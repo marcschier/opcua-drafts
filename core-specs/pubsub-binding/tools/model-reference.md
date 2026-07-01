@@ -8,7 +8,7 @@ This annex is the normative node reference. It is generated from `tools/build_mo
 | NodeId | BrowseName | NodeClass | Subtype of |
 |---|---|---|---|
 | i=60001 | [BindsToNode](#type-BindsToNode) | ReferenceType | [NonHierarchicalReferences](https://reference.opcfoundation.org/specs/OPC-10000-3/7.4) |
-| i=60002 | [HasScenarioRealization](#type-HasScenarioRealization) | ReferenceType | [NonHierarchicalReferences](https://reference.opcfoundation.org/specs/OPC-10000-3/7.4) |
+| i=60002 | [ScenarioRealizedVia](#type-ScenarioRealizedVia) | ReferenceType | [NonHierarchicalReferences](https://reference.opcfoundation.org/specs/OPC-10000-3/7.4) |
 | i=60012 | [BoundItemType](#type-BoundItemType) | ObjectType | [BaseObjectType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.2) |
 | i=60013 | [BoundVariableType](#type-BoundVariableType) | ObjectType | [BoundItemType](#type-BoundItemType) |
 | i=60014 | [BoundMethodType](#type-BoundMethodType) | ObjectType | [BoundItemType](#type-BoundItemType) |
@@ -31,12 +31,12 @@ This annex is the normative node reference. It is generated from `tools/build_mo
 
 Links a BoundItem to the companion-specification Variable or Method in the AddressSpace that it exposes for a scenario. The target is the authoritative semantic node; the BoundItem does not copy its meaning.
 
-<a id="type-HasScenarioRealization"></a>
-#### HasScenarioRealization  (i=60002)
+<a id="type-ScenarioRealizedVia"></a>
+#### ScenarioRealizedVia  (i=60002)
 
-*Subtype of:* [NonHierarchicalReferences](https://reference.opcfoundation.org/specs/OPC-10000-3/7.4) · *InverseName:* `RealizesScenarioBinding`
+*Subtype of:* [NonHierarchicalReferences](https://reference.opcfoundation.org/specs/OPC-10000-3/7.4) · *InverseName:* `SupportsScenario`
 
-Links a ScenarioBinding to the OPC UA Part 14 PubSub node(s) that realize it (a PublishedDataSet, DataSetWriter, DataSetReader or an ActionTarget). Absent when the binding is not (yet) realized over PubSub.
+Links a ScenarioBinding to the optional OPC UA Part 14 PubSub node(s) that realize it (a PublishedDataSet, DataSetWriter, DataSetReader or an ActionTarget). Forward 'ScenarioRealizedVia' reads binding -> realization; the inverse 'SupportsScenario' reads realization -> binding. Absent (and never required) when the binding is not realized over PubSub.
 
 ### Object types
 
@@ -130,12 +130,11 @@ One scenario binding on a bound object or type. It declares the scenario URI and
 
 *Inherits from:* [FolderType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.6)
 
-A discoverable container of ScenarioBinding objects. A server exposes one server-wide instance under the PublishSubscribe object, and/or a local instance on any object that implements IPubSubScenarioBoundType.
+A discoverable container of ScenarioBinding objects, enumerated by Browse. A server exposes one server-wide instance under the Server object, and/or a local instance on any object that implements IPubSubScenarioBoundType.
 
 | BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
 |---|---|---|---|---|---|
 | <ScenarioBinding> | Object |  | OptionalPlaceholder | PubSubScenarioBindingsType | A scenario binding held by this container. |
-| GetScenarioBindings | Method |  | Optional | PubSubScenarioBindingsType | Return the ScenarioBinding objects whose ScenarioUri matches the argument (empty argument returns all). |
 
 <a id="type-ScenarioProfileType"></a>
 #### ScenarioProfileType  (i=60015)
@@ -258,13 +257,12 @@ Portable, machine-readable 'full binding' for a companion specification or type:
 
 | Method | Owning type | Input arguments | Output arguments |
 |---|---|---|---|
-| GetScenarioBindings | [PubSubScenarioBindingsType](#type-PubSubScenarioBindingsType) | ScenarioUri | Bindings |
 
 ### Well-known instances
 
 | BrowseName | NodeId | TypeDefinition | Note |
 |---|---|---|---|
-| ScenarioBindings | i=60100 | [PubSubScenarioBindingsType](#type-PubSubScenarioBindingsType) | Server-wide registry of scenario bindings, discoverable from the PublishSubscribe object. |
+| ScenarioBindings | i=60100 | [PubSubScenarioBindingsType](#type-PubSubScenarioBindingsType) | Server-wide registry of scenario bindings, discoverable by browsing the Server object. Its presence does not require any PubSub configuration. |
 | Scenarios | i=60101 | [FolderType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.6) | Registry of known integration scenarios (extensible). |
 | Observability | i=60110 | [ScenarioProfileType](#type-ScenarioProfileType) | Real-time operational monitoring: SCADA/HMI, dashboards and observability platforms (e.g. OpenTelemetry). Low latency, cyclic telemetry and status. |
 | PredictiveMaintenance | i=60111 | [ScenarioProfileType](#type-ScenarioProfileType) | Condition- and usage-based trending fed to maintenance analytics to forecast wear and schedule service. |

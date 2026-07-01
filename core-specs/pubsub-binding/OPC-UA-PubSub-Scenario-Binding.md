@@ -15,7 +15,7 @@ This specification defines an information model that lets an OPC UA Server **bin
 
 It specifies:
 
-- a discoverable **registry** of scenario bindings, reachable from the standard `PublishSubscribe` object and, optionally, from any Object that opts in through an Interface;
+- a discoverable **registry** of scenario bindings, reachable from the standard **Server Object** and, optionally, from any Object that opts in through an Interface;
 - a **ScenarioBinding** that associates a Scenario (identified by a URI) and a direction with a set of **bound items** — Variables and Methods of the underlying model;
 - a **semantic cross‑reference** carried by each bound item back to the model that defines it, retained so that it can be **exported to a disconnected consumer**;
 - normative rules for locating bound items by **BrowsePath** (RelativePath) so that bindings can be authored once at the type level and resolved per instance;
@@ -69,29 +69,77 @@ The bridge never needs the semantic layer to do its job; it forwards it verbatim
 
 ### 4.2 Discovery
 
-A Server exposes a server‑wide registry — a [`PubSubScenarioBindingsType`](#type-PubSubScenarioBindingsType) instance named `ScenarioBindings` — as a component of the standard [`PublishSubscribe`](https://reference.opcfoundation.org/specs/OPC-10000-14/9.1.3#9.1.3.2) object. Additionally, any Object (typically a companion‑spec instance) may implement the [`IPubSubScenarioBoundType`](#type-IPubSubScenarioBoundType) Interface to expose its **own** local `ScenarioBindings` container, giving per‑instance discovery. A Client browses either entry point to enumerate [`ScenarioBindingType`](#type-ScenarioBindingType) objects and filters them by `ScenarioUri`.
+A Server exposes a server‑wide registry — a [`PubSubScenarioBindingsType`](#type-PubSubScenarioBindingsType) instance named `ScenarioBindings` — as a component of the standard **Server Object** (`i=2253`), which is **always present**. Discovery therefore never depends on a PubSub configuration surface. Additionally, any Object (typically a companion‑spec instance) may implement the [`IPubSubScenarioBoundType`](#type-IPubSubScenarioBoundType) Interface to expose its **own** local `ScenarioBindings` container, giving per‑instance discovery. A Client **browses** either entry point to enumerate [`ScenarioBindingType`](#type-ScenarioBindingType) objects and reads each one's `ScenarioUri` to filter; no query Method is required.
 
 ### 4.3 Realization (hybrid)
 
-A binding **declares** intent; whether and how it is realized over the wire is separate. When the Server has configured PubSub for a binding, the binding references the realizing Part 14 nodes via [`HasScenarioRealization`](#type-HasScenarioRealization) — a `PublishedDataSet`, a `DataSetWriter`/`DataSetReader`, or an `ActionTarget`. When no realization is present, a Client may still act on the binding through classic Subscriptions and Method calls (§6). This **hybrid** model means a binding is useful immediately, and becomes a turn‑key PubSub subscription once realized.
+A binding **declares** intent; whether and how it is realized over the wire is separate.
+
+**A conforming Server is not required to implement OPC UA PubSub.** The default and most common case is a Server with **no PubSub configuration surface at all**: this specification references Part 14 *types* to describe an optional realization, but never requires *instances* of them — no `PublishSubscribe` object, `PublishedDataSet`, `DataSetWriter` or `WriterGroup` need exist. On such a Server a Client acts on a binding through **classic Subscriptions and Method calls** (§6); this is the baseline.
+
+When a Server *does* configure PubSub for a binding, the realizing Part 14 node references the binding through the inverse [`SupportsScenario`](#type-ScenarioRealizedVia) reference (equivalently, the binding is [`ScenarioRealizedVia`](#type-ScenarioRealizedVia) that node) — a `PublishedDataSet`, a `DataSetWriter`/`DataSetReader`, or an `ActionTarget`. This **hybrid** model means a binding is useful immediately on any Server, and becomes a turn‑key PubSub subscription wherever PubSub happens to be configured.
 
 ### 4.4 Architecture
 
 ```mermaid
-graph TD
-  PS["PublishSubscribe (Part 14)"] -->|HasComponent| REG[ScenarioBindings : PubSubScenarioBindingsType]
-  REG -->|Organizes| SCN[Scenarios registry]
-  SCN --> P1[ScenarioProfile: Observability]
-  SCN --> P2[ScenarioProfile: PredictiveMaintenance]
-  REG -->|placeholder| SB[ScenarioBinding : ScenarioBindingType]
-  INST["Companion instance : IPubSubScenarioBoundType"] -->|HasComponent| LREG[ScenarioBindings]
-  LREG --> SB
-  SB -->|ScenarioUri + Direction| ROUTE{{routing}}
-  SB --> BI["&lt;BoundItem&gt; : BoundItemType"]
-  BI -->|BindsToNode / BrowsePath| SRC["companion Variable/Method"]
-  BI -->|semantic cross-ref| SEM["TypeDefinition, BrowseName, dictionary"]
-  SB -.HasScenarioRealization.-> PDS["PublishedDataSet / Writer / ActionTarget (Part 14)"]
+classDiagram
+  direction LR
+
+  class ServerObject["Server Object (i=2253)"]
+  class Bridge["Bridge / Client"]
+  <<actor>> Bridge
+  class Target["Target system"]
+  <<actor>> Target
+
+  class PubSubScenarioBindingsType {
+    <<ObjectType>>
+  }
+  class ScenarioBindingType {
+    +ScenarioUri : String
+    +Direction : ScenarioBindingDirectionEnum
+    +ConfigurationVersion : ConfigurationVersion
+    +BoundItems : BoundItemDataType[]
+  }
+  class BoundItemType {
+    +FieldName : String
+    +Kind : BoundItemKindEnum
+    +BrowsePath : RelativePath
+    +SourceTypeDefinition : NodeId
+    +SourceBrowseName : QualifiedName
+    +ModelNamespaceUri : String
+    +DataSetFieldId : Guid
+    +SemanticReferenceUri : String
+  }
+  class BoundVariableType
+  class BoundMethodType {
+    +OwningObjectPath : RelativePath
+  }
+  class IPubSubScenarioBoundType {
+    <<interface>>
+    +ScenarioBindings : PubSubScenarioBindingsType
+  }
+  class ScenarioProfileType {
+    +ScenarioUri : String
+    +Title : LocalizedText
+    +Keywords : String[]
+  }
+  class CompanionNode["companion Variable / Method"]
+  class Realization["PublishedDataSet / DataSetWriter (Part 14, optional)"]
+
+  ServerObject "1" *-- "1" PubSubScenarioBindingsType : HasComponent
+  IPubSubScenarioBoundType ..> PubSubScenarioBindingsType : HasComponent per-instance
+  PubSubScenarioBindingsType "1" o-- "*" ScenarioBindingType : ScenarioBinding placeholder
+  PubSubScenarioBindingsType ..> ScenarioProfileType : Scenarios registry
+  ScenarioBindingType "1" o-- "*" BoundItemType : BoundItem placeholder
+  BoundVariableType --|> BoundItemType
+  BoundMethodType --|> BoundItemType
+  BoundItemType ..> CompanionNode : BindsToNode / BrowsePath
+  Realization ..> ScenarioBindingType : SupportsScenario
+  Bridge ..> ServerObject : Browse + Subscribe / Call
+  Bridge ..> Target : forward by Kind
 ```
+
+*Attributes inside a box are **Properties** (Variables/DataType fields); labelled lines between boxes are **References**. The optional Part 14 realization points back at the binding via the inverse `SupportsScenario` reference (`Realization → ScenarioBinding`).*
 
 ## 5 Information model
 
@@ -99,11 +147,11 @@ The full node reference — every type, member, DataType and well‑known instan
 
 ### 5.1 PubSubScenarioBindingsType
 
-The discoverable container. It holds `<ScenarioBinding>` objects (an `OptionalPlaceholder`) and offers `GetScenarioBindings(ScenarioUri)`, which **shall** return the NodeIds of the contained bindings whose `ScenarioUri` equals the argument, or all of them when the argument is empty. A Server **shall** expose one instance as a component of the `PublishSubscribe` object; it **may** expose further instances through the Interface (§5.6).
+The discoverable container. It holds `<ScenarioBinding>` objects (an `OptionalPlaceholder`), enumerated by **Browse**; a Client reads each binding's `ScenarioUri` to filter. No query Method is defined — Browse and Read already provide enumeration and selection, and requiring a Method would burden the classic Servers that are the common case. A Server **shall** expose one instance as a component of the **Server Object**; it **may** expose further instances through the Interface (§5.6).
 
 ### 5.2 ScenarioBindingType
 
-One binding. `ScenarioUri` (Mandatory) and `Direction` (Mandatory, a [`ScenarioBindingDirectionEnum`](#type-ScenarioBindingDirectionEnum)) are the routing header. `ConfigurationVersion` aligns the binding with the `ConfigurationVersion` of its realizing `DataSetMetaData` so a consumer can detect change. The bound items are exposed **both** as browsable `<BoundItem>` objects **and** as a compact `BoundItems` array of [`BoundItemDataType`](#type-BoundItemDataType); when both are present they **shall** carry equivalent bound‑item information (the same members and values). A binding **may** reference its realization with `HasScenarioRealization`.
+One binding. `ScenarioUri` (Mandatory) and `Direction` (Mandatory, a [`ScenarioBindingDirectionEnum`](#type-ScenarioBindingDirectionEnum)) are the routing header. `ConfigurationVersion` aligns the binding with the `ConfigurationVersion` of its realizing `DataSetMetaData` so a consumer can detect change. The bound items are exposed **both** as browsable `<BoundItem>` objects **and** as a compact `BoundItems` array of [`BoundItemDataType`](#type-BoundItemDataType); when both are present they **shall** carry equivalent bound‑item information (the same members and values). Where PubSub is configured, the realizing Part 14 node references this binding with [`SupportsScenario`](#type-ScenarioRealizedVia) (the binding is then [`ScenarioRealizedVia`](#type-ScenarioRealizedVia) that node).
 
 ### 5.3 BoundItemType and its subtypes
 
@@ -111,7 +159,7 @@ A [`BoundItemType`](#type-BoundItemType) describes one exposed node. It **shall*
 
 ### 5.4 Semantic cross‑reference (normative)
 
-Each bound item **shall** retain enough information to identify the model node it exposes independently of the live AddressSpace:
+Each bound item **shall** retain enough information to identify the model node it exposes independently of the live AddressSpace — as applicable to its NodeClass (see the Variable/Method rule below):
 
 - `SourceTypeDefinition` — the TypeDefinition NodeId of the source node;
 - `SourceBrowseName` — its namespace‑qualified BrowseName;
@@ -119,6 +167,8 @@ Each bound item **shall** retain enough information to identify the model node i
 - optionally, `SemanticReferenceUri` — a portable external semantic identifier for the item (an IRDI/CDD, e.g. the identifier of a [OPC 10000‑19](https://reference.opcfoundation.org/specs/OPC-10000-19/) dictionary entry). A Server that models the dictionary linkage natively **may** additionally place a `HasDictionaryEntry` reference on the browsable `BoundItem`; `SemanticReferenceUri` is the carrier used in the compact and configuration forms and for propagation, so the linkage survives export.
 
 These values are **derivable from the AddressSpace** and a generating tool **should** populate them mechanically to avoid drift.
+
+The Properties above carry the **Optional** ModellingRule on `BoundItemType` so the one type serves both bound Variables and bound Methods (a Method has no TypeDefinition). A Server that exposes a binding **shall** nevertheless populate them per the *Semantic Cross‑Reference* conformance unit (§7): `SourceTypeDefinition`, `SourceBrowseName` and `ModelNamespaceUri` for a bound **Variable**; `SourceBrowseName` and `ModelNamespaceUri` (the source being identified by its `BrowsePath`/`OwningObjectPath`) for a bound **Method**.
 
 **Propagation to consumers.** When a binding is realized as a Part 14 `PublishedDataSet`, for every bound item the Server **shall**:
 
@@ -172,31 +222,48 @@ This clause shows how a **bridge** consumes the model. It is informative; confor
 
 ### 6.1 Walkthrough
 
-1. **Discover.** Browse `PublishSubscribe/ScenarioBindings` for the server‑wide registry, and/or query for Objects implementing `IPubSubScenarioBoundType` for per‑instance bindings. Enumerate the `ScenarioBinding` objects (or call `GetScenarioBindings`).
+1. **Discover.** Browse `Server/ScenarioBindings` for the server‑wide registry, and/or find Objects implementing `IPubSubScenarioBoundType` for per‑instance bindings. Enumerate the `ScenarioBinding` objects by Browse and read each `ScenarioUri`.
 2. **Select.** Keep the bindings whose `ScenarioUri` is one the bridge supports. Read `Direction` to learn which side to set up.
-3. **Realize — PubSub path.** If the binding references a realization (`HasScenarioRealization` → a `PublishedDataSet`/`DataSetWriter`), read the `DataSetMetaData` and the transport from the owning `WriterGroup`/`PubSubConnection`, then create a `DataSetReader`/subscriber. For an `ActionInvoker`/`ActionResponder` binding, use Part 14 Actions/ActionTargets.
-4. **Realize — classic fallback.** If there is no realization, for each bound item resolve its `BrowsePath` (or read `SourceNodeId`), then create a Subscription with a MonitoredItem on that node and `AttributeId`, honouring `SamplingIntervalHint`. For a bound Method, use the `Call` service.
+3. **Realize — classic path (the default).** For each bound item resolve its `BrowsePath` (or read `SourceNodeId`) with `TranslateBrowsePathsToNodeIds`, then create a Subscription with a MonitoredItem on that node and `AttributeId`, honouring `SamplingIntervalHint`. For a bound Method, use the `Call` service. This path needs no PubSub configuration and works on any Server.
+4. **Realize — PubSub path (only where PubSub is configured).** If a Part 14 node references the binding via `SupportsScenario` (the binding is `ScenarioRealizedVia` a `PublishedDataSet`/`DataSetWriter`), read the `DataSetMetaData` and the transport from the owning `WriterGroup`/`PubSubConnection`, then create a `DataSetReader`/subscriber. For an `ActionInvoker`/`ActionResponder` binding, use Part 14 Actions/ActionTargets.
 5. **Forward.** For each field, forward the value tagged with its `Kind` (Telemetry/Metric → time series; Event → log; Command → action; …) and attach the semantic cross‑reference so the downstream consumer can interpret it. **No domain knowledge is required.**
 
-### 6.2 Sequence
+### 6.2 Sequence — classic server (the default)
 
 ```mermaid
 sequenceDiagram
+  participant S as Server (no PubSub surface)
   participant B as Bridge (Client)
-  participant S as Server
   participant X as Target system
-  B->>S: Browse PublishSubscribe/ScenarioBindings
-  S-->>B: ScenarioBinding{ ScenarioUri, Direction, BoundItems, [Realization] }
-  alt PubSub realization present
-    B->>S: Read DataSetMetaData + WriterGroup/Connection
-    B->>B: Create DataSetReader (subscriber)
-  else classic fallback
-    B->>S: TranslateBrowsePaths (per BoundItem)
-    B->>S: CreateSubscription + MonitoredItems
+  B->>S: Browse Server/ScenarioBindings (or via IPubSubScenarioBoundType)
+  S-->>B: ScenarioBinding { ScenarioUri, Direction, BoundItems… }
+  B->>B: Select bindings whose ScenarioUri is supported
+  loop per BoundItem
+    B->>S: TranslateBrowsePathsToNodeIds (BrowsePath)
+    B->>S: CreateSubscription + CreateMonitoredItems (AttributeId, SamplingIntervalHint)
   end
+  Note over S,B: Bound Methods → Call service
   loop runtime
-    S-->>B: DataSet / DataChange (field = value + Kind + semantic ref)
-    B->>X: Forward mapped by Kind (+ semantics)
+    S-->>B: DataChange notification (value)
+    B->>X: Forward tagged by Kind (+ semantic cross-ref)
+  end
+```
+
+### 6.3 Sequence — PubSub‑capable server (less common)
+
+```mermaid
+sequenceDiagram
+  participant S as Server (PubSub configured)
+  participant B as Bridge (Client)
+  participant X as Target system
+  B->>S: Browse Server/ScenarioBindings
+  S-->>B: ScenarioBinding + realization (PublishedDataSet SupportsScenario binding)
+  B->>S: Read DataSetMetaData + WriterGroup/PubSubConnection
+  B->>B: Create DataSetReader (subscriber)
+  Note over S,B: Action bindings → Part 14 Actions/ActionTargets
+  loop runtime
+    S-->>B: PubSub DataSetMessage (fields + dataSetFieldId + semantic props)
+    B->>X: Forward tagged by Kind (+ semantic cross-ref)
   end
 ```
 
@@ -206,18 +273,19 @@ The following Conformance Units (CUs) are defined; Facets group them for Servers
 
 | Conformance Unit | Requirement |
 |---|---|
-| Scenario Binding Discovery | Expose a server‑wide `ScenarioBindings` registry from `PublishSubscribe`; enumerate `ScenarioBinding` objects; support `GetScenarioBindings`. |
+| Scenario Binding Discovery | Expose a server‑wide `ScenarioBindings` registry as a component of the Server Object; enumerate `ScenarioBinding` objects by Browse. |
 | Scenario Registry | Expose the `Scenarios` registry with a `ScenarioProfile` per supported Scenario URI. |
 | BrowsePath Resolution | Author bound items as type‑level BrowsePaths and resolve them per instance under the rules of §5.5. |
-| Variable Realization | Realize a binding as a Part 14 `PublishedDataSet`/`DataSetWriter` for its bound Variables. |
-| Action Realization | Realize a bound Method as a Part 14 Action/ActionTarget. |
-| Semantic Cross‑Reference & MetaData Propagation | Populate the semantic fields and propagate them into `DataSetMetaData.FieldMetaData` per §5.4. |
+| Variable Realization *(optional)* | Realize a binding as a Part 14 `PublishedDataSet`/`DataSetWriter` for its bound Variables. Applicable only where the Server implements PubSub. |
+| Action Realization *(optional)* | Realize a bound Method as a Part 14 Action/ActionTarget. Applicable only where the Server implements PubSub. |
+| Semantic Cross‑Reference | Populate the semantic fields on every exposed bound item (`SourceTypeDefinition`/`SourceBrowseName`/`ModelNamespaceUri`, per the Variable/Method rule in §5.4). Independent of PubSub. |
+| PubSub MetaData Propagation *(optional)* | Where a binding is realized over PubSub, propagate the semantic fields into `DataSetMetaData.FieldMetaData` per §5.4. Applicable only where Variable/Action Realization is offered. |
 
 **Facets (informative grouping):**
 
-- **Server Scenario Binding Facet** — Discovery + Scenario Registry + BrowsePath Resolution (mandatory), Variable/Action Realization + Semantic Propagation (as offered).
-- **Publisher Facet** — Variable Realization + Semantic Cross‑Reference & MetaData Propagation.
-- **Bridge (Client) Facet** — discover, select by `ScenarioUri`, realize via PubSub or classic fallback, forward by `Kind`.
+- **Server Scenario Binding Facet** — Discovery + Scenario Registry + BrowsePath Resolution + Semantic Cross‑Reference (mandatory); Variable/Action Realization + PubSub MetaData Propagation (as offered, only where PubSub is implemented).
+- **Publisher Facet** — Variable Realization + PubSub MetaData Propagation.
+- **Bridge (Client) Facet** — discover, select by `ScenarioUri`, realize via the classic path (default) or PubSub where configured, forward by `Kind`.
 
 ## 8 Deliverables and reproducibility
 
@@ -228,11 +296,12 @@ The following Conformance Units (CUs) are defined; Facets group them for Servers
 | [`OPC-UA-PubSub-Scenario-Binding.md`](OPC-UA-PubSub-Scenario-Binding.md) | This document. |
 | [`tools/build_model.py`](tools/build_model.py) | The generator that emits the NodeSet, the CSV and the [Annex A](#annex-a) tables from one source of truth. |
 
-The NodeSet has been validated to be structurally correct — XML well‑formedness, unique NodeIds, CSV↔NodeSet consistency, and resolution of every referenced base NodeId against the base OPC UA and Part 14 NodeId tables — and its constructs (base‑namespace type definitions, a custom ReferenceType, an Interface, enumerations, a Structure with encodings, `RelativePath`/`QualifiedName`/`Guid` fields, a Method with input and output arguments, and the hook onto the well‑known `PublishSubscribe` object) were checked with the OPC Foundation modelling validator and reported **0 errors**.
+The NodeSet has been validated to be structurally correct — XML well‑formedness, unique NodeIds, CSV↔NodeSet consistency, and resolution of every referenced base NodeId against the base OPC UA and Part 14 NodeId tables — and its constructs (base‑namespace type definitions, a custom ReferenceType, an Interface, enumerations, a Structure with encodings, `RelativePath`/`QualifiedName`/`Guid` fields, and the hook onto the well‑known **Server Object**) were checked with the OPC Foundation modelling validator and reported **0 errors**.
 
 An authoring **skill** (`skills/opcua-scenario-binding/`) generates, for any companion specification, a machine‑readable `ScenarioBindingConfiguration` and a per‑spec binding annex from documented heuristics; a deterministic generator expands that single source into the AddressSpace binding fragment and Part 14 runtime‑configuration skeletons (transport, security and addressing are deployment parameters and are not fixed by this specification).
 
 ---
+
 
 
 
@@ -247,7 +316,7 @@ This annex is the normative node reference. It is generated from `tools/build_mo
 | NodeId | BrowseName | NodeClass | Subtype of |
 |---|---|---|---|
 | i=60001 | [BindsToNode](#type-BindsToNode) | ReferenceType | [NonHierarchicalReferences](https://reference.opcfoundation.org/specs/OPC-10000-3/7.4) |
-| i=60002 | [HasScenarioRealization](#type-HasScenarioRealization) | ReferenceType | [NonHierarchicalReferences](https://reference.opcfoundation.org/specs/OPC-10000-3/7.4) |
+| i=60002 | [ScenarioRealizedVia](#type-ScenarioRealizedVia) | ReferenceType | [NonHierarchicalReferences](https://reference.opcfoundation.org/specs/OPC-10000-3/7.4) |
 | i=60012 | [BoundItemType](#type-BoundItemType) | ObjectType | [BaseObjectType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.2) |
 | i=60013 | [BoundVariableType](#type-BoundVariableType) | ObjectType | [BoundItemType](#type-BoundItemType) |
 | i=60014 | [BoundMethodType](#type-BoundMethodType) | ObjectType | [BoundItemType](#type-BoundItemType) |
@@ -270,12 +339,12 @@ This annex is the normative node reference. It is generated from `tools/build_mo
 
 Links a BoundItem to the companion-specification Variable or Method in the AddressSpace that it exposes for a scenario. The target is the authoritative semantic node; the BoundItem does not copy its meaning.
 
-<a id="type-HasScenarioRealization"></a>
-#### HasScenarioRealization  (i=60002)
+<a id="type-ScenarioRealizedVia"></a>
+#### ScenarioRealizedVia  (i=60002)
 
-*Subtype of:* [NonHierarchicalReferences](https://reference.opcfoundation.org/specs/OPC-10000-3/7.4) · *InverseName:* `RealizesScenarioBinding`
+*Subtype of:* [NonHierarchicalReferences](https://reference.opcfoundation.org/specs/OPC-10000-3/7.4) · *InverseName:* `SupportsScenario`
 
-Links a ScenarioBinding to the OPC UA Part 14 PubSub node(s) that realize it (a PublishedDataSet, DataSetWriter, DataSetReader or an ActionTarget). Absent when the binding is not (yet) realized over PubSub.
+Links a ScenarioBinding to the optional OPC UA Part 14 PubSub node(s) that realize it (a PublishedDataSet, DataSetWriter, DataSetReader or an ActionTarget). Forward 'ScenarioRealizedVia' reads binding -> realization; the inverse 'SupportsScenario' reads realization -> binding. Absent (and never required) when the binding is not realized over PubSub.
 
 ### Object types
 
@@ -369,12 +438,11 @@ One scenario binding on a bound object or type. It declares the scenario URI and
 
 *Inherits from:* [FolderType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.6)
 
-A discoverable container of ScenarioBinding objects. A server exposes one server-wide instance under the PublishSubscribe object, and/or a local instance on any object that implements IPubSubScenarioBoundType.
+A discoverable container of ScenarioBinding objects, enumerated by Browse. A server exposes one server-wide instance under the Server object, and/or a local instance on any object that implements IPubSubScenarioBoundType.
 
 | BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
 |---|---|---|---|---|---|
 | <ScenarioBinding> | Object |  | OptionalPlaceholder | PubSubScenarioBindingsType | A scenario binding held by this container. |
-| GetScenarioBindings | Method |  | Optional | PubSubScenarioBindingsType | Return the ScenarioBinding objects whose ScenarioUri matches the argument (empty argument returns all). |
 
 <a id="type-ScenarioProfileType"></a>
 #### ScenarioProfileType  (i=60015)
@@ -497,13 +565,12 @@ Portable, machine-readable 'full binding' for a companion specification or type:
 
 | Method | Owning type | Input arguments | Output arguments |
 |---|---|---|---|
-| GetScenarioBindings | [PubSubScenarioBindingsType](#type-PubSubScenarioBindingsType) | ScenarioUri | Bindings |
 
 ### Well-known instances
 
 | BrowseName | NodeId | TypeDefinition | Note |
 |---|---|---|---|
-| ScenarioBindings | i=60100 | [PubSubScenarioBindingsType](#type-PubSubScenarioBindingsType) | Server-wide registry of scenario bindings, discoverable from the PublishSubscribe object. |
+| ScenarioBindings | i=60100 | [PubSubScenarioBindingsType](#type-PubSubScenarioBindingsType) | Server-wide registry of scenario bindings, discoverable by browsing the Server object. Its presence does not require any PubSub configuration. |
 | Scenarios | i=60101 | [FolderType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.6) | Registry of known integration scenarios (extensible). |
 | Observability | i=60110 | [ScenarioProfileType](#type-ScenarioProfileType) | Real-time operational monitoring: SCADA/HMI, dashboards and observability platforms (e.g. OpenTelemetry). Low latency, cyclic telemetry and status. |
 | PredictiveMaintenance | i=60111 | [ScenarioProfileType](#type-ScenarioProfileType) | Condition- and usage-based trending fed to maintenance analytics to forecast wear and schedule service. |

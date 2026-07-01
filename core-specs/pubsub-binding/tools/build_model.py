@@ -62,8 +62,10 @@ NumericRange = "i=291"
 Argument = "i=296"
 RelativePath = "i=540"
 
-# Part 14 PubSub (base namespace)
-PublishSubscribe = "i=14443"          # well-known PublishSubscribe object
+# Server object (base namespace)
+Server = "i=2253"
+
+# Part 14 PubSub (base namespace) - referenced only as optional realization target types
 PublishedDataSetType = "i=14509"
 DataSetWriterType = "i=15298"
 DataSetReaderType = "i=15306"
@@ -330,11 +332,13 @@ reference_type(60001, "BindsToNode", NonHierarchicalReferences, "IsBoundBy",
                "in the AddressSpace that it exposes for a scenario. The target is the "
                "authoritative semantic node; the BoundItem does not copy its meaning.",
                CAT)
-reference_type(60002, "HasScenarioRealization", NonHierarchicalReferences,
-               "RealizesScenarioBinding",
-               "Links a ScenarioBinding to the OPC UA Part 14 PubSub node(s) that "
+reference_type(60002, "ScenarioRealizedVia", NonHierarchicalReferences,
+               "SupportsScenario",
+               "Links a ScenarioBinding to the optional OPC UA Part 14 PubSub node(s) that "
                "realize it (a PublishedDataSet, DataSetWriter, DataSetReader or an "
-               "ActionTarget). Absent when the binding is not (yet) realized over PubSub.",
+               "ActionTarget). Forward 'ScenarioRealizedVia' reads binding -> realization; "
+               "the inverse 'SupportsScenario' reads realization -> binding. Absent (and "
+               "never required) when the binding is not realized over PubSub.",
                CAT)
 
 # --- Enumerations ----------------------------------------------------------
@@ -457,17 +461,15 @@ placeholder_obj(60011, SB, "<BoundItem>", T(60012),
 
 # PubSubScenarioBindingsType (container)
 object_type(60010, "PubSubScenarioBindingsType", FolderType,
-            "A discoverable container of ScenarioBinding objects. A server exposes one "
-            "server-wide instance under the PublishSubscribe object, and/or a local "
-            "instance on any object that implements IPubSubScenarioBoundType.", CAT)
+            "A discoverable container of ScenarioBinding objects, enumerated by Browse. A "
+            "server exposes one server-wide instance under the Server object, and/or a "
+            "local instance on any object that implements IPubSubScenarioBoundType.", CAT)
 BC = "PubSubScenarioBindingsType"
 placeholder_obj(60010, BC, "<ScenarioBinding>", T(60011),
                 "A scenario binding held by this container.")
-method(60010, BC, "GetScenarioBindings",
-       "Return the ScenarioBinding objects whose ScenarioUri matches the argument "
-       "(empty argument returns all).",
-       inargs=[("ScenarioUri", String, "Scenario URI to match, or an empty string for all.")],
-       outargs=[("Bindings", NodeId_, "NodeIds of the matching ScenarioBinding objects.", 1)])
+# No query Method: clients enumerate the <ScenarioBinding> components by Browse and read
+# each ScenarioUri. Browse + Read is sufficient and OPC UA-native, and keeps the type
+# usable on a classic server with no PubSub surface.
 
 # ScenarioProfileType (registry entry)
 object_type(60015, "ScenarioProfileType", BaseObjectType,
@@ -490,10 +492,11 @@ obj_member(60016, "IPubSubScenarioBoundType", "ScenarioBindings", T(60010),
 
 # --- Well-known instances --------------------------------------------------
 CAT_INST = "PubSub Scenario Binding Instances"
-# Server-wide registry hooked onto the well-known PublishSubscribe object.
-well_known(60100, "ScenarioBindings", T(60010), int(PublishSubscribe.split("=")[1]),
-           "Server-wide registry of scenario bindings, discoverable from the "
-           "PublishSubscribe object.")
+# Server-wide registry hooked onto the well-known Server object (i=2253) - always present,
+# so discovery never assumes a PubSub configuration surface.
+well_known(60100, "ScenarioBindings", T(60010), int(Server.split("=")[1]),
+           "Server-wide registry of scenario bindings, discoverable by browsing the "
+           "Server object. Its presence does not require any PubSub configuration.")
 NODES[60100].category = CAT_INST
 # Scenarios registry folder under the server-wide container.
 add(60101, "UAObject", "Scenarios", "Scenarios",
