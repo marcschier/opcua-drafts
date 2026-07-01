@@ -1,0 +1,2110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UANodeSet xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd" xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd">
+  <NamespaceUris>
+    <Uri>http://opcfoundation.org/UA/PubSub/Examples/Pumps/</Uri>
+    <Uri>http://opcfoundation.org/UA/Pumps/</Uri>
+    <Uri>http://opcfoundation.org/UA/DI/</Uri>
+    <Uri>http://opcfoundation.org/UA/Machinery/</Uri>
+  </NamespaceUris>
+  <Models>
+    <Model ModelUri="http://opcfoundation.org/UA/PubSub/Examples/Pumps/" Version="0.1.0" PublicationDate="2026-07-01T00:00:00Z">
+      <RequiredModel ModelUri="http://opcfoundation.org/UA/Pumps/"/>
+      <RequiredModel ModelUri="http://opcfoundation.org/UA/DI/"/>
+      <RequiredModel ModelUri="http://opcfoundation.org/UA/Machinery/"/>
+    </Model>
+  </Models>
+  <Aliases>
+    <Alias Alias="HasComponent">i=47</Alias>
+    <Alias Alias="HasProperty">i=46</Alias>
+    <Alias Alias="HasTypeDefinition">i=40</Alias>
+    <Alias Alias="HasInterface">i=17603</Alias>
+    <Alias Alias="Organizes">i=35</Alias>
+    <Alias Alias="BindsToNode">i=60001</Alias>
+    <Alias Alias="String">i=12</Alias>
+    <Alias Alias="Int32">i=6</Alias>
+    <Alias Alias="QualifiedName">i=20</Alias>
+    <Alias Alias="NodeId">i=17</Alias>
+    <Alias Alias="Guid">i=14</Alias>
+    <Alias Alias="BaseDataVariableType">i=63</Alias>
+    <Alias Alias="PropertyType">i=68</Alias>
+    <Alias Alias="BaseObjectType">i=58</Alias>
+    <Alias Alias="FolderType">i=61</Alias>
+  </Aliases>
+  <UAObject NodeId="ns=1;i=5001" BrowseName="1:ExamplePump">
+    <DisplayName>ExamplePump</DisplayName>
+    <Description>Illustrative theoretical instance of PumpType carrying example scenario bindings. Only the bound signals are shown; not a conformant full instance.</Description>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">ns=2;i=1052</Reference>
+      <Reference ReferenceType="HasInterface">i=60016</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=5002</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="ns=1;i=5002" BrowseName="1:ScenarioBindings" ParentNodeId="ns=1;i=5001">
+    <DisplayName>ScenarioBindings</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=60010</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5001</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="ns=1;i=5003" BrowseName="1:Observability" ParentNodeId="ns=1;i=5002">
+    <DisplayName>Observability</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=60011</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5002</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=5004" BrowseName="1:ScenarioUri" ParentNodeId="ns=1;i=5003" DataType="String">
+    <DisplayName>ScenarioUri</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5003</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">http://opcfoundation.org/UA/PubSub/Scenarios/Observability</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5005" BrowseName="1:Direction" ParentNodeId="ns=1;i=5003" DataType="i=60050">
+    <DisplayName>Direction</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5003</Reference>
+    </References>
+    <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">0</uax:Int32></Value>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=5006" BrowseName="3:Operational" ParentNodeId="ns=1;i=5001">
+    <DisplayName>Operational</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">FolderType</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5001</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="ns=1;i=5007" BrowseName="2:Measurements" ParentNodeId="ns=1;i=5006">
+    <DisplayName>Measurements</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">FolderType</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5006</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=5008" BrowseName="2:Speed" ParentNodeId="ns=1;i=5007" DataType="i=11">
+    <DisplayName>Speed</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=15318</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5007</Reference>
+    </References>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=5009" BrowseName="1:Speed" ParentNodeId="ns=1;i=5003">
+    <DisplayName>Speed</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=60013</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5003</Reference>
+      <Reference ReferenceType="BindsToNode">ns=1;i=5008</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=5010" BrowseName="1:FieldName" ParentNodeId="ns=1;i=5009" DataType="String">
+    <DisplayName>FieldName</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5009</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">Speed</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5011" BrowseName="1:Kind" ParentNodeId="ns=1;i=5009" DataType="i=60051">
+    <DisplayName>Kind</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5009</Reference>
+    </References>
+    <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">0</uax:Int32></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5012" BrowseName="1:ModelNamespaceUri" ParentNodeId="ns=1;i=5009" DataType="String">
+    <DisplayName>ModelNamespaceUri</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5009</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">http://opcfoundation.org/UA/Pumps/</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5013" BrowseName="1:SourceBrowseName" ParentNodeId="ns=1;i=5009" DataType="QualifiedName">
+    <DisplayName>SourceBrowseName</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5009</Reference>
+    </References>
+    <Value><uax:QualifiedName xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:NamespaceIndex>2</uax:NamespaceIndex><uax:Name>Speed</uax:Name></uax:QualifiedName></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5014" BrowseName="1:SourceTypeDefinition" ParentNodeId="ns=1;i=5009" DataType="NodeId">
+    <DisplayName>SourceTypeDefinition</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5009</Reference>
+    </References>
+    <Value><uax:NodeId xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:Identifier>i=15318</uax:Identifier></uax:NodeId></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5015" BrowseName="1:DataSetFieldId" ParentNodeId="ns=1;i=5009" DataType="Guid">
+    <DisplayName>DataSetFieldId</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5009</Reference>
+    </References>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>96d82f58-aa3e-51ec-aeab-d9c85f7f4f7d</uax:String></uax:Guid></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5016" BrowseName="2:Throughput" ParentNodeId="ns=1;i=5007" DataType="i=11">
+    <DisplayName>Throughput</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=15318</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5007</Reference>
+    </References>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=5017" BrowseName="1:Throughput" ParentNodeId="ns=1;i=5003">
+    <DisplayName>Throughput</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=60013</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5003</Reference>
+      <Reference ReferenceType="BindsToNode">ns=1;i=5016</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=5018" BrowseName="1:FieldName" ParentNodeId="ns=1;i=5017" DataType="String">
+    <DisplayName>FieldName</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5017</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">Throughput</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5019" BrowseName="1:Kind" ParentNodeId="ns=1;i=5017" DataType="i=60051">
+    <DisplayName>Kind</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5017</Reference>
+    </References>
+    <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">0</uax:Int32></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5020" BrowseName="1:ModelNamespaceUri" ParentNodeId="ns=1;i=5017" DataType="String">
+    <DisplayName>ModelNamespaceUri</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5017</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">http://opcfoundation.org/UA/Pumps/</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5021" BrowseName="1:SourceBrowseName" ParentNodeId="ns=1;i=5017" DataType="QualifiedName">
+    <DisplayName>SourceBrowseName</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5017</Reference>
+    </References>
+    <Value><uax:QualifiedName xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:NamespaceIndex>2</uax:NamespaceIndex><uax:Name>Throughput</uax:Name></uax:QualifiedName></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5022" BrowseName="1:SourceTypeDefinition" ParentNodeId="ns=1;i=5017" DataType="NodeId">
+    <DisplayName>SourceTypeDefinition</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5017</Reference>
+    </References>
+    <Value><uax:NodeId xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:Identifier>i=15318</uax:Identifier></uax:NodeId></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5023" BrowseName="1:DataSetFieldId" ParentNodeId="ns=1;i=5017" DataType="Guid">
+    <DisplayName>DataSetFieldId</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5017</Reference>
+    </References>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>40374a40-c478-54bf-bb67-3afdc2a17255</uax:String></uax:Guid></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5024" BrowseName="2:MassFlow" ParentNodeId="ns=1;i=5007" DataType="i=11">
+    <DisplayName>MassFlow</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=15318</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5007</Reference>
+    </References>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=5025" BrowseName="1:MassFlow" ParentNodeId="ns=1;i=5003">
+    <DisplayName>MassFlow</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=60013</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5003</Reference>
+      <Reference ReferenceType="BindsToNode">ns=1;i=5024</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=5026" BrowseName="1:FieldName" ParentNodeId="ns=1;i=5025" DataType="String">
+    <DisplayName>FieldName</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5025</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">MassFlow</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5027" BrowseName="1:Kind" ParentNodeId="ns=1;i=5025" DataType="i=60051">
+    <DisplayName>Kind</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5025</Reference>
+    </References>
+    <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">0</uax:Int32></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5028" BrowseName="1:ModelNamespaceUri" ParentNodeId="ns=1;i=5025" DataType="String">
+    <DisplayName>ModelNamespaceUri</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5025</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">http://opcfoundation.org/UA/Pumps/</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5029" BrowseName="1:SourceBrowseName" ParentNodeId="ns=1;i=5025" DataType="QualifiedName">
+    <DisplayName>SourceBrowseName</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5025</Reference>
+    </References>
+    <Value><uax:QualifiedName xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:NamespaceIndex>2</uax:NamespaceIndex><uax:Name>MassFlow</uax:Name></uax:QualifiedName></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5030" BrowseName="1:SourceTypeDefinition" ParentNodeId="ns=1;i=5025" DataType="NodeId">
+    <DisplayName>SourceTypeDefinition</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5025</Reference>
+    </References>
+    <Value><uax:NodeId xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:Identifier>i=15318</uax:Identifier></uax:NodeId></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5031" BrowseName="1:DataSetFieldId" ParentNodeId="ns=1;i=5025" DataType="Guid">
+    <DisplayName>DataSetFieldId</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5025</Reference>
+    </References>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>4c681055-d214-5326-be24-431b05b3d7d5</uax:String></uax:Guid></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5032" BrowseName="2:ProcessPressure" ParentNodeId="ns=1;i=5007" DataType="i=11">
+    <DisplayName>ProcessPressure</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=15318</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5007</Reference>
+    </References>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=5033" BrowseName="1:ProcessPressure" ParentNodeId="ns=1;i=5003">
+    <DisplayName>ProcessPressure</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=60013</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5003</Reference>
+      <Reference ReferenceType="BindsToNode">ns=1;i=5032</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=5034" BrowseName="1:FieldName" ParentNodeId="ns=1;i=5033" DataType="String">
+    <DisplayName>FieldName</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5033</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">ProcessPressure</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5035" BrowseName="1:Kind" ParentNodeId="ns=1;i=5033" DataType="i=60051">
+    <DisplayName>Kind</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5033</Reference>
+    </References>
+    <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">0</uax:Int32></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5036" BrowseName="1:ModelNamespaceUri" ParentNodeId="ns=1;i=5033" DataType="String">
+    <DisplayName>ModelNamespaceUri</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5033</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">http://opcfoundation.org/UA/Pumps/</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5037" BrowseName="1:SourceBrowseName" ParentNodeId="ns=1;i=5033" DataType="QualifiedName">
+    <DisplayName>SourceBrowseName</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5033</Reference>
+    </References>
+    <Value><uax:QualifiedName xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:NamespaceIndex>2</uax:NamespaceIndex><uax:Name>ProcessPressure</uax:Name></uax:QualifiedName></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5038" BrowseName="1:SourceTypeDefinition" ParentNodeId="ns=1;i=5033" DataType="NodeId">
+    <DisplayName>SourceTypeDefinition</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5033</Reference>
+    </References>
+    <Value><uax:NodeId xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:Identifier>i=15318</uax:Identifier></uax:NodeId></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5039" BrowseName="1:DataSetFieldId" ParentNodeId="ns=1;i=5033" DataType="Guid">
+    <DisplayName>DataSetFieldId</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5033</Reference>
+    </References>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>232417b1-7fb5-5aff-bf16-095db8c0526b</uax:String></uax:Guid></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5040" BrowseName="2:DifferentialPressure" ParentNodeId="ns=1;i=5007" DataType="i=11">
+    <DisplayName>DifferentialPressure</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=15318</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5007</Reference>
+    </References>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=5041" BrowseName="1:DifferentialPressure" ParentNodeId="ns=1;i=5003">
+    <DisplayName>DifferentialPressure</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=60013</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5003</Reference>
+      <Reference ReferenceType="BindsToNode">ns=1;i=5040</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=5042" BrowseName="1:FieldName" ParentNodeId="ns=1;i=5041" DataType="String">
+    <DisplayName>FieldName</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5041</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">DifferentialPressure</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5043" BrowseName="1:Kind" ParentNodeId="ns=1;i=5041" DataType="i=60051">
+    <DisplayName>Kind</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5041</Reference>
+    </References>
+    <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">0</uax:Int32></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5044" BrowseName="1:ModelNamespaceUri" ParentNodeId="ns=1;i=5041" DataType="String">
+    <DisplayName>ModelNamespaceUri</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5041</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">http://opcfoundation.org/UA/Pumps/</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5045" BrowseName="1:SourceBrowseName" ParentNodeId="ns=1;i=5041" DataType="QualifiedName">
+    <DisplayName>SourceBrowseName</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5041</Reference>
+    </References>
+    <Value><uax:QualifiedName xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:NamespaceIndex>2</uax:NamespaceIndex><uax:Name>DifferentialPressure</uax:Name></uax:QualifiedName></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5046" BrowseName="1:SourceTypeDefinition" ParentNodeId="ns=1;i=5041" DataType="NodeId">
+    <DisplayName>SourceTypeDefinition</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5041</Reference>
+    </References>
+    <Value><uax:NodeId xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:Identifier>i=15318</uax:Identifier></uax:NodeId></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5047" BrowseName="1:DataSetFieldId" ParentNodeId="ns=1;i=5041" DataType="Guid">
+    <DisplayName>DataSetFieldId</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5041</Reference>
+    </References>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>a4a0e0b7-9525-5c78-8903-7e20c5108dde</uax:String></uax:Guid></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5048" BrowseName="2:PumpTotalHead" ParentNodeId="ns=1;i=5007" DataType="i=11">
+    <DisplayName>PumpTotalHead</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=15318</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5007</Reference>
+    </References>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=5049" BrowseName="1:PumpTotalHead" ParentNodeId="ns=1;i=5003">
+    <DisplayName>PumpTotalHead</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=60013</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5003</Reference>
+      <Reference ReferenceType="BindsToNode">ns=1;i=5048</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=5050" BrowseName="1:FieldName" ParentNodeId="ns=1;i=5049" DataType="String">
+    <DisplayName>FieldName</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5049</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">PumpTotalHead</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5051" BrowseName="1:Kind" ParentNodeId="ns=1;i=5049" DataType="i=60051">
+    <DisplayName>Kind</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5049</Reference>
+    </References>
+    <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">0</uax:Int32></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5052" BrowseName="1:ModelNamespaceUri" ParentNodeId="ns=1;i=5049" DataType="String">
+    <DisplayName>ModelNamespaceUri</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5049</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">http://opcfoundation.org/UA/Pumps/</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5053" BrowseName="1:SourceBrowseName" ParentNodeId="ns=1;i=5049" DataType="QualifiedName">
+    <DisplayName>SourceBrowseName</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5049</Reference>
+    </References>
+    <Value><uax:QualifiedName xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:NamespaceIndex>2</uax:NamespaceIndex><uax:Name>PumpTotalHead</uax:Name></uax:QualifiedName></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5054" BrowseName="1:SourceTypeDefinition" ParentNodeId="ns=1;i=5049" DataType="NodeId">
+    <DisplayName>SourceTypeDefinition</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5049</Reference>
+    </References>
+    <Value><uax:NodeId xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:Identifier>i=15318</uax:Identifier></uax:NodeId></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5055" BrowseName="1:DataSetFieldId" ParentNodeId="ns=1;i=5049" DataType="Guid">
+    <DisplayName>DataSetFieldId</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5049</Reference>
+    </References>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>cb383c46-4def-5446-b776-ebfa2923b8f0</uax:String></uax:Guid></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5056" BrowseName="2:PumpPowerInput" ParentNodeId="ns=1;i=5007" DataType="i=11">
+    <DisplayName>PumpPowerInput</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=15318</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5007</Reference>
+    </References>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=5057" BrowseName="1:PumpPowerInput" ParentNodeId="ns=1;i=5003">
+    <DisplayName>PumpPowerInput</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=60013</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5003</Reference>
+      <Reference ReferenceType="BindsToNode">ns=1;i=5056</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=5058" BrowseName="1:FieldName" ParentNodeId="ns=1;i=5057" DataType="String">
+    <DisplayName>FieldName</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5057</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">PumpPowerInput</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5059" BrowseName="1:Kind" ParentNodeId="ns=1;i=5057" DataType="i=60051">
+    <DisplayName>Kind</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5057</Reference>
+    </References>
+    <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">0</uax:Int32></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5060" BrowseName="1:ModelNamespaceUri" ParentNodeId="ns=1;i=5057" DataType="String">
+    <DisplayName>ModelNamespaceUri</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5057</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">http://opcfoundation.org/UA/Pumps/</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5061" BrowseName="1:SourceBrowseName" ParentNodeId="ns=1;i=5057" DataType="QualifiedName">
+    <DisplayName>SourceBrowseName</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5057</Reference>
+    </References>
+    <Value><uax:QualifiedName xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:NamespaceIndex>2</uax:NamespaceIndex><uax:Name>PumpPowerInput</uax:Name></uax:QualifiedName></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5062" BrowseName="1:SourceTypeDefinition" ParentNodeId="ns=1;i=5057" DataType="NodeId">
+    <DisplayName>SourceTypeDefinition</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5057</Reference>
+    </References>
+    <Value><uax:NodeId xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:Identifier>i=15318</uax:Identifier></uax:NodeId></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5063" BrowseName="1:DataSetFieldId" ParentNodeId="ns=1;i=5057" DataType="Guid">
+    <DisplayName>DataSetFieldId</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5057</Reference>
+    </References>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>71a5011a-f2b4-5e56-be11-af2d6b10a1b3</uax:String></uax:Guid></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5064" BrowseName="2:FluidTemperature" ParentNodeId="ns=1;i=5007" DataType="i=11">
+    <DisplayName>FluidTemperature</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=15318</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5007</Reference>
+    </References>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=5065" BrowseName="1:FluidTemperature" ParentNodeId="ns=1;i=5003">
+    <DisplayName>FluidTemperature</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=60013</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5003</Reference>
+      <Reference ReferenceType="BindsToNode">ns=1;i=5064</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=5066" BrowseName="1:FieldName" ParentNodeId="ns=1;i=5065" DataType="String">
+    <DisplayName>FieldName</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5065</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">FluidTemperature</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5067" BrowseName="1:Kind" ParentNodeId="ns=1;i=5065" DataType="i=60051">
+    <DisplayName>Kind</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5065</Reference>
+    </References>
+    <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">0</uax:Int32></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5068" BrowseName="1:ModelNamespaceUri" ParentNodeId="ns=1;i=5065" DataType="String">
+    <DisplayName>ModelNamespaceUri</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5065</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">http://opcfoundation.org/UA/Pumps/</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5069" BrowseName="1:SourceBrowseName" ParentNodeId="ns=1;i=5065" DataType="QualifiedName">
+    <DisplayName>SourceBrowseName</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5065</Reference>
+    </References>
+    <Value><uax:QualifiedName xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:NamespaceIndex>2</uax:NamespaceIndex><uax:Name>FluidTemperature</uax:Name></uax:QualifiedName></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5070" BrowseName="1:SourceTypeDefinition" ParentNodeId="ns=1;i=5065" DataType="NodeId">
+    <DisplayName>SourceTypeDefinition</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5065</Reference>
+    </References>
+    <Value><uax:NodeId xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:Identifier>i=15318</uax:Identifier></uax:NodeId></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5071" BrowseName="1:DataSetFieldId" ParentNodeId="ns=1;i=5065" DataType="Guid">
+    <DisplayName>DataSetFieldId</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5065</Reference>
+    </References>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>90a2f427-81ba-5fb3-9382-6fbff536a1c5</uax:String></uax:Guid></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5072" BrowseName="2:BearingTemperature" ParentNodeId="ns=1;i=5007" DataType="i=11">
+    <DisplayName>BearingTemperature</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=15318</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5007</Reference>
+    </References>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=5073" BrowseName="1:BearingTemperature" ParentNodeId="ns=1;i=5003">
+    <DisplayName>BearingTemperature</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=60013</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5003</Reference>
+      <Reference ReferenceType="BindsToNode">ns=1;i=5072</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=5074" BrowseName="1:FieldName" ParentNodeId="ns=1;i=5073" DataType="String">
+    <DisplayName>FieldName</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5073</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">BearingTemperature</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5075" BrowseName="1:Kind" ParentNodeId="ns=1;i=5073" DataType="i=60051">
+    <DisplayName>Kind</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5073</Reference>
+    </References>
+    <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">0</uax:Int32></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5076" BrowseName="1:ModelNamespaceUri" ParentNodeId="ns=1;i=5073" DataType="String">
+    <DisplayName>ModelNamespaceUri</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5073</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">http://opcfoundation.org/UA/Pumps/</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5077" BrowseName="1:SourceBrowseName" ParentNodeId="ns=1;i=5073" DataType="QualifiedName">
+    <DisplayName>SourceBrowseName</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5073</Reference>
+    </References>
+    <Value><uax:QualifiedName xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:NamespaceIndex>2</uax:NamespaceIndex><uax:Name>BearingTemperature</uax:Name></uax:QualifiedName></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5078" BrowseName="1:SourceTypeDefinition" ParentNodeId="ns=1;i=5073" DataType="NodeId">
+    <DisplayName>SourceTypeDefinition</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5073</Reference>
+    </References>
+    <Value><uax:NodeId xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:Identifier>i=15318</uax:Identifier></uax:NodeId></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5079" BrowseName="1:DataSetFieldId" ParentNodeId="ns=1;i=5073" DataType="Guid">
+    <DisplayName>DataSetFieldId</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5073</Reference>
+    </References>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>630ff180-88ab-5ccb-94df-a8900bb63422</uax:String></uax:Guid></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5080" BrowseName="2:PumpTemperature" ParentNodeId="ns=1;i=5007" DataType="i=11">
+    <DisplayName>PumpTemperature</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=15318</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5007</Reference>
+    </References>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=5081" BrowseName="1:PumpTemperature" ParentNodeId="ns=1;i=5003">
+    <DisplayName>PumpTemperature</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=60013</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5003</Reference>
+      <Reference ReferenceType="BindsToNode">ns=1;i=5080</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=5082" BrowseName="1:FieldName" ParentNodeId="ns=1;i=5081" DataType="String">
+    <DisplayName>FieldName</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5081</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">PumpTemperature</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5083" BrowseName="1:Kind" ParentNodeId="ns=1;i=5081" DataType="i=60051">
+    <DisplayName>Kind</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5081</Reference>
+    </References>
+    <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">0</uax:Int32></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5084" BrowseName="1:ModelNamespaceUri" ParentNodeId="ns=1;i=5081" DataType="String">
+    <DisplayName>ModelNamespaceUri</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5081</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">http://opcfoundation.org/UA/Pumps/</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5085" BrowseName="1:SourceBrowseName" ParentNodeId="ns=1;i=5081" DataType="QualifiedName">
+    <DisplayName>SourceBrowseName</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5081</Reference>
+    </References>
+    <Value><uax:QualifiedName xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:NamespaceIndex>2</uax:NamespaceIndex><uax:Name>PumpTemperature</uax:Name></uax:QualifiedName></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5086" BrowseName="1:SourceTypeDefinition" ParentNodeId="ns=1;i=5081" DataType="NodeId">
+    <DisplayName>SourceTypeDefinition</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5081</Reference>
+    </References>
+    <Value><uax:NodeId xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:Identifier>i=15318</uax:Identifier></uax:NodeId></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5087" BrowseName="1:DataSetFieldId" ParentNodeId="ns=1;i=5081" DataType="Guid">
+    <DisplayName>DataSetFieldId</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5081</Reference>
+    </References>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>400e0703-d59b-578d-8053-1723914deb88</uax:String></uax:Guid></Value>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=5088" BrowseName="1:EnergyAndLoadManagement" ParentNodeId="ns=1;i=5002">
+    <DisplayName>EnergyAndLoadManagement</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=60011</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5002</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=5089" BrowseName="1:ScenarioUri" ParentNodeId="ns=1;i=5088" DataType="String">
+    <DisplayName>ScenarioUri</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5088</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">http://opcfoundation.org/UA/PubSub/Scenarios/EnergyAndLoadManagement</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5090" BrowseName="1:Direction" ParentNodeId="ns=1;i=5088" DataType="i=60050">
+    <DisplayName>Direction</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5088</Reference>
+    </References>
+    <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">0</uax:Int32></Value>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=5091" BrowseName="1:PumpPowerInput" ParentNodeId="ns=1;i=5088">
+    <DisplayName>PumpPowerInput</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=60013</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5088</Reference>
+      <Reference ReferenceType="BindsToNode">ns=1;i=5056</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=5092" BrowseName="1:FieldName" ParentNodeId="ns=1;i=5091" DataType="String">
+    <DisplayName>FieldName</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5091</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">PumpPowerInput</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5093" BrowseName="1:Kind" ParentNodeId="ns=1;i=5091" DataType="i=60051">
+    <DisplayName>Kind</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5091</Reference>
+    </References>
+    <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">0</uax:Int32></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5094" BrowseName="1:ModelNamespaceUri" ParentNodeId="ns=1;i=5091" DataType="String">
+    <DisplayName>ModelNamespaceUri</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5091</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">http://opcfoundation.org/UA/Pumps/</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5095" BrowseName="1:SourceBrowseName" ParentNodeId="ns=1;i=5091" DataType="QualifiedName">
+    <DisplayName>SourceBrowseName</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5091</Reference>
+    </References>
+    <Value><uax:QualifiedName xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:NamespaceIndex>2</uax:NamespaceIndex><uax:Name>PumpPowerInput</uax:Name></uax:QualifiedName></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5096" BrowseName="1:SourceTypeDefinition" ParentNodeId="ns=1;i=5091" DataType="NodeId">
+    <DisplayName>SourceTypeDefinition</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5091</Reference>
+    </References>
+    <Value><uax:NodeId xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:Identifier>i=15318</uax:Identifier></uax:NodeId></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5097" BrowseName="1:DataSetFieldId" ParentNodeId="ns=1;i=5091" DataType="Guid">
+    <DisplayName>DataSetFieldId</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5091</Reference>
+    </References>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>ceb41b90-73d6-59fa-b9da-885c7cf6de46</uax:String></uax:Guid></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5098" BrowseName="2:PumpPowerOutput" ParentNodeId="ns=1;i=5007" DataType="i=11">
+    <DisplayName>PumpPowerOutput</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=15318</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5007</Reference>
+    </References>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=5099" BrowseName="1:PumpPowerOutput" ParentNodeId="ns=1;i=5088">
+    <DisplayName>PumpPowerOutput</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=60013</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5088</Reference>
+      <Reference ReferenceType="BindsToNode">ns=1;i=5098</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=5100" BrowseName="1:FieldName" ParentNodeId="ns=1;i=5099" DataType="String">
+    <DisplayName>FieldName</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5099</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">PumpPowerOutput</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5101" BrowseName="1:Kind" ParentNodeId="ns=1;i=5099" DataType="i=60051">
+    <DisplayName>Kind</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5099</Reference>
+    </References>
+    <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">0</uax:Int32></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5102" BrowseName="1:ModelNamespaceUri" ParentNodeId="ns=1;i=5099" DataType="String">
+    <DisplayName>ModelNamespaceUri</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5099</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">http://opcfoundation.org/UA/Pumps/</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5103" BrowseName="1:SourceBrowseName" ParentNodeId="ns=1;i=5099" DataType="QualifiedName">
+    <DisplayName>SourceBrowseName</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5099</Reference>
+    </References>
+    <Value><uax:QualifiedName xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:NamespaceIndex>2</uax:NamespaceIndex><uax:Name>PumpPowerOutput</uax:Name></uax:QualifiedName></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5104" BrowseName="1:SourceTypeDefinition" ParentNodeId="ns=1;i=5099" DataType="NodeId">
+    <DisplayName>SourceTypeDefinition</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5099</Reference>
+    </References>
+    <Value><uax:NodeId xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:Identifier>i=15318</uax:Identifier></uax:NodeId></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5105" BrowseName="1:DataSetFieldId" ParentNodeId="ns=1;i=5099" DataType="Guid">
+    <DisplayName>DataSetFieldId</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5099</Reference>
+    </References>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>a83b3d87-27c0-5fbe-ba95-733918e446ed</uax:String></uax:Guid></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5106" BrowseName="2:OverallEfficiency" ParentNodeId="ns=1;i=5007" DataType="i=11">
+    <DisplayName>OverallEfficiency</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=15318</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5007</Reference>
+    </References>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=5107" BrowseName="1:OverallEfficiency" ParentNodeId="ns=1;i=5088">
+    <DisplayName>OverallEfficiency</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=60013</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5088</Reference>
+      <Reference ReferenceType="BindsToNode">ns=1;i=5106</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=5108" BrowseName="1:FieldName" ParentNodeId="ns=1;i=5107" DataType="String">
+    <DisplayName>FieldName</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5107</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">OverallEfficiency</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5109" BrowseName="1:Kind" ParentNodeId="ns=1;i=5107" DataType="i=60051">
+    <DisplayName>Kind</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5107</Reference>
+    </References>
+    <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">3</uax:Int32></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5110" BrowseName="1:ModelNamespaceUri" ParentNodeId="ns=1;i=5107" DataType="String">
+    <DisplayName>ModelNamespaceUri</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5107</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">http://opcfoundation.org/UA/Pumps/</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5111" BrowseName="1:SourceBrowseName" ParentNodeId="ns=1;i=5107" DataType="QualifiedName">
+    <DisplayName>SourceBrowseName</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5107</Reference>
+    </References>
+    <Value><uax:QualifiedName xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:NamespaceIndex>2</uax:NamespaceIndex><uax:Name>OverallEfficiency</uax:Name></uax:QualifiedName></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5112" BrowseName="1:SourceTypeDefinition" ParentNodeId="ns=1;i=5107" DataType="NodeId">
+    <DisplayName>SourceTypeDefinition</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5107</Reference>
+    </References>
+    <Value><uax:NodeId xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:Identifier>i=15318</uax:Identifier></uax:NodeId></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5113" BrowseName="1:DataSetFieldId" ParentNodeId="ns=1;i=5107" DataType="Guid">
+    <DisplayName>DataSetFieldId</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5107</Reference>
+    </References>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>554278db-092a-5210-99f7-754e2f16a5fb</uax:String></uax:Guid></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5114" BrowseName="2:PumpEfficiency" ParentNodeId="ns=1;i=5007" DataType="i=11">
+    <DisplayName>PumpEfficiency</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=15318</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5007</Reference>
+    </References>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=5115" BrowseName="1:PumpEfficiency" ParentNodeId="ns=1;i=5088">
+    <DisplayName>PumpEfficiency</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=60013</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5088</Reference>
+      <Reference ReferenceType="BindsToNode">ns=1;i=5114</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=5116" BrowseName="1:FieldName" ParentNodeId="ns=1;i=5115" DataType="String">
+    <DisplayName>FieldName</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5115</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">PumpEfficiency</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5117" BrowseName="1:Kind" ParentNodeId="ns=1;i=5115" DataType="i=60051">
+    <DisplayName>Kind</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5115</Reference>
+    </References>
+    <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">3</uax:Int32></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5118" BrowseName="1:ModelNamespaceUri" ParentNodeId="ns=1;i=5115" DataType="String">
+    <DisplayName>ModelNamespaceUri</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5115</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">http://opcfoundation.org/UA/Pumps/</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5119" BrowseName="1:SourceBrowseName" ParentNodeId="ns=1;i=5115" DataType="QualifiedName">
+    <DisplayName>SourceBrowseName</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5115</Reference>
+    </References>
+    <Value><uax:QualifiedName xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:NamespaceIndex>2</uax:NamespaceIndex><uax:Name>PumpEfficiency</uax:Name></uax:QualifiedName></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5120" BrowseName="1:SourceTypeDefinition" ParentNodeId="ns=1;i=5115" DataType="NodeId">
+    <DisplayName>SourceTypeDefinition</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5115</Reference>
+    </References>
+    <Value><uax:NodeId xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:Identifier>i=15318</uax:Identifier></uax:NodeId></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5121" BrowseName="1:DataSetFieldId" ParentNodeId="ns=1;i=5115" DataType="Guid">
+    <DisplayName>DataSetFieldId</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5115</Reference>
+    </References>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>f2355a90-8a9e-54aa-8272-3a413a166ef1</uax:String></uax:Guid></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5122" BrowseName="2:HydraulicEfficiency" ParentNodeId="ns=1;i=5007" DataType="i=11">
+    <DisplayName>HydraulicEfficiency</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=15318</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5007</Reference>
+    </References>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=5123" BrowseName="1:HydraulicEfficiency" ParentNodeId="ns=1;i=5088">
+    <DisplayName>HydraulicEfficiency</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=60013</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5088</Reference>
+      <Reference ReferenceType="BindsToNode">ns=1;i=5122</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=5124" BrowseName="1:FieldName" ParentNodeId="ns=1;i=5123" DataType="String">
+    <DisplayName>FieldName</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5123</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">HydraulicEfficiency</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5125" BrowseName="1:Kind" ParentNodeId="ns=1;i=5123" DataType="i=60051">
+    <DisplayName>Kind</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5123</Reference>
+    </References>
+    <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">3</uax:Int32></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5126" BrowseName="1:ModelNamespaceUri" ParentNodeId="ns=1;i=5123" DataType="String">
+    <DisplayName>ModelNamespaceUri</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5123</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">http://opcfoundation.org/UA/Pumps/</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5127" BrowseName="1:SourceBrowseName" ParentNodeId="ns=1;i=5123" DataType="QualifiedName">
+    <DisplayName>SourceBrowseName</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5123</Reference>
+    </References>
+    <Value><uax:QualifiedName xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:NamespaceIndex>2</uax:NamespaceIndex><uax:Name>HydraulicEfficiency</uax:Name></uax:QualifiedName></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5128" BrowseName="1:SourceTypeDefinition" ParentNodeId="ns=1;i=5123" DataType="NodeId">
+    <DisplayName>SourceTypeDefinition</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5123</Reference>
+    </References>
+    <Value><uax:NodeId xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:Identifier>i=15318</uax:Identifier></uax:NodeId></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5129" BrowseName="1:DataSetFieldId" ParentNodeId="ns=1;i=5123" DataType="Guid">
+    <DisplayName>DataSetFieldId</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5123</Reference>
+    </References>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>902f62b4-082e-59e2-98e6-a3d3d93456de</uax:String></uax:Guid></Value>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=5130" BrowseName="1:PredictiveMaintenance" ParentNodeId="ns=1;i=5002">
+    <DisplayName>PredictiveMaintenance</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=60011</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5002</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=5131" BrowseName="1:ScenarioUri" ParentNodeId="ns=1;i=5130" DataType="String">
+    <DisplayName>ScenarioUri</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5130</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">http://opcfoundation.org/UA/PubSub/Scenarios/PredictiveMaintenance</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5132" BrowseName="1:Direction" ParentNodeId="ns=1;i=5130" DataType="i=60050">
+    <DisplayName>Direction</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5130</Reference>
+    </References>
+    <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">0</uax:Int32></Value>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=5133" BrowseName="1:BearingTemperature" ParentNodeId="ns=1;i=5130">
+    <DisplayName>BearingTemperature</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=60013</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5130</Reference>
+      <Reference ReferenceType="BindsToNode">ns=1;i=5072</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=5134" BrowseName="1:FieldName" ParentNodeId="ns=1;i=5133" DataType="String">
+    <DisplayName>FieldName</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5133</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">BearingTemperature</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5135" BrowseName="1:Kind" ParentNodeId="ns=1;i=5133" DataType="i=60051">
+    <DisplayName>Kind</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5133</Reference>
+    </References>
+    <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">0</uax:Int32></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5136" BrowseName="1:ModelNamespaceUri" ParentNodeId="ns=1;i=5133" DataType="String">
+    <DisplayName>ModelNamespaceUri</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5133</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">http://opcfoundation.org/UA/Pumps/</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5137" BrowseName="1:SourceBrowseName" ParentNodeId="ns=1;i=5133" DataType="QualifiedName">
+    <DisplayName>SourceBrowseName</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5133</Reference>
+    </References>
+    <Value><uax:QualifiedName xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:NamespaceIndex>2</uax:NamespaceIndex><uax:Name>BearingTemperature</uax:Name></uax:QualifiedName></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5138" BrowseName="1:SourceTypeDefinition" ParentNodeId="ns=1;i=5133" DataType="NodeId">
+    <DisplayName>SourceTypeDefinition</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5133</Reference>
+    </References>
+    <Value><uax:NodeId xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:Identifier>i=15318</uax:Identifier></uax:NodeId></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5139" BrowseName="1:DataSetFieldId" ParentNodeId="ns=1;i=5133" DataType="Guid">
+    <DisplayName>DataSetFieldId</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5133</Reference>
+    </References>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>e641c3a2-bd45-5616-a3e9-4362e001b758</uax:String></uax:Guid></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5140" BrowseName="2:AxialLoadOfPumpRotor" ParentNodeId="ns=1;i=5007" DataType="i=11">
+    <DisplayName>AxialLoadOfPumpRotor</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=15318</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5007</Reference>
+    </References>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=5141" BrowseName="1:AxialLoadOfPumpRotor" ParentNodeId="ns=1;i=5130">
+    <DisplayName>AxialLoadOfPumpRotor</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=60013</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5130</Reference>
+      <Reference ReferenceType="BindsToNode">ns=1;i=5140</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=5142" BrowseName="1:FieldName" ParentNodeId="ns=1;i=5141" DataType="String">
+    <DisplayName>FieldName</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5141</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">AxialLoadOfPumpRotor</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5143" BrowseName="1:Kind" ParentNodeId="ns=1;i=5141" DataType="i=60051">
+    <DisplayName>Kind</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5141</Reference>
+    </References>
+    <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">0</uax:Int32></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5144" BrowseName="1:ModelNamespaceUri" ParentNodeId="ns=1;i=5141" DataType="String">
+    <DisplayName>ModelNamespaceUri</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5141</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">http://opcfoundation.org/UA/Pumps/</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5145" BrowseName="1:SourceBrowseName" ParentNodeId="ns=1;i=5141" DataType="QualifiedName">
+    <DisplayName>SourceBrowseName</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5141</Reference>
+    </References>
+    <Value><uax:QualifiedName xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:NamespaceIndex>2</uax:NamespaceIndex><uax:Name>AxialLoadOfPumpRotor</uax:Name></uax:QualifiedName></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5146" BrowseName="1:SourceTypeDefinition" ParentNodeId="ns=1;i=5141" DataType="NodeId">
+    <DisplayName>SourceTypeDefinition</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5141</Reference>
+    </References>
+    <Value><uax:NodeId xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:Identifier>i=15318</uax:Identifier></uax:NodeId></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5147" BrowseName="1:DataSetFieldId" ParentNodeId="ns=1;i=5141" DataType="Guid">
+    <DisplayName>DataSetFieldId</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5141</Reference>
+    </References>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>ba817576-1fb5-5059-a9ae-a607b512ff3f</uax:String></uax:Guid></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5148" BrowseName="2:RadialLoadOfPumpRotor" ParentNodeId="ns=1;i=5007" DataType="i=11">
+    <DisplayName>RadialLoadOfPumpRotor</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=15318</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5007</Reference>
+    </References>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=5149" BrowseName="1:RadialLoadOfPumpRotor" ParentNodeId="ns=1;i=5130">
+    <DisplayName>RadialLoadOfPumpRotor</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=60013</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5130</Reference>
+      <Reference ReferenceType="BindsToNode">ns=1;i=5148</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=5150" BrowseName="1:FieldName" ParentNodeId="ns=1;i=5149" DataType="String">
+    <DisplayName>FieldName</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5149</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">RadialLoadOfPumpRotor</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5151" BrowseName="1:Kind" ParentNodeId="ns=1;i=5149" DataType="i=60051">
+    <DisplayName>Kind</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5149</Reference>
+    </References>
+    <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">0</uax:Int32></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5152" BrowseName="1:ModelNamespaceUri" ParentNodeId="ns=1;i=5149" DataType="String">
+    <DisplayName>ModelNamespaceUri</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5149</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">http://opcfoundation.org/UA/Pumps/</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5153" BrowseName="1:SourceBrowseName" ParentNodeId="ns=1;i=5149" DataType="QualifiedName">
+    <DisplayName>SourceBrowseName</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5149</Reference>
+    </References>
+    <Value><uax:QualifiedName xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:NamespaceIndex>2</uax:NamespaceIndex><uax:Name>RadialLoadOfPumpRotor</uax:Name></uax:QualifiedName></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5154" BrowseName="1:SourceTypeDefinition" ParentNodeId="ns=1;i=5149" DataType="NodeId">
+    <DisplayName>SourceTypeDefinition</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5149</Reference>
+    </References>
+    <Value><uax:NodeId xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:Identifier>i=15318</uax:Identifier></uax:NodeId></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5155" BrowseName="1:DataSetFieldId" ParentNodeId="ns=1;i=5149" DataType="Guid">
+    <DisplayName>DataSetFieldId</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5149</Reference>
+    </References>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>6ea9c9e1-1b1d-5671-a1d7-bfe95dac9d4e</uax:String></uax:Guid></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5156" BrowseName="2:LubricatingOilPressure" ParentNodeId="ns=1;i=5007" DataType="i=11">
+    <DisplayName>LubricatingOilPressure</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=15318</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5007</Reference>
+    </References>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=5157" BrowseName="1:LubricatingOilPressure" ParentNodeId="ns=1;i=5130">
+    <DisplayName>LubricatingOilPressure</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=60013</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5130</Reference>
+      <Reference ReferenceType="BindsToNode">ns=1;i=5156</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=5158" BrowseName="1:FieldName" ParentNodeId="ns=1;i=5157" DataType="String">
+    <DisplayName>FieldName</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5157</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">LubricatingOilPressure</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5159" BrowseName="1:Kind" ParentNodeId="ns=1;i=5157" DataType="i=60051">
+    <DisplayName>Kind</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5157</Reference>
+    </References>
+    <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">0</uax:Int32></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5160" BrowseName="1:ModelNamespaceUri" ParentNodeId="ns=1;i=5157" DataType="String">
+    <DisplayName>ModelNamespaceUri</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5157</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">http://opcfoundation.org/UA/Pumps/</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5161" BrowseName="1:SourceBrowseName" ParentNodeId="ns=1;i=5157" DataType="QualifiedName">
+    <DisplayName>SourceBrowseName</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5157</Reference>
+    </References>
+    <Value><uax:QualifiedName xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:NamespaceIndex>2</uax:NamespaceIndex><uax:Name>LubricatingOilPressure</uax:Name></uax:QualifiedName></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5162" BrowseName="1:SourceTypeDefinition" ParentNodeId="ns=1;i=5157" DataType="NodeId">
+    <DisplayName>SourceTypeDefinition</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5157</Reference>
+    </References>
+    <Value><uax:NodeId xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:Identifier>i=15318</uax:Identifier></uax:NodeId></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5163" BrowseName="1:DataSetFieldId" ParentNodeId="ns=1;i=5157" DataType="Guid">
+    <DisplayName>DataSetFieldId</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5157</Reference>
+    </References>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>9d620b80-7ac5-5699-ba14-1c2fc4bebd7c</uax:String></uax:Guid></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5164" BrowseName="2:AxialRotorPosition" ParentNodeId="ns=1;i=5007" DataType="i=11">
+    <DisplayName>AxialRotorPosition</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=15318</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5007</Reference>
+    </References>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=5165" BrowseName="1:AxialRotorPosition" ParentNodeId="ns=1;i=5130">
+    <DisplayName>AxialRotorPosition</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=60013</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5130</Reference>
+      <Reference ReferenceType="BindsToNode">ns=1;i=5164</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=5166" BrowseName="1:FieldName" ParentNodeId="ns=1;i=5165" DataType="String">
+    <DisplayName>FieldName</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5165</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">AxialRotorPosition</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5167" BrowseName="1:Kind" ParentNodeId="ns=1;i=5165" DataType="i=60051">
+    <DisplayName>Kind</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5165</Reference>
+    </References>
+    <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">0</uax:Int32></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5168" BrowseName="1:ModelNamespaceUri" ParentNodeId="ns=1;i=5165" DataType="String">
+    <DisplayName>ModelNamespaceUri</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5165</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">http://opcfoundation.org/UA/Pumps/</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5169" BrowseName="1:SourceBrowseName" ParentNodeId="ns=1;i=5165" DataType="QualifiedName">
+    <DisplayName>SourceBrowseName</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5165</Reference>
+    </References>
+    <Value><uax:QualifiedName xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:NamespaceIndex>2</uax:NamespaceIndex><uax:Name>AxialRotorPosition</uax:Name></uax:QualifiedName></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5170" BrowseName="1:SourceTypeDefinition" ParentNodeId="ns=1;i=5165" DataType="NodeId">
+    <DisplayName>SourceTypeDefinition</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5165</Reference>
+    </References>
+    <Value><uax:NodeId xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:Identifier>i=15318</uax:Identifier></uax:NodeId></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5171" BrowseName="1:DataSetFieldId" ParentNodeId="ns=1;i=5165" DataType="Guid">
+    <DisplayName>DataSetFieldId</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5165</Reference>
+    </References>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>b2754243-e6d1-5ef4-8bd3-cf2ff01cd183</uax:String></uax:Guid></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5172" BrowseName="2:NumberOfStarts" ParentNodeId="ns=1;i=5007" DataType="i=7">
+    <DisplayName>NumberOfStarts</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=15318</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5007</Reference>
+    </References>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=5173" BrowseName="1:NumberOfStarts" ParentNodeId="ns=1;i=5130">
+    <DisplayName>NumberOfStarts</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=60013</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5130</Reference>
+      <Reference ReferenceType="BindsToNode">ns=1;i=5172</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=5174" BrowseName="1:FieldName" ParentNodeId="ns=1;i=5173" DataType="String">
+    <DisplayName>FieldName</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5173</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">NumberOfStarts</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5175" BrowseName="1:Kind" ParentNodeId="ns=1;i=5173" DataType="i=60051">
+    <DisplayName>Kind</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5173</Reference>
+    </References>
+    <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">4</uax:Int32></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5176" BrowseName="1:ModelNamespaceUri" ParentNodeId="ns=1;i=5173" DataType="String">
+    <DisplayName>ModelNamespaceUri</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5173</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">http://opcfoundation.org/UA/Pumps/</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5177" BrowseName="1:SourceBrowseName" ParentNodeId="ns=1;i=5173" DataType="QualifiedName">
+    <DisplayName>SourceBrowseName</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5173</Reference>
+    </References>
+    <Value><uax:QualifiedName xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:NamespaceIndex>2</uax:NamespaceIndex><uax:Name>NumberOfStarts</uax:Name></uax:QualifiedName></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5178" BrowseName="1:SourceTypeDefinition" ParentNodeId="ns=1;i=5173" DataType="NodeId">
+    <DisplayName>SourceTypeDefinition</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5173</Reference>
+    </References>
+    <Value><uax:NodeId xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:Identifier>i=15318</uax:Identifier></uax:NodeId></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5179" BrowseName="1:DataSetFieldId" ParentNodeId="ns=1;i=5173" DataType="Guid">
+    <DisplayName>DataSetFieldId</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5173</Reference>
+    </References>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>310ef49d-a562-561c-a889-37ce1fac9597</uax:String></uax:Guid></Value>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=5180" BrowseName="1:AnomalyDetection" ParentNodeId="ns=1;i=5002">
+    <DisplayName>AnomalyDetection</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=60011</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5002</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=5181" BrowseName="1:ScenarioUri" ParentNodeId="ns=1;i=5180" DataType="String">
+    <DisplayName>ScenarioUri</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5180</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5182" BrowseName="1:Direction" ParentNodeId="ns=1;i=5180" DataType="i=60050">
+    <DisplayName>Direction</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5180</Reference>
+    </References>
+    <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">0</uax:Int32></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5183" BrowseName="2:SoundPower" ParentNodeId="ns=1;i=5007" DataType="i=11">
+    <DisplayName>SoundPower</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=15318</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5007</Reference>
+    </References>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=5184" BrowseName="1:SoundPower" ParentNodeId="ns=1;i=5180">
+    <DisplayName>SoundPower</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=60013</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5180</Reference>
+      <Reference ReferenceType="BindsToNode">ns=1;i=5183</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=5185" BrowseName="1:FieldName" ParentNodeId="ns=1;i=5184" DataType="String">
+    <DisplayName>FieldName</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5184</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">SoundPower</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5186" BrowseName="1:Kind" ParentNodeId="ns=1;i=5184" DataType="i=60051">
+    <DisplayName>Kind</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5184</Reference>
+    </References>
+    <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">0</uax:Int32></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5187" BrowseName="1:ModelNamespaceUri" ParentNodeId="ns=1;i=5184" DataType="String">
+    <DisplayName>ModelNamespaceUri</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5184</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">http://opcfoundation.org/UA/Pumps/</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5188" BrowseName="1:SourceBrowseName" ParentNodeId="ns=1;i=5184" DataType="QualifiedName">
+    <DisplayName>SourceBrowseName</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5184</Reference>
+    </References>
+    <Value><uax:QualifiedName xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:NamespaceIndex>2</uax:NamespaceIndex><uax:Name>SoundPower</uax:Name></uax:QualifiedName></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5189" BrowseName="1:SourceTypeDefinition" ParentNodeId="ns=1;i=5184" DataType="NodeId">
+    <DisplayName>SourceTypeDefinition</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5184</Reference>
+    </References>
+    <Value><uax:NodeId xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:Identifier>i=15318</uax:Identifier></uax:NodeId></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5190" BrowseName="1:DataSetFieldId" ParentNodeId="ns=1;i=5184" DataType="Guid">
+    <DisplayName>DataSetFieldId</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5184</Reference>
+    </References>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>e5f8ad62-53b9-597f-8e30-720021c990c8</uax:String></uax:Guid></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5191" BrowseName="2:SoundPressureLevel" ParentNodeId="ns=1;i=5007" DataType="i=11">
+    <DisplayName>SoundPressureLevel</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=15318</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5007</Reference>
+    </References>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=5192" BrowseName="1:SoundPressureLevel" ParentNodeId="ns=1;i=5180">
+    <DisplayName>SoundPressureLevel</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=60013</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5180</Reference>
+      <Reference ReferenceType="BindsToNode">ns=1;i=5191</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=5193" BrowseName="1:FieldName" ParentNodeId="ns=1;i=5192" DataType="String">
+    <DisplayName>FieldName</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5192</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">SoundPressureLevel</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5194" BrowseName="1:Kind" ParentNodeId="ns=1;i=5192" DataType="i=60051">
+    <DisplayName>Kind</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5192</Reference>
+    </References>
+    <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">0</uax:Int32></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5195" BrowseName="1:ModelNamespaceUri" ParentNodeId="ns=1;i=5192" DataType="String">
+    <DisplayName>ModelNamespaceUri</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5192</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">http://opcfoundation.org/UA/Pumps/</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5196" BrowseName="1:SourceBrowseName" ParentNodeId="ns=1;i=5192" DataType="QualifiedName">
+    <DisplayName>SourceBrowseName</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5192</Reference>
+    </References>
+    <Value><uax:QualifiedName xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:NamespaceIndex>2</uax:NamespaceIndex><uax:Name>SoundPressureLevel</uax:Name></uax:QualifiedName></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5197" BrowseName="1:SourceTypeDefinition" ParentNodeId="ns=1;i=5192" DataType="NodeId">
+    <DisplayName>SourceTypeDefinition</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5192</Reference>
+    </References>
+    <Value><uax:NodeId xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:Identifier>i=15318</uax:Identifier></uax:NodeId></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5198" BrowseName="1:DataSetFieldId" ParentNodeId="ns=1;i=5192" DataType="Guid">
+    <DisplayName>DataSetFieldId</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5192</Reference>
+    </References>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>1659e4e2-e103-5da0-86f8-83360e57907b</uax:String></uax:Guid></Value>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=5199" BrowseName="1:DifferentialPressure" ParentNodeId="ns=1;i=5180">
+    <DisplayName>DifferentialPressure</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=60013</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5180</Reference>
+      <Reference ReferenceType="BindsToNode">ns=1;i=5040</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=5200" BrowseName="1:FieldName" ParentNodeId="ns=1;i=5199" DataType="String">
+    <DisplayName>FieldName</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5199</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">DifferentialPressure</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5201" BrowseName="1:Kind" ParentNodeId="ns=1;i=5199" DataType="i=60051">
+    <DisplayName>Kind</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5199</Reference>
+    </References>
+    <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">0</uax:Int32></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5202" BrowseName="1:ModelNamespaceUri" ParentNodeId="ns=1;i=5199" DataType="String">
+    <DisplayName>ModelNamespaceUri</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5199</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">http://opcfoundation.org/UA/Pumps/</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5203" BrowseName="1:SourceBrowseName" ParentNodeId="ns=1;i=5199" DataType="QualifiedName">
+    <DisplayName>SourceBrowseName</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5199</Reference>
+    </References>
+    <Value><uax:QualifiedName xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:NamespaceIndex>2</uax:NamespaceIndex><uax:Name>DifferentialPressure</uax:Name></uax:QualifiedName></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5204" BrowseName="1:SourceTypeDefinition" ParentNodeId="ns=1;i=5199" DataType="NodeId">
+    <DisplayName>SourceTypeDefinition</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5199</Reference>
+    </References>
+    <Value><uax:NodeId xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:Identifier>i=15318</uax:Identifier></uax:NodeId></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5205" BrowseName="1:DataSetFieldId" ParentNodeId="ns=1;i=5199" DataType="Guid">
+    <DisplayName>DataSetFieldId</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5199</Reference>
+    </References>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>1e4890ca-9328-59b9-be52-292e43b960aa</uax:String></uax:Guid></Value>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=5206" BrowseName="1:BearingTemperature" ParentNodeId="ns=1;i=5180">
+    <DisplayName>BearingTemperature</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=60013</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5180</Reference>
+      <Reference ReferenceType="BindsToNode">ns=1;i=5072</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=5207" BrowseName="1:FieldName" ParentNodeId="ns=1;i=5206" DataType="String">
+    <DisplayName>FieldName</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5206</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">BearingTemperature</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5208" BrowseName="1:Kind" ParentNodeId="ns=1;i=5206" DataType="i=60051">
+    <DisplayName>Kind</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5206</Reference>
+    </References>
+    <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">0</uax:Int32></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5209" BrowseName="1:ModelNamespaceUri" ParentNodeId="ns=1;i=5206" DataType="String">
+    <DisplayName>ModelNamespaceUri</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5206</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">http://opcfoundation.org/UA/Pumps/</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5210" BrowseName="1:SourceBrowseName" ParentNodeId="ns=1;i=5206" DataType="QualifiedName">
+    <DisplayName>SourceBrowseName</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5206</Reference>
+    </References>
+    <Value><uax:QualifiedName xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:NamespaceIndex>2</uax:NamespaceIndex><uax:Name>BearingTemperature</uax:Name></uax:QualifiedName></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5211" BrowseName="1:SourceTypeDefinition" ParentNodeId="ns=1;i=5206" DataType="NodeId">
+    <DisplayName>SourceTypeDefinition</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5206</Reference>
+    </References>
+    <Value><uax:NodeId xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:Identifier>i=15318</uax:Identifier></uax:NodeId></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5212" BrowseName="1:DataSetFieldId" ParentNodeId="ns=1;i=5206" DataType="Guid">
+    <DisplayName>DataSetFieldId</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5206</Reference>
+    </References>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>5ec0aa96-8b8c-54aa-859c-c0f6f8f20148</uax:String></uax:Guid></Value>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=5213" BrowseName="1:FleetAndCompliance" ParentNodeId="ns=1;i=5002">
+    <DisplayName>FleetAndCompliance</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=60011</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5002</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=5214" BrowseName="1:ScenarioUri" ParentNodeId="ns=1;i=5213" DataType="String">
+    <DisplayName>ScenarioUri</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5213</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">http://opcfoundation.org/UA/PubSub/Scenarios/FleetAndCompliance</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5215" BrowseName="1:Direction" ParentNodeId="ns=1;i=5213" DataType="i=60050">
+    <DisplayName>Direction</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5213</Reference>
+    </References>
+    <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">0</uax:Int32></Value>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=5216" BrowseName="3:Identification" ParentNodeId="ns=1;i=5001">
+    <DisplayName>Identification</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">FolderType</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5001</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=5217" BrowseName="3:Manufacturer" ParentNodeId="ns=1;i=5216" DataType="i=21">
+    <DisplayName>Manufacturer</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5216</Reference>
+    </References>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=5218" BrowseName="1:Manufacturer" ParentNodeId="ns=1;i=5213">
+    <DisplayName>Manufacturer</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=60013</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5213</Reference>
+      <Reference ReferenceType="BindsToNode">ns=1;i=5217</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=5219" BrowseName="1:FieldName" ParentNodeId="ns=1;i=5218" DataType="String">
+    <DisplayName>FieldName</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5218</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">Manufacturer</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5220" BrowseName="1:Kind" ParentNodeId="ns=1;i=5218" DataType="i=60051">
+    <DisplayName>Kind</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5218</Reference>
+    </References>
+    <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">8</uax:Int32></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5221" BrowseName="1:ModelNamespaceUri" ParentNodeId="ns=1;i=5218" DataType="String">
+    <DisplayName>ModelNamespaceUri</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5218</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">http://opcfoundation.org/UA/DI/</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5222" BrowseName="1:SourceBrowseName" ParentNodeId="ns=1;i=5218" DataType="QualifiedName">
+    <DisplayName>SourceBrowseName</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5218</Reference>
+    </References>
+    <Value><uax:QualifiedName xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:NamespaceIndex>3</uax:NamespaceIndex><uax:Name>Manufacturer</uax:Name></uax:QualifiedName></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5223" BrowseName="1:SourceTypeDefinition" ParentNodeId="ns=1;i=5218" DataType="NodeId">
+    <DisplayName>SourceTypeDefinition</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5218</Reference>
+    </References>
+    <Value><uax:NodeId xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:Identifier>i=68</uax:Identifier></uax:NodeId></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5224" BrowseName="1:DataSetFieldId" ParentNodeId="ns=1;i=5218" DataType="Guid">
+    <DisplayName>DataSetFieldId</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5218</Reference>
+    </References>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>e78385ec-c698-506c-966b-0ecbcd0d93f0</uax:String></uax:Guid></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5225" BrowseName="3:Model" ParentNodeId="ns=1;i=5216" DataType="i=21">
+    <DisplayName>Model</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5216</Reference>
+    </References>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=5226" BrowseName="1:Model" ParentNodeId="ns=1;i=5213">
+    <DisplayName>Model</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=60013</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5213</Reference>
+      <Reference ReferenceType="BindsToNode">ns=1;i=5225</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=5227" BrowseName="1:FieldName" ParentNodeId="ns=1;i=5226" DataType="String">
+    <DisplayName>FieldName</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5226</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">Model</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5228" BrowseName="1:Kind" ParentNodeId="ns=1;i=5226" DataType="i=60051">
+    <DisplayName>Kind</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5226</Reference>
+    </References>
+    <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">8</uax:Int32></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5229" BrowseName="1:ModelNamespaceUri" ParentNodeId="ns=1;i=5226" DataType="String">
+    <DisplayName>ModelNamespaceUri</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5226</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">http://opcfoundation.org/UA/DI/</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5230" BrowseName="1:SourceBrowseName" ParentNodeId="ns=1;i=5226" DataType="QualifiedName">
+    <DisplayName>SourceBrowseName</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5226</Reference>
+    </References>
+    <Value><uax:QualifiedName xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:NamespaceIndex>3</uax:NamespaceIndex><uax:Name>Model</uax:Name></uax:QualifiedName></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5231" BrowseName="1:SourceTypeDefinition" ParentNodeId="ns=1;i=5226" DataType="NodeId">
+    <DisplayName>SourceTypeDefinition</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5226</Reference>
+    </References>
+    <Value><uax:NodeId xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:Identifier>i=68</uax:Identifier></uax:NodeId></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5232" BrowseName="1:DataSetFieldId" ParentNodeId="ns=1;i=5226" DataType="Guid">
+    <DisplayName>DataSetFieldId</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5226</Reference>
+    </References>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>890ff03b-27c6-5db8-a735-c2c130af661d</uax:String></uax:Guid></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5233" BrowseName="3:SerialNumber" ParentNodeId="ns=1;i=5216" DataType="i=12">
+    <DisplayName>SerialNumber</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5216</Reference>
+    </References>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=5234" BrowseName="1:SerialNumber" ParentNodeId="ns=1;i=5213">
+    <DisplayName>SerialNumber</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=60013</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5213</Reference>
+      <Reference ReferenceType="BindsToNode">ns=1;i=5233</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=5235" BrowseName="1:FieldName" ParentNodeId="ns=1;i=5234" DataType="String">
+    <DisplayName>FieldName</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5234</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">SerialNumber</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5236" BrowseName="1:Kind" ParentNodeId="ns=1;i=5234" DataType="i=60051">
+    <DisplayName>Kind</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5234</Reference>
+    </References>
+    <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">8</uax:Int32></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5237" BrowseName="1:ModelNamespaceUri" ParentNodeId="ns=1;i=5234" DataType="String">
+    <DisplayName>ModelNamespaceUri</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5234</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">http://opcfoundation.org/UA/DI/</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5238" BrowseName="1:SourceBrowseName" ParentNodeId="ns=1;i=5234" DataType="QualifiedName">
+    <DisplayName>SourceBrowseName</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5234</Reference>
+    </References>
+    <Value><uax:QualifiedName xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:NamespaceIndex>3</uax:NamespaceIndex><uax:Name>SerialNumber</uax:Name></uax:QualifiedName></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5239" BrowseName="1:SourceTypeDefinition" ParentNodeId="ns=1;i=5234" DataType="NodeId">
+    <DisplayName>SourceTypeDefinition</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5234</Reference>
+    </References>
+    <Value><uax:NodeId xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:Identifier>i=68</uax:Identifier></uax:NodeId></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5240" BrowseName="1:DataSetFieldId" ParentNodeId="ns=1;i=5234" DataType="Guid">
+    <DisplayName>DataSetFieldId</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5234</Reference>
+    </References>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>df589d5b-e5f1-5472-a9ef-117d0078109e</uax:String></uax:Guid></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5241" BrowseName="3:ProductInstanceUri" ParentNodeId="ns=1;i=5216" DataType="i=12">
+    <DisplayName>ProductInstanceUri</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5216</Reference>
+    </References>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=5242" BrowseName="1:ProductInstanceUri" ParentNodeId="ns=1;i=5213">
+    <DisplayName>ProductInstanceUri</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=60013</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5213</Reference>
+      <Reference ReferenceType="BindsToNode">ns=1;i=5241</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=5243" BrowseName="1:FieldName" ParentNodeId="ns=1;i=5242" DataType="String">
+    <DisplayName>FieldName</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5242</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">ProductInstanceUri</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5244" BrowseName="1:Kind" ParentNodeId="ns=1;i=5242" DataType="i=60051">
+    <DisplayName>Kind</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5242</Reference>
+    </References>
+    <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">8</uax:Int32></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5245" BrowseName="1:ModelNamespaceUri" ParentNodeId="ns=1;i=5242" DataType="String">
+    <DisplayName>ModelNamespaceUri</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5242</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">http://opcfoundation.org/UA/DI/</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5246" BrowseName="1:SourceBrowseName" ParentNodeId="ns=1;i=5242" DataType="QualifiedName">
+    <DisplayName>SourceBrowseName</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5242</Reference>
+    </References>
+    <Value><uax:QualifiedName xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:NamespaceIndex>3</uax:NamespaceIndex><uax:Name>ProductInstanceUri</uax:Name></uax:QualifiedName></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5247" BrowseName="1:SourceTypeDefinition" ParentNodeId="ns=1;i=5242" DataType="NodeId">
+    <DisplayName>SourceTypeDefinition</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5242</Reference>
+    </References>
+    <Value><uax:NodeId xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:Identifier>i=68</uax:Identifier></uax:NodeId></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5248" BrowseName="1:DataSetFieldId" ParentNodeId="ns=1;i=5242" DataType="Guid">
+    <DisplayName>DataSetFieldId</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5242</Reference>
+    </References>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>9a94a2d7-b174-5437-b956-f6f4cdde13cb</uax:String></uax:Guid></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5249" BrowseName="3:AssetId" ParentNodeId="ns=1;i=5216" DataType="i=12">
+    <DisplayName>AssetId</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5216</Reference>
+    </References>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=5250" BrowseName="1:AssetId" ParentNodeId="ns=1;i=5213">
+    <DisplayName>AssetId</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=60013</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5213</Reference>
+      <Reference ReferenceType="BindsToNode">ns=1;i=5249</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=5251" BrowseName="1:FieldName" ParentNodeId="ns=1;i=5250" DataType="String">
+    <DisplayName>FieldName</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5250</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">AssetId</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5252" BrowseName="1:Kind" ParentNodeId="ns=1;i=5250" DataType="i=60051">
+    <DisplayName>Kind</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5250</Reference>
+    </References>
+    <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">8</uax:Int32></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5253" BrowseName="1:ModelNamespaceUri" ParentNodeId="ns=1;i=5250" DataType="String">
+    <DisplayName>ModelNamespaceUri</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5250</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">http://opcfoundation.org/UA/DI/</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5254" BrowseName="1:SourceBrowseName" ParentNodeId="ns=1;i=5250" DataType="QualifiedName">
+    <DisplayName>SourceBrowseName</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5250</Reference>
+    </References>
+    <Value><uax:QualifiedName xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:NamespaceIndex>3</uax:NamespaceIndex><uax:Name>AssetId</uax:Name></uax:QualifiedName></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5255" BrowseName="1:SourceTypeDefinition" ParentNodeId="ns=1;i=5250" DataType="NodeId">
+    <DisplayName>SourceTypeDefinition</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5250</Reference>
+    </References>
+    <Value><uax:NodeId xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:Identifier>i=68</uax:Identifier></uax:NodeId></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5256" BrowseName="1:DataSetFieldId" ParentNodeId="ns=1;i=5250" DataType="Guid">
+    <DisplayName>DataSetFieldId</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5250</Reference>
+    </References>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>203fcb57-7797-5175-ad88-420870033a94</uax:String></uax:Guid></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5257" BrowseName="4:Location" ParentNodeId="ns=1;i=5216" DataType="i=12">
+    <DisplayName>Location</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5216</Reference>
+    </References>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=5258" BrowseName="1:Location" ParentNodeId="ns=1;i=5213">
+    <DisplayName>Location</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=60013</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5213</Reference>
+      <Reference ReferenceType="BindsToNode">ns=1;i=5257</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=5259" BrowseName="1:FieldName" ParentNodeId="ns=1;i=5258" DataType="String">
+    <DisplayName>FieldName</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5258</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">Location</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5260" BrowseName="1:Kind" ParentNodeId="ns=1;i=5258" DataType="i=60051">
+    <DisplayName>Kind</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5258</Reference>
+    </References>
+    <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">8</uax:Int32></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5261" BrowseName="1:ModelNamespaceUri" ParentNodeId="ns=1;i=5258" DataType="String">
+    <DisplayName>ModelNamespaceUri</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5258</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">http://opcfoundation.org/UA/Machinery/</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5262" BrowseName="1:SourceBrowseName" ParentNodeId="ns=1;i=5258" DataType="QualifiedName">
+    <DisplayName>SourceBrowseName</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5258</Reference>
+    </References>
+    <Value><uax:QualifiedName xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:NamespaceIndex>4</uax:NamespaceIndex><uax:Name>Location</uax:Name></uax:QualifiedName></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5263" BrowseName="1:SourceTypeDefinition" ParentNodeId="ns=1;i=5258" DataType="NodeId">
+    <DisplayName>SourceTypeDefinition</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5258</Reference>
+    </References>
+    <Value><uax:NodeId xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:Identifier>i=68</uax:Identifier></uax:NodeId></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5264" BrowseName="1:DataSetFieldId" ParentNodeId="ns=1;i=5258" DataType="Guid">
+    <DisplayName>DataSetFieldId</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5258</Reference>
+    </References>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>7a9b0886-1ea9-5b9f-80d9-6ad7a25d1bb9</uax:String></uax:Guid></Value>
+  </UAVariable>
+</UANodeSet>

@@ -45,25 +45,47 @@ hand-writing PubSub configuration per project.
 
 ## Outputs
 
-- `bindings/<Model>.ScenarioBinding.json` — the machine-readable
-  **ScenarioBindingConfiguration** descriptor (single source of truth).
-- `bindings/<Model>-scenario-binding-annex.md` — the human-readable **annex** (tables per
-  Scenario listing each bound item, its RelativePath, Kind and semantic reference).
-- *(optional)* `bindings/<Model>.ScenarioBinding.NodeSet2.xml` — a **UANodeSet fragment**
-  instantiating the bindings on the model's types, ready to merge into a server.
+Per companion spec (see the worked examples under `core-specs/pubsub-binding/examples/`):
 
-Do **not** invent a domain example annex inside this skill; always generate from the actual
-input NodeSet.
+- `<Domain>.ScenarioBinding.json` — the machine-readable **ScenarioBindingConfiguration**
+  descriptor (single source of truth; the authoring DSL below).
+- `Opc.Ua.<Domain>.ScenarioBinding.NodeSet2.xml` — the **binding instances**: a compact
+  *theoretical instance* of the bound type in an example namespace, with a `ScenarioBindings`
+  container holding the `ScenarioBinding`/`BoundItem` instances (see "Two-level authoring").
+- `OPC-UA-<Domain>-PubSub-Scenario-Binding-Addendum.md` — the companion-spec **addendum**:
+  scope, the per-scenario annex tables, and diagrams showing where the bindings live on the
+  theoretical instance.
+
+**Reference implementation (use it, don't reinvent):**
+`core-specs/pubsub-binding/examples/tools/build_bindings.py` (+ `nodeset_util.py`) is a
+deterministic generator that reads the descriptor, **resolves and validates every
+`BrowsePath` against the published companion NodeSet**, synthesises the instance overlay, and
+emits the addendum (annex tables + two mermaid diagrams). Author the descriptor, then run it:
+`python tools/build_bindings.py <domain>/<Domain>.ScenarioBinding.json`. The base companion
+NodeSets live (gitignored) under `examples/tools/ref/`. Worked examples: `examples/pumps/`
+(from the official `Pumps/instanceexample.xml`) and `examples/robotics/` (synthesised
+`MotionDeviceSystem`).
+
+Do **not** invent a domain example inside this skill; always generate from the actual input
+NodeSet, and never claim a `BrowsePath` you have not resolved against that NodeSet.
 
 ## Procedure
 
 ### 1. Parse the model
 
-Enumerate every `UAObjectType`/`UAVariableType` and, within each, its member Variables
-(including nested Objects' Variables to a sensible depth) and Methods. For each member record:
-`BrowseName` (with namespace), the RelativePath from the owning type root, `DataType`,
-`ValueRank`, `ModellingRule`, and the member's TypeDefinition. Note placeholders
-(`OptionalPlaceholder`/`MandatoryPlaceholder`) — they become multi-match BrowsePaths.
+Walk the target `ObjectType`'s instance declarations to enumerate bindable Variables/Methods
+with their type-level RelativePath, namespace-qualified `BrowseName`, `DataType`, `ValueRank`,
+`ModellingRule` and `TypeDefinition`. **Two nesting styles must both be followed** (this is the
+key correctness trap): the children of a component are the merge of (a) its `TypeDefinition`'s
+instance declarations *and* (b) any **inline** references declared directly on the component
+node. Pump-style models nest purely by TypeDefinition (`Operational` → `MeasurementsType` →
+`Speed`); robot-style models nest by inline **placeholders** (`MotionDevices` folder →
+`<MotionDeviceIdentifier> : MotionDeviceType` → `Axes` → `<AxisIdentifier> : AxisType` → …).
+`nodeset_util.NodeSetDB.walk` already does this merge; reuse it. Placeholder segments
+(`<…Identifier>`) stay in the type-level BrowsePath; on a real server a placeholder path
+**can match multiple instances** (per the base spec's resolution rules), but the reference
+generator synthesises **one representative concrete instance** per placeholder path for the
+illustrative overlay (it does not expand multi-match).
 
 ### 2. Classify each item's Kind (routing role)
 
@@ -124,77 +146,121 @@ locator); leave absolute NodeIds unset for type-level bindings.
 Write `ScenarioBindingConfiguration` (see format below). This is the single source; the
 annex and the NodeSet fragment are **derived** from it, never authored separately.
 
-### 6. Generate annex (+ optional NodeSet fragment)
+### 6. Generate the addendum + instance overlay
 
-Render one annex table per Scenario. Link each Scenario URI and each referenced base type
-to `https://reference.opcfoundation.org/` and each own concept to the spec's Annex A anchors,
-matching the style of `core-specs/pubsub-binding` and `companion-specs/Generators`. If a
-NodeSet fragment is requested, instantiate `ScenarioBindingType`/`BoundVariableType`/
-`BoundMethodType` under an `IPubSubScenarioBoundType` interface applied to each bound type,
-with `BrowsePath` values from the descriptor. Leave transport/security/addressing as
-deployment parameters — never bake them in.
+Run the reference generator (`build_bindings.py`) on the descriptor. It renders one annex
+table per Scenario (linking each referenced base type to `https://reference.opcfoundation.org/`
+and own concepts to the base spec), emits the instance-overlay NodeSet, and assembles the
+addendum. Leave transport/security/addressing as deployment parameters — never bake them in.
 
 ### 7. Validate
 
-- Every `BrowsePath` resolves against the input NodeSet (dry-run TranslateBrowsePath).
+- **Every `BrowsePath` resolves against the input NodeSet** — the generator fails hard if not;
+  never ship a path you have not resolved.
 - Every item has a `Kind`, a `FieldName` and a complete semantic cross-reference.
 - Scenario URIs are well-formed; vendor Scenarios use the vendor's own URI authority and
   **not** the reserved `…/opcfoundation.org/UA/PubSub/Scenarios/` root.
 - Field names are unique within a binding.
+- The overlay NodeSet is well-formed, NodeIds unique, and every reference target resolves
+  against the base spec + companion + DI/IA/Machinery NodeSets.
+- Every mermaid diagram renders (`mmdc`).
 
-## ScenarioBindingConfiguration descriptor (format)
+## Two-level authoring: type-level definition + instance overlay
 
-A single JSON object that is an **authoring DSL** for the spec's
-`ScenarioBindingConfigurationDataType` (§5.8): it carries exactly the same fields, but in a
-human-writable form. The deterministic generator converts it to the OPC UA DataType (and to
-the annex and NodeSet fragment). It is *not* raw OPC UA JSON encoding — the conversion rules
-below define the mapping so the result is unambiguous.
+A companion specification is owned by *its* namespace, so **you cannot add `HasInterface` or a
+`ScenarioBindings` component to the base companion type** (e.g. `PumpType`,
+`MotionDeviceSystemType`) from an addendum. Author the bindings at two levels instead:
+
+1. **Type-level definition (reusable, portable).** The `ScenarioBindingConfiguration`
+   descriptor + the annex express each binding as a `BrowsePath` (RelativePath) from the type
+   root. This does not touch the base type and applies to *every* conforming instance. It is
+   the normative-recommendation artifact a future revision of the companion spec (or a server)
+   would adopt.
+2. **Instance overlay (concrete, illustrative).** In your **own example namespace**
+   (`http://opcfoundation.org/UA/PubSub/Examples/<Domain>/`), synthesise a compact
+   *theoretical instance* of the bound type — you own it, so you may apply `IPubSubScenarioBoundType`
+   and hang a `ScenarioBindings` container off it (`HasComponent`). Emit the
+   `ScenarioBinding`/`BoundItem` instances there.
+
+**Two locators, one per level.** On the type level a `BoundItem` uses **`BrowsePath`**; on the
+instance overlay it uses **`BindsToNode`** pointing at the concrete signal node (both are
+defined by the base spec). The overlay materialises only the parent-chain objects and the
+bound leaf for each path — it is illustrative, not a conformant full instance; say so.
+
+**Theoretical instance.** Prefer the companion's official instance example if one exists (e.g.
+Pumps `instanceexample.xml`); otherwise synthesise a minimal one. **Placeholder path segments**
+(`<AxisIdentifier>`) become concrete instance names (`Axis_1`) in the overlay while the
+type-level BrowsePath keeps the placeholder.
+
+**Diagram conventions (two per addendum).** (a) a *bindings overview*
+(instance → ScenarioBindings → per-scenario ScenarioBinding → BoundItems); (b) an *instance
+placement* diagram (instance → `HasInterface`/`HasComponent` → ScenarioBindings → binding →
+BoundItem → `BindsToNode` → the signal node), so a reader sees exactly where bindings live.
+
+## Domain heuristics learned from the worked examples
+
+- **Measurement-rich models (e.g. Pumps).** Most signals live under one operational group
+  (`Operational/Measurements/*`): flow/head/pressure/power/temperatures → Telemetry,
+  efficiencies → Metric, start counters → Counter, nameplate under `Identification/*` →
+  Identification. Scenarios map cleanly and densely.
+- **Structure/state-machine models (e.g. Robotics).** Fewer flat analog measurements; signals
+  are nested under placeholders (`MotionDevices/<…>/Axes/<…>/ParameterSet/ActualPosition`,
+  `PowerTrains/<…>/<Motor…>/ParameterSet/MotorTemperature`, `Controllers/<…>/ParameterSet/*`).
+  Lean on axis/motor Telemetry, controller thermals, **Status/Event** from `SafetyStates`
+  (EmergencyStop/ProtectiveStop/OperationalMode), and nameplate for FleetAndCompliance. Expect
+  more `Status`/`Event` and fewer `Telemetry` than a measurement-rich model.
+
+
+
+A single JSON object — the **authoring DSL** consumed by `build_bindings.py`. You write the
+intent (which type, which scenarios, which items by `BrowsePath`, which `Kind`); the generator
+resolves each `BrowsePath` against the companion NodeSet and fills in the namespaces, source
+`BrowseName`, `TypeDefinition`, `DataType` and `DataSetFieldId` mechanically, then emits the
+overlay NodeSet + addendum. `browsePath` uses **plain BrowseNames** (no namespace prefix) —
+the generator recovers the namespace per segment from the walk. Keep placeholder segments
+(`<AxisIdentifier>`) verbatim.
 
 ```json
 {
-  "modelNamespaceUri": "http://example.org/UA/<Model>/",
-  "appliesToType": "1:<BrowseName of the bound ObjectType, e.g. GeneratorType>",
+  "domain": "Pumps",
+  "appliesToType": "PumpType",
+  "baseModelNamespaceUri": "http://opcfoundation.org/UA/Pumps/",
+  "exampleNamespaceUri": "http://opcfoundation.org/UA/PubSub/Examples/Pumps/",
+  "instanceName": "ExamplePump",
+  "summary": "one-line description used in the addendum scope",
+  "companionSpec": { "name": "OPC UA for Pumps and Vacuum Pumps", "ref": "https://reference.opcfoundation.org/Pumps/…" },
+  "instanceModel": { "note": "…theoretical instance note…", "ref": "https://github.com/OPCFoundation/UA-Nodeset/blob/latest/Pumps/instanceexample.xml", "refName": "Pumps/instanceexample.xml" },
   "configurationVersion": { "majorVersion": 1, "minorVersion": 0 },
+  "baseNodeSets": ["Opc.Ua.Pumps.NodeSet2.xml", "Opc.Ua.Di.NodeSet2.xml", "Opc.Ua.Machinery.NodeSet2.xml"],
+  "requiredModels": [
+    { "uri": "http://opcfoundation.org/UA/Pumps/" },
+    { "uri": "http://opcfoundation.org/UA/DI/" },
+    { "uri": "http://opcfoundation.org/UA/Machinery/" }
+  ],
   "scenarioBindings": [
     {
       "name": "Observability",
       "scenarioUri": "http://opcfoundation.org/UA/PubSub/Scenarios/Observability",
       "direction": "Publisher",
       "boundItems": [
-        {
-          "fieldName": "ActivePower",
-          "kind": "Telemetry",
-          "browsePath": "/1:ElectricalMeasurements/1:ActivePower",
-          "attributeId": 13,
-          "sourceTypeDefinition": "1:AnalogUnitType",
-          "sourceBrowseName": "1:ActivePower",
-          "modelNamespaceUri": "http://example.org/UA/<Model>/",
-          "semanticReferenceUri": null,
-          "dataSetFieldId": null,
-          "samplingIntervalHint": 1000
-        }
+        { "fieldName": "Speed", "kind": "Telemetry", "browsePath": "/Operational/Measurements/Speed", "samplingIntervalHint": 1000 }
       ]
     }
   ]
 }
 ```
 
-Conversion rules (DSL → `ScenarioBindingConfigurationDataType`):
-- `appliesToType`, `sourceBrowseName` → `QualifiedName`, written `"<nsIndex>:<Name>"`; the
-  generator resolves `<nsIndex>` against `modelNamespaceUri` and the target NodeSet's namespace table.
-- `browsePath`, `owningObjectPath` → `RelativePath`, written in the standard OPC UA
-  RelativePath text form (`/1:Child/1:Grandchild`); the generator parses it to a `RelativePath` value.
-- `sourceTypeDefinition`, `sourceNodeId`, `startingNode` → `NodeId`, written as an
-  expanded NodeId string (`nsu=<uri>;i=…` or `<nsIndex>:<BrowseName>` for a type, which the
-  generator resolves).
-- `dataSetFieldId` → `Guid`; **omit or `null`** to have the generator assign a stable GUID
-  (recommended). It becomes `FieldMetaData.dataSetFieldId` in the realized PublishedDataSet.
+Field notes:
+- `appliesToType` is the plain BrowseName of the bound `ObjectType`; the generator locates it
+  in `baseNodeSets`.
+- `baseNodeSets` are filenames under `examples/tools/ref/` (gitignored); `requiredModels` are
+  the namespace URIs emitted as `<RequiredModel>` (order sets the ns indices).
+- `fieldName` defaults to the last `browsePath` segment; make it unique within a binding.
 - `direction` ∈ `Publisher` | `Subscriber` | `ActionInvoker` | `ActionResponder` |
-  `Bidirectional` (`ScenarioBindingDirectionEnum`).
+  `Bidirectional`.
 - `kind` ∈ `Telemetry` | `Status` | `Configuration` | `Metric` | `Counter` | `Event` |
-  `Command` | `Setpoint` | `Identification` | `Other` (`BoundItemKindEnum`).
-- For a Method, use a `boundItems` entry with `kind: "Command"`, `browsePath` to the Method,
-  and `owningObjectPath` (RelativePath to the owning Object; default: the bound root).
+  `Command` | `Setpoint` | `Identification` | `Other`.
+- For a Method use `kind: "Command"` and a `browsePath` to the Method.
 
 ## Annex template (per Scenario)
 
