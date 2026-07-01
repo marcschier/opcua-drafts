@@ -397,7 +397,7 @@ def transition(sm_nid, sm_sym, name, number, from_nid, to_nid):
 CAT_EN = "Generators DataTypes"
 
 enum_type(3001, "GeneratorOperatingModeEnum",
-          "Selector mode of the generator set control panel (e.g. Cummins PowerCommand).",
+          "Selector mode of the generator set control panel.",
           CAT_EN, [
     ("Off", 0, "Control is off; the set will not start automatically or manually."),
     ("Manual", 1, "Manual/hand mode; the set runs on operator command."),
@@ -592,15 +592,15 @@ object_type(1016, "GeneratorIdentificationType", MC_MachineIdentificationType,
             "MachineIdentificationType with generator-specific nameplate data.", CAT_ID)
 S = "GeneratorIdentificationType"
 prop_var(1016, S, "SpecificationNumber", String,
-         "Manufacturer build/specification code (e.g. Cummins spec number).")
+         "Vendor build/specification code that identifies the exact configuration.")
 prop_var(1016, S, "ProductFamily", String,
-         "Product family or series (e.g. QuietConnect, C-Series, QSK, QSV).")
+         "Vendor product family or series to which the set belongs.")
 prop_var(1016, S, "EngineModel", String, "Model designation of the prime-mover engine.")
 prop_var(1016, S, "EngineSerialNumber", String, "Serial number of the prime-mover engine.")
 prop_var(1016, S, "AlternatorModel", String, "Model designation of the alternator.")
 prop_var(1016, S, "AlternatorSerialNumber", String, "Serial number of the alternator.")
 prop_var(1016, S, "ControllerModel", String,
-         "Model of the control panel (e.g. PCC1301, PCC2300, PCC3300).")
+         "Model designation of the control panel.")
 prop_var(1016, S, "FuelType", T(3002), "Primary fuel of the set.")
 prop_var(1016, S, "EmissionsStandard", T(3008), "Emissions certification standard.")
 analog(1016, S, "RatedRealPower", "kW", "Nameplate rated real power.")
@@ -814,11 +814,11 @@ comp_var(1008, ST, "StartAttempts", UInt32, "Number of start attempts in the las
 
 # --- GeneratorControllerType -----------------------------------------------
 object_type(1009, "GeneratorControllerType", DI_ComponentType,
-            "The generator set control panel (e.g. Cummins PowerCommand). Provides "
-            "controller identity, mode/state visibility and remote-monitoring status.",
+            "The generator set control panel. Provides controller identity, mode/state "
+            "visibility and remote-monitoring status.",
             CAT_COMP)
 G = "GeneratorControllerType"
-prop_var(1009, G, "ControllerFamily", String, "Controller family, e.g. 'PowerCommand'.")
+prop_var(1009, G, "ControllerFamily", String, "Vendor controller product family or product line.")
 prop_var(1009, G, "FirmwareVersion", String, "Controller firmware version.")
 prop_var(1009, G, "ApplicationSoftwareVersion", String, "Application software version.")
 prop_var(1009, G, "ConfigurationVersion", String, "Configuration/calibration version.")
@@ -1167,6 +1167,145 @@ def emit_csv():
 # --- Markdown reference-table generation (reconstructed from the model) -----
 import re
 
+# Auto-extracted transitive members of base types (do not edit by hand).
+# (BrowseName, NodeClass, DataType, ModellingRule, DeclaringType)
+BASE_MEMBERS = {
+    'DeviceType': [
+        ('Manufacturer', 'Variable', 'LocalizedText', 'Mandatory', 'DeviceType'),
+        ('ManufacturerUri', 'Variable', 'String', 'Optional', 'DeviceType'),
+        ('Model', 'Variable', 'LocalizedText', 'Mandatory', 'DeviceType'),
+        ('HardwareRevision', 'Variable', 'String', 'Mandatory', 'DeviceType'),
+        ('SoftwareRevision', 'Variable', 'String', 'Mandatory', 'DeviceType'),
+        ('DeviceRevision', 'Variable', 'String', 'Mandatory', 'DeviceType'),
+        ('ProductCode', 'Variable', 'String', 'Optional', 'DeviceType'),
+        ('DeviceManual', 'Variable', 'String', 'Mandatory', 'DeviceType'),
+        ('DeviceClass', 'Variable', 'String', 'Optional', 'DeviceType'),
+        ('SerialNumber', 'Variable', 'String', 'Mandatory', 'DeviceType'),
+        ('ProductInstanceUri', 'Variable', 'String', 'Optional', 'DeviceType'),
+        ('RevisionCounter', 'Variable', 'Int32', 'Mandatory', 'DeviceType'),
+        ('<CPIdentifier>', 'Object', '', 'OptionalPlaceholder', 'DeviceType'),
+        ('DeviceHealth', 'Variable', 'DeviceHealthEnumeration', 'Optional', 'DeviceType'),
+        ('DeviceHealthAlarms', 'Object', '', 'Optional', 'DeviceType'),
+        ('DeviceTypeImage', 'Object', '', 'Optional', 'DeviceType'),
+        ('Documentation', 'Object', '', 'Optional', 'DeviceType'),
+        ('ProtocolSupport', 'Object', '', 'Optional', 'DeviceType'),
+        ('ImageSet', 'Object', '', 'Optional', 'DeviceType'),
+        ('AssetId', 'Variable', 'String', 'Optional', 'ComponentType'),
+        ('ComponentName', 'Variable', 'LocalizedText', 'Optional', 'ComponentType'),
+        ('ParameterSet', 'Object', '', 'Optional', 'TopologyElementType'),
+        ('MethodSet', 'Object', '', 'Optional', 'TopologyElementType'),
+        ('<GroupIdentifier>', 'Object', '', 'OptionalPlaceholder', 'TopologyElementType'),
+        ('Identification', 'Object', '', 'Optional', 'TopologyElementType'),
+        ('Lock', 'Object', '', 'Optional', 'TopologyElementType'),
+    ],
+    'ComponentType': [
+        ('Manufacturer', 'Variable', 'LocalizedText', 'Optional', 'ComponentType'),
+        ('ManufacturerUri', 'Variable', 'String', 'Optional', 'ComponentType'),
+        ('Model', 'Variable', 'LocalizedText', 'Optional', 'ComponentType'),
+        ('HardwareRevision', 'Variable', 'String', 'Optional', 'ComponentType'),
+        ('SoftwareRevision', 'Variable', 'String', 'Optional', 'ComponentType'),
+        ('DeviceRevision', 'Variable', 'String', 'Optional', 'ComponentType'),
+        ('ProductCode', 'Variable', 'String', 'Optional', 'ComponentType'),
+        ('DeviceManual', 'Variable', 'String', 'Optional', 'ComponentType'),
+        ('DeviceClass', 'Variable', 'String', 'Optional', 'ComponentType'),
+        ('SerialNumber', 'Variable', 'String', 'Optional', 'ComponentType'),
+        ('ProductInstanceUri', 'Variable', 'String', 'Optional', 'ComponentType'),
+        ('RevisionCounter', 'Variable', 'Int32', 'Optional', 'ComponentType'),
+        ('AssetId', 'Variable', 'String', 'Optional', 'ComponentType'),
+        ('ComponentName', 'Variable', 'LocalizedText', 'Optional', 'ComponentType'),
+        ('ParameterSet', 'Object', '', 'Optional', 'TopologyElementType'),
+        ('MethodSet', 'Object', '', 'Optional', 'TopologyElementType'),
+        ('<GroupIdentifier>', 'Object', '', 'OptionalPlaceholder', 'TopologyElementType'),
+        ('Identification', 'Object', '', 'Optional', 'TopologyElementType'),
+        ('Lock', 'Object', '', 'Optional', 'TopologyElementType'),
+    ],
+    'MachineIdentificationType': [
+        ('Location', 'Variable', 'String', 'Optional', 'MachineIdentificationType'),
+        ('ProductInstanceUri', 'Variable', 'String', 'Mandatory', 'MachineIdentificationType'),
+        ('AssetId', 'Variable', 'String', 'Optional', 'MachineryItemIdentificationType'),
+        ('ComponentName', 'Variable', 'LocalizedText', 'Optional', 'MachineryItemIdentificationType'),
+        ('DeviceClass', 'Variable', 'String', 'Optional', 'MachineryItemIdentificationType'),
+        ('HardwareRevision', 'Variable', 'String', 'Optional', 'MachineryItemIdentificationType'),
+        ('InitialOperationDate', 'Variable', 'DateTime', 'Optional', 'MachineryItemIdentificationType'),
+        ('Manufacturer', 'Variable', 'LocalizedText', 'Mandatory', 'MachineryItemIdentificationType'),
+        ('ManufacturerUri', 'Variable', 'String', 'Optional', 'MachineryItemIdentificationType'),
+        ('Model', 'Variable', 'LocalizedText', 'Optional', 'MachineryItemIdentificationType'),
+        ('MonthOfConstruction', 'Variable', 'Byte', 'Optional', 'MachineryItemIdentificationType'),
+        ('ProductCode', 'Variable', 'String', 'Optional', 'MachineryItemIdentificationType'),
+        ('SerialNumber', 'Variable', 'String', 'Mandatory', 'MachineryItemIdentificationType'),
+        ('SoftwareRevision', 'Variable', 'String', 'Optional', 'MachineryItemIdentificationType'),
+        ('YearOfConstruction', 'Variable', 'UInt16', 'Optional', 'MachineryItemIdentificationType'),
+        ('<GroupIdentifier>', 'Object', '', 'OptionalPlaceholder', 'FunctionalGroupType'),
+        ('UIElement', 'Variable', '', 'Optional', 'FunctionalGroupType'),
+    ],
+    'FiniteStateMachineType': [
+        ('CurrentState', 'Variable', 'LocalizedText', 'Mandatory', 'FiniteStateMachineType'),
+        ('LastTransition', 'Variable', 'LocalizedText', 'Optional', 'FiniteStateMachineType'),
+        ('AvailableStates', 'Variable', 'NodeId[]', 'Optional', 'FiniteStateMachineType'),
+        ('AvailableTransitions', 'Variable', 'NodeId[]', 'Optional', 'FiniteStateMachineType'),
+    ],
+    'OffNormalAlarmType': [
+        ('NormalState', 'Variable', 'NodeId', 'Mandatory', 'OffNormalAlarmType'),
+        ('EnabledState', 'Variable', 'LocalizedText', 'Mandatory', 'AlarmConditionType'),
+        ('ActiveState', 'Variable', 'LocalizedText', 'Mandatory', 'AlarmConditionType'),
+        ('InputNode', 'Variable', 'NodeId', 'Mandatory', 'AlarmConditionType'),
+        ('SuppressedState', 'Variable', 'LocalizedText', 'Optional', 'AlarmConditionType'),
+        ('OutOfServiceState', 'Variable', 'LocalizedText', 'Optional', 'AlarmConditionType'),
+        ('ShelvingState', 'Object', '', 'Optional', 'AlarmConditionType'),
+        ('SuppressedOrShelved', 'Variable', 'Boolean', 'Mandatory', 'AlarmConditionType'),
+        ('MaxTimeShelved', 'Variable', 'Duration', 'Optional', 'AlarmConditionType'),
+        ('AudibleEnabled', 'Variable', 'Boolean', 'Optional', 'AlarmConditionType'),
+        ('AudibleSound', 'Variable', 'AudioDataType', 'Optional', 'AlarmConditionType'),
+        ('SilenceState', 'Variable', 'LocalizedText', 'Optional', 'AlarmConditionType'),
+        ('OnDelay', 'Variable', 'Duration', 'Optional', 'AlarmConditionType'),
+        ('OffDelay', 'Variable', 'Duration', 'Optional', 'AlarmConditionType'),
+        ('FirstInGroupFlag', 'Variable', 'Boolean', 'Optional', 'AlarmConditionType'),
+        ('FirstInGroup', 'Object', '', 'Optional', 'AlarmConditionType'),
+        ('LatchedState', 'Variable', 'LocalizedText', 'Optional', 'AlarmConditionType'),
+        ('ReAlarmTime', 'Variable', 'Duration', 'Optional', 'AlarmConditionType'),
+        ('ReAlarmRepeatCount', 'Variable', 'Int16', 'Optional', 'AlarmConditionType'),
+        ('Silence', 'Method', '', 'Optional', 'AlarmConditionType'),
+        ('Suppress', 'Method', '', 'Optional', 'AlarmConditionType'),
+        ('Suppress2', 'Method', '', 'Optional', 'AlarmConditionType'),
+        ('Unsuppress', 'Method', '', 'Optional', 'AlarmConditionType'),
+        ('Unsuppress2', 'Method', '', 'Optional', 'AlarmConditionType'),
+        ('RemoveFromService', 'Method', '', 'Optional', 'AlarmConditionType'),
+        ('RemoveFromService2', 'Method', '', 'Optional', 'AlarmConditionType'),
+        ('PlaceInService', 'Method', '', 'Optional', 'AlarmConditionType'),
+        ('PlaceInService2', 'Method', '', 'Optional', 'AlarmConditionType'),
+        ('Reset', 'Method', '', 'Optional', 'AlarmConditionType'),
+        ('Reset2', 'Method', '', 'Optional', 'AlarmConditionType'),
+        ('GetGroupMemberships', 'Method', '', 'Optional', 'AlarmConditionType'),
+        ('AckedState', 'Variable', 'LocalizedText', 'Mandatory', 'AcknowledgeableConditionType'),
+        ('ConfirmedState', 'Variable', 'LocalizedText', 'Optional', 'AcknowledgeableConditionType'),
+        ('Acknowledge', 'Method', '', 'Mandatory', 'AcknowledgeableConditionType'),
+        ('Confirm', 'Method', '', 'Optional', 'AcknowledgeableConditionType'),
+        ('ConditionClassId', 'Variable', 'NodeId', 'Mandatory', 'ConditionType'),
+        ('ConditionClassName', 'Variable', 'LocalizedText', 'Mandatory', 'ConditionType'),
+        ('ConditionSubClassId', 'Variable', 'NodeId[]', 'Optional', 'ConditionType'),
+        ('ConditionSubClassName', 'Variable', 'LocalizedText[]', 'Optional', 'ConditionType'),
+        ('ConditionName', 'Variable', 'String', 'Mandatory', 'ConditionType'),
+        ('BranchId', 'Variable', 'NodeId', 'Mandatory', 'ConditionType'),
+        ('Retain', 'Variable', 'Boolean', 'Mandatory', 'ConditionType'),
+        ('Quality', 'Variable', 'StatusCode', 'Mandatory', 'ConditionType'),
+        ('LastSeverity', 'Variable', 'UInt16', 'Mandatory', 'ConditionType'),
+        ('Comment', 'Variable', 'LocalizedText', 'Mandatory', 'ConditionType'),
+        ('ClientUserId', 'Variable', 'String', 'Mandatory', 'ConditionType'),
+        ('Disable', 'Method', '', 'Mandatory', 'ConditionType'),
+        ('Enable', 'Method', '', 'Mandatory', 'ConditionType'),
+        ('AddComment', 'Method', '', 'Mandatory', 'ConditionType'),
+        ('EventId', 'Variable', 'ByteString', 'Mandatory', 'BaseEventType'),
+        ('EventType', 'Variable', 'NodeId', 'Mandatory', 'BaseEventType'),
+        ('SourceNode', 'Variable', 'NodeId', 'Mandatory', 'BaseEventType'),
+        ('SourceName', 'Variable', 'String', 'Mandatory', 'BaseEventType'),
+        ('Time', 'Variable', 'UtcTime', 'Mandatory', 'BaseEventType'),
+        ('ReceiveTime', 'Variable', 'UtcTime', 'Mandatory', 'BaseEventType'),
+        ('LocalTime', 'Variable', 'TimeZoneDataType', 'Optional', 'BaseEventType'),
+        ('Message', 'Variable', 'LocalizedText', 'Mandatory', 'BaseEventType'),
+        ('Severity', 'Variable', 'UInt16', 'Mandatory', 'BaseEventType'),
+    ],
+}
+
 _FRIENDLY = {
     "i=58": "BaseObjectType", "i=61": "FolderType", "i=63": "BaseDataVariableType",
     "i=68": "PropertyType", "i=17497": "AnalogUnitType", "i=76": "DataTypeEncodingType",
@@ -1224,44 +1363,76 @@ def _members_of(type_nid):
 
 
 def emit_md():
+    _BASE_KEY = {
+        DI_DeviceType: "DeviceType", DI_ComponentType: "ComponentType",
+        MC_MachineIdentificationType: "MachineIdentificationType",
+        FiniteStateMachineType: "FiniteStateMachineType",
+        OffNormalAlarmType: "OffNormalAlarmType",
+    }
     obj_types = [nid for nid in ORDER if NODES[nid].cls == "UAObjectType"]
     data_types = [nid for nid in ORDER if NODES[nid].cls == "UADataType"]
+
+    def supertype(n):
+        for rt, tgt, fwd in n.refs:
+            if rt == HasSubtype and not fwd:
+                return tgt
+        return ""
+
+    # index methods -> input argument names
+    method_args = {}
+    for nid in ORDER:
+        n = NODES[nid]
+        if n.cls == "UAVariable" and n.bname == "InputArguments" and n.value:
+            names = re.findall(r"<Name>([^<]+)</Name>", n.value)
+            pid = int(n.parent.split("i=")[1]) if n.parent else None
+            if pid is not None:
+                method_args[pid] = names
+
     md = []
-    md.append("## Type overview\n")
+    md.append("## Information model\n")
+    md.append("This section is the normative node reference. It is generated directly from "
+              "`tools/build_model.py` and therefore always matches "
+              "`Opc.Ua.Generators.NodeSet2.xml`. It is organised by NodeClass. For every "
+              "ObjectType and DataType the full structure is given, and the **Declared in** "
+              "column names the type that declares each member — rows whose *Declared in* "
+              "value differs from the type being described are **inherited** from a base type "
+              "in OPC UA, Devices (DI) or Machinery.\n")
+
+    md.append("### Type overview\n")
     md.append("| NodeId | BrowseName | NodeClass | Subtype of |")
     md.append("|---|---|---|---|")
     for nid in obj_types + data_types:
         n = NODES[nid]
-        sup = ""
-        for rt, tgt, fwd in n.refs:
-            if rt == HasSubtype and not fwd:
-                sup = _friendly(tgt)
-        md.append(f"| ns=1;i={nid} | {n.bname} | {n.cls[2:]} | {sup} |")
+        md.append(f"| ns=1;i={nid} | {n.bname} | {n.cls[2:]} | {_friendly(supertype(n))} |")
     md.append("")
 
-    md.append("## ObjectTypes\n")
+    md.append("### Object types\n")
     for nid in obj_types:
         n = NODES[nid]
-        md.append(f"### {n.bname}  (ns=1;i={nid})\n")
+        base = _friendly(supertype(n))
+        md.append(f"#### {n.bname}  (ns=1;i={nid})\n")
+        md.append(f"*Inherits from:* **{base}**\n")
         if n.desc:
             md.append(n.desc + "\n")
-        members = _members_of(nid)
-        if members:
-            md.append("| BrowseName | NodeClass | DataType | TypeDefinition | ModellingRule | Description |")
-            md.append("|---|---|---|---|---|---|")
-            for m in members:
-                mn = NODES[m]
-                dt = _friendly(mn.attrs.get("DataType", "")) if mn.attrs.get("DataType") else ""
-                vr = mn.attrs.get("ValueRank", "")
-                if vr == "1":
-                    dt += "[]"
-                md.append(f"| {mn.bname} | {mn.cls[2:]} | {dt} | {_typedef(mn)} | "
-                          f"{_member_reftype(mn)} | {(mn.desc or '').replace('|','/')} |")
-            md.append("")
-    md.append("## DataTypes\n")
+        md.append("| BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |")
+        md.append("|---|---|---|---|---|---|")
+        for m in _members_of(nid):
+            mn = NODES[m]
+            dt = _friendly(mn.attrs.get("DataType", "")) if mn.attrs.get("DataType") else ""
+            if mn.attrs.get("ValueRank", "") == "1" and dt:
+                dt += "[]"
+            md.append(f"| {mn.bname} | {mn.cls[2:]} | {dt} | {_member_reftype(mn)} | "
+                      f"{n.bname} | {(mn.desc or '').replace('|', '/')} |")
+        base_key = _BASE_KEY.get(supertype(n))
+        for (bn, cls, dtype, rule, decl) in BASE_MEMBERS.get(base_key, []):
+            md.append(f"| {bn} | {cls} | {dtype} | {rule} | {decl} | |")
+        md.append("")
+
+    md.append("### Data types\n")
     for nid in data_types:
         n = NODES[nid]
-        md.append(f"### {n.bname}  (ns=1;i={nid})\n")
+        md.append(f"#### {n.bname}  (ns=1;i={nid})\n")
+        md.append(f"*Subtype of:* **{_friendly(supertype(n))}**\n")
         if n.desc:
             md.append(n.desc + "\n")
         if n.definition and "Value=" in n.definition:
@@ -1276,6 +1447,45 @@ def emit_md():
             for mm in re.finditer(r'<Field Name="([^"]+)" DataType="([^"]+)"[^>]*?(?:/>|>(?:<Description>([^<]*)</Description>)?</Field>)', n.definition):
                 md.append(f"| {mm.group(1)} | {_friendly(mm.group(2))} | {mm.group(3) or ''} |")
             md.append("")
+
+    md.append("### Objects\n")
+    md.append("All Object-class nodes in this model are instance declarations of the "
+              "ObjectTypes above and appear in their structure tables. They fall into four "
+              "groups: sub-assembly **components** referenced with `HasComponent` (for example "
+              "`Engine`, `Alternator`, `L1`/`L2`/`L3`, `Source1`/`Source2`); standardized "
+              "**Machinery building-block add-ins** referenced with `HasAddIn` (`Identification`, "
+              "`MachineryBuildingBlocks`, `MachineryItemState`, `MachineryOperationMode`); the "
+              "finite-state-machine **States and Transitions** of `GeneratorStateMachineType`; "
+              "and the **DataType encodings** (`Default Binary`, `Default XML`) of "
+              "`DiagnosticTroubleCodeType`. This specification defines no free-standing Object "
+              "instances; live instances are created by the server in its address space.\n")
+
+    md.append("### Variables\n")
+    md.append("All Variable-class nodes are instance declarations of the types above. Measured "
+              "values are typed `AnalogUnitType` and each carries a child `EngineeringUnits` "
+              "property whose value is a standard UNECE/CEFACT unit; status and configuration "
+              "values are typed `BaseDataVariableType` or `PropertyType`. Standard child "
+              "variables also appear: `EngineeringUnits` (on every analog value), `EnumStrings` "
+              "(on every enumeration DataType), `StateNumber`/`TransitionNumber` (on FSM states "
+              "and transitions) and `InputArguments` (on methods that take parameters).\n")
+
+    md.append("### Methods\n")
+    md.append("| Method | Owning type | Input arguments |")
+    md.append("|---|---|---|")
+    for nid in ORDER:
+        n = NODES[nid]
+        if n.cls != "UAMethod":
+            continue
+        owner = NODES[int(n.parent.split("i=")[1])].bname if n.parent else ""
+        args = ", ".join(method_args.get(nid, [])) or "(none)"
+        md.append(f"| {n.bname} | {owner} | {args} |")
+    md.append("")
+
+    md.append("### Reference types\n")
+    md.append("This specification defines no custom ReferenceTypes. It uses the standard OPC UA "
+              "references `HasComponent`, `HasProperty`, `HasAddIn`, `HasInterface`, "
+              "`GeneratesEvent`, `HasSubtype`, `HasTypeDefinition`, `HasModellingRule`, "
+              "`FromState`, `ToState` and `HasEncoding`.\n")
     return "\n".join(md) + "\n"
 
 
@@ -1294,3 +1504,4 @@ if __name__ == "__main__":
     n_types = sum(1 for k in NODES if NODES[k].cls in ("UAObjectType", "UADataType"))
     print(f"Nodes: {len(NODES)}  (ObjectTypes+DataTypes: {n_types})")
     print(f"Member id range: 6001..{_next_member[0] - 1}")
+

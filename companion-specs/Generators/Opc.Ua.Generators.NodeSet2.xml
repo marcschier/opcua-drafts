@@ -41,7 +41,7 @@
   </Aliases>
   <UADataType NodeId="ns=1;i=3001" BrowseName="1:GeneratorOperatingModeEnum">
     <DisplayName>GeneratorOperatingModeEnum</DisplayName>
-    <Description>Selector mode of the generator set control panel (e.g. Cummins PowerCommand).</Description>
+    <Description>Selector mode of the generator set control panel.</Description>
     <Category>Generators DataTypes</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
@@ -394,7 +394,7 @@
   </UAObjectType>
   <UAVariable NodeId="ns=1;i=6003" BrowseName="1:SpecificationNumber" ParentNodeId="ns=1;i=1016" DataType="String" ValueRank="-1">
     <DisplayName>SpecificationNumber</DisplayName>
-    <Description>Manufacturer build/specification code (e.g. Cummins spec number).</Description>
+    <Description>Vendor build/specification code that identifies the exact configuration.</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=80</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
@@ -403,7 +403,7 @@
   </UAVariable>
   <UAVariable NodeId="ns=1;i=6004" BrowseName="1:ProductFamily" ParentNodeId="ns=1;i=1016" DataType="String" ValueRank="-1">
     <DisplayName>ProductFamily</DisplayName>
-    <Description>Product family or series (e.g. QuietConnect, C-Series, QSK, QSV).</Description>
+    <Description>Vendor product family or series to which the set belongs.</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=80</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
@@ -448,7 +448,7 @@
   </UAVariable>
   <UAVariable NodeId="ns=1;i=6009" BrowseName="1:ControllerModel" ParentNodeId="ns=1;i=1016" DataType="String" ValueRank="-1">
     <DisplayName>ControllerModel</DisplayName>
-    <Description>Model of the control panel (e.g. PCC1301, PCC2300, PCC3300).</Description>
+    <Description>Model designation of the control panel.</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=80</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
@@ -2968,7 +2968,7 @@
   </UAVariable>
   <UAObjectType NodeId="ns=1;i=1009" BrowseName="1:GeneratorControllerType">
     <DisplayName>GeneratorControllerType</DisplayName>
-    <Description>The generator set control panel (e.g. Cummins PowerCommand). Provides controller identity, mode/state visibility and remote-monitoring status.</Description>
+    <Description>The generator set control panel. Provides controller identity, mode/state visibility and remote-monitoring status.</Description>
     <Category>Generators Components</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=2;i=15063</Reference>
@@ -2987,7 +2987,7 @@
   </UAObjectType>
   <UAVariable NodeId="ns=1;i=6253" BrowseName="1:ControllerFamily" ParentNodeId="ns=1;i=1009" DataType="String" ValueRank="-1">
     <DisplayName>ControllerFamily</DisplayName>
-    <Description>Controller family, e.g. 'PowerCommand'.</Description>
+    <Description>Vendor controller product family or product line.</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=80</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
