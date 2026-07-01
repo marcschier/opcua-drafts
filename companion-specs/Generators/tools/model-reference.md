@@ -1,3 +1,4 @@
+<a id="annex-a"></a>
 ## Annex A — Information model
 
 This annex is the normative node reference. It is generated directly from `tools/build_model.py` and therefore always matches `Opc.Ua.Generators.NodeSet2.xml`. It is organised by NodeClass. For every ObjectType and DataType the full structure is given, and the **Declared in** column names the type that declares each member — rows whose *Declared in* value differs from the type being described are **inherited** from a base type in OPC UA, Devices (DI) or Machinery.
@@ -6,49 +7,50 @@ This annex is the normative node reference. It is generated directly from `tools
 
 | NodeId | BrowseName | NodeClass | Subtype of |
 |---|---|---|---|
-| ns=1;i=1016 | GeneratorIdentificationType | ObjectType | MachineIdentificationType [Machinery] |
-| ns=1;i=1011 | GeneratorStateMachineType | ObjectType | FiniteStateMachineType |
-| ns=1;i=1010 | J1939DiagnosticInterfaceType | ObjectType | BaseObjectType |
-| ns=1;i=1018 | ExhaustAftertreatmentType | ObjectType | ComponentType [DI] |
-| ns=1;i=1002 | EngineType | ObjectType | ComponentType [DI] |
-| ns=1;i=1004 | AlternatorPhaseType | ObjectType | BaseObjectType |
-| ns=1;i=1003 | AlternatorType | ObjectType | ComponentType [DI] |
-| ns=1;i=1005 | FuelSystemType | ObjectType | ComponentType [DI] |
-| ns=1;i=1006 | CoolingSystemType | ObjectType | ComponentType [DI] |
-| ns=1;i=1007 | LubricationSystemType | ObjectType | ComponentType [DI] |
-| ns=1;i=1008 | StartingSystemType | ObjectType | ComponentType [DI] |
-| ns=1;i=1009 | GeneratorControllerType | ObjectType | ComponentType [DI] |
-| ns=1;i=1012 | GeneratorRatingType | ObjectType | BaseObjectType |
-| ns=1;i=1017 | GeneratorProtectionAlarmType | ObjectType | OffNormalAlarmType |
-| ns=1;i=1001 | GeneratorSetType | ObjectType | DeviceType [DI] |
-| ns=1;i=1019 | TransferSwitchSourceType | ObjectType | BaseObjectType |
-| ns=1;i=1013 | AutomaticTransferSwitchType | ObjectType | DeviceType [DI] |
-| ns=1;i=1014 | ParallelingControllerType | ObjectType | ComponentType [DI] |
-| ns=1;i=1015 | GeneratorSystemType | ObjectType | BaseObjectType |
-| ns=1;i=3001 | GeneratorOperatingModeEnum | DataType | Enumeration |
-| ns=1;i=3002 | FuelTypeEnum | DataType | Enumeration |
-| ns=1;i=3003 | GeneratorApplicationRatingEnum | DataType | Enumeration |
-| ns=1;i=3004 | ElectricalConnectionEnum | DataType | Enumeration |
-| ns=1;i=3005 | ExcitationTypeEnum | DataType | Enumeration |
-| ns=1;i=3006 | CoolingMethodEnum | DataType | Enumeration |
-| ns=1;i=3007 | AspirationEnum | DataType | Enumeration |
-| ns=1;i=3008 | EmissionsStandardEnum | DataType | Enumeration |
-| ns=1;i=3009 | CanBusStateEnum | DataType | Enumeration |
-| ns=1;i=3010 | TransferSwitchPositionEnum | DataType | Enumeration |
-| ns=1;i=3011 | TransferTransitionTypeEnum | DataType | Enumeration |
-| ns=1;i=3012 | AtsOperatingStateEnum | DataType | Enumeration |
-| ns=1;i=3013 | AlarmSeverityEnum | DataType | Enumeration |
-| ns=1;i=3014 | GeneratorProtectionFunctionEnum | DataType | Enumeration |
-| ns=1;i=3015 | ParallelingSystemStateEnum | DataType | Enumeration |
-| ns=1;i=3016 | AftertreatmentStateEnum | DataType | Enumeration |
-| ns=1;i=3017 | J1939LampStatusEnum | DataType | Enumeration |
-| ns=1;i=3050 | DiagnosticTroubleCodeType | DataType | Structure |
+| ns=1;i=1016 | [GeneratorIdentificationType](#type-GeneratorIdentificationType) | ObjectType | [MachineIdentificationType](https://reference.opcfoundation.org/specs/OPC-40001-1/8.6) \[Machinery\] |
+| ns=1;i=1011 | [GeneratorStateMachineType](#type-GeneratorStateMachineType) | ObjectType | [FiniteStateMachineType](https://reference.opcfoundation.org/specs/OPC-10000-16/4.4.5) |
+| ns=1;i=1010 | [J1939DiagnosticInterfaceType](#type-J1939DiagnosticInterfaceType) | ObjectType | [BaseObjectType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.2) |
+| ns=1;i=1018 | [ExhaustAftertreatmentType](#type-ExhaustAftertreatmentType) | ObjectType | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) \[DI\] |
+| ns=1;i=1002 | [EngineType](#type-EngineType) | ObjectType | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) \[DI\] |
+| ns=1;i=1004 | [AlternatorPhaseType](#type-AlternatorPhaseType) | ObjectType | [BaseObjectType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.2) |
+| ns=1;i=1003 | [AlternatorType](#type-AlternatorType) | ObjectType | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) \[DI\] |
+| ns=1;i=1005 | [FuelSystemType](#type-FuelSystemType) | ObjectType | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) \[DI\] |
+| ns=1;i=1006 | [CoolingSystemType](#type-CoolingSystemType) | ObjectType | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) \[DI\] |
+| ns=1;i=1007 | [LubricationSystemType](#type-LubricationSystemType) | ObjectType | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) \[DI\] |
+| ns=1;i=1008 | [StartingSystemType](#type-StartingSystemType) | ObjectType | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) \[DI\] |
+| ns=1;i=1009 | [GeneratorControllerType](#type-GeneratorControllerType) | ObjectType | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) \[DI\] |
+| ns=1;i=1012 | [GeneratorRatingType](#type-GeneratorRatingType) | ObjectType | [BaseObjectType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.2) |
+| ns=1;i=1017 | [GeneratorProtectionAlarmType](#type-GeneratorProtectionAlarmType) | ObjectType | [OffNormalAlarmType](https://reference.opcfoundation.org/specs/OPC-10000-9/5.8.24#5.8.24.2) |
+| ns=1;i=1001 | [GeneratorSetType](#type-GeneratorSetType) | ObjectType | [DeviceType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.7) \[DI\] |
+| ns=1;i=1019 | [TransferSwitchSourceType](#type-TransferSwitchSourceType) | ObjectType | [BaseObjectType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.2) |
+| ns=1;i=1013 | [AutomaticTransferSwitchType](#type-AutomaticTransferSwitchType) | ObjectType | [DeviceType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.7) \[DI\] |
+| ns=1;i=1014 | [ParallelingControllerType](#type-ParallelingControllerType) | ObjectType | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) \[DI\] |
+| ns=1;i=1015 | [GeneratorSystemType](#type-GeneratorSystemType) | ObjectType | [BaseObjectType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.2) |
+| ns=1;i=3001 | [GeneratorOperatingModeEnum](#type-GeneratorOperatingModeEnum) | DataType | [Enumeration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.14) |
+| ns=1;i=3002 | [FuelTypeEnum](#type-FuelTypeEnum) | DataType | [Enumeration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.14) |
+| ns=1;i=3003 | [GeneratorApplicationRatingEnum](#type-GeneratorApplicationRatingEnum) | DataType | [Enumeration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.14) |
+| ns=1;i=3004 | [ElectricalConnectionEnum](#type-ElectricalConnectionEnum) | DataType | [Enumeration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.14) |
+| ns=1;i=3005 | [ExcitationTypeEnum](#type-ExcitationTypeEnum) | DataType | [Enumeration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.14) |
+| ns=1;i=3006 | [CoolingMethodEnum](#type-CoolingMethodEnum) | DataType | [Enumeration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.14) |
+| ns=1;i=3007 | [AspirationEnum](#type-AspirationEnum) | DataType | [Enumeration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.14) |
+| ns=1;i=3008 | [EmissionsStandardEnum](#type-EmissionsStandardEnum) | DataType | [Enumeration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.14) |
+| ns=1;i=3009 | [CanBusStateEnum](#type-CanBusStateEnum) | DataType | [Enumeration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.14) |
+| ns=1;i=3010 | [TransferSwitchPositionEnum](#type-TransferSwitchPositionEnum) | DataType | [Enumeration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.14) |
+| ns=1;i=3011 | [TransferTransitionTypeEnum](#type-TransferTransitionTypeEnum) | DataType | [Enumeration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.14) |
+| ns=1;i=3012 | [AtsOperatingStateEnum](#type-AtsOperatingStateEnum) | DataType | [Enumeration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.14) |
+| ns=1;i=3013 | [AlarmSeverityEnum](#type-AlarmSeverityEnum) | DataType | [Enumeration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.14) |
+| ns=1;i=3014 | [GeneratorProtectionFunctionEnum](#type-GeneratorProtectionFunctionEnum) | DataType | [Enumeration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.14) |
+| ns=1;i=3015 | [ParallelingSystemStateEnum](#type-ParallelingSystemStateEnum) | DataType | [Enumeration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.14) |
+| ns=1;i=3016 | [AftertreatmentStateEnum](#type-AftertreatmentStateEnum) | DataType | [Enumeration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.14) |
+| ns=1;i=3017 | [J1939LampStatusEnum](#type-J1939LampStatusEnum) | DataType | [Enumeration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.14) |
+| ns=1;i=3050 | [DiagnosticTroubleCodeType](#type-DiagnosticTroubleCodeType) | DataType | [Structure](https://reference.opcfoundation.org/specs/OPC-10000-3/8.32) |
 
 ### Object types
 
+<a id="type-GeneratorIdentificationType"></a>
 #### GeneratorIdentificationType  (ns=1;i=1016)
 
-*Inherits from:* **MachineIdentificationType [Machinery]**
+*Inherits from:* [MachineIdentificationType](https://reference.opcfoundation.org/specs/OPC-40001-1/8.6) \[Machinery\]
 
 Identification and nameplate of a generator set. Extends the Machinery MachineIdentificationType with generator-specific nameplate data.
 
@@ -61,34 +63,35 @@ Identification and nameplate of a generator set. Extends the Machinery MachineId
 | AlternatorModel | Variable | String | Optional | GeneratorIdentificationType | Model designation of the alternator. |
 | AlternatorSerialNumber | Variable | String | Optional | GeneratorIdentificationType | Serial number of the alternator. |
 | ControllerModel | Variable | String | Optional | GeneratorIdentificationType | Model designation of the control panel. |
-| FuelType | Variable | FuelTypeEnum | Optional | GeneratorIdentificationType | Primary fuel of the set. |
-| EmissionsStandard | Variable | EmissionsStandardEnum | Optional | GeneratorIdentificationType | Emissions certification standard. |
+| FuelType | Variable | [FuelTypeEnum](#type-FuelTypeEnum) | Optional | GeneratorIdentificationType | Primary fuel of the set. |
+| EmissionsStandard | Variable | [EmissionsStandardEnum](#type-EmissionsStandardEnum) | Optional | GeneratorIdentificationType | Emissions certification standard. |
 | RatedRealPower | Variable | Double | Optional | GeneratorIdentificationType | Nameplate rated real power. EngineeringUnits: kW. |
 | RatedApparentPower | Variable | Double | Optional | GeneratorIdentificationType | Nameplate rated apparent power. EngineeringUnits: kVA. |
 | RatedVoltage | Variable | Double | Optional | GeneratorIdentificationType | Nameplate rated line-to-line voltage. EngineeringUnits: V. |
 | RatedFrequency | Variable | Double | Optional | GeneratorIdentificationType | Nameplate rated frequency. EngineeringUnits: Hz. |
 | SoundRatingAt7m | Variable | Double | Optional | GeneratorIdentificationType | Sound pressure level at 7 m (23 ft) in dB(A). |
-| Location | Variable | String | Optional | MachineIdentificationType | |
-| ProductInstanceUri | Variable | String | Mandatory | MachineIdentificationType | |
-| AssetId | Variable | String | Optional | MachineryItemIdentificationType | |
-| ComponentName | Variable | LocalizedText | Optional | MachineryItemIdentificationType | |
-| DeviceClass | Variable | String | Optional | MachineryItemIdentificationType | |
-| HardwareRevision | Variable | String | Optional | MachineryItemIdentificationType | |
-| InitialOperationDate | Variable | DateTime | Optional | MachineryItemIdentificationType | |
-| Manufacturer | Variable | LocalizedText | Mandatory | MachineryItemIdentificationType | |
-| ManufacturerUri | Variable | String | Optional | MachineryItemIdentificationType | |
-| Model | Variable | LocalizedText | Optional | MachineryItemIdentificationType | |
-| MonthOfConstruction | Variable | Byte | Optional | MachineryItemIdentificationType | |
-| ProductCode | Variable | String | Optional | MachineryItemIdentificationType | |
-| SerialNumber | Variable | String | Mandatory | MachineryItemIdentificationType | |
-| SoftwareRevision | Variable | String | Optional | MachineryItemIdentificationType | |
-| YearOfConstruction | Variable | UInt16 | Optional | MachineryItemIdentificationType | |
-| <GroupIdentifier> | Object |  | OptionalPlaceholder | FunctionalGroupType | |
-| UIElement | Variable |  | Optional | FunctionalGroupType | |
+| Location | Variable | String | Optional | [MachineIdentificationType](https://reference.opcfoundation.org/specs/OPC-40001-1/8.6) | |
+| ProductInstanceUri | Variable | String | Mandatory | [MachineIdentificationType](https://reference.opcfoundation.org/specs/OPC-40001-1/8.6) | |
+| AssetId | Variable | String | Optional | [MachineryItemIdentificationType](https://reference.opcfoundation.org/specs/OPC-40001-1/8.3) | |
+| ComponentName | Variable | LocalizedText | Optional | [MachineryItemIdentificationType](https://reference.opcfoundation.org/specs/OPC-40001-1/8.3) | |
+| DeviceClass | Variable | String | Optional | [MachineryItemIdentificationType](https://reference.opcfoundation.org/specs/OPC-40001-1/8.3) | |
+| HardwareRevision | Variable | String | Optional | [MachineryItemIdentificationType](https://reference.opcfoundation.org/specs/OPC-40001-1/8.3) | |
+| InitialOperationDate | Variable | DateTime | Optional | [MachineryItemIdentificationType](https://reference.opcfoundation.org/specs/OPC-40001-1/8.3) | |
+| Manufacturer | Variable | LocalizedText | Mandatory | [MachineryItemIdentificationType](https://reference.opcfoundation.org/specs/OPC-40001-1/8.3) | |
+| ManufacturerUri | Variable | String | Optional | [MachineryItemIdentificationType](https://reference.opcfoundation.org/specs/OPC-40001-1/8.3) | |
+| Model | Variable | LocalizedText | Optional | [MachineryItemIdentificationType](https://reference.opcfoundation.org/specs/OPC-40001-1/8.3) | |
+| MonthOfConstruction | Variable | Byte | Optional | [MachineryItemIdentificationType](https://reference.opcfoundation.org/specs/OPC-40001-1/8.3) | |
+| ProductCode | Variable | String | Optional | [MachineryItemIdentificationType](https://reference.opcfoundation.org/specs/OPC-40001-1/8.3) | |
+| SerialNumber | Variable | String | Mandatory | [MachineryItemIdentificationType](https://reference.opcfoundation.org/specs/OPC-40001-1/8.3) | |
+| SoftwareRevision | Variable | String | Optional | [MachineryItemIdentificationType](https://reference.opcfoundation.org/specs/OPC-40001-1/8.3) | |
+| YearOfConstruction | Variable | UInt16 | Optional | [MachineryItemIdentificationType](https://reference.opcfoundation.org/specs/OPC-40001-1/8.3) | |
+| <GroupIdentifier> | Object |  | OptionalPlaceholder | [FunctionalGroupType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.4.1) | |
+| UIElement | Variable |  | Optional | [FunctionalGroupType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.4.1) | |
 
+<a id="type-GeneratorStateMachineType"></a>
 #### GeneratorStateMachineType  (ns=1;i=1011)
 
-*Inherits from:* **FiniteStateMachineType**
+*Inherits from:* [FiniteStateMachineType](https://reference.opcfoundation.org/specs/OPC-10000-16/4.4.5)
 
 Finite state machine describing the operating state of a generator set: Off, Ready, Starting, Warmup, Running, Loaded, Synchronizing, Paralleled, Cooldown, Stopping, Fault and EmergencyStopped.
 
@@ -129,14 +132,15 @@ Finite state machine describing the operating state of a generator set: Off, Rea
 | LoadedToEmergencyStopped | Object |  |  | GeneratorStateMachineType | Transition 'LoadedToEmergencyStopped'. |
 | ParalleledToEmergencyStopped | Object |  |  | GeneratorStateMachineType | Transition 'ParalleledToEmergencyStopped'. |
 | EmergencyStoppedToOff | Object |  |  | GeneratorStateMachineType | Transition 'EmergencyStoppedToOff'. |
-| CurrentState | Variable | LocalizedText | Mandatory | FiniteStateMachineType | |
-| LastTransition | Variable | LocalizedText | Optional | FiniteStateMachineType | |
-| AvailableStates | Variable | NodeId[] | Optional | FiniteStateMachineType | |
-| AvailableTransitions | Variable | NodeId[] | Optional | FiniteStateMachineType | |
+| CurrentState | Variable | LocalizedText | Mandatory | [FiniteStateMachineType](https://reference.opcfoundation.org/specs/OPC-10000-16/4.4.5) | |
+| LastTransition | Variable | LocalizedText | Optional | [FiniteStateMachineType](https://reference.opcfoundation.org/specs/OPC-10000-16/4.4.5) | |
+| AvailableStates | Variable | NodeId\[\] | Optional | [FiniteStateMachineType](https://reference.opcfoundation.org/specs/OPC-10000-16/4.4.5) | |
+| AvailableTransitions | Variable | NodeId\[\] | Optional | [FiniteStateMachineType](https://reference.opcfoundation.org/specs/OPC-10000-16/4.4.5) | |
 
+<a id="type-J1939DiagnosticInterfaceType"></a>
 #### J1939DiagnosticInterfaceType  (ns=1;i=1010)
 
-*Inherits from:* **BaseObjectType**
+*Inherits from:* [BaseObjectType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.2)
 
 The engine CAN bus / SAE J1939 diagnostic interface. Surfaces the network connection parameters, J1939 lamp status and active/previously-active diagnostic trouble codes reported by the engine ECU.
 
@@ -146,24 +150,25 @@ The engine CAN bus / SAE J1939 diagnostic interface. Surfaces the network connec
 | NetworkName | Variable | String | Optional | J1939DiagnosticInterfaceType | Name/identifier of the CAN network (e.g. CAN0). |
 | SourceAddress | Variable | Byte | Optional | J1939DiagnosticInterfaceType | J1939 source address of the engine ECU. |
 | Baudrate | Variable | UInt32 | Optional | J1939DiagnosticInterfaceType | CAN bit rate in bit/s (typically 250000 or 500000). |
-| BusState | Variable | CanBusStateEnum | Optional | J1939DiagnosticInterfaceType | State of the CAN bus interface. |
-| AmberWarningLamp | Variable | J1939LampStatusEnum | Optional | J1939DiagnosticInterfaceType | J1939 DM1 amber warning lamp status. |
-| RedStopLamp | Variable | J1939LampStatusEnum | Optional | J1939DiagnosticInterfaceType | J1939 DM1 red stop lamp status. |
-| MalfunctionIndicatorLamp | Variable | J1939LampStatusEnum | Optional | J1939DiagnosticInterfaceType | J1939 DM1 malfunction indicator lamp status. |
-| ProtectLamp | Variable | J1939LampStatusEnum | Optional | J1939DiagnosticInterfaceType | J1939 DM1 protect lamp status. |
-| ActiveDiagnosticTroubleCodes | Variable | DiagnosticTroubleCodeType[] | Optional | J1939DiagnosticInterfaceType | Currently active DTCs (J1939 DM1). |
-| PreviouslyActiveDiagnosticTroubleCodes | Variable | DiagnosticTroubleCodeType[] | Optional | J1939DiagnosticInterfaceType | Previously active DTCs (J1939 DM2). |
+| BusState | Variable | [CanBusStateEnum](#type-CanBusStateEnum) | Optional | J1939DiagnosticInterfaceType | State of the CAN bus interface. |
+| AmberWarningLamp | Variable | [J1939LampStatusEnum](#type-J1939LampStatusEnum) | Optional | J1939DiagnosticInterfaceType | J1939 DM1 amber warning lamp status. |
+| RedStopLamp | Variable | [J1939LampStatusEnum](#type-J1939LampStatusEnum) | Optional | J1939DiagnosticInterfaceType | J1939 DM1 red stop lamp status. |
+| MalfunctionIndicatorLamp | Variable | [J1939LampStatusEnum](#type-J1939LampStatusEnum) | Optional | J1939DiagnosticInterfaceType | J1939 DM1 malfunction indicator lamp status. |
+| ProtectLamp | Variable | [J1939LampStatusEnum](#type-J1939LampStatusEnum) | Optional | J1939DiagnosticInterfaceType | J1939 DM1 protect lamp status. |
+| ActiveDiagnosticTroubleCodes | Variable | [DiagnosticTroubleCodeType](#type-DiagnosticTroubleCodeType)\[\] | Optional | J1939DiagnosticInterfaceType | Currently active DTCs (J1939 DM1). |
+| PreviouslyActiveDiagnosticTroubleCodes | Variable | [DiagnosticTroubleCodeType](#type-DiagnosticTroubleCodeType)\[\] | Optional | J1939DiagnosticInterfaceType | Previously active DTCs (J1939 DM2). |
 | ClearPreviouslyActiveDtcs | Method |  | Optional | J1939DiagnosticInterfaceType | Clear previously active diagnostic trouble codes (J1939 DM3/DM11). |
 
+<a id="type-ExhaustAftertreatmentType"></a>
 #### ExhaustAftertreatmentType  (ns=1;i=1018)
 
-*Inherits from:* **ComponentType [DI]**
+*Inherits from:* [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) \[DI\]
 
 Exhaust aftertreatment subsystem (DPF/SCR/DEF) for Tier 4 / Stage V engines.
 
 | BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
 |---|---|---|---|---|---|
-| AftertreatmentState | Variable | AftertreatmentStateEnum | Optional | ExhaustAftertreatmentType | State of the aftertreatment system. |
+| AftertreatmentState | Variable | [AftertreatmentStateEnum](#type-AftertreatmentStateEnum) | Optional | ExhaustAftertreatmentType | State of the aftertreatment system. |
 | DefLevel | Variable | Double | Optional | ExhaustAftertreatmentType | Diesel Exhaust Fluid tank level. SAE J1939 SPN 1761. EngineeringUnits: %. |
 | DefTemperature | Variable | Double | Optional | ExhaustAftertreatmentType | DEF tank temperature. SAE J1939 SPN 3031. EngineeringUnits: degC. |
 | DefQuality | Variable | Double | Optional | ExhaustAftertreatmentType | DEF concentration/quality. SAE J1939 SPN 3364. EngineeringUnits: %. |
@@ -174,29 +179,30 @@ Exhaust aftertreatment subsystem (DPF/SCR/DEF) for Tier 4 / Stage V engines.
 | RegenerationInhibited | Variable | Boolean | Optional | ExhaustAftertreatmentType | DPF regeneration is currently inhibited. |
 | InitiateRegeneration | Method |  | Optional | ExhaustAftertreatmentType | Request a manual DPF regeneration. |
 | InhibitRegeneration | Method |  | Optional | ExhaustAftertreatmentType | Enable or disable the inhibit of automatic regeneration. |
-| Manufacturer | Variable | LocalizedText | Optional | ComponentType | |
-| ManufacturerUri | Variable | String | Optional | ComponentType | |
-| Model | Variable | LocalizedText | Optional | ComponentType | |
-| HardwareRevision | Variable | String | Optional | ComponentType | |
-| SoftwareRevision | Variable | String | Optional | ComponentType | |
-| DeviceRevision | Variable | String | Optional | ComponentType | |
-| ProductCode | Variable | String | Optional | ComponentType | |
-| DeviceManual | Variable | String | Optional | ComponentType | |
-| DeviceClass | Variable | String | Optional | ComponentType | |
-| SerialNumber | Variable | String | Optional | ComponentType | |
-| ProductInstanceUri | Variable | String | Optional | ComponentType | |
-| RevisionCounter | Variable | Int32 | Optional | ComponentType | |
-| AssetId | Variable | String | Optional | ComponentType | |
-| ComponentName | Variable | LocalizedText | Optional | ComponentType | |
-| ParameterSet | Object |  | Optional | TopologyElementType | |
-| MethodSet | Object |  | Optional | TopologyElementType | |
-| <GroupIdentifier> | Object |  | OptionalPlaceholder | TopologyElementType | |
-| Identification | Object |  | Optional | TopologyElementType | |
-| Lock | Object |  | Optional | TopologyElementType | |
+| Manufacturer | Variable | LocalizedText | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| ManufacturerUri | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| Model | Variable | LocalizedText | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| HardwareRevision | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| SoftwareRevision | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| DeviceRevision | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| ProductCode | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| DeviceManual | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| DeviceClass | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| SerialNumber | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| ProductInstanceUri | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| RevisionCounter | Variable | Int32 | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| AssetId | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| ComponentName | Variable | LocalizedText | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| ParameterSet | Object |  | Optional | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
+| MethodSet | Object |  | Optional | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
+| <GroupIdentifier> | Object |  | OptionalPlaceholder | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
+| Identification | Object |  | Optional | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
+| Lock | Object |  | Optional | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
 
+<a id="type-EngineType"></a>
 #### EngineType  (ns=1;i=1002)
 
-*Inherits from:* **ComponentType [DI]**
+*Inherits from:* [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) \[DI\]
 
 The prime-mover engine of a generator set. Exposes engine telemetry, typically obtained over the CAN bus / SAE J1939 interface, and identification.
 
@@ -217,35 +223,36 @@ The prime-mover engine of a generator set. Exposes engine telemetry, typically o
 | BarometricPressure | Variable | Double | Optional | EngineType | Ambient barometric pressure. SAE J1939 SPN 108. EngineeringUnits: kPa. |
 | EngineHours | Variable | Double | Mandatory | EngineType | Total engine run hours. SAE J1939 SPN 247. EngineeringUnits: h. |
 | NumberOfStarts | Variable | UInt32 | Optional | EngineType | Total number of engine start attempts. |
-| Aspiration | Variable | AspirationEnum | Optional | EngineType | Air induction method of the engine. |
+| Aspiration | Variable | [AspirationEnum](#type-AspirationEnum) | Optional | EngineType | Air induction method of the engine. |
 | Displacement | Variable | Double | Optional | EngineType | Engine displacement. EngineeringUnits: l. |
 | CylinderCount | Variable | UInt16 | Optional | EngineType | Number of cylinders. |
 | RatedSpeed | Variable | Double | Optional | EngineType | Rated (synchronous) engine speed, e.g. 1500 or 1800 rpm. EngineeringUnits: rpm. |
 | CanInterface | Object |  | Optional | EngineType | CAN bus / SAE J1939 diagnostic interface of the engine ECU. |
 | Aftertreatment | Object |  | Optional | EngineType | Exhaust aftertreatment subsystem, when equipped. |
-| Manufacturer | Variable | LocalizedText | Optional | ComponentType | |
-| ManufacturerUri | Variable | String | Optional | ComponentType | |
-| Model | Variable | LocalizedText | Optional | ComponentType | |
-| HardwareRevision | Variable | String | Optional | ComponentType | |
-| SoftwareRevision | Variable | String | Optional | ComponentType | |
-| DeviceRevision | Variable | String | Optional | ComponentType | |
-| ProductCode | Variable | String | Optional | ComponentType | |
-| DeviceManual | Variable | String | Optional | ComponentType | |
-| DeviceClass | Variable | String | Optional | ComponentType | |
-| SerialNumber | Variable | String | Optional | ComponentType | |
-| ProductInstanceUri | Variable | String | Optional | ComponentType | |
-| RevisionCounter | Variable | Int32 | Optional | ComponentType | |
-| AssetId | Variable | String | Optional | ComponentType | |
-| ComponentName | Variable | LocalizedText | Optional | ComponentType | |
-| ParameterSet | Object |  | Optional | TopologyElementType | |
-| MethodSet | Object |  | Optional | TopologyElementType | |
-| <GroupIdentifier> | Object |  | OptionalPlaceholder | TopologyElementType | |
-| Identification | Object |  | Optional | TopologyElementType | |
-| Lock | Object |  | Optional | TopologyElementType | |
+| Manufacturer | Variable | LocalizedText | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| ManufacturerUri | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| Model | Variable | LocalizedText | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| HardwareRevision | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| SoftwareRevision | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| DeviceRevision | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| ProductCode | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| DeviceManual | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| DeviceClass | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| SerialNumber | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| ProductInstanceUri | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| RevisionCounter | Variable | Int32 | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| AssetId | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| ComponentName | Variable | LocalizedText | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| ParameterSet | Object |  | Optional | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
+| MethodSet | Object |  | Optional | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
+| <GroupIdentifier> | Object |  | OptionalPlaceholder | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
+| Identification | Object |  | Optional | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
+| Lock | Object |  | Optional | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
 
+<a id="type-AlternatorPhaseType"></a>
 #### AlternatorPhaseType  (ns=1;i=1004)
 
-*Inherits from:* **BaseObjectType**
+*Inherits from:* [BaseObjectType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.2)
 
 Per-phase electrical measurements of the alternator output.
 
@@ -259,9 +266,10 @@ Per-phase electrical measurements of the alternator output.
 | ApparentPower | Variable | Double | Optional | AlternatorPhaseType | Per-phase apparent power. EngineeringUnits: kVA. |
 | PowerFactor | Variable | Double | Optional | AlternatorPhaseType | Per-phase power factor (-1..1). |
 
+<a id="type-AlternatorType"></a>
 #### AlternatorType  (ns=1;i=1003)
 
-*Inherits from:* **ComponentType [DI]**
+*Inherits from:* [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) \[DI\]
 
 The alternator (generator end) that converts mechanical power into AC electrical power. Exposes aggregate and per-phase electrical measurements.
 
@@ -282,43 +290,44 @@ The alternator (generator end) that converts mechanical power into AC electrical
 | WindingTemperature3 | Variable | Double | Optional | AlternatorType | Stator winding temperature, phase 3. EngineeringUnits: degC. |
 | BearingTemperatureDriveEnd | Variable | Double | Optional | AlternatorType | Drive-end bearing temperature. EngineeringUnits: degC. |
 | BearingTemperatureNonDriveEnd | Variable | Double | Optional | AlternatorType | Non-drive-end bearing temperature. EngineeringUnits: degC. |
-| Connection | Variable | ElectricalConnectionEnum | Optional | AlternatorType | Winding connection configuration. |
-| ExcitationType | Variable | ExcitationTypeEnum | Optional | AlternatorType | Excitation method. |
+| Connection | Variable | [ElectricalConnectionEnum](#type-ElectricalConnectionEnum) | Optional | AlternatorType | Winding connection configuration. |
+| ExcitationType | Variable | [ExcitationTypeEnum](#type-ExcitationTypeEnum) | Optional | AlternatorType | Excitation method. |
 | NumberOfPoles | Variable | UInt16 | Optional | AlternatorType | Number of alternator poles. |
 | VoltageSetpoint | Variable | Double | Optional | AlternatorType | AVR voltage setpoint. EngineeringUnits: V. |
 | FieldCurrent | Variable | Double | Optional | AlternatorType | Excitation field current. EngineeringUnits: A. |
 | L1 | Object |  | Mandatory | AlternatorType | Phase 1 (A) measurements. |
 | L2 | Object |  | Optional | AlternatorType | Phase 2 (B) measurements. |
 | L3 | Object |  | Optional | AlternatorType | Phase 3 (C) measurements. |
-| Manufacturer | Variable | LocalizedText | Optional | ComponentType | |
-| ManufacturerUri | Variable | String | Optional | ComponentType | |
-| Model | Variable | LocalizedText | Optional | ComponentType | |
-| HardwareRevision | Variable | String | Optional | ComponentType | |
-| SoftwareRevision | Variable | String | Optional | ComponentType | |
-| DeviceRevision | Variable | String | Optional | ComponentType | |
-| ProductCode | Variable | String | Optional | ComponentType | |
-| DeviceManual | Variable | String | Optional | ComponentType | |
-| DeviceClass | Variable | String | Optional | ComponentType | |
-| SerialNumber | Variable | String | Optional | ComponentType | |
-| ProductInstanceUri | Variable | String | Optional | ComponentType | |
-| RevisionCounter | Variable | Int32 | Optional | ComponentType | |
-| AssetId | Variable | String | Optional | ComponentType | |
-| ComponentName | Variable | LocalizedText | Optional | ComponentType | |
-| ParameterSet | Object |  | Optional | TopologyElementType | |
-| MethodSet | Object |  | Optional | TopologyElementType | |
-| <GroupIdentifier> | Object |  | OptionalPlaceholder | TopologyElementType | |
-| Identification | Object |  | Optional | TopologyElementType | |
-| Lock | Object |  | Optional | TopologyElementType | |
+| Manufacturer | Variable | LocalizedText | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| ManufacturerUri | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| Model | Variable | LocalizedText | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| HardwareRevision | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| SoftwareRevision | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| DeviceRevision | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| ProductCode | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| DeviceManual | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| DeviceClass | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| SerialNumber | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| ProductInstanceUri | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| RevisionCounter | Variable | Int32 | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| AssetId | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| ComponentName | Variable | LocalizedText | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| ParameterSet | Object |  | Optional | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
+| MethodSet | Object |  | Optional | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
+| <GroupIdentifier> | Object |  | OptionalPlaceholder | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
+| Identification | Object |  | Optional | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
+| Lock | Object |  | Optional | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
 
+<a id="type-FuelSystemType"></a>
 #### FuelSystemType  (ns=1;i=1005)
 
-*Inherits from:* **ComponentType [DI]**
+*Inherits from:* [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) \[DI\]
 
 The fuel storage and delivery subsystem of a generator set.
 
 | BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
 |---|---|---|---|---|---|
-| FuelType | Variable | FuelTypeEnum | Mandatory | FuelSystemType | Primary fuel of the set. |
+| FuelType | Variable | [FuelTypeEnum](#type-FuelTypeEnum) | Mandatory | FuelSystemType | Primary fuel of the set. |
 | FuelLevel | Variable | Double | Optional | FuelSystemType | Fuel tank level. EngineeringUnits: %. |
 | FuelVolume | Variable | Double | Optional | FuelSystemType | Usable fuel volume remaining. EngineeringUnits: l. |
 | FuelConsumptionRate | Variable | Double | Optional | FuelSystemType | Fuel consumption rate. EngineeringUnits: L/h. |
@@ -328,29 +337,30 @@ The fuel storage and delivery subsystem of a generator set.
 | RuntimeRemaining | Variable | Double | Optional | FuelSystemType | Estimated runtime remaining at current load. EngineeringUnits: h. |
 | TotalFuelConsumed | Variable | Double | Optional | FuelSystemType | Cumulative fuel consumed. EngineeringUnits: l. |
 | WaterInFuel | Variable | Boolean | Optional | FuelSystemType | Water detected in the fuel/water separator. |
-| Manufacturer | Variable | LocalizedText | Optional | ComponentType | |
-| ManufacturerUri | Variable | String | Optional | ComponentType | |
-| Model | Variable | LocalizedText | Optional | ComponentType | |
-| HardwareRevision | Variable | String | Optional | ComponentType | |
-| SoftwareRevision | Variable | String | Optional | ComponentType | |
-| DeviceRevision | Variable | String | Optional | ComponentType | |
-| ProductCode | Variable | String | Optional | ComponentType | |
-| DeviceManual | Variable | String | Optional | ComponentType | |
-| DeviceClass | Variable | String | Optional | ComponentType | |
-| SerialNumber | Variable | String | Optional | ComponentType | |
-| ProductInstanceUri | Variable | String | Optional | ComponentType | |
-| RevisionCounter | Variable | Int32 | Optional | ComponentType | |
-| AssetId | Variable | String | Optional | ComponentType | |
-| ComponentName | Variable | LocalizedText | Optional | ComponentType | |
-| ParameterSet | Object |  | Optional | TopologyElementType | |
-| MethodSet | Object |  | Optional | TopologyElementType | |
-| <GroupIdentifier> | Object |  | OptionalPlaceholder | TopologyElementType | |
-| Identification | Object |  | Optional | TopologyElementType | |
-| Lock | Object |  | Optional | TopologyElementType | |
+| Manufacturer | Variable | LocalizedText | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| ManufacturerUri | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| Model | Variable | LocalizedText | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| HardwareRevision | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| SoftwareRevision | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| DeviceRevision | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| ProductCode | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| DeviceManual | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| DeviceClass | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| SerialNumber | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| ProductInstanceUri | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| RevisionCounter | Variable | Int32 | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| AssetId | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| ComponentName | Variable | LocalizedText | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| ParameterSet | Object |  | Optional | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
+| MethodSet | Object |  | Optional | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
+| <GroupIdentifier> | Object |  | OptionalPlaceholder | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
+| Identification | Object |  | Optional | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
+| Lock | Object |  | Optional | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
 
+<a id="type-CoolingSystemType"></a>
 #### CoolingSystemType  (ns=1;i=1006)
 
-*Inherits from:* **ComponentType [DI]**
+*Inherits from:* [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) \[DI\]
 
 The engine cooling subsystem of a generator set.
 
@@ -359,33 +369,34 @@ The engine cooling subsystem of a generator set.
 | CoolantTemperature | Variable | Double | Optional | CoolingSystemType | Engine coolant temperature. EngineeringUnits: degC. |
 | CoolantLevel | Variable | Double | Optional | CoolingSystemType | Coolant level. SAE J1939 SPN 111. EngineeringUnits: %. |
 | CoolantPressure | Variable | Double | Optional | CoolingSystemType | Coolant pressure. EngineeringUnits: kPa. |
-| CoolingMethod | Variable | CoolingMethodEnum | Optional | CoolingSystemType | Cooling method (air- or liquid-cooled). |
+| CoolingMethod | Variable | [CoolingMethodEnum](#type-CoolingMethodEnum) | Optional | CoolingSystemType | Cooling method (air- or liquid-cooled). |
 | AmbientTemperature | Variable | Double | Optional | CoolingSystemType | Ambient air temperature at the set. EngineeringUnits: degC. |
 | RadiatorFanRunning | Variable | Boolean | Optional | CoolingSystemType | The radiator fan is running. |
 | JacketWaterHeaterActive | Variable | Boolean | Optional | CoolingSystemType | The jacket-water block heater is active. |
-| Manufacturer | Variable | LocalizedText | Optional | ComponentType | |
-| ManufacturerUri | Variable | String | Optional | ComponentType | |
-| Model | Variable | LocalizedText | Optional | ComponentType | |
-| HardwareRevision | Variable | String | Optional | ComponentType | |
-| SoftwareRevision | Variable | String | Optional | ComponentType | |
-| DeviceRevision | Variable | String | Optional | ComponentType | |
-| ProductCode | Variable | String | Optional | ComponentType | |
-| DeviceManual | Variable | String | Optional | ComponentType | |
-| DeviceClass | Variable | String | Optional | ComponentType | |
-| SerialNumber | Variable | String | Optional | ComponentType | |
-| ProductInstanceUri | Variable | String | Optional | ComponentType | |
-| RevisionCounter | Variable | Int32 | Optional | ComponentType | |
-| AssetId | Variable | String | Optional | ComponentType | |
-| ComponentName | Variable | LocalizedText | Optional | ComponentType | |
-| ParameterSet | Object |  | Optional | TopologyElementType | |
-| MethodSet | Object |  | Optional | TopologyElementType | |
-| <GroupIdentifier> | Object |  | OptionalPlaceholder | TopologyElementType | |
-| Identification | Object |  | Optional | TopologyElementType | |
-| Lock | Object |  | Optional | TopologyElementType | |
+| Manufacturer | Variable | LocalizedText | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| ManufacturerUri | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| Model | Variable | LocalizedText | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| HardwareRevision | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| SoftwareRevision | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| DeviceRevision | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| ProductCode | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| DeviceManual | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| DeviceClass | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| SerialNumber | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| ProductInstanceUri | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| RevisionCounter | Variable | Int32 | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| AssetId | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| ComponentName | Variable | LocalizedText | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| ParameterSet | Object |  | Optional | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
+| MethodSet | Object |  | Optional | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
+| <GroupIdentifier> | Object |  | OptionalPlaceholder | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
+| Identification | Object |  | Optional | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
+| Lock | Object |  | Optional | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
 
+<a id="type-LubricationSystemType"></a>
 #### LubricationSystemType  (ns=1;i=1007)
 
-*Inherits from:* **ComponentType [DI]**
+*Inherits from:* [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) \[DI\]
 
 The engine lubrication subsystem of a generator set.
 
@@ -395,29 +406,30 @@ The engine lubrication subsystem of a generator set.
 | OilTemperature | Variable | Double | Optional | LubricationSystemType | Engine oil temperature. SAE J1939 SPN 175. EngineeringUnits: degC. |
 | OilLevel | Variable | Double | Optional | LubricationSystemType | Engine oil level. EngineeringUnits: %. |
 | OilFilterDifferentialPressure | Variable | Double | Optional | LubricationSystemType | Oil filter differential pressure. EngineeringUnits: kPa. |
-| Manufacturer | Variable | LocalizedText | Optional | ComponentType | |
-| ManufacturerUri | Variable | String | Optional | ComponentType | |
-| Model | Variable | LocalizedText | Optional | ComponentType | |
-| HardwareRevision | Variable | String | Optional | ComponentType | |
-| SoftwareRevision | Variable | String | Optional | ComponentType | |
-| DeviceRevision | Variable | String | Optional | ComponentType | |
-| ProductCode | Variable | String | Optional | ComponentType | |
-| DeviceManual | Variable | String | Optional | ComponentType | |
-| DeviceClass | Variable | String | Optional | ComponentType | |
-| SerialNumber | Variable | String | Optional | ComponentType | |
-| ProductInstanceUri | Variable | String | Optional | ComponentType | |
-| RevisionCounter | Variable | Int32 | Optional | ComponentType | |
-| AssetId | Variable | String | Optional | ComponentType | |
-| ComponentName | Variable | LocalizedText | Optional | ComponentType | |
-| ParameterSet | Object |  | Optional | TopologyElementType | |
-| MethodSet | Object |  | Optional | TopologyElementType | |
-| <GroupIdentifier> | Object |  | OptionalPlaceholder | TopologyElementType | |
-| Identification | Object |  | Optional | TopologyElementType | |
-| Lock | Object |  | Optional | TopologyElementType | |
+| Manufacturer | Variable | LocalizedText | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| ManufacturerUri | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| Model | Variable | LocalizedText | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| HardwareRevision | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| SoftwareRevision | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| DeviceRevision | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| ProductCode | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| DeviceManual | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| DeviceClass | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| SerialNumber | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| ProductInstanceUri | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| RevisionCounter | Variable | Int32 | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| AssetId | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| ComponentName | Variable | LocalizedText | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| ParameterSet | Object |  | Optional | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
+| MethodSet | Object |  | Optional | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
+| <GroupIdentifier> | Object |  | OptionalPlaceholder | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
+| Identification | Object |  | Optional | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
+| Lock | Object |  | Optional | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
 
+<a id="type-StartingSystemType"></a>
 #### StartingSystemType  (ns=1;i=1008)
 
-*Inherits from:* **ComponentType [DI]**
+*Inherits from:* [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) \[DI\]
 
 The starting/battery subsystem of a generator set.
 
@@ -427,29 +439,30 @@ The starting/battery subsystem of a generator set.
 | BatteryChargingCurrent | Variable | Double | Optional | StartingSystemType | Battery charging current. EngineeringUnits: A. |
 | BatteryChargerActive | Variable | Boolean | Optional | StartingSystemType | The battery charger is active. |
 | StartAttempts | Variable | UInt32 | Optional | StartingSystemType | Number of start attempts in the last start sequence. |
-| Manufacturer | Variable | LocalizedText | Optional | ComponentType | |
-| ManufacturerUri | Variable | String | Optional | ComponentType | |
-| Model | Variable | LocalizedText | Optional | ComponentType | |
-| HardwareRevision | Variable | String | Optional | ComponentType | |
-| SoftwareRevision | Variable | String | Optional | ComponentType | |
-| DeviceRevision | Variable | String | Optional | ComponentType | |
-| ProductCode | Variable | String | Optional | ComponentType | |
-| DeviceManual | Variable | String | Optional | ComponentType | |
-| DeviceClass | Variable | String | Optional | ComponentType | |
-| SerialNumber | Variable | String | Optional | ComponentType | |
-| ProductInstanceUri | Variable | String | Optional | ComponentType | |
-| RevisionCounter | Variable | Int32 | Optional | ComponentType | |
-| AssetId | Variable | String | Optional | ComponentType | |
-| ComponentName | Variable | LocalizedText | Optional | ComponentType | |
-| ParameterSet | Object |  | Optional | TopologyElementType | |
-| MethodSet | Object |  | Optional | TopologyElementType | |
-| <GroupIdentifier> | Object |  | OptionalPlaceholder | TopologyElementType | |
-| Identification | Object |  | Optional | TopologyElementType | |
-| Lock | Object |  | Optional | TopologyElementType | |
+| Manufacturer | Variable | LocalizedText | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| ManufacturerUri | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| Model | Variable | LocalizedText | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| HardwareRevision | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| SoftwareRevision | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| DeviceRevision | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| ProductCode | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| DeviceManual | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| DeviceClass | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| SerialNumber | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| ProductInstanceUri | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| RevisionCounter | Variable | Int32 | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| AssetId | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| ComponentName | Variable | LocalizedText | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| ParameterSet | Object |  | Optional | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
+| MethodSet | Object |  | Optional | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
+| <GroupIdentifier> | Object |  | OptionalPlaceholder | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
+| Identification | Object |  | Optional | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
+| Lock | Object |  | Optional | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
 
+<a id="type-GeneratorControllerType"></a>
 #### GeneratorControllerType  (ns=1;i=1009)
 
-*Inherits from:* **ComponentType [DI]**
+*Inherits from:* [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) \[DI\]
 
 The generator set control panel. Provides controller identity, mode/state visibility and remote-monitoring status.
 
@@ -466,35 +479,36 @@ The generator set control panel. Provides controller identity, mode/state visibi
 | CloudConnected | Variable | Boolean | Optional | GeneratorControllerType | Connected to the remote-monitoring cloud. |
 | ModbusEnabled | Variable | Boolean | Optional | GeneratorControllerType | The Modbus interface is enabled. |
 | SignalStrength | Variable | Double | Optional | GeneratorControllerType | Cellular/network signal strength. EngineeringUnits: %. |
-| Manufacturer | Variable | LocalizedText | Optional | ComponentType | |
-| ManufacturerUri | Variable | String | Optional | ComponentType | |
-| Model | Variable | LocalizedText | Optional | ComponentType | |
-| HardwareRevision | Variable | String | Optional | ComponentType | |
-| SoftwareRevision | Variable | String | Optional | ComponentType | |
-| DeviceRevision | Variable | String | Optional | ComponentType | |
-| ProductCode | Variable | String | Optional | ComponentType | |
-| DeviceManual | Variable | String | Optional | ComponentType | |
-| DeviceClass | Variable | String | Optional | ComponentType | |
-| SerialNumber | Variable | String | Optional | ComponentType | |
-| ProductInstanceUri | Variable | String | Optional | ComponentType | |
-| RevisionCounter | Variable | Int32 | Optional | ComponentType | |
-| AssetId | Variable | String | Optional | ComponentType | |
-| ComponentName | Variable | LocalizedText | Optional | ComponentType | |
-| ParameterSet | Object |  | Optional | TopologyElementType | |
-| MethodSet | Object |  | Optional | TopologyElementType | |
-| <GroupIdentifier> | Object |  | OptionalPlaceholder | TopologyElementType | |
-| Identification | Object |  | Optional | TopologyElementType | |
-| Lock | Object |  | Optional | TopologyElementType | |
+| Manufacturer | Variable | LocalizedText | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| ManufacturerUri | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| Model | Variable | LocalizedText | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| HardwareRevision | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| SoftwareRevision | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| DeviceRevision | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| ProductCode | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| DeviceManual | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| DeviceClass | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| SerialNumber | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| ProductInstanceUri | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| RevisionCounter | Variable | Int32 | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| AssetId | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| ComponentName | Variable | LocalizedText | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| ParameterSet | Object |  | Optional | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
+| MethodSet | Object |  | Optional | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
+| <GroupIdentifier> | Object |  | OptionalPlaceholder | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
+| Identification | Object |  | Optional | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
+| Lock | Object |  | Optional | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
 
+<a id="type-GeneratorRatingType"></a>
 #### GeneratorRatingType  (ns=1;i=1012)
 
-*Inherits from:* **BaseObjectType**
+*Inherits from:* [BaseObjectType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.2)
 
 A single nameplate power rating point of a generator set for a given application/duty (ISO 8528).
 
 | BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
 |---|---|---|---|---|---|
-| ApplicationRating | Variable | GeneratorApplicationRatingEnum | Mandatory | GeneratorRatingType | Application/duty of this rating. |
+| ApplicationRating | Variable | [GeneratorApplicationRatingEnum](#type-GeneratorApplicationRatingEnum) | Mandatory | GeneratorRatingType | Application/duty of this rating. |
 | RatedRealPower | Variable | Double | Mandatory | GeneratorRatingType | Rated real power. EngineeringUnits: kW. |
 | RatedApparentPower | Variable | Double | Optional | GeneratorRatingType | Rated apparent power. EngineeringUnits: kVA. |
 | RatedPowerFactor | Variable | Double | Optional | GeneratorRatingType | Rated power factor. |
@@ -503,86 +517,88 @@ A single nameplate power rating point of a generator set for a given application
 | RatedFrequency | Variable | Double | Optional | GeneratorRatingType | Rated frequency. EngineeringUnits: Hz. |
 | RatedSpeed | Variable | Double | Optional | GeneratorRatingType | Rated engine speed. EngineeringUnits: rpm. |
 | PhaseCount | Variable | Byte | Optional | GeneratorRatingType | Number of phases (1 or 3). |
-| Connection | Variable | ElectricalConnectionEnum | Optional | GeneratorRatingType | Winding connection for this rating. |
+| Connection | Variable | [ElectricalConnectionEnum](#type-ElectricalConnectionEnum) | Optional | GeneratorRatingType | Winding connection for this rating. |
 | AmbientTemperature | Variable | Double | Optional | GeneratorRatingType | Reference ambient temperature for the rating. EngineeringUnits: degC. |
 | Altitude | Variable | Double | Optional | GeneratorRatingType | Reference altitude for the rating. EngineeringUnits: m. |
 
+<a id="type-GeneratorProtectionAlarmType"></a>
 #### GeneratorProtectionAlarmType  (ns=1;i=1017)
 
-*Inherits from:* **OffNormalAlarmType**
+*Inherits from:* [OffNormalAlarmType](https://reference.opcfoundation.org/specs/OPC-10000-9/5.8.24#5.8.24.2)
 
 Alarm raised by a generator protection/shutdown function. Extends OffNormalAlarmType with the protection function, severity and J1939 origin.
 
 | BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
 |---|---|---|---|---|---|
-| ProtectionFunction | Variable | GeneratorProtectionFunctionEnum | Mandatory | GeneratorProtectionAlarmType | The protection function that raised the alarm. |
-| GeneratorAlarmSeverity | Variable | AlarmSeverityEnum | Optional | GeneratorProtectionAlarmType | Severity class of the alarm. |
+| ProtectionFunction | Variable | [GeneratorProtectionFunctionEnum](#type-GeneratorProtectionFunctionEnum) | Mandatory | GeneratorProtectionAlarmType | The protection function that raised the alarm. |
+| GeneratorAlarmSeverity | Variable | [AlarmSeverityEnum](#type-AlarmSeverityEnum) | Optional | GeneratorProtectionAlarmType | Severity class of the alarm. |
 | IsShutdown | Variable | Boolean | Optional | GeneratorProtectionAlarmType | TRUE if the condition caused an engine shutdown. |
 | Spn | Variable | UInt32 | Optional | GeneratorProtectionAlarmType | SAE J1939 SPN when the alarm originates from the engine ECU. |
 | Fmi | Variable | Byte | Optional | GeneratorProtectionAlarmType | SAE J1939 FMI when the alarm originates from the engine ECU. |
 | SubsystemName | Variable | String | Optional | GeneratorProtectionAlarmType | Name of the originating subsystem. |
-| NormalState | Variable | NodeId | Mandatory | OffNormalAlarmType | |
-| EnabledState | Variable | LocalizedText | Mandatory | AlarmConditionType | |
-| ActiveState | Variable | LocalizedText | Mandatory | AlarmConditionType | |
-| InputNode | Variable | NodeId | Mandatory | AlarmConditionType | |
-| SuppressedState | Variable | LocalizedText | Optional | AlarmConditionType | |
-| OutOfServiceState | Variable | LocalizedText | Optional | AlarmConditionType | |
-| ShelvingState | Object |  | Optional | AlarmConditionType | |
-| SuppressedOrShelved | Variable | Boolean | Mandatory | AlarmConditionType | |
-| MaxTimeShelved | Variable | Duration | Optional | AlarmConditionType | |
-| AudibleEnabled | Variable | Boolean | Optional | AlarmConditionType | |
-| AudibleSound | Variable | AudioDataType | Optional | AlarmConditionType | |
-| SilenceState | Variable | LocalizedText | Optional | AlarmConditionType | |
-| OnDelay | Variable | Duration | Optional | AlarmConditionType | |
-| OffDelay | Variable | Duration | Optional | AlarmConditionType | |
-| FirstInGroupFlag | Variable | Boolean | Optional | AlarmConditionType | |
-| FirstInGroup | Object |  | Optional | AlarmConditionType | |
-| LatchedState | Variable | LocalizedText | Optional | AlarmConditionType | |
-| ReAlarmTime | Variable | Duration | Optional | AlarmConditionType | |
-| ReAlarmRepeatCount | Variable | Int16 | Optional | AlarmConditionType | |
-| Silence | Method |  | Optional | AlarmConditionType | |
-| Suppress | Method |  | Optional | AlarmConditionType | |
-| Suppress2 | Method |  | Optional | AlarmConditionType | |
-| Unsuppress | Method |  | Optional | AlarmConditionType | |
-| Unsuppress2 | Method |  | Optional | AlarmConditionType | |
-| RemoveFromService | Method |  | Optional | AlarmConditionType | |
-| RemoveFromService2 | Method |  | Optional | AlarmConditionType | |
-| PlaceInService | Method |  | Optional | AlarmConditionType | |
-| PlaceInService2 | Method |  | Optional | AlarmConditionType | |
-| Reset | Method |  | Optional | AlarmConditionType | |
-| Reset2 | Method |  | Optional | AlarmConditionType | |
-| GetGroupMemberships | Method |  | Optional | AlarmConditionType | |
-| AckedState | Variable | LocalizedText | Mandatory | AcknowledgeableConditionType | |
-| ConfirmedState | Variable | LocalizedText | Optional | AcknowledgeableConditionType | |
-| Acknowledge | Method |  | Mandatory | AcknowledgeableConditionType | |
-| Confirm | Method |  | Optional | AcknowledgeableConditionType | |
-| ConditionClassId | Variable | NodeId | Mandatory | ConditionType | |
-| ConditionClassName | Variable | LocalizedText | Mandatory | ConditionType | |
-| ConditionSubClassId | Variable | NodeId[] | Optional | ConditionType | |
-| ConditionSubClassName | Variable | LocalizedText[] | Optional | ConditionType | |
-| ConditionName | Variable | String | Mandatory | ConditionType | |
-| BranchId | Variable | NodeId | Mandatory | ConditionType | |
-| Retain | Variable | Boolean | Mandatory | ConditionType | |
-| Quality | Variable | StatusCode | Mandatory | ConditionType | |
-| LastSeverity | Variable | UInt16 | Mandatory | ConditionType | |
-| Comment | Variable | LocalizedText | Mandatory | ConditionType | |
-| ClientUserId | Variable | String | Mandatory | ConditionType | |
-| Disable | Method |  | Mandatory | ConditionType | |
-| Enable | Method |  | Mandatory | ConditionType | |
-| AddComment | Method |  | Mandatory | ConditionType | |
-| EventId | Variable | ByteString | Mandatory | BaseEventType | |
-| EventType | Variable | NodeId | Mandatory | BaseEventType | |
-| SourceNode | Variable | NodeId | Mandatory | BaseEventType | |
-| SourceName | Variable | String | Mandatory | BaseEventType | |
-| Time | Variable | UtcTime | Mandatory | BaseEventType | |
-| ReceiveTime | Variable | UtcTime | Mandatory | BaseEventType | |
-| LocalTime | Variable | TimeZoneDataType | Optional | BaseEventType | |
-| Message | Variable | LocalizedText | Mandatory | BaseEventType | |
-| Severity | Variable | UInt16 | Mandatory | BaseEventType | |
+| NormalState | Variable | NodeId | Mandatory | [OffNormalAlarmType](https://reference.opcfoundation.org/specs/OPC-10000-9/5.8.24#5.8.24.2) | |
+| EnabledState | Variable | LocalizedText | Mandatory | [AlarmConditionType](https://reference.opcfoundation.org/specs/OPC-10000-9/5.8.2) | |
+| ActiveState | Variable | LocalizedText | Mandatory | [AlarmConditionType](https://reference.opcfoundation.org/specs/OPC-10000-9/5.8.2) | |
+| InputNode | Variable | NodeId | Mandatory | [AlarmConditionType](https://reference.opcfoundation.org/specs/OPC-10000-9/5.8.2) | |
+| SuppressedState | Variable | LocalizedText | Optional | [AlarmConditionType](https://reference.opcfoundation.org/specs/OPC-10000-9/5.8.2) | |
+| OutOfServiceState | Variable | LocalizedText | Optional | [AlarmConditionType](https://reference.opcfoundation.org/specs/OPC-10000-9/5.8.2) | |
+| ShelvingState | Object |  | Optional | [AlarmConditionType](https://reference.opcfoundation.org/specs/OPC-10000-9/5.8.2) | |
+| SuppressedOrShelved | Variable | Boolean | Mandatory | [AlarmConditionType](https://reference.opcfoundation.org/specs/OPC-10000-9/5.8.2) | |
+| MaxTimeShelved | Variable | Duration | Optional | [AlarmConditionType](https://reference.opcfoundation.org/specs/OPC-10000-9/5.8.2) | |
+| AudibleEnabled | Variable | Boolean | Optional | [AlarmConditionType](https://reference.opcfoundation.org/specs/OPC-10000-9/5.8.2) | |
+| AudibleSound | Variable | [AudioDataType](https://reference.opcfoundation.org/specs/OPC-10000-3/8.53) | Optional | [AlarmConditionType](https://reference.opcfoundation.org/specs/OPC-10000-9/5.8.2) | |
+| SilenceState | Variable | LocalizedText | Optional | [AlarmConditionType](https://reference.opcfoundation.org/specs/OPC-10000-9/5.8.2) | |
+| OnDelay | Variable | Duration | Optional | [AlarmConditionType](https://reference.opcfoundation.org/specs/OPC-10000-9/5.8.2) | |
+| OffDelay | Variable | Duration | Optional | [AlarmConditionType](https://reference.opcfoundation.org/specs/OPC-10000-9/5.8.2) | |
+| FirstInGroupFlag | Variable | Boolean | Optional | [AlarmConditionType](https://reference.opcfoundation.org/specs/OPC-10000-9/5.8.2) | |
+| FirstInGroup | Object |  | Optional | [AlarmConditionType](https://reference.opcfoundation.org/specs/OPC-10000-9/5.8.2) | |
+| LatchedState | Variable | LocalizedText | Optional | [AlarmConditionType](https://reference.opcfoundation.org/specs/OPC-10000-9/5.8.2) | |
+| ReAlarmTime | Variable | Duration | Optional | [AlarmConditionType](https://reference.opcfoundation.org/specs/OPC-10000-9/5.8.2) | |
+| ReAlarmRepeatCount | Variable | Int16 | Optional | [AlarmConditionType](https://reference.opcfoundation.org/specs/OPC-10000-9/5.8.2) | |
+| Silence | Method |  | Optional | [AlarmConditionType](https://reference.opcfoundation.org/specs/OPC-10000-9/5.8.2) | |
+| Suppress | Method |  | Optional | [AlarmConditionType](https://reference.opcfoundation.org/specs/OPC-10000-9/5.8.2) | |
+| Suppress2 | Method |  | Optional | [AlarmConditionType](https://reference.opcfoundation.org/specs/OPC-10000-9/5.8.2) | |
+| Unsuppress | Method |  | Optional | [AlarmConditionType](https://reference.opcfoundation.org/specs/OPC-10000-9/5.8.2) | |
+| Unsuppress2 | Method |  | Optional | [AlarmConditionType](https://reference.opcfoundation.org/specs/OPC-10000-9/5.8.2) | |
+| RemoveFromService | Method |  | Optional | [AlarmConditionType](https://reference.opcfoundation.org/specs/OPC-10000-9/5.8.2) | |
+| RemoveFromService2 | Method |  | Optional | [AlarmConditionType](https://reference.opcfoundation.org/specs/OPC-10000-9/5.8.2) | |
+| PlaceInService | Method |  | Optional | [AlarmConditionType](https://reference.opcfoundation.org/specs/OPC-10000-9/5.8.2) | |
+| PlaceInService2 | Method |  | Optional | [AlarmConditionType](https://reference.opcfoundation.org/specs/OPC-10000-9/5.8.2) | |
+| Reset | Method |  | Optional | [AlarmConditionType](https://reference.opcfoundation.org/specs/OPC-10000-9/5.8.2) | |
+| Reset2 | Method |  | Optional | [AlarmConditionType](https://reference.opcfoundation.org/specs/OPC-10000-9/5.8.2) | |
+| GetGroupMemberships | Method |  | Optional | [AlarmConditionType](https://reference.opcfoundation.org/specs/OPC-10000-9/5.8.2) | |
+| AckedState | Variable | LocalizedText | Mandatory | [AcknowledgeableConditionType](https://reference.opcfoundation.org/specs/OPC-10000-9/5.7.2) | |
+| ConfirmedState | Variable | LocalizedText | Optional | [AcknowledgeableConditionType](https://reference.opcfoundation.org/specs/OPC-10000-9/5.7.2) | |
+| Acknowledge | Method |  | Mandatory | [AcknowledgeableConditionType](https://reference.opcfoundation.org/specs/OPC-10000-9/5.7.2) | |
+| Confirm | Method |  | Optional | [AcknowledgeableConditionType](https://reference.opcfoundation.org/specs/OPC-10000-9/5.7.2) | |
+| ConditionClassId | Variable | NodeId | Mandatory | [ConditionType](https://reference.opcfoundation.org/specs/OPC-10000-9/5.5.2) | |
+| ConditionClassName | Variable | LocalizedText | Mandatory | [ConditionType](https://reference.opcfoundation.org/specs/OPC-10000-9/5.5.2) | |
+| ConditionSubClassId | Variable | NodeId\[\] | Optional | [ConditionType](https://reference.opcfoundation.org/specs/OPC-10000-9/5.5.2) | |
+| ConditionSubClassName | Variable | LocalizedText\[\] | Optional | [ConditionType](https://reference.opcfoundation.org/specs/OPC-10000-9/5.5.2) | |
+| ConditionName | Variable | String | Mandatory | [ConditionType](https://reference.opcfoundation.org/specs/OPC-10000-9/5.5.2) | |
+| BranchId | Variable | NodeId | Mandatory | [ConditionType](https://reference.opcfoundation.org/specs/OPC-10000-9/5.5.2) | |
+| Retain | Variable | Boolean | Mandatory | [ConditionType](https://reference.opcfoundation.org/specs/OPC-10000-9/5.5.2) | |
+| Quality | Variable | StatusCode | Mandatory | [ConditionType](https://reference.opcfoundation.org/specs/OPC-10000-9/5.5.2) | |
+| LastSeverity | Variable | UInt16 | Mandatory | [ConditionType](https://reference.opcfoundation.org/specs/OPC-10000-9/5.5.2) | |
+| Comment | Variable | LocalizedText | Mandatory | [ConditionType](https://reference.opcfoundation.org/specs/OPC-10000-9/5.5.2) | |
+| ClientUserId | Variable | String | Mandatory | [ConditionType](https://reference.opcfoundation.org/specs/OPC-10000-9/5.5.2) | |
+| Disable | Method |  | Mandatory | [ConditionType](https://reference.opcfoundation.org/specs/OPC-10000-9/5.5.2) | |
+| Enable | Method |  | Mandatory | [ConditionType](https://reference.opcfoundation.org/specs/OPC-10000-9/5.5.2) | |
+| AddComment | Method |  | Mandatory | [ConditionType](https://reference.opcfoundation.org/specs/OPC-10000-9/5.5.2) | |
+| EventId | Variable | ByteString | Mandatory | [BaseEventType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.4.2) | |
+| EventType | Variable | NodeId | Mandatory | [BaseEventType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.4.2) | |
+| SourceNode | Variable | NodeId | Mandatory | [BaseEventType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.4.2) | |
+| SourceName | Variable | String | Mandatory | [BaseEventType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.4.2) | |
+| Time | Variable | UtcTime | Mandatory | [BaseEventType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.4.2) | |
+| ReceiveTime | Variable | UtcTime | Mandatory | [BaseEventType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.4.2) | |
+| LocalTime | Variable | [TimeZoneDataType](https://reference.opcfoundation.org/specs/OPC-10000-3/8.28) | Optional | [BaseEventType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.4.2) | |
+| Message | Variable | LocalizedText | Mandatory | [BaseEventType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.4.2) | |
+| Severity | Variable | UInt16 | Mandatory | [BaseEventType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.4.2) | |
 
+<a id="type-GeneratorSetType"></a>
 #### GeneratorSetType  (ns=1;i=1001)
 
-*Inherits from:* **DeviceType [DI]**
+*Inherits from:* [DeviceType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.7) \[DI\]
 
 A generator set (GenSet): a complete electrical power generation asset composed of a prime-mover engine, an alternator, a fuel system, cooling, lubrication, starting and control subsystems. Applicable to the whole industry, from small home-standby units to house-sized multi-megawatt industrial sets.
 
@@ -591,8 +607,8 @@ A generator set (GenSet): a complete electrical power generation asset composed 
 | Identification | Object |  | Mandatory | GeneratorSetType | Generator identification and nameplate (Machinery building block). |
 | MachineryBuildingBlocks | Object |  | Optional | GeneratorSetType | Container for standardized Machinery building blocks. |
 | OperatingState | Object |  | Mandatory | GeneratorSetType | Detailed generator-set operating state machine. |
-| OperatingMode | Variable | GeneratorOperatingModeEnum | Mandatory | GeneratorSetType | Selector mode of the control panel (Off/Manual/Auto/Test/...). |
-| EmissionsStandard | Variable | EmissionsStandardEnum | Optional | GeneratorSetType | Emissions certification standard of the set. |
+| OperatingMode | Variable | [GeneratorOperatingModeEnum](#type-GeneratorOperatingModeEnum) | Mandatory | GeneratorSetType | Selector mode of the control panel (Off/Manual/Auto/Test/...). |
+| EmissionsStandard | Variable | [EmissionsStandardEnum](#type-EmissionsStandardEnum) | Optional | GeneratorSetType | Emissions certification standard of the set. |
 | Application | Variable | String | Optional | GeneratorSetType | Application segment, e.g. Residential, DataCenter, Healthcare, Rental, PrimePower. |
 | GeneratorBreakerClosed | Variable | Boolean | Optional | GeneratorSetType | The generator (output) breaker is closed. |
 | GeneratorBreakerAvailable | Variable | Boolean | Optional | GeneratorSetType | The generator breaker is available to close. |
@@ -614,36 +630,37 @@ A generator set (GenSet): a complete electrical power generation asset composed 
 | ResetFaults | Method |  | Optional | GeneratorSetType | Reset latched faults / lockout. |
 | SetOperatingMode | Method |  | Optional | GeneratorSetType | Set the control-panel selector mode. |
 | StartTest | Method |  | Optional | GeneratorSetType | Start a test run for a given duration. |
-| Manufacturer | Variable | LocalizedText | Mandatory | DeviceType | |
-| ManufacturerUri | Variable | String | Optional | DeviceType | |
-| Model | Variable | LocalizedText | Mandatory | DeviceType | |
-| HardwareRevision | Variable | String | Mandatory | DeviceType | |
-| SoftwareRevision | Variable | String | Mandatory | DeviceType | |
-| DeviceRevision | Variable | String | Mandatory | DeviceType | |
-| ProductCode | Variable | String | Optional | DeviceType | |
-| DeviceManual | Variable | String | Mandatory | DeviceType | |
-| DeviceClass | Variable | String | Optional | DeviceType | |
-| SerialNumber | Variable | String | Mandatory | DeviceType | |
-| ProductInstanceUri | Variable | String | Optional | DeviceType | |
-| RevisionCounter | Variable | Int32 | Mandatory | DeviceType | |
-| <CPIdentifier> | Object |  | OptionalPlaceholder | DeviceType | |
-| DeviceHealth | Variable | DeviceHealthEnumeration | Optional | DeviceType | |
-| DeviceHealthAlarms | Object |  | Optional | DeviceType | |
-| DeviceTypeImage | Object |  | Optional | DeviceType | |
-| Documentation | Object |  | Optional | DeviceType | |
-| ProtocolSupport | Object |  | Optional | DeviceType | |
-| ImageSet | Object |  | Optional | DeviceType | |
-| AssetId | Variable | String | Optional | ComponentType | |
-| ComponentName | Variable | LocalizedText | Optional | ComponentType | |
-| ParameterSet | Object |  | Optional | TopologyElementType | |
-| MethodSet | Object |  | Optional | TopologyElementType | |
-| <GroupIdentifier> | Object |  | OptionalPlaceholder | TopologyElementType | |
-| Identification | Object |  | Optional | TopologyElementType | |
-| Lock | Object |  | Optional | TopologyElementType | |
+| Manufacturer | Variable | LocalizedText | Mandatory | [DeviceType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.7) | |
+| ManufacturerUri | Variable | String | Optional | [DeviceType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.7) | |
+| Model | Variable | LocalizedText | Mandatory | [DeviceType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.7) | |
+| HardwareRevision | Variable | String | Mandatory | [DeviceType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.7) | |
+| SoftwareRevision | Variable | String | Mandatory | [DeviceType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.7) | |
+| DeviceRevision | Variable | String | Mandatory | [DeviceType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.7) | |
+| ProductCode | Variable | String | Optional | [DeviceType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.7) | |
+| DeviceManual | Variable | String | Mandatory | [DeviceType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.7) | |
+| DeviceClass | Variable | String | Optional | [DeviceType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.7) | |
+| SerialNumber | Variable | String | Mandatory | [DeviceType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.7) | |
+| ProductInstanceUri | Variable | String | Optional | [DeviceType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.7) | |
+| RevisionCounter | Variable | Int32 | Mandatory | [DeviceType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.7) | |
+| <CPIdentifier> | Object |  | OptionalPlaceholder | [DeviceType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.7) | |
+| DeviceHealth | Variable | [DeviceHealthEnumeration](https://reference.opcfoundation.org/specs/OPC-10000-100/4.5.4) | Optional | [DeviceType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.7) | |
+| DeviceHealthAlarms | Object |  | Optional | [DeviceType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.7) | |
+| DeviceTypeImage | Object |  | Optional | [DeviceType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.7) | |
+| Documentation | Object |  | Optional | [DeviceType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.7) | |
+| ProtocolSupport | Object |  | Optional | [DeviceType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.7) | |
+| ImageSet | Object |  | Optional | [DeviceType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.7) | |
+| AssetId | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| ComponentName | Variable | LocalizedText | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| ParameterSet | Object |  | Optional | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
+| MethodSet | Object |  | Optional | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
+| <GroupIdentifier> | Object |  | OptionalPlaceholder | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
+| Identification | Object |  | Optional | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
+| Lock | Object |  | Optional | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
 
+<a id="type-TransferSwitchSourceType"></a>
 #### TransferSwitchSourceType  (ns=1;i=1019)
 
-*Inherits from:* **BaseObjectType**
+*Inherits from:* [BaseObjectType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.2)
 
 One power source (normal/utility or emergency/generator) of an automatic transfer switch, with its availability and measurements.
 
@@ -655,18 +672,19 @@ One power source (normal/utility or emergency/generator) of an automatic transfe
 | Frequency | Variable | Double | Optional | TransferSwitchSourceType | Source frequency. EngineeringUnits: Hz. |
 | PhaseRotation | Variable | String | Optional | TransferSwitchSourceType | Phase rotation of the source (e.g. ABC or CBA). |
 
+<a id="type-AutomaticTransferSwitchType"></a>
 #### AutomaticTransferSwitchType  (ns=1;i=1013)
 
-*Inherits from:* **DeviceType [DI]**
+*Inherits from:* [DeviceType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.7) \[DI\]
 
 An automatic transfer switch (ATS) that transfers a load between a normal source (utility) and an emergency source (generator).
 
 | BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
 |---|---|---|---|---|---|
 | Identification | Object |  | Optional | AutomaticTransferSwitchType | ATS identification and nameplate. |
-| Position | Variable | TransferSwitchPositionEnum | Mandatory | AutomaticTransferSwitchType | Contact position of the switch. |
-| OperatingState | Variable | AtsOperatingStateEnum | Optional | AutomaticTransferSwitchType | Operating state of the switch. |
-| TransitionType | Variable | TransferTransitionTypeEnum | Optional | AutomaticTransferSwitchType | Transition method of the switch. |
+| Position | Variable | [TransferSwitchPositionEnum](#type-TransferSwitchPositionEnum) | Mandatory | AutomaticTransferSwitchType | Contact position of the switch. |
+| OperatingState | Variable | [AtsOperatingStateEnum](#type-AtsOperatingStateEnum) | Optional | AutomaticTransferSwitchType | Operating state of the switch. |
+| TransitionType | Variable | [TransferTransitionTypeEnum](#type-TransferTransitionTypeEnum) | Optional | AutomaticTransferSwitchType | Transition method of the switch. |
 | Source1 | Object |  | Mandatory | AutomaticTransferSwitchType | Source 1 (normal/utility). |
 | Source2 | Object |  | Mandatory | AutomaticTransferSwitchType | Source 2 (emergency/generator). |
 | PreferredSource | Variable | Byte | Optional | AutomaticTransferSwitchType | The preferred source (1 = normal, 2 = emergency). |
@@ -687,42 +705,43 @@ An automatic transfer switch (ATS) that transfers a load between a normal source
 | Transfer | Method |  | Optional | AutomaticTransferSwitchType | Command a transfer to the emergency source. |
 | Retransfer | Method |  | Optional | AutomaticTransferSwitchType | Command a retransfer to the normal source. |
 | InhibitTransfer | Method |  | Optional | AutomaticTransferSwitchType | Enable or disable the transfer inhibit. |
-| Manufacturer | Variable | LocalizedText | Mandatory | DeviceType | |
-| ManufacturerUri | Variable | String | Optional | DeviceType | |
-| Model | Variable | LocalizedText | Mandatory | DeviceType | |
-| HardwareRevision | Variable | String | Mandatory | DeviceType | |
-| SoftwareRevision | Variable | String | Mandatory | DeviceType | |
-| DeviceRevision | Variable | String | Mandatory | DeviceType | |
-| ProductCode | Variable | String | Optional | DeviceType | |
-| DeviceManual | Variable | String | Mandatory | DeviceType | |
-| DeviceClass | Variable | String | Optional | DeviceType | |
-| SerialNumber | Variable | String | Mandatory | DeviceType | |
-| ProductInstanceUri | Variable | String | Optional | DeviceType | |
-| RevisionCounter | Variable | Int32 | Mandatory | DeviceType | |
-| <CPIdentifier> | Object |  | OptionalPlaceholder | DeviceType | |
-| DeviceHealth | Variable | DeviceHealthEnumeration | Optional | DeviceType | |
-| DeviceHealthAlarms | Object |  | Optional | DeviceType | |
-| DeviceTypeImage | Object |  | Optional | DeviceType | |
-| Documentation | Object |  | Optional | DeviceType | |
-| ProtocolSupport | Object |  | Optional | DeviceType | |
-| ImageSet | Object |  | Optional | DeviceType | |
-| AssetId | Variable | String | Optional | ComponentType | |
-| ComponentName | Variable | LocalizedText | Optional | ComponentType | |
-| ParameterSet | Object |  | Optional | TopologyElementType | |
-| MethodSet | Object |  | Optional | TopologyElementType | |
-| <GroupIdentifier> | Object |  | OptionalPlaceholder | TopologyElementType | |
-| Identification | Object |  | Optional | TopologyElementType | |
-| Lock | Object |  | Optional | TopologyElementType | |
+| Manufacturer | Variable | LocalizedText | Mandatory | [DeviceType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.7) | |
+| ManufacturerUri | Variable | String | Optional | [DeviceType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.7) | |
+| Model | Variable | LocalizedText | Mandatory | [DeviceType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.7) | |
+| HardwareRevision | Variable | String | Mandatory | [DeviceType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.7) | |
+| SoftwareRevision | Variable | String | Mandatory | [DeviceType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.7) | |
+| DeviceRevision | Variable | String | Mandatory | [DeviceType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.7) | |
+| ProductCode | Variable | String | Optional | [DeviceType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.7) | |
+| DeviceManual | Variable | String | Mandatory | [DeviceType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.7) | |
+| DeviceClass | Variable | String | Optional | [DeviceType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.7) | |
+| SerialNumber | Variable | String | Mandatory | [DeviceType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.7) | |
+| ProductInstanceUri | Variable | String | Optional | [DeviceType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.7) | |
+| RevisionCounter | Variable | Int32 | Mandatory | [DeviceType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.7) | |
+| <CPIdentifier> | Object |  | OptionalPlaceholder | [DeviceType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.7) | |
+| DeviceHealth | Variable | [DeviceHealthEnumeration](https://reference.opcfoundation.org/specs/OPC-10000-100/4.5.4) | Optional | [DeviceType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.7) | |
+| DeviceHealthAlarms | Object |  | Optional | [DeviceType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.7) | |
+| DeviceTypeImage | Object |  | Optional | [DeviceType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.7) | |
+| Documentation | Object |  | Optional | [DeviceType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.7) | |
+| ProtocolSupport | Object |  | Optional | [DeviceType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.7) | |
+| ImageSet | Object |  | Optional | [DeviceType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.7) | |
+| AssetId | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| ComponentName | Variable | LocalizedText | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| ParameterSet | Object |  | Optional | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
+| MethodSet | Object |  | Optional | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
+| <GroupIdentifier> | Object |  | OptionalPlaceholder | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
+| Identification | Object |  | Optional | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
+| Lock | Object |  | Optional | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
 
+<a id="type-ParallelingControllerType"></a>
 #### ParallelingControllerType  (ns=1;i=1014)
 
-*Inherits from:* **ComponentType [DI]**
+*Inherits from:* [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) \[DI\]
 
 A paralleling / switchgear controller that synchronizes and shares load among generator sets on a common bus, and optionally parallels with the utility.
 
 | BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
 |---|---|---|---|---|---|
-| SystemState | Variable | ParallelingSystemStateEnum | Mandatory | ParallelingControllerType | Operating state of the paralleling system. |
+| SystemState | Variable | [ParallelingSystemStateEnum](#type-ParallelingSystemStateEnum) | Mandatory | ParallelingControllerType | Operating state of the paralleling system. |
 | BusVoltage | Variable | Double | Optional | ParallelingControllerType | Common bus voltage. EngineeringUnits: V. |
 | BusFrequency | Variable | Double | Optional | ParallelingControllerType | Common bus frequency. EngineeringUnits: Hz. |
 | TotalBusRealPower | Variable | Double | Optional | ParallelingControllerType | Total real power on the bus. EngineeringUnits: kW. |
@@ -742,29 +761,30 @@ A paralleling / switchgear controller that synchronizes and shares load among ge
 | UtilityExportPower | Variable | Double | Optional | ParallelingControllerType | Power exported to the utility. EngineeringUnits: kW. |
 | ConnectToBus | Method |  | Optional | ParallelingControllerType | Synchronize and close onto the common bus. |
 | DisconnectFromBus | Method |  | Optional | ParallelingControllerType | Soft-unload and open from the common bus. |
-| Manufacturer | Variable | LocalizedText | Optional | ComponentType | |
-| ManufacturerUri | Variable | String | Optional | ComponentType | |
-| Model | Variable | LocalizedText | Optional | ComponentType | |
-| HardwareRevision | Variable | String | Optional | ComponentType | |
-| SoftwareRevision | Variable | String | Optional | ComponentType | |
-| DeviceRevision | Variable | String | Optional | ComponentType | |
-| ProductCode | Variable | String | Optional | ComponentType | |
-| DeviceManual | Variable | String | Optional | ComponentType | |
-| DeviceClass | Variable | String | Optional | ComponentType | |
-| SerialNumber | Variable | String | Optional | ComponentType | |
-| ProductInstanceUri | Variable | String | Optional | ComponentType | |
-| RevisionCounter | Variable | Int32 | Optional | ComponentType | |
-| AssetId | Variable | String | Optional | ComponentType | |
-| ComponentName | Variable | LocalizedText | Optional | ComponentType | |
-| ParameterSet | Object |  | Optional | TopologyElementType | |
-| MethodSet | Object |  | Optional | TopologyElementType | |
-| <GroupIdentifier> | Object |  | OptionalPlaceholder | TopologyElementType | |
-| Identification | Object |  | Optional | TopologyElementType | |
-| Lock | Object |  | Optional | TopologyElementType | |
+| Manufacturer | Variable | LocalizedText | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| ManufacturerUri | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| Model | Variable | LocalizedText | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| HardwareRevision | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| SoftwareRevision | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| DeviceRevision | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| ProductCode | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| DeviceManual | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| DeviceClass | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| SerialNumber | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| ProductInstanceUri | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| RevisionCounter | Variable | Int32 | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| AssetId | Variable | String | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| ComponentName | Variable | LocalizedText | Optional | [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) | |
+| ParameterSet | Object |  | Optional | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
+| MethodSet | Object |  | Optional | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
+| <GroupIdentifier> | Object |  | OptionalPlaceholder | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
+| Identification | Object |  | Optional | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
+| Lock | Object |  | Optional | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
 
+<a id="type-GeneratorSystemType"></a>
 #### GeneratorSystemType  (ns=1;i=1015)
 
-*Inherits from:* **BaseObjectType**
+*Inherits from:* [BaseObjectType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.2)
 
 A power-generation system aggregating one or more paralleled generator sets, an optional paralleling controller and transfer switches. Models integrated power systems such as data-center and healthcare plants.
 
@@ -780,9 +800,10 @@ A power-generation system aggregating one or more paralleled generator sets, an 
 
 ### Data types
 
+<a id="type-GeneratorOperatingModeEnum"></a>
 #### GeneratorOperatingModeEnum  (ns=1;i=3001)
 
-*Subtype of:* **Enumeration**
+*Subtype of:* [Enumeration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.14)
 
 Selector mode of the generator set control panel.
 
@@ -797,9 +818,10 @@ Selector mode of the generator set control panel.
 | Maintenance | 6 | Maintenance/service mode; starting is inhibited or restricted. |
 | Lockout | 7 | Locked out; starting is blocked until reset. |
 
+<a id="type-FuelTypeEnum"></a>
 #### FuelTypeEnum  (ns=1;i=3002)
 
-*Subtype of:* **Enumeration**
+*Subtype of:* [Enumeration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.14)
 
 Primary fuel of the generator set.
 
@@ -822,9 +844,10 @@ Primary fuel of the generator set.
 | Syngas | 14 |  |
 | Other | 15 |  |
 
+<a id="type-GeneratorApplicationRatingEnum"></a>
 #### GeneratorApplicationRatingEnum  (ns=1;i=3003)
 
-*Subtype of:* **Enumeration**
+*Subtype of:* [Enumeration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.14)
 
 Application/duty rating per ISO 8528 plus the data-center-continuous rating.
 
@@ -836,9 +859,10 @@ Application/duty rating per ISO 8528 plus the data-center-continuous rating.
 | LimitedTime | 3 | LTP: limited hours per year at defined load. |
 | DataCenterContinuous | 4 | DCC: continuous operation for data-center loads. |
 
+<a id="type-ElectricalConnectionEnum"></a>
 #### ElectricalConnectionEnum  (ns=1;i=3004)
 
-*Subtype of:* **Enumeration**
+*Subtype of:* [Enumeration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.14)
 
 Winding/connection configuration of the alternator output.
 
@@ -854,9 +878,10 @@ Winding/connection configuration of the alternator output.
 | ZigZag | 7 |  |
 | SinglePhaseThreeWire | 8 |  |
 
+<a id="type-ExcitationTypeEnum"></a>
 #### ExcitationTypeEnum  (ns=1;i=3005)
 
-*Subtype of:* **Enumeration**
+*Subtype of:* [Enumeration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.14)
 
 Excitation method of the alternator.
 
@@ -869,9 +894,10 @@ Excitation method of the alternator.
 | AuxiliaryWinding | 4 |  |
 | StaticExciter | 5 |  |
 
+<a id="type-CoolingMethodEnum"></a>
 #### CoolingMethodEnum  (ns=1;i=3006)
 
-*Subtype of:* **Enumeration**
+*Subtype of:* [Enumeration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.14)
 
 Primary cooling method of the engine.
 
@@ -880,9 +906,10 @@ Primary cooling method of the engine.
 | AirCooled | 0 |  |
 | LiquidCooled | 1 |  |
 
+<a id="type-AspirationEnum"></a>
 #### AspirationEnum  (ns=1;i=3007)
 
-*Subtype of:* **Enumeration**
+*Subtype of:* [Enumeration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.14)
 
 Air induction method of the engine.
 
@@ -892,9 +919,10 @@ Air induction method of the engine.
 | Turbocharged | 1 |  |
 | TurbochargedAftercooled | 2 |  |
 
+<a id="type-EmissionsStandardEnum"></a>
 #### EmissionsStandardEnum  (ns=1;i=3008)
 
-*Subtype of:* **Enumeration**
+*Subtype of:* [Enumeration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.14)
 
 Emissions certification standard of the engine.
 
@@ -911,9 +939,10 @@ Emissions certification standard of the engine.
 | EUStageV | 8 |  |
 | Other | 9 |  |
 
+<a id="type-CanBusStateEnum"></a>
 #### CanBusStateEnum  (ns=1;i=3009)
 
-*Subtype of:* **Enumeration**
+*Subtype of:* [Enumeration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.14)
 
 State of the engine CAN bus / SAE J1939 network interface.
 
@@ -925,9 +954,10 @@ State of the engine CAN bus / SAE J1939 network interface.
 | ErrorPassive | 3 |  |
 | BusOff | 4 |  |
 
+<a id="type-TransferSwitchPositionEnum"></a>
 #### TransferSwitchPositionEnum  (ns=1;i=3010)
 
-*Subtype of:* **Enumeration**
+*Subtype of:* [Enumeration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.14)
 
 Contact position of an automatic transfer switch.
 
@@ -942,9 +972,10 @@ Contact position of an automatic transfer switch.
 | BypassSource2 | 6 |  |
 | Isolated | 7 |  |
 
+<a id="type-TransferTransitionTypeEnum"></a>
 #### TransferTransitionTypeEnum  (ns=1;i=3011)
 
-*Subtype of:* **Enumeration**
+*Subtype of:* [Enumeration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.14)
 
 Transition method of an automatic transfer switch.
 
@@ -956,9 +987,10 @@ Transition method of an automatic transfer switch.
 | SoftLoadTransition | 3 | Ramped, no-break transfer while paralleled. |
 | BypassIsolation | 4 |  |
 
+<a id="type-AtsOperatingStateEnum"></a>
 #### AtsOperatingStateEnum  (ns=1;i=3012)
 
-*Subtype of:* **Enumeration**
+*Subtype of:* [Enumeration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.14)
 
 Operating state of an automatic transfer switch.
 
@@ -978,9 +1010,10 @@ Operating state of an automatic transfer switch.
 | Bypassed | 11 |  |
 | Isolated | 12 |  |
 
+<a id="type-AlarmSeverityEnum"></a>
 #### AlarmSeverityEnum  (ns=1;i=3013)
 
-*Subtype of:* **Enumeration**
+*Subtype of:* [Enumeration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.14)
 
 Severity class of a generator protection event.
 
@@ -994,9 +1027,10 @@ Severity class of a generator protection event.
 | Lockout | 5 | The set is locked out and requires manual reset. |
 | EmergencyStop | 6 |  |
 
+<a id="type-GeneratorProtectionFunctionEnum"></a>
 #### GeneratorProtectionFunctionEnum  (ns=1;i=3014)
 
-*Subtype of:* **Enumeration**
+*Subtype of:* [Enumeration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.14)
 
 Protection / fault function that raised a generator alarm.
 
@@ -1067,9 +1101,10 @@ Protection / fault function that raised a generator alarm.
 | BreakerFailedToClose | 62 |  |
 | SynchronizationFailure | 63 |  |
 
+<a id="type-ParallelingSystemStateEnum"></a>
 #### ParallelingSystemStateEnum  (ns=1;i=3015)
 
-*Subtype of:* **Enumeration**
+*Subtype of:* [Enumeration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.14)
 
 Operating state of a paralleling / switchgear system.
 
@@ -1093,9 +1128,10 @@ Operating state of a paralleling / switchgear system.
 | EmergencyStop | 15 |  |
 | MaintenanceBypass | 16 |  |
 
+<a id="type-AftertreatmentStateEnum"></a>
 #### AftertreatmentStateEnum  (ns=1;i=3016)
 
-*Subtype of:* **Enumeration**
+*Subtype of:* [Enumeration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.14)
 
 State of the exhaust aftertreatment system.
 
@@ -1110,9 +1146,10 @@ State of the exhaust aftertreatment system.
 | DerateActive | 6 |  |
 | Faulted | 7 |  |
 
+<a id="type-J1939LampStatusEnum"></a>
 #### J1939LampStatusEnum  (ns=1;i=3017)
 
-*Subtype of:* **Enumeration**
+*Subtype of:* [Enumeration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.14)
 
 SAE J1939 DM1 diagnostic lamp status (lamp state plus flash rate).
 
@@ -1124,9 +1161,10 @@ SAE J1939 DM1 diagnostic lamp status (lamp state plus flash rate).
 | FastFlash | 3 | The lamp is flashing fast. |
 | NotAvailable | 4 | The lamp status is not available. |
 
+<a id="type-DiagnosticTroubleCodeType"></a>
 #### DiagnosticTroubleCodeType  (ns=1;i=3050)
 
-*Subtype of:* **Structure**
+*Subtype of:* [Structure](https://reference.opcfoundation.org/specs/OPC-10000-3/8.32)
 
 A SAE J1939 diagnostic trouble code (DTC) reported by an engine ECU.
 
@@ -1139,37 +1177,37 @@ A SAE J1939 diagnostic trouble code (DTC) reported by an engine ECU.
 | Active | Boolean | TRUE while the fault is currently active (DM1). |
 | SourceAddress | Byte | J1939 source address of the ECU that reported the code. |
 | SourceName | String | Name of the ECU/controller that reported the code. |
-| Severity | AlarmSeverityEnum | Severity classification of the fault. |
+| Severity | [AlarmSeverityEnum](#type-AlarmSeverityEnum) | Severity classification of the fault. |
 | Description | String | Human-readable description of the fault. |
 
 ### Objects
 
-All Object-class nodes in this model are instance declarations of the ObjectTypes above and appear in their structure tables. They fall into four groups: sub-assembly **components** referenced with `HasComponent` (for example `Engine`, `Alternator`, `L1`/`L2`/`L3`, `Source1`/`Source2`); standardized **Machinery building-block add-ins** referenced with `HasAddIn` (`Identification`, `MachineryBuildingBlocks`, `MachineryItemState`, `MachineryOperationMode`); the finite-state-machine **States and Transitions** of `GeneratorStateMachineType`; and the **DataType encodings** (`Default Binary`, `Default XML`) of `DiagnosticTroubleCodeType`. This specification defines no free-standing Object instances; live instances are created by the server in its address space.
+All Object-class nodes in this model are instance declarations of the ObjectTypes above and appear in their structure tables. They fall into four groups: sub-assembly **components** referenced with [`HasComponent`](https://reference.opcfoundation.org/specs/OPC-10000-3/7.7) (for example `Engine`, `Alternator`, `L1`/`L2`/`L3`, `Source1`/`Source2`); standardized **Machinery building-block add-ins** referenced with [`HasAddIn`](https://reference.opcfoundation.org/specs/OPC-10000-3/7.20) (`Identification`, `MachineryBuildingBlocks`, `MachineryItemState`, `MachineryOperationMode`); the finite-state-machine **States and Transitions** of [`GeneratorStateMachineType`](#type-GeneratorStateMachineType); and the **DataType encodings** (`Default Binary`, `Default XML`) of [`DiagnosticTroubleCodeType`](#type-DiagnosticTroubleCodeType). This specification defines no free-standing Object instances; live instances are created by the server in its address space.
 
 ### Variables
 
-All Variable-class nodes are instance declarations of the types above. Measured values are typed `AnalogUnitType` and each carries a child `EngineeringUnits` property whose value is a standard UNECE/CEFACT unit; status and configuration values are typed `BaseDataVariableType` or `PropertyType`. Standard child variables also appear: `EngineeringUnits` (on every analog value), `EnumStrings` (on every enumeration DataType), `StateNumber`/`TransitionNumber` (on FSM states and transitions) and `InputArguments` (on methods that take parameters).
+All Variable-class nodes are instance declarations of the types above. Measured values are typed [`AnalogUnitType`](https://reference.opcfoundation.org/specs/OPC-10000-8/5.3.2#5.3.2.4) and each carries a child `EngineeringUnits` property whose value is a standard UNECE/CEFACT unit; status and configuration values are typed [`BaseDataVariableType`](https://reference.opcfoundation.org/specs/OPC-10000-5/7.4) or [`PropertyType`](https://reference.opcfoundation.org/specs/OPC-10000-5/7.3). Standard child variables also appear: `EngineeringUnits` (on every analog value), `EnumStrings` (on every enumeration DataType), `StateNumber`/`TransitionNumber` (on FSM states and transitions) and `InputArguments` (on methods that take parameters).
 
 ### Methods
 
 | Method | Owning type | Input arguments |
 |---|---|---|
-| ClearPreviouslyActiveDtcs | J1939DiagnosticInterfaceType | (none) |
-| InitiateRegeneration | ExhaustAftertreatmentType | (none) |
-| InhibitRegeneration | ExhaustAftertreatmentType | Inhibit |
-| Start | GeneratorSetType | (none) |
-| Stop | GeneratorSetType | (none) |
-| EmergencyStop | GeneratorSetType | (none) |
-| ResetFaults | GeneratorSetType | (none) |
-| SetOperatingMode | GeneratorSetType | Mode |
-| StartTest | GeneratorSetType | DurationMinutes, WithLoad |
-| Transfer | AutomaticTransferSwitchType | (none) |
-| Retransfer | AutomaticTransferSwitchType | (none) |
-| InhibitTransfer | AutomaticTransferSwitchType | Inhibit |
-| ConnectToBus | ParallelingControllerType | (none) |
-| DisconnectFromBus | ParallelingControllerType | (none) |
+| ClearPreviouslyActiveDtcs | [J1939DiagnosticInterfaceType](#type-J1939DiagnosticInterfaceType) | (none) |
+| InitiateRegeneration | [ExhaustAftertreatmentType](#type-ExhaustAftertreatmentType) | (none) |
+| InhibitRegeneration | [ExhaustAftertreatmentType](#type-ExhaustAftertreatmentType) | Inhibit |
+| Start | [GeneratorSetType](#type-GeneratorSetType) | (none) |
+| Stop | [GeneratorSetType](#type-GeneratorSetType) | (none) |
+| EmergencyStop | [GeneratorSetType](#type-GeneratorSetType) | (none) |
+| ResetFaults | [GeneratorSetType](#type-GeneratorSetType) | (none) |
+| SetOperatingMode | [GeneratorSetType](#type-GeneratorSetType) | Mode |
+| StartTest | [GeneratorSetType](#type-GeneratorSetType) | DurationMinutes, WithLoad |
+| Transfer | [AutomaticTransferSwitchType](#type-AutomaticTransferSwitchType) | (none) |
+| Retransfer | [AutomaticTransferSwitchType](#type-AutomaticTransferSwitchType) | (none) |
+| InhibitTransfer | [AutomaticTransferSwitchType](#type-AutomaticTransferSwitchType) | Inhibit |
+| ConnectToBus | [ParallelingControllerType](#type-ParallelingControllerType) | (none) |
+| DisconnectFromBus | [ParallelingControllerType](#type-ParallelingControllerType) | (none) |
 
 ### Reference types
 
-This specification defines no custom ReferenceTypes. It uses the standard OPC UA references `HasComponent`, `HasProperty`, `HasAddIn`, `HasInterface`, `GeneratesEvent`, `HasSubtype`, `HasTypeDefinition`, `HasModellingRule`, `FromState`, `ToState` and `HasEncoding`.
+This specification defines no custom ReferenceTypes. It uses the standard OPC UA references [`HasComponent`](https://reference.opcfoundation.org/specs/OPC-10000-3/7.7), [`HasProperty`](https://reference.opcfoundation.org/specs/OPC-10000-3/5.3.3#5.3.3.2), [`HasAddIn`](https://reference.opcfoundation.org/specs/OPC-10000-3/7.20), [`HasInterface`](https://reference.opcfoundation.org/specs/OPC-10000-3/7.19), [`GeneratesEvent`](https://reference.opcfoundation.org/specs/OPC-10000-3/7.15), [`HasSubtype`](https://reference.opcfoundation.org/specs/OPC-10000-3/5.3.3#5.3.3.3), [`HasTypeDefinition`](https://reference.opcfoundation.org/specs/OPC-10000-3/7.13), [`HasModellingRule`](https://reference.opcfoundation.org/specs/OPC-10000-3/7.12), [`FromState`](https://reference.opcfoundation.org/specs/OPC-10000-16/4.4.11), [`ToState`](https://reference.opcfoundation.org/specs/OPC-10000-16/4.4.12) and [`HasEncoding`](https://reference.opcfoundation.org/specs/OPC-10000-3/7.14).
 
