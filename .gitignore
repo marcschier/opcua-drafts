@@ -5,3 +5,6 @@ __pycache__/
 # OS
 .DS_Store
 Thumbs.db
+
+# Local validation aids (base NodeId tables, not distributed)
+**/tools/ref/

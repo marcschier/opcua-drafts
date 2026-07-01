@@ -8,6 +8,10 @@ This repository is a working area for authoring and iterating on draft OPC UA in
 
 - `companion-specs/` — draft OPC UA companion specifications, one folder per domain.
   - `Generators/` — draft Companion Specification for electrical power **Generator Sets (GenSets)**: the information model (`Opc.Ua.Generators.NodeSet2.xml`), the NodeId assignments (`Opc.Ua.Generators.NodeIds.csv`), the specification document, and `tools/build_model.py` — a generator that emits the NodeSet, CSV, and reference tables from a single source of truth.
+- `core-specs/` — draft **extensions to the base OPC UA specification** (proposed additions to the `http://opcfoundation.org/UA/` namespace), intended for submission to an OPC Foundation Working Group.
+  - `pubsub-binding/` — draft *OPC UA — PubSub Scenario Binding*: a small, transport-neutral binding and discovery layer that lets a server expose the instances of **any** companion specification over PubSub (Part 14) for extensible integration **Scenarios** (observability, predictive maintenance, anomaly detection, …), so a generic client can bridge them to other systems without understanding the domain. Contains the NodeSet, CSV, specification document, and `tools/build_model.py`.
+- `skills/` — reusable authoring **skills** (agent instructions) that operate on the drafts.
+  - `opcua-scenario-binding/` — a skill that generates PubSub Scenario Bindings for any companion specification from its NodeSet (a machine-readable binding descriptor, a human-readable annex, and an optional NodeSet fragment).
 
 ## Status
 
