@@ -1,0 +1,93 @@
+{
+  "domain": "Pumps",
+  "appliesToType": "PumpType",
+  "baseModelNamespaceUri": "http://opcfoundation.org/UA/Pumps/",
+  "exampleNamespaceUri": "http://opcfoundation.org/UA/PubSub/Examples/Pumps/",
+  "instanceName": "ExamplePump",
+  "summary": "Pumps expose rich operational telemetry (flow, head, pressure, power, temperatures, efficiencies, rotor loads) plus identity and maintenance data, so most industrial scenarios map cleanly onto the pump measurement model.",
+  "companionSpec": { "name": "OPC UA for Pumps and Vacuum Pumps", "ref": "https://reference.opcfoundation.org/Pumps/v100/docs/" },
+  "instanceModel": {
+    "note": "The theoretical instance mirrors the official Pumps `instanceexample.xml` (an `ExamplePump : PumpType` with `Operational/Measurements`, `Identification`, `Supervision*`, `Maintenance` and a `<Drive>`); the bound BrowsePaths resolve against exactly that structure.",
+    "ref": "https://github.com/OPCFoundation/UA-Nodeset/blob/latest/Pumps/instanceexample.xml",
+    "refName": "Pumps/instanceexample.xml"
+  },
+  "configurationVersion": { "majorVersion": 1, "minorVersion": 0 },
+  "baseNodeSets": [
+    "Opc.Ua.Pumps.NodeSet2.xml",
+    "Opc.Ua.Di.NodeSet2.xml",
+    "Opc.Ua.Machinery.NodeSet2.xml"
+  ],
+  "requiredModels": [
+    { "uri": "http://opcfoundation.org/UA/Pumps/" },
+    { "uri": "http://opcfoundation.org/UA/DI/" },
+    { "uri": "http://opcfoundation.org/UA/Machinery/" }
+  ],
+  "scenarioBindings": [
+    {
+      "name": "Observability",
+      "scenarioUri": "http://opcfoundation.org/UA/PubSub/Scenarios/Observability",
+      "direction": "Publisher",
+      "boundItems": [
+        { "kind": "Telemetry", "browsePath": "/Operational/Measurements/Speed", "samplingIntervalHint": 1000 },
+        { "kind": "Telemetry", "browsePath": "/Operational/Measurements/Throughput", "samplingIntervalHint": 1000 },
+        { "kind": "Telemetry", "browsePath": "/Operational/Measurements/MassFlow", "samplingIntervalHint": 1000 },
+        { "kind": "Telemetry", "browsePath": "/Operational/Measurements/ProcessPressure", "samplingIntervalHint": 1000 },
+        { "kind": "Telemetry", "browsePath": "/Operational/Measurements/DifferentialPressure", "samplingIntervalHint": 1000 },
+        { "kind": "Telemetry", "browsePath": "/Operational/Measurements/PumpTotalHead", "samplingIntervalHint": 1000 },
+        { "kind": "Telemetry", "browsePath": "/Operational/Measurements/PumpPowerInput", "samplingIntervalHint": 1000 },
+        { "kind": "Telemetry", "browsePath": "/Operational/Measurements/FluidTemperature", "samplingIntervalHint": 2000 },
+        { "kind": "Telemetry", "browsePath": "/Operational/Measurements/BearingTemperature", "samplingIntervalHint": 2000 },
+        { "kind": "Telemetry", "browsePath": "/Operational/Measurements/PumpTemperature", "samplingIntervalHint": 2000 }
+      ]
+    },
+    {
+      "name": "EnergyAndLoadManagement",
+      "scenarioUri": "http://opcfoundation.org/UA/PubSub/Scenarios/EnergyAndLoadManagement",
+      "direction": "Publisher",
+      "boundItems": [
+        { "kind": "Telemetry", "browsePath": "/Operational/Measurements/PumpPowerInput", "samplingIntervalHint": 1000 },
+        { "kind": "Telemetry", "browsePath": "/Operational/Measurements/PumpPowerOutput", "samplingIntervalHint": 1000 },
+        { "kind": "Metric", "browsePath": "/Operational/Measurements/OverallEfficiency", "samplingIntervalHint": 5000 },
+        { "kind": "Metric", "browsePath": "/Operational/Measurements/PumpEfficiency", "samplingIntervalHint": 5000 },
+        { "kind": "Metric", "browsePath": "/Operational/Measurements/HydraulicEfficiency", "samplingIntervalHint": 5000 }
+      ]
+    },
+    {
+      "name": "PredictiveMaintenance",
+      "scenarioUri": "http://opcfoundation.org/UA/PubSub/Scenarios/PredictiveMaintenance",
+      "direction": "Publisher",
+      "boundItems": [
+        { "kind": "Telemetry", "browsePath": "/Operational/Measurements/BearingTemperature", "samplingIntervalHint": 5000 },
+        { "kind": "Telemetry", "browsePath": "/Operational/Measurements/AxialLoadOfPumpRotor", "samplingIntervalHint": 5000 },
+        { "kind": "Telemetry", "browsePath": "/Operational/Measurements/RadialLoadOfPumpRotor", "samplingIntervalHint": 5000 },
+        { "kind": "Telemetry", "browsePath": "/Operational/Measurements/LubricatingOilPressure", "samplingIntervalHint": 5000 },
+        { "kind": "Telemetry", "browsePath": "/Operational/Measurements/AxialRotorPosition", "samplingIntervalHint": 5000 },
+        { "kind": "Counter", "browsePath": "/Operational/Measurements/NumberOfStarts", "samplingIntervalHint": 10000 }
+      ]
+    },
+    {
+      "name": "AnomalyDetection",
+      "scenarioUri": "http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection",
+      "direction": "Publisher",
+      "boundItems": [
+        { "kind": "Telemetry", "browsePath": "/Operational/Measurements/SoundPower", "samplingIntervalHint": 500 },
+        { "kind": "Telemetry", "browsePath": "/Operational/Measurements/SoundPressureLevel", "samplingIntervalHint": 500 },
+        { "kind": "Telemetry", "browsePath": "/Operational/Measurements/DifferentialPressure", "samplingIntervalHint": 500 },
+        { "kind": "Telemetry", "browsePath": "/Operational/Measurements/BearingTemperature", "samplingIntervalHint": 500 }
+      ]
+    },
+    {
+      "name": "FleetAndCompliance",
+      "scenarioUri": "http://opcfoundation.org/UA/PubSub/Scenarios/FleetAndCompliance",
+      "direction": "Publisher",
+      "boundItems": [
+        { "kind": "Identification", "browsePath": "/Identification/Manufacturer" },
+        { "kind": "Identification", "browsePath": "/Identification/Model" },
+        { "kind": "Identification", "browsePath": "/Identification/SerialNumber" },
+        { "kind": "Identification", "browsePath": "/Identification/ProductInstanceUri" },
+        { "kind": "Identification", "browsePath": "/Identification/AssetId" },
+        { "kind": "Identification", "browsePath": "/Identification/Location" }
+      ]
+    }
+  ]
+}

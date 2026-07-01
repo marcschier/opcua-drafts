@@ -1,0 +1,82 @@
+{
+  "domain": "Robotics",
+  "appliesToType": "MotionDeviceSystemType",
+  "baseModelNamespaceUri": "http://opcfoundation.org/UA/Robotics/",
+  "exampleNamespaceUri": "http://opcfoundation.org/UA/PubSub/Examples/Robotics/",
+  "instanceName": "ExampleRobotSystem",
+  "summary": "Robotics is structured around motion devices, axes, power trains, controllers and safety states with state machines, so scenarios lean on axis/motor telemetry, controller thermals, safety status and nameplate identity rather than a flat measurement model.",
+  "companionSpec": { "name": "OPC UA for Robotics (OPC 40010)", "ref": "https://reference.opcfoundation.org/Robotics/v100/docs/" },
+  "instanceModel": {
+    "note": "Robotics publishes no public instance example, so a compact theoretical `MotionDeviceSystem` is synthesised: one MotionDevice with an Axis and a PowerTrain/Motor, one Controller, and one SafetyState. Placeholder path segments (e.g. `<AxisIdentifier>`) become concrete instance names (e.g. `Axis_1`) in the overlay while the type-level BrowsePath keeps the placeholder."
+  },
+  "configurationVersion": { "majorVersion": 1, "minorVersion": 0 },
+  "baseNodeSets": [
+    "Opc.Ua.Robotics.NodeSet2.xml",
+    "Opc.Ua.Di.NodeSet2.xml",
+    "Opc.Ua.IA.NodeSet2.xml",
+    "Opc.Ua.Machinery.NodeSet2.xml"
+  ],
+  "requiredModels": [
+    { "uri": "http://opcfoundation.org/UA/Robotics/" },
+    { "uri": "http://opcfoundation.org/UA/DI/" },
+    { "uri": "http://opcfoundation.org/UA/IA/" },
+    { "uri": "http://opcfoundation.org/UA/Machinery/" }
+  ],
+  "scenarioBindings": [
+    {
+      "name": "Observability",
+      "scenarioUri": "http://opcfoundation.org/UA/PubSub/Scenarios/Observability",
+      "direction": "Publisher",
+      "boundItems": [
+        { "fieldName": "AxisActualPosition", "kind": "Telemetry", "browsePath": "/MotionDevices/<MotionDeviceIdentifier>/Axes/<AxisIdentifier>/ParameterSet/ActualPosition", "samplingIntervalHint": 200 },
+        { "fieldName": "MotorTemperature", "kind": "Telemetry", "browsePath": "/MotionDevices/<MotionDeviceIdentifier>/PowerTrains/<PowerTrainIdentifier>/<MotorIdentifier>/ParameterSet/MotorTemperature", "samplingIntervalHint": 2000 },
+        { "fieldName": "SpeedOverride", "kind": "Status", "browsePath": "/MotionDevices/<MotionDeviceIdentifier>/ParameterSet/SpeedOverride", "samplingIntervalHint": 500 },
+        { "fieldName": "ControllerTemperature", "kind": "Telemetry", "browsePath": "/Controllers/<ControllerIdentifier>/ParameterSet/Temperature", "samplingIntervalHint": 2000 }
+      ]
+    },
+    {
+      "name": "PredictiveMaintenance",
+      "scenarioUri": "http://opcfoundation.org/UA/PubSub/Scenarios/PredictiveMaintenance",
+      "direction": "Publisher",
+      "boundItems": [
+        { "fieldName": "MotorTemperature", "kind": "Telemetry", "browsePath": "/MotionDevices/<MotionDeviceIdentifier>/PowerTrains/<PowerTrainIdentifier>/<MotorIdentifier>/ParameterSet/MotorTemperature", "samplingIntervalHint": 5000 },
+        { "fieldName": "ControllerTemperature", "kind": "Telemetry", "browsePath": "/Controllers/<ControllerIdentifier>/ParameterSet/Temperature", "samplingIntervalHint": 5000 },
+        { "fieldName": "CabinetFanSpeed", "kind": "Telemetry", "browsePath": "/Controllers/<ControllerIdentifier>/ParameterSet/CabinetFanSpeed", "samplingIntervalHint": 5000 },
+        { "fieldName": "CPUFanSpeed", "kind": "Telemetry", "browsePath": "/Controllers/<ControllerIdentifier>/ParameterSet/CPUFanSpeed", "samplingIntervalHint": 5000 },
+        { "fieldName": "TotalPowerOnTime", "kind": "Counter", "browsePath": "/Controllers/<ControllerIdentifier>/ParameterSet/TotalPowerOnTime", "samplingIntervalHint": 30000 }
+      ]
+    },
+    {
+      "name": "AnomalyDetection",
+      "scenarioUri": "http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection",
+      "direction": "Publisher",
+      "boundItems": [
+        { "fieldName": "AxisActualPosition", "kind": "Telemetry", "browsePath": "/MotionDevices/<MotionDeviceIdentifier>/Axes/<AxisIdentifier>/ParameterSet/ActualPosition", "samplingIntervalHint": 100 },
+        { "fieldName": "MotorTemperature", "kind": "Telemetry", "browsePath": "/MotionDevices/<MotionDeviceIdentifier>/PowerTrains/<PowerTrainIdentifier>/<MotorIdentifier>/ParameterSet/MotorTemperature", "samplingIntervalHint": 500 }
+      ]
+    },
+    {
+      "name": "AlarmAndEventDistribution",
+      "scenarioUri": "http://opcfoundation.org/UA/PubSub/Scenarios/AlarmAndEventDistribution",
+      "direction": "Publisher",
+      "boundItems": [
+        { "fieldName": "EmergencyStop", "kind": "Status", "browsePath": "/SafetyStates/<SafetyStateIdentifier>/ParameterSet/EmergencyStop", "samplingIntervalHint": 100 },
+        { "fieldName": "ProtectiveStop", "kind": "Status", "browsePath": "/SafetyStates/<SafetyStateIdentifier>/ParameterSet/ProtectiveStop", "samplingIntervalHint": 100 },
+        { "fieldName": "OperationalMode", "kind": "Status", "browsePath": "/SafetyStates/<SafetyStateIdentifier>/ParameterSet/OperationalMode", "samplingIntervalHint": 500 },
+        { "fieldName": "EmergencyStopActive", "kind": "Status", "browsePath": "/SafetyStates/<SafetyStateIdentifier>/EmergencyStopFunctions/<EmergencyStopFunctionIdentifier>/Active", "samplingIntervalHint": 100 }
+      ]
+    },
+    {
+      "name": "FleetAndCompliance",
+      "scenarioUri": "http://opcfoundation.org/UA/PubSub/Scenarios/FleetAndCompliance",
+      "direction": "Publisher",
+      "boundItems": [
+        { "fieldName": "Manufacturer", "kind": "Identification", "browsePath": "/Manufacturer" },
+        { "fieldName": "Model", "kind": "Identification", "browsePath": "/Model" },
+        { "fieldName": "SerialNumber", "kind": "Identification", "browsePath": "/SerialNumber" },
+        { "fieldName": "ProductInstanceUri", "kind": "Identification", "browsePath": "/ProductInstanceUri" },
+        { "fieldName": "MotionDeviceCategory", "kind": "Configuration", "browsePath": "/MotionDevices/<MotionDeviceIdentifier>/MotionDeviceCategory" }
+      ]
+    }
+  ]
+}
