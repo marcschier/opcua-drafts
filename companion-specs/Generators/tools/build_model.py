@@ -1389,8 +1389,8 @@ def emit_md():
                 method_args[pid] = names
 
     md = []
-    md.append("## Information model\n")
-    md.append("This section is the normative node reference. It is generated directly from "
+    md.append("## Annex A \u2014 Information model\n")
+    md.append("This annex is the normative node reference. It is generated directly from "
               "`tools/build_model.py` and therefore always matches "
               "`Opc.Ua.Generators.NodeSet2.xml`. It is organised by NodeClass. For every "
               "ObjectType and DataType the full structure is given, and the **Declared in** "

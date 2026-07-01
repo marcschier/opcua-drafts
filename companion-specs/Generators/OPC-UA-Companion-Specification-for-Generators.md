@@ -223,7 +223,75 @@ A server implementing this specification should implement the `GeneratorSetType`
 
 Mandatory children inherited from the chosen base types are **not** re‑declared in this NodeSet, but conforming instances must still expose them. In particular: the DI `DeviceType` nameplate (`Manufacturer`, `Model`, `SerialNumber`, `HardwareRevision`, `SoftwareRevision`, `DeviceRevision`, `DeviceManual`, `RevisionCounter`); the `FiniteStateMachineType` `CurrentState` on `OperatingState`; the `AnalogUnitType` `EngineeringUnits` on every measured value (this specification pre‑populates it with a default unit); and the `OffNormalAlarmType` / `AcknowledgeableConditionType` condition state (`EnabledState`, `ActiveState`, `AckedState`, `NormalState`). Optional but recommended children — such as the `FiniteStateMachineType` `LastTransition` and the `AnalogUnitType` `EURange` / `InstrumentRange` — should be provided where the information is available.
 
-## 10 Deliverables and reproducibility
+## 10 PubSub dataset bindings
+
+The information model is transport‑neutral: it can be exposed over OPC UA client/server and, at scale, over **OPC UA PubSub** (OPC 10000‑14). This clause gives *non‑normative* recommendations for grouping the Variables of a generator set into **PublishedDataSets** (PDS) and **WriterGroups** so that a server can efficiently feed several classes of consumer. A server may publish any subset; the field paths below are BrowsePaths relative to a `GeneratorSetType` (or `GeneratorSystemType`) instance.
+
+### 10.1 General binding guidance
+
+- A **PublishedDataSet** is a named list of published fields, each field bound to a Variable of the model (for example `Alternator/TotalRealPower`). Group fields by **rate of change** and **consumer** so that fast telemetry, slow nameplate/configuration, and event data travel in separate datasets and writer groups.
+- Use one **WriterGroup** per publishing rate. Publish cyclic telemetry as **delta frames** with a periodic **key frame**; publish nameplate/configuration as low‑rate key frames or on change.
+- Bind alarms and protection events to an **event DataSet** (the Part 14 event message mapping) rather than to a cyclic dataset.
+- Expose `DataSetMetaData` including its `ConfigurationVersion` so subscribers can detect structural changes, and carry `SourceTimestamp` and `StatusCode` per field so analytics can reason about data quality and gaps.
+- For multi‑set installations, a `GeneratorSystemType` writer publishes aggregated key indicators while each `GeneratorSetType` publishes its own detailed datasets.
+
+### 10.2 Scenario — Operational observability
+
+Real‑time monitoring, SCADA/HMI and remote operations. Low latency, small payloads, cyclic.
+
+| PublishedDataSet | Suggested fields | Rate | Frame |
+|---|---|---|---|
+| `GenSet.Live` | `OperatingState/CurrentState`, `OperatingMode`, `Engine/Speed`, `Engine/CoolantTemperature`, `Engine/OilPressure`, `Alternator/Frequency`, `Alternator/TotalRealPower`, `Alternator/AverageLineToLineVoltage`, `Alternator/AverageCurrent`, `FuelSystem/FuelLevel`, `StartingSystem/BatteryVoltage` | 1 s | delta + 10 s key |
+| `GenSet.Status` | `GeneratorBreakerClosed`, `AvailableToLoad`, `RunRequest`, `LoadInhibit`, `Controller/InAutoMode`, `DeviceHealth` | on change | key |
+
+### 10.3 Scenario — Analytics: predictive maintenance
+
+Trending of wear‑ and condition‑related signals together with diagnostic codes and usage counters; historized. Moderate rate.
+
+| PublishedDataSet | Suggested fields | Rate |
+|---|---|---|
+| `GenSet.Condition` | `Engine/OilPressure`, `Engine/OilTemperature`, `Engine/CoolantTemperature`, `Engine/ExhaustGasTemperature`, `Engine/IntakeManifoldPressure`, `LubricationSystem/OilFilterDifferentialPressure`, `Alternator/WindingTemperature1..3`, `Alternator/BearingTemperatureDriveEnd`, `Alternator/BearingTemperatureNonDriveEnd`, `FuelSystem/FuelPressure` | 1–10 s |
+| `GenSet.Usage` | `Engine/EngineHours`, `Engine/NumberOfStarts`, `StartingSystem/StartAttempts`, `Alternator/TotalRealEnergy`, `FuelSystem/TotalFuelConsumed` | 1 min / on change |
+| `GenSet.Diagnostics` | `Engine/CanInterface/ActiveDiagnosticTroubleCodes`, `Engine/CanInterface/PreviouslyActiveDiagnosticTroubleCodes`, `Engine/CanInterface/AmberWarningLamp`, `Engine/CanInterface/RedStopLamp` | on change |
+
+Predictive models correlate the condition signals with usage counters and DTC history to forecast wear (bearings, injectors, cooling and lubrication systems) and to schedule service before failure.
+
+### 10.4 Scenario — Analytics: anomaly detection
+
+High‑resolution, correlated electrical and mechanical signals for baseline modelling and deviation/outlier detection (phase imbalance, load‑vs‑fuel drift, incipient faults).
+
+| PublishedDataSet | Suggested fields | Rate |
+|---|---|---|
+| `GenSet.HiRes` | `Engine/Speed`, `Engine/PercentLoad`, `Engine/FuelRate`, `Alternator/Frequency`, `Alternator/TotalRealPower`, `Alternator/TotalReactivePower`, and per‑phase `Alternator/L1..L3/Current`, `.../LineToNeutralVoltage`, `.../PowerFactor` | 100 ms – 1 s |
+
+### 10.5 Scenario — Energy & load management and paralleling
+
+Load sharing, peak shaving, demand response and grid‑services coordination across a bus or fleet.
+
+| PublishedDataSet | Suggested fields | Rate |
+|---|---|---|
+| `System.Load` | `ParallelingController/TotalBusRealPower`, `.../TotalBusReactivePower`, `.../BusFrequency`, `.../BusVoltage`, `.../LoadSharePercent`, `.../AvailableCapacity`, `.../SpinningReserve`, `.../UtilityImportPower`, `.../UtilityExportPower` | 200 ms – 1 s |
+| `GenSet.Power` | `Alternator/TotalRealPower`, `Alternator/LoadPercent`, `Ratings/<Rating>/RatedRealPower` | 1 s |
+
+### 10.6 Scenario — Alarm & event distribution
+
+Protection and condition events for operators, CMMS/EAM systems and safety functions.
+
+| Event DataSet | Source | Delivery |
+|---|---|---|
+| `GenSet.Events` | `GeneratorProtectionAlarmType` events (`ProtectionFunction`, `GeneratorAlarmSeverity`, `IsShutdown`, `Spn`, `Fmi`, `SubsystemName`) plus the standard `AcknowledgeableConditionType` fields | event‑driven, reliable, with keep‑alive |
+
+### 10.7 Scenario — Fleet monitoring & compliance
+
+Multi‑site supervision, contractual reporting and regulatory / emergency‑power compliance (for example NFPA 110 test records and emissions reporting).
+
+| PublishedDataSet | Suggested fields | Rate |
+|---|---|---|
+| `GenSet.Nameplate` | `Identification/Manufacturer`, `Identification/Model`, `Identification/SerialNumber`, `Identification/EngineModel`, `Identification/AlternatorModel`, `Identification/RatedRealPower`, `Identification/EmissionsStandard`, `Application`, `Controller/FirmwareVersion`, `Controller/ConfigurationVersion` | on change / daily key |
+| `GenSet.Compliance` | `EmissionsStandard`, `Engine/Aftertreatment/AftertreatmentState`, `Engine/Aftertreatment/DefLevel`, `Engine/Aftertreatment/DpfSootLoad`, `Engine/EngineHours`, `FuelSystem/TotalFuelConsumed` (test runs are recorded via the `StartTest` method and protection/condition events) | periodic / event |
+| `System.Fleet` | per set `OperatingState/CurrentState` and `Alternator/TotalRealPower`; system `TotalSystemLoad`, `TotalSystemCapacity`, `NumberOfGeneratorSets` | 1–10 s |
+
+## 11 Deliverables and reproducibility
 
 | File | Content |
 |---|---|
@@ -236,9 +304,9 @@ The NodeSet has been validated to be structurally correct: XML well‑formedness
 
 ---
 
-## Information model
+## Annex A — Information model
 
-This section is the normative node reference. It is generated directly from `tools/build_model.py` and therefore always matches `Opc.Ua.Generators.NodeSet2.xml`. It is organised by NodeClass. For every ObjectType and DataType the full structure is given, and the **Declared in** column names the type that declares each member — rows whose *Declared in* value differs from the type being described are **inherited** from a base type in OPC UA, Devices (DI) or Machinery.
+This annex is the normative node reference. It is generated directly from `tools/build_model.py` and therefore always matches `Opc.Ua.Generators.NodeSet2.xml`. It is organised by NodeClass. For every ObjectType and DataType the full structure is given, and the **Declared in** column names the type that declares each member — rows whose *Declared in* value differs from the type being described are **inherited** from a base type in OPC UA, Devices (DI) or Machinery.
 
 ### Type overview
 
