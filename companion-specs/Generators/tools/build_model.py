@@ -1,0 +1,1296 @@
+#!/usr/bin/env python3
+"""
+Generator for the OPC UA Companion Specification for Generators (GenSets).
+
+Emits two artifacts that are guaranteed to stay consistent with each other:
+  * Opc.Ua.Generators.NodeSet2.xml  - the machine-readable information model
+  * Opc.Ua.Generators.NodeIds.csv   - the numeric NodeId assignments
+
+The model is hand-authored here as data. Types get stable NodeIds; instance
+declarations (members), enum strings, method arguments, state-machine states
+and transitions receive sequential NodeIds from a dedicated range.
+
+Namespace layout inside the NodeSet:
+    index 0 (implicit) : http://opcfoundation.org/UA/            (Core)
+    index 1            : http://opcfoundation.org/UA/Generators/ (this spec)
+    index 2            : http://opcfoundation.org/UA/DI/         (Devices)
+    index 3            : http://opcfoundation.org/UA/Machinery/  (Machinery)
+"""
+from __future__ import annotations
+import os
+import xml.sax.saxutils as sx
+
+# ---------------------------------------------------------------------------
+# Namespace indices as they appear in this NodeSet
+# ---------------------------------------------------------------------------
+GEN = 1   # Generators (own)
+DI = 2    # Devices
+MC = 3    # Machinery
+
+# ---------------------------------------------------------------------------
+# Well-known base NodeIds (verified against UA-Nodeset)
+# ---------------------------------------------------------------------------
+# Core UA reference types
+HasComponent = "i=47"
+HasProperty = "i=46"
+HasSubtype = "i=45"
+Organizes = "i=35"
+HasTypeDefinition = "i=40"
+HasModellingRule = "i=37"
+HasInterface = "i=17603"
+HasAddIn = "i=17604"
+HasEncoding = "i=38"
+GeneratesEvent = "i=41"
+FromState = "i=51"
+ToState = "i=52"
+
+# Modelling rules (targets of HasModellingRule)
+MR_Mandatory = "i=78"
+MR_Optional = "i=80"
+MR_OptionalPlaceholder = "i=11508"
+MR_MandatoryPlaceholder = "i=11510"
+
+# Core type definitions
+BaseObjectType = "i=58"
+FolderType = "i=61"
+BaseDataVariableType = "i=63"
+PropertyType = "i=68"
+BaseInterfaceType = "i=17602"
+FiniteStateMachineType = "i=2771"
+StateType = "i=2307"
+InitialStateType = "i=2309"
+TransitionType = "i=2310"
+AnalogUnitType = "i=17497"
+DataTypeEncodingType = "i=76"
+
+# Core data types
+Boolean = "i=1"
+Byte = "i=3"
+UInt16 = "i=5"
+UInt32 = "i=7"
+Int32 = "i=6"
+Float = "i=10"
+Double = "i=11"
+String = "i=12"
+DateTime = "i=13"
+LocalizedText = "i=21"
+Structure = "i=22"
+Enumeration = "i=29"
+Duration = "i=290"
+Argument = "i=296"
+Range = "i=884"
+EUInformation = "i=887"
+
+# DI (ns=2)
+DI_TopologyElementType = f"ns={DI};i=1001"
+DI_DeviceType = f"ns={DI};i=1002"
+DI_ComponentType = f"ns={DI};i=15063"
+DI_IVendorNameplateType = f"ns={DI};i=15035"
+
+# Machinery (ns=3)
+MC_MachineryItemState_SMT = f"ns={MC};i=1002"
+MC_MachineIdentificationType = f"ns={MC};i=1012"
+MC_MachineryOperationMode_SMT = f"ns={MC};i=1008"
+
+# Alarms (Part 9, ns=0)
+OffNormalAlarmType = "i=10637"
+
+# ---------------------------------------------------------------------------
+# Node registry
+# ---------------------------------------------------------------------------
+class Node:
+    __slots__ = ("nid", "cls", "bns", "bname", "symbolic", "display", "desc",
+                 "parent", "attrs", "refs", "category", "definition", "value",
+                 "abstract")
+
+    def __init__(self, nid, cls, bns, bname, symbolic, display, desc, parent,
+                 attrs, category, abstract):
+        self.nid = nid
+        self.cls = cls
+        self.bns = bns
+        self.bname = bname
+        self.symbolic = symbolic
+        self.display = display
+        self.desc = desc
+        self.parent = parent
+        self.attrs = attrs or {}
+        self.refs = []            # list of (reftype, target, forward)
+        self.category = category
+        self.definition = None    # raw xml for <Definition>
+        self.value = None         # raw xml for <Value>
+        self.abstract = abstract
+
+
+NODES = {}
+ORDER = []
+_next_member = [6001]
+
+
+def _mid():
+    v = _next_member[0]
+    _next_member[0] += 1
+    return v
+
+
+def add(nid, cls, bname, symbolic, display=None, desc=None, parent=None,
+        attrs=None, category=None, bns=GEN, abstract=False):
+    n = Node(nid, cls, bns, bname, symbolic, display or bname, desc, parent,
+             attrs, category, abstract)
+    NODES[nid] = n
+    ORDER.append(nid)
+    return n
+
+
+def ref(nid, reftype, target, forward=True):
+    NODES[nid].refs.append((reftype, target, forward))
+
+
+def T(nid):
+    """Format a NodeId in this (Generators) namespace."""
+    return f"ns={GEN};i={nid}"
+
+
+# ---------------------------------------------------------------------------
+# High-level builders
+# ---------------------------------------------------------------------------
+def object_type(nid, name, base, desc, category, abstract=False):
+    add(nid, "UAObjectType", name, name, desc=desc, category=category,
+        abstract=abstract)
+    ref(nid, HasSubtype, base, forward=False)
+    return nid
+
+
+def _member_var(owner, owner_sym, name, datatype, typedef, rule, reftype, desc,
+                valuerank="-1", array=None, bns=GEN):
+    nid = _mid()
+    attrs = {"DataType": datatype, "ValueRank": valuerank}
+    if array is not None:
+        attrs["ArrayDimensions"] = str(array)
+    add(nid, "UAVariable", name, f"{owner_sym}_{name}", desc=desc,
+        parent=T(owner), attrs=attrs, bns=bns)
+    ref(nid, HasModellingRule, rule)
+    ref(nid, HasTypeDefinition, typedef)
+    ref(nid, reftype, T(owner), forward=False)
+    ref(owner, reftype, T(nid))
+    return nid
+
+
+def analog(owner, owner_sym, name, unit, desc, rule=MR_Optional):
+    full = f"{desc} EngineeringUnits: {unit}."
+    nid = _member_var(owner, owner_sym, name, Double, AnalogUnitType, rule,
+                      HasComponent, full)
+    _engineering_units(nid, f"{owner_sym}_{name}", unit)
+    return nid
+
+
+# UNECE Rec 20 unit codes (UNECECode, UnitId, DisplayName, Description)
+UNITS = {
+    "rpm": ("RPM", 5394509, "r/min", "revolutions per minute"),
+    "%": ("P1", 20529, "%", "percent"),
+    "kPa": ("KPA", 4935745, "kPa", "kilopascal"),
+    "degC": ("CEL", 4408652, "\u00b0C", "degree Celsius"),
+    "L/h": ("E32", 4535090, "l/h", "litre per hour"),
+    "V": ("VLT", 5655636, "V", "volt"),
+    "A": ("AMP", 4279632, "A", "ampere"),
+    "kW": ("KWT", 4937556, "kW", "kilowatt"),
+    "kvar": ("KVR", 4937298, "kvar", "kilovar"),
+    "kVA": ("KVA", 4937281, "kV\u00b7A", "kilovolt ampere"),
+    "Hz": ("HTZ", 4740186, "Hz", "hertz"),
+    "h": ("HUR", 4740434, "h", "hour"),
+    "kW.h": ("KWH", 4937544, "kW\u00b7h", "kilowatt hour"),
+    "l": ("LTR", 5002322, "l", "litre"),
+    "m": ("MTR", 5067858, "m", "metre"),
+    "deg": ("DD", 17476, "\u00b0", "degree"),
+}
+_UN_NS = "http://www.opcfoundation.org/UA/units/un/cefact"
+
+
+def _engineering_units(parent_nid, parent_sym, unit):
+    code, uid, disp, descr = UNITS.get(unit, (None, 0, unit, unit))
+    nid = _mid()
+    add(nid, "UAVariable", "EngineeringUnits", f"{parent_sym}_EngineeringUnits",
+        parent=T(parent_nid), attrs={"DataType": EUInformation}, bns=0)
+    ref(nid, HasModellingRule, MR_Mandatory)
+    ref(nid, HasTypeDefinition, PropertyType)
+    ref(nid, HasProperty, T(parent_nid), forward=False)
+    ref(parent_nid, HasProperty, T(nid))
+    NODES[nid].value = (
+        '<Value><ExtensionObject xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">'
+        '<TypeId><Identifier>i=889</Identifier></TypeId>'
+        '<Body><EUInformation>'
+        f'<NamespaceUri>{_UN_NS}</NamespaceUri>'
+        f'<UnitId>{uid}</UnitId>'
+        f'<DisplayName><Text>{sx.escape(disp)}</Text></DisplayName>'
+        f'<Description><Text>{sx.escape(descr)}</Text></Description>'
+        '</EUInformation></Body></ExtensionObject></Value>')
+    return nid
+
+
+def comp_var(owner, owner_sym, name, datatype, desc, rule=MR_Optional,
+             typedef=BaseDataVariableType, valuerank="-1", array=None):
+    return _member_var(owner, owner_sym, name, datatype, typedef, rule,
+                       HasComponent, desc, valuerank, array)
+
+
+def prop_var(owner, owner_sym, name, datatype, desc, rule=MR_Optional,
+             valuerank="-1", array=None):
+    return _member_var(owner, owner_sym, name, datatype, PropertyType, rule,
+                       HasProperty, desc, valuerank, array)
+
+
+def obj_member(owner, owner_sym, name, typedef, desc, rule=MR_Optional,
+               reftype=HasComponent, bns=GEN):
+    nid = _mid()
+    add(nid, "UAObject", name, f"{owner_sym}_{name}", desc=desc,
+        parent=T(owner), bns=bns)
+    ref(nid, HasModellingRule, rule)
+    ref(nid, HasTypeDefinition, typedef)
+    ref(nid, reftype, T(owner), forward=False)
+    ref(owner, reftype, T(nid))
+    return nid
+
+
+def method(owner, owner_sym, name, desc, rule=MR_Optional, inargs=None,
+           outargs=None):
+    nid = _mid()
+    add(nid, "UAMethod", name, f"{owner_sym}_{name}", desc=desc,
+        parent=T(owner))
+    ref(nid, HasModellingRule, rule)
+    ref(nid, HasComponent, T(owner), forward=False)
+    ref(owner, HasComponent, T(nid))
+    if inargs:
+        _args(nid, f"{owner_sym}_{name}", "InputArguments", inargs)
+    if outargs:
+        _args(nid, f"{owner_sym}_{name}", "OutputArguments", outargs)
+    return nid
+
+
+def _args(method_nid, method_sym, bname, args):
+    nid = _mid()
+    add(nid, "UAVariable", bname, f"{method_sym}_{bname}",
+        parent=T(method_nid),
+        attrs={"DataType": Argument, "ValueRank": "1",
+               "ArrayDimensions": str(len(args))}, bns=0)
+    ref(nid, HasModellingRule, MR_Mandatory)
+    ref(nid, HasTypeDefinition, PropertyType)
+    ref(nid, HasProperty, T(method_nid), forward=False)
+    ref(method_nid, HasProperty, T(nid))
+    parts = ['<Value>',
+             '<ListOfExtensionObject xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">']
+    for (aname, adtype, adesc) in args:
+        parts.append("<ExtensionObject><TypeId><Identifier>i=297</Identifier></TypeId>")
+        parts.append("<Body><Argument>")
+        parts.append(f"<Name>{sx.escape(aname)}</Name>")
+        parts.append(f"<DataType><Identifier>{adtype}</Identifier></DataType>")
+        parts.append("<ValueRank>-1</ValueRank><ArrayDimensions/>")
+        if adesc:
+            parts.append(f"<Description><Text>{sx.escape(adesc)}</Text></Description>")
+        parts.append("</Argument></Body></ExtensionObject>")
+    parts.append("</ListOfExtensionObject></Value>")
+    NODES[nid].value = "".join(parts)
+    return nid
+
+
+def enum_type(nid, name, desc, category, fields):
+    """fields: list of (fieldname, value_int, description)."""
+    add(nid, "UADataType", name, name, desc=desc, category=category)
+    ref(nid, HasSubtype, Enumeration, forward=False)
+    dparts = [f'<Definition Name="{GEN}:{name}">']
+    for (fname, val, fdesc) in fields:
+        if fdesc:
+            dparts.append(f'<Field Name="{sx.escape(fname)}" Value="{val}">')
+            dparts.append(f'<Description>{sx.escape(fdesc)}</Description></Field>')
+        else:
+            dparts.append(f'<Field Name="{sx.escape(fname)}" Value="{val}"/>')
+    dparts.append("</Definition>")
+    NODES[nid].definition = "".join(dparts)
+    es = nid + 900  # EnumStrings id convention: datatype id + 900
+    ref(nid, HasProperty, T(es))
+    add(es, "UAVariable", "EnumStrings", f"{name}_EnumStrings", parent=T(nid),
+        attrs={"DataType": LocalizedText, "ValueRank": "1",
+               "ArrayDimensions": str(len(fields))}, bns=0)
+    ref(es, HasTypeDefinition, PropertyType)
+    ref(es, HasProperty, T(nid), forward=False)
+    vp = ['<Value>',
+          '<ListOfLocalizedText xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">']
+    for (fname, val, fdesc) in fields:
+        vp.append(f"<LocalizedText><Text>{sx.escape(fname)}</Text></LocalizedText>")
+    vp.append("</ListOfLocalizedText></Value>")
+    NODES[es].value = "".join(vp)
+    return nid
+
+
+def struct_type(nid, name, desc, category, fields):
+    """fields: list of (fieldname, datatype_id, valuerank, description)."""
+    add(nid, "UADataType", name, name, desc=desc, category=category)
+    ref(nid, HasSubtype, Structure, forward=False)
+    dparts = [f'<Definition Name="{GEN}:{name}">']
+    for (fname, dtype, vrank, fdesc) in fields:
+        extra = f' ValueRank="{vrank}"' if vrank is not None else ""
+        if fdesc:
+            dparts.append(f'<Field Name="{sx.escape(fname)}" DataType="{dtype}"{extra}>')
+            dparts.append(f'<Description>{sx.escape(fdesc)}</Description></Field>')
+        else:
+            dparts.append(f'<Field Name="{sx.escape(fname)}" DataType="{dtype}"{extra}/>')
+    dparts.append("</Definition>")
+    NODES[nid].definition = "".join(dparts)
+    for enc_bname, enc_sym in (("Default Binary", "DefaultBinary"),
+                               ("Default XML", "DefaultXml")):
+        enc = _mid()
+        add(enc, "UAObject", enc_bname, f"{name}_{enc_sym}", parent=T(nid),
+            bns=0)
+        ref(enc, HasTypeDefinition, DataTypeEncodingType)
+        ref(enc, HasEncoding, T(nid), forward=False)
+        ref(nid, HasEncoding, T(enc))
+    return nid
+
+
+def state(sm_nid, sm_sym, name, number, initial=False):
+    nid = _mid()
+    add(nid, "UAObject", name, f"{sm_sym}_{name}",
+        desc=f"State '{name}' of the generator set operating state machine.",
+        parent=T(sm_nid))
+    ref(nid, HasTypeDefinition, InitialStateType if initial else StateType)
+    ref(nid, HasComponent, T(sm_nid), forward=False)
+    ref(sm_nid, HasComponent, T(nid))
+    snum = _mid()
+    add(snum, "UAVariable", "StateNumber", f"{sm_sym}_{name}_StateNumber",
+        parent=T(nid), attrs={"DataType": UInt32}, bns=0)
+    ref(snum, HasModellingRule, MR_Mandatory)
+    ref(snum, HasTypeDefinition, PropertyType)
+    ref(snum, HasProperty, T(nid), forward=False)
+    ref(nid, HasProperty, T(snum))
+    NODES[snum].value = ('<Value><uax:UInt32 '
+                         'xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">'
+                         f'{number}</uax:UInt32></Value>')
+    return nid
+
+
+def transition(sm_nid, sm_sym, name, number, from_nid, to_nid):
+    nid = _mid()
+    add(nid, "UAObject", name, f"{sm_sym}_{name}",
+        desc=f"Transition '{name}'.", parent=T(sm_nid))
+    ref(nid, HasTypeDefinition, TransitionType)
+    ref(nid, HasComponent, T(sm_nid), forward=False)
+    ref(sm_nid, HasComponent, T(nid))
+    ref(nid, FromState, T(from_nid))
+    ref(nid, ToState, T(to_nid))
+    tnum = _mid()
+    add(tnum, "UAVariable", "TransitionNumber",
+        f"{sm_sym}_{name}_TransitionNumber", parent=T(nid),
+        attrs={"DataType": UInt32}, bns=0)
+    ref(tnum, HasModellingRule, MR_Mandatory)
+    ref(tnum, HasTypeDefinition, PropertyType)
+    ref(tnum, HasProperty, T(nid), forward=False)
+    ref(nid, HasProperty, T(tnum))
+    NODES[tnum].value = ('<Value><uax:UInt32 '
+                         'xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">'
+                         f'{number}</uax:UInt32></Value>')
+    return nid
+
+
+# ===========================================================================
+# ============================  MODEL DEFINITION  ===========================
+# ===========================================================================
+
+# --- Enumerations ----------------------------------------------------------
+CAT_EN = "Generators DataTypes"
+
+enum_type(3001, "GeneratorOperatingModeEnum",
+          "Selector mode of the generator set control panel (e.g. Cummins PowerCommand).",
+          CAT_EN, [
+    ("Off", 0, "Control is off; the set will not start automatically or manually."),
+    ("Manual", 1, "Manual/hand mode; the set runs on operator command."),
+    ("Auto", 2, "Automatic mode; the set starts/stops on remote or utility-failure signals."),
+    ("Test", 3, "Test mode; a commanded test run, optionally with load."),
+    ("Exercise", 4, "Scheduled exercise/self-test run."),
+    ("RemoteStart", 5, "Started by a remote start signal."),
+    ("Maintenance", 6, "Maintenance/service mode; starting is inhibited or restricted."),
+    ("Lockout", 7, "Locked out; starting is blocked until reset."),
+])
+
+enum_type(3002, "FuelTypeEnum",
+          "Primary fuel of the generator set.", CAT_EN, [
+    ("Diesel", 0, None), ("NaturalGas", 1, None), ("Propane", 2, None),
+    ("LPG", 3, None), ("Gasoline", 4, None), ("BiFuel", 5, None),
+    ("DualFuel", 6, None), ("Biodiesel", 7, None), ("HVO", 8, None),
+    ("RenewableDiesel", 9, None), ("Hydrogen", 10, None), ("Biogas", 11, None),
+    ("LandfillGas", 12, None), ("FieldGas", 13, None), ("Syngas", 14, None),
+    ("Other", 15, None),
+])
+
+enum_type(3003, "GeneratorApplicationRatingEnum",
+          "Application/duty rating per ISO 8528 plus the data-center-continuous rating.",
+          CAT_EN, [
+    ("EmergencyStandby", 0, "ESP: standby power at variable load, limited hours, no overload."),
+    ("Prime", 1, "PRP: unlimited hours at variable load, typically 10% overload 1h/12h."),
+    ("Continuous", 2, "COP: unlimited hours at constant load, no overload."),
+    ("LimitedTime", 3, "LTP: limited hours per year at defined load."),
+    ("DataCenterContinuous", 4, "DCC: continuous operation for data-center loads."),
+])
+
+enum_type(3004, "ElectricalConnectionEnum",
+          "Winding/connection configuration of the alternator output.", CAT_EN, [
+    ("Unknown", 0, None), ("Wye", 1, None), ("WyeSolidlyGrounded", 2, None),
+    ("WyeResistanceGrounded", 3, None), ("WyeUngrounded", 4, None),
+    ("Delta", 5, None), ("OpenDelta", 6, None), ("ZigZag", 7, None),
+    ("SinglePhaseThreeWire", 8, None),
+])
+
+enum_type(3005, "ExcitationTypeEnum",
+          "Excitation method of the alternator.", CAT_EN, [
+    ("Unknown", 0, None), ("Shunt", 1, None),
+    ("PMG", 2, "Permanent Magnet Generator - independent excitation supply."),
+    ("AREP", 3, None), ("AuxiliaryWinding", 4, None), ("StaticExciter", 5, None),
+])
+
+enum_type(3006, "CoolingMethodEnum",
+          "Primary cooling method of the engine.", CAT_EN, [
+    ("AirCooled", 0, None), ("LiquidCooled", 1, None),
+])
+
+enum_type(3007, "AspirationEnum",
+          "Air induction method of the engine.", CAT_EN, [
+    ("NaturallyAspirated", 0, None), ("Turbocharged", 1, None),
+    ("TurbochargedAftercooled", 2, None),
+])
+
+enum_type(3008, "EmissionsStandardEnum",
+          "Emissions certification standard of the engine.", CAT_EN, [
+    ("Unregulated", 0, None), ("EPATier1", 1, None), ("EPATier2", 2, None),
+    ("EPATier3", 3, None), ("EPATier4Interim", 4, None),
+    ("EPATier4Final", 5, None), ("EUStageIII", 6, None), ("EUStageIV", 7, None),
+    ("EUStageV", 8, None), ("Other", 9, None),
+])
+
+enum_type(3009, "CanBusStateEnum",
+          "State of the engine CAN bus / SAE J1939 network interface.", CAT_EN, [
+    ("Offline", 0, None), ("Online", 1, None), ("ErrorWarning", 2, None),
+    ("ErrorPassive", 3, None), ("BusOff", 4, None),
+])
+
+enum_type(3010, "TransferSwitchPositionEnum",
+          "Contact position of an automatic transfer switch.", CAT_EN, [
+    ("Unknown", 0, None), ("Source1", 1, "Connected to Source 1 (normal/utility)."),
+    ("Source2", 2, "Connected to Source 2 (emergency/generator)."),
+    ("Neutral", 3, "Center-off / neutral position."),
+    ("InTransition", 4, None), ("BypassSource1", 5, None),
+    ("BypassSource2", 6, None), ("Isolated", 7, None),
+])
+
+enum_type(3011, "TransferTransitionTypeEnum",
+          "Transition method of an automatic transfer switch.", CAT_EN, [
+    ("OpenTransition", 0, "Break-before-make."),
+    ("DelayedTransition", 1, "Break-before-make with center-off delay."),
+    ("ClosedTransition", 2, "Make-before-break; momentary paralleling."),
+    ("SoftLoadTransition", 3, "Ramped, no-break transfer while paralleled."),
+    ("BypassIsolation", 4, None),
+])
+
+enum_type(3012, "AtsOperatingStateEnum",
+          "Operating state of an automatic transfer switch.", CAT_EN, [
+    ("Unknown", 0, None), ("NormalAvailable", 1, None),
+    ("EmergencyAvailable", 2, None), ("NormalConnected", 3, None),
+    ("EmergencyConnected", 4, None), ("TransferPending", 5, None),
+    ("Transferring", 6, None), ("RetransferPending", 7, None),
+    ("Exercising", 8, None), ("Test", 9, None), ("Faulted", 10, None),
+    ("Bypassed", 11, None), ("Isolated", 12, None),
+])
+
+enum_type(3013, "AlarmSeverityEnum",
+          "Severity class of a generator protection event.", CAT_EN, [
+    ("Info", 0, None), ("Warning", 1, None),
+    ("Derate", 2, "The set continues to run at reduced output."),
+    ("Shutdown", 3, "The engine is shut down."),
+    ("ElectricalTrip", 4, "The generator breaker is tripped."),
+    ("Lockout", 5, "The set is locked out and requires manual reset."),
+    ("EmergencyStop", 6, None),
+])
+
+enum_type(3014, "GeneratorProtectionFunctionEnum",
+          "Protection / fault function that raised a generator alarm.", CAT_EN, [
+    ("Other", 0, None), ("LowOilPressure", 1, None), ("HighOilTemperature", 2, None),
+    ("HighCoolantTemperature", 3, None), ("LowCoolantTemperature", 4, None),
+    ("LowCoolantLevel", 5, None), ("HighCoolantPressure", 6, None),
+    ("Overspeed", 7, None), ("Underspeed", 8, None),
+    ("Overcrank", 9, "Fail to start within the crank limit."),
+    ("FailToCrank", 10, None), ("StarterFailure", 11, None),
+    ("LowFuelLevel", 12, None), ("CriticalLowFuel", 13, None),
+    ("FuelLeak", 14, None), ("LowFuelPressure", 15, None),
+    ("HighFuelPressure", 16, None), ("WaterInFuel", 17, None),
+    ("FuelFilterRestriction", 18, None), ("AirFilterRestriction", 19, None),
+    ("HighExhaustTemperature", 20, None), ("TurbochargerFault", 21, None),
+    ("EcuFault", 22, None), ("EngineDerate", 23, None),
+    ("Overvoltage", 24, None), ("Undervoltage", 25, None),
+    ("Overfrequency", 26, None), ("Underfrequency", 27, None),
+    ("Overload", 28, None), ("Overcurrent", 29, None),
+    ("ShortCircuit", 30, None), ("GroundFault", 31, None),
+    ("PhaseLoss", 32, None), ("PhaseReversal", 33, None),
+    ("VoltageImbalance", 34, None), ("CurrentImbalance", 35, None),
+    ("ReversePower", 36, None), ("LossOfExcitation", 37, None),
+    ("Overexcitation", 38, None), ("Underexcitation", 39, None),
+    ("AvrFault", 40, None), ("HighWindingTemperature", 41, None),
+    ("HighBearingTemperature", 42, None), ("LowBatteryVoltage", 43, None),
+    ("HighBatteryVoltage", 44, None), ("BatteryChargerFailure", 45, None),
+    ("WeakBattery", 46, None), ("ControllerFault", 47, None),
+    ("CommunicationLost", 48, None), ("SensorFailure", 49, None),
+    ("EmergencyStop", 50, None), ("DefLevelLow", 51, None),
+    ("DefQualityPoor", 52, None), ("DpfSootHigh", 53, None),
+    ("RegenerationRequired", 54, None), ("AftertreatmentFault", 55, None),
+    ("EnclosureHighTemperature", 56, None), ("DoorOpen", 57, None),
+    ("FuelBasinLeak", 58, None), ("RadiatorFanFailure", 59, None),
+    ("JacketWaterHeaterFailure", 60, None), ("AtsFailedToTransfer", 61, None),
+    ("BreakerFailedToClose", 62, None), ("SynchronizationFailure", 63, None),
+])
+
+enum_type(3015, "ParallelingSystemStateEnum",
+          "Operating state of a paralleling / switchgear system.", CAT_EN, [
+    ("Off", 0, None), ("Standby", 1, None), ("StartSequence", 2, None),
+    ("DeadBusClose", 3, None), ("Synchronizing", 4, None),
+    ("Paralleling", 5, None), ("LoadSharing", 6, None), ("LoadDemand", 7, None),
+    ("UtilityParallel", 8, None), ("PeakShaving", 9, None), ("BaseLoad", 10, None),
+    ("LoadShed", 11, None), ("SoftUnload", 12, None), ("Cooldown", 13, None),
+    ("Faulted", 14, None), ("EmergencyStop", 15, None),
+    ("MaintenanceBypass", 16, None),
+])
+
+enum_type(3016, "AftertreatmentStateEnum",
+          "State of the exhaust aftertreatment system.", CAT_EN, [
+    ("NotEquipped", 0, None), ("Normal", 1, None), ("PassiveRegen", 2, None),
+    ("ActiveRegen", 3, None), ("RegenInhibited", 4, None),
+    ("RegenRequired", 5, None), ("DerateActive", 6, None), ("Faulted", 7, None),
+])
+
+enum_type(3017, "J1939LampStatusEnum",
+          "SAE J1939 DM1 diagnostic lamp status (lamp state plus flash rate).", CAT_EN, [
+    ("Off", 0, "The lamp is off."),
+    ("On", 1, "The lamp is on (steady)."),
+    ("SlowFlash", 2, "The lamp is flashing slowly."),
+    ("FastFlash", 3, "The lamp is flashing fast."),
+    ("NotAvailable", 4, "The lamp status is not available."),
+])
+
+# --- Structure -------------------------------------------------------------
+struct_type(3050, "DiagnosticTroubleCodeType",
+            "A SAE J1939 diagnostic trouble code (DTC) reported by an engine ECU.",
+            CAT_EN, [
+    ("Spn", UInt32, None, "Suspect Parameter Number identifying the faulty subsystem."),
+    ("Fmi", Byte, None, "Failure Mode Identifier describing the type of failure."),
+    ("OccurrenceCount", Byte, None, "Number of times the fault has become active."),
+    ("ConversionMethod", Boolean, None, "J1939 SPN conversion method flag."),
+    ("Active", Boolean, None, "TRUE while the fault is currently active (DM1)."),
+    ("SourceAddress", Byte, None, "J1939 source address of the ECU that reported the code."),
+    ("SourceName", String, None, "Name of the ECU/controller that reported the code."),
+    ("Severity", T(3013), None, "Severity classification of the fault."),
+    ("Description", String, None, "Human-readable description of the fault."),
+])
+
+# --- GeneratorIdentificationType (: MachineIdentificationType) --------------
+CAT_ID = "Generators Identification"
+object_type(1016, "GeneratorIdentificationType", MC_MachineIdentificationType,
+            "Identification and nameplate of a generator set. Extends the Machinery "
+            "MachineIdentificationType with generator-specific nameplate data.", CAT_ID)
+S = "GeneratorIdentificationType"
+prop_var(1016, S, "SpecificationNumber", String,
+         "Manufacturer build/specification code (e.g. Cummins spec number).")
+prop_var(1016, S, "ProductFamily", String,
+         "Product family or series (e.g. QuietConnect, C-Series, QSK, QSV).")
+prop_var(1016, S, "EngineModel", String, "Model designation of the prime-mover engine.")
+prop_var(1016, S, "EngineSerialNumber", String, "Serial number of the prime-mover engine.")
+prop_var(1016, S, "AlternatorModel", String, "Model designation of the alternator.")
+prop_var(1016, S, "AlternatorSerialNumber", String, "Serial number of the alternator.")
+prop_var(1016, S, "ControllerModel", String,
+         "Model of the control panel (e.g. PCC1301, PCC2300, PCC3300).")
+prop_var(1016, S, "FuelType", T(3002), "Primary fuel of the set.")
+prop_var(1016, S, "EmissionsStandard", T(3008), "Emissions certification standard.")
+analog(1016, S, "RatedRealPower", "kW", "Nameplate rated real power.")
+analog(1016, S, "RatedApparentPower", "kVA", "Nameplate rated apparent power.")
+analog(1016, S, "RatedVoltage", "V", "Nameplate rated line-to-line voltage.")
+analog(1016, S, "RatedFrequency", "Hz", "Nameplate rated frequency.")
+prop_var(1016, S, "SoundRatingAt7m", "i=11",
+         "Sound pressure level at 7 m (23 ft) in dB(A).")
+
+# --- GeneratorStateMachineType ---------------------------------------------
+CAT_SM = "Generators StateMachine"
+object_type(1011, "GeneratorStateMachineType", FiniteStateMachineType,
+            "Finite state machine describing the operating state of a generator set: "
+            "Off, Ready, Starting, Warmup, Running, Loaded, Synchronizing, Paralleled, "
+            "Cooldown, Stopping, Fault and EmergencyStopped.", CAT_SM)
+SM = "GeneratorStateMachineType"
+st = {}
+st["Off"] = state(1011, SM, "Off", 1, initial=True)
+st["Ready"] = state(1011, SM, "Ready", 2)
+st["Starting"] = state(1011, SM, "Starting", 3)
+st["Warmup"] = state(1011, SM, "Warmup", 4)
+st["Running"] = state(1011, SM, "Running", 5)
+st["Loaded"] = state(1011, SM, "Loaded", 6)
+st["Synchronizing"] = state(1011, SM, "Synchronizing", 7)
+st["Paralleled"] = state(1011, SM, "Paralleled", 8)
+st["Cooldown"] = state(1011, SM, "Cooldown", 9)
+st["Stopping"] = state(1011, SM, "Stopping", 10)
+st["Fault"] = state(1011, SM, "Fault", 11)
+st["EmergencyStopped"] = state(1011, SM, "EmergencyStopped", 12)
+_tn = [0]
+
+
+def _tr(a, b):
+    _tn[0] += 1
+    transition(1011, SM, f"{a}To{b}", _tn[0], st[a], st[b])
+
+
+for a, b in [("Off", "Ready"), ("Ready", "Starting"), ("Ready", "Off"),
+             ("Starting", "Warmup"), ("Starting", "Fault"), ("Warmup", "Running"),
+             ("Running", "Loaded"), ("Running", "Synchronizing"),
+             ("Synchronizing", "Paralleled"), ("Synchronizing", "Running"),
+             ("Paralleled", "Loaded"), ("Loaded", "Cooldown"),
+             ("Running", "Cooldown"), ("Cooldown", "Stopping"),
+             ("Stopping", "Off"), ("Running", "Fault"), ("Loaded", "Fault"),
+             ("Paralleled", "Fault"), ("Fault", "Off"),
+             ("Running", "EmergencyStopped"), ("Loaded", "EmergencyStopped"),
+             ("Paralleled", "EmergencyStopped"), ("EmergencyStopped", "Off")]:
+    _tr(a, b)
+
+# --- J1939DiagnosticInterfaceType ------------------------------------------
+CAT_CAN = "Generators CANbus"
+object_type(1010, "J1939DiagnosticInterfaceType", BaseObjectType,
+            "The engine CAN bus / SAE J1939 diagnostic interface. Surfaces the network "
+            "connection parameters, J1939 lamp status and active/previously-active "
+            "diagnostic trouble codes reported by the engine ECU.", CAT_CAN)
+J = "J1939DiagnosticInterfaceType"
+prop_var(1010, J, "ProtocolName", String,
+         "Name of the diagnostic protocol, e.g. 'SAE J1939'.", rule=MR_Mandatory)
+prop_var(1010, J, "NetworkName", String, "Name/identifier of the CAN network (e.g. CAN0).")
+prop_var(1010, J, "SourceAddress", Byte, "J1939 source address of the engine ECU.")
+prop_var(1010, J, "Baudrate", UInt32, "CAN bit rate in bit/s (typically 250000 or 500000).")
+comp_var(1010, J, "BusState", T(3009), "State of the CAN bus interface.")
+comp_var(1010, J, "AmberWarningLamp", T(3017), "J1939 DM1 amber warning lamp status.")
+comp_var(1010, J, "RedStopLamp", T(3017), "J1939 DM1 red stop lamp status.")
+comp_var(1010, J, "MalfunctionIndicatorLamp", T(3017), "J1939 DM1 malfunction indicator lamp status.")
+comp_var(1010, J, "ProtectLamp", T(3017), "J1939 DM1 protect lamp status.")
+comp_var(1010, J, "ActiveDiagnosticTroubleCodes", T(3050),
+         "Currently active DTCs (J1939 DM1).", valuerank="1")
+comp_var(1010, J, "PreviouslyActiveDiagnosticTroubleCodes", T(3050),
+         "Previously active DTCs (J1939 DM2).", valuerank="1")
+method(1010, J, "ClearPreviouslyActiveDtcs",
+       "Clear previously active diagnostic trouble codes (J1939 DM3/DM11).")
+
+# --- ExhaustAftertreatmentType ---------------------------------------------
+CAT_COMP = "Generators Components"
+object_type(1018, "ExhaustAftertreatmentType", DI_ComponentType,
+            "Exhaust aftertreatment subsystem (DPF/SCR/DEF) for Tier 4 / Stage V engines.",
+            CAT_COMP)
+AT = "ExhaustAftertreatmentType"
+comp_var(1018, AT, "AftertreatmentState", T(3016), "State of the aftertreatment system.")
+analog(1018, AT, "DefLevel", "%", "Diesel Exhaust Fluid tank level. SAE J1939 SPN 1761.")
+analog(1018, AT, "DefTemperature", "degC", "DEF tank temperature. SAE J1939 SPN 3031.")
+analog(1018, AT, "DefQuality", "%", "DEF concentration/quality. SAE J1939 SPN 3364.")
+analog(1018, AT, "DpfSootLoad", "%", "Diesel particulate filter soot load. SAE J1939 SPN 3719.")
+analog(1018, AT, "DpfAshLoad", "%", "Diesel particulate filter ash load. SAE J1939 SPN 3720.")
+analog(1018, AT, "ExhaustGasTemperature", "degC", "Exhaust gas temperature. SAE J1939 SPN 173.")
+comp_var(1018, AT, "RegenerationRequired", Boolean, "A DPF regeneration is required.")
+comp_var(1018, AT, "RegenerationInhibited", Boolean, "DPF regeneration is currently inhibited.")
+method(1018, AT, "InitiateRegeneration", "Request a manual DPF regeneration.")
+method(1018, AT, "InhibitRegeneration",
+       "Enable or disable the inhibit of automatic regeneration.",
+       inargs=[("Inhibit", Boolean, "TRUE to inhibit regeneration.")])
+
+# --- EngineType ------------------------------------------------------------
+object_type(1002, "EngineType", DI_ComponentType,
+            "The prime-mover engine of a generator set. Exposes engine telemetry, "
+            "typically obtained over the CAN bus / SAE J1939 interface, and identification.",
+            CAT_COMP)
+E = "EngineType"
+analog(1002, E, "Speed", "rpm", "Engine speed. SAE J1939 SPN 190.", rule=MR_Mandatory)
+analog(1002, E, "PercentLoad", "%", "Engine percent load at current speed. SAE J1939 SPN 92.")
+analog(1002, E, "PercentTorque", "%", "Actual engine percent torque. SAE J1939 SPN 513.")
+analog(1002, E, "OilPressure", "kPa", "Engine oil pressure. SAE J1939 SPN 100.")
+analog(1002, E, "OilTemperature", "degC", "Engine oil temperature. SAE J1939 SPN 175.")
+analog(1002, E, "CoolantTemperature", "degC", "Engine coolant temperature. SAE J1939 SPN 110.")
+analog(1002, E, "CoolantPressure", "kPa", "Engine coolant pressure. SAE J1939 SPN 109.")
+analog(1002, E, "FuelRate", "L/h", "Engine fuel consumption rate. SAE J1939 SPN 183.")
+analog(1002, E, "FuelTemperature", "degC", "Engine fuel temperature. SAE J1939 SPN 174.")
+analog(1002, E, "IntakeManifoldPressure", "kPa", "Intake manifold (boost) pressure. SAE J1939 SPN 102.")
+analog(1002, E, "IntakeManifoldTemperature", "degC", "Intake manifold temperature. SAE J1939 SPN 105.")
+analog(1002, E, "ExhaustGasTemperature", "degC", "Exhaust gas temperature. SAE J1939 SPN 173.")
+analog(1002, E, "BarometricPressure", "kPa", "Ambient barometric pressure. SAE J1939 SPN 108.")
+analog(1002, E, "EngineHours", "h", "Total engine run hours. SAE J1939 SPN 247.", rule=MR_Mandatory)
+comp_var(1002, E, "NumberOfStarts", UInt32, "Total number of engine start attempts.")
+comp_var(1002, E, "Aspiration", T(3007), "Air induction method of the engine.")
+analog(1002, E, "Displacement", "l", "Engine displacement.")
+comp_var(1002, E, "CylinderCount", UInt16, "Number of cylinders.")
+analog(1002, E, "RatedSpeed", "rpm", "Rated (synchronous) engine speed, e.g. 1500 or 1800 rpm.")
+obj_member(1002, E, "CanInterface", T(1010),
+           "CAN bus / SAE J1939 diagnostic interface of the engine ECU.")
+obj_member(1002, E, "Aftertreatment", T(1018),
+           "Exhaust aftertreatment subsystem, when equipped.")
+
+# --- AlternatorPhaseType ---------------------------------------------------
+object_type(1004, "AlternatorPhaseType", BaseObjectType,
+            "Per-phase electrical measurements of the alternator output.", CAT_COMP)
+PH = "AlternatorPhaseType"
+analog(1004, PH, "LineToNeutralVoltage", "V", "Phase (line-to-neutral) RMS voltage.")
+analog(1004, PH, "LineToLineVoltage", "V", "Line-to-line RMS voltage referenced to the next phase.")
+analog(1004, PH, "Current", "A", "Phase RMS current.", rule=MR_Mandatory)
+analog(1004, PH, "RealPower", "kW", "Per-phase real power.")
+analog(1004, PH, "ReactivePower", "kvar", "Per-phase reactive power.")
+analog(1004, PH, "ApparentPower", "kVA", "Per-phase apparent power.")
+comp_var(1004, PH, "PowerFactor", Double, "Per-phase power factor (-1..1).")
+
+# --- AlternatorType --------------------------------------------------------
+object_type(1003, "AlternatorType", DI_ComponentType,
+            "The alternator (generator end) that converts mechanical power into AC "
+            "electrical power. Exposes aggregate and per-phase electrical measurements.",
+            CAT_COMP)
+A = "AlternatorType"
+analog(1003, A, "Frequency", "Hz", "Output frequency.", rule=MR_Mandatory)
+analog(1003, A, "AverageLineToLineVoltage", "V", "Average line-to-line RMS voltage.")
+analog(1003, A, "AverageLineToNeutralVoltage", "V", "Average line-to-neutral RMS voltage.")
+analog(1003, A, "AverageCurrent", "A", "Average line RMS current.")
+analog(1003, A, "TotalRealPower", "kW", "Total three-phase real power.", rule=MR_Mandatory)
+analog(1003, A, "TotalReactivePower", "kvar", "Total three-phase reactive power.")
+analog(1003, A, "TotalApparentPower", "kVA", "Total three-phase apparent power.")
+comp_var(1003, A, "AveragePowerFactor", Double, "Average power factor (-1..1).")
+analog(1003, A, "TotalRealEnergy", "kW.h", "Cumulative generated real energy.")
+analog(1003, A, "LoadPercent", "%", "Output as a percentage of rated power.")
+analog(1003, A, "WindingTemperature1", "degC", "Stator winding temperature, phase 1.")
+analog(1003, A, "WindingTemperature2", "degC", "Stator winding temperature, phase 2.")
+analog(1003, A, "WindingTemperature3", "degC", "Stator winding temperature, phase 3.")
+analog(1003, A, "BearingTemperatureDriveEnd", "degC", "Drive-end bearing temperature.")
+analog(1003, A, "BearingTemperatureNonDriveEnd", "degC", "Non-drive-end bearing temperature.")
+comp_var(1003, A, "Connection", T(3004), "Winding connection configuration.")
+comp_var(1003, A, "ExcitationType", T(3005), "Excitation method.")
+comp_var(1003, A, "NumberOfPoles", UInt16, "Number of alternator poles.")
+analog(1003, A, "VoltageSetpoint", "V", "AVR voltage setpoint.")
+analog(1003, A, "FieldCurrent", "A", "Excitation field current.")
+obj_member(1003, A, "L1", T(1004), "Phase 1 (A) measurements.", rule=MR_Mandatory)
+obj_member(1003, A, "L2", T(1004), "Phase 2 (B) measurements.")
+obj_member(1003, A, "L3", T(1004), "Phase 3 (C) measurements.")
+
+# --- FuelSystemType --------------------------------------------------------
+object_type(1005, "FuelSystemType", DI_ComponentType,
+            "The fuel storage and delivery subsystem of a generator set.", CAT_COMP)
+F = "FuelSystemType"
+comp_var(1005, F, "FuelType", T(3002), "Primary fuel of the set.", rule=MR_Mandatory)
+analog(1005, F, "FuelLevel", "%", "Fuel tank level.")
+analog(1005, F, "FuelVolume", "l", "Usable fuel volume remaining.")
+analog(1005, F, "FuelConsumptionRate", "L/h", "Fuel consumption rate.")
+analog(1005, F, "FuelPressure", "kPa", "Fuel supply pressure.")
+analog(1005, F, "FuelTemperature", "degC", "Fuel temperature.")
+analog(1005, F, "GasSupplyPressure", "kPa", "Gas inlet pressure for gaseous-fuel sets.")
+analog(1005, F, "RuntimeRemaining", "h", "Estimated runtime remaining at current load.")
+analog(1005, F, "TotalFuelConsumed", "l", "Cumulative fuel consumed.")
+comp_var(1005, F, "WaterInFuel", Boolean, "Water detected in the fuel/water separator.")
+
+# --- CoolingSystemType -----------------------------------------------------
+object_type(1006, "CoolingSystemType", DI_ComponentType,
+            "The engine cooling subsystem of a generator set.", CAT_COMP)
+C = "CoolingSystemType"
+analog(1006, C, "CoolantTemperature", "degC", "Engine coolant temperature.")
+analog(1006, C, "CoolantLevel", "%", "Coolant level. SAE J1939 SPN 111.")
+analog(1006, C, "CoolantPressure", "kPa", "Coolant pressure.")
+comp_var(1006, C, "CoolingMethod", T(3006), "Cooling method (air- or liquid-cooled).")
+analog(1006, C, "AmbientTemperature", "degC", "Ambient air temperature at the set.")
+comp_var(1006, C, "RadiatorFanRunning", Boolean, "The radiator fan is running.")
+comp_var(1006, C, "JacketWaterHeaterActive", Boolean, "The jacket-water block heater is active.")
+
+# --- LubricationSystemType -------------------------------------------------
+object_type(1007, "LubricationSystemType", DI_ComponentType,
+            "The engine lubrication subsystem of a generator set.", CAT_COMP)
+L = "LubricationSystemType"
+analog(1007, L, "OilPressure", "kPa", "Engine oil pressure. SAE J1939 SPN 100.")
+analog(1007, L, "OilTemperature", "degC", "Engine oil temperature. SAE J1939 SPN 175.")
+analog(1007, L, "OilLevel", "%", "Engine oil level.")
+analog(1007, L, "OilFilterDifferentialPressure", "kPa", "Oil filter differential pressure.")
+
+# --- StartingSystemType ----------------------------------------------------
+object_type(1008, "StartingSystemType", DI_ComponentType,
+            "The starting/battery subsystem of a generator set.", CAT_COMP)
+ST = "StartingSystemType"
+analog(1008, ST, "BatteryVoltage", "V", "Starting battery voltage. SAE J1939 SPN 168.",
+       rule=MR_Mandatory)
+analog(1008, ST, "BatteryChargingCurrent", "A", "Battery charging current.")
+comp_var(1008, ST, "BatteryChargerActive", Boolean, "The battery charger is active.")
+comp_var(1008, ST, "StartAttempts", UInt32, "Number of start attempts in the last start sequence.")
+
+# --- GeneratorControllerType -----------------------------------------------
+object_type(1009, "GeneratorControllerType", DI_ComponentType,
+            "The generator set control panel (e.g. Cummins PowerCommand). Provides "
+            "controller identity, mode/state visibility and remote-monitoring status.",
+            CAT_COMP)
+G = "GeneratorControllerType"
+prop_var(1009, G, "ControllerFamily", String, "Controller family, e.g. 'PowerCommand'.")
+prop_var(1009, G, "FirmwareVersion", String, "Controller firmware version.")
+prop_var(1009, G, "ApplicationSoftwareVersion", String, "Application software version.")
+prop_var(1009, G, "ConfigurationVersion", String, "Configuration/calibration version.")
+comp_var(1009, G, "InAutoMode", Boolean, "The controller is in automatic mode.")
+comp_var(1009, G, "NotInAuto", Boolean, "The controller is NOT in automatic mode (NFPA annunciation).")
+comp_var(1009, G, "RemoteStartEnabled", Boolean, "Remote start is enabled.")
+comp_var(1009, G, "RemoteControlEnabled", Boolean, "Remote control is enabled.")
+comp_var(1009, G, "CloudConnected", Boolean, "Connected to the remote-monitoring cloud.")
+comp_var(1009, G, "ModbusEnabled", Boolean, "The Modbus interface is enabled.")
+analog(1009, G, "SignalStrength", "%", "Cellular/network signal strength.")
+
+# --- GeneratorRatingType ---------------------------------------------------
+CAT_RATE = "Generators Rating"
+object_type(1012, "GeneratorRatingType", BaseObjectType,
+            "A single nameplate power rating point of a generator set for a given "
+            "application/duty (ISO 8528).", CAT_RATE)
+R = "GeneratorRatingType"
+comp_var(1012, R, "ApplicationRating", T(3003), "Application/duty of this rating.",
+         rule=MR_Mandatory)
+analog(1012, R, "RatedRealPower", "kW", "Rated real power.", rule=MR_Mandatory)
+analog(1012, R, "RatedApparentPower", "kVA", "Rated apparent power.")
+comp_var(1012, R, "RatedPowerFactor", Double, "Rated power factor.")
+analog(1012, R, "RatedVoltage", "V", "Rated line-to-line voltage.")
+analog(1012, R, "RatedCurrent", "A", "Rated line current.")
+analog(1012, R, "RatedFrequency", "Hz", "Rated frequency.")
+analog(1012, R, "RatedSpeed", "rpm", "Rated engine speed.")
+prop_var(1012, R, "PhaseCount", Byte, "Number of phases (1 or 3).")
+comp_var(1012, R, "Connection", T(3004), "Winding connection for this rating.")
+analog(1012, R, "AmbientTemperature", "degC", "Reference ambient temperature for the rating.")
+analog(1012, R, "Altitude", "m", "Reference altitude for the rating.")
+
+# --- GeneratorProtectionAlarmType (: OffNormalAlarmType) --------------------
+CAT_AL = "Generators Alarms"
+object_type(1017, "GeneratorProtectionAlarmType", OffNormalAlarmType,
+            "Alarm raised by a generator protection/shutdown function. Extends "
+            "OffNormalAlarmType with the protection function, severity and J1939 origin.",
+            CAT_AL)
+AL = "GeneratorProtectionAlarmType"
+prop_var(1017, AL, "ProtectionFunction", T(3014),
+         "The protection function that raised the alarm.", rule=MR_Mandatory)
+prop_var(1017, AL, "GeneratorAlarmSeverity", T(3013), "Severity class of the alarm.")
+prop_var(1017, AL, "IsShutdown", Boolean, "TRUE if the condition caused an engine shutdown.")
+prop_var(1017, AL, "Spn", UInt32, "SAE J1939 SPN when the alarm originates from the engine ECU.")
+prop_var(1017, AL, "Fmi", Byte, "SAE J1939 FMI when the alarm originates from the engine ECU.")
+prop_var(1017, AL, "SubsystemName", String, "Name of the originating subsystem.")
+
+# --- GeneratorSetType (the whole asset) ------------------------------------
+CAT_MAIN = "Generators GeneratorSet"
+object_type(1001, "GeneratorSetType", DI_DeviceType,
+            "A generator set (GenSet): a complete electrical power generation asset "
+            "composed of a prime-mover engine, an alternator, a fuel system, cooling, "
+            "lubrication, starting and control subsystems. Applicable to the whole "
+            "industry, from small home-standby units to house-sized multi-megawatt "
+            "industrial sets.", CAT_MAIN)
+GS = "GeneratorSetType"
+# Machinery interoperability building blocks
+obj_member(1001, GS, "Identification", T(1016),
+           "Generator identification and nameplate (Machinery building block).",
+           rule=MR_Mandatory, reftype=HasAddIn, bns=DI)
+bb = obj_member(1001, GS, "MachineryBuildingBlocks", FolderType,
+                "Container for standardized Machinery building blocks.",
+                reftype=HasAddIn, bns=MC)
+mis = _mid()
+add(mis, "UAObject", "MachineryItemState",
+    f"{GS}_MachineryBuildingBlocks_MachineryItemState",
+    desc="Generic Machinery availability state machine (interoperability).",
+    parent=T(bb), bns=MC)
+ref(mis, HasModellingRule, MR_Optional)
+ref(mis, HasTypeDefinition, MC_MachineryItemState_SMT)
+ref(mis, HasAddIn, T(bb), forward=False)
+ref(bb, HasAddIn, T(mis))
+mom = _mid()
+add(mom, "UAObject", "MachineryOperationMode",
+    f"{GS}_MachineryBuildingBlocks_MachineryOperationMode",
+    desc="Generic Machinery operation-mode state machine (interoperability).",
+    parent=T(bb), bns=MC)
+ref(mom, HasModellingRule, MR_Optional)
+ref(mom, HasTypeDefinition, MC_MachineryOperationMode_SMT)
+ref(mom, HasAddIn, T(bb), forward=False)
+ref(bb, HasAddIn, T(mom))
+# Domain state & mode
+obj_member(1001, GS, "OperatingState", T(1011),
+           "Detailed generator-set operating state machine.", rule=MR_Mandatory)
+comp_var(1001, GS, "OperatingMode", T(3001),
+         "Selector mode of the control panel (Off/Manual/Auto/Test/...).",
+         rule=MR_Mandatory)
+comp_var(1001, GS, "EmissionsStandard", T(3008),
+         "Emissions certification standard of the set.")
+prop_var(1001, GS, "Application", String,
+         "Application segment, e.g. Residential, DataCenter, Healthcare, Rental, PrimePower.")
+# Operational status / interlocks
+comp_var(1001, GS, "GeneratorBreakerClosed", Boolean, "The generator (output) breaker is closed.")
+comp_var(1001, GS, "GeneratorBreakerAvailable", Boolean, "The generator breaker is available to close.")
+comp_var(1001, GS, "RemoteStartInput", Boolean, "The remote start input is asserted.")
+comp_var(1001, GS, "RunRequest", Boolean, "A run request is active from any source.")
+comp_var(1001, GS, "LoadInhibit", Boolean, "Loading of the set is inhibited.")
+comp_var(1001, GS, "AvailableToLoad", Boolean,
+         "The set is up to speed and voltage and is ready to accept load.")
+# Subassemblies
+obj_member(1001, GS, "Engine", T(1002), "The prime-mover engine.", rule=MR_Mandatory)
+obj_member(1001, GS, "Alternator", T(1003), "The alternator (generator end).", rule=MR_Mandatory)
+obj_member(1001, GS, "Controller", T(1009), "The control panel.", rule=MR_Mandatory)
+obj_member(1001, GS, "FuelSystem", T(1005), "The fuel subsystem.")
+obj_member(1001, GS, "CoolingSystem", T(1006), "The cooling subsystem.")
+obj_member(1001, GS, "LubricationSystem", T(1007), "The lubrication subsystem.")
+obj_member(1001, GS, "StartingSystem", T(1008), "The starting/battery subsystem.")
+# Ratings folder with a placeholder for one or more rating points
+ratings = obj_member(1001, GS, "Ratings", FolderType,
+                     "Nameplate power ratings of the set (e.g. Standby and Prime).",
+                     rule=MR_Mandatory)
+rp = _mid()
+add(rp, "UAObject", "<Rating>", f"{GS}_Ratings_Rating",
+    desc="A nameplate rating point of the set.", parent=T(ratings))
+ref(rp, HasModellingRule, MR_OptionalPlaceholder)
+ref(rp, HasTypeDefinition, T(1012))
+ref(rp, HasComponent, T(ratings), forward=False)
+ref(ratings, HasComponent, T(rp))
+# Methods
+method(1001, GS, "Start", "Command the set to start in the current operating mode.")
+method(1001, GS, "Stop", "Command a normal stop (with cooldown).")
+method(1001, GS, "EmergencyStop", "Command an immediate emergency stop.")
+method(1001, GS, "ResetFaults", "Reset latched faults / lockout.")
+method(1001, GS, "SetOperatingMode", "Set the control-panel selector mode.",
+       inargs=[("Mode", T(3001), "The requested operating mode.")])
+method(1001, GS, "StartTest", "Start a test run for a given duration.",
+       inargs=[("DurationMinutes", UInt32, "Test duration in minutes."),
+               ("WithLoad", Boolean, "TRUE to run the test with load.")])
+# Alarm event source
+ref(1001, GeneratesEvent, T(1017))
+
+# --- TransferSwitchSourceType ----------------------------------------------
+CAT_ATS = "Generators TransferSwitch"
+object_type(1019, "TransferSwitchSourceType", BaseObjectType,
+            "One power source (normal/utility or emergency/generator) of an automatic "
+            "transfer switch, with its availability and measurements.", CAT_ATS)
+SRC = "TransferSwitchSourceType"
+comp_var(1019, SRC, "Available", Boolean, "The source is present and energized.", rule=MR_Mandatory)
+comp_var(1019, SRC, "Acceptable", Boolean, "The source is within acceptable voltage/frequency limits.")
+analog(1019, SRC, "Voltage", "V", "Source line-to-line voltage.")
+analog(1019, SRC, "Frequency", "Hz", "Source frequency.")
+prop_var(1019, SRC, "PhaseRotation", String, "Phase rotation of the source (e.g. ABC or CBA).")
+
+# --- AutomaticTransferSwitchType -------------------------------------------
+object_type(1013, "AutomaticTransferSwitchType", DI_DeviceType,
+            "An automatic transfer switch (ATS) that transfers a load between a normal "
+            "source (utility) and an emergency source (generator).", CAT_ATS)
+TS = "AutomaticTransferSwitchType"
+obj_member(1013, TS, "Identification", MC_MachineIdentificationType,
+           "ATS identification and nameplate.", reftype=HasAddIn, bns=DI)
+comp_var(1013, TS, "Position", T(3010), "Contact position of the switch.", rule=MR_Mandatory)
+comp_var(1013, TS, "OperatingState", T(3012), "Operating state of the switch.")
+comp_var(1013, TS, "TransitionType", T(3011), "Transition method of the switch.")
+obj_member(1013, TS, "Source1", T(1019), "Source 1 (normal/utility).", rule=MR_Mandatory)
+obj_member(1013, TS, "Source2", T(1019), "Source 2 (emergency/generator).", rule=MR_Mandatory)
+prop_var(1013, TS, "PreferredSource", Byte, "The preferred source (1 = normal, 2 = emergency).")
+comp_var(1013, TS, "Source1Connected", Boolean, "The load is connected to Source 1.")
+comp_var(1013, TS, "Source2Connected", Boolean, "The load is connected to Source 2.")
+comp_var(1013, TS, "TransferInhibited", Boolean, "Transfer is currently inhibited.")
+prop_var(1013, TS, "TransferInhibitReason", String, "Reason transfer is inhibited, if any.")
+analog(1013, TS, "RatedCurrent", "A", "Rated current of the switch.")
+prop_var(1013, TS, "PoleCount", Byte, "Number of poles.")
+comp_var(1013, TS, "ServiceEntranceRated", Boolean, "The switch is service-entrance rated.")
+analog(1013, TS, "LoadCurrent", "A", "Load current through the switch.")
+comp_var(1013, TS, "TransferCount", UInt32, "Cumulative number of transfers.")
+comp_var(1013, TS, "LastTransferTime", DateTime, "Timestamp of the last transfer.")
+comp_var(1013, TS, "EngineStartDelay", Duration, "Engine-start (outage confirmation) delay.")
+comp_var(1013, TS, "TransferToEmergencyDelay", Duration, "Delay before transferring to emergency.")
+comp_var(1013, TS, "RetransferToNormalDelay", Duration, "Delay before retransferring to normal.")
+comp_var(1013, TS, "CooldownDelay", Duration, "Engine cooldown (unloaded run) delay.")
+method(1013, TS, "Transfer", "Command a transfer to the emergency source.")
+method(1013, TS, "Retransfer", "Command a retransfer to the normal source.")
+method(1013, TS, "InhibitTransfer", "Enable or disable the transfer inhibit.",
+       inargs=[("Inhibit", Boolean, "TRUE to inhibit transfer.")])
+
+# --- ParallelingControllerType ---------------------------------------------
+CAT_PAR = "Generators Paralleling"
+object_type(1014, "ParallelingControllerType", DI_ComponentType,
+            "A paralleling / switchgear controller that synchronizes and shares load "
+            "among generator sets on a common bus, and optionally parallels with the utility.",
+            CAT_PAR)
+P = "ParallelingControllerType"
+comp_var(1014, P, "SystemState", T(3015), "Operating state of the paralleling system.",
+         rule=MR_Mandatory)
+analog(1014, P, "BusVoltage", "V", "Common bus voltage.")
+analog(1014, P, "BusFrequency", "Hz", "Common bus frequency.")
+analog(1014, P, "TotalBusRealPower", "kW", "Total real power on the bus.")
+analog(1014, P, "TotalBusReactivePower", "kvar", "Total reactive power on the bus.")
+analog(1014, P, "SynchronizationAngle", "deg", "Phase angle difference during synchronizing.")
+analog(1014, P, "SlipFrequency", "Hz", "Slip frequency during synchronizing.")
+analog(1014, P, "VoltageDifference", "V", "Voltage difference during synchronizing.")
+analog(1014, P, "FrequencyDifference", "Hz", "Frequency difference during synchronizing.")
+comp_var(1014, P, "SyncCheckPermissive", Boolean, "Synchronism-check permissive to close.")
+comp_var(1014, P, "DeadBus", Boolean, "The bus is dead (de-energized).")
+analog(1014, P, "LoadSharePercent", "%", "This set's share of the total bus load.")
+analog(1014, P, "AvailableCapacity", "kW", "Available spare capacity on the bus.")
+analog(1014, P, "SpinningReserve", "kW", "Spinning reserve on the bus.")
+comp_var(1014, P, "GeneratorBreakerClosed", Boolean, "The generator breaker is closed.")
+comp_var(1014, P, "UtilityBreakerClosed", Boolean, "The utility breaker is closed.")
+analog(1014, P, "UtilityImportPower", "kW", "Power imported from the utility.")
+analog(1014, P, "UtilityExportPower", "kW", "Power exported to the utility.")
+method(1014, P, "ConnectToBus", "Synchronize and close onto the common bus.")
+method(1014, P, "DisconnectFromBus", "Soft-unload and open from the common bus.")
+
+# --- GeneratorSystemType (multi-set power plant) ---------------------------
+CAT_SYS = "Generators System"
+object_type(1015, "GeneratorSystemType", BaseObjectType,
+            "A power-generation system aggregating one or more paralleled generator sets, "
+            "an optional paralleling controller and transfer switches. Models integrated "
+            "power systems such as data-center and healthcare plants.", CAT_SYS)
+SY = "GeneratorSystemType"
+gsets = obj_member(1015, SY, "GeneratorSets", FolderType,
+                   "The generator sets that make up the system.", rule=MR_Mandatory)
+gp = _mid()
+add(gp, "UAObject", "<GeneratorSet>", f"{SY}_GeneratorSets_GeneratorSet",
+    desc="A generator set participating in the system.", parent=T(gsets))
+ref(gp, HasModellingRule, MR_MandatoryPlaceholder)
+ref(gp, HasTypeDefinition, T(1001))
+ref(gp, HasComponent, T(gsets), forward=False)
+ref(gsets, HasComponent, T(gp))
+obj_member(1015, SY, "ParallelingController", T(1014),
+           "The paralleling/switchgear controller of the system.")
+tswitches = obj_member(1015, SY, "TransferSwitches", FolderType,
+                       "The transfer switches in the system.")
+tp = _mid()
+add(tp, "UAObject", "<TransferSwitch>", f"{SY}_TransferSwitches_TransferSwitch",
+    desc="A transfer switch in the system.", parent=T(tswitches))
+ref(tp, HasModellingRule, MR_OptionalPlaceholder)
+ref(tp, HasTypeDefinition, T(1013))
+ref(tp, HasComponent, T(tswitches), forward=False)
+ref(tswitches, HasComponent, T(tp))
+comp_var(1015, SY, "NumberOfGeneratorSets", UInt16, "Number of generator sets in the system.")
+analog(1015, SY, "TotalSystemCapacity", "kW", "Total installed capacity of the system.")
+analog(1015, SY, "TotalSystemLoad", "kW", "Total load currently served by the system.")
+prop_var(1015, SY, "RedundancyScheme", String,
+         "Redundancy scheme, e.g. N, N+1, N+2, 2N, DistributedRedundant.")
+
+# ===========================================================================
+# ==============================  EMISSION  =================================
+# ===========================================================================
+NAMESPACE = "http://opcfoundation.org/UA/Generators/"
+VERSION = "1.0.0"
+PUBDATE = "2026-07-01T00:00:00Z"
+
+ALIASES = [
+    ("Boolean", "i=1"), ("Byte", "i=3"), ("UInt16", "i=5"), ("UInt32", "i=7"),
+    ("Int32", "i=6"), ("Double", "i=11"), ("String", "i=12"),
+    ("DateTime", "i=13"), ("LocalizedText", "i=21"), ("Duration", "i=290"),
+    ("Argument", "i=296"), ("Organizes", "i=35"), ("HasModellingRule", "i=37"),
+    ("HasEncoding", "i=38"), ("HasTypeDefinition", "i=40"),
+    ("EUInformation", "i=887"),
+    ("GeneratesEvent", "i=41"), ("HasSubtype", "i=45"), ("HasProperty", "i=46"),
+    ("HasComponent", "i=47"), ("FromState", "i=51"), ("ToState", "i=52"),
+    ("HasInterface", "i=17603"), ("HasAddIn", "i=17604"),
+]
+
+REFTYPE_ALIAS = {v: k for k, v in ALIASES}
+DATATYPE_ALIAS = {v: k for k, v in ALIASES}
+
+_PRIO = {HasModellingRule: 0, HasSubtype: 1}
+
+
+def _sorted_refs(refs):
+    return sorted(range(len(refs)), key=lambda i: (_PRIO.get(refs[i][0], 2), i))
+
+
+def _bn(n):
+    if n.bns == 0:
+        return n.bname
+    return f"{n.bns}:{n.bname}"
+
+
+def _fmt_reftype(t):
+    return REFTYPE_ALIAS.get(t, t)
+
+
+def _emit_node(n):
+    tag = n.cls
+    a = [f'{tag} NodeId="{T(n.nid)}"', f'BrowseName="{sx.escape(_bn(n))}"']
+    if n.parent is not None:
+        a.append(f'ParentNodeId="{n.parent}"')
+    for k in ("DataType", "ValueRank", "ArrayDimensions"):
+        if k in n.attrs:
+            v = n.attrs[k]
+            if k == "DataType":
+                v = DATATYPE_ALIAS.get(v, v)
+            a.append(f'{k}="{v}"')
+    if n.cls == "UAObjectType" and n.abstract:
+        a.append('IsAbstract="true"')
+    lines = ["  <" + " ".join(a) + ">"]
+    lines.append(f"    <DisplayName>{sx.escape(n.display)}</DisplayName>")
+    if n.desc:
+        lines.append(f"    <Description>{sx.escape(n.desc)}</Description>")
+    if n.category:
+        lines.append(f"    <Category>{sx.escape(n.category)}</Category>")
+    lines.append("    <References>")
+    for i in _sorted_refs(n.refs):
+        rt, tgt, fwd = n.refs[i]
+        fwd_s = "" if fwd else ' IsForward="false"'
+        lines.append(f'      <Reference ReferenceType="{_fmt_reftype(rt)}"{fwd_s}>{tgt}</Reference>')
+    lines.append("    </References>")
+    if n.definition:
+        lines.append("    " + n.definition)
+    if n.value:
+        lines.append("    " + n.value)
+    lines.append(f"  </{tag}>")
+    return "\n".join(lines)
+
+
+def emit():
+    out = ['<?xml version="1.0" encoding="utf-8"?>',
+           '<!-- OPC UA Companion Specification for Generators (GenSets) - generated model -->',
+           '<UANodeSet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" '
+           'xmlns:xsd="http://www.w3.org/2001/XMLSchema" '
+           'xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd" '
+           'xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd">',
+           '  <NamespaceUris>',
+           f'    <Uri>{NAMESPACE}</Uri>',
+           '    <Uri>http://opcfoundation.org/UA/DI/</Uri>',
+           '    <Uri>http://opcfoundation.org/UA/Machinery/</Uri>',
+           '  </NamespaceUris>',
+           '  <Models>',
+           f'    <Model ModelUri="{NAMESPACE}" Version="{VERSION}" PublicationDate="{PUBDATE}">',
+           '      <RequiredModel ModelUri="http://opcfoundation.org/UA/" Version="1.05.04" PublicationDate="2023-12-15T00:00:00Z" />',
+           '      <RequiredModel ModelUri="http://opcfoundation.org/UA/DI/" Version="1.04.0" PublicationDate="2022-11-03T00:00:00Z" />',
+           '      <RequiredModel ModelUri="http://opcfoundation.org/UA/Machinery/" Version="1.04.1" PublicationDate="2026-01-01T00:00:00Z" />',
+           '    </Model>',
+           '  </Models>',
+           '  <Aliases>']
+    for name, val in ALIASES:
+        out.append(f'    <Alias Alias="{name}">{val}</Alias>')
+    out.append('  </Aliases>')
+    for nid in ORDER:
+        out.append(_emit_node(NODES[nid]))
+    out.append('</UANodeSet>')
+    return "\n".join(out) + "\n"
+
+
+def emit_csv():
+    rows = []
+    for nid in ORDER:
+        n = NODES[nid]
+        rows.append(f"{n.symbolic},{n.nid},{n.cls[2:]}")
+    return "\n".join(rows) + "\n"
+
+
+# --- Markdown reference-table generation (reconstructed from the model) -----
+import re
+
+_FRIENDLY = {
+    "i=58": "BaseObjectType", "i=61": "FolderType", "i=63": "BaseDataVariableType",
+    "i=68": "PropertyType", "i=17497": "AnalogUnitType", "i=76": "DataTypeEncodingType",
+    "i=2771": "FiniteStateMachineType", "i=2307": "StateType", "i=2309": "InitialStateType",
+    "i=2310": "TransitionType", "i=10637": "OffNormalAlarmType",
+    "i=1": "Boolean", "i=3": "Byte", "i=5": "UInt16", "i=7": "UInt32", "i=6": "Int32",
+    "i=11": "Double", "i=12": "String", "i=13": "DateTime", "i=21": "LocalizedText",
+    "i=290": "Duration", "i=296": "Argument", "i=29": "Enumeration", "i=22": "Structure",
+    f"ns={DI};i=1002": "DeviceType [DI]", f"ns={DI};i=15063": "ComponentType [DI]",
+    f"ns={MC};i=1012": "MachineIdentificationType [Machinery]",
+    f"ns={MC};i=1002": "MachineryItemState_StateMachineType [Machinery]",
+    f"ns={MC};i=1008": "MachineryOperationModeStateMachineType [Machinery]",
+}
+_RULE = {MR_Mandatory: "Mandatory", MR_Optional: "Optional",
+         MR_OptionalPlaceholder: "OptionalPlaceholder",
+         MR_MandatoryPlaceholder: "MandatoryPlaceholder"}
+
+
+def _friendly(tgt):
+    if tgt in _FRIENDLY:
+        return _FRIENDLY[tgt]
+    if tgt in DATATYPE_ALIAS:
+        return DATATYPE_ALIAS[tgt]
+    if tgt.startswith(f"ns={GEN};i="):
+        num = int(tgt.split("i=")[1])
+        if num in NODES:
+            return NODES[num].bname
+    return tgt
+
+
+def _member_reftype(n):
+    for rt, tgt, fwd in n.refs:
+        if rt == HasModellingRule:
+            return _RULE.get(tgt, tgt)
+    return ""
+
+
+def _typedef(n):
+    for rt, tgt, fwd in n.refs:
+        if rt == HasTypeDefinition:
+            return _friendly(tgt)
+    return ""
+
+
+def _members_of(type_nid):
+    out = []
+    seen = set()
+    for rt, tgt, fwd in NODES[type_nid].refs:
+        if rt in (HasComponent, HasProperty, HasAddIn) and fwd and tgt.startswith(f"ns={GEN};i="):
+            num = int(tgt.split("i=")[1])
+            if num in NODES and num not in seen:
+                seen.add(num)
+                out.append(num)
+    return out
+
+
+def emit_md():
+    obj_types = [nid for nid in ORDER if NODES[nid].cls == "UAObjectType"]
+    data_types = [nid for nid in ORDER if NODES[nid].cls == "UADataType"]
+    md = []
+    md.append("## Type overview\n")
+    md.append("| NodeId | BrowseName | NodeClass | Subtype of |")
+    md.append("|---|---|---|---|")
+    for nid in obj_types + data_types:
+        n = NODES[nid]
+        sup = ""
+        for rt, tgt, fwd in n.refs:
+            if rt == HasSubtype and not fwd:
+                sup = _friendly(tgt)
+        md.append(f"| ns=1;i={nid} | {n.bname} | {n.cls[2:]} | {sup} |")
+    md.append("")
+
+    md.append("## ObjectTypes\n")
+    for nid in obj_types:
+        n = NODES[nid]
+        md.append(f"### {n.bname}  (ns=1;i={nid})\n")
+        if n.desc:
+            md.append(n.desc + "\n")
+        members = _members_of(nid)
+        if members:
+            md.append("| BrowseName | NodeClass | DataType | TypeDefinition | ModellingRule | Description |")
+            md.append("|---|---|---|---|---|---|")
+            for m in members:
+                mn = NODES[m]
+                dt = _friendly(mn.attrs.get("DataType", "")) if mn.attrs.get("DataType") else ""
+                vr = mn.attrs.get("ValueRank", "")
+                if vr == "1":
+                    dt += "[]"
+                md.append(f"| {mn.bname} | {mn.cls[2:]} | {dt} | {_typedef(mn)} | "
+                          f"{_member_reftype(mn)} | {(mn.desc or '').replace('|','/')} |")
+            md.append("")
+    md.append("## DataTypes\n")
+    for nid in data_types:
+        n = NODES[nid]
+        md.append(f"### {n.bname}  (ns=1;i={nid})\n")
+        if n.desc:
+            md.append(n.desc + "\n")
+        if n.definition and "Value=" in n.definition:
+            md.append("| Name | Value | Description |")
+            md.append("|---|---|---|")
+            for mm in re.finditer(r'<Field Name="([^"]+)" Value="(\d+)"\s*(?:/>|>(?:<Description>([^<]*)</Description>)?</Field>)', n.definition):
+                md.append(f"| {mm.group(1)} | {mm.group(2)} | {mm.group(3) or ''} |")
+            md.append("")
+        elif n.definition:
+            md.append("| Field | DataType | Description |")
+            md.append("|---|---|---|")
+            for mm in re.finditer(r'<Field Name="([^"]+)" DataType="([^"]+)"[^>]*?(?:/>|>(?:<Description>([^<]*)</Description>)?</Field>)', n.definition):
+                md.append(f"| {mm.group(1)} | {_friendly(mm.group(2))} | {mm.group(3) or ''} |")
+            md.append("")
+    return "\n".join(md) + "\n"
+
+
+if __name__ == "__main__":
+    here = os.path.dirname(os.path.abspath(__file__))
+    outdir = os.path.dirname(here)  # companion-specs/Generators/
+    with open(os.path.join(outdir, "Opc.Ua.Generators.NodeSet2.xml"), "w",
+              encoding="utf-8") as f:
+        f.write(emit())
+    with open(os.path.join(outdir, "Opc.Ua.Generators.NodeIds.csv"), "w",
+              encoding="utf-8") as f:
+        f.write(emit_csv())
+    with open(os.path.join(here, "model-reference.md"), "w",
+              encoding="utf-8") as f:
+        f.write(emit_md())
+    n_types = sum(1 for k in NODES if NODES[k].cls in ("UAObjectType", "UADataType"))
+    print(f"Nodes: {len(NODES)}  (ObjectTypes+DataTypes: {n_types})")
+    print(f"Member id range: 6001..{_next_member[0] - 1}")
