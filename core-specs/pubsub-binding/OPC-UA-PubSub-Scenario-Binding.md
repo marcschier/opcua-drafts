@@ -16,7 +16,7 @@ This specification defines an information model that lets an OPC UA Server **bin
 It specifies:
 
 - a discoverable **registry** of scenario bindings, reachable from the standard **Server Object** and, optionally, from any Object that opts in through an Interface;
-- a **ScenarioBinding** that associates a Scenario (identified by a URI) and a direction with a set of **bound items** — Variables and Methods of the underlying model;
+- a **ScenarioBinding** that associates a Scenario (identified by a URI) and a direction with exactly one **PublishedDataSet** class whose **bound items** are data fields, event fields, or bound actions;
 - a **semantic cross‑reference** carried by each bound item back to the model that defines it, retained so that it can be **exported to a disconnected consumer**;
 - normative rules for locating bound items by **BrowsePath** (RelativePath) so that bindings can be authored once at the type level and resolved per instance;
 - a **machine‑readable configuration** DataType so that tools can generate the full binding — AddressSpace nodes and Part 14 runtime configuration — from a single source;
@@ -37,7 +37,7 @@ This specification makes the decision **part of the model and discoverable at ru
 - [OPC 10000‑5](https://reference.opcfoundation.org/specs/OPC-10000-5/) — Information Model (base types, Interfaces).
 - [OPC 10000‑6](https://reference.opcfoundation.org/specs/OPC-10000-6/) — Mappings (DataType encodings: Binary, XML, JSON).
 - [OPC 10000‑7](https://reference.opcfoundation.org/specs/OPC-10000-7/) — Profiles.
-- [OPC 10000‑14](https://reference.opcfoundation.org/specs/OPC-10000-14/) — PubSub (PublishedDataSet, DataSetWriter/Reader, DataSetMetaData, Actions).
+- [OPC 10000‑14](https://reference.opcfoundation.org/specs/OPC-10000-14/) — PubSub (PublishedDataSet, PublishedDataItems, PublishedEvents, DataSetWriter/Reader, DataSetMetaData, DataSetClassId, Actions).
 - [OPC 10000‑19](https://reference.opcfoundation.org/specs/OPC-10000-19/) — Dictionary Reference (`HasDictionaryEntry`, IRDI/CDD).
 
 ## 3 Terms, definitions and abbreviations
@@ -45,13 +45,14 @@ This specification makes the decision **part of the model and discoverable at ru
 | Term | Definition |
 |---|---|
 | Scenario | A class of integration use case (e.g. Observability, PredictiveMaintenance) identified by a URI, describing why data is moved and to what kind of consumer. |
-| Scenario Binding | An association of a Scenario and a direction with a set of bound items on a bound object or type. |
-| Bound item | A Variable or Method of the underlying model that a Scenario Binding exposes, with routing and semantic metadata. |
+| Scenario Binding | An association of a Scenario and a direction with exactly one PublishedDataSet class; its bound items are the DataSet fields on a bound object or type. |
+| Bound item | A data field, event field or Method/action that a Scenario Binding exposes, with routing and semantic metadata. |
 | Bound root | The Object (an instance, or a type when authoring type‑level bindings) that a bound item's BrowsePath is resolved from. |
 | Routing role (`Kind`) | The small, domain‑agnostic classification a bridge uses to forward an item (Telemetry, Status, Event, Command, …). |
 | Semantic cross‑reference | The retained link from a bound item back to the model node that defines it (TypeDefinition, BrowseName, namespace, dictionary entry). |
 | Bridge | A Client whose sole purpose is to forward bound data/actions between an OPC UA Server and another system, without understanding the domain semantics. |
 | Realization | The Part 14 PubSub node(s) (PublishedDataSet, DataSetWriter/Reader, ActionTarget) that carry a binding's data on the wire. |
+| DataSetClassId | The Guid carried by Part 14 DataSetMetaData that identifies a DataSet class independently of any Server instance. |
 | DTC, PDS | Diagnostic Trouble Code; PublishedDataSet. |
 
 Key words **shall**, **should**, **may**, **shall not** are to be interpreted as in ISO/IEC directives; normative and informative content is marked as such.
@@ -77,7 +78,9 @@ A binding **declares** intent; whether and how it is realized over the wire is s
 
 **A conforming Server is not required to implement OPC UA PubSub.** The default and most common case is a Server with **no PubSub configuration surface at all**: this specification references Part 14 *types* to describe an optional realization, but never requires *instances* of them — no `PublishSubscribe` object, `PublishedDataSet`, `DataSetWriter` or `WriterGroup` need exist. On such a Server a Client acts on a binding through **classic Subscriptions and Method calls** (§6); this is the baseline.
 
-When a Server *does* configure PubSub for a binding, the realizing Part 14 node references the binding through the inverse [`SupportsScenario`](#type-ScenarioRealizedVia) reference (equivalently, the binding is [`ScenarioRealizedVia`](#type-ScenarioRealizedVia) that node) — a `PublishedDataSet`, a `DataSetWriter`/`DataSetReader`, or an `ActionTarget`. This **hybrid** model means a binding is useful immediately on any Server, and becomes a turn‑key PubSub subscription wherever PubSub happens to be configured.
+A [`ScenarioBindingType`](#type-ScenarioBindingType) defines exactly **one** Part 14 `PublishedDataSet` class. Its `BoundItems` are the DataSet fields. If `ContentKind` is `DataItems`, the realizing DataSet is a [`PublishedDataItemsType`](https://reference.opcfoundation.org/specs/OPC-10000-14/9.1.4) — grouped Variable values. If `ContentKind` is `Events`, the realizing DataSet is a [`PublishedEventsType`](https://reference.opcfoundation.org/specs/OPC-10000-14/9.1.5) — an event notifier plus selected event fields and an optional filter. The binding's `DataSetClassId` is the class identity carried by the DataSet metadata and by the `PublishedDataSet`.
+
+When a Server *does* configure PubSub for a binding, the realizing Part 14 node references the binding through the inverse [`SupportsScenario`](#type-ScenarioRealizedVia) reference (equivalently, the binding is [`ScenarioRealizedVia`](#type-ScenarioRealizedVia) that node) — normally the `PublishedDataSet` and optionally a `DataSetWriter`/`DataSetReader` or an `ActionTarget`. This **hybrid** model means a binding is useful immediately on any Server, and becomes a turn-key PubSub subscription wherever PubSub happens to be configured.
 
 ### 4.4 Architecture
 
@@ -98,6 +101,11 @@ classDiagram
     +ScenarioUri : String
     +Direction : ScenarioBindingDirectionEnum
     +ConfigurationVersion : ConfigurationVersion
+    +DataSetClassId : Guid
+    +ContentKind : ScenarioContentKindEnum
+    +DataSetMetaData : DataSetMetaDataType
+    +EventSourcePath : RelativePath
+    +Filter : ContentFilter
     +BoundItems : BoundItemDataType[]
   }
   class BoundItemType {
@@ -114,6 +122,9 @@ classDiagram
   class BoundMethodType {
     +OwningObjectPath : RelativePath
   }
+  class BoundEventFieldType {
+    +EventFieldOperand : SimpleAttributeOperand
+  }
   class IPubSubScenarioBoundType {
     <<interface>>
     +ScenarioBindings : PubSubScenarioBindingsType
@@ -124,6 +135,8 @@ classDiagram
     +Keywords : String[]
   }
   class CompanionNode["companion Variable / Method"]
+  class EventField["field of the event type"]
+  class Notifier["event notifier"]
   class Realization["PublishedDataSet / DataSetWriter (Part 14, optional)"]
 
   ServerObject "1" *-- "1" PubSubScenarioBindingsType : HasComponent
@@ -133,7 +146,11 @@ classDiagram
   ScenarioBindingType "1" o-- "*" BoundItemType : BoundItem placeholder
   BoundVariableType --|> BoundItemType
   BoundMethodType --|> BoundItemType
-  BoundItemType ..> CompanionNode : BindsToNode / BrowsePath
+  BoundEventFieldType --|> BoundItemType
+  BoundVariableType ..> CompanionNode : BindsToNode / BrowsePath
+  BoundMethodType ..> CompanionNode : BindsToNode / BrowsePath
+  BoundEventFieldType ..> EventField : EventFieldOperand
+  ScenarioBindingType ..> Notifier : EventSourcePath (Events)
   Realization ..> ScenarioBindingType : SupportsScenario
   Bridge ..> ServerObject : Browse + Subscribe / Call
   Bridge ..> Target : forward by Kind
@@ -143,78 +160,120 @@ classDiagram
 
 ## 5 Information model
 
-The full node reference — every type, member, DataType and well‑known instance — is generated in **[Annex A](#annex-a)**. This clause states the intent and the normative rules. All types are defined in the base namespace; NodeIds are provisional.
+The full node reference — every type, member, DataType and well-known instance — is generated in **[Annex A](#annex-a)**. This clause states the intent and the normative rules. All types are defined in the base namespace; NodeIds are provisional.
 
 ### 5.1 PubSubScenarioBindingsType
 
-The discoverable container. It holds `<ScenarioBinding>` objects (an `OptionalPlaceholder`), enumerated by **Browse**; a Client reads each binding's `ScenarioUri` to filter. No query Method is defined — Browse and Read already provide enumeration and selection, and requiring a Method would burden the classic Servers that are the common case. A Server **shall** expose one instance as a component of the **Server Object**; it **may** expose further instances through the Interface (§5.6).
+The discoverable container. It holds `<ScenarioBinding>` objects (an `OptionalPlaceholder`), enumerated by **Browse**; a Client reads each binding's `ScenarioUri` to filter. No query Method is defined — Browse and Read already provide enumeration and selection, and requiring a Method would burden the classic Servers that are the common case. A Server **shall** expose one instance as a component of the **Server Object**; it **may** expose further instances through the Interface (§5.9).
 
 ### 5.2 ScenarioBindingType
 
-One binding. `ScenarioUri` (Mandatory) and `Direction` (Mandatory, a [`ScenarioBindingDirectionEnum`](#type-ScenarioBindingDirectionEnum)) are the routing header. `ConfigurationVersion` aligns the binding with the `ConfigurationVersion` of its realizing `DataSetMetaData` so a consumer can detect change. The bound items are exposed **both** as browsable `<BoundItem>` objects **and** as a compact `BoundItems` array of [`BoundItemDataType`](#type-BoundItemDataType); when both are present they **shall** carry equivalent bound‑item information (the same members and values). Where PubSub is configured, the realizing Part 14 node references this binding with [`SupportsScenario`](#type-ScenarioRealizedVia) (the binding is then [`ScenarioRealizedVia`](#type-ScenarioRealizedVia) that node).
+One binding. A [`ScenarioBindingType`](#type-ScenarioBindingType) is exactly one DataSet class. `ScenarioUri` (Mandatory) and `Direction` (Mandatory, a [`ScenarioBindingDirectionEnum`](#type-ScenarioBindingDirectionEnum)) are the routing header. `ConfigurationVersion` aligns the binding with the `ConfigurationVersion` of its DataSet schema so a consumer can detect change. `DataSetClassId` (Mandatory) is the stable Part 14 class identity for the DataSet (§5.7). `ContentKind` (Mandatory, a [`ScenarioContentKindEnum`](#type-ScenarioContentKindEnum)) selects whether the DataSet contains data items or events (§5.6).
+
+The bound items are exposed **both** as browsable `<BoundItem>` objects **and** as a compact `BoundItems` array of [`BoundItemDataType`](#type-BoundItemDataType); when both are present they **shall** carry equivalent bound-item information (the same members and values). The bound items are the DataSet fields.
+
+`DataSetMetaData` (Optional) exposes the Part 14 [`DataSetMetaDataType`](https://reference.opcfoundation.org/specs/OPC-10000-14/6.2.3#6.2.3.2.3) schema offline (§5.8). For event DataSets, `EventSourcePath` (Optional) identifies the event notifier; when omitted, the bound root is the notifier. `Filter` (Optional, a [`ContentFilter`](https://reference.opcfoundation.org/specs/OPC-10000-4/7.4.1)) is the event where-clause. Where PubSub is configured, the realizing Part 14 node references this binding with [`SupportsScenario`](#type-ScenarioRealizedVia) (the binding is then [`ScenarioRealizedVia`](#type-ScenarioRealizedVia) that node).
 
 ### 5.3 BoundItemType and its subtypes
 
-A [`BoundItemType`](#type-BoundItemType) describes one exposed node. It **shall** carry a `FieldName` and a `Kind` (a [`BoundItemKindEnum`](#type-BoundItemKindEnum)). It locates its source node in one of two ways (§5.5) and carries the semantic cross‑reference (§5.4). [`BoundVariableType`](#type-BoundVariableType) binds a Variable exposed as a DataSet field; [`BoundMethodType`](#type-BoundMethodType) binds a Method exposed as an action and adds `OwningObjectPath`.
+A [`BoundItemType`](#type-BoundItemType) describes one DataSet field or action. It **shall** carry a `FieldName` and a `Kind` (a [`BoundItemKindEnum`](#type-BoundItemKindEnum)). It locates its source in one of two ways (§5.10) and carries the semantic cross-reference (§5.4). [`BoundVariableType`](#type-BoundVariableType) binds a Variable exposed as a data DataSet field. [`BoundMethodType`](#type-BoundMethodType) binds a Method exposed as an action and adds `OwningObjectPath`. [`BoundEventFieldType`](#type-BoundEventFieldType) binds an event field selected by a [`SimpleAttributeOperand`](https://reference.opcfoundation.org/specs/OPC-10000-4/7.4.4); its `BrowsePath` is relative to the event `SourceTypeDefinition`, not to the AddressSpace instance.
 
-### 5.4 Semantic cross‑reference (normative)
+### 5.4 Semantic cross-reference (normative)
 
-Each bound item **shall** retain enough information to identify the model node it exposes independently of the live AddressSpace — as applicable to its NodeClass (see the Variable/Method rule below):
+Each bound item **shall** retain enough information to identify the model node it exposes independently of the live AddressSpace — as applicable to its NodeClass (see the Variable/Method/Event rule below):
 
-- `SourceTypeDefinition` — the TypeDefinition NodeId of the source node;
-- `SourceBrowseName` — its namespace‑qualified BrowseName;
+- `SourceTypeDefinition` — the TypeDefinition NodeId of the source node, or for [`BoundEventFieldType`](#type-BoundEventFieldType), the event TypeDefinition against which the field operand is evaluated;
+- `SourceBrowseName` — its namespace-qualified BrowseName;
 - `ModelNamespaceUri` — the namespace URI of the model that defines it;
-- optionally, `SemanticReferenceUri` — a portable external semantic identifier for the item (an IRDI/CDD, e.g. the identifier of a [OPC 10000‑19](https://reference.opcfoundation.org/specs/OPC-10000-19/) dictionary entry). A Server that models the dictionary linkage natively **may** additionally place a `HasDictionaryEntry` reference on the browsable `BoundItem`; `SemanticReferenceUri` is the carrier used in the compact and configuration forms and for propagation, so the linkage survives export.
+- optionally, `SemanticReferenceUri` — a portable external semantic identifier for the item (an IRDI/CDD, e.g. the identifier of a [OPC 10000-19](https://reference.opcfoundation.org/specs/OPC-10000-19/) dictionary entry). A Server that models the dictionary linkage natively **may** additionally place a `HasDictionaryEntry` reference on the browsable `BoundItem`; `SemanticReferenceUri` is the carrier used in the compact and configuration forms and for propagation, so the linkage survives export.
 
 These values are **derivable from the AddressSpace** and a generating tool **should** populate them mechanically to avoid drift.
 
-The Properties above carry the **Optional** ModellingRule on `BoundItemType` so the one type serves both bound Variables and bound Methods (a Method has no TypeDefinition). A Server that exposes a binding **shall** nevertheless populate them per the *Semantic Cross‑Reference* conformance unit (§7): `SourceTypeDefinition`, `SourceBrowseName` and `ModelNamespaceUri` for a bound **Variable**; `SourceBrowseName` and `ModelNamespaceUri` (the source being identified by its `BrowsePath`/`OwningObjectPath`) for a bound **Method**.
+The Properties above carry the **Optional** ModellingRule on `BoundItemType` so the one type serves bound Variables, bound Methods and bound event fields. A Server that exposes a binding **shall** nevertheless populate them per the *Semantic Cross-Reference* conformance unit (§7): `SourceTypeDefinition`, `SourceBrowseName` and `ModelNamespaceUri` for a bound **Variable**; `SourceBrowseName` and `ModelNamespaceUri` (the source being identified by its `BrowsePath`/`OwningObjectPath`) for a bound **Method**; and `SourceTypeDefinition` (the event type), `SourceBrowseName` and `ModelNamespaceUri` for a bound **event field**.
 
 **Propagation to consumers.** When a binding is realized as a Part 14 `PublishedDataSet`, for every bound item the Server **shall**:
 
-1. set the corresponding `FieldMetaData.dataSetFieldId` to the item's `DataSetFieldId`; and
-2. add to `FieldMetaData.properties` the KeyValuePairs `ModelNamespaceUri`, `SourceBrowseName`, `SourceTypeDefinition`, `BrowsePath` and, where present, `SemanticReferenceUri`; and
-3. ensure the `DataSetMetaData` namespace and DataType tables describe any non‑standard DataTypes used.
+1. set the corresponding `FieldMetaData.dataSetFieldId` to the item's `DataSetFieldId`;
+2. add to `FieldMetaData.properties` the KeyValuePairs `ModelNamespaceUri`, `SourceBrowseName`, `SourceTypeDefinition`, `BrowsePath` and, where present, `SemanticReferenceUri` and `EventFieldOperand`; and
+3. ensure the `DataSetMetaData` namespace and DataType tables describe any non-standard DataTypes used.
 
-The property keys **shall** match the corresponding [`BoundItemType`](#type-BoundItemType) member names above, so a consumer can map each `FieldMetaData` property back to the binding model without a separate lookup.
+The property keys **shall** match the corresponding [`BoundItemType`](#type-BoundItemType) or [`BoundItemDataType`](#type-BoundItemDataType) member names above, so a consumer can map each `FieldMetaData` property back to the binding model without a separate lookup.
 
-As a result the PubSub stream is **self‑describing**: a subscriber that never connects to the Server can still map each field back to the companion model. This requirement is a Conformance Unit (§7).
+As a result the PubSub stream is **self-describing**: a subscriber that never connects to the Server can still map each field back to the companion model. This requirement is a Conformance Unit (§7).
 
-### 5.5 Locating bound items — BrowsePath resolution (normative)
+### 5.5 Propagation to Part 14 configuration (normative)
+
+Where PubSub is configured, the Server **shall** propagate the binding into Part 14 configuration as follows:
+
+1. create or identify exactly one `PublishedDataSet` for the binding;
+2. set `DataSetMetaData.dataSetClassId` and `PublishedDataSet.DataSetClassId` to the binding's `DataSetClassId`;
+3. set the `DataSetMetaData.ConfigurationVersion` to the binding's `ConfigurationVersion`;
+4. populate `FieldMetaData` from the `BoundItems` as specified in §5.4;
+5. for `ContentKind = DataItems`, realize the DataSet as [`PublishedDataItemsType`](https://reference.opcfoundation.org/specs/OPC-10000-14/9.1.4) and map each [`BoundVariableType`](#type-BoundVariableType) or data [`BoundItemDataType`](#type-BoundItemDataType) entry to a published data Variable; and
+6. for `ContentKind = Events`, realize the DataSet as [`PublishedEventsType`](https://reference.opcfoundation.org/specs/OPC-10000-14/9.1.5), map [`BoundEventFieldType`](#type-BoundEventFieldType) / `EventFieldOperand` entries to `SelectedFields`, map `EventSourcePath` to the `EventNotifier` (default: the bound root), and map `Filter` to the PublishedEvents `Filter`.
+
+### 5.6 DataSet granularity and content (normative)
+
+A [`ScenarioBindingType`](#type-ScenarioBindingType) **shall** describe exactly one `PublishedDataSet`. The `BoundItems` of the binding **shall** be the fields of that DataSet. This is the granularity at which class identity, configuration versioning and subscriber recognition are defined: per Scenario, per bound ObjectType, per major version.
+
+For `ContentKind = DataItems`, the DataSet is a data DataSet: grouped Variable values modeled by Part 14 [`PublishedDataItemsType`](https://reference.opcfoundation.org/specs/OPC-10000-14/9.1.4). The fields are [`BoundVariableType`](#type-BoundVariableType) objects, or [`BoundItemDataType`](#type-BoundItemDataType) entries whose source locators identify Variables.
+
+For `ContentKind = Events`, the DataSet is an event DataSet modeled by Part 14 [`PublishedEventsType`](https://reference.opcfoundation.org/specs/OPC-10000-14/9.1.5). `EventSourcePath` names the event notifier to subscribe to; if absent, the notifier is the bound root. The fields are [`BoundEventFieldType`](#type-BoundEventFieldType) objects, or [`BoundItemDataType`](#type-BoundItemDataType) entries with `EventFieldOperand`, and they map to PublishedEvents `SelectedFields`. `Filter` carries the optional Part 14 event where-clause.
+
+### 5.7 DataSetClassId (normative)
+
+`DataSetClassId` **shall** be a Version-5 UUID as defined by RFC 4122, computed over the canonical UTF-8 string:
+
+```text
+<ScenarioUri>|<AppliesToType>|<MajorVersion>
+```
+
+The namespace UUID **shall** be the fixed UUID `fc164bdb-8705-58e9-ab11-7b1ed155b4e8`, defined by this specification as `uuid5(URL, "http://opcfoundation.org/UA/PubSub/Scenarios/DataSetClass")`.
+
+`ScenarioUri` is the binding's `ScenarioUri`. `AppliesToType` is the namespace-qualified BrowseName of the bound ObjectType encoded as `<namespaceUri>;<Name>`. `MajorVersion` is the binding's `ConfigurationVersion.MajorVersion` expressed as a base-10 integer without leading zeroes. If the binding does not expose `ConfigurationVersion`, `MajorVersion` **shall** be taken as `1` (equivalently, an absent `ConfigurationVersion` is treated as `{MajorVersion = 1, MinorVersion = 0}`) so the derivation is always well-defined.
+
+Because the calculation is deterministic, every Server publishing the same Scenario for the same bound ObjectType and major version **shall** compute the same `DataSetClassId`. A semantics-agnostic subscriber can therefore recognize the DataSet class from `DataSetClassId` alone, without browsing the Server. The identity grain is per `(ScenarioUri × AppliesToType × MajorVersion)`.
+
+### 5.8 DataSetMetaData exposure
+
+A binding **may** expose `DataSetMetaData` carrying the DataSet fields, `dataSetClassId` and `configurationVersion`. When present, it **shall** be consistent with the binding's `BoundItems`, `DataSetClassId`, `ContentKind` and `ConfigurationVersion`. This lets a subscriber or offline tool obtain the class schema without browsing the bound model or reading the runtime PubSub configuration.
+
+### 5.9 IPubSubScenarioBoundType
+
+An Interface a model may apply (via `HasInterface`) to advertise participation in scenario bindings. It exposes a Mandatory `ScenarioBindings` container. Applying it at the **type** level, with type-level BrowsePath bindings, is the recommended way for a companion specification to adopt this specification without changing its own types' semantics.
+
+### 5.10 Locating bound items — BrowsePath resolution (normative)
 
 A bound item locates its source node in one of two ways:
 
-- **BrowsePath (recommended).** `BrowsePath` is a [`RelativePath`](https://reference.opcfoundation.org/specs/OPC-10000-4/7.30) resolved from `StartingNode` (default: the bound root). Because it is relative, a single binding authored on a **type** applies to **every instance**: the Server resolves it per instance with [TranslateBrowsePathsToNodeIds](https://reference.opcfoundation.org/specs/OPC-10000-4/). This is the recommended mechanism and the form emitted by the authoring tool.
-- **Absolute NodeId.** `SourceNodeId` (and the `BindsToNode` reference on the browsable form) identifies the node directly, for server‑specific or instance‑specific bindings.
+- **BrowsePath (recommended).** `BrowsePath` is a [`RelativePath`](https://reference.opcfoundation.org/specs/OPC-10000-4/7.30) resolved from `StartingNode` (default: the bound root). Because it is relative, a single binding authored on a **type** applies to **every instance**: the Server resolves it per instance with [TranslateBrowsePathsToNodeIds](https://reference.opcfoundation.org/specs/OPC-10000-4/). This is the recommended mechanism and the form emitted by the authoring tool. For [`BoundEventFieldType`](#type-BoundEventFieldType), the `BrowsePath` segments select an event field relative to `SourceTypeDefinition`, the event TypeDefinition, and may be represented directly as `EventFieldOperand`.
+- **Absolute NodeId.** `SourceNodeId` (and the `BindsToNode` reference on the browsable form) identifies the node directly, for server-specific or instance-specific bindings. It is not used to select event fields inside a PublishedEvents DataSet.
 
 Resolution rules a Server **shall** apply:
 
 1. If a BrowsePath does not resolve on a given instance (an absent Optional component), the item is **omitted** for that instance; this is **not** an error.
 2. If a BrowsePath matches **multiple** nodes (a placeholder such as `<Rating>`, or an array of components), it **expands** to one bound field per match; `FieldName` is made unique by appending the matched BrowseName.
 3. For a bound Method, the path targets the Method Node; the Object the Method is called on is the path's parent (or `OwningObjectPath` when given).
+4. For an event field, the path targets a field of the event TypeDefinition; the notifier is identified by `EventSourcePath`, not by the field `BrowsePath`.
 
-### 5.6 IPubSubScenarioBoundType
+### 5.11 Scenario registry and URIs
 
-An Interface a model may apply (via `HasInterface`) to advertise participation in scenario bindings. It exposes a Mandatory `ScenarioBindings` container. Applying it at the **type** level, with type‑level BrowsePath bindings, is the recommended way for a companion specification to adopt this specification without changing its own types' semantics.
-
-### 5.7 Scenario registry and URIs
-
-The `Scenarios` folder under the server‑wide registry holds [`ScenarioProfileType`](#type-ScenarioProfileType) objects, one per known Scenario, each carrying its `ScenarioUri`, `Title`, `Summary` and `Keywords`. This specification defines the following baseline Scenario URIs under the root `http://opcfoundation.org/UA/PubSub/Scenarios/`:
+The `Scenarios` folder under the server-wide registry holds [`ScenarioProfileType`](#type-ScenarioProfileType) objects, one per known Scenario, each carrying its `ScenarioUri`, `Title`, `Summary` and `Keywords`. This specification defines the following baseline Scenario URIs under the root `http://opcfoundation.org/UA/PubSub/Scenarios/`:
 
 | Scenario | Purpose |
 |---|---|
-| `Observability` | Real‑time operational monitoring — SCADA/HMI, dashboards, observability platforms. |
+| `Observability` | Real-time operational monitoring — SCADA/HMI, dashboards, observability platforms. |
 | `PredictiveMaintenance` | Condition and usage trending for maintenance analytics. |
-| `AnomalyDetection` | High‑resolution correlated signals for baseline/deviation modelling. |
+| `AnomalyDetection` | High-resolution correlated signals for baseline/deviation modelling. |
 | `EnergyAndLoadManagement` | Power, load, demand and energy coordination. |
 | `AlarmAndEventDistribution` | Condition and event streams. |
-| `FleetAndCompliance` | Multi‑site supervision, reporting and regulatory compliance. |
+| `FleetAndCompliance` | Multi-site supervision, reporting and regulatory compliance. |
 
 **Governance (normative).** The registry is **extensible**. Anyone may define additional Scenarios; a Scenario URI **shall** be owned by whoever controls its URI authority (for example a vendor uses a URI under a domain it controls). Extenders **shall not** define new URIs under `http://opcfoundation.org/UA/PubSub/Scenarios/`; that root is reserved for this specification and its successors.
 
-### 5.8 Machine‑readable binding configuration
+### 5.12 Machine-readable binding configuration
 
-[`ScenarioBindingConfigurationDataType`](#type-ScenarioBindingConfigurationDataType) is a portable, encodable description of the *full* set of bindings for a model or type: the `ModelNamespaceUri`, the `AppliesToType`, a `ConfigurationVersion`, and the `ScenarioBindings` (each a [`ScenarioBindingDataType`](#type-ScenarioBindingDataType) containing [`BoundItemDataType`](#type-BoundItemDataType) entries). It deliberately mirrors the Part 14 `PubSubConfigurationDataType` pattern: the DataTypes **are** the interchange schema, serializable via [OPC 10000‑6](https://reference.opcfoundation.org/specs/OPC-10000-6/) (Binary/XML/JSON), and equivalently expressible as a `UANodeSet2` fragment. Tools use it as the single source from which the AddressSpace nodes, the Part 14 runtime configuration and the human‑readable annex are generated (§7).
+[`ScenarioBindingConfigurationDataType`](#type-ScenarioBindingConfigurationDataType) is a portable, encodable description of the *full* set of bindings for a model or type: the `ModelNamespaceUri`, the `AppliesToType`, a `ConfigurationVersion`, and the `ScenarioBindings` (each a [`ScenarioBindingDataType`](#type-ScenarioBindingDataType) containing [`BoundItemDataType`](#type-BoundItemDataType) entries). Each `ScenarioBindingDataType` carries the same DataSet-level identity and content members as [`ScenarioBindingType`](#type-ScenarioBindingType): `DataSetClassId`, `ContentKind`, `EventSourcePath` and `Filter`; each `BoundItemDataType` may carry `EventFieldOperand` for event fields. It deliberately mirrors the Part 14 `PubSubConfigurationDataType` pattern: the DataTypes **are** the interchange schema, serializable via [OPC 10000-6](https://reference.opcfoundation.org/specs/OPC-10000-6/) (Binary/XML/JSON), and equivalently expressible as a `UANodeSet2` fragment. Tools use it as the single source from which the AddressSpace nodes, the Part 14 runtime configuration and the human-readable annex are generated (§7).
 
 ## 6 Using the binding registry (informative)
 
@@ -222,11 +281,11 @@ This clause shows how a **bridge** consumes the model. It is informative; confor
 
 ### 6.1 Walkthrough
 
-1. **Discover.** Browse `Server/ScenarioBindings` for the server‑wide registry, and/or find Objects implementing `IPubSubScenarioBoundType` for per‑instance bindings. Enumerate the `ScenarioBinding` objects by Browse and read each `ScenarioUri`.
-2. **Select.** Keep the bindings whose `ScenarioUri` is one the bridge supports. Read `Direction` to learn which side to set up.
-3. **Realize — classic path (the default).** For each bound item resolve its `BrowsePath` (or read `SourceNodeId`) with `TranslateBrowsePathsToNodeIds`, then create a Subscription with a MonitoredItem on that node and `AttributeId`, honouring `SamplingIntervalHint`. For a bound Method, use the `Call` service. This path needs no PubSub configuration and works on any Server.
-4. **Realize — PubSub path (only where PubSub is configured).** If a Part 14 node references the binding via `SupportsScenario` (the binding is `ScenarioRealizedVia` a `PublishedDataSet`/`DataSetWriter`), read the `DataSetMetaData` and the transport from the owning `WriterGroup`/`PubSubConnection`, then create a `DataSetReader`/subscriber. For an `ActionInvoker`/`ActionResponder` binding, use Part 14 Actions/ActionTargets.
-5. **Forward.** For each field, forward the value tagged with its `Kind` (Telemetry/Metric → time series; Event → log; Command → action; …) and attach the semantic cross‑reference so the downstream consumer can interpret it. **No domain knowledge is required.**
+1. **Discover.** Browse `Server/ScenarioBindings` for the server-wide registry, and/or find Objects implementing `IPubSubScenarioBoundType` for per-instance bindings. Enumerate the `ScenarioBinding` objects by Browse and read each `ScenarioUri`.
+2. **Recognize.** If the bridge has prior knowledge of a scenario DataSet class, it can recognize an incoming PubSub DataSet by `DataSetClassId` alone; no browse of the publishing Server is required. If it is browsing, read `DataSetClassId`, `ContentKind`, `Direction` and optionally `DataSetMetaData` to learn the schema.
+3. **Realize — classic path (the default).** For a data binding, resolve each bound Variable `BrowsePath` (or read `SourceNodeId`) with `TranslateBrowsePathsToNodeIds`, then create a Subscription with a MonitoredItem on that node and `AttributeId`, honouring `SamplingIntervalHint`. For an event binding, resolve `EventSourcePath` to the notifier (or use the bound root), subscribe to Events, use the `BoundEventFieldType` / `EventFieldOperand` entries as selected fields, and apply `Filter` where supported. For a bound Method, use the `Call` service. This path needs no PubSub configuration and works on any Server.
+4. **Realize — PubSub path (only where PubSub is configured).** If a Part 14 node references the binding via `SupportsScenario` (the binding is `ScenarioRealizedVia` a `PublishedDataSet`/`DataSetWriter`), read the `DataSetMetaData` and the transport from the owning `WriterGroup`/`PubSubConnection`, then create a `DataSetReader`/subscriber. A data DataSet is consumed as grouped Variable values. An event DataSet is consumed as selected event fields from the configured notifier, with the PublishedEvents `Filter` already applied by the publisher. For an `ActionInvoker`/`ActionResponder` binding, use Part 14 Actions/ActionTargets.
+5. **Forward.** For each field, forward the value tagged with its `Kind` (Telemetry/Metric → time series; Event → log; Command → action; …) and attach the semantic cross-reference so the downstream consumer can interpret it. **No domain knowledge is required.**
 
 ### 6.2 Sequence — classic server (the default)
 
@@ -236,20 +295,25 @@ sequenceDiagram
   participant B as Bridge (Client)
   participant X as Target system
   B->>S: Browse Server/ScenarioBindings (or via IPubSubScenarioBoundType)
-  S-->>B: ScenarioBinding { ScenarioUri, Direction, BoundItems… }
-  B->>B: Select bindings whose ScenarioUri is supported
-  loop per BoundItem
-    B->>S: TranslateBrowsePathsToNodeIds (BrowsePath)
-    B->>S: CreateSubscription + CreateMonitoredItems (AttributeId, SamplingIntervalHint)
+  S-->>B: ScenarioBinding { ScenarioUri, DataSetClassId, ContentKind, BoundItems… }
+  B->>B: Select by ScenarioUri or known DataSetClassId
+  alt DataItems
+    loop per BoundItem
+      B->>S: TranslateBrowsePathsToNodeIds (BrowsePath)
+      B->>S: CreateSubscription + CreateMonitoredItems (AttributeId, SamplingIntervalHint)
+    end
+  else Events
+    B->>S: Resolve EventSourcePath (default bound root)
+    B->>S: Subscribe to Events (SelectedFields + Filter)
   end
-  Note over S,B: Bound Methods → Call service
+  Note over S,B: Bound Methods -> Call service
   loop runtime
-    S-->>B: DataChange notification (value)
+    S-->>B: DataChange or Event notification
     B->>X: Forward tagged by Kind (+ semantic cross-ref)
   end
 ```
 
-### 6.3 Sequence — PubSub‑capable server (less common)
+### 6.3 Sequence — PubSub-capable server (less common)
 
 ```mermaid
 sequenceDiagram
@@ -259,10 +323,11 @@ sequenceDiagram
   B->>S: Browse Server/ScenarioBindings
   S-->>B: ScenarioBinding + realization (PublishedDataSet SupportsScenario binding)
   B->>S: Read DataSetMetaData + WriterGroup/PubSubConnection
+  B->>B: Match or cache DataSetClassId
   B->>B: Create DataSetReader (subscriber)
-  Note over S,B: Action bindings → Part 14 Actions/ActionTargets
+  Note over S,B: Action bindings -> Part 14 Actions/ActionTargets
   loop runtime
-    S-->>B: PubSub DataSetMessage (fields + dataSetFieldId + semantic props)
+    S-->>B: PubSub DataSetMessage (data fields or event fields)
     B->>X: Forward tagged by Kind (+ semantic cross-ref)
   end
 ```
@@ -273,19 +338,21 @@ The following Conformance Units (CUs) are defined; Facets group them for Servers
 
 | Conformance Unit | Requirement |
 |---|---|
-| Scenario Binding Discovery | Expose a server‑wide `ScenarioBindings` registry as a component of the Server Object; enumerate `ScenarioBinding` objects by Browse. |
+| Scenario Binding Discovery | Expose a server-wide `ScenarioBindings` registry as a component of the Server Object; enumerate `ScenarioBinding` objects by Browse. |
 | Scenario Registry | Expose the `Scenarios` registry with a `ScenarioProfile` per supported Scenario URI. |
-| BrowsePath Resolution | Author bound items as type‑level BrowsePaths and resolve them per instance under the rules of §5.5. |
-| Variable Realization *(optional)* | Realize a binding as a Part 14 `PublishedDataSet`/`DataSetWriter` for its bound Variables. Applicable only where the Server implements PubSub. |
+| BrowsePath Resolution | Author bound items as type-level BrowsePaths and resolve them per instance under the rules of §5.10. |
+| DataSet Class Identity | Compute the deterministic `DataSetClassId` per §5.7 and propagate it to `DataSetMetaData.dataSetClassId` and `PublishedDataSet.DataSetClassId` wherever PubSub is configured. |
+| Variable Realization *(optional)* | Realize a data binding as one Part 14 `PublishedDataSet`/`DataSetWriter` with `PublishedDataItemsType`. Applicable only where the Server implements PubSub. |
+| Event DataSet Binding *(optional)* | Realize an event binding as one Part 14 `PublishedDataSet`/`DataSetWriter` with `PublishedEventsType`, mapping `BoundEventFieldType`/`EventFieldOperand` to `SelectedFields`, `EventSourcePath` to the notifier and `Filter` to the event filter. Applicable only where the Server implements PubSub. |
 | Action Realization *(optional)* | Realize a bound Method as a Part 14 Action/ActionTarget. Applicable only where the Server implements PubSub. |
-| Semantic Cross‑Reference | Populate the semantic fields on every exposed bound item (`SourceTypeDefinition`/`SourceBrowseName`/`ModelNamespaceUri`, per the Variable/Method rule in §5.4). Independent of PubSub. |
-| PubSub MetaData Propagation *(optional)* | Where a binding is realized over PubSub, propagate the semantic fields into `DataSetMetaData.FieldMetaData` per §5.4. Applicable only where Variable/Action Realization is offered. |
+| Semantic Cross-Reference | Populate the semantic fields on every exposed bound item (`SourceTypeDefinition`/`SourceBrowseName`/`ModelNamespaceUri`, per the Variable/Method/Event rule in §5.4). Independent of PubSub. |
+| PubSub MetaData Propagation *(optional)* | Where a binding is realized over PubSub, propagate the semantic fields into `DataSetMetaData.FieldMetaData` per §5.4 and the DataSet-level fields per §5.5. Applicable only where PubSub realization is offered. |
 
 **Facets (informative grouping):**
 
-- **Server Scenario Binding Facet** — Discovery + Scenario Registry + BrowsePath Resolution + Semantic Cross‑Reference (mandatory); Variable/Action Realization + PubSub MetaData Propagation (as offered, only where PubSub is implemented).
-- **Publisher Facet** — Variable Realization + PubSub MetaData Propagation.
-- **Bridge (Client) Facet** — discover, select by `ScenarioUri`, realize via the classic path (default) or PubSub where configured, forward by `Kind`.
+- **Server Scenario Binding Facet** — Discovery + Scenario Registry + BrowsePath Resolution + Semantic Cross-Reference + DataSet Class Identity (mandatory); Variable Realization + Event DataSet Binding + Action Realization + PubSub MetaData Propagation (as offered, only where PubSub is implemented).
+- **Publisher Facet** — Variable Realization and/or Event DataSet Binding + PubSub MetaData Propagation.
+- **Bridge (Client) Facet** — discover, select by `ScenarioUri` or recognize by `DataSetClassId`, realize via the classic path (default) or PubSub where configured, forward by `Kind`.
 
 ## 8 Deliverables and reproducibility
 
@@ -296,11 +363,12 @@ The following Conformance Units (CUs) are defined; Facets group them for Servers
 | [`OPC-UA-PubSub-Scenario-Binding.md`](OPC-UA-PubSub-Scenario-Binding.md) | This document. |
 | [`tools/build_model.py`](tools/build_model.py) | The generator that emits the NodeSet, the CSV and the [Annex A](#annex-a) tables from one source of truth. |
 
-The NodeSet has been validated to be structurally correct — XML well‑formedness, unique NodeIds, CSV↔NodeSet consistency, and resolution of every referenced base NodeId against the base OPC UA and Part 14 NodeId tables — and its constructs (base‑namespace type definitions, a custom ReferenceType, an Interface, enumerations, a Structure with encodings, `RelativePath`/`QualifiedName`/`Guid` fields, and the hook onto the well‑known **Server Object**) were checked with the OPC Foundation modelling validator and reported **0 errors**.
+The NodeSet has been validated to be structurally correct — XML well-formedness, unique NodeIds, CSV↔NodeSet consistency, and resolution of every referenced base NodeId against the base OPC UA and Part 14 NodeId tables — and its constructs (base-namespace type definitions, a custom ReferenceType, an Interface, enumerations, Structures with encodings, `RelativePath`/`QualifiedName`/`Guid` fields, and the hook onto the well-known **Server Object**) were checked with the OPC Foundation modelling validator and reported **0 errors**.
 
-An authoring **skill** (`skills/opcua-scenario-binding/`) generates, for any companion specification, a machine‑readable `ScenarioBindingConfiguration` and a per‑spec binding annex from documented heuristics; a deterministic generator expands that single source into the AddressSpace binding fragment and Part 14 runtime‑configuration skeletons (transport, security and addressing are deployment parameters and are not fixed by this specification).
+An authoring **skill** (`skills/opcua-scenario-binding/`) generates, for any companion specification, a machine-readable `ScenarioBindingConfiguration` and a per-spec binding annex from documented heuristics; a deterministic generator expands that single source into the AddressSpace binding fragment and Part 14 runtime-configuration skeletons (transport, security and addressing are deployment parameters and are not fixed by this specification).
 
 ---
+
 
 
 
@@ -320,12 +388,14 @@ This annex is the normative node reference. It is generated from `tools/build_mo
 | i=60012 | [BoundItemType](#type-BoundItemType) | ObjectType | [BaseObjectType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.2) |
 | i=60013 | [BoundVariableType](#type-BoundVariableType) | ObjectType | [BoundItemType](#type-BoundItemType) |
 | i=60014 | [BoundMethodType](#type-BoundMethodType) | ObjectType | [BoundItemType](#type-BoundItemType) |
+| i=60017 | [BoundEventFieldType](#type-BoundEventFieldType) | ObjectType | [BoundItemType](#type-BoundItemType) |
 | i=60011 | [ScenarioBindingType](#type-ScenarioBindingType) | ObjectType | [BaseObjectType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.2) |
 | i=60010 | [PubSubScenarioBindingsType](#type-PubSubScenarioBindingsType) | ObjectType | [FolderType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.6) |
 | i=60015 | [ScenarioProfileType](#type-ScenarioProfileType) | ObjectType | [BaseObjectType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.2) |
 | i=60016 | [IPubSubScenarioBoundType](#type-IPubSubScenarioBoundType) | ObjectType | [BaseInterfaceType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.9) |
 | i=60050 | [ScenarioBindingDirectionEnum](#type-ScenarioBindingDirectionEnum) | DataType | Enumeration |
 | i=60051 | [BoundItemKindEnum](#type-BoundItemKindEnum) | DataType | Enumeration |
+| i=60052 | [ScenarioContentKindEnum](#type-ScenarioContentKindEnum) | DataType | Enumeration |
 | i=60060 | [BoundItemDataType](#type-BoundItemDataType) | DataType | Structure |
 | i=60065 | [ScenarioBindingDataType](#type-ScenarioBindingDataType) | DataType | Structure |
 | i=60070 | [ScenarioBindingConfigurationDataType](#type-ScenarioBindingConfigurationDataType) | DataType | Structure |
@@ -418,6 +488,30 @@ A bound Method exposed as an invokable action; may be realized as a Part 14 Acti
 | DataSetFieldId | Variable | Guid | Optional | [BoundItemType](#type-BoundItemType) | GUID correlating the item to Part 14 FieldMetaData. |
 | SemanticReferenceUri | Variable | String | Optional | [BoundItemType](#type-BoundItemType) | Optional external semantic identifier (e.g. IRDI/CDD). |
 
+<a id="type-BoundEventFieldType"></a>
+#### BoundEventFieldType  (i=60017)
+
+*Inherits from:* [BoundItemType](#type-BoundItemType)
+
+A bound event field of an event DataSet, selected by a Part 14 SimpleAttributeOperand. Its BrowsePath is resolved relative to the event TypeDefinition (SourceTypeDefinition), not the AddressSpace instance; the EventSourcePath on the ScenarioBinding names the notifier it is selected from.
+
+| BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
+|---|---|---|---|---|---|
+| EventFieldOperand | Variable | [SimpleAttributeOperand](https://reference.opcfoundation.org/specs/OPC-10000-4/7.4.4) | Optional | BoundEventFieldType | The Part 14 SimpleAttributeOperand that selects this field (TypeDefinitionId, BrowsePath, AttributeId); maps directly to a PublishedEvents SelectedFields entry. |
+| FieldName | Variable | String | Mandatory | [BoundItemType](#type-BoundItemType) | Stable logical field name of the item. |
+| Kind | Variable | [BoundItemKindEnum](#type-BoundItemKindEnum) | Mandatory | [BoundItemType](#type-BoundItemType) | Generic routing role of the item. |
+| AttributeId | Variable | UInt32 | Optional | [BoundItemType](#type-BoundItemType) | Attribute of the source node to expose (default 13 = Value). |
+| BrowsePath | Variable | [RelativePath](https://reference.opcfoundation.org/specs/OPC-10000-4/7.30) | Optional | [BoundItemType](#type-BoundItemType) | RECOMMENDED locator: RelativePath from the bound root; resolved per instance. |
+| StartingNode | Variable | NodeId | Optional | [BoundItemType](#type-BoundItemType) | Node the BrowsePath is resolved from (default: the bound root). |
+| SourceNodeId | Variable | NodeId | Optional | [BoundItemType](#type-BoundItemType) | Alternative absolute locator (instance/server-specific). |
+| SamplingIntervalHint | Variable | Duration | Optional | [BoundItemType](#type-BoundItemType) | Recommended sampling/publishing interval (ms). |
+| IndexRange | Variable | NumericRange | Optional | [BoundItemType](#type-BoundItemType) | Optional sub-range for array values. |
+| SourceTypeDefinition | Variable | NodeId | Optional | [BoundItemType](#type-BoundItemType) | TypeDefinition of the source node (semantic identity). |
+| SourceBrowseName | Variable | QualifiedName | Optional | [BoundItemType](#type-BoundItemType) | Namespace-qualified BrowseName of the source node. |
+| ModelNamespaceUri | Variable | String | Optional | [BoundItemType](#type-BoundItemType) | Namespace URI of the companion model defining the source. |
+| DataSetFieldId | Variable | Guid | Optional | [BoundItemType](#type-BoundItemType) | GUID correlating the item to Part 14 FieldMetaData. |
+| SemanticReferenceUri | Variable | String | Optional | [BoundItemType](#type-BoundItemType) | Optional external semantic identifier (e.g. IRDI/CDD). |
+
 <a id="type-ScenarioBindingType"></a>
 #### ScenarioBindingType  (i=60011)
 
@@ -430,7 +524,12 @@ One scenario binding on a bound object or type. It declares the scenario URI and
 | ScenarioUri | Variable | String | Mandatory | ScenarioBindingType | URI of the integration scenario this binding serves. |
 | Direction | Variable | [ScenarioBindingDirectionEnum](#type-ScenarioBindingDirectionEnum) | Mandatory | ScenarioBindingType | Role the server offers for this binding. |
 | ConfigurationVersion | Variable | i=14593 | Optional | ScenarioBindingType | Version of the binding, aligned with the realizing DataSetMetaData. |
-| BoundItems | Variable | [BoundItemDataType](#type-BoundItemDataType)\[\] | Optional | ScenarioBindingType | Compact machine-readable list of bound items. |
+| DataSetClassId | Variable | Guid | Mandatory | ScenarioBindingType | Stable DataSetClassId (Part 14) identifying the class of the DataSet this binding defines, so subscribers recognize the same schema across servers. Deterministic (see the DataSetClassId clause). |
+| ContentKind | Variable | [ScenarioContentKindEnum](#type-ScenarioContentKindEnum) | Mandatory | ScenarioBindingType | Whether the binding realizes as a data DataSet (PublishedDataItems) or an event DataSet (PublishedEvents). |
+| DataSetMetaData | Variable | [DataSetMetaDataType](https://reference.opcfoundation.org/specs/OPC-10000-14/6.2.3#6.2.3.2.3) | Optional | ScenarioBindingType | Part 14 DataSetMetaData for this DataSet (fields, dataSetClassId, configurationVersion), exposed so a consumer gets the class schema offline. |
+| EventSourcePath | Variable | [RelativePath](https://reference.opcfoundation.org/specs/OPC-10000-4/7.30) | Optional | ScenarioBindingType | For an event DataSet: RelativePath to the event notifier to subscribe to (default: the bound root). |
+| Filter | Variable | [ContentFilter](https://reference.opcfoundation.org/specs/OPC-10000-4/7.4.1) | Optional | ScenarioBindingType | For an event DataSet: optional ContentFilter (event where-clause). |
+| BoundItems | Variable | [BoundItemDataType](#type-BoundItemDataType)\[\] | Optional | ScenarioBindingType | Compact machine-readable list of bound items (the DataSet fields). |
 | <BoundItem> | Object |  | OptionalPlaceholder | ScenarioBindingType | A browsable bound item (rich form of a BoundItems entry). |
 
 <a id="type-PubSubScenarioBindingsType"></a>
@@ -506,6 +605,18 @@ Generic role of a bound item for routing/bridging. It is intentionally domain-ag
 | Identification | 8 | Static nameplate/identity information. |
 | Other | 9 | Any other role. |
 
+<a id="type-ScenarioContentKindEnum"></a>
+#### ScenarioContentKindEnum  (i=60052)
+
+*Subtype of:* Enumeration
+
+Whether a scenario binding realizes as a Part 14 data DataSet (PublishedDataItems) or an event DataSet (PublishedEvents). A binding is exactly one DataSet.
+
+| Name | Value | Description |
+|---|---|---|
+| DataItems | 0 | A data DataSet: grouped Variable values (PublishedDataItemsType). |
+| Events | 1 | An event DataSet: selected event fields from a notifier (PublishedEventsType). |
+
 <a id="type-BoundItemDataType"></a>
 #### BoundItemDataType  (i=60060)
 
@@ -529,6 +640,7 @@ Machine-readable descriptor of a single bound item: how to LOCATE it (BrowsePath
 | ModelNamespaceUri | String | Namespace URI of the companion model that defines the source. |
 | DataSetFieldId | Guid | GUID correlating this item to Part 14 FieldMetaData.dataSetFieldId. |
 | SemanticReferenceUri | String | Optional external semantic identifier (e.g. IRDI/CDD) for the item. |
+| EventFieldOperand | [SimpleAttributeOperand](https://reference.opcfoundation.org/specs/OPC-10000-4/7.4.4) | For an event-DataSet field: the Part 14 SimpleAttributeOperand that selects it (alternative/complement to BrowsePath, whose segments are then relative to the event TypeDefinition). |
 
 <a id="type-ScenarioBindingDataType"></a>
 #### ScenarioBindingDataType  (i=60065)
@@ -543,7 +655,11 @@ Machine-readable descriptor of one scenario binding: a scenario URI, the offered
 | ScenarioUri | String | URI of the integration scenario this binding serves. |
 | Direction | [ScenarioBindingDirectionEnum](#type-ScenarioBindingDirectionEnum) | Role the server offers for this binding. |
 | ConfigurationVersion | i=14593 | Version of the binding, aligned with the realizing DataSetMetaData. |
-| BoundItems | [BoundItemDataType](#type-BoundItemDataType)\[\] | The bound items. |
+| BoundItems | [BoundItemDataType](#type-BoundItemDataType)\[\] | The bound items (the DataSet fields). |
+| DataSetClassId | Guid | Stable DataSetClassId (Part 14) identifying the class of this DataSet across servers. |
+| ContentKind | [ScenarioContentKindEnum](#type-ScenarioContentKindEnum) | Whether this binding is a data or an event DataSet. |
+| EventSourcePath | [RelativePath](https://reference.opcfoundation.org/specs/OPC-10000-4/7.30) | For an event DataSet: RelativePath to the event notifier (default: the bound root). |
+| Filter | [ContentFilter](https://reference.opcfoundation.org/specs/OPC-10000-4/7.4.1) | For an event DataSet: optional ContentFilter (event where-clause). |
 | PublishedDataSetName | String | Name of the realizing Part 14 PublishedDataSet, if any. |
 | WriterGroupName | String | Name of the realizing Part 14 WriterGroup, if any. |
 

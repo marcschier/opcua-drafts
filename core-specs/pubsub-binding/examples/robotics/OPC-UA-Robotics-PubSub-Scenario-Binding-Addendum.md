@@ -6,7 +6,7 @@
 
 ## 1 Scope
 
-This addendum defines example **scenario bindings** for the `MotionDeviceSystemType` — 20 bound items across the scenarios *Observability, PredictiveMaintenance, AnomalyDetection, AlarmAndEventDistribution, FleetAndCompliance* — per the [PubSub Scenario Binding](../../OPC-UA-PubSub-Scenario-Binding.md) base specification. Robotics is structured around motion devices, axes, power trains, controllers and safety states with state machines, so scenarios lean on axis/motor telemetry, controller thermals, safety status and nameplate identity rather than a flat measurement model.
+This addendum defines example **scenario bindings** for the `MotionDeviceSystemType` — 22 bound items across the scenarios *Observability, PredictiveMaintenance, AnomalyDetection, AlarmAndEventDistribution, FleetAndCompliance* — per the [PubSub Scenario Binding](../../OPC-UA-PubSub-Scenario-Binding.md) base specification. Robotics is structured around motion devices, axes, power trains, controllers and safety states with state machines, so scenarios lean on axis/motor telemetry, controller thermals, safety status and nameplate identity rather than a flat measurement model.
 
 ## 2 Normative references
 
@@ -27,11 +27,11 @@ Only the bound signals are materialised in the overlay; it is an *illustrative* 
 
 ## 4 Scenario bindings for `MotionDeviceSystemType`
 
-Bindings for the `MotionDeviceSystemType` of the `http://opcfoundation.org/UA/Robotics/` companion specification, per the [PubSub Scenario Binding](../../OPC-UA-PubSub-Scenario-Binding.md) base specification. Every `BrowsePath` below was resolved against the published companion NodeSet.
+Bindings for the `MotionDeviceSystemType` of the `http://opcfoundation.org/UA/Robotics/` companion specification, per the [PubSub Scenario Binding](../../OPC-UA-PubSub-Scenario-Binding.md) base specification. Each binding is **one Part 14 DataSet** with a deterministic `DataSetClassId`. Every data-DataSet `BrowsePath` below was resolved against the published companion NodeSet; event-DataSet fields select standard event-type fields.
 
 #### Scenario: Observability
 
-*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/Observability` · *Direction:* Publisher
+*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/Observability` · *Direction:* Publisher · *Content:* data DataSet (PublishedDataItems) · *DataSetClassId:* `ad751dd8-3b2d-5599-8cce-4be80dc0f8b8`
 
 | Field | Kind | BrowsePath | Source type | DataType |
 |---|---|---|---|---|
@@ -42,7 +42,7 @@ Bindings for the `MotionDeviceSystemType` of the `http://opcfoundation.org/UA/Ro
 
 #### Scenario: PredictiveMaintenance
 
-*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/PredictiveMaintenance` · *Direction:* Publisher
+*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/PredictiveMaintenance` · *Direction:* Publisher · *Content:* data DataSet (PublishedDataItems) · *DataSetClassId:* `fccc95e4-e8b3-5b20-82b1-c5fdcb30f53a`
 
 | Field | Kind | BrowsePath | Source type | DataType |
 |---|---|---|---|---|
@@ -54,7 +54,7 @@ Bindings for the `MotionDeviceSystemType` of the `http://opcfoundation.org/UA/Ro
 
 #### Scenario: AnomalyDetection
 
-*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection` · *Direction:* Publisher
+*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection` · *Direction:* Publisher · *Content:* data DataSet (PublishedDataItems) · *DataSetClassId:* `4fa76f85-fefb-5a6d-a699-e5e3298c769e`
 
 | Field | Kind | BrowsePath | Source type | DataType |
 |---|---|---|---|---|
@@ -63,18 +63,20 @@ Bindings for the `MotionDeviceSystemType` of the `http://opcfoundation.org/UA/Ro
 
 #### Scenario: AlarmAndEventDistribution
 
-*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/AlarmAndEventDistribution` · *Direction:* Publisher
+*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/AlarmAndEventDistribution` · *Direction:* Publisher · *Content:* event DataSet (PublishedEvents) · *DataSetClassId:* `47b98390-ae81-5a82-82e3-39258ce1a49b` · *Event source:* `/` · *Event type:* AlarmConditionType
 
-| Field | Kind | BrowsePath | Source type | DataType |
-|---|---|---|---|---|
-| EmergencyStop | Status | `/SafetyStates/<SafetyStateIdentifier>/ParameterSet/EmergencyStop` | [BaseDataVariableType](https://reference.opcfoundation.org/specs/OPC-10000-5/7.4) | Boolean |
-| ProtectiveStop | Status | `/SafetyStates/<SafetyStateIdentifier>/ParameterSet/ProtectiveStop` | [BaseDataVariableType](https://reference.opcfoundation.org/specs/OPC-10000-5/7.4) | Boolean |
-| OperationalMode | Status | `/SafetyStates/<SafetyStateIdentifier>/ParameterSet/OperationalMode` | [BaseDataVariableType](https://reference.opcfoundation.org/specs/OPC-10000-5/7.4) | i=3006 |
-| EmergencyStopActive | Status | `/SafetyStates/<SafetyStateIdentifier>/EmergencyStopFunctions/<EmergencyStopFunctionIdentifier>/Active` | [BaseDataVariableType](https://reference.opcfoundation.org/specs/OPC-10000-5/7.4) | Boolean |
+| Field | Kind | Event field (of the event type) |
+|---|---|---|
+| EventId | Event | `/EventId` |
+| EventType | Event | `/EventType` |
+| SourceName | Event | `/SourceName` |
+| Time | Event | `/Time` |
+| Severity | Event | `/Severity` |
+| Message | Event | `/Message` |
 
 #### Scenario: FleetAndCompliance
 
-*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/FleetAndCompliance` · *Direction:* Publisher
+*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/FleetAndCompliance` · *Direction:* Publisher · *Content:* data DataSet (PublishedDataItems) · *DataSetClassId:* `f366c644-8670-57a3-b838-dd492b1f82b0`
 
 | Field | Kind | BrowsePath | Source type | DataType |
 |---|---|---|---|---|
@@ -92,26 +94,28 @@ Overview of the scenario bindings, then their placement on the theoretical insta
 ```mermaid
 graph LR
   ROOT["ExampleRobotSystem : MotionDeviceSystemType"] --> SB["ScenarioBindings"]
-  SB --> S0["Observability<br/>Publisher"]
+  SB --> S0["Observability<br/>Publisher · Data"]
   S0 --> S0_0["AxisActualPosition : Telemetry"]
   S0 --> S0_1["MotorTemperature : Telemetry"]
   S0 --> S0_2["SpeedOverride : Status"]
   S0 --> S0_3["ControllerTemperature : Telemetry"]
-  SB --> S1["PredictiveMaintenance<br/>Publisher"]
+  SB --> S1["PredictiveMaintenance<br/>Publisher · Data"]
   S1 --> S1_0["MotorTemperature : Telemetry"]
   S1 --> S1_1["ControllerTemperature : Telemetry"]
   S1 --> S1_2["CabinetFanSpeed : Telemetry"]
   S1 --> S1_3["CPUFanSpeed : Telemetry"]
   S1 --> S1_4["TotalPowerOnTime : Counter"]
-  SB --> S2["AnomalyDetection<br/>Publisher"]
+  SB --> S2["AnomalyDetection<br/>Publisher · Data"]
   S2 --> S2_0["AxisActualPosition : Telemetry"]
   S2 --> S2_1["MotorTemperature : Telemetry"]
-  SB --> S3["AlarmAndEventDistribution<br/>Publisher"]
-  S3 --> S3_0["EmergencyStop : Status"]
-  S3 --> S3_1["ProtectiveStop : Status"]
-  S3 --> S3_2["OperationalMode : Status"]
-  S3 --> S3_3["EmergencyStopActive : Status"]
-  SB --> S4["FleetAndCompliance<br/>Publisher"]
+  SB --> S3["AlarmAndEventDistribution<br/>Publisher · Events"]
+  S3 --> S3_0["EventId : Event"]
+  S3 --> S3_1["EventType : Event"]
+  S3 --> S3_2["SourceName : Event"]
+  S3 --> S3_3["Time : Event"]
+  S3 --> S3_4["Severity : Event"]
+  S3 --> S3_5["Message : Event"]
+  SB --> S4["FleetAndCompliance<br/>Publisher · Data"]
   S4 --> S4_0["Manufacturer : Identification"]
   S4 --> S4_1["Model : Identification"]
   S4 --> S4_2["SerialNumber : Identification"]
@@ -131,13 +135,13 @@ graph TD
   IT01 -->|BindsToNode| N01["MotionDevices/MotionDevice_1/PowerTrains/PowerTrain_1/Motor_1/ParameterSet/MotorTemperature"]
   B0 -->|HasComponent| IT02["SpeedOverride : BoundVariableType"]
   IT02 -->|BindsToNode| N02["MotionDevices/MotionDevice_1/ParameterSet/SpeedOverride"]
-  SB -->|HasComponent| B1["PredictiveMaintenance : ScenarioBindingType"]
-  B1 -->|HasComponent| IT10["MotorTemperature : BoundVariableType"]
-  IT10 -->|BindsToNode| N10["MotionDevices/MotionDevice_1/PowerTrains/PowerTrain_1/Motor_1/ParameterSet/MotorTemperature"]
-  B1 -->|HasComponent| IT11["ControllerTemperature : BoundVariableType"]
-  IT11 -->|BindsToNode| N11["Controllers/Controller_1/ParameterSet/Temperature"]
-  B1 -->|HasComponent| IT12["CabinetFanSpeed : BoundVariableType"]
-  IT12 -->|BindsToNode| N12["Controllers/Controller_1/ParameterSet/CabinetFanSpeed"]
+  SB -->|HasComponent| B1["AlarmAndEventDistribution : ScenarioBindingType"]
+  B1 -->|HasComponent| IT10["EventId : BoundEventFieldType"]
+  IT10 -.event field.-> N10["AlarmConditionType/EventId"]
+  B1 -->|HasComponent| IT11["EventType : BoundEventFieldType"]
+  IT11 -.event field.-> N11["AlarmConditionType/EventType"]
+  B1 -->|HasComponent| IT12["SourceName : BoundEventFieldType"]
+  IT12 -.event field.-> N12["AlarmConditionType/SourceName"]
 ```
 
 ## 6 Deliverables

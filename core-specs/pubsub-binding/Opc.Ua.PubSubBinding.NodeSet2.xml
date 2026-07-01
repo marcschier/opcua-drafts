@@ -29,6 +29,9 @@
     <Alias Alias="HasInterface">i=17603</Alias>
     <Alias Alias="HasDictionaryEntry">i=17597</Alias>
     <Alias Alias="NonHierarchicalReferences">i=32</Alias>
+    <Alias Alias="DataSetMetaDataType">i=14523</Alias>
+    <Alias Alias="SimpleAttributeOperand">i=601</Alias>
+    <Alias Alias="ContentFilter">i=586</Alias>
   </Aliases>
   <UAReferenceType NodeId="i=60001" BrowseName="BindsToNode" Symmetric="false">
     <DisplayName>BindsToNode</DisplayName>
@@ -84,6 +87,24 @@
     </References>
     <Value><ListOfLocalizedText xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd"><LocalizedText><Text>Telemetry</Text></LocalizedText><LocalizedText><Text>Status</Text></LocalizedText><LocalizedText><Text>Configuration</Text></LocalizedText><LocalizedText><Text>Metric</Text></LocalizedText><LocalizedText><Text>Counter</Text></LocalizedText><LocalizedText><Text>Event</Text></LocalizedText><LocalizedText><Text>Command</Text></LocalizedText><LocalizedText><Text>Setpoint</Text></LocalizedText><LocalizedText><Text>Identification</Text></LocalizedText><LocalizedText><Text>Other</Text></LocalizedText></ListOfLocalizedText></Value>
   </UAVariable>
+  <UADataType NodeId="i=60052" BrowseName="ScenarioContentKindEnum">
+    <DisplayName>ScenarioContentKindEnum</DisplayName>
+    <Description>Whether a scenario binding realizes as a Part 14 data DataSet (PublishedDataItems) or an event DataSet (PublishedEvents). A binding is exactly one DataSet.</Description>
+    <Category>PubSub Scenario Binding DataTypes</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
+      <Reference ReferenceType="HasProperty">i=60952</Reference>
+    </References>
+    <Definition Name="ScenarioContentKindEnum"><Field Name="DataItems" Value="0"><Description>A data DataSet: grouped Variable values (PublishedDataItemsType).</Description></Field><Field Name="Events" Value="1"><Description>An event DataSet: selected event fields from a notifier (PublishedEventsType).</Description></Field></Definition>
+  </UADataType>
+  <UAVariable NodeId="i=60952" BrowseName="EnumStrings" ParentNodeId="i=60052" DataType="LocalizedText" ValueRank="1" ArrayDimensions="2">
+    <DisplayName>EnumStrings</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">i=60052</Reference>
+    </References>
+    <Value><ListOfLocalizedText xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd"><LocalizedText><Text>DataItems</Text></LocalizedText><LocalizedText><Text>Events</Text></LocalizedText></ListOfLocalizedText></Value>
+  </UAVariable>
   <UADataType NodeId="i=60060" BrowseName="BoundItemDataType">
     <DisplayName>BoundItemDataType</DisplayName>
     <Description>Machine-readable descriptor of a single bound item: how to LOCATE it (BrowsePath relative to StartingNode, or an absolute SourceNodeId), its routing role (Kind) and the SEMANTIC cross-reference back to the companion model (TypeDefinition, BrowseName, ModelNamespaceUri, SemanticReferenceUri), which is retained so it can be exported to a disconnected consumer.</Description>
@@ -93,7 +114,7 @@
       <Reference ReferenceType="HasEncoding">i=60500</Reference>
       <Reference ReferenceType="HasEncoding">i=60501</Reference>
     </References>
-    <Definition Name="BoundItemDataType"><Field Name="FieldName" DataType="i=12"><Description>Stable logical field name; matches the PubSub DataSet field name.</Description></Field><Field Name="Kind" DataType="i=60051"><Description>Generic routing role of the item.</Description></Field><Field Name="AttributeId" DataType="i=7"><Description>Attribute of the source node to expose (default 13 = Value).</Description></Field><Field Name="SamplingIntervalHint" DataType="i=290"><Description>Recommended sampling/publishing interval, in ms.</Description></Field><Field Name="IndexRange" DataType="i=291"><Description>Optional sub-range for array values.</Description></Field><Field Name="StartingNode" DataType="i=17"><Description>Node the BrowsePath is resolved from (default: the bound root).</Description></Field><Field Name="BrowsePath" DataType="i=540"><Description>RECOMMENDED locator: RelativePath from StartingNode (type-level, portable).</Description></Field><Field Name="SourceNodeId" DataType="i=17"><Description>Alternative absolute locator (instance/server-specific).</Description></Field><Field Name="OwningObjectPath" DataType="i=540"><Description>For a bound Method: RelativePath to the Object it is called on (default: the bound root).</Description></Field><Field Name="SourceTypeDefinition" DataType="i=17"><Description>TypeDefinition of the source node (semantic identity).</Description></Field><Field Name="SourceBrowseName" DataType="i=20"><Description>Namespace-qualified BrowseName of the source node.</Description></Field><Field Name="ModelNamespaceUri" DataType="i=12"><Description>Namespace URI of the companion model that defines the source.</Description></Field><Field Name="DataSetFieldId" DataType="i=14"><Description>GUID correlating this item to Part 14 FieldMetaData.dataSetFieldId.</Description></Field><Field Name="SemanticReferenceUri" DataType="i=12"><Description>Optional external semantic identifier (e.g. IRDI/CDD) for the item.</Description></Field></Definition>
+    <Definition Name="BoundItemDataType"><Field Name="FieldName" DataType="i=12"><Description>Stable logical field name; matches the PubSub DataSet field name.</Description></Field><Field Name="Kind" DataType="i=60051"><Description>Generic routing role of the item.</Description></Field><Field Name="AttributeId" DataType="i=7"><Description>Attribute of the source node to expose (default 13 = Value).</Description></Field><Field Name="SamplingIntervalHint" DataType="i=290"><Description>Recommended sampling/publishing interval, in ms.</Description></Field><Field Name="IndexRange" DataType="i=291"><Description>Optional sub-range for array values.</Description></Field><Field Name="StartingNode" DataType="i=17"><Description>Node the BrowsePath is resolved from (default: the bound root).</Description></Field><Field Name="BrowsePath" DataType="i=540"><Description>RECOMMENDED locator: RelativePath from StartingNode (type-level, portable).</Description></Field><Field Name="SourceNodeId" DataType="i=17"><Description>Alternative absolute locator (instance/server-specific).</Description></Field><Field Name="OwningObjectPath" DataType="i=540"><Description>For a bound Method: RelativePath to the Object it is called on (default: the bound root).</Description></Field><Field Name="SourceTypeDefinition" DataType="i=17"><Description>TypeDefinition of the source node (semantic identity).</Description></Field><Field Name="SourceBrowseName" DataType="i=20"><Description>Namespace-qualified BrowseName of the source node.</Description></Field><Field Name="ModelNamespaceUri" DataType="i=12"><Description>Namespace URI of the companion model that defines the source.</Description></Field><Field Name="DataSetFieldId" DataType="i=14"><Description>GUID correlating this item to Part 14 FieldMetaData.dataSetFieldId.</Description></Field><Field Name="SemanticReferenceUri" DataType="i=12"><Description>Optional external semantic identifier (e.g. IRDI/CDD) for the item.</Description></Field><Field Name="EventFieldOperand" DataType="i=601"><Description>For an event-DataSet field: the Part 14 SimpleAttributeOperand that selects it (alternative/complement to BrowsePath, whose segments are then relative to the event TypeDefinition).</Description></Field></Definition>
   </UADataType>
   <UAObject NodeId="i=60500" BrowseName="Default Binary" ParentNodeId="i=60060">
     <DisplayName>Default Binary</DisplayName>
@@ -118,7 +139,7 @@
       <Reference ReferenceType="HasEncoding">i=60502</Reference>
       <Reference ReferenceType="HasEncoding">i=60503</Reference>
     </References>
-    <Definition Name="ScenarioBindingDataType"><Field Name="Name" DataType="i=12"><Description>Human-readable name of the binding.</Description></Field><Field Name="ScenarioUri" DataType="i=12"><Description>URI of the integration scenario this binding serves.</Description></Field><Field Name="Direction" DataType="i=60050"><Description>Role the server offers for this binding.</Description></Field><Field Name="ConfigurationVersion" DataType="i=14593"><Description>Version of the binding, aligned with the realizing DataSetMetaData.</Description></Field><Field Name="BoundItems" DataType="i=60060" ValueRank="1"><Description>The bound items.</Description></Field><Field Name="PublishedDataSetName" DataType="i=12"><Description>Name of the realizing Part 14 PublishedDataSet, if any.</Description></Field><Field Name="WriterGroupName" DataType="i=12"><Description>Name of the realizing Part 14 WriterGroup, if any.</Description></Field></Definition>
+    <Definition Name="ScenarioBindingDataType"><Field Name="Name" DataType="i=12"><Description>Human-readable name of the binding.</Description></Field><Field Name="ScenarioUri" DataType="i=12"><Description>URI of the integration scenario this binding serves.</Description></Field><Field Name="Direction" DataType="i=60050"><Description>Role the server offers for this binding.</Description></Field><Field Name="ConfigurationVersion" DataType="i=14593"><Description>Version of the binding, aligned with the realizing DataSetMetaData.</Description></Field><Field Name="BoundItems" DataType="i=60060" ValueRank="1"><Description>The bound items (the DataSet fields).</Description></Field><Field Name="DataSetClassId" DataType="i=14"><Description>Stable DataSetClassId (Part 14) identifying the class of this DataSet across servers.</Description></Field><Field Name="ContentKind" DataType="i=60052"><Description>Whether this binding is a data or an event DataSet.</Description></Field><Field Name="EventSourcePath" DataType="i=540"><Description>For an event DataSet: RelativePath to the event notifier (default: the bound root).</Description></Field><Field Name="Filter" DataType="i=586"><Description>For an event DataSet: optional ContentFilter (event where-clause).</Description></Field><Field Name="PublishedDataSetName" DataType="i=12"><Description>Name of the realizing Part 14 PublishedDataSet, if any.</Description></Field><Field Name="WriterGroupName" DataType="i=12"><Description>Name of the realizing Part 14 WriterGroup, if any.</Description></Field></Definition>
   </UADataType>
   <UAObject NodeId="i=60502" BrowseName="Default Binary" ParentNodeId="i=60065">
     <DisplayName>Default Binary</DisplayName>
@@ -323,20 +344,43 @@
       <Reference ReferenceType="HasProperty" IsForward="false">i=60014</Reference>
     </References>
   </UAVariable>
+  <UAObjectType NodeId="i=60017" BrowseName="BoundEventFieldType">
+    <DisplayName>BoundEventFieldType</DisplayName>
+    <Description>A bound event field of an event DataSet, selected by a Part 14 SimpleAttributeOperand. Its BrowsePath is resolved relative to the event TypeDefinition (SourceTypeDefinition), not the AddressSpace instance; the EventSourcePath on the ScenarioBinding names the notifier it is selected from.</Description>
+    <Category>PubSub Scenario Binding</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=60012</Reference>
+      <Reference ReferenceType="HasProperty">i=60520</Reference>
+    </References>
+  </UAObjectType>
+  <UAVariable NodeId="i=60520" BrowseName="EventFieldOperand" ParentNodeId="i=60017" DataType="SimpleAttributeOperand" ValueRank="-1">
+    <DisplayName>EventFieldOperand</DisplayName>
+    <Description>The Part 14 SimpleAttributeOperand that selects this field (TypeDefinitionId, BrowsePath, AttributeId); maps directly to a PublishedEvents SelectedFields entry.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">i=60017</Reference>
+    </References>
+  </UAVariable>
   <UAObjectType NodeId="i=60011" BrowseName="ScenarioBindingType">
     <DisplayName>ScenarioBindingType</DisplayName>
     <Description>One scenario binding on a bound object or type. It declares the scenario URI and direction, lists the bound items (browsable and/or as a compact array), and may reference the Part 14 nodes that realize it.</Description>
     <Category>PubSub Scenario Binding</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
-      <Reference ReferenceType="HasProperty">i=60520</Reference>
       <Reference ReferenceType="HasProperty">i=60521</Reference>
       <Reference ReferenceType="HasProperty">i=60522</Reference>
       <Reference ReferenceType="HasProperty">i=60523</Reference>
-      <Reference ReferenceType="HasComponent">i=60524</Reference>
+      <Reference ReferenceType="HasProperty">i=60524</Reference>
+      <Reference ReferenceType="HasProperty">i=60525</Reference>
+      <Reference ReferenceType="HasProperty">i=60526</Reference>
+      <Reference ReferenceType="HasProperty">i=60527</Reference>
+      <Reference ReferenceType="HasProperty">i=60528</Reference>
+      <Reference ReferenceType="HasProperty">i=60529</Reference>
+      <Reference ReferenceType="HasComponent">i=60530</Reference>
     </References>
   </UAObjectType>
-  <UAVariable NodeId="i=60520" BrowseName="ScenarioUri" ParentNodeId="i=60011" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="i=60521" BrowseName="ScenarioUri" ParentNodeId="i=60011" DataType="String" ValueRank="-1">
     <DisplayName>ScenarioUri</DisplayName>
     <Description>URI of the integration scenario this binding serves.</Description>
     <References>
@@ -345,7 +389,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">i=60011</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="i=60521" BrowseName="Direction" ParentNodeId="i=60011" DataType="i=60050" ValueRank="-1">
+  <UAVariable NodeId="i=60522" BrowseName="Direction" ParentNodeId="i=60011" DataType="i=60050" ValueRank="-1">
     <DisplayName>Direction</DisplayName>
     <Description>Role the server offers for this binding.</Description>
     <References>
@@ -354,7 +398,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">i=60011</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="i=60522" BrowseName="ConfigurationVersion" ParentNodeId="i=60011" DataType="i=14593" ValueRank="-1">
+  <UAVariable NodeId="i=60523" BrowseName="ConfigurationVersion" ParentNodeId="i=60011" DataType="i=14593" ValueRank="-1">
     <DisplayName>ConfigurationVersion</DisplayName>
     <Description>Version of the binding, aligned with the realizing DataSetMetaData.</Description>
     <References>
@@ -363,16 +407,61 @@
       <Reference ReferenceType="HasProperty" IsForward="false">i=60011</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="i=60523" BrowseName="BoundItems" ParentNodeId="i=60011" DataType="i=60060" ValueRank="1">
-    <DisplayName>BoundItems</DisplayName>
-    <Description>Compact machine-readable list of bound items.</Description>
+  <UAVariable NodeId="i=60524" BrowseName="DataSetClassId" ParentNodeId="i=60011" DataType="Guid" ValueRank="-1">
+    <DisplayName>DataSetClassId</DisplayName>
+    <Description>Stable DataSetClassId (Part 14) identifying the class of the DataSet this binding defines, so subscribers recognize the same schema across servers. Deterministic (see the DataSetClassId clause).</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">i=60011</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="i=60525" BrowseName="ContentKind" ParentNodeId="i=60011" DataType="i=60052" ValueRank="-1">
+    <DisplayName>ContentKind</DisplayName>
+    <Description>Whether the binding realizes as a data DataSet (PublishedDataItems) or an event DataSet (PublishedEvents).</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">i=60011</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="i=60526" BrowseName="DataSetMetaData" ParentNodeId="i=60011" DataType="DataSetMetaDataType" ValueRank="-1">
+    <DisplayName>DataSetMetaData</DisplayName>
+    <Description>Part 14 DataSetMetaData for this DataSet (fields, dataSetClassId, configurationVersion), exposed so a consumer gets the class schema offline.</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=80</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
       <Reference ReferenceType="HasProperty" IsForward="false">i=60011</Reference>
     </References>
   </UAVariable>
-  <UAObject NodeId="i=60524" BrowseName="&lt;BoundItem&gt;" ParentNodeId="i=60011">
+  <UAVariable NodeId="i=60527" BrowseName="EventSourcePath" ParentNodeId="i=60011" DataType="RelativePath" ValueRank="-1">
+    <DisplayName>EventSourcePath</DisplayName>
+    <Description>For an event DataSet: RelativePath to the event notifier to subscribe to (default: the bound root).</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">i=60011</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="i=60528" BrowseName="Filter" ParentNodeId="i=60011" DataType="ContentFilter" ValueRank="-1">
+    <DisplayName>Filter</DisplayName>
+    <Description>For an event DataSet: optional ContentFilter (event where-clause).</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">i=60011</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="i=60529" BrowseName="BoundItems" ParentNodeId="i=60011" DataType="i=60060" ValueRank="1">
+    <DisplayName>BoundItems</DisplayName>
+    <Description>Compact machine-readable list of bound items (the DataSet fields).</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">i=60011</Reference>
+    </References>
+  </UAVariable>
+  <UAObject NodeId="i=60530" BrowseName="&lt;BoundItem&gt;" ParentNodeId="i=60011">
     <DisplayName>&lt;BoundItem&gt;</DisplayName>
     <Description>A browsable bound item (rich form of a BoundItems entry).</Description>
     <References>
@@ -387,10 +476,10 @@
     <Category>PubSub Scenario Binding</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=61</Reference>
-      <Reference ReferenceType="HasComponent">i=60525</Reference>
+      <Reference ReferenceType="HasComponent">i=60531</Reference>
     </References>
   </UAObjectType>
-  <UAObject NodeId="i=60525" BrowseName="&lt;ScenarioBinding&gt;" ParentNodeId="i=60010">
+  <UAObject NodeId="i=60531" BrowseName="&lt;ScenarioBinding&gt;" ParentNodeId="i=60010">
     <DisplayName>&lt;ScenarioBinding&gt;</DisplayName>
     <Description>A scenario binding held by this container.</Description>
     <References>
@@ -405,13 +494,13 @@
     <Category>PubSub Scenario Binding</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
-      <Reference ReferenceType="HasProperty">i=60526</Reference>
-      <Reference ReferenceType="HasProperty">i=60527</Reference>
-      <Reference ReferenceType="HasProperty">i=60528</Reference>
-      <Reference ReferenceType="HasProperty">i=60529</Reference>
+      <Reference ReferenceType="HasProperty">i=60532</Reference>
+      <Reference ReferenceType="HasProperty">i=60533</Reference>
+      <Reference ReferenceType="HasProperty">i=60534</Reference>
+      <Reference ReferenceType="HasProperty">i=60535</Reference>
     </References>
   </UAObjectType>
-  <UAVariable NodeId="i=60526" BrowseName="ScenarioUri" ParentNodeId="i=60015" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="i=60532" BrowseName="ScenarioUri" ParentNodeId="i=60015" DataType="String" ValueRank="-1">
     <DisplayName>ScenarioUri</DisplayName>
     <Description>The scenario URI.</Description>
     <References>
@@ -420,7 +509,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">i=60015</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="i=60527" BrowseName="Title" ParentNodeId="i=60015" DataType="LocalizedText" ValueRank="-1">
+  <UAVariable NodeId="i=60533" BrowseName="Title" ParentNodeId="i=60015" DataType="LocalizedText" ValueRank="-1">
     <DisplayName>Title</DisplayName>
     <Description>Short human-readable title.</Description>
     <References>
@@ -429,7 +518,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">i=60015</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="i=60528" BrowseName="Summary" ParentNodeId="i=60015" DataType="LocalizedText" ValueRank="-1">
+  <UAVariable NodeId="i=60534" BrowseName="Summary" ParentNodeId="i=60015" DataType="LocalizedText" ValueRank="-1">
     <DisplayName>Summary</DisplayName>
     <Description>Human-readable description of the scenario and its intended consumers.</Description>
     <References>
@@ -438,7 +527,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">i=60015</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="i=60529" BrowseName="Keywords" ParentNodeId="i=60015" DataType="String" ValueRank="1">
+  <UAVariable NodeId="i=60535" BrowseName="Keywords" ParentNodeId="i=60015" DataType="String" ValueRank="1">
     <DisplayName>Keywords</DisplayName>
     <Description>Keywords describing the scenario.</Description>
     <References>
@@ -453,10 +542,10 @@
     <Category>PubSub Scenario Binding</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=17602</Reference>
-      <Reference ReferenceType="HasComponent">i=60530</Reference>
+      <Reference ReferenceType="HasComponent">i=60536</Reference>
     </References>
   </UAObjectType>
-  <UAObject NodeId="i=60530" BrowseName="ScenarioBindings" ParentNodeId="i=60016">
+  <UAObject NodeId="i=60536" BrowseName="ScenarioBindings" ParentNodeId="i=60016">
     <DisplayName>ScenarioBindings</DisplayName>
     <Description>The scenario bindings defined on this object.</Description>
     <References>
@@ -497,10 +586,10 @@
     <References>
       <Reference ReferenceType="HasTypeDefinition">i=60015</Reference>
       <Reference ReferenceType="Organizes" IsForward="false">i=60101</Reference>
-      <Reference ReferenceType="HasProperty">i=60531</Reference>
+      <Reference ReferenceType="HasProperty">i=60537</Reference>
     </References>
   </UAObject>
-  <UAVariable NodeId="i=60531" BrowseName="ScenarioUri" ParentNodeId="i=60110" DataType="String">
+  <UAVariable NodeId="i=60537" BrowseName="ScenarioUri" ParentNodeId="i=60110" DataType="String">
     <DisplayName>ScenarioUri</DisplayName>
     <References>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
@@ -515,10 +604,10 @@
     <References>
       <Reference ReferenceType="HasTypeDefinition">i=60015</Reference>
       <Reference ReferenceType="Organizes" IsForward="false">i=60101</Reference>
-      <Reference ReferenceType="HasProperty">i=60532</Reference>
+      <Reference ReferenceType="HasProperty">i=60538</Reference>
     </References>
   </UAObject>
-  <UAVariable NodeId="i=60532" BrowseName="ScenarioUri" ParentNodeId="i=60111" DataType="String">
+  <UAVariable NodeId="i=60538" BrowseName="ScenarioUri" ParentNodeId="i=60111" DataType="String">
     <DisplayName>ScenarioUri</DisplayName>
     <References>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
@@ -533,10 +622,10 @@
     <References>
       <Reference ReferenceType="HasTypeDefinition">i=60015</Reference>
       <Reference ReferenceType="Organizes" IsForward="false">i=60101</Reference>
-      <Reference ReferenceType="HasProperty">i=60533</Reference>
+      <Reference ReferenceType="HasProperty">i=60539</Reference>
     </References>
   </UAObject>
-  <UAVariable NodeId="i=60533" BrowseName="ScenarioUri" ParentNodeId="i=60112" DataType="String">
+  <UAVariable NodeId="i=60539" BrowseName="ScenarioUri" ParentNodeId="i=60112" DataType="String">
     <DisplayName>ScenarioUri</DisplayName>
     <References>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
@@ -551,10 +640,10 @@
     <References>
       <Reference ReferenceType="HasTypeDefinition">i=60015</Reference>
       <Reference ReferenceType="Organizes" IsForward="false">i=60101</Reference>
-      <Reference ReferenceType="HasProperty">i=60534</Reference>
+      <Reference ReferenceType="HasProperty">i=60540</Reference>
     </References>
   </UAObject>
-  <UAVariable NodeId="i=60534" BrowseName="ScenarioUri" ParentNodeId="i=60113" DataType="String">
+  <UAVariable NodeId="i=60540" BrowseName="ScenarioUri" ParentNodeId="i=60113" DataType="String">
     <DisplayName>ScenarioUri</DisplayName>
     <References>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
@@ -569,10 +658,10 @@
     <References>
       <Reference ReferenceType="HasTypeDefinition">i=60015</Reference>
       <Reference ReferenceType="Organizes" IsForward="false">i=60101</Reference>
-      <Reference ReferenceType="HasProperty">i=60535</Reference>
+      <Reference ReferenceType="HasProperty">i=60541</Reference>
     </References>
   </UAObject>
-  <UAVariable NodeId="i=60535" BrowseName="ScenarioUri" ParentNodeId="i=60114" DataType="String">
+  <UAVariable NodeId="i=60541" BrowseName="ScenarioUri" ParentNodeId="i=60114" DataType="String">
     <DisplayName>ScenarioUri</DisplayName>
     <References>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
@@ -587,10 +676,10 @@
     <References>
       <Reference ReferenceType="HasTypeDefinition">i=60015</Reference>
       <Reference ReferenceType="Organizes" IsForward="false">i=60101</Reference>
-      <Reference ReferenceType="HasProperty">i=60536</Reference>
+      <Reference ReferenceType="HasProperty">i=60542</Reference>
     </References>
   </UAObject>
-  <UAVariable NodeId="i=60536" BrowseName="ScenarioUri" ParentNodeId="i=60115" DataType="String">
+  <UAVariable NodeId="i=60542" BrowseName="ScenarioUri" ParentNodeId="i=60115" DataType="String">
     <DisplayName>ScenarioUri</DisplayName>
     <References>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>

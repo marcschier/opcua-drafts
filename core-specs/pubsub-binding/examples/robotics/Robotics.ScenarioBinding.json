@@ -59,11 +59,16 @@
       "name": "AlarmAndEventDistribution",
       "scenarioUri": "http://opcfoundation.org/UA/PubSub/Scenarios/AlarmAndEventDistribution",
       "direction": "Publisher",
+      "contentKind": "Events",
+      "eventSourcePath": "/",
+      "eventType": "AlarmConditionType",
       "boundItems": [
-        { "fieldName": "EmergencyStop", "kind": "Status", "browsePath": "/SafetyStates/<SafetyStateIdentifier>/ParameterSet/EmergencyStop", "samplingIntervalHint": 100 },
-        { "fieldName": "ProtectiveStop", "kind": "Status", "browsePath": "/SafetyStates/<SafetyStateIdentifier>/ParameterSet/ProtectiveStop", "samplingIntervalHint": 100 },
-        { "fieldName": "OperationalMode", "kind": "Status", "browsePath": "/SafetyStates/<SafetyStateIdentifier>/ParameterSet/OperationalMode", "samplingIntervalHint": 500 },
-        { "fieldName": "EmergencyStopActive", "kind": "Status", "browsePath": "/SafetyStates/<SafetyStateIdentifier>/EmergencyStopFunctions/<EmergencyStopFunctionIdentifier>/Active", "samplingIntervalHint": 100 }
+        { "fieldName": "EventId", "kind": "Event", "browsePath": "/EventId" },
+        { "fieldName": "EventType", "kind": "Event", "browsePath": "/EventType" },
+        { "fieldName": "SourceName", "kind": "Event", "browsePath": "/SourceName" },
+        { "fieldName": "Time", "kind": "Event", "browsePath": "/Time" },
+        { "fieldName": "Severity", "kind": "Event", "browsePath": "/Severity" },
+        { "fieldName": "Message", "kind": "Event", "browsePath": "/Message" }
       ]
     },
     {

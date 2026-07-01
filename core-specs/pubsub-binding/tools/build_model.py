@@ -73,6 +73,13 @@ WriterGroupType = "i=17725"
 ActionTargetDataType = "i=18593"
 ConfigurationVersionDataType = "i=14593"
 
+# Part 14 DataSet / event modelling (base namespace)
+DataSetMetaDataType = "i=14523"
+SimpleAttributeOperand = "i=601"
+ContentFilter = "i=586"
+PublishedDataItemsType = "i=15535"
+PublishedEventsType = "i=15536"
+
 # ---------------------------------------------------------------------------
 # Node registry
 # ---------------------------------------------------------------------------
@@ -368,6 +375,14 @@ enum_type(60051, "BoundItemKindEnum",
     ("Other", 9, "Any other role."),
 ])
 
+enum_type(60052, "ScenarioContentKindEnum",
+          "Whether a scenario binding realizes as a Part 14 data DataSet "
+          "(PublishedDataItems) or an event DataSet (PublishedEvents). A binding is exactly "
+          "one DataSet.", CAT_DT, [
+    ("DataItems", 0, "A data DataSet: grouped Variable values (PublishedDataItemsType)."),
+    ("Events", 1, "An event DataSet: selected event fields from a notifier (PublishedEventsType)."),
+])
+
 # --- Structures ------------------------------------------------------------
 struct_type(60060, "BoundItemDataType",
             "Machine-readable descriptor of a single bound item: how to LOCATE it "
@@ -389,6 +404,7 @@ struct_type(60060, "BoundItemDataType",
     ("ModelNamespaceUri", String, None, "Namespace URI of the companion model that defines the source."),
     ("DataSetFieldId", Guid, None, "GUID correlating this item to Part 14 FieldMetaData.dataSetFieldId."),
     ("SemanticReferenceUri", String, None, "Optional external semantic identifier (e.g. IRDI/CDD) for the item."),
+    ("EventFieldOperand", SimpleAttributeOperand, None, "For an event-DataSet field: the Part 14 SimpleAttributeOperand that selects it (alternative/complement to BrowsePath, whose segments are then relative to the event TypeDefinition)."),
 ])
 
 struct_type(60065, "ScenarioBindingDataType",
@@ -399,7 +415,11 @@ struct_type(60065, "ScenarioBindingDataType",
     ("ScenarioUri", String, None, "URI of the integration scenario this binding serves."),
     ("Direction", T(60050), None, "Role the server offers for this binding."),
     ("ConfigurationVersion", ConfigurationVersionDataType, None, "Version of the binding, aligned with the realizing DataSetMetaData."),
-    ("BoundItems", T(60060), "1", "The bound items."),
+    ("BoundItems", T(60060), "1", "The bound items (the DataSet fields)."),
+    ("DataSetClassId", Guid, None, "Stable DataSetClassId (Part 14) identifying the class of this DataSet across servers."),
+    ("ContentKind", T(60052), None, "Whether this binding is a data or an event DataSet."),
+    ("EventSourcePath", RelativePath, None, "For an event DataSet: RelativePath to the event notifier (default: the bound root)."),
+    ("Filter", ContentFilter, None, "For an event DataSet: optional ContentFilter (event where-clause)."),
     ("PublishedDataSetName", String, None, "Name of the realizing Part 14 PublishedDataSet, if any."),
     ("WriterGroupName", String, None, "Name of the realizing Part 14 WriterGroup, if any."),
 ])
@@ -445,6 +465,15 @@ object_type(60014, "BoundMethodType", T(60012),
 prop_var(60014, "BoundMethodType", "OwningObjectPath", RelativePath,
          "RelativePath to the Object the Method is called on (default: the bound root).")
 
+object_type(60017, "BoundEventFieldType", T(60012),
+            "A bound event field of an event DataSet, selected by a Part 14 "
+            "SimpleAttributeOperand. Its BrowsePath is resolved relative to the event "
+            "TypeDefinition (SourceTypeDefinition), not the AddressSpace instance; the "
+            "EventSourcePath on the ScenarioBinding names the notifier it is selected from.", CAT)
+prop_var(60017, "BoundEventFieldType", "EventFieldOperand", SimpleAttributeOperand,
+         "The Part 14 SimpleAttributeOperand that selects this field (TypeDefinitionId, "
+         "BrowsePath, AttributeId); maps directly to a PublishedEvents SelectedFields entry.")
+
 # ScenarioBindingType
 object_type(60011, "ScenarioBindingType", BaseObjectType,
             "One scenario binding on a bound object or type. It declares the scenario "
@@ -455,7 +484,22 @@ prop_var(60011, SB, "ScenarioUri", String, "URI of the integration scenario this
 prop_var(60011, SB, "Direction", T(60050), "Role the server offers for this binding.", rule=MR_Mandatory)
 prop_var(60011, SB, "ConfigurationVersion", ConfigurationVersionDataType,
          "Version of the binding, aligned with the realizing DataSetMetaData.")
-prop_var(60011, SB, "BoundItems", T(60060), "Compact machine-readable list of bound items.", valuerank="1")
+prop_var(60011, SB, "DataSetClassId", Guid,
+         "Stable DataSetClassId (Part 14) identifying the class of the DataSet this binding "
+         "defines, so subscribers recognize the same schema across servers. Deterministic "
+         "(see the DataSetClassId clause).", rule=MR_Mandatory)
+prop_var(60011, SB, "ContentKind", T(60052),
+         "Whether the binding realizes as a data DataSet (PublishedDataItems) or an event "
+         "DataSet (PublishedEvents).", rule=MR_Mandatory)
+prop_var(60011, SB, "DataSetMetaData", DataSetMetaDataType,
+         "Part 14 DataSetMetaData for this DataSet (fields, dataSetClassId, "
+         "configurationVersion), exposed so a consumer gets the class schema offline.")
+prop_var(60011, SB, "EventSourcePath", RelativePath,
+         "For an event DataSet: RelativePath to the event notifier to subscribe to "
+         "(default: the bound root).")
+prop_var(60011, SB, "Filter", ContentFilter,
+         "For an event DataSet: optional ContentFilter (event where-clause).")
+prop_var(60011, SB, "BoundItems", T(60060), "Compact machine-readable list of bound items (the DataSet fields).", valuerank="1")
 placeholder_obj(60011, SB, "<BoundItem>", T(60012),
                 "A browsable bound item (rich form of a BoundItems entry).")
 
@@ -550,6 +594,8 @@ ALIASES = [
     ("HasTypeDefinition", "i=40"), ("HasSubtype", "i=45"), ("HasProperty", "i=46"),
     ("HasComponent", "i=47"), ("HasInterface", "i=17603"),
     ("HasDictionaryEntry", "i=17597"), ("NonHierarchicalReferences", "i=32"),
+    ("DataSetMetaDataType", "i=14523"), ("SimpleAttributeOperand", "i=601"),
+    ("ContentFilter", "i=586"),
 ]
 REFTYPE_ALIAS = {v: k for k, v in ALIASES}
 DATATYPE_ALIAS = {v: k for k, v in ALIASES}
@@ -635,6 +681,11 @@ LINK_MAP = {
     "BaseInterfaceType": "https://reference.opcfoundation.org/specs/OPC-10000-5/6.9",
     "BaseObjectType": "https://reference.opcfoundation.org/specs/OPC-10000-5/6.2",
     "ConfigurationVersionDataType": "https://reference.opcfoundation.org/specs/OPC-10000-14/6.2.3#6.2.3.2.6",
+    "DataSetMetaDataType": "https://reference.opcfoundation.org/specs/OPC-10000-14/6.2.3#6.2.3.2.4",
+    "SimpleAttributeOperand": "https://reference.opcfoundation.org/specs/OPC-10000-4/7.4.4",
+    "ContentFilter": "https://reference.opcfoundation.org/specs/OPC-10000-4/7.4.1",
+    "PublishedDataItemsType": "https://reference.opcfoundation.org/specs/OPC-10000-14/9.1.4",
+    "PublishedEventsType": "https://reference.opcfoundation.org/specs/OPC-10000-14/9.1.4",
     "DataSetMetaDataType": "https://reference.opcfoundation.org/specs/OPC-10000-14/6.2.3#6.2.3.2.3",
     "DataSetReaderType": "https://reference.opcfoundation.org/specs/OPC-10000-14/9.1.8#9.1.8.2",
     "DataSetWriterType": "https://reference.opcfoundation.org/specs/OPC-10000-14/9.1.7#9.1.7.2",

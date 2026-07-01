@@ -6,7 +6,7 @@
 
 ## 1 Scope
 
-This addendum defines example **scenario bindings** for the `PumpType` — 31 bound items across the scenarios *Observability, EnergyAndLoadManagement, PredictiveMaintenance, AnomalyDetection, FleetAndCompliance* — per the [PubSub Scenario Binding](../../OPC-UA-PubSub-Scenario-Binding.md) base specification. Pumps expose rich operational telemetry (flow, head, pressure, power, temperatures, efficiencies, rotor loads) plus identity and maintenance data, so most industrial scenarios map cleanly onto the pump measurement model.
+This addendum defines example **scenario bindings** for the `PumpType` — 37 bound items across the scenarios *Observability, EnergyAndLoadManagement, PredictiveMaintenance, AnomalyDetection, FleetAndCompliance, AlarmAndEventDistribution* — per the [PubSub Scenario Binding](../../OPC-UA-PubSub-Scenario-Binding.md) base specification. Pumps expose rich operational telemetry (flow, head, pressure, power, temperatures, efficiencies, rotor loads) plus identity and maintenance data, so most industrial scenarios map cleanly onto the pump measurement model.
 
 ## 2 Normative references
 
@@ -27,11 +27,11 @@ Only the bound signals are materialised in the overlay; it is an *illustrative* 
 
 ## 4 Scenario bindings for `PumpType`
 
-Bindings for the `PumpType` of the `http://opcfoundation.org/UA/Pumps/` companion specification, per the [PubSub Scenario Binding](../../OPC-UA-PubSub-Scenario-Binding.md) base specification. Every `BrowsePath` below was resolved against the published companion NodeSet.
+Bindings for the `PumpType` of the `http://opcfoundation.org/UA/Pumps/` companion specification, per the [PubSub Scenario Binding](../../OPC-UA-PubSub-Scenario-Binding.md) base specification. Each binding is **one Part 14 DataSet** with a deterministic `DataSetClassId`. Every data-DataSet `BrowsePath` below was resolved against the published companion NodeSet; event-DataSet fields select standard event-type fields.
 
 #### Scenario: Observability
 
-*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/Observability` · *Direction:* Publisher
+*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/Observability` · *Direction:* Publisher · *Content:* data DataSet (PublishedDataItems) · *DataSetClassId:* `96490f93-6c92-59cd-981d-4203ab067313`
 
 | Field | Kind | BrowsePath | Source type | DataType |
 |---|---|---|---|---|
@@ -48,7 +48,7 @@ Bindings for the `PumpType` of the `http://opcfoundation.org/UA/Pumps/` companio
 
 #### Scenario: EnergyAndLoadManagement
 
-*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/EnergyAndLoadManagement` · *Direction:* Publisher
+*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/EnergyAndLoadManagement` · *Direction:* Publisher · *Content:* data DataSet (PublishedDataItems) · *DataSetClassId:* `605ca065-f5d7-5400-a9fe-995d21ad75ce`
 
 | Field | Kind | BrowsePath | Source type | DataType |
 |---|---|---|---|---|
@@ -60,7 +60,7 @@ Bindings for the `PumpType` of the `http://opcfoundation.org/UA/Pumps/` companio
 
 #### Scenario: PredictiveMaintenance
 
-*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/PredictiveMaintenance` · *Direction:* Publisher
+*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/PredictiveMaintenance` · *Direction:* Publisher · *Content:* data DataSet (PublishedDataItems) · *DataSetClassId:* `a96b90d3-7b07-55d8-8343-9c7e4df85bab`
 
 | Field | Kind | BrowsePath | Source type | DataType |
 |---|---|---|---|---|
@@ -73,7 +73,7 @@ Bindings for the `PumpType` of the `http://opcfoundation.org/UA/Pumps/` companio
 
 #### Scenario: AnomalyDetection
 
-*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection` · *Direction:* Publisher
+*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection` · *Direction:* Publisher · *Content:* data DataSet (PublishedDataItems) · *DataSetClassId:* `d4eb3d5b-5ffb-580e-b96f-142cb3f998ad`
 
 | Field | Kind | BrowsePath | Source type | DataType |
 |---|---|---|---|---|
@@ -84,7 +84,7 @@ Bindings for the `PumpType` of the `http://opcfoundation.org/UA/Pumps/` companio
 
 #### Scenario: FleetAndCompliance
 
-*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/FleetAndCompliance` · *Direction:* Publisher
+*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/FleetAndCompliance` · *Direction:* Publisher · *Content:* data DataSet (PublishedDataItems) · *DataSetClassId:* `c5ad94e3-12f1-5fa4-b69f-b8aeaf40106a`
 
 | Field | Kind | BrowsePath | Source type | DataType |
 |---|---|---|---|---|
@@ -95,6 +95,19 @@ Bindings for the `PumpType` of the `http://opcfoundation.org/UA/Pumps/` companio
 | AssetId | Identification | `/Identification/AssetId` | [PropertyType](https://reference.opcfoundation.org/specs/OPC-10000-5/7.3) | String |
 | Location | Identification | `/Identification/Location` | [PropertyType](https://reference.opcfoundation.org/specs/OPC-10000-5/7.3) | String |
 
+#### Scenario: AlarmAndEventDistribution
+
+*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/AlarmAndEventDistribution` · *Direction:* Publisher · *Content:* event DataSet (PublishedEvents) · *DataSetClassId:* `700f61a4-4e97-52ed-b72e-f085d406ced9` · *Event source:* `/` · *Event type:* BaseEventType
+
+| Field | Kind | Event field (of the event type) |
+|---|---|---|
+| EventId | Event | `/EventId` |
+| EventType | Event | `/EventType` |
+| SourceName | Event | `/SourceName` |
+| Time | Event | `/Time` |
+| Severity | Event | `/Severity` |
+| Message | Event | `/Message` |
+
 
 ## 5 Where the bindings live
 
@@ -103,38 +116,45 @@ Overview of the scenario bindings, then their placement on the theoretical insta
 ```mermaid
 graph LR
   ROOT["ExamplePump : PumpType"] --> SB["ScenarioBindings"]
-  SB --> S0["Observability<br/>Publisher"]
+  SB --> S0["Observability<br/>Publisher · Data"]
   S0 --> S0_0["Speed : Telemetry"]
   S0 --> S0_1["Throughput : Telemetry"]
   S0 --> S0_2["MassFlow : Telemetry"]
   S0 --> S0_3["ProcessPressure : Telemetry"]
   S0 --> S0_4["DifferentialPressure : Telemetry"]
   S0 --> S0_5["PumpTotalHead : Telemetry"]
-  SB --> S1["EnergyAndLoadManagement<br/>Publisher"]
+  SB --> S1["EnergyAndLoadManagement<br/>Publisher · Data"]
   S1 --> S1_0["PumpPowerInput : Telemetry"]
   S1 --> S1_1["PumpPowerOutput : Telemetry"]
   S1 --> S1_2["OverallEfficiency : Metric"]
   S1 --> S1_3["PumpEfficiency : Metric"]
   S1 --> S1_4["HydraulicEfficiency : Metric"]
-  SB --> S2["PredictiveMaintenance<br/>Publisher"]
+  SB --> S2["PredictiveMaintenance<br/>Publisher · Data"]
   S2 --> S2_0["BearingTemperature : Telemetry"]
   S2 --> S2_1["AxialLoadOfPumpRotor : Telemetry"]
   S2 --> S2_2["RadialLoadOfPumpRotor : Telemetry"]
   S2 --> S2_3["LubricatingOilPressure : Telemetry"]
   S2 --> S2_4["AxialRotorPosition : Telemetry"]
   S2 --> S2_5["NumberOfStarts : Counter"]
-  SB --> S3["AnomalyDetection<br/>Publisher"]
+  SB --> S3["AnomalyDetection<br/>Publisher · Data"]
   S3 --> S3_0["SoundPower : Telemetry"]
   S3 --> S3_1["SoundPressureLevel : Telemetry"]
   S3 --> S3_2["DifferentialPressure : Telemetry"]
   S3 --> S3_3["BearingTemperature : Telemetry"]
-  SB --> S4["FleetAndCompliance<br/>Publisher"]
+  SB --> S4["FleetAndCompliance<br/>Publisher · Data"]
   S4 --> S4_0["Manufacturer : Identification"]
   S4 --> S4_1["Model : Identification"]
   S4 --> S4_2["SerialNumber : Identification"]
   S4 --> S4_3["ProductInstanceUri : Identification"]
   S4 --> S4_4["AssetId : Identification"]
   S4 --> S4_5["Location : Identification"]
+  SB --> S5["AlarmAndEventDistribution<br/>Publisher · Events"]
+  S5 --> S5_0["EventId : Event"]
+  S5 --> S5_1["EventType : Event"]
+  S5 --> S5_2["SourceName : Event"]
+  S5 --> S5_3["Time : Event"]
+  S5 --> S5_4["Severity : Event"]
+  S5 --> S5_5["Message : Event"]
 ```
 
 ```mermaid
@@ -149,13 +169,13 @@ graph TD
   IT01 -->|BindsToNode| N01["Operational/Measurements/Throughput"]
   B0 -->|HasComponent| IT02["MassFlow : BoundVariableType"]
   IT02 -->|BindsToNode| N02["Operational/Measurements/MassFlow"]
-  SB -->|HasComponent| B1["EnergyAndLoadManagement : ScenarioBindingType"]
-  B1 -->|HasComponent| IT10["PumpPowerInput : BoundVariableType"]
-  IT10 -->|BindsToNode| N10["Operational/Measurements/PumpPowerInput"]
-  B1 -->|HasComponent| IT11["PumpPowerOutput : BoundVariableType"]
-  IT11 -->|BindsToNode| N11["Operational/Measurements/PumpPowerOutput"]
-  B1 -->|HasComponent| IT12["OverallEfficiency : BoundVariableType"]
-  IT12 -->|BindsToNode| N12["Operational/Measurements/OverallEfficiency"]
+  SB -->|HasComponent| B1["AlarmAndEventDistribution : ScenarioBindingType"]
+  B1 -->|HasComponent| IT10["EventId : BoundEventFieldType"]
+  IT10 -.event field.-> N10["BaseEventType/EventId"]
+  B1 -->|HasComponent| IT11["EventType : BoundEventFieldType"]
+  IT11 -.event field.-> N11["BaseEventType/EventType"]
+  B1 -->|HasComponent| IT12["SourceName : BoundEventFieldType"]
+  IT12 -.event field.-> N12["BaseEventType/SourceName"]
 ```
 
 ## 6 Deliverables

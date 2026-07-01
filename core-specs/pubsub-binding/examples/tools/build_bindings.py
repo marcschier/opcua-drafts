@@ -31,13 +31,28 @@ BIND = {
     "PubSubScenarioBindingsType": 60010, "ScenarioBindingType": 60011,
     "BoundItemType": 60012, "BoundVariableType": 60013, "BoundMethodType": 60014,
     "ScenarioProfileType": 60015, "IPubSubScenarioBoundType": 60016,
+    "BoundEventFieldType": 60017,
     "ScenarioBindingDirectionEnum": 60050, "BoundItemKindEnum": 60051,
+    "ScenarioContentKindEnum": 60052,
     "BindsToNode": 60001, "ScenarioRealizedVia": 60002,
 }
 DIRECTION = {"Publisher": 0, "Subscriber": 1, "ActionInvoker": 2,
              "ActionResponder": 3, "Bidirectional": 4}
 KIND = {"Telemetry": 0, "Status": 1, "Configuration": 2, "Metric": 3, "Counter": 4,
         "Event": 5, "Command": 6, "Setpoint": 7, "Identification": 8, "Other": 9}
+CONTENT_KIND = {"DataItems": 0, "Events": 1}
+# well-known base event types (ns0) whose fields an event DataSet selects
+EVENT_TYPES = {"BaseEventType": 2041, "ConditionType": 2782,
+               "AlarmConditionType": 2915, "SystemEventType": 2130}
+# fixed namespace UUID (defined by the base spec) for deterministic DataSetClassIds
+DATASET_CLASS_NS = uuid.UUID("fc164bdb-8705-58e9-ab11-7b1ed155b4e8")
+
+
+def dataset_class_id(descriptor, sb):
+    """Deterministic DataSetClassId: uuid5 over ScenarioUri | <ns>;<Type> | MajorVersion."""
+    major = descriptor.get("configurationVersion", {}).get("majorVersion", 1)
+    applies = f'{descriptor["baseModelNamespaceUri"]};{descriptor["appliesToType"]}'
+    return uuid.uuid5(DATASET_CLASS_NS, f'{sb["scenarioUri"]}|{applies}|{major}')
 # base UA aliases used in the emitted file
 ALIASES = {
     "HasComponent": "i=47", "HasProperty": "i=46", "HasTypeDefinition": "i=40",
@@ -45,7 +60,7 @@ ALIASES = {
     "BindsToNode": f"i={BIND['BindsToNode']}",
     "String": "i=12", "Int32": "i=6", "QualifiedName": "i=20", "NodeId": "i=17",
     "Guid": "i=14", "BaseDataVariableType": "i=63", "PropertyType": "i=68",
-    "BaseObjectType": "i=58", "FolderType": "i=61",
+    "BaseObjectType": "i=58", "FolderType": "i=61", "SimpleAttributeOperand": "i=601",
 }
 # reference.opcfoundation.org links for base types used in the annex
 REF = {
@@ -83,9 +98,16 @@ def build_index(db, type_name):
 
 
 def resolve_items(descriptor, idx):
-    """Validate each boundItem.browsePath against the walked type; enrich in place."""
+    """Validate each data boundItem.browsePath against the walked type; enrich in place.
+    Event bindings (contentKind=Events) select standard event-type fields and are not
+    resolved against the companion type."""
     errors = []
     for sb in descriptor["scenarioBindings"]:
+        if sb.get("contentKind", "DataItems") == "Events":
+            for it in sb["boundItems"]:
+                it.setdefault("fieldName",
+                              it.get("browsePath", "/").strip("/").split("/")[-1])
+            continue
         for it in sb["boundItems"]:
             names = tuple(p for p in it["browsePath"].strip("/").split("/"))
             rec = idx.get(names)
@@ -240,8 +262,59 @@ class Emitter:
         self.prop(self.nid(), "Direction", f'i={BIND["ScenarioBindingDirectionEnum"]}',
                   f'<uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">'
                   f'{DIRECTION[sb["direction"]]}</uax:Int32>', bid)
-        for it in sb["boundItems"]:
-            self.emit_item(bid, sb, it)
+        U = 'xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"'
+        # DataSetClassId (deterministic; recognizable across servers) + ContentKind
+        dscid = dataset_class_id(self.d, sb)
+        sb["_dataSetClassId"] = str(dscid)
+        self.prop(self.nid(), "DataSetClassId", "Guid",
+                  f'<uax:Guid {U}><uax:String>{dscid}</uax:String></uax:Guid>', bid)
+        ck = sb.get("contentKind", "DataItems")
+        self.prop(self.nid(), "ContentKind", f'i={BIND["ScenarioContentKindEnum"]}',
+                  f'<uax:Int32 {U}>{CONTENT_KIND[ck]}</uax:Int32>', bid)
+        if ck == "Events":
+            for it in sb["boundItems"]:
+                self.emit_event_item(bid, sb, it)
+        else:
+            for it in sb["boundItems"]:
+                self.emit_item(bid, sb, it)
+
+    def emit_event_item(self, binding_id, sb, it):
+        """An event-DataSet field: a BoundEventFieldType selecting a field of a standard
+        event type (no BindsToNode - event fields are not AddressSpace instance nodes)."""
+        iid = self.nid()
+        fn = it["fieldName"]
+        evtype = EVENT_TYPES.get(sb.get("eventType", "BaseEventType"), 2041)
+        U = 'xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"'
+        self._open("UAObject", iid, f"1:{fn}", self.ex(binding_id))
+        self.out.append(f"    <DisplayName>{sx.escape(fn)}</DisplayName>")
+        self._refs([("HasTypeDefinition", f'i={BIND["BoundEventFieldType"]}', True),
+                    ("HasComponent", self.ex(binding_id), False)])
+        self.out.append("  </UAObject>")
+        self.prop(self.nid(), "FieldName", "String",
+                  f'<uax:String {U}>{sx.escape(fn)}</uax:String>', iid)
+        self.prop(self.nid(), "Kind", f'i={BIND["BoundItemKindEnum"]}',
+                  f'<uax:Int32 {U}>{KIND["Event"]}</uax:Int32>', iid)
+        self.prop(self.nid(), "ModelNamespaceUri", "String",
+                  f'<uax:String {U}>{UA}</uax:String>', iid)
+        self.prop(self.nid(), "SourceBrowseName", "QualifiedName",
+                  f'<uax:QualifiedName {U}><uax:NamespaceIndex>0</uax:NamespaceIndex>'
+                  f'<uax:Name>{sx.escape(fn)}</uax:Name></uax:QualifiedName>', iid)
+        self.prop(self.nid(), "SourceTypeDefinition", "NodeId",
+                  f'<uax:NodeId {U}><uax:Identifier>i={evtype}</uax:Identifier></uax:NodeId>', iid)
+        # EventFieldOperand: the authoritative Part 14 SimpleAttributeOperand for the field
+        segs = it.get("browsePath", "/" + fn).strip("/").split("/")
+        qn = "".join(
+            f'<uax:QualifiedName><uax:NamespaceIndex>0</uax:NamespaceIndex>'
+            f'<uax:Name>{sx.escape(s)}</uax:Name></uax:QualifiedName>' for s in segs)
+        self.prop(self.nid(), "EventFieldOperand", "SimpleAttributeOperand",
+                  f'<uax:SimpleAttributeOperand {U}>'
+                  f'<uax:TypeDefinitionId><uax:Identifier>i={evtype}</uax:Identifier></uax:TypeDefinitionId>'
+                  f'<uax:BrowsePath>{qn}</uax:BrowsePath>'
+                  f'<uax:AttributeId>13</uax:AttributeId>'
+                  f'</uax:SimpleAttributeOperand>', iid)
+        dsfid = uuid.uuid5(FIELD_ID_NS, f'{self.d["domain"]}|{sb["scenarioUri"]}|{fn}|event')
+        self.prop(self.nid(), "DataSetFieldId", "Guid",
+                  f'<uax:Guid {U}><uax:String>{dsfid}</uax:String></uax:Guid>', iid)
 
     def emit_item(self, binding_id, sb, it):
         rec = it["_rec"]
@@ -342,21 +415,39 @@ def emit_annex(descriptor, db, base_names):
     L = [f"### Scenario bindings for `{d['appliesToType']}`", "",
          f"Bindings for the `{d['appliesToType']}` of the "
          f"`{d['baseModelNamespaceUri']}` companion specification, per the "
-         f"[PubSub Scenario Binding]({SPEC}) base specification. Every `BrowsePath` below "
-         f"was resolved against the published companion NodeSet.", ""]
+         f"[PubSub Scenario Binding]({SPEC}) base specification. Each binding is **one Part 14 "
+         f"DataSet** with a deterministic `DataSetClassId`. Every data-DataSet `BrowsePath` "
+         f"below was resolved against the published companion NodeSet; event-DataSet fields "
+         f"select standard event-type fields.", ""]
     for sb in d["scenarioBindings"]:
+        ck = sb.get("contentKind", "DataItems")
+        dscid = sb.get("_dataSetClassId") or str(dataset_class_id(d, sb))
+        content = ("event DataSet (PublishedEvents)" if ck == "Events"
+                   else "data DataSet (PublishedDataItems)")
         L.append(f"#### Scenario: {sb['name']}")
         L.append("")
-        L.append(f"*URI:* `{sb['scenarioUri']}` · *Direction:* {sb['direction']}")
+        hdr = (f"*URI:* `{sb['scenarioUri']}` · *Direction:* {sb['direction']} · "
+               f"*Content:* {content} · *DataSetClassId:* `{dscid}`")
+        if ck == "Events":
+            hdr += (f" · *Event source:* `{sb.get('eventSourcePath', '/')}` · "
+                    f"*Event type:* {sb.get('eventType', 'BaseEventType')}")
+        L.append(hdr)
         L.append("")
-        L.append("| Field | Kind | BrowsePath | Source type | DataType |")
-        L.append("|---|---|---|---|---|")
-        for it in sb["boundItems"]:
-            rec = it["_rec"]
-            tdname = td_name(rec["typedef"], db, base_names)
-            dt = dt_name(rec["datatype"])
-            L.append(f"| {it['fieldName']} | {it['kind']} | `{it['browsePath']}` | "
-                     f"{tdname} | {dt} |")
+        if ck == "Events":
+            L.append("| Field | Kind | Event field (of the event type) |")
+            L.append("|---|---|---|")
+            for it in sb["boundItems"]:
+                L.append(f"| {it['fieldName']} | {it['kind']} | "
+                         f"`{it.get('browsePath', '/' + it['fieldName'])}` |")
+        else:
+            L.append("| Field | Kind | BrowsePath | Source type | DataType |")
+            L.append("|---|---|---|---|---|")
+            for it in sb["boundItems"]:
+                rec = it["_rec"]
+                tdname = td_name(rec["typedef"], db, base_names)
+                dt = dt_name(rec["datatype"])
+                L.append(f"| {it['fieldName']} | {it['kind']} | `{it['browsePath']}` | "
+                         f"{tdname} | {dt} |")
         L.append("")
     return "\n".join(L) + "\n"
 
@@ -485,24 +576,33 @@ def emit_diagrams(descriptor):
     ov = ["```mermaid", "graph LR",
           f'  ROOT["{d["instanceName"]} : {d["appliesToType"]}"] --> SB["ScenarioBindings"]']
     for i, sb in enumerate(d["scenarioBindings"]):
-        ov.append(f'  SB --> S{i}["{sb["name"]}<br/>{sb["direction"]}"]')
+        tag = "Events" if sb.get("contentKind") == "Events" else "Data"
+        ov.append(f'  SB --> S{i}["{sb["name"]}<br/>{sb["direction"]} · {tag}"]')
         for j, it in enumerate(sb["boundItems"][:6]):
             ov.append(f'  S{i} --> S{i}_{j}["{it["fieldName"]} : {it["kind"]}"]')
     ov.append("```")
-    # instance placement (first two scenarios, a few items)
+    # instance placement: the first (data) binding + the first event binding, if any
+    picks = [d["scenarioBindings"][0]]
+    ev = next((s for s in d["scenarioBindings"] if s.get("contentKind") == "Events"), None)
+    if ev is not None and ev is not picks[0]:
+        picks.append(ev)
     inst = ["```mermaid", "graph TD",
             f'  R["{d["instanceName"]} : {d["appliesToType"]}"]',
             "  R -->|HasInterface| I([IPubSubScenarioBoundType])",
             '  R -->|HasComponent| SB["ScenarioBindings"]']
-    shown = 0
-    for i, sb in enumerate(d["scenarioBindings"][:2]):
+    for i, sb in enumerate(picks):
+        ck = sb.get("contentKind", "DataItems")
         inst.append(f'  SB -->|HasComponent| B{i}["{sb["name"]} : ScenarioBindingType"]')
         for j, it in enumerate(sb["boundItems"][:3]):
-            rec = it["_rec"]
-            path = "/".join(concrete_name(s["name"]) for s in rec["path"])
-            inst.append(f'  B{i} -->|HasComponent| IT{i}{j}["{it["fieldName"]} : BoundVariableType"]')
-            inst.append(f'  IT{i}{j} -->|BindsToNode| N{i}{j}["{path}"]')
-            shown += 1
+            if ck == "Events" or "_rec" not in it:
+                et = sb.get("eventType", "BaseEventType")
+                inst.append(f'  B{i} -->|HasComponent| IT{i}{j}["{it["fieldName"]} : BoundEventFieldType"]')
+                inst.append(f'  IT{i}{j} -.event field.-> N{i}{j}["{et}/{it["fieldName"]}"]')
+            else:
+                rec = it["_rec"]
+                path = "/".join(concrete_name(s["name"]) for s in rec["path"])
+                inst.append(f'  B{i} -->|HasComponent| IT{i}{j}["{it["fieldName"]} : BoundVariableType"]')
+                inst.append(f'  IT{i}{j} -->|BindsToNode| N{i}{j}["{path}"]')
     inst.append("```")
     return "\n".join(ov) + "\n\n" + "\n".join(inst) + "\n"
 

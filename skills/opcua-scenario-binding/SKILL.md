@@ -27,6 +27,10 @@ Read the specification first — this skill assumes its two-layer contract:
 - **Semantic cross-reference** (for the ultimate consumer): each item retains
   `TypeDefinition`, namespace-qualified `BrowseName`, `ModelNamespaceUri` and any
   dictionary entry, and this is propagated into Part 14 `DataSetMetaData`.
+- **One DataSet per binding**: each `ScenarioBinding` is classified as `DataItems`
+  (a Part 14 `PublishedDataItems` DataSet of grouped Variables) or `Events` (a
+  `PublishedEvents` DataSet of selected event fields from a notifier), and carries a
+  deterministic `DataSetClassId` so the same schema is recognizable across servers.
 
 ## When to use
 
@@ -132,32 +136,89 @@ Commands to bound Methods; `ActionResponder` when clients invoke bound Actions;
 Give each item a stable `FieldName` (default: the BrowseName; disambiguate placeholders by
 appending the matched BrowseName as the spec requires).
 
-### 4. Fill the semantic cross-reference (mechanical)
+### 4. Classify each scenario's content as Data or Event
+
+Each `ScenarioBinding` defines exactly **one** Part 14 DataSet. Set its `ContentKind`
+(`ScenarioContentKindEnum`) before emitting the descriptor:
+
+- `DataItems` (default): a data DataSet (`PublishedDataItems`) made from grouped
+  Variables. This is the common case for observability, maintenance, anomaly,
+  energy/load and fleet data.
+- `Events`: an event DataSet (`PublishedEvents`) made from an event notifier and selected
+  event fields. Alarm/event/safety scenarios (for example `AlarmAndEventDistribution`)
+  are typically Event DataSets.
+
+For an Event DataSet identify:
+
+1. the **event notifier** (`eventSourcePath`): the Object that raises events, often the
+   bound root or a component with the `EventNotifier` attribute;
+2. the **event type** being selected (record it as the event fields'
+   `SourceTypeDefinition` when generated);
+3. the **selected fields** as `BoundEventFieldType`/`BoundItemDataType` entries with
+   `kind: "Event"` and `browsePath` segments relative to the event TypeDefinition
+   (for example `EventId`, `EventType`, `Time`, `Severity`, `Message`, `SourceName`,
+   `ConditionName`, plus domain-specific condition fields);
+4. an optional `filter` (OPC UA `ContentFilter` where-clause), such as a severity
+   threshold or event-type restriction.
+
+### 5. Fill the semantic cross-reference (mechanical)
 
 For every item, populate from the NodeSet (do not guess):
 `SourceTypeDefinition`, `SourceBrowseName` (with namespace), `ModelNamespaceUri`,
 `AttributeId` (13/Value unless otherwise), and `SemanticReferenceUri` — set the last from
 the identifier of any `HasDictionaryEntry` target (OPC 10000-19) or a known IRDI/CDD, if the
-model has one. Set `BrowsePath` to the RelativePath from the type root (recommended
-locator); leave absolute NodeIds unset for type-level bindings.
+model has one. For data items set `BrowsePath` to the RelativePath from the type root
+(recommended locator); leave absolute NodeIds unset for type-level bindings. For event
+fields, `BrowsePath` is relative to the selected event TypeDefinition and the generated
+`EventFieldOperand` is the corresponding Part 14 `SimpleAttributeOperand`.
 
-### 5. Emit the descriptor
+### 6. Compute the DataSet class identity (mechanical)
+
+Every binding gets a deterministic `DataSetClassId` (Part 14 `Guid`) with grain
+**(scenario × bound type)**. The generator computes it; do **not** author it in the
+descriptor:
+
+```text
+uuid5(fc164bdb-8705-58e9-ab11-7b1ed155b4e8,
+      "<ScenarioUri>|<AppliesToType as namespaceUri;BrowseName>|<MajorVersion>")
+```
+
+`MajorVersion` is `configurationVersion.majorVersion` (absent ⇒ `1`). The same scenario, type
+and major version therefore produce the same DataSet class across servers, making it the
+cross-server recognition key. The reference generator emits `DataSetClassId` (and `ContentKind`)
+on each browsable `ScenarioBinding` instance. Propagation to `DataSetMetaData.dataSetClassId`
+and the realizing `PublishedDataSet.DataSetClassId` is a **realization** step the base spec
+requires *where PubSub is configured* (§5.5) — it is not produced by the example generator.
+
+### 7. Emit the descriptor
 
 Write `ScenarioBindingConfiguration` (see format below). This is the single source; the
 annex and the NodeSet fragment are **derived** from it, never authored separately.
 
-### 6. Generate the addendum + instance overlay
+### 8. Generate the addendum + instance overlay
 
 Run the reference generator (`build_bindings.py`) on the descriptor. It renders one annex
 table per Scenario (linking each referenced base type to `https://reference.opcfoundation.org/`
-and own concepts to the base spec), emits the instance-overlay NodeSet, and assembles the
-addendum. Leave transport/security/addressing as deployment parameters — never bake them in.
+and own concepts to the base spec), emits the instance-overlay NodeSet (with per-binding
+`DataSetClassId` + `ContentKind`, and `BoundEventFieldType` items for event DataSets), and
+assembles the addendum. Leave transport/security/addressing as deployment parameters — never
+bake them in. Exposing the full Part 14 `DataSetMetaData` (fields + `dataSetClassId` +
+`configurationVersion`) so a consumer can obtain the class schema offline is a capability the
+base spec defines (§5.8); a Server SHOULD populate it, but the example generator does not emit
+the full metadata value.
 
-### 7. Validate
+### 9. Validate
 
 - **Every `BrowsePath` resolves against the input NodeSet** — the generator fails hard if not;
-  never ship a path you have not resolved.
+  never ship a path you have not resolved. For Event DataSets, data-source paths resolve
+  from the bound type while event field paths are validated against the selected event type.
 - Every item has a `Kind`, a `FieldName` and a complete semantic cross-reference.
+- Every binding has the correct `contentKind`; Event bindings have an `eventSourcePath` or
+  intentionally default to the bound root.
+- `DataSetClassId` is generated, stable for `(ScenarioUri, AppliesToType, MajorVersion)`,
+  and appears consistently in the binding and PubSub metadata.
+- When present, `DataSetMetaData` includes the fields, `dataSetClassId` and
+  `configurationVersion`.
 - Scenario URIs are well-formed; vendor Scenarios use the vendor's own URI authority and
   **not** the reserved `…/opcfoundation.org/UA/PubSub/Scenarios/` root.
 - Field names are unique within a binding.
@@ -209,16 +270,22 @@ BoundItem → `BindsToNode` → the signal node), so a reader sees exactly where
   Lean on axis/motor Telemetry, controller thermals, **Status/Event** from `SafetyStates`
   (EmergencyStop/ProtectiveStop/OperationalMode), and nameplate for FleetAndCompliance. Expect
   more `Status`/`Event` and fewer `Telemetry` than a measurement-rich model.
+- **Event/safety scenarios.** Do not model alarm streams as ordinary grouped Variables when
+  the domain exposes OPC UA Events/Conditions. Use `contentKind: "Events"`, choose the
+  notifier (`eventSourcePath`), select standard event fields plus domain-specific condition
+  fields, and add a `filter` when the scenario is scoped to severity or event type.
 
 
+## Descriptor DSL
 
 A single JSON object — the **authoring DSL** consumed by `build_bindings.py`. You write the
-intent (which type, which scenarios, which items by `BrowsePath`, which `Kind`); the generator
-resolves each `BrowsePath` against the companion NodeSet and fills in the namespaces, source
-`BrowseName`, `TypeDefinition`, `DataType` and `DataSetFieldId` mechanically, then emits the
-overlay NodeSet + addendum. `browsePath` uses **plain BrowseNames** (no namespace prefix) —
-the generator recovers the namespace per segment from the walk. Keep placeholder segments
-(`<AxisIdentifier>`) verbatim.
+intent (which type, which scenarios, Data vs Event content, which items by `BrowsePath`, which
+`Kind`); the generator resolves each data `BrowsePath` against the companion NodeSet, resolves
+event field paths against the selected event type, and fills in the namespaces, source
+`BrowseName`, `TypeDefinition`, `DataType`, `DataSetFieldId`, `EventFieldOperand`,
+`DataSetClassId` and `DataSetMetaData` mechanically, then emits the overlay NodeSet + addendum.
+`browsePath` uses **plain BrowseNames** (no namespace prefix) — the generator recovers the
+namespace per segment from the walk. Keep placeholder segments (`<AxisIdentifier>`) verbatim.
 
 ```json
 {
@@ -242,8 +309,27 @@ the generator recovers the namespace per segment from the walk. Keep placeholder
       "name": "Observability",
       "scenarioUri": "http://opcfoundation.org/UA/PubSub/Scenarios/Observability",
       "direction": "Publisher",
+      "contentKind": "DataItems",
       "boundItems": [
         { "fieldName": "Speed", "kind": "Telemetry", "browsePath": "/Operational/Measurements/Speed", "samplingIntervalHint": 1000 }
+      ]
+    },
+    {
+      "name": "AlarmAndEventDistribution",
+      "scenarioUri": "http://opcfoundation.org/UA/PubSub/Scenarios/AlarmAndEventDistribution",
+      "direction": "Publisher",
+      "contentKind": "Events",
+      "eventSourcePath": "/",
+      "eventType": "AlarmConditionType",
+      "filter": { "whereClause": "Severity >= 500" },
+      "boundItems": [
+        { "fieldName": "EventId", "kind": "Event", "browsePath": "/EventId" },
+        { "fieldName": "EventType", "kind": "Event", "browsePath": "/EventType" },
+        { "fieldName": "Time", "kind": "Event", "browsePath": "/Time" },
+        { "fieldName": "Severity", "kind": "Event", "browsePath": "/Severity" },
+        { "fieldName": "Message", "kind": "Event", "browsePath": "/Message" },
+        { "fieldName": "SourceName", "kind": "Event", "browsePath": "/SourceName" },
+        { "fieldName": "ConditionName", "kind": "Event", "browsePath": "/ConditionName" }
       ]
     }
   ]
@@ -258,9 +344,21 @@ Field notes:
 - `fieldName` defaults to the last `browsePath` segment; make it unique within a binding.
 - `direction` ∈ `Publisher` | `Subscriber` | `ActionInvoker` | `ActionResponder` |
   `Bidirectional`.
+- `contentKind` ∈ `DataItems` | `Events`; omit it only for the default `DataItems`.
+- `dataSetClassId` is **not** authored. The generator derives it deterministically as
+  `uuid5(fc164bdb-8705-58e9-ab11-7b1ed155b4e8, "<ScenarioUri>|<namespaceUri;BrowseName>|<MajorVersion>")`.
 - `kind` ∈ `Telemetry` | `Status` | `Configuration` | `Metric` | `Counter` | `Event` |
   `Command` | `Setpoint` | `Identification` | `Other`.
 - For a Method use `kind: "Command"` and a `browsePath` to the Method.
+- For `contentKind: "Events"`, set `eventSourcePath` to the notifier RelativePath (`"/"` means
+  the bound root). Event `boundItems` are selected event fields: their `browsePath` is relative
+  to the event TypeDefinition, their `kind` is `Event`, and the generator emits
+  `BoundEventFieldType`/`EventFieldOperand`.
+- `eventType` (Events only) is the event type whose fields are selected — one of
+  `BaseEventType` | `ConditionType` | `AlarmConditionType` | `SystemEventType` (default
+  `BaseEventType`); the generator uses it as each event field's `SourceTypeDefinition`.
+- `filter` is optional and represents the event `ContentFilter` where-clause; use it only when
+  the scenario requires a severity, event-type or domain-specific restriction.
 
 ## Annex template (per Scenario)
 

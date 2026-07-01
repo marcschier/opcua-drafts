@@ -12,12 +12,14 @@ This annex is the normative node reference. It is generated from `tools/build_mo
 | i=60012 | [BoundItemType](#type-BoundItemType) | ObjectType | [BaseObjectType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.2) |
 | i=60013 | [BoundVariableType](#type-BoundVariableType) | ObjectType | [BoundItemType](#type-BoundItemType) |
 | i=60014 | [BoundMethodType](#type-BoundMethodType) | ObjectType | [BoundItemType](#type-BoundItemType) |
+| i=60017 | [BoundEventFieldType](#type-BoundEventFieldType) | ObjectType | [BoundItemType](#type-BoundItemType) |
 | i=60011 | [ScenarioBindingType](#type-ScenarioBindingType) | ObjectType | [BaseObjectType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.2) |
 | i=60010 | [PubSubScenarioBindingsType](#type-PubSubScenarioBindingsType) | ObjectType | [FolderType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.6) |
 | i=60015 | [ScenarioProfileType](#type-ScenarioProfileType) | ObjectType | [BaseObjectType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.2) |
 | i=60016 | [IPubSubScenarioBoundType](#type-IPubSubScenarioBoundType) | ObjectType | [BaseInterfaceType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.9) |
 | i=60050 | [ScenarioBindingDirectionEnum](#type-ScenarioBindingDirectionEnum) | DataType | Enumeration |
 | i=60051 | [BoundItemKindEnum](#type-BoundItemKindEnum) | DataType | Enumeration |
+| i=60052 | [ScenarioContentKindEnum](#type-ScenarioContentKindEnum) | DataType | Enumeration |
 | i=60060 | [BoundItemDataType](#type-BoundItemDataType) | DataType | Structure |
 | i=60065 | [ScenarioBindingDataType](#type-ScenarioBindingDataType) | DataType | Structure |
 | i=60070 | [ScenarioBindingConfigurationDataType](#type-ScenarioBindingConfigurationDataType) | DataType | Structure |
@@ -110,6 +112,30 @@ A bound Method exposed as an invokable action; may be realized as a Part 14 Acti
 | DataSetFieldId | Variable | Guid | Optional | [BoundItemType](#type-BoundItemType) | GUID correlating the item to Part 14 FieldMetaData. |
 | SemanticReferenceUri | Variable | String | Optional | [BoundItemType](#type-BoundItemType) | Optional external semantic identifier (e.g. IRDI/CDD). |
 
+<a id="type-BoundEventFieldType"></a>
+#### BoundEventFieldType  (i=60017)
+
+*Inherits from:* [BoundItemType](#type-BoundItemType)
+
+A bound event field of an event DataSet, selected by a Part 14 SimpleAttributeOperand. Its BrowsePath is resolved relative to the event TypeDefinition (SourceTypeDefinition), not the AddressSpace instance; the EventSourcePath on the ScenarioBinding names the notifier it is selected from.
+
+| BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
+|---|---|---|---|---|---|
+| EventFieldOperand | Variable | [SimpleAttributeOperand](https://reference.opcfoundation.org/specs/OPC-10000-4/7.4.4) | Optional | BoundEventFieldType | The Part 14 SimpleAttributeOperand that selects this field (TypeDefinitionId, BrowsePath, AttributeId); maps directly to a PublishedEvents SelectedFields entry. |
+| FieldName | Variable | String | Mandatory | [BoundItemType](#type-BoundItemType) | Stable logical field name of the item. |
+| Kind | Variable | [BoundItemKindEnum](#type-BoundItemKindEnum) | Mandatory | [BoundItemType](#type-BoundItemType) | Generic routing role of the item. |
+| AttributeId | Variable | UInt32 | Optional | [BoundItemType](#type-BoundItemType) | Attribute of the source node to expose (default 13 = Value). |
+| BrowsePath | Variable | [RelativePath](https://reference.opcfoundation.org/specs/OPC-10000-4/7.30) | Optional | [BoundItemType](#type-BoundItemType) | RECOMMENDED locator: RelativePath from the bound root; resolved per instance. |
+| StartingNode | Variable | NodeId | Optional | [BoundItemType](#type-BoundItemType) | Node the BrowsePath is resolved from (default: the bound root). |
+| SourceNodeId | Variable | NodeId | Optional | [BoundItemType](#type-BoundItemType) | Alternative absolute locator (instance/server-specific). |
+| SamplingIntervalHint | Variable | Duration | Optional | [BoundItemType](#type-BoundItemType) | Recommended sampling/publishing interval (ms). |
+| IndexRange | Variable | NumericRange | Optional | [BoundItemType](#type-BoundItemType) | Optional sub-range for array values. |
+| SourceTypeDefinition | Variable | NodeId | Optional | [BoundItemType](#type-BoundItemType) | TypeDefinition of the source node (semantic identity). |
+| SourceBrowseName | Variable | QualifiedName | Optional | [BoundItemType](#type-BoundItemType) | Namespace-qualified BrowseName of the source node. |
+| ModelNamespaceUri | Variable | String | Optional | [BoundItemType](#type-BoundItemType) | Namespace URI of the companion model defining the source. |
+| DataSetFieldId | Variable | Guid | Optional | [BoundItemType](#type-BoundItemType) | GUID correlating the item to Part 14 FieldMetaData. |
+| SemanticReferenceUri | Variable | String | Optional | [BoundItemType](#type-BoundItemType) | Optional external semantic identifier (e.g. IRDI/CDD). |
+
 <a id="type-ScenarioBindingType"></a>
 #### ScenarioBindingType  (i=60011)
 
@@ -122,7 +148,12 @@ One scenario binding on a bound object or type. It declares the scenario URI and
 | ScenarioUri | Variable | String | Mandatory | ScenarioBindingType | URI of the integration scenario this binding serves. |
 | Direction | Variable | [ScenarioBindingDirectionEnum](#type-ScenarioBindingDirectionEnum) | Mandatory | ScenarioBindingType | Role the server offers for this binding. |
 | ConfigurationVersion | Variable | i=14593 | Optional | ScenarioBindingType | Version of the binding, aligned with the realizing DataSetMetaData. |
-| BoundItems | Variable | [BoundItemDataType](#type-BoundItemDataType)\[\] | Optional | ScenarioBindingType | Compact machine-readable list of bound items. |
+| DataSetClassId | Variable | Guid | Mandatory | ScenarioBindingType | Stable DataSetClassId (Part 14) identifying the class of the DataSet this binding defines, so subscribers recognize the same schema across servers. Deterministic (see the DataSetClassId clause). |
+| ContentKind | Variable | [ScenarioContentKindEnum](#type-ScenarioContentKindEnum) | Mandatory | ScenarioBindingType | Whether the binding realizes as a data DataSet (PublishedDataItems) or an event DataSet (PublishedEvents). |
+| DataSetMetaData | Variable | [DataSetMetaDataType](https://reference.opcfoundation.org/specs/OPC-10000-14/6.2.3#6.2.3.2.3) | Optional | ScenarioBindingType | Part 14 DataSetMetaData for this DataSet (fields, dataSetClassId, configurationVersion), exposed so a consumer gets the class schema offline. |
+| EventSourcePath | Variable | [RelativePath](https://reference.opcfoundation.org/specs/OPC-10000-4/7.30) | Optional | ScenarioBindingType | For an event DataSet: RelativePath to the event notifier to subscribe to (default: the bound root). |
+| Filter | Variable | [ContentFilter](https://reference.opcfoundation.org/specs/OPC-10000-4/7.4.1) | Optional | ScenarioBindingType | For an event DataSet: optional ContentFilter (event where-clause). |
+| BoundItems | Variable | [BoundItemDataType](#type-BoundItemDataType)\[\] | Optional | ScenarioBindingType | Compact machine-readable list of bound items (the DataSet fields). |
 | <BoundItem> | Object |  | OptionalPlaceholder | ScenarioBindingType | A browsable bound item (rich form of a BoundItems entry). |
 
 <a id="type-PubSubScenarioBindingsType"></a>
@@ -198,6 +229,18 @@ Generic role of a bound item for routing/bridging. It is intentionally domain-ag
 | Identification | 8 | Static nameplate/identity information. |
 | Other | 9 | Any other role. |
 
+<a id="type-ScenarioContentKindEnum"></a>
+#### ScenarioContentKindEnum  (i=60052)
+
+*Subtype of:* Enumeration
+
+Whether a scenario binding realizes as a Part 14 data DataSet (PublishedDataItems) or an event DataSet (PublishedEvents). A binding is exactly one DataSet.
+
+| Name | Value | Description |
+|---|---|---|
+| DataItems | 0 | A data DataSet: grouped Variable values (PublishedDataItemsType). |
+| Events | 1 | An event DataSet: selected event fields from a notifier (PublishedEventsType). |
+
 <a id="type-BoundItemDataType"></a>
 #### BoundItemDataType  (i=60060)
 
@@ -221,6 +264,7 @@ Machine-readable descriptor of a single bound item: how to LOCATE it (BrowsePath
 | ModelNamespaceUri | String | Namespace URI of the companion model that defines the source. |
 | DataSetFieldId | Guid | GUID correlating this item to Part 14 FieldMetaData.dataSetFieldId. |
 | SemanticReferenceUri | String | Optional external semantic identifier (e.g. IRDI/CDD) for the item. |
+| EventFieldOperand | [SimpleAttributeOperand](https://reference.opcfoundation.org/specs/OPC-10000-4/7.4.4) | For an event-DataSet field: the Part 14 SimpleAttributeOperand that selects it (alternative/complement to BrowsePath, whose segments are then relative to the event TypeDefinition). |
 
 <a id="type-ScenarioBindingDataType"></a>
 #### ScenarioBindingDataType  (i=60065)
@@ -235,7 +279,11 @@ Machine-readable descriptor of one scenario binding: a scenario URI, the offered
 | ScenarioUri | String | URI of the integration scenario this binding serves. |
 | Direction | [ScenarioBindingDirectionEnum](#type-ScenarioBindingDirectionEnum) | Role the server offers for this binding. |
 | ConfigurationVersion | i=14593 | Version of the binding, aligned with the realizing DataSetMetaData. |
-| BoundItems | [BoundItemDataType](#type-BoundItemDataType)\[\] | The bound items. |
+| BoundItems | [BoundItemDataType](#type-BoundItemDataType)\[\] | The bound items (the DataSet fields). |
+| DataSetClassId | Guid | Stable DataSetClassId (Part 14) identifying the class of this DataSet across servers. |
+| ContentKind | [ScenarioContentKindEnum](#type-ScenarioContentKindEnum) | Whether this binding is a data or an event DataSet. |
+| EventSourcePath | [RelativePath](https://reference.opcfoundation.org/specs/OPC-10000-4/7.30) | For an event DataSet: RelativePath to the event notifier (default: the bound root). |
+| Filter | [ContentFilter](https://reference.opcfoundation.org/specs/OPC-10000-4/7.4.1) | For an event DataSet: optional ContentFilter (event where-clause). |
 | PublishedDataSetName | String | Name of the realizing Part 14 PublishedDataSet, if any. |
 | WriterGroupName | String | Name of the realizing Part 14 WriterGroup, if any. |
 

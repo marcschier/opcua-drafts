@@ -88,6 +88,22 @@
         { "kind": "Identification", "browsePath": "/Identification/AssetId" },
         { "kind": "Identification", "browsePath": "/Identification/Location" }
       ]
+    },
+    {
+      "name": "AlarmAndEventDistribution",
+      "scenarioUri": "http://opcfoundation.org/UA/PubSub/Scenarios/AlarmAndEventDistribution",
+      "direction": "Publisher",
+      "contentKind": "Events",
+      "eventSourcePath": "/",
+      "eventType": "BaseEventType",
+      "boundItems": [
+        { "fieldName": "EventId", "kind": "Event", "browsePath": "/EventId" },
+        { "fieldName": "EventType", "kind": "Event", "browsePath": "/EventType" },
+        { "fieldName": "SourceName", "kind": "Event", "browsePath": "/SourceName" },
+        { "fieldName": "Time", "kind": "Event", "browsePath": "/Time" },
+        { "fieldName": "Severity", "kind": "Event", "browsePath": "/Severity" },
+        { "fieldName": "Message", "kind": "Event", "browsePath": "/Message" }
+      ]
     }
   ]
 }
