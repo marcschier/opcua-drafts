@@ -118,7 +118,7 @@ runtime multi-match expansion is a bridge/Server realization rule.
 
 `Kind` values are exactly the members of `BoundItemKindEnum` in the spec:
 `Telemetry`, `Status`, `Configuration`, `Metric`, `Counter`, `Event`, `Command`,
-`Setpoint`, `Identification`, `Other`. When unsure between `Telemetry` and a total,
+`Setpoint`, `Identification`, `Dimension`, `Other`. When unsure between `Telemetry` and a total,
 prefer `Telemetry` for instantaneous values and `Counter` for monotonic accumulators.
 
 ### 3. Assign items to Scenarios
@@ -173,7 +173,21 @@ For an Event DataSet identify:
 4. an optional `filter` (OPC UA `ContentFilter` where-clause), such as a severity
    threshold or event-type restriction.
 
-### 5. Choose the DataSet cardinality anchor
+### 5. Enrich Observability bindings for OTEL
+
+For Observability bindings, carry enough OpenTelemetry detail for a generic bridge to emit
+metrics and logs faithfully. Pick the OTEL instrument per metric with `metricInstrumentType`
+(or rely on the Kind default), set `unit`, `metricTemporality` and histogram
+`explicitBucketBoundaries` where relevant, and declare binding-level dimensions with
+`kind: "Dimension"`: node-sourced dimensions use `browsePath`; constant dimensions use
+`dimensionConstantValue`. For event/log bindings, add a `logTemplate` and, when available,
+`logSeverityFieldName`, `logBodyFieldName` or `logTimestampFieldName` so selected event fields
+render as OTEL LogRecords.
+
+Kind to OTEL instrument default: `Telemetry`/`Metric` → `Gauge`; `Counter` → `Counter`
+(monotonic). An explicit `metricInstrumentType` overrides the default.
+
+### 6. Choose the DataSet cardinality anchor
 
 For each binding, decide whether the binding describes one DataSet for the bound root or one
 DataSet per matched placeholder/component level. Author `dataSetCardinalityPath` as a
@@ -190,7 +204,7 @@ then put axis-level placeholders below the device cardinality and make them fiel
 item paths should sit under its cardinality path; if they do not, split the binding or choose a
 higher cardinality anchor.
 
-### 6. Reuse & extend base facet bindings
+### 7. Reuse & extend base facet bindings
 
 Before duplicating a scenario for a derived type, check whether the same integration facet is
 already bound on a base ObjectType, an Interface, or an AddInType. If so, author the deriving
@@ -217,7 +231,7 @@ time, the bridge composes the effective DataSet by union over the instance's sup
 `HasBaseBinding` reference may be emitted for browsing convenience, but the portable lineage
 carrier is `baseDataSetClassIds`.
 
-### 7. Fill the semantic cross-reference (mechanical)
+### 8. Fill the semantic cross-reference (mechanical)
 
 For every item, populate from the NodeSet (do not guess):
 `SourceTypeDefinition`, `SourceBrowseName` (with namespace), `ModelNamespaceUri`,
@@ -228,7 +242,7 @@ model has one. For data items set `BrowsePath` to the RelativePath from the type
 fields, `BrowsePath` is relative to the selected event TypeDefinition and the generated
 `EventFieldOperand` is the corresponding Part 14 `SimpleAttributeOperand`.
 
-### 8. Compute the DataSet class identity (mechanical)
+### 9. Compute the DataSet class identity (mechanical)
 
 Every binding gets a deterministic `DataSetClassId` (Part 14 `Guid`) with grain
 **(scenario × bound type)**. The generator computes it; do **not** author it in the
@@ -246,7 +260,7 @@ on each browsable `ScenarioBinding` instance. Propagation to `DataSetMetaData.da
 and the realizing `PublishedDataSet.DataSetClassId` is a **realization** step the base spec
 requires *where PubSub is configured* (§5.5) — it is not produced by the example generator.
 
-### 9. Emit the descriptor
+### 10. Emit the descriptor
 
 Write the binding descriptor (JSON; see format below). Include the top-level
 `companionSpecificationUri` and `modelNamespaceUris` so the generator can emit one
@@ -254,7 +268,7 @@ Write the binding descriptor (JSON; see format below). Include the top-level
 the single source; the annex and the NodeSet fragment are **derived** from it, never authored
 separately.
 
-### 10. Generate the addendum + instance overlay
+### 11. Generate the addendum + instance overlay
 
 Run the reference generator (`build_bindings.py`) on the descriptor. It renders one annex
 table per Scenario (linking each referenced base type to `https://reference.opcfoundation.org/`
@@ -269,7 +283,7 @@ bake them in. Exposing the full Part 14 `DataSetMetaData` (fields + `dataSetClas
 base spec defines (§5.8); a Server SHOULD populate it, but the example generator does not emit
 the full metadata value.
 
-### 11. Validate
+### 12. Validate
 
 - **Every `BrowsePath` resolves against the input NodeSet** — the generator fails hard if not;
   never ship a path you have not resolved. For Event DataSets, data-source paths resolve
@@ -279,6 +293,9 @@ the full metadata value.
   nests bindings under that per-companion-spec group.
 - Every binding has the correct `contentKind`; Event bindings have an `eventSourcePath` or
   intentionally default to the bound root.
+- Observability metrics carry an instrument type (or rely on the Kind default), dimensions are
+  marked `kind: "Dimension"`, and event bindings that are logs carry a `logTemplate` or
+  `logBodyFieldName`.
 - Every binding has a deliberate `dataSetCardinalityPath` (or intentionally defaults to the
   bound root), and its item paths sit under that cardinality path unless the binding is split.
 - `DataSetClassId` is generated, stable for `(ScenarioUri, AppliesToType, MajorVersion)`,
@@ -416,6 +433,44 @@ namespace per segment from the walk. Keep placeholder segments (`<AxisIdentifier
 }
 ```
 
+OTEL Observability fragment:
+
+```json
+{
+  "scenarioBindings": [
+    {
+      "name": "Observability",
+      "scenarioUri": "http://opcfoundation.org/UA/PubSub/Scenarios/Observability",
+      "direction": "Publisher",
+      "contentKind": "DataItems",
+      "boundItems": [
+        { "fieldName": "MotorTemperature", "kind": "Telemetry", "browsePath": "/Motor/Temperature", "metricInstrumentType": "Gauge", "unit": "Cel" },
+        { "fieldName": "StartCount", "kind": "Counter", "browsePath": "/Operational/StartCount", "metricInstrumentType": "Counter" },
+        { "fieldName": "CycleTime", "kind": "Metric", "browsePath": "/Operational/CycleTime", "metricInstrumentType": "Histogram", "unit": "s", "explicitBucketBoundaries": [0.1, 0.5, 1, 2, 5] },
+        { "fieldName": "SerialNumber", "kind": "Dimension", "browsePath": "/Identification/SerialNumber" },
+        { "fieldName": "service.name", "kind": "Dimension", "dimensionConstantValue": "pump-bridge" }
+      ]
+    },
+    {
+      "name": "ObservabilityEvents",
+      "scenarioUri": "http://opcfoundation.org/UA/PubSub/Scenarios/Observability",
+      "direction": "Publisher",
+      "contentKind": "Events",
+      "eventSourcePath": "/",
+      "eventType": "BaseEventType",
+      "logTemplate": "{SourceName}: {Message}",
+      "logSeverityFieldName": "Severity",
+      "boundItems": [
+        { "fieldName": "Time", "kind": "Event", "browsePath": "/Time" },
+        { "fieldName": "Severity", "kind": "Event", "browsePath": "/Severity" },
+        { "fieldName": "Message", "kind": "Event", "browsePath": "/Message" },
+        { "fieldName": "SourceName", "kind": "Event", "browsePath": "/SourceName" }
+      ]
+    }
+  ]
+}
+```
+
 Field notes:
 - `companionSpecificationUri` is the stable **spec-level** identifier for the companion
   specification group anchor. It is distinct from any namespace URI because one companion
@@ -447,7 +502,21 @@ Field notes:
   present, author only delta fields: added fields and overrides by identical `fieldName`; never
   restate inherited fields just to carry them forward.
 - `kind` ∈ `Telemetry` | `Status` | `Configuration` | `Metric` | `Counter` | `Event` |
-  `Command` | `Setpoint` | `Identification` | `Other`.
+  `Command` | `Setpoint` | `Identification` | `Dimension` | `Other`.
+- `metricInstrumentType` (per `boundItems` entry) ∈ `Counter` | `UpDownCounter` |
+  `Histogram` | `Gauge` | `ObservableCounter` | `ObservableUpDownCounter` |
+  `ObservableGauge`; omit it to use the Kind default (`Telemetry`/`Metric` → `Gauge`,
+  `Counter` → `Counter`).
+- `unit` (per metric `boundItems` entry) is an optional UCUM unit string such as `Cel`,
+  `1/min` or `W`; omit it to derive the unit from source `EngineeringUnits`.
+- `explicitBucketBoundaries` (per metric `boundItems` entry) is an array of numbers for
+  `metricInstrumentType: "Histogram"` only.
+- `metricTemporality` (per metric `boundItems` entry) ∈ `Cumulative` | `Delta`.
+- `monotonic` (per metric `boundItems` entry) is an optional boolean; omit it to let the
+  bridge imply monotonicity from the instrument.
+- Use `kind: "Dimension"` for binding-level metric/log attributes. Its attribute key is
+  `fieldName`; set `browsePath` for a node-sourced value or `dimensionConstantValue` for a
+  constant string value that needs no source node.
 - `sourceScenarioBindingClassId` (per `boundItems` entry) is the provenance Guid for the
   scenario binding class that contributed the field. It is normally set by composition/the
   generator, not hand-authored, and lets subscribers extract exact per-facet field subsets from a
@@ -462,6 +531,14 @@ Field notes:
   `BaseEventType`); the generator uses it as each event field's `SourceTypeDefinition`.
 - `filter` is optional and represents the event `ContentFilter` where-clause; use it only when
   the scenario requires a severity, event-type or domain-specific restriction.
+- `logTemplate` (Events only) is an OTEL LogRecord body message template with `{FieldName}`
+  holes that reference selected event field names.
+- `logSeverityFieldName` (Events only) names the selected event field mapped to OTEL
+  LogRecord `SeverityNumber`/`SeverityText`.
+- `logBodyFieldName` (Events only) names a selected event field that already carries the
+  rendered OTEL LogRecord body; use it as an alternative to `logTemplate`.
+- `logTimestampFieldName` (Events only) names the selected event field mapped to the OTEL
+  LogRecord `Timestamp`.
 
 ## Annex template (per Scenario)
 

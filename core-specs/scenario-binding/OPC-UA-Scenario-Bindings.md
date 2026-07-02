@@ -65,7 +65,7 @@ Key words **shall**, **should**, **may**, **shall not** are to be interpreted as
 
 A Scenario Binding carries two distinct kinds of metadata, and keeping them separate is the central design idea:
 
-1. **Routing metadata — for the bridge.** The `ScenarioUri` says *which integration this serves*; the per‑item `Kind` says *how to forward this value* (a time series, a log record, an action, …). A bridge that "supports the Observability Scenario" can configure itself from routing metadata alone, for any domain.
+1. **Routing metadata — for the bridge.** The `ScenarioUri` says *which integration this serves*; the per‑item `Kind` says *how to forward this value* (a time series, a log record, an action, …). A bridge that "supports the Observability Scenario" can configure itself from routing metadata alone, for any domain. For the Observability Scenario, the routing metadata also includes the OTEL metric instrument (`MetricInstrumentType`), the metric dimensions (`Kind = Dimension` items) and, for logs, the `LogTemplate`, so a bridge produces correct OTEL metrics/logs without domain knowledge.
 2. **Semantic metadata — for the consumer.** Each bound item also retains a **cross‑reference back to the model** that defines it: the source `TypeDefinition`, the namespace‑qualified `BrowseName`, the `ModelNamespaceUri`, and — where available — a dictionary entry ([OPC 10000‑19](https://reference.opcfoundation.org/specs/OPC-10000-19/), IRDI/CDD). This is what lets a *disconnected* consumer, holding only a PubSub message, recover what the value *means*.
 
 The bridge never needs the semantic layer to do its job; it forwards it verbatim so the ultimate consumer can use it.
@@ -113,8 +113,11 @@ classDiagram
     +FieldName
     +Kind
     +BrowsePath
+    +DimensionConstantValue
   }
-  class BoundVariableType
+  class BoundVariableType {
+    +MetricInstrumentType
+  }
   class BoundMethodType {
     +OwningObjectPath
   }
@@ -216,7 +219,7 @@ BrowsePaths at or above the cardinality anchor select which DataSet instances ar
 
 ### 5.3 BoundItemType and its subtypes
 
-A [`BoundItemType`](#type-BoundItemType) describes one DataSet field or action. It **shall** carry a `FieldName` and a `Kind` (a [`BoundItemKindEnum`](#type-BoundItemKindEnum)). It locates its source in one of two ways (§5.10) and carries the semantic cross-reference (§5.4). [`BoundVariableType`](#type-BoundVariableType) binds a Variable exposed as a data DataSet field. [`BoundMethodType`](#type-BoundMethodType) binds a Method exposed as an action and adds `OwningObjectPath`. [`BoundEventFieldType`](#type-BoundEventFieldType) binds an event field selected by a [`SimpleAttributeOperand`](https://reference.opcfoundation.org/specs/OPC-10000-4/7.4.4); its `BrowsePath` is relative to the event `SourceTypeDefinition`, not to the AddressSpace instance.
+A [`BoundItemType`](#type-BoundItemType) describes one DataSet field or action. It **shall** carry a `FieldName` and a `Kind` (a [`BoundItemKindEnum`](#type-BoundItemKindEnum)). It locates its source in one of two ways (§5.10) and carries the semantic cross-reference (§5.4). [`BoundVariableType`](#type-BoundVariableType) binds a Variable exposed as a data DataSet field. [`BoundMethodType`](#type-BoundMethodType) binds a Method exposed as an action and adds `OwningObjectPath`. [`BoundEventFieldType`](#type-BoundEventFieldType) binds an event field selected by a [`SimpleAttributeOperand`](https://reference.opcfoundation.org/specs/OPC-10000-4/7.4.4); its `BrowsePath` is relative to the event `SourceTypeDefinition`, not to the AddressSpace instance. `BoundVariableType` additionally carries the Observability/OTEL metric members (`MetricInstrumentType`, `Unit`, `ExplicitBucketBoundaries`, `MetricTemporality`, `Monotonic`), and a bound item may instead be a metric dimension (`Kind = Dimension`, optionally with a `DimensionConstantValue`); see §5.13.
 
 ```mermaid
 classDiagram
@@ -226,12 +229,19 @@ classDiagram
     +FieldName
     +Kind
     +BrowsePath
+    +DimensionConstantValue
     +SourceTypeDefinition
     +SourceBrowseName
     +ModelNamespaceUri
     +SemanticReferenceUri
   }
-  class BoundVariableType
+  class BoundVariableType {
+    +MetricInstrumentType
+    +Unit
+    +ExplicitBucketBoundaries
+    +MetricTemporality
+    +Monotonic
+  }
   class BoundMethodType {
     +OwningObjectPath
   }
@@ -342,7 +352,7 @@ This specification defines the following baseline Scenario URIs under the root `
 
 | Scenario | Purpose |
 |---|---|
-| `Observability` | Real-time operational monitoring — SCADA/HMI, dashboards, observability platforms. |
+| `Observability` | Real-time operational monitoring — SCADA/HMI, dashboards, observability platforms; defines the OTEL metric/dimension/log mapping (§5.13). |
 | `PredictiveMaintenance` | Condition and usage trending for maintenance analytics. |
 | `AnomalyDetection` | High-resolution correlated signals for baseline/deviation modelling. |
 | `EnergyAndLoadManagement` | Power, load, demand and energy coordination. |
@@ -373,6 +383,45 @@ A base facet binding **may** merge into the composing DataSet only when its (re-
 `DataSetClassId` still identifies the concrete composed class deterministically. A subscriber that understands a base facet selects exactly the composed fields whose `SourceScenarioBindingClassId` equals that facet's `DataSetClassId`; a subscriber that understands the full composed class consumes every field (those tagged with a base facet class plus the composing binding's own untagged fields).
 
 Guidance: use a subtype binding for is-a refinement, use an Interface facet binding for a contract capability implemented by many types without adding new structure, and use an AddIn binding for a reusable structural block that brings its own sub-objects, for example a GPS or Location block, whose fields compose into the host's DataSet.
+
+### 5.13 Observability mapping (OTEL) (normative)
+
+This subsection defines how a bridge that supports the `Observability` Scenario maps a [`ScenarioBindingType`](#type-ScenarioBindingType) to OpenTelemetry (OTEL) signals.
+
+**Metrics — instrument selection.** A bound Variable in an Observability binding maps to exactly one OTEL metric instrument. If `MetricInstrumentType` is present it selects the instrument directly and overrides the default; if it is absent, the bridge derives the instrument from the item's `Kind` as follows:
+
+| Bound item `Kind` | Default OTEL metric instrument |
+|---|---|
+| `Telemetry` | Gauge |
+| `Metric` | Gauge |
+| `Counter` | Counter (monotonic) |
+| `Status` | Gauge (numeric state) — informative |
+| other kinds | Not a metric; a bridge may skip the item or treat it as a Gauge. |
+
+`Monotonic` is implied by the selected instrument unless set explicitly: Counter and ObservableCounter instruments are monotonic, while UpDownCounter and Gauge instruments are not monotonic. An explicit `Monotonic` shall not contradict the selected instrument: it shall be `true` (or absent) for `Counter` and `ObservableCounter`, and `false` (or absent) for `UpDownCounter`, `Gauge`, `ObservableUpDownCounter`, and `ObservableGauge`; a Server shall not publish a contradictory combination.
+
+**Metric unit.** The metric unit is `Unit` (a UCUM annotation) when present; otherwise a bridge SHOULD derive it from the source Variable's `EngineeringUnits` (`EUInformation`) where present; otherwise the metric is unitless. `Unit` is also the carrier that survives export to a disconnected consumer.
+
+**Histogram buckets and temporality.** For `Histogram`, `ExplicitBucketBoundaries` (Double[]) gives the bucket boundaries a bridge configures. `MetricTemporality` (`Cumulative` or `Delta`) is the aggregation temporality a bridge uses when exporting a Sum (`Counter` or `UpDownCounter`) or Histogram data stream: Cumulative reports totals since a fixed start, and Delta reports the change since the previous export. For Gauge instruments temporality does not apply because a Gauge reports the last value. When `MetricTemporality` is absent, `Cumulative` is assumed for `Counter`, `UpDownCounter`, and `Histogram` (Sum/Histogram) instruments, and Gauges report last-value.
+
+**Dimensions (attributes).** Within an Observability binding, every bound item with `Kind = Dimension` is an attribute applied to every metric and log data point that binding produces; dimensions are binding-level in this revision.
+
+A dimension's attribute key is its `FieldName`; its value is read from the dimension item's source node through its `BrowsePath` unless `DimensionConstantValue` is set, in which case the dimension is a constant attribute, for example `service.name`. Non-dimension items in the binding are the measured values. A bridge attaches the binding's dimension set to each metric data point and each log record it emits.
+
+**Structured logs.** For an event binding (`ContentKind = Events`), the bound event fields are the structured attributes of an OTEL LogRecord. `LogTemplate` is a message template whose `{FieldName}` holes reference bound event `FieldName`s; a bridge renders it to the LogRecord Body while still carrying the fields as attributes. Alternatively, `LogBodyFieldName` names a field already carrying the rendered body. A Server should set only one of `LogTemplate` or `LogBodyFieldName`; if both are present, `LogTemplate` shall take precedence for the LogRecord Body and `LogBodyFieldName` is then treated as an ordinary attribute. `LogSeverityFieldName` names the field mapped to the LogRecord SeverityNumber/SeverityText, and `LogTimestampFieldName` names the field mapped to the LogRecord Timestamp. The binding's `Kind = Dimension` items also apply to each log record as attributes.
+
+When the bound severity field already carries an OTEL SeverityNumber (1..24), a bridge uses it directly; otherwise it applies the following recommended mapping from the OPC UA `Severity` UInt16 value, S, to OTEL SeverityNumber/SeverityText. A bridge MAY use a finer mapping.
+
+| OPC UA `Severity` | OTEL SeverityNumber (SeverityText) |
+|---|---|
+| 1–199 | 5 (DEBUG) |
+| 200–399 | 9 (INFO) |
+| 400–599 | 13 (WARN) |
+| 600–799 | 17 (ERROR) |
+| 800–1000 | 21 (FATAL) |
+
+These members are Optional and are ignored by scenarios other than Observability; they do not change the `DataSetClassId` derivation.
+
 
 ## 6 Using the binding registry (informative)
 
@@ -451,6 +500,7 @@ The following Conformance Units (CUs) are defined; Facets group them for Servers
 | DataSet Cardinality | Resolve `DataSetCardinalityPath` and create one DataSet instance per matched cardinality anchor while sharing the binding's `DataSetClassId`. |
 | DataSet Class Identity | Compute the deterministic `DataSetClassId` per §5.7 and propagate it to `DataSetMetaData.dataSetClassId` and `PublishedDataSet.DataSetClassId` wherever PubSub is configured. |
 | Binding Inheritance & Facet Composition | Compose the effective DataSet for a Scenario by unioning bindings inherited via subtype, `HasInterface` and `HasAddIn` (override by `FieldName`), advertise base classes via `BaseDataSetClassIds`, and tag field provenance with `SourceScenarioBindingClassId` (§5.12). |
+| Observability OTEL Mapping *(optional, per-scenario)* | For the Observability scenario, map bound values to OTEL metric instruments per `MetricInstrumentType` (or the Kind default), attach the binding's `Kind = Dimension` items as attributes, and render event bindings to OTEL LogRecords via `LogTemplate`/`LogSeverityFieldName`/`LogBodyFieldName`/`LogTimestampFieldName` (§5.13). |
 | Variable Realization *(optional)* | Realize a data binding as one Part 14 `PublishedDataSet`/`DataSetWriter` per DataSet instance produced by `DataSetCardinalityPath`, with `PublishedDataItemsType`. Applicable only where the Server implements PubSub. |
 | Event DataSet Binding *(optional)* | Realize an event binding as one Part 14 `PublishedDataSet`/`DataSetWriter` per DataSet instance produced by `DataSetCardinalityPath`, with `PublishedEventsType`, mapping `BoundEventFieldType`/`EventFieldOperand` to `SelectedFields`, `EventSourcePath` to the notifier and `Filter` to the event filter. Applicable only where the Server implements PubSub. |
 | Action Realization *(optional)* | Realize a bound Method as a Part 14 Action/ActionTarget. Applicable only where the Server implements PubSub. |
@@ -461,7 +511,7 @@ The following Conformance Units (CUs) are defined; Facets group them for Servers
 
 - **Server Scenario Binding Facet** — Discovery + Binding Grouping + Scenario Registry + BrowsePath Resolution + DataSet Cardinality + Semantic Cross-Reference + DataSet Class Identity + Binding Inheritance & Facet Composition (mandatory); Variable Realization + Event DataSet Binding + Action Realization + PubSub MetaData Propagation (as offered, only where PubSub is implemented).
 - **Publisher Facet** — Variable Realization and/or Event DataSet Binding + PubSub MetaData Propagation.
-- **Bridge (Client) Facet** — select a Scenario from the `Scenarios` registry, browse `HasScenarioBinding` to serving bindings (or inspect groups directly), recognize by `DataSetClassId`, compose the effective DataSet by the §5.12 union algorithm, resolve `DataSetCardinalityPath`, realize via the classic path (default) or PubSub where configured, forward by `Kind`.
+- **Bridge (Client) Facet** — select a Scenario from the `Scenarios` registry, browse `HasScenarioBinding` to serving bindings (or inspect groups directly), recognize by `DataSetClassId`, compose the effective DataSet by the §5.12 union algorithm, resolve `DataSetCardinalityPath`, realize via the classic path (default) or PubSub where configured, forward by `Kind`; optionally support Observability OTEL Mapping for the Observability Scenario.
 
 ## 8 Deliverables and reproducibility
 
@@ -501,6 +551,8 @@ This annex is the normative node reference. It is generated from `tools/build_mo
 | i=60016 | [IScenarioBoundType](#type-IScenarioBoundType) | ObjectType | [BaseInterfaceType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.9) |
 | i=60050 | [ScenarioBindingDirectionEnum](#type-ScenarioBindingDirectionEnum) | DataType | Enumeration |
 | i=60051 | [BoundItemKindEnum](#type-BoundItemKindEnum) | DataType | Enumeration |
+| i=60053 | [MetricInstrumentTypeEnum](#type-MetricInstrumentTypeEnum) | DataType | Enumeration |
+| i=60054 | [MetricTemporalityEnum](#type-MetricTemporalityEnum) | DataType | Enumeration |
 | i=60052 | [ScenarioContentKindEnum](#type-ScenarioContentKindEnum) | DataType | Enumeration |
 | i=60060 | [BoundItemDataType](#type-BoundItemDataType) | DataType | Structure |
 
@@ -559,6 +611,7 @@ A single item bound into a scenario: it references the companion-spec node it ex
 | DataSetFieldId | Variable | Guid | Optional | BoundItemType | GUID correlating the item to Part 14 FieldMetaData. |
 | SourceScenarioBindingClassId | Variable | Guid | Optional | BoundItemType | Provenance: DataSetClassId of the base scenario binding this field originates from (its facet). Lets a subscriber partition a composed DataSet into exact per-base-class field subsets. Absent for fields defined by this binding itself. |
 | SemanticReferenceUri | Variable | String | Optional | BoundItemType | Optional external semantic identifier (e.g. IRDI/CDD). |
+| DimensionConstantValue | Variable | String | Optional | BoundItemType | For a Kind=Dimension item whose attribute value is a constant (not read from a node): the attribute value; the attribute key is FieldName. Absent for a node-sourced dimension (which uses its BrowsePath). |
 
 <a id="type-BoundVariableType"></a>
 #### BoundVariableType  (i=60013)
@@ -569,6 +622,11 @@ A bound Variable exposed as a PubSub DataSet field.
 
 | BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
 |---|---|---|---|---|---|
+| MetricInstrumentType | Variable | [MetricInstrumentTypeEnum](#type-MetricInstrumentTypeEnum) | Optional | BoundVariableType | OTEL metric instrument this value maps to (Counter, UpDownCounter, Histogram, Gauge and the observable variants). Primarily used by the Observability scenario; when absent a bridge applies the default for the item's Kind. |
+| Unit | Variable | String | Optional | BoundVariableType | UCUM unit annotation for the metric. When absent a bridge derives the unit from the source node's EngineeringUnits (EUInformation) where present. |
+| ExplicitBucketBoundaries | Variable | Double\[\] | Optional | BoundVariableType | For a Histogram instrument: the explicit bucket boundaries a bridge configures. |
+| MetricTemporality | Variable | [MetricTemporalityEnum](#type-MetricTemporalityEnum) | Optional | BoundVariableType | Aggregation temporality (Cumulative/Delta) of the metric value, so a bridge accumulates or reports it correctly. |
+| Monotonic | Variable | Boolean | Optional | BoundVariableType | Whether the metric is monotonically increasing. When absent, monotonicity is implied by MetricInstrumentType (e.g. Counter is monotonic, UpDownCounter is not). |
 | FieldName | Variable | String | Mandatory | [BoundItemType](#type-BoundItemType) | Stable logical field name of the item. |
 | Kind | Variable | [BoundItemKindEnum](#type-BoundItemKindEnum) | Mandatory | [BoundItemType](#type-BoundItemType) | Generic routing role of the item. |
 | AttributeId | Variable | UInt32 | Optional | [BoundItemType](#type-BoundItemType) | Attribute of the source node to expose (default 13 = Value). |
@@ -583,6 +641,7 @@ A bound Variable exposed as a PubSub DataSet field.
 | DataSetFieldId | Variable | Guid | Optional | [BoundItemType](#type-BoundItemType) | GUID correlating the item to Part 14 FieldMetaData. |
 | SourceScenarioBindingClassId | Variable | Guid | Optional | [BoundItemType](#type-BoundItemType) | Provenance: DataSetClassId of the base scenario binding this field originates from (its facet). Lets a subscriber partition a composed DataSet into exact per-base-class field subsets. Absent for fields defined by this binding itself. |
 | SemanticReferenceUri | Variable | String | Optional | [BoundItemType](#type-BoundItemType) | Optional external semantic identifier (e.g. IRDI/CDD). |
+| DimensionConstantValue | Variable | String | Optional | [BoundItemType](#type-BoundItemType) | For a Kind=Dimension item whose attribute value is a constant (not read from a node): the attribute value; the attribute key is FieldName. Absent for a node-sourced dimension (which uses its BrowsePath). |
 
 <a id="type-BoundMethodType"></a>
 #### BoundMethodType  (i=60014)
@@ -608,6 +667,7 @@ A bound Method exposed as an invokable action; may be realized as a Part 14 Acti
 | DataSetFieldId | Variable | Guid | Optional | [BoundItemType](#type-BoundItemType) | GUID correlating the item to Part 14 FieldMetaData. |
 | SourceScenarioBindingClassId | Variable | Guid | Optional | [BoundItemType](#type-BoundItemType) | Provenance: DataSetClassId of the base scenario binding this field originates from (its facet). Lets a subscriber partition a composed DataSet into exact per-base-class field subsets. Absent for fields defined by this binding itself. |
 | SemanticReferenceUri | Variable | String | Optional | [BoundItemType](#type-BoundItemType) | Optional external semantic identifier (e.g. IRDI/CDD). |
+| DimensionConstantValue | Variable | String | Optional | [BoundItemType](#type-BoundItemType) | For a Kind=Dimension item whose attribute value is a constant (not read from a node): the attribute value; the attribute key is FieldName. Absent for a node-sourced dimension (which uses its BrowsePath). |
 
 <a id="type-BoundEventFieldType"></a>
 #### BoundEventFieldType  (i=60017)
@@ -633,6 +693,7 @@ A bound event field of an event DataSet, selected by a Part 14 SimpleAttributeOp
 | DataSetFieldId | Variable | Guid | Optional | [BoundItemType](#type-BoundItemType) | GUID correlating the item to Part 14 FieldMetaData. |
 | SourceScenarioBindingClassId | Variable | Guid | Optional | [BoundItemType](#type-BoundItemType) | Provenance: DataSetClassId of the base scenario binding this field originates from (its facet). Lets a subscriber partition a composed DataSet into exact per-base-class field subsets. Absent for fields defined by this binding itself. |
 | SemanticReferenceUri | Variable | String | Optional | [BoundItemType](#type-BoundItemType) | Optional external semantic identifier (e.g. IRDI/CDD). |
+| DimensionConstantValue | Variable | String | Optional | [BoundItemType](#type-BoundItemType) | For a Kind=Dimension item whose attribute value is a constant (not read from a node): the attribute value; the attribute key is FieldName. Absent for a node-sourced dimension (which uses its BrowsePath). |
 
 <a id="type-ScenarioBindingType"></a>
 #### ScenarioBindingType  (i=60011)
@@ -653,6 +714,10 @@ One scenario binding on a bound object or type. It declares the scenario URI and
 | DataSetMetaData | Variable | [DataSetMetaDataType](https://reference.opcfoundation.org/specs/OPC-10000-14/6.2.3#6.2.3.2.3) | Optional | ScenarioBindingType | Part 14 DataSetMetaData for this DataSet (fields, dataSetClassId, configurationVersion), exposed so a consumer gets the class schema offline. |
 | EventSourcePath | Variable | [RelativePath](https://reference.opcfoundation.org/specs/OPC-10000-4/7.30) | Optional | ScenarioBindingType | For an event DataSet: RelativePath to the event notifier to subscribe to (default: the cardinality anchor, i.e. the bound root when DataSetCardinalityPath is omitted). |
 | Filter | Variable | [ContentFilter](https://reference.opcfoundation.org/specs/OPC-10000-4/7.4.1) | Optional | ScenarioBindingType | For an event DataSet: optional ContentFilter (event where-clause). |
+| LogTemplate | Variable | String | Optional | ScenarioBindingType | For an event/log DataSet: a structured-log message template with {FieldName} holes that reference the binding's bound event fields, so a bridge can render an OTEL LogRecord Body while still carrying the fields as attributes. |
+| LogSeverityFieldName | Variable | String | Optional | ScenarioBindingType | For an event/log DataSet: FieldName of the bound field carrying severity, mapped to the OTEL LogRecord SeverityNumber/SeverityText. |
+| LogBodyFieldName | Variable | String | Optional | ScenarioBindingType | For an event/log DataSet: FieldName of the bound field carrying the rendered body, an alternative to LogTemplate when the Server already produces the message text. |
+| LogTimestampFieldName | Variable | String | Optional | ScenarioBindingType | For an event/log DataSet: FieldName of the bound field carrying the record timestamp, mapped to the OTEL LogRecord Timestamp. |
 | BoundItems | Variable | [BoundItemDataType](#type-BoundItemDataType)\[\] | Optional | ScenarioBindingType | Compact machine-readable list of bound items (the DataSet fields). |
 | <BoundItem> | Object |  | OptionalPlaceholder | ScenarioBindingType | A browsable bound item (rich form of a BoundItems entry). |
 
@@ -741,6 +806,36 @@ Generic role of a bound item for routing/bridging. It is intentionally domain-ag
 | Setpoint | 7 | A writable setpoint/target value. |
 | Identification | 8 | Static nameplate/identity information. |
 | Other | 9 | Any other role. |
+| Dimension | 10 | An attribute/label that qualifies the metrics and logs of its binding (an OTEL/metric dimension), not a measured value. Applied to every data point the binding produces. |
+
+<a id="type-MetricInstrumentTypeEnum"></a>
+#### MetricInstrumentTypeEnum  (i=60053)
+
+*Subtype of:* Enumeration
+
+The OpenTelemetry-style metric instrument a bound value maps to. Lets a bridge emit the correct instrument without domain knowledge; complements the coarser BoundItemKindEnum.
+
+| Name | Value | Description |
+|---|---|---|
+| Counter | 0 | Monotonically increasing synchronous sum (OTEL Counter). |
+| UpDownCounter | 1 | Non-monotonic synchronous sum (OTEL UpDownCounter). |
+| Histogram | 2 | Synchronous distribution of values (OTEL Histogram). |
+| Gauge | 3 | Synchronous last-value sample (OTEL Gauge). |
+| ObservableCounter | 4 | Asynchronous monotonic sum, observed on collect (OTEL ObservableCounter). |
+| ObservableUpDownCounter | 5 | Asynchronous non-monotonic sum (OTEL ObservableUpDownCounter). |
+| ObservableGauge | 6 | Asynchronous last-value sample (OTEL ObservableGauge). |
+
+<a id="type-MetricTemporalityEnum"></a>
+#### MetricTemporalityEnum  (i=60054)
+
+*Subtype of:* Enumeration
+
+Aggregation temporality of a metric value, so a bridge accumulates or reports it correctly.
+
+| Name | Value | Description |
+|---|---|---|
+| Cumulative | 0 | The value is a running total since a fixed start (OTEL cumulative). |
+| Delta | 1 | The value is the change since the previous report (OTEL delta). |
 
 <a id="type-ScenarioContentKindEnum"></a>
 #### ScenarioContentKindEnum  (i=60052)
@@ -779,6 +874,12 @@ Machine-readable descriptor of a single bound item: how to LOCATE it (BrowsePath
 | SourceScenarioBindingClassId | Guid | Provenance: DataSetClassId of the base scenario binding this field originates from (its facet). Lets a subscriber partition a composed DataSet into exact per-base-class field subsets. Absent for fields defined by this binding itself. |
 | SemanticReferenceUri | String | Optional external semantic identifier (e.g. IRDI/CDD) for the item. |
 | EventFieldOperand | [SimpleAttributeOperand](https://reference.opcfoundation.org/specs/OPC-10000-4/7.4.4) | For an event-DataSet field: the Part 14 SimpleAttributeOperand that selects it (alternative/complement to BrowsePath, whose segments are then relative to the event TypeDefinition). |
+| MetricInstrumentType | [MetricInstrumentTypeEnum](#type-MetricInstrumentTypeEnum) | OTEL metric instrument this value maps to (Counter, Histogram, Gauge, …); primarily for the Observability scenario. |
+| Unit | String | UCUM unit annotation for the metric; if absent a bridge derives it from the source node's EngineeringUnits. |
+| ExplicitBucketBoundaries | Double\[\] | For a Histogram instrument: the explicit bucket boundaries. |
+| MetricTemporality | [MetricTemporalityEnum](#type-MetricTemporalityEnum) | Aggregation temporality (Cumulative/Delta) of the metric value. |
+| Monotonic | Boolean | Whether the metric is monotonic; if absent it is implied by MetricInstrumentType. |
+| DimensionConstantValue | String | For a Kind=Dimension item with a constant value: the attribute value (key is FieldName). Absent when the dimension value is read from the source node. |
 
 ### Methods
 
@@ -797,4 +898,3 @@ Machine-readable descriptor of a single bound item: how to LOCATE it (BrowsePath
 | EnergyAndLoadManagement | i=60113 | [ScenarioProfileType](#type-ScenarioProfileType) | Power, load, demand and energy signals for load management, peak shaving and grid-services coordination. |
 | AlarmAndEventDistribution | i=60114 | [ScenarioProfileType](#type-ScenarioProfileType) | Condition and event streams for operators, CMMS/EAM and safety functions. |
 | FleetAndCompliance | i=60115 | [ScenarioProfileType](#type-ScenarioProfileType) | Multi-site supervision, contractual reporting and regulatory compliance. |
-

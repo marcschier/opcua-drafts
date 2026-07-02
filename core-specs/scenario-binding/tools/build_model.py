@@ -390,6 +390,27 @@ enum_type(60051, "BoundItemKindEnum",
     ("Setpoint", 7, "A writable setpoint/target value."),
     ("Identification", 8, "Static nameplate/identity information."),
     ("Other", 9, "Any other role."),
+    ("Dimension", 10, "An attribute/label that qualifies the metrics and logs of its binding (an OTEL/metric dimension), not a measured value. Applied to every data point the binding produces."),
+])
+
+enum_type(60053, "MetricInstrumentTypeEnum",
+          "The OpenTelemetry-style metric instrument a bound value maps to. Lets a bridge "
+          "emit the correct instrument without domain knowledge; complements the coarser "
+          "BoundItemKindEnum.", CAT_DT, [
+    ("Counter", 0, "Monotonically increasing synchronous sum (OTEL Counter)."),
+    ("UpDownCounter", 1, "Non-monotonic synchronous sum (OTEL UpDownCounter)."),
+    ("Histogram", 2, "Synchronous distribution of values (OTEL Histogram)."),
+    ("Gauge", 3, "Synchronous last-value sample (OTEL Gauge)."),
+    ("ObservableCounter", 4, "Asynchronous monotonic sum, observed on collect (OTEL ObservableCounter)."),
+    ("ObservableUpDownCounter", 5, "Asynchronous non-monotonic sum (OTEL ObservableUpDownCounter)."),
+    ("ObservableGauge", 6, "Asynchronous last-value sample (OTEL ObservableGauge)."),
+])
+
+enum_type(60054, "MetricTemporalityEnum",
+          "Aggregation temporality of a metric value, so a bridge accumulates or reports it "
+          "correctly.", CAT_DT, [
+    ("Cumulative", 0, "The value is a running total since a fixed start (OTEL cumulative)."),
+    ("Delta", 1, "The value is the change since the previous report (OTEL delta)."),
 ])
 
 enum_type(60052, "ScenarioContentKindEnum",
@@ -423,6 +444,12 @@ struct_type(60060, "BoundItemDataType",
     ("SourceScenarioBindingClassId", Guid, None, "Provenance: DataSetClassId of the base scenario binding this field originates from (its facet). Lets a subscriber partition a composed DataSet into exact per-base-class field subsets. Absent for fields defined by this binding itself."),
     ("SemanticReferenceUri", String, None, "Optional external semantic identifier (e.g. IRDI/CDD) for the item."),
     ("EventFieldOperand", SimpleAttributeOperand, None, "For an event-DataSet field: the Part 14 SimpleAttributeOperand that selects it (alternative/complement to BrowsePath, whose segments are then relative to the event TypeDefinition)."),
+    ("MetricInstrumentType", T(60053), None, "OTEL metric instrument this value maps to (Counter, Histogram, Gauge, …); primarily for the Observability scenario."),
+    ("Unit", String, None, "UCUM unit annotation for the metric; if absent a bridge derives it from the source node's EngineeringUnits."),
+    ("ExplicitBucketBoundaries", Double, "1", "For a Histogram instrument: the explicit bucket boundaries."),
+    ("MetricTemporality", T(60054), None, "Aggregation temporality (Cumulative/Delta) of the metric value."),
+    ("Monotonic", Boolean, None, "Whether the metric is monotonic; if absent it is implied by MetricInstrumentType."),
+    ("DimensionConstantValue", String, None, "For a Kind=Dimension item with a constant value: the attribute value (key is FieldName). Absent when the dimension value is read from the source node."),
 ])
 
 # Note: the portable "full binding" interchange DataTypes (ScenarioBindingDataType,
@@ -453,9 +480,30 @@ prop_var(60012, BI, "SourceScenarioBindingClassId", Guid,
          "(its facet). Lets a subscriber partition a composed DataSet into exact per-base-class "
          "field subsets. Absent for fields defined by this binding itself.")
 prop_var(60012, BI, "SemanticReferenceUri", String, "Optional external semantic identifier (e.g. IRDI/CDD).")
+prop_var(60012, BI, "DimensionConstantValue", String,
+         "For a Kind=Dimension item whose attribute value is a constant (not read from a node): "
+         "the attribute value; the attribute key is FieldName. Absent for a node-sourced dimension "
+         "(which uses its BrowsePath).")
 
 object_type(60013, "BoundVariableType", T(60012),
             "A bound Variable exposed as a PubSub DataSet field.", CAT)
+BV = "BoundVariableType"
+prop_var(60013, BV, "MetricInstrumentType", T(60053),
+         "OTEL metric instrument this value maps to (Counter, UpDownCounter, Histogram, Gauge and "
+         "the observable variants). Primarily used by the Observability scenario; when absent a "
+         "bridge applies the default for the item's Kind.")
+prop_var(60013, BV, "Unit", String,
+         "UCUM unit annotation for the metric. When absent a bridge derives the unit from the "
+         "source node's EngineeringUnits (EUInformation) where present.")
+prop_var(60013, BV, "ExplicitBucketBoundaries", Double,
+         "For a Histogram instrument: the explicit bucket boundaries a bridge configures.",
+         valuerank="1")
+prop_var(60013, BV, "MetricTemporality", T(60054),
+         "Aggregation temporality (Cumulative/Delta) of the metric value, so a bridge accumulates "
+         "or reports it correctly.")
+prop_var(60013, BV, "Monotonic", Boolean,
+         "Whether the metric is monotonically increasing. When absent, monotonicity is implied by "
+         "MetricInstrumentType (e.g. Counter is monotonic, UpDownCounter is not).")
 
 object_type(60014, "BoundMethodType", T(60012),
             "A bound Method exposed as an invokable action; may be realized as a Part 14 "
@@ -508,6 +556,19 @@ prop_var(60011, SB, "EventSourcePath", RelativePath,
          "is omitted).")
 prop_var(60011, SB, "Filter", ContentFilter,
          "For an event DataSet: optional ContentFilter (event where-clause).")
+prop_var(60011, SB, "LogTemplate", String,
+         "For an event/log DataSet: a structured-log message template with {FieldName} holes that "
+         "reference the binding's bound event fields, so a bridge can render an OTEL LogRecord Body "
+         "while still carrying the fields as attributes.")
+prop_var(60011, SB, "LogSeverityFieldName", String,
+         "For an event/log DataSet: FieldName of the bound field carrying severity, mapped to the "
+         "OTEL LogRecord SeverityNumber/SeverityText.")
+prop_var(60011, SB, "LogBodyFieldName", String,
+         "For an event/log DataSet: FieldName of the bound field carrying the rendered body, an "
+         "alternative to LogTemplate when the Server already produces the message text.")
+prop_var(60011, SB, "LogTimestampFieldName", String,
+         "For an event/log DataSet: FieldName of the bound field carrying the record timestamp, "
+         "mapped to the OTEL LogRecord Timestamp.")
 prop_var(60011, SB, "BoundItems", T(60060), "Compact machine-readable list of bound items (the DataSet fields).", valuerank="1")
 placeholder_obj(60011, SB, "<BoundItem>", T(60012),
                 "A browsable bound item (rich form of a BoundItems entry).")

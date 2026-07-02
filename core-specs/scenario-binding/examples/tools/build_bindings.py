@@ -34,13 +34,18 @@ BIND = {
     "BoundEventFieldType": 60017, "ScenarioBindingGroupType": 60018,
     "ScenarioBindingDirectionEnum": 60050, "BoundItemKindEnum": 60051,
     "ScenarioContentKindEnum": 60052,
+    "MetricInstrumentTypeEnum": 60053, "MetricTemporalityEnum": 60054,
     "BindsToNode": 60001, "ScenarioRealizedBy": 60002,
 }
 DIRECTION = {"Publisher": 0, "Subscriber": 1, "ActionInvoker": 2,
              "ActionResponder": 3, "Bidirectional": 4}
 KIND = {"Telemetry": 0, "Status": 1, "Configuration": 2, "Metric": 3, "Counter": 4,
-        "Event": 5, "Command": 6, "Setpoint": 7, "Identification": 8, "Other": 9}
+        "Event": 5, "Command": 6, "Setpoint": 7, "Identification": 8, "Other": 9,
+        "Dimension": 10}
 CONTENT_KIND = {"DataItems": 0, "Events": 1}
+INSTRUMENT = {"Counter": 0, "UpDownCounter": 1, "Histogram": 2, "Gauge": 3,
+              "ObservableCounter": 4, "ObservableUpDownCounter": 5, "ObservableGauge": 6}
+TEMPORALITY = {"Cumulative": 0, "Delta": 1}
 # well-known base event types (ns0) whose fields an event DataSet selects
 EVENT_TYPES = {"BaseEventType": 2041, "ConditionType": 2782,
                "AlarmConditionType": 2915, "SystemEventType": 2130}
@@ -61,7 +66,7 @@ ALIASES = {
     "String": "i=12", "Int32": "i=6", "QualifiedName": "i=20", "NodeId": "i=17",
     "Guid": "i=14", "BaseDataVariableType": "i=63", "PropertyType": "i=68",
     "BaseObjectType": "i=58", "FolderType": "i=61", "SimpleAttributeOperand": "i=601",
-    "RelativePath": "i=540",
+    "RelativePath": "i=540", "Boolean": "i=1", "Double": "i=11",
 }
 # reference.opcfoundation.org links for base types used in the annex
 REF = {
@@ -98,18 +103,48 @@ def build_index(db, type_name):
     return root, idx
 
 
+def _check_item(sb, it, errors):
+    """Validate OTEL/dimension constraints on a bound item (§5.13)."""
+    where = f'{sb["name"]}/{it.get("fieldName", "?")}'
+    # A dimension is either constant (dimensionConstantValue) or node-sourced (browsePath).
+    if it.get("kind") == "Dimension" and it.get("dimensionConstantValue") is not None \
+            and "browsePath" in it:
+        errors.append(f'{where}: a dimension has both browsePath and dimensionConstantValue; '
+                      f'use exactly one')
+    # Monotonicity must not contradict the metric instrument.
+    mi, mono = it.get("metricInstrumentType"), it.get("monotonic")
+    if mi and mono is not None:
+        monotonic = mi in ("Counter", "ObservableCounter")
+        if monotonic and mono is False:
+            errors.append(f'{where}: {mi} is monotonic; monotonic:false contradicts it')
+        if not monotonic and mono is True:
+            errors.append(f'{where}: {mi} is not monotonic; monotonic:true contradicts it')
+
+
 def resolve_items(descriptor, idx):
-    """Validate each data boundItem.browsePath against the walked type; enrich in place.
-    Event bindings (contentKind=Events) select standard event-type fields and are not
-    resolved against the companion type."""
+    """Validate each bound item and enrich it in place. A Kind=Dimension item is a binding-level
+    attribute (§5.13): constant dimensions (dimensionConstantValue, no source node) are not
+    resolved; node-sourced dimensions resolve their BrowsePath like data items — in both data and
+    event bindings. Non-dimension items in an event binding are event fields (not resolved against
+    the companion type)."""
     errors = []
     for sb in descriptor["scenarioBindings"]:
-        if sb.get("contentKind", "DataItems") == "Events":
-            for it in sb["boundItems"]:
+        is_event = sb.get("contentKind", "DataItems") == "Events"
+        for it in sb["boundItems"]:
+            _check_item(sb, it, errors)
+            is_dim = it.get("kind") == "Dimension"
+            # constant dimension: fixed attribute value, no source node
+            if is_dim and it.get("dimensionConstantValue") is not None and "browsePath" not in it:
+                it["_constant_dim"] = True
+                if "fieldName" not in it:
+                    errors.append(f'{sb["name"]}: constant dimension needs a fieldName')
+                continue
+            # event field (non-dimension item in an event binding): not resolved against the type
+            if is_event and not is_dim:
                 it.setdefault("fieldName",
                               it.get("browsePath", "/").strip("/").split("/")[-1])
-            continue
-        for it in sb["boundItems"]:
+                continue
+            # data item OR node-sourced dimension: resolve the BrowsePath against the type
             names = tuple(p for p in it["browsePath"].strip("/").split("/"))
             rec = idx.get(names)
             if rec is None:
@@ -303,12 +338,31 @@ class Emitter:
         if card:
             self.prop(self.nid(), "DataSetCardinalityPath", "RelativePath",
                       self._rel_path_value(card, sb, U), bid)
+        # Structured-log mapping (§5.13): per-binding log Properties for an event/log DataSet.
+        for key, propname in (("logTemplate", "LogTemplate"),
+                              ("logSeverityFieldName", "LogSeverityFieldName"),
+                              ("logBodyFieldName", "LogBodyFieldName"),
+                              ("logTimestampFieldName", "LogTimestampFieldName")):
+            v = sb.get(key)
+            if v:
+                self.prop(self.nid(), propname, "String",
+                          f'<uax:String {U}>{sx.escape(v)}</uax:String>', bid)
         if ck == "Events":
             for it in sb["boundItems"]:
-                self.emit_event_item(bid, sb, it)
+                if it.get("kind") == "Dimension":
+                    # a binding-level dimension (attribute) also applies to log records (§5.13)
+                    if it.get("_constant_dim"):
+                        self.emit_constant_dimension(bid, sb, it)
+                    else:
+                        self.emit_item(bid, sb, it)
+                else:
+                    self.emit_event_item(bid, sb, it)
         else:
             for it in sb["boundItems"]:
-                self.emit_item(bid, sb, it)
+                if it.get("_constant_dim"):
+                    self.emit_constant_dimension(bid, sb, it)
+                else:
+                    self.emit_item(bid, sb, it)
 
     def _rel_path_value(self, path_str, sb, U):
         """Encode a RelativePath value; segment namespaces are taken from the binding's
@@ -446,6 +500,58 @@ class Emitter:
             self.prop(self.nid(), "SourceScenarioBindingClassId", "Guid",
                       f'<uax:Guid {U}><uax:String>{sx.escape(str(prov))}</uax:String>'
                       f'</uax:Guid>', iid)
+        # DimensionConstantValue for a node-sourced item is unusual, but supported.
+        if it.get("dimensionConstantValue") is not None:
+            self.prop(self.nid(), "DimensionConstantValue", "String",
+                      f'<uax:String {U}>{sx.escape(str(it["dimensionConstantValue"]))}'
+                      f'</uax:String>', iid)
+        # Observability/OTEL metric detail (§5.13): instrument, unit, buckets, temporality, monotonic.
+        if not is_method:
+            self._emit_metric_props(iid, it, U)
+
+    def _emit_metric_props(self, iid, it, U):
+        mi = it.get("metricInstrumentType")
+        if mi:
+            self.prop(self.nid(), "MetricInstrumentType", f'i={BIND["MetricInstrumentTypeEnum"]}',
+                      f'<uax:Int32 {U}>{INSTRUMENT[mi]}</uax:Int32>', iid)
+        unit = it.get("unit")
+        if unit:
+            self.prop(self.nid(), "Unit", "String",
+                      f'<uax:String {U}>{sx.escape(unit)}</uax:String>', iid)
+        buckets = it.get("explicitBucketBoundaries")
+        if buckets:
+            lst = "".join(f'<uax:Double>{float(b)}</uax:Double>' for b in buckets)
+            self.prop(self.nid(), "ExplicitBucketBoundaries", "Double",
+                      f'<uax:ListOfDouble {U}>{lst}</uax:ListOfDouble>', iid, valuerank=1)
+        temp = it.get("metricTemporality")
+        if temp:
+            self.prop(self.nid(), "MetricTemporality", f'i={BIND["MetricTemporalityEnum"]}',
+                      f'<uax:Int32 {U}>{TEMPORALITY[temp]}</uax:Int32>', iid)
+        mono = it.get("monotonic")
+        if mono is not None:
+            self.prop(self.nid(), "Monotonic", "Boolean",
+                      f'<uax:Boolean {U}>{"true" if mono else "false"}</uax:Boolean>', iid)
+
+    def emit_constant_dimension(self, binding_id, sb, it):
+        """A constant-valued dimension: a Kind=Dimension bound item whose attribute value is a
+        fixed string (DimensionConstantValue), with no source node/BrowsePath/BindsToNode."""
+        iid = self.nid()
+        fn = it["fieldName"]
+        U = 'xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"'
+        self._open("UAObject", iid, f"1:{fn}", self.ex(binding_id))
+        self.out.append(f"    <DisplayName>{sx.escape(fn)}</DisplayName>")
+        self._refs([("HasTypeDefinition", f'i={BIND["BoundVariableType"]}', True),
+                    ("HasComponent", self.ex(binding_id), False)])
+        self.out.append("  </UAObject>")
+        self.prop(self.nid(), "FieldName", "String",
+                  f'<uax:String {U}>{sx.escape(fn)}</uax:String>', iid)
+        self.prop(self.nid(), "Kind", f'i={BIND["BoundItemKindEnum"]}',
+                  f'<uax:Int32 {U}>{KIND["Dimension"]}</uax:Int32>', iid)
+        self.prop(self.nid(), "DimensionConstantValue", "String",
+                  f'<uax:String {U}>{sx.escape(str(it["dimensionConstantValue"]))}</uax:String>', iid)
+        dsfid = uuid.uuid5(FIELD_ID_NS, f'{self.d["domain"]}|{sb["scenarioUri"]}|{fn}|dimension')
+        self.prop(self.nid(), "DataSetFieldId", "Guid",
+                  f'<uax:Guid {U}><uax:String>{dsfid}</uax:String></uax:Guid>', iid)
 
     def document(self, type_key):
         self.type_key = type_key
@@ -528,22 +634,57 @@ def emit_annex(descriptor, db, base_names):
         L.append(hdr)
         L.append("")
         if ck == "Events":
-            L.append("| Field | Kind | Event field (of the event type) |")
+            L.append("| Field | Kind | Event field / attribute |")
             L.append("|---|---|---|")
             for it in sb["boundItems"]:
-                L.append(f"| {it['fieldName']} | {it['kind']} | "
-                         f"`{it.get('browsePath', '/' + it['fieldName'])}` |")
+                if it.get("kind") == "Dimension":
+                    detail = _otel_note(it)
+                else:
+                    detail = f"`{it.get('browsePath', '/' + it['fieldName'])}`"
+                L.append(f"| {it['fieldName']} | {it['kind']} | {detail} |")
+            if sb.get("logTemplate") or sb.get("logBodyFieldName"):
+                L.append("")
+                L.append(f"*Structured-log mapping (OTEL LogRecord):* body template "
+                         f"`{sb.get('logTemplate', '—')}`; severity = "
+                         f"`{sb.get('logSeverityFieldName', '—')}`, body = "
+                         f"`{sb.get('logBodyFieldName', '—')}`, timestamp = "
+                         f"`{sb.get('logTimestampFieldName', '—')}`.")
         else:
-            L.append("| Field | Kind | BrowsePath | Source type | DataType |")
-            L.append("|---|---|---|---|---|")
+            L.append("| Field | Kind | BrowsePath | Source type | DataType | OTEL |")
+            L.append("|---|---|---|---|---|---|")
             for it in sb["boundItems"]:
-                rec = it["_rec"]
-                tdname = td_name(rec["typedef"], db, base_names)
-                dt = dt_name(rec["datatype"])
-                L.append(f"| {it['fieldName']} | {it['kind']} | `{it['browsePath']}` | "
-                         f"{tdname} | {dt} |")
+                otel = _otel_note(it)
+                if it.get("_constant_dim") or "_rec" not in it:
+                    bp, tdname, dt = "—", "—", "—"
+                else:
+                    rec = it["_rec"]
+                    tdname = td_name(rec["typedef"], db, base_names)
+                    dt = dt_name(rec["datatype"])
+                    bp = f"`{it['browsePath']}`"
+                L.append(f"| {it['fieldName']} | {it['kind']} | {bp} | "
+                         f"{tdname} | {dt} | {otel} |")
         L.append("")
     return "\n".join(L) + "\n"
+
+
+def _otel_note(it):
+    """A compact OTEL annotation for the annex item table."""
+    if it.get("kind") == "Dimension":
+        if it.get("dimensionConstantValue") is not None:
+            return f"dimension = `{it['dimensionConstantValue']}` (const)"
+        return "dimension"
+    parts = []
+    if it.get("metricInstrumentType"):
+        parts.append(it["metricInstrumentType"])
+    if it.get("unit"):
+        parts.append(f"[{it['unit']}]")
+    if it.get("metricTemporality"):
+        parts.append(it["metricTemporality"].lower())
+    if it.get("monotonic"):
+        parts.append("monotonic")
+    if it.get("explicitBucketBoundaries"):
+        parts.append("buckets " + ",".join(str(b) for b in it["explicitBucketBoundaries"]))
+    return " ".join(parts) if parts else "—"
 
 
 def td_name(td, db, base_names):
@@ -733,6 +874,10 @@ def emit_resolution_examples(descriptor):
                 dsname = names[-1] if names else d["instanceName"]
                 fields = []
                 for it in sb["boundItems"]:
+                    if "browsePath" not in it:
+                        # a constant dimension is a binding-level attribute, not a value field
+                        fields.append(it["fieldName"])
+                        continue
                     suffix = it["browsePath"].strip("/").split("/")[len(card_segs):]
                     for pnames, _c in _expand(suffix, ctx, topo):
                         fields.append(it["fieldName"] + "".join("_" + n for n in pnames))

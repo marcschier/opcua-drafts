@@ -38,9 +38,9 @@
       "direction": "Publisher",
       "dataSetCardinalityPath": "/MotionDevices/<MotionDeviceIdentifier>",
       "boundItems": [
-        { "fieldName": "AxisActualPosition", "kind": "Telemetry", "browsePath": "/MotionDevices/<MotionDeviceIdentifier>/Axes/<AxisIdentifier>/ParameterSet/ActualPosition", "samplingIntervalHint": 200 },
-        { "fieldName": "MotorTemperature", "kind": "Telemetry", "browsePath": "/MotionDevices/<MotionDeviceIdentifier>/PowerTrains/<PowerTrainIdentifier>/<MotorIdentifier>/ParameterSet/MotorTemperature", "samplingIntervalHint": 2000 },
-        { "fieldName": "SpeedOverride", "kind": "Status", "browsePath": "/MotionDevices/<MotionDeviceIdentifier>/ParameterSet/SpeedOverride", "samplingIntervalHint": 500 }
+        { "fieldName": "AxisActualPosition", "kind": "Telemetry", "metricInstrumentType": "Gauge", "unit": "deg", "browsePath": "/MotionDevices/<MotionDeviceIdentifier>/Axes/<AxisIdentifier>/ParameterSet/ActualPosition", "samplingIntervalHint": 200 },
+        { "fieldName": "MotorTemperature", "kind": "Telemetry", "metricInstrumentType": "Gauge", "unit": "Cel", "browsePath": "/MotionDevices/<MotionDeviceIdentifier>/PowerTrains/<PowerTrainIdentifier>/<MotorIdentifier>/ParameterSet/MotorTemperature", "samplingIntervalHint": 2000 },
+        { "fieldName": "SpeedOverride", "kind": "Status", "metricInstrumentType": "Gauge", "unit": "%", "browsePath": "/MotionDevices/<MotionDeviceIdentifier>/ParameterSet/SpeedOverride", "samplingIntervalHint": 500 }
       ]
     },
     {
@@ -72,6 +72,10 @@
       "contentKind": "Events",
       "eventSourcePath": "/",
       "eventType": "AlarmConditionType",
+      "logTemplate": "{SourceName}: {Message} (severity {Severity})",
+      "logSeverityFieldName": "Severity",
+      "logBodyFieldName": "Message",
+      "logTimestampFieldName": "Time",
       "boundItems": [
         { "fieldName": "EventId", "kind": "Event", "browsePath": "/EventId" },
         { "fieldName": "EventType", "kind": "Event", "browsePath": "/EventType" },
