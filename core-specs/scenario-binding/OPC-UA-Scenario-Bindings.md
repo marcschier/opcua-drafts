@@ -32,6 +32,38 @@ Companion specifications describe *what a thing is*. Getting that thing's live d
 
 This specification makes the decision **part of the model and discoverable at runtime**. A Server advertises, per Scenario, exactly which nodes to move or invoke and how; a generic **bridge** — a Client whose only job is to forward OPC UA data/actions into another system — discovers the binding, uses classic Subscriptions/Reads/Calls as the baseline, or uses PubSub where the Server has realized the same binding as Part 14 configuration, and forwards each field tagged with a small, stable, domain-agnostic role. The bridge needs to understand the *Scenario* and the *routing role*, not the generator, the pump, or the robot.
 
+### 1.2 Motivating use cases
+
+The practical value is that a **single generic bridge** can serve many downstream systems with *no domain-specific code*: the Server has already decided, per Scenario, which signals matter and what they mean, and every binding is a named **DataSet** with a stable, deterministic `DataSetClassId`. A consumer recognizes and routes the data by *Scenario* and *class*, not by knowing the pump, the robot, or the generator. The use cases below are illustrative; product names are examples only and imply no endorsement.
+
+```mermaid
+flowchart LR
+  subgraph Servers[OPC UA Servers with Scenario Bindings]
+    S1[Pumps]
+    S2[Robotics]
+    S3[Generators]
+  end
+  B["Generic bridge<br/>discovers the Scenario registry<br/>Subscriptions/Reads/Calls or PubSub"]
+  OT[OTEL Collector]
+  G[Grafana dashboards]
+  AN["Analytics<br/>Apache Arrow / lakehouse · Splunk · Microsoft Fabric RTI"]
+  ML["Per-scenario ML<br/>AnomalyDetection model<br/>keyed by DataSetClassId"]
+  S1 --> B
+  S2 --> B
+  S3 --> B
+  B -->|Observability metrics + logs| OT --> G
+  B -->|self-describing DataSets| AN
+  B -->|AnomalyDetection DataSet| ML
+```
+
+**Factory-floor observability to OpenTelemetry and Grafana.** The `Observability` binding already declares which Variables are metrics — with their OTEL instrument type, unit and histogram buckets — which fields are dimensions, and how event fields become structured log records (§5.13). A bridge subscribes to the Observability DataSet and emits OpenTelemetry metrics and logs to an OTEL Collector, which drives Grafana (or any observability backend) for live factory-operations dashboards. Because the OTEL semantics are carried in the model, the same bridge lights up dashboards for a new machine or a new vendor with no per-model wiring.
+
+**Egress to analytics and real-time-intelligence platforms.** Every binding is a named DataSet with a stable `DataSetClassId`, offline `DataSetMetaData` and a semantic cross-reference on each field (§5.4). A bridge can therefore shape a DataSet into a self-describing columnar record — for example Apache Arrow for a data lakehouse — or stream it into Splunk or Microsoft Fabric Real-Time Intelligence (eventstream/KQL), carrying the field names, engineering units and semantic references so the destination schema is populated without hand-mapping. Where the Server realizes the binding over PubSub (Part 14), the same egress is simply a fan-out of `DataSetMessage`s to those platforms.
+
+**Ready-to-go, scenario-group-specific machine learning.** The `AnomalyDetection` scenario defines a high-resolution, correlated DataSet whose `DataSetClassId` is derived deterministically and is **identical across every vendor and instance** of a bound type (§5.7). A model trained once against that class recognizes the DataSet by its class id alone — no browse, no re-mapping — so an anomaly-detection model, or a whole library of scenario-group models, becomes plug-in across a fleet and across suppliers. DataSet cardinality (§5.2.1) yields one live DataSet — and therefore one model instance — per pump, per robot or per axis group, all sharing the one class.
+
+The same pattern serves the other registered Scenarios — `PredictiveMaintenance`, `EnergyAndLoadManagement`, `AlarmAndEventDistribution` and `FleetAndCompliance` (§5.11) — and any vendor-defined Scenario: one bridge, many backends, zero domain code.
+
 ## 2 Normative references
 
 - [OPC 10000‑3](https://reference.opcfoundation.org/specs/OPC-10000-3/) — Address Space Model.
