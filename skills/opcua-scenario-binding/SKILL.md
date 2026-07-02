@@ -69,6 +69,9 @@ Per companion spec (see the worked examples under `core-specs/scenario-binding/e
 - `OPC-UA-<Domain>-PubSub-Scenario-Binding-Addendum.md` — the companion-spec **addendum**:
   scope, the per-scenario annex tables, and diagrams showing where the bindings live on the
   theoretical instance.
+- `Opc.Ua.<Domain>.ScenarioBinding.td.json` — an **optional W3C WoT Thing Description** (a single
+  Thing, or a TD collection when the bindings have a cardinality anchor) rendering the same
+  bindings for WoT/HTTP consumers per OPC 10101 (OPC UA WoT Connectivity); see spec §8.
 
 **Reference implementation (use it, don't reinvent):**
 `core-specs/scenario-binding/examples/tools/build_bindings.py` (+ `nodeset_util.py`) is a
@@ -79,6 +82,11 @@ emits the addendum (annex tables + two mermaid diagrams). Author the descriptor,
 NodeSets live (gitignored) under `examples/tools/ref/`. Worked examples: `examples/pumps/`
 (from the official `Pumps/instanceexample.xml`) and `examples/robotics/` (synthesised
 `MotionDeviceSystem`).
+
+A companion generator `examples/tools/build_wot_td.py` renders the *same* descriptor as a W3C WoT
+Thing Description per OPC 10101 (spec §8): bound Variables → WoT Properties, event bindings →
+Events, bound Methods → Actions, with `opc.tcp://…/?id=<nodeId>` form hrefs and the `uav:`
+semantic terms. Run: `python tools/build_wot_td.py <domain>/<Domain>.ScenarioBinding.json`.
 
 Do **not** invent a domain example inside this skill; always generate from the actual input
 NodeSet, and never claim a `BrowsePath` you have not resolved against that NodeSet.

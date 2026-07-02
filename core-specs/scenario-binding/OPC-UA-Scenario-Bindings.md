@@ -41,6 +41,8 @@ This specification makes the decision **part of the model and discoverable at ru
 - [OPC 10000‑7](https://reference.opcfoundation.org/specs/OPC-10000-7/) — Profiles.
 - [OPC 10000‑14](https://reference.opcfoundation.org/specs/OPC-10000-14/) — PubSub (PublishedDataSet, PublishedDataItems, PublishedEvents, DataSetWriter/Reader, DataSetMetaData, DataSetClassId, Actions).
 - [OPC 10000‑19](https://reference.opcfoundation.org/specs/OPC-10000-19/) — Dictionary Reference (`HasDictionaryEntry`, IRDI/CDD).
+- [OPC 10101](https://reference.opcfoundation.org/specs/OPC-10101/) — OPC UA WoT Connectivity (informative).
+- [W3C WoT Thing Description 1.1](https://www.w3.org/TR/wot-thing-description11/) — Web of Things Thing Description 1.1 (informative).
 
 ## 3 Terms, definitions and abbreviations
 
@@ -536,7 +538,283 @@ The following Conformance Units (CUs) are defined; Facets group them for Servers
 - **Publisher Facet** — Variable Realization and/or Event DataSet Binding + PubSub MetaData Propagation.
 - **Bridge (Client) Facet** — select a Scenario from the `Scenarios` registry, browse its per-specification groups to serving bindings, recognize by `DataSetClassId`, compose the effective DataSet by the §5.12 union algorithm, resolve `DataSetCardinalityPath`, realize via the classic path (default) or PubSub where configured, forward by `Kind`; optionally support Observability OTEL Mapping for the Observability Scenario.
 
-## 8 Deliverables and reproducibility
+
+## 8 Interoperability — mapping to W3C WoT and OPC 10101 (informative)
+
+The W3C Web of Things (WoT) Thing Description models a Thing through property, action and event interaction affordances. OPC 10101 — OPC UA WoT Connectivity defines how those affordances bind to OPC UA using the `uav:` ontology `http://opcfoundation.org/UA/WoT-Binding/`, OPC UA forms such as `opc.tcp://<endpoint>[/res]/?id=<nodeId>`, semantic terms including `uav:object`, `uav:variable`, `uav:browseName` and `uav:browsePath`, and WoT security schemes such as `nosec`, `auto`, or explicit `uav:channelsec` plus `uav:authentication`. Scenario Bindings map cleanly to this model because a binding is already an interaction-affordance set with locators, directions and semantic cross-references.
+
+Two JSON-LD prefixes are used in the examples. The `uav:` prefix is the authoritative OPC 10101 OPC UA WoT Binding ontology (`http://opcfoundation.org/UA/WoT-Binding/`) and is used here only for OPC 10101 terms such as `uav:object`, `uav:variable`, `uav:browseName`, `uav:browsePath` and OPC 10101 security terms. The `sb:` prefix is a provisional extension namespace defined by this document (`http://opcfoundation.org/UA/ScenarioBinding/WoT/`) for Scenario-Binding-specific metadata that OPC 10101 does not define: `sb:dataSetClassId`, `sb:scenario`, `sb:cardinalityPath`, `sb:metricInstrumentType`, `sb:explicitBucketBoundaries`, `sb:dimensions`, `sb:dimension`, `sb:eventType`, `sb:eventSourcePath`, `sb:pubSub` and `sb:namespaces`. These `sb:` terms are informative, provisional and non-normative.
+
+| Scenario Bindings | WoT / OPC 10101 |
+|---|---|
+| ScenarioBinding (one DataSet class, one scenario, one target) | a WoT **Thing** (TD), or an affordance group within a Thing |
+| BoundVariable (Kind Telemetry/Metric/Status) | WoT **Property**; `op` observeproperty+readproperty (Publisher/observable) or writeproperty (Subscriber) |
+| Event binding / BoundEventField (ContentKind Events) | WoT **Event**; `op` subscribeevent; `data` schema = event fields |
+| BoundMethod (Kind Command; ActionInvoker/Responder) | WoT **Action**; `op` invokeaction |
+| Locator BindsToNode (absolute) | form `href` `opc.tcp://…/?id=<nodeId>` |
+| Locator BrowsePath (type-level RelativePath) | `uav:browsePath` (+ `base` server endpoint) |
+| Direction enum | `op` set + `readOnly`/`writeOnly`/`observable` |
+| Semantic cross-ref (SourceTypeDefinition/SourceBrowseName/ModelNamespaceUri) | `uav:object`/`uav:variable` `@type`, `uav:browseName`, `@context` namespace |
+| SemanticReferenceUri (CDD/IRDI) | JSON-LD `@type` / semantic annotation |
+| DataSetClassId | TD `id` (urn) and/or `sb:dataSetClassId` |
+| FieldName | affordance key |
+| DataType / ValueRank | WoT DataSchema (`type`: number/string/object/array) |
+| Unit (eng/OTEL) | WoT `unit` |
+| DataSetCardinalityPath (N DataSets) | N Things — one TD per cardinality anchor (TD collection) |
+| PubSub realization (transport) | an **additional** form on the affordance (e.g. `mqtt://…`) |
+| Scenario registry / profile | a WoT **Thing Directory** / TD collection |
+
+### 8.1 Export: Scenario Binding to WoT Thing Description
+
+This subclause describes an informative export convention from the model in this document to a WoT Thing Description using OPC 10101 terms and the provisional `sb:` extension terms defined above.
+
+A `BoundVariable` is exported as a WoT Property. A Publisher direction is represented with `op` values `readproperty` and `observeproperty`, with `observable: true` and `readOnly: true`. A Subscriber direction is represented with `writeproperty` and `writeOnly: true`. A Bidirectional direction is represented with read, write and observe operations. An event binding is exported as a WoT Event with `op: subscribeevent`; the event `data` schema is an object whose properties are the selected event fields. A `BoundMethod` is exported as a WoT Action with `op: invokeaction`.
+
+A `BindsToNode` locator becomes an OPC UA form `href` ending in `/?id=<nodeId>`. A type-level BrowsePath is represented as `uav:browsePath` on the form and is used with the Thing `base` endpoint when the exporter does not emit an absolute OPC UA URL for each affordance. Semantic cross-references become the OPC 10101 semantic annotations: `@type` carries `uav:variable` or `uav:object`, `uav:browseName` carries the namespace-qualified BrowseName, `@context` declares the `uav:` prefix, and `sb:namespaces` records the OPC UA namespace table used by the generated view.
+
+`DataSetClassId` is represented as `sb:dataSetClassId` and may also seed the Thing `id` as a `urn:uuid`. `DataType` and `ValueRank` are mapped to the WoT DataSchema `type` (`number`, `integer`, `string`, `boolean`, `object` or `array` as appropriate). Engineering or OTEL units become `unit`. Observability metric details become `sb:metricInstrumentType` and, for histograms, `sb:explicitBucketBoundaries`. Constant bound items with `Kind = Dimension` may be lifted to Thing-level `sb:dimensions` when they describe every affordance in the Thing.
+
+When `DataSetCardinalityPath` resolves to multiple cardinality anchors, the export creates one Thing per anchor and emits a TD collection. The generated Robotics TD illustrates this: `/MotionDevices/<MotionDeviceIdentifier>` expands to one Thing per robot, while subordinate placeholders such as `<AxisIdentifier>` expand to per-instance affordance keys and locators. Both structural styles are valid: a device-as-Thing view, as used by the Pumps TD, exposes each datapoint once and merges the scenarios that use it on the same affordance; a binding- or anchor-as-Thing view, as used by the Robotics TD collection, exposes one Thing per scenario/cardinality anchor.
+
+### 8.2 Import: WoT Thing Description / OPC 10101 to Scenario Binding
+
+The mapping is partially recoverable when the Thing Description contains OPC 10101 forms or semantic annotations. Each WoT Property becomes a candidate `BoundVariable`; each WoT Event becomes an event binding with `BoundEventField` definitions derived from its `data` schema; and each WoT Action becomes a candidate `BoundMethod`. A generic OPC 10101 TD yields the affordance kind, operation set and OPC UA node locators, but full reconstruction of the Scenario Binding class structure — scenario grouping, `DataSetClassId`, cardinality and merged multi-scenario provenance — requires the `sb:` extension annotations. The form `op` set implies the Scenario Binding direction: `readproperty` or `observeproperty` implies Publisher, `writeproperty` implies Subscriber, both read/observe and write imply Bidirectional, `subscribeevent` implies an event Publisher, and `invokeaction` implies the action direction chosen by the importer for the target deployment.
+
+An OPC UA form `href` supplies the absolute `BindsToNode` locator when it contains `/?id=<nodeId>`. If the TD uses `base` plus a relative `href`, the importer composes them before extracting the NodeId. A `uav:browsePath` annotation supplies the type-level BrowsePath locator. `uav:browseName`, `@type`, `sb:namespaces` and any JSON-LD semantic annotations seed the semantic cross-reference fields (`SourceBrowseName`, `ModelNamespaceUri`, source class and dictionary reference where available). WoT security schemes are read to configure the connection, but credentials and trust material remain out of band. Since WoT is protocol-agnostic, a TD can also carry non-OPC-UA forms; those forms are deployment realizations and are not modeled as Scenario Binding locators unless an importer has an explicit extension for them.
+
+### 8.3 Multi-protocol and PubSub forms
+
+WoT allows multiple forms on the same interaction affordance. A Scenario Binding realized through OPC UA PubSub can therefore appear as an additional non-`opc.tcp` form, for example an `mqtt://` form, alongside the OPC UA form that identifies the source node or event source. This does not create a second bound item; it states that the same Property, Event or Action can be reached through more than one protocol realization. The additional form addresses the DataSet topic: the whole DataSet is published as one message, and the specific field is selected from the payload by its `FieldName` (the affordance key). The generated Pumps TD includes forms such as `mqtt://broker.example.com:1883/pumps/observability` and `mqtt://broker.example.com:1883/pumps/alarmandeventdistribution`. The generated Robotics TD similarly includes forms such as `mqtt://broker.example.com:1883/robotics/observability` and `mqtt://broker.example.com:1883/robotics/alarmandeventdistribution`.
+
+```mermaid
+flowchart LR
+  SB[ScenarioBinding<br/>ScenarioUri + DataSetClassId + Direction]
+  BV[BoundVariable<br/>Telemetry / Metric / Status]
+  BM[BoundMethod<br/>Command]
+  BE[Event binding<br/>BoundEventField]
+  TD[WoT Thing Description<br/>@context + base + security]
+  P[Property affordance<br/>read/write/observe]
+  A[Action affordance<br/>invokeaction]
+  E[Event affordance<br/>subscribeevent]
+  F1[OPC UA form<br/>opc.tcp ... ?id=nodeId<br/>uav:browsePath]
+  F2[PubSub form<br/>mqtt:// DataSet topic]
+  U[semantic annotations<br/>uav:variable / uav:object<br/>uav:browseName<br/>sb:dataSetClassId]
+
+  SB --> BV
+  SB --> BM
+  SB --> BE
+  SB --> TD
+  BV --> P
+  BM --> A
+  BE --> E
+  TD --> P
+  TD --> A
+  TD --> E
+  P --> F1
+  P --> F2
+  A --> F1
+  E --> F1
+  E --> F2
+  P --> U
+  A --> U
+  E --> U
+```
+
+### 8.4 Worked examples
+
+The generated Pumps Thing Description is [`examples/pumps/Opc.Ua.Pumps.ScenarioBinding.td.json`](examples/pumps/Opc.Ua.Pumps.ScenarioBinding.td.json). It is a single Thing / device view: each datapoint appears once, and scenarios that use the same datapoint are listed on that affordance by `sb:scenario`. The complete Thing is in the linked generated file; the following is an abridged excerpt.
+
+```json
+{
+  "@context": [
+    "https://www.w3.org/2019/wot/td/v1",
+    {
+      "uav": "http://opcfoundation.org/UA/WoT-Binding/",
+      "sb": "http://opcfoundation.org/UA/ScenarioBinding/WoT/"
+    }
+  ],
+  "@type": "uav:object",
+  "id": "urn:uuid:c709a09c-2a77-5862-b8e7-1c6a0521e9d8",
+  "title": "ExamplePump",
+  "base": "opc.tcp://opcua.example.com:4840/UA/Pumps",
+  "securityDefinitions": {
+    "auto_sc": {
+      "scheme": "auto"
+    }
+  },
+  "security": [
+    "auto_sc"
+  ],
+  "sb:namespaces": [
+    "http://opcfoundation.org/UA/",
+    "http://opcfoundation.org/UA/Pumps/",
+    "http://opcfoundation.org/UA/DI/",
+    "http://opcfoundation.org/UA/Machinery/"
+  ],
+  "properties": {
+    "Speed": {
+      "title": "Speed",
+      "@type": "uav:variable",
+      "type": "number",
+      "unit": "1/min",
+      "observable": true,
+      "readOnly": true,
+      "uav:browseName": "1:Speed",
+      "sb:scenario": [
+        "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
+      ],
+      "sb:dataSetClassId": [
+        "urn:uuid:96490f93-6c92-59cd-981d-4203ab067313"
+      ],
+      "sb:metricInstrumentType": "Gauge",
+      "forms": [
+        {
+          "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Pumps/;s=ExamplePump/Operational/Measurements/Speed",
+          "contentType": "application/json",
+          "op": [
+            "readproperty",
+            "observeproperty"
+          ],
+          "uav:browsePath": "/Operational/Measurements/Speed",
+          "uav:browseName": "1:Speed"
+        },
+        {
+          "href": "mqtt://broker.example.com:1883/pumps/observability",
+          "contentType": "application/json",
+          "op": "observeproperty",
+          "sb:pubSub": true
+        }
+      ]
+    }
+  },
+  "events": {
+    "AlarmAndEventDistribution": {
+      "title": "AlarmAndEventDistribution",
+      "@type": "uav:object",
+      "sb:scenario": "http://opcfoundation.org/UA/PubSub/Scenarios/AlarmAndEventDistribution",
+      "sb:dataSetClassId": "urn:uuid:700f61a4-4e97-52ed-b72e-f085d406ced9",
+      "sb:eventType": "BaseEventType",
+      "data": {
+        "type": "object",
+        "properties": {
+          "EventId": {
+            "type": "string",
+            "uav:browseName": "0:EventId"
+          },
+          "EventType": {
+            "type": "string",
+            "uav:browseName": "0:EventType"
+          },
+          "SourceName": {
+            "type": "string",
+            "uav:browseName": "0:SourceName"
+          },
+          "Time": {
+            "type": "string",
+            "uav:browseName": "0:Time"
+          },
+          "Severity": {
+            "type": "integer",
+            "uav:browseName": "0:Severity"
+          },
+          "Message": {
+            "type": "string",
+            "uav:browseName": "0:Message"
+          }
+        }
+      },
+      "forms": [
+        {
+          "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Pumps/;s=ExamplePump",
+          "contentType": "application/json",
+          "op": "subscribeevent",
+          "subprotocol": "opcua.subscribe",
+          "sb:eventSourcePath": "/"
+        },
+        {
+          "href": "mqtt://broker.example.com:1883/pumps/alarmandeventdistribution",
+          "contentType": "application/json",
+          "op": "subscribeevent",
+          "sb:pubSub": true
+        }
+      ]
+    }
+  }
+}
+```
+
+The generated Robotics Thing Description is [`examples/robotics/Opc.Ua.Robotics.ScenarioBinding.td.json`](examples/robotics/Opc.Ua.Robotics.ScenarioBinding.td.json). It is a TD collection: `DataSetCardinalityPath` expands to one Thing per anchor, and subordinate placeholders expand into per-instance fields while `uav:browsePath` preserves the type-level placeholder path. The complete TD collection is in the linked generated file; the following is an abridged excerpt of one Thing.
+
+```json
+{
+  "@context": [
+    "https://www.w3.org/2019/wot/td/v1",
+    {
+      "uav": "http://opcfoundation.org/UA/WoT-Binding/",
+      "sb": "http://opcfoundation.org/UA/ScenarioBinding/WoT/"
+    }
+  ],
+  "@type": "uav:object",
+  "id": "urn:uuid:385fd9f0-0607-519a-8f4d-c03d4897abf2",
+  "title": "ExampleRobotSystem · Observability · Robot_1",
+  "base": "opc.tcp://opcua.example.com:4840/UA/Robotics",
+  "securityDefinitions": {
+    "auto_sc": {
+      "scheme": "auto"
+    }
+  },
+  "security": [
+    "auto_sc"
+  ],
+  "sb:namespaces": [
+    "http://opcfoundation.org/UA/",
+    "http://opcfoundation.org/UA/Robotics/"
+  ],
+  "sb:scenario": "http://opcfoundation.org/UA/PubSub/Scenarios/Observability",
+  "sb:dataSetClassId": "urn:uuid:ad751dd8-3b2d-5599-8cce-4be80dc0f8b8",
+  "sb:cardinalityPath": "/MotionDevices/<MotionDeviceIdentifier>",
+  "properties": {
+    "AxisActualPosition_Axis_1": {
+      "title": "AxisActualPosition_Axis_1",
+      "@type": "uav:variable",
+      "type": "number",
+      "unit": "deg",
+      "observable": true,
+      "readOnly": true,
+      "uav:browseName": "1:ActualPosition",
+      "sb:scenario": [
+        "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
+      ],
+      "sb:dataSetClassId": [
+        "urn:uuid:ad751dd8-3b2d-5599-8cce-4be80dc0f8b8"
+      ],
+      "sb:metricInstrumentType": "Gauge",
+      "forms": [
+        {
+          "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Robotics/;s=ExampleRobotSystem/MotionDevices/Robot_1/Axes/Axis_1/ParameterSet/ActualPosition",
+          "contentType": "application/json",
+          "op": [
+            "readproperty",
+            "observeproperty"
+          ],
+          "uav:browsePath": "/MotionDevices/<MotionDeviceIdentifier>/Axes/<AxisIdentifier>/ParameterSet/ActualPosition",
+          "uav:browseName": "1:ActualPosition"
+        },
+        {
+          "href": "mqtt://broker.example.com:1883/robotics/observability",
+          "contentType": "application/json",
+          "op": "observeproperty",
+          "sb:pubSub": true
+        }
+      ]
+    }
+  }
+}
+```
+
+These TDs are generated by `examples/tools/build_wot_td.py` and are illustrative and provisional.
+
+## 9 Deliverables and reproducibility
 
 | File | Content |
 |---|---|
