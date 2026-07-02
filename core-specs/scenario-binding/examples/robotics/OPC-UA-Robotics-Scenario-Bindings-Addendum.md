@@ -2,7 +2,7 @@
 
 **Working draft — a worked example of the [Scenario Bindings](../../OPC-UA-Scenario-Bindings.md) base specification applied to OPC UA for Robotics (OPC 40010).**
 
-> **Status — illustrative example.** This addendum shows how the instances of the `MotionDeviceSystemType` (http://opcfoundation.org/UA/Robotics/) can be exposed for integration scenarios over the classic client/server (RPC) interface and, optionally, over OPC UA PubSub — without modifying the companion specification. All NodeIds in the example namespace `http://opcfoundation.org/UA/PubSub/Examples/Robotics/` are provisional and the base-namespace binding types it references (`ScenarioBindingsType` etc.) carry the **provisional** NodeIds of the draft base specification.
+> **Status — illustrative example.** This addendum shows how the instances of the `MotionDeviceSystemType` (http://opcfoundation.org/UA/Robotics/) can be exposed for integration scenarios over the classic client/server (RPC) interface and, optionally, over OPC UA PubSub — without modifying the companion specification. All NodeIds in the example namespace `http://opcfoundation.org/UA/PubSub/Examples/Robotics/` are provisional and the base-namespace binding types it references (`ScenarioBindingGroupType` etc.) carry the **provisional** NodeIds of the draft base specification.
 
 ## 1 Scope
 
@@ -19,7 +19,7 @@ This addendum defines example **scenario bindings** for the `MotionDeviceSystemT
 The bindings are authored at **two levels**, exactly as the base specification recommends:
 
 1. **Type-level definitions (reusable).** The machine-readable descriptor [`Robotics.ScenarioBinding.json`](Robotics.ScenarioBinding.json) lists each bound item as a `BrowsePath` (RelativePath) from the `MotionDeviceSystemType` root, with its routing `Kind` and scenario. Every path in §4 was **resolved against the published companion NodeSet**, so the bindings apply to *any* conforming instance.
-2. **Instance overlay (concrete).** [`Opc.Ua.Robotics.ScenarioBinding.NodeSet2.xml`](Opc.Ua.Robotics.ScenarioBinding.NodeSet2.xml) instantiates a compact theoretical instance `ExampleRobotSystem`, applies the `IScenarioBoundType` interface, and hangs a `ScenarioBindings` container holding the `ScenarioBinding`/`BoundItem` instances. On the instance each `BoundItem` uses **`BindsToNode`** to point at the concrete signal node (the type-level `BrowsePath` and the instance `BindsToNode` are the two locators defined by the base specification).
+2. **Instance overlay (concrete).** [`Opc.Ua.Robotics.ScenarioBinding.NodeSet2.xml`](Opc.Ua.Robotics.ScenarioBinding.NodeSet2.xml) instantiates a compact theoretical instance `ExampleRobotSystem`, applies the `IScenarioBoundType` interface, and exposes one `ScenarioBindingGroup` per scenario holding that scenario's `ScenarioBinding`/`BoundItem` instances. On the instance each `BoundItem` uses **`BindsToNode`** to point at the concrete signal node (the type-level `BrowsePath` and the instance `BindsToNode` are the two locators defined by the base specification).
 
 > **Theoretical instance model.** Robotics publishes no public instance example, so a compact theoretical `MotionDeviceSystem` is synthesised: one MotionDevice with an Axis and a PowerTrain/Motor, one Controller, and one SafetyState. Placeholder path segments (e.g. `<AxisIdentifier>`) become concrete instance names (e.g. `Axis_1`) in the overlay while the type-level BrowsePath keeps the placeholder.
 
@@ -88,31 +88,36 @@ Bindings for the `MotionDeviceSystemType` of the `http://opcfoundation.org/UA/Ro
 
 ## 5 Where the bindings live
 
-Overview of the scenario bindings, then their placement on the theoretical instance (`ScenarioBindings` hangs off the instance; each `BoundItem` `BindsToNode` its signal):
+Overview of the scenario bindings, then their placement on the theoretical instance (one `ScenarioBindingGroup` per scenario hangs off the instance; each `BoundItem` `BindsToNode` its signal):
 
 ```mermaid
 graph LR
-  ROOT["ExampleRobotSystem : MotionDeviceSystemType"] --> SB["ScenarioBindings"]
-  SB --> S0["Observability<br/>Publisher · Data"]
+  ROOT["ExampleRobotSystem : MotionDeviceSystemType"]
+  ROOT --> G0["Observability<br/>ScenarioBindingGroup"]
+  G0 --> S0["Observability<br/>Publisher · Data"]
   S0 --> S0_0["AxisActualPosition : Telemetry"]
   S0 --> S0_1["MotorTemperature : Telemetry"]
   S0 --> S0_2["SpeedOverride : Status"]
-  SB --> S1["PredictiveMaintenance<br/>Publisher · Data"]
+  ROOT --> G1["PredictiveMaintenance<br/>ScenarioBindingGroup"]
+  G1 --> S1["PredictiveMaintenance<br/>Publisher · Data"]
   S1 --> S1_0["ControllerTemperature : Telemetry"]
   S1 --> S1_1["CabinetFanSpeed : Telemetry"]
   S1 --> S1_2["CPUFanSpeed : Telemetry"]
   S1 --> S1_3["TotalPowerOnTime : Counter"]
-  SB --> S2["AnomalyDetection<br/>Publisher · Data"]
+  ROOT --> G2["AnomalyDetection<br/>ScenarioBindingGroup"]
+  G2 --> S2["AnomalyDetection<br/>Publisher · Data"]
   S2 --> S2_0["AxisActualPosition : Telemetry"]
   S2 --> S2_1["MotorTemperature : Telemetry"]
-  SB --> S3["AlarmAndEventDistribution<br/>Publisher · Events"]
+  ROOT --> G3["AlarmAndEventDistribution<br/>ScenarioBindingGroup"]
+  G3 --> S3["AlarmAndEventDistribution<br/>Publisher · Events"]
   S3 --> S3_0["EventId : Event"]
   S3 --> S3_1["EventType : Event"]
   S3 --> S3_2["SourceName : Event"]
   S3 --> S3_3["Time : Event"]
   S3 --> S3_4["Severity : Event"]
   S3 --> S3_5["Message : Event"]
-  SB --> S4["FleetAndCompliance<br/>Publisher · Data"]
+  ROOT --> G4["FleetAndCompliance<br/>ScenarioBindingGroup"]
+  G4 --> S4["FleetAndCompliance<br/>Publisher · Data"]
   S4 --> S4_0["Manufacturer : Identification"]
   S4 --> S4_1["Model : Identification"]
   S4 --> S4_2["SerialNumber : Identification"]
@@ -123,16 +128,16 @@ graph LR
 graph TD
   R["ExampleRobotSystem : MotionDeviceSystemType"]
   R -->|HasInterface| I([IScenarioBoundType])
-  R -->|HasComponent| SB["ScenarioBindings"]
-  SB -->|HasComponent| G["Robotics : ScenarioBindingGroupType"]
-  G -->|HasComponent| B0["Observability : ScenarioBindingType"]
+  R -->|HasComponent| G0["Observability : ScenarioBindingGroupType"]
+  G0 -->|HasComponent| B0["Observability : ScenarioBindingType"]
   B0 -->|HasComponent| IT00["AxisActualPosition : BoundVariableType"]
   IT00 -->|BindsToNode| N00["MotionDevices/MotionDevice_1/Axes/Axis_1/ParameterSet/ActualPosition"]
   B0 -->|HasComponent| IT01["MotorTemperature : BoundVariableType"]
   IT01 -->|BindsToNode| N01["MotionDevices/MotionDevice_1/PowerTrains/PowerTrain_1/Motor_1/ParameterSet/MotorTemperature"]
   B0 -->|HasComponent| IT02["SpeedOverride : BoundVariableType"]
   IT02 -->|BindsToNode| N02["MotionDevices/MotionDevice_1/ParameterSet/SpeedOverride"]
-  G -->|HasComponent| B1["AlarmAndEventDistribution : ScenarioBindingType"]
+  R -->|HasComponent| G1["AlarmAndEventDistribution : ScenarioBindingGroupType"]
+  G1 -->|HasComponent| B1["AlarmAndEventDistribution : ScenarioBindingType"]
   B1 -->|HasComponent| IT10["EventId : BoundEventFieldType"]
   IT10 -.event field.-> N10["AlarmConditionType/EventId"]
   B1 -->|HasComponent| IT11["EventType : BoundEventFieldType"]

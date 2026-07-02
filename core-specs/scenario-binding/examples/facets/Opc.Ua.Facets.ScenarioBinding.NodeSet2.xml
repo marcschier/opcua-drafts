@@ -16,13 +16,15 @@
     <Alias Alias="HasComponent">i=47</Alias>
     <Alias Alias="HasProperty">i=46</Alias>
     <Alias Alias="Organizes">i=35</Alias>
+    <Alias Alias="HasInterface">i=17603</Alias>
     <Alias Alias="HasTypeDefinition">i=40</Alias>
     <Alias Alias="HasBaseBinding">i=60003</Alias>
   </Aliases>
-  <UAObject NodeId="ns=1;i=5001" BrowseName="1:ExampleFacetBindings">
-    <DisplayName>ExampleFacetBindings</DisplayName>
+  <UAObject NodeId="ns=1;i=5001" BrowseName="1:FacetDemoInstance">
+    <DisplayName>FacetDemoInstance</DisplayName>
     <References>
-      <Reference ReferenceType="i=40">i=60010</Reference>
+      <Reference ReferenceType="i=40">i=58</Reference>
+      <Reference ReferenceType="i=17603">i=60016</Reference>
       <Reference ReferenceType="i=35" IsForward="false">i=85</Reference>
     </References>
   </UAObject>

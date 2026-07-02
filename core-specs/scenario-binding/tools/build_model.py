@@ -348,15 +348,6 @@ reference_type(60002, "ScenarioRealizedBy", NonHierarchicalReferences,
                "never required) when the binding is not realized over PubSub - a Server may "
                "instead serve the binding over the classic client/server (RPC) interface.",
                CAT)
-reference_type(60004, "HasScenarioBinding", NonHierarchicalReferences, "ServesScenario",
-               "Links a ScenarioProfile in the Scenarios registry to a ScenarioBinding that "
-               "serves that scenario, so a Client can start at the scenario it cares about and "
-               "browse straight to every binding serving it (across companion specifications). "
-               "Forward 'HasScenarioBinding' reads scenario -> binding; the inverse "
-               "'ServesScenario' reads binding -> scenario. The binding still lives physically "
-               "under its per-specification ScenarioBindingGroup; this reference is the "
-               "scenario-first discovery cross-link.",
-               CAT)
 reference_type(60003, "HasBaseBinding", NonHierarchicalReferences, "IsBaseBindingOf",
                "Links a derived or composing ScenarioBinding to a base ScenarioBinding whose "
                "fields it extends or composes (e.g. a Machine binding to the Device-facet "
@@ -576,68 +567,78 @@ placeholder_obj(60011, SB, "<BoundItem>", T(60012),
 # ScenarioBindingGroupType (per-companion-spec anchor) + registry
 object_type(60018, "ScenarioBindingGroupType", FolderType,
             "A per-companion-specification anchor grouping that spec's ScenarioBinding "
-            "objects, so bindings from different companion specifications registered in one "
-            "container never collide by BrowseName. Identified by CompanionSpecificationUri "
+            "objects, so bindings from different companion specifications registered under one "
+            "ScenarioProfile never collide by BrowseName. Identified by CompanionSpecificationUri "
             "(a stable spec-level identifier, distinct from a namespace URI, because a "
-            "companion specification may define several namespace URIs).", CAT)
+            "companion specification may define several namespace URIs). Sibling groups "
+            "themselves carry unique BrowseNames.", CAT)
 SG = "ScenarioBindingGroupType"
 prop_var(60018, SG, "CompanionSpecificationUri", String,
          "Stable spec-level identifier of the companion specification this group anchors. "
-         "Groups are unique per CompanionSpecificationUri.", rule=MR_Mandatory)
+         "Sibling groups under one ScenarioProfile are unique by CompanionSpecificationUri, and "
+         "each group's BrowseName is derived from this identity so sibling BrowseNames do not "
+         "collide.", rule=MR_Mandatory)
 prop_var(60018, SG, "ModelNamespaceUris", String,
          "All namespace URIs the companion specification defines/covers.",
          rule=MR_Mandatory, valuerank="1")
 placeholder_obj(60018, SG, "<ScenarioBinding>", T(60011),
                 "A scenario binding of this companion specification.")
 
-# ScenarioBindingsType (container)
-object_type(60010, "ScenarioBindingsType", FolderType,
-            "A discoverable container of per-companion-spec ScenarioBindingGroup objects, "
-            "enumerated by Browse. A server exposes one server-wide instance under the Server "
-            "object, and/or a local instance on any object that implements "
-            "IScenarioBoundType.", CAT)
-BC = "ScenarioBindingsType"
-placeholder_obj(60010, BC, "<ScenarioBindingGroup>", T(60018),
-                "A per-companion-specification group of scenario bindings.")
-# No query Method: clients enumerate the <ScenarioBindingGroup> components (per companion
-# spec) and their <ScenarioBinding> children by Browse, reading each ScenarioUri. Browse +
-# Read is sufficient and OPC UA-native, and keeps the type usable on a classic server.
+# ScenarioFolderType (the Scenarios registry container)
+object_type(60010, "ScenarioFolderType", FolderType,
+            "The type of the Scenarios registry: a discoverable folder of ScenarioProfile "
+            "objects, exposed as a component of the Server Object. It is the scenario-first "
+            "discovery entry point. Extensible - companion and scenario specifications add "
+            "their own ScenarioProfile objects.", CAT)
+SF = "ScenarioFolderType"
+placeholder_obj(60010, SF, "<Scenario>", T(60015),
+                "A registered integration scenario in this registry.",
+                reftype=Organizes)
+# No query Method: clients browse the Scenarios registry, pick a ScenarioProfile, then its
+# ScenarioBindingGroup components (per companion spec) and their ScenarioBinding children,
+# reading each ScenarioUri. Browse + Read is sufficient and keeps the type usable on a classic
+# server.
 
-# ScenarioProfileType (registry entry)
+# ScenarioProfileType (registry entry) - contains the per-spec binding groups for its scenario
 object_type(60015, "ScenarioProfileType", BaseObjectType,
-            "A registered integration scenario: its URI plus human-readable metadata. "
-            "The registry is extensible; vendors and other specifications add profiles "
-            "with their own URIs.", CAT)
+            "A registered integration scenario: its URI plus human-readable metadata, and the "
+            "ScenarioBindingGroup components (one per companion specification) that contain the "
+            "ScenarioBindings serving this scenario. The registry is extensible; vendors and "
+            "other specifications add profiles with their own URIs.", CAT)
 SP = "ScenarioProfileType"
 prop_var(60015, SP, "ScenarioUri", String, "The scenario URI.", rule=MR_Mandatory)
 prop_var(60015, SP, "Title", LocalizedText, "Short human-readable title.")
 prop_var(60015, SP, "Summary", LocalizedText, "Human-readable description of the scenario and its intended consumers.")
 prop_var(60015, SP, "Keywords", String, "Keywords describing the scenario.", valuerank="1")
+placeholder_obj(60015, SP, "<ScenarioBindingGroup>", T(60018),
+                "A per-companion-specification group of the bindings serving this scenario. "
+                "Sibling groups under one profile are unique by CompanionSpecificationUri and "
+                "each carries a unique BrowseName derived from that specification identity (not "
+                "the scenario name).")
 
-# IScenarioBoundType (interface)
+# IScenarioBoundType (interface) - references its scenario binding groups directly
 interface_type(60016, "IScenarioBoundType", BaseInterfaceType,
-               "Interface implemented by a companion-specification ObjectType (or "
-               "instance) to advertise that it participates in scenario bindings, by "
-               "exposing a local ScenarioBindings container.", CAT)
-obj_member(60016, "IScenarioBoundType", "ScenarioBindings", T(60010),
-           "The scenario bindings defined on this object.", rule=MR_Mandatory)
+               "Interface implemented by a companion-specification ObjectType (or instance) to "
+               "advertise that it participates in scenario bindings, by exposing its "
+               "ScenarioBindingGroup objects directly (one per (Scenario x companion "
+               "specification) it serves; typically one per scenario for a single-specification "
+               "instance).", CAT)
+placeholder_obj(60016, "IScenarioBoundType", "<ScenarioBindingGroup>", T(60018),
+                "A group of this object's bindings for one (Scenario x companion specification). "
+                "Sibling groups have unique BrowseNames - by scenario for a single-specification "
+                "instance, and additionally by specification when several specifications serve "
+                "one scenario on the instance.")
 
 # --- Well-known instances --------------------------------------------------
 CAT_INST = "Scenario Binding Instances"
-# Server-wide registry hooked onto the well-known Server object (i=2253) - always present,
-# so discovery never assumes a PubSub configuration surface.
-well_known(60100, "ScenarioBindings", T(60010), int(Server.split("=")[1]),
-           "Server-wide registry of scenario bindings, discoverable by browsing the "
-           "Server object. Its presence does not require any PubSub configuration.")
-NODES[60100].category = CAT_INST
-# Scenarios registry folder under the server-wide container.
-add(60101, "UAObject", "Scenarios", "Scenarios",
-    desc="Registry of known integration scenarios (extensible).",
-    parent=T(60100))
+# The Scenarios registry, hooked onto the well-known Server object (i=2253) as a component -
+# always present, so discovery never assumes a PubSub configuration surface. It is the
+# scenario-first discovery entry point.
+well_known(60101, "Scenarios", T(60010), int(Server.split("=")[1]),
+           "Server-wide registry of integration scenarios, discoverable as a component of the "
+           "Server object. It is the scenario-first entry point; its presence does not require "
+           "any PubSub configuration.")
 NODES[60101].category = CAT_INST
-ref(60101, HasTypeDefinition, FolderType)
-ref(60101, Organizes, T(60100), forward=False)
-ref(60100, Organizes, T(60101))
 
 SCENARIOS = [
     (60110, "Observability",

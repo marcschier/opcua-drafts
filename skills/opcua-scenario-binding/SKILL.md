@@ -24,9 +24,11 @@ generator does the *expansion* into artifacts (which a program is good at).
 
 Read the specification first — this skill assumes its two-layer contract:
 
-- **Per-companion-spec grouping**: a `ScenarioBindingGroupType` anchor per descriptor
-  carries the stable `CompanionSpecificationUri` and all `ModelNamespaceUris`; the
-  registry and per-instance containers hold groups, and groups hold bindings.
+- **Scenario-first discovery**: the Server Object has a `Scenarios`
+  (`ScenarioFolderType`) registry. A client starts there, picks a `ScenarioProfileType`,
+  browses that profile's per-companion-spec `ScenarioBindingGroupType` components, then
+  the bindings. On an instance, `IScenarioBoundType` exposes its per-scenario groups
+  directly.
 - **Routing** (for a generic bridge): a `ScenarioUri` per binding + a `Kind` per item.
 - **Semantic cross-reference** (for the ultimate consumer): each item retains
   `TypeDefinition`, namespace-qualified `BrowseName`, `ModelNamespaceUri` and any
@@ -60,9 +62,10 @@ Per companion spec (see the worked examples under `core-specs/scenario-binding/e
 - `<Domain>.ScenarioBinding.json` — the machine-readable **binding descriptor (JSON)**
   (single source of truth; the authoring DSL below).
 - `Opc.Ua.<Domain>.ScenarioBinding.NodeSet2.xml` — the **binding instances**: a compact
-  *theoretical instance* of the bound type in an example namespace, with a `ScenarioBindings`
-  container holding a per-companion-spec `ScenarioBindingGroup`, with the
-  `ScenarioBinding`/`BoundItem` instances nested below it (see "Two-level authoring").
+  *theoretical instance* of the bound type in an example namespace, applying
+  `IScenarioBoundType` and exposing one `ScenarioBindingGroup` per scenario directly on
+  the instance, with the `ScenarioBinding`/`BoundItem` instances nested below each group
+  (see "Two-level authoring").
 - `OPC-UA-<Domain>-PubSub-Scenario-Binding-Addendum.md` — the companion-spec **addendum**:
   scope, the per-scenario annex tables, and diagrams showing where the bindings live on the
   theoretical instance.
@@ -145,7 +148,7 @@ Give each item a stable `FieldName` (default: the BrowseName; disambiguate place
 appending the matched BrowseName as the spec requires). Set the descriptor-level
 `companionSpecificationUri` to the stable URI for the companion specification itself (not a
 namespace URI), and `modelNamespaceUris` to every namespace URI that specification defines or
-covers; these become the per-spec group identity.
+covers; these identify the companion-spec facet of each per-scenario group.
 
 ### 4. Classify each scenario's content as Data or Event
 
@@ -263,18 +266,19 @@ requires *where PubSub is configured* (§5.5) — it is not produced by the exam
 ### 10. Emit the descriptor
 
 Write the binding descriptor (JSON; see format below). Include the top-level
-`companionSpecificationUri` and `modelNamespaceUris` so the generator can emit one
-`ScenarioBindingGroupType` per descriptor, with all bindings nested under that group. This is
-the single source; the annex and the NodeSet fragment are **derived** from it, never authored
-separately.
+`companionSpecificationUri` and `modelNamespaceUris` so the generated structure can emit one
+`ScenarioBindingGroupType` per `(scenario × companion specification)`, with that scenario's
+bindings nested under the group. This is the single source; the annex and the NodeSet fragment
+are **derived** from it, never authored separately.
 
 ### 11. Generate the addendum + instance overlay
 
 Run the reference generator (`build_bindings.py`) on the descriptor. It renders one annex
 table per Scenario (linking each referenced base type to `https://reference.opcfoundation.org/`
 and own concepts to the base spec), emits the instance-overlay NodeSet with a
-`ScenarioBindingGroupType` carrying `CompanionSpecificationUri` and `ModelNamespaceUris`, nests
-the `ScenarioBinding` objects under that group, emits per-binding `DataSetClassId`,
+per-scenario `ScenarioBindingGroupType` carrying `CompanionSpecificationUri` and
+`ModelNamespaceUris`, nests that scenario's `ScenarioBinding` objects under the group, emits
+per-binding `DataSetClassId`,
 `ContentKind` and `DataSetCardinalityPath` (when authored), and emits `BoundEventFieldType`
 items for event DataSets, then assembles the addendum. Leave transport/security/addressing as
 deployment parameters — never
@@ -290,7 +294,7 @@ the full metadata value.
   from the bound type while event field paths are validated against the selected event type.
 - Every item has a `Kind`, a `FieldName` and a complete semantic cross-reference.
 - Every descriptor has `companionSpecificationUri` and `modelNamespaceUris`, and the overlay
-  nests bindings under that per-companion-spec group.
+  nests bindings under the correct per-scenario companion-spec group.
 - Every binding has the correct `contentKind`; Event bindings have an `eventSourcePath` or
   intentionally default to the bound root.
 - Observability metrics carry an instrument type (or rely on the Kind default), dimensions are
@@ -314,23 +318,30 @@ the full metadata value.
 
 ## Two-level authoring: type-level definition + instance overlay
 
-A companion specification is owned by *its* namespace, so **you cannot add `HasInterface` or a
-`ScenarioBindings` component to the base companion type** (e.g. `PumpType`,
-`MotionDeviceSystemType`) from an addendum. Author the bindings at two levels instead:
+A companion specification is owned by *its* namespace, so **you cannot add `HasInterface` or
+binding components to the base companion type** (e.g. `PumpType`, `MotionDeviceSystemType`)
+from an addendum. Author the bindings at two levels instead:
 
 1. **Type-level definition (reusable, portable).** The binding descriptor (JSON) +
    the annex express each binding as a `BrowsePath` (RelativePath) from the type
    root. This does not touch the base type and applies to *every* conforming instance. It is
    the normative-recommendation artifact a future revision of the companion spec (or a server)
-   would adopt. The descriptor also names the per-companion-spec group identity with
-   `companionSpecificationUri` and `modelNamespaceUris`, preventing BrowseName collisions when
-   multiple companion specs publish bindings into one registry.
+   would adopt. The descriptor also names the companion-spec facet of each per-scenario group
+   with `companionSpecificationUri` and `modelNamespaceUris`, preventing BrowseName collisions
+   when multiple companion specs publish bindings into one scenario profile.
 2. **Instance overlay (concrete, illustrative).** In your **own example namespace**
    (`http://opcfoundation.org/UA/PubSub/Examples/<Domain>/`), synthesise a compact
    *theoretical instance* of the bound type — you own it, so you may apply `IScenarioBoundType`
-   and hang a `ScenarioBindings` container off it (`HasComponent`). Emit the
-   `ScenarioBindingGroup` instance under `ScenarioBindings`, then the `ScenarioBinding`/`BoundItem`
-   instances below that group.
+   and expose one `ScenarioBindingGroup` per scenario directly on the instance (`HasComponent`).
+   Each group is per `(scenario × companion specification)` and is named by the scenario on
+   per-instance objects. Emit the matching `ScenarioBinding`/`BoundItem` instances below each
+   group.
+
+**Server-wide discovery.** A server exposes `Server` → `Scenarios` (`ScenarioFolderType`) →
+`<Scenario>` (`ScenarioProfileType`) → `<ScenarioBindingGroup>` (`ScenarioBindingGroupType`,
+per companion spec) → `<ScenarioBinding>` (`ScenarioBindingType`) → `<BoundItem>`. Clients
+start at the `Scenarios` registry, select a scenario profile, browse its per-spec groups, then
+the bindings and bound items.
 
 **Two locators, one per level.** On the type level a `BoundItem` uses **`BrowsePath`**; on the
 instance overlay it uses **`BindsToNode`** pointing at the concrete signal node (both are
@@ -343,9 +354,10 @@ Pumps `instanceexample.xml`); otherwise synthesise a minimal one. **Placeholder 
 type-level BrowsePath keeps the placeholder.
 
 **Diagram conventions (two per addendum).** (a) a *bindings overview*
-(instance → ScenarioBindings → per-spec ScenarioBindingGroup → per-scenario ScenarioBinding → BoundItems); (b) an *instance
-placement* diagram (instance → `HasInterface`/`HasComponent` → ScenarioBindings → group → binding →
-BoundItem → `BindsToNode` → the signal node), so a reader sees exactly where bindings live.
+(`Server` → `Scenarios` → scenario profile → per-spec `ScenarioBindingGroup` → `ScenarioBinding`
+→ BoundItems); (b) an *instance placement* diagram (instance → `IScenarioBoundType` →
+per-scenario group → binding → BoundItem → `BindsToNode` → the signal node), so a reader sees
+exactly where bindings live.
 
 ## Domain heuristics learned from the worked examples
 
@@ -372,7 +384,7 @@ BoundItem → `BindsToNode` → the signal node), so a reader sees exactly where
 
 A single JSON object — the **authoring DSL** consumed by `build_bindings.py`. You write the
 intent (which type, which scenarios, Data vs Event content, which items by `BrowsePath`, which
-`Kind`, and which companion-spec group owns them); the generator resolves each data
+`Kind`, and which companion specification owns them); the generator resolves each data
 `BrowsePath` against the companion NodeSet, resolves event field paths against the selected
 event type, and fills in the namespaces, source `BrowseName`, `TypeDefinition`, `DataType`,
 `DataSetFieldId`, `EventFieldOperand` and `DataSetClassId` mechanically, then emits the grouped
@@ -473,11 +485,11 @@ OTEL Observability fragment:
 
 Field notes:
 - `companionSpecificationUri` is the stable **spec-level** identifier for the companion
-  specification group anchor. It is distinct from any namespace URI because one companion
-  specification can define several model namespaces.
+  specification facet of each per-scenario group. It is distinct from any namespace URI because
+  one companion specification can define several model namespaces.
 - `modelNamespaceUris` lists the namespace URIs the companion specification defines/covers;
-  the generator emits them on the `ScenarioBindingGroupType` instance together with
-  `CompanionSpecificationUri`, then nests this descriptor's bindings below that group.
+  the generator emits them on each `ScenarioBindingGroupType` instance together with
+  `CompanionSpecificationUri`, then nests the matching scenario's bindings below that group.
 - `appliesToType` is the plain BrowseName of the binding target: an `ObjectType`, Interface, or
   AddInType. The generator locates it in `baseNodeSets`.
 - `baseNodeSets` are filenames under `examples/tools/ref/` (gitignored); `requiredModels` are

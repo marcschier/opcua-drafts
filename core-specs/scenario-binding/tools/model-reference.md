@@ -9,7 +9,6 @@ This annex is the normative node reference. It is generated from `tools/build_mo
 |---|---|---|---|
 | i=60001 | [BindsToNode](#type-BindsToNode) | ReferenceType | [NonHierarchicalReferences](https://reference.opcfoundation.org/specs/OPC-10000-3/7.4) |
 | i=60002 | [ScenarioRealizedBy](#type-ScenarioRealizedBy) | ReferenceType | [NonHierarchicalReferences](https://reference.opcfoundation.org/specs/OPC-10000-3/7.4) |
-| i=60004 | [HasScenarioBinding](#type-HasScenarioBinding) | ReferenceType | [NonHierarchicalReferences](https://reference.opcfoundation.org/specs/OPC-10000-3/7.4) |
 | i=60003 | [HasBaseBinding](#type-HasBaseBinding) | ReferenceType | [NonHierarchicalReferences](https://reference.opcfoundation.org/specs/OPC-10000-3/7.4) |
 | i=60012 | [BoundItemType](#type-BoundItemType) | ObjectType | [BaseObjectType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.2) |
 | i=60013 | [BoundVariableType](#type-BoundVariableType) | ObjectType | [BoundItemType](#type-BoundItemType) |
@@ -17,7 +16,7 @@ This annex is the normative node reference. It is generated from `tools/build_mo
 | i=60017 | [BoundEventFieldType](#type-BoundEventFieldType) | ObjectType | [BoundItemType](#type-BoundItemType) |
 | i=60011 | [ScenarioBindingType](#type-ScenarioBindingType) | ObjectType | [BaseObjectType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.2) |
 | i=60018 | [ScenarioBindingGroupType](#type-ScenarioBindingGroupType) | ObjectType | [FolderType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.6) |
-| i=60010 | [ScenarioBindingsType](#type-ScenarioBindingsType) | ObjectType | [FolderType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.6) |
+| i=60010 | [ScenarioFolderType](#type-ScenarioFolderType) | ObjectType | [FolderType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.6) |
 | i=60015 | [ScenarioProfileType](#type-ScenarioProfileType) | ObjectType | [BaseObjectType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.2) |
 | i=60016 | [IScenarioBoundType](#type-IScenarioBoundType) | ObjectType | [BaseInterfaceType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.9) |
 | i=60050 | [ScenarioBindingDirectionEnum](#type-ScenarioBindingDirectionEnum) | DataType | Enumeration |
@@ -42,13 +41,6 @@ Links a BoundItem to the companion-specification Variable or Method in the Addre
 *Subtype of:* [NonHierarchicalReferences](https://reference.opcfoundation.org/specs/OPC-10000-3/7.4) · *InverseName:* `RealizesScenario`
 
 Links a ScenarioBinding to the optional OPC UA Part 14 PubSub node(s) that realize it (a PublishedDataSet, DataSetWriter, DataSetReader or an ActionTarget). Forward 'ScenarioRealizedBy' reads binding -> realization; the inverse 'RealizesScenario' reads realization -> binding. Absent (and never required) when the binding is not realized over PubSub - a Server may instead serve the binding over the classic client/server (RPC) interface.
-
-<a id="type-HasScenarioBinding"></a>
-#### HasScenarioBinding  (i=60004)
-
-*Subtype of:* [NonHierarchicalReferences](https://reference.opcfoundation.org/specs/OPC-10000-3/7.4) · *InverseName:* `ServesScenario`
-
-Links a ScenarioProfile in the Scenarios registry to a ScenarioBinding that serves that scenario, so a Client can start at the scenario it cares about and browse straight to every binding serving it (across companion specifications). Forward 'HasScenarioBinding' reads scenario -> binding; the inverse 'ServesScenario' reads binding -> scenario. The binding still lives physically under its per-specification ScenarioBindingGroup; this reference is the scenario-first discovery cross-link.
 
 <a id="type-HasBaseBinding"></a>
 #### HasBaseBinding  (i=60003)
@@ -197,31 +189,27 @@ One scenario binding on a bound object or type. It declares the scenario URI and
 
 *Inherits from:* [FolderType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.6)
 
-A per-companion-specification anchor grouping that spec's ScenarioBinding objects, so bindings from different companion specifications registered in one container never collide by BrowseName. Identified by CompanionSpecificationUri (a stable spec-level identifier, distinct from a namespace URI, because a companion specification may define several namespace URIs).
+A per-companion-specification anchor grouping that spec's ScenarioBinding objects, so bindings from different companion specifications registered under one ScenarioProfile never collide by BrowseName. Identified by CompanionSpecificationUri (a stable spec-level identifier, distinct from a namespace URI, because a companion specification may define several namespace URIs). Sibling groups themselves carry unique BrowseNames.
 
 | BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
 |---|---|---|---|---|---|
-| CompanionSpecificationUri | Variable | String | Mandatory | ScenarioBindingGroupType | Stable spec-level identifier of the companion specification this group anchors. Groups are unique per CompanionSpecificationUri. |
+| CompanionSpecificationUri | Variable | String | Mandatory | ScenarioBindingGroupType | Stable spec-level identifier of the companion specification this group anchors. Sibling groups under one ScenarioProfile are unique by CompanionSpecificationUri, and each group's BrowseName is derived from this identity so sibling BrowseNames do not collide. |
 | ModelNamespaceUris | Variable | String\[\] | Mandatory | ScenarioBindingGroupType | All namespace URIs the companion specification defines/covers. |
 | <ScenarioBinding> | Object |  | OptionalPlaceholder | ScenarioBindingGroupType | A scenario binding of this companion specification. |
 
-<a id="type-ScenarioBindingsType"></a>
-#### ScenarioBindingsType  (i=60010)
+<a id="type-ScenarioFolderType"></a>
+#### ScenarioFolderType  (i=60010)
 
 *Inherits from:* [FolderType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.6)
 
-A discoverable container of per-companion-spec ScenarioBindingGroup objects, enumerated by Browse. A server exposes one server-wide instance under the Server object, and/or a local instance on any object that implements IScenarioBoundType.
-
-| BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
-|---|---|---|---|---|---|
-| <ScenarioBindingGroup> | Object |  | OptionalPlaceholder | ScenarioBindingsType | A per-companion-specification group of scenario bindings. |
+The type of the Scenarios registry: a discoverable folder of ScenarioProfile objects, exposed as a component of the Server Object. It is the scenario-first discovery entry point. Extensible - companion and scenario specifications add their own ScenarioProfile objects.
 
 <a id="type-ScenarioProfileType"></a>
 #### ScenarioProfileType  (i=60015)
 
 *Inherits from:* [BaseObjectType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.2)
 
-A registered integration scenario: its URI plus human-readable metadata. The registry is extensible; vendors and other specifications add profiles with their own URIs.
+A registered integration scenario: its URI plus human-readable metadata, and the ScenarioBindingGroup components (one per companion specification) that contain the ScenarioBindings serving this scenario. The registry is extensible; vendors and other specifications add profiles with their own URIs.
 
 | BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
 |---|---|---|---|---|---|
@@ -229,17 +217,18 @@ A registered integration scenario: its URI plus human-readable metadata. The reg
 | Title | Variable | LocalizedText | Optional | ScenarioProfileType | Short human-readable title. |
 | Summary | Variable | LocalizedText | Optional | ScenarioProfileType | Human-readable description of the scenario and its intended consumers. |
 | Keywords | Variable | String\[\] | Optional | ScenarioProfileType | Keywords describing the scenario. |
+| <ScenarioBindingGroup> | Object |  | OptionalPlaceholder | ScenarioProfileType | A per-companion-specification group of the bindings serving this scenario. Sibling groups under one profile are unique by CompanionSpecificationUri and each carries a unique BrowseName derived from that specification identity (not the scenario name). |
 
 <a id="type-IScenarioBoundType"></a>
 #### IScenarioBoundType  (i=60016)
 
 *Inherits from:* [BaseInterfaceType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.9)
 
-Interface implemented by a companion-specification ObjectType (or instance) to advertise that it participates in scenario bindings, by exposing a local ScenarioBindings container.
+Interface implemented by a companion-specification ObjectType (or instance) to advertise that it participates in scenario bindings, by exposing its ScenarioBindingGroup objects directly (one per (Scenario x companion specification) it serves; typically one per scenario for a single-specification instance).
 
 | BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
 |---|---|---|---|---|---|
-| ScenarioBindings | Object |  | Mandatory | IScenarioBoundType | The scenario bindings defined on this object. |
+| <ScenarioBindingGroup> | Object |  | OptionalPlaceholder | IScenarioBoundType | A group of this object's bindings for one (Scenario x companion specification). Sibling groups have unique BrowseNames - by scenario for a single-specification instance, and additionally by specification when several specifications serve one scenario on the instance. |
 
 ### Data types
 
@@ -361,8 +350,7 @@ Machine-readable descriptor of a single bound item: how to LOCATE it (BrowsePath
 
 | BrowseName | NodeId | TypeDefinition | Note |
 |---|---|---|---|
-| ScenarioBindings | i=60100 | [ScenarioBindingsType](#type-ScenarioBindingsType) | Server-wide registry of scenario bindings, discoverable by browsing the Server object. Its presence does not require any PubSub configuration. |
-| Scenarios | i=60101 | [FolderType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.6) | Registry of known integration scenarios (extensible). |
+| Scenarios | i=60101 | [ScenarioFolderType](#type-ScenarioFolderType) | Server-wide registry of integration scenarios, discoverable as a component of the Server object. It is the scenario-first entry point; its presence does not require any PubSub configuration. |
 | Observability | i=60110 | [ScenarioProfileType](#type-ScenarioProfileType) | Real-time operational monitoring: SCADA/HMI, dashboards and observability platforms (e.g. OpenTelemetry). Low latency, cyclic telemetry and status. |
 | PredictiveMaintenance | i=60111 | [ScenarioProfileType](#type-ScenarioProfileType) | Condition- and usage-based trending fed to maintenance analytics to forecast wear and schedule service. |
 | AnomalyDetection | i=60112 | [ScenarioProfileType](#type-ScenarioProfileType) | High-resolution, correlated signals for baseline modelling and deviation/outlier detection. |

@@ -34,7 +34,7 @@ MAINT = "http://opcfoundation.org/UA/PubSub/Scenarios/Maintenance"
 MAJOR = 1
 
 # provisional base-spec type ids (see the base model)
-T_BINDINGS, T_GROUP, T_BINDING, T_BOUNDVAR = 60010, 60018, 60011, 60013
+T_IBOUND, T_GROUP, T_BINDING, T_BOUNDVAR = 60016, 60018, 60011, 60013
 KIND = {"Telemetry": 0, "Identity": 3, "Maintenance": 5, "Status": 1}
 
 
@@ -242,15 +242,19 @@ class Emit:
                         return
 
     def document(self):
-        cont = self._id()
-        self._open("UAObject", cont, "1:ExampleFacetBindings")
-        self._refs([("i=40", f"i={T_BINDINGS}", True),
+        # Illustrative instance implementing IScenarioBoundType; it exposes its scenario
+        # binding group directly (no container), consistent with the base model where an
+        # IScenarioBoundType object HasComponent one ScenarioBindingGroup per scenario.
+        root = self._id()
+        self._open("UAObject", root, "1:FacetDemoInstance")
+        self._refs([("i=40", "i=58", True),              # HasTypeDefinition -> BaseObjectType
+                    ("i=17603", f"i={T_IBOUND}", True),  # HasInterface -> IScenarioBoundType
                     ("i=35", "i=85", False)])   # Organizes from Objects folder (illustrative)
         self.out.append('  </UAObject>')
         gid = self._id()
-        self._open("UAObject", gid, "1:FacetDemo", cont)
+        self._open("UAObject", gid, "1:FacetDemo", root)
         self._refs([("i=40", f"i={T_GROUP}", True),
-                    ("i=47", f"ns=1;i={cont}", False)])
+                    ("i=47", f"ns=1;i={root}", False)])
         self.out.append('  </UAObject>')
         self.prop("CompanionSpecificationUri", "i=12",
                   f'<uax:String {U}>{sx.escape(BASE)}</uax:String>', gid)
@@ -278,6 +282,7 @@ class Emit:
                   '    <Alias Alias="HasComponent">i=47</Alias>',
                   '    <Alias Alias="HasProperty">i=46</Alias>',
                   '    <Alias Alias="Organizes">i=35</Alias>',
+                  '    <Alias Alias="HasInterface">i=17603</Alias>',
                   '    <Alias Alias="HasTypeDefinition">i=40</Alias>',
                   '    <Alias Alias="HasBaseBinding">i=60003</Alias>',
                   '  </Aliases>']
@@ -400,13 +405,16 @@ def emit_addendum(db):
     A("")
     A("## 6. Where the binding nodes live")
     A("")
-    A("`Opc.Ua.Facets.ScenarioBinding.NodeSet2.xml` in this folder shows the four base bindings "
-      "and the two derived bindings under one `ScenarioBindingGroup` (`FacetDemo`) for readability. "
-      "In a real Server each facet's binding is exposed on that facet type's own `ScenarioBindings` "
-      "container (Device on `DeviceType`, Location on `LocationAddInType`, Maintenance on "
-      "`IMaintenanceFacetType`); a `MachineType` instance's container exposes the derived bindings, "
-      "which the Server/bridge composes with the inherited/AddIn/interface bindings at resolve time "
-      "per §5.12. NodeIds and the example namespace are provisional.")
+    A("`Opc.Ua.Facets.ScenarioBinding.NodeSet2.xml` in this folder collapses the four base bindings "
+      "and the two derived bindings under one `ScenarioBindingGroup` (`FacetDemo`) for readability, "
+      "exposed on an illustrative `FacetDemoInstance` that implements `IScenarioBoundType`. "
+      "A conformant Server does not collapse them: it exposes one group per "
+      "(`ScenarioUri` × `CompanionSpecificationUri`) with unique sibling BrowseNames (§5.1.1), so "
+      "each facet type carries its own group (Device on `DeviceType`, Location on "
+      "`LocationAddInType`, Maintenance on `IMaintenanceFacetType`) and a `MachineType` instance "
+      "exposes the derived bindings' group, which the Server/bridge composes with the "
+      "inherited/AddIn/interface bindings at resolve time per §5.12. NodeIds and the example "
+      "namespace are provisional.")
     A("")
     return "\n".join(L) + "\n"
 

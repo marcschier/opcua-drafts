@@ -6,12 +6,13 @@ the base companion NodeSet(s). The tool:
   1. walks the target companion ObjectType and validates every boundItem.browsePath,
      enriching it with the real namespace-qualified BrowseName, DataType and TypeDefinition;
   2. synthesises a compact *theoretical instance* (only the bound signals) in an example
-     namespace, hangs a ScenarioBindings container (ScenarioBindingsType) off it and
-     emits ScenarioBinding + BoundItem instances (BindsToNode -> the concrete signal node);
+     namespace, exposes one ScenarioBindingGroup per scenario on it (the instance implements
+     IScenarioBoundType) and emits ScenarioBinding + BoundItem instances (BindsToNode ->
+     the concrete signal node);
   3. emits the per-scenario annex tables (Markdown, with reference.opcfoundation.org and
      base-spec links) and two mermaid diagram sources (bindings overview + instance placement).
 
-All base-namespace (ns0) binding NodeIds (ScenarioBindingsType i=60010 etc.) are the
+All base-namespace (ns0) binding NodeIds (ScenarioBindingGroupType i=60018 etc.) are the
 PROVISIONAL ids from the draft Scenario Bindings spec.
 """
 import json
@@ -28,7 +29,7 @@ FIELD_ID_NS = uuid.uuid5(uuid.NAMESPACE_URL,
 
 # --- base-namespace (ns0) Scenario Binding provisional ids -----------
 BIND = {
-    "ScenarioBindingsType": 60010, "ScenarioBindingType": 60011,
+    "ScenarioFolderType": 60010, "ScenarioBindingType": 60011,
     "BoundItemType": 60012, "BoundVariableType": 60013, "BoundMethodType": 60014,
     "ScenarioProfileType": 60015, "IScenarioBoundType": 60016,
     "BoundEventFieldType": 60017, "ScenarioBindingGroupType": 60018,
@@ -262,44 +263,48 @@ class Emitter:
         # instance root
         self.root_id = self.nid()
         root_bn = f'1:{d["instanceName"]}'
-        pump_type = self.base_nodeid_str(self.type_key)
-        # ScenarioBindings container id (allocated now, filled later)
+        type_ref = self.base_nodeid_str(self.type_key)
+        U = 'xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"'
+        cs_uri = d.get("companionSpecificationUri", d["baseModelNamespaceUri"])
+        ns_uris = d.get("modelNamespaceUris") or [m["uri"] for m in d["requiredModels"]]
+        # On a per-instance object, IScenarioBoundType exposes one ScenarioBindingGroup per
+        # (scenario x companion specification) it serves (§5.9). This overlay realizes a single
+        # companion specification, so there is one group per scenario and the group BrowseName is
+        # the scenario short name (unique among siblings; §5.1.1). Group the bindings by
+        # scenarioUri, preserving descriptor order, and allocate a group per scenario.
+        groups, seen = [], {}
+        for sb in d["scenarioBindings"]:
+            suri = sb["scenarioUri"]
+            if suri not in seen:
+                seen[suri] = len(groups)
+                groups.append([self.nid(), suri.rsplit("/", 1)[-1], []])
+            groups[seen[suri]][2].append(sb)
+        # instance root: implements IScenarioBoundType and HasComponent each per-scenario group
         self._open("UAObject", self.root_id, root_bn)
         self.out.append(f'    <DisplayName>{d["instanceName"]}</DisplayName>')
         self.out.append(f'    <Description>Illustrative theoretical instance of '
                         f'{d["appliesToType"]} carrying example scenario bindings. Only the '
                         f'bound signals are shown; not a conformant full instance.</Description>')
-        self.sb_container = self.nid()
-        self._refs([("HasTypeDefinition", pump_type, True),
-                    ("HasInterface", f'i={BIND["IScenarioBoundType"]}', True),
-                    ("HasComponent", self.ex(self.sb_container), True)])
+        root_refs = [("HasTypeDefinition", type_ref, True),
+                     ("HasInterface", f'i={BIND["IScenarioBoundType"]}', True)]
+        root_refs += [("HasComponent", self.ex(gid), True) for gid, _bn, _sbs in groups]
+        self._refs(root_refs)
         self.out.append("  </UAObject>")
-        # ScenarioBindings container
-        self._open("UAObject", self.sb_container, "1:ScenarioBindings", self.ex(self.root_id))
-        self.out.append("    <DisplayName>ScenarioBindings</DisplayName>")
-        self._refs([("HasTypeDefinition", f'i={BIND["ScenarioBindingsType"]}', True),
-                    ("HasComponent", self.ex(self.root_id), False)])
-        self.out.append("  </UAObject>")
-        # per-companion-specification group anchor (avoids cross-spec name collisions)
-        self.group_id = self.nid()
-        group_bn = d.get("groupName", d["domain"])
-        cs_uri = d.get("companionSpecificationUri", d["baseModelNamespaceUri"])
-        ns_uris = d.get("modelNamespaceUris") or [m["uri"] for m in d["requiredModels"]]
-        U = 'xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"'
-        self._open("UAObject", self.group_id, f"1:{group_bn}", self.ex(self.sb_container))
-        self.out.append(f"    <DisplayName>{sx.escape(group_bn)}</DisplayName>")
-        self._refs([("HasTypeDefinition", f'i={BIND["ScenarioBindingGroupType"]}', True),
-                    ("HasComponent", self.ex(self.sb_container), False)])
-        self.out.append("  </UAObject>")
-        self.prop(self.nid(), "CompanionSpecificationUri", "String",
-                  f'<uax:String {U}>{sx.escape(cs_uri)}</uax:String>', self.group_id)
-        lst = "".join(f'<uax:String>{sx.escape(u)}</uax:String>' for u in ns_uris)
-        self.prop(self.nid(), "ModelNamespaceUris", "String",
-                  f'<uax:ListOfString {U}>{lst}</uax:ListOfString>', self.group_id,
-                  valuerank="1")
-        # scenario bindings (under the group)
-        for sb in d["scenarioBindings"]:
-            self.emit_binding(sb)
+        # per-scenario ScenarioBindingGroup objects (each carries the companion-spec identity)
+        for gid, group_bn, sbs in groups:
+            self.group_id = gid
+            self._open("UAObject", gid, f"1:{group_bn}", self.ex(self.root_id))
+            self.out.append(f"    <DisplayName>{sx.escape(group_bn)}</DisplayName>")
+            self._refs([("HasTypeDefinition", f'i={BIND["ScenarioBindingGroupType"]}', True),
+                        ("HasComponent", self.ex(self.root_id), False)])
+            self.out.append("  </UAObject>")
+            self.prop(self.nid(), "CompanionSpecificationUri", "String",
+                      f'<uax:String {U}>{sx.escape(cs_uri)}</uax:String>', gid)
+            lst = "".join(f'<uax:String>{sx.escape(u)}</uax:String>' for u in ns_uris)
+            self.prop(self.nid(), "ModelNamespaceUris", "String",
+                      f'<uax:ListOfString {U}>{lst}</uax:ListOfString>', gid, valuerank="1")
+            for sb in sbs:
+                self.emit_binding(sb)
 
     def emit_binding(self, sb):
         bid = self.nid()
@@ -720,7 +725,7 @@ def emit_addendum(descriptor, db, base_names):
              f"optionally, over OPC UA PubSub — without modifying the companion "
              f"specification. All NodeIds in the example namespace "
              f"`{d['exampleNamespaceUri']}` are provisional and the base-namespace binding "
-             f"types it references (`ScenarioBindingsType` etc.) carry the **provisional** "
+             f"types it references (`ScenarioBindingGroupType` etc.) carry the **provisional** "
              f"NodeIds of the draft base specification.")
     L.append("")
     L.append("## 1 Scope")
@@ -755,8 +760,9 @@ def emit_addendum(descriptor, db, base_names):
              f"[`Opc.Ua.{d['domain']}.ScenarioBinding.NodeSet2.xml`]"
              f"(Opc.Ua.{d['domain']}.ScenarioBinding.NodeSet2.xml) instantiates a compact "
              f"theoretical instance `{d['instanceName']}`, applies the "
-             f"`IScenarioBoundType` interface, and hangs a `ScenarioBindings` container "
-             f"holding the `ScenarioBinding`/`BoundItem` instances. On the instance each "
+             f"`IScenarioBoundType` interface, and exposes one `ScenarioBindingGroup` per "
+             f"scenario holding that scenario's `ScenarioBinding`/`BoundItem` instances. On the "
+             f"instance each "
              f"`BoundItem` uses **`BindsToNode`** to point at the concrete signal node "
              f"(the type-level `BrowsePath` and the instance `BindsToNode` are the two "
              f"locators defined by the base specification).")
@@ -775,8 +781,8 @@ def emit_addendum(descriptor, db, base_names):
     L.append("## 5 Where the bindings live")
     L.append("")
     L.append("Overview of the scenario bindings, then their placement on the theoretical "
-             "instance (`ScenarioBindings` hangs off the instance; each `BoundItem` "
-             "`BindsToNode` its signal):")
+             "instance (one `ScenarioBindingGroup` per scenario hangs off the instance; each "
+             "`BoundItem` `BindsToNode` its signal):")
     L.append("")
     L.append(emit_diagrams(d))
     res = emit_resolution_examples(d)
@@ -908,12 +914,19 @@ def dt_name(dt):
 
 def emit_diagrams(descriptor):
     d = descriptor
-    # overview
+    # overview: group the scenario bindings by scenario (one ScenarioBindingGroup per scenario)
     ov = ["```mermaid", "graph LR",
-          f'  ROOT["{d["instanceName"]} : {d["appliesToType"]}"] --> SB["ScenarioBindings"]']
+          f'  ROOT["{d["instanceName"]} : {d["appliesToType"]}"]']
+    ov_seen = {}
     for i, sb in enumerate(d["scenarioBindings"]):
         tag = "Events" if sb.get("contentKind") == "Events" else "Data"
-        ov.append(f'  SB --> S{i}["{sb["name"]}<br/>{sb["direction"]} · {tag}"]')
+        suri = sb["scenarioUri"]
+        gname = suri.rsplit("/", 1)[-1]
+        if suri not in ov_seen:
+            ov_seen[suri] = i
+            ov.append(f'  ROOT --> G{i}["{gname}<br/>ScenarioBindingGroup"]')
+        gi = ov_seen[suri]
+        ov.append(f'  G{gi} --> S{i}["{sb["name"]}<br/>{sb["direction"]} · {tag}"]')
         for j, it in enumerate(sb["boundItems"][:6]):
             ov.append(f'  S{i} --> S{i}_{j}["{it["fieldName"]} : {it["kind"]}"]')
     ov.append("```")
@@ -922,15 +935,19 @@ def emit_diagrams(descriptor):
     ev = next((s for s in d["scenarioBindings"] if s.get("contentKind") == "Events"), None)
     if ev is not None and ev is not picks[0]:
         picks.append(ev)
-    group = d.get("groupName", d["domain"])
     inst = ["```mermaid", "graph TD",
             f'  R["{d["instanceName"]} : {d["appliesToType"]}"]',
-            "  R -->|HasInterface| I([IScenarioBoundType])",
-            '  R -->|HasComponent| SB["ScenarioBindings"]',
-            f'  SB -->|HasComponent| G["{group} : ScenarioBindingGroupType"]']
+            "  R -->|HasInterface| I([IScenarioBoundType])"]
+    gseen = {}
     for i, sb in enumerate(picks):
         ck = sb.get("contentKind", "DataItems")
-        inst.append(f'  G -->|HasComponent| B{i}["{sb["name"]} : ScenarioBindingType"]')
+        suri = sb["scenarioUri"]
+        gname = suri.rsplit("/", 1)[-1]
+        if suri not in gseen:
+            gseen[suri] = i
+            inst.append(f'  R -->|HasComponent| G{i}["{gname} : ScenarioBindingGroupType"]')
+        gi = gseen[suri]
+        inst.append(f'  G{gi} -->|HasComponent| B{i}["{sb["name"]} : ScenarioBindingType"]')
         for j, it in enumerate(sb["boundItems"][:3]):
             if ck == "Events" or "_rec" not in it:
                 et = sb.get("eventType", "BaseEventType")
