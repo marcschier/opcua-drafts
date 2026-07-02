@@ -9,6 +9,7 @@ This annex is the normative node reference. It is generated from `tools/build_mo
 |---|---|---|---|
 | i=60001 | [BindsToNode](#type-BindsToNode) | ReferenceType | [NonHierarchicalReferences](https://reference.opcfoundation.org/specs/OPC-10000-3/7.4) |
 | i=60002 | [ScenarioRealizedVia](#type-ScenarioRealizedVia) | ReferenceType | [NonHierarchicalReferences](https://reference.opcfoundation.org/specs/OPC-10000-3/7.4) |
+| i=60003 | [HasBaseBinding](#type-HasBaseBinding) | ReferenceType | [NonHierarchicalReferences](https://reference.opcfoundation.org/specs/OPC-10000-3/7.4) |
 | i=60012 | [BoundItemType](#type-BoundItemType) | ObjectType | [BaseObjectType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.2) |
 | i=60013 | [BoundVariableType](#type-BoundVariableType) | ObjectType | [BoundItemType](#type-BoundItemType) |
 | i=60014 | [BoundMethodType](#type-BoundMethodType) | ObjectType | [BoundItemType](#type-BoundItemType) |
@@ -41,6 +42,13 @@ Links a BoundItem to the companion-specification Variable or Method in the Addre
 
 Links a ScenarioBinding to the optional OPC UA Part 14 PubSub node(s) that realize it (a PublishedDataSet, DataSetWriter, DataSetReader or an ActionTarget). Forward 'ScenarioRealizedVia' reads binding -> realization; the inverse 'SupportsScenario' reads realization -> binding. Absent (and never required) when the binding is not realized over PubSub.
 
+<a id="type-HasBaseBinding"></a>
+#### HasBaseBinding  (i=60003)
+
+*Subtype of:* [NonHierarchicalReferences](https://reference.opcfoundation.org/specs/OPC-10000-3/7.4) · *InverseName:* `IsBaseBindingOf`
+
+Links a derived or composing ScenarioBinding to a base ScenarioBinding whose fields it extends or composes (e.g. a Machine binding to the Device-facet binding it builds on). Optional browse convenience used where the base binding node is present in the same AddressSpace; the portable, cross-specification lineage carrier is ScenarioBinding.BaseDataSetClassIds.
+
 ### Object types
 
 <a id="type-BoundItemType"></a>
@@ -64,6 +72,7 @@ A single item bound into a scenario: it references the companion-spec node it ex
 | SourceBrowseName | Variable | QualifiedName | Optional | BoundItemType | Namespace-qualified BrowseName of the source node. |
 | ModelNamespaceUri | Variable | String | Optional | BoundItemType | Namespace URI of the companion model defining the source. |
 | DataSetFieldId | Variable | Guid | Optional | BoundItemType | GUID correlating the item to Part 14 FieldMetaData. |
+| SourceScenarioBindingClassId | Variable | Guid | Optional | BoundItemType | Provenance: DataSetClassId of the base scenario binding this field originates from (its facet). Lets a subscriber partition a composed DataSet into exact per-base-class field subsets. Absent for fields defined by this binding itself. |
 | SemanticReferenceUri | Variable | String | Optional | BoundItemType | Optional external semantic identifier (e.g. IRDI/CDD). |
 
 <a id="type-BoundVariableType"></a>
@@ -87,6 +96,7 @@ A bound Variable exposed as a PubSub DataSet field.
 | SourceBrowseName | Variable | QualifiedName | Optional | [BoundItemType](#type-BoundItemType) | Namespace-qualified BrowseName of the source node. |
 | ModelNamespaceUri | Variable | String | Optional | [BoundItemType](#type-BoundItemType) | Namespace URI of the companion model defining the source. |
 | DataSetFieldId | Variable | Guid | Optional | [BoundItemType](#type-BoundItemType) | GUID correlating the item to Part 14 FieldMetaData. |
+| SourceScenarioBindingClassId | Variable | Guid | Optional | [BoundItemType](#type-BoundItemType) | Provenance: DataSetClassId of the base scenario binding this field originates from (its facet). Lets a subscriber partition a composed DataSet into exact per-base-class field subsets. Absent for fields defined by this binding itself. |
 | SemanticReferenceUri | Variable | String | Optional | [BoundItemType](#type-BoundItemType) | Optional external semantic identifier (e.g. IRDI/CDD). |
 
 <a id="type-BoundMethodType"></a>
@@ -111,6 +121,7 @@ A bound Method exposed as an invokable action; may be realized as a Part 14 Acti
 | SourceBrowseName | Variable | QualifiedName | Optional | [BoundItemType](#type-BoundItemType) | Namespace-qualified BrowseName of the source node. |
 | ModelNamespaceUri | Variable | String | Optional | [BoundItemType](#type-BoundItemType) | Namespace URI of the companion model defining the source. |
 | DataSetFieldId | Variable | Guid | Optional | [BoundItemType](#type-BoundItemType) | GUID correlating the item to Part 14 FieldMetaData. |
+| SourceScenarioBindingClassId | Variable | Guid | Optional | [BoundItemType](#type-BoundItemType) | Provenance: DataSetClassId of the base scenario binding this field originates from (its facet). Lets a subscriber partition a composed DataSet into exact per-base-class field subsets. Absent for fields defined by this binding itself. |
 | SemanticReferenceUri | Variable | String | Optional | [BoundItemType](#type-BoundItemType) | Optional external semantic identifier (e.g. IRDI/CDD). |
 
 <a id="type-BoundEventFieldType"></a>
@@ -135,6 +146,7 @@ A bound event field of an event DataSet, selected by a Part 14 SimpleAttributeOp
 | SourceBrowseName | Variable | QualifiedName | Optional | [BoundItemType](#type-BoundItemType) | Namespace-qualified BrowseName of the source node. |
 | ModelNamespaceUri | Variable | String | Optional | [BoundItemType](#type-BoundItemType) | Namespace URI of the companion model defining the source. |
 | DataSetFieldId | Variable | Guid | Optional | [BoundItemType](#type-BoundItemType) | GUID correlating the item to Part 14 FieldMetaData. |
+| SourceScenarioBindingClassId | Variable | Guid | Optional | [BoundItemType](#type-BoundItemType) | Provenance: DataSetClassId of the base scenario binding this field originates from (its facet). Lets a subscriber partition a composed DataSet into exact per-base-class field subsets. Absent for fields defined by this binding itself. |
 | SemanticReferenceUri | Variable | String | Optional | [BoundItemType](#type-BoundItemType) | Optional external semantic identifier (e.g. IRDI/CDD). |
 
 <a id="type-ScenarioBindingType"></a>
@@ -150,6 +162,7 @@ One scenario binding on a bound object or type. It declares the scenario URI and
 | Direction | Variable | [ScenarioBindingDirectionEnum](#type-ScenarioBindingDirectionEnum) | Mandatory | ScenarioBindingType | Role the server offers for this binding. |
 | ConfigurationVersion | Variable | i=14593 | Optional | ScenarioBindingType | Version of the binding, aligned with the realizing DataSetMetaData. |
 | DataSetClassId | Variable | Guid | Mandatory | ScenarioBindingType | Stable DataSetClassId (Part 14) identifying the class of the DataSet this binding defines, so subscribers recognize the same DataSet class across servers. It is a semantic class identity, not a guarantee of a fixed field layout (see the DataSetClassId clause). Deterministic. |
+| BaseDataSetClassIds | Variable | Guid\[\] | Optional | ScenarioBindingType | DataSetClassIds of the base facet bindings this binding extends or composes (its class lineage). This binding's own DataSetClassId identifies the composed/derived class; a subscriber that knows a base class-id consumes the matching field subset (see BoundItemType.SourceScenarioBindingClassId). |
 | ContentKind | Variable | [ScenarioContentKindEnum](#type-ScenarioContentKindEnum) | Mandatory | ScenarioBindingType | Whether the binding realizes as a data DataSet (PublishedDataItems) or an event DataSet (PublishedEvents). |
 | DataSetCardinalityPath | Variable | [RelativePath](https://reference.opcfoundation.org/specs/OPC-10000-4/7.30) | Optional | ScenarioBindingType | RelativePath to the cardinality level: the Server/bridge produces one DataSet per matched instance of it (default: the bound root); placeholders below it become fields. The DataSetClassId is shared across those DataSets (one class, many writers). |
 | DataSetMetaData | Variable | [DataSetMetaDataType](https://reference.opcfoundation.org/specs/OPC-10000-14/6.2.3#6.2.3.2.3) | Optional | ScenarioBindingType | Part 14 DataSetMetaData for this DataSet (fields, dataSetClassId, configurationVersion), exposed so a consumer gets the class schema offline. |
@@ -278,6 +291,7 @@ Machine-readable descriptor of a single bound item: how to LOCATE it (BrowsePath
 | SourceBrowseName | QualifiedName | Namespace-qualified BrowseName of the source node. |
 | ModelNamespaceUri | String | Namespace URI of the companion model that defines the source. |
 | DataSetFieldId | Guid | GUID correlating this item to Part 14 FieldMetaData.dataSetFieldId. |
+| SourceScenarioBindingClassId | Guid | Provenance: DataSetClassId of the base scenario binding this field originates from (its facet). Lets a subscriber partition a composed DataSet into exact per-base-class field subsets. Absent for fields defined by this binding itself. |
 | SemanticReferenceUri | String | Optional external semantic identifier (e.g. IRDI/CDD) for the item. |
 | EventFieldOperand | [SimpleAttributeOperand](https://reference.opcfoundation.org/specs/OPC-10000-4/7.4.4) | For an event-DataSet field: the Part 14 SimpleAttributeOperand that selects it (alternative/complement to BrowsePath, whose segments are then relative to the event TypeDefinition). |
 
@@ -296,6 +310,7 @@ Machine-readable descriptor of one scenario binding: a scenario URI, the offered
 | ConfigurationVersion | i=14593 | Version of the binding, aligned with the realizing DataSetMetaData. |
 | BoundItems | [BoundItemDataType](#type-BoundItemDataType)\[\] | The bound items (the DataSet fields). |
 | DataSetClassId | Guid | Stable DataSetClassId (Part 14) identifying the class of this DataSet across servers. |
+| BaseDataSetClassIds | Guid\[\] | DataSetClassIds of the base facet bindings this binding extends or composes (its class lineage). |
 | ContentKind | [ScenarioContentKindEnum](#type-ScenarioContentKindEnum) | Whether this binding is a data or an event DataSet. |
 | DataSetCardinalityPath | [RelativePath](https://reference.opcfoundation.org/specs/OPC-10000-4/7.30) | RelativePath to the cardinality level: one DataSet is produced per matched instance of it (default: the bound root); placeholders below it become fields. |
 | EventSourcePath | [RelativePath](https://reference.opcfoundation.org/specs/OPC-10000-4/7.30) | For an event DataSet: RelativePath to the event notifier (default: the cardinality anchor, i.e. the bound root when DataSetCardinalityPath is omitted). |
@@ -314,7 +329,7 @@ Portable, machine-readable 'full binding' for a companion specification or type:
 |---|---|---|
 | CompanionSpecificationUri | String | Stable spec-level identifier of the companion specification (the per-spec group anchor identity; distinct from a namespace URI). |
 | ModelNamespaceUris | String\[\] | All namespace URIs the companion specification defines/covers. |
-| AppliesToType | QualifiedName | BrowseName of the companion ObjectType the bindings are defined on. |
+| AppliesToType | QualifiedName | BrowseName of the companion binding target (an ObjectType, Interface, or AddInType) the bindings are defined on. |
 | ConfigurationVersion | i=14593 | Version of this binding configuration. |
 | ScenarioBindings | [ScenarioBindingDataType](#type-ScenarioBindingDataType)\[\] | The scenario bindings. |
 

@@ -23,6 +23,9 @@ DOMAINS = {
               "Opc.Ua.Machinery.NodeSet2.xml"],
     "Robotics": ["Opc.Ua.Robotics.NodeSet2.xml", "Opc.Ua.Di.NodeSet2.xml",
                  "Opc.Ua.IA.NodeSet2.xml", "Opc.Ua.Machinery.NodeSet2.xml"],
+    # Facets overlay locates bound items by type-level BrowsePath (values, not node
+    # references), so it resolves against the base spec alone - no companion NodeSet needed.
+    "Facets": [],
 }
 
 errors = []

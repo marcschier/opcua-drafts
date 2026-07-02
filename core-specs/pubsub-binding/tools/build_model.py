@@ -347,6 +347,13 @@ reference_type(60002, "ScenarioRealizedVia", NonHierarchicalReferences,
                "the inverse 'SupportsScenario' reads realization -> binding. Absent (and "
                "never required) when the binding is not realized over PubSub.",
                CAT)
+reference_type(60003, "HasBaseBinding", NonHierarchicalReferences, "IsBaseBindingOf",
+               "Links a derived or composing ScenarioBinding to a base ScenarioBinding whose "
+               "fields it extends or composes (e.g. a Machine binding to the Device-facet "
+               "binding it builds on). Optional browse convenience used where the base binding "
+               "node is present in the same AddressSpace; the portable, cross-specification "
+               "lineage carrier is ScenarioBinding.BaseDataSetClassIds.",
+               CAT)
 
 # --- Enumerations ----------------------------------------------------------
 enum_type(60050, "ScenarioBindingDirectionEnum",
@@ -403,6 +410,7 @@ struct_type(60060, "BoundItemDataType",
     ("SourceBrowseName", QualifiedName, None, "Namespace-qualified BrowseName of the source node."),
     ("ModelNamespaceUri", String, None, "Namespace URI of the companion model that defines the source."),
     ("DataSetFieldId", Guid, None, "GUID correlating this item to Part 14 FieldMetaData.dataSetFieldId."),
+    ("SourceScenarioBindingClassId", Guid, None, "Provenance: DataSetClassId of the base scenario binding this field originates from (its facet). Lets a subscriber partition a composed DataSet into exact per-base-class field subsets. Absent for fields defined by this binding itself."),
     ("SemanticReferenceUri", String, None, "Optional external semantic identifier (e.g. IRDI/CDD) for the item."),
     ("EventFieldOperand", SimpleAttributeOperand, None, "For an event-DataSet field: the Part 14 SimpleAttributeOperand that selects it (alternative/complement to BrowsePath, whose segments are then relative to the event TypeDefinition)."),
 ])
@@ -417,6 +425,7 @@ struct_type(60065, "ScenarioBindingDataType",
     ("ConfigurationVersion", ConfigurationVersionDataType, None, "Version of the binding, aligned with the realizing DataSetMetaData."),
     ("BoundItems", T(60060), "1", "The bound items (the DataSet fields)."),
     ("DataSetClassId", Guid, None, "Stable DataSetClassId (Part 14) identifying the class of this DataSet across servers."),
+    ("BaseDataSetClassIds", Guid, "1", "DataSetClassIds of the base facet bindings this binding extends or composes (its class lineage)."),
     ("ContentKind", T(60052), None, "Whether this binding is a data or an event DataSet."),
     ("DataSetCardinalityPath", RelativePath, None, "RelativePath to the cardinality level: one DataSet is produced per matched instance of it (default: the bound root); placeholders below it become fields."),
     ("EventSourcePath", RelativePath, None, "For an event DataSet: RelativePath to the event notifier (default: the cardinality anchor, i.e. the bound root when DataSetCardinalityPath is omitted)."),
@@ -432,7 +441,7 @@ struct_type(60070, "ScenarioBindingConfigurationDataType",
             "AddressSpace nodes and Part 14 runtime configuration.", CAT_DT, [
     ("CompanionSpecificationUri", String, None, "Stable spec-level identifier of the companion specification (the per-spec group anchor identity; distinct from a namespace URI)."),
     ("ModelNamespaceUris", String, "1", "All namespace URIs the companion specification defines/covers."),
-    ("AppliesToType", QualifiedName, None, "BrowseName of the companion ObjectType the bindings are defined on."),
+    ("AppliesToType", QualifiedName, None, "BrowseName of the companion binding target (an ObjectType, Interface, or AddInType) the bindings are defined on."),
     ("ConfigurationVersion", ConfigurationVersionDataType, None, "Version of this binding configuration."),
     ("ScenarioBindings", T(60065), "1", "The scenario bindings."),
 ])
@@ -456,6 +465,10 @@ prop_var(60012, BI, "SourceTypeDefinition", NodeId_, "TypeDefinition of the sour
 prop_var(60012, BI, "SourceBrowseName", QualifiedName, "Namespace-qualified BrowseName of the source node.")
 prop_var(60012, BI, "ModelNamespaceUri", String, "Namespace URI of the companion model defining the source.")
 prop_var(60012, BI, "DataSetFieldId", Guid, "GUID correlating the item to Part 14 FieldMetaData.")
+prop_var(60012, BI, "SourceScenarioBindingClassId", Guid,
+         "Provenance: DataSetClassId of the base scenario binding this field originates from "
+         "(its facet). Lets a subscriber partition a composed DataSet into exact per-base-class "
+         "field subsets. Absent for fields defined by this binding itself.")
 prop_var(60012, BI, "SemanticReferenceUri", String, "Optional external semantic identifier (e.g. IRDI/CDD).")
 
 object_type(60013, "BoundVariableType", T(60012),
@@ -491,6 +504,11 @@ prop_var(60011, SB, "DataSetClassId", Guid,
          "defines, so subscribers recognize the same DataSet class across servers. It is a "
          "semantic class identity, not a guarantee of a fixed field layout (see the "
          "DataSetClassId clause). Deterministic.", rule=MR_Mandatory)
+prop_var(60011, SB, "BaseDataSetClassIds", Guid,
+         "DataSetClassIds of the base facet bindings this binding extends or composes (its "
+         "class lineage). This binding's own DataSetClassId identifies the composed/derived "
+         "class; a subscriber that knows a base class-id consumes the matching field subset "
+         "(see BoundItemType.SourceScenarioBindingClassId).", valuerank="1")
 prop_var(60011, SB, "ContentKind", T(60052),
          "Whether the binding realizes as a data DataSet (PublishedDataItems) or an event "
          "DataSet (PublishedEvents).", rule=MR_Mandatory)

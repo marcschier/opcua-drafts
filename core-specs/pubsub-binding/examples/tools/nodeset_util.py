@@ -140,6 +140,13 @@ class NodeSetDB:
                 return tgt
         return None
 
+    def interfaces(self, key):
+        """Forward HasInterface targets of a type (the facets it implements)."""
+        n = self.get(key)
+        if not n:
+            return []
+        return [tgt for rt, tgt, fwd in n.refs if rt == HAS_INTERFACE and fwd]
+
     def _forward_children(self, key):
         n = self.get(key)
         if not n:
@@ -148,9 +155,16 @@ class NodeSetDB:
             if fwd and rt in HIERARCHICAL_INTO:
                 yield rt, tgt
 
-    def instance_declarations(self, type_key, include_inherited=True):
+    def instance_declarations(self, type_key, include_inherited=True, _visited=None):
         """Direct instance declarations of a type, optionally incl. inherited,
-        de-duplicated by BrowseName (subtype overrides supertype)."""
+        de-duplicated by BrowseName (subtype overrides supertype). Also includes
+        members contributed by implemented Interfaces (HasInterface facets); concrete
+        type/subtype members win over interface members of the same BrowseName."""
+        if _visited is None:
+            _visited = set()
+        if type_key in _visited:
+            return {}
+        _visited = _visited | {type_key}
         seen = {}
         chain = []
         k = type_key
@@ -170,6 +184,13 @@ class NodeSetDB:
                 bnkey = (child.bn_ns, child.bn_name)
                 if bnkey not in seen:
                     seen[bnkey] = (tgt, tk)
+        # interface-inherited members (contract facets); concrete members already won
+        for tk in chain:
+            for iface in self.interfaces(tk):
+                for bnk, val in self.instance_declarations(
+                        iface, True, _visited).items():
+                    if bnk not in seen:
+                        seen[bnk] = val
         return seen  # {(bn_ns,bn_name): (child_key, declaring_type_key)}
 
     def _decl_children(self, key, is_type):

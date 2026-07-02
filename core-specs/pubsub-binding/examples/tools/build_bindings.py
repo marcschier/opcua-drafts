@@ -287,6 +287,13 @@ class Emitter:
         sb["_dataSetClassId"] = str(dscid)
         self.prop(self.nid(), "DataSetClassId", "Guid",
                   f'<uax:Guid {U}><uax:String>{dscid}</uax:String></uax:Guid>', bid)
+        # Facet lineage (§5.13): base classes this binding extends/composes, if any.
+        base_cls = sb.get("baseDataSetClassIds")
+        if base_cls:
+            lst = "".join(f'<uax:Guid><uax:String>{sx.escape(str(g))}</uax:String></uax:Guid>'
+                          for g in base_cls)
+            self.prop(self.nid(), "BaseDataSetClassIds", "Guid",
+                      f'<uax:ListOfGuid {U}>{lst}</uax:ListOfGuid>', bid, valuerank=1)
         ck = sb.get("contentKind", "DataItems")
         self.prop(self.nid(), "ContentKind", f'i={BIND["ScenarioContentKindEnum"]}',
                   f'<uax:Int32 {U}>{CONTENT_KIND[ck]}</uax:Int32>', bid)
@@ -382,6 +389,12 @@ class Emitter:
         dsfid = uuid.uuid5(FIELD_ID_NS, f'{self.d["domain"]}|{sb["scenarioUri"]}|{fn}|event')
         self.prop(self.nid(), "DataSetFieldId", "Guid",
                   f'<uax:Guid {U}><uax:String>{dsfid}</uax:String></uax:Guid>', iid)
+        # Facet provenance (§5.13): base binding class an inherited/overriding event field came from.
+        prov = it.get("sourceScenarioBindingClassId")
+        if prov:
+            self.prop(self.nid(), "SourceScenarioBindingClassId", "Guid",
+                      f'<uax:Guid {U}><uax:String>{sx.escape(str(prov))}</uax:String>'
+                      f'</uax:Guid>', iid)
 
     def emit_item(self, binding_id, sb, it):
         rec = it["_rec"]
@@ -427,6 +440,12 @@ class Emitter:
                            f'{self.d["domain"]}|{sb["scenarioUri"]}|{fn}|{it["browsePath"]}')
         self.prop(self.nid(), "DataSetFieldId", "Guid",
                   f'<uax:Guid {U}><uax:String>{dsfid}</uax:String></uax:Guid>', iid)
+        # Facet provenance (§5.13): the base binding class an inherited/overriding field came from.
+        prov = it.get("sourceScenarioBindingClassId")
+        if prov:
+            self.prop(self.nid(), "SourceScenarioBindingClassId", "Guid",
+                      f'<uax:Guid {U}><uax:String>{sx.escape(str(prov))}</uax:String>'
+                      f'</uax:Guid>', iid)
 
     def document(self, type_key):
         self.type_key = type_key

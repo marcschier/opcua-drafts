@@ -189,7 +189,34 @@ then put axis-level placeholders below the device cardinality and make them fiel
 item paths should sit under its cardinality path; if they do not, split the binding or choose a
 higher cardinality anchor.
 
-### 6. Fill the semantic cross-reference (mechanical)
+### 6. Reuse & extend base facet bindings
+
+Before duplicating a scenario for a derived type, check whether the same integration facet is
+already bound on a base ObjectType, an Interface, or an AddInType. If so, author the deriving
+binding as a **delta**: set `baseDataSetClassIds` to the base facet binding classes it extends
+or composes, and list only added or overridden fields. The deriving binding still has its own
+deterministic `DataSetClassId`; `baseDataSetClassIds` advertises the class lineage.
+
+Choosing a composition axis:
+
+- **Subtype** (`HasSubtype`) is an is-a refinement: the derived ObjectType inherits the base
+  binding and adds or refines fields.
+- **Interface facet** (`HasInterface`) is a contract capability many unrelated types implement;
+  it adds no new structure, but its fields compose with the host DataSet when present.
+- **AddIn** (`HasAddIn`, a subtype of `HasComponent`) is a reusable structural block, such as a
+  GPS/Location object, that brings its own sub-objects and whose fields compose into the host
+  DataSet.
+
+Field removal is not supported: a derived DataSet is always a **superset** of each base it
+extends. To refine an inherited field (for example `samplingIntervalHint` or `browsePath`), add
+a bound item with the same `fieldName`; composition uses override-by-`fieldName`. At realization
+time, the bridge composes the effective DataSet by union over the instance's supertypes,
+`HasInterface` targets and `HasAddIn` children, advertises contributing base classes in
+`baseDataSetClassIds`, and tags inherited fields with `sourceScenarioBindingClassId`. A
+`HasBaseBinding` reference may be emitted for browsing convenience, but the portable lineage
+carrier is `baseDataSetClassIds`.
+
+### 7. Fill the semantic cross-reference (mechanical)
 
 For every item, populate from the NodeSet (do not guess):
 `SourceTypeDefinition`, `SourceBrowseName` (with namespace), `ModelNamespaceUri`,
@@ -200,7 +227,7 @@ model has one. For data items set `BrowsePath` to the RelativePath from the type
 fields, `BrowsePath` is relative to the selected event TypeDefinition and the generated
 `EventFieldOperand` is the corresponding Part 14 `SimpleAttributeOperand`.
 
-### 7. Compute the DataSet class identity (mechanical)
+### 8. Compute the DataSet class identity (mechanical)
 
 Every binding gets a deterministic `DataSetClassId` (Part 14 `Guid`) with grain
 **(scenario × bound type)**. The generator computes it; do **not** author it in the
@@ -218,7 +245,7 @@ on each browsable `ScenarioBinding` instance. Propagation to `DataSetMetaData.da
 and the realizing `PublishedDataSet.DataSetClassId` is a **realization** step the base spec
 requires *where PubSub is configured* (§5.5) — it is not produced by the example generator.
 
-### 8. Emit the descriptor
+### 9. Emit the descriptor
 
 Write `ScenarioBindingConfiguration` (see format below). Include the top-level
 `companionSpecificationUri` and `modelNamespaceUris` so the generator can emit one
@@ -226,7 +253,7 @@ Write `ScenarioBindingConfiguration` (see format below). Include the top-level
 the single source; the annex and the NodeSet fragment are **derived** from it, never authored
 separately.
 
-### 9. Generate the addendum + instance overlay
+### 10. Generate the addendum + instance overlay
 
 Run the reference generator (`build_bindings.py`) on the descriptor. It renders one annex
 table per Scenario (linking each referenced base type to `https://reference.opcfoundation.org/`
@@ -241,7 +268,7 @@ bake them in. Exposing the full Part 14 `DataSetMetaData` (fields + `dataSetClas
 base spec defines (§5.8); a Server SHOULD populate it, but the example generator does not emit
 the full metadata value.
 
-### 10. Validate
+### 11. Validate
 
 - **Every `BrowsePath` resolves against the input NodeSet** — the generator fails hard if not;
   never ship a path you have not resolved. For Event DataSets, data-source paths resolve
@@ -256,6 +283,8 @@ the full metadata value.
 - `DataSetClassId` is generated, stable for `(ScenarioUri, AppliesToType, MajorVersion)`,
   shared by all DataSets produced for a cardinality match, and appears consistently in the
   binding and PubSub metadata.
+- Derived bindings list only delta fields, reference base classes via `baseDataSetClassIds`,
+  and never remove inherited fields (a derived DataSet is a superset).
 - When present, `DataSetMetaData` includes the fields, `dataSetClassId` and
   `configurationVersion`.
 - Scenario URIs are well-formed; vendor Scenarios use the vendor's own URI authority and
@@ -393,8 +422,8 @@ Field notes:
 - `modelNamespaceUris` lists the namespace URIs the companion specification defines/covers;
   the generator emits them on the `ScenarioBindingGroupType` instance together with
   `CompanionSpecificationUri`, then nests this descriptor's bindings below that group.
-- `appliesToType` is the plain BrowseName of the bound `ObjectType`; the generator locates it
-  in `baseNodeSets`.
+- `appliesToType` is the plain BrowseName of the binding target: an `ObjectType`, Interface, or
+  AddInType. The generator locates it in `baseNodeSets`.
 - `baseNodeSets` are filenames under `examples/tools/ref/` (gitignored); `requiredModels` are
   the namespace URIs emitted as `<RequiredModel>` (order sets the ns indices).
 - `fieldName` defaults to the last `browsePath` segment; make it unique within a binding.
@@ -412,8 +441,16 @@ Field notes:
   should sit under that path.
 - `dataSetClassId` is **not** authored. The generator derives it deterministically as
   `uuid5(fc164bdb-8705-58e9-ab11-7b1ed155b4e8, "<ScenarioUri>|<namespaceUri;BrowseName>|<MajorVersion>")`.
+- `baseDataSetClassIds` (per binding) is an array of Guid strings naming the base facet
+  DataSet classes this binding extends or composes. Omit it for a root/base binding. When
+  present, author only delta fields: added fields and overrides by identical `fieldName`; never
+  restate inherited fields just to carry them forward.
 - `kind` ∈ `Telemetry` | `Status` | `Configuration` | `Metric` | `Counter` | `Event` |
   `Command` | `Setpoint` | `Identification` | `Other`.
+- `sourceScenarioBindingClassId` (per `boundItems` entry) is the provenance Guid for the
+  scenario binding class that contributed the field. It is normally set by composition/the
+  generator, not hand-authored, and lets subscribers extract exact per-facet field subsets from a
+  merged DataSet.
 - For a Method use `kind: "Command"` and a `browsePath` to the Method.
 - For `contentKind: "Events"`, set `eventSourcePath` to the notifier RelativePath (`"/"` means
   the bound root). Event `boundItems` are selected event fields: their `browsePath` is relative
