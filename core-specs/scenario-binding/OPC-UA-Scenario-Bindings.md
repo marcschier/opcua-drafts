@@ -22,8 +22,6 @@ It specifies:
 - normative rules for realizing a binding through classic OPC UA Subscriptions, Reads and Calls as the baseline, and through OPC UA PubSub as an optional Part 14 realization where the Server provides it;
 - the **Profiles and Conformance Units** for Servers and Clients.
 
-A binding is authored from the browsable model plus an out-of-band descriptor used by tooling; a portable interchange DataType for full binding configurations is deferred to a future revision.
-
 It is explicitly **out of scope** to define new PubSub transports, message mappings, security, or the lifecycle of PubSub configuration; these are defined by [OPC 10000-14](https://reference.opcfoundation.org/specs/OPC-10000-14/) and referenced here for the optional PubSub realization.
 
 ### 1.1 Motivation
@@ -83,7 +81,8 @@ The same pattern serves the other registered Scenarios — `PredictiveMaintenanc
 | Scenario | A class of integration use case (e.g. Observability, PredictiveMaintenance) identified by a URI, describing why data is moved and to what kind of consumer. |
 | Scenario Binding | A transport-neutral association of a Scenario and a direction with exactly one named DataSet class; its bound items are Variables, Methods/actions, or event fields on a bound object or type. |
 | Bound item | A data field, event field or Method/action that a Scenario Binding exposes, with routing and semantic metadata. |
-| Bound root | The Object (an instance, or a type when authoring type‑level bindings) that a bound item's BrowsePath is resolved from. |
+| <a id="term-bound-root"></a>Bound root | The Object (an instance, or a type when authoring type‑level bindings) that a bound item's BrowsePath is resolved from. |
+| <a id="term-binding-target"></a>Binding target | The TypeDefinitionNode a binding is declared on — an ObjectType, an Interface (facet), or an AddInType (an Interface and an AddInType are themselves ObjectTypes). Its type‑level BrowsePaths resolve against any instance that is‑a the ObjectType, implements the Interface (`HasInterface`), or composes the AddInType (`HasAddIn`). |
 | Routing role (`Kind`) | The small, domain‑agnostic classification a bridge uses to forward an item (Telemetry, Status, Event, Command, …). |
 | Semantic cross‑reference | The retained link from a bound item back to the model node that defines it (TypeDefinition, BrowseName, namespace, dictionary entry). |
 | Bridge | A Client whose sole purpose is to forward bound data/actions between an OPC UA Server and another system, without understanding the domain semantics. |
@@ -267,8 +266,20 @@ Illustrative cases:
 |---|---|
 | `DataSetCardinalityPath` omitted on a single pump bound root | One Observability DataSet for that pump. |
 | `DataSetCardinalityPath = /MotionDevices/<MotionDevice>` on a three-robot cell | Three DataSets, one per MotionDevice, all with the same `DataSetClassId`; `<Axis>/ActualPosition` expands to per-axis fields **within** each device DataSet. |
+| `DataSetCardinalityPath = /MotionDevices/<MotionDevice>` with a bound item at `/MotionDevices/<MotionDevice>/PowerTrains/<PowerTrain>/<Motor>/ParameterSet/MotorTemperature` (two placeholder levels **below** the anchor) on a robot with 6 power trains × 1 motor | One DataSet per MotionDevice; the two sub-anchor placeholders expand to 6 `MotorTemperature` fields per device (`MotorTemperature_PowerTrain_1_Motor_1` … `MotorTemperature_PowerTrain_6_Motor_1`), all sharing the one `DataSetClassId`. Placeholder levels compose multiplicatively. |
 
 BrowsePaths at or above the cardinality anchor select which DataSet instances are produced. Placeholders strictly below the cardinality anchor do **not** create additional DataSets; they expand to disambiguated fields within that DataSet according to the BrowsePath resolution rules (§5.10).
+
+The **shape** of a produced DataSet is the resolved field set for one cardinality anchor. For the `Observability` binding of a `MotionDevice` `Robot_1` (6 axes, 6 motors), the bridge produces one DataSet of this shape (see the Robotics addendum for the full worked resolution):
+
+```text
+DataSet "Robot_1 · Observability"   (one DataSetClassId, shared by every MotionDevice DataSet)
+  AxisActualPosition_Axis_1 … AxisActualPosition_Axis_6            Gauge · deg
+  MotorTemperature_PowerTrain_1_Motor_1 … _PowerTrain_6_Motor_1    Gauge · Cel
+  SpeedOverride                                                    Gauge · %
+```
+
+A different topology (for example a 4-axis SCARA) yields the same `DataSetClassId` but a DataSet with fewer fields; a subscriber recognizes the class regardless of the per-instance field count.
 
 ### 5.3 BoundItemType and its subtypes
 
@@ -301,10 +312,25 @@ classDiagram
   class BoundEventFieldType {
     +EventFieldOperand
   }
+  class BoundItemKindEnum {
+    <<enumeration>>
+    Telemetry = 0
+    Status = 1
+    Configuration = 2
+    Metric = 3
+    Counter = 4
+    Event = 5
+    Command = 6
+    Setpoint = 7
+    Identification = 8
+    Other = 9
+    Dimension = 10
+  }
 
   BoundVariableType --|> BoundItemType
   BoundMethodType --|> BoundItemType
   BoundEventFieldType --|> BoundItemType
+  BoundItemType --> BoundItemKindEnum : Kind
 ```
 
 ### 5.4 Semantic cross-reference (normative)
@@ -361,7 +387,7 @@ For `ContentKind = Events`, the DataSet is an event DataSet modeled by Part 14 [
 
 The namespace UUID **shall** be the fixed UUID `fc164bdb-8705-58e9-ab11-7b1ed155b4e8`, defined by this specification as `uuid5(URL, "http://opcfoundation.org/UA/PubSub/Scenarios/DataSetClass")`.
 
-`ScenarioUri` is the binding's `ScenarioUri`. `AppliesToType` is the namespace-qualified BrowseName of the concrete binding target (ObjectType, Interface, or AddInType) encoded as `<namespaceUri>;<Name>`. `MajorVersion` is the binding's `ConfigurationVersion.MajorVersion` expressed as a base-10 integer without leading zeroes. If the binding does not expose `ConfigurationVersion`, `MajorVersion` **shall** be taken as `1` (equivalently, an absent `ConfigurationVersion` is treated as `{MajorVersion = 1, MinorVersion = 0}`) so the derivation is always well-defined.
+`ScenarioUri` is the binding's `ScenarioUri`. `AppliesToType` is the namespace-qualified BrowseName of the concrete [binding target](#term-binding-target) (a TypeDefinitionNode) encoded as `<namespaceUri>;<Name>`. `MajorVersion` is the binding's `ConfigurationVersion.MajorVersion` expressed as a base-10 integer without leading zeroes. If the binding does not expose `ConfigurationVersion`, `MajorVersion` **shall** be taken as `1` (equivalently, an absent `ConfigurationVersion` is treated as `{MajorVersion = 1, MinorVersion = 0}`) so the derivation is always well-defined.
 
 Because the calculation is deterministic, every Server publishing the same Scenario for the same binding target and major version **shall** compute the same `DataSetClassId`. A semantics-agnostic subscriber can therefore recognize the DataSet *class* from `DataSetClassId` alone, without browsing the Server. The identity grain is per `(ScenarioUri × AppliesToType × MajorVersion)`.
 
@@ -381,10 +407,10 @@ An Interface a model may apply (via `HasInterface`) to advertise participation i
 
 A bound item locates its source node in one of two ways:
 
-- **BrowsePath (recommended).** `BrowsePath` is a [`RelativePath`](https://reference.opcfoundation.org/specs/OPC-10000-4/7.30) resolved from `StartingNode` (default: the bound root). Because it is relative, a single binding authored on a **type** applies to **every instance**: the Server resolves it per instance with [TranslateBrowsePathsToNodeIds](https://reference.opcfoundation.org/specs/OPC-10000-4/). This is the recommended mechanism and the form emitted by the authoring tool. For [`BoundEventFieldType`](#type-BoundEventFieldType), the `BrowsePath` segments select an event field relative to `SourceTypeDefinition`, the event TypeDefinition, and may be represented directly as `EventFieldOperand`.
+- **BrowsePath (recommended).** `BrowsePath` is a [`RelativePath`](https://reference.opcfoundation.org/specs/OPC-10000-4/7.30) resolved from `StartingNode` (default: the [bound root](#term-bound-root)). Because it is relative, a single binding authored on a **type** applies to **every instance**: the Server resolves it per instance with [TranslateBrowsePathsToNodeIds](https://reference.opcfoundation.org/specs/OPC-10000-4/). This is the recommended mechanism and the form emitted by the authoring tool. For [`BoundEventFieldType`](#type-BoundEventFieldType), the `BrowsePath` segments select an event field relative to `SourceTypeDefinition`, the event TypeDefinition, and may be represented directly as `EventFieldOperand`.
 - **Absolute NodeId.** `SourceNodeId` (and the `BindsToNode` reference on the browsable form) identifies the node directly, for server-specific or instance-specific bindings. It is not used to select event fields inside a PublishedEvents DataSet.
 
-Binding targets may be ObjectTypes, Interfaces, or AddInTypes; because `HasInterface` is applied to the instance and `HasAddIn` is hierarchical (a subtype of `HasComponent`), type-level BrowsePaths still resolve against the instance using the same `HierarchicalReferences` (`i=33`) traversal.
+[Binding targets](#term-binding-target) are TypeDefinitionNodes — ObjectTypes, Interface facets, or AddInTypes (an Interface and an AddInType are themselves ObjectTypes); because `HasInterface` is applied to the instance and `HasAddIn` is hierarchical (a subtype of `HasComponent`), type-level BrowsePaths still resolve against the instance using the same `HierarchicalReferences` (`i=33`) traversal.
 
 Resolution rules a Server **shall** apply:
 
@@ -394,6 +420,7 @@ Resolution rules a Server **shall** apply:
 4. A bound-item BrowsePath that matches multiple nodes strictly below a cardinality anchor (a placeholder such as `<Rating>`, or an array of components) expands to one bound field per match within that DataSet; `FieldName` is made unique by appending the matched BrowseName or another deterministic path-derived suffix.
 5. For a bound Method, the path targets the Method Node; the Object the Method is called on is the path's parent (or `OwningObjectPath` when given).
 6. For an event field, the path targets a field of the event TypeDefinition; the notifier is identified by `EventSourcePath`, not by the field `BrowsePath`.
+7. Type-level BrowsePaths and `DataSetCardinalityPath` resolve against the **live** AddressSpace. When the instance structure changes — a cardinality anchor or a placeholder instance is added or removed (for example a robot joins or leaves a cell, or an axis is added) — the Server/bridge **shall** re-resolve the affected paths and add or remove the corresponding DataSets and fields. A bridge **should** drive this re-evaluation from the Server's **model-change signalling** — subscribing to `GeneralModelChangeEventType` notifications (or observing a changed node version or a bumped DataSet `ConfigurationVersion`) — rather than polling.
 
 ### 5.11 Scenario registry and URIs
 
@@ -416,7 +443,7 @@ This specification defines the following baseline Scenario URIs under the root `
 
 ### 5.12 Binding inheritance and facet composition (normative)
 
-A binding may be declared on a binding target that is an ObjectType, an Interface (facet), or an AddInType; the target's type-level BrowsePaths resolve against any instance that is-a that ObjectType, implements that Interface using `HasInterface`, or composes that AddInType using `HasAddIn`. `HasAddIn` is the core OPC UA ReferenceType `i=17604`, a subtype of `HasComponent`, so AddIn children are reachable by the §5.10 BrowsePath resolution over `HierarchicalReferences` (`i=33`).
+A binding may be declared on a [binding target](#term-binding-target) — a **TypeDefinitionNode**; in practice an ObjectType, an Interface (facet) or an AddInType (an Interface and an AddInType are themselves ObjectTypes). The target's type-level BrowsePaths resolve against any instance that is-a that type, implements that Interface using `HasInterface`, or composes that AddInType using `HasAddIn`. `HasAddIn` is the core OPC UA ReferenceType `i=17604`, a subtype of `HasComponent`, so AddIn children are reachable by the §5.10 BrowsePath resolution over `HierarchicalReferences` (`i=33`).
 
 Inheritance is uniform across the three OPC UA composition axes: a subtype inherits the bindings of its supertype, a type implementing a facet Interface inherits the facet's bindings, and a host composing an AddIn inherits the AddIn's bindings.
 
@@ -461,7 +488,9 @@ This subsection defines how a bridge that supports the `Observability` Scenario 
 
 A dimension's attribute key is its `FieldName`; its value is read from the dimension item's source node through its `BrowsePath` unless `DimensionConstantValue` is set, in which case the dimension is a constant attribute, for example `service.name`. Non-dimension items in the binding are the measured values. A bridge attaches the binding's dimension set to each metric data point and each log record it emits.
 
-**Structured logs.** For an event binding (`ContentKind = Events`), the bound event fields are the structured attributes of an OTEL LogRecord. `LogTemplate` is a message template whose `{FieldName}` holes reference bound event `FieldName`s; a bridge renders it to the LogRecord Body while still carrying the fields as attributes. Alternatively, `LogBodyFieldName` names a field already carrying the rendered body. A Server should set only one of `LogTemplate` or `LogBodyFieldName`; if both are present, `LogTemplate` shall take precedence for the LogRecord Body and `LogBodyFieldName` is then treated as an ordinary attribute. `LogSeverityFieldName` names the field mapped to the LogRecord SeverityNumber/SeverityText, and `LogTimestampFieldName` names the field mapped to the LogRecord Timestamp. The binding's `Kind = Dimension` items also apply to each log record as attributes.
+**Structured logs.** For an event binding (`ContentKind = Events`), the bound event fields are the structured attributes of an OTEL LogRecord. `LogTemplate` is a message template whose `{FieldName}` placeholders reference bound event `FieldName`s; a bridge renders it to the LogRecord Body while still carrying the fields as attributes. Alternatively, `LogBodyFieldName` names a field already carrying the rendered body. A Server should set only one of `LogTemplate` or `LogBodyFieldName`; if both are present, `LogTemplate` shall take precedence for the LogRecord Body and `LogBodyFieldName` is then treated as an ordinary attribute. `LogSeverityFieldName` names the field mapped to the LogRecord SeverityNumber/SeverityText, and `LogTimestampFieldName` names the field mapped to the LogRecord Timestamp. The binding's `Kind = Dimension` items also apply to each log record as attributes.
+
+The `Kind` routing selects a **default, not exclusive**, target: bound Variables map to metrics and structured logs are produced from event bindings, but a bridge **may** also render a bound Variable as a LogRecord where that is the more meaningful OTEL signal — for example a textual `Status`, a message, or a diagnostic string — carrying the binding's dimensions as log attributes.
 
 When the bound severity field already carries an OTEL SeverityNumber (1..24), a bridge uses it directly; otherwise it applies the following recommended mapping from the OPC UA `Severity` UInt16 value, S, to OTEL SeverityNumber/SeverityText. A bridge MAY use a finer mapping.
 
@@ -482,7 +511,7 @@ This clause shows how a **bridge** consumes the model. It is informative; confor
 
 ### 6.1 Walkthrough
 
-1. **Discover.** Browse `Server/Scenarios`, select the `ScenarioProfileType` for the Scenario URI the bridge supports, browse that profile's per-specification `ScenarioBindingGroup` components, then browse each group's `ScenarioBinding` children. If needed, find Objects implementing `IScenarioBoundType` and browse their directly exposed per-scenario groups for per-instance bindings.
+1. **Discover.** Browse `Server/Scenarios`, select the `ScenarioProfileType` for the Scenario URI the bridge supports — the well-known Scenario profiles are listed in [§5.11 Scenario registry and URIs](#511-scenario-registry-and-uris), so a bridge can jump straight to the one it cares about — browse that profile's per-specification `ScenarioBindingGroup` components, then browse each group's `ScenarioBinding` children. If needed, find Objects implementing `IScenarioBoundType` and browse their directly exposed per-scenario groups for per-instance bindings.
 2. **Recognize.** If the bridge has prior knowledge of a scenario DataSet class, it can recognize an incoming PubSub DataSet by `DataSetClassId` alone; no browse of the publishing Server is required. If it is browsing, read `DataSetClassId`, `ContentKind`, `Direction`, `DataSetCardinalityPath` and optionally `DataSetMetaData` to learn the schema.
 3. **Compose.** Before resolving items, compose the effective DataSet by the §5.12 union algorithm: gather bindings inherited via subtype, `HasInterface` facets and `HasAddIn` children for the selected `ScenarioUri`, then apply override-by-`FieldName` and field provenance tagging rather than using only the single most-derived binding.
 4. **Realize — classic path (the default).** Resolve `DataSetCardinalityPath` (default: the bound root) to the set of DataSet instances to create. For each produced DataSet in a data binding, resolve each bound Variable `BrowsePath` (or read `SourceNodeId`) with `TranslateBrowsePathsToNodeIds`, then create a Subscription with a MonitoredItem on that node and `AttributeId`, honouring `SamplingIntervalHint`; a Client may also Read the values directly for non-streaming use. For an event binding, resolve `EventSourcePath` to the notifier (default: the cardinality anchor), subscribe to Events, use the `BoundEventFieldType` / `EventFieldOperand` entries as selected fields, and apply `Filter` where supported. For a bound Method, use the `Call` service. This path needs no PubSub configuration and works on any Server.
