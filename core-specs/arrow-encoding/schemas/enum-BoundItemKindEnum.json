@@ -1,0 +1,51 @@
+{
+  "arrow": {
+    "arrow": "int32",
+    "detail": "int32",
+    "opcua": "BoundItemKindEnum"
+  },
+  "kind": "Enumeration",
+  "members": [
+    {
+      "name": "Telemetry",
+      "value": 0
+    },
+    {
+      "name": "Status",
+      "value": 1
+    },
+    {
+      "name": "Configuration",
+      "value": 2
+    },
+    {
+      "name": "Metric",
+      "value": 3
+    },
+    {
+      "name": "Counter",
+      "value": 4
+    },
+    {
+      "name": "Event",
+      "value": 5
+    },
+    {
+      "name": "Command",
+      "value": 6
+    },
+    {
+      "name": "Setpoint",
+      "value": 7
+    },
+    {
+      "name": "Identification",
+      "value": 8
+    },
+    {
+      "name": "Other",
+      "value": 9
+    }
+  ],
+  "name": "BoundItemKindEnum"
+}

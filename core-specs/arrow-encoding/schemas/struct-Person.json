@@ -1,0 +1,109 @@
+{
+  "arrow": {
+    "arrow": "struct<Name: string, Age: int32 not null, Email: struct<present: bool not null, value: string> not null, Nickname: struct<present: bool not null, value: string> not null>",
+    "detail": {
+      "fields": [
+        {
+          "name": "Name",
+          "nullable": true,
+          "type": "string"
+        },
+        {
+          "name": "Age",
+          "nullable": false,
+          "type": "int32"
+        },
+        {
+          "name": "Email",
+          "nullable": false,
+          "type": {
+            "fields": [
+              {
+                "name": "present",
+                "nullable": false,
+                "type": "bool"
+              },
+              {
+                "name": "value",
+                "nullable": true,
+                "type": "string"
+              }
+            ],
+            "type": "struct"
+          }
+        },
+        {
+          "name": "Nickname",
+          "nullable": false,
+          "type": {
+            "fields": [
+              {
+                "name": "present",
+                "nullable": false,
+                "type": "bool"
+              },
+              {
+                "name": "value",
+                "nullable": true,
+                "type": "string"
+              }
+            ],
+            "type": "struct"
+          }
+        }
+      ],
+      "type": "struct"
+    },
+    "opcua": "Person"
+  },
+  "encodingId": "i=3011",
+  "fields": [
+    {
+      "allowSubtypes": false,
+      "arrow": {
+        "arrow": "string",
+        "detail": "string",
+        "opcua": "String"
+      },
+      "name": "Name",
+      "optional": false,
+      "type": "String"
+    },
+    {
+      "allowSubtypes": false,
+      "arrow": {
+        "arrow": "int32",
+        "detail": "int32",
+        "opcua": "Int32"
+      },
+      "name": "Age",
+      "optional": false,
+      "type": "Int32"
+    },
+    {
+      "allowSubtypes": false,
+      "arrow": {
+        "arrow": "string",
+        "detail": "string",
+        "opcua": "String"
+      },
+      "name": "Email",
+      "optional": true,
+      "type": "String"
+    },
+    {
+      "allowSubtypes": false,
+      "arrow": {
+        "arrow": "string",
+        "detail": "string",
+        "opcua": "String"
+      },
+      "name": "Nickname",
+      "optional": true,
+      "type": "String"
+    }
+  ],
+  "kind": "STRUCTURE_WITH_OPTIONAL_FIELDS",
+  "name": "Person",
+  "typeId": "i=3010"
+}

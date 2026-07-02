@@ -1,0 +1,2119 @@
+[
+  {
+    "fields": [
+      {
+        "name": "namespace",
+        "type": "int"
+      },
+      {
+        "name": "idType",
+        "type": "int"
+      },
+      {
+        "default": null,
+        "name": "numeric",
+        "type": [
+          "null",
+          "long"
+        ]
+      },
+      {
+        "default": null,
+        "name": "string",
+        "type": [
+          "null",
+          "string"
+        ]
+      },
+      {
+        "default": null,
+        "name": "guid",
+        "type": [
+          "null",
+          {
+            "logicalType": "opcua-guid",
+            "name": "Guid",
+            "namespace": "org.opcfoundation.ua.avro",
+            "size": 16,
+            "type": "fixed"
+          }
+        ]
+      },
+      {
+        "default": null,
+        "name": "opaque",
+        "type": [
+          "null",
+          "bytes"
+        ]
+      }
+    ],
+    "name": "NodeId",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "nodeId",
+        "type": "org.opcfoundation.ua.avro.NodeId"
+      },
+      {
+        "default": null,
+        "name": "namespaceUri",
+        "type": [
+          "null",
+          "string"
+        ]
+      },
+      {
+        "default": 0,
+        "name": "serverIndex",
+        "type": "long"
+      }
+    ],
+    "name": "ExpandedNodeId",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "namespace",
+        "type": "int"
+      },
+      {
+        "default": null,
+        "name": "name",
+        "type": [
+          "null",
+          "string"
+        ]
+      }
+    ],
+    "name": "QualifiedName",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "default": null,
+        "name": "locale",
+        "type": [
+          "null",
+          "string"
+        ]
+      },
+      {
+        "default": null,
+        "name": "text",
+        "type": [
+          "null",
+          "string"
+        ]
+      }
+    ],
+    "name": "LocalizedText",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "typeId",
+        "type": "org.opcfoundation.ua.avro.NodeId"
+      },
+      {
+        "default": null,
+        "doc": "Known ExtensionObject bodies use typed record branches; bytes is reserved for genuinely unknown type ids.",
+        "name": "body",
+        "type": [
+          "null",
+          {
+            "fields": [
+              {
+                "name": "X",
+                "type": "double"
+              },
+              {
+                "name": "Y",
+                "type": "double"
+              }
+            ],
+            "name": "Point",
+            "namespace": "org.opcfoundation.ua.avro",
+            "type": "record"
+          },
+          {
+            "fields": [
+              {
+                "name": "Name",
+                "type": [
+                  "null",
+                  "string"
+                ]
+              },
+              {
+                "name": "Age",
+                "type": "int"
+              },
+              {
+                "default": null,
+                "name": "Email",
+                "type": [
+                  "null",
+                  {
+                    "fields": [
+                      {
+                        "name": "value",
+                        "type": [
+                          "null",
+                          "string"
+                        ]
+                      }
+                    ],
+                    "name": "Person_Email_Optional",
+                    "namespace": "org.opcfoundation.ua.avro",
+                    "type": "record"
+                  }
+                ]
+              },
+              {
+                "default": null,
+                "name": "Nickname",
+                "type": [
+                  "null",
+                  {
+                    "fields": [
+                      {
+                        "name": "value",
+                        "type": [
+                          "null",
+                          "string"
+                        ]
+                      }
+                    ],
+                    "name": "Person_Nickname_Optional",
+                    "namespace": "org.opcfoundation.ua.avro",
+                    "type": "record"
+                  }
+                ]
+              }
+            ],
+            "name": "Person",
+            "namespace": "org.opcfoundation.ua.avro",
+            "type": "record"
+          },
+          {
+            "fields": [
+              {
+                "default": null,
+                "name": "switch",
+                "type": [
+                  "null",
+                  "string"
+                ]
+              },
+              {
+                "default": null,
+                "name": "value",
+                "type": [
+                  "null",
+                  {
+                    "fields": [
+                      {
+                        "name": "AsInt",
+                        "type": "int"
+                      }
+                    ],
+                    "name": "Measurement_AsInt_Branch",
+                    "namespace": "org.opcfoundation.ua.avro",
+                    "type": "record"
+                  },
+                  {
+                    "fields": [
+                      {
+                        "name": "AsText",
+                        "type": [
+                          "null",
+                          "string"
+                        ]
+                      }
+                    ],
+                    "name": "Measurement_AsText_Branch",
+                    "namespace": "org.opcfoundation.ua.avro",
+                    "type": "record"
+                  },
+                  {
+                    "fields": [
+                      {
+                        "name": "AsPoint",
+                        "type": "org.opcfoundation.ua.avro.Point"
+                      }
+                    ],
+                    "name": "Measurement_AsPoint_Branch",
+                    "namespace": "org.opcfoundation.ua.avro",
+                    "type": "record"
+                  }
+                ]
+              }
+            ],
+            "name": "Measurement",
+            "namespace": "org.opcfoundation.ua.avro",
+            "type": "record"
+          },
+          {
+            "fields": [
+              {
+                "name": "Id",
+                "type": [
+                  "null",
+                  "string"
+                ]
+              },
+              {
+                "name": "Location",
+                "type": "org.opcfoundation.ua.avro.Point"
+              },
+              {
+                "name": "Tags",
+                "type": {
+                  "items": [
+                    "null",
+                    "string"
+                  ],
+                  "type": "array"
+                }
+              },
+              {
+                "name": "Payload",
+                "type": [
+                  "null",
+                  "org.opcfoundation.ua.avro.ExtensionObject"
+                ]
+              }
+            ],
+            "name": "Envelope",
+            "namespace": "org.opcfoundation.ua.avro",
+            "type": "record"
+          },
+          {
+            "fields": [
+              {
+                "name": "FieldName",
+                "type": [
+                  "null",
+                  "string"
+                ]
+              },
+              {
+                "name": "Kind",
+                "type": "int"
+              },
+              {
+                "name": "AttributeId",
+                "type": "int"
+              },
+              {
+                "name": "SamplingIntervalHint",
+                "type": "double"
+              },
+              {
+                "name": "IndexRange",
+                "type": [
+                  "null",
+                  "string"
+                ]
+              },
+              {
+                "name": "StartingNode",
+                "type": [
+                  "null",
+                  "org.opcfoundation.ua.avro.NodeId"
+                ]
+              },
+              {
+                "name": "BrowsePath",
+                "type": [
+                  "null",
+                  "org.opcfoundation.ua.avro.ExtensionObject"
+                ]
+              },
+              {
+                "name": "SourceNodeId",
+                "type": [
+                  "null",
+                  "org.opcfoundation.ua.avro.NodeId"
+                ]
+              },
+              {
+                "name": "OwningObjectPath",
+                "type": [
+                  "null",
+                  "org.opcfoundation.ua.avro.ExtensionObject"
+                ]
+              },
+              {
+                "name": "SourceTypeDefinition",
+                "type": [
+                  "null",
+                  "org.opcfoundation.ua.avro.NodeId"
+                ]
+              },
+              {
+                "name": "SourceBrowseName",
+                "type": [
+                  "null",
+                  "org.opcfoundation.ua.avro.QualifiedName"
+                ]
+              },
+              {
+                "name": "ModelNamespaceUri",
+                "type": [
+                  "null",
+                  "string"
+                ]
+              },
+              {
+                "name": "DataSetFieldId",
+                "type": "org.opcfoundation.ua.avro.Guid"
+              },
+              {
+                "name": "SemanticReferenceUri",
+                "type": [
+                  "null",
+                  "string"
+                ]
+              }
+            ],
+            "name": "BoundItemDataType",
+            "namespace": "org.opcfoundation.ua.avro",
+            "type": "record"
+          },
+          {
+            "fields": [
+              {
+                "name": "Name",
+                "type": [
+                  "null",
+                  "string"
+                ]
+              },
+              {
+                "name": "ScenarioUri",
+                "type": [
+                  "null",
+                  "string"
+                ]
+              },
+              {
+                "name": "Direction",
+                "type": "int"
+              },
+              {
+                "name": "ConfigurationVersion",
+                "type": [
+                  "null",
+                  "org.opcfoundation.ua.avro.ExtensionObject"
+                ]
+              },
+              {
+                "name": "BoundItems",
+                "type": {
+                  "items": [
+                    "null",
+                    "org.opcfoundation.ua.avro.BoundItemDataType"
+                  ],
+                  "type": "array"
+                }
+              },
+              {
+                "name": "PublishedDataSetName",
+                "type": [
+                  "null",
+                  "string"
+                ]
+              },
+              {
+                "name": "WriterGroupName",
+                "type": [
+                  "null",
+                  "string"
+                ]
+              }
+            ],
+            "name": "ScenarioBindingDataType",
+            "namespace": "org.opcfoundation.ua.avro",
+            "type": "record"
+          },
+          {
+            "fields": [
+              {
+                "name": "ModelNamespaceUri",
+                "type": [
+                  "null",
+                  "string"
+                ]
+              },
+              {
+                "name": "AppliesToType",
+                "type": [
+                  "null",
+                  "org.opcfoundation.ua.avro.QualifiedName"
+                ]
+              },
+              {
+                "name": "ConfigurationVersion",
+                "type": [
+                  "null",
+                  "org.opcfoundation.ua.avro.ExtensionObject"
+                ]
+              },
+              {
+                "name": "ScenarioBindings",
+                "type": {
+                  "items": [
+                    "null",
+                    "org.opcfoundation.ua.avro.ScenarioBindingDataType"
+                  ],
+                  "type": "array"
+                }
+              }
+            ],
+            "name": "ScenarioBindingConfigurationDataType",
+            "namespace": "org.opcfoundation.ua.avro",
+            "type": "record"
+          },
+          "bytes"
+        ]
+      }
+    ],
+    "name": "ExtensionObject",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "value",
+        "type": "boolean"
+      }
+    ],
+    "name": "VariantBooleanScalar",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "values",
+        "type": {
+          "items": "boolean",
+          "type": "array"
+        }
+      }
+    ],
+    "name": "VariantBooleanArray",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "dimensions",
+        "type": {
+          "items": "int",
+          "type": "array"
+        }
+      },
+      {
+        "name": "values",
+        "type": {
+          "items": "boolean",
+          "type": "array"
+        }
+      }
+    ],
+    "name": "VariantBooleanMatrix",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "matrix",
+        "type": "org.opcfoundation.ua.avro.VariantBooleanMatrix"
+      }
+    ],
+    "name": "VariantBooleanMatrixBody",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "value",
+        "type": "int"
+      }
+    ],
+    "name": "VariantSByteScalar",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "values",
+        "type": {
+          "items": "int",
+          "type": "array"
+        }
+      }
+    ],
+    "name": "VariantSByteArray",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "dimensions",
+        "type": {
+          "items": "int",
+          "type": "array"
+        }
+      },
+      {
+        "name": "values",
+        "type": {
+          "items": "int",
+          "type": "array"
+        }
+      }
+    ],
+    "name": "VariantSByteMatrix",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "matrix",
+        "type": "org.opcfoundation.ua.avro.VariantSByteMatrix"
+      }
+    ],
+    "name": "VariantSByteMatrixBody",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "value",
+        "type": "int"
+      }
+    ],
+    "name": "VariantByteScalar",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "values",
+        "type": {
+          "items": "int",
+          "type": "array"
+        }
+      }
+    ],
+    "name": "VariantByteArray",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "dimensions",
+        "type": {
+          "items": "int",
+          "type": "array"
+        }
+      },
+      {
+        "name": "values",
+        "type": {
+          "items": "int",
+          "type": "array"
+        }
+      }
+    ],
+    "name": "VariantByteMatrix",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "matrix",
+        "type": "org.opcfoundation.ua.avro.VariantByteMatrix"
+      }
+    ],
+    "name": "VariantByteMatrixBody",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "value",
+        "type": "int"
+      }
+    ],
+    "name": "VariantInt16Scalar",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "values",
+        "type": {
+          "items": "int",
+          "type": "array"
+        }
+      }
+    ],
+    "name": "VariantInt16Array",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "dimensions",
+        "type": {
+          "items": "int",
+          "type": "array"
+        }
+      },
+      {
+        "name": "values",
+        "type": {
+          "items": "int",
+          "type": "array"
+        }
+      }
+    ],
+    "name": "VariantInt16Matrix",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "matrix",
+        "type": "org.opcfoundation.ua.avro.VariantInt16Matrix"
+      }
+    ],
+    "name": "VariantInt16MatrixBody",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "value",
+        "type": "int"
+      }
+    ],
+    "name": "VariantUInt16Scalar",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "values",
+        "type": {
+          "items": "int",
+          "type": "array"
+        }
+      }
+    ],
+    "name": "VariantUInt16Array",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "dimensions",
+        "type": {
+          "items": "int",
+          "type": "array"
+        }
+      },
+      {
+        "name": "values",
+        "type": {
+          "items": "int",
+          "type": "array"
+        }
+      }
+    ],
+    "name": "VariantUInt16Matrix",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "matrix",
+        "type": "org.opcfoundation.ua.avro.VariantUInt16Matrix"
+      }
+    ],
+    "name": "VariantUInt16MatrixBody",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "value",
+        "type": "int"
+      }
+    ],
+    "name": "VariantInt32Scalar",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "values",
+        "type": {
+          "items": "int",
+          "type": "array"
+        }
+      }
+    ],
+    "name": "VariantInt32Array",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "dimensions",
+        "type": {
+          "items": "int",
+          "type": "array"
+        }
+      },
+      {
+        "name": "values",
+        "type": {
+          "items": "int",
+          "type": "array"
+        }
+      }
+    ],
+    "name": "VariantInt32Matrix",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "matrix",
+        "type": "org.opcfoundation.ua.avro.VariantInt32Matrix"
+      }
+    ],
+    "name": "VariantInt32MatrixBody",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "value",
+        "type": "int"
+      }
+    ],
+    "name": "VariantUInt32Scalar",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "values",
+        "type": {
+          "items": "int",
+          "type": "array"
+        }
+      }
+    ],
+    "name": "VariantUInt32Array",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "dimensions",
+        "type": {
+          "items": "int",
+          "type": "array"
+        }
+      },
+      {
+        "name": "values",
+        "type": {
+          "items": "int",
+          "type": "array"
+        }
+      }
+    ],
+    "name": "VariantUInt32Matrix",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "matrix",
+        "type": "org.opcfoundation.ua.avro.VariantUInt32Matrix"
+      }
+    ],
+    "name": "VariantUInt32MatrixBody",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "value",
+        "type": "long"
+      }
+    ],
+    "name": "VariantInt64Scalar",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "values",
+        "type": {
+          "items": "long",
+          "type": "array"
+        }
+      }
+    ],
+    "name": "VariantInt64Array",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "dimensions",
+        "type": {
+          "items": "int",
+          "type": "array"
+        }
+      },
+      {
+        "name": "values",
+        "type": {
+          "items": "long",
+          "type": "array"
+        }
+      }
+    ],
+    "name": "VariantInt64Matrix",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "matrix",
+        "type": "org.opcfoundation.ua.avro.VariantInt64Matrix"
+      }
+    ],
+    "name": "VariantInt64MatrixBody",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "value",
+        "type": "long"
+      }
+    ],
+    "name": "VariantUInt64Scalar",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "values",
+        "type": {
+          "items": "long",
+          "type": "array"
+        }
+      }
+    ],
+    "name": "VariantUInt64Array",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "dimensions",
+        "type": {
+          "items": "int",
+          "type": "array"
+        }
+      },
+      {
+        "name": "values",
+        "type": {
+          "items": "long",
+          "type": "array"
+        }
+      }
+    ],
+    "name": "VariantUInt64Matrix",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "matrix",
+        "type": "org.opcfoundation.ua.avro.VariantUInt64Matrix"
+      }
+    ],
+    "name": "VariantUInt64MatrixBody",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "value",
+        "type": "float"
+      }
+    ],
+    "name": "VariantFloatScalar",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "values",
+        "type": {
+          "items": "float",
+          "type": "array"
+        }
+      }
+    ],
+    "name": "VariantFloatArray",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "dimensions",
+        "type": {
+          "items": "int",
+          "type": "array"
+        }
+      },
+      {
+        "name": "values",
+        "type": {
+          "items": "float",
+          "type": "array"
+        }
+      }
+    ],
+    "name": "VariantFloatMatrix",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "matrix",
+        "type": "org.opcfoundation.ua.avro.VariantFloatMatrix"
+      }
+    ],
+    "name": "VariantFloatMatrixBody",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "value",
+        "type": "double"
+      }
+    ],
+    "name": "VariantDoubleScalar",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "values",
+        "type": {
+          "items": "double",
+          "type": "array"
+        }
+      }
+    ],
+    "name": "VariantDoubleArray",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "dimensions",
+        "type": {
+          "items": "int",
+          "type": "array"
+        }
+      },
+      {
+        "name": "values",
+        "type": {
+          "items": "double",
+          "type": "array"
+        }
+      }
+    ],
+    "name": "VariantDoubleMatrix",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "matrix",
+        "type": "org.opcfoundation.ua.avro.VariantDoubleMatrix"
+      }
+    ],
+    "name": "VariantDoubleMatrixBody",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "value",
+        "type": [
+          "null",
+          "string"
+        ]
+      }
+    ],
+    "name": "VariantStringScalar",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "values",
+        "type": {
+          "items": [
+            "null",
+            "string"
+          ],
+          "type": "array"
+        }
+      }
+    ],
+    "name": "VariantStringArray",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "dimensions",
+        "type": {
+          "items": "int",
+          "type": "array"
+        }
+      },
+      {
+        "name": "values",
+        "type": {
+          "items": [
+            "null",
+            "string"
+          ],
+          "type": "array"
+        }
+      }
+    ],
+    "name": "VariantStringMatrix",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "matrix",
+        "type": "org.opcfoundation.ua.avro.VariantStringMatrix"
+      }
+    ],
+    "name": "VariantStringMatrixBody",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "value",
+        "type": "long"
+      }
+    ],
+    "name": "VariantDateTimeScalar",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "values",
+        "type": {
+          "items": "long",
+          "type": "array"
+        }
+      }
+    ],
+    "name": "VariantDateTimeArray",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "dimensions",
+        "type": {
+          "items": "int",
+          "type": "array"
+        }
+      },
+      {
+        "name": "values",
+        "type": {
+          "items": "long",
+          "type": "array"
+        }
+      }
+    ],
+    "name": "VariantDateTimeMatrix",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "matrix",
+        "type": "org.opcfoundation.ua.avro.VariantDateTimeMatrix"
+      }
+    ],
+    "name": "VariantDateTimeMatrixBody",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "value",
+        "type": "org.opcfoundation.ua.avro.Guid"
+      }
+    ],
+    "name": "VariantGuidScalar",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "values",
+        "type": {
+          "items": "org.opcfoundation.ua.avro.Guid",
+          "type": "array"
+        }
+      }
+    ],
+    "name": "VariantGuidArray",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "dimensions",
+        "type": {
+          "items": "int",
+          "type": "array"
+        }
+      },
+      {
+        "name": "values",
+        "type": {
+          "items": "org.opcfoundation.ua.avro.Guid",
+          "type": "array"
+        }
+      }
+    ],
+    "name": "VariantGuidMatrix",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "matrix",
+        "type": "org.opcfoundation.ua.avro.VariantGuidMatrix"
+      }
+    ],
+    "name": "VariantGuidMatrixBody",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "value",
+        "type": [
+          "null",
+          "bytes"
+        ]
+      }
+    ],
+    "name": "VariantByteStringScalar",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "values",
+        "type": {
+          "items": [
+            "null",
+            "bytes"
+          ],
+          "type": "array"
+        }
+      }
+    ],
+    "name": "VariantByteStringArray",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "dimensions",
+        "type": {
+          "items": "int",
+          "type": "array"
+        }
+      },
+      {
+        "name": "values",
+        "type": {
+          "items": [
+            "null",
+            "bytes"
+          ],
+          "type": "array"
+        }
+      }
+    ],
+    "name": "VariantByteStringMatrix",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "matrix",
+        "type": "org.opcfoundation.ua.avro.VariantByteStringMatrix"
+      }
+    ],
+    "name": "VariantByteStringMatrixBody",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "value",
+        "type": [
+          "null",
+          "string"
+        ]
+      }
+    ],
+    "name": "VariantXmlElementScalar",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "values",
+        "type": {
+          "items": [
+            "null",
+            "string"
+          ],
+          "type": "array"
+        }
+      }
+    ],
+    "name": "VariantXmlElementArray",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "dimensions",
+        "type": {
+          "items": "int",
+          "type": "array"
+        }
+      },
+      {
+        "name": "values",
+        "type": {
+          "items": [
+            "null",
+            "string"
+          ],
+          "type": "array"
+        }
+      }
+    ],
+    "name": "VariantXmlElementMatrix",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "matrix",
+        "type": "org.opcfoundation.ua.avro.VariantXmlElementMatrix"
+      }
+    ],
+    "name": "VariantXmlElementMatrixBody",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "value",
+        "type": [
+          "null",
+          "org.opcfoundation.ua.avro.NodeId"
+        ]
+      }
+    ],
+    "name": "VariantNodeIdScalar",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "values",
+        "type": {
+          "items": [
+            "null",
+            "org.opcfoundation.ua.avro.NodeId"
+          ],
+          "type": "array"
+        }
+      }
+    ],
+    "name": "VariantNodeIdArray",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "dimensions",
+        "type": {
+          "items": "int",
+          "type": "array"
+        }
+      },
+      {
+        "name": "values",
+        "type": {
+          "items": [
+            "null",
+            "org.opcfoundation.ua.avro.NodeId"
+          ],
+          "type": "array"
+        }
+      }
+    ],
+    "name": "VariantNodeIdMatrix",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "matrix",
+        "type": "org.opcfoundation.ua.avro.VariantNodeIdMatrix"
+      }
+    ],
+    "name": "VariantNodeIdMatrixBody",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "value",
+        "type": [
+          "null",
+          "org.opcfoundation.ua.avro.ExpandedNodeId"
+        ]
+      }
+    ],
+    "name": "VariantExpandedNodeIdScalar",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "values",
+        "type": {
+          "items": [
+            "null",
+            "org.opcfoundation.ua.avro.ExpandedNodeId"
+          ],
+          "type": "array"
+        }
+      }
+    ],
+    "name": "VariantExpandedNodeIdArray",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "dimensions",
+        "type": {
+          "items": "int",
+          "type": "array"
+        }
+      },
+      {
+        "name": "values",
+        "type": {
+          "items": [
+            "null",
+            "org.opcfoundation.ua.avro.ExpandedNodeId"
+          ],
+          "type": "array"
+        }
+      }
+    ],
+    "name": "VariantExpandedNodeIdMatrix",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "matrix",
+        "type": "org.opcfoundation.ua.avro.VariantExpandedNodeIdMatrix"
+      }
+    ],
+    "name": "VariantExpandedNodeIdMatrixBody",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "value",
+        "type": "int"
+      }
+    ],
+    "name": "VariantStatusCodeScalar",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "values",
+        "type": {
+          "items": "int",
+          "type": "array"
+        }
+      }
+    ],
+    "name": "VariantStatusCodeArray",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "dimensions",
+        "type": {
+          "items": "int",
+          "type": "array"
+        }
+      },
+      {
+        "name": "values",
+        "type": {
+          "items": "int",
+          "type": "array"
+        }
+      }
+    ],
+    "name": "VariantStatusCodeMatrix",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "matrix",
+        "type": "org.opcfoundation.ua.avro.VariantStatusCodeMatrix"
+      }
+    ],
+    "name": "VariantStatusCodeMatrixBody",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "value",
+        "type": [
+          "null",
+          "org.opcfoundation.ua.avro.QualifiedName"
+        ]
+      }
+    ],
+    "name": "VariantQualifiedNameScalar",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "values",
+        "type": {
+          "items": [
+            "null",
+            "org.opcfoundation.ua.avro.QualifiedName"
+          ],
+          "type": "array"
+        }
+      }
+    ],
+    "name": "VariantQualifiedNameArray",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "dimensions",
+        "type": {
+          "items": "int",
+          "type": "array"
+        }
+      },
+      {
+        "name": "values",
+        "type": {
+          "items": [
+            "null",
+            "org.opcfoundation.ua.avro.QualifiedName"
+          ],
+          "type": "array"
+        }
+      }
+    ],
+    "name": "VariantQualifiedNameMatrix",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "matrix",
+        "type": "org.opcfoundation.ua.avro.VariantQualifiedNameMatrix"
+      }
+    ],
+    "name": "VariantQualifiedNameMatrixBody",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "value",
+        "type": [
+          "null",
+          "org.opcfoundation.ua.avro.LocalizedText"
+        ]
+      }
+    ],
+    "name": "VariantLocalizedTextScalar",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "values",
+        "type": {
+          "items": [
+            "null",
+            "org.opcfoundation.ua.avro.LocalizedText"
+          ],
+          "type": "array"
+        }
+      }
+    ],
+    "name": "VariantLocalizedTextArray",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "dimensions",
+        "type": {
+          "items": "int",
+          "type": "array"
+        }
+      },
+      {
+        "name": "values",
+        "type": {
+          "items": [
+            "null",
+            "org.opcfoundation.ua.avro.LocalizedText"
+          ],
+          "type": "array"
+        }
+      }
+    ],
+    "name": "VariantLocalizedTextMatrix",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "matrix",
+        "type": "org.opcfoundation.ua.avro.VariantLocalizedTextMatrix"
+      }
+    ],
+    "name": "VariantLocalizedTextMatrixBody",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "value",
+        "type": [
+          "null",
+          "org.opcfoundation.ua.avro.ExtensionObject"
+        ]
+      }
+    ],
+    "name": "VariantExtensionObjectScalar",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "values",
+        "type": {
+          "items": [
+            "null",
+            "org.opcfoundation.ua.avro.ExtensionObject"
+          ],
+          "type": "array"
+        }
+      }
+    ],
+    "name": "VariantExtensionObjectArray",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "dimensions",
+        "type": {
+          "items": "int",
+          "type": "array"
+        }
+      },
+      {
+        "name": "values",
+        "type": {
+          "items": [
+            "null",
+            "org.opcfoundation.ua.avro.ExtensionObject"
+          ],
+          "type": "array"
+        }
+      }
+    ],
+    "name": "VariantExtensionObjectMatrix",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "matrix",
+        "type": "org.opcfoundation.ua.avro.VariantExtensionObjectMatrix"
+      }
+    ],
+    "name": "VariantExtensionObjectMatrixBody",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "builtInType",
+        "type": "int"
+      },
+      {
+        "default": null,
+        "name": "dimensions",
+        "type": [
+          "null",
+          {
+            "items": "int",
+            "type": "array"
+          }
+        ]
+      },
+      {
+        "default": null,
+        "name": "body",
+        "type": [
+          "null",
+          "org.opcfoundation.ua.avro.VariantBooleanScalar",
+          "org.opcfoundation.ua.avro.VariantBooleanArray",
+          "org.opcfoundation.ua.avro.VariantBooleanMatrixBody",
+          "org.opcfoundation.ua.avro.VariantSByteScalar",
+          "org.opcfoundation.ua.avro.VariantSByteArray",
+          "org.opcfoundation.ua.avro.VariantSByteMatrixBody",
+          "org.opcfoundation.ua.avro.VariantByteScalar",
+          "org.opcfoundation.ua.avro.VariantByteArray",
+          "org.opcfoundation.ua.avro.VariantByteMatrixBody",
+          "org.opcfoundation.ua.avro.VariantInt16Scalar",
+          "org.opcfoundation.ua.avro.VariantInt16Array",
+          "org.opcfoundation.ua.avro.VariantInt16MatrixBody",
+          "org.opcfoundation.ua.avro.VariantUInt16Scalar",
+          "org.opcfoundation.ua.avro.VariantUInt16Array",
+          "org.opcfoundation.ua.avro.VariantUInt16MatrixBody",
+          "org.opcfoundation.ua.avro.VariantInt32Scalar",
+          "org.opcfoundation.ua.avro.VariantInt32Array",
+          "org.opcfoundation.ua.avro.VariantInt32MatrixBody",
+          "org.opcfoundation.ua.avro.VariantUInt32Scalar",
+          "org.opcfoundation.ua.avro.VariantUInt32Array",
+          "org.opcfoundation.ua.avro.VariantUInt32MatrixBody",
+          "org.opcfoundation.ua.avro.VariantInt64Scalar",
+          "org.opcfoundation.ua.avro.VariantInt64Array",
+          "org.opcfoundation.ua.avro.VariantInt64MatrixBody",
+          "org.opcfoundation.ua.avro.VariantUInt64Scalar",
+          "org.opcfoundation.ua.avro.VariantUInt64Array",
+          "org.opcfoundation.ua.avro.VariantUInt64MatrixBody",
+          "org.opcfoundation.ua.avro.VariantFloatScalar",
+          "org.opcfoundation.ua.avro.VariantFloatArray",
+          "org.opcfoundation.ua.avro.VariantFloatMatrixBody",
+          "org.opcfoundation.ua.avro.VariantDoubleScalar",
+          "org.opcfoundation.ua.avro.VariantDoubleArray",
+          "org.opcfoundation.ua.avro.VariantDoubleMatrixBody",
+          "org.opcfoundation.ua.avro.VariantStringScalar",
+          "org.opcfoundation.ua.avro.VariantStringArray",
+          "org.opcfoundation.ua.avro.VariantStringMatrixBody",
+          "org.opcfoundation.ua.avro.VariantDateTimeScalar",
+          "org.opcfoundation.ua.avro.VariantDateTimeArray",
+          "org.opcfoundation.ua.avro.VariantDateTimeMatrixBody",
+          "org.opcfoundation.ua.avro.VariantGuidScalar",
+          "org.opcfoundation.ua.avro.VariantGuidArray",
+          "org.opcfoundation.ua.avro.VariantGuidMatrixBody",
+          "org.opcfoundation.ua.avro.VariantByteStringScalar",
+          "org.opcfoundation.ua.avro.VariantByteStringArray",
+          "org.opcfoundation.ua.avro.VariantByteStringMatrixBody",
+          "org.opcfoundation.ua.avro.VariantXmlElementScalar",
+          "org.opcfoundation.ua.avro.VariantXmlElementArray",
+          "org.opcfoundation.ua.avro.VariantXmlElementMatrixBody",
+          "org.opcfoundation.ua.avro.VariantNodeIdScalar",
+          "org.opcfoundation.ua.avro.VariantNodeIdArray",
+          "org.opcfoundation.ua.avro.VariantNodeIdMatrixBody",
+          "org.opcfoundation.ua.avro.VariantExpandedNodeIdScalar",
+          "org.opcfoundation.ua.avro.VariantExpandedNodeIdArray",
+          "org.opcfoundation.ua.avro.VariantExpandedNodeIdMatrixBody",
+          "org.opcfoundation.ua.avro.VariantStatusCodeScalar",
+          "org.opcfoundation.ua.avro.VariantStatusCodeArray",
+          "org.opcfoundation.ua.avro.VariantStatusCodeMatrixBody",
+          "org.opcfoundation.ua.avro.VariantQualifiedNameScalar",
+          "org.opcfoundation.ua.avro.VariantQualifiedNameArray",
+          "org.opcfoundation.ua.avro.VariantQualifiedNameMatrixBody",
+          "org.opcfoundation.ua.avro.VariantLocalizedTextScalar",
+          "org.opcfoundation.ua.avro.VariantLocalizedTextArray",
+          "org.opcfoundation.ua.avro.VariantLocalizedTextMatrixBody",
+          "org.opcfoundation.ua.avro.VariantExtensionObjectScalar",
+          "org.opcfoundation.ua.avro.VariantExtensionObjectArray",
+          "org.opcfoundation.ua.avro.VariantExtensionObjectMatrixBody"
+        ]
+      }
+    ],
+    "name": "Variant",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "default": null,
+        "name": "value",
+        "type": [
+          "null",
+          "org.opcfoundation.ua.avro.Variant"
+        ]
+      },
+      {
+        "default": null,
+        "name": "status",
+        "type": [
+          "null",
+          "int"
+        ]
+      },
+      {
+        "default": null,
+        "name": "sourceTimestamp",
+        "type": [
+          "null",
+          "long"
+        ]
+      },
+      {
+        "default": null,
+        "name": "sourcePicoseconds",
+        "type": [
+          "null",
+          "int"
+        ]
+      },
+      {
+        "default": null,
+        "name": "serverTimestamp",
+        "type": [
+          "null",
+          "long"
+        ]
+      },
+      {
+        "default": null,
+        "name": "serverPicoseconds",
+        "type": [
+          "null",
+          "int"
+        ]
+      }
+    ],
+    "name": "DataValue",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "default": null,
+        "name": "symbolicId",
+        "type": [
+          "null",
+          "int"
+        ]
+      },
+      {
+        "default": null,
+        "name": "namespaceUri",
+        "type": [
+          "null",
+          "int"
+        ]
+      },
+      {
+        "default": null,
+        "name": "locale",
+        "type": [
+          "null",
+          "int"
+        ]
+      },
+      {
+        "default": null,
+        "name": "localizedText",
+        "type": [
+          "null",
+          "int"
+        ]
+      },
+      {
+        "default": null,
+        "name": "additionalInfo",
+        "type": [
+          "null",
+          "string"
+        ]
+      },
+      {
+        "default": null,
+        "name": "innerStatusCode",
+        "type": [
+          "null",
+          "int"
+        ]
+      },
+      {
+        "default": null,
+        "name": "innerDiagnosticInfo",
+        "type": [
+          "null",
+          "DiagnosticInfo"
+        ]
+      }
+    ],
+    "name": "DiagnosticInfo",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "name": "messageType",
+        "type": {
+          "name": "DataSetMessageType",
+          "namespace": "org.opcfoundation.ua.avro",
+          "symbols": [
+            "KeyFrame",
+            "DeltaFrame"
+          ],
+          "type": "enum"
+        }
+      },
+      {
+        "name": "writerId",
+        "type": "int"
+      },
+      {
+        "default": null,
+        "name": "sequenceNumber",
+        "type": [
+          "null",
+          "long"
+        ]
+      },
+      {
+        "default": null,
+        "name": "status",
+        "type": [
+          "null",
+          "int"
+        ]
+      },
+      {
+        "default": null,
+        "name": "timestamp",
+        "type": [
+          "null",
+          "long"
+        ]
+      },
+      {
+        "name": "fields",
+        "type": {
+          "items": "org.opcfoundation.ua.avro.Variant",
+          "type": "array"
+        }
+      }
+    ],
+    "name": "DataSetMessage",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  },
+  {
+    "fields": [
+      {
+        "default": null,
+        "name": "publisherId",
+        "type": [
+          "null",
+          "string"
+        ]
+      },
+      {
+        "default": null,
+        "name": "groupHeader",
+        "type": [
+          "null",
+          "bytes"
+        ]
+      },
+      {
+        "name": "payload",
+        "type": {
+          "items": "org.opcfoundation.ua.avro.DataSetMessage",
+          "type": "array"
+        }
+      }
+    ],
+    "name": "NetworkMessage",
+    "namespace": "org.opcfoundation.ua.avro",
+    "type": "record"
+  }
+]

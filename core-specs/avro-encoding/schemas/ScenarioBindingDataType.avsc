@@ -1,0 +1,56 @@
+{
+  "fields": [
+    {
+      "name": "Name",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "name": "ScenarioUri",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "name": "Direction",
+      "type": "int"
+    },
+    {
+      "name": "ConfigurationVersion",
+      "type": [
+        "null",
+        "org.opcfoundation.ua.avro.ExtensionObject"
+      ]
+    },
+    {
+      "name": "BoundItems",
+      "type": {
+        "items": [
+          "null",
+          "org.opcfoundation.ua.avro.BoundItemDataType"
+        ],
+        "type": "array"
+      }
+    },
+    {
+      "name": "PublishedDataSetName",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "name": "WriterGroupName",
+      "type": [
+        "null",
+        "string"
+      ]
+    }
+  ],
+  "name": "ScenarioBindingDataType",
+  "namespace": "org.opcfoundation.ua.avro",
+  "type": "record"
+}
