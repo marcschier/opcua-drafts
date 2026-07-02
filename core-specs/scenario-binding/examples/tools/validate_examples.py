@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate the generated PubSub Scenario Binding examples.
+"""Validate the generated Scenario Bindings examples.
 
 For each domain overlay NodeSet: well-formedness, unique NodeIds, no dangling internal
 references, and full cross-NodeSet reference resolution against the base PubSub Scenario
@@ -15,7 +15,7 @@ from nodeset_util import UA
 HERE = os.path.dirname(os.path.abspath(__file__))
 EX = os.path.dirname(HERE)
 REF = os.path.join(HERE, "ref")
-BIND = os.path.join(os.path.dirname(EX), "Opc.Ua.PubSubBinding.NodeSet2.xml")
+BIND = os.path.join(os.path.dirname(EX), "Opc.Ua.ScenarioBinding.NodeSet2.xml")
 NS = "{http://opcfoundation.org/UA/2011/03/UANodeSet.xsd}"
 
 DOMAINS = {

@@ -1,23 +1,24 @@
 ---
 name: opcua-scenario-binding
 description: >-
-  Generate OPC UA PubSub Scenario Bindings for any companion specification. Given a
+  Generate OPC UA Scenario Bindings for any companion specification. Given a
   companion-spec NodeSet2.xml, classify its Variables and Methods into integration
   Scenarios (Observability, PredictiveMaintenance, AnomalyDetection, …) and routing
   Kinds (Telemetry, Status, Event, Command, …), emit type-level bindings as
-  RelativePaths, and produce (a) a machine-readable ScenarioBindingConfiguration
-  descriptor, (b) a human-readable binding annex, and optionally (c) a UANodeSet
-  binding fragment. Implements the "OPC UA — PubSub Scenario Binding" base-namespace
-  specification (core-specs/pubsub-binding). WHEN: add PubSub bindings to a companion
-  spec, expose a companion spec over PubSub, generate scenario bindings, PubSub
+  RelativePaths, and produce (a) a machine-readable binding descriptor (JSON), (b) a
+  human-readable binding annex, and optionally (c) a UANodeSet binding fragment.
+  Implements the "OPC UA — Scenario Bindings" base-namespace specification
+  (core-specs/scenario-binding). WHEN: add Scenario Bindings to a companion
+  spec, expose a companion spec over RPC and optionally PubSub, generate scenario bindings,
   scenario annex, bind variables to scenarios, make a model observable/analytics-ready.
 ---
 
-# OPC UA PubSub Scenario Binding
+# OPC UA Scenario Bindings
 
-This skill makes any OPC UA Information Model **consumable over PubSub for integration
-scenarios** by producing the bindings defined in the *OPC UA — PubSub Scenario Binding*
-specification (`core-specs/pubsub-binding/OPC-UA-PubSub-Scenario-Binding.md`). It does the
+This skill makes any OPC UA Information Model **consumable for integration scenarios** by
+producing the bindings defined in the *OPC UA — Scenario Bindings* specification
+(`core-specs/scenario-binding/OPC-UA-Scenario-Bindings.md`). A binding is served over the
+classic client/server (RPC) interface by default; PubSub is an optional realization. It does the
 *authoring* (semantic classification, which a human/LLM is good at); a deterministic
 generator does the *expansion* into artifacts (which a program is good at).
 
@@ -40,9 +41,9 @@ Read the specification first — this skill assumes its two-layer contract:
 ## When to use
 
 Use this skill when a user wants to expose a companion specification (or any device /
-vendor model) over OPC UA PubSub for analytics, observability, predictive maintenance,
-anomaly detection, energy management, alarm distribution, or fleet/compliance — without
-hand-writing PubSub configuration per project.
+vendor model) over OPC UA RPC and optionally over PubSub for analytics, observability,
+predictive maintenance, anomaly detection, energy management, alarm distribution, or
+fleet/compliance — without hand-writing per-project integration bindings.
 
 ## Inputs
 
@@ -54,10 +55,10 @@ hand-writing PubSub configuration per project.
 
 ## Outputs
 
-Per companion spec (see the worked examples under `core-specs/pubsub-binding/examples/`):
+Per companion spec (see the worked examples under `core-specs/scenario-binding/examples/`):
 
-- `<Domain>.ScenarioBinding.json` — the machine-readable **ScenarioBindingConfiguration**
-  descriptor (single source of truth; the authoring DSL below).
+- `<Domain>.ScenarioBinding.json` — the machine-readable **binding descriptor (JSON)**
+  (single source of truth; the authoring DSL below).
 - `Opc.Ua.<Domain>.ScenarioBinding.NodeSet2.xml` — the **binding instances**: a compact
   *theoretical instance* of the bound type in an example namespace, with a `ScenarioBindings`
   container holding a per-companion-spec `ScenarioBindingGroup`, with the
@@ -67,7 +68,7 @@ Per companion spec (see the worked examples under `core-specs/pubsub-binding/exa
   theoretical instance.
 
 **Reference implementation (use it, don't reinvent):**
-`core-specs/pubsub-binding/examples/tools/build_bindings.py` (+ `nodeset_util.py`) is a
+`core-specs/scenario-binding/examples/tools/build_bindings.py` (+ `nodeset_util.py`) is a
 deterministic generator that reads the descriptor, **resolves and validates every
 `BrowsePath` against the published companion NodeSet**, synthesises the instance overlay, and
 emits the addendum (annex tables + two mermaid diagrams). Author the descriptor, then run it:
@@ -247,7 +248,7 @@ requires *where PubSub is configured* (§5.5) — it is not produced by the exam
 
 ### 9. Emit the descriptor
 
-Write `ScenarioBindingConfiguration` (see format below). Include the top-level
+Write the binding descriptor (JSON; see format below). Include the top-level
 `companionSpecificationUri` and `modelNamespaceUris` so the generator can emit one
 `ScenarioBindingGroupType` per descriptor, with all bindings nested under that group. This is
 the single source; the annex and the NodeSet fragment are **derived** from it, never authored
@@ -300,8 +301,8 @@ A companion specification is owned by *its* namespace, so **you cannot add `HasI
 `ScenarioBindings` component to the base companion type** (e.g. `PumpType`,
 `MotionDeviceSystemType`) from an addendum. Author the bindings at two levels instead:
 
-1. **Type-level definition (reusable, portable).** The `ScenarioBindingConfiguration`
-   descriptor + the annex express each binding as a `BrowsePath` (RelativePath) from the type
+1. **Type-level definition (reusable, portable).** The binding descriptor (JSON) +
+   the annex express each binding as a `BrowsePath` (RelativePath) from the type
    root. This does not touch the base type and applies to *every* conforming instance. It is
    the normative-recommendation artifact a future revision of the companion spec (or a server)
    would adopt. The descriptor also names the per-companion-spec group identity with
@@ -309,7 +310,7 @@ A companion specification is owned by *its* namespace, so **you cannot add `HasI
    multiple companion specs publish bindings into one registry.
 2. **Instance overlay (concrete, illustrative).** In your **own example namespace**
    (`http://opcfoundation.org/UA/PubSub/Examples/<Domain>/`), synthesise a compact
-   *theoretical instance* of the bound type — you own it, so you may apply `IPubSubScenarioBoundType`
+   *theoretical instance* of the bound type — you own it, so you may apply `IScenarioBoundType`
    and hang a `ScenarioBindings` container off it (`HasComponent`). Emit the
    `ScenarioBindingGroup` instance under `ScenarioBindings`, then the `ScenarioBinding`/`BoundItem`
    instances below that group.
@@ -475,7 +476,7 @@ Field notes:
 ```
 
 Prefix the annex with a note that all NodeIds/paths are relative to the companion model and
-that the bindings realize the *PubSub Scenario Binding* base specification.
+that the bindings realize the *Scenario Bindings* base specification.
 
 ## Quality bar
 

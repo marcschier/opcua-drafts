@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
-Generator for the OPC UA PubSub Scenario Binding specification (WG draft).
+Generator for the OPC UA Scenario Bindings specification (WG draft).
 
 Emits, from a single in-code source of truth:
-  * Opc.Ua.PubSubBinding.NodeSet2.xml  - the information model (UANodeSet)
-  * Opc.Ua.PubSubBinding.NodeIds.csv   - the NodeId assignments
+  * Opc.Ua.ScenarioBinding.NodeSet2.xml  - the information model (UANodeSet)
+  * Opc.Ua.ScenarioBinding.NodeIds.csv   - the NodeId assignments
   * model-reference.md                 - the generated Annex A (node reference)
 
 The model is a proposed addition to the OPC UA BASE namespace
@@ -330,8 +330,8 @@ def set_string(owner, owner_sym, name, value, datatype=String):
 # ===========================================================================
 # ============================  MODEL DEFINITION  ===========================
 # ===========================================================================
-CAT = "PubSub Scenario Binding"
-CAT_DT = "PubSub Scenario Binding DataTypes"
+CAT = "Scenario Binding"
+CAT_DT = "Scenario Binding DataTypes"
 
 # --- ReferenceTypes --------------------------------------------------------
 reference_type(60001, "BindsToNode", NonHierarchicalReferences, "IsBoundBy",
@@ -339,13 +339,23 @@ reference_type(60001, "BindsToNode", NonHierarchicalReferences, "IsBoundBy",
                "in the AddressSpace that it exposes for a scenario. The target is the "
                "authoritative semantic node; the BoundItem does not copy its meaning.",
                CAT)
-reference_type(60002, "ScenarioRealizedVia", NonHierarchicalReferences,
-               "SupportsScenario",
+reference_type(60002, "ScenarioRealizedBy", NonHierarchicalReferences,
+               "RealizesScenario",
                "Links a ScenarioBinding to the optional OPC UA Part 14 PubSub node(s) that "
                "realize it (a PublishedDataSet, DataSetWriter, DataSetReader or an "
-               "ActionTarget). Forward 'ScenarioRealizedVia' reads binding -> realization; "
-               "the inverse 'SupportsScenario' reads realization -> binding. Absent (and "
-               "never required) when the binding is not realized over PubSub.",
+               "ActionTarget). Forward 'ScenarioRealizedBy' reads binding -> realization; "
+               "the inverse 'RealizesScenario' reads realization -> binding. Absent (and "
+               "never required) when the binding is not realized over PubSub - a Server may "
+               "instead serve the binding over the classic client/server (RPC) interface.",
+               CAT)
+reference_type(60004, "HasScenarioBinding", NonHierarchicalReferences, "ServesScenario",
+               "Links a ScenarioProfile in the Scenarios registry to a ScenarioBinding that "
+               "serves that scenario, so a Client can start at the scenario it cares about and "
+               "browse straight to every binding serving it (across companion specifications). "
+               "Forward 'HasScenarioBinding' reads scenario -> binding; the inverse "
+               "'ServesScenario' reads binding -> scenario. The binding still lives physically "
+               "under its per-specification ScenarioBindingGroup; this reference is the "
+               "scenario-first discovery cross-link.",
                CAT)
 reference_type(60003, "HasBaseBinding", NonHierarchicalReferences, "IsBaseBindingOf",
                "Links a derived or composing ScenarioBinding to a base ScenarioBinding whose "
@@ -415,36 +425,9 @@ struct_type(60060, "BoundItemDataType",
     ("EventFieldOperand", SimpleAttributeOperand, None, "For an event-DataSet field: the Part 14 SimpleAttributeOperand that selects it (alternative/complement to BrowsePath, whose segments are then relative to the event TypeDefinition)."),
 ])
 
-struct_type(60065, "ScenarioBindingDataType",
-            "Machine-readable descriptor of one scenario binding: a scenario URI, the "
-            "offered direction and the list of bound items, plus optional names of the "
-            "Part 14 artifacts that realize it.", CAT_DT, [
-    ("Name", String, None, "Human-readable name of the binding."),
-    ("ScenarioUri", String, None, "URI of the integration scenario this binding serves."),
-    ("Direction", T(60050), None, "Role the server offers for this binding."),
-    ("ConfigurationVersion", ConfigurationVersionDataType, None, "Version of the binding, aligned with the realizing DataSetMetaData."),
-    ("BoundItems", T(60060), "1", "The bound items (the DataSet fields)."),
-    ("DataSetClassId", Guid, None, "Stable DataSetClassId (Part 14) identifying the class of this DataSet across servers."),
-    ("BaseDataSetClassIds", Guid, "1", "DataSetClassIds of the base facet bindings this binding extends or composes (its class lineage)."),
-    ("ContentKind", T(60052), None, "Whether this binding is a data or an event DataSet."),
-    ("DataSetCardinalityPath", RelativePath, None, "RelativePath to the cardinality level: one DataSet is produced per matched instance of it (default: the bound root); placeholders below it become fields."),
-    ("EventSourcePath", RelativePath, None, "For an event DataSet: RelativePath to the event notifier (default: the cardinality anchor, i.e. the bound root when DataSetCardinalityPath is omitted)."),
-    ("Filter", ContentFilter, None, "For an event DataSet: optional ContentFilter (event where-clause)."),
-    ("PublishedDataSetName", String, None, "Name of the realizing Part 14 PublishedDataSet, if any."),
-    ("WriterGroupName", String, None, "Name of the realizing Part 14 WriterGroup, if any."),
-])
-
-struct_type(60070, "ScenarioBindingConfigurationDataType",
-            "Portable, machine-readable 'full binding' for a companion specification or "
-            "type: the set of scenario bindings plus the model they apply to. Mirrors the "
-            "Part 14 PubSubConfigurationDataType pattern; a generator expands it into "
-            "AddressSpace nodes and Part 14 runtime configuration.", CAT_DT, [
-    ("CompanionSpecificationUri", String, None, "Stable spec-level identifier of the companion specification (the per-spec group anchor identity; distinct from a namespace URI)."),
-    ("ModelNamespaceUris", String, "1", "All namespace URIs the companion specification defines/covers."),
-    ("AppliesToType", QualifiedName, None, "BrowseName of the companion binding target (an ObjectType, Interface, or AddInType) the bindings are defined on."),
-    ("ConfigurationVersion", ConfigurationVersionDataType, None, "Version of this binding configuration."),
-    ("ScenarioBindings", T(60065), "1", "The scenario bindings."),
-])
+# Note: the portable "full binding" interchange DataTypes (ScenarioBindingDataType,
+# ScenarioBindingConfigurationDataType) are deferred to a future revision; a binding is
+# authored from the browsable model and an out-of-band descriptor for now.
 
 # --- ObjectTypes -----------------------------------------------------------
 # BoundItemType and subtypes
@@ -546,13 +529,13 @@ prop_var(60018, SG, "ModelNamespaceUris", String,
 placeholder_obj(60018, SG, "<ScenarioBinding>", T(60011),
                 "A scenario binding of this companion specification.")
 
-# PubSubScenarioBindingsType (container)
-object_type(60010, "PubSubScenarioBindingsType", FolderType,
+# ScenarioBindingsType (container)
+object_type(60010, "ScenarioBindingsType", FolderType,
             "A discoverable container of per-companion-spec ScenarioBindingGroup objects, "
             "enumerated by Browse. A server exposes one server-wide instance under the Server "
             "object, and/or a local instance on any object that implements "
-            "IPubSubScenarioBoundType.", CAT)
-BC = "PubSubScenarioBindingsType"
+            "IScenarioBoundType.", CAT)
+BC = "ScenarioBindingsType"
 placeholder_obj(60010, BC, "<ScenarioBindingGroup>", T(60018),
                 "A per-companion-specification group of scenario bindings.")
 # No query Method: clients enumerate the <ScenarioBindingGroup> components (per companion
@@ -570,16 +553,16 @@ prop_var(60015, SP, "Title", LocalizedText, "Short human-readable title.")
 prop_var(60015, SP, "Summary", LocalizedText, "Human-readable description of the scenario and its intended consumers.")
 prop_var(60015, SP, "Keywords", String, "Keywords describing the scenario.", valuerank="1")
 
-# IPubSubScenarioBoundType (interface)
-interface_type(60016, "IPubSubScenarioBoundType", BaseInterfaceType,
+# IScenarioBoundType (interface)
+interface_type(60016, "IScenarioBoundType", BaseInterfaceType,
                "Interface implemented by a companion-specification ObjectType (or "
                "instance) to advertise that it participates in scenario bindings, by "
                "exposing a local ScenarioBindings container.", CAT)
-obj_member(60016, "IPubSubScenarioBoundType", "ScenarioBindings", T(60010),
+obj_member(60016, "IScenarioBoundType", "ScenarioBindings", T(60010),
            "The scenario bindings defined on this object.", rule=MR_Mandatory)
 
 # --- Well-known instances --------------------------------------------------
-CAT_INST = "PubSub Scenario Binding Instances"
+CAT_INST = "Scenario Binding Instances"
 # Server-wide registry hooked onto the well-known Server object (i=2253) - always present,
 # so discovery never assumes a PubSub configuration surface.
 well_known(60100, "ScenarioBindings", T(60010), int(Server.split("=")[1]),
@@ -693,7 +676,7 @@ def _emit_node(n):
 
 def emit():
     out = ['<?xml version="1.0" encoding="utf-8"?>',
-           '<!-- OPC UA PubSub Scenario Binding - proposed addition to the base UA '
+           '<!-- OPC UA Scenario Bindings - proposed addition to the base UA '
            'namespace. PROVISIONAL NodeIds (final IDs assigned by the OPC Foundation). -->',
            '<UANodeSet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" '
            'xmlns:xsd="http://www.w3.org/2001/XMLSchema" '
@@ -873,7 +856,7 @@ def emit_md():
 
     md = ['<a id="annex-a"></a>', "## Annex A \u2014 Information model\n",
           "This annex is the normative node reference. It is generated from "
-          "`tools/build_model.py` and always matches `Opc.Ua.PubSubBinding.NodeSet2.xml`. "
+          "`tools/build_model.py` and always matches `Opc.Ua.ScenarioBinding.NodeSet2.xml`. "
           "All nodes are proposed additions to the base OPC UA namespace "
           "`http://opcfoundation.org/UA/`; the NodeIds shown are **provisional** (final "
           "IDs are assigned by the OPC Foundation). The **Declared in** column marks "
@@ -974,7 +957,7 @@ def emit_md():
     md.append("|---|---|---|---|")
     for nid in ORDER:
         n = NODES[nid]
-        if n.category != "PubSub Scenario Binding Instances" or n.cls != "UAObject":
+        if n.category != "Scenario Binding Instances" or n.cls != "UAObject":
             continue
         td = ""
         for rt, tgt, fwd in n.refs:
@@ -988,10 +971,10 @@ def emit_md():
 if __name__ == "__main__":
     here = os.path.dirname(os.path.abspath(__file__))
     outdir = os.path.dirname(here)
-    with open(os.path.join(outdir, "Opc.Ua.PubSubBinding.NodeSet2.xml"), "w",
+    with open(os.path.join(outdir, "Opc.Ua.ScenarioBinding.NodeSet2.xml"), "w",
               encoding="utf-8") as f:
         f.write(emit())
-    with open(os.path.join(outdir, "Opc.Ua.PubSubBinding.NodeIds.csv"), "w",
+    with open(os.path.join(outdir, "Opc.Ua.ScenarioBinding.NodeIds.csv"), "w",
               encoding="utf-8") as f:
         f.write(emit_csv())
     with open(os.path.join(here, "model-reference.md"), "w", encoding="utf-8") as f:

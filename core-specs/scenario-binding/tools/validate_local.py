@@ -7,8 +7,8 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 GEN = os.path.dirname(HERE)
 REF = os.path.join(HERE, "ref")
 NS = "{http://opcfoundation.org/UA/2011/03/UANodeSet.xsd}"
-XML = os.path.join(GEN, "Opc.Ua.PubSubBinding.NodeSet2.xml")
-CSVF = os.path.join(GEN, "Opc.Ua.PubSubBinding.NodeIds.csv")
+XML = os.path.join(GEN, "Opc.Ua.ScenarioBinding.NodeSet2.xml")
+CSVF = os.path.join(GEN, "Opc.Ua.ScenarioBinding.NodeIds.csv")
 
 def load_ids(p):
     s = set()

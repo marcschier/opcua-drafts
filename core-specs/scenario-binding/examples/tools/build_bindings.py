@@ -1,18 +1,18 @@
 #!/usr/bin/env python3
-"""build_bindings.py - generate a PubSub Scenario Binding *example* from a descriptor.
+"""build_bindings.py - generate a Scenario Bindings *example* from a descriptor.
 
 Input: a ScenarioBindingConfiguration descriptor (JSON, the skill's authoring DSL) plus
 the base companion NodeSet(s). The tool:
   1. walks the target companion ObjectType and validates every boundItem.browsePath,
      enriching it with the real namespace-qualified BrowseName, DataType and TypeDefinition;
   2. synthesises a compact *theoretical instance* (only the bound signals) in an example
-     namespace, hangs a ScenarioBindings container (PubSubScenarioBindingsType) off it and
+     namespace, hangs a ScenarioBindings container (ScenarioBindingsType) off it and
      emits ScenarioBinding + BoundItem instances (BindsToNode -> the concrete signal node);
   3. emits the per-scenario annex tables (Markdown, with reference.opcfoundation.org and
      base-spec links) and two mermaid diagram sources (bindings overview + instance placement).
 
-All base-namespace (ns0) binding NodeIds (PubSubScenarioBindingsType i=60010 etc.) are the
-PROVISIONAL ids from the draft PubSub Scenario Binding spec.
+All base-namespace (ns0) binding NodeIds (ScenarioBindingsType i=60010 etc.) are the
+PROVISIONAL ids from the draft Scenario Bindings spec.
 """
 import json
 import os
@@ -26,15 +26,15 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 FIELD_ID_NS = uuid.uuid5(uuid.NAMESPACE_URL,
                          "http://opcfoundation.org/UA/PubSub/Examples/ScenarioBinding")
 
-# --- base-namespace (ns0) PubSub Scenario Binding provisional ids -----------
+# --- base-namespace (ns0) Scenario Binding provisional ids -----------
 BIND = {
-    "PubSubScenarioBindingsType": 60010, "ScenarioBindingType": 60011,
+    "ScenarioBindingsType": 60010, "ScenarioBindingType": 60011,
     "BoundItemType": 60012, "BoundVariableType": 60013, "BoundMethodType": 60014,
-    "ScenarioProfileType": 60015, "IPubSubScenarioBoundType": 60016,
+    "ScenarioProfileType": 60015, "IScenarioBoundType": 60016,
     "BoundEventFieldType": 60017, "ScenarioBindingGroupType": 60018,
     "ScenarioBindingDirectionEnum": 60050, "BoundItemKindEnum": 60051,
     "ScenarioContentKindEnum": 60052,
-    "BindsToNode": 60001, "ScenarioRealizedVia": 60002,
+    "BindsToNode": 60001, "ScenarioRealizedBy": 60002,
 }
 DIRECTION = {"Publisher": 0, "Subscriber": 1, "ActionInvoker": 2,
              "ActionResponder": 3, "Bidirectional": 4}
@@ -74,7 +74,7 @@ REF = {
     "TwoStateDiscreteType": "https://reference.opcfoundation.org/specs/OPC-10000-8/5.3.6",
     "MultiStateDiscreteType": "https://reference.opcfoundation.org/specs/OPC-10000-8/5.3.7",
 }
-SPEC = "../../OPC-UA-PubSub-Scenario-Binding.md"  # relative from a domain subfolder
+SPEC = "../../OPC-UA-Scenario-Bindings.md"  # relative from a domain subfolder
 
 
 def load_base(descriptor, ref_dir):
@@ -236,13 +236,13 @@ class Emitter:
                         f'bound signals are shown; not a conformant full instance.</Description>')
         self.sb_container = self.nid()
         self._refs([("HasTypeDefinition", pump_type, True),
-                    ("HasInterface", f'i={BIND["IPubSubScenarioBoundType"]}', True),
+                    ("HasInterface", f'i={BIND["IScenarioBoundType"]}', True),
                     ("HasComponent", self.ex(self.sb_container), True)])
         self.out.append("  </UAObject>")
         # ScenarioBindings container
         self._open("UAObject", self.sb_container, "1:ScenarioBindings", self.ex(self.root_id))
         self.out.append("    <DisplayName>ScenarioBindings</DisplayName>")
-        self._refs([("HasTypeDefinition", f'i={BIND["PubSubScenarioBindingsType"]}', True),
+        self._refs([("HasTypeDefinition", f'i={BIND["ScenarioBindingsType"]}', True),
                     ("HasComponent", self.ex(self.root_id), False)])
         self.out.append("  </UAObject>")
         # per-companion-specification group anchor (avoids cross-spec name collisions)
@@ -287,7 +287,7 @@ class Emitter:
         sb["_dataSetClassId"] = str(dscid)
         self.prop(self.nid(), "DataSetClassId", "Guid",
                   f'<uax:Guid {U}><uax:String>{dscid}</uax:String></uax:Guid>', bid)
-        # Facet lineage (§5.13): base classes this binding extends/composes, if any.
+        # Facet lineage (§5.12): base classes this binding extends/composes, if any.
         base_cls = sb.get("baseDataSetClassIds")
         if base_cls:
             lst = "".join(f'<uax:Guid><uax:String>{sx.escape(str(g))}</uax:String></uax:Guid>'
@@ -389,7 +389,7 @@ class Emitter:
         dsfid = uuid.uuid5(FIELD_ID_NS, f'{self.d["domain"]}|{sb["scenarioUri"]}|{fn}|event')
         self.prop(self.nid(), "DataSetFieldId", "Guid",
                   f'<uax:Guid {U}><uax:String>{dsfid}</uax:String></uax:Guid>', iid)
-        # Facet provenance (§5.13): base binding class an inherited/overriding event field came from.
+        # Facet provenance (§5.12): base binding class an inherited/overriding event field came from.
         prov = it.get("sourceScenarioBindingClassId")
         if prov:
             self.prop(self.nid(), "SourceScenarioBindingClassId", "Guid",
@@ -440,7 +440,7 @@ class Emitter:
                            f'{self.d["domain"]}|{sb["scenarioUri"]}|{fn}|{it["browsePath"]}')
         self.prop(self.nid(), "DataSetFieldId", "Guid",
                   f'<uax:Guid {U}><uax:String>{dsfid}</uax:String></uax:Guid>', iid)
-        # Facet provenance (§5.13): the base binding class an inherited/overriding field came from.
+        # Facet provenance (§5.12): the base binding class an inherited/overriding field came from.
         prov = it.get("sourceScenarioBindingClassId")
         if prov:
             self.prop(self.nid(), "SourceScenarioBindingClassId", "Guid",
@@ -506,7 +506,7 @@ def emit_annex(descriptor, db, base_names):
     L = [f"### Scenario bindings for `{d['appliesToType']}`", "",
          f"Bindings for the `{d['appliesToType']}` of the "
          f"`{d['baseModelNamespaceUri']}` companion specification, per the "
-         f"[PubSub Scenario Binding]({SPEC}) base specification. Each binding is **one Part 14 "
+         f"[Scenario Bindings]({SPEC}) base specification. Each binding is **one Part 14 "
          f"DataSet** with a deterministic `DataSetClassId`. Every data-DataSet `BrowsePath` "
          f"below was resolved against the published companion NodeSet; event-DataSet fields "
          f"select standard event-type fields.", ""]
@@ -567,30 +567,31 @@ def emit_addendum(descriptor, db, base_names):
     nitems = sum(len(sb["boundItems"]) for sb in d["scenarioBindings"])
     scen = ", ".join(sb["name"] for sb in d["scenarioBindings"])
     L = []
-    L.append(f"# OPC UA {d['domain']} — PubSub Scenario Binding Addendum")
+    L.append(f"# OPC UA {d['domain']} — Scenario Bindings Addendum")
     L.append("")
     L.append(f"**Working draft — a worked example of the "
-             f"[PubSub Scenario Binding]({SPEC}) base specification applied to "
+             f"[Scenario Bindings]({SPEC}) base specification applied to "
              f"{cs.get('name', d['domain'])}.**")
     L.append("")
     L.append(f"> **Status — illustrative example.** This addendum shows how the instances of "
-             f"the `{d['appliesToType']}` ({d['baseModelNamespaceUri']}) can be exposed over "
-             f"OPC UA PubSub for integration scenarios, without modifying the companion "
+             f"the `{d['appliesToType']}` ({d['baseModelNamespaceUri']}) can be exposed for "
+             f"integration scenarios over the classic client/server (RPC) interface and, "
+             f"optionally, over OPC UA PubSub — without modifying the companion "
              f"specification. All NodeIds in the example namespace "
              f"`{d['exampleNamespaceUri']}` are provisional and the base-namespace binding "
-             f"types it references (`PubSubScenarioBindingsType` etc.) carry the **provisional** "
+             f"types it references (`ScenarioBindingsType` etc.) carry the **provisional** "
              f"NodeIds of the draft base specification.")
     L.append("")
     L.append("## 1 Scope")
     L.append("")
     L.append(f"This addendum defines example **scenario bindings** for the "
              f"`{d['appliesToType']}` — {nitems} bound items across the scenarios *{scen}* — "
-             f"per the [PubSub Scenario Binding]({SPEC}) base specification. "
+             f"per the [Scenario Bindings]({SPEC}) base specification. "
              f"{d.get('summary', '')}")
     L.append("")
     L.append("## 2 Normative references")
     L.append("")
-    L.append(f"- [PubSub Scenario Binding]({SPEC}) — the base binding model (types, "
+    L.append(f"- [Scenario Bindings]({SPEC}) — the base binding model (types, "
              f"discovery, the two-layer routing/semantic contract).")
     if cs.get("ref"):
         L.append(f"- [{cs.get('name', d['domain'])}]({cs['ref']}) — the companion "
@@ -613,7 +614,7 @@ def emit_addendum(descriptor, db, base_names):
              f"[`Opc.Ua.{d['domain']}.ScenarioBinding.NodeSet2.xml`]"
              f"(Opc.Ua.{d['domain']}.ScenarioBinding.NodeSet2.xml) instantiates a compact "
              f"theoretical instance `{d['instanceName']}`, applies the "
-             f"`IPubSubScenarioBoundType` interface, and hangs a `ScenarioBindings` container "
+             f"`IScenarioBoundType` interface, and hangs a `ScenarioBindings` container "
              f"holding the `ScenarioBinding`/`BoundItem` instances. On the instance each "
              f"`BoundItem` uses **`BindsToNode`** to point at the concrete signal node "
              f"(the type-level `BrowsePath` and the instance `BindsToNode` are the two "
@@ -779,7 +780,7 @@ def emit_diagrams(descriptor):
     group = d.get("groupName", d["domain"])
     inst = ["```mermaid", "graph TD",
             f'  R["{d["instanceName"]} : {d["appliesToType"]}"]',
-            "  R -->|HasInterface| I([IPubSubScenarioBoundType])",
+            "  R -->|HasInterface| I([IScenarioBoundType])",
             '  R -->|HasComponent| SB["ScenarioBindings"]',
             f'  SB -->|HasComponent| G["{group} : ScenarioBindingGroupType"]']
     for i, sb in enumerate(picks):
@@ -812,7 +813,7 @@ def main():
     xml = em.document(type_key)
     base = f'Opc.Ua.{d["domain"]}.ScenarioBinding'
     open(os.path.join(outdir, base + ".NodeSet2.xml"), "w", encoding="utf-8").write(xml)
-    addendum = f'OPC-UA-{d["domain"]}-PubSub-Scenario-Binding-Addendum.md'
+    addendum = f'OPC-UA-{d["domain"]}-Scenario-Bindings-Addendum.md'
     open(os.path.join(outdir, addendum), "w", encoding="utf-8").write(
         emit_addendum(d, db, base_names))
     nitems = sum(len(sb["boundItems"]) for sb in d["scenarioBindings"])

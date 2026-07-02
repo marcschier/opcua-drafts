@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Emit a tiny, self-contained example companion model, `Opc.Ua.FacetDemo.NodeSet2.xml`,
-used only to demonstrate binding inheritance & facet composition (§5.13 of the base spec).
+used only to demonstrate binding inheritance & facet composition (§5.12 of the base spec).
 
 It defines four binding targets exercising all three OPC UA composition axes:
   * DeviceType            - a base ObjectType facet (Manufacturer, SerialNumber, DeviceHealth)
@@ -110,7 +110,7 @@ member_var(1032, "AxisLoad", 1030, Double)
 addin_obj(1033, "Location", 1030, 1010)
 
 HEADER = f'''<?xml version="1.0" encoding="utf-8"?>
-<!-- FacetDemo: a minimal illustrative companion model for the PubSub Scenario Binding
+<!-- FacetDemo: a minimal illustrative companion model for the Scenario Bindings
      inheritance/facet-composition example. PROVISIONAL, non-normative. -->
 <UANodeSet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd">
   <NamespaceUris>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Facets: illustrative overlay for the PubSub Scenario Binding inheritance/composition example. PROVISIONAL. -->
+<!-- Facets: illustrative overlay for the Scenario Bindings inheritance/composition example. PROVISIONAL. -->
 <UANodeSet xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd" xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd">
   <NamespaceUris>
     <Uri>http://opcfoundation.org/UA/PubSub/Examples/Facets/</Uri>
