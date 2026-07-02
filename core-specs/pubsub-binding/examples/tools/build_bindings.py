@@ -31,7 +31,7 @@ BIND = {
     "PubSubScenarioBindingsType": 60010, "ScenarioBindingType": 60011,
     "BoundItemType": 60012, "BoundVariableType": 60013, "BoundMethodType": 60014,
     "ScenarioProfileType": 60015, "IPubSubScenarioBoundType": 60016,
-    "BoundEventFieldType": 60017,
+    "BoundEventFieldType": 60017, "ScenarioBindingGroupType": 60018,
     "ScenarioBindingDirectionEnum": 60050, "BoundItemKindEnum": 60051,
     "ScenarioContentKindEnum": 60052,
     "BindsToNode": 60001, "ScenarioRealizedVia": 60002,
@@ -61,6 +61,7 @@ ALIASES = {
     "String": "i=12", "Int32": "i=6", "QualifiedName": "i=20", "NodeId": "i=17",
     "Guid": "i=14", "BaseDataVariableType": "i=63", "PropertyType": "i=68",
     "BaseObjectType": "i=58", "FolderType": "i=61", "SimpleAttributeOperand": "i=601",
+    "RelativePath": "i=540",
 }
 # reference.opcfoundation.org links for base types used in the annex
 REF = {
@@ -175,9 +176,10 @@ class Emitter:
         self._refs(refs)
         self.out.append("  </UAObject>")
 
-    def prop(self, nid, name, datatype_alias, value_xml, parent_id):
+    def prop(self, nid, name, datatype_alias, value_xml, parent_id, valuerank=None):
+        vr = f' ValueRank="{valuerank}" ArrayDimensions="0"' if valuerank else ""
         self._open("UAVariable", nid, f"1:{name}", self.ex(parent_id),
-                   extra=f' DataType="{datatype_alias}"')
+                   extra=f' DataType="{datatype_alias}"{vr}')
         self.out.append(f"    <DisplayName>{name}</DisplayName>")
         self._refs([("HasTypeDefinition", "PropertyType", True),
                     ("HasProperty", self.ex(parent_id), False)])
@@ -243,17 +245,34 @@ class Emitter:
         self._refs([("HasTypeDefinition", f'i={BIND["PubSubScenarioBindingsType"]}', True),
                     ("HasComponent", self.ex(self.root_id), False)])
         self.out.append("  </UAObject>")
-        # scenario bindings
+        # per-companion-specification group anchor (avoids cross-spec name collisions)
+        self.group_id = self.nid()
+        group_bn = d.get("groupName", d["domain"])
+        cs_uri = d.get("companionSpecificationUri", d["baseModelNamespaceUri"])
+        ns_uris = d.get("modelNamespaceUris") or [m["uri"] for m in d["requiredModels"]]
+        U = 'xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"'
+        self._open("UAObject", self.group_id, f"1:{group_bn}", self.ex(self.sb_container))
+        self.out.append(f"    <DisplayName>{sx.escape(group_bn)}</DisplayName>")
+        self._refs([("HasTypeDefinition", f'i={BIND["ScenarioBindingGroupType"]}', True),
+                    ("HasComponent", self.ex(self.sb_container), False)])
+        self.out.append("  </UAObject>")
+        self.prop(self.nid(), "CompanionSpecificationUri", "String",
+                  f'<uax:String {U}>{sx.escape(cs_uri)}</uax:String>', self.group_id)
+        lst = "".join(f'<uax:String>{sx.escape(u)}</uax:String>' for u in ns_uris)
+        self.prop(self.nid(), "ModelNamespaceUris", "String",
+                  f'<uax:ListOfString {U}>{lst}</uax:ListOfString>', self.group_id,
+                  valuerank="1")
+        # scenario bindings (under the group)
         for sb in d["scenarioBindings"]:
             self.emit_binding(sb)
 
     def emit_binding(self, sb):
         bid = self.nid()
         name = sb["name"]
-        self._open("UAObject", bid, f"1:{name}", self.ex(self.sb_container))
+        self._open("UAObject", bid, f"1:{name}", self.ex(self.group_id))
         self.out.append(f"    <DisplayName>{name}</DisplayName>")
         self._refs([("HasTypeDefinition", f'i={BIND["ScenarioBindingType"]}', True),
-                    ("HasComponent", self.ex(self.sb_container), False)])
+                    ("HasComponent", self.ex(self.group_id), False)])
         self.out.append("  </UAObject>")
         # ScenarioUri + Direction properties
         self.prop(self.nid(), "ScenarioUri", "String",
@@ -271,12 +290,60 @@ class Emitter:
         ck = sb.get("contentKind", "DataItems")
         self.prop(self.nid(), "ContentKind", f'i={BIND["ScenarioContentKindEnum"]}',
                   f'<uax:Int32 {U}>{CONTENT_KIND[ck]}</uax:Int32>', bid)
+        # A "/" or empty dataSetCardinalityPath is an alias for omitted (the bound root is the
+        # cardinality anchor), so it is normalized away rather than emitted as an empty segment.
+        card = (sb.get("dataSetCardinalityPath") or "").strip("/")
+        if card:
+            self.prop(self.nid(), "DataSetCardinalityPath", "RelativePath",
+                      self._rel_path_value(card, sb, U), bid)
         if ck == "Events":
             for it in sb["boundItems"]:
                 self.emit_event_item(bid, sb, it)
         else:
             for it in sb["boundItems"]:
                 self.emit_item(bid, sb, it)
+
+    def _rel_path_value(self, path_str, sb, U):
+        """Encode a RelativePath value; segment namespaces are taken from the binding's
+        first resolved data item (whose path shares this cardinality prefix)."""
+        segs = path_str.strip("/").split("/")
+        ns_by_idx = {}
+        for it in sb["boundItems"]:
+            rec = it.get("_rec")
+            if rec:
+                for i, s in enumerate(rec["path"]):
+                    if i < len(segs) and s["name"] == segs[i]:
+                        ns_by_idx[i] = s["ns"]
+                break
+        els = []
+        for i, s in enumerate(segs):
+            nsidx = self.nsmap.get(ns_by_idx.get(i), 0)
+            els.append('<uax:RelativePathElement>'
+                       '<uax:ReferenceTypeId><uax:Identifier>i=33</uax:Identifier>'
+                       '</uax:ReferenceTypeId><uax:IsInverse>false</uax:IsInverse>'
+                       '<uax:IncludeSubtypes>true</uax:IncludeSubtypes>'
+                       f'<uax:TargetName><uax:NamespaceIndex>{nsidx}</uax:NamespaceIndex>'
+                       f'<uax:Name>{sx.escape(s)}</uax:Name></uax:TargetName>'
+                       '</uax:RelativePathElement>')
+        return f'<uax:RelativePath {U}><uax:Elements>{"".join(els)}</uax:Elements></uax:RelativePath>'
+
+    def _browsepath_value(self, it, U):
+        """Encode the RECOMMENDED type-level BrowsePath locator (RelativePath from the bound
+        root) for a bound item, preserving placeholder segment names so a browse-only consumer
+        can resolve cardinality per instance. Per-segment namespaces come from the resolved
+        item path; HierarchicalReferences + IncludeSubtypes so it resolves via
+        TranslateBrowsePathsToNodeIds regardless of the concrete hierarchical reference type."""
+        els = []
+        for seg in it["_rec"]["path"]:
+            nsidx = self.nsmap.get(seg["ns"], 0)
+            els.append('<uax:RelativePathElement>'
+                       '<uax:ReferenceTypeId><uax:Identifier>i=33</uax:Identifier>'
+                       '</uax:ReferenceTypeId><uax:IsInverse>false</uax:IsInverse>'
+                       '<uax:IncludeSubtypes>true</uax:IncludeSubtypes>'
+                       f'<uax:TargetName><uax:NamespaceIndex>{nsidx}</uax:NamespaceIndex>'
+                       f'<uax:Name>{sx.escape(seg["name"])}</uax:Name></uax:TargetName>'
+                       '</uax:RelativePathElement>')
+        return f'<uax:RelativePath {U}><uax:Elements>{"".join(els)}</uax:Elements></uax:RelativePath>'
 
     def emit_event_item(self, binding_id, sb, it):
         """An event-DataSet field: a BoundEventFieldType selecting a field of a standard
@@ -336,6 +403,11 @@ class Emitter:
         # Kind
         self.prop(self.nid(), "Kind", f'i={BIND["BoundItemKindEnum"]}',
                   f'<uax:Int32 {U}>{KIND[it["kind"]]}</uax:Int32>', iid)
+        # BrowsePath: the RECOMMENDED type-level locator (RelativePath from the bound root),
+        # placeholders preserved, so a browse-only consumer can reconstruct the placeholder
+        # cardinality semantics from the AddressSpace alone (BindsToNode is one concrete match).
+        self.prop(self.nid(), "BrowsePath", "RelativePath",
+                  self._browsepath_value(it, U), iid)
         # ModelNamespaceUri = the namespace URI that DEFINES the source node (its BrowseName ns)
         seg = rec["path"][-1]
         self.prop(self.nid(), "ModelNamespaceUri", "String",
@@ -428,6 +500,9 @@ def emit_annex(descriptor, db, base_names):
         L.append("")
         hdr = (f"*URI:* `{sb['scenarioUri']}` · *Direction:* {sb['direction']} · "
                f"*Content:* {content} · *DataSetClassId:* `{dscid}`")
+        card = sb.get("dataSetCardinalityPath")
+        hdr += (f" · *Cardinality:* one DataSet per `{card}`" if card
+                else " · *Cardinality:* one DataSet (bound root)")
         if ck == "Events":
             hdr += (f" · *Event source:* `{sb.get('eventSourcePath', '/')}` · "
                     f"*Event type:* {sb.get('eventType', 'BaseEventType')}")
@@ -543,7 +618,14 @@ def emit_addendum(descriptor, db, base_names):
              "`BindsToNode` its signal):")
     L.append("")
     L.append(emit_diagrams(d))
-    L.append("## 6 Deliverables")
+    res = emit_resolution_examples(d)
+    deliv_no = 6
+    if res:
+        L.append("## 6 BrowsePath resolution — worked examples")
+        L.append("")
+        L.append(res)
+        deliv_no = 7
+    L.append(f"## {deliv_no} Deliverables")
     L.append("")
     L.append(f"| File | Content |")
     L.append(f"|---|---|")
@@ -555,6 +637,95 @@ def emit_addendum(descriptor, db, base_names):
     L.append("")
     L.append("Regenerate with `python ../tools/build_bindings.py "
              f"{d['domain'].lower()}/{d['domain']}.ScenarioBinding.json`.")
+    L.append("")
+    return "\n".join(L) + "\n"
+
+
+# --- BrowsePath resolution worked examples ---------------------------------
+def _enum_placeholder(seg, ctx, topo):
+    """Concrete instances a placeholder segment expands to, given the topology + context."""
+    if seg == "<MotionDeviceIdentifier>":
+        return [(dv["name"], {"device": dv}) for dv in topo["devices"]]
+    if seg == "<AxisIdentifier>":
+        return [(f"Axis_{i+1}", {}) for i in range(ctx.get("device", {}).get("axes", 1))]
+    if seg == "<PowerTrainIdentifier>":
+        return [(f"PowerTrain_{i+1}", {}) for i in range(ctx.get("device", {}).get("motors", 1))]
+    if seg == "<MotorIdentifier>":
+        return [("Motor_1", {})]
+    if seg == "<ControllerIdentifier>":
+        return [(c, {}) for c in topo.get("controllers", ["Controller_1"])]
+    return [(seg.strip("<>") + "_1", {})]
+
+
+def _expand(segs, ctx, topo):
+    """Expand path segments within ctx -> list of (matched placeholder-instance names, ctx).
+    Literal segments do not expand; only <Placeholder> segments do."""
+    out = [([], dict(ctx))]
+    for s in segs:
+        nxt = []
+        for names, c in out:
+            if s.startswith("<") and s.endswith(">"):
+                for inst, upd in _enum_placeholder(s, c, topo):
+                    c2 = dict(c)
+                    c2.update(upd)
+                    nxt.append((names + [inst], c2))
+            else:
+                nxt.append((names, c))
+        out = nxt
+    return out
+
+
+def emit_resolution_examples(descriptor):
+    d = descriptor
+    tops = d.get("resolutionTopologies")
+    if not tops:
+        return ""
+    L = ["The type-level bindings above use placeholder BrowsePaths. A bridge resolves them "
+         "against a concrete instance (via `TranslateBrowsePathsToNodeIds`) and produces **one "
+         "DataSet per matched instance of each binding's cardinality anchor** "
+         "(`DataSetCardinalityPath`); placeholders **below** the anchor become fields, their "
+         "name disambiguated by the matched instance (per §5.10 of the base spec). The "
+         "`DataSetClassId` is identical for every DataSet of a scenario — it names the *class*, "
+         "of which there are many DataSetWriters. The same bindings resolve differently for "
+         "different instance topologies:", ""]
+    for ti, topo in enumerate(tops, 1):
+        devdesc = ", ".join(f'{dv["name"]} ({dv["axes"]} axes, {dv["motors"]} motors)'
+                            for dv in topo["devices"])
+        L.append(f"### Topology {ti}: {topo['name']}")
+        L.append("")
+        L.append(f"*MotionDevices:* {devdesc} · *Controllers:* "
+                 f"{', '.join(topo.get('controllers', []))}")
+        L.append("")
+        L.append("| Scenario | DataSet (cardinality instance) | # fields | Example fields |")
+        L.append("|---|---|---|---|")
+        total = 0
+        for sb in d["scenarioBindings"]:
+            ck = sb.get("contentKind", "DataItems")
+            card = (sb.get("dataSetCardinalityPath") or "").strip("/")
+            if ck == "Events" or not card:
+                fields = [it["fieldName"] for it in sb["boundItems"]]
+                ex = ", ".join(fields[:4]) + (" …" if len(fields) > 4 else "")
+                L.append(f"| {sb['name']} | {d['instanceName']} | {len(fields)} | {ex} |")
+                total += 1
+                continue
+            card_segs = card.split("/")
+            for names, ctx in _expand(card_segs, {}, topo):
+                dsname = names[-1] if names else d["instanceName"]
+                fields = []
+                for it in sb["boundItems"]:
+                    suffix = it["browsePath"].strip("/").split("/")[len(card_segs):]
+                    for pnames, _c in _expand(suffix, ctx, topo):
+                        fields.append(it["fieldName"] + "".join("_" + n for n in pnames))
+                ex = ", ".join(fields[:4]) + (" …" if len(fields) > 4 else "")
+                L.append(f"| {sb['name']} | {dsname} | {len(fields)} | {ex} |")
+                total += 1
+        L.append("")
+        L.append(f"→ **{total} DataSets** produced by the bridge for this topology.")
+        L.append("")
+    L.append("Across all topologies the `DataSetClassId` per scenario is unchanged — a "
+             "subscriber recognizes each DataSet's class regardless of how many robots, axes or "
+             "controllers a particular cell has; only the number of DataSets (writers) and the "
+             "field counts differ.")
     L.append("")
     return "\n".join(L) + "\n"
 
@@ -586,13 +757,15 @@ def emit_diagrams(descriptor):
     ev = next((s for s in d["scenarioBindings"] if s.get("contentKind") == "Events"), None)
     if ev is not None and ev is not picks[0]:
         picks.append(ev)
+    group = d.get("groupName", d["domain"])
     inst = ["```mermaid", "graph TD",
             f'  R["{d["instanceName"]} : {d["appliesToType"]}"]',
             "  R -->|HasInterface| I([IPubSubScenarioBoundType])",
-            '  R -->|HasComponent| SB["ScenarioBindings"]']
+            '  R -->|HasComponent| SB["ScenarioBindings"]',
+            f'  SB -->|HasComponent| G["{group} : ScenarioBindingGroupType"]']
     for i, sb in enumerate(picks):
         ck = sb.get("contentKind", "DataItems")
-        inst.append(f'  SB -->|HasComponent| B{i}["{sb["name"]} : ScenarioBindingType"]')
+        inst.append(f'  G -->|HasComponent| B{i}["{sb["name"]} : ScenarioBindingType"]')
         for j, it in enumerate(sb["boundItems"][:3]):
             if ck == "Events" or "_rec" not in it:
                 et = sb.get("eventType", "BaseEventType")

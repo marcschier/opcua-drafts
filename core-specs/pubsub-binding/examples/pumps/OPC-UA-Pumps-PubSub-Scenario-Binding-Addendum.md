@@ -31,7 +31,7 @@ Bindings for the `PumpType` of the `http://opcfoundation.org/UA/Pumps/` companio
 
 #### Scenario: Observability
 
-*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/Observability` · *Direction:* Publisher · *Content:* data DataSet (PublishedDataItems) · *DataSetClassId:* `96490f93-6c92-59cd-981d-4203ab067313`
+*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/Observability` · *Direction:* Publisher · *Content:* data DataSet (PublishedDataItems) · *DataSetClassId:* `96490f93-6c92-59cd-981d-4203ab067313` · *Cardinality:* one DataSet (bound root)
 
 | Field | Kind | BrowsePath | Source type | DataType |
 |---|---|---|---|---|
@@ -48,7 +48,7 @@ Bindings for the `PumpType` of the `http://opcfoundation.org/UA/Pumps/` companio
 
 #### Scenario: EnergyAndLoadManagement
 
-*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/EnergyAndLoadManagement` · *Direction:* Publisher · *Content:* data DataSet (PublishedDataItems) · *DataSetClassId:* `605ca065-f5d7-5400-a9fe-995d21ad75ce`
+*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/EnergyAndLoadManagement` · *Direction:* Publisher · *Content:* data DataSet (PublishedDataItems) · *DataSetClassId:* `605ca065-f5d7-5400-a9fe-995d21ad75ce` · *Cardinality:* one DataSet (bound root)
 
 | Field | Kind | BrowsePath | Source type | DataType |
 |---|---|---|---|---|
@@ -60,7 +60,7 @@ Bindings for the `PumpType` of the `http://opcfoundation.org/UA/Pumps/` companio
 
 #### Scenario: PredictiveMaintenance
 
-*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/PredictiveMaintenance` · *Direction:* Publisher · *Content:* data DataSet (PublishedDataItems) · *DataSetClassId:* `a96b90d3-7b07-55d8-8343-9c7e4df85bab`
+*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/PredictiveMaintenance` · *Direction:* Publisher · *Content:* data DataSet (PublishedDataItems) · *DataSetClassId:* `a96b90d3-7b07-55d8-8343-9c7e4df85bab` · *Cardinality:* one DataSet (bound root)
 
 | Field | Kind | BrowsePath | Source type | DataType |
 |---|---|---|---|---|
@@ -73,7 +73,7 @@ Bindings for the `PumpType` of the `http://opcfoundation.org/UA/Pumps/` companio
 
 #### Scenario: AnomalyDetection
 
-*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection` · *Direction:* Publisher · *Content:* data DataSet (PublishedDataItems) · *DataSetClassId:* `d4eb3d5b-5ffb-580e-b96f-142cb3f998ad`
+*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection` · *Direction:* Publisher · *Content:* data DataSet (PublishedDataItems) · *DataSetClassId:* `d4eb3d5b-5ffb-580e-b96f-142cb3f998ad` · *Cardinality:* one DataSet (bound root)
 
 | Field | Kind | BrowsePath | Source type | DataType |
 |---|---|---|---|---|
@@ -84,7 +84,7 @@ Bindings for the `PumpType` of the `http://opcfoundation.org/UA/Pumps/` companio
 
 #### Scenario: FleetAndCompliance
 
-*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/FleetAndCompliance` · *Direction:* Publisher · *Content:* data DataSet (PublishedDataItems) · *DataSetClassId:* `c5ad94e3-12f1-5fa4-b69f-b8aeaf40106a`
+*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/FleetAndCompliance` · *Direction:* Publisher · *Content:* data DataSet (PublishedDataItems) · *DataSetClassId:* `c5ad94e3-12f1-5fa4-b69f-b8aeaf40106a` · *Cardinality:* one DataSet (bound root)
 
 | Field | Kind | BrowsePath | Source type | DataType |
 |---|---|---|---|---|
@@ -97,7 +97,7 @@ Bindings for the `PumpType` of the `http://opcfoundation.org/UA/Pumps/` companio
 
 #### Scenario: AlarmAndEventDistribution
 
-*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/AlarmAndEventDistribution` · *Direction:* Publisher · *Content:* event DataSet (PublishedEvents) · *DataSetClassId:* `700f61a4-4e97-52ed-b72e-f085d406ced9` · *Event source:* `/` · *Event type:* BaseEventType
+*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/AlarmAndEventDistribution` · *Direction:* Publisher · *Content:* event DataSet (PublishedEvents) · *DataSetClassId:* `700f61a4-4e97-52ed-b72e-f085d406ced9` · *Cardinality:* one DataSet (bound root) · *Event source:* `/` · *Event type:* BaseEventType
 
 | Field | Kind | Event field (of the event type) |
 |---|---|---|
@@ -162,14 +162,15 @@ graph TD
   R["ExamplePump : PumpType"]
   R -->|HasInterface| I([IPubSubScenarioBoundType])
   R -->|HasComponent| SB["ScenarioBindings"]
-  SB -->|HasComponent| B0["Observability : ScenarioBindingType"]
+  SB -->|HasComponent| G["Pumps : ScenarioBindingGroupType"]
+  G -->|HasComponent| B0["Observability : ScenarioBindingType"]
   B0 -->|HasComponent| IT00["Speed : BoundVariableType"]
   IT00 -->|BindsToNode| N00["Operational/Measurements/Speed"]
   B0 -->|HasComponent| IT01["Throughput : BoundVariableType"]
   IT01 -->|BindsToNode| N01["Operational/Measurements/Throughput"]
   B0 -->|HasComponent| IT02["MassFlow : BoundVariableType"]
   IT02 -->|BindsToNode| N02["Operational/Measurements/MassFlow"]
-  SB -->|HasComponent| B1["AlarmAndEventDistribution : ScenarioBindingType"]
+  G -->|HasComponent| B1["AlarmAndEventDistribution : ScenarioBindingType"]
   B1 -->|HasComponent| IT10["EventId : BoundEventFieldType"]
   IT10 -.event field.-> N10["BaseEventType/EventId"]
   B1 -->|HasComponent| IT11["EventType : BoundEventFieldType"]

@@ -418,7 +418,8 @@ struct_type(60065, "ScenarioBindingDataType",
     ("BoundItems", T(60060), "1", "The bound items (the DataSet fields)."),
     ("DataSetClassId", Guid, None, "Stable DataSetClassId (Part 14) identifying the class of this DataSet across servers."),
     ("ContentKind", T(60052), None, "Whether this binding is a data or an event DataSet."),
-    ("EventSourcePath", RelativePath, None, "For an event DataSet: RelativePath to the event notifier (default: the bound root)."),
+    ("DataSetCardinalityPath", RelativePath, None, "RelativePath to the cardinality level: one DataSet is produced per matched instance of it (default: the bound root); placeholders below it become fields."),
+    ("EventSourcePath", RelativePath, None, "For an event DataSet: RelativePath to the event notifier (default: the cardinality anchor, i.e. the bound root when DataSetCardinalityPath is omitted)."),
     ("Filter", ContentFilter, None, "For an event DataSet: optional ContentFilter (event where-clause)."),
     ("PublishedDataSetName", String, None, "Name of the realizing Part 14 PublishedDataSet, if any."),
     ("WriterGroupName", String, None, "Name of the realizing Part 14 WriterGroup, if any."),
@@ -429,7 +430,8 @@ struct_type(60070, "ScenarioBindingConfigurationDataType",
             "type: the set of scenario bindings plus the model they apply to. Mirrors the "
             "Part 14 PubSubConfigurationDataType pattern; a generator expands it into "
             "AddressSpace nodes and Part 14 runtime configuration.", CAT_DT, [
-    ("ModelNamespaceUri", String, None, "Namespace URI of the companion model these bindings apply to."),
+    ("CompanionSpecificationUri", String, None, "Stable spec-level identifier of the companion specification (the per-spec group anchor identity; distinct from a namespace URI)."),
+    ("ModelNamespaceUris", String, "1", "All namespace URIs the companion specification defines/covers."),
     ("AppliesToType", QualifiedName, None, "BrowseName of the companion ObjectType the bindings are defined on."),
     ("ConfigurationVersion", ConfigurationVersionDataType, None, "Version of this binding configuration."),
     ("ScenarioBindings", T(60065), "1", "The scenario bindings."),
@@ -486,34 +488,58 @@ prop_var(60011, SB, "ConfigurationVersion", ConfigurationVersionDataType,
          "Version of the binding, aligned with the realizing DataSetMetaData.")
 prop_var(60011, SB, "DataSetClassId", Guid,
          "Stable DataSetClassId (Part 14) identifying the class of the DataSet this binding "
-         "defines, so subscribers recognize the same schema across servers. Deterministic "
-         "(see the DataSetClassId clause).", rule=MR_Mandatory)
+         "defines, so subscribers recognize the same DataSet class across servers. It is a "
+         "semantic class identity, not a guarantee of a fixed field layout (see the "
+         "DataSetClassId clause). Deterministic.", rule=MR_Mandatory)
 prop_var(60011, SB, "ContentKind", T(60052),
          "Whether the binding realizes as a data DataSet (PublishedDataItems) or an event "
          "DataSet (PublishedEvents).", rule=MR_Mandatory)
+prop_var(60011, SB, "DataSetCardinalityPath", RelativePath,
+         "RelativePath to the cardinality level: the Server/bridge produces one DataSet per "
+         "matched instance of it (default: the bound root); placeholders below it become "
+         "fields. The DataSetClassId is shared across those DataSets (one class, many writers).")
 prop_var(60011, SB, "DataSetMetaData", DataSetMetaDataType,
          "Part 14 DataSetMetaData for this DataSet (fields, dataSetClassId, "
          "configurationVersion), exposed so a consumer gets the class schema offline.")
 prop_var(60011, SB, "EventSourcePath", RelativePath,
          "For an event DataSet: RelativePath to the event notifier to subscribe to "
-         "(default: the bound root).")
+         "(default: the cardinality anchor, i.e. the bound root when DataSetCardinalityPath "
+         "is omitted).")
 prop_var(60011, SB, "Filter", ContentFilter,
          "For an event DataSet: optional ContentFilter (event where-clause).")
 prop_var(60011, SB, "BoundItems", T(60060), "Compact machine-readable list of bound items (the DataSet fields).", valuerank="1")
 placeholder_obj(60011, SB, "<BoundItem>", T(60012),
                 "A browsable bound item (rich form of a BoundItems entry).")
 
+# ScenarioBindingGroupType (per-companion-spec anchor) + registry
+object_type(60018, "ScenarioBindingGroupType", FolderType,
+            "A per-companion-specification anchor grouping that spec's ScenarioBinding "
+            "objects, so bindings from different companion specifications registered in one "
+            "container never collide by BrowseName. Identified by CompanionSpecificationUri "
+            "(a stable spec-level identifier, distinct from a namespace URI, because a "
+            "companion specification may define several namespace URIs).", CAT)
+SG = "ScenarioBindingGroupType"
+prop_var(60018, SG, "CompanionSpecificationUri", String,
+         "Stable spec-level identifier of the companion specification this group anchors. "
+         "Groups are unique per CompanionSpecificationUri.", rule=MR_Mandatory)
+prop_var(60018, SG, "ModelNamespaceUris", String,
+         "All namespace URIs the companion specification defines/covers.",
+         rule=MR_Mandatory, valuerank="1")
+placeholder_obj(60018, SG, "<ScenarioBinding>", T(60011),
+                "A scenario binding of this companion specification.")
+
 # PubSubScenarioBindingsType (container)
 object_type(60010, "PubSubScenarioBindingsType", FolderType,
-            "A discoverable container of ScenarioBinding objects, enumerated by Browse. A "
-            "server exposes one server-wide instance under the Server object, and/or a "
-            "local instance on any object that implements IPubSubScenarioBoundType.", CAT)
+            "A discoverable container of per-companion-spec ScenarioBindingGroup objects, "
+            "enumerated by Browse. A server exposes one server-wide instance under the Server "
+            "object, and/or a local instance on any object that implements "
+            "IPubSubScenarioBoundType.", CAT)
 BC = "PubSubScenarioBindingsType"
-placeholder_obj(60010, BC, "<ScenarioBinding>", T(60011),
-                "A scenario binding held by this container.")
-# No query Method: clients enumerate the <ScenarioBinding> components by Browse and read
-# each ScenarioUri. Browse + Read is sufficient and OPC UA-native, and keeps the type
-# usable on a classic server with no PubSub surface.
+placeholder_obj(60010, BC, "<ScenarioBindingGroup>", T(60018),
+                "A per-companion-specification group of scenario bindings.")
+# No query Method: clients enumerate the <ScenarioBindingGroup> components (per companion
+# spec) and their <ScenarioBinding> children by Browse, reading each ScenarioUri. Browse +
+# Read is sufficient and OPC UA-native, and keeps the type usable on a classic server.
 
 # ScenarioProfileType (registry entry)
 object_type(60015, "ScenarioProfileType", BaseObjectType,

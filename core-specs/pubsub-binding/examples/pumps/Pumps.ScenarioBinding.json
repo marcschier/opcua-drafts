@@ -12,6 +12,9 @@
     "refName": "Pumps/instanceexample.xml"
   },
   "configurationVersion": { "majorVersion": 1, "minorVersion": 0 },
+  "companionSpecificationUri": "http://opcfoundation.org/UA/Pumps/",
+  "modelNamespaceUris": ["http://opcfoundation.org/UA/Pumps/"],
+  "groupName": "Pumps",
   "baseNodeSets": [
     "Opc.Ua.Pumps.NodeSet2.xml",
     "Opc.Ua.Di.NodeSet2.xml",

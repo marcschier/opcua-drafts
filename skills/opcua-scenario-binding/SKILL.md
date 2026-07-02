@@ -23,14 +23,19 @@ generator does the *expansion* into artifacts (which a program is good at).
 
 Read the specification first — this skill assumes its two-layer contract:
 
+- **Per-companion-spec grouping**: a `ScenarioBindingGroupType` anchor per descriptor
+  carries the stable `CompanionSpecificationUri` and all `ModelNamespaceUris`; the
+  registry and per-instance containers hold groups, and groups hold bindings.
 - **Routing** (for a generic bridge): a `ScenarioUri` per binding + a `Kind` per item.
 - **Semantic cross-reference** (for the ultimate consumer): each item retains
   `TypeDefinition`, namespace-qualified `BrowseName`, `ModelNamespaceUri` and any
   dictionary entry, and this is propagated into Part 14 `DataSetMetaData`.
-- **One DataSet per binding**: each `ScenarioBinding` is classified as `DataItems`
+- **DataSet class and cardinality**: each `ScenarioBinding` is classified as `DataItems`
   (a Part 14 `PublishedDataItems` DataSet of grouped Variables) or `Events` (a
-  `PublishedEvents` DataSet of selected event fields from a notifier), and carries a
-  deterministic `DataSetClassId` so the same schema is recognizable across servers.
+  `PublishedEvents` DataSet of selected event fields from a notifier), carries a
+  deterministic `DataSetClassId`, and may set a `DataSetCardinalityPath` that tells
+  a bridge which matched level produces one DataSet per instance. Those DataSets share
+  the same DataSet class.
 
 ## When to use
 
@@ -55,7 +60,8 @@ Per companion spec (see the worked examples under `core-specs/pubsub-binding/exa
   descriptor (single source of truth; the authoring DSL below).
 - `Opc.Ua.<Domain>.ScenarioBinding.NodeSet2.xml` — the **binding instances**: a compact
   *theoretical instance* of the bound type in an example namespace, with a `ScenarioBindings`
-  container holding the `ScenarioBinding`/`BoundItem` instances (see "Two-level authoring").
+  container holding a per-companion-spec `ScenarioBindingGroup`, with the
+  `ScenarioBinding`/`BoundItem` instances nested below it (see "Two-level authoring").
 - `OPC-UA-<Domain>-PubSub-Scenario-Binding-Addendum.md` — the companion-spec **addendum**:
   scope, the per-scenario annex tables, and diagrams showing where the bindings live on the
   theoretical instance.
@@ -87,9 +93,10 @@ node. Pump-style models nest purely by TypeDefinition (`Operational` → `Measur
 `<MotionDeviceIdentifier> : MotionDeviceType` → `Axes` → `<AxisIdentifier> : AxisType` → …).
 `nodeset_util.NodeSetDB.walk` already does this merge; reuse it. Placeholder segments
 (`<…Identifier>`) stay in the type-level BrowsePath; on a real server a placeholder path
-**can match multiple instances** (per the base spec's resolution rules), but the reference
-generator synthesises **one representative concrete instance** per placeholder path for the
-illustrative overlay (it does not expand multi-match).
+**can match multiple instances** (per the base spec's resolution rules), and a binding's
+`dataSetCardinalityPath` selects which placeholder level produces one DataSet per matched
+instance. The illustrative overlay materialises representative concrete paths for display;
+runtime multi-match expansion is a bridge/Server realization rule.
 
 ### 2. Classify each item's Kind (routing role)
 
@@ -134,11 +141,15 @@ Commands to bound Methods; `ActionResponder` when clients invoke bound Actions;
 `Bidirectional` when both apply.
 
 Give each item a stable `FieldName` (default: the BrowseName; disambiguate placeholders by
-appending the matched BrowseName as the spec requires).
+appending the matched BrowseName as the spec requires). Set the descriptor-level
+`companionSpecificationUri` to the stable URI for the companion specification itself (not a
+namespace URI), and `modelNamespaceUris` to every namespace URI that specification defines or
+covers; these become the per-spec group identity.
 
 ### 4. Classify each scenario's content as Data or Event
 
-Each `ScenarioBinding` defines exactly **one** Part 14 DataSet. Set its `ContentKind`
+Each `ScenarioBinding` defines one DataSet class; `dataSetCardinalityPath` may cause a bridge
+to realize several DataSet instances of that same class. Set its `ContentKind`
 (`ScenarioContentKindEnum`) before emitting the descriptor:
 
 - `DataItems` (default): a data DataSet (`PublishedDataItems`) made from grouped
@@ -161,7 +172,24 @@ For an Event DataSet identify:
 4. an optional `filter` (OPC UA `ContentFilter` where-clause), such as a severity
    threshold or event-type restriction.
 
-### 5. Fill the semantic cross-reference (mechanical)
+### 5. Choose the DataSet cardinality anchor
+
+For each binding, decide whether the binding describes one DataSet for the bound root or one
+DataSet per matched placeholder/component level. Author `dataSetCardinalityPath` as a
+RelativePath to that level; omit it only when the bound root (`"/"`) is the cardinality level.
+When the path matches many instances, the bridge produces **one DataSet per matched instance**
+of that level. Placeholder segments **below** the cardinality level expand into fields inside
+that DataSet. The `DataSetClassId` remains shared by all those DataSets: one DataSetClass,
+many DataSetWriters.
+
+For robotics, prefer per-device cardinality for device-scoped scenarios:
+`/MotionDevices/<MotionDeviceIdentifier>` means one DataSet per motion device; item paths such
+as `/MotionDevices/<MotionDeviceIdentifier>/Axes/<AxisIdentifier>/ParameterSet/ActualPosition`
+then put axis-level placeholders below the device cardinality and make them fields. A binding's
+item paths should sit under its cardinality path; if they do not, split the binding or choose a
+higher cardinality anchor.
+
+### 6. Fill the semantic cross-reference (mechanical)
 
 For every item, populate from the NodeSet (do not guess):
 `SourceTypeDefinition`, `SourceBrowseName` (with namespace), `ModelNamespaceUri`,
@@ -172,7 +200,7 @@ model has one. For data items set `BrowsePath` to the RelativePath from the type
 fields, `BrowsePath` is relative to the selected event TypeDefinition and the generated
 `EventFieldOperand` is the corresponding Part 14 `SimpleAttributeOperand`.
 
-### 6. Compute the DataSet class identity (mechanical)
+### 7. Compute the DataSet class identity (mechanical)
 
 Every binding gets a deterministic `DataSetClassId` (Part 14 `Guid`) with grain
 **(scenario × bound type)**. The generator computes it; do **not** author it in the
@@ -190,33 +218,44 @@ on each browsable `ScenarioBinding` instance. Propagation to `DataSetMetaData.da
 and the realizing `PublishedDataSet.DataSetClassId` is a **realization** step the base spec
 requires *where PubSub is configured* (§5.5) — it is not produced by the example generator.
 
-### 7. Emit the descriptor
+### 8. Emit the descriptor
 
-Write `ScenarioBindingConfiguration` (see format below). This is the single source; the
-annex and the NodeSet fragment are **derived** from it, never authored separately.
+Write `ScenarioBindingConfiguration` (see format below). Include the top-level
+`companionSpecificationUri` and `modelNamespaceUris` so the generator can emit one
+`ScenarioBindingGroupType` per descriptor, with all bindings nested under that group. This is
+the single source; the annex and the NodeSet fragment are **derived** from it, never authored
+separately.
 
-### 8. Generate the addendum + instance overlay
+### 9. Generate the addendum + instance overlay
 
 Run the reference generator (`build_bindings.py`) on the descriptor. It renders one annex
 table per Scenario (linking each referenced base type to `https://reference.opcfoundation.org/`
-and own concepts to the base spec), emits the instance-overlay NodeSet (with per-binding
-`DataSetClassId` + `ContentKind`, and `BoundEventFieldType` items for event DataSets), and
-assembles the addendum. Leave transport/security/addressing as deployment parameters — never
+and own concepts to the base spec), emits the instance-overlay NodeSet with a
+`ScenarioBindingGroupType` carrying `CompanionSpecificationUri` and `ModelNamespaceUris`, nests
+the `ScenarioBinding` objects under that group, emits per-binding `DataSetClassId`,
+`ContentKind` and `DataSetCardinalityPath` (when authored), and emits `BoundEventFieldType`
+items for event DataSets, then assembles the addendum. Leave transport/security/addressing as
+deployment parameters — never
 bake them in. Exposing the full Part 14 `DataSetMetaData` (fields + `dataSetClassId` +
 `configurationVersion`) so a consumer can obtain the class schema offline is a capability the
 base spec defines (§5.8); a Server SHOULD populate it, but the example generator does not emit
 the full metadata value.
 
-### 9. Validate
+### 10. Validate
 
 - **Every `BrowsePath` resolves against the input NodeSet** — the generator fails hard if not;
   never ship a path you have not resolved. For Event DataSets, data-source paths resolve
   from the bound type while event field paths are validated against the selected event type.
 - Every item has a `Kind`, a `FieldName` and a complete semantic cross-reference.
+- Every descriptor has `companionSpecificationUri` and `modelNamespaceUris`, and the overlay
+  nests bindings under that per-companion-spec group.
 - Every binding has the correct `contentKind`; Event bindings have an `eventSourcePath` or
   intentionally default to the bound root.
+- Every binding has a deliberate `dataSetCardinalityPath` (or intentionally defaults to the
+  bound root), and its item paths sit under that cardinality path unless the binding is split.
 - `DataSetClassId` is generated, stable for `(ScenarioUri, AppliesToType, MajorVersion)`,
-  and appears consistently in the binding and PubSub metadata.
+  shared by all DataSets produced for a cardinality match, and appears consistently in the
+  binding and PubSub metadata.
 - When present, `DataSetMetaData` includes the fields, `dataSetClassId` and
   `configurationVersion`.
 - Scenario URIs are well-formed; vendor Scenarios use the vendor's own URI authority and
@@ -236,12 +275,15 @@ A companion specification is owned by *its* namespace, so **you cannot add `HasI
    descriptor + the annex express each binding as a `BrowsePath` (RelativePath) from the type
    root. This does not touch the base type and applies to *every* conforming instance. It is
    the normative-recommendation artifact a future revision of the companion spec (or a server)
-   would adopt.
+   would adopt. The descriptor also names the per-companion-spec group identity with
+   `companionSpecificationUri` and `modelNamespaceUris`, preventing BrowseName collisions when
+   multiple companion specs publish bindings into one registry.
 2. **Instance overlay (concrete, illustrative).** In your **own example namespace**
    (`http://opcfoundation.org/UA/PubSub/Examples/<Domain>/`), synthesise a compact
    *theoretical instance* of the bound type — you own it, so you may apply `IPubSubScenarioBoundType`
    and hang a `ScenarioBindings` container off it (`HasComponent`). Emit the
-   `ScenarioBinding`/`BoundItem` instances there.
+   `ScenarioBindingGroup` instance under `ScenarioBindings`, then the `ScenarioBinding`/`BoundItem`
+   instances below that group.
 
 **Two locators, one per level.** On the type level a `BoundItem` uses **`BrowsePath`**; on the
 instance overlay it uses **`BindsToNode`** pointing at the concrete signal node (both are
@@ -254,8 +296,8 @@ Pumps `instanceexample.xml`); otherwise synthesise a minimal one. **Placeholder 
 type-level BrowsePath keeps the placeholder.
 
 **Diagram conventions (two per addendum).** (a) a *bindings overview*
-(instance → ScenarioBindings → per-scenario ScenarioBinding → BoundItems); (b) an *instance
-placement* diagram (instance → `HasInterface`/`HasComponent` → ScenarioBindings → binding →
+(instance → ScenarioBindings → per-spec ScenarioBindingGroup → per-scenario ScenarioBinding → BoundItems); (b) an *instance
+placement* diagram (instance → `HasInterface`/`HasComponent` → ScenarioBindings → group → binding →
 BoundItem → `BindsToNode` → the signal node), so a reader sees exactly where bindings live.
 
 ## Domain heuristics learned from the worked examples
@@ -269,7 +311,10 @@ BoundItem → `BindsToNode` → the signal node), so a reader sees exactly where
   `PowerTrains/<…>/<Motor…>/ParameterSet/MotorTemperature`, `Controllers/<…>/ParameterSet/*`).
   Lean on axis/motor Telemetry, controller thermals, **Status/Event** from `SafetyStates`
   (EmergencyStop/ProtectiveStop/OperationalMode), and nameplate for FleetAndCompliance. Expect
-  more `Status`/`Event` and fewer `Telemetry` than a measurement-rich model.
+  more `Status`/`Event` and fewer `Telemetry` than a measurement-rich model. Choose a
+  placeholder cardinality anchor deliberately: for device-scoped robotics scenarios use
+  `/MotionDevices/<MotionDeviceIdentifier>` so each motion device gets its own DataSet, while
+  axis/motor placeholders below that level become fields.
 - **Event/safety scenarios.** Do not model alarm streams as ordinary grouped Variables when
   the domain exposes OPC UA Events/Conditions. Use `contentKind: "Events"`, choose the
   notifier (`eventSourcePath`), select standard event fields plus domain-specific condition
@@ -280,10 +325,12 @@ BoundItem → `BindsToNode` → the signal node), so a reader sees exactly where
 
 A single JSON object — the **authoring DSL** consumed by `build_bindings.py`. You write the
 intent (which type, which scenarios, Data vs Event content, which items by `BrowsePath`, which
-`Kind`); the generator resolves each data `BrowsePath` against the companion NodeSet, resolves
-event field paths against the selected event type, and fills in the namespaces, source
-`BrowseName`, `TypeDefinition`, `DataType`, `DataSetFieldId`, `EventFieldOperand`,
-`DataSetClassId` and `DataSetMetaData` mechanically, then emits the overlay NodeSet + addendum.
+`Kind`, and which companion-spec group owns them); the generator resolves each data
+`BrowsePath` against the companion NodeSet, resolves event field paths against the selected
+event type, and fills in the namespaces, source `BrowseName`, `TypeDefinition`, `DataType`,
+`DataSetFieldId`, `EventFieldOperand` and `DataSetClassId` mechanically, then emits the grouped
+overlay NodeSet + addendum. `DataSetMetaData`/`PublishedDataSet` propagation remains the
+spec-defined realization step, not generated by this descriptor tool.
 `browsePath` uses **plain BrowseNames** (no namespace prefix) — the generator recovers the
 namespace per segment from the walk. Keep placeholder segments (`<AxisIdentifier>`) verbatim.
 
@@ -292,6 +339,8 @@ namespace per segment from the walk. Keep placeholder segments (`<AxisIdentifier
   "domain": "Pumps",
   "appliesToType": "PumpType",
   "baseModelNamespaceUri": "http://opcfoundation.org/UA/Pumps/",
+  "companionSpecificationUri": "https://reference.opcfoundation.org/Pumps/",
+  "modelNamespaceUris": ["http://opcfoundation.org/UA/Pumps/"],
   "exampleNamespaceUri": "http://opcfoundation.org/UA/PubSub/Examples/Pumps/",
   "instanceName": "ExamplePump",
   "summary": "one-line description used in the addendum scope",
@@ -310,6 +359,7 @@ namespace per segment from the walk. Keep placeholder segments (`<AxisIdentifier
       "scenarioUri": "http://opcfoundation.org/UA/PubSub/Scenarios/Observability",
       "direction": "Publisher",
       "contentKind": "DataItems",
+      "dataSetCardinalityPath": "/",
       "boundItems": [
         { "fieldName": "Speed", "kind": "Telemetry", "browsePath": "/Operational/Measurements/Speed", "samplingIntervalHint": 1000 }
       ]
@@ -337,6 +387,12 @@ namespace per segment from the walk. Keep placeholder segments (`<AxisIdentifier
 ```
 
 Field notes:
+- `companionSpecificationUri` is the stable **spec-level** identifier for the companion
+  specification group anchor. It is distinct from any namespace URI because one companion
+  specification can define several model namespaces.
+- `modelNamespaceUris` lists the namespace URIs the companion specification defines/covers;
+  the generator emits them on the `ScenarioBindingGroupType` instance together with
+  `CompanionSpecificationUri`, then nests this descriptor's bindings below that group.
 - `appliesToType` is the plain BrowseName of the bound `ObjectType`; the generator locates it
   in `baseNodeSets`.
 - `baseNodeSets` are filenames under `examples/tools/ref/` (gitignored); `requiredModels` are
@@ -345,6 +401,15 @@ Field notes:
 - `direction` ∈ `Publisher` | `Subscriber` | `ActionInvoker` | `ActionResponder` |
   `Bidirectional`.
 - `contentKind` ∈ `DataItems` | `Events`; omit it only for the default `DataItems`.
+- `dataSetCardinalityPath` is a RelativePath to the level that determines DataSet
+  multiplicity; omit it to default to the bound root. `"/"` (or an empty string) is accepted
+  as an explicit alias for omitted and is normalized away — it is never emitted as an empty
+  path segment. When it matches multiple
+  instances, a bridge/Server produces one DataSet per matched instance. Placeholders below that
+  path become fields in each DataSet, and all such DataSets share the binding's
+  `DataSetClassId` (one DataSetClass, many DataSetWriters). For robotics,
+  `"/MotionDevices/<MotionDeviceIdentifier>"` means one DataSet per motion device; item paths
+  should sit under that path.
 - `dataSetClassId` is **not** authored. The generator derives it deterministically as
   `uuid5(fc164bdb-8705-58e9-ab11-7b1ed155b4e8, "<ScenarioUri>|<namespaceUri;BrowseName>|<MajorVersion>")`.
 - `kind` ∈ `Telemetry` | `Status` | `Configuration` | `Metric` | `Counter` | `Event` |
