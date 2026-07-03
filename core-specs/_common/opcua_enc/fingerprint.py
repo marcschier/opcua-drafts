@@ -3,7 +3,7 @@
 A **SchemaId** is a compact, deterministic fingerprint of a *canonical* schema
 document. It is what a message carries (instead of the whole schema) so an
 encoder can announce a schema once and reference it thereafter, and a decoder
-can cache it by id (see each extension's Part 14 SchemaId handshake).
+can cache it by id (see each extension's SchemaId handshake — Part 14 PubSub for Avro/Arrow, the Part 6 §7.6 gRPC service contract for Protobuf).
 
 Two fingerprints are provided:
 

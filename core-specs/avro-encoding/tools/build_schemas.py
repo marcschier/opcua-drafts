@@ -20,6 +20,7 @@ from schema_support import (
     stable_json,
     type_key,
 )
+from message_types import MESSAGE_STRUCTS
 
 load_common()
 from opcua_enc import corpus, fingerprint, nodeset, types as t
@@ -134,9 +135,10 @@ def main() -> int:
     os.makedirs(OUT_DIR, exist_ok=True)
     result = nodeset.load_datatypes(args.nodeset)
     enums = tuple(sorted([*corpus.ENUM_TYPES, *result.enums], key=lambda x: x.name))
-    structs = order_structs((*corpus.STRUCT_TYPES, *tuple(sorted(result.structs, key=lambda x: x.name))))
+    nodeset_structs = tuple(sorted(result.structs, key=lambda x: x.name))
+    structs = order_structs((*corpus.STRUCT_TYPES, *nodeset_structs, *MESSAGE_STRUCTS))
     with open(os.path.join(OUT_DIR, "opcua.builtins.avsc"), "w", encoding="utf-8") as f:
-        f.write(stable_json(builtin_defs(structs)))
+        f.write(stable_json(builtin_defs(order_structs((*corpus.STRUCT_TYPES, *nodeset_structs)))))
     for ty in sorted([*enums, *structs], key=lambda x: x.name):
         with open(os.path.join(OUT_DIR, f"{avro_name(ty.name)}.avsc"), "w", encoding="utf-8") as f:
             f.write(stable_json(datatype_schema(ty)))

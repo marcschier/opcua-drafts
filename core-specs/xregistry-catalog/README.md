@@ -3,7 +3,7 @@
 Central schema sharing for the schema-based OPC UA DataEncodings (Avro, Protobuf, Apache Arrow) and JSON Schema, profiled onto the [xRegistry Schema Registry Service](https://github.com/xregistry/spec/blob/main/schema/spec.md) (`schemagroups → schemas → versions`).
 
 - **Spec:** [`OPC-UA-xRegistry-Schema-Catalog.md`](OPC-UA-xRegistry-Schema-Catalog.md) — the mapping (namespaces→groups, DataTypes/DataSets→schemas, model/ConfigurationVersion→versions), formats & content-types, the on-the-wire schema reference, and the consumer resolution flow.
-- **Why:** Avro/Protobuf/Arrow need the schema to *decode*; a disconnected PubSub consumer resolves it here. JSON is self-describing, so JSON Schema is registered for governance/validation only.
+- **Why:** Avro/Protobuf/Arrow need the schema to *decode*; a disconnected consumer (PubSub, gRPC, or historian/ADBC) resolves it here. JSON is self-describing, so JSON Schema is registered for governance/validation only.
 
 ## Tools
 

@@ -1,0 +1,49 @@
+{
+  "fields": [
+    {
+      "name": "EndpointUrl",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "name": "SecurityMode",
+      "type": "int"
+    },
+    {
+      "name": "SecurityPolicyUri",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "name": "TransportProfileUri",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "name": "Server",
+      "type": [
+        "null",
+        "org.opcfoundation.ua.avro.ExtensionObject"
+      ]
+    },
+    {
+      "name": "UserIdentityTokens",
+      "type": {
+        "items": [
+          "null",
+          "org.opcfoundation.ua.avro.ExtensionObject"
+        ],
+        "type": "array"
+      }
+    }
+  ],
+  "name": "AvroEndpointDescription",
+  "namespace": "org.opcfoundation.ua.avro",
+  "type": "record"
+}

@@ -19,10 +19,10 @@ sys.path.insert(0, os.path.abspath(HERE / ".." / ".." / "_common"))
 from opcua_enc import hexdump, types as t, values as v  # noqa: E402
 from opcua_enc.corpus import CORPUS  # noqa: E402
 from opcua_enc.values import canonical_equal, is_single_float_type  # noqa: E402
+from opcua_enc import fingerprint  # noqa: E402
 import build_schemas  # noqa: E402
 import gen_type_reference  # noqa: E402
 import protobuf_codec  # noqa: E402
-import schema_handshake_demo  # noqa: E402
 import wire_annotate  # noqa: E402
 
 EXAMPLE_CASES = [
@@ -259,13 +259,46 @@ def _write_examples() -> None:
     (EXAMPLES / "index.json").write_text(json.dumps(index, indent=2, sort_keys=True) + "\n", encoding="utf-8", newline="\n")
 
 
+def _file_proto(file_desc):
+    from google.protobuf import descriptor_pb2
+
+    out = descriptor_pb2.FileDescriptorProto()
+    out.ParseFromString(file_desc.serialized_pb)
+    out.ClearField("source_code_info")
+    return out
+
+
+def _collect_files(file_desc, override=None):
+    from google.protobuf import descriptor_pb2
+
+    seen: set[str] = set()
+    ordered = []
+
+    def visit(fd) -> None:
+        if fd.name in seen:
+            return
+        for dep in sorted(fd.dependencies, key=lambda d: d.name):
+            visit(dep)
+        seen.add(fd.name)
+        ordered.append(override if override is not None and override.name == fd.name else _file_proto(fd))
+
+    visit(file_desc)
+    fds = descriptor_pb2.FileDescriptorSet()
+    fds.file.extend(ordered)
+    return fds
+
+
+def _schema_id(file_desc_or_set) -> bytes:
+    return fingerprint.sha256_id(file_desc_or_set.SerializeToString(deterministic=True))
+
+
 def _nested_import_schemaid_change() -> tuple[str, str]:
     from google.protobuf import descriptor_pb2
 
     cases_by_name = {case.name: case for case in CORPUS}
     envelope_desc = _msg_desc(cases_by_name["envelope"].type)
     point_desc = _msg_desc(cases_by_name["struct_point"].type)
-    changed_point = schema_handshake_demo._file_proto(point_desc.file)
+    changed_point = _file_proto(point_desc.file)
     point = next(m for m in changed_point.message_type if m.name == "Point")
     field = point.field.add()
     field.name = "schema_gate"
@@ -273,8 +306,8 @@ def _nested_import_schemaid_change() -> tuple[str, str]:
     field.label = descriptor_pb2.FieldDescriptorProto.LABEL_OPTIONAL
     field.type = descriptor_pb2.FieldDescriptorProto.TYPE_DOUBLE
 
-    old_id = schema_handshake_demo._schema_id(schema_handshake_demo._collect_files(envelope_desc.file))
-    new_id = schema_handshake_demo._schema_id(schema_handshake_demo._collect_files(envelope_desc.file, changed_point))
+    old_id = _schema_id(_collect_files(envelope_desc.file))
+    new_id = _schema_id(_collect_files(envelope_desc.file, changed_point))
     return old_id.hex(), new_id.hex()
 
 
@@ -383,18 +416,10 @@ def main() -> int:
         print(f"FAIL nested SchemaId gate: {exc}")
     failures += nested_schemaid_failures
 
-    handshake_failures = 0
-    try:
-        schema_handshake_demo.run_demo()
-    except Exception as exc:
-        handshake_failures += 1
-        print(f"FAIL schema handshake demo: {exc}")
-    failures += handshake_failures
-
     conformance_ok = len(CORPUS) - gate_failures
     examples_ok = len(bin_files) - example_gate_failures
     nested_status = "ok" if not nested_schemaid_failures else "fail"
-    print(f"validate_local: proto_files={len(list(SCHEMAS.glob('*.proto')))} corpus={len(CORPUS) - rt_failures}/{len(CORPUS)} conformance={conformance_ok}/{len(CORPUS)} examples={examples_ok}/{len(bin_files)} annotations={len(CORPUS) - annotation_failures}/{len(CORPUS)} drift={'ok' if not drift_failures else 'fail'} nested_schemaid={nested_status}({nested_old_id}->{nested_new_id}) handshake={'ok' if not handshake_failures else 'fail'}; {failures} failures")
+    print(f"validate_local: proto_files={len(list(SCHEMAS.glob('*.proto')))} corpus={len(CORPUS) - rt_failures}/{len(CORPUS)} conformance={conformance_ok}/{len(CORPUS)} examples={examples_ok}/{len(bin_files)} annotations={len(CORPUS) - annotation_failures}/{len(CORPUS)} drift={'ok' if not drift_failures else 'fail'} nested_schemaid={nested_status}({nested_old_id}->{nested_new_id}); {failures} failures")
     return 1 if failures else 0
 
 

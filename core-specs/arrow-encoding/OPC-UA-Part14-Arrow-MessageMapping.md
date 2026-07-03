@@ -10,6 +10,8 @@
 
 This mapping defines how PubSub NetworkMessages and DataSetMessages are represented using Apache Arrow. It is optimized for analytics and historian consumers that benefit from columnar batches while preserving OPC UA PubSub metadata and the exact Part 6 value mapping.
 
+**Normative exclusion:** The Arrow Part 14 mapping covers batch publish/subscribe NetworkMessages and DataSetMessages only. It does not map OPC UA Actions, action invoke requests, or action invoke responses; those use the OPC UA Avro mapping.
+
 ## 2 Overview
 
 An Arrow NetworkMessage is an Arrow IPC stream whose schema describes one PublishedDataSet. Each RecordBatch contains zero or more DataSetMessage rows. A single DataSetMessage is a one-row RecordBatch. Key frames carry a full set of DataSet fields. Delta frames carry only changed fields, either as a batch with nullable omitted columns and a field-index selection column or as a selection RecordBatch whose columns are the changed field subset.

@@ -12,6 +12,8 @@ This specification defines how every OPC UA value is represented as an Apache Ar
 
 Arrow is columnar. A single Part 6 scalar value is encoded as a length-1 Arrow Array or StructArray. A PubSub DataSet field uses the same Arrow `DataType` as its column type in Part 14; there is no separate PubSub type mapping.
 
+**Normative exclusion:** OPC UA Arrow does not map OPC UA Actions, action invoke requests, or action invoke responses. Actions shall use the OPC UA Avro mapping. Arrow remains defined for columnar historian access and Part 14 batch publish/subscribe payloads.
+
 ## 2 Normative references
 
 - OPC 10000-3, Address Space Model, including `DataTypeDefinition`.

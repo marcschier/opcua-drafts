@@ -13,6 +13,7 @@ from opcua_enc.corpus import CORPUS
 from opcua_enc.values import canonical_equal, is_single_float_type
 
 import arrow_codec
+import adbc_access_demo
 import build_schemas
 import gen_type_reference
 import roundtrip
@@ -66,8 +67,9 @@ def main() -> int:
     failures += type_reference_drift_gate()
     failures += annotation_gate()
     failures += schema_handshake_demo.main()
+    failures += adbc_access_demo.main()
 
-    print(f"validate_local: schemas ok, schemaids ok, examples ok, type-reference ok, byte-annotations ok, handshake ok, conformance gate {len(CORPUS) - conformance_failures}/{len(CORPUS)} corpus passed, {len(CORPUS) - rt_failures}/{len(CORPUS)} corpus passed, {failures} failures")
+    print(f"validate_local: schemas ok, schemaids ok, examples ok, type-reference ok, byte-annotations ok, handshake ok, adbc-access ok, conformance gate {len(CORPUS) - conformance_failures}/{len(CORPUS)} corpus passed, {len(CORPUS) - rt_failures}/{len(CORPUS)} corpus passed, {failures} failures")
     return 1 if failures else 0
 
 

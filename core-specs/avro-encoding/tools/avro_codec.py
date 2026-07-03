@@ -66,6 +66,23 @@ def _load_builtin_named_schemas() -> dict[str, Any]:
     with open(os.path.join(SCHEMAS, "opcua.builtins.avsc"), "r", encoding="utf-8") as f:
         for schema in json.load(f):
             parse_schema(schema, named_schemas=named)
+    pending = [
+        os.path.join(SCHEMAS, name)
+        for name in sorted(os.listdir(SCHEMAS))
+        if name.endswith(".avsc") and name != "opcua.builtins.avsc"
+    ]
+    while pending:
+        progressed = False
+        for path in pending[:]:
+            try:
+                with open(path, "r", encoding="utf-8") as f:
+                    parse_schema(json.load(f), named_schemas=named)
+                pending.remove(path)
+                progressed = True
+            except Exception:
+                pass
+        if not progressed:
+            break
     return named
 
 

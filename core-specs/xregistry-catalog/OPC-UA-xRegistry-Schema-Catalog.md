@@ -5,13 +5,13 @@
 **Companion namespace:** `http://opcfoundation.org/UA/SchemaCatalog/`
 **Version:** 0.1.0 · **Date:** 2026-07-02
 
-> **Status — working draft.** This document defines how OPC UA schema documents — the reference schemas produced by the Avro, Protobuf and Apache Arrow DataEncoding additions, and JSON Schema — are published in, and resolved from, a central **[xRegistry](https://github.com/xregistry/spec) Schema Registry** so that a disconnected consumer of an OPC UA PubSub message can obtain the schema it needs to decode the payload. It is a companion specification that *references* the encoding additions to [OPC 10000‑6](https://reference.opcfoundation.org/specs/OPC-10000-6/) and [OPC 10000‑14](https://reference.opcfoundation.org/specs/OPC-10000-14/); it does not itself change Part 6 or Part 14. Nothing here is normative or endorsed by the OPC Foundation.
+> **Status — working draft.** This document defines how OPC UA schema documents — the reference schemas produced by the Avro, Protobuf and Apache Arrow DataEncoding additions, and JSON Schema — are published in, and resolved from, a central **[xRegistry](https://github.com/xregistry/spec) Schema Registry** so that a disconnected consumer — of a PubSub message, a gRPC service contract, or a historian/ADBC stream — can obtain the schema it needs to decode the payload. It is a companion specification that *references* the encoding additions to [OPC 10000‑6](https://reference.opcfoundation.org/specs/OPC-10000-6/) and [OPC 10000‑14](https://reference.opcfoundation.org/specs/OPC-10000-14/); it does not itself change Part 6 or Part 14. Nothing here is normative or endorsed by the OPC Foundation.
 
 ---
 
 ## 1 Scope
 
-The Avro, Protobuf and Apache Arrow DataEncodings are **schema‑based**: a decoder cannot reconstruct a value without the schema that describes it. Unlike the OPC UA Binary, XML and JSON DataEncodings — which are either self‑describing or resolved through the server AddressSpace — a schema‑based payload that has left the server (in a PubSub message on MQTT/AMQP/Kafka, in a file, in a data lake) must be accompanied by a **reference** to a schema document that the consumer can retrieve out‑of‑band.
+The Avro, Protobuf and Apache Arrow DataEncodings are **schema‑based**: a decoder cannot reconstruct a value without the schema that describes it. Unlike the OPC UA Binary, XML and JSON DataEncodings — which are either self‑describing or resolved through the server AddressSpace — a schema‑based payload that has left the server (in a PubSub message on MQTT/AMQP/Kafka, a gRPC service call, a file, a data lake) must be accompanied by a **reference** to a schema document that the consumer can retrieve out‑of‑band.
 
 This specification defines:
 
@@ -32,8 +32,8 @@ Avro, Protobuf and Arrow achieve their compactness by *externalising* type infor
 - [xRegistry Schema Registry Service, v1.0‑rc3](https://github.com/xregistry/spec/blob/main/schema/spec.md) — `schemagroup`/`schema`/`version` model, `format`, `self`/`schemaurl`/`schemabase64`.
 - [CloudEvents v1.0](https://github.com/cloudevents/spec) — the `dataschema` attribute convention reused for the schema reference.
 - [OPC 10000‑3](https://reference.opcfoundation.org/specs/OPC-10000-3/) — Address Space Model (DataTypeDefinition, namespaces).
-- [OPC 10000‑6](https://reference.opcfoundation.org/specs/OPC-10000-6/) — Mappings, **with the Avro / Protobuf / Arrow DataEncoding additions** (this repository).
-- [OPC 10000‑14](https://reference.opcfoundation.org/specs/OPC-10000-14/) — PubSub, **with the Avro / Protobuf / Arrow message‑mapping additions** (this repository); `DataSetMetaData`, `ConfigurationVersion`, `dataSetFieldId`.
+- [OPC 10000‑6](https://reference.opcfoundation.org/specs/OPC-10000-6/) — Mappings, **with the Avro / Protobuf / Arrow DataEncoding additions** (this repository); Protobuf additionally defines the §7.6 *OPC UA over gRPC* TransportProtocol.
+- [OPC 10000‑14](https://reference.opcfoundation.org/specs/OPC-10000-14/) — PubSub, **with the Avro and Arrow message‑mapping additions** (this repository); `DataSetMetaData`, `ConfigurationVersion`, `dataSetFieldId`. (Protobuf is a gRPC service encoding, not a PubSub mapping.)
 - [OPC 10000‑19](https://reference.opcfoundation.org/specs/OPC-10000-19/) — Dictionary Reference (optional semantic linkage).
 
 ## 3 Terms, definitions and abbreviations
@@ -99,6 +99,8 @@ Each schema **Version** correlates with an OPC UA model change. The `versionid` 
 
 `Avro/1.11`, `Protobuf/3` and `JsonSchema/*` are the format names refined by the xRegistry Schema Registry spec; `ApacheArrow/1.0` is an application‑defined extension format (the spec permits extension formats). Where a document is preferred by reference rather than embedded, `schemaurl` **may** be used instead of inline `schema`; binary carriers use `schemabase64`.
 
+The `contenttype` above is the *schema document* media type. The *message/transport* content-type differs by usage and selects the format at resolution time (§6): Avro PubSub `application/vnd.apache.avro`, JSON PubSub `application/json`, **Protobuf gRPC** `application/grpc+proto` (a service contract, not a PubSub message schema), **Apache Arrow** `application/vnd.apache.arrow.stream` (batch PubSub and historian/ADBC streams).
+
 ### 5.5 The schema reference and the `self` URL
 
 The reference a Publisher puts on the wire is the schema **Version's** `self` URL, e.g.
@@ -125,7 +127,7 @@ Given a received schema‑based `DataSetMessage`, a consumer **shall** resolve i
 
 0. If the message carries an on-wire **SchemaId** (the encoding's SchemaId handshake), resolve the Version whose `opcua.schemaid` equals it within the format's schemagroup, GET the document once (caching it by SchemaId for all subsequent messages), and decode. This is the fastest, most self-contained path. Otherwise, continue.
 
-1. Determine the **format** from the transport **content‑type** (Part 14 additions: MQTT `ContentType`, AMQP `content-type`, Kafka `content-type` header) — e.g. `application/vnd.apache.avro`, `application/x-protobuf`, `application/vnd.apache.arrow.stream`.
+1. Determine the **format** from the transport **content‑type** — e.g. Avro PubSub `application/vnd.apache.avro`, Arrow `application/vnd.apache.arrow.stream`, Protobuf gRPC `application/grpc+proto` (carried in MQTT `ContentType`, AMQP/Kafka `content-type`, or gRPC message metadata).
 2. If the message header carries an explicit **schema reference** (the Version `self` URL — carried in the Part 14 message header extension or the transport header), GET it and decode. Otherwise:
 3. Resolve the **schemagroup** from the DataSet's namespace (`DataSetMetaData` namespace), the **schema** from `<DataSetName>:<fmt>` (or the DataType BrowseName for RawData field schemas), and the **Version** from `opcua.configurationversion` = the message `DataSetMessage` header `ConfigurationVersion`.
 4. GET the resolved Version `self` URL to obtain the schema document, then decode the payload per the corresponding Part 6 addition.
@@ -135,6 +137,14 @@ The `ConfigurationVersion` correlation (§5.3) is the same mechanism the OPC UA 
 ### 6.1 JSON is self‑describing
 
 For the OPC UA JSON DataEncoding no schema fetch is required to decode. A Publisher **may** still register JSON Schema (`JsonSchema/2020-12`) for validation, code generation and documentation, and **may** reference it identically; consumers **shall not** be required to fetch it in order to decode JSON.
+
+### 6.2 Protobuf is a gRPC service contract
+
+The Protobuf schemas registered here are **OPC UA gRPC service contracts** (the service `.proto` / `FileDescriptorSet`), not PubSub message schemas. A gRPC peer resolves the contract by its **SchemaId** via step 0 (the transitive-closure `FileDescriptorSet` fingerprint); the DataSet‑specific steps 3–4 (`DataSetName`/`ConfigurationVersion`) do not apply. See the Protobuf Part 6 §7.6 *OPC UA over gRPC* transport.
+
+### 6.3 Arrow historian/ADBC streams
+
+Arrow schemas resolve identically for both Part 14 batch pub/sub and the historian/ADBC access surface (an Arrow IPC stream embeds its own schema; the SchemaId indexes it for governance and pre‑stream validation).
 
 ## 7 Catalog generation and example
 

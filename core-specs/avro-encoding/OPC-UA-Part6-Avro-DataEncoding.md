@@ -170,6 +170,265 @@ This text is intended to be inserted after clause `5.4 OPC UA JSON` and before c
 
 Conformance text should require that senders and receivers claiming Default Avro support use the canonical schema generated from the DataTypeDefinition and reject non-canonical alternate encodings where a reversible decode cannot be guaranteed.
 
+## 9 Appendix B PubSub Action and Discovery schema examples
+
+The Part 14 Avro mapping publishes compact envelope schemas for Action and Discovery messages in `schemas\`. The Action request/response envelopes are `AvroActionRequestNetworkMessage.avsc` and `AvroActionResponseNetworkMessage.avsc`, each containing an array of request/response DataSetMessages. Discovery examples include `AvroDataSetMetaData.avsc`, `AvroDataSetWriterConfigurationAnnouncement.avsc`, `AvroActionResponderConfigurationAnnouncement.avsc`, `AvroDiscoveryProbe.avsc` and `AvroPublisherEndpointsAnnouncement.avsc`. The generated schemas use the built-in `Variant`, `DataValue`, `NodeId`, `StatusCode`, `DiagnosticInfo` and `ExtensionObject` records from this annex; reduced base-UA shapes and fallbacks are documented in the Part 14 draft.
+
+Compact examples publish the exact generated schema files below. Do not edit these JSON blocks by hand; copy them from `schemas\*.avsc`.
+
+The published Action request DataSetMessage schema is `schemas\AvroActionRequestDataSetMessage.avsc`:
+
+```json
+{
+  "fields": [
+    {
+      "name": "ActionTargetId",
+      "type": [
+        "null",
+        "org.opcfoundation.ua.avro.NodeId"
+      ]
+    },
+    {
+      "name": "RequestId",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "name": "CorrelationData",
+      "type": [
+        "null",
+        "bytes"
+      ]
+    },
+    {
+      "name": "InputArguments",
+      "type": {
+        "items": [
+          "null",
+          "org.opcfoundation.ua.avro.Variant"
+        ],
+        "type": "array"
+      }
+    }
+  ],
+  "name": "AvroActionRequestDataSetMessage",
+  "namespace": "org.opcfoundation.ua.avro",
+  "type": "record"
+}
+```
+
+The published Action request NetworkMessage schema is `schemas\AvroActionRequestNetworkMessage.avsc`:
+
+```json
+{
+  "fields": [
+    {
+      "name": "PublisherId",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "name": "WriterGroupId",
+      "type": "int"
+    },
+    {
+      "name": "NetworkMessageNumber",
+      "type": "int"
+    },
+    {
+      "name": "SequenceNumber",
+      "type": "int"
+    },
+    {
+      "name": "Timestamp",
+      "type": "long"
+    },
+    {
+      "name": "Messages",
+      "type": {
+        "items": [
+          "null",
+          "org.opcfoundation.ua.avro.AvroActionRequestDataSetMessage"
+        ],
+        "type": "array"
+      }
+    },
+    {
+      "name": "SchemaId",
+      "type": [
+        "null",
+        "string"
+      ]
+    }
+  ],
+  "name": "AvroActionRequestNetworkMessage",
+  "namespace": "org.opcfoundation.ua.avro",
+  "type": "record"
+}
+```
+
+The published Action response DataSetMessage schema is `schemas\AvroActionResponseDataSetMessage.avsc`:
+
+```json
+{
+  "fields": [
+    {
+      "name": "ActionTargetId",
+      "type": [
+        "null",
+        "org.opcfoundation.ua.avro.NodeId"
+      ]
+    },
+    {
+      "name": "RequestId",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "name": "CorrelationData",
+      "type": [
+        "null",
+        "bytes"
+      ]
+    },
+    {
+      "name": "Status",
+      "type": "int"
+    },
+    {
+      "name": "OutputArguments",
+      "type": {
+        "items": [
+          "null",
+          "org.opcfoundation.ua.avro.Variant"
+        ],
+        "type": "array"
+      }
+    },
+    {
+      "name": "DiagnosticInfos",
+      "type": {
+        "items": [
+          "null",
+          "org.opcfoundation.ua.avro.DiagnosticInfo"
+        ],
+        "type": "array"
+      }
+    }
+  ],
+  "name": "AvroActionResponseDataSetMessage",
+  "namespace": "org.opcfoundation.ua.avro",
+  "type": "record"
+}
+```
+
+The published Action response NetworkMessage schema is `schemas\AvroActionResponseNetworkMessage.avsc`:
+
+```json
+{
+  "fields": [
+    {
+      "name": "PublisherId",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "name": "WriterGroupId",
+      "type": "int"
+    },
+    {
+      "name": "NetworkMessageNumber",
+      "type": "int"
+    },
+    {
+      "name": "SequenceNumber",
+      "type": "int"
+    },
+    {
+      "name": "Timestamp",
+      "type": "long"
+    },
+    {
+      "name": "Messages",
+      "type": {
+        "items": [
+          "null",
+          "org.opcfoundation.ua.avro.AvroActionResponseDataSetMessage"
+        ],
+        "type": "array"
+      }
+    },
+    {
+      "name": "SchemaId",
+      "type": [
+        "null",
+        "string"
+      ]
+    }
+  ],
+  "name": "AvroActionResponseNetworkMessage",
+  "namespace": "org.opcfoundation.ua.avro",
+  "type": "record"
+}
+```
+
+The published DataSetWriter configuration announcement schema is `schemas\AvroDataSetWriterConfigurationAnnouncement.avsc`:
+
+```json
+{
+  "fields": [
+    {
+      "name": "PublisherId",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "name": "WriterGroupId",
+      "type": "int"
+    },
+    {
+      "name": "DataSetWriterId",
+      "type": "int"
+    },
+    {
+      "name": "ConfigurationVersion",
+      "type": "org.opcfoundation.ua.avro.AvroConfigurationVersionDataType"
+    },
+    {
+      "name": "DataSetMetaData",
+      "type": "org.opcfoundation.ua.avro.AvroDataSetMetaData"
+    },
+    {
+      "name": "SchemaId",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "name": "SchemaJson",
+      "type": [
+        "null",
+        "string"
+      ]
+    }
+  ],
+  "name": "AvroDataSetWriterConfigurationAnnouncement",
+  "namespace": "org.opcfoundation.ua.avro",
+  "type": "record"
+}
+```
+
 ## Annex A Generated type reference
 
 <!-- BEGIN GENERATED: type-reference -->

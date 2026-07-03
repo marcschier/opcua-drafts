@@ -15,6 +15,54 @@
     "algorithm": "CRC-64-AVRO Rabin",
     "schemaid": "fe961155c29ee867"
   },
+  "AvroActionRequestDataSetMessage": {
+    "algorithm": "CRC-64-AVRO Rabin",
+    "schemaid": "1824e0baf15b309b"
+  },
+  "AvroActionRequestNetworkMessage": {
+    "algorithm": "CRC-64-AVRO Rabin",
+    "schemaid": "b7741f6eb772e01b"
+  },
+  "AvroActionResponderConfigurationAnnouncement": {
+    "algorithm": "CRC-64-AVRO Rabin",
+    "schemaid": "95aac6fb624bdbd5"
+  },
+  "AvroActionResponseDataSetMessage": {
+    "algorithm": "CRC-64-AVRO Rabin",
+    "schemaid": "c4b39badd0d3c626"
+  },
+  "AvroActionResponseNetworkMessage": {
+    "algorithm": "CRC-64-AVRO Rabin",
+    "schemaid": "3eede2729ca52d22"
+  },
+  "AvroConfigurationVersionDataType": {
+    "algorithm": "CRC-64-AVRO Rabin",
+    "schemaid": "f6eade35b327896b"
+  },
+  "AvroDataSetMetaData": {
+    "algorithm": "CRC-64-AVRO Rabin",
+    "schemaid": "becf1b48829babf7"
+  },
+  "AvroDataSetWriterConfigurationAnnouncement": {
+    "algorithm": "CRC-64-AVRO Rabin",
+    "schemaid": "285a289345d4acde"
+  },
+  "AvroDiscoveryProbe": {
+    "algorithm": "CRC-64-AVRO Rabin",
+    "schemaid": "c4792cf2502e697d"
+  },
+  "AvroEndpointDescription": {
+    "algorithm": "CRC-64-AVRO Rabin",
+    "schemaid": "58f9ee4a616eac62"
+  },
+  "AvroFieldMetaData": {
+    "algorithm": "CRC-64-AVRO Rabin",
+    "schemaid": "5f0e0ddcc1841aa1"
+  },
+  "AvroPublisherEndpointsAnnouncement": {
+    "algorithm": "CRC-64-AVRO Rabin",
+    "schemaid": "bd0f31b1e325e7b9"
+  },
   "Boolean": {
     "algorithm": "CRC-64-AVRO Rabin",
     "schemaid": "64f7d4a478fc429f"

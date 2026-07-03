@@ -28,7 +28,7 @@ This document defines a proto3 DataEncoding for all OPC UA values described by t
 | Default Protobuf | The OPC UA DataTypeEncoding described by this document. |
 | Explicit presence | A proto3 field form (`optional`, message field or `oneof`) that records whether a value was present independently of its default value. |
 | Nullable element wrapper | A message wrapper used in `repeated` fields so that a null array element is representable in proto3. |
-| Canonical form | The serialized, normalized transitive `FileDescriptorSet` for the generated per-type schema, and the only permitted wire representation for a given OPC UA value and declared type. |
+| Canonical form | The serialized, normalized transitive `FileDescriptorSet` for the generated per-type or service schema, and the only permitted wire representation for a given OPC UA value and declared type. |
 | SchemaId | The first 8 bytes of SHA-256 over the canonical form, rendered as lowercase hex when textual. |
 
 Key words **shall**, **should**, **may**, **shall not** are to be interpreted as in ISO/IEC directives.
@@ -37,7 +37,7 @@ Key words **shall**, **should**, **may**, **shall not** are to be interpreted as
 
 The Protobuf DataEncoding is schema driven. A generator reads OPC UA DataTypeDefinition metadata from a NodeSet and emits one proto3 message per structured DataType and one enum or OptionSet message per enumeration DataType. Field numbers are stable and are assigned from DataTypeDefinition field order starting at 1. Built-in and envelope messages are defined once in `opcua_builtins.proto` and imported by generated namespace schemas. A receiver may compile the `.proto`, load a self-describing `FileDescriptorSet`, or re-derive the same schema from the AddressSpace.
 
-The transport content type for complete Protobuf encoded OPC UA values should be `application/vnd.google.protobuf`; `application/x-protobuf` may be accepted for compatibility. Profiles or transports that require a schema identifier shall carry the SchemaId, Protobuf package name, message name and OPC UA DataType/Encoding NodeId out of band or in the containing PubSub metadata.
+The transport content type for complete Protobuf encoded OPC UA values should be `application/vnd.google.protobuf`; the OPC UA gRPC TransportProtocol defined in clause 7 uses `application/grpc+proto` for service calls. Profiles or transports that require a schema identifier shall carry the SchemaId, Protobuf package name, message name and OPC UA DataType/Encoding NodeId in their service contract, call metadata or a catalog record. There is no PubSub schema announcement for this DataEncoding.
 
 A described-only DataTypeEncoding Object named `Default Protobuf` would be added as a HasEncoding target for every DataType that supports this encoding, parallel to `Default Binary`, `Default XML` and `Default JSON`.
 
@@ -119,14 +119,15 @@ For a declared OPC UA DataType `T`, producers and consumers shall use the same d
 8. Map Unions, Variants and abstract/subtyped fields to `oneof` choices. No selected arm represents a null union/variant/abstract value; a selected nullable wrapper may itself hold null.
 9. Emit the normalized transitive `FileDescriptorSet`: the target `FileDescriptorProto` plus every imported file needed for dynamic decoding, recursively, with deterministic file names, packages, imports, options, messages, enums and fields; no source-code-location data; and a stable dependency-first file order with dependencies sorted by file name.
 
-The canonical form is the deterministic serialization of this normalized transitive `FileDescriptorSet`. The Protobuf SchemaId shall be `sha256_id_hex(canonical_form, 8)`, i.e. the first 8 bytes of SHA-256 over the canonical bytes rendered as lowercase hexadecimal. SchemaId identifies the complete descriptor closure, not a PubSub ConfigurationVersion or value.
+The canonical form is the deterministic serialization of this normalized transitive `FileDescriptorSet`. The Protobuf SchemaId shall be `sha256_id_hex(canonical_form, 8)`, i.e. the first 8 bytes of SHA-256 over the canonical bytes rendered as lowercase hexadecimal. SchemaId identifies the complete descriptor closure for the value schema or service contract, not a service request handle, Session, SecureChannel token or individual value.
 
 ### 5.6.10 Decoder algorithm
 
-A decoder shall first resolve the schema for the declared type and SchemaId, then parse the Protobuf wire bytes using that schema:
+A decoder shall first resolve the schema for the declared type and SchemaId, then parse the Protobuf wire bytes using that schema. In an OPC UA gRPC service call, the schema is the service `.proto` or its equivalent transitive `FileDescriptorSet`; the SchemaId is resolved from the shared service contract or from the xRegistry catalog record selected by call metadata:
 
 * **Schema-driven decoding.** If the concrete `.proto` is pre-compiled, the decoder instantiates the generated per-type message and decodes the body. If it receives a self-describing `FileDescriptorSet`, it shall load the descriptors into a dynamic descriptor pool, find the carried package/message name, construct the dynamic message class, and parse the body. Dynamic decoding shall produce the same canonical value as static per-type decoding.
-* **AddressSpace-driven decoding.** If no descriptor is pre-compiled or announced, the decoder may read the DataType's `DataTypeDefinition` from the AddressSpace and re-run the schema-generation algorithm above. The resulting canonical transitive `FileDescriptorSet` and SchemaId shall match the sender's for the same DataType definition and imports.
+* **Catalog-driven decoding.** If no descriptor is pre-compiled, the decoder may retrieve the service `.proto` or `FileDescriptorSet` from the xRegistry catalog by SchemaId. The retrieved descriptor closure shall hash to the advertised SchemaId before any request or response body is decoded.
+* **AddressSpace-driven decoding.** If no descriptor is pre-compiled or registered in the catalog, the decoder may read the DataType's `DataTypeDefinition` from the AddressSpace and re-run the schema-generation algorithm above. The resulting canonical transitive `FileDescriptorSet` and SchemaId shall match the sender's for the same DataType definition and imports.
 
 After parsing, the decoder applies the OPC UA type rules: integer range checks, matrix value-count checks, null-versus-empty preservation, union single-arm validation, ExtensionObject type resolution and canonical equality of value semantics. Unknown fields may be preserved by a forwarding implementation but shall not change the decoded OPC UA value.
 
@@ -146,7 +147,7 @@ This annex is generated by `tools\gen_type_reference.py`; edit the generator, no
 |---|---|---|---|
 | `boolean_value` | `bool` in `Value.kind` | selected `oneof` arm | BuiltInType `1`. |
 
-SchemaId: `45e459f9fb2c9230`
+SchemaId: `7fc4be352f884550`
 
 ```proto
 message Value {
@@ -175,7 +176,7 @@ Encoded bytes: `0801`
 |---|---|---|---|
 | `sbyte_value` | `int32` in `Value.kind` | selected `oneof` arm | BuiltInType `2`. |
 
-SchemaId: `45e459f9fb2c9230`
+SchemaId: `7fc4be352f884550`
 
 ```proto
 message Value {
@@ -204,7 +205,7 @@ Encoded bytes: `1080ffffffffffffffff01`
 |---|---|---|---|
 | `byte_value` | `uint32` in `Value.kind` | selected `oneof` arm | BuiltInType `3`. |
 
-SchemaId: `45e459f9fb2c9230`
+SchemaId: `7fc4be352f884550`
 
 ```proto
 message Value {
@@ -233,7 +234,7 @@ Encoded bytes: `18ff01`
 |---|---|---|---|
 | `int16_value` | `int32` in `Value.kind` | selected `oneof` arm | BuiltInType `4`. |
 
-SchemaId: `45e459f9fb2c9230`
+SchemaId: `7fc4be352f884550`
 
 ```proto
 message Value {
@@ -262,7 +263,7 @@ Encoded bytes: `208080feffffffffffff01`
 |---|---|---|---|
 | `uint16_value` | `uint32` in `Value.kind` | selected `oneof` arm | BuiltInType `5`. |
 
-SchemaId: `45e459f9fb2c9230`
+SchemaId: `7fc4be352f884550`
 
 ```proto
 message Value {
@@ -291,7 +292,7 @@ Encoded bytes: `28ffff03`
 |---|---|---|---|
 | `int32_value` | `int32` in `Value.kind` | selected `oneof` arm | BuiltInType `6`. |
 
-SchemaId: `45e459f9fb2c9230`
+SchemaId: `7fc4be352f884550`
 
 ```proto
 message Value {
@@ -320,7 +321,7 @@ Encoded bytes: `3080808080f8ffffffff01`
 |---|---|---|---|
 | `uint32_value` | `uint32` in `Value.kind` | selected `oneof` arm | BuiltInType `7`. |
 
-SchemaId: `45e459f9fb2c9230`
+SchemaId: `7fc4be352f884550`
 
 ```proto
 message Value {
@@ -349,7 +350,7 @@ Encoded bytes: `38ffffffff0f`
 |---|---|---|---|
 | `int64_value` | `int64` in `Value.kind` | selected `oneof` arm | BuiltInType `8`. |
 
-SchemaId: `45e459f9fb2c9230`
+SchemaId: `7fc4be352f884550`
 
 ```proto
 message Value {
@@ -378,7 +379,7 @@ Encoded bytes: `4080808080808080808001`
 |---|---|---|---|
 | `uint64_value` | `uint64` in `Value.kind` | selected `oneof` arm | BuiltInType `9`. |
 
-SchemaId: `45e459f9fb2c9230`
+SchemaId: `7fc4be352f884550`
 
 ```proto
 message Value {
@@ -407,7 +408,7 @@ Encoded bytes: `48ffffffffffffffffff01`
 |---|---|---|---|
 | `float_value` | `float` in `Value.kind` | selected `oneof` arm | BuiltInType `10`. |
 
-SchemaId: `45e459f9fb2c9230`
+SchemaId: `7fc4be352f884550`
 
 ```proto
 message Value {
@@ -436,7 +437,7 @@ Encoded bytes: `550000c03f`
 |---|---|---|---|
 | `double_value` | `double` in `Value.kind` | selected `oneof` arm | BuiltInType `11`. |
 
-SchemaId: `45e459f9fb2c9230`
+SchemaId: `7fc4be352f884550`
 
 ```proto
 message Value {
@@ -465,7 +466,7 @@ Encoded bytes: `590100000000000000`
 |---|---|---|---|
 | `string_value` | `string` in `Value.kind` | selected `oneof` arm | BuiltInType `12`. |
 
-SchemaId: `45e459f9fb2c9230`
+SchemaId: `7fc4be352f884550`
 
 ```proto
 message Value {
@@ -495,7 +496,7 @@ Encoded bytes: `62136772c3bcc39f652de4b8ade696872df09f9880`
 |---|---|---|---|
 | `datetime_value` | `sfixed64` in `Value.kind` | selected `oneof` arm | BuiltInType `13`. |
 
-SchemaId: `45e459f9fb2c9230`
+SchemaId: `7fc4be352f884550`
 
 ```proto
 message Value {
@@ -524,7 +525,7 @@ Encoded bytes: `690080209bcb82d801`
 |---|---|---|---|
 | `guid_value` | `bytes` in `Value.kind` | selected `oneof` arm | BuiltInType `14`. |
 
-SchemaId: `45e459f9fb2c9230`
+SchemaId: `7fc4be352f884550`
 
 ```proto
 message Value {
@@ -554,7 +555,7 @@ Encoded bytes: `72100102030405060708090a0b0c0d0e0f10`
 |---|---|---|---|
 | `bytestring_value` | `bytes` in `Value.kind` | selected `oneof` arm | BuiltInType `15`. |
 
-SchemaId: `45e459f9fb2c9230`
+SchemaId: `7fc4be352f884550`
 
 ```proto
 message Value {
@@ -584,7 +585,7 @@ Encoded bytes: `7a080001020304050607`
 |---|---|---|---|
 | `xml_element_value` | `opcua.protobuf.v1.XmlElementValue` in `Value.kind` | selected `oneof` arm | BuiltInType `16`. |
 
-SchemaId: `45e459f9fb2c9230`
+SchemaId: `7fc4be352f884550`
 
 ```proto
 message Value {
@@ -616,7 +617,7 @@ Encoded bytes: `8201100a0e3c6120783d2731273e743c2f613e`
 |---|---|---|---|
 | `node_id_value` | `opcua.protobuf.v1.NodeId` in `Value.kind` | selected `oneof` arm | BuiltInType `17`. |
 
-SchemaId: `45e459f9fb2c9230`
+SchemaId: `7fc4be352f884550`
 
 ```proto
 message Value {
@@ -652,7 +653,7 @@ Encoded bytes: `8a0116080310022a100708090a0b0c0d0e0f10111213141516`
 |---|---|---|---|
 | `expanded_node_id_value` | `opcua.protobuf.v1.ExpandedNodeId` in `Value.kind` | selected `oneof` arm | BuiltInType `18`. |
 
-SchemaId: `45e459f9fb2c9230`
+SchemaId: `7fc4be352f884550`
 
 ```proto
 message Value {
@@ -695,7 +696,7 @@ Encoded bytes: `9201230a07080110012201581216687474703a2f2f6578616d706c652e6f7267
 |---|---|---|---|
 | `status_code_value` | `fixed32` in `Value.kind` | selected `oneof` arm | BuiltInType `19`. |
 
-SchemaId: `45e459f9fb2c9230`
+SchemaId: `7fc4be352f884550`
 
 ```proto
 message Value {
@@ -724,7 +725,7 @@ Encoded bytes: `9d010000ac80`
 |---|---|---|---|
 | `qualified_name_value` | `opcua.protobuf.v1.QualifiedName` in `Value.kind` | selected `oneof` arm | BuiltInType `20`. |
 
-SchemaId: `45e459f9fb2c9230`
+SchemaId: `7fc4be352f884550`
 
 ```proto
 message Value {
@@ -758,7 +759,7 @@ Encoded bytes: `a201080801120454656d70`
 |---|---|---|---|
 | `localized_text_value` | `opcua.protobuf.v1.LocalizedText` in `Value.kind` | selected `oneof` arm | BuiltInType `21`. |
 
-SchemaId: `45e459f9fb2c9230`
+SchemaId: `7fc4be352f884550`
 
 ```proto
 message Value {
@@ -793,7 +794,7 @@ Encoded bytes: `aa010b0a02656e120548656c6c6f`
 |---|---|---|---|
 | `extension_object_value` | `opcua.protobuf.v1.ExtensionObject` in `Value.kind` | selected `oneof` arm | BuiltInType `22`. |
 
-SchemaId: `45e459f9fb2c9230`
+SchemaId: `7fc4be352f884550`
 
 ```proto
 message Value {
@@ -834,7 +835,7 @@ Encoded bytes: `b2014f0a0318b91712480a32747970652e676f6f676c65617069732e636f6d2f
 |---|---|---|---|
 | `data_value` | `opcua.protobuf.v1.DataValue` in `Value.kind` | selected `oneof` arm | BuiltInType `23`. |
 
-SchemaId: `45e459f9fb2c9230`
+SchemaId: `7fc4be352f884550`
 
 ```proto
 message Value {
@@ -881,7 +882,7 @@ Encoded bytes: `ba01250a0608061202302a150000000019e80300000000000020f40329d00700
 |---|---|---|---|
 | `variant_value` | `opcua.protobuf.v1.Variant` in `Value.kind` | selected `oneof` arm | BuiltInType `24`. |
 
-SchemaId: `45e459f9fb2c9230`
+SchemaId: `7fc4be352f884550`
 
 ```proto
 message Value {
@@ -933,7 +934,7 @@ Encoded bytes: `c20118080622140a02020212023001120230021202300312023004`
 |---|---|---|---|
 | `diagnostic_info_value` | `opcua.protobuf.v1.DiagnosticInfo` in `Value.kind` | selected `oneof` arm | BuiltInType `25`. |
 
-SchemaId: `45e459f9fb2c9230`
+SchemaId: `7fc4be352f884550`
 
 ```proto
 message Value {
@@ -978,7 +979,7 @@ Encoded bytes: `ca011b080110022a056f75746572350000ac803a0918052a05696e6e6572`
 |---|---|---|---|
 | `array_value.values` | `repeated Value` | containing `Value.kind`; each element wrapper present | Empty element wrapper is a null element. |
 
-SchemaId: `45e459f9fb2c9230`
+SchemaId: `7fc4be352f884550`
 
 ```proto
 message ArrayValue {
@@ -1019,7 +1020,7 @@ Encoded bytes: `d2010b0a036201610a000a026200`
 | `matrix_value.dimensions` | `repeated int32` | present matrix | Row-major dimensions. |
 | `matrix_value.values` | `repeated Value` | present matrix | Count shall equal product of dimensions. |
 
-SchemaId: `45e459f9fb2c9230`
+SchemaId: `7fc4be352f884550`
 
 ```proto
 message MatrixValue {
@@ -1067,7 +1068,7 @@ Encoded bytes: `da01300a020202120959000000000000f03f120959000000000000f87f120959
 | `x` | `Double` = 1 | present for mandatory fields | DataTypeDefinition field `X`. |
 | `y` | `Double` = 2 | present for mandatory fields | DataTypeDefinition field `Y`. |
 
-SchemaId: `22dadd90f3efc6e5`
+SchemaId: `7d8f4f0cab37e77f`
 
 ```proto
 // Generated by tools/build_schemas.py. Do not edit.
@@ -1109,7 +1110,7 @@ Encoded bytes: `09000000000000f43f110000000000000cc0`
 | `email` | `String` = 3 | optional | DataTypeDefinition field `Email`. |
 | `nickname` | `String` = 4 | optional | DataTypeDefinition field `Nickname`. |
 
-SchemaId: `03ee97bc2373eae7`
+SchemaId: `1d957f6758d8d1a5`
 
 ```proto
 // Generated by tools/build_schemas.py. Do not edit.
@@ -1161,7 +1162,7 @@ Encoded bytes: `0a040a02437910051a050a03634078`
 | `as_text` | `String` = 2 | oneof arm | DataTypeDefinition field `AsText`. |
 | `as_point` | `Point` = 3 | oneof arm | DataTypeDefinition field `AsPoint`. |
 
-SchemaId: `ebc9764b1ab0a50e`
+SchemaId: `2eec643ca40196f0`
 
 ```proto
 // Generated by tools/build_schemas.py. Do not edit.
@@ -1209,7 +1210,7 @@ Encoded bytes: `1a12090000000000002240110000000000002040`
 | `tags` | `Array<String>` = 3 | present for mandatory fields | DataTypeDefinition field `Tags`. |
 | `payload` | `ExtensionObject` = 4 | present for mandatory fields | DataTypeDefinition field `Payload`. |
 
-SchemaId: `f343b115cc5a8074`
+SchemaId: `30bfcd3d6d9f9b43`
 
 ```proto
 // Generated by tools/build_schemas.py. Do not edit.

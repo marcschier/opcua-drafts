@@ -4,6 +4,7 @@ import hashlib
 import copy
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -33,6 +34,12 @@ EXAMPLE_NAMES = [
     "matrix_double_2x2_special", "struct_person_min", "union_point", "envelope", "variant_matrix_int",
     "variant_extobj", "datavalue_full", "diaginfo_nested",
 ]
+
+DOC_SCHEMA_DOCS = [
+    ROOT / "OPC-UA-Part14-Avro-MessageMapping.md",
+    ROOT / "OPC-UA-Part6-Avro-DataEncoding.md",
+]
+DOC_SCHEMA_INTRO_RE = re.compile(r"`schemas\\([^`]+\.avsc)`")
 
 
 def write_examples() -> None:
@@ -101,6 +108,81 @@ def _raw_schema_registry() -> dict[str, object]:
         if path.name != "opcua.builtins.avsc":
             schemas.append(json.loads(path.read_text(encoding="utf-8")))
     return schema_support.build_named_schema_registry(schemas)
+
+
+def _raw_schema_registry_excluding(excluded_fullname: str | None) -> dict[str, object]:
+    schemas: list[object] = []
+    schemas.extend(json.loads((SCHEMAS / "opcua.builtins.avsc").read_text(encoding="utf-8")))
+    for path in sorted(SCHEMAS.glob("*.avsc")):
+        if path.name == "opcua.builtins.avsc":
+            continue
+        schema = json.loads(path.read_text(encoding="utf-8"))
+        if isinstance(schema, dict) and schema_support.schema_fullname(schema) == excluded_fullname:
+            continue
+        schemas.append(schema)
+    return schema_support.build_named_schema_registry(schemas)
+
+
+def _canonical_schema_form(schema: object, excluded_fullname: str | None) -> str:
+    registry = _raw_schema_registry_excluding(excluded_fullname)
+    return to_parsing_canonical_form(parse_schema(copy.deepcopy(schema), named_schemas=registry))
+
+
+def _doc_schema_blocks(doc: Path) -> list[tuple[int, str, str]]:
+    lines = doc.read_text(encoding="utf-8").splitlines()
+    blocks: list[tuple[int, str, str]] = []
+    for i, line in enumerate(lines):
+        schema_paths = DOC_SCHEMA_INTRO_RE.findall(line)
+        if not schema_paths:
+            continue
+        j = i + 1
+        while j < len(lines) and not lines[j].strip():
+            j += 1
+        if j >= len(lines) or lines[j].strip() != "```json":
+            continue
+        k = j + 1
+        while k < len(lines) and lines[k].strip() != "```":
+            k += 1
+        if k >= len(lines):
+            blocks.append((i + 1, schema_paths[-1], ""))
+            continue
+        blocks.append((i + 1, schema_paths[-1], "\n".join(lines[j + 1:k])))
+    return blocks
+
+
+def validate_doc_schema_blocks() -> tuple[list[str], int]:
+    failures: list[str] = []
+    block_count = 0
+    for doc in DOC_SCHEMA_DOCS:
+        blocks = _doc_schema_blocks(doc)
+        block_count += len(blocks)
+        if not blocks:
+            failures.append(f"doc-schema {doc.name}: no schemas\\*.avsc JSON blocks found")
+            continue
+        for line_no, schema_name, doc_json in blocks:
+            schema_path = SCHEMAS / schema_name
+            label = f"doc-schema {doc.name}:{line_no} schemas\\{schema_name}"
+            if not schema_path.exists():
+                failures.append(f"{label}: file does not exist")
+                continue
+            try:
+                doc_schema = json.loads(doc_json)
+            except Exception as exc:
+                failures.append(f"{label}: doc JSON does not parse: {exc}")
+                continue
+            try:
+                published_schema = json.loads(schema_path.read_text(encoding="utf-8"))
+                excluded_fullname = schema_support.schema_fullname(published_schema) if isinstance(published_schema, dict) else None
+                doc_canonical = _canonical_schema_form(doc_schema, excluded_fullname)
+                published_canonical = _canonical_schema_form(published_schema, excluded_fullname)
+            except Exception as exc:
+                failures.append(f"{label}: schema parse failed: {exc}")
+                continue
+            if doc_canonical != published_canonical:
+                doc_id = fingerprint.avro_schema_id_hex(doc_canonical.encode("utf-8"))
+                published_id = fingerprint.avro_schema_id_hex(published_canonical.encode("utf-8"))
+                failures.append(f"{label}: doc schema differs from published .avsc ({doc_id} != {published_id})")
+    return failures, block_count
 
 
 def _self_contained_schemaid(schema: object, registry: dict[str, object]) -> str:
@@ -228,7 +310,13 @@ def main() -> int:
         subprocess.run([sys.executable, str(TOOLS / "schema_handshake_demo.py")], cwd=ROOT, check=True)
     except subprocess.CalledProcessError as exc:
         failures.append(f"schema handshake demo failed: exit {exc.returncode}")
+    try:
+        subprocess.run([sys.executable, str(TOOLS / "action_discovery_demo.py")], cwd=ROOT, check=True)
+    except subprocess.CalledProcessError as exc:
+        failures.append(f"action/discovery demo failed: exit {exc.returncode}")
     failures.extend(validate_schemas())
+    doc_failures, doc_block_count = validate_doc_schema_blocks()
+    failures.extend(doc_failures)
     failures.extend(validate_nested_schemaid_gate())
     failures.extend(validate_roundtrip())
     failures.extend(validate_published_schema_conformance())
@@ -245,7 +333,7 @@ def main() -> int:
     for f in failures:
         print("FAIL", f)
     schemaid_count = len(json.loads((SCHEMAS / "schemaids.json").read_text(encoding="utf-8"))) if (SCHEMAS / "schemaids.json").exists() else 0
-    print(f"validate_local: schemas={len(list(SCHEMAS.glob('*.avsc')))} schemaids={schemaid_count} corpus={len(CORPUS)} examples={len(EXAMPLE_NAMES)} type_reference=31 handshake=ok nested_schemaid=ok; {len(failures)} failures")
+    print(f"validate_local: schemas={len(list(SCHEMAS.glob('*.avsc')))} schemaids={schemaid_count} corpus={len(CORPUS)} examples={len(EXAMPLE_NAMES)} type_reference=31 handshake=ok nested_schemaid=ok doc_schema_blocks={doc_block_count} action_discovery=ok; {len(failures)} failures")
     return 1 if failures else 0
 
 if __name__ == "__main__":
