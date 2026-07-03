@@ -95,7 +95,7 @@
       <Reference ReferenceType="i=40">i=68</Reference>
       <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5008</Reference>
     </References>
-    <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">3</uax:Int32></Value>
+    <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">8</uax:Int32></Value>
   </UAVariable>
   <UAVariable NodeId="ns=1;i=5011" BrowseName="1:BrowsePath" ParentNodeId="ns=1;i=5008" DataType="i=540">
     <DisplayName>BrowsePath</DisplayName>
@@ -134,7 +134,7 @@
       <Reference ReferenceType="i=40">i=68</Reference>
       <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5013</Reference>
     </References>
-    <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">3</uax:Int32></Value>
+    <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">8</uax:Int32></Value>
   </UAVariable>
   <UAVariable NodeId="ns=1;i=5016" BrowseName="1:BrowsePath" ParentNodeId="ns=1;i=5013" DataType="i=540">
     <DisplayName>BrowsePath</DisplayName>
@@ -375,7 +375,7 @@
       <Reference ReferenceType="i=40">i=68</Reference>
       <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5044</Reference>
     </References>
-    <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">5</uax:Int32></Value>
+    <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">2</uax:Int32></Value>
   </UAVariable>
   <UAVariable NodeId="ns=1;i=5047" BrowseName="1:BrowsePath" ParentNodeId="ns=1;i=5044" DataType="i=540">
     <DisplayName>BrowsePath</DisplayName>

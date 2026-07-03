@@ -23,7 +23,7 @@
     "security": [
       "auto_sc"
     ],
-    "base": "opc.tcp://opcua.example.com:4840/UA/Robotics",
+    "base": "opc.tcp://opcua.example.com:4840",
     "sb:scenario": "http://opcfoundation.org/UA/PubSub/Scenarios/Observability",
     "sb:dataSetClassId": "urn:uuid:ad751dd8-3b2d-5599-8cce-4be80dc0f8b8",
     "sb:cardinalityPath": "/MotionDevices/<MotionDeviceIdentifier>",
@@ -496,7 +496,7 @@
     "security": [
       "auto_sc"
     ],
-    "base": "opc.tcp://opcua.example.com:4840/UA/Robotics",
+    "base": "opc.tcp://opcua.example.com:4840",
     "sb:scenario": "http://opcfoundation.org/UA/PubSub/Scenarios/Observability",
     "sb:dataSetClassId": "urn:uuid:ad751dd8-3b2d-5599-8cce-4be80dc0f8b8",
     "sb:cardinalityPath": "/MotionDevices/<MotionDeviceIdentifier>",
@@ -833,7 +833,7 @@
     "security": [
       "auto_sc"
     ],
-    "base": "opc.tcp://opcua.example.com:4840/UA/Robotics",
+    "base": "opc.tcp://opcua.example.com:4840",
     "sb:scenario": "http://opcfoundation.org/UA/PubSub/Scenarios/PredictiveMaintenance",
     "sb:dataSetClassId": "urn:uuid:fccc95e4-e8b3-5b20-82b1-c5fdcb30f53a",
     "sb:cardinalityPath": "/Controllers/<ControllerIdentifier>",
@@ -992,7 +992,7 @@
     "security": [
       "auto_sc"
     ],
-    "base": "opc.tcp://opcua.example.com:4840/UA/Robotics",
+    "base": "opc.tcp://opcua.example.com:4840",
     "sb:scenario": "http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection",
     "sb:dataSetClassId": "urn:uuid:4fa76f85-fefb-5a6d-a699-e5e3298c769e",
     "sb:cardinalityPath": "/MotionDevices/<MotionDeviceIdentifier>",
@@ -1407,7 +1407,7 @@
     "security": [
       "auto_sc"
     ],
-    "base": "opc.tcp://opcua.example.com:4840/UA/Robotics",
+    "base": "opc.tcp://opcua.example.com:4840",
     "sb:scenario": "http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection",
     "sb:dataSetClassId": "urn:uuid:4fa76f85-fefb-5a6d-a699-e5e3298c769e",
     "sb:cardinalityPath": "/MotionDevices/<MotionDeviceIdentifier>",
@@ -1694,7 +1694,7 @@
     "security": [
       "auto_sc"
     ],
-    "base": "opc.tcp://opcua.example.com:4840/UA/Robotics",
+    "base": "opc.tcp://opcua.example.com:4840",
     "sb:scenario": "http://opcfoundation.org/UA/PubSub/Scenarios/AlarmAndEventDistribution",
     "sb:dataSetClassId": "urn:uuid:47b98390-ae81-5a82-82e3-39258ce1a49b",
     "events": {
@@ -1775,7 +1775,7 @@
     "security": [
       "auto_sc"
     ],
-    "base": "opc.tcp://opcua.example.com:4840/UA/Robotics",
+    "base": "opc.tcp://opcua.example.com:4840",
     "sb:scenario": "http://opcfoundation.org/UA/PubSub/Scenarios/FleetAndCompliance",
     "sb:dataSetClassId": "urn:uuid:f366c644-8670-57a3-b838-dd492b1f82b0",
     "properties": {

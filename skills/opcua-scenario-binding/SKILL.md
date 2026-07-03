@@ -66,7 +66,7 @@ Per companion spec (see the worked examples under `core-specs/scenario-binding/e
   `IScenarioBoundType` and exposing one `ScenarioBindingGroup` per scenario directly on
   the instance, with the `ScenarioBinding`/`BoundItem` instances nested below each group
   and each group carrying `Realizes` to its `ScenarioProfile` (see "Two-level authoring").
-- `OPC-UA-<Domain>-PubSub-Scenario-Binding-Addendum.md` — the companion-spec **addendum**:
+- `OPC-UA-<Domain>-Scenario-Bindings-Addendum.md` — the companion-spec **addendum**:
   scope, the per-scenario annex tables, and diagrams showing where the bindings live on the
   theoretical instance.
 - `Opc.Ua.<Domain>.ScenarioBinding.td.json` — an **optional W3C WoT Thing Description** (a single

@@ -24,7 +24,7 @@
   "security": [
     "auto_sc"
   ],
-  "base": "opc.tcp://opcua.example.com:4840/UA/Pumps",
+  "base": "opc.tcp://opcua.example.com:4840",
   "sb:dimensions": [
     {
       "name": "service.name",

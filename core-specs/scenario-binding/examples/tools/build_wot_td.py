@@ -219,7 +219,10 @@ class TDBuilder:
             "sb:namespaces": list(self.namespaces),
             "securityDefinitions": {"auto_sc": {"scheme": "auto"}},
             "security": ["auto_sc"],
-            "base": f'{ENDPOINT}/UA/{self.domain}',
+            # base carries no resource path so a leading-slash form href "/?id=..." resolves per
+            # RFC 3986 to "opc.tcp://host:port/?id=..." (matching the OPC 10101 href BNF) without
+            # dropping a resource segment.
+            "base": ENDPOINT,
         }
 
 
@@ -292,13 +295,13 @@ def build_collection(d):
             continue
         card_segs = card.split("/")
         for names, ctx in _expand(card_segs, {}, topo):
-            anchor = names[-1] if names else d["instanceName"]
-            things.append(_collection_thing(d, sb, anchor, ctx, topo, card_segs))
+            things.append(_collection_thing(d, sb, names, ctx, topo, card_segs))
     return things
 
 
-def _collection_thing(d, sb, anchor, ctx, topo, card_segs=None):
+def _collection_thing(d, sb, anchor_names, ctx, topo, card_segs=None):
     b = TDBuilder(d)
+    anchor = anchor_names[-1] if anchor_names else None
     scen_short = sb["scenarioUri"].rsplit("/", 1)[-1]
     is_event = sb.get("contentKind", "DataItems") == "Events"
     label = anchor or d["instanceName"]
@@ -329,7 +332,7 @@ def _collection_thing(d, sb, anchor, ctx, topo, card_segs=None):
         # substitute the cardinality anchor prefix with the concrete instance; expand sub-anchor
         # placeholders into concrete fields using the topology counts
         below = seg_names[len(card_segs):] if card_segs else seg_names
-        prefix = ("/" + "/".join(names_for_prefix(card_segs, anchor))) if card_segs else ""
+        prefix = ("/" + "/".join(names_for_prefix(card_segs, anchor_names))) if card_segs else ""
         for pnames, _c in _expand(below, ctx, topo):
             concrete = []
             pi = 0
@@ -354,12 +357,14 @@ def _collection_thing(d, sb, anchor, ctx, topo, card_segs=None):
     return td
 
 
-def names_for_prefix(card_segs, anchor):
-    """Concrete names for the cardinality-anchor prefix (last placeholder -> anchor)."""
-    out = []
+def names_for_prefix(card_segs, anchor_names):
+    """Concrete names for the cardinality-anchor prefix: substitute each placeholder in the
+    cardinality path positionally with its matched instance (supports multi-placeholder paths)."""
+    out, pi = [], 0
     for s in card_segs:
         if s.startswith("<") and s.endswith(">"):
-            out.append(anchor)
+            out.append(anchor_names[pi])
+            pi += 1
         else:
             out.append(s)
     return out

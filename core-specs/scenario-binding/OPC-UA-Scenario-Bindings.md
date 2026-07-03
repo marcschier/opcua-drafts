@@ -721,7 +721,7 @@ The generated Pumps Thing Description is [`examples/pumps/Opc.Ua.Pumps.ScenarioB
   "@type": "uav:object",
   "id": "urn:uuid:c709a09c-2a77-5862-b8e7-1c6a0521e9d8",
   "title": "ExamplePump",
-  "base": "opc.tcp://opcua.example.com:4840/UA/Pumps",
+  "base": "opc.tcp://opcua.example.com:4840",
   "securityDefinitions": {
     "auto_sc": {
       "scheme": "auto"
@@ -842,7 +842,7 @@ The generated Robotics Thing Description is [`examples/robotics/Opc.Ua.Robotics.
   "@type": "uav:object",
   "id": "urn:uuid:385fd9f0-0607-519a-8f4d-c03d4897abf2",
   "title": "ExampleRobotSystem · Observability · Robot_1",
-  "base": "opc.tcp://opcua.example.com:4840/UA/Robotics",
+  "base": "opc.tcp://opcua.example.com:4840",
   "securityDefinitions": {
     "auto_sc": {
       "scheme": "auto"

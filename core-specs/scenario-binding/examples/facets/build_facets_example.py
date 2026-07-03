@@ -24,7 +24,7 @@ import xml.sax.saxutils as sx
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, "..", "tools"))
 from nodeset_util import NodeSetDB  # noqa: E402
-from build_bindings import DATASET_CLASS_NS, FIELD_ID_NS  # noqa: E402  (shared formula)
+from build_bindings import DATASET_CLASS_NS, FIELD_ID_NS, KIND  # noqa: E402  (shared formula + enum)
 
 UA = "http://opcfoundation.org/UA/"
 BASE = "http://opcfoundation.org/UA/FacetDemo/"
@@ -35,7 +35,8 @@ MAJOR = 1
 
 # provisional base-spec type ids (see the base model)
 T_IBOUND, T_GROUP, T_BINDING, T_BOUNDVAR = 60016, 60018, 60011, 60013
-KIND = {"Telemetry": 0, "Identity": 3, "Maintenance": 5, "Status": 1}
+# Kind labels map to the canonical BoundItemKindEnum (imported from build_bindings) so this
+# example can never diverge from the normative enum.
 
 
 def class_id(scenario_uri, applies_type):
@@ -51,8 +52,8 @@ def field_id(scenario_uri, applies_type, field):
 BASE_BINDINGS = {
     "DeviceObservability": {
         "scenario": OBS, "target": "DeviceType", "axis": "ObjectType (subtype base)",
-        "items": [("Manufacturer", "/Manufacturer", "Identity"),
-                  ("SerialNumber", "/SerialNumber", "Identity"),
+        "items": [("Manufacturer", "/Manufacturer", "Identification"),
+                  ("SerialNumber", "/SerialNumber", "Identification"),
                   ("DeviceHealth", "/DeviceHealth", "Status")]},
     "LocationObservability": {
         "scenario": OBS, "target": "LocationAddInType", "axis": "AddIn (structural facet)",
@@ -61,7 +62,7 @@ BASE_BINDINGS = {
                   ("Altitude", "/Altitude", "Telemetry")]},
     "Maintenance": {
         "scenario": MAINT, "target": "IMaintenanceFacetType", "axis": "Interface (contract facet)",
-        "items": [("LastMaintenanceDate", "/LastMaintenanceDate", "Maintenance")]},
+        "items": [("LastMaintenanceDate", "/LastMaintenanceDate", "Configuration")]},
 }
 
 # Derived bindings: only DELTA fields; `extends` names base bindings + the mount path the base
