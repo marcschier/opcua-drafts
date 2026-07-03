@@ -11,7 +11,9 @@ from fastavro import parse_schema, schemaless_reader
 
 ROOT = Path(__file__).resolve().parents[1]
 TOOLS = ROOT / "tools"
+STD = ROOT.parents[1] / "avro-encoding"
 SCHEMAS = ROOT / "schemas"
+STD_SCHEMAS = STD / "schemas"
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "_common")))
 from opcua_enc import types as t, values as v
@@ -33,7 +35,7 @@ def _sv(ty: t.Struct, fields: dict[str, Any]) -> v.StructValue:
 
 def _fresh_named_schemas() -> dict[str, object]:
     named: dict[str, object] = {}
-    for schema in json.loads((SCHEMAS / "opcua.builtins.avsc").read_text(encoding="utf-8")):
+    for schema in json.loads((STD_SCHEMAS / "opcua.builtins.avsc").read_text(encoding="utf-8")):
         parse_schema(schema, named_schemas=named)
     return named
 

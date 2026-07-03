@@ -9,9 +9,9 @@ Central schema sharing for the schema-based OPC UA DataEncodings (Avro, Protobuf
 
 | Command | Purpose |
 |---|---|
-| `python core-specs/xregistry-catalog/tools/build_catalog.py [NodeSet.xml]` | Emit `examples/opcua-catalog.xregistry.json` from a NodeSet. Generates the JSON Schema documents itself and embeds the Avro/Protobuf/Arrow documents from the sibling `*-encoding/schemas/` folders when present (else references them by `schemaurl`). |
-| `python core-specs/xregistry-catalog/tools/jsonschema_gen.py` | (library) OPC UA DataType → JSON Schema (Draft 2020-12). |
-| `python core-specs/xregistry-catalog/tools/validate_local.py` | Structural conformance of the catalog: required attributes, unique ids, allowed formats, embedded documents parse, JSON Schemas valid (needs `pip install jsonschema`). |
+| `python core-specs/extras/xregistry-catalog/tools/build_catalog.py [NodeSet.xml]` | Emit `examples/opcua-catalog.xregistry.json` from a NodeSet. Generates the JSON Schema documents itself and embeds the Avro/Protobuf/Arrow documents from the sibling `../<enc>-encoding/schemas/` folders when present (else references them by `schemaurl`). |
+| `python core-specs/extras/xregistry-catalog/tools/jsonschema_gen.py` | (library) OPC UA DataType → JSON Schema (Draft 2020-12). |
+| `python core-specs/extras/xregistry-catalog/tools/validate_local.py` | Structural conformance of the catalog: required attributes, unique ids, allowed formats, embedded documents parse, JSON Schemas valid (needs `pip install jsonschema`). |
 
 Re-run `build_catalog.py` after the three encoding folders have generated their schemas to embed the real Avro/Protobuf/Arrow documents (rather than URL references).
 

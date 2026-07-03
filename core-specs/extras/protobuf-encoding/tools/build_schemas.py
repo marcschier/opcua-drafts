@@ -8,6 +8,8 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
 SCHEMAS = ROOT / "schemas"
+STD = (HERE / ".." / ".." / ".." / "protobuf-encoding").resolve()
+STD_SCHEMAS = STD / "schemas"
 sys.path.insert(0, os.path.abspath(HERE / ".." / ".." / "_common"))
 from opcua_enc import corpus, nodeset, types as t  # noqa: E402
 
@@ -141,7 +143,7 @@ def _write_type_file(name: str, body: str, imports: set[str] | None = None) -> N
 def collect_types() -> tuple[list[t.Struct], list[t.Enumeration]]:
     structs = list(corpus.STRUCT_TYPES)
     enums = list(corpus.ENUM_TYPES)
-    ns_path = ROOT.parent / "pubsub-binding" / "Opc.Ua.PubSubBinding.NodeSet2.xml"
+    ns_path = STD.parent / "pubsub-binding" / "Opc.Ua.PubSubBinding.NodeSet2.xml"
     if ns_path.exists():
         res = nodeset.load_datatypes(str(ns_path))
         by_struct = {s.name: s for s in structs}
@@ -157,15 +159,16 @@ def collect_types() -> tuple[list[t.Struct], list[t.Enumeration]]:
 
 def main() -> int:
     SCHEMAS.mkdir(parents=True, exist_ok=True)
+    STD_SCHEMAS.mkdir(parents=True, exist_ok=True)
     for old in SCHEMAS.glob("*.proto"):
         old.unlink()
-    (SCHEMAS / "opcua_builtins.proto").write_text(HEADER + BUILTINS_PROTO, encoding="utf-8", newline="\n")
+    (STD_SCHEMAS / "opcua_builtins.proto").write_text(HEADER + BUILTINS_PROTO, encoding="utf-8", newline="\n")
     structs, enums = collect_types()
     for enum in sorted(enums, key=lambda e: e.name):
         _write_type_file(enum.name, _enum_proto(enum))
     for st in sorted(structs, key=lambda s: s.name):
         _write_type_file(st.name, _struct_proto(st), _deps_for_struct(st))
-    print(f"wrote {1 + len(structs) + len(enums)} proto files to {SCHEMAS}")
+    print(f"wrote opcua_builtins.proto to {STD_SCHEMAS} and {len(structs) + len(enums)} proto files to {SCHEMAS}")
     return 0
 
 

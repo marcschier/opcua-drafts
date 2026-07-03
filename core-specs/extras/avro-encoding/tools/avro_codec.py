@@ -18,6 +18,8 @@ from opcua_enc import values as v
 INT32_MOD = 2**32
 INT64_MOD = 2**64
 SCHEMAS = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "schemas"))
+STD = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..", "avro-encoding"))
+STD_SCHEMAS = os.path.join(STD, "schemas")
 
 
 class TypeRegistry:
@@ -63,7 +65,7 @@ def _unsigned64(x: int) -> int:
 @lru_cache(maxsize=256)
 def _load_builtin_named_schemas() -> dict[str, Any]:
     named: dict[str, Any] = {}
-    with open(os.path.join(SCHEMAS, "opcua.builtins.avsc"), "r", encoding="utf-8") as f:
+    with open(os.path.join(STD_SCHEMAS, "opcua.builtins.avsc"), "r", encoding="utf-8") as f:
         for schema in json.load(f):
             parse_schema(schema, named_schemas=named)
     pending = [

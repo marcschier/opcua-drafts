@@ -14,6 +14,9 @@ from fastavro.schema import to_parsing_canonical_form
 
 ROOT = Path(__file__).resolve().parents[1]
 TOOLS = ROOT / "tools"
+STD = ROOT.parents[1] / "avro-encoding"
+SCHEMAS = ROOT / "schemas"
+STD_SCHEMAS = STD / "schemas"
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "_common")))
 from opcua_enc import corpus, fingerprint, types as t, values as v
@@ -55,16 +58,15 @@ def _schema_info(ty: t.Type) -> SchemaInfo:
 @lru_cache(maxsize=1)
 def _schema_registry() -> dict[str, object]:
     schemas: list[object] = []
-    schemas.extend(json.loads((ROOT / "schemas" / "opcua.builtins.avsc").read_text(encoding="utf-8")))
-    for path in sorted((ROOT / "schemas").glob("*.avsc")):
-        if path.name != "opcua.builtins.avsc":
-            schemas.append(json.loads(path.read_text(encoding="utf-8")))
+    schemas.extend(json.loads((STD_SCHEMAS / "opcua.builtins.avsc").read_text(encoding="utf-8")))
+    for path in sorted(SCHEMAS.glob("*.avsc")):
+        schemas.append(json.loads(path.read_text(encoding="utf-8")))
     return schema_support.build_named_schema_registry(schemas)
 
 
 def _raw_schema(ty: t.Type) -> object:
     if isinstance(ty, (t.Struct, t.Enumeration)):
-        return json.loads((ROOT / "schemas" / f"{schema_support.avro_name(ty.name)}.avsc").read_text(encoding="utf-8"))
+        return json.loads((SCHEMAS / f"{schema_support.avro_name(ty.name)}.avsc").read_text(encoding="utf-8"))
     return schema_support.schema_for_type(ty, top=True)
 
 

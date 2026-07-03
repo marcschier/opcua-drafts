@@ -15,9 +15,12 @@ from fastavro import parse_schema
 
 ROOT = Path(__file__).resolve().parents[1]
 TOOLS = ROOT / "tools"
+STD = ROOT.parents[1] / "avro-encoding"
 SCHEMAS = ROOT / "schemas"
+STD_SCHEMAS = STD / "schemas"
+BUILTINS_SCHEMA = STD_SCHEMAS / "opcua.builtins.avsc"
 SCHEMAIDS = SCHEMAS / "schemaids.json"
-PART6 = ROOT / "OPC-UA-Part6-Avro-DataEncoding.md"
+PART6 = STD / "OPC-UA-Part6-Avro-DataEncoding.md"
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "_common")))
 from opcua_enc import corpus, hexdump, types as t, values as v
@@ -71,7 +74,7 @@ COMPOSITE_CASES = [
 
 def _fresh_named_schemas() -> dict[str, object]:
     named: dict[str, object] = {}
-    for schema in json.loads((SCHEMAS / "opcua.builtins.avsc").read_text(encoding="utf-8")):
+    for schema in json.loads(BUILTINS_SCHEMA.read_text(encoding="utf-8")):
         parse_schema(schema, named_schemas=named)
     return named
 
@@ -117,7 +120,7 @@ def raw_fragment(ty: t.Type) -> object:
         }.get(ty.id)
         if name:
             full = schema_support.fullname(name)
-            for s in json.loads((SCHEMAS / "opcua.builtins.avsc").read_text(encoding="utf-8")):
+            for s in json.loads(BUILTINS_SCHEMA.read_text(encoding="utf-8")):
                 ns = s.get("namespace")
                 fn = f"{ns}.{s['name']}" if ns else s["name"]
                 if fn == full:
@@ -247,7 +250,7 @@ def reference_cases() -> list[tuple[str, corpus.Case, str]]:
 
 def generated_content() -> str:
     lines = [
-        "The following reference material is generated from the published `.avsc` schemas and the shared conformance corpus. Do not edit it by hand; run `python tools\\gen_type_reference.py`.",
+        "The following reference material is generated from the published `.avsc` schemas and the shared conformance corpus. Do not edit it by hand; run `python ..\\extras\\avro-encoding\\tools\\gen_type_reference.py`.",
         "",
     ]
     for title, case, note in reference_cases():
@@ -280,7 +283,7 @@ def main() -> int:
     new = inject(old, content)
     if args.check:
         if old != new:
-            print("type reference drift: run python tools\\gen_type_reference.py")
+            print("type reference drift: run python ..\\extras\\avro-encoding\\tools\\gen_type_reference.py")
             return 1
         validate_annotations()
         print(f"type reference: {len(reference_cases())} sections checked")

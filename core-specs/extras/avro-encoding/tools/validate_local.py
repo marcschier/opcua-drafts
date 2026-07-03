@@ -16,7 +16,10 @@ from fastavro.schema import to_parsing_canonical_form
 
 ROOT = Path(__file__).resolve().parents[1]
 TOOLS = ROOT / "tools"
+STD = ROOT.parents[1] / "avro-encoding"
 SCHEMAS = ROOT / "schemas"
+STD_SCHEMAS = STD / "schemas"
+BUILTINS_SCHEMA = STD_SCHEMAS / "opcua.builtins.avsc"
 EXAMPLES = ROOT / "examples"
 
 sys.path.insert(0, str(ROOT.parents[0] / "_common"))
@@ -36,10 +39,10 @@ EXAMPLE_NAMES = [
 ]
 
 DOC_SCHEMA_DOCS = [
-    ROOT / "OPC-UA-Part14-Avro-MessageMapping.md",
-    ROOT / "OPC-UA-Part6-Avro-DataEncoding.md",
+    STD / "OPC-UA-Part14-Avro-MessageMapping.md",
+    STD / "OPC-UA-Part6-Avro-DataEncoding.md",
 ]
-DOC_SCHEMA_INTRO_RE = re.compile(r"`schemas\\([^`]+\.avsc)`")
+DOC_SCHEMA_INTRO_RE = re.compile(r"`((?:\.\.[/\\]extras[/\\]avro-encoding[/\\])?schemas[/\\]([^`]+\.avsc))`")
 
 
 def write_examples() -> None:
@@ -61,9 +64,12 @@ def snapshot_examples() -> dict[str, str]:
 
 
 def snapshot_schemas() -> dict[str, str]:
-    if not SCHEMAS.exists():
-        return {}
-    return {str(p.relative_to(SCHEMAS)): hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(SCHEMAS.glob("**/*")) if p.is_file()}
+    out: dict[str, str] = {}
+    if BUILTINS_SCHEMA.exists():
+        out[f"standard/schemas/{BUILTINS_SCHEMA.name}"] = hashlib.sha256(BUILTINS_SCHEMA.read_bytes()).hexdigest()
+    if SCHEMAS.exists():
+        out.update({f"extras/schemas/{p.relative_to(SCHEMAS)}": hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(SCHEMAS.glob("**/*")) if p.is_file()})
+    return out
 
 
 def snapshot_schemaids() -> str | None:
@@ -73,7 +79,7 @@ def snapshot_schemaids() -> str | None:
 
 def _fresh_named_schemas() -> dict[str, object]:
     named: dict[str, object] = {}
-    for schema in json.loads((SCHEMAS / "opcua.builtins.avsc").read_text(encoding="utf-8")):
+    for schema in json.loads(BUILTINS_SCHEMA.read_text(encoding="utf-8")):
         parse_schema(schema, named_schemas=named)
     return named
 
@@ -103,19 +109,16 @@ def fresh_published_schema(ty: t.Type) -> object:
 
 def _raw_schema_registry() -> dict[str, object]:
     schemas: list[object] = []
-    schemas.extend(json.loads((SCHEMAS / "opcua.builtins.avsc").read_text(encoding="utf-8")))
+    schemas.extend(json.loads(BUILTINS_SCHEMA.read_text(encoding="utf-8")))
     for path in sorted(SCHEMAS.glob("*.avsc")):
-        if path.name != "opcua.builtins.avsc":
-            schemas.append(json.loads(path.read_text(encoding="utf-8")))
+        schemas.append(json.loads(path.read_text(encoding="utf-8")))
     return schema_support.build_named_schema_registry(schemas)
 
 
 def _raw_schema_registry_excluding(excluded_fullname: str | None) -> dict[str, object]:
     schemas: list[object] = []
-    schemas.extend(json.loads((SCHEMAS / "opcua.builtins.avsc").read_text(encoding="utf-8")))
+    schemas.extend(json.loads(BUILTINS_SCHEMA.read_text(encoding="utf-8")))
     for path in sorted(SCHEMAS.glob("*.avsc")):
-        if path.name == "opcua.builtins.avsc":
-            continue
         schema = json.loads(path.read_text(encoding="utf-8"))
         if isinstance(schema, dict) and schema_support.schema_fullname(schema) == excluded_fullname:
             continue
@@ -128,13 +131,14 @@ def _canonical_schema_form(schema: object, excluded_fullname: str | None) -> str
     return to_parsing_canonical_form(parse_schema(copy.deepcopy(schema), named_schemas=registry))
 
 
-def _doc_schema_blocks(doc: Path) -> list[tuple[int, str, str]]:
+def _doc_schema_blocks(doc: Path) -> list[tuple[int, str, str, str]]:
     lines = doc.read_text(encoding="utf-8").splitlines()
-    blocks: list[tuple[int, str, str]] = []
+    blocks: list[tuple[int, str, str, str]] = []
     for i, line in enumerate(lines):
-        schema_paths = DOC_SCHEMA_INTRO_RE.findall(line)
-        if not schema_paths:
+        matches = DOC_SCHEMA_INTRO_RE.findall(line)
+        if not matches:
             continue
+        schema_ref, schema_name = matches[-1]
         j = i + 1
         while j < len(lines) and not lines[j].strip():
             j += 1
@@ -144,10 +148,19 @@ def _doc_schema_blocks(doc: Path) -> list[tuple[int, str, str]]:
         while k < len(lines) and lines[k].strip() != "```":
             k += 1
         if k >= len(lines):
-            blocks.append((i + 1, schema_paths[-1], ""))
+            blocks.append((i + 1, schema_ref, schema_name, ""))
             continue
-        blocks.append((i + 1, schema_paths[-1], "\n".join(lines[j + 1:k])))
+        blocks.append((i + 1, schema_ref, schema_name, "\n".join(lines[j + 1:k])))
     return blocks
+
+
+def _doc_schema_path(schema_ref: str, schema_name: str) -> Path:
+    normalized = schema_ref.replace("\\", "/")
+    if normalized == "schemas/opcua.builtins.avsc":
+        return BUILTINS_SCHEMA
+    if normalized.startswith("../extras/avro-encoding/schemas/"):
+        return SCHEMAS / schema_name
+    return Path("__invalid_doc_schema_ref__")
 
 
 def validate_doc_schema_blocks() -> tuple[list[str], int]:
@@ -157,11 +170,11 @@ def validate_doc_schema_blocks() -> tuple[list[str], int]:
         blocks = _doc_schema_blocks(doc)
         block_count += len(blocks)
         if not blocks:
-            failures.append(f"doc-schema {doc.name}: no schemas\\*.avsc JSON blocks found")
+            failures.append(f"doc-schema {doc.name}: no ../extras/avro-encoding/schemas/*.avsc JSON blocks found")
             continue
-        for line_no, schema_name, doc_json in blocks:
-            schema_path = SCHEMAS / schema_name
-            label = f"doc-schema {doc.name}:{line_no} schemas\\{schema_name}"
+        for line_no, schema_ref, schema_name, doc_json in blocks:
+            schema_path = _doc_schema_path(schema_ref, schema_name)
+            label = f"doc-schema {doc.name}:{line_no} {schema_ref}"
             if not schema_path.exists():
                 failures.append(f"{label}: file does not exist")
                 continue
@@ -216,14 +229,14 @@ def validate_nested_schemaid_gate() -> list[str]:
 def validate_schemas() -> list[str]:
     failures: list[str] = []
     named: dict[str, object] = {}
-    builtins = SCHEMAS / "opcua.builtins.avsc"
+    builtins = BUILTINS_SCHEMA
     if builtins.exists():
         try:
             for schema in json.loads(builtins.read_text(encoding="utf-8")):
                 parse_schema(schema, named_schemas=named)
         except Exception as exc:
             failures.append(f"schema {builtins.name}: {exc}")
-    pending = [p for p in sorted(SCHEMAS.glob("*.avsc")) if p.name != "opcua.builtins.avsc"]
+    pending = [p for p in sorted(SCHEMAS.glob("*.avsc"))]
     errors: dict[Path, Exception] = {}
     while pending:
         progressed = False
@@ -292,16 +305,16 @@ def validate_examples_with_published_schemas() -> list[str]:
 
 def main() -> int:
     schemaids_before = snapshot_schemaids()
-    subprocess.run([sys.executable, str(TOOLS / "build_schemas.py")], cwd=ROOT.parents[1], check=True)
+    subprocess.run([sys.executable, str(TOOLS / "build_schemas.py")], cwd=ROOT.parents[2], check=True)
     schemaids_after_first = snapshot_schemaids()
     schemas_after_first = snapshot_schemas()
-    subprocess.run([sys.executable, str(TOOLS / "build_schemas.py")], cwd=ROOT.parents[1], check=True)
+    subprocess.run([sys.executable, str(TOOLS / "build_schemas.py")], cwd=ROOT.parents[2], check=True)
     if schemas_after_first != snapshot_schemas():
         failures = ["schemas are not byte-stable across regeneration"]
     else:
         failures = []
     if schemaids_before and schemaids_before != schemaids_after_first:
-        failures.append("schemas/schemaids.json was regenerated with drift; rerun validate_local.py and review changes")
+        failures.append("extras/avro-encoding/schemas/schemaids.json was regenerated with drift; rerun validate_local.py and review changes")
     try:
         subprocess.run([sys.executable, str(TOOLS / "gen_type_reference.py"), "--check"], cwd=ROOT, check=True)
     except subprocess.CalledProcessError as exc:

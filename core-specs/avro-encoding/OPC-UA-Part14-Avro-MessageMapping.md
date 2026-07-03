@@ -84,7 +84,7 @@ This clause is intended to sit beside the JSON message mapping in Part 14. Data 
 
 Actions are Methods invoked via PubSub. An Avro Action NetworkMessage contains one or more Action request or Action response DataSetMessages. Request and response traffic shall not be mixed in one envelope. The same SchemaId handshake defined in §9 applies: Action request and response schemas are announced, cached and selected by SchemaId exactly like data-message schemas.
 
-The published request envelope schema is `schemas\AvroActionRequestNetworkMessage.avsc`:
+The published request envelope schema is `../extras/avro-encoding/schemas/AvroActionRequestNetworkMessage.avsc`:
 
 ```json
 {
@@ -136,7 +136,7 @@ The published request envelope schema is `schemas\AvroActionRequestNetworkMessag
 }
 ```
 
-The published request DataSetMessage schema is `schemas\AvroActionRequestDataSetMessage.avsc`:
+The published request DataSetMessage schema is `../extras/avro-encoding/schemas/AvroActionRequestDataSetMessage.avsc`:
 
 ```json
 {
@@ -179,7 +179,7 @@ The published request DataSetMessage schema is `schemas\AvroActionRequestDataSet
 }
 ```
 
-The published response envelope schema is `schemas\AvroActionResponseNetworkMessage.avsc`:
+The published response envelope schema is `../extras/avro-encoding/schemas/AvroActionResponseNetworkMessage.avsc`:
 
 ```json
 {
@@ -231,7 +231,7 @@ The published response envelope schema is `schemas\AvroActionResponseNetworkMess
 }
 ```
 
-The published response DataSetMessage schema is `schemas\AvroActionResponseDataSetMessage.avsc`:
+The published response DataSetMessage schema is `../extras/avro-encoding/schemas/AvroActionResponseDataSetMessage.avsc`:
 
 ```json
 {

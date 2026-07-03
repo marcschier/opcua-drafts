@@ -12,7 +12,9 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
+STD = (HERE / ".." / ".." / ".." / "protobuf-encoding").resolve()
 SCHEMAS = ROOT / "schemas"
+STD_SCHEMAS = STD / "schemas"
 GEN = HERE / "_generated"
 EXAMPLES = ROOT / "examples"
 sys.path.insert(0, os.path.abspath(HERE / ".." / ".." / "_common"))
@@ -233,14 +235,15 @@ def _compile() -> tuple[int, str]:
     GEN.mkdir(parents=True, exist_ok=True)
     for old in GEN.glob("*_pb2.py"):
         old.unlink()
-    proto_files = [str(p) for p in sorted(SCHEMAS.glob("*.proto"))]
-    cmd = [sys.executable, "-m", "grpc_tools.protoc", f"-I{SCHEMAS}", f"--python_out={GEN}", *proto_files]
+    proto_files = [str(STD_SCHEMAS / "opcua_builtins.proto"), *[str(p) for p in sorted(SCHEMAS.glob("*.proto"))]]
+    cmd = [sys.executable, "-m", "grpc_tools.protoc", f"-I{STD_SCHEMAS}", f"-I{SCHEMAS}", f"--python_out={GEN}", *proto_files]
     p = subprocess.run(cmd, cwd=str(ROOT), text=True, capture_output=True)
     return p.returncode, p.stdout + p.stderr
 
 
 def _snapshot() -> dict[str, bytes]:
-    return {str(p.relative_to(ROOT)): p.read_bytes() for p in sorted(SCHEMAS.glob("*.proto"))}
+    files = [STD_SCHEMAS / "opcua_builtins.proto", *sorted(SCHEMAS.glob("*.proto"))]
+    return {str(p): p.read_bytes() for p in files if p.exists()}
 
 
 def _write_examples() -> None:
@@ -390,11 +393,12 @@ def main() -> int:
     failures += annotation_failures
 
     drift_failures = 0
+    part6 = STD / "OPC-UA-Part6-Protobuf-DataEncoding.md"
     generated_doc = gen_type_reference.inject(
-        (ROOT / "OPC-UA-Part6-Protobuf-DataEncoding.md").read_text(encoding="utf-8"),
+        part6.read_text(encoding="utf-8"),
         gen_type_reference.generate(),
     )
-    if generated_doc != (ROOT / "OPC-UA-Part6-Protobuf-DataEncoding.md").read_text(encoding="utf-8"):
+    if generated_doc != part6.read_text(encoding="utf-8"):
         drift_failures += 1
         print("FAIL Part 6 type-reference annex is out of date; run tools\\gen_type_reference.py")
     schemaids_path = SCHEMAS / "schemaids.json"
@@ -419,7 +423,8 @@ def main() -> int:
     conformance_ok = len(CORPUS) - gate_failures
     examples_ok = len(bin_files) - example_gate_failures
     nested_status = "ok" if not nested_schemaid_failures else "fail"
-    print(f"validate_local: proto_files={len(list(SCHEMAS.glob('*.proto')))} corpus={len(CORPUS) - rt_failures}/{len(CORPUS)} conformance={conformance_ok}/{len(CORPUS)} examples={examples_ok}/{len(bin_files)} annotations={len(CORPUS) - annotation_failures}/{len(CORPUS)} drift={'ok' if not drift_failures else 'fail'} nested_schemaid={nested_status}({nested_old_id}->{nested_new_id}); {failures} failures")
+    proto_count = int((STD_SCHEMAS / "opcua_builtins.proto").exists()) + len(list(SCHEMAS.glob("*.proto")))
+    print(f"validate_local: proto_files={proto_count} corpus={len(CORPUS) - rt_failures}/{len(CORPUS)} conformance={conformance_ok}/{len(CORPUS)} examples={examples_ok}/{len(bin_files)} annotations={len(CORPUS) - annotation_failures}/{len(CORPUS)} drift={'ok' if not drift_failures else 'fail'} nested_schemaid={nested_status}({nested_old_id}->{nested_new_id}); {failures} failures")
     return 1 if failures else 0
 
 

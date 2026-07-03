@@ -22,6 +22,7 @@ import wire_annotate
 
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+STD = os.path.abspath(os.path.join(ROOT, "..", "..", "arrow-encoding"))
 EXAMPLES = os.path.join(ROOT, "examples")
 SUBSET = [
     "bool_true",
@@ -46,9 +47,9 @@ def main() -> int:
     failures = 0
     failures += schemaids_drift_gate()
     build_schemas.main()
-    first = snapshot(os.path.join(ROOT, "schemas"))
+    first = schema_snapshots()
     build_schemas.main()
-    second = snapshot(os.path.join(ROOT, "schemas"))
+    second = schema_snapshots()
     if first != second:
         failures += 1
         print("FAIL schemas are not deterministic")
@@ -81,6 +82,13 @@ def snapshot(path: str) -> dict[str, str]:
             with open(full, "rb") as f:
                 out[name] = hashlib.sha256(f.read()).hexdigest()
     return out
+
+
+def schema_snapshots() -> dict[str, dict[str, str]]:
+    return {
+        "base": snapshot(os.path.join(STD, "schemas")),
+        "extras": snapshot(os.path.join(ROOT, "schemas")),
+    }
 
 
 def generate_examples() -> dict[str, str]:
@@ -126,7 +134,7 @@ def conformance_gate() -> int:
 
 
 def type_reference_drift_gate() -> int:
-    with open(os.path.join(ROOT, "OPC-UA-Part6-Arrow-DataEncoding.md"), encoding="utf-8") as f:
+    with open(os.path.join(STD, "OPC-UA-Part6-Arrow-DataEncoding.md"), encoding="utf-8") as f:
         text = f.read()
     begin = gen_type_reference.BEGIN
     end = gen_type_reference.END
@@ -201,7 +209,7 @@ def decode_with_published_schema(ty: Any, data: bytes, expected_type: pa.DataTyp
 
 
 def load_published_corpus_types() -> dict[str, pa.DataType]:
-    with open(os.path.join(ROOT, "schemas", "base.json"), encoding="utf-8") as f:
+    with open(os.path.join(STD, "schemas", "base.json"), encoding="utf-8") as f:
         base = json.load(f)
     return {name: arrow_from_detail(desc["detail"]) for name, desc in base["corpusTypes"].items()}
 

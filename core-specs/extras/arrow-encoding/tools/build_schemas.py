@@ -15,12 +15,15 @@ import arrow_codec
 
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+STD = os.path.abspath(os.path.join(ROOT, "..", "..", "arrow-encoding"))
 SCHEMA_DIR = os.path.join(ROOT, "schemas")
-NODESET = os.path.abspath(os.path.join(ROOT, "..", "pubsub-binding", "Opc.Ua.PubSubBinding.NodeSet2.xml"))
+BASE_SCHEMA_DIR = os.path.join(STD, "schemas")
+NODESET = os.path.abspath(os.path.join(STD, "..", "pubsub-binding", "Opc.Ua.PubSubBinding.NodeSet2.xml"))
 
 
 def main() -> None:
     os.makedirs(SCHEMA_DIR, exist_ok=True)
+    os.makedirs(BASE_SCHEMA_DIR, exist_ok=True)
     for name in os.listdir(SCHEMA_DIR):
         if name.endswith(".json"):
             os.remove(os.path.join(SCHEMA_DIR, name))
@@ -38,7 +41,7 @@ def main() -> None:
         "networkMessage": network_message_schema(),
         "datasetMessage": dataset_message_schema(),
         "pyarrow": pa.__version__,
-    })
+    }, BASE_SCHEMA_DIR)
 
     for enum in sorted([*corpus.ENUM_TYPES, *loaded.enums], key=lambda e: e.name):
         write_json(f"enum-{safe(enum.name)}.json", {
@@ -171,8 +174,8 @@ def dataset_message_arrow() -> pa.DataType:
     ])
 
 
-def write_json(name: str, obj: Any) -> None:
-    with open(os.path.join(SCHEMA_DIR, name), "w", encoding="utf-8", newline="\n") as f:
+def write_json(name: str, obj: Any, directory: str = SCHEMA_DIR) -> None:
+    with open(os.path.join(directory, name), "w", encoding="utf-8", newline="\n") as f:
         json.dump(obj, f, indent=2, sort_keys=True)
         f.write("\n")
 

@@ -26,6 +26,9 @@ load_common()
 from opcua_enc import corpus, fingerprint, nodeset, types as t
 
 OUT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "schemas"))
+STD_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..", "avro-encoding"))
+STD_SCHEMAS = os.path.join(STD_DIR, "schemas")
+BUILTINS_SCHEMA = os.path.join(STD_SCHEMAS, "opcua.builtins.avsc")
 DEFAULT_NODESET = repo_path("core-specs", "pubsub-binding", "Opc.Ua.PubSubBinding.NodeSet2.xml")
 
 
@@ -96,7 +99,7 @@ def write_schemaids(enums: tuple[t.Enumeration, ...], structs: tuple[t.Struct, .
     named: dict[str, object] = {}
     entries: dict[str, dict[str, str]] = {}
 
-    builtin_schemas = json.loads(open(os.path.join(OUT_DIR, "opcua.builtins.avsc"), "r", encoding="utf-8").read())
+    builtin_schemas = json.loads(open(BUILTINS_SCHEMA, "r", encoding="utf-8").read())
     for schema in builtin_schemas:
         parse_schema(schema, named_schemas=named)
     raw_datatypes: dict[str, object] = {}
@@ -133,17 +136,18 @@ def main() -> int:
     if os.path.isdir(OUT_DIR):
         shutil.rmtree(OUT_DIR)
     os.makedirs(OUT_DIR, exist_ok=True)
+    os.makedirs(STD_SCHEMAS, exist_ok=True)
     result = nodeset.load_datatypes(args.nodeset)
     enums = tuple(sorted([*corpus.ENUM_TYPES, *result.enums], key=lambda x: x.name))
     nodeset_structs = tuple(sorted(result.structs, key=lambda x: x.name))
     structs = order_structs((*corpus.STRUCT_TYPES, *nodeset_structs, *MESSAGE_STRUCTS))
-    with open(os.path.join(OUT_DIR, "opcua.builtins.avsc"), "w", encoding="utf-8") as f:
+    with open(BUILTINS_SCHEMA, "w", encoding="utf-8") as f:
         f.write(stable_json(builtin_defs(order_structs((*corpus.STRUCT_TYPES, *nodeset_structs)))))
     for ty in sorted([*enums, *structs], key=lambda x: x.name):
         with open(os.path.join(OUT_DIR, f"{avro_name(ty.name)}.avsc"), "w", encoding="utf-8") as f:
             f.write(stable_json(datatype_schema(ty)))
     write_schemaids(enums, structs)
-    print(f"Generated {1 + len(enums) + len(structs)} schema files in {OUT_DIR}")
+    print(f"Generated {1 + len(enums) + len(structs)} schema files in {OUT_DIR} and {STD_SCHEMAS}")
     if result.unresolved:
         print(f"Unresolved fields mapped to ExtensionObject: {len(result.unresolved)}")
     return 0

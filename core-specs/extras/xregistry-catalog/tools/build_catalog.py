@@ -28,8 +28,12 @@ from opcua_enc import fingerprint  # noqa: E402
 import jsonschema_gen as jsg  # noqa: E402
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-CORE_SPECS = os.path.abspath(os.path.join(HERE, "..", ".."))
-DEFAULT_NODESET = os.path.join(CORE_SPECS, "pubsub-binding", "Opc.Ua.PubSubBinding.NodeSet2.xml")
+# After the reorg this tool lives under core-specs/extras/xregistry-catalog/tools,
+# so this resolves to core-specs/extras (where the sibling encodings' generated
+# schemas live). pubsub-binding was NOT moved, so it is one level up in core-specs.
+EXTRAS = os.path.abspath(os.path.join(HERE, "..", ".."))
+CORE_SPECS = EXTRAS
+DEFAULT_NODESET = os.path.join(EXTRAS, "..", "pubsub-binding", "Opc.Ua.PubSubBinding.NodeSet2.xml")
 OUT = os.path.abspath(os.path.join(HERE, "..", "examples", "opcua-catalog.xregistry.json"))
 BASE_UA = "http://opcfoundation.org/UA/"
 _UA_NS = "{http://opcfoundation.org/UA/2011/03/UANodeSet.xsd}"

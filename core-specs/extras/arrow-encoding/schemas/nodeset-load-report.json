@@ -1,6 +1,6 @@
 {
   "enumCount": 2,
-  "source": "..\\pubsub-binding\\Opc.Ua.PubSubBinding.NodeSet2.xml",
+  "source": "..\\..\\pubsub-binding\\Opc.Ua.PubSubBinding.NodeSet2.xml",
   "structCount": 3,
   "unresolved": [
     "BoundItemDataType.BrowsePath -> i=540",

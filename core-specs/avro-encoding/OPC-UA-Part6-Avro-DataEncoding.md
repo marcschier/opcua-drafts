@@ -172,11 +172,11 @@ Conformance text should require that senders and receivers claiming Default Avro
 
 ## 9 Appendix B PubSub Action and Discovery schema examples
 
-The Part 14 Avro mapping publishes compact envelope schemas for Action and Discovery messages in `schemas\`. The Action request/response envelopes are `AvroActionRequestNetworkMessage.avsc` and `AvroActionResponseNetworkMessage.avsc`, each containing an array of request/response DataSetMessages. Discovery examples include `AvroDataSetMetaData.avsc`, `AvroDataSetWriterConfigurationAnnouncement.avsc`, `AvroActionResponderConfigurationAnnouncement.avsc`, `AvroDiscoveryProbe.avsc` and `AvroPublisherEndpointsAnnouncement.avsc`. The generated schemas use the built-in `Variant`, `DataValue`, `NodeId`, `StatusCode`, `DiagnosticInfo` and `ExtensionObject` records from this annex; reduced base-UA shapes and fallbacks are documented in the Part 14 draft.
+The Part 14 Avro mapping publishes compact envelope schemas for Action and Discovery messages in `../extras/avro-encoding/schemas/`. The Action request/response envelopes are `AvroActionRequestNetworkMessage.avsc` and `AvroActionResponseNetworkMessage.avsc`, each containing an array of request/response DataSetMessages. Discovery examples include `AvroDataSetMetaData.avsc`, `AvroDataSetWriterConfigurationAnnouncement.avsc`, `AvroActionResponderConfigurationAnnouncement.avsc`, `AvroDiscoveryProbe.avsc` and `AvroPublisherEndpointsAnnouncement.avsc`. The generated schemas use the built-in `Variant`, `DataValue`, `NodeId`, `StatusCode`, `DiagnosticInfo` and `ExtensionObject` records from this annex; reduced base-UA shapes and fallbacks are documented in the Part 14 draft.
 
-Compact examples publish the exact generated schema files below. Do not edit these JSON blocks by hand; copy them from `schemas\*.avsc`.
+Compact examples publish the exact generated schema files below. Do not edit these JSON blocks by hand; copy them from `..\extras\avro-encoding\schemas\*.avsc`.
 
-The published Action request DataSetMessage schema is `schemas\AvroActionRequestDataSetMessage.avsc`:
+The published Action request DataSetMessage schema is `../extras/avro-encoding/schemas/AvroActionRequestDataSetMessage.avsc`:
 
 ```json
 {
@@ -219,7 +219,7 @@ The published Action request DataSetMessage schema is `schemas\AvroActionRequest
 }
 ```
 
-The published Action request NetworkMessage schema is `schemas\AvroActionRequestNetworkMessage.avsc`:
+The published Action request NetworkMessage schema is `../extras/avro-encoding/schemas/AvroActionRequestNetworkMessage.avsc`:
 
 ```json
 {
@@ -271,7 +271,7 @@ The published Action request NetworkMessage schema is `schemas\AvroActionRequest
 }
 ```
 
-The published Action response DataSetMessage schema is `schemas\AvroActionResponseDataSetMessage.avsc`:
+The published Action response DataSetMessage schema is `../extras/avro-encoding/schemas/AvroActionResponseDataSetMessage.avsc`:
 
 ```json
 {
@@ -328,7 +328,7 @@ The published Action response DataSetMessage schema is `schemas\AvroActionRespon
 }
 ```
 
-The published Action response NetworkMessage schema is `schemas\AvroActionResponseNetworkMessage.avsc`:
+The published Action response NetworkMessage schema is `../extras/avro-encoding/schemas/AvroActionResponseNetworkMessage.avsc`:
 
 ```json
 {
@@ -380,7 +380,7 @@ The published Action response NetworkMessage schema is `schemas\AvroActionRespon
 }
 ```
 
-The published DataSetWriter configuration announcement schema is `schemas\AvroDataSetWriterConfigurationAnnouncement.avsc`:
+The published DataSetWriter configuration announcement schema is `../extras/avro-encoding/schemas/AvroDataSetWriterConfigurationAnnouncement.avsc`:
 
 ```json
 {
@@ -432,7 +432,7 @@ The published DataSetWriter configuration announcement schema is `schemas\AvroDa
 ## Annex A Generated type reference
 
 <!-- BEGIN GENERATED: type-reference -->
-The following reference material is generated from the published `.avsc` schemas and the shared conformance corpus. Do not edit it by hand; run `python tools\gen_type_reference.py`.
+The following reference material is generated from the published `.avsc` schemas and the shared conformance corpus. Do not edit it by hand; run `python ..\extras\avro-encoding\tools\gen_type_reference.py`.
 
 ### Built-in Boolean
 

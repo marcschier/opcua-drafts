@@ -15,7 +15,7 @@ def common_path(*parts: str) -> str:
 
 
 def repo_path(*parts: str) -> str:
-    return os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..", *parts))
+    return os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", *parts))
 
 
 def load_common() -> None:

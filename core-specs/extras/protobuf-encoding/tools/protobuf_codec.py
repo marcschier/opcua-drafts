@@ -10,6 +10,9 @@ from typing import Any
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
+STD = (HERE / ".." / ".." / ".." / "protobuf-encoding").resolve()
+STD_SCHEMAS = STD / "schemas"
+SCHEMAS = ROOT / "schemas"
 GEN = HERE / "_generated"
 sys.path.insert(0, os.path.abspath(HERE / ".." / ".." / "_common"))
 from opcua_enc import corpus as _corpus, types as t, values as v  # noqa: E402
@@ -42,18 +45,19 @@ DEFAULT_REGISTRY = TypeRegistry(_corpus.STRUCT_TYPES)
 
 def _compile_if_needed() -> None:
     target = GEN / "opcua_builtins_pb2.py"
-    protos = list((ROOT / "schemas").glob("*.proto"))
+    protos = [STD_SCHEMAS / "opcua_builtins.proto", *sorted(SCHEMAS.glob("*.proto"))]
+    protos = [p for p in protos if p.exists()]
     if target.exists() and protos and target.stat().st_mtime >= max(p.stat().st_mtime for p in protos):
         return
     from build_schemas import main as build_main
     build_main()
     GEN.mkdir(parents=True, exist_ok=True)
-    proto_files = [str(p) for p in sorted((ROOT / "schemas").glob("*.proto"))]
     try:
         import grpc_tools.protoc  # noqa: F401
     except ImportError as exc:  # pragma: no cover
         raise RuntimeError("grpcio-tools is required: pip install grpcio-tools") from exc
-    cmd = [sys.executable, "-m", "grpc_tools.protoc", f"-I{ROOT / 'schemas'}", f"--python_out={GEN}", *proto_files]
+    proto_files = [str(STD_SCHEMAS / "opcua_builtins.proto"), *[str(p) for p in sorted(SCHEMAS.glob("*.proto"))]]
+    cmd = [sys.executable, "-m", "grpc_tools.protoc", f"-I{STD_SCHEMAS}", f"-I{SCHEMAS}", f"--python_out={GEN}", *proto_files]
     rc = subprocess.run(cmd, cwd=str(ROOT), text=True, capture_output=True)
     if rc.returncode:
         raise RuntimeError(rc.stdout + rc.stderr)
@@ -66,6 +70,7 @@ import opcua_builtins_pb2 as pb  # noqa: E402
 
 def reload_generated() -> None:
     global pb
+    _compile_if_needed()
     importlib.invalidate_caches()
     pb = importlib.reload(pb)
     for path in sorted(GEN.glob("*_pb2.py")):
