@@ -44,6 +44,13 @@ KIND = {"Telemetry": 0, "Status": 1, "Configuration": 2, "Metric": 3, "Counter":
         "Event": 5, "Command": 6, "Setpoint": 7, "Identification": 8, "Other": 9,
         "Dimension": 10}
 CONTENT_KIND = {"DataItems": 0, "Events": 1}
+# well-known ns0 ScenarioProfile node ids (see build_model.py SCENARIOS); a per-instance group
+# Realizes the profile for its scenario (inverse of the profile's RealizedBy).
+PROFILE_ID = {
+    "Observability": 60110, "PredictiveMaintenance": 60111, "AnomalyDetection": 60112,
+    "EnergyAndLoadManagement": 60113, "AlarmAndEventDistribution": 60114,
+    "FleetAndCompliance": 60115,
+}
 INSTRUMENT = {"Counter": 0, "UpDownCounter": 1, "Histogram": 2, "Gauge": 3,
               "ObservableCounter": 4, "ObservableUpDownCounter": 5, "ObservableGauge": 6}
 TEMPORALITY = {"Cumulative": 0, "Delta": 1}
@@ -64,6 +71,7 @@ ALIASES = {
     "HasComponent": "i=47", "HasProperty": "i=46", "HasTypeDefinition": "i=40",
     "HasInterface": "i=17603", "Organizes": "i=35",
     "BindsToNode": f"i={BIND['BindsToNode']}",
+    "RealizedBy": "i=60004",
     "String": "i=12", "Int32": "i=6", "QualifiedName": "i=20", "NodeId": "i=17",
     "Guid": "i=14", "BaseDataVariableType": "i=63", "PropertyType": "i=68",
     "BaseObjectType": "i=58", "FolderType": "i=61", "SimpleAttributeOperand": "i=601",
@@ -290,13 +298,19 @@ class Emitter:
         root_refs += [("HasComponent", self.ex(gid), True) for gid, _bn, _sbs in groups]
         self._refs(root_refs)
         self.out.append("  </UAObject>")
-        # per-scenario ScenarioBindingGroup objects (each carries the companion-spec identity)
+        # per-scenario ScenarioBindingGroup objects (each carries the companion-spec identity and
+        # Realizes the well-known ScenarioProfile for its scenario)
         for gid, group_bn, sbs in groups:
             self.group_id = gid
             self._open("UAObject", gid, f"1:{group_bn}", self.ex(self.root_id))
             self.out.append(f"    <DisplayName>{sx.escape(group_bn)}</DisplayName>")
-            self._refs([("HasTypeDefinition", f'i={BIND["ScenarioBindingGroupType"]}', True),
-                        ("HasComponent", self.ex(self.root_id), False)])
+            grp_refs = [("HasTypeDefinition", f'i={BIND["ScenarioBindingGroupType"]}', True),
+                        ("HasComponent", self.ex(self.root_id), False)]
+            prof = PROFILE_ID.get(sbs[0]["scenarioUri"].rsplit("/", 1)[-1])
+            if prof:
+                # group Realizes profile = inverse of the profile's forward RealizedBy
+                grp_refs.append(("RealizedBy", f'i={prof}', False))
+            self._refs(grp_refs)
             self.out.append("  </UAObject>")
             self.prop(self.nid(), "CompanionSpecificationUri", "String",
                       f'<uax:String {U}>{sx.escape(cs_uri)}</uax:String>', gid)
@@ -314,10 +328,8 @@ class Emitter:
         self._refs([("HasTypeDefinition", f'i={BIND["ScenarioBindingType"]}', True),
                     ("HasComponent", self.ex(self.group_id), False)])
         self.out.append("  </UAObject>")
-        # ScenarioUri + Direction properties
-        self.prop(self.nid(), "ScenarioUri", "String",
-                  f'<uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">'
-                  f'{sx.escape(sb["scenarioUri"])}</uax:String>', bid)
+        # Direction property (the binding's scenario is its group's profile, via Realizes; the
+        # DataSetClassId also encodes the scenario, so no ScenarioUri is stored on the binding)
         self.prop(self.nid(), "Direction", f'i={BIND["ScenarioBindingDirectionEnum"]}',
                   f'<uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">'
                   f'{DIRECTION[sb["direction"]]}</uax:Int32>', bid)
@@ -946,6 +958,7 @@ def emit_diagrams(descriptor):
         if suri not in gseen:
             gseen[suri] = i
             inst.append(f'  R -->|HasComponent| G{i}["{gname} : ScenarioBindingGroupType"]')
+            inst.append(f'  G{i} -.Realizes.-> P{i}["{gname} : ScenarioProfileType<br/>under Server/Scenarios"]')
         gi = gseen[suri]
         inst.append(f'  G{gi} -->|HasComponent| B{i}["{sb["name"]} : ScenarioBindingType"]')
         for j, it in enumerate(sb["boundItems"][:3]):

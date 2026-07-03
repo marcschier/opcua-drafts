@@ -87,11 +87,8 @@
       "name": "FleetAndCompliance",
       "scenarioUri": "http://opcfoundation.org/UA/PubSub/Scenarios/FleetAndCompliance",
       "direction": "Publisher",
+      "baseDataSetClassIds": ["69883a15-1331-51d0-a3be-d453d4547192"],
       "boundItems": [
-        { "kind": "Identification", "browsePath": "/Identification/Manufacturer" },
-        { "kind": "Identification", "browsePath": "/Identification/Model" },
-        { "kind": "Identification", "browsePath": "/Identification/SerialNumber" },
-        { "kind": "Identification", "browsePath": "/Identification/ProductInstanceUri" },
         { "kind": "Identification", "browsePath": "/Identification/AssetId" },
         { "kind": "Identification", "browsePath": "/Identification/Location" }
       ]

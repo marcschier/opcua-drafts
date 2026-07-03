@@ -355,6 +355,17 @@ reference_type(60003, "HasBaseBinding", NonHierarchicalReferences, "IsBaseBindin
                "node is present in the same AddressSpace; the portable, cross-specification "
                "lineage carrier is ScenarioBinding.BaseDataSetClassIds.",
                CAT)
+reference_type(60004, "RealizedBy", NonHierarchicalReferences, "Realizes",
+               "Links a ScenarioProfile to the ScenarioBindingGroups that serve its scenario. "
+               "Forward 'RealizedBy' reads profile -> group (the registry's scenario-first path to "
+               "every group serving the scenario, across instances and specifications); the "
+               "inverse 'Realizes' reads group -> profile, so given a group a client resolves its "
+               "scenario - and thus the ScenarioUri - from the profile under the Scenarios "
+               "registry. Non-hierarchical: a group's single hierarchical parent is the "
+               "IScenarioBoundType object that contains it, so this cross-link never forms a "
+               "hierarchy loop. Distinct from ScenarioRealizedBy/RealizesScenario, which links a "
+               "binding to its optional Part 14 PubSub realization.",
+               CAT)
 
 # --- Enumerations ----------------------------------------------------------
 enum_type(60050, "ScenarioBindingDirectionEnum",
@@ -513,11 +524,13 @@ prop_var(60017, "BoundEventFieldType", "EventFieldOperand", SimpleAttributeOpera
 
 # ScenarioBindingType
 object_type(60011, "ScenarioBindingType", BaseObjectType,
-            "One scenario binding on a bound object or type. It declares the scenario "
-            "URI and direction, lists the bound items (browsable and/or as a compact "
-            "array), and may reference the Part 14 nodes that realize it.", CAT)
+            "One scenario binding on a bound object or type. It declares the direction, "
+            "lists the bound items (browsable and/or as a compact array), and may reference "
+            "the Part 14 nodes that realize it. Its scenario is not stored here: the binding "
+            "lives in a ScenarioBindingGroup whose profile (reached via the group's Realizes "
+            "reference) carries the ScenarioUri, and the DataSetClassId already encodes the "
+            "scenario.", CAT)
 SB = "ScenarioBindingType"
-prop_var(60011, SB, "ScenarioUri", String, "URI of the integration scenario this binding serves.", rule=MR_Mandatory)
 prop_var(60011, SB, "Direction", T(60050), "Role the server offers for this binding.", rule=MR_Mandatory)
 prop_var(60011, SB, "ConfigurationVersion", ConfigurationVersionDataType,
          "Version of the binding, aligned with the realizing DataSetMetaData.")
@@ -566,18 +579,19 @@ placeholder_obj(60011, SB, "<BoundItem>", T(60012),
 
 # ScenarioBindingGroupType (per-companion-spec anchor) + registry
 object_type(60018, "ScenarioBindingGroupType", FolderType,
-            "A per-companion-specification anchor grouping that spec's ScenarioBinding "
-            "objects, so bindings from different companion specifications registered under one "
-            "ScenarioProfile never collide by BrowseName. Identified by CompanionSpecificationUri "
-            "(a stable spec-level identifier, distinct from a namespace URI, because a "
-            "companion specification may define several namespace URIs). Sibling groups "
-            "themselves carry unique BrowseNames.", CAT)
+            "A per-companion-specification group of that spec's ScenarioBinding objects. It is "
+            "contained (HasComponent) in the IScenarioBoundType object that owns the bindings, and "
+            "is linked to the ScenarioProfile it serves by a Realizes reference (the inverse of the "
+            "profile's RealizedBy). Identified by CompanionSpecificationUri (a stable spec-level "
+            "identifier, distinct from a namespace URI, because a companion specification may "
+            "define several namespace URIs), so groups from different specifications on one object "
+            "never collide by BrowseName.", CAT)
 SG = "ScenarioBindingGroupType"
 prop_var(60018, SG, "CompanionSpecificationUri", String,
-         "Stable spec-level identifier of the companion specification this group anchors. "
-         "Sibling groups under one ScenarioProfile are unique by CompanionSpecificationUri, and "
-         "each group's BrowseName is derived from this identity so sibling BrowseNames do not "
-         "collide.", rule=MR_Mandatory)
+         "Stable spec-level identifier of the companion specification this group anchors. Sibling "
+         "groups on one IScenarioBoundType object are unique by (Scenario x "
+         "CompanionSpecificationUri), and each group's BrowseName is derived from this identity so "
+         "sibling BrowseNames do not collide.", rule=MR_Mandatory)
 prop_var(60018, SG, "ModelNamespaceUris", String,
          "All namespace URIs the companion specification defines/covers.",
          rule=MR_Mandatory, valuerank="1")
@@ -594,40 +608,41 @@ SF = "ScenarioFolderType"
 placeholder_obj(60010, SF, "<Scenario>", T(60015),
                 "A registered integration scenario in this registry.",
                 reftype=Organizes)
-# No query Method: clients browse the Scenarios registry, pick a ScenarioProfile, then its
-# ScenarioBindingGroup components (per companion spec) and their ScenarioBinding children,
-# reading each ScenarioUri. Browse + Read is sufficient and keeps the type usable on a classic
-# server.
+# No query Method: clients browse the Scenarios registry, pick a ScenarioProfile, follow its
+# RealizedBy references to the ScenarioBindingGroups (which live on the bound instances) and their
+# ScenarioBinding children; the profile carries the ScenarioUri. Browse + Read is sufficient and
+# keeps the type usable on a classic server.
 
-# ScenarioProfileType (registry entry) - contains the per-spec binding groups for its scenario
+# ScenarioProfileType (registry entry) - references the binding groups serving its scenario
 object_type(60015, "ScenarioProfileType", BaseObjectType,
-            "A registered integration scenario: its URI plus human-readable metadata, and the "
-            "ScenarioBindingGroup components (one per companion specification) that contain the "
-            "ScenarioBindings serving this scenario. The registry is extensible; vendors and "
-            "other specifications add profiles with their own URIs.", CAT)
+            "A registered integration scenario: its URI plus human-readable metadata, and "
+            "RealizedBy references to the ScenarioBindingGroups (which live on the bound "
+            "instances) that serve this scenario. Groups are not contained here - the profile is "
+            "not duplicated per instance; a group reaches its profile via the inverse Realizes "
+            "reference. The registry is extensible; vendors and other specifications add profiles "
+            "with their own URIs.", CAT)
 SP = "ScenarioProfileType"
-prop_var(60015, SP, "ScenarioUri", String, "The scenario URI.", rule=MR_Mandatory)
+prop_var(60015, SP, "ScenarioUri", String, "The scenario URI. Authoritative here; a binding's "
+         "scenario is this ScenarioUri, reached from the binding's group via Realizes.",
+         rule=MR_Mandatory)
 prop_var(60015, SP, "Title", LocalizedText, "Short human-readable title.")
 prop_var(60015, SP, "Summary", LocalizedText, "Human-readable description of the scenario and its intended consumers.")
 prop_var(60015, SP, "Keywords", String, "Keywords describing the scenario.", valuerank="1")
-placeholder_obj(60015, SP, "<ScenarioBindingGroup>", T(60018),
-                "A per-companion-specification group of the bindings serving this scenario. "
-                "Sibling groups under one profile are unique by CompanionSpecificationUri and "
-                "each carries a unique BrowseName derived from that specification identity (not "
-                "the scenario name).")
 
-# IScenarioBoundType (interface) - references its scenario binding groups directly
+# IScenarioBoundType (interface) - contains its scenario binding groups directly
 interface_type(60016, "IScenarioBoundType", BaseInterfaceType,
                "Interface implemented by a companion-specification ObjectType (or instance) to "
-               "advertise that it participates in scenario bindings, by exposing its "
+               "advertise that it participates in scenario bindings, by containing its "
                "ScenarioBindingGroup objects directly (one per (Scenario x companion "
                "specification) it serves; typically one per scenario for a single-specification "
-               "instance).", CAT)
+               "instance). Each contained group Realizes the ScenarioProfile under the Scenarios "
+               "registry that defines its scenario.", CAT)
 placeholder_obj(60016, "IScenarioBoundType", "<ScenarioBindingGroup>", T(60018),
-                "A group of this object's bindings for one (Scenario x companion specification). "
-                "Sibling groups have unique BrowseNames - by scenario for a single-specification "
-                "instance, and additionally by specification when several specifications serve "
-                "one scenario on the instance.")
+                "A group of this object's bindings for one (Scenario x companion specification), "
+                "contained here (HasComponent) and linked to its ScenarioProfile by a Realizes "
+                "reference. Sibling groups have unique BrowseNames - by scenario for a "
+                "single-specification instance, and additionally by specification when several "
+                "specifications serve one scenario on the instance.")
 
 # --- Well-known instances --------------------------------------------------
 CAT_INST = "Scenario Binding Instances"

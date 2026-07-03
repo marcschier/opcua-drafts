@@ -19,20 +19,26 @@ BIND = os.path.join(os.path.dirname(EX), "Opc.Ua.ScenarioBinding.NodeSet2.xml")
 NS = "{http://opcfoundation.org/UA/2011/03/UANodeSet.xsd}"
 
 DOMAINS = {
-    "Pumps": ["Opc.Ua.Pumps.NodeSet2.xml", "Opc.Ua.Di.NodeSet2.xml",
-              "Opc.Ua.Machinery.NodeSet2.xml"],
-    "Robotics": ["Opc.Ua.Robotics.NodeSet2.xml", "Opc.Ua.Di.NodeSet2.xml",
-                 "Opc.Ua.IA.NodeSet2.xml", "Opc.Ua.Machinery.NodeSet2.xml"],
+    "Pumps": {"base": ["Opc.Ua.Pumps.NodeSet2.xml", "Opc.Ua.Di.NodeSet2.xml",
+                       "Opc.Ua.Machinery.NodeSet2.xml"]},
+    "Robotics": {"base": ["Opc.Ua.Robotics.NodeSet2.xml", "Opc.Ua.Di.NodeSet2.xml",
+                          "Opc.Ua.IA.NodeSet2.xml", "Opc.Ua.Machinery.NodeSet2.xml"]},
     # Facets overlay locates bound items by type-level BrowsePath (values, not node
     # references), so it resolves against the base spec alone - no companion NodeSet needed.
-    "Facets": [],
+    "Facets": {"base": []},
+    # DI facet examples (both live in examples/di/): nameplate identity on IVendorNameplateType
+    # (which Pumps extends) and a device-only DeviceHealth binding on IDeviceHealthType.
+    "DI": {"base": ["Opc.Ua.Di.NodeSet2.xml"]},
+    "DIDeviceHealth": {"base": ["Opc.Ua.Di.NodeSet2.xml"], "folder": "di"},
 }
 
 errors = []
 
 
-def check(domain, base_files):
-    f = os.path.join(EX, domain.lower(), f"Opc.Ua.{domain}.ScenarioBinding.NodeSet2.xml")
+def check(domain, spec):
+    base_files = spec["base"]
+    folder = spec.get("folder", domain.lower())
+    f = os.path.join(EX, folder, f"Opc.Ua.{domain}.ScenarioBinding.NodeSet2.xml")
     tree = ET.parse(f)  # raises on malformed
     root = tree.getroot()
     nodes = [e for e in root if e.tag.startswith(NS + "UA")]
@@ -77,11 +83,11 @@ def check(domain, base_files):
 def main():
     if not os.path.exists(BIND):
         sys.exit(f"base spec NodeSet not found: {BIND}")
-    for dom, files in DOMAINS.items():
-        if not all(os.path.exists(os.path.join(REF, x)) for x in files):
+    for dom, spec in DOMAINS.items():
+        if not all(os.path.exists(os.path.join(REF, x)) for x in spec["base"]):
             print(f"{dom}: SKIP (base NodeSets missing under tools/ref/)")
             continue
-        check(dom, files)
+        check(dom, spec)
     print(f"\nERRORS: {len(errors)}")
     for e in errors[:40]:
         print("  ", e)

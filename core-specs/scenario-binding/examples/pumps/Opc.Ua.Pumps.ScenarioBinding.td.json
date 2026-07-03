@@ -431,12 +431,10 @@
       "readOnly": true,
       "uav:browseName": "2:Manufacturer",
       "sb:scenario": [
-        "http://opcfoundation.org/UA/PubSub/Scenarios/Observability",
-        "http://opcfoundation.org/UA/PubSub/Scenarios/FleetAndCompliance"
+        "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
       ],
       "sb:dataSetClassId": [
-        "urn:uuid:96490f93-6c92-59cd-981d-4203ab067313",
-        "urn:uuid:c5ad94e3-12f1-5fa4-b69f-b8aeaf40106a"
+        "urn:uuid:96490f93-6c92-59cd-981d-4203ab067313"
       ],
       "sb:dimension": true,
       "forms": [
@@ -466,12 +464,10 @@
       "readOnly": true,
       "uav:browseName": "2:SerialNumber",
       "sb:scenario": [
-        "http://opcfoundation.org/UA/PubSub/Scenarios/Observability",
-        "http://opcfoundation.org/UA/PubSub/Scenarios/FleetAndCompliance"
+        "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
       ],
       "sb:dataSetClassId": [
-        "urn:uuid:96490f93-6c92-59cd-981d-4203ab067313",
-        "urn:uuid:c5ad94e3-12f1-5fa4-b69f-b8aeaf40106a"
+        "urn:uuid:96490f93-6c92-59cd-981d-4203ab067313"
       ],
       "sb:dimension": true,
       "forms": [
@@ -807,70 +803,6 @@
         },
         {
           "href": "mqtt://broker.example.com:1883/pumps/anomalydetection",
-          "contentType": "application/json",
-          "op": "observeproperty",
-          "sb:pubSub": true
-        }
-      ]
-    },
-    "Model": {
-      "title": "Model",
-      "@type": "uav:variable",
-      "type": "string",
-      "observable": true,
-      "readOnly": true,
-      "uav:browseName": "2:Model",
-      "sb:scenario": [
-        "http://opcfoundation.org/UA/PubSub/Scenarios/FleetAndCompliance"
-      ],
-      "sb:dataSetClassId": [
-        "urn:uuid:c5ad94e3-12f1-5fa4-b69f-b8aeaf40106a"
-      ],
-      "forms": [
-        {
-          "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Pumps/;s=ExamplePump/Identification/Model",
-          "contentType": "application/json",
-          "op": [
-            "readproperty",
-            "observeproperty"
-          ],
-          "uav:browsePath": "/Identification/Model",
-          "uav:browseName": "2:Model"
-        },
-        {
-          "href": "mqtt://broker.example.com:1883/pumps/fleetandcompliance",
-          "contentType": "application/json",
-          "op": "observeproperty",
-          "sb:pubSub": true
-        }
-      ]
-    },
-    "ProductInstanceUri": {
-      "title": "ProductInstanceUri",
-      "@type": "uav:variable",
-      "type": "string",
-      "observable": true,
-      "readOnly": true,
-      "uav:browseName": "2:ProductInstanceUri",
-      "sb:scenario": [
-        "http://opcfoundation.org/UA/PubSub/Scenarios/FleetAndCompliance"
-      ],
-      "sb:dataSetClassId": [
-        "urn:uuid:c5ad94e3-12f1-5fa4-b69f-b8aeaf40106a"
-      ],
-      "forms": [
-        {
-          "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Pumps/;s=ExamplePump/Identification/ProductInstanceUri",
-          "contentType": "application/json",
-          "op": [
-            "readproperty",
-            "observeproperty"
-          ],
-          "uav:browsePath": "/Identification/ProductInstanceUri",
-          "uav:browseName": "2:ProductInstanceUri"
-        },
-        {
-          "href": "mqtt://broker.example.com:1883/pumps/fleetandcompliance",
           "contentType": "application/json",
           "op": "observeproperty",
           "sb:pubSub": true

@@ -98,18 +98,18 @@ Key words **shall**, **should**, **may**, **shall not** are to be interpreted as
 
 A Scenario Binding carries two distinct kinds of metadata, and keeping them separate is the central design idea:
 
-1. **Routing metadata — for the bridge.** The `ScenarioUri` says *which integration this serves*; the per‑item `Kind` says *how to forward this value* (a time series, a log record, an action, …). A bridge that "supports the Observability Scenario" can configure itself from routing metadata alone, for any domain. For the Observability Scenario, the routing metadata also includes the OTEL metric instrument (`MetricInstrumentType`), the metric dimensions (`Kind = Dimension` items) and, for logs, the `LogTemplate`, so a bridge produces correct OTEL metrics/logs without domain knowledge.
+1. **Routing metadata — for the bridge.** The selected profile's `ScenarioUri` says *which integration this serves*; the per‑item `Kind` says *how to forward this value* (a time series, a log record, an action, …). A bridge that "supports the Observability Scenario" can configure itself from routing metadata alone, for any domain. For the Observability Scenario, the routing metadata also includes the OTEL metric instrument (`MetricInstrumentType`), the metric dimensions (`Kind = Dimension` items) and, for logs, the `LogTemplate`, so a bridge produces correct OTEL metrics/logs without domain knowledge.
 2. **Semantic metadata — for the consumer.** Each bound item also retains a **cross‑reference back to the model** that defines it: the source `TypeDefinition`, the namespace‑qualified `BrowseName`, the `ModelNamespaceUri`, and — where available — a dictionary entry ([OPC 10000‑19](https://reference.opcfoundation.org/specs/OPC-10000-19/), IRDI/CDD). This is what lets a *disconnected* consumer, holding only a PubSub message, recover what the value *means*.
 
 The bridge never needs the semantic layer to do its job; it forwards it verbatim so the ultimate consumer can use it.
 
 ### 4.2 Discovery
 
-A Server exposes a server-wide `Scenarios` Object of [`ScenarioFolderType`](#type-ScenarioFolderType) as a component of the standard **Server Object** (`i=2253`), which is the scenario-first discovery entry point. The `Scenarios` registry contains [`ScenarioProfileType`](#type-ScenarioProfileType) Objects, one per known Scenario URI. A Client browses `Server/Scenarios`, selects the Scenario profile whose `ScenarioUri` it supports, browses that profile's [`ScenarioBindingGroupType`](#type-ScenarioBindingGroupType) components, and then browses each group's [`ScenarioBindingType`](#type-ScenarioBindingType) children.
+A Server exposes a server-wide `Scenarios` Object of [`ScenarioFolderType`](#type-ScenarioFolderType) as a component of the standard **Server Object** (`i=2253`), which is the scenario-first discovery entry point. The `Scenarios` registry organizes [`ScenarioProfileType`](#type-ScenarioProfileType) Objects, one per known Scenario URI. A Client browses `Server/Scenarios`, selects the Scenario profile whose `ScenarioUri` it supports, follows the profile's non-hierarchical [`RealizedBy`](#type-RealizedBy) references to the [`ScenarioBindingGroupType`](#type-ScenarioBindingGroupType) Objects that serve that Scenario, and then browses each group's [`ScenarioBindingType`](#type-ScenarioBindingType) children.
 
-Each [`ScenarioProfileType`](#type-ScenarioProfileType) contains one [`ScenarioBindingGroupType`](#type-ScenarioBindingGroupType) per companion or scenario specification that serves that Scenario. The group carries `CompanionSpecificationUri` and `ModelNamespaceUris`, and it is the BrowseName collision boundary within the selected Scenario: bindings with the same BrowseName from different companion specifications do not collide because they are contained in different groups distinguished by `CompanionSpecificationUri`. Because sibling groups under one profile share the Scenario, each group's BrowseName is derived from its `CompanionSpecificationUri` (a stable specification identifier), not the Scenario name, so the groups themselves do not collide by BrowseName either. A specification serving N scenarios appears as N groups, one under each Scenario profile; each binding keeps its `ScenarioUri` as portable identity even though the parent profile also implies the Scenario.
+The groups themselves are not contained by the profile. Each [`ScenarioBindingGroupType`](#type-ScenarioBindingGroupType) is a `HasComponent` child of the [`IScenarioBoundType`](#type-IScenarioBoundType) Object instance it describes, and that Object is the group's single hierarchical parent. Profiles therefore are not duplicated per instance and do not contain or copy groups; they reference the serving instance groups through `RealizedBy`. Given a group, a Client browses the inverse `Realizes` reference back to its profile and reads that profile's authoritative `ScenarioUri`. The group carries `CompanionSpecificationUri` and `ModelNamespaceUris`, and it remains the BrowseName collision boundary for the bindings on that instance.
 
-Additionally, any Object (typically a companion-spec instance) may implement the [`IScenarioBoundType`](#type-IScenarioBoundType) Interface to expose its **own** [`ScenarioBindingGroupType`](#type-ScenarioBindingGroupType) components directly, one per (`ScenarioUri` × `CompanionSpecificationUri`) the Object serves — typically one per Scenario for a single-specification instance, whose group BrowseNames are then the Scenario names — giving per-instance discovery without a separate container. No query Method is defined — Browse and Read provide enumeration and selection for both server-wide and per-instance discovery.
+`RealizedBy` is non-hierarchical so the group can remain hierarchically contained by the bound instance while still being reachable from the scenario registry. This avoids a second hierarchical parent and prevents a profile→group→instance hierarchy loop. `RealizedBy`/`Realizes` is distinct from [`ScenarioRealizedBy`](#type-ScenarioRealizedBy)/`RealizesScenario`, which links a binding to its optional Part 14 PubSub realization.
 
 ### 4.3 Realization (hybrid)
 
@@ -147,7 +147,6 @@ classDiagram
   }
   class ScenarioBindingType {
     <<ObjectType : BaseObjectType>>
-    +ScenarioUri
     +Direction
     +DataSetClassId
     +ContentKind
@@ -182,17 +181,18 @@ classDiagram
 
   ServerObject "1" *-- "1" ScenarioFolderType : HasComponent (Scenarios)
   ScenarioFolderType "1" o-- "*" ScenarioProfileType : Organizes (<Scenario>)
-  ScenarioProfileType "1" o-- "*" ScenarioBindingGroupType : HasComponent (<ScenarioBindingGroup>)
+  ScenarioProfileType ..> ScenarioBindingGroupType : RealizedBy (non-hier)
+  ScenarioBindingGroupType ..> ScenarioProfileType : Realizes
+  IScenarioBoundType "1" *-- "*" ScenarioBindingGroupType : HasComponent (per-instance)
   ScenarioBindingGroupType "1" o-- "*" ScenarioBindingType : HasComponent (<ScenarioBinding>)
   ScenarioBindingType "1" o-- "*" BoundItemType : HasComponent (<BoundItem>)
   BoundVariableType --|> BoundItemType
   BoundMethodType --|> BoundItemType
   BoundEventFieldType --|> BoundItemType
-  IScenarioBoundType o-- "*" ScenarioBindingGroupType : HasComponent (per-instance)
   BoundItemType ..> CompanionNode : BindsToNode or BrowsePath
   Bridge ..> ScenarioFolderType : browse Server/Scenarios
   Bridge ..> ScenarioProfileType : select ScenarioUri
-  Bridge ..> ScenarioBindingGroupType : browse per spec
+  Bridge ..> ScenarioBindingGroupType : follow RealizedBy
   Bridge ..> ScenarioBindingType : Read and resolve
   Bridge ..> Target : forward by Kind
 ```
@@ -203,9 +203,22 @@ classDiagram
 classDiagram
   direction LR
 
-  class ScenarioBindingType {
+  class ScenarioFolderType {
+    <<ObjectType : FolderType>>
+  }
+  class ScenarioProfileType {
     <<ObjectType : BaseObjectType>>
     +ScenarioUri
+  }
+  class ScenarioBindingGroupType {
+    <<ObjectType : FolderType>>
+    +CompanionSpecificationUri
+  }
+  class IScenarioBoundType {
+    <<ObjectType : BaseInterfaceType>>
+  }
+  class ScenarioBindingType {
+    <<ObjectType : BaseObjectType>>
     +DataSetClassId
     +ContentKind
     +DataSetMetaData
@@ -223,6 +236,11 @@ classDiagram
     <<Object : Part 14 WriterGroup / PubSubConnection>>
   }
 
+  ScenarioFolderType "1" o-- "*" ScenarioProfileType : Organizes (<Scenario>)
+  ScenarioProfileType ..> ScenarioBindingGroupType : RealizedBy (non-hier)
+  ScenarioBindingGroupType ..> ScenarioProfileType : Realizes
+  IScenarioBoundType "1" *-- "*" ScenarioBindingGroupType : HasComponent
+  ScenarioBindingGroupType "1" o-- "*" ScenarioBindingType : HasComponent
   ScenarioBindingType --> PublishedDataSet : ScenarioRealizedBy
   PublishedDataSet --> ScenarioBindingType : RealizesScenario
   PublishedDataSet o-- DataSetWriter : writes or reads
@@ -230,25 +248,27 @@ classDiagram
   ActionTarget --> ScenarioBindingType : RealizesScenario
 ```
 
-*Attributes inside a box are **Properties** (Variables/DataType fields); labelled lines between boxes are **References**. The core diagram shows scenario-first discovery by containment, the per-scenario physical grouping of binding nodes, and the classic OPC UA Services baseline. The optional Part 14 diagram shows PubSub realization nodes pointing back to the binding via the inverse `RealizesScenario` reference (`Realization → ScenarioBinding`).*
+*Attributes inside a box are **Properties** (Variables/DataType fields); labelled lines between boxes are **References**. The core diagram shows scenario-first discovery from the registry through `RealizedBy` to groups hierarchically contained by bound instances, and the classic OPC UA Services baseline. The optional Part 14 diagram shows the same discovery relation plus PubSub realization nodes pointing back to the binding via the inverse `RealizesScenario` reference (`Realization → ScenarioBinding`).*
 
 ## 5 Information model
 
 The full node reference — every type, member, DataType and well-known instance — is generated in **[Annex A](#annex-a)**. This clause states the intent and the normative rules. All types are defined in the base namespace; NodeIds are provisional.
 
+The model uses non-hierarchical ReferenceTypes for cross-links that must not affect containment: `BindsToNode` links a bound item to the source Variable or Method it exposes; `ScenarioRealizedBy`/`RealizesScenario` links a binding to its optional Part 14 PubSub realization; `HasBaseBinding` links a derived or composed binding to a locally present base binding; and `RealizedBy`/`Realizes` links a `ScenarioProfile` to the instance-contained `ScenarioBindingGroup` Objects that serve that profile. `RealizedBy` is intentionally distinct from `ScenarioRealizedBy`.
+
 ### 5.1 ScenarioFolderType
 
-The server-wide `Scenarios` registry is a [`ScenarioFolderType`](#type-ScenarioFolderType) Object exposed as a component of the **Server Object**. It holds `<Scenario>` Objects of [`ScenarioProfileType`](#type-ScenarioProfileType) organized by **Browse** and is the scenario-first discovery entry point. A Client selects the profile for the Scenario URI it supports, browses that profile's [`ScenarioBindingGroupType`](#type-ScenarioBindingGroupType) components, and then browses each group's `<ScenarioBinding>` children. No query Method is defined — Browse and Read already provide enumeration and selection, and requiring a Method would burden the classic Servers that are the common case.
+The server-wide `Scenarios` registry is a [`ScenarioFolderType`](#type-ScenarioFolderType) Object exposed as a component of the **Server Object**. It organizes `<Scenario>` Objects of [`ScenarioProfileType`](#type-ScenarioProfileType) and is the scenario-first discovery entry point. A Client selects the profile for the Scenario URI it supports, follows the profile's [`RealizedBy`](#type-RealizedBy) references to the instance-contained [`ScenarioBindingGroupType`](#type-ScenarioBindingGroupType) Objects serving that Scenario, and then browses each group's `<ScenarioBinding>` children. No query Method is defined — Browse and Read already provide enumeration and selection, and requiring a Method would burden the classic Servers that are the common case.
 
 #### 5.1.1 ScenarioBindingGroupType
 
-A [`ScenarioBindingGroupType`](#type-ScenarioBindingGroupType) is the per-companion-specification anchor below a [`ScenarioProfileType`](#type-ScenarioProfileType). Its `CompanionSpecificationUri` (Mandatory) is a stable **specification-level** identifier, not a namespace URI: a companion specification may define or use several namespace URIs across modules, versions or profiles, and those URIs are therefore not a unique group key. `ModelNamespaceUris` (Mandatory) lists all namespace URIs the companion specification defines or covers so a Client can match the group to the namespaces it knows.
+A [`ScenarioBindingGroupType`](#type-ScenarioBindingGroupType) is the per-(Scenario × companion specification) anchor contained by the [`IScenarioBoundType`](#type-IScenarioBoundType) Object instance it describes. Its `CompanionSpecificationUri` (Mandatory) is a stable **specification-level** identifier, not a namespace URI: a companion specification may define or use several namespace URIs across modules, versions or profiles, and those URIs are therefore not a unique group key. `ModelNamespaceUris` (Mandatory) lists all namespace URIs the companion specification defines or covers so a Client can match the group to the namespaces it knows. Each group `Realizes` exactly the [`ScenarioProfileType`](#type-ScenarioProfileType) for its Scenario; profiles reference the groups that serve them through `RealizedBy`.
 
-A `ScenarioBindingGroup` is identified by the pair (`ScenarioUri` of its parent profile, `CompanionSpecificationUri`). Within one [`ScenarioProfileType`](#type-ScenarioProfileType) the Scenario is fixed, so its groups **shall** be unique by `CompanionSpecificationUri`; and because sibling Objects must also have distinct BrowseNames, each group's BrowseName **shall** be a stable identifier of its companion specification (for example a spec short name), not the Scenario name. Bindings are named only within their group, so two companion specifications may use the same binding BrowseName without colliding. On a per-instance Object exposing groups directly through [`IScenarioBoundType`](#type-IScenarioBoundType) the specification is typically fixed and the Scenario varies, so the groups are one per (`ScenarioUri` × `CompanionSpecificationUri`) — normally one per Scenario, whose BrowseName is then the Scenario name; when several specifications serve one Scenario on the same instance the BrowseName **shall** additionally distinguish the specification. In all cases sibling group BrowseNames **shall** be unique. Scenario-first discovery is containment through the selected profile and group; it does not require cross-links or rename binding nodes.
+A `ScenarioBindingGroup` is identified on its containing instance by the pair (`ScenarioUri` of the profile reached through inverse `Realizes`, `CompanionSpecificationUri`). Because sibling groups are contained by the same instance, an instance **shall not** expose two sibling groups with the same (`ScenarioUri` × `CompanionSpecificationUri`) pair; and because sibling Objects must also have distinct BrowseNames, each group's BrowseName **shall** be stable and unique among that instance's groups. For a single-specification instance the BrowseName is typically the Scenario name. When several specifications serve one Scenario on the same instance, the BrowseName **shall** additionally distinguish the specification. Bindings are named only within their group, so two companion specifications may use the same binding BrowseName without colliding. Scenario-first discovery is by `RealizedBy` from the selected profile to the instance-contained groups; it does not duplicate groups under the profile or rename binding nodes.
 
 ### 5.2 ScenarioBindingType
 
-A [`ScenarioBindingType`](#type-ScenarioBindingType) represents exactly one Scenario Binding — one named DataSet class (a set of fields) for one Scenario on one bound target. `ScenarioUri` (Mandatory) and `Direction` (Mandatory, a [`ScenarioBindingDirectionEnum`](#type-ScenarioBindingDirectionEnum)) are the routing header. `ConfigurationVersion` aligns the binding with the `ConfigurationVersion` of its DataSet schema so a consumer can detect change. `DataSetClassId` (Mandatory) is the stable Part 14 class identity for the DataSet (§5.7). `ContentKind` (Mandatory, a [`ScenarioContentKindEnum`](#type-ScenarioContentKindEnum)) selects whether the DataSet contains data items or events (§5.6). `DataSetCardinalityPath` (Optional) selects the cardinality level for instances of that class; when omitted, the cardinality level is the bound root.
+A [`ScenarioBindingType`](#type-ScenarioBindingType) represents exactly one Scenario Binding — one named DataSet class (a set of fields) for the Scenario realized by its containing group on one bound target. The binding's Scenario is the `ScenarioUri` of that group's [`ScenarioProfileType`](#type-ScenarioProfileType), reached by browsing inverse [`Realizes`](#type-RealizedBy) from the group; the binding itself does not carry `ScenarioUri`. `Direction` (Mandatory, a [`ScenarioBindingDirectionEnum`](#type-ScenarioBindingDirectionEnum)) is routing metadata. `ConfigurationVersion` aligns the binding with the `ConfigurationVersion` of its DataSet schema so a consumer can detect change. `DataSetClassId` (Mandatory) is the stable Part 14 class identity for the DataSet and already encodes the Scenario (§5.7). `ContentKind` (Mandatory, a [`ScenarioContentKindEnum`](#type-ScenarioContentKindEnum)) selects whether the DataSet contains data items or events (§5.6). `DataSetCardinalityPath` (Optional) selects the cardinality level for instances of that class; when omitted, the cardinality level is the bound root.
 
 The bound items are exposed **both** as browsable `<BoundItem>` objects **and** as a compact `BoundItems` array of [`BoundItemDataType`](#type-BoundItemDataType); when both are present they **shall** carry equivalent bound-item information (the same members and values). The bound items are the DataSet fields.
 
@@ -351,7 +371,7 @@ The semantic Properties carry the **Optional** ModellingRule on [`BoundItemType`
 When a binding is realized as a Part 14 `PublishedDataSet`, for every bound item the Server **shall**:
 
 1. set the corresponding `FieldMetaData.dataSetFieldId` to the item's `DataSetFieldId`;
-2. add to `FieldMetaData.properties` the KeyValuePairs `ModelNamespaceUri`, `SourceBrowseName`, `SourceTypeDefinition`, `BrowsePath` and, where present, `SemanticReferenceUri` and `EventFieldOperand`; and
+2. add to `FieldMetaData.properties` the KeyValuePairs `ModelNamespaceUri`, `SourceBrowseName`, `SourceTypeDefinition`, `BrowsePath` and, where present, `SemanticReferenceUri`, `SourceScenarioBindingClassId` (so a disconnected subscriber can recognize fields inherited from a base facet class) and `EventFieldOperand`; and
 3. ensure the `DataSetMetaData` namespace and DataType tables describe any non-standard DataTypes used.
 
 The property keys **shall** match the corresponding [`BoundItemType`](#type-BoundItemType) or [`BoundItemDataType`](#type-BoundItemDataType) member names above, so a consumer can map each `FieldMetaData` property back to the binding model without a separate lookup.
@@ -387,7 +407,7 @@ For `ContentKind = Events`, the DataSet is an event DataSet modeled by Part 14 [
 
 The namespace UUID **shall** be the fixed UUID `fc164bdb-8705-58e9-ab11-7b1ed155b4e8`, defined by this specification as `uuid5(URL, "http://opcfoundation.org/UA/PubSub/Scenarios/DataSetClass")`.
 
-`ScenarioUri` is the binding's `ScenarioUri`. `AppliesToType` is the namespace-qualified BrowseName of the concrete [binding target](#term-binding-target) (a TypeDefinitionNode) encoded as `<namespaceUri>;<Name>`. `MajorVersion` is the binding's `ConfigurationVersion.MajorVersion` expressed as a base-10 integer without leading zeroes. If the binding does not expose `ConfigurationVersion`, `MajorVersion` **shall** be taken as `1` (equivalently, an absent `ConfigurationVersion` is treated as `{MajorVersion = 1, MinorVersion = 0}`) so the derivation is always well-defined.
+`ScenarioUri` is the `ScenarioUri` of the binding's group profile (group inverse `Realizes` → `ScenarioProfile`). `AppliesToType` is the namespace-qualified BrowseName of the concrete [binding target](#term-binding-target) (a TypeDefinitionNode) encoded as `<namespaceUri>;<Name>`. `MajorVersion` is the binding's `ConfigurationVersion.MajorVersion` expressed as a base-10 integer without leading zeroes. If the binding does not expose `ConfigurationVersion`, `MajorVersion` **shall** be taken as `1` (equivalently, an absent `ConfigurationVersion` is treated as `{MajorVersion = 1, MinorVersion = 0}`) so the derivation is always well-defined.
 
 Because the calculation is deterministic, every Server publishing the same Scenario for the same binding target and major version **shall** compute the same `DataSetClassId`. A semantics-agnostic subscriber can therefore recognize the DataSet *class* from `DataSetClassId` alone, without browsing the Server. The identity grain is per `(ScenarioUri × AppliesToType × MajorVersion)`.
 
@@ -401,7 +421,7 @@ A binding **may** expose `DataSetMetaData` carrying the DataSet fields, `dataSet
 
 ### 5.9 IScenarioBoundType
 
-An Interface a model may apply (via `HasInterface`) to advertise participation in scenario bindings. It exposes [`ScenarioBindingGroupType`](#type-ScenarioBindingGroupType) components directly, one per (`ScenarioUri` × `CompanionSpecificationUri`) the Object serves — typically one per Scenario for a single-specification instance — rather than a separate container; sibling group BrowseNames are unique (§5.1.1). Applying it at the **type** level, with type-level BrowsePath bindings, is the recommended way for a companion specification to adopt this specification without changing its own types' semantics.
+An Interface a model may apply (via `HasInterface`) to advertise participation in scenario bindings. It contains the Object's per-(Scenario × `CompanionSpecificationUri`) [`ScenarioBindingGroupType`](#type-ScenarioBindingGroupType) components directly — typically one per Scenario for a single-specification instance — rather than a separate container; sibling group BrowseNames are unique (§5.1.1). Each contained group `Realizes` the [`ScenarioProfileType`](#type-ScenarioProfileType) under the server-wide registry, and that profile references the group through `RealizedBy`. Applying the Interface at the **type** level, with type-level BrowsePath bindings, is the recommended way for a companion specification to adopt this specification without changing its own types' semantics.
 
 ### 5.10 Locating bound items — BrowsePath resolution (normative)
 
@@ -424,9 +444,9 @@ Resolution rules a Server **shall** apply:
 
 ### 5.11 Scenario registry and URIs
 
-The `Scenarios` registry is a [`ScenarioFolderType`](#type-ScenarioFolderType) Object under the Server Object. It holds [`ScenarioProfileType`](#type-ScenarioProfileType) Objects, one per known Scenario, each carrying its `ScenarioUri`, `Title`, `Summary` and `Keywords`, and it is the primary discovery entry point. Companion or scenario specifications that extend this specification register their own Scenario profiles for their Scenario URIs.
+The `Scenarios` registry is a [`ScenarioFolderType`](#type-ScenarioFolderType) Object under the Server Object. It organizes [`ScenarioProfileType`](#type-ScenarioProfileType) Objects, one per known Scenario, each carrying the authoritative `ScenarioUri`, `Title`, `Summary` and `Keywords`, and it is the primary discovery entry point. Companion or scenario specifications that extend this specification register their own Scenario profiles for their Scenario URIs.
 
-Each [`ScenarioProfileType`](#type-ScenarioProfileType) contains the [`ScenarioBindingGroupType`](#type-ScenarioBindingGroupType) Objects that serve that Scenario. A Client that supports a Scenario does not need to know which specification contributed a binding: it selects the Scenario profile, browses the per-specification groups distinguished by `CompanionSpecificationUri`, browses each group's [`ScenarioBindingType`](#type-ScenarioBindingType) children, then resolves each binding through the classic baseline or optional PubSub realization.
+Each [`ScenarioProfileType`](#type-ScenarioProfileType) references the instance-contained [`ScenarioBindingGroupType`](#type-ScenarioBindingGroupType) Objects that serve that Scenario through non-hierarchical `RealizedBy` references. A Client that supports a Scenario does not need to know which specification contributed a binding: it selects the Scenario profile, follows `RealizedBy` to the serving groups distinguished by `CompanionSpecificationUri`, browses each group's [`ScenarioBindingType`](#type-ScenarioBindingType) children, then resolves each binding through the classic baseline or optional PubSub realization. Given only a group, the Client browses inverse `Realizes` to the profile and reads that profile's `ScenarioUri`.
 
 This specification defines the following baseline Scenario URIs under the root `http://opcfoundation.org/UA/PubSub/Scenarios/` (the URI root is a stable opaque identifier retained for deterministic `DataSetClassId` derivation):
 
@@ -445,14 +465,14 @@ This specification defines the following baseline Scenario URIs under the root `
 
 A binding may be declared on a [binding target](#term-binding-target) — a **TypeDefinitionNode**; in practice an ObjectType, an Interface (facet) or an AddInType (an Interface and an AddInType are themselves ObjectTypes). The target's type-level BrowsePaths resolve against any instance that is-a that type, implements that Interface using `HasInterface`, or composes that AddInType using `HasAddIn`. `HasAddIn` is the core OPC UA ReferenceType `i=17604`, a subtype of `HasComponent`, so AddIn children are reachable by the §5.10 BrowsePath resolution over `HierarchicalReferences` (`i=33`).
 
-Inheritance is uniform across the three OPC UA composition axes: a subtype inherits the bindings of its supertype, a type implementing a facet Interface inherits the facet's bindings, and a host composing an AddIn inherits the AddIn's bindings.
+Inheritance is uniform across the three OPC UA composition axes: a subtype inherits the bindings of its supertype, a type (or one of its component objects) implementing a facet Interface inherits the facet's bindings, and a host composing an AddIn inherits the AddIn's bindings. A facet implemented by a component object is composed at that component's path (step 2).
 
 A derived binding **shall** list only its additional delta fields and **shall** reference the base class lineage with `BaseDataSetClassIds`; it **may** additionally use `HasBaseBinding` when the base binding node is present locally. A derived field with the same `FieldName` as an inherited field **shall** override the inherited field, for example to refine `SamplingIntervalHint` or use a different `BrowsePath`. A binding **shall not** remove an inherited field; every derived DataSet is a superset of each base DataSet it extends, which makes base-class field-subset recognition safe.
 
-For a given instance and `ScenarioUri`, a Server or bridge **shall** compose the effective binding as follows:
+For a given instance and Scenario (identified by the `ScenarioUri` of the group's profile), a Server or bridge **shall** compose the effective binding as follows:
 
-1. Collect candidate bindings for that `ScenarioUri` from the instance's TypeDefinition and its supertype chain, from each `HasInterface` target type, and from each `HasAddIn` child's type.
-2. Each collected binding has a **mount path** — the RelativePath from the composing instance's root to the node the binding's paths are relative to. For a binding inherited via **subtype** or an **Interface** (`HasInterface`), the mount path is **empty** (its members appear directly on the instance). For a binding contributed by an **AddIn** (`HasAddIn`), the mount path is the **BrowseName of the `HasAddIn` child** on the host (e.g. `Location` for a `LocationAddInType` mounted as `Location`). Before unioning, the Server/bridge **shall** re-anchor every path of a collected binding by prefixing the mount path: each bound item's `BrowsePath` (and `StartingNode`), the binding's `DataSetCardinalityPath`, and its `EventSourcePath` are resolved relative to `mountPath + path`. Bindings inherited via subtype/interface need no prefix (empty mount).
+1. Collect candidate bindings for that profile `ScenarioUri` from the instance's TypeDefinition and its supertype chain, from each `HasInterface` target type, from each `HasAddIn` child's type, and from each hierarchical **child object** (a component or AddIn) whose TypeDefinition — or an Interface that child implements — declares a binding for that `ScenarioUri` (this is how a facet implemented by a sub-object, such as a DI `IVendorNameplateType` nameplate on a Machinery `Identification` component, is reached).
+2. Each collected binding has a **mount path** — the RelativePath from the composing instance's root to the node that **carries the facet** (the node whose TypeDefinition or implemented Interface declares the binding). For a binding on the bound type itself (**subtype**) or on an **Interface the bound type implements directly** (`HasInterface`), the mount path is **empty** (its members appear directly on the instance). For a binding carried by a **hierarchical child** — an **AddIn** child (`HasAddIn`, e.g. `Location` for a `LocationAddInType` mounted as `Location`) or a **component/child object** whose type or implemented Interface declares it (e.g. `Identification` for a `IVendorNameplateType` nameplate facet implemented by the `Identification` object) — the mount path is that **child's BrowsePath**. Before unioning, the Server/bridge **shall** re-anchor every path of a collected binding by prefixing the mount path: each bound item's `BrowsePath` (and `StartingNode`), the binding's `DataSetCardinalityPath`, and its `EventSourcePath` are resolved relative to `mountPath + path`. Bindings on the bound type or a directly-implemented interface need no prefix (empty mount).
 3. Union the candidates' re-anchored `BoundItems`, applying override-by-`FieldName` so the most-derived contribution wins when multiple bindings define the same `FieldName`.
 4. Set `SourceScenarioBindingClassId` on each composed field **only** for fields inherited from — or overriding a field of — a base facet binding; its value is the **base facet binding's `DataSetClassId`** (an overriding field retains the **overridden base facet's** class, since it still belongs to that facet). Fields the composing binding **defines itself** (its own delta fields) **omit** `SourceScenarioBindingClassId`; they belong implicitly to the composing binding's own `DataSetClassId`.
 5. Set the composed binding's `BaseDataSetClassIds` to the set of contributing base `DataSetClassId` values.
@@ -511,9 +531,9 @@ This clause shows how a **bridge** consumes the model. It is informative; confor
 
 ### 6.1 Walkthrough
 
-1. **Discover.** Browse `Server/Scenarios`, select the `ScenarioProfileType` for the Scenario URI the bridge supports — the well-known Scenario profiles are listed in [§5.11 Scenario registry and URIs](#511-scenario-registry-and-uris), so a bridge can jump straight to the one it cares about — browse that profile's per-specification `ScenarioBindingGroup` components, then browse each group's `ScenarioBinding` children. If needed, find Objects implementing `IScenarioBoundType` and browse their directly exposed per-scenario groups for per-instance bindings.
+1. **Discover.** Browse `Server/Scenarios`, select the `ScenarioProfileType` for the Scenario URI the bridge supports — the well-known Scenario profiles are listed in [§5.11 Scenario registry and URIs](#511-scenario-registry-and-uris), so a bridge can jump straight to the one it cares about — follow that profile's `RealizedBy` references to the instance-contained `ScenarioBindingGroup` Objects, then browse each group's `ScenarioBinding` children. If starting from an `IScenarioBoundType` instance, browse its directly exposed per-scenario groups and resolve each group's Scenario by inverse `Realizes` → profile → `ScenarioUri`.
 2. **Recognize.** If the bridge has prior knowledge of a scenario DataSet class, it can recognize an incoming PubSub DataSet by `DataSetClassId` alone; no browse of the publishing Server is required. If it is browsing, read `DataSetClassId`, `ContentKind`, `Direction`, `DataSetCardinalityPath` and optionally `DataSetMetaData` to learn the schema.
-3. **Compose.** Before resolving items, compose the effective DataSet by the §5.12 union algorithm: gather bindings inherited via subtype, `HasInterface` facets and `HasAddIn` children for the selected `ScenarioUri`, then apply override-by-`FieldName` and field provenance tagging rather than using only the single most-derived binding.
+3. **Compose.** Before resolving items, compose the effective DataSet by the §5.12 union algorithm: gather bindings inherited via subtype, `HasInterface` facets and `HasAddIn` children for the selected profile `ScenarioUri`, then apply override-by-`FieldName` and field provenance tagging rather than using only the single most-derived binding.
 4. **Realize — classic path (the default).** Resolve `DataSetCardinalityPath` (default: the bound root) to the set of DataSet instances to create. For each produced DataSet in a data binding, resolve each bound Variable `BrowsePath` (or read `SourceNodeId`) with `TranslateBrowsePathsToNodeIds`, then create a Subscription with a MonitoredItem on that node and `AttributeId`, honouring `SamplingIntervalHint`; a Client may also Read the values directly for non-streaming use. For an event binding, resolve `EventSourcePath` to the notifier (default: the cardinality anchor), subscribe to Events, use the `BoundEventFieldType` / `EventFieldOperand` entries as selected fields, and apply `Filter` where supported. For a bound Method, use the `Call` service. This path needs no PubSub configuration and works on any Server.
 5. **Realize — PubSub path (only where PubSub is configured).** If the binding is [`ScenarioRealizedBy`](#type-ScenarioRealizedBy) a Part 14 node (equivalently, that node `RealizesScenario` the binding), read the `DataSetMetaData` and the transport from the owning `WriterGroup`/`PubSubConnection`, then create a `DataSetReader`/subscriber. A data DataSet is consumed as grouped Variable values. An event DataSet is consumed as selected event fields from the configured notifier, with the PublishedEvents `Filter` already applied by the publisher. For an `ActionInvoker`/`ActionResponder` binding, use Part 14 Actions/ActionTargets.
 6. **Forward.** For each field, forward the value tagged with its `Kind` (Telemetry/Metric → time series; Event → log; Command → action; …) and attach the semantic cross-reference so the downstream consumer can interpret it. **No domain knowledge is required.**
@@ -527,8 +547,10 @@ sequenceDiagram
   participant X as Target system
   B->>S: Browse Server/Scenarios
   S-->>B: ScenarioProfile { ScenarioUri, Title }
-  B->>S: Browse selected ScenarioProfile components
+  B->>S: Browse selected ScenarioProfile RealizedBy
   S-->>B: ScenarioBindingGroup { CompanionSpecificationUri, ModelNamespaceUris }
+  B->>S: Browse ScenarioBindingGroup Realizes
+  S-->>B: ScenarioProfile { ScenarioUri }
   B->>S: Browse selected ScenarioBindingGroup children
   S-->>B: ScenarioBinding { DataSetClassId, ContentKind, DataSetCardinalityPath, BoundItems... }
   B->>B: Compose effective DataSet via §5.12 union
@@ -558,8 +580,10 @@ sequenceDiagram
   participant X as Target system
   B->>S: Browse Server/Scenarios
   S-->>B: ScenarioProfile { ScenarioUri, Title }
-  B->>S: Browse selected ScenarioProfile components
+  B->>S: Browse selected ScenarioProfile RealizedBy
   S-->>B: ScenarioBindingGroup { CompanionSpecificationUri, ModelNamespaceUris }
+  B->>S: Browse ScenarioBindingGroup Realizes
+  S-->>B: ScenarioProfile { ScenarioUri }
   B->>S: Browse selected ScenarioBindingGroup children
   S-->>B: ScenarioBinding + realization (PublishedDataSet RealizesScenario binding)
   B->>S: Read DataSetMetaData + WriterGroup/PubSubConnection
@@ -579,9 +603,9 @@ The following Conformance Units (CUs) are defined; Facets group them for Servers
 
 | Conformance Unit | Requirement |
 |---|---|
-| Scenario Binding Discovery | Expose a server-wide `Scenarios` registry of type [`ScenarioFolderType`](#type-ScenarioFolderType) as a component of the Server Object so Clients can start from a Scenario profile and browse contained per-specification groups to serving bindings. |
-| Binding Grouping | Within each `ScenarioProfile`, group bindings under one `ScenarioBindingGroup` per companion specification, unique by `CompanionSpecificationUri` and carrying a unique sibling BrowseName derived from that specification identity, and expose `ModelNamespaceUris` for namespace matching. |
-| Scenario Registry | Expose the `Scenarios` registry with a `ScenarioProfile` per supported Scenario URI; each profile contains the per-specification `ScenarioBindingGroup` components whose bindings serve that Scenario. |
+| Scenario Binding Discovery | Expose a server-wide `Scenarios` registry of type [`ScenarioFolderType`](#type-ScenarioFolderType) as a component of the Server Object so Clients can start from a Scenario profile, follow `RealizedBy` to instance-contained groups, and browse those groups to serving bindings. |
+| Binding Grouping | On each `IScenarioBoundType` instance, group bindings under one `ScenarioBindingGroup` per (`ScenarioUri` × `CompanionSpecificationUri`) served by that instance; make sibling groups unique by that pair and BrowseName, have each group `Realizes` its profile, and expose `ModelNamespaceUris` for namespace matching. |
+| Scenario Registry | Expose the `Scenarios` registry with a `ScenarioProfile` per supported Scenario URI; each profile carries the authoritative `ScenarioUri` and references the instance-contained `ScenarioBindingGroup` Objects whose bindings serve that Scenario through `RealizedBy`. |
 | BrowsePath Resolution | Author bound items as type-level BrowsePaths and resolve them per instance under the rules of §5.10. |
 | DataSet Cardinality | Resolve `DataSetCardinalityPath` and create one DataSet instance per matched cardinality anchor while sharing the binding's `DataSetClassId`. |
 | DataSet Class Identity | Compute the deterministic `DataSetClassId` per §5.7 and propagate it to `DataSetMetaData.dataSetClassId` and `PublishedDataSet.DataSetClassId` wherever PubSub is configured. |
@@ -597,7 +621,7 @@ The following Conformance Units (CUs) are defined; Facets group them for Servers
 
 - **Server Scenario Binding Facet** — Discovery + Binding Grouping + Scenario Registry + BrowsePath Resolution + DataSet Cardinality + Semantic Cross-Reference + DataSet Class Identity + Binding Inheritance & Facet Composition (mandatory); Variable Realization + Event DataSet Binding + Action Realization + PubSub MetaData Propagation (as offered, only where PubSub is implemented).
 - **Publisher Facet** — Variable Realization and/or Event DataSet Binding + PubSub MetaData Propagation.
-- **Bridge (Client) Facet** — select a Scenario from the `Scenarios` registry, browse its per-specification groups to serving bindings, recognize by `DataSetClassId`, compose the effective DataSet by the §5.12 union algorithm, resolve `DataSetCardinalityPath`, realize via the classic path (default) or PubSub where configured, forward by `Kind`; optionally support Observability OTEL Mapping for the Observability Scenario.
+- **Bridge (Client) Facet** — select a Scenario from the `Scenarios` registry, follow `RealizedBy` to per-instance groups and serving bindings, recognize by `DataSetClassId`, compose the effective DataSet by the §5.12 union algorithm, resolve `DataSetCardinalityPath`, realize via the classic path (default) or PubSub where configured, forward by `Kind`; optionally support Observability OTEL Mapping for the Observability Scenario.
 
 
 ## 8 Interoperability — mapping to W3C WoT and OPC 10101 (informative)
@@ -649,7 +673,7 @@ WoT allows multiple forms on the same interaction affordance. A Scenario Binding
 
 ```mermaid
 flowchart LR
-  SB[ScenarioBinding<br/>ScenarioUri + DataSetClassId + Direction]
+  SB["ScenarioBinding<br/>DataSetClassId + Direction<br/>scenario from its profile"]
   BV[BoundVariable<br/>Telemetry / Metric / Status]
   BM[BoundMethod<br/>Command]
   BE[Event binding<br/>BoundEventField]
@@ -901,6 +925,7 @@ This annex is the normative node reference. It is generated from `tools/build_mo
 | i=60001 | [BindsToNode](#type-BindsToNode) | ReferenceType | [NonHierarchicalReferences](https://reference.opcfoundation.org/specs/OPC-10000-3/7.4) |
 | i=60002 | [ScenarioRealizedBy](#type-ScenarioRealizedBy) | ReferenceType | [NonHierarchicalReferences](https://reference.opcfoundation.org/specs/OPC-10000-3/7.4) |
 | i=60003 | [HasBaseBinding](#type-HasBaseBinding) | ReferenceType | [NonHierarchicalReferences](https://reference.opcfoundation.org/specs/OPC-10000-3/7.4) |
+| i=60004 | [RealizedBy](#type-RealizedBy) | ReferenceType | [NonHierarchicalReferences](https://reference.opcfoundation.org/specs/OPC-10000-3/7.4) |
 | i=60012 | [BoundItemType](#type-BoundItemType) | ObjectType | [BaseObjectType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.2) |
 | i=60013 | [BoundVariableType](#type-BoundVariableType) | ObjectType | [BoundItemType](#type-BoundItemType) |
 | i=60014 | [BoundMethodType](#type-BoundMethodType) | ObjectType | [BoundItemType](#type-BoundItemType) |
@@ -939,6 +964,13 @@ Links a ScenarioBinding to the optional OPC UA Part 14 PubSub node(s) that reali
 *Subtype of:* [NonHierarchicalReferences](https://reference.opcfoundation.org/specs/OPC-10000-3/7.4) · *InverseName:* `IsBaseBindingOf`
 
 Links a derived or composing ScenarioBinding to a base ScenarioBinding whose fields it extends or composes (e.g. a Machine binding to the Device-facet binding it builds on). Optional browse convenience used where the base binding node is present in the same AddressSpace; the portable, cross-specification lineage carrier is ScenarioBinding.BaseDataSetClassIds.
+
+<a id="type-RealizedBy"></a>
+#### RealizedBy  (i=60004)
+
+*Subtype of:* [NonHierarchicalReferences](https://reference.opcfoundation.org/specs/OPC-10000-3/7.4) · *InverseName:* `Realizes`
+
+Links a ScenarioProfile to the ScenarioBindingGroups that serve its scenario. Forward 'RealizedBy' reads profile -> group (the registry's scenario-first path to every group serving the scenario, across instances and specifications); the inverse 'Realizes' reads group -> profile, so given a group a client resolves its scenario - and thus the ScenarioUri - from the profile under the Scenarios registry. Non-hierarchical: a group's single hierarchical parent is the IScenarioBoundType object that contains it, so this cross-link never forms a hierarchy loop. Distinct from ScenarioRealizedBy/RealizesScenario, which links a binding to its optional Part 14 PubSub realization.
 
 ### Object types
 
@@ -1054,11 +1086,10 @@ A bound event field of an event DataSet, selected by a Part 14 SimpleAttributeOp
 
 *Inherits from:* [BaseObjectType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.2)
 
-One scenario binding on a bound object or type. It declares the scenario URI and direction, lists the bound items (browsable and/or as a compact array), and may reference the Part 14 nodes that realize it.
+One scenario binding on a bound object or type. It declares the direction, lists the bound items (browsable and/or as a compact array), and may reference the Part 14 nodes that realize it. Its scenario is not stored here: the binding lives in a ScenarioBindingGroup whose profile (reached via the group's Realizes reference) carries the ScenarioUri, and the DataSetClassId already encodes the scenario.
 
 | BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
 |---|---|---|---|---|---|
-| ScenarioUri | Variable | String | Mandatory | ScenarioBindingType | URI of the integration scenario this binding serves. |
 | Direction | Variable | [ScenarioBindingDirectionEnum](#type-ScenarioBindingDirectionEnum) | Mandatory | ScenarioBindingType | Role the server offers for this binding. |
 | ConfigurationVersion | Variable | i=14593 | Optional | ScenarioBindingType | Version of the binding, aligned with the realizing DataSetMetaData. |
 | DataSetClassId | Variable | Guid | Mandatory | ScenarioBindingType | Stable DataSetClassId (Part 14) identifying the class of the DataSet this binding defines, so subscribers recognize the same DataSet class across servers. It is a semantic class identity, not a guarantee of a fixed field layout (see the DataSetClassId clause). Deterministic. |
@@ -1080,11 +1111,11 @@ One scenario binding on a bound object or type. It declares the scenario URI and
 
 *Inherits from:* [FolderType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.6)
 
-A per-companion-specification anchor grouping that spec's ScenarioBinding objects, so bindings from different companion specifications registered under one ScenarioProfile never collide by BrowseName. Identified by CompanionSpecificationUri (a stable spec-level identifier, distinct from a namespace URI, because a companion specification may define several namespace URIs). Sibling groups themselves carry unique BrowseNames.
+A per-companion-specification group of that spec's ScenarioBinding objects. It is contained (HasComponent) in the IScenarioBoundType object that owns the bindings, and is linked to the ScenarioProfile it serves by a Realizes reference (the inverse of the profile's RealizedBy). Identified by CompanionSpecificationUri (a stable spec-level identifier, distinct from a namespace URI, because a companion specification may define several namespace URIs), so groups from different specifications on one object never collide by BrowseName.
 
 | BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
 |---|---|---|---|---|---|
-| CompanionSpecificationUri | Variable | String | Mandatory | ScenarioBindingGroupType | Stable spec-level identifier of the companion specification this group anchors. Sibling groups under one ScenarioProfile are unique by CompanionSpecificationUri, and each group's BrowseName is derived from this identity so sibling BrowseNames do not collide. |
+| CompanionSpecificationUri | Variable | String | Mandatory | ScenarioBindingGroupType | Stable spec-level identifier of the companion specification this group anchors. Sibling groups on one IScenarioBoundType object are unique by (Scenario x CompanionSpecificationUri), and each group's BrowseName is derived from this identity so sibling BrowseNames do not collide. |
 | ModelNamespaceUris | Variable | String\[\] | Mandatory | ScenarioBindingGroupType | All namespace URIs the companion specification defines/covers. |
 | <ScenarioBinding> | Object |  | OptionalPlaceholder | ScenarioBindingGroupType | A scenario binding of this companion specification. |
 
@@ -1100,26 +1131,25 @@ The type of the Scenarios registry: a discoverable folder of ScenarioProfile obj
 
 *Inherits from:* [BaseObjectType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.2)
 
-A registered integration scenario: its URI plus human-readable metadata, and the ScenarioBindingGroup components (one per companion specification) that contain the ScenarioBindings serving this scenario. The registry is extensible; vendors and other specifications add profiles with their own URIs.
+A registered integration scenario: its URI plus human-readable metadata, and RealizedBy references to the ScenarioBindingGroups (which live on the bound instances) that serve this scenario. Groups are not contained here - the profile is not duplicated per instance; a group reaches its profile via the inverse Realizes reference. The registry is extensible; vendors and other specifications add profiles with their own URIs.
 
 | BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
 |---|---|---|---|---|---|
-| ScenarioUri | Variable | String | Mandatory | ScenarioProfileType | The scenario URI. |
+| ScenarioUri | Variable | String | Mandatory | ScenarioProfileType | The scenario URI. Authoritative here; a binding's scenario is this ScenarioUri, reached from the binding's group via Realizes. |
 | Title | Variable | LocalizedText | Optional | ScenarioProfileType | Short human-readable title. |
 | Summary | Variable | LocalizedText | Optional | ScenarioProfileType | Human-readable description of the scenario and its intended consumers. |
 | Keywords | Variable | String\[\] | Optional | ScenarioProfileType | Keywords describing the scenario. |
-| <ScenarioBindingGroup> | Object |  | OptionalPlaceholder | ScenarioProfileType | A per-companion-specification group of the bindings serving this scenario. Sibling groups under one profile are unique by CompanionSpecificationUri and each carries a unique BrowseName derived from that specification identity (not the scenario name). |
 
 <a id="type-IScenarioBoundType"></a>
 #### IScenarioBoundType  (i=60016)
 
 *Inherits from:* [BaseInterfaceType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.9)
 
-Interface implemented by a companion-specification ObjectType (or instance) to advertise that it participates in scenario bindings, by exposing its ScenarioBindingGroup objects directly (one per (Scenario x companion specification) it serves; typically one per scenario for a single-specification instance).
+Interface implemented by a companion-specification ObjectType (or instance) to advertise that it participates in scenario bindings, by containing its ScenarioBindingGroup objects directly (one per (Scenario x companion specification) it serves; typically one per scenario for a single-specification instance). Each contained group Realizes the ScenarioProfile under the Scenarios registry that defines its scenario.
 
 | BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
 |---|---|---|---|---|---|
-| <ScenarioBindingGroup> | Object |  | OptionalPlaceholder | IScenarioBoundType | A group of this object's bindings for one (Scenario x companion specification). Sibling groups have unique BrowseNames - by scenario for a single-specification instance, and additionally by specification when several specifications serve one scenario on the instance. |
+| <ScenarioBindingGroup> | Object |  | OptionalPlaceholder | IScenarioBoundType | A group of this object's bindings for one (Scenario x companion specification), contained here (HasComponent) and linked to its ScenarioProfile by a Realizes reference. Sibling groups have unique BrowseNames - by scenario for a single-specification instance, and additionally by specification when several specifications serve one scenario on the instance. |
 
 ### Data types
 

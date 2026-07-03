@@ -26,10 +26,10 @@ Read the specification first — this skill assumes its two-layer contract:
 
 - **Scenario-first discovery**: the Server Object has a `Scenarios`
   (`ScenarioFolderType`) registry. A client starts there, picks a `ScenarioProfileType`,
-  browses that profile's per-companion-spec `ScenarioBindingGroupType` components, then
-  the bindings. On an instance, `IScenarioBoundType` exposes its per-scenario groups
-  directly.
-- **Routing** (for a generic bridge): a `ScenarioUri` per binding + a `Kind` per item.
+  follows its `RealizedBy` references to per-companion-spec `ScenarioBindingGroupType`
+  nodes contained by `IScenarioBoundType`, then browses the bindings. Given a group,
+  the inverse `Realizes` reference resolves the profile and its `ScenarioUri`.
+- **Routing** (for a generic bridge): the profile `ScenarioUri` + a `Kind` per item.
 - **Semantic cross-reference** (for the ultimate consumer): each item retains
   `TypeDefinition`, namespace-qualified `BrowseName`, `ModelNamespaceUri` and any
   dictionary entry, and this is propagated into Part 14 `DataSetMetaData`.
@@ -65,7 +65,7 @@ Per companion spec (see the worked examples under `core-specs/scenario-binding/e
   *theoretical instance* of the bound type in an example namespace, applying
   `IScenarioBoundType` and exposing one `ScenarioBindingGroup` per scenario directly on
   the instance, with the `ScenarioBinding`/`BoundItem` instances nested below each group
-  (see "Two-level authoring").
+  and each group carrying `Realizes` to its `ScenarioProfile` (see "Two-level authoring").
 - `OPC-UA-<Domain>-PubSub-Scenario-Binding-Addendum.md` — the companion-spec **addendum**:
   scope, the per-scenario annex tables, and diagrams showing where the bindings live on the
   theoretical instance.
@@ -278,6 +278,9 @@ Write the binding descriptor (JSON; see format below). Include the top-level
 `ScenarioBindingGroupType` per `(scenario × companion specification)`, with that scenario's
 bindings nested under the group. This is the single source; the annex and the NodeSet fragment
 are **derived** from it, never authored separately.
+Keep `scenarioUri` on each descriptor binding: it is authoring input used to group bindings by
+scenario, derive the deterministic `DataSetClassId`, and target the group's `Realizes`
+reference at the right well-known profile.
 
 ### 11. Generate the addendum + instance overlay
 
@@ -285,8 +288,9 @@ Run the reference generator (`build_bindings.py`) on the descriptor. It renders 
 table per Scenario (linking each referenced base type to `https://reference.opcfoundation.org/`
 and own concepts to the base spec), emits the instance-overlay NodeSet with a
 per-scenario `ScenarioBindingGroupType` carrying `CompanionSpecificationUri` and
-`ModelNamespaceUris`, nests that scenario's `ScenarioBinding` objects under the group, emits
-per-binding `DataSetClassId`,
+`ModelNamespaceUris` plus `Realizes` to the matching `ScenarioProfile`, nests that scenario's
+`ScenarioBinding` objects under the group, emits per-binding `DataSetClassId` but no
+`ScenarioUri` property on the binding,
 `ContentKind` and `DataSetCardinalityPath` (when authored), and emits `BoundEventFieldType`
 items for event DataSets, then assembles the addendum. Leave transport/security/addressing as
 deployment parameters — never
@@ -310,7 +314,8 @@ the full metadata value.
   `logBodyFieldName`.
 - Every binding has a deliberate `dataSetCardinalityPath` (or intentionally defaults to the
   bound root), and its item paths sit under that cardinality path unless the binding is split.
-- `DataSetClassId` is generated, stable for `(ScenarioUri, AppliesToType, MajorVersion)`,
+- `DataSetClassId` is generated, stable for `(descriptor scenarioUri/profile ScenarioUri,
+  AppliesToType, MajorVersion)`,
   shared by all DataSets produced for a cardinality match, and appears consistently in the
   binding and PubSub metadata.
 - Derived bindings list only delta fields, reference base classes via `baseDataSetClassIds`,
@@ -342,13 +347,14 @@ from an addendum. Author the bindings at two levels instead:
    *theoretical instance* of the bound type — you own it, so you may apply `IScenarioBoundType`
    and expose one `ScenarioBindingGroup` per scenario directly on the instance (`HasComponent`).
    Each group is per `(scenario × companion specification)` and is named by the scenario on
-   per-instance objects. Emit the matching `ScenarioBinding`/`BoundItem` instances below each
-   group.
+   per-instance objects, with `Realizes` to the well-known profile under `Server/Scenarios`.
+   Emit the matching `ScenarioBinding`/`BoundItem` instances below each group.
 
 **Server-wide discovery.** A server exposes `Server` → `Scenarios` (`ScenarioFolderType`) →
-`<Scenario>` (`ScenarioProfileType`) → `<ScenarioBindingGroup>` (`ScenarioBindingGroupType`,
-per companion spec) → `<ScenarioBinding>` (`ScenarioBindingType`) → `<BoundItem>`. Clients
-start at the `Scenarios` registry, select a scenario profile, browse its per-spec groups, then
+`<Scenario>` (`ScenarioProfileType`). Profiles do not contain groups; they reference
+per-spec `ScenarioBindingGroupType` nodes via `RealizedBy`. Those groups are contained by an
+`IScenarioBoundType` object and carry inverse `Realizes` back to the profile. Clients start at
+the `Scenarios` registry, select a scenario profile, follow `RealizedBy` to groups, then browse
 the bindings and bound items.
 
 **Two locators, one per level.** On the type level a `BoundItem` uses **`BrowsePath`**; on the
@@ -362,10 +368,10 @@ Pumps `instanceexample.xml`); otherwise synthesise a minimal one. **Placeholder 
 type-level BrowsePath keeps the placeholder.
 
 **Diagram conventions (two per addendum).** (a) a *bindings overview*
-(`Server` → `Scenarios` → scenario profile → per-spec `ScenarioBindingGroup` → `ScenarioBinding`
-→ BoundItems); (b) an *instance placement* diagram (instance → `IScenarioBoundType` →
-per-scenario group → binding → BoundItem → `BindsToNode` → the signal node), so a reader sees
-exactly where bindings live.
+(`Server` → `Scenarios` → scenario profile --`RealizedBy`--> per-spec `ScenarioBindingGroup`
+→ `ScenarioBinding` → BoundItems); (b) an *instance placement* diagram (instance →
+`IScenarioBoundType` → per-scenario group --`Realizes`--> profile, plus group → binding →
+BoundItem → `BindsToNode` → the signal node), so a reader sees exactly where bindings live.
 
 ## Domain heuristics learned from the worked examples
 
@@ -497,7 +503,12 @@ Field notes:
   one companion specification can define several model namespaces.
 - `modelNamespaceUris` lists the namespace URIs the companion specification defines/covers;
   the generator emits them on each `ScenarioBindingGroupType` instance together with
-  `CompanionSpecificationUri`, then nests the matching scenario's bindings below that group.
+  `CompanionSpecificationUri`, adds `Realizes` to the matching profile, then nests the matching
+  scenario's bindings below that group.
+- `scenarioUri` remains authored on each descriptor binding. The generated `ScenarioBinding`
+  node does **not** have a `ScenarioUri` property; its scenario comes from the group's profile.
+  The descriptor value groups bindings by scenario, derives `DataSetClassId`, and targets the
+  group's `Realizes` reference.
 - `appliesToType` is the plain BrowseName of the binding target: an `ObjectType`, Interface, or
   AddInType. The generator locates it in `baseNodeSets`.
 - `baseNodeSets` are filenames under `examples/tools/ref/` (gitignored); `requiredModels` are
@@ -580,5 +591,6 @@ that the bindings realize the *Scenario Bindings* base specification.
 - Author intent (which items, which scenarios, which Kind) is the human/LLM contribution;
   everything mechanical (semantic fields, paths, tables) is generated from the NodeSet so it
   cannot drift.
-- Never require a bridge to understand the domain — Kind + ScenarioUri must be enough to route.
+- Never require a bridge to understand the domain — Kind + the profile's ScenarioUri must be
+  enough to route.
 - Keep the descriptor the single source of truth; regenerate the annex and fragment from it.

@@ -6,7 +6,7 @@
 
 ## 1 Scope
 
-This addendum defines example **scenario bindings** for the `PumpType` — 42 bound items across the scenarios *Observability, EnergyAndLoadManagement, PredictiveMaintenance, AnomalyDetection, FleetAndCompliance, AlarmAndEventDistribution* — per the [Scenario Bindings](../../OPC-UA-Scenario-Bindings.md) base specification. Pumps expose rich operational telemetry (flow, head, pressure, power, temperatures, efficiencies, rotor loads) plus identity and maintenance data, so most industrial scenarios map cleanly onto the pump measurement model.
+This addendum defines example **scenario bindings** for the `PumpType` — 38 bound items across the scenarios *Observability, EnergyAndLoadManagement, PredictiveMaintenance, AnomalyDetection, FleetAndCompliance, AlarmAndEventDistribution* — per the [Scenario Bindings](../../OPC-UA-Scenario-Bindings.md) base specification. Pumps expose rich operational telemetry (flow, head, pressure, power, temperatures, efficiencies, rotor loads) plus identity and maintenance data, so most industrial scenarios map cleanly onto the pump measurement model.
 
 ## 2 Normative references
 
@@ -92,10 +92,6 @@ Bindings for the `PumpType` of the `http://opcfoundation.org/UA/Pumps/` companio
 
 | Field | Kind | BrowsePath | Source type | DataType | OTEL |
 |---|---|---|---|---|---|
-| Manufacturer | Identification | `/Identification/Manufacturer` | [PropertyType](https://reference.opcfoundation.org/specs/OPC-10000-5/7.3) | LocalizedText | — |
-| Model | Identification | `/Identification/Model` | [PropertyType](https://reference.opcfoundation.org/specs/OPC-10000-5/7.3) | LocalizedText | — |
-| SerialNumber | Identification | `/Identification/SerialNumber` | [PropertyType](https://reference.opcfoundation.org/specs/OPC-10000-5/7.3) | String | — |
-| ProductInstanceUri | Identification | `/Identification/ProductInstanceUri` | [PropertyType](https://reference.opcfoundation.org/specs/OPC-10000-5/7.3) | String | — |
 | AssetId | Identification | `/Identification/AssetId` | [PropertyType](https://reference.opcfoundation.org/specs/OPC-10000-5/7.3) | String | — |
 | Location | Identification | `/Identification/Location` | [PropertyType](https://reference.opcfoundation.org/specs/OPC-10000-5/7.3) | String | — |
 
@@ -154,12 +150,8 @@ graph LR
   S3 --> S3_3["BearingTemperature : Telemetry"]
   ROOT --> G4["FleetAndCompliance<br/>ScenarioBindingGroup"]
   G4 --> S4["FleetAndCompliance<br/>Publisher · Data"]
-  S4 --> S4_0["Manufacturer : Identification"]
-  S4 --> S4_1["Model : Identification"]
-  S4 --> S4_2["SerialNumber : Identification"]
-  S4 --> S4_3["ProductInstanceUri : Identification"]
-  S4 --> S4_4["AssetId : Identification"]
-  S4 --> S4_5["Location : Identification"]
+  S4 --> S4_0["AssetId : Identification"]
+  S4 --> S4_1["Location : Identification"]
   ROOT --> G5["AlarmAndEventDistribution<br/>ScenarioBindingGroup"]
   G5 --> S5["AlarmAndEventDistribution<br/>Publisher · Events"]
   S5 --> S5_0["EventId : Event"]
@@ -175,6 +167,7 @@ graph TD
   R["ExamplePump : PumpType"]
   R -->|HasInterface| I([IScenarioBoundType])
   R -->|HasComponent| G0["Observability : ScenarioBindingGroupType"]
+  G0 -.Realizes.-> P0["Observability : ScenarioProfileType<br/>under Server/Scenarios"]
   G0 -->|HasComponent| B0["Observability : ScenarioBindingType"]
   B0 -->|HasComponent| IT00["Speed : BoundVariableType"]
   IT00 -->|BindsToNode| N00["Operational/Measurements/Speed"]
@@ -183,6 +176,7 @@ graph TD
   B0 -->|HasComponent| IT02["MassFlow : BoundVariableType"]
   IT02 -->|BindsToNode| N02["Operational/Measurements/MassFlow"]
   R -->|HasComponent| G1["AlarmAndEventDistribution : ScenarioBindingGroupType"]
+  G1 -.Realizes.-> P1["AlarmAndEventDistribution : ScenarioProfileType<br/>under Server/Scenarios"]
   G1 -->|HasComponent| B1["AlarmAndEventDistribution : ScenarioBindingType"]
   B1 -->|HasComponent| IT10["EventId : BoundEventFieldType"]
   IT10 -.event field.-> N10["BaseEventType/EventId"]

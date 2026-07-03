@@ -192,8 +192,8 @@ class Emit:
         self._refs([("i=40", f"i={T_BINDING}", True),
                     ("i=47", f"ns=1;i={group_id}", False)])
         self.out.append('  </UAObject>')
-        self.prop("ScenarioUri", "i=12",
-                  f'<uax:String {U}>{sx.escape(spec["scenario"])}</uax:String>', bid)
+        # No ScenarioUri on the binding: its scenario is its group's profile (via Realizes) and the
+        # DataSetClassId already encodes the scenario.
         self.prop("Direction", "i=60050", f'<uax:Int32 {U}>0</uax:Int32>', bid)
         self.prop("DataSetClassId", "i=14",
                   self.guid(class_id(spec["scenario"], spec["target"])), bid)

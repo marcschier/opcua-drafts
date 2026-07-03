@@ -129,6 +129,7 @@ graph TD
   R["ExampleRobotSystem : MotionDeviceSystemType"]
   R -->|HasInterface| I([IScenarioBoundType])
   R -->|HasComponent| G0["Observability : ScenarioBindingGroupType"]
+  G0 -.Realizes.-> P0["Observability : ScenarioProfileType<br/>under Server/Scenarios"]
   G0 -->|HasComponent| B0["Observability : ScenarioBindingType"]
   B0 -->|HasComponent| IT00["AxisActualPosition : BoundVariableType"]
   IT00 -->|BindsToNode| N00["MotionDevices/MotionDevice_1/Axes/Axis_1/ParameterSet/ActualPosition"]
@@ -137,6 +138,7 @@ graph TD
   B0 -->|HasComponent| IT02["SpeedOverride : BoundVariableType"]
   IT02 -->|BindsToNode| N02["MotionDevices/MotionDevice_1/ParameterSet/SpeedOverride"]
   R -->|HasComponent| G1["AlarmAndEventDistribution : ScenarioBindingGroupType"]
+  G1 -.Realizes.-> P1["AlarmAndEventDistribution : ScenarioProfileType<br/>under Server/Scenarios"]
   G1 -->|HasComponent| B1["AlarmAndEventDistribution : ScenarioBindingType"]
   B1 -->|HasComponent| IT10["EventId : BoundEventFieldType"]
   IT10 -.event field.-> N10["AlarmConditionType/EventId"]
