@@ -1,0 +1,29 @@
+{
+  "fields": [
+    {
+      "name": "A",
+      "type": "float"
+    },
+    {
+      "default": null,
+      "name": "B",
+      "type": [
+        "null",
+        {
+          "fields": [
+            {
+              "name": "value",
+              "type": "float"
+            }
+          ],
+          "name": "FloatHolder_B_Optional",
+          "namespace": "org.opcfoundation.ua.avro",
+          "type": "record"
+        }
+      ]
+    }
+  ],
+  "name": "FloatHolder",
+  "namespace": "org.opcfoundation.ua.avro",
+  "type": "record"
+}

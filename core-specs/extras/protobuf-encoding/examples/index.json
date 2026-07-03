@@ -56,6 +56,34 @@
     "type": "Struct(name='Person', fields=(Field(name='Name', type=Builtin(id=<BuiltInType.String: 12>), is_optional=False, allow_subtypes=False), Field(name='Age', type=Builtin(id=<BuiltInType.Int32: 6>), is_optional=False, allow_subtypes=False), Field(name='Email', type=Builtin(id=<BuiltInType.String: 12>), is_optional=True, allow_subtypes=False), Field(name='Nickname', type=Builtin(id=<BuiltInType.String: 12>), is_optional=True, allow_subtypes=False)), kind=<StructureKind.STRUCTURE_WITH_OPTIONAL_FIELDS: 1>, type_id='i=3010', encoding_id='i=3011')"
   },
   {
+    "file": "optscalars_absent.bin",
+    "hex": "0807",
+    "name": "optscalars_absent",
+    "size": 2,
+    "type": "Struct(name='OptionalScalars', fields=(Field(name='Id', type=Builtin(id=<BuiltInType.Int32: 6>), is_optional=False, allow_subtypes=False), Field(name='Flag', type=Builtin(id=<BuiltInType.Boolean: 1>), is_optional=True, allow_subtypes=False), Field(name='Count', type=Builtin(id=<BuiltInType.Int32: 6>), is_optional=True, allow_subtypes=False), Field(name='Ratio', type=Builtin(id=<BuiltInType.Double: 11>), is_optional=True, allow_subtypes=False)), kind=<StructureKind.STRUCTURE_WITH_OPTIONAL_FIELDS: 1>, type_id='i=3040', encoding_id='i=3041')"
+  },
+  {
+    "file": "optscalars_zero_present.bin",
+    "hex": "080710001800210000000000000000",
+    "name": "optscalars_zero_present",
+    "size": 15,
+    "type": "Struct(name='OptionalScalars', fields=(Field(name='Id', type=Builtin(id=<BuiltInType.Int32: 6>), is_optional=False, allow_subtypes=False), Field(name='Flag', type=Builtin(id=<BuiltInType.Boolean: 1>), is_optional=True, allow_subtypes=False), Field(name='Count', type=Builtin(id=<BuiltInType.Int32: 6>), is_optional=True, allow_subtypes=False), Field(name='Ratio', type=Builtin(id=<BuiltInType.Double: 11>), is_optional=True, allow_subtypes=False)), kind=<StructureKind.STRUCTURE_WITH_OPTIONAL_FIELDS: 1>, type_id='i=3040', encoding_id='i=3041')"
+  },
+  {
+    "file": "floatholder_min.bin",
+    "hex": "0d0000c03f",
+    "name": "floatholder_min",
+    "size": 5,
+    "type": "Struct(name='FloatHolder', fields=(Field(name='A', type=Builtin(id=<BuiltInType.Float: 10>), is_optional=False, allow_subtypes=False), Field(name='B', type=Builtin(id=<BuiltInType.Float: 10>), is_optional=True, allow_subtypes=False)), kind=<StructureKind.STRUCTURE_WITH_OPTIONAL_FIELDS: 1>, type_id='i=3050', encoding_id='i=3051')"
+  },
+  {
+    "file": "floatholder_full.bin",
+    "hex": "0d000080be150000003f",
+    "name": "floatholder_full",
+    "size": 10,
+    "type": "Struct(name='FloatHolder', fields=(Field(name='A', type=Builtin(id=<BuiltInType.Float: 10>), is_optional=False, allow_subtypes=False), Field(name='B', type=Builtin(id=<BuiltInType.Float: 10>), is_optional=True, allow_subtypes=False)), kind=<StructureKind.STRUCTURE_WITH_OPTIONAL_FIELDS: 1>, type_id='i=3050', encoding_id='i=3051')"
+  },
+  {
     "file": "union_point.bin",
     "hex": "1a12090000000000002240110000000000002040",
     "name": "union_point",

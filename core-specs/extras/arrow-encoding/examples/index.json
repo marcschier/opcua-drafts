@@ -72,17 +72,17 @@
       "type": "Measurement"
     },
     {
-      "bytes": 44768,
+      "bytes": 53240,
       "file": "variant_extobj.arrow",
       "name": "variant_extobj",
-      "sha256": "dd951e35c02cdcf30f4cc590d5549f9445eb3b20a035ec2aef4a4aa9c857421c",
+      "sha256": "14f0964080b959a32db63f20834271b2da9723fc462ce597fb5338e97b814791",
       "type": "Variant"
     },
     {
-      "bytes": 45336,
+      "bytes": 53808,
       "file": "datavalue_full.arrow",
       "name": "datavalue_full",
-      "sha256": "c428fe4f564bc0546bd454fbe192e755fc98eee42c56440bd839c24272d41b08",
+      "sha256": "923b2be33d1fc2f0b40a17a3a399455abdad2e683da3ca0034dafba986047f31",
       "type": "DataValue"
     },
     {

@@ -31,6 +31,7 @@ EXAMPLE_CASES = [
     "bool_true", "uint64_max", "string_null", "string_unicode", "nodeid_guid",
     "array_string_with_nulls", "matrix_double_2x2_special", "struct_person_one_opt",
     "union_point", "envelope", "variant_matrix_int", "datavalue_full", "diaginfo_nested",
+    "optscalars_absent", "optscalars_zero_present", "floatholder_min", "floatholder_full",
 ]
 
 
@@ -151,14 +152,17 @@ def _pub_struct(ty: t.Struct, msg):
     out = {}
     for fld in ty.fields:
         name = _field_name(fld.name)
-        try:
-            absent = not msg.HasField(name)
-        except ValueError:
-            absent = False
-        if absent:
+        if fld.is_optional and _pub_field_absent(msg, name):
             continue
         out[fld.name] = _pub_field(fld.type, getattr(msg, name))
     return v.StructValue(out, ty.name)
+
+
+def _pub_field_absent(msg, name: str) -> bool:
+    try:
+        return not msg.HasField(name)
+    except ValueError as exc:
+        raise ValueError(f"optional field {name!r} does not have protobuf presence") from exc
 
 
 def _pub_field(ty: t.Type, val):

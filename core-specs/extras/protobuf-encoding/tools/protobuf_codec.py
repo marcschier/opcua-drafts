@@ -497,7 +497,7 @@ def _decode_struct_message(ty: t.Struct, msg: Any, reg: TypeRegistry) -> Any:
     out: dict[str, Any] = {}
     for fld in ty.fields:
         name = _field_name(fld.name)
-        if _field_absent(msg, name, fld.type):
+        if fld.is_optional and _field_absent(msg, name):
             continue
         out[fld.name] = _decode_field_value(fld.type, msg, name, reg)
     return v.StructValue(out, ty.name)
@@ -511,11 +511,11 @@ def _decode_union_message(ty: t.Struct, msg: Any, reg: TypeRegistry) -> v.UnionV
     return v.UnionValue(fld.name, _decode_field_value(fld.type, msg, selected, reg))
 
 
-def _field_absent(msg: Any, name: str, ty: t.Type) -> bool:
+def _field_absent(msg: Any, name: str) -> bool:
     try:
         return not msg.HasField(name)
-    except ValueError:
-        return False
+    except ValueError as exc:
+        raise ValueError(f"optional field {name!r} does not have protobuf presence") from exc
 
 
 def _decode_field_value(ty: t.Type, msg: Any, name: str, reg: TypeRegistry) -> Any:

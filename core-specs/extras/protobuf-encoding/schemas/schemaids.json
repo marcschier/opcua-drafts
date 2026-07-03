@@ -71,6 +71,10 @@
     "algorithm": "SHA-256 over transitive FileDescriptorSet",
     "schemaid": "7fc4be352f884550"
   },
+  "FloatHolder": {
+    "algorithm": "SHA-256 over transitive FileDescriptorSet",
+    "schemaid": "1ffe9d3b330d2ba8"
+  },
   "Guid": {
     "algorithm": "SHA-256 over transitive FileDescriptorSet",
     "schemaid": "7fc4be352f884550"
@@ -102,6 +106,10 @@
   "NodeId": {
     "algorithm": "SHA-256 over transitive FileDescriptorSet",
     "schemaid": "7fc4be352f884550"
+  },
+  "OptionalScalars": {
+    "algorithm": "SHA-256 over transitive FileDescriptorSet",
+    "schemaid": "3bf5d258c6e0aa53"
   },
   "Person": {
     "algorithm": "SHA-256 over transitive FileDescriptorSet",

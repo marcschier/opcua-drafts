@@ -52,7 +52,7 @@ def _proto_scalar(ty: t.Type) -> tuple[str, bool]:
             t.BuiltInType.DateTime: ("sfixed64", False),
             t.BuiltInType.Guid: ("bytes", False),
             t.BuiltInType.ByteString: ("opcua.protobuf.v1.ByteStringValue", True),
-            t.BuiltInType.XmlElement: ("opcua.protobuf.v1.XmlElementValue", False),
+            t.BuiltInType.XmlElement: ("opcua.protobuf.v1.XmlElementValue", True),
             t.BuiltInType.NodeId: ("opcua.protobuf.v1.NodeId", False),
             t.BuiltInType.ExpandedNodeId: ("opcua.protobuf.v1.ExpandedNodeId", False),
             t.BuiltInType.StatusCode: ("fixed32", False),
@@ -69,6 +69,29 @@ def _proto_scalar(ty: t.Type) -> tuple[str, bool]:
     return "opcua.protobuf.v1.Value", False
 
 
+def _needs_proto3_optional(ty: t.Type) -> bool:
+    if isinstance(ty, t.Enumeration):
+        return True
+    if not isinstance(ty, t.Builtin):
+        return False
+    return ty.id in {
+        t.BuiltInType.Boolean,
+        t.BuiltInType.SByte,
+        t.BuiltInType.Byte,
+        t.BuiltInType.Int16,
+        t.BuiltInType.UInt16,
+        t.BuiltInType.Int32,
+        t.BuiltInType.UInt32,
+        t.BuiltInType.Int64,
+        t.BuiltInType.UInt64,
+        t.BuiltInType.Float,
+        t.BuiltInType.Double,
+        t.BuiltInType.DateTime,
+        t.BuiltInType.Guid,
+        t.BuiltInType.StatusCode,
+    }
+
+
 def _type_line(ty: t.Type, fld: t.Field, number: int) -> str:
     name = _field_name(fld.name)
     if isinstance(ty, t.Array):
@@ -76,7 +99,7 @@ def _type_line(ty: t.Type, fld: t.Field, number: int) -> str:
     if isinstance(ty, t.Matrix):
         return f"  opcua.protobuf.v1.MatrixValue {name} = {number};"
     elem, nullable = _proto_scalar(ty)
-    prefix = "optional " if fld.is_optional and nullable else ""
+    prefix = "optional " if fld.is_optional and (nullable or _needs_proto3_optional(ty)) else ""
     return f"  {prefix}{elem} {name} = {number};"
 
 

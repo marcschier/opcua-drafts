@@ -100,8 +100,33 @@ PERMISSIONS = t.Enumeration(
     bit_size=32,
 )
 
+# A structure with optional NON-String scalar fields: absent must stay distinct
+# from present-with-zero (exercises proto3 presence for scalars).
+OPTIONAL_SCALARS = t.Struct(
+    "OptionalScalars",
+    (
+        t.Field("Id", t.INT32),
+        t.Field("Flag", t.BOOLEAN, is_optional=True),
+        t.Field("Count", t.INT32, is_optional=True),
+        t.Field("Ratio", t.DOUBLE, is_optional=True),
+    ),
+    t.StructureKind.STRUCTURE_WITH_OPTIONAL_FIELDS,
+    type_id="i=3040",
+    encoding_id="i=3041",
+)
+
+# Float32 fields inside a structure (values are float32-exact so double-precision
+# equality holds), covering the Float-in-composite path.
+FLOAT_HOLDER = t.Struct(
+    "FloatHolder",
+    (t.Field("A", t.FLOAT), t.Field("B", t.FLOAT, is_optional=True)),
+    t.StructureKind.STRUCTURE_WITH_OPTIONAL_FIELDS,
+    type_id="i=3050",
+    encoding_id="i=3051",
+)
+
 #: Structured DataTypes referenced by the corpus, for schema generators.
-STRUCT_TYPES: tuple[t.Struct, ...] = (POINT, PERSON, MEASUREMENT, ENVELOPE)
+STRUCT_TYPES: tuple[t.Struct, ...] = (POINT, PERSON, MEASUREMENT, ENVELOPE, OPTIONAL_SCALARS, FLOAT_HOLDER)
 ENUM_TYPES: tuple[t.Enumeration, ...] = (COLOR, PERMISSIONS)
 
 
@@ -221,6 +246,13 @@ def build_corpus() -> list[Case]:
     add(Case("struct_person_one_opt", PERSON, v.StructValue({"Name": "Cy", "Age": 5, "Email": "c@x"}, "Person")))
     # present-but-null optional field (mask bit set, value null) must NOT collapse to absent
     add(Case("struct_person_present_null", PERSON, v.StructValue({"Name": "Zed", "Age": 9, "Email": None}, "Person")))
+    # optional NON-String scalars: absent must differ from present-with-zero
+    add(Case("optscalars_absent", OPTIONAL_SCALARS, v.StructValue({"Id": 7}, "OptionalScalars")))
+    add(Case("optscalars_present", OPTIONAL_SCALARS, v.StructValue({"Id": 7, "Flag": True, "Count": -3, "Ratio": 2.5}, "OptionalScalars")))
+    add(Case("optscalars_zero_present", OPTIONAL_SCALARS, v.StructValue({"Id": 7, "Flag": False, "Count": 0, "Ratio": 0.0}, "OptionalScalars")))
+    # Float32 fields inside a struct (float32-exact values); optional B absent vs present
+    add(Case("floatholder_min", FLOAT_HOLDER, v.StructValue({"A": 1.5}, "FloatHolder")))
+    add(Case("floatholder_full", FLOAT_HOLDER, v.StructValue({"A": -0.25, "B": 0.5}, "FloatHolder")))
 
     # ---- Union (each branch + null) ----
     add(Case("union_int", MEASUREMENT, v.UnionValue("AsInt", 7)))

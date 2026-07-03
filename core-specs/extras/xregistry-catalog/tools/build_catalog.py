@@ -8,8 +8,8 @@ sibling encoding folders' ``schemas/`` when present, otherwise referenced by
 ``schemaurl``.
 
 Usage (from repo root):
-  python core-specs/xregistry-catalog/tools/build_catalog.py [NODESET_XML]
-Writes: core-specs/xregistry-catalog/examples/opcua-catalog.xregistry.json
+  python core-specs/extras/xregistry-catalog/tools/build_catalog.py [NODESET_XML]
+Writes: core-specs/extras/xregistry-catalog/examples/opcua-catalog.xregistry.json
 """
 from __future__ import annotations
 

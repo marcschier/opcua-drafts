@@ -1273,11 +1273,11 @@ ffff9ff50f
 
 ### Built-in ExtensionObject
 
-**SchemaId** `b8c9570e69d84350`
+**SchemaId** `f50df9bab1852efe`
 
 | Field | Avro type | Presence / nullability | Notes |
 |---|---|---|---|
-| `value` | `{"fields": [{"name": "typeId", "type": "org.opcfoundation.ua.avro.NodeId"}, {"default": null, "doc": "Known ExtensionObject bodies use typed record branches; bytes is reserved for genuinely unknown type ids.", "name": "body", "type": ["null", {"fields": [{"name": "X", "type": "double"}, {"name": "Y", "type": "double"}], "name": "Point", "namespace": "org.opcfoundation.ua.avro", "type": "record"}, {"fields": [{"name": "Name", "type": ["null", "string"]}, {"name": "Age", "type": "int"}, {"default": null, "name": "Email", "type": ["null", {"fields": [{"name": "value", "type": ["null", "string"]}], "name": "Person_Email_Optional", "namespace": "org.opcfoundation.ua.avro", "type": "record"}]}, {"default": null, "name": "Nickname", "type": ["null", {"fields": [{"name": "value", "type": ["null", "string"]}], "name": "Person_Nickname_Optional", "namespace": "org.opcfoundation.ua.avro", "type": "record"}]}], "name": "Person", "namespace": "org.opcfoundation.ua.avro", "type": "record"}, {"fields": [{"default": null, "name": "switch", "type": ["null", "string"]}, {"default": null, "name": "value", "type": ["null", {"fields": [{"name": "AsInt", "type": "int"}], "name": "Measurement_AsInt_Branch", "namespace": "org.opcfoundation.ua.avro", "type": "record"}, {"fields": [{"name": "AsText", "type": ["null", "string"]}], "name": "Measurement_AsText_Branch", "namespace": "org.opcfoundation.ua.avro", "type": "record"}, {"fields": [{"name": "AsPoint", "type": "org.opcfoundation.ua.avro.Point"}], "name": "Measurement_AsPoint_Branch", "namespace": "org.opcfoundation.ua.avro", "type": "record"}]}], "name": "Measurement", "namespace": "org.opcfoundation.ua.avro", "type": "record"}, {"fields": [{"name": "Id", "type": ["null", "string"]}, {"name": "Location", "type": "org.opcfoundation.ua.avro.Point"}, {"name": "Tags", "type": {"items": ["null", "string"], "type": "array"}}, {"name": "Payload", "type": ["null", "org.opcfoundation.ua.avro.ExtensionObject"]}], "name": "Envelope", "namespace": "org.opcfoundation.ua.avro", "type": "record"}, {"fields": [{"name": "FieldName", "type": ["null", "string"]}, {"name": "Kind", "type": "int"}, {"name": "AttributeId", "type": "int"}, {"name": "SamplingIntervalHint", "type": "double"}, {"name": "IndexRange", "type": ["null", "string"]}, {"name": "StartingNode", "type": ["null", "org.opcfoundation.ua.avro.NodeId"]}, {"name": "BrowsePath", "type": ["null", "org.opcfoundation.ua.avro.ExtensionObject"]}, {"name": "SourceNodeId", "type": ["null", "org.opcfoundation.ua.avro.NodeId"]}, {"name": "OwningObjectPath", "type": ["null", "org.opcfoundation.ua.avro.ExtensionObject"]}, {"name": "SourceTypeDefinition", "type": ["null", "org.opcfoundation.ua.avro.NodeId"]}, {"name": "SourceBrowseName", "type": ["null", "org.opcfoundation.ua.avro.QualifiedName"]}, {"name": "ModelNamespaceUri", "type": ["null", "string"]}, {"name": "DataSetFieldId", "type": "org.opcfoundation.ua.avro.Guid"}, {"name": "SemanticReferenceUri", "type": ["null", "string"]}], "name": "BoundItemDataType", "namespace": "org.opcfoundation.ua.avro", "type": "record"}, {"fields": [{"name": "Name", "type": ["null", "string"]}, {"name": "ScenarioUri", "type": ["null", "string"]}, {"name": "Direction", "type": "int"}, {"name": "ConfigurationVersion", "type": ["null", "org.opcfoundation.ua.avro.ExtensionObject"]}, {"name": "BoundItems", "type": {"items": ["null", "org.opcfoundation.ua.avro.BoundItemDataType"], "type": "array"}}, {"name": "PublishedDataSetName", "type": ["null", "string"]}, {"name": "WriterGroupName", "type": ["null", "string"]}], "name": "ScenarioBindingDataType", "namespace": "org.opcfoundation.ua.avro", "type": "record"}, {"fields": [{"name": "ModelNamespaceUri", "type": ["null", "string"]}, {"name": "AppliesToType", "type": ["null", "org.opcfoundation.ua.avro.QualifiedName"]}, {"name": "ConfigurationVersion", "type": ["null", "org.opcfoundation.ua.avro.ExtensionObject"]}, {"name": "ScenarioBindings", "type": {"items": ["null", "org.opcfoundation.ua.avro.ScenarioBindingDataType"], "type": "array"}}], "name": "ScenarioBindingConfigurationDataType", "namespace": "org.opcfoundation.ua.avro", "type": "record"}, "bytes"]}], "name": "ExtensionObject", "namespace": "org.opcfoundation.ua.avro", "type": "record"}` | nullable where schema is a null union | OPC UA BuiltInType 22. |
+| `value` | `{"fields": [{"name": "typeId", "type": "org.opcfoundation.ua.avro.NodeId"}, {"default": null, "doc": "Known ExtensionObject bodies use typed record branches; bytes is reserved for genuinely unknown type ids.", "name": "body", "type": ["null", {"fields": [{"name": "X", "type": "double"}, {"name": "Y", "type": "double"}], "name": "Point", "namespace": "org.opcfoundation.ua.avro", "type": "record"}, {"fields": [{"name": "Name", "type": ["null", "string"]}, {"name": "Age", "type": "int"}, {"default": null, "name": "Email", "type": ["null", {"fields": [{"name": "value", "type": ["null", "string"]}], "name": "Person_Email_Optional", "namespace": "org.opcfoundation.ua.avro", "type": "record"}]}, {"default": null, "name": "Nickname", "type": ["null", {"fields": [{"name": "value", "type": ["null", "string"]}], "name": "Person_Nickname_Optional", "namespace": "org.opcfoundation.ua.avro", "type": "record"}]}], "name": "Person", "namespace": "org.opcfoundation.ua.avro", "type": "record"}, {"fields": [{"default": null, "name": "switch", "type": ["null", "string"]}, {"default": null, "name": "value", "type": ["null", {"fields": [{"name": "AsInt", "type": "int"}], "name": "Measurement_AsInt_Branch", "namespace": "org.opcfoundation.ua.avro", "type": "record"}, {"fields": [{"name": "AsText", "type": ["null", "string"]}], "name": "Measurement_AsText_Branch", "namespace": "org.opcfoundation.ua.avro", "type": "record"}, {"fields": [{"name": "AsPoint", "type": "org.opcfoundation.ua.avro.Point"}], "name": "Measurement_AsPoint_Branch", "namespace": "org.opcfoundation.ua.avro", "type": "record"}]}], "name": "Measurement", "namespace": "org.opcfoundation.ua.avro", "type": "record"}, {"fields": [{"name": "Id", "type": ["null", "string"]}, {"name": "Location", "type": "org.opcfoundation.ua.avro.Point"}, {"name": "Tags", "type": {"items": ["null", "string"], "type": "array"}}, {"name": "Payload", "type": ["null", "org.opcfoundation.ua.avro.ExtensionObject"]}], "name": "Envelope", "namespace": "org.opcfoundation.ua.avro", "type": "record"}, {"fields": [{"name": "Id", "type": "int"}, {"default": null, "name": "Flag", "type": ["null", {"fields": [{"name": "value", "type": "boolean"}], "name": "OptionalScalars_Flag_Optional", "namespace": "org.opcfoundation.ua.avro", "type": "record"}]}, {"default": null, "name": "Count", "type": ["null", {"fields": [{"name": "value", "type": "int"}], "name": "OptionalScalars_Count_Optional", "namespace": "org.opcfoundation.ua.avro", "type": "record"}]}, {"default": null, "name": "Ratio", "type": ["null", {"fields": [{"name": "value", "type": "double"}], "name": "OptionalScalars_Ratio_Optional", "namespace": "org.opcfoundation.ua.avro", "type": "record"}]}], "name": "OptionalScalars", "namespace": "org.opcfoundation.ua.avro", "type": "record"}, {"fields": [{"name": "A", "type": "float"}, {"default": null, "name": "B", "type": ["null", {"fields": [{"name": "value", "type": "float"}], "name": "FloatHolder_B_Optional", "namespace": "org.opcfoundation.ua.avro", "type": "record"}]}], "name": "FloatHolder", "namespace": "org.opcfoundation.ua.avro", "type": "record"}, {"fields": [{"name": "FieldName", "type": ["null", "string"]}, {"name": "Kind", "type": "int"}, {"name": "AttributeId", "type": "int"}, {"name": "SamplingIntervalHint", "type": "double"}, {"name": "IndexRange", "type": ["null", "string"]}, {"name": "StartingNode", "type": ["null", "org.opcfoundation.ua.avro.NodeId"]}, {"name": "BrowsePath", "type": ["null", "org.opcfoundation.ua.avro.ExtensionObject"]}, {"name": "SourceNodeId", "type": ["null", "org.opcfoundation.ua.avro.NodeId"]}, {"name": "OwningObjectPath", "type": ["null", "org.opcfoundation.ua.avro.ExtensionObject"]}, {"name": "SourceTypeDefinition", "type": ["null", "org.opcfoundation.ua.avro.NodeId"]}, {"name": "SourceBrowseName", "type": ["null", "org.opcfoundation.ua.avro.QualifiedName"]}, {"name": "ModelNamespaceUri", "type": ["null", "string"]}, {"name": "DataSetFieldId", "type": "org.opcfoundation.ua.avro.Guid"}, {"name": "SemanticReferenceUri", "type": ["null", "string"]}], "name": "BoundItemDataType", "namespace": "org.opcfoundation.ua.avro", "type": "record"}, {"fields": [{"name": "Name", "type": ["null", "string"]}, {"name": "ScenarioUri", "type": ["null", "string"]}, {"name": "Direction", "type": "int"}, {"name": "ConfigurationVersion", "type": ["null", "org.opcfoundation.ua.avro.ExtensionObject"]}, {"name": "BoundItems", "type": {"items": ["null", "org.opcfoundation.ua.avro.BoundItemDataType"], "type": "array"}}, {"name": "PublishedDataSetName", "type": ["null", "string"]}, {"name": "WriterGroupName", "type": ["null", "string"]}], "name": "ScenarioBindingDataType", "namespace": "org.opcfoundation.ua.avro", "type": "record"}, {"fields": [{"name": "ModelNamespaceUri", "type": ["null", "string"]}, {"name": "AppliesToType", "type": ["null", "org.opcfoundation.ua.avro.QualifiedName"]}, {"name": "ConfigurationVersion", "type": ["null", "org.opcfoundation.ua.avro.ExtensionObject"]}, {"name": "ScenarioBindings", "type": {"items": ["null", "org.opcfoundation.ua.avro.ScenarioBindingDataType"], "type": "array"}}], "name": "ScenarioBindingConfigurationDataType", "namespace": "org.opcfoundation.ua.avro", "type": "record"}, "bytes"]}], "name": "ExtensionObject", "namespace": "org.opcfoundation.ua.avro", "type": "record"}` | nullable where schema is a null union | OPC UA BuiltInType 22. |
 
 **Avro schema fragment**
 
@@ -1459,6 +1459,100 @@ ffff9ff50f
             }
           ],
           "name": "Envelope",
+          "namespace": "org.opcfoundation.ua.avro",
+          "type": "record"
+        },
+        {
+          "fields": [
+            {
+              "name": "Id",
+              "type": "int"
+            },
+            {
+              "default": null,
+              "name": "Flag",
+              "type": [
+                "null",
+                {
+                  "fields": [
+                    {
+                      "name": "value",
+                      "type": "boolean"
+                    }
+                  ],
+                  "name": "OptionalScalars_Flag_Optional",
+                  "namespace": "org.opcfoundation.ua.avro",
+                  "type": "record"
+                }
+              ]
+            },
+            {
+              "default": null,
+              "name": "Count",
+              "type": [
+                "null",
+                {
+                  "fields": [
+                    {
+                      "name": "value",
+                      "type": "int"
+                    }
+                  ],
+                  "name": "OptionalScalars_Count_Optional",
+                  "namespace": "org.opcfoundation.ua.avro",
+                  "type": "record"
+                }
+              ]
+            },
+            {
+              "default": null,
+              "name": "Ratio",
+              "type": [
+                "null",
+                {
+                  "fields": [
+                    {
+                      "name": "value",
+                      "type": "double"
+                    }
+                  ],
+                  "name": "OptionalScalars_Ratio_Optional",
+                  "namespace": "org.opcfoundation.ua.avro",
+                  "type": "record"
+                }
+              ]
+            }
+          ],
+          "name": "OptionalScalars",
+          "namespace": "org.opcfoundation.ua.avro",
+          "type": "record"
+        },
+        {
+          "fields": [
+            {
+              "name": "A",
+              "type": "float"
+            },
+            {
+              "default": null,
+              "name": "B",
+              "type": [
+                "null",
+                {
+                  "fields": [
+                    {
+                      "name": "value",
+                      "type": "float"
+                    }
+                  ],
+                  "name": "FloatHolder_B_Optional",
+                  "namespace": "org.opcfoundation.ua.avro",
+                  "type": "record"
+                }
+              ]
+            }
+          ],
+          "name": "FloatHolder",
           "namespace": "org.opcfoundation.ua.avro",
           "type": "record"
         },
@@ -1692,7 +1786,7 @@ ffff9ff50f
 
 ### Built-in DataValue
 
-**SchemaId** `5d6fdebe22e3b0d9`
+**SchemaId** `2abf014fafc0cfa5`
 
 | Field | Avro type | Presence / nullability | Notes |
 |---|---|---|---|
@@ -1793,7 +1887,7 @@ ffff9ff50f
 
 ### Built-in Variant
 
-**SchemaId** `eb3716e5a3ede96f`
+**SchemaId** `e4991bff0397acd7`
 
 | Field | Avro type | Presence / nullability | Notes |
 |---|---|---|---|
@@ -2427,7 +2521,7 @@ ffff9ff50f
 
 ### Worked structured DataType: Envelope
 
-**SchemaId** `54086d6041c8f13d`
+**SchemaId** `d5b98856c5cee45e`
 
 | Field | Avro type | Presence / nullability | Notes |
 |---|---|---|---|

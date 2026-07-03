@@ -84,7 +84,7 @@ If OPC UA Service processing returns a `ServiceFault` or another service-level B
 message OpcUaStatusDetail {
   fixed32 status_code = 1;
   optional string symbolic_id = 2;
-  optional DiagnosticInfo diagnostic_info = 3;
+  optional opcua.protobuf.v1.DiagnosticInfo diagnostic_info = 3;
 }
 ```
 

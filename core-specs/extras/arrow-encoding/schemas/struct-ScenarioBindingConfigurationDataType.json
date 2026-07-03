@@ -1,6 +1,6 @@
 {
   "arrow": {
-    "arrow": "struct<ModelNamespaceUri: string, AppliesToType: struct<namespace: uint16 not null, name: string>, ConfigurationVersion: struct<type_id: struct<namespace: uint16 not null, id_type: uint8 not null, numeric: uint32, string: string, guid: fixed_size_binary[16], opaque: binary> not null, body: dense_union<null: null=0, Point: struct<X: double not null, Y: double not null>=1, Person: struct<Name: string, Age: int32 not null, Email: struct<present: bool not null, value: string> not null, Nickname: struct<present: bool not null, value: string> not null>=2, Measurement: dense_union<null: null=0, AsInt: struct<value: int32>=1, AsText: struct<value: string>=2, AsPoint: struct<value: struct<X: double not null, Y: double not null>>=3>=3, Envelope: struct<Id: string, Location: struct<X: double not null, Y: double not null>, Tags: list<item: string>, Payload: struct<type_id: struct<namespace: uint16 not null, id_type: uint8 not null, numeric: uint32, string: string, guid: fixed_size_binary[16], opaque: binary> not null, body: dense_union<null: null=0, Point: struct<X: double not null, Y: double not null>=1, Person: struct<Name: string, Age: int32 not null, Email: struct<present: bool not null, value: string> not null, Nickname: struct<present: bool not null, value: string> not null>=2, Measurement: dense_union<null: null=0, AsInt: struct<value: int32>=1, AsText: struct<value: string>=2, AsPoint: struct<value: struct<X: double not null, Y: double not null>>=3>=3, Envelope: struct<>=4, binary: binary=5> not null>>=4, binary: binary=5> not null>, ScenarioBindings: list<item: struct<Name: string, ScenarioUri: string, Direction: int32 not null, ConfigurationVersion: struct<type_id: struct<namespace: uint16 not null, id_type: uint8 not null, numeric: uint32, string: string, guid: fixed_size_binary[16], opaque: binary> not null, body: dense_union<null: null=0, Point: struct<X: double not null, Y: double not null>=1, Person: struct<Name: string, Age: int32 not null, Email: struct<present: bool not null, value: string> not null, Nickname: struct<present: bool not null, value: string> not null>=2, Measurement: dense_union<null: null=0, AsInt: struct<value: int32>=1, AsText: struct<value: string>=2, AsPoint: struct<value: struct<X: double not null, Y: double not null>>=3>=3, Envelope: struct<Id: string, Location: struct<X: double not null, Y: double not null>, Tags: list<item: string>, Payload: struct<type_id: struct<namespace: uint16 not null, id_type: uint8 not null, numeric: uint32, string: string, guid: fixed_size_binary[16], opaque: binary> not null, body: dense_union<null: null=0, Point: struct<X: double not null, Y: double not null>=1, Person: struct<Name: string, Age: int32 not null, Email: struct<present: bool not null, value: string> not null, Nickname: struct<present: bool not null, value: string> not null>=2, Measurement: dense_union<null: null=0, AsInt: struct<value: int32>=1, AsText: struct<value: string>=2, AsPoint: struct<value: struct<X: double not null, Y: double not null>>=3>=3, Envelope: struct<>=4, binary: binary=5> not null>>=4, binary: binary=5> not null>, BoundItems: list<item: struct<FieldName: string, Kind: int32 not null, AttributeId: uint32 not null, SamplingIntervalHint: double not null, IndexRange: string, StartingNode: struct<namespace: uint16 not null, id_type: uint8 not null, numeric: uint32, string: string, guid: fixed_size_binary[16], opaque: binary>, BrowsePath: struct<type_id: struct<namespace: uint16 not null, id_type: uint8 not null, numeric: uint32, string: string, guid: fixed_size_binary[16], opaque: binary> not null, body: dense_union<null: null=0, Point: struct<X: double not null, Y: double not null>=1, Person: struct<Name: string, Age: int32 not null, Email: struct<present: bool not null, value: string> not null, Nickname: struct<present: bool not null, value: string> not null>=2, Measurement: dense_union<null: null=0, AsInt: struct<value: int32>=1, AsText: struct<value: string>=2, AsPoint: struct<value: struct<X: double not null, Y: double not null>>=3>=3, Envelope: struct<Id: string, Location: struct<X: double not null, Y: double not null>, Tags: list<item: string>, Payload: struct<type_id: struct<namespace: uint16 not null, id_type: uint8 not null, numeric: uint32, string: string, guid: fixed_size_binary[16], opaque: binary> not null, body: dense_union<null: null=0, Point: struct<X: double not null, Y: double not null>=1, Person: struct<Name: string, Age: int32 not null, Email: struct<present: bool not null, value: string> not null, Nickname: struct<present: bool not null, value: string> not null>=2, Measurement: dense_union<null: null=0, AsInt: struct<value: int32>=1, AsText: struct<value: string>=2, AsPoint: struct<value: struct<X: double not null, Y: double not null>>=3>=3, Envelope: struct<>=4, binary: binary=5> not null>>=4, binary: binary=5> not null>, SourceNodeId: struct<namespace: uint16 not null, id_type: uint8 not null, numeric: uint32, string: string, guid: fixed_size_binary[16], opaque: binary>, OwningObjectPath: struct<type_id: struct<namespace: uint16 not null, id_type: uint8 not null, numeric: uint32, string: string, guid: fixed_size_binary[16], opaque: binary> not null, body: dense_union<null: null=0, Point: struct<X: double not null, Y: double not null>=1, Person: struct<Name: string, Age: int32 not null, Email: struct<present: bool not null, value: string> not null, Nickname: struct<present: bool not null, value: string> not null>=2, Measurement: dense_union<null: null=0, AsInt: struct<value: int32>=1, AsText: struct<value: string>=2, AsPoint: struct<value: struct<X: double not null, Y: double not null>>=3>=3, Envelope: struct<Id: string, Location: struct<X: double not null, Y: double not null>, Tags: list<item: string>, Payload: struct<type_id: struct<namespace: uint16 not null, id_type: uint8 not null, numeric: uint32, string: string, guid: fixed_size_binary[16], opaque: binary> not null, body: dense_union<null: null=0, Point: struct<X: double not null, Y: double not null>=1, Person: struct<Name: string, Age: int32 not null, Email: struct<present: bool not null, value: string> not null, Nickname: struct<present: bool not null, value: string> not null>=2, Measurement: dense_union<null: null=0, AsInt: struct<value: int32>=1, AsText: struct<value: string>=2, AsPoint: struct<value: struct<X: double not null, Y: double not null>>=3>=3, Envelope: struct<>=4, binary: binary=5> not null>>=4, binary: binary=5> not null>, SourceTypeDefinition: struct<namespace: uint16 not null, id_type: uint8 not null, numeric: uint32, string: string, guid: fixed_size_binary[16], opaque: binary>, SourceBrowseName: struct<namespace: uint16 not null, name: string>, ModelNamespaceUri: string, DataSetFieldId: fixed_size_binary[16] not null, SemanticReferenceUri: string>>, PublishedDataSetName: string, WriterGroupName: string>>>",
+    "arrow": "struct<ModelNamespaceUri: string, AppliesToType: struct<namespace: uint16 not null, name: string>, ConfigurationVersion: struct<type_id: struct<namespace: uint16 not null, id_type: uint8 not null, numeric: uint32, string: string, guid: fixed_size_binary[16], opaque: binary> not null, body: dense_union<null: null=0, Point: struct<X: double not null, Y: double not null>=1, Person: struct<Name: string, Age: int32 not null, Email: struct<present: bool not null, value: string> not null, Nickname: struct<present: bool not null, value: string> not null>=2, Measurement: dense_union<null: null=0, AsInt: struct<value: int32>=1, AsText: struct<value: string>=2, AsPoint: struct<value: struct<X: double not null, Y: double not null>>=3>=3, Envelope: struct<Id: string, Location: struct<X: double not null, Y: double not null>, Tags: list<item: string>, Payload: struct<type_id: struct<namespace: uint16 not null, id_type: uint8 not null, numeric: uint32, string: string, guid: fixed_size_binary[16], opaque: binary> not null, body: dense_union<null: null=0, Point: struct<X: double not null, Y: double not null>=1, Person: struct<Name: string, Age: int32 not null, Email: struct<present: bool not null, value: string> not null, Nickname: struct<present: bool not null, value: string> not null>=2, Measurement: dense_union<null: null=0, AsInt: struct<value: int32>=1, AsText: struct<value: string>=2, AsPoint: struct<value: struct<X: double not null, Y: double not null>>=3>=3, Envelope: struct<>=4, OptionalScalars: struct<Id: int32 not null, Flag: struct<present: bool not null, value: bool> not null, Count: struct<present: bool not null, value: int32> not null, Ratio: struct<present: bool not null, value: double> not null>=5, FloatHolder: struct<A: float not null, B: struct<present: bool not null, value: float> not null>=6, binary: binary=7> not null>>=4, OptionalScalars: struct<Id: int32 not null, Flag: struct<present: bool not null, value: bool> not null, Count: struct<present: bool not null, value: int32> not null, Ratio: struct<present: bool not null, value: double> not null>=5, FloatHolder: struct<A: float not null, B: struct<present: bool not null, value: float> not null>=6, binary: binary=7> not null>, ScenarioBindings: list<item: struct<Name: string, ScenarioUri: string, Direction: int32 not null, ConfigurationVersion: struct<type_id: struct<namespace: uint16 not null, id_type: uint8 not null, numeric: uint32, string: string, guid: fixed_size_binary[16], opaque: binary> not null, body: dense_union<null: null=0, Point: struct<X: double not null, Y: double not null>=1, Person: struct<Name: string, Age: int32 not null, Email: struct<present: bool not null, value: string> not null, Nickname: struct<present: bool not null, value: string> not null>=2, Measurement: dense_union<null: null=0, AsInt: struct<value: int32>=1, AsText: struct<value: string>=2, AsPoint: struct<value: struct<X: double not null, Y: double not null>>=3>=3, Envelope: struct<Id: string, Location: struct<X: double not null, Y: double not null>, Tags: list<item: string>, Payload: struct<type_id: struct<namespace: uint16 not null, id_type: uint8 not null, numeric: uint32, string: string, guid: fixed_size_binary[16], opaque: binary> not null, body: dense_union<null: null=0, Point: struct<X: double not null, Y: double not null>=1, Person: struct<Name: string, Age: int32 not null, Email: struct<present: bool not null, value: string> not null, Nickname: struct<present: bool not null, value: string> not null>=2, Measurement: dense_union<null: null=0, AsInt: struct<value: int32>=1, AsText: struct<value: string>=2, AsPoint: struct<value: struct<X: double not null, Y: double not null>>=3>=3, Envelope: struct<>=4, OptionalScalars: struct<Id: int32 not null, Flag: struct<present: bool not null, value: bool> not null, Count: struct<present: bool not null, value: int32> not null, Ratio: struct<present: bool not null, value: double> not null>=5, FloatHolder: struct<A: float not null, B: struct<present: bool not null, value: float> not null>=6, binary: binary=7> not null>>=4, OptionalScalars: struct<Id: int32 not null, Flag: struct<present: bool not null, value: bool> not null, Count: struct<present: bool not null, value: int32> not null, Ratio: struct<present: bool not null, value: double> not null>=5, FloatHolder: struct<A: float not null, B: struct<present: bool not null, value: float> not null>=6, binary: binary=7> not null>, BoundItems: list<item: struct<FieldName: string, Kind: int32 not null, AttributeId: uint32 not null, SamplingIntervalHint: double not null, IndexRange: string, StartingNode: struct<namespace: uint16 not null, id_type: uint8 not null, numeric: uint32, string: string, guid: fixed_size_binary[16], opaque: binary>, BrowsePath: struct<type_id: struct<namespace: uint16 not null, id_type: uint8 not null, numeric: uint32, string: string, guid: fixed_size_binary[16], opaque: binary> not null, body: dense_union<null: null=0, Point: struct<X: double not null, Y: double not null>=1, Person: struct<Name: string, Age: int32 not null, Email: struct<present: bool not null, value: string> not null, Nickname: struct<present: bool not null, value: string> not null>=2, Measurement: dense_union<null: null=0, AsInt: struct<value: int32>=1, AsText: struct<value: string>=2, AsPoint: struct<value: struct<X: double not null, Y: double not null>>=3>=3, Envelope: struct<Id: string, Location: struct<X: double not null, Y: double not null>, Tags: list<item: string>, Payload: struct<type_id: struct<namespace: uint16 not null, id_type: uint8 not null, numeric: uint32, string: string, guid: fixed_size_binary[16], opaque: binary> not null, body: dense_union<null: null=0, Point: struct<X: double not null, Y: double not null>=1, Person: struct<Name: string, Age: int32 not null, Email: struct<present: bool not null, value: string> not null, Nickname: struct<present: bool not null, value: string> not null>=2, Measurement: dense_union<null: null=0, AsInt: struct<value: int32>=1, AsText: struct<value: string>=2, AsPoint: struct<value: struct<X: double not null, Y: double not null>>=3>=3, Envelope: struct<>=4, OptionalScalars: struct<Id: int32 not null, Flag: struct<present: bool not null, value: bool> not null, Count: struct<present: bool not null, value: int32> not null, Ratio: struct<present: bool not null, value: double> not null>=5, FloatHolder: struct<A: float not null, B: struct<present: bool not null, value: float> not null>=6, binary: binary=7> not null>>=4, OptionalScalars: struct<Id: int32 not null, Flag: struct<present: bool not null, value: bool> not null, Count: struct<present: bool not null, value: int32> not null, Ratio: struct<present: bool not null, value: double> not null>=5, FloatHolder: struct<A: float not null, B: struct<present: bool not null, value: float> not null>=6, binary: binary=7> not null>, SourceNodeId: struct<namespace: uint16 not null, id_type: uint8 not null, numeric: uint32, string: string, guid: fixed_size_binary[16], opaque: binary>, OwningObjectPath: struct<type_id: struct<namespace: uint16 not null, id_type: uint8 not null, numeric: uint32, string: string, guid: fixed_size_binary[16], opaque: binary> not null, body: dense_union<null: null=0, Point: struct<X: double not null, Y: double not null>=1, Person: struct<Name: string, Age: int32 not null, Email: struct<present: bool not null, value: string> not null, Nickname: struct<present: bool not null, value: string> not null>=2, Measurement: dense_union<null: null=0, AsInt: struct<value: int32>=1, AsText: struct<value: string>=2, AsPoint: struct<value: struct<X: double not null, Y: double not null>>=3>=3, Envelope: struct<Id: string, Location: struct<X: double not null, Y: double not null>, Tags: list<item: string>, Payload: struct<type_id: struct<namespace: uint16 not null, id_type: uint8 not null, numeric: uint32, string: string, guid: fixed_size_binary[16], opaque: binary> not null, body: dense_union<null: null=0, Point: struct<X: double not null, Y: double not null>=1, Person: struct<Name: string, Age: int32 not null, Email: struct<present: bool not null, value: string> not null, Nickname: struct<present: bool not null, value: string> not null>=2, Measurement: dense_union<null: null=0, AsInt: struct<value: int32>=1, AsText: struct<value: string>=2, AsPoint: struct<value: struct<X: double not null, Y: double not null>>=3>=3, Envelope: struct<>=4, OptionalScalars: struct<Id: int32 not null, Flag: struct<present: bool not null, value: bool> not null, Count: struct<present: bool not null, value: int32> not null, Ratio: struct<present: bool not null, value: double> not null>=5, FloatHolder: struct<A: float not null, B: struct<present: bool not null, value: float> not null>=6, binary: binary=7> not null>>=4, OptionalScalars: struct<Id: int32 not null, Flag: struct<present: bool not null, value: bool> not null, Count: struct<present: bool not null, value: int32> not null, Ratio: struct<present: bool not null, value: double> not null>=5, FloatHolder: struct<A: float not null, B: struct<present: bool not null, value: float> not null>=6, binary: binary=7> not null>, SourceTypeDefinition: struct<namespace: uint16 not null, id_type: uint8 not null, numeric: uint32, string: string, guid: fixed_size_binary[16], opaque: binary>, SourceBrowseName: struct<namespace: uint16 not null, name: string>, ModelNamespaceUri: string, DataSetFieldId: fixed_size_binary[16] not null, SemanticReferenceUri: string>>, PublishedDataSetName: string, WriterGroupName: string>>>",
     "detail": {
       "fields": [
         {
@@ -468,6 +468,108 @@
                                         }
                                       },
                                       {
+                                        "name": "OptionalScalars",
+                                        "type": {
+                                          "fields": [
+                                            {
+                                              "name": "Id",
+                                              "nullable": false,
+                                              "type": "int32"
+                                            },
+                                            {
+                                              "name": "Flag",
+                                              "nullable": false,
+                                              "type": {
+                                                "fields": [
+                                                  {
+                                                    "name": "present",
+                                                    "nullable": false,
+                                                    "type": "bool"
+                                                  },
+                                                  {
+                                                    "name": "value",
+                                                    "nullable": true,
+                                                    "type": "bool"
+                                                  }
+                                                ],
+                                                "type": "struct"
+                                              }
+                                            },
+                                            {
+                                              "name": "Count",
+                                              "nullable": false,
+                                              "type": {
+                                                "fields": [
+                                                  {
+                                                    "name": "present",
+                                                    "nullable": false,
+                                                    "type": "bool"
+                                                  },
+                                                  {
+                                                    "name": "value",
+                                                    "nullable": true,
+                                                    "type": "int32"
+                                                  }
+                                                ],
+                                                "type": "struct"
+                                              }
+                                            },
+                                            {
+                                              "name": "Ratio",
+                                              "nullable": false,
+                                              "type": {
+                                                "fields": [
+                                                  {
+                                                    "name": "present",
+                                                    "nullable": false,
+                                                    "type": "bool"
+                                                  },
+                                                  {
+                                                    "name": "value",
+                                                    "nullable": true,
+                                                    "type": "double"
+                                                  }
+                                                ],
+                                                "type": "struct"
+                                              }
+                                            }
+                                          ],
+                                          "type": "struct"
+                                        }
+                                      },
+                                      {
+                                        "name": "FloatHolder",
+                                        "type": {
+                                          "fields": [
+                                            {
+                                              "name": "A",
+                                              "nullable": false,
+                                              "type": "float"
+                                            },
+                                            {
+                                              "name": "B",
+                                              "nullable": false,
+                                              "type": {
+                                                "fields": [
+                                                  {
+                                                    "name": "present",
+                                                    "nullable": false,
+                                                    "type": "bool"
+                                                  },
+                                                  {
+                                                    "name": "value",
+                                                    "nullable": true,
+                                                    "type": "float"
+                                                  }
+                                                ],
+                                                "type": "struct"
+                                              }
+                                            }
+                                          ],
+                                          "type": "struct"
+                                        }
+                                      },
+                                      {
                                         "name": "binary",
                                         "type": "binary"
                                       }
@@ -479,9 +581,113 @@
                                       2,
                                       3,
                                       4,
-                                      5
+                                      5,
+                                      6,
+                                      7
                                     ]
                                   }
+                                }
+                              ],
+                              "type": "struct"
+                            }
+                          }
+                        ],
+                        "type": "struct"
+                      }
+                    },
+                    {
+                      "name": "OptionalScalars",
+                      "type": {
+                        "fields": [
+                          {
+                            "name": "Id",
+                            "nullable": false,
+                            "type": "int32"
+                          },
+                          {
+                            "name": "Flag",
+                            "nullable": false,
+                            "type": {
+                              "fields": [
+                                {
+                                  "name": "present",
+                                  "nullable": false,
+                                  "type": "bool"
+                                },
+                                {
+                                  "name": "value",
+                                  "nullable": true,
+                                  "type": "bool"
+                                }
+                              ],
+                              "type": "struct"
+                            }
+                          },
+                          {
+                            "name": "Count",
+                            "nullable": false,
+                            "type": {
+                              "fields": [
+                                {
+                                  "name": "present",
+                                  "nullable": false,
+                                  "type": "bool"
+                                },
+                                {
+                                  "name": "value",
+                                  "nullable": true,
+                                  "type": "int32"
+                                }
+                              ],
+                              "type": "struct"
+                            }
+                          },
+                          {
+                            "name": "Ratio",
+                            "nullable": false,
+                            "type": {
+                              "fields": [
+                                {
+                                  "name": "present",
+                                  "nullable": false,
+                                  "type": "bool"
+                                },
+                                {
+                                  "name": "value",
+                                  "nullable": true,
+                                  "type": "double"
+                                }
+                              ],
+                              "type": "struct"
+                            }
+                          }
+                        ],
+                        "type": "struct"
+                      }
+                    },
+                    {
+                      "name": "FloatHolder",
+                      "type": {
+                        "fields": [
+                          {
+                            "name": "A",
+                            "nullable": false,
+                            "type": "float"
+                          },
+                          {
+                            "name": "B",
+                            "nullable": false,
+                            "type": {
+                              "fields": [
+                                {
+                                  "name": "present",
+                                  "nullable": false,
+                                  "type": "bool"
+                                },
+                                {
+                                  "name": "value",
+                                  "nullable": true,
+                                  "type": "float"
                                 }
                               ],
                               "type": "struct"
@@ -503,7 +709,9 @@
                     2,
                     3,
                     4,
-                    5
+                    5,
+                    6,
+                    7
                   ]
                 }
               }
@@ -974,6 +1182,108 @@
                                                 }
                                               },
                                               {
+                                                "name": "OptionalScalars",
+                                                "type": {
+                                                  "fields": [
+                                                    {
+                                                      "name": "Id",
+                                                      "nullable": false,
+                                                      "type": "int32"
+                                                    },
+                                                    {
+                                                      "name": "Flag",
+                                                      "nullable": false,
+                                                      "type": {
+                                                        "fields": [
+                                                          {
+                                                            "name": "present",
+                                                            "nullable": false,
+                                                            "type": "bool"
+                                                          },
+                                                          {
+                                                            "name": "value",
+                                                            "nullable": true,
+                                                            "type": "bool"
+                                                          }
+                                                        ],
+                                                        "type": "struct"
+                                                      }
+                                                    },
+                                                    {
+                                                      "name": "Count",
+                                                      "nullable": false,
+                                                      "type": {
+                                                        "fields": [
+                                                          {
+                                                            "name": "present",
+                                                            "nullable": false,
+                                                            "type": "bool"
+                                                          },
+                                                          {
+                                                            "name": "value",
+                                                            "nullable": true,
+                                                            "type": "int32"
+                                                          }
+                                                        ],
+                                                        "type": "struct"
+                                                      }
+                                                    },
+                                                    {
+                                                      "name": "Ratio",
+                                                      "nullable": false,
+                                                      "type": {
+                                                        "fields": [
+                                                          {
+                                                            "name": "present",
+                                                            "nullable": false,
+                                                            "type": "bool"
+                                                          },
+                                                          {
+                                                            "name": "value",
+                                                            "nullable": true,
+                                                            "type": "double"
+                                                          }
+                                                        ],
+                                                        "type": "struct"
+                                                      }
+                                                    }
+                                                  ],
+                                                  "type": "struct"
+                                                }
+                                              },
+                                              {
+                                                "name": "FloatHolder",
+                                                "type": {
+                                                  "fields": [
+                                                    {
+                                                      "name": "A",
+                                                      "nullable": false,
+                                                      "type": "float"
+                                                    },
+                                                    {
+                                                      "name": "B",
+                                                      "nullable": false,
+                                                      "type": {
+                                                        "fields": [
+                                                          {
+                                                            "name": "present",
+                                                            "nullable": false,
+                                                            "type": "bool"
+                                                          },
+                                                          {
+                                                            "name": "value",
+                                                            "nullable": true,
+                                                            "type": "float"
+                                                          }
+                                                        ],
+                                                        "type": "struct"
+                                                      }
+                                                    }
+                                                  ],
+                                                  "type": "struct"
+                                                }
+                                              },
+                                              {
                                                 "name": "binary",
                                                 "type": "binary"
                                               }
@@ -985,9 +1295,113 @@
                                               2,
                                               3,
                                               4,
-                                              5
+                                              5,
+                                              6,
+                                              7
                                             ]
                                           }
+                                        }
+                                      ],
+                                      "type": "struct"
+                                    }
+                                  }
+                                ],
+                                "type": "struct"
+                              }
+                            },
+                            {
+                              "name": "OptionalScalars",
+                              "type": {
+                                "fields": [
+                                  {
+                                    "name": "Id",
+                                    "nullable": false,
+                                    "type": "int32"
+                                  },
+                                  {
+                                    "name": "Flag",
+                                    "nullable": false,
+                                    "type": {
+                                      "fields": [
+                                        {
+                                          "name": "present",
+                                          "nullable": false,
+                                          "type": "bool"
+                                        },
+                                        {
+                                          "name": "value",
+                                          "nullable": true,
+                                          "type": "bool"
+                                        }
+                                      ],
+                                      "type": "struct"
+                                    }
+                                  },
+                                  {
+                                    "name": "Count",
+                                    "nullable": false,
+                                    "type": {
+                                      "fields": [
+                                        {
+                                          "name": "present",
+                                          "nullable": false,
+                                          "type": "bool"
+                                        },
+                                        {
+                                          "name": "value",
+                                          "nullable": true,
+                                          "type": "int32"
+                                        }
+                                      ],
+                                      "type": "struct"
+                                    }
+                                  },
+                                  {
+                                    "name": "Ratio",
+                                    "nullable": false,
+                                    "type": {
+                                      "fields": [
+                                        {
+                                          "name": "present",
+                                          "nullable": false,
+                                          "type": "bool"
+                                        },
+                                        {
+                                          "name": "value",
+                                          "nullable": true,
+                                          "type": "double"
+                                        }
+                                      ],
+                                      "type": "struct"
+                                    }
+                                  }
+                                ],
+                                "type": "struct"
+                              }
+                            },
+                            {
+                              "name": "FloatHolder",
+                              "type": {
+                                "fields": [
+                                  {
+                                    "name": "A",
+                                    "nullable": false,
+                                    "type": "float"
+                                  },
+                                  {
+                                    "name": "B",
+                                    "nullable": false,
+                                    "type": {
+                                      "fields": [
+                                        {
+                                          "name": "present",
+                                          "nullable": false,
+                                          "type": "bool"
+                                        },
+                                        {
+                                          "name": "value",
+                                          "nullable": true,
+                                          "type": "float"
                                         }
                                       ],
                                       "type": "struct"
@@ -1009,7 +1423,9 @@
                             2,
                             3,
                             4,
-                            5
+                            5,
+                            6,
+                            7
                           ]
                         }
                       }
@@ -1529,6 +1945,108 @@
                                                         }
                                                       },
                                                       {
+                                                        "name": "OptionalScalars",
+                                                        "type": {
+                                                          "fields": [
+                                                            {
+                                                              "name": "Id",
+                                                              "nullable": false,
+                                                              "type": "int32"
+                                                            },
+                                                            {
+                                                              "name": "Flag",
+                                                              "nullable": false,
+                                                              "type": {
+                                                                "fields": [
+                                                                  {
+                                                                    "name": "present",
+                                                                    "nullable": false,
+                                                                    "type": "bool"
+                                                                  },
+                                                                  {
+                                                                    "name": "value",
+                                                                    "nullable": true,
+                                                                    "type": "bool"
+                                                                  }
+                                                                ],
+                                                                "type": "struct"
+                                                              }
+                                                            },
+                                                            {
+                                                              "name": "Count",
+                                                              "nullable": false,
+                                                              "type": {
+                                                                "fields": [
+                                                                  {
+                                                                    "name": "present",
+                                                                    "nullable": false,
+                                                                    "type": "bool"
+                                                                  },
+                                                                  {
+                                                                    "name": "value",
+                                                                    "nullable": true,
+                                                                    "type": "int32"
+                                                                  }
+                                                                ],
+                                                                "type": "struct"
+                                                              }
+                                                            },
+                                                            {
+                                                              "name": "Ratio",
+                                                              "nullable": false,
+                                                              "type": {
+                                                                "fields": [
+                                                                  {
+                                                                    "name": "present",
+                                                                    "nullable": false,
+                                                                    "type": "bool"
+                                                                  },
+                                                                  {
+                                                                    "name": "value",
+                                                                    "nullable": true,
+                                                                    "type": "double"
+                                                                  }
+                                                                ],
+                                                                "type": "struct"
+                                                              }
+                                                            }
+                                                          ],
+                                                          "type": "struct"
+                                                        }
+                                                      },
+                                                      {
+                                                        "name": "FloatHolder",
+                                                        "type": {
+                                                          "fields": [
+                                                            {
+                                                              "name": "A",
+                                                              "nullable": false,
+                                                              "type": "float"
+                                                            },
+                                                            {
+                                                              "name": "B",
+                                                              "nullable": false,
+                                                              "type": {
+                                                                "fields": [
+                                                                  {
+                                                                    "name": "present",
+                                                                    "nullable": false,
+                                                                    "type": "bool"
+                                                                  },
+                                                                  {
+                                                                    "name": "value",
+                                                                    "nullable": true,
+                                                                    "type": "float"
+                                                                  }
+                                                                ],
+                                                                "type": "struct"
+                                                              }
+                                                            }
+                                                          ],
+                                                          "type": "struct"
+                                                        }
+                                                      },
+                                                      {
                                                         "name": "binary",
                                                         "type": "binary"
                                                       }
@@ -1540,9 +2058,113 @@
                                                       2,
                                                       3,
                                                       4,
-                                                      5
+                                                      5,
+                                                      6,
+                                                      7
                                                     ]
                                                   }
+                                                }
+                                              ],
+                                              "type": "struct"
+                                            }
+                                          }
+                                        ],
+                                        "type": "struct"
+                                      }
+                                    },
+                                    {
+                                      "name": "OptionalScalars",
+                                      "type": {
+                                        "fields": [
+                                          {
+                                            "name": "Id",
+                                            "nullable": false,
+                                            "type": "int32"
+                                          },
+                                          {
+                                            "name": "Flag",
+                                            "nullable": false,
+                                            "type": {
+                                              "fields": [
+                                                {
+                                                  "name": "present",
+                                                  "nullable": false,
+                                                  "type": "bool"
+                                                },
+                                                {
+                                                  "name": "value",
+                                                  "nullable": true,
+                                                  "type": "bool"
+                                                }
+                                              ],
+                                              "type": "struct"
+                                            }
+                                          },
+                                          {
+                                            "name": "Count",
+                                            "nullable": false,
+                                            "type": {
+                                              "fields": [
+                                                {
+                                                  "name": "present",
+                                                  "nullable": false,
+                                                  "type": "bool"
+                                                },
+                                                {
+                                                  "name": "value",
+                                                  "nullable": true,
+                                                  "type": "int32"
+                                                }
+                                              ],
+                                              "type": "struct"
+                                            }
+                                          },
+                                          {
+                                            "name": "Ratio",
+                                            "nullable": false,
+                                            "type": {
+                                              "fields": [
+                                                {
+                                                  "name": "present",
+                                                  "nullable": false,
+                                                  "type": "bool"
+                                                },
+                                                {
+                                                  "name": "value",
+                                                  "nullable": true,
+                                                  "type": "double"
+                                                }
+                                              ],
+                                              "type": "struct"
+                                            }
+                                          }
+                                        ],
+                                        "type": "struct"
+                                      }
+                                    },
+                                    {
+                                      "name": "FloatHolder",
+                                      "type": {
+                                        "fields": [
+                                          {
+                                            "name": "A",
+                                            "nullable": false,
+                                            "type": "float"
+                                          },
+                                          {
+                                            "name": "B",
+                                            "nullable": false,
+                                            "type": {
+                                              "fields": [
+                                                {
+                                                  "name": "present",
+                                                  "nullable": false,
+                                                  "type": "bool"
+                                                },
+                                                {
+                                                  "name": "value",
+                                                  "nullable": true,
+                                                  "type": "float"
                                                 }
                                               ],
                                               "type": "struct"
@@ -1564,7 +2186,9 @@
                                     2,
                                     3,
                                     4,
-                                    5
+                                    5,
+                                    6,
+                                    7
                                   ]
                                 }
                               }
@@ -2052,6 +2676,108 @@
                                                         }
                                                       },
                                                       {
+                                                        "name": "OptionalScalars",
+                                                        "type": {
+                                                          "fields": [
+                                                            {
+                                                              "name": "Id",
+                                                              "nullable": false,
+                                                              "type": "int32"
+                                                            },
+                                                            {
+                                                              "name": "Flag",
+                                                              "nullable": false,
+                                                              "type": {
+                                                                "fields": [
+                                                                  {
+                                                                    "name": "present",
+                                                                    "nullable": false,
+                                                                    "type": "bool"
+                                                                  },
+                                                                  {
+                                                                    "name": "value",
+                                                                    "nullable": true,
+                                                                    "type": "bool"
+                                                                  }
+                                                                ],
+                                                                "type": "struct"
+                                                              }
+                                                            },
+                                                            {
+                                                              "name": "Count",
+                                                              "nullable": false,
+                                                              "type": {
+                                                                "fields": [
+                                                                  {
+                                                                    "name": "present",
+                                                                    "nullable": false,
+                                                                    "type": "bool"
+                                                                  },
+                                                                  {
+                                                                    "name": "value",
+                                                                    "nullable": true,
+                                                                    "type": "int32"
+                                                                  }
+                                                                ],
+                                                                "type": "struct"
+                                                              }
+                                                            },
+                                                            {
+                                                              "name": "Ratio",
+                                                              "nullable": false,
+                                                              "type": {
+                                                                "fields": [
+                                                                  {
+                                                                    "name": "present",
+                                                                    "nullable": false,
+                                                                    "type": "bool"
+                                                                  },
+                                                                  {
+                                                                    "name": "value",
+                                                                    "nullable": true,
+                                                                    "type": "double"
+                                                                  }
+                                                                ],
+                                                                "type": "struct"
+                                                              }
+                                                            }
+                                                          ],
+                                                          "type": "struct"
+                                                        }
+                                                      },
+                                                      {
+                                                        "name": "FloatHolder",
+                                                        "type": {
+                                                          "fields": [
+                                                            {
+                                                              "name": "A",
+                                                              "nullable": false,
+                                                              "type": "float"
+                                                            },
+                                                            {
+                                                              "name": "B",
+                                                              "nullable": false,
+                                                              "type": {
+                                                                "fields": [
+                                                                  {
+                                                                    "name": "present",
+                                                                    "nullable": false,
+                                                                    "type": "bool"
+                                                                  },
+                                                                  {
+                                                                    "name": "value",
+                                                                    "nullable": true,
+                                                                    "type": "float"
+                                                                  }
+                                                                ],
+                                                                "type": "struct"
+                                                              }
+                                                            }
+                                                          ],
+                                                          "type": "struct"
+                                                        }
+                                                      },
+                                                      {
                                                         "name": "binary",
                                                         "type": "binary"
                                                       }
@@ -2063,9 +2789,113 @@
                                                       2,
                                                       3,
                                                       4,
-                                                      5
+                                                      5,
+                                                      6,
+                                                      7
                                                     ]
                                                   }
+                                                }
+                                              ],
+                                              "type": "struct"
+                                            }
+                                          }
+                                        ],
+                                        "type": "struct"
+                                      }
+                                    },
+                                    {
+                                      "name": "OptionalScalars",
+                                      "type": {
+                                        "fields": [
+                                          {
+                                            "name": "Id",
+                                            "nullable": false,
+                                            "type": "int32"
+                                          },
+                                          {
+                                            "name": "Flag",
+                                            "nullable": false,
+                                            "type": {
+                                              "fields": [
+                                                {
+                                                  "name": "present",
+                                                  "nullable": false,
+                                                  "type": "bool"
+                                                },
+                                                {
+                                                  "name": "value",
+                                                  "nullable": true,
+                                                  "type": "bool"
+                                                }
+                                              ],
+                                              "type": "struct"
+                                            }
+                                          },
+                                          {
+                                            "name": "Count",
+                                            "nullable": false,
+                                            "type": {
+                                              "fields": [
+                                                {
+                                                  "name": "present",
+                                                  "nullable": false,
+                                                  "type": "bool"
+                                                },
+                                                {
+                                                  "name": "value",
+                                                  "nullable": true,
+                                                  "type": "int32"
+                                                }
+                                              ],
+                                              "type": "struct"
+                                            }
+                                          },
+                                          {
+                                            "name": "Ratio",
+                                            "nullable": false,
+                                            "type": {
+                                              "fields": [
+                                                {
+                                                  "name": "present",
+                                                  "nullable": false,
+                                                  "type": "bool"
+                                                },
+                                                {
+                                                  "name": "value",
+                                                  "nullable": true,
+                                                  "type": "double"
+                                                }
+                                              ],
+                                              "type": "struct"
+                                            }
+                                          }
+                                        ],
+                                        "type": "struct"
+                                      }
+                                    },
+                                    {
+                                      "name": "FloatHolder",
+                                      "type": {
+                                        "fields": [
+                                          {
+                                            "name": "A",
+                                            "nullable": false,
+                                            "type": "float"
+                                          },
+                                          {
+                                            "name": "B",
+                                            "nullable": false,
+                                            "type": {
+                                              "fields": [
+                                                {
+                                                  "name": "present",
+                                                  "nullable": false,
+                                                  "type": "bool"
+                                                },
+                                                {
+                                                  "name": "value",
+                                                  "nullable": true,
+                                                  "type": "float"
                                                 }
                                               ],
                                               "type": "struct"
@@ -2087,7 +2917,9 @@
                                     2,
                                     3,
                                     4,
-                                    5
+                                    5,
+                                    6,
+                                    7
                                   ]
                                 }
                               }
@@ -2236,7 +3068,7 @@
     {
       "allowSubtypes": true,
       "arrow": {
-        "arrow": "struct<type_id: struct<namespace: uint16 not null, id_type: uint8 not null, numeric: uint32, string: string, guid: fixed_size_binary[16], opaque: binary> not null, body: dense_union<null: null=0, Point: struct<X: double not null, Y: double not null>=1, Person: struct<Name: string, Age: int32 not null, Email: struct<present: bool not null, value: string> not null, Nickname: struct<present: bool not null, value: string> not null>=2, Measurement: dense_union<null: null=0, AsInt: struct<value: int32>=1, AsText: struct<value: string>=2, AsPoint: struct<value: struct<X: double not null, Y: double not null>>=3>=3, Envelope: struct<Id: string, Location: struct<X: double not null, Y: double not null>, Tags: list<item: string>, Payload: struct<type_id: struct<namespace: uint16 not null, id_type: uint8 not null, numeric: uint32, string: string, guid: fixed_size_binary[16], opaque: binary> not null, body: dense_union<null: null=0, Point: struct<X: double not null, Y: double not null>=1, Person: struct<Name: string, Age: int32 not null, Email: struct<present: bool not null, value: string> not null, Nickname: struct<present: bool not null, value: string> not null>=2, Measurement: dense_union<null: null=0, AsInt: struct<value: int32>=1, AsText: struct<value: string>=2, AsPoint: struct<value: struct<X: double not null, Y: double not null>>=3>=3, Envelope: struct<>=4, binary: binary=5> not null>>=4, binary: binary=5> not null>",
+        "arrow": "struct<type_id: struct<namespace: uint16 not null, id_type: uint8 not null, numeric: uint32, string: string, guid: fixed_size_binary[16], opaque: binary> not null, body: dense_union<null: null=0, Point: struct<X: double not null, Y: double not null>=1, Person: struct<Name: string, Age: int32 not null, Email: struct<present: bool not null, value: string> not null, Nickname: struct<present: bool not null, value: string> not null>=2, Measurement: dense_union<null: null=0, AsInt: struct<value: int32>=1, AsText: struct<value: string>=2, AsPoint: struct<value: struct<X: double not null, Y: double not null>>=3>=3, Envelope: struct<Id: string, Location: struct<X: double not null, Y: double not null>, Tags: list<item: string>, Payload: struct<type_id: struct<namespace: uint16 not null, id_type: uint8 not null, numeric: uint32, string: string, guid: fixed_size_binary[16], opaque: binary> not null, body: dense_union<null: null=0, Point: struct<X: double not null, Y: double not null>=1, Person: struct<Name: string, Age: int32 not null, Email: struct<present: bool not null, value: string> not null, Nickname: struct<present: bool not null, value: string> not null>=2, Measurement: dense_union<null: null=0, AsInt: struct<value: int32>=1, AsText: struct<value: string>=2, AsPoint: struct<value: struct<X: double not null, Y: double not null>>=3>=3, Envelope: struct<>=4, OptionalScalars: struct<Id: int32 not null, Flag: struct<present: bool not null, value: bool> not null, Count: struct<present: bool not null, value: int32> not null, Ratio: struct<present: bool not null, value: double> not null>=5, FloatHolder: struct<A: float not null, B: struct<present: bool not null, value: float> not null>=6, binary: binary=7> not null>>=4, OptionalScalars: struct<Id: int32 not null, Flag: struct<present: bool not null, value: bool> not null, Count: struct<present: bool not null, value: int32> not null, Ratio: struct<present: bool not null, value: double> not null>=5, FloatHolder: struct<A: float not null, B: struct<present: bool not null, value: float> not null>=6, binary: binary=7> not null>",
         "detail": {
           "fields": [
             {
@@ -2675,6 +3507,108 @@
                                       }
                                     },
                                     {
+                                      "name": "OptionalScalars",
+                                      "type": {
+                                        "fields": [
+                                          {
+                                            "name": "Id",
+                                            "nullable": false,
+                                            "type": "int32"
+                                          },
+                                          {
+                                            "name": "Flag",
+                                            "nullable": false,
+                                            "type": {
+                                              "fields": [
+                                                {
+                                                  "name": "present",
+                                                  "nullable": false,
+                                                  "type": "bool"
+                                                },
+                                                {
+                                                  "name": "value",
+                                                  "nullable": true,
+                                                  "type": "bool"
+                                                }
+                                              ],
+                                              "type": "struct"
+                                            }
+                                          },
+                                          {
+                                            "name": "Count",
+                                            "nullable": false,
+                                            "type": {
+                                              "fields": [
+                                                {
+                                                  "name": "present",
+                                                  "nullable": false,
+                                                  "type": "bool"
+                                                },
+                                                {
+                                                  "name": "value",
+                                                  "nullable": true,
+                                                  "type": "int32"
+                                                }
+                                              ],
+                                              "type": "struct"
+                                            }
+                                          },
+                                          {
+                                            "name": "Ratio",
+                                            "nullable": false,
+                                            "type": {
+                                              "fields": [
+                                                {
+                                                  "name": "present",
+                                                  "nullable": false,
+                                                  "type": "bool"
+                                                },
+                                                {
+                                                  "name": "value",
+                                                  "nullable": true,
+                                                  "type": "double"
+                                                }
+                                              ],
+                                              "type": "struct"
+                                            }
+                                          }
+                                        ],
+                                        "type": "struct"
+                                      }
+                                    },
+                                    {
+                                      "name": "FloatHolder",
+                                      "type": {
+                                        "fields": [
+                                          {
+                                            "name": "A",
+                                            "nullable": false,
+                                            "type": "float"
+                                          },
+                                          {
+                                            "name": "B",
+                                            "nullable": false,
+                                            "type": {
+                                              "fields": [
+                                                {
+                                                  "name": "present",
+                                                  "nullable": false,
+                                                  "type": "bool"
+                                                },
+                                                {
+                                                  "name": "value",
+                                                  "nullable": true,
+                                                  "type": "float"
+                                                }
+                                              ],
+                                              "type": "struct"
+                                            }
+                                          }
+                                        ],
+                                        "type": "struct"
+                                      }
+                                    },
+                                    {
                                       "name": "binary",
                                       "type": "binary"
                                     }
@@ -2686,9 +3620,113 @@
                                     2,
                                     3,
                                     4,
-                                    5
+                                    5,
+                                    6,
+                                    7
                                   ]
                                 }
+                              }
+                            ],
+                            "type": "struct"
+                          }
+                        }
+                      ],
+                      "type": "struct"
+                    }
+                  },
+                  {
+                    "name": "OptionalScalars",
+                    "type": {
+                      "fields": [
+                        {
+                          "name": "Id",
+                          "nullable": false,
+                          "type": "int32"
+                        },
+                        {
+                          "name": "Flag",
+                          "nullable": false,
+                          "type": {
+                            "fields": [
+                              {
+                                "name": "present",
+                                "nullable": false,
+                                "type": "bool"
+                              },
+                              {
+                                "name": "value",
+                                "nullable": true,
+                                "type": "bool"
+                              }
+                            ],
+                            "type": "struct"
+                          }
+                        },
+                        {
+                          "name": "Count",
+                          "nullable": false,
+                          "type": {
+                            "fields": [
+                              {
+                                "name": "present",
+                                "nullable": false,
+                                "type": "bool"
+                              },
+                              {
+                                "name": "value",
+                                "nullable": true,
+                                "type": "int32"
+                              }
+                            ],
+                            "type": "struct"
+                          }
+                        },
+                        {
+                          "name": "Ratio",
+                          "nullable": false,
+                          "type": {
+                            "fields": [
+                              {
+                                "name": "present",
+                                "nullable": false,
+                                "type": "bool"
+                              },
+                              {
+                                "name": "value",
+                                "nullable": true,
+                                "type": "double"
+                              }
+                            ],
+                            "type": "struct"
+                          }
+                        }
+                      ],
+                      "type": "struct"
+                    }
+                  },
+                  {
+                    "name": "FloatHolder",
+                    "type": {
+                      "fields": [
+                        {
+                          "name": "A",
+                          "nullable": false,
+                          "type": "float"
+                        },
+                        {
+                          "name": "B",
+                          "nullable": false,
+                          "type": {
+                            "fields": [
+                              {
+                                "name": "present",
+                                "nullable": false,
+                                "type": "bool"
+                              },
+                              {
+                                "name": "value",
+                                "nullable": true,
+                                "type": "float"
                               }
                             ],
                             "type": "struct"
@@ -2710,7 +3748,9 @@
                   2,
                   3,
                   4,
-                  5
+                  5,
+                  6,
+                  7
                 ]
               }
             }
@@ -2726,7 +3766,7 @@
     {
       "allowSubtypes": false,
       "arrow": {
-        "arrow": "list<item: struct<Name: string, ScenarioUri: string, Direction: int32 not null, ConfigurationVersion: struct<type_id: struct<namespace: uint16 not null, id_type: uint8 not null, numeric: uint32, string: string, guid: fixed_size_binary[16], opaque: binary> not null, body: dense_union<null: null=0, Point: struct<X: double not null, Y: double not null>=1, Person: struct<Name: string, Age: int32 not null, Email: struct<present: bool not null, value: string> not null, Nickname: struct<present: bool not null, value: string> not null>=2, Measurement: dense_union<null: null=0, AsInt: struct<value: int32>=1, AsText: struct<value: string>=2, AsPoint: struct<value: struct<X: double not null, Y: double not null>>=3>=3, Envelope: struct<Id: string, Location: struct<X: double not null, Y: double not null>, Tags: list<item: string>, Payload: struct<type_id: struct<namespace: uint16 not null, id_type: uint8 not null, numeric: uint32, string: string, guid: fixed_size_binary[16], opaque: binary> not null, body: dense_union<null: null=0, Point: struct<X: double not null, Y: double not null>=1, Person: struct<Name: string, Age: int32 not null, Email: struct<present: bool not null, value: string> not null, Nickname: struct<present: bool not null, value: string> not null>=2, Measurement: dense_union<null: null=0, AsInt: struct<value: int32>=1, AsText: struct<value: string>=2, AsPoint: struct<value: struct<X: double not null, Y: double not null>>=3>=3, Envelope: struct<>=4, binary: binary=5> not null>>=4, binary: binary=5> not null>, BoundItems: list<item: struct<FieldName: string, Kind: int32 not null, AttributeId: uint32 not null, SamplingIntervalHint: double not null, IndexRange: string, StartingNode: struct<namespace: uint16 not null, id_type: uint8 not null, numeric: uint32, string: string, guid: fixed_size_binary[16], opaque: binary>, BrowsePath: struct<type_id: struct<namespace: uint16 not null, id_type: uint8 not null, numeric: uint32, string: string, guid: fixed_size_binary[16], opaque: binary> not null, body: dense_union<null: null=0, Point: struct<X: double not null, Y: double not null>=1, Person: struct<Name: string, Age: int32 not null, Email: struct<present: bool not null, value: string> not null, Nickname: struct<present: bool not null, value: string> not null>=2, Measurement: dense_union<null: null=0, AsInt: struct<value: int32>=1, AsText: struct<value: string>=2, AsPoint: struct<value: struct<X: double not null, Y: double not null>>=3>=3, Envelope: struct<Id: string, Location: struct<X: double not null, Y: double not null>, Tags: list<item: string>, Payload: struct<type_id: struct<namespace: uint16 not null, id_type: uint8 not null, numeric: uint32, string: string, guid: fixed_size_binary[16], opaque: binary> not null, body: dense_union<null: null=0, Point: struct<X: double not null, Y: double not null>=1, Person: struct<Name: string, Age: int32 not null, Email: struct<present: bool not null, value: string> not null, Nickname: struct<present: bool not null, value: string> not null>=2, Measurement: dense_union<null: null=0, AsInt: struct<value: int32>=1, AsText: struct<value: string>=2, AsPoint: struct<value: struct<X: double not null, Y: double not null>>=3>=3, Envelope: struct<>=4, binary: binary=5> not null>>=4, binary: binary=5> not null>, SourceNodeId: struct<namespace: uint16 not null, id_type: uint8 not null, numeric: uint32, string: string, guid: fixed_size_binary[16], opaque: binary>, OwningObjectPath: struct<type_id: struct<namespace: uint16 not null, id_type: uint8 not null, numeric: uint32, string: string, guid: fixed_size_binary[16], opaque: binary> not null, body: dense_union<null: null=0, Point: struct<X: double not null, Y: double not null>=1, Person: struct<Name: string, Age: int32 not null, Email: struct<present: bool not null, value: string> not null, Nickname: struct<present: bool not null, value: string> not null>=2, Measurement: dense_union<null: null=0, AsInt: struct<value: int32>=1, AsText: struct<value: string>=2, AsPoint: struct<value: struct<X: double not null, Y: double not null>>=3>=3, Envelope: struct<Id: string, Location: struct<X: double not null, Y: double not null>, Tags: list<item: string>, Payload: struct<type_id: struct<namespace: uint16 not null, id_type: uint8 not null, numeric: uint32, string: string, guid: fixed_size_binary[16], opaque: binary> not null, body: dense_union<null: null=0, Point: struct<X: double not null, Y: double not null>=1, Person: struct<Name: string, Age: int32 not null, Email: struct<present: bool not null, value: string> not null, Nickname: struct<present: bool not null, value: string> not null>=2, Measurement: dense_union<null: null=0, AsInt: struct<value: int32>=1, AsText: struct<value: string>=2, AsPoint: struct<value: struct<X: double not null, Y: double not null>>=3>=3, Envelope: struct<>=4, binary: binary=5> not null>>=4, binary: binary=5> not null>, SourceTypeDefinition: struct<namespace: uint16 not null, id_type: uint8 not null, numeric: uint32, string: string, guid: fixed_size_binary[16], opaque: binary>, SourceBrowseName: struct<namespace: uint16 not null, name: string>, ModelNamespaceUri: string, DataSetFieldId: fixed_size_binary[16] not null, SemanticReferenceUri: string>>, PublishedDataSetName: string, WriterGroupName: string>>",
+        "arrow": "list<item: struct<Name: string, ScenarioUri: string, Direction: int32 not null, ConfigurationVersion: struct<type_id: struct<namespace: uint16 not null, id_type: uint8 not null, numeric: uint32, string: string, guid: fixed_size_binary[16], opaque: binary> not null, body: dense_union<null: null=0, Point: struct<X: double not null, Y: double not null>=1, Person: struct<Name: string, Age: int32 not null, Email: struct<present: bool not null, value: string> not null, Nickname: struct<present: bool not null, value: string> not null>=2, Measurement: dense_union<null: null=0, AsInt: struct<value: int32>=1, AsText: struct<value: string>=2, AsPoint: struct<value: struct<X: double not null, Y: double not null>>=3>=3, Envelope: struct<Id: string, Location: struct<X: double not null, Y: double not null>, Tags: list<item: string>, Payload: struct<type_id: struct<namespace: uint16 not null, id_type: uint8 not null, numeric: uint32, string: string, guid: fixed_size_binary[16], opaque: binary> not null, body: dense_union<null: null=0, Point: struct<X: double not null, Y: double not null>=1, Person: struct<Name: string, Age: int32 not null, Email: struct<present: bool not null, value: string> not null, Nickname: struct<present: bool not null, value: string> not null>=2, Measurement: dense_union<null: null=0, AsInt: struct<value: int32>=1, AsText: struct<value: string>=2, AsPoint: struct<value: struct<X: double not null, Y: double not null>>=3>=3, Envelope: struct<>=4, OptionalScalars: struct<Id: int32 not null, Flag: struct<present: bool not null, value: bool> not null, Count: struct<present: bool not null, value: int32> not null, Ratio: struct<present: bool not null, value: double> not null>=5, FloatHolder: struct<A: float not null, B: struct<present: bool not null, value: float> not null>=6, binary: binary=7> not null>>=4, OptionalScalars: struct<Id: int32 not null, Flag: struct<present: bool not null, value: bool> not null, Count: struct<present: bool not null, value: int32> not null, Ratio: struct<present: bool not null, value: double> not null>=5, FloatHolder: struct<A: float not null, B: struct<present: bool not null, value: float> not null>=6, binary: binary=7> not null>, BoundItems: list<item: struct<FieldName: string, Kind: int32 not null, AttributeId: uint32 not null, SamplingIntervalHint: double not null, IndexRange: string, StartingNode: struct<namespace: uint16 not null, id_type: uint8 not null, numeric: uint32, string: string, guid: fixed_size_binary[16], opaque: binary>, BrowsePath: struct<type_id: struct<namespace: uint16 not null, id_type: uint8 not null, numeric: uint32, string: string, guid: fixed_size_binary[16], opaque: binary> not null, body: dense_union<null: null=0, Point: struct<X: double not null, Y: double not null>=1, Person: struct<Name: string, Age: int32 not null, Email: struct<present: bool not null, value: string> not null, Nickname: struct<present: bool not null, value: string> not null>=2, Measurement: dense_union<null: null=0, AsInt: struct<value: int32>=1, AsText: struct<value: string>=2, AsPoint: struct<value: struct<X: double not null, Y: double not null>>=3>=3, Envelope: struct<Id: string, Location: struct<X: double not null, Y: double not null>, Tags: list<item: string>, Payload: struct<type_id: struct<namespace: uint16 not null, id_type: uint8 not null, numeric: uint32, string: string, guid: fixed_size_binary[16], opaque: binary> not null, body: dense_union<null: null=0, Point: struct<X: double not null, Y: double not null>=1, Person: struct<Name: string, Age: int32 not null, Email: struct<present: bool not null, value: string> not null, Nickname: struct<present: bool not null, value: string> not null>=2, Measurement: dense_union<null: null=0, AsInt: struct<value: int32>=1, AsText: struct<value: string>=2, AsPoint: struct<value: struct<X: double not null, Y: double not null>>=3>=3, Envelope: struct<>=4, OptionalScalars: struct<Id: int32 not null, Flag: struct<present: bool not null, value: bool> not null, Count: struct<present: bool not null, value: int32> not null, Ratio: struct<present: bool not null, value: double> not null>=5, FloatHolder: struct<A: float not null, B: struct<present: bool not null, value: float> not null>=6, binary: binary=7> not null>>=4, OptionalScalars: struct<Id: int32 not null, Flag: struct<present: bool not null, value: bool> not null, Count: struct<present: bool not null, value: int32> not null, Ratio: struct<present: bool not null, value: double> not null>=5, FloatHolder: struct<A: float not null, B: struct<present: bool not null, value: float> not null>=6, binary: binary=7> not null>, SourceNodeId: struct<namespace: uint16 not null, id_type: uint8 not null, numeric: uint32, string: string, guid: fixed_size_binary[16], opaque: binary>, OwningObjectPath: struct<type_id: struct<namespace: uint16 not null, id_type: uint8 not null, numeric: uint32, string: string, guid: fixed_size_binary[16], opaque: binary> not null, body: dense_union<null: null=0, Point: struct<X: double not null, Y: double not null>=1, Person: struct<Name: string, Age: int32 not null, Email: struct<present: bool not null, value: string> not null, Nickname: struct<present: bool not null, value: string> not null>=2, Measurement: dense_union<null: null=0, AsInt: struct<value: int32>=1, AsText: struct<value: string>=2, AsPoint: struct<value: struct<X: double not null, Y: double not null>>=3>=3, Envelope: struct<Id: string, Location: struct<X: double not null, Y: double not null>, Tags: list<item: string>, Payload: struct<type_id: struct<namespace: uint16 not null, id_type: uint8 not null, numeric: uint32, string: string, guid: fixed_size_binary[16], opaque: binary> not null, body: dense_union<null: null=0, Point: struct<X: double not null, Y: double not null>=1, Person: struct<Name: string, Age: int32 not null, Email: struct<present: bool not null, value: string> not null, Nickname: struct<present: bool not null, value: string> not null>=2, Measurement: dense_union<null: null=0, AsInt: struct<value: int32>=1, AsText: struct<value: string>=2, AsPoint: struct<value: struct<X: double not null, Y: double not null>>=3>=3, Envelope: struct<>=4, OptionalScalars: struct<Id: int32 not null, Flag: struct<present: bool not null, value: bool> not null, Count: struct<present: bool not null, value: int32> not null, Ratio: struct<present: bool not null, value: double> not null>=5, FloatHolder: struct<A: float not null, B: struct<present: bool not null, value: float> not null>=6, binary: binary=7> not null>>=4, OptionalScalars: struct<Id: int32 not null, Flag: struct<present: bool not null, value: bool> not null, Count: struct<present: bool not null, value: int32> not null, Ratio: struct<present: bool not null, value: double> not null>=5, FloatHolder: struct<A: float not null, B: struct<present: bool not null, value: float> not null>=6, binary: binary=7> not null>, SourceTypeDefinition: struct<namespace: uint16 not null, id_type: uint8 not null, numeric: uint32, string: string, guid: fixed_size_binary[16], opaque: binary>, SourceBrowseName: struct<namespace: uint16 not null, name: string>, ModelNamespaceUri: string, DataSetFieldId: fixed_size_binary[16] not null, SemanticReferenceUri: string>>, PublishedDataSetName: string, WriterGroupName: string>>",
         "detail": {
           "type": "list",
           "value": {
@@ -3187,6 +4227,108 @@
                                               }
                                             },
                                             {
+                                              "name": "OptionalScalars",
+                                              "type": {
+                                                "fields": [
+                                                  {
+                                                    "name": "Id",
+                                                    "nullable": false,
+                                                    "type": "int32"
+                                                  },
+                                                  {
+                                                    "name": "Flag",
+                                                    "nullable": false,
+                                                    "type": {
+                                                      "fields": [
+                                                        {
+                                                          "name": "present",
+                                                          "nullable": false,
+                                                          "type": "bool"
+                                                        },
+                                                        {
+                                                          "name": "value",
+                                                          "nullable": true,
+                                                          "type": "bool"
+                                                        }
+                                                      ],
+                                                      "type": "struct"
+                                                    }
+                                                  },
+                                                  {
+                                                    "name": "Count",
+                                                    "nullable": false,
+                                                    "type": {
+                                                      "fields": [
+                                                        {
+                                                          "name": "present",
+                                                          "nullable": false,
+                                                          "type": "bool"
+                                                        },
+                                                        {
+                                                          "name": "value",
+                                                          "nullable": true,
+                                                          "type": "int32"
+                                                        }
+                                                      ],
+                                                      "type": "struct"
+                                                    }
+                                                  },
+                                                  {
+                                                    "name": "Ratio",
+                                                    "nullable": false,
+                                                    "type": {
+                                                      "fields": [
+                                                        {
+                                                          "name": "present",
+                                                          "nullable": false,
+                                                          "type": "bool"
+                                                        },
+                                                        {
+                                                          "name": "value",
+                                                          "nullable": true,
+                                                          "type": "double"
+                                                        }
+                                                      ],
+                                                      "type": "struct"
+                                                    }
+                                                  }
+                                                ],
+                                                "type": "struct"
+                                              }
+                                            },
+                                            {
+                                              "name": "FloatHolder",
+                                              "type": {
+                                                "fields": [
+                                                  {
+                                                    "name": "A",
+                                                    "nullable": false,
+                                                    "type": "float"
+                                                  },
+                                                  {
+                                                    "name": "B",
+                                                    "nullable": false,
+                                                    "type": {
+                                                      "fields": [
+                                                        {
+                                                          "name": "present",
+                                                          "nullable": false,
+                                                          "type": "bool"
+                                                        },
+                                                        {
+                                                          "name": "value",
+                                                          "nullable": true,
+                                                          "type": "float"
+                                                        }
+                                                      ],
+                                                      "type": "struct"
+                                                    }
+                                                  }
+                                                ],
+                                                "type": "struct"
+                                              }
+                                            },
+                                            {
                                               "name": "binary",
                                               "type": "binary"
                                             }
@@ -3198,9 +4340,113 @@
                                             2,
                                             3,
                                             4,
-                                            5
+                                            5,
+                                            6,
+                                            7
                                           ]
                                         }
+                                      }
+                                    ],
+                                    "type": "struct"
+                                  }
+                                }
+                              ],
+                              "type": "struct"
+                            }
+                          },
+                          {
+                            "name": "OptionalScalars",
+                            "type": {
+                              "fields": [
+                                {
+                                  "name": "Id",
+                                  "nullable": false,
+                                  "type": "int32"
+                                },
+                                {
+                                  "name": "Flag",
+                                  "nullable": false,
+                                  "type": {
+                                    "fields": [
+                                      {
+                                        "name": "present",
+                                        "nullable": false,
+                                        "type": "bool"
+                                      },
+                                      {
+                                        "name": "value",
+                                        "nullable": true,
+                                        "type": "bool"
+                                      }
+                                    ],
+                                    "type": "struct"
+                                  }
+                                },
+                                {
+                                  "name": "Count",
+                                  "nullable": false,
+                                  "type": {
+                                    "fields": [
+                                      {
+                                        "name": "present",
+                                        "nullable": false,
+                                        "type": "bool"
+                                      },
+                                      {
+                                        "name": "value",
+                                        "nullable": true,
+                                        "type": "int32"
+                                      }
+                                    ],
+                                    "type": "struct"
+                                  }
+                                },
+                                {
+                                  "name": "Ratio",
+                                  "nullable": false,
+                                  "type": {
+                                    "fields": [
+                                      {
+                                        "name": "present",
+                                        "nullable": false,
+                                        "type": "bool"
+                                      },
+                                      {
+                                        "name": "value",
+                                        "nullable": true,
+                                        "type": "double"
+                                      }
+                                    ],
+                                    "type": "struct"
+                                  }
+                                }
+                              ],
+                              "type": "struct"
+                            }
+                          },
+                          {
+                            "name": "FloatHolder",
+                            "type": {
+                              "fields": [
+                                {
+                                  "name": "A",
+                                  "nullable": false,
+                                  "type": "float"
+                                },
+                                {
+                                  "name": "B",
+                                  "nullable": false,
+                                  "type": {
+                                    "fields": [
+                                      {
+                                        "name": "present",
+                                        "nullable": false,
+                                        "type": "bool"
+                                      },
+                                      {
+                                        "name": "value",
+                                        "nullable": true,
+                                        "type": "float"
                                       }
                                     ],
                                     "type": "struct"
@@ -3222,7 +4468,9 @@
                           2,
                           3,
                           4,
-                          5
+                          5,
+                          6,
+                          7
                         ]
                       }
                     }
@@ -3742,6 +4990,108 @@
                                                       }
                                                     },
                                                     {
+                                                      "name": "OptionalScalars",
+                                                      "type": {
+                                                        "fields": [
+                                                          {
+                                                            "name": "Id",
+                                                            "nullable": false,
+                                                            "type": "int32"
+                                                          },
+                                                          {
+                                                            "name": "Flag",
+                                                            "nullable": false,
+                                                            "type": {
+                                                              "fields": [
+                                                                {
+                                                                  "name": "present",
+                                                                  "nullable": false,
+                                                                  "type": "bool"
+                                                                },
+                                                                {
+                                                                  "name": "value",
+                                                                  "nullable": true,
+                                                                  "type": "bool"
+                                                                }
+                                                              ],
+                                                              "type": "struct"
+                                                            }
+                                                          },
+                                                          {
+                                                            "name": "Count",
+                                                            "nullable": false,
+                                                            "type": {
+                                                              "fields": [
+                                                                {
+                                                                  "name": "present",
+                                                                  "nullable": false,
+                                                                  "type": "bool"
+                                                                },
+                                                                {
+                                                                  "name": "value",
+                                                                  "nullable": true,
+                                                                  "type": "int32"
+                                                                }
+                                                              ],
+                                                              "type": "struct"
+                                                            }
+                                                          },
+                                                          {
+                                                            "name": "Ratio",
+                                                            "nullable": false,
+                                                            "type": {
+                                                              "fields": [
+                                                                {
+                                                                  "name": "present",
+                                                                  "nullable": false,
+                                                                  "type": "bool"
+                                                                },
+                                                                {
+                                                                  "name": "value",
+                                                                  "nullable": true,
+                                                                  "type": "double"
+                                                                }
+                                                              ],
+                                                              "type": "struct"
+                                                            }
+                                                          }
+                                                        ],
+                                                        "type": "struct"
+                                                      }
+                                                    },
+                                                    {
+                                                      "name": "FloatHolder",
+                                                      "type": {
+                                                        "fields": [
+                                                          {
+                                                            "name": "A",
+                                                            "nullable": false,
+                                                            "type": "float"
+                                                          },
+                                                          {
+                                                            "name": "B",
+                                                            "nullable": false,
+                                                            "type": {
+                                                              "fields": [
+                                                                {
+                                                                  "name": "present",
+                                                                  "nullable": false,
+                                                                  "type": "bool"
+                                                                },
+                                                                {
+                                                                  "name": "value",
+                                                                  "nullable": true,
+                                                                  "type": "float"
+                                                                }
+                                                              ],
+                                                              "type": "struct"
+                                                            }
+                                                          }
+                                                        ],
+                                                        "type": "struct"
+                                                      }
+                                                    },
+                                                    {
                                                       "name": "binary",
                                                       "type": "binary"
                                                     }
@@ -3753,9 +5103,113 @@
                                                     2,
                                                     3,
                                                     4,
-                                                    5
+                                                    5,
+                                                    6,
+                                                    7
                                                   ]
                                                 }
+                                              }
+                                            ],
+                                            "type": "struct"
+                                          }
+                                        }
+                                      ],
+                                      "type": "struct"
+                                    }
+                                  },
+                                  {
+                                    "name": "OptionalScalars",
+                                    "type": {
+                                      "fields": [
+                                        {
+                                          "name": "Id",
+                                          "nullable": false,
+                                          "type": "int32"
+                                        },
+                                        {
+                                          "name": "Flag",
+                                          "nullable": false,
+                                          "type": {
+                                            "fields": [
+                                              {
+                                                "name": "present",
+                                                "nullable": false,
+                                                "type": "bool"
+                                              },
+                                              {
+                                                "name": "value",
+                                                "nullable": true,
+                                                "type": "bool"
+                                              }
+                                            ],
+                                            "type": "struct"
+                                          }
+                                        },
+                                        {
+                                          "name": "Count",
+                                          "nullable": false,
+                                          "type": {
+                                            "fields": [
+                                              {
+                                                "name": "present",
+                                                "nullable": false,
+                                                "type": "bool"
+                                              },
+                                              {
+                                                "name": "value",
+                                                "nullable": true,
+                                                "type": "int32"
+                                              }
+                                            ],
+                                            "type": "struct"
+                                          }
+                                        },
+                                        {
+                                          "name": "Ratio",
+                                          "nullable": false,
+                                          "type": {
+                                            "fields": [
+                                              {
+                                                "name": "present",
+                                                "nullable": false,
+                                                "type": "bool"
+                                              },
+                                              {
+                                                "name": "value",
+                                                "nullable": true,
+                                                "type": "double"
+                                              }
+                                            ],
+                                            "type": "struct"
+                                          }
+                                        }
+                                      ],
+                                      "type": "struct"
+                                    }
+                                  },
+                                  {
+                                    "name": "FloatHolder",
+                                    "type": {
+                                      "fields": [
+                                        {
+                                          "name": "A",
+                                          "nullable": false,
+                                          "type": "float"
+                                        },
+                                        {
+                                          "name": "B",
+                                          "nullable": false,
+                                          "type": {
+                                            "fields": [
+                                              {
+                                                "name": "present",
+                                                "nullable": false,
+                                                "type": "bool"
+                                              },
+                                              {
+                                                "name": "value",
+                                                "nullable": true,
+                                                "type": "float"
                                               }
                                             ],
                                             "type": "struct"
@@ -3777,7 +5231,9 @@
                                   2,
                                   3,
                                   4,
-                                  5
+                                  5,
+                                  6,
+                                  7
                                 ]
                               }
                             }
@@ -4265,6 +5721,108 @@
                                                       }
                                                     },
                                                     {
+                                                      "name": "OptionalScalars",
+                                                      "type": {
+                                                        "fields": [
+                                                          {
+                                                            "name": "Id",
+                                                            "nullable": false,
+                                                            "type": "int32"
+                                                          },
+                                                          {
+                                                            "name": "Flag",
+                                                            "nullable": false,
+                                                            "type": {
+                                                              "fields": [
+                                                                {
+                                                                  "name": "present",
+                                                                  "nullable": false,
+                                                                  "type": "bool"
+                                                                },
+                                                                {
+                                                                  "name": "value",
+                                                                  "nullable": true,
+                                                                  "type": "bool"
+                                                                }
+                                                              ],
+                                                              "type": "struct"
+                                                            }
+                                                          },
+                                                          {
+                                                            "name": "Count",
+                                                            "nullable": false,
+                                                            "type": {
+                                                              "fields": [
+                                                                {
+                                                                  "name": "present",
+                                                                  "nullable": false,
+                                                                  "type": "bool"
+                                                                },
+                                                                {
+                                                                  "name": "value",
+                                                                  "nullable": true,
+                                                                  "type": "int32"
+                                                                }
+                                                              ],
+                                                              "type": "struct"
+                                                            }
+                                                          },
+                                                          {
+                                                            "name": "Ratio",
+                                                            "nullable": false,
+                                                            "type": {
+                                                              "fields": [
+                                                                {
+                                                                  "name": "present",
+                                                                  "nullable": false,
+                                                                  "type": "bool"
+                                                                },
+                                                                {
+                                                                  "name": "value",
+                                                                  "nullable": true,
+                                                                  "type": "double"
+                                                                }
+                                                              ],
+                                                              "type": "struct"
+                                                            }
+                                                          }
+                                                        ],
+                                                        "type": "struct"
+                                                      }
+                                                    },
+                                                    {
+                                                      "name": "FloatHolder",
+                                                      "type": {
+                                                        "fields": [
+                                                          {
+                                                            "name": "A",
+                                                            "nullable": false,
+                                                            "type": "float"
+                                                          },
+                                                          {
+                                                            "name": "B",
+                                                            "nullable": false,
+                                                            "type": {
+                                                              "fields": [
+                                                                {
+                                                                  "name": "present",
+                                                                  "nullable": false,
+                                                                  "type": "bool"
+                                                                },
+                                                                {
+                                                                  "name": "value",
+                                                                  "nullable": true,
+                                                                  "type": "float"
+                                                                }
+                                                              ],
+                                                              "type": "struct"
+                                                            }
+                                                          }
+                                                        ],
+                                                        "type": "struct"
+                                                      }
+                                                    },
+                                                    {
                                                       "name": "binary",
                                                       "type": "binary"
                                                     }
@@ -4276,9 +5834,113 @@
                                                     2,
                                                     3,
                                                     4,
-                                                    5
+                                                    5,
+                                                    6,
+                                                    7
                                                   ]
                                                 }
+                                              }
+                                            ],
+                                            "type": "struct"
+                                          }
+                                        }
+                                      ],
+                                      "type": "struct"
+                                    }
+                                  },
+                                  {
+                                    "name": "OptionalScalars",
+                                    "type": {
+                                      "fields": [
+                                        {
+                                          "name": "Id",
+                                          "nullable": false,
+                                          "type": "int32"
+                                        },
+                                        {
+                                          "name": "Flag",
+                                          "nullable": false,
+                                          "type": {
+                                            "fields": [
+                                              {
+                                                "name": "present",
+                                                "nullable": false,
+                                                "type": "bool"
+                                              },
+                                              {
+                                                "name": "value",
+                                                "nullable": true,
+                                                "type": "bool"
+                                              }
+                                            ],
+                                            "type": "struct"
+                                          }
+                                        },
+                                        {
+                                          "name": "Count",
+                                          "nullable": false,
+                                          "type": {
+                                            "fields": [
+                                              {
+                                                "name": "present",
+                                                "nullable": false,
+                                                "type": "bool"
+                                              },
+                                              {
+                                                "name": "value",
+                                                "nullable": true,
+                                                "type": "int32"
+                                              }
+                                            ],
+                                            "type": "struct"
+                                          }
+                                        },
+                                        {
+                                          "name": "Ratio",
+                                          "nullable": false,
+                                          "type": {
+                                            "fields": [
+                                              {
+                                                "name": "present",
+                                                "nullable": false,
+                                                "type": "bool"
+                                              },
+                                              {
+                                                "name": "value",
+                                                "nullable": true,
+                                                "type": "double"
+                                              }
+                                            ],
+                                            "type": "struct"
+                                          }
+                                        }
+                                      ],
+                                      "type": "struct"
+                                    }
+                                  },
+                                  {
+                                    "name": "FloatHolder",
+                                    "type": {
+                                      "fields": [
+                                        {
+                                          "name": "A",
+                                          "nullable": false,
+                                          "type": "float"
+                                        },
+                                        {
+                                          "name": "B",
+                                          "nullable": false,
+                                          "type": {
+                                            "fields": [
+                                              {
+                                                "name": "present",
+                                                "nullable": false,
+                                                "type": "bool"
+                                              },
+                                              {
+                                                "name": "value",
+                                                "nullable": true,
+                                                "type": "float"
                                               }
                                             ],
                                             "type": "struct"
@@ -4300,7 +5962,9 @@
                                   2,
                                   3,
                                   4,
-                                  5
+                                  5,
+                                  6,
+                                  7
                                 ]
                               }
                             }

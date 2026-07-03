@@ -17,11 +17,11 @@
   },
   "AvroActionRequestDataSetMessage": {
     "algorithm": "CRC-64-AVRO Rabin",
-    "schemaid": "1824e0baf15b309b"
+    "schemaid": "b1fa8bde3a71fc65"
   },
   "AvroActionRequestNetworkMessage": {
     "algorithm": "CRC-64-AVRO Rabin",
-    "schemaid": "b7741f6eb772e01b"
+    "schemaid": "1551c8e6ff7bc711"
   },
   "AvroActionResponderConfigurationAnnouncement": {
     "algorithm": "CRC-64-AVRO Rabin",
@@ -29,11 +29,11 @@
   },
   "AvroActionResponseDataSetMessage": {
     "algorithm": "CRC-64-AVRO Rabin",
-    "schemaid": "c4b39badd0d3c626"
+    "schemaid": "af77e7e787709e47"
   },
   "AvroActionResponseNetworkMessage": {
     "algorithm": "CRC-64-AVRO Rabin",
-    "schemaid": "3eede2729ca52d22"
+    "schemaid": "aa704f9738c59cdd"
   },
   "AvroConfigurationVersionDataType": {
     "algorithm": "CRC-64-AVRO Rabin",
@@ -53,7 +53,7 @@
   },
   "AvroEndpointDescription": {
     "algorithm": "CRC-64-AVRO Rabin",
-    "schemaid": "58f9ee4a616eac62"
+    "schemaid": "117adb3e8e000071"
   },
   "AvroFieldMetaData": {
     "algorithm": "CRC-64-AVRO Rabin",
@@ -61,7 +61,7 @@
   },
   "AvroPublisherEndpointsAnnouncement": {
     "algorithm": "CRC-64-AVRO Rabin",
-    "schemaid": "bd0f31b1e325e7b9"
+    "schemaid": "a1c09a8fa50885da"
   },
   "Boolean": {
     "algorithm": "CRC-64-AVRO Rabin",
@@ -69,7 +69,7 @@
   },
   "BoundItemDataType": {
     "algorithm": "CRC-64-AVRO Rabin",
-    "schemaid": "f86a3d9c107c5d66"
+    "schemaid": "833984d11a37df05"
   },
   "BoundItemKindEnum": {
     "algorithm": "CRC-64-AVRO Rabin",
@@ -89,7 +89,7 @@
   },
   "DataValue": {
     "algorithm": "CRC-64-AVRO Rabin",
-    "schemaid": "5d6fdebe22e3b0d9"
+    "schemaid": "2abf014fafc0cfa5"
   },
   "DateTime": {
     "algorithm": "CRC-64-AVRO Rabin",
@@ -105,7 +105,7 @@
   },
   "Envelope": {
     "algorithm": "CRC-64-AVRO Rabin",
-    "schemaid": "54086d6041c8f13d"
+    "schemaid": "d5b98856c5cee45e"
   },
   "ExpandedNodeId": {
     "algorithm": "CRC-64-AVRO Rabin",
@@ -113,11 +113,15 @@
   },
   "ExtensionObject": {
     "algorithm": "CRC-64-AVRO Rabin",
-    "schemaid": "b8c9570e69d84350"
+    "schemaid": "f50df9bab1852efe"
   },
   "Float": {
     "algorithm": "CRC-64-AVRO Rabin",
     "schemaid": "90d7a83ecb027c4d"
+  },
+  "FloatHolder": {
+    "algorithm": "CRC-64-AVRO Rabin",
+    "schemaid": "cbce70fa219911e8"
   },
   "Guid": {
     "algorithm": "CRC-64-AVRO Rabin",
@@ -159,6 +163,10 @@
     "algorithm": "CRC-64-AVRO Rabin",
     "schemaid": "7a72f202d5e8e102"
   },
+  "OptionalScalars": {
+    "algorithm": "CRC-64-AVRO Rabin",
+    "schemaid": "77cd3b497b7c69a0"
+  },
   "Person": {
     "algorithm": "CRC-64-AVRO Rabin",
     "schemaid": "87352c988d4b795d"
@@ -177,11 +185,11 @@
   },
   "ScenarioBindingConfigurationDataType": {
     "algorithm": "CRC-64-AVRO Rabin",
-    "schemaid": "f0e7857afa713dc7"
+    "schemaid": "960cab0446250fc7"
   },
   "ScenarioBindingDataType": {
     "algorithm": "CRC-64-AVRO Rabin",
-    "schemaid": "2573982d5efdf5a0"
+    "schemaid": "c063c9eca133f302"
   },
   "ScenarioBindingDirectionEnum": {
     "algorithm": "CRC-64-AVRO Rabin",
@@ -209,7 +217,7 @@
   },
   "Variant": {
     "algorithm": "CRC-64-AVRO Rabin",
-    "schemaid": "eb3716e5a3ede96f"
+    "schemaid": "e4991bff0397acd7"
   },
   "XmlElement": {
     "algorithm": "CRC-64-AVRO Rabin",

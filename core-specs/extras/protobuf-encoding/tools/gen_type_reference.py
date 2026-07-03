@@ -86,6 +86,8 @@ COMPOSITE_CASES = [
     ("Matrix", "matrix_double_2x2_special"),
     ("Structure", "struct_point"),
     ("Structure with optional fields", "struct_person_one_opt"),
+    ("Optional scalar presence", "optscalars_zero_present"),
+    ("Optional Float presence", "floatholder_full"),
     ("Union oneof", "union_point"),
     ("Worked structured DataType: Envelope", "envelope"),
 ]

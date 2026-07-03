@@ -21,7 +21,7 @@
   },
   "BoundItemDataType": {
     "algorithm": "SHA-256 over Arrow Schema",
-    "schemaid": "52541853a4b2b243"
+    "schemaid": "25eb13dd2df42a9c"
   },
   "BoundItemKindEnum": {
     "algorithm": "SHA-256 over Arrow Schema",
@@ -41,11 +41,11 @@
   },
   "DataSetMessage": {
     "algorithm": "SHA-256 over Arrow Schema",
-    "schemaid": "21704d743131371b"
+    "schemaid": "3424092bbacfcfb4"
   },
   "DataValue": {
     "algorithm": "SHA-256 over Arrow Schema",
-    "schemaid": "446cfe0da333cbe7"
+    "schemaid": "83d9b3877406f207"
   },
   "DateTime": {
     "algorithm": "SHA-256 over Arrow Schema",
@@ -61,7 +61,7 @@
   },
   "Envelope": {
     "algorithm": "SHA-256 over Arrow Schema",
-    "schemaid": "fb8568ded2a84d0b"
+    "schemaid": "306f13a2fa40fc28"
   },
   "ExpandedNodeId": {
     "algorithm": "SHA-256 over Arrow Schema",
@@ -69,11 +69,15 @@
   },
   "ExtensionObject": {
     "algorithm": "SHA-256 over Arrow Schema",
-    "schemaid": "908109d5082a18c3"
+    "schemaid": "64f76d44068bde04"
   },
   "Float": {
     "algorithm": "SHA-256 over Arrow Schema",
     "schemaid": "4760b7d7322090d7"
+  },
+  "FloatHolder": {
+    "algorithm": "SHA-256 over Arrow Schema",
+    "schemaid": "e6d193066bd7bcee"
   },
   "Guid": {
     "algorithm": "SHA-256 over Arrow Schema",
@@ -113,11 +117,15 @@
   },
   "NetworkMessage": {
     "algorithm": "SHA-256 over Arrow Schema",
-    "schemaid": "43c4ce14c5be32de"
+    "schemaid": "69928670b92192b5"
   },
   "NodeId": {
     "algorithm": "SHA-256 over Arrow Schema",
     "schemaid": "48ad8cbe55122414"
+  },
+  "OptionalScalars": {
+    "algorithm": "SHA-256 over Arrow Schema",
+    "schemaid": "11bbf03aeb023c14"
   },
   "Person": {
     "algorithm": "SHA-256 over Arrow Schema",
@@ -137,11 +145,11 @@
   },
   "ScenarioBindingConfigurationDataType": {
     "algorithm": "SHA-256 over Arrow Schema",
-    "schemaid": "253da7a52d44389b"
+    "schemaid": "94ac55fba7c41bab"
   },
   "ScenarioBindingDataType": {
     "algorithm": "SHA-256 over Arrow Schema",
-    "schemaid": "32fe42125dd72643"
+    "schemaid": "f4052c4c879d6685"
   },
   "ScenarioBindingDirectionEnum": {
     "algorithm": "SHA-256 over Arrow Schema",
@@ -169,7 +177,7 @@
   },
   "Variant": {
     "algorithm": "SHA-256 over Arrow Schema",
-    "schemaid": "9294a0b607cc4a85"
+    "schemaid": "bb30bbf4a4cc8cbd"
   },
   "XmlElement": {
     "algorithm": "SHA-256 over Arrow Schema",
