@@ -8,7 +8,7 @@ from typing import Any
 import pyarrow as pa
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "_common")))
-from opcua_enc import corpus, nodeset
+from opcua_enc import corpus, fingerprint, nodeset
 from opcua_enc import types as t
 
 import arrow_codec
@@ -74,11 +74,45 @@ def main() -> None:
         "enumCount": len(loaded.enums),
         "unresolved": sorted(loaded.unresolved),
     })
+    write_json("schemaids.json", schemaids(loaded))
 
 
 def describe_type(ty: t.Type) -> dict[str, Any]:
     arrow = arrow_codec.canonical_type_to_arrow(ty)
     return {"opcua": type_name(ty), "arrow": str(arrow), "detail": arrow_detail(arrow)}
+
+
+def schemaids(loaded: nodeset.LoadResult | None = None) -> dict[str, dict[str, str]]:
+    if loaded is None:
+        loaded = nodeset.load_datatypes(NODESET) if os.path.exists(NODESET) else nodeset.LoadResult()
+    entries: dict[str, dict[str, str]] = {}
+    all_types: list[t.Type] = [t.Builtin(b) for b in t.BuiltInType]
+    all_types.extend([t.Array(t.INT32, False), t.Matrix(t.DOUBLE), *corpus.STRUCT_TYPES, *corpus.ENUM_TYPES])
+    all_types.extend(case.type for case in corpus.CORPUS)
+    all_types.extend([*loaded.enums, *loaded.structs])
+    for ty in sorted(_unique_types(all_types), key=type_name):
+        entries[type_name(ty)] = schemaid_for_arrow_schema(_value_schema(arrow_codec.canonical_type_to_arrow(ty)))
+    entries["DataSetMessage"] = schemaid_for_arrow_schema(_value_schema(dataset_message_arrow()))
+    entries["NetworkMessage"] = schemaid_for_arrow_schema(_network_message_arrow_schema())
+    return {name: entries[name] for name in sorted(entries)}
+
+
+def schemaid_for_arrow_schema(schema: pa.Schema) -> dict[str, str]:
+    return {
+        "algorithm": "SHA-256 over Arrow Schema",
+        "schemaid": fingerprint.sha256_id_hex(schema.serialize().to_pybytes()),
+    }
+
+
+def _value_schema(data_type: pa.DataType) -> pa.Schema:
+    return pa.schema([pa.field("value", data_type)], metadata={b"opcua-arrow": b"1"})
+
+
+def _unique_types(types: list[t.Type]) -> list[t.Type]:
+    seen: dict[str, t.Type] = {}
+    for ty in types:
+        seen.setdefault(type_name(ty), ty)
+    return list(seen.values())
 
 
 def arrow_detail(dt: pa.DataType) -> Any:
@@ -106,6 +140,11 @@ def type_name(ty: t.Type) -> str:
 
 
 def network_message_schema() -> dict[str, Any]:
+    schema = _network_message_arrow_schema()
+    return {"arrow": schema.to_string(), "fields": [{"name": f.name, "type": str(f.type), "nullable": f.nullable} for f in schema]}
+
+
+def _network_message_arrow_schema() -> pa.Schema:
     fields = [
         pa.field("publisher_id", pa.utf8()),
         pa.field("writer_group_id", pa.uint16()),
@@ -114,8 +153,7 @@ def network_message_schema() -> dict[str, Any]:
         pa.field("timestamp", pa.int64()),
         pa.field("messages", pa.list_(dataset_message_arrow())),
     ]
-    schema = pa.schema(fields, metadata={b"opcua.mapping": b"arrow-network-message"})
-    return {"arrow": schema.to_string(), "fields": [{"name": f.name, "type": str(f.type), "nullable": f.nullable} for f in schema]}
+    return pa.schema(fields, metadata={b"opcua.mapping": b"arrow-network-message"})
 
 
 def dataset_message_schema() -> dict[str, Any]:

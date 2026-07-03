@@ -19,7 +19,9 @@
             "opcua.format": "arrow",
             "opcua.modelversion": "0.1.0",
             "opcua.namespaceuri": "http://opcfoundation.org/UA/",
-            "opcua.nodeid": "i=60060"
+            "opcua.nodeid": "i=60060",
+            "opcua.schemaid": "52541853a4b2b243",
+            "opcua.schemaid.alg": "SHA-256 over Arrow Schema"
           },
           "name": "BoundItemDataType",
           "schema": {
@@ -2423,7 +2425,9 @@
                 "opcua.format": "arrow",
                 "opcua.modelversion": "0.1.0",
                 "opcua.namespaceuri": "http://opcfoundation.org/UA/",
-                "opcua.nodeid": "i=60060"
+                "opcua.nodeid": "i=60060",
+                "opcua.schemaid": "52541853a4b2b243",
+                "opcua.schemaid.alg": "SHA-256 over Arrow Schema"
               },
               "schema": {
                 "arrow": {
@@ -4829,7 +4833,9 @@
             "opcua.format": "avro",
             "opcua.modelversion": "0.1.0",
             "opcua.namespaceuri": "http://opcfoundation.org/UA/",
-            "opcua.nodeid": "i=60060"
+            "opcua.nodeid": "i=60060",
+            "opcua.schemaid": "f86a3d9c107c5d66",
+            "opcua.schemaid.alg": "CRC-64-AVRO Rabin"
           },
           "name": "BoundItemDataType",
           "schema": "{\n  \"fields\": [\n    {\n      \"name\": \"FieldName\",\n      \"type\": [\n        \"null\",\n        \"string\"\n      ]\n    },\n    {\n      \"name\": \"Kind\",\n      \"type\": \"int\"\n    },\n    {\n      \"name\": \"AttributeId\",\n      \"type\": \"int\"\n    },\n    {\n      \"name\": \"SamplingIntervalHint\",\n      \"type\": \"double\"\n    },\n    {\n      \"name\": \"IndexRange\",\n      \"type\": [\n        \"null\",\n        \"string\"\n      ]\n    },\n    {\n      \"name\": \"StartingNode\",\n      \"type\": [\n        \"null\",\n        \"org.opcfoundation.ua.avro.NodeId\"\n      ]\n    },\n    {\n      \"name\": \"BrowsePath\",\n      \"type\": [\n        \"null\",\n        \"org.opcfoundation.ua.avro.ExtensionObject\"\n      ]\n    },\n    {\n      \"name\": \"SourceNodeId\",\n      \"type\": [\n        \"null\",\n        \"org.opcfoundation.ua.avro.NodeId\"\n      ]\n    },\n    {\n      \"name\": \"OwningObjectPath\",\n      \"type\": [\n        \"null\",\n        \"org.opcfoundation.ua.avro.ExtensionObject\"\n      ]\n    },\n    {\n      \"name\": \"SourceTypeDefinition\",\n      \"type\": [\n        \"null\",\n        \"org.opcfoundation.ua.avro.NodeId\"\n      ]\n    },\n    {\n      \"name\": \"SourceBrowseName\",\n      \"type\": [\n        \"null\",\n        \"org.opcfoundation.ua.avro.QualifiedName\"\n      ]\n    },\n    {\n      \"name\": \"ModelNamespaceUri\",\n      \"type\": [\n        \"null\",\n        \"string\"\n      ]\n    },\n    {\n      \"name\": \"DataSetFieldId\",\n      \"type\": \"org.opcfoundation.ua.avro.Guid\"\n    },\n    {\n      \"name\": \"SemanticReferenceUri\",\n      \"type\": [\n        \"null\",\n        \"string\"\n      ]\n    }\n  ],\n  \"name\": \"BoundItemDataType\",\n  \"namespace\": \"org.opcfoundation.ua.avro\",\n  \"type\": \"record\"\n}\n",
@@ -4845,7 +4851,9 @@
                 "opcua.format": "avro",
                 "opcua.modelversion": "0.1.0",
                 "opcua.namespaceuri": "http://opcfoundation.org/UA/",
-                "opcua.nodeid": "i=60060"
+                "opcua.nodeid": "i=60060",
+                "opcua.schemaid": "f86a3d9c107c5d66",
+                "opcua.schemaid.alg": "CRC-64-AVRO Rabin"
               },
               "schema": "{\n  \"fields\": [\n    {\n      \"name\": \"FieldName\",\n      \"type\": [\n        \"null\",\n        \"string\"\n      ]\n    },\n    {\n      \"name\": \"Kind\",\n      \"type\": \"int\"\n    },\n    {\n      \"name\": \"AttributeId\",\n      \"type\": \"int\"\n    },\n    {\n      \"name\": \"SamplingIntervalHint\",\n      \"type\": \"double\"\n    },\n    {\n      \"name\": \"IndexRange\",\n      \"type\": [\n        \"null\",\n        \"string\"\n      ]\n    },\n    {\n      \"name\": \"StartingNode\",\n      \"type\": [\n        \"null\",\n        \"org.opcfoundation.ua.avro.NodeId\"\n      ]\n    },\n    {\n      \"name\": \"BrowsePath\",\n      \"type\": [\n        \"null\",\n        \"org.opcfoundation.ua.avro.ExtensionObject\"\n      ]\n    },\n    {\n      \"name\": \"SourceNodeId\",\n      \"type\": [\n        \"null\",\n        \"org.opcfoundation.ua.avro.NodeId\"\n      ]\n    },\n    {\n      \"name\": \"OwningObjectPath\",\n      \"type\": [\n        \"null\",\n        \"org.opcfoundation.ua.avro.ExtensionObject\"\n      ]\n    },\n    {\n      \"name\": \"SourceTypeDefinition\",\n      \"type\": [\n        \"null\",\n        \"org.opcfoundation.ua.avro.NodeId\"\n      ]\n    },\n    {\n      \"name\": \"SourceBrowseName\",\n      \"type\": [\n        \"null\",\n        \"org.opcfoundation.ua.avro.QualifiedName\"\n      ]\n    },\n    {\n      \"name\": \"ModelNamespaceUri\",\n      \"type\": [\n        \"null\",\n        \"string\"\n      ]\n    },\n    {\n      \"name\": \"DataSetFieldId\",\n      \"type\": \"org.opcfoundation.ua.avro.Guid\"\n    },\n    {\n      \"name\": \"SemanticReferenceUri\",\n      \"type\": [\n        \"null\",\n        \"string\"\n      ]\n    }\n  ],\n  \"name\": \"BoundItemDataType\",\n  \"namespace\": \"org.opcfoundation.ua.avro\",\n  \"type\": \"record\"\n}\n",
               "schemaid": "BoundItemDataType:avro",
@@ -4863,7 +4871,9 @@
             "opcua.format": "jsonschema",
             "opcua.modelversion": "0.1.0",
             "opcua.namespaceuri": "http://opcfoundation.org/UA/",
-            "opcua.nodeid": "i=60060"
+            "opcua.nodeid": "i=60060",
+            "opcua.schemaid": "b63254409d689911",
+            "opcua.schemaid.alg": "SHA-256 over document (fallback)"
           },
           "name": "BoundItemDataType",
           "schema": {
@@ -5275,7 +5285,9 @@
                 "opcua.format": "jsonschema",
                 "opcua.modelversion": "0.1.0",
                 "opcua.namespaceuri": "http://opcfoundation.org/UA/",
-                "opcua.nodeid": "i=60060"
+                "opcua.nodeid": "i=60060",
+                "opcua.schemaid": "b63254409d689911",
+                "opcua.schemaid.alg": "SHA-256 over document (fallback)"
               },
               "schema": {
                 "$defs": {
@@ -5689,7 +5701,9 @@
             "opcua.format": "protobuf",
             "opcua.modelversion": "0.1.0",
             "opcua.namespaceuri": "http://opcfoundation.org/UA/",
-            "opcua.nodeid": "i=60060"
+            "opcua.nodeid": "i=60060",
+            "opcua.schemaid": "2d7009c84405eb30",
+            "opcua.schemaid.alg": "SHA-256 over transitive FileDescriptorSet"
           },
           "name": "BoundItemDataType",
           "schema": "// Generated by tools/build_schemas.py. Do not edit.\nsyntax = \"proto3\";\n\npackage opcua.protobuf.generated;\n\nimport \"opcua_builtins.proto\";\n\noption java_multiple_files = true;\n\nmessage BoundItemDataType {\n  opcua.protobuf.v1.StringValue field_name = 1;\n  int32 kind = 2;\n  uint32 attribute_id = 3;\n  double sampling_interval_hint = 4;\n  opcua.protobuf.v1.StringValue index_range = 5;\n  opcua.protobuf.v1.NodeId starting_node = 6;\n  opcua.protobuf.v1.ExtensionObject browse_path = 7;\n  opcua.protobuf.v1.NodeId source_node_id = 8;\n  opcua.protobuf.v1.ExtensionObject owning_object_path = 9;\n  opcua.protobuf.v1.NodeId source_type_definition = 10;\n  opcua.protobuf.v1.QualifiedName source_browse_name = 11;\n  opcua.protobuf.v1.StringValue model_namespace_uri = 12;\n  bytes data_set_field_id = 13;\n  opcua.protobuf.v1.StringValue semantic_reference_uri = 14;\n}\n",
@@ -5705,7 +5719,9 @@
                 "opcua.format": "protobuf",
                 "opcua.modelversion": "0.1.0",
                 "opcua.namespaceuri": "http://opcfoundation.org/UA/",
-                "opcua.nodeid": "i=60060"
+                "opcua.nodeid": "i=60060",
+                "opcua.schemaid": "2d7009c84405eb30",
+                "opcua.schemaid.alg": "SHA-256 over transitive FileDescriptorSet"
               },
               "schema": "// Generated by tools/build_schemas.py. Do not edit.\nsyntax = \"proto3\";\n\npackage opcua.protobuf.generated;\n\nimport \"opcua_builtins.proto\";\n\noption java_multiple_files = true;\n\nmessage BoundItemDataType {\n  opcua.protobuf.v1.StringValue field_name = 1;\n  int32 kind = 2;\n  uint32 attribute_id = 3;\n  double sampling_interval_hint = 4;\n  opcua.protobuf.v1.StringValue index_range = 5;\n  opcua.protobuf.v1.NodeId starting_node = 6;\n  opcua.protobuf.v1.ExtensionObject browse_path = 7;\n  opcua.protobuf.v1.NodeId source_node_id = 8;\n  opcua.protobuf.v1.ExtensionObject owning_object_path = 9;\n  opcua.protobuf.v1.NodeId source_type_definition = 10;\n  opcua.protobuf.v1.QualifiedName source_browse_name = 11;\n  opcua.protobuf.v1.StringValue model_namespace_uri = 12;\n  bytes data_set_field_id = 13;\n  opcua.protobuf.v1.StringValue semantic_reference_uri = 14;\n}\n",
               "schemaid": "BoundItemDataType:protobuf",
@@ -5723,7 +5739,9 @@
             "opcua.format": "arrow",
             "opcua.modelversion": "0.1.0",
             "opcua.namespaceuri": "http://opcfoundation.org/UA/",
-            "opcua.nodeid": ""
+            "opcua.nodeid": "",
+            "opcua.schemaid": "a94e58013dcc0ace",
+            "opcua.schemaid.alg": "SHA-256 over Arrow Schema"
           },
           "name": "BoundItemKindEnum",
           "schema": {
@@ -5789,7 +5807,9 @@
                 "opcua.format": "arrow",
                 "opcua.modelversion": "0.1.0",
                 "opcua.namespaceuri": "http://opcfoundation.org/UA/",
-                "opcua.nodeid": ""
+                "opcua.nodeid": "",
+                "opcua.schemaid": "a94e58013dcc0ace",
+                "opcua.schemaid.alg": "SHA-256 over Arrow Schema"
               },
               "schema": {
                 "arrow": {
@@ -5857,7 +5877,9 @@
             "opcua.format": "avro",
             "opcua.modelversion": "0.1.0",
             "opcua.namespaceuri": "http://opcfoundation.org/UA/",
-            "opcua.nodeid": ""
+            "opcua.nodeid": "",
+            "opcua.schemaid": "8f5c393f1ad57572",
+            "opcua.schemaid.alg": "CRC-64-AVRO Rabin"
           },
           "name": "BoundItemKindEnum",
           "schema": "\"int\"\n",
@@ -5873,7 +5895,9 @@
                 "opcua.format": "avro",
                 "opcua.modelversion": "0.1.0",
                 "opcua.namespaceuri": "http://opcfoundation.org/UA/",
-                "opcua.nodeid": ""
+                "opcua.nodeid": "",
+                "opcua.schemaid": "8f5c393f1ad57572",
+                "opcua.schemaid.alg": "CRC-64-AVRO Rabin"
               },
               "schema": "\"int\"\n",
               "schemaid": "BoundItemKindEnum:avro",
@@ -5891,7 +5915,9 @@
             "opcua.format": "jsonschema",
             "opcua.modelversion": "0.1.0",
             "opcua.namespaceuri": "http://opcfoundation.org/UA/",
-            "opcua.nodeid": ""
+            "opcua.nodeid": "",
+            "opcua.schemaid": "0ec49d522faea468",
+            "opcua.schemaid.alg": "SHA-256 over document (fallback)"
           },
           "name": "BoundItemKindEnum",
           "schema": {
@@ -6303,7 +6329,9 @@
                 "opcua.format": "jsonschema",
                 "opcua.modelversion": "0.1.0",
                 "opcua.namespaceuri": "http://opcfoundation.org/UA/",
-                "opcua.nodeid": ""
+                "opcua.nodeid": "",
+                "opcua.schemaid": "0ec49d522faea468",
+                "opcua.schemaid.alg": "SHA-256 over document (fallback)"
               },
               "schema": {
                 "$defs": {
@@ -6717,7 +6745,9 @@
             "opcua.format": "protobuf",
             "opcua.modelversion": "0.1.0",
             "opcua.namespaceuri": "http://opcfoundation.org/UA/",
-            "opcua.nodeid": ""
+            "opcua.nodeid": "",
+            "opcua.schemaid": "a957ebc40e573811",
+            "opcua.schemaid.alg": "SHA-256 over transitive FileDescriptorSet"
           },
           "name": "BoundItemKindEnum",
           "schema": "// Generated by tools/build_schemas.py. Do not edit.\nsyntax = \"proto3\";\n\npackage opcua.protobuf.generated;\n\nimport \"opcua_builtins.proto\";\n\noption java_multiple_files = true;\n\nenum BoundItemKindEnum {\n  BOUNDITEMKINDENUM_TELEMETRY = 0;\n  BOUNDITEMKINDENUM_STATUS = 1;\n  BOUNDITEMKINDENUM_CONFIGURATION = 2;\n  BOUNDITEMKINDENUM_METRIC = 3;\n  BOUNDITEMKINDENUM_COUNTER = 4;\n  BOUNDITEMKINDENUM_EVENT = 5;\n  BOUNDITEMKINDENUM_COMMAND = 6;\n  BOUNDITEMKINDENUM_SETPOINT = 7;\n  BOUNDITEMKINDENUM_IDENTIFICATION = 8;\n  BOUNDITEMKINDENUM_OTHER = 9;\n}\n",
@@ -6733,7 +6763,9 @@
                 "opcua.format": "protobuf",
                 "opcua.modelversion": "0.1.0",
                 "opcua.namespaceuri": "http://opcfoundation.org/UA/",
-                "opcua.nodeid": ""
+                "opcua.nodeid": "",
+                "opcua.schemaid": "a957ebc40e573811",
+                "opcua.schemaid.alg": "SHA-256 over transitive FileDescriptorSet"
               },
               "schema": "// Generated by tools/build_schemas.py. Do not edit.\nsyntax = \"proto3\";\n\npackage opcua.protobuf.generated;\n\nimport \"opcua_builtins.proto\";\n\noption java_multiple_files = true;\n\nenum BoundItemKindEnum {\n  BOUNDITEMKINDENUM_TELEMETRY = 0;\n  BOUNDITEMKINDENUM_STATUS = 1;\n  BOUNDITEMKINDENUM_CONFIGURATION = 2;\n  BOUNDITEMKINDENUM_METRIC = 3;\n  BOUNDITEMKINDENUM_COUNTER = 4;\n  BOUNDITEMKINDENUM_EVENT = 5;\n  BOUNDITEMKINDENUM_COMMAND = 6;\n  BOUNDITEMKINDENUM_SETPOINT = 7;\n  BOUNDITEMKINDENUM_IDENTIFICATION = 8;\n  BOUNDITEMKINDENUM_OTHER = 9;\n}\n",
               "schemaid": "BoundItemKindEnum:protobuf",
@@ -6751,7 +6783,9 @@
             "opcua.format": "arrow",
             "opcua.modelversion": "0.1.0",
             "opcua.namespaceuri": "http://opcfoundation.org/UA/",
-            "opcua.nodeid": "i=60070"
+            "opcua.nodeid": "i=60070",
+            "opcua.schemaid": "253da7a52d44389b",
+            "opcua.schemaid.alg": "SHA-256 over Arrow Schema"
           },
           "name": "ScenarioBindingConfigurationDataType",
           "schema": {
@@ -11181,7 +11215,9 @@
                 "opcua.format": "arrow",
                 "opcua.modelversion": "0.1.0",
                 "opcua.namespaceuri": "http://opcfoundation.org/UA/",
-                "opcua.nodeid": "i=60070"
+                "opcua.nodeid": "i=60070",
+                "opcua.schemaid": "253da7a52d44389b",
+                "opcua.schemaid.alg": "SHA-256 over Arrow Schema"
               },
               "schema": {
                 "arrow": {
@@ -15613,7 +15649,9 @@
             "opcua.format": "avro",
             "opcua.modelversion": "0.1.0",
             "opcua.namespaceuri": "http://opcfoundation.org/UA/",
-            "opcua.nodeid": "i=60070"
+            "opcua.nodeid": "i=60070",
+            "opcua.schemaid": "f0e7857afa713dc7",
+            "opcua.schemaid.alg": "CRC-64-AVRO Rabin"
           },
           "name": "ScenarioBindingConfigurationDataType",
           "schema": "{\n  \"fields\": [\n    {\n      \"name\": \"ModelNamespaceUri\",\n      \"type\": [\n        \"null\",\n        \"string\"\n      ]\n    },\n    {\n      \"name\": \"AppliesToType\",\n      \"type\": [\n        \"null\",\n        \"org.opcfoundation.ua.avro.QualifiedName\"\n      ]\n    },\n    {\n      \"name\": \"ConfigurationVersion\",\n      \"type\": [\n        \"null\",\n        \"org.opcfoundation.ua.avro.ExtensionObject\"\n      ]\n    },\n    {\n      \"name\": \"ScenarioBindings\",\n      \"type\": {\n        \"items\": [\n          \"null\",\n          \"org.opcfoundation.ua.avro.ScenarioBindingDataType\"\n        ],\n        \"type\": \"array\"\n      }\n    }\n  ],\n  \"name\": \"ScenarioBindingConfigurationDataType\",\n  \"namespace\": \"org.opcfoundation.ua.avro\",\n  \"type\": \"record\"\n}\n",
@@ -15629,7 +15667,9 @@
                 "opcua.format": "avro",
                 "opcua.modelversion": "0.1.0",
                 "opcua.namespaceuri": "http://opcfoundation.org/UA/",
-                "opcua.nodeid": "i=60070"
+                "opcua.nodeid": "i=60070",
+                "opcua.schemaid": "f0e7857afa713dc7",
+                "opcua.schemaid.alg": "CRC-64-AVRO Rabin"
               },
               "schema": "{\n  \"fields\": [\n    {\n      \"name\": \"ModelNamespaceUri\",\n      \"type\": [\n        \"null\",\n        \"string\"\n      ]\n    },\n    {\n      \"name\": \"AppliesToType\",\n      \"type\": [\n        \"null\",\n        \"org.opcfoundation.ua.avro.QualifiedName\"\n      ]\n    },\n    {\n      \"name\": \"ConfigurationVersion\",\n      \"type\": [\n        \"null\",\n        \"org.opcfoundation.ua.avro.ExtensionObject\"\n      ]\n    },\n    {\n      \"name\": \"ScenarioBindings\",\n      \"type\": {\n        \"items\": [\n          \"null\",\n          \"org.opcfoundation.ua.avro.ScenarioBindingDataType\"\n        ],\n        \"type\": \"array\"\n      }\n    }\n  ],\n  \"name\": \"ScenarioBindingConfigurationDataType\",\n  \"namespace\": \"org.opcfoundation.ua.avro\",\n  \"type\": \"record\"\n}\n",
               "schemaid": "ScenarioBindingConfigurationDataType:avro",
@@ -15647,7 +15687,9 @@
             "opcua.format": "jsonschema",
             "opcua.modelversion": "0.1.0",
             "opcua.namespaceuri": "http://opcfoundation.org/UA/",
-            "opcua.nodeid": "i=60070"
+            "opcua.nodeid": "i=60070",
+            "opcua.schemaid": "14453b92f73ecf46",
+            "opcua.schemaid.alg": "SHA-256 over document (fallback)"
           },
           "name": "ScenarioBindingConfigurationDataType",
           "schema": {
@@ -16059,7 +16101,9 @@
                 "opcua.format": "jsonschema",
                 "opcua.modelversion": "0.1.0",
                 "opcua.namespaceuri": "http://opcfoundation.org/UA/",
-                "opcua.nodeid": "i=60070"
+                "opcua.nodeid": "i=60070",
+                "opcua.schemaid": "14453b92f73ecf46",
+                "opcua.schemaid.alg": "SHA-256 over document (fallback)"
               },
               "schema": {
                 "$defs": {
@@ -16473,7 +16517,9 @@
             "opcua.format": "protobuf",
             "opcua.modelversion": "0.1.0",
             "opcua.namespaceuri": "http://opcfoundation.org/UA/",
-            "opcua.nodeid": "i=60070"
+            "opcua.nodeid": "i=60070",
+            "opcua.schemaid": "bf10faeb99777038",
+            "opcua.schemaid.alg": "SHA-256 over transitive FileDescriptorSet"
           },
           "name": "ScenarioBindingConfigurationDataType",
           "schema": "// Generated by tools/build_schemas.py. Do not edit.\nsyntax = \"proto3\";\n\npackage opcua.protobuf.generated;\n\nimport \"opcua_builtins.proto\";\nimport \"scenariobindingdatatype.proto\";\n\noption java_multiple_files = true;\n\nmessage ScenarioBindingConfigurationDataType {\n  opcua.protobuf.v1.StringValue model_namespace_uri = 1;\n  opcua.protobuf.v1.QualifiedName applies_to_type = 2;\n  opcua.protobuf.v1.ExtensionObject configuration_version = 3;\n  opcua.protobuf.v1.ArrayValue scenario_bindings = 4;\n}\n",
@@ -16489,7 +16535,9 @@
                 "opcua.format": "protobuf",
                 "opcua.modelversion": "0.1.0",
                 "opcua.namespaceuri": "http://opcfoundation.org/UA/",
-                "opcua.nodeid": "i=60070"
+                "opcua.nodeid": "i=60070",
+                "opcua.schemaid": "bf10faeb99777038",
+                "opcua.schemaid.alg": "SHA-256 over transitive FileDescriptorSet"
               },
               "schema": "// Generated by tools/build_schemas.py. Do not edit.\nsyntax = \"proto3\";\n\npackage opcua.protobuf.generated;\n\nimport \"opcua_builtins.proto\";\nimport \"scenariobindingdatatype.proto\";\n\noption java_multiple_files = true;\n\nmessage ScenarioBindingConfigurationDataType {\n  opcua.protobuf.v1.StringValue model_namespace_uri = 1;\n  opcua.protobuf.v1.QualifiedName applies_to_type = 2;\n  opcua.protobuf.v1.ExtensionObject configuration_version = 3;\n  opcua.protobuf.v1.ArrayValue scenario_bindings = 4;\n}\n",
               "schemaid": "ScenarioBindingConfigurationDataType:protobuf",
@@ -16507,7 +16555,9 @@
             "opcua.format": "arrow",
             "opcua.modelversion": "0.1.0",
             "opcua.namespaceuri": "http://opcfoundation.org/UA/",
-            "opcua.nodeid": "i=60065"
+            "opcua.nodeid": "i=60065",
+            "opcua.schemaid": "32fe42125dd72643",
+            "opcua.schemaid.alg": "SHA-256 over Arrow Schema"
           },
           "name": "ScenarioBindingDataType",
           "schema": {
@@ -19913,7 +19963,9 @@
                 "opcua.format": "arrow",
                 "opcua.modelversion": "0.1.0",
                 "opcua.namespaceuri": "http://opcfoundation.org/UA/",
-                "opcua.nodeid": "i=60065"
+                "opcua.nodeid": "i=60065",
+                "opcua.schemaid": "32fe42125dd72643",
+                "opcua.schemaid.alg": "SHA-256 over Arrow Schema"
               },
               "schema": {
                 "arrow": {
@@ -23321,7 +23373,9 @@
             "opcua.format": "avro",
             "opcua.modelversion": "0.1.0",
             "opcua.namespaceuri": "http://opcfoundation.org/UA/",
-            "opcua.nodeid": "i=60065"
+            "opcua.nodeid": "i=60065",
+            "opcua.schemaid": "2573982d5efdf5a0",
+            "opcua.schemaid.alg": "CRC-64-AVRO Rabin"
           },
           "name": "ScenarioBindingDataType",
           "schema": "{\n  \"fields\": [\n    {\n      \"name\": \"Name\",\n      \"type\": [\n        \"null\",\n        \"string\"\n      ]\n    },\n    {\n      \"name\": \"ScenarioUri\",\n      \"type\": [\n        \"null\",\n        \"string\"\n      ]\n    },\n    {\n      \"name\": \"Direction\",\n      \"type\": \"int\"\n    },\n    {\n      \"name\": \"ConfigurationVersion\",\n      \"type\": [\n        \"null\",\n        \"org.opcfoundation.ua.avro.ExtensionObject\"\n      ]\n    },\n    {\n      \"name\": \"BoundItems\",\n      \"type\": {\n        \"items\": [\n          \"null\",\n          \"org.opcfoundation.ua.avro.BoundItemDataType\"\n        ],\n        \"type\": \"array\"\n      }\n    },\n    {\n      \"name\": \"PublishedDataSetName\",\n      \"type\": [\n        \"null\",\n        \"string\"\n      ]\n    },\n    {\n      \"name\": \"WriterGroupName\",\n      \"type\": [\n        \"null\",\n        \"string\"\n      ]\n    }\n  ],\n  \"name\": \"ScenarioBindingDataType\",\n  \"namespace\": \"org.opcfoundation.ua.avro\",\n  \"type\": \"record\"\n}\n",
@@ -23337,7 +23391,9 @@
                 "opcua.format": "avro",
                 "opcua.modelversion": "0.1.0",
                 "opcua.namespaceuri": "http://opcfoundation.org/UA/",
-                "opcua.nodeid": "i=60065"
+                "opcua.nodeid": "i=60065",
+                "opcua.schemaid": "2573982d5efdf5a0",
+                "opcua.schemaid.alg": "CRC-64-AVRO Rabin"
               },
               "schema": "{\n  \"fields\": [\n    {\n      \"name\": \"Name\",\n      \"type\": [\n        \"null\",\n        \"string\"\n      ]\n    },\n    {\n      \"name\": \"ScenarioUri\",\n      \"type\": [\n        \"null\",\n        \"string\"\n      ]\n    },\n    {\n      \"name\": \"Direction\",\n      \"type\": \"int\"\n    },\n    {\n      \"name\": \"ConfigurationVersion\",\n      \"type\": [\n        \"null\",\n        \"org.opcfoundation.ua.avro.ExtensionObject\"\n      ]\n    },\n    {\n      \"name\": \"BoundItems\",\n      \"type\": {\n        \"items\": [\n          \"null\",\n          \"org.opcfoundation.ua.avro.BoundItemDataType\"\n        ],\n        \"type\": \"array\"\n      }\n    },\n    {\n      \"name\": \"PublishedDataSetName\",\n      \"type\": [\n        \"null\",\n        \"string\"\n      ]\n    },\n    {\n      \"name\": \"WriterGroupName\",\n      \"type\": [\n        \"null\",\n        \"string\"\n      ]\n    }\n  ],\n  \"name\": \"ScenarioBindingDataType\",\n  \"namespace\": \"org.opcfoundation.ua.avro\",\n  \"type\": \"record\"\n}\n",
               "schemaid": "ScenarioBindingDataType:avro",
@@ -23355,7 +23411,9 @@
             "opcua.format": "jsonschema",
             "opcua.modelversion": "0.1.0",
             "opcua.namespaceuri": "http://opcfoundation.org/UA/",
-            "opcua.nodeid": "i=60065"
+            "opcua.nodeid": "i=60065",
+            "opcua.schemaid": "a6399265f15fdf6f",
+            "opcua.schemaid.alg": "SHA-256 over document (fallback)"
           },
           "name": "ScenarioBindingDataType",
           "schema": {
@@ -23767,7 +23825,9 @@
                 "opcua.format": "jsonschema",
                 "opcua.modelversion": "0.1.0",
                 "opcua.namespaceuri": "http://opcfoundation.org/UA/",
-                "opcua.nodeid": "i=60065"
+                "opcua.nodeid": "i=60065",
+                "opcua.schemaid": "a6399265f15fdf6f",
+                "opcua.schemaid.alg": "SHA-256 over document (fallback)"
               },
               "schema": {
                 "$defs": {
@@ -24181,7 +24241,9 @@
             "opcua.format": "protobuf",
             "opcua.modelversion": "0.1.0",
             "opcua.namespaceuri": "http://opcfoundation.org/UA/",
-            "opcua.nodeid": "i=60065"
+            "opcua.nodeid": "i=60065",
+            "opcua.schemaid": "23818e67b7fdb7e2",
+            "opcua.schemaid.alg": "SHA-256 over transitive FileDescriptorSet"
           },
           "name": "ScenarioBindingDataType",
           "schema": "// Generated by tools/build_schemas.py. Do not edit.\nsyntax = \"proto3\";\n\npackage opcua.protobuf.generated;\n\nimport \"opcua_builtins.proto\";\nimport \"bounditemdatatype.proto\";\n\noption java_multiple_files = true;\n\nmessage ScenarioBindingDataType {\n  opcua.protobuf.v1.StringValue name = 1;\n  opcua.protobuf.v1.StringValue scenario_uri = 2;\n  int32 direction = 3;\n  opcua.protobuf.v1.ExtensionObject configuration_version = 4;\n  opcua.protobuf.v1.ArrayValue bound_items = 5;\n  opcua.protobuf.v1.StringValue published_data_set_name = 6;\n  opcua.protobuf.v1.StringValue writer_group_name = 7;\n}\n",
@@ -24197,7 +24259,9 @@
                 "opcua.format": "protobuf",
                 "opcua.modelversion": "0.1.0",
                 "opcua.namespaceuri": "http://opcfoundation.org/UA/",
-                "opcua.nodeid": "i=60065"
+                "opcua.nodeid": "i=60065",
+                "opcua.schemaid": "23818e67b7fdb7e2",
+                "opcua.schemaid.alg": "SHA-256 over transitive FileDescriptorSet"
               },
               "schema": "// Generated by tools/build_schemas.py. Do not edit.\nsyntax = \"proto3\";\n\npackage opcua.protobuf.generated;\n\nimport \"opcua_builtins.proto\";\nimport \"bounditemdatatype.proto\";\n\noption java_multiple_files = true;\n\nmessage ScenarioBindingDataType {\n  opcua.protobuf.v1.StringValue name = 1;\n  opcua.protobuf.v1.StringValue scenario_uri = 2;\n  int32 direction = 3;\n  opcua.protobuf.v1.ExtensionObject configuration_version = 4;\n  opcua.protobuf.v1.ArrayValue bound_items = 5;\n  opcua.protobuf.v1.StringValue published_data_set_name = 6;\n  opcua.protobuf.v1.StringValue writer_group_name = 7;\n}\n",
               "schemaid": "ScenarioBindingDataType:protobuf",
@@ -24215,7 +24279,9 @@
             "opcua.format": "arrow",
             "opcua.modelversion": "0.1.0",
             "opcua.namespaceuri": "http://opcfoundation.org/UA/",
-            "opcua.nodeid": ""
+            "opcua.nodeid": "",
+            "opcua.schemaid": "a94e58013dcc0ace",
+            "opcua.schemaid.alg": "SHA-256 over Arrow Schema"
           },
           "name": "ScenarioBindingDirectionEnum",
           "schema": {
@@ -24261,7 +24327,9 @@
                 "opcua.format": "arrow",
                 "opcua.modelversion": "0.1.0",
                 "opcua.namespaceuri": "http://opcfoundation.org/UA/",
-                "opcua.nodeid": ""
+                "opcua.nodeid": "",
+                "opcua.schemaid": "a94e58013dcc0ace",
+                "opcua.schemaid.alg": "SHA-256 over Arrow Schema"
               },
               "schema": {
                 "arrow": {
@@ -24309,7 +24377,9 @@
             "opcua.format": "avro",
             "opcua.modelversion": "0.1.0",
             "opcua.namespaceuri": "http://opcfoundation.org/UA/",
-            "opcua.nodeid": ""
+            "opcua.nodeid": "",
+            "opcua.schemaid": "8f5c393f1ad57572",
+            "opcua.schemaid.alg": "CRC-64-AVRO Rabin"
           },
           "name": "ScenarioBindingDirectionEnum",
           "schema": "\"int\"\n",
@@ -24325,7 +24395,9 @@
                 "opcua.format": "avro",
                 "opcua.modelversion": "0.1.0",
                 "opcua.namespaceuri": "http://opcfoundation.org/UA/",
-                "opcua.nodeid": ""
+                "opcua.nodeid": "",
+                "opcua.schemaid": "8f5c393f1ad57572",
+                "opcua.schemaid.alg": "CRC-64-AVRO Rabin"
               },
               "schema": "\"int\"\n",
               "schemaid": "ScenarioBindingDirectionEnum:avro",
@@ -24343,7 +24415,9 @@
             "opcua.format": "jsonschema",
             "opcua.modelversion": "0.1.0",
             "opcua.namespaceuri": "http://opcfoundation.org/UA/",
-            "opcua.nodeid": ""
+            "opcua.nodeid": "",
+            "opcua.schemaid": "541006abe18039b2",
+            "opcua.schemaid.alg": "SHA-256 over document (fallback)"
           },
           "name": "ScenarioBindingDirectionEnum",
           "schema": {
@@ -24755,7 +24829,9 @@
                 "opcua.format": "jsonschema",
                 "opcua.modelversion": "0.1.0",
                 "opcua.namespaceuri": "http://opcfoundation.org/UA/",
-                "opcua.nodeid": ""
+                "opcua.nodeid": "",
+                "opcua.schemaid": "541006abe18039b2",
+                "opcua.schemaid.alg": "SHA-256 over document (fallback)"
               },
               "schema": {
                 "$defs": {
@@ -25169,7 +25245,9 @@
             "opcua.format": "protobuf",
             "opcua.modelversion": "0.1.0",
             "opcua.namespaceuri": "http://opcfoundation.org/UA/",
-            "opcua.nodeid": ""
+            "opcua.nodeid": "",
+            "opcua.schemaid": "50dff32c8eb823b3",
+            "opcua.schemaid.alg": "SHA-256 over transitive FileDescriptorSet"
           },
           "name": "ScenarioBindingDirectionEnum",
           "schema": "// Generated by tools/build_schemas.py. Do not edit.\nsyntax = \"proto3\";\n\npackage opcua.protobuf.generated;\n\nimport \"opcua_builtins.proto\";\n\noption java_multiple_files = true;\n\nenum ScenarioBindingDirectionEnum {\n  SCENARIOBINDINGDIRECTIONENUM_PUBLISHER = 0;\n  SCENARIOBINDINGDIRECTIONENUM_SUBSCRIBER = 1;\n  SCENARIOBINDINGDIRECTIONENUM_ACTIONINVOKER = 2;\n  SCENARIOBINDINGDIRECTIONENUM_ACTIONRESPONDER = 3;\n  SCENARIOBINDINGDIRECTIONENUM_BIDIRECTIONAL = 4;\n}\n",
@@ -25185,7 +25263,9 @@
                 "opcua.format": "protobuf",
                 "opcua.modelversion": "0.1.0",
                 "opcua.namespaceuri": "http://opcfoundation.org/UA/",
-                "opcua.nodeid": ""
+                "opcua.nodeid": "",
+                "opcua.schemaid": "50dff32c8eb823b3",
+                "opcua.schemaid.alg": "SHA-256 over transitive FileDescriptorSet"
               },
               "schema": "// Generated by tools/build_schemas.py. Do not edit.\nsyntax = \"proto3\";\n\npackage opcua.protobuf.generated;\n\nimport \"opcua_builtins.proto\";\n\noption java_multiple_files = true;\n\nenum ScenarioBindingDirectionEnum {\n  SCENARIOBINDINGDIRECTIONENUM_PUBLISHER = 0;\n  SCENARIOBINDINGDIRECTIONENUM_SUBSCRIBER = 1;\n  SCENARIOBINDINGDIRECTIONENUM_ACTIONINVOKER = 2;\n  SCENARIOBINDINGDIRECTIONENUM_ACTIONRESPONDER = 3;\n  SCENARIOBINDINGDIRECTIONENUM_BIDIRECTIONAL = 4;\n}\n",
               "schemaid": "ScenarioBindingDirectionEnum:protobuf",

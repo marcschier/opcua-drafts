@@ -1,0 +1,178 @@
+{
+  "AbstractSubtype": {
+    "algorithm": "SHA-256 over transitive FileDescriptorSet",
+    "schemaid": "45e459f9fb2c9230"
+  },
+  "AccessPermissions": {
+    "algorithm": "SHA-256 over transitive FileDescriptorSet",
+    "schemaid": "3d4c22f7abfa8509"
+  },
+  "Array": {
+    "algorithm": "SHA-256 over transitive FileDescriptorSet",
+    "schemaid": "45e459f9fb2c9230"
+  },
+  "ArrayNullableElement": {
+    "algorithm": "SHA-256 over transitive FileDescriptorSet",
+    "schemaid": "45e459f9fb2c9230"
+  },
+  "Boolean": {
+    "algorithm": "SHA-256 over transitive FileDescriptorSet",
+    "schemaid": "45e459f9fb2c9230"
+  },
+  "BoundItemDataType": {
+    "algorithm": "SHA-256 over transitive FileDescriptorSet",
+    "schemaid": "2d7009c84405eb30"
+  },
+  "BoundItemKindEnum": {
+    "algorithm": "SHA-256 over transitive FileDescriptorSet",
+    "schemaid": "a957ebc40e573811"
+  },
+  "Byte": {
+    "algorithm": "SHA-256 over transitive FileDescriptorSet",
+    "schemaid": "45e459f9fb2c9230"
+  },
+  "ByteString": {
+    "algorithm": "SHA-256 over transitive FileDescriptorSet",
+    "schemaid": "45e459f9fb2c9230"
+  },
+  "Color": {
+    "algorithm": "SHA-256 over transitive FileDescriptorSet",
+    "schemaid": "807e0d7315ed2835"
+  },
+  "DataValue": {
+    "algorithm": "SHA-256 over transitive FileDescriptorSet",
+    "schemaid": "45e459f9fb2c9230"
+  },
+  "DateTime": {
+    "algorithm": "SHA-256 over transitive FileDescriptorSet",
+    "schemaid": "45e459f9fb2c9230"
+  },
+  "DiagnosticInfo": {
+    "algorithm": "SHA-256 over transitive FileDescriptorSet",
+    "schemaid": "45e459f9fb2c9230"
+  },
+  "Double": {
+    "algorithm": "SHA-256 over transitive FileDescriptorSet",
+    "schemaid": "45e459f9fb2c9230"
+  },
+  "Envelope": {
+    "algorithm": "SHA-256 over transitive FileDescriptorSet",
+    "schemaid": "f343b115cc5a8074"
+  },
+  "ExpandedNodeId": {
+    "algorithm": "SHA-256 over transitive FileDescriptorSet",
+    "schemaid": "45e459f9fb2c9230"
+  },
+  "ExtensionObject": {
+    "algorithm": "SHA-256 over transitive FileDescriptorSet",
+    "schemaid": "45e459f9fb2c9230"
+  },
+  "Float": {
+    "algorithm": "SHA-256 over transitive FileDescriptorSet",
+    "schemaid": "45e459f9fb2c9230"
+  },
+  "Guid": {
+    "algorithm": "SHA-256 over transitive FileDescriptorSet",
+    "schemaid": "45e459f9fb2c9230"
+  },
+  "Int16": {
+    "algorithm": "SHA-256 over transitive FileDescriptorSet",
+    "schemaid": "45e459f9fb2c9230"
+  },
+  "Int32": {
+    "algorithm": "SHA-256 over transitive FileDescriptorSet",
+    "schemaid": "45e459f9fb2c9230"
+  },
+  "Int64": {
+    "algorithm": "SHA-256 over transitive FileDescriptorSet",
+    "schemaid": "45e459f9fb2c9230"
+  },
+  "LocalizedText": {
+    "algorithm": "SHA-256 over transitive FileDescriptorSet",
+    "schemaid": "45e459f9fb2c9230"
+  },
+  "Matrix": {
+    "algorithm": "SHA-256 over transitive FileDescriptorSet",
+    "schemaid": "45e459f9fb2c9230"
+  },
+  "Measurement": {
+    "algorithm": "SHA-256 over transitive FileDescriptorSet",
+    "schemaid": "ebc9764b1ab0a50e"
+  },
+  "NodeId": {
+    "algorithm": "SHA-256 over transitive FileDescriptorSet",
+    "schemaid": "45e459f9fb2c9230"
+  },
+  "Person": {
+    "algorithm": "SHA-256 over transitive FileDescriptorSet",
+    "schemaid": "03ee97bc2373eae7"
+  },
+  "Point": {
+    "algorithm": "SHA-256 over transitive FileDescriptorSet",
+    "schemaid": "22dadd90f3efc6e5"
+  },
+  "QualifiedName": {
+    "algorithm": "SHA-256 over transitive FileDescriptorSet",
+    "schemaid": "45e459f9fb2c9230"
+  },
+  "SByte": {
+    "algorithm": "SHA-256 over transitive FileDescriptorSet",
+    "schemaid": "45e459f9fb2c9230"
+  },
+  "ScenarioBindingConfigurationDataType": {
+    "algorithm": "SHA-256 over transitive FileDescriptorSet",
+    "schemaid": "bf10faeb99777038"
+  },
+  "ScenarioBindingDataType": {
+    "algorithm": "SHA-256 over transitive FileDescriptorSet",
+    "schemaid": "23818e67b7fdb7e2"
+  },
+  "ScenarioBindingDirectionEnum": {
+    "algorithm": "SHA-256 over transitive FileDescriptorSet",
+    "schemaid": "50dff32c8eb823b3"
+  },
+  "StatusCode": {
+    "algorithm": "SHA-256 over transitive FileDescriptorSet",
+    "schemaid": "45e459f9fb2c9230"
+  },
+  "String": {
+    "algorithm": "SHA-256 over transitive FileDescriptorSet",
+    "schemaid": "45e459f9fb2c9230"
+  },
+  "Structure": {
+    "algorithm": "SHA-256 over transitive FileDescriptorSet",
+    "schemaid": "22dadd90f3efc6e5"
+  },
+  "StructureWithOptionalFields": {
+    "algorithm": "SHA-256 over transitive FileDescriptorSet",
+    "schemaid": "03ee97bc2373eae7"
+  },
+  "UInt16": {
+    "algorithm": "SHA-256 over transitive FileDescriptorSet",
+    "schemaid": "45e459f9fb2c9230"
+  },
+  "UInt32": {
+    "algorithm": "SHA-256 over transitive FileDescriptorSet",
+    "schemaid": "45e459f9fb2c9230"
+  },
+  "UInt64": {
+    "algorithm": "SHA-256 over transitive FileDescriptorSet",
+    "schemaid": "45e459f9fb2c9230"
+  },
+  "UnionOneof": {
+    "algorithm": "SHA-256 over transitive FileDescriptorSet",
+    "schemaid": "ebc9764b1ab0a50e"
+  },
+  "Variant": {
+    "algorithm": "SHA-256 over transitive FileDescriptorSet",
+    "schemaid": "45e459f9fb2c9230"
+  },
+  "WorkedStructuredDataType": {
+    "algorithm": "SHA-256 over transitive FileDescriptorSet",
+    "schemaid": "f343b115cc5a8074"
+  },
+  "XmlElement": {
+    "algorithm": "SHA-256 over transitive FileDescriptorSet",
+    "schemaid": "45e459f9fb2c9230"
+  }
+}

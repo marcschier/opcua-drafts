@@ -16,11 +16,14 @@ SCHEMAS = ROOT / "schemas"
 GEN = HERE / "_generated"
 EXAMPLES = ROOT / "examples"
 sys.path.insert(0, os.path.abspath(HERE / ".." / ".." / "_common"))
-from opcua_enc import types as t, values as v  # noqa: E402
+from opcua_enc import hexdump, types as t, values as v  # noqa: E402
 from opcua_enc.corpus import CORPUS  # noqa: E402
 from opcua_enc.values import canonical_equal, is_single_float_type  # noqa: E402
 import build_schemas  # noqa: E402
+import gen_type_reference  # noqa: E402
 import protobuf_codec  # noqa: E402
+import schema_handshake_demo  # noqa: E402
+import wire_annotate  # noqa: E402
 
 EXAMPLE_CASES = [
     "bool_true", "uint64_max", "string_null", "string_unicode", "nodeid_guid",
@@ -45,6 +48,13 @@ def _field_name(name: str) -> str:
 def _msg_cls(st: t.Struct):
     mod = importlib.import_module(f"{_safe_name(st.name).lower()}_pb2")
     return getattr(mod, _safe_name(st.name))
+
+
+def _msg_desc(ty: t.Type):
+    if isinstance(ty, t.Struct):
+        return _msg_cls(ty).DESCRIPTOR
+    import opcua_builtins_pb2 as gate_pb
+    return gate_pb.Value.DESCRIPTOR
 
 
 def _published_decode(ty: t.Type, data: bytes):
@@ -249,6 +259,25 @@ def _write_examples() -> None:
     (EXAMPLES / "index.json").write_text(json.dumps(index, indent=2, sort_keys=True) + "\n", encoding="utf-8", newline="\n")
 
 
+def _nested_import_schemaid_change() -> tuple[str, str]:
+    from google.protobuf import descriptor_pb2
+
+    cases_by_name = {case.name: case for case in CORPUS}
+    envelope_desc = _msg_desc(cases_by_name["envelope"].type)
+    point_desc = _msg_desc(cases_by_name["struct_point"].type)
+    changed_point = schema_handshake_demo._file_proto(point_desc.file)
+    point = next(m for m in changed_point.message_type if m.name == "Point")
+    field = point.field.add()
+    field.name = "schema_gate"
+    field.number = 100
+    field.label = descriptor_pb2.FieldDescriptorProto.LABEL_OPTIONAL
+    field.type = descriptor_pb2.FieldDescriptorProto.TYPE_DOUBLE
+
+    old_id = schema_handshake_demo._schema_id(schema_handshake_demo._collect_files(envelope_desc.file))
+    new_id = schema_handshake_demo._schema_id(schema_handshake_demo._collect_files(envelope_desc.file, changed_point))
+    return old_id.hex(), new_id.hex()
+
+
 def main() -> int:
     failures = 0
     build_schemas.main()
@@ -316,9 +345,56 @@ def main() -> int:
             print(f"FAIL example conformance {bin_file.name}: {case.value!r} != {got!r}")
     failures += example_gate_failures
 
+    annotation_failures = 0
+    for case in CORPUS:
+        data = protobuf_codec.encode(case.type, case.value)
+        try:
+            fields = wire_annotate.annotate(data, _msg_desc(case.type))
+            hexdump.assert_contiguous(fields, len(data))
+        except Exception as exc:
+            annotation_failures += 1
+            print(f"FAIL wire annotation {case.name}: {exc}")
+    failures += annotation_failures
+
+    drift_failures = 0
+    generated_doc = gen_type_reference.inject(
+        (ROOT / "OPC-UA-Part6-Protobuf-DataEncoding.md").read_text(encoding="utf-8"),
+        gen_type_reference.generate(),
+    )
+    if generated_doc != (ROOT / "OPC-UA-Part6-Protobuf-DataEncoding.md").read_text(encoding="utf-8"):
+        drift_failures += 1
+        print("FAIL Part 6 type-reference annex is out of date; run tools\\gen_type_reference.py")
+    schemaids_path = SCHEMAS / "schemaids.json"
+    schemaids = gen_type_reference.schemaids_text()
+    if not schemaids_path.exists() or schemaids_path.read_text(encoding="utf-8") != schemaids:
+        drift_failures += 1
+        print("FAIL schemas\\schemaids.json is out of date; run tools\\gen_type_reference.py")
+    failures += drift_failures
+
+    nested_schemaid_failures = 0
+    try:
+        nested_old_id, nested_new_id = _nested_import_schemaid_change()
+        if nested_old_id == nested_new_id:
+            nested_schemaid_failures += 1
+            print(f"FAIL nested SchemaId gate: Envelope id did not change after Point changed ({nested_old_id})")
+    except Exception as exc:
+        nested_old_id, nested_new_id = "error", "error"
+        nested_schemaid_failures += 1
+        print(f"FAIL nested SchemaId gate: {exc}")
+    failures += nested_schemaid_failures
+
+    handshake_failures = 0
+    try:
+        schema_handshake_demo.run_demo()
+    except Exception as exc:
+        handshake_failures += 1
+        print(f"FAIL schema handshake demo: {exc}")
+    failures += handshake_failures
+
     conformance_ok = len(CORPUS) - gate_failures
     examples_ok = len(bin_files) - example_gate_failures
-    print(f"validate_local: proto_files={len(list(SCHEMAS.glob('*.proto')))} corpus={len(CORPUS) - rt_failures}/{len(CORPUS)} conformance={conformance_ok}/{len(CORPUS)} examples={examples_ok}/{len(bin_files)}; {failures} failures")
+    nested_status = "ok" if not nested_schemaid_failures else "fail"
+    print(f"validate_local: proto_files={len(list(SCHEMAS.glob('*.proto')))} corpus={len(CORPUS) - rt_failures}/{len(CORPUS)} conformance={conformance_ok}/{len(CORPUS)} examples={examples_ok}/{len(bin_files)} annotations={len(CORPUS) - annotation_failures}/{len(CORPUS)} drift={'ok' if not drift_failures else 'fail'} nested_schemaid={nested_status}({nested_old_id}->{nested_new_id}) handshake={'ok' if not handshake_failures else 'fail'}; {failures} failures")
     return 1 if failures else 0
 
 

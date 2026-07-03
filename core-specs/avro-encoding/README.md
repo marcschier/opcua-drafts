@@ -8,9 +8,13 @@ This folder contains the working draft for a canonical Apache Avro binary DataEn
 - `OPC-UA-Part14-Avro-MessageMapping.md` — Part 14 Avro PubSub message mapping proposal.
 - `tools\build_schemas.py` — NodeSet-driven Avro schema generator.
 - `tools\avro_codec.py` — reversible fastavro codec over `core-specs\_common\opcua_enc` descriptors.
+- `tools\wire_annotate.py` — Avro-binary byte layout annotator used by the generated Part 6 annex.
+- `tools\gen_type_reference.py` — regenerates and drift-checks the Part 6 per-type reference annex.
+- `tools\schema_handshake_demo.py` — executable SchemaId announcement/cache demo.
 - `tools\roundtrip.py` — runs the shared CORPUS through `decode(encode(x))`.
 - `tools\validate_local.py` — local acceptance gate.
 - `schemas\` — generated `.avsc` schemas.
+- `schemas\schemaids.json` — generated on-wire SchemaId catalog for built-ins, composites and generated DataTypes.
 - `examples\` — generated representative Avro payload hex files.
 
 ## Regenerate and validate
@@ -31,6 +35,6 @@ python core-specs\avro-encoding\tools\validate_local.py
 
 `build_schemas.py` defaults to `core-specs\pubsub-binding\Opc.Ua.PubSubBinding.NodeSet2.xml` and writes deterministic schemas to `schemas\`, including the shared corpus structures/enumerations used by the examples. Pass another UANodeSet2 XML path to generate schemas for a different model.
 
-`validate_local.py` verifies normal codec round-trips and an independent conformance gate that decodes every corpus payload and generated example from freshly loaded published `.avsc` schemas.
+`validate_local.py` verifies normal codec round-trips, an independent conformance gate that decodes every corpus payload and generated example from freshly loaded published `.avsc` schemas, `schemaids.json` drift, type-reference drift, byte annotation contiguity, self-contained composite SchemaId changes, and the SchemaId handshake demo.
 
 The codec and tests use the read-only shared API in `core-specs\_common\opcua_enc`. Central schema sharing and registry/catalog mechanics are specified separately in `core-specs\xregistry-catalog\`.

@@ -1,0 +1,170 @@
+{
+  "AccessPermissions": {
+    "algorithm": "CRC-64-AVRO Rabin",
+    "schemaid": "8f5c393f1ad57572"
+  },
+  "ArrayOfInt32": {
+    "algorithm": "CRC-64-AVRO Rabin",
+    "schemaid": "43929ee630dbc280"
+  },
+  "ArrayOfPoint": {
+    "algorithm": "CRC-64-AVRO Rabin",
+    "schemaid": "d4c2d55c7fc7d75c"
+  },
+  "ArrayOfString": {
+    "algorithm": "CRC-64-AVRO Rabin",
+    "schemaid": "fe961155c29ee867"
+  },
+  "Boolean": {
+    "algorithm": "CRC-64-AVRO Rabin",
+    "schemaid": "64f7d4a478fc429f"
+  },
+  "BoundItemDataType": {
+    "algorithm": "CRC-64-AVRO Rabin",
+    "schemaid": "f86a3d9c107c5d66"
+  },
+  "BoundItemKindEnum": {
+    "algorithm": "CRC-64-AVRO Rabin",
+    "schemaid": "8f5c393f1ad57572"
+  },
+  "Byte": {
+    "algorithm": "CRC-64-AVRO Rabin",
+    "schemaid": "8f5c393f1ad57572"
+  },
+  "ByteString": {
+    "algorithm": "CRC-64-AVRO Rabin",
+    "schemaid": "9d4c3eb5447b4848"
+  },
+  "Color": {
+    "algorithm": "CRC-64-AVRO Rabin",
+    "schemaid": "8f5c393f1ad57572"
+  },
+  "DataValue": {
+    "algorithm": "CRC-64-AVRO Rabin",
+    "schemaid": "5d6fdebe22e3b0d9"
+  },
+  "DateTime": {
+    "algorithm": "CRC-64-AVRO Rabin",
+    "schemaid": "b71df49344e154d0"
+  },
+  "DiagnosticInfo": {
+    "algorithm": "CRC-64-AVRO Rabin",
+    "schemaid": "1f23716837bba69d"
+  },
+  "Double": {
+    "algorithm": "CRC-64-AVRO Rabin",
+    "schemaid": "7e95ab32c035758e"
+  },
+  "Envelope": {
+    "algorithm": "CRC-64-AVRO Rabin",
+    "schemaid": "54086d6041c8f13d"
+  },
+  "ExpandedNodeId": {
+    "algorithm": "CRC-64-AVRO Rabin",
+    "schemaid": "eff6df8ff05db838"
+  },
+  "ExtensionObject": {
+    "algorithm": "CRC-64-AVRO Rabin",
+    "schemaid": "b8c9570e69d84350"
+  },
+  "Float": {
+    "algorithm": "CRC-64-AVRO Rabin",
+    "schemaid": "90d7a83ecb027c4d"
+  },
+  "Guid": {
+    "algorithm": "CRC-64-AVRO Rabin",
+    "schemaid": "cde4c366633fdfe6"
+  },
+  "Int16": {
+    "algorithm": "CRC-64-AVRO Rabin",
+    "schemaid": "8f5c393f1ad57572"
+  },
+  "Int32": {
+    "algorithm": "CRC-64-AVRO Rabin",
+    "schemaid": "8f5c393f1ad57572"
+  },
+  "Int64": {
+    "algorithm": "CRC-64-AVRO Rabin",
+    "schemaid": "b71df49344e154d0"
+  },
+  "LocalizedText": {
+    "algorithm": "CRC-64-AVRO Rabin",
+    "schemaid": "2d8ba35586039a65"
+  },
+  "MatrixOfDouble": {
+    "algorithm": "CRC-64-AVRO Rabin",
+    "schemaid": "2ffc7ee0a94fbeb3"
+  },
+  "MatrixOfInt32": {
+    "algorithm": "CRC-64-AVRO Rabin",
+    "schemaid": "d1693dce5899f595"
+  },
+  "MatrixOfString": {
+    "algorithm": "CRC-64-AVRO Rabin",
+    "schemaid": "575c41d9d93cdc93"
+  },
+  "Measurement": {
+    "algorithm": "CRC-64-AVRO Rabin",
+    "schemaid": "f906a398dbbd6787"
+  },
+  "NodeId": {
+    "algorithm": "CRC-64-AVRO Rabin",
+    "schemaid": "7a72f202d5e8e102"
+  },
+  "Person": {
+    "algorithm": "CRC-64-AVRO Rabin",
+    "schemaid": "87352c988d4b795d"
+  },
+  "Point": {
+    "algorithm": "CRC-64-AVRO Rabin",
+    "schemaid": "088588111c53429d"
+  },
+  "QualifiedName": {
+    "algorithm": "CRC-64-AVRO Rabin",
+    "schemaid": "5ea7a40e898d19ec"
+  },
+  "SByte": {
+    "algorithm": "CRC-64-AVRO Rabin",
+    "schemaid": "8f5c393f1ad57572"
+  },
+  "ScenarioBindingConfigurationDataType": {
+    "algorithm": "CRC-64-AVRO Rabin",
+    "schemaid": "f0e7857afa713dc7"
+  },
+  "ScenarioBindingDataType": {
+    "algorithm": "CRC-64-AVRO Rabin",
+    "schemaid": "2573982d5efdf5a0"
+  },
+  "ScenarioBindingDirectionEnum": {
+    "algorithm": "CRC-64-AVRO Rabin",
+    "schemaid": "8f5c393f1ad57572"
+  },
+  "StatusCode": {
+    "algorithm": "CRC-64-AVRO Rabin",
+    "schemaid": "8f5c393f1ad57572"
+  },
+  "String": {
+    "algorithm": "CRC-64-AVRO Rabin",
+    "schemaid": "9dc47eb71ef24598"
+  },
+  "UInt16": {
+    "algorithm": "CRC-64-AVRO Rabin",
+    "schemaid": "8f5c393f1ad57572"
+  },
+  "UInt32": {
+    "algorithm": "CRC-64-AVRO Rabin",
+    "schemaid": "8f5c393f1ad57572"
+  },
+  "UInt64": {
+    "algorithm": "CRC-64-AVRO Rabin",
+    "schemaid": "b71df49344e154d0"
+  },
+  "Variant": {
+    "algorithm": "CRC-64-AVRO Rabin",
+    "schemaid": "eb3716e5a3ede96f"
+  },
+  "XmlElement": {
+    "algorithm": "CRC-64-AVRO Rabin",
+    "schemaid": "9dc47eb71ef24598"
+  }
+}

@@ -14,7 +14,10 @@ from opcua_enc.values import canonical_equal, is_single_float_type
 
 import arrow_codec
 import build_schemas
+import gen_type_reference
 import roundtrip
+import schema_handshake_demo
+import wire_annotate
 
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
@@ -40,6 +43,7 @@ SUBSET = [
 
 def main() -> int:
     failures = 0
+    failures += schemaids_drift_gate()
     build_schemas.main()
     first = snapshot(os.path.join(ROOT, "schemas"))
     build_schemas.main()
@@ -59,8 +63,11 @@ def main() -> int:
 
     conformance_failures = conformance_gate()
     failures += conformance_failures
+    failures += type_reference_drift_gate()
+    failures += annotation_gate()
+    failures += schema_handshake_demo.main()
 
-    print(f"validate_local: schemas ok, examples ok, conformance gate {len(CORPUS) - conformance_failures}/{len(CORPUS)} corpus passed, {len(CORPUS) - rt_failures}/{len(CORPUS)} corpus passed, {failures} failures")
+    print(f"validate_local: schemas ok, schemaids ok, examples ok, type-reference ok, byte-annotations ok, handshake ok, conformance gate {len(CORPUS) - conformance_failures}/{len(CORPUS)} corpus passed, {len(CORPUS) - rt_failures}/{len(CORPUS)} corpus passed, {failures} failures")
     return 1 if failures else 0
 
 
@@ -113,6 +120,50 @@ def conformance_gate() -> int:
             print(f"FAIL conformance {case.name}: {case.value!r} != {decoded!r}")
     failures += conformance_examples(published)
     print(f"Arrow conformance gate: {len(CORPUS) - failures}/{len(CORPUS)} corpus passed, {failures} failures")
+    return failures
+
+
+def type_reference_drift_gate() -> int:
+    with open(os.path.join(ROOT, "OPC-UA-Part6-Arrow-DataEncoding.md"), encoding="utf-8") as f:
+        text = f.read()
+    begin = gen_type_reference.BEGIN
+    end = gen_type_reference.END
+    if begin not in text or end not in text:
+        print("FAIL type-reference markers missing")
+        return 1
+    current = text[text.index(begin) + len(begin):text.index(end)].strip()
+    expected = gen_type_reference.generate().strip()
+    if current != expected:
+        print("FAIL generated type-reference annex drift; run tools\\gen_type_reference.py")
+        return 1
+    print("Type-reference drift gate: ok")
+    return 0
+
+
+def schemaids_drift_gate() -> int:
+    path = os.path.join(ROOT, "schemas", "schemaids.json")
+    with open(path, encoding="utf-8") as f:
+        current = json.load(f)
+    expected = build_schemas.schemaids()
+    if current != expected:
+        print("FAIL schemas\\schemaids.json drift; run tools\\build_schemas.py")
+        return 1
+    print(f"SchemaId drift gate: {len(current)} entries ok")
+    return 0
+
+
+def annotation_gate() -> int:
+    failures = 0
+    for case in CORPUS:
+        try:
+            data = arrow_codec.encode(case.type, case.value)
+            fields = wire_annotate.annotate(data)
+            from opcua_enc import hexdump
+            hexdump.assert_contiguous(fields, len(data))
+        except Exception as exc:
+            failures += 1
+            print(f"FAIL byte annotation {case.name}: {exc}")
+    print(f"Byte annotation gate: {len(CORPUS) - failures}/{len(CORPUS)} corpus layouts contiguous, {failures} failures")
     return failures
 
 

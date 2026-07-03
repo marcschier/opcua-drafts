@@ -1,10 +1,13 @@
 from __future__ import annotations
 
+import copy
 import os
 import re
+from collections.abc import Iterable
 from typing import Any
 
 NS = "org.opcfoundation.ua.avro"
+PRIMITIVE_NAMES = {"null", "boolean", "int", "long", "float", "double", "bytes", "string"}
 
 
 def common_path(*parts: str) -> str:
@@ -31,6 +34,102 @@ def avro_name(name: str) -> str:
 
 def fullname(name: str) -> str:
     return f"{NS}.{avro_name(name)}"
+
+
+def schema_fullname(schema: dict[str, Any], default_namespace: str | None = None) -> str | None:
+    name = schema.get("name")
+    typ = schema.get("type")
+    if not isinstance(name, str) or typ not in ("record", "enum", "fixed"):
+        return None
+    if "." in name:
+        return name
+    namespace = schema.get("namespace", default_namespace)
+    return f"{namespace}.{name}" if namespace else name
+
+
+def _resolve_ref(name: str, registry: dict[str, Any], namespace: str | None) -> str | None:
+    if name in PRIMITIVE_NAMES:
+        return None
+    if name in registry:
+        return name
+    if "." not in name and namespace:
+        candidate = f"{namespace}.{name}"
+        if candidate in registry:
+            return candidate
+    return None
+
+
+def build_named_schema_registry(schemas: Iterable[Any]) -> dict[str, Any]:
+    registry: dict[str, Any] = {}
+
+    def visit(schema: Any, namespace: str | None = None) -> None:
+        if isinstance(schema, list):
+            for item in schema:
+                visit(item, namespace)
+            return
+        if not isinstance(schema, dict):
+            return
+        current_namespace = schema.get("namespace", namespace)
+        full = schema_fullname(schema, namespace)
+        if full is not None:
+            registry[full] = schema
+        typ = schema.get("type")
+        if isinstance(typ, (dict, list)):
+            visit(typ, current_namespace)
+        if typ == "record":
+            for field in schema.get("fields", []):
+                visit(field.get("type"), current_namespace)
+        elif typ == "array":
+            visit(schema.get("items"), current_namespace)
+        elif typ == "map":
+            visit(schema.get("values"), current_namespace)
+        for key in ("items", "values"):
+            if key in schema and typ not in ("array", "map"):
+                visit(schema[key], current_namespace)
+
+    for schema in schemas:
+        visit(schema)
+    return registry
+
+
+def self_contained_schema(schema: Any, registry: dict[str, Any]) -> Any:
+    seen: set[str] = set()
+
+    def inline(current: Any, namespace: str | None = None) -> Any:
+        if isinstance(current, str):
+            full = _resolve_ref(current, registry, namespace)
+            if full is None:
+                return current
+            if full in seen:
+                return full
+            return inline(copy.deepcopy(registry[full]), namespace)
+        if isinstance(current, list):
+            return [inline(item, namespace) for item in current]
+        if not isinstance(current, dict):
+            return current
+
+        full = schema_fullname(current, namespace)
+        current_namespace = current.get("namespace", namespace)
+        if full is not None:
+            if full in seen:
+                return full
+            seen.add(full)
+            current_namespace = current.get("namespace", current_namespace)
+
+        out: dict[str, Any] = {}
+        for key, value in current.items():
+            if key in ("type", "items", "values"):
+                out[key] = inline(value, current_namespace)
+            elif key == "fields" and isinstance(value, list):
+                out[key] = [
+                    {field_key: inline(field_value, current_namespace) if field_key == "type" else field_value for field_key, field_value in field.items()}
+                    for field in value
+                ]
+            else:
+                out[key] = value
+        return out
+
+    return inline(copy.deepcopy(schema))
 
 
 def stable_json(data: Any) -> str:

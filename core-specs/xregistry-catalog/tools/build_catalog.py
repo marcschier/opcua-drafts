@@ -23,6 +23,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..",
 
 from opcua_enc import nodeset  # noqa: E402
 from opcua_enc import types as t  # noqa: E402
+from opcua_enc import fingerprint  # noqa: E402
 
 import jsonschema_gen as jsg  # noqa: E402
 
@@ -88,13 +89,48 @@ def _embed(fmt: str, browse_name: str) -> tuple[object | None, str | None]:
     return text, None
 
 
-def _schema_resource(schemaid, name, fmt_key, doc, url, nodeid, ns_uri, model_ver):
+def _load_schemaids(fmt_key: str) -> dict[str, dict]:
+    """Read a sibling encoding's ``schemas/schemaids.json`` (type -> {schemaid, algorithm})."""
+    sib = SIBLING_DIR.get(fmt_key)
+    if not sib:
+        return {}
+    path = os.path.join(CORE_SPECS, sib, "schemas", "schemaids.json")
+    if not os.path.isfile(path):
+        return {}
+    try:
+        with open(path, encoding="utf-8") as fh:
+            return json.load(fh)
+    except (json.JSONDecodeError, OSError):
+        return {}
+
+
+def _content_id(doc: object) -> str:
+    if isinstance(doc, str):
+        data = doc.encode("utf-8")
+    elif doc is None:
+        return ""
+    else:
+        data = json.dumps(doc, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    return fingerprint.sha256_id_hex(data)
+
+
+def _wire_schemaid(fmt_key: str, name: str, doc: object, ids: dict[str, dict]) -> tuple[str, str]:
+    """The authoritative on-wire SchemaId from schemaids.json, else a content fallback."""
+    entry = ids.get(name)
+    if entry and entry.get("schemaid"):
+        return entry["schemaid"], entry.get("algorithm", "unspecified")
+    return _content_id(doc), "SHA-256 over document (fallback)"
+
+
+def _schema_resource(schemaid, name, fmt_key, doc, url, nodeid, ns_uri, model_ver, wire_id, wire_alg):
     fmt, ctype, _ = FORMATS[fmt_key]
     labels = {
         "opcua.browsename": name,
         "opcua.nodeid": nodeid or "",
         "opcua.format": fmt_key,
         "opcua.namespaceuri": ns_uri,
+        "opcua.schemaid": wire_id,
+        "opcua.schemaid.alg": wire_alg,
     }
     version = {
         "schemaid": schemaid,
@@ -126,6 +162,7 @@ def build(nodeset_path: str) -> dict:
     named += [(e.name, None) for e in loaded.enums]
 
     schemas: dict[str, dict] = {}
+    schemaid_maps = {fk: _load_schemaids(fk) for fk in ("avro", "protobuf", "arrow")}
     for name, nid in sorted(named):
         for fmt_key in ("avro", "protobuf", "arrow", "jsonschema"):
             schemaid = f"{name}:{fmt_key}"
@@ -133,8 +170,9 @@ def build(nodeset_path: str) -> dict:
                 doc, url = jsg.schema_for(name, list(loaded.structs), list(loaded.enums)), None
             else:
                 doc, url = _embed(fmt_key, name)
+            wire_id, wire_alg = _wire_schemaid(fmt_key, name, doc, schemaid_maps.get(fmt_key, {}))
             schemas[schemaid] = _schema_resource(
-                schemaid, name, fmt_key, doc, url, nid, ns_uri, model_ver
+                schemaid, name, fmt_key, doc, url, nid, ns_uri, model_ver, wire_id, wire_alg
             )
 
     slug = _slug(ns_uri)

@@ -28,6 +28,7 @@ This document defines a Protobuf message mapping for OPC UA PubSub. It covers Ne
 | RawData | A DataSet field encoded with its declared field DataType rather than as a Variant or DataValue. |
 | Key frame | A DataSetMessage carrying all configured DataSet fields. |
 | Delta frame | A DataSetMessage carrying only changed fields and their field indexes or names. |
+| SchemaId | The Part 6 Protobuf schema hash: first 8 bytes of SHA-256 over the canonical transitive `FileDescriptorSet`. |
 
 Key words **shall**, **should**, **may**, **shall not** are to be interpreted as in ISO/IEC directives.
 
@@ -73,9 +74,47 @@ The PubSubConnection, WriterGroup, ReaderGroup, DataSetWriter and DataSetReader 
 
 The configuration model shall add described-only VariableTypes and DataTypes parallel to the JSON message mapping configuration model. These nodes identify the Protobuf message mapping, content masks, schema identifiers and content types used by WriterGroups and ReaderGroups. The base namespace would add a Protobuf message mapping entry below the existing PubSub configuration model without changing existing Binary, JSON or UADP nodes.
 
-### 4.9 Schema resolution
+### 4.9 SchemaId resolution and announcement
 
-Protobuf is schema-based: a subscriber cannot decode a `DataSetMessage` without the `.proto` that describes it. The reference schema is published to, and resolved from, a central catalog as defined by *OPC UA — xRegistry Schema Catalog* (`../xregistry-catalog/OPC-UA-xRegistry-Schema-Catalog.md`). A Publisher sets `ProtobufSchemaUri` to the schema Version `self` URL; when it is absent, a subscriber resolves the schema from the DataSet namespace, `<DataSetName>:protobuf` (or the RawData DataType BrowseName), and the `ConfigurationVersion` carried in the DataSetMessage header, exactly as in §6 of that specification. The transport `content-type` selects the format.
+Protobuf is schema-based: a subscriber cannot decode a `DataSetMessage` without the descriptor that describes it. Each Protobuf frame shall reference the schema by SchemaId. The SchemaId is independent of PubSub `ConfigurationVersion`; it changes only when the canonical Part 6 Protobuf schema changes, and it may coexist with `ConfigurationVersion` in the same header.
+
+#### 4.9.1 Framing
+
+A transport mapping shall carry `{magic, SchemaId, body}` or shall place the SchemaId in an existing NetworkMessage, DataSetMessage or transport header field. The body is the Protobuf bytes for the referenced package/message. A compact envelope is:
+
+```proto
+message ProtobufFrame {
+  fixed32 magic = 1;          // "OPBP" or transport-specific equivalent
+  bytes schema_id = 2;        // 8 bytes unless a profile selects a longer SHA-256 prefix
+  bytes body = 3;             // encoded NetworkMessage/DataSetMessage/value body
+}
+```
+
+#### 4.9.2 Schema announcement
+
+A publisher shall be able to send a schema-announcement frame before data that uses an unknown SchemaId:
+
+```proto
+message ProtobufSchemaAnnouncement {
+  bytes schema_id = 1;
+  google.protobuf.FileDescriptorSet descriptor_set = 2;
+  optional uint64 schema_epoch = 3;
+}
+```
+
+The `FileDescriptorSet` shall include the target file and all transitive imports needed for dynamic decoding. Its normalized deterministic serialization is the canonical form hashed to produce the SchemaId, so any target or imported descriptor change changes the cache key. It is self-describing so a generic decoder can build the descriptor pool without pre-compiled application messages. A schema may also be published to xRegistry and referenced by URI, but the SchemaId remains the cache key.
+
+#### 4.9.3 Encoder change tracking
+
+An encoder shall maintain `announced: set<SchemaId>` per destination. Before sending a value or DataSetMessage it recomputes the SchemaId from the current canonical transitive `FileDescriptorSet`. If the SchemaId is not in the set, the encoder sends a schema announcement first and then the data frame. If a DataType, DataSet field list, RawData schema or imported descriptor changes, the canonical descriptor set changes, the SchemaId changes, and the encoder announces the new schema. An optional monotonically increasing `SchemaEpoch` may help diagnostics and cache eviction, but it is not part of SchemaId.
+
+#### 4.9.4 Decoder behavior
+
+A decoder shall maintain `cache: SchemaId -> descriptor`. On an announcement, it validates that SHA-256 over the canonical transitive `FileDescriptorSet` matches `schema_id`, loads the `FileDescriptorSet`, and caches the resulting descriptors. On a data frame with a known SchemaId, it dynamically decodes the body using the cached package/message or uses an equivalent pre-compiled class. On an unknown SchemaId, it shall await an announcement, fetch the schema from xRegistry, re-derive it from the AddressSpace DataType, or send an optional `SchemaRequest`. Publishers should periodically re-announce active schemas so late joiners recover without out-of-band configuration.
+
+#### 4.9.5 Relationship to ConfigurationVersion
+
+`ConfigurationVersion` describes PubSub configuration metadata. SchemaId describes the Protobuf schema bytes only. A configuration change that does not affect the canonical Protobuf descriptor does not change SchemaId; a schema change that leaves PubSub `ConfigurationVersion` unchanged still produces a new SchemaId and requires announcement. Receivers should check both when both are available.
 
 ## 5 Insertion into OPC 10000-14 v1.05.06
 

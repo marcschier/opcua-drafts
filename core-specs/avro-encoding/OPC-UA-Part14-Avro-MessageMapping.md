@@ -32,7 +32,9 @@ This specification does not change PubSub discovery, security, writer group sema
 
 ## 4 Overview
 
-The Avro message mapping uses one canonical Avro schema for the NetworkMessage envelope and one canonical schema for each DataSetMessage shape. The schema is derived from PubSub configuration and DataSetMetaData. A receiver shall know the writer configuration and schema identifier before decoding, either from configured PubSub metadata, a schema registry or a negotiated out-of-band catalog such as `core-specs\xregistry-catalog\`.
+The Avro message mapping uses one canonical Avro schema for the NetworkMessage envelope and one canonical schema for each DataSetMessage shape. The schema is derived from PubSub configuration and DataSetMetaData. A receiver shall know the writer configuration and schema identifier before decoding, either from configured PubSub metadata, a schema registry, an AddressSpace re-derivation or a negotiated out-of-band catalog such as `core-specs\xregistry-catalog\`.
+
+Each value or message shall reference its schema by SchemaId. The SchemaId is the CRC-64-AVRO Rabin fingerprint over the Avro Parsing Canonical Form of the self-contained schema, with every referenced named type defined inline at its first occurrence, represented in the little-endian byte order used by Avro single-object encoding. SchemaId derivation is independent of PubSub ConfigurationVersion: ConfigurationVersion tracks PubSub metadata versioning, while SchemaId identifies the exact Avro schema bytes needed to decode a payload.
 
 The transport content type shall be `application/vnd.apache.avro`. A PubSub-specific parameter should identify this mapping, for example `application/vnd.apache.avro; opcua=pubsub; encoding=binary`.
 
@@ -72,27 +74,50 @@ The Avro mapping adds the following configuration parameters to the JSON mapping
 | `AvroSchemaUri` | String | Optional URI from which the schema bundle can be retrieved. |
 | `AvroUseObjectContainerFile` | Boolean | False for PubSub network payloads by default; true only for transports that explicitly carry Avro object container files. |
 | `AvroRawDataAllowed` | Boolean | Whether RawData fields may be emitted for this writer. |
-| `AvroSchemaHash` | ByteString | Optional hash of the canonical schema JSON for mismatch detection. |
+| `AvroSchemaHash` | ByteString | Optional copy of the little-endian CRC-64-AVRO SchemaId bytes for mismatch detection. |
 
-## 8 Transport content types
+## 8 SchemaId handshake
+
+### 8.1 Framing
+
+Single OPC UA values encoded with Default Avro should use Avro single-object encoding: the two magic bytes `0xC3 0x01`, followed by the 8-byte little-endian Rabin fingerprint, followed by the Avro binary body. The fingerprint bytes are the SchemaId. PubSub DataSetMessages or NetworkMessages that do not use single-object encoding shall carry the same SchemaId in the DataSetMessage header, NetworkMessage header, or transport metadata agreed for the mapping.
+
+### 8.2 Schema announcements
+
+A schema announcement frame shall contain `{ SchemaId, canonical Avro schema JSON }`, where the schema JSON is the self-contained Avro Parsing Canonical Form or a self-contained schema document that has exactly that Parsing Canonical Form. The announcement shall define every named type needed to parse the payload without external named-schema state. An encoder shall send the announcement once per SchemaId and destination, at stream start, on first use, or in response to a decoder request. The announcement is lightweight and independent of data frames.
+
+### 8.3 Encoder change tracking
+
+An encoder shall maintain `announced: set[SchemaId]` per destination. Before sending each value or message, it shall recompute the SchemaId from the generated self-contained Avro schema. If the SchemaId is not in the destination's announced set, the encoder shall emit the schema announcement before the first value using that SchemaId and then add it to the set. A changed DataType, referenced DataType, DataSet field list, field order, optional-field shape, Variant body type or RawData schema produces a different SchemaId and therefore automatically triggers a new announcement. An optional monotonic `SchemaEpoch` may be sent for operator correlation, but receivers shall not use it as the decoding key.
+
+### 8.4 Decoder behavior
+
+A decoder shall maintain `cache: SchemaId -> parsed Avro schema`. If a value references an unknown SchemaId, the decoder shall wait for an announcement, fetch the canonical schema from an xRegistry or schema registry by SchemaId, or re-derive the schema from the AddressSpace DataType and verify the derived SchemaId. A decoder may send `SchemaRequest(SchemaId)` when it joins late or detects a cache miss. Encoders should periodically re-announce active schemas on lossy transports or when late joiners are expected.
+
+### 8.5 Relationship to ConfigurationVersion
+
+SchemaId derives only from the Avro schema. It does not depend on PubSub ConfigurationVersion, writer group version numbers, sequence numbers or transport session state. A ConfigurationVersion change that does not alter the Avro schema keeps the same SchemaId. A schema change produces a new SchemaId even if a deployment accidentally fails to advance ConfigurationVersion; decoders shall use SchemaId to select the Avro decoder and may use ConfigurationVersion for the existing PubSub metadata checks.
+
+## 9 Transport content types
 
 For MQTT, the MQTT 5 `ContentType` property shall be `application/vnd.apache.avro; opcua=pubsub; encoding=binary`. For MQTT 3.1.1, the same string should be carried in configured metadata or topic documentation because the protocol has no ContentType property.
 
 For AMQP, the message `content-type` property shall carry the same content type. For Kafka, a header named `content-type` or `Content-Type` shall carry the same value. Kafka and AMQP deployments that use a schema registry should also carry `opcua-avro-schema-id` with the configured SchemaId.
 
-## 9 Information model additions
+## 10 Information model additions
 
 The PubSub configuration model would add Avro message mapping ObjectTypes parallel to the JSON message mapping configuration ObjectTypes. The model would describe Avro NetworkMessage mapping parameters, Avro DataSetMessage mapping parameters and the SchemaId/SchemaUri properties. This draft describes the ObjectTypes only; assigned NodeIds and a NodeSet are out of scope.
 
-## 10 Insertion into OPC 10000-14 v1.05.06
+## 11 Insertion into OPC 10000-14 v1.05.06
 
 | Draft section | Target in OPC 10000-14 | Notes |
 |---|---|---|
 | §7 Configuration parameters | New `6.3.x Avro message mapping parameters` | Add `AvroSchemaId`, `AvroSchemaUri`, object-container flag, RawData flag and schema hash. |
+| §8 SchemaId handshake | New `7.2.6.x SchemaId handshake` | Defines single-object framing, schema announcements, cache misses, SchemaRequest and ConfigurationVersion independence. |
 | §4-§6 Message mapping | New `7.2.6 Avro message mapping` | Mirrors `7.2.5 JSON message mapping` with Avro NetworkMessage, DataSetMessage, key frame and delta frame definitions. |
-| §8 MQTT content type | New `7.3.4.x MQTT Avro content type` | Defines MQTT `ContentType` string. |
-| §9 Configuration model | New `9.2.x Avro message mapping ObjectTypes` | Describes ObjectTypes and Properties only; no NodeSet in this draft. |
+| §9 MQTT content type | New `7.3.4.x MQTT Avro content type` | Defines MQTT `ContentType` string. |
+| §10 Configuration model | New `9.2.x Avro message mapping ObjectTypes` | Describes ObjectTypes and Properties only; no NodeSet in this draft. |
 | §5-§6 Header fields | New `Annex A.x Avro header layouts` | Tables list NetworkMessage and DataSetMessage header fields and their Avro field names. |
-| §8 Kafka/AMQP metadata | `Annex B` additions | Adds AMQP `content-type`, Kafka content-type header and optional schema-id header. |
+| §9 Kafka/AMQP metadata | `Annex B` additions | Adds AMQP `content-type`, Kafka content-type header and optional schema-id header. |
 
 The editor should place `7.2.6 Avro message mapping` after `7.2.5 JSON message mapping` so the Avro text can reuse the same PubSub concepts and masks while replacing JSON object representation with canonical Avro records.

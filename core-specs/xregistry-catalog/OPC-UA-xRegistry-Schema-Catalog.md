@@ -109,9 +109,21 @@ https://registry.example.com/schemagroups/opcfoundation.ua.pumps/schemas/PumpDat
 
 This reuses the CloudEvents `dataschema` convention, so an OPC UA PubSub payload republished as a CloudEvent carries the same URI in `dataschema`. Registries **may** offer a `shortself` alias. Appending `$details` returns the Version metadata (including `opcua.*` labels) rather than the raw document.
 
+### 5.6 Schema identity (`SchemaId`) and message-driven resolution
+
+The Avro, Protobuf and Arrow additions each define a compact **SchemaId** — a deterministic fingerprint of the canonical schema — that a Publisher puts on the wire (per its *SchemaId handshake*) so the schema body need be sent only once and every subsequent message carries just the id:
+
+- **Avro** — the 64-bit **CRC-64-AVRO Rabin** fingerprint of the schema's Parsing Canonical Form (the 8 bytes of Avro single-object framing, `0xC3 0x01` + fingerprint).
+- **Protobuf** — a **SHA-256** fingerprint of the canonical `FileDescriptorProto`.
+- **Apache Arrow** — a **SHA-256** fingerprint of the serialized Arrow `Schema`.
+
+Each schema Version **shall** carry the label `opcua.schemaid` (the id, lower-case hex) and `opcua.schemaid.alg` (the algorithm name). These are the exact on-wire ids emitted by each encoding generator into `schemas/schemaids.json`; the catalog generator copies them onto the Versions verbatim so that a consumer holding only a message's SchemaId can resolve the schema Version by matching `opcua.schemaid` within the format's schemagroup. This resolution is **independent of `ConfigurationVersion`** — the SchemaId derives solely from the schema — though the two are cross-referenced on the Version (`opcua.configurationversion`) for operators.
+
 ## 6 Resolution flow (Part 14 consumer)
 
 Given a received schema‑based `DataSetMessage`, a consumer **shall** resolve its schema as follows:
+
+0. If the message carries an on-wire **SchemaId** (the encoding's SchemaId handshake), resolve the Version whose `opcua.schemaid` equals it within the format's schemagroup, GET the document once (caching it by SchemaId for all subsequent messages), and decode. This is the fastest, most self-contained path. Otherwise, continue.
 
 1. Determine the **format** from the transport **content‑type** (Part 14 additions: MQTT `ContentType`, AMQP `content-type`, Kafka `content-type` header) — e.g. `application/vnd.apache.avro`, `application/x-protobuf`, `application/vnd.apache.arrow.stream`.
 2. If the message header carries an explicit **schema reference** (the Version `self` URL — carried in the Part 14 message header extension or the transport header), GET it and decode. Otherwise:

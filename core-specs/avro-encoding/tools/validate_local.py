@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+import copy
 import json
 import os
 import shutil
@@ -10,6 +11,7 @@ from pathlib import Path
 from io import BytesIO
 
 from fastavro import parse_schema, schemaless_reader
+from fastavro.schema import to_parsing_canonical_form
 
 ROOT = Path(__file__).resolve().parents[1]
 TOOLS = ROOT / "tools"
@@ -17,12 +19,13 @@ SCHEMAS = ROOT / "schemas"
 EXAMPLES = ROOT / "examples"
 
 sys.path.insert(0, str(ROOT.parents[0] / "_common"))
+from opcua_enc import corpus, fingerprint, types as t
 from opcua_enc.corpus import CORPUS
-from opcua_enc import types as t
 from opcua_enc.values import canonical_equal, is_single_float_type
 
 sys.path.insert(0, str(TOOLS))
 import avro_codec
+import schema_handshake_demo
 import schema_support
 
 EXAMPLE_NAMES = [
@@ -56,6 +59,11 @@ def snapshot_schemas() -> dict[str, str]:
     return {str(p.relative_to(SCHEMAS)): hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(SCHEMAS.glob("**/*")) if p.is_file()}
 
 
+def snapshot_schemaids() -> str | None:
+    path = SCHEMAS / "schemaids.json"
+    return hashlib.sha256(path.read_bytes()).hexdigest() if path.exists() else None
+
+
 def _fresh_named_schemas() -> dict[str, object]:
     named: dict[str, object] = {}
     for schema in json.loads((SCHEMAS / "opcua.builtins.avsc").read_text(encoding="utf-8")):
@@ -84,6 +92,43 @@ def fresh_published_schema(ty: t.Type) -> object:
     if isinstance(top, str) and top in named:
         return parse_schema(named[top], named_schemas=named)
     return parse_schema(_expand_top_refs(top, named), named_schemas=named)
+
+
+def _raw_schema_registry() -> dict[str, object]:
+    schemas: list[object] = []
+    schemas.extend(json.loads((SCHEMAS / "opcua.builtins.avsc").read_text(encoding="utf-8")))
+    for path in sorted(SCHEMAS.glob("*.avsc")):
+        if path.name != "opcua.builtins.avsc":
+            schemas.append(json.loads(path.read_text(encoding="utf-8")))
+    return schema_support.build_named_schema_registry(schemas)
+
+
+def _self_contained_schemaid(schema: object, registry: dict[str, object]) -> str:
+    standalone = schema_support.self_contained_schema(schema, registry)
+    canonical = to_parsing_canonical_form(parse_schema(standalone)).encode("utf-8")
+    return fingerprint.avro_schema_id_hex(canonical)
+
+
+def validate_nested_schemaid_gate() -> list[str]:
+    failures: list[str] = []
+    registry = _raw_schema_registry()
+    envelope = json.loads((SCHEMAS / "Envelope.avsc").read_text(encoding="utf-8"))
+    before = _self_contained_schemaid(envelope, registry)
+
+    mutated = copy.deepcopy(registry)
+    point = mutated[schema_support.fullname("Point")]
+    assert isinstance(point, dict)
+    point["fields"].append({"name": "Z", "type": "double"})
+    after = _self_contained_schemaid(envelope, mutated)
+    if before == after:
+        failures.append(f"nested SchemaId gate: Envelope id did not change after Point changed ({before})")
+
+    try:
+        info = schema_handshake_demo._schema_info(corpus.ENVELOPE)
+        parse_schema(json.loads(info.canonical_json))
+    except Exception as exc:
+        failures.append(f"nested SchemaId gate: Envelope announcement is not standalone: {exc}")
+    return failures
 
 
 def validate_schemas() -> list[str]:
@@ -164,14 +209,27 @@ def validate_examples_with_published_schemas() -> list[str]:
 
 
 def main() -> int:
+    schemaids_before = snapshot_schemaids()
     subprocess.run([sys.executable, str(TOOLS / "build_schemas.py")], cwd=ROOT.parents[1], check=True)
+    schemaids_after_first = snapshot_schemaids()
     schemas_after_first = snapshot_schemas()
     subprocess.run([sys.executable, str(TOOLS / "build_schemas.py")], cwd=ROOT.parents[1], check=True)
     if schemas_after_first != snapshot_schemas():
         failures = ["schemas are not byte-stable across regeneration"]
     else:
         failures = []
+    if schemaids_before and schemaids_before != schemaids_after_first:
+        failures.append("schemas/schemaids.json was regenerated with drift; rerun validate_local.py and review changes")
+    try:
+        subprocess.run([sys.executable, str(TOOLS / "gen_type_reference.py"), "--check"], cwd=ROOT, check=True)
+    except subprocess.CalledProcessError as exc:
+        failures.append(f"type reference gate failed: exit {exc.returncode}")
+    try:
+        subprocess.run([sys.executable, str(TOOLS / "schema_handshake_demo.py")], cwd=ROOT, check=True)
+    except subprocess.CalledProcessError as exc:
+        failures.append(f"schema handshake demo failed: exit {exc.returncode}")
     failures.extend(validate_schemas())
+    failures.extend(validate_nested_schemaid_gate())
     failures.extend(validate_roundtrip())
     failures.extend(validate_published_schema_conformance())
     before = snapshot_examples()
@@ -186,7 +244,8 @@ def main() -> int:
     failures.extend(validate_examples_with_published_schemas())
     for f in failures:
         print("FAIL", f)
-    print(f"validate_local: schemas={len(list(SCHEMAS.glob('*.avsc')))} corpus={len(CORPUS)} examples={len(EXAMPLE_NAMES)}; {len(failures)} failures")
+    schemaid_count = len(json.loads((SCHEMAS / "schemaids.json").read_text(encoding="utf-8"))) if (SCHEMAS / "schemaids.json").exists() else 0
+    print(f"validate_local: schemas={len(list(SCHEMAS.glob('*.avsc')))} schemaids={schemaid_count} corpus={len(CORPUS)} examples={len(EXAMPLE_NAMES)} type_reference=31 handshake=ok nested_schemaid=ok; {len(failures)} failures")
     return 1 if failures else 0
 
 if __name__ == "__main__":
