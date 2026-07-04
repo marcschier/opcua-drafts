@@ -88,7 +88,7 @@ REF = {
     "TwoStateDiscreteType": "https://reference.opcfoundation.org/specs/OPC-10000-8/5.3.6",
     "MultiStateDiscreteType": "https://reference.opcfoundation.org/specs/OPC-10000-8/5.3.7",
 }
-SPEC = "../../OPC-UA-Scenario-Bindings.md"  # relative from a domain subfolder
+SPEC = "../OPC-UA-Scenario-Bindings.md"  # relative from a domain subfolder of scenario-binding
 
 
 def load_base(descriptor, ref_dir):
@@ -718,8 +718,9 @@ def td_name(td, db, base_names):
     return f"[{name}]({url})" if url else f"`{name}`"
 
 
-def emit_addendum(descriptor, db, base_names):
+def emit_addendum(descriptor, db, base_names, spec_folder, desc_base):
     d = descriptor
+    desc_rel = f"../../../extras/scenario-binding/examples/{spec_folder}/{desc_base}"
     cs = d.get("companionSpec", {})
     im = d.get("instanceModel", {})
     nitems = sum(len(sb["boundItems"]) for sb in d["scenarioBindings"])
@@ -763,7 +764,7 @@ def emit_addendum(descriptor, db, base_names):
              f"specification recommends:")
     L.append("")
     L.append(f"1. **Type-level definitions (reusable).** The machine-readable descriptor "
-             f"[`{d['domain']}.ScenarioBinding.json`]({d['domain']}.ScenarioBinding.json) "
+             f"[`{desc_base}`]({desc_rel}) "
              f"lists each bound item as a `BrowsePath` (RelativePath) from the "
              f"`{d['appliesToType']}` root, with its routing `Kind` and scenario. Every path "
              f"in §4 was **resolved against the published companion NodeSet**, so the bindings "
@@ -808,14 +809,14 @@ def emit_addendum(descriptor, db, base_names):
     L.append("")
     L.append(f"| File | Content |")
     L.append(f"|---|---|")
-    L.append(f"| [`{d['domain']}.ScenarioBinding.json`]({d['domain']}.ScenarioBinding.json) | "
+    L.append(f"| [`{desc_base}`]({desc_rel}) | "
              f"Machine-readable ScenarioBindingConfiguration descriptor (single source). |")
     L.append(f"| [`Opc.Ua.{d['domain']}.ScenarioBinding.NodeSet2.xml`]"
              f"(Opc.Ua.{d['domain']}.ScenarioBinding.NodeSet2.xml) | The binding instances on "
              f"the theoretical `{d['instanceName']}` instance. |")
     L.append("")
-    L.append("Regenerate with `python ../tools/build_bindings.py "
-             f"{d['domain'].lower()}/{d['domain']}.ScenarioBinding.json`.")
+    L.append("Regenerate from `extras/scenario-binding/examples/` with "
+             f"`python tools/build_bindings.py {spec_folder}/{desc_base}`.")
     L.append("")
     return "\n".join(L) + "\n"
 
@@ -978,7 +979,14 @@ def emit_diagrams(descriptor):
 def main():
     descriptor_path = sys.argv[1]
     ref_dir = sys.argv[2] if len(sys.argv) > 2 else os.path.join(HERE, "ref")
-    outdir = os.path.dirname(os.path.abspath(descriptor_path))
+    # The descriptor is a secondary source under extras/scenario-binding/examples/<spec>/; the
+    # standardized outputs (overlay + addendum) land in core-specs/scenario-binding/<spec>/.
+    desc_dir = os.path.dirname(os.path.abspath(descriptor_path))
+    spec_folder = os.path.basename(desc_dir)
+    desc_base = os.path.basename(os.path.abspath(descriptor_path))
+    repo = os.path.abspath(os.path.join(desc_dir, "..", "..", "..", ".."))
+    outdir = os.path.join(repo, "core-specs", "scenario-binding", spec_folder)
+    os.makedirs(outdir, exist_ok=True)
     d = json.load(open(descriptor_path, encoding="utf-8"))
     db = load_base(d, ref_dir)
     base_names = load_base_names(ref_dir)
@@ -990,7 +998,7 @@ def main():
     open(os.path.join(outdir, base + ".NodeSet2.xml"), "w", encoding="utf-8").write(xml)
     addendum = f'OPC-UA-{d["domain"]}-Scenario-Bindings-Addendum.md'
     open(os.path.join(outdir, addendum), "w", encoding="utf-8").write(
-        emit_addendum(d, db, base_names))
+        emit_addendum(d, db, base_names, spec_folder, desc_base))
     nitems = sum(len(sb["boundItems"]) for sb in d["scenarioBindings"])
     print(f'{d["domain"]}: {len(d["scenarioBindings"])} scenarios, {nitems} bound items, '
           f'{em.next_id-5000} nodes emitted; all paths resolved OK')

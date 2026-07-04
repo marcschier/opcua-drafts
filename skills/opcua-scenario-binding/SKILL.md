@@ -57,7 +57,9 @@ fleet/compliance — without hand-writing per-project integration bindings.
 
 ## Outputs
 
-Per companion spec (see the worked examples under `core-specs/scenario-binding/examples/`):
+Per companion spec — descriptor sources and tooling live under
+`extras/scenario-binding/examples/<spec>/`; the standardized addendum + overlay outputs land under
+`core-specs/scenario-binding/<spec>/`:
 
 - `<Domain>.ScenarioBinding.json` — the machine-readable **binding descriptor (JSON)**
   (single source of truth; the authoring DSL below).
@@ -74,16 +76,19 @@ Per companion spec (see the worked examples under `core-specs/scenario-binding/e
   bindings for WoT/HTTP consumers per OPC 10101 (OPC UA WoT Connectivity); see spec §8.
 
 **Reference implementation (use it, don't reinvent):**
-`core-specs/scenario-binding/examples/tools/build_bindings.py` (+ `nodeset_util.py`) is a
+`extras/scenario-binding/examples/tools/build_bindings.py` (+ `nodeset_util.py`) is a
 deterministic generator that reads the descriptor, **resolves and validates every
 `BrowsePath` against the published companion NodeSet**, synthesises the instance overlay, and
-emits the addendum (annex tables + two mermaid diagrams). Author the descriptor, then run it:
+emits the addendum (annex tables + two mermaid diagrams) into `core-specs/scenario-binding/<spec>/`.
+Author the descriptor, then run it (from `extras/scenario-binding/examples/`):
 `python tools/build_bindings.py <domain>/<Domain>.ScenarioBinding.json`. The base companion
-NodeSets live (gitignored) under `examples/tools/ref/`. Worked examples: `examples/pumps/`
-(from the official `Pumps/instanceexample.xml`) and `examples/robotics/` (synthesised
-`MotionDeviceSystem`).
+NodeSets live (gitignored) under `extras/scenario-binding/examples/tools/ref/`. Worked example
+descriptors: `extras/scenario-binding/examples/pumps/`
+(from the official `Pumps/instanceexample.xml`) and `extras/scenario-binding/examples/robotics/`
+(synthesised `MotionDeviceSystem`).
 
-A companion generator `examples/tools/build_wot_td.py` renders the *same* descriptor as a W3C WoT
+A companion generator `extras/scenario-binding/examples/tools/build_wot_td.py` renders the *same*
+descriptor as a W3C WoT
 Thing Description per OPC 10101 (spec §8): bound Variables → WoT Properties, event bindings →
 Events, bound Methods → Actions, with `opc.tcp://…/?id=<nodeId>` form hrefs and the `uav:`
 semantic terms. Run: `python tools/build_wot_td.py <domain>/<Domain>.ScenarioBinding.json`.
@@ -511,7 +516,7 @@ Field notes:
   group's `Realizes` reference.
 - `appliesToType` is the plain BrowseName of the binding target: an `ObjectType`, Interface, or
   AddInType. The generator locates it in `baseNodeSets`.
-- `baseNodeSets` are filenames under `examples/tools/ref/` (gitignored); `requiredModels` are
+- `baseNodeSets` are filenames under `extras/scenario-binding/examples/tools/ref/` (gitignored); `requiredModels` are
   the namespace URIs emitted as `<RequiredModel>` (order sets the ns indices).
 - `fieldName` defaults to the last `browsePath` segment; make it unique within a binding.
 - `direction` ∈ `Publisher` | `Subscriber` | `ActionInvoker` | `ActionResponder` |

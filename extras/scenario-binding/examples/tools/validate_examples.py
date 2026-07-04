@@ -15,7 +15,11 @@ from nodeset_util import UA
 HERE = os.path.dirname(os.path.abspath(__file__))
 EX = os.path.dirname(HERE)
 REF = os.path.join(HERE, "ref")
-BIND = os.path.join(os.path.dirname(EX), "Opc.Ua.ScenarioBinding.NodeSet2.xml")
+# The base spec NodeSet and the per-spec example overlays are standardized artifacts under
+# core-specs/scenario-binding/; the descriptors + this validator are secondary here in extras.
+CORE = os.path.abspath(os.path.join(HERE, "..", "..", "..", "..",
+                                    "core-specs", "scenario-binding"))
+BIND = os.path.join(CORE, "Opc.Ua.ScenarioBinding.NodeSet2.xml")
 NS = "{http://opcfoundation.org/UA/2011/03/UANodeSet.xsd}"
 
 DOMAINS = {
@@ -38,7 +42,7 @@ errors = []
 def check(domain, spec):
     base_files = spec["base"]
     folder = spec.get("folder", domain.lower())
-    f = os.path.join(EX, folder, f"Opc.Ua.{domain}.ScenarioBinding.NodeSet2.xml")
+    f = os.path.join(CORE, folder, f"Opc.Ua.{domain}.ScenarioBinding.NodeSet2.xml")
     tree = ET.parse(f)  # raises on malformed
     root = tree.getroot()
     nodes = [e for e in root if e.tag.startswith(NS + "UA")]
