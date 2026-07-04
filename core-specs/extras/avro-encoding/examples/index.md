@@ -16,3 +16,8 @@ The `.hex.txt` files contain schemaless Avro payload bytes generated from the sh
 - `variant_extobj.hex.txt` — `Builtin` descriptor, 30 bytes
 - `datavalue_full.hex.txt` — `Builtin` descriptor, 19 bytes
 - `diaginfo_nested.hex.txt` — `Builtin` descriptor, 34 bytes
+
+Schema-exchange message examples are schemaless Avro payload bytes generated from the published `.avsc` files.
+
+- `avro_schema_announcement.hex.txt` — `AvroSchemaAnnouncement` record, 804 bytes
+- `avro_schema_request.hex.txt` — `AvroSchemaRequest` record, 35 bytes

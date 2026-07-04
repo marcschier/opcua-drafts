@@ -1,0 +1,38 @@
+{
+  "arrowSchema": {
+    "arrow": "RequesterId: string\nSchemaIds: list<item: fixed_size_binary[8] not null> not null\n  child 0, item: fixed_size_binary[8] not null\n-- schema metadata --\nopcua.mapping: 'arrow-schema-request'",
+    "fields": [
+      {
+        "name": "RequesterId",
+        "nullable": true,
+        "type": "string"
+      },
+      {
+        "name": "SchemaIds",
+        "nullable": false,
+        "type": "list<item: fixed_size_binary[8] not null>"
+      }
+    ],
+    "metadata": {
+      "opcua.mapping": "arrow-schema-request"
+    }
+  },
+  "fields": [
+    {
+      "arrow": "string",
+      "description": "Optional receiver or session identity for diagnostics.",
+      "name": "RequesterId",
+      "optional": true,
+      "type": "String"
+    },
+    {
+      "arrow": "list<fixed_size_binary(8)>",
+      "description": "One or more raw 8-byte SchemaIds requested by the decoder.",
+      "name": "SchemaIds",
+      "optional": false,
+      "type": "Array<ByteString[8]>"
+    }
+  ],
+  "kind": "STRUCTURE",
+  "name": "ArrowSchemaRequest"
+}

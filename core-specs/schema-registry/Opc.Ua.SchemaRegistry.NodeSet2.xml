@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- OPC UA Schema Registry companion namespace. PROVISIONAL NodeIds (final IDs assigned by the OPC Foundation). -->
+<UANodeSet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd" xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd">
+  <NamespaceUris>
+    <Uri>http://opcfoundation.org/UA/</Uri>
+    <Uri>http://opcfoundation.org/UA/SchemaRegistry/</Uri>
+  </NamespaceUris>
+  <Models>
+    <Model ModelUri="http://opcfoundation.org/UA/SchemaRegistry/" Version="0.1.0" PublicationDate="2026-07-04T00:00:00Z">
+      <RequiredModel ModelUri="http://opcfoundation.org/UA/" Version="1.05.04" PublicationDate="2023-11-01T00:00:00Z" />
+    </Model>
+  </Models>
+  <Aliases>
+    <Alias Alias="Boolean">i=1</Alias>
+    <Alias Alias="UInt32">i=7</Alias>
+    <Alias Alias="String">i=12</Alias>
+    <Alias Alias="DateTime">i=13</Alias>
+    <Alias Alias="ByteString">i=15</Alias>
+    <Alias Alias="Duration">i=290</Alias>
+    <Alias Alias="Argument">i=296</Alias>
+    <Alias Alias="Organizes">i=35</Alias>
+    <Alias Alias="HasModellingRule">i=37</Alias>
+    <Alias Alias="HasTypeDefinition">i=40</Alias>
+    <Alias Alias="HasSubtype">i=45</Alias>
+    <Alias Alias="HasProperty">i=46</Alias>
+    <Alias Alias="HasComponent">i=47</Alias>
+  </Aliases>
+  <UAObjectType NodeId="ns=1;i=62000" BrowseName="1:SchemaRegistryType">
+    <DisplayName>SchemaRegistryType</DisplayName>
+    <Description>The in-server registry root, isomorphic to an xRegistry Schema Registry document. It exposes schema groups and methods for SchemaId-based resolution.</Description>
+    <Category>Schema Registry</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=62500</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=62501</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=62502</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=62505</Reference>
+    </References>
+  </UAObjectType>
+  <UAObjectType NodeId="ns=1;i=62001" BrowseName="1:SchemaGroupType">
+    <DisplayName>SchemaGroupType</DisplayName>
+    <Description>An xRegistry schemagroup, keyed by an OPC UA namespace URI and containing schemas for DataTypes or PublishedDataSets in that namespace.</Description>
+    <Category>Schema Registry</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=62509</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=62510</Reference>
+    </References>
+  </UAObjectType>
+  <UAObjectType NodeId="ns=1;i=62002" BrowseName="1:SchemaType">
+    <DisplayName>SchemaType</DisplayName>
+    <Description>An xRegistry schema Resource for one DataType or PublishedDataSet in one schema format.</Description>
+    <Category>Schema Registry</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=62511</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=62512</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=62513</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=62514</Reference>
+    </References>
+  </UAObjectType>
+  <UAObjectType NodeId="ns=1;i=62003" BrowseName="1:SchemaVersionType">
+    <DisplayName>SchemaVersionType</DisplayName>
+    <Description>An xRegistry schema Version: one concrete schema document plus labels used for OPC UA schema-based decoding.</Description>
+    <Category>Schema Registry</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=62515</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=62516</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=62517</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=62518</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=62519</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=62520</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=62521</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=62522</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=62523</Reference>
+    </References>
+  </UAObjectType>
+  <UAObjectType NodeId="ns=1;i=62004" BrowseName="1:SchemaNamespacesType">
+    <DisplayName>SchemaNamespacesType</DisplayName>
+    <Description>The registry's schemagroups container. Its children are SchemaGroupType instances keyed by OPC UA namespace URI.</Description>
+    <Category>Schema Registry</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=61</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=62508</Reference>
+    </References>
+  </UAObjectType>
+  <UAObject NodeId="ns=1;i=62500" BrowseName="1:Namespaces" ParentNodeId="ns=1;i=62000">
+    <DisplayName>Namespaces</DisplayName>
+    <Description>Container for SchemaGroup objects, equivalent to xRegistry schemagroups.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=1;i=62004</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=62000</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="ns=1;i=62501" BrowseName="1:&lt;SchemaGroup&gt;" ParentNodeId="ns=1;i=62000">
+    <DisplayName>&lt;SchemaGroup&gt;</DisplayName>
+    <Description>A SchemaGroup directly below the registry when a server chooses not to use the Namespaces folder.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=11508</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=1;i=62001</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=62000</Reference>
+    </References>
+  </UAObject>
+  <UAMethod NodeId="ns=1;i=62502" BrowseName="1:GetSchema" ParentNodeId="ns=1;i=62000">
+    <DisplayName>GetSchema</DisplayName>
+    <Description>Return the schema document and metadata for a raw on-wire SchemaId fingerprint.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=62000</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=62503</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=62504</Reference>
+    </References>
+  </UAMethod>
+  <UAVariable NodeId="ns=1;i=62503" BrowseName="1:InputArguments" ParentNodeId="ns=1;i=62502" DataType="Argument" ValueRank="1" ArrayDimensions="1">
+    <DisplayName>InputArguments</DisplayName>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=62502</Reference>
+    </References>
+    <Value><ListOfExtensionObject xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd"><ExtensionObject><TypeId><Identifier>i=297</Identifier></TypeId><Body><Argument><Name>SchemaId</Name><DataType><Identifier>i=15</Identifier></DataType><ValueRank>-1</ValueRank><ArrayDimensions/><Description><Text>Raw on-wire SchemaId fingerprint bytes.</Text></Description></Argument></Body></ExtensionObject></ListOfExtensionObject></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=62504" BrowseName="1:OutputArguments" ParentNodeId="ns=1;i=62502" DataType="Argument" ValueRank="1" ArrayDimensions="4">
+    <DisplayName>OutputArguments</DisplayName>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=62502</Reference>
+    </References>
+    <Value><ListOfExtensionObject xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd"><ExtensionObject><TypeId><Identifier>i=297</Identifier></TypeId><Body><Argument><Name>Document</Name><DataType><Identifier>i=15</Identifier></DataType><ValueRank>-1</ValueRank><ArrayDimensions/><Description><Text>Schema document bytes.</Text></Description></Argument></Body></ExtensionObject><ExtensionObject><TypeId><Identifier>i=297</Identifier></TypeId><Body><Argument><Name>Format</Name><DataType><Identifier>i=12</Identifier></DataType><ValueRank>-1</ValueRank><ArrayDimensions/><Description><Text>xRegistry format string.</Text></Description></Argument></Body></ExtensionObject><ExtensionObject><TypeId><Identifier>i=297</Identifier></TypeId><Body><Argument><Name>ContentType</Name><DataType><Identifier>i=12</Identifier></DataType><ValueRank>-1</ValueRank><ArrayDimensions/><Description><Text>Schema document media type.</Text></Description></Argument></Body></ExtensionObject><ExtensionObject><TypeId><Identifier>i=297</Identifier></TypeId><Body><Argument><Name>Found</Name><DataType><Identifier>i=1</Identifier></DataType><ValueRank>-1</ValueRank><ArrayDimensions/><Description><Text>True if the SchemaId was resolved.</Text></Description></Argument></Body></ExtensionObject></ListOfExtensionObject></Value>
+  </UAVariable>
+  <UAMethod NodeId="ns=1;i=62505" BrowseName="1:RegisterSchema" ParentNodeId="ns=1;i=62000">
+    <DisplayName>RegisterSchema</DisplayName>
+    <Description>Optional authoritative population method used by server configuration or writers, not by read-only consumers.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=62000</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=62506</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=62507</Reference>
+    </References>
+  </UAMethod>
+  <UAVariable NodeId="ns=1;i=62506" BrowseName="1:InputArguments" ParentNodeId="ns=1;i=62505" DataType="Argument" ValueRank="1" ArrayDimensions="9">
+    <DisplayName>InputArguments</DisplayName>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=62505</Reference>
+    </References>
+    <Value><ListOfExtensionObject xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd"><ExtensionObject><TypeId><Identifier>i=297</Identifier></TypeId><Body><Argument><Name>NamespaceUri</Name><DataType><Identifier>i=12</Identifier></DataType><ValueRank>-1</ValueRank><ArrayDimensions/><Description><Text>OPC UA namespace URI / schemagroup key.</Text></Description></Argument></Body></ExtensionObject><ExtensionObject><TypeId><Identifier>i=297</Identifier></TypeId><Body><Argument><Name>BrowseName</Name><DataType><Identifier>i=12</Identifier></DataType><ValueRank>-1</ValueRank><ArrayDimensions/><Description><Text>DataType, DataSet or schema resource name.</Text></Description></Argument></Body></ExtensionObject><ExtensionObject><TypeId><Identifier>i=297</Identifier></TypeId><Body><Argument><Name>Format</Name><DataType><Identifier>i=12</Identifier></DataType><ValueRank>-1</ValueRank><ArrayDimensions/><Description><Text>xRegistry format string.</Text></Description></Argument></Body></ExtensionObject><ExtensionObject><TypeId><Identifier>i=297</Identifier></TypeId><Body><Argument><Name>ContentType</Name><DataType><Identifier>i=12</Identifier></DataType><ValueRank>-1</ValueRank><ArrayDimensions/><Description><Text>Schema document media type.</Text></Description></Argument></Body></ExtensionObject><ExtensionObject><TypeId><Identifier>i=297</Identifier></TypeId><Body><Argument><Name>Document</Name><DataType><Identifier>i=15</Identifier></DataType><ValueRank>-1</ValueRank><ArrayDimensions/><Description><Text>Schema document bytes.</Text></Description></Argument></Body></ExtensionObject><ExtensionObject><TypeId><Identifier>i=297</Identifier></TypeId><Body><Argument><Name>SchemaId</Name><DataType><Identifier>i=15</Identifier></DataType><ValueRank>-1</ValueRank><ArrayDimensions/><Description><Text>Raw SchemaId fingerprint bytes.</Text></Description></Argument></Body></ExtensionObject><ExtensionObject><TypeId><Identifier>i=297</Identifier></TypeId><Body><Argument><Name>SchemaIdAlg</Name><DataType><Identifier>i=12</Identifier></DataType><ValueRank>-1</ValueRank><ArrayDimensions/><Description><Text>SchemaId algorithm name.</Text></Description></Argument></Body></ExtensionObject><ExtensionObject><TypeId><Identifier>i=297</Identifier></TypeId><Body><Argument><Name>ModelVersion</Name><DataType><Identifier>i=12</Identifier></DataType><ValueRank>-1</ValueRank><ArrayDimensions/><Description><Text>OPC UA model version label.</Text></Description></Argument></Body></ExtensionObject><ExtensionObject><TypeId><Identifier>i=297</Identifier></TypeId><Body><Argument><Name>ConfigurationVersion</Name><DataType><Identifier>i=14593</Identifier></DataType><ValueRank>-1</ValueRank><ArrayDimensions/><Description><Text>Optional PubSub ConfigurationVersion label.</Text></Description></Argument></Body></ExtensionObject></ListOfExtensionObject></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=62507" BrowseName="1:OutputArguments" ParentNodeId="ns=1;i=62505" DataType="Argument" ValueRank="1" ArrayDimensions="3">
+    <DisplayName>OutputArguments</DisplayName>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=62505</Reference>
+    </References>
+    <Value><ListOfExtensionObject xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd"><ExtensionObject><TypeId><Identifier>i=297</Identifier></TypeId><Body><Argument><Name>VersionNodeId</Name><DataType><Identifier>i=17</Identifier></DataType><ValueRank>-1</ValueRank><ArrayDimensions/><Description><Text>NodeId of the created SchemaVersion object.</Text></Description></Argument></Body></ExtensionObject><ExtensionObject><TypeId><Identifier>i=297</Identifier></TypeId><Body><Argument><Name>DocumentNodeId</Name><DataType><Identifier>i=17</Identifier></DataType><ValueRank>-1</ValueRank><ArrayDimensions/><Description><Text>Opaque SchemaId NodeId of the created Document Variable.</Text></Description></Argument></Body></ExtensionObject><ExtensionObject><TypeId><Identifier>i=297</Identifier></TypeId><Body><Argument><Name>Registered</Name><DataType><Identifier>i=1</Identifier></DataType><ValueRank>-1</ValueRank><ArrayDimensions/><Description><Text>True if a new Version was registered.</Text></Description></Argument></Body></ExtensionObject></ListOfExtensionObject></Value>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=62508" BrowseName="1:&lt;SchemaGroup&gt;" ParentNodeId="ns=1;i=62004">
+    <DisplayName>&lt;SchemaGroup&gt;</DisplayName>
+    <Description>A SchemaGroup held by the Namespaces container.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=11508</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=1;i=62001</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=62004</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=62509" BrowseName="1:NamespaceUri" ParentNodeId="ns=1;i=62001" DataType="String" ValueRank="-1">
+    <DisplayName>NamespaceUri</DisplayName>
+    <Description>The OPC UA namespace URI represented by this schemagroup.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=62001</Reference>
+    </References>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=62510" BrowseName="1:&lt;Schema&gt;" ParentNodeId="ns=1;i=62001">
+    <DisplayName>&lt;Schema&gt;</DisplayName>
+    <Description>A schema Resource for one DataType or PublishedDataSet and one format.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=11508</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=1;i=62002</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=62001</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=62511" BrowseName="1:BrowseName" ParentNodeId="ns=1;i=62002" DataType="String" ValueRank="-1">
+    <DisplayName>BrowseName</DisplayName>
+    <Description>The OPC UA BrowseName or PublishedDataSet name represented by this schema Resource.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=62002</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=62512" BrowseName="1:Format" ParentNodeId="ns=1;i=62002" DataType="String" ValueRank="-1">
+    <DisplayName>Format</DisplayName>
+    <Description>The xRegistry schema format, for example Avro/1.11 or ApacheArrow/1.0.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=62002</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=62513" BrowseName="1:DataTypeEncoding" ParentNodeId="ns=1;i=62002" DataType="String" ValueRank="-1">
+    <DisplayName>DataTypeEncoding</DisplayName>
+    <Description>The OPC UA DataTypeEncoding name, for example Default Avro, Default Arrow or Default Protobuf.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=62002</Reference>
+    </References>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=62514" BrowseName="1:&lt;Version&gt;" ParentNodeId="ns=1;i=62002">
+    <DisplayName>&lt;Version&gt;</DisplayName>
+    <Description>One concrete schema document Version.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=11508</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=1;i=62003</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=62002</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=62515" BrowseName="1:Document" ParentNodeId="ns=1;i=62003" DataType="ByteString" ValueRank="-1">
+    <DisplayName>Document</DisplayName>
+    <Description>The schema document bytes. In instances this Variable should be assigned the Opaque SchemaId NodeId for direct Read access.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=62003</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=62516" BrowseName="1:Format" ParentNodeId="ns=1;i=62003" DataType="String" ValueRank="-1">
+    <DisplayName>Format</DisplayName>
+    <Description>The xRegistry format string copied onto the Version.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=62003</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=62517" BrowseName="1:ContentType" ParentNodeId="ns=1;i=62003" DataType="String" ValueRank="-1">
+    <DisplayName>ContentType</DisplayName>
+    <Description>The media type of the schema document.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=62003</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=62518" BrowseName="1:SchemaId" ParentNodeId="ns=1;i=62003" DataType="ByteString" ValueRank="-1">
+    <DisplayName>SchemaId</DisplayName>
+    <Description>Raw on-wire SchemaId fingerprint bytes.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=62003</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=62519" BrowseName="1:SchemaIdAlg" ParentNodeId="ns=1;i=62003" DataType="String" ValueRank="-1">
+    <DisplayName>SchemaIdAlg</DisplayName>
+    <Description>SchemaId algorithm name, such as CRC-64-AVRO or SHA-256.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=62003</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=62520" BrowseName="1:ModelVersion" ParentNodeId="ns=1;i=62003" DataType="String" ValueRank="-1">
+    <DisplayName>ModelVersion</DisplayName>
+    <Description>OPC UA NodeSet model version label opcua.modelversion.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=62003</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=62521" BrowseName="1:ConfigurationVersion" ParentNodeId="ns=1;i=62003" DataType="i=14593" ValueRank="-1">
+    <DisplayName>ConfigurationVersion</DisplayName>
+    <Description>PubSub ConfigurationVersion label opcua.configurationversion when the schema describes a DataSet.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=62003</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=62522" BrowseName="1:ExpiryTime" ParentNodeId="ns=1;i=62003" DataType="DateTime" ValueRank="-1">
+    <DisplayName>ExpiryTime</DisplayName>
+    <Description>Optional UTC expiry time for mirror/cache mode.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=62003</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=62523" BrowseName="1:Ttl" ParentNodeId="ns=1;i=62003" DataType="Duration" ValueRank="-1">
+    <DisplayName>Ttl</DisplayName>
+    <Description>Optional time-to-live in milliseconds for mirror/cache mode.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=62003</Reference>
+    </References>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=62100" BrowseName="1:SchemaRegistry" ParentNodeId="i=14443">
+    <DisplayName>SchemaRegistry</DisplayName>
+    <Description>Server-wide in-server Schema Registry, discoverable from the PublishSubscribe object.</Description>
+    <Category>Schema Registry Instances</Category>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">ns=1;i=62000</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">i=14443</Reference>
+      <Reference ReferenceType="Organizes">ns=1;i=62101</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="ns=1;i=62101" BrowseName="1:Namespaces" ParentNodeId="ns=1;i=62100">
+    <DisplayName>Namespaces</DisplayName>
+    <Description>Container for namespace schema groups.</Description>
+    <Category>Schema Registry Instances</Category>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">ns=1;i=62004</Reference>
+      <Reference ReferenceType="Organizes" IsForward="false">ns=1;i=62100</Reference>
+    </References>
+  </UAObject>
+</UANodeSet>

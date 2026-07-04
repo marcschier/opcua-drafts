@@ -15,6 +15,14 @@
     "algorithm": "SHA-256 over Arrow Schema",
     "schemaid": "29fbb0deb2fca279"
   },
+  "ArrowSchemaAnnouncement": {
+    "algorithm": "SHA-256 over Arrow Schema",
+    "schemaid": "c3d275cfa1929c81"
+  },
+  "ArrowSchemaRequest": {
+    "algorithm": "SHA-256 over Arrow Schema",
+    "schemaid": "4b73e1ee26c265d3"
+  },
   "Boolean": {
     "algorithm": "SHA-256 over Arrow Schema",
     "schemaid": "eb9e462ff1431ec8"

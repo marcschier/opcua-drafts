@@ -15,6 +15,7 @@ TARGETS = [
     "protobuf-encoding/tools/validate_local.py",
     "arrow-encoding/tools/validate_local.py",
     "xregistry-catalog/tools/validate_local.py",
+    "../schema-registry/tools/validate_local.py",
 ]
 
 

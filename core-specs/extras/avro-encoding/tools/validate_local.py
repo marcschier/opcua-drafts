@@ -11,7 +11,7 @@ import sys
 from pathlib import Path
 from io import BytesIO
 
-from fastavro import parse_schema, schemaless_reader
+from fastavro import parse_schema, schemaless_reader, schemaless_writer
 from fastavro.schema import to_parsing_canonical_form
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -37,6 +37,10 @@ EXAMPLE_NAMES = [
     "matrix_double_2x2_special", "struct_person_min", "union_point", "envelope", "variant_matrix_int",
     "variant_extobj", "datavalue_full", "diaginfo_nested",
 ]
+MESSAGE_EXAMPLE_NAMES = {
+    "avro_schema_announcement": "AvroSchemaAnnouncement",
+    "avro_schema_request": "AvroSchemaRequest",
+}
 
 DOC_SCHEMA_DOCS = [
     STD / "OPC-UA-Part14-Avro-MessageMapping.md",
@@ -54,7 +58,40 @@ def write_examples() -> None:
         data = avro_codec.encode(c.type, c.value)
         (EXAMPLES / f"{name}.hex.txt").write_text(data.hex() + "\n", encoding="utf-8")
         lines.append(f"- `{name}.hex.txt` — `{type(c.type).__name__}` descriptor, {len(data)} bytes")
+    lines.extend(["", "Schema-exchange message examples are schemaless Avro payload bytes generated from the published `.avsc` files.", ""])
+    for name, schema_name in MESSAGE_EXAMPLE_NAMES.items():
+        data = _message_example_bytes(schema_name)
+        (EXAMPLES / f"{name}.hex.txt").write_text(data.hex() + "\n", encoding="utf-8")
+        lines.append(f"- `{name}.hex.txt` — `{schema_name}` record, {len(data)} bytes")
     (EXAMPLES / "index.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+def _message_example_value(schema_name: str) -> dict[str, object]:
+    schemaids = json.loads((SCHEMAS / "schemaids.json").read_text(encoding="utf-8"))
+    action_schema_id = bytes.fromhex(schemaids["AvroActionRequestNetworkMessage"]["schemaid"])
+    if schema_name == "AvroSchemaAnnouncement":
+        return {
+            "SchemaId": action_schema_id,
+            "SchemaJson": (SCHEMAS / "AvroActionRequestNetworkMessage.avsc").read_text(encoding="utf-8"),
+            "SchemaEpoch": 1,
+        }
+    if schema_name == "AvroSchemaRequest":
+        response_schema_id = bytes.fromhex(schemaids["AvroActionResponseNetworkMessage"]["schemaid"])
+        return {
+            "RequesterId": "late-joiner-1",
+            "SchemaIds": [action_schema_id, response_schema_id],
+        }
+    raise KeyError(schema_name)
+
+
+def _message_example_schema(schema_name: str) -> object:
+    return parse_schema(json.loads((SCHEMAS / f"{schema_name}.avsc").read_text(encoding="utf-8")))
+
+
+def _message_example_bytes(schema_name: str) -> bytes:
+    bio = BytesIO()
+    schemaless_writer(bio, _message_example_schema(schema_name), _message_example_value(schema_name))
+    return bio.getvalue()
 
 
 def snapshot_examples() -> dict[str, str]:
@@ -286,6 +323,16 @@ def validate_examples_with_published_schemas() -> list[str]:
     by_name = {c.name: c for c in CORPUS}
     for p in sorted(EXAMPLES.glob("*.hex.txt")):
         name = p.name.removesuffix(".hex.txt")
+        if name in MESSAGE_EXAMPLE_NAMES:
+            schema_name = MESSAGE_EXAMPLE_NAMES[name]
+            try:
+                data = bytes.fromhex(p.read_text(encoding="utf-8").strip())
+                datum = schemaless_reader(BytesIO(data), _message_example_schema(schema_name))
+                if datum != _message_example_value(schema_name):
+                    failures.append(f"example {p.name}: mismatch")
+            except Exception as exc:
+                failures.append(f"example {p.name}: {exc}")
+            continue
         if name not in by_name:
             failures.append(f"example {p.name}: no matching corpus case")
             continue
@@ -346,7 +393,7 @@ def main() -> int:
     for f in failures:
         print("FAIL", f)
     schemaid_count = len(json.loads((SCHEMAS / "schemaids.json").read_text(encoding="utf-8"))) if (SCHEMAS / "schemaids.json").exists() else 0
-    print(f"validate_local: schemas={len(list(SCHEMAS.glob('*.avsc')))} schemaids={schemaid_count} corpus={len(CORPUS)} examples={len(EXAMPLE_NAMES)} type_reference=31 handshake=ok nested_schemaid=ok doc_schema_blocks={doc_block_count} action_discovery=ok; {len(failures)} failures")
+    print(f"validate_local: schemas={len(list(SCHEMAS.glob('*.avsc')))} schemaids={schemaid_count} corpus={len(CORPUS)} examples={len(EXAMPLE_NAMES) + len(MESSAGE_EXAMPLE_NAMES)} type_reference=31 handshake=ok nested_schemaid=ok doc_schema_blocks={doc_block_count} action_discovery=ok; {len(failures)} failures")
     return 1 if failures else 0
 
 if __name__ == "__main__":

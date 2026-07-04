@@ -110,6 +110,7 @@ def generate_examples() -> dict[str, str]:
         json.dump({"contentType": "application/vnd.apache.arrow.stream", "examples": index}, f, indent=2, sort_keys=True)
         f.write("\n")
     hashes["index.json"] = hashlib.sha256(json.dumps(index, sort_keys=True).encode("utf-8")).hexdigest()
+    hashes.update(build_schemas.write_schema_exchange_examples())
     return hashes
 
 

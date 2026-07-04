@@ -13,6 +13,7 @@ from opcua_enc import types as t
 from opcua_enc.values import canonical_equal, is_single_float_type
 
 import arrow_codec
+import build_schemas
 
 
 @dataclass
@@ -83,7 +84,7 @@ def encode_stream(ty: t.Type, batches: list[list[Any]], state: DestinationState,
     data_type = arrow_codec.canonical_type_to_arrow(ty)
     schema = pa.schema([pa.field("value", data_type)], metadata={b"opcua-arrow": b"1"})
     canonical = schema.serialize().to_pybytes()
-    schema_id = fingerprint.sha256_id_hex(canonical)
+    schema_id = fingerprint.sha256_id_hex(canonical, build_schemas.ARROW_SCHEMAID_BYTES)
     announced = schema_id not in state.announced
     if announced:
         state.announced.add(schema_id)

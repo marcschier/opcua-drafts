@@ -13,6 +13,7 @@ from opcua_enc import corpus, fingerprint
 from opcua_enc import types as t
 
 import arrow_codec
+import build_schemas
 
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
@@ -97,7 +98,7 @@ def _section(title: str, ty: t.Type, case: corpus.Case, source: str) -> str:
     schema_bytes = schema.serialize().to_pybytes()
     return "\n\n".join([
         f"### {title}",
-        f"Published schema source: `{source}`. SchemaId: `{fingerprint.sha256_id_hex(schema_bytes)}`.",
+        f"Published schema source: `{source}`. SchemaId: `{fingerprint.sha256_id_hex(schema_bytes, build_schemas.ARROW_SCHEMAID_BYTES)}`.",
         _structure_table(data_type),
         "Arrow schema:",
         f"```text\n{schema.to_string()}\n```",

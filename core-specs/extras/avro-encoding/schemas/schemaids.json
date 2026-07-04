@@ -63,6 +63,14 @@
     "algorithm": "CRC-64-AVRO Rabin",
     "schemaid": "a1c09a8fa50885da"
   },
+  "AvroSchemaAnnouncement": {
+    "algorithm": "CRC-64-AVRO Rabin",
+    "schemaid": "7f1d08c6e9c1b9fb"
+  },
+  "AvroSchemaRequest": {
+    "algorithm": "CRC-64-AVRO Rabin",
+    "schemaid": "82e4dbb1b6870330"
+  },
   "Boolean": {
     "algorithm": "CRC-64-AVRO Rabin",
     "schemaid": "64f7d4a478fc429f"

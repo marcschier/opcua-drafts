@@ -20,7 +20,7 @@ from schema_support import (
     stable_json,
     type_key,
 )
-from message_types import MESSAGE_STRUCTS
+from message_types import HAND_AUTHORED_MESSAGE_SCHEMAS, MESSAGE_STRUCTS
 
 load_common()
 from opcua_enc import corpus, fingerprint, nodeset, types as t
@@ -106,6 +106,9 @@ def write_schemaids(enums: tuple[t.Enumeration, ...], structs: tuple[t.Struct, .
     for ty in sorted([*enums, *structs], key=lambda x: avro_name(x.name)):
         with open(os.path.join(OUT_DIR, f"{avro_name(ty.name)}.avsc"), "r", encoding="utf-8") as f:
             raw_datatypes[avro_name(ty.name)] = json.load(f)
+    for name in sorted(HAND_AUTHORED_MESSAGE_SCHEMAS):
+        with open(os.path.join(OUT_DIR, f"{name}.avsc"), "r", encoding="utf-8") as f:
+            raw_datatypes[name] = json.load(f)
     registry = build_named_schema_registry([*builtin_schemas, *raw_datatypes.values()])
 
     for bid in t.BuiltInType:
@@ -124,6 +127,8 @@ def write_schemaids(enums: tuple[t.Enumeration, ...], structs: tuple[t.Struct, .
 
     for ty in sorted([*enums, *structs], key=lambda x: avro_name(x.name)):
         entries[avro_name(ty.name)] = _schemaid(raw_datatypes[avro_name(ty.name)], registry)
+    for name in sorted(HAND_AUTHORED_MESSAGE_SCHEMAS):
+        entries[name] = _schemaid(raw_datatypes[name], registry)
 
     with open(os.path.join(OUT_DIR, "schemaids.json"), "w", encoding="utf-8") as f:
         f.write(stable_json(entries))
@@ -146,8 +151,11 @@ def main() -> int:
     for ty in sorted([*enums, *structs], key=lambda x: x.name):
         with open(os.path.join(OUT_DIR, f"{avro_name(ty.name)}.avsc"), "w", encoding="utf-8") as f:
             f.write(stable_json(datatype_schema(ty)))
+    for name, schema in sorted(HAND_AUTHORED_MESSAGE_SCHEMAS.items()):
+        with open(os.path.join(OUT_DIR, f"{name}.avsc"), "w", encoding="utf-8") as f:
+            f.write(stable_json(schema))
     write_schemaids(enums, structs)
-    print(f"Generated {1 + len(enums) + len(structs)} schema files in {OUT_DIR} and {STD_SCHEMAS}")
+    print(f"Generated {1 + len(enums) + len(structs) + len(HAND_AUTHORED_MESSAGE_SCHEMAS)} schema files in {OUT_DIR} and {STD_SCHEMAS}")
     if result.unresolved:
         print(f"Unresolved fields mapped to ExtensionObject: {len(result.unresolved)}")
     return 0

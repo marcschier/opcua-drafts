@@ -141,6 +141,28 @@ PUBLISHER_ENDPOINTS_ANNOUNCEMENT = t.Struct(
     ),
 )
 
+HAND_AUTHORED_MESSAGE_SCHEMAS: dict[str, object] = {
+    "AvroSchemaAnnouncement": {
+        "type": "record",
+        "name": "AvroSchemaAnnouncement",
+        "namespace": "org.opcfoundation.ua.avro",
+        "fields": [
+            {"name": "SchemaId", "type": "bytes"},
+            {"name": "SchemaJson", "type": "string"},
+            {"name": "SchemaEpoch", "type": ["null", "long"]},
+        ],
+    },
+    "AvroSchemaRequest": {
+        "type": "record",
+        "name": "AvroSchemaRequest",
+        "namespace": "org.opcfoundation.ua.avro",
+        "fields": [
+            {"name": "RequesterId", "type": ["null", "string"]},
+            {"name": "SchemaIds", "type": {"type": "array", "items": "bytes"}},
+        ],
+    },
+}
+
 MESSAGE_STRUCTS: tuple[t.Struct, ...] = (
     CONFIGURATION_VERSION,
     FIELD_METADATA,

@@ -57995,5 +57995,48 @@
     ]
   },
   "pyarrow": "24.0.0",
-  "schema": "opcua-arrow-reference-schemas"
+  "schema": "opcua-arrow-reference-schemas",
+  "schemaExchange": {
+    "ArrowSchemaAnnouncement": {
+      "arrow": "SchemaId: fixed_size_binary[8] not null\nSchema: binary not null\nSchemaEpoch: int64\n-- schema metadata --\nopcua.mapping: 'arrow-schema-announcement'",
+      "fields": [
+        {
+          "name": "SchemaId",
+          "nullable": false,
+          "type": "fixed_size_binary[8]"
+        },
+        {
+          "name": "Schema",
+          "nullable": false,
+          "type": "binary"
+        },
+        {
+          "name": "SchemaEpoch",
+          "nullable": true,
+          "type": "int64"
+        }
+      ],
+      "metadata": {
+        "opcua.mapping": "arrow-schema-announcement"
+      }
+    },
+    "ArrowSchemaRequest": {
+      "arrow": "RequesterId: string\nSchemaIds: list<item: fixed_size_binary[8] not null> not null\n  child 0, item: fixed_size_binary[8] not null\n-- schema metadata --\nopcua.mapping: 'arrow-schema-request'",
+      "fields": [
+        {
+          "name": "RequesterId",
+          "nullable": true,
+          "type": "string"
+        },
+        {
+          "name": "SchemaIds",
+          "nullable": false,
+          "type": "list<item: fixed_size_binary[8] not null>"
+        }
+      ],
+      "metadata": {
+        "opcua.mapping": "arrow-schema-request"
+      }
+    }
+  }
 }
