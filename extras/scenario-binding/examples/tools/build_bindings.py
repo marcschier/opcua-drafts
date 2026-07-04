@@ -43,13 +43,13 @@ DIRECTION = {"Publisher": 0, "Subscriber": 1, "ActionInvoker": 2,
 KIND = {"Telemetry": 0, "Status": 1, "Configuration": 2, "Metric": 3, "Counter": 4,
         "Event": 5, "Command": 6, "Setpoint": 7, "Identification": 8, "Other": 9,
         "Dimension": 10}
-CONTENT_KIND = {"DataItems": 0, "Events": 1}
+CONTENT_KIND = {"DataItems": 0, "Events": 1, "Actions": 2}
 # well-known ns0 ScenarioProfile node ids (see build_model.py SCENARIOS); a per-instance group
 # Realizes the profile for its scenario (inverse of the profile's RealizedBy).
 PROFILE_ID = {
     "Observability": 60110, "PredictiveMaintenance": 60111, "AnomalyDetection": 60112,
     "EnergyAndLoadManagement": 60113, "AlarmAndEventDistribution": 60114,
-    "FleetAndCompliance": 60115,
+    "FleetAndCompliance": 60115, "RemoteOperations": 60116,
 }
 INSTRUMENT = {"Counter": 0, "UpDownCounter": 1, "Histogram": 2, "Gauge": 3,
               "ObservableCounter": 4, "ObservableUpDownCounter": 5, "ObservableGauge": 6}
@@ -62,10 +62,13 @@ DATASET_CLASS_NS = uuid.UUID("fc164bdb-8705-58e9-ab11-7b1ed155b4e8")
 
 
 def dataset_class_id(descriptor, sb):
-    """Deterministic DataSetClassId: uuid5 over ScenarioUri | <ns>;<Type> | MajorVersion."""
+    """Deterministic DataSetClassId: uuid5 over ScenarioUri | <ns>;<Type> | ContentKind | MajorVersion.
+    ContentKind is part of the identity so a data DataSet, event DataSet and action set for the same
+    Scenario/target/version are distinct classes recognizable by DataSetClassId alone."""
     major = descriptor.get("configurationVersion", {}).get("majorVersion", 1)
     applies = f'{descriptor["baseModelNamespaceUri"]};{descriptor["appliesToType"]}'
-    return uuid.uuid5(DATASET_CLASS_NS, f'{sb["scenarioUri"]}|{applies}|{major}')
+    ck = sb.get("contentKind", "DataItems")
+    return uuid.uuid5(DATASET_CLASS_NS, f'{sb["scenarioUri"]}|{applies}|{ck}|{major}')
 # base UA aliases used in the emitted file
 ALIASES = {
     "HasComponent": "i=47", "HasProperty": "i=46", "HasTypeDefinition": "i=40",
@@ -161,6 +164,16 @@ def resolve_items(descriptor, idx):
                 continue
             it["_rec"] = rec
             it.setdefault("fieldName", names[-1])
+            # A bound Method's OwningObjectPath (the Object it is called on) must be a prefix of
+            # its BrowsePath: a Method is a component of the Object it is invoked on, so the owning
+            # Object is an ancestor on the same path. Validate that; the encoder then reuses the
+            # method's own resolved segments (correct names + namespaces) for the prefix.
+            owning = it.get("owningObjectPath")
+            if owning:
+                onames = tuple(p for p in owning.strip("/").split("/") if p)
+                if onames != names[:len(onames)]:
+                    errors.append(f'{sb["name"]}: owningObjectPath {owning} is not a prefix of '
+                                  f'BrowsePath {it["browsePath"]}')
     if errors:
         raise SystemExit("PATH RESOLUTION ERRORS:\n  " + "\n  ".join(errors))
     return descriptor
@@ -258,6 +271,13 @@ class Emitter:
                 self._refs([("HasTypeDefinition", td_ref, True),
                             ("HasComponent", self.ex(parent), False)])
                 self.out.append("  </UAVariable>")
+            elif is_leaf and rec["cls"] == "UAMethod":
+                # A bound Method leaf: BindsToNode targets a Method node (Methods are not typed,
+                # so no HasTypeDefinition); it is a HasComponent of its owning Object.
+                self._open("UAMethod", nid, bn, self.ex(parent))
+                self.out.append(f"    <DisplayName>{concrete_name(seg['name'])}</DisplayName>")
+                self._refs([("HasComponent", self.ex(parent), False)])
+                self.out.append("  </UAMethod>")
             else:
                 self.object(nid, bn, "FolderType", self.ex(parent),
                             refs_extra=[("HasComponent", self.ex(parent), False)])
@@ -423,6 +443,22 @@ class Emitter:
                        '</uax:RelativePathElement>')
         return f'<uax:RelativePath {U}><uax:Elements>{"".join(els)}</uax:Elements></uax:RelativePath>'
 
+    def _relpath_from_segments(self, segs, U):
+        """Encode a RelativePath from already-resolved path segments (each with name/ns), e.g. a
+        bound Method's OwningObjectPath = its resolved path minus the Method segment. Namespaces
+        come from the resolved segments; HierarchicalReferences + IncludeSubtypes."""
+        els = []
+        for seg in segs:
+            nsidx = self.nsmap.get(seg["ns"], 0)
+            els.append('<uax:RelativePathElement>'
+                       '<uax:ReferenceTypeId><uax:Identifier>i=33</uax:Identifier>'
+                       '</uax:ReferenceTypeId><uax:IsInverse>false</uax:IsInverse>'
+                       '<uax:IncludeSubtypes>true</uax:IncludeSubtypes>'
+                       f'<uax:TargetName><uax:NamespaceIndex>{nsidx}</uax:NamespaceIndex>'
+                       f'<uax:Name>{sx.escape(seg["name"])}</uax:Name></uax:TargetName>'
+                       '</uax:RelativePathElement>')
+        return f'<uax:RelativePath {U}><uax:Elements>{"".join(els)}</uax:Elements></uax:RelativePath>'
+
     def emit_event_item(self, binding_id, sb, it):
         """An event-DataSet field: a BoundEventFieldType selecting a field of a standard
         event type (no BindsToNode - event fields are not AddressSpace instance nodes)."""
@@ -492,6 +528,18 @@ class Emitter:
         # cardinality semantics from the AddressSpace alone (BindsToNode is one concrete match).
         self.prop(self.nid(), "BrowsePath", "RelativePath",
                   self._browsepath_value(it, U), iid)
+        # OwningObjectPath: for a bound Method, the RelativePath to the Object it is called on
+        # (default: the Method's parent Object; an explicit owningObjectPath overrides). Omitted
+        # when the owning Object is the bound root itself (a Method directly on the root).
+        if is_method:
+            if it.get("owningObjectPath"):
+                n = len([s for s in it["owningObjectPath"].strip("/").split("/") if s])
+                owning_segs = rec["path"][:n]
+            else:
+                owning_segs = rec["path"][:-1]
+            if owning_segs:
+                self.prop(self.nid(), "OwningObjectPath", "RelativePath",
+                          self._relpath_from_segments(owning_segs, U), iid)
         # ModelNamespaceUri = the namespace URI that DEFINES the source node (its BrowseName ns)
         seg = rec["path"][-1]
         self.prop(self.nid(), "ModelNamespaceUri", "String",
@@ -629,22 +677,25 @@ def emit_annex(descriptor, db, base_names):
     L = [f"### Scenario bindings for `{d['appliesToType']}`", "",
          f"Bindings for the `{d['appliesToType']}` of the "
          f"`{d['baseModelNamespaceUri']}` companion specification, per the "
-         f"[Scenario Bindings]({SPEC}) base specification. Each binding is **one Part 14 "
-         f"DataSet** with a deterministic `DataSetClassId`. Every data-DataSet `BrowsePath` "
-         f"below was resolved against the published companion NodeSet; event-DataSet fields "
-         f"select standard event-type fields.", ""]
+         f"[Scenario Bindings]({SPEC}) base specification. Each binding is **one content "
+         f"class** — a data DataSet, an event DataSet, or an action set — with a deterministic "
+         f"`DataSetClassId`. Every data and Method `BrowsePath` below was resolved against the "
+         f"published companion NodeSet; event-DataSet fields select standard event-type "
+         f"fields.", ""]
     for sb in d["scenarioBindings"]:
         ck = sb.get("contentKind", "DataItems")
         dscid = sb.get("_dataSetClassId") or str(dataset_class_id(d, sb))
         content = ("event DataSet (PublishedEvents)" if ck == "Events"
+                   else "action set (Part 14 Actions/ActionTargets)" if ck == "Actions"
                    else "data DataSet (PublishedDataItems)")
         L.append(f"#### Scenario: {sb['name']}")
         L.append("")
         hdr = (f"*URI:* `{sb['scenarioUri']}` · *Direction:* {sb['direction']} · "
                f"*Content:* {content} · *DataSetClassId:* `{dscid}`")
         card = sb.get("dataSetCardinalityPath")
-        hdr += (f" · *Cardinality:* one DataSet per `{card}`" if card
-                else " · *Cardinality:* one DataSet (bound root)")
+        unit = "action target" if ck == "Actions" else "DataSet"
+        hdr += (f" · *Cardinality:* one {unit} per `{card}`" if card
+                else f" · *Cardinality:* one {unit} (bound root)")
         if ck == "Events":
             hdr += (f" · *Event source:* `{sb.get('eventSourcePath', '/')}` · "
                     f"*Event type:* {sb.get('eventType', 'BaseEventType')}")
@@ -666,6 +717,16 @@ def emit_annex(descriptor, db, base_names):
                          f"`{sb.get('logSeverityFieldName', '—')}`, body = "
                          f"`{sb.get('logBodyFieldName', '—')}`, timestamp = "
                          f"`{sb.get('logTimestampFieldName', '—')}`.")
+        elif ck == "Actions":
+            L.append("| Field | Kind | Method BrowsePath | Owning object |")
+            L.append("|---|---|---|---|")
+            for it in sb["boundItems"]:
+                rec = it.get("_rec")
+                owning = it.get("owningObjectPath")
+                if not owning and rec and len(rec["path"]) > 1:
+                    owning = "/" + "/".join(s["name"] for s in rec["path"][:-1])
+                L.append(f"| {it['fieldName']} | {it['kind']} | "
+                         f"`{it.get('browsePath', '—')}` | `{owning or '(bound root)'}` |")
         else:
             L.append("| Field | Kind | BrowsePath | Source type | DataType | OTEL |")
             L.append("|---|---|---|---|---|---|")
@@ -932,7 +993,7 @@ def emit_diagrams(descriptor):
           f'  ROOT["{d["instanceName"]} : {d["appliesToType"]}"]']
     ov_seen = {}
     for i, sb in enumerate(d["scenarioBindings"]):
-        tag = "Events" if sb.get("contentKind") == "Events" else "Data"
+        tag = {"Events": "Events", "Actions": "Actions"}.get(sb.get("contentKind"), "Data")
         suri = sb["scenarioUri"]
         gname = suri.rsplit("/", 1)[-1]
         if suri not in ov_seen:
@@ -948,6 +1009,9 @@ def emit_diagrams(descriptor):
     ev = next((s for s in d["scenarioBindings"] if s.get("contentKind") == "Events"), None)
     if ev is not None and ev is not picks[0]:
         picks.append(ev)
+    act = next((s for s in d["scenarioBindings"] if s.get("contentKind") == "Actions"), None)
+    if act is not None and act not in picks:
+        picks.append(act)
     inst = ["```mermaid", "graph TD",
             f'  R["{d["instanceName"]} : {d["appliesToType"]}"]',
             "  R -->|HasInterface| I([IScenarioBoundType])"]
@@ -970,7 +1034,8 @@ def emit_diagrams(descriptor):
             else:
                 rec = it["_rec"]
                 path = "/".join(concrete_name(s["name"]) for s in rec["path"])
-                inst.append(f'  B{i} -->|HasComponent| IT{i}{j}["{it["fieldName"]} : BoundVariableType"]')
+                itype = "BoundMethodType" if rec["cls"] == "UAMethod" else "BoundVariableType"
+                inst.append(f'  B{i} -->|HasComponent| IT{i}{j}["{it["fieldName"]} : {itype}"]')
                 inst.append(f'  IT{i}{j} -->|BindsToNode| N{i}{j}["{path}"]')
     inst.append("```")
     return "\n".join(ov) + "\n\n" + "\n".join(inst) + "\n"

@@ -95,7 +95,7 @@
       <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5009</Reference>
     </References>
-    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>ad751dd8-3b2d-5599-8cce-4be80dc0f8b8</uax:String></uax:Guid></Value>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>c59daa9d-857b-5016-9299-d85875e022dc</uax:String></uax:Guid></Value>
   </UAVariable>
   <UAVariable NodeId="ns=1;i=5012" BrowseName="1:ContentKind" ParentNodeId="ns=1;i=5009" DataType="i=60052">
     <DisplayName>ContentKind</DisplayName>
@@ -489,7 +489,7 @@
       <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5059</Reference>
     </References>
-    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>fccc95e4-e8b3-5b20-82b1-c5fdcb30f53a</uax:String></uax:Guid></Value>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>9aebd118-3e77-5786-89e3-713807499548</uax:String></uax:Guid></Value>
   </UAVariable>
   <UAVariable NodeId="ns=1;i=5062" BrowseName="1:ContentKind" ParentNodeId="ns=1;i=5059" DataType="i=60052">
     <DisplayName>ContentKind</DisplayName>
@@ -857,7 +857,7 @@
       <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5105</Reference>
     </References>
-    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>4fa76f85-fefb-5a6d-a699-e5e3298c769e</uax:String></uax:Guid></Value>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>180dfa3e-be8b-5dae-b66e-a5a08384f256</uax:String></uax:Guid></Value>
   </UAVariable>
   <UAVariable NodeId="ns=1;i=5108" BrowseName="1:ContentKind" ParentNodeId="ns=1;i=5105" DataType="i=60052">
     <DisplayName>ContentKind</DisplayName>
@@ -1048,7 +1048,7 @@
       <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5128</Reference>
     </References>
-    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>47b98390-ae81-5a82-82e3-39258ce1a49b</uax:String></uax:Guid></Value>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>ec621723-fbe4-54a1-9166-87d19a264c0f</uax:String></uax:Guid></Value>
   </UAVariable>
   <UAVariable NodeId="ns=1;i=5131" BrowseName="1:ContentKind" ParentNodeId="ns=1;i=5128" DataType="i=60052">
     <DisplayName>ContentKind</DisplayName>
@@ -1513,7 +1513,7 @@
       <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5186</Reference>
     </References>
-    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>f366c644-8670-57a3-b838-dd492b1f82b0</uax:String></uax:Guid></Value>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>000fbba0-373f-5ff1-bd11-67fb2fc20ef0</uax:String></uax:Guid></Value>
   </UAVariable>
   <UAVariable NodeId="ns=1;i=5189" BrowseName="1:ContentKind" ParentNodeId="ns=1;i=5186" DataType="i=60052">
     <DisplayName>ContentKind</DisplayName>

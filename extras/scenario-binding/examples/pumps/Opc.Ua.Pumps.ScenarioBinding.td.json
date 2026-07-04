@@ -45,7 +45,7 @@
         "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
       ],
       "sb:dataSetClassId": [
-        "urn:uuid:96490f93-6c92-59cd-981d-4203ab067313"
+        "urn:uuid:794b8a9a-676a-5e30-b18e-2e3f49354d64"
       ],
       "sb:metricInstrumentType": "Gauge",
       "forms": [
@@ -79,7 +79,7 @@
         "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
       ],
       "sb:dataSetClassId": [
-        "urn:uuid:96490f93-6c92-59cd-981d-4203ab067313"
+        "urn:uuid:794b8a9a-676a-5e30-b18e-2e3f49354d64"
       ],
       "sb:metricInstrumentType": "Gauge",
       "forms": [
@@ -113,7 +113,7 @@
         "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
       ],
       "sb:dataSetClassId": [
-        "urn:uuid:96490f93-6c92-59cd-981d-4203ab067313"
+        "urn:uuid:794b8a9a-676a-5e30-b18e-2e3f49354d64"
       ],
       "sb:metricInstrumentType": "Gauge",
       "forms": [
@@ -147,7 +147,7 @@
         "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
       ],
       "sb:dataSetClassId": [
-        "urn:uuid:96490f93-6c92-59cd-981d-4203ab067313"
+        "urn:uuid:794b8a9a-676a-5e30-b18e-2e3f49354d64"
       ],
       "sb:metricInstrumentType": "Gauge",
       "forms": [
@@ -182,8 +182,8 @@
         "http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection"
       ],
       "sb:dataSetClassId": [
-        "urn:uuid:96490f93-6c92-59cd-981d-4203ab067313",
-        "urn:uuid:d4eb3d5b-5ffb-580e-b96f-142cb3f998ad"
+        "urn:uuid:794b8a9a-676a-5e30-b18e-2e3f49354d64",
+        "urn:uuid:1a2fd8ca-dc68-5659-ad43-8452ba8f2a5a"
       ],
       "sb:metricInstrumentType": "Gauge",
       "forms": [
@@ -217,7 +217,7 @@
         "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
       ],
       "sb:dataSetClassId": [
-        "urn:uuid:96490f93-6c92-59cd-981d-4203ab067313"
+        "urn:uuid:794b8a9a-676a-5e30-b18e-2e3f49354d64"
       ],
       "sb:metricInstrumentType": "Gauge",
       "forms": [
@@ -252,8 +252,8 @@
         "http://opcfoundation.org/UA/PubSub/Scenarios/EnergyAndLoadManagement"
       ],
       "sb:dataSetClassId": [
-        "urn:uuid:96490f93-6c92-59cd-981d-4203ab067313",
-        "urn:uuid:605ca065-f5d7-5400-a9fe-995d21ad75ce"
+        "urn:uuid:794b8a9a-676a-5e30-b18e-2e3f49354d64",
+        "urn:uuid:4f30fed4-ab2a-5a65-9cdc-0b7d79d88aa9"
       ],
       "sb:metricInstrumentType": "Gauge",
       "forms": [
@@ -287,7 +287,7 @@
         "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
       ],
       "sb:dataSetClassId": [
-        "urn:uuid:96490f93-6c92-59cd-981d-4203ab067313"
+        "urn:uuid:794b8a9a-676a-5e30-b18e-2e3f49354d64"
       ],
       "sb:metricInstrumentType": "Gauge",
       "forms": [
@@ -323,9 +323,9 @@
         "http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection"
       ],
       "sb:dataSetClassId": [
-        "urn:uuid:96490f93-6c92-59cd-981d-4203ab067313",
-        "urn:uuid:a96b90d3-7b07-55d8-8343-9c7e4df85bab",
-        "urn:uuid:d4eb3d5b-5ffb-580e-b96f-142cb3f998ad"
+        "urn:uuid:794b8a9a-676a-5e30-b18e-2e3f49354d64",
+        "urn:uuid:bc161840-91a3-5cc5-98a9-862cb53a590a",
+        "urn:uuid:1a2fd8ca-dc68-5659-ad43-8452ba8f2a5a"
       ],
       "sb:metricInstrumentType": "Histogram",
       "sb:explicitBucketBoundaries": [
@@ -366,7 +366,7 @@
         "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
       ],
       "sb:dataSetClassId": [
-        "urn:uuid:96490f93-6c92-59cd-981d-4203ab067313"
+        "urn:uuid:794b8a9a-676a-5e30-b18e-2e3f49354d64"
       ],
       "sb:metricInstrumentType": "Gauge",
       "forms": [
@@ -400,8 +400,8 @@
         "http://opcfoundation.org/UA/PubSub/Scenarios/PredictiveMaintenance"
       ],
       "sb:dataSetClassId": [
-        "urn:uuid:96490f93-6c92-59cd-981d-4203ab067313",
-        "urn:uuid:a96b90d3-7b07-55d8-8343-9c7e4df85bab"
+        "urn:uuid:794b8a9a-676a-5e30-b18e-2e3f49354d64",
+        "urn:uuid:bc161840-91a3-5cc5-98a9-862cb53a590a"
       ],
       "sb:metricInstrumentType": "Counter",
       "forms": [
@@ -434,7 +434,7 @@
         "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
       ],
       "sb:dataSetClassId": [
-        "urn:uuid:96490f93-6c92-59cd-981d-4203ab067313"
+        "urn:uuid:794b8a9a-676a-5e30-b18e-2e3f49354d64"
       ],
       "sb:dimension": true,
       "forms": [
@@ -467,7 +467,7 @@
         "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
       ],
       "sb:dataSetClassId": [
-        "urn:uuid:96490f93-6c92-59cd-981d-4203ab067313"
+        "urn:uuid:794b8a9a-676a-5e30-b18e-2e3f49354d64"
       ],
       "sb:dimension": true,
       "forms": [
@@ -500,7 +500,7 @@
         "http://opcfoundation.org/UA/PubSub/Scenarios/EnergyAndLoadManagement"
       ],
       "sb:dataSetClassId": [
-        "urn:uuid:605ca065-f5d7-5400-a9fe-995d21ad75ce"
+        "urn:uuid:4f30fed4-ab2a-5a65-9cdc-0b7d79d88aa9"
       ],
       "forms": [
         {
@@ -532,7 +532,7 @@
         "http://opcfoundation.org/UA/PubSub/Scenarios/EnergyAndLoadManagement"
       ],
       "sb:dataSetClassId": [
-        "urn:uuid:605ca065-f5d7-5400-a9fe-995d21ad75ce"
+        "urn:uuid:4f30fed4-ab2a-5a65-9cdc-0b7d79d88aa9"
       ],
       "forms": [
         {
@@ -564,7 +564,7 @@
         "http://opcfoundation.org/UA/PubSub/Scenarios/EnergyAndLoadManagement"
       ],
       "sb:dataSetClassId": [
-        "urn:uuid:605ca065-f5d7-5400-a9fe-995d21ad75ce"
+        "urn:uuid:4f30fed4-ab2a-5a65-9cdc-0b7d79d88aa9"
       ],
       "forms": [
         {
@@ -596,7 +596,7 @@
         "http://opcfoundation.org/UA/PubSub/Scenarios/EnergyAndLoadManagement"
       ],
       "sb:dataSetClassId": [
-        "urn:uuid:605ca065-f5d7-5400-a9fe-995d21ad75ce"
+        "urn:uuid:4f30fed4-ab2a-5a65-9cdc-0b7d79d88aa9"
       ],
       "forms": [
         {
@@ -628,7 +628,7 @@
         "http://opcfoundation.org/UA/PubSub/Scenarios/PredictiveMaintenance"
       ],
       "sb:dataSetClassId": [
-        "urn:uuid:a96b90d3-7b07-55d8-8343-9c7e4df85bab"
+        "urn:uuid:bc161840-91a3-5cc5-98a9-862cb53a590a"
       ],
       "forms": [
         {
@@ -660,7 +660,7 @@
         "http://opcfoundation.org/UA/PubSub/Scenarios/PredictiveMaintenance"
       ],
       "sb:dataSetClassId": [
-        "urn:uuid:a96b90d3-7b07-55d8-8343-9c7e4df85bab"
+        "urn:uuid:bc161840-91a3-5cc5-98a9-862cb53a590a"
       ],
       "forms": [
         {
@@ -692,7 +692,7 @@
         "http://opcfoundation.org/UA/PubSub/Scenarios/PredictiveMaintenance"
       ],
       "sb:dataSetClassId": [
-        "urn:uuid:a96b90d3-7b07-55d8-8343-9c7e4df85bab"
+        "urn:uuid:bc161840-91a3-5cc5-98a9-862cb53a590a"
       ],
       "forms": [
         {
@@ -724,7 +724,7 @@
         "http://opcfoundation.org/UA/PubSub/Scenarios/PredictiveMaintenance"
       ],
       "sb:dataSetClassId": [
-        "urn:uuid:a96b90d3-7b07-55d8-8343-9c7e4df85bab"
+        "urn:uuid:bc161840-91a3-5cc5-98a9-862cb53a590a"
       ],
       "forms": [
         {
@@ -756,7 +756,7 @@
         "http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection"
       ],
       "sb:dataSetClassId": [
-        "urn:uuid:d4eb3d5b-5ffb-580e-b96f-142cb3f998ad"
+        "urn:uuid:1a2fd8ca-dc68-5659-ad43-8452ba8f2a5a"
       ],
       "forms": [
         {
@@ -788,7 +788,7 @@
         "http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection"
       ],
       "sb:dataSetClassId": [
-        "urn:uuid:d4eb3d5b-5ffb-580e-b96f-142cb3f998ad"
+        "urn:uuid:1a2fd8ca-dc68-5659-ad43-8452ba8f2a5a"
       ],
       "forms": [
         {
@@ -820,7 +820,7 @@
         "http://opcfoundation.org/UA/PubSub/Scenarios/FleetAndCompliance"
       ],
       "sb:dataSetClassId": [
-        "urn:uuid:c5ad94e3-12f1-5fa4-b69f-b8aeaf40106a"
+        "urn:uuid:e50711a6-ebed-5e04-9672-2a7d506e1c32"
       ],
       "forms": [
         {
@@ -852,7 +852,7 @@
         "http://opcfoundation.org/UA/PubSub/Scenarios/FleetAndCompliance"
       ],
       "sb:dataSetClassId": [
-        "urn:uuid:c5ad94e3-12f1-5fa4-b69f-b8aeaf40106a"
+        "urn:uuid:e50711a6-ebed-5e04-9672-2a7d506e1c32"
       ],
       "forms": [
         {
@@ -879,7 +879,7 @@
       "title": "AlarmAndEventDistribution",
       "@type": "uav:object",
       "sb:scenario": "http://opcfoundation.org/UA/PubSub/Scenarios/AlarmAndEventDistribution",
-      "sb:dataSetClassId": "urn:uuid:700f61a4-4e97-52ed-b72e-f085d406ced9",
+      "sb:dataSetClassId": "urn:uuid:85c43bb8-1a03-5d12-bf95-b4277153baf8",
       "sb:eventType": "BaseEventType",
       "data": {
         "type": "object",

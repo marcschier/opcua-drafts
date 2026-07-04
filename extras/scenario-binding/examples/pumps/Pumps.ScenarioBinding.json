@@ -87,7 +87,7 @@
       "name": "FleetAndCompliance",
       "scenarioUri": "http://opcfoundation.org/UA/PubSub/Scenarios/FleetAndCompliance",
       "direction": "Publisher",
-      "baseDataSetClassIds": ["69883a15-1331-51d0-a3be-d453d4547192"],
+      "baseDataSetClassIds": ["cb5100f1-96f5-5999-a09f-97b71bb044be"],
       "boundItems": [
         { "kind": "Identification", "browsePath": "/Identification/AssetId" },
         { "kind": "Identification", "browsePath": "/Identification/Location" }

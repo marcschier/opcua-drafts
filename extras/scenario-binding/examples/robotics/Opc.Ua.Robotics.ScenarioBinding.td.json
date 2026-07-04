@@ -8,9 +8,9 @@
       }
     ],
     "@type": "uav:object",
-    "id": "urn:uuid:385fd9f0-0607-519a-8f4d-c03d4897abf2",
+    "id": "urn:uuid:c78a6ef0-0705-558b-a80e-473bb8076b38",
     "title": "ExampleRobotSystem · Observability · Robot_1",
-    "description": "WoT Thing for one Observability DataSet (class urn:uuid:ad751dd8-3b2d-5599-8cce-4be80dc0f8b8) at cardinality anchor Robot_1 — topology \"Two-robot cell (6+4 axes)\". Illustrative.",
+    "description": "WoT Thing for one Observability DataSet (class urn:uuid:c59daa9d-857b-5016-9299-d85875e022dc) at cardinality anchor Robot_1 — topology \"Two-robot cell (6+4 axes)\". Illustrative.",
     "sb:namespaces": [
       "http://opcfoundation.org/UA/",
       "http://opcfoundation.org/UA/Robotics/"
@@ -25,7 +25,7 @@
     ],
     "base": "opc.tcp://opcua.example.com:4840",
     "sb:scenario": "http://opcfoundation.org/UA/PubSub/Scenarios/Observability",
-    "sb:dataSetClassId": "urn:uuid:ad751dd8-3b2d-5599-8cce-4be80dc0f8b8",
+    "sb:dataSetClassId": "urn:uuid:c59daa9d-857b-5016-9299-d85875e022dc",
     "sb:cardinalityPath": "/MotionDevices/<MotionDeviceIdentifier>",
     "properties": {
       "AxisActualPosition_Axis_1": {
@@ -40,7 +40,7 @@
           "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
         ],
         "sb:dataSetClassId": [
-          "urn:uuid:ad751dd8-3b2d-5599-8cce-4be80dc0f8b8"
+          "urn:uuid:c59daa9d-857b-5016-9299-d85875e022dc"
         ],
         "sb:metricInstrumentType": "Gauge",
         "forms": [
@@ -74,7 +74,7 @@
           "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
         ],
         "sb:dataSetClassId": [
-          "urn:uuid:ad751dd8-3b2d-5599-8cce-4be80dc0f8b8"
+          "urn:uuid:c59daa9d-857b-5016-9299-d85875e022dc"
         ],
         "sb:metricInstrumentType": "Gauge",
         "forms": [
@@ -108,7 +108,7 @@
           "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
         ],
         "sb:dataSetClassId": [
-          "urn:uuid:ad751dd8-3b2d-5599-8cce-4be80dc0f8b8"
+          "urn:uuid:c59daa9d-857b-5016-9299-d85875e022dc"
         ],
         "sb:metricInstrumentType": "Gauge",
         "forms": [
@@ -142,7 +142,7 @@
           "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
         ],
         "sb:dataSetClassId": [
-          "urn:uuid:ad751dd8-3b2d-5599-8cce-4be80dc0f8b8"
+          "urn:uuid:c59daa9d-857b-5016-9299-d85875e022dc"
         ],
         "sb:metricInstrumentType": "Gauge",
         "forms": [
@@ -176,7 +176,7 @@
           "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
         ],
         "sb:dataSetClassId": [
-          "urn:uuid:ad751dd8-3b2d-5599-8cce-4be80dc0f8b8"
+          "urn:uuid:c59daa9d-857b-5016-9299-d85875e022dc"
         ],
         "sb:metricInstrumentType": "Gauge",
         "forms": [
@@ -210,7 +210,7 @@
           "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
         ],
         "sb:dataSetClassId": [
-          "urn:uuid:ad751dd8-3b2d-5599-8cce-4be80dc0f8b8"
+          "urn:uuid:c59daa9d-857b-5016-9299-d85875e022dc"
         ],
         "sb:metricInstrumentType": "Gauge",
         "forms": [
@@ -244,7 +244,7 @@
           "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
         ],
         "sb:dataSetClassId": [
-          "urn:uuid:ad751dd8-3b2d-5599-8cce-4be80dc0f8b8"
+          "urn:uuid:c59daa9d-857b-5016-9299-d85875e022dc"
         ],
         "sb:metricInstrumentType": "Gauge",
         "forms": [
@@ -278,7 +278,7 @@
           "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
         ],
         "sb:dataSetClassId": [
-          "urn:uuid:ad751dd8-3b2d-5599-8cce-4be80dc0f8b8"
+          "urn:uuid:c59daa9d-857b-5016-9299-d85875e022dc"
         ],
         "sb:metricInstrumentType": "Gauge",
         "forms": [
@@ -312,7 +312,7 @@
           "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
         ],
         "sb:dataSetClassId": [
-          "urn:uuid:ad751dd8-3b2d-5599-8cce-4be80dc0f8b8"
+          "urn:uuid:c59daa9d-857b-5016-9299-d85875e022dc"
         ],
         "sb:metricInstrumentType": "Gauge",
         "forms": [
@@ -346,7 +346,7 @@
           "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
         ],
         "sb:dataSetClassId": [
-          "urn:uuid:ad751dd8-3b2d-5599-8cce-4be80dc0f8b8"
+          "urn:uuid:c59daa9d-857b-5016-9299-d85875e022dc"
         ],
         "sb:metricInstrumentType": "Gauge",
         "forms": [
@@ -380,7 +380,7 @@
           "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
         ],
         "sb:dataSetClassId": [
-          "urn:uuid:ad751dd8-3b2d-5599-8cce-4be80dc0f8b8"
+          "urn:uuid:c59daa9d-857b-5016-9299-d85875e022dc"
         ],
         "sb:metricInstrumentType": "Gauge",
         "forms": [
@@ -414,7 +414,7 @@
           "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
         ],
         "sb:dataSetClassId": [
-          "urn:uuid:ad751dd8-3b2d-5599-8cce-4be80dc0f8b8"
+          "urn:uuid:c59daa9d-857b-5016-9299-d85875e022dc"
         ],
         "sb:metricInstrumentType": "Gauge",
         "forms": [
@@ -448,7 +448,7 @@
           "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
         ],
         "sb:dataSetClassId": [
-          "urn:uuid:ad751dd8-3b2d-5599-8cce-4be80dc0f8b8"
+          "urn:uuid:c59daa9d-857b-5016-9299-d85875e022dc"
         ],
         "sb:metricInstrumentType": "Gauge",
         "forms": [
@@ -481,9 +481,9 @@
       }
     ],
     "@type": "uav:object",
-    "id": "urn:uuid:e39c7fa6-5fc2-5d07-a9dd-b906941f0e39",
+    "id": "urn:uuid:c3a889f4-2ef3-5fa8-8f27-d6e3a2151978",
     "title": "ExampleRobotSystem · Observability · Robot_2",
-    "description": "WoT Thing for one Observability DataSet (class urn:uuid:ad751dd8-3b2d-5599-8cce-4be80dc0f8b8) at cardinality anchor Robot_2 — topology \"Two-robot cell (6+4 axes)\". Illustrative.",
+    "description": "WoT Thing for one Observability DataSet (class urn:uuid:c59daa9d-857b-5016-9299-d85875e022dc) at cardinality anchor Robot_2 — topology \"Two-robot cell (6+4 axes)\". Illustrative.",
     "sb:namespaces": [
       "http://opcfoundation.org/UA/",
       "http://opcfoundation.org/UA/Robotics/"
@@ -498,7 +498,7 @@
     ],
     "base": "opc.tcp://opcua.example.com:4840",
     "sb:scenario": "http://opcfoundation.org/UA/PubSub/Scenarios/Observability",
-    "sb:dataSetClassId": "urn:uuid:ad751dd8-3b2d-5599-8cce-4be80dc0f8b8",
+    "sb:dataSetClassId": "urn:uuid:c59daa9d-857b-5016-9299-d85875e022dc",
     "sb:cardinalityPath": "/MotionDevices/<MotionDeviceIdentifier>",
     "properties": {
       "AxisActualPosition_Axis_1": {
@@ -513,7 +513,7 @@
           "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
         ],
         "sb:dataSetClassId": [
-          "urn:uuid:ad751dd8-3b2d-5599-8cce-4be80dc0f8b8"
+          "urn:uuid:c59daa9d-857b-5016-9299-d85875e022dc"
         ],
         "sb:metricInstrumentType": "Gauge",
         "forms": [
@@ -547,7 +547,7 @@
           "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
         ],
         "sb:dataSetClassId": [
-          "urn:uuid:ad751dd8-3b2d-5599-8cce-4be80dc0f8b8"
+          "urn:uuid:c59daa9d-857b-5016-9299-d85875e022dc"
         ],
         "sb:metricInstrumentType": "Gauge",
         "forms": [
@@ -581,7 +581,7 @@
           "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
         ],
         "sb:dataSetClassId": [
-          "urn:uuid:ad751dd8-3b2d-5599-8cce-4be80dc0f8b8"
+          "urn:uuid:c59daa9d-857b-5016-9299-d85875e022dc"
         ],
         "sb:metricInstrumentType": "Gauge",
         "forms": [
@@ -615,7 +615,7 @@
           "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
         ],
         "sb:dataSetClassId": [
-          "urn:uuid:ad751dd8-3b2d-5599-8cce-4be80dc0f8b8"
+          "urn:uuid:c59daa9d-857b-5016-9299-d85875e022dc"
         ],
         "sb:metricInstrumentType": "Gauge",
         "forms": [
@@ -649,7 +649,7 @@
           "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
         ],
         "sb:dataSetClassId": [
-          "urn:uuid:ad751dd8-3b2d-5599-8cce-4be80dc0f8b8"
+          "urn:uuid:c59daa9d-857b-5016-9299-d85875e022dc"
         ],
         "sb:metricInstrumentType": "Gauge",
         "forms": [
@@ -683,7 +683,7 @@
           "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
         ],
         "sb:dataSetClassId": [
-          "urn:uuid:ad751dd8-3b2d-5599-8cce-4be80dc0f8b8"
+          "urn:uuid:c59daa9d-857b-5016-9299-d85875e022dc"
         ],
         "sb:metricInstrumentType": "Gauge",
         "forms": [
@@ -717,7 +717,7 @@
           "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
         ],
         "sb:dataSetClassId": [
-          "urn:uuid:ad751dd8-3b2d-5599-8cce-4be80dc0f8b8"
+          "urn:uuid:c59daa9d-857b-5016-9299-d85875e022dc"
         ],
         "sb:metricInstrumentType": "Gauge",
         "forms": [
@@ -751,7 +751,7 @@
           "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
         ],
         "sb:dataSetClassId": [
-          "urn:uuid:ad751dd8-3b2d-5599-8cce-4be80dc0f8b8"
+          "urn:uuid:c59daa9d-857b-5016-9299-d85875e022dc"
         ],
         "sb:metricInstrumentType": "Gauge",
         "forms": [
@@ -785,7 +785,7 @@
           "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
         ],
         "sb:dataSetClassId": [
-          "urn:uuid:ad751dd8-3b2d-5599-8cce-4be80dc0f8b8"
+          "urn:uuid:c59daa9d-857b-5016-9299-d85875e022dc"
         ],
         "sb:metricInstrumentType": "Gauge",
         "forms": [
@@ -818,9 +818,9 @@
       }
     ],
     "@type": "uav:object",
-    "id": "urn:uuid:5e5a3bb5-d7dd-5de1-9f7f-a5e485aad516",
+    "id": "urn:uuid:afa1b967-7b7a-589d-ad03-cca431bcf3f5",
     "title": "ExampleRobotSystem · PredictiveMaintenance · Controller_1",
-    "description": "WoT Thing for one PredictiveMaintenance DataSet (class urn:uuid:fccc95e4-e8b3-5b20-82b1-c5fdcb30f53a) at cardinality anchor Controller_1 — topology \"Two-robot cell (6+4 axes)\". Illustrative.",
+    "description": "WoT Thing for one PredictiveMaintenance DataSet (class urn:uuid:9aebd118-3e77-5786-89e3-713807499548) at cardinality anchor Controller_1 — topology \"Two-robot cell (6+4 axes)\". Illustrative.",
     "sb:namespaces": [
       "http://opcfoundation.org/UA/",
       "http://opcfoundation.org/UA/Robotics/"
@@ -835,7 +835,7 @@
     ],
     "base": "opc.tcp://opcua.example.com:4840",
     "sb:scenario": "http://opcfoundation.org/UA/PubSub/Scenarios/PredictiveMaintenance",
-    "sb:dataSetClassId": "urn:uuid:fccc95e4-e8b3-5b20-82b1-c5fdcb30f53a",
+    "sb:dataSetClassId": "urn:uuid:9aebd118-3e77-5786-89e3-713807499548",
     "sb:cardinalityPath": "/Controllers/<ControllerIdentifier>",
     "properties": {
       "ControllerTemperature": {
@@ -849,7 +849,7 @@
           "http://opcfoundation.org/UA/PubSub/Scenarios/PredictiveMaintenance"
         ],
         "sb:dataSetClassId": [
-          "urn:uuid:fccc95e4-e8b3-5b20-82b1-c5fdcb30f53a"
+          "urn:uuid:9aebd118-3e77-5786-89e3-713807499548"
         ],
         "forms": [
           {
@@ -881,7 +881,7 @@
           "http://opcfoundation.org/UA/PubSub/Scenarios/PredictiveMaintenance"
         ],
         "sb:dataSetClassId": [
-          "urn:uuid:fccc95e4-e8b3-5b20-82b1-c5fdcb30f53a"
+          "urn:uuid:9aebd118-3e77-5786-89e3-713807499548"
         ],
         "forms": [
           {
@@ -913,7 +913,7 @@
           "http://opcfoundation.org/UA/PubSub/Scenarios/PredictiveMaintenance"
         ],
         "sb:dataSetClassId": [
-          "urn:uuid:fccc95e4-e8b3-5b20-82b1-c5fdcb30f53a"
+          "urn:uuid:9aebd118-3e77-5786-89e3-713807499548"
         ],
         "forms": [
           {
@@ -945,7 +945,7 @@
           "http://opcfoundation.org/UA/PubSub/Scenarios/PredictiveMaintenance"
         ],
         "sb:dataSetClassId": [
-          "urn:uuid:fccc95e4-e8b3-5b20-82b1-c5fdcb30f53a"
+          "urn:uuid:9aebd118-3e77-5786-89e3-713807499548"
         ],
         "forms": [
           {
@@ -977,9 +977,9 @@
       }
     ],
     "@type": "uav:object",
-    "id": "urn:uuid:49f29442-7230-522c-bc7e-43a43d21b13a",
+    "id": "urn:uuid:33fe2a7d-46c9-50b3-b5c9-f5f479f04643",
     "title": "ExampleRobotSystem · AnomalyDetection · Robot_1",
-    "description": "WoT Thing for one AnomalyDetection DataSet (class urn:uuid:4fa76f85-fefb-5a6d-a699-e5e3298c769e) at cardinality anchor Robot_1 — topology \"Two-robot cell (6+4 axes)\". Illustrative.",
+    "description": "WoT Thing for one AnomalyDetection DataSet (class urn:uuid:180dfa3e-be8b-5dae-b66e-a5a08384f256) at cardinality anchor Robot_1 — topology \"Two-robot cell (6+4 axes)\". Illustrative.",
     "sb:namespaces": [
       "http://opcfoundation.org/UA/",
       "http://opcfoundation.org/UA/Robotics/"
@@ -994,7 +994,7 @@
     ],
     "base": "opc.tcp://opcua.example.com:4840",
     "sb:scenario": "http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection",
-    "sb:dataSetClassId": "urn:uuid:4fa76f85-fefb-5a6d-a699-e5e3298c769e",
+    "sb:dataSetClassId": "urn:uuid:180dfa3e-be8b-5dae-b66e-a5a08384f256",
     "sb:cardinalityPath": "/MotionDevices/<MotionDeviceIdentifier>",
     "properties": {
       "AxisActualPosition_Axis_1": {
@@ -1008,7 +1008,7 @@
           "http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection"
         ],
         "sb:dataSetClassId": [
-          "urn:uuid:4fa76f85-fefb-5a6d-a699-e5e3298c769e"
+          "urn:uuid:180dfa3e-be8b-5dae-b66e-a5a08384f256"
         ],
         "forms": [
           {
@@ -1040,7 +1040,7 @@
           "http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection"
         ],
         "sb:dataSetClassId": [
-          "urn:uuid:4fa76f85-fefb-5a6d-a699-e5e3298c769e"
+          "urn:uuid:180dfa3e-be8b-5dae-b66e-a5a08384f256"
         ],
         "forms": [
           {
@@ -1072,7 +1072,7 @@
           "http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection"
         ],
         "sb:dataSetClassId": [
-          "urn:uuid:4fa76f85-fefb-5a6d-a699-e5e3298c769e"
+          "urn:uuid:180dfa3e-be8b-5dae-b66e-a5a08384f256"
         ],
         "forms": [
           {
@@ -1104,7 +1104,7 @@
           "http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection"
         ],
         "sb:dataSetClassId": [
-          "urn:uuid:4fa76f85-fefb-5a6d-a699-e5e3298c769e"
+          "urn:uuid:180dfa3e-be8b-5dae-b66e-a5a08384f256"
         ],
         "forms": [
           {
@@ -1136,7 +1136,7 @@
           "http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection"
         ],
         "sb:dataSetClassId": [
-          "urn:uuid:4fa76f85-fefb-5a6d-a699-e5e3298c769e"
+          "urn:uuid:180dfa3e-be8b-5dae-b66e-a5a08384f256"
         ],
         "forms": [
           {
@@ -1168,7 +1168,7 @@
           "http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection"
         ],
         "sb:dataSetClassId": [
-          "urn:uuid:4fa76f85-fefb-5a6d-a699-e5e3298c769e"
+          "urn:uuid:180dfa3e-be8b-5dae-b66e-a5a08384f256"
         ],
         "forms": [
           {
@@ -1200,7 +1200,7 @@
           "http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection"
         ],
         "sb:dataSetClassId": [
-          "urn:uuid:4fa76f85-fefb-5a6d-a699-e5e3298c769e"
+          "urn:uuid:180dfa3e-be8b-5dae-b66e-a5a08384f256"
         ],
         "forms": [
           {
@@ -1232,7 +1232,7 @@
           "http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection"
         ],
         "sb:dataSetClassId": [
-          "urn:uuid:4fa76f85-fefb-5a6d-a699-e5e3298c769e"
+          "urn:uuid:180dfa3e-be8b-5dae-b66e-a5a08384f256"
         ],
         "forms": [
           {
@@ -1264,7 +1264,7 @@
           "http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection"
         ],
         "sb:dataSetClassId": [
-          "urn:uuid:4fa76f85-fefb-5a6d-a699-e5e3298c769e"
+          "urn:uuid:180dfa3e-be8b-5dae-b66e-a5a08384f256"
         ],
         "forms": [
           {
@@ -1296,7 +1296,7 @@
           "http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection"
         ],
         "sb:dataSetClassId": [
-          "urn:uuid:4fa76f85-fefb-5a6d-a699-e5e3298c769e"
+          "urn:uuid:180dfa3e-be8b-5dae-b66e-a5a08384f256"
         ],
         "forms": [
           {
@@ -1328,7 +1328,7 @@
           "http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection"
         ],
         "sb:dataSetClassId": [
-          "urn:uuid:4fa76f85-fefb-5a6d-a699-e5e3298c769e"
+          "urn:uuid:180dfa3e-be8b-5dae-b66e-a5a08384f256"
         ],
         "forms": [
           {
@@ -1360,7 +1360,7 @@
           "http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection"
         ],
         "sb:dataSetClassId": [
-          "urn:uuid:4fa76f85-fefb-5a6d-a699-e5e3298c769e"
+          "urn:uuid:180dfa3e-be8b-5dae-b66e-a5a08384f256"
         ],
         "forms": [
           {
@@ -1392,9 +1392,9 @@
       }
     ],
     "@type": "uav:object",
-    "id": "urn:uuid:82f245da-41a2-5b26-949f-5f3b2f854bc0",
+    "id": "urn:uuid:33130872-e429-501e-8a38-65fab2fd577e",
     "title": "ExampleRobotSystem · AnomalyDetection · Robot_2",
-    "description": "WoT Thing for one AnomalyDetection DataSet (class urn:uuid:4fa76f85-fefb-5a6d-a699-e5e3298c769e) at cardinality anchor Robot_2 — topology \"Two-robot cell (6+4 axes)\". Illustrative.",
+    "description": "WoT Thing for one AnomalyDetection DataSet (class urn:uuid:180dfa3e-be8b-5dae-b66e-a5a08384f256) at cardinality anchor Robot_2 — topology \"Two-robot cell (6+4 axes)\". Illustrative.",
     "sb:namespaces": [
       "http://opcfoundation.org/UA/",
       "http://opcfoundation.org/UA/Robotics/"
@@ -1409,7 +1409,7 @@
     ],
     "base": "opc.tcp://opcua.example.com:4840",
     "sb:scenario": "http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection",
-    "sb:dataSetClassId": "urn:uuid:4fa76f85-fefb-5a6d-a699-e5e3298c769e",
+    "sb:dataSetClassId": "urn:uuid:180dfa3e-be8b-5dae-b66e-a5a08384f256",
     "sb:cardinalityPath": "/MotionDevices/<MotionDeviceIdentifier>",
     "properties": {
       "AxisActualPosition_Axis_1": {
@@ -1423,7 +1423,7 @@
           "http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection"
         ],
         "sb:dataSetClassId": [
-          "urn:uuid:4fa76f85-fefb-5a6d-a699-e5e3298c769e"
+          "urn:uuid:180dfa3e-be8b-5dae-b66e-a5a08384f256"
         ],
         "forms": [
           {
@@ -1455,7 +1455,7 @@
           "http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection"
         ],
         "sb:dataSetClassId": [
-          "urn:uuid:4fa76f85-fefb-5a6d-a699-e5e3298c769e"
+          "urn:uuid:180dfa3e-be8b-5dae-b66e-a5a08384f256"
         ],
         "forms": [
           {
@@ -1487,7 +1487,7 @@
           "http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection"
         ],
         "sb:dataSetClassId": [
-          "urn:uuid:4fa76f85-fefb-5a6d-a699-e5e3298c769e"
+          "urn:uuid:180dfa3e-be8b-5dae-b66e-a5a08384f256"
         ],
         "forms": [
           {
@@ -1519,7 +1519,7 @@
           "http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection"
         ],
         "sb:dataSetClassId": [
-          "urn:uuid:4fa76f85-fefb-5a6d-a699-e5e3298c769e"
+          "urn:uuid:180dfa3e-be8b-5dae-b66e-a5a08384f256"
         ],
         "forms": [
           {
@@ -1551,7 +1551,7 @@
           "http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection"
         ],
         "sb:dataSetClassId": [
-          "urn:uuid:4fa76f85-fefb-5a6d-a699-e5e3298c769e"
+          "urn:uuid:180dfa3e-be8b-5dae-b66e-a5a08384f256"
         ],
         "forms": [
           {
@@ -1583,7 +1583,7 @@
           "http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection"
         ],
         "sb:dataSetClassId": [
-          "urn:uuid:4fa76f85-fefb-5a6d-a699-e5e3298c769e"
+          "urn:uuid:180dfa3e-be8b-5dae-b66e-a5a08384f256"
         ],
         "forms": [
           {
@@ -1615,7 +1615,7 @@
           "http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection"
         ],
         "sb:dataSetClassId": [
-          "urn:uuid:4fa76f85-fefb-5a6d-a699-e5e3298c769e"
+          "urn:uuid:180dfa3e-be8b-5dae-b66e-a5a08384f256"
         ],
         "forms": [
           {
@@ -1647,7 +1647,7 @@
           "http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection"
         ],
         "sb:dataSetClassId": [
-          "urn:uuid:4fa76f85-fefb-5a6d-a699-e5e3298c769e"
+          "urn:uuid:180dfa3e-be8b-5dae-b66e-a5a08384f256"
         ],
         "forms": [
           {
@@ -1679,9 +1679,9 @@
       }
     ],
     "@type": "uav:object",
-    "id": "urn:uuid:f08b61a5-bb3b-5b1b-8297-ca261855d758",
+    "id": "urn:uuid:17975e04-9c1c-5d3b-9a0c-0ad3bcd794ab",
     "title": "ExampleRobotSystem · AlarmAndEventDistribution",
-    "description": "WoT Thing for one AlarmAndEventDistribution DataSet (class urn:uuid:47b98390-ae81-5a82-82e3-39258ce1a49b) — topology \"Two-robot cell (6+4 axes)\". Illustrative.",
+    "description": "WoT Thing for one AlarmAndEventDistribution DataSet (class urn:uuid:ec621723-fbe4-54a1-9166-87d19a264c0f) — topology \"Two-robot cell (6+4 axes)\". Illustrative.",
     "sb:namespaces": [
       "http://opcfoundation.org/UA/",
       "http://opcfoundation.org/UA/Robotics/"
@@ -1696,13 +1696,13 @@
     ],
     "base": "opc.tcp://opcua.example.com:4840",
     "sb:scenario": "http://opcfoundation.org/UA/PubSub/Scenarios/AlarmAndEventDistribution",
-    "sb:dataSetClassId": "urn:uuid:47b98390-ae81-5a82-82e3-39258ce1a49b",
+    "sb:dataSetClassId": "urn:uuid:ec621723-fbe4-54a1-9166-87d19a264c0f",
     "events": {
       "AlarmAndEventDistribution": {
         "title": "AlarmAndEventDistribution",
         "@type": "uav:object",
         "sb:scenario": "http://opcfoundation.org/UA/PubSub/Scenarios/AlarmAndEventDistribution",
-        "sb:dataSetClassId": "urn:uuid:47b98390-ae81-5a82-82e3-39258ce1a49b",
+        "sb:dataSetClassId": "urn:uuid:ec621723-fbe4-54a1-9166-87d19a264c0f",
         "sb:eventType": "AlarmConditionType",
         "data": {
           "type": "object",
@@ -1760,9 +1760,9 @@
       }
     ],
     "@type": "uav:object",
-    "id": "urn:uuid:836dbe46-066a-5b9a-adc5-c6e7245eec78",
+    "id": "urn:uuid:310300f7-3633-509d-9ffc-58cc2457120b",
     "title": "ExampleRobotSystem · FleetAndCompliance",
-    "description": "WoT Thing for one FleetAndCompliance DataSet (class urn:uuid:f366c644-8670-57a3-b838-dd492b1f82b0) — topology \"Two-robot cell (6+4 axes)\". Illustrative.",
+    "description": "WoT Thing for one FleetAndCompliance DataSet (class urn:uuid:000fbba0-373f-5ff1-bd11-67fb2fc20ef0) — topology \"Two-robot cell (6+4 axes)\". Illustrative.",
     "sb:namespaces": [
       "http://opcfoundation.org/UA/",
       "http://opcfoundation.org/UA/Robotics/"
@@ -1777,7 +1777,7 @@
     ],
     "base": "opc.tcp://opcua.example.com:4840",
     "sb:scenario": "http://opcfoundation.org/UA/PubSub/Scenarios/FleetAndCompliance",
-    "sb:dataSetClassId": "urn:uuid:f366c644-8670-57a3-b838-dd492b1f82b0",
+    "sb:dataSetClassId": "urn:uuid:000fbba0-373f-5ff1-bd11-67fb2fc20ef0",
     "properties": {
       "Manufacturer": {
         "title": "Manufacturer",
@@ -1790,7 +1790,7 @@
           "http://opcfoundation.org/UA/PubSub/Scenarios/FleetAndCompliance"
         ],
         "sb:dataSetClassId": [
-          "urn:uuid:f366c644-8670-57a3-b838-dd492b1f82b0"
+          "urn:uuid:000fbba0-373f-5ff1-bd11-67fb2fc20ef0"
         ],
         "forms": [
           {
@@ -1822,7 +1822,7 @@
           "http://opcfoundation.org/UA/PubSub/Scenarios/FleetAndCompliance"
         ],
         "sb:dataSetClassId": [
-          "urn:uuid:f366c644-8670-57a3-b838-dd492b1f82b0"
+          "urn:uuid:000fbba0-373f-5ff1-bd11-67fb2fc20ef0"
         ],
         "forms": [
           {
@@ -1854,7 +1854,7 @@
           "http://opcfoundation.org/UA/PubSub/Scenarios/FleetAndCompliance"
         ],
         "sb:dataSetClassId": [
-          "urn:uuid:f366c644-8670-57a3-b838-dd492b1f82b0"
+          "urn:uuid:000fbba0-373f-5ff1-bd11-67fb2fc20ef0"
         ],
         "forms": [
           {
@@ -1886,7 +1886,7 @@
           "http://opcfoundation.org/UA/PubSub/Scenarios/FleetAndCompliance"
         ],
         "sb:dataSetClassId": [
-          "urn:uuid:f366c644-8670-57a3-b838-dd492b1f82b0"
+          "urn:uuid:000fbba0-373f-5ff1-bd11-67fb2fc20ef0"
         ],
         "forms": [
           {

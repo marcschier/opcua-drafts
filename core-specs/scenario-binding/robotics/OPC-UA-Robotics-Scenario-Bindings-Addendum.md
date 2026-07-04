@@ -27,11 +27,11 @@ Only the bound signals are materialised in the overlay; it is an *illustrative* 
 
 ## 4 Scenario bindings for `MotionDeviceSystemType`
 
-Bindings for the `MotionDeviceSystemType` of the `http://opcfoundation.org/UA/Robotics/` companion specification, per the [Scenario Bindings](../OPC-UA-Scenario-Bindings.md) base specification. Each binding is **one Part 14 DataSet** with a deterministic `DataSetClassId`. Every data-DataSet `BrowsePath` below was resolved against the published companion NodeSet; event-DataSet fields select standard event-type fields.
+Bindings for the `MotionDeviceSystemType` of the `http://opcfoundation.org/UA/Robotics/` companion specification, per the [Scenario Bindings](../OPC-UA-Scenario-Bindings.md) base specification. Each binding is **one content class** — a data DataSet, an event DataSet, or an action set — with a deterministic `DataSetClassId`. Every data and Method `BrowsePath` below was resolved against the published companion NodeSet; event-DataSet fields select standard event-type fields.
 
 #### Scenario: Observability
 
-*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/Observability` · *Direction:* Publisher · *Content:* data DataSet (PublishedDataItems) · *DataSetClassId:* `ad751dd8-3b2d-5599-8cce-4be80dc0f8b8` · *Cardinality:* one DataSet per `/MotionDevices/<MotionDeviceIdentifier>`
+*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/Observability` · *Direction:* Publisher · *Content:* data DataSet (PublishedDataItems) · *DataSetClassId:* `c59daa9d-857b-5016-9299-d85875e022dc` · *Cardinality:* one DataSet per `/MotionDevices/<MotionDeviceIdentifier>`
 
 | Field | Kind | BrowsePath | Source type | DataType | OTEL |
 |---|---|---|---|---|---|
@@ -41,7 +41,7 @@ Bindings for the `MotionDeviceSystemType` of the `http://opcfoundation.org/UA/Ro
 
 #### Scenario: PredictiveMaintenance
 
-*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/PredictiveMaintenance` · *Direction:* Publisher · *Content:* data DataSet (PublishedDataItems) · *DataSetClassId:* `fccc95e4-e8b3-5b20-82b1-c5fdcb30f53a` · *Cardinality:* one DataSet per `/Controllers/<ControllerIdentifier>`
+*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/PredictiveMaintenance` · *Direction:* Publisher · *Content:* data DataSet (PublishedDataItems) · *DataSetClassId:* `9aebd118-3e77-5786-89e3-713807499548` · *Cardinality:* one DataSet per `/Controllers/<ControllerIdentifier>`
 
 | Field | Kind | BrowsePath | Source type | DataType | OTEL |
 |---|---|---|---|---|---|
@@ -52,7 +52,7 @@ Bindings for the `MotionDeviceSystemType` of the `http://opcfoundation.org/UA/Ro
 
 #### Scenario: AnomalyDetection
 
-*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection` · *Direction:* Publisher · *Content:* data DataSet (PublishedDataItems) · *DataSetClassId:* `4fa76f85-fefb-5a6d-a699-e5e3298c769e` · *Cardinality:* one DataSet per `/MotionDevices/<MotionDeviceIdentifier>`
+*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection` · *Direction:* Publisher · *Content:* data DataSet (PublishedDataItems) · *DataSetClassId:* `180dfa3e-be8b-5dae-b66e-a5a08384f256` · *Cardinality:* one DataSet per `/MotionDevices/<MotionDeviceIdentifier>`
 
 | Field | Kind | BrowsePath | Source type | DataType | OTEL |
 |---|---|---|---|---|---|
@@ -61,7 +61,7 @@ Bindings for the `MotionDeviceSystemType` of the `http://opcfoundation.org/UA/Ro
 
 #### Scenario: AlarmAndEventDistribution
 
-*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/AlarmAndEventDistribution` · *Direction:* Publisher · *Content:* event DataSet (PublishedEvents) · *DataSetClassId:* `47b98390-ae81-5a82-82e3-39258ce1a49b` · *Cardinality:* one DataSet (bound root) · *Event source:* `/` · *Event type:* AlarmConditionType
+*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/AlarmAndEventDistribution` · *Direction:* Publisher · *Content:* event DataSet (PublishedEvents) · *DataSetClassId:* `ec621723-fbe4-54a1-9166-87d19a264c0f` · *Cardinality:* one DataSet (bound root) · *Event source:* `/` · *Event type:* AlarmConditionType
 
 | Field | Kind | Event field / attribute |
 |---|---|---|
@@ -76,7 +76,7 @@ Bindings for the `MotionDeviceSystemType` of the `http://opcfoundation.org/UA/Ro
 
 #### Scenario: FleetAndCompliance
 
-*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/FleetAndCompliance` · *Direction:* Publisher · *Content:* data DataSet (PublishedDataItems) · *DataSetClassId:* `f366c644-8670-57a3-b838-dd492b1f82b0` · *Cardinality:* one DataSet (bound root)
+*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/FleetAndCompliance` · *Direction:* Publisher · *Content:* data DataSet (PublishedDataItems) · *DataSetClassId:* `000fbba0-373f-5ff1-bd11-67fb2fc20ef0` · *Cardinality:* one DataSet (bound root)
 
 | Field | Kind | BrowsePath | Source type | DataType | OTEL |
 |---|---|---|---|---|---|

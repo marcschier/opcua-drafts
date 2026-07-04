@@ -83,3 +83,5 @@ Scenario_AlarmAndEventDistribution,60114,Object
 Scenario_AlarmAndEventDistribution_ScenarioUri,60552,Variable
 Scenario_FleetAndCompliance,60115,Object
 Scenario_FleetAndCompliance_ScenarioUri,60553,Variable
+Scenario_RemoteOperations,60116,Object
+Scenario_RemoteOperations_ScenarioUri,60554,Variable

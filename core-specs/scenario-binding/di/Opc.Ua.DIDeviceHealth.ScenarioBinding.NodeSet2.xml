@@ -85,7 +85,7 @@
       <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5005</Reference>
     </References>
-    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>c2bdda35-eefe-569a-ab7a-779eabd7d611</uax:String></uax:Guid></Value>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>6a43d6ba-2a81-58af-991b-f1c5108ce590</uax:String></uax:Guid></Value>
   </UAVariable>
   <UAVariable NodeId="ns=1;i=5008" BrowseName="1:ContentKind" ParentNodeId="ns=1;i=5005" DataType="i=60052">
     <DisplayName>ContentKind</DisplayName>

@@ -34,6 +34,9 @@ DOMAINS = {
     # (which Pumps extends) and a device-only DeviceHealth binding on IDeviceHealthType.
     "DI": {"base": ["Opc.Ua.Di.NodeSet2.xml"]},
     "DIDeviceHealth": {"base": ["Opc.Ua.Di.NodeSet2.xml"], "folder": "di"},
+    # DI device-action example (also in examples/di/): an ACTION SET (ContentKind=Actions) on
+    # DeviceType exposing the inherited LockingServices Methods (Lock/InitLock, Lock/ExitLock).
+    "DIOperations": {"base": ["Opc.Ua.Di.NodeSet2.xml"], "folder": "di"},
 }
 
 errors = []

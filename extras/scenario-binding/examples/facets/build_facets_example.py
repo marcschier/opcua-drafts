@@ -40,7 +40,9 @@ T_IBOUND, T_GROUP, T_BINDING, T_BOUNDVAR = 60016, 60018, 60011, 60013
 
 
 def class_id(scenario_uri, applies_type):
-    return uuid.uuid5(DATASET_CLASS_NS, f"{scenario_uri}|{BASE};{applies_type}|{MAJOR}")
+    # Facets bindings are all data DataSets (DataItems); ContentKind is part of the identity (see
+    # build_bindings.dataset_class_id) so the formula must match.
+    return uuid.uuid5(DATASET_CLASS_NS, f"{scenario_uri}|{BASE};{applies_type}|DataItems|{MAJOR}")
 
 
 def field_id(scenario_uri, applies_type, field):

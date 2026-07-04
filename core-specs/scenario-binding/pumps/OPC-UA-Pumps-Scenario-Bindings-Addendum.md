@@ -27,11 +27,11 @@ Only the bound signals are materialised in the overlay; it is an *illustrative* 
 
 ## 4 Scenario bindings for `PumpType`
 
-Bindings for the `PumpType` of the `http://opcfoundation.org/UA/Pumps/` companion specification, per the [Scenario Bindings](../OPC-UA-Scenario-Bindings.md) base specification. Each binding is **one Part 14 DataSet** with a deterministic `DataSetClassId`. Every data-DataSet `BrowsePath` below was resolved against the published companion NodeSet; event-DataSet fields select standard event-type fields.
+Bindings for the `PumpType` of the `http://opcfoundation.org/UA/Pumps/` companion specification, per the [Scenario Bindings](../OPC-UA-Scenario-Bindings.md) base specification. Each binding is **one content class** — a data DataSet, an event DataSet, or an action set — with a deterministic `DataSetClassId`. Every data and Method `BrowsePath` below was resolved against the published companion NodeSet; event-DataSet fields select standard event-type fields.
 
 #### Scenario: Observability
 
-*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/Observability` · *Direction:* Publisher · *Content:* data DataSet (PublishedDataItems) · *DataSetClassId:* `96490f93-6c92-59cd-981d-4203ab067313` · *Cardinality:* one DataSet (bound root)
+*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/Observability` · *Direction:* Publisher · *Content:* data DataSet (PublishedDataItems) · *DataSetClassId:* `794b8a9a-676a-5e30-b18e-2e3f49354d64` · *Cardinality:* one DataSet (bound root)
 
 | Field | Kind | BrowsePath | Source type | DataType | OTEL |
 |---|---|---|---|---|---|
@@ -52,7 +52,7 @@ Bindings for the `PumpType` of the `http://opcfoundation.org/UA/Pumps/` companio
 
 #### Scenario: EnergyAndLoadManagement
 
-*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/EnergyAndLoadManagement` · *Direction:* Publisher · *Content:* data DataSet (PublishedDataItems) · *DataSetClassId:* `605ca065-f5d7-5400-a9fe-995d21ad75ce` · *Cardinality:* one DataSet (bound root)
+*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/EnergyAndLoadManagement` · *Direction:* Publisher · *Content:* data DataSet (PublishedDataItems) · *DataSetClassId:* `4f30fed4-ab2a-5a65-9cdc-0b7d79d88aa9` · *Cardinality:* one DataSet (bound root)
 
 | Field | Kind | BrowsePath | Source type | DataType | OTEL |
 |---|---|---|---|---|---|
@@ -64,7 +64,7 @@ Bindings for the `PumpType` of the `http://opcfoundation.org/UA/Pumps/` companio
 
 #### Scenario: PredictiveMaintenance
 
-*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/PredictiveMaintenance` · *Direction:* Publisher · *Content:* data DataSet (PublishedDataItems) · *DataSetClassId:* `a96b90d3-7b07-55d8-8343-9c7e4df85bab` · *Cardinality:* one DataSet (bound root)
+*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/PredictiveMaintenance` · *Direction:* Publisher · *Content:* data DataSet (PublishedDataItems) · *DataSetClassId:* `bc161840-91a3-5cc5-98a9-862cb53a590a` · *Cardinality:* one DataSet (bound root)
 
 | Field | Kind | BrowsePath | Source type | DataType | OTEL |
 |---|---|---|---|---|---|
@@ -77,7 +77,7 @@ Bindings for the `PumpType` of the `http://opcfoundation.org/UA/Pumps/` companio
 
 #### Scenario: AnomalyDetection
 
-*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection` · *Direction:* Publisher · *Content:* data DataSet (PublishedDataItems) · *DataSetClassId:* `d4eb3d5b-5ffb-580e-b96f-142cb3f998ad` · *Cardinality:* one DataSet (bound root)
+*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection` · *Direction:* Publisher · *Content:* data DataSet (PublishedDataItems) · *DataSetClassId:* `1a2fd8ca-dc68-5659-ad43-8452ba8f2a5a` · *Cardinality:* one DataSet (bound root)
 
 | Field | Kind | BrowsePath | Source type | DataType | OTEL |
 |---|---|---|---|---|---|
@@ -88,7 +88,7 @@ Bindings for the `PumpType` of the `http://opcfoundation.org/UA/Pumps/` companio
 
 #### Scenario: FleetAndCompliance
 
-*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/FleetAndCompliance` · *Direction:* Publisher · *Content:* data DataSet (PublishedDataItems) · *DataSetClassId:* `c5ad94e3-12f1-5fa4-b69f-b8aeaf40106a` · *Cardinality:* one DataSet (bound root)
+*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/FleetAndCompliance` · *Direction:* Publisher · *Content:* data DataSet (PublishedDataItems) · *DataSetClassId:* `e50711a6-ebed-5e04-9672-2a7d506e1c32` · *Cardinality:* one DataSet (bound root)
 
 | Field | Kind | BrowsePath | Source type | DataType | OTEL |
 |---|---|---|---|---|---|
@@ -97,7 +97,7 @@ Bindings for the `PumpType` of the `http://opcfoundation.org/UA/Pumps/` companio
 
 #### Scenario: AlarmAndEventDistribution
 
-*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/AlarmAndEventDistribution` · *Direction:* Publisher · *Content:* event DataSet (PublishedEvents) · *DataSetClassId:* `700f61a4-4e97-52ed-b72e-f085d406ced9` · *Cardinality:* one DataSet (bound root) · *Event source:* `/` · *Event type:* BaseEventType
+*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/AlarmAndEventDistribution` · *Direction:* Publisher · *Content:* event DataSet (PublishedEvents) · *DataSetClassId:* `85c43bb8-1a03-5d12-bf95-b4277153baf8` · *Cardinality:* one DataSet (bound root) · *Event source:* `/` · *Event type:* BaseEventType
 
 | Field | Kind | Event field / attribute |
 |---|---|---|

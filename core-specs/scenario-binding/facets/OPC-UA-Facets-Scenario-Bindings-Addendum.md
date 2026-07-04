@@ -29,9 +29,9 @@ Each facet defines its scenario binding **once**, on its own type:
 
 | Binding | Defined on (axis) | Scenario | `DataSetClassId` | Fields |
 |---|---|---|---|---|
-| **DeviceObservability** | `DeviceType` — ObjectType (subtype base) | Observability | `f521e631…` | `Manufacturer`, `SerialNumber`, `DeviceHealth` |
-| **LocationObservability** | `LocationAddInType` — AddIn (structural facet) | Observability | `ef3c6168…` | `Latitude`, `Longitude`, `Altitude` |
-| **Maintenance** | `IMaintenanceFacetType` — Interface (contract facet) | Maintenance | `ca4e2134…` | `LastMaintenanceDate` |
+| **DeviceObservability** | `DeviceType` — ObjectType (subtype base) | Observability | `e91fdfed…` | `Manufacturer`, `SerialNumber`, `DeviceHealth` |
+| **LocationObservability** | `LocationAddInType` — AddIn (structural facet) | Observability | `b61cab00…` | `Latitude`, `Longitude`, `Altitude` |
+| **Maintenance** | `IMaintenanceFacetType` — Interface (contract facet) | Maintenance | `b7c28bc2…` | `LastMaintenanceDate` |
 
 ## 3. Derived bindings — delta only
 
@@ -39,39 +39,39 @@ A derived binding lists **only its added (delta) fields** and references the bas
 
 | Derived binding | Scenario | Own `DataSetClassId` | Delta fields | `BaseDataSetClassIds` |
 |---|---|---|---|---|
-| **MachineObservability** | Observability | `53abb5ef…` | `SpindleSpeed`, `AxisLoad` · overrides `DeviceHealth` | `f521e631…`, `ef3c6168…` |
-| **MachineMaintenance** | Maintenance | `051beb56…` | *(none — pure inheritance)* | `ca4e2134…` |
+| **MachineObservability** | Observability | `f89b3144…` | `SpindleSpeed`, `AxisLoad` · overrides `DeviceHealth` | `e91fdfed…`, `b61cab00…` |
+| **MachineMaintenance** | Maintenance | `6dfb7f30…` | *(none — pure inheritance)* | `b7c28bc2…` |
 
 ## 4. What the bridge produces — the composed DataSets
 
 A bridge composes the effective DataSet for `MachineType` + a scenario by **unioning** the bindings reachable via subtype, `HasAddIn` and `HasInterface` (override by `FieldName`), re-rooting each base facet's BrowsePaths under its mount point (the AddIn is mounted at `/Location`), and tagging every field with the `SourceScenarioBindingClassId` of the base binding it came from. The composed DataSet keeps `MachineType`'s own `DataSetClassId` and advertises the contributing base classes in `BaseDataSetClassIds`.
 
-### 4.1 `MachineObservability` — Observability DataSet (8 fields, class `53abb5ef…`)
+### 4.1 `MachineObservability` — Observability DataSet (8 fields, class `f89b3144…`)
 
 | Field | Resolved BrowsePath (on a Machine instance) | From facet | Provenance `SourceScenarioBindingClassId` | Note |
 |---|---|---|---|---|
-| `Manufacturer` | `/Manufacturer` | DeviceObservability | `f521e631…` | inherited |
-| `SerialNumber` | `/SerialNumber` | DeviceObservability | `f521e631…` | inherited |
-| `DeviceHealth` | `/DeviceHealth` | DeviceObservability | `f521e631…` | overrides base field |
-| `Latitude` | `/Location/Latitude` | LocationObservability | `ef3c6168…` | inherited |
-| `Longitude` | `/Location/Longitude` | LocationObservability | `ef3c6168…` | inherited |
-| `Altitude` | `/Location/Altitude` | LocationObservability | `ef3c6168…` | inherited |
+| `Manufacturer` | `/Manufacturer` | DeviceObservability | `e91fdfed…` | inherited |
+| `SerialNumber` | `/SerialNumber` | DeviceObservability | `e91fdfed…` | inherited |
+| `DeviceHealth` | `/DeviceHealth` | DeviceObservability | `e91fdfed…` | overrides base field |
+| `Latitude` | `/Location/Latitude` | LocationObservability | `b61cab00…` | inherited |
+| `Longitude` | `/Location/Longitude` | LocationObservability | `b61cab00…` | inherited |
+| `Altitude` | `/Location/Altitude` | LocationObservability | `b61cab00…` | inherited |
 | `SpindleSpeed` | `/SpindleSpeed` | MachineObservability | — | own field |
 | `AxisLoad` | `/AxisLoad` | MachineObservability | — | own field |
 
-### 4.2 `MachineMaintenance` — Maintenance DataSet (1 fields, class `051beb56…`)
+### 4.2 `MachineMaintenance` — Maintenance DataSet (1 fields, class `6dfb7f30…`)
 
 | Field | Resolved BrowsePath (on a Machine instance) | From facet | Provenance `SourceScenarioBindingClassId` | Note |
 |---|---|---|---|---|
-| `LastMaintenanceDate` | `/LastMaintenanceDate` | Maintenance | `ca4e2134…` | inherited |
+| `LastMaintenanceDate` | `/LastMaintenanceDate` | Maintenance | `b7c28bc2…` | inherited |
 
 ## 5. Facet-scoped subset recognition
 
 A semantics-agnostic subscriber that understands only a **base facet** recognises the base `DataSetClassId` in the composed DataSet's `BaseDataSetClassIds` and consumes exactly the fields tagged with that class in `SourceScenarioBindingClassId` — without understanding `MachineType`:
 
-- A **DeviceObservability** subscriber (knows `f521e631…`) selects 3 of 8 fields: `Manufacturer`, `SerialNumber`, `DeviceHealth`.
-- A **LocationObservability** subscriber (knows `ef3c6168…`) selects 3 of 8 fields: `Latitude`, `Longitude`, `Altitude`.
-- A subscriber that understands the full `MachineObservability` class (`53abb5ef…`) consumes all 8 fields.
+- A **DeviceObservability** subscriber (knows `e91fdfed…`) selects 3 of 8 fields: `Manufacturer`, `SerialNumber`, `DeviceHealth`.
+- A **LocationObservability** subscriber (knows `b61cab00…`) selects 3 of 8 fields: `Latitude`, `Longitude`, `Altitude`.
+- A subscriber that understands the full `MachineObservability` class (`f89b3144…`) consumes all 8 fields.
 
 ## 6. Where the binding nodes live
 

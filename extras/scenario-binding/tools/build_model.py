@@ -416,11 +416,13 @@ enum_type(60054, "MetricTemporalityEnum",
 ])
 
 enum_type(60052, "ScenarioContentKindEnum",
-          "Whether a scenario binding realizes as a Part 14 data DataSet "
-          "(PublishedDataItems) or an event DataSet (PublishedEvents). A binding is exactly "
-          "one DataSet.", CAT_DT, [
+          "The content class a scenario binding exposes: a Part 14 data DataSet "
+          "(PublishedDataItems), an event DataSet (PublishedEvents), or an action set "
+          "(bound Methods). A binding is exactly one content class.", CAT_DT, [
     ("DataItems", 0, "A data DataSet: grouped Variable values (PublishedDataItemsType)."),
     ("Events", 1, "An event DataSet: selected event fields from a notifier (PublishedEventsType)."),
+    ("Actions", 2, "An action set: bound Methods invoked or responded (optionally realized as "
+                   "Part 14 Actions/ActionTargets)."),
 ])
 
 # --- Structures ------------------------------------------------------------
@@ -438,7 +440,7 @@ struct_type(60060, "BoundItemDataType",
     ("StartingNode", NodeId_, None, "Node the BrowsePath is resolved from (default: the bound root)."),
     ("BrowsePath", RelativePath, None, "RECOMMENDED locator: RelativePath from StartingNode (type-level, portable)."),
     ("SourceNodeId", NodeId_, None, "Alternative absolute locator (instance/server-specific)."),
-    ("OwningObjectPath", RelativePath, None, "For a bound Method: RelativePath to the Object it is called on (default: the bound root)."),
+    ("OwningObjectPath", RelativePath, None, "For a bound Method: RelativePath to the Object it is called on (default: the Method BrowsePath's parent Object; omit only when the Method is directly on the bound root)."),
     ("SourceTypeDefinition", NodeId_, None, "TypeDefinition of the source node (semantic identity)."),
     ("SourceBrowseName", QualifiedName, None, "Namespace-qualified BrowseName of the source node."),
     ("ModelNamespaceUri", String, None, "Namespace URI of the companion model that defines the source."),
@@ -508,10 +510,12 @@ prop_var(60013, BV, "Monotonic", Boolean,
          "MetricInstrumentType (e.g. Counter is monotonic, UpDownCounter is not).")
 
 object_type(60014, "BoundMethodType", T(60012),
-            "A bound Method exposed as an invokable action; may be realized as a Part 14 "
-            "Action/ActionTarget.", CAT)
+            "A bound Method exposed as an invokable action in an action-set binding "
+            "(ContentKind=Actions); realized classically via the Call service and, optionally, "
+            "as a Part 14 Action/ActionTarget.", CAT)
 prop_var(60014, "BoundMethodType", "OwningObjectPath", RelativePath,
-         "RelativePath to the Object the Method is called on (default: the bound root).")
+         "RelativePath to the Object the Method is called on (default: the Method "
+         "BrowsePath's parent Object; omit only when the Method is directly on the bound root).")
 
 object_type(60017, "BoundEventFieldType", T(60012),
             "A bound event field of an event DataSet, selected by a Part 14 "
@@ -535,22 +539,23 @@ prop_var(60011, SB, "Direction", T(60050), "Role the server offers for this bind
 prop_var(60011, SB, "ConfigurationVersion", ConfigurationVersionDataType,
          "Version of the binding, aligned with the realizing DataSetMetaData.")
 prop_var(60011, SB, "DataSetClassId", Guid,
-         "Stable DataSetClassId (Part 14) identifying the class of the DataSet this binding "
-         "defines, so subscribers recognize the same DataSet class across servers. It is a "
-         "semantic class identity, not a guarantee of a fixed field layout (see the "
-         "DataSetClassId clause). Deterministic.", rule=MR_Mandatory)
+         "Stable DataSetClassId (Part 14) identifying the binding/content class this binding "
+         "defines - a data DataSet, event DataSet, or action set - so subscribers recognize the "
+         "same class across servers. It is a semantic class identity, not a guarantee of a fixed "
+         "field layout (see the DataSetClassId clause). Deterministic.", rule=MR_Mandatory)
 prop_var(60011, SB, "BaseDataSetClassIds", Guid,
          "DataSetClassIds of the base facet bindings this binding extends or composes (its "
          "class lineage). This binding's own DataSetClassId identifies the composed/derived "
          "class; a subscriber that knows a base class-id consumes the matching field subset "
          "(see BoundItemType.SourceScenarioBindingClassId).", valuerank="1")
 prop_var(60011, SB, "ContentKind", T(60052),
-         "Whether the binding realizes as a data DataSet (PublishedDataItems) or an event "
-         "DataSet (PublishedEvents).", rule=MR_Mandatory)
+         "The content class the binding exposes: a data DataSet (PublishedDataItems), an "
+         "event DataSet (PublishedEvents), or an action set (bound Methods).", rule=MR_Mandatory)
 prop_var(60011, SB, "DataSetCardinalityPath", RelativePath,
-         "RelativePath to the cardinality level: the Server/bridge produces one DataSet per "
-         "matched instance of it (default: the bound root); placeholders below it become "
-         "fields. The DataSetClassId is shared across those DataSets (one class, many writers).")
+         "RelativePath to the cardinality level: the Server/bridge produces one DataSet (data/event "
+         "content) or one action target (action content) per matched instance of it (default: the "
+         "bound root); placeholders below it become fields or actions within that produced content. "
+         "The DataSetClassId is shared across those DataSets/action targets (one class, many writers).")
 prop_var(60011, SB, "DataSetMetaData", DataSetMetaDataType,
          "Part 14 DataSetMetaData for this DataSet (fields, dataSetClassId, "
          "configurationVersion), exposed so a consumer gets the class schema offline.")
@@ -672,6 +677,10 @@ SCENARIOS = [
      "Condition and event streams for operators, CMMS/EAM and safety functions."),
     (60115, "FleetAndCompliance",
      "Multi-site supervision, contractual reporting and regulatory compliance."),
+    (60116, "RemoteOperations",
+     "Remote invocation of device/asset operations and commands (an action set): a bridge or "
+     "operator triggers bound Methods - lock/unlock, start/stop, reset, acknowledge, transfer - "
+     "over the classic Call service, or over Part 14 Actions/ActionTargets where PubSub is offered."),
 ]
 SCENARIO_ROOT = "http://opcfoundation.org/UA/PubSub/Scenarios/"
 for (snid, sname, sdesc) in SCENARIOS:

@@ -143,21 +143,21 @@
   </UAVariable>
   <UADataType NodeId="i=60052" BrowseName="ScenarioContentKindEnum">
     <DisplayName>ScenarioContentKindEnum</DisplayName>
-    <Description>Whether a scenario binding realizes as a Part 14 data DataSet (PublishedDataItems) or an event DataSet (PublishedEvents). A binding is exactly one DataSet.</Description>
+    <Description>The content class a scenario binding exposes: a Part 14 data DataSet (PublishedDataItems), an event DataSet (PublishedEvents), or an action set (bound Methods). A binding is exactly one content class.</Description>
     <Category>Scenario Binding DataTypes</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
       <Reference ReferenceType="HasProperty">i=60952</Reference>
     </References>
-    <Definition Name="ScenarioContentKindEnum"><Field Name="DataItems" Value="0"><Description>A data DataSet: grouped Variable values (PublishedDataItemsType).</Description></Field><Field Name="Events" Value="1"><Description>An event DataSet: selected event fields from a notifier (PublishedEventsType).</Description></Field></Definition>
+    <Definition Name="ScenarioContentKindEnum"><Field Name="DataItems" Value="0"><Description>A data DataSet: grouped Variable values (PublishedDataItemsType).</Description></Field><Field Name="Events" Value="1"><Description>An event DataSet: selected event fields from a notifier (PublishedEventsType).</Description></Field><Field Name="Actions" Value="2"><Description>An action set: bound Methods invoked or responded (optionally realized as Part 14 Actions/ActionTargets).</Description></Field></Definition>
   </UADataType>
-  <UAVariable NodeId="i=60952" BrowseName="EnumStrings" ParentNodeId="i=60052" DataType="LocalizedText" ValueRank="1" ArrayDimensions="2">
+  <UAVariable NodeId="i=60952" BrowseName="EnumStrings" ParentNodeId="i=60052" DataType="LocalizedText" ValueRank="1" ArrayDimensions="3">
     <DisplayName>EnumStrings</DisplayName>
     <References>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
       <Reference ReferenceType="HasProperty" IsForward="false">i=60052</Reference>
     </References>
-    <Value><ListOfLocalizedText xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd"><LocalizedText><Text>DataItems</Text></LocalizedText><LocalizedText><Text>Events</Text></LocalizedText></ListOfLocalizedText></Value>
+    <Value><ListOfLocalizedText xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd"><LocalizedText><Text>DataItems</Text></LocalizedText><LocalizedText><Text>Events</Text></LocalizedText><LocalizedText><Text>Actions</Text></LocalizedText></ListOfLocalizedText></Value>
   </UAVariable>
   <UADataType NodeId="i=60060" BrowseName="BoundItemDataType">
     <DisplayName>BoundItemDataType</DisplayName>
@@ -168,7 +168,7 @@
       <Reference ReferenceType="HasEncoding">i=60500</Reference>
       <Reference ReferenceType="HasEncoding">i=60501</Reference>
     </References>
-    <Definition Name="BoundItemDataType"><Field Name="FieldName" DataType="i=12"><Description>Stable logical field name; matches the PubSub DataSet field name.</Description></Field><Field Name="Kind" DataType="i=60051"><Description>Generic routing role of the item.</Description></Field><Field Name="AttributeId" DataType="i=7"><Description>Attribute of the source node to expose (default 13 = Value).</Description></Field><Field Name="SamplingIntervalHint" DataType="i=290"><Description>Recommended sampling/publishing interval, in ms.</Description></Field><Field Name="IndexRange" DataType="i=291"><Description>Optional sub-range for array values.</Description></Field><Field Name="StartingNode" DataType="i=17"><Description>Node the BrowsePath is resolved from (default: the bound root).</Description></Field><Field Name="BrowsePath" DataType="i=540"><Description>RECOMMENDED locator: RelativePath from StartingNode (type-level, portable).</Description></Field><Field Name="SourceNodeId" DataType="i=17"><Description>Alternative absolute locator (instance/server-specific).</Description></Field><Field Name="OwningObjectPath" DataType="i=540"><Description>For a bound Method: RelativePath to the Object it is called on (default: the bound root).</Description></Field><Field Name="SourceTypeDefinition" DataType="i=17"><Description>TypeDefinition of the source node (semantic identity).</Description></Field><Field Name="SourceBrowseName" DataType="i=20"><Description>Namespace-qualified BrowseName of the source node.</Description></Field><Field Name="ModelNamespaceUri" DataType="i=12"><Description>Namespace URI of the companion model that defines the source.</Description></Field><Field Name="DataSetFieldId" DataType="i=14"><Description>GUID correlating this item to Part 14 FieldMetaData.dataSetFieldId.</Description></Field><Field Name="SourceScenarioBindingClassId" DataType="i=14"><Description>Provenance: DataSetClassId of the base scenario binding this field originates from (its facet). Lets a subscriber partition a composed DataSet into exact per-base-class field subsets. Absent for fields defined by this binding itself.</Description></Field><Field Name="SemanticReferenceUri" DataType="i=12"><Description>Optional external semantic identifier (e.g. IRDI/CDD) for the item.</Description></Field><Field Name="EventFieldOperand" DataType="i=601"><Description>For an event-DataSet field: the Part 14 SimpleAttributeOperand that selects it (alternative/complement to BrowsePath, whose segments are then relative to the event TypeDefinition).</Description></Field><Field Name="MetricInstrumentType" DataType="i=60053"><Description>OTEL metric instrument this value maps to (Counter, Histogram, Gauge, …); primarily for the Observability scenario.</Description></Field><Field Name="Unit" DataType="i=12"><Description>UCUM unit annotation for the metric; if absent a bridge derives it from the source node's EngineeringUnits.</Description></Field><Field Name="ExplicitBucketBoundaries" DataType="i=11" ValueRank="1"><Description>For a Histogram instrument: the explicit bucket boundaries.</Description></Field><Field Name="MetricTemporality" DataType="i=60054"><Description>Aggregation temporality (Cumulative/Delta) of the metric value.</Description></Field><Field Name="Monotonic" DataType="i=1"><Description>Whether the metric is monotonic; if absent it is implied by MetricInstrumentType.</Description></Field><Field Name="DimensionConstantValue" DataType="i=12"><Description>For a Kind=Dimension item with a constant value: the attribute value (key is FieldName). Absent when the dimension value is read from the source node.</Description></Field></Definition>
+    <Definition Name="BoundItemDataType"><Field Name="FieldName" DataType="i=12"><Description>Stable logical field name; matches the PubSub DataSet field name.</Description></Field><Field Name="Kind" DataType="i=60051"><Description>Generic routing role of the item.</Description></Field><Field Name="AttributeId" DataType="i=7"><Description>Attribute of the source node to expose (default 13 = Value).</Description></Field><Field Name="SamplingIntervalHint" DataType="i=290"><Description>Recommended sampling/publishing interval, in ms.</Description></Field><Field Name="IndexRange" DataType="i=291"><Description>Optional sub-range for array values.</Description></Field><Field Name="StartingNode" DataType="i=17"><Description>Node the BrowsePath is resolved from (default: the bound root).</Description></Field><Field Name="BrowsePath" DataType="i=540"><Description>RECOMMENDED locator: RelativePath from StartingNode (type-level, portable).</Description></Field><Field Name="SourceNodeId" DataType="i=17"><Description>Alternative absolute locator (instance/server-specific).</Description></Field><Field Name="OwningObjectPath" DataType="i=540"><Description>For a bound Method: RelativePath to the Object it is called on (default: the Method BrowsePath's parent Object; omit only when the Method is directly on the bound root).</Description></Field><Field Name="SourceTypeDefinition" DataType="i=17"><Description>TypeDefinition of the source node (semantic identity).</Description></Field><Field Name="SourceBrowseName" DataType="i=20"><Description>Namespace-qualified BrowseName of the source node.</Description></Field><Field Name="ModelNamespaceUri" DataType="i=12"><Description>Namespace URI of the companion model that defines the source.</Description></Field><Field Name="DataSetFieldId" DataType="i=14"><Description>GUID correlating this item to Part 14 FieldMetaData.dataSetFieldId.</Description></Field><Field Name="SourceScenarioBindingClassId" DataType="i=14"><Description>Provenance: DataSetClassId of the base scenario binding this field originates from (its facet). Lets a subscriber partition a composed DataSet into exact per-base-class field subsets. Absent for fields defined by this binding itself.</Description></Field><Field Name="SemanticReferenceUri" DataType="i=12"><Description>Optional external semantic identifier (e.g. IRDI/CDD) for the item.</Description></Field><Field Name="EventFieldOperand" DataType="i=601"><Description>For an event-DataSet field: the Part 14 SimpleAttributeOperand that selects it (alternative/complement to BrowsePath, whose segments are then relative to the event TypeDefinition).</Description></Field><Field Name="MetricInstrumentType" DataType="i=60053"><Description>OTEL metric instrument this value maps to (Counter, Histogram, Gauge, …); primarily for the Observability scenario.</Description></Field><Field Name="Unit" DataType="i=12"><Description>UCUM unit annotation for the metric; if absent a bridge derives it from the source node's EngineeringUnits.</Description></Field><Field Name="ExplicitBucketBoundaries" DataType="i=11" ValueRank="1"><Description>For a Histogram instrument: the explicit bucket boundaries.</Description></Field><Field Name="MetricTemporality" DataType="i=60054"><Description>Aggregation temporality (Cumulative/Delta) of the metric value.</Description></Field><Field Name="Monotonic" DataType="i=1"><Description>Whether the metric is monotonic; if absent it is implied by MetricInstrumentType.</Description></Field><Field Name="DimensionConstantValue" DataType="i=12"><Description>For a Kind=Dimension item with a constant value: the attribute value (key is FieldName). Absent when the dimension value is read from the source node.</Description></Field></Definition>
   </UADataType>
   <UAObject NodeId="i=60500" BrowseName="Default Binary" ParentNodeId="i=60060">
     <DisplayName>Default Binary</DisplayName>
@@ -402,7 +402,7 @@
   </UAVariable>
   <UAObjectType NodeId="i=60014" BrowseName="BoundMethodType">
     <DisplayName>BoundMethodType</DisplayName>
-    <Description>A bound Method exposed as an invokable action; may be realized as a Part 14 Action/ActionTarget.</Description>
+    <Description>A bound Method exposed as an invokable action in an action-set binding (ContentKind=Actions); realized classically via the Call service and, optionally, as a Part 14 Action/ActionTarget.</Description>
     <Category>Scenario Binding</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=60012</Reference>
@@ -411,7 +411,7 @@
   </UAObjectType>
   <UAVariable NodeId="i=60522" BrowseName="OwningObjectPath" ParentNodeId="i=60014" DataType="RelativePath" ValueRank="-1">
     <DisplayName>OwningObjectPath</DisplayName>
-    <Description>RelativePath to the Object the Method is called on (default: the bound root).</Description>
+    <Description>RelativePath to the Object the Method is called on (default: the Method BrowsePath's parent Object; omit only when the Method is directly on the bound root).</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=80</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
@@ -479,7 +479,7 @@
   </UAVariable>
   <UAVariable NodeId="i=60526" BrowseName="DataSetClassId" ParentNodeId="i=60011" DataType="Guid" ValueRank="-1">
     <DisplayName>DataSetClassId</DisplayName>
-    <Description>Stable DataSetClassId (Part 14) identifying the class of the DataSet this binding defines, so subscribers recognize the same DataSet class across servers. It is a semantic class identity, not a guarantee of a fixed field layout (see the DataSetClassId clause). Deterministic.</Description>
+    <Description>Stable DataSetClassId (Part 14) identifying the binding/content class this binding defines - a data DataSet, event DataSet, or action set - so subscribers recognize the same class across servers. It is a semantic class identity, not a guarantee of a fixed field layout (see the DataSetClassId clause). Deterministic.</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=78</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
@@ -497,7 +497,7 @@
   </UAVariable>
   <UAVariable NodeId="i=60528" BrowseName="ContentKind" ParentNodeId="i=60011" DataType="i=60052" ValueRank="-1">
     <DisplayName>ContentKind</DisplayName>
-    <Description>Whether the binding realizes as a data DataSet (PublishedDataItems) or an event DataSet (PublishedEvents).</Description>
+    <Description>The content class the binding exposes: a data DataSet (PublishedDataItems), an event DataSet (PublishedEvents), or an action set (bound Methods).</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=78</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
@@ -506,7 +506,7 @@
   </UAVariable>
   <UAVariable NodeId="i=60529" BrowseName="DataSetCardinalityPath" ParentNodeId="i=60011" DataType="RelativePath" ValueRank="-1">
     <DisplayName>DataSetCardinalityPath</DisplayName>
-    <Description>RelativePath to the cardinality level: the Server/bridge produces one DataSet per matched instance of it (default: the bound root); placeholders below it become fields. The DataSetClassId is shared across those DataSets (one class, many writers).</Description>
+    <Description>RelativePath to the cardinality level: the Server/bridge produces one DataSet (data/event content) or one action target (action content) per matched instance of it (default: the bound root); placeholders below it become fields or actions within that produced content. The DataSetClassId is shared across those DataSets/action targets (one class, many writers).</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=80</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
@@ -729,6 +729,7 @@
       <Reference ReferenceType="Organizes">i=60113</Reference>
       <Reference ReferenceType="Organizes">i=60114</Reference>
       <Reference ReferenceType="Organizes">i=60115</Reference>
+      <Reference ReferenceType="Organizes">i=60116</Reference>
     </References>
   </UAObject>
   <UAObject NodeId="i=60110" BrowseName="Observability" ParentNodeId="i=60101">
@@ -838,5 +839,23 @@
       <Reference ReferenceType="HasProperty" IsForward="false">i=60115</Reference>
     </References>
     <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">http://opcfoundation.org/UA/PubSub/Scenarios/FleetAndCompliance</uax:String></Value>
+  </UAVariable>
+  <UAObject NodeId="i=60116" BrowseName="RemoteOperations" ParentNodeId="i=60101">
+    <DisplayName>RemoteOperations</DisplayName>
+    <Description>Remote invocation of device/asset operations and commands (an action set): a bridge or operator triggers bound Methods - lock/unlock, start/stop, reset, acknowledge, transfer - over the classic Call service, or over Part 14 Actions/ActionTargets where PubSub is offered.</Description>
+    <Category>Scenario Binding Instances</Category>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=60015</Reference>
+      <Reference ReferenceType="Organizes" IsForward="false">i=60101</Reference>
+      <Reference ReferenceType="HasProperty">i=60554</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="i=60554" BrowseName="ScenarioUri" ParentNodeId="i=60116" DataType="String">
+    <DisplayName>ScenarioUri</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">i=60116</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">http://opcfoundation.org/UA/PubSub/Scenarios/RemoteOperations</uax:String></Value>
   </UAVariable>
 </UANodeSet>

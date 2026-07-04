@@ -1,0 +1,29 @@
+{
+  "domain": "DIOperations",
+  "appliesToType": "TopologyElementType",
+  "baseModelNamespaceUri": "http://opcfoundation.org/UA/DI/",
+  "exampleNamespaceUri": "http://opcfoundation.org/UA/PubSub/Examples/DIOperations/",
+  "instanceName": "ExampleTopologyElement",
+  "summary": "The DI TopologyElementType exposes device-level operations through the LockingServices addin (Lock/InitLock, Lock/ExitLock). This binding exposes them as an ACTION SET (ContentKind=Actions) under a RemoteOperations scenario: a bridge or operator invokes the Methods (classic Call, or optionally Part 14 Actions/ActionTargets) to lock a device or component for maintenance and release it afterwards. Because the LockingServices Methods are declared on TopologyElementType, EVERY DI topology element - a DeviceType device, a sub-component, and a PumpType (which is a TopologyElementType, not a DeviceType) - inherits this action binding via the subtype axis of §5.12 (see OPC-UA-DI-Pumps-Inheritance.md). This is the worked example showing that a Scenario Binding covers invokable Methods, not just data or event DataSets.",
+  "companionSpec": { "name": "OPC UA Devices (DI, OPC 10000-100)", "ref": "https://reference.opcfoundation.org/DI/v104/docs/" },
+  "instanceModel": {
+    "note": "A compact instance of TopologyElementType exposing the inherited LockingServices Methods. The binding's bound items are Methods (BoundMethodType), each with an OwningObjectPath to the Lock object it is called on - contrast the data/event DI examples (nameplate FleetAndCompliance, device-health Observability), whose bound items are Variables or event fields."
+  },
+  "configurationVersion": { "majorVersion": 1, "minorVersion": 0 },
+  "companionSpecificationUri": "http://opcfoundation.org/UA/DI/",
+  "modelNamespaceUris": ["http://opcfoundation.org/UA/DI/"],
+  "baseNodeSets": ["Opc.Ua.Di.NodeSet2.xml"],
+  "requiredModels": [{ "uri": "http://opcfoundation.org/UA/DI/" }],
+  "scenarioBindings": [
+    {
+      "name": "RemoteOperations",
+      "scenarioUri": "http://opcfoundation.org/UA/PubSub/Scenarios/RemoteOperations",
+      "direction": "ActionResponder",
+      "contentKind": "Actions",
+      "boundItems": [
+        { "kind": "Command", "browsePath": "/Lock/InitLock", "owningObjectPath": "/Lock" },
+        { "kind": "Command", "browsePath": "/Lock/ExitLock", "owningObjectPath": "/Lock" }
+      ]
+    }
+  ]
+}

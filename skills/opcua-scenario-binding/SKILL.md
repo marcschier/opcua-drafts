@@ -33,12 +33,13 @@ Read the specification first — this skill assumes its two-layer contract:
 - **Semantic cross-reference** (for the ultimate consumer): each item retains
   `TypeDefinition`, namespace-qualified `BrowseName`, `ModelNamespaceUri` and any
   dictionary entry, and this is propagated into Part 14 `DataSetMetaData`.
-- **DataSet class and cardinality**: each `ScenarioBinding` is classified as `DataItems`
-  (a Part 14 `PublishedDataItems` DataSet of grouped Variables) or `Events` (a
-  `PublishedEvents` DataSet of selected event fields from a notifier), carries a
-  deterministic `DataSetClassId`, and may set a `DataSetCardinalityPath` that tells
-  a bridge which matched level produces one DataSet per instance. Those DataSets share
-  the same DataSet class.
+- **Content class and cardinality**: each `ScenarioBinding` is classified as `DataItems`
+  (a Part 14 `PublishedDataItems` DataSet of grouped Variables), `Events` (a
+  `PublishedEvents` DataSet of selected event fields from a notifier), or `Actions` (an
+  **action set** of bound Methods invoked via the classic `Call` service, or Part 14
+  Actions/ActionTargets where PubSub is offered), carries a deterministic `DataSetClassId`,
+  and may set a `DataSetCardinalityPath` that tells a bridge which matched level produces one
+  DataSet (or action target) per instance. Those content instances share the same class.
 
 ## When to use
 
@@ -163,10 +164,10 @@ appending the matched BrowseName as the spec requires). Set the descriptor-level
 namespace URI), and `modelNamespaceUris` to every namespace URI that specification defines or
 covers; these identify the companion-spec facet of each per-scenario group.
 
-### 4. Classify each scenario's content as Data or Event
+### 4. Classify each scenario's content as Data, Event or Action
 
-Each `ScenarioBinding` defines one DataSet class; `dataSetCardinalityPath` may cause a bridge
-to realize several DataSet instances of that same class. Set its `ContentKind`
+Each `ScenarioBinding` defines one content class; `dataSetCardinalityPath` may cause a bridge
+to realize several instances of that same class. Set its `ContentKind`
 (`ScenarioContentKindEnum`) before emitting the descriptor:
 
 - `DataItems` (default): a data DataSet (`PublishedDataItems`) made from grouped
@@ -175,6 +176,11 @@ to realize several DataSet instances of that same class. Set its `ContentKind`
 - `Events`: an event DataSet (`PublishedEvents`) made from an event notifier and selected
   event fields. Alarm/event/safety scenarios (for example `AlarmAndEventDistribution`)
   are typically Event DataSets.
+- `Actions`: an **action set** whose bound items are Methods (`BoundMethodType`), invoked via
+  the classic `Call` service (or Part 14 Actions/ActionTargets where PubSub is offered).
+  Use it for command/operations scenarios such as `RemoteOperations` (lock/unlock, start/stop,
+  reset, acknowledge, transfer). A binding is homogeneous: an action set contains only Methods,
+  never mixed with data or event fields (put those in a sibling binding in the same group).
 
 For an Event DataSet identify:
 
@@ -188,6 +194,17 @@ For an Event DataSet identify:
    `ConditionName`, plus domain-specific condition fields);
 4. an optional `filter` (OPC UA `ContentFilter` where-clause), such as a severity
    threshold or event-type restriction.
+
+For an Action set (`contentKind: "Actions"`) identify:
+
+1. the **direction** — `ActionResponder` (the Server exposes the Methods; a client/bridge
+   invokes them, the classic-Call baseline) or `ActionInvoker` (the Server invokes on receipt
+   of a trigger, a PubSub Action pattern);
+2. each bound **Method** as a `BoundItemDataType` entry with `kind: "Command"` and a
+   `browsePath` to the Method node, plus an `owningObjectPath` naming the Object the Method is
+   called on. `owningObjectPath` **must be a prefix of** the Method `browsePath` (a Method is a
+   component of its owning Object); omit it only when the Method is directly on the bound root
+   (default = the Method's parent Object).
 
 ### 5. Enrich Observability bindings for OTEL
 
@@ -261,16 +278,17 @@ fields, `BrowsePath` is relative to the selected event TypeDefinition and the ge
 ### 9. Compute the DataSet class identity (mechanical)
 
 Every binding gets a deterministic `DataSetClassId` (Part 14 `Guid`) with grain
-**(scenario × bound type)**. The generator computes it; do **not** author it in the
+**(scenario × bound type × content kind)**. The generator computes it; do **not** author it in the
 descriptor:
 
 ```text
 uuid5(fc164bdb-8705-58e9-ab11-7b1ed155b4e8,
-      "<ScenarioUri>|<AppliesToType as namespaceUri;BrowseName>|<MajorVersion>")
+      "<ScenarioUri>|<AppliesToType as namespaceUri;BrowseName>|<ContentKind>|<MajorVersion>")
 ```
 
-`MajorVersion` is `configurationVersion.majorVersion` (absent ⇒ `1`). The same scenario, type
-and major version therefore produce the same DataSet class across servers, making it the
+`ContentKind` is the enum name (`DataItems`, `Events` or `Actions`); `MajorVersion` is
+`configurationVersion.majorVersion` (absent ⇒ `1`). The same scenario, content kind, type
+and major version therefore produce the same class across servers, making it the
 cross-server recognition key. The reference generator emits `DataSetClassId` (and `ContentKind`)
 on each browsable `ScenarioBinding` instance. Propagation to `DataSetMetaData.dataSetClassId`
 and the realizing `PublishedDataSet.DataSetClassId` is a **realization** step the base spec
@@ -297,7 +315,8 @@ per-scenario `ScenarioBindingGroupType` carrying `CompanionSpecificationUri` and
 `ScenarioBinding` objects under the group, emits per-binding `DataSetClassId` but no
 `ScenarioUri` property on the binding,
 `ContentKind` and `DataSetCardinalityPath` (when authored), and emits `BoundEventFieldType`
-items for event DataSets, then assembles the addendum. Leave transport/security/addressing as
+items for event DataSets and `BoundMethodType` items (with `OwningObjectPath`) for action sets,
+then assembles the addendum. Leave transport/security/addressing as
 deployment parameters — never
 bake them in. Exposing the full Part 14 `DataSetMetaData` (fields + `dataSetClassId` +
 `configurationVersion`) so a consumer can obtain the class schema offline is a capability the
@@ -320,7 +339,7 @@ the full metadata value.
 - Every binding has a deliberate `dataSetCardinalityPath` (or intentionally defaults to the
   bound root), and its item paths sit under that cardinality path unless the binding is split.
 - `DataSetClassId` is generated, stable for `(descriptor scenarioUri/profile ScenarioUri,
-  AppliesToType, MajorVersion)`,
+  AppliesToType, ContentKind, MajorVersion)`,
   shared by all DataSets produced for a cardinality match, and appears consistently in the
   binding and PubSub metadata.
 - Derived bindings list only delta fields, reference base classes via `baseDataSetClassIds`,
@@ -521,7 +540,9 @@ Field notes:
 - `fieldName` defaults to the last `browsePath` segment; make it unique within a binding.
 - `direction` ∈ `Publisher` | `Subscriber` | `ActionInvoker` | `ActionResponder` |
   `Bidirectional`.
-- `contentKind` ∈ `DataItems` | `Events`; omit it only for the default `DataItems`.
+- `contentKind` ∈ `DataItems` | `Events` | `Actions`; omit it only for the default `DataItems`.
+  An `Actions` binding's items are Methods (`kind: "Command"`) with an `owningObjectPath` that is
+  a prefix of each Method `browsePath`.
 - `dataSetCardinalityPath` is a RelativePath to the level that determines DataSet
   multiplicity; omit it to default to the bound root. `"/"` (or an empty string) is accepted
   as an explicit alias for omitted and is normalized away — it is never emitted as an empty

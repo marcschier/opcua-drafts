@@ -119,11 +119,11 @@ A bound Variable exposed as a PubSub DataSet field.
 
 *Inherits from:* [BoundItemType](#type-BoundItemType)
 
-A bound Method exposed as an invokable action; may be realized as a Part 14 Action/ActionTarget.
+A bound Method exposed as an invokable action in an action-set binding (ContentKind=Actions); realized classically via the Call service and, optionally, as a Part 14 Action/ActionTarget.
 
 | BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
 |---|---|---|---|---|---|
-| OwningObjectPath | Variable | [RelativePath](https://reference.opcfoundation.org/specs/OPC-10000-4/7.30) | Optional | BoundMethodType | RelativePath to the Object the Method is called on (default: the bound root). |
+| OwningObjectPath | Variable | [RelativePath](https://reference.opcfoundation.org/specs/OPC-10000-4/7.30) | Optional | BoundMethodType | RelativePath to the Object the Method is called on (default: the Method BrowsePath's parent Object; omit only when the Method is directly on the bound root). |
 | FieldName | Variable | String | Mandatory | [BoundItemType](#type-BoundItemType) | Stable logical field name of the item. |
 | Kind | Variable | [BoundItemKindEnum](#type-BoundItemKindEnum) | Mandatory | [BoundItemType](#type-BoundItemType) | Generic routing role of the item. |
 | AttributeId | Variable | UInt32 | Optional | [BoundItemType](#type-BoundItemType) | Attribute of the source node to expose (default 13 = Value). |
@@ -177,10 +177,10 @@ One scenario binding on a bound object or type. It declares the direction, lists
 |---|---|---|---|---|---|
 | Direction | Variable | [ScenarioBindingDirectionEnum](#type-ScenarioBindingDirectionEnum) | Mandatory | ScenarioBindingType | Role the server offers for this binding. |
 | ConfigurationVersion | Variable | i=14593 | Optional | ScenarioBindingType | Version of the binding, aligned with the realizing DataSetMetaData. |
-| DataSetClassId | Variable | Guid | Mandatory | ScenarioBindingType | Stable DataSetClassId (Part 14) identifying the class of the DataSet this binding defines, so subscribers recognize the same DataSet class across servers. It is a semantic class identity, not a guarantee of a fixed field layout (see the DataSetClassId clause). Deterministic. |
+| DataSetClassId | Variable | Guid | Mandatory | ScenarioBindingType | Stable DataSetClassId (Part 14) identifying the binding/content class this binding defines - a data DataSet, event DataSet, or action set - so subscribers recognize the same class across servers. It is a semantic class identity, not a guarantee of a fixed field layout (see the DataSetClassId clause). Deterministic. |
 | BaseDataSetClassIds | Variable | Guid\[\] | Optional | ScenarioBindingType | DataSetClassIds of the base facet bindings this binding extends or composes (its class lineage). This binding's own DataSetClassId identifies the composed/derived class; a subscriber that knows a base class-id consumes the matching field subset (see BoundItemType.SourceScenarioBindingClassId). |
-| ContentKind | Variable | [ScenarioContentKindEnum](#type-ScenarioContentKindEnum) | Mandatory | ScenarioBindingType | Whether the binding realizes as a data DataSet (PublishedDataItems) or an event DataSet (PublishedEvents). |
-| DataSetCardinalityPath | Variable | [RelativePath](https://reference.opcfoundation.org/specs/OPC-10000-4/7.30) | Optional | ScenarioBindingType | RelativePath to the cardinality level: the Server/bridge produces one DataSet per matched instance of it (default: the bound root); placeholders below it become fields. The DataSetClassId is shared across those DataSets (one class, many writers). |
+| ContentKind | Variable | [ScenarioContentKindEnum](#type-ScenarioContentKindEnum) | Mandatory | ScenarioBindingType | The content class the binding exposes: a data DataSet (PublishedDataItems), an event DataSet (PublishedEvents), or an action set (bound Methods). |
+| DataSetCardinalityPath | Variable | [RelativePath](https://reference.opcfoundation.org/specs/OPC-10000-4/7.30) | Optional | ScenarioBindingType | RelativePath to the cardinality level: the Server/bridge produces one DataSet (data/event content) or one action target (action content) per matched instance of it (default: the bound root); placeholders below it become fields or actions within that produced content. The DataSetClassId is shared across those DataSets/action targets (one class, many writers). |
 | DataSetMetaData | Variable | [DataSetMetaDataType](https://reference.opcfoundation.org/specs/OPC-10000-14/6.2.3#6.2.3.2.3) | Optional | ScenarioBindingType | Part 14 DataSetMetaData for this DataSet (fields, dataSetClassId, configurationVersion), exposed so a consumer gets the class schema offline. |
 | EventSourcePath | Variable | [RelativePath](https://reference.opcfoundation.org/specs/OPC-10000-4/7.30) | Optional | ScenarioBindingType | For an event DataSet: RelativePath to the event notifier to subscribe to (default: the cardinality anchor, i.e. the bound root when DataSetCardinalityPath is omitted). |
 | Filter | Variable | [ContentFilter](https://reference.opcfoundation.org/specs/OPC-10000-4/7.4.1) | Optional | ScenarioBindingType | For an event DataSet: optional ContentFilter (event where-clause). |
@@ -308,12 +308,13 @@ Aggregation temporality of a metric value, so a bridge accumulates or reports it
 
 *Subtype of:* Enumeration
 
-Whether a scenario binding realizes as a Part 14 data DataSet (PublishedDataItems) or an event DataSet (PublishedEvents). A binding is exactly one DataSet.
+The content class a scenario binding exposes: a Part 14 data DataSet (PublishedDataItems), an event DataSet (PublishedEvents), or an action set (bound Methods). A binding is exactly one content class.
 
 | Name | Value | Description |
 |---|---|---|
 | DataItems | 0 | A data DataSet: grouped Variable values (PublishedDataItemsType). |
 | Events | 1 | An event DataSet: selected event fields from a notifier (PublishedEventsType). |
+| Actions | 2 | An action set: bound Methods invoked or responded (optionally realized as Part 14 Actions/ActionTargets). |
 
 <a id="type-BoundItemDataType"></a>
 #### BoundItemDataType  (i=60060)
@@ -332,7 +333,7 @@ Machine-readable descriptor of a single bound item: how to LOCATE it (BrowsePath
 | StartingNode | NodeId | Node the BrowsePath is resolved from (default: the bound root). |
 | BrowsePath | [RelativePath](https://reference.opcfoundation.org/specs/OPC-10000-4/7.30) | RECOMMENDED locator: RelativePath from StartingNode (type-level, portable). |
 | SourceNodeId | NodeId | Alternative absolute locator (instance/server-specific). |
-| OwningObjectPath | [RelativePath](https://reference.opcfoundation.org/specs/OPC-10000-4/7.30) | For a bound Method: RelativePath to the Object it is called on (default: the bound root). |
+| OwningObjectPath | [RelativePath](https://reference.opcfoundation.org/specs/OPC-10000-4/7.30) | For a bound Method: RelativePath to the Object it is called on (default: the Method BrowsePath's parent Object; omit only when the Method is directly on the bound root). |
 | SourceTypeDefinition | NodeId | TypeDefinition of the source node (semantic identity). |
 | SourceBrowseName | QualifiedName | Namespace-qualified BrowseName of the source node. |
 | ModelNamespaceUri | String | Namespace URI of the companion model that defines the source. |
@@ -363,4 +364,5 @@ Machine-readable descriptor of a single bound item: how to LOCATE it (BrowsePath
 | EnergyAndLoadManagement | i=60113 | [ScenarioProfileType](#type-ScenarioProfileType) | Power, load, demand and energy signals for load management, peak shaving and grid-services coordination. |
 | AlarmAndEventDistribution | i=60114 | [ScenarioProfileType](#type-ScenarioProfileType) | Condition and event streams for operators, CMMS/EAM and safety functions. |
 | FleetAndCompliance | i=60115 | [ScenarioProfileType](#type-ScenarioProfileType) | Multi-site supervision, contractual reporting and regulatory compliance. |
+| RemoteOperations | i=60116 | [ScenarioProfileType](#type-ScenarioProfileType) | Remote invocation of device/asset operations and commands (an action set): a bridge or operator triggers bound Methods - lock/unlock, start/stop, reset, acknowledge, transfer - over the classic Call service, or over Part 14 Actions/ActionTargets where PubSub is offered. |
 
