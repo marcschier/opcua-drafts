@@ -1053,6 +1053,14 @@ def main():
     outdir = os.path.join(repo, "core-specs", "scenario-binding", spec_folder)
     os.makedirs(outdir, exist_ok=True)
     d = json.load(open(descriptor_path, encoding="utf-8"))
+    # DataSetClassId encodes MajorVersion; a browsing subscriber recomputes it from the binding's
+    # exposed attributes. Per spec §5.7 a binding at MajorVersion != 1 SHALL expose
+    # ConfigurationVersion so that computation matches. This example generator does not yet emit the
+    # ConfigurationVersion property, so refuse MajorVersion != 1 rather than emit a non-recognizable
+    # overlay (all current descriptors use majorVersion 1).
+    if d.get("configurationVersion", {}).get("majorVersion", 1) != 1:
+        raise SystemExit("majorVersion != 1 requires emitting ConfigurationVersion on each binding "
+                         "(spec §5.7); not implemented by this example generator.")
     db = load_base(d, ref_dir)
     base_names = load_base_names(ref_dir)
     type_key, idx = build_index(db, d["appliesToType"])

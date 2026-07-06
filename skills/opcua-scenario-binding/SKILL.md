@@ -135,7 +135,7 @@ runtime multi-match expansion is a bridge/Server realization rule.
 
 `Kind` values are exactly the members of `BoundItemKindEnum` in the spec:
 `Telemetry`, `Status`, `Configuration`, `Metric`, `Counter`, `Event`, `Command`,
-`Setpoint`, `Identification`, `Dimension`, `Other`. When unsure between `Telemetry` and a total,
+`Setpoint`, `Identification`, `Other`, `Dimension`. When unsure between `Telemetry` and a total,
 prefer `Telemetry` for instantaneous values and `Counter` for monotonic accumulators.
 
 ### 3. Assign items to Scenarios
@@ -553,7 +553,8 @@ Field notes:
   `"/MotionDevices/<MotionDeviceIdentifier>"` means one DataSet per motion device; item paths
   should sit under that path.
 - `dataSetClassId` is **not** authored. The generator derives it deterministically as
-  `uuid5(fc164bdb-8705-58e9-ab11-7b1ed155b4e8, "<ScenarioUri>|<namespaceUri;BrowseName>|<MajorVersion>")`.
+  `uuid5(fc164bdb-8705-58e9-ab11-7b1ed155b4e8, "<ScenarioUri>|<namespaceUri;BrowseName>|<ContentKind>|<MajorVersion>")`
+  (`ContentKind` ∈ `DataItems` | `Events` | `Actions`).
 - `baseDataSetClassIds` (per binding) is an array of Guid strings naming the base facet
   DataSet classes this binding extends or composes. Omit it for a root/base binding. When
   present, author only delta fields: added fields and overrides by identical `fieldName`; never
