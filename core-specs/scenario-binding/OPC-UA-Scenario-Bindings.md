@@ -554,8 +554,6 @@ sequenceDiagram
   S-->>B: ScenarioProfile { ScenarioUri, Title }
   B->>S: Browse selected ScenarioProfile RealizedBy
   S-->>B: ScenarioBindingGroup { CompanionSpecificationUri, ModelNamespaceUris }
-  B->>S: Browse ScenarioBindingGroup Realizes
-  S-->>B: ScenarioProfile { ScenarioUri }
   B->>S: Browse selected ScenarioBindingGroup children
   S-->>B: ScenarioBinding { DataSetClassId, ContentKind, DataSetCardinalityPath, BoundItems... }
   B->>B: Compose effective content class via §5.12 union
@@ -593,8 +591,6 @@ sequenceDiagram
   S-->>B: ScenarioProfile { ScenarioUri, Title }
   B->>S: Browse selected ScenarioProfile RealizedBy
   S-->>B: ScenarioBindingGroup { CompanionSpecificationUri, ModelNamespaceUris }
-  B->>S: Browse ScenarioBindingGroup Realizes
-  S-->>B: ScenarioProfile { ScenarioUri }
   B->>S: Browse selected ScenarioBindingGroup children
   S-->>B: ScenarioBinding + realization (PublishedDataSet or ActionTarget RealizesScenario binding)
   B->>S: Read DataSetMetaData + WriterGroup/PubSubConnection or ActionTarget
