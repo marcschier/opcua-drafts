@@ -2,7 +2,7 @@
 """Build an xRegistry Schema Registry catalog document from an OPC UA NodeSet.
 
 Maps namespaces -> schemagroups and DataTypes -> schema Resources per §5 of
-OPC-UA-xRegistry-Schema-Catalog.md. The JSON Schema documents are generated
+core-specs/schema-registry/OPC-UA-Schema-Registry.md. The JSON Schema documents are generated
 here (jsonschema_gen); the Avro/Protobuf/Arrow documents are embedded from the
 sibling encoding folders' ``schemas/`` when present, otherwise referenced by
 ``schemaurl``.

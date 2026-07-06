@@ -6,7 +6,7 @@ formats from the allowed set; embedded documents parse (Avro/Arrow/JSON Schema
 as JSON, Protobuf as non-empty text); and — if the ``jsonschema`` package is
 installed — every generated JSON Schema is a valid Draft 2020-12 schema.
 
-Usage: python core-specs/xregistry-catalog/tools/validate_local.py
+Usage: python core-specs/extras/xregistry-catalog/tools/validate_local.py
 """
 from __future__ import annotations
 

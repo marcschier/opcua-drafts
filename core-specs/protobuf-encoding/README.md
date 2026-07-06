@@ -46,4 +46,4 @@ The canonical wire form is proto3 with explicit presence. OPC UA Services map to
 
 The service `.proto` or transitive `FileDescriptorSet` is the shared contract. Its SchemaId is the existing transitive-closure SHA-256 identifier and is registered in the xRegistry catalog for discovery. gRPC calls use `application/grpc+proto`; OPC UA Session/authentication tokens and request headers ride in gRPC metadata.
 
-Central schema-sharing/discovery material for all encoding extensions belongs in `core-specs\xregistry-catalog\`; this folder contains only the Protobuf-specific draft, schemas, examples, and tools.
+Central schema-sharing/discovery material for all encoding extensions belongs in `core-specs\schema-registry\OPC-UA-Schema-Registry.md`; this folder contains only the Protobuf-specific draft, schemas, examples, and tools.

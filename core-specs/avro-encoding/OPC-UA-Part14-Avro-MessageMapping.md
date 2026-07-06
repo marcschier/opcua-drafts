@@ -32,7 +32,7 @@ This specification does not change PubSub security, writer group semantics, data
 
 ## 4 Overview
 
-The Avro message mapping uses one canonical Avro schema for the NetworkMessage envelope and one canonical schema for each DataSetMessage shape. The schema is derived from PubSub configuration and DataSetMetaData. A receiver shall know the writer configuration and schema identifier before decoding, either from configured PubSub metadata, a schema registry, an AddressSpace re-derivation or a negotiated out-of-band catalog such as `core-specs\xregistry-catalog\`.
+The Avro message mapping uses one canonical Avro schema for the NetworkMessage envelope and one canonical schema for each DataSetMessage shape. The schema is derived from PubSub configuration and DataSetMetaData. A receiver shall know the writer configuration and schema identifier before decoding, either from configured PubSub metadata, a schema registry, an AddressSpace re-derivation or a negotiated out-of-band catalog such as the unified Schema Registry specified in `core-specs\schema-registry\OPC-UA-Schema-Registry.md`.
 
 Each value or message shall reference its schema by SchemaId. The SchemaId is the CRC-64-AVRO Rabin fingerprint over the Avro Parsing Canonical Form of the self-contained schema, with every referenced named type defined inline at its first occurrence, represented in the little-endian byte order used by Avro single-object encoding. SchemaId derivation is independent of PubSub ConfigurationVersion: ConfigurationVersion tracks PubSub metadata versioning, while SchemaId identifies the exact Avro schema bytes needed to decode a payload.
 
@@ -400,7 +400,7 @@ A decoder shall maintain `cache: SchemaId -> parsed Avro schema`. When a value o
 
 1. Await an `AvroSchemaAnnouncement` on the relevant Discovery announcement channel.
 2. Send an `AvroSchemaRequest` on the relevant Discovery request channel containing the unknown SchemaId and await one `AvroSchemaAnnouncement` per known requested SchemaId.
-3. Fetch the schema from the out-of-band xRegistry by the `opcua.schemaid` attribute defined in `core-specs/xregistry-catalog/OPC-UA-xRegistry-Schema-Catalog.md` §6.
+3. Fetch the schema from the out-of-band xRegistry by the `opcua.schemaid` attribute defined in `core-specs/schema-registry/OPC-UA-Schema-Registry.md` §8.
 4. Read the in-server AddressSpace Schema Registry by a SchemaId-NodeId. A companion NodeSet in `core-specs/schema-registry/`, namespace `http://opcfoundation.org/UA/SchemaRegistry/`, exposes each schema at an Opaque NodeId whose Identifier is the raw SchemaId bytes, so a single Read returns the schema with no browse or recomputation. The same registry also exposes a `GetSchema(SchemaId)` Method for clients that prefer a Method call.
 5. Re-derive the schema from the AddressSpace DataType and verify that the recomputed SchemaId is equal to the referenced SchemaId.
 

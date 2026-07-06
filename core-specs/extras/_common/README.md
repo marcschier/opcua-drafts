@@ -1,6 +1,6 @@
 # `_common` — shared OPC UA type model, corpus & reference codec
 
-Infrastructure shared by the encoding extensions (`avro-encoding/`, `protobuf-encoding/`, `arrow-encoding/`, `xregistry-catalog/`).
+Infrastructure shared by the encoding extensions (`avro-encoding/`, `protobuf-encoding/`, `arrow-encoding/`, `schema-registry/`).
 It is **not** an extension itself and is not proposed for the base namespace; it exists so that every encoding is generated from, and validated against, the *same* canonical OPC UA type model, values, and reversibility corpus.
 
 ## Package `opcua_enc`

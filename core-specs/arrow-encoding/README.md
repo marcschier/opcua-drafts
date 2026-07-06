@@ -31,4 +31,4 @@ validate_local: schemas ok, schemaids ok, examples ok, type-reference ok, byte-a
 
 The codec and generator import the read-only shared API from `core-specs\extras\_common\opcua_enc`: type descriptors, canonical values, the NodeSet loader, and the 102-case corpus. The Arrow Part 6 field/type mapping, historian/ADBC `Value` column mapping, and Part 14 DataSet column mapping are intentionally the same mapping.
 
-Schema sharing across sibling extensions is catalogued centrally by `core-specs\xregistry-catalog\`; this folder only emits the Arrow-specific reference schema descriptions.
+Schema sharing across sibling extensions is catalogued centrally by `core-specs\schema-registry\OPC-UA-Schema-Registry.md`; this folder only emits the Arrow-specific reference schema descriptions.

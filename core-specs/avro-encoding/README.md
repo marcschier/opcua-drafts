@@ -39,4 +39,4 @@ python core-specs\extras\avro-encoding\tools\validate_local.py
 
 `validate_local.py` verifies normal codec round-trips, an independent conformance gate that decodes every corpus payload and generated example from freshly loaded published `.avsc` schemas, `schemaids.json` drift, type-reference drift, byte annotation contiguity, self-contained composite SchemaId changes, the SchemaId handshake demo, and the Action/Discovery demo.
 
-The codec and tests use the read-only shared API in `core-specs\extras\_common\opcua_enc`. Central schema sharing and registry/catalog mechanics are specified separately in `core-specs\xregistry-catalog\`.
+The codec and tests use the read-only shared API in `core-specs\extras\_common\opcua_enc`. Central schema sharing and registry/catalog mechanics are specified separately in `core-specs\schema-registry\OPC-UA-Schema-Registry.md`.
