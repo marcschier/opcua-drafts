@@ -87,49 +87,56 @@ Binary's compact type tags make it the smallest for many small heterogeneous val
 
 ## 4 Part 14 — PubSub messages
 
-Same DataSet, varying batch size. `B/sample` is the amortised payload per DataSet sample.
+Same DataSet, varying batch size. `B/sample` is the amortised payload per DataSet sample. All Part 14 numbers below are from a single measurement session so the rows are mutually consistent; the two Arrow rows (`batch`, the default, and `stream`) are measured together.
 
 ### 4.1 Single sample
 
 | Encoder | Payload (B) | B/sample | Encode (ns/op) | Decode (ns/op) | Alloc (B/op) |
 |---|--:|--:|--:|--:|--:|
-| **UADP** | **70** | **70.0** | 4,112 | 862 | 2,648 |
-| JSON | 466 | 466.0 | 23,599 | 27,042 | 3,472 |
-| Avro | 240 | 240.0 | 49,092 | 12,849 | 18,471 |
-| Arrow | 3,064 | 3,064.0 | 128,998 | 68,496 | 50,582 |
+| **UADP** | **70** | **70.0** | 6,060 | 929 | 2,648 |
+| JSON | 466 | 466.0 | 45,713 | 36,077 | 3,472 |
+| Avro | 240 | 240.0 | 62,291 | 12,724 | 18,471 |
+| **Arrow (batch)** | 1,856 | 1,856.0 | 271,823 | 142,570 | 50,542 |
+| Arrow (stream) | 3,064 | 3,064.0 | 210,016 | 140,296 | 50,538 |
 
 ### 4.2 Batch of 100
 
 | Encoder | Payload (B) | B/sample | Encode (ns/op) | Decode (ns/op) | Alloc (B/op) |
 |---|--:|--:|--:|--:|--:|
-| **UADP** | 7,036 | **70.4** | 980,318 | 92,745 | 262,424 |
-| JSON | 33,974 | 339.7 | 3,785,237 | 2,283,110 | 309,464 |
-| Avro | 18,630 | 186.3 | 2,539,085 | 1,210,080 | 1,419,603 |
-| Arrow | 9,144 | 91.4 | 1,647,993 | 672,012 | 818,172 |
+| **UADP** | 7,036 | **70.4** | 650,188 | 97,437 | 262,424 |
+| JSON | 33,974 | 339.7 | 3,763,670 | 2,373,273 | 309,464 |
+| Avro | 18,630 | 186.3 | 2,927,333 | 978,675 | 1,419,637 |
+| **Arrow (batch)** | 7,936 | 79.4 | 4,431,712 | 1,034,385 | 818,101 |
+| Arrow (stream) | 9,144 | 91.4 | 3,456,305 | 998,280 | 818,101 |
 
 ### 4.3 Batch of 1 000
 
 | Encoder | Payload (B) | B/sample | Encode (ns/op) | Decode (ns/op) | Alloc (B/op) |
 |---|--:|--:|--:|--:|--:|
-| UADP | 70,372 | 70.4 | 3,830,670 | 1,308,940 | 2,624,030 |
-| JSON | 345,490 | 345.5 | 20,842,750 | 17,966,580 | 3,129,246 |
-| Avro | 189,019 | 189.0 | 25,411,290 | 10,909,840 | 13,814,086 |
-| **Arrow** | **66,936** | **66.9** | **17,053,680** | **7,882,650** | 7,522,898 |
+| UADP | 70,372 | 70.4 | 5,250,620 | 907,200 | 2,624,024 |
+| JSON | 345,490 | 345.5 | 32,330,220 | 22,350,140 | 3,129,243 |
+| Avro | 189,019 | 189.0 | 34,560,380 | 21,068,370 | 13,811,553 |
+| **Arrow (batch)** | **65,728** | **65.7** | 27,752,760 | 3,652,000 | 7,525,249 |
+| Arrow (stream) | 66,936 | 66.9 | 32,285,270 | 15,777,620 | 7,525,898 |
 
-The Arrow crossover is the key result. A single Arrow schema is amortised once per batch and the columns vectorise, so per-sample size falls from 3,064 B (1 sample) to 91.4 B (100) to **66.9 B (1 000) — below UADP's 70.4 B/sample** — while Arrow decode becomes the fastest of all encodings (7.9 ms vs UADP 1.3 ms is misleading only because UADP decodes a much smaller structure; against the comparably-sized JSON/Avro, Arrow decodes ~2–3× faster). Arrow is the right transport for historian dumps, ADBC/Flight bulk reads and analytics streaming; it is the wrong transport for low-latency single-sample telemetry.
+The Arrow crossover is the key result. A single Arrow schema is amortised once per batch and the columns vectorise, so per-sample size falls from ~1.9–3.1 kB (1 sample) to ~79–91 B (100) to **~66–67 B (1 000)** — the default `batch` framing reaches 65.7 B/sample and even the self-contained `stream` reaches 66.9 B/sample, both **below UADP's 70.4 B/sample**. Against the comparably-sized JSON and Avro, Arrow decodes fastest at scale (`batch` decode ~3.7 ms at 1 000 rows vs JSON's ~22 ms and Avro's ~21 ms). Absolute ns for the largest batches have high variance (few iterations); the deterministic result is size. Arrow is the right transport for historian dumps, ADBC/Flight bulk reads and analytics streaming; it is the wrong transport for low-latency single-sample telemetry, where even a bare `batch` (1,856 B) is far larger than UADP (70 B).
 
-### 4.4 Arrow IPC framing: self-contained stream vs bare RecordBatch
+### 4.4 Arrow IPC framing: bare RecordBatch (default) vs self-contained stream
 
-A self-contained Arrow IPC stream embeds a **Schema message** before its RecordBatch. That schema is a fixed cost — ~1.2 kB for this ten-field DataSet — independent of the row count, and it is repeated in every self-contained message. The `batch` framing option (Part 14 Arrow mapping §7.2.8.x) omits it: the payload is a **bare RecordBatch** and the schema is announced once out of band and resolved by SchemaId (the Arrow Flight model). Measured breakdown for the same DataSet:
+A self-contained Arrow IPC `stream` embeds a **Schema message** before its RecordBatch. That schema is a fixed cost — ~1.2 kB for this ten-field DataSet — independent of the row count, and it is repeated in every self-contained message. The default `batch` framing (Part 14 Arrow mapping §7.2.8.x) omits it: the payload is a **bare RecordBatch** and the schema is announced once out of band and resolved by SchemaId (the Arrow Flight model, and the same schema-exchange model the Avro mapping already uses). Full measured comparison for the same DataSet:
 
-| Samples | Stream (B) | Schema msg (B) | Bare batch (B) | B/sample stream | B/sample batch | Saved |
-|--:|--:|--:|--:|--:|--:|--:|
-| 1 | 3,064 | 1,200 | 1,856 | 3,064.0 | 1,856.0 | **39.4 %** |
-| 10 | 3,256 | 1,200 | 2,048 | 325.6 | 204.8 | 37.1 % |
-| 100 | 9,144 | 1,200 | 7,936 | 91.4 | 79.4 | 13.2 % |
-| 1 000 | 66,936 | 1,200 | 65,728 | 66.9 | 65.7 | 1.8 % |
+| Samples | Framing | Payload (B) | B/sample | Encode (ns/op) | Decode (ns/op) | Alloc (B/op) |
+|--:|:--|--:|--:|--:|--:|--:|
+| 1 | **batch** | **1,856** | **1,856.0** | 271,823 | 142,570 | 50,542 |
+| 1 | stream | 3,064 | 3,064.0 | 210,016 | 140,296 | 50,538 |
+| 10 | **batch** | **2,048** | **204.8** | 524,527 | 283,866 | 110,025 |
+| 10 | stream | 3,256 | 325.6 | 465,363 | 239,322 | 110,025 |
+| 100 | **batch** | **7,936** | **79.4** | 4,431,712 | 1,034,385 | 818,101 |
+| 100 | stream | 9,144 | 91.4 | 3,456,305 | 998,280 | 818,101 |
+| 1 000 | **batch** | **65,728** | **65.7** | 27,752,760 | 3,652,000 | 7,525,249 |
+| 1 000 | stream | 66,936 | 66.9 | 32,285,270 | 15,777,620 | 7,525,898 |
 
-`batch` framing removes a constant ~1.2 kB per message, so the relative saving is largest for small or single-sample messages (≈39 %) and shrinks as the schema is amortised across a larger batch (1.8 % at 1 000 rows). It is a **framing** choice, not an encoding variant — the column and value layout is the identical canonical Part 6 Arrow mapping — and it requires a schema-announcement channel, so `stream` remains the default self-contained framing. Note the floor: even a bare single-sample RecordBatch is 1,856 B (vs UADP's 70 B) because the RecordBatch header itself carries per-column length/null-count/buffer descriptors. `batch` framing reduces Arrow's per-message overhead but does not make Arrow competitive with a compact row encoding for single samples — it is most useful for frequent small-to-medium batches on a schema-governed channel.
+`batch` removes a constant ~1.2 kB per message, so the relative saving is largest for small or single-sample messages (payload ≈39 % smaller at 1 sample, 37 % at 10) and shrinks as the schema is amortised across a larger batch (~13 % at 100, ~2 % at 1 000). It is a **framing** choice, not an encoding variant — the column and value layout is the identical canonical Part 6 Arrow mapping. Because `batch` requires a schema-announcement channel and that is the same model the Avro mapping already requires, **`batch` is the default framing**; `stream` is used for channels without a schema-announcement mechanism or when each message must be independently decodable. Note the floor: even a bare single-sample RecordBatch is 1,856 B (vs UADP's 70 B) because the RecordBatch header itself carries per-column length/null-count/buffer descriptors, so `batch` reduces but does not remove Arrow's per-message overhead — it is most useful for frequent small-to-medium batches on a schema-governed channel.
 
 ## 5 Value-add by encoding
 
