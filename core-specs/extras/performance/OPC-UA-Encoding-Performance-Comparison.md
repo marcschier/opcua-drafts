@@ -143,7 +143,7 @@ A self-contained Arrow IPC stream embeds a **Schema message** before its RecordB
 
 ## 6 Edge cases observed
 
-- **Avro codec allocation.** The reference Avro writer/reader pool their IO buffers from `ArrayPool`; scalar-message allocation is ~0.9 KB/op (below Binary). Earlier a per-instance 8 KB buffer regressed small-message allocation to ~9 KB/op — pooling removed that while keeping the large-payload batching win.
+- **Avro codec allocation.** The reference Avro writer/reader pool their IO buffers from `ArrayPool` rather than allocating a per-instance buffer, so scalar-message allocation is ~0.9 KB/op (below Binary) while the buffering still batches large-payload writes.
 - **Protobuf Variant matrices/arrays.** Fully supported and reversible, but large and slow because each element is a generic `Value` message. This is expected: Protobuf's strength is statically-typed service messages, not a dynamic numeric matrix container.
 - **Arrow Variant unions.** Fully supported across every built-in scalar/array/matrix body and reversible, but a per-value dense union is the antithesis of Arrow's columnar design and is very large. Arrow should carry Variants as typed columns in a batch, not as per-row unions.
 - **Determinism.** All payload sizes and per-op allocations are reproducible; ns timings vary with machine load and JIT and are reported as indicative.

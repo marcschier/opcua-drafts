@@ -5,7 +5,7 @@ This working area contains the Apache Arrow (columnar) OPC UA DataEncoding draft
 ## Contents
 
 - [`OPC-UA-Part6-Arrow-DataEncoding.md`](OPC-UA-Part6-Arrow-DataEncoding.md) — proposed insertion into OPC 10000-6 v1.05.07.
-- [`OPC-UA-Arrow-Historian-ADBC-Access.md`](OPC-UA-Arrow-Historian-ADBC-Access.md) — ADBC-style HistoryRead result mapping to ArrowArrayStream.
+- [`OPC-UA-Part11-Arrow-ADBC-Access.md`](OPC-UA-Part11-Arrow-ADBC-Access.md) — ADBC-style HistoryRead result mapping to ArrowArrayStream.
 - [`OPC-UA-Part14-Arrow-MessageMapping.md`](OPC-UA-Part14-Arrow-MessageMapping.md) — proposed insertion into OPC 10000-14 v1.05.06.
 - `../extras/arrow-encoding/tools/build_schemas.py` — builds deterministic JSON descriptions of the shared Arrow type mapping into `schemas\base.json` and `../extras/arrow-encoding/schemas/`.
 - `../extras/arrow-encoding/tools/arrow_codec.py` — pyarrow IPC stream codec used by the local reversibility harness.
