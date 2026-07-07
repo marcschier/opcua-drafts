@@ -158,5 +158,6 @@ A self-contained Arrow IPC `stream` embeds a **Schema message** before its Recor
 ## 7 References
 
 - Encoding specifications: `../avro-encoding`, `../protobuf-encoding`, `../arrow-encoding` and the merged `../../schema-registry/OPC-UA-Schema-Registry.md`.
+- NodeId / ExpandedNodeId structured-vs-textual payload analysis: [`nodeid-size-analysis.md`](nodeid-size-analysis.md).
 - Reference reversibility corpus (107 cases): `../_common` and each extension's `tools/validate_local.py`.
 - Reference C# encoders and the comparison harnesses: `UA-.NETStandard` PR #7 (`Opc.Ua.Core.Experimental`, `Opc.Ua.PubSub.Experimental`).

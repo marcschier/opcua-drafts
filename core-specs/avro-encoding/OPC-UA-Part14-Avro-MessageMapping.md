@@ -451,6 +451,8 @@ sequenceDiagram
 
 SchemaId derives only from the Avro schema. It does not depend on PubSub ConfigurationVersion, writer group version numbers, sequence numbers or transport session state. A ConfigurationVersion change that does not alter the Avro schema keeps the same SchemaId. A schema change produces a new SchemaId even if a deployment accidentally fails to advance ConfigurationVersion; decoders shall use SchemaId to select the Avro decoder and may use ConfigurationVersion for the existing PubSub metadata checks.
 
+Although SchemaId is not computed from ConfigurationVersion, the `{MajorVersion, MinorVersion}` lineage carries a compatibility relationship between successive schemas per *OPC UA — Schema Registry* §5.6. A MinorVersion increment is an append-only-compatible superset of the same lineage, so a subscriber holding the latest minor of a lineage decodes every message produced under any earlier minor of that lineage — the appended Avro union branches are simply unused for older values. Where data-driven growth is used, a lineage is a single publisher's chain of SchemaIds (§5.6), so a consumer keys on SchemaId rather than on `major.minor` alone. A MajorVersion increment is a reset with no such guarantee. A publisher shall advance MinorVersion when it aggregates a new Variant body form or ExtensionObject concrete type into the schema, and re-announce the resulting SchemaId.
+
 ## 10 Transport content types
 
 For MQTT, the MQTT 5 `ContentType` property shall be `application/vnd.apache.avro; opcua=pubsub; encoding=binary`. For MQTT 3.1.1, the same string should be carried in configured metadata or topic documentation because the protocol has no ContentType property.
@@ -474,7 +476,7 @@ The PubSub configuration model would add Avro message mapping ObjectTypes parall
 | §9.5 Encoder change tracking | New `7.2.6.5 Encoder change tracking` | Defines per-destination announced sets and automatic re-announcement on schema changes. |
 | §9.6 Decoder behavior | New `7.2.6.6 Decoder cache-miss resolution` | Defines the ordered cache-miss resolution sequence including xRegistry, Schema Registry NodeId reads, GetSchema and AddressSpace re-derivation. |
 | §9.7 Sequence diagrams | New `7.2.6.7 SchemaId exchange sequences` | Shows announce-data, late-joiner request and schema-change flows. |
-| §9.8 Relationship to ConfigurationVersion | New `7.2.6.8 SchemaId and ConfigurationVersion` | States that SchemaId is content-derived and independent of ConfigurationVersion. |
+| §9.8 Relationship to ConfigurationVersion | New `7.2.6.8 SchemaId and ConfigurationVersion` | States that SchemaId is content-derived and independent of ConfigurationVersion, and defines the minor/major schema compatibility contract (Schema Registry §5.6). |
 | §8.1 Action messages | New `7.2.6.x NetworkMessage containing Action messages` | Mirrors JSON `7.2.5.6`, Table 166 request and Table 167 response semantics using Avro records. |
 | §8.2 Discovery messages | New `7.2.6.x Discovery messages` | Mirrors DataSetMetaData, DataSetWriter configuration, ActionResponder configuration, schema announcement, schema request, probe and Publisher endpoints announcements using Avro records. |
 | §10 MQTT content type | New `7.3.4.x MQTT Avro content type` | Defines MQTT `ContentType` string and schema-exchange message parameters. |

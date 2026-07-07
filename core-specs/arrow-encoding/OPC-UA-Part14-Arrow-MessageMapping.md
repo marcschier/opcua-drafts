@@ -34,7 +34,7 @@ Insert a new message mapping `7.2.8 Arrow message mapping` after the existing me
 | §5.2.4 SchemaRequest | New `7.2.8.x SchemaRequest` | Defines the `ArrowSchemaRequest` descriptor for late joiners and cache misses. |
 | §5.2.5 Encoder change tracking | New `7.2.8.x Encoder change tracking` | Requires per-destination announcement tracking and homogeneous streams per SchemaId. |
 | §5.2.6 Decoder cache-miss resolution | New `7.2.8.x Decoder cache-miss resolution` | Orders IPC/announcement wait, SchemaRequest, xRegistry lookup, AddressSpace Schema Registry read, and Part 6 re-derivation. |
-| §5.2.7 Relationship to ConfigurationVersion | New `7.2.8.x Relationship to ConfigurationVersion` | States that SchemaId is independent of ConfigurationVersion. |
+| §5.2.7 Relationship to ConfigurationVersion | New `7.2.8.x Relationship to ConfigurationVersion` | States that SchemaId is independent of ConfigurationVersion, and defines the minor/major schema compatibility contract (Schema Registry §5.6). |
 | §5.2.8 Schema-exchange sequences | New `7.2.8.x Schema-exchange sequences` | Provides the normative exchange patterns as sequence diagrams. |
 | §3 `7.3.4.x Content types` | New `7.3.4.x Arrow content types` | Adds Arrow IPC stream/file media types. |
 | §3 `9.2.x Configuration model` | New `9.2.x Arrow message mapping ObjectTypes` | Describes Arrow mapping configuration model entries. |
@@ -171,6 +171,8 @@ If all configured resolution paths fail, the decoder shall treat the payload as 
 #### 5.2.7 Relationship to ConfigurationVersion
 
 SchemaId derives only from the Arrow Schema. It does not depend on PubSub `ConfigurationVersion`, writer group version numbers, sequence numbers, transport session state or `SchemaEpoch`. A ConfigurationVersion change that does not alter the Arrow Schema keeps the same SchemaId. A schema change produces a new SchemaId even if a deployment accidentally fails to advance ConfigurationVersion; decoders shall use SchemaId to select the Arrow schema and may use ConfigurationVersion for existing PubSub metadata checks.
+
+Although SchemaId is not computed from ConfigurationVersion, the `{MajorVersion, MinorVersion}` lineage carries a compatibility relationship between successive schemas per *OPC UA — Schema Registry* §5.6. A MinorVersion increment is an append-only-compatible superset of the same major. An Arrow IPC `stream` embeds its writer schema and remains self-describing; a bare `batch` RecordBatch carries no schema and its node/buffer layout matches its writer-minor schema, so a subscriber shall resolve the exact writer-minor schema by SchemaId to decode a bare batch, or apply a defined upgrade that treats union children absent from the older batch as empty. A MajorVersion increment is a reset with no such guarantee. A publisher shall advance MinorVersion when it aggregates a new Variant body form or ExtensionObject concrete type into the schema, and re-announce the resulting SchemaId per §5.2.3–5.2.6.
 
 #### 5.2.8 Schema-exchange sequences
 
