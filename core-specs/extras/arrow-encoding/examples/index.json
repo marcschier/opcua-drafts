@@ -37,10 +37,10 @@
       "type": "String"
     },
     {
-      "bytes": 1024,
+      "bytes": 408,
       "file": "nodeid_guid.arrow",
       "name": "nodeid_guid",
-      "sha256": "47aab4818553facfc2364784b31a1bbb31d5c5433eaaa134dab1d7195b4ab5a0",
+      "sha256": "15dc1fc02e1e297ed2deb00cfe6a03215d44c17b25c0adafdeb44b06771b670e",
       "type": "NodeId"
     },
     {
@@ -72,17 +72,17 @@
       "type": "Measurement"
     },
     {
-      "bytes": 53240,
+      "bytes": 45312,
       "file": "variant_extobj.arrow",
       "name": "variant_extobj",
-      "sha256": "14f0964080b959a32db63f20834271b2da9723fc462ce597fb5338e97b814791",
+      "sha256": "4d07b810c4066835369f1af6b059f6cb9928ce629c8c8892dfef7229553b6532",
       "type": "Variant"
     },
     {
-      "bytes": 53808,
+      "bytes": 45936,
       "file": "datavalue_full.arrow",
       "name": "datavalue_full",
-      "sha256": "923b2be33d1fc2f0b40a17a3a399455abdad2e683da3ca0034dafba986047f31",
+      "sha256": "83b170d79169ea0ffaecdf33c48ddd1db00d08b83ad1aec023921e5475e01133",
       "type": "DataValue"
     },
     {

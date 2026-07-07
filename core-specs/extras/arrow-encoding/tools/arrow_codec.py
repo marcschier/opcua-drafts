@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+import base64
 import os
 import sys
+import uuid
 from typing import Any, Iterable
 
 import pyarrow as pa
@@ -145,11 +147,7 @@ def _builtin_arrow(bid: t.BuiltInType) -> pa.DataType:
         B.ByteString: pa.binary(),
         B.XmlElement: pa.utf8(),
         B.NodeId: _nodeid_type(),
-        B.ExpandedNodeId: pa.struct([
-            pa.field("node_id", _nodeid_type(), nullable=False),
-            pa.field("namespace_uri", pa.utf8()),
-            pa.field("server_index", pa.uint32(), nullable=False),
-        ]),
+        B.ExpandedNodeId: pa.utf8(),
         B.StatusCode: pa.uint32(),
         B.QualifiedName: pa.struct([
             pa.field("namespace", pa.uint16(), nullable=False),
@@ -163,14 +161,59 @@ def _builtin_arrow(bid: t.BuiltInType) -> pa.DataType:
 
 
 def _nodeid_type() -> pa.DataType:
-    return pa.struct([
-        pa.field("namespace", pa.uint16(), nullable=False),
-        pa.field("id_type", pa.uint8(), nullable=False),
-        pa.field("numeric", pa.uint32()),
-        pa.field("string", pa.utf8()),
-        pa.field("guid", pa.binary(16)),
-        pa.field("opaque", pa.binary()),
-    ])
+    return pa.utf8()
+
+
+def _nodeid_to_text(n: v.NodeId) -> str:
+    prefix = "" if n.namespace == 0 else f"ns={n.namespace};"
+    if n.id_type == v.IdType.NUMERIC:
+        return f"{prefix}i={int(n.identifier)}"
+    if n.id_type == v.IdType.STRING:
+        return f"{prefix}s={n.identifier}"
+    if n.id_type == v.IdType.GUID:
+        return f"{prefix}g={uuid.UUID(bytes=n.identifier.bytes)}"
+    return f"{prefix}b={base64.b64encode(n.identifier).decode('ascii')}"
+
+
+def _nodeid_from_text(s: str) -> v.NodeId:
+    namespace = 0
+    if s.startswith("ns="):
+        sep = s.index(";")
+        namespace = int(s[3:sep])
+        s = s[sep + 1:]
+    kind, _, body = s.partition("=")
+    if kind == "i":
+        return v.NodeId(namespace, v.IdType.NUMERIC, int(body))
+    if kind == "s":
+        return v.NodeId(namespace, v.IdType.STRING, body)
+    if kind == "g":
+        return v.NodeId(namespace, v.IdType.GUID, v.Guid(uuid.UUID(body).bytes))
+    if kind == "b":
+        return v.NodeId(namespace, v.IdType.OPAQUE, base64.b64decode(body))
+    raise ValueError(f"unrecognized NodeId text: {s!r}")
+
+
+def _expandednodeid_to_text(e: v.ExpandedNodeId) -> str:
+    prefix = ""
+    if e.server_index:
+        prefix += f"svr={e.server_index};"
+    if e.namespace_uri is not None:
+        prefix += f"nsu={e.namespace_uri};"
+    return prefix + _nodeid_to_text(e.node_id)
+
+
+def _expandednodeid_from_text(s: str) -> v.ExpandedNodeId:
+    server_index = 0
+    if s.startswith("svr="):
+        sep = s.index(";")
+        server_index = int(s[4:sep])
+        s = s[sep + 1:]
+    namespace_uri = None
+    if s.startswith("nsu="):
+        sep = s.index(";")
+        namespace_uri = s[4:sep]
+        s = s[sep + 1:]
+    return v.ExpandedNodeId(_nodeid_from_text(s), namespace_uri, server_index)
 
 
 def encode(ty: t.Type, value: Any, reg: TypeRegistry = DEFAULT_REGISTRY) -> bytes:
@@ -251,14 +294,7 @@ def _build_builtin_array(bid: t.BuiltInType, vals: list[Any], reg: TypeRegistry,
     if bid == B.NodeId:
         return _build_nodeid_array(vals, pa_type)
     if bid == B.ExpandedNodeId:
-        return _build_struct_array(
-            ["node_id", "namespace_uri", "server_index"],
-            [t.NODEID, t.STRING, t.UINT32],
-            [[None if x is None else x.node_id for x in vals], [None if x is None else x.namespace_uri for x in vals], [None if x is None else x.server_index for x in vals]],
-            reg,
-            pa_type,
-            mask=[x is None for x in vals],
-        )
+        return pa.array([None if x is None else _expandednodeid_to_text(x) for x in vals], type=pa.utf8())
     if bid == B.QualifiedName:
         return _build_struct_array(
             ["namespace", "name"], [t.UINT16, t.STRING],
@@ -283,21 +319,7 @@ def _build_builtin_array(bid: t.BuiltInType, vals: list[Any], reg: TypeRegistry,
 
 
 def _build_nodeid_array(vals: list[v.NodeId | None], pa_type: pa.DataType) -> pa.Array:
-    ns, idt, num, string, guid, opaque = [], [], [], [], [], []
-    mask = []
-    for n in vals:
-        mask.append(n is None)
-        ns.append(0 if n is None else n.namespace)
-        idt.append(0 if n is None else int(n.id_type))
-        num.append(n.identifier if n is not None and n.id_type == v.IdType.NUMERIC else None)
-        string.append(n.identifier if n is not None and n.id_type == v.IdType.STRING else None)
-        guid.append(n.identifier.bytes if n is not None and n.id_type == v.IdType.GUID else None)
-        opaque.append(n.identifier if n is not None and n.id_type == v.IdType.OPAQUE else None)
-    return pa.StructArray.from_arrays(
-        [pa.array(ns, type=pa.uint16()), pa.array(idt, type=pa.uint8()), pa.array(num, type=pa.uint32()), pa.array(string, type=pa.utf8()), pa.array(guid, type=pa.binary(16)), pa.array(opaque, type=pa.binary())],
-        fields=list(pa_type),
-        mask=pa.array(mask, type=pa.bool_()),
-    )
+    return pa.array([None if n is None else _nodeid_to_text(n) for n in vals], type=pa.utf8())
 
 
 def _build_list_array(elem_ty: t.Type, vals: list[Any], allow_null_elements: bool, reg: TypeRegistry, pa_type: pa.DataType) -> pa.Array:
@@ -543,7 +565,7 @@ def _builtin_from_scalar(bid: t.BuiltInType, scalar: pa.Scalar, reg: TypeRegistr
     if bid == B.NodeId:
         return _nodeid_from_scalar(scalar)
     if bid == B.ExpandedNodeId:
-        return v.ExpandedNodeId(_nodeid_from_scalar(scalar["node_id"]), scalar["namespace_uri"].as_py(), int(scalar["server_index"].as_py()))
+        return _expandednodeid_from_text(scalar.as_py())
     if bid == B.QualifiedName:
         return v.QualifiedName(int(scalar["namespace"].as_py()), scalar["name"].as_py())
     if bid == B.LocalizedText:
@@ -567,16 +589,7 @@ def _builtin_from_scalar(bid: t.BuiltInType, scalar: pa.Scalar, reg: TypeRegistr
 
 
 def _nodeid_from_scalar(scalar: pa.Scalar) -> v.NodeId:
-    id_type = v.IdType(int(scalar["id_type"].as_py()))
-    if id_type == v.IdType.NUMERIC:
-        ident: Any = int(scalar["numeric"].as_py())
-    elif id_type == v.IdType.STRING:
-        ident = scalar["string"].as_py()
-    elif id_type == v.IdType.GUID:
-        ident = v.Guid(scalar["guid"].as_py())
-    else:
-        ident = scalar["opaque"].as_py()
-    return v.NodeId(int(scalar["namespace"].as_py()), id_type, ident)
+    return _nodeid_from_text(scalar.as_py())
 
 
 def _type_field_index(data_type: pa.DataType, name: str) -> int:
