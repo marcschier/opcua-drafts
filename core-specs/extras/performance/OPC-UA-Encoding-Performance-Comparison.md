@@ -118,6 +118,19 @@ Same DataSet, varying batch size. `B/sample` is the amortised payload per DataSe
 
 The Arrow crossover is the key result. A single Arrow schema is amortised once per batch and the columns vectorise, so per-sample size falls from 3,064 B (1 sample) to 91.4 B (100) to **66.9 B (1 000) — below UADP's 70.4 B/sample** — while Arrow decode becomes the fastest of all encodings (7.9 ms vs UADP 1.3 ms is misleading only because UADP decodes a much smaller structure; against the comparably-sized JSON/Avro, Arrow decodes ~2–3× faster). Arrow is the right transport for historian dumps, ADBC/Flight bulk reads and analytics streaming; it is the wrong transport for low-latency single-sample telemetry.
 
+### 4.4 Arrow IPC framing: self-contained stream vs bare RecordBatch
+
+A self-contained Arrow IPC stream embeds a **Schema message** before its RecordBatch. That schema is a fixed cost — ~1.2 kB for this ten-field DataSet — independent of the row count, and it is repeated in every self-contained message. The `batch` framing option (Part 14 Arrow mapping §7.2.8.x) omits it: the payload is a **bare RecordBatch** and the schema is announced once out of band and resolved by SchemaId (the Arrow Flight model). Measured breakdown for the same DataSet:
+
+| Samples | Stream (B) | Schema msg (B) | Bare batch (B) | B/sample stream | B/sample batch | Saved |
+|--:|--:|--:|--:|--:|--:|--:|
+| 1 | 3,064 | 1,200 | 1,856 | 3,064.0 | 1,856.0 | **39.4 %** |
+| 10 | 3,256 | 1,200 | 2,048 | 325.6 | 204.8 | 37.1 % |
+| 100 | 9,144 | 1,200 | 7,936 | 91.4 | 79.4 | 13.2 % |
+| 1 000 | 66,936 | 1,200 | 65,728 | 66.9 | 65.7 | 1.8 % |
+
+`batch` framing removes a constant ~1.2 kB per message, so the relative saving is largest for small or single-sample messages (≈39 %) and shrinks as the schema is amortised across a larger batch (1.8 % at 1 000 rows). It is a **framing** choice, not an encoding variant — the column and value layout is the identical canonical Part 6 Arrow mapping — and it requires a schema-announcement channel, so `stream` remains the default self-contained framing. Note the floor: even a bare single-sample RecordBatch is 1,856 B (vs UADP's 70 B) because the RecordBatch header itself carries per-column length/null-count/buffer descriptors. `batch` framing reduces Arrow's per-message overhead but does not make Arrow competitive with a compact row encoding for single samples — it is most useful for frequent small-to-medium batches on a schema-governed channel.
+
 ## 5 Value-add by encoding
 
 | Encoding | Best at | Avoid for | Notes |
@@ -125,7 +138,7 @@ The Arrow crossover is the key result. A single Arrow schema is amortised once p
 | **Binary / UADP** | CPU baseline; small single messages; low latency | very large batches (no columnar amortisation) | Existing default; compact type tags. |
 | **Avro** | compact schema-governed messaging; integer-heavy data and matrices; a smaller/faster JSON replacement | nothing categorically — solid all-rounder | Variable-length integers win on small-magnitude integers; SchemaId handshake keeps the schema off the wire; add-in Action + Discovery mappings. |
 | **Protobuf / gRPC** | idiomatic gRPC service request/response contracts | bulk numeric arrays and matrices via the dynamic `Variant` container | Use typed fields for bulk data; the generic Variant path frames each element as a message. |
-| **Arrow** | large columnar batches — historian / ADBC / Flight bulk and analytics | single or small messages (kilobytes of per-message IPC framing); per-value Variant unions | Wins on both size (smallest per sample at scale, beating UADP) and decode speed once the schema is amortised across a batch. |
+| **Arrow** | large columnar batches — historian / ADBC / Flight bulk and analytics | single or small messages (kilobytes of per-message IPC framing); per-value Variant unions | Wins on both size (smallest per sample at scale, beating UADP) and decode speed once the schema is amortised across a batch; `batch` framing (§4.4) trims the fixed schema cost on schema-governed channels. |
 | **JSON** | human-readable, self-describing debugging and interop | size- or throughput-sensitive paths | Largest and slowest; needs no schema to decode. |
 
 ## 6 Edge cases observed

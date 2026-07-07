@@ -26,6 +26,7 @@ Insert a new message mapping `7.2.8 Arrow message mapping` after the existing me
 |---|---|---|
 | §3 `6.3.x Arrow mapping parameters` | New `6.3.x Arrow message mapping parameters` | Adds IPC format, batch sizing, schema metadata, delta-frame and compression settings. |
 | §3 `7.2.8 Arrow message mapping` | New `7.2.8 Arrow message mapping` | Defines Arrow IPC NetworkMessages, RecordBatch DataSetMessages, key frames and delta frames. |
+| §3 `7.2.8 Arrow message mapping` | New `7.2.8.x Bare RecordBatch framing` | Adds the `batch` `ArrowIpcFormat` option: bare RecordBatch data messages whose schema is resolved out of band by SchemaId. |
 | §5.1 Schema resolution | New `7.2.8.x Schema resolution` | Describes catalog resolution, content-type selection and governed-schema validation. |
 | §5.2.1 SchemaId and canonical schema bytes | New `7.2.8.x SchemaId and canonical schema bytes` | Defines the 8-byte SchemaId as the first 8 bytes of SHA-256 over the serialized Arrow Schema. |
 | §5.2.2 Carrier placement | New `7.2.8.x SchemaId carrier placement` | Normatively maps stream, transport and envelope scopes to SchemaId carriers. |
@@ -42,7 +43,7 @@ Insert a new message mapping `7.2.8 Arrow message mapping` after the existing me
 
 ### 6.3.x Arrow mapping parameters
 
-The WriterGroup MessageSettings for the Arrow mapping shall include: `ArrowIpcFormat` (`stream` or `file`, default `stream`), `MaxRowsPerRecordBatch`, `IncludeSchemaMetadata`, `DeltaFrameMode` (`nullable-columns` or `selected-columns`), and `Compression` (`none` or an Arrow IPC-supported codec). The DataSetWriter MessageSettings shall identify the DataSet schema version and whether DataSet fields are represented as RawData, Variant or DataValue according to `DataSetFieldContentMask`.
+The WriterGroup MessageSettings for the Arrow mapping shall include: `ArrowIpcFormat` (`stream`, `file` or `batch`, default `stream`), `MaxRowsPerRecordBatch`, `IncludeSchemaMetadata`, `DeltaFrameMode` (`nullable-columns` or `selected-columns`), and `Compression` (`none` or an Arrow IPC-supported codec). The DataSetWriter MessageSettings shall identify the DataSet schema version and whether DataSet fields are represented as RawData, Variant or DataValue according to `DataSetFieldContentMask`.
 
 ### 7.2.8 Arrow message mapping
 
@@ -51,6 +52,14 @@ The payload of an Arrow NetworkMessage shall be an Arrow IPC stream (`applicatio
 Each RecordBatch row is one DataSetMessage sample for the DataSet. Columns are DataSet fields. If `DataSetFieldContentMask` selects RawData, the column type is the field DataType mapping. If it selects Variant, the column type is the Part 6 Variant mapping. If it selects DataValue, the column type is the Part 6 DataValue mapping. The selected representation shall be the same for every row in the batch.
 
 Key frames shall contain all fields in DataSetMetaData field order. Delta frames shall identify changed fields using a `field_index:list<uint16>` selection column, a schema-level changed-field list, or a selected-column RecordBatch whose metadata lists the original field indexes. Omitted unchanged fields shall not be decoded as null values; they are absent by delta-frame selection.
+
+#### 7.2.8.x Bare RecordBatch framing (`batch`)
+
+When `ArrowIpcFormat` is `batch`, a data NetworkMessage payload is a single bare Arrow RecordBatch message with no embedded Schema message. This removes the per-message Arrow Schema message — a fixed cost that is independent of row count, for example approximately 1.2 kB for a ten-field DataSet — from every data message. The schema is conveyed once out of band and resolved by SchemaId, exactly as the Arrow IPC stream format sends its Schema message once before any RecordBatch and as Arrow Flight carries the schema in the flight descriptor rather than in each `FlightData` batch. `batch` is a framing choice, not an encoding variant: the column and value layout is the identical canonical Part 6 Arrow mapping used by `stream` and `file`, so the requirement that encoders not introduce alternate Arrow layouts or encoding variants for the same DataType is preserved.
+
+A publisher using `batch` framing shall announce the schema for a SchemaId before, or together with, the first bare RecordBatch that references it, using either a one-time Arrow IPC stream whose Schema message carries that SchemaId or an `ArrowSchemaAnnouncement` (§5.2.3). Because a bare RecordBatch carries no schema, and therefore no in-payload SchemaId, the SchemaId shall accompany each bare RecordBatch out of band — in transport metadata (`opcua-arrow-schema-id`, §5.2.2) or in the DataSetMessage/NetworkMessage envelope. A subscriber shall resolve the schema for the referenced SchemaId from its cache — populated by a prior Schema message or announcement — following the §5.2.6 cache-miss resolution order, then decode the RecordBatch against that schema. A bare RecordBatch that references an unknown SchemaId is a schema error and shall not be decoded.
+
+The relative benefit of `batch` framing is largest for small or single-sample messages and diminishes as rows per RecordBatch increase, because the fixed schema cost is amortised across the batch. Even without the schema, a bare RecordBatch retains the Arrow RecordBatch message header — per-column length, null-count and buffer descriptors — so `batch` framing reduces, but does not remove, Arrow's per-message overhead and does not make Arrow competitive with a compact row encoding for single samples. `stream` remains the default self-contained framing for channels without a schema-announcement mechanism.
 
 ### 7.3.4.x Content types
 
