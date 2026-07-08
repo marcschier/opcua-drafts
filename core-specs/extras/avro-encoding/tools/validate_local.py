@@ -378,6 +378,14 @@ def main() -> int:
         subprocess.run([sys.executable, str(TOOLS / "evolution_demo.py")], cwd=ROOT, check=True)
     except subprocess.CalledProcessError as exc:
         failures.append(f"evolution demo failed: exit {exc.returncode}")
+    try:
+        subprocess.run([sys.executable, str(TOOLS / "namespace_map_demo.py")], cwd=ROOT, check=True)
+    except subprocess.CalledProcessError as exc:
+        failures.append(f"namespace map demo failed: exit {exc.returncode}")
+    try:
+        subprocess.run([sys.executable, str(TOOLS / "nodeid_string_demo.py")], cwd=ROOT, check=True)
+    except subprocess.CalledProcessError as exc:
+        failures.append(f"nodeid string demo failed: exit {exc.returncode}")
     failures.extend(validate_schemas())
     doc_failures, doc_block_count = validate_doc_schema_blocks()
     failures.extend(doc_failures)
@@ -397,7 +405,7 @@ def main() -> int:
     for f in failures:
         print("FAIL", f)
     schemaid_count = len(json.loads((SCHEMAS / "schemaids.json").read_text(encoding="utf-8"))) if (SCHEMAS / "schemaids.json").exists() else 0
-    print(f"validate_local: schemas={len(list(SCHEMAS.glob('*.avsc')))} schemaids={schemaid_count} corpus={len(CORPUS)} examples={len(EXAMPLE_NAMES) + len(MESSAGE_EXAMPLE_NAMES)} type_reference=31 handshake=ok nested_schemaid=ok doc_schema_blocks={doc_block_count} action_discovery=ok evolution=ok; {len(failures)} failures")
+    print(f"validate_local: schemas={len(list(SCHEMAS.glob('*.avsc')))} schemaids={schemaid_count} corpus={len(CORPUS)} examples={len(EXAMPLE_NAMES) + len(MESSAGE_EXAMPLE_NAMES)} type_reference=31 handshake=ok nested_schemaid=ok doc_schema_blocks={doc_block_count} action_discovery=ok evolution=ok namespace_map=ok nodeid_string=ok; {len(failures)} failures")
     return 1 if failures else 0
 
 if __name__ == "__main__":
