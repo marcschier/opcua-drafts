@@ -1,0 +1,35 @@
+{
+  "fields": [
+    {
+      "name": "Id",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "name": "Location",
+      "type": "org.opcfoundation.ua.avro.Point"
+    },
+    {
+      "name": "Tags",
+      "type": {
+        "items": [
+          "null",
+          "string"
+        ],
+        "type": "array"
+      }
+    },
+    {
+      "name": "Payload",
+      "type": [
+        "null",
+        "org.opcfoundation.ua.avro.ExtensionObject"
+      ]
+    }
+  ],
+  "name": "Envelope",
+  "namespace": "org.opcfoundation.ua.avro",
+  "type": "record"
+}

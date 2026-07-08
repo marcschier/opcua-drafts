@@ -1,0 +1,27 @@
+{
+  "arrow": {
+    "arrow": "uint32",
+    "detail": "uint32",
+    "opcua": "AccessPermissions"
+  },
+  "kind": "OptionSet",
+  "members": [
+    {
+      "name": "Browse",
+      "value": 1
+    },
+    {
+      "name": "Read",
+      "value": 2
+    },
+    {
+      "name": "Write",
+      "value": 4
+    },
+    {
+      "name": "Call",
+      "value": 8
+    }
+  ],
+  "name": "AccessPermissions"
+}

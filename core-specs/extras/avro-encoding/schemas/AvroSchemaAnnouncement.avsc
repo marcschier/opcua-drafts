@@ -1,0 +1,22 @@
+{
+  "fields": [
+    {
+      "name": "SchemaId",
+      "type": "bytes"
+    },
+    {
+      "name": "SchemaJson",
+      "type": "string"
+    },
+    {
+      "name": "SchemaEpoch",
+      "type": [
+        "null",
+        "long"
+      ]
+    }
+  ],
+  "name": "AvroSchemaAnnouncement",
+  "namespace": "org.opcfoundation.ua.avro",
+  "type": "record"
+}

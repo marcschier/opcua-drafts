@@ -1,0 +1,194 @@
+{
+  "AccessPermissions": {
+    "algorithm": "SHA-256 over Arrow Schema",
+    "schemaid": "3a7d0fa718aba078"
+  },
+  "Array<Int32>": {
+    "algorithm": "SHA-256 over Arrow Schema",
+    "schemaid": "a73bb969965c7b38"
+  },
+  "Array<Point>": {
+    "algorithm": "SHA-256 over Arrow Schema",
+    "schemaid": "185b027ab1baafae"
+  },
+  "Array<String>": {
+    "algorithm": "SHA-256 over Arrow Schema",
+    "schemaid": "29fbb0deb2fca279"
+  },
+  "ArrowSchemaAnnouncement": {
+    "algorithm": "SHA-256 over Arrow Schema",
+    "schemaid": "c3d275cfa1929c81"
+  },
+  "ArrowSchemaRequest": {
+    "algorithm": "SHA-256 over Arrow Schema",
+    "schemaid": "4b73e1ee26c265d3"
+  },
+  "Boolean": {
+    "algorithm": "SHA-256 over Arrow Schema",
+    "schemaid": "eb9e462ff1431ec8"
+  },
+  "BoundItemDataType": {
+    "algorithm": "SHA-256 over Arrow Schema",
+    "schemaid": "d4fc3f5a398cc648"
+  },
+  "BoundItemKindEnum": {
+    "algorithm": "SHA-256 over Arrow Schema",
+    "schemaid": "a94e58013dcc0ace"
+  },
+  "Byte": {
+    "algorithm": "SHA-256 over Arrow Schema",
+    "schemaid": "f3f67e3b5b8a4c33"
+  },
+  "ByteString": {
+    "algorithm": "SHA-256 over Arrow Schema",
+    "schemaid": "0b3084b7b66d58c5"
+  },
+  "Color": {
+    "algorithm": "SHA-256 over Arrow Schema",
+    "schemaid": "a94e58013dcc0ace"
+  },
+  "DataSetMessage": {
+    "algorithm": "SHA-256 over Arrow Schema",
+    "schemaid": "64efbc026a01239d"
+  },
+  "DataValue": {
+    "algorithm": "SHA-256 over Arrow Schema",
+    "schemaid": "ebe13da8c989cfb8"
+  },
+  "DateTime": {
+    "algorithm": "SHA-256 over Arrow Schema",
+    "schemaid": "0ca4cf7abab461b5"
+  },
+  "DiagnosticInfo": {
+    "algorithm": "SHA-256 over Arrow Schema",
+    "schemaid": "f771456f4d1d0ab7"
+  },
+  "Double": {
+    "algorithm": "SHA-256 over Arrow Schema",
+    "schemaid": "2ea3b1f1a51b7231"
+  },
+  "Envelope": {
+    "algorithm": "SHA-256 over Arrow Schema",
+    "schemaid": "2a2a532233026d37"
+  },
+  "ExpandedNodeId": {
+    "algorithm": "SHA-256 over Arrow Schema",
+    "schemaid": "dd43171d093a54aa"
+  },
+  "ExtensionObject": {
+    "algorithm": "SHA-256 over Arrow Schema",
+    "schemaid": "b34aa4ddac0c1f2e"
+  },
+  "Float": {
+    "algorithm": "SHA-256 over Arrow Schema",
+    "schemaid": "4760b7d7322090d7"
+  },
+  "FloatHolder": {
+    "algorithm": "SHA-256 over Arrow Schema",
+    "schemaid": "e6d193066bd7bcee"
+  },
+  "Guid": {
+    "algorithm": "SHA-256 over Arrow Schema",
+    "schemaid": "81e222e0fec2ba07"
+  },
+  "Int16": {
+    "algorithm": "SHA-256 over Arrow Schema",
+    "schemaid": "9b9ed1fb78bb0504"
+  },
+  "Int32": {
+    "algorithm": "SHA-256 over Arrow Schema",
+    "schemaid": "a94e58013dcc0ace"
+  },
+  "Int64": {
+    "algorithm": "SHA-256 over Arrow Schema",
+    "schemaid": "0ca4cf7abab461b5"
+  },
+  "LocalizedText": {
+    "algorithm": "SHA-256 over Arrow Schema",
+    "schemaid": "def6b87ad887cc5b"
+  },
+  "Matrix<Double>": {
+    "algorithm": "SHA-256 over Arrow Schema",
+    "schemaid": "80fc271958993aff"
+  },
+  "Matrix<Int32>": {
+    "algorithm": "SHA-256 over Arrow Schema",
+    "schemaid": "80dc3fc579af87b2"
+  },
+  "Matrix<String>": {
+    "algorithm": "SHA-256 over Arrow Schema",
+    "schemaid": "535de5dd8ce67436"
+  },
+  "Measurement": {
+    "algorithm": "SHA-256 over Arrow Schema",
+    "schemaid": "916f95c2e1d7e908"
+  },
+  "NetworkMessage": {
+    "algorithm": "SHA-256 over Arrow Schema",
+    "schemaid": "f5cfbe14e1560cfd"
+  },
+  "NodeId": {
+    "algorithm": "SHA-256 over Arrow Schema",
+    "schemaid": "dd43171d093a54aa"
+  },
+  "OptionalScalars": {
+    "algorithm": "SHA-256 over Arrow Schema",
+    "schemaid": "11bbf03aeb023c14"
+  },
+  "Person": {
+    "algorithm": "SHA-256 over Arrow Schema",
+    "schemaid": "38e92bc671144ea6"
+  },
+  "Point": {
+    "algorithm": "SHA-256 over Arrow Schema",
+    "schemaid": "beb88baa5c498682"
+  },
+  "QualifiedName": {
+    "algorithm": "SHA-256 over Arrow Schema",
+    "schemaid": "4aefacb2875f7e9c"
+  },
+  "SByte": {
+    "algorithm": "SHA-256 over Arrow Schema",
+    "schemaid": "574fba8aebe6986c"
+  },
+  "ScenarioBindingConfigurationDataType": {
+    "algorithm": "SHA-256 over Arrow Schema",
+    "schemaid": "19fd1ba4848cd266"
+  },
+  "ScenarioBindingDataType": {
+    "algorithm": "SHA-256 over Arrow Schema",
+    "schemaid": "715d37829ed15fb6"
+  },
+  "ScenarioBindingDirectionEnum": {
+    "algorithm": "SHA-256 over Arrow Schema",
+    "schemaid": "a94e58013dcc0ace"
+  },
+  "StatusCode": {
+    "algorithm": "SHA-256 over Arrow Schema",
+    "schemaid": "3a7d0fa718aba078"
+  },
+  "String": {
+    "algorithm": "SHA-256 over Arrow Schema",
+    "schemaid": "dd43171d093a54aa"
+  },
+  "UInt16": {
+    "algorithm": "SHA-256 over Arrow Schema",
+    "schemaid": "5e48d7a9fb0e260a"
+  },
+  "UInt32": {
+    "algorithm": "SHA-256 over Arrow Schema",
+    "schemaid": "3a7d0fa718aba078"
+  },
+  "UInt64": {
+    "algorithm": "SHA-256 over Arrow Schema",
+    "schemaid": "adde7d8c9e746c67"
+  },
+  "Variant": {
+    "algorithm": "SHA-256 over Arrow Schema",
+    "schemaid": "21a6dba186a946e9"
+  },
+  "XmlElement": {
+    "algorithm": "SHA-256 over Arrow Schema",
+    "schemaid": "dd43171d093a54aa"
+  }
+}

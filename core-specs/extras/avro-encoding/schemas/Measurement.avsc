@@ -1,0 +1,58 @@
+{
+  "fields": [
+    {
+      "default": null,
+      "name": "switch",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "default": null,
+      "name": "value",
+      "type": [
+        "null",
+        {
+          "fields": [
+            {
+              "name": "AsInt",
+              "type": "int"
+            }
+          ],
+          "name": "Measurement_AsInt_Branch",
+          "namespace": "org.opcfoundation.ua.avro",
+          "type": "record"
+        },
+        {
+          "fields": [
+            {
+              "name": "AsText",
+              "type": [
+                "null",
+                "string"
+              ]
+            }
+          ],
+          "name": "Measurement_AsText_Branch",
+          "namespace": "org.opcfoundation.ua.avro",
+          "type": "record"
+        },
+        {
+          "fields": [
+            {
+              "name": "AsPoint",
+              "type": "org.opcfoundation.ua.avro.Point"
+            }
+          ],
+          "name": "Measurement_AsPoint_Branch",
+          "namespace": "org.opcfoundation.ua.avro",
+          "type": "record"
+        }
+      ]
+    }
+  ],
+  "name": "Measurement",
+  "namespace": "org.opcfoundation.ua.avro",
+  "type": "record"
+}

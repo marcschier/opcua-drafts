@@ -1,0 +1,22 @@
+{
+  "announcedSchema": {
+    "schemaBase64": "/////7gAAAAQAAAAAAAKAA4ABgAFAAgACgAAAAABBAAQAAAAAAAKAAwAAAAEAAgACgAAADwAAAAEAAAAAQAAAAwAAAAIAAwABAAIAAgAAAAQAAAABAAAAAEAAAAxAAAACwAAAG9wY3VhLWFycm93AAEAAAAUAAAAEAAUAAgABgAHAAwAAAAQABAAAAAAAAECEAAAACAAAAAEAAAAAAAAAAUAAAB2YWx1ZQAAAAgADAAIAAcACAAAAAAAAAEgAAAA",
+    "schemaEpoch": 1,
+    "schemaId": "a94e58013dcc0ace"
+  },
+  "examples": [
+    {
+      "bytes": 824,
+      "file": "arrow_schema_announcement.arrow",
+      "name": "ArrowSchemaAnnouncement",
+      "sha256": "18703c2554baf9cd627778c0b2eadef37326b6576982485788f7f816d49674e7"
+    },
+    {
+      "bytes": 632,
+      "file": "arrow_schema_request.arrow",
+      "name": "ArrowSchemaRequest",
+      "sha256": "a182cfc27fb867653585ca366aa98a06d0a4f7a4964b2f45dc6fa5024fbfeed2"
+    }
+  ],
+  "schemaIdEncoding": "lowercase hex for display; wire fields are raw 8-byte fixed_size_binary values"
+}

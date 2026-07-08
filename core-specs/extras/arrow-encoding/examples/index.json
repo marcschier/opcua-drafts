@@ -1,0 +1,110 @@
+{
+  "contentType": "application/vnd.apache.arrow.stream",
+  "examples": [
+    {
+      "bytes": 344,
+      "file": "bool_true.arrow",
+      "name": "bool_true",
+      "sha256": "3d2040d0d073a2efdf7a8e03e22b6e013a12c16dd69e144e7c5d2d0f05078d20",
+      "type": "Boolean"
+    },
+    {
+      "bytes": 352,
+      "file": "int32_max.arrow",
+      "name": "int32_max",
+      "sha256": "89acdd97c40000413280bcdbe187c536e726fb55bcc0f7e1f61ff78f38ae4989",
+      "type": "Int32"
+    },
+    {
+      "bytes": 344,
+      "file": "double_neg_zero.arrow",
+      "name": "double_neg_zero",
+      "sha256": "11ff81fc04cfc7cecbc36d549e8f0740ce043fa60b935a8f48463b4f8a8d1746",
+      "type": "Double"
+    },
+    {
+      "bytes": 344,
+      "file": "double_nan.arrow",
+      "name": "double_nan",
+      "sha256": "608a0dcb3b8d52b65b4a197b191ae72bf8347bbb1fbb3998f6c74e6eb68ec1c0",
+      "type": "Double"
+    },
+    {
+      "bytes": 384,
+      "file": "string_unicode.arrow",
+      "name": "string_unicode",
+      "sha256": "916723013118ccf9bf609025eb0c3eb78a8a6df0f7f3e9bb56ede6287bc1bcb4",
+      "type": "String"
+    },
+    {
+      "bytes": 408,
+      "file": "nodeid_guid.arrow",
+      "name": "nodeid_guid",
+      "sha256": "15dc1fc02e1e297ed2deb00cfe6a03215d44c17b25c0adafdeb44b06771b670e",
+      "type": "NodeId"
+    },
+    {
+      "bytes": 480,
+      "file": "array_string_with_nulls.arrow",
+      "name": "array_string_with_nulls",
+      "sha256": "a12eb7394aabdebd823e846bac6eefc9aaef7a76f02386134395ad1f376f1bed",
+      "type": "Array<String>"
+    },
+    {
+      "bytes": 784,
+      "file": "matrix_double_2x2_special.arrow",
+      "name": "matrix_double_2x2_special",
+      "sha256": "3d6ef998bcf1c5e61b598cdfe8ab2bc0d17eab729c5f3f61fe1e3d2a1d89b432",
+      "type": "Matrix<Double>"
+    },
+    {
+      "bytes": 1176,
+      "file": "struct_person_min.arrow",
+      "name": "struct_person_min",
+      "sha256": "38b6208b9d123bc0ad1c214054835db3972d671fe24d55c5483dfd5bf32f2811",
+      "type": "Person"
+    },
+    {
+      "bytes": 1192,
+      "file": "union_point.arrow",
+      "name": "union_point",
+      "sha256": "73084ac2c194063f894f736dde2a8a013cb62fa4e1a2142e96fc7d387e3ee884",
+      "type": "Measurement"
+    },
+    {
+      "bytes": 45312,
+      "file": "variant_extobj.arrow",
+      "name": "variant_extobj",
+      "sha256": "4d07b810c4066835369f1af6b059f6cb9928ce629c8c8892dfef7229553b6532",
+      "type": "Variant"
+    },
+    {
+      "bytes": 45936,
+      "file": "datavalue_full.arrow",
+      "name": "datavalue_full",
+      "sha256": "83b170d79169ea0ffaecdf33c48ddd1db00d08b83ad1aec023921e5475e01133",
+      "type": "DataValue"
+    },
+    {
+      "bytes": 1984,
+      "file": "diaginfo_nested.arrow",
+      "name": "diaginfo_nested",
+      "sha256": "bc87dee04352309cda08bfd5ac49f08396c9ab4ef69ef3f7f516e7426a0908c7",
+      "type": "DiagnosticInfo"
+    },
+    {
+      "bytes": 1176,
+      "file": "struct_person_present_null.arrow",
+      "name": "struct_person_present_null",
+      "sha256": "96081b552770ce250bf3fd827c0f50ab8832c50d5fa3c6f68b32d7544611b156",
+      "type": "Person"
+    },
+    {
+      "bytes": 1184,
+      "file": "union_text_null.arrow",
+      "name": "union_text_null",
+      "sha256": "ca5ae3fb2fdf6fe18a26aa72173e191d2cd2bd104e32ea917cd9b0c3a9e16cc6",
+      "type": "Measurement"
+    }
+  ]
+}

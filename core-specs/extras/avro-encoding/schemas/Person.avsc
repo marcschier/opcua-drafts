@@ -1,0 +1,60 @@
+{
+  "fields": [
+    {
+      "name": "Name",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "name": "Age",
+      "type": "int"
+    },
+    {
+      "default": null,
+      "name": "Email",
+      "type": [
+        "null",
+        {
+          "fields": [
+            {
+              "name": "value",
+              "type": [
+                "null",
+                "string"
+              ]
+            }
+          ],
+          "name": "Person_Email_Optional",
+          "namespace": "org.opcfoundation.ua.avro",
+          "type": "record"
+        }
+      ]
+    },
+    {
+      "default": null,
+      "name": "Nickname",
+      "type": [
+        "null",
+        {
+          "fields": [
+            {
+              "name": "value",
+              "type": [
+                "null",
+                "string"
+              ]
+            }
+          ],
+          "name": "Person_Nickname_Optional",
+          "namespace": "org.opcfoundation.ua.avro",
+          "type": "record"
+        }
+      ]
+    }
+  ],
+  "name": "Person",
+  "namespace": "org.opcfoundation.ua.avro",
+  "type": "record"
+}

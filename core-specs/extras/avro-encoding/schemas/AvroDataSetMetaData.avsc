@@ -1,0 +1,46 @@
+{
+  "fields": [
+    {
+      "name": "Name",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "name": "DataSetClassId",
+      "type": "org.opcfoundation.ua.avro.Guid"
+    },
+    {
+      "name": "ConfigurationVersion",
+      "type": "org.opcfoundation.ua.avro.AvroConfigurationVersionDataType"
+    },
+    {
+      "name": "Fields",
+      "type": {
+        "items": [
+          "null",
+          "org.opcfoundation.ua.avro.AvroFieldMetaData"
+        ],
+        "type": "array"
+      }
+    },
+    {
+      "name": "SchemaId",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "name": "SchemaJson",
+      "type": [
+        "null",
+        "string"
+      ]
+    }
+  ],
+  "name": "AvroDataSetMetaData",
+  "namespace": "org.opcfoundation.ua.avro",
+  "type": "record"
+}

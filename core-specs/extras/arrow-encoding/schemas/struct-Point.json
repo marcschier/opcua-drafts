@@ -1,0 +1,49 @@
+{
+  "arrow": {
+    "arrow": "struct<X: double not null, Y: double not null>",
+    "detail": {
+      "fields": [
+        {
+          "name": "X",
+          "nullable": false,
+          "type": "double"
+        },
+        {
+          "name": "Y",
+          "nullable": false,
+          "type": "double"
+        }
+      ],
+      "type": "struct"
+    },
+    "opcua": "Point"
+  },
+  "encodingId": "i=3002",
+  "fields": [
+    {
+      "allowSubtypes": false,
+      "arrow": {
+        "arrow": "double",
+        "detail": "double",
+        "opcua": "Double"
+      },
+      "name": "X",
+      "optional": false,
+      "type": "Double"
+    },
+    {
+      "allowSubtypes": false,
+      "arrow": {
+        "arrow": "double",
+        "detail": "double",
+        "opcua": "Double"
+      },
+      "name": "Y",
+      "optional": false,
+      "type": "Double"
+    }
+  ],
+  "kind": "STRUCTURE",
+  "name": "Point",
+  "typeId": "i=3001"
+}

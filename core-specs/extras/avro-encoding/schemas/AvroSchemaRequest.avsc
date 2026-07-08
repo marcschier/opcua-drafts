@@ -1,0 +1,21 @@
+{
+  "fields": [
+    {
+      "name": "RequesterId",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "name": "SchemaIds",
+      "type": {
+        "items": "bytes",
+        "type": "array"
+      }
+    }
+  ],
+  "name": "AvroSchemaRequest",
+  "namespace": "org.opcfoundation.ua.avro",
+  "type": "record"
+}

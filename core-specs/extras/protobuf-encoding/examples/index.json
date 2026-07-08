@@ -1,0 +1,121 @@
+[
+  {
+    "file": "bool_true.bin",
+    "hex": "0801",
+    "name": "bool_true",
+    "size": 2,
+    "type": "Builtin(id=<BuiltInType.Boolean: 1>)"
+  },
+  {
+    "file": "uint64_max.bin",
+    "hex": "48ffffffffffffffffff01",
+    "name": "uint64_max",
+    "size": 11,
+    "type": "Builtin(id=<BuiltInType.UInt64: 9>)"
+  },
+  {
+    "file": "string_null.bin",
+    "hex": "",
+    "name": "string_null",
+    "size": 0,
+    "type": "Builtin(id=<BuiltInType.String: 12>)"
+  },
+  {
+    "file": "string_unicode.bin",
+    "hex": "62136772c3bcc39f652de4b8ade696872df09f9880",
+    "name": "string_unicode",
+    "size": 21,
+    "type": "Builtin(id=<BuiltInType.String: 12>)"
+  },
+  {
+    "file": "nodeid_guid.bin",
+    "hex": "8a0116080310022a100708090a0b0c0d0e0f10111213141516",
+    "name": "nodeid_guid",
+    "size": 25,
+    "type": "Builtin(id=<BuiltInType.NodeId: 17>)"
+  },
+  {
+    "file": "array_string_with_nulls.bin",
+    "hex": "d2010b0a036201610a000a026200",
+    "name": "array_string_with_nulls",
+    "size": 14,
+    "type": "Array(element=Builtin(id=<BuiltInType.String: 12>), allow_null_elements=True)"
+  },
+  {
+    "file": "matrix_double_2x2_special.bin",
+    "hex": "da01300a020202120959000000000000f03f120959000000000000f87f120959000000000000f0ff1209590000000000000080",
+    "name": "matrix_double_2x2_special",
+    "size": 51,
+    "type": "Matrix(element=Builtin(id=<BuiltInType.Double: 11>), allow_null_elements=True)"
+  },
+  {
+    "file": "struct_person_one_opt.bin",
+    "hex": "0a040a02437910051a050a03634078",
+    "name": "struct_person_one_opt",
+    "size": 15,
+    "type": "Struct(name='Person', fields=(Field(name='Name', type=Builtin(id=<BuiltInType.String: 12>), is_optional=False, allow_subtypes=False), Field(name='Age', type=Builtin(id=<BuiltInType.Int32: 6>), is_optional=False, allow_subtypes=False), Field(name='Email', type=Builtin(id=<BuiltInType.String: 12>), is_optional=True, allow_subtypes=False), Field(name='Nickname', type=Builtin(id=<BuiltInType.String: 12>), is_optional=True, allow_subtypes=False)), kind=<StructureKind.STRUCTURE_WITH_OPTIONAL_FIELDS: 1>, type_id='i=3010', encoding_id='i=3011')"
+  },
+  {
+    "file": "optscalars_absent.bin",
+    "hex": "0807",
+    "name": "optscalars_absent",
+    "size": 2,
+    "type": "Struct(name='OptionalScalars', fields=(Field(name='Id', type=Builtin(id=<BuiltInType.Int32: 6>), is_optional=False, allow_subtypes=False), Field(name='Flag', type=Builtin(id=<BuiltInType.Boolean: 1>), is_optional=True, allow_subtypes=False), Field(name='Count', type=Builtin(id=<BuiltInType.Int32: 6>), is_optional=True, allow_subtypes=False), Field(name='Ratio', type=Builtin(id=<BuiltInType.Double: 11>), is_optional=True, allow_subtypes=False)), kind=<StructureKind.STRUCTURE_WITH_OPTIONAL_FIELDS: 1>, type_id='i=3040', encoding_id='i=3041')"
+  },
+  {
+    "file": "optscalars_zero_present.bin",
+    "hex": "080710001800210000000000000000",
+    "name": "optscalars_zero_present",
+    "size": 15,
+    "type": "Struct(name='OptionalScalars', fields=(Field(name='Id', type=Builtin(id=<BuiltInType.Int32: 6>), is_optional=False, allow_subtypes=False), Field(name='Flag', type=Builtin(id=<BuiltInType.Boolean: 1>), is_optional=True, allow_subtypes=False), Field(name='Count', type=Builtin(id=<BuiltInType.Int32: 6>), is_optional=True, allow_subtypes=False), Field(name='Ratio', type=Builtin(id=<BuiltInType.Double: 11>), is_optional=True, allow_subtypes=False)), kind=<StructureKind.STRUCTURE_WITH_OPTIONAL_FIELDS: 1>, type_id='i=3040', encoding_id='i=3041')"
+  },
+  {
+    "file": "floatholder_min.bin",
+    "hex": "0d0000c03f",
+    "name": "floatholder_min",
+    "size": 5,
+    "type": "Struct(name='FloatHolder', fields=(Field(name='A', type=Builtin(id=<BuiltInType.Float: 10>), is_optional=False, allow_subtypes=False), Field(name='B', type=Builtin(id=<BuiltInType.Float: 10>), is_optional=True, allow_subtypes=False)), kind=<StructureKind.STRUCTURE_WITH_OPTIONAL_FIELDS: 1>, type_id='i=3050', encoding_id='i=3051')"
+  },
+  {
+    "file": "floatholder_full.bin",
+    "hex": "0d000080be150000003f",
+    "name": "floatholder_full",
+    "size": 10,
+    "type": "Struct(name='FloatHolder', fields=(Field(name='A', type=Builtin(id=<BuiltInType.Float: 10>), is_optional=False, allow_subtypes=False), Field(name='B', type=Builtin(id=<BuiltInType.Float: 10>), is_optional=True, allow_subtypes=False)), kind=<StructureKind.STRUCTURE_WITH_OPTIONAL_FIELDS: 1>, type_id='i=3050', encoding_id='i=3051')"
+  },
+  {
+    "file": "union_point.bin",
+    "hex": "1a12090000000000002240110000000000002040",
+    "name": "union_point",
+    "size": 20,
+    "type": "Struct(name='Measurement', fields=(Field(name='AsInt', type=Builtin(id=<BuiltInType.Int32: 6>), is_optional=False, allow_subtypes=False), Field(name='AsText', type=Builtin(id=<BuiltInType.String: 12>), is_optional=False, allow_subtypes=False), Field(name='AsPoint', type=Struct(name='Point', fields=(Field(name='X', type=Builtin(id=<BuiltInType.Double: 11>), is_optional=False, allow_subtypes=False), Field(name='Y', type=Builtin(id=<BuiltInType.Double: 11>), is_optional=False, allow_subtypes=False)), kind=<StructureKind.STRUCTURE: 0>, type_id='i=3001', encoding_id='i=3002'), is_optional=False, allow_subtypes=False)), kind=<StructureKind.UNION: 2>, type_id='i=3020', encoding_id='i=3021')"
+  },
+  {
+    "file": "envelope.bin",
+    "hex": "0a040a02453112001a0c0a036201780a000a0362017a224f0a0318b91712480a32747970652e676f6f676c65617069732e636f6d2f6f706375612e70726f746f6275662e67656e6572617465642e506f696e741212090000000000000040110000000000000840",
+    "name": "envelope",
+    "size": 103,
+    "type": "Struct(name='Envelope', fields=(Field(name='Id', type=Builtin(id=<BuiltInType.String: 12>), is_optional=False, allow_subtypes=False), Field(name='Location', type=Struct(name='Point', fields=(Field(name='X', type=Builtin(id=<BuiltInType.Double: 11>), is_optional=False, allow_subtypes=False), Field(name='Y', type=Builtin(id=<BuiltInType.Double: 11>), is_optional=False, allow_subtypes=False)), kind=<StructureKind.STRUCTURE: 0>, type_id='i=3001', encoding_id='i=3002'), is_optional=False, allow_subtypes=False), Field(name='Tags', type=Array(element=Builtin(id=<BuiltInType.String: 12>), allow_null_elements=True), is_optional=False, allow_subtypes=False), Field(name='Payload', type=Builtin(id=<BuiltInType.ExtensionObject: 22>), is_optional=False, allow_subtypes=True)), kind=<StructureKind.STRUCTURE: 0>, type_id='i=3030', encoding_id='i=3031')"
+  },
+  {
+    "file": "variant_matrix_int.bin",
+    "hex": "c20118080622140a02020212023001120230021202300312023004",
+    "name": "variant_matrix_int",
+    "size": 27,
+    "type": "Builtin(id=<BuiltInType.Variant: 24>)"
+  },
+  {
+    "file": "datavalue_full.bin",
+    "hex": "ba01250a0608061202302a150000000019e80300000000000020f40329d00700000000000030fa01",
+    "name": "datavalue_full",
+    "size": 40,
+    "type": "Builtin(id=<BuiltInType.DataValue: 23>)"
+  },
+  {
+    "file": "diaginfo_nested.bin",
+    "hex": "ca011b080110022a056f75746572350000ac803a0918052a05696e6e6572",
+    "name": "diaginfo_nested",
+    "size": 30,
+    "type": "Builtin(id=<BuiltInType.DiagnosticInfo: 25>)"
+  }
+]

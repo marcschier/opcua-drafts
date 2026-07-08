@@ -1,0 +1,15 @@
+{
+  "fields": [
+    {
+      "name": "MajorVersion",
+      "type": "int"
+    },
+    {
+      "name": "MinorVersion",
+      "type": "int"
+    }
+  ],
+  "name": "AvroConfigurationVersionDataType",
+  "namespace": "org.opcfoundation.ua.avro",
+  "type": "record"
+}

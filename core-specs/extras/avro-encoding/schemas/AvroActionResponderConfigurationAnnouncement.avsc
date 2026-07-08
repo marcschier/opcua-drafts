@@ -1,0 +1,57 @@
+{
+  "fields": [
+    {
+      "name": "PublisherId",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "name": "ActionTargetId",
+      "type": [
+        "null",
+        "org.opcfoundation.ua.avro.NodeId"
+      ]
+    },
+    {
+      "name": "ObjectId",
+      "type": [
+        "null",
+        "org.opcfoundation.ua.avro.NodeId"
+      ]
+    },
+    {
+      "name": "MethodId",
+      "type": [
+        "null",
+        "org.opcfoundation.ua.avro.NodeId"
+      ]
+    },
+    {
+      "name": "InputArgumentMetaData",
+      "type": "org.opcfoundation.ua.avro.AvroDataSetMetaData"
+    },
+    {
+      "name": "OutputArgumentMetaData",
+      "type": "org.opcfoundation.ua.avro.AvroDataSetMetaData"
+    },
+    {
+      "name": "SchemaId",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "name": "SchemaJson",
+      "type": [
+        "null",
+        "string"
+      ]
+    }
+  ],
+  "name": "AvroActionResponderConfigurationAnnouncement",
+  "namespace": "org.opcfoundation.ua.avro",
+  "type": "record"
+}

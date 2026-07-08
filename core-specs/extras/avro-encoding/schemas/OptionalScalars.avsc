@@ -1,0 +1,65 @@
+{
+  "fields": [
+    {
+      "name": "Id",
+      "type": "int"
+    },
+    {
+      "default": null,
+      "name": "Flag",
+      "type": [
+        "null",
+        {
+          "fields": [
+            {
+              "name": "value",
+              "type": "boolean"
+            }
+          ],
+          "name": "OptionalScalars_Flag_Optional",
+          "namespace": "org.opcfoundation.ua.avro",
+          "type": "record"
+        }
+      ]
+    },
+    {
+      "default": null,
+      "name": "Count",
+      "type": [
+        "null",
+        {
+          "fields": [
+            {
+              "name": "value",
+              "type": "int"
+            }
+          ],
+          "name": "OptionalScalars_Count_Optional",
+          "namespace": "org.opcfoundation.ua.avro",
+          "type": "record"
+        }
+      ]
+    },
+    {
+      "default": null,
+      "name": "Ratio",
+      "type": [
+        "null",
+        {
+          "fields": [
+            {
+              "name": "value",
+              "type": "double"
+            }
+          ],
+          "name": "OptionalScalars_Ratio_Optional",
+          "namespace": "org.opcfoundation.ua.avro",
+          "type": "record"
+        }
+      ]
+    }
+  ],
+  "name": "OptionalScalars",
+  "namespace": "org.opcfoundation.ua.avro",
+  "type": "record"
+}
