@@ -11,9 +11,11 @@ fastavro it shows, with assertions, that:
   appended members are simply unused;
 * each minor is a distinct schema with a distinct Avro SchemaId (the CRC-64-AVRO
   Rabin fingerprint of the Parsing Canonical Form);
-* a reserved opaque-fallback branch kept *ahead* of the appended known-struct
-  branches keeps its index stable, so an older opaque ExtensionObject body still
-  decodes under a grown schema; and
+* an opaque-fallback branch (`bytes` for a Binary body, `string` for an XML or
+  textual body) is appended append-only like any other branch — it may sit at
+  any position, not a reserved index — and its branch index is fixed once
+  appended, so an older opaque ExtensionObject body still decodes under a grown
+  schema; and
 * an old (narrow) reader cannot decode a value of a newly-appended type, which is
   why a consumer must hold the latest minor of the lineage.
 
@@ -52,11 +54,16 @@ def _variant_schema(branches: list[dict]) -> dict:
         {"name": "body", "type": ["null", *branches], "default": None}]}
 
 
-def _ext_schema(struct_branches: list[dict]) -> dict:
-    """An ExtensionObject record; the opaque `bytes` fallback is reserved ahead of appends."""
+def _ext_schema(branches: list) -> dict:
+    """An ExtensionObject record whose body union carries the given branches in order.
+
+    Branches are appended append-only in discovery order; an opaque fallback
+    (``"bytes"`` for a Binary body, ``"string"`` for an XML or textual body) is
+    just another appended branch and may sit at any position, not a reserved one.
+    """
     return {"type": "record", "name": "ExtObj", "namespace": NS, "fields": [
         {"name": "typeId", "type": "string"},
-        {"name": "body", "type": ["null", "bytes", *struct_branches], "default": None}]}
+        {"name": "body", "type": ["null", *branches], "default": None}]}
 
 
 def _write(schema: dict, datum: dict) -> bytes:
@@ -119,30 +126,51 @@ def run() -> int:
         old_reader_failed = True
     _check(failures, "variant-old-reader-cannot-read-new", old_reader_failed)
 
-    # ---- ExtensionObject union with reserved opaque fallback ----
+    # ---- ExtensionObject union: opaque fallback appended append-only at any position ----
+    # The fallback is NOT reserved ahead of the struct branches; each fallback
+    # (`bytes` for a Binary body, `string` for an XML/textual body) is appended
+    # when a value first needs it, exactly like a struct branch, so it may sit at
+    # any position and keeps its index once appended.
     point = {"type": "record", "name": "Point", "namespace": NS,
              "fields": [{"name": "x", "type": "double"}, {"name": "y", "type": "double"}]}
-    narrow_ext = _ext_schema([])          # body: ["null", "bytes"]
-    grown_ext = _ext_schema([point])      # body: ["null", "bytes", Point]
+    point2 = {"type": "record", "name": "Point2", "namespace": NS,
+              "fields": [{"name": "x", "type": "double"}, {"name": "y", "type": "double"},
+                         {"name": "z", "type": "double"}]}
+    ext0 = _ext_schema([point])                              # ["null", Point]
+    ext1 = _ext_schema([point, "bytes"])                     # ["null", Point, "bytes"]
+    ext2 = _ext_schema([point, "bytes", "string"])           # ["null", Point, "bytes", "string"]
+    ext3 = _ext_schema([point, "bytes", "string", point2])   # + Point' appended after the fallbacks
 
-    _check(failures, "ext-minor-distinct-schemaid", _schema_id(narrow_ext) != _schema_id(grown_ext))
-    # The reserved `bytes` fallback keeps index 1 after appending Point at index 2.
-    _check(failures, "ext-fallback-index-stable",
-           narrow_ext["fields"][1]["type"][1] == "bytes" and grown_ext["fields"][1]["type"][1] == "bytes")
+    ids = [_schema_id(ext0), _schema_id(ext1), _schema_id(ext2), _schema_id(ext3)]
+    _check(failures, "ext-minors-distinct-schemaid", len(set(ids)) == 4)
 
-    # An opaque body written under minor 0 selects the `bytes` branch...
-    opaque = {"typeId": "i=999", "body": ("bytes", b"\x01\x02\x03")}
-    ext_bytes_v0 = _write(narrow_ext, opaque)
-    # ...and still decodes as the same opaque bytes under the grown schema (index unchanged).
-    got_ext = _read(grown_ext, ext_bytes_v0)
-    _check(failures, "ext-opaque-decodes-under-grown", got_ext["body"] == b"\x01\x02\x03")
-    # A newly-aggregated concrete type round-trips typed under the grown schema.
-    typed = {"typeId": "i=3001", "body": (f"{NS}.Point", {"x": 1.0, "y": 2.0})}
-    got_typed = _read(grown_ext, _write(grown_ext, typed))
-    _check(failures, "ext-typed-roundtrip",
-           got_typed["body"][0] == f"{NS}.Point" and got_typed["body"][1] == {"x": 1.0, "y": 2.0})
+    # Append-only: each body union is a prefix of the next.
+    b0, b1, b2, b3 = (e["fields"][1]["type"] for e in (ext0, ext1, ext2, ext3))
+    _check(failures, "ext-append-only-prefix",
+           b1[:len(b0)] == b0 and b2[:len(b1)] == b1 and b3[:len(b2)] == b2)
+    # The fallbacks sit at appended (non-reserved) positions: bytes at index 2, string at index 3.
+    _check(failures, "ext-fallback-any-position", b3[2] == "bytes" and b3[3] == "string")
 
-    total = 11
+    # A struct written under minor 0 (Point at index 1) still decodes under minor 3.
+    pt_v0 = {"typeId": "i=3001", "body": (f"{NS}.Point", {"x": 1.0, "y": 2.0})}
+    got_pt = _read(ext3, _write(ext0, pt_v0))
+    _check(failures, "ext-struct-decodes-under-grown",
+           got_pt["body"][0] == f"{NS}.Point" and got_pt["body"][1] == {"x": 1.0, "y": 2.0})
+    # An opaque Binary body written under minor 1 (bytes at index 2) still decodes under minor 3.
+    opaque_bytes = {"typeId": "i=999", "body": ("bytes", b"\x01\x02\x03")}
+    got_bytes = _read(ext3, _write(ext1, opaque_bytes))
+    _check(failures, "ext-bytes-decodes-under-grown", got_bytes["body"] == b"\x01\x02\x03")
+    # An opaque XML/textual body written under minor 2 (string at index 3) still decodes under minor 3.
+    opaque_xml = {"typeId": "i=888", "body": ("string", "<Value>1</Value>")}
+    got_xml = _read(ext3, _write(ext2, opaque_xml))
+    _check(failures, "ext-string-decodes-under-grown", got_xml["body"] == "<Value>1</Value>")
+    # The struct appended after the fallbacks round-trips typed under minor 3.
+    p2 = {"typeId": "i=3002", "body": (f"{NS}.Point2", {"x": 1.0, "y": 2.0, "z": 3.0})}
+    got_p2 = _read(ext3, _write(ext3, p2))
+    _check(failures, "ext-appended-struct-roundtrip",
+           got_p2["body"][0] == f"{NS}.Point2" and got_p2["body"][1] == {"x": 1.0, "y": 2.0, "z": 3.0})
+
+    total = 13
     if failures:
         for f in failures:
             print(f"FAIL {f}")

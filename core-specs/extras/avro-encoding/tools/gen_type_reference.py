@@ -285,7 +285,7 @@ def render_growing_item(title: str, case: corpus.Case, note: str) -> str:
         + " are observed; the complete aggregation used by the conformance corpus is the published `opcua.builtins.avsc`."
     )
     if has_bytes_fallback:
-        body_note += " An opaque body that has no known record branch is carried in the reserved `bytes` fallback."
+        body_note += " An opaque body that has no known record branch is carried in an opaque fallback branch (`bytes` for a Binary body, `string` for an XML or textual body), appended append-only like any other branch."
     return "\n".join([
         f"### {title}",
         "",
