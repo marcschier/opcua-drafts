@@ -237,6 +237,83 @@ def render_item(title: str, case: corpus.Case, note: str) -> str:
     ])
 
 
+def _growing_layout_rows(fragment: object) -> list[tuple[str, str, str, str]]:
+    assert isinstance(fragment, dict)
+    rows: list[tuple[str, str, str, str]] = []
+    for f in fragment["fields"]:
+        if f["name"] == "body":
+            rows.append((
+                "body",
+                "append-only growing union — see §6.4",
+                "nullable",
+                "Not expanded here; the full published aggregation is `../extras/avro-encoding/schemas/opcua.builtins.avsc`.",
+            ))
+            continue
+        avro_type = f["type"]
+        nullable = isinstance(avro_type, list) and avro_type and avro_type[0] == "null"
+        rows.append((
+            f["name"],
+            schema_inline(avro_type),
+            "nullable" if nullable else "present",
+            "Fixed member of the record shape.",
+        ))
+    return rows
+
+
+def render_growing_item(title: str, case: corpus.Case, note: str) -> str:
+    """Render Variant / ExtensionObject without dumping the universal union.
+
+    The body member is the append-only growing union of §6.4; only the fixed
+    record shape, a single example and a pointer are shown. SchemaId, bytes and
+    the annotated breakdown are still produced from the published aggregation
+    schema so they remain exact and reversible.
+    """
+    fragment = raw_fragment(case.type)
+    assert isinstance(fragment, dict)
+    body_field = next(f for f in fragment["fields"] if f["name"] == "body")
+    has_bytes_fallback = isinstance(body_field["type"], list) and "bytes" in body_field["type"]
+    data = avro_codec.encode(case.type, case.value)
+    fields = wire_annotate.annotate(published_schema(case.type), data)
+    hexdump.assert_contiguous(fields, len(data))
+    rows = ["| Field | Avro type | Presence / nullability | Notes |", "|---|---|---|---|"]
+    for field, avro_type, presence, row_note in _growing_layout_rows(fragment):
+        rows.append(f"| `{field}` | {avro_type} | {presence} | {row_note} |")
+    body_note = (
+        "The `body` member is the append-only **growing union** governed by §6.4 (see also *OPC UA — Schema Registry* §5.6). "
+        "Its members are not reproduced here because the union grows as new "
+        + ("built-in body types" if case.type.id == t.BuiltInType.Variant else "concrete DataTypes")
+        + " are observed; the complete aggregation used by the conformance corpus is the published `opcua.builtins.avsc`."
+    )
+    if has_bytes_fallback:
+        body_note += " An opaque body that has no known record branch is carried in an opaque fallback branch (`bytes` for a Binary body, `string` for an XML or textual body), appended append-only like any other branch."
+    return "\n".join([
+        f"### {title}",
+        "",
+        f"**SchemaId** `{schemaid_for(case.type)}`",
+        "",
+        "\n".join(rows),
+        "",
+        body_note,
+        "",
+        f"**Example value** (`{case.name}`)",
+        "",
+        "```json",
+        value_text(case.value),
+        "```",
+        "",
+        f"**Encoded bytes** ({len(data)} bytes)",
+        "",
+        "```text",
+        data.hex(),
+        "```",
+        "",
+        "**Annotated byte-level breakdown** (the body union index below is into the published aggregation schema)",
+        "",
+        hexdump.hex_table(data, fields),
+        "",
+    ])
+
+
 def reference_cases() -> list[tuple[str, corpus.Case, str]]:
     by_name = {c.name: c for c in corpus.CORPUS}
     items: list[tuple[str, corpus.Case, str]] = []
@@ -254,7 +331,13 @@ def generated_content() -> str:
         "",
     ]
     for title, case, note in reference_cases():
-        lines.append(render_item(title, case, note))
+        if isinstance(case.type, t.Builtin) and case.type.id in (
+            t.BuiltInType.Variant,
+            t.BuiltInType.ExtensionObject,
+        ):
+            lines.append(render_growing_item(title, case, note))
+        else:
+            lines.append(render_item(title, case, note))
     return "\n".join(lines).rstrip() + "\n"
 
 

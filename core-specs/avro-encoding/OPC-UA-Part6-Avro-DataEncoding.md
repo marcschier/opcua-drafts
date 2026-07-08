@@ -37,7 +37,7 @@ Key words **shall**, **should**, **may**, **shall not** are to be interpreted as
 
 ## 4 Overview
 
-Each OPC UA DataType maps to exactly one Avro schema. Primitive built-ins use Avro primitives where the Avro type can carry the complete OPC UA domain; composite built-ins use Avro records; nullable OPC UA values use Avro unions with `"null"` as the first branch. Avro schema names are stable qualified names under the namespace `org.opcfoundation.ua.avro` unless a companion or vendor namespace is mapped to a more specific Avro namespace by configuration. Annex A gives generated per-type examples and byte layouts.
+Each OPC UA DataType maps to exactly one Avro schema. Primitive built-ins use Avro primitives where the Avro type can carry the complete OPC UA domain; composite built-ins use Avro records; nullable OPC UA values use Avro unions with `"null"` as the first branch. Avro schema names are stable qualified names under the namespace `org.opcfoundation.ua.avro` unless the type comes from another OPC UA NamespaceUri, which is mapped to a more specific Avro namespace by the deterministic function in §6.5. Annex A gives generated per-type examples and byte layouts.
 
 The content type for a standalone Avro payload using this DataEncoding shall be `application/vnd.apache.avro`. Where a transport distinguishes container files from schemaless Avro binary payloads it may use the parameter `encoding=binary` or `container=object-container-file`; PubSub messages defined by the companion Part 14 mapping use schemaless Avro binary with schema resolution from configuration or registry.
 
@@ -71,8 +71,8 @@ Avro unions used for nullability shall be ordered as `["null", T]`, and the defa
 | Guid | `fixed` size 16 with logical type `opcua-guid` | The 16 OPC UA Guid bytes are preserved exactly. |
 | ByteString | `["null", "bytes"]` | `null` and zero-length bytes are distinct. |
 | XmlElement | `["null", "string"]` | XML text is not normalized. `null` is distinct from empty XML text. |
-| NodeId | `record NodeId` | Fields: namespace Int32, idType enum/int, and exactly one identifier member: numeric UInt32-as-long, string, guid fixed16, or opaque bytes. |
-| ExpandedNodeId | `record ExpandedNodeId` | Fields: NodeId, nullable namespaceUri, serverIndex UInt32-as-long. |
+| NodeId | `record NodeId` | Fields: namespace Int32, idType enum/int, and exactly one identifier member: numeric UInt32-as-long, string, guid fixed16, or opaque bytes. A field of type NodeId MAY instead use the textual `string` form of §5.2.1. |
+| ExpandedNodeId | `record ExpandedNodeId` | Fields: NodeId, nullable namespaceUri, serverIndex UInt32-as-long. A field of type ExpandedNodeId MAY instead use the textual `string` form of §5.2.1. |
 | StatusCode | `int` | The UInt32 status bits are carried in signed `int` and reinterpreted unsigned on decode. |
 | QualifiedName | `record QualifiedName` | Namespace UInt16-as-int and nullable name string. |
 | LocalizedText | `["null", record LocalizedText]` | Locale and text are independently nullable strings. |
@@ -80,6 +80,17 @@ Avro unions used for nullability shall be ordered as `["null", T]`, and the defa
 | DataValue | `record DataValue` | Optional members as described in §5.10. |
 | Variant | `record Variant` | Recursive typed body as described in §5.7. |
 | DiagnosticInfo | `record DiagnosticInfo` | Recursive optional members as described in §5.11. |
+
+#### 5.2.1 Textual NodeId and ExpandedNodeId form
+
+A schema generator MAY represent a NodeId or ExpandedNodeId field as Avro `string` instead of the `record NodeId` / `record ExpandedNodeId` of §5.2. The choice is fixed in the schema and is therefore part of the SchemaId (§6.3): a given field is either always structured or always textual, never both. Both representations are conformant and losslessly reversible; a columnar or registry consumer may prefer the string form because a NodeId is then a single Avro `string` value rather than a nested record.
+
+When the field type is `string`, the value shall use the canonical OPC UA textual syntax of *OPC 10000-6* (the syntax used by the XML and JSON encodings):
+
+- **NodeId** — `[ns=<namespaceindex>;]<t>=<identifier>`, where `<t>` is `i` for a numeric identifier (decimal UInt32), `s` for a String identifier, `g` for a Guid in the canonical hyphenated 8-4-4-4-12 form, or `b` for a ByteString identifier in standard base64. The `ns=` prefix is omitted when the namespace index is 0. The `s=` String identifier is the final component and is taken verbatim to the end of the string, so it needs no escaping and MAY itself contain `;` or `=`.
+- **ExpandedNodeId** — `[svr=<serverindex>;][nsu=<namespaceuri>;]<nodeid-text>`. `svr=` appears only when the server index is non-zero. `nsu=<namespaceuri>`, when present, carries the NamespaceUri and is terminated by the following `;`; the NamespaceUri is authoritative and the trailing `<nodeid-text>` keeps its own `ns=` index (which MAY be 0 and is retained, so a value that carries both a namespace index and a NamespaceUri round-trips). Because `;` terminates the `nsu=` value, the textual form is only used when the NamespaceUri contains no `;`; a NamespaceUri that contains `;` shall use the structured `record ExpandedNodeId`, which represents any NamespaceUri losslessly.
+
+A `string`-typed NodeId or ExpandedNodeId field that is nullable uses the `["null", "string"]` union; a null value is distinct from the empty string. An encoder and decoder shall round-trip every identifier kind — numeric, String, Guid and opaque — and, for ExpandedNodeId, a value that carries a namespace index together with a NamespaceUri, without loss.
 
 ### 5.3 Enumerations and OptionSets
 
@@ -107,7 +118,7 @@ Variant shall be a record carrying `builtInType`, nullable `dimensions`, and `bo
 
 ### 5.9 ExtensionObject and abstract or subtyped fields
 
-ExtensionObject shall be a record `{ "typeId": NodeId, "body": ["null", <known-struct-records...>, "bytes"] }`. The `typeId` shall identify the concrete DataType or DataTypeEncoding NodeId. If the concrete structured DataType is known to the decoder, the body shall use that record branch. If the type is unknown but the sender has an opaque encoded representation, the body may use the `bytes` branch and the receiver shall preserve the bytes with the TypeId. Fields declared as abstract structures or fields that allow subtypes shall use the same representation so the concrete runtime type is carried inline. The `known-struct` branches are the aggregated concrete-type set for the field per the Schema Registry (see *OPC UA — Schema Registry* §5.6): generated from the subtype hierarchy where bounded, or grown append-only across MinorVersions as new concrete types are encoded, with an existing branch keeping its Avro union branch index. Under aggregation the `bytes` fallback branch is reserved ahead of the appended known-struct branches so its ordinal is stable; it continues to carry any concrete type not yet aggregated.
+ExtensionObject shall be a record `{ "typeId": NodeId, "body": ["null", <known-struct-records...>, <opaque fallback branches...>] }`, where the opaque fallback branches are `"bytes"` for a Binary body and `"string"` for an XML or textual body. The `typeId` shall identify the concrete DataType or DataTypeEncoding NodeId. If the concrete structured DataType is known to the decoder, the body shall use that record branch. If the type is unknown but the sender has an opaque encoded representation, the body may use the `bytes` branch (a Binary body) or the `string` branch (an XML or textual body), and the receiver shall preserve the opaque value with the TypeId. Fields declared as abstract structures or fields that allow subtypes shall use the same representation so the concrete runtime type is carried inline. The `known-struct` branches are the aggregated concrete-type set for the field per the Schema Registry (see *OPC UA — Schema Registry* §5.6): generated from the subtype hierarchy where bounded, or grown append-only across MinorVersions as new concrete types are encoded, with an existing branch keeping its Avro union branch index. The opaque fallback branches are appended append-only alongside the known-struct branches when a value first requires them, so a fallback may occupy any branch index and its index is fixed once appended; a fallback carries any body not represented by a known-struct branch.
 
 ### 5.10 DataValue
 
@@ -147,17 +158,33 @@ A producer shall recompute the SchemaId from the self-contained canonical schema
 
 The Variant body-type union (§5.8) and the ExtensionObject known-struct union (§5.9) are the only two Avro unions that may grow after a schema is first announced; every other union is closed. An implementer that governs an evolving schema shall grow these two unions **append-only**, as defined by *OPC UA — Schema Registry* §5.6, using the following procedure.
 
-1. **Narrow the initial union.** Generate the initial (`MAJOR.0`) union from the schema-driven bound: for a Variant field whose declared DataType constrains the allowed body types, include exactly those `Variant<Type>Scalar`, `Variant<Type>Array` and `Variant<Type>MatrixBody` branches; for an ExtensionObject or abstract/subtyped field, include the record branch of every concrete subtype known from the AddressSpace or schema registry. For an unbounded field — a `BaseDataType` Variant, or a body whose concrete type is not known in advance — start minimal (`["null", "bytes"]` for an ExtensionObject body) and grow it as values are observed.
+1. **Narrow the initial union.** Generate the initial (`MAJOR.0`) union from the schema-driven bound: for a Variant field whose declared DataType constrains the allowed body types, include exactly those `Variant<Type>Scalar`, `Variant<Type>Array` and `Variant<Type>MatrixBody` branches; for an ExtensionObject or abstract/subtyped field, include the record branch of every concrete subtype known from the AddressSpace or schema registry. For an unbounded field — a `BaseDataType` Variant, or a body whose concrete type is not known in advance — start minimal (`["null"]`, plus an opaque fallback such as `"bytes"` for an ExtensionObject body once an opaque value is observed) and grow it as values are observed.
 
 2. **Grow append-only.** When a value selects a body type or concrete struct type not yet present, **append** the corresponding branch record to the end of the Avro union array and leave every existing branch at its current position. Because an Avro binary union is encoded as the zig-zag branch index followed by the branch value, appending never changes an existing branch index, so a message written under an earlier schema still selects the same branch under the grown schema. Do not reorder, remove or retype an existing branch; any such change is a MajorVersion reset, not an aggregation.
 
-3. **Keep the opaque fallback ahead of appends.** For the ExtensionObject body union, place the `"bytes"` fallback at a fixed low index ahead of the growing known-struct branches — `["null", "bytes", <known structs…>]` — so appended struct branches never shift the `"bytes"` index and an opaque body written under an earlier minor still decodes as `"bytes"`.
+3. **Append the opaque fallback like any other branch.** An ExtensionObject body that cannot be represented as a known-struct record is carried in an opaque fallback branch — `"bytes"` for a Binary body, or `"string"` for an XML or textual body. A fallback branch is **appended** when a value first requires it, exactly like a known-struct branch (step 2); it is not reserved at a fixed index and may therefore occupy any position. For example a body union may grow `["null", <Struct>]` → `["null", <Struct>, "bytes"]` → `["null", <Struct>, "bytes", <Struct'>]`. Because every branch is append-only, a fallback's index is fixed once appended, so an opaque body written under an earlier minor still decodes to the same fallback branch under a grown schema.
 
 4. **Recompute the SchemaId and announce.** Each grown union is a new self-contained schema; recompute the CRC-64-AVRO SchemaId per §6, advance the DataSet `ConfigurationVersion` MinorVersion, then re-announce the schema and SchemaId over the Part 14 handshake before sending a message that uses the appended branch.
 
 5. **Decode with the latest minor.** A decoder that holds the latest minor of a lineage decodes every earlier-minor message of that lineage directly, because reading the branch index resolves to the same branch. A decoder that lacks the exact writer SchemaId may decode with a later minor of the same lineage after confirming, from the registry or announced lineage, that the on-wire SchemaId is an earlier minor of it (Schema Registry §5.6, §8); it shall not compare the on-wire fingerprint against the later schema's canonical form.
 
-An executable reference of this procedure — narrow schema, append-only growth, latest-minor-decodes-older, distinct per-minor SchemaIds and the reserved fallback index — is `../extras/avro-encoding/tools/evolution_demo.py`. See *OPC UA — Schema Registry* §5.6 for the full model, including the schema-driven-versus-data-driven basis and the lineage/SchemaId relationship.
+An executable reference of this procedure — narrow schema, append-only growth (including opaque fallbacks appended at any position), latest-minor-decodes-older and distinct per-minor SchemaIds — is `../extras/avro-encoding/tools/evolution_demo.py`. See *OPC UA — Schema Registry* §5.6 for the full model, including the schema-driven-versus-data-driven basis and the lineage/SchemaId relationship.
+
+### 6.5 NamespaceUri to Avro namespace mapping
+
+Avro schema names generated from the base OPC UA namespace use the Avro namespace `org.opcfoundation.ua.avro`. Types generated from any other OPC UA NamespaceUri — a companion specification or a vendor namespace — shall be placed in an Avro namespace derived from that NamespaceUri by the following deterministic function, so that an encoder and a decoder compute the same fully-qualified Avro names.
+
+Given a NamespaceUri:
+
+1. **Parse the URI.** Take its authority (host) and its path. A NamespaceUri that is not an absolute URI with an authority (for example a bare URN) skips steps 2–3 and applies step 4 to its scheme-specific part split on `:` and `/`.
+2. **Reverse the authority.** Split the host on `.`, reverse the labels and join them with `.`; `example.org` becomes `org.example`. Any port, userinfo or trailing dot is removed before reversal.
+3. **Append the path.** Split the path on `/`, drop empty segments, and append them in order; `/UA/Line3/` becomes `.ua.line3`.
+4. **Make each part a legal Avro name.** Lower-case the whole result; replace every character outside `[a-z0-9_]` with `_`; if any resulting part is empty or begins with a digit, prefix that part with `_`. Each URI segment maps to exactly one Avro name part.
+5. **Append the reserved suffix.** Append the reserved final part `avro`, so the namespace ends in `.avro` — for example `org.example.ua.line3.avro`. Encoders shall not generate any other namespace ending in `.avro`, and shall not map the base OPC UA namespace through this function (it keeps its fixed `org.opcfoundation.ua.avro` namespace).
+
+**Conflicts.** All Avro namespaces generated in one schema-generation scope shall be distinct. Map every NamespaceUri by steps 1–5; the resulting natural namespaces are reserved. If two or more distinct NamespaceUris map to the same natural namespace, order them by ordinal Unicode code-point order of the original URI string and leave the first with the natural namespace; for each subsequent colliding URI append an incrementing ordinal `_2`, `_3`, … to the last name part (the part before the reserved `avro`) and, if that candidate is already reserved by any other mapping in the scope, keep advancing the ordinal until it is free — for example `org.example.ua.line3.avro` and `org.example.ua.line3_2.avro`. Because every natural namespace is reserved up front, a suffixed name can never coincide with another URI's natural namespace, so a producer and consumer that share the same set of NamespaceUris derive the same distinct namespaces. A deployment may instead supply an explicit configured NamespaceUri→Avro-namespace mapping that overrides this function for the mapped URIs; the configured targets shall still be distinct and end in `.avro`.
+
+The generated Avro namespace is part of the fully-qualified type name and therefore of the Parsing Canonical Form, so it participates in the SchemaId (§6.3).
 
 ## 7 Decoder schema resolution
 
@@ -169,6 +196,8 @@ A decoder shall use one of the following schema resolution paths.
 
 The encoder and decoder therefore run the same deterministic generation function. When both sides already have the relevant DataTypeDefinitions, schema bodies need not be transferred for every value; the SchemaId is sufficient to verify that both sides selected the same schema.
 
+**Textual NodeId fields.** The Avro schema alone determines the NodeId/ExpandedNodeId representation: where a NodeId or ExpandedNodeId field's schema type is `string`, the decoder shall parse the OPC UA textual syntax of §5.2.1; where it is the `record NodeId` / `record ExpandedNodeId`, the decoder shall decode structurally. A decoder shall not infer the textual form from the value; it follows the field's declared Avro type.
+
 ## 8 Insertion into OPC 10000-6 v1.05.07
 
 This text is intended to be inserted after clause `5.4 OPC UA JSON` and before clause `6 Message SecurityProtocols` as a new working clause `5.5 OPC UA Avro`.
@@ -176,274 +205,15 @@ This text is intended to be inserted after clause `5.4 OPC UA JSON` and before c
 | Draft section | Target clause in OPC 10000-6 | Notes |
 |---|---|---|
 | §4 Overview and content type | `5.5.1 General` | Introduces Default Avro, canonical schemas, content type `application/vnd.apache.avro`, schema resolution and reversibility. |
-| §5.2 Built-in DataTypes | `5.5.2 Built-in Types` | Adds the full built-in mapping table and unsigned reinterpretation rules. |
+| §5.2 Built-in DataTypes | `5.5.2 Built-in Types` | Adds the full built-in mapping table and unsigned reinterpretation rules. §5.2.1 adds the optional textual `string` form for NodeId and ExpandedNodeId. |
 | §5.4 Arrays and §5.5 Matrices | `5.5.3 Arrays` | Defines null array, empty array, nullable elements and matrix record layout. |
 | §5.6 Structures and optional fields | `5.5.4 Structures` and `5.5.5 Structures with optional fields` | Parallels the JSON clauses while using Avro records and null unions. |
 | §5.7 Union DataTypes | `5.5.6 Unions` | Defines the canonical switch plus record-wrapped value branch. |
 | §5.3 Enumerations and OptionSets | `5.5.2` or new `5.5.7 Enumerations and OptionSets` | Numeric preservation rule may be a subclause after built-ins if preferred by the editor. |
 | §5.8-§5.11 Variant, ExtensionObject, DataValue, DiagnosticInfo | `5.5.2` child subclauses | These are built-in DataTypes but need dedicated detail comparable to JSON Variant/DataValue text. |
-| §6-§7 Schema generation, SchemaId and decoding | `5.5.x Schema resolution` | Defines Parsing Canonical Form, CRC-64-AVRO SchemaId, schema-driven decoding and AddressSpace-driven re-derivation. |
+| §6-§7 Schema generation, SchemaId and decoding | `5.5.x Schema resolution` | Defines Parsing Canonical Form, CRC-64-AVRO SchemaId, schema-driven decoding and AddressSpace-driven re-derivation. §6.5 defines the deterministic NamespaceUri to Avro-namespace mapping. |
 
 Conformance text should require that senders and receivers claiming Default Avro support use the canonical schema generated from the DataTypeDefinition and reject non-canonical alternate encodings where a reversible decode cannot be guaranteed.
-
-## 9 Appendix B PubSub Action and Discovery schema examples
-
-The Part 14 Avro mapping publishes compact envelope schemas for Action and Discovery messages in `../extras/avro-encoding/schemas/`. The Action request/response envelopes are `AvroActionRequestNetworkMessage.avsc` and `AvroActionResponseNetworkMessage.avsc`, each containing an array of request/response DataSetMessages. Discovery examples include `AvroDataSetMetaData.avsc`, `AvroDataSetWriterConfigurationAnnouncement.avsc`, `AvroActionResponderConfigurationAnnouncement.avsc`, `AvroDiscoveryProbe.avsc` and `AvroPublisherEndpointsAnnouncement.avsc`. The generated schemas use the built-in `Variant`, `DataValue`, `NodeId`, `StatusCode`, `DiagnosticInfo` and `ExtensionObject` records from this annex; reduced base-UA shapes and fallbacks are documented in the Part 14 draft.
-
-Compact examples publish the exact generated schema files below. Do not edit these JSON blocks by hand; copy them from `..\extras\avro-encoding\schemas\*.avsc`.
-
-The published Action request DataSetMessage schema is `../extras/avro-encoding/schemas/AvroActionRequestDataSetMessage.avsc`:
-
-```json
-{
-  "fields": [
-    {
-      "name": "ActionTargetId",
-      "type": [
-        "null",
-        "org.opcfoundation.ua.avro.NodeId"
-      ]
-    },
-    {
-      "name": "RequestId",
-      "type": [
-        "null",
-        "string"
-      ]
-    },
-    {
-      "name": "CorrelationData",
-      "type": [
-        "null",
-        "bytes"
-      ]
-    },
-    {
-      "name": "InputArguments",
-      "type": {
-        "items": [
-          "null",
-          "org.opcfoundation.ua.avro.Variant"
-        ],
-        "type": "array"
-      }
-    }
-  ],
-  "name": "AvroActionRequestDataSetMessage",
-  "namespace": "org.opcfoundation.ua.avro",
-  "type": "record"
-}
-```
-
-The published Action request NetworkMessage schema is `../extras/avro-encoding/schemas/AvroActionRequestNetworkMessage.avsc`:
-
-```json
-{
-  "fields": [
-    {
-      "name": "PublisherId",
-      "type": [
-        "null",
-        "string"
-      ]
-    },
-    {
-      "name": "WriterGroupId",
-      "type": "int"
-    },
-    {
-      "name": "NetworkMessageNumber",
-      "type": "int"
-    },
-    {
-      "name": "SequenceNumber",
-      "type": "int"
-    },
-    {
-      "name": "Timestamp",
-      "type": "long"
-    },
-    {
-      "name": "Messages",
-      "type": {
-        "items": [
-          "null",
-          "org.opcfoundation.ua.avro.AvroActionRequestDataSetMessage"
-        ],
-        "type": "array"
-      }
-    },
-    {
-      "name": "SchemaId",
-      "type": [
-        "null",
-        "string"
-      ]
-    }
-  ],
-  "name": "AvroActionRequestNetworkMessage",
-  "namespace": "org.opcfoundation.ua.avro",
-  "type": "record"
-}
-```
-
-The published Action response DataSetMessage schema is `../extras/avro-encoding/schemas/AvroActionResponseDataSetMessage.avsc`:
-
-```json
-{
-  "fields": [
-    {
-      "name": "ActionTargetId",
-      "type": [
-        "null",
-        "org.opcfoundation.ua.avro.NodeId"
-      ]
-    },
-    {
-      "name": "RequestId",
-      "type": [
-        "null",
-        "string"
-      ]
-    },
-    {
-      "name": "CorrelationData",
-      "type": [
-        "null",
-        "bytes"
-      ]
-    },
-    {
-      "name": "Status",
-      "type": "int"
-    },
-    {
-      "name": "OutputArguments",
-      "type": {
-        "items": [
-          "null",
-          "org.opcfoundation.ua.avro.Variant"
-        ],
-        "type": "array"
-      }
-    },
-    {
-      "name": "DiagnosticInfos",
-      "type": {
-        "items": [
-          "null",
-          "org.opcfoundation.ua.avro.DiagnosticInfo"
-        ],
-        "type": "array"
-      }
-    }
-  ],
-  "name": "AvroActionResponseDataSetMessage",
-  "namespace": "org.opcfoundation.ua.avro",
-  "type": "record"
-}
-```
-
-The published Action response NetworkMessage schema is `../extras/avro-encoding/schemas/AvroActionResponseNetworkMessage.avsc`:
-
-```json
-{
-  "fields": [
-    {
-      "name": "PublisherId",
-      "type": [
-        "null",
-        "string"
-      ]
-    },
-    {
-      "name": "WriterGroupId",
-      "type": "int"
-    },
-    {
-      "name": "NetworkMessageNumber",
-      "type": "int"
-    },
-    {
-      "name": "SequenceNumber",
-      "type": "int"
-    },
-    {
-      "name": "Timestamp",
-      "type": "long"
-    },
-    {
-      "name": "Messages",
-      "type": {
-        "items": [
-          "null",
-          "org.opcfoundation.ua.avro.AvroActionResponseDataSetMessage"
-        ],
-        "type": "array"
-      }
-    },
-    {
-      "name": "SchemaId",
-      "type": [
-        "null",
-        "string"
-      ]
-    }
-  ],
-  "name": "AvroActionResponseNetworkMessage",
-  "namespace": "org.opcfoundation.ua.avro",
-  "type": "record"
-}
-```
-
-The published DataSetWriter configuration announcement schema is `../extras/avro-encoding/schemas/AvroDataSetWriterConfigurationAnnouncement.avsc`:
-
-```json
-{
-  "fields": [
-    {
-      "name": "PublisherId",
-      "type": [
-        "null",
-        "string"
-      ]
-    },
-    {
-      "name": "WriterGroupId",
-      "type": "int"
-    },
-    {
-      "name": "DataSetWriterId",
-      "type": "int"
-    },
-    {
-      "name": "ConfigurationVersion",
-      "type": "org.opcfoundation.ua.avro.AvroConfigurationVersionDataType"
-    },
-    {
-      "name": "DataSetMetaData",
-      "type": "org.opcfoundation.ua.avro.AvroDataSetMetaData"
-    },
-    {
-      "name": "SchemaId",
-      "type": [
-        "null",
-        "string"
-      ]
-    },
-    {
-      "name": "SchemaJson",
-      "type": [
-        "null",
-        "string"
-      ]
-    }
-  ],
-  "name": "AvroDataSetWriterConfigurationAnnouncement",
-  "namespace": "org.opcfoundation.ua.avro",
-  "type": "record"
-}
-```
 
 ## Annex A Generated type reference
 
@@ -1293,481 +1063,10 @@ ffff9ff50f
 
 | Field | Avro type | Presence / nullability | Notes |
 |---|---|---|---|
-| `value` | `{"fields": [{"name": "typeId", "type": "org.opcfoundation.ua.avro.NodeId"}, {"default": null, "doc": "Known ExtensionObject bodies use typed record branches; bytes is reserved for genuinely unknown type ids.", "name": "body", "type": ["null", {"fields": [{"name": "X", "type": "double"}, {"name": "Y", "type": "double"}], "name": "Point", "namespace": "org.opcfoundation.ua.avro", "type": "record"}, {"fields": [{"name": "Name", "type": ["null", "string"]}, {"name": "Age", "type": "int"}, {"default": null, "name": "Email", "type": ["null", {"fields": [{"name": "value", "type": ["null", "string"]}], "name": "Person_Email_Optional", "namespace": "org.opcfoundation.ua.avro", "type": "record"}]}, {"default": null, "name": "Nickname", "type": ["null", {"fields": [{"name": "value", "type": ["null", "string"]}], "name": "Person_Nickname_Optional", "namespace": "org.opcfoundation.ua.avro", "type": "record"}]}], "name": "Person", "namespace": "org.opcfoundation.ua.avro", "type": "record"}, {"fields": [{"default": null, "name": "switch", "type": ["null", "string"]}, {"default": null, "name": "value", "type": ["null", {"fields": [{"name": "AsInt", "type": "int"}], "name": "Measurement_AsInt_Branch", "namespace": "org.opcfoundation.ua.avro", "type": "record"}, {"fields": [{"name": "AsText", "type": ["null", "string"]}], "name": "Measurement_AsText_Branch", "namespace": "org.opcfoundation.ua.avro", "type": "record"}, {"fields": [{"name": "AsPoint", "type": "org.opcfoundation.ua.avro.Point"}], "name": "Measurement_AsPoint_Branch", "namespace": "org.opcfoundation.ua.avro", "type": "record"}]}], "name": "Measurement", "namespace": "org.opcfoundation.ua.avro", "type": "record"}, {"fields": [{"name": "Id", "type": ["null", "string"]}, {"name": "Location", "type": "org.opcfoundation.ua.avro.Point"}, {"name": "Tags", "type": {"items": ["null", "string"], "type": "array"}}, {"name": "Payload", "type": ["null", "org.opcfoundation.ua.avro.ExtensionObject"]}], "name": "Envelope", "namespace": "org.opcfoundation.ua.avro", "type": "record"}, {"fields": [{"name": "Id", "type": "int"}, {"default": null, "name": "Flag", "type": ["null", {"fields": [{"name": "value", "type": "boolean"}], "name": "OptionalScalars_Flag_Optional", "namespace": "org.opcfoundation.ua.avro", "type": "record"}]}, {"default": null, "name": "Count", "type": ["null", {"fields": [{"name": "value", "type": "int"}], "name": "OptionalScalars_Count_Optional", "namespace": "org.opcfoundation.ua.avro", "type": "record"}]}, {"default": null, "name": "Ratio", "type": ["null", {"fields": [{"name": "value", "type": "double"}], "name": "OptionalScalars_Ratio_Optional", "namespace": "org.opcfoundation.ua.avro", "type": "record"}]}], "name": "OptionalScalars", "namespace": "org.opcfoundation.ua.avro", "type": "record"}, {"fields": [{"name": "A", "type": "float"}, {"default": null, "name": "B", "type": ["null", {"fields": [{"name": "value", "type": "float"}], "name": "FloatHolder_B_Optional", "namespace": "org.opcfoundation.ua.avro", "type": "record"}]}], "name": "FloatHolder", "namespace": "org.opcfoundation.ua.avro", "type": "record"}, {"fields": [{"name": "FieldName", "type": ["null", "string"]}, {"name": "Kind", "type": "int"}, {"name": "AttributeId", "type": "int"}, {"name": "SamplingIntervalHint", "type": "double"}, {"name": "IndexRange", "type": ["null", "string"]}, {"name": "StartingNode", "type": ["null", "org.opcfoundation.ua.avro.NodeId"]}, {"name": "BrowsePath", "type": ["null", "org.opcfoundation.ua.avro.ExtensionObject"]}, {"name": "SourceNodeId", "type": ["null", "org.opcfoundation.ua.avro.NodeId"]}, {"name": "OwningObjectPath", "type": ["null", "org.opcfoundation.ua.avro.ExtensionObject"]}, {"name": "SourceTypeDefinition", "type": ["null", "org.opcfoundation.ua.avro.NodeId"]}, {"name": "SourceBrowseName", "type": ["null", "org.opcfoundation.ua.avro.QualifiedName"]}, {"name": "ModelNamespaceUri", "type": ["null", "string"]}, {"name": "DataSetFieldId", "type": "org.opcfoundation.ua.avro.Guid"}, {"name": "SemanticReferenceUri", "type": ["null", "string"]}], "name": "BoundItemDataType", "namespace": "org.opcfoundation.ua.avro", "type": "record"}, {"fields": [{"name": "Name", "type": ["null", "string"]}, {"name": "ScenarioUri", "type": ["null", "string"]}, {"name": "Direction", "type": "int"}, {"name": "ConfigurationVersion", "type": ["null", "org.opcfoundation.ua.avro.ExtensionObject"]}, {"name": "BoundItems", "type": {"items": ["null", "org.opcfoundation.ua.avro.BoundItemDataType"], "type": "array"}}, {"name": "PublishedDataSetName", "type": ["null", "string"]}, {"name": "WriterGroupName", "type": ["null", "string"]}], "name": "ScenarioBindingDataType", "namespace": "org.opcfoundation.ua.avro", "type": "record"}, {"fields": [{"name": "ModelNamespaceUri", "type": ["null", "string"]}, {"name": "AppliesToType", "type": ["null", "org.opcfoundation.ua.avro.QualifiedName"]}, {"name": "ConfigurationVersion", "type": ["null", "org.opcfoundation.ua.avro.ExtensionObject"]}, {"name": "ScenarioBindings", "type": {"items": ["null", "org.opcfoundation.ua.avro.ScenarioBindingDataType"], "type": "array"}}], "name": "ScenarioBindingConfigurationDataType", "namespace": "org.opcfoundation.ua.avro", "type": "record"}, "bytes"]}], "name": "ExtensionObject", "namespace": "org.opcfoundation.ua.avro", "type": "record"}` | nullable where schema is a null union | OPC UA BuiltInType 22. |
+| `typeId` | `"org.opcfoundation.ua.avro.NodeId"` | present | Fixed member of the record shape. |
+| `body` | append-only growing union — see §6.4 | nullable | Not expanded here; the full published aggregation is `../extras/avro-encoding/schemas/opcua.builtins.avsc`. |
 
-**Avro schema fragment**
-
-```json
-{
-  "fields": [
-    {
-      "name": "typeId",
-      "type": "org.opcfoundation.ua.avro.NodeId"
-    },
-    {
-      "default": null,
-      "doc": "Known ExtensionObject bodies use typed record branches; bytes is reserved for genuinely unknown type ids.",
-      "name": "body",
-      "type": [
-        "null",
-        {
-          "fields": [
-            {
-              "name": "X",
-              "type": "double"
-            },
-            {
-              "name": "Y",
-              "type": "double"
-            }
-          ],
-          "name": "Point",
-          "namespace": "org.opcfoundation.ua.avro",
-          "type": "record"
-        },
-        {
-          "fields": [
-            {
-              "name": "Name",
-              "type": [
-                "null",
-                "string"
-              ]
-            },
-            {
-              "name": "Age",
-              "type": "int"
-            },
-            {
-              "default": null,
-              "name": "Email",
-              "type": [
-                "null",
-                {
-                  "fields": [
-                    {
-                      "name": "value",
-                      "type": [
-                        "null",
-                        "string"
-                      ]
-                    }
-                  ],
-                  "name": "Person_Email_Optional",
-                  "namespace": "org.opcfoundation.ua.avro",
-                  "type": "record"
-                }
-              ]
-            },
-            {
-              "default": null,
-              "name": "Nickname",
-              "type": [
-                "null",
-                {
-                  "fields": [
-                    {
-                      "name": "value",
-                      "type": [
-                        "null",
-                        "string"
-                      ]
-                    }
-                  ],
-                  "name": "Person_Nickname_Optional",
-                  "namespace": "org.opcfoundation.ua.avro",
-                  "type": "record"
-                }
-              ]
-            }
-          ],
-          "name": "Person",
-          "namespace": "org.opcfoundation.ua.avro",
-          "type": "record"
-        },
-        {
-          "fields": [
-            {
-              "default": null,
-              "name": "switch",
-              "type": [
-                "null",
-                "string"
-              ]
-            },
-            {
-              "default": null,
-              "name": "value",
-              "type": [
-                "null",
-                {
-                  "fields": [
-                    {
-                      "name": "AsInt",
-                      "type": "int"
-                    }
-                  ],
-                  "name": "Measurement_AsInt_Branch",
-                  "namespace": "org.opcfoundation.ua.avro",
-                  "type": "record"
-                },
-                {
-                  "fields": [
-                    {
-                      "name": "AsText",
-                      "type": [
-                        "null",
-                        "string"
-                      ]
-                    }
-                  ],
-                  "name": "Measurement_AsText_Branch",
-                  "namespace": "org.opcfoundation.ua.avro",
-                  "type": "record"
-                },
-                {
-                  "fields": [
-                    {
-                      "name": "AsPoint",
-                      "type": "org.opcfoundation.ua.avro.Point"
-                    }
-                  ],
-                  "name": "Measurement_AsPoint_Branch",
-                  "namespace": "org.opcfoundation.ua.avro",
-                  "type": "record"
-                }
-              ]
-            }
-          ],
-          "name": "Measurement",
-          "namespace": "org.opcfoundation.ua.avro",
-          "type": "record"
-        },
-        {
-          "fields": [
-            {
-              "name": "Id",
-              "type": [
-                "null",
-                "string"
-              ]
-            },
-            {
-              "name": "Location",
-              "type": "org.opcfoundation.ua.avro.Point"
-            },
-            {
-              "name": "Tags",
-              "type": {
-                "items": [
-                  "null",
-                  "string"
-                ],
-                "type": "array"
-              }
-            },
-            {
-              "name": "Payload",
-              "type": [
-                "null",
-                "org.opcfoundation.ua.avro.ExtensionObject"
-              ]
-            }
-          ],
-          "name": "Envelope",
-          "namespace": "org.opcfoundation.ua.avro",
-          "type": "record"
-        },
-        {
-          "fields": [
-            {
-              "name": "Id",
-              "type": "int"
-            },
-            {
-              "default": null,
-              "name": "Flag",
-              "type": [
-                "null",
-                {
-                  "fields": [
-                    {
-                      "name": "value",
-                      "type": "boolean"
-                    }
-                  ],
-                  "name": "OptionalScalars_Flag_Optional",
-                  "namespace": "org.opcfoundation.ua.avro",
-                  "type": "record"
-                }
-              ]
-            },
-            {
-              "default": null,
-              "name": "Count",
-              "type": [
-                "null",
-                {
-                  "fields": [
-                    {
-                      "name": "value",
-                      "type": "int"
-                    }
-                  ],
-                  "name": "OptionalScalars_Count_Optional",
-                  "namespace": "org.opcfoundation.ua.avro",
-                  "type": "record"
-                }
-              ]
-            },
-            {
-              "default": null,
-              "name": "Ratio",
-              "type": [
-                "null",
-                {
-                  "fields": [
-                    {
-                      "name": "value",
-                      "type": "double"
-                    }
-                  ],
-                  "name": "OptionalScalars_Ratio_Optional",
-                  "namespace": "org.opcfoundation.ua.avro",
-                  "type": "record"
-                }
-              ]
-            }
-          ],
-          "name": "OptionalScalars",
-          "namespace": "org.opcfoundation.ua.avro",
-          "type": "record"
-        },
-        {
-          "fields": [
-            {
-              "name": "A",
-              "type": "float"
-            },
-            {
-              "default": null,
-              "name": "B",
-              "type": [
-                "null",
-                {
-                  "fields": [
-                    {
-                      "name": "value",
-                      "type": "float"
-                    }
-                  ],
-                  "name": "FloatHolder_B_Optional",
-                  "namespace": "org.opcfoundation.ua.avro",
-                  "type": "record"
-                }
-              ]
-            }
-          ],
-          "name": "FloatHolder",
-          "namespace": "org.opcfoundation.ua.avro",
-          "type": "record"
-        },
-        {
-          "fields": [
-            {
-              "name": "FieldName",
-              "type": [
-                "null",
-                "string"
-              ]
-            },
-            {
-              "name": "Kind",
-              "type": "int"
-            },
-            {
-              "name": "AttributeId",
-              "type": "int"
-            },
-            {
-              "name": "SamplingIntervalHint",
-              "type": "double"
-            },
-            {
-              "name": "IndexRange",
-              "type": [
-                "null",
-                "string"
-              ]
-            },
-            {
-              "name": "StartingNode",
-              "type": [
-                "null",
-                "org.opcfoundation.ua.avro.NodeId"
-              ]
-            },
-            {
-              "name": "BrowsePath",
-              "type": [
-                "null",
-                "org.opcfoundation.ua.avro.ExtensionObject"
-              ]
-            },
-            {
-              "name": "SourceNodeId",
-              "type": [
-                "null",
-                "org.opcfoundation.ua.avro.NodeId"
-              ]
-            },
-            {
-              "name": "OwningObjectPath",
-              "type": [
-                "null",
-                "org.opcfoundation.ua.avro.ExtensionObject"
-              ]
-            },
-            {
-              "name": "SourceTypeDefinition",
-              "type": [
-                "null",
-                "org.opcfoundation.ua.avro.NodeId"
-              ]
-            },
-            {
-              "name": "SourceBrowseName",
-              "type": [
-                "null",
-                "org.opcfoundation.ua.avro.QualifiedName"
-              ]
-            },
-            {
-              "name": "ModelNamespaceUri",
-              "type": [
-                "null",
-                "string"
-              ]
-            },
-            {
-              "name": "DataSetFieldId",
-              "type": "org.opcfoundation.ua.avro.Guid"
-            },
-            {
-              "name": "SemanticReferenceUri",
-              "type": [
-                "null",
-                "string"
-              ]
-            }
-          ],
-          "name": "BoundItemDataType",
-          "namespace": "org.opcfoundation.ua.avro",
-          "type": "record"
-        },
-        {
-          "fields": [
-            {
-              "name": "Name",
-              "type": [
-                "null",
-                "string"
-              ]
-            },
-            {
-              "name": "ScenarioUri",
-              "type": [
-                "null",
-                "string"
-              ]
-            },
-            {
-              "name": "Direction",
-              "type": "int"
-            },
-            {
-              "name": "ConfigurationVersion",
-              "type": [
-                "null",
-                "org.opcfoundation.ua.avro.ExtensionObject"
-              ]
-            },
-            {
-              "name": "BoundItems",
-              "type": {
-                "items": [
-                  "null",
-                  "org.opcfoundation.ua.avro.BoundItemDataType"
-                ],
-                "type": "array"
-              }
-            },
-            {
-              "name": "PublishedDataSetName",
-              "type": [
-                "null",
-                "string"
-              ]
-            },
-            {
-              "name": "WriterGroupName",
-              "type": [
-                "null",
-                "string"
-              ]
-            }
-          ],
-          "name": "ScenarioBindingDataType",
-          "namespace": "org.opcfoundation.ua.avro",
-          "type": "record"
-        },
-        {
-          "fields": [
-            {
-              "name": "ModelNamespaceUri",
-              "type": [
-                "null",
-                "string"
-              ]
-            },
-            {
-              "name": "AppliesToType",
-              "type": [
-                "null",
-                "org.opcfoundation.ua.avro.QualifiedName"
-              ]
-            },
-            {
-              "name": "ConfigurationVersion",
-              "type": [
-                "null",
-                "org.opcfoundation.ua.avro.ExtensionObject"
-              ]
-            },
-            {
-              "name": "ScenarioBindings",
-              "type": {
-                "items": [
-                  "null",
-                  "org.opcfoundation.ua.avro.ScenarioBindingDataType"
-                ],
-                "type": "array"
-              }
-            }
-          ],
-          "name": "ScenarioBindingConfigurationDataType",
-          "namespace": "org.opcfoundation.ua.avro",
-          "type": "record"
-        },
-        "bytes"
-      ]
-    }
-  ],
-  "name": "ExtensionObject",
-  "namespace": "org.opcfoundation.ua.avro",
-  "type": "record"
-}
-```
+The `body` member is the append-only **growing union** governed by §6.4 (see also *OPC UA — Schema Registry* §5.6). Its members are not reproduced here because the union grows as new concrete DataTypes are observed; the complete aggregation used by the conformance corpus is the published `opcua.builtins.avsc`. An opaque body that has no known record branch is carried in an opaque fallback branch (`bytes` for a Binary body, `string` for an XML or textual body), appended append-only like any other branch.
 
 **Example value** (`extobj_point`)
 
@@ -1781,7 +1080,7 @@ ffff9ff50f
 02000002f22e00000002000000000000f03f000000000000f03f
 ```
 
-**Annotated byte-level breakdown**
+**Annotated byte-level breakdown** (the body union index below is into the published aggregation schema)
 
 | Offset | Len | Bytes | Field |
 |---:|---:|---|---|
@@ -1907,107 +1206,11 @@ ffff9ff50f
 
 | Field | Avro type | Presence / nullability | Notes |
 |---|---|---|---|
-| `value` | `{"fields": [{"name": "builtInType", "type": "int"}, {"default": null, "name": "dimensions", "type": ["null", {"items": "int", "type": "array"}]}, {"default": null, "name": "body", "type": ["null", "org.opcfoundation.ua.avro.VariantBooleanScalar", "org.opcfoundation.ua.avro.VariantBooleanArray", "org.opcfoundation.ua.avro.VariantBooleanMatrixBody", "org.opcfoundation.ua.avro.VariantSByteScalar", "org.opcfoundation.ua.avro.VariantSByteArray", "org.opcfoundation.ua.avro.VariantSByteMatrixBody", "org.opcfoundation.ua.avro.VariantByteScalar", "org.opcfoundation.ua.avro.VariantByteArray", "org.opcfoundation.ua.avro.VariantByteMatrixBody", "org.opcfoundation.ua.avro.VariantInt16Scalar", "org.opcfoundation.ua.avro.VariantInt16Array", "org.opcfoundation.ua.avro.VariantInt16MatrixBody", "org.opcfoundation.ua.avro.VariantUInt16Scalar", "org.opcfoundation.ua.avro.VariantUInt16Array", "org.opcfoundation.ua.avro.VariantUInt16MatrixBody", "org.opcfoundation.ua.avro.VariantInt32Scalar", "org.opcfoundation.ua.avro.VariantInt32Array", "org.opcfoundation.ua.avro.VariantInt32MatrixBody", "org.opcfoundation.ua.avro.VariantUInt32Scalar", "org.opcfoundation.ua.avro.VariantUInt32Array", "org.opcfoundation.ua.avro.VariantUInt32MatrixBody", "org.opcfoundation.ua.avro.VariantInt64Scalar", "org.opcfoundation.ua.avro.VariantInt64Array", "org.opcfoundation.ua.avro.VariantInt64MatrixBody", "org.opcfoundation.ua.avro.VariantUInt64Scalar", "org.opcfoundation.ua.avro.VariantUInt64Array", "org.opcfoundation.ua.avro.VariantUInt64MatrixBody", "org.opcfoundation.ua.avro.VariantFloatScalar", "org.opcfoundation.ua.avro.VariantFloatArray", "org.opcfoundation.ua.avro.VariantFloatMatrixBody", "org.opcfoundation.ua.avro.VariantDoubleScalar", "org.opcfoundation.ua.avro.VariantDoubleArray", "org.opcfoundation.ua.avro.VariantDoubleMatrixBody", "org.opcfoundation.ua.avro.VariantStringScalar", "org.opcfoundation.ua.avro.VariantStringArray", "org.opcfoundation.ua.avro.VariantStringMatrixBody", "org.opcfoundation.ua.avro.VariantDateTimeScalar", "org.opcfoundation.ua.avro.VariantDateTimeArray", "org.opcfoundation.ua.avro.VariantDateTimeMatrixBody", "org.opcfoundation.ua.avro.VariantGuidScalar", "org.opcfoundation.ua.avro.VariantGuidArray", "org.opcfoundation.ua.avro.VariantGuidMatrixBody", "org.opcfoundation.ua.avro.VariantByteStringScalar", "org.opcfoundation.ua.avro.VariantByteStringArray", "org.opcfoundation.ua.avro.VariantByteStringMatrixBody", "org.opcfoundation.ua.avro.VariantXmlElementScalar", "org.opcfoundation.ua.avro.VariantXmlElementArray", "org.opcfoundation.ua.avro.VariantXmlElementMatrixBody", "org.opcfoundation.ua.avro.VariantNodeIdScalar", "org.opcfoundation.ua.avro.VariantNodeIdArray", "org.opcfoundation.ua.avro.VariantNodeIdMatrixBody", "org.opcfoundation.ua.avro.VariantExpandedNodeIdScalar", "org.opcfoundation.ua.avro.VariantExpandedNodeIdArray", "org.opcfoundation.ua.avro.VariantExpandedNodeIdMatrixBody", "org.opcfoundation.ua.avro.VariantStatusCodeScalar", "org.opcfoundation.ua.avro.VariantStatusCodeArray", "org.opcfoundation.ua.avro.VariantStatusCodeMatrixBody", "org.opcfoundation.ua.avro.VariantQualifiedNameScalar", "org.opcfoundation.ua.avro.VariantQualifiedNameArray", "org.opcfoundation.ua.avro.VariantQualifiedNameMatrixBody", "org.opcfoundation.ua.avro.VariantLocalizedTextScalar", "org.opcfoundation.ua.avro.VariantLocalizedTextArray", "org.opcfoundation.ua.avro.VariantLocalizedTextMatrixBody", "org.opcfoundation.ua.avro.VariantExtensionObjectScalar", "org.opcfoundation.ua.avro.VariantExtensionObjectArray", "org.opcfoundation.ua.avro.VariantExtensionObjectMatrixBody"]}], "name": "Variant", "namespace": "org.opcfoundation.ua.avro", "type": "record"}` | nullable where schema is a null union | OPC UA BuiltInType 24. |
+| `builtInType` | `"int"` | present | Fixed member of the record shape. |
+| `dimensions` | `["null", {"items": "int", "type": "array"}]` | nullable | Fixed member of the record shape. |
+| `body` | append-only growing union — see §6.4 | nullable | Not expanded here; the full published aggregation is `../extras/avro-encoding/schemas/opcua.builtins.avsc`. |
 
-**Avro schema fragment**
-
-```json
-{
-  "fields": [
-    {
-      "name": "builtInType",
-      "type": "int"
-    },
-    {
-      "default": null,
-      "name": "dimensions",
-      "type": [
-        "null",
-        {
-          "items": "int",
-          "type": "array"
-        }
-      ]
-    },
-    {
-      "default": null,
-      "name": "body",
-      "type": [
-        "null",
-        "org.opcfoundation.ua.avro.VariantBooleanScalar",
-        "org.opcfoundation.ua.avro.VariantBooleanArray",
-        "org.opcfoundation.ua.avro.VariantBooleanMatrixBody",
-        "org.opcfoundation.ua.avro.VariantSByteScalar",
-        "org.opcfoundation.ua.avro.VariantSByteArray",
-        "org.opcfoundation.ua.avro.VariantSByteMatrixBody",
-        "org.opcfoundation.ua.avro.VariantByteScalar",
-        "org.opcfoundation.ua.avro.VariantByteArray",
-        "org.opcfoundation.ua.avro.VariantByteMatrixBody",
-        "org.opcfoundation.ua.avro.VariantInt16Scalar",
-        "org.opcfoundation.ua.avro.VariantInt16Array",
-        "org.opcfoundation.ua.avro.VariantInt16MatrixBody",
-        "org.opcfoundation.ua.avro.VariantUInt16Scalar",
-        "org.opcfoundation.ua.avro.VariantUInt16Array",
-        "org.opcfoundation.ua.avro.VariantUInt16MatrixBody",
-        "org.opcfoundation.ua.avro.VariantInt32Scalar",
-        "org.opcfoundation.ua.avro.VariantInt32Array",
-        "org.opcfoundation.ua.avro.VariantInt32MatrixBody",
-        "org.opcfoundation.ua.avro.VariantUInt32Scalar",
-        "org.opcfoundation.ua.avro.VariantUInt32Array",
-        "org.opcfoundation.ua.avro.VariantUInt32MatrixBody",
-        "org.opcfoundation.ua.avro.VariantInt64Scalar",
-        "org.opcfoundation.ua.avro.VariantInt64Array",
-        "org.opcfoundation.ua.avro.VariantInt64MatrixBody",
-        "org.opcfoundation.ua.avro.VariantUInt64Scalar",
-        "org.opcfoundation.ua.avro.VariantUInt64Array",
-        "org.opcfoundation.ua.avro.VariantUInt64MatrixBody",
-        "org.opcfoundation.ua.avro.VariantFloatScalar",
-        "org.opcfoundation.ua.avro.VariantFloatArray",
-        "org.opcfoundation.ua.avro.VariantFloatMatrixBody",
-        "org.opcfoundation.ua.avro.VariantDoubleScalar",
-        "org.opcfoundation.ua.avro.VariantDoubleArray",
-        "org.opcfoundation.ua.avro.VariantDoubleMatrixBody",
-        "org.opcfoundation.ua.avro.VariantStringScalar",
-        "org.opcfoundation.ua.avro.VariantStringArray",
-        "org.opcfoundation.ua.avro.VariantStringMatrixBody",
-        "org.opcfoundation.ua.avro.VariantDateTimeScalar",
-        "org.opcfoundation.ua.avro.VariantDateTimeArray",
-        "org.opcfoundation.ua.avro.VariantDateTimeMatrixBody",
-        "org.opcfoundation.ua.avro.VariantGuidScalar",
-        "org.opcfoundation.ua.avro.VariantGuidArray",
-        "org.opcfoundation.ua.avro.VariantGuidMatrixBody",
-        "org.opcfoundation.ua.avro.VariantByteStringScalar",
-        "org.opcfoundation.ua.avro.VariantByteStringArray",
-        "org.opcfoundation.ua.avro.VariantByteStringMatrixBody",
-        "org.opcfoundation.ua.avro.VariantXmlElementScalar",
-        "org.opcfoundation.ua.avro.VariantXmlElementArray",
-        "org.opcfoundation.ua.avro.VariantXmlElementMatrixBody",
-        "org.opcfoundation.ua.avro.VariantNodeIdScalar",
-        "org.opcfoundation.ua.avro.VariantNodeIdArray",
-        "org.opcfoundation.ua.avro.VariantNodeIdMatrixBody",
-        "org.opcfoundation.ua.avro.VariantExpandedNodeIdScalar",
-        "org.opcfoundation.ua.avro.VariantExpandedNodeIdArray",
-        "org.opcfoundation.ua.avro.VariantExpandedNodeIdMatrixBody",
-        "org.opcfoundation.ua.avro.VariantStatusCodeScalar",
-        "org.opcfoundation.ua.avro.VariantStatusCodeArray",
-        "org.opcfoundation.ua.avro.VariantStatusCodeMatrixBody",
-        "org.opcfoundation.ua.avro.VariantQualifiedNameScalar",
-        "org.opcfoundation.ua.avro.VariantQualifiedNameArray",
-        "org.opcfoundation.ua.avro.VariantQualifiedNameMatrixBody",
-        "org.opcfoundation.ua.avro.VariantLocalizedTextScalar",
-        "org.opcfoundation.ua.avro.VariantLocalizedTextArray",
-        "org.opcfoundation.ua.avro.VariantLocalizedTextMatrixBody",
-        "org.opcfoundation.ua.avro.VariantExtensionObjectScalar",
-        "org.opcfoundation.ua.avro.VariantExtensionObjectArray",
-        "org.opcfoundation.ua.avro.VariantExtensionObjectMatrixBody"
-      ]
-    }
-  ],
-  "name": "Variant",
-  "namespace": "org.opcfoundation.ua.avro",
-  "type": "record"
-}
-```
+The `body` member is the append-only **growing union** governed by §6.4 (see also *OPC UA — Schema Registry* §5.6). Its members are not reproduced here because the union grows as new built-in body types are observed; the complete aggregation used by the conformance corpus is the published `opcua.builtins.avsc`.
 
 **Example value** (`variant_matrix_int`)
 
@@ -2021,7 +1224,7 @@ ffff9ff50f
 0c02040404002404040400080204060800
 ```
 
-**Annotated byte-level breakdown**
+**Annotated byte-level breakdown** (the body union index below is into the published aggregation schema)
 
 | Offset | Len | Bytes | Field |
 |---:|---:|---|---|
@@ -2632,3 +1835,262 @@ ffff9ff50f
 | 39 | 8 | `00 00 00 00 00 00 00 40` | $.Payload: branch 1 (org.opcfoundation.ua.avro.ExtensionObject).body: branch 1 (org.opcfoundation.ua.avro.Point).X: float64 little-endian |
 | 47 | 8 | `00 00 00 00 00 00 08 40` | $.Payload: branch 1 (org.opcfoundation.ua.avro.ExtensionObject).body: branch 1 (org.opcfoundation.ua.avro.Point).Y: float64 little-endian |
 <!-- END GENERATED: type-reference -->
+
+## Annex B PubSub Action and Discovery schema examples
+
+The Part 14 Avro mapping publishes compact envelope schemas for Action and Discovery messages in `../extras/avro-encoding/schemas/`. The Action request/response envelopes are `AvroActionRequestNetworkMessage.avsc` and `AvroActionResponseNetworkMessage.avsc`, each containing an array of request/response DataSetMessages. Discovery examples include `AvroDataSetMetaData.avsc`, `AvroDataSetWriterConfigurationAnnouncement.avsc`, `AvroActionResponderConfigurationAnnouncement.avsc`, `AvroDiscoveryProbe.avsc` and `AvroPublisherEndpointsAnnouncement.avsc`. The generated schemas use the built-in `Variant`, `DataValue`, `NodeId`, `StatusCode`, `DiagnosticInfo` and `ExtensionObject` records from Annex A; reduced base-UA shapes and fallbacks are documented in the Part 14 draft.
+
+Compact examples publish the exact generated schema files below. Do not edit these JSON blocks by hand; copy them from `..\extras\avro-encoding\schemas\*.avsc`.
+
+The published Action request DataSetMessage schema is `../extras/avro-encoding/schemas/AvroActionRequestDataSetMessage.avsc`:
+
+```json
+{
+  "fields": [
+    {
+      "name": "ActionTargetId",
+      "type": [
+        "null",
+        "org.opcfoundation.ua.avro.NodeId"
+      ]
+    },
+    {
+      "name": "RequestId",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "name": "CorrelationData",
+      "type": [
+        "null",
+        "bytes"
+      ]
+    },
+    {
+      "name": "InputArguments",
+      "type": {
+        "items": [
+          "null",
+          "org.opcfoundation.ua.avro.Variant"
+        ],
+        "type": "array"
+      }
+    }
+  ],
+  "name": "AvroActionRequestDataSetMessage",
+  "namespace": "org.opcfoundation.ua.avro",
+  "type": "record"
+}
+```
+
+The published Action request NetworkMessage schema is `../extras/avro-encoding/schemas/AvroActionRequestNetworkMessage.avsc`:
+
+```json
+{
+  "fields": [
+    {
+      "name": "PublisherId",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "name": "WriterGroupId",
+      "type": "int"
+    },
+    {
+      "name": "NetworkMessageNumber",
+      "type": "int"
+    },
+    {
+      "name": "SequenceNumber",
+      "type": "int"
+    },
+    {
+      "name": "Timestamp",
+      "type": "long"
+    },
+    {
+      "name": "Messages",
+      "type": {
+        "items": [
+          "null",
+          "org.opcfoundation.ua.avro.AvroActionRequestDataSetMessage"
+        ],
+        "type": "array"
+      }
+    },
+    {
+      "name": "SchemaId",
+      "type": [
+        "null",
+        "string"
+      ]
+    }
+  ],
+  "name": "AvroActionRequestNetworkMessage",
+  "namespace": "org.opcfoundation.ua.avro",
+  "type": "record"
+}
+```
+
+The published Action response DataSetMessage schema is `../extras/avro-encoding/schemas/AvroActionResponseDataSetMessage.avsc`:
+
+```json
+{
+  "fields": [
+    {
+      "name": "ActionTargetId",
+      "type": [
+        "null",
+        "org.opcfoundation.ua.avro.NodeId"
+      ]
+    },
+    {
+      "name": "RequestId",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "name": "CorrelationData",
+      "type": [
+        "null",
+        "bytes"
+      ]
+    },
+    {
+      "name": "Status",
+      "type": "int"
+    },
+    {
+      "name": "OutputArguments",
+      "type": {
+        "items": [
+          "null",
+          "org.opcfoundation.ua.avro.Variant"
+        ],
+        "type": "array"
+      }
+    },
+    {
+      "name": "DiagnosticInfos",
+      "type": {
+        "items": [
+          "null",
+          "org.opcfoundation.ua.avro.DiagnosticInfo"
+        ],
+        "type": "array"
+      }
+    }
+  ],
+  "name": "AvroActionResponseDataSetMessage",
+  "namespace": "org.opcfoundation.ua.avro",
+  "type": "record"
+}
+```
+
+The published Action response NetworkMessage schema is `../extras/avro-encoding/schemas/AvroActionResponseNetworkMessage.avsc`:
+
+```json
+{
+  "fields": [
+    {
+      "name": "PublisherId",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "name": "WriterGroupId",
+      "type": "int"
+    },
+    {
+      "name": "NetworkMessageNumber",
+      "type": "int"
+    },
+    {
+      "name": "SequenceNumber",
+      "type": "int"
+    },
+    {
+      "name": "Timestamp",
+      "type": "long"
+    },
+    {
+      "name": "Messages",
+      "type": {
+        "items": [
+          "null",
+          "org.opcfoundation.ua.avro.AvroActionResponseDataSetMessage"
+        ],
+        "type": "array"
+      }
+    },
+    {
+      "name": "SchemaId",
+      "type": [
+        "null",
+        "string"
+      ]
+    }
+  ],
+  "name": "AvroActionResponseNetworkMessage",
+  "namespace": "org.opcfoundation.ua.avro",
+  "type": "record"
+}
+```
+
+The published DataSetWriter configuration announcement schema is `../extras/avro-encoding/schemas/AvroDataSetWriterConfigurationAnnouncement.avsc`:
+
+```json
+{
+  "fields": [
+    {
+      "name": "PublisherId",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "name": "WriterGroupId",
+      "type": "int"
+    },
+    {
+      "name": "DataSetWriterId",
+      "type": "int"
+    },
+    {
+      "name": "ConfigurationVersion",
+      "type": "org.opcfoundation.ua.avro.AvroConfigurationVersionDataType"
+    },
+    {
+      "name": "DataSetMetaData",
+      "type": "org.opcfoundation.ua.avro.AvroDataSetMetaData"
+    },
+    {
+      "name": "SchemaId",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "name": "SchemaJson",
+      "type": [
+        "null",
+        "string"
+      ]
+    }
+  ],
+  "name": "AvroDataSetWriterConfigurationAnnouncement",
+  "namespace": "org.opcfoundation.ua.avro",
+  "type": "record"
+}
+```
