@@ -168,7 +168,7 @@ The Variant body-type union (§5.8) and the ExtensionObject known-struct union (
 
 5. **Decode with the latest minor.** A decoder that holds the latest minor of a lineage decodes every earlier-minor message of that lineage directly, because reading the branch index resolves to the same branch. A decoder that lacks the exact writer SchemaId may decode with a later minor of the same lineage after confirming, from the registry or announced lineage, that the on-wire SchemaId is an earlier minor of it (Schema Registry §5.6, §8); it shall not compare the on-wire fingerprint against the later schema's canonical form.
 
-An executable reference of this procedure — narrow schema, append-only growth (including opaque fallbacks appended at any position), latest-minor-decodes-older and distinct per-minor SchemaIds — is `../extras/avro-encoding/tools/evolution_demo.py`. See *OPC UA — Schema Registry* §5.6 for the full model, including the data-driven-first (or schema-driven) initial basis and the lineage/SchemaId relationship.
+An executable reference of this procedure — narrow schema, append-only growth (including opaque fallbacks appended at any position), latest-minor-decodes-older and distinct per-minor SchemaIds — is `../extras/avro-encoding/tools/evolution_demo.py`, and a fully worked lineage with concrete schemas, per-minor SchemaIds and a backward-compatible decode is in Annex C. See *OPC UA — Schema Registry* §5.6 for the full model, including the data-driven-first (or schema-driven) initial basis and the lineage/SchemaId relationship.
 
 ### 6.5 NamespaceUri to Avro namespace mapping
 
@@ -2094,3 +2094,151 @@ The published DataSetWriter configuration announcement schema is `../extras/avro
   "type": "record"
 }
 ```
+
+## Annex C Worked schema-evolution example (incremental growth)
+
+<!-- BEGIN GENERATED: evolution-annex -->
+This annex is generated from real Avro schemas by `../extras/avro-encoding/tools/gen_evolution_annex.py`; do not edit it by hand.
+
+It shows one lineage of self-contained schemas built and adapted incrementally as values are observed, per the growing-union model of §6.4 and *OPC UA — Schema Registry* §5.6. All record names below are in the `org.opcfoundation.ua.avro` namespace.
+
+**Scenario.** A DataSet sample has two fields: `signal`, a Variant, and `event`, an ExtensionObject whose concrete struct `SensorEvent` itself contains a Variant field `detail` (a struct with a variant). A self-contained schema carries a single shared `Variant` record, so both `signal` and the nested `detail` reference the *same* growing Variant body union; the `event` ExtensionObject has its own growing struct-type union. The initial schema is built data-driven from the first values, then grown append-only at whichever position changes.
+
+### MinorVersion 1.0
+
+First message: `signal` = Int32(42), `event` = SensorEvent{ detail = Boolean(true) }. The initial (`MAJOR.0`) schema is narrowed data-driven to exactly the concrete types the two fields first carry.
+
+- Shared Variant body union: `["null", "VariantInt32Scalar", "VariantBooleanScalar"]`
+- ExtensionObject body union: `["null", "SensorEvent"]`
+- **SchemaId** `07d4be7df69b09f5`
+
+Self-contained `MAJOR.0` schema:
+
+```json
+{
+  "fields": [
+    {
+      "name": "signal",
+      "type": {
+        "fields": [
+          {
+            "name": "builtInType",
+            "type": "int"
+          },
+          {
+            "default": null,
+            "name": "dimensions",
+            "type": [
+              "null",
+              {
+                "items": "int",
+                "type": "array"
+              }
+            ]
+          },
+          {
+            "default": null,
+            "name": "body",
+            "type": [
+              "null",
+              {
+                "fields": [
+                  {
+                    "name": "value",
+                    "type": "int"
+                  }
+                ],
+                "name": "VariantInt32Scalar",
+                "namespace": "org.opcfoundation.ua.avro",
+                "type": "record"
+              },
+              {
+                "fields": [
+                  {
+                    "name": "value",
+                    "type": "boolean"
+                  }
+                ],
+                "name": "VariantBooleanScalar",
+                "namespace": "org.opcfoundation.ua.avro",
+                "type": "record"
+              }
+            ]
+          }
+        ],
+        "name": "Variant",
+        "namespace": "org.opcfoundation.ua.avro",
+        "type": "record"
+      }
+    },
+    {
+      "name": "event",
+      "type": {
+        "fields": [
+          {
+            "name": "typeId",
+            "type": "string"
+          },
+          {
+            "default": null,
+            "name": "body",
+            "type": [
+              "null",
+              {
+                "fields": [
+                  {
+                    "name": "deviceId",
+                    "type": "string"
+                  },
+                  {
+                    "name": "detail",
+                    "type": "org.opcfoundation.ua.avro.Variant"
+                  }
+                ],
+                "name": "SensorEvent",
+                "namespace": "org.opcfoundation.ua.avro",
+                "type": "record"
+              }
+            ]
+          }
+        ],
+        "name": "ExtensionObject",
+        "namespace": "org.opcfoundation.ua.avro",
+        "type": "record"
+      }
+    }
+  ],
+  "name": "Sample",
+  "namespace": "org.opcfoundation.ua.avro",
+  "type": "record"
+}
+```
+
+### MinorVersion 1.1
+
+`signal` now carries a Double, so `VariantDoubleScalar` is appended to the shared Variant body union. The ExtensionObject union is unchanged.
+
+- Shared Variant body union: `["null", "VariantInt32Scalar", "VariantBooleanScalar", "VariantDoubleScalar"]`
+- ExtensionObject body union: `["null", "SensorEvent"]`
+- **SchemaId** `a9874c578c7a58c9`
+
+### MinorVersion 1.2
+
+The nested `event.detail` Variant now carries a Float, so `VariantFloatScalar` is appended to the **same shared** Variant body union — growth triggered from inside the ExtensionObject struct. Because the Variant record is shared, the Float body type is thereby also available to `signal`.
+
+- Shared Variant body union: `["null", "VariantInt32Scalar", "VariantBooleanScalar", "VariantDoubleScalar", "VariantFloatScalar"]`
+- ExtensionObject body union: `["null", "SensorEvent"]`
+- **SchemaId** `2c3c4ff6d8ee53c4`
+
+### MinorVersion 1.3
+
+`event` now carries a second concrete struct, `AlarmEvent`, so it is appended to the ExtensionObject body union. The shared Variant union is unchanged.
+
+- Shared Variant body union: `["null", "VariantInt32Scalar", "VariantBooleanScalar", "VariantDoubleScalar", "VariantFloatScalar"]`
+- ExtensionObject body union: `["null", "SensorEvent", "AlarmEvent"]`
+- **SchemaId** `d79ca063c07e5ddd`
+
+### Backward compatibility
+
+A `Sample` written under 1.0 — `signal` = Int32(42), `event` = SensorEvent{ detail = Boolean(true) } — encodes to `0c0002540c693d31303031020a6465762d3102000401` and decodes unchanged under the 1.3 schema. `VariantInt32Scalar` (branch 1) and `VariantBooleanScalar` (branch 2) keep their indices in the shared Variant union, and `SensorEvent` (branch 1) keeps its index in the ExtensionObject union, because every member was appended, never reordered. Each minor is a distinct SchemaId in one lineage; a decoder holding the 1.3 schema decodes every earlier minor of that lineage, while the appended members stay unused for older values (§6.4).
+<!-- END GENERATED: evolution-annex -->

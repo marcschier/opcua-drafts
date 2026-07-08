@@ -367,6 +367,10 @@ def main() -> int:
     except subprocess.CalledProcessError as exc:
         failures.append(f"type reference gate failed: exit {exc.returncode}")
     try:
+        subprocess.run([sys.executable, str(TOOLS / "gen_evolution_annex.py"), "--check"], cwd=ROOT, check=True)
+    except subprocess.CalledProcessError as exc:
+        failures.append(f"evolution annex gate failed: exit {exc.returncode}")
+    try:
         subprocess.run([sys.executable, str(TOOLS / "schema_handshake_demo.py")], cwd=ROOT, check=True)
     except subprocess.CalledProcessError as exc:
         failures.append(f"schema handshake demo failed: exit {exc.returncode}")
@@ -405,7 +409,7 @@ def main() -> int:
     for f in failures:
         print("FAIL", f)
     schemaid_count = len(json.loads((SCHEMAS / "schemaids.json").read_text(encoding="utf-8"))) if (SCHEMAS / "schemaids.json").exists() else 0
-    print(f"validate_local: schemas={len(list(SCHEMAS.glob('*.avsc')))} schemaids={schemaid_count} corpus={len(CORPUS)} examples={len(EXAMPLE_NAMES) + len(MESSAGE_EXAMPLE_NAMES)} type_reference=31 handshake=ok nested_schemaid=ok doc_schema_blocks={doc_block_count} action_discovery=ok evolution=ok namespace_map=ok nodeid_string=ok; {len(failures)} failures")
+    print(f"validate_local: schemas={len(list(SCHEMAS.glob('*.avsc')))} schemaids={schemaid_count} corpus={len(CORPUS)} examples={len(EXAMPLE_NAMES) + len(MESSAGE_EXAMPLE_NAMES)} type_reference=31 handshake=ok nested_schemaid=ok doc_schema_blocks={doc_block_count} action_discovery=ok evolution=ok evolution_annex=ok namespace_map=ok nodeid_string=ok; {len(failures)} failures")
     return 1 if failures else 0
 
 if __name__ == "__main__":
