@@ -143,6 +143,22 @@ The canonical form used for SchemaId shall be the Apache Avro Parsing Canonical 
 
 A producer shall recompute the SchemaId from the self-contained canonical schema before writing a value or message. Two schemas with different field order, optional-field wrappers, union branch order, runtime Variant body type, matrix record shape, or referenced concrete structured DataType definition shall have different SchemaIds. A consumer shall treat the SchemaId as identifying the exact self-contained Avro Parsing Canonical Form, not merely a DataType NodeId or a PubSub ConfigurationVersion.
 
+### 6.4 Implementing schema evolution (growing unions)
+
+The Variant body-type union (§5.8) and the ExtensionObject known-struct union (§5.9) are the only two Avro unions that may grow after a schema is first announced; every other union is closed. An implementer that governs an evolving schema shall grow these two unions **append-only**, as defined by *OPC UA — Schema Registry* §5.6, using the following procedure.
+
+1. **Narrow the initial union.** Generate the initial (`MAJOR.0`) union from the schema-driven bound: for a Variant field whose declared DataType constrains the allowed body types, include exactly those `Variant<Type>Scalar`, `Variant<Type>Array` and `Variant<Type>MatrixBody` branches; for an ExtensionObject or abstract/subtyped field, include the record branch of every concrete subtype known from the AddressSpace or schema registry. For an unbounded field — a `BaseDataType` Variant, or a body whose concrete type is not known in advance — start minimal (`["null", "bytes"]` for an ExtensionObject body) and grow it as values are observed.
+
+2. **Grow append-only.** When a value selects a body type or concrete struct type not yet present, **append** the corresponding branch record to the end of the Avro union array and leave every existing branch at its current position. Because an Avro binary union is encoded as the zig-zag branch index followed by the branch value, appending never changes an existing branch index, so a message written under an earlier schema still selects the same branch under the grown schema. Do not reorder, remove or retype an existing branch; any such change is a MajorVersion reset, not an aggregation.
+
+3. **Keep the opaque fallback ahead of appends.** For the ExtensionObject body union, place the `"bytes"` fallback at a fixed low index ahead of the growing known-struct branches — `["null", "bytes", <known structs…>]` — so appended struct branches never shift the `"bytes"` index and an opaque body written under an earlier minor still decodes as `"bytes"`.
+
+4. **Recompute the SchemaId and announce.** Each grown union is a new self-contained schema; recompute the CRC-64-AVRO SchemaId per §6, advance the DataSet `ConfigurationVersion` MinorVersion, then re-announce the schema and SchemaId over the Part 14 handshake before sending a message that uses the appended branch.
+
+5. **Decode with the latest minor.** A decoder that holds the latest minor of a lineage decodes every earlier-minor message of that lineage directly, because reading the branch index resolves to the same branch. A decoder that lacks the exact writer SchemaId may decode with a later minor of the same lineage after confirming, from the registry or announced lineage, that the on-wire SchemaId is an earlier minor of it (Schema Registry §5.6, §8); it shall not compare the on-wire fingerprint against the later schema's canonical form.
+
+An executable reference of this procedure — narrow schema, append-only growth, latest-minor-decodes-older, distinct per-minor SchemaIds and the reserved fallback index — is `../extras/avro-encoding/tools/evolution_demo.py`. See *OPC UA — Schema Registry* §5.6 for the full model, including the schema-driven-versus-data-driven basis and the lineage/SchemaId relationship.
+
 ## 7 Decoder schema resolution
 
 A decoder shall use one of the following schema resolution paths.

@@ -132,6 +132,22 @@ An AddressSpace-driven decoder may instead read the DataTypeDefinition for the e
 
 An implementation conforms to OPC UA Arrow when it implements the single mapping in this clause for all 25 built-in DataTypes, Structures, Unions, Enumerations, OptionSets, Arrays, Matrices, Variant, ExtensionObject, DataValue and DiagnosticInfo, and demonstrates `decode(encode(x)) == x` for conforming OPC UA values.
 
+#### 5.7.12 Implementing schema evolution (growing unions)
+
+The Variant dense union (§5.7.6) and the ExtensionObject known-struct dense union (§5.7.7) are the two Arrow unions that may grow after a schema is first announced; every other union and struct is closed. An implementer that governs an evolving schema shall grow these unions **append-only**, as defined by *OPC UA — Schema Registry* §5.6.
+
+1. **Narrow the initial union.** Build the initial (`MAJOR.0`) dense union from the schema-driven bound: include one child per allowed Variant body form — a distinct child for each `(BuiltInType, scalar|array|matrix)` combination the field may carry — or one child per concrete struct type known for an ExtensionObject/abstract-subtyped field. For an unbounded field, start with the `null` and `binary` children only and grow as values are observed.
+
+2. **Grow append-only.** When a value selects a body form or concrete struct type not yet present, **append** a new child array and assign it a dense-union **type code** never used in this lineage; leave every existing child and its type code unchanged. The type code travels in the union's 8-bit type-ids buffer, so a stable type code means an older RecordBatch resolves the same child under the grown schema. Type codes are `int8` (0–127); assign them in a documented, monotonic order. Do not remove, reorder or retype an existing child; any such change is a MajorVersion reset.
+
+3. **Keep the binary fallback ahead of appends.** For the ExtensionObject body union, place the `binary` fallback child at a fixed low type code ahead of the growing known-struct children so appends never change its type code and an opaque body written under an earlier minor still resolves to `binary`.
+
+4. **Recompute the SchemaId and announce.** Each grown union yields a new serialized Arrow `Schema`; recompute the SHA-256[:8] SchemaId per §5.7.9, advance the DataSet `ConfigurationVersion` MinorVersion, and re-announce the schema and SchemaId per the Part 14 Arrow handshake before sending a batch that uses the appended child.
+
+5. **Decode with the writer-minor schema.** Unlike the row encodings, an Arrow RecordBatch's node and buffer layout is shaped by its writer schema: a self-describing IPC `stream` embeds that schema, but a bare `batch` RecordBatch does not. A decoder shall therefore resolve the exact writer-minor schema by SchemaId to decode a bare batch, or apply a defined upgrade that treats union children absent from the older batch as empty. A consumer that reads only IPC `stream`s decodes each stream from its embedded schema; a consumer that reads bare batches shall cache each minor's schema by SchemaId (Schema Registry §5.6, §8).
+
+See *OPC UA — Schema Registry* §5.6 for the full model, including the schema-driven-versus-data-driven basis and the lineage/SchemaId relationship.
+
 ## Annex A Generated per-type reference
 
 <!-- BEGIN GENERATED: type-reference -->

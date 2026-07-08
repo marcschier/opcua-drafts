@@ -131,6 +131,20 @@ A decoder shall first resolve the schema for the declared type and SchemaId, the
 
 After parsing, the decoder applies the OPC UA type rules: integer range checks, matrix value-count checks, null-versus-empty preservation, union single-arm validation, ExtensionObject type resolution and canonical equality of value semantics. Unknown fields may be preserved by a forwarding implementation but shall not change the decoded OPC UA value.
 
+### 5.6.11 Implementing schema evolution (growing unions)
+
+Protobuf's built-in Variant `Value` kinds are a finite, complete `oneof` and are never aggregated (§5.6.6). Two open constructs may grow after a schema is first announced, and shall grow **append-only** as defined by *OPC UA — Schema Registry* §5.6.
+
+1. **ExtensionObject / abstract-subtyped bodies carried as `Any`.** The concrete body travels in a stable `Any message_body` field (§5.6.7); its field number never changes. Aggregating a newly-seen concrete type means adding that type's generated message to the transitive `FileDescriptorSet` — the closure of types the receiver can `Any`-unpack — not changing any wire field. A body whose concrete type is not yet in the closure travels in the stable opaque `bytes` field and is preserved with its TypeId. Because the `Any` type URL selects the concrete type, an older receiver simply cannot unpack a newly-added type and keeps it opaque, while a receiver holding the latest descriptor closure unpacks it typed.
+
+2. **Abstract-or-subtyped fields generated as an explicit `oneof`.** Where a field is generated as a `oneof` over concrete messages rather than an `Any`, grow it by **appending** new `oneof` arms with new, never-reused field numbers, leaving existing arms and their field numbers unchanged. Protobuf wire compatibility then guarantees that a message written under an earlier schema decodes under the grown schema — the appended field numbers are absent — and an older decoder treats an appended arm as an unknown field.
+
+3. **Recompute the SchemaId and announce.** Each grown descriptor closure is a new canonical transitive `FileDescriptorSet`; recompute the SHA-256[:8] SchemaId per §5.6.9, advance the DataSet `ConfigurationVersion` MinorVersion, and publish the new descriptor set and SchemaId (shared service contract or xRegistry catalog) before using the appended type.
+
+4. **Do not** remove or renumber an existing `oneof` field, change an existing field's type, or repurpose a field number; any such change is a MajorVersion reset, not an aggregation.
+
+See *OPC UA — Schema Registry* §5.6 for the full model, including the schema-driven-versus-data-driven basis, the lineage/SchemaId relationship and the compatibility contract.
+
 ## 6 Insertion into OPC 10000-6 v1.05.07
 
 Insert a new clause **5.6 OPC UA Protobuf** after **5.4 OPC UA JSON** and the sibling **5.5 OPC UA Avro** addition, and before clause 6. The child clauses shall parallel the JSON mapping: **5.6.1 General**, **5.6.2 Built-in DataTypes**, **5.6.3 Enumerations and OptionSets**, **5.6.4 Structures**, **5.6.5 Arrays and matrices**, **5.6.6 Variant**, **5.6.7 ExtensionObject**, **5.6.8 DataValue**, and **5.6.9 DiagnosticInfo**. Add `Default Protobuf` to DataTypeEncoding discussions wherever `Default Binary`, `Default XML` and `Default JSON` are listed. Add `application/vnd.google.protobuf` and compatibility alias `application/x-protobuf` to content-type guidance for Protobuf encoded bodies.
