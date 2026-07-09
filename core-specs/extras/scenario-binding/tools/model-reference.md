@@ -1,7 +1,7 @@
 <a id="annex-a"></a>
 ## Annex A — Information model
 
-This annex is the normative node reference. It is generated from `extras/scenario-binding/tools/build_model.py` and always matches `Opc.Ua.ScenarioBinding.NodeSet2.xml`. All nodes are proposed additions to the base OPC UA namespace `http://opcfoundation.org/UA/`; the NodeIds shown are **provisional** (final IDs are assigned by the OPC Foundation). The **Declared in** column marks members inherited from a supertype.
+This annex is the normative node reference. It is generated from [`core-specs/extras/scenario-binding/tools/build_model.py`](../extras/scenario-binding/tools/build_model.py) and always matches `Opc.Ua.ScenarioBinding.NodeSet2.xml`. All nodes are proposed additions to the base OPC UA namespace `http://opcfoundation.org/UA/`; the NodeIds shown are **provisional** (final IDs are assigned by the OPC Foundation). The **Declared in** column marks members inherited from a supertype.
 
 ### Type overview
 

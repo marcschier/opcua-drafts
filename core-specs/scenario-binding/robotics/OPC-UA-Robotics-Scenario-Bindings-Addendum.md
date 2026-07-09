@@ -18,7 +18,7 @@ This addendum defines example **scenario bindings** for the `MotionDeviceSystemT
 
 The bindings are authored at **two levels**, exactly as the base specification recommends:
 
-1. **Type-level definitions (reusable).** The machine-readable descriptor [`Robotics.ScenarioBinding.json`](../../../extras/scenario-binding/examples/robotics/Robotics.ScenarioBinding.json) lists each bound item as a `BrowsePath` (RelativePath) from the `MotionDeviceSystemType` root, with its routing `Kind` and scenario. Every path in §4 was **resolved against the published companion NodeSet**, so the bindings apply to *any* conforming instance.
+1. **Type-level definitions (reusable).** The machine-readable descriptor [`Robotics.ScenarioBinding.json`](../../extras/scenario-binding/examples/robotics/Robotics.ScenarioBinding.json) lists each bound item as a `BrowsePath` (RelativePath) from the `MotionDeviceSystemType` root, with its routing `Kind` and scenario. Every path in §4 was **resolved against the published companion NodeSet**, so the bindings apply to *any* conforming instance.
 2. **Instance overlay (concrete).** [`Opc.Ua.Robotics.ScenarioBinding.NodeSet2.xml`](Opc.Ua.Robotics.ScenarioBinding.NodeSet2.xml) instantiates a compact theoretical instance `ExampleRobotSystem`, applies the `IScenarioBoundType` interface, and exposes one `ScenarioBindingGroup` per scenario holding that scenario's `ScenarioBinding`/`BoundItem` instances. On the instance each `BoundItem` uses **`BindsToNode`** to point at the concrete signal node (the type-level `BrowsePath` and the instance `BindsToNode` are the two locators defined by the base specification).
 
 > **Theoretical instance model.** Robotics publishes no public instance example, so a compact theoretical `MotionDeviceSystem` is synthesised: one MotionDevice with an Axis and a PowerTrain/Motor, one Controller, and one SafetyState. Placeholder path segments (e.g. `<AxisIdentifier>`) become concrete instance names (e.g. `Axis_1`) in the overlay while the type-level BrowsePath keeps the placeholder.
@@ -222,8 +222,8 @@ Across all topologies the `DataSetClassId` per scenario is unchanged — a subsc
 
 | File | Content |
 |---|---|
-| [`Robotics.ScenarioBinding.json`](../../../extras/scenario-binding/examples/robotics/Robotics.ScenarioBinding.json) | Machine-readable ScenarioBindingConfiguration descriptor (single source). |
+| [`Robotics.ScenarioBinding.json`](../../extras/scenario-binding/examples/robotics/Robotics.ScenarioBinding.json) | Machine-readable ScenarioBindingConfiguration descriptor (single source). |
 | [`Opc.Ua.Robotics.ScenarioBinding.NodeSet2.xml`](Opc.Ua.Robotics.ScenarioBinding.NodeSet2.xml) | The binding instances on the theoretical `ExampleRobotSystem` instance. |
 
-Regenerate from `extras/scenario-binding/examples/` with `python tools/build_bindings.py robotics/Robotics.ScenarioBinding.json`.
+Regenerate from [`core-specs/extras/scenario-binding/examples/`](../../extras/scenario-binding/examples/) with `python tools/build_bindings.py robotics/Robotics.ScenarioBinding.json`.
 

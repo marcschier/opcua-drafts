@@ -781,7 +781,7 @@ def td_name(td, db, base_names):
 
 def emit_addendum(descriptor, db, base_names, spec_folder, desc_base):
     d = descriptor
-    desc_rel = f"../../../extras/scenario-binding/examples/{spec_folder}/{desc_base}"
+    desc_rel = f"../../extras/scenario-binding/examples/{spec_folder}/{desc_base}"
     cs = d.get("companionSpec", {})
     im = d.get("instanceModel", {})
     nitems = sum(len(sb["boundItems"]) for sb in d["scenarioBindings"])
@@ -876,7 +876,8 @@ def emit_addendum(descriptor, db, base_names, spec_folder, desc_base):
              f"(Opc.Ua.{d['domain']}.ScenarioBinding.NodeSet2.xml) | The binding instances on "
              f"the theoretical `{d['instanceName']}` instance. |")
     L.append("")
-    L.append("Regenerate from `extras/scenario-binding/examples/` with "
+    L.append("Regenerate from [`core-specs/extras/scenario-binding/examples/`]"
+             "(../../extras/scenario-binding/examples/) with "
              f"`python tools/build_bindings.py {spec_folder}/{desc_base}`.")
     L.append("")
     return "\n".join(L) + "\n"
@@ -1044,13 +1045,13 @@ def emit_diagrams(descriptor):
 def main():
     descriptor_path = sys.argv[1]
     ref_dir = sys.argv[2] if len(sys.argv) > 2 else os.path.join(HERE, "ref")
-    # The descriptor is a secondary source under extras/scenario-binding/examples/<spec>/; the
-    # standardized outputs (overlay + addendum) land in core-specs/scenario-binding/<spec>/.
+    # The descriptor is a secondary source under core-specs/extras/scenario-binding/examples/<spec>/;
+    # the standardized outputs (overlay + addendum) land in core-specs/scenario-binding/<spec>/.
     desc_dir = os.path.dirname(os.path.abspath(descriptor_path))
     spec_folder = os.path.basename(desc_dir)
     desc_base = os.path.basename(os.path.abspath(descriptor_path))
-    repo = os.path.abspath(os.path.join(desc_dir, "..", "..", "..", ".."))
-    outdir = os.path.join(repo, "core-specs", "scenario-binding", spec_folder)
+    core = os.path.abspath(os.path.join(desc_dir, "..", "..", "..", ".."))
+    outdir = os.path.join(core, "scenario-binding", spec_folder)
     os.makedirs(outdir, exist_ok=True)
     d = json.load(open(descriptor_path, encoding="utf-8"))
     # DataSetClassId encodes MajorVersion; a browsing subscriber recomputes it from the binding's

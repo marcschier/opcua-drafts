@@ -18,7 +18,7 @@ This addendum defines example **scenario bindings** for the `TopologyElementType
 
 The bindings are authored at **two levels**, exactly as the base specification recommends:
 
-1. **Type-level definitions (reusable).** The machine-readable descriptor [`DI.Operations.ScenarioBinding.json`](../../../extras/scenario-binding/examples/di/DI.Operations.ScenarioBinding.json) lists each bound item as a `BrowsePath` (RelativePath) from the `TopologyElementType` root, with its routing `Kind` and scenario. Every path in §4 was **resolved against the published companion NodeSet**, so the bindings apply to *any* conforming instance.
+1. **Type-level definitions (reusable).** The machine-readable descriptor [`DI.Operations.ScenarioBinding.json`](../../extras/scenario-binding/examples/di/DI.Operations.ScenarioBinding.json) lists each bound item as a `BrowsePath` (RelativePath) from the `TopologyElementType` root, with its routing `Kind` and scenario. Every path in §4 was **resolved against the published companion NodeSet**, so the bindings apply to *any* conforming instance.
 2. **Instance overlay (concrete).** [`Opc.Ua.DIOperations.ScenarioBinding.NodeSet2.xml`](Opc.Ua.DIOperations.ScenarioBinding.NodeSet2.xml) instantiates a compact theoretical instance `ExampleTopologyElement`, applies the `IScenarioBoundType` interface, and exposes one `ScenarioBindingGroup` per scenario holding that scenario's `ScenarioBinding`/`BoundItem` instances. On the instance each `BoundItem` uses **`BindsToNode`** to point at the concrete signal node (the type-level `BrowsePath` and the instance `BindsToNode` are the two locators defined by the base specification).
 
 > **Theoretical instance model.** A compact instance of TopologyElementType exposing the inherited LockingServices Methods. The binding's bound items are Methods (BoundMethodType), each with an OwningObjectPath to the Lock object it is called on - contrast the data/event DI examples (nameplate FleetAndCompliance, device-health Observability), whose bound items are Variables or event fields.
@@ -69,8 +69,8 @@ graph TD
 
 | File | Content |
 |---|---|
-| [`DI.Operations.ScenarioBinding.json`](../../../extras/scenario-binding/examples/di/DI.Operations.ScenarioBinding.json) | Machine-readable ScenarioBindingConfiguration descriptor (single source). |
+| [`DI.Operations.ScenarioBinding.json`](../../extras/scenario-binding/examples/di/DI.Operations.ScenarioBinding.json) | Machine-readable ScenarioBindingConfiguration descriptor (single source). |
 | [`Opc.Ua.DIOperations.ScenarioBinding.NodeSet2.xml`](Opc.Ua.DIOperations.ScenarioBinding.NodeSet2.xml) | The binding instances on the theoretical `ExampleTopologyElement` instance. |
 
-Regenerate from `extras/scenario-binding/examples/` with `python tools/build_bindings.py di/DI.Operations.ScenarioBinding.json`.
+Regenerate from [`core-specs/extras/scenario-binding/examples/`](../../extras/scenario-binding/examples/) with `python tools/build_bindings.py di/DI.Operations.ScenarioBinding.json`.
 

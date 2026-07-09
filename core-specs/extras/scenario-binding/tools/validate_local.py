@@ -4,8 +4,8 @@ import os, sys, csv, re
 import xml.etree.ElementTree as ET
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-# The generated NodeSet/CSV live in core-specs; this validator lives in extras.
-GEN = os.path.abspath(os.path.join(HERE, "..", "..", "..", "core-specs", "scenario-binding"))
+# The generated NodeSet/CSV live in core-specs/scenario-binding; this validator lives under core-specs/extras.
+GEN = os.path.abspath(os.path.join(HERE, "..", "..", "..", "scenario-binding"))
 REF = os.path.join(HERE, "ref")
 NS = "{http://opcfoundation.org/UA/2011/03/UANodeSet.xsd}"
 XML = os.path.join(GEN, "Opc.Ua.ScenarioBinding.NodeSet2.xml")

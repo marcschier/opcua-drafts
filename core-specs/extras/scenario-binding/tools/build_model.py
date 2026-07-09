@@ -942,7 +942,8 @@ def emit_md():
 
     md = ['<a id="annex-a"></a>', "## Annex A \u2014 Information model\n",
           "This annex is the normative node reference. It is generated from "
-          "`extras/scenario-binding/tools/build_model.py` and always matches `Opc.Ua.ScenarioBinding.NodeSet2.xml`. "
+          "[`core-specs/extras/scenario-binding/tools/build_model.py`]"
+          "(../extras/scenario-binding/tools/build_model.py) and always matches `Opc.Ua.ScenarioBinding.NodeSet2.xml`. "
           "All nodes are proposed additions to the base OPC UA namespace "
           "`http://opcfoundation.org/UA/`; the NodeIds shown are **provisional** (final "
           "IDs are assigned by the OPC Foundation). The **Declared in** column marks "
@@ -1056,9 +1057,9 @@ def emit_md():
 
 if __name__ == "__main__":
     here = os.path.dirname(os.path.abspath(__file__))
-    # The standardized NodeSet/CSV live in core-specs; this generator lives in extras.
-    outdir = os.path.abspath(os.path.join(here, "..", "..", "..",
-                                          "core-specs", "scenario-binding"))
+    # The standardized NodeSet/CSV live in core-specs/scenario-binding; this generator lives
+    # alongside the other specs' secondary tooling under core-specs/extras/scenario-binding.
+    outdir = os.path.abspath(os.path.join(here, "..", "..", "..", "scenario-binding"))
     with open(os.path.join(outdir, "Opc.Ua.ScenarioBinding.NodeSet2.xml"), "w",
               encoding="utf-8") as f:
         f.write(emit())
