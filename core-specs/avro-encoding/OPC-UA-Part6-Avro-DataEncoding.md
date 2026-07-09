@@ -114,11 +114,11 @@ An OPC UA Union DataType shall be encoded canonically as an Avro record with `sw
 
 ### 5.8 Variant
 
-Variant shall be a record carrying `builtInType`, nullable `dimensions`, and `body`. A null Variant has `builtInType = 0`, `dimensions = null`, and `body = null`. A scalar body uses one record-wrapped Avro union branch for the selected built-in body type. A one-dimensional array body uses the corresponding `Array` wrapper. A matrix body uses the corresponding Matrix wrapper and sets `dimensions`. The `body` union excludes nested Variant, DataValue and DiagnosticInfo. Its member set is the set of body types the Variant may carry: a self-describing encoding may include the full set of built-in body types (including ExtensionObject), whereas a schema-governed encoding may narrow the union to the aggregated set for the field and grow it across MinorVersions under the append-only rule of the Schema Registry (see *OPC UA — Schema Registry* §5.6), so an existing branch keeps its Avro union branch index in every later minor of the same major. The branch wrappers and the `builtInType` field are both present so decoders can disambiguate Avro unions and recover the exact OPC UA type.
+Variant shall be a record carrying `builtInType`, nullable `dimensions`, and `body`. A null Variant has `builtInType = 0`, `dimensions = null`, and `body = null`. A scalar body uses one record-wrapped Avro union branch for the selected built-in body type. A one-dimensional array body uses the corresponding `Array` wrapper. A matrix body uses the corresponding Matrix wrapper and sets `dimensions`. The `body` union excludes nested Variant, DataValue and DiagnosticInfo. Its member set is the set of body types the Variant may carry: a self-describing encoding may include the full set of built-in body types (including ExtensionObject), whereas a schema-governed encoding may narrow the union to the aggregated set for the field and grow it across MinorVersions under the append-only rule of the Schema Registry (see *OPC UA — Schema Registry* §5.6), so an existing branch keeps its Avro union branch index in every later minor of the same major. The branch wrappers and the `builtInType` field are both present so decoders can disambiguate Avro unions and recover the exact OPC UA type. By default the Variant record is specialized per field, so each Variant field's `body` union grows independently; a single shared Variant record is an option (§6.6).
 
 ### 5.9 ExtensionObject and abstract or subtyped fields
 
-ExtensionObject shall be a record `{ "typeId": NodeId, "body": ["null", <known-struct-records...>, <opaque fallback branches...>] }`, where the opaque fallback branches are `"bytes"` for a Binary body and `"string"` for an XML or textual body. The `typeId` shall identify the concrete DataType or DataTypeEncoding NodeId. If the concrete structured DataType is known to the decoder, the body shall use that record branch. If the type is unknown but the sender has an opaque encoded representation, the body may use the `bytes` branch (a Binary body) or the `string` branch (an XML or textual body), and the receiver shall preserve the opaque value with the TypeId. Fields declared as abstract structures or fields that allow subtypes shall use the same representation so the concrete runtime type is carried inline. The `known-struct` branches are the aggregated concrete-type set for the field per the Schema Registry (see *OPC UA — Schema Registry* §5.6): generated from the subtype hierarchy where bounded, or grown append-only across MinorVersions as new concrete types are encoded, with an existing branch keeping its Avro union branch index. The opaque fallback branches are appended append-only alongside the known-struct branches when a value first requires them, so a fallback may occupy any branch index and its index is fixed once appended; a fallback carries any body not represented by a known-struct branch.
+ExtensionObject shall be a record `{ "typeId": NodeId, "body": ["null", <known-struct-records...>, <opaque fallback branches...>] }`, where the opaque fallback branches are `"bytes"` for a Binary body and `"string"` for an XML or textual body. The `typeId` shall identify the concrete DataType or DataTypeEncoding NodeId. If the concrete structured DataType is known to the decoder, the body shall use that record branch. If the type is unknown but the sender has an opaque encoded representation, the body may use the `bytes` branch (a Binary body) or the `string` branch (an XML or textual body), and the receiver shall preserve the opaque value with the TypeId. Fields declared as abstract structures or fields that allow subtypes shall use the same representation so the concrete runtime type is carried inline. The `known-struct` branches are the aggregated concrete-type set for the field per the Schema Registry (see *OPC UA — Schema Registry* §5.6): generated from the subtype hierarchy where bounded, or grown append-only across MinorVersions as new concrete types are encoded, with an existing branch keeping its Avro union branch index. The opaque fallback branches are appended append-only alongside the known-struct branches when a value first requires them, so a fallback may occupy any branch index and its index is fixed once appended; a fallback carries any body not represented by a known-struct branch. By default the ExtensionObject record is specialized per field, so each field's known-struct union grows independently; a single shared ExtensionObject record is an option (§6.6).
 
 ### 5.10 DataValue
 
@@ -139,7 +139,7 @@ An encoder shall derive the Avro schema from the OPC UA DataTypeDefinition of th
 The schema generator shall apply the following deterministic algorithm.
 
 1. Resolve the DataTypeDefinition and all recursively referenced DataTypes. Built-in DataTypes use the mappings in §5.2. Enumerations and OptionSets use the numeric representation in §5.3.
-2. Assign Avro names by converting OPC UA DataType and field names to legal Avro names: replace each character outside `[A-Za-z0-9_]` with `_`; if the first character is not `[A-Za-z_]`, prefix `T_`. Names in the base namespace use Avro namespace `org.opcfoundation.ua.avro`.
+2. Assign Avro names by converting OPC UA DataType and field names to legal Avro names: replace each character outside `[A-Za-z0-9_]` with `_`; if the first character is not `[A-Za-z_]`, prefix `T_`. Names in the base namespace use Avro namespace `org.opcfoundation.ua.avro`. Growing Variant/ExtensionObject records and the containers that hold them are named per field by default (§6.6).
 3. Emit record fields in exactly the DataTypeDefinition field order. The generator shall not sort fields, omit disabled optional fields from the schema, or reorder union branches for local convenience.
 4. For nullable values, emit an Avro union ordered as `["null", T]` and set the default to `null` where Avro requires a default. Mandatory nullable fields remain mandatory record fields whose value type is nullable.
 5. For StructureWithOptionalFields, emit one nullable wrapper record per optional field, named `<Structure>_<Field>_Optional`, with a single `value` field. The wrapper null means absent; a non-null wrapper whose value is null means present-null.
@@ -158,7 +158,7 @@ A producer shall recompute the SchemaId from the self-contained canonical schema
 
 The Variant body-type union (§5.8) and the ExtensionObject known-struct union (§5.9) are the only two Avro unions that may grow after a schema is first announced; every other union is closed. An implementer that governs an evolving schema shall grow these two unions **append-only**, as defined by *OPC UA — Schema Registry* §5.6, using the following procedure.
 
-1. **Narrow the initial union.** Generate the initial (`MAJOR.0`) union from the schema-driven bound: for a Variant field whose declared DataType constrains the allowed body types, include exactly those `Variant<Type>Scalar`, `Variant<Type>Array` and `Variant<Type>MatrixBody` branches; for an ExtensionObject or abstract/subtyped field, include the record branch of every concrete subtype known from the AddressSpace or schema registry. For an unbounded field — a `BaseDataType` Variant, or a body whose concrete type is not known in advance — start minimal (`["null"]`, plus an opaque fallback such as `"bytes"` for an ExtensionObject body once an opaque value is observed) and grow it as values are observed.
+1. **Narrow the initial union.** Prefer to build the initial (`MAJOR.0`) union **data-driven**, from the concrete type of the first value the field actually encodes: a Variant carrying an `Int32` scalar starts `["null", "VariantInt32Scalar"]`; an ExtensionObject whose first body is a `Point` starts `["null", "Point"]`; an opaque first body starts `["null", "bytes"]`. The concrete body type stands in place of the abstract Variant/ExtensionObject, unioned with `null`, and the union is grown at that position (steps 2–3) as later values carry types not yet present. The encoder MAY instead seed the union **schema-driven** from the declared bound — for a Variant field whose declared DataType constrains the allowed body types, exactly those `Variant<Type>Scalar`, `Variant<Type>Array` and `Variant<Type>MatrixBody` branches; for an ExtensionObject or abstract/subtyped field, the record branch of every concrete subtype known from the AddressSpace or schema registry, in canonical order — where a schema is needed before the first message or where cross-publisher determinism is required (see *OPC UA — Schema Registry* §5.6).
 
 2. **Grow append-only.** When a value selects a body type or concrete struct type not yet present, **append** the corresponding branch record to the end of the Avro union array and leave every existing branch at its current position. Because an Avro binary union is encoded as the zig-zag branch index followed by the branch value, appending never changes an existing branch index, so a message written under an earlier schema still selects the same branch under the grown schema. Do not reorder, remove or retype an existing branch; any such change is a MajorVersion reset, not an aggregation.
 
@@ -168,7 +168,7 @@ The Variant body-type union (§5.8) and the ExtensionObject known-struct union (
 
 5. **Decode with the latest minor.** A decoder that holds the latest minor of a lineage decodes every earlier-minor message of that lineage directly, because reading the branch index resolves to the same branch. A decoder that lacks the exact writer SchemaId may decode with a later minor of the same lineage after confirming, from the registry or announced lineage, that the on-wire SchemaId is an earlier minor of it (Schema Registry §5.6, §8); it shall not compare the on-wire fingerprint against the later schema's canonical form.
 
-An executable reference of this procedure — narrow schema, append-only growth (including opaque fallbacks appended at any position), latest-minor-decodes-older and distinct per-minor SchemaIds — is `../extras/avro-encoding/tools/evolution_demo.py`. See *OPC UA — Schema Registry* §5.6 for the full model, including the schema-driven-versus-data-driven basis and the lineage/SchemaId relationship.
+An executable reference of this procedure — narrow schema, append-only growth (including opaque fallbacks appended at any position), latest-minor-decodes-older and distinct per-minor SchemaIds — is `../extras/avro-encoding/tools/evolution_demo.py`, and a fully worked lineage with concrete schemas, per-minor SchemaIds and a backward-compatible decode is in Annex C. See *OPC UA — Schema Registry* §5.6 for the full model, including the data-driven-first (or schema-driven) initial basis and the lineage/SchemaId relationship.
 
 ### 6.5 NamespaceUri to Avro namespace mapping
 
@@ -185,6 +185,18 @@ Given a NamespaceUri:
 **Conflicts.** All Avro namespaces generated in one schema-generation scope shall be distinct. Map every NamespaceUri by steps 1–5; the resulting natural namespaces are reserved. If two or more distinct NamespaceUris map to the same natural namespace, order them by ordinal Unicode code-point order of the original URI string and leave the first with the natural namespace; for each subsequent colliding URI append an incrementing ordinal `_2`, `_3`, … to the last name part (the part before the reserved `avro`) and, if that candidate is already reserved by any other mapping in the scope, keep advancing the ordinal until it is free — for example `org.example.ua.line3.avro` and `org.example.ua.line3_2.avro`. Because every natural namespace is reserved up front, a suffixed name can never coincide with another URI's natural namespace, so a producer and consumer that share the same set of NamespaceUris derive the same distinct namespaces. A deployment may instead supply an explicit configured NamespaceUri→Avro-namespace mapping that overrides this function for the mapped URIs; the configured targets shall still be distinct and end in `.avro`.
 
 The generated Avro namespace is part of the fully-qualified type name and therefore of the Parsing Canonical Form, so it participates in the SchemaId (§6.3).
+
+### 6.6 Per-field specialization of Variant and ExtensionObject
+
+The `body` union of a Variant (§5.8) and the known-struct union of an ExtensionObject (§5.9) are the only Avro constructs that grow (§6.4). A schema generator shall choose, once per schema and as part of the SchemaId, between two ways of naming these growing records.
+
+**Per-field (preferred).** Each Variant occurrence, each ExtensionObject occurrence, and each container record that transitively contains one — a Structure with such a field, or a DataValue (whose `value` is a Variant) — is a **distinct** Avro record named by its **field path** from the DataSet field root, for example `Variant<Path>`, `ExtensionObject<Path>` and `<Structure><Path>`. The path is formed from the DataSet field browse name followed, on each descent, by the struct field name, the concrete body Structure name for an ExtensionObject body branch, or `Item` for an array or matrix element; each component is converted to a legal Avro name part (§6.2 step 2) and the parts are joined with `_`. Every record fullname in a self-contained schema shall be unique: a generated name that would collide with any other name in that schema — another field path, a wrapper record, or an OPC UA type mapped per §6.2 — is disambiguated with a deterministic ordinal suffix (`_2`, `_3`, …) assigned in field order over the complete set of names in the schema-generation scope. Because each occurrence is a separate record with its own union, the fields **evolve independently**: appending a body type or concrete struct type to one field's union never changes any other field's schema. A record with no Variant/ExtensionObject descendant — for example a Structure of only fixed built-in fields — is **not** specialized and keeps its shared §6.2 name, so specialization is limited to the records that actually grow.
+
+Because a Variant body may itself be an ExtensionObject whose Structure contains a Variant, a **bounded** (schema-driven, all-admissible-types) union can recurse without end. Cycle-tying applies only where continued expansion would revisit the **same** recursive DataType occurrence already open on the ancestor path — a Variant or ExtensionObject whose admissible type set would reproduce that of an ancestor, or a self-recursive type such as DiagnosticInfo: the recursive occurrence shall then **reference the nearest such ancestor's record by name** rather than expand further, which keeps the schema finite. An ordinary nested Variant or ExtensionObject whose admissible set differs from every ancestor is **not** tied and remains separately specialized. A data-driven schema (§6.4) includes only observed types and therefore terminates naturally at the nesting depth observed; cycle-tying thus affects only bounded schema-driven unions.
+
+**Shared (option).** A generator MAY instead emit a single shared `Variant` and a single shared `ExtensionObject` record (and shared container records) named per §6.2, referenced by every occurrence. This is more compact and lets two publishers that bound a field the same way produce the same SchemaId, at the cost of coupling: appending a body type for any occurrence widens the one shared union for every occurrence. The shared form is the form used by the published reference schemas and Annex A; the per-field form is shown in Annex C.
+
+An encoder and decoder shall use the same choice; because it is fixed in the schema it participates in the SchemaId (§6.3). Both forms are reversible and both grow append-only (§6.4); they differ only in whether growth is per-field or shared. This mirrors the Arrow mapping, whose inline structural dense unions are per-field by construction. An executable per-field reference is `../extras/avro-encoding/tools/per_field_demo.py`.
 
 ## 7 Decoder schema resolution
 
@@ -2094,3 +2106,183 @@ The published DataSetWriter configuration announcement schema is `../extras/avro
   "type": "record"
 }
 ```
+
+## Annex C Worked schema-evolution example (incremental growth)
+
+<!-- BEGIN GENERATED: evolution-annex -->
+This annex is generated from real Avro schemas by `../extras/avro-encoding/tools/gen_evolution_annex.py`; do not edit it by hand.
+
+It shows one lineage of self-contained schemas built and adapted incrementally as values are observed, per the per-field growing-union model of §6.4 and *OPC UA — Schema Registry* §5.6. All record names below are in the `org.opcfoundation.ua.avro` namespace.
+
+**Scenario.** A DataSet sample has two fields: `signal`, a Variant, and `event`, an ExtensionObject whose concrete struct `SensorEvent` itself contains a Variant field `detail` (a struct with a variant). Under the per-field model each Variant field has its **own** record named by field path — `VariantSignal` and `VariantEventDetail` — each with its own body union, so `signal` and the nested `detail` grow independently. The `event` ExtensionObject likewise has its own struct-type union. The initial schema is built data-driven from the first values, then grown append-only at whichever field changes.
+
+### MinorVersion 1.0
+
+First message: `signal` = Int32(42), `event` = SensorEvent{ detail = Boolean(true) }. The initial (`MAJOR.0`) schema is narrowed data-driven to exactly the concrete types each field first carries, and each Variant field has its own record (`VariantSignal`, `VariantEventDetail`).
+
+- `VariantSignal` body union: `["null", "VariantSignal_Int32Scalar"]`
+- `VariantEventDetail` body union: `["null", "VariantEventDetail_BooleanScalar"]`
+- `ExtensionObjectEvent` body union: `["null", "SensorEvent"]`
+- **SchemaId** `08f4e71eb59f973a`
+
+Self-contained `MAJOR.0` schema:
+
+```json
+{
+  "fields": [
+    {
+      "name": "signal",
+      "type": {
+        "fields": [
+          {
+            "name": "builtInType",
+            "type": "int"
+          },
+          {
+            "default": null,
+            "name": "dimensions",
+            "type": [
+              "null",
+              {
+                "items": "int",
+                "type": "array"
+              }
+            ]
+          },
+          {
+            "default": null,
+            "name": "body",
+            "type": [
+              "null",
+              {
+                "fields": [
+                  {
+                    "name": "value",
+                    "type": "int"
+                  }
+                ],
+                "name": "VariantSignal_Int32Scalar",
+                "namespace": "org.opcfoundation.ua.avro",
+                "type": "record"
+              }
+            ]
+          }
+        ],
+        "name": "VariantSignal",
+        "namespace": "org.opcfoundation.ua.avro",
+        "type": "record"
+      }
+    },
+    {
+      "name": "event",
+      "type": {
+        "fields": [
+          {
+            "name": "typeId",
+            "type": "string"
+          },
+          {
+            "default": null,
+            "name": "body",
+            "type": [
+              "null",
+              {
+                "fields": [
+                  {
+                    "name": "deviceId",
+                    "type": "string"
+                  },
+                  {
+                    "name": "detail",
+                    "type": {
+                      "fields": [
+                        {
+                          "name": "builtInType",
+                          "type": "int"
+                        },
+                        {
+                          "default": null,
+                          "name": "dimensions",
+                          "type": [
+                            "null",
+                            {
+                              "items": "int",
+                              "type": "array"
+                            }
+                          ]
+                        },
+                        {
+                          "default": null,
+                          "name": "body",
+                          "type": [
+                            "null",
+                            {
+                              "fields": [
+                                {
+                                  "name": "value",
+                                  "type": "boolean"
+                                }
+                              ],
+                              "name": "VariantEventDetail_BooleanScalar",
+                              "namespace": "org.opcfoundation.ua.avro",
+                              "type": "record"
+                            }
+                          ]
+                        }
+                      ],
+                      "name": "VariantEventDetail",
+                      "namespace": "org.opcfoundation.ua.avro",
+                      "type": "record"
+                    }
+                  }
+                ],
+                "name": "SensorEvent",
+                "namespace": "org.opcfoundation.ua.avro",
+                "type": "record"
+              }
+            ]
+          }
+        ],
+        "name": "ExtensionObjectEvent",
+        "namespace": "org.opcfoundation.ua.avro",
+        "type": "record"
+      }
+    }
+  ],
+  "name": "Sample",
+  "namespace": "org.opcfoundation.ua.avro",
+  "type": "record"
+}
+```
+
+### MinorVersion 1.1
+
+`signal` now carries a Double, so `VariantSignal_DoubleScalar` is appended to **`VariantSignal`** only. `VariantEventDetail` and the ExtensionObject union are untouched.
+
+- `VariantSignal` body union: `["null", "VariantSignal_Int32Scalar", "VariantSignal_DoubleScalar"]`
+- `VariantEventDetail` body union: `["null", "VariantEventDetail_BooleanScalar"]`
+- `ExtensionObjectEvent` body union: `["null", "SensorEvent"]`
+- **SchemaId** `2bdb850ff832697c`
+
+### MinorVersion 1.2
+
+The nested `event.detail` Variant now carries a Float, so `VariantEventDetail_FloatScalar` is appended to **`VariantEventDetail`** only — because it has its own record, `VariantSignal` is unchanged (independent evolution). This is the key difference from a single shared `Variant` record.
+
+- `VariantSignal` body union: `["null", "VariantSignal_Int32Scalar", "VariantSignal_DoubleScalar"]`
+- `VariantEventDetail` body union: `["null", "VariantEventDetail_BooleanScalar", "VariantEventDetail_FloatScalar"]`
+- `ExtensionObjectEvent` body union: `["null", "SensorEvent"]`
+- **SchemaId** `c48908757c5263b6`
+
+### MinorVersion 1.3
+
+`event` now carries a second concrete struct, `AlarmEvent`, appended to the `ExtensionObjectEvent` body union. Both Variant records are unchanged.
+
+- `VariantSignal` body union: `["null", "VariantSignal_Int32Scalar", "VariantSignal_DoubleScalar"]`
+- `VariantEventDetail` body union: `["null", "VariantEventDetail_BooleanScalar", "VariantEventDetail_FloatScalar"]`
+- `ExtensionObjectEvent` body union: `["null", "SensorEvent", "AlarmEvent"]`
+- **SchemaId** `18864ae3ca92df54`
+
+### Backward compatibility
+
+A `Sample` written under 1.0 — `signal` = Int32(42), `event` = SensorEvent{ detail = Boolean(true) } — encodes to `0c0002540c693d31303031020a6465762d3102000201` and decodes unchanged under the 1.3 schema. Each per-field record keeps its members' branch indices under growth (`VariantSignal_Int32Scalar`, `VariantEventDetail_BooleanScalar` and `SensorEvent` all stay at branch 1), because members are only ever appended, never reordered. Each minor is a distinct SchemaId in one lineage; a decoder holding the 1.3 schema decodes every earlier minor of that lineage, while the appended members stay unused for older values (§6.4). Note that between 1.1 and 1.2 the `VariantSignal` schema is byte-identical: growing `detail` cannot affect `signal` because they are separate records.
+<!-- END GENERATED: evolution-annex -->

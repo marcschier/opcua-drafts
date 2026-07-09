@@ -16,6 +16,7 @@ import arrow_codec
 import adbc_access_demo
 import build_schemas
 import gen_type_reference
+import per_field_arrow_demo
 import roundtrip
 import schema_handshake_demo
 import wire_annotate
@@ -69,8 +70,9 @@ def main() -> int:
     failures += annotation_gate()
     failures += schema_handshake_demo.main()
     failures += adbc_access_demo.main()
+    failures += per_field_arrow_demo.main()
 
-    print(f"validate_local: schemas ok, schemaids ok, examples ok, type-reference ok, byte-annotations ok, handshake ok, adbc-access ok, conformance gate {len(CORPUS) - conformance_failures}/{len(CORPUS)} corpus passed, {len(CORPUS) - rt_failures}/{len(CORPUS)} corpus passed, {failures} failures")
+    print(f"validate_local: schemas ok, schemaids ok, examples ok, type-reference ok, byte-annotations ok, handshake ok, adbc-access ok, per-field ok, conformance gate {len(CORPUS) - conformance_failures}/{len(CORPUS)} corpus passed, {len(CORPUS) - rt_failures}/{len(CORPUS)} corpus passed, {failures} failures")
     return 1 if failures else 0
 
 
