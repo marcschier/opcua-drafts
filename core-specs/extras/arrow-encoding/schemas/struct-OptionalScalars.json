@@ -1,0 +1,123 @@
+{
+  "arrow": {
+    "arrow": "struct<Id: int32 not null, Flag: struct<present: bool not null, value: bool> not null, Count: struct<present: bool not null, value: int32> not null, Ratio: struct<present: bool not null, value: double> not null>",
+    "detail": {
+      "fields": [
+        {
+          "name": "Id",
+          "nullable": false,
+          "type": "int32"
+        },
+        {
+          "name": "Flag",
+          "nullable": false,
+          "type": {
+            "fields": [
+              {
+                "name": "present",
+                "nullable": false,
+                "type": "bool"
+              },
+              {
+                "name": "value",
+                "nullable": true,
+                "type": "bool"
+              }
+            ],
+            "type": "struct"
+          }
+        },
+        {
+          "name": "Count",
+          "nullable": false,
+          "type": {
+            "fields": [
+              {
+                "name": "present",
+                "nullable": false,
+                "type": "bool"
+              },
+              {
+                "name": "value",
+                "nullable": true,
+                "type": "int32"
+              }
+            ],
+            "type": "struct"
+          }
+        },
+        {
+          "name": "Ratio",
+          "nullable": false,
+          "type": {
+            "fields": [
+              {
+                "name": "present",
+                "nullable": false,
+                "type": "bool"
+              },
+              {
+                "name": "value",
+                "nullable": true,
+                "type": "double"
+              }
+            ],
+            "type": "struct"
+          }
+        }
+      ],
+      "type": "struct"
+    },
+    "opcua": "OptionalScalars"
+  },
+  "encodingId": "i=3041",
+  "fields": [
+    {
+      "allowSubtypes": false,
+      "arrow": {
+        "arrow": "int32",
+        "detail": "int32",
+        "opcua": "Int32"
+      },
+      "name": "Id",
+      "optional": false,
+      "type": "Int32"
+    },
+    {
+      "allowSubtypes": false,
+      "arrow": {
+        "arrow": "bool",
+        "detail": "bool",
+        "opcua": "Boolean"
+      },
+      "name": "Flag",
+      "optional": true,
+      "type": "Boolean"
+    },
+    {
+      "allowSubtypes": false,
+      "arrow": {
+        "arrow": "int32",
+        "detail": "int32",
+        "opcua": "Int32"
+      },
+      "name": "Count",
+      "optional": true,
+      "type": "Int32"
+    },
+    {
+      "allowSubtypes": false,
+      "arrow": {
+        "arrow": "double",
+        "detail": "double",
+        "opcua": "Double"
+      },
+      "name": "Ratio",
+      "optional": true,
+      "type": "Double"
+    }
+  ],
+  "kind": "STRUCTURE_WITH_OPTIONAL_FIELDS",
+  "name": "OptionalScalars",
+  "typeId": "i=3040"
+}

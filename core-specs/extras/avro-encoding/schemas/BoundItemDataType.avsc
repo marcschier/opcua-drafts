@@ -1,0 +1,93 @@
+{
+  "fields": [
+    {
+      "name": "FieldName",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "name": "Kind",
+      "type": "int"
+    },
+    {
+      "name": "AttributeId",
+      "type": "int"
+    },
+    {
+      "name": "SamplingIntervalHint",
+      "type": "double"
+    },
+    {
+      "name": "IndexRange",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "name": "StartingNode",
+      "type": [
+        "null",
+        "org.opcfoundation.ua.avro.NodeId"
+      ]
+    },
+    {
+      "name": "BrowsePath",
+      "type": [
+        "null",
+        "org.opcfoundation.ua.avro.ExtensionObject"
+      ]
+    },
+    {
+      "name": "SourceNodeId",
+      "type": [
+        "null",
+        "org.opcfoundation.ua.avro.NodeId"
+      ]
+    },
+    {
+      "name": "OwningObjectPath",
+      "type": [
+        "null",
+        "org.opcfoundation.ua.avro.ExtensionObject"
+      ]
+    },
+    {
+      "name": "SourceTypeDefinition",
+      "type": [
+        "null",
+        "org.opcfoundation.ua.avro.NodeId"
+      ]
+    },
+    {
+      "name": "SourceBrowseName",
+      "type": [
+        "null",
+        "org.opcfoundation.ua.avro.QualifiedName"
+      ]
+    },
+    {
+      "name": "ModelNamespaceUri",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "name": "DataSetFieldId",
+      "type": "org.opcfoundation.ua.avro.Guid"
+    },
+    {
+      "name": "SemanticReferenceUri",
+      "type": [
+        "null",
+        "string"
+      ]
+    }
+  ],
+  "name": "BoundItemDataType",
+  "namespace": "org.opcfoundation.ua.avro",
+  "type": "record"
+}

@@ -1,0 +1,127 @@
+{
+  "arrow": {
+    "arrow": "dense_union<null: null=0, AsInt: struct<value: int32>=1, AsText: struct<value: string>=2, AsPoint: struct<value: struct<X: double not null, Y: double not null>>=3>",
+    "detail": {
+      "fields": [
+        {
+          "name": "null",
+          "type": "null"
+        },
+        {
+          "name": "AsInt",
+          "type": {
+            "fields": [
+              {
+                "name": "value",
+                "nullable": true,
+                "type": "int32"
+              }
+            ],
+            "type": "struct"
+          }
+        },
+        {
+          "name": "AsText",
+          "type": {
+            "fields": [
+              {
+                "name": "value",
+                "nullable": true,
+                "type": "string"
+              }
+            ],
+            "type": "struct"
+          }
+        },
+        {
+          "name": "AsPoint",
+          "type": {
+            "fields": [
+              {
+                "name": "value",
+                "nullable": true,
+                "type": {
+                  "fields": [
+                    {
+                      "name": "X",
+                      "nullable": false,
+                      "type": "double"
+                    },
+                    {
+                      "name": "Y",
+                      "nullable": false,
+                      "type": "double"
+                    }
+                  ],
+                  "type": "struct"
+                }
+              }
+            ],
+            "type": "struct"
+          }
+        }
+      ],
+      "type": "dense_union",
+      "typeCodes": [
+        0,
+        1,
+        2,
+        3
+      ]
+    },
+    "opcua": "Measurement"
+  },
+  "encodingId": "i=3021",
+  "fields": [
+    {
+      "allowSubtypes": false,
+      "arrow": {
+        "arrow": "int32",
+        "detail": "int32",
+        "opcua": "Int32"
+      },
+      "name": "AsInt",
+      "optional": false,
+      "type": "Int32"
+    },
+    {
+      "allowSubtypes": false,
+      "arrow": {
+        "arrow": "string",
+        "detail": "string",
+        "opcua": "String"
+      },
+      "name": "AsText",
+      "optional": false,
+      "type": "String"
+    },
+    {
+      "allowSubtypes": false,
+      "arrow": {
+        "arrow": "struct<X: double not null, Y: double not null>",
+        "detail": {
+          "fields": [
+            {
+              "name": "X",
+              "nullable": false,
+              "type": "double"
+            },
+            {
+              "name": "Y",
+              "nullable": false,
+              "type": "double"
+            }
+          ],
+          "type": "struct"
+        },
+        "opcua": "Point"
+      },
+      "name": "AsPoint",
+      "optional": false,
+      "type": "Point"
+    }
+  ],
+  "kind": "UNION",
+  "name": "Measurement",
+  "typeId": "i=3020"
+}

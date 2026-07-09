@@ -1,0 +1,15 @@
+{
+  "fields": [
+    {
+      "name": "X",
+      "type": "double"
+    },
+    {
+      "name": "Y",
+      "type": "double"
+    }
+  ],
+  "name": "Point",
+  "namespace": "org.opcfoundation.ua.avro",
+  "type": "record"
+}

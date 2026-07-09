@@ -1,0 +1,43 @@
+{
+  "fields": [
+    {
+      "name": "Name",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "name": "Description",
+      "type": [
+        "null",
+        "org.opcfoundation.ua.avro.LocalizedText"
+      ]
+    },
+    {
+      "name": "DataType",
+      "type": [
+        "null",
+        "org.opcfoundation.ua.avro.NodeId"
+      ]
+    },
+    {
+      "name": "BuiltInType",
+      "type": "int"
+    },
+    {
+      "name": "ValueRank",
+      "type": "int"
+    },
+    {
+      "name": "ArrayDimensions",
+      "type": {
+        "items": "int",
+        "type": "array"
+      }
+    }
+  ],
+  "name": "AvroFieldMetaData",
+  "namespace": "org.opcfoundation.ua.avro",
+  "type": "record"
+}

@@ -1,0 +1,50 @@
+{
+  "arrowSchema": {
+    "arrow": "SchemaId: fixed_size_binary[8] not null\nSchema: binary not null\nSchemaEpoch: int64\n-- schema metadata --\nopcua.mapping: 'arrow-schema-announcement'",
+    "fields": [
+      {
+        "name": "SchemaId",
+        "nullable": false,
+        "type": "fixed_size_binary[8]"
+      },
+      {
+        "name": "Schema",
+        "nullable": false,
+        "type": "binary"
+      },
+      {
+        "name": "SchemaEpoch",
+        "nullable": true,
+        "type": "int64"
+      }
+    ],
+    "metadata": {
+      "opcua.mapping": "arrow-schema-announcement"
+    }
+  },
+  "fields": [
+    {
+      "arrow": "fixed_size_binary(8)",
+      "description": "Raw 8-byte SchemaId: the first 8 bytes of SHA-256 over the serialized Arrow Schema.",
+      "name": "SchemaId",
+      "optional": false,
+      "type": "ByteString[8]"
+    },
+    {
+      "arrow": "binary",
+      "description": "Serialized Arrow Schema IPC message bytes.",
+      "name": "Schema",
+      "optional": false,
+      "type": "ByteString"
+    },
+    {
+      "arrow": "int64",
+      "description": "Optional operational epoch; not part of SchemaId calculation.",
+      "name": "SchemaEpoch",
+      "optional": true,
+      "type": "Int64"
+    }
+  ],
+  "kind": "STRUCTURE",
+  "name": "ArrowSchemaAnnouncement"
+}

@@ -1,0 +1,63 @@
+{
+  "arrow": {
+    "arrow": "struct<A: float not null, B: struct<present: bool not null, value: float> not null>",
+    "detail": {
+      "fields": [
+        {
+          "name": "A",
+          "nullable": false,
+          "type": "float"
+        },
+        {
+          "name": "B",
+          "nullable": false,
+          "type": {
+            "fields": [
+              {
+                "name": "present",
+                "nullable": false,
+                "type": "bool"
+              },
+              {
+                "name": "value",
+                "nullable": true,
+                "type": "float"
+              }
+            ],
+            "type": "struct"
+          }
+        }
+      ],
+      "type": "struct"
+    },
+    "opcua": "FloatHolder"
+  },
+  "encodingId": "i=3051",
+  "fields": [
+    {
+      "allowSubtypes": false,
+      "arrow": {
+        "arrow": "float",
+        "detail": "float",
+        "opcua": "Float"
+      },
+      "name": "A",
+      "optional": false,
+      "type": "Float"
+    },
+    {
+      "allowSubtypes": false,
+      "arrow": {
+        "arrow": "float",
+        "detail": "float",
+        "opcua": "Float"
+      },
+      "name": "B",
+      "optional": true,
+      "type": "Float"
+    }
+  ],
+  "kind": "STRUCTURE_WITH_OPTIONAL_FIELDS",
+  "name": "FloatHolder",
+  "typeId": "i=3050"
+}

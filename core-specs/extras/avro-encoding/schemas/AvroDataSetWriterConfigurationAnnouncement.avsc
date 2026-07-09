@@ -1,0 +1,44 @@
+{
+  "fields": [
+    {
+      "name": "PublisherId",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "name": "WriterGroupId",
+      "type": "int"
+    },
+    {
+      "name": "DataSetWriterId",
+      "type": "int"
+    },
+    {
+      "name": "ConfigurationVersion",
+      "type": "org.opcfoundation.ua.avro.AvroConfigurationVersionDataType"
+    },
+    {
+      "name": "DataSetMetaData",
+      "type": "org.opcfoundation.ua.avro.AvroDataSetMetaData"
+    },
+    {
+      "name": "SchemaId",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "name": "SchemaJson",
+      "type": [
+        "null",
+        "string"
+      ]
+    }
+  ],
+  "name": "AvroDataSetWriterConfigurationAnnouncement",
+  "namespace": "org.opcfoundation.ua.avro",
+  "type": "record"
+}

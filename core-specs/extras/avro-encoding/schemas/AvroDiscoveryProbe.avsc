@@ -1,0 +1,38 @@
+{
+  "fields": [
+    {
+      "name": "PublisherId",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "name": "WriterGroupIds",
+      "type": {
+        "items": "int",
+        "type": "array"
+      }
+    },
+    {
+      "name": "DataSetWriterIds",
+      "type": {
+        "items": "int",
+        "type": "array"
+      }
+    },
+    {
+      "name": "ActionTargetIds",
+      "type": {
+        "items": [
+          "null",
+          "org.opcfoundation.ua.avro.NodeId"
+        ],
+        "type": "array"
+      }
+    }
+  ],
+  "name": "AvroDiscoveryProbe",
+  "namespace": "org.opcfoundation.ua.avro",
+  "type": "record"
+}

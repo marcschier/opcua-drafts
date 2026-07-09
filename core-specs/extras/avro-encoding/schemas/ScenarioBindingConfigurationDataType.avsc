@@ -1,0 +1,38 @@
+{
+  "fields": [
+    {
+      "name": "ModelNamespaceUri",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "name": "AppliesToType",
+      "type": [
+        "null",
+        "org.opcfoundation.ua.avro.QualifiedName"
+      ]
+    },
+    {
+      "name": "ConfigurationVersion",
+      "type": [
+        "null",
+        "org.opcfoundation.ua.avro.ExtensionObject"
+      ]
+    },
+    {
+      "name": "ScenarioBindings",
+      "type": {
+        "items": [
+          "null",
+          "org.opcfoundation.ua.avro.ScenarioBindingDataType"
+        ],
+        "type": "array"
+      }
+    }
+  ],
+  "name": "ScenarioBindingConfigurationDataType",
+  "namespace": "org.opcfoundation.ua.avro",
+  "type": "record"
+}

@@ -1,0 +1,52 @@
+{
+  "fields": [
+    {
+      "name": "ActionTargetId",
+      "type": [
+        "null",
+        "org.opcfoundation.ua.avro.NodeId"
+      ]
+    },
+    {
+      "name": "RequestId",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "name": "CorrelationData",
+      "type": [
+        "null",
+        "bytes"
+      ]
+    },
+    {
+      "name": "Status",
+      "type": "int"
+    },
+    {
+      "name": "OutputArguments",
+      "type": {
+        "items": [
+          "null",
+          "org.opcfoundation.ua.avro.Variant"
+        ],
+        "type": "array"
+      }
+    },
+    {
+      "name": "DiagnosticInfos",
+      "type": {
+        "items": [
+          "null",
+          "org.opcfoundation.ua.avro.DiagnosticInfo"
+        ],
+        "type": "array"
+      }
+    }
+  ],
+  "name": "AvroActionResponseDataSetMessage",
+  "namespace": "org.opcfoundation.ua.avro",
+  "type": "record"
+}
