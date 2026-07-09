@@ -1,0 +1,30 @@
+{
+  "domain": "DI",
+  "appliesToType": "IVendorNameplateType",
+  "baseModelNamespaceUri": "http://opcfoundation.org/UA/DI/",
+  "exampleNamespaceUri": "http://opcfoundation.org/UA/PubSub/Examples/DI/",
+  "instanceName": "ExampleDeviceNameplate",
+  "summary": "The DI IVendorNameplateType facet exposes vendor nameplate identity (Manufacturer, Model, SerialNumber, ProductInstanceUri, DeviceRevision, ...). Any DI device, machine or component that composes this facet - including a pump's Identification object - inherits a fleet/compliance identity scenario authored here.",
+  "companionSpec": { "name": "OPC UA Devices (DI, OPC 10000-100)", "ref": "https://reference.opcfoundation.org/DI/v104/docs/" },
+  "instanceModel": {
+    "note": "A compact instance implementing IVendorNameplateType. A pump's Identification (MachineIdentificationType) composes the same DI facet, so the Pumps FleetAndCompliance binding extends this one (see OPC-UA-DI-Pumps-Inheritance.md)."
+  },
+  "configurationVersion": { "majorVersion": 1, "minorVersion": 0 },
+  "companionSpecificationUri": "http://opcfoundation.org/UA/DI/",
+  "modelNamespaceUris": ["http://opcfoundation.org/UA/DI/"],
+  "baseNodeSets": ["Opc.Ua.Di.NodeSet2.xml"],
+  "requiredModels": [{ "uri": "http://opcfoundation.org/UA/DI/" }],
+  "scenarioBindings": [
+    {
+      "name": "FleetAndCompliance",
+      "scenarioUri": "http://opcfoundation.org/UA/PubSub/Scenarios/FleetAndCompliance",
+      "direction": "Publisher",
+      "boundItems": [
+        { "kind": "Identification", "browsePath": "/Manufacturer" },
+        { "kind": "Identification", "browsePath": "/Model" },
+        { "kind": "Identification", "browsePath": "/SerialNumber" },
+        { "kind": "Identification", "browsePath": "/ProductInstanceUri" }
+      ]
+    }
+  ]
+}

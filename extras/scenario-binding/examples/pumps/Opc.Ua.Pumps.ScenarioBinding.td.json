@@ -1,0 +1,930 @@
+{
+  "@context": [
+    "https://www.w3.org/2019/wot/td/v1",
+    {
+      "uav": "http://opcfoundation.org/UA/WoT-Binding/",
+      "sb": "http://opcfoundation.org/UA/ScenarioBinding/WoT/"
+    }
+  ],
+  "@type": "uav:object",
+  "id": "urn:uuid:c709a09c-2a77-5862-b8e7-1c6a0521e9d8",
+  "title": "ExamplePump",
+  "description": "WoT Thing view of the PumpType instance ExamplePump, exposing its Scenario-bound datapoints per OPC 10101. Illustrative.",
+  "sb:namespaces": [
+    "http://opcfoundation.org/UA/",
+    "http://opcfoundation.org/UA/Pumps/",
+    "http://opcfoundation.org/UA/DI/",
+    "http://opcfoundation.org/UA/Machinery/"
+  ],
+  "securityDefinitions": {
+    "auto_sc": {
+      "scheme": "auto"
+    }
+  },
+  "security": [
+    "auto_sc"
+  ],
+  "base": "opc.tcp://opcua.example.com:4840",
+  "sb:dimensions": [
+    {
+      "name": "service.name",
+      "value": "pump-observability",
+      "sb:scenario": "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
+    }
+  ],
+  "properties": {
+    "Speed": {
+      "title": "Speed",
+      "@type": "uav:variable",
+      "type": "number",
+      "unit": "1/min",
+      "observable": true,
+      "readOnly": true,
+      "uav:browseName": "1:Speed",
+      "sb:scenario": [
+        "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
+      ],
+      "sb:dataSetClassId": [
+        "urn:uuid:794b8a9a-676a-5e30-b18e-2e3f49354d64"
+      ],
+      "sb:metricInstrumentType": "Gauge",
+      "forms": [
+        {
+          "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Pumps/;s=ExamplePump/Operational/Measurements/Speed",
+          "contentType": "application/json",
+          "op": [
+            "readproperty",
+            "observeproperty"
+          ],
+          "uav:browsePath": "/Operational/Measurements/Speed",
+          "uav:browseName": "1:Speed"
+        },
+        {
+          "href": "mqtt://broker.example.com:1883/pumps/observability",
+          "contentType": "application/json",
+          "op": "observeproperty",
+          "sb:pubSub": true
+        }
+      ]
+    },
+    "Throughput": {
+      "title": "Throughput",
+      "@type": "uav:variable",
+      "type": "number",
+      "unit": "m3/s",
+      "observable": true,
+      "readOnly": true,
+      "uav:browseName": "1:Throughput",
+      "sb:scenario": [
+        "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
+      ],
+      "sb:dataSetClassId": [
+        "urn:uuid:794b8a9a-676a-5e30-b18e-2e3f49354d64"
+      ],
+      "sb:metricInstrumentType": "Gauge",
+      "forms": [
+        {
+          "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Pumps/;s=ExamplePump/Operational/Measurements/Throughput",
+          "contentType": "application/json",
+          "op": [
+            "readproperty",
+            "observeproperty"
+          ],
+          "uav:browsePath": "/Operational/Measurements/Throughput",
+          "uav:browseName": "1:Throughput"
+        },
+        {
+          "href": "mqtt://broker.example.com:1883/pumps/observability",
+          "contentType": "application/json",
+          "op": "observeproperty",
+          "sb:pubSub": true
+        }
+      ]
+    },
+    "MassFlow": {
+      "title": "MassFlow",
+      "@type": "uav:variable",
+      "type": "number",
+      "unit": "kg/s",
+      "observable": true,
+      "readOnly": true,
+      "uav:browseName": "1:MassFlow",
+      "sb:scenario": [
+        "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
+      ],
+      "sb:dataSetClassId": [
+        "urn:uuid:794b8a9a-676a-5e30-b18e-2e3f49354d64"
+      ],
+      "sb:metricInstrumentType": "Gauge",
+      "forms": [
+        {
+          "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Pumps/;s=ExamplePump/Operational/Measurements/MassFlow",
+          "contentType": "application/json",
+          "op": [
+            "readproperty",
+            "observeproperty"
+          ],
+          "uav:browsePath": "/Operational/Measurements/MassFlow",
+          "uav:browseName": "1:MassFlow"
+        },
+        {
+          "href": "mqtt://broker.example.com:1883/pumps/observability",
+          "contentType": "application/json",
+          "op": "observeproperty",
+          "sb:pubSub": true
+        }
+      ]
+    },
+    "ProcessPressure": {
+      "title": "ProcessPressure",
+      "@type": "uav:variable",
+      "type": "number",
+      "unit": "Pa",
+      "observable": true,
+      "readOnly": true,
+      "uav:browseName": "1:ProcessPressure",
+      "sb:scenario": [
+        "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
+      ],
+      "sb:dataSetClassId": [
+        "urn:uuid:794b8a9a-676a-5e30-b18e-2e3f49354d64"
+      ],
+      "sb:metricInstrumentType": "Gauge",
+      "forms": [
+        {
+          "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Pumps/;s=ExamplePump/Operational/Measurements/ProcessPressure",
+          "contentType": "application/json",
+          "op": [
+            "readproperty",
+            "observeproperty"
+          ],
+          "uav:browsePath": "/Operational/Measurements/ProcessPressure",
+          "uav:browseName": "1:ProcessPressure"
+        },
+        {
+          "href": "mqtt://broker.example.com:1883/pumps/observability",
+          "contentType": "application/json",
+          "op": "observeproperty",
+          "sb:pubSub": true
+        }
+      ]
+    },
+    "DifferentialPressure": {
+      "title": "DifferentialPressure",
+      "@type": "uav:variable",
+      "type": "number",
+      "unit": "Pa",
+      "observable": true,
+      "readOnly": true,
+      "uav:browseName": "1:DifferentialPressure",
+      "sb:scenario": [
+        "http://opcfoundation.org/UA/PubSub/Scenarios/Observability",
+        "http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection"
+      ],
+      "sb:dataSetClassId": [
+        "urn:uuid:794b8a9a-676a-5e30-b18e-2e3f49354d64",
+        "urn:uuid:1a2fd8ca-dc68-5659-ad43-8452ba8f2a5a"
+      ],
+      "sb:metricInstrumentType": "Gauge",
+      "forms": [
+        {
+          "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Pumps/;s=ExamplePump/Operational/Measurements/DifferentialPressure",
+          "contentType": "application/json",
+          "op": [
+            "readproperty",
+            "observeproperty"
+          ],
+          "uav:browsePath": "/Operational/Measurements/DifferentialPressure",
+          "uav:browseName": "1:DifferentialPressure"
+        },
+        {
+          "href": "mqtt://broker.example.com:1883/pumps/observability",
+          "contentType": "application/json",
+          "op": "observeproperty",
+          "sb:pubSub": true
+        }
+      ]
+    },
+    "PumpTotalHead": {
+      "title": "PumpTotalHead",
+      "@type": "uav:variable",
+      "type": "number",
+      "unit": "m",
+      "observable": true,
+      "readOnly": true,
+      "uav:browseName": "1:PumpTotalHead",
+      "sb:scenario": [
+        "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
+      ],
+      "sb:dataSetClassId": [
+        "urn:uuid:794b8a9a-676a-5e30-b18e-2e3f49354d64"
+      ],
+      "sb:metricInstrumentType": "Gauge",
+      "forms": [
+        {
+          "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Pumps/;s=ExamplePump/Operational/Measurements/PumpTotalHead",
+          "contentType": "application/json",
+          "op": [
+            "readproperty",
+            "observeproperty"
+          ],
+          "uav:browsePath": "/Operational/Measurements/PumpTotalHead",
+          "uav:browseName": "1:PumpTotalHead"
+        },
+        {
+          "href": "mqtt://broker.example.com:1883/pumps/observability",
+          "contentType": "application/json",
+          "op": "observeproperty",
+          "sb:pubSub": true
+        }
+      ]
+    },
+    "PumpPowerInput": {
+      "title": "PumpPowerInput",
+      "@type": "uav:variable",
+      "type": "number",
+      "unit": "W",
+      "observable": true,
+      "readOnly": true,
+      "uav:browseName": "1:PumpPowerInput",
+      "sb:scenario": [
+        "http://opcfoundation.org/UA/PubSub/Scenarios/Observability",
+        "http://opcfoundation.org/UA/PubSub/Scenarios/EnergyAndLoadManagement"
+      ],
+      "sb:dataSetClassId": [
+        "urn:uuid:794b8a9a-676a-5e30-b18e-2e3f49354d64",
+        "urn:uuid:4f30fed4-ab2a-5a65-9cdc-0b7d79d88aa9"
+      ],
+      "sb:metricInstrumentType": "Gauge",
+      "forms": [
+        {
+          "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Pumps/;s=ExamplePump/Operational/Measurements/PumpPowerInput",
+          "contentType": "application/json",
+          "op": [
+            "readproperty",
+            "observeproperty"
+          ],
+          "uav:browsePath": "/Operational/Measurements/PumpPowerInput",
+          "uav:browseName": "1:PumpPowerInput"
+        },
+        {
+          "href": "mqtt://broker.example.com:1883/pumps/observability",
+          "contentType": "application/json",
+          "op": "observeproperty",
+          "sb:pubSub": true
+        }
+      ]
+    },
+    "FluidTemperature": {
+      "title": "FluidTemperature",
+      "@type": "uav:variable",
+      "type": "number",
+      "unit": "Cel",
+      "observable": true,
+      "readOnly": true,
+      "uav:browseName": "1:FluidTemperature",
+      "sb:scenario": [
+        "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
+      ],
+      "sb:dataSetClassId": [
+        "urn:uuid:794b8a9a-676a-5e30-b18e-2e3f49354d64"
+      ],
+      "sb:metricInstrumentType": "Gauge",
+      "forms": [
+        {
+          "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Pumps/;s=ExamplePump/Operational/Measurements/FluidTemperature",
+          "contentType": "application/json",
+          "op": [
+            "readproperty",
+            "observeproperty"
+          ],
+          "uav:browsePath": "/Operational/Measurements/FluidTemperature",
+          "uav:browseName": "1:FluidTemperature"
+        },
+        {
+          "href": "mqtt://broker.example.com:1883/pumps/observability",
+          "contentType": "application/json",
+          "op": "observeproperty",
+          "sb:pubSub": true
+        }
+      ]
+    },
+    "BearingTemperature": {
+      "title": "BearingTemperature",
+      "@type": "uav:variable",
+      "type": "number",
+      "unit": "Cel",
+      "observable": true,
+      "readOnly": true,
+      "uav:browseName": "1:BearingTemperature",
+      "sb:scenario": [
+        "http://opcfoundation.org/UA/PubSub/Scenarios/Observability",
+        "http://opcfoundation.org/UA/PubSub/Scenarios/PredictiveMaintenance",
+        "http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection"
+      ],
+      "sb:dataSetClassId": [
+        "urn:uuid:794b8a9a-676a-5e30-b18e-2e3f49354d64",
+        "urn:uuid:bc161840-91a3-5cc5-98a9-862cb53a590a",
+        "urn:uuid:1a2fd8ca-dc68-5659-ad43-8452ba8f2a5a"
+      ],
+      "sb:metricInstrumentType": "Histogram",
+      "sb:explicitBucketBoundaries": [
+        40,
+        60,
+        80,
+        100,
+        120
+      ],
+      "forms": [
+        {
+          "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Pumps/;s=ExamplePump/Operational/Measurements/BearingTemperature",
+          "contentType": "application/json",
+          "op": [
+            "readproperty",
+            "observeproperty"
+          ],
+          "uav:browsePath": "/Operational/Measurements/BearingTemperature",
+          "uav:browseName": "1:BearingTemperature"
+        },
+        {
+          "href": "mqtt://broker.example.com:1883/pumps/observability",
+          "contentType": "application/json",
+          "op": "observeproperty",
+          "sb:pubSub": true
+        }
+      ]
+    },
+    "PumpTemperature": {
+      "title": "PumpTemperature",
+      "@type": "uav:variable",
+      "type": "number",
+      "unit": "Cel",
+      "observable": true,
+      "readOnly": true,
+      "uav:browseName": "1:PumpTemperature",
+      "sb:scenario": [
+        "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
+      ],
+      "sb:dataSetClassId": [
+        "urn:uuid:794b8a9a-676a-5e30-b18e-2e3f49354d64"
+      ],
+      "sb:metricInstrumentType": "Gauge",
+      "forms": [
+        {
+          "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Pumps/;s=ExamplePump/Operational/Measurements/PumpTemperature",
+          "contentType": "application/json",
+          "op": [
+            "readproperty",
+            "observeproperty"
+          ],
+          "uav:browsePath": "/Operational/Measurements/PumpTemperature",
+          "uav:browseName": "1:PumpTemperature"
+        },
+        {
+          "href": "mqtt://broker.example.com:1883/pumps/observability",
+          "contentType": "application/json",
+          "op": "observeproperty",
+          "sb:pubSub": true
+        }
+      ]
+    },
+    "NumberOfStarts": {
+      "title": "NumberOfStarts",
+      "@type": "uav:variable",
+      "type": "integer",
+      "observable": true,
+      "readOnly": true,
+      "uav:browseName": "1:NumberOfStarts",
+      "sb:scenario": [
+        "http://opcfoundation.org/UA/PubSub/Scenarios/Observability",
+        "http://opcfoundation.org/UA/PubSub/Scenarios/PredictiveMaintenance"
+      ],
+      "sb:dataSetClassId": [
+        "urn:uuid:794b8a9a-676a-5e30-b18e-2e3f49354d64",
+        "urn:uuid:bc161840-91a3-5cc5-98a9-862cb53a590a"
+      ],
+      "sb:metricInstrumentType": "Counter",
+      "forms": [
+        {
+          "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Pumps/;s=ExamplePump/Operational/Measurements/NumberOfStarts",
+          "contentType": "application/json",
+          "op": [
+            "readproperty",
+            "observeproperty"
+          ],
+          "uav:browsePath": "/Operational/Measurements/NumberOfStarts",
+          "uav:browseName": "1:NumberOfStarts"
+        },
+        {
+          "href": "mqtt://broker.example.com:1883/pumps/observability",
+          "contentType": "application/json",
+          "op": "observeproperty",
+          "sb:pubSub": true
+        }
+      ]
+    },
+    "Manufacturer": {
+      "title": "Manufacturer",
+      "@type": "uav:variable",
+      "type": "string",
+      "observable": true,
+      "readOnly": true,
+      "uav:browseName": "2:Manufacturer",
+      "sb:scenario": [
+        "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
+      ],
+      "sb:dataSetClassId": [
+        "urn:uuid:794b8a9a-676a-5e30-b18e-2e3f49354d64"
+      ],
+      "sb:dimension": true,
+      "forms": [
+        {
+          "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Pumps/;s=ExamplePump/Identification/Manufacturer",
+          "contentType": "application/json",
+          "op": [
+            "readproperty",
+            "observeproperty"
+          ],
+          "uav:browsePath": "/Identification/Manufacturer",
+          "uav:browseName": "2:Manufacturer"
+        },
+        {
+          "href": "mqtt://broker.example.com:1883/pumps/observability",
+          "contentType": "application/json",
+          "op": "observeproperty",
+          "sb:pubSub": true
+        }
+      ]
+    },
+    "SerialNumber": {
+      "title": "SerialNumber",
+      "@type": "uav:variable",
+      "type": "string",
+      "observable": true,
+      "readOnly": true,
+      "uav:browseName": "2:SerialNumber",
+      "sb:scenario": [
+        "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
+      ],
+      "sb:dataSetClassId": [
+        "urn:uuid:794b8a9a-676a-5e30-b18e-2e3f49354d64"
+      ],
+      "sb:dimension": true,
+      "forms": [
+        {
+          "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Pumps/;s=ExamplePump/Identification/SerialNumber",
+          "contentType": "application/json",
+          "op": [
+            "readproperty",
+            "observeproperty"
+          ],
+          "uav:browsePath": "/Identification/SerialNumber",
+          "uav:browseName": "2:SerialNumber"
+        },
+        {
+          "href": "mqtt://broker.example.com:1883/pumps/observability",
+          "contentType": "application/json",
+          "op": "observeproperty",
+          "sb:pubSub": true
+        }
+      ]
+    },
+    "PumpPowerOutput": {
+      "title": "PumpPowerOutput",
+      "@type": "uav:variable",
+      "type": "number",
+      "observable": true,
+      "readOnly": true,
+      "uav:browseName": "1:PumpPowerOutput",
+      "sb:scenario": [
+        "http://opcfoundation.org/UA/PubSub/Scenarios/EnergyAndLoadManagement"
+      ],
+      "sb:dataSetClassId": [
+        "urn:uuid:4f30fed4-ab2a-5a65-9cdc-0b7d79d88aa9"
+      ],
+      "forms": [
+        {
+          "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Pumps/;s=ExamplePump/Operational/Measurements/PumpPowerOutput",
+          "contentType": "application/json",
+          "op": [
+            "readproperty",
+            "observeproperty"
+          ],
+          "uav:browsePath": "/Operational/Measurements/PumpPowerOutput",
+          "uav:browseName": "1:PumpPowerOutput"
+        },
+        {
+          "href": "mqtt://broker.example.com:1883/pumps/energyandloadmanagement",
+          "contentType": "application/json",
+          "op": "observeproperty",
+          "sb:pubSub": true
+        }
+      ]
+    },
+    "OverallEfficiency": {
+      "title": "OverallEfficiency",
+      "@type": "uav:variable",
+      "type": "number",
+      "observable": true,
+      "readOnly": true,
+      "uav:browseName": "1:OverallEfficiency",
+      "sb:scenario": [
+        "http://opcfoundation.org/UA/PubSub/Scenarios/EnergyAndLoadManagement"
+      ],
+      "sb:dataSetClassId": [
+        "urn:uuid:4f30fed4-ab2a-5a65-9cdc-0b7d79d88aa9"
+      ],
+      "forms": [
+        {
+          "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Pumps/;s=ExamplePump/Operational/Measurements/OverallEfficiency",
+          "contentType": "application/json",
+          "op": [
+            "readproperty",
+            "observeproperty"
+          ],
+          "uav:browsePath": "/Operational/Measurements/OverallEfficiency",
+          "uav:browseName": "1:OverallEfficiency"
+        },
+        {
+          "href": "mqtt://broker.example.com:1883/pumps/energyandloadmanagement",
+          "contentType": "application/json",
+          "op": "observeproperty",
+          "sb:pubSub": true
+        }
+      ]
+    },
+    "PumpEfficiency": {
+      "title": "PumpEfficiency",
+      "@type": "uav:variable",
+      "type": "number",
+      "observable": true,
+      "readOnly": true,
+      "uav:browseName": "1:PumpEfficiency",
+      "sb:scenario": [
+        "http://opcfoundation.org/UA/PubSub/Scenarios/EnergyAndLoadManagement"
+      ],
+      "sb:dataSetClassId": [
+        "urn:uuid:4f30fed4-ab2a-5a65-9cdc-0b7d79d88aa9"
+      ],
+      "forms": [
+        {
+          "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Pumps/;s=ExamplePump/Operational/Measurements/PumpEfficiency",
+          "contentType": "application/json",
+          "op": [
+            "readproperty",
+            "observeproperty"
+          ],
+          "uav:browsePath": "/Operational/Measurements/PumpEfficiency",
+          "uav:browseName": "1:PumpEfficiency"
+        },
+        {
+          "href": "mqtt://broker.example.com:1883/pumps/energyandloadmanagement",
+          "contentType": "application/json",
+          "op": "observeproperty",
+          "sb:pubSub": true
+        }
+      ]
+    },
+    "HydraulicEfficiency": {
+      "title": "HydraulicEfficiency",
+      "@type": "uav:variable",
+      "type": "number",
+      "observable": true,
+      "readOnly": true,
+      "uav:browseName": "1:HydraulicEfficiency",
+      "sb:scenario": [
+        "http://opcfoundation.org/UA/PubSub/Scenarios/EnergyAndLoadManagement"
+      ],
+      "sb:dataSetClassId": [
+        "urn:uuid:4f30fed4-ab2a-5a65-9cdc-0b7d79d88aa9"
+      ],
+      "forms": [
+        {
+          "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Pumps/;s=ExamplePump/Operational/Measurements/HydraulicEfficiency",
+          "contentType": "application/json",
+          "op": [
+            "readproperty",
+            "observeproperty"
+          ],
+          "uav:browsePath": "/Operational/Measurements/HydraulicEfficiency",
+          "uav:browseName": "1:HydraulicEfficiency"
+        },
+        {
+          "href": "mqtt://broker.example.com:1883/pumps/energyandloadmanagement",
+          "contentType": "application/json",
+          "op": "observeproperty",
+          "sb:pubSub": true
+        }
+      ]
+    },
+    "AxialLoadOfPumpRotor": {
+      "title": "AxialLoadOfPumpRotor",
+      "@type": "uav:variable",
+      "type": "number",
+      "observable": true,
+      "readOnly": true,
+      "uav:browseName": "1:AxialLoadOfPumpRotor",
+      "sb:scenario": [
+        "http://opcfoundation.org/UA/PubSub/Scenarios/PredictiveMaintenance"
+      ],
+      "sb:dataSetClassId": [
+        "urn:uuid:bc161840-91a3-5cc5-98a9-862cb53a590a"
+      ],
+      "forms": [
+        {
+          "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Pumps/;s=ExamplePump/Operational/Measurements/AxialLoadOfPumpRotor",
+          "contentType": "application/json",
+          "op": [
+            "readproperty",
+            "observeproperty"
+          ],
+          "uav:browsePath": "/Operational/Measurements/AxialLoadOfPumpRotor",
+          "uav:browseName": "1:AxialLoadOfPumpRotor"
+        },
+        {
+          "href": "mqtt://broker.example.com:1883/pumps/predictivemaintenance",
+          "contentType": "application/json",
+          "op": "observeproperty",
+          "sb:pubSub": true
+        }
+      ]
+    },
+    "RadialLoadOfPumpRotor": {
+      "title": "RadialLoadOfPumpRotor",
+      "@type": "uav:variable",
+      "type": "number",
+      "observable": true,
+      "readOnly": true,
+      "uav:browseName": "1:RadialLoadOfPumpRotor",
+      "sb:scenario": [
+        "http://opcfoundation.org/UA/PubSub/Scenarios/PredictiveMaintenance"
+      ],
+      "sb:dataSetClassId": [
+        "urn:uuid:bc161840-91a3-5cc5-98a9-862cb53a590a"
+      ],
+      "forms": [
+        {
+          "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Pumps/;s=ExamplePump/Operational/Measurements/RadialLoadOfPumpRotor",
+          "contentType": "application/json",
+          "op": [
+            "readproperty",
+            "observeproperty"
+          ],
+          "uav:browsePath": "/Operational/Measurements/RadialLoadOfPumpRotor",
+          "uav:browseName": "1:RadialLoadOfPumpRotor"
+        },
+        {
+          "href": "mqtt://broker.example.com:1883/pumps/predictivemaintenance",
+          "contentType": "application/json",
+          "op": "observeproperty",
+          "sb:pubSub": true
+        }
+      ]
+    },
+    "LubricatingOilPressure": {
+      "title": "LubricatingOilPressure",
+      "@type": "uav:variable",
+      "type": "number",
+      "observable": true,
+      "readOnly": true,
+      "uav:browseName": "1:LubricatingOilPressure",
+      "sb:scenario": [
+        "http://opcfoundation.org/UA/PubSub/Scenarios/PredictiveMaintenance"
+      ],
+      "sb:dataSetClassId": [
+        "urn:uuid:bc161840-91a3-5cc5-98a9-862cb53a590a"
+      ],
+      "forms": [
+        {
+          "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Pumps/;s=ExamplePump/Operational/Measurements/LubricatingOilPressure",
+          "contentType": "application/json",
+          "op": [
+            "readproperty",
+            "observeproperty"
+          ],
+          "uav:browsePath": "/Operational/Measurements/LubricatingOilPressure",
+          "uav:browseName": "1:LubricatingOilPressure"
+        },
+        {
+          "href": "mqtt://broker.example.com:1883/pumps/predictivemaintenance",
+          "contentType": "application/json",
+          "op": "observeproperty",
+          "sb:pubSub": true
+        }
+      ]
+    },
+    "AxialRotorPosition": {
+      "title": "AxialRotorPosition",
+      "@type": "uav:variable",
+      "type": "number",
+      "observable": true,
+      "readOnly": true,
+      "uav:browseName": "1:AxialRotorPosition",
+      "sb:scenario": [
+        "http://opcfoundation.org/UA/PubSub/Scenarios/PredictiveMaintenance"
+      ],
+      "sb:dataSetClassId": [
+        "urn:uuid:bc161840-91a3-5cc5-98a9-862cb53a590a"
+      ],
+      "forms": [
+        {
+          "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Pumps/;s=ExamplePump/Operational/Measurements/AxialRotorPosition",
+          "contentType": "application/json",
+          "op": [
+            "readproperty",
+            "observeproperty"
+          ],
+          "uav:browsePath": "/Operational/Measurements/AxialRotorPosition",
+          "uav:browseName": "1:AxialRotorPosition"
+        },
+        {
+          "href": "mqtt://broker.example.com:1883/pumps/predictivemaintenance",
+          "contentType": "application/json",
+          "op": "observeproperty",
+          "sb:pubSub": true
+        }
+      ]
+    },
+    "SoundPower": {
+      "title": "SoundPower",
+      "@type": "uav:variable",
+      "type": "number",
+      "observable": true,
+      "readOnly": true,
+      "uav:browseName": "1:SoundPower",
+      "sb:scenario": [
+        "http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection"
+      ],
+      "sb:dataSetClassId": [
+        "urn:uuid:1a2fd8ca-dc68-5659-ad43-8452ba8f2a5a"
+      ],
+      "forms": [
+        {
+          "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Pumps/;s=ExamplePump/Operational/Measurements/SoundPower",
+          "contentType": "application/json",
+          "op": [
+            "readproperty",
+            "observeproperty"
+          ],
+          "uav:browsePath": "/Operational/Measurements/SoundPower",
+          "uav:browseName": "1:SoundPower"
+        },
+        {
+          "href": "mqtt://broker.example.com:1883/pumps/anomalydetection",
+          "contentType": "application/json",
+          "op": "observeproperty",
+          "sb:pubSub": true
+        }
+      ]
+    },
+    "SoundPressureLevel": {
+      "title": "SoundPressureLevel",
+      "@type": "uav:variable",
+      "type": "number",
+      "observable": true,
+      "readOnly": true,
+      "uav:browseName": "1:SoundPressureLevel",
+      "sb:scenario": [
+        "http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection"
+      ],
+      "sb:dataSetClassId": [
+        "urn:uuid:1a2fd8ca-dc68-5659-ad43-8452ba8f2a5a"
+      ],
+      "forms": [
+        {
+          "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Pumps/;s=ExamplePump/Operational/Measurements/SoundPressureLevel",
+          "contentType": "application/json",
+          "op": [
+            "readproperty",
+            "observeproperty"
+          ],
+          "uav:browsePath": "/Operational/Measurements/SoundPressureLevel",
+          "uav:browseName": "1:SoundPressureLevel"
+        },
+        {
+          "href": "mqtt://broker.example.com:1883/pumps/anomalydetection",
+          "contentType": "application/json",
+          "op": "observeproperty",
+          "sb:pubSub": true
+        }
+      ]
+    },
+    "AssetId": {
+      "title": "AssetId",
+      "@type": "uav:variable",
+      "type": "string",
+      "observable": true,
+      "readOnly": true,
+      "uav:browseName": "2:AssetId",
+      "sb:scenario": [
+        "http://opcfoundation.org/UA/PubSub/Scenarios/FleetAndCompliance"
+      ],
+      "sb:dataSetClassId": [
+        "urn:uuid:e50711a6-ebed-5e04-9672-2a7d506e1c32"
+      ],
+      "forms": [
+        {
+          "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Pumps/;s=ExamplePump/Identification/AssetId",
+          "contentType": "application/json",
+          "op": [
+            "readproperty",
+            "observeproperty"
+          ],
+          "uav:browsePath": "/Identification/AssetId",
+          "uav:browseName": "2:AssetId"
+        },
+        {
+          "href": "mqtt://broker.example.com:1883/pumps/fleetandcompliance",
+          "contentType": "application/json",
+          "op": "observeproperty",
+          "sb:pubSub": true
+        }
+      ]
+    },
+    "Location": {
+      "title": "Location",
+      "@type": "uav:variable",
+      "type": "string",
+      "observable": true,
+      "readOnly": true,
+      "uav:browseName": "3:Location",
+      "sb:scenario": [
+        "http://opcfoundation.org/UA/PubSub/Scenarios/FleetAndCompliance"
+      ],
+      "sb:dataSetClassId": [
+        "urn:uuid:e50711a6-ebed-5e04-9672-2a7d506e1c32"
+      ],
+      "forms": [
+        {
+          "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Pumps/;s=ExamplePump/Identification/Location",
+          "contentType": "application/json",
+          "op": [
+            "readproperty",
+            "observeproperty"
+          ],
+          "uav:browsePath": "/Identification/Location",
+          "uav:browseName": "3:Location"
+        },
+        {
+          "href": "mqtt://broker.example.com:1883/pumps/fleetandcompliance",
+          "contentType": "application/json",
+          "op": "observeproperty",
+          "sb:pubSub": true
+        }
+      ]
+    }
+  },
+  "events": {
+    "AlarmAndEventDistribution": {
+      "title": "AlarmAndEventDistribution",
+      "@type": "uav:object",
+      "sb:scenario": "http://opcfoundation.org/UA/PubSub/Scenarios/AlarmAndEventDistribution",
+      "sb:dataSetClassId": "urn:uuid:85c43bb8-1a03-5d12-bf95-b4277153baf8",
+      "sb:eventType": "BaseEventType",
+      "data": {
+        "type": "object",
+        "properties": {
+          "EventId": {
+            "type": "string",
+            "uav:browseName": "0:EventId"
+          },
+          "EventType": {
+            "type": "string",
+            "uav:browseName": "0:EventType"
+          },
+          "SourceName": {
+            "type": "string",
+            "uav:browseName": "0:SourceName"
+          },
+          "Time": {
+            "type": "string",
+            "uav:browseName": "0:Time"
+          },
+          "Severity": {
+            "type": "integer",
+            "uav:browseName": "0:Severity"
+          },
+          "Message": {
+            "type": "string",
+            "uav:browseName": "0:Message"
+          }
+        }
+      },
+      "forms": [
+        {
+          "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Pumps/;s=ExamplePump",
+          "contentType": "application/json",
+          "op": "subscribeevent",
+          "subprotocol": "opcua.subscribe",
+          "sb:eventSourcePath": "/"
+        },
+        {
+          "href": "mqtt://broker.example.com:1883/pumps/alarmandeventdistribution",
+          "contentType": "application/json",
+          "op": "subscribeevent",
+          "sb:pubSub": true
+        }
+      ]
+    }
+  }
+}

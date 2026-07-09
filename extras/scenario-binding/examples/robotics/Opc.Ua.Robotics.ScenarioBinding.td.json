@@ -1,0 +1,1912 @@
+[
+  {
+    "@context": [
+      "https://www.w3.org/2019/wot/td/v1",
+      {
+        "uav": "http://opcfoundation.org/UA/WoT-Binding/",
+        "sb": "http://opcfoundation.org/UA/ScenarioBinding/WoT/"
+      }
+    ],
+    "@type": "uav:object",
+    "id": "urn:uuid:c78a6ef0-0705-558b-a80e-473bb8076b38",
+    "title": "ExampleRobotSystem · Observability · Robot_1",
+    "description": "WoT Thing for one Observability DataSet (class urn:uuid:c59daa9d-857b-5016-9299-d85875e022dc) at cardinality anchor Robot_1 — topology \"Two-robot cell (6+4 axes)\". Illustrative.",
+    "sb:namespaces": [
+      "http://opcfoundation.org/UA/",
+      "http://opcfoundation.org/UA/Robotics/"
+    ],
+    "securityDefinitions": {
+      "auto_sc": {
+        "scheme": "auto"
+      }
+    },
+    "security": [
+      "auto_sc"
+    ],
+    "base": "opc.tcp://opcua.example.com:4840",
+    "sb:scenario": "http://opcfoundation.org/UA/PubSub/Scenarios/Observability",
+    "sb:dataSetClassId": "urn:uuid:c59daa9d-857b-5016-9299-d85875e022dc",
+    "sb:cardinalityPath": "/MotionDevices/<MotionDeviceIdentifier>",
+    "properties": {
+      "AxisActualPosition_Axis_1": {
+        "title": "AxisActualPosition_Axis_1",
+        "@type": "uav:variable",
+        "type": "number",
+        "unit": "deg",
+        "observable": true,
+        "readOnly": true,
+        "uav:browseName": "1:ActualPosition",
+        "sb:scenario": [
+          "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
+        ],
+        "sb:dataSetClassId": [
+          "urn:uuid:c59daa9d-857b-5016-9299-d85875e022dc"
+        ],
+        "sb:metricInstrumentType": "Gauge",
+        "forms": [
+          {
+            "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Robotics/;s=ExampleRobotSystem/MotionDevices/Robot_1/Axes/Axis_1/ParameterSet/ActualPosition",
+            "contentType": "application/json",
+            "op": [
+              "readproperty",
+              "observeproperty"
+            ],
+            "uav:browsePath": "/MotionDevices/<MotionDeviceIdentifier>/Axes/<AxisIdentifier>/ParameterSet/ActualPosition",
+            "uav:browseName": "1:ActualPosition"
+          },
+          {
+            "href": "mqtt://broker.example.com:1883/robotics/observability",
+            "contentType": "application/json",
+            "op": "observeproperty",
+            "sb:pubSub": true
+          }
+        ]
+      },
+      "AxisActualPosition_Axis_2": {
+        "title": "AxisActualPosition_Axis_2",
+        "@type": "uav:variable",
+        "type": "number",
+        "unit": "deg",
+        "observable": true,
+        "readOnly": true,
+        "uav:browseName": "1:ActualPosition",
+        "sb:scenario": [
+          "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
+        ],
+        "sb:dataSetClassId": [
+          "urn:uuid:c59daa9d-857b-5016-9299-d85875e022dc"
+        ],
+        "sb:metricInstrumentType": "Gauge",
+        "forms": [
+          {
+            "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Robotics/;s=ExampleRobotSystem/MotionDevices/Robot_1/Axes/Axis_2/ParameterSet/ActualPosition",
+            "contentType": "application/json",
+            "op": [
+              "readproperty",
+              "observeproperty"
+            ],
+            "uav:browsePath": "/MotionDevices/<MotionDeviceIdentifier>/Axes/<AxisIdentifier>/ParameterSet/ActualPosition",
+            "uav:browseName": "1:ActualPosition"
+          },
+          {
+            "href": "mqtt://broker.example.com:1883/robotics/observability",
+            "contentType": "application/json",
+            "op": "observeproperty",
+            "sb:pubSub": true
+          }
+        ]
+      },
+      "AxisActualPosition_Axis_3": {
+        "title": "AxisActualPosition_Axis_3",
+        "@type": "uav:variable",
+        "type": "number",
+        "unit": "deg",
+        "observable": true,
+        "readOnly": true,
+        "uav:browseName": "1:ActualPosition",
+        "sb:scenario": [
+          "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
+        ],
+        "sb:dataSetClassId": [
+          "urn:uuid:c59daa9d-857b-5016-9299-d85875e022dc"
+        ],
+        "sb:metricInstrumentType": "Gauge",
+        "forms": [
+          {
+            "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Robotics/;s=ExampleRobotSystem/MotionDevices/Robot_1/Axes/Axis_3/ParameterSet/ActualPosition",
+            "contentType": "application/json",
+            "op": [
+              "readproperty",
+              "observeproperty"
+            ],
+            "uav:browsePath": "/MotionDevices/<MotionDeviceIdentifier>/Axes/<AxisIdentifier>/ParameterSet/ActualPosition",
+            "uav:browseName": "1:ActualPosition"
+          },
+          {
+            "href": "mqtt://broker.example.com:1883/robotics/observability",
+            "contentType": "application/json",
+            "op": "observeproperty",
+            "sb:pubSub": true
+          }
+        ]
+      },
+      "AxisActualPosition_Axis_4": {
+        "title": "AxisActualPosition_Axis_4",
+        "@type": "uav:variable",
+        "type": "number",
+        "unit": "deg",
+        "observable": true,
+        "readOnly": true,
+        "uav:browseName": "1:ActualPosition",
+        "sb:scenario": [
+          "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
+        ],
+        "sb:dataSetClassId": [
+          "urn:uuid:c59daa9d-857b-5016-9299-d85875e022dc"
+        ],
+        "sb:metricInstrumentType": "Gauge",
+        "forms": [
+          {
+            "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Robotics/;s=ExampleRobotSystem/MotionDevices/Robot_1/Axes/Axis_4/ParameterSet/ActualPosition",
+            "contentType": "application/json",
+            "op": [
+              "readproperty",
+              "observeproperty"
+            ],
+            "uav:browsePath": "/MotionDevices/<MotionDeviceIdentifier>/Axes/<AxisIdentifier>/ParameterSet/ActualPosition",
+            "uav:browseName": "1:ActualPosition"
+          },
+          {
+            "href": "mqtt://broker.example.com:1883/robotics/observability",
+            "contentType": "application/json",
+            "op": "observeproperty",
+            "sb:pubSub": true
+          }
+        ]
+      },
+      "AxisActualPosition_Axis_5": {
+        "title": "AxisActualPosition_Axis_5",
+        "@type": "uav:variable",
+        "type": "number",
+        "unit": "deg",
+        "observable": true,
+        "readOnly": true,
+        "uav:browseName": "1:ActualPosition",
+        "sb:scenario": [
+          "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
+        ],
+        "sb:dataSetClassId": [
+          "urn:uuid:c59daa9d-857b-5016-9299-d85875e022dc"
+        ],
+        "sb:metricInstrumentType": "Gauge",
+        "forms": [
+          {
+            "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Robotics/;s=ExampleRobotSystem/MotionDevices/Robot_1/Axes/Axis_5/ParameterSet/ActualPosition",
+            "contentType": "application/json",
+            "op": [
+              "readproperty",
+              "observeproperty"
+            ],
+            "uav:browsePath": "/MotionDevices/<MotionDeviceIdentifier>/Axes/<AxisIdentifier>/ParameterSet/ActualPosition",
+            "uav:browseName": "1:ActualPosition"
+          },
+          {
+            "href": "mqtt://broker.example.com:1883/robotics/observability",
+            "contentType": "application/json",
+            "op": "observeproperty",
+            "sb:pubSub": true
+          }
+        ]
+      },
+      "AxisActualPosition_Axis_6": {
+        "title": "AxisActualPosition_Axis_6",
+        "@type": "uav:variable",
+        "type": "number",
+        "unit": "deg",
+        "observable": true,
+        "readOnly": true,
+        "uav:browseName": "1:ActualPosition",
+        "sb:scenario": [
+          "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
+        ],
+        "sb:dataSetClassId": [
+          "urn:uuid:c59daa9d-857b-5016-9299-d85875e022dc"
+        ],
+        "sb:metricInstrumentType": "Gauge",
+        "forms": [
+          {
+            "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Robotics/;s=ExampleRobotSystem/MotionDevices/Robot_1/Axes/Axis_6/ParameterSet/ActualPosition",
+            "contentType": "application/json",
+            "op": [
+              "readproperty",
+              "observeproperty"
+            ],
+            "uav:browsePath": "/MotionDevices/<MotionDeviceIdentifier>/Axes/<AxisIdentifier>/ParameterSet/ActualPosition",
+            "uav:browseName": "1:ActualPosition"
+          },
+          {
+            "href": "mqtt://broker.example.com:1883/robotics/observability",
+            "contentType": "application/json",
+            "op": "observeproperty",
+            "sb:pubSub": true
+          }
+        ]
+      },
+      "MotorTemperature_PowerTrain_1_Motor_1": {
+        "title": "MotorTemperature_PowerTrain_1_Motor_1",
+        "@type": "uav:variable",
+        "type": "number",
+        "unit": "Cel",
+        "observable": true,
+        "readOnly": true,
+        "uav:browseName": "1:MotorTemperature",
+        "sb:scenario": [
+          "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
+        ],
+        "sb:dataSetClassId": [
+          "urn:uuid:c59daa9d-857b-5016-9299-d85875e022dc"
+        ],
+        "sb:metricInstrumentType": "Gauge",
+        "forms": [
+          {
+            "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Robotics/;s=ExampleRobotSystem/MotionDevices/Robot_1/PowerTrains/PowerTrain_1/Motor_1/ParameterSet/MotorTemperature",
+            "contentType": "application/json",
+            "op": [
+              "readproperty",
+              "observeproperty"
+            ],
+            "uav:browsePath": "/MotionDevices/<MotionDeviceIdentifier>/PowerTrains/<PowerTrainIdentifier>/<MotorIdentifier>/ParameterSet/MotorTemperature",
+            "uav:browseName": "1:MotorTemperature"
+          },
+          {
+            "href": "mqtt://broker.example.com:1883/robotics/observability",
+            "contentType": "application/json",
+            "op": "observeproperty",
+            "sb:pubSub": true
+          }
+        ]
+      },
+      "MotorTemperature_PowerTrain_2_Motor_1": {
+        "title": "MotorTemperature_PowerTrain_2_Motor_1",
+        "@type": "uav:variable",
+        "type": "number",
+        "unit": "Cel",
+        "observable": true,
+        "readOnly": true,
+        "uav:browseName": "1:MotorTemperature",
+        "sb:scenario": [
+          "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
+        ],
+        "sb:dataSetClassId": [
+          "urn:uuid:c59daa9d-857b-5016-9299-d85875e022dc"
+        ],
+        "sb:metricInstrumentType": "Gauge",
+        "forms": [
+          {
+            "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Robotics/;s=ExampleRobotSystem/MotionDevices/Robot_1/PowerTrains/PowerTrain_2/Motor_1/ParameterSet/MotorTemperature",
+            "contentType": "application/json",
+            "op": [
+              "readproperty",
+              "observeproperty"
+            ],
+            "uav:browsePath": "/MotionDevices/<MotionDeviceIdentifier>/PowerTrains/<PowerTrainIdentifier>/<MotorIdentifier>/ParameterSet/MotorTemperature",
+            "uav:browseName": "1:MotorTemperature"
+          },
+          {
+            "href": "mqtt://broker.example.com:1883/robotics/observability",
+            "contentType": "application/json",
+            "op": "observeproperty",
+            "sb:pubSub": true
+          }
+        ]
+      },
+      "MotorTemperature_PowerTrain_3_Motor_1": {
+        "title": "MotorTemperature_PowerTrain_3_Motor_1",
+        "@type": "uav:variable",
+        "type": "number",
+        "unit": "Cel",
+        "observable": true,
+        "readOnly": true,
+        "uav:browseName": "1:MotorTemperature",
+        "sb:scenario": [
+          "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
+        ],
+        "sb:dataSetClassId": [
+          "urn:uuid:c59daa9d-857b-5016-9299-d85875e022dc"
+        ],
+        "sb:metricInstrumentType": "Gauge",
+        "forms": [
+          {
+            "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Robotics/;s=ExampleRobotSystem/MotionDevices/Robot_1/PowerTrains/PowerTrain_3/Motor_1/ParameterSet/MotorTemperature",
+            "contentType": "application/json",
+            "op": [
+              "readproperty",
+              "observeproperty"
+            ],
+            "uav:browsePath": "/MotionDevices/<MotionDeviceIdentifier>/PowerTrains/<PowerTrainIdentifier>/<MotorIdentifier>/ParameterSet/MotorTemperature",
+            "uav:browseName": "1:MotorTemperature"
+          },
+          {
+            "href": "mqtt://broker.example.com:1883/robotics/observability",
+            "contentType": "application/json",
+            "op": "observeproperty",
+            "sb:pubSub": true
+          }
+        ]
+      },
+      "MotorTemperature_PowerTrain_4_Motor_1": {
+        "title": "MotorTemperature_PowerTrain_4_Motor_1",
+        "@type": "uav:variable",
+        "type": "number",
+        "unit": "Cel",
+        "observable": true,
+        "readOnly": true,
+        "uav:browseName": "1:MotorTemperature",
+        "sb:scenario": [
+          "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
+        ],
+        "sb:dataSetClassId": [
+          "urn:uuid:c59daa9d-857b-5016-9299-d85875e022dc"
+        ],
+        "sb:metricInstrumentType": "Gauge",
+        "forms": [
+          {
+            "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Robotics/;s=ExampleRobotSystem/MotionDevices/Robot_1/PowerTrains/PowerTrain_4/Motor_1/ParameterSet/MotorTemperature",
+            "contentType": "application/json",
+            "op": [
+              "readproperty",
+              "observeproperty"
+            ],
+            "uav:browsePath": "/MotionDevices/<MotionDeviceIdentifier>/PowerTrains/<PowerTrainIdentifier>/<MotorIdentifier>/ParameterSet/MotorTemperature",
+            "uav:browseName": "1:MotorTemperature"
+          },
+          {
+            "href": "mqtt://broker.example.com:1883/robotics/observability",
+            "contentType": "application/json",
+            "op": "observeproperty",
+            "sb:pubSub": true
+          }
+        ]
+      },
+      "MotorTemperature_PowerTrain_5_Motor_1": {
+        "title": "MotorTemperature_PowerTrain_5_Motor_1",
+        "@type": "uav:variable",
+        "type": "number",
+        "unit": "Cel",
+        "observable": true,
+        "readOnly": true,
+        "uav:browseName": "1:MotorTemperature",
+        "sb:scenario": [
+          "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
+        ],
+        "sb:dataSetClassId": [
+          "urn:uuid:c59daa9d-857b-5016-9299-d85875e022dc"
+        ],
+        "sb:metricInstrumentType": "Gauge",
+        "forms": [
+          {
+            "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Robotics/;s=ExampleRobotSystem/MotionDevices/Robot_1/PowerTrains/PowerTrain_5/Motor_1/ParameterSet/MotorTemperature",
+            "contentType": "application/json",
+            "op": [
+              "readproperty",
+              "observeproperty"
+            ],
+            "uav:browsePath": "/MotionDevices/<MotionDeviceIdentifier>/PowerTrains/<PowerTrainIdentifier>/<MotorIdentifier>/ParameterSet/MotorTemperature",
+            "uav:browseName": "1:MotorTemperature"
+          },
+          {
+            "href": "mqtt://broker.example.com:1883/robotics/observability",
+            "contentType": "application/json",
+            "op": "observeproperty",
+            "sb:pubSub": true
+          }
+        ]
+      },
+      "MotorTemperature_PowerTrain_6_Motor_1": {
+        "title": "MotorTemperature_PowerTrain_6_Motor_1",
+        "@type": "uav:variable",
+        "type": "number",
+        "unit": "Cel",
+        "observable": true,
+        "readOnly": true,
+        "uav:browseName": "1:MotorTemperature",
+        "sb:scenario": [
+          "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
+        ],
+        "sb:dataSetClassId": [
+          "urn:uuid:c59daa9d-857b-5016-9299-d85875e022dc"
+        ],
+        "sb:metricInstrumentType": "Gauge",
+        "forms": [
+          {
+            "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Robotics/;s=ExampleRobotSystem/MotionDevices/Robot_1/PowerTrains/PowerTrain_6/Motor_1/ParameterSet/MotorTemperature",
+            "contentType": "application/json",
+            "op": [
+              "readproperty",
+              "observeproperty"
+            ],
+            "uav:browsePath": "/MotionDevices/<MotionDeviceIdentifier>/PowerTrains/<PowerTrainIdentifier>/<MotorIdentifier>/ParameterSet/MotorTemperature",
+            "uav:browseName": "1:MotorTemperature"
+          },
+          {
+            "href": "mqtt://broker.example.com:1883/robotics/observability",
+            "contentType": "application/json",
+            "op": "observeproperty",
+            "sb:pubSub": true
+          }
+        ]
+      },
+      "SpeedOverride": {
+        "title": "SpeedOverride",
+        "@type": "uav:variable",
+        "type": "number",
+        "unit": "%",
+        "observable": true,
+        "readOnly": true,
+        "uav:browseName": "1:SpeedOverride",
+        "sb:scenario": [
+          "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
+        ],
+        "sb:dataSetClassId": [
+          "urn:uuid:c59daa9d-857b-5016-9299-d85875e022dc"
+        ],
+        "sb:metricInstrumentType": "Gauge",
+        "forms": [
+          {
+            "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Robotics/;s=ExampleRobotSystem/MotionDevices/Robot_1/ParameterSet/SpeedOverride",
+            "contentType": "application/json",
+            "op": [
+              "readproperty",
+              "observeproperty"
+            ],
+            "uav:browsePath": "/MotionDevices/<MotionDeviceIdentifier>/ParameterSet/SpeedOverride",
+            "uav:browseName": "1:SpeedOverride"
+          },
+          {
+            "href": "mqtt://broker.example.com:1883/robotics/observability",
+            "contentType": "application/json",
+            "op": "observeproperty",
+            "sb:pubSub": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "@context": [
+      "https://www.w3.org/2019/wot/td/v1",
+      {
+        "uav": "http://opcfoundation.org/UA/WoT-Binding/",
+        "sb": "http://opcfoundation.org/UA/ScenarioBinding/WoT/"
+      }
+    ],
+    "@type": "uav:object",
+    "id": "urn:uuid:c3a889f4-2ef3-5fa8-8f27-d6e3a2151978",
+    "title": "ExampleRobotSystem · Observability · Robot_2",
+    "description": "WoT Thing for one Observability DataSet (class urn:uuid:c59daa9d-857b-5016-9299-d85875e022dc) at cardinality anchor Robot_2 — topology \"Two-robot cell (6+4 axes)\". Illustrative.",
+    "sb:namespaces": [
+      "http://opcfoundation.org/UA/",
+      "http://opcfoundation.org/UA/Robotics/"
+    ],
+    "securityDefinitions": {
+      "auto_sc": {
+        "scheme": "auto"
+      }
+    },
+    "security": [
+      "auto_sc"
+    ],
+    "base": "opc.tcp://opcua.example.com:4840",
+    "sb:scenario": "http://opcfoundation.org/UA/PubSub/Scenarios/Observability",
+    "sb:dataSetClassId": "urn:uuid:c59daa9d-857b-5016-9299-d85875e022dc",
+    "sb:cardinalityPath": "/MotionDevices/<MotionDeviceIdentifier>",
+    "properties": {
+      "AxisActualPosition_Axis_1": {
+        "title": "AxisActualPosition_Axis_1",
+        "@type": "uav:variable",
+        "type": "number",
+        "unit": "deg",
+        "observable": true,
+        "readOnly": true,
+        "uav:browseName": "1:ActualPosition",
+        "sb:scenario": [
+          "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
+        ],
+        "sb:dataSetClassId": [
+          "urn:uuid:c59daa9d-857b-5016-9299-d85875e022dc"
+        ],
+        "sb:metricInstrumentType": "Gauge",
+        "forms": [
+          {
+            "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Robotics/;s=ExampleRobotSystem/MotionDevices/Robot_2/Axes/Axis_1/ParameterSet/ActualPosition",
+            "contentType": "application/json",
+            "op": [
+              "readproperty",
+              "observeproperty"
+            ],
+            "uav:browsePath": "/MotionDevices/<MotionDeviceIdentifier>/Axes/<AxisIdentifier>/ParameterSet/ActualPosition",
+            "uav:browseName": "1:ActualPosition"
+          },
+          {
+            "href": "mqtt://broker.example.com:1883/robotics/observability",
+            "contentType": "application/json",
+            "op": "observeproperty",
+            "sb:pubSub": true
+          }
+        ]
+      },
+      "AxisActualPosition_Axis_2": {
+        "title": "AxisActualPosition_Axis_2",
+        "@type": "uav:variable",
+        "type": "number",
+        "unit": "deg",
+        "observable": true,
+        "readOnly": true,
+        "uav:browseName": "1:ActualPosition",
+        "sb:scenario": [
+          "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
+        ],
+        "sb:dataSetClassId": [
+          "urn:uuid:c59daa9d-857b-5016-9299-d85875e022dc"
+        ],
+        "sb:metricInstrumentType": "Gauge",
+        "forms": [
+          {
+            "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Robotics/;s=ExampleRobotSystem/MotionDevices/Robot_2/Axes/Axis_2/ParameterSet/ActualPosition",
+            "contentType": "application/json",
+            "op": [
+              "readproperty",
+              "observeproperty"
+            ],
+            "uav:browsePath": "/MotionDevices/<MotionDeviceIdentifier>/Axes/<AxisIdentifier>/ParameterSet/ActualPosition",
+            "uav:browseName": "1:ActualPosition"
+          },
+          {
+            "href": "mqtt://broker.example.com:1883/robotics/observability",
+            "contentType": "application/json",
+            "op": "observeproperty",
+            "sb:pubSub": true
+          }
+        ]
+      },
+      "AxisActualPosition_Axis_3": {
+        "title": "AxisActualPosition_Axis_3",
+        "@type": "uav:variable",
+        "type": "number",
+        "unit": "deg",
+        "observable": true,
+        "readOnly": true,
+        "uav:browseName": "1:ActualPosition",
+        "sb:scenario": [
+          "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
+        ],
+        "sb:dataSetClassId": [
+          "urn:uuid:c59daa9d-857b-5016-9299-d85875e022dc"
+        ],
+        "sb:metricInstrumentType": "Gauge",
+        "forms": [
+          {
+            "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Robotics/;s=ExampleRobotSystem/MotionDevices/Robot_2/Axes/Axis_3/ParameterSet/ActualPosition",
+            "contentType": "application/json",
+            "op": [
+              "readproperty",
+              "observeproperty"
+            ],
+            "uav:browsePath": "/MotionDevices/<MotionDeviceIdentifier>/Axes/<AxisIdentifier>/ParameterSet/ActualPosition",
+            "uav:browseName": "1:ActualPosition"
+          },
+          {
+            "href": "mqtt://broker.example.com:1883/robotics/observability",
+            "contentType": "application/json",
+            "op": "observeproperty",
+            "sb:pubSub": true
+          }
+        ]
+      },
+      "AxisActualPosition_Axis_4": {
+        "title": "AxisActualPosition_Axis_4",
+        "@type": "uav:variable",
+        "type": "number",
+        "unit": "deg",
+        "observable": true,
+        "readOnly": true,
+        "uav:browseName": "1:ActualPosition",
+        "sb:scenario": [
+          "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
+        ],
+        "sb:dataSetClassId": [
+          "urn:uuid:c59daa9d-857b-5016-9299-d85875e022dc"
+        ],
+        "sb:metricInstrumentType": "Gauge",
+        "forms": [
+          {
+            "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Robotics/;s=ExampleRobotSystem/MotionDevices/Robot_2/Axes/Axis_4/ParameterSet/ActualPosition",
+            "contentType": "application/json",
+            "op": [
+              "readproperty",
+              "observeproperty"
+            ],
+            "uav:browsePath": "/MotionDevices/<MotionDeviceIdentifier>/Axes/<AxisIdentifier>/ParameterSet/ActualPosition",
+            "uav:browseName": "1:ActualPosition"
+          },
+          {
+            "href": "mqtt://broker.example.com:1883/robotics/observability",
+            "contentType": "application/json",
+            "op": "observeproperty",
+            "sb:pubSub": true
+          }
+        ]
+      },
+      "MotorTemperature_PowerTrain_1_Motor_1": {
+        "title": "MotorTemperature_PowerTrain_1_Motor_1",
+        "@type": "uav:variable",
+        "type": "number",
+        "unit": "Cel",
+        "observable": true,
+        "readOnly": true,
+        "uav:browseName": "1:MotorTemperature",
+        "sb:scenario": [
+          "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
+        ],
+        "sb:dataSetClassId": [
+          "urn:uuid:c59daa9d-857b-5016-9299-d85875e022dc"
+        ],
+        "sb:metricInstrumentType": "Gauge",
+        "forms": [
+          {
+            "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Robotics/;s=ExampleRobotSystem/MotionDevices/Robot_2/PowerTrains/PowerTrain_1/Motor_1/ParameterSet/MotorTemperature",
+            "contentType": "application/json",
+            "op": [
+              "readproperty",
+              "observeproperty"
+            ],
+            "uav:browsePath": "/MotionDevices/<MotionDeviceIdentifier>/PowerTrains/<PowerTrainIdentifier>/<MotorIdentifier>/ParameterSet/MotorTemperature",
+            "uav:browseName": "1:MotorTemperature"
+          },
+          {
+            "href": "mqtt://broker.example.com:1883/robotics/observability",
+            "contentType": "application/json",
+            "op": "observeproperty",
+            "sb:pubSub": true
+          }
+        ]
+      },
+      "MotorTemperature_PowerTrain_2_Motor_1": {
+        "title": "MotorTemperature_PowerTrain_2_Motor_1",
+        "@type": "uav:variable",
+        "type": "number",
+        "unit": "Cel",
+        "observable": true,
+        "readOnly": true,
+        "uav:browseName": "1:MotorTemperature",
+        "sb:scenario": [
+          "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
+        ],
+        "sb:dataSetClassId": [
+          "urn:uuid:c59daa9d-857b-5016-9299-d85875e022dc"
+        ],
+        "sb:metricInstrumentType": "Gauge",
+        "forms": [
+          {
+            "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Robotics/;s=ExampleRobotSystem/MotionDevices/Robot_2/PowerTrains/PowerTrain_2/Motor_1/ParameterSet/MotorTemperature",
+            "contentType": "application/json",
+            "op": [
+              "readproperty",
+              "observeproperty"
+            ],
+            "uav:browsePath": "/MotionDevices/<MotionDeviceIdentifier>/PowerTrains/<PowerTrainIdentifier>/<MotorIdentifier>/ParameterSet/MotorTemperature",
+            "uav:browseName": "1:MotorTemperature"
+          },
+          {
+            "href": "mqtt://broker.example.com:1883/robotics/observability",
+            "contentType": "application/json",
+            "op": "observeproperty",
+            "sb:pubSub": true
+          }
+        ]
+      },
+      "MotorTemperature_PowerTrain_3_Motor_1": {
+        "title": "MotorTemperature_PowerTrain_3_Motor_1",
+        "@type": "uav:variable",
+        "type": "number",
+        "unit": "Cel",
+        "observable": true,
+        "readOnly": true,
+        "uav:browseName": "1:MotorTemperature",
+        "sb:scenario": [
+          "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
+        ],
+        "sb:dataSetClassId": [
+          "urn:uuid:c59daa9d-857b-5016-9299-d85875e022dc"
+        ],
+        "sb:metricInstrumentType": "Gauge",
+        "forms": [
+          {
+            "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Robotics/;s=ExampleRobotSystem/MotionDevices/Robot_2/PowerTrains/PowerTrain_3/Motor_1/ParameterSet/MotorTemperature",
+            "contentType": "application/json",
+            "op": [
+              "readproperty",
+              "observeproperty"
+            ],
+            "uav:browsePath": "/MotionDevices/<MotionDeviceIdentifier>/PowerTrains/<PowerTrainIdentifier>/<MotorIdentifier>/ParameterSet/MotorTemperature",
+            "uav:browseName": "1:MotorTemperature"
+          },
+          {
+            "href": "mqtt://broker.example.com:1883/robotics/observability",
+            "contentType": "application/json",
+            "op": "observeproperty",
+            "sb:pubSub": true
+          }
+        ]
+      },
+      "MotorTemperature_PowerTrain_4_Motor_1": {
+        "title": "MotorTemperature_PowerTrain_4_Motor_1",
+        "@type": "uav:variable",
+        "type": "number",
+        "unit": "Cel",
+        "observable": true,
+        "readOnly": true,
+        "uav:browseName": "1:MotorTemperature",
+        "sb:scenario": [
+          "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
+        ],
+        "sb:dataSetClassId": [
+          "urn:uuid:c59daa9d-857b-5016-9299-d85875e022dc"
+        ],
+        "sb:metricInstrumentType": "Gauge",
+        "forms": [
+          {
+            "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Robotics/;s=ExampleRobotSystem/MotionDevices/Robot_2/PowerTrains/PowerTrain_4/Motor_1/ParameterSet/MotorTemperature",
+            "contentType": "application/json",
+            "op": [
+              "readproperty",
+              "observeproperty"
+            ],
+            "uav:browsePath": "/MotionDevices/<MotionDeviceIdentifier>/PowerTrains/<PowerTrainIdentifier>/<MotorIdentifier>/ParameterSet/MotorTemperature",
+            "uav:browseName": "1:MotorTemperature"
+          },
+          {
+            "href": "mqtt://broker.example.com:1883/robotics/observability",
+            "contentType": "application/json",
+            "op": "observeproperty",
+            "sb:pubSub": true
+          }
+        ]
+      },
+      "SpeedOverride": {
+        "title": "SpeedOverride",
+        "@type": "uav:variable",
+        "type": "number",
+        "unit": "%",
+        "observable": true,
+        "readOnly": true,
+        "uav:browseName": "1:SpeedOverride",
+        "sb:scenario": [
+          "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
+        ],
+        "sb:dataSetClassId": [
+          "urn:uuid:c59daa9d-857b-5016-9299-d85875e022dc"
+        ],
+        "sb:metricInstrumentType": "Gauge",
+        "forms": [
+          {
+            "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Robotics/;s=ExampleRobotSystem/MotionDevices/Robot_2/ParameterSet/SpeedOverride",
+            "contentType": "application/json",
+            "op": [
+              "readproperty",
+              "observeproperty"
+            ],
+            "uav:browsePath": "/MotionDevices/<MotionDeviceIdentifier>/ParameterSet/SpeedOverride",
+            "uav:browseName": "1:SpeedOverride"
+          },
+          {
+            "href": "mqtt://broker.example.com:1883/robotics/observability",
+            "contentType": "application/json",
+            "op": "observeproperty",
+            "sb:pubSub": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "@context": [
+      "https://www.w3.org/2019/wot/td/v1",
+      {
+        "uav": "http://opcfoundation.org/UA/WoT-Binding/",
+        "sb": "http://opcfoundation.org/UA/ScenarioBinding/WoT/"
+      }
+    ],
+    "@type": "uav:object",
+    "id": "urn:uuid:afa1b967-7b7a-589d-ad03-cca431bcf3f5",
+    "title": "ExampleRobotSystem · PredictiveMaintenance · Controller_1",
+    "description": "WoT Thing for one PredictiveMaintenance DataSet (class urn:uuid:9aebd118-3e77-5786-89e3-713807499548) at cardinality anchor Controller_1 — topology \"Two-robot cell (6+4 axes)\". Illustrative.",
+    "sb:namespaces": [
+      "http://opcfoundation.org/UA/",
+      "http://opcfoundation.org/UA/Robotics/"
+    ],
+    "securityDefinitions": {
+      "auto_sc": {
+        "scheme": "auto"
+      }
+    },
+    "security": [
+      "auto_sc"
+    ],
+    "base": "opc.tcp://opcua.example.com:4840",
+    "sb:scenario": "http://opcfoundation.org/UA/PubSub/Scenarios/PredictiveMaintenance",
+    "sb:dataSetClassId": "urn:uuid:9aebd118-3e77-5786-89e3-713807499548",
+    "sb:cardinalityPath": "/Controllers/<ControllerIdentifier>",
+    "properties": {
+      "ControllerTemperature": {
+        "title": "ControllerTemperature",
+        "@type": "uav:variable",
+        "type": "number",
+        "observable": true,
+        "readOnly": true,
+        "uav:browseName": "1:Temperature",
+        "sb:scenario": [
+          "http://opcfoundation.org/UA/PubSub/Scenarios/PredictiveMaintenance"
+        ],
+        "sb:dataSetClassId": [
+          "urn:uuid:9aebd118-3e77-5786-89e3-713807499548"
+        ],
+        "forms": [
+          {
+            "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Robotics/;s=ExampleRobotSystem/Controllers/Controller_1/ParameterSet/Temperature",
+            "contentType": "application/json",
+            "op": [
+              "readproperty",
+              "observeproperty"
+            ],
+            "uav:browsePath": "/Controllers/<ControllerIdentifier>/ParameterSet/Temperature",
+            "uav:browseName": "1:Temperature"
+          },
+          {
+            "href": "mqtt://broker.example.com:1883/robotics/predictivemaintenance",
+            "contentType": "application/json",
+            "op": "observeproperty",
+            "sb:pubSub": true
+          }
+        ]
+      },
+      "CabinetFanSpeed": {
+        "title": "CabinetFanSpeed",
+        "@type": "uav:variable",
+        "type": "number",
+        "observable": true,
+        "readOnly": true,
+        "uav:browseName": "1:CabinetFanSpeed",
+        "sb:scenario": [
+          "http://opcfoundation.org/UA/PubSub/Scenarios/PredictiveMaintenance"
+        ],
+        "sb:dataSetClassId": [
+          "urn:uuid:9aebd118-3e77-5786-89e3-713807499548"
+        ],
+        "forms": [
+          {
+            "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Robotics/;s=ExampleRobotSystem/Controllers/Controller_1/ParameterSet/CabinetFanSpeed",
+            "contentType": "application/json",
+            "op": [
+              "readproperty",
+              "observeproperty"
+            ],
+            "uav:browsePath": "/Controllers/<ControllerIdentifier>/ParameterSet/CabinetFanSpeed",
+            "uav:browseName": "1:CabinetFanSpeed"
+          },
+          {
+            "href": "mqtt://broker.example.com:1883/robotics/predictivemaintenance",
+            "contentType": "application/json",
+            "op": "observeproperty",
+            "sb:pubSub": true
+          }
+        ]
+      },
+      "CPUFanSpeed": {
+        "title": "CPUFanSpeed",
+        "@type": "uav:variable",
+        "type": "number",
+        "observable": true,
+        "readOnly": true,
+        "uav:browseName": "1:CPUFanSpeed",
+        "sb:scenario": [
+          "http://opcfoundation.org/UA/PubSub/Scenarios/PredictiveMaintenance"
+        ],
+        "sb:dataSetClassId": [
+          "urn:uuid:9aebd118-3e77-5786-89e3-713807499548"
+        ],
+        "forms": [
+          {
+            "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Robotics/;s=ExampleRobotSystem/Controllers/Controller_1/ParameterSet/CPUFanSpeed",
+            "contentType": "application/json",
+            "op": [
+              "readproperty",
+              "observeproperty"
+            ],
+            "uav:browsePath": "/Controllers/<ControllerIdentifier>/ParameterSet/CPUFanSpeed",
+            "uav:browseName": "1:CPUFanSpeed"
+          },
+          {
+            "href": "mqtt://broker.example.com:1883/robotics/predictivemaintenance",
+            "contentType": "application/json",
+            "op": "observeproperty",
+            "sb:pubSub": true
+          }
+        ]
+      },
+      "TotalPowerOnTime": {
+        "title": "TotalPowerOnTime",
+        "@type": "uav:variable",
+        "type": "string",
+        "observable": true,
+        "readOnly": true,
+        "uav:browseName": "1:TotalPowerOnTime",
+        "sb:scenario": [
+          "http://opcfoundation.org/UA/PubSub/Scenarios/PredictiveMaintenance"
+        ],
+        "sb:dataSetClassId": [
+          "urn:uuid:9aebd118-3e77-5786-89e3-713807499548"
+        ],
+        "forms": [
+          {
+            "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Robotics/;s=ExampleRobotSystem/Controllers/Controller_1/ParameterSet/TotalPowerOnTime",
+            "contentType": "application/json",
+            "op": [
+              "readproperty",
+              "observeproperty"
+            ],
+            "uav:browsePath": "/Controllers/<ControllerIdentifier>/ParameterSet/TotalPowerOnTime",
+            "uav:browseName": "1:TotalPowerOnTime"
+          },
+          {
+            "href": "mqtt://broker.example.com:1883/robotics/predictivemaintenance",
+            "contentType": "application/json",
+            "op": "observeproperty",
+            "sb:pubSub": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "@context": [
+      "https://www.w3.org/2019/wot/td/v1",
+      {
+        "uav": "http://opcfoundation.org/UA/WoT-Binding/",
+        "sb": "http://opcfoundation.org/UA/ScenarioBinding/WoT/"
+      }
+    ],
+    "@type": "uav:object",
+    "id": "urn:uuid:33fe2a7d-46c9-50b3-b5c9-f5f479f04643",
+    "title": "ExampleRobotSystem · AnomalyDetection · Robot_1",
+    "description": "WoT Thing for one AnomalyDetection DataSet (class urn:uuid:180dfa3e-be8b-5dae-b66e-a5a08384f256) at cardinality anchor Robot_1 — topology \"Two-robot cell (6+4 axes)\". Illustrative.",
+    "sb:namespaces": [
+      "http://opcfoundation.org/UA/",
+      "http://opcfoundation.org/UA/Robotics/"
+    ],
+    "securityDefinitions": {
+      "auto_sc": {
+        "scheme": "auto"
+      }
+    },
+    "security": [
+      "auto_sc"
+    ],
+    "base": "opc.tcp://opcua.example.com:4840",
+    "sb:scenario": "http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection",
+    "sb:dataSetClassId": "urn:uuid:180dfa3e-be8b-5dae-b66e-a5a08384f256",
+    "sb:cardinalityPath": "/MotionDevices/<MotionDeviceIdentifier>",
+    "properties": {
+      "AxisActualPosition_Axis_1": {
+        "title": "AxisActualPosition_Axis_1",
+        "@type": "uav:variable",
+        "type": "number",
+        "observable": true,
+        "readOnly": true,
+        "uav:browseName": "1:ActualPosition",
+        "sb:scenario": [
+          "http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection"
+        ],
+        "sb:dataSetClassId": [
+          "urn:uuid:180dfa3e-be8b-5dae-b66e-a5a08384f256"
+        ],
+        "forms": [
+          {
+            "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Robotics/;s=ExampleRobotSystem/MotionDevices/Robot_1/Axes/Axis_1/ParameterSet/ActualPosition",
+            "contentType": "application/json",
+            "op": [
+              "readproperty",
+              "observeproperty"
+            ],
+            "uav:browsePath": "/MotionDevices/<MotionDeviceIdentifier>/Axes/<AxisIdentifier>/ParameterSet/ActualPosition",
+            "uav:browseName": "1:ActualPosition"
+          },
+          {
+            "href": "mqtt://broker.example.com:1883/robotics/anomalydetection",
+            "contentType": "application/json",
+            "op": "observeproperty",
+            "sb:pubSub": true
+          }
+        ]
+      },
+      "AxisActualPosition_Axis_2": {
+        "title": "AxisActualPosition_Axis_2",
+        "@type": "uav:variable",
+        "type": "number",
+        "observable": true,
+        "readOnly": true,
+        "uav:browseName": "1:ActualPosition",
+        "sb:scenario": [
+          "http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection"
+        ],
+        "sb:dataSetClassId": [
+          "urn:uuid:180dfa3e-be8b-5dae-b66e-a5a08384f256"
+        ],
+        "forms": [
+          {
+            "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Robotics/;s=ExampleRobotSystem/MotionDevices/Robot_1/Axes/Axis_2/ParameterSet/ActualPosition",
+            "contentType": "application/json",
+            "op": [
+              "readproperty",
+              "observeproperty"
+            ],
+            "uav:browsePath": "/MotionDevices/<MotionDeviceIdentifier>/Axes/<AxisIdentifier>/ParameterSet/ActualPosition",
+            "uav:browseName": "1:ActualPosition"
+          },
+          {
+            "href": "mqtt://broker.example.com:1883/robotics/anomalydetection",
+            "contentType": "application/json",
+            "op": "observeproperty",
+            "sb:pubSub": true
+          }
+        ]
+      },
+      "AxisActualPosition_Axis_3": {
+        "title": "AxisActualPosition_Axis_3",
+        "@type": "uav:variable",
+        "type": "number",
+        "observable": true,
+        "readOnly": true,
+        "uav:browseName": "1:ActualPosition",
+        "sb:scenario": [
+          "http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection"
+        ],
+        "sb:dataSetClassId": [
+          "urn:uuid:180dfa3e-be8b-5dae-b66e-a5a08384f256"
+        ],
+        "forms": [
+          {
+            "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Robotics/;s=ExampleRobotSystem/MotionDevices/Robot_1/Axes/Axis_3/ParameterSet/ActualPosition",
+            "contentType": "application/json",
+            "op": [
+              "readproperty",
+              "observeproperty"
+            ],
+            "uav:browsePath": "/MotionDevices/<MotionDeviceIdentifier>/Axes/<AxisIdentifier>/ParameterSet/ActualPosition",
+            "uav:browseName": "1:ActualPosition"
+          },
+          {
+            "href": "mqtt://broker.example.com:1883/robotics/anomalydetection",
+            "contentType": "application/json",
+            "op": "observeproperty",
+            "sb:pubSub": true
+          }
+        ]
+      },
+      "AxisActualPosition_Axis_4": {
+        "title": "AxisActualPosition_Axis_4",
+        "@type": "uav:variable",
+        "type": "number",
+        "observable": true,
+        "readOnly": true,
+        "uav:browseName": "1:ActualPosition",
+        "sb:scenario": [
+          "http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection"
+        ],
+        "sb:dataSetClassId": [
+          "urn:uuid:180dfa3e-be8b-5dae-b66e-a5a08384f256"
+        ],
+        "forms": [
+          {
+            "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Robotics/;s=ExampleRobotSystem/MotionDevices/Robot_1/Axes/Axis_4/ParameterSet/ActualPosition",
+            "contentType": "application/json",
+            "op": [
+              "readproperty",
+              "observeproperty"
+            ],
+            "uav:browsePath": "/MotionDevices/<MotionDeviceIdentifier>/Axes/<AxisIdentifier>/ParameterSet/ActualPosition",
+            "uav:browseName": "1:ActualPosition"
+          },
+          {
+            "href": "mqtt://broker.example.com:1883/robotics/anomalydetection",
+            "contentType": "application/json",
+            "op": "observeproperty",
+            "sb:pubSub": true
+          }
+        ]
+      },
+      "AxisActualPosition_Axis_5": {
+        "title": "AxisActualPosition_Axis_5",
+        "@type": "uav:variable",
+        "type": "number",
+        "observable": true,
+        "readOnly": true,
+        "uav:browseName": "1:ActualPosition",
+        "sb:scenario": [
+          "http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection"
+        ],
+        "sb:dataSetClassId": [
+          "urn:uuid:180dfa3e-be8b-5dae-b66e-a5a08384f256"
+        ],
+        "forms": [
+          {
+            "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Robotics/;s=ExampleRobotSystem/MotionDevices/Robot_1/Axes/Axis_5/ParameterSet/ActualPosition",
+            "contentType": "application/json",
+            "op": [
+              "readproperty",
+              "observeproperty"
+            ],
+            "uav:browsePath": "/MotionDevices/<MotionDeviceIdentifier>/Axes/<AxisIdentifier>/ParameterSet/ActualPosition",
+            "uav:browseName": "1:ActualPosition"
+          },
+          {
+            "href": "mqtt://broker.example.com:1883/robotics/anomalydetection",
+            "contentType": "application/json",
+            "op": "observeproperty",
+            "sb:pubSub": true
+          }
+        ]
+      },
+      "AxisActualPosition_Axis_6": {
+        "title": "AxisActualPosition_Axis_6",
+        "@type": "uav:variable",
+        "type": "number",
+        "observable": true,
+        "readOnly": true,
+        "uav:browseName": "1:ActualPosition",
+        "sb:scenario": [
+          "http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection"
+        ],
+        "sb:dataSetClassId": [
+          "urn:uuid:180dfa3e-be8b-5dae-b66e-a5a08384f256"
+        ],
+        "forms": [
+          {
+            "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Robotics/;s=ExampleRobotSystem/MotionDevices/Robot_1/Axes/Axis_6/ParameterSet/ActualPosition",
+            "contentType": "application/json",
+            "op": [
+              "readproperty",
+              "observeproperty"
+            ],
+            "uav:browsePath": "/MotionDevices/<MotionDeviceIdentifier>/Axes/<AxisIdentifier>/ParameterSet/ActualPosition",
+            "uav:browseName": "1:ActualPosition"
+          },
+          {
+            "href": "mqtt://broker.example.com:1883/robotics/anomalydetection",
+            "contentType": "application/json",
+            "op": "observeproperty",
+            "sb:pubSub": true
+          }
+        ]
+      },
+      "MotorTemperature_PowerTrain_1_Motor_1": {
+        "title": "MotorTemperature_PowerTrain_1_Motor_1",
+        "@type": "uav:variable",
+        "type": "number",
+        "observable": true,
+        "readOnly": true,
+        "uav:browseName": "1:MotorTemperature",
+        "sb:scenario": [
+          "http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection"
+        ],
+        "sb:dataSetClassId": [
+          "urn:uuid:180dfa3e-be8b-5dae-b66e-a5a08384f256"
+        ],
+        "forms": [
+          {
+            "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Robotics/;s=ExampleRobotSystem/MotionDevices/Robot_1/PowerTrains/PowerTrain_1/Motor_1/ParameterSet/MotorTemperature",
+            "contentType": "application/json",
+            "op": [
+              "readproperty",
+              "observeproperty"
+            ],
+            "uav:browsePath": "/MotionDevices/<MotionDeviceIdentifier>/PowerTrains/<PowerTrainIdentifier>/<MotorIdentifier>/ParameterSet/MotorTemperature",
+            "uav:browseName": "1:MotorTemperature"
+          },
+          {
+            "href": "mqtt://broker.example.com:1883/robotics/anomalydetection",
+            "contentType": "application/json",
+            "op": "observeproperty",
+            "sb:pubSub": true
+          }
+        ]
+      },
+      "MotorTemperature_PowerTrain_2_Motor_1": {
+        "title": "MotorTemperature_PowerTrain_2_Motor_1",
+        "@type": "uav:variable",
+        "type": "number",
+        "observable": true,
+        "readOnly": true,
+        "uav:browseName": "1:MotorTemperature",
+        "sb:scenario": [
+          "http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection"
+        ],
+        "sb:dataSetClassId": [
+          "urn:uuid:180dfa3e-be8b-5dae-b66e-a5a08384f256"
+        ],
+        "forms": [
+          {
+            "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Robotics/;s=ExampleRobotSystem/MotionDevices/Robot_1/PowerTrains/PowerTrain_2/Motor_1/ParameterSet/MotorTemperature",
+            "contentType": "application/json",
+            "op": [
+              "readproperty",
+              "observeproperty"
+            ],
+            "uav:browsePath": "/MotionDevices/<MotionDeviceIdentifier>/PowerTrains/<PowerTrainIdentifier>/<MotorIdentifier>/ParameterSet/MotorTemperature",
+            "uav:browseName": "1:MotorTemperature"
+          },
+          {
+            "href": "mqtt://broker.example.com:1883/robotics/anomalydetection",
+            "contentType": "application/json",
+            "op": "observeproperty",
+            "sb:pubSub": true
+          }
+        ]
+      },
+      "MotorTemperature_PowerTrain_3_Motor_1": {
+        "title": "MotorTemperature_PowerTrain_3_Motor_1",
+        "@type": "uav:variable",
+        "type": "number",
+        "observable": true,
+        "readOnly": true,
+        "uav:browseName": "1:MotorTemperature",
+        "sb:scenario": [
+          "http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection"
+        ],
+        "sb:dataSetClassId": [
+          "urn:uuid:180dfa3e-be8b-5dae-b66e-a5a08384f256"
+        ],
+        "forms": [
+          {
+            "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Robotics/;s=ExampleRobotSystem/MotionDevices/Robot_1/PowerTrains/PowerTrain_3/Motor_1/ParameterSet/MotorTemperature",
+            "contentType": "application/json",
+            "op": [
+              "readproperty",
+              "observeproperty"
+            ],
+            "uav:browsePath": "/MotionDevices/<MotionDeviceIdentifier>/PowerTrains/<PowerTrainIdentifier>/<MotorIdentifier>/ParameterSet/MotorTemperature",
+            "uav:browseName": "1:MotorTemperature"
+          },
+          {
+            "href": "mqtt://broker.example.com:1883/robotics/anomalydetection",
+            "contentType": "application/json",
+            "op": "observeproperty",
+            "sb:pubSub": true
+          }
+        ]
+      },
+      "MotorTemperature_PowerTrain_4_Motor_1": {
+        "title": "MotorTemperature_PowerTrain_4_Motor_1",
+        "@type": "uav:variable",
+        "type": "number",
+        "observable": true,
+        "readOnly": true,
+        "uav:browseName": "1:MotorTemperature",
+        "sb:scenario": [
+          "http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection"
+        ],
+        "sb:dataSetClassId": [
+          "urn:uuid:180dfa3e-be8b-5dae-b66e-a5a08384f256"
+        ],
+        "forms": [
+          {
+            "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Robotics/;s=ExampleRobotSystem/MotionDevices/Robot_1/PowerTrains/PowerTrain_4/Motor_1/ParameterSet/MotorTemperature",
+            "contentType": "application/json",
+            "op": [
+              "readproperty",
+              "observeproperty"
+            ],
+            "uav:browsePath": "/MotionDevices/<MotionDeviceIdentifier>/PowerTrains/<PowerTrainIdentifier>/<MotorIdentifier>/ParameterSet/MotorTemperature",
+            "uav:browseName": "1:MotorTemperature"
+          },
+          {
+            "href": "mqtt://broker.example.com:1883/robotics/anomalydetection",
+            "contentType": "application/json",
+            "op": "observeproperty",
+            "sb:pubSub": true
+          }
+        ]
+      },
+      "MotorTemperature_PowerTrain_5_Motor_1": {
+        "title": "MotorTemperature_PowerTrain_5_Motor_1",
+        "@type": "uav:variable",
+        "type": "number",
+        "observable": true,
+        "readOnly": true,
+        "uav:browseName": "1:MotorTemperature",
+        "sb:scenario": [
+          "http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection"
+        ],
+        "sb:dataSetClassId": [
+          "urn:uuid:180dfa3e-be8b-5dae-b66e-a5a08384f256"
+        ],
+        "forms": [
+          {
+            "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Robotics/;s=ExampleRobotSystem/MotionDevices/Robot_1/PowerTrains/PowerTrain_5/Motor_1/ParameterSet/MotorTemperature",
+            "contentType": "application/json",
+            "op": [
+              "readproperty",
+              "observeproperty"
+            ],
+            "uav:browsePath": "/MotionDevices/<MotionDeviceIdentifier>/PowerTrains/<PowerTrainIdentifier>/<MotorIdentifier>/ParameterSet/MotorTemperature",
+            "uav:browseName": "1:MotorTemperature"
+          },
+          {
+            "href": "mqtt://broker.example.com:1883/robotics/anomalydetection",
+            "contentType": "application/json",
+            "op": "observeproperty",
+            "sb:pubSub": true
+          }
+        ]
+      },
+      "MotorTemperature_PowerTrain_6_Motor_1": {
+        "title": "MotorTemperature_PowerTrain_6_Motor_1",
+        "@type": "uav:variable",
+        "type": "number",
+        "observable": true,
+        "readOnly": true,
+        "uav:browseName": "1:MotorTemperature",
+        "sb:scenario": [
+          "http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection"
+        ],
+        "sb:dataSetClassId": [
+          "urn:uuid:180dfa3e-be8b-5dae-b66e-a5a08384f256"
+        ],
+        "forms": [
+          {
+            "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Robotics/;s=ExampleRobotSystem/MotionDevices/Robot_1/PowerTrains/PowerTrain_6/Motor_1/ParameterSet/MotorTemperature",
+            "contentType": "application/json",
+            "op": [
+              "readproperty",
+              "observeproperty"
+            ],
+            "uav:browsePath": "/MotionDevices/<MotionDeviceIdentifier>/PowerTrains/<PowerTrainIdentifier>/<MotorIdentifier>/ParameterSet/MotorTemperature",
+            "uav:browseName": "1:MotorTemperature"
+          },
+          {
+            "href": "mqtt://broker.example.com:1883/robotics/anomalydetection",
+            "contentType": "application/json",
+            "op": "observeproperty",
+            "sb:pubSub": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "@context": [
+      "https://www.w3.org/2019/wot/td/v1",
+      {
+        "uav": "http://opcfoundation.org/UA/WoT-Binding/",
+        "sb": "http://opcfoundation.org/UA/ScenarioBinding/WoT/"
+      }
+    ],
+    "@type": "uav:object",
+    "id": "urn:uuid:33130872-e429-501e-8a38-65fab2fd577e",
+    "title": "ExampleRobotSystem · AnomalyDetection · Robot_2",
+    "description": "WoT Thing for one AnomalyDetection DataSet (class urn:uuid:180dfa3e-be8b-5dae-b66e-a5a08384f256) at cardinality anchor Robot_2 — topology \"Two-robot cell (6+4 axes)\". Illustrative.",
+    "sb:namespaces": [
+      "http://opcfoundation.org/UA/",
+      "http://opcfoundation.org/UA/Robotics/"
+    ],
+    "securityDefinitions": {
+      "auto_sc": {
+        "scheme": "auto"
+      }
+    },
+    "security": [
+      "auto_sc"
+    ],
+    "base": "opc.tcp://opcua.example.com:4840",
+    "sb:scenario": "http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection",
+    "sb:dataSetClassId": "urn:uuid:180dfa3e-be8b-5dae-b66e-a5a08384f256",
+    "sb:cardinalityPath": "/MotionDevices/<MotionDeviceIdentifier>",
+    "properties": {
+      "AxisActualPosition_Axis_1": {
+        "title": "AxisActualPosition_Axis_1",
+        "@type": "uav:variable",
+        "type": "number",
+        "observable": true,
+        "readOnly": true,
+        "uav:browseName": "1:ActualPosition",
+        "sb:scenario": [
+          "http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection"
+        ],
+        "sb:dataSetClassId": [
+          "urn:uuid:180dfa3e-be8b-5dae-b66e-a5a08384f256"
+        ],
+        "forms": [
+          {
+            "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Robotics/;s=ExampleRobotSystem/MotionDevices/Robot_2/Axes/Axis_1/ParameterSet/ActualPosition",
+            "contentType": "application/json",
+            "op": [
+              "readproperty",
+              "observeproperty"
+            ],
+            "uav:browsePath": "/MotionDevices/<MotionDeviceIdentifier>/Axes/<AxisIdentifier>/ParameterSet/ActualPosition",
+            "uav:browseName": "1:ActualPosition"
+          },
+          {
+            "href": "mqtt://broker.example.com:1883/robotics/anomalydetection",
+            "contentType": "application/json",
+            "op": "observeproperty",
+            "sb:pubSub": true
+          }
+        ]
+      },
+      "AxisActualPosition_Axis_2": {
+        "title": "AxisActualPosition_Axis_2",
+        "@type": "uav:variable",
+        "type": "number",
+        "observable": true,
+        "readOnly": true,
+        "uav:browseName": "1:ActualPosition",
+        "sb:scenario": [
+          "http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection"
+        ],
+        "sb:dataSetClassId": [
+          "urn:uuid:180dfa3e-be8b-5dae-b66e-a5a08384f256"
+        ],
+        "forms": [
+          {
+            "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Robotics/;s=ExampleRobotSystem/MotionDevices/Robot_2/Axes/Axis_2/ParameterSet/ActualPosition",
+            "contentType": "application/json",
+            "op": [
+              "readproperty",
+              "observeproperty"
+            ],
+            "uav:browsePath": "/MotionDevices/<MotionDeviceIdentifier>/Axes/<AxisIdentifier>/ParameterSet/ActualPosition",
+            "uav:browseName": "1:ActualPosition"
+          },
+          {
+            "href": "mqtt://broker.example.com:1883/robotics/anomalydetection",
+            "contentType": "application/json",
+            "op": "observeproperty",
+            "sb:pubSub": true
+          }
+        ]
+      },
+      "AxisActualPosition_Axis_3": {
+        "title": "AxisActualPosition_Axis_3",
+        "@type": "uav:variable",
+        "type": "number",
+        "observable": true,
+        "readOnly": true,
+        "uav:browseName": "1:ActualPosition",
+        "sb:scenario": [
+          "http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection"
+        ],
+        "sb:dataSetClassId": [
+          "urn:uuid:180dfa3e-be8b-5dae-b66e-a5a08384f256"
+        ],
+        "forms": [
+          {
+            "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Robotics/;s=ExampleRobotSystem/MotionDevices/Robot_2/Axes/Axis_3/ParameterSet/ActualPosition",
+            "contentType": "application/json",
+            "op": [
+              "readproperty",
+              "observeproperty"
+            ],
+            "uav:browsePath": "/MotionDevices/<MotionDeviceIdentifier>/Axes/<AxisIdentifier>/ParameterSet/ActualPosition",
+            "uav:browseName": "1:ActualPosition"
+          },
+          {
+            "href": "mqtt://broker.example.com:1883/robotics/anomalydetection",
+            "contentType": "application/json",
+            "op": "observeproperty",
+            "sb:pubSub": true
+          }
+        ]
+      },
+      "AxisActualPosition_Axis_4": {
+        "title": "AxisActualPosition_Axis_4",
+        "@type": "uav:variable",
+        "type": "number",
+        "observable": true,
+        "readOnly": true,
+        "uav:browseName": "1:ActualPosition",
+        "sb:scenario": [
+          "http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection"
+        ],
+        "sb:dataSetClassId": [
+          "urn:uuid:180dfa3e-be8b-5dae-b66e-a5a08384f256"
+        ],
+        "forms": [
+          {
+            "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Robotics/;s=ExampleRobotSystem/MotionDevices/Robot_2/Axes/Axis_4/ParameterSet/ActualPosition",
+            "contentType": "application/json",
+            "op": [
+              "readproperty",
+              "observeproperty"
+            ],
+            "uav:browsePath": "/MotionDevices/<MotionDeviceIdentifier>/Axes/<AxisIdentifier>/ParameterSet/ActualPosition",
+            "uav:browseName": "1:ActualPosition"
+          },
+          {
+            "href": "mqtt://broker.example.com:1883/robotics/anomalydetection",
+            "contentType": "application/json",
+            "op": "observeproperty",
+            "sb:pubSub": true
+          }
+        ]
+      },
+      "MotorTemperature_PowerTrain_1_Motor_1": {
+        "title": "MotorTemperature_PowerTrain_1_Motor_1",
+        "@type": "uav:variable",
+        "type": "number",
+        "observable": true,
+        "readOnly": true,
+        "uav:browseName": "1:MotorTemperature",
+        "sb:scenario": [
+          "http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection"
+        ],
+        "sb:dataSetClassId": [
+          "urn:uuid:180dfa3e-be8b-5dae-b66e-a5a08384f256"
+        ],
+        "forms": [
+          {
+            "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Robotics/;s=ExampleRobotSystem/MotionDevices/Robot_2/PowerTrains/PowerTrain_1/Motor_1/ParameterSet/MotorTemperature",
+            "contentType": "application/json",
+            "op": [
+              "readproperty",
+              "observeproperty"
+            ],
+            "uav:browsePath": "/MotionDevices/<MotionDeviceIdentifier>/PowerTrains/<PowerTrainIdentifier>/<MotorIdentifier>/ParameterSet/MotorTemperature",
+            "uav:browseName": "1:MotorTemperature"
+          },
+          {
+            "href": "mqtt://broker.example.com:1883/robotics/anomalydetection",
+            "contentType": "application/json",
+            "op": "observeproperty",
+            "sb:pubSub": true
+          }
+        ]
+      },
+      "MotorTemperature_PowerTrain_2_Motor_1": {
+        "title": "MotorTemperature_PowerTrain_2_Motor_1",
+        "@type": "uav:variable",
+        "type": "number",
+        "observable": true,
+        "readOnly": true,
+        "uav:browseName": "1:MotorTemperature",
+        "sb:scenario": [
+          "http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection"
+        ],
+        "sb:dataSetClassId": [
+          "urn:uuid:180dfa3e-be8b-5dae-b66e-a5a08384f256"
+        ],
+        "forms": [
+          {
+            "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Robotics/;s=ExampleRobotSystem/MotionDevices/Robot_2/PowerTrains/PowerTrain_2/Motor_1/ParameterSet/MotorTemperature",
+            "contentType": "application/json",
+            "op": [
+              "readproperty",
+              "observeproperty"
+            ],
+            "uav:browsePath": "/MotionDevices/<MotionDeviceIdentifier>/PowerTrains/<PowerTrainIdentifier>/<MotorIdentifier>/ParameterSet/MotorTemperature",
+            "uav:browseName": "1:MotorTemperature"
+          },
+          {
+            "href": "mqtt://broker.example.com:1883/robotics/anomalydetection",
+            "contentType": "application/json",
+            "op": "observeproperty",
+            "sb:pubSub": true
+          }
+        ]
+      },
+      "MotorTemperature_PowerTrain_3_Motor_1": {
+        "title": "MotorTemperature_PowerTrain_3_Motor_1",
+        "@type": "uav:variable",
+        "type": "number",
+        "observable": true,
+        "readOnly": true,
+        "uav:browseName": "1:MotorTemperature",
+        "sb:scenario": [
+          "http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection"
+        ],
+        "sb:dataSetClassId": [
+          "urn:uuid:180dfa3e-be8b-5dae-b66e-a5a08384f256"
+        ],
+        "forms": [
+          {
+            "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Robotics/;s=ExampleRobotSystem/MotionDevices/Robot_2/PowerTrains/PowerTrain_3/Motor_1/ParameterSet/MotorTemperature",
+            "contentType": "application/json",
+            "op": [
+              "readproperty",
+              "observeproperty"
+            ],
+            "uav:browsePath": "/MotionDevices/<MotionDeviceIdentifier>/PowerTrains/<PowerTrainIdentifier>/<MotorIdentifier>/ParameterSet/MotorTemperature",
+            "uav:browseName": "1:MotorTemperature"
+          },
+          {
+            "href": "mqtt://broker.example.com:1883/robotics/anomalydetection",
+            "contentType": "application/json",
+            "op": "observeproperty",
+            "sb:pubSub": true
+          }
+        ]
+      },
+      "MotorTemperature_PowerTrain_4_Motor_1": {
+        "title": "MotorTemperature_PowerTrain_4_Motor_1",
+        "@type": "uav:variable",
+        "type": "number",
+        "observable": true,
+        "readOnly": true,
+        "uav:browseName": "1:MotorTemperature",
+        "sb:scenario": [
+          "http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection"
+        ],
+        "sb:dataSetClassId": [
+          "urn:uuid:180dfa3e-be8b-5dae-b66e-a5a08384f256"
+        ],
+        "forms": [
+          {
+            "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Robotics/;s=ExampleRobotSystem/MotionDevices/Robot_2/PowerTrains/PowerTrain_4/Motor_1/ParameterSet/MotorTemperature",
+            "contentType": "application/json",
+            "op": [
+              "readproperty",
+              "observeproperty"
+            ],
+            "uav:browsePath": "/MotionDevices/<MotionDeviceIdentifier>/PowerTrains/<PowerTrainIdentifier>/<MotorIdentifier>/ParameterSet/MotorTemperature",
+            "uav:browseName": "1:MotorTemperature"
+          },
+          {
+            "href": "mqtt://broker.example.com:1883/robotics/anomalydetection",
+            "contentType": "application/json",
+            "op": "observeproperty",
+            "sb:pubSub": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "@context": [
+      "https://www.w3.org/2019/wot/td/v1",
+      {
+        "uav": "http://opcfoundation.org/UA/WoT-Binding/",
+        "sb": "http://opcfoundation.org/UA/ScenarioBinding/WoT/"
+      }
+    ],
+    "@type": "uav:object",
+    "id": "urn:uuid:17975e04-9c1c-5d3b-9a0c-0ad3bcd794ab",
+    "title": "ExampleRobotSystem · AlarmAndEventDistribution",
+    "description": "WoT Thing for one AlarmAndEventDistribution DataSet (class urn:uuid:ec621723-fbe4-54a1-9166-87d19a264c0f) — topology \"Two-robot cell (6+4 axes)\". Illustrative.",
+    "sb:namespaces": [
+      "http://opcfoundation.org/UA/",
+      "http://opcfoundation.org/UA/Robotics/"
+    ],
+    "securityDefinitions": {
+      "auto_sc": {
+        "scheme": "auto"
+      }
+    },
+    "security": [
+      "auto_sc"
+    ],
+    "base": "opc.tcp://opcua.example.com:4840",
+    "sb:scenario": "http://opcfoundation.org/UA/PubSub/Scenarios/AlarmAndEventDistribution",
+    "sb:dataSetClassId": "urn:uuid:ec621723-fbe4-54a1-9166-87d19a264c0f",
+    "events": {
+      "AlarmAndEventDistribution": {
+        "title": "AlarmAndEventDistribution",
+        "@type": "uav:object",
+        "sb:scenario": "http://opcfoundation.org/UA/PubSub/Scenarios/AlarmAndEventDistribution",
+        "sb:dataSetClassId": "urn:uuid:ec621723-fbe4-54a1-9166-87d19a264c0f",
+        "sb:eventType": "AlarmConditionType",
+        "data": {
+          "type": "object",
+          "properties": {
+            "EventId": {
+              "type": "string",
+              "uav:browseName": "0:EventId"
+            },
+            "EventType": {
+              "type": "string",
+              "uav:browseName": "0:EventType"
+            },
+            "SourceName": {
+              "type": "string",
+              "uav:browseName": "0:SourceName"
+            },
+            "Time": {
+              "type": "string",
+              "uav:browseName": "0:Time"
+            },
+            "Severity": {
+              "type": "integer",
+              "uav:browseName": "0:Severity"
+            },
+            "Message": {
+              "type": "string",
+              "uav:browseName": "0:Message"
+            }
+          }
+        },
+        "forms": [
+          {
+            "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Robotics/;s=ExampleRobotSystem",
+            "contentType": "application/json",
+            "op": "subscribeevent",
+            "subprotocol": "opcua.subscribe",
+            "sb:eventSourcePath": "/"
+          },
+          {
+            "href": "mqtt://broker.example.com:1883/robotics/alarmandeventdistribution",
+            "contentType": "application/json",
+            "op": "subscribeevent",
+            "sb:pubSub": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "@context": [
+      "https://www.w3.org/2019/wot/td/v1",
+      {
+        "uav": "http://opcfoundation.org/UA/WoT-Binding/",
+        "sb": "http://opcfoundation.org/UA/ScenarioBinding/WoT/"
+      }
+    ],
+    "@type": "uav:object",
+    "id": "urn:uuid:310300f7-3633-509d-9ffc-58cc2457120b",
+    "title": "ExampleRobotSystem · FleetAndCompliance",
+    "description": "WoT Thing for one FleetAndCompliance DataSet (class urn:uuid:000fbba0-373f-5ff1-bd11-67fb2fc20ef0) — topology \"Two-robot cell (6+4 axes)\". Illustrative.",
+    "sb:namespaces": [
+      "http://opcfoundation.org/UA/",
+      "http://opcfoundation.org/UA/Robotics/"
+    ],
+    "securityDefinitions": {
+      "auto_sc": {
+        "scheme": "auto"
+      }
+    },
+    "security": [
+      "auto_sc"
+    ],
+    "base": "opc.tcp://opcua.example.com:4840",
+    "sb:scenario": "http://opcfoundation.org/UA/PubSub/Scenarios/FleetAndCompliance",
+    "sb:dataSetClassId": "urn:uuid:000fbba0-373f-5ff1-bd11-67fb2fc20ef0",
+    "properties": {
+      "Manufacturer": {
+        "title": "Manufacturer",
+        "@type": "uav:variable",
+        "type": "string",
+        "observable": true,
+        "readOnly": true,
+        "uav:browseName": "2:Manufacturer",
+        "sb:scenario": [
+          "http://opcfoundation.org/UA/PubSub/Scenarios/FleetAndCompliance"
+        ],
+        "sb:dataSetClassId": [
+          "urn:uuid:000fbba0-373f-5ff1-bd11-67fb2fc20ef0"
+        ],
+        "forms": [
+          {
+            "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Robotics/;s=ExampleRobotSystem/Manufacturer",
+            "contentType": "application/json",
+            "op": [
+              "readproperty",
+              "observeproperty"
+            ],
+            "uav:browsePath": "/Manufacturer",
+            "uav:browseName": "2:Manufacturer"
+          },
+          {
+            "href": "mqtt://broker.example.com:1883/robotics/fleetandcompliance",
+            "contentType": "application/json",
+            "op": "observeproperty",
+            "sb:pubSub": true
+          }
+        ]
+      },
+      "Model": {
+        "title": "Model",
+        "@type": "uav:variable",
+        "type": "string",
+        "observable": true,
+        "readOnly": true,
+        "uav:browseName": "2:Model",
+        "sb:scenario": [
+          "http://opcfoundation.org/UA/PubSub/Scenarios/FleetAndCompliance"
+        ],
+        "sb:dataSetClassId": [
+          "urn:uuid:000fbba0-373f-5ff1-bd11-67fb2fc20ef0"
+        ],
+        "forms": [
+          {
+            "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Robotics/;s=ExampleRobotSystem/Model",
+            "contentType": "application/json",
+            "op": [
+              "readproperty",
+              "observeproperty"
+            ],
+            "uav:browsePath": "/Model",
+            "uav:browseName": "2:Model"
+          },
+          {
+            "href": "mqtt://broker.example.com:1883/robotics/fleetandcompliance",
+            "contentType": "application/json",
+            "op": "observeproperty",
+            "sb:pubSub": true
+          }
+        ]
+      },
+      "SerialNumber": {
+        "title": "SerialNumber",
+        "@type": "uav:variable",
+        "type": "string",
+        "observable": true,
+        "readOnly": true,
+        "uav:browseName": "2:SerialNumber",
+        "sb:scenario": [
+          "http://opcfoundation.org/UA/PubSub/Scenarios/FleetAndCompliance"
+        ],
+        "sb:dataSetClassId": [
+          "urn:uuid:000fbba0-373f-5ff1-bd11-67fb2fc20ef0"
+        ],
+        "forms": [
+          {
+            "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Robotics/;s=ExampleRobotSystem/SerialNumber",
+            "contentType": "application/json",
+            "op": [
+              "readproperty",
+              "observeproperty"
+            ],
+            "uav:browsePath": "/SerialNumber",
+            "uav:browseName": "2:SerialNumber"
+          },
+          {
+            "href": "mqtt://broker.example.com:1883/robotics/fleetandcompliance",
+            "contentType": "application/json",
+            "op": "observeproperty",
+            "sb:pubSub": true
+          }
+        ]
+      },
+      "ProductInstanceUri": {
+        "title": "ProductInstanceUri",
+        "@type": "uav:variable",
+        "type": "string",
+        "observable": true,
+        "readOnly": true,
+        "uav:browseName": "2:ProductInstanceUri",
+        "sb:scenario": [
+          "http://opcfoundation.org/UA/PubSub/Scenarios/FleetAndCompliance"
+        ],
+        "sb:dataSetClassId": [
+          "urn:uuid:000fbba0-373f-5ff1-bd11-67fb2fc20ef0"
+        ],
+        "forms": [
+          {
+            "href": "/?id=nsu=http://opcfoundation.org/UA/PubSub/Examples/Robotics/;s=ExampleRobotSystem/ProductInstanceUri",
+            "contentType": "application/json",
+            "op": [
+              "readproperty",
+              "observeproperty"
+            ],
+            "uav:browsePath": "/ProductInstanceUri",
+            "uav:browseName": "2:ProductInstanceUri"
+          },
+          {
+            "href": "mqtt://broker.example.com:1883/robotics/fleetandcompliance",
+            "contentType": "application/json",
+            "op": "observeproperty",
+            "sb:pubSub": true
+          }
+        ]
+      }
+    }
+  }
+]

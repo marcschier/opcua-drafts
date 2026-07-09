@@ -1,0 +1,100 @@
+{
+  "domain": "Robotics",
+  "appliesToType": "MotionDeviceSystemType",
+  "baseModelNamespaceUri": "http://opcfoundation.org/UA/Robotics/",
+  "exampleNamespaceUri": "http://opcfoundation.org/UA/PubSub/Examples/Robotics/",
+  "instanceName": "ExampleRobotSystem",
+  "summary": "Robotics is structured around motion devices, axes, power trains, controllers and safety states with state machines, so scenarios lean on axis/motor telemetry, controller thermals, safety status and nameplate identity rather than a flat measurement model.",
+  "companionSpec": { "name": "OPC UA for Robotics (OPC 40010)", "ref": "https://reference.opcfoundation.org/Robotics/v100/docs/" },
+  "instanceModel": {
+    "note": "Robotics publishes no public instance example, so a compact theoretical `MotionDeviceSystem` is synthesised: one MotionDevice with an Axis and a PowerTrain/Motor, one Controller, and one SafetyState. Placeholder path segments (e.g. `<AxisIdentifier>`) become concrete instance names (e.g. `Axis_1`) in the overlay while the type-level BrowsePath keeps the placeholder."
+  },
+  "configurationVersion": { "majorVersion": 1, "minorVersion": 0 },
+  "companionSpecificationUri": "http://opcfoundation.org/UA/Robotics/",
+  "modelNamespaceUris": ["http://opcfoundation.org/UA/Robotics/"],
+  "groupName": "Robotics",
+  "resolutionTopologies": [
+    { "name": "Single 6-axis articulated robot", "devices": [ { "name": "Robot_1", "axes": 6, "motors": 6 } ], "controllers": ["Controller_1"] },
+    { "name": "Single 4-axis SCARA", "devices": [ { "name": "Scara_1", "axes": 4, "motors": 4 } ], "controllers": ["Controller_1"] },
+    { "name": "Two-robot cell (6+4 axes)", "devices": [ { "name": "Robot_1", "axes": 6, "motors": 6 }, { "name": "Robot_2", "axes": 4, "motors": 4 } ], "controllers": ["Controller_1"] },
+    { "name": "Three-robot cell, dual controller", "devices": [ { "name": "Robot_1", "axes": 6, "motors": 6 }, { "name": "Robot_2", "axes": 6, "motors": 6 }, { "name": "Robot_3", "axes": 7, "motors": 7 } ], "controllers": ["Controller_A", "Controller_B"] }
+  ],
+  "baseNodeSets": [
+    "Opc.Ua.Robotics.NodeSet2.xml",
+    "Opc.Ua.Di.NodeSet2.xml",
+    "Opc.Ua.IA.NodeSet2.xml",
+    "Opc.Ua.Machinery.NodeSet2.xml"
+  ],
+  "requiredModels": [
+    { "uri": "http://opcfoundation.org/UA/Robotics/" },
+    { "uri": "http://opcfoundation.org/UA/DI/" },
+    { "uri": "http://opcfoundation.org/UA/IA/" },
+    { "uri": "http://opcfoundation.org/UA/Machinery/" }
+  ],
+  "scenarioBindings": [
+    {
+      "name": "Observability",
+      "scenarioUri": "http://opcfoundation.org/UA/PubSub/Scenarios/Observability",
+      "direction": "Publisher",
+      "dataSetCardinalityPath": "/MotionDevices/<MotionDeviceIdentifier>",
+      "boundItems": [
+        { "fieldName": "AxisActualPosition", "kind": "Telemetry", "metricInstrumentType": "Gauge", "unit": "deg", "browsePath": "/MotionDevices/<MotionDeviceIdentifier>/Axes/<AxisIdentifier>/ParameterSet/ActualPosition", "samplingIntervalHint": 200 },
+        { "fieldName": "MotorTemperature", "kind": "Telemetry", "metricInstrumentType": "Gauge", "unit": "Cel", "browsePath": "/MotionDevices/<MotionDeviceIdentifier>/PowerTrains/<PowerTrainIdentifier>/<MotorIdentifier>/ParameterSet/MotorTemperature", "samplingIntervalHint": 2000 },
+        { "fieldName": "SpeedOverride", "kind": "Status", "metricInstrumentType": "Gauge", "unit": "%", "browsePath": "/MotionDevices/<MotionDeviceIdentifier>/ParameterSet/SpeedOverride", "samplingIntervalHint": 500 }
+      ]
+    },
+    {
+      "name": "PredictiveMaintenance",
+      "scenarioUri": "http://opcfoundation.org/UA/PubSub/Scenarios/PredictiveMaintenance",
+      "direction": "Publisher",
+      "dataSetCardinalityPath": "/Controllers/<ControllerIdentifier>",
+      "boundItems": [
+        { "fieldName": "ControllerTemperature", "kind": "Telemetry", "browsePath": "/Controllers/<ControllerIdentifier>/ParameterSet/Temperature", "samplingIntervalHint": 5000 },
+        { "fieldName": "CabinetFanSpeed", "kind": "Telemetry", "browsePath": "/Controllers/<ControllerIdentifier>/ParameterSet/CabinetFanSpeed", "samplingIntervalHint": 5000 },
+        { "fieldName": "CPUFanSpeed", "kind": "Telemetry", "browsePath": "/Controllers/<ControllerIdentifier>/ParameterSet/CPUFanSpeed", "samplingIntervalHint": 5000 },
+        { "fieldName": "TotalPowerOnTime", "kind": "Counter", "browsePath": "/Controllers/<ControllerIdentifier>/ParameterSet/TotalPowerOnTime", "samplingIntervalHint": 30000 }
+      ]
+    },
+    {
+      "name": "AnomalyDetection",
+      "scenarioUri": "http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection",
+      "direction": "Publisher",
+      "dataSetCardinalityPath": "/MotionDevices/<MotionDeviceIdentifier>",
+      "boundItems": [
+        { "fieldName": "AxisActualPosition", "kind": "Telemetry", "browsePath": "/MotionDevices/<MotionDeviceIdentifier>/Axes/<AxisIdentifier>/ParameterSet/ActualPosition", "samplingIntervalHint": 100 },
+        { "fieldName": "MotorTemperature", "kind": "Telemetry", "browsePath": "/MotionDevices/<MotionDeviceIdentifier>/PowerTrains/<PowerTrainIdentifier>/<MotorIdentifier>/ParameterSet/MotorTemperature", "samplingIntervalHint": 500 }
+      ]
+    },
+    {
+      "name": "AlarmAndEventDistribution",
+      "scenarioUri": "http://opcfoundation.org/UA/PubSub/Scenarios/AlarmAndEventDistribution",
+      "direction": "Publisher",
+      "contentKind": "Events",
+      "eventSourcePath": "/",
+      "eventType": "AlarmConditionType",
+      "logTemplate": "{SourceName}: {Message} (severity {Severity})",
+      "logSeverityFieldName": "Severity",
+      "logBodyFieldName": "Message",
+      "logTimestampFieldName": "Time",
+      "boundItems": [
+        { "fieldName": "EventId", "kind": "Event", "browsePath": "/EventId" },
+        { "fieldName": "EventType", "kind": "Event", "browsePath": "/EventType" },
+        { "fieldName": "SourceName", "kind": "Event", "browsePath": "/SourceName" },
+        { "fieldName": "Time", "kind": "Event", "browsePath": "/Time" },
+        { "fieldName": "Severity", "kind": "Event", "browsePath": "/Severity" },
+        { "fieldName": "Message", "kind": "Event", "browsePath": "/Message" }
+      ]
+    },
+    {
+      "name": "FleetAndCompliance",
+      "scenarioUri": "http://opcfoundation.org/UA/PubSub/Scenarios/FleetAndCompliance",
+      "direction": "Publisher",
+      "boundItems": [
+        { "fieldName": "Manufacturer", "kind": "Identification", "browsePath": "/Manufacturer" },
+        { "fieldName": "Model", "kind": "Identification", "browsePath": "/Model" },
+        { "fieldName": "SerialNumber", "kind": "Identification", "browsePath": "/SerialNumber" },
+        { "fieldName": "ProductInstanceUri", "kind": "Identification", "browsePath": "/ProductInstanceUri" }
+      ]
+    }
+  ]
+}
