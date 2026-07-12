@@ -46,12 +46,29 @@ Notes:
 - **BearingTemperature** targets a child prim (`…/Body`) and drives a colour; the numeric-to-`color3f` mapping is a connector responsibility declared by `RenderTargetKind = DisplayColor` and `ValueSemanticUri`.
 - **Running** toggles visibility; a non-Good source value uses the binding's `BadQualityAction` (default `Skip`).
 
+## 4.1 Reference implementation (validated end-to-end)
+
+The `PumpDeviceIntegrationServer` sample in `marcschier/UA-.NETStandard` realizes this design and validates it with an automated end-to-end test (`PumpOpenUsdE2eTests`, three passing cases: the companion model is served, the representation and its bindings are discoverable through the registry, and live values flow through a generic connector into a mock USD sink). Because the sample's `PumpType` instance (`Pump #1`) exposes the OPC 40223 measurement surface, the reference bindings use the measurements actually present rather than the illustrative `Speed`/`Running` above:
+
+| Reference binding | Source (Pump measurement) | Target property | USD type | RenderTargetKind |
+|---|---|---|---|---|
+| **MassFlowSpin** | `MassFlow` | `xformOp:rotateZ` (on the represented prim) | `double` | Rotation |
+| **BearingTempColor** | `BearingTemperature` | `primvars:displayColor` (on `…/Body`) | `color3f` | DisplayColor |
+| **DiffPressureEmissive** | `DifferentialPressure` | `inputs:emissiveColor` | `color3f` | EmissiveColor |
+
+Implementer findings from the source-generated OPC UA .NET model (generic, not Pump-specific — applies to any server built from this companion NodeSet):
+
+- **Attach with a hierarchical ReferenceType.** The generated `CreateInstanceOf…` factories leave `ReferenceTypeId = Null`, which is not a browsable reference. Attach the `OpenUsdRepresentation` AddIn to the represented Object and each `OpenUsdLiveBinding` to the representation with an explicit `HasComponent` (or `HasAddIn`) so the nodes are browsable.
+- **Instantiate bindings via the placeholder.** Create each binding from the representation's `<Binding>` placeholder (the generated `AddxBinding_` helper), which yields a concrete instance with a valid BrowseName and reference type.
+- **Optional members are not auto-created.** Only mandatory members exist after instantiation; the optional members a connector reads (`SourceNodeId`, `RenderTargetKind`, `Scale`, `BadQualityAction`) must be explicitly created so they carry a BrowseName and are browsable/readable.
+- **Discovery uses the registry, not the represented object.** A connector enumerates representations from `Server/OpenUSD/Representations` (Organizes) — it does not need to know or reach the represented Object, confirming the Part 1 discovery facility is sufficient on its own.
+
 ## 5 Where the bindings live
 
 - **Machine-readable descriptor:** `../../extras/openusd-binding/examples/pumps/Pumps.OpenUsdBinding.json`.
 - **Illustrative instance overlay (NodeSet):** `Opc.Ua.Pumps.OpenUsdBinding.NodeSet2.xml` (this folder) — a concrete `Pump101` with the AddIn and the three bindings, for browsing/inspection.
 - **Runnable USD writer:** `../../extras/openusd-binding/examples/pumps/usd_writer.py` (+ generated `live.usda`).
-- **C# end-to-end:** the `PumpDeviceIntegrationServer` sample in `marcschier/UA-.NETStandard` exposes the representation + bindings and a `ServerFixture`-based test drives a connector into a mock USD sink; a Python `pxr` writer authors a real `live.usda` locally (Omniverse rendering is out of CI scope).
+- **C# end-to-end:** the `PumpDeviceIntegrationServer` sample in `marcschier/UA-.NETStandard` exposes the representation + bindings, and `PumpOpenUsdE2eTests` starts the server via the generic host, connects a client session, discovers the representation and bindings through `Server/OpenUSD/Representations`, subscribes to the bound source Variables, and drives a generic connector into a mock USD sink (asserted in CI). A Python `pxr` writer authors a real `live.usda` locally (Omniverse rendering is out of CI scope).
 
 ## 6 Deliverables
 
