@@ -1,0 +1,57 @@
+{
+  "domain": "Pumps",
+  "appliesToType": "PumpType",
+  "baseModelNamespaceUri": "http://opcfoundation.org/UA/Pumps/",
+  "openUsdModelNamespaceUri": "http://opcfoundation.org/UA/OpenUSD/",
+  "note": "Implementer (Pump) example for OPC UA - OpenUSD Bindings. Generic spec stays in the base document; this descriptor is the Pump Annex source of truth. Browse paths are relative to the represented Pump Object; final paths depend on the concrete Pumps server.",
+  "stage": {
+    "browseName": "PlantStage",
+    "rootLayerIdentifier": "asset-repo/Plant.usd"
+  },
+  "representation": {
+    "primPath": "/Plant/Pumps/P101",
+    "assetReference": "@./assets/pump.usd@</Pump>"
+  },
+  "bindings": [
+    {
+      "bindingDefinitionId": "6e63cf2c-f2de-4f78-a8f8-f0ccdbb7647a",
+      "name": "Speed",
+      "intentProfile": "UaToUsdTelemetry",
+      "sourceBrowsePath": "/Operational/Measurements/RotationalSpeed",
+      "targetPrimPath": "",
+      "targetPropertyName": "xformOp:rotateZ",
+      "targetUsdTypeName": "double",
+      "renderTargetKind": "Rotation",
+      "valueSemanticUri": "urn:opcua:openusd:semantic:angle",
+      "scale": 0.06,
+      "offset": 0.0,
+      "sourceEngineeringUnits": "1/min",
+      "note": "Impeller spin: rpm scaled to a per-tick degree delta by the connector."
+    },
+    {
+      "bindingDefinitionId": "b1a1f6f0-5c2b-5a1e-9f3a-2b7c4d8e0011",
+      "name": "BearingTemperature",
+      "intentProfile": "UaToUsdTelemetry",
+      "sourceBrowsePath": "/Operational/Measurements/BearingTemperature",
+      "targetPrimPath": "/Plant/Pumps/P101/Body",
+      "targetPropertyName": "primvars:displayColor",
+      "targetUsdTypeName": "color3f",
+      "renderTargetKind": "DisplayColor",
+      "valueSemanticUri": "urn:opcua:openusd:semantic:scalar",
+      "sourceEngineeringUnits": "Cel",
+      "note": "Temperature mapped to a blue->red gradient by the connector's color mapping."
+    },
+    {
+      "bindingDefinitionId": "c2b2a7e1-6d3c-5b2f-a04b-3c8d5e9f1122",
+      "name": "Running",
+      "intentProfile": "UaToUsdTelemetry",
+      "sourceBrowsePath": "/Operational/IsRunning",
+      "targetPrimPath": "",
+      "targetPropertyName": "visibility",
+      "targetUsdTypeName": "token",
+      "renderTargetKind": "Visibility",
+      "valueSemanticUri": "urn:opcua:openusd:semantic:scalar",
+      "note": "Boolean running state toggles inherited/invisible."
+    }
+  ]
+}
