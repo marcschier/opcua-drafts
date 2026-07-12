@@ -1,0 +1,22 @@
+#usda 1.0
+(
+    doc = """Composed pump stage for the OPC UA - OpenUSD Bindings end-to-end.
+
+    This is the stage an operator opens in usdview or NVIDIA Omniverse. It
+    composes two sublayers, strongest first:
+
+      1. live.usda   - runtime override opinions authored by the connector
+                       (xformOp:rotateZ, primvars:displayColor, inputs:emissiveColor).
+                       In Omniverse this is the equivalent of a Nucleus `.live` layer.
+      2. Plant.usda  - the static base asset (geometry + materials).
+
+    Open this file; run the connector (see E2E-GUIDE.md) to author live.usda;
+    reload in usdview or watch it update live in Omniverse.
+    """
+    subLayers = [
+        @./live.usda@,
+        @./Plant.usda@
+    ]
+    defaultPrim = "Plant"
+    upAxis = "Z"
+)

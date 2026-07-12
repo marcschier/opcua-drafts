@@ -1,8 +1,4 @@
 #usda 1.0
-(
-    upAxis = "Y"
-    doc = "OPC UA -> OpenUSD live bindings (demo)"
-)
 
 over "Plant"
 {
@@ -10,22 +6,27 @@ over "Plant"
     {
         over "P101"
         {
-            double xformOp:rotateZ = 87.0000
-            token visibility = "inherited"
-        }
-    }
-}
+            over "Impeller"
+            {
+                custom double xformOp:rotateZ = 42
+            }
 
-over "Plant"
-{
-    over "Pumps"
-    {
-        over "P101"
-        {
             over "Body"
             {
-                color3f primvars:displayColor = (0.6562, 0.0000, 0.3438)
+                custom color3f[] primvars:displayColor = [(0.65625, 0, 0.34375)]
+            }
+
+            over "StatusLight"
+            {
+                over "Mat"
+                {
+                    over "Surface"
+                    {
+                        custom color3f inputs:emissiveColor = (0.053333335, 0.53333336, 0.10666667)
+                    }
+                }
             }
         }
     }
 }
+

@@ -3,34 +3,34 @@
   "appliesToType": "PumpType",
   "baseModelNamespaceUri": "http://opcfoundation.org/UA/Pumps/",
   "openUsdModelNamespaceUri": "http://opcfoundation.org/UA/OpenUSD/",
-  "note": "Implementer (Pump) example for OPC UA - OpenUSD Bindings. Generic spec stays in the base document; this descriptor is the Pump Annex source of truth. Browse paths are relative to the represented Pump Object; final paths depend on the concrete Pumps server.",
+  "note": "Implementer (Pump) example for OPC UA - OpenUSD Bindings. The generic spec stays in the base document; this descriptor is the Pump Annex source of truth and matches the validated PumpDeviceIntegrationServer bindings and the base asset in Plant.usda. Browse paths are relative to the represented Pump Object; a connector normally discovers SourceNodeId directly via Server/OpenUSD/Representations and does not need these paths.",
   "stage": {
     "browseName": "PlantStage",
     "rootLayerIdentifier": "asset-repo/Plant.usd"
   },
   "representation": {
     "primPath": "/Plant/Pumps/P101",
-    "assetReference": "@./assets/pump.usd@</Pump>"
+    "assetReference": "@./Plant.usda@</Plant/Pumps/P101>"
   },
   "bindings": [
     {
       "bindingDefinitionId": "6e63cf2c-f2de-4f78-a8f8-f0ccdbb7647a",
-      "name": "Speed",
+      "name": "MassFlowSpin",
       "intentProfile": "UaToUsdTelemetry",
-      "sourceBrowsePath": "/Operational/Measurements/RotationalSpeed",
-      "targetPrimPath": "",
+      "sourceBrowsePath": "/Operational/Measurements/MassFlow",
+      "targetPrimPath": "/Plant/Pumps/P101/Impeller",
       "targetPropertyName": "xformOp:rotateZ",
       "targetUsdTypeName": "double",
       "renderTargetKind": "Rotation",
       "valueSemanticUri": "urn:opcua:openusd:semantic:angle",
-      "scale": 0.06,
+      "scale": 1.0,
       "offset": 0.0,
-      "sourceEngineeringUnits": "1/min",
-      "note": "Impeller spin: rpm scaled to a per-tick degree delta by the connector."
+      "sourceEngineeringUnits": "kg/s",
+      "note": "Impeller spin: mass flow scaled to a rotateZ angle by the connector."
     },
     {
       "bindingDefinitionId": "b1a1f6f0-5c2b-5a1e-9f3a-2b7c4d8e0011",
-      "name": "BearingTemperature",
+      "name": "BearingTempColor",
       "intentProfile": "UaToUsdTelemetry",
       "sourceBrowsePath": "/Operational/Measurements/BearingTemperature",
       "targetPrimPath": "/Plant/Pumps/P101/Body",
@@ -43,15 +43,16 @@
     },
     {
       "bindingDefinitionId": "c2b2a7e1-6d3c-5b2f-a04b-3c8d5e9f1122",
-      "name": "Running",
+      "name": "DiffPressureEmissive",
       "intentProfile": "UaToUsdTelemetry",
-      "sourceBrowsePath": "/Operational/IsRunning",
-      "targetPrimPath": "",
-      "targetPropertyName": "visibility",
-      "targetUsdTypeName": "token",
-      "renderTargetKind": "Visibility",
+      "sourceBrowsePath": "/Operational/Measurements/DifferentialPressure",
+      "targetPrimPath": "/Plant/Pumps/P101/StatusLight/Mat/Surface",
+      "targetPropertyName": "inputs:emissiveColor",
+      "targetUsdTypeName": "color3f",
+      "renderTargetKind": "EmissiveColor",
       "valueSemanticUri": "urn:opcua:openusd:semantic:scalar",
-      "note": "Boolean running state toggles inherited/invisible."
+      "sourceEngineeringUnits": "bar",
+      "note": "Differential pressure mapped to an emissive glow (status light) by the connector's color mapping."
     }
   ]
 }

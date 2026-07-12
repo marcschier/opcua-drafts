@@ -22,13 +22,33 @@ Out of scope for Edition 1 (reserved for later editions): OPC UA `Method`/comman
 
 ### 1.1 Motivation
 
-Industrial "digital twin" visualization repeatedly re-implements the same brittle glue: a bespoke script maps specific OPC UA NodeIds to specific USD prim attributes and pushes values into a stage. That mapping is invisible to other tools, breaks when the address space changes, and cannot be discovered. This specification moves the mapping into the OPC UA address space itself, where it is browsable, versioned, and authoritative, so that a **generic** connector can discover and apply it for any conforming server.
+Industrial "digital twin" visualization repeatedly re-implements the same brittle glue: a bespoke script maps specific OPC UA NodeIds to specific USD prim attributes and pushes values into a stage. That mapping lives in a connector nobody else can see; it is invisible to other tools, breaks silently when the address space changes, cannot be discovered, and cannot be reviewed, versioned, or governed. Every new pairing of a server with a viewer starts the integration from scratch.
+
+The result is an **N×M integration problem**: *N* servers (pumps, robots, machines, lines) each hand-crafted against *M* visualization tools (Omniverse, `usdview`, web viewers, HMIs) require up to *N×M* one-off bridges, none reusable. This specification collapses that to **N + M**: each server declares its mapping **once**, in its own address space, and each tool implements **one** generic connector. The mapping becomes a first-class, browsable, versioned, authoritative part of the OPC UA model instead of hidden connector code, so a **generic** connector can discover and apply it for any conforming server without prior knowledge of the domain.
 
 ### 1.2 Motivating use cases
 
 - Render a live factory line: pump speed drives a rotating impeller, a bearing temperature drives an emissive glow, a running state drives visibility.
 - Position assets in a scene: an RSL 3D frame drives a prim transform.
 - Bridge to Omniverse: a connector Browses `Server/OpenUSD`, subscribes to the bound Variables, and writes the mapped USD attributes into a Nucleus `.live` layer for RTX rendering.
+
+### 1.3 What it simplifies and what it enables
+
+**Simplifies.**
+
+- **One declaration, not N×M bridges.** The value/identity mapping is authored once in the server and consumed by any conforming connector; adding a viewer no longer means writing another bridge.
+- **No code and no asset edits to change a binding.** Bindings are data in the address space, not connector source or USD-asset edits. Adding, retargeting, or disabling a binding is a model change a server author (or tool) can make and a client can immediately discover.
+- **Deterministic onboarding.** Discovery starts at a single well-known entry point (`Server/OpenUSD/Representations`), so bringing a new asset online is "browse and go" rather than "find out which NodeIds the artist hard-coded".
+- **Identity separated from values.** A server can publish *which* prim represents *which* Object (Part 1) before any live values are wired, and add value bindings (Part 2) later, without breaking consumers.
+- **Reuses existing models unchanged.** Bindings *reference* the Variables that domain companion specs (Pumps, Robotics, Machinery, …) already expose; they do not duplicate or re-model process data.
+
+**Enables.**
+
+- **Interchangeable connectors and renderers.** Competing tools — NVIDIA Omniverse, open-source `usdview`, web viewers — operate over the same declared contract, so servers and viewers evolve independently.
+- **Vendor-neutral, auditable digital twins.** Because the mapping is authoritative, versioned, and part of the model, it can be reviewed, diffed, validated, and governed like any other engineering artifact.
+- **Toolable pipelines.** The mapping is machine-readable, so it can be generated from engineering data, checked in CI, and migrated across editions (override/tombstone matching via `BindingDefinitionId`).
+- **Incremental adoption and clean evolution.** Servers implement Part 1 alone first, add Part 2 when ready, and refine bindings over time without invalidating previously deployed connectors.
+- **An ecosystem division of labour.** Asset authors, machine OEMs, integrators, connector vendors, and visualization operators collaborate through the model as a shared contract rather than through private, point-to-point agreements (see **Annex B**).
 
 ---
 
@@ -318,3 +338,68 @@ The NodeSet and NodeIds are generated and byte-deterministic; do not hand-edit t
 ## Annex A — Information model (generated)
 
 See `core-specs/extras/openusd-binding/tools/model-reference.md` for the full generated node table (BrowseName, NodeId, NodeClass, description for all nodes in this namespace).
+
+---
+
+## Annex B — End-to-end collaboration flow (informative)
+
+This annex walks a complete "live digital twin" scenario to show **who does what** and how the specification is the single contract that lets independent actors collaborate without private, point-to-point agreements. It is informative; nothing here adds normative requirements. The flow is generic; a concrete pump pass is given at the end.
+
+### B.1 Actors and what each contributes
+
+| Actor | Provides | Leverages / consumes | Works at layer |
+|---|---|---|---|
+| **Domain companion-spec author** (e.g., an OPC Foundation working group) | The domain information model (e.g., `PumpType`, RSL spatial types) that a server exposes. | Core OPC UA. | OPC UA type model |
+| **OpenUSD schema author** (AOUSD + DCC/renderer vendors) | The USD schemas that give prims meaning (UsdGeom transforms, UsdShade materials, UsdLux, …). | OpenUSD core. | USD schema |
+| **This specification** (the binding layer) | The generic representation + live-binding model and its discovery facility. | The two model layers above. | OPC UA ⇄ USD contract |
+| **Asset / machine OEM** | An OPC UA **server** that exposes the domain model **and** this binding model (a representation per Object + its live bindings); often ships the machine's **USD asset** too. | Domain spec + this spec. | Server + USD asset |
+| **3D / USD asset author** (artist, CAD-to-USD) | The machine/plant **geometry and materials** as USD layers, with the prim paths and attributes the bindings target. | USD schemas. | USD layers |
+| **System integrator / plant operator** | The composed **plant stage** (references OEM assets, positions instances) and the deployment that points bindings at real servers. | OEM servers + OEM/asset layers. | USD composition + config |
+| **Connector / tool vendor** | A **generic connector** that discovers `Server/OpenUSD`, subscribes, converts, and writes USD — with no domain-specific code. | This spec only. | Runtime bridge |
+| **Visualization / Omniverse operator** | The running **renderer** (Omniverse RTX, `usdview`, web) over the live stage. | The composed stage + connector output. | Presentation |
+
+The key property: each actor depends only on the **published contract** of the layer beneath it, never on another actor's internal choices. A connector vendor never learns "pump"; a machine OEM never learns which renderer will be used; an artist never learns which NodeIds carry the data.
+
+### B.2 The flow
+
+```mermaid
+sequenceDiagram
+  autonumber
+  participant OEM as Machine OEM (server author)
+  participant ART as USD asset author
+  participant SI as System integrator
+  participant CV as Connector vendor
+  participant VIZ as Visualization operator
+  Note over OEM,VIZ: Design time
+  OEM->>OEM: Expose domain model + OpenUsdRepresentation + bindings<br/>(PrimPath, Source, Target, RenderTargetKind)
+  ART->>ART: Author the machine USD asset<br/>(prims/attributes the bindings target)
+  SI->>SI: Compose plant stage (reference assets, place instances),<br/>deploy servers, point bindings at real NodeIds
+  CV->>CV: Build one generic connector (spec-only)
+  Note over OEM,VIZ: Runtime
+  CV->>OEM: Browse Server/OpenUSD/Representations
+  OEM-->>CV: representations (Stage, PrimPath) + live bindings
+  CV->>OEM: Subscribe to bound source Variables
+  loop live
+    OEM-->>CV: DataChange(value, quality, timestamps)
+    CV->>VIZ: convert + write target USD attribute (coalesced)
+  end
+  VIZ->>VIZ: Render the live stage (RTX / Hydra)
+```
+
+### B.3 Where the contract lives at each hand-off
+
+- **OEM → integrator:** the server's `Server/OpenUSD` graph *is* the interface. The integrator does not read OEM connector code; they browse the representation and bindings.
+- **Artist → OEM/integrator:** the USD **prim paths and attribute names** are the interface. As long as `PrimPath`, `TargetPrimPath`, and `TargetPropertyName` match the authored asset, either side can change independently.
+- **Connector vendor → everyone:** the connector consumes only this spec's model. The same binary serves a pump server, a robot server, and a line server.
+- **Integrator → visualization:** the composed stage plus the connector's live overrides are the interface; the operator swaps renderers freely.
+
+### B.4 Concrete pass — the pump example
+
+1. The **Pumps working group** publishes `PumpType` (OPC 40223). The **binding spec** (this document) publishes the representation/binding model.
+2. A **pump OEM** ships a server whose `Pump #1` carries an `OpenUsdRepresentation` (`PrimPath = /Plant/Pumps/P101`) and three bindings: `MassFlow → xformOp:rotateZ`, `BearingTemperature → primvars:displayColor`, `DifferentialPressure → emissive`.
+3. A **USD artist** authors `Plant.usda`: `/Plant/Pumps/P101` with a rotatable impeller, a `Body` with a display color, and an emissive material.
+4. A **system integrator** references that asset into the plant stage and points the deployment at the OEM server.
+5. A **connector vendor's** generic connector browses `Server/OpenUSD/Representations`, subscribes to the three Variables, converts, and writes a `.live` override layer.
+6. The **visualization operator** opens the composed stage in Omniverse (or `usdview`) and sees the pump spin, warm toward red, and glow — driven live, with no pump-specific code anywhere in the connector or renderer.
+
+A runnable realization of this pass (server, connector, base asset, and a step-by-step guide) is provided in `core-specs/extras/openusd-binding/examples/pumps/` and the `PumpDeviceIntegrationServer` sample.

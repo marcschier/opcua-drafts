@@ -8,7 +8,7 @@
 
 ## 1 Scope
 
-This addendum binds one `PumpType` instance to a USD prim and defines three read-only live bindings (Part 2, `UaToUsdTelemetry`): impeller rotation, body colour from temperature, and visibility from running state. It is illustrative; a concrete server supplies the exact source BrowsePaths and stage identifiers.
+This addendum binds one `PumpType` instance to a USD prim and defines three read-only live bindings (Part 2, `UaToUsdTelemetry`): impeller rotation from mass flow, body colour from bearing temperature, and status-light glow from differential pressure. It is illustrative; a concrete server supplies the exact source BrowsePaths and stage identifiers.
 
 ## 2 Normative references
 
@@ -25,9 +25,9 @@ Pump101 : PumpType
   └─ HasAddIn OpenUsdRepresentation : OpenUsdRepresentationType
        Stage    = NodeId(Server/OpenUSD/Stages/PlantStage)
        PrimPath = "/Plant/Pumps/P101"
-       ├─ Speed              : OpenUsdLiveBindingType
-       ├─ BearingTemperature : OpenUsdLiveBindingType
-       └─ Running            : OpenUsdLiveBindingType
+       ├─ MassFlowSpin         : OpenUsdLiveBindingType
+       ├─ BearingTempColor     : OpenUsdLiveBindingType
+       └─ DiffPressureEmissive : OpenUsdLiveBindingType
 ```
 
 The AddIn is also `Organizes`-listed from `Server/OpenUSD/Representations`, so a generic connector discovers it without knowing anything about pumps. Each binding's source resolves **relative to `Pump101`** via `SourceBrowsePath`, so the same declaration applies to every pump instance; the effective runtime key is `(Pump101, BindingDefinitionId)`.
@@ -36,15 +36,15 @@ The AddIn is also `Organizes`-listed from `Server/OpenUSD/Representations`, so a
 
 | Binding | Source (relative to the Pump) | Target property | USD type | RenderTargetKind | Conversion |
 |---|---|---|---|---|---|
-| **Speed** | `/Operational/Measurements/RotationalSpeed` | `xformOp:rotateZ` | `double` | Rotation | rpm → per-tick degrees (Scale 0.06) |
-| **BearingTemperature** | `/Operational/Measurements/BearingTemperature` | `primvars:displayColor` (on `…/Body`) | `color3f` | DisplayColor | °C → blue→red gradient (connector mapping) |
-| **Running** | `/Operational/IsRunning` | `visibility` | `token` | Visibility | bool → `inherited`/`invisible` |
+| **MassFlowSpin** | `/Operational/Measurements/MassFlow` | `xformOp:rotateZ` (on `…/Impeller`) | `double` | Rotation | flow → rotateZ angle (Scale) |
+| **BearingTempColor** | `/Operational/Measurements/BearingTemperature` | `primvars:displayColor` (on `…/Body`) | `color3f` | DisplayColor | °C → blue→red gradient (connector mapping) |
+| **DiffPressureEmissive** | `/Operational/Measurements/DifferentialPressure` | `inputs:emissiveColor` (on the status-light material) | `color3f` | EmissiveColor | bar → emissive glow (connector mapping) |
 
 Notes:
 
-- **Speed** targets the represented prim itself (empty `TargetPrimPath`); the connector integrates rpm into an angle each frame. `xformOp:rotateZ` must appear in the prim's `xformOpOrder`.
-- **BearingTemperature** targets a child prim (`…/Body`) and drives a colour; the numeric-to-`color3f` mapping is a connector responsibility declared by `RenderTargetKind = DisplayColor` and `ValueSemanticUri`.
-- **Running** toggles visibility; a non-Good source value uses the binding's `BadQualityAction` (default `Skip`).
+- **MassFlowSpin** targets the impeller prim; `xformOp:rotateZ` must appear in that prim's `xformOpOrder`.
+- **BearingTempColor** targets a child prim (`…/Body`) and drives a colour; the numeric-to-`color3f` mapping is a connector responsibility declared by `RenderTargetKind = DisplayColor` and `ValueSemanticUri`.
+- **DiffPressureEmissive** drives a `UsdPreviewSurface` emissive input; a non-Good source value uses the binding's `BadQualityAction` (default `Skip`).
 
 ## 4.1 Reference implementation (validated end-to-end)
 
