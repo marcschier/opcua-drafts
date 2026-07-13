@@ -114,8 +114,13 @@ The connector is a standalone client — point it at the server and the output l
 ```bash
 cd UA-.NETStandard
 dotnet run --project Applications/PumpDeviceIntegrationBridge -c Release -f net10.0 -- \
-  --server opc.tcp://localhost:62810/PumpDeviceIntegrationServer --out ~/pump-live/live.usda
+  --server opc.tcp://localhost:62810/PumpDeviceIntegrationServer --out ~/pump-live/live.usda --insecure
 ```
+
+> The bridge is **secure by default** (encrypted/signed channel, server-certificate trust
+> required — spec §9). For this localhost demo the server uses a self-signed certificate, so
+> `--insecure` opts into an unsecured endpoint and blanket certificate acceptance. For a secured
+> run, omit `--insecure` and place the server certificate in the bridge's trusted store.
 
 You should see:
 
