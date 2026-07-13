@@ -1,24 +1,30 @@
 # OPC UA — OpenUSD Bindings
 
-**Release 0.1.0 — Draft**
+**Release 0.2.0 — Draft**
 **Namespace:** `http://opcfoundation.org/UA/OpenUSD/`
-**Publication date:** 2026-07-12
+**Publication date:** 2026-07-13
 
-> Status: Working-group draft. This document, together with `Opc.Ua.OpenUsdBinding.NodeSet2.xml` and `Opc.Ua.OpenUsdBinding.NodeIds.csv`, defines an OPC UA information model that lets a Server declare **which OpenUSD (Universal Scene Description) prim represents a given OPC UA Object**, and **which live OPC UA Variable values drive which USD attributes**, so that a generic connector can render live industrial data in an OpenUSD renderer (for example NVIDIA Omniverse) without hard-coding the mapping. Nothing here is normative, official, or endorsed by the OPC Foundation or the Alliance for OpenUSD; namespace URIs and NodeIds are **provisional** and for prototyping only. The design rationale, prior art, and the corrections that shaped this Edition are recorded in the companion research report (`research/openuds-and-omniverse-what-would-be-needed-to-supp.md`, §0).
+> Status: Working-group draft. This document, together with `Opc.Ua.OpenUsdBinding.NodeSet2.xml` and `Opc.Ua.OpenUsdBinding.NodeIds.csv`, defines an OPC UA information model that lets a Server declare **which OpenUSD (Universal Scene Description) prim represents a given OPC UA Object**, and **which live OPC UA Variable values drive which USD attributes** (and, where authorized, which USD-side intents command OPC UA back), so that a generic connector can render live industrial data in an OpenUSD renderer (for example NVIDIA Omniverse) without hard-coding the mapping. Nothing here is normative, official, or endorsed by the OPC Foundation or the Alliance for OpenUSD; namespace URIs and NodeIds are **provisional** and for prototyping only. The design rationale, prior art, and the corrections that shaped this draft are recorded in the companion research report (`research/openuds-and-omniverse-what-would-be-needed-to-supp.md`, §0).
 
 ---
 
 ## 1 Scope
 
-This specification defines a small, generic **representation and live-binding layer** between an OPC UA address space and an OpenUSD model. It is deliberately domain-agnostic: it binds the Objects and Variables of **any** companion specification (Pumps, Robotics, Machinery, …) to a USD scene, and it does not require modifying the USD asset.
+This specification defines a small, generic **representation and binding layer** between an OPC UA address space and an OpenUSD model. It is deliberately domain-agnostic: it binds the Objects and Variables of **any** companion specification (Pumps, Robotics, Machinery, …) to a USD scene, and it does not require modifying the USD asset.
 
-The Edition-1 model has two portable parts and one informative profile:
+The model has three portable capability groups and one informative profile:
 
-- **Part 1 — Representation.** A mandatory, well-known discovery facility (`Server/OpenUSD`) plus an `OpenUsdRepresentation` AddIn that ties an OPC UA Object to a canonical composed USD prim path on a named stage. Representation carries **identity only**; it does not carry values.
-- **Part 2 — Live Property Binding.** A read-only mapping from a source OPC UA `Variable` `Value` to a target USD attribute, with conversion and with quality/timestamp/persistence **hints**. Part 2 binds **existing** domain Variables; it does not duplicate process data.
-- **Part 3 — Omniverse realization (informative).** How a connector realizes the model in NVIDIA Omniverse (Nucleus `.live` layers, Fabric/USDRT, OmniGraph, frame coalescing). Part 3 is a separate, vendor-governed profile and is **not** part of the portable normative model.
+- **Representation (identity).** A mandatory, well-known discovery facility (`Server/OpenUSD`) plus an `OpenUsdRepresentation` AddIn that ties an OPC UA Object to a canonical composed USD prim path on a named stage, with optional content-integrity metadata (digest/signature) so a referenced asset can be verified. Representation carries **identity only**; it does not carry values.
+- **Live property binding (telemetry).** A read-only mapping from a source OPC UA `Variable` `Value` — resolved by NodeId, RelativePath, or **semantic id** — to a target USD attribute, with conversion and with quality/timestamp/persistence **hints**. This binds **existing** domain Variables; it does not duplicate process data. Event/alarm state and historical playback are expressed as additional intent profiles on the same binding type.
+- **Command binding (control).** An **opt-in**, authorized, single-writer mapping from a USD-side intent to an OPC UA setpoint write or `Method` call, so an agent or operator can act on the plant through the same declared, discoverable model. Command bindings are **disabled by default** and require explicit `RolePermissions`; the default posture of the model remains read-only.
+- **Omniverse realization (informative).** How a connector realizes the model in NVIDIA Omniverse (Nucleus `.live` layers, Fabric/USDRT, OmniGraph, frame coalescing). This is a separate, vendor-governed profile and is **not** part of the portable normative model.
 
-Out of scope for Edition 1 (reserved for later editions): OPC UA `Method`/command bindings, event/alarm bindings, setpoint writes, Part 14 Actions, PubSub realization, a USD-side applied API schema mirror, persistent-UUID identity, and normative geometry/material/skeleton/physics profiles.
+Out of scope (reserved for later work): Part 14 Actions, PubSub realization, a USD-side applied API schema mirror, persistent-UUID identity, and normative geometry/material/skeleton/physics profiles. Command, event/alarm, and history bindings are **normative but optional** capabilities a Server may choose not to implement.
+
+### 1.4 Capabilities and versioning
+
+This document supersedes Release 0.1.0. The 0.1 baseline (Representation + read-only `UaToUsdTelemetry` binding + the Omniverse informative profile) is unchanged and remains conformant; 0.2.0 **adds** capabilities without altering any 0.1 node or NodeId. New capabilities are additive and each is gated by its own conformance unit (§7), so a Server implements only what it needs. Where this document refers to "the 0.1 baseline" it means the read-only representation + telemetry core; everything else is an optional 0.2.0 capability.
+
 
 ### 1.1 Motivation
 
@@ -46,8 +52,8 @@ The result is an **N×M integration problem**: *N* servers (pumps, robots, machi
 
 - **Interchangeable connectors and renderers.** Competing tools — NVIDIA Omniverse, open-source `usdview`, web viewers — operate over the same declared contract, so servers and viewers evolve independently.
 - **Vendor-neutral, auditable digital twins.** Because the mapping is authoritative, versioned, and part of the model, it can be reviewed, diffed, validated, and governed like any other engineering artifact.
-- **Toolable pipelines.** The mapping is machine-readable, so it can be generated from engineering data, checked in CI, and migrated across editions (override/tombstone matching via `BindingDefinitionId`).
-- **Incremental adoption and clean evolution.** Servers implement Part 1 alone first, add Part 2 when ready, and refine bindings over time without invalidating previously deployed connectors.
+- **Toolable pipelines.** The mapping is machine-readable, so it can be generated from engineering data, checked in CI, and migrated across versions (override/tombstone matching via `BindingDefinitionId`).
+- **Incremental adoption and clean evolution.** Servers implement the representation core alone first, add value bindings when ready, and refine bindings over time without invalidating previously deployed connectors.
 - **An ecosystem division of labour.** Asset authors, machine OEMs, integrators, connector vendors, and visualization operators collaborate through the model as a shared contract rather than through private, point-to-point agreements (see **Annex B**).
 
 ---
@@ -85,7 +91,7 @@ Referenced for the transform profile only (not a RequiredModel of the base NodeS
 
 ### 4.1 Layered contract
 
-Representation (identity) and live binding (values) are separated so that identity can be stable while value mapping and transport evolve. A Server may implement Part 1 alone (declare which prim represents each Object) and add Part 2 later. OPC UA is the **single mapping authority**; the USD asset is not modified by this specification.
+Representation (identity) and live binding (values) are separated so that identity can be stable while value mapping and transport evolve. A Server may implement the representation core alone (declare which prim represents each Object) and add value bindings later. OPC UA is the **single mapping authority**; the USD asset is not modified by this specification.
 
 ### 4.2 Discovery (normative)
 
@@ -135,7 +141,7 @@ flowchart TD
 
 ## 5 Information model
 
-All types are in the namespace `http://opcfoundation.org/UA/OpenUSD/` (index 1). Numeric NodeIds are **provisional**: ObjectTypes `1001–1099`, Interfaces `1010+`, DataTypes/Enumerations `3001+` (with EnumStrings at `datatype-id + 900`), and all remaining instance declarations sequentially from `6001`. The base NodeSet's only RequiredModel is the base UA namespace, so a Server can adopt Part 1/Part 2 without pulling in RSL or DI. The full generated node table is Annex A.
+All types are in the namespace `http://opcfoundation.org/UA/OpenUSD/` (index 1). Numeric NodeIds are **provisional**: ObjectTypes `1001–1099`, Interfaces `1010+`, DataTypes/Enumerations `3001+` (with EnumStrings at `datatype-id + 900`), and all remaining instance declarations sequentially from `6001`. The base NodeSet's only RequiredModel is the base UA namespace, so a Server can adopt the representation + telemetry core without pulling in RSL or DI. New 0.2.0 members are appended so 0.1 NodeIds are unchanged. The full generated node table is Annex A.
 
 ### 5.1 `OpenUsdRootType : BaseObjectType`
 
@@ -154,8 +160,12 @@ The well-known instance `Server/OpenUSD` is of this type (§4.2).
 | `SessionLayerIdentifier` | String | O | Opaque session-layer identifier; contributes to stage identity. |
 | `ResolverContext` | String | O | Opaque resolver-context descriptor. |
 | `ResolvedRootLayerUri` | String | O | Informative current resolution as a URI; not authoritative. |
+| `RootLayerDigest` | ByteString | O | Cryptographic digest of the resolved root layer, for content-integrity verification (Twin BOM). |
+| `RootLayerDigestAlgorithm` | OpenUsdDigestAlgorithmEnum | O | Digest algorithm for `RootLayerDigest` (default `SHA-256`). |
+| `Signature` | ByteString | O | Optional detached signature over the digest / stage identity, for provenance. |
+| `ProvenanceUri` | String | O | Optional URI locating provenance / a signed Twin BOM manifest for the stage. |
 
-The Stage Object's own NodeId is its same-server identity; a `Representation` references it by NodeId.
+The Stage Object's own NodeId is its same-server identity; a `Representation` references it by NodeId. When `RootLayerDigest` is present a connector **shall** verify the resolved root layer against it (using `RootLayerDigestAlgorithm`) before composing the stage, and **shall** refuse to open a layer whose digest does not match; this is the model's content-integrity anchor for the vision's signed *Twin BOM* (§8.2).
 
 ### 5.3 `OpenUsdRepresentationType : BaseObjectType` — the AddIn
 
@@ -176,10 +186,12 @@ One read-only live binding maps a source `Variable` `Value` to one target USD at
 |---|---|---:|---|
 | `BindingDefinitionId` | Guid | M | Stable declaration id for override/tombstone matching. |
 | `Enabled` | Boolean | M | `false` is a tombstone suppressing an inherited binding. |
-| `IntentProfile` | OpenUsdIntentProfileEnum | M | Edition 1: `UaToUsdTelemetry`. |
+| `IntentProfile` | OpenUsdIntentProfileEnum | M | Direction/semantics of the binding: `UaToUsdTelemetry` (default), `UaAlarmToUsd`, `UaHistoryToUsd`, `UsdToUaCommand`. |
+| `SignalRole` | OpenUsdSignalRoleEnum | O | `Observable` (read-only, default) or `Controllable` (eligible for a command binding). Mirrors the asset-definition signal role. |
 | `SourceNodeId` | NodeId | O | Absolute source Variable NodeId (instance form). |
-| `SourceBrowsePath` | RelativePath | O | Preferred: RelativePath from the represented Object to the source Variable. |
-| `AttributeId` | UInt32 | O | Source attribute; default 13 (Value). Edition 1 binds Value only. |
+| `SourceBrowsePath` | RelativePath | O | RelativePath from the represented Object to the source Variable (instance-portable). |
+| `SourceSemanticId` | String | O | Semantic identifier (e.g. ECLASS / IEC CDD IRDI) of the source signal; resolved against the source's `HasDictionaryEntry` / semantic annotations for cross-vendor portability. |
+| `AttributeId` | UInt32 | O | Source attribute; default 13 (Value). Telemetry binds Value only. |
 | `TargetStage` | NodeId | M | The `OpenUsdStageType` instance holding the target prim. |
 | `TargetPrimPath` | String | M | Target prim path: absolute, or relative to the representation `PrimPath`. |
 | `TargetPropertyName` | String | M | USD attribute name, e.g. `xformOp:rotateZ`, `primvars:displayColor`. |
@@ -190,10 +202,15 @@ One read-only live binding maps a source `Variable` `Value` to one target USD at
 | `SourceEngineeringUnits`, `TargetEngineeringUnits` | EUInformation | O | Unit assertion / request (UNECE). |
 | `BadQualityAction` | OpenUsdBadQualityActionEnum | O | Treatment of non-Good source values; default `Skip`. |
 | `SamplingIntervalHint` | Double | O | Requested sampling hint (ms). A **hint** only. |
+| `AlarmAspect` | OpenUsdAlarmAspectEnum | O | For `UaAlarmToUsd`: which condition aspect drives the target (`ActiveState`, `Severity`, `AckedState`, `EnabledState`). |
+| `TimeSampled` | Boolean | O | For `UaHistoryToUsd`: author values as USD time samples (playback) rather than the latest default. |
+| `CommandTargetNodeId` | NodeId | O | For `UsdToUaCommand`: the Variable to write, or the Object on which to `Call` `CommandMethodId`. |
+| `CommandMethodId` | NodeId | O | For `UsdToUaCommand`: optional Method to invoke instead of a Variable write. |
+| `CommandTriggerPropertyName` | String | O | For `UsdToUaCommand`: the USD attribute whose change is interpreted as the command intent/value. |
 | `State` | OpenUsdBindingStateEnum | O | Runtime lifecycle state (diagnostic, read-only). |
 | `LastError` | LocalizedText | O | Last operation error (diagnostic). |
 
-Exactly one of `SourceNodeId` / `SourceBrowsePath` **shall** resolve. `SourceBrowsePath` is preferred because it is instance-portable and can be declared at type level.
+Exactly one of `SourceNodeId` / `SourceBrowsePath` / `SourceSemanticId` **shall** resolve to a single source Variable. `SourceBrowsePath` and `SourceSemanticId` are preferred over `SourceNodeId` because they are instance-portable and can be declared at type level; `SourceSemanticId` additionally makes a binding portable **across vendors and servers** that share the same semantic dictionary (ECLASS / IEC CDD), which is the anchor the wider asset-definition strategy relies on (§8.2).
 
 ### 5.5 `IOpenUsdRepresentedType : BaseInterfaceType`
 
@@ -201,16 +218,19 @@ An optional interface a domain ObjectType may apply (`HasInterface`) to advertis
 
 ### 5.6 DataTypes (Enumerations)
 
-- `OpenUsdIntentProfileEnum` — `UaToUsdTelemetry(0)` (Edition 1). Other intents reserved.
+- `OpenUsdIntentProfileEnum` — `UaToUsdTelemetry(0) UaAlarmToUsd(1) UaHistoryToUsd(2) UsdToUaCommand(3)`. `UaToUsdTelemetry` is the read-only default; others are optional capabilities.
 - `OpenUsdRenderTargetKindEnum` — `Translation(0) Rotation(1) Scale(2) Transform(3) Visibility(4) DisplayColor(5) EmissiveColor(6) Opacity(7) Custom(8)`.
 - `OpenUsdBadQualityActionEnum` — `Skip(0) HoldLast(1) ClearOpinion(2) Fallback(3)`.
 - `OpenUsdBindingStateEnum` — `Disabled(0) Unresolved(1) Ready(2) Active(3) Degraded(4) Error(5)`.
+- `OpenUsdSignalRoleEnum` — `Observable(0) Controllable(1)`.
+- `OpenUsdAlarmAspectEnum` — `ActiveState(0) Severity(1) AckedState(2) EnabledState(3)`.
+- `OpenUsdDigestAlgorithmEnum` — `None(0) SHA-256(1) SHA-384(2) SHA-512(3)`.
 
 ### 5.7 Source and target resolution (normative)
 
-**Source.** If `SourceNodeId` is present, use it. Otherwise resolve `SourceBrowsePath` from the represented Object. Zero matches → the binding is *unresolved* (no update). More than one match → `Bad_TooManyMatches`. The connector validates NodeClass = Variable and the Value attribute.
+**Source.** In precedence order: if `SourceNodeId` is present use it; else if `SourceSemanticId` is present resolve it against the represented Object's subtree by matching the source Variable's semantic annotation (`HasDictionaryEntry` target IRDI or equivalent); else resolve `SourceBrowsePath` from the represented Object. Zero matches → the binding is *unresolved* (no update). More than one match → `Bad_TooManyMatches`. The connector validates NodeClass = Variable and the Value attribute.
 
-**Target.** Resolve `TargetStage` (validate it is an `OpenUsdStageType`). Resolve `TargetPrimPath`: absolute, or relative to the representation `PrimPath`. Append `TargetPropertyName` to obtain the target attribute. Validate the prim, the attribute, and `TargetUsdTypeName`. For an `xformOp`, the op **shall** be present in the prim's `xformOpOrder`. The connector **shall not** fall back by name, nearest prim, first match, or a compatible type, and **shall not** create a property unless an explicit authoring profile permits it.
+**Target.** Resolve `TargetStage` (validate it is an `OpenUsdStageType`; verify `RootLayerDigest` if present per §5.2). Resolve `TargetPrimPath`: absolute, or relative to the representation `PrimPath`. Append `TargetPropertyName` to obtain the target attribute. Validate the prim, the attribute, and `TargetUsdTypeName`. For an `xformOp`, the op **shall** be present in the prim's `xformOpOrder`. The connector **shall not** fall back by name, nearest prim, first match, or a compatible type, and **shall not** create a property unless an explicit authoring profile permits it.
 
 ### 5.8 Conversion (normative)
 
@@ -226,9 +246,27 @@ Conversion order: engineering-unit conversion → `Scale`/`Offset` → (transfor
 
 **Quality.** An omitted (binary) source `StatusCode` means **Good**; a `Bad`/`Uncertain` StatusCode triggers `BadQualityAction` (default `Skip`). `ClearOpinion` removes the authored USD opinion (revealing a weaker layer) — it does **not** author a fabricated "bad" value.
 
-**Timestamp.** OPC UA source/server timestamps are wall-clock; USD time codes are stage-timeline ordinates. They relate only through an explicit epoch and `timeCodesPerSecond` when a recording profile is used; Edition 1 authors the latest value as the attribute default. Absent timestamps mean **unavailable**, not "now".
+**Timestamp.** OPC UA source/server timestamps are wall-clock; USD time codes are stage-timeline ordinates. They relate only through an explicit epoch and `timeCodesPerSecond` when a recording profile is used; the `UaToUsdTelemetry` profile authors the latest value as the attribute default, while the `UaHistoryToUsd` profile authors time-sampled values (§5.11). Absent timestamps mean **unavailable**, not "now".
 
 **Persistence and update.** `SamplingIntervalHint` and any deadband are **hints**; `PublishingInterval`, queue size, and the actual MonitoredItem parameters are per-client Subscription requests and are **not** part of the binding descriptor. Overflow and sequence gaps are observable loss (partly recoverable via `Republish`) and are not license to invent continuity.
+
+### 5.10 Command bindings (normative, optional, opt-in)
+
+A binding with `IntentProfile = UsdToUaCommand` maps a **USD-side intent** back to an OPC UA action, so an agent or operator acting in the visual twin can command the plant through the same declared, discoverable model. Command bindings are the control counterpart of the read-only telemetry binding and are **disabled by default**.
+
+- **Trigger.** `CommandTriggerPropertyName` names the USD attribute whose authored change is interpreted as the intent; the connector observes that attribute (e.g. an operator/agent writes a setpoint on the prim) and converts it back through the inverse of §5.8 (`Offset`/`Scale`, units).
+- **Action.** If `CommandMethodId` is present, the connector `Call`s that Method on `CommandTargetNodeId` with the converted argument(s); otherwise it `Write`s the converted value to the Variable `CommandTargetNodeId`.
+- **Role.** The bound signal **shall** carry `SignalRole = Controllable`; a connector **shall not** issue a command for an `Observable` signal.
+- **Authorization & safety (normative).** `Enabled` defaults to **false**; a Server exposes a command binding only deliberately. The connector **shall** hold the write/`Call` authorization the target requires (`RolePermissions`), **shall** enforce a **single-writer** discipline per target, **shall** be **fail-closed** (on any resolution/authorization/quality doubt it performs no action), and **shall not** retry a command implicitly. The model carries no credentials.
+- **Boundary.** This model does **not** define the control logic, interlocks, or the operating envelope that governs whether a command is *allowed*; that is the responsibility of the server's control layer and of a declarative operating-envelope policy (e.g. SOP-as-Code) outside this specification. The command binding only declares *how* a USD-side intent reaches an authorized OPC UA action.
+
+### 5.11 Alarm and history bindings (normative, optional)
+
+Two additional read-only intent profiles reuse the same `OpenUsdLiveBindingType`:
+
+- **`UaAlarmToUsd`.** The source resolves to an OPC UA Alarms & Conditions instance (Part 9). `AlarmAspect` selects the condition aspect that drives the target USD attribute — `ActiveState`/`AckedState`/`EnabledState` (boolean → e.g. `visibility` or an emissive on/off) or `Severity` (numeric → e.g. a color ramp). Quality/`BadQualityAction` apply as for telemetry; a returned-to-normal condition clears or resets the target per `BadQualityAction`.
+- **`UaHistoryToUsd`.** With `TimeSampled = true` the connector reads history (Part 11 `HistoryRead`) for the source and authors the values as **USD time samples** on the target attribute, giving the stage a scrubbable timeline for playback/replay. The epoch and `timeCodesPerSecond` mapping is declared by a recording profile; absent that, samples are authored on a connector-defined uniform timeline and are informative.
+
 
 ---
 
@@ -274,13 +312,19 @@ Conformance Units (each a normative, testable requirement):
 - **OU-Conversion-Transform** — RSL transform profile (angles, units, up-axis).
 - **OU-Quality** — Good-default handling and `BadQualityAction`.
 - **OU-Diagnostics** — `State` / `LastError` populated at runtime.
+- **OU-SemanticSource** — a binding whose source resolves via `SourceSemanticId` (ECLASS / IEC CDD).
+- **OU-Alarm** — a `UaAlarmToUsd` binding driving a target from an A&C condition aspect.
+- **OU-History** — a `UaHistoryToUsd` binding authoring USD time samples from `HistoryRead`.
+- **OU-Command** — an opt-in, authorized, single-writer `UsdToUaCommand` binding (Controllable role; fail-closed).
+- **OU-Integrity** — `OpenUsdStageType` with a verified `RootLayerDigest`.
 
 Profiles:
 
 - **OpenUSD Representation Server** — OU-Namespace, OU-Discovery, OU-Stage, OU-Representation, OU-RepresentationRegistry.
-- **OpenUSD Live Rendering Server** — the Representation profile + OU-Binding, OU-Conversion-Scalar, OU-Quality (OU-Conversion-Transform and OU-Diagnostics optional).
+- **OpenUSD Live Rendering Server** — the Representation profile + OU-Binding, OU-Conversion-Scalar, OU-Quality (OU-Conversion-Transform, OU-SemanticSource, OU-Integrity, and OU-Diagnostics optional).
+- **OpenUSD Interactive Server** — the Live Rendering profile + OU-Command (and typically OU-Alarm); adds the authorized, opt-in control path for agent/operator interaction. OU-History is optional.
 
-Each CU requires a conformance test (Browse the node, Read the properties, and — for bindings — resolve source/target and observe a converted value). See the Pumps addendum for a worked, testable instance.
+Each CU requires a conformance test (Browse the node, Read the properties, and — for bindings — resolve source/target and observe a converted value or, for OU-Command, an authorized write/`Call`). See the Pumps addendum for a worked, testable instance.
 
 ---
 
@@ -297,17 +341,30 @@ Each CU requires a conformance test (Browse the node, Read the properties, and �
 | `RenderTargetKind = Visibility` | `visibility` on a `UsdGeomImageable` |
 | transform profile (RSL 3D frame) | `xformOp:transform` (matrix4d) or decomposed translate + orient |
 
-### 8.1 Part 3 — Omniverse realization (informative, vendor-governed)
+### 8.1 Omniverse realization (informative, vendor-governed)
 
-In NVIDIA Omniverse a connector opens the stage on Nucleus, creates or joins a `.live` layer, and writes target attributes there (flushing with `omni.client.live_process()` on the main thread), or applies high-rate updates through **Fabric/USDRT** and coalesces to the latest value **once per render frame** rather than persisting every sample. `Method`/command execution (a later edition) maps to an OmniGraph/Action Graph node. These behaviors are a vendor profile and are not part of the portable model; the base model must not normatively require Kit, Fabric, Nucleus, `.live`, MDL, or PhysX.
+In NVIDIA Omniverse a connector opens the stage on Nucleus, creates or joins a `.live` layer, and writes target attributes there (flushing with `omni.client.live_process()` on the main thread), or applies high-rate updates through **Fabric/USDRT** and coalesces to the latest value **once per render frame** rather than persisting every sample. USD-side command intents (§5.10) map to an OmniGraph/Action Graph node that issues the authorized OPC UA write/`Method` call. These behaviors are a vendor profile and are not part of the portable model; the base model must not normatively require Kit, Fabric, Nucleus, `.live`, MDL, or PhysX.
+
+### 8.2 Alignment with an asset-definition-centric strategy (informative)
+
+This model is the **visual-projection binding** of a broader "asset definition at the center" strategy, in which a single governed, standards-based asset definition drives multiple projections — meaning (ontology), appearance (this model → OpenUSD/Omniverse), place (geospatial, OPC UA Parts 210/211), and behavior (a declarative operating envelope). The design choices here serve that role:
+
+- **Declared, discoverable binding.** The signal → USD-prim binding lives in the OPC UA address space (browsable, versioned, discoverable), so visualization is a *projection* of the asset definition rather than a bespoke per-scene integration. This is exactly the "declared signal → USD-prim binding contract" the strategy needs on the spine.
+- **Semantic-id portability.** `SourceSemanticId` (ECLASS / IEC CDD) lets the same binding apply to assets from different vendors that share companion-spec types and semantic ids — the cross-vendor portability the strategy depends on — and is the natural bridge to an AAS submodel expression (Annex C).
+- **Signal role + command.** `SignalRole` mirrors the strategy's *observable vs controllable* signal tagging, and `UsdToUaCommand` provides the authorized, opt-in control path an agent needs to *act* on the plant (gated externally by the operating envelope).
+- **Twin BOM integrity.** `RootLayerDigest`/`Signature`/`ProvenanceUri` let the referenced USD asset be digest-pinned and verified, so the visual reference can be packaged into a signed *Twin BOM* alongside the definition, semantic ids, and provenance.
+- **OpenUSD-native, not runtime-captive.** The normative model is AOUSD-native; Omniverse is an informative realization (§8.1), so the asset definition is not captive to one runtime.
+
+The intended standards path is a family of thin, composable binding contracts (this OpenUSD binding being one) advanced through the OPC Foundation and bridged to the AAS/IDTA on shared semantic ids, rather than a single monolithic profile.
+
 
 ---
 
 ## 9 Security
 
 - **Endpoint.** A connector **shall** use an authenticated, integrity-protected endpoint; the represented model itself carries no secrets. Server certificate trust is required.
-- **Authorization.** Read access to the representation/binding nodes and to the source Variables is governed by normal OPC UA `RolePermissions`/`AccessRestrictions`. Edition 1 is read-only over process data and requires no write authority.
-- **Resolver safety.** `RootLayerIdentifier`/`ResolvedRootLayerUri` are server-provided and could point a connector at an arbitrary asset location (an SSRF-class risk). A connector **shall** apply a scheme/root **allowlist** and a trusted resolver-context policy, and **shall** impose resource limits on stage open/asset resolution.
+- **Authorization.** Read access to the representation/binding nodes and to the source Variables is governed by normal OPC UA `RolePermissions`/`AccessRestrictions`. Telemetry, alarm, and history bindings are read-only over process data and require no write authority. **Command bindings** (§5.10) require explicit write/`Call` authorization on the target Variable/Method, are disabled by default, and are subject to a single-writer discipline; a connector **shall** obtain and check the required Role before issuing any command.
+- **Resolver safety & content integrity.** `RootLayerIdentifier`/`ResolvedRootLayerUri` are server-provided and could point a connector at an arbitrary asset location (an SSRF-class risk). A connector **shall** apply a scheme/root **allowlist** and a trusted resolver-context policy, and **shall** impose resource limits on stage open/asset resolution. When `RootLayerDigest` is present, the connector **shall** verify the resolved layer against it before composing the stage and **shall** refuse a mismatch; when `Signature`/`ProvenanceUri` are present, provenance **should** be verified against a trusted policy (the Twin BOM anchor, §8.2).
 - **Writer ownership.** When authoring into a shared USD/Nucleus layer, a **single-writer** discipline is required; no secrets (keys, tokens, Nucleus/broker credentials) are stored in the NodeSet or in USD metadata.
 
 ---
@@ -403,3 +460,20 @@ sequenceDiagram
 6. The **visualization operator** opens the composed stage in Omniverse (or `usdview`) and sees the pump spin, warm toward red, and glow — driven live, with no pump-specific code anywhere in the connector or renderer.
 
 A runnable realization of this pass (server, connector, base asset, and a step-by-step guide) is provided in `core-specs/extras/openusd-binding/examples/pumps/` and the `PumpDeviceIntegrationServer` sample.
+
+---
+
+## Annex C — Bridging to the Asset Administration Shell (informative)
+
+The wider asset-definition strategy is deliberately **plural**: the same enrichment should be expressible against either an OPC UA companion specification or an Asset Administration Shell (AAS, IEC 63278) submodel, reconciled through shared semantic ids (ECLASS / IEC CDD) rather than a single vendor schema. OPC 30270 already bridges OPC UA and AAS. This annex sketches how the OpenUSD binding maps to an AAS **submodel template** so a curator can carry it in an AASX package or a signed Twin BOM.
+
+| This model (OPC UA) | AAS submodel template `OpenUsdBinding` |
+|---|---|
+| `OpenUsdRepresentationType` (per represented Object) | a `SubmodelElementCollection` "Representation" with `PrimPath`, `Stage` reference |
+| `OpenUsdStageType` (`RootLayerIdentifier`, digest, signature) | a "Stage" collection with `RootLayerIdentifier`, `RootLayerDigest`, `Signature`, `ProvenanceUri` properties (the USD asset stays external, digest-pinned) |
+| `OpenUsdLiveBindingType` (each binding) | a "Binding" `SubmodelElementCollection` with `Target*`, `RenderTargetKind`, conversion, `IntentProfile`, `SignalRole` |
+| `SourceSemanticId` | the binding element's `semanticId` (the shared ECLASS / IEC CDD anchor — the reconciliation point) |
+| `SourceNodeId` / `SourceBrowsePath` | a `ReferenceElement` to the OPC UA source (or, in an AAS-only deployment, to the corresponding submodel property) |
+| `UsdToUaCommand` target/method | a "Command" element referencing the controllable operation, gated by AAS access rules |
+
+Because the **source is anchored on a semantic id**, a binding authored against an OPC UA server and one authored against an AAS submodel describe the *same* signal → prim mapping and can be reconciled automatically. Co-publishing the submodel template with the IDTA, anchored on ECLASS / IEC CDD, keeps the two standards' expressions of this enrichment convergent rather than competing. This annex is a direction, not a normative binding; the normative artifact remains the OPC UA NodeSet.

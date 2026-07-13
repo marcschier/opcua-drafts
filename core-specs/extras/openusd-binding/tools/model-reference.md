@@ -4,7 +4,7 @@
 
 | NodeId | BrowseName | NodeClass | Description |
 |---|---|---|---|
-| ns=1;i=3001 | OpenUsdIntentProfileEnum | DataType | The intent of a live binding. Edition 1 defines only UaToUsdTelemetry (one-way, read-only UA -> USD). Other intents are reserved for later editions. |
+| ns=1;i=3001 | OpenUsdIntentProfileEnum | DataType | The intent/direction of a binding. UaToUsdTelemetry (read-only UA -> USD) is the default; UaAlarmToUsd and UaHistoryToUsd are read-only variants; UsdToUaCommand is the opt-in, authorized control direction (USD -> UA). |
 | ns=1;i=3901 | EnumStrings | Variable |  |
 | ns=1;i=3002 | OpenUsdRenderTargetKindEnum | DataType | Classifies the USD render target a live value drives (advisory routing hint). |
 | ns=1;i=3902 | EnumStrings | Variable |  |
@@ -15,10 +15,10 @@
 | ns=1;i=1004 | OpenUsdLiveBindingType | ObjectType | One read-only live binding: a source OPC UA Variable value drives one target USD attribute. The binding declaration is portable; the runtime connector resolves and applies it. The effective runtime identity is (represented object, BindingDefinitionId). |
 | ns=1;i=6001 | BindingDefinitionId | Variable | Stable declaration identifier used for override/tombstone matching across type and instance levels. NOT a runtime instance key. |
 | ns=1;i=6002 | Enabled | Variable | False acts as a tombstone that suppresses an inherited binding. |
-| ns=1;i=6003 | IntentProfile | Variable | The binding intent. Edition 1: UaToUsdTelemetry. |
+| ns=1;i=6003 | IntentProfile | Variable | The binding intent/direction; default UaToUsdTelemetry. |
 | ns=1;i=6004 | SourceNodeId | Variable | Absolute NodeId of the source Variable (instance-level). Optional; prefer SourceBrowsePath for type-level declarations. |
 | ns=1;i=6005 | SourceBrowsePath | Variable | RelativePath to the source Variable, resolved from the represented object. Preferred, instance-portable form. |
-| ns=1;i=6006 | AttributeId | Variable | Source attribute id; default 13 (Value). Edition 1 binds Value only. |
+| ns=1;i=6006 | AttributeId | Variable | Source attribute id; default 13 (Value). Telemetry binds Value only. |
 | ns=1;i=6007 | TargetStage | Variable | NodeId of the OpenUsdStageType instance holding the target prim. |
 | ns=1;i=6008 | TargetPrimPath | Variable | Prim path of the target: absolute, or relative to the representation PrimPath. |
 | ns=1;i=6009 | TargetPropertyName | Variable | USD attribute name on the target prim, e.g. 'xformOp:rotateZ' or 'primvars:displayColor'. |
@@ -48,3 +48,20 @@
 | ns=1;i=6030 | Representations | Object | Registry that Organizes every OpenUsdRepresentation AddIn in the server, so a connector can enumerate all representations from one place. |
 | ns=1;i=1010 | IOpenUsdRepresentedType | ObjectType | Optional interface advertising that a domain ObjectType participates in OpenUSD representation. Applied with HasInterface; informative for browsing. |
 | ns=1;i=6031 | <OpenUsdRepresentation> | Object | Placeholder for the representation AddIn on an implementing instance. |
+| ns=1;i=3005 | OpenUsdSignalRoleEnum | DataType | Role of the bound signal, mirroring the asset-definition observable/controllable tagging. Only Controllable signals are eligible for a command binding. |
+| ns=1;i=3905 | EnumStrings | Variable |  |
+| ns=1;i=3006 | OpenUsdAlarmAspectEnum | DataType | For UaAlarmToUsd bindings: which A&C condition aspect drives the target attribute. |
+| ns=1;i=3906 | EnumStrings | Variable |  |
+| ns=1;i=3007 | OpenUsdDigestAlgorithmEnum | DataType | Digest algorithm for OpenUsdStageType.RootLayerDigest (Twin BOM content integrity). |
+| ns=1;i=3907 | EnumStrings | Variable |  |
+| ns=1;i=6032 | SignalRole | Variable | Observable (read-only, default) or Controllable (eligible for a command binding). |
+| ns=1;i=6033 | SourceSemanticId | Variable | Semantic identifier (e.g. ECLASS / IEC CDD IRDI) of the source signal; resolved against the source's semantic annotations for cross-vendor portability. |
+| ns=1;i=6034 | AlarmAspect | Variable | For UaAlarmToUsd: which A&C condition aspect drives the target. |
+| ns=1;i=6035 | TimeSampled | Variable | For UaHistoryToUsd: author values as USD time samples (playback) rather than the latest default. |
+| ns=1;i=6036 | CommandTargetNodeId | Variable | For UsdToUaCommand: the Variable to write, or the Object on which to Call CommandMethodId. |
+| ns=1;i=6037 | CommandMethodId | Variable | For UsdToUaCommand: optional Method to invoke instead of a Variable write. |
+| ns=1;i=6038 | CommandTriggerPropertyName | Variable | For UsdToUaCommand: the USD attribute whose change is interpreted as the command intent/value. |
+| ns=1;i=6039 | RootLayerDigest | Variable | Cryptographic digest of the resolved root layer, for content-integrity verification (Twin BOM). Verify before composing the stage. |
+| ns=1;i=6040 | RootLayerDigestAlgorithm | Variable | Digest algorithm for RootLayerDigest (default SHA-256). |
+| ns=1;i=6041 | Signature | Variable | Optional detached signature over the digest / stage identity, for provenance. |
+| ns=1;i=6042 | ProvenanceUri | Variable | Optional URI locating provenance / a signed Twin BOM manifest for the stage. |

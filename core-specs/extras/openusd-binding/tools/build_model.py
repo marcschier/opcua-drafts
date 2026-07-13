@@ -56,6 +56,7 @@ UInt32 = "i=7"
 Double = "i=11"
 String = "i=12"
 Guid = "i=14"
+ByteString = "i=15"
 NodeId_ = "i=17"
 QualifiedName = "i=20"
 LocalizedText = "i=21"
@@ -66,7 +67,7 @@ Server = "i=2253"
 
 ALIASES = [
     ("Boolean", Boolean), ("UInt32", UInt32), ("Double", Double), ("String", String),
-    ("Guid", Guid), ("NodeId", NodeId_), ("QualifiedName", QualifiedName),
+    ("Guid", Guid), ("ByteString", ByteString), ("NodeId", NodeId_), ("QualifiedName", QualifiedName),
     ("LocalizedText", LocalizedText), ("RelativePath", RelativePath),
     ("EUInformation", EUInformation),
     ("HasComponent", HasComponent), ("HasProperty", HasProperty),
@@ -256,9 +257,13 @@ CAT_DT = "OpenUSD Binding DataTypes"
 
 # ---- DataTypes (enums) ----------------------------------------------------
 enum_type(3001, "OpenUsdIntentProfileEnum",
-          "The intent of a live binding. Edition 1 defines only UaToUsdTelemetry "
-          "(one-way, read-only UA -> USD). Other intents are reserved for later editions.",
-          [("UaToUsdTelemetry", 0, "Read-only UA Variable value drives a USD attribute.")])
+          "The intent/direction of a binding. UaToUsdTelemetry (read-only UA -> USD) is "
+          "the default; UaAlarmToUsd and UaHistoryToUsd are read-only variants; "
+          "UsdToUaCommand is the opt-in, authorized control direction (USD -> UA).",
+          [("UaToUsdTelemetry", 0, "Read-only UA Variable value drives a USD attribute."),
+           ("UaAlarmToUsd", 1, "Read-only A&C condition aspect drives a USD attribute."),
+           ("UaHistoryToUsd", 2, "Read-only history (HistoryRead) authored as USD time samples."),
+           ("UsdToUaCommand", 3, "Opt-in, authorized USD-side intent drives an UA write/Method call.")])
 
 enum_type(3002, "OpenUsdRenderTargetKindEnum",
           "Classifies the USD render target a live value drives (advisory routing hint).",
@@ -297,7 +302,7 @@ prop_var(B, "OpenUsdLiveBindingType", "BindingDefinitionId", Guid,
 prop_var(B, "OpenUsdLiveBindingType", "Enabled", Boolean,
          "False acts as a tombstone that suppresses an inherited binding.", MR_Mandatory)
 prop_var(B, "OpenUsdLiveBindingType", "IntentProfile", OpenUsdIntentProfileEnum,
-         "The binding intent. Edition 1: UaToUsdTelemetry.", MR_Mandatory)
+         "The binding intent/direction; default UaToUsdTelemetry.", MR_Mandatory)
 # Source locator (exactly one of SourceNodeId / SourceBrowsePath resolves)
 prop_var(B, "OpenUsdLiveBindingType", "SourceNodeId", NodeId_,
          "Absolute NodeId of the source Variable (instance-level). Optional; prefer "
@@ -306,7 +311,7 @@ prop_var(B, "OpenUsdLiveBindingType", "SourceBrowsePath", RelativePath,
          "RelativePath to the source Variable, resolved from the represented object. "
          "Preferred, instance-portable form.", MR_Optional)
 prop_var(B, "OpenUsdLiveBindingType", "AttributeId", UInt32,
-         "Source attribute id; default 13 (Value). Edition 1 binds Value only.", MR_Optional)
+         "Source attribute id; default 13 (Value). Telemetry binds Value only.", MR_Optional)
 # Target locator
 prop_var(B, "OpenUsdLiveBindingType", "TargetStage", NodeId_,
          "NodeId of the OpenUsdStageType instance holding the target prim.", MR_Mandatory)
@@ -334,7 +339,7 @@ prop_var(B, "OpenUsdLiveBindingType", "SourceEngineeringUnits", EUInformation,
          "Asserted source engineering units (UNECE).", MR_Optional)
 prop_var(B, "OpenUsdLiveBindingType", "TargetEngineeringUnits", EUInformation,
          "Requested target engineering units.", MR_Optional)
-# Quality / hints (Edition 1: hints only; Subscription config is per-client, not here)
+# Quality / hints (hints only; Subscription config is per-client, not here)
 prop_var(B, "OpenUsdLiveBindingType", "BadQualityAction", OpenUsdBadQualityActionEnum,
          "How the connector treats a non-Good source value. Default Skip.", MR_Optional)
 prop_var(B, "OpenUsdLiveBindingType", "SamplingIntervalHint", Double,
@@ -406,6 +411,69 @@ placeholder_obj(1010, "IOpenUsdRepresentedType", "<OpenUsdRepresentation>", T(10
 # this type-only base NodeSet. This keeps the base model free of cross-namespace instance
 # references and lets any server mount the facility under Server or Objects. See the spec
 # §4.2 (a conforming server SHALL expose it) and the PumpDeviceIntegrationServer sample.
+
+
+# ===========================================================================
+# ============  0.2.0 ADDITIONS (appended so 0.1 NodeIds are stable)  ========
+# ===========================================================================
+# New DataTypes use explicit NodeIds (3005+); new members are appended here so
+# every 0.1 member keeps its original sequential NodeId. Do not reorder.
+
+enum_type(3005, "OpenUsdSignalRoleEnum",
+          "Role of the bound signal, mirroring the asset-definition observable/controllable "
+          "tagging. Only Controllable signals are eligible for a command binding.",
+          [("Observable", 0, "Read-only; drives USD but cannot be commanded."),
+           ("Controllable", 1, "May be commanded via an opt-in, authorized command binding.")])
+
+enum_type(3006, "OpenUsdAlarmAspectEnum",
+          "For UaAlarmToUsd bindings: which A&C condition aspect drives the target attribute.",
+          [("ActiveState", 0, "Condition ActiveState (boolean)."),
+           ("Severity", 1, "Condition Severity (numeric)."),
+           ("AckedState", 2, "Condition AckedState (boolean)."),
+           ("EnabledState", 3, "Condition EnabledState (boolean).")])
+
+enum_type(3007, "OpenUsdDigestAlgorithmEnum",
+          "Digest algorithm for OpenUsdStageType.RootLayerDigest (Twin BOM content integrity).",
+          [("None", 0, None), ("SHA-256", 1, None), ("SHA-384", 2, None), ("SHA-512", 3, None)])
+
+OpenUsdSignalRoleEnum = T(3005)
+OpenUsdAlarmAspectEnum = T(3006)
+OpenUsdDigestAlgorithmEnum = T(3007)
+
+# --- OpenUsdLiveBindingType (1004): appended members -----------------------
+prop_var(B, "OpenUsdLiveBindingType", "SignalRole", OpenUsdSignalRoleEnum,
+         "Observable (read-only, default) or Controllable (eligible for a command binding).",
+         MR_Optional)
+prop_var(B, "OpenUsdLiveBindingType", "SourceSemanticId", String,
+         "Semantic identifier (e.g. ECLASS / IEC CDD IRDI) of the source signal; resolved "
+         "against the source's semantic annotations for cross-vendor portability.", MR_Optional)
+prop_var(B, "OpenUsdLiveBindingType", "AlarmAspect", OpenUsdAlarmAspectEnum,
+         "For UaAlarmToUsd: which A&C condition aspect drives the target.", MR_Optional)
+prop_var(B, "OpenUsdLiveBindingType", "TimeSampled", Boolean,
+         "For UaHistoryToUsd: author values as USD time samples (playback) rather than "
+         "the latest default.", MR_Optional)
+prop_var(B, "OpenUsdLiveBindingType", "CommandTargetNodeId", NodeId_,
+         "For UsdToUaCommand: the Variable to write, or the Object on which to Call "
+         "CommandMethodId.", MR_Optional)
+prop_var(B, "OpenUsdLiveBindingType", "CommandMethodId", NodeId_,
+         "For UsdToUaCommand: optional Method to invoke instead of a Variable write.",
+         MR_Optional)
+prop_var(B, "OpenUsdLiveBindingType", "CommandTriggerPropertyName", String,
+         "For UsdToUaCommand: the USD attribute whose change is interpreted as the command "
+         "intent/value.", MR_Optional)
+
+# --- OpenUsdStageType (1002): appended content-integrity members -----------
+prop_var(S, "OpenUsdStageType", "RootLayerDigest", ByteString,
+         "Cryptographic digest of the resolved root layer, for content-integrity "
+         "verification (Twin BOM). Verify before composing the stage.", MR_Optional)
+prop_var(S, "OpenUsdStageType", "RootLayerDigestAlgorithm", OpenUsdDigestAlgorithmEnum,
+         "Digest algorithm for RootLayerDigest (default SHA-256).", MR_Optional)
+prop_var(S, "OpenUsdStageType", "Signature", ByteString,
+         "Optional detached signature over the digest / stage identity, for provenance.",
+         MR_Optional)
+prop_var(S, "OpenUsdStageType", "ProvenanceUri", String,
+         "Optional URI locating provenance / a signed Twin BOM manifest for the stage.",
+         MR_Optional)
 
 
 # ===========================================================================
