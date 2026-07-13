@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Generate JSON Schema (Draft 2020-12) documents for OPC UA DataTypes.
 
-This is the xRegistry catalog's own contribution (the Avro/Protobuf/Arrow
+This is the xRegistry catalog's own contribution (the Avro/Arrow
 documents come from the sibling encoding folders). The schemas describe the
 *structure* of the OPC UA JSON DataEncoding for each DataType and are intended
 for validation, code generation and documentation — JSON does not require a

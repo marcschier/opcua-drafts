@@ -1,7 +1,7 @@
 # OPC UA Part 6 Apache Arrow DataEncoding
 
 **Working draft for submission to the OPC Foundation Working Group**  
-**Proposed insertion:** OPC 10000-6 v1.05.07, new clause `5.7 OPC UA Arrow`  
+**Proposed insertion:** OPC 10000-6 v1.05.07, new clause `5.6 OPC UA Arrow`  
 **Version:** 0.1.0 · **Date:** 2026-07-02
 
 > **Status — working draft.** This document specifies a single canonical Apache Arrow representation for OPC UA values. It is an additive DataEncoding beside Binary, XML and JSON and shares the same OPC UA type model, DataTypeDefinition metadata and ExtensionObject type identity rules.
@@ -40,13 +40,13 @@ There is one canonical form. Encoders shall not choose alternative Arrow layouts
 
 ## 5 Insertion into OPC 10000-6 v1.05.07
 
-Insert the following new clause after `5.4 OPC UA JSON` and after the sibling additive clauses `5.5 OPC UA Avro` and `5.6 OPC UA Protobuf`, before clause `6`.
+Insert the following new clause after `5.4 OPC UA JSON` and after the sibling additive clause `5.5 OPC UA Avro`, before clause `6`.
 
-### 5.7 OPC UA Arrow
+### 5.6 OPC UA Arrow
 
 OPC UA Arrow maps each OPC UA DataType to one Apache Arrow `DataType`. A value encoded by this mapping is a length-1 Arrow Array with that `DataType`. When used by OPC UA PubSub, the same `DataType` is used as the column type for the corresponding DataSet field.
 
-#### 5.7.1 General rules
+#### 5.6.1 General rules
 
 Null OPC UA values shall be encoded as Arrow null slots using the native validity bitmap. Empty strings, empty ByteStrings and empty lists shall be encoded as present non-null slots with zero length content. Optional Structure fields shall use `struct<present:bool, value:T>` so an absent optional field (`present=false`) is distinct from a present field whose value is null (`present=true, value=null`).
 
@@ -54,7 +54,7 @@ Arrow IPC stream content shall use media type `application/vnd.apache.arrow.stre
 
 OPC UA DataTypes that support DataTypeEncoding Objects may describe a `Default Arrow` DataTypeEncoding Node. This draft describes that Node but does not allocate final NodeIds.
 
-#### 5.7.2 Built-in DataTypes
+#### 5.6.2 Built-in DataTypes
 
 For generated per-type schemas and examples, see [Annex A](#annex-a-generated-per-type-reference).
 
@@ -86,59 +86,59 @@ For generated per-type schemas and examples, see [Annex A](#annex-a-generated-pe
 | Variant | `dense_union<null, scalar built-ins, list built-ins, matrix, ExtensionObject>` | Carries exact runtime type identity and dimensions. A null Variant is a null slot. |
 | DiagnosticInfo | `struct<symbolic_id:int32, namespace_uri:int32, locale:int32, localized_text:int32, additional_info:utf8, inner_status_code:uint32, inner_diagnostic_info:list<DiagnosticInfoFrame>>` | All scalar child fields are nullable. `inner_diagnostic_info` is an ordered list of non-recursive DiagnosticInfo frames, outermost inner first, which preserves the recursive OPC UA chain without embedding JSON or opaque binary. |
 
-NodeId and ExpandedNodeId use the OPC UA textual form in a single `utf8` column rather than the structured multi-field representation used by the Avro and Protobuf row encodings. The textual form is fully reversible: the `s=` string identifier is the last component and runs to the end of the value so it needs no escaping, `g=` uses the canonical 36-character GUID form, `b=` uses base64 for opaque identifiers, and a NamespaceIndex round-trips through `ns=`, a NamespaceUri through `nsu=`, and a non-zero ServerIndex through `svr=`.
+NodeId and ExpandedNodeId use the OPC UA textual form in a single `utf8` column rather than the structured multi-field representation used by the Avro row encoding. The textual form is fully reversible: the `s=` string identifier is the last component and runs to the end of the value so it needs no escaping, `g=` uses the canonical 36-character GUID form, `b=` uses base64 for opaque identifiers, and a NamespaceIndex round-trips through `ns=`, a NamespaceUri through `nsu=`, and a non-zero ServerIndex through `svr=`.
 
-#### 5.7.3 Enumerations and OptionSets
+#### 5.6.3 Enumerations and OptionSets
 
 Enumerations shall be represented as `int32`; symbolic labels in generated schema metadata are informative and the integer value is normative for decoding. OptionSets shall be represented by the exact-width unsigned integer required by the OptionSet bit size (`uint32` for 32-bit OptionSets unless the DataTypeDefinition states otherwise).
 
-#### 5.7.4 Structures, optional fields and Unions
+#### 5.6.4 Structures, optional fields and Unions
 
 An OPC UA Structure shall be represented as an Arrow `struct` with one child field per DataTypeDefinition field in definition order. A StructureWithOptionalFields uses the `struct<present:bool, value:T>` optional wrapper for optional members; mandatory fields are nullable only when the field DataType itself is nullable.
 
 An OPC UA Union shall be represented as an Arrow dense `union` with a `null` branch followed by one branch per OPC UA union field. Each non-null branch is `struct<value:T>` so selecting a nullable branch with `value=null` is distinct from selecting the union `null` branch. Type codes shall be stable for the DataTypeDefinition field order.
 
-#### 5.7.5 Arrays and Matrices
+#### 5.6.5 Arrays and Matrices
 
 A one-dimensional OPC UA array shall be represented as `list<Elem>`, where `Elem` is the Arrow mapping of the element DataType. A null array is a null list slot. An empty array is a present list slot with length zero. Null elements are represented by the element validity bitmap when the element type permits nulls.
 
 A multi-dimensional OPC UA Matrix shall be represented as `struct<dimensions:list<int32>, values:list<Elem>>`. `dimensions` contains the OPC UA dimension lengths. `values` contains the elements in row-major order. The product of `dimensions` shall equal the length of `values`. Arrow `fixed_shape_tensor` and `variable_shape_tensor` extension types may be referenced informatively, but this struct is the only canonical Matrix carrier.
 
-#### 5.7.6 Variant
+#### 5.6.6 Variant
 
 Variant shall be represented as a recursive dense union whose child arrays cover the Variant body forms the field may carry: scalar built-ins except Variant, DataValue and DiagnosticInfo; one-dimensional list forms of those built-ins; the canonical Matrix struct; and ExtensionObject. A self-describing encoding may include all body forms, whereas a schema-governed encoding may narrow the union to the aggregated set for the field and grow it across MinorVersions under the append-only rule of the Schema Registry (see *OPC UA — Schema Registry* §5.6), so an existing branch keeps its dense-union type code in every later minor of the same major. The union type code, list-vs-scalar form and Matrix dimensions are sufficient to reconstruct the exact OPC UA Variant type and dimensionality.
 
-#### 5.7.7 ExtensionObject and abstract/subtyped fields
+#### 5.6.7 ExtensionObject and abstract/subtyped fields
 
 ExtensionObject and fields declared with abstract or subtyped values shall carry concrete type identity inline. The canonical carrier is `struct<type_id:NodeId, body:dense_union<null, known structs, binary>>`. The `type_id` is the DataType NodeId or DataTypeEncoding NodeId needed to resolve the body schema. The known-struct union branches are the aggregated concrete-type set for the field per the Schema Registry (see *OPC UA — Schema Registry* §5.6): generated from the subtype hierarchy where bounded, or grown append-only across MinorVersions as new concrete types are encoded, with an existing branch keeping its dense-union type code, and the opaque fallback children — `binary` for a Binary body and `utf8` for an XML or textual body — appended append-only when a value first requires them so they may occupy any type code. If the receiver does not know the body type, or the type is not yet aggregated, the body may be retained as opaque binary without claiming decoded structured content. Because a bare RecordBatch carries no schema and its node/buffer layout matches its writer-minor schema, a decoder that did not receive the writer schema in an IPC `stream` shall resolve the exact writer-minor schema by SchemaId (§5.6).
 
-#### 5.7.8 Default Arrow DataTypeEncoding Node
+#### 5.6.8 Default Arrow DataTypeEncoding Node
 
 For every structured DataType with a Default Binary, Default XML or Default JSON DataTypeEncoding, a companion `Default Arrow` DataTypeEncoding Object may be described. Its browse name is `Default Arrow`, its encoding format is Arrow IPC using this clause, and its schema is the canonical Arrow `DataType` generated from the DataTypeDefinition.
 
-#### 5.7.9 Schema-generation algorithm
+#### 5.6.9 Schema-generation algorithm
 
-Given an OPC UA DataType, an encoder or decoder shall derive the canonical Arrow `DataType` by applying the mapping in this clause recursively to the DataTypeDefinition. Built-in DataTypes map as specified in 5.7.2. Enumerations map to `int32`; OptionSets map to the unsigned integer width required by their DataTypeDefinition. A one-dimensional array maps to `list<Elem>`. A Matrix maps to `struct<dimensions:list<int32>, values:list<Elem>>`. A Structure maps to an Arrow `struct` whose child fields appear in DataTypeDefinition order. A StructureWithOptionalFields shall wrap each optional field as `struct<present:bool not null, value:T>` and shall not use a null child slot to mean absent. A Union shall map to a dense union with a `null` branch followed by one branch per union field in definition order; each non-null branch is `struct<value:T>`. Fields declared abstract or allowing subtyped values, and `ExtensionObject`, shall carry the concrete runtime type identity with the value using the canonical `type_id` plus dense-union body carrier. `Variant` and abstract values use the runtime type to select the scalar, array, matrix or ExtensionObject branch. Numeric NodeIds shall use a `uint32` numeric identifier field.
+Given an OPC UA DataType, an encoder or decoder shall derive the canonical Arrow `DataType` by applying the mapping in this clause recursively to the DataTypeDefinition. Built-in DataTypes map as specified in 5.6.2. Enumerations map to `int32`; OptionSets map to the unsigned integer width required by their DataTypeDefinition. A one-dimensional array maps to `list<Elem>`. A Matrix maps to `struct<dimensions:list<int32>, values:list<Elem>>`. A Structure maps to an Arrow `struct` whose child fields appear in DataTypeDefinition order. A StructureWithOptionalFields shall wrap each optional field as `struct<present:bool not null, value:T>` and shall not use a null child slot to mean absent. A Union shall map to a dense union with a `null` branch followed by one branch per union field in definition order; each non-null branch is `struct<value:T>`. Fields declared abstract or allowing subtyped values, and `ExtensionObject`, shall carry the concrete runtime type identity with the value using the canonical `type_id` plus dense-union body carrier. `Variant` and abstract values use the runtime type to select the scalar, array, matrix or ExtensionObject branch. Numeric NodeIds shall use a `uint32` numeric identifier field.
 
 The canonical Arrow `Schema` for a standalone Part 6 value is a single field named `value` with metadata `opcua-arrow=1`. For PubSub, the same generation function is applied to each DataSet field to form the RecordBatch schema. The canonical form of a schema is the serialized Arrow Schema IPC message bytes, for example `schema.serialize().to_pybytes()`. The `SchemaId` is the lowercase hexadecimal SHA-256 fingerprint truncated to the first 8 bytes (16 hex chars) of the canonical schema bytes, unless a profile specifies a longer length.
 
 Arrow types are **structural**: the mapping inlines a fresh dense union at each Variant and ExtensionObject occurrence, so every field carries its **own** union and the fields evolve independently — appending a body form or concrete struct type to one field's union never changes another field's type. This is the per-field model; unlike the nominal Avro mapping (Avro Part 6 §6.6), Arrow has no shared named `Variant`/`ExtensionObject` type and therefore no shared-record option. Two structurally identical fields still produce identical inline types, so a schema-driven bound remains deterministic across publishers.
 
-#### 5.7.10 Decoder algorithm
+#### 5.6.10 Decoder algorithm
 
 A schema-driven decoder shall treat an Arrow IPC stream as self-contained because the stream embeds its Schema message before any RecordBatch. The decoder reads that Schema message, validates that each field uses the canonical mapping, then decodes each Arrow Array using this Part 6 mapping. If a decoder must validate a message before receiving the stream, or must enforce a governed schema, it shall look up the `SchemaId` in a local cache or registry and compare the received serialized Arrow Schema with the cached canonical form.
 
-When the payload is a **bare RecordBatch** — the Part 14 `batch` `ArrowIpcFormat`, a single Arrow RecordBatch message with no preceding Schema message — the decoder cannot read the schema from the payload. Because a RecordBatch carries no schema and its node and buffer layout is shaped by its writer-minor schema (§5.7.7, §5.7.12), the decoder shall obtain the exact writer-minor schema out of band: it reads the `SchemaId` that accompanies the message — in transport metadata (`opcua-arrow-schema-id`) or the DataSetMessage/NetworkMessage envelope — and resolves the serialized Arrow Schema for that SchemaId from its schema cache, a schema registry or a prior announcement, following the Part 14 cache-miss resolution order. It then validates that each field uses the canonical mapping and decodes each Arrow Array against that schema using this Part 6 mapping. A bare RecordBatch whose SchemaId is unknown and cannot be resolved is a schema error and shall not be decoded.
+When the payload is a **bare RecordBatch** — the Part 14 `batch` `ArrowIpcFormat`, a single Arrow RecordBatch message with no preceding Schema message — the decoder cannot read the schema from the payload. Because a RecordBatch carries no schema and its node and buffer layout is shaped by its writer-minor schema (§5.6.7, §5.6.12), the decoder shall obtain the exact writer-minor schema out of band: it reads the `SchemaId` that accompanies the message — in transport metadata (`opcua-arrow-schema-id`) or the DataSetMessage/NetworkMessage envelope — and resolves the serialized Arrow Schema for that SchemaId from its schema cache, a schema registry or a prior announcement, following the Part 14 cache-miss resolution order. It then validates that each field uses the canonical mapping and decodes each Arrow Array against that schema using this Part 6 mapping. A bare RecordBatch whose SchemaId is unknown and cannot be resolved is a schema error and shall not be decoded.
 
-An AddressSpace-driven decoder may instead read the DataTypeDefinition for the expected DataType from the AddressSpace and re-run the schema-generation algorithm in 5.7.9. Encoders and decoders shall use the same generation function, so the AddressSpace-derived Arrow Schema serializes to the same canonical form and therefore the same `SchemaId`. A mismatch between the received SchemaId and the re-derived SchemaId is a schema error.
+An AddressSpace-driven decoder may instead read the DataTypeDefinition for the expected DataType from the AddressSpace and re-run the schema-generation algorithm in 5.6.9. Encoders and decoders shall use the same generation function, so the AddressSpace-derived Arrow Schema serializes to the same canonical form and therefore the same `SchemaId`. A mismatch between the received SchemaId and the re-derived SchemaId is a schema error.
 
-#### 5.7.11 Conformance
+#### 5.6.11 Conformance
 
 An implementation conforms to OPC UA Arrow when it implements the single mapping in this clause for all 25 built-in DataTypes, Structures, Unions, Enumerations, OptionSets, Arrays, Matrices, Variant, ExtensionObject, DataValue and DiagnosticInfo, and demonstrates `decode(encode(x)) == x` for conforming OPC UA values.
 
-#### 5.7.12 Implementing schema evolution (growing unions)
+#### 5.6.12 Implementing schema evolution (growing unions)
 
-The Variant dense union (§5.7.6) and the ExtensionObject known-struct dense union (§5.7.7) are the two Arrow unions that may grow after a schema is first announced; every other union and struct is closed. An implementer that governs an evolving schema shall grow these unions **append-only**, as defined by *OPC UA — Schema Registry* §5.6. Because Arrow types are structural, each field's union is its own inline dense union (§5.7.9), so growth is per-field: appending to one field's union does not change another field's type.
+The Variant dense union (§5.6.6) and the ExtensionObject known-struct dense union (§5.6.7) are the two Arrow unions that may grow after a schema is first announced; every other union and struct is closed. An implementer that governs an evolving schema shall grow these unions **append-only**, as defined by *OPC UA — Schema Registry* §5.6. Because Arrow types are structural, each field's union is its own inline dense union (§5.6.9), so growth is per-field: appending to one field's union does not change another field's type.
 
 1. **Narrow the initial union.** Prefer to build the initial (`MAJOR.0`) dense union **data-driven**, from the concrete type of the first value the field actually encodes — one child for that concrete Variant body form, or the concrete struct child for the first ExtensionObject/abstract body (or the `binary` child for an opaque first body) — with the concrete type standing in place of the abstract Variant/ExtensionObject and the union grown at that position (steps 2–3) as later values carry types not yet present. The encoder MAY instead seed the union **schema-driven** from the declared bound — one child per allowed Variant body form (a distinct child for each `(BuiltInType, scalar|array|matrix)` combination the field may carry), or one child per concrete struct type known for an ExtensionObject/abstract-subtyped field, in canonical order — where a schema is needed before the first message or where cross-publisher determinism is required (see *OPC UA — Schema Registry* §5.6).
 
@@ -146,7 +146,7 @@ The Variant dense union (§5.7.6) and the ExtensionObject known-struct dense uni
 
 3. **Append the opaque fallback like any other child.** An ExtensionObject body that cannot be represented as a known-struct child is carried in an opaque fallback child — `binary` for a Binary body, or `utf8` for an XML or textual body. A fallback child is appended when a value first requires it (step 2), so it may take any dense-union type code and is not reserved at a fixed low code. Because every child is append-only, a fallback's type code is fixed once assigned, so an opaque body written under an earlier minor still resolves to it under a grown schema.
 
-4. **Recompute the SchemaId and announce.** Each grown union yields a new serialized Arrow `Schema`; recompute the SHA-256[:8] SchemaId per §5.7.9, advance the DataSet `ConfigurationVersion` MinorVersion, and re-announce the schema and SchemaId per the Part 14 Arrow handshake before sending a batch that uses the appended child.
+4. **Recompute the SchemaId and announce.** Each grown union yields a new serialized Arrow `Schema`; recompute the SHA-256[:8] SchemaId per §5.6.9, advance the DataSet `ConfigurationVersion` MinorVersion, and re-announce the schema and SchemaId per the Part 14 Arrow handshake before sending a batch that uses the appended child.
 
 5. **Decode with the writer-minor schema.** Unlike the row encodings, an Arrow RecordBatch's node and buffer layout is shaped by its writer schema: a self-describing IPC `stream` embeds that schema, but a bare RecordBatch does not. A decoder shall therefore resolve the exact writer-minor schema by SchemaId to decode a bare RecordBatch, or apply a defined upgrade that treats union children absent from the older RecordBatch as empty. A consumer that reads only IPC `stream`s decodes each stream from its embedded schema; a consumer that reads bare RecordBatches shall cache each minor's schema by SchemaId (Schema Registry §5.6, §8).
 

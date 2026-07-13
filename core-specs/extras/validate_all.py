@@ -12,7 +12,6 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 TARGETS = [
     "_common/validate_local.py",
     "avro-encoding/tools/validate_local.py",
-    "protobuf-encoding/tools/validate_local.py",
     "arrow-encoding/tools/validate_local.py",
     "xregistry-catalog/tools/validate_local.py",
     "../schema-registry/tools/validate_local.py",

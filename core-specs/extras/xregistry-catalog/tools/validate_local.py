@@ -3,7 +3,7 @@
 
 Checks: required top-level + group + schema attributes; unique schema ids;
 formats from the allowed set; embedded documents parse (Avro/Arrow/JSON Schema
-as JSON, Protobuf as non-empty text); and — if the ``jsonschema`` package is
+as JSON); and — if the ``jsonschema`` package is
 installed — every generated JSON Schema is a valid Draft 2020-12 schema.
 
 Usage: python core-specs/extras/xregistry-catalog/tools/validate_local.py
@@ -16,7 +16,7 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 EXAMPLE = os.path.abspath(os.path.join(HERE, "..", "examples", "opcua-catalog.xregistry.json"))
-ALLOWED_FORMATS = {"Avro/1.11", "Protobuf/3", "ApacheArrow/1.0", "JsonSchema/2020-12"}
+ALLOWED_FORMATS = {"Avro/1.11", "ApacheArrow/1.0", "JsonSchema/2020-12"}
 
 
 def _fail(msg: str, errs: list) -> None:
@@ -59,10 +59,7 @@ def main() -> int:
                 _fail(f"schema '{sid}' has neither 'schema' nor 'schemaurl'", errs)
             doc = sch.get("schema")
             if doc is not None:
-                if fmt == "Protobuf/3":
-                    if not isinstance(doc, str) or not doc.strip():
-                        _fail(f"schema '{sid}' empty proto", errs)
-                elif isinstance(doc, str):
+                if isinstance(doc, str):
                     try:
                         json.loads(doc)
                     except json.JSONDecodeError:

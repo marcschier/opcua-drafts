@@ -3,7 +3,7 @@
 A **SchemaId** is a compact, deterministic fingerprint of a *canonical* schema
 document. It is what a message carries (instead of the whole schema) so an
 encoder can announce a schema once and reference it thereafter, and a decoder
-can cache it by id (see each extension's SchemaId handshake — Part 14 PubSub for Avro/Arrow, the Part 6 §7.6 gRPC service contract for Protobuf).
+can cache it by id (see each extension's SchemaId handshake — Part 14 PubSub for Avro/Arrow).
 
 Two fingerprints are provided:
 
@@ -11,7 +11,7 @@ Two fingerprints are provided:
   the Apache Avro specification, used for Avro single-object encoding
   (``0xC3 0x01`` + 8-byte little-endian fingerprint). The caller passes the
   Avro *Parsing Canonical Form* bytes.
-* :func:`sha256_id` — a generic truncated SHA-256 id for Protobuf / Arrow, whose
+* :func:`sha256_id` — a generic truncated SHA-256 id for Arrow, whose
   canonical form is the serialized descriptor / schema.
 """
 from __future__ import annotations

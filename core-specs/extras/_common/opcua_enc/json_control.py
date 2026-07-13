@@ -3,7 +3,7 @@
 This is **not** the OPC UA JSON DataEncoding; it is a compact, deliberately
 lossless reference codec used to (a) prove that the shared corpus and
 ``canonical_equal`` are internally consistent, and (b) demonstrate the
-encode/decode dispatch pattern that the Avro / Protobuf / Arrow extensions
+encode/decode dispatch pattern that the Avro / Arrow extensions
 follow. Values are mapped to plain JSON-serialisable Python structures, then
 through ``json.dumps(..., allow_nan=True)`` / ``json.loads`` for a real
 bytes round-trip.
