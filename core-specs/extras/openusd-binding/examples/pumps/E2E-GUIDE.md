@@ -27,7 +27,7 @@ OpenUsdConnector  ──► UsdFileSink ──►  live.usda        (runtime ove
 
 - **Server** — exposes `Pump #1` with an `OpenUsdRepresentation` (prim `/Plant/Pumps/P101`)
   and three live bindings.
-- **Connector** — the standalone C# client app `PumpOpenUsdConnector`. It discovers the
+- **Connector** — the standalone C# client app `PumpDeviceIntegrationBridge`. It discovers the
   representation via `Server/OpenUSD/Representations`, subscribes to the bound Variables,
   converts, and writes a USD override layer through `UsdFileSink`.
 - **Base asset** — `Plant.usda` (geometry + materials). `stage.usda` composes the live
@@ -73,13 +73,13 @@ The base asset, composed stage, descriptor, and Python writer are in
 
 ## Step 2 — Build the server and the connector
 
-The **server** (`PumpDeviceIntegrationServer`) and the **connector** (`PumpOpenUsdConnector`)
+The **server** (`PumpDeviceIntegrationServer`) and the **connector** (`PumpDeviceIntegrationBridge`)
 are two separate console apps — the connector is a standalone OPC UA client.
 
 ```bash
 cd UA-.NETStandard
 dotnet build Applications/PumpDeviceIntegrationServer/PumpDeviceIntegrationServer.csproj -c Release -f net10.0
-dotnet build Applications/PumpOpenUsdConnector/PumpOpenUsdConnector.csproj -c Release -f net10.0
+dotnet build Applications/PumpDeviceIntegrationBridge/PumpDeviceIntegrationBridge.csproj -c Release -f net10.0
 ```
 
 ## Step 3 — Prepare a working folder with the base asset
@@ -113,7 +113,7 @@ The connector is a standalone client — point it at the server and the output l
 
 ```bash
 cd UA-.NETStandard
-dotnet run --project Applications/PumpOpenUsdConnector -c Release -f net10.0 -- \
+dotnet run --project Applications/PumpDeviceIntegrationBridge -c Release -f net10.0 -- \
   --server opc.tcp://localhost:62810/PumpDeviceIntegrationServer --out ~/pump-live/live.usda
 ```
 
