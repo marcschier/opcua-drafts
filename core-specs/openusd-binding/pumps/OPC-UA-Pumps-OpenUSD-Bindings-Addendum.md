@@ -8,7 +8,7 @@
 
 ## 1 Scope
 
-This addendum binds one `PumpType` instance to a USD prim and defines three read-only live bindings (Part 2, `UaToUsdTelemetry`): impeller rotation from mass flow, body colour from bearing temperature, and status-light glow from differential pressure. It is illustrative; a concrete server supplies the exact source BrowsePaths and stage identifiers.
+This addendum binds one `PumpType` instance to a USD prim and defines three read-only telemetry bindings (Part 2, `UaToUsdTelemetry`): impeller rotation from mass flow, body colour from bearing temperature, and status-light glow from differential pressure. It also shows the 0.2 capability bindings on the same pump — an alarm binding (`UaAlarmToUsd`) driving status-light visibility and an opt-in command binding (`UsdToUaCommand`) writing a speed setpoint — plus a stage content-integrity digest. It is illustrative; a concrete server supplies the exact source BrowsePaths and stage identifiers.
 
 ## 2 Normative references
 
@@ -25,12 +25,14 @@ Pump101 : PumpType
   └─ HasAddIn OpenUsdRepresentation : OpenUsdRepresentationType
        Stage    = NodeId(Server/OpenUSD/Stages/PlantStage)
        PrimPath = "/Plant/Pumps/P101"
-       ├─ MassFlowSpin         : OpenUsdLiveBindingType
-       ├─ BearingTempColor     : OpenUsdLiveBindingType
-       └─ DiffPressureEmissive : OpenUsdLiveBindingType
+       ├─ MassFlowSpin           : OpenUsdLiveBindingType   (UaToUsdTelemetry, +SourceSemanticId)
+       ├─ BearingTempColor       : OpenUsdLiveBindingType   (UaToUsdTelemetry)
+       ├─ DiffPressureEmissive   : OpenUsdLiveBindingType   (UaToUsdTelemetry)
+       ├─ AlarmActiveVisibility  : OpenUsdLiveBindingType   (UaAlarmToUsd)
+       └─ SpeedSetpointCommand   : OpenUsdLiveBindingType   (UsdToUaCommand, opt-in)
 ```
 
-The AddIn is also `Organizes`-listed from `Server/OpenUSD/Representations`, so a generic connector discovers it without knowing anything about pumps. Each binding's source resolves **relative to `Pump101`** via `SourceBrowsePath`, so the same declaration applies to every pump instance; the effective runtime key is `(Pump101, BindingDefinitionId)`.
+The AddIn is also `Organizes`-listed from `Server/OpenUSD/Representations`, so a generic connector discovers it without knowing anything about pumps. Each binding's source resolves **relative to `Pump101`** via `SourceBrowsePath` (or, from 0.2, a portable `SourceSemanticId`), so the same declaration applies to every pump instance; the effective runtime key is `(Pump101, BindingDefinitionId)`. The alarm and command bindings target two extra pump Variables — `AlarmActive` (Boolean) and a writable `SpeedSetpoint` (Double) — and the `PlantStage` carries a `RootLayerDigest` (SHA-256) a connector verifies before composing.
 
 ## 4 OpenUSD bindings for `PumpType`
 
@@ -48,25 +50,29 @@ Notes:
 
 ## 4.1 Reference implementation (validated end-to-end)
 
-The `PumpDeviceIntegrationServer` sample in `marcschier/UA-.NETStandard` realizes this design and validates it with an automated end-to-end test (`PumpOpenUsdE2eTests`, three passing cases: the companion model is served, the representation and its bindings are discoverable through the registry, and live values flow through a generic connector into a mock USD sink). Because the sample's `PumpType` instance (`Pump #1`) exposes the OPC 40223 measurement surface, the reference bindings use the measurements actually present rather than the illustrative `Speed`/`Running` above:
+The `PumpDeviceIntegrationServer` sample in `marcschier/UA-.NETStandard` realizes this design and validates it with an automated end-to-end test suite (`PumpOpenUsdE2eTests`, ten passing cases): the companion model is served; the facility is browsable from the Server Object; the representation and its five bindings are discoverable through the registry; live telemetry flows through a generic connector into a mock USD sink; the semantic id + signal role are surfaced; the stage `RootLayerDigest` verifies; the alarm binding drives status-light visibility; the command binding is fail-closed by default and writes the server setpoint when enabled; and history replay degrades gracefully on a non-historizing source. Because the sample's `PumpType` instance (`Pump #1`) exposes the OPC 40223 measurement surface, the reference bindings use the measurements actually present rather than the illustrative `Speed`/`Running` above:
 
 | Reference binding | Source (Pump measurement) | Target property | USD type | RenderTargetKind |
 |---|---|---|---|---|
-| **MassFlowSpin** | `MassFlow` | `xformOp:rotateZ` (on the represented prim) | `double` | Rotation |
+| **MassFlowSpin** | `MassFlow` (+ `SourceSemanticId` IRDI) | `xformOp:rotateZ` (on the represented prim) | `double` | Rotation |
 | **BearingTempColor** | `BearingTemperature` | `primvars:displayColor` (on `…/Body`) | `color3f` | DisplayColor |
 | **DiffPressureEmissive** | `DifferentialPressure` | `inputs:emissiveColor` | `color3f` | EmissiveColor |
+| **AlarmActiveVisibility** | `AlarmActive` (supervision alarm ActiveState) | `visibility` (on `…/StatusLight`) | `token` | Visibility |
+| **SpeedSetpointCommand** | *(command)* → `SpeedSetpoint` | `inputs:speedSetpoint` (on `…/Impeller`) | `double` | — |
+
+The alarm binding (`UaAlarmToUsd`, `AlarmAspect = ActiveState`) shows the status light when a supervision alarm is active; the command binding (`UsdToUaCommand`, `SignalRole = Controllable`) is opt-in — the bridge writes the setpoint only with `--enable-commands` (single-writer, fail-closed). The `PlantStage` publishes a `RootLayerDigest` (`Sha256`) the connector verifies before composing.
 
 Implementer findings from the source-generated OPC UA .NET model (generic, not Pump-specific — applies to any server built from this companion NodeSet):
 
 - **Attach with a hierarchical ReferenceType.** The generated `CreateInstanceOf…` factories leave `ReferenceTypeId = Null`, which is not a browsable reference. Attach the `OpenUsdRepresentation` AddIn to the represented Object and each `OpenUsdLiveBinding` to the representation with an explicit `HasComponent` (or `HasAddIn`) so the nodes are browsable.
 - **Instantiate bindings via the placeholder.** Create each binding from the representation's `<Binding>` placeholder (the generated `AddxBinding_` helper), which yields a concrete instance with a valid BrowseName and reference type.
-- **Optional members are not auto-created.** Only mandatory members exist after instantiation; the optional members a connector reads (`SourceNodeId`, `RenderTargetKind`, `Scale`, `BadQualityAction`) must be explicitly created so they carry a BrowseName and are browsable/readable.
+- **Optional members are not auto-created.** Only mandatory members exist after instantiation; the optional members a connector reads (`SourceNodeId`, `RenderTargetKind`, `Scale`, `BadQualityAction`, and the 0.2 members `SignalRole`, `SourceSemanticId`, `AlarmAspect`, `CommandTargetNodeId`, `CommandTriggerPropertyName`) must be explicitly created so they carry a BrowseName and are browsable/readable.
 - **Discovery uses the registry, not the represented object.** A connector enumerates representations from `Server/OpenUSD/Representations` (Organizes) — it does not need to know or reach the represented Object, confirming the Part 1 discovery facility is sufficient on its own.
 
 ## 5 Where the bindings live
 
 - **Machine-readable descriptor:** `../../extras/openusd-binding/examples/pumps/Pumps.OpenUsdBinding.json`.
-- **Illustrative instance overlay (NodeSet):** `Opc.Ua.Pumps.OpenUsdBinding.NodeSet2.xml` (this folder) — a concrete `Pump101` with the AddIn and the three bindings, for browsing/inspection.
+- **Illustrative instance overlay (NodeSet):** `Opc.Ua.Pumps.OpenUsdBinding.NodeSet2.xml` (this folder) — a concrete `Pump101` with the AddIn and the three telemetry bindings, for browsing/inspection. The alarm, command, and integrity capabilities are shown in the descriptor JSON and the C# sample.
 - **Runnable USD writer:** `../../extras/openusd-binding/examples/pumps/usd_writer.py` (+ generated `live.usda`).
 - **C# end-to-end:** the `PumpDeviceIntegrationServer` sample in `marcschier/UA-.NETStandard` exposes the representation + bindings, and `PumpOpenUsdE2eTests` starts the server via the generic host, connects a client session, discovers the representation and bindings through `Server/OpenUSD/Representations`, subscribes to the bound source Variables, and drives a generic connector into a mock USD sink (asserted in CI). A Python `pxr` writer authors a real `live.usda` locally (Omniverse rendering is out of CI scope).
 
