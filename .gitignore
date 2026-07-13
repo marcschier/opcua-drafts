@@ -8,6 +8,3 @@ Thumbs.db
 
 # Local validation aids (base NodeId tables, not distributed)
 **/tools/ref/
-
-# Generated protobuf Python bindings (rebuilt from the published .proto)
-**/tools/_generated/

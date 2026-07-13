@@ -1,5 +1,7 @@
 # NodeId / ExpandedNodeId payload-size comparison
 
+> **Note.** The **Protobuf** columns and figures are retained as an *alternative* encoding, for comparison only — the Protobuf DataEncoding draft is no longer part of this repository, which defines only Avro and Arrow.
+
 All sizes are bytes. Structured Avro/Protobuf are the encoded NodeId or ExpandedNodeId value only. Text rows use the portable `nsu=<uri>` spelling; `ns=index raw` is the server-local spelling shown only for reference.
 
 Representative text constants: default URI `http://example.org/UA/`; case 6 URI `http://example.org/UA/Line3/`; case 7 URI `https://example.org/UA/Very/Long/Namespace/Uri/For/Line3/`; string id `Some.Long.Browse.Path.To.A.Signal`; GUID `00112233-4455-6677-8899-aabbccddeeff`; opaque bytes are 8 bytes rendered as base64 `AQIDBAUGBwg=`.

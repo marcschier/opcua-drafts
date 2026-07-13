@@ -3,7 +3,7 @@
 
 Maps namespaces -> schemagroups and DataTypes -> schema Resources per §5 of
 core-specs/schema-registry/OPC-UA-Schema-Registry.md. The JSON Schema documents are generated
-here (jsonschema_gen); the Avro/Protobuf/Arrow documents are embedded from the
+here (jsonschema_gen); the Avro/Arrow documents are embedded from the
 sibling encoding folders' ``schemas/`` when present, otherwise referenced by
 ``schemaurl``.
 
@@ -40,11 +40,10 @@ _UA_NS = "{http://opcfoundation.org/UA/2011/03/UANodeSet.xsd}"
 
 FORMATS = {
     "avro": ("Avro/1.11", "application/vnd.apache.avro+json", "avsc"),
-    "protobuf": ("Protobuf/3", "text/plain", "proto"),
     "arrow": ("ApacheArrow/1.0", "application/vnd.apache.arrow.schema+json", "json"),
     "jsonschema": ("JsonSchema/2020-12", "application/schema+json", "json"),
 }
-SIBLING_DIR = {"avro": "avro-encoding", "protobuf": "protobuf-encoding", "arrow": "arrow-encoding"}
+SIBLING_DIR = {"avro": "avro-encoding", "arrow": "arrow-encoding"}
 
 
 def _slug(uri: str) -> str:
@@ -166,9 +165,9 @@ def build(nodeset_path: str) -> dict:
     named += [(e.name, None) for e in loaded.enums]
 
     schemas: dict[str, dict] = {}
-    schemaid_maps = {fk: _load_schemaids(fk) for fk in ("avro", "protobuf", "arrow")}
+    schemaid_maps = {fk: _load_schemaids(fk) for fk in ("avro", "arrow")}
     for name, nid in sorted(named):
-        for fmt_key in ("avro", "protobuf", "arrow", "jsonschema"):
+        for fmt_key in ("avro", "arrow", "jsonschema"):
             schemaid = f"{name}:{fmt_key}"
             if fmt_key == "jsonschema":
                 doc, url = jsg.schema_for(name, list(loaded.structs), list(loaded.enums)), None
@@ -184,7 +183,7 @@ def build(nodeset_path: str) -> dict:
         "specversion": "1.0-rc3",
         "registryid": "opcua-schema-catalog",
         "self": "https://registry.example.com/",
-        "description": "OPC UA DataType schemas (Avro, Protobuf, Apache Arrow, JSON Schema).",
+        "description": "OPC UA DataType schemas (Avro, Apache Arrow, JSON Schema).",
         "schemagroupscount": 1,
         "schemagroups": {
             slug: {

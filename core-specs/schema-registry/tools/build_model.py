@@ -188,7 +188,7 @@ placeholder_obj(62001, SG, "<Schema>", T(62002), "A schema Resource for one Data
 ST = "SchemaType"
 prop_var(62002, ST, "BrowseName", String, "The OPC UA BrowseName or PublishedDataSet name represented by this schema Resource.", rule=MR_Mandatory)
 prop_var(62002, ST, "Format", String, "The xRegistry schema format, for example Avro/1.11 or ApacheArrow/1.0.", rule=MR_Mandatory)
-prop_var(62002, ST, "DataTypeEncoding", String, "The OPC UA DataTypeEncoding name, for example Default Avro, Default Arrow or Default Protobuf.")
+prop_var(62002, ST, "DataTypeEncoding", String, "The OPC UA DataTypeEncoding name, for example Default Avro or Default Arrow.")
 placeholder_obj(62002, ST, "<Version>", T(62003), "One concrete schema document Version.")
 
 SV = "SchemaVersionType"

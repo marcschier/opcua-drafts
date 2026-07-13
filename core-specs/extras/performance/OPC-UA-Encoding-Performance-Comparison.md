@@ -1,12 +1,14 @@
-# OPC UA Encoding Performance Comparison — Avro, Protobuf, Arrow vs Binary/UADP/JSON
+# OPC UA Encoding Performance Comparison — Avro & Arrow vs Binary/UADP/JSON (with Protobuf as an alternative, for comparison)
 
-> **Status — informative companion report.** This document quantifies the payload-size, CPU and memory trade-offs of the additive encoding extensions (Avro, Protobuf/gRPC, Arrow) against the existing OPC UA encodings (Binary, UADP, JSON). It is measurement, not normative specification. Its purpose is to explain where each encoding adds value and where it does not, so implementers and system designers can choose an encoding per use case.
+> **Status — informative companion report.** This document quantifies the payload-size, CPU and memory trade-offs of the additive encoding extensions (**Avro** and **Arrow**) against the existing OPC UA encodings (Binary, UADP, JSON). It is measurement, not normative specification. Its purpose is to explain where each encoding adds value and where it does not, so implementers and system designers can choose an encoding per use case.
+>
+> **Protobuf/gRPC is included below as an *alternative* encoding, for comparison only.** It is no longer part of the OPC UA DataEncoding drafts in this repository (which define only Avro and Arrow); its figures are retained to show how a generic gRPC-oriented `Variant` container compares.
 
 ## 1 Summary
 
 - **Binary (Part 6) / UADP (Part 14)** remain the baseline for CPU and for small single messages: smallest and fastest for a scalar value or a single DataSet sample.
 - **Avro** is the compact, schema-governed alternative to JSON: comparable to Binary on size, materially smaller on integer-heavy data (variable-length integers), and much smaller and faster than JSON. With the Part 14 SchemaId handshake the Avro schema is not carried on the wire.
-- **Protobuf** targets idiomatic gRPC service contracts. It is competitive for structured request/response messages but its generic `Variant` container is not intended for bulk numeric arrays or matrices, where per-element message framing makes it large and slow.
+- **Protobuf** *(alternative encoding, comparison only)* targets idiomatic gRPC service contracts. It is competitive for structured request/response messages but its generic `Variant` container is not intended for bulk numeric arrays or matrices, where per-element message framing makes it large and slow.
 - **Arrow** has no value for single or small messages (a few kilobytes of IPC framing per message) but is the clear winner for large columnar batches (historian / ADBC bulk transport): at 1 000 samples it produces the **smallest** payload of all encodings — smaller per sample than UADP — and decodes fastest.
 - **JSON** stays the most verbose and slowest; its value is being self-describing and human-readable, not performance.
 
@@ -144,7 +146,7 @@ A self-contained Arrow IPC `stream` embeds a **Schema message** before its Recor
 |---|---|---|---|
 | **Binary / UADP** | CPU baseline; small single messages; low latency | very large batches (no columnar amortisation) | Existing default; compact type tags. |
 | **Avro** | compact schema-governed messaging; integer-heavy data and matrices; a smaller/faster JSON replacement | nothing categorically — solid all-rounder | Variable-length integers win on small-magnitude integers; SchemaId handshake keeps the schema off the wire; add-in Action + Discovery mappings. |
-| **Protobuf / gRPC** | idiomatic gRPC service request/response contracts | bulk numeric arrays and matrices via the dynamic `Variant` container | Use typed fields for bulk data; the generic Variant path frames each element as a message. |
+| **Protobuf / gRPC** *(alternative, comparison only)* | idiomatic gRPC service request/response contracts | bulk numeric arrays and matrices via the dynamic `Variant` container | Use typed fields for bulk data; the generic Variant path frames each element as a message. |
 | **Arrow** | large columnar batches — historian / ADBC / Flight bulk and analytics | single or small messages (kilobytes of per-message IPC framing); per-value Variant unions | Wins on both size (smallest per sample at scale, beating UADP) and decode speed once the schema is amortised across a batch; `batch` framing (§4.4) trims the fixed schema cost on schema-governed channels. |
 | **JSON** | human-readable, self-describing debugging and interop | size- or throughput-sensitive paths | Largest and slowest; needs no schema to decode. |
 
@@ -157,7 +159,7 @@ A self-contained Arrow IPC `stream` embeds a **Schema message** before its Recor
 
 ## 7 References
 
-- Encoding specifications: `../avro-encoding`, `../protobuf-encoding`, `../arrow-encoding` and the merged `../../schema-registry/OPC-UA-Schema-Registry.md`.
+- Encoding specifications: `../avro-encoding`, `../arrow-encoding` and the merged `../../schema-registry/OPC-UA-Schema-Registry.md`. (Protobuf figures above are retained for comparison only; the Protobuf DataEncoding draft is no longer part of this repository.)
 - NodeId / ExpandedNodeId structured-vs-textual payload analysis: [`nodeid-size-analysis.md`](nodeid-size-analysis.md).
 - Reference reversibility corpus (107 cases): `../_common` and each extension's `tools/validate_local.py`.
 - Reference C# encoders and the comparison harnesses: `UA-.NETStandard` PR #7 (`Opc.Ua.Core.Experimental`, `Opc.Ua.PubSub.Experimental`).
