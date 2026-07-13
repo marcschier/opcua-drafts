@@ -52,7 +52,7 @@ An xRegistry schema Resource for one DataType or PublishedDataSet in one schema 
 |---|---|---|---|---|---|
 | BrowseName | Variable | String | Mandatory | SchemaType | The OPC UA BrowseName or PublishedDataSet name represented by this schema Resource. |
 | Format | Variable | String | Mandatory | SchemaType | The xRegistry schema format, for example Avro/1.11 or ApacheArrow/1.0. |
-| DataTypeEncoding | Variable | String | Optional | SchemaType | The OPC UA DataTypeEncoding name, for example Default Avro, Default Arrow or Default Protobuf. |
+| DataTypeEncoding | Variable | String | Optional | SchemaType | The OPC UA DataTypeEncoding name, for example Default Avro or Default Arrow. |
 | <Version> | Object |  | OptionalPlaceholder | SchemaType | One concrete schema document Version. |
 
 <a id="type-SchemaVersionType"></a>

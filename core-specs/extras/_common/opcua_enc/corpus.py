@@ -1,7 +1,7 @@
 """The canonical reversibility corpus.
 
 A single, shared set of ``(name, type, value)`` cases that every encoding
-extension (Avro / Protobuf / Arrow) — and the JSON control — must round-trip
+extension (Avro / Arrow) — and the JSON control — must round-trip
 losslessly: ``decode(type, encode(type, value))`` must ``canonical_equal`` the
 original ``value``.
 
@@ -101,7 +101,7 @@ PERMISSIONS = t.Enumeration(
 )
 
 # A structure with optional NON-String scalar fields: absent must stay distinct
-# from present-with-zero (exercises proto3 presence for scalars).
+# from present-with-zero (exercises optional-scalar presence).
 OPTIONAL_SCALARS = t.Struct(
     "OptionalScalars",
     (

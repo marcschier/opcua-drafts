@@ -1,7 +1,7 @@
 """Canonical OPC UA *type descriptors* shared by every encoding extension.
 
 A type descriptor names an OPC UA data type precisely enough that a
-type-directed codec (Avro / Protobuf / Arrow / the JSON control) can encode and
+type-directed codec (Avro / Arrow / the JSON control) can encode and
 *losslessly* decode a value of that type. Reversibility is defined against these
 descriptors: for a descriptor ``T`` and a value ``v``,
 ``decode(T, encode(T, v))`` must equal ``v`` (see :mod:`opcua_enc.values`
