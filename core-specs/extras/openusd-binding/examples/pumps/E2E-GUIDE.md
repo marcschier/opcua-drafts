@@ -27,7 +27,7 @@ OpenUsdConnector  ──► UsdFileSink ──►  live.usda        (runtime ove
 
 - **Server** — exposes `Pump #1` with an `OpenUsdRepresentation` (prim `/Plant/Pumps/P101`)
   and three live bindings.
-- **Connector** — the generic C# `OpenUsdConnector` (in the sample app). It discovers the
+- **Connector** — the standalone C# client app `PumpOpenUsdConnector`. It discovers the
   representation via `Server/OpenUSD/Representations`, subscribes to the bound Variables,
   converts, and writes a USD override layer through `UsdFileSink`.
 - **Base asset** — `Plant.usda` (geometry + materials). `stage.usda` composes the live
@@ -71,13 +71,15 @@ git clone https://github.com/marcschier/opcua-drafts.git
 The base asset, composed stage, descriptor, and Python writer are in
 `opcua-drafts/core-specs/extras/openusd-binding/examples/pumps/`.
 
-## Step 2 — Build the server (and connector)
+## Step 2 — Build the server and the connector
 
-The server and the connector are the **same** executable (the connector is a run-mode).
+The **server** (`PumpDeviceIntegrationServer`) and the **connector** (`PumpOpenUsdConnector`)
+are two separate console apps — the connector is a standalone OPC UA client.
 
 ```bash
 cd UA-.NETStandard
 dotnet build Applications/PumpDeviceIntegrationServer/PumpDeviceIntegrationServer.csproj -c Release -f net10.0
+dotnet build Applications/PumpOpenUsdConnector/PumpOpenUsdConnector.csproj -c Release -f net10.0
 ```
 
 ## Step 3 — Prepare a working folder with the base asset
@@ -107,10 +109,12 @@ The server simulates the pump, so `MassFlow`, `BearingTemperature`, and
 
 ## Step 5 — Run the connector (terminal 2)
 
+The connector is a standalone client — point it at the server and the output layer:
+
 ```bash
 cd UA-.NETStandard
-dotnet run --project Applications/PumpDeviceIntegrationServer -c Release -f net10.0 -- \
-  connect --server opc.tcp://localhost:62810/PumpDeviceIntegrationServer --out ~/pump-live/live.usda
+dotnet run --project Applications/PumpOpenUsdConnector -c Release -f net10.0 -- \
+  --server opc.tcp://localhost:62810/PumpDeviceIntegrationServer --out ~/pump-live/live.usda
 ```
 
 You should see:
