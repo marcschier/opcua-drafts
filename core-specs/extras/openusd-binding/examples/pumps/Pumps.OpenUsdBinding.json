@@ -6,7 +6,9 @@
   "note": "Implementer (Pump) example for OPC UA - OpenUSD Bindings. The generic spec stays in the base document; this descriptor is the Pump Annex source of truth and matches the validated PumpDeviceIntegrationServer bindings and the base asset in Plant.usda. Browse paths are relative to the represented Pump Object; a connector normally discovers SourceNodeId directly via Server/OpenUSD/Representations and does not need these paths.",
   "stage": {
     "browseName": "PlantStage",
-    "rootLayerIdentifier": "asset-repo/Plant.usd"
+    "rootLayerIdentifier": "asset-repo/Plant.usd",
+    "rootLayerDigestAlgorithm": "Sha256",
+    "rootLayerDigestNote": "The server publishes RootLayerDigest = SHA-256 over the resolved root layer (a Twin-BOM content-integrity check). The demo digests the rootLayerIdentifier as a deterministic stand-in; a connector verifies it before composing the stage."
   },
   "representation": {
     "primPath": "/Plant/Pumps/P101",
@@ -17,7 +19,9 @@
       "bindingDefinitionId": "6e63cf2c-f2de-4f78-a8f8-f0ccdbb7647a",
       "name": "MassFlowSpin",
       "intentProfile": "UaToUsdTelemetry",
+      "signalRole": "Observable",
       "sourceBrowsePath": "/Operational/Measurements/MassFlow",
+      "sourceSemanticId": "0173-1#02-AAO677#002",
       "targetPrimPath": "/Plant/Pumps/P101/Impeller",
       "targetPropertyName": "xformOp:rotateZ",
       "targetUsdTypeName": "double",
@@ -26,7 +30,7 @@
       "scale": 1.0,
       "offset": 0.0,
       "sourceEngineeringUnits": "kg/s",
-      "note": "Impeller spin: mass flow scaled to a rotateZ angle by the connector."
+      "note": "Impeller spin: mass flow scaled to a rotateZ angle by the connector. SourceSemanticId is an ECLASS-style IRDI (volume flow rate) a connector can use to resolve the source across vendors."
     },
     {
       "bindingDefinitionId": "b1a1f6f0-5c2b-5a1e-9f3a-2b7c4d8e0011",
@@ -53,6 +57,32 @@
       "valueSemanticUri": "urn:opcua:openusd:semantic:scalar",
       "sourceEngineeringUnits": "bar",
       "note": "Differential pressure mapped to an emissive glow (status light) by the connector's color mapping."
+    },
+    {
+      "bindingDefinitionId": "d3c3b8f2-7e4d-5c30-b15c-4d9e6a0b2233",
+      "name": "AlarmActiveVisibility",
+      "intentProfile": "UaAlarmToUsd",
+      "signalRole": "Observable",
+      "alarmAspect": "ActiveState",
+      "sourceBrowsePath": "/AlarmActive",
+      "targetPrimPath": "/Plant/Pumps/P101/StatusLight",
+      "targetPropertyName": "visibility",
+      "targetUsdTypeName": "token",
+      "renderTargetKind": "Visibility",
+      "note": "Supervision alarm ActiveState (cavitation or motor overheat) drives the status-light visibility token: 'inherited' when active, 'invisible' when clear. In a full A&C deployment the source is a Part 9 condition ActiveState; the demo exposes a Boolean AlarmActive variable the connector reads directly."
+    },
+    {
+      "bindingDefinitionId": "e4d4c9a3-8f5e-5d41-c26d-5e0f7b1c3344",
+      "name": "SpeedSetpointCommand",
+      "intentProfile": "UsdToUaCommand",
+      "signalRole": "Controllable",
+      "enabled": true,
+      "commandTargetBrowsePath": "/SpeedSetpoint",
+      "commandTriggerPropertyName": "inputs:speedSetpoint",
+      "targetPrimPath": "/Plant/Pumps/P101/Impeller",
+      "targetPropertyName": "inputs:speedSetpoint",
+      "targetUsdTypeName": "double",
+      "note": "Opt-in control direction: a USD-side speed setpoint intent is written to the UA SpeedSetpoint Variable. The binding is declared (enabled=true) and marked Controllable, but a connector actuates it only when explicitly enabled (bridge --enable-commands) AND authorized — single-writer, fail-closed. 'enabled=true' means declared, NOT auto-actuated; the opt-in lives on the connector, not on the Enabled member (whose false value is a tombstone)."
     }
   ]
 }

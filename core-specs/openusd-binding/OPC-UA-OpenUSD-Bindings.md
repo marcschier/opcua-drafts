@@ -16,7 +16,7 @@ The model has three portable capability groups and one informative profile:
 
 - **Representation (identity).** A mandatory, well-known discovery facility (`Server/OpenUSD`) plus an `OpenUsdRepresentation` AddIn that ties an OPC UA Object to a canonical composed USD prim path on a named stage, with optional content-integrity metadata (digest/signature) so a referenced asset can be verified. Representation carries **identity only**; it does not carry values.
 - **Live property binding (telemetry).** A read-only mapping from a source OPC UA `Variable` `Value` — resolved by NodeId, RelativePath, or **semantic id** — to a target USD attribute, with conversion and with quality/timestamp/persistence **hints**. This binds **existing** domain Variables; it does not duplicate process data. Event/alarm state and historical playback are expressed as additional intent profiles on the same binding type.
-- **Command binding (control).** An **opt-in**, authorized, single-writer mapping from a USD-side intent to an OPC UA setpoint write or `Method` call, so an agent or operator can act on the plant through the same declared, discoverable model. Command bindings are **disabled by default** and require explicit `RolePermissions`; the default posture of the model remains read-only.
+- **Command binding (control).** An **opt-in**, authorized, single-writer mapping from a USD-side intent to an OPC UA setpoint write or `Method` call, so an agent or operator can act on the plant through the same declared, discoverable model. The opt-in is a matter of connector configuration and server `RolePermissions` (not the `Enabled` flag): a Server declares a command binding only deliberately and a conformant connector actuates it only when explicitly enabled and authorized, so the default posture of the model remains read-only.
 - **Omniverse realization (informative).** How a connector realizes the model in NVIDIA Omniverse (Nucleus `.live` layers, Fabric/USDRT, OmniGraph, frame coalescing). This is a separate, vendor-governed profile and is **not** part of the portable normative model.
 
 Out of scope (reserved for later work): Part 14 Actions, PubSub realization, a USD-side applied API schema mirror, persistent-UUID identity, and normative geometry/material/skeleton/physics profiles. Command, event/alarm, and history bindings are **normative but optional** capabilities a Server may choose not to implement.
@@ -161,11 +161,11 @@ The well-known instance `Server/OpenUSD` is of this type (§4.2).
 | `ResolverContext` | String | O | Opaque resolver-context descriptor. |
 | `ResolvedRootLayerUri` | String | O | Informative current resolution as a URI; not authoritative. |
 | `RootLayerDigest` | ByteString | O | Cryptographic digest of the resolved root layer, for content-integrity verification (Twin BOM). |
-| `RootLayerDigestAlgorithm` | OpenUsdDigestAlgorithmEnum | O | Digest algorithm for `RootLayerDigest` (default `SHA-256`). |
+| `RootLayerDigestAlgorithm` | OpenUsdDigestAlgorithmEnum | O | Digest algorithm for `RootLayerDigest` (default `Sha256`). |
 | `Signature` | ByteString | O | Optional detached signature over the digest / stage identity, for provenance. |
 | `ProvenanceUri` | String | O | Optional URI locating provenance / a signed Twin BOM manifest for the stage. |
 
-The Stage Object's own NodeId is its same-server identity; a `Representation` references it by NodeId. When `RootLayerDigest` is present a connector **shall** verify the resolved root layer against it (using `RootLayerDigestAlgorithm`) before composing the stage, and **shall** refuse to open a layer whose digest does not match; this is the model's content-integrity anchor for the vision's signed *Twin BOM* (§8.2).
+The Stage Object's own NodeId is its same-server identity; a `Representation` references it by NodeId. `RootLayerDigest` is computed over the **resolved root-layer content** (the layer bytes the resolver returns for `RootLayerIdentifier`), not over the identifier string. When it is present a connector **shall** obtain the resolved layer, verify it against the digest (using `RootLayerDigestAlgorithm`) before composing the stage, and **shall** refuse to open a layer whose digest does not match; this is the model's content-integrity anchor for the vision's signed *Twin BOM* (§8.2).
 
 ### 5.3 `OpenUsdRepresentationType : BaseObjectType` — the AddIn
 
@@ -224,7 +224,7 @@ An optional interface a domain ObjectType may apply (`HasInterface`) to advertis
 - `OpenUsdBindingStateEnum` — `Disabled(0) Unresolved(1) Ready(2) Active(3) Degraded(4) Error(5)`.
 - `OpenUsdSignalRoleEnum` — `Observable(0) Controllable(1)`.
 - `OpenUsdAlarmAspectEnum` — `ActiveState(0) Severity(1) AckedState(2) EnabledState(3)`.
-- `OpenUsdDigestAlgorithmEnum` — `None(0) SHA-256(1) SHA-384(2) SHA-512(3)`.
+- `OpenUsdDigestAlgorithmEnum` — `None(0) Sha256(1) Sha384(2) Sha512(3)` (SHA-256/384/512).
 
 ### 5.7 Source and target resolution (normative)
 
@@ -252,20 +252,20 @@ Conversion order: engineering-unit conversion → `Scale`/`Offset` → (transfor
 
 ### 5.10 Command bindings (normative, optional, opt-in)
 
-A binding with `IntentProfile = UsdToUaCommand` maps a **USD-side intent** back to an OPC UA action, so an agent or operator acting in the visual twin can command the plant through the same declared, discoverable model. Command bindings are the control counterpart of the read-only telemetry binding and are **disabled by default**.
+A binding with `IntentProfile = UsdToUaCommand` maps a **USD-side intent** back to an OPC UA action, so an agent or operator acting in the visual twin can command the plant through the same declared, discoverable model. Command bindings are the control counterpart of the read-only telemetry binding. They are **opt-in**: the *default posture* of the model stays read-only because a Server declares a command binding only deliberately, and a conformant connector actuates one only when explicitly configured to **and** only when the target's authorization permits it. A command binding is otherwise a fully-declared binding — `Enabled = true` like any other, and `Enabled = false` retains its normal meaning as an inherited-binding tombstone (it does **not** encode the opt-in; see below).
 
 - **Trigger.** `CommandTriggerPropertyName` names the USD attribute whose authored change is interpreted as the intent; the connector observes that attribute (e.g. an operator/agent writes a setpoint on the prim) and converts it back through the inverse of §5.8 (`Offset`/`Scale`, units).
 - **Action.** If `CommandMethodId` is present, the connector `Call`s that Method on `CommandTargetNodeId` with the converted argument(s); otherwise it `Write`s the converted value to the Variable `CommandTargetNodeId`.
 - **Role.** The bound signal **shall** carry `SignalRole = Controllable`; a connector **shall not** issue a command for an `Observable` signal.
-- **Authorization & safety (normative).** `Enabled` defaults to **false**; a Server exposes a command binding only deliberately. The connector **shall** hold the write/`Call` authorization the target requires (`RolePermissions`), **shall** enforce a **single-writer** discipline per target, **shall** be **fail-closed** (on any resolution/authorization/quality doubt it performs no action), and **shall not** retry a command implicitly. The model carries no credentials.
+- **Authorization & safety (normative).** The opt-in is enforced at two layers, **not** through `Enabled` (whose `false` value is the inherited-binding tombstone and would merely suppress the binding): (1) a connector **shall not** actuate any command binding unless it has been explicitly enabled to do so by its operator/configuration; and (2) the connector **shall** hold the write/`Call` authorization the target requires (`RolePermissions`), which a Server withholds by default. The connector **shall** enforce a **single-writer** discipline per target, **shall** be **fail-closed** (on any resolution/authorization/quality doubt it performs no action), and **shall not** retry a command implicitly. The model carries no credentials.
 - **Boundary.** This model does **not** define the control logic, interlocks, or the operating envelope that governs whether a command is *allowed*; that is the responsibility of the server's control layer and of a declarative operating-envelope policy (e.g. SOP-as-Code) outside this specification. The command binding only declares *how* a USD-side intent reaches an authorized OPC UA action.
 
 ### 5.11 Alarm and history bindings (normative, optional)
 
 Two additional read-only intent profiles reuse the same `OpenUsdLiveBindingType`:
 
-- **`UaAlarmToUsd`.** The source resolves to an OPC UA Alarms & Conditions instance (Part 9). `AlarmAspect` selects the condition aspect that drives the target USD attribute — `ActiveState`/`AckedState`/`EnabledState` (boolean → e.g. `visibility` or an emissive on/off) or `Severity` (numeric → e.g. a color ramp). Quality/`BadQualityAction` apply as for telemetry; a returned-to-normal condition clears or resets the target per `BadQualityAction`.
-- **`UaHistoryToUsd`.** With `TimeSampled = true` the connector reads history (Part 11 `HistoryRead`) for the source and authors the values as **USD time samples** on the target attribute, giving the stage a scrubbable timeline for playback/replay. The epoch and `timeCodesPerSecond` mapping is declared by a recording profile; absent that, samples are authored on a connector-defined uniform timeline and are informative.
+- **`UaAlarmToUsd`.** The source resolves to an OPC UA Alarms & Conditions instance (Part 9). `AlarmAspect` selects the condition aspect that drives the target USD attribute — `ActiveState`/`AckedState`/`EnabledState` (boolean → e.g. `visibility` or an emissive on/off) or `Severity` (numeric → e.g. a color ramp). Where a full A&C condition is not available, the aspect **may** instead be sourced from a plain Variable that exposes the aspect value (a Boolean active-state or numeric severity); the binding semantics are identical and the connector treats it as any monitored source. Quality/`BadQualityAction` apply as for telemetry; a returned-to-normal condition clears or resets the target per `BadQualityAction`.
+- **`UaHistoryToUsd`.** With `TimeSampled = true` the connector reads history (Part 11 `HistoryRead`) for the source and authors the values as **USD time samples** on the target attribute, giving the stage a scrubbable timeline for playback/replay. The source **shall** be historizing (its `AccessLevel`/`UserAccessLevel` grants `HistoryRead` and the server retains history); if it is not, the connector authors no samples and the binding is inert — a documented degrade, not an error. The epoch and `timeCodesPerSecond` mapping is declared by a recording profile; absent that, samples are authored on a connector-defined uniform timeline and are informative.
 
 
 ---

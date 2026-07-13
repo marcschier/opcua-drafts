@@ -12,6 +12,8 @@
       /Plant/Pumps/P101/Body           primvars:displayColor(BearingTemperature -> DisplayColor)
       /Plant/Pumps/P101/StatusLight/Mat/Surface.inputs:emissiveColor
                                                             (DifferentialPressure -> EmissiveColor)
+      /Plant/Pumps/P101/StatusLight.visibility              (alarm ActiveState -> Visibility)
+      /Plant/Pumps/P101/Impeller.inputs:speedSetpoint       (opt-in command intent -> UA write)
     """
     defaultPrim = "Plant"
     metersPerUnit = 1
@@ -49,6 +51,10 @@ def Xform "Plant"
                 double3 xformOp:translate = (0, 0, 1.05)
                 uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateZ"]
 
+                # Opt-in command intent: a controller writes this setpoint on the
+                # USD side; the connector maps it to a UA write (UsdToUaCommand).
+                custom double inputs:speedSetpoint = 0
+
                 def Cube "BladeA"
                 {
                     double size = 1.0
@@ -71,6 +77,11 @@ def Xform "Plant"
             {
                 double3 xformOp:translate = (0.6, 0, 0.6)
                 uniform token[] xformOpOrder = ["xformOp:translate"]
+
+                # Driven by a UaAlarmToUsd binding: the supervision alarm
+                # ActiveState toggles this prim's visibility ("inherited" when
+                # active, "invisible" when clear).
+                token visibility = "inherited"
 
                 def Sphere "Bulb" (
                     prepend apiSchemas = ["MaterialBindingAPI"]

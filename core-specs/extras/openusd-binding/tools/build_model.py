@@ -434,7 +434,8 @@ enum_type(3006, "OpenUsdAlarmAspectEnum",
 
 enum_type(3007, "OpenUsdDigestAlgorithmEnum",
           "Digest algorithm for OpenUsdStageType.RootLayerDigest (Twin BOM content integrity).",
-          [("None", 0, None), ("SHA-256", 1, None), ("SHA-384", 2, None), ("SHA-512", 3, None)])
+          [("None", 0, None), ("Sha256", 1, "SHA-256."), ("Sha384", 2, "SHA-384."),
+           ("Sha512", 3, "SHA-512.")])
 
 OpenUsdSignalRoleEnum = T(3005)
 OpenUsdAlarmAspectEnum = T(3006)

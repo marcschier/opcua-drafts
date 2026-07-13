@@ -42,6 +42,22 @@ OpenUsdConnector  ──► UsdFileSink ──►  live.usda        (runtime ove
 | `BearingTemperature` | `/Plant/Pumps/P101/Body` · `primvars:displayColor` | DisplayColor | body colour (blue→red) |
 | `DifferentialPressure` | `/Plant/Pumps/P101/StatusLight/Mat/Surface` · `inputs:emissiveColor` | EmissiveColor | status light glow |
 
+Each carries a **SignalRole** (`Observable`) and `MassFlow` additionally carries a portable
+**SourceSemanticId** (an ECLASS-style IRDI for volume flow rate) a connector can use to resolve
+the source across vendors.
+
+## Two more bindings (alarm and opt-in command)
+
+The server also declares two capability bindings that exercise the rest of the model:
+
+| Binding | Intent | Source → target | Effect |
+|---|---|---|---|
+| `AlarmActiveVisibility` | `UaAlarmToUsd` | supervision alarm `ActiveState` → `/Plant/Pumps/P101/StatusLight` · `visibility` | status light shown when an alarm is active, hidden when clear |
+| `SpeedSetpointCommand` | `UsdToUaCommand` | USD `inputs:speedSetpoint` → UA `SpeedSetpoint` Variable | writes a speed setpoint back into the server (**opt-in**) |
+
+The **stage** also advertises a **RootLayerDigest** (`Sha256`) — a Twin-BOM content-integrity
+digest the connector verifies before it composes the stage (fail-closed on mismatch).
+
 ## Prerequisites
 
 - **.NET SDK 10** — to build and run the server + connector.
@@ -195,6 +211,22 @@ python usd_writer.py --connect opc.tcp://localhost:62810/PumpDeviceIntegrationSe
 
 Then open `stage.usda` as in Step 6.
 
+## Optional — issue an opt-in command (USD → OPC UA)
+
+Command bindings are **disabled by default** (fail-closed). To let the connector actuate the
+single `UsdToUaCommand` binding, pass `--enable-commands` and a `--command-value`:
+
+```bash
+dotnet run --project Applications/PumpDeviceIntegrationBridge -c Release -f net10.0 -- \
+  --server opc.tcp://localhost:62810/PumpDeviceIntegrationServer --out ~/pump-live/live.usda \
+  --insecure --enable-commands --command-value 1450
+```
+
+The bridge writes `1450` into the server's `SpeedSetpoint` Variable (single-writer, authorized,
+fail-closed). Without `--enable-commands` the same binding is discovered but never actuated —
+the read-only telemetry/alarm flow is unaffected. In production the write is additionally gated
+by RolePermissions on the target Variable (the demo server leaves the setpoint writable).
+
 ## Validate composition without a GUI
 
 If you only have `usd-core` (no `usdview`), confirm the live layer composes over the base:
@@ -232,7 +264,12 @@ PY
   never at "the pump". The same connector binary works for any conforming server.
 - **Bindings** — each `OpenUsdLiveBinding` declares `SourceNodeId`, target prim/property,
   `RenderTargetKind`, and `Scale`; the connector reads them and applies the conversion
-  (§5.7–§5.8).
+  (§5.7–§5.8). 0.2 bindings add `SignalRole`, `SourceSemanticId`, alarm (`UaAlarmToUsd` +
+  `AlarmAspect`), and opt-in command (`UsdToUaCommand` + `CommandTargetNodeId`) members.
+- **Integrity** — the stage's `RootLayerDigest` / `RootLayerDigestAlgorithm` let the connector
+  verify the resolved root layer before composing it (Twin-BOM content integrity, §5.11/§9).
+- **Command safety** — command bindings are normative but opt-in: disabled by default,
+  single-writer, authorized, and fail-closed (§5.10).
 - **Layering** — OPC UA is the single mapping authority; the base USD asset is never
   modified. Live values live in a composed override layer (`live.usda`), the equivalent of
   an Omniverse Nucleus `.live` layer (Part 3).

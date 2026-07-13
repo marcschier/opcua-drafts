@@ -515,7 +515,7 @@
       <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=3907</Reference>
     </References>
-    <Definition Name="OpenUsdDigestAlgorithmEnum"><Field Name="None" Value="0"/><Field Name="SHA-256" Value="1"/><Field Name="SHA-384" Value="2"/><Field Name="SHA-512" Value="3"/></Definition>
+    <Definition Name="OpenUsdDigestAlgorithmEnum"><Field Name="None" Value="0"/><Field Name="Sha256" Value="1"><Description>SHA-256.</Description></Field><Field Name="Sha384" Value="2"><Description>SHA-384.</Description></Field><Field Name="Sha512" Value="3"><Description>SHA-512.</Description></Field></Definition>
   </UADataType>
   <UAVariable NodeId="ns=1;i=3907" BrowseName="1:EnumStrings" ParentNodeId="ns=1;i=3007" DataType="LocalizedText" ValueRank="1" ArrayDimensions="4">
     <DisplayName>EnumStrings</DisplayName>
@@ -524,7 +524,7 @@
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=3007</Reference>
     </References>
-    <Value><uax:ListOfLocalizedText xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:LocalizedText><uax:Text>None</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>SHA-256</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>SHA-384</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>SHA-512</uax:Text></uax:LocalizedText></uax:ListOfLocalizedText></Value>
+    <Value><uax:ListOfLocalizedText xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:LocalizedText><uax:Text>None</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Sha256</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Sha384</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Sha512</uax:Text></uax:LocalizedText></uax:ListOfLocalizedText></Value>
   </UAVariable>
   <UAVariable NodeId="ns=1;i=6032" BrowseName="1:SignalRole" ParentNodeId="ns=1;i=1004" DataType="ns=1;i=3005" ValueRank="-1">
     <DisplayName>SignalRole</DisplayName>
