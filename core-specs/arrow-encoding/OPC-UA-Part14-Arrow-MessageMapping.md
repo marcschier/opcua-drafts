@@ -43,7 +43,7 @@ Insert a new message mapping `7.2.8 Arrow message mapping` after the existing me
 
 ### 6.3.x Arrow mapping parameters
 
-The WriterGroup MessageSettings for the Arrow mapping shall include: `ArrowIpcFormat` (`batch`, `stream` or `file`, default `batch`; see Table 7.2.8-1), `MaxRowsPerRecordBatch`, `IncludeSchemaMetadata`, `DeltaFrameMode` (`nullable-columns` or `selected-columns`), and `Compression` (`none` or an Arrow IPC-supported codec). The DataSetWriter MessageSettings shall identify the DataSet schema version and whether DataSet fields are represented as RawData, Variant or DataValue according to `DataSetFieldContentMask`.
+The WriterGroup MessageSettings for the Arrow mapping shall include: `ArrowIpcFormat` (`batch`, `stream` or `file`, default `batch`; see Table 7.2.8-1), `MaxRowsPerRecordBatch`, `IncludeSchemaMetadata`, `DeltaFrameMode` (`nullable-columns` or `selected-columns`), and `Compression` (`none` or an Arrow IPC-supported codec). `DeltaFrameMode = nullable-columns` (the default) keeps the full column set and marks absent keys as null cells, so sparse and full frames share one schema and SchemaId (§7.2.8); `selected-columns` drops columns and changes the SchemaId and is used only when an explicit reduced-column batch is intended. The DataSetWriter MessageSettings shall identify the DataSet schema version and whether DataSet fields are represented as RawData, Variant or DataValue according to `DataSetFieldContentMask`.
 
 ### 7.2.8 Arrow message mapping
 
@@ -57,9 +57,11 @@ The payload of an Arrow NetworkMessage shall be a bare Arrow RecordBatch (`batch
 | `stream` | An Arrow IPC stream: one Schema message followed by one or more RecordBatch messages | Yes — the Schema message precedes the RecordBatches | Yes | Channels without a schema-announcement mechanism, or when each message must be independently decodable. |
 | `file` | An Arrow IPC file: the stream contents plus a footer with a random-access block index | Yes — embedded, plus the footer index | Yes | Bounded, seekable payloads for storage or random-access retrieval. |
 
-Each RecordBatch row is one DataSetMessage sample for the DataSet. Columns are DataSet fields. If `DataSetFieldContentMask` selects RawData, the column type is the field DataType mapping. If it selects Variant, the column type is the Part 6 Variant mapping. If it selects DataValue, the column type is the Part 6 DataValue mapping. The selected representation shall be the same for every row in the batch.
+Each RecordBatch row is one DataSetMessage sample for the DataSet. Columns are DataSet fields. If `DataSetFieldContentMask` selects RawData, the column type is the field DataType mapping. If it selects Variant, the column type is the Part 6 Variant mapping. If it selects DataValue, the column type is the Part 6 DataValue mapping. The selected representation shall be the same for every row in the batch. **Every DataSet field column shall be nullable** (Arrow validity bitmap; for a Variant or ExtensionObject column the dense-union `null` child, `null=0`).
 
-Key frames shall contain all fields in DataSetMetaData field order. Delta frames shall identify changed fields using a `field_index:list<uint16>` selection column, a schema-level changed-field list, or a selected-column RecordBatch whose metadata lists the original field indexes. Omitted unchanged fields shall not be decoded as null values; they are absent by delta-frame selection.
+Key frames shall contain all fields in DataSetMetaData field order. A DataSet may be **sparse** — a row need not carry a value for every key. A sparse DataSet shall be represented with **nullable columns**: the RecordBatch keeps the identical full column set — and therefore the same schema and SchemaId — and a key with no value in a given row is written as a **null cell** (`null:null`: a cleared validity bit, or the dense-union `null` child). A subscriber shall treat a null cell as **missing** — no value for that key in that row. This is the `nullable-columns` mode (§6.3.x) and shall be used whenever a stable schema across sparse subsets is required.
+
+Delta frames shall identify changed fields using a `field_index:list<uint16>` selection column, a schema-level changed-field list, or a `selected-columns` RecordBatch whose metadata lists the original field indexes. A `selected-columns` batch omits unchanged columns and therefore changes the column set and the SchemaId, so it is the explicit schema-changing option, distinct from the stable-schema `nullable-columns` sparse representation above. In a `selected-columns` batch, omitted unchanged fields shall not be decoded as null values; they are absent by delta-frame selection.
 
 #### 7.2.8.x Bare RecordBatch framing (`batch`)
 
@@ -87,7 +89,7 @@ Annex B shall list `application/vnd.apache.arrow.stream` for Arrow IPC streaming
 
 ## 4 DataSet schema mapping
 
-A PublishedDataSet maps to one Arrow schema. For each `FieldMetaData` entry, the field name becomes the Arrow column name and the field DataType becomes the Arrow column `DataType` using OPC UA Part 6 Arrow. Field properties from DataSetMetaData are copied into Arrow field metadata so a disconnected subscriber can retain engineering units, semantic references, model namespace, SourceBrowseName and SourceTypeDefinition.
+A PublishedDataSet maps to one Arrow schema. For each `FieldMetaData` entry, the field name becomes the Arrow column name and the field DataType becomes the Arrow column `DataType` using OPC UA Part 6 Arrow. Every DataSet field column is **nullable**, so a **sparse** DataSet — a row that does not carry a value for every key — uses the same schema: the absent key is a null cell interpreted as missing (§7.2.8), and the SchemaId does not change with the subset of keys carried. Field properties from DataSetMetaData are copied into Arrow field metadata so a disconnected subscriber can retain engineering units, semantic references, model namespace, SourceBrowseName and SourceTypeDefinition.
 
 ## 5 NetworkMessage and DataSetMessage envelopes
 
