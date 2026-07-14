@@ -84,5 +84,41 @@
       "targetUsdTypeName": "double",
       "note": "Opt-in control direction: a USD-side speed setpoint intent is written to the UA SpeedSetpoint Variable. The binding is declared (enabled=true) and marked Controllable, but a connector actuates it only when explicitly enabled (bridge --enable-commands) AND authorized — single-writer, fail-closed. 'enabled=true' means declared, NOT auto-actuated; the opt-in lives on the connector, not on the Enabled member (whose false value is a tombstone)."
     }
+  ],
+  "components": [
+    {
+      "name": "ImpellerComponent",
+      "cardinality": "One",
+      "compositionArc": "Child",
+      "componentPrimPath": "/Plant/Pumps/P101/Impeller",
+      "note": "1:1 composition (§5.12): the pump is composed of an Impeller component Object with its own representation, mapped to a child prim."
+    },
+    {
+      "name": "BearingComponent",
+      "cardinality": "One",
+      "compositionArc": "Child",
+      "componentPrimPath": "/Plant/Pumps/P101/Bearing",
+      "note": "1:1 composition (§5.12): the pump is composed of a Bearing component Object mapped to a child prim."
+    },
+    {
+      "name": "PumpsAggregation",
+      "on": "ProductionLine",
+      "cardinality": "Many",
+      "compositionArc": "Instance",
+      "targetPrimPath": "/Plant/Line1/Pumps",
+      "componentAssetReference": "@pump.usda@</Pump>",
+      "dynamic": true,
+      "note": "1..n composition (§5.12/§5.13): a ProductionLine aggregates its pumps as instanceable reference prims; pumps are added/removed at runtime (GeneralModelChange), reconciled by the connector."
+    },
+    {
+      "name": "RemotePumpComponent",
+      "on": "ProductionLine",
+      "cardinality": "One",
+      "compositionArc": "Reference",
+      "targetPrimPath": "/Plant/Line1/RemotePump",
+      "componentAssetReference": "@remote-pump.usda@</Pump>",
+      "componentServerUri": "urn:localhost:OPCFoundation:PumpDeviceIntegrationServer",
+      "note": "Cross-server composition (§5.14): an OEM pump hosted on another server; the connector composes its reference prim and federates to drive its bindings."
+    }
   ]
 }

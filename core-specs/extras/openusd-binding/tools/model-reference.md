@@ -65,3 +65,26 @@
 | ns=1;i=6040 | RootLayerDigestAlgorithm | Variable | Digest algorithm for RootLayerDigest (default SHA-256). |
 | ns=1;i=6041 | Signature | Variable | Optional detached signature over the digest / stage identity, for provenance. |
 | ns=1;i=6042 | ProvenanceUri | Variable | Optional URI locating provenance / a signed Twin BOM manifest for the stage. |
+| ns=1;i=3008 | OpenUsdCardinalityEnum | DataType | Cardinality of a component binding: 1:1 or 1..n. |
+| ns=1;i=3908 | EnumStrings | Variable |  |
+| ns=1;i=3009 | OpenUsdCompositionArcEnum | DataType | USD composition arc used to place a component prim under its parent. |
+| ns=1;i=3909 | EnumStrings | Variable |  |
+| ns=1;i=1005 | OpenUsdComponentBindingType | ObjectType | One composition/aggregation binding: maps an OPC UA component relationship of the represented Object onto a USD composition arc, so a connector assembles the component prim(s). Carried as a <Component> child of a representation. |
+| ns=1;i=6043 | BindingDefinitionId | Variable | Stable declaration id for override/tombstone matching. |
+| ns=1;i=6044 | Enabled | Variable | False acts as a tombstone that suppresses an inherited component binding. |
+| ns=1;i=6045 | Cardinality | Variable | One (1:1) or Many (1..n). |
+| ns=1;i=6046 | CompositionArc | Variable | How the component maps into the parent prim: Child, Reference, Payload, Instance. |
+| ns=1;i=6047 | ComponentReferenceType | Variable | Aggregating ReferenceType from the represented Object to its component(s); default HasComponent. |
+| ns=1;i=6048 | ComponentBrowsePath | Variable | RelativePath to the component Object (One) or to the container from which components are enumerated (Many). |
+| ns=1;i=6049 | ComponentTypeDefinition | Variable | Expected component ObjectType; selects children for Many and locates each component's own representation. |
+| ns=1;i=6050 | TargetPrimPath | Variable | Child prim (One) or parent scope prim (Many), relative to the parent representation PrimPath (or absolute). |
+| ns=1;i=6051 | TargetPrimNameSource | Variable | For Many: how to name each instance prim (BrowseName default, a source-property RelativePath, or a {...} template). |
+| ns=1;i=6052 | ComponentAssetReference | Variable | For Reference/Payload/Instance: the external USD asset + default prim, e.g. @pump.usda@</Pump>. |
+| ns=1;i=6053 | ComponentRepresentation | Variable | NodeId of the component's own OpenUsdRepresentation AddIn (its sub-bindings compose under the component prim). |
+| ns=1;i=6054 | Dynamic | Variable | The component set may change at runtime (reconciled from model-change events). |
+| ns=1;i=6055 | ChangeEventSource | Variable | Node whose GeneralModelChange/SemanticChange events signal recomposition; default the Server Object (i=2253). |
+| ns=1;i=6056 | ComponentServerUri | Variable | For a component on another server: the remote Server's application/namespace URI. |
+| ns=1;i=6057 | ComponentEndpointUrl | Variable | For a component on another server: the remote endpoint URL (else discovered). |
+| ns=1;i=6058 | State | Variable | Runtime lifecycle state (diagnostic). |
+| ns=1;i=6059 | LastError | Variable | Last operation error text (diagnostic). |
+| ns=1;i=6060 | <Component> | Object | A component/aggregation binding composing this Object's components into the USD prim tree. |

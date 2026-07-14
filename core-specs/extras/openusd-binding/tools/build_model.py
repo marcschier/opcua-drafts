@@ -477,6 +477,81 @@ prop_var(S, "OpenUsdStageType", "ProvenanceUri", String,
          MR_Optional)
 
 
+# ============  Composition / aggregation (appended; stable NodeIds)  =======
+enum_type(3008, "OpenUsdCardinalityEnum",
+          "Cardinality of a component binding: 1:1 or 1..n.",
+          [("One", 0, "Exactly one component (1:1)."),
+           ("Many", 1, "Zero or more components of a type (1..n).")])
+
+enum_type(3009, "OpenUsdCompositionArcEnum",
+          "USD composition arc used to place a component prim under its parent.",
+          [("Child", 0, "Inline nested prim under the parent prim."),
+           ("Reference", 1, "Prim that references the component's external asset."),
+           ("Payload", 2, "Prim that payloads (deferred-load) the component's external asset."),
+           ("Instance", 3, "Instanceable reference (instanceable=true), for efficient 1..n.")])
+
+OpenUsdCardinalityEnum = T(3008)
+OpenUsdCompositionArcEnum = T(3009)
+
+# ---- ObjectType: OpenUsdComponentBindingType (1005) -----------------------
+object_type(1005, "OpenUsdComponentBindingType", BaseObjectType,
+            "One composition/aggregation binding: maps an OPC UA component relationship of the "
+            "represented Object onto a USD composition arc, so a connector assembles the component "
+            "prim(s). Carried as a <Component> child of a representation.")
+K = 1005
+prop_var(K, "OpenUsdComponentBindingType", "BindingDefinitionId", Guid,
+         "Stable declaration id for override/tombstone matching.", MR_Mandatory)
+prop_var(K, "OpenUsdComponentBindingType", "Enabled", Boolean,
+         "False acts as a tombstone that suppresses an inherited component binding.", MR_Mandatory)
+prop_var(K, "OpenUsdComponentBindingType", "Cardinality", OpenUsdCardinalityEnum,
+         "One (1:1) or Many (1..n).", MR_Mandatory)
+prop_var(K, "OpenUsdComponentBindingType", "CompositionArc", OpenUsdCompositionArcEnum,
+         "How the component maps into the parent prim: Child, Reference, Payload, Instance.",
+         MR_Mandatory)
+prop_var(K, "OpenUsdComponentBindingType", "ComponentReferenceType", NodeId_,
+         "Aggregating ReferenceType from the represented Object to its component(s); "
+         "default HasComponent.", MR_Optional)
+prop_var(K, "OpenUsdComponentBindingType", "ComponentBrowsePath", RelativePath,
+         "RelativePath to the component Object (One) or to the container from which components "
+         "are enumerated (Many).", MR_Optional)
+prop_var(K, "OpenUsdComponentBindingType", "ComponentTypeDefinition", NodeId_,
+         "Expected component ObjectType; selects children for Many and locates each component's "
+         "own representation.", MR_Optional)
+prop_var(K, "OpenUsdComponentBindingType", "TargetPrimPath", String,
+         "Child prim (One) or parent scope prim (Many), relative to the parent representation "
+         "PrimPath (or absolute).", MR_Mandatory)
+prop_var(K, "OpenUsdComponentBindingType", "TargetPrimNameSource", String,
+         "For Many: how to name each instance prim (BrowseName default, a source-property "
+         "RelativePath, or a {...} template).", MR_Optional)
+prop_var(K, "OpenUsdComponentBindingType", "ComponentAssetReference", String,
+         "For Reference/Payload/Instance: the external USD asset + default prim, e.g. "
+         "@pump.usda@</Pump>.", MR_Optional)
+prop_var(K, "OpenUsdComponentBindingType", "ComponentRepresentation", NodeId_,
+         "NodeId of the component's own OpenUsdRepresentation AddIn (its sub-bindings compose "
+         "under the component prim).", MR_Optional)
+prop_var(K, "OpenUsdComponentBindingType", "Dynamic", Boolean,
+         "The component set may change at runtime (reconciled from model-change events).",
+         MR_Optional)
+prop_var(K, "OpenUsdComponentBindingType", "ChangeEventSource", NodeId_,
+         "Node whose GeneralModelChange/SemanticChange events signal recomposition; default the "
+         "Server Object (i=2253).", MR_Optional)
+prop_var(K, "OpenUsdComponentBindingType", "ComponentServerUri", String,
+         "For a component on another server: the remote Server's application/namespace URI.",
+         MR_Optional)
+prop_var(K, "OpenUsdComponentBindingType", "ComponentEndpointUrl", String,
+         "For a component on another server: the remote endpoint URL (else discovered).",
+         MR_Optional)
+prop_var(K, "OpenUsdComponentBindingType", "State", OpenUsdBindingStateEnum,
+         "Runtime lifecycle state (diagnostic).", MR_Optional)
+prop_var(K, "OpenUsdComponentBindingType", "LastError", LocalizedText,
+         "Last operation error text (diagnostic).", MR_Optional)
+
+# <Component> placeholder on the representation type (1003)
+placeholder_obj(R, "OpenUsdRepresentationType", "<Component>", T(1005),
+                "A component/aggregation binding composing this Object's components into the USD "
+                "prim tree.")
+
+
 # ===========================================================================
 # ==================================  EMIT  =================================
 # ===========================================================================

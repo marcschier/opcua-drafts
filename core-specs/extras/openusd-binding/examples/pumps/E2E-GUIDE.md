@@ -58,6 +58,25 @@ The server also declares two capability bindings that exercise the rest of the m
 The **stage** also advertises a **RootLayerDigest** (`Sha256`) — a Twin-BOM content-integrity
 digest the connector verifies before it composes the stage (fail-closed on mismatch).
 
+## Composition (the asset is composed of components)
+
+The server also exercises composition/aggregation (spec §5.12–5.14), so the connector assembles a
+USD prim hierarchy that mirrors the asset's *is-composed-of* structure:
+
+- **1:1** — the pump is composed of an `Impeller` and a `Bearing` component Object (each with its own
+  representation), mapped to the `…/Impeller` and `…/Bearing` **child prims**.
+- **1..n** — a `ProductionLine` aggregates its pumps as **instanceable references** to `pump.usda`
+  under `/Plant/Line1/Pumps` (one prim per pump).
+- **dynamic** — a pump is added and removed at runtime; the server emits model-change events and the
+  connector reconciles the prims (new prim appears; a removed prim is set `active = false`) — no
+  reload, and the base asset is never mutated.
+- **cross-server** — one component is an OEM pump on **another server**; the connector composes its
+  reference prim (and, given remote credentials, federates to drive its live values).
+
+You will see these as additional `over`/`def` prims in `live.usda` — nested child prims for the
+1:1 components, and `prepend references = @pump.usda@</Pump>` (with `instanceable = true`) prims for
+the aggregated line pumps.
+
 ## Prerequisites
 
 - **.NET SDK 10** — to build and run the server + connector.
