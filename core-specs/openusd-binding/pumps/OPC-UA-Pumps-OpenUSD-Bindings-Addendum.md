@@ -69,6 +69,22 @@ Implementer findings from the source-generated OPC UA .NET model (generic, not P
 - **Optional members are not auto-created.** Only mandatory members exist after instantiation; the optional members a connector reads (`SourceNodeId`, `RenderTargetKind`, `Scale`, `BadQualityAction`, and the 0.2 members `SignalRole`, `SourceSemanticId`, `AlarmAspect`, `CommandTargetNodeId`, `CommandTriggerPropertyName`) must be explicitly created so they carry a BrowseName and are browsable/readable.
 - **Discovery uses the registry, not the represented object.** A connector enumerates representations from `Server/OpenUSD/Representations` (Organizes) — it does not need to know or reach the represented Object, confirming the Part 1 discovery facility is sufficient on its own.
 
+## 4.2 Composition / aggregation (validated)
+
+The sample also exercises the composition model (base spec §5.12–5.14):
+
+- **1:1 (Child).** The pump is composed of an `Impeller` and a `Bearing` component Object, each with its own representation, declared as `One` `<Component>` bindings (`CompositionArc = Child`) that compose the `…/Impeller` and `…/Bearing` child prims.
+- **1..n (Instance) + dynamic.** A `ProductionLine` Object aggregates 1..n pumps via a `Many` `<Component>` binding (`CompositionArc = Instance`, `Dynamic = true`), authoring an instanceable reference prim per pump under `/Plant/Line1/Pumps`. A pump is added and removed at runtime; with `ModelChangeEmissionEnabled` the server emits `GeneralModelChangeEvent`s and the connector reconciles the prims (new prim authored; removed prim set `active = false`).
+- **Cross-server (Reference).** A `<Component>` binding carries `ComponentServerUri`/`ComponentEndpointUrl` for an OEM pump on another server; the connector composes its reference prim and (given a remote session factory) federates to drive its bindings.
+
+Composition-specific implementer findings (generic):
+
+- **Reach the represented Object via the aggregating reference.** Resolve a representation's owner by browsing the inverse of `HasComponent`/`HasAddIn` (`Aggregates`), not any hierarchical reference — otherwise the `Organizes` link from the registry is mistaken for the parent.
+- **Process every representation.** Composition spans the aggregating representation and each component's own representation, so a connector iterates all registry entries, not just the first.
+- **One `OfType` filter covers both model-change events.** `GeneralModelChangeEventType` and `SemanticChangeEventType` both derive from `BaseModelChangeEventType`, so a single `OfType(BaseModelChangeEventType)` event filter suffices.
+
+`PumpOpenUsdE2eTests` now has **fifteen** passing cases; the five composition cases are `PumpComponentsComposeChildPrims`, `ProductionLineAggregatesPumps`, `DynamicPumpIsComposedThenDeactivated`, `CrossServerComponentIsComposed`, and `ComponentBindingsAreDiscoverable`.
+
 ## 5 Where the bindings live
 
 - **Machine-readable descriptor:** `../../extras/openusd-binding/examples/pumps/Pumps.OpenUsdBinding.json`.
