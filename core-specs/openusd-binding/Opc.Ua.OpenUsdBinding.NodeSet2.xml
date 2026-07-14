@@ -385,6 +385,7 @@
       <Reference ReferenceType="HasProperty">ns=1;i=6026</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6027</Reference>
       <Reference ReferenceType="HasComponent">ns=1;i=6028</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=6060</Reference>
     </References>
   </UAObjectType>
   <UAVariable NodeId="ns=1;i=6025" BrowseName="1:DefaultInstanceBrowseName" ParentNodeId="ns=1;i=1003" DataType="QualifiedName">
@@ -625,4 +626,229 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1002</Reference>
     </References>
   </UAVariable>
+  <UADataType NodeId="ns=1;i=3008" BrowseName="1:OpenUsdCardinalityEnum">
+    <DisplayName>OpenUsdCardinalityEnum</DisplayName>
+    <Description>Cardinality of a component binding: 1:1 or 1..n.</Description>
+    <Category>OpenUSD Binding DataTypes</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=3908</Reference>
+    </References>
+    <Definition Name="OpenUsdCardinalityEnum"><Field Name="One" Value="0"><Description>Exactly one component (1:1).</Description></Field><Field Name="Many" Value="1"><Description>Zero or more components of a type (1..n).</Description></Field></Definition>
+  </UADataType>
+  <UAVariable NodeId="ns=1;i=3908" BrowseName="1:EnumStrings" ParentNodeId="ns=1;i=3008" DataType="LocalizedText" ValueRank="1" ArrayDimensions="2">
+    <DisplayName>EnumStrings</DisplayName>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=3008</Reference>
+    </References>
+    <Value><uax:ListOfLocalizedText xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:LocalizedText><uax:Text>One</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Many</uax:Text></uax:LocalizedText></uax:ListOfLocalizedText></Value>
+  </UAVariable>
+  <UADataType NodeId="ns=1;i=3009" BrowseName="1:OpenUsdCompositionArcEnum">
+    <DisplayName>OpenUsdCompositionArcEnum</DisplayName>
+    <Description>USD composition arc used to place a component prim under its parent.</Description>
+    <Category>OpenUSD Binding DataTypes</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=3909</Reference>
+    </References>
+    <Definition Name="OpenUsdCompositionArcEnum"><Field Name="Child" Value="0"><Description>Inline nested prim under the parent prim.</Description></Field><Field Name="Reference" Value="1"><Description>Prim that references the component's external asset.</Description></Field><Field Name="Payload" Value="2"><Description>Prim that payloads (deferred-load) the component's external asset.</Description></Field><Field Name="Instance" Value="3"><Description>Instanceable reference (instanceable=true), for efficient 1..n.</Description></Field></Definition>
+  </UADataType>
+  <UAVariable NodeId="ns=1;i=3909" BrowseName="1:EnumStrings" ParentNodeId="ns=1;i=3009" DataType="LocalizedText" ValueRank="1" ArrayDimensions="4">
+    <DisplayName>EnumStrings</DisplayName>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=3009</Reference>
+    </References>
+    <Value><uax:ListOfLocalizedText xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:LocalizedText><uax:Text>Child</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Reference</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Payload</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Instance</uax:Text></uax:LocalizedText></uax:ListOfLocalizedText></Value>
+  </UAVariable>
+  <UAObjectType NodeId="ns=1;i=1005" BrowseName="1:OpenUsdComponentBindingType">
+    <DisplayName>OpenUsdComponentBindingType</DisplayName>
+    <Description>One composition/aggregation binding: maps an OPC UA component relationship of the represented Object onto a USD composition arc, so a connector assembles the component prim(s). Carried as a &lt;Component&gt; child of a representation.</Description>
+    <Category>OpenUSD Binding</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6043</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6044</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6045</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6046</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6047</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6048</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6049</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6050</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6051</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6052</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6053</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6054</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6055</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6056</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6057</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6058</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6059</Reference>
+    </References>
+  </UAObjectType>
+  <UAVariable NodeId="ns=1;i=6043" BrowseName="1:BindingDefinitionId" ParentNodeId="ns=1;i=1005" DataType="Guid" ValueRank="-1">
+    <DisplayName>BindingDefinitionId</DisplayName>
+    <Description>Stable declaration id for override/tombstone matching.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1005</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6044" BrowseName="1:Enabled" ParentNodeId="ns=1;i=1005" DataType="Boolean" ValueRank="-1">
+    <DisplayName>Enabled</DisplayName>
+    <Description>False acts as a tombstone that suppresses an inherited component binding.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1005</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6045" BrowseName="1:Cardinality" ParentNodeId="ns=1;i=1005" DataType="ns=1;i=3008" ValueRank="-1">
+    <DisplayName>Cardinality</DisplayName>
+    <Description>One (1:1) or Many (1..n).</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1005</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6046" BrowseName="1:CompositionArc" ParentNodeId="ns=1;i=1005" DataType="ns=1;i=3009" ValueRank="-1">
+    <DisplayName>CompositionArc</DisplayName>
+    <Description>How the component maps into the parent prim: Child, Reference, Payload, Instance.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1005</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6047" BrowseName="1:ComponentReferenceType" ParentNodeId="ns=1;i=1005" DataType="NodeId" ValueRank="-1">
+    <DisplayName>ComponentReferenceType</DisplayName>
+    <Description>Aggregating ReferenceType from the represented Object to its component(s); default HasComponent.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1005</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6048" BrowseName="1:ComponentBrowsePath" ParentNodeId="ns=1;i=1005" DataType="RelativePath" ValueRank="-1">
+    <DisplayName>ComponentBrowsePath</DisplayName>
+    <Description>RelativePath to the component Object (One) or to the container from which components are enumerated (Many).</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1005</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6049" BrowseName="1:ComponentTypeDefinition" ParentNodeId="ns=1;i=1005" DataType="NodeId" ValueRank="-1">
+    <DisplayName>ComponentTypeDefinition</DisplayName>
+    <Description>Expected component ObjectType; selects children for Many and locates each component's own representation.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1005</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6050" BrowseName="1:TargetPrimPath" ParentNodeId="ns=1;i=1005" DataType="String" ValueRank="-1">
+    <DisplayName>TargetPrimPath</DisplayName>
+    <Description>Child prim (One) or parent scope prim (Many), relative to the parent representation PrimPath (or absolute).</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1005</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6051" BrowseName="1:TargetPrimNameSource" ParentNodeId="ns=1;i=1005" DataType="String" ValueRank="-1">
+    <DisplayName>TargetPrimNameSource</DisplayName>
+    <Description>For Many: how to name each instance prim (BrowseName default, a source-property RelativePath, or a {...} template).</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1005</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6052" BrowseName="1:ComponentAssetReference" ParentNodeId="ns=1;i=1005" DataType="String" ValueRank="-1">
+    <DisplayName>ComponentAssetReference</DisplayName>
+    <Description>For Reference/Payload/Instance: the external USD asset + default prim, e.g. @pump.usda@&lt;/Pump&gt;.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1005</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6053" BrowseName="1:ComponentRepresentation" ParentNodeId="ns=1;i=1005" DataType="NodeId" ValueRank="-1">
+    <DisplayName>ComponentRepresentation</DisplayName>
+    <Description>NodeId of the component's own OpenUsdRepresentation AddIn (its sub-bindings compose under the component prim).</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1005</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6054" BrowseName="1:Dynamic" ParentNodeId="ns=1;i=1005" DataType="Boolean" ValueRank="-1">
+    <DisplayName>Dynamic</DisplayName>
+    <Description>The component set may change at runtime (reconciled from model-change events).</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1005</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6055" BrowseName="1:ChangeEventSource" ParentNodeId="ns=1;i=1005" DataType="NodeId" ValueRank="-1">
+    <DisplayName>ChangeEventSource</DisplayName>
+    <Description>Node whose GeneralModelChange/SemanticChange events signal recomposition; default the Server Object (i=2253).</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1005</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6056" BrowseName="1:ComponentServerUri" ParentNodeId="ns=1;i=1005" DataType="String" ValueRank="-1">
+    <DisplayName>ComponentServerUri</DisplayName>
+    <Description>For a component on another server: the remote Server's application/namespace URI.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1005</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6057" BrowseName="1:ComponentEndpointUrl" ParentNodeId="ns=1;i=1005" DataType="String" ValueRank="-1">
+    <DisplayName>ComponentEndpointUrl</DisplayName>
+    <Description>For a component on another server: the remote endpoint URL (else discovered).</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1005</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6058" BrowseName="1:State" ParentNodeId="ns=1;i=1005" DataType="ns=1;i=3004" ValueRank="-1">
+    <DisplayName>State</DisplayName>
+    <Description>Runtime lifecycle state (diagnostic).</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1005</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6059" BrowseName="1:LastError" ParentNodeId="ns=1;i=1005" DataType="LocalizedText" ValueRank="-1">
+    <DisplayName>LastError</DisplayName>
+    <Description>Last operation error text (diagnostic).</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1005</Reference>
+    </References>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=6060" BrowseName="1:&lt;Component&gt;" ParentNodeId="ns=1;i=1003">
+    <DisplayName>&lt;Component&gt;</DisplayName>
+    <Description>A component/aggregation binding composing this Object's components into the USD prim tree.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=11508</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=1;i=1005</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=1003</Reference>
+    </References>
+  </UAObject>
 </UANodeSet>

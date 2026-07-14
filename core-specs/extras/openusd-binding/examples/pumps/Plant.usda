@@ -43,6 +43,16 @@ def Xform "Plant"
                 uniform token[] xformOpOrder = ["xformOp:translate"]
             }
 
+            # Bearing sub-component (1:1 composition: the pump is composed of a
+            # Bearing component Object mapped to this child prim, §5.12).
+            def Sphere "Bearing"
+            {
+                double radius = 0.12
+                color3f[] primvars:displayColor = [(0.3, 0.3, 0.32)]
+                double3 xformOp:translate = (0, 0, 0.15)
+                uniform token[] xformOpOrder = ["xformOp:translate"]
+            }
+
             # Impeller that spins about the pump's vertical (Z) axis. Its
             # xformOp:rotateZ angle is driven by mass flow at runtime.
             def Xform "Impeller"
