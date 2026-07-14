@@ -296,8 +296,10 @@ An asset is usually **composed of components** (a pump has an impeller and a bea
 | `LastError` | LocalizedText | O | Last operation error (diagnostic). |
 
 **Resolution.**
-- `One` — resolve `ComponentBrowsePath` (constrained by `ComponentReferenceType` / `ComponentTypeDefinition`) to exactly one component Object; zero → *unresolved*; more than one → `Bad_TooManyMatches`.
+- `One` — resolve `ComponentBrowsePath` (constrained by `ComponentReferenceType` / `ComponentTypeDefinition`) to exactly one component Object; zero → *unresolved*; more than one → `Bad_TooManyMatches`. When `ComponentRepresentation` is present it names the component's representation directly, giving unambiguous 1:1 targeting without a browse.
 - `Many` — enumerate every component Object reached by `ComponentReferenceType` from the container that matches `ComponentTypeDefinition`; each yields one instance prim under the `TargetPrimPath` scope, named per `TargetPrimNameSource`.
+
+A connector reaches the represented Object of a representation by following the **aggregating** reference (`HasComponent`/`HasAddIn`), **not** any hierarchical reference — otherwise the `Organizes` link from the discovery registry (§4.2) would be mistaken for the parent. A connector **shall** also process **every** representation in the registry, since composition spans the aggregating representation and each component's own representation.
 
 **USD arc.** `Child` authors an inline nested prim under the parent prim. `Reference` / `Payload` author a prim that `references` / `payload`s `ComponentAssetReference` (the component's own asset; `Payload` defers loading). `Instance` is a `Reference` authored `instanceable = true`, for efficient identical 1..n aggregation. A component's own live bindings (from its `ComponentRepresentation`) then drive attributes within the composed sub-tree.
 
@@ -305,7 +307,7 @@ An asset is usually **composed of components** (a pump has an impeller and a bea
 
 ### 5.13 Dynamic composition (normative, optional)
 
-When `Dynamic = true`, the component set may change while the server runs. A conforming server that supports dynamic composition **shall** emit standard model-change events — `GeneralModelChangeEventType` (Part 3) for node/reference additions and deletions, and `SemanticChangeEventType` where a change alters meaning (e.g. a component's semantic id) — from `ChangeEventSource` (or the Server Object).
+When `Dynamic = true`, the component set may change while the server runs. A conforming server that supports dynamic composition **shall** emit standard model-change events — `GeneralModelChangeEventType` (Part 3) for node/reference additions and deletions, and `SemanticChangeEventType` where a change alters meaning (e.g. a component's semantic id) — from `ChangeEventSource` (or the Server Object). Both derive from `BaseModelChangeEventType`, so a connector can subscribe to both with a single `OfType(BaseModelChangeEventType)` event filter.
 
 A connector supporting dynamic composition **shall** subscribe to those events for `ChangeEventSource`; on a relevant change it **shall** re-resolve the affected component binding (§5.12) and reconcile the USD prims it authored:
 
