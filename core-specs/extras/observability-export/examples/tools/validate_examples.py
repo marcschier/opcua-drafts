@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
-"""Validate the generated Scenario Bindings examples.
+"""Validate the generated Observability Export examples.
 
 For each domain overlay NodeSet: well-formedness, unique NodeIds, no dangling internal
-references, and full cross-NodeSet reference resolution against the base PubSub Scenario
-Binding spec + the companion + DI/IA/Machinery NodeSets. Base companion NodeSets are read
+references, and full cross-NodeSet reference resolution against the base Observability Export spec + the companion + DI/IA/Machinery NodeSets. Base companion NodeSets are read
 from tools/ref/ (gitignored). Exit non-zero on any error.
 """
 import os
@@ -16,9 +15,9 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 EX = os.path.dirname(HERE)
 REF = os.path.join(HERE, "ref")
 # The base spec NodeSet and the per-spec example overlays are standardized artifacts under
-# core-specs/scenario-binding/; the descriptors + this validator are secondary here under core-specs/extras.
-CORE = os.path.abspath(os.path.join(HERE, "..", "..", "..", "..", "scenario-binding"))
-BIND = os.path.join(CORE, "Opc.Ua.ScenarioBinding.NodeSet2.xml")
+# core-specs/observability-export/; the descriptors + this validator are secondary here under core-specs/extras.
+CORE = os.path.abspath(os.path.join(HERE, "..", "..", "..", "..", "observability-export"))
+BIND = os.path.join(CORE, "Opc.Ua.ObservabilityExport.NodeSet2.xml")
 NS = "{http://opcfoundation.org/UA/2011/03/UANodeSet.xsd}"
 
 DOMAINS = {
@@ -33,9 +32,6 @@ DOMAINS = {
     # (which Pumps extends) and a device-only DeviceHealth binding on IDeviceHealthType.
     "DI": {"base": ["Opc.Ua.Di.NodeSet2.xml"]},
     "DIDeviceHealth": {"base": ["Opc.Ua.Di.NodeSet2.xml"], "folder": "di"},
-    # DI device-action example (also in examples/di/): an ACTION SET (ContentKind=Actions) on
-    # DeviceType exposing the inherited LockingServices Methods (Lock/InitLock, Lock/ExitLock).
-    "DIOperations": {"base": ["Opc.Ua.Di.NodeSet2.xml"], "folder": "di"},
 }
 
 errors = []
@@ -44,7 +40,7 @@ errors = []
 def check(domain, spec):
     base_files = spec["base"]
     folder = spec.get("folder", domain.lower())
-    f = os.path.join(CORE, folder, f"Opc.Ua.{domain}.ScenarioBinding.NodeSet2.xml")
+    f = os.path.join(CORE, folder, f"Opc.Ua.{domain}.ObservabilityExport.NodeSet2.xml")
     tree = ET.parse(f)  # raises on malformed
     root = tree.getroot()
     nodes = [e for e in root if e.tag.startswith(NS + "UA")]
@@ -102,3 +98,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

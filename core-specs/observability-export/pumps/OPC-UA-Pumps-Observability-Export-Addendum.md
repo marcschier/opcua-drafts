@@ -1,103 +1,69 @@
-# OPC UA Pumps — Scenario Bindings Addendum
+# OPC UA Pumps — Observability Export Addendum
 
-**Working draft — a worked example of the [Scenario Bindings](../OPC-UA-Scenario-Bindings.md) base specification applied to OPC UA for Pumps and Vacuum Pumps.**
+**Working draft — a worked example of the [Observability Export](../OPC-UA-Observability-Export.md) base specification applied to OPC UA for Pumps and Vacuum Pumps.**
 
-> **Status — illustrative example.** This addendum shows how the instances of the `PumpType` (http://opcfoundation.org/UA/Pumps/) can be exposed for integration scenarios over the classic client/server (RPC) interface and, optionally, over OPC UA PubSub — without modifying the companion specification. All NodeIds in the example namespace `http://opcfoundation.org/UA/PubSub/Examples/Pumps/` are provisional and the base-namespace binding types it references (`ScenarioBindingGroupType` etc.) carry the **provisional** NodeIds of the draft base specification.
+> **Status — illustrative example.** The `http://opcfoundation.org/UA/PubSub/Examples/Pumps/` namespace and NodeIds are provisional. The example shows how `PumpType` data is declared for OTEL metrics, logs and traces over classic OPC UA and optional PubSub.
 
 ## 1 Scope
 
-This addendum defines example **scenario bindings** for the `PumpType` — 38 bound items across the scenarios *Observability, EnergyAndLoadManagement, PredictiveMaintenance, AnomalyDetection, FleetAndCompliance, AlarmAndEventDistribution* — per the [Scenario Bindings](../OPC-UA-Scenario-Bindings.md) base specification. Pumps expose rich operational telemetry (flow, head, pressure, power, temperatures, efficiencies, rotor loads) plus identity and maintenance data, so most industrial scenarios map cleanly onto the pump measurement model.
+This addendum defines example **observability export bindings** for `PumpType` — 41 bound items across Metrics (Metrics), Logs (Logs), Traces (Traces). Pumps expose operational measurements, identity dimensions and events that map naturally to OTEL metrics, logs and traces.
 
 ## 2 Normative references
 
-- [Scenario Bindings](../OPC-UA-Scenario-Bindings.md) — the base binding model (types, discovery, the two-layer routing/semantic contract).
+- [Observability Export](../OPC-UA-Observability-Export.md) — the base binding model (discovery and OTEL mapping).
 - [OPC UA for Pumps and Vacuum Pumps](https://reference.opcfoundation.org/Pumps/v100/docs/) — the companion specification whose type is bound.
 - [OPC 10000-14](https://reference.opcfoundation.org/specs/OPC-10000-14/) — PubSub (optional realization).
 
 ## 3 How the bindings are applied
 
-The bindings are authored at **two levels**, exactly as the base specification recommends:
+The machine-readable descriptor [`Pumps.ObservabilityExport.json`](../../extras/observability-export/examples/pumps/Pumps.ObservabilityExport.json) lists each bound item as a `BrowsePath` from `PumpType`, with its observability `Kind` and OTEL `SignalKind`. The generated overlay [`Opc.Ua.Pumps.ObservabilityExport.NodeSet2.xml`](Opc.Ua.Pumps.ObservabilityExport.NodeSet2.xml) instantiates a compact `ExamplePump` object, applies `IObservableType`, and exposes an `ObservabilityBindingGroup` that realizes the server-wide `Observability` registry.
 
-1. **Type-level definitions (reusable).** The machine-readable descriptor [`Pumps.ScenarioBinding.json`](../../extras/scenario-binding/examples/pumps/Pumps.ScenarioBinding.json) lists each bound item as a `BrowsePath` (RelativePath) from the `PumpType` root, with its routing `Kind` and scenario. Every path in §4 was **resolved against the published companion NodeSet**, so the bindings apply to *any* conforming instance.
-2. **Instance overlay (concrete).** [`Opc.Ua.Pumps.ScenarioBinding.NodeSet2.xml`](Opc.Ua.Pumps.ScenarioBinding.NodeSet2.xml) instantiates a compact theoretical instance `ExamplePump`, applies the `IScenarioBoundType` interface, and exposes one `ScenarioBindingGroup` per scenario holding that scenario's `ScenarioBinding`/`BoundItem` instances. On the instance each `BoundItem` uses **`BindsToNode`** to point at the concrete signal node (the type-level `BrowsePath` and the instance `BindsToNode` are the two locators defined by the base specification).
+> **Theoretical instance model.** The theoretical instance mirrors the official Pumps instanceexample.xml (an ExamplePump : PumpType with Operational/Measurements, Identification, Supervision*, Maintenance and a <Drive>); the bound BrowsePaths resolve against exactly that structure. See [Pumps/instanceexample.xml](https://github.com/OPCFoundation/UA-Nodeset/blob/latest/Pumps/instanceexample.xml).
 
-> **Theoretical instance model.** The theoretical instance mirrors the official Pumps `instanceexample.xml` (an `ExamplePump : PumpType` with `Operational/Measurements`, `Identification`, `Supervision*`, `Maintenance` and a `<Drive>`); the bound BrowsePaths resolve against exactly that structure. See the reference model: [Pumps/instanceexample.xml](https://github.com/OPCFoundation/UA-Nodeset/blob/latest/Pumps/instanceexample.xml).
+Only the bound signals are materialised in the overlay; it is illustrative, not a full companion instance.
 
-Only the bound signals are materialised in the overlay; it is an *illustrative* instance, not a conformant full instance of the companion type.
+## 4 Observability export bindings for `PumpType`
 
-## 4 Scenario bindings for `PumpType`
+Bindings for `PumpType` in `http://opcfoundation.org/UA/Pumps/`, per the [Observability Export](../OPC-UA-Observability-Export.md) base specification. Each binding exposes one OTEL signal (`Metrics`, `Logs` or `Traces`) with a deterministic `DataSetClassId`.
 
-Bindings for the `PumpType` of the `http://opcfoundation.org/UA/Pumps/` companion specification, per the [Scenario Bindings](../OPC-UA-Scenario-Bindings.md) base specification. Each binding is **one content class** — a data DataSet, an event DataSet, or an action set — with a deterministic `DataSetClassId`. Every data and Method `BrowsePath` below was resolved against the published companion NodeSet; event-DataSet fields select standard event-type fields.
+#### Metrics — Metrics
 
-#### Scenario: Observability
-
-*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/Observability` · *Direction:* Publisher · *Content:* data DataSet (PublishedDataItems) · *DataSetClassId:* `794b8a9a-676a-5e30-b18e-2e3f49354d64` · *Cardinality:* one DataSet (bound root)
+*Signal:* OTEL metrics (PublishedDataItems) · *DataSetClassId:* `04ec3212-44fd-579c-ad2f-38b3c32df9e8` · *Cardinality:* one DataSet (bound root)
 
 | Field | Kind | BrowsePath | Source type | DataType | OTEL |
 |---|---|---|---|---|---|
-| Speed | Telemetry | `/Operational/Measurements/Speed` | [BaseAnalogType](https://reference.opcfoundation.org/specs/OPC-10000-8/5.3.2) | Double | Gauge [1/min] |
-| Throughput | Telemetry | `/Operational/Measurements/Throughput` | [BaseAnalogType](https://reference.opcfoundation.org/specs/OPC-10000-8/5.3.2) | Double | Gauge [m3/s] |
-| MassFlow | Telemetry | `/Operational/Measurements/MassFlow` | [BaseAnalogType](https://reference.opcfoundation.org/specs/OPC-10000-8/5.3.2) | Double | Gauge [kg/s] |
-| ProcessPressure | Telemetry | `/Operational/Measurements/ProcessPressure` | [BaseAnalogType](https://reference.opcfoundation.org/specs/OPC-10000-8/5.3.2) | Double | Gauge [Pa] |
-| DifferentialPressure | Telemetry | `/Operational/Measurements/DifferentialPressure` | [BaseAnalogType](https://reference.opcfoundation.org/specs/OPC-10000-8/5.3.2) | Double | Gauge [Pa] |
-| PumpTotalHead | Telemetry | `/Operational/Measurements/PumpTotalHead` | [BaseAnalogType](https://reference.opcfoundation.org/specs/OPC-10000-8/5.3.2) | Double | Gauge [m] |
-| PumpPowerInput | Telemetry | `/Operational/Measurements/PumpPowerInput` | [BaseAnalogType](https://reference.opcfoundation.org/specs/OPC-10000-8/5.3.2) | Double | Gauge [W] |
-| FluidTemperature | Telemetry | `/Operational/Measurements/FluidTemperature` | [BaseAnalogType](https://reference.opcfoundation.org/specs/OPC-10000-8/5.3.2) | Double | Gauge [Cel] |
-| BearingTemperature | Telemetry | `/Operational/Measurements/BearingTemperature` | [BaseAnalogType](https://reference.opcfoundation.org/specs/OPC-10000-8/5.3.2) | Double | Histogram [Cel] buckets 40,60,80,100,120 |
-| PumpTemperature | Telemetry | `/Operational/Measurements/PumpTemperature` | [BaseAnalogType](https://reference.opcfoundation.org/specs/OPC-10000-8/5.3.2) | Double | Gauge [Cel] |
-| NumberOfStarts | Counter | `/Operational/Measurements/NumberOfStarts` | [BaseAnalogType](https://reference.opcfoundation.org/specs/OPC-10000-8/5.3.2) | UInt32 | Counter cumulative monotonic |
-| Manufacturer | Dimension | `/Identification/Manufacturer` | [PropertyType](https://reference.opcfoundation.org/specs/OPC-10000-5/7.3) | LocalizedText | dimension |
-| SerialNumber | Dimension | `/Identification/SerialNumber` | [PropertyType](https://reference.opcfoundation.org/specs/OPC-10000-5/7.3) | String | dimension |
+| Speed | Telemetry | `/Operational/Measurements/Speed` | `i=15318` | Double | Gauge [1/min] |
+| Throughput | Telemetry | `/Operational/Measurements/Throughput` | `i=15318` | Double | Gauge [m3/s] |
+| MassFlow | Telemetry | `/Operational/Measurements/MassFlow` | `i=15318` | Double | Gauge [kg/s] |
+| ProcessPressure | Telemetry | `/Operational/Measurements/ProcessPressure` | `i=15318` | Double | Gauge [Pa] |
+| DifferentialPressure | Telemetry | `/Operational/Measurements/DifferentialPressure` | `i=15318` | Double | Gauge [Pa] |
+| PumpTotalHead | Telemetry | `/Operational/Measurements/PumpTotalHead` | `i=15318` | Double | Gauge [m] |
+| PumpPowerInput | Telemetry | `/Operational/Measurements/PumpPowerInput` | `i=15318` | Double | Gauge [W] |
+| PumpPowerOutput | Telemetry | `/Operational/Measurements/PumpPowerOutput` | `i=15318` | Double | Gauge [W] |
+| OverallEfficiency | Metric | `/Operational/Measurements/OverallEfficiency` | `i=15318` | Double | Gauge [%] |
+| PumpEfficiency | Metric | `/Operational/Measurements/PumpEfficiency` | `i=15318` | Double | Gauge [%] |
+| HydraulicEfficiency | Metric | `/Operational/Measurements/HydraulicEfficiency` | `i=15318` | Double | Gauge [%] |
+| FluidTemperature | Telemetry | `/Operational/Measurements/FluidTemperature` | `i=15318` | Double | Gauge [Cel] |
+| BearingTemperature | Telemetry | `/Operational/Measurements/BearingTemperature` | `i=15318` | Double | Histogram [Cel] buckets 40,60,80,100,120 |
+| PumpTemperature | Telemetry | `/Operational/Measurements/PumpTemperature` | `i=15318` | Double | Gauge [Cel] |
+| AxialLoadOfPumpRotor | Telemetry | `/Operational/Measurements/AxialLoadOfPumpRotor` | `i=15318` | Double | Gauge [N] |
+| RadialLoadOfPumpRotor | Telemetry | `/Operational/Measurements/RadialLoadOfPumpRotor` | `i=15318` | Double | Gauge [N] |
+| LubricatingOilPressure | Telemetry | `/Operational/Measurements/LubricatingOilPressure` | `i=15318` | Double | Gauge [Pa] |
+| AxialRotorPosition | Telemetry | `/Operational/Measurements/AxialRotorPosition` | `i=15318` | Double | Gauge [m] |
+| SoundPower | Telemetry | `/Operational/Measurements/SoundPower` | `i=15318` | Double | Gauge [dB] |
+| SoundPressureLevel | Telemetry | `/Operational/Measurements/SoundPressureLevel` | `i=15318` | Double | Gauge [dB] |
+| NumberOfStarts | Counter | `/Operational/Measurements/NumberOfStarts` | `i=15318` | UInt32 | Counter cumulative monotonic |
+| Manufacturer | Dimension | `/Identification/Manufacturer` | `i=68` | LocalizedText | dimension |
+| Model | Dimension | `/Identification/Model` | `i=68` | LocalizedText | dimension |
+| SerialNumber | Dimension | `/Identification/SerialNumber` | `i=68` | String | dimension |
+| ProductInstanceUri | Dimension | `/Identification/ProductInstanceUri` | `i=68` | String | dimension |
+| AssetId | Dimension | `/Identification/AssetId` | `i=68` | String | dimension |
+| Location | Dimension | `/Identification/Location` | `i=68` | String | dimension |
 | service.name | Dimension | — | — | — | dimension = `pump-observability` (const) |
 
-#### Scenario: EnergyAndLoadManagement
+#### Logs — Logs
 
-*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/EnergyAndLoadManagement` · *Direction:* Publisher · *Content:* data DataSet (PublishedDataItems) · *DataSetClassId:* `4f30fed4-ab2a-5a65-9cdc-0b7d79d88aa9` · *Cardinality:* one DataSet (bound root)
-
-| Field | Kind | BrowsePath | Source type | DataType | OTEL |
-|---|---|---|---|---|---|
-| PumpPowerInput | Telemetry | `/Operational/Measurements/PumpPowerInput` | [BaseAnalogType](https://reference.opcfoundation.org/specs/OPC-10000-8/5.3.2) | Double | — |
-| PumpPowerOutput | Telemetry | `/Operational/Measurements/PumpPowerOutput` | [BaseAnalogType](https://reference.opcfoundation.org/specs/OPC-10000-8/5.3.2) | Double | — |
-| OverallEfficiency | Metric | `/Operational/Measurements/OverallEfficiency` | [BaseAnalogType](https://reference.opcfoundation.org/specs/OPC-10000-8/5.3.2) | Double | — |
-| PumpEfficiency | Metric | `/Operational/Measurements/PumpEfficiency` | [BaseAnalogType](https://reference.opcfoundation.org/specs/OPC-10000-8/5.3.2) | Double | — |
-| HydraulicEfficiency | Metric | `/Operational/Measurements/HydraulicEfficiency` | [BaseAnalogType](https://reference.opcfoundation.org/specs/OPC-10000-8/5.3.2) | Double | — |
-
-#### Scenario: PredictiveMaintenance
-
-*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/PredictiveMaintenance` · *Direction:* Publisher · *Content:* data DataSet (PublishedDataItems) · *DataSetClassId:* `bc161840-91a3-5cc5-98a9-862cb53a590a` · *Cardinality:* one DataSet (bound root)
-
-| Field | Kind | BrowsePath | Source type | DataType | OTEL |
-|---|---|---|---|---|---|
-| BearingTemperature | Telemetry | `/Operational/Measurements/BearingTemperature` | [BaseAnalogType](https://reference.opcfoundation.org/specs/OPC-10000-8/5.3.2) | Double | — |
-| AxialLoadOfPumpRotor | Telemetry | `/Operational/Measurements/AxialLoadOfPumpRotor` | [BaseAnalogType](https://reference.opcfoundation.org/specs/OPC-10000-8/5.3.2) | Double | — |
-| RadialLoadOfPumpRotor | Telemetry | `/Operational/Measurements/RadialLoadOfPumpRotor` | [BaseAnalogType](https://reference.opcfoundation.org/specs/OPC-10000-8/5.3.2) | Double | — |
-| LubricatingOilPressure | Telemetry | `/Operational/Measurements/LubricatingOilPressure` | [BaseAnalogType](https://reference.opcfoundation.org/specs/OPC-10000-8/5.3.2) | Double | — |
-| AxialRotorPosition | Telemetry | `/Operational/Measurements/AxialRotorPosition` | [BaseAnalogType](https://reference.opcfoundation.org/specs/OPC-10000-8/5.3.2) | Double | — |
-| NumberOfStarts | Counter | `/Operational/Measurements/NumberOfStarts` | [BaseAnalogType](https://reference.opcfoundation.org/specs/OPC-10000-8/5.3.2) | UInt32 | — |
-
-#### Scenario: AnomalyDetection
-
-*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection` · *Direction:* Publisher · *Content:* data DataSet (PublishedDataItems) · *DataSetClassId:* `1a2fd8ca-dc68-5659-ad43-8452ba8f2a5a` · *Cardinality:* one DataSet (bound root)
-
-| Field | Kind | BrowsePath | Source type | DataType | OTEL |
-|---|---|---|---|---|---|
-| SoundPower | Telemetry | `/Operational/Measurements/SoundPower` | [BaseAnalogType](https://reference.opcfoundation.org/specs/OPC-10000-8/5.3.2) | Double | — |
-| SoundPressureLevel | Telemetry | `/Operational/Measurements/SoundPressureLevel` | [BaseAnalogType](https://reference.opcfoundation.org/specs/OPC-10000-8/5.3.2) | Double | — |
-| DifferentialPressure | Telemetry | `/Operational/Measurements/DifferentialPressure` | [BaseAnalogType](https://reference.opcfoundation.org/specs/OPC-10000-8/5.3.2) | Double | — |
-| BearingTemperature | Telemetry | `/Operational/Measurements/BearingTemperature` | [BaseAnalogType](https://reference.opcfoundation.org/specs/OPC-10000-8/5.3.2) | Double | — |
-
-#### Scenario: FleetAndCompliance
-
-*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/FleetAndCompliance` · *Direction:* Publisher · *Content:* data DataSet (PublishedDataItems) · *DataSetClassId:* `e50711a6-ebed-5e04-9672-2a7d506e1c32` · *Cardinality:* one DataSet (bound root)
-
-| Field | Kind | BrowsePath | Source type | DataType | OTEL |
-|---|---|---|---|---|---|
-| AssetId | Identification | `/Identification/AssetId` | [PropertyType](https://reference.opcfoundation.org/specs/OPC-10000-5/7.3) | String | — |
-| Location | Identification | `/Identification/Location` | [PropertyType](https://reference.opcfoundation.org/specs/OPC-10000-5/7.3) | String | — |
-
-#### Scenario: AlarmAndEventDistribution
-
-*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/AlarmAndEventDistribution` · *Direction:* Publisher · *Content:* event DataSet (PublishedEvents) · *DataSetClassId:* `85c43bb8-1a03-5d12-bf95-b4277153baf8` · *Cardinality:* one DataSet (bound root) · *Event source:* `/` · *Event type:* BaseEventType
+*Signal:* OTEL logs (PublishedEvents) · *DataSetClassId:* `46d1c23b-a92c-5056-b5d8-084e848a761e` · *Cardinality:* one DataSet (bound root) · *Event source:* `/` · *Event type:* BaseEventType
 
 | Field | Kind | Event field / attribute |
 |---|---|---|
@@ -109,89 +75,91 @@ Bindings for the `PumpType` of the `http://opcfoundation.org/UA/Pumps/` companio
 | Message | Event | `/Message` |
 | service.name | Dimension | dimension = `pump-observability` (const) |
 
-*Structured-log mapping (OTEL LogRecord):* body template `{SourceName}: {Message} (severity {Severity})`; severity = `Severity`, body = `Message`, timestamp = `Time`.
+*OTEL LogRecord mapping:* body template `{SourceName}: {Message} (severity {Severity})`; severity = `Severity`, body = `Message`, timestamp = `Time`.
+
+#### Traces — Traces
+
+*Signal:* OTEL traces/spans (PublishedEvents) · *DataSetClassId:* `cd367489-b1eb-5e95-ad67-32eebfdc438a` · *Cardinality:* one DataSet (bound root) · *Event source:* `/` · *Event type:* BaseEventType
+
+| Field | Kind | Event field / attribute |
+|---|---|---|
+| EventId | Event | `/EventId` |
+| SourceName | Event | `/SourceName` |
+| Time | Event | `/Time` |
+| Severity | Event | `/Severity` |
+| Message | Event | `/Message` |
+| service.name | Dimension | dimension = `pump-observability` (const) |
+
+*OTEL Span mapping:* name template `Pump operation {SourceName}`, start = `Time`, end = `—`, status = `Severity`, kind = `Internal`.
 
 
 ## 5 Where the bindings live
 
-Overview of the scenario bindings, then their placement on the theoretical instance (one `ScenarioBindingGroup` per scenario hangs off the instance; each `BoundItem` `BindsToNode` its signal):
+Overview of the observability bindings and their placement on the theoretical instance:
 
 ```mermaid
 graph LR
   ROOT["ExamplePump : PumpType"]
-  ROOT --> G0["Observability<br/>ScenarioBindingGroup"]
-  G0 --> S0["Observability<br/>Publisher · Data"]
+  ROOT --> G["Pumps<br/>ObservabilityBindingGroup"]
+  G -.Realizes.-> O["Observability registry i=60101"]
+  G --> S0["Metrics<br/>Metrics"]
   S0 --> S0_0["Speed : Telemetry"]
   S0 --> S0_1["Throughput : Telemetry"]
   S0 --> S0_2["MassFlow : Telemetry"]
   S0 --> S0_3["ProcessPressure : Telemetry"]
   S0 --> S0_4["DifferentialPressure : Telemetry"]
   S0 --> S0_5["PumpTotalHead : Telemetry"]
-  ROOT --> G1["EnergyAndLoadManagement<br/>ScenarioBindingGroup"]
-  G1 --> S1["EnergyAndLoadManagement<br/>Publisher · Data"]
-  S1 --> S1_0["PumpPowerInput : Telemetry"]
-  S1 --> S1_1["PumpPowerOutput : Telemetry"]
-  S1 --> S1_2["OverallEfficiency : Metric"]
-  S1 --> S1_3["PumpEfficiency : Metric"]
-  S1 --> S1_4["HydraulicEfficiency : Metric"]
-  ROOT --> G2["PredictiveMaintenance<br/>ScenarioBindingGroup"]
-  G2 --> S2["PredictiveMaintenance<br/>Publisher · Data"]
-  S2 --> S2_0["BearingTemperature : Telemetry"]
-  S2 --> S2_1["AxialLoadOfPumpRotor : Telemetry"]
-  S2 --> S2_2["RadialLoadOfPumpRotor : Telemetry"]
-  S2 --> S2_3["LubricatingOilPressure : Telemetry"]
-  S2 --> S2_4["AxialRotorPosition : Telemetry"]
-  S2 --> S2_5["NumberOfStarts : Counter"]
-  ROOT --> G3["AnomalyDetection<br/>ScenarioBindingGroup"]
-  G3 --> S3["AnomalyDetection<br/>Publisher · Data"]
-  S3 --> S3_0["SoundPower : Telemetry"]
-  S3 --> S3_1["SoundPressureLevel : Telemetry"]
-  S3 --> S3_2["DifferentialPressure : Telemetry"]
-  S3 --> S3_3["BearingTemperature : Telemetry"]
-  ROOT --> G4["FleetAndCompliance<br/>ScenarioBindingGroup"]
-  G4 --> S4["FleetAndCompliance<br/>Publisher · Data"]
-  S4 --> S4_0["AssetId : Identification"]
-  S4 --> S4_1["Location : Identification"]
-  ROOT --> G5["AlarmAndEventDistribution<br/>ScenarioBindingGroup"]
-  G5 --> S5["AlarmAndEventDistribution<br/>Publisher · Events"]
-  S5 --> S5_0["EventId : Event"]
-  S5 --> S5_1["EventType : Event"]
-  S5 --> S5_2["SourceName : Event"]
-  S5 --> S5_3["Time : Event"]
-  S5 --> S5_4["Severity : Event"]
-  S5 --> S5_5["Message : Event"]
+  G --> S1["Logs<br/>Logs"]
+  S1 --> S1_0["EventId : Event"]
+  S1 --> S1_1["EventType : Event"]
+  S1 --> S1_2["SourceName : Event"]
+  S1 --> S1_3["Time : Event"]
+  S1 --> S1_4["Severity : Event"]
+  S1 --> S1_5["Message : Event"]
+  G --> S2["Traces<br/>Traces"]
+  S2 --> S2_0["EventId : Event"]
+  S2 --> S2_1["SourceName : Event"]
+  S2 --> S2_2["Time : Event"]
+  S2 --> S2_3["Severity : Event"]
+  S2 --> S2_4["Message : Event"]
+  S2 --> S2_5["service.name : Dimension"]
 ```
 
 ```mermaid
 graph TD
   R["ExamplePump : PumpType"]
-  R -->|HasInterface| I([IScenarioBoundType])
-  R -->|HasComponent| G0["Observability : ScenarioBindingGroupType"]
-  G0 -.Realizes.-> P0["Observability : ScenarioProfileType<br/>under Server/Scenarios"]
-  G0 -->|HasComponent| B0["Observability : ScenarioBindingType"]
+  R -->|HasInterface| I([IObservableType])
+  R -->|HasComponent| G["Pumps : ObservabilityBindingGroupType"]
+  G -.Realizes.-> O["Observability : ObservabilityFolderType"]
+  G -->|HasComponent| B0["Metrics : ObservabilityBindingType<br/>Metrics"]
   B0 -->|HasComponent| IT00["Speed : BoundVariableType"]
   IT00 -->|BindsToNode| N00["Operational/Measurements/Speed"]
   B0 -->|HasComponent| IT01["Throughput : BoundVariableType"]
   IT01 -->|BindsToNode| N01["Operational/Measurements/Throughput"]
   B0 -->|HasComponent| IT02["MassFlow : BoundVariableType"]
   IT02 -->|BindsToNode| N02["Operational/Measurements/MassFlow"]
-  R -->|HasComponent| G1["AlarmAndEventDistribution : ScenarioBindingGroupType"]
-  G1 -.Realizes.-> P1["AlarmAndEventDistribution : ScenarioProfileType<br/>under Server/Scenarios"]
-  G1 -->|HasComponent| B1["AlarmAndEventDistribution : ScenarioBindingType"]
+  G -->|HasComponent| B1["Logs : ObservabilityBindingType<br/>Logs"]
   B1 -->|HasComponent| IT10["EventId : BoundEventFieldType"]
   IT10 -.event field.-> N10["BaseEventType/EventId"]
   B1 -->|HasComponent| IT11["EventType : BoundEventFieldType"]
   IT11 -.event field.-> N11["BaseEventType/EventType"]
   B1 -->|HasComponent| IT12["SourceName : BoundEventFieldType"]
   IT12 -.event field.-> N12["BaseEventType/SourceName"]
+  G -->|HasComponent| B2["Traces : ObservabilityBindingType<br/>Traces"]
+  B2 -->|HasComponent| IT20["EventId : BoundEventFieldType"]
+  IT20 -.event field.-> N20["BaseEventType/EventId"]
+  B2 -->|HasComponent| IT21["SourceName : BoundEventFieldType"]
+  IT21 -.event field.-> N21["BaseEventType/SourceName"]
+  B2 -->|HasComponent| IT22["Time : BoundEventFieldType"]
+  IT22 -.event field.-> N22["BaseEventType/Time"]
 ```
 
-## 6 Deliverables
+## 7 Deliverables
 
 | File | Content |
 |---|---|
-| [`Pumps.ScenarioBinding.json`](../../extras/scenario-binding/examples/pumps/Pumps.ScenarioBinding.json) | Machine-readable ScenarioBindingConfiguration descriptor (single source). |
-| [`Opc.Ua.Pumps.ScenarioBinding.NodeSet2.xml`](Opc.Ua.Pumps.ScenarioBinding.NodeSet2.xml) | The binding instances on the theoretical `ExamplePump` instance. |
+| [`Pumps.ObservabilityExport.json`](../../extras/observability-export/examples/pumps/Pumps.ObservabilityExport.json) | Machine-readable ObservabilityExport descriptor (single source). |
+| [`Opc.Ua.Pumps.ObservabilityExport.NodeSet2.xml`](Opc.Ua.Pumps.ObservabilityExport.NodeSet2.xml) | The binding instances on the theoretical `ExamplePump` instance. |
 
-Regenerate from [`core-specs/extras/scenario-binding/examples/`](../../extras/scenario-binding/examples/) with `python tools/build_bindings.py pumps/Pumps.ScenarioBinding.json`.
+Regenerate from [`core-specs/extras/observability-export/examples/`](../../extras/observability-export/examples/) with `python tools/build_bindings.py pumps/Pumps.ObservabilityExport.json tools/ref`.
 

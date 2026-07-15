@@ -2,16 +2,16 @@
 """Worked example for §5.12 (binding inheritance & facet composition).
 
 Demonstrates, against the self-contained `Opc.Ua.FacetDemo.NodeSet2.xml` model, how a
-`MachineType` reuses and EXTENDS base-facet scenario bindings across all three OPC UA
+`MachineType` reuses and EXTENDS base-facet observability bindings across all three OPC UA
 composition axes instead of duplicating fields:
 
   * subtype  : MachineType is-a DeviceType        -> inherits the Device Observability binding
   * AddIn    : MachineType HasAddIn Location       -> composes the Location Observability binding
   * interface: MachineType HasInterface IMaintenance-> inherits the Maintenance binding
 
-It emits `Opc.Ua.Facets.ScenarioBinding.NodeSet2.xml` (an illustrative overlay showing the four
+It emits `Opc.Ua.Facets.ObservabilityExport.NodeSet2.xml` (an illustrative overlay showing the four
 base bindings plus the two DERIVED bindings, with `BaseDataSetClassIds`/`HasBaseBinding` lineage
-and per-field `SourceScenarioBindingClassId` provenance) and an addendum that resolves the merged
+and per-field `SourceObservabilityExportClassId` provenance) and an addendum that resolves the merged
 Machine DataSets and shows how a facet-scoped subscriber extracts its field subset.
 
 Deterministic. Run:  python build_facets_example.py
@@ -29,8 +29,6 @@ from build_bindings import DATASET_CLASS_NS, FIELD_ID_NS, KIND  # noqa: E402  (s
 UA = "http://opcfoundation.org/UA/"
 BASE = "http://opcfoundation.org/UA/FacetDemo/"
 EX = "http://opcfoundation.org/UA/PubSub/Examples/Facets/"
-OBS = "http://opcfoundation.org/UA/PubSub/Scenarios/Observability"
-MAINT = "http://opcfoundation.org/UA/PubSub/Scenarios/Maintenance"
 MAJOR = 1
 
 # provisional base-spec type ids (see the base model)
@@ -39,32 +37,30 @@ T_IBOUND, T_GROUP, T_BINDING, T_BOUNDVAR = 60016, 60018, 60011, 60013
 # example can never diverge from the normative enum.
 
 
-def class_id(scenario_uri, applies_type):
-    # Facets bindings are all data DataSets (DataItems); ContentKind is part of the identity (see
-    # build_bindings.dataset_class_id) so the formula must match.
-    return uuid.uuid5(DATASET_CLASS_NS, f"{scenario_uri}|{BASE};{applies_type}|DataItems|{MAJOR}")
+def class_id(applies_type):
+    return uuid.uuid5(DATASET_CLASS_NS, f"ObservabilityExport|{BASE};{applies_type}|Metrics|{MAJOR}")
 
 
-def field_id(scenario_uri, applies_type, field):
-    return uuid.uuid5(FIELD_ID_NS, f"Facets|{scenario_uri}|{applies_type}|{field}")
+def field_id(applies_type, field):
+    return uuid.uuid5(FIELD_ID_NS, f"Facets|Metrics|{applies_type}|{field}")
 
 
 # --- binding catalogue: base facets + derived (composed) bindings ------------
 # Each item: (fieldName, browsePath-relative-to-target, kind)
 BASE_BINDINGS = {
     "DeviceObservability": {
-        "scenario": OBS, "target": "DeviceType", "axis": "ObjectType (subtype base)",
+        "target": "DeviceType", "axis": "ObjectType (subtype base)",
         "items": [("Manufacturer", "/Manufacturer", "Identification"),
                   ("SerialNumber", "/SerialNumber", "Identification"),
                   ("DeviceHealth", "/DeviceHealth", "Status")]},
     "LocationObservability": {
-        "scenario": OBS, "target": "LocationAddInType", "axis": "AddIn (structural facet)",
+        "target": "LocationAddInType", "axis": "AddIn (structural facet)",
         "items": [("Latitude", "/Latitude", "Telemetry"),
                   ("Longitude", "/Longitude", "Telemetry"),
                   ("Altitude", "/Altitude", "Telemetry")]},
     "Maintenance": {
-        "scenario": MAINT, "target": "IMaintenanceFacetType", "axis": "Interface (contract facet)",
-        "items": [("LastMaintenanceDate", "/LastMaintenanceDate", "Configuration")]},
+        "target": "IMaintenanceFacetType", "axis": "Interface (contract facet)",
+        "items": [("LastMaintenanceDate", "/LastMaintenanceDate", "Other")]},
 }
 
 # Derived bindings: only DELTA fields; `extends` names base bindings + the mount path the base
@@ -72,7 +68,7 @@ BASE_BINDINGS = {
 # an AddIn).
 DERIVED_BINDINGS = {
     "MachineObservability": {
-        "scenario": OBS, "target": "MachineType", "axis": "MachineType (is-a Device + Location AddIn)",
+        "target": "MachineType", "axis": "MachineType (is-a Device + Location AddIn)",
         "delta": [("SpindleSpeed", "/SpindleSpeed", "Telemetry"),
                   ("AxisLoad", "/AxisLoad", "Telemetry")],
         # override-by-FieldName: refine the inherited Device `DeviceHealth` (e.g. faster sampling)
@@ -80,7 +76,7 @@ DERIVED_BINDINGS = {
         "overrides": [("DeviceHealth", "/DeviceHealth", "Status", "DeviceObservability")],
         "extends": [("DeviceObservability", ""), ("LocationObservability", "Location")]},
     "MachineMaintenance": {
-        "scenario": MAINT, "target": "MachineType", "axis": "MachineType implements IMaintenance",
+        "target": "MachineType", "axis": "MachineType implements IMaintenance",
         "delta": [], "overrides": [],
         "extends": [("Maintenance", "")]},
 }
@@ -92,11 +88,11 @@ def compose(name):
     but keeps its base facet provenance; the derived binding's own delta fields carry the derived
     class as provenance."""
     d = DERIVED_BINDINGS[name]
-    own_cls = class_id(d["scenario"], d["target"])
+    own_cls = class_id(d["target"])
     by_name, order = {}, []
     for base_name, mount in d["extends"]:
         b = BASE_BINDINGS[base_name]
-        bcls = class_id(b["scenario"], b["target"])
+        bcls = class_id(b["target"])
         for fn, path, _kind in b["items"]:
             full = (f"/{mount}" if mount else "") + path
             if fn not in by_name:
@@ -104,7 +100,7 @@ def compose(name):
             by_name[fn] = (fn, full, bcls, base_name, False)
     for fn, path, _kind, base_name in d.get("overrides", []):
         b = BASE_BINDINGS[base_name]
-        bcls = class_id(b["scenario"], b["target"])
+        bcls = class_id(b["target"])
         if fn not in by_name:
             order.append(fn)
         by_name[fn] = (fn, path, bcls, base_name, True)
@@ -172,7 +168,7 @@ class Emit:
     def guid(self, g):
         return f'<uax:Guid {U}><uax:String>{g}</uax:String></uax:Guid>'
 
-    def bound_item(self, binding_id, scenario, target, fn, path, kind, prov=None):
+    def bound_item(self, binding_id, target, fn, path, kind, prov=None):
         iid = self._id()
         self._open("UAObject", iid, f"1:{fn}", binding_id)
         self._refs([("i=40", f"i={T_BOUNDVAR}", True),
@@ -184,9 +180,9 @@ class Emit:
                   f'<uax:Int32 {U}>{KIND[kind]}</uax:Int32>', iid)
         self.prop("BrowsePath", "i=540", self.rel_path(path), iid)
         if prov is not None:
-            self.prop("SourceScenarioBindingClassId", "i=14", self.guid(prov), iid)
+            self.prop("SourceObservabilityExportClassId", "i=14", self.guid(prov), iid)
         self.prop("DataSetFieldId", "i=14",
-                  self.guid(field_id(scenario, target, fn)), iid)
+                  self.guid(field_id(target, fn)), iid)
 
     def binding(self, group_id, name, spec):
         bid = self._id()
@@ -195,24 +191,24 @@ class Emit:
         self._refs([("i=40", f"i={T_BINDING}", True),
                     ("i=47", f"ns=1;i={group_id}", False)])
         self.out.append('  </UAObject>')
-        # No ScenarioUri on the binding: its scenario is its group's profile (via Realizes) and the
-        # DataSetClassId already encodes the scenario.
-        self.prop("Direction", "i=60050", f'<uax:Int32 {U}>0</uax:Int32>', bid)
+        # No SignalUri on the binding: its signal is its group's profile (via Realizes) and the
+        # DataSetClassId already encodes the signal.
+        self.prop("SignalKind", "i=60052", f'<uax:Int32 {U}>0</uax:Int32>', bid)
         self.prop("DataSetClassId", "i=14",
-                  self.guid(class_id(spec["scenario"], spec["target"])), bid)
+                  self.guid(class_id(spec["target"])), bid)
         return bid
 
     def base_binding(self, group_id, name):
         spec = BASE_BINDINGS[name]
         bid = self.binding(group_id, name, spec)
         for fn, path, kind in spec["items"]:
-            self.bound_item(bid, spec["scenario"], spec["target"], fn, path, kind)
+            self.bound_item(bid, spec["target"], fn, path, kind)
 
     def derived_binding(self, group_id, name):
         spec = DERIVED_BINDINGS[name]
         bid = self.binding(group_id, name, spec)
         # lineage: BaseDataSetClassIds + HasBaseBinding to the base binding nodes
-        base_cls = [class_id(BASE_BINDINGS[b]["scenario"], BASE_BINDINGS[b]["target"])
+        base_cls = [class_id(BASE_BINDINGS[b]["target"])
                     for b, _m in spec["extends"]]
         lst = "".join(self.guid(c) for c in base_cls)
         self.prop("BaseDataSetClassIds", "i=14",
@@ -222,14 +218,14 @@ class Emit:
         if extra:
             # append HasBaseBinding references onto the binding node's reference block
             self._append_refs(bid, extra)
-        # delta fields are this binding's OWN -> no SourceScenarioBindingClassId
+        # delta fields are this binding's OWN -> no SourceObservabilityExportClassId
         for fn, path, kind in spec["delta"]:
-            self.bound_item(bid, spec["scenario"], spec["target"], fn, path, kind)
+            self.bound_item(bid, spec["target"], fn, path, kind)
         # override fields refine an inherited field -> carry the overridden base's class as provenance
         for fn, path, kind, base_name in spec.get("overrides", []):
             b = BASE_BINDINGS[base_name]
-            self.bound_item(bid, spec["scenario"], spec["target"], fn, path, kind,
-                            prov=class_id(b["scenario"], b["target"]))
+            self.bound_item(bid, spec["target"], fn, path, kind,
+                            prov=class_id(b["target"]))
 
     def _append_refs(self, nid, refs):
         marker = f'  <UAObject NodeId="ns=1;i={nid}" '
@@ -245,19 +241,20 @@ class Emit:
                         return
 
     def document(self):
-        # Illustrative instance implementing IScenarioBoundType; it exposes its scenario
+        # Illustrative instance implementing IObservableType; it exposes its signal
         # binding group directly (no container), consistent with the base model where an
-        # IScenarioBoundType object HasComponent one ScenarioBindingGroup per scenario.
+        # IObservableType object HasComponent one ObservabilityBindingGroup per signal.
         root = self._id()
         self._open("UAObject", root, "1:FacetDemoInstance")
         self._refs([("i=40", "i=58", True),              # HasTypeDefinition -> BaseObjectType
-                    ("i=17603", f"i={T_IBOUND}", True),  # HasInterface -> IScenarioBoundType
+                    ("i=17603", f"i={T_IBOUND}", True),  # HasInterface -> IObservableType
                     ("i=35", "i=85", False)])   # Organizes from Objects folder (illustrative)
         self.out.append('  </UAObject>')
         gid = self._id()
         self._open("UAObject", gid, "1:FacetDemo", root)
         self._refs([("i=40", f"i={T_GROUP}", True),
-                    ("i=47", f"ns=1;i={root}", False)])
+                    ("i=47", f"ns=1;i={root}", False),
+                    ("i=60004", "i=60101", False)])
         self.out.append('  </UAObject>')
         self.prop("CompanionSpecificationUri", "i=12",
                   f'<uax:String {U}>{sx.escape(BASE)}</uax:String>', gid)
@@ -269,7 +266,7 @@ class Emit:
         for name in DERIVED_BINDINGS:
             self.derived_binding(gid, name)
         header = ['<?xml version="1.0" encoding="utf-8"?>',
-                  '<!-- Facets: illustrative overlay for the Scenario Bindings '
+                  '<!-- Facets: illustrative overlay for the Observability Export '
                   'inheritance/composition example. PROVISIONAL. -->',
                   '<UANodeSet xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd" '
                   'xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd">',
@@ -302,18 +299,18 @@ def guid_short(g):
 def emit_addendum(db):
     L = []
     A = L.append
-    A("# OPC UA — Scenario Bindings — Facets & Inheritance Addendum")
+    A("# OPC UA — Observability Export — Facets & Inheritance Addendum")
     A("")
-    A("*Non-normative. Companion to the [base specification](../OPC-UA-Scenario-Bindings.md), "
+    A("*Non-normative. Companion to the [base specification](../OPC-UA-Signal-Bindings.md), "
       "section “Binding inheritance and facet composition” (§5.12). Generated by "
-      "[`core-specs/extras/scenario-binding/examples/facets/build_facets_example.py`]"
-      "(../../extras/scenario-binding/examples/facets/build_facets_example.py) from the self-contained "
+      "[`core-specs/extras/observability-export/examples/facets/build_facets_example.py`]"
+      "(../../extras/observability-export/examples/facets/build_facets_example.py) from the self-contained "
       "[`Opc.Ua.FacetDemo.NodeSet2.xml`]"
-      "(../../extras/scenario-binding/examples/facets/Opc.Ua.FacetDemo.NodeSet2.xml) model.*")
+      "(../../extras/observability-export/examples/facets/Opc.Ua.FacetDemo.NodeSet2.xml) model.*")
     A("")
     A("## 1. The model")
     A("")
-    A("A `MachineType` reuses base-facet scenario bindings across **all three** OPC UA "
+    A("A `MachineType` reuses base-facet observability bindings across **all three** OPC UA "
       "composition axes, instead of restating their fields:")
     A("")
     A("- **subtype** — `MachineType` *is-a* `DeviceType`, so it inherits the **Device "
@@ -338,13 +335,13 @@ def emit_addendum(db):
     A("")
     A("## 2. Base facet bindings")
     A("")
-    A("Each facet defines its scenario binding **once**, on its own type:")
+    A("Each facet defines its observability binding **once**, on its own type:")
     A("")
-    A("| Binding | Defined on (axis) | Scenario | `DataSetClassId` | Fields |")
+    A("| Binding | Defined on (axis) | Signal | `DataSetClassId` | Fields |")
     A("|---|---|---|---|---|")
     for name, b in BASE_BINDINGS.items():
-        cid = class_id(b["scenario"], b["target"])
-        scen = b["scenario"].rsplit("/", 1)[-1]
+        cid = class_id(b["target"])
+        scen = "Metrics"
         fields = ", ".join(f"`{fn}`" for fn, _p, _k in b["items"])
         A(f"| **{name}** | `{b['target']}` — {b['axis']} | {scen} | {guid_short(cid)} | {fields} |")
     A("")
@@ -355,37 +352,36 @@ def emit_addendum(db):
       "It never restates or removes an inherited field, so its DataSet is always a **superset** of "
       "each base.")
     A("")
-    A("| Derived binding | Scenario | Own `DataSetClassId` | Delta fields | `BaseDataSetClassIds` |")
+    A("| Derived binding | Signal | Own `DataSetClassId` | Delta fields | `BaseDataSetClassIds` |")
     A("|---|---|---|---|---|")
     for name, d in DERIVED_BINDINGS.items():
-        cid = class_id(d["scenario"], d["target"])
-        scen = d["scenario"].rsplit("/", 1)[-1]
+        cid = class_id(d["target"])
+        scen = "Metrics"
         delta = ", ".join(f"`{fn}`" for fn, _p, _k in d["delta"]) or "*(none — pure inheritance)*"
         if d.get("overrides"):
             delta += " · overrides " + ", ".join(f"`{o[0]}`" for o in d["overrides"])
-        bases = ", ".join(guid_short(class_id(BASE_BINDINGS[b]["scenario"],
-                                              BASE_BINDINGS[b]["target"]))
+        bases = ", ".join(guid_short(class_id(BASE_BINDINGS[b]["target"]))
                           for b, _m in d["extends"])
         A(f"| **{name}** | {scen} | {guid_short(cid)} | {delta} | {bases} |")
     A("")
     A("## 4. What the bridge produces — the composed DataSets")
     A("")
-    A("A bridge composes the effective DataSet for `MachineType` + a scenario by **unioning** the "
+    A("A bridge composes the effective DataSet for `MachineType` + a signal by **unioning** the "
       "bindings reachable via subtype, `HasAddIn` and `HasInterface` (override by `FieldName`), "
       "re-rooting each base facet's BrowsePaths under its mount point (the AddIn is mounted at "
-      "`/Location`), and tagging every field with the `SourceScenarioBindingClassId` of the base "
+      "`/Location`), and tagging every field with the `SourceObservabilityExportClassId` of the base "
       "binding it came from. The composed DataSet keeps `MachineType`'s own `DataSetClassId` and "
       "advertises the contributing base classes in `BaseDataSetClassIds`.")
     for name in DERIVED_BINDINGS:
         own, fields = compose(name)
         d = DERIVED_BINDINGS[name]
-        scen = d["scenario"].rsplit("/", 1)[-1]
+        scen = "Metrics"
         A("")
         A(f"### 4.{list(DERIVED_BINDINGS).index(name)+1} `{name}` — {scen} DataSet "
           f"({len(fields)} fields, class {guid_short(own)})")
         A("")
         A("| Field | Resolved BrowsePath (on a Machine instance) | From facet | Provenance "
-          "`SourceScenarioBindingClassId` | Note |")
+          "`SourceObservabilityExportClassId` | Note |")
         A("|---|---|---|---|---|")
         for fn, path, prov, src, overridden in fields:
             note = ("overrides base field" if overridden
@@ -396,13 +392,13 @@ def emit_addendum(db):
     A("")
     A("A semantics-agnostic subscriber that understands only a **base facet** recognises the base "
       "`DataSetClassId` in the composed DataSet's `BaseDataSetClassIds` and consumes exactly the "
-      "fields tagged with that class in `SourceScenarioBindingClassId` — without understanding "
+      "fields tagged with that class in `SourceObservabilityExportClassId` — without understanding "
       "`MachineType`:")
     A("")
     own, machine_fields = compose("MachineObservability")
     for base_name in ("DeviceObservability", "LocationObservability"):
         b = BASE_BINDINGS[base_name]
-        bcls = class_id(b["scenario"], b["target"])
+        bcls = class_id(b["target"])
         subset = [fn for fn, _p, prov, _s, _o in machine_fields if prov == bcls]
         A(f"- A **{base_name}** subscriber (knows {guid_short(bcls)}) selects "
           f"{len(subset)} of {len(machine_fields)} fields: " + ", ".join(f"`{f}`" for f in subset) + ".")
@@ -411,11 +407,11 @@ def emit_addendum(db):
     A("")
     A("## 6. Where the binding nodes live")
     A("")
-    A("`Opc.Ua.Facets.ScenarioBinding.NodeSet2.xml` in this folder collapses the four base bindings "
-      "and the two derived bindings under one `ScenarioBindingGroup` (`FacetDemo`) for readability, "
-      "exposed on an illustrative `FacetDemoInstance` that implements `IScenarioBoundType`. "
+    A("`Opc.Ua.Facets.ObservabilityExport.NodeSet2.xml` in this folder collapses the four base bindings "
+      "and the two derived bindings under one `ObservabilityBindingGroup` (`FacetDemo`) for readability, "
+      "exposed on an illustrative `FacetDemoInstance` that implements `IObservableType`. "
       "A conformant Server does not collapse them: it exposes one group per "
-      "(`ScenarioUri` × `CompanionSpecificationUri`) with unique sibling BrowseNames (§5.1.1), so "
+      "(`SignalUri` × `CompanionSpecificationUri`) with unique sibling BrowseNames (§5.1.1), so "
       "each facet type carries its own group (Device on `DeviceType`, Location on "
       "`LocationAddInType`, Maintenance on `IMaintenanceFacetType`) and a `MachineType` instance "
       "exposes the derived bindings' group, which the Server/bridge composes with the "
@@ -430,14 +426,14 @@ def main():
     db.load(os.path.join(HERE, "Opc.Ua.FacetDemo.NodeSet2.xml"))
     em = Emit()
     xml = em.document()
-    # Standardized outputs (overlay + addendum) land in core-specs/scenario-binding/facets/;
+    # Standardized outputs (overlay + addendum) land in core-specs/observability-export/facets/;
     # the FacetDemo model + this generator are secondary and stay under core-specs/extras.
     out = os.path.abspath(os.path.join(HERE, "..", "..", "..", "..",
-                                       "scenario-binding", "facets"))
+                                       "observability-export", "facets"))
     os.makedirs(out, exist_ok=True)
-    open(os.path.join(out, "Opc.Ua.Facets.ScenarioBinding.NodeSet2.xml"), "w",
+    open(os.path.join(out, "Opc.Ua.Facets.ObservabilityExport.NodeSet2.xml"), "w",
          encoding="utf-8", newline="\n").write(xml)
-    open(os.path.join(out, "OPC-UA-Facets-Scenario-Bindings-Addendum.md"), "w",
+    open(os.path.join(out, "OPC-UA-Facets-Observability-Export-Addendum.md"), "w",
          encoding="utf-8", newline="\n").write(emit_addendum(db))
     n = em.nid - 5000
     print(f"Facets: {len(BASE_BINDINGS)} base + {len(DERIVED_BINDINGS)} derived bindings, "
@@ -446,3 +442,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

@@ -1,37 +1,26 @@
-# OPC UA — Scenario Bindings — DI ↔ Pumps inheritance (illustration)
+# OPC UA — Observability Export — DI ↔ Pumps inheritance (illustration)
 
-*Non-normative. Companion to the base specification, §5.12 "Binding inheritance and facet
-composition". Shows how the Pumps example's `FleetAndCompliance` scenario binding **extends** a DI
-data binding through facet composition, and how a DI **action binding** (bound Methods, not a
-DataSet) is inherited by a pump through the subtype axis. Provisional NodeIds and example namespaces.*
+*Non-normative. Companion to the base specification, §5.12 "Binding inheritance and facet composition". Shows how a Pumps Metrics binding extends a DI nameplate Metrics binding through facet composition. Observability Export is read-only; the former DI action-set example has been removed.*
 
-## 1 Why a pump extends a DI scenario
+## 1 Why a pump extends a DI observability binding
 
-A `PumpType` is a DI `TopologyElementType` (not a `DeviceType`), but every pump carries an
-`Identification` object that **composes the DI `IVendorNameplateType` facet** — the interface that
-declares the vendor nameplate (`Manufacturer`, `Model`, `SerialNumber`, `ProductInstanceUri`,
-`DeviceRevision`, …). Because `HasInterface`/`HasAddIn` composition is one of the three inheritance
-axes of §5.12, a scenario binding authored **once** on the DI facet is inherited by *every* type
-that composes it — including a pump — which then adds only its own delta fields.
+A `PumpType` is a DI `TopologyElementType`, and its `Identification` object composes the DI `IVendorNameplateType` facet. Because `HasInterface`/component composition is one of the inheritance axes of §5.12, an observability binding authored once on the DI facet is inherited by every type that composes it, including a pump.
 
-So the DI companion specification owns a small, reusable **`FleetAndCompliance` identity binding on
-`IVendorNameplateType`**, and the Pumps companion specification's `FleetAndCompliance` binding is a
-**superset**: the DI nameplate fields (inherited) plus pump-specific identity (`AssetId`,
-`Location`).
+The DI companion specification owns a reusable **Metrics** binding on `IVendorNameplateType` for nameplate identity/resource attributes. The Pumps companion specification's **Metrics** binding is a superset: the DI nameplate fields (inherited) plus pump-specific operational metrics and dimensions.
 
 ```mermaid
 flowchart TD
   subgraph DI[DI companion specification]
     IVN["IVendorNameplateType<br/>«Interface : BaseInterfaceType»"]
-    BB["FleetAndCompliance binding (base)<br/>DataSetClassId cb5100f1…<br/>Manufacturer · Model · SerialNumber · ProductInstanceUri"]
+    BB["Metrics binding (base)<br/>DataSetClassId ac52dde1…<br/>Manufacturer · Model · SerialNumber · ProductInstanceUri"]
     IDH["IDeviceHealthType<br/>«Interface : BaseInterfaceType»"]
-    HB["Observability binding (device-only)<br/>DataSetClassId 6a43d6ba…<br/>DeviceHealth"]
+    HB["Metrics binding (device-only)<br/>DataSetClassId 021ecf01…<br/>DeviceHealth"]
     IVN --> BB
     IDH --> HB
   end
   subgraph P[Pumps companion specification]
     PT["PumpType : TopologyElementType<br/>Identification composes IVendorNameplateType"]
-    DB["FleetAndCompliance binding (derived)<br/>DataSetClassId e50711a6…<br/>BaseDataSetClassIds = [cb5100f1…]<br/>+ AssetId · Location (delta)"]
+    DB["Metrics binding (derived)<br/>DataSetClassId 04ec3212…<br/>BaseDataSetClassIds = [ac52dde1…]<br/>+ pump metrics and dimensions"]
     PT --> DB
   end
   PT -. HasInterface via /Identification .-> IVN
@@ -39,10 +28,9 @@ flowchart TD
   IDH -. "not composed by PumpType" .-x PT
 ```
 
-## 2 The base binding — DI `FleetAndCompliance` on `IVendorNameplateType`
+## 2 The base binding — DI Metrics on `IVendorNameplateType`
 
-Generated overlay: [`Opc.Ua.DI.ScenarioBinding.NodeSet2.xml`](Opc.Ua.DI.ScenarioBinding.NodeSet2.xml),
-addendum [`OPC-UA-DI-Scenario-Bindings-Addendum.md`](OPC-UA-DI-Scenario-Bindings-Addendum.md).
+Generated overlay: [`Opc.Ua.DI.ObservabilityExport.NodeSet2.xml`](Opc.Ua.DI.ObservabilityExport.NodeSet2.xml), addendum [`OPC-UA-DI-Observability-Export-Addendum.md`](OPC-UA-DI-Observability-Export-Addendum.md).
 
 | Field | Kind | BrowsePath (facet-relative) |
 |---|---|---|
@@ -51,84 +39,21 @@ addendum [`OPC-UA-DI-Scenario-Bindings-Addendum.md`](OPC-UA-DI-Scenario-Bindings
 | SerialNumber | Identification | `/SerialNumber` |
 | ProductInstanceUri | Identification | `/ProductInstanceUri` |
 
-- Scenario: `…/Scenarios/FleetAndCompliance` · Bound target: `http://opcfoundation.org/UA/DI/;IVendorNameplateType`
-- **DataSetClassId** `cb5100f1-96f5-5999-a09f-97b71bb044be` (deterministic over
-  `ScenarioUri | <ns>;IVendorNameplateType | DataItems | 1`).
+- SignalKind: `Metrics` · Bound target: `http://opcfoundation.org/UA/DI/;IVendorNameplateType`
+- **DataSetClassId** `ac52dde1-e3db-5534-bc44-5b18d9335b72` (deterministic over `ObservabilityExport|http://opcfoundation.org/UA/DI/;IVendorNameplateType|Metrics|1`).
 
-## 3 The derived binding — Pumps `FleetAndCompliance` on `PumpType`
+## 3 The derived binding — Pumps Metrics on `PumpType`
 
-The pump's `Identification` object composes `IVendorNameplateType`, so the pump inherits the four
-nameplate fields. Per §5.12 a derived binding **lists only its own delta fields** and references the
-base lineage with **`BaseDataSetClassIds`** — it does **not** restate the inherited fields. So the
-Pumps `FleetAndCompliance` binding authored on `PumpType` lists just `AssetId` and `Location` and
-sets `BaseDataSetClassIds = [cb5100f1…]`:
+The pump's `Identification` object composes `IVendorNameplateType`, so the pump inherits the four nameplate fields. Per §5.12 a derived binding lists its own delta fields and references the base lineage with **`BaseDataSetClassIds`**; it does not restate inherited fields. The Pumps Metrics binding adds operational pump metrics and pump-specific dimensions (`AssetId`, `Location`, `service.name`).
 
-| Field authored on the pump binding | BrowsePath | Role |
-|---|---|---|
-| AssetId | `/Identification/AssetId` | **delta** (pump/Machinery) |
-| Location | `/Identification/Location` | **delta** (pump/Machinery) |
-
-At **compose time** a Server/bridge unions this delta with the DI base binding, re-anchoring the DI
-facet paths by the mount path of the component that carries the facet — the pump's `Identification`
-(§5.12 step 2) — so `/Manufacturer` becomes `/Identification/Manufacturer`, and so on. The four
-inherited fields then carry `SourceScenarioBindingClassId = cb5100f1…` on the **composed** DataSet,
-while `AssetId`/`Location` are the pump's own untagged fields:
-
-| Composed field | Origin | Path on the instance | Provenance on the composed DataSet |
-|---|---|---|---|
-| Manufacturer | DI base (`IVendorNameplateType`) | `/Identification/Manufacturer` | `SourceScenarioBindingClassId = cb5100f1…` |
-| Model | DI base | `/Identification/Model` | `SourceScenarioBindingClassId = cb5100f1…` |
-| SerialNumber | DI base | `/Identification/SerialNumber` | `SourceScenarioBindingClassId = cb5100f1…` |
-| ProductInstanceUri | DI base | `/Identification/ProductInstanceUri` | `SourceScenarioBindingClassId = cb5100f1…` |
-| AssetId | pump delta | `/Identification/AssetId` | *(own field — untagged)* |
-| Location | pump delta | `/Identification/Location` | *(own field — untagged)* |
+At compose time a Server/bridge unions this delta with the DI base binding, re-anchoring DI facet paths by the pump's `Identification` mount path. The inherited fields carry `SourceBindingClassId = ac52dde1…` on the composed DataSet; pump-owned fields omit it.
 
 - Bound target: `http://opcfoundation.org/UA/Pumps/;PumpType`
-- Composed **DataSetClassId** `e50711a6-ebed-5e04-9672-2a7d506e1c32` · **BaseDataSetClassIds**
-  `[cb5100f1-96f5-5999-a09f-97b71bb044be]`.
-- Generated overlay (the authored delta binding):
-  [`../pumps/Opc.Ua.Pumps.ScenarioBinding.NodeSet2.xml`](../pumps/Opc.Ua.Pumps.ScenarioBinding.NodeSet2.xml).
+- Composed **DataSetClassId** `04ec3212-44fd-579c-ad2f-38b3c32df9e8` · **BaseDataSetClassIds** `[ac52dde1-e3db-5534-bc44-5b18d9335b72]`.
+- Generated overlay: [`../pumps/Opc.Ua.Pumps.ObservabilityExport.NodeSet2.xml`](../pumps/Opc.Ua.Pumps.ObservabilityExport.NodeSet2.xml).
 
-A subscriber that only knows the DI nameplate class (`cb5100f1…`) recognizes the four base fields
-inside any pump's composed DataSet by their `SourceScenarioBindingClassId`; a subscriber that knows
-the pump class (`e50711a6…`) additionally consumes `AssetId` and `Location`.
+A subscriber that only knows the DI nameplate class recognizes the four base fields by `SourceBindingClassId`; a subscriber that knows the pump class consumes the full pump metrics DataSet.
 
-## 4 An inherited DI action — `RemoteOperations` on `TopologyElementType`
+## 4 A DI observability binding the pump does not inherit
 
-Not every Scenario Binding is a DataSet. DI also owns a **`RemoteOperations` action binding**
-(`ContentKind = Actions`) authored on **`TopologyElementType`**, exposing the inherited
-`LockingServices` Methods so a bridge or operator can lock a topology element for maintenance and
-release it afterwards. Its bound items are **Methods** ([`BoundMethodType`](../OPC-UA-Scenario-Bindings.md#type-BoundMethodType)),
-each with an `OwningObjectPath` to the `Lock` object they are called on — **not** Variables or event
-fields, so the binding is an *action set*, not a data or event DataSet.
-
-Generated overlay: [`Opc.Ua.DIOperations.ScenarioBinding.NodeSet2.xml`](Opc.Ua.DIOperations.ScenarioBinding.NodeSet2.xml),
-addendum [`OPC-UA-DIOperations-Scenario-Bindings-Addendum.md`](OPC-UA-DIOperations-Scenario-Bindings-Addendum.md).
-
-| Field | Kind | Method BrowsePath | Owning object |
-|---|---|---|---|
-| InitLock | Command | `/Lock/InitLock` | `/Lock` |
-| ExitLock | Command | `/Lock/ExitLock` | `/Lock` |
-
-- Scenario: `…/Scenarios/RemoteOperations` · *Direction:* `ActionResponder` (the Server offers the
-  Methods; a Client/bridge invokes them via the classic `Call` service, or via Part 14
-  Actions/ActionTargets where PubSub is configured).
-- Bound target: `http://opcfoundation.org/UA/DI/;TopologyElementType` · **DataSetClassId**
-  `3061c066-ed80-5aa5-ab02-0feb85745f2a` (the class identity applies to an action set exactly as it
-  does to a DataSet; §5.7).
-
-Because `LockingServices` is declared on `TopologyElementType`, this action binding is inherited
-through the **subtype axis** of §5.12 by *every* `TopologyElementType` subtype — a DI `DeviceType`
-**and** a `PumpType` (which is a `TopologyElementType`, not a `DeviceType`; see §1). Unlike the
-`FleetAndCompliance` data binding, which a pump **extends** with delta fields, a pump inherits this
-action binding **unchanged**: any pump instance already exposes `Lock/InitLock` and `Lock/ExitLock`,
-so the `RemoteOperations` scenario resolves against it with no pump-specific authoring at all.
-
-## 5 A DI scenario the pump does **not** inherit
-
-DI also defines an `Observability` binding on the **`IDeviceHealthType`** facet (`DeviceHealth`,
-DataSetClassId `6a43d6ba…`; see
-[`OPC-UA-DIDeviceHealth-Scenario-Bindings-Addendum.md`](OPC-UA-DIDeviceHealth-Scenario-Bindings-Addendum.md)).
-A pump does **not** compose `IDeviceHealthType` (it has no `DeviceHealth`), so this scenario is
-**device-only** and is not inherited by the Pumps example — inheritance follows the facets a type
-actually composes, nothing more.
+DI also defines a **Metrics** binding on `IDeviceHealthType` (`DeviceHealth`, DataSetClassId `021ecf01-f573-54e1-b4c5-112ced3f846f`). A pump does not compose `IDeviceHealthType`, so this binding is device-only and is not inherited by the Pumps example. Inheritance follows the facets a type actually composes, nothing more.

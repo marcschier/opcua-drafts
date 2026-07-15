@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Facets: illustrative overlay for the Scenario Bindings inheritance/composition example. PROVISIONAL. -->
+<!-- Facets: illustrative overlay for the Observability Export inheritance/composition example. PROVISIONAL. -->
 <UANodeSet xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd" xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd">
   <NamespaceUris>
     <Uri>http://opcfoundation.org/UA/PubSub/Examples/Facets/</Uri>
@@ -33,6 +33,7 @@
     <References>
       <Reference ReferenceType="i=40">i=60018</Reference>
       <Reference ReferenceType="i=47" IsForward="false">ns=1;i=5001</Reference>
+      <Reference ReferenceType="i=60004" IsForward="false">i=60101</Reference>
     </References>
   </UAObject>
   <UAVariable NodeId="ns=1;i=5003" BrowseName="1:CompanionSpecificationUri" ParentNodeId="ns=1;i=5002" DataType="i=12">
@@ -58,8 +59,8 @@
       <Reference ReferenceType="i=47" IsForward="false">ns=1;i=5002</Reference>
     </References>
   </UAObject>
-  <UAVariable NodeId="ns=1;i=5006" BrowseName="1:Direction" ParentNodeId="ns=1;i=5005" DataType="i=60050">
-    <DisplayName>Direction</DisplayName>
+  <UAVariable NodeId="ns=1;i=5006" BrowseName="1:SignalKind" ParentNodeId="ns=1;i=5005" DataType="i=60052">
+    <DisplayName>SignalKind</DisplayName>
     <References>
       <Reference ReferenceType="i=40">i=68</Reference>
       <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5005</Reference>
@@ -72,7 +73,7 @@
       <Reference ReferenceType="i=40">i=68</Reference>
       <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5005</Reference>
     </References>
-    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>e91fdfed-c60b-5ac0-8cad-c0c152840cca</uax:String></uax:Guid></Value>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>1760c83f-c0c2-59c3-8bfa-e0c7c353aa97</uax:String></uax:Guid></Value>
   </UAVariable>
   <UAObject NodeId="ns=1;i=5008" BrowseName="1:Manufacturer" ParentNodeId="ns=1;i=5005">
     <DisplayName>Manufacturer</DisplayName>
@@ -95,7 +96,7 @@
       <Reference ReferenceType="i=40">i=68</Reference>
       <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5008</Reference>
     </References>
-    <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">8</uax:Int32></Value>
+    <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">6</uax:Int32></Value>
   </UAVariable>
   <UAVariable NodeId="ns=1;i=5011" BrowseName="1:BrowsePath" ParentNodeId="ns=1;i=5008" DataType="i=540">
     <DisplayName>BrowsePath</DisplayName>
@@ -111,7 +112,7 @@
       <Reference ReferenceType="i=40">i=68</Reference>
       <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5008</Reference>
     </References>
-    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>acbc79e2-0f4d-5d28-b49c-b7c637fa90f1</uax:String></uax:Guid></Value>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>d478d2ac-7178-55f2-82a7-7d21d5c468e9</uax:String></uax:Guid></Value>
   </UAVariable>
   <UAObject NodeId="ns=1;i=5013" BrowseName="1:SerialNumber" ParentNodeId="ns=1;i=5005">
     <DisplayName>SerialNumber</DisplayName>
@@ -134,7 +135,7 @@
       <Reference ReferenceType="i=40">i=68</Reference>
       <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5013</Reference>
     </References>
-    <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">8</uax:Int32></Value>
+    <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">6</uax:Int32></Value>
   </UAVariable>
   <UAVariable NodeId="ns=1;i=5016" BrowseName="1:BrowsePath" ParentNodeId="ns=1;i=5013" DataType="i=540">
     <DisplayName>BrowsePath</DisplayName>
@@ -150,7 +151,7 @@
       <Reference ReferenceType="i=40">i=68</Reference>
       <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5013</Reference>
     </References>
-    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>2d0a36f5-99e9-5f5c-bef9-639a4d087cbe</uax:String></uax:Guid></Value>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>ce58c764-c5fc-5895-97af-95048bbb17c9</uax:String></uax:Guid></Value>
   </UAVariable>
   <UAObject NodeId="ns=1;i=5018" BrowseName="1:DeviceHealth" ParentNodeId="ns=1;i=5005">
     <DisplayName>DeviceHealth</DisplayName>
@@ -189,7 +190,7 @@
       <Reference ReferenceType="i=40">i=68</Reference>
       <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5018</Reference>
     </References>
-    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>009219d8-b3f0-5a6e-8903-5cbc32fad6b8</uax:String></uax:Guid></Value>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>6eb2f99c-37e6-59d9-b30e-995240c52f05</uax:String></uax:Guid></Value>
   </UAVariable>
   <UAObject NodeId="ns=1;i=5023" BrowseName="1:LocationObservability" ParentNodeId="ns=1;i=5002">
     <DisplayName>LocationObservability</DisplayName>
@@ -198,8 +199,8 @@
       <Reference ReferenceType="i=47" IsForward="false">ns=1;i=5002</Reference>
     </References>
   </UAObject>
-  <UAVariable NodeId="ns=1;i=5024" BrowseName="1:Direction" ParentNodeId="ns=1;i=5023" DataType="i=60050">
-    <DisplayName>Direction</DisplayName>
+  <UAVariable NodeId="ns=1;i=5024" BrowseName="1:SignalKind" ParentNodeId="ns=1;i=5023" DataType="i=60052">
+    <DisplayName>SignalKind</DisplayName>
     <References>
       <Reference ReferenceType="i=40">i=68</Reference>
       <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5023</Reference>
@@ -212,7 +213,7 @@
       <Reference ReferenceType="i=40">i=68</Reference>
       <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5023</Reference>
     </References>
-    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>b61cab00-da22-5c32-935f-71431a31a89f</uax:String></uax:Guid></Value>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>5d376ec7-f02c-539b-9a87-6126367fe4e0</uax:String></uax:Guid></Value>
   </UAVariable>
   <UAObject NodeId="ns=1;i=5026" BrowseName="1:Latitude" ParentNodeId="ns=1;i=5023">
     <DisplayName>Latitude</DisplayName>
@@ -251,7 +252,7 @@
       <Reference ReferenceType="i=40">i=68</Reference>
       <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5026</Reference>
     </References>
-    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>f772c36a-11f5-5340-aff8-fc52031e4947</uax:String></uax:Guid></Value>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>26689ce9-07b2-5330-a8ce-e99bae9c4fd0</uax:String></uax:Guid></Value>
   </UAVariable>
   <UAObject NodeId="ns=1;i=5031" BrowseName="1:Longitude" ParentNodeId="ns=1;i=5023">
     <DisplayName>Longitude</DisplayName>
@@ -290,7 +291,7 @@
       <Reference ReferenceType="i=40">i=68</Reference>
       <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5031</Reference>
     </References>
-    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>e64528f0-9091-5824-8e91-99824842b7e6</uax:String></uax:Guid></Value>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>6d1ffbe4-6a41-5df5-ae16-e61f692fd6f1</uax:String></uax:Guid></Value>
   </UAVariable>
   <UAObject NodeId="ns=1;i=5036" BrowseName="1:Altitude" ParentNodeId="ns=1;i=5023">
     <DisplayName>Altitude</DisplayName>
@@ -329,7 +330,7 @@
       <Reference ReferenceType="i=40">i=68</Reference>
       <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5036</Reference>
     </References>
-    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>c7f6f77c-e656-5dc4-9695-aa7e58684afe</uax:String></uax:Guid></Value>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>19f28c19-f61c-59bd-8167-a82651cf524f</uax:String></uax:Guid></Value>
   </UAVariable>
   <UAObject NodeId="ns=1;i=5041" BrowseName="1:Maintenance" ParentNodeId="ns=1;i=5002">
     <DisplayName>Maintenance</DisplayName>
@@ -338,8 +339,8 @@
       <Reference ReferenceType="i=47" IsForward="false">ns=1;i=5002</Reference>
     </References>
   </UAObject>
-  <UAVariable NodeId="ns=1;i=5042" BrowseName="1:Direction" ParentNodeId="ns=1;i=5041" DataType="i=60050">
-    <DisplayName>Direction</DisplayName>
+  <UAVariable NodeId="ns=1;i=5042" BrowseName="1:SignalKind" ParentNodeId="ns=1;i=5041" DataType="i=60052">
+    <DisplayName>SignalKind</DisplayName>
     <References>
       <Reference ReferenceType="i=40">i=68</Reference>
       <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5041</Reference>
@@ -352,7 +353,7 @@
       <Reference ReferenceType="i=40">i=68</Reference>
       <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5041</Reference>
     </References>
-    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>b7c28bc2-d44e-5e1f-8b8a-5dd9684125b3</uax:String></uax:Guid></Value>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>7e967a1b-d266-56a2-8a44-68a07e36aec6</uax:String></uax:Guid></Value>
   </UAVariable>
   <UAObject NodeId="ns=1;i=5044" BrowseName="1:LastMaintenanceDate" ParentNodeId="ns=1;i=5041">
     <DisplayName>LastMaintenanceDate</DisplayName>
@@ -375,7 +376,7 @@
       <Reference ReferenceType="i=40">i=68</Reference>
       <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5044</Reference>
     </References>
-    <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">2</uax:Int32></Value>
+    <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">7</uax:Int32></Value>
   </UAVariable>
   <UAVariable NodeId="ns=1;i=5047" BrowseName="1:BrowsePath" ParentNodeId="ns=1;i=5044" DataType="i=540">
     <DisplayName>BrowsePath</DisplayName>
@@ -391,7 +392,7 @@
       <Reference ReferenceType="i=40">i=68</Reference>
       <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5044</Reference>
     </References>
-    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>26e5da79-efe7-57c2-ab40-61abdf668156</uax:String></uax:Guid></Value>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>258b9d8c-d3d1-58d1-acc8-3d9a74f1b92d</uax:String></uax:Guid></Value>
   </UAVariable>
   <UAObject NodeId="ns=1;i=5049" BrowseName="1:MachineObservability" ParentNodeId="ns=1;i=5002">
     <DisplayName>MachineObservability</DisplayName>
@@ -402,8 +403,8 @@
       <Reference ReferenceType="i=60003">ns=1;i=5023</Reference>
     </References>
   </UAObject>
-  <UAVariable NodeId="ns=1;i=5050" BrowseName="1:Direction" ParentNodeId="ns=1;i=5049" DataType="i=60050">
-    <DisplayName>Direction</DisplayName>
+  <UAVariable NodeId="ns=1;i=5050" BrowseName="1:SignalKind" ParentNodeId="ns=1;i=5049" DataType="i=60052">
+    <DisplayName>SignalKind</DisplayName>
     <References>
       <Reference ReferenceType="i=40">i=68</Reference>
       <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5049</Reference>
@@ -416,7 +417,7 @@
       <Reference ReferenceType="i=40">i=68</Reference>
       <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5049</Reference>
     </References>
-    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>f89b3144-b44f-5149-9e7a-4e41db20cf62</uax:String></uax:Guid></Value>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>53dc8a49-b4ec-50d2-a122-e1ce44825662</uax:String></uax:Guid></Value>
   </UAVariable>
   <UAVariable NodeId="ns=1;i=5052" BrowseName="1:BaseDataSetClassIds" ParentNodeId="ns=1;i=5049" DataType="i=14" ValueRank="1" ArrayDimensions="0">
     <DisplayName>BaseDataSetClassIds</DisplayName>
@@ -424,7 +425,7 @@
       <Reference ReferenceType="i=40">i=68</Reference>
       <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5049</Reference>
     </References>
-    <Value><uax:ListOfGuid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>e91fdfed-c60b-5ac0-8cad-c0c152840cca</uax:String></uax:Guid><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>b61cab00-da22-5c32-935f-71431a31a89f</uax:String></uax:Guid></uax:ListOfGuid></Value>
+    <Value><uax:ListOfGuid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>1760c83f-c0c2-59c3-8bfa-e0c7c353aa97</uax:String></uax:Guid><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>5d376ec7-f02c-539b-9a87-6126367fe4e0</uax:String></uax:Guid></uax:ListOfGuid></Value>
   </UAVariable>
   <UAObject NodeId="ns=1;i=5053" BrowseName="1:SpindleSpeed" ParentNodeId="ns=1;i=5049">
     <DisplayName>SpindleSpeed</DisplayName>
@@ -463,7 +464,7 @@
       <Reference ReferenceType="i=40">i=68</Reference>
       <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5053</Reference>
     </References>
-    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>86c42c76-3977-53cd-ad5a-af6dd5be6ee7</uax:String></uax:Guid></Value>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>ef6f212e-002f-5cb8-ad26-d1ae0deaacee</uax:String></uax:Guid></Value>
   </UAVariable>
   <UAObject NodeId="ns=1;i=5058" BrowseName="1:AxisLoad" ParentNodeId="ns=1;i=5049">
     <DisplayName>AxisLoad</DisplayName>
@@ -502,7 +503,7 @@
       <Reference ReferenceType="i=40">i=68</Reference>
       <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5058</Reference>
     </References>
-    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>39e737c1-2555-580e-86f9-5e5f08f44757</uax:String></uax:Guid></Value>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>ff56a88d-6107-54b6-b36c-9c98db27da58</uax:String></uax:Guid></Value>
   </UAVariable>
   <UAObject NodeId="ns=1;i=5063" BrowseName="1:DeviceHealth" ParentNodeId="ns=1;i=5049">
     <DisplayName>DeviceHealth</DisplayName>
@@ -535,13 +536,13 @@
     </References>
     <Value><uax:RelativePath xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:Elements><uax:RelativePathElement><uax:ReferenceTypeId><uax:Identifier>i=33</uax:Identifier></uax:ReferenceTypeId><uax:IsInverse>false</uax:IsInverse><uax:IncludeSubtypes>true</uax:IncludeSubtypes><uax:TargetName><uax:NamespaceIndex>2</uax:NamespaceIndex><uax:Name>DeviceHealth</uax:Name></uax:TargetName></uax:RelativePathElement></uax:Elements></uax:RelativePath></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=5067" BrowseName="1:SourceScenarioBindingClassId" ParentNodeId="ns=1;i=5063" DataType="i=14">
-    <DisplayName>SourceScenarioBindingClassId</DisplayName>
+  <UAVariable NodeId="ns=1;i=5067" BrowseName="1:SourceObservabilityExportClassId" ParentNodeId="ns=1;i=5063" DataType="i=14">
+    <DisplayName>SourceObservabilityExportClassId</DisplayName>
     <References>
       <Reference ReferenceType="i=40">i=68</Reference>
       <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5063</Reference>
     </References>
-    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>e91fdfed-c60b-5ac0-8cad-c0c152840cca</uax:String></uax:Guid></Value>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>1760c83f-c0c2-59c3-8bfa-e0c7c353aa97</uax:String></uax:Guid></Value>
   </UAVariable>
   <UAVariable NodeId="ns=1;i=5068" BrowseName="1:DataSetFieldId" ParentNodeId="ns=1;i=5063" DataType="i=14">
     <DisplayName>DataSetFieldId</DisplayName>
@@ -549,7 +550,7 @@
       <Reference ReferenceType="i=40">i=68</Reference>
       <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5063</Reference>
     </References>
-    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>d2eb3627-804e-535f-b68e-50590811bb3b</uax:String></uax:Guid></Value>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>c410e972-12ed-515e-9b9e-3dcad1e02ef9</uax:String></uax:Guid></Value>
   </UAVariable>
   <UAObject NodeId="ns=1;i=5069" BrowseName="1:MachineMaintenance" ParentNodeId="ns=1;i=5002">
     <DisplayName>MachineMaintenance</DisplayName>
@@ -559,8 +560,8 @@
       <Reference ReferenceType="i=60003">ns=1;i=5041</Reference>
     </References>
   </UAObject>
-  <UAVariable NodeId="ns=1;i=5070" BrowseName="1:Direction" ParentNodeId="ns=1;i=5069" DataType="i=60050">
-    <DisplayName>Direction</DisplayName>
+  <UAVariable NodeId="ns=1;i=5070" BrowseName="1:SignalKind" ParentNodeId="ns=1;i=5069" DataType="i=60052">
+    <DisplayName>SignalKind</DisplayName>
     <References>
       <Reference ReferenceType="i=40">i=68</Reference>
       <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5069</Reference>
@@ -573,7 +574,7 @@
       <Reference ReferenceType="i=40">i=68</Reference>
       <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5069</Reference>
     </References>
-    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>6dfb7f30-9405-5967-8d05-a2872b0028d8</uax:String></uax:Guid></Value>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>53dc8a49-b4ec-50d2-a122-e1ce44825662</uax:String></uax:Guid></Value>
   </UAVariable>
   <UAVariable NodeId="ns=1;i=5072" BrowseName="1:BaseDataSetClassIds" ParentNodeId="ns=1;i=5069" DataType="i=14" ValueRank="1" ArrayDimensions="0">
     <DisplayName>BaseDataSetClassIds</DisplayName>
@@ -581,6 +582,6 @@
       <Reference ReferenceType="i=40">i=68</Reference>
       <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5069</Reference>
     </References>
-    <Value><uax:ListOfGuid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>b7c28bc2-d44e-5e1f-8b8a-5dd9684125b3</uax:String></uax:Guid></uax:ListOfGuid></Value>
+    <Value><uax:ListOfGuid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>7e967a1b-d266-56a2-8a44-68a07e36aec6</uax:String></uax:Guid></uax:ListOfGuid></Value>
   </UAVariable>
 </UANodeSet>

@@ -1,72 +1,70 @@
-# OPC UA DIDeviceHealth — Scenario Bindings Addendum
+# OPC UA DIDeviceHealth — Observability Export Addendum
 
-**Working draft — a worked example of the [Scenario Bindings](../OPC-UA-Scenario-Bindings.md) base specification applied to OPC UA Devices (DI, OPC 10000-100).**
+**Working draft — a worked example of the [Observability Export](../OPC-UA-Observability-Export.md) base specification applied to OPC UA Devices (DI, OPC 10000-100).**
 
-> **Status — illustrative example.** This addendum shows how the instances of the `IDeviceHealthType` (http://opcfoundation.org/UA/DI/) can be exposed for integration scenarios over the classic client/server (RPC) interface and, optionally, over OPC UA PubSub — without modifying the companion specification. All NodeIds in the example namespace `http://opcfoundation.org/UA/PubSub/Examples/DIDeviceHealth/` are provisional and the base-namespace binding types it references (`ScenarioBindingGroupType` etc.) carry the **provisional** NodeIds of the draft base specification.
+> **Status — illustrative example.** The `http://opcfoundation.org/UA/PubSub/Examples/DIDeviceHealth/` namespace and NodeIds are provisional. The example shows how `IDeviceHealthType` data is declared for OTEL metrics, logs and traces over classic OPC UA and optional PubSub.
 
 ## 1 Scope
 
-This addendum defines example **scenario bindings** for the `IDeviceHealthType` — 1 bound items across the scenarios *Observability* — per the [Scenario Bindings](../OPC-UA-Scenario-Bindings.md) base specification. The DI IDeviceHealthType facet exposes DeviceHealth (a NAMUR NE 107 style health state). A DI device composes it for an Observability/health scenario. A pump does NOT compose IDeviceHealthType (it has no DeviceHealth), so this scenario is device-only and is not inherited by the Pumps example - illustrating that a scenario is inherited only where its facet is actually composed.
+This addendum defines example **observability export bindings** for `IDeviceHealthType` — 1 bound items across Metrics (Metrics). The DI IDeviceHealthType facet exposes DeviceHealth as an OTEL status gauge. A pump does not compose IDeviceHealthType, so this binding is device-only.
 
 ## 2 Normative references
 
-- [Scenario Bindings](../OPC-UA-Scenario-Bindings.md) — the base binding model (types, discovery, the two-layer routing/semantic contract).
+- [Observability Export](../OPC-UA-Observability-Export.md) — the base binding model (discovery and OTEL mapping).
 - [OPC UA Devices (DI, OPC 10000-100)](https://reference.opcfoundation.org/DI/v104/docs/) — the companion specification whose type is bound.
 - [OPC 10000-14](https://reference.opcfoundation.org/specs/OPC-10000-14/) — PubSub (optional realization).
 
 ## 3 How the bindings are applied
 
-The bindings are authored at **two levels**, exactly as the base specification recommends:
+The machine-readable descriptor [`DI.DeviceHealth.ObservabilityExport.json`](../../extras/observability-export/examples/di/DI.DeviceHealth.ObservabilityExport.json) lists each bound item as a `BrowsePath` from `IDeviceHealthType`, with its observability `Kind` and OTEL `SignalKind`. The generated overlay [`Opc.Ua.DIDeviceHealth.ObservabilityExport.NodeSet2.xml`](Opc.Ua.DIDeviceHealth.ObservabilityExport.NodeSet2.xml) instantiates a compact `ExampleDeviceHealth` object, applies `IObservableType`, and exposes an `ObservabilityBindingGroup` that realizes the server-wide `Observability` registry.
 
-1. **Type-level definitions (reusable).** The machine-readable descriptor [`DI.DeviceHealth.ScenarioBinding.json`](../../extras/scenario-binding/examples/di/DI.DeviceHealth.ScenarioBinding.json) lists each bound item as a `BrowsePath` (RelativePath) from the `IDeviceHealthType` root, with its routing `Kind` and scenario. Every path in §4 was **resolved against the published companion NodeSet**, so the bindings apply to *any* conforming instance.
-2. **Instance overlay (concrete).** [`Opc.Ua.DIDeviceHealth.ScenarioBinding.NodeSet2.xml`](Opc.Ua.DIDeviceHealth.ScenarioBinding.NodeSet2.xml) instantiates a compact theoretical instance `ExampleDeviceHealth`, applies the `IScenarioBoundType` interface, and exposes one `ScenarioBindingGroup` per scenario holding that scenario's `ScenarioBinding`/`BoundItem` instances. On the instance each `BoundItem` uses **`BindsToNode`** to point at the concrete signal node (the type-level `BrowsePath` and the instance `BindsToNode` are the two locators defined by the base specification).
+> **Theoretical instance model.** A compact instance implementing IDeviceHealthType.
 
-> **Theoretical instance model.** A compact instance implementing IDeviceHealthType. Contrast with the DI nameplate example: pumps compose IVendorNameplateType (so they extend its FleetAndCompliance binding) but not IDeviceHealthType.
+Only the bound signals are materialised in the overlay; it is illustrative, not a full companion instance.
 
-Only the bound signals are materialised in the overlay; it is an *illustrative* instance, not a conformant full instance of the companion type.
+## 4 Observability export bindings for `IDeviceHealthType`
 
-## 4 Scenario bindings for `IDeviceHealthType`
+Bindings for `IDeviceHealthType` in `http://opcfoundation.org/UA/DI/`, per the [Observability Export](../OPC-UA-Observability-Export.md) base specification. Each binding exposes one OTEL signal (`Metrics`, `Logs` or `Traces`) with a deterministic `DataSetClassId`.
 
-Bindings for the `IDeviceHealthType` of the `http://opcfoundation.org/UA/DI/` companion specification, per the [Scenario Bindings](../OPC-UA-Scenario-Bindings.md) base specification. Each binding is **one content class** — a data DataSet, an event DataSet, or an action set — with a deterministic `DataSetClassId`. Every data and Method `BrowsePath` below was resolved against the published companion NodeSet; event-DataSet fields select standard event-type fields.
+#### Metrics — Metrics
 
-#### Scenario: Observability
-
-*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/Observability` · *Direction:* Publisher · *Content:* data DataSet (PublishedDataItems) · *DataSetClassId:* `6a43d6ba-2a81-58af-991b-f1c5108ce590` · *Cardinality:* one DataSet (bound root)
+*Signal:* OTEL metrics (PublishedDataItems) · *DataSetClassId:* `021ecf01-f573-54e1-b4c5-112ced3f846f` · *Cardinality:* one DataSet (bound root)
 
 | Field | Kind | BrowsePath | Source type | DataType | OTEL |
 |---|---|---|---|---|---|
-| DeviceHealth | Status | `/DeviceHealth` | [BaseDataVariableType](https://reference.opcfoundation.org/specs/OPC-10000-5/7.4) | i=6244 | — |
+| DeviceHealth | Status | `/DeviceHealth` | `i=63` | i=6244 | Gauge |
 
 
 ## 5 Where the bindings live
 
-Overview of the scenario bindings, then their placement on the theoretical instance (one `ScenarioBindingGroup` per scenario hangs off the instance; each `BoundItem` `BindsToNode` its signal):
+Overview of the observability bindings and their placement on the theoretical instance:
 
 ```mermaid
 graph LR
   ROOT["ExampleDeviceHealth : IDeviceHealthType"]
-  ROOT --> G0["Observability<br/>ScenarioBindingGroup"]
-  G0 --> S0["Observability<br/>Publisher · Data"]
+  ROOT --> G["DIDeviceHealth<br/>ObservabilityBindingGroup"]
+  G -.Realizes.-> O["Observability registry i=60101"]
+  G --> S0["Metrics<br/>Metrics"]
   S0 --> S0_0["DeviceHealth : Status"]
 ```
 
 ```mermaid
 graph TD
   R["ExampleDeviceHealth : IDeviceHealthType"]
-  R -->|HasInterface| I([IScenarioBoundType])
-  R -->|HasComponent| G0["Observability : ScenarioBindingGroupType"]
-  G0 -.Realizes.-> P0["Observability : ScenarioProfileType<br/>under Server/Scenarios"]
-  G0 -->|HasComponent| B0["Observability : ScenarioBindingType"]
+  R -->|HasInterface| I([IObservableType])
+  R -->|HasComponent| G["DIDeviceHealth : ObservabilityBindingGroupType"]
+  G -.Realizes.-> O["Observability : ObservabilityFolderType"]
+  G -->|HasComponent| B0["Metrics : ObservabilityBindingType<br/>Metrics"]
   B0 -->|HasComponent| IT00["DeviceHealth : BoundVariableType"]
   IT00 -->|BindsToNode| N00["DeviceHealth"]
 ```
 
-## 6 Deliverables
+## 7 Deliverables
 
 | File | Content |
 |---|---|
-| [`DI.DeviceHealth.ScenarioBinding.json`](../../extras/scenario-binding/examples/di/DI.DeviceHealth.ScenarioBinding.json) | Machine-readable ScenarioBindingConfiguration descriptor (single source). |
-| [`Opc.Ua.DIDeviceHealth.ScenarioBinding.NodeSet2.xml`](Opc.Ua.DIDeviceHealth.ScenarioBinding.NodeSet2.xml) | The binding instances on the theoretical `ExampleDeviceHealth` instance. |
+| [`DI.DeviceHealth.ObservabilityExport.json`](../../extras/observability-export/examples/di/DI.DeviceHealth.ObservabilityExport.json) | Machine-readable ObservabilityExport descriptor (single source). |
+| [`Opc.Ua.DIDeviceHealth.ObservabilityExport.NodeSet2.xml`](Opc.Ua.DIDeviceHealth.ObservabilityExport.NodeSet2.xml) | The binding instances on the theoretical `ExampleDeviceHealth` instance. |
 
-Regenerate from [`core-specs/extras/scenario-binding/examples/`](../../extras/scenario-binding/examples/) with `python tools/build_bindings.py di/DI.DeviceHealth.ScenarioBinding.json`.
+Regenerate from [`core-specs/extras/observability-export/examples/`](../../extras/observability-export/examples/) with `python tools/build_bindings.py di/DI.DeviceHealth.ObservabilityExport.json tools/ref`.
 

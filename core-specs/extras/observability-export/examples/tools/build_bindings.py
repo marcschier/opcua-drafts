@@ -1,19 +1,13 @@
 #!/usr/bin/env python3
-"""build_bindings.py - generate a Scenario Bindings *example* from a descriptor.
+"""build_bindings.py - generate an Observability Export example from a descriptor.
 
-Input: a ScenarioBindingConfiguration descriptor (JSON, the skill's authoring DSL) plus
-the base companion NodeSet(s). The tool:
-  1. walks the target companion ObjectType and validates every boundItem.browsePath,
-     enriching it with the real namespace-qualified BrowseName, DataType and TypeDefinition;
-  2. synthesises a compact *theoretical instance* (only the bound signals) in an example
-     namespace, exposes one ScenarioBindingGroup per scenario on it (the instance implements
-     IScenarioBoundType) and emits ScenarioBinding + BoundItem instances (BindsToNode ->
-     the concrete signal node);
-  3. emits the per-scenario annex tables (Markdown, with reference.opcfoundation.org and
-     base-spec links) and two mermaid diagram sources (bindings overview + instance placement).
+Input: an ObservabilityExport descriptor (JSON) plus the base companion NodeSet(s).
+The tool resolves type-level BrowsePaths, synthesizes a compact illustrative instance
+implementing IObservableType, emits ObservabilityBinding/BoundItem instances, and
+generates the corresponding addendum.
 
-All base-namespace (ns0) binding NodeIds (ScenarioBindingGroupType i=60018 etc.) are the
-PROVISIONAL ids from the draft Scenario Bindings spec.
+All base-namespace (ns0) binding NodeIds are the provisional ids from the draft
+Observability Export spec.
 """
 import json
 import os
@@ -25,32 +19,22 @@ from nodeset_util import NodeSetDB, UA
 HERE = os.path.dirname(os.path.abspath(__file__))
 # stable namespace for deterministic DataSetFieldId GUIDs
 FIELD_ID_NS = uuid.uuid5(uuid.NAMESPACE_URL,
-                         "http://opcfoundation.org/UA/PubSub/Examples/ScenarioBinding")
+                         "http://opcfoundation.org/UA/ObservabilityExport/Examples/FieldId")
 
-# --- base-namespace (ns0) Scenario Binding provisional ids -----------
+# --- base-namespace (ns0) Observability Export provisional ids -----------
 BIND = {
-    "ScenarioFolderType": 60010, "ScenarioBindingType": 60011,
-    "BoundItemType": 60012, "BoundVariableType": 60013, "BoundMethodType": 60014,
-    "ScenarioProfileType": 60015, "IScenarioBoundType": 60016,
-    "BoundEventFieldType": 60017, "ScenarioBindingGroupType": 60018,
-    "ScenarioBindingDirectionEnum": 60050, "BoundItemKindEnum": 60051,
-    "ScenarioContentKindEnum": 60052,
+    "ObservabilityFolderType": 60010, "ObservabilityBindingType": 60011,
+    "BoundItemType": 60012, "BoundVariableType": 60013,
+    "IObservableType": 60016, "BoundEventFieldType": 60017,
+    "ObservabilityBindingGroupType": 60018,
+    "BoundItemKindEnum": 60051, "ObservabilitySignalKindEnum": 60052,
     "MetricInstrumentTypeEnum": 60053, "MetricTemporalityEnum": 60054,
-    "BindsToNode": 60001, "ScenarioRealizedBy": 60002,
+    "BindsToNode": 60001, "ObservabilityRealizedBy": 60002,
+    "HasBaseBinding": 60003, "RealizedBy": 60004,
 }
-DIRECTION = {"Publisher": 0, "Subscriber": 1, "ActionInvoker": 2,
-             "ActionResponder": 3, "Bidirectional": 4}
-KIND = {"Telemetry": 0, "Status": 1, "Configuration": 2, "Metric": 3, "Counter": 4,
-        "Event": 5, "Command": 6, "Setpoint": 7, "Identification": 8, "Other": 9,
-        "Dimension": 10}
-CONTENT_KIND = {"DataItems": 0, "Events": 1, "Actions": 2}
-# well-known ns0 ScenarioProfile node ids (see build_model.py SCENARIOS); a per-instance group
-# Realizes the profile for its scenario (inverse of the profile's RealizedBy).
-PROFILE_ID = {
-    "Observability": 60110, "PredictiveMaintenance": 60111, "AnomalyDetection": 60112,
-    "EnergyAndLoadManagement": 60113, "AlarmAndEventDistribution": 60114,
-    "FleetAndCompliance": 60115, "RemoteOperations": 60116,
-}
+KIND = {"Telemetry": 0, "Status": 1, "Metric": 2, "Counter": 3,
+        "Event": 4, "Dimension": 5, "Identification": 6, "Other": 7}
+SIGNAL_KIND = {"Metrics": 0, "Logs": 1, "Traces": 2}
 INSTRUMENT = {"Counter": 0, "UpDownCounter": 1, "Histogram": 2, "Gauge": 3,
               "ObservableCounter": 4, "ObservableUpDownCounter": 5, "ObservableGauge": 6}
 TEMPORALITY = {"Cumulative": 0, "Delta": 1}
@@ -58,17 +42,21 @@ TEMPORALITY = {"Cumulative": 0, "Delta": 1}
 EVENT_TYPES = {"BaseEventType": 2041, "ConditionType": 2782,
                "AlarmConditionType": 2915, "SystemEventType": 2130}
 # fixed namespace UUID (defined by the base spec) for deterministic DataSetClassIds
-DATASET_CLASS_NS = uuid.UUID("fc164bdb-8705-58e9-ab11-7b1ed155b4e8")
+DATASET_CLASS_NS = uuid.UUID("8d3280be-2bf7-5ab1-9898-15a237192577")
+
+
+def bindings(descriptor):
+    if "observabilityBindings" not in descriptor:
+        raise SystemExit("descriptor is missing required observabilityBindings array")
+    return descriptor["observabilityBindings"]
 
 
 def dataset_class_id(descriptor, sb):
-    """Deterministic DataSetClassId: uuid5 over ScenarioUri | <ns>;<Type> | ContentKind | MajorVersion.
-    ContentKind is part of the identity so a data DataSet, event DataSet and action set for the same
-    Scenario/target/version are distinct classes recognizable by DataSetClassId alone."""
+    """Deterministic DataSetClassId: uuid5 over ObservabilityExport|<ns>;<Type>|SignalKind|MajorVersion."""
     major = descriptor.get("configurationVersion", {}).get("majorVersion", 1)
     applies = f'{descriptor["baseModelNamespaceUri"]};{descriptor["appliesToType"]}'
-    ck = sb.get("contentKind", "DataItems")
-    return uuid.uuid5(DATASET_CLASS_NS, f'{sb["scenarioUri"]}|{applies}|{ck}|{major}')
+    signal = sb.get("signalKind", "Metrics")
+    return uuid.uuid5(DATASET_CLASS_NS, f'ObservabilityExport|{applies}|{signal}|{major}')
 # base UA aliases used in the emitted file
 ALIASES = {
     "HasComponent": "i=47", "HasProperty": "i=46", "HasTypeDefinition": "i=40",
@@ -91,7 +79,7 @@ REF = {
     "TwoStateDiscreteType": "https://reference.opcfoundation.org/specs/OPC-10000-8/5.3.6",
     "MultiStateDiscreteType": "https://reference.opcfoundation.org/specs/OPC-10000-8/5.3.7",
 }
-SPEC = "../OPC-UA-Scenario-Bindings.md"  # relative from a domain subfolder of scenario-binding
+SPEC = "../OPC-UA-Observability-Export.md"  # relative from a domain subfolder of observability-export
 
 
 def load_base(descriptor, ref_dir):
@@ -140,8 +128,8 @@ def resolve_items(descriptor, idx):
     event bindings. Non-dimension items in an event binding are event fields (not resolved against
     the companion type)."""
     errors = []
-    for sb in descriptor["scenarioBindings"]:
-        is_event = sb.get("contentKind", "DataItems") == "Events"
+    for sb in bindings(descriptor):
+        is_event = sb.get("signalKind", "Metrics") in ("Logs", "Traces")
         for it in sb["boundItems"]:
             _check_item(sb, it, errors)
             is_dim = it.get("kind") == "Dimension"
@@ -164,16 +152,6 @@ def resolve_items(descriptor, idx):
                 continue
             it["_rec"] = rec
             it.setdefault("fieldName", names[-1])
-            # A bound Method's OwningObjectPath (the Object it is called on) must be a prefix of
-            # its BrowsePath: a Method is a component of the Object it is invoked on, so the owning
-            # Object is an ancestor on the same path. Validate that; the encoder then reuses the
-            # method's own resolved segments (correct names + namespaces) for the prefix.
-            owning = it.get("owningObjectPath")
-            if owning:
-                onames = tuple(p for p in owning.strip("/").split("/") if p)
-                if onames != names[:len(onames)]:
-                    errors.append(f'{sb["name"]}: owningObjectPath {owning} is not a prefix of '
-                                  f'BrowsePath {it["browsePath"]}')
     if errors:
         raise SystemExit("PATH RESOLUTION ERRORS:\n  " + "\n  ".join(errors))
     return descriptor
@@ -288,106 +266,91 @@ class Emitter:
 
     def emit(self):
         d = self.d
-        # instance root
         self.root_id = self.nid()
         root_bn = f'1:{d["instanceName"]}'
         type_ref = self.base_nodeid_str(self.type_key)
         U = 'xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"'
         cs_uri = d.get("companionSpecificationUri", d["baseModelNamespaceUri"])
         ns_uris = d.get("modelNamespaceUris") or [m["uri"] for m in d["requiredModels"]]
-        # On a per-instance object, IScenarioBoundType exposes one ScenarioBindingGroup per
-        # (scenario x companion specification) it serves (§5.9). This overlay realizes a single
-        # companion specification, so there is one group per scenario and the group BrowseName is
-        # the scenario short name (unique among siblings; §5.1.1). Group the bindings by
-        # scenarioUri, preserving descriptor order, and allocate a group per scenario.
-        groups, seen = [], {}
-        for sb in d["scenarioBindings"]:
-            suri = sb["scenarioUri"]
-            if suri not in seen:
-                seen[suri] = len(groups)
-                groups.append([self.nid(), suri.rsplit("/", 1)[-1], []])
-            groups[seen[suri]][2].append(sb)
-        # instance root: implements IScenarioBoundType and HasComponent each per-scenario group
+        group_id = self.nid()
+        group_bn = d.get("groupName", d["domain"])
+
         self._open("UAObject", self.root_id, root_bn)
         self.out.append(f'    <DisplayName>{d["instanceName"]}</DisplayName>')
         self.out.append(f'    <Description>Illustrative theoretical instance of '
-                        f'{d["appliesToType"]} carrying example scenario bindings. Only the '
+                        f'{d["appliesToType"]} carrying example observability bindings. Only the '
                         f'bound signals are shown; not a conformant full instance.</Description>')
-        root_refs = [("HasTypeDefinition", type_ref, True),
-                     ("HasInterface", f'i={BIND["IScenarioBoundType"]}', True)]
-        root_refs += [("HasComponent", self.ex(gid), True) for gid, _bn, _sbs in groups]
-        self._refs(root_refs)
+        self._refs([("HasTypeDefinition", type_ref, True),
+                    ("HasInterface", f'i={BIND["IObservableType"]}', True),
+                    ("HasComponent", self.ex(group_id), True)])
         self.out.append("  </UAObject>")
-        # per-scenario ScenarioBindingGroup objects (each carries the companion-spec identity and
-        # Realizes the well-known ScenarioProfile for its scenario)
-        for gid, group_bn, sbs in groups:
-            self.group_id = gid
-            self._open("UAObject", gid, f"1:{group_bn}", self.ex(self.root_id))
-            self.out.append(f"    <DisplayName>{sx.escape(group_bn)}</DisplayName>")
-            grp_refs = [("HasTypeDefinition", f'i={BIND["ScenarioBindingGroupType"]}', True),
-                        ("HasComponent", self.ex(self.root_id), False)]
-            prof = PROFILE_ID.get(sbs[0]["scenarioUri"].rsplit("/", 1)[-1])
-            if prof:
-                # group Realizes profile = inverse of the profile's forward RealizedBy
-                grp_refs.append(("RealizedBy", f'i={prof}', False))
-            self._refs(grp_refs)
-            self.out.append("  </UAObject>")
-            self.prop(self.nid(), "CompanionSpecificationUri", "String",
-                      f'<uax:String {U}>{sx.escape(cs_uri)}</uax:String>', gid)
-            lst = "".join(f'<uax:String>{sx.escape(u)}</uax:String>' for u in ns_uris)
-            self.prop(self.nid(), "ModelNamespaceUris", "String",
-                      f'<uax:ListOfString {U}>{lst}</uax:ListOfString>', gid, valuerank="1")
-            for sb in sbs:
-                self.emit_binding(sb)
+
+        self.group_id = group_id
+        self._open("UAObject", group_id, f"1:{group_bn}", self.ex(self.root_id))
+        self.out.append(f"    <DisplayName>{sx.escape(group_bn)}</DisplayName>")
+        self._refs([("HasTypeDefinition", f'i={BIND["ObservabilityBindingGroupType"]}', True),
+                    ("HasComponent", self.ex(self.root_id), False),
+                    ("RealizedBy", "i=60101", False)])
+        self.out.append("  </UAObject>")
+        self.prop(self.nid(), "CompanionSpecificationUri", "String",
+                  f'<uax:String {U}>{sx.escape(cs_uri)}</uax:String>', group_id)
+        lst = "".join(f'<uax:String>{sx.escape(u)}</uax:String>' for u in ns_uris)
+        self.prop(self.nid(), "ModelNamespaceUris", "String",
+                  f'<uax:ListOfString {U}>{lst}</uax:ListOfString>', group_id, valuerank="1")
+        for sb in bindings(d):
+            self.emit_binding(sb)
 
     def emit_binding(self, sb):
         bid = self.nid()
         name = sb["name"]
+        U = 'xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"'
         self._open("UAObject", bid, f"1:{name}", self.ex(self.group_id))
         self.out.append(f"    <DisplayName>{name}</DisplayName>")
-        self._refs([("HasTypeDefinition", f'i={BIND["ScenarioBindingType"]}', True),
+        self._refs([("HasTypeDefinition", f'i={BIND["ObservabilityBindingType"]}', True),
                     ("HasComponent", self.ex(self.group_id), False)])
         self.out.append("  </UAObject>")
-        # Direction property (the binding's scenario is its group's profile, via Realizes; the
-        # DataSetClassId also encodes the scenario, so no ScenarioUri is stored on the binding)
-        self.prop(self.nid(), "Direction", f'i={BIND["ScenarioBindingDirectionEnum"]}',
-                  f'<uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">'
-                  f'{DIRECTION[sb["direction"]]}</uax:Int32>', bid)
-        U = 'xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"'
-        # DataSetClassId (deterministic; recognizable across servers) + ContentKind
+        sig = sb.get("signalKind", "Metrics")
+        self.prop(self.nid(), "SignalKind", f'i={BIND["ObservabilitySignalKindEnum"]}',
+                  f'<uax:Int32 {U}>{SIGNAL_KIND[sig]}</uax:Int32>', bid)
         dscid = dataset_class_id(self.d, sb)
         sb["_dataSetClassId"] = str(dscid)
         self.prop(self.nid(), "DataSetClassId", "Guid",
                   f'<uax:Guid {U}><uax:String>{dscid}</uax:String></uax:Guid>', bid)
-        # Facet lineage (§5.12): base classes this binding extends/composes, if any.
         base_cls = sb.get("baseDataSetClassIds")
         if base_cls:
             lst = "".join(f'<uax:Guid><uax:String>{sx.escape(str(g))}</uax:String></uax:Guid>'
                           for g in base_cls)
             self.prop(self.nid(), "BaseDataSetClassIds", "Guid",
                       f'<uax:ListOfGuid {U}>{lst}</uax:ListOfGuid>', bid, valuerank=1)
-        ck = sb.get("contentKind", "DataItems")
-        self.prop(self.nid(), "ContentKind", f'i={BIND["ScenarioContentKindEnum"]}',
-                  f'<uax:Int32 {U}>{CONTENT_KIND[ck]}</uax:Int32>', bid)
-        # A "/" or empty dataSetCardinalityPath is an alias for omitted (the bound root is the
-        # cardinality anchor), so it is normalized away rather than emitted as an empty segment.
         card = (sb.get("dataSetCardinalityPath") or "").strip("/")
         if card:
             self.prop(self.nid(), "DataSetCardinalityPath", "RelativePath",
                       self._rel_path_value(card, sb, U), bid)
-        # Structured-log mapping (§5.13): per-binding log Properties for an event/log DataSet.
+        evsrc = (sb.get("eventSourcePath") or "").strip("/")
+        if evsrc:
+            self.prop(self.nid(), "EventSourcePath", "RelativePath",
+                      self._rel_path_value(evsrc, sb, U), bid)
         for key, propname in (("logTemplate", "LogTemplate"),
                               ("logSeverityFieldName", "LogSeverityFieldName"),
                               ("logBodyFieldName", "LogBodyFieldName"),
-                              ("logTimestampFieldName", "LogTimestampFieldName")):
+                              ("logTimestampFieldName", "LogTimestampFieldName"),
+                              ("spanNameTemplate", "SpanNameTemplate"),
+                              ("spanNameFieldName", "SpanNameFieldName"),
+                              ("traceIdFieldName", "TraceIdFieldName"),
+                              ("spanIdFieldName", "SpanIdFieldName"),
+                              ("parentSpanIdFieldName", "ParentSpanIdFieldName"),
+                              ("spanStartTimeFieldName", "SpanStartTimeFieldName"),
+                              ("spanEndTimeFieldName", "SpanEndTimeFieldName"),
+                              ("spanStatusFieldName", "SpanStatusFieldName"),
+                              ("spanKind", "SpanKind"),
+                              ("spanCorrelationFieldName", "SpanCorrelationFieldName")):
             v = sb.get(key)
             if v:
                 self.prop(self.nid(), propname, "String",
                           f'<uax:String {U}>{sx.escape(v)}</uax:String>', bid)
-        if ck == "Events":
+        if sig in ("Logs", "Traces"):
             for it in sb["boundItems"]:
                 if it.get("kind") == "Dimension":
-                    # a binding-level dimension (attribute) also applies to log records (§5.13)
                     if it.get("_constant_dim"):
                         self.emit_constant_dimension(bid, sb, it)
                     else:
@@ -493,13 +456,13 @@ class Emitter:
                   f'<uax:BrowsePath>{qn}</uax:BrowsePath>'
                   f'<uax:AttributeId>13</uax:AttributeId>'
                   f'</uax:SimpleAttributeOperand>', iid)
-        dsfid = uuid.uuid5(FIELD_ID_NS, f'{self.d["domain"]}|{sb["scenarioUri"]}|{fn}|event')
+        dsfid = uuid.uuid5(FIELD_ID_NS, f'{self.d["domain"]}|{sb.get("signalKind", "Metrics")}|{fn}|event')
         self.prop(self.nid(), "DataSetFieldId", "Guid",
                   f'<uax:Guid {U}><uax:String>{dsfid}</uax:String></uax:Guid>', iid)
         # Facet provenance (§5.12): base binding class an inherited/overriding event field came from.
-        prov = it.get("sourceScenarioBindingClassId")
+        prov = it.get("sourceBindingClassId")
         if prov:
-            self.prop(self.nid(), "SourceScenarioBindingClassId", "Guid",
+            self.prop(self.nid(), "SourceBindingClassId", "Guid",
                       f'<uax:Guid {U}><uax:String>{sx.escape(str(prov))}</uax:String>'
                       f'</uax:Guid>', iid)
 
@@ -507,8 +470,9 @@ class Emitter:
         rec = it["_rec"]
         signal = self.ensure_signal(rec)
         iid = self.nid()
-        is_method = rec["cls"] == "UAMethod"
-        td = BIND["BoundMethodType"] if is_method else BIND["BoundVariableType"]
+        if rec["cls"] == "UAMethod":
+            raise SystemExit(f"{sb['name']}/{it.get('fieldName', it.get('browsePath'))}: Methods/actions are not part of Observability Export")
+        td = BIND["BoundVariableType"]
         fn = it["fieldName"]
         self._open("UAObject", iid, f"1:{fn}", self.ex(binding_id))
         self.out.append(f"    <DisplayName>{sx.escape(fn)}</DisplayName>")
@@ -528,18 +492,6 @@ class Emitter:
         # cardinality semantics from the AddressSpace alone (BindsToNode is one concrete match).
         self.prop(self.nid(), "BrowsePath", "RelativePath",
                   self._browsepath_value(it, U), iid)
-        # OwningObjectPath: for a bound Method, the RelativePath to the Object it is called on
-        # (default: the Method's parent Object; an explicit owningObjectPath overrides). Omitted
-        # when the owning Object is the bound root itself (a Method directly on the root).
-        if is_method:
-            if it.get("owningObjectPath"):
-                n = len([s for s in it["owningObjectPath"].strip("/").split("/") if s])
-                owning_segs = rec["path"][:n]
-            else:
-                owning_segs = rec["path"][:-1]
-            if owning_segs:
-                self.prop(self.nid(), "OwningObjectPath", "RelativePath",
-                          self._relpath_from_segments(owning_segs, U), iid)
         # ModelNamespaceUri = the namespace URI that DEFINES the source node (its BrowseName ns)
         seg = rec["path"][-1]
         self.prop(self.nid(), "ModelNamespaceUri", "String",
@@ -556,13 +508,13 @@ class Emitter:
                       f'{self.base_nodeid_str(rec["typedef"])}</uax:Identifier></uax:NodeId>', iid)
         # DataSetFieldId (deterministic: stable across regenerations)
         dsfid = uuid.uuid5(FIELD_ID_NS,
-                           f'{self.d["domain"]}|{sb["scenarioUri"]}|{fn}|{it["browsePath"]}')
+                           f'{self.d["domain"]}|{sb.get("signalKind", "Metrics")}|{fn}|{it["browsePath"]}')
         self.prop(self.nid(), "DataSetFieldId", "Guid",
                   f'<uax:Guid {U}><uax:String>{dsfid}</uax:String></uax:Guid>', iid)
         # Facet provenance (§5.12): the base binding class an inherited/overriding field came from.
-        prov = it.get("sourceScenarioBindingClassId")
+        prov = it.get("sourceBindingClassId")
         if prov:
-            self.prop(self.nid(), "SourceScenarioBindingClassId", "Guid",
+            self.prop(self.nid(), "SourceBindingClassId", "Guid",
                       f'<uax:Guid {U}><uax:String>{sx.escape(str(prov))}</uax:String>'
                       f'</uax:Guid>', iid)
         # DimensionConstantValue for a node-sourced item is unusual, but supported.
@@ -571,8 +523,7 @@ class Emitter:
                       f'<uax:String {U}>{sx.escape(str(it["dimensionConstantValue"]))}'
                       f'</uax:String>', iid)
         # Observability/OTEL metric detail (§5.13): instrument, unit, buckets, temporality, monotonic.
-        if not is_method:
-            self._emit_metric_props(iid, it, U)
+        self._emit_metric_props(iid, it, U)
 
     def _emit_metric_props(self, iid, it, U):
         mi = it.get("metricInstrumentType")
@@ -614,7 +565,7 @@ class Emitter:
                   f'<uax:Int32 {U}>{KIND["Dimension"]}</uax:Int32>', iid)
         self.prop(self.nid(), "DimensionConstantValue", "String",
                   f'<uax:String {U}>{sx.escape(str(it["dimensionConstantValue"]))}</uax:String>', iid)
-        dsfid = uuid.uuid5(FIELD_ID_NS, f'{self.d["domain"]}|{sb["scenarioUri"]}|{fn}|dimension')
+        dsfid = uuid.uuid5(FIELD_ID_NS, f'{self.d["domain"]}|{sb.get("signalKind", "Metrics")}|{fn}|dimension')
         self.prop(self.nid(), "DataSetFieldId", "Guid",
                   f'<uax:Guid {U}><uax:String>{dsfid}</uax:String></uax:Guid>', iid)
 
@@ -674,59 +625,43 @@ def load_base_names(ref_dir):
 
 def emit_annex(descriptor, db, base_names):
     d = descriptor
-    L = [f"### Scenario bindings for `{d['appliesToType']}`", "",
-         f"Bindings for the `{d['appliesToType']}` of the "
-         f"`{d['baseModelNamespaceUri']}` companion specification, per the "
-         f"[Scenario Bindings]({SPEC}) base specification. Each binding is **one content "
-         f"class** — a data DataSet, an event DataSet, or an action set — with a deterministic "
-         f"`DataSetClassId`. Every data and Method `BrowsePath` below was resolved against the "
-         f"published companion NodeSet; event-DataSet fields select standard event-type "
-         f"fields.", ""]
-    for sb in d["scenarioBindings"]:
-        ck = sb.get("contentKind", "DataItems")
+    L = [f"### Observability export bindings for `{d['appliesToType']}`", "",
+         f"Bindings for `{d['appliesToType']}` in `{d['baseModelNamespaceUri']}`, per the "
+         f"[Observability Export]({SPEC}) base specification. Each binding exposes one OTEL "
+         f"signal (`Metrics`, `Logs` or `Traces`) with a deterministic `DataSetClassId`.", ""]
+    for sb in bindings(d):
+        sig = sb.get("signalKind", "Metrics")
         dscid = sb.get("_dataSetClassId") or str(dataset_class_id(d, sb))
-        content = ("event DataSet (PublishedEvents)" if ck == "Events"
-                   else "action set (Part 14 Actions/ActionTargets)" if ck == "Actions"
-                   else "data DataSet (PublishedDataItems)")
-        L.append(f"#### Scenario: {sb['name']}")
+        content = {"Metrics": "OTEL metrics (PublishedDataItems)",
+                   "Logs": "OTEL logs (PublishedEvents)",
+                   "Traces": "OTEL traces/spans (PublishedEvents)"}[sig]
+        L.append(f"#### {sb['name']} — {sig}")
         L.append("")
-        hdr = (f"*URI:* `{sb['scenarioUri']}` · *Direction:* {sb['direction']} · "
-               f"*Content:* {content} · *DataSetClassId:* `{dscid}`")
+        hdr = f"*Signal:* {content} · *DataSetClassId:* `{dscid}`"
         card = sb.get("dataSetCardinalityPath")
-        unit = "action target" if ck == "Actions" else "DataSet"
-        hdr += (f" · *Cardinality:* one {unit} per `{card}`" if card
-                else f" · *Cardinality:* one {unit} (bound root)")
-        if ck == "Events":
-            hdr += (f" · *Event source:* `{sb.get('eventSourcePath', '/')}` · "
-                    f"*Event type:* {sb.get('eventType', 'BaseEventType')}")
+        hdr += f" · *Cardinality:* one DataSet per `{card}`" if card else " · *Cardinality:* one DataSet (bound root)"
+        if sig in ("Logs", "Traces"):
+            hdr += f" · *Event source:* `{sb.get('eventSourcePath', '/')}` · *Event type:* {sb.get('eventType', 'BaseEventType')}"
         L.append(hdr)
         L.append("")
-        if ck == "Events":
+        if sig in ("Logs", "Traces"):
             L.append("| Field | Kind | Event field / attribute |")
             L.append("|---|---|---|")
             for it in sb["boundItems"]:
-                if it.get("kind") == "Dimension":
-                    detail = _otel_note(it)
-                else:
-                    detail = f"`{it.get('browsePath', '/' + it['fieldName'])}`"
+                detail = _otel_note(it) if it.get("kind") == "Dimension" else f"`{it.get('browsePath', '/' + it['fieldName'])}`"
                 L.append(f"| {it['fieldName']} | {it['kind']} | {detail} |")
-            if sb.get("logTemplate") or sb.get("logBodyFieldName"):
+            if sig == "Logs" and (sb.get("logTemplate") or sb.get("logBodyFieldName")):
                 L.append("")
-                L.append(f"*Structured-log mapping (OTEL LogRecord):* body template "
-                         f"`{sb.get('logTemplate', '—')}`; severity = "
-                         f"`{sb.get('logSeverityFieldName', '—')}`, body = "
+                L.append(f"*OTEL LogRecord mapping:* body template `{sb.get('logTemplate', '—')}`; "
+                         f"severity = `{sb.get('logSeverityFieldName', '—')}`, body = "
                          f"`{sb.get('logBodyFieldName', '—')}`, timestamp = "
                          f"`{sb.get('logTimestampFieldName', '—')}`.")
-        elif ck == "Actions":
-            L.append("| Field | Kind | Method BrowsePath | Owning object |")
-            L.append("|---|---|---|---|")
-            for it in sb["boundItems"]:
-                rec = it.get("_rec")
-                owning = it.get("owningObjectPath")
-                if not owning and rec and len(rec["path"]) > 1:
-                    owning = "/" + "/".join(s["name"] for s in rec["path"][:-1])
-                L.append(f"| {it['fieldName']} | {it['kind']} | "
-                         f"`{it.get('browsePath', '—')}` | `{owning or '(bound root)'}` |")
+            if sig == "Traces":
+                L.append("")
+                L.append(f"*OTEL Span mapping:* name template `{sb.get('spanNameTemplate', '—')}`, "
+                         f"start = `{sb.get('spanStartTimeFieldName', '—')}`, end = "
+                         f"`{sb.get('spanEndTimeFieldName', '—')}`, status = "
+                         f"`{sb.get('spanStatusFieldName', '—')}`, kind = `{sb.get('spanKind', 'Internal')}`.")
         else:
             L.append("| Field | Kind | BrowsePath | Source type | DataType | OTEL |")
             L.append("|---|---|---|---|---|---|")
@@ -739,11 +674,9 @@ def emit_annex(descriptor, db, base_names):
                     tdname = td_name(rec["typedef"], db, base_names)
                     dt = dt_name(rec["datatype"])
                     bp = f"`{it['browsePath']}`"
-                L.append(f"| {it['fieldName']} | {it['kind']} | {bp} | "
-                         f"{tdname} | {dt} | {otel} |")
+                L.append(f"| {it['fieldName']} | {it['kind']} | {bp} | {tdname} | {dt} | {otel} |")
         L.append("")
     return "\n".join(L) + "\n"
-
 
 def _otel_note(it):
     """A compact OTEL annotation for the annex item table."""
@@ -781,105 +714,61 @@ def td_name(td, db, base_names):
 
 def emit_addendum(descriptor, db, base_names, spec_folder, desc_base):
     d = descriptor
-    desc_rel = f"../../extras/scenario-binding/examples/{spec_folder}/{desc_base}"
+    desc_rel = f"../../extras/observability-export/examples/{spec_folder}/{desc_base}"
     cs = d.get("companionSpec", {})
     im = d.get("instanceModel", {})
-    nitems = sum(len(sb["boundItems"]) for sb in d["scenarioBindings"])
-    scen = ", ".join(sb["name"] for sb in d["scenarioBindings"])
+    nitems = sum(len(sb["boundItems"]) for sb in bindings(d))
+    sigs = ", ".join(f"{sb['name']} ({sb.get('signalKind', 'Metrics')})" for sb in bindings(d))
     L = []
-    L.append(f"# OPC UA {d['domain']} — Scenario Bindings Addendum")
-    L.append("")
-    L.append(f"**Working draft — a worked example of the "
-             f"[Scenario Bindings]({SPEC}) base specification applied to "
-             f"{cs.get('name', d['domain'])}.**")
-    L.append("")
-    L.append(f"> **Status — illustrative example.** This addendum shows how the instances of "
-             f"the `{d['appliesToType']}` ({d['baseModelNamespaceUri']}) can be exposed for "
-             f"integration scenarios over the classic client/server (RPC) interface and, "
-             f"optionally, over OPC UA PubSub — without modifying the companion "
-             f"specification. All NodeIds in the example namespace "
-             f"`{d['exampleNamespaceUri']}` are provisional and the base-namespace binding "
-             f"types it references (`ScenarioBindingGroupType` etc.) carry the **provisional** "
-             f"NodeIds of the draft base specification.")
-    L.append("")
-    L.append("## 1 Scope")
-    L.append("")
-    L.append(f"This addendum defines example **scenario bindings** for the "
-             f"`{d['appliesToType']}` — {nitems} bound items across the scenarios *{scen}* — "
-             f"per the [Scenario Bindings]({SPEC}) base specification. "
-             f"{d.get('summary', '')}")
-    L.append("")
-    L.append("## 2 Normative references")
-    L.append("")
-    L.append(f"- [Scenario Bindings]({SPEC}) — the base binding model (types, "
-             f"discovery, the two-layer routing/semantic contract).")
+    A = L.append
+    A(f"# OPC UA {d['domain']} — Observability Export Addendum")
+    A("")
+    A(f"**Working draft — a worked example of the [Observability Export]({SPEC}) base specification applied to {cs.get('name', d['domain'])}.**")
+    A("")
+    A(f"> **Status — illustrative example.** The `{d['exampleNamespaceUri']}` namespace and NodeIds are provisional. The example shows how `{d['appliesToType']}` data is declared for OTEL metrics, logs and traces over classic OPC UA and optional PubSub.")
+    A("")
+    A("## 1 Scope")
+    A("")
+    A(f"This addendum defines example **observability export bindings** for `{d['appliesToType']}` — {nitems} bound items across {sigs}. {d.get('summary', '')}")
+    A("")
+    A("## 2 Normative references")
+    A("")
+    A(f"- [Observability Export]({SPEC}) — the base binding model (discovery and OTEL mapping).")
     if cs.get("ref"):
-        L.append(f"- [{cs.get('name', d['domain'])}]({cs['ref']}) — the companion "
-                 f"specification whose type is bound.")
-    L.append("- [OPC 10000-14](https://reference.opcfoundation.org/specs/OPC-10000-14/) — "
-             "PubSub (optional realization).")
-    L.append("")
-    L.append("## 3 How the bindings are applied")
-    L.append("")
-    L.append(f"The bindings are authored at **two levels**, exactly as the base "
-             f"specification recommends:")
-    L.append("")
-    L.append(f"1. **Type-level definitions (reusable).** The machine-readable descriptor "
-             f"[`{desc_base}`]({desc_rel}) "
-             f"lists each bound item as a `BrowsePath` (RelativePath) from the "
-             f"`{d['appliesToType']}` root, with its routing `Kind` and scenario. Every path "
-             f"in §4 was **resolved against the published companion NodeSet**, so the bindings "
-             f"apply to *any* conforming instance.")
-    L.append(f"2. **Instance overlay (concrete).** "
-             f"[`Opc.Ua.{d['domain']}.ScenarioBinding.NodeSet2.xml`]"
-             f"(Opc.Ua.{d['domain']}.ScenarioBinding.NodeSet2.xml) instantiates a compact "
-             f"theoretical instance `{d['instanceName']}`, applies the "
-             f"`IScenarioBoundType` interface, and exposes one `ScenarioBindingGroup` per "
-             f"scenario holding that scenario's `ScenarioBinding`/`BoundItem` instances. On the "
-             f"instance each "
-             f"`BoundItem` uses **`BindsToNode`** to point at the concrete signal node "
-             f"(the type-level `BrowsePath` and the instance `BindsToNode` are the two "
-             f"locators defined by the base specification).")
+        A(f"- [{cs.get('name', d['domain'])}]({cs['ref']}) — the companion specification whose type is bound.")
+    A("- [OPC 10000-14](https://reference.opcfoundation.org/specs/OPC-10000-14/) — PubSub (optional realization).")
+    A("")
+    A("## 3 How the bindings are applied")
+    A("")
+    A(f"The machine-readable descriptor [`{desc_base}`]({desc_rel}) lists each bound item as a `BrowsePath` from `{d['appliesToType']}`, with its observability `Kind` and OTEL `SignalKind`. The generated overlay [`Opc.Ua.{d['domain']}.ObservabilityExport.NodeSet2.xml`](Opc.Ua.{d['domain']}.ObservabilityExport.NodeSet2.xml) instantiates a compact `{d['instanceName']}` object, applies `IObservableType`, and exposes an `ObservabilityBindingGroup` that realizes the server-wide `Observability` registry.")
     if im.get("note"):
-        L.append("")
-        L.append(f"> **Theoretical instance model.** {im['note']}"
-                 + (f" See the reference model: [{im.get('refName', 'instance example')}]"
-                    f"({im['ref']})." if im.get("ref") else ""))
-    L.append("")
-    L.append("Only the bound signals are materialised in the overlay; it is an *illustrative* "
-             "instance, not a conformant full instance of the companion type.")
-    L.append("")
-    L.append("## 4 " + emit_annex(d, db, base_names).split("\n", 1)[0].lstrip("# ").strip())
-    L.append("")
-    L.append("\n".join(emit_annex(d, db, base_names).split("\n")[2:]))
-    L.append("## 5 Where the bindings live")
-    L.append("")
-    L.append("Overview of the scenario bindings, then their placement on the theoretical "
-             "instance (one `ScenarioBindingGroup` per scenario hangs off the instance; each "
-             "`BoundItem` `BindsToNode` its signal):")
-    L.append("")
-    L.append(emit_diagrams(d))
+        A("")
+        A(f"> **Theoretical instance model.** {im['note']}" + (f" See [{im.get('refName', 'instance example')}]({im['ref']})." if im.get("ref") else ""))
+    A("")
+    A("Only the bound signals are materialised in the overlay; it is illustrative, not a full companion instance.")
+    A("")
+    A("## 4 " + emit_annex(d, db, base_names).split("\n", 1)[0].lstrip("# ").strip())
+    A("")
+    A("\n".join(emit_annex(d, db, base_names).split("\n")[2:]))
+    A("## 5 Where the bindings live")
+    A("")
+    A("Overview of the observability bindings and their placement on the theoretical instance:")
+    A("")
+    A(emit_diagrams(d))
     res = emit_resolution_examples(d)
-    deliv_no = 6
     if res:
-        L.append("## 6 BrowsePath resolution — worked examples")
-        L.append("")
-        L.append(res)
-        deliv_no = 7
-    L.append(f"## {deliv_no} Deliverables")
-    L.append("")
-    L.append(f"| File | Content |")
-    L.append(f"|---|---|")
-    L.append(f"| [`{desc_base}`]({desc_rel}) | "
-             f"Machine-readable ScenarioBindingConfiguration descriptor (single source). |")
-    L.append(f"| [`Opc.Ua.{d['domain']}.ScenarioBinding.NodeSet2.xml`]"
-             f"(Opc.Ua.{d['domain']}.ScenarioBinding.NodeSet2.xml) | The binding instances on "
-             f"the theoretical `{d['instanceName']}` instance. |")
-    L.append("")
-    L.append("Regenerate from [`core-specs/extras/scenario-binding/examples/`]"
-             "(../../extras/scenario-binding/examples/) with "
-             f"`python tools/build_bindings.py {spec_folder}/{desc_base}`.")
-    L.append("")
+        A("## 6 BrowsePath resolution — worked examples")
+        A("")
+        A(res)
+    A("## 7 Deliverables")
+    A("")
+    A("| File | Content |")
+    A("|---|---|")
+    A(f"| [`{desc_base}`]({desc_rel}) | Machine-readable ObservabilityExport descriptor (single source). |")
+    A(f"| [`Opc.Ua.{d['domain']}.ObservabilityExport.NodeSet2.xml`](Opc.Ua.{d['domain']}.ObservabilityExport.NodeSet2.xml) | The binding instances on the theoretical `{d['instanceName']}` instance. |")
+    A("")
+    A(f"Regenerate from [`core-specs/extras/observability-export/examples/`](../../extras/observability-export/examples/) with `python tools/build_bindings.py {spec_folder}/{desc_base} tools/ref`.")
+    A("")
     return "\n".join(L) + "\n"
 
 
@@ -927,7 +816,7 @@ def emit_resolution_examples(descriptor):
          "DataSet per matched instance of each binding's cardinality anchor** "
          "(`DataSetCardinalityPath`); placeholders **below** the anchor become fields, their "
          "name disambiguated by the matched instance (per §5.10 of the base spec). The "
-         "`DataSetClassId` is identical for every DataSet of a scenario — it names the *class*, "
+         "`DataSetClassId` is identical for every DataSet of a signal — it names the *class*, "
          "of which there are many DataSetWriters. The same bindings resolve differently for "
          "different instance topologies:", ""]
     for ti, topo in enumerate(tops, 1):
@@ -938,13 +827,13 @@ def emit_resolution_examples(descriptor):
         L.append(f"*MotionDevices:* {devdesc} · *Controllers:* "
                  f"{', '.join(topo.get('controllers', []))}")
         L.append("")
-        L.append("| Scenario | DataSet (cardinality instance) | # fields | Example fields |")
+        L.append("| Binding | DataSet (cardinality instance) | # fields | Example fields |")
         L.append("|---|---|---|---|")
         total = 0
-        for sb in d["scenarioBindings"]:
-            ck = sb.get("contentKind", "DataItems")
+        for sb in bindings(d):
+            sig = sb.get("signalKind", "Metrics")
             card = (sb.get("dataSetCardinalityPath") or "").strip("/")
-            if ck == "Events" or not card:
+            if sig in ("Logs", "Traces") or not card:
                 fields = [it["fieldName"] for it in sb["boundItems"]]
                 ex = ", ".join(fields[:4]) + (" …" if len(fields) > 4 else "")
                 L.append(f"| {sb['name']} | {d['instanceName']} | {len(fields)} | {ex} |")
@@ -968,7 +857,7 @@ def emit_resolution_examples(descriptor):
         L.append("")
         L.append(f"→ **{total} DataSets** produced by the bridge for this topology.")
         L.append("")
-    L.append("Across all topologies the `DataSetClassId` per scenario is unchanged — a "
+    L.append("Across all topologies the `DataSetClassId` per signal is unchanged — a "
              "subscriber recognizes each DataSet's class regardless of how many robots, axes or "
              "controllers a particular cell has; only the number of DataSets (writers) and the "
              "field counts differ.")
@@ -989,54 +878,33 @@ def dt_name(dt):
 
 def emit_diagrams(descriptor):
     d = descriptor
-    # overview: group the scenario bindings by scenario (one ScenarioBindingGroup per scenario)
     ov = ["```mermaid", "graph LR",
-          f'  ROOT["{d["instanceName"]} : {d["appliesToType"]}"]']
-    ov_seen = {}
-    for i, sb in enumerate(d["scenarioBindings"]):
-        tag = {"Events": "Events", "Actions": "Actions"}.get(sb.get("contentKind"), "Data")
-        suri = sb["scenarioUri"]
-        gname = suri.rsplit("/", 1)[-1]
-        if suri not in ov_seen:
-            ov_seen[suri] = i
-            ov.append(f'  ROOT --> G{i}["{gname}<br/>ScenarioBindingGroup"]')
-        gi = ov_seen[suri]
-        ov.append(f'  G{gi} --> S{i}["{sb["name"]}<br/>{sb["direction"]} · {tag}"]')
+          f'  ROOT["{d["instanceName"]} : {d["appliesToType"]}"]',
+          f'  ROOT --> G["{d.get("groupName", d["domain"])}<br/>ObservabilityBindingGroup"]',
+          '  G -.Realizes.-> O["Observability registry i=60101"]']
+    for i, sb in enumerate(bindings(d)):
+        sig = sb.get("signalKind", "Metrics")
+        ov.append(f'  G --> S{i}["{sb["name"]}<br/>{sig}"]')
         for j, it in enumerate(sb["boundItems"][:6]):
             ov.append(f'  S{i} --> S{i}_{j}["{it["fieldName"]} : {it["kind"]}"]')
     ov.append("```")
-    # instance placement: the first (data) binding + the first event binding, if any
-    picks = [d["scenarioBindings"][0]]
-    ev = next((s for s in d["scenarioBindings"] if s.get("contentKind") == "Events"), None)
-    if ev is not None and ev is not picks[0]:
-        picks.append(ev)
-    act = next((s for s in d["scenarioBindings"] if s.get("contentKind") == "Actions"), None)
-    if act is not None and act not in picks:
-        picks.append(act)
     inst = ["```mermaid", "graph TD",
             f'  R["{d["instanceName"]} : {d["appliesToType"]}"]',
-            "  R -->|HasInterface| I([IScenarioBoundType])"]
-    gseen = {}
-    for i, sb in enumerate(picks):
-        ck = sb.get("contentKind", "DataItems")
-        suri = sb["scenarioUri"]
-        gname = suri.rsplit("/", 1)[-1]
-        if suri not in gseen:
-            gseen[suri] = i
-            inst.append(f'  R -->|HasComponent| G{i}["{gname} : ScenarioBindingGroupType"]')
-            inst.append(f'  G{i} -.Realizes.-> P{i}["{gname} : ScenarioProfileType<br/>under Server/Scenarios"]')
-        gi = gseen[suri]
-        inst.append(f'  G{gi} -->|HasComponent| B{i}["{sb["name"]} : ScenarioBindingType"]')
+            "  R -->|HasInterface| I([IObservableType])",
+            f'  R -->|HasComponent| G["{d.get("groupName", d["domain"])} : ObservabilityBindingGroupType"]',
+            '  G -.Realizes.-> O["Observability : ObservabilityFolderType"]']
+    for i, sb in enumerate(bindings(d)[:3]):
+        sig = sb.get("signalKind", "Metrics")
+        inst.append(f'  G -->|HasComponent| B{i}["{sb["name"]} : ObservabilityBindingType<br/>{sig}"]')
         for j, it in enumerate(sb["boundItems"][:3]):
-            if ck == "Events" or "_rec" not in it:
+            if sig in ("Logs", "Traces") or "_rec" not in it:
                 et = sb.get("eventType", "BaseEventType")
                 inst.append(f'  B{i} -->|HasComponent| IT{i}{j}["{it["fieldName"]} : BoundEventFieldType"]')
                 inst.append(f'  IT{i}{j} -.event field.-> N{i}{j}["{et}/{it["fieldName"]}"]')
             else:
                 rec = it["_rec"]
                 path = "/".join(concrete_name(s["name"]) for s in rec["path"])
-                itype = "BoundMethodType" if rec["cls"] == "UAMethod" else "BoundVariableType"
-                inst.append(f'  B{i} -->|HasComponent| IT{i}{j}["{it["fieldName"]} : {itype}"]')
+                inst.append(f'  B{i} -->|HasComponent| IT{i}{j}["{it["fieldName"]} : BoundVariableType"]')
                 inst.append(f'  IT{i}{j} -->|BindsToNode| N{i}{j}["{path}"]')
     inst.append("```")
     return "\n".join(ov) + "\n\n" + "\n".join(inst) + "\n"
@@ -1045,13 +913,13 @@ def emit_diagrams(descriptor):
 def main():
     descriptor_path = sys.argv[1]
     ref_dir = sys.argv[2] if len(sys.argv) > 2 else os.path.join(HERE, "ref")
-    # The descriptor is a secondary source under core-specs/extras/scenario-binding/examples/<spec>/;
-    # the standardized outputs (overlay + addendum) land in core-specs/scenario-binding/<spec>/.
+    # The descriptor is a secondary source under core-specs/extras/observability-export/examples/<spec>/;
+    # the standardized outputs (overlay + addendum) land in core-specs/observability-export/<spec>/.
     desc_dir = os.path.dirname(os.path.abspath(descriptor_path))
     spec_folder = os.path.basename(desc_dir)
     desc_base = os.path.basename(os.path.abspath(descriptor_path))
     core = os.path.abspath(os.path.join(desc_dir, "..", "..", "..", ".."))
-    outdir = os.path.join(core, "scenario-binding", spec_folder)
+    outdir = os.path.join(core, "observability-export", spec_folder)
     os.makedirs(outdir, exist_ok=True)
     d = json.load(open(descriptor_path, encoding="utf-8"))
     # DataSetClassId encodes MajorVersion; a browsing subscriber recomputes it from the binding's
@@ -1068,13 +936,13 @@ def main():
     resolve_items(d, idx)
     em = Emitter(d, db)
     xml = em.document(type_key)
-    base = f'Opc.Ua.{d["domain"]}.ScenarioBinding'
+    base = f'Opc.Ua.{d["domain"]}.ObservabilityExport'
     open(os.path.join(outdir, base + ".NodeSet2.xml"), "w", encoding="utf-8").write(xml)
-    addendum = f'OPC-UA-{d["domain"]}-Scenario-Bindings-Addendum.md'
+    addendum = f'OPC-UA-{d["domain"]}-Observability-Export-Addendum.md'
     open(os.path.join(outdir, addendum), "w", encoding="utf-8").write(
         emit_addendum(d, db, base_names, spec_folder, desc_base))
-    nitems = sum(len(sb["boundItems"]) for sb in d["scenarioBindings"])
-    print(f'{d["domain"]}: {len(d["scenarioBindings"])} scenarios, {nitems} bound items, '
+    nitems = sum(len(sb["boundItems"]) for sb in bindings(d))
+    print(f'{d["domain"]}: {len(bindings(d))} signals, {nitems} bound items, '
           f'{em.next_id-5000} nodes emitted; all paths resolved OK')
 
 

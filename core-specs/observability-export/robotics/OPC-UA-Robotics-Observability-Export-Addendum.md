@@ -1,67 +1,53 @@
-# OPC UA Robotics — Scenario Bindings Addendum
+# OPC UA Robotics — Observability Export Addendum
 
-**Working draft — a worked example of the [Scenario Bindings](../OPC-UA-Scenario-Bindings.md) base specification applied to OPC UA for Robotics (OPC 40010).**
+**Working draft — a worked example of the [Observability Export](../OPC-UA-Observability-Export.md) base specification applied to OPC UA for Robotics (OPC 40010).**
 
-> **Status — illustrative example.** This addendum shows how the instances of the `MotionDeviceSystemType` (http://opcfoundation.org/UA/Robotics/) can be exposed for integration scenarios over the classic client/server (RPC) interface and, optionally, over OPC UA PubSub — without modifying the companion specification. All NodeIds in the example namespace `http://opcfoundation.org/UA/PubSub/Examples/Robotics/` are provisional and the base-namespace binding types it references (`ScenarioBindingGroupType` etc.) carry the **provisional** NodeIds of the draft base specification.
+> **Status — illustrative example.** The `http://opcfoundation.org/UA/PubSub/Examples/Robotics/` namespace and NodeIds are provisional. The example shows how `MotionDeviceSystemType` data is declared for OTEL metrics, logs and traces over classic OPC UA and optional PubSub.
 
 ## 1 Scope
 
-This addendum defines example **scenario bindings** for the `MotionDeviceSystemType` — 19 bound items across the scenarios *Observability, PredictiveMaintenance, AnomalyDetection, AlarmAndEventDistribution, FleetAndCompliance* — per the [Scenario Bindings](../OPC-UA-Scenario-Bindings.md) base specification. Robotics is structured around motion devices, axes, power trains, controllers and safety states with state machines, so scenarios lean on axis/motor telemetry, controller thermals, safety status and nameplate identity rather than a flat measurement model.
+This addendum defines example **observability export bindings** for `MotionDeviceSystemType` — 25 bound items across Metrics (Metrics), Logs (Logs), Traces (Traces). Robotics exposes motion-device, axis, motor, controller and safety state information for OTEL metrics, logs and traces.
 
 ## 2 Normative references
 
-- [Scenario Bindings](../OPC-UA-Scenario-Bindings.md) — the base binding model (types, discovery, the two-layer routing/semantic contract).
+- [Observability Export](../OPC-UA-Observability-Export.md) — the base binding model (discovery and OTEL mapping).
 - [OPC UA for Robotics (OPC 40010)](https://reference.opcfoundation.org/Robotics/v100/docs/) — the companion specification whose type is bound.
 - [OPC 10000-14](https://reference.opcfoundation.org/specs/OPC-10000-14/) — PubSub (optional realization).
 
 ## 3 How the bindings are applied
 
-The bindings are authored at **two levels**, exactly as the base specification recommends:
+The machine-readable descriptor [`Robotics.ObservabilityExport.json`](../../extras/observability-export/examples/robotics/Robotics.ObservabilityExport.json) lists each bound item as a `BrowsePath` from `MotionDeviceSystemType`, with its observability `Kind` and OTEL `SignalKind`. The generated overlay [`Opc.Ua.Robotics.ObservabilityExport.NodeSet2.xml`](Opc.Ua.Robotics.ObservabilityExport.NodeSet2.xml) instantiates a compact `ExampleRobotSystem` object, applies `IObservableType`, and exposes an `ObservabilityBindingGroup` that realizes the server-wide `Observability` registry.
 
-1. **Type-level definitions (reusable).** The machine-readable descriptor [`Robotics.ScenarioBinding.json`](../../extras/scenario-binding/examples/robotics/Robotics.ScenarioBinding.json) lists each bound item as a `BrowsePath` (RelativePath) from the `MotionDeviceSystemType` root, with its routing `Kind` and scenario. Every path in §4 was **resolved against the published companion NodeSet**, so the bindings apply to *any* conforming instance.
-2. **Instance overlay (concrete).** [`Opc.Ua.Robotics.ScenarioBinding.NodeSet2.xml`](Opc.Ua.Robotics.ScenarioBinding.NodeSet2.xml) instantiates a compact theoretical instance `ExampleRobotSystem`, applies the `IScenarioBoundType` interface, and exposes one `ScenarioBindingGroup` per scenario holding that scenario's `ScenarioBinding`/`BoundItem` instances. On the instance each `BoundItem` uses **`BindsToNode`** to point at the concrete signal node (the type-level `BrowsePath` and the instance `BindsToNode` are the two locators defined by the base specification).
+> **Theoretical instance model.** Robotics publishes no public instance example, so a compact theoretical MotionDeviceSystem is synthesised with one MotionDevice, one Axis, one PowerTrain/Motor, one Controller and one SafetyState. Placeholder path segments remain in type-level BrowsePaths.
 
-> **Theoretical instance model.** Robotics publishes no public instance example, so a compact theoretical `MotionDeviceSystem` is synthesised: one MotionDevice with an Axis and a PowerTrain/Motor, one Controller, and one SafetyState. Placeholder path segments (e.g. `<AxisIdentifier>`) become concrete instance names (e.g. `Axis_1`) in the overlay while the type-level BrowsePath keeps the placeholder.
+Only the bound signals are materialised in the overlay; it is illustrative, not a full companion instance.
 
-Only the bound signals are materialised in the overlay; it is an *illustrative* instance, not a conformant full instance of the companion type.
+## 4 Observability export bindings for `MotionDeviceSystemType`
 
-## 4 Scenario bindings for `MotionDeviceSystemType`
+Bindings for `MotionDeviceSystemType` in `http://opcfoundation.org/UA/Robotics/`, per the [Observability Export](../OPC-UA-Observability-Export.md) base specification. Each binding exposes one OTEL signal (`Metrics`, `Logs` or `Traces`) with a deterministic `DataSetClassId`.
 
-Bindings for the `MotionDeviceSystemType` of the `http://opcfoundation.org/UA/Robotics/` companion specification, per the [Scenario Bindings](../OPC-UA-Scenario-Bindings.md) base specification. Each binding is **one content class** — a data DataSet, an event DataSet, or an action set — with a deterministic `DataSetClassId`. Every data and Method `BrowsePath` below was resolved against the published companion NodeSet; event-DataSet fields select standard event-type fields.
+#### Metrics — Metrics
 
-#### Scenario: Observability
-
-*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/Observability` · *Direction:* Publisher · *Content:* data DataSet (PublishedDataItems) · *DataSetClassId:* `c59daa9d-857b-5016-9299-d85875e022dc` · *Cardinality:* one DataSet per `/MotionDevices/<MotionDeviceIdentifier>`
+*Signal:* OTEL metrics (PublishedDataItems) · *DataSetClassId:* `142d1e8e-93e7-5436-8a2b-c99fe45b80e7` · *Cardinality:* one DataSet (bound root)
 
 | Field | Kind | BrowsePath | Source type | DataType | OTEL |
 |---|---|---|---|---|---|
-| AxisActualPosition | Telemetry | `/MotionDevices/<MotionDeviceIdentifier>/Axes/<AxisIdentifier>/ParameterSet/ActualPosition` | [AnalogUnitType](https://reference.opcfoundation.org/specs/OPC-10000-8/5.3.4) | Double | Gauge [deg] |
-| MotorTemperature | Telemetry | `/MotionDevices/<MotionDeviceIdentifier>/PowerTrains/<PowerTrainIdentifier>/<MotorIdentifier>/ParameterSet/MotorTemperature` | [AnalogUnitType](https://reference.opcfoundation.org/specs/OPC-10000-8/5.3.4) | Double | Gauge [Cel] |
-| SpeedOverride | Status | `/MotionDevices/<MotionDeviceIdentifier>/ParameterSet/SpeedOverride` | [BaseDataVariableType](https://reference.opcfoundation.org/specs/OPC-10000-5/7.4) | Double | Gauge [%] |
+| AxisActualPosition | Telemetry | `/MotionDevices/<MotionDeviceIdentifier>/Axes/<AxisIdentifier>/ParameterSet/ActualPosition` | `i=17497` | Double | Gauge [deg] |
+| MotorTemperature | Telemetry | `/MotionDevices/<MotionDeviceIdentifier>/PowerTrains/<PowerTrainIdentifier>/<MotorIdentifier>/ParameterSet/MotorTemperature` | `i=17497` | Double | Gauge [Cel] |
+| SpeedOverride | Status | `/MotionDevices/<MotionDeviceIdentifier>/ParameterSet/SpeedOverride` | `i=63` | Double | Gauge [%] |
+| ControllerTemperature | Telemetry | `/Controllers/<ControllerIdentifier>/ParameterSet/Temperature` | `i=17497` | Double | Gauge [Cel] |
+| CabinetFanSpeed | Telemetry | `/Controllers/<ControllerIdentifier>/ParameterSet/CabinetFanSpeed` | `i=17497` | Double | Gauge [1/min] |
+| CPUFanSpeed | Telemetry | `/Controllers/<ControllerIdentifier>/ParameterSet/CPUFanSpeed` | `i=17497` | Double | Gauge [1/min] |
+| TotalPowerOnTime | Counter | `/Controllers/<ControllerIdentifier>/ParameterSet/TotalPowerOnTime` | `i=63` | i=12879 | Counter cumulative monotonic |
+| Manufacturer | Dimension | `/Manufacturer` | `i=68` | LocalizedText | dimension |
+| Model | Dimension | `/Model` | `i=68` | LocalizedText | dimension |
+| SerialNumber | Dimension | `/SerialNumber` | `i=68` | String | dimension |
+| ProductInstanceUri | Dimension | `/ProductInstanceUri` | `i=68` | String | dimension |
+| service.name | Dimension | — | — | — | dimension = `robotics-observability` (const) |
 
-#### Scenario: PredictiveMaintenance
+#### Logs — Logs
 
-*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/PredictiveMaintenance` · *Direction:* Publisher · *Content:* data DataSet (PublishedDataItems) · *DataSetClassId:* `9aebd118-3e77-5786-89e3-713807499548` · *Cardinality:* one DataSet per `/Controllers/<ControllerIdentifier>`
-
-| Field | Kind | BrowsePath | Source type | DataType | OTEL |
-|---|---|---|---|---|---|
-| ControllerTemperature | Telemetry | `/Controllers/<ControllerIdentifier>/ParameterSet/Temperature` | [AnalogUnitType](https://reference.opcfoundation.org/specs/OPC-10000-8/5.3.4) | Double | — |
-| CabinetFanSpeed | Telemetry | `/Controllers/<ControllerIdentifier>/ParameterSet/CabinetFanSpeed` | [AnalogUnitType](https://reference.opcfoundation.org/specs/OPC-10000-8/5.3.4) | Double | — |
-| CPUFanSpeed | Telemetry | `/Controllers/<ControllerIdentifier>/ParameterSet/CPUFanSpeed` | [AnalogUnitType](https://reference.opcfoundation.org/specs/OPC-10000-8/5.3.4) | Double | — |
-| TotalPowerOnTime | Counter | `/Controllers/<ControllerIdentifier>/ParameterSet/TotalPowerOnTime` | [BaseDataVariableType](https://reference.opcfoundation.org/specs/OPC-10000-5/7.4) | i=12879 | — |
-
-#### Scenario: AnomalyDetection
-
-*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/AnomalyDetection` · *Direction:* Publisher · *Content:* data DataSet (PublishedDataItems) · *DataSetClassId:* `180dfa3e-be8b-5dae-b66e-a5a08384f256` · *Cardinality:* one DataSet per `/MotionDevices/<MotionDeviceIdentifier>`
-
-| Field | Kind | BrowsePath | Source type | DataType | OTEL |
-|---|---|---|---|---|---|
-| AxisActualPosition | Telemetry | `/MotionDevices/<MotionDeviceIdentifier>/Axes/<AxisIdentifier>/ParameterSet/ActualPosition` | [AnalogUnitType](https://reference.opcfoundation.org/specs/OPC-10000-8/5.3.4) | Double | — |
-| MotorTemperature | Telemetry | `/MotionDevices/<MotionDeviceIdentifier>/PowerTrains/<PowerTrainIdentifier>/<MotorIdentifier>/ParameterSet/MotorTemperature` | [AnalogUnitType](https://reference.opcfoundation.org/specs/OPC-10000-8/5.3.4) | Double | — |
-
-#### Scenario: AlarmAndEventDistribution
-
-*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/AlarmAndEventDistribution` · *Direction:* Publisher · *Content:* event DataSet (PublishedEvents) · *DataSetClassId:* `ec621723-fbe4-54a1-9166-87d19a264c0f` · *Cardinality:* one DataSet (bound root) · *Event source:* `/` · *Event type:* AlarmConditionType
+*Signal:* OTEL logs (PublishedEvents) · *DataSetClassId:* `38f93e0c-7ad5-5e8d-bee9-1f2096b6c24f` · *Cardinality:* one DataSet (bound root) · *Event source:* `/` · *Event type:* AlarmConditionType
 
 | Field | Kind | Event field / attribute |
 |---|---|---|
@@ -71,159 +57,136 @@ Bindings for the `MotionDeviceSystemType` of the `http://opcfoundation.org/UA/Ro
 | Time | Event | `/Time` |
 | Severity | Event | `/Severity` |
 | Message | Event | `/Message` |
+| service.name | Dimension | dimension = `robotics-observability` (const) |
 
-*Structured-log mapping (OTEL LogRecord):* body template `{SourceName}: {Message} (severity {Severity})`; severity = `Severity`, body = `Message`, timestamp = `Time`.
+*OTEL LogRecord mapping:* body template `{SourceName}: {Message} (severity {Severity})`; severity = `Severity`, body = `Message`, timestamp = `Time`.
 
-#### Scenario: FleetAndCompliance
+#### Traces — Traces
 
-*URI:* `http://opcfoundation.org/UA/PubSub/Scenarios/FleetAndCompliance` · *Direction:* Publisher · *Content:* data DataSet (PublishedDataItems) · *DataSetClassId:* `000fbba0-373f-5ff1-bd11-67fb2fc20ef0` · *Cardinality:* one DataSet (bound root)
+*Signal:* OTEL traces/spans (PublishedEvents) · *DataSetClassId:* `1d01f74f-5b27-5bf0-b933-5fa3019d1544` · *Cardinality:* one DataSet (bound root) · *Event source:* `/` · *Event type:* BaseEventType
 
-| Field | Kind | BrowsePath | Source type | DataType | OTEL |
-|---|---|---|---|---|---|
-| Manufacturer | Identification | `/Manufacturer` | [PropertyType](https://reference.opcfoundation.org/specs/OPC-10000-5/7.3) | LocalizedText | — |
-| Model | Identification | `/Model` | [PropertyType](https://reference.opcfoundation.org/specs/OPC-10000-5/7.3) | LocalizedText | — |
-| SerialNumber | Identification | `/SerialNumber` | [PropertyType](https://reference.opcfoundation.org/specs/OPC-10000-5/7.3) | String | — |
-| ProductInstanceUri | Identification | `/ProductInstanceUri` | [PropertyType](https://reference.opcfoundation.org/specs/OPC-10000-5/7.3) | String | — |
+| Field | Kind | Event field / attribute |
+|---|---|---|
+| EventId | Event | `/EventId` |
+| SourceName | Event | `/SourceName` |
+| Time | Event | `/Time` |
+| Severity | Event | `/Severity` |
+| Message | Event | `/Message` |
+| service.name | Dimension | dimension = `robotics-observability` (const) |
+
+*OTEL Span mapping:* name template `Robot program/state {SourceName}`, start = `Time`, end = `—`, status = `Severity`, kind = `Internal`.
 
 
 ## 5 Where the bindings live
 
-Overview of the scenario bindings, then their placement on the theoretical instance (one `ScenarioBindingGroup` per scenario hangs off the instance; each `BoundItem` `BindsToNode` its signal):
+Overview of the observability bindings and their placement on the theoretical instance:
 
 ```mermaid
 graph LR
   ROOT["ExampleRobotSystem : MotionDeviceSystemType"]
-  ROOT --> G0["Observability<br/>ScenarioBindingGroup"]
-  G0 --> S0["Observability<br/>Publisher · Data"]
+  ROOT --> G["Robotics<br/>ObservabilityBindingGroup"]
+  G -.Realizes.-> O["Observability registry i=60101"]
+  G --> S0["Metrics<br/>Metrics"]
   S0 --> S0_0["AxisActualPosition : Telemetry"]
   S0 --> S0_1["MotorTemperature : Telemetry"]
   S0 --> S0_2["SpeedOverride : Status"]
-  ROOT --> G1["PredictiveMaintenance<br/>ScenarioBindingGroup"]
-  G1 --> S1["PredictiveMaintenance<br/>Publisher · Data"]
-  S1 --> S1_0["ControllerTemperature : Telemetry"]
-  S1 --> S1_1["CabinetFanSpeed : Telemetry"]
-  S1 --> S1_2["CPUFanSpeed : Telemetry"]
-  S1 --> S1_3["TotalPowerOnTime : Counter"]
-  ROOT --> G2["AnomalyDetection<br/>ScenarioBindingGroup"]
-  G2 --> S2["AnomalyDetection<br/>Publisher · Data"]
-  S2 --> S2_0["AxisActualPosition : Telemetry"]
-  S2 --> S2_1["MotorTemperature : Telemetry"]
-  ROOT --> G3["AlarmAndEventDistribution<br/>ScenarioBindingGroup"]
-  G3 --> S3["AlarmAndEventDistribution<br/>Publisher · Events"]
-  S3 --> S3_0["EventId : Event"]
-  S3 --> S3_1["EventType : Event"]
-  S3 --> S3_2["SourceName : Event"]
-  S3 --> S3_3["Time : Event"]
-  S3 --> S3_4["Severity : Event"]
-  S3 --> S3_5["Message : Event"]
-  ROOT --> G4["FleetAndCompliance<br/>ScenarioBindingGroup"]
-  G4 --> S4["FleetAndCompliance<br/>Publisher · Data"]
-  S4 --> S4_0["Manufacturer : Identification"]
-  S4 --> S4_1["Model : Identification"]
-  S4 --> S4_2["SerialNumber : Identification"]
-  S4 --> S4_3["ProductInstanceUri : Identification"]
+  S0 --> S0_3["ControllerTemperature : Telemetry"]
+  S0 --> S0_4["CabinetFanSpeed : Telemetry"]
+  S0 --> S0_5["CPUFanSpeed : Telemetry"]
+  G --> S1["Logs<br/>Logs"]
+  S1 --> S1_0["EventId : Event"]
+  S1 --> S1_1["EventType : Event"]
+  S1 --> S1_2["SourceName : Event"]
+  S1 --> S1_3["Time : Event"]
+  S1 --> S1_4["Severity : Event"]
+  S1 --> S1_5["Message : Event"]
+  G --> S2["Traces<br/>Traces"]
+  S2 --> S2_0["EventId : Event"]
+  S2 --> S2_1["SourceName : Event"]
+  S2 --> S2_2["Time : Event"]
+  S2 --> S2_3["Severity : Event"]
+  S2 --> S2_4["Message : Event"]
+  S2 --> S2_5["service.name : Dimension"]
 ```
 
 ```mermaid
 graph TD
   R["ExampleRobotSystem : MotionDeviceSystemType"]
-  R -->|HasInterface| I([IScenarioBoundType])
-  R -->|HasComponent| G0["Observability : ScenarioBindingGroupType"]
-  G0 -.Realizes.-> P0["Observability : ScenarioProfileType<br/>under Server/Scenarios"]
-  G0 -->|HasComponent| B0["Observability : ScenarioBindingType"]
+  R -->|HasInterface| I([IObservableType])
+  R -->|HasComponent| G["Robotics : ObservabilityBindingGroupType"]
+  G -.Realizes.-> O["Observability : ObservabilityFolderType"]
+  G -->|HasComponent| B0["Metrics : ObservabilityBindingType<br/>Metrics"]
   B0 -->|HasComponent| IT00["AxisActualPosition : BoundVariableType"]
   IT00 -->|BindsToNode| N00["MotionDevices/MotionDevice_1/Axes/Axis_1/ParameterSet/ActualPosition"]
   B0 -->|HasComponent| IT01["MotorTemperature : BoundVariableType"]
   IT01 -->|BindsToNode| N01["MotionDevices/MotionDevice_1/PowerTrains/PowerTrain_1/Motor_1/ParameterSet/MotorTemperature"]
   B0 -->|HasComponent| IT02["SpeedOverride : BoundVariableType"]
   IT02 -->|BindsToNode| N02["MotionDevices/MotionDevice_1/ParameterSet/SpeedOverride"]
-  R -->|HasComponent| G1["AlarmAndEventDistribution : ScenarioBindingGroupType"]
-  G1 -.Realizes.-> P1["AlarmAndEventDistribution : ScenarioProfileType<br/>under Server/Scenarios"]
-  G1 -->|HasComponent| B1["AlarmAndEventDistribution : ScenarioBindingType"]
+  G -->|HasComponent| B1["Logs : ObservabilityBindingType<br/>Logs"]
   B1 -->|HasComponent| IT10["EventId : BoundEventFieldType"]
   IT10 -.event field.-> N10["AlarmConditionType/EventId"]
   B1 -->|HasComponent| IT11["EventType : BoundEventFieldType"]
   IT11 -.event field.-> N11["AlarmConditionType/EventType"]
   B1 -->|HasComponent| IT12["SourceName : BoundEventFieldType"]
   IT12 -.event field.-> N12["AlarmConditionType/SourceName"]
+  G -->|HasComponent| B2["Traces : ObservabilityBindingType<br/>Traces"]
+  B2 -->|HasComponent| IT20["EventId : BoundEventFieldType"]
+  IT20 -.event field.-> N20["BaseEventType/EventId"]
+  B2 -->|HasComponent| IT21["SourceName : BoundEventFieldType"]
+  IT21 -.event field.-> N21["BaseEventType/SourceName"]
+  B2 -->|HasComponent| IT22["Time : BoundEventFieldType"]
+  IT22 -.event field.-> N22["BaseEventType/Time"]
 ```
 
 ## 6 BrowsePath resolution — worked examples
 
-The type-level bindings above use placeholder BrowsePaths. A bridge resolves them against a concrete instance (via `TranslateBrowsePathsToNodeIds`) and produces **one DataSet per matched instance of each binding's cardinality anchor** (`DataSetCardinalityPath`); placeholders **below** the anchor become fields, their name disambiguated by the matched instance (per §5.10 of the base spec). The `DataSetClassId` is identical for every DataSet of a scenario — it names the *class*, of which there are many DataSetWriters. The same bindings resolve differently for different instance topologies:
+The type-level bindings above use placeholder BrowsePaths. A bridge resolves them against a concrete instance (via `TranslateBrowsePathsToNodeIds`) and produces **one DataSet per matched instance of each binding's cardinality anchor** (`DataSetCardinalityPath`); placeholders **below** the anchor become fields, their name disambiguated by the matched instance (per §5.10 of the base spec). The `DataSetClassId` is identical for every DataSet of a signal — it names the *class*, of which there are many DataSetWriters. The same bindings resolve differently for different instance topologies:
 
 ### Topology 1: Single 6-axis articulated robot
 
 *MotionDevices:* Robot_1 (6 axes, 6 motors) · *Controllers:* Controller_1
 
-| Scenario | DataSet (cardinality instance) | # fields | Example fields |
+| Binding | DataSet (cardinality instance) | # fields | Example fields |
 |---|---|---|---|
-| Observability | Robot_1 | 13 | AxisActualPosition_Axis_1, AxisActualPosition_Axis_2, AxisActualPosition_Axis_3, AxisActualPosition_Axis_4 … |
-| PredictiveMaintenance | Controller_1 | 4 | ControllerTemperature, CabinetFanSpeed, CPUFanSpeed, TotalPowerOnTime |
-| AnomalyDetection | Robot_1 | 12 | AxisActualPosition_Axis_1, AxisActualPosition_Axis_2, AxisActualPosition_Axis_3, AxisActualPosition_Axis_4 … |
-| AlarmAndEventDistribution | ExampleRobotSystem | 6 | EventId, EventType, SourceName, Time … |
-| FleetAndCompliance | ExampleRobotSystem | 4 | Manufacturer, Model, SerialNumber, ProductInstanceUri |
+| Metrics | ExampleRobotSystem | 12 | AxisActualPosition, MotorTemperature, SpeedOverride, ControllerTemperature … |
+| Logs | ExampleRobotSystem | 7 | EventId, EventType, SourceName, Time … |
+| Traces | ExampleRobotSystem | 6 | EventId, SourceName, Time, Severity … |
 
-→ **5 DataSets** produced by the bridge for this topology.
+→ **3 DataSets** produced by the bridge for this topology.
 
 ### Topology 2: Single 4-axis SCARA
 
 *MotionDevices:* Scara_1 (4 axes, 4 motors) · *Controllers:* Controller_1
 
-| Scenario | DataSet (cardinality instance) | # fields | Example fields |
+| Binding | DataSet (cardinality instance) | # fields | Example fields |
 |---|---|---|---|
-| Observability | Scara_1 | 9 | AxisActualPosition_Axis_1, AxisActualPosition_Axis_2, AxisActualPosition_Axis_3, AxisActualPosition_Axis_4 … |
-| PredictiveMaintenance | Controller_1 | 4 | ControllerTemperature, CabinetFanSpeed, CPUFanSpeed, TotalPowerOnTime |
-| AnomalyDetection | Scara_1 | 8 | AxisActualPosition_Axis_1, AxisActualPosition_Axis_2, AxisActualPosition_Axis_3, AxisActualPosition_Axis_4 … |
-| AlarmAndEventDistribution | ExampleRobotSystem | 6 | EventId, EventType, SourceName, Time … |
-| FleetAndCompliance | ExampleRobotSystem | 4 | Manufacturer, Model, SerialNumber, ProductInstanceUri |
+| Metrics | ExampleRobotSystem | 12 | AxisActualPosition, MotorTemperature, SpeedOverride, ControllerTemperature … |
+| Logs | ExampleRobotSystem | 7 | EventId, EventType, SourceName, Time … |
+| Traces | ExampleRobotSystem | 6 | EventId, SourceName, Time, Severity … |
 
-→ **5 DataSets** produced by the bridge for this topology.
+→ **3 DataSets** produced by the bridge for this topology.
 
 ### Topology 3: Two-robot cell (6+4 axes)
 
 *MotionDevices:* Robot_1 (6 axes, 6 motors), Robot_2 (4 axes, 4 motors) · *Controllers:* Controller_1
 
-| Scenario | DataSet (cardinality instance) | # fields | Example fields |
+| Binding | DataSet (cardinality instance) | # fields | Example fields |
 |---|---|---|---|
-| Observability | Robot_1 | 13 | AxisActualPosition_Axis_1, AxisActualPosition_Axis_2, AxisActualPosition_Axis_3, AxisActualPosition_Axis_4 … |
-| Observability | Robot_2 | 9 | AxisActualPosition_Axis_1, AxisActualPosition_Axis_2, AxisActualPosition_Axis_3, AxisActualPosition_Axis_4 … |
-| PredictiveMaintenance | Controller_1 | 4 | ControllerTemperature, CabinetFanSpeed, CPUFanSpeed, TotalPowerOnTime |
-| AnomalyDetection | Robot_1 | 12 | AxisActualPosition_Axis_1, AxisActualPosition_Axis_2, AxisActualPosition_Axis_3, AxisActualPosition_Axis_4 … |
-| AnomalyDetection | Robot_2 | 8 | AxisActualPosition_Axis_1, AxisActualPosition_Axis_2, AxisActualPosition_Axis_3, AxisActualPosition_Axis_4 … |
-| AlarmAndEventDistribution | ExampleRobotSystem | 6 | EventId, EventType, SourceName, Time … |
-| FleetAndCompliance | ExampleRobotSystem | 4 | Manufacturer, Model, SerialNumber, ProductInstanceUri |
+| Metrics | ExampleRobotSystem | 12 | AxisActualPosition, MotorTemperature, SpeedOverride, ControllerTemperature … |
+| Logs | ExampleRobotSystem | 7 | EventId, EventType, SourceName, Time … |
+| Traces | ExampleRobotSystem | 6 | EventId, SourceName, Time, Severity … |
 
-→ **7 DataSets** produced by the bridge for this topology.
+→ **3 DataSets** produced by the bridge for this topology.
 
-### Topology 4: Three-robot cell, dual controller
-
-*MotionDevices:* Robot_1 (6 axes, 6 motors), Robot_2 (6 axes, 6 motors), Robot_3 (7 axes, 7 motors) · *Controllers:* Controller_A, Controller_B
-
-| Scenario | DataSet (cardinality instance) | # fields | Example fields |
-|---|---|---|---|
-| Observability | Robot_1 | 13 | AxisActualPosition_Axis_1, AxisActualPosition_Axis_2, AxisActualPosition_Axis_3, AxisActualPosition_Axis_4 … |
-| Observability | Robot_2 | 13 | AxisActualPosition_Axis_1, AxisActualPosition_Axis_2, AxisActualPosition_Axis_3, AxisActualPosition_Axis_4 … |
-| Observability | Robot_3 | 15 | AxisActualPosition_Axis_1, AxisActualPosition_Axis_2, AxisActualPosition_Axis_3, AxisActualPosition_Axis_4 … |
-| PredictiveMaintenance | Controller_A | 4 | ControllerTemperature, CabinetFanSpeed, CPUFanSpeed, TotalPowerOnTime |
-| PredictiveMaintenance | Controller_B | 4 | ControllerTemperature, CabinetFanSpeed, CPUFanSpeed, TotalPowerOnTime |
-| AnomalyDetection | Robot_1 | 12 | AxisActualPosition_Axis_1, AxisActualPosition_Axis_2, AxisActualPosition_Axis_3, AxisActualPosition_Axis_4 … |
-| AnomalyDetection | Robot_2 | 12 | AxisActualPosition_Axis_1, AxisActualPosition_Axis_2, AxisActualPosition_Axis_3, AxisActualPosition_Axis_4 … |
-| AnomalyDetection | Robot_3 | 14 | AxisActualPosition_Axis_1, AxisActualPosition_Axis_2, AxisActualPosition_Axis_3, AxisActualPosition_Axis_4 … |
-| AlarmAndEventDistribution | ExampleRobotSystem | 6 | EventId, EventType, SourceName, Time … |
-| FleetAndCompliance | ExampleRobotSystem | 4 | Manufacturer, Model, SerialNumber, ProductInstanceUri |
-
-→ **10 DataSets** produced by the bridge for this topology.
-
-Across all topologies the `DataSetClassId` per scenario is unchanged — a subscriber recognizes each DataSet's class regardless of how many robots, axes or controllers a particular cell has; only the number of DataSets (writers) and the field counts differ.
+Across all topologies the `DataSetClassId` per signal is unchanged — a subscriber recognizes each DataSet's class regardless of how many robots, axes or controllers a particular cell has; only the number of DataSets (writers) and the field counts differ.
 
 
 ## 7 Deliverables
 
 | File | Content |
 |---|---|
-| [`Robotics.ScenarioBinding.json`](../../extras/scenario-binding/examples/robotics/Robotics.ScenarioBinding.json) | Machine-readable ScenarioBindingConfiguration descriptor (single source). |
-| [`Opc.Ua.Robotics.ScenarioBinding.NodeSet2.xml`](Opc.Ua.Robotics.ScenarioBinding.NodeSet2.xml) | The binding instances on the theoretical `ExampleRobotSystem` instance. |
+| [`Robotics.ObservabilityExport.json`](../../extras/observability-export/examples/robotics/Robotics.ObservabilityExport.json) | Machine-readable ObservabilityExport descriptor (single source). |
+| [`Opc.Ua.Robotics.ObservabilityExport.NodeSet2.xml`](Opc.Ua.Robotics.ObservabilityExport.NodeSet2.xml) | The binding instances on the theoretical `ExampleRobotSystem` instance. |
 
-Regenerate from [`core-specs/extras/scenario-binding/examples/`](../../extras/scenario-binding/examples/) with `python tools/build_bindings.py robotics/Robotics.ScenarioBinding.json`.
+Regenerate from [`core-specs/extras/observability-export/examples/`](../../extras/observability-export/examples/) with `python tools/build_bindings.py robotics/Robotics.ObservabilityExport.json tools/ref`.
 
