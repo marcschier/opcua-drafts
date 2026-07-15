@@ -193,7 +193,7 @@ A worked example is generated to `../extras/xregistry-catalog/examples/opcua-cat
 
 The companion namespace is `http://opcfoundation.org/UA/SchemaRegistry/`. Draft numeric NodeIds use the provisional `62000+` block in this namespace; final NodeIds are assigned by the OPC Foundation.
 
-A Server exposes one well-known `SchemaRegistry` Object as a `HasComponent` of the Part 14 `PublishSubscribe` Object (`i=14443`). This mirrors the discoverability pattern used by PubSub services: a Client that can discover PubSub configuration can discover schema resolution in the same place. The well-known instance is parallel to Security Key Service and scenario binding services.
+A Server exposes one well-known `SchemaRegistry` Object as a `HasComponent` of the Part 14 `PublishSubscribe` Object (`i=14443`). This mirrors the discoverability pattern used by PubSub services: a Client that can discover PubSub configuration can discover schema resolution in the same place. The well-known instance is parallel to Security Key Service and observability export services.
 
 ### 7.1 ObjectTypes
 

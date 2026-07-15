@@ -2,7 +2,7 @@
 """
 Local structural + modelling-rule validator for the OpenUSD Bindings NodeSet.
 
-Reproducible in-repo gate (mirrors the scenario-binding validate_local.py convention).
+Reproducible in-repo gate (mirrors the observability-export validate_local.py convention).
 Checks, against Opc.Ua.OpenUsdBinding.NodeSet2.xml:
   * XML well-formedness and single <Model> with a base-UA <RequiredModel>.
   * Unique NodeIds; every reference target resolves (own ns=1 node or known base-UA id).

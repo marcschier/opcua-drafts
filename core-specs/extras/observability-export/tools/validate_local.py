@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
-"""Local structural validator for the ns0 PubSub Binding nodeset + CSV."""
+"""Local structural validator for the ns0 Observability Export nodeset + CSV."""
 import os, sys, csv, re
 import xml.etree.ElementTree as ET
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-# The generated NodeSet/CSV live in core-specs/scenario-binding; this validator lives under core-specs/extras.
-GEN = os.path.abspath(os.path.join(HERE, "..", "..", "..", "scenario-binding"))
+# The generated NodeSet/CSV live in core-specs/observability-export; this validator lives under core-specs/extras.
+GEN = os.path.abspath(os.path.join(HERE, "..", "..", "..", "observability-export"))
 REF = os.path.join(HERE, "ref")
 NS = "{http://opcfoundation.org/UA/2011/03/UANodeSet.xsd}"
-XML = os.path.join(GEN, "Opc.Ua.ScenarioBinding.NodeSet2.xml")
-CSVF = os.path.join(GEN, "Opc.Ua.ScenarioBinding.NodeIds.csv")
+XML = os.path.join(GEN, "Opc.Ua.ObservabilityExport.NodeSet2.xml")
+CSVF = os.path.join(GEN, "Opc.Ua.ObservabilityExport.NodeIds.csv")
 
 def load_ids(p):
     s = set()
@@ -91,7 +91,7 @@ for tag, el in elems:
         num_p = resolve(el.get("ParentNodeId"))
         wellknown = num_p is not None and (num_p in UA if UA is not None else num_p < OWN_MIN)
         if "HasModellingRule" not in reftypes and not is_enc and not wellknown \
-           and bn not in ("EnumStrings",) and num not in (60101,) and num < 60110:
+           and bn not in ("EnumStrings",) and num != 60101:
             warnings.append(f"{ctx}: instance without HasModellingRule")
         if tag in ("UAVariable","UAObject") and not typedef and not is_enc:
             errors.append(f"{ctx}: missing HasTypeDefinition")
