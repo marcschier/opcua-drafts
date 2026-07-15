@@ -36,6 +36,7 @@ The result is an **N×M integration problem**: *N* servers (pumps, robots, machi
 ### 1.2 Motivating use cases
 
 - Render a live factory line: pump speed drives a rotating impeller, a bearing temperature drives an emissive glow, a running state drives visibility.
+- Render a live robot cell: OPC 40010 Axis `ActualPosition` values drive nested OpenUSD joint rotate ops for independently articulated robots, while safety and tool-mount state compose live.
 - Position assets in a scene: an RSL 3D frame drives a prim transform.
 - Bridge to Omniverse: a connector Browses `Server/OpenUSD`, subscribes to the bound Variables, and writes the mapped USD attributes into a Nucleus `.live` layer for RTX rendering.
 
@@ -443,6 +444,7 @@ The intended standards path is a family of thin, composable binding contracts (t
 | Generator | `core-specs/extras/openusd-binding/tools/build_model.py` |
 | Validator | `core-specs/extras/openusd-binding/tools/validate_local.py` |
 | Pumps addendum (implementer Annex) | `core-specs/openusd-binding/pumps/` |
+| Robotics addendum (implementer Annex) | `core-specs/openusd-binding/robotics/` |
 
 Regenerate and validate:
 
@@ -463,7 +465,7 @@ See `core-specs/extras/openusd-binding/tools/model-reference.md` for the full ge
 
 ## Annex B — End-to-end collaboration flow (informative)
 
-This annex walks a complete "live digital twin" scenario to show **who does what** and how the specification is the single contract that lets independent actors collaborate without private, point-to-point agreements. It is informative; nothing here adds normative requirements. The flow is generic; a concrete pump pass is given at the end.
+This annex walks a complete "live digital twin" scenario to show **who does what** and how the specification is the single contract that lets independent actors collaborate without private, point-to-point agreements. It is informative; nothing here adds normative requirements. The flow is generic; concrete pump and robotics passes are given at the end.
 
 ### B.1 Actors and what each contributes
 
@@ -523,6 +525,18 @@ sequenceDiagram
 6. The **visualization operator** opens the composed stage in Omniverse (or `usdview`) and sees the pump spin, warm toward red, and glow — driven live, with no pump-specific code anywhere in the connector or renderer.
 
 A runnable realization of this pass (server, connector, base asset, and a step-by-step guide) is provided in `core-specs/extras/openusd-binding/examples/pumps/` and the `PumpDeviceIntegrationServer` sample.
+
+
+### B.5 Concrete pass — the robotics example
+
+1. The **Robotics working group** publishes the OPC 40010 `MotionDeviceSystem`, `MotionDevice`, and `Axis` model. The **binding spec** (this document) publishes the representation/binding model.
+2. A **robot-cell OEM** ships a server whose `RobotCell` carries an `OpenUsdRepresentation` (`PrimPath = /Cell`), component bindings for `MotionDevices` and `Axes`, and Axis bindings from `ActualPosition` to nested joint rotate ops.
+3. A **USD artist** authors `Cell.usda`: `/Cell` with the environment and positioned empty `/Cell/Robots/R1` and `/Cell/Robots/R2` mount-point Xforms, plus a reusable `robot.usda` asset containing the nested `Base/J1/.../J6/Flange` kinematic chain.
+4. A **system integrator** composes the cell stage and deploys the generic connector against `RoboticsDeviceIntegrationServer`.
+5. A **connector vendor's** generic connector browses `Server/OpenUSD/Representations`, composes `/Cell/Robots/R1` and `/Cell/Robots/R2` as references in `live.usda`, subscribes to the twelve Axis Variables plus safety state, and writes live override opinions.
+6. The **visualization operator** opens the composed stage in Omniverse (or `usdview`) and sees two independently articulated robots, safety beacon and warning visibility, and a dynamically mounted R1 gripper — driven live, with no robotics-specific code in the connector or renderer.
+
+A runnable realization of this pass (descriptor, USD assets, Python writer, fallback renderer, and step-by-step guide) is provided in `core-specs/extras/openusd-binding/examples/robotics/` and the `RoboticsDeviceIntegrationServer` sample.
 
 ---
 
