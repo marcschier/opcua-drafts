@@ -448,7 +448,7 @@ struct_type(60060, "BoundItemDataType",
 # --- ObjectTypes -----------------------------------------------------------
 # BoundItemType and subtypes
 object_type(60012, "BoundItemType", BaseObjectType,
-            "A single item bound into a scenario: it references the companion-spec node "
+            "A single item bound for observability export: it references the companion-spec node "
             "it exposes (BindsToNode and/or a BrowsePath) and carries the routing role "
             "(Kind) and the semantic cross-reference retained for export.", CAT)
 BI = "BoundItemType"

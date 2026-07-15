@@ -168,7 +168,7 @@
   </UAObject>
   <UAObjectType NodeId="i=60012" BrowseName="BoundItemType">
     <DisplayName>BoundItemType</DisplayName>
-    <Description>A single item bound into a scenario: it references the companion-spec node it exposes (BindsToNode and/or a BrowsePath) and carries the routing role (Kind) and the semantic cross-reference retained for export.</Description>
+    <Description>A single item bound for observability export: it references the companion-spec node it exposes (BindsToNode and/or a BrowsePath) and carries the routing role (Kind) and the semantic cross-reference retained for export.</Description>
     <Category>Observability Export</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
