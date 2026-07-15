@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """
-Generator for the OPC UA Scenario Bindings specification (WG draft).
+Generator for the OPC UA Observability Export specification (WG draft).
 
 Emits, from a single in-code source of truth:
-  * Opc.Ua.ScenarioBinding.NodeSet2.xml  - the information model (UANodeSet)
-  * Opc.Ua.ScenarioBinding.NodeIds.csv   - the NodeId assignments
-  * model-reference.md                 - the generated Annex A (node reference)
+  * Opc.Ua.ObservabilityExport.NodeSet2.xml  - the information model (UANodeSet)
+  * Opc.Ua.ObservabilityExport.NodeIds.csv   - the NodeId assignments
+  * model-reference.md                       - the generated Annex A (node reference)
 
 The model is a proposed addition to the OPC UA BASE namespace
 (http://opcfoundation.org/UA/, namespace index 0). All nodes therefore use plain
@@ -70,7 +70,6 @@ PublishedDataSetType = "i=14509"
 DataSetWriterType = "i=15298"
 DataSetReaderType = "i=15306"
 WriterGroupType = "i=17725"
-ActionTargetDataType = "i=18593"
 ConfigurationVersionDataType = "i=14593"
 
 # Part 14 DataSet / event modelling (base namespace)
@@ -330,69 +329,56 @@ def set_string(owner, owner_sym, name, value, datatype=String):
 # ===========================================================================
 # ============================  MODEL DEFINITION  ===========================
 # ===========================================================================
-CAT = "Scenario Binding"
-CAT_DT = "Scenario Binding DataTypes"
+CAT = "Observability Export"
+CAT_DT = "Observability Export DataTypes"
 
 # --- ReferenceTypes --------------------------------------------------------
 reference_type(60001, "BindsToNode", NonHierarchicalReferences, "IsBoundBy",
-               "Links a BoundItem to the companion-specification Variable or Method "
-               "in the AddressSpace that it exposes for a scenario. The target is the "
-               "authoritative semantic node; the BoundItem does not copy its meaning.",
+               "Links a BoundItem to the companion-specification Variable, event source or "
+               "Program in the AddressSpace that it exposes for observability export. The "
+               "target is the authoritative semantic node; the BoundItem does not copy its "
+               "meaning.",
                CAT)
-reference_type(60002, "ScenarioRealizedBy", NonHierarchicalReferences,
-               "RealizesScenario",
-               "Links a ScenarioBinding to the optional OPC UA Part 14 PubSub node(s) that "
-               "realize it (a PublishedDataSet, DataSetWriter, DataSetReader or an "
-               "ActionTarget). Forward 'ScenarioRealizedBy' reads binding -> realization; "
-               "the inverse 'RealizesScenario' reads realization -> binding. Absent (and "
-               "never required) when the binding is not realized over PubSub - a Server may "
-               "instead serve the binding over the classic client/server (RPC) interface.",
+reference_type(60002, "ObservabilityRealizedBy", NonHierarchicalReferences,
+               "RealizesObservability",
+               "Links an ObservabilityBinding to the optional OPC UA Part 14 PubSub node(s) that "
+               "realize it (a PublishedDataSet, DataSetWriter or DataSetReader). Forward "
+               "'ObservabilityRealizedBy' reads binding -> realization; the inverse "
+               "'RealizesObservability' reads realization -> binding. Absent (and never required) "
+               "when the binding is not realized over PubSub - a Server may instead serve the "
+               "binding over the classic client/server (RPC) interface.",
                CAT)
 reference_type(60003, "HasBaseBinding", NonHierarchicalReferences, "IsBaseBindingOf",
-               "Links a derived or composing ScenarioBinding to a base ScenarioBinding whose "
-               "fields it extends or composes (e.g. a Machine binding to the Device-facet "
+               "Links a derived or composing ObservabilityBinding to a base ObservabilityBinding "
+               "whose fields it extends or composes (e.g. a Machine binding to the Device-facet "
                "binding it builds on). Optional browse convenience used where the base binding "
                "node is present in the same AddressSpace; the portable, cross-specification "
-               "lineage carrier is ScenarioBinding.BaseDataSetClassIds.",
+               "lineage carrier is ObservabilityBinding.BaseDataSetClassIds.",
                CAT)
 reference_type(60004, "RealizedBy", NonHierarchicalReferences, "Realizes",
-               "Links a ScenarioProfile to the ScenarioBindingGroups that serve its scenario. "
-               "Forward 'RealizedBy' reads profile -> group (the registry's scenario-first path to "
-               "every group serving the scenario, across instances and specifications); the "
-               "inverse 'Realizes' reads group -> profile, so given a group a client resolves its "
-               "scenario - and thus the ScenarioUri - from the profile under the Scenarios "
-               "registry. Non-hierarchical: a group's single hierarchical parent is the "
-               "IScenarioBoundType object that contains it, so this cross-link never forms a "
-               "hierarchy loop. Distinct from ScenarioRealizedBy/RealizesScenario, which links a "
-               "binding to its optional Part 14 PubSub realization.",
+               "Links the server-wide Observability registry to the ObservabilityBindingGroups it "
+               "lists. Forward 'RealizedBy' reads registry -> group (the discovery path to every "
+               "group that exports observability data, across instances and specifications); the "
+               "inverse 'Realizes' reads group -> registry. Non-hierarchical: a group's single "
+               "hierarchical parent is the IObservableType object that contains it, so this "
+               "cross-link never forms a hierarchy loop. Distinct from "
+               "ObservabilityRealizedBy/RealizesObservability, which links a binding to its "
+               "optional Part 14 PubSub realization.",
                CAT)
 
 # --- Enumerations ----------------------------------------------------------
-enum_type(60050, "ScenarioBindingDirectionEnum",
-          "The role the server offers for a ScenarioBinding, and hence what a client "
-          "sets up on the other side.", CAT_DT, [
-    ("Publisher", 0, "The server publishes the bound data; a client sets up a subscriber."),
-    ("Subscriber", 1, "The server subscribes to the bound data; a client sets up a publisher."),
-    ("ActionInvoker", 2, "The server invokes bound Methods/Actions on receipt; a client sends the trigger."),
-    ("ActionResponder", 3, "The server responds to bound Actions; a client invokes them."),
-    ("Bidirectional", 4, "Both data and action directions apply."),
-])
-
 enum_type(60051, "BoundItemKindEnum",
-          "Generic role of a bound item for routing/bridging. It is intentionally "
-          "domain-agnostic: a bridge maps each Kind to its target system without "
-          "understanding the companion-specification semantics.", CAT_DT, [
-    ("Telemetry", 0, "A measured/process value that changes continuously (maps to a time series)."),
-    ("Status", 1, "A discrete state/health/mode value."),
-    ("Configuration", 2, "A configuration/parameter value that changes rarely."),
-    ("Metric", 3, "An aggregated KPI or computed value."),
-    ("Counter", 4, "A monotonically increasing counter/total."),
-    ("Event", 5, "An event or condition (maps to a log/alarm stream)."),
-    ("Command", 6, "A bound Method/Action invocation (maps to an action)."),
-    ("Setpoint", 7, "A writable setpoint/target value."),
-    ("Identification", 8, "Static nameplate/identity information."),
-    ("Other", 9, "Any other role."),
-    ("Dimension", 10, "An attribute/label that qualifies the metrics and logs of its binding (an OTEL/metric dimension), not a measured value. Applied to every data point the binding produces."),
+          "Generic role of a bound item for routing/bridging to an observability backend. It "
+          "is intentionally domain-agnostic: a bridge maps each Kind to its target signal "
+          "without understanding the companion-specification semantics.", CAT_DT, [
+    ("Telemetry", 0, "A measured/process value that changes continuously (maps to a metric time series)."),
+    ("Status", 1, "A discrete state/health/mode value (maps to a numeric-state gauge)."),
+    ("Metric", 2, "An aggregated KPI or computed value."),
+    ("Counter", 3, "A monotonically increasing counter/total."),
+    ("Event", 4, "An event or condition field (maps to a log record or a span)."),
+    ("Dimension", 5, "An attribute/label that qualifies the metrics, logs and traces of its binding (an OTEL attribute or Resource dimension), not a measured value. Applied to every data point the binding produces."),
+    ("Identification", 6, "Static nameplate/identity information, typically emitted as an OTEL Resource attribute."),
+    ("Other", 7, "Any other role."),
 ])
 
 enum_type(60053, "MetricInstrumentTypeEnum",
@@ -415,14 +401,14 @@ enum_type(60054, "MetricTemporalityEnum",
     ("Delta", 1, "The value is the change since the previous report (OTEL delta)."),
 ])
 
-enum_type(60052, "ScenarioContentKindEnum",
-          "The content class a scenario binding exposes: a Part 14 data DataSet "
-          "(PublishedDataItems), an event DataSet (PublishedEvents), or an action set "
-          "(bound Methods). A binding is exactly one content class.", CAT_DT, [
-    ("DataItems", 0, "A data DataSet: grouped Variable values (PublishedDataItemsType)."),
-    ("Events", 1, "An event DataSet: selected event fields from a notifier (PublishedEventsType)."),
-    ("Actions", 2, "An action set: bound Methods invoked or responded (optionally realized as "
-                   "Part 14 Actions/ActionTargets)."),
+enum_type(60052, "ObservabilitySignalKindEnum",
+          "The OTEL signal an observability binding exposes: metrics (a Part 14 data DataSet, "
+          "PublishedDataItems), logs (an event DataSet, PublishedEvents), or traces (spans "
+          "produced from Program executions, audit events or correlated events). A binding is "
+          "exactly one signal kind.", CAT_DT, [
+    ("Metrics", 0, "A metric set: grouped Variable values mapped to OTEL metric instruments (PublishedDataItemsType)."),
+    ("Logs", 1, "A log stream: selected event fields from a notifier mapped to OTEL LogRecords (PublishedEventsType)."),
+    ("Traces", 2, "A trace/span stream: Program executions, audit events or correlated events mapped to OTEL spans (PublishedEventsType)."),
 ])
 
 # --- Structures ------------------------------------------------------------
@@ -440,15 +426,14 @@ struct_type(60060, "BoundItemDataType",
     ("StartingNode", NodeId_, None, "Node the BrowsePath is resolved from (default: the bound root)."),
     ("BrowsePath", RelativePath, None, "RECOMMENDED locator: RelativePath from StartingNode (type-level, portable)."),
     ("SourceNodeId", NodeId_, None, "Alternative absolute locator (instance/server-specific)."),
-    ("OwningObjectPath", RelativePath, None, "For a bound Method: RelativePath to the Object it is called on (default: the Method BrowsePath's parent Object; omit only when the Method is directly on the bound root)."),
     ("SourceTypeDefinition", NodeId_, None, "TypeDefinition of the source node (semantic identity)."),
     ("SourceBrowseName", QualifiedName, None, "Namespace-qualified BrowseName of the source node."),
     ("ModelNamespaceUri", String, None, "Namespace URI of the companion model that defines the source."),
     ("DataSetFieldId", Guid, None, "GUID correlating this item to Part 14 FieldMetaData.dataSetFieldId."),
-    ("SourceScenarioBindingClassId", Guid, None, "Provenance: DataSetClassId of the base scenario binding this field originates from (its facet). Lets a subscriber partition a composed DataSet into exact per-base-class field subsets. Absent for fields defined by this binding itself."),
+    ("SourceBindingClassId", Guid, None, "Provenance: DataSetClassId of the base observability binding this field originates from (its facet). Lets a subscriber partition a composed DataSet into exact per-base-class field subsets. Absent for fields defined by this binding itself."),
     ("SemanticReferenceUri", String, None, "Optional external semantic identifier (e.g. IRDI/CDD) for the item."),
-    ("EventFieldOperand", SimpleAttributeOperand, None, "For an event-DataSet field: the Part 14 SimpleAttributeOperand that selects it (alternative/complement to BrowsePath, whose segments are then relative to the event TypeDefinition)."),
-    ("MetricInstrumentType", T(60053), None, "OTEL metric instrument this value maps to (Counter, Histogram, Gauge, …); primarily for the Observability scenario."),
+    ("EventFieldOperand", SimpleAttributeOperand, None, "For a log/trace (event-DataSet) field: the Part 14 SimpleAttributeOperand that selects it (alternative/complement to BrowsePath, whose segments are then relative to the event TypeDefinition)."),
+    ("MetricInstrumentType", T(60053), None, "OTEL metric instrument this value maps to (Counter, Histogram, Gauge, …), for a Metrics binding."),
     ("Unit", String, None, "UCUM unit annotation for the metric; if absent a bridge derives it from the source node's EngineeringUnits."),
     ("ExplicitBucketBoundaries", Double, "1", "For a Histogram instrument: the explicit bucket boundaries."),
     ("MetricTemporality", T(60054), None, "Aggregation temporality (Cumulative/Delta) of the metric value."),
@@ -456,8 +441,8 @@ struct_type(60060, "BoundItemDataType",
     ("DimensionConstantValue", String, None, "For a Kind=Dimension item with a constant value: the attribute value (key is FieldName). Absent when the dimension value is read from the source node."),
 ])
 
-# Note: the portable "full binding" interchange DataTypes (ScenarioBindingDataType,
-# ScenarioBindingConfigurationDataType) are deferred to a future revision; a binding is
+# Note: the portable "full binding" interchange DataTypes (ObservabilityBindingDataType,
+# ObservabilityBindingConfigurationDataType) are deferred to a future revision; a binding is
 # authored from the browsable model and an out-of-band descriptor for now.
 
 # --- ObjectTypes -----------------------------------------------------------
@@ -479,8 +464,8 @@ prop_var(60012, BI, "SourceTypeDefinition", NodeId_, "TypeDefinition of the sour
 prop_var(60012, BI, "SourceBrowseName", QualifiedName, "Namespace-qualified BrowseName of the source node.")
 prop_var(60012, BI, "ModelNamespaceUri", String, "Namespace URI of the companion model defining the source.")
 prop_var(60012, BI, "DataSetFieldId", Guid, "GUID correlating the item to Part 14 FieldMetaData.")
-prop_var(60012, BI, "SourceScenarioBindingClassId", Guid,
-         "Provenance: DataSetClassId of the base scenario binding this field originates from "
+prop_var(60012, BI, "SourceBindingClassId", Guid,
+         "Provenance: DataSetClassId of the base observability binding this field originates from "
          "(its facet). Lets a subscriber partition a composed DataSet into exact per-base-class "
          "field subsets. Absent for fields defined by this binding itself.")
 prop_var(60012, BI, "SemanticReferenceUri", String, "Optional external semantic identifier (e.g. IRDI/CDD).")
@@ -494,8 +479,8 @@ object_type(60013, "BoundVariableType", T(60012),
 BV = "BoundVariableType"
 prop_var(60013, BV, "MetricInstrumentType", T(60053),
          "OTEL metric instrument this value maps to (Counter, UpDownCounter, Histogram, Gauge and "
-         "the observable variants). Primarily used by the Observability scenario; when absent a "
-         "bridge applies the default for the item's Kind.")
+         "the observable variants). When absent a bridge applies the default for the item's "
+         "Kind.")
 prop_var(60013, BV, "Unit", String,
          "UCUM unit annotation for the metric. When absent a bridge derives the unit from the "
          "source node's EngineeringUnits (EUInformation) where present.")
@@ -509,187 +494,159 @@ prop_var(60013, BV, "Monotonic", Boolean,
          "Whether the metric is monotonically increasing. When absent, monotonicity is implied by "
          "MetricInstrumentType (e.g. Counter is monotonic, UpDownCounter is not).")
 
-object_type(60014, "BoundMethodType", T(60012),
-            "A bound Method exposed as an invokable action in an action-set binding "
-            "(ContentKind=Actions); realized classically via the Call service and, optionally, "
-            "as a Part 14 Action/ActionTarget.", CAT)
-prop_var(60014, "BoundMethodType", "OwningObjectPath", RelativePath,
-         "RelativePath to the Object the Method is called on (default: the Method "
-         "BrowsePath's parent Object; omit only when the Method is directly on the bound root).")
-
 object_type(60017, "BoundEventFieldType", T(60012),
-            "A bound event field of an event DataSet, selected by a Part 14 "
+            "A bound event field of a log or trace (event-sourced) binding, selected by a Part 14 "
             "SimpleAttributeOperand. Its BrowsePath is resolved relative to the event "
             "TypeDefinition (SourceTypeDefinition), not the AddressSpace instance; the "
-            "EventSourcePath on the ScenarioBinding names the notifier it is selected from.", CAT)
+            "EventSourcePath on the ObservabilityBinding names the notifier it is selected from.", CAT)
 prop_var(60017, "BoundEventFieldType", "EventFieldOperand", SimpleAttributeOperand,
          "The Part 14 SimpleAttributeOperand that selects this field (TypeDefinitionId, "
          "BrowsePath, AttributeId); maps directly to a PublishedEvents SelectedFields entry.")
 
-# ScenarioBindingType
-object_type(60011, "ScenarioBindingType", BaseObjectType,
-            "One scenario binding on a bound object or type. It declares the direction, "
-            "lists the bound items (browsable and/or as a compact array), and may reference "
-            "the Part 14 nodes that realize it. Its scenario is not stored here: the binding "
-            "lives in a ScenarioBindingGroup whose profile (reached via the group's Realizes "
-            "reference) carries the ScenarioUri, and the DataSetClassId already encodes the "
-            "scenario.", CAT)
-SB = "ScenarioBindingType"
-prop_var(60011, SB, "Direction", T(60050), "Role the server offers for this binding.", rule=MR_Mandatory)
+# ObservabilityBindingType
+object_type(60011, "ObservabilityBindingType", BaseObjectType,
+            "One observability binding on a bound object or type. It declares the OTEL signal "
+            "kind it exposes (metrics, logs or traces), lists the bound items (browsable and/or "
+            "as a compact array), carries the OTEL mapping metadata, and may reference the Part 14 "
+            "nodes that realize it. It lives in an ObservabilityBindingGroup contained by the "
+            "bound instance; its stable DataSetClassId already encodes the bound type, the signal "
+            "kind and the major version.", CAT)
+SB = "ObservabilityBindingType"
+prop_var(60011, SB, "SignalKind", T(60052),
+         "The OTEL signal this binding exposes: Metrics (a data DataSet), Logs (an event "
+         "DataSet) or Traces (spans from Program executions, audit or correlated events).",
+         rule=MR_Mandatory)
 prop_var(60011, SB, "ConfigurationVersion", ConfigurationVersionDataType,
          "Version of the binding, aligned with the realizing DataSetMetaData.")
 prop_var(60011, SB, "DataSetClassId", Guid,
-         "Stable DataSetClassId (Part 14) identifying the binding/content class this binding "
-         "defines - a data DataSet, event DataSet, or action set - so subscribers recognize the "
-         "same class across servers. It is a semantic class identity, not a guarantee of a fixed "
-         "field layout (see the DataSetClassId clause). Deterministic.", rule=MR_Mandatory)
+         "Stable DataSetClassId (Part 14) identifying the observability class this binding defines "
+         "- a metric set, a log stream, or a trace stream - so subscribers recognize the same "
+         "class across servers. It is a semantic class identity, not a guarantee of a fixed field "
+         "layout (see the DataSetClassId clause). Deterministic.", rule=MR_Mandatory)
 prop_var(60011, SB, "BaseDataSetClassIds", Guid,
          "DataSetClassIds of the base facet bindings this binding extends or composes (its "
          "class lineage). This binding's own DataSetClassId identifies the composed/derived "
          "class; a subscriber that knows a base class-id consumes the matching field subset "
-         "(see BoundItemType.SourceScenarioBindingClassId).", valuerank="1")
-prop_var(60011, SB, "ContentKind", T(60052),
-         "The content class the binding exposes: a data DataSet (PublishedDataItems), an "
-         "event DataSet (PublishedEvents), or an action set (bound Methods).", rule=MR_Mandatory)
+         "(see BoundItemType.SourceBindingClassId).", valuerank="1")
 prop_var(60011, SB, "DataSetCardinalityPath", RelativePath,
-         "RelativePath to the cardinality level: the Server/bridge produces one DataSet (data/event "
-         "content) or one action target (action content) per matched instance of it (default: the "
-         "bound root); placeholders below it become fields or actions within that produced content. "
-         "The DataSetClassId is shared across those DataSets/action targets (one class, many writers).")
+         "RelativePath to the cardinality level: the Server/bridge produces one DataSet per matched "
+         "instance of it (default: the bound root); placeholders below it become fields within that "
+         "produced DataSet. The DataSetClassId is shared across those DataSets (one class, many "
+         "writers).")
 prop_var(60011, SB, "DataSetMetaData", DataSetMetaDataType,
          "Part 14 DataSetMetaData for this DataSet (fields, dataSetClassId, "
          "configurationVersion), exposed so a consumer gets the class schema offline.")
 prop_var(60011, SB, "EventSourcePath", RelativePath,
-         "For an event DataSet: RelativePath to the event notifier to subscribe to "
+         "For a Logs or Traces binding: RelativePath to the event notifier to subscribe to "
          "(default: the cardinality anchor, i.e. the bound root when DataSetCardinalityPath "
          "is omitted).")
 prop_var(60011, SB, "Filter", ContentFilter,
-         "For an event DataSet: optional ContentFilter (event where-clause).")
+         "For a Logs or Traces binding: optional ContentFilter (event where-clause).")
 prop_var(60011, SB, "LogTemplate", String,
-         "For an event/log DataSet: a structured-log message template with {FieldName} holes that "
+         "For a Logs binding: a structured-log message template with {FieldName} holes that "
          "reference the binding's bound event fields, so a bridge can render an OTEL LogRecord Body "
          "while still carrying the fields as attributes.")
 prop_var(60011, SB, "LogSeverityFieldName", String,
-         "For an event/log DataSet: FieldName of the bound field carrying severity, mapped to the "
+         "For a Logs binding: FieldName of the bound field carrying severity, mapped to the "
          "OTEL LogRecord SeverityNumber/SeverityText.")
 prop_var(60011, SB, "LogBodyFieldName", String,
-         "For an event/log DataSet: FieldName of the bound field carrying the rendered body, an "
+         "For a Logs binding: FieldName of the bound field carrying the rendered body, an "
          "alternative to LogTemplate when the Server already produces the message text.")
 prop_var(60011, SB, "LogTimestampFieldName", String,
-         "For an event/log DataSet: FieldName of the bound field carrying the record timestamp, "
+         "For a Logs binding: FieldName of the bound field carrying the record timestamp, "
          "mapped to the OTEL LogRecord Timestamp.")
+prop_var(60011, SB, "SpanNameTemplate", String,
+         "For a Traces binding: a span-name template with {FieldName} holes referencing bound "
+         "event fields, rendered by a bridge to the OTEL span name.")
+prop_var(60011, SB, "SpanNameFieldName", String,
+         "For a Traces binding: FieldName of the bound field carrying the span name (alternative "
+         "to SpanNameTemplate).")
+prop_var(60011, SB, "TraceIdFieldName", String,
+         "For a Traces binding: FieldName of the bound field carrying the trace id (16-byte hex "
+         "or opaque). When absent a bridge derives or generates a trace id.")
+prop_var(60011, SB, "SpanIdFieldName", String,
+         "For a Traces binding: FieldName of the bound field carrying the span id (8-byte hex or "
+         "opaque). When absent a bridge generates a span id.")
+prop_var(60011, SB, "ParentSpanIdFieldName", String,
+         "For a Traces binding: FieldName of the bound field carrying the parent span id, so a "
+         "bridge can nest the span under its caller.")
+prop_var(60011, SB, "SpanStartTimeFieldName", String,
+         "For a Traces binding: FieldName of the bound field carrying the span start time "
+         "(default: the event Time/SourceTimestamp).")
+prop_var(60011, SB, "SpanEndTimeFieldName", String,
+         "For a Traces binding: FieldName of the bound field carrying the span end time. When "
+         "absent (and no correlation is configured) the event is a zero-duration span.")
+prop_var(60011, SB, "SpanStatusFieldName", String,
+         "For a Traces binding: FieldName of the bound field carrying the span status "
+         "(Ok/Error/Unset); when absent a bridge derives it from the event Severity/Quality.")
+prop_var(60011, SB, "SpanKind", String,
+         "For a Traces binding: the OTEL SpanKind for spans produced by this binding "
+         "(Internal, Server, Client, Producer, Consumer). Constant per binding; default Internal.")
+prop_var(60011, SB, "SpanCorrelationFieldName", String,
+         "For a Traces binding: FieldName of the bound field whose value pairs a start event with "
+         "its matching end event into one span (e.g. a Program run id). When absent, each event is "
+         "an independent span.")
 prop_var(60011, SB, "BoundItems", T(60060), "Compact machine-readable list of bound items (the DataSet fields).", valuerank="1")
 placeholder_obj(60011, SB, "<BoundItem>", T(60012),
                 "A browsable bound item (rich form of a BoundItems entry).")
 
-# ScenarioBindingGroupType (per-companion-spec anchor) + registry
-object_type(60018, "ScenarioBindingGroupType", FolderType,
-            "A per-companion-specification group of that spec's ScenarioBinding objects. It is "
-            "contained (HasComponent) in the IScenarioBoundType object that owns the bindings, and "
-            "is linked to the ScenarioProfile it serves by a Realizes reference (the inverse of the "
-            "profile's RealizedBy). Identified by CompanionSpecificationUri (a stable spec-level "
-            "identifier, distinct from a namespace URI, because a companion specification may "
-            "define several namespace URIs), so groups from different specifications on one object "
-            "never collide by BrowseName.", CAT)
-SG = "ScenarioBindingGroupType"
+# ObservabilityBindingGroupType (per-companion-spec anchor) + registry
+object_type(60018, "ObservabilityBindingGroupType", FolderType,
+            "A per-companion-specification group of that spec's ObservabilityBinding objects. It is "
+            "contained (HasComponent) in the IObservableType object that owns the bindings, and is "
+            "linked to the server-wide Observability registry by a Realizes reference (the inverse "
+            "of the registry's RealizedBy). Identified by CompanionSpecificationUri (a stable "
+            "spec-level identifier, distinct from a namespace URI, because a companion "
+            "specification may define several namespace URIs), so groups from different "
+            "specifications on one object never collide by BrowseName.", CAT)
+SG = "ObservabilityBindingGroupType"
 prop_var(60018, SG, "CompanionSpecificationUri", String,
          "Stable spec-level identifier of the companion specification this group anchors. Sibling "
-         "groups on one IScenarioBoundType object are unique by (Scenario x "
-         "CompanionSpecificationUri), and each group's BrowseName is derived from this identity so "
-         "sibling BrowseNames do not collide.", rule=MR_Mandatory)
+         "groups on one IObservableType object are unique by CompanionSpecificationUri, and each "
+         "group's BrowseName is derived from this identity so sibling BrowseNames do not collide.",
+         rule=MR_Mandatory)
 prop_var(60018, SG, "ModelNamespaceUris", String,
          "All namespace URIs the companion specification defines/covers.",
          rule=MR_Mandatory, valuerank="1")
-placeholder_obj(60018, SG, "<ScenarioBinding>", T(60011),
-                "A scenario binding of this companion specification.")
+placeholder_obj(60018, SG, "<ObservabilityBinding>", T(60011),
+                "An observability binding of this companion specification.")
 
-# ScenarioFolderType (the Scenarios registry container)
-object_type(60010, "ScenarioFolderType", FolderType,
-            "The type of the Scenarios registry: a discoverable folder of ScenarioProfile "
-            "objects, exposed as a component of the Server Object. It is the scenario-first "
-            "discovery entry point. Extensible - companion and scenario specifications add "
-            "their own ScenarioProfile objects.", CAT)
-SF = "ScenarioFolderType"
-placeholder_obj(60010, SF, "<Scenario>", T(60015),
-                "A registered integration scenario in this registry.",
-                reftype=Organizes)
-# No query Method: clients browse the Scenarios registry, pick a ScenarioProfile, follow its
-# RealizedBy references to the ScenarioBindingGroups (which live on the bound instances) and their
-# ScenarioBinding children; the profile carries the ScenarioUri. Browse + Read is sufficient and
-# keeps the type usable on a classic server.
+# ObservabilityFolderType (the Observability registry container)
+object_type(60010, "ObservabilityFolderType", FolderType,
+            "The type of the server-wide Observability registry, exposed as a component of the "
+            "Server Object. It is the discovery entry point: it references every "
+            "ObservabilityBindingGroup that exports observability data through non-hierarchical "
+            "RealizedBy references (the groups themselves stay contained by their bound instances). "
+            "Extensible - companion specifications contribute their instances' groups.", CAT)
+SF = "ObservabilityFolderType"
+# No placeholder children and no query Method: the registry references the ObservabilityBindingGroups
+# (which live on the bound instances) via RealizedBy; a client browses those references, then each
+# group's ObservabilityBinding children. Browse + Read is sufficient and keeps the type usable on a
+# classic server.
 
-# ScenarioProfileType (registry entry) - references the binding groups serving its scenario
-object_type(60015, "ScenarioProfileType", BaseObjectType,
-            "A registered integration scenario: its URI plus human-readable metadata, and "
-            "RealizedBy references to the ScenarioBindingGroups (which live on the bound "
-            "instances) that serve this scenario. Groups are not contained here - the profile is "
-            "not duplicated per instance; a group reaches its profile via the inverse Realizes "
-            "reference. The registry is extensible; vendors and other specifications add profiles "
-            "with their own URIs.", CAT)
-SP = "ScenarioProfileType"
-prop_var(60015, SP, "ScenarioUri", String, "The scenario URI. Authoritative here; a binding's "
-         "scenario is this ScenarioUri, reached from the binding's group via Realizes.",
-         rule=MR_Mandatory)
-prop_var(60015, SP, "Title", LocalizedText, "Short human-readable title.")
-prop_var(60015, SP, "Summary", LocalizedText, "Human-readable description of the scenario and its intended consumers.")
-prop_var(60015, SP, "Keywords", String, "Keywords describing the scenario.", valuerank="1")
-
-# IScenarioBoundType (interface) - contains its scenario binding groups directly
-interface_type(60016, "IScenarioBoundType", BaseInterfaceType,
+# IObservableType (interface) - contains its observability binding groups directly
+interface_type(60016, "IObservableType", BaseInterfaceType,
                "Interface implemented by a companion-specification ObjectType (or instance) to "
-               "advertise that it participates in scenario bindings, by containing its "
-               "ScenarioBindingGroup objects directly (one per (Scenario x companion "
-               "specification) it serves; typically one per scenario for a single-specification "
-               "instance). Each contained group Realizes the ScenarioProfile under the Scenarios "
-               "registry that defines its scenario.", CAT)
-placeholder_obj(60016, "IScenarioBoundType", "<ScenarioBindingGroup>", T(60018),
-                "A group of this object's bindings for one (Scenario x companion specification), "
-                "contained here (HasComponent) and linked to its ScenarioProfile by a Realizes "
-                "reference. Sibling groups have unique BrowseNames - by scenario for a "
-                "single-specification instance, and additionally by specification when several "
-                "specifications serve one scenario on the instance.")
+               "advertise that it exports observability data, by containing its "
+               "ObservabilityBindingGroup objects directly (one per companion specification it "
+               "covers; typically one for a single-specification instance). Each contained group "
+               "Realizes the server-wide Observability registry.", CAT)
+placeholder_obj(60016, "IObservableType", "<ObservabilityBindingGroup>", T(60018),
+                "A group of this object's observability bindings for one companion specification, "
+                "contained here (HasComponent) and linked to the Observability registry by a "
+                "Realizes reference. Sibling groups have unique BrowseNames, distinguished by "
+                "specification when several specifications are observable on the instance.")
 
 # --- Well-known instances --------------------------------------------------
-CAT_INST = "Scenario Binding Instances"
-# The Scenarios registry, hooked onto the well-known Server object (i=2253) as a component -
-# always present, so discovery never assumes a PubSub configuration surface. It is the
-# scenario-first discovery entry point.
-well_known(60101, "Scenarios", T(60010), int(Server.split("=")[1]),
-           "Server-wide registry of integration scenarios, discoverable as a component of the "
-           "Server object. It is the scenario-first entry point; its presence does not require "
-           "any PubSub configuration.")
+CAT_INST = "Observability Export Instances"
+# The Observability registry, hooked onto the well-known Server object (i=2253) as a component -
+# always present, so discovery never assumes a PubSub configuration surface. It is the discovery
+# entry point for observability export.
+well_known(60101, "Observability", T(60010), int(Server.split("=")[1]),
+           "Server-wide registry of observability bindings, discoverable as a component of the "
+           "Server object. It references (RealizedBy) every ObservabilityBindingGroup exposed by "
+           "the Server's instances; its presence does not require any PubSub configuration.")
 NODES[60101].category = CAT_INST
-
-SCENARIOS = [
-    (60110, "Observability",
-     "Real-time operational monitoring: SCADA/HMI, dashboards and observability "
-     "platforms (e.g. OpenTelemetry). Low latency, cyclic telemetry and status."),
-    (60111, "PredictiveMaintenance",
-     "Condition- and usage-based trending fed to maintenance analytics to forecast "
-     "wear and schedule service."),
-    (60112, "AnomalyDetection",
-     "High-resolution, correlated signals for baseline modelling and deviation/"
-     "outlier detection."),
-    (60113, "EnergyAndLoadManagement",
-     "Power, load, demand and energy signals for load management, peak shaving and "
-     "grid-services coordination."),
-    (60114, "AlarmAndEventDistribution",
-     "Condition and event streams for operators, CMMS/EAM and safety functions."),
-    (60115, "FleetAndCompliance",
-     "Multi-site supervision, contractual reporting and regulatory compliance."),
-    (60116, "RemoteOperations",
-     "Remote invocation of device/asset operations and commands (an action set): a bridge or "
-     "operator triggers bound Methods - lock/unlock, start/stop, reset, acknowledge, transfer - "
-     "over the classic Call service, or over Part 14 Actions/ActionTargets where PubSub is offered."),
-]
-SCENARIO_ROOT = "http://opcfoundation.org/UA/PubSub/Scenarios/"
-for (snid, sname, sdesc) in SCENARIOS:
-    add(snid, "UAObject", sname, f"Scenario_{sname}", desc=sdesc, parent=T(60101))
-    NODES[snid].category = CAT_INST
-    ref(snid, HasTypeDefinition, T(60015))
-    ref(snid, Organizes, T(60101), forward=False)
-    ref(60101, Organizes, T(snid))
-    set_string(snid, f"Scenario_{sname}", "ScenarioUri", SCENARIO_ROOT + sname)
 
 # ===========================================================================
 # ==============================  EMISSION  =================================
@@ -762,7 +719,7 @@ def _emit_node(n):
 
 def emit():
     out = ['<?xml version="1.0" encoding="utf-8"?>',
-           '<!-- OPC UA Scenario Bindings - proposed addition to the base UA '
+           '<!-- OPC UA Observability Export - proposed addition to the base UA '
            'namespace. PROVISIONAL NodeIds (final IDs assigned by the OPC Foundation). -->',
            '<UANodeSet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" '
            'xmlns:xsd="http://www.w3.org/2001/XMLSchema" '
@@ -788,7 +745,6 @@ def emit_csv():
 
 # --- Annex (reference tables) ----------------------------------------------
 LINK_MAP = {
-    "ActionTargetDataType": "https://reference.opcfoundation.org/specs/OPC-10000-14/6.2.3#6.2.3.10.3",
     "Argument": "https://reference.opcfoundation.org/specs/OPC-10000-3/8.6",
     "BaseDataVariableType": "https://reference.opcfoundation.org/specs/OPC-10000-5/7.4",
     "BaseInterfaceType": "https://reference.opcfoundation.org/specs/OPC-10000-5/6.9",
@@ -942,8 +898,8 @@ def emit_md():
 
     md = ['<a id="annex-a"></a>', "## Annex A \u2014 Information model\n",
           "This annex is the normative node reference. It is generated from "
-          "[`core-specs/extras/scenario-binding/tools/build_model.py`]"
-          "(../extras/scenario-binding/tools/build_model.py) and always matches `Opc.Ua.ScenarioBinding.NodeSet2.xml`. "
+          "[`core-specs/extras/observability-export/tools/build_model.py`]"
+          "(../extras/observability-export/tools/build_model.py) and always matches `Opc.Ua.ObservabilityExport.NodeSet2.xml`. "
           "All nodes are proposed additions to the base OPC UA namespace "
           "`http://opcfoundation.org/UA/`; the NodeIds shown are **provisional** (final "
           "IDs are assigned by the OPC Foundation). The **Declared in** column marks "
@@ -1044,7 +1000,7 @@ def emit_md():
     md.append("|---|---|---|---|")
     for nid in ORDER:
         n = NODES[nid]
-        if n.category != "Scenario Binding Instances" or n.cls != "UAObject":
+        if n.category != "Observability Export Instances" or n.cls != "UAObject":
             continue
         td = ""
         for rt, tgt, fwd in n.refs:
@@ -1057,13 +1013,13 @@ def emit_md():
 
 if __name__ == "__main__":
     here = os.path.dirname(os.path.abspath(__file__))
-    # The standardized NodeSet/CSV live in core-specs/scenario-binding; this generator lives
-    # alongside the other specs' secondary tooling under core-specs/extras/scenario-binding.
-    outdir = os.path.abspath(os.path.join(here, "..", "..", "..", "scenario-binding"))
-    with open(os.path.join(outdir, "Opc.Ua.ScenarioBinding.NodeSet2.xml"), "w",
+    # The standardized NodeSet/CSV live in core-specs/observability-export; this generator lives
+    # alongside the other specs' secondary tooling under core-specs/extras/observability-export.
+    outdir = os.path.abspath(os.path.join(here, "..", "..", "..", "observability-export"))
+    with open(os.path.join(outdir, "Opc.Ua.ObservabilityExport.NodeSet2.xml"), "w",
               encoding="utf-8") as f:
         f.write(emit())
-    with open(os.path.join(outdir, "Opc.Ua.ScenarioBinding.NodeIds.csv"), "w",
+    with open(os.path.join(outdir, "Opc.Ua.ObservabilityExport.NodeIds.csv"), "w",
               encoding="utf-8") as f:
         f.write(emit_csv())
     with open(os.path.join(here, "model-reference.md"), "w", encoding="utf-8") as f:
