@@ -53,7 +53,7 @@
 | ns=1;i=3907 | EnumStrings | Variable |  |
 | ns=1;i=6031 | SignalRole | Variable | Observable (read-only, default) or Controllable (eligible for a command binding). |
 | ns=1;i=6032 | SourceSemanticId | Variable | Semantic identifier (e.g. ECLASS / IEC CDD IRDI) of the source signal; resolved against the source's semantic annotations for cross-vendor portability. |
-| ns=1;i=1007 | OpenUsdTelemetryBindingType | ObjectType | Read-only UA Variable value drives a USD attribute (the default binding). Adds no members beyond the abstract base; binds the source Value (AttributeId 13). |
+| ns=1;i=1007 | OpenUsdValueChangeBindingType | ObjectType | A source UA Variable Value change drives a USD attribute (the default binding). Adds no members beyond the abstract base; binds the source Value (AttributeId 13). |
 | ns=1;i=1008 | OpenUsdAlarmBindingType | ObjectType | Read-only OPC UA A&C condition aspect (Part 9) drives a USD attribute. |
 | ns=1;i=6033 | AlarmAspect | Variable | Which A&C condition aspect drives the target (ActiveState/Severity/AckedState/EnabledState). |
 | ns=1;i=1009 | OpenUsdHistoryBindingType | ObjectType | Read-only history (Part 11 HistoryRead) authored as USD time samples. |

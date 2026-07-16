@@ -26,7 +26,7 @@ OpenUsdConnector  ──► UsdFileSink ──►  live.usda        (runtime ove
 
 ## Articulation bindings
 
-Each Axis representation carries the same `OpenUsdTelemetryBindingType` binding shape: `ParameterSet/ActualPosition` in degrees maps 1:1 to a USD rotate op. USD rotate ops are degrees, so the connector applies `Scale = 1.0`, `Offset = 0.0`.
+Each Axis representation carries the same `OpenUsdValueChangeBindingType` binding shape: `ParameterSet/ActualPosition` in degrees maps 1:1 to a USD rotate op. USD rotate ops are degrees, so the connector applies `Scale = 1.0`, `Offset = 0.0`.
 
 | Robot | Axis | Axis source | USD target prim | Target property | Home |
 |---|---|---|---|---|---|

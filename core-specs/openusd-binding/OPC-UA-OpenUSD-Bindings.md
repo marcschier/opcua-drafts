@@ -25,7 +25,7 @@ Out of scope (reserved for later work): Part 14 Actions, PubSub realization, a U
 
 ### 1.4 Capabilities and versioning
 
-This document supersedes Release 0.1.0. The 0.1 baseline (Representation + read-only telemetry binding + the Omniverse informative profile) remains conformant; 0.2.0 **adds** capabilities — semantic-id source, command, alarm, history, content integrity, **composition/aggregation**, and **asset content delivery**. New capabilities are additive and each is gated by its own conformance unit (§7), so a Server implements only what it needs. 0.2.0 also refines the live-binding information model: a binding is now an **abstract `OpenUsdLiveBindingType` with one concrete subtype per intent** (`OpenUsdTelemetryBindingType`, `OpenUsdAlarmBindingType`, `OpenUsdHistoryBindingType`, `OpenUsdCommandBindingType`; §5.4) rather than a single type discriminated by an `IntentProfile` enum — the 0.1 telemetry binding is expressed as `OpenUsdTelemetryBindingType`. Where this document refers to "the 0.1 baseline" it means the read-only representation + telemetry core; everything else is an optional 0.2.0 capability.
+This document supersedes Release 0.1.0. The 0.1 baseline (Representation + read-only telemetry binding + the Omniverse informative profile) remains conformant; 0.2.0 **adds** capabilities — semantic-id source, command, alarm, history, content integrity, **composition/aggregation**, and **asset content delivery**. New capabilities are additive and each is gated by its own conformance unit (§7), so a Server implements only what it needs. 0.2.0 also refines the live-binding information model: a binding is now an **abstract `OpenUsdLiveBindingType` with one concrete subtype per intent** (`OpenUsdValueChangeBindingType`, `OpenUsdAlarmBindingType`, `OpenUsdHistoryBindingType`, `OpenUsdCommandBindingType`; §5.4) rather than a single type discriminated by an `IntentProfile` enum — the 0.1 telemetry binding is expressed as `OpenUsdValueChangeBindingType`. Where this document refers to "the 0.1 baseline" it means the read-only representation + telemetry core; everything else is an optional 0.2.0 capability.
 
 
 ### 1.1 Motivation
@@ -130,7 +130,7 @@ flowchart TD
     STG["PlantStage : OpenUsdStageType"]
     OBJ["Pump101 : PumpType (domain Object)"]
     REP["OpenUsdRepresentation : OpenUsdRepresentationType (AddIn)"]
-    BND["Speed binding : OpenUsdTelemetryBindingType"]
+    BND["Speed binding : OpenUsdValueChangeBindingType"]
     OU --> ST --> STG
     OU --> RP
     OBJ -->|HasAddIn| REP
@@ -213,9 +213,9 @@ A domain Object gains a representation by composing this AddIn with `HasAddIn` (
 
 Exactly one of `SourceNodeId` / `SourceBrowsePath` / `SourceSemanticId` **shall** resolve to a single source Variable. `SourceBrowsePath` and `SourceSemanticId` are preferred over `SourceNodeId` because they are instance-portable and can be declared at type level; `SourceSemanticId` additionally makes a binding portable **across vendors and servers** that share the same semantic dictionary (ECLASS / IEC CDD), which is the anchor the wider asset-definition strategy relies on (§8.2).
 
-Because the intent is the type, a connector determines a binding's intent from its `HasTypeDefinition` (the concrete subtype), and a `<Binding>` placeholder (§5.3) whose declared TypeDefinition is the abstract base is materialized only by instances of a concrete subtype. The 0.1 baseline telemetry binding is expressed as `OpenUsdTelemetryBindingType`.
+Because the intent is the type, a connector determines a binding's intent from its `HasTypeDefinition` (the concrete subtype), and a `<Binding>` placeholder (§5.3) whose declared TypeDefinition is the abstract base is materialized only by instances of a concrete subtype. The 0.1 baseline telemetry binding is expressed as `OpenUsdValueChangeBindingType`.
 
-#### 5.4.1 `OpenUsdTelemetryBindingType : OpenUsdLiveBindingType`
+#### 5.4.1 `OpenUsdValueChangeBindingType : OpenUsdLiveBindingType`
 
 The read-only default (the 0.1 baseline binding): a source `Variable` `Value` drives a USD attribute. Adds **no** members beyond the base; it binds the source Value (`AttributeId` 13).
 
@@ -241,9 +241,9 @@ The opt-in, authorized control direction (USD → UA; §5.10). Adds:
 
 | Property | DataType | Rule | Meaning |
 |---|---|---:|---|
-| `CommandTargetNodeId` | NodeId | O | The Variable to write, or the Object on which to `Call` `CommandMethodId`. |
+| `CommandTargetNodeId` | NodeId | M | The Variable to write, or the Object on which to `Call` `CommandMethodId`. |
 | `CommandMethodId` | NodeId | O | Optional Method to invoke instead of a Variable write. |
-| `CommandTriggerPropertyName` | String | O | The USD attribute whose change is interpreted as the command intent/value. |
+| `CommandTriggerPropertyName` | String | M | The USD attribute whose change is interpreted as the command intent/value. |
 
 ### 5.5 `IOpenUsdRepresentedType : BaseInterfaceType`
 
@@ -281,7 +281,7 @@ Conversion order: engineering-unit conversion → `Scale`/`Offset` → (transfor
 
 **Quality.** An omitted (binary) source `StatusCode` means **Good**; a `Bad`/`Uncertain` StatusCode triggers `BadQualityAction` (default `Skip`). `ClearOpinion` removes the authored USD opinion (revealing a weaker layer) — it does **not** author a fabricated "bad" value.
 
-**Timestamp.** OPC UA source/server timestamps are wall-clock; USD time codes are stage-timeline ordinates. They relate only through an explicit epoch and `timeCodesPerSecond` when a recording profile is used; an `OpenUsdTelemetryBindingType` authors the latest value as the attribute default, while an `OpenUsdHistoryBindingType` authors time-sampled values (§5.11). Absent timestamps mean **unavailable**, not "now".
+**Timestamp.** OPC UA source/server timestamps are wall-clock; USD time codes are stage-timeline ordinates. They relate only through an explicit epoch and `timeCodesPerSecond` when a recording profile is used; an `OpenUsdValueChangeBindingType` authors the latest value as the attribute default, while an `OpenUsdHistoryBindingType` authors time-sampled values (§5.11). Absent timestamps mean **unavailable**, not "now".
 
 **Persistence and update.** `SamplingIntervalHint` and any deadband are **hints**; `PublishingInterval`, queue size, and the actual MonitoredItem parameters are per-client Subscription requests and are **not** part of the binding descriptor. Overflow and sequence gaps are observable loss (partly recoverable via `Republish`) and are not license to invent continuity.
 
@@ -424,7 +424,7 @@ Conformance Units (each a normative, testable requirement):
 - **OU-Stage** — `OpenUsdStageType` with a valid `RootLayerIdentifier`.
 - **OU-Representation** — a valid `OpenUsdRepresentation` AddIn (Stage NodeId resolves; canonical absolute `PrimPath`).
 - **OU-RepresentationRegistry** — every representation is Organized from `Representations`.
-- **OU-Binding** — a concrete `OpenUsdLiveBindingType` subtype (the baseline `OpenUsdTelemetryBindingType`) with a resolvable source and target and a stable `BindingDefinitionId`.
+- **OU-Binding** — a concrete `OpenUsdLiveBindingType` subtype (the baseline `OpenUsdValueChangeBindingType`) with a resolvable source and target and a stable `BindingDefinitionId`.
 - **OU-Conversion-Scalar** — scalar unit/scale/offset conversion.
 - **OU-Conversion-Transform** — RSL transform profile (angles, units, up-axis).
 - **OU-Quality** — Good-default handling and `BadQualityAction`.

@@ -8,7 +8,7 @@
 
 ## 1 Scope
 
-This addendum binds one `PumpType` instance to a USD prim and defines three read-only telemetry bindings (Part 2, `OpenUsdTelemetryBindingType`): impeller rotation from mass flow, body colour from bearing temperature, and status-light glow from differential pressure. It also shows the 0.2 capability bindings on the same pump — an alarm binding (`OpenUsdAlarmBindingType`) driving status-light visibility and an opt-in command binding (`OpenUsdCommandBindingType`) writing a speed setpoint — plus a stage content-integrity digest. It is illustrative; a concrete server supplies the exact source BrowsePaths and stage identifiers.
+This addendum binds one `PumpType` instance to a USD prim and defines three read-only telemetry bindings (Part 2, `OpenUsdValueChangeBindingType`): impeller rotation from mass flow, body colour from bearing temperature, and status-light glow from differential pressure. It also shows the 0.2 capability bindings on the same pump — an alarm binding (`OpenUsdAlarmBindingType`) driving status-light visibility and an opt-in command binding (`OpenUsdCommandBindingType`) writing a speed setpoint — plus a stage content-integrity digest. It is illustrative; a concrete server supplies the exact source BrowsePaths and stage identifiers.
 
 ## 2 Normative references
 
@@ -25,9 +25,9 @@ Pump101 : PumpType
   └─ HasAddIn OpenUsdRepresentation : OpenUsdRepresentationType
        Stage    = NodeId(Server/OpenUSD/Stages/PlantStage)
        PrimPath = "/Plant/Pumps/P101"
-       ├─ MassFlowSpin           : OpenUsdTelemetryBindingType   (+SourceSemanticId)
-       ├─ BearingTempColor       : OpenUsdTelemetryBindingType
-       ├─ DiffPressureEmissive   : OpenUsdTelemetryBindingType
+       ├─ MassFlowSpin           : OpenUsdValueChangeBindingType   (+SourceSemanticId)
+       ├─ BearingTempColor       : OpenUsdValueChangeBindingType
+       ├─ DiffPressureEmissive   : OpenUsdValueChangeBindingType
        ├─ AlarmActiveVisibility  : OpenUsdAlarmBindingType
        └─ SpeedSetpointCommand   : OpenUsdCommandBindingType   (opt-in)
 ```

@@ -27,7 +27,7 @@
     {
       "bindingDefinitionId": "6e63cf2c-f2de-4f78-a8f8-f0ccdbb7647a",
       "name": "MassFlowSpin",
-      "bindingType": "OpenUsdTelemetryBindingType",
+      "bindingType": "OpenUsdValueChangeBindingType",
       "signalRole": "Observable",
       "sourceBrowsePath": "/Operational/Measurements/MassFlow",
       "sourceSemanticId": "0173-1#02-AAO677#002",
@@ -44,7 +44,7 @@
     {
       "bindingDefinitionId": "b1a1f6f0-5c2b-5a1e-9f3a-2b7c4d8e0011",
       "name": "BearingTempColor",
-      "bindingType": "OpenUsdTelemetryBindingType",
+      "bindingType": "OpenUsdValueChangeBindingType",
       "sourceBrowsePath": "/Operational/Measurements/BearingTemperature",
       "targetPrimPath": "/Plant/Pumps/P101/Body",
       "targetPropertyName": "primvars:displayColor",
@@ -57,7 +57,7 @@
     {
       "bindingDefinitionId": "c2b2a7e1-6d3c-5b2f-a04b-3c8d5e9f1122",
       "name": "DiffPressureEmissive",
-      "bindingType": "OpenUsdTelemetryBindingType",
+      "bindingType": "OpenUsdValueChangeBindingType",
       "sourceBrowsePath": "/Operational/Measurements/DifferentialPressure",
       "targetPrimPath": "/Plant/Pumps/P101/StatusLight/Mat/Surface",
       "targetPropertyName": "inputs:emissiveColor",

@@ -443,9 +443,10 @@ prop_var(B, "OpenUsdLiveBindingType", "SourceSemanticId", String,
 # ---- Intent-specific subtypes of OpenUsdLiveBindingType --------------------
 # The concrete binding type encodes the intent; intent-specific members live only
 # on their subtype (replaces the former IntentProfile enum discriminator).
-object_type(1007, "OpenUsdTelemetryBindingType", T(1004),
-            "Read-only UA Variable value drives a USD attribute (the default binding). "
-            "Adds no members beyond the abstract base; binds the source Value (AttributeId 13).")
+object_type(1007, "OpenUsdValueChangeBindingType", T(1004),
+            "A source UA Variable Value change drives a USD attribute (the default "
+            "binding). Adds no members beyond the abstract base; binds the source "
+            "Value (AttributeId 13).")
 
 object_type(1008, "OpenUsdAlarmBindingType", T(1004),
             "Read-only OPC UA A&C condition aspect (Part 9) drives a USD attribute.")
@@ -465,12 +466,12 @@ object_type(1011, "OpenUsdCommandBindingType", T(1004),
             "Opt-in, authorized USD-side intent drives an OPC UA write / Method call (USD -> UA).")
 CM = 1011
 prop_var(CM, "OpenUsdCommandBindingType", "CommandTargetNodeId", NodeId_,
-         "The Variable to write, or the Object on which to Call CommandMethodId.", MR_Optional)
+         "The Variable to write, or the Object on which to Call CommandMethodId.", MR_Mandatory)
 prop_var(CM, "OpenUsdCommandBindingType", "CommandMethodId", NodeId_,
          "Optional Method to invoke instead of a Variable write.", MR_Optional)
 prop_var(CM, "OpenUsdCommandBindingType", "CommandTriggerPropertyName", String,
          "The USD attribute whose change is interpreted as the command intent/value.",
-         MR_Optional)
+         MR_Mandatory)
 
 # --- OpenUsdStageType (1002): appended content-integrity members -----------
 prop_var(S, "OpenUsdStageType", "RootLayerDigest", ByteString,

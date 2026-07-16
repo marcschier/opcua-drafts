@@ -512,9 +512,9 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1004</Reference>
     </References>
   </UAVariable>
-  <UAObjectType NodeId="ns=1;i=1007" BrowseName="1:OpenUsdTelemetryBindingType">
-    <DisplayName>OpenUsdTelemetryBindingType</DisplayName>
-    <Description>Read-only UA Variable value drives a USD attribute (the default binding). Adds no members beyond the abstract base; binds the source Value (AttributeId 13).</Description>
+  <UAObjectType NodeId="ns=1;i=1007" BrowseName="1:OpenUsdValueChangeBindingType">
+    <DisplayName>OpenUsdValueChangeBindingType</DisplayName>
+    <Description>A source UA Variable Value change drives a USD attribute (the default binding). Adds no members beyond the abstract base; binds the source Value (AttributeId 13).</Description>
     <Category>OpenUSD Binding</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=1004</Reference>
@@ -571,7 +571,7 @@
     <DisplayName>CommandTargetNodeId</DisplayName>
     <Description>The Variable to write, or the Object on which to Call CommandMethodId.</Description>
     <References>
-      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1011</Reference>
     </References>
@@ -589,7 +589,7 @@
     <DisplayName>CommandTriggerPropertyName</DisplayName>
     <Description>The USD attribute whose change is interpreted as the command intent/value.</Description>
     <References>
-      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1011</Reference>
     </References>

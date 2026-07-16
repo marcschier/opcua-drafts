@@ -47,7 +47,7 @@ OpenUsdDigestAlgorithmEnum,3007,DataType
 OpenUsdDigestAlgorithmEnum_EnumStrings,3907,Variable
 OpenUsdLiveBindingType_SignalRole,6031,Variable
 OpenUsdLiveBindingType_SourceSemanticId,6032,Variable
-OpenUsdTelemetryBindingType,1007,ObjectType
+OpenUsdValueChangeBindingType,1007,ObjectType
 OpenUsdAlarmBindingType,1008,ObjectType
 OpenUsdAlarmBindingType_AlarmAspect,6033,Variable
 OpenUsdHistoryBindingType,1009,ObjectType

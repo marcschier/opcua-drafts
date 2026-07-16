@@ -34,7 +34,7 @@
   },
 
   "articulationBinding": {
-    "bindingType": "OpenUsdTelemetryBindingType",
+    "bindingType": "OpenUsdValueChangeBindingType",
     "signalRole": "Observable",
     "sourceBrowsePath": "/ParameterSet/ActualPosition",
     "sourceSemanticId": "0173-1#02-BAF564#005",

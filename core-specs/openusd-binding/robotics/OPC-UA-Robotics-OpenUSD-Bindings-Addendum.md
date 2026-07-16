@@ -8,7 +8,7 @@
 
 ## 1 Scope
 
-This addendum binds one OPC 40010 `MotionDeviceSystem` (`RobotCell`) to `/Cell` in an OpenUSD stage. It defines recursive composition from the system to two articulated `MotionDevice` robots (`/Cell/Robots/R1`, `/Cell/Robots/R2`) and from each robot to six Axis link Xforms. Each Axis carries a read-only telemetry binding (`OpenUsdTelemetryBindingType`) from `ParameterSet/ActualPosition` in degrees to a USD rotate op (`xformOp:rotateZ`, `xformOp:rotateY`, or `xformOp:rotateX`). It also shows an emergency-stop alarm binding driving beacon visibility and a per-robot warning-halo visibility, an opt-in speed-override command binding, and a dynamic gripper tool reference mounted on R1's flange.
+This addendum binds one OPC 40010 `MotionDeviceSystem` (`RobotCell`) to `/Cell` in an OpenUSD stage. It defines recursive composition from the system to two articulated `MotionDevice` robots (`/Cell/Robots/R1`, `/Cell/Robots/R2`) and from each robot to six Axis link Xforms. Each Axis carries a read-only telemetry binding (`OpenUsdValueChangeBindingType`) from `ParameterSet/ActualPosition` in degrees to a USD rotate op (`xformOp:rotateZ`, `xformOp:rotateY`, or `xformOp:rotateX`). It also shows an emergency-stop alarm binding driving beacon visibility and a per-robot warning-halo visibility, an opt-in speed-override command binding, and a dynamic gripper tool reference mounted on R1's flange.
 
 ## 2 Normative references
 
@@ -40,7 +40,7 @@ MotionDevices/R1 : MotionDeviceType
 MotionDevices/R1/Axes/A1 : AxisType
   └─ HasAddIn OpenUsdRepresentation
        PrimPath = "/Cell/Robots/R1/Base/J1"
-       └─ AxisActualPosition : OpenUsdTelemetryBindingType
+       └─ AxisActualPosition : OpenUsdValueChangeBindingType
             SourceBrowsePath = "/ParameterSet/ActualPosition"
             TargetPropertyName = "xformOp:rotateZ"
             RenderTargetKind = Rotation
