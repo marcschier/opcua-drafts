@@ -83,7 +83,7 @@ Composition-specific implementer findings (generic):
 - **Process every representation.** Composition spans the aggregating representation and each component's own representation, so a connector iterates all registry entries, not just the first.
 - **One `OfType` filter covers both model-change events.** `GeneralModelChangeEventType` and `SemanticChangeEventType` both derive from `BaseModelChangeEventType`, so a single `OfType(BaseModelChangeEventType)` event filter suffices.
 
-`PumpOpenUsdE2eTests` now has **fifteen** passing cases; the five composition cases are `PumpComponentsComposeChildPrims`, `ProductionLineAggregatesPumps`, `DynamicPumpIsComposedThenDeactivated`, `CrossServerComponentIsComposed`, and `ComponentBindingsAreDiscoverable`.
+`PumpOpenUsdE2eTests` now has **sixteen** passing cases; the five composition cases are `PumpComponentsComposeChildPrims`, `ProductionLineAggregatesPumps`, `DynamicPumpIsComposedThenDeactivated`, `CrossServerComponentIsComposed`, and `ComponentBindingsAreDiscoverable`.
 
 ## 4.3 Asset content delivery
 

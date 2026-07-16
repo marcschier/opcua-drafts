@@ -5,7 +5,7 @@
     <Uri>http://opcfoundation.org/UA/OpenUSD/</Uri>
   </NamespaceUris>
   <Models>
-    <Model ModelUri="http://opcfoundation.org/UA/OpenUSD/" Version="0.1.0" PublicationDate="2026-07-12T00:00:00Z">
+    <Model ModelUri="http://opcfoundation.org/UA/OpenUSD/" Version="0.2.0" PublicationDate="2026-07-13T00:00:00Z">
       <RequiredModel ModelUri="http://opcfoundation.org/UA/" Version="1.05.04" PublicationDate="2023-12-15T00:00:00Z" />
     </Model>
   </Models>
@@ -91,7 +91,7 @@
   </UAVariable>
   <UAObjectType NodeId="ns=1;i=1004" BrowseName="1:OpenUsdLiveBindingType" IsAbstract="true">
     <DisplayName>OpenUsdLiveBindingType</DisplayName>
-    <Description>Abstract base for one read-only live binding: a source OPC UA Variable value drives one target USD attribute. The binding intent is expressed by the concrete subtype (Telemetry/Alarm/History/Command), not by an enum. The declaration is portable; the runtime connector resolves and applies it. The effective runtime identity is (represented object, BindingDefinitionId).</Description>
+    <Description>Abstract base for one read-only live binding: a source OPC UA Variable value drives one target USD attribute. The binding intent is expressed by the concrete subtype (ValueChange/Alarm/History/Command), not by an enum. The declaration is portable; the runtime connector resolves and applies it. The effective runtime identity is (represented object, BindingDefinitionId).</Description>
     <Category>OpenUSD Binding</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>

@@ -27,8 +27,8 @@ import os
 import xml.sax.saxutils as sx
 
 NAMESPACE = "http://opcfoundation.org/UA/OpenUSD/"
-VERSION = "0.1.0"
-PUBDATE = "2026-07-12T00:00:00Z"
+VERSION = "0.2.0"
+PUBDATE = "2026-07-13T00:00:00Z"
 BASE_UA_VERSION = "1.05.04"
 BASE_UA_PUBDATE = "2023-12-15T00:00:00Z"
 
@@ -284,7 +284,7 @@ OpenUsdBindingStateEnum = T(3004)
 object_type(1004, "OpenUsdLiveBindingType", BaseObjectType,
             "Abstract base for one read-only live binding: a source OPC UA Variable "
             "value drives one target USD attribute. The binding intent is expressed by "
-            "the concrete subtype (Telemetry/Alarm/History/Command), not by an enum. The "
+            "the concrete subtype (ValueChange/Alarm/History/Command), not by an enum. The "
             "declaration is portable; the runtime connector resolves and applies it. The "
             "effective runtime identity is (represented object, BindingDefinitionId).",
             abstract=True)

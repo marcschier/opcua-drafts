@@ -10,7 +10,7 @@
 | ns=1;i=3903 | EnumStrings | Variable |  |
 | ns=1;i=3004 | OpenUsdBindingStateEnum | DataType | Runtime lifecycle state of a live binding, exposed for diagnostics. |
 | ns=1;i=3904 | EnumStrings | Variable |  |
-| ns=1;i=1004 | OpenUsdLiveBindingType | ObjectType | Abstract base for one read-only live binding: a source OPC UA Variable value drives one target USD attribute. The binding intent is expressed by the concrete subtype (Telemetry/Alarm/History/Command), not by an enum. The declaration is portable; the runtime connector resolves and applies it. The effective runtime identity is (represented object, BindingDefinitionId). |
+| ns=1;i=1004 | OpenUsdLiveBindingType | ObjectType | Abstract base for one read-only live binding: a source OPC UA Variable value drives one target USD attribute. The binding intent is expressed by the concrete subtype (ValueChange/Alarm/History/Command), not by an enum. The declaration is portable; the runtime connector resolves and applies it. The effective runtime identity is (represented object, BindingDefinitionId). |
 | ns=1;i=6001 | BindingDefinitionId | Variable | Stable declaration identifier used for override/tombstone matching across type and instance levels. NOT a runtime instance key. |
 | ns=1;i=6002 | Enabled | Variable | False acts as a tombstone that suppresses an inherited binding. |
 | ns=1;i=6003 | SourceNodeId | Variable | Absolute NodeId of the source Variable (instance-level). Optional; prefer SourceBrowsePath for type-level declarations. |
