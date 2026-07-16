@@ -31,12 +31,12 @@ The model has these goals:
 
 JSON Schema is a first-class registry format, but the OPC UA JSON DataEncoding is self-describing enough that a schema fetch is optional for decoding. For JSON, the registry is used for governance, validation, code generation and documentation rather than as a mandatory decoding dependency.
 
-It is explicitly out of scope to re-specify the Avro, Arrow or JSON encodings themselves, the PubSub message framing, the abstract xRegistry model, or the xRegistry API. The abstract model is defined by [*OPC UA — xRegistry*](../xregistry/OPC-UA-xRegistry.md) and its generic OPC UA protocol binding by [*OPC UA — xRegistry Binding*](../xregistry/OPC-UA-xRegistry-Binding.md); this specification is a domain profile of them.
+It is explicitly out of scope to re-specify the Avro, Arrow or JSON encodings themselves, the PubSub message framing, the abstract xRegistry model, or the xRegistry API. The abstract model is defined by [*OPC UA — xRegistry*](../xregistry/OPC-UA-xRegistry.md) and the OPC UA API for it by [*xRegistry — OPC UA API*](../xregistry/xRegistry-OPC-UA-Api.md); this specification is a domain profile of them.
 
 ## 2 Normative references
 
 - [*OPC UA — xRegistry*](../xregistry/OPC-UA-xRegistry.md) — the abstract base companion model this specification extends: `RegistryType`, `GroupType`, `ResourceFileType`, the common xRegistry attributes, `AddProperty`/`RemoveProperty`, auto-bootstrap, the three representations and federation.
-- [*OPC UA — xRegistry Binding*](../xregistry/OPC-UA-xRegistry-Binding.md) — the generic OPC UA protocol binding for the xRegistry API.
+- [*xRegistry — OPC UA API*](../xregistry/xRegistry-OPC-UA-Api.md) — the OPC UA API binding for xRegistry.
 - [xRegistry Schema Registry Service, v1.0-rc3](https://github.com/xregistry/spec/blob/v1.0-rc3/schema/spec.md) — the `schemagroups`, `schemas`, `versions`, `format` model this domain profile aligns with.
 - [CloudEvents v1.0](https://github.com/cloudevents/spec) — the `dataschema` attribute convention reused for an optional on-wire schema reference.
 - [OPC 10000-3](https://reference.opcfoundation.org/specs/OPC-10000-3/) — Address Space Model, NodeIds, References, TypeDefinitions and the `ExpandedNodeId` structure.
@@ -217,7 +217,7 @@ The base auto-bootstrap (base §6.5) is specialized for schemas. When a schema f
 
 ### 10.2 Serving the xRegistry API and JSON projection
 
-The AddressSpace subtree rooted at `SchemaRegistry` is simultaneously the xRegistry API server and serializes to the xRegistry Schema Registry JSON shape, per the generic verb mapping of [*OPC UA — xRegistry Binding*](../xregistry/OPC-UA-xRegistry-Binding.md). The schema-specific projection is:
+The AddressSpace subtree rooted at `SchemaRegistry` is simultaneously the xRegistry API server and serializes to the xRegistry Schema Registry JSON shape, per the OPC UA API of [*xRegistry — OPC UA API*](../xregistry/xRegistry-OPC-UA-Api.md). The schema-specific projection is:
 
 | OPC UA node | xRegistry JSON member |
 |---|---|

@@ -4,8 +4,9 @@
 **Proposed Part: OPC 10000-2xx (number to be assigned)**
 **Companion namespace:** `http://opcfoundation.org/UA/xRegistry/`
 **Version:** 0.1.0 · **Date:** 2026-07-16
+**Target:** OPC Foundation standardization — the reusable base for domain-specific registries (Schema, Asset, Semantic, WoT Thing-Description, …).
 
-> **Status — working draft.** This document defines an abstract OPC UA companion information model that projects a [xRegistry](https://github.com/xregistry/spec) registry onto the OPC UA **FileTransfer** model. A registry and its groups are directories (`FileDirectoryType`); a resource/version document *is* a file (`FileType`). The model is **domain-neutral**: concrete registries — the OPC UA Schema Registry, a WoT Thing-Description registry, or any other xRegistry-shaped catalogue — subtype these base types. Nothing here is normative or endorsed by the OPC Foundation.
+> **Status — working draft.** This document defines an abstract OPC UA companion information model that projects a [xRegistry](https://github.com/xregistry/spec) registry onto the OPC UA **FileTransfer** model. A registry and its groups are directories (`FileDirectoryType`); a resource/version document *is* a file (`FileType`). The model is **domain-neutral**: concrete registries — an OPC UA Schema registry, an Asset registry, a Semantic registry, a WoT Thing-Description registry, or any other xRegistry-shaped catalogue — subtype these base types. Nothing here is normative or endorsed by the OPC Foundation.
 
 ---
 
@@ -22,13 +23,13 @@ This specification defines *one* mapping of the generic xRegistry structure onto
 
 The model is intentionally **abstract**. It defines the reusable base type system (`RegistryType`, `GroupType`, `ResourceFileType`) and the generic behaviours (three-representation symmetry, auto-bootstrap of the structure, property configuration, federation). A **domain companion specification** subtypes the base types to add its own group key and resource metadata — for example *OPC UA — Schema Registry* adds a `SchemaGroupType` keyed by an OPC UA namespace URI and a `SchemaFileType` carrying an on-wire `SchemaId`. The same base is designed to carry a future WoT Thing-Description registry without change.
 
-It is explicitly out of scope to re-specify the xRegistry core model or its HTTP API; the generic OPC UA operations that realize the xRegistry API over OPC UA services are described in the companion [*OPC UA — xRegistry Binding*](OPC-UA-xRegistry-Binding.md).
+It is explicitly out of scope to re-specify the xRegistry core model or its HTTP API; the OPC UA API for xRegistry — how these nodes are discovered, read and mutated over OPC UA Services — is defined in the companion [*xRegistry — OPC UA API*](xRegistry-OPC-UA-Api.md).
 
 ## 2 Normative references
 
 - [xRegistry Core specification, v1.0-rc3](https://github.com/xregistry/spec/blob/v1.0-rc3/core/spec.md) — the registry / group / resource / version / attribute model, `xid`, `epoch`, `self`, `labels`, and the model/capabilities documents.
 - [xRegistry primer, v1.0-rc3](https://github.com/xregistry/spec/blob/v1.0-rc3/core/primer.md) — §7 the three representations (file / static-file-server / API-server) and their symmetry; §8 cross-registry links and federation.
-- [xRegistry HTTP binding, v1.0-rc3](https://github.com/xregistry/spec/blob/v1.0-rc3/core/http.md) — the reference protocol binding whose structure the [*OPC UA — xRegistry Binding*](OPC-UA-xRegistry-Binding.md) mirrors.
+- [xRegistry HTTP binding, v1.0-rc3](https://github.com/xregistry/spec/blob/v1.0-rc3/core/http.md) — the HTTP protocol binding of xRegistry; an informative sibling of the OPC UA API binding ([*xRegistry — OPC UA API*](xRegistry-OPC-UA-Api.md)), both realizing the same core model over their respective protocols.
 - [OPC 10000-3](https://reference.opcfoundation.org/specs/OPC-10000-3/) — Address Space Model: NodeIds, References, TypeDefinitions, and the `ExpandedNodeId` structure (§8.2.3) used for federation.
 - [OPC 10000-5](https://reference.opcfoundation.org/specs/OPC-10000-5/) — Base Information Model: `FolderType`, `PropertyType` and the `KeyValuePair` DataType (§12.23) used for `labels`.
 - [OPC 10000-20](https://reference.opcfoundation.org/specs/OPC-10000-20/) — File Transfer: `FileType` (§4.2) and `FileDirectoryType` (§4.3.1) with the `Open` / `Read` / `Write` / `Close` and `CreateDirectory` / `CreateFile` / `Delete` / `MoveOrCopy` Methods.
@@ -76,7 +77,7 @@ xRegistry (primer §7) defines three interchangeable representations of the same
 | xRegistry representation | Realization in this model |
 |---|---|
 | **Files** / **static file server** — a directory tree of documents + attribute sidecars | The AddressSpace subtree: `FileDirectoryType` directories and `FileType` files under the `RegistryType` root. Browse = list; Read = fetch a document. |
-| **API server** — a live service that serves and mutates the registry | OPC UA Client/Server services over the same subtree: Browse, Read, `Open`/`Read`/`Write`, `CreateDirectory`/`CreateFile`/`Delete`/`MoveOrCopy`, `AddProperty`/`RemoveProperty` — mapped verb-by-verb in [*OPC UA — xRegistry Binding*](OPC-UA-xRegistry-Binding.md). |
+| **API server** — a live service that serves and mutates the registry | OPC UA Client/Server services over the same subtree: Browse, Read, `Open`/`Read`/`Write`, `CreateDirectory`/`CreateFile`/`Delete`/`MoveOrCopy`, `AddProperty`/`RemoveProperty` — defined by [*xRegistry — OPC UA API*](xRegistry-OPC-UA-Api.md). |
 | **Document** — a single serialized registry document | An OPC UA Read/export of the subtree serializes to the xRegistry JSON document shape (the inverse of importing a document to bootstrap the subtree). |
 
 The three are **symmetric**: the same entity has the same `xid` and identity in every representation, so a resource registered through the API server is immediately visible as a file, and a document imported to bootstrap the AddressSpace is immediately serveable through the API.
@@ -154,17 +155,17 @@ Subsequent `Write`s or `AddProperty` / `RemoveProperty` calls update `ModifiedAt
 
 ## 7 The xRegistry API over OPC UA
 
-The AddressSpace subtree is simultaneously the xRegistry **API server**: each xRegistry HTTP operation has a direct OPC UA equivalent over the same nodes. The generic mapping — every entity and verb (`GET` / `PUT` / `PATCH` / `POST` / `DELETE`, the collection and document endpoints, request flags such as `?inline`, `?filter`, `?export`, and error handling) to an OPC UA operation — is defined in the companion [*OPC UA — xRegistry Binding*](OPC-UA-xRegistry-Binding.md), which mirrors the structure of the xRegistry HTTP binding so it can be submitted to the xRegistry organization as the OPC UA protocol binding. In summary:
+The AddressSpace subtree is simultaneously the xRegistry **API server**: each xRegistry operation is realized natively by OPC UA Services over the same nodes. The full OPC UA API — reading, listing, creating, updating and deleting registries, groups, resources, versions and their documents and attributes, together with the request flags and error handling — is defined in the companion [*xRegistry — OPC UA API*](xRegistry-OPC-UA-Api.md), the OPC UA API binding of xRegistry. In summary:
 
-| xRegistry HTTP | OPC UA operation |
+| xRegistry operation | OPC UA operation |
 |---|---|
-| `GET` a registry/group/resource collection | Browse the corresponding `FileDirectoryType` directory |
-| `GET` a resource document | `Open`/`Read`/`Close` the `ResourceFileType` file (or a domain fast path) |
-| `GET` an entity's attributes (`?meta`, `$details`) | Read the Properties of the Object |
-| `PUT` / `POST` a new resource or version | `CreateFile` (+ `CreateDirectory`) then `Write` |
-| `PATCH` an entity's attributes | `AddProperty` / `RemoveProperty` (or Write a Property) |
-| `DELETE` an entity | `Delete` on the parent `FileDirectoryType` |
-| `?export` a subtree as a document | Read/serialize the subtree to the xRegistry document shape |
+| List a registry/group/resource collection | Browse the corresponding `FileDirectoryType` directory |
+| Read a resource document | `Open`/`Read`/`Close` the `ResourceFileType` file (or a domain fast path) |
+| Read an entity's attributes | Read the Properties of the Object |
+| Create a resource or version | `CreateFile` (+ `CreateDirectory`) then `Write` |
+| Update an entity's attributes | `AddProperty` / `RemoveProperty` (or Write a Property) |
+| Delete an entity | `Delete` on the parent `FileDirectoryType` |
+| Export a subtree as a document | Read/serialize the subtree to the xRegistry document shape |
 
 ## 8 Federation
 
