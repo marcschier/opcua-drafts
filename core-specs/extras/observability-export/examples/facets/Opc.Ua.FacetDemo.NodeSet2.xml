@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- FacetDemo: a minimal illustrative companion model for the Observability Export
+     inheritance/facet-composition example. PROVISIONAL, non-normative. -->
+<UANodeSet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd">
+  <NamespaceUris>
+    <Uri>http://opcfoundation.org/UA/FacetDemo/</Uri>
+  </NamespaceUris>
+  <Models>
+    <Model ModelUri="http://opcfoundation.org/UA/FacetDemo/" Version="1.0.0" PublicationDate="2026-07-01T00:00:00Z">
+      <RequiredModel ModelUri="http://opcfoundation.org/UA/" Version="1.05.0" PublicationDate="2023-12-15T00:00:00Z" />
+    </Model>
+  </Models>
+  <Aliases>
+    <Alias Alias="Int32">i=6</Alias>
+    <Alias Alias="Double">i=11</Alias>
+    <Alias Alias="String">i=12</Alias>
+    <Alias Alias="DateTime">i=13</Alias>
+    <Alias Alias="HasModellingRule">i=37</Alias>
+    <Alias Alias="HasTypeDefinition">i=40</Alias>
+    <Alias Alias="HasSubtype">i=45</Alias>
+    <Alias Alias="HasProperty">i=46</Alias>
+    <Alias Alias="HasComponent">i=47</Alias>
+    <Alias Alias="HasInterface">i=17603</Alias>
+    <Alias Alias="HasAddIn">i=17604</Alias>
+  </Aliases>
+  <UAObjectType NodeId="ns=1;i=1001" BrowseName="1:DeviceType">
+    <DisplayName>DeviceType</DisplayName>
+    <References>
+      <Reference ReferenceType="i=45" IsForward="false">i=58</Reference>
+      <Reference ReferenceType="i=46">ns=1;i=1002</Reference>
+      <Reference ReferenceType="i=46">ns=1;i=1003</Reference>
+      <Reference ReferenceType="i=47">ns=1;i=1004</Reference>
+    </References>
+  </UAObjectType>
+  <UAVariable NodeId="ns=1;i=1002" BrowseName="1:Manufacturer" ParentNodeId="ns=1;i=1001" DataType="i=12">
+    <DisplayName>Manufacturer</DisplayName>
+    <References>
+      <Reference ReferenceType="i=37">i=78</Reference>
+      <Reference ReferenceType="i=40">i=68</Reference>
+      <Reference ReferenceType="i=46" IsForward="false">ns=1;i=1001</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=1003" BrowseName="1:SerialNumber" ParentNodeId="ns=1;i=1001" DataType="i=12">
+    <DisplayName>SerialNumber</DisplayName>
+    <References>
+      <Reference ReferenceType="i=37">i=78</Reference>
+      <Reference ReferenceType="i=40">i=68</Reference>
+      <Reference ReferenceType="i=46" IsForward="false">ns=1;i=1001</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=1004" BrowseName="1:DeviceHealth" ParentNodeId="ns=1;i=1001" DataType="i=6">
+    <DisplayName>DeviceHealth</DisplayName>
+    <References>
+      <Reference ReferenceType="i=37">i=78</Reference>
+      <Reference ReferenceType="i=40">i=63</Reference>
+      <Reference ReferenceType="i=47" IsForward="false">ns=1;i=1001</Reference>
+    </References>
+  </UAVariable>
+  <UAObjectType NodeId="ns=1;i=1010" BrowseName="1:LocationAddInType">
+    <DisplayName>LocationAddInType</DisplayName>
+    <References>
+      <Reference ReferenceType="i=45" IsForward="false">i=58</Reference>
+      <Reference ReferenceType="i=47">ns=1;i=1011</Reference>
+      <Reference ReferenceType="i=47">ns=1;i=1012</Reference>
+      <Reference ReferenceType="i=47">ns=1;i=1013</Reference>
+    </References>
+  </UAObjectType>
+  <UAVariable NodeId="ns=1;i=1011" BrowseName="1:Latitude" ParentNodeId="ns=1;i=1010" DataType="i=11">
+    <DisplayName>Latitude</DisplayName>
+    <References>
+      <Reference ReferenceType="i=37">i=78</Reference>
+      <Reference ReferenceType="i=40">i=63</Reference>
+      <Reference ReferenceType="i=47" IsForward="false">ns=1;i=1010</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=1012" BrowseName="1:Longitude" ParentNodeId="ns=1;i=1010" DataType="i=11">
+    <DisplayName>Longitude</DisplayName>
+    <References>
+      <Reference ReferenceType="i=37">i=78</Reference>
+      <Reference ReferenceType="i=40">i=63</Reference>
+      <Reference ReferenceType="i=47" IsForward="false">ns=1;i=1010</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=1013" BrowseName="1:Altitude" ParentNodeId="ns=1;i=1010" DataType="i=11">
+    <DisplayName>Altitude</DisplayName>
+    <References>
+      <Reference ReferenceType="i=37">i=78</Reference>
+      <Reference ReferenceType="i=40">i=63</Reference>
+      <Reference ReferenceType="i=47" IsForward="false">ns=1;i=1010</Reference>
+    </References>
+  </UAVariable>
+  <UAObjectType NodeId="ns=1;i=1020" BrowseName="1:IMaintenanceFacetType" IsAbstract="true">
+    <DisplayName>IMaintenanceFacetType</DisplayName>
+    <References>
+      <Reference ReferenceType="i=45" IsForward="false">i=17602</Reference>
+      <Reference ReferenceType="i=46">ns=1;i=1021</Reference>
+    </References>
+  </UAObjectType>
+  <UAVariable NodeId="ns=1;i=1021" BrowseName="1:LastMaintenanceDate" ParentNodeId="ns=1;i=1020" DataType="i=13">
+    <DisplayName>LastMaintenanceDate</DisplayName>
+    <References>
+      <Reference ReferenceType="i=37">i=78</Reference>
+      <Reference ReferenceType="i=40">i=68</Reference>
+      <Reference ReferenceType="i=46" IsForward="false">ns=1;i=1020</Reference>
+    </References>
+  </UAVariable>
+  <UAObjectType NodeId="ns=1;i=1030" BrowseName="1:MachineType">
+    <DisplayName>MachineType</DisplayName>
+    <References>
+      <Reference ReferenceType="i=45" IsForward="false">ns=1;i=1001</Reference>
+      <Reference ReferenceType="i=47">ns=1;i=1031</Reference>
+      <Reference ReferenceType="i=47">ns=1;i=1032</Reference>
+      <Reference ReferenceType="i=17604">ns=1;i=1033</Reference>
+      <Reference ReferenceType="i=17603">ns=1;i=1020</Reference>
+    </References>
+  </UAObjectType>
+  <UAVariable NodeId="ns=1;i=1031" BrowseName="1:SpindleSpeed" ParentNodeId="ns=1;i=1030" DataType="i=11">
+    <DisplayName>SpindleSpeed</DisplayName>
+    <References>
+      <Reference ReferenceType="i=37">i=78</Reference>
+      <Reference ReferenceType="i=40">i=63</Reference>
+      <Reference ReferenceType="i=47" IsForward="false">ns=1;i=1030</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=1032" BrowseName="1:AxisLoad" ParentNodeId="ns=1;i=1030" DataType="i=11">
+    <DisplayName>AxisLoad</DisplayName>
+    <References>
+      <Reference ReferenceType="i=37">i=78</Reference>
+      <Reference ReferenceType="i=40">i=63</Reference>
+      <Reference ReferenceType="i=47" IsForward="false">ns=1;i=1030</Reference>
+    </References>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=1033" BrowseName="1:Location" ParentNodeId="ns=1;i=1030">
+    <DisplayName>Location</DisplayName>
+    <References>
+      <Reference ReferenceType="i=37">i=78</Reference>
+      <Reference ReferenceType="i=40">ns=1;i=1010</Reference>
+      <Reference ReferenceType="i=17604" IsForward="false">ns=1;i=1030</Reference>
+    </References>
+  </UAObject>
+</UANodeSet>

@@ -1,0 +1,337 @@
+{
+  "domain": "Pumps",
+  "appliesToType": "PumpType",
+  "baseModelNamespaceUri": "http://opcfoundation.org/UA/Pumps/",
+  "exampleNamespaceUri": "http://opcfoundation.org/UA/PubSub/Examples/Pumps/",
+  "instanceName": "ExamplePump",
+  "summary": "Pumps expose operational measurements, identity dimensions and events that map naturally to OTEL metrics, logs and traces.",
+  "companionSpec": {
+    "name": "OPC UA for Pumps and Vacuum Pumps",
+    "ref": "https://reference.opcfoundation.org/Pumps/v100/docs/"
+  },
+  "instanceModel": {
+    "note": "The theoretical instance mirrors the official Pumps instanceexample.xml (an ExamplePump : PumpType with Operational/Measurements, Identification, Supervision*, Maintenance and a <Drive>); the bound BrowsePaths resolve against exactly that structure.",
+    "ref": "https://github.com/OPCFoundation/UA-Nodeset/blob/latest/Pumps/instanceexample.xml",
+    "refName": "Pumps/instanceexample.xml"
+  },
+  "configurationVersion": {
+    "majorVersion": 1,
+    "minorVersion": 0
+  },
+  "companionSpecificationUri": "http://opcfoundation.org/UA/Pumps/",
+  "modelNamespaceUris": [
+    "http://opcfoundation.org/UA/Pumps/"
+  ],
+  "groupName": "Pumps",
+  "baseNodeSets": [
+    "Opc.Ua.Pumps.NodeSet2.xml",
+    "Opc.Ua.Di.NodeSet2.xml",
+    "Opc.Ua.Machinery.NodeSet2.xml"
+  ],
+  "requiredModels": [
+    {
+      "uri": "http://opcfoundation.org/UA/Pumps/"
+    },
+    {
+      "uri": "http://opcfoundation.org/UA/DI/"
+    },
+    {
+      "uri": "http://opcfoundation.org/UA/Machinery/"
+    }
+  ],
+  "observabilityBindings": [
+    {
+      "name": "Metrics",
+      "signalKind": "Metrics",
+      "baseDataSetClassIds": [
+        "ac52dde1-e3db-5534-bc44-5b18d9335b72"
+      ],
+      "boundItems": [
+        {
+          "kind": "Telemetry",
+          "metricInstrumentType": "Gauge",
+          "unit": "1/min",
+          "browsePath": "/Operational/Measurements/Speed",
+          "samplingIntervalHint": 1000
+        },
+        {
+          "kind": "Telemetry",
+          "metricInstrumentType": "Gauge",
+          "unit": "m3/s",
+          "browsePath": "/Operational/Measurements/Throughput",
+          "samplingIntervalHint": 1000
+        },
+        {
+          "kind": "Telemetry",
+          "metricInstrumentType": "Gauge",
+          "unit": "kg/s",
+          "browsePath": "/Operational/Measurements/MassFlow",
+          "samplingIntervalHint": 1000
+        },
+        {
+          "kind": "Telemetry",
+          "metricInstrumentType": "Gauge",
+          "unit": "Pa",
+          "browsePath": "/Operational/Measurements/ProcessPressure",
+          "samplingIntervalHint": 1000
+        },
+        {
+          "kind": "Telemetry",
+          "metricInstrumentType": "Gauge",
+          "unit": "Pa",
+          "browsePath": "/Operational/Measurements/DifferentialPressure",
+          "samplingIntervalHint": 1000
+        },
+        {
+          "kind": "Telemetry",
+          "metricInstrumentType": "Gauge",
+          "unit": "m",
+          "browsePath": "/Operational/Measurements/PumpTotalHead",
+          "samplingIntervalHint": 1000
+        },
+        {
+          "kind": "Telemetry",
+          "metricInstrumentType": "Gauge",
+          "unit": "W",
+          "browsePath": "/Operational/Measurements/PumpPowerInput",
+          "samplingIntervalHint": 1000
+        },
+        {
+          "kind": "Telemetry",
+          "metricInstrumentType": "Gauge",
+          "unit": "W",
+          "browsePath": "/Operational/Measurements/PumpPowerOutput",
+          "samplingIntervalHint": 1000
+        },
+        {
+          "kind": "Metric",
+          "metricInstrumentType": "Gauge",
+          "unit": "%",
+          "browsePath": "/Operational/Measurements/OverallEfficiency",
+          "samplingIntervalHint": 5000
+        },
+        {
+          "kind": "Metric",
+          "metricInstrumentType": "Gauge",
+          "unit": "%",
+          "browsePath": "/Operational/Measurements/PumpEfficiency",
+          "samplingIntervalHint": 5000
+        },
+        {
+          "kind": "Metric",
+          "metricInstrumentType": "Gauge",
+          "unit": "%",
+          "browsePath": "/Operational/Measurements/HydraulicEfficiency",
+          "samplingIntervalHint": 5000
+        },
+        {
+          "kind": "Telemetry",
+          "metricInstrumentType": "Gauge",
+          "unit": "Cel",
+          "browsePath": "/Operational/Measurements/FluidTemperature",
+          "samplingIntervalHint": 2000
+        },
+        {
+          "kind": "Telemetry",
+          "metricInstrumentType": "Histogram",
+          "unit": "Cel",
+          "explicitBucketBoundaries": [
+            40,
+            60,
+            80,
+            100,
+            120
+          ],
+          "browsePath": "/Operational/Measurements/BearingTemperature",
+          "samplingIntervalHint": 2000
+        },
+        {
+          "kind": "Telemetry",
+          "metricInstrumentType": "Gauge",
+          "unit": "Cel",
+          "browsePath": "/Operational/Measurements/PumpTemperature",
+          "samplingIntervalHint": 2000
+        },
+        {
+          "kind": "Telemetry",
+          "metricInstrumentType": "Gauge",
+          "unit": "N",
+          "browsePath": "/Operational/Measurements/AxialLoadOfPumpRotor",
+          "samplingIntervalHint": 5000
+        },
+        {
+          "kind": "Telemetry",
+          "metricInstrumentType": "Gauge",
+          "unit": "N",
+          "browsePath": "/Operational/Measurements/RadialLoadOfPumpRotor",
+          "samplingIntervalHint": 5000
+        },
+        {
+          "kind": "Telemetry",
+          "metricInstrumentType": "Gauge",
+          "unit": "Pa",
+          "browsePath": "/Operational/Measurements/LubricatingOilPressure",
+          "samplingIntervalHint": 5000
+        },
+        {
+          "kind": "Telemetry",
+          "metricInstrumentType": "Gauge",
+          "unit": "m",
+          "browsePath": "/Operational/Measurements/AxialRotorPosition",
+          "samplingIntervalHint": 5000
+        },
+        {
+          "kind": "Telemetry",
+          "metricInstrumentType": "Gauge",
+          "unit": "dB",
+          "browsePath": "/Operational/Measurements/SoundPower",
+          "samplingIntervalHint": 500
+        },
+        {
+          "kind": "Telemetry",
+          "metricInstrumentType": "Gauge",
+          "unit": "dB",
+          "browsePath": "/Operational/Measurements/SoundPressureLevel",
+          "samplingIntervalHint": 500
+        },
+        {
+          "kind": "Counter",
+          "metricInstrumentType": "Counter",
+          "metricTemporality": "Cumulative",
+          "monotonic": true,
+          "browsePath": "/Operational/Measurements/NumberOfStarts",
+          "samplingIntervalHint": 10000
+        },
+        {
+          "kind": "Dimension",
+          "fieldName": "Manufacturer",
+          "browsePath": "/Identification/Manufacturer",
+          "sourceBindingClassId": "ac52dde1-e3db-5534-bc44-5b18d9335b72"
+        },
+        {
+          "kind": "Dimension",
+          "fieldName": "Model",
+          "browsePath": "/Identification/Model",
+          "sourceBindingClassId": "ac52dde1-e3db-5534-bc44-5b18d9335b72"
+        },
+        {
+          "kind": "Dimension",
+          "fieldName": "SerialNumber",
+          "browsePath": "/Identification/SerialNumber",
+          "sourceBindingClassId": "ac52dde1-e3db-5534-bc44-5b18d9335b72"
+        },
+        {
+          "kind": "Dimension",
+          "fieldName": "ProductInstanceUri",
+          "browsePath": "/Identification/ProductInstanceUri",
+          "sourceBindingClassId": "ac52dde1-e3db-5534-bc44-5b18d9335b72"
+        },
+        {
+          "kind": "Dimension",
+          "fieldName": "AssetId",
+          "browsePath": "/Identification/AssetId"
+        },
+        {
+          "kind": "Dimension",
+          "fieldName": "Location",
+          "browsePath": "/Identification/Location"
+        },
+        {
+          "kind": "Dimension",
+          "fieldName": "service.name",
+          "dimensionConstantValue": "pump-observability"
+        }
+      ]
+    },
+    {
+      "name": "Logs",
+      "signalKind": "Logs",
+      "eventSourcePath": "/",
+      "eventType": "BaseEventType",
+      "logTemplate": "{SourceName}: {Message} (severity {Severity})",
+      "logSeverityFieldName": "Severity",
+      "logBodyFieldName": "Message",
+      "logTimestampFieldName": "Time",
+      "boundItems": [
+        {
+          "fieldName": "EventId",
+          "kind": "Event",
+          "browsePath": "/EventId"
+        },
+        {
+          "fieldName": "EventType",
+          "kind": "Event",
+          "browsePath": "/EventType"
+        },
+        {
+          "fieldName": "SourceName",
+          "kind": "Event",
+          "browsePath": "/SourceName"
+        },
+        {
+          "fieldName": "Time",
+          "kind": "Event",
+          "browsePath": "/Time"
+        },
+        {
+          "fieldName": "Severity",
+          "kind": "Event",
+          "browsePath": "/Severity"
+        },
+        {
+          "fieldName": "Message",
+          "kind": "Event",
+          "browsePath": "/Message"
+        },
+        {
+          "fieldName": "service.name",
+          "kind": "Dimension",
+          "dimensionConstantValue": "pump-observability"
+        }
+      ]
+    },
+    {
+      "name": "Traces",
+      "signalKind": "Traces",
+      "eventSourcePath": "/",
+      "eventType": "BaseEventType",
+      "spanNameTemplate": "Pump operation {SourceName}",
+      "spanStartTimeFieldName": "Time",
+      "spanStatusFieldName": "Severity",
+      "spanKind": "Internal",
+      "spanCorrelationFieldName": "EventId",
+      "boundItems": [
+        {
+          "fieldName": "EventId",
+          "kind": "Event",
+          "browsePath": "/EventId"
+        },
+        {
+          "fieldName": "SourceName",
+          "kind": "Event",
+          "browsePath": "/SourceName"
+        },
+        {
+          "fieldName": "Time",
+          "kind": "Event",
+          "browsePath": "/Time"
+        },
+        {
+          "fieldName": "Severity",
+          "kind": "Event",
+          "browsePath": "/Severity"
+        },
+        {
+          "fieldName": "Message",
+          "kind": "Event",
+          "browsePath": "/Message"
+        },
+        {
+          "fieldName": "service.name",
+          "kind": "Dimension",
+          "dimensionConstantValue": "pump-observability"
+        }
+      ]
+    }
+  ]
+}
