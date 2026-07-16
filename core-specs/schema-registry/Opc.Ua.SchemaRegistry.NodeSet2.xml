@@ -48,7 +48,7 @@
   </UAObjectType>
   <UAObjectType NodeId="ns=2;i=62002" BrowseName="2:SchemaFileType">
     <DisplayName>SchemaFileType</DisplayName>
-    <Description>An xRegistry ResourceFileType whose file content is one concrete schema document (Avro, Apache Arrow or JSON Schema). Adds the OPC UA schema-decoding metadata (SchemaId and per-encoding fields) used by a consumer that must resolve a schema from an on-wire fingerprint.</Description>
+    <Description>An xRegistry ResourceType whose file content is one concrete schema document (Avro, Apache Arrow or JSON Schema). Adds the OPC UA schema-decoding metadata (SchemaId and per-encoding fields) used by a consumer that must resolve a schema from an on-wire fingerprint.</Description>
     <Category>Schema Registry</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=63002</Reference>

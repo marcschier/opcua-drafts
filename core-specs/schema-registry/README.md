@@ -2,7 +2,7 @@
 
 This folder contains the specification and generated NodeSet companion extension for an in-server OPC UA Schema Registry.
 
-The Schema Registry is a **domain extension of the abstract [OPC UA — xRegistry](../xregistry/) companion model**: `SchemaRegistryType`, `SchemaGroupType` and `SchemaFileType` subtype the base `RegistryType`, `GroupType` and `ResourceFileType`, so the registry, its schema groups and its schema documents are OPC UA **FileTransfer** directories and files. It is exposed as a well-known `SchemaRegistry` Object under Part 14 `PublishSubscribe` (`i=14443`). Each schema document is also addressable at runtime by an Opaque NodeId in the Schema Registry namespace whose Identifier bytes are the raw on-wire `SchemaId` fingerprint.
+The Schema Registry is a **domain extension of the abstract [OPC UA — xRegistry](../xregistry/) companion model**: `SchemaRegistryType`, `SchemaGroupType` and `SchemaFileType` subtype the base `RegistryType`, `GroupType` and `ResourceType`, so the registry, its schema groups and its schema documents are OPC UA **FileTransfer** directories and files. It is exposed as a well-known `SchemaRegistry` Object under Part 14 `PublishSubscribe` (`i=14443`). Each schema document is also addressable at runtime by an Opaque NodeId in the Schema Registry namespace whose Identifier bytes are the raw on-wire `SchemaId` fingerprint.
 
 Files:
 

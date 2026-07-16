@@ -80,7 +80,7 @@ def X(nid):
 # abstract xRegistry base types this spec extends
 XRegistry_RegistryType = X(63000)
 XRegistry_GroupType = X(63001)
-XRegistry_ResourceFileType = X(63002)
+XRegistry_ResourceType = X(63002)
 
 def _mid():
     v = _next_member[0]
@@ -172,8 +172,8 @@ object_type(62000, "SchemaRegistryType", XRegistry_RegistryType,
 object_type(62001, "SchemaGroupType", XRegistry_GroupType,
             "An xRegistry GroupType keyed by an OPC UA namespace URI; a directory of schema files for the "
             "DataTypes and PublishedDataSets of that namespace.", CAT)
-object_type(62002, "SchemaFileType", XRegistry_ResourceFileType,
-            "An xRegistry ResourceFileType whose file content is one concrete schema document (Avro, Apache "
+object_type(62002, "SchemaFileType", XRegistry_ResourceType,
+            "An xRegistry ResourceType whose file content is one concrete schema document (Avro, Apache "
             "Arrow or JSON Schema). Adds the OPC UA schema-decoding metadata (SchemaId and per-encoding fields) "
             "used by a consumer that must resolve a schema from an on-wire fingerprint.", CAT)
 
@@ -285,11 +285,11 @@ LINK_MAP = {
     "ConfigurationVersionDataType": "https://reference.opcfoundation.org/specs/OPC-10000-14/6.2.3#6.2.3.2.6",
     "RegistryType": "OPC-UA-xRegistry.md#type-RegistryType",
     "GroupType": "OPC-UA-xRegistry.md#type-GroupType",
-    "ResourceFileType": "OPC-UA-xRegistry.md#type-ResourceFileType",
+    "ResourceType": "OPC-UA-xRegistry.md#type-ResourceType",
 }
 _BASE_NAMES = {"i=58": "BaseObjectType", "i=61": "FolderType", "i=63": "BaseDataVariableType", "i=68": "PropertyType"}
 # abstract xRegistry base types this spec extends (required model, ns=1)
-_XR_NAMES = {XRegistry_RegistryType: "RegistryType", XRegistry_GroupType: "GroupType", XRegistry_ResourceFileType: "ResourceFileType"}
+_XR_NAMES = {XRegistry_RegistryType: "RegistryType", XRegistry_GroupType: "GroupType", XRegistry_ResourceType: "ResourceType"}
 _OWN = None
 
 def _friendly(tgt):
@@ -358,7 +358,7 @@ def emit_md():
             if n.bname == "InputArguments": method_args[pid] = names
             else: method_out[pid] = names
     md = ['<a id="annex-a"></a>', '## Annex A — Information model\n',
-          'This annex is the normative node reference. It is generated from `tools/build_model.py` and always matches `Opc.Ua.SchemaRegistry.NodeSet2.xml`. All nodes are proposed additions in the companion namespace `http://opcfoundation.org/UA/SchemaRegistry/` (namespace index `2` in this NodeSet, after the required `http://opcfoundation.org/UA/xRegistry/` base model at index `1`). The Schema Registry types **extend the abstract [OPC UA — xRegistry](OPC-UA-xRegistry.md) base types** (`RegistryType`/`GroupType`/`ResourceFileType`). The numeric NodeIds shown are **provisional** (final IDs are assigned by the OPC Foundation). The **Declared in** column marks members inherited from a supertype.\n']
+          'This annex is the normative node reference. It is generated from `tools/build_model.py` and always matches `Opc.Ua.SchemaRegistry.NodeSet2.xml`. All nodes are proposed additions in the companion namespace `http://opcfoundation.org/UA/SchemaRegistry/` (namespace index `2` in this NodeSet, after the required `http://opcfoundation.org/UA/xRegistry/` base model at index `1`). The Schema Registry types **extend the abstract [OPC UA — xRegistry](OPC-UA-xRegistry.md) base types** (`RegistryType`/`GroupType`/`ResourceType`). The numeric NodeIds shown are **provisional** (final IDs are assigned by the OPC Foundation). The **Declared in** column marks members inherited from a supertype.\n']
     md.append('### Type overview\n')
     md.append('| NodeId | BrowseName | NodeClass | Subtype of |')
     md.append('|---|---|---|---|')

@@ -1,7 +1,7 @@
 <a id="annex-a"></a>
 ## Annex A — Information model
 
-This annex is the normative node reference. It is generated from `tools/build_model.py` and always matches `Opc.Ua.SchemaRegistry.NodeSet2.xml`. All nodes are proposed additions in the companion namespace `http://opcfoundation.org/UA/SchemaRegistry/` (namespace index `2` in this NodeSet, after the required `http://opcfoundation.org/UA/xRegistry/` base model at index `1`). The Schema Registry types **extend the abstract [OPC UA — xRegistry](OPC-UA-xRegistry.md) base types** (`RegistryType`/`GroupType`/`ResourceFileType`). The numeric NodeIds shown are **provisional** (final IDs are assigned by the OPC Foundation). The **Declared in** column marks members inherited from a supertype.
+This annex is the normative node reference. It is generated from `tools/build_model.py` and always matches `Opc.Ua.SchemaRegistry.NodeSet2.xml`. All nodes are proposed additions in the companion namespace `http://opcfoundation.org/UA/SchemaRegistry/` (namespace index `2` in this NodeSet, after the required `http://opcfoundation.org/UA/xRegistry/` base model at index `1`). The Schema Registry types **extend the abstract [OPC UA — xRegistry](OPC-UA-xRegistry.md) base types** (`RegistryType`/`GroupType`/`ResourceType`). The numeric NodeIds shown are **provisional** (final IDs are assigned by the OPC Foundation). The **Declared in** column marks members inherited from a supertype.
 
 ### Type overview
 
@@ -9,7 +9,7 @@ This annex is the normative node reference. It is generated from `tools/build_mo
 |---|---|---|---|
 | ns=2;i=62000 | [SchemaRegistryType](#type-SchemaRegistryType) | ObjectType | [RegistryType](OPC-UA-xRegistry.md#type-RegistryType) |
 | ns=2;i=62001 | [SchemaGroupType](#type-SchemaGroupType) | ObjectType | [GroupType](OPC-UA-xRegistry.md#type-GroupType) |
-| ns=2;i=62002 | [SchemaFileType](#type-SchemaFileType) | ObjectType | [ResourceFileType](OPC-UA-xRegistry.md#type-ResourceFileType) |
+| ns=2;i=62002 | [SchemaFileType](#type-SchemaFileType) | ObjectType | [ResourceType](OPC-UA-xRegistry.md#type-ResourceType) |
 
 ### Object types
 
@@ -40,9 +40,9 @@ An xRegistry GroupType keyed by an OPC UA namespace URI; a directory of schema f
 <a id="type-SchemaFileType"></a>
 #### SchemaFileType  (ns=2;i=62002)
 
-*Inherits from:* [ResourceFileType](OPC-UA-xRegistry.md#type-ResourceFileType)
+*Inherits from:* [ResourceType](OPC-UA-xRegistry.md#type-ResourceType)
 
-An xRegistry ResourceFileType whose file content is one concrete schema document (Avro, Apache Arrow or JSON Schema). Adds the OPC UA schema-decoding metadata (SchemaId and per-encoding fields) used by a consumer that must resolve a schema from an on-wire fingerprint.
+An xRegistry ResourceType whose file content is one concrete schema document (Avro, Apache Arrow or JSON Schema). Adds the OPC UA schema-decoding metadata (SchemaId and per-encoding fields) used by a consumer that must resolve a schema from an on-wire fingerprint.
 
 | BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
 |---|---|---|---|---|---|

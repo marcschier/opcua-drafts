@@ -16,12 +16,12 @@
 
 This specification defines *one* mapping of the generic xRegistry structure onto the OPC UA AddressSpace, using the OPC UA **FileTransfer** model (OPC 10000-20) so that the AddressSpace *is* the registry:
 
-- a **registry** and each **group** are `FileDirectoryType` directories, browsable and manipulable with the inherited `CreateDirectory` / `CreateFile` / `Delete` / `MoveOrCopy` Methods;
+- a **registry** and each **group** are `FileDirectoryType` directories, browsable and manipulable with the `CreateGroup` and `CreateResourceOrVersion` Methods (the xRegistry-semantic form of the inherited FileDirectory `CreateDirectory` / `CreateFile`) and the inherited `Delete` / `MoveOrCopy` Methods;
 - a **resource/version document** is a `FileType` file, whose bytes are read and written with the inherited `Open` / `Read` / `Write` / `Close` Methods;
-- xRegistry **attributes** (`xid`, `epoch`, `name`, timestamps, `labels`, `format`, `contenttype`, …) are OPC UA Properties on those Objects, configurable through `AddProperty` / `RemoveProperty`;
+- xRegistry **attributes** (`xid`, `epoch`, `name`, timestamps, `labels`, `format`, `contenttype`, …) are OPC UA Properties on those Objects, configurable through `AddAttribute` / `RemoveAttribute`;
 - **federation** links to resources hosted by other registries are OPC UA `ExpandedNodeId` values.
 
-The model is intentionally **abstract**. It defines the reusable base type system (`RegistryType`, `GroupType`, `ResourceFileType`) and the generic behaviours (three-representation symmetry, auto-bootstrap of the structure, property configuration, federation). A **domain companion specification** subtypes the base types to add its own group key and resource metadata — for example *OPC UA — Schema Registry* adds a `SchemaGroupType` keyed by an OPC UA namespace URI and a `SchemaFileType` carrying an on-wire `SchemaId`. The same base is designed to carry a future WoT Thing-Description registry without change.
+The model is intentionally **abstract**. It defines the reusable base type system (`RegistryType`, `GroupType`, `ResourceType`) and the generic behaviours (three-representation symmetry, auto-bootstrap of the structure, property configuration, federation). A **domain companion specification** subtypes the base types to add its own group key and resource metadata — for example *OPC UA — Schema Registry* adds a `SchemaGroupType` keyed by an OPC UA namespace URI and a `SchemaFileType` carrying an on-wire `SchemaId`. The same base is designed to carry a future WoT Thing-Description registry without change.
 
 It is explicitly out of scope to re-specify the xRegistry core model or its HTTP API; the OPC UA API for xRegistry — how these nodes are discovered, read and mutated over OPC UA Services — is defined in the companion [*xRegistry — OPC UA API*](xRegistry-OPC-UA-Api.md).
 
@@ -40,11 +40,11 @@ It is explicitly out of scope to re-specify the xRegistry core model or its HTTP
 |---|---|
 | Registry | The root of an xRegistry, projected as the `RegistryType` directory. Equivalent to an xRegistry *registry* document root. |
 | Group | A named collection of resources, projected as a `GroupType` directory below the registry. Equivalent to an xRegistry *group* (an entry of a `GROUPS` collection such as `schemagroups`). |
-| Resource | A logical entity managed by the registry — a schema, an endpoint, a Thing Description — projected as a `ResourceFileType` file in its group. Equivalent to an xRegistry *resource*. |
+| Resource | A logical entity managed by the registry — a schema, an endpoint, a Thing Description — projected as a `ResourceType` file in its group. Equivalent to an xRegistry *resource*. |
 | Version | One concrete revision of a resource. In the flat OPC UA projection a resource file exposes its current version's document and `VersionId`; historic versions, when kept, are sibling files. Equivalent to an xRegistry resource *version*. |
 | Document | The bytes of a resource version — the schema text, the Thing Description JSON, and so on — read and written through the `FileType` Methods. Equivalent to an xRegistry `RESOURCE` document. |
 | Attribute / Property | A named metadata value on a registry, group or resource. Projected as an OPC UA Property. Equivalent to an xRegistry attribute. |
-| Label | An extensible name/value string pair on any entity (`labels`), projected as a `KeyValuePair[]` Property and configured with `AddProperty` / `RemoveProperty`. |
+| Label | An extensible name/value string pair on any entity (`labels`), projected as a `KeyValuePair[]` Property and configured with `AddAttribute` / `RemoveAttribute`. |
 | xid | An xRegistry *relative identifier*: the stable path of an entity within its registry (for example `/schemagroups/g1/schemas/s1`), independent of the hosting endpoint. |
 | epoch | An xRegistry change counter that increments on every modification of an entity. |
 | Representation | One of the three interchangeable xRegistry forms: the directory of **files**, the **static file server**, or the **API server** (primer §7). This model realizes the file/static-file-server form as the AddressSpace and the API-server form as OPC UA services. |
@@ -62,9 +62,9 @@ xRegistry's static-file-server representation lays a registry out as a directory
 graph TD
   REG[RegistryType : FileDirectoryType] -->|Organizes| G1[GroupType : FileDirectoryType]
   REG -->|Organizes| G2[GroupType : FileDirectoryType]
-  G1 -->|Organizes| R1[ResourceFileType : FileType]
-  G1 -->|Organizes| R2[ResourceFileType : FileType]
-  G2 -->|Organizes| R3[ResourceFileType : FileType]
+  G1 -->|Organizes| R1[ResourceType : FileType]
+  G1 -->|Organizes| R2[ResourceType : FileType]
+  G2 -->|Organizes| R3[ResourceType : FileType]
   R1 -.Open/Read/Write.-> DOC[(document bytes)]
 ```
 
@@ -77,7 +77,7 @@ xRegistry (primer §7) defines three interchangeable representations of the same
 | xRegistry representation | Realization in this model |
 |---|---|
 | **Files** / **static file server** — a directory tree of documents + attribute sidecars | The AddressSpace subtree: `FileDirectoryType` directories and `FileType` files under the `RegistryType` root. Browse = list; Read = fetch a document. |
-| **API server** — a live service that serves and mutates the registry | OPC UA Client/Server services over the same subtree: Browse, Read, `Open`/`Read`/`Write`, `CreateDirectory`/`CreateFile`/`Delete`/`MoveOrCopy`, `AddProperty`/`RemoveProperty` — defined by [*xRegistry — OPC UA API*](xRegistry-OPC-UA-Api.md). |
+| **API server** — a live service that serves and mutates the registry | OPC UA Client/Server services over the same subtree: Browse, Read, `Open`/`Read`/`Write`, `CreateGroup`/`CreateResourceOrVersion`/`Delete`/`MoveOrCopy`, `AddAttribute`/`RemoveAttribute` — defined by [*xRegistry — OPC UA API*](xRegistry-OPC-UA-Api.md). |
 | **Document** — a single serialized registry document | An OPC UA Read/export of the subtree serializes to the xRegistry JSON document shape (the inverse of importing a document to bootstrap the subtree). |
 
 The three are **symmetric**: the same entity has the same `xid` and identity in every representation, so a resource registered through the API server is immediately visible as a file, and a document imported to bootstrap the AddressSpace is immediately serveable through the API.
@@ -87,8 +87,8 @@ The three are **symmetric**: the same entity has the same `xid` and identity in 
 An implementation is useful with only the **mandatory** capability and grows from there:
 
 1. **Download a resource document (mandatory).** Given a resource file, `Open` it for reading, `Read` its bytes, `Close`. A domain registry may add a one-call fast path (for example the Schema Registry's Opaque `SchemaId` NodeId). This is the minimum a consumer needs and it is nothing more than standard FileTransfer read (§5.1).
-2. **Register a resource (optional).** `CreateFile` in the target group directory and `Write` the document bytes. The server **auto-bootstraps** the surrounding structure and attributes (§6.5). This is standard FileTransfer write (§5.2).
-3. **Materialize and configure the structure (optional).** Beyond the raw file, the server exposes the xRegistry attributes as Properties and the groups as directories, and lets a client refine them with `AddProperty` / `RemoveProperty` (§6). The whole xRegistry structure becomes browsable in the AddressSpace.
+2. **Register a resource (optional).** `CreateResourceOrVersion` in the target group directory and `Write` the document bytes. The server **auto-bootstraps** the surrounding structure and attributes (§6.5). This is standard FileTransfer write (§5.2).
+3. **Materialize and configure the structure (optional).** Beyond the raw file, the server exposes the xRegistry attributes as Properties and the groups as directories, and lets a client refine them with `AddAttribute` / `RemoveAttribute` (§6). The whole xRegistry structure becomes browsable in the AddressSpace.
 4. **Serve the full xRegistry API (optional).** The same subtree is exposed as the xRegistry API server through the verb mapping of the binding document, including federation to other registries (§7, §8).
 
 A conformant server **shall** support step 1; steps 2–4 are optional and independently adoptable.
@@ -97,7 +97,7 @@ A conformant server **shall** support step 1; steps 2–4 are optional and indep
 
 ### 5.1 Reading a resource document (mandatory)
 
-A resource document is the content of a `ResourceFileType` (a `FileType`). A consumer reads it with the standard FileType Methods (OPC 10000-20 §4.2):
+A resource document is the content of a `ResourceType` (a `FileType`). A consumer reads it with the standard FileType Methods (OPC 10000-20 §4.2):
 
 1. `Open(mode = Read)` on the resource file → `fileHandle`.
 2. one or more `Read(fileHandle, length)` calls → the document bytes (the `Size` Property bounds the total).
@@ -107,13 +107,13 @@ No registry-specific Method is required. A domain registry **may** additionally 
 
 ### 5.2 Registering a resource (optional)
 
-A writer registers a document by creating a file in the target group directory and writing the bytes, using the standard FileDirectoryType and FileType Methods (OPC 10000-20 §4.3.1, §4.2):
+A writer registers a document by creating a file in the target group directory and writing the bytes, using the `CreateResourceOrVersion` Method (and `CreateGroup` for a new group), which are the xRegistry-semantic forms of the standard FileDirectoryType/FileType creation Methods (OPC 10000-20 §4.3.1, §4.2):
 
-1. `CreateFile(fileName, requestFileOpen = true)` on the target `GroupType` directory → the new resource file's `NodeId` and a write `fileHandle` (or `CreateDirectory` first to create a new group).
+1. `CreateResourceOrVersion(ResourceId, RequestFileOpen = true)` on the target `GroupType` directory → the new resource file's `NodeId` and a write `fileHandle` (or `CreateGroup` first to create a new group).
 2. one or more `Write(fileHandle, data)` calls with the document bytes.
 3. `Close(fileHandle)`.
 
-On `Close` the server **auto-bootstraps** (§6.5): it assigns the entity's `xid`, `epoch`, `CreatedAt`/`ModifiedAt`, and any domain-derived attributes, and links the new file under its group and registry so it is immediately visible in all three representations. A server that is read-only (a published catalogue or a mirror) need not expose `CreateFile`.
+On `Close` the server **auto-bootstraps** (§6.5): it assigns the entity's `xid`, `epoch`, `CreatedAt`/`ModifiedAt`, and any domain-derived attributes, and links the new file under its group and registry so it is immediately visible in all three representations. A server that is read-only (a published catalogue or a mirror) need not expose `CreateResourceOrVersion`.
 
 ## 6 Information model
 
@@ -121,26 +121,26 @@ The abstract base namespace is `http://opcfoundation.org/UA/xRegistry/`. Draft n
 
 ### 6.1 RegistryType
 
-`RegistryType` is a subtype of `FileDirectoryType` and is the registry root. Through its inherited FileDirectory Methods it can create, delete and move the group directories it contains. Its Properties carry the registry-level xRegistry attributes: the Mandatory `RegistryId`, the optional `SpecVersion` (the xRegistry spec version), and the `Capabilities` and `Model` documents (the xRegistry `/capabilities` and `/model` JSON, as strings), plus the common attributes of §6.4. Its `<Group>` OptionalPlaceholder declares that its directory children are `GroupType` instances. A domain registry subtypes `RegistryType` (for example `SchemaRegistryType`) and constrains `<Group>` to its own group type.
+`RegistryType` is a subtype of `FileDirectoryType` and is the registry root. Through its `CreateGroup` Method (the xRegistry-semantic form of the inherited `CreateDirectory`) and the inherited `Delete`/`MoveOrCopy` Methods it can create, delete and move the group directories it contains. Its Properties carry the registry-level xRegistry attributes: the Mandatory `RegistryId`, the optional `SpecVersion` (the xRegistry spec version), and the `Capabilities` and `Model` documents (the xRegistry `/capabilities` and `/model` JSON, as strings), plus the common attributes of §6.4. Its `<Group>` OptionalPlaceholder declares that its directory children are `GroupType` instances. A domain registry subtypes `RegistryType` (for example `SchemaRegistryType`) and constrains `<Group>` to its own group type.
 
 ### 6.2 GroupType
 
-`GroupType` is a subtype of `FileDirectoryType` and is a group directory — an entry of an xRegistry `GROUPS` collection. It carries the Mandatory `GroupId` and the common attributes of §6.4, and its `<Resource>` OptionalPlaceholder declares that its directory children are `ResourceFileType` files. A domain group subtypes `GroupType` to add the **group key**: for example `SchemaGroupType` adds a Mandatory `NamespaceUri`.
+`GroupType` is a subtype of `FileDirectoryType` and is a group directory — an entry of an xRegistry `GROUPS` collection. It carries the Mandatory `GroupId` and the common attributes of §6.4, and its `<Resource>` OptionalPlaceholder declares that its directory children are `ResourceType` files, created through its `CreateResourceOrVersion` Method (the xRegistry-semantic form of the inherited `CreateFile`). A domain group subtypes `GroupType` to add the **group key**: for example `SchemaGroupType` adds a Mandatory `NamespaceUri`.
 
-### 6.3 ResourceFileType
+### 6.3 ResourceType
 
-`ResourceFileType` is a subtype of `FileType`: the resource/version **document is the file**, read and written through the inherited `Open` / `Read` / `Write` / `Close` Methods. It carries the resource-level xRegistry attributes: the Mandatory `ResourceId`, the `VersionId`, the `Format` (the xRegistry format string) and `ContentType` (the document media type), the federation links `ExternalReference` and `ResourceUrl` (§8), and the common attributes of §6.4. A domain resource subtypes `ResourceFileType` (for example `SchemaFileType`) to add its own metadata.
+`ResourceType` is a subtype of `FileType`: the resource/version **document is the file**, read and written through the inherited `Open` / `Read` / `Write` / `Close` Methods. It carries the resource-level xRegistry attributes: the Mandatory `ResourceId`, the `VersionId`, the `Format` (the xRegistry format string) and `ContentType` (the document media type), the federation links `ExternalReference` and `ResourceUrl` (§8), and the common attributes of §6.4. A domain resource subtypes `ResourceType` (for example `SchemaFileType`) to add its own metadata.
 
-`ResourceFileType` adds two Methods for configuring xRegistry attributes/labels on the resource in place:
+`ResourceType` adds two Methods for configuring xRegistry attributes/labels on the resource in place:
 
-- `AddProperty(Key: String, Value: String) → (Success: Boolean)` — add or update an xRegistry property/label. The server materializes it as (or within) a Property so the change is visible in all three representations.
-- `RemoveProperty(Key: String) → (Success: Boolean)` — remove a previously added property/label.
+- `AddAttribute(Key: String, Value: String) → (Success: Boolean)` — add or update an xRegistry attribute/label. The server materializes it as (or within) a Property so the change is visible in all three representations.
+- `RemoveAttribute(Key: String) → (Success: Boolean)` — remove a previously added attribute/label.
 
 These are the OPC UA form of an xRegistry `PATCH` of an entity's attributes; a server that does not allow post-creation configuration need not expose them.
 
 ### 6.4 Common xRegistry attributes
 
-Every registry, group and resource carries the common xRegistry attributes as Properties: `Xid` (the relative identifier), `Epoch` (the change counter), `Name`, `Description`, `Documentation`, `Labels` (a `KeyValuePair[]`), `CreatedAt` and `ModifiedAt`. `Xid` is stable across representations and across registries (§8): it identifies the entity independently of the endpoint that currently serves it. `Epoch` increments on every change so a client can detect a stale cache. `Labels` is the extensible attribute map managed by `AddProperty` / `RemoveProperty`.
+Every registry, group and resource carries the common xRegistry attributes as Properties: `Xid` (the relative identifier), `Epoch` (the change counter), `Name`, `Description`, `Documentation`, `Labels` (a `KeyValuePair[]`), `CreatedAt` and `ModifiedAt`. `Xid` is stable across representations and across registries (§8): it identifies the entity independently of the endpoint that currently serves it. `Epoch` increments on every change so a client can detect a stale cache. `Labels` is the extensible attribute map managed by `AddAttribute` / `RemoveAttribute`.
 
 ### 6.5 Auto-bootstrap
 
@@ -151,7 +151,7 @@ When a resource is created by writing a file (§5.2), the server **shall** mater
 - assign `Xid`, `Epoch = 1`, and `CreatedAt` = `ModifiedAt` = now;
 - link the file under its group and the group under the registry so the entity is immediately visible as a file, through the API, and in a serialized document.
 
-Subsequent `Write`s or `AddProperty` / `RemoveProperty` calls update `ModifiedAt` and increment `Epoch`. Auto-bootstrap makes the minimal write path (`CreateFile` + `Write`) sufficient to populate a fully-formed registry entry; a client that needs finer control uses `AddProperty` / `RemoveProperty` afterwards.
+Subsequent `Write`s or `AddAttribute` / `RemoveAttribute` calls update `ModifiedAt` and increment `Epoch`. Auto-bootstrap makes the minimal write path (`CreateResourceOrVersion` + `Write`) sufficient to populate a fully-formed registry entry; a client that needs finer control uses `AddAttribute` / `RemoveAttribute` afterwards.
 
 ## 7 The xRegistry API over OPC UA
 
@@ -160,10 +160,10 @@ The AddressSpace subtree is simultaneously the xRegistry **API server**: each xR
 | xRegistry operation | OPC UA operation |
 |---|---|
 | List a registry/group/resource collection | Browse the corresponding `FileDirectoryType` directory |
-| Read a resource document | `Open`/`Read`/`Close` the `ResourceFileType` file (or a domain fast path) |
+| Read a resource document | `Open`/`Read`/`Close` the `ResourceType` file (or a domain fast path) |
 | Read an entity's attributes | Read the Properties of the Object |
-| Create a resource or version | `CreateFile` (+ `CreateDirectory`) then `Write` |
-| Update an entity's attributes | `AddProperty` / `RemoveProperty` (or Write a Property) |
+| Create a resource or version | `CreateResourceOrVersion` (+ `CreateGroup`) then `Write` |
+| Update an entity's attributes | `AddAttribute` / `RemoveAttribute` (or Write a Property) |
 | Delete an entity | `Delete` on the parent `FileDirectoryType` |
 | Export a subtree as a document | Read/serialize the subtree to the xRegistry document shape |
 
@@ -171,13 +171,13 @@ The AddressSpace subtree is simultaneously the xRegistry **API server**: each xR
 
 xRegistry federation (primer §8) lets one registry reference resources hosted by another. A key xRegistry rule is that an entity's identity (`xid`, `groupid`, `resourceid`) is **stable across registries**, while the **URL authority identifies the serving endpoint, not the resource** — so the same resource federated from two endpoints keeps one identity but is reachable at two URLs. OPC UA models this precisely with `ExpandedNodeId` (OPC 10000-3 §8.2.3), whose `ServerUri` identifies the hosting endpoint and whose `NamespaceUri` + `Identifier` identify the entity independently of it.
 
-A federated resource is represented locally by a `ResourceFileType` whose `ExternalReference` Property (an `ExpandedNodeId`) points to the resource in the remote registry: the `ServerUri` is the remote registry's OPC UA endpoint, and the `NamespaceUri` + `Identifier` are the remote group/resource identity. The `ResourceUrl` Property carries the same link in string form (the xRegistry `<RESOURCE>url`) — for example an `opc.tcp` endpoint plus a browse path, or an HTTP URL for a non-OPC-UA registry. A client resolves a federated resource by connecting to the `ServerUri` endpoint and browsing/reading the referenced node, exactly as it would a local one. Annex B specifies the resolution algorithm.
+A federated resource is represented locally by a `ResourceType` whose `ExternalReference` Property (an `ExpandedNodeId`) points to the resource in the remote registry: the `ServerUri` is the remote registry's OPC UA endpoint, and the `NamespaceUri` + `Identifier` are the remote group/resource identity. The `ResourceUrl` Property carries the same link in string form (the xRegistry `<RESOURCE>url`) — for example an `opc.tcp` endpoint plus a browse path, or an HTTP URL for a non-OPC-UA registry. A client resolves a federated resource by connecting to the `ServerUri` endpoint and browsing/reading the referenced node, exactly as it would a local one. Annex B specifies the resolution algorithm.
 
 ## 9 Conformance
 
-An implementation conforms to this base model if it exposes a `RegistryType` root (or a domain subtype) under which groups and resources are projected as `FileDirectoryType` directories and `ResourceFileType` files, and it supports the **mandatory** capability of §4.3 — reading a resource document through the FileType Methods (§5.1). It **may** additionally support registration (§5.2), structure materialization and property configuration (§6), the xRegistry API mapping (§7) and federation (§8); each is optional and independently conformant.
+An implementation conforms to this base model if it exposes a `RegistryType` root (or a domain subtype) under which groups and resources are projected as `FileDirectoryType` directories and `ResourceType` files, and it supports the **mandatory** capability of §4.3 — reading a resource document through the FileType Methods (§5.1). It **may** additionally support registration (§5.2), structure materialization and property configuration (§6), the xRegistry API mapping (§7) and federation (§8); each is optional and independently conformant.
 
-A domain companion specification conforms if its registry, group and resource types are subtypes of `RegistryType`, `GroupType` and `ResourceFileType` respectively and it does not weaken the mandatory read capability.
+A domain companion specification conforms if its registry, group and resource types are subtypes of `RegistryType`, `GroupType` and `ResourceType` respectively and it does not weaken the mandatory read capability.
 
 ## 10 NodeSet validation
 
@@ -196,7 +196,7 @@ This annex is the normative node reference. It is generated from `tools/build_mo
 |---|---|---|---|
 | ns=1;i=63000 | [RegistryType](#type-RegistryType) | ObjectType | [FileDirectoryType](https://reference.opcfoundation.org/specs/OPC-10000-20/4.3.1) |
 | ns=1;i=63001 | [GroupType](#type-GroupType) | ObjectType | [FileDirectoryType](https://reference.opcfoundation.org/specs/OPC-10000-20/4.3.1) |
-| ns=1;i=63002 | [ResourceFileType](#type-ResourceFileType) | ObjectType | [FileType](https://reference.opcfoundation.org/specs/OPC-10000-20/4.2) |
+| ns=1;i=63002 | [ResourceType](#type-ResourceType) | ObjectType | [FileType](https://reference.opcfoundation.org/specs/OPC-10000-20/4.2) |
 
 ### Object types
 
@@ -205,7 +205,7 @@ This annex is the normative node reference. It is generated from `tools/build_mo
 
 *Inherits from:* [FileDirectoryType](https://reference.opcfoundation.org/specs/OPC-10000-20/4.3.1)
 
-The abstract xRegistry root, expressed as a FileDirectory. It contains Group directories and, through the inherited FileDirectoryType methods (CreateDirectory/CreateFile/Delete/MoveOrCopy), supports creating and managing them. Domain registries subtype this.
+The abstract xRegistry root, expressed as a FileDirectory. It contains Group directories and supports creating and managing them through the CreateGroup Method (and the inherited FileDirectoryType Delete/MoveOrCopy Methods). Domain registries subtype this.
 
 | BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
 |---|---|---|---|---|---|
@@ -218,17 +218,18 @@ The abstract xRegistry root, expressed as a FileDirectory. It contains Group dir
 | Name | Variable | String | Optional | RegistryType | Human-readable name of the entity. |
 | Description | Variable | String | Optional | RegistryType | Human-readable description of the entity. |
 | Documentation | Variable | String | Optional | RegistryType | URL to human-readable documentation for the entity. |
-| Labels | Variable | [KeyValuePair](https://reference.opcfoundation.org/specs/OPC-10000-5/12.23)\[\] | Optional | RegistryType | xRegistry labels: an extensible map of name/value pairs, managed by AddProperty/RemoveProperty on resources. |
+| Labels | Variable | [KeyValuePair](https://reference.opcfoundation.org/specs/OPC-10000-5/12.23)\[\] | Optional | RegistryType | xRegistry labels: an extensible map of name/value pairs, managed by AddAttribute/RemoveAttribute on resources. |
 | CreatedAt | Variable | DateTime | Optional | RegistryType | UTC timestamp when the entity was created. |
 | ModifiedAt | Variable | DateTime | Optional | RegistryType | UTC timestamp when the entity was last modified. |
 | <Group> | Object |  | OptionalPlaceholder | RegistryType | A group directory held by this registry. |
+| CreateGroup | Method |  | Optional | RegistryType | Create a group directory under this registry and assign its GroupId. This is the xRegistry-semantic form of the inherited FileDirectoryType CreateDirectory Method; the server bootstraps the new group's xRegistry attributes (Xid, Epoch, CreatedAt, ModifiedAt). |
 
 <a id="type-GroupType"></a>
 #### GroupType  (ns=1;i=63001)
 
 *Inherits from:* [FileDirectoryType](https://reference.opcfoundation.org/specs/OPC-10000-20/4.3.1)
 
-An abstract xRegistry group, expressed as a FileDirectory that contains resource files. Domain group types subtype this and add the group key (e.g. a namespace URI).
+An abstract xRegistry group, expressed as a FileDirectory that contains resources. It creates resources and versions through the CreateResourceOrVersion Method. Domain group types subtype this and add the group key (e.g. a namespace URI).
 
 | BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
 |---|---|---|---|---|---|
@@ -238,13 +239,14 @@ An abstract xRegistry group, expressed as a FileDirectory that contains resource
 | Name | Variable | String | Optional | GroupType | Human-readable name of the entity. |
 | Description | Variable | String | Optional | GroupType | Human-readable description of the entity. |
 | Documentation | Variable | String | Optional | GroupType | URL to human-readable documentation for the entity. |
-| Labels | Variable | [KeyValuePair](https://reference.opcfoundation.org/specs/OPC-10000-5/12.23)\[\] | Optional | GroupType | xRegistry labels: an extensible map of name/value pairs, managed by AddProperty/RemoveProperty on resources. |
+| Labels | Variable | [KeyValuePair](https://reference.opcfoundation.org/specs/OPC-10000-5/12.23)\[\] | Optional | GroupType | xRegistry labels: an extensible map of name/value pairs, managed by AddAttribute/RemoveAttribute on resources. |
 | CreatedAt | Variable | DateTime | Optional | GroupType | UTC timestamp when the entity was created. |
 | ModifiedAt | Variable | DateTime | Optional | GroupType | UTC timestamp when the entity was last modified. |
 | <Resource> | Object |  | OptionalPlaceholder | GroupType | A resource file held by this group. |
+| CreateResourceOrVersion | Method |  | Optional | GroupType | Create a resource - or a new version of a resource - as a file in this group, optionally opened for writing. This is the xRegistry-semantic form of the inherited FileDirectoryType CreateFile Method; the server bootstraps the resource's xRegistry attributes when the file is closed. |
 
-<a id="type-ResourceFileType"></a>
-#### ResourceFileType  (ns=1;i=63002)
+<a id="type-ResourceType"></a>
+#### ResourceType  (ns=1;i=63002)
 
 *Inherits from:* [FileType](https://reference.opcfoundation.org/specs/OPC-10000-20/4.2)
 
@@ -252,35 +254,36 @@ An abstract xRegistry resource/version whose document IS the file: the content i
 
 | BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
 |---|---|---|---|---|---|
-| ResourceId | Variable | String | Mandatory | ResourceFileType | xRegistry resourceid: the stable identifier of the resource within its group. |
-| VersionId | Variable | String | Optional | ResourceFileType | xRegistry versionid: the identifier of the version this file represents. |
-| Format | Variable | String | Optional | ResourceFileType | xRegistry format string identifying the document's schema language/shape. |
-| ContentType | Variable | String | Optional | ResourceFileType | Media type (content-type) of the document bytes. |
-| ExternalReference | Variable | [ExpandedNodeId](https://reference.opcfoundation.org/specs/OPC-10000-3/8.2.3) | Optional | ResourceFileType | Federation link: an ExpandedNodeId identifying this resource in another (possibly remote) registry - the ServerUri identifies the hosting registry endpoint, the NamespaceUri and Identifier identify the group and resource. Present when the document is served by reference (xRegistry <RESOURCE>url). |
-| ResourceUrl | Variable | String | Optional | ResourceFileType | Federation link (string form): the URL from which the document can be obtained (xRegistry <RESOURCE>url), for example an opc.tcp endpoint plus browse path, or an HTTP URL. |
-| Xid | Variable | String | Optional | ResourceFileType | xRegistry relative identifier (xid): the entity's stable path within the registry, independent of the hosting endpoint. |
-| Epoch | Variable | UInt32 | Optional | ResourceFileType | xRegistry epoch: a counter that increments on every change to the entity. |
-| Name | Variable | String | Optional | ResourceFileType | Human-readable name of the entity. |
-| Description | Variable | String | Optional | ResourceFileType | Human-readable description of the entity. |
-| Documentation | Variable | String | Optional | ResourceFileType | URL to human-readable documentation for the entity. |
-| Labels | Variable | [KeyValuePair](https://reference.opcfoundation.org/specs/OPC-10000-5/12.23)\[\] | Optional | ResourceFileType | xRegistry labels: an extensible map of name/value pairs, managed by AddProperty/RemoveProperty on resources. |
-| CreatedAt | Variable | DateTime | Optional | ResourceFileType | UTC timestamp when the entity was created. |
-| ModifiedAt | Variable | DateTime | Optional | ResourceFileType | UTC timestamp when the entity was last modified. |
-| AddProperty | Method |  | Optional | ResourceFileType | Add or update an xRegistry property (attribute/label) on this resource, further configuring the registry structure. The server materializes the property in the AddressSpace. |
-| RemoveProperty | Method |  | Optional | ResourceFileType | Remove an xRegistry property (attribute/label) from this resource. |
+| ResourceId | Variable | String | Mandatory | ResourceType | xRegistry resourceid: the stable identifier of the resource within its group. |
+| VersionId | Variable | String | Optional | ResourceType | xRegistry versionid: the identifier of the version this file represents. |
+| Format | Variable | String | Optional | ResourceType | xRegistry format string identifying the document's schema language/shape. |
+| ContentType | Variable | String | Optional | ResourceType | Media type (content-type) of the document bytes. |
+| ExternalReference | Variable | [ExpandedNodeId](https://reference.opcfoundation.org/specs/OPC-10000-3/8.2.3) | Optional | ResourceType | Federation link: an ExpandedNodeId identifying this resource in another (possibly remote) registry - the ServerUri identifies the hosting registry endpoint, the NamespaceUri and Identifier identify the group and resource. Present when the document is served by reference (xRegistry <RESOURCE>url). |
+| ResourceUrl | Variable | String | Optional | ResourceType | Federation link (string form): the URL from which the document can be obtained (xRegistry <RESOURCE>url), for example an opc.tcp endpoint plus browse path, or an HTTP URL. |
+| Xid | Variable | String | Optional | ResourceType | xRegistry relative identifier (xid): the entity's stable path within the registry, independent of the hosting endpoint. |
+| Epoch | Variable | UInt32 | Optional | ResourceType | xRegistry epoch: a counter that increments on every change to the entity. |
+| Name | Variable | String | Optional | ResourceType | Human-readable name of the entity. |
+| Description | Variable | String | Optional | ResourceType | Human-readable description of the entity. |
+| Documentation | Variable | String | Optional | ResourceType | URL to human-readable documentation for the entity. |
+| Labels | Variable | [KeyValuePair](https://reference.opcfoundation.org/specs/OPC-10000-5/12.23)\[\] | Optional | ResourceType | xRegistry labels: an extensible map of name/value pairs, managed by AddAttribute/RemoveAttribute on resources. |
+| CreatedAt | Variable | DateTime | Optional | ResourceType | UTC timestamp when the entity was created. |
+| ModifiedAt | Variable | DateTime | Optional | ResourceType | UTC timestamp when the entity was last modified. |
+| AddAttribute | Method |  | Optional | ResourceType | Add or update an xRegistry attribute (or label) on this resource, further configuring the registry structure. The server materializes the attribute in the AddressSpace. |
+| RemoveAttribute | Method |  | Optional | ResourceType | Remove an xRegistry attribute (or label) from this resource. |
 
 ### Methods
 
 | Method | Owning type | Input arguments | Output arguments |
 |---|---|---|---|
-| AddProperty | [ResourceFileType](#type-ResourceFileType) | Key, Value | Success |
-| RemoveProperty | [ResourceFileType](#type-ResourceFileType) | Key | Success |
-
+| CreateGroup | [RegistryType](#type-RegistryType) | GroupId | GroupNodeId |
+| CreateResourceOrVersion | [GroupType](#type-GroupType) | ResourceId, RequestFileOpen | ResourceNodeId, FileHandle |
+| AddAttribute | [ResourceType](#type-ResourceType) | Key, Value | Success |
+| RemoveAttribute | [ResourceType](#type-ResourceType) | Key | Success |
 ## Annex B — Federation resolution via ExpandedNodeId (informative)
 
 A client resolves a federated resource as follows:
 
-1. Read the federated `ResourceFileType`'s `ExternalReference` Property (an `ExpandedNodeId`).
+1. Read the federated `ResourceType`'s `ExternalReference` Property (an `ExpandedNodeId`).
 2. If its `ServerUri` is empty or equal to the local server, the target is local: resolve `NamespaceUri` + `Identifier` to a local NodeId and read it as in §5.1.
 3. Otherwise the target is remote: obtain the endpoint URL for `ServerUri` (from the local server's `Server` Object `ServerArray`/namespace metadata, from a discovery server, or from the `ResourceUrl` string), open a secure channel and session to that endpoint, translate `NamespaceUri` to the remote `NamespaceIndex`, and read the referenced resource file there with the FileType Methods of §5.1.
 4. `ResourceUrl` provides the same link for non-OPC-UA registries: an HTTP `<RESOURCE>url` is fetched with HTTP; an `opc.tcp` URL encodes the endpoint and a browse path to the resource file.
