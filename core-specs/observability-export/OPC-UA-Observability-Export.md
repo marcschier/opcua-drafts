@@ -25,7 +25,7 @@ It specifies:
 
 OTEL is the normative reference target because it is the de-facto vendor-neutral wire and data model for metrics, logs and traces; the model is nonetheless **generic** — the same bindings drive any observability backend (§8), since the mapping metadata is expressed in OTEL-shaped but backend-agnostic terms.
 
-It is explicitly **out of scope** to define new PubSub transports, message mappings, security, or the lifecycle of PubSub configuration; these are defined by [OPC 10000-14](https://reference.opcfoundation.org/specs/OPC-10000-14/) and referenced here for the optional PubSub realization. Invoking or writing to the Server (commands, setpoints, actuation) is out of scope: observability export is **read-only**.
+It is explicitly **out of scope** to define new PubSub transports, message mappings, security, or the lifecycle of PubSub configuration; these are defined by [OPC 10000-14](https://reference.opcfoundation.org/specs/OPC-10000-14/) and referenced here for the optional PubSub realization. It is likewise **out of scope to define a log, event or trace model of its own**: this specification *exports* existing OPC UA sources — Events, [OPC 10000‑26](https://reference.opcfoundation.org/specs/OPC-10000-26/) `LogObject` log entries, and [OPC 10000‑10](https://reference.opcfoundation.org/specs/OPC-10000-10/) Program executions — rather than redefining how they are represented (§5.13). Invoking or writing to the Server (commands, setpoints, actuation) is out of scope: observability export is **read-only**.
 
 ### 1.1 Motivation
 
@@ -75,6 +75,7 @@ flowchart LR
 - [OPC 10000‑10](https://reference.opcfoundation.org/specs/OPC-10000-10/) — Programs (`ProgramStateMachineType`), for the trace mapping.
 - [OPC 10000‑14](https://reference.opcfoundation.org/specs/OPC-10000-14/) — PubSub (PublishedDataSet, PublishedDataItems, PublishedEvents, DataSetWriter/Reader, DataSetMetaData, DataSetClassId).
 - [OPC 10000‑19](https://reference.opcfoundation.org/specs/OPC-10000-19/) — Dictionary Reference (`HasDictionaryEntry`, IRDI/CDD).
+- [OPC 10000‑26](https://reference.opcfoundation.org/specs/OPC-10000-26/) — Information Model for Log Models (`LogObject`/`LogEntry`), the first-class OPC UA log source for the Logs mapping (§5.13.2).
 - [OpenTelemetry specification](https://opentelemetry.io/docs/specs/otel/) — data model for metrics, logs and traces (informative external reference).
 - [OTLP](https://opentelemetry.io/docs/specs/otlp/) — OpenTelemetry Protocol (informative external reference).
 
@@ -398,6 +399,10 @@ When the bound severity field already carries an OTEL SeverityNumber (1..24), a 
 | 400–599 | 13 (WARN) |
 | 600–799 | 17 (ERROR) |
 | 800–1000 | 21 (FATAL) |
+
+**OPC 10000-26 Log Models as the first-class log source (overlap).** Where a Server implements [OPC 10000‑26](https://reference.opcfoundation.org/specs/OPC-10000-26/) (Information Model for Log Models), its `LogObject` is the natural, standardized source for a Logs binding. A `LogObject` emits structured `LogEntry` records — already carrying a timestamp, a `Severity`/`LogLevel`, a message and structured fields — as OPC UA Events that a Client subscribes to. Point the binding's `EventSourcePath` at the `LogObject` and map the `LogEntry` fields directly: the entry timestamp via `LogTimestampFieldName`, the message via `LogBodyFieldName` (so no `LogTemplate` is needed), and the severity via `LogSeverityFieldName`; remaining structured fields become LogRecord attributes. Part 26's coarse `LogLevel` (Trace/Debug/Info/Warn/Error/Fatal) maps onto the OTEL SeverityNumber ranges above more directly than the numeric OPC UA `Severity`; a bridge that recognizes a `LogLevel` field SHOULD use it in preference to the `Severity` table.
+
+This specification and OPC 10000‑26 are **complementary, non-overlapping layers**, not alternatives: Part 26 defines *how a Server represents logs in its AddressSpace* (the `LogObject`/`LogEntry` model and its log-entry Events); this specification defines *how a bridge exports* those logs — and any other event stream — *to an external observability system* as OTEL LogRecords. Observability Export neither defines nor requires a log model of its own: a Part 26 `LogObject`, where present, is simply the preferred `EventSourcePath` for a Logs binding, and any other event notifier remains a valid source where Part 26 is not implemented.
 
 #### 5.13.3 Traces
 

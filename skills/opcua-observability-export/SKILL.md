@@ -155,6 +155,14 @@ For a **Logs** binding identify:
    plus `logSeverityFieldName` and `logTimestampFieldName`;
 5. an optional `filter` (OPC UA `ContentFilter` where-clause), e.g. a severity threshold.
 
+**Prefer an OPC 10000-26 `LogObject` when the Server has one.** Part 26 (Information Model for Log
+Models) exposes structured `LogEntry` records — timestamp, `Severity`/`LogLevel`, message and
+structured fields — as Events from a `LogObject`. When present it is the best `eventSourcePath` for a
+Logs binding: map the entry timestamp to `logTimestampFieldName`, the message to `logBodyFieldName`
+(no `logTemplate` needed), and the severity to `logSeverityFieldName`; a `LogLevel` field maps to the
+OTEL SeverityNumber directly. Fall back to any event notifier where Part 26 is not implemented — this
+skill exports logs, it does not define a log model.
+
 For a **Traces** binding identify the same event source, then the span mapping members: `spanNameTemplate`
 or `spanNameFieldName`; `traceIdFieldName`, `spanIdFieldName`, `parentSpanIdFieldName`;
 `spanStartTimeFieldName` and `spanEndTimeFieldName`; `spanCorrelationFieldName` (pairs a start event
