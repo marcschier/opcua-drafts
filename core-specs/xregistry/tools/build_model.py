@@ -1,16 +1,19 @@
 #!/usr/bin/env python3
 """
-Generator for the OPC UA Schema Registry companion NodeSet (WG draft).
+Generator for the abstract OPC UA xRegistry companion NodeSet (WG draft).
 
 Emits, from a single in-code source of truth:
-  * Opc.Ua.SchemaRegistry.NodeSet2.xml
-  * Opc.Ua.SchemaRegistry.NodeIds.csv
+  * Opc.Ua.XRegistry.NodeSet2.xml
+  * Opc.Ua.XRegistry.NodeIds.csv
   * tools/model-reference.md
 
-The model is a companion namespace (http://opcfoundation.org/UA/SchemaRegistry/).
-Draft numeric identifiers are provisional and drawn from 62000+; final NodeIds are
-assigned by the OPC Foundation. Runtime schema document nodes may additionally use
-Opaque NodeIds whose identifier bytes are the raw SchemaId fingerprint.
+This is the REUSABLE base type system for the xRegistry model
+(registry -> groups -> resources/versions) expressed over the OPC UA
+FileTransfer model: a registry and its groups are FileDirectoryType
+directories; a resource/version document is a FileType file. Domain
+specifications (Schema Registry now, WoT-file registry later) subtype these
+base types. Namespace http://opcfoundation.org/UA/xRegistry/; draft numeric
+identifiers are provisional and drawn from 63000+.
 """
 from __future__ import annotations
 import os
@@ -33,22 +36,23 @@ BaseObjectType = "i=58"
 FolderType = "i=61"
 BaseDataVariableType = "i=63"
 PropertyType = "i=68"
-DataTypeEncodingType = "i=76"
+# FileTransfer base types (OPC 10000-5 / OPC 10000-20)
+FileType = "i=11575"
+FileDirectoryType = "i=13353"
 
 Boolean = "i=1"
 UInt32 = "i=7"
 String = "i=12"
 DateTime = "i=13"
 ByteString = "i=15"
+ExpandedNodeId = "i=18"
 Duration = "i=290"
 Argument = "i=296"
-ConfigurationVersionDataType = "i=14593"
-PublishSubscribe = "i=14443"
+KeyValuePair = "i=14533"
 
-XR_NS = 1          # required model: the abstract xRegistry base (http://opcfoundation.org/UA/xRegistry/)
-OWN_NS = 2         # this specification's own namespace (SchemaRegistry)
-OWN_MIN = 62000
-_next_member = [62500]
+OWN_NS = 1
+OWN_MIN = 63000
+_next_member = [63500]
 
 class Node:
     __slots__ = ("nid", "cls", "bname", "symbolic", "display", "desc", "parent", "attrs", "refs", "category", "definition", "value", "abstract")
@@ -72,15 +76,6 @@ ORDER = []
 
 def T(nid):
     return f"ns={OWN_NS};i={nid}"
-
-def X(nid):
-    """Reference to an abstract xRegistry base type (required model)."""
-    return f"ns={XR_NS};i={nid}"
-
-# abstract xRegistry base types this spec extends
-XRegistry_RegistryType = X(63000)
-XRegistry_GroupType = X(63001)
-XRegistry_ResourceFileType = X(63002)
 
 def _mid():
     v = _next_member[0]
@@ -123,7 +118,7 @@ def obj_member(owner, owner_sym, name, typedef, desc, rule=MR_Optional, reftype=
     ref(owner, reftype, T(nid))
     return nid
 
-def placeholder_obj(owner, owner_sym, name, typedef, desc, rule=MR_OptionalPlaceholder, reftype=HasComponent):
+def placeholder_obj(owner, owner_sym, name, typedef, desc, rule=MR_OptionalPlaceholder, reftype=Organizes):
     return obj_member(owner, owner_sym, name, typedef, desc, rule, reftype)
 
 def method(owner, owner_sym, name, desc, rule=MR_Optional, inargs=None, outargs=None):
@@ -161,54 +156,78 @@ def _args(method_nid, method_sym, bname, args):
     parts.append("</ListOfExtensionObject></Value>")
     NODES[nid].value = "".join(parts)
 
+def common_attrs(nid, sym):
+    """The xRegistry attributes common to a registry, group and resource entity."""
+    prop_var(nid, sym, "Xid", String, "xRegistry relative identifier (xid): the entity's stable path within the registry, independent of the hosting endpoint.")
+    prop_var(nid, sym, "Epoch", UInt32, "xRegistry epoch: a counter that increments on every change to the entity.")
+    prop_var(nid, sym, "Name", String, "Human-readable name of the entity.")
+    prop_var(nid, sym, "Description", String, "Human-readable description of the entity.")
+    prop_var(nid, sym, "Documentation", String, "URL to human-readable documentation for the entity.")
+    prop_var(nid, sym, "Labels", KeyValuePair, "xRegistry labels: an extensible map of name/value pairs, managed by AddProperty/RemoveProperty on resources.", valuerank="1")
+    prop_var(nid, sym, "CreatedAt", DateTime, "UTC timestamp when the entity was created.")
+    prop_var(nid, sym, "ModifiedAt", DateTime, "UTC timestamp when the entity was last modified.")
+
 # Model
-CAT = "Schema Registry"
-CAT_INST = "Schema Registry Instances"
+CAT = "xRegistry"
 
-object_type(62000, "SchemaRegistryType", XRegistry_RegistryType,
-            "The in-server Schema Registry root - an xRegistry RegistryType (a FileDirectory) whose group "
-            "directories hold schema files. Adds SchemaId-based resolution (GetSchema and the Opaque SchemaId "
-            "NodeId fast path). Exposed as a well-known object under the Part 14 PublishSubscribe object.", CAT)
-object_type(62001, "SchemaGroupType", XRegistry_GroupType,
-            "An xRegistry GroupType keyed by an OPC UA namespace URI; a directory of schema files for the "
-            "DataTypes and PublishedDataSets of that namespace.", CAT)
-object_type(62002, "SchemaFileType", XRegistry_ResourceFileType,
-            "An xRegistry ResourceFileType whose file content is one concrete schema document (Avro, Apache "
-            "Arrow or JSON Schema). Adds the OPC UA schema-decoding metadata (SchemaId and per-encoding fields) "
-            "used by a consumer that must resolve a schema from an on-wire fingerprint.", CAT)
+object_type(63000, "RegistryType", FileDirectoryType,
+            "The abstract xRegistry root, expressed as a FileDirectory. It contains Group directories and, "
+            "through the inherited FileDirectoryType methods (CreateDirectory/CreateFile/Delete/MoveOrCopy), "
+            "supports creating and managing them. Domain registries subtype this.", CAT)
+object_type(63001, "GroupType", FileDirectoryType,
+            "An abstract xRegistry group, expressed as a FileDirectory that contains resource files. Domain "
+            "group types subtype this and add the group key (e.g. a namespace URI).", CAT)
+object_type(63002, "ResourceFileType", FileType,
+            "An abstract xRegistry resource/version whose document IS the file: the content is read and written "
+            "through the inherited FileType methods (Open/Read/Write/Close). Carries the xRegistry attributes and "
+            "an optional ExternalReference for federation. Domain resource types subtype this.", CAT)
 
-SR = "SchemaRegistryType"
-placeholder_obj(62000, SR, "<SchemaGroup>", T(62001), "A schema group directory (per OPC UA namespace) held by the registry.")
-method(62000, SR, "GetSchema",
-       "Return the schema document and metadata for a raw on-wire SchemaId fingerprint (the method form of the Opaque SchemaId NodeId fast path).",
-       inargs=[("SchemaId", ByteString, "Raw on-wire SchemaId fingerprint bytes.")],
-       outargs=[("Document", ByteString, "Schema document bytes."), ("Format", String, "xRegistry format string."), ("ContentType", String, "Schema document media type."), ("Found", Boolean, "True if the SchemaId was resolved.")])
+RG = "RegistryType"
+prop_var(63000, RG, "RegistryId", String, "xRegistry registryid: the stable identifier of this registry.", rule=MR_Mandatory)
+prop_var(63000, RG, "SpecVersion", String, "The xRegistry specification version this registry conforms to.")
+prop_var(63000, RG, "Capabilities", String, "The registry capabilities document (xRegistry /capabilities), as a JSON string.")
+prop_var(63000, RG, "Model", String, "The registry model document (xRegistry /model), as a JSON string.")
+common_attrs(63000, RG)
+placeholder_obj(63000, RG, "<Group>", T(63001), "A group directory held by this registry.")
 
-SG = "SchemaGroupType"
-prop_var(62001, SG, "NamespaceUri", String, "The OPC UA namespace URI represented by this schema group (the xRegistry group key).", rule=MR_Mandatory)
-placeholder_obj(62001, SG, "<Schema>", T(62002), "A schema file (one DataType/DataSet in one format) held by this group.")
+GP = "GroupType"
+prop_var(63001, GP, "GroupId", String, "xRegistry groupid: the stable identifier of this group. Group identifiers are globally unique for federation.", rule=MR_Mandatory)
+common_attrs(63001, GP)
+placeholder_obj(63001, GP, "<Resource>", T(63002), "A resource file held by this group.")
 
-SF = "SchemaFileType"
-prop_var(62002, SF, "SchemaId", ByteString, "Raw on-wire SchemaId fingerprint bytes. The schema file is additionally addressable by an Opaque NodeId whose identifier bytes are exactly this value.", rule=MR_Mandatory)
-prop_var(62002, SF, "SchemaIdAlg", String, "SchemaId algorithm name, such as CRC-64-AVRO or SHA-256.", rule=MR_Mandatory)
-prop_var(62002, SF, "DataTypeEncoding", String, "The OPC UA DataTypeEncoding name, for example Default Avro or Default Arrow.")
-prop_var(62002, SF, "ModelVersion", String, "OPC UA NodeSet model version label (opcua.modelversion).")
-prop_var(62002, SF, "ConfigurationVersion", ConfigurationVersionDataType, "PubSub ConfigurationVersion (opcua.configurationversion) when the schema describes a DataSet.")
-prop_var(62002, SF, "ExpiryTime", DateTime, "Optional UTC expiry time for mirror/cache mode.")
-prop_var(62002, SF, "Ttl", Duration, "Optional time-to-live for mirror/cache mode.")
-
-# Well-known instance hooked onto Part 14 PublishSubscribe.
-add(62100, "UAObject", "SchemaRegistry", "SchemaRegistry", desc="Server-wide in-server Schema Registry, discoverable from the PublishSubscribe object.", parent=PublishSubscribe, category=CAT_INST)
-ref(62100, HasTypeDefinition, T(62000))
-ref(62100, HasComponent, PublishSubscribe, forward=False)
+RS = "ResourceFileType"
+prop_var(63002, RS, "ResourceId", String, "xRegistry resourceid: the stable identifier of the resource within its group.", rule=MR_Mandatory)
+prop_var(63002, RS, "VersionId", String, "xRegistry versionid: the identifier of the version this file represents.")
+prop_var(63002, RS, "Format", String, "xRegistry format string identifying the document's schema language/shape.")
+prop_var(63002, RS, "ContentType", String, "Media type (content-type) of the document bytes.")
+prop_var(63002, RS, "ExternalReference", ExpandedNodeId,
+         "Federation link: an ExpandedNodeId identifying this resource in another (possibly remote) registry - "
+         "the ServerUri identifies the hosting registry endpoint, the NamespaceUri and Identifier identify the "
+         "group and resource. Present when the document is served by reference (xRegistry <RESOURCE>url).")
+prop_var(63002, RS, "ResourceUrl", String,
+         "Federation link (string form): the URL from which the document can be obtained (xRegistry <RESOURCE>url), "
+         "for example an opc.tcp endpoint plus browse path, or an HTTP URL.")
+common_attrs(63002, RS)
+method(63002, RS, "AddProperty",
+       "Add or update an xRegistry property (attribute/label) on this resource, further configuring the registry "
+       "structure. The server materializes the property in the AddressSpace.",
+       inargs=[("Key", String, "Property (attribute or label) name."), ("Value", String, "Property value.")],
+       outargs=[("Success", Boolean, "True if the property was added or updated.")])
+method(63002, RS, "RemoveProperty",
+       "Remove an xRegistry property (attribute/label) from this resource.",
+       inargs=[("Key", String, "Property (attribute or label) name.")],
+       outargs=[("Success", Boolean, "True if the property existed and was removed.")])
 
 # Emission
-NAMESPACE = "http://opcfoundation.org/UA/SchemaRegistry/"
+NAMESPACE = "http://opcfoundation.org/UA/xRegistry/"
 VERSION = "0.1.0"
 PUBDATE = "2026-07-16T00:00:00Z"
+UA_REQUIRED_VERSION = "1.05.04"
+UA_REQUIRED_PUBDATE = "2024-05-01T00:00:00Z"
 ALIASES = [
     ("Boolean", Boolean), ("UInt32", UInt32), ("String", String), ("DateTime", DateTime),
-    ("ByteString", ByteString), ("Duration", Duration), ("Argument", Argument),
+    ("ByteString", ByteString), ("ExpandedNodeId", ExpandedNodeId), ("Duration", Duration),
+    ("Argument", Argument), ("KeyValuePair", KeyValuePair),
     ("Organizes", Organizes), ("HasModellingRule", HasModellingRule),
     ("HasTypeDefinition", HasTypeDefinition), ("HasSubtype", HasSubtype),
     ("HasProperty", HasProperty), ("HasComponent", HasComponent),
@@ -259,12 +278,11 @@ def _emit_node(n):
 
 def emit():
     out = ['<?xml version="1.0" encoding="utf-8"?>',
-           '<!-- OPC UA Schema Registry companion namespace. PROVISIONAL NodeIds (final IDs assigned by the OPC Foundation). -->',
+           '<!-- OPC UA xRegistry abstract companion namespace. Draft NodeIds (final IDs assigned by the OPC Foundation). -->',
            '<UANodeSet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd" xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd">',
-           '  <NamespaceUris>', '    <Uri>http://opcfoundation.org/UA/xRegistry/</Uri>', f'    <Uri>{NAMESPACE}</Uri>', '  </NamespaceUris>',
+           '  <NamespaceUris>', f'    <Uri>{NAMESPACE}</Uri>', '  </NamespaceUris>',
            '  <Models>', f'    <Model ModelUri="{NAMESPACE}" Version="{VERSION}" PublicationDate="{PUBDATE}">',
-           '      <RequiredModel ModelUri="http://opcfoundation.org/UA/" Version="1.05.04" PublicationDate="2024-05-01T00:00:00Z" />',
-           '      <RequiredModel ModelUri="http://opcfoundation.org/UA/xRegistry/" Version="0.1.0" PublicationDate="2026-07-16T00:00:00Z" />',
+           f'      <RequiredModel ModelUri="http://opcfoundation.org/UA/" Version="{UA_REQUIRED_VERSION}" PublicationDate="{UA_REQUIRED_PUBDATE}" />',
            '    </Model>', '  </Models>', '  <Aliases>']
     for name, val in ALIASES:
         out.append(f'    <Alias Alias="{name}">{val}</Alias>')
@@ -281,30 +299,24 @@ LINK_MAP = {
     "BaseObjectType": "https://reference.opcfoundation.org/specs/OPC-10000-5/6.2",
     "FolderType": "https://reference.opcfoundation.org/specs/OPC-10000-5/6.6",
     "PropertyType": "https://reference.opcfoundation.org/specs/OPC-10000-5/7.3",
-    "BaseDataVariableType": "https://reference.opcfoundation.org/specs/OPC-10000-5/7.4",
-    "ConfigurationVersionDataType": "https://reference.opcfoundation.org/specs/OPC-10000-14/6.2.3#6.2.3.2.6",
-    "RegistryType": "OPC-UA-xRegistry.md#type-RegistryType",
-    "GroupType": "OPC-UA-xRegistry.md#type-GroupType",
-    "ResourceFileType": "OPC-UA-xRegistry.md#type-ResourceFileType",
+    "FileType": "https://reference.opcfoundation.org/specs/OPC-10000-20/4.2",
+    "FileDirectoryType": "https://reference.opcfoundation.org/specs/OPC-10000-20/4.3.1",
+    "KeyValuePair": "https://reference.opcfoundation.org/specs/OPC-10000-5/12.23",
+    "ExpandedNodeId": "https://reference.opcfoundation.org/specs/OPC-10000-3/8.2.3",
 }
-_BASE_NAMES = {"i=58": "BaseObjectType", "i=61": "FolderType", "i=63": "BaseDataVariableType", "i=68": "PropertyType"}
-# abstract xRegistry base types this spec extends (required model, ns=1)
-_XR_NAMES = {XRegistry_RegistryType: "RegistryType", XRegistry_GroupType: "GroupType", XRegistry_ResourceFileType: "ResourceFileType"}
+_BASE_NAMES = {"i=58": "BaseObjectType", "i=61": "FolderType", "i=63": "BaseDataVariableType",
+               "i=68": "PropertyType", FileType: "FileType", FileDirectoryType: "FileDirectoryType"}
 _OWN = None
 
 def _friendly(tgt):
     if tgt in _BASE_NAMES:
         return _BASE_NAMES[tgt]
-    if tgt in _XR_NAMES:
-        return _XR_NAMES[tgt]
     if tgt in DATATYPE_ALIAS:
         return DATATYPE_ALIAS[tgt]
     if tgt.startswith(f"ns={OWN_NS};i="):
         num = int(tgt.split("i=")[1])
         if num in NODES:
             return NODES[num].bname
-    if tgt == ConfigurationVersionDataType:
-        return "ConfigurationVersionDataType"
     return tgt
 
 def _anchor(name):
@@ -358,30 +370,31 @@ def emit_md():
             if n.bname == "InputArguments": method_args[pid] = names
             else: method_out[pid] = names
     md = ['<a id="annex-a"></a>', '## Annex A — Information model\n',
-          'This annex is the normative node reference. It is generated from `tools/build_model.py` and always matches `Opc.Ua.SchemaRegistry.NodeSet2.xml`. All nodes are proposed additions in the companion namespace `http://opcfoundation.org/UA/SchemaRegistry/` (namespace index `2` in this NodeSet, after the required `http://opcfoundation.org/UA/xRegistry/` base model at index `1`). The Schema Registry types **extend the abstract [OPC UA — xRegistry](OPC-UA-xRegistry.md) base types** (`RegistryType`/`GroupType`/`ResourceFileType`). The numeric NodeIds shown are **provisional** (final IDs are assigned by the OPC Foundation). The **Declared in** column marks members inherited from a supertype.\n']
+          'This annex is the normative node reference. It is generated from `tools/build_model.py` and always matches `Opc.Ua.XRegistry.NodeSet2.xml`. All nodes are defined in the companion namespace `http://opcfoundation.org/UA/xRegistry/` (which requires the base OPC UA namespace); the numeric NodeIds shown are **draft** identifiers within that namespace. The **Declared in** column marks members inherited from a supertype.\n']
     md.append('### Type overview\n')
     md.append('| NodeId | BrowseName | NodeClass | Subtype of |')
     md.append('|---|---|---|---|')
     for nid in obj_types:
         n = NODES[nid]
-        md.append(f"| ns={OWN_NS};i={nid} | {_link(n.bname)} | {n.cls[2:]} | {_link(_friendly(_supertype(n)))} |")
+        md.append(f"| ns=1;i={nid} | {_link(n.bname)} | {n.cls[2:]} | {_link(_friendly(_supertype(n)))} |")
     md.append('')
     md.append('### Object types\n')
     for nid in obj_types:
         n = NODES[nid]
         md.append(f'<a id="{_anchor(n.bname)}"></a>')
-        md.append(f"#### {n.bname}  (ns={OWN_NS};i={nid})\n")
+        md.append(f"#### {n.bname}  (ns=1;i={nid})\n")
         md.append(f"*Inherits from:* {_link(_friendly(_supertype(n)))}\n")
         if n.desc: md.append(n.desc + "\n")
         rows = []
         for m in _members_of(nid):
             mn = NODES[m]
-            dt = _friendly(mn.attrs.get("DataType", "")) if mn.attrs.get("DataType") else ""
-            if mn.attrs.get("ValueRank") == "1" and dt: dt += "[]"
-            rows.append((mn.bname, mn.cls[2:], _link(dt), _member_rule(mn), n.bname, (mn.desc or "").replace("|", "/")))
+            dt = _link(_friendly(mn.attrs.get("DataType", ""))) if mn.attrs.get("DataType") else ""
+            if mn.attrs.get("ValueRank", "") == "1" and dt:
+                dt += r"\[\]"
+            rows.append((mn.bname, mn.cls[2:], dt, _member_rule(mn), n.bname, (mn.desc or "").replace("|", "/")))
         if rows:
-            md.append('| BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |')
-            md.append('|---|---|---|---|---|---|')
+            md.append("| BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |")
+            md.append("|---|---|---|---|---|---|")
             for r in rows:
                 md.append(f"| {r[0]} | {r[1]} | {r[2]} | {r[3]} | {r[4]} | {r[5]} |")
             md.append('')
@@ -390,32 +403,23 @@ def emit_md():
     md.append('|---|---|---|---|')
     for nid in ORDER:
         n = NODES[nid]
-        if n.cls != "UAMethod": continue
+        if n.cls != "UAMethod":
+            continue
         owner = NODES[int(n.parent.split("i=")[1])].bname if n.parent else ""
-        md.append(f"| {n.bname} | {_link(owner)} | {', '.join(method_args.get(nid, [])) or '(none)'} | {', '.join(method_out.get(nid, [])) or '(none)'} |")
-    md.append('')
-    md.append('### Well-known instances\n')
-    md.append('| BrowseName | NodeId | TypeDefinition | Note |')
-    md.append('|---|---|---|---|')
-    for nid in ORDER:
-        n = NODES[nid]
-        if n.category != CAT_INST or n.cls != "UAObject": continue
-        td = ""
-        for rt, tgt, fwd in n.refs:
-            if rt == HasTypeDefinition: td = _link(_friendly(tgt))
-        md.append(f"| {n.bname} | ns={OWN_NS};i={nid} | {td} | {(n.desc or '').replace('|','/')} |")
+        ins = ", ".join(method_args.get(nid, [])) or "(none)"
+        outs = ", ".join(method_out.get(nid, [])) or "(none)"
+        md.append(f"| {n.bname} | {_link(owner)} | {ins} | {outs} |")
     md.append('')
     return "\n".join(md) + "\n"
 
 if __name__ == "__main__":
     here = os.path.dirname(os.path.abspath(__file__))
-    outdir = os.path.dirname(here)
-    with open(os.path.join(outdir, "Opc.Ua.SchemaRegistry.NodeSet2.xml"), "w", encoding="utf-8") as f:
+    outdir = os.path.abspath(os.path.join(here, ".."))
+    with open(os.path.join(outdir, "Opc.Ua.XRegistry.NodeSet2.xml"), "w", encoding="utf-8") as f:
         f.write(emit())
-    with open(os.path.join(outdir, "Opc.Ua.SchemaRegistry.NodeIds.csv"), "w", encoding="utf-8") as f:
+    with open(os.path.join(outdir, "Opc.Ua.XRegistry.NodeIds.csv"), "w", encoding="utf-8") as f:
         f.write(emit_csv())
     with open(os.path.join(here, "model-reference.md"), "w", encoding="utf-8") as f:
         f.write(emit_md())
     nt = sum(1 for k in NODES if NODES[k].cls in ("UAObjectType", "UADataType", "UAReferenceType"))
-    print(f"Nodes: {len(NODES)}  (types: {nt})")
-    print(f"Member id range: 62500..{_next_member[0] - 1}")
+    print(f"Nodes: {len(NODES)}  (types: {nt})  member range: 63500..{_next_member[0]-1}")
