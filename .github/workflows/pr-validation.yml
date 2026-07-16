@@ -1,0 +1,94 @@
+# Advisory PR validation for the OPC UA specification drafts.
+#
+# Every job is report-only: `continue-on-error: true` means a finding is surfaced in the checks tab
+# and logs but never blocks a merge. To make a check required later: remove its `continue-on-error`
+# and mark that check as a required status in the branch protection ruleset.
+#
+# Only checks that run on a clean checkout are wired here. Full spec validation and the determinism
+# gate additionally need untracked base data (companion NodeSets under **/tools/ref/ and the base
+# PubSubBinding NodeSet), so they run their self-contained subset / skip cleanly in CI and remain a
+# local gate (see CONTRIBUTING.md).
+name: PR validation
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  markdown-lint:
+    name: Markdown lint (advisory)
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: markdownlint-cli2
+        run: npx --yes markdownlint-cli2 "**/*.md"
+
+  links:
+    name: Internal links (advisory)
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python .github/scripts/check_links.py
+
+  mermaid:
+    name: Mermaid diagrams (advisory)
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install Mermaid CLI
+        run: npm install -g @mermaid-js/mermaid-cli
+      - run: python .github/scripts/check_mermaid.py
+
+  yaml-json:
+    name: YAML / JSON well-formedness (advisory)
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install pyyaml
+      - run: python .github/scripts/check_yaml_json.py
+
+  spec-validate:
+    name: Spec validation, self-contained (advisory)
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r core-specs/extras/requirements.txt
+      - run: python core-specs/extras/validate_all.py --self-contained
+
+  determinism:
+    name: Determinism / generated files (advisory)
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r core-specs/extras/requirements.txt
+      - run: python .github/scripts/check_determinism.py

@@ -61,6 +61,27 @@ python core-specs/extras/<extension>/tools/validate_local.py
 
 A green run (`ALL EXTENSIONS VALIDATED OK`) is the acceptance gate; please include it in the PR for model or tooling changes. Feedback-only and annotation-only pull requests do not need to pass validation.
 
+The full `validate_all.py` (and the determinism check below) also regenerate from base NodeSets that are not distributed with the repository, so they are a **local** gate. On a clean checkout use `python core-specs/extras/validate_all.py --self-contained`, which runs only the extensions that need no base data — this is what CI runs.
+
+## Automated checks
+
+Pull requests run a set of **advisory** checks (`.github/workflows/pr-validation.yml`) — they are report-only and never block a merge. You can run the same checks locally from the repository root:
+
+```powershell
+# markdown lint (config in .markdownlint-cli2.yaml)
+npx markdownlint-cli2 "**/*.md"
+
+# internal links + anchors, mermaid diagrams, and YAML/JSON well-formedness
+python .github/scripts/check_links.py
+python .github/scripts/check_mermaid.py     # needs the Mermaid CLI: npm install -g @mermaid-js/mermaid-cli
+python .github/scripts/check_yaml_json.py   # needs PyYAML: pip install pyyaml
+
+# spec validation (self-contained subset) and determinism (skips without base data)
+python core-specs/extras/validate_all.py --self-contained
+python .github/scripts/check_determinism.py
+```
+
+
 ## Conventions
 
 - **Branch names** — short and descriptive of the change (for example `avro-action-response-fields`).
