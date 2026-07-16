@@ -21,3 +21,14 @@ This repository is a working area for authoring and iterating on draft OPC UA in
 ## Status
 
 Draft / experimental. These drafts are not affiliated with, reviewed by, or endorsed by the OPC Foundation, and the use of `opcfoundation.org` namespace URIs is for prototyping only.
+
+## Contributing
+
+Feedback on these drafts is welcome — and you don't have to write the specification yourself. Fork the repo, create a branch, and either make changes or just **annotate** the drafts (inline comments, notes, or open questions); then open a pull request and discuss. Maintainers use **AI agents** to turn the feedback and discussion into concrete specification text, information-model (NodeSet / CSV) updates, and regenerated artifacts.
+
+1. Fork `marcschier/opcua-drafts` and check out a topic branch.
+2. Make your changes or annotations — for generated specs, edit the source (a descriptor or `tools/build_model.py`), not the generated NodeSet / CSV, and regenerate.
+3. Open a pull request against `main` and discuss.
+4. Maintainers apply the agreed changes with AI, regenerate, and validate (`python core-specs/extras/validate_all.py`).
+
+See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the full workflow, validation, and conventions.
