@@ -8,7 +8,7 @@
 
 ## 1 Scope
 
-This addendum binds one `PumpType` instance to a USD prim and defines three read-only telemetry bindings (Part 2, `UaToUsdTelemetry`): impeller rotation from mass flow, body colour from bearing temperature, and status-light glow from differential pressure. It also shows the 0.2 capability bindings on the same pump — an alarm binding (`UaAlarmToUsd`) driving status-light visibility and an opt-in command binding (`UsdToUaCommand`) writing a speed setpoint — plus a stage content-integrity digest. It is illustrative; a concrete server supplies the exact source BrowsePaths and stage identifiers.
+This addendum binds one `PumpType` instance to a USD prim and defines three read-only telemetry bindings (Part 2, `OpenUsdTelemetryBindingType`): impeller rotation from mass flow, body colour from bearing temperature, and status-light glow from differential pressure. It also shows the 0.2 capability bindings on the same pump — an alarm binding (`OpenUsdAlarmBindingType`) driving status-light visibility and an opt-in command binding (`OpenUsdCommandBindingType`) writing a speed setpoint — plus a stage content-integrity digest. It is illustrative; a concrete server supplies the exact source BrowsePaths and stage identifiers.
 
 ## 2 Normative references
 
@@ -25,11 +25,11 @@ Pump101 : PumpType
   └─ HasAddIn OpenUsdRepresentation : OpenUsdRepresentationType
        Stage    = NodeId(Server/OpenUSD/Stages/PlantStage)
        PrimPath = "/Plant/Pumps/P101"
-       ├─ MassFlowSpin           : OpenUsdLiveBindingType   (UaToUsdTelemetry, +SourceSemanticId)
-       ├─ BearingTempColor       : OpenUsdLiveBindingType   (UaToUsdTelemetry)
-       ├─ DiffPressureEmissive   : OpenUsdLiveBindingType   (UaToUsdTelemetry)
-       ├─ AlarmActiveVisibility  : OpenUsdLiveBindingType   (UaAlarmToUsd)
-       └─ SpeedSetpointCommand   : OpenUsdLiveBindingType   (UsdToUaCommand, opt-in)
+       ├─ MassFlowSpin           : OpenUsdTelemetryBindingType   (+SourceSemanticId)
+       ├─ BearingTempColor       : OpenUsdTelemetryBindingType
+       ├─ DiffPressureEmissive   : OpenUsdTelemetryBindingType
+       ├─ AlarmActiveVisibility  : OpenUsdAlarmBindingType
+       └─ SpeedSetpointCommand   : OpenUsdCommandBindingType   (opt-in)
 ```
 
 The AddIn is also `Organizes`-listed from `Server/OpenUSD/Representations`, so a generic connector discovers it without knowing anything about pumps. Each binding's source resolves **relative to `Pump101`** via `SourceBrowsePath` (or, from 0.2, a portable `SourceSemanticId`), so the same declaration applies to every pump instance; the effective runtime key is `(Pump101, BindingDefinitionId)`. The alarm and command bindings target two extra pump Variables — `AlarmActive` (Boolean) and a writable `SpeedSetpoint` (Double) — and the `PlantStage` carries a `RootLayerDigest` (SHA-256) a connector verifies before composing.
@@ -60,7 +60,7 @@ The `PumpDeviceIntegrationServer` sample in `marcschier/UA-.NETStandard` realize
 | **AlarmActiveVisibility** | `AlarmActive` (supervision alarm ActiveState) | `visibility` (on `…/StatusLight`) | `token` | Visibility |
 | **SpeedSetpointCommand** | *(command)* → `SpeedSetpoint` | `inputs:speedSetpoint` (on `…/Impeller`) | `double` | — |
 
-The alarm binding (`UaAlarmToUsd`, `AlarmAspect = ActiveState`) shows the status light when a supervision alarm is active; the command binding (`UsdToUaCommand`, `SignalRole = Controllable`) is opt-in — the bridge writes the setpoint only with `--enable-commands` (single-writer, fail-closed). The `PlantStage` publishes a `RootLayerDigest` (`Sha256`) the connector verifies before composing.
+The alarm binding (`OpenUsdAlarmBindingType`, `AlarmAspect = ActiveState`) shows the status light when a supervision alarm is active; the command binding (`OpenUsdCommandBindingType`, `SignalRole = Controllable`) is opt-in — the bridge writes the setpoint only with `--enable-commands` (single-writer, fail-closed). The `PlantStage` publishes a `RootLayerDigest` (`Sha256`) the connector verifies before composing.
 
 Implementer findings from the source-generated OPC UA .NET model (generic, not Pump-specific — applies to any server built from this companion NodeSet):
 

@@ -8,7 +8,7 @@
 
 ## 1 Scope
 
-This addendum binds one OPC 40010 `MotionDeviceSystem` (`RobotCell`) to `/Cell` in an OpenUSD stage. It defines recursive composition from the system to two articulated `MotionDevice` robots (`/Cell/Robots/R1`, `/Cell/Robots/R2`) and from each robot to six Axis link Xforms. Each Axis carries a read-only telemetry binding (`UaToUsdTelemetry`) from `ParameterSet/ActualPosition` in degrees to a USD rotate op (`xformOp:rotateZ`, `xformOp:rotateY`, or `xformOp:rotateX`). It also shows an emergency-stop alarm binding driving beacon visibility and a per-robot warning-halo visibility, an opt-in speed-override command binding, and a dynamic gripper tool reference mounted on R1's flange.
+This addendum binds one OPC 40010 `MotionDeviceSystem` (`RobotCell`) to `/Cell` in an OpenUSD stage. It defines recursive composition from the system to two articulated `MotionDevice` robots (`/Cell/Robots/R1`, `/Cell/Robots/R2`) and from each robot to six Axis link Xforms. Each Axis carries a read-only telemetry binding (`OpenUsdTelemetryBindingType`) from `ParameterSet/ActualPosition` in degrees to a USD rotate op (`xformOp:rotateZ`, `xformOp:rotateY`, or `xformOp:rotateX`). It also shows an emergency-stop alarm binding driving beacon visibility and a per-robot warning-halo visibility, an opt-in speed-override command binding, and a dynamic gripper tool reference mounted on R1's flange.
 
 ## 2 Normative references
 
@@ -27,20 +27,20 @@ RobotCell : MotionDeviceSystemType
        PrimPath = "/Cell"
        ├─ <Component> RobotsAggregation : OpenUsdComponentBindingType
        │    MotionDevices (Organizes, Many) -> /Cell/Robots/<BrowseName>, Reference @robot.usda@</Robot>
-       ├─ EmergencyStopBeacon : OpenUsdLiveBindingType (UaAlarmToUsd -> /Cell/SafetyBeacon.visibility)
-       └─ SpeedOverrideCommand : OpenUsdLiveBindingType (UsdToUaCommand -> /Cell.inputs:speedOverride)
+       ├─ EmergencyStopBeacon : OpenUsdAlarmBindingType (-> /Cell/SafetyBeacon.visibility)
+       └─ SpeedOverrideCommand : OpenUsdCommandBindingType (-> /Cell.inputs:speedOverride)
 
 MotionDevices/R1 : MotionDeviceType
   └─ HasAddIn OpenUsdRepresentation
        PrimPath = "/Cell/Robots/R1"
        ├─ <Component> AxesAggregation : Axes (HasComponent, Many) -> child link Xforms
        ├─ <Component> GripperTool : Flange/MountedTool -> /Cell/Robots/R1/Base/J1/J2/J3/J4/J5/J6/Flange/Tool, Reference @tool.usda@</Gripper>, Dynamic=true
-       └─ EmergencyStopWarning : OpenUsdLiveBindingType (UaAlarmToUsd -> /Cell/Robots/R1/Warning.visibility)
+       └─ EmergencyStopWarning : OpenUsdAlarmBindingType (-> /Cell/Robots/R1/Warning.visibility)
 
 MotionDevices/R1/Axes/A1 : AxisType
   └─ HasAddIn OpenUsdRepresentation
        PrimPath = "/Cell/Robots/R1/Base/J1"
-       └─ AxisActualPosition : OpenUsdLiveBindingType
+       └─ AxisActualPosition : OpenUsdTelemetryBindingType
             SourceBrowsePath = "/ParameterSet/ActualPosition"
             TargetPropertyName = "xformOp:rotateZ"
             RenderTargetKind = Rotation

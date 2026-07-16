@@ -26,7 +26,7 @@ OpenUsdConnector  ──► UsdFileSink ──►  live.usda        (runtime ove
 
 ## Articulation bindings
 
-Each Axis representation carries the same `UaToUsdTelemetry` binding shape: `ParameterSet/ActualPosition` in degrees maps 1:1 to a USD rotate op. USD rotate ops are degrees, so the connector applies `Scale = 1.0`, `Offset = 0.0`.
+Each Axis representation carries the same `OpenUsdTelemetryBindingType` binding shape: `ParameterSet/ActualPosition` in degrees maps 1:1 to a USD rotate op. USD rotate ops are degrees, so the connector applies `Scale = 1.0`, `Offset = 0.0`.
 
 | Robot | Axis | Axis source | USD target prim | Target property | Home |
 |---|---|---|---|---|---|
@@ -43,9 +43,9 @@ The nested link Xforms form a serial kinematic chain, so changing A2 also moves 
 
 | Binding | Intent | Source / command | USD target | Effect |
 |---|---|---|---|---|
-| `EmergencyStopBeacon` | `UaAlarmToUsd` | `/SafetyStates/EmergencyStop` ActiveState | `/Cell/SafetyBeacon.visibility` | beacon visible while e-stop is active |
-| `EmergencyStopWarning` | `UaAlarmToUsd` | same cell e-stop | `/Cell/Robots/R1/Warning.visibility` and `/Cell/Robots/R2/Warning.visibility` | warning halos become visible while stopped, hidden when clear |
-| `SpeedOverrideCommand` | `UsdToUaCommand` | USD `inputs:speedOverride` → controller SpeedOverride Variable | `/Cell.inputs:speedOverride` | opt-in command intent, fail-closed unless the bridge enables commands |
+| `EmergencyStopBeacon` | `OpenUsdAlarmBindingType` | `/SafetyStates/EmergencyStop` ActiveState | `/Cell/SafetyBeacon.visibility` | beacon visible while e-stop is active |
+| `EmergencyStopWarning` | `OpenUsdAlarmBindingType` | same cell e-stop | `/Cell/Robots/R1/Warning.visibility` and `/Cell/Robots/R2/Warning.visibility` | warning halos become visible while stopped, hidden when clear |
+| `SpeedOverrideCommand` | `OpenUsdCommandBindingType` | USD `inputs:speedOverride` → controller SpeedOverride Variable | `/Cell.inputs:speedOverride` | opt-in command intent, fail-closed unless the bridge enables commands |
 | `GripperTool` | composition | `/Flange/MountedTool` model change | `/Cell/Robots/R1/.../Flange/Tool` reference to `tool.usda` | dynamically attaches the gripper to R1 |
 
 ## Composition

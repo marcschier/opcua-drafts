@@ -25,7 +25,7 @@ Out of scope (reserved for later work): Part 14 Actions, PubSub realization, a U
 
 ### 1.4 Capabilities and versioning
 
-This document supersedes Release 0.1.0. The 0.1 baseline (Representation + read-only `UaToUsdTelemetry` binding + the Omniverse informative profile) is unchanged and remains conformant; 0.2.0 **adds** capabilities — semantic-id source, command, alarm, history, content integrity, **composition/aggregation**, and **asset content delivery** — without altering any earlier node or NodeId. New capabilities are additive and each is gated by its own conformance unit (§7), so a Server implements only what it needs. Where this document refers to "the 0.1 baseline" it means the read-only representation + telemetry core; everything else is an optional 0.2.0 capability.
+This document supersedes Release 0.1.0. The 0.1 baseline (Representation + read-only telemetry binding + the Omniverse informative profile) remains conformant; 0.2.0 **adds** capabilities — semantic-id source, command, alarm, history, content integrity, **composition/aggregation**, and **asset content delivery**. New capabilities are additive and each is gated by its own conformance unit (§7), so a Server implements only what it needs. 0.2.0 also refines the live-binding information model: a binding is now an **abstract `OpenUsdLiveBindingType` with one concrete subtype per intent** (`OpenUsdTelemetryBindingType`, `OpenUsdAlarmBindingType`, `OpenUsdHistoryBindingType`, `OpenUsdCommandBindingType`; §5.4) rather than a single type discriminated by an `IntentProfile` enum — the 0.1 telemetry binding is expressed as `OpenUsdTelemetryBindingType`. Where this document refers to "the 0.1 baseline" it means the read-only representation + telemetry core; everything else is an optional 0.2.0 capability.
 
 
 ### 1.1 Motivation
@@ -130,7 +130,7 @@ flowchart TD
     STG["PlantStage : OpenUsdStageType"]
     OBJ["Pump101 : PumpType (domain Object)"]
     REP["OpenUsdRepresentation : OpenUsdRepresentationType (AddIn)"]
-    BND["Speed binding : OpenUsdLiveBindingType"]
+    BND["Speed binding : OpenUsdTelemetryBindingType"]
     OU --> ST --> STG
     OU --> RP
     OBJ -->|HasAddIn| REP
@@ -180,20 +180,19 @@ The Stage Object's own NodeId is its same-server identity; a `Representation` re
 | `DefaultInstanceBrowseName` | QualifiedName | *(static, no ModellingRule)* | `1:OpenUsdRepresentation` — the AddIn default BrowseName. |
 | `Stage` | NodeId | M | NodeId of the `OpenUsdStageType` instance targeted. |
 | `PrimPath` | String | M | Canonical absolute composed prim path (instance-level). |
-| `<Binding>` | OpenUsdLiveBindingType | OptionalPlaceholder | Zero or more live bindings whose source resolves relative to the represented Object. |
+| `<Binding>` | OpenUsdLiveBindingType (abstract) | OptionalPlaceholder | Zero or more live bindings whose source resolves relative to the represented Object; each instance is a concrete subtype selecting the intent (§5.4.1–§5.4.4). |
 | `<Component>` | OpenUsdComponentBindingType | OptionalPlaceholder | Zero or more component/aggregation bindings composing this Object's components into the USD prim tree (§5.12). |
 
 A domain Object gains a representation by composing this AddIn with `HasAddIn` (Part 3 AddIn convention). The AddIn is `Organizes`-listed from `Server/OpenUSD/Representations`. The represented Object is the AddIn's `HasAddIn`-inverse parent; a connector computes the effective binding key as `(represented Object, BindingDefinitionId)`.
 
-### 5.4 `OpenUsdLiveBindingType : BaseObjectType`
+### 5.4 `OpenUsdLiveBindingType : BaseObjectType` (abstract) and its intent subtypes
 
-One read-only live binding maps a source `Variable` `Value` to one target USD attribute. Declaration identity (`BindingDefinitionId`) is distinct from runtime identity (`(represented Object, BindingDefinitionId)`); a type-level declaration is therefore not wrongly shared across instances.
+`OpenUsdLiveBindingType` is the **abstract** base for a read-only live binding that maps a source `Variable` `Value` to one target USD attribute. The binding **intent is expressed by the concrete subtype** (§5.4.1–§5.4.4) rather than by an enum discriminator, so each intent's members live only on its subtype. Declaration identity (`BindingDefinitionId`) is distinct from runtime identity (`(represented Object, BindingDefinitionId)`); a type-level declaration is therefore not wrongly shared across instances. The base carries the members common to every intent:
 
 | Property | DataType | Rule | Meaning |
 |---|---|---:|---|
 | `BindingDefinitionId` | Guid | M | Stable declaration id for override/tombstone matching. |
 | `Enabled` | Boolean | M | `false` is a tombstone suppressing an inherited binding. |
-| `IntentProfile` | OpenUsdIntentProfileEnum | M | Direction/semantics of the binding: `UaToUsdTelemetry` (default), `UaAlarmToUsd`, `UaHistoryToUsd`, `UsdToUaCommand`. |
 | `SignalRole` | OpenUsdSignalRoleEnum | O | `Observable` (read-only, default) or `Controllable` (eligible for a command binding). Mirrors the asset-definition signal role. |
 | `SourceNodeId` | NodeId | O | Absolute source Variable NodeId (instance form). |
 | `SourceBrowsePath` | RelativePath | O | RelativePath from the represented Object to the source Variable (instance-portable). |
@@ -209,15 +208,42 @@ One read-only live binding maps a source `Variable` `Value` to one target USD at
 | `SourceEngineeringUnits`, `TargetEngineeringUnits` | EUInformation | O | Unit assertion / request (UNECE). |
 | `BadQualityAction` | OpenUsdBadQualityActionEnum | O | Treatment of non-Good source values; default `Skip`. |
 | `SamplingIntervalHint` | Double | O | Requested sampling hint (ms). A **hint** only. |
-| `AlarmAspect` | OpenUsdAlarmAspectEnum | O | For `UaAlarmToUsd`: which condition aspect drives the target (`ActiveState`, `Severity`, `AckedState`, `EnabledState`). |
-| `TimeSampled` | Boolean | O | For `UaHistoryToUsd`: author values as USD time samples (playback) rather than the latest default. |
-| `CommandTargetNodeId` | NodeId | O | For `UsdToUaCommand`: the Variable to write, or the Object on which to `Call` `CommandMethodId`. |
-| `CommandMethodId` | NodeId | O | For `UsdToUaCommand`: optional Method to invoke instead of a Variable write. |
-| `CommandTriggerPropertyName` | String | O | For `UsdToUaCommand`: the USD attribute whose change is interpreted as the command intent/value. |
 | `State` | OpenUsdBindingStateEnum | O | Runtime lifecycle state (diagnostic, read-only). |
 | `LastError` | LocalizedText | O | Last operation error (diagnostic). |
 
 Exactly one of `SourceNodeId` / `SourceBrowsePath` / `SourceSemanticId` **shall** resolve to a single source Variable. `SourceBrowsePath` and `SourceSemanticId` are preferred over `SourceNodeId` because they are instance-portable and can be declared at type level; `SourceSemanticId` additionally makes a binding portable **across vendors and servers** that share the same semantic dictionary (ECLASS / IEC CDD), which is the anchor the wider asset-definition strategy relies on (§8.2).
+
+Because the intent is the type, a connector determines a binding's intent from its `HasTypeDefinition` (the concrete subtype), and a `<Binding>` placeholder (§5.3) whose declared TypeDefinition is the abstract base is materialized only by instances of a concrete subtype. The 0.1 baseline telemetry binding is expressed as `OpenUsdTelemetryBindingType`.
+
+#### 5.4.1 `OpenUsdTelemetryBindingType : OpenUsdLiveBindingType`
+
+The read-only default (the 0.1 baseline binding): a source `Variable` `Value` drives a USD attribute. Adds **no** members beyond the base; it binds the source Value (`AttributeId` 13).
+
+#### 5.4.2 `OpenUsdAlarmBindingType : OpenUsdLiveBindingType`
+
+The source resolves to an OPC UA Alarms & Conditions instance (Part 9) or a plain Variable exposing the aspect value. Adds:
+
+| Property | DataType | Rule | Meaning |
+|---|---|---:|---|
+| `AlarmAspect` | OpenUsdAlarmAspectEnum | O | Which condition aspect drives the target (`ActiveState`, `Severity`, `AckedState`, `EnabledState`). |
+
+#### 5.4.3 `OpenUsdHistoryBindingType : OpenUsdLiveBindingType`
+
+Reads history (Part 11 `HistoryRead`) for the source and authors it on the target. Adds:
+
+| Property | DataType | Rule | Meaning |
+|---|---|---:|---|
+| `TimeSampled` | Boolean | O | Author values as USD time samples (playback) rather than the latest default. |
+
+#### 5.4.4 `OpenUsdCommandBindingType : OpenUsdLiveBindingType`
+
+The opt-in, authorized control direction (USD → UA; §5.10). Adds:
+
+| Property | DataType | Rule | Meaning |
+|---|---|---:|---|
+| `CommandTargetNodeId` | NodeId | O | The Variable to write, or the Object on which to `Call` `CommandMethodId`. |
+| `CommandMethodId` | NodeId | O | Optional Method to invoke instead of a Variable write. |
+| `CommandTriggerPropertyName` | String | O | The USD attribute whose change is interpreted as the command intent/value. |
 
 ### 5.5 `IOpenUsdRepresentedType : BaseInterfaceType`
 
@@ -225,7 +251,6 @@ An optional interface a domain ObjectType may apply (`HasInterface`) to advertis
 
 ### 5.6 DataTypes (Enumerations)
 
-- `OpenUsdIntentProfileEnum` — `UaToUsdTelemetry(0) UaAlarmToUsd(1) UaHistoryToUsd(2) UsdToUaCommand(3)`. `UaToUsdTelemetry` is the read-only default; others are optional capabilities.
 - `OpenUsdRenderTargetKindEnum` — `Translation(0) Rotation(1) Scale(2) Transform(3) Visibility(4) DisplayColor(5) EmissiveColor(6) Opacity(7) Custom(8)`.
 - `OpenUsdBadQualityActionEnum` — `Skip(0) HoldLast(1) ClearOpinion(2) Fallback(3)`.
 - `OpenUsdBindingStateEnum` — `Disabled(0) Unresolved(1) Ready(2) Active(3) Degraded(4) Error(5)`.
@@ -256,13 +281,13 @@ Conversion order: engineering-unit conversion → `Scale`/`Offset` → (transfor
 
 **Quality.** An omitted (binary) source `StatusCode` means **Good**; a `Bad`/`Uncertain` StatusCode triggers `BadQualityAction` (default `Skip`). `ClearOpinion` removes the authored USD opinion (revealing a weaker layer) — it does **not** author a fabricated "bad" value.
 
-**Timestamp.** OPC UA source/server timestamps are wall-clock; USD time codes are stage-timeline ordinates. They relate only through an explicit epoch and `timeCodesPerSecond` when a recording profile is used; the `UaToUsdTelemetry` profile authors the latest value as the attribute default, while the `UaHistoryToUsd` profile authors time-sampled values (§5.11). Absent timestamps mean **unavailable**, not "now".
+**Timestamp.** OPC UA source/server timestamps are wall-clock; USD time codes are stage-timeline ordinates. They relate only through an explicit epoch and `timeCodesPerSecond` when a recording profile is used; an `OpenUsdTelemetryBindingType` authors the latest value as the attribute default, while an `OpenUsdHistoryBindingType` authors time-sampled values (§5.11). Absent timestamps mean **unavailable**, not "now".
 
 **Persistence and update.** `SamplingIntervalHint` and any deadband are **hints**; `PublishingInterval`, queue size, and the actual MonitoredItem parameters are per-client Subscription requests and are **not** part of the binding descriptor. Overflow and sequence gaps are observable loss (partly recoverable via `Republish`) and are not license to invent continuity.
 
 ### 5.10 Command bindings (normative, optional, opt-in)
 
-A binding with `IntentProfile = UsdToUaCommand` maps a **USD-side intent** back to an OPC UA action, so an agent or operator acting in the visual twin can command the plant through the same declared, discoverable model. Command bindings are the control counterpart of the read-only telemetry binding. They are **opt-in**: the *default posture* of the model stays read-only because a Server declares a command binding only deliberately, and a conformant connector actuates one only when explicitly configured to **and** only when the target's authorization permits it. A command binding is otherwise a fully-declared binding — `Enabled = true` like any other, and `Enabled = false` retains its normal meaning as an inherited-binding tombstone (it does **not** encode the opt-in; see below).
+A binding of type `OpenUsdCommandBindingType` maps a **USD-side intent** back to an OPC UA action, so an agent or operator acting in the visual twin can command the plant through the same declared, discoverable model. Command bindings are the control counterpart of the read-only telemetry binding. They are **opt-in**: the *default posture* of the model stays read-only because a Server declares a command binding only deliberately, and a conformant connector actuates one only when explicitly configured to **and** only when the target's authorization permits it. A command binding is otherwise a fully-declared binding — `Enabled = true` like any other, and `Enabled = false` retains its normal meaning as an inherited-binding tombstone (it does **not** encode the opt-in; see below).
 
 - **Trigger.** `CommandTriggerPropertyName` names the USD attribute whose authored change is interpreted as the intent; the connector observes that attribute (e.g. an operator/agent writes a setpoint on the prim) and converts it back through the inverse of §5.8 (`Offset`/`Scale`, units).
 - **Action.** If `CommandMethodId` is present, the connector `Call`s that Method on `CommandTargetNodeId` with the converted argument(s); otherwise it `Write`s the converted value to the Variable `CommandTargetNodeId`.
@@ -272,10 +297,10 @@ A binding with `IntentProfile = UsdToUaCommand` maps a **USD-side intent** back 
 
 ### 5.11 Alarm and history bindings (normative, optional)
 
-Two additional read-only intent profiles reuse the same `OpenUsdLiveBindingType`:
+Two additional read-only binding subtypes extend `OpenUsdLiveBindingType`:
 
-- **`UaAlarmToUsd`.** The source resolves to an OPC UA Alarms & Conditions instance (Part 9). `AlarmAspect` selects the condition aspect that drives the target USD attribute — `ActiveState`/`AckedState`/`EnabledState` (boolean → e.g. `visibility` or an emissive on/off) or `Severity` (numeric → e.g. a color ramp). Where a full A&C condition is not available, the aspect **may** instead be sourced from a plain Variable that exposes the aspect value (a Boolean active-state or numeric severity); the binding semantics are identical and the connector treats it as any monitored source. Quality/`BadQualityAction` apply as for telemetry; a returned-to-normal condition clears or resets the target per `BadQualityAction`.
-- **`UaHistoryToUsd`.** With `TimeSampled = true` the connector reads history (Part 11 `HistoryRead`) for the source and authors the values as **USD time samples** on the target attribute, giving the stage a scrubbable timeline for playback/replay. The source **shall** be historizing (its `AccessLevel`/`UserAccessLevel` grants `HistoryRead` and the server retains history); if it is not, the connector authors no samples and the binding is inert — a documented degrade, not an error. The epoch and `timeCodesPerSecond` mapping is declared by a recording profile; absent that, samples are authored on a connector-defined uniform timeline and are informative.
+- **`OpenUsdAlarmBindingType`.** The source resolves to an OPC UA Alarms & Conditions instance (Part 9). `AlarmAspect` selects the condition aspect that drives the target USD attribute — `ActiveState`/`AckedState`/`EnabledState` (boolean → e.g. `visibility` or an emissive on/off) or `Severity` (numeric → e.g. a color ramp). Where a full A&C condition is not available, the aspect **may** instead be sourced from a plain Variable that exposes the aspect value (a Boolean active-state or numeric severity); the binding semantics are identical and the connector treats it as any monitored source. Quality/`BadQualityAction` apply as for telemetry; a returned-to-normal condition clears or resets the target per `BadQualityAction`.
+- **`OpenUsdHistoryBindingType`.** With `TimeSampled = true` the connector reads history (Part 11 `HistoryRead`) for the source and authors the values as **USD time samples** on the target attribute, giving the stage a scrubbable timeline for playback/replay. The source **shall** be historizing (its `AccessLevel`/`UserAccessLevel` grants `HistoryRead` and the server retains history); if it is not, the connector authors no samples and the binding is inert — a documented degrade, not an error. The epoch and `timeCodesPerSecond` mapping is declared by a recording profile; absent that, samples are authored on a connector-defined uniform timeline and are informative.
 
 ### 5.12 Composition and aggregation bindings (normative, optional)
 
@@ -399,15 +424,15 @@ Conformance Units (each a normative, testable requirement):
 - **OU-Stage** — `OpenUsdStageType` with a valid `RootLayerIdentifier`.
 - **OU-Representation** — a valid `OpenUsdRepresentation` AddIn (Stage NodeId resolves; canonical absolute `PrimPath`).
 - **OU-RepresentationRegistry** — every representation is Organized from `Representations`.
-- **OU-Binding** — `OpenUsdLiveBindingType` with a resolvable source and target and a stable `BindingDefinitionId`.
+- **OU-Binding** — a concrete `OpenUsdLiveBindingType` subtype (the baseline `OpenUsdTelemetryBindingType`) with a resolvable source and target and a stable `BindingDefinitionId`.
 - **OU-Conversion-Scalar** — scalar unit/scale/offset conversion.
 - **OU-Conversion-Transform** — RSL transform profile (angles, units, up-axis).
 - **OU-Quality** — Good-default handling and `BadQualityAction`.
 - **OU-Diagnostics** — `State` / `LastError` populated at runtime.
 - **OU-SemanticSource** — a binding whose source resolves via `SourceSemanticId` (ECLASS / IEC CDD).
-- **OU-Alarm** — a `UaAlarmToUsd` binding driving a target from an A&C condition aspect.
-- **OU-History** — a `UaHistoryToUsd` binding authoring USD time samples from `HistoryRead`.
-- **OU-Command** — an opt-in, authorized, single-writer `UsdToUaCommand` binding (Controllable role; fail-closed).
+- **OU-Alarm** — an `OpenUsdAlarmBindingType` binding driving a target from an A&C condition aspect.
+- **OU-History** — an `OpenUsdHistoryBindingType` binding authoring USD time samples from `HistoryRead`.
+- **OU-Command** — an opt-in, authorized, single-writer `OpenUsdCommandBindingType` binding (Controllable role; fail-closed).
 - **OU-Integrity** — `OpenUsdStageType` with a verified `RootLayerDigest`.
 - **OU-Composition** — an `OpenUsdComponentBindingType` composing a component Object into the parent prim (`One` and `Many`, with a valid `CompositionArc`).
 - **OU-DynamicComposition** — a `Dynamic` component binding reconciled on `GeneralModelChangeEventType` / `SemanticChangeEventType`.
@@ -449,7 +474,7 @@ This model is the **visual-projection binding** of a broader "asset definition a
 
 - **Declared, discoverable binding.** The signal → USD-prim binding lives in the OPC UA address space (browsable, versioned, discoverable), so visualization is a *projection* of the asset definition rather than a bespoke per-scene integration. This is exactly the "declared signal → USD-prim binding contract" the strategy needs on the spine.
 - **Semantic-id portability.** `SourceSemanticId` (ECLASS / IEC CDD) lets the same binding apply to assets from different vendors that share companion-spec types and semantic ids — the cross-vendor portability the strategy depends on — and is the natural bridge to an AAS submodel expression (Annex C).
-- **Signal role + command.** `SignalRole` mirrors the strategy's *observable vs controllable* signal tagging, and `UsdToUaCommand` provides the authorized, opt-in control path an agent needs to *act* on the plant (gated externally by the operating envelope).
+- **Signal role + command.** `SignalRole` mirrors the strategy's *observable vs controllable* signal tagging, and `OpenUsdCommandBindingType` provides the authorized, opt-in control path an agent needs to *act* on the plant (gated externally by the operating envelope).
 - **Twin BOM integrity.** `RootLayerDigest`/`Signature`/`ProvenanceUri` let the referenced USD asset be digest-pinned and verified, so the visual reference can be packaged into a signed *Twin BOM* alongside the definition, semantic ids, and provenance.
 - **Twin BOM payload delivery.** Optional `OpenUsdStageType.Assets` lets the machine ship the signed *Twin BOM* payload itself — root layer, component assets, packages, and textures — through OPC UA, enabling zero-setup remote rendering of the twin without a preconfigured external asset repository.
 - **Composition = the asset structure / BOM.** `OpenUsdComponentBindingType` projects the asset's *is-composed-of* structure (1:1 and 1..n, static or dynamic, even across vendor servers) onto the USD prim hierarchy, so the visual twin mirrors the same component breakdown the spine and the *Twin BOM* declare — assembled from referenced/instanced OEM sub-assets rather than re-modelled per scene.
@@ -585,10 +610,10 @@ The wider asset-definition strategy is deliberately **plural**: the same enrichm
 |---|---|
 | `OpenUsdRepresentationType` (per represented Object) | a `SubmodelElementCollection` "Representation" with `PrimPath`, `Stage` reference |
 | `OpenUsdStageType` (`RootLayerIdentifier`, digest, signature) | a "Stage" collection with `RootLayerIdentifier`, `RootLayerDigest`, `Signature`, `ProvenanceUri` properties (the USD asset stays external, digest-pinned) |
-| `OpenUsdLiveBindingType` (each binding) | a "Binding" `SubmodelElementCollection` with `Target*`, `RenderTargetKind`, conversion, `IntentProfile`, `SignalRole` |
+| `OpenUsdLiveBindingType` subtype (each binding) | a "Binding" `SubmodelElementCollection` with `Target*`, `RenderTargetKind`, conversion, the binding subtype (intent), `SignalRole` |
 | `SourceSemanticId` | the binding element's `semanticId` (the shared ECLASS / IEC CDD anchor — the reconciliation point) |
 | `SourceNodeId` / `SourceBrowsePath` | a `ReferenceElement` to the OPC UA source (or, in an AAS-only deployment, to the corresponding submodel property) |
-| `UsdToUaCommand` target/method | a "Command" element referencing the controllable operation, gated by AAS access rules |
+| `OpenUsdCommandBindingType` target/method | a "Command" element referencing the controllable operation, gated by AAS access rules |
 | `OpenUsdComponentBindingType` (composition) | a "Component" `SubmodelElementCollection` (or an `Entity` with a `RelationshipElement`) referencing the component's submodel and carrying `Cardinality`, `CompositionArc`, and the component `semanticId` — mirroring the AAS "bill of material" / part-of structure |
 
 Because the **source is anchored on a semantic id**, a binding authored against an OPC UA server and one authored against an AAS submodel describe the *same* signal → prim mapping and can be reconciled automatically. Co-publishing the submodel template with the IDTA, anchored on ECLASS / IEC CDD, keeps the two standards' expressions of this enrichment convergent rather than competing. This annex is a direction, not a normative binding; the normative artifact remains the OPC UA NodeSet.

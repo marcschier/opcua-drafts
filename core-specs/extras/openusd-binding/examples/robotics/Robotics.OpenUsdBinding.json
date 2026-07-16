@@ -34,7 +34,7 @@
   },
 
   "articulationBinding": {
-    "intentProfile": "UaToUsdTelemetry",
+    "bindingType": "OpenUsdTelemetryBindingType",
     "signalRole": "Observable",
     "sourceBrowsePath": "/ParameterSet/ActualPosition",
     "sourceSemanticId": "0173-1#02-BAF564#005",
@@ -75,7 +75,7 @@
         {
           "bindingDefinitionId": "a1b2c3d4-0002-4a10-9c01-100000000002",
           "name": "EmergencyStopBeacon",
-          "intentProfile": "UaAlarmToUsd",
+          "bindingType": "OpenUsdAlarmBindingType",
           "signalRole": "Observable",
           "alarmAspect": "ActiveState",
           "sourceBrowsePath": "/SafetyStates/EmergencyStop",
@@ -88,7 +88,7 @@
         {
           "bindingDefinitionId": "a1b2c3d4-0003-4a10-9c01-100000000003",
           "name": "SpeedOverrideCommand",
-          "intentProfile": "UsdToUaCommand",
+          "bindingType": "OpenUsdCommandBindingType",
           "signalRole": "Controllable",
           "enabled": true,
           "commandTargetBrowsePath": "/Controllers/Controller_C1/ParameterSet/SpeedOverride",
@@ -141,7 +141,7 @@
           {
             "bindingDefinitionId": "b1c2d3e4-0013-4a20-9c02-200000000013",
             "name": "EmergencyStopWarning",
-            "intentProfile": "UaAlarmToUsd",
+            "bindingType": "OpenUsdAlarmBindingType",
             "signalRole": "Observable",
             "alarmAspect": "ActiveState",
             "sourceBrowsePath": "/SafetyStates/EmergencyStop",
@@ -178,7 +178,7 @@
           {
             "bindingDefinitionId": "b1c2d3e4-0023-4a20-9c02-200000000023",
             "name": "EmergencyStopWarning",
-            "intentProfile": "UaAlarmToUsd",
+            "bindingType": "OpenUsdAlarmBindingType",
             "signalRole": "Observable",
             "alarmAspect": "ActiveState",
             "sourceBrowsePath": "/SafetyStates/EmergencyStop",

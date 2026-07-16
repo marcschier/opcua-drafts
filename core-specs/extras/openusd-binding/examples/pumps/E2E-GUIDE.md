@@ -52,8 +52,8 @@ The server also declares two capability bindings that exercise the rest of the m
 
 | Binding | Intent | Source → target | Effect |
 |---|---|---|---|
-| `AlarmActiveVisibility` | `UaAlarmToUsd` | supervision alarm `ActiveState` → `/Plant/Pumps/P101/StatusLight` · `visibility` | status light shown when an alarm is active, hidden when clear |
-| `SpeedSetpointCommand` | `UsdToUaCommand` | USD `inputs:speedSetpoint` → UA `SpeedSetpoint` Variable | writes a speed setpoint back into the server (**opt-in**) |
+| `AlarmActiveVisibility` | `OpenUsdAlarmBindingType` | supervision alarm `ActiveState` → `/Plant/Pumps/P101/StatusLight` · `visibility` | status light shown when an alarm is active, hidden when clear |
+| `SpeedSetpointCommand` | `OpenUsdCommandBindingType` | USD `inputs:speedSetpoint` → UA `SpeedSetpoint` Variable | writes a speed setpoint back into the server (**opt-in**) |
 
 The **stage** also advertises a **RootLayerDigest** (`Sha256`) — a Twin-BOM content-integrity
 digest the connector verifies before it composes the stage (fail-closed on mismatch).
@@ -237,7 +237,7 @@ Then open `stage.usda` as in Step 6.
 ## Optional — issue an opt-in command (USD → OPC UA)
 
 Command bindings are **disabled by default** (fail-closed). To let the connector actuate the
-single `UsdToUaCommand` binding, pass `--enable-commands` and a `--command-value`:
+single `OpenUsdCommandBindingType` binding, pass `--enable-commands` and a `--command-value`:
 
 ```bash
 dotnet run --project Applications/PumpDeviceIntegrationBridge -c Release -f net10.0 -- \
@@ -287,8 +287,8 @@ PY
   never at "the pump". The same connector binary works for any conforming server.
 - **Bindings** — each `OpenUsdLiveBinding` declares `SourceNodeId`, target prim/property,
   `RenderTargetKind`, and `Scale`; the connector reads them and applies the conversion
-  (§5.7–§5.8). 0.2 bindings add `SignalRole`, `SourceSemanticId`, alarm (`UaAlarmToUsd` +
-  `AlarmAspect`), and opt-in command (`UsdToUaCommand` + `CommandTargetNodeId`) members.
+  (§5.7–§5.8). 0.2 bindings add `SignalRole`, `SourceSemanticId`, alarm (`OpenUsdAlarmBindingType` +
+  `AlarmAspect`), and opt-in command (`OpenUsdCommandBindingType` + `CommandTargetNodeId`) members.
 - **Integrity** — the stage's `RootLayerDigest` / `RootLayerDigestAlgorithm` let the connector
   verify the resolved root layer before composing it (Twin-BOM content integrity, §5.11/§9).
 - **Command safety** — command bindings are normative but opt-in: disabled by default,

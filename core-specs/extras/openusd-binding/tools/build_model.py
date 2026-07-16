@@ -257,15 +257,6 @@ CAT = "OpenUSD Binding"
 CAT_DT = "OpenUSD Binding DataTypes"
 
 # ---- DataTypes (enums) ----------------------------------------------------
-enum_type(3001, "OpenUsdIntentProfileEnum",
-          "The intent/direction of a binding. UaToUsdTelemetry (read-only UA -> USD) is "
-          "the default; UaAlarmToUsd and UaHistoryToUsd are read-only variants; "
-          "UsdToUaCommand is the opt-in, authorized control direction (USD -> UA).",
-          [("UaToUsdTelemetry", 0, "Read-only UA Variable value drives a USD attribute."),
-           ("UaAlarmToUsd", 1, "Read-only A&C condition aspect drives a USD attribute."),
-           ("UaHistoryToUsd", 2, "Read-only history (HistoryRead) authored as USD time samples."),
-           ("UsdToUaCommand", 3, "Opt-in, authorized USD-side intent drives an UA write/Method call.")])
-
 enum_type(3002, "OpenUsdRenderTargetKindEnum",
           "Classifies the USD render target a live value drives (advisory routing hint).",
           [("Translation", 0, None), ("Rotation", 1, None), ("Scale", 2, None),
@@ -284,7 +275,6 @@ enum_type(3004, "OpenUsdBindingStateEnum",
           [("Disabled", 0, None), ("Unresolved", 1, None), ("Ready", 2, None),
            ("Active", 3, None), ("Degraded", 4, None), ("Error", 5, None)])
 
-OpenUsdIntentProfileEnum = T(3001)
 OpenUsdRenderTargetKindEnum = T(3002)
 OpenUsdBadQualityActionEnum = T(3003)
 OpenUsdBindingStateEnum = T(3004)
@@ -292,18 +282,18 @@ OpenUsdBindingStateEnum = T(3004)
 # ---- ObjectType: OpenUsdLiveBindingType (1004) ----------------------------
 # Defined first so the representation AddIn can reference it as a placeholder typedef.
 object_type(1004, "OpenUsdLiveBindingType", BaseObjectType,
-            "One read-only live binding: a source OPC UA Variable value drives one "
-            "target USD attribute. The binding declaration is portable; the runtime "
-            "connector resolves and applies it. The effective runtime identity is "
-            "(represented object, BindingDefinitionId).")
+            "Abstract base for one read-only live binding: a source OPC UA Variable "
+            "value drives one target USD attribute. The binding intent is expressed by "
+            "the concrete subtype (Telemetry/Alarm/History/Command), not by an enum. The "
+            "declaration is portable; the runtime connector resolves and applies it. The "
+            "effective runtime identity is (represented object, BindingDefinitionId).",
+            abstract=True)
 B = 1004
 prop_var(B, "OpenUsdLiveBindingType", "BindingDefinitionId", Guid,
          "Stable declaration identifier used for override/tombstone matching across "
          "type and instance levels. NOT a runtime instance key.", MR_Mandatory)
 prop_var(B, "OpenUsdLiveBindingType", "Enabled", Boolean,
          "False acts as a tombstone that suppresses an inherited binding.", MR_Mandatory)
-prop_var(B, "OpenUsdLiveBindingType", "IntentProfile", OpenUsdIntentProfileEnum,
-         "The binding intent/direction; default UaToUsdTelemetry.", MR_Mandatory)
 # Source locator (exactly one of SourceNodeId / SourceBrowsePath resolves)
 prop_var(B, "OpenUsdLiveBindingType", "SourceNodeId", NodeId_,
          "Absolute NodeId of the source Variable (instance-level). Optional; prefer "
@@ -427,7 +417,7 @@ enum_type(3005, "OpenUsdSignalRoleEnum",
            ("Controllable", 1, "May be commanded via an opt-in, authorized command binding.")])
 
 enum_type(3006, "OpenUsdAlarmAspectEnum",
-          "For UaAlarmToUsd bindings: which A&C condition aspect drives the target attribute.",
+          "For OpenUsdAlarmBindingType bindings: which A&C condition aspect drives the target attribute.",
           [("ActiveState", 0, "Condition ActiveState (boolean)."),
            ("Severity", 1, "Condition Severity (numeric)."),
            ("AckedState", 2, "Condition AckedState (boolean)."),
@@ -449,20 +439,38 @@ prop_var(B, "OpenUsdLiveBindingType", "SignalRole", OpenUsdSignalRoleEnum,
 prop_var(B, "OpenUsdLiveBindingType", "SourceSemanticId", String,
          "Semantic identifier (e.g. ECLASS / IEC CDD IRDI) of the source signal; resolved "
          "against the source's semantic annotations for cross-vendor portability.", MR_Optional)
-prop_var(B, "OpenUsdLiveBindingType", "AlarmAspect", OpenUsdAlarmAspectEnum,
-         "For UaAlarmToUsd: which A&C condition aspect drives the target.", MR_Optional)
-prop_var(B, "OpenUsdLiveBindingType", "TimeSampled", Boolean,
-         "For UaHistoryToUsd: author values as USD time samples (playback) rather than "
-         "the latest default.", MR_Optional)
-prop_var(B, "OpenUsdLiveBindingType", "CommandTargetNodeId", NodeId_,
-         "For UsdToUaCommand: the Variable to write, or the Object on which to Call "
-         "CommandMethodId.", MR_Optional)
-prop_var(B, "OpenUsdLiveBindingType", "CommandMethodId", NodeId_,
-         "For UsdToUaCommand: optional Method to invoke instead of a Variable write.",
+
+# ---- Intent-specific subtypes of OpenUsdLiveBindingType --------------------
+# The concrete binding type encodes the intent; intent-specific members live only
+# on their subtype (replaces the former IntentProfile enum discriminator).
+object_type(1007, "OpenUsdTelemetryBindingType", T(1004),
+            "Read-only UA Variable value drives a USD attribute (the default binding). "
+            "Adds no members beyond the abstract base; binds the source Value (AttributeId 13).")
+
+object_type(1008, "OpenUsdAlarmBindingType", T(1004),
+            "Read-only OPC UA A&C condition aspect (Part 9) drives a USD attribute.")
+AL = 1008
+prop_var(AL, "OpenUsdAlarmBindingType", "AlarmAspect", OpenUsdAlarmAspectEnum,
+         "Which A&C condition aspect drives the target "
+         "(ActiveState/Severity/AckedState/EnabledState).", MR_Optional)
+
+object_type(1009, "OpenUsdHistoryBindingType", T(1004),
+            "Read-only history (Part 11 HistoryRead) authored as USD time samples.")
+HI = 1009
+prop_var(HI, "OpenUsdHistoryBindingType", "TimeSampled", Boolean,
+         "Author values as USD time samples (playback) rather than the latest default.",
          MR_Optional)
-prop_var(B, "OpenUsdLiveBindingType", "CommandTriggerPropertyName", String,
-         "For UsdToUaCommand: the USD attribute whose change is interpreted as the command "
-         "intent/value.", MR_Optional)
+
+object_type(1011, "OpenUsdCommandBindingType", T(1004),
+            "Opt-in, authorized USD-side intent drives an OPC UA write / Method call (USD -> UA).")
+CM = 1011
+prop_var(CM, "OpenUsdCommandBindingType", "CommandTargetNodeId", NodeId_,
+         "The Variable to write, or the Object on which to Call CommandMethodId.", MR_Optional)
+prop_var(CM, "OpenUsdCommandBindingType", "CommandMethodId", NodeId_,
+         "Optional Method to invoke instead of a Variable write.", MR_Optional)
+prop_var(CM, "OpenUsdCommandBindingType", "CommandTriggerPropertyName", String,
+         "The USD attribute whose change is interpreted as the command intent/value.",
+         MR_Optional)
 
 # --- OpenUsdStageType (1002): appended content-integrity members -----------
 prop_var(S, "OpenUsdStageType", "RootLayerDigest", ByteString,
