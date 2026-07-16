@@ -935,8 +935,7 @@ def emit_md():
 
     md = ['<a id="annex-a"></a>', "## Annex A \u2014 Information model\n",
           "This annex is the normative node reference. It is generated from "
-          "[`core-specs/extras/observability-export/tools/build_model.py`]"
-          "(../extras/observability-export/tools/build_model.py) and always matches `Opc.Ua.ObservabilityExport.NodeSet2.xml`. "
+          "`core-specs/extras/observability-export/tools/build_model.py` and always matches `Opc.Ua.ObservabilityExport.NodeSet2.xml`. "
           "All nodes are defined in this specification's own namespace "
           "`http://opcfoundation.org/UA/ObservabilityExport/` (namespace index 1 in the NodeSet, "
           "which requires the base OPC UA namespace); the NodeIds shown are the draft numeric "
