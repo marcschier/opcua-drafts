@@ -337,6 +337,7 @@
       <Reference ReferenceType="HasProperty">ns=1;i=6040</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6041</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6042</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=6067</Reference>
     </References>
   </UAObjectType>
   <UAVariable NodeId="ns=1;i=6021" BrowseName="1:RootLayerIdentifier" ParentNodeId="ns=1;i=1002" DataType="String" ValueRank="-1">
@@ -687,6 +688,7 @@
       <Reference ReferenceType="HasProperty">ns=1;i=6057</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6058</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6059</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6068</Reference>
     </References>
   </UAObjectType>
   <UAVariable NodeId="ns=1;i=6043" BrowseName="1:BindingDefinitionId" ParentNodeId="ns=1;i=1005" DataType="Guid" ValueRank="-1">
@@ -851,4 +853,109 @@
       <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=1003</Reference>
     </References>
   </UAObject>
+  <UADataType NodeId="ns=1;i=3010" BrowseName="1:OpenUsdAssetKindEnum">
+    <DisplayName>OpenUsdAssetKindEnum</DisplayName>
+    <Description>Role of a served USD asset within a stage's served layer closure.</Description>
+    <Category>OpenUSD Binding DataTypes</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=3910</Reference>
+    </References>
+    <Definition Name="OpenUsdAssetKindEnum"><Field Name="RootLayer" Value="0"><Description>The stage's root/base layer (exactly one served RootLayer per stage).</Description></Field><Field Name="SubLayer" Value="1"><Description>A sublayer contributing to the root layer's composition.</Description></Field><Field Name="Reference" Value="2"><Description>An asset introduced by a reference arc (e.g. a component's asset).</Description></Field><Field Name="Payload" Value="3"><Description>An asset introduced by a payload arc (deferred-loaded).</Description></Field><Field Name="Texture" Value="4"><Description>A texture / image asset referenced by a material.</Description></Field><Field Name="Package" Value="5"><Description>A packaged asset bundle (e.g. USDZ) carrying the whole closure.</Description></Field></Definition>
+  </UADataType>
+  <UAVariable NodeId="ns=1;i=3910" BrowseName="1:EnumStrings" ParentNodeId="ns=1;i=3010" DataType="LocalizedText" ValueRank="1" ArrayDimensions="6">
+    <DisplayName>EnumStrings</DisplayName>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=3010</Reference>
+    </References>
+    <Value><uax:ListOfLocalizedText xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:LocalizedText><uax:Text>RootLayer</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>SubLayer</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Reference</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Payload</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Texture</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Package</uax:Text></uax:LocalizedText></uax:ListOfLocalizedText></Value>
+  </UAVariable>
+  <UAObjectType NodeId="ns=1;i=1006" BrowseName="1:OpenUsdAssetType">
+    <DisplayName>OpenUsdAssetType</DisplayName>
+    <Description>One served USD asset/layer: authored content the server delivers through the address space so a connector can fetch it and compose the stage locally, with no external resolver. The bytes are streamed through the File (Part 5 FileType) member; AssetIdentifier is the resolver identifier / relative path used to place the asset in the local cache so that @...@ references resolve.</Description>
+    <Category>OpenUSD Binding</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6061</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6062</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6063</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6064</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6065</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=6066</Reference>
+    </References>
+  </UAObjectType>
+  <UAVariable NodeId="ns=1;i=6061" BrowseName="1:AssetIdentifier" ParentNodeId="ns=1;i=1006" DataType="String" ValueRank="-1">
+    <DisplayName>AssetIdentifier</DisplayName>
+    <Description>Resolver identifier / relative path of this asset, matching the stage RootLayerIdentifier or a ComponentAssetReference asset path; used for @...@ resolution and cache placement.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1006</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6062" BrowseName="1:AssetKind" ParentNodeId="ns=1;i=1006" DataType="ns=1;i=3010" ValueRank="-1">
+    <DisplayName>AssetKind</DisplayName>
+    <Description>Role of this asset within the stage's served layer closure.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1006</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6063" BrowseName="1:MediaType" ParentNodeId="ns=1;i=1006" DataType="String" ValueRank="-1">
+    <DisplayName>MediaType</DisplayName>
+    <Description>IANA media type of the content, e.g. 'model/vnd.usda', 'model/vnd.usdz+zip', 'image/png'.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1006</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6064" BrowseName="1:Digest" ParentNodeId="ns=1;i=1006" DataType="ByteString" ValueRank="-1">
+    <DisplayName>Digest</DisplayName>
+    <Description>Cryptographic digest of this asset's resolved content, for per-layer integrity verification. A connector verifies it before composing the asset.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1006</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6065" BrowseName="1:DigestAlgorithm" ParentNodeId="ns=1;i=1006" DataType="ns=1;i=3007" ValueRank="-1">
+    <DisplayName>DigestAlgorithm</DisplayName>
+    <Description>Digest algorithm for Digest (default SHA-256).</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1006</Reference>
+    </References>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=6066" BrowseName="1:File" ParentNodeId="ns=1;i=1006">
+    <DisplayName>File</DisplayName>
+    <Description>Part 5 FileType exposing the asset bytes for streaming download (Open/Read/Close). Read-only.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=11575</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=1006</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="ns=1;i=6067" BrowseName="1:Assets" ParentNodeId="ns=1;i=1002">
+    <DisplayName>Assets</DisplayName>
+    <Description>Optional registry of OpenUsdAssetType instances forming this stage's served layer closure (exactly one RootLayer). Present only when the server delivers its geometry; a connector that finds it fetches and composes the stage locally, else it resolves RootLayerIdentifier externally as before.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=61</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=1002</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=6068" BrowseName="1:ComponentAssetNode" ParentNodeId="ns=1;i=1005" DataType="NodeId" ValueRank="-1">
+    <DisplayName>ComponentAssetNode</DisplayName>
+    <Description>NodeId of the OpenUsdAssetType (under the stage's Assets folder) serving this component's asset, when the server delivers it. Complements ComponentAssetReference.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1005</Reference>
+    </References>
+  </UAVariable>
 </UANodeSet>

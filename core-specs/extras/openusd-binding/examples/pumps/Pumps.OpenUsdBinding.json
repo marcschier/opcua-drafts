@@ -10,7 +10,16 @@
     "rootLayerDigestAlgorithm": "Sha256",
     "rootLayerDigestNote": "The server publishes RootLayerDigest = SHA-256 over the resolved root layer (a Twin-BOM content-integrity check). The demo digests the rootLayerIdentifier as a deterministic stand-in; a connector verifies it before composing the stage."
   },
-  "representation": {
+  "servedAssets": {
+    "note": "Optional OU-AssetDelivery capability: the server serves these USD layers through <Stage>.Assets (Part 5 FileType); a connector fetches + verifies + caches them and composes the stage locally, no external asset repo needed.",
+    "digestAlgorithm": "Sha256",
+    "assets": [
+      { "assetIdentifier": "Plant.usda", "assetKind": "RootLayer", "mediaType": "model/vnd.usda" },
+      { "assetIdentifier": "pump.usda", "assetKind": "Reference", "mediaType": "model/vnd.usda" },
+      { "assetIdentifier": "remote-pump.usda", "assetKind": "Reference", "mediaType": "model/vnd.usda" }
+    ]
+  },
+"representation": {
     "primPath": "/Plant/Pumps/P101",
     "assetReference": "@./Plant.usda@</Plant/Pumps/P101>"
   },

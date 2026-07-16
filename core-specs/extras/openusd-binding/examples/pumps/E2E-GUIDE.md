@@ -77,6 +77,10 @@ You will see these as additional `over`/`def` prims in `live.usda` — nested ch
 1:1 components, and `prepend references = @pump.usda@</Pump>` (with `instanceable = true`) prims for
 the aggregated line pumps.
 
+## Optional asset delivery (zero-setup base layers)
+
+When the server advertises `PlantStage.Assets` (`OU-AssetDelivery`), the bridge can download `Plant.usda`, `pump.usda`, and `remote-pump.usda` from the server through Part 5 `FileType`, verify their SHA-256 digests, and write them into a local cache before composing `live.usda`. In that mode `usdview` or Omniverse opens a fully local, self-contained `stage.usda`; no external asset repository or manual base-layer copy is needed. If the server does not advertise `Assets`, provide the base `.usda` files out-of-band as in Step 3.
+
 ## Prerequisites
 
 - **.NET SDK 10** — to build and run the server + connector.

@@ -82,3 +82,14 @@ OpenUsdComponentBindingType_ComponentEndpointUrl,6057,Variable
 OpenUsdComponentBindingType_State,6058,Variable
 OpenUsdComponentBindingType_LastError,6059,Variable
 OpenUsdRepresentationType_Component,6060,Object
+OpenUsdAssetKindEnum,3010,DataType
+OpenUsdAssetKindEnum_EnumStrings,3910,Variable
+OpenUsdAssetType,1006,ObjectType
+OpenUsdAssetType_AssetIdentifier,6061,Variable
+OpenUsdAssetType_AssetKind,6062,Variable
+OpenUsdAssetType_MediaType,6063,Variable
+OpenUsdAssetType_Digest,6064,Variable
+OpenUsdAssetType_DigestAlgorithm,6065,Variable
+OpenUsdAssetType_File,6066,Object
+OpenUsdStageType_Assets,6067,Object
+OpenUsdComponentBindingType_ComponentAssetNode,6068,Variable

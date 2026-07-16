@@ -62,6 +62,7 @@ QualifiedName = "i=20"
 LocalizedText = "i=21"
 RelativePath = "i=540"
 EUInformation = "i=887"
+FileType = "i=11575"
 
 Server = "i=2253"
 
@@ -550,6 +551,72 @@ prop_var(K, "OpenUsdComponentBindingType", "LastError", LocalizedText,
 placeholder_obj(R, "OpenUsdRepresentationType", "<Component>", T(1005),
                 "A component/aggregation binding composing this Object's components into the USD "
                 "prim tree.")
+
+
+# ===========================================================================
+# ============  0.2.0 (cont.): asset content delivery (optional)  ===========
+# ===========================================================================
+# Optional server capability (conformance unit OU-AssetDelivery): the server
+# serves the artist-authored USD asset layers (the base/root layer plus its full
+# dependency closure) through the address space via Part 5 FileType streaming, so
+# a generic connector can enumerate, download, verify, cache, compose, and render
+# the twin with no external asset resolution — then live-update as usual. Appended
+# so every earlier NodeId stays stable; the base NodeSet still depends only on the
+# base UA namespace (FileType is a base-UA type).
+
+# ---- DataType: OpenUsdAssetKindEnum (3010) --------------------------------
+enum_type(3010, "OpenUsdAssetKindEnum",
+          "Role of a served USD asset within a stage's served layer closure.",
+          [("RootLayer", 0, "The stage's root/base layer (exactly one served RootLayer per stage)."),
+           ("SubLayer", 1, "A sublayer contributing to the root layer's composition."),
+           ("Reference", 2, "An asset introduced by a reference arc (e.g. a component's asset)."),
+           ("Payload", 3, "An asset introduced by a payload arc (deferred-loaded)."),
+           ("Texture", 4, "A texture / image asset referenced by a material."),
+           ("Package", 5, "A packaged asset bundle (e.g. USDZ) carrying the whole closure.")])
+OpenUsdAssetKindEnum = T(3010)
+
+# ---- ObjectType: OpenUsdAssetType (1006) ----------------------------------
+object_type(1006, "OpenUsdAssetType", BaseObjectType,
+            "One served USD asset/layer: authored content the server delivers through the address "
+            "space so a connector can fetch it and compose the stage locally, with no external "
+            "resolver. The bytes are streamed through the File (Part 5 FileType) member; "
+            "AssetIdentifier is the resolver identifier / relative path used to place the asset in "
+            "the local cache so that @...@ references resolve.")
+A = 1006
+prop_var(A, "OpenUsdAssetType", "AssetIdentifier", String,
+         "Resolver identifier / relative path of this asset, matching the stage RootLayerIdentifier "
+         "or a ComponentAssetReference asset path; used for @...@ resolution and cache placement.",
+         MR_Mandatory)
+prop_var(A, "OpenUsdAssetType", "AssetKind", OpenUsdAssetKindEnum,
+         "Role of this asset within the stage's served layer closure.", MR_Mandatory)
+prop_var(A, "OpenUsdAssetType", "MediaType", String,
+         "IANA media type of the content, e.g. 'model/vnd.usda', 'model/vnd.usdz+zip', 'image/png'.",
+         MR_Optional)
+prop_var(A, "OpenUsdAssetType", "Digest", ByteString,
+         "Cryptographic digest of this asset's resolved content, for per-layer integrity "
+         "verification. A connector verifies it before composing the asset.",
+         MR_Optional)
+prop_var(A, "OpenUsdAssetType", "DigestAlgorithm", OpenUsdDigestAlgorithmEnum,
+         "Digest algorithm for Digest (default SHA-256).", MR_Optional)
+# The streamed bytes: a Part 5 FileType (Open/Read/Close/GetPosition/SetPosition + Size). Read-only.
+placeholder_obj(A, "OpenUsdAssetType", "File", FileType,
+                "Part 5 FileType exposing the asset bytes for streaming download (Open/Read/Close). "
+                "Read-only.",
+                rule=MR_Mandatory, reftype=HasComponent)
+
+# ---- OpenUsdStageType (1002): appended served-asset facility ---------------
+folder_member(S, "OpenUsdStageType", "Assets",
+              "Optional registry of OpenUsdAssetType instances forming this stage's served layer "
+              "closure (exactly one RootLayer). Present only when the server delivers its geometry; "
+              "a connector that finds it fetches and composes the stage locally, else it resolves "
+              "RootLayerIdentifier externally as before.",
+              rule=MR_Optional)
+
+# ---- OpenUsdComponentBindingType (1005): appended component asset pointer ---
+prop_var(K, "OpenUsdComponentBindingType", "ComponentAssetNode", NodeId_,
+         "NodeId of the OpenUsdAssetType (under the stage's Assets folder) serving this component's "
+         "asset, when the server delivers it. Complements ComponentAssetReference.",
+         MR_Optional)
 
 
 # ===========================================================================

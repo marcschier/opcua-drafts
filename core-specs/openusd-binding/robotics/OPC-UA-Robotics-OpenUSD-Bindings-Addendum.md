@@ -76,7 +76,13 @@ The robotics example exercises recursive composition (base spec §5.12–5.14). 
 
 Reference, not Instance, is intentional for `/Cell/Robots/R1` and `/Cell/Robots/R2`: both robots use the same reusable `robot.usda` asset, but each needs independent live opinions on the same relative joint paths. Instanceable prims share prototype composition and are not suitable when every robot must articulate independently. The R1 gripper uses dynamic Reference composition so a model-change event can add or remove `/Cell/Robots/R1/Base/J1/J2/J3/J4/J5/J6/Flange/Tool` without mutating `Cell.usda`.
 
-## 4.2 Reference implementation
+## 4.2 Asset content delivery
+
+The reference server also demonstrates the optional `OU-AssetDelivery` capability from the base spec §5.15. `RobotCellStage` exposes an `Assets` folder whose `OpenUsdAssetType` children serve the `.usda` layers through read-only Part 5 `FileType` streams: `Cell.usda` (`RootLayer`), `robot.usda` (`Reference`), and `tool.usda` (`Reference`). Each served layer carries a SHA-256 digest.
+
+A generic connector can therefore browse `<Stage>.Assets`, download and verify the layers, cache them with the same relative `AssetIdentifier` paths, and compose the live layer over the local `Cell.usda`. The rendered robot-cell twin is self-contained: no external asset repository or manual USD asset setup is required when the server advertises this capability.
+
+## 4.3 Reference implementation
 
 The `RoboticsDeviceIntegrationServer` sample realizes this design and validates it with `RobotOpenUsdE2eTests`: the companion Robotics model is served; the `RobotCell` representation and child robot/Axis representations are discoverable through `Server/OpenUSD/Representations`; live Axis telemetry drives a generic connector into a USD sink; the e-stop alarm updates cell beacon and robot warning visibility; the speed override command is declared but fail-closed unless the connector enables commands and the server authorizes the write; and the dynamic gripper is reconciled from model-change events.
 

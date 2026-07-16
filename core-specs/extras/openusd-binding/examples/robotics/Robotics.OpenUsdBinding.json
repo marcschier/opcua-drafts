@@ -10,8 +10,16 @@
     "rootLayerDigestAlgorithm": "Sha256",
     "rootLayerDigestNote": "The server publishes RootLayerDigest = SHA-256 over the resolved root layer (a Twin-BOM content-integrity check). The demo digests the rootLayerIdentifier as a deterministic stand-in; a connector verifies it before composing the stage."
   },
-
-  "kinematics": {
+  "servedAssets": {
+    "note": "Optional OU-AssetDelivery capability: the server serves these USD layers through <Stage>.Assets (Part 5 FileType); a connector fetches + verifies + caches them and composes the stage locally, no external asset repo needed.",
+    "digestAlgorithm": "Sha256",
+    "assets": [
+      { "assetIdentifier": "Cell.usda", "assetKind": "RootLayer", "mediaType": "model/vnd.usda" },
+      { "assetIdentifier": "robot.usda", "assetKind": "Reference", "mediaType": "model/vnd.usda" },
+      { "assetIdentifier": "tool.usda", "assetKind": "Reference", "mediaType": "model/vnd.usda" }
+    ]
+  },
+"kinematics": {
     "note": "6-axis articulated arm. The link Xforms are nested in robot.usda so each joint's local rotate composes onto the previous link (a serial kinematic chain). rotationAxis picks the xformOp the Axis' ActualPosition drives; angles are in degrees (USD rotate ops are degrees, so the connector applies them directly). linkPrimPath is relative to the robot representation PrimPath.",
     "axisTemplate": [
       { "name": "A1", "linkPrimPath": "Base/J1", "rotateOp": "xformOp:rotateZ", "rotationAxis": "Z", "home": 0.0, "min": -170.0, "max": 170.0, "engineeringUnits": "deg", "note": "base slew (about Z)" },

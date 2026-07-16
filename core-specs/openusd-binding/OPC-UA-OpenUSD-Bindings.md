@@ -12,19 +12,20 @@
 
 This specification defines a small, generic **representation and binding layer** between an OPC UA address space and an OpenUSD model. It is deliberately domain-agnostic: it binds the Objects and Variables of **any** companion specification (Pumps, Robotics, Machinery, …) to a USD scene, and it does not require modifying the USD asset.
 
-The model has four portable capability groups and one informative profile:
+The model has five portable capability groups and one informative profile:
 
 - **Representation (identity).** A mandatory, well-known discovery facility (`Server/OpenUSD`) plus an `OpenUsdRepresentation` AddIn that ties an OPC UA Object to a canonical composed USD prim path on a named stage, with optional content-integrity metadata (digest/signature) so a referenced asset can be verified. Representation carries **identity only**; it does not carry values.
 - **Live property binding (telemetry).** A read-only mapping from a source OPC UA `Variable` `Value` — resolved by NodeId, RelativePath, or **semantic id** — to a target USD attribute, with conversion and with quality/timestamp/persistence **hints**. This binds **existing** domain Variables; it does not duplicate process data. Event/alarm state and historical playback are expressed as additional intent profiles on the same binding type.
 - **Command binding (control).** An **opt-in**, authorized, single-writer mapping from a USD-side intent to an OPC UA setpoint write or `Method` call, so an agent or operator can act on the plant through the same declared, discoverable model. The opt-in is a matter of connector configuration and server `RolePermissions` (not the `Enabled` flag): a Server declares a command binding only deliberately and a conformant connector actuates it only when explicitly enabled and authorized, so the default posture of the model remains read-only.
 - **Composition (aggregation).** A declarative mapping of an asset's **components** onto the USD prim hierarchy — 1:1 or 1..n, inline child prims or referenced/instanced sub-assets, static or **dynamic** (reconciled from model-change events), and even components hosted on **another server** — so the visual twin mirrors the asset's *is-composed-of* structure.
+- **Asset content delivery.** An optional address-space facility by which a server serves the artist-authored USD root layer and its dependency closure through OPC UA Part 5 `FileType`, with per-layer digests, so a generic connector can download, verify, cache, compose, and render without external asset-repository setup.
 - **Omniverse realization (informative).** How a connector realizes the model in NVIDIA Omniverse (Nucleus `.live` layers, Fabric/USDRT, OmniGraph, frame coalescing). This is a separate, vendor-governed profile and is **not** part of the portable normative model.
 
-Out of scope (reserved for later work): Part 14 Actions, PubSub realization, a USD-side applied API schema mirror, persistent-UUID identity, and normative geometry/material/skeleton/physics profiles. Command, event/alarm, history, and composition bindings are **normative but optional** capabilities a Server may choose not to implement.
+Out of scope (reserved for later work): Part 14 Actions, PubSub realization, a USD-side applied API schema mirror, persistent-UUID identity, and normative geometry/material/skeleton/physics profiles. Command, event/alarm, history, composition, and asset delivery are **normative but optional** capabilities a Server may choose not to implement.
 
 ### 1.4 Capabilities and versioning
 
-This document supersedes Release 0.1.0. The 0.1 baseline (Representation + read-only `UaToUsdTelemetry` binding + the Omniverse informative profile) is unchanged and remains conformant; 0.2.0 **adds** capabilities — semantic-id source, command, alarm, history, content integrity, and **composition/aggregation** — without altering any earlier node or NodeId. New capabilities are additive and each is gated by its own conformance unit (§7), so a Server implements only what it needs. Where this document refers to "the 0.1 baseline" it means the read-only representation + telemetry core; everything else is an optional 0.2.0 capability.
+This document supersedes Release 0.1.0. The 0.1 baseline (Representation + read-only `UaToUsdTelemetry` binding + the Omniverse informative profile) is unchanged and remains conformant; 0.2.0 **adds** capabilities — semantic-id source, command, alarm, history, content integrity, **composition/aggregation**, and **asset content delivery** — without altering any earlier node or NodeId. New capabilities are additive and each is gated by its own conformance unit (§7), so a Server implements only what it needs. Where this document refers to "the 0.1 baseline" it means the read-only representation + telemetry core; everything else is an optional 0.2.0 capability.
 
 
 ### 1.1 Motivation
@@ -116,6 +117,8 @@ OpenUsdStageType instance  +  OpenUsdRepresentationType.PrimPath
 
 A stage's identity is more than its root layer. `OpenUsdStageType` therefore carries `RootLayerIdentifier` (mandatory, opaque), and, where they affect the composed result, `SessionLayerIdentifier` and `ResolverContext`. A connector opening the stage **shall** use the root layer, the session layer (if present), and the resolver context together; `ResolvedRootLayerUri` is informative only.
 
+The root layer may be obtained either by external resolution of `RootLayerIdentifier` under the connector's resolver policy, or, when the stage advertises `Assets` (§5.15), by streaming the served `OpenUsdAssetType` whose `AssetKind = RootLayer` through its Part 5 `FileType` and verifying it against its `Digest` before composition. In both cases `RootLayerIdentifier` remains the authored identity used by USD resolution; the delivery mechanism does not change the stage identity.
+
 ### 4.4 Architecture
 
 ```mermaid
@@ -166,6 +169,7 @@ The well-known instance `Server/OpenUSD` is of this type (§4.2).
 | `RootLayerDigestAlgorithm` | OpenUsdDigestAlgorithmEnum | O | Digest algorithm for `RootLayerDigest` (default `Sha256`). |
 | `Signature` | ByteString | O | Optional detached signature over the digest / stage identity, for provenance. |
 | `ProvenanceUri` | String | O | Optional URI locating provenance / a signed Twin BOM manifest for the stage. |
+| `Assets` | Folder | O | Served USD asset/layer closure for optional Part 5 asset content delivery (§5.15). |
 
 The Stage Object's own NodeId is its same-server identity; a `Representation` references it by NodeId. `RootLayerDigest` is computed over the **resolved root-layer content** (the layer bytes the resolver returns for `RootLayerIdentifier`), not over the identifier string. When it is present a connector **shall** obtain the resolved layer, verify it against the digest (using `RootLayerDigestAlgorithm`) before composing the stage, and **shall** refuse to open a layer whose digest does not match; this is the model's content-integrity anchor for the vision's signed *Twin BOM* (§8.2).
 
@@ -228,6 +232,7 @@ An optional interface a domain ObjectType may apply (`HasInterface`) to advertis
 - `OpenUsdSignalRoleEnum` — `Observable(0) Controllable(1)`.
 - `OpenUsdAlarmAspectEnum` — `ActiveState(0) Severity(1) AckedState(2) EnabledState(3)`.
 - `OpenUsdDigestAlgorithmEnum` — `None(0) Sha256(1) Sha384(2) Sha512(3)` (SHA-256/384/512).
+- `OpenUsdAssetKindEnum` — `RootLayer(0) SubLayer(1) Reference(2) Payload(3) Texture(4) Package(5)` for served asset content (§5.15).
 - `OpenUsdCardinalityEnum` — `One(0) Many(1)` (a component binding is 1:1 or 1..n).
 - `OpenUsdCompositionArcEnum` — `Child(0) Reference(1) Payload(2) Instance(3)` (USD composition arc for the component prim; `Instance` = an instanceable reference for efficient 1..n aggregation).
 
@@ -288,6 +293,7 @@ An asset is usually **composed of components** (a pump has an impeller and a bea
 | `TargetPrimPath` | String | M | For `One`, the child prim; for `Many`, the parent scope prim — relative to the parent representation `PrimPath` (or absolute). |
 | `TargetPrimNameSource` | String | O | For `Many`, how to name each instance prim: `BrowseName` (default), a source-property RelativePath (e.g. an asset id), or a `{...}` template. |
 | `ComponentAssetReference` | String | O | For `Reference`/`Payload`/`Instance`: the external USD asset + default prim, e.g. `@pump.usda@</Pump>`. |
+| `ComponentAssetNode` | NodeId | O | NodeId of the `OpenUsdAssetType` that serves `ComponentAssetReference` through the stage's `Assets` folder (§5.15). |
 | `ComponentRepresentation` | NodeId | O | NodeId of the component's own `OpenUsdRepresentation` AddIn, when it publishes one (its sub-bindings compose under the component prim). |
 | `Dynamic` | Boolean | O | The component set may change at runtime (§5.13); default `false`. |
 | `ChangeEventSource` | NodeId | O | Node whose model-change events signal recomposition; default the Server Object (`i=2253`). |
@@ -323,6 +329,35 @@ A component may live on a **different OPC UA server** — e.g. an OEM sub-asset 
 
 Security (§9) applies per session: the connector **shall** establish an authenticated, integrity-protected channel to each server and honor each server's trust and authorization independently. Cross-server dynamic composition uses the remote server's model-change events on its own `ChangeEventSource`.
 
+
+### 5.15 Asset content delivery (normative, optional)
+
+A server may optionally serve the artist-authored USD asset content needed to open a stage directly through the OPC UA address space. The facility is exposed by the optional `OpenUsdStageType.Assets` Folder, which Organizes `OpenUsdAssetType` instances for the stage. A server that does not expose `Assets` remains conformant; connectors then resolve `RootLayerIdentifier` and `ComponentAssetReference` externally as in earlier releases.
+
+Each `OpenUsdAssetType` represents one served asset or layer:
+
+| Member | DataType / Type | Rule | Meaning |
+|---|---|---:|---|
+| `AssetIdentifier` | String | M | Authored resolver identifier or relative asset path. It is the identifier used in USD `@...@` references and the relative cache location a connector recreates locally. |
+| `AssetKind` | `OpenUsdAssetKindEnum` | M | `RootLayer`, `SubLayer`, `Reference`, `Payload`, `Texture`, or `Package`. |
+| `MediaType` | String | O | Media type hint, e.g. `model/vnd.usda`, `model/vnd.usdz+zip`, `image/png`. |
+| `Digest` | ByteString | O | Digest of the exact bytes exposed by `File`; required for the `OU-AssetDelivery` conformance unit. |
+| `DigestAlgorithm` | `OpenUsdDigestAlgorithmEnum` | O | Algorithm for `Digest`; required with `Digest` and defaulting by convention to `Sha256` when not otherwise constrained. |
+| `File` | Part 5 `FileType` | M | Read-only streamed bytes for the asset. |
+
+A server claiming `OU-AssetDelivery` **shall** expose the full dependency closure needed to compose the served stage without external asset resolution: exactly one `AssetKind = RootLayer` asset whose `AssetIdentifier` matches the stage root identifier used for USD resolution, plus every sublayer, referenced layer, payload, package, and texture reachable from that root and from component assets. For each component binding whose `ComponentAssetReference` is served by the stage, `ComponentAssetNode` **should** point to the corresponding `OpenUsdAssetType` so a connector can link the composition declaration to the bytes it will cache. All served `File` instances are read-only.
+
+The streaming contract is the OPC UA Part 5 `FileType` contract: a connector opens the `File` in read mode, reads until the requested byte count returns fewer bytes or end-of-file is reached, and closes the handle. A connector may use `Size`, `GetPosition`, and `SetPosition` for progress, range retry, or resume, but it shall not require write access. A server shall close abandoned handles according to normal session cleanup and server resource policy.
+
+A connector supporting this capability uses the following algorithm:
+
+1. Browse the stage's `Assets` Folder and read every asset's `AssetIdentifier`, `AssetKind`, `MediaType`, `Digest`, `DigestAlgorithm`, and `File` NodeId.
+2. Validate that there is exactly one `RootLayer` asset and that every authored sublayer, component asset (`Reference`/`Payload`/`Instance`), package member, and texture needed by the root is represented in the set; missing entries are a delivery failure for the self-contained mode.
+3. Stream each `File` through Part 5 `Open`/`Read`/`Close`, compute the declared digest over the received bytes, and refuse to use an asset whose digest does not match.
+4. Write each verified asset into a connector-controlled local cache at the sanitized relative path derived from `AssetIdentifier`, preserving the authored relative layout so USD `@...@` asset paths resolve locally.
+5. Open the cached root layer, compose the connector's live override/session layer above it, and render or update the stage as usual.
+
+The delivery facility is additive. If `Assets` is absent, incomplete, unauthorized, or fails digest verification, a connector may fall back to its configured external resolver only when its operator policy permits that fallback; it shall not silently mix unverified delivered bytes into the stage.
 
 ---
 
@@ -378,15 +413,16 @@ Conformance Units (each a normative, testable requirement):
 - **OU-Composition** — an `OpenUsdComponentBindingType` composing a component Object into the parent prim (`One` and `Many`, with a valid `CompositionArc`).
 - **OU-DynamicComposition** — a `Dynamic` component binding reconciled on `GeneralModelChangeEventType` / `SemanticChangeEventType`.
 - **OU-CrossServerComposition** — a component binding resolved by federation to `ComponentServerUri` / `ComponentEndpointUrl`.
+- **OU-AssetDelivery** — a server serves the stage's complete USD asset closure as `OpenUsdAssetType` nodes with read-only Part 5 `FileType` streams and per-layer digests; a connector fetches, verifies, caches by `AssetIdentifier`, and composes a self-contained local stage.
 
 Profiles:
 
 - **OpenUSD Representation Server** — OU-Namespace, OU-Discovery, OU-Stage, OU-Representation, OU-RepresentationRegistry.
 - **OpenUSD Live Rendering Server** — the Representation profile + OU-Binding, OU-Conversion-Scalar, OU-Quality (OU-Conversion-Transform, OU-SemanticSource, OU-Integrity, and OU-Diagnostics optional).
 - **OpenUSD Interactive Server** — the Live Rendering profile + OU-Command (and typically OU-Alarm); adds the authorized, opt-in control path for agent/operator interaction. OU-History is optional.
-- **OpenUSD Composite Server** — the Live Rendering profile + OU-Composition (OU-DynamicComposition and OU-CrossServerComposition optional); exposes the asset's component structure as composed USD prims.
+- **OpenUSD Composite Server** — the Live Rendering profile + OU-Composition (OU-DynamicComposition, OU-CrossServerComposition, and OU-AssetDelivery optional); exposes the asset's component structure as composed USD prims.
 
-Each CU requires a conformance test (Browse the node, Read the properties, and — for bindings — resolve source/target and observe a converted value or, for OU-Command, an authorized write/`Call`). See the Pumps addendum for a worked, testable instance.
+Each CU requires a conformance test (Browse the node, Read the properties, and — for bindings — resolve source/target and observe a converted value or, for OU-Command, an authorized write/`Call`; for OU-AssetDelivery, stream at least the root and one dependent asset, verify their digests, and open the cached composed stage). See the Pumps addendum for a worked, testable instance.
 
 ---
 
@@ -416,6 +452,7 @@ This model is the **visual-projection binding** of a broader "asset definition a
 - **Semantic-id portability.** `SourceSemanticId` (ECLASS / IEC CDD) lets the same binding apply to assets from different vendors that share companion-spec types and semantic ids — the cross-vendor portability the strategy depends on — and is the natural bridge to an AAS submodel expression (Annex C).
 - **Signal role + command.** `SignalRole` mirrors the strategy's *observable vs controllable* signal tagging, and `UsdToUaCommand` provides the authorized, opt-in control path an agent needs to *act* on the plant (gated externally by the operating envelope).
 - **Twin BOM integrity.** `RootLayerDigest`/`Signature`/`ProvenanceUri` let the referenced USD asset be digest-pinned and verified, so the visual reference can be packaged into a signed *Twin BOM* alongside the definition, semantic ids, and provenance.
+- **Twin BOM payload delivery.** Optional `OpenUsdStageType.Assets` lets the machine ship the signed *Twin BOM* payload itself — root layer, component assets, packages, and textures — through OPC UA, enabling zero-setup remote rendering of the twin without a preconfigured external asset repository.
 - **Composition = the asset structure / BOM.** `OpenUsdComponentBindingType` projects the asset's *is-composed-of* structure (1:1 and 1..n, static or dynamic, even across vendor servers) onto the USD prim hierarchy, so the visual twin mirrors the same component breakdown the spine and the *Twin BOM* declare — assembled from referenced/instanced OEM sub-assets rather than re-modelled per scene.
 - **OpenUSD-native, not runtime-captive.** The normative model is AOUSD-native; Omniverse is an informative realization (§8.1), so the asset definition is not captive to one runtime.
 
@@ -429,6 +466,7 @@ The intended standards path is a family of thin, composable binding contracts (t
 - **Endpoint.** A connector **shall** use an authenticated, integrity-protected endpoint; the represented model itself carries no secrets. Server certificate trust is required.
 - **Authorization.** Read access to the representation/binding nodes and to the source Variables is governed by normal OPC UA `RolePermissions`/`AccessRestrictions`. Telemetry, alarm, and history bindings are read-only over process data and require no write authority. **Command bindings** (§5.10) require explicit write/`Call` authorization on the target Variable/Method, are disabled by default, and are subject to a single-writer discipline; a connector **shall** obtain and check the required Role before issuing any command.
 - **Resolver safety & content integrity.** `RootLayerIdentifier`/`ResolvedRootLayerUri` are server-provided and could point a connector at an arbitrary asset location (an SSRF-class risk). A connector **shall** apply a scheme/root **allowlist** and a trusted resolver-context policy, and **shall** impose resource limits on stage open/asset resolution. When `RootLayerDigest` is present, the connector **shall** verify the resolved layer against it before composing the stage and **shall** refuse a mismatch; when `Signature`/`ProvenanceUri` are present, provenance **should** be verified against a trusted policy (the Twin BOM anchor, §8.2).
+- **Served asset safety.** Asset delivery reads require the same authenticated and authorized OPC UA Session as the representation model; a server **shall** enforce `RolePermissions`/`AccessRestrictions` on `Assets` and `File` nodes, bound total served size, and bound concurrent file handles per session. A connector **shall** treat every served `AssetIdentifier` as untrusted input: reject absolute paths, drive-qualified paths, parent traversal, empty segments, and platform-reserved names before writing to a local cache, and write only under a connector-controlled cache root.
 - **Writer ownership.** When authoring into a shared USD/Nucleus layer, a **single-writer** discipline is required; no secrets (keys, tokens, Nucleus/broker credentials) are stored in the NodeSet or in USD metadata.
 
 ---
@@ -446,7 +484,7 @@ The intended standards path is a family of thin, composable binding contracts (t
 | Pumps addendum (implementer Annex) | `core-specs/openusd-binding/pumps/` |
 | Robotics addendum (implementer Annex) | `core-specs/openusd-binding/robotics/` |
 
-Regenerate and validate:
+The Release 0.2.0 optional deliverables include semantic source, command, alarm/history, integrity, composition, cross-server composition, and asset delivery. Regenerate and validate:
 
 ```
 python core-specs/extras/openusd-binding/tools/build_model.py
