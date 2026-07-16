@@ -164,25 +164,51 @@ def common_attrs(nid, sym):
     prop_var(nid, sym, "Name", String, "Human-readable name of the entity.")
     prop_var(nid, sym, "Description", String, "Human-readable description of the entity.")
     prop_var(nid, sym, "Documentation", String, "URL to human-readable documentation for the entity.")
-    prop_var(nid, sym, "Labels", KeyValuePair, "xRegistry labels: an extensible map of name/value pairs, managed by AddAttribute/RemoveAttribute on resources.", valuerank="1")
+    obj_member(nid, sym, "Labels", T(63003),
+               "The entity's extensible xRegistry labels/attributes, exposed as an AttributesType container: each label "
+               "is a browsable PropertyType Variable, added and removed with the container's AddAttribute/RemoveAttribute "
+               "Methods. Deleted together with the entity.", rule=MR_Optional)
     prop_var(nid, sym, "CreatedAt", DateTime, "UTC timestamp when the entity was created.")
     prop_var(nid, sym, "ModifiedAt", DateTime, "UTC timestamp when the entity was last modified.")
 
 # Model
 CAT = "xRegistry"
 
-object_type(63000, "RegistryType", FileDirectoryType,
-            "The abstract xRegistry root, expressed as a FileDirectory. It contains Group directories and supports "
-            "creating and managing them through the CreateGroup Method (and the inherited FileDirectoryType "
-            "Delete/MoveOrCopy Methods). Domain registries subtype this.", CAT)
-object_type(63001, "GroupType", FileDirectoryType,
-            "An abstract xRegistry group, expressed as a FileDirectory that contains resources. It creates resources "
-            "and versions through the CreateResourceOrVersion Method. Domain group types subtype this and add the "
-            "group key (e.g. a namespace URI).", CAT)
+object_type(63000, "RegistryType", FolderType,
+            "The abstract xRegistry root, expressed as a FolderType that organizes its Group objects. It creates groups "
+            "through the CreateGroup Method; a group is removed with the standard DeleteNodes Service. The physical "
+            "backing may be a file-system directory, but the type is a plain organizing folder. Domain registries "
+            "subtype this.", CAT)
+object_type(63001, "GroupType", FolderType,
+            "An abstract xRegistry group, expressed as a FolderType that organizes its resource files. It creates "
+            "resources and versions through the CreateResourceOrVersion Method; an entry is removed with the DeleteNodes "
+            "Service. Domain group types subtype this and add the group key (e.g. a namespace URI).", CAT)
 object_type(63002, "ResourceType", FileType,
             "An abstract xRegistry resource/version whose document IS the file: the content is read and written "
             "through the inherited FileType methods (Open/Read/Write/Close). Carries the xRegistry attributes and "
             "an optional ExternalReference for federation. Domain resource types subtype this.", CAT)
+object_type(63003, "AttributesType", BaseObjectType,
+            "A container for an entity's extensible xRegistry attributes/labels. Each attribute materializes as a "
+            "browsable HasProperty PropertyType Variable whose BrowseName is the attribute key, so attributes can be "
+            "browsed, read and enumerated, and are deleted with the owning entity. The AddAttribute/RemoveAttribute "
+            "Methods add and remove attributes. This follows the OPC UA extensible-container pattern (an "
+            "OptionalPlaceholder Property plus Add/Remove Methods); the placeholder isolates dynamic attributes so "
+            "they never conflict with an entity's fixed attribute BrowseNames.", CAT)
+
+AT = "AttributesType"
+prop_var(63003, AT, "<Attribute>", String,
+         "An xRegistry attribute or label materialized as a PropertyType Variable: the BrowseName is the attribute key "
+         "and the Value is its string value. OptionalPlaceholder so a server exposes one Variable per present attribute.",
+         rule=MR_OptionalPlaceholder)
+method(63003, AT, "AddAttribute",
+       "Add or update an xRegistry attribute/label in this container. The server materializes it as a browsable "
+       "PropertyType Variable whose BrowseName is the Key, and increments the owning entity's Epoch.",
+       inargs=[("Key", String, "Attribute (or label) name."), ("Value", String, "Attribute value.")],
+       outargs=[("Success", Boolean, "True if the attribute was added or updated.")])
+method(63003, AT, "RemoveAttribute",
+       "Remove an xRegistry attribute/label (the Variable whose BrowseName is the Key) from this container.",
+       inargs=[("Key", String, "Attribute (or label) name.")],
+       outargs=[("Success", Boolean, "True if the attribute existed and was removed.")])
 
 RG = "RegistryType"
 prop_var(63000, RG, "RegistryId", String, "xRegistry registryid: the stable identifier of this registry.", rule=MR_Mandatory)
@@ -190,11 +216,10 @@ prop_var(63000, RG, "SpecVersion", String, "The xRegistry specification version 
 prop_var(63000, RG, "Capabilities", String, "The registry capabilities document (xRegistry /capabilities), as a JSON string.")
 prop_var(63000, RG, "Model", String, "The registry model document (xRegistry /model), as a JSON string.")
 common_attrs(63000, RG)
-placeholder_obj(63000, RG, "<Group>", T(63001), "A group directory held by this registry.")
+placeholder_obj(63000, RG, "<Group>", T(63001), "A group held by this registry.")
 method(63000, RG, "CreateGroup",
-       "Create a group directory under this registry and assign its GroupId. This is the xRegistry-semantic form of "
-       "the inherited FileDirectoryType CreateDirectory Method; the server bootstraps the new group's xRegistry "
-       "attributes (Xid, Epoch, CreatedAt, ModifiedAt).",
+       "Create a group under this registry and assign its GroupId. The server creates the GroupType Object and "
+       "bootstraps its xRegistry attributes (Xid, Epoch, CreatedAt, ModifiedAt).",
        inargs=[("GroupId", String, "The groupid of the group to create.")],
        outargs=[("GroupNodeId", NodeId, "NodeId of the created group Object.")])
 
@@ -203,9 +228,8 @@ prop_var(63001, GP, "GroupId", String, "xRegistry groupid: the stable identifier
 common_attrs(63001, GP)
 placeholder_obj(63001, GP, "<Resource>", T(63002), "A resource file held by this group.")
 method(63001, GP, "CreateResourceOrVersion",
-       "Create a resource - or a new version of a resource - as a file in this group, optionally opened for writing. "
-       "This is the xRegistry-semantic form of the inherited FileDirectoryType CreateFile Method; the server "
-       "bootstraps the resource's xRegistry attributes when the file is closed.",
+       "Create a resource - or a new version of a resource - as a ResourceType file in this group, optionally opened "
+       "for writing. The server bootstraps the resource's xRegistry attributes when the file is closed.",
        inargs=[("ResourceId", String, "The resourceid of the resource; a versionid is assigned or supplied per the registry model."),
                ("RequestFileOpen", Boolean, "If true, the new resource file is opened for writing and a FileHandle is returned.")],
        outargs=[("ResourceNodeId", NodeId, "NodeId of the created resource Object."),
@@ -224,15 +248,6 @@ prop_var(63002, RS, "ResourceUrl", String,
          "Federation link (string form): the URL from which the document can be obtained (xRegistry <RESOURCE>url), "
          "for example an opc.tcp endpoint plus browse path, or an HTTP URL.")
 common_attrs(63002, RS)
-method(63002, RS, "AddAttribute",
-       "Add or update an xRegistry attribute (or label) on this resource, further configuring the registry "
-       "structure. The server materializes the attribute in the AddressSpace.",
-       inargs=[("Key", String, "Attribute (or label) name."), ("Value", String, "Attribute value.")],
-       outargs=[("Success", Boolean, "True if the attribute was added or updated.")])
-method(63002, RS, "RemoveAttribute",
-       "Remove an xRegistry attribute (or label) from this resource.",
-       inargs=[("Key", String, "Attribute (or label) name.")],
-       outargs=[("Success", Boolean, "True if the attribute existed and was removed.")])
 
 # Emission
 NAMESPACE = "http://opcfoundation.org/UA/xRegistry/"

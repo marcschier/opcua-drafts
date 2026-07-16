@@ -28,7 +28,7 @@
   </Aliases>
   <UAObjectType NodeId="ns=2;i=62000" BrowseName="2:SchemaRegistryType">
     <DisplayName>SchemaRegistryType</DisplayName>
-    <Description>The in-server Schema Registry root - an xRegistry RegistryType (a FileDirectory) whose group directories hold schema files. Adds SchemaId-based resolution (GetSchema and the Opaque SchemaId NodeId fast path). Exposed as a well-known object under the Part 14 PublishSubscribe object.</Description>
+    <Description>The in-server Schema Registry root - an xRegistry RegistryType (a FolderType) whose group folders hold schema files. Adds SchemaId-based resolution (GetSchema and the Opaque SchemaId NodeId fast path). Exposed as a well-known object under the Part 14 PublishSubscribe object.</Description>
     <Category>Schema Registry</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=63000</Reference>
@@ -38,7 +38,7 @@
   </UAObjectType>
   <UAObjectType NodeId="ns=2;i=62001" BrowseName="2:SchemaGroupType">
     <DisplayName>SchemaGroupType</DisplayName>
-    <Description>An xRegistry GroupType keyed by an OPC UA namespace URI; a directory of schema files for the DataTypes and PublishedDataSets of that namespace.</Description>
+    <Description>An xRegistry GroupType keyed by an OPC UA namespace URI; a folder of schema files for the DataTypes and PublishedDataSets of that namespace.</Description>
     <Category>Schema Registry</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=63001</Reference>
@@ -63,7 +63,7 @@
   </UAObjectType>
   <UAObject NodeId="ns=2;i=62500" BrowseName="2:&lt;SchemaGroup&gt;" ParentNodeId="ns=2;i=62000">
     <DisplayName>&lt;SchemaGroup&gt;</DisplayName>
-    <Description>A schema group directory (per OPC UA namespace) held by the registry.</Description>
+    <Description>A schema group folder (per OPC UA namespace) held by the registry.</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=11508</Reference>
       <Reference ReferenceType="HasTypeDefinition">ns=2;i=62001</Reference>

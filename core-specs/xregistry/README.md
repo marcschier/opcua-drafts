@@ -1,8 +1,8 @@
 # OPC UA xRegistry (abstract base)
 
-This folder contains the specification and generated NodeSet for the abstract **OPC UA — xRegistry** companion model: a reusable OPC UA type system that projects a [xRegistry](https://github.com/xregistry/spec) registry onto the OPC UA **FileTransfer** model.
+This folder contains the specification and generated NodeSet for the abstract **OPC UA — xRegistry** companion model: a reusable OPC UA type system that projects a [xRegistry](https://github.com/xregistry/spec) registry onto the OPC UA AddressSpace as folders and files.
 
-A registry and its groups are `FileDirectoryType` directories; a resource/version document *is* a `FileType` file. The base defines three ObjectTypes — `RegistryType`, `GroupType`, `ResourceType` — plus the common xRegistry attributes as Properties, `AddAttribute`/`RemoveAttribute` methods, auto-bootstrap, the three xRegistry representations (files / API server / document), and federation via `ExpandedNodeId`. The model is **domain-neutral**: concrete registries subtype these base types. The [Schema Registry](../schema-registry/) is the first such extension; Asset, Semantic and WoT Thing-Description registries are designed for but not yet built.
+A registry and its groups are `FolderType` folders; a resource/version document *is* a `FileType` file. The base defines four ObjectTypes — `RegistryType`, `GroupType`, `ResourceType`, `AttributesType` — plus the common xRegistry attributes as Properties, a `Labels` (`AttributesType`) container whose `AddAttribute`/`RemoveAttribute` Methods add/remove individual browsable label Properties, auto-bootstrap, the three xRegistry representations (files / API server / document), and federation via `ExpandedNodeId`. The model is **domain-neutral**: concrete registries subtype these base types. The [Schema Registry](../schema-registry/) is the first such extension; Asset, Semantic and WoT Thing-Description registries are designed for but not yet built.
 
 Files:
 

@@ -29,43 +29,43 @@
   </Aliases>
   <UAObjectType NodeId="ns=1;i=63000" BrowseName="1:RegistryType">
     <DisplayName>RegistryType</DisplayName>
-    <Description>The abstract xRegistry root, expressed as a FileDirectory. It contains Group directories and supports creating and managing them through the CreateGroup Method (and the inherited FileDirectoryType Delete/MoveOrCopy Methods). Domain registries subtype this.</Description>
+    <Description>The abstract xRegistry root, expressed as a FolderType that organizes its Group objects. It creates groups through the CreateGroup Method; a group is removed with the standard DeleteNodes Service. The physical backing may be a file-system directory, but the type is a plain organizing folder. Domain registries subtype this.</Description>
     <Category>xRegistry</Category>
     <References>
-      <Reference ReferenceType="HasSubtype" IsForward="false">i=13353</Reference>
-      <Reference ReferenceType="HasProperty">ns=1;i=63500</Reference>
-      <Reference ReferenceType="HasProperty">ns=1;i=63501</Reference>
-      <Reference ReferenceType="HasProperty">ns=1;i=63502</Reference>
-      <Reference ReferenceType="HasProperty">ns=1;i=63503</Reference>
-      <Reference ReferenceType="HasProperty">ns=1;i=63504</Reference>
-      <Reference ReferenceType="HasProperty">ns=1;i=63505</Reference>
-      <Reference ReferenceType="HasProperty">ns=1;i=63506</Reference>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=61</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=63507</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=63508</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=63509</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=63510</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=63511</Reference>
-      <Reference ReferenceType="Organizes">ns=1;i=63512</Reference>
-      <Reference ReferenceType="HasComponent">ns=1;i=63513</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=63512</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=63513</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=63514</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=63515</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=63516</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=63517</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=63518</Reference>
+      <Reference ReferenceType="Organizes">ns=1;i=63519</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=63520</Reference>
     </References>
   </UAObjectType>
   <UAObjectType NodeId="ns=1;i=63001" BrowseName="1:GroupType">
     <DisplayName>GroupType</DisplayName>
-    <Description>An abstract xRegistry group, expressed as a FileDirectory that contains resources. It creates resources and versions through the CreateResourceOrVersion Method. Domain group types subtype this and add the group key (e.g. a namespace URI).</Description>
+    <Description>An abstract xRegistry group, expressed as a FolderType that organizes its resource files. It creates resources and versions through the CreateResourceOrVersion Method; an entry is removed with the DeleteNodes Service. Domain group types subtype this and add the group key (e.g. a namespace URI).</Description>
     <Category>xRegistry</Category>
     <References>
-      <Reference ReferenceType="HasSubtype" IsForward="false">i=13353</Reference>
-      <Reference ReferenceType="HasProperty">ns=1;i=63516</Reference>
-      <Reference ReferenceType="HasProperty">ns=1;i=63517</Reference>
-      <Reference ReferenceType="HasProperty">ns=1;i=63518</Reference>
-      <Reference ReferenceType="HasProperty">ns=1;i=63519</Reference>
-      <Reference ReferenceType="HasProperty">ns=1;i=63520</Reference>
-      <Reference ReferenceType="HasProperty">ns=1;i=63521</Reference>
-      <Reference ReferenceType="HasProperty">ns=1;i=63522</Reference>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=61</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=63523</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=63524</Reference>
-      <Reference ReferenceType="Organizes">ns=1;i=63525</Reference>
-      <Reference ReferenceType="HasComponent">ns=1;i=63526</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=63525</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=63526</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=63527</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=63528</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=63529</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=63530</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=63531</Reference>
+      <Reference ReferenceType="Organizes">ns=1;i=63532</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=63533</Reference>
     </References>
   </UAObjectType>
   <UAObjectType NodeId="ns=1;i=63002" BrowseName="1:ResourceType">
@@ -74,13 +74,6 @@
     <Category>xRegistry</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=11575</Reference>
-      <Reference ReferenceType="HasProperty">ns=1;i=63529</Reference>
-      <Reference ReferenceType="HasProperty">ns=1;i=63530</Reference>
-      <Reference ReferenceType="HasProperty">ns=1;i=63531</Reference>
-      <Reference ReferenceType="HasProperty">ns=1;i=63532</Reference>
-      <Reference ReferenceType="HasProperty">ns=1;i=63533</Reference>
-      <Reference ReferenceType="HasProperty">ns=1;i=63534</Reference>
-      <Reference ReferenceType="HasProperty">ns=1;i=63535</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=63536</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=63537</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=63538</Reference>
@@ -88,11 +81,92 @@
       <Reference ReferenceType="HasProperty">ns=1;i=63540</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=63541</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=63542</Reference>
-      <Reference ReferenceType="HasComponent">ns=1;i=63543</Reference>
-      <Reference ReferenceType="HasComponent">ns=1;i=63546</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=63543</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=63544</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=63545</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=63546</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=63547</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=63548</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=63549</Reference>
     </References>
   </UAObjectType>
-  <UAVariable NodeId="ns=1;i=63500" BrowseName="1:RegistryId" ParentNodeId="ns=1;i=63000" DataType="String" ValueRank="-1">
+  <UAObjectType NodeId="ns=1;i=63003" BrowseName="1:AttributesType">
+    <DisplayName>AttributesType</DisplayName>
+    <Description>A container for an entity's extensible xRegistry attributes/labels. Each attribute materializes as a browsable HasProperty PropertyType Variable whose BrowseName is the attribute key, so attributes can be browsed, read and enumerated, and are deleted with the owning entity. The AddAttribute/RemoveAttribute Methods add and remove attributes. This follows the OPC UA extensible-container pattern (an OptionalPlaceholder Property plus Add/Remove Methods); the placeholder isolates dynamic attributes so they never conflict with an entity's fixed attribute BrowseNames.</Description>
+    <Category>xRegistry</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=63500</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=63501</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=63504</Reference>
+    </References>
+  </UAObjectType>
+  <UAVariable NodeId="ns=1;i=63500" BrowseName="1:&lt;Attribute&gt;" ParentNodeId="ns=1;i=63003" DataType="String" ValueRank="-1">
+    <DisplayName>&lt;Attribute&gt;</DisplayName>
+    <Description>An xRegistry attribute or label materialized as a PropertyType Variable: the BrowseName is the attribute key and the Value is its string value. OptionalPlaceholder so a server exposes one Variable per present attribute.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=11508</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=63003</Reference>
+    </References>
+  </UAVariable>
+  <UAMethod NodeId="ns=1;i=63501" BrowseName="1:AddAttribute" ParentNodeId="ns=1;i=63003">
+    <DisplayName>AddAttribute</DisplayName>
+    <Description>Add or update an xRegistry attribute/label in this container. The server materializes it as a browsable PropertyType Variable whose BrowseName is the Key, and increments the owning entity's Epoch.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=63003</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=63502</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=63503</Reference>
+    </References>
+  </UAMethod>
+  <UAVariable NodeId="ns=1;i=63502" BrowseName="1:InputArguments" ParentNodeId="ns=1;i=63501" DataType="Argument" ValueRank="1" ArrayDimensions="2">
+    <DisplayName>InputArguments</DisplayName>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=63501</Reference>
+    </References>
+    <Value><ListOfExtensionObject xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd"><ExtensionObject><TypeId><Identifier>i=297</Identifier></TypeId><Body><Argument><Name>Key</Name><DataType><Identifier>i=12</Identifier></DataType><ValueRank>-1</ValueRank><ArrayDimensions/><Description><Text>Attribute (or label) name.</Text></Description></Argument></Body></ExtensionObject><ExtensionObject><TypeId><Identifier>i=297</Identifier></TypeId><Body><Argument><Name>Value</Name><DataType><Identifier>i=12</Identifier></DataType><ValueRank>-1</ValueRank><ArrayDimensions/><Description><Text>Attribute value.</Text></Description></Argument></Body></ExtensionObject></ListOfExtensionObject></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=63503" BrowseName="1:OutputArguments" ParentNodeId="ns=1;i=63501" DataType="Argument" ValueRank="1" ArrayDimensions="1">
+    <DisplayName>OutputArguments</DisplayName>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=63501</Reference>
+    </References>
+    <Value><ListOfExtensionObject xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd"><ExtensionObject><TypeId><Identifier>i=297</Identifier></TypeId><Body><Argument><Name>Success</Name><DataType><Identifier>i=1</Identifier></DataType><ValueRank>-1</ValueRank><ArrayDimensions/><Description><Text>True if the attribute was added or updated.</Text></Description></Argument></Body></ExtensionObject></ListOfExtensionObject></Value>
+  </UAVariable>
+  <UAMethod NodeId="ns=1;i=63504" BrowseName="1:RemoveAttribute" ParentNodeId="ns=1;i=63003">
+    <DisplayName>RemoveAttribute</DisplayName>
+    <Description>Remove an xRegistry attribute/label (the Variable whose BrowseName is the Key) from this container.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=63003</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=63505</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=63506</Reference>
+    </References>
+  </UAMethod>
+  <UAVariable NodeId="ns=1;i=63505" BrowseName="1:InputArguments" ParentNodeId="ns=1;i=63504" DataType="Argument" ValueRank="1" ArrayDimensions="1">
+    <DisplayName>InputArguments</DisplayName>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=63504</Reference>
+    </References>
+    <Value><ListOfExtensionObject xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd"><ExtensionObject><TypeId><Identifier>i=297</Identifier></TypeId><Body><Argument><Name>Key</Name><DataType><Identifier>i=12</Identifier></DataType><ValueRank>-1</ValueRank><ArrayDimensions/><Description><Text>Attribute (or label) name.</Text></Description></Argument></Body></ExtensionObject></ListOfExtensionObject></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=63506" BrowseName="1:OutputArguments" ParentNodeId="ns=1;i=63504" DataType="Argument" ValueRank="1" ArrayDimensions="1">
+    <DisplayName>OutputArguments</DisplayName>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=63504</Reference>
+    </References>
+    <Value><ListOfExtensionObject xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd"><ExtensionObject><TypeId><Identifier>i=297</Identifier></TypeId><Body><Argument><Name>Success</Name><DataType><Identifier>i=1</Identifier></DataType><ValueRank>-1</ValueRank><ArrayDimensions/><Description><Text>True if the attribute existed and was removed.</Text></Description></Argument></Body></ExtensionObject></ListOfExtensionObject></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=63507" BrowseName="1:RegistryId" ParentNodeId="ns=1;i=63000" DataType="String" ValueRank="-1">
     <DisplayName>RegistryId</DisplayName>
     <Description>xRegistry registryid: the stable identifier of this registry.</Description>
     <References>
@@ -101,7 +175,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=63000</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=63501" BrowseName="1:SpecVersion" ParentNodeId="ns=1;i=63000" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=63508" BrowseName="1:SpecVersion" ParentNodeId="ns=1;i=63000" DataType="String" ValueRank="-1">
     <DisplayName>SpecVersion</DisplayName>
     <Description>The xRegistry specification version this registry conforms to.</Description>
     <References>
@@ -110,7 +184,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=63000</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=63502" BrowseName="1:Capabilities" ParentNodeId="ns=1;i=63000" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=63509" BrowseName="1:Capabilities" ParentNodeId="ns=1;i=63000" DataType="String" ValueRank="-1">
     <DisplayName>Capabilities</DisplayName>
     <Description>The registry capabilities document (xRegistry /capabilities), as a JSON string.</Description>
     <References>
@@ -119,7 +193,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=63000</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=63503" BrowseName="1:Model" ParentNodeId="ns=1;i=63000" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=63510" BrowseName="1:Model" ParentNodeId="ns=1;i=63000" DataType="String" ValueRank="-1">
     <DisplayName>Model</DisplayName>
     <Description>The registry model document (xRegistry /model), as a JSON string.</Description>
     <References>
@@ -128,7 +202,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=63000</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=63504" BrowseName="1:Xid" ParentNodeId="ns=1;i=63000" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=63511" BrowseName="1:Xid" ParentNodeId="ns=1;i=63000" DataType="String" ValueRank="-1">
     <DisplayName>Xid</DisplayName>
     <Description>xRegistry relative identifier (xid): the entity's stable path within the registry, independent of the hosting endpoint.</Description>
     <References>
@@ -137,7 +211,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=63000</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=63505" BrowseName="1:Epoch" ParentNodeId="ns=1;i=63000" DataType="UInt32" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=63512" BrowseName="1:Epoch" ParentNodeId="ns=1;i=63000" DataType="UInt32" ValueRank="-1">
     <DisplayName>Epoch</DisplayName>
     <Description>xRegistry epoch: a counter that increments on every change to the entity.</Description>
     <References>
@@ -146,7 +220,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=63000</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=63506" BrowseName="1:Name" ParentNodeId="ns=1;i=63000" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=63513" BrowseName="1:Name" ParentNodeId="ns=1;i=63000" DataType="String" ValueRank="-1">
     <DisplayName>Name</DisplayName>
     <Description>Human-readable name of the entity.</Description>
     <References>
@@ -155,7 +229,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=63000</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=63507" BrowseName="1:Description" ParentNodeId="ns=1;i=63000" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=63514" BrowseName="1:Description" ParentNodeId="ns=1;i=63000" DataType="String" ValueRank="-1">
     <DisplayName>Description</DisplayName>
     <Description>Human-readable description of the entity.</Description>
     <References>
@@ -164,7 +238,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=63000</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=63508" BrowseName="1:Documentation" ParentNodeId="ns=1;i=63000" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=63515" BrowseName="1:Documentation" ParentNodeId="ns=1;i=63000" DataType="String" ValueRank="-1">
     <DisplayName>Documentation</DisplayName>
     <Description>URL to human-readable documentation for the entity.</Description>
     <References>
@@ -173,16 +247,16 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=63000</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=63509" BrowseName="1:Labels" ParentNodeId="ns=1;i=63000" DataType="KeyValuePair" ValueRank="1">
+  <UAObject NodeId="ns=1;i=63516" BrowseName="1:Labels" ParentNodeId="ns=1;i=63000">
     <DisplayName>Labels</DisplayName>
-    <Description>xRegistry labels: an extensible map of name/value pairs, managed by AddAttribute/RemoveAttribute on resources.</Description>
+    <Description>The entity's extensible xRegistry labels/attributes, exposed as an AttributesType container: each label is a browsable PropertyType Variable, added and removed with the container's AddAttribute/RemoveAttribute Methods. Deleted together with the entity.</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=80</Reference>
-      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
-      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=63000</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=1;i=63003</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=63000</Reference>
     </References>
-  </UAVariable>
-  <UAVariable NodeId="ns=1;i=63510" BrowseName="1:CreatedAt" ParentNodeId="ns=1;i=63000" DataType="DateTime" ValueRank="-1">
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=63517" BrowseName="1:CreatedAt" ParentNodeId="ns=1;i=63000" DataType="DateTime" ValueRank="-1">
     <DisplayName>CreatedAt</DisplayName>
     <Description>UTC timestamp when the entity was created.</Description>
     <References>
@@ -191,7 +265,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=63000</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=63511" BrowseName="1:ModifiedAt" ParentNodeId="ns=1;i=63000" DataType="DateTime" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=63518" BrowseName="1:ModifiedAt" ParentNodeId="ns=1;i=63000" DataType="DateTime" ValueRank="-1">
     <DisplayName>ModifiedAt</DisplayName>
     <Description>UTC timestamp when the entity was last modified.</Description>
     <References>
@@ -200,44 +274,44 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=63000</Reference>
     </References>
   </UAVariable>
-  <UAObject NodeId="ns=1;i=63512" BrowseName="1:&lt;Group&gt;" ParentNodeId="ns=1;i=63000">
+  <UAObject NodeId="ns=1;i=63519" BrowseName="1:&lt;Group&gt;" ParentNodeId="ns=1;i=63000">
     <DisplayName>&lt;Group&gt;</DisplayName>
-    <Description>A group directory held by this registry.</Description>
+    <Description>A group held by this registry.</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=11508</Reference>
       <Reference ReferenceType="HasTypeDefinition">ns=1;i=63001</Reference>
       <Reference ReferenceType="Organizes" IsForward="false">ns=1;i=63000</Reference>
     </References>
   </UAObject>
-  <UAMethod NodeId="ns=1;i=63513" BrowseName="1:CreateGroup" ParentNodeId="ns=1;i=63000">
+  <UAMethod NodeId="ns=1;i=63520" BrowseName="1:CreateGroup" ParentNodeId="ns=1;i=63000">
     <DisplayName>CreateGroup</DisplayName>
-    <Description>Create a group directory under this registry and assign its GroupId. This is the xRegistry-semantic form of the inherited FileDirectoryType CreateDirectory Method; the server bootstraps the new group's xRegistry attributes (Xid, Epoch, CreatedAt, ModifiedAt).</Description>
+    <Description>Create a group under this registry and assign its GroupId. The server creates the GroupType Object and bootstraps its xRegistry attributes (Xid, Epoch, CreatedAt, ModifiedAt).</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=80</Reference>
       <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=63000</Reference>
-      <Reference ReferenceType="HasProperty">ns=1;i=63514</Reference>
-      <Reference ReferenceType="HasProperty">ns=1;i=63515</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=63521</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=63522</Reference>
     </References>
   </UAMethod>
-  <UAVariable NodeId="ns=1;i=63514" BrowseName="1:InputArguments" ParentNodeId="ns=1;i=63513" DataType="Argument" ValueRank="1" ArrayDimensions="1">
+  <UAVariable NodeId="ns=1;i=63521" BrowseName="1:InputArguments" ParentNodeId="ns=1;i=63520" DataType="Argument" ValueRank="1" ArrayDimensions="1">
     <DisplayName>InputArguments</DisplayName>
     <References>
       <Reference ReferenceType="HasModellingRule">i=78</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
-      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=63513</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=63520</Reference>
     </References>
     <Value><ListOfExtensionObject xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd"><ExtensionObject><TypeId><Identifier>i=297</Identifier></TypeId><Body><Argument><Name>GroupId</Name><DataType><Identifier>i=12</Identifier></DataType><ValueRank>-1</ValueRank><ArrayDimensions/><Description><Text>The groupid of the group to create.</Text></Description></Argument></Body></ExtensionObject></ListOfExtensionObject></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=63515" BrowseName="1:OutputArguments" ParentNodeId="ns=1;i=63513" DataType="Argument" ValueRank="1" ArrayDimensions="1">
+  <UAVariable NodeId="ns=1;i=63522" BrowseName="1:OutputArguments" ParentNodeId="ns=1;i=63520" DataType="Argument" ValueRank="1" ArrayDimensions="1">
     <DisplayName>OutputArguments</DisplayName>
     <References>
       <Reference ReferenceType="HasModellingRule">i=78</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
-      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=63513</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=63520</Reference>
     </References>
     <Value><ListOfExtensionObject xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd"><ExtensionObject><TypeId><Identifier>i=297</Identifier></TypeId><Body><Argument><Name>GroupNodeId</Name><DataType><Identifier>i=17</Identifier></DataType><ValueRank>-1</ValueRank><ArrayDimensions/><Description><Text>NodeId of the created group Object.</Text></Description></Argument></Body></ExtensionObject></ListOfExtensionObject></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=63516" BrowseName="1:GroupId" ParentNodeId="ns=1;i=63001" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=63523" BrowseName="1:GroupId" ParentNodeId="ns=1;i=63001" DataType="String" ValueRank="-1">
     <DisplayName>GroupId</DisplayName>
     <Description>xRegistry groupid: the stable identifier of this group. Group identifiers are globally unique for federation.</Description>
     <References>
@@ -246,7 +320,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=63001</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=63517" BrowseName="1:Xid" ParentNodeId="ns=1;i=63001" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=63524" BrowseName="1:Xid" ParentNodeId="ns=1;i=63001" DataType="String" ValueRank="-1">
     <DisplayName>Xid</DisplayName>
     <Description>xRegistry relative identifier (xid): the entity's stable path within the registry, independent of the hosting endpoint.</Description>
     <References>
@@ -255,7 +329,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=63001</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=63518" BrowseName="1:Epoch" ParentNodeId="ns=1;i=63001" DataType="UInt32" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=63525" BrowseName="1:Epoch" ParentNodeId="ns=1;i=63001" DataType="UInt32" ValueRank="-1">
     <DisplayName>Epoch</DisplayName>
     <Description>xRegistry epoch: a counter that increments on every change to the entity.</Description>
     <References>
@@ -264,7 +338,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=63001</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=63519" BrowseName="1:Name" ParentNodeId="ns=1;i=63001" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=63526" BrowseName="1:Name" ParentNodeId="ns=1;i=63001" DataType="String" ValueRank="-1">
     <DisplayName>Name</DisplayName>
     <Description>Human-readable name of the entity.</Description>
     <References>
@@ -273,7 +347,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=63001</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=63520" BrowseName="1:Description" ParentNodeId="ns=1;i=63001" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=63527" BrowseName="1:Description" ParentNodeId="ns=1;i=63001" DataType="String" ValueRank="-1">
     <DisplayName>Description</DisplayName>
     <Description>Human-readable description of the entity.</Description>
     <References>
@@ -282,7 +356,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=63001</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=63521" BrowseName="1:Documentation" ParentNodeId="ns=1;i=63001" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=63528" BrowseName="1:Documentation" ParentNodeId="ns=1;i=63001" DataType="String" ValueRank="-1">
     <DisplayName>Documentation</DisplayName>
     <Description>URL to human-readable documentation for the entity.</Description>
     <References>
@@ -291,16 +365,16 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=63001</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=63522" BrowseName="1:Labels" ParentNodeId="ns=1;i=63001" DataType="KeyValuePair" ValueRank="1">
+  <UAObject NodeId="ns=1;i=63529" BrowseName="1:Labels" ParentNodeId="ns=1;i=63001">
     <DisplayName>Labels</DisplayName>
-    <Description>xRegistry labels: an extensible map of name/value pairs, managed by AddAttribute/RemoveAttribute on resources.</Description>
+    <Description>The entity's extensible xRegistry labels/attributes, exposed as an AttributesType container: each label is a browsable PropertyType Variable, added and removed with the container's AddAttribute/RemoveAttribute Methods. Deleted together with the entity.</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=80</Reference>
-      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
-      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=63001</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=1;i=63003</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=63001</Reference>
     </References>
-  </UAVariable>
-  <UAVariable NodeId="ns=1;i=63523" BrowseName="1:CreatedAt" ParentNodeId="ns=1;i=63001" DataType="DateTime" ValueRank="-1">
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=63530" BrowseName="1:CreatedAt" ParentNodeId="ns=1;i=63001" DataType="DateTime" ValueRank="-1">
     <DisplayName>CreatedAt</DisplayName>
     <Description>UTC timestamp when the entity was created.</Description>
     <References>
@@ -309,7 +383,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=63001</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=63524" BrowseName="1:ModifiedAt" ParentNodeId="ns=1;i=63001" DataType="DateTime" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=63531" BrowseName="1:ModifiedAt" ParentNodeId="ns=1;i=63001" DataType="DateTime" ValueRank="-1">
     <DisplayName>ModifiedAt</DisplayName>
     <Description>UTC timestamp when the entity was last modified.</Description>
     <References>
@@ -318,7 +392,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=63001</Reference>
     </References>
   </UAVariable>
-  <UAObject NodeId="ns=1;i=63525" BrowseName="1:&lt;Resource&gt;" ParentNodeId="ns=1;i=63001">
+  <UAObject NodeId="ns=1;i=63532" BrowseName="1:&lt;Resource&gt;" ParentNodeId="ns=1;i=63001">
     <DisplayName>&lt;Resource&gt;</DisplayName>
     <Description>A resource file held by this group.</Description>
     <References>
@@ -327,35 +401,35 @@
       <Reference ReferenceType="Organizes" IsForward="false">ns=1;i=63001</Reference>
     </References>
   </UAObject>
-  <UAMethod NodeId="ns=1;i=63526" BrowseName="1:CreateResourceOrVersion" ParentNodeId="ns=1;i=63001">
+  <UAMethod NodeId="ns=1;i=63533" BrowseName="1:CreateResourceOrVersion" ParentNodeId="ns=1;i=63001">
     <DisplayName>CreateResourceOrVersion</DisplayName>
-    <Description>Create a resource - or a new version of a resource - as a file in this group, optionally opened for writing. This is the xRegistry-semantic form of the inherited FileDirectoryType CreateFile Method; the server bootstraps the resource's xRegistry attributes when the file is closed.</Description>
+    <Description>Create a resource - or a new version of a resource - as a ResourceType file in this group, optionally opened for writing. The server bootstraps the resource's xRegistry attributes when the file is closed.</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=80</Reference>
       <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=63001</Reference>
-      <Reference ReferenceType="HasProperty">ns=1;i=63527</Reference>
-      <Reference ReferenceType="HasProperty">ns=1;i=63528</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=63534</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=63535</Reference>
     </References>
   </UAMethod>
-  <UAVariable NodeId="ns=1;i=63527" BrowseName="1:InputArguments" ParentNodeId="ns=1;i=63526" DataType="Argument" ValueRank="1" ArrayDimensions="2">
+  <UAVariable NodeId="ns=1;i=63534" BrowseName="1:InputArguments" ParentNodeId="ns=1;i=63533" DataType="Argument" ValueRank="1" ArrayDimensions="2">
     <DisplayName>InputArguments</DisplayName>
     <References>
       <Reference ReferenceType="HasModellingRule">i=78</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
-      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=63526</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=63533</Reference>
     </References>
     <Value><ListOfExtensionObject xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd"><ExtensionObject><TypeId><Identifier>i=297</Identifier></TypeId><Body><Argument><Name>ResourceId</Name><DataType><Identifier>i=12</Identifier></DataType><ValueRank>-1</ValueRank><ArrayDimensions/><Description><Text>The resourceid of the resource; a versionid is assigned or supplied per the registry model.</Text></Description></Argument></Body></ExtensionObject><ExtensionObject><TypeId><Identifier>i=297</Identifier></TypeId><Body><Argument><Name>RequestFileOpen</Name><DataType><Identifier>i=1</Identifier></DataType><ValueRank>-1</ValueRank><ArrayDimensions/><Description><Text>If true, the new resource file is opened for writing and a FileHandle is returned.</Text></Description></Argument></Body></ExtensionObject></ListOfExtensionObject></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=63528" BrowseName="1:OutputArguments" ParentNodeId="ns=1;i=63526" DataType="Argument" ValueRank="1" ArrayDimensions="2">
+  <UAVariable NodeId="ns=1;i=63535" BrowseName="1:OutputArguments" ParentNodeId="ns=1;i=63533" DataType="Argument" ValueRank="1" ArrayDimensions="2">
     <DisplayName>OutputArguments</DisplayName>
     <References>
       <Reference ReferenceType="HasModellingRule">i=78</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
-      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=63526</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=63533</Reference>
     </References>
     <Value><ListOfExtensionObject xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd"><ExtensionObject><TypeId><Identifier>i=297</Identifier></TypeId><Body><Argument><Name>ResourceNodeId</Name><DataType><Identifier>i=17</Identifier></DataType><ValueRank>-1</ValueRank><ArrayDimensions/><Description><Text>NodeId of the created resource Object.</Text></Description></Argument></Body></ExtensionObject><ExtensionObject><TypeId><Identifier>i=297</Identifier></TypeId><Body><Argument><Name>FileHandle</Name><DataType><Identifier>i=7</Identifier></DataType><ValueRank>-1</ValueRank><ArrayDimensions/><Description><Text>Write handle when RequestFileOpen is true; otherwise 0.</Text></Description></Argument></Body></ExtensionObject></ListOfExtensionObject></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=63529" BrowseName="1:ResourceId" ParentNodeId="ns=1;i=63002" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=63536" BrowseName="1:ResourceId" ParentNodeId="ns=1;i=63002" DataType="String" ValueRank="-1">
     <DisplayName>ResourceId</DisplayName>
     <Description>xRegistry resourceid: the stable identifier of the resource within its group.</Description>
     <References>
@@ -364,7 +438,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=63002</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=63530" BrowseName="1:VersionId" ParentNodeId="ns=1;i=63002" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=63537" BrowseName="1:VersionId" ParentNodeId="ns=1;i=63002" DataType="String" ValueRank="-1">
     <DisplayName>VersionId</DisplayName>
     <Description>xRegistry versionid: the identifier of the version this file represents.</Description>
     <References>
@@ -373,7 +447,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=63002</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=63531" BrowseName="1:Format" ParentNodeId="ns=1;i=63002" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=63538" BrowseName="1:Format" ParentNodeId="ns=1;i=63002" DataType="String" ValueRank="-1">
     <DisplayName>Format</DisplayName>
     <Description>xRegistry format string identifying the document's schema language/shape.</Description>
     <References>
@@ -382,7 +456,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=63002</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=63532" BrowseName="1:ContentType" ParentNodeId="ns=1;i=63002" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=63539" BrowseName="1:ContentType" ParentNodeId="ns=1;i=63002" DataType="String" ValueRank="-1">
     <DisplayName>ContentType</DisplayName>
     <Description>Media type (content-type) of the document bytes.</Description>
     <References>
@@ -391,7 +465,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=63002</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=63533" BrowseName="1:ExternalReference" ParentNodeId="ns=1;i=63002" DataType="ExpandedNodeId" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=63540" BrowseName="1:ExternalReference" ParentNodeId="ns=1;i=63002" DataType="ExpandedNodeId" ValueRank="-1">
     <DisplayName>ExternalReference</DisplayName>
     <Description>Federation link: an ExpandedNodeId identifying this resource in another (possibly remote) registry - the ServerUri identifies the hosting registry endpoint, the NamespaceUri and Identifier identify the group and resource. Present when the document is served by reference (xRegistry &lt;RESOURCE&gt;url).</Description>
     <References>
@@ -400,7 +474,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=63002</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=63534" BrowseName="1:ResourceUrl" ParentNodeId="ns=1;i=63002" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=63541" BrowseName="1:ResourceUrl" ParentNodeId="ns=1;i=63002" DataType="String" ValueRank="-1">
     <DisplayName>ResourceUrl</DisplayName>
     <Description>Federation link (string form): the URL from which the document can be obtained (xRegistry &lt;RESOURCE&gt;url), for example an opc.tcp endpoint plus browse path, or an HTTP URL.</Description>
     <References>
@@ -409,7 +483,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=63002</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=63535" BrowseName="1:Xid" ParentNodeId="ns=1;i=63002" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=63542" BrowseName="1:Xid" ParentNodeId="ns=1;i=63002" DataType="String" ValueRank="-1">
     <DisplayName>Xid</DisplayName>
     <Description>xRegistry relative identifier (xid): the entity's stable path within the registry, independent of the hosting endpoint.</Description>
     <References>
@@ -418,7 +492,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=63002</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=63536" BrowseName="1:Epoch" ParentNodeId="ns=1;i=63002" DataType="UInt32" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=63543" BrowseName="1:Epoch" ParentNodeId="ns=1;i=63002" DataType="UInt32" ValueRank="-1">
     <DisplayName>Epoch</DisplayName>
     <Description>xRegistry epoch: a counter that increments on every change to the entity.</Description>
     <References>
@@ -427,7 +501,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=63002</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=63537" BrowseName="1:Name" ParentNodeId="ns=1;i=63002" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=63544" BrowseName="1:Name" ParentNodeId="ns=1;i=63002" DataType="String" ValueRank="-1">
     <DisplayName>Name</DisplayName>
     <Description>Human-readable name of the entity.</Description>
     <References>
@@ -436,7 +510,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=63002</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=63538" BrowseName="1:Description" ParentNodeId="ns=1;i=63002" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=63545" BrowseName="1:Description" ParentNodeId="ns=1;i=63002" DataType="String" ValueRank="-1">
     <DisplayName>Description</DisplayName>
     <Description>Human-readable description of the entity.</Description>
     <References>
@@ -445,7 +519,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=63002</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=63539" BrowseName="1:Documentation" ParentNodeId="ns=1;i=63002" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=63546" BrowseName="1:Documentation" ParentNodeId="ns=1;i=63002" DataType="String" ValueRank="-1">
     <DisplayName>Documentation</DisplayName>
     <Description>URL to human-readable documentation for the entity.</Description>
     <References>
@@ -454,16 +528,16 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=63002</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=63540" BrowseName="1:Labels" ParentNodeId="ns=1;i=63002" DataType="KeyValuePair" ValueRank="1">
+  <UAObject NodeId="ns=1;i=63547" BrowseName="1:Labels" ParentNodeId="ns=1;i=63002">
     <DisplayName>Labels</DisplayName>
-    <Description>xRegistry labels: an extensible map of name/value pairs, managed by AddAttribute/RemoveAttribute on resources.</Description>
+    <Description>The entity's extensible xRegistry labels/attributes, exposed as an AttributesType container: each label is a browsable PropertyType Variable, added and removed with the container's AddAttribute/RemoveAttribute Methods. Deleted together with the entity.</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=80</Reference>
-      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
-      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=63002</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=1;i=63003</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=63002</Reference>
     </References>
-  </UAVariable>
-  <UAVariable NodeId="ns=1;i=63541" BrowseName="1:CreatedAt" ParentNodeId="ns=1;i=63002" DataType="DateTime" ValueRank="-1">
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=63548" BrowseName="1:CreatedAt" ParentNodeId="ns=1;i=63002" DataType="DateTime" ValueRank="-1">
     <DisplayName>CreatedAt</DisplayName>
     <Description>UTC timestamp when the entity was created.</Description>
     <References>
@@ -472,7 +546,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=63002</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=63542" BrowseName="1:ModifiedAt" ParentNodeId="ns=1;i=63002" DataType="DateTime" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=63549" BrowseName="1:ModifiedAt" ParentNodeId="ns=1;i=63002" DataType="DateTime" ValueRank="-1">
     <DisplayName>ModifiedAt</DisplayName>
     <Description>UTC timestamp when the entity was last modified.</Description>
     <References>
@@ -480,61 +554,5 @@
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=63002</Reference>
     </References>
-  </UAVariable>
-  <UAMethod NodeId="ns=1;i=63543" BrowseName="1:AddAttribute" ParentNodeId="ns=1;i=63002">
-    <DisplayName>AddAttribute</DisplayName>
-    <Description>Add or update an xRegistry attribute (or label) on this resource, further configuring the registry structure. The server materializes the attribute in the AddressSpace.</Description>
-    <References>
-      <Reference ReferenceType="HasModellingRule">i=80</Reference>
-      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=63002</Reference>
-      <Reference ReferenceType="HasProperty">ns=1;i=63544</Reference>
-      <Reference ReferenceType="HasProperty">ns=1;i=63545</Reference>
-    </References>
-  </UAMethod>
-  <UAVariable NodeId="ns=1;i=63544" BrowseName="1:InputArguments" ParentNodeId="ns=1;i=63543" DataType="Argument" ValueRank="1" ArrayDimensions="2">
-    <DisplayName>InputArguments</DisplayName>
-    <References>
-      <Reference ReferenceType="HasModellingRule">i=78</Reference>
-      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
-      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=63543</Reference>
-    </References>
-    <Value><ListOfExtensionObject xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd"><ExtensionObject><TypeId><Identifier>i=297</Identifier></TypeId><Body><Argument><Name>Key</Name><DataType><Identifier>i=12</Identifier></DataType><ValueRank>-1</ValueRank><ArrayDimensions/><Description><Text>Attribute (or label) name.</Text></Description></Argument></Body></ExtensionObject><ExtensionObject><TypeId><Identifier>i=297</Identifier></TypeId><Body><Argument><Name>Value</Name><DataType><Identifier>i=12</Identifier></DataType><ValueRank>-1</ValueRank><ArrayDimensions/><Description><Text>Attribute value.</Text></Description></Argument></Body></ExtensionObject></ListOfExtensionObject></Value>
-  </UAVariable>
-  <UAVariable NodeId="ns=1;i=63545" BrowseName="1:OutputArguments" ParentNodeId="ns=1;i=63543" DataType="Argument" ValueRank="1" ArrayDimensions="1">
-    <DisplayName>OutputArguments</DisplayName>
-    <References>
-      <Reference ReferenceType="HasModellingRule">i=78</Reference>
-      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
-      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=63543</Reference>
-    </References>
-    <Value><ListOfExtensionObject xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd"><ExtensionObject><TypeId><Identifier>i=297</Identifier></TypeId><Body><Argument><Name>Success</Name><DataType><Identifier>i=1</Identifier></DataType><ValueRank>-1</ValueRank><ArrayDimensions/><Description><Text>True if the attribute was added or updated.</Text></Description></Argument></Body></ExtensionObject></ListOfExtensionObject></Value>
-  </UAVariable>
-  <UAMethod NodeId="ns=1;i=63546" BrowseName="1:RemoveAttribute" ParentNodeId="ns=1;i=63002">
-    <DisplayName>RemoveAttribute</DisplayName>
-    <Description>Remove an xRegistry attribute (or label) from this resource.</Description>
-    <References>
-      <Reference ReferenceType="HasModellingRule">i=80</Reference>
-      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=63002</Reference>
-      <Reference ReferenceType="HasProperty">ns=1;i=63547</Reference>
-      <Reference ReferenceType="HasProperty">ns=1;i=63548</Reference>
-    </References>
-  </UAMethod>
-  <UAVariable NodeId="ns=1;i=63547" BrowseName="1:InputArguments" ParentNodeId="ns=1;i=63546" DataType="Argument" ValueRank="1" ArrayDimensions="1">
-    <DisplayName>InputArguments</DisplayName>
-    <References>
-      <Reference ReferenceType="HasModellingRule">i=78</Reference>
-      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
-      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=63546</Reference>
-    </References>
-    <Value><ListOfExtensionObject xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd"><ExtensionObject><TypeId><Identifier>i=297</Identifier></TypeId><Body><Argument><Name>Key</Name><DataType><Identifier>i=12</Identifier></DataType><ValueRank>-1</ValueRank><ArrayDimensions/><Description><Text>Attribute (or label) name.</Text></Description></Argument></Body></ExtensionObject></ListOfExtensionObject></Value>
-  </UAVariable>
-  <UAVariable NodeId="ns=1;i=63548" BrowseName="1:OutputArguments" ParentNodeId="ns=1;i=63546" DataType="Argument" ValueRank="1" ArrayDimensions="1">
-    <DisplayName>OutputArguments</DisplayName>
-    <References>
-      <Reference ReferenceType="HasModellingRule">i=78</Reference>
-      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
-      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=63546</Reference>
-    </References>
-    <Value><ListOfExtensionObject xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd"><ExtensionObject><TypeId><Identifier>i=297</Identifier></TypeId><Body><Argument><Name>Success</Name><DataType><Identifier>i=1</Identifier></DataType><ValueRank>-1</ValueRank><ArrayDimensions/><Description><Text>True if the attribute existed and was removed.</Text></Description></Argument></Body></ExtensionObject></ListOfExtensionObject></Value>
   </UAVariable>
 </UANodeSet>

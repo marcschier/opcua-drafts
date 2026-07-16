@@ -166,11 +166,11 @@ CAT = "Schema Registry"
 CAT_INST = "Schema Registry Instances"
 
 object_type(62000, "SchemaRegistryType", XRegistry_RegistryType,
-            "The in-server Schema Registry root - an xRegistry RegistryType (a FileDirectory) whose group "
-            "directories hold schema files. Adds SchemaId-based resolution (GetSchema and the Opaque SchemaId "
+            "The in-server Schema Registry root - an xRegistry RegistryType (a FolderType) whose group "
+            "folders hold schema files. Adds SchemaId-based resolution (GetSchema and the Opaque SchemaId "
             "NodeId fast path). Exposed as a well-known object under the Part 14 PublishSubscribe object.", CAT)
 object_type(62001, "SchemaGroupType", XRegistry_GroupType,
-            "An xRegistry GroupType keyed by an OPC UA namespace URI; a directory of schema files for the "
+            "An xRegistry GroupType keyed by an OPC UA namespace URI; a folder of schema files for the "
             "DataTypes and PublishedDataSets of that namespace.", CAT)
 object_type(62002, "SchemaFileType", XRegistry_ResourceType,
             "An xRegistry ResourceType whose file content is one concrete schema document (Avro, Apache "
@@ -178,7 +178,7 @@ object_type(62002, "SchemaFileType", XRegistry_ResourceType,
             "used by a consumer that must resolve a schema from an on-wire fingerprint.", CAT)
 
 SR = "SchemaRegistryType"
-placeholder_obj(62000, SR, "<SchemaGroup>", T(62001), "A schema group directory (per OPC UA namespace) held by the registry.")
+placeholder_obj(62000, SR, "<SchemaGroup>", T(62001), "A schema group folder (per OPC UA namespace) held by the registry.")
 method(62000, SR, "GetSchema",
        "Return the schema document and metadata for a raw on-wire SchemaId fingerprint (the method form of the Opaque SchemaId NodeId fast path).",
        inargs=[("SchemaId", ByteString, "Raw on-wire SchemaId fingerprint bytes.")],

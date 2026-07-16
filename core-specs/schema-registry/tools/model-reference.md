@@ -18,11 +18,11 @@ This annex is the normative node reference. It is generated from `tools/build_mo
 
 *Inherits from:* [RegistryType](OPC-UA-xRegistry.md#type-RegistryType)
 
-The in-server Schema Registry root - an xRegistry RegistryType (a FileDirectory) whose group directories hold schema files. Adds SchemaId-based resolution (GetSchema and the Opaque SchemaId NodeId fast path). Exposed as a well-known object under the Part 14 PublishSubscribe object.
+The in-server Schema Registry root - an xRegistry RegistryType (a FolderType) whose group folders hold schema files. Adds SchemaId-based resolution (GetSchema and the Opaque SchemaId NodeId fast path). Exposed as a well-known object under the Part 14 PublishSubscribe object.
 
 | BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
 |---|---|---|---|---|---|
-| <SchemaGroup> | Object |  | OptionalPlaceholder | SchemaRegistryType | A schema group directory (per OPC UA namespace) held by the registry. |
+| <SchemaGroup> | Object |  | OptionalPlaceholder | SchemaRegistryType | A schema group folder (per OPC UA namespace) held by the registry. |
 | GetSchema | Method |  | Optional | SchemaRegistryType | Return the schema document and metadata for a raw on-wire SchemaId fingerprint (the method form of the Opaque SchemaId NodeId fast path). |
 
 <a id="type-SchemaGroupType"></a>
@@ -30,7 +30,7 @@ The in-server Schema Registry root - an xRegistry RegistryType (a FileDirectory)
 
 *Inherits from:* [GroupType](OPC-UA-xRegistry.md#type-GroupType)
 
-An xRegistry GroupType keyed by an OPC UA namespace URI; a directory of schema files for the DataTypes and PublishedDataSets of that namespace.
+An xRegistry GroupType keyed by an OPC UA namespace URI; a folder of schema files for the DataTypes and PublishedDataSets of that namespace.
 
 | BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
 |---|---|---|---|---|---|

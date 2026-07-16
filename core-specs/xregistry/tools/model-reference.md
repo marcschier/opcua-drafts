@@ -7,18 +7,19 @@ This annex is the normative node reference. It is generated from `tools/build_mo
 
 | NodeId | BrowseName | NodeClass | Subtype of |
 |---|---|---|---|
-| ns=1;i=63000 | [RegistryType](#type-RegistryType) | ObjectType | [FileDirectoryType](https://reference.opcfoundation.org/specs/OPC-10000-20/4.3.1) |
-| ns=1;i=63001 | [GroupType](#type-GroupType) | ObjectType | [FileDirectoryType](https://reference.opcfoundation.org/specs/OPC-10000-20/4.3.1) |
+| ns=1;i=63000 | [RegistryType](#type-RegistryType) | ObjectType | [FolderType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.6) |
+| ns=1;i=63001 | [GroupType](#type-GroupType) | ObjectType | [FolderType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.6) |
 | ns=1;i=63002 | [ResourceType](#type-ResourceType) | ObjectType | [FileType](https://reference.opcfoundation.org/specs/OPC-10000-20/4.2) |
+| ns=1;i=63003 | [AttributesType](#type-AttributesType) | ObjectType | [BaseObjectType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.2) |
 
 ### Object types
 
 <a id="type-RegistryType"></a>
 #### RegistryType  (ns=1;i=63000)
 
-*Inherits from:* [FileDirectoryType](https://reference.opcfoundation.org/specs/OPC-10000-20/4.3.1)
+*Inherits from:* [FolderType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.6)
 
-The abstract xRegistry root, expressed as a FileDirectory. It contains Group directories and supports creating and managing them through the CreateGroup Method (and the inherited FileDirectoryType Delete/MoveOrCopy Methods). Domain registries subtype this.
+The abstract xRegistry root, expressed as a FolderType that organizes its Group objects. It creates groups through the CreateGroup Method; a group is removed with the standard DeleteNodes Service. The physical backing may be a file-system directory, but the type is a plain organizing folder. Domain registries subtype this.
 
 | BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
 |---|---|---|---|---|---|
@@ -31,18 +32,18 @@ The abstract xRegistry root, expressed as a FileDirectory. It contains Group dir
 | Name | Variable | String | Optional | RegistryType | Human-readable name of the entity. |
 | Description | Variable | String | Optional | RegistryType | Human-readable description of the entity. |
 | Documentation | Variable | String | Optional | RegistryType | URL to human-readable documentation for the entity. |
-| Labels | Variable | [KeyValuePair](https://reference.opcfoundation.org/specs/OPC-10000-5/12.23)\[\] | Optional | RegistryType | xRegistry labels: an extensible map of name/value pairs, managed by AddAttribute/RemoveAttribute on resources. |
+| Labels | Object |  | Optional | RegistryType | The entity's extensible xRegistry labels/attributes, exposed as an AttributesType container: each label is a browsable PropertyType Variable, added and removed with the container's AddAttribute/RemoveAttribute Methods. Deleted together with the entity. |
 | CreatedAt | Variable | DateTime | Optional | RegistryType | UTC timestamp when the entity was created. |
 | ModifiedAt | Variable | DateTime | Optional | RegistryType | UTC timestamp when the entity was last modified. |
-| <Group> | Object |  | OptionalPlaceholder | RegistryType | A group directory held by this registry. |
-| CreateGroup | Method |  | Optional | RegistryType | Create a group directory under this registry and assign its GroupId. This is the xRegistry-semantic form of the inherited FileDirectoryType CreateDirectory Method; the server bootstraps the new group's xRegistry attributes (Xid, Epoch, CreatedAt, ModifiedAt). |
+| <Group> | Object |  | OptionalPlaceholder | RegistryType | A group held by this registry. |
+| CreateGroup | Method |  | Optional | RegistryType | Create a group under this registry and assign its GroupId. The server creates the GroupType Object and bootstraps its xRegistry attributes (Xid, Epoch, CreatedAt, ModifiedAt). |
 
 <a id="type-GroupType"></a>
 #### GroupType  (ns=1;i=63001)
 
-*Inherits from:* [FileDirectoryType](https://reference.opcfoundation.org/specs/OPC-10000-20/4.3.1)
+*Inherits from:* [FolderType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.6)
 
-An abstract xRegistry group, expressed as a FileDirectory that contains resources. It creates resources and versions through the CreateResourceOrVersion Method. Domain group types subtype this and add the group key (e.g. a namespace URI).
+An abstract xRegistry group, expressed as a FolderType that organizes its resource files. It creates resources and versions through the CreateResourceOrVersion Method; an entry is removed with the DeleteNodes Service. Domain group types subtype this and add the group key (e.g. a namespace URI).
 
 | BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
 |---|---|---|---|---|---|
@@ -52,11 +53,11 @@ An abstract xRegistry group, expressed as a FileDirectory that contains resource
 | Name | Variable | String | Optional | GroupType | Human-readable name of the entity. |
 | Description | Variable | String | Optional | GroupType | Human-readable description of the entity. |
 | Documentation | Variable | String | Optional | GroupType | URL to human-readable documentation for the entity. |
-| Labels | Variable | [KeyValuePair](https://reference.opcfoundation.org/specs/OPC-10000-5/12.23)\[\] | Optional | GroupType | xRegistry labels: an extensible map of name/value pairs, managed by AddAttribute/RemoveAttribute on resources. |
+| Labels | Object |  | Optional | GroupType | The entity's extensible xRegistry labels/attributes, exposed as an AttributesType container: each label is a browsable PropertyType Variable, added and removed with the container's AddAttribute/RemoveAttribute Methods. Deleted together with the entity. |
 | CreatedAt | Variable | DateTime | Optional | GroupType | UTC timestamp when the entity was created. |
 | ModifiedAt | Variable | DateTime | Optional | GroupType | UTC timestamp when the entity was last modified. |
 | <Resource> | Object |  | OptionalPlaceholder | GroupType | A resource file held by this group. |
-| CreateResourceOrVersion | Method |  | Optional | GroupType | Create a resource - or a new version of a resource - as a file in this group, optionally opened for writing. This is the xRegistry-semantic form of the inherited FileDirectoryType CreateFile Method; the server bootstraps the resource's xRegistry attributes when the file is closed. |
+| CreateResourceOrVersion | Method |  | Optional | GroupType | Create a resource - or a new version of a resource - as a ResourceType file in this group, optionally opened for writing. The server bootstraps the resource's xRegistry attributes when the file is closed. |
 
 <a id="type-ResourceType"></a>
 #### ResourceType  (ns=1;i=63002)
@@ -78,18 +79,29 @@ An abstract xRegistry resource/version whose document IS the file: the content i
 | Name | Variable | String | Optional | ResourceType | Human-readable name of the entity. |
 | Description | Variable | String | Optional | ResourceType | Human-readable description of the entity. |
 | Documentation | Variable | String | Optional | ResourceType | URL to human-readable documentation for the entity. |
-| Labels | Variable | [KeyValuePair](https://reference.opcfoundation.org/specs/OPC-10000-5/12.23)\[\] | Optional | ResourceType | xRegistry labels: an extensible map of name/value pairs, managed by AddAttribute/RemoveAttribute on resources. |
+| Labels | Object |  | Optional | ResourceType | The entity's extensible xRegistry labels/attributes, exposed as an AttributesType container: each label is a browsable PropertyType Variable, added and removed with the container's AddAttribute/RemoveAttribute Methods. Deleted together with the entity. |
 | CreatedAt | Variable | DateTime | Optional | ResourceType | UTC timestamp when the entity was created. |
 | ModifiedAt | Variable | DateTime | Optional | ResourceType | UTC timestamp when the entity was last modified. |
-| AddAttribute | Method |  | Optional | ResourceType | Add or update an xRegistry attribute (or label) on this resource, further configuring the registry structure. The server materializes the attribute in the AddressSpace. |
-| RemoveAttribute | Method |  | Optional | ResourceType | Remove an xRegistry attribute (or label) from this resource. |
+
+<a id="type-AttributesType"></a>
+#### AttributesType  (ns=1;i=63003)
+
+*Inherits from:* [BaseObjectType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.2)
+
+A container for an entity's extensible xRegistry attributes/labels. Each attribute materializes as a browsable HasProperty PropertyType Variable whose BrowseName is the attribute key, so attributes can be browsed, read and enumerated, and are deleted with the owning entity. The AddAttribute/RemoveAttribute Methods add and remove attributes. This follows the OPC UA extensible-container pattern (an OptionalPlaceholder Property plus Add/Remove Methods); the placeholder isolates dynamic attributes so they never conflict with an entity's fixed attribute BrowseNames.
+
+| BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
+|---|---|---|---|---|---|
+| <Attribute> | Variable | String | OptionalPlaceholder | AttributesType | An xRegistry attribute or label materialized as a PropertyType Variable: the BrowseName is the attribute key and the Value is its string value. OptionalPlaceholder so a server exposes one Variable per present attribute. |
+| AddAttribute | Method |  | Optional | AttributesType | Add or update an xRegistry attribute/label in this container. The server materializes it as a browsable PropertyType Variable whose BrowseName is the Key, and increments the owning entity's Epoch. |
+| RemoveAttribute | Method |  | Optional | AttributesType | Remove an xRegistry attribute/label (the Variable whose BrowseName is the Key) from this container. |
 
 ### Methods
 
 | Method | Owning type | Input arguments | Output arguments |
 |---|---|---|---|
+| AddAttribute | [AttributesType](#type-AttributesType) | Key, Value | Success |
+| RemoveAttribute | [AttributesType](#type-AttributesType) | Key | Success |
 | CreateGroup | [RegistryType](#type-RegistryType) | GroupId | GroupNodeId |
 | CreateResourceOrVersion | [GroupType](#type-GroupType) | ResourceId, RequestFileOpen | ResourceNodeId, FileHandle |
-| AddAttribute | [ResourceType](#type-ResourceType) | Key, Value | Success |
-| RemoveAttribute | [ResourceType](#type-ResourceType) | Key | Success |
 

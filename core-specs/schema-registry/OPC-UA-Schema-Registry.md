@@ -14,12 +14,12 @@
 
 Schema-based encodings such as Apache Avro and Apache Arrow require a decoder to obtain the concrete schema document that matches the received payload. Unlike the OPC UA Binary, XML and JSON DataEncodings, which are either self-describing or resolved through the server AddressSpace, a schema-based payload that has left the server in a PubSub message, a file, a data lake, an MQTT/AMQP/Kafka stream or a historian/ADBC stream must be accompanied by a reference or identifier that lets the consumer retrieve the schema.
 
-This specification defines a **Schema Registry**: a concrete xRegistry whose resources are schema documents. It is a **domain extension** of the abstract [*OPC UA — xRegistry*](../xregistry/OPC-UA-xRegistry.md) base model — its registry, group and resource types are subtypes of the base `RegistryType`, `GroupType` and `ResourceType` — so it inherits, unchanged, the base model's three interchangeable representations (the AddressSpace as a directory of files, the OPC UA API server, and the serialized xRegistry document), its property configuration (`AddAttribute`/`RemoveAttribute`), its auto-bootstrap behaviour, and its federation via `ExpandedNodeId`. This specification adds only what is specific to *schemas*.
+This specification defines a **Schema Registry**: a concrete xRegistry whose resources are schema documents. It is a **domain extension** of the abstract [*OPC UA — xRegistry*](../xregistry/OPC-UA-xRegistry.md) base model — its registry, group and resource types are subtypes of the base `RegistryType`, `GroupType` and `ResourceType` — so it inherits, unchanged, the base model's three interchangeable representations (the AddressSpace as a folder tree of files, the OPC UA API server, and the serialized xRegistry document), its label configuration (the `Labels` container's `AddAttribute`/`RemoveAttribute`), its auto-bootstrap behaviour, and its federation via `ExpandedNodeId`. This specification adds only what is specific to *schemas*.
 
 The model is **minimal first**:
 
 - **Download a schema (mandatory).** A consumer that received a schema-based message obtains the matching schema either by the one-Read **SchemaId fast path** (an Opaque NodeId whose Identifier bytes are the on-wire SchemaId) or by the generic FileTransfer read of the schema file (§5.1).
-- **Register a schema (optional).** A writer or tool registers a schema by creating a file in the target group directory and writing the document bytes; the server auto-bootstraps the group and the schema-version metadata (§5.2).
+- **Register a schema (optional).** A writer or tool registers a schema by creating a file in the target group folder and writing the document bytes; the server auto-bootstraps the group and the schema-version metadata (§5.2).
 - **Materialize and serve the full registry (optional).** The schema groups, schemas and versions are materialized as a browsable xRegistry structure and served as the xRegistry API (§10), including to disconnected consumers and across federated registries.
 
 The model has these goals:
@@ -35,15 +35,16 @@ It is explicitly out of scope to re-specify the Avro, Arrow or JSON encodings th
 
 ## 2 Normative references
 
-- [*OPC UA — xRegistry*](../xregistry/OPC-UA-xRegistry.md) — the abstract base companion model this specification extends: `RegistryType`, `GroupType`, `ResourceType`, the common xRegistry attributes, `AddAttribute`/`RemoveAttribute`, auto-bootstrap, the three representations and federation.
+- [*OPC UA — xRegistry*](../xregistry/OPC-UA-xRegistry.md) — the abstract base companion model this specification extends: `RegistryType`, `GroupType`, `ResourceType`, `AttributesType`, the common xRegistry attributes and the `Labels` container with its `AddAttribute`/`RemoveAttribute` Methods, auto-bootstrap, the three representations and federation.
 - [*xRegistry — OPC UA API*](../xregistry/xRegistry-OPC-UA-Api.md) — the OPC UA API binding for xRegistry.
 - [xRegistry Schema Registry Service, v1.0-rc3](https://github.com/xregistry/spec/blob/v1.0-rc3/schema/spec.md) — the `schemagroups`, `schemas`, `versions`, `format` model this domain profile aligns with.
 - [CloudEvents v1.0](https://github.com/cloudevents/spec) — the `dataschema` attribute convention reused for an optional on-wire schema reference.
 - [OPC 10000-3](https://reference.opcfoundation.org/specs/OPC-10000-3/) — Address Space Model, NodeIds, References, TypeDefinitions and the `ExpandedNodeId` structure.
-- [OPC 10000-5](https://reference.opcfoundation.org/specs/OPC-10000-5/) — Base Information Model, `PropertyType`, `KeyValuePair`.
+- [OPC 10000-4](https://reference.opcfoundation.org/specs/OPC-10000-4/) — Services: Browse, Read, Write, Call, and the `DeleteNodes` Service.
+- [OPC 10000-5](https://reference.opcfoundation.org/specs/OPC-10000-5/) — Base Information Model, `FolderType`, `BaseObjectType`, `PropertyType`.
 - [OPC 10000-6](https://reference.opcfoundation.org/specs/OPC-10000-6/) — Mappings, with the Avro and Arrow DataEncoding additions in this repository.
 - [OPC 10000-14](https://reference.opcfoundation.org/specs/OPC-10000-14/) — PubSub, including the well-known `PublishSubscribe` object (`i=14443`), `DataSetMetaData`, `ConfigurationVersionDataType`, `ConfigurationVersion` and the Security Key Service relationship, with the Avro and Arrow message-mapping additions in this repository.
-- [OPC 10000-20](https://reference.opcfoundation.org/specs/OPC-10000-20/) — File Transfer: `FileType` (§4.2) and `FileDirectoryType` (§4.3.1).
+- [OPC 10000-20](https://reference.opcfoundation.org/specs/OPC-10000-20/) — File Transfer: `FileType` (§4.2), the base type of the schema file.
 - OPC UA Avro Message Mapping draft §9 — SchemaId handshake and decoder cache-miss behaviour.
 - OPC UA Arrow Message Mapping draft §5.2 — SchemaId handshake and cache-miss behaviour.
 
@@ -53,7 +54,7 @@ It is explicitly out of scope to re-specify the Avro, Arrow or JSON encodings th
 |---|---|
 | Schema Registry | The registry root, a subtype of the xRegistry `RegistryType`, exposed as the well-known `SchemaRegistry` Object under Part 14 `PublishSubscribe`. |
 | Schema document | A concrete Avro (`.avsc`), Apache Arrow Schema, or JSON Schema document describing an OPC UA DataType or DataSet in one encoding. |
-| Schema Group | A group directory for one OPC UA namespace URI, a subtype of the xRegistry `GroupType`, keyed by that namespace URI. |
+| Schema Group | A group folder for one OPC UA namespace URI, a subtype of the xRegistry `GroupType`, keyed by that namespace URI. |
 | Schema / Schema file | One `(DataType or PublishedDataSet, format)` schema document as a resource file, a subtype of the xRegistry `ResourceType`. |
 | Schema Version / Version | One concrete schema document, correlated with an OPC UA model version and, for DataSets, a Part 14 `ConfigurationVersion`. In the flat projection a schema file exposes its current version's document and `VersionId`; earlier versions, when kept, are sibling files. |
 | Format | The xRegistry `format` string identifying the schema language, for example `Avro/1.11`, `ApacheArrow/1.0` or `JsonSchema/2020-12`. |
@@ -65,7 +66,7 @@ Key words **shall**, **should** and **may** are interpreted as in the ISO/IEC di
 
 ## 4 Overview
 
-A Schema Registry is an xRegistry (per [*OPC UA — xRegistry*](../xregistry/OPC-UA-xRegistry.md)) whose groups are OPC UA namespaces and whose resources are schema documents. Because it is projected onto the OPC UA FileTransfer model, the registry *is* a browsable directory of files:
+A Schema Registry is an xRegistry (per [*OPC UA — xRegistry*](../xregistry/OPC-UA-xRegistry.md)) whose groups are OPC UA namespaces and whose resources are schema documents. Because groups are folders and each schema document is a `FileType` file, the registry *is* a browsable folder tree of files:
 
 ```mermaid
 graph TD
@@ -80,7 +81,7 @@ graph TD
 
 A Server, Publisher or offline tool generates schema documents from its model and registers them as files. On the wire, schema-based messages carry a compact SchemaId (the encoding's SchemaId handshake) or an explicit schema reference. A consumer resolves the schema — by the SchemaId fast path or by reading the schema file — and decodes. For JSON, the schema reference is informative unless the consumer chooses to validate.
 
-Everything the base model provides applies unchanged: the three representations (§4.2 of the base), auto-bootstrap on registration (§6.5 of the base), `AddAttribute`/`RemoveAttribute` on a schema file (§6.3 of the base), and federation to schemas hosted by another registry via `ExpandedNodeId` (§8 of the base; Annex B here).
+Everything the base model provides applies unchanged: the three representations (§4.2 of the base), auto-bootstrap on registration (§6.5 of the base), the `Labels` container with `AddAttribute`/`RemoveAttribute` on each entity (§6.6 of the base), and federation to schemas hosted by another registry via `ExpandedNodeId` (§8 of the base; Annex B here).
 
 ## 5 Minimal binding
 
@@ -96,7 +97,7 @@ A consumer that received a schema-based message obtains the matching schema docu
 
 A writer registers a schema by creating a file in the target schema group and writing the document bytes, exactly as in the base model (base §5.2):
 
-1. `CreateResourceOrVersion(ResourceId, RequestFileOpen = true)` on the target `SchemaGroup` directory (or `CreateGroup` first on the `SchemaRegistry` root to create a new namespace group) → the new `SchemaFileType` file's `NodeId` and a write `fileHandle`.
+1. `CreateResourceOrVersion(ResourceId, RequestFileOpen = true)` on the target `SchemaGroup` folder (or `CreateGroup` first on the `SchemaRegistry` root to create a new namespace group) → the new `SchemaFileType` file's `NodeId` and a write `fileHandle`.
 2. one or more `Write(fileHandle, data)` with the schema document bytes.
 3. `Close(fileHandle)`.
 
@@ -108,11 +109,11 @@ The companion namespace is `http://opcfoundation.org/UA/SchemaRegistry/`. Draft 
 
 ### 6.1 SchemaRegistryType
 
-`SchemaRegistryType` is a subtype of the base `RegistryType` (itself a `FileDirectoryType`). It is exposed as one well-known `SchemaRegistry` Object as a `HasComponent` of the Part 14 `PublishSubscribe` Object (`i=14443`), so a Client that can discover PubSub configuration discovers schema resolution in the same place, parallel to the Security Key Service (§11). Its `<SchemaGroup>` OptionalPlaceholder constrains the base `<Group>` to `SchemaGroupType`. It adds the `GetSchema` Method (§6.4) as the method form of the SchemaId fast path. Registration uses the base `CreateResourceOrVersion` Method and `Write` (§5.2); no bespoke register Method is required.
+`SchemaRegistryType` is a subtype of the base `RegistryType` (itself a `FolderType`). It is exposed as one well-known `SchemaRegistry` Object as a `HasComponent` of the Part 14 `PublishSubscribe` Object (`i=14443`), so a Client that can discover PubSub configuration discovers schema resolution in the same place, parallel to the Security Key Service (§11). Its `<SchemaGroup>` OptionalPlaceholder constrains the base `<Group>` to `SchemaGroupType`. It adds the `GetSchema` Method (§6.4) as the method form of the SchemaId fast path. Registration uses the base `CreateResourceOrVersion` Method and `Write` (§5.2); no bespoke register Method is required.
 
 ### 6.2 SchemaGroupType
 
-`SchemaGroupType` is a subtype of the base `GroupType`. Each instance is a directory of schema files for one OPC UA namespace, keyed by that namespace URI: its Mandatory `NamespaceUri` Property is the group key (the xRegistry `groupid` may be a server-chosen URL-safe slug of it, retained verbatim in `NamespaceUri`). Its `<Schema>` OptionalPlaceholder constrains the base `<Resource>` to `SchemaFileType`. The PubSub envelope schemas (NetworkMessage / DataSetMessage) live in the base-namespace group `http://opcfoundation.org/UA/`.
+`SchemaGroupType` is a subtype of the base `GroupType`. Each instance is a folder of schema files for one OPC UA namespace, keyed by that namespace URI: its Mandatory `NamespaceUri` Property is the group key (the xRegistry `groupid` may be a server-chosen URL-safe slug of it, retained verbatim in `NamespaceUri`). Its `<Schema>` OptionalPlaceholder constrains the base `<Resource>` to `SchemaFileType`. The PubSub envelope schemas (NetworkMessage / DataSetMessage) live in the base-namespace group `http://opcfoundation.org/UA/`.
 
 ### 6.3 SchemaFileType
 
@@ -125,7 +126,7 @@ The companion namespace is `http://opcfoundation.org/UA/SchemaRegistry/`. Draft 
 - `ConfigurationVersion` (`ConfigurationVersionDataType`) — the Part 14 `ConfigurationVersion` when the schema describes a DataSet.
 - `ExpiryTime` (DateTime) and `Ttl` (Duration) — optional mirror/cache metadata (§9).
 
-`AddAttribute`/`RemoveAttribute` (inherited) configure further xRegistry labels on a schema file.
+The inherited `Labels` container (an `AttributesType`, base §6.6) and its `AddAttribute`/`RemoveAttribute` Methods configure further xRegistry labels on a schema file.
 
 ### 6.4 SchemaId-NodeId fast access and GetSchema
 
@@ -213,7 +214,7 @@ An in-server registry may operate as a TTL-cached mirror in front of an external
 
 ### 10.1 Auto-bootstrap of the schema structure
 
-The base auto-bootstrap (base §6.5) is specialized for schemas. When a schema file is created and written (§5.2), the server materializes the full xRegistry structure so it is immediately visible in all three representations: it creates the namespace `SchemaGroup` if absent (deriving `NamespaceUri` from the document or the create arguments), assigns the base attributes (`Xid`, `Epoch`, `CreatedAt`/`ModifiedAt`, `ResourceId`, `VersionId`), and computes the schema-specific metadata (`SchemaId`, `SchemaIdAlg`, `Format`, `ContentType`, `DataTypeEncoding`, `ModelVersion`, and `ConfigurationVersion` for a DataSet schema). A client that needs finer control adjusts labels afterwards with the inherited `AddAttribute`/`RemoveAttribute`.
+The base auto-bootstrap (base §6.5) is specialized for schemas. When a schema file is created and written (§5.2), the server materializes the full xRegistry structure so it is immediately visible in all three representations: it creates the namespace `SchemaGroup` if absent (deriving `NamespaceUri` from the document or the create arguments), assigns the base attributes (`Xid`, `Epoch`, `CreatedAt`/`ModifiedAt`, `ResourceId`, `VersionId`), and computes the schema-specific metadata (`SchemaId`, `SchemaIdAlg`, `Format`, `ContentType`, `DataTypeEncoding`, `ModelVersion`, and `ConfigurationVersion` for a DataSet schema). A client that needs finer control adjusts labels afterwards with the inherited `Labels` container's `AddAttribute`/`RemoveAttribute` Methods.
 
 ### 10.2 Serving the xRegistry API and JSON projection
 
@@ -274,11 +275,11 @@ This annex is the normative node reference. It is generated from `tools/build_mo
 
 *Inherits from:* [RegistryType](OPC-UA-xRegistry.md#type-RegistryType)
 
-The in-server Schema Registry root - an xRegistry RegistryType (a FileDirectory) whose group directories hold schema files. Adds SchemaId-based resolution (GetSchema and the Opaque SchemaId NodeId fast path). Exposed as a well-known object under the Part 14 PublishSubscribe object.
+The in-server Schema Registry root - an xRegistry RegistryType (a FolderType) whose group folders hold schema files. Adds SchemaId-based resolution (GetSchema and the Opaque SchemaId NodeId fast path). Exposed as a well-known object under the Part 14 PublishSubscribe object.
 
 | BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
 |---|---|---|---|---|---|
-| <SchemaGroup> | Object |  | OptionalPlaceholder | SchemaRegistryType | A schema group directory (per OPC UA namespace) held by the registry. |
+| <SchemaGroup> | Object |  | OptionalPlaceholder | SchemaRegistryType | A schema group folder (per OPC UA namespace) held by the registry. |
 | GetSchema | Method |  | Optional | SchemaRegistryType | Return the schema document and metadata for a raw on-wire SchemaId fingerprint (the method form of the Opaque SchemaId NodeId fast path). |
 
 <a id="type-SchemaGroupType"></a>
@@ -286,7 +287,7 @@ The in-server Schema Registry root - an xRegistry RegistryType (a FileDirectory)
 
 *Inherits from:* [GroupType](OPC-UA-xRegistry.md#type-GroupType)
 
-An xRegistry GroupType keyed by an OPC UA namespace URI; a directory of schema files for the DataTypes and PublishedDataSets of that namespace.
+An xRegistry GroupType keyed by an OPC UA namespace URI; a folder of schema files for the DataTypes and PublishedDataSets of that namespace.
 
 | BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
 |---|---|---|---|---|---|
