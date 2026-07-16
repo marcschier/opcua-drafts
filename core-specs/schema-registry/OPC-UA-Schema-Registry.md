@@ -97,11 +97,11 @@ A consumer that received a schema-based message obtains the matching schema docu
 
 A writer registers a schema by creating a file in the target schema group and writing the document bytes, exactly as in the base model (base §5.2):
 
-1. `CreateResourceOrVersion(ResourceId, RequestFileOpen = true)` on the target `SchemaGroup` folder (or `CreateGroup` first on the `SchemaRegistry` root to create a new namespace group) → the new `SchemaFileType` file's `NodeId` and a write `fileHandle`.
+1. `CreateResource(ResourceId, RequestFileOpen = true)` on the target `SchemaGroup` folder (or `CreateGroup` first on the `SchemaRegistry` root to create a new namespace group) → the new `SchemaFileType` file's `NodeId` and a write `fileHandle`. The idempotent `GetOrCreateResource`/`GetOrCreateGroup` collapse the existence-check-then-create into a single call.
 2. one or more `Write(fileHandle, data)` with the schema document bytes.
 3. `Close(fileHandle)`.
 
-On `Close` the server **auto-bootstraps** the schema-specific metadata in addition to the base attributes (§10.1): it computes the `SchemaId` and `SchemaIdAlg` from the document per the encoding mapping, sets `Format`/`ContentType`, records `ModelVersion` (and, for a DataSet schema, `ConfigurationVersion`) when known, and makes the document reachable by its Opaque SchemaId NodeId. A read-only registry (a published catalogue or a TTL mirror) need not expose `CreateResourceOrVersion`.
+On `Close` the server **auto-bootstraps** the schema-specific metadata in addition to the base attributes (§10.1): it computes the `SchemaId` and `SchemaIdAlg` from the document per the encoding mapping, sets `Format`/`ContentType`, records `ModelVersion` (and, for a DataSet schema, `ConfigurationVersion`) when known, and makes the document reachable by its Opaque SchemaId NodeId. A read-only registry (a published catalogue or a TTL mirror) need not expose `CreateResource`.
 
 ## 6 Schema-specific information model
 
@@ -109,7 +109,7 @@ The companion namespace is `http://opcfoundation.org/UA/SchemaRegistry/`. Draft 
 
 ### 6.1 SchemaRegistryType
 
-`SchemaRegistryType` is a subtype of the base `RegistryType` (itself a `FolderType`). It is exposed as one well-known `SchemaRegistry` Object as a `HasComponent` of the Part 14 `PublishSubscribe` Object (`i=14443`), so a Client that can discover PubSub configuration discovers schema resolution in the same place, parallel to the Security Key Service (§11). Its `<SchemaGroup>` OptionalPlaceholder constrains the base `<Group>` to `SchemaGroupType`. It adds the `GetSchema` Method (§6.4) as the method form of the SchemaId fast path. Registration uses the base `CreateResourceOrVersion` Method and `Write` (§5.2); no bespoke register Method is required.
+`SchemaRegistryType` is a subtype of the base `RegistryType` (itself a `FolderType`). It is exposed as one well-known `SchemaRegistry` Object as a `HasComponent` of the Part 14 `PublishSubscribe` Object (`i=14443`), so a Client that can discover PubSub configuration discovers schema resolution in the same place, parallel to the Security Key Service (§11). Its `<SchemaGroup>` OptionalPlaceholder constrains the base `<Group>` to `SchemaGroupType`. It adds the `GetSchema` Method (§6.4) as the method form of the SchemaId fast path. Registration uses the base `CreateResource` Method and `Write` (§5.2); no bespoke register Method is required.
 
 ### 6.2 SchemaGroupType
 

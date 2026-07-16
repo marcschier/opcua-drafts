@@ -181,7 +181,7 @@ object_type(63000, "RegistryType", FolderType,
             "subtype this.", CAT)
 object_type(63001, "GroupType", FolderType,
             "An abstract xRegistry group, expressed as a FolderType that organizes its resource files. It creates "
-            "resources and versions through the CreateResourceOrVersion Method; an entry is removed with the DeleteNodes "
+            "resources and versions through the CreateResource Method; an entry is removed with the DeleteNodes "
             "Service. Domain group types subtype this and add the group key (e.g. a namespace URI).", CAT)
 object_type(63002, "ResourceType", FileType,
             "An abstract xRegistry resource/version whose document IS the file: the content is read and written "
@@ -202,38 +202,67 @@ prop_var(63003, AT, "<Attribute>", String,
          rule=MR_OptionalPlaceholder)
 method(63003, AT, "AddAttribute",
        "Add or update an xRegistry attribute/label in this container. The server materializes it as a browsable "
-       "PropertyType Variable whose BrowseName is the Key, and increments the owning entity's Epoch.",
-       inargs=[("Key", String, "Attribute (or label) name."), ("Value", String, "Attribute value.")],
+       "PropertyType Variable whose BrowseName is the Key, and increments the owning entity's Epoch. If ExpectedEpoch "
+       "is non-zero and does not equal the owning entity's current Epoch, the call fails with Bad_InvalidState and "
+       "makes no change (optimistic concurrency).",
+       inargs=[("Key", String, "Attribute (or label) name."), ("Value", String, "Attribute value."),
+               ("ExpectedEpoch", UInt32, "Expected current Epoch of the owning entity for optimistic concurrency; 0 disables the check.")],
        outargs=[("Success", Boolean, "True if the attribute was added or updated.")])
 method(63003, AT, "RemoveAttribute",
-       "Remove an xRegistry attribute/label (the Variable whose BrowseName is the Key) from this container.",
-       inargs=[("Key", String, "Attribute (or label) name.")],
+       "Remove an xRegistry attribute/label (the Variable whose BrowseName is the Key) from this container. If "
+       "ExpectedEpoch is non-zero and does not equal the owning entity's current Epoch, the call fails with "
+       "Bad_InvalidState and makes no change.",
+       inargs=[("Key", String, "Attribute (or label) name."),
+               ("ExpectedEpoch", UInt32, "Expected current Epoch of the owning entity for optimistic concurrency; 0 disables the check.")],
        outargs=[("Success", Boolean, "True if the attribute existed and was removed.")])
 
 RG = "RegistryType"
 prop_var(63000, RG, "RegistryId", String, "xRegistry registryid: the stable identifier of this registry.", rule=MR_Mandatory)
 prop_var(63000, RG, "SpecVersion", String, "The xRegistry specification version this registry conforms to.")
-prop_var(63000, RG, "Capabilities", String, "The registry capabilities document (xRegistry /capabilities), as a JSON string.")
-prop_var(63000, RG, "Model", String, "The registry model document (xRegistry /model), as a JSON string.")
+obj_member(63000, RG, "Capabilities", FileType,
+           "The registry capabilities document (xRegistry /capabilities): a FileType whose content is the capabilities "
+           "JSON, read with the inherited Open/Read/Close Methods (so an arbitrarily large document is not bounded by "
+           "MaxStringLength).")
+obj_member(63000, RG, "Model", FileType,
+           "The registry model document (xRegistry /model): a FileType whose content is the model JSON, read with the "
+           "inherited Open/Read/Close Methods.")
 common_attrs(63000, RG)
 placeholder_obj(63000, RG, "<Group>", T(63001), "A group held by this registry.")
 method(63000, RG, "CreateGroup",
        "Create a group under this registry and assign its GroupId. The server creates the GroupType Object and "
-       "bootstraps its xRegistry attributes (Xid, Epoch, CreatedAt, ModifiedAt).",
+       "bootstraps its xRegistry attributes (Xid, Epoch, CreatedAt, ModifiedAt). Fails if a group with the same "
+       "GroupId already exists; use GetOrCreateGroup for idempotent create-or-get.",
        inargs=[("GroupId", String, "The groupid of the group to create.")],
        outargs=[("GroupNodeId", NodeId, "NodeId of the created group Object.")])
+method(63000, RG, "GetOrCreateGroup",
+       "Idempotently return the group with this GroupId, creating it if absent. One-shot form that avoids a separate "
+       "existence check: returns the existing GroupType Object (Created = false) or a newly created and bootstrapped "
+       "one (Created = true).",
+       inargs=[("GroupId", String, "The groupid to get or create.")],
+       outargs=[("GroupNodeId", NodeId, "NodeId of the existing or newly created group Object."),
+                ("Created", Boolean, "True if the group was created, false if it already existed.")])
 
 GP = "GroupType"
 prop_var(63001, GP, "GroupId", String, "xRegistry groupid: the stable identifier of this group. Group identifiers are globally unique for federation.", rule=MR_Mandatory)
 common_attrs(63001, GP)
 placeholder_obj(63001, GP, "<Resource>", T(63002), "A resource file held by this group.")
-method(63001, GP, "CreateResourceOrVersion",
+method(63001, GP, "CreateResource",
        "Create a resource - or a new version of a resource - as a ResourceType file in this group, optionally opened "
-       "for writing. The server bootstraps the resource's xRegistry attributes when the file is closed.",
+       "for writing. The server bootstraps the resource's xRegistry attributes when the file is closed. Fails if a "
+       "resource with the same ResourceId already exists; use GetOrCreateResource for idempotent create-or-get.",
        inargs=[("ResourceId", String, "The resourceid of the resource; a versionid is assigned or supplied per the registry model."),
                ("RequestFileOpen", Boolean, "If true, the new resource file is opened for writing and a FileHandle is returned.")],
        outargs=[("ResourceNodeId", NodeId, "NodeId of the created resource Object."),
                 ("FileHandle", UInt32, "Write handle when RequestFileOpen is true; otherwise 0.")])
+method(63001, GP, "GetOrCreateResource",
+       "Idempotently return the resource with this ResourceId, creating it if absent, optionally opened for writing. "
+       "One-shot form that avoids a separate existence check: returns the existing ResourceType file (Created = false) "
+       "or a newly created one (Created = true); a write FileHandle is returned when RequestFileOpen is true.",
+       inargs=[("ResourceId", String, "The resourceid to get or create."),
+               ("RequestFileOpen", Boolean, "If true, the resource file is opened for writing and a FileHandle is returned.")],
+       outargs=[("ResourceNodeId", NodeId, "NodeId of the existing or newly created resource Object."),
+                ("FileHandle", UInt32, "Write handle when RequestFileOpen is true; otherwise 0."),
+                ("Created", Boolean, "True if the resource was created, false if it already existed.")])
 
 RS = "ResourceType"
 prop_var(63002, RS, "ResourceId", String, "xRegistry resourceid: the stable identifier of the resource within its group.", rule=MR_Mandatory)

@@ -25,8 +25,8 @@ The abstract xRegistry root, expressed as a FolderType that organizes its Group 
 |---|---|---|---|---|---|
 | RegistryId | Variable | String | Mandatory | RegistryType | xRegistry registryid: the stable identifier of this registry. |
 | SpecVersion | Variable | String | Optional | RegistryType | The xRegistry specification version this registry conforms to. |
-| Capabilities | Variable | String | Optional | RegistryType | The registry capabilities document (xRegistry /capabilities), as a JSON string. |
-| Model | Variable | String | Optional | RegistryType | The registry model document (xRegistry /model), as a JSON string. |
+| Capabilities | Object |  | Optional | RegistryType | The registry capabilities document (xRegistry /capabilities): a FileType whose content is the capabilities JSON, read with the inherited Open/Read/Close Methods (so an arbitrarily large document is not bounded by MaxStringLength). |
+| Model | Object |  | Optional | RegistryType | The registry model document (xRegistry /model): a FileType whose content is the model JSON, read with the inherited Open/Read/Close Methods. |
 | Xid | Variable | String | Optional | RegistryType | xRegistry relative identifier (xid): the entity's stable path within the registry, independent of the hosting endpoint. |
 | Epoch | Variable | UInt32 | Optional | RegistryType | xRegistry epoch: a counter that increments on every change to the entity. |
 | Name | Variable | String | Optional | RegistryType | Human-readable name of the entity. |
@@ -36,14 +36,15 @@ The abstract xRegistry root, expressed as a FolderType that organizes its Group 
 | CreatedAt | Variable | DateTime | Optional | RegistryType | UTC timestamp when the entity was created. |
 | ModifiedAt | Variable | DateTime | Optional | RegistryType | UTC timestamp when the entity was last modified. |
 | <Group> | Object |  | OptionalPlaceholder | RegistryType | A group held by this registry. |
-| CreateGroup | Method |  | Optional | RegistryType | Create a group under this registry and assign its GroupId. The server creates the GroupType Object and bootstraps its xRegistry attributes (Xid, Epoch, CreatedAt, ModifiedAt). |
+| CreateGroup | Method |  | Optional | RegistryType | Create a group under this registry and assign its GroupId. The server creates the GroupType Object and bootstraps its xRegistry attributes (Xid, Epoch, CreatedAt, ModifiedAt). Fails if a group with the same GroupId already exists; use GetOrCreateGroup for idempotent create-or-get. |
+| GetOrCreateGroup | Method |  | Optional | RegistryType | Idempotently return the group with this GroupId, creating it if absent. One-shot form that avoids a separate existence check: returns the existing GroupType Object (Created = false) or a newly created and bootstrapped one (Created = true). |
 
 <a id="type-GroupType"></a>
 #### GroupType  (ns=1;i=63001)
 
 *Inherits from:* [FolderType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.6)
 
-An abstract xRegistry group, expressed as a FolderType that organizes its resource files. It creates resources and versions through the CreateResourceOrVersion Method; an entry is removed with the DeleteNodes Service. Domain group types subtype this and add the group key (e.g. a namespace URI).
+An abstract xRegistry group, expressed as a FolderType that organizes its resource files. It creates resources and versions through the CreateResource Method; an entry is removed with the DeleteNodes Service. Domain group types subtype this and add the group key (e.g. a namespace URI).
 
 | BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
 |---|---|---|---|---|---|
@@ -57,7 +58,8 @@ An abstract xRegistry group, expressed as a FolderType that organizes its resour
 | CreatedAt | Variable | DateTime | Optional | GroupType | UTC timestamp when the entity was created. |
 | ModifiedAt | Variable | DateTime | Optional | GroupType | UTC timestamp when the entity was last modified. |
 | <Resource> | Object |  | OptionalPlaceholder | GroupType | A resource file held by this group. |
-| CreateResourceOrVersion | Method |  | Optional | GroupType | Create a resource - or a new version of a resource - as a ResourceType file in this group, optionally opened for writing. The server bootstraps the resource's xRegistry attributes when the file is closed. |
+| CreateResource | Method |  | Optional | GroupType | Create a resource - or a new version of a resource - as a ResourceType file in this group, optionally opened for writing. The server bootstraps the resource's xRegistry attributes when the file is closed. Fails if a resource with the same ResourceId already exists; use GetOrCreateResource for idempotent create-or-get. |
+| GetOrCreateResource | Method |  | Optional | GroupType | Idempotently return the resource with this ResourceId, creating it if absent, optionally opened for writing. One-shot form that avoids a separate existence check: returns the existing ResourceType file (Created = false) or a newly created one (Created = true); a write FileHandle is returned when RequestFileOpen is true. |
 
 <a id="type-ResourceType"></a>
 #### ResourceType  (ns=1;i=63002)
@@ -93,15 +95,17 @@ A container for an entity's extensible xRegistry attributes/labels. Each attribu
 | BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
 |---|---|---|---|---|---|
 | <Attribute> | Variable | String | OptionalPlaceholder | AttributesType | An xRegistry attribute or label materialized as a PropertyType Variable: the BrowseName is the attribute key and the Value is its string value. OptionalPlaceholder so a server exposes one Variable per present attribute. |
-| AddAttribute | Method |  | Optional | AttributesType | Add or update an xRegistry attribute/label in this container. The server materializes it as a browsable PropertyType Variable whose BrowseName is the Key, and increments the owning entity's Epoch. |
-| RemoveAttribute | Method |  | Optional | AttributesType | Remove an xRegistry attribute/label (the Variable whose BrowseName is the Key) from this container. |
+| AddAttribute | Method |  | Optional | AttributesType | Add or update an xRegistry attribute/label in this container. The server materializes it as a browsable PropertyType Variable whose BrowseName is the Key, and increments the owning entity's Epoch. If ExpectedEpoch is non-zero and does not equal the owning entity's current Epoch, the call fails with Bad_InvalidState and makes no change (optimistic concurrency). |
+| RemoveAttribute | Method |  | Optional | AttributesType | Remove an xRegistry attribute/label (the Variable whose BrowseName is the Key) from this container. If ExpectedEpoch is non-zero and does not equal the owning entity's current Epoch, the call fails with Bad_InvalidState and makes no change. |
 
 ### Methods
 
 | Method | Owning type | Input arguments | Output arguments |
 |---|---|---|---|
-| AddAttribute | [AttributesType](#type-AttributesType) | Key, Value | Success |
-| RemoveAttribute | [AttributesType](#type-AttributesType) | Key | Success |
+| AddAttribute | [AttributesType](#type-AttributesType) | Key, Value, ExpectedEpoch | Success |
+| RemoveAttribute | [AttributesType](#type-AttributesType) | Key, ExpectedEpoch | Success |
 | CreateGroup | [RegistryType](#type-RegistryType) | GroupId | GroupNodeId |
-| CreateResourceOrVersion | [GroupType](#type-GroupType) | ResourceId, RequestFileOpen | ResourceNodeId, FileHandle |
+| GetOrCreateGroup | [RegistryType](#type-RegistryType) | GroupId | GroupNodeId, Created |
+| CreateResource | [GroupType](#type-GroupType) | ResourceId, RequestFileOpen | ResourceNodeId, FileHandle |
+| GetOrCreateResource | [GroupType](#type-GroupType) | ResourceId, RequestFileOpen | ResourceNodeId, FileHandle, Created |
 
