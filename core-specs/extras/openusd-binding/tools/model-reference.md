@@ -90,12 +90,11 @@
 | ns=1;i=6060 | <Component> | Object | A component/aggregation binding composing this Object's components into the USD prim tree. |
 | ns=1;i=3010 | OpenUsdAssetKindEnum | DataType | Role of a served USD asset within a stage's served layer closure. |
 | ns=1;i=3910 | EnumStrings | Variable |  |
-| ns=1;i=1006 | OpenUsdAssetType | ObjectType | One served USD asset/layer: authored content the server delivers through the address space so a connector can fetch it and compose the stage locally, with no external resolver. The bytes are streamed through the File (Part 5 FileType) member; AssetIdentifier is the resolver identifier / relative path used to place the asset in the local cache so that @...@ references resolve. |
+| ns=1;i=1006 | OpenUsdAssetType | ObjectType | One served USD asset/layer: authored content the server delivers through the address space so a connector can fetch it and compose the stage locally, with no external resolver. OpenUsdAssetType subtypes the Part 5 FileType, so the asset's bytes are streamed directly through the node's own Open/Read/Close; AssetIdentifier is the resolver identifier / relative path used to place the asset in the local cache so that @...@ references resolve. |
 | ns=1;i=6061 | AssetIdentifier | Variable | Resolver identifier / relative path of this asset, matching the stage RootLayerIdentifier or a ComponentAssetReference asset path; used for @...@ resolution and cache placement. |
 | ns=1;i=6062 | AssetKind | Variable | Role of this asset within the stage's served layer closure. |
 | ns=1;i=6063 | MediaType | Variable | IANA media type of the content, e.g. 'model/vnd.usda', 'model/vnd.usdz+zip', 'image/png'. |
 | ns=1;i=6064 | Digest | Variable | Cryptographic digest of this asset's resolved content, for per-layer integrity verification. A connector verifies it before composing the asset. |
 | ns=1;i=6065 | DigestAlgorithm | Variable | Digest algorithm for Digest (default SHA-256). |
-| ns=1;i=6066 | File | Object | Part 5 FileType exposing the asset bytes for streaming download (Open/Read/Close). Read-only. |
-| ns=1;i=6067 | Assets | Object | Optional registry of OpenUsdAssetType instances forming this stage's served layer closure (exactly one RootLayer). Present only when the server delivers its geometry; a connector that finds it fetches and composes the stage locally, else it resolves RootLayerIdentifier externally as before. |
-| ns=1;i=6068 | ComponentAssetNode | Variable | NodeId of the OpenUsdAssetType (under the stage's Assets folder) serving this component's asset, when the server delivers it. Complements ComponentAssetReference. |
+| ns=1;i=6066 | Assets | Object | Optional registry of OpenUsdAssetType instances forming this stage's served layer closure (exactly one RootLayer). Present only when the server delivers its geometry; a connector that finds it fetches and composes the stage locally, else it resolves RootLayerIdentifier externally as before. |
+| ns=1;i=6067 | ComponentAssetNode | Variable | NodeId of the OpenUsdAssetType (under the stage's Assets folder) serving this component's asset, when the server delivers it. Complements ComponentAssetReference. |

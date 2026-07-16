@@ -90,6 +90,5 @@ OpenUsdAssetType_AssetKind,6062,Variable
 OpenUsdAssetType_MediaType,6063,Variable
 OpenUsdAssetType_Digest,6064,Variable
 OpenUsdAssetType_DigestAlgorithm,6065,Variable
-OpenUsdAssetType_File,6066,Object
-OpenUsdStageType_Assets,6067,Object
-OpenUsdComponentBindingType_ComponentAssetNode,6068,Variable
+OpenUsdStageType_Assets,6066,Object
+OpenUsdComponentBindingType_ComponentAssetNode,6067,Variable

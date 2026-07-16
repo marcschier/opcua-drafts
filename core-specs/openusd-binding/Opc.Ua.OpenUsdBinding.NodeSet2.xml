@@ -337,7 +337,7 @@
       <Reference ReferenceType="HasProperty">ns=1;i=6040</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6041</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6042</Reference>
-      <Reference ReferenceType="HasComponent">ns=1;i=6067</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=6066</Reference>
     </References>
   </UAObjectType>
   <UAVariable NodeId="ns=1;i=6021" BrowseName="1:RootLayerIdentifier" ParentNodeId="ns=1;i=1002" DataType="String" ValueRank="-1">
@@ -688,7 +688,7 @@
       <Reference ReferenceType="HasProperty">ns=1;i=6057</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6058</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6059</Reference>
-      <Reference ReferenceType="HasProperty">ns=1;i=6068</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6067</Reference>
     </References>
   </UAObjectType>
   <UAVariable NodeId="ns=1;i=6043" BrowseName="1:BindingDefinitionId" ParentNodeId="ns=1;i=1005" DataType="Guid" ValueRank="-1">
@@ -874,16 +874,15 @@
   </UAVariable>
   <UAObjectType NodeId="ns=1;i=1006" BrowseName="1:OpenUsdAssetType">
     <DisplayName>OpenUsdAssetType</DisplayName>
-    <Description>One served USD asset/layer: authored content the server delivers through the address space so a connector can fetch it and compose the stage locally, with no external resolver. The bytes are streamed through the File (Part 5 FileType) member; AssetIdentifier is the resolver identifier / relative path used to place the asset in the local cache so that @...@ references resolve.</Description>
+    <Description>One served USD asset/layer: authored content the server delivers through the address space so a connector can fetch it and compose the stage locally, with no external resolver. OpenUsdAssetType subtypes the Part 5 FileType, so the asset's bytes are streamed directly through the node's own Open/Read/Close; AssetIdentifier is the resolver identifier / relative path used to place the asset in the local cache so that @...@ references resolve.</Description>
     <Category>OpenUSD Binding</Category>
     <References>
-      <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=11575</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6061</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6062</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6063</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6064</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6065</Reference>
-      <Reference ReferenceType="HasComponent">ns=1;i=6066</Reference>
     </References>
   </UAObjectType>
   <UAVariable NodeId="ns=1;i=6061" BrowseName="1:AssetIdentifier" ParentNodeId="ns=1;i=1006" DataType="String" ValueRank="-1">
@@ -931,16 +930,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1006</Reference>
     </References>
   </UAVariable>
-  <UAObject NodeId="ns=1;i=6066" BrowseName="1:File" ParentNodeId="ns=1;i=1006">
-    <DisplayName>File</DisplayName>
-    <Description>Part 5 FileType exposing the asset bytes for streaming download (Open/Read/Close). Read-only.</Description>
-    <References>
-      <Reference ReferenceType="HasModellingRule">i=78</Reference>
-      <Reference ReferenceType="HasTypeDefinition">i=11575</Reference>
-      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=1006</Reference>
-    </References>
-  </UAObject>
-  <UAObject NodeId="ns=1;i=6067" BrowseName="1:Assets" ParentNodeId="ns=1;i=1002">
+  <UAObject NodeId="ns=1;i=6066" BrowseName="1:Assets" ParentNodeId="ns=1;i=1002">
     <DisplayName>Assets</DisplayName>
     <Description>Optional registry of OpenUsdAssetType instances forming this stage's served layer closure (exactly one RootLayer). Present only when the server delivers its geometry; a connector that finds it fetches and composes the stage locally, else it resolves RootLayerIdentifier externally as before.</Description>
     <References>
@@ -949,7 +939,7 @@
       <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=1002</Reference>
     </References>
   </UAObject>
-  <UAVariable NodeId="ns=1;i=6068" BrowseName="1:ComponentAssetNode" ParentNodeId="ns=1;i=1005" DataType="NodeId" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=6067" BrowseName="1:ComponentAssetNode" ParentNodeId="ns=1;i=1005" DataType="NodeId" ValueRank="-1">
     <DisplayName>ComponentAssetNode</DisplayName>
     <Description>NodeId of the OpenUsdAssetType (under the stage's Assets folder) serving this component's asset, when the server delivers it. Complements ComponentAssetReference.</Description>
     <References>

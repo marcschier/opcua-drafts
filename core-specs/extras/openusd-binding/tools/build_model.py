@@ -575,13 +575,16 @@ enum_type(3010, "OpenUsdAssetKindEnum",
            ("Package", 5, "A packaged asset bundle (e.g. USDZ) carrying the whole closure.")])
 OpenUsdAssetKindEnum = T(3010)
 
-# ---- ObjectType: OpenUsdAssetType (1006) ----------------------------------
-object_type(1006, "OpenUsdAssetType", BaseObjectType,
+# ---- ObjectType: OpenUsdAssetType : FileType (1006) -----------------------
+# Subtypes the OPC UA Part 5 FileType so the asset node IS the file: its bytes
+# are streamed through the node's own Open/Read/Close (no separate File child).
+object_type(1006, "OpenUsdAssetType", FileType,
             "One served USD asset/layer: authored content the server delivers through the address "
             "space so a connector can fetch it and compose the stage locally, with no external "
-            "resolver. The bytes are streamed through the File (Part 5 FileType) member; "
-            "AssetIdentifier is the resolver identifier / relative path used to place the asset in "
-            "the local cache so that @...@ references resolve.")
+            "resolver. OpenUsdAssetType subtypes the Part 5 FileType, so the asset's bytes are "
+            "streamed directly through the node's own Open/Read/Close; AssetIdentifier is the "
+            "resolver identifier / relative path used to place the asset in the local cache so "
+            "that @...@ references resolve.")
 A = 1006
 prop_var(A, "OpenUsdAssetType", "AssetIdentifier", String,
          "Resolver identifier / relative path of this asset, matching the stage RootLayerIdentifier "
@@ -598,11 +601,8 @@ prop_var(A, "OpenUsdAssetType", "Digest", ByteString,
          MR_Optional)
 prop_var(A, "OpenUsdAssetType", "DigestAlgorithm", OpenUsdDigestAlgorithmEnum,
          "Digest algorithm for Digest (default SHA-256).", MR_Optional)
-# The streamed bytes: a Part 5 FileType (Open/Read/Close/GetPosition/SetPosition + Size). Read-only.
-placeholder_obj(A, "OpenUsdAssetType", "File", FileType,
-                "Part 5 FileType exposing the asset bytes for streaming download (Open/Read/Close). "
-                "Read-only.",
-                rule=MR_Mandatory, reftype=HasComponent)
+# The streamed bytes are the node's own Part 5 FileType interface (Open/Read/Close/
+# GetPosition/SetPosition + Size), inherited by subtyping FileType. Read-only.
 
 # ---- OpenUsdStageType (1002): appended served-asset facility ---------------
 folder_member(S, "OpenUsdStageType", "Assets",
