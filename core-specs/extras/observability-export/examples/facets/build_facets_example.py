@@ -29,6 +29,7 @@ from build_bindings import DATASET_CLASS_NS, FIELD_ID_NS, KIND  # noqa: E402  (s
 UA = "http://opcfoundation.org/UA/"
 BASE = "http://opcfoundation.org/UA/FacetDemo/"
 EX = "http://opcfoundation.org/UA/PubSub/Examples/Facets/"
+OBS_NS = "http://opcfoundation.org/UA/ObservabilityExport/"
 MAJOR = 1
 
 # provisional base-spec type ids (see the base model)
@@ -115,7 +116,7 @@ def compose(name):
 # ===========================================================================
 # NodeSet emission (compact illustrative overlay)
 # ===========================================================================
-NSMAP = {UA: 0, EX: 1, BASE: 2}
+NSMAP = {UA: 0, EX: 1, BASE: 2, OBS_NS: 3}
 U = 'xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"'
 
 
@@ -133,6 +134,9 @@ class Emit:
         p = f' ParentNodeId="ns=1;i={parent}"' if parent else ""
         self.out.append(f'  <{cls} NodeId="ns=1;i={nid}" BrowseName="{bn}"{p}>')
         self.out.append(f'    <DisplayName>{sx.escape(bn.split(":",1)[-1])}</DisplayName>')
+
+    def b(self, nid):
+        return f"ns={NSMAP[OBS_NS]};i={nid}"
 
     def _refs(self, refs):
         self.out.append("    <References>")
@@ -171,12 +175,12 @@ class Emit:
     def bound_item(self, binding_id, target, fn, path, kind, prov=None):
         iid = self._id()
         self._open("UAObject", iid, f"1:{fn}", binding_id)
-        self._refs([("i=40", f"i={T_BOUNDVAR}", True),
+        self._refs([("i=40", self.b(T_BOUNDVAR), True),
                     ("i=47", f"ns=1;i={binding_id}", False)])
         self.out.append('  </UAObject>')
         self.prop("FieldName", "i=12",
                   f'<uax:String {U}>{sx.escape(fn)}</uax:String>', iid)
-        self.prop("Kind", "i=60051",
+        self.prop("Kind", self.b(60051),
                   f'<uax:Int32 {U}>{KIND[kind]}</uax:Int32>', iid)
         self.prop("BrowsePath", "i=540", self.rel_path(path), iid)
         if prov is not None:
@@ -188,12 +192,12 @@ class Emit:
         bid = self._id()
         self.node_by_binding[name] = bid
         self._open("UAObject", bid, f"1:{name}", group_id)
-        self._refs([("i=40", f"i={T_BINDING}", True),
+        self._refs([("i=40", self.b(T_BINDING), True),
                     ("i=47", f"ns=1;i={group_id}", False)])
         self.out.append('  </UAObject>')
-        # No SignalUri on the binding: its signal is its group's profile (via Realizes) and the
+        # No SignalUri on the binding: its signal is the binding's SignalKind and the
         # DataSetClassId already encodes the signal.
-        self.prop("SignalKind", "i=60052", f'<uax:Int32 {U}>0</uax:Int32>', bid)
+        self.prop("SignalKind", self.b(60052), f'<uax:Int32 {U}>0</uax:Int32>', bid)
         self.prop("DataSetClassId", "i=14",
                   self.guid(class_id(spec["target"])), bid)
         return bid
@@ -213,7 +217,7 @@ class Emit:
         lst = "".join(self.guid(c) for c in base_cls)
         self.prop("BaseDataSetClassIds", "i=14",
                   f'<uax:ListOfGuid {U}>{lst}</uax:ListOfGuid>', bid, valuerank=True)
-        extra = [("i=60003", f"ns=1;i={self.node_by_binding[b]}", True)
+        extra = [(self.b(60003), f"ns=1;i={self.node_by_binding[b]}", True)
                  for b, _m in spec["extends"] if b in self.node_by_binding]
         if extra:
             # append HasBaseBinding references onto the binding node's reference block
@@ -247,14 +251,14 @@ class Emit:
         root = self._id()
         self._open("UAObject", root, "1:FacetDemoInstance")
         self._refs([("i=40", "i=58", True),              # HasTypeDefinition -> BaseObjectType
-                    ("i=17603", f"i={T_IBOUND}", True),  # HasInterface -> IObservableType
+                    ("i=17603", self.b(T_IBOUND), True),  # HasInterface -> IObservableType
                     ("i=35", "i=85", False)])   # Organizes from Objects folder (illustrative)
         self.out.append('  </UAObject>')
         gid = self._id()
         self._open("UAObject", gid, "1:FacetDemo", root)
-        self._refs([("i=40", f"i={T_GROUP}", True),
+        self._refs([("i=40", self.b(T_GROUP), True),
                     ("i=47", f"ns=1;i={root}", False),
-                    ("i=60004", "i=60101", False)])
+                    (self.b(60004), self.b(60101), False)])
         self.out.append('  </UAObject>')
         self.prop("CompanionSpecificationUri", "i=12",
                   f'<uax:String {U}>{sx.escape(BASE)}</uax:String>', gid)
@@ -272,9 +276,12 @@ class Emit:
                   'xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd">',
                   '  <NamespaceUris>',
                   f'    <Uri>{EX}</Uri>', f'    <Uri>{BASE}</Uri>',
+                  f'    <Uri>{OBS_NS}</Uri>',
                   '  </NamespaceUris>', '  <Models>',
                   f'    <Model ModelUri="{EX}" Version="0.1.0" '
-                  'PublicationDate="2026-07-01T00:00:00Z" />', '  </Models>', '  <Aliases>',
+                  'PublicationDate="2026-07-01T00:00:00Z">',
+                  f'      <RequiredModel ModelUri="{OBS_NS}"/>',
+                  '    </Model>', '  </Models>', '  <Aliases>',
                   '    <Alias Alias="Int32">i=6</Alias>',
                   '    <Alias Alias="Guid">i=14</Alias>',
                   '    <Alias Alias="String">i=12</Alias>',
@@ -284,7 +291,8 @@ class Emit:
                   '    <Alias Alias="Organizes">i=35</Alias>',
                   '    <Alias Alias="HasInterface">i=17603</Alias>',
                   '    <Alias Alias="HasTypeDefinition">i=40</Alias>',
-                  '    <Alias Alias="HasBaseBinding">i=60003</Alias>',
+                  f'    <Alias Alias="HasBaseBinding">{self.b(60003)}</Alias>',
+                  f'    <Alias Alias="Collects">{self.b(60004)}</Alias>',
                   '  </Aliases>']
         return "\n".join(header) + "\n" + "\n".join(self.out) + "\n</UANodeSet>\n"
 
@@ -442,4 +450,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

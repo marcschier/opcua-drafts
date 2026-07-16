@@ -16,7 +16,7 @@ This addendum defines example **observability export bindings** for `IDeviceHeal
 
 ## 3 How the bindings are applied
 
-The machine-readable descriptor [`DI.DeviceHealth.ObservabilityExport.json`](../../extras/observability-export/examples/di/DI.DeviceHealth.ObservabilityExport.json) lists each bound item as a `BrowsePath` from `IDeviceHealthType`, with its observability `Kind` and OTEL `SignalKind`. The generated overlay [`Opc.Ua.DIDeviceHealth.ObservabilityExport.NodeSet2.xml`](Opc.Ua.DIDeviceHealth.ObservabilityExport.NodeSet2.xml) instantiates a compact `ExampleDeviceHealth` object, applies `IObservableType`, and exposes an `ObservabilityBindingGroup` that realizes the server-wide `Observability` registry.
+The machine-readable descriptor [`DI.DeviceHealth.ObservabilityExport.json`](../../extras/observability-export/examples/di/DI.DeviceHealth.ObservabilityExport.json) lists each bound item as a `BrowsePath` from `IDeviceHealthType`, with its observability `Kind` and OTEL `SignalKind`. The generated overlay [`Opc.Ua.DIDeviceHealth.ObservabilityExport.NodeSet2.xml`](Opc.Ua.DIDeviceHealth.ObservabilityExport.NodeSet2.xml) instantiates a compact `ExampleDeviceHealth` object, applies `IObservableType`, and exposes an `ObservabilityBindingGroup` collected by (`CollectedBy`) the server-wide `Observability` registry.
 
 > **Theoretical instance model.** A compact instance implementing IDeviceHealthType.
 
@@ -43,7 +43,7 @@ Overview of the observability bindings and their placement on the theoretical in
 graph LR
   ROOT["ExampleDeviceHealth : IDeviceHealthType"]
   ROOT --> G["DIDeviceHealth<br/>ObservabilityBindingGroup"]
-  G -.Realizes.-> O["Observability registry i=60101"]
+  G -.CollectedBy.-> O["Observability registry i=60101"]
   G --> S0["Metrics<br/>Metrics"]
   S0 --> S0_0["DeviceHealth : Status"]
 ```
@@ -53,7 +53,7 @@ graph TD
   R["ExampleDeviceHealth : IDeviceHealthType"]
   R -->|HasInterface| I([IObservableType])
   R -->|HasComponent| G["DIDeviceHealth : ObservabilityBindingGroupType"]
-  G -.Realizes.-> O["Observability : ObservabilityFolderType"]
+  G -.CollectedBy.-> O["Observability : ObservabilityFolderType"]
   G -->|HasComponent| B0["Metrics : ObservabilityBindingType<br/>Metrics"]
   B0 -->|HasComponent| IT00["DeviceHealth : BoundVariableType"]
   IT00 -->|BindsToNode| N00["DeviceHealth"]

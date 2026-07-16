@@ -31,6 +31,16 @@ tree = ET.parse(XML)
 root = tree.getroot()
 defined = {}
 elems = []
+ID_RE = re.compile(r'(?:ns=(\d+);)?i=(\d+)$')
+
+
+def parse_id(t):
+    """Return (ns, num) for 'i=N' or 'ns=1;i=N' (after alias resolution), else None."""
+    t = ALIAS.get(t, t) if t else t
+    m = ID_RE.match(t) if t else None
+    return (int(m.group(1) or 0), int(m.group(2))) if m else None
+
+
 for el in root:
     tag = el.tag.replace(NS, "")
     if tag == "Aliases":
@@ -38,42 +48,36 @@ for el in root:
             ALIAS[a.get("Alias")] = a.text
     if not tag.startswith("UA"):
         continue
-    nid = el.get("NodeId")
-    if nid and nid.startswith("i="):
-        num = int(nid.split("=")[1])
+    pid = parse_id(el.get("NodeId"))
+    # own nodes live in this spec's namespace (ns=1); base UA nodes (ns 0) appear only as references
+    if pid and pid[0] == 1:
+        num = pid[1]
         if num in defined:
-            errors.append(f"dup NodeId i={num}")
+            errors.append(f"dup NodeId ns=1;i={num}")
         defined[num] = (tag, el.get("BrowseName"))
     elems.append((tag, el))
 
-def resolve(t):
-    t = ALIAS.get(t, t)
-    if t.startswith("i="):
-        return int(t.split("=")[1])
-    return None
-
-OWN_MIN = 60000
 
 def check(t, ctx):
-    v = resolve(t)
-    if v is None:
+    pid = parse_id(t)
+    if pid is None:
         return
-    if v in defined:
+    ns, v = pid
+    if ns == 1:
+        if v not in defined:
+            errors.append(f"{ctx}: ns=1;i={v} not defined here")
         return
-    if UA is None:
-        if v < OWN_MIN:
-            return  # assume valid base id (base table not available locally)
-    elif v in UA or v in UA_EXTRA:
+    # base UA namespace (ns 0)
+    if UA is None or v in UA or v in UA_EXTRA:
         return
-    errors.append(f"{ctx}: i={v} not defined here and not a known base id")
+    errors.append(f"{ctx}: i={v} not a known base UA id")
 
-OWN_MIN = 60000
+
 for tag, el in elems:
     bn = el.get("BrowseName"); nid = el.get("NodeId")
     ctx = f"{tag} {bn} ({nid})"
-    num = int(nid.split("=")[1]) if nid and nid.startswith("i=") else None
-    if num is not None and num >= OWN_MIN and UA is not None and num in UA:
-        errors.append(f"{ctx}: provisional id collides with a base UA id")
+    pid = parse_id(nid)
+    num = pid[1] if pid else None
     if el.get("ParentNodeId"): check(el.get("ParentNodeId"), ctx+" parent")
     if el.get("DataType"): check(el.get("DataType"), ctx+" datatype")
     refs = el.find(NS+"References"); rl=[]
@@ -83,13 +87,13 @@ for tag, el in elems:
             rl.append((rt,tgt,fwd)); check(rt,ctx+" reftype"); check(tgt,ctx+" ref")
     reftypes=[rt for rt,_,_ in rl]
     typedef=[t for rt,t,f in rl if rt=="HasTypeDefinition"]
-    is_enc = any(resolve(t)==76 for t in typedef)
+    is_enc = any(parse_id(t) == (0, 76) for t in typedef)
     if tag in ("UAObjectType","UADataType","UAVariableType","UAReferenceType"):
         if not any(rt=="HasSubtype" and not fwd for rt,_,fwd in rl):
             errors.append(f"{ctx}: type without HasSubtype(inverse)")
     if tag in ("UAVariable","UAObject","UAMethod") and el.get("ParentNodeId"):
-        num_p = resolve(el.get("ParentNodeId"))
-        wellknown = num_p is not None and (num_p in UA if UA is not None else num_p < OWN_MIN)
+        pp = parse_id(el.get("ParentNodeId"))
+        wellknown = pp is not None and pp[0] == 0
         if "HasModellingRule" not in reftypes and not is_enc and not wellknown \
            and bn not in ("EnumStrings",) and num != 60101:
             warnings.append(f"{ctx}: instance without HasModellingRule")

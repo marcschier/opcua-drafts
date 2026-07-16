@@ -26,7 +26,7 @@ deterministic generator does the *expansion* into artifacts (which a program is 
 Read the specification first — this skill assumes its two-layer contract:
 
 - **Discovery**: the Server Object has an `Observability` (`ObservabilityFolderType`) registry. A
-  read-only **bridge** starts there, follows `RealizedBy` to per-companion-spec
+  read-only **bridge** starts there, follows `Collects` to per-companion-spec
   `ObservabilityBindingGroupType` nodes contained by `IObservableType`, then browses the bindings.
   There is a single kind of registry entry — no "scenarios", no "profiles".
 - **Routing / OTEL** (for the bridge): each binding's `SignalKind` (`Metrics`/`Logs`/`Traces`) plus
@@ -68,7 +68,7 @@ land under `core-specs/observability-export/<spec>/`:
   *theoretical instance* of the bound type in an example namespace, applying `IObservableType` and
   exposing one `ObservabilityBindingGroup` per companion specification directly on the instance, with
   the `ObservabilityBinding`/`BoundItem` instances nested below the group and the group carrying
-  `Realizes` to the well-known `Observability` registry (see "Two-level authoring").
+  `CollectedBy` to the well-known `Observability` registry (see "Two-level authoring").
 - `OPC-UA-<Domain>-Observability-Export-Addendum.md` — the companion-spec **addendum**: scope, the
   per-signal annex tables, and diagrams showing where the bindings live on the theoretical instance.
 
@@ -252,7 +252,7 @@ authored separately.
 Run the reference generator (`build_bindings.py`) on the descriptor. It renders one annex table per
 binding (linking each referenced base type to `https://reference.opcfoundation.org/` and own concepts
 to the base spec), emits the instance-overlay NodeSet with an `ObservabilityBindingGroupType` carrying
-`CompanionSpecificationUri` and `ModelNamespaceUris` plus `Realizes` to the well-known `Observability`
+`CompanionSpecificationUri` and `ModelNamespaceUris` plus `CollectedBy` to the well-known `Observability`
 registry, nests the `ObservabilityBinding` objects under the group, emits per-binding `DataSetClassId`
 and `SignalKind`, `DataSetCardinalityPath` (when authored), the metric members for Metrics bindings and
 `BoundEventFieldType` items for Logs/Traces bindings, then assembles the addendum. Leave
@@ -282,14 +282,18 @@ Author the bindings at two levels instead:
    (`http://opcfoundation.org/UA/PubSub/Examples/<Domain>/`), synthesise a compact *theoretical
    instance* of the bound type — you own it, so you may apply `IObservableType` and expose one
    `ObservabilityBindingGroup` per companion specification directly on the instance (`HasComponent`),
-   with `Realizes` to the well-known `Observability` registry. Emit the matching
+   with `CollectedBy` to the well-known `Observability` registry. Emit the matching
    `ObservabilityBinding`/`BoundItem` instances below the group.
 
 **Server-wide discovery.** A server exposes `Server` → `Observability` (`ObservabilityFolderType`),
-which references per-spec `ObservabilityBindingGroupType` nodes via `RealizedBy`. Those groups are
-contained by an `IObservableType` object and carry inverse `Realizes` back to the registry. A bridge
-starts at the `Observability` registry, follows `RealizedBy` to groups, then browses the bindings and
-bound items.
+which references per-spec `ObservabilityBindingGroupType` nodes via `Collects`. Those groups are
+contained by an `IObservableType` object and carry inverse `CollectedBy` back to the registry. A bridge
+starts at the `Observability` registry, follows `Collects` to groups, then browses the bindings and
+bound items. The Observability Export types (`ObservabilityBindingType`, `IObservableType`, the
+`Collects`/`ExportedBy` reference types, …) live in this specification's **own namespace**
+`http://opcfoundation.org/UA/ObservabilityExport/`; the generated overlay imports it as a
+`<RequiredModel>`, so an instance overlay references those types through that namespace, not
+namespace 0.
 
 **Two locators, one per level.** On the type level a `BoundItem` uses **`BrowsePath`**; on the instance
 overlay it uses **`BindsToNode`** pointing at the concrete signal node (both defined by the base spec).
@@ -297,8 +301,8 @@ The overlay materialises only the parent-chain objects and the bound leaf for ea
 illustrative, not a conformant full instance; say so.
 
 **Diagram conventions (two per addendum).** (a) a *bindings overview* (`Server` → `Observability`
---`RealizedBy`--> per-spec `ObservabilityBindingGroup` → `ObservabilityBinding` → BoundItems); (b) an
-*instance placement* diagram (instance → `IObservableType` → group --`Realizes`--> `Observability`,
+--`Collects`--> per-spec `ObservabilityBindingGroup` → `ObservabilityBinding` → BoundItems); (b) an
+*instance placement* diagram (instance → `IObservableType` → group --`CollectedBy`--> `Observability`,
 plus group → binding → BoundItem → `BindsToNode` → the signal node).
 
 ## Domain heuristics learned from the worked examples
@@ -415,7 +419,7 @@ Field notes:
   define several model namespaces.
 - `modelNamespaceUris` lists the namespace URIs the companion specification defines/covers; the
   generator emits them on each `ObservabilityBindingGroupType` instance together with
-  `CompanionSpecificationUri`, adds `Realizes` to the well-known `Observability` registry, then nests
+  `CompanionSpecificationUri`, adds `CollectedBy` to the well-known `Observability` registry, then nests
   the bindings below that group.
 - `signalKind` ∈ `Metrics` | `Logs` | `Traces`. The generated `ObservabilityBinding` carries it as a
   property; it also drives the deterministic `DataSetClassId`. There is no `scenarioUri`/`direction`/
@@ -444,7 +448,7 @@ Field notes:
   selected event type. Never ship an unresolved path.
 - Every item has a `Kind`, a unique `FieldName`, and a complete semantic cross-reference.
 - Every descriptor has `companionSpecificationUri` and `modelNamespaceUris`; the overlay nests
-  bindings under the correct companion-spec group, each `Realizes`-linked to the `Observability`
+  bindings under the correct companion-spec group, each `CollectedBy`-linked to the `Observability`
   registry.
 - Every binding has the correct `signalKind`; Logs/Traces bindings have an `eventSourcePath` (or
   intentionally default to the bound root) and their OTEL mapping members.

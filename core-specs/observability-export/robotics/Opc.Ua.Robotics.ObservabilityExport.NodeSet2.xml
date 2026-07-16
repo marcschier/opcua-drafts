@@ -6,6 +6,7 @@
     <Uri>http://opcfoundation.org/UA/DI/</Uri>
     <Uri>http://opcfoundation.org/UA/IA/</Uri>
     <Uri>http://opcfoundation.org/UA/Machinery/</Uri>
+    <Uri>http://opcfoundation.org/UA/ObservabilityExport/</Uri>
   </NamespaceUris>
   <Models>
     <Model ModelUri="http://opcfoundation.org/UA/PubSub/Examples/Robotics/" Version="0.1.0" PublicationDate="2026-07-01T00:00:00Z">
@@ -13,6 +14,7 @@
       <RequiredModel ModelUri="http://opcfoundation.org/UA/DI/"/>
       <RequiredModel ModelUri="http://opcfoundation.org/UA/IA/"/>
       <RequiredModel ModelUri="http://opcfoundation.org/UA/Machinery/"/>
+      <RequiredModel ModelUri="http://opcfoundation.org/UA/ObservabilityExport/"/>
     </Model>
   </Models>
   <Aliases>
@@ -21,8 +23,6 @@
     <Alias Alias="HasTypeDefinition">i=40</Alias>
     <Alias Alias="HasInterface">i=17603</Alias>
     <Alias Alias="Organizes">i=35</Alias>
-    <Alias Alias="BindsToNode">i=60001</Alias>
-    <Alias Alias="RealizedBy">i=60004</Alias>
     <Alias Alias="String">i=12</Alias>
     <Alias Alias="Int32">i=6</Alias>
     <Alias Alias="QualifiedName">i=20</Alias>
@@ -36,22 +36,26 @@
     <Alias Alias="RelativePath">i=540</Alias>
     <Alias Alias="Boolean">i=1</Alias>
     <Alias Alias="Double">i=11</Alias>
+    <Alias Alias="BindsToNode">ns=6;i=60001</Alias>
+    <Alias Alias="ExportedBy">ns=6;i=60002</Alias>
+    <Alias Alias="HasBaseBinding">ns=6;i=60003</Alias>
+    <Alias Alias="Collects">ns=6;i=60004</Alias>
   </Aliases>
   <UAObject NodeId="ns=1;i=5001" BrowseName="1:ExampleRobotSystem">
     <DisplayName>ExampleRobotSystem</DisplayName>
     <Description>Illustrative theoretical instance of MotionDeviceSystemType carrying example observability bindings. Only the bound signals are shown; not a conformant full instance.</Description>
     <References>
       <Reference ReferenceType="HasTypeDefinition">ns=2;i=1002</Reference>
-      <Reference ReferenceType="HasInterface">i=60016</Reference>
+      <Reference ReferenceType="HasInterface">ns=6;i=60016</Reference>
       <Reference ReferenceType="HasComponent">ns=1;i=5002</Reference>
     </References>
   </UAObject>
   <UAObject NodeId="ns=1;i=5002" BrowseName="1:Robotics" ParentNodeId="ns=1;i=5001">
     <DisplayName>Robotics</DisplayName>
     <References>
-      <Reference ReferenceType="HasTypeDefinition">i=60018</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=6;i=60018</Reference>
       <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5001</Reference>
-      <Reference ReferenceType="RealizedBy" IsForward="false">i=60101</Reference>
+      <Reference ReferenceType="Collects" IsForward="false">ns=6;i=60101</Reference>
     </References>
   </UAObject>
   <UAVariable NodeId="ns=1;i=5003" BrowseName="1:CompanionSpecificationUri" ParentNodeId="ns=1;i=5002" DataType="String">
@@ -73,11 +77,11 @@
   <UAObject NodeId="ns=1;i=5005" BrowseName="1:Metrics" ParentNodeId="ns=1;i=5002">
     <DisplayName>Metrics</DisplayName>
     <References>
-      <Reference ReferenceType="HasTypeDefinition">i=60011</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=6;i=60011</Reference>
       <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5002</Reference>
     </References>
   </UAObject>
-  <UAVariable NodeId="ns=1;i=5006" BrowseName="1:SignalKind" ParentNodeId="ns=1;i=5005" DataType="i=60052">
+  <UAVariable NodeId="ns=1;i=5006" BrowseName="1:SignalKind" ParentNodeId="ns=1;i=5005" DataType="ns=6;i=60052">
     <DisplayName>SignalKind</DisplayName>
     <References>
       <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
@@ -138,7 +142,7 @@
   <UAObject NodeId="ns=1;i=5014" BrowseName="1:AxisActualPosition" ParentNodeId="ns=1;i=5005">
     <DisplayName>AxisActualPosition</DisplayName>
     <References>
-      <Reference ReferenceType="HasTypeDefinition">i=60013</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=6;i=60013</Reference>
       <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5005</Reference>
       <Reference ReferenceType="BindsToNode">ns=1;i=5013</Reference>
     </References>
@@ -151,7 +155,7 @@
     </References>
     <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">AxisActualPosition</uax:String></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=5016" BrowseName="1:Kind" ParentNodeId="ns=1;i=5014" DataType="i=60051">
+  <UAVariable NodeId="ns=1;i=5016" BrowseName="1:Kind" ParentNodeId="ns=1;i=5014" DataType="ns=6;i=60051">
     <DisplayName>Kind</DisplayName>
     <References>
       <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
@@ -199,7 +203,7 @@
     </References>
     <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>a14cbdf4-a8c6-5d59-9ccb-464ebc68b9f4</uax:String></uax:Guid></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=5022" BrowseName="1:MetricInstrumentType" ParentNodeId="ns=1;i=5014" DataType="i=60053">
+  <UAVariable NodeId="ns=1;i=5022" BrowseName="1:MetricInstrumentType" ParentNodeId="ns=1;i=5014" DataType="ns=6;i=60053">
     <DisplayName>MetricInstrumentType</DisplayName>
     <References>
       <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
@@ -253,7 +257,7 @@
   <UAObject NodeId="ns=1;i=5029" BrowseName="1:MotorTemperature" ParentNodeId="ns=1;i=5005">
     <DisplayName>MotorTemperature</DisplayName>
     <References>
-      <Reference ReferenceType="HasTypeDefinition">i=60013</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=6;i=60013</Reference>
       <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5005</Reference>
       <Reference ReferenceType="BindsToNode">ns=1;i=5028</Reference>
     </References>
@@ -266,7 +270,7 @@
     </References>
     <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">MotorTemperature</uax:String></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=5031" BrowseName="1:Kind" ParentNodeId="ns=1;i=5029" DataType="i=60051">
+  <UAVariable NodeId="ns=1;i=5031" BrowseName="1:Kind" ParentNodeId="ns=1;i=5029" DataType="ns=6;i=60051">
     <DisplayName>Kind</DisplayName>
     <References>
       <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
@@ -314,7 +318,7 @@
     </References>
     <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>becc2379-e1ba-56ec-9374-4618865b9a47</uax:String></uax:Guid></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=5037" BrowseName="1:MetricInstrumentType" ParentNodeId="ns=1;i=5029" DataType="i=60053">
+  <UAVariable NodeId="ns=1;i=5037" BrowseName="1:MetricInstrumentType" ParentNodeId="ns=1;i=5029" DataType="ns=6;i=60053">
     <DisplayName>MetricInstrumentType</DisplayName>
     <References>
       <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
@@ -347,7 +351,7 @@
   <UAObject NodeId="ns=1;i=5041" BrowseName="1:SpeedOverride" ParentNodeId="ns=1;i=5005">
     <DisplayName>SpeedOverride</DisplayName>
     <References>
-      <Reference ReferenceType="HasTypeDefinition">i=60013</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=6;i=60013</Reference>
       <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5005</Reference>
       <Reference ReferenceType="BindsToNode">ns=1;i=5040</Reference>
     </References>
@@ -360,7 +364,7 @@
     </References>
     <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">SpeedOverride</uax:String></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=5043" BrowseName="1:Kind" ParentNodeId="ns=1;i=5041" DataType="i=60051">
+  <UAVariable NodeId="ns=1;i=5043" BrowseName="1:Kind" ParentNodeId="ns=1;i=5041" DataType="ns=6;i=60051">
     <DisplayName>Kind</DisplayName>
     <References>
       <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
@@ -408,7 +412,7 @@
     </References>
     <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>eb071352-4e9e-55c3-ae11-d1252d8e9656</uax:String></uax:Guid></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=5049" BrowseName="1:MetricInstrumentType" ParentNodeId="ns=1;i=5041" DataType="i=60053">
+  <UAVariable NodeId="ns=1;i=5049" BrowseName="1:MetricInstrumentType" ParentNodeId="ns=1;i=5041" DataType="ns=6;i=60053">
     <DisplayName>MetricInstrumentType</DisplayName>
     <References>
       <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
@@ -455,7 +459,7 @@
   <UAObject NodeId="ns=1;i=5055" BrowseName="1:ControllerTemperature" ParentNodeId="ns=1;i=5005">
     <DisplayName>ControllerTemperature</DisplayName>
     <References>
-      <Reference ReferenceType="HasTypeDefinition">i=60013</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=6;i=60013</Reference>
       <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5005</Reference>
       <Reference ReferenceType="BindsToNode">ns=1;i=5054</Reference>
     </References>
@@ -468,7 +472,7 @@
     </References>
     <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">ControllerTemperature</uax:String></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=5057" BrowseName="1:Kind" ParentNodeId="ns=1;i=5055" DataType="i=60051">
+  <UAVariable NodeId="ns=1;i=5057" BrowseName="1:Kind" ParentNodeId="ns=1;i=5055" DataType="ns=6;i=60051">
     <DisplayName>Kind</DisplayName>
     <References>
       <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
@@ -516,7 +520,7 @@
     </References>
     <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>4639799d-e161-595a-b1f2-27c990b0c2d1</uax:String></uax:Guid></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=5063" BrowseName="1:MetricInstrumentType" ParentNodeId="ns=1;i=5055" DataType="i=60053">
+  <UAVariable NodeId="ns=1;i=5063" BrowseName="1:MetricInstrumentType" ParentNodeId="ns=1;i=5055" DataType="ns=6;i=60053">
     <DisplayName>MetricInstrumentType</DisplayName>
     <References>
       <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
@@ -542,7 +546,7 @@
   <UAObject NodeId="ns=1;i=5066" BrowseName="1:CabinetFanSpeed" ParentNodeId="ns=1;i=5005">
     <DisplayName>CabinetFanSpeed</DisplayName>
     <References>
-      <Reference ReferenceType="HasTypeDefinition">i=60013</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=6;i=60013</Reference>
       <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5005</Reference>
       <Reference ReferenceType="BindsToNode">ns=1;i=5065</Reference>
     </References>
@@ -555,7 +559,7 @@
     </References>
     <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">CabinetFanSpeed</uax:String></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=5068" BrowseName="1:Kind" ParentNodeId="ns=1;i=5066" DataType="i=60051">
+  <UAVariable NodeId="ns=1;i=5068" BrowseName="1:Kind" ParentNodeId="ns=1;i=5066" DataType="ns=6;i=60051">
     <DisplayName>Kind</DisplayName>
     <References>
       <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
@@ -603,7 +607,7 @@
     </References>
     <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>7ffd33fd-b64d-5058-8f57-d70c7398e712</uax:String></uax:Guid></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=5074" BrowseName="1:MetricInstrumentType" ParentNodeId="ns=1;i=5066" DataType="i=60053">
+  <UAVariable NodeId="ns=1;i=5074" BrowseName="1:MetricInstrumentType" ParentNodeId="ns=1;i=5066" DataType="ns=6;i=60053">
     <DisplayName>MetricInstrumentType</DisplayName>
     <References>
       <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
@@ -629,7 +633,7 @@
   <UAObject NodeId="ns=1;i=5077" BrowseName="1:CPUFanSpeed" ParentNodeId="ns=1;i=5005">
     <DisplayName>CPUFanSpeed</DisplayName>
     <References>
-      <Reference ReferenceType="HasTypeDefinition">i=60013</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=6;i=60013</Reference>
       <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5005</Reference>
       <Reference ReferenceType="BindsToNode">ns=1;i=5076</Reference>
     </References>
@@ -642,7 +646,7 @@
     </References>
     <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">CPUFanSpeed</uax:String></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=5079" BrowseName="1:Kind" ParentNodeId="ns=1;i=5077" DataType="i=60051">
+  <UAVariable NodeId="ns=1;i=5079" BrowseName="1:Kind" ParentNodeId="ns=1;i=5077" DataType="ns=6;i=60051">
     <DisplayName>Kind</DisplayName>
     <References>
       <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
@@ -690,7 +694,7 @@
     </References>
     <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>a93f5d9e-fe22-56e4-afb6-08083859447a</uax:String></uax:Guid></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=5085" BrowseName="1:MetricInstrumentType" ParentNodeId="ns=1;i=5077" DataType="i=60053">
+  <UAVariable NodeId="ns=1;i=5085" BrowseName="1:MetricInstrumentType" ParentNodeId="ns=1;i=5077" DataType="ns=6;i=60053">
     <DisplayName>MetricInstrumentType</DisplayName>
     <References>
       <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
@@ -716,7 +720,7 @@
   <UAObject NodeId="ns=1;i=5088" BrowseName="1:TotalPowerOnTime" ParentNodeId="ns=1;i=5005">
     <DisplayName>TotalPowerOnTime</DisplayName>
     <References>
-      <Reference ReferenceType="HasTypeDefinition">i=60013</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=6;i=60013</Reference>
       <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5005</Reference>
       <Reference ReferenceType="BindsToNode">ns=1;i=5087</Reference>
     </References>
@@ -729,7 +733,7 @@
     </References>
     <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">TotalPowerOnTime</uax:String></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=5090" BrowseName="1:Kind" ParentNodeId="ns=1;i=5088" DataType="i=60051">
+  <UAVariable NodeId="ns=1;i=5090" BrowseName="1:Kind" ParentNodeId="ns=1;i=5088" DataType="ns=6;i=60051">
     <DisplayName>Kind</DisplayName>
     <References>
       <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
@@ -777,7 +781,7 @@
     </References>
     <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>4d3c6082-3a02-5ce0-ba51-50aa2b728ea0</uax:String></uax:Guid></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=5096" BrowseName="1:MetricInstrumentType" ParentNodeId="ns=1;i=5088" DataType="i=60053">
+  <UAVariable NodeId="ns=1;i=5096" BrowseName="1:MetricInstrumentType" ParentNodeId="ns=1;i=5088" DataType="ns=6;i=60053">
     <DisplayName>MetricInstrumentType</DisplayName>
     <References>
       <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
@@ -785,7 +789,7 @@
     </References>
     <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">0</uax:Int32></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=5097" BrowseName="1:MetricTemporality" ParentNodeId="ns=1;i=5088" DataType="i=60054">
+  <UAVariable NodeId="ns=1;i=5097" BrowseName="1:MetricTemporality" ParentNodeId="ns=1;i=5088" DataType="ns=6;i=60054">
     <DisplayName>MetricTemporality</DisplayName>
     <References>
       <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
@@ -811,7 +815,7 @@
   <UAObject NodeId="ns=1;i=5100" BrowseName="1:Manufacturer" ParentNodeId="ns=1;i=5005">
     <DisplayName>Manufacturer</DisplayName>
     <References>
-      <Reference ReferenceType="HasTypeDefinition">i=60013</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=6;i=60013</Reference>
       <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5005</Reference>
       <Reference ReferenceType="BindsToNode">ns=1;i=5099</Reference>
     </References>
@@ -824,7 +828,7 @@
     </References>
     <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">Manufacturer</uax:String></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=5102" BrowseName="1:Kind" ParentNodeId="ns=1;i=5100" DataType="i=60051">
+  <UAVariable NodeId="ns=1;i=5102" BrowseName="1:Kind" ParentNodeId="ns=1;i=5100" DataType="ns=6;i=60051">
     <DisplayName>Kind</DisplayName>
     <References>
       <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
@@ -882,7 +886,7 @@
   <UAObject NodeId="ns=1;i=5109" BrowseName="1:Model" ParentNodeId="ns=1;i=5005">
     <DisplayName>Model</DisplayName>
     <References>
-      <Reference ReferenceType="HasTypeDefinition">i=60013</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=6;i=60013</Reference>
       <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5005</Reference>
       <Reference ReferenceType="BindsToNode">ns=1;i=5108</Reference>
     </References>
@@ -895,7 +899,7 @@
     </References>
     <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">Model</uax:String></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=5111" BrowseName="1:Kind" ParentNodeId="ns=1;i=5109" DataType="i=60051">
+  <UAVariable NodeId="ns=1;i=5111" BrowseName="1:Kind" ParentNodeId="ns=1;i=5109" DataType="ns=6;i=60051">
     <DisplayName>Kind</DisplayName>
     <References>
       <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
@@ -953,7 +957,7 @@
   <UAObject NodeId="ns=1;i=5118" BrowseName="1:SerialNumber" ParentNodeId="ns=1;i=5005">
     <DisplayName>SerialNumber</DisplayName>
     <References>
-      <Reference ReferenceType="HasTypeDefinition">i=60013</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=6;i=60013</Reference>
       <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5005</Reference>
       <Reference ReferenceType="BindsToNode">ns=1;i=5117</Reference>
     </References>
@@ -966,7 +970,7 @@
     </References>
     <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">SerialNumber</uax:String></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=5120" BrowseName="1:Kind" ParentNodeId="ns=1;i=5118" DataType="i=60051">
+  <UAVariable NodeId="ns=1;i=5120" BrowseName="1:Kind" ParentNodeId="ns=1;i=5118" DataType="ns=6;i=60051">
     <DisplayName>Kind</DisplayName>
     <References>
       <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
@@ -1024,7 +1028,7 @@
   <UAObject NodeId="ns=1;i=5127" BrowseName="1:ProductInstanceUri" ParentNodeId="ns=1;i=5005">
     <DisplayName>ProductInstanceUri</DisplayName>
     <References>
-      <Reference ReferenceType="HasTypeDefinition">i=60013</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=6;i=60013</Reference>
       <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5005</Reference>
       <Reference ReferenceType="BindsToNode">ns=1;i=5126</Reference>
     </References>
@@ -1037,7 +1041,7 @@
     </References>
     <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">ProductInstanceUri</uax:String></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=5129" BrowseName="1:Kind" ParentNodeId="ns=1;i=5127" DataType="i=60051">
+  <UAVariable NodeId="ns=1;i=5129" BrowseName="1:Kind" ParentNodeId="ns=1;i=5127" DataType="ns=6;i=60051">
     <DisplayName>Kind</DisplayName>
     <References>
       <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
@@ -1088,7 +1092,7 @@
   <UAObject NodeId="ns=1;i=5135" BrowseName="1:service.name" ParentNodeId="ns=1;i=5005">
     <DisplayName>service.name</DisplayName>
     <References>
-      <Reference ReferenceType="HasTypeDefinition">i=60013</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=6;i=60013</Reference>
       <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5005</Reference>
     </References>
   </UAObject>
@@ -1100,7 +1104,7 @@
     </References>
     <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">service.name</uax:String></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=5137" BrowseName="1:Kind" ParentNodeId="ns=1;i=5135" DataType="i=60051">
+  <UAVariable NodeId="ns=1;i=5137" BrowseName="1:Kind" ParentNodeId="ns=1;i=5135" DataType="ns=6;i=60051">
     <DisplayName>Kind</DisplayName>
     <References>
       <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
@@ -1127,11 +1131,11 @@
   <UAObject NodeId="ns=1;i=5140" BrowseName="1:Logs" ParentNodeId="ns=1;i=5002">
     <DisplayName>Logs</DisplayName>
     <References>
-      <Reference ReferenceType="HasTypeDefinition">i=60011</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=6;i=60011</Reference>
       <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5002</Reference>
     </References>
   </UAObject>
-  <UAVariable NodeId="ns=1;i=5141" BrowseName="1:SignalKind" ParentNodeId="ns=1;i=5140" DataType="i=60052">
+  <UAVariable NodeId="ns=1;i=5141" BrowseName="1:SignalKind" ParentNodeId="ns=1;i=5140" DataType="ns=6;i=60052">
     <DisplayName>SignalKind</DisplayName>
     <References>
       <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
@@ -1182,7 +1186,7 @@
   <UAObject NodeId="ns=1;i=5147" BrowseName="1:EventId" ParentNodeId="ns=1;i=5140">
     <DisplayName>EventId</DisplayName>
     <References>
-      <Reference ReferenceType="HasTypeDefinition">i=60017</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=6;i=60017</Reference>
       <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5140</Reference>
     </References>
   </UAObject>
@@ -1194,7 +1198,7 @@
     </References>
     <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">EventId</uax:String></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=5149" BrowseName="1:Kind" ParentNodeId="ns=1;i=5147" DataType="i=60051">
+  <UAVariable NodeId="ns=1;i=5149" BrowseName="1:Kind" ParentNodeId="ns=1;i=5147" DataType="ns=6;i=60051">
     <DisplayName>Kind</DisplayName>
     <References>
       <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
@@ -1245,7 +1249,7 @@
   <UAObject NodeId="ns=1;i=5155" BrowseName="1:EventType" ParentNodeId="ns=1;i=5140">
     <DisplayName>EventType</DisplayName>
     <References>
-      <Reference ReferenceType="HasTypeDefinition">i=60017</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=6;i=60017</Reference>
       <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5140</Reference>
     </References>
   </UAObject>
@@ -1257,7 +1261,7 @@
     </References>
     <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">EventType</uax:String></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=5157" BrowseName="1:Kind" ParentNodeId="ns=1;i=5155" DataType="i=60051">
+  <UAVariable NodeId="ns=1;i=5157" BrowseName="1:Kind" ParentNodeId="ns=1;i=5155" DataType="ns=6;i=60051">
     <DisplayName>Kind</DisplayName>
     <References>
       <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
@@ -1308,7 +1312,7 @@
   <UAObject NodeId="ns=1;i=5163" BrowseName="1:SourceName" ParentNodeId="ns=1;i=5140">
     <DisplayName>SourceName</DisplayName>
     <References>
-      <Reference ReferenceType="HasTypeDefinition">i=60017</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=6;i=60017</Reference>
       <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5140</Reference>
     </References>
   </UAObject>
@@ -1320,7 +1324,7 @@
     </References>
     <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">SourceName</uax:String></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=5165" BrowseName="1:Kind" ParentNodeId="ns=1;i=5163" DataType="i=60051">
+  <UAVariable NodeId="ns=1;i=5165" BrowseName="1:Kind" ParentNodeId="ns=1;i=5163" DataType="ns=6;i=60051">
     <DisplayName>Kind</DisplayName>
     <References>
       <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
@@ -1371,7 +1375,7 @@
   <UAObject NodeId="ns=1;i=5171" BrowseName="1:Time" ParentNodeId="ns=1;i=5140">
     <DisplayName>Time</DisplayName>
     <References>
-      <Reference ReferenceType="HasTypeDefinition">i=60017</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=6;i=60017</Reference>
       <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5140</Reference>
     </References>
   </UAObject>
@@ -1383,7 +1387,7 @@
     </References>
     <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">Time</uax:String></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=5173" BrowseName="1:Kind" ParentNodeId="ns=1;i=5171" DataType="i=60051">
+  <UAVariable NodeId="ns=1;i=5173" BrowseName="1:Kind" ParentNodeId="ns=1;i=5171" DataType="ns=6;i=60051">
     <DisplayName>Kind</DisplayName>
     <References>
       <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
@@ -1434,7 +1438,7 @@
   <UAObject NodeId="ns=1;i=5179" BrowseName="1:Severity" ParentNodeId="ns=1;i=5140">
     <DisplayName>Severity</DisplayName>
     <References>
-      <Reference ReferenceType="HasTypeDefinition">i=60017</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=6;i=60017</Reference>
       <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5140</Reference>
     </References>
   </UAObject>
@@ -1446,7 +1450,7 @@
     </References>
     <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">Severity</uax:String></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=5181" BrowseName="1:Kind" ParentNodeId="ns=1;i=5179" DataType="i=60051">
+  <UAVariable NodeId="ns=1;i=5181" BrowseName="1:Kind" ParentNodeId="ns=1;i=5179" DataType="ns=6;i=60051">
     <DisplayName>Kind</DisplayName>
     <References>
       <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
@@ -1497,7 +1501,7 @@
   <UAObject NodeId="ns=1;i=5187" BrowseName="1:Message" ParentNodeId="ns=1;i=5140">
     <DisplayName>Message</DisplayName>
     <References>
-      <Reference ReferenceType="HasTypeDefinition">i=60017</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=6;i=60017</Reference>
       <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5140</Reference>
     </References>
   </UAObject>
@@ -1509,7 +1513,7 @@
     </References>
     <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">Message</uax:String></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=5189" BrowseName="1:Kind" ParentNodeId="ns=1;i=5187" DataType="i=60051">
+  <UAVariable NodeId="ns=1;i=5189" BrowseName="1:Kind" ParentNodeId="ns=1;i=5187" DataType="ns=6;i=60051">
     <DisplayName>Kind</DisplayName>
     <References>
       <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
@@ -1560,7 +1564,7 @@
   <UAObject NodeId="ns=1;i=5195" BrowseName="1:service.name" ParentNodeId="ns=1;i=5140">
     <DisplayName>service.name</DisplayName>
     <References>
-      <Reference ReferenceType="HasTypeDefinition">i=60013</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=6;i=60013</Reference>
       <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5140</Reference>
     </References>
   </UAObject>
@@ -1572,7 +1576,7 @@
     </References>
     <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">service.name</uax:String></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=5197" BrowseName="1:Kind" ParentNodeId="ns=1;i=5195" DataType="i=60051">
+  <UAVariable NodeId="ns=1;i=5197" BrowseName="1:Kind" ParentNodeId="ns=1;i=5195" DataType="ns=6;i=60051">
     <DisplayName>Kind</DisplayName>
     <References>
       <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
@@ -1599,11 +1603,11 @@
   <UAObject NodeId="ns=1;i=5200" BrowseName="1:Traces" ParentNodeId="ns=1;i=5002">
     <DisplayName>Traces</DisplayName>
     <References>
-      <Reference ReferenceType="HasTypeDefinition">i=60011</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=6;i=60011</Reference>
       <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5002</Reference>
     </References>
   </UAObject>
-  <UAVariable NodeId="ns=1;i=5201" BrowseName="1:SignalKind" ParentNodeId="ns=1;i=5200" DataType="i=60052">
+  <UAVariable NodeId="ns=1;i=5201" BrowseName="1:SignalKind" ParentNodeId="ns=1;i=5200" DataType="ns=6;i=60052">
     <DisplayName>SignalKind</DisplayName>
     <References>
       <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
@@ -1662,7 +1666,7 @@
   <UAObject NodeId="ns=1;i=5208" BrowseName="1:EventId" ParentNodeId="ns=1;i=5200">
     <DisplayName>EventId</DisplayName>
     <References>
-      <Reference ReferenceType="HasTypeDefinition">i=60017</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=6;i=60017</Reference>
       <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5200</Reference>
     </References>
   </UAObject>
@@ -1674,7 +1678,7 @@
     </References>
     <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">EventId</uax:String></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=5210" BrowseName="1:Kind" ParentNodeId="ns=1;i=5208" DataType="i=60051">
+  <UAVariable NodeId="ns=1;i=5210" BrowseName="1:Kind" ParentNodeId="ns=1;i=5208" DataType="ns=6;i=60051">
     <DisplayName>Kind</DisplayName>
     <References>
       <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
@@ -1725,7 +1729,7 @@
   <UAObject NodeId="ns=1;i=5216" BrowseName="1:SourceName" ParentNodeId="ns=1;i=5200">
     <DisplayName>SourceName</DisplayName>
     <References>
-      <Reference ReferenceType="HasTypeDefinition">i=60017</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=6;i=60017</Reference>
       <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5200</Reference>
     </References>
   </UAObject>
@@ -1737,7 +1741,7 @@
     </References>
     <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">SourceName</uax:String></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=5218" BrowseName="1:Kind" ParentNodeId="ns=1;i=5216" DataType="i=60051">
+  <UAVariable NodeId="ns=1;i=5218" BrowseName="1:Kind" ParentNodeId="ns=1;i=5216" DataType="ns=6;i=60051">
     <DisplayName>Kind</DisplayName>
     <References>
       <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
@@ -1788,7 +1792,7 @@
   <UAObject NodeId="ns=1;i=5224" BrowseName="1:Time" ParentNodeId="ns=1;i=5200">
     <DisplayName>Time</DisplayName>
     <References>
-      <Reference ReferenceType="HasTypeDefinition">i=60017</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=6;i=60017</Reference>
       <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5200</Reference>
     </References>
   </UAObject>
@@ -1800,7 +1804,7 @@
     </References>
     <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">Time</uax:String></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=5226" BrowseName="1:Kind" ParentNodeId="ns=1;i=5224" DataType="i=60051">
+  <UAVariable NodeId="ns=1;i=5226" BrowseName="1:Kind" ParentNodeId="ns=1;i=5224" DataType="ns=6;i=60051">
     <DisplayName>Kind</DisplayName>
     <References>
       <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
@@ -1851,7 +1855,7 @@
   <UAObject NodeId="ns=1;i=5232" BrowseName="1:Severity" ParentNodeId="ns=1;i=5200">
     <DisplayName>Severity</DisplayName>
     <References>
-      <Reference ReferenceType="HasTypeDefinition">i=60017</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=6;i=60017</Reference>
       <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5200</Reference>
     </References>
   </UAObject>
@@ -1863,7 +1867,7 @@
     </References>
     <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">Severity</uax:String></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=5234" BrowseName="1:Kind" ParentNodeId="ns=1;i=5232" DataType="i=60051">
+  <UAVariable NodeId="ns=1;i=5234" BrowseName="1:Kind" ParentNodeId="ns=1;i=5232" DataType="ns=6;i=60051">
     <DisplayName>Kind</DisplayName>
     <References>
       <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
@@ -1914,7 +1918,7 @@
   <UAObject NodeId="ns=1;i=5240" BrowseName="1:Message" ParentNodeId="ns=1;i=5200">
     <DisplayName>Message</DisplayName>
     <References>
-      <Reference ReferenceType="HasTypeDefinition">i=60017</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=6;i=60017</Reference>
       <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5200</Reference>
     </References>
   </UAObject>
@@ -1926,7 +1930,7 @@
     </References>
     <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">Message</uax:String></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=5242" BrowseName="1:Kind" ParentNodeId="ns=1;i=5240" DataType="i=60051">
+  <UAVariable NodeId="ns=1;i=5242" BrowseName="1:Kind" ParentNodeId="ns=1;i=5240" DataType="ns=6;i=60051">
     <DisplayName>Kind</DisplayName>
     <References>
       <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>
@@ -1977,7 +1981,7 @@
   <UAObject NodeId="ns=1;i=5248" BrowseName="1:service.name" ParentNodeId="ns=1;i=5200">
     <DisplayName>service.name</DisplayName>
     <References>
-      <Reference ReferenceType="HasTypeDefinition">i=60013</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=6;i=60013</Reference>
       <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5200</Reference>
     </References>
   </UAObject>
@@ -1989,7 +1993,7 @@
     </References>
     <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">service.name</uax:String></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=5250" BrowseName="1:Kind" ParentNodeId="ns=1;i=5248" DataType="i=60051">
+  <UAVariable NodeId="ns=1;i=5250" BrowseName="1:Kind" ParentNodeId="ns=1;i=5248" DataType="ns=6;i=60051">
     <DisplayName>Kind</DisplayName>
     <References>
       <Reference ReferenceType="HasTypeDefinition">PropertyType</Reference>

@@ -16,7 +16,7 @@ This addendum defines example **observability export bindings** for `IVendorName
 
 ## 3 How the bindings are applied
 
-The machine-readable descriptor [`DI.ObservabilityExport.json`](../../extras/observability-export/examples/di/DI.ObservabilityExport.json) lists each bound item as a `BrowsePath` from `IVendorNameplateType`, with its observability `Kind` and OTEL `SignalKind`. The generated overlay [`Opc.Ua.DI.ObservabilityExport.NodeSet2.xml`](Opc.Ua.DI.ObservabilityExport.NodeSet2.xml) instantiates a compact `ExampleDeviceNameplate` object, applies `IObservableType`, and exposes an `ObservabilityBindingGroup` that realizes the server-wide `Observability` registry.
+The machine-readable descriptor [`DI.ObservabilityExport.json`](../../extras/observability-export/examples/di/DI.ObservabilityExport.json) lists each bound item as a `BrowsePath` from `IVendorNameplateType`, with its observability `Kind` and OTEL `SignalKind`. The generated overlay [`Opc.Ua.DI.ObservabilityExport.NodeSet2.xml`](Opc.Ua.DI.ObservabilityExport.NodeSet2.xml) instantiates a compact `ExampleDeviceNameplate` object, applies `IObservableType`, and exposes an `ObservabilityBindingGroup` collected by (`CollectedBy`) the server-wide `Observability` registry.
 
 > **Theoretical instance model.** A compact instance implementing IVendorNameplateType. A pump's Identification object composes the same DI facet, so the Pumps metrics binding extends this one.
 
@@ -46,7 +46,7 @@ Overview of the observability bindings and their placement on the theoretical in
 graph LR
   ROOT["ExampleDeviceNameplate : IVendorNameplateType"]
   ROOT --> G["DI<br/>ObservabilityBindingGroup"]
-  G -.Realizes.-> O["Observability registry i=60101"]
+  G -.CollectedBy.-> O["Observability registry i=60101"]
   G --> S0["Metrics<br/>Metrics"]
   S0 --> S0_0["Manufacturer : Identification"]
   S0 --> S0_1["Model : Identification"]
@@ -59,7 +59,7 @@ graph TD
   R["ExampleDeviceNameplate : IVendorNameplateType"]
   R -->|HasInterface| I([IObservableType])
   R -->|HasComponent| G["DI : ObservabilityBindingGroupType"]
-  G -.Realizes.-> O["Observability : ObservabilityFolderType"]
+  G -.CollectedBy.-> O["Observability : ObservabilityFolderType"]
   G -->|HasComponent| B0["Metrics : ObservabilityBindingType<br/>Metrics"]
   B0 -->|HasComponent| IT00["Manufacturer : BoundVariableType"]
   IT00 -->|BindsToNode| N00["Manufacturer"]

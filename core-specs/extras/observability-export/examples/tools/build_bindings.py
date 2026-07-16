@@ -21,7 +21,8 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 FIELD_ID_NS = uuid.uuid5(uuid.NAMESPACE_URL,
                          "http://opcfoundation.org/UA/ObservabilityExport/Examples/FieldId")
 
-# --- base-namespace (ns0) Observability Export provisional ids -----------
+# --- Observability Export model namespace provisional ids -----------------
+OBS_NS = "http://opcfoundation.org/UA/ObservabilityExport/"
 BIND = {
     "ObservabilityFolderType": 60010, "ObservabilityBindingType": 60011,
     "BoundItemType": 60012, "BoundVariableType": 60013,
@@ -29,8 +30,9 @@ BIND = {
     "ObservabilityBindingGroupType": 60018,
     "BoundItemKindEnum": 60051, "ObservabilitySignalKindEnum": 60052,
     "MetricInstrumentTypeEnum": 60053, "MetricTemporalityEnum": 60054,
-    "BindsToNode": 60001, "ObservabilityRealizedBy": 60002,
-    "HasBaseBinding": 60003, "RealizedBy": 60004,
+    "BindsToNode": 60001, "ExportedBy": 60002,
+    "HasBaseBinding": 60003, "Collects": 60004,
+    "Observability": 60101,
 }
 KIND = {"Telemetry": 0, "Status": 1, "Metric": 2, "Counter": 3,
         "Event": 4, "Dimension": 5, "Identification": 6, "Other": 7}
@@ -61,8 +63,6 @@ def dataset_class_id(descriptor, sb):
 ALIASES = {
     "HasComponent": "i=47", "HasProperty": "i=46", "HasTypeDefinition": "i=40",
     "HasInterface": "i=17603", "Organizes": "i=35",
-    "BindsToNode": f"i={BIND['BindsToNode']}",
-    "RealizedBy": "i=60004",
     "String": "i=12", "Int32": "i=6", "QualifiedName": "i=20", "NodeId": "i=17",
     "Guid": "i=14", "BaseDataVariableType": "i=63", "PropertyType": "i=68",
     "BaseObjectType": "i=58", "FolderType": "i=61", "SimpleAttributeOperand": "i=601",
@@ -172,6 +172,9 @@ class Emitter:
         for i, m in enumerate(descriptor["requiredModels"], start=2):
             self.nsmap[m["uri"]] = i
             self.file_uris.append(m["uri"])
+        self.obs_ns = len(self.file_uris) + 1
+        self.nsmap[OBS_NS] = self.obs_ns
+        self.file_uris.append(OBS_NS)
         self.signal_nodes = {}   # names-tuple -> nodeid(int, example ns)
 
     def nid(self):
@@ -180,6 +183,9 @@ class Emitter:
 
     def ex(self, i):
         return f"ns=1;i={i}"
+
+    def b(self, key):
+        return f"ns={self.obs_ns};i={BIND[key]}"
 
     def qn(self, uri, name):
         return f'{self.nsmap[uri]}:{name}'
@@ -281,16 +287,16 @@ class Emitter:
                         f'{d["appliesToType"]} carrying example observability bindings. Only the '
                         f'bound signals are shown; not a conformant full instance.</Description>')
         self._refs([("HasTypeDefinition", type_ref, True),
-                    ("HasInterface", f'i={BIND["IObservableType"]}', True),
+                    ("HasInterface", self.b("IObservableType"), True),
                     ("HasComponent", self.ex(group_id), True)])
         self.out.append("  </UAObject>")
 
         self.group_id = group_id
         self._open("UAObject", group_id, f"1:{group_bn}", self.ex(self.root_id))
         self.out.append(f"    <DisplayName>{sx.escape(group_bn)}</DisplayName>")
-        self._refs([("HasTypeDefinition", f'i={BIND["ObservabilityBindingGroupType"]}', True),
+        self._refs([("HasTypeDefinition", self.b("ObservabilityBindingGroupType"), True),
                     ("HasComponent", self.ex(self.root_id), False),
-                    ("RealizedBy", "i=60101", False)])
+                    ("Collects", self.b("Observability"), False)])
         self.out.append("  </UAObject>")
         self.prop(self.nid(), "CompanionSpecificationUri", "String",
                   f'<uax:String {U}>{sx.escape(cs_uri)}</uax:String>', group_id)
@@ -306,11 +312,11 @@ class Emitter:
         U = 'xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"'
         self._open("UAObject", bid, f"1:{name}", self.ex(self.group_id))
         self.out.append(f"    <DisplayName>{name}</DisplayName>")
-        self._refs([("HasTypeDefinition", f'i={BIND["ObservabilityBindingType"]}', True),
+        self._refs([("HasTypeDefinition", self.b("ObservabilityBindingType"), True),
                     ("HasComponent", self.ex(self.group_id), False)])
         self.out.append("  </UAObject>")
         sig = sb.get("signalKind", "Metrics")
-        self.prop(self.nid(), "SignalKind", f'i={BIND["ObservabilitySignalKindEnum"]}',
+        self.prop(self.nid(), "SignalKind", self.b("ObservabilitySignalKindEnum"),
                   f'<uax:Int32 {U}>{SIGNAL_KIND[sig]}</uax:Int32>', bid)
         dscid = dataset_class_id(self.d, sb)
         sb["_dataSetClassId"] = str(dscid)
@@ -431,12 +437,12 @@ class Emitter:
         U = 'xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"'
         self._open("UAObject", iid, f"1:{fn}", self.ex(binding_id))
         self.out.append(f"    <DisplayName>{sx.escape(fn)}</DisplayName>")
-        self._refs([("HasTypeDefinition", f'i={BIND["BoundEventFieldType"]}', True),
+        self._refs([("HasTypeDefinition", self.b("BoundEventFieldType"), True),
                     ("HasComponent", self.ex(binding_id), False)])
         self.out.append("  </UAObject>")
         self.prop(self.nid(), "FieldName", "String",
                   f'<uax:String {U}>{sx.escape(fn)}</uax:String>', iid)
-        self.prop(self.nid(), "Kind", f'i={BIND["BoundItemKindEnum"]}',
+        self.prop(self.nid(), "Kind", self.b("BoundItemKindEnum"),
                   f'<uax:Int32 {U}>{KIND["Event"]}</uax:Int32>', iid)
         self.prop(self.nid(), "ModelNamespaceUri", "String",
                   f'<uax:String {U}>{UA}</uax:String>', iid)
@@ -472,11 +478,10 @@ class Emitter:
         iid = self.nid()
         if rec["cls"] == "UAMethod":
             raise SystemExit(f"{sb['name']}/{it.get('fieldName', it.get('browsePath'))}: Methods/actions are not part of Observability Export")
-        td = BIND["BoundVariableType"]
         fn = it["fieldName"]
         self._open("UAObject", iid, f"1:{fn}", self.ex(binding_id))
         self.out.append(f"    <DisplayName>{sx.escape(fn)}</DisplayName>")
-        self._refs([("HasTypeDefinition", f'i={td}', True),
+        self._refs([("HasTypeDefinition", self.b("BoundVariableType"), True),
                     ("HasComponent", self.ex(binding_id), False),
                     ("BindsToNode", self.ex(signal), True)])
         self.out.append("  </UAObject>")
@@ -485,7 +490,7 @@ class Emitter:
         self.prop(self.nid(), "FieldName", "String",
                   f'<uax:String {U}>{sx.escape(fn)}</uax:String>', iid)
         # Kind
-        self.prop(self.nid(), "Kind", f'i={BIND["BoundItemKindEnum"]}',
+        self.prop(self.nid(), "Kind", self.b("BoundItemKindEnum"),
                   f'<uax:Int32 {U}>{KIND[it["kind"]]}</uax:Int32>', iid)
         # BrowsePath: the RECOMMENDED type-level locator (RelativePath from the bound root),
         # placeholders preserved, so a browse-only consumer can reconstruct the placeholder
@@ -528,7 +533,7 @@ class Emitter:
     def _emit_metric_props(self, iid, it, U):
         mi = it.get("metricInstrumentType")
         if mi:
-            self.prop(self.nid(), "MetricInstrumentType", f'i={BIND["MetricInstrumentTypeEnum"]}',
+            self.prop(self.nid(), "MetricInstrumentType", self.b("MetricInstrumentTypeEnum"),
                       f'<uax:Int32 {U}>{INSTRUMENT[mi]}</uax:Int32>', iid)
         unit = it.get("unit")
         if unit:
@@ -541,7 +546,7 @@ class Emitter:
                       f'<uax:ListOfDouble {U}>{lst}</uax:ListOfDouble>', iid, valuerank=1)
         temp = it.get("metricTemporality")
         if temp:
-            self.prop(self.nid(), "MetricTemporality", f'i={BIND["MetricTemporalityEnum"]}',
+            self.prop(self.nid(), "MetricTemporality", self.b("MetricTemporalityEnum"),
                       f'<uax:Int32 {U}>{TEMPORALITY[temp]}</uax:Int32>', iid)
         mono = it.get("monotonic")
         if mono is not None:
@@ -556,12 +561,12 @@ class Emitter:
         U = 'xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"'
         self._open("UAObject", iid, f"1:{fn}", self.ex(binding_id))
         self.out.append(f"    <DisplayName>{sx.escape(fn)}</DisplayName>")
-        self._refs([("HasTypeDefinition", f'i={BIND["BoundVariableType"]}', True),
+        self._refs([("HasTypeDefinition", self.b("BoundVariableType"), True),
                     ("HasComponent", self.ex(binding_id), False)])
         self.out.append("  </UAObject>")
         self.prop(self.nid(), "FieldName", "String",
                   f'<uax:String {U}>{sx.escape(fn)}</uax:String>', iid)
-        self.prop(self.nid(), "Kind", f'i={BIND["BoundItemKindEnum"]}',
+        self.prop(self.nid(), "Kind", self.b("BoundItemKindEnum"),
                   f'<uax:Int32 {U}>{KIND["Dimension"]}</uax:Int32>', iid)
         self.prop(self.nid(), "DimensionConstantValue", "String",
                   f'<uax:String {U}>{sx.escape(str(it["dimensionConstantValue"]))}</uax:String>', iid)
@@ -584,11 +589,14 @@ class Emitter:
                       f'PublicationDate="2026-07-01T00:00:00Z">')
         for m in self.d["requiredModels"]:
             header.append(f'      <RequiredModel ModelUri="{m["uri"]}"/>')
+        header.append(f'      <RequiredModel ModelUri="{OBS_NS}"/>')
         header.append("    </Model>")
         header.append("  </Models>")
         header.append("  <Aliases>")
         for a, v in ALIASES.items():
             header.append(f'    <Alias Alias="{a}">{v}</Alias>')
+        for a in ("BindsToNode", "ExportedBy", "HasBaseBinding", "Collects"):
+            header.append(f'    <Alias Alias="{a}">{self.b(a)}</Alias>')
         header.append("  </Aliases>")
         return "\n".join(header + self.out + ["</UANodeSet>"]) + "\n"
 
@@ -740,7 +748,7 @@ def emit_addendum(descriptor, db, base_names, spec_folder, desc_base):
     A("")
     A("## 3 How the bindings are applied")
     A("")
-    A(f"The machine-readable descriptor [`{desc_base}`]({desc_rel}) lists each bound item as a `BrowsePath` from `{d['appliesToType']}`, with its observability `Kind` and OTEL `SignalKind`. The generated overlay [`Opc.Ua.{d['domain']}.ObservabilityExport.NodeSet2.xml`](Opc.Ua.{d['domain']}.ObservabilityExport.NodeSet2.xml) instantiates a compact `{d['instanceName']}` object, applies `IObservableType`, and exposes an `ObservabilityBindingGroup` that realizes the server-wide `Observability` registry.")
+    A(f"The machine-readable descriptor [`{desc_base}`]({desc_rel}) lists each bound item as a `BrowsePath` from `{d['appliesToType']}`, with its observability `Kind` and OTEL `SignalKind`. The generated overlay [`Opc.Ua.{d['domain']}.ObservabilityExport.NodeSet2.xml`](Opc.Ua.{d['domain']}.ObservabilityExport.NodeSet2.xml) instantiates a compact `{d['instanceName']}` object, applies `IObservableType`, and exposes an `ObservabilityBindingGroup` collected by (`CollectedBy`) the server-wide `Observability` registry.")
     if im.get("note"):
         A("")
         A(f"> **Theoretical instance model.** {im['note']}" + (f" See [{im.get('refName', 'instance example')}]({im['ref']})." if im.get("ref") else ""))
@@ -881,7 +889,7 @@ def emit_diagrams(descriptor):
     ov = ["```mermaid", "graph LR",
           f'  ROOT["{d["instanceName"]} : {d["appliesToType"]}"]',
           f'  ROOT --> G["{d.get("groupName", d["domain"])}<br/>ObservabilityBindingGroup"]',
-          '  G -.Realizes.-> O["Observability registry i=60101"]']
+          '  G -.CollectedBy.-> O["Observability registry i=60101"]']
     for i, sb in enumerate(bindings(d)):
         sig = sb.get("signalKind", "Metrics")
         ov.append(f'  G --> S{i}["{sb["name"]}<br/>{sig}"]')
@@ -892,7 +900,7 @@ def emit_diagrams(descriptor):
             f'  R["{d["instanceName"]} : {d["appliesToType"]}"]',
             "  R -->|HasInterface| I([IObservableType])",
             f'  R -->|HasComponent| G["{d.get("groupName", d["domain"])} : ObservabilityBindingGroupType"]',
-            '  G -.Realizes.-> O["Observability : ObservabilityFolderType"]']
+            '  G -.CollectedBy.-> O["Observability : ObservabilityFolderType"]']
     for i, sb in enumerate(bindings(d)[:3]):
         sig = sb.get("signalKind", "Metrics")
         inst.append(f'  G -->|HasComponent| B{i}["{sb["name"]} : ObservabilityBindingType<br/>{sig}"]')

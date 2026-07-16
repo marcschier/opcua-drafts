@@ -16,7 +16,7 @@ This addendum defines example **observability export bindings** for `MotionDevic
 
 ## 3 How the bindings are applied
 
-The machine-readable descriptor [`Robotics.ObservabilityExport.json`](../../extras/observability-export/examples/robotics/Robotics.ObservabilityExport.json) lists each bound item as a `BrowsePath` from `MotionDeviceSystemType`, with its observability `Kind` and OTEL `SignalKind`. The generated overlay [`Opc.Ua.Robotics.ObservabilityExport.NodeSet2.xml`](Opc.Ua.Robotics.ObservabilityExport.NodeSet2.xml) instantiates a compact `ExampleRobotSystem` object, applies `IObservableType`, and exposes an `ObservabilityBindingGroup` that realizes the server-wide `Observability` registry.
+The machine-readable descriptor [`Robotics.ObservabilityExport.json`](../../extras/observability-export/examples/robotics/Robotics.ObservabilityExport.json) lists each bound item as a `BrowsePath` from `MotionDeviceSystemType`, with its observability `Kind` and OTEL `SignalKind`. The generated overlay [`Opc.Ua.Robotics.ObservabilityExport.NodeSet2.xml`](Opc.Ua.Robotics.ObservabilityExport.NodeSet2.xml) instantiates a compact `ExampleRobotSystem` object, applies `IObservableType`, and exposes an `ObservabilityBindingGroup` collected by (`CollectedBy`) the server-wide `Observability` registry.
 
 > **Theoretical instance model.** Robotics publishes no public instance example, so a compact theoretical MotionDeviceSystem is synthesised with one MotionDevice, one Axis, one PowerTrain/Motor, one Controller and one SafetyState. Placeholder path segments remain in type-level BrowsePaths.
 
@@ -85,7 +85,7 @@ Overview of the observability bindings and their placement on the theoretical in
 graph LR
   ROOT["ExampleRobotSystem : MotionDeviceSystemType"]
   ROOT --> G["Robotics<br/>ObservabilityBindingGroup"]
-  G -.Realizes.-> O["Observability registry i=60101"]
+  G -.CollectedBy.-> O["Observability registry i=60101"]
   G --> S0["Metrics<br/>Metrics"]
   S0 --> S0_0["AxisActualPosition : Telemetry"]
   S0 --> S0_1["MotorTemperature : Telemetry"]
@@ -114,7 +114,7 @@ graph TD
   R["ExampleRobotSystem : MotionDeviceSystemType"]
   R -->|HasInterface| I([IObservableType])
   R -->|HasComponent| G["Robotics : ObservabilityBindingGroupType"]
-  G -.Realizes.-> O["Observability : ObservabilityFolderType"]
+  G -.CollectedBy.-> O["Observability : ObservabilityFolderType"]
   G -->|HasComponent| B0["Metrics : ObservabilityBindingType<br/>Metrics"]
   B0 -->|HasComponent| IT00["AxisActualPosition : BoundVariableType"]
   IT00 -->|BindsToNode| N00["MotionDevices/MotionDevice_1/Axes/Axis_1/ParameterSet/ActualPosition"]

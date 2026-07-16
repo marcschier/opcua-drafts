@@ -7,12 +7,12 @@ Emits, from a single in-code source of truth:
   * Opc.Ua.ObservabilityExport.NodeIds.csv   - the NodeId assignments
   * model-reference.md                       - the generated Annex A (node reference)
 
-The model is a proposed addition to the OPC UA BASE namespace
-(http://opcfoundation.org/UA/, namespace index 0). All nodes therefore use plain
-`i=<n>` NodeIds. NodeIds are PROVISIONAL and drawn from a currently-free block
-(60000+); the final NodeIds are assigned by the OPC Foundation. The model builds
-on the Part 14 PubSub types (which are themselves in the base namespace), so there
-are no cross-namespace references.
+The model is a COMPANION SPECIFICATION in its OWN namespace
+(http://opcfoundation.org/UA/ObservabilityExport/, namespace index 1). Its own nodes
+are emitted as `ns=1;i=<n>`; references to base OPC UA nodes (BaseObjectType, the
+Server object, the Part 14 PubSub types, base DataTypes) stay `i=<n>` (namespace 0),
+which the NodeSet declares as a <RequiredModel>. NodeIds are draft numeric identifiers
+in the 60000+ block within this specification's namespace.
 """
 from __future__ import annotations
 import os
@@ -339,14 +339,14 @@ reference_type(60001, "BindsToNode", NonHierarchicalReferences, "IsBoundBy",
                "target is the authoritative semantic node; the BoundItem does not copy its "
                "meaning.",
                CAT)
-reference_type(60002, "ObservabilityRealizedBy", NonHierarchicalReferences,
-               "RealizesObservability",
+reference_type(60002, "ExportedBy", NonHierarchicalReferences,
+               "Exports",
                "Links an ObservabilityBinding to the optional OPC UA Part 14 PubSub node(s) that "
-               "realize it (a PublishedDataSet, DataSetWriter or DataSetReader). Forward "
-               "'ObservabilityRealizedBy' reads binding -> realization; the inverse "
-               "'RealizesObservability' reads realization -> binding. Absent (and never required) "
-               "when the binding is not realized over PubSub - a Server may instead serve the "
-               "binding over the classic client/server (RPC) interface.",
+               "export it (a PublishedDataSet, DataSetWriter or DataSetReader) - the concrete OTEL "
+               "exporter for the binding's signal. Forward 'ExportedBy' reads binding -> exporter; "
+               "the inverse 'Exports' reads exporter -> binding. Absent (and never required) when "
+               "the binding is not exported over PubSub - a Server may instead serve the binding "
+               "over the classic client/server (RPC) interface.",
                CAT)
 reference_type(60003, "HasBaseBinding", NonHierarchicalReferences, "IsBaseBindingOf",
                "Links a derived or composing ObservabilityBinding to a base ObservabilityBinding "
@@ -355,15 +355,14 @@ reference_type(60003, "HasBaseBinding", NonHierarchicalReferences, "IsBaseBindin
                "node is present in the same AddressSpace; the portable, cross-specification "
                "lineage carrier is ObservabilityBinding.BaseDataSetClassIds.",
                CAT)
-reference_type(60004, "RealizedBy", NonHierarchicalReferences, "Realizes",
+reference_type(60004, "Collects", NonHierarchicalReferences, "CollectedBy",
                "Links the server-wide Observability registry to the ObservabilityBindingGroups it "
-               "lists. Forward 'RealizedBy' reads registry -> group (the discovery path to every "
+               "collects. Forward 'Collects' reads registry -> group (the discovery path to every "
                "group that exports observability data, across instances and specifications); the "
-               "inverse 'Realizes' reads group -> registry. Non-hierarchical: a group's single "
+               "inverse 'CollectedBy' reads group -> registry. Non-hierarchical: a group's single "
                "hierarchical parent is the IObservableType object that contains it, so this "
-               "cross-link never forms a hierarchy loop. Distinct from "
-               "ObservabilityRealizedBy/RealizesObservability, which links a binding to its "
-               "optional Part 14 PubSub realization.",
+               "cross-link never forms a hierarchy loop. Distinct from ExportedBy/Exports, which "
+               "links a binding to its optional Part 14 PubSub exporter.",
                CAT)
 
 # --- Enumerations ----------------------------------------------------------
@@ -594,11 +593,11 @@ placeholder_obj(60011, SB, "<BoundItem>", T(60012),
 object_type(60018, "ObservabilityBindingGroupType", FolderType,
             "A per-companion-specification group of that spec's ObservabilityBinding objects. It is "
             "contained (HasComponent) in the IObservableType object that owns the bindings, and is "
-            "linked to the server-wide Observability registry by a Realizes reference (the inverse "
-            "of the registry's RealizedBy). Identified by CompanionSpecificationUri (a stable "
-            "spec-level identifier, distinct from a namespace URI, because a companion "
-            "specification may define several namespace URIs), so groups from different "
-            "specifications on one object never collide by BrowseName.", CAT)
+            "collected by the server-wide Observability registry (the registry Collects it; the "
+            "group carries the inverse CollectedBy reference). Identified by "
+            "CompanionSpecificationUri (a stable spec-level identifier, distinct from a namespace "
+            "URI, because a companion specification may define several namespace URIs), so groups "
+            "from different specifications on one object never collide by BrowseName.", CAT)
 SG = "ObservabilityBindingGroupType"
 prop_var(60018, SG, "CompanionSpecificationUri", String,
          "Stable spec-level identifier of the companion specification this group anchors. Sibling "
@@ -614,13 +613,13 @@ placeholder_obj(60018, SG, "<ObservabilityBinding>", T(60011),
 # ObservabilityFolderType (the Observability registry container)
 object_type(60010, "ObservabilityFolderType", FolderType,
             "The type of the server-wide Observability registry, exposed as a component of the "
-            "Server Object. It is the discovery entry point: it references every "
+            "Server Object. It is the discovery entry point: it Collects every "
             "ObservabilityBindingGroup that exports observability data through non-hierarchical "
-            "RealizedBy references (the groups themselves stay contained by their bound instances). "
+            "Collects references (the groups themselves stay contained by their bound instances). "
             "Extensible - companion specifications contribute their instances' groups.", CAT)
 SF = "ObservabilityFolderType"
-# No placeholder children and no query Method: the registry references the ObservabilityBindingGroups
-# (which live on the bound instances) via RealizedBy; a client browses those references, then each
+# No placeholder children and no query Method: the registry Collects the ObservabilityBindingGroups
+# (which live on the bound instances); a client browses those references, then each
 # group's ObservabilityBinding children. Browse + Read is sufficient and keeps the type usable on a
 # classic server.
 
@@ -630,12 +629,13 @@ interface_type(60016, "IObservableType", BaseInterfaceType,
                "advertise that it exports observability data, by containing its "
                "ObservabilityBindingGroup objects directly (one per companion specification it "
                "covers; typically one for a single-specification instance). Each contained group "
-               "Realizes the server-wide Observability registry.", CAT)
+               "is collected by the server-wide Observability registry (CollectedBy).", CAT)
 placeholder_obj(60016, "IObservableType", "<ObservabilityBindingGroup>", T(60018),
                 "A group of this object's observability bindings for one companion specification, "
-                "contained here (HasComponent) and linked to the Observability registry by a "
-                "Realizes reference. Sibling groups have unique BrowseNames, distinguished by "
-                "specification when several specifications are observable on the instance.")
+                "contained here (HasComponent) and collected by the Observability registry (the "
+                "inverse CollectedBy reference). Sibling groups have unique BrowseNames, "
+                "distinguished by specification when several specifications are observable on the "
+                "instance.")
 
 # --- Well-known instances --------------------------------------------------
 CAT_INST = "Observability Export Instances"
@@ -644,7 +644,7 @@ CAT_INST = "Observability Export Instances"
 # entry point for observability export.
 well_known(60101, "Observability", T(60010), int(Server.split("=")[1]),
            "Server-wide registry of observability bindings, discoverable as a component of the "
-           "Server object. It references (RealizedBy) every ObservabilityBindingGroup exposed by "
+           "Server object. It Collects every ObservabilityBindingGroup exposed by "
            "the Server's instances; its presence does not require any PubSub configuration.")
 NODES[60101].category = CAT_INST
 
@@ -652,6 +652,12 @@ NODES[60101].category = CAT_INST
 # ==============================  EMISSION  =================================
 # ===========================================================================
 NAMESPACE = "http://opcfoundation.org/UA/"
+# This model now lives in its OWN namespace (a companion specification), not the base UA
+# namespace. Own nodes are emitted as ns=1;i=<n>; base UA nodes stay i=<n> (ns 0).
+MODEL_NS = "http://opcfoundation.org/UA/ObservabilityExport/"
+# Base UA namespace RequiredModel coordinates (informational; targets UA 1.05).
+UA_REQUIRED_VERSION = "1.05.04"
+UA_REQUIRED_PUBDATE = "2024-05-01T00:00:00Z"
 VERSION = "0.1.0"
 PUBDATE = "2026-07-01T00:00:00Z"
 
@@ -680,16 +686,41 @@ def _fmt_reftype(t):
     return REFTYPE_ALIAS.get(t, t)
 
 
+def _q(s):
+    """Qualify an own NodeId string with the model namespace (ns=1); base UA ids stay i=<n> (ns 0)."""
+    if isinstance(s, str) and s.startswith("i="):
+        tail = s[2:]
+        if tail.isdigit() and int(tail) in NODES:
+            return "ns=1;i=" + tail
+    return s
+
+
+# BrowseNames that stay in namespace 0 even on own (ns=1) nodes: the standard
+# EnumStrings property and the standard DataType encoding names.
+STD_BROWSENAMES = {"EnumStrings", "Default Binary", "Default XML"}
+
+
+def _qbn(bname):
+    """Namespace-qualify an own node's BrowseName (1:Name), except standard base names."""
+    return bname if bname in STD_BROWSENAMES else "1:" + bname
+
+
+def _qdef(defstr):
+    """Namespace-qualify own DataType ids embedded in an enum/struct Definition string."""
+    return re.sub(r'DataType="i=(\d+)"',
+                  lambda m: f'DataType="{_q("i=" + m.group(1))}"', defstr)
+
+
 def _emit_node(n):
     tag = n.cls
-    a = [f'{tag} NodeId="{T(n.nid)}"', f'BrowseName="{sx.escape(n.bname)}"']
+    a = [f'{tag} NodeId="{_q(T(n.nid))}"', f'BrowseName="{sx.escape(_qbn(n.bname))}"']
     if n.parent is not None:
-        a.append(f'ParentNodeId="{n.parent}"')
+        a.append(f'ParentNodeId="{_q(n.parent)}"')
     for k in ("DataType", "ValueRank", "ArrayDimensions"):
         if k in n.attrs:
             v = n.attrs[k]
             if k == "DataType":
-                v = DATATYPE_ALIAS.get(v, v)
+                v = _q(DATATYPE_ALIAS.get(v, v))
             a.append(f'{k}="{v}"')
     if n.cls == "UAObjectType" and n.abstract:
         a.append('IsAbstract="true"')
@@ -705,12 +736,12 @@ def _emit_node(n):
     for i in _sorted_refs(n.refs):
         rt, tgt, fwd = n.refs[i]
         fwd_s = "" if fwd else ' IsForward="false"'
-        lines.append(f'      <Reference ReferenceType="{_fmt_reftype(rt)}"{fwd_s}>{tgt}</Reference>')
+        lines.append(f'      <Reference ReferenceType="{_q(_fmt_reftype(rt))}"{fwd_s}>{_q(tgt)}</Reference>')
     lines.append("    </References>")
     if n.cls == "UAReferenceType" and n.inverse and not n.symmetric:
         lines.append(f"    <InverseName>{sx.escape(n.inverse)}</InverseName>")
     if n.definition:
-        lines.append("    " + n.definition)
+        lines.append("    " + _qdef(n.definition))
     if n.value:
         lines.append("    " + n.value)
     lines.append(f"  </{tag}>")
@@ -719,14 +750,20 @@ def _emit_node(n):
 
 def emit():
     out = ['<?xml version="1.0" encoding="utf-8"?>',
-           '<!-- OPC UA Observability Export - proposed addition to the base UA '
-           'namespace. PROVISIONAL NodeIds (final IDs assigned by the OPC Foundation). -->',
+           '<!-- OPC UA Observability Export - a companion specification in its own namespace '
+           '(http://opcfoundation.org/UA/ObservabilityExport/). Draft NodeIds. -->',
            '<UANodeSet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" '
            'xmlns:xsd="http://www.w3.org/2001/XMLSchema" '
            'xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd" '
            'xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd">',
+           '  <NamespaceUris>',
+           f'    <Uri>{MODEL_NS}</Uri>',
+           '  </NamespaceUris>',
            '  <Models>',
-           f'    <Model ModelUri="{NAMESPACE}" Version="{VERSION}" PublicationDate="{PUBDATE}" />',
+           f'    <Model ModelUri="{MODEL_NS}" Version="{VERSION}" PublicationDate="{PUBDATE}">',
+           f'      <RequiredModel ModelUri="{NAMESPACE}" Version="{UA_REQUIRED_VERSION}" '
+           f'PublicationDate="{UA_REQUIRED_PUBDATE}" />',
+           '    </Model>',
            '  </Models>',
            '  <Aliases>']
     for name, val in ALIASES:
@@ -900,9 +937,10 @@ def emit_md():
           "This annex is the normative node reference. It is generated from "
           "[`core-specs/extras/observability-export/tools/build_model.py`]"
           "(../extras/observability-export/tools/build_model.py) and always matches `Opc.Ua.ObservabilityExport.NodeSet2.xml`. "
-          "All nodes are proposed additions to the base OPC UA namespace "
-          "`http://opcfoundation.org/UA/`; the NodeIds shown are **provisional** (final "
-          "IDs are assigned by the OPC Foundation). The **Declared in** column marks "
+          "All nodes are defined in this specification's own namespace "
+          "`http://opcfoundation.org/UA/ObservabilityExport/` (namespace index 1 in the NodeSet, "
+          "which requires the base OPC UA namespace); the NodeIds shown are the draft numeric "
+          "identifiers within that namespace. The **Declared in** column marks "
           "members inherited from a supertype.\n"]
 
     md.append("### Type overview\n")

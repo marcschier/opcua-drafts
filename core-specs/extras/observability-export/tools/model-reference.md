@@ -1,16 +1,16 @@
 <a id="annex-a"></a>
 ## Annex A — Information model
 
-This annex is the normative node reference. It is generated from [`core-specs/extras/observability-export/tools/build_model.py`](../extras/observability-export/tools/build_model.py) and always matches `Opc.Ua.ObservabilityExport.NodeSet2.xml`. All nodes are proposed additions to the base OPC UA namespace `http://opcfoundation.org/UA/`; the NodeIds shown are **provisional** (final IDs are assigned by the OPC Foundation). The **Declared in** column marks members inherited from a supertype.
+This annex is the normative node reference. It is generated from [`core-specs/extras/observability-export/tools/build_model.py`](../extras/observability-export/tools/build_model.py) and always matches `Opc.Ua.ObservabilityExport.NodeSet2.xml`. All nodes are defined in this specification's own namespace `http://opcfoundation.org/UA/ObservabilityExport/` (namespace index 1 in the NodeSet, which requires the base OPC UA namespace); the NodeIds shown are the draft numeric identifiers within that namespace. The **Declared in** column marks members inherited from a supertype.
 
 ### Type overview
 
 | NodeId | BrowseName | NodeClass | Subtype of |
 |---|---|---|---|
 | i=60001 | [BindsToNode](#type-BindsToNode) | ReferenceType | [NonHierarchicalReferences](https://reference.opcfoundation.org/specs/OPC-10000-3/7.4) |
-| i=60002 | [ObservabilityRealizedBy](#type-ObservabilityRealizedBy) | ReferenceType | [NonHierarchicalReferences](https://reference.opcfoundation.org/specs/OPC-10000-3/7.4) |
+| i=60002 | [ExportedBy](#type-ExportedBy) | ReferenceType | [NonHierarchicalReferences](https://reference.opcfoundation.org/specs/OPC-10000-3/7.4) |
 | i=60003 | [HasBaseBinding](#type-HasBaseBinding) | ReferenceType | [NonHierarchicalReferences](https://reference.opcfoundation.org/specs/OPC-10000-3/7.4) |
-| i=60004 | [RealizedBy](#type-RealizedBy) | ReferenceType | [NonHierarchicalReferences](https://reference.opcfoundation.org/specs/OPC-10000-3/7.4) |
+| i=60004 | [Collects](#type-Collects) | ReferenceType | [NonHierarchicalReferences](https://reference.opcfoundation.org/specs/OPC-10000-3/7.4) |
 | i=60012 | [BoundItemType](#type-BoundItemType) | ObjectType | [BaseObjectType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.2) |
 | i=60013 | [BoundVariableType](#type-BoundVariableType) | ObjectType | [BoundItemType](#type-BoundItemType) |
 | i=60017 | [BoundEventFieldType](#type-BoundEventFieldType) | ObjectType | [BoundItemType](#type-BoundItemType) |
@@ -33,12 +33,12 @@ This annex is the normative node reference. It is generated from [`core-specs/ex
 
 Links a BoundItem to the companion-specification Variable, event source or Program in the AddressSpace that it exposes for observability export. The target is the authoritative semantic node; the BoundItem does not copy its meaning.
 
-<a id="type-ObservabilityRealizedBy"></a>
-#### ObservabilityRealizedBy  (i=60002)
+<a id="type-ExportedBy"></a>
+#### ExportedBy  (i=60002)
 
-*Subtype of:* [NonHierarchicalReferences](https://reference.opcfoundation.org/specs/OPC-10000-3/7.4) · *InverseName:* `RealizesObservability`
+*Subtype of:* [NonHierarchicalReferences](https://reference.opcfoundation.org/specs/OPC-10000-3/7.4) · *InverseName:* `Exports`
 
-Links an ObservabilityBinding to the optional OPC UA Part 14 PubSub node(s) that realize it (a PublishedDataSet, DataSetWriter or DataSetReader). Forward 'ObservabilityRealizedBy' reads binding -> realization; the inverse 'RealizesObservability' reads realization -> binding. Absent (and never required) when the binding is not realized over PubSub - a Server may instead serve the binding over the classic client/server (RPC) interface.
+Links an ObservabilityBinding to the optional OPC UA Part 14 PubSub node(s) that export it (a PublishedDataSet, DataSetWriter or DataSetReader) - the concrete OTEL exporter for the binding's signal. Forward 'ExportedBy' reads binding -> exporter; the inverse 'Exports' reads exporter -> binding. Absent (and never required) when the binding is not exported over PubSub - a Server may instead serve the binding over the classic client/server (RPC) interface.
 
 <a id="type-HasBaseBinding"></a>
 #### HasBaseBinding  (i=60003)
@@ -47,12 +47,12 @@ Links an ObservabilityBinding to the optional OPC UA Part 14 PubSub node(s) that
 
 Links a derived or composing ObservabilityBinding to a base ObservabilityBinding whose fields it extends or composes (e.g. a Machine binding to the Device-facet binding it builds on). Optional browse convenience used where the base binding node is present in the same AddressSpace; the portable, cross-specification lineage carrier is ObservabilityBinding.BaseDataSetClassIds.
 
-<a id="type-RealizedBy"></a>
-#### RealizedBy  (i=60004)
+<a id="type-Collects"></a>
+#### Collects  (i=60004)
 
-*Subtype of:* [NonHierarchicalReferences](https://reference.opcfoundation.org/specs/OPC-10000-3/7.4) · *InverseName:* `Realizes`
+*Subtype of:* [NonHierarchicalReferences](https://reference.opcfoundation.org/specs/OPC-10000-3/7.4) · *InverseName:* `CollectedBy`
 
-Links the server-wide Observability registry to the ObservabilityBindingGroups it lists. Forward 'RealizedBy' reads registry -> group (the discovery path to every group that exports observability data, across instances and specifications); the inverse 'Realizes' reads group -> registry. Non-hierarchical: a group's single hierarchical parent is the IObservableType object that contains it, so this cross-link never forms a hierarchy loop. Distinct from ObservabilityRealizedBy/RealizesObservability, which links a binding to its optional Part 14 PubSub realization.
+Links the server-wide Observability registry to the ObservabilityBindingGroups it collects. Forward 'Collects' reads registry -> group (the discovery path to every group that exports observability data, across instances and specifications); the inverse 'CollectedBy' reads group -> registry. Non-hierarchical: a group's single hierarchical parent is the IObservableType object that contains it, so this cross-link never forms a hierarchy loop. Distinct from ExportedBy/Exports, which links a binding to its optional Part 14 PubSub exporter.
 
 ### Object types
 
@@ -176,7 +176,7 @@ One observability binding on a bound object or type. It declares the OTEL signal
 
 *Inherits from:* [FolderType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.6)
 
-A per-companion-specification group of that spec's ObservabilityBinding objects. It is contained (HasComponent) in the IObservableType object that owns the bindings, and is linked to the server-wide Observability registry by a Realizes reference (the inverse of the registry's RealizedBy). Identified by CompanionSpecificationUri (a stable spec-level identifier, distinct from a namespace URI, because a companion specification may define several namespace URIs), so groups from different specifications on one object never collide by BrowseName.
+A per-companion-specification group of that spec's ObservabilityBinding objects. It is contained (HasComponent) in the IObservableType object that owns the bindings, and is collected by the server-wide Observability registry (the registry Collects it; the group carries the inverse CollectedBy reference). Identified by CompanionSpecificationUri (a stable spec-level identifier, distinct from a namespace URI, because a companion specification may define several namespace URIs), so groups from different specifications on one object never collide by BrowseName.
 
 | BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
 |---|---|---|---|---|---|
@@ -189,18 +189,18 @@ A per-companion-specification group of that spec's ObservabilityBinding objects.
 
 *Inherits from:* [FolderType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.6)
 
-The type of the server-wide Observability registry, exposed as a component of the Server Object. It is the discovery entry point: it references every ObservabilityBindingGroup that exports observability data through non-hierarchical RealizedBy references (the groups themselves stay contained by their bound instances). Extensible - companion specifications contribute their instances' groups.
+The type of the server-wide Observability registry, exposed as a component of the Server Object. It is the discovery entry point: it Collects every ObservabilityBindingGroup that exports observability data through non-hierarchical Collects references (the groups themselves stay contained by their bound instances). Extensible - companion specifications contribute their instances' groups.
 
 <a id="type-IObservableType"></a>
 #### IObservableType  (i=60016)
 
 *Inherits from:* [BaseInterfaceType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.9)
 
-Interface implemented by a companion-specification ObjectType (or instance) to advertise that it exports observability data, by containing its ObservabilityBindingGroup objects directly (one per companion specification it covers; typically one for a single-specification instance). Each contained group Realizes the server-wide Observability registry.
+Interface implemented by a companion-specification ObjectType (or instance) to advertise that it exports observability data, by containing its ObservabilityBindingGroup objects directly (one per companion specification it covers; typically one for a single-specification instance). Each contained group is collected by the server-wide Observability registry (CollectedBy).
 
 | BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
 |---|---|---|---|---|---|
-| <ObservabilityBindingGroup> | Object |  | OptionalPlaceholder | IObservableType | A group of this object's observability bindings for one companion specification, contained here (HasComponent) and linked to the Observability registry by a Realizes reference. Sibling groups have unique BrowseNames, distinguished by specification when several specifications are observable on the instance. |
+| <ObservabilityBindingGroup> | Object |  | OptionalPlaceholder | IObservableType | A group of this object's observability bindings for one companion specification, contained here (HasComponent) and collected by the Observability registry (the inverse CollectedBy reference). Sibling groups have unique BrowseNames, distinguished by specification when several specifications are observable on the instance. |
 
 ### Data types
 
@@ -304,5 +304,5 @@ Machine-readable descriptor of a single bound item: how to LOCATE it (BrowsePath
 
 | BrowseName | NodeId | TypeDefinition | Note |
 |---|---|---|---|
-| Observability | i=60101 | [ObservabilityFolderType](#type-ObservabilityFolderType) | Server-wide registry of observability bindings, discoverable as a component of the Server object. It references (RealizedBy) every ObservabilityBindingGroup exposed by the Server's instances; its presence does not require any PubSub configuration. |
+| Observability | i=60101 | [ObservabilityFolderType](#type-ObservabilityFolderType) | Server-wide registry of observability bindings, discoverable as a component of the Server object. It Collects every ObservabilityBindingGroup exposed by the Server's instances; its presence does not require any PubSub configuration. |
 

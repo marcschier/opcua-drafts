@@ -1,7 +1,7 @@
 BindsToNode,60001,ReferenceType
-ObservabilityRealizedBy,60002,ReferenceType
+ExportedBy,60002,ReferenceType
 HasBaseBinding,60003,ReferenceType
-RealizedBy,60004,ReferenceType
+Collects,60004,ReferenceType
 BoundItemKindEnum,60051,DataType
 BoundItemKindEnum_EnumStrings,60951,Variable
 MetricInstrumentTypeEnum,60053,DataType
