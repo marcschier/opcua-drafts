@@ -429,7 +429,7 @@ def emit_md():
             pid = int(n.parent.split("i=")[1]) if n.parent else None
             if n.bname == "InputArguments": method_args[pid] = names
             else: method_out[pid] = names
-    md = ['<a id="annex-a"></a>', '## Annex A — Information model\n',
+    md = ['<a id="annex-a"></a>', '', '## Annex A — Information model\n',
           'This annex is the normative node reference. It is generated from `tools/build_model.py` and always matches `Opc.Ua.XRegistry.NodeSet2.xml`. All nodes are defined in the companion namespace `http://opcfoundation.org/UA/xRegistry/` (which requires the base OPC UA namespace); the numeric NodeIds shown are **draft** identifiers within that namespace. The **Declared in** column marks members inherited from a supertype.\n']
     md.append('### Type overview\n')
     md.append('| NodeId | BrowseName | NodeClass | Subtype of |')
@@ -442,6 +442,7 @@ def emit_md():
     for nid in obj_types:
         n = NODES[nid]
         md.append(f'<a id="{_anchor(n.bname)}"></a>')
+        md.append('')
         md.append(f"#### {n.bname}  (ns=1;i={nid})\n")
         md.append(f"*Inherits from:* {_link(_friendly(_supertype(n)))}\n")
         if n.desc: md.append(n.desc + "\n")

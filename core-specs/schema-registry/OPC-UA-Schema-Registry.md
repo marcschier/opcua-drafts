@@ -256,6 +256,7 @@ The NodeSet, CSV and Annex A are generated from `tools/build_model.py`. The loca
 ---
 
 <a id="annex-a"></a>
+
 ## Annex A — Information model
 
 This annex is the normative node reference. It is generated from `tools/build_model.py` and always matches `Opc.Ua.SchemaRegistry.NodeSet2.xml`. All nodes are proposed additions in the companion namespace `http://opcfoundation.org/UA/SchemaRegistry/` (namespace index `2` in this NodeSet, after the required `http://opcfoundation.org/UA/xRegistry/` base model at index `1`). The Schema Registry types **extend the abstract [OPC UA — xRegistry](OPC-UA-xRegistry.md) base types** (`RegistryType`/`GroupType`/`ResourceType`). The numeric NodeIds shown are **provisional** (final IDs are assigned by the OPC Foundation). The **Declared in** column marks members inherited from a supertype.
@@ -271,6 +272,7 @@ This annex is the normative node reference. It is generated from `tools/build_mo
 ### Object types
 
 <a id="type-SchemaRegistryType"></a>
+
 #### SchemaRegistryType  (ns=2;i=62000)
 
 *Inherits from:* [RegistryType](OPC-UA-xRegistry.md#type-RegistryType)
@@ -283,6 +285,7 @@ The in-server Schema Registry root - an xRegistry RegistryType (a FolderType) wh
 | GetSchema | Method |  | Optional | SchemaRegistryType | Return the schema document and metadata for a raw on-wire SchemaId fingerprint (the method form of the Opaque SchemaId NodeId fast path). |
 
 <a id="type-SchemaGroupType"></a>
+
 #### SchemaGroupType  (ns=2;i=62001)
 
 *Inherits from:* [GroupType](OPC-UA-xRegistry.md#type-GroupType)
@@ -295,6 +298,7 @@ An xRegistry GroupType keyed by an OPC UA namespace URI; a folder of schema file
 | <Schema> | Object |  | OptionalPlaceholder | SchemaGroupType | A schema file (one DataType/DataSet in one format) held by this group. |
 
 <a id="type-SchemaFileType"></a>
+
 #### SchemaFileType  (ns=2;i=62002)
 
 *Inherits from:* [ResourceType](OPC-UA-xRegistry.md#type-ResourceType)
@@ -322,6 +326,7 @@ An xRegistry ResourceType whose file content is one concrete schema document (Av
 | BrowseName | NodeId | TypeDefinition | Note |
 |---|---|---|---|
 | SchemaRegistry | ns=2;i=62100 | [SchemaRegistryType](#type-SchemaRegistryType) | Server-wide in-server Schema Registry, discoverable from the PublishSubscribe object. |
+
 ## Annex B — Federated schemas via ExpandedNodeId (informative)
 
 A Schema Registry inherits the base model's federation (base §8). A schema hosted by another registry is represented locally by a `SchemaFileType` whose `ExternalReference` Property (an `ExpandedNodeId`) points to the remote schema file — `ServerUri` = the remote registry's OPC UA endpoint, `NamespaceUri` + `Identifier` = the remote group/schema identity — and/or whose `ResourceUrl` carries the same link in string form (an `opc.tcp` endpoint plus browse path, or an HTTP URL for a non-OPC-UA registry). A consumer that cannot resolve an on-wire SchemaId locally (§8 step 0c) follows the federation resolution algorithm of the base spec's Annex B: connect to the referenced `ServerUri`, translate the `NamespaceUri`, and read the referenced schema file there with the FileType Methods. Because a schema's identity (its `SchemaId` and `xid`) is stable across registries while the endpoint authority is not, the same schema federated from several registries keeps one identity and can be de-duplicated by `SchemaId`.

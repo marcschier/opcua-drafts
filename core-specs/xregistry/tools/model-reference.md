@@ -1,4 +1,5 @@
 <a id="annex-a"></a>
+
 ## Annex A — Information model
 
 This annex is the normative node reference. It is generated from `tools/build_model.py` and always matches `Opc.Ua.XRegistry.NodeSet2.xml`. All nodes are defined in the companion namespace `http://opcfoundation.org/UA/xRegistry/` (which requires the base OPC UA namespace); the numeric NodeIds shown are **draft** identifiers within that namespace. The **Declared in** column marks members inherited from a supertype.
@@ -15,6 +16,7 @@ This annex is the normative node reference. It is generated from `tools/build_mo
 ### Object types
 
 <a id="type-RegistryType"></a>
+
 #### RegistryType  (ns=1;i=63000)
 
 *Inherits from:* [FolderType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.6)
@@ -40,6 +42,7 @@ The abstract xRegistry root, expressed as a FolderType that organizes its Group 
 | GetOrCreateGroup | Method |  | Optional | RegistryType | Idempotently return the group with this GroupId, creating it if absent. One-shot form that avoids a separate existence check: returns the existing GroupType Object (Created = false) or a newly created and bootstrapped one (Created = true). |
 
 <a id="type-GroupType"></a>
+
 #### GroupType  (ns=1;i=63001)
 
 *Inherits from:* [FolderType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.6)
@@ -62,6 +65,7 @@ An abstract xRegistry group, expressed as a FolderType that organizes its resour
 | GetOrCreateResource | Method |  | Optional | GroupType | Idempotently return the resource with this ResourceId, creating it if absent, optionally opened for writing. One-shot form that avoids a separate existence check: returns the existing ResourceType file (Created = false) or a newly created one (Created = true); a write FileHandle is returned when RequestFileOpen is true. |
 
 <a id="type-ResourceType"></a>
+
 #### ResourceType  (ns=1;i=63002)
 
 *Inherits from:* [FileType](https://reference.opcfoundation.org/specs/OPC-10000-20/4.2)
@@ -86,6 +90,7 @@ An abstract xRegistry resource/version whose document IS the file: the content i
 | ModifiedAt | Variable | DateTime | Optional | ResourceType | UTC timestamp when the entity was last modified. |
 
 <a id="type-AttributesType"></a>
+
 #### AttributesType  (ns=1;i=63003)
 
 *Inherits from:* [BaseObjectType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.2)

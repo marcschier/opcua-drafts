@@ -1,4 +1,5 @@
 <a id="annex-a"></a>
+
 ## Annex A — Information model
 
 This annex is the normative node reference. It is generated from `tools/build_model.py` and always matches `Opc.Ua.SchemaRegistry.NodeSet2.xml`. All nodes are proposed additions in the companion namespace `http://opcfoundation.org/UA/SchemaRegistry/` (namespace index `2` in this NodeSet, after the required `http://opcfoundation.org/UA/xRegistry/` base model at index `1`). The Schema Registry types **extend the abstract [OPC UA — xRegistry](OPC-UA-xRegistry.md) base types** (`RegistryType`/`GroupType`/`ResourceType`). The numeric NodeIds shown are **provisional** (final IDs are assigned by the OPC Foundation). The **Declared in** column marks members inherited from a supertype.
@@ -14,6 +15,7 @@ This annex is the normative node reference. It is generated from `tools/build_mo
 ### Object types
 
 <a id="type-SchemaRegistryType"></a>
+
 #### SchemaRegistryType  (ns=2;i=62000)
 
 *Inherits from:* [RegistryType](OPC-UA-xRegistry.md#type-RegistryType)
@@ -26,6 +28,7 @@ The in-server Schema Registry root - an xRegistry RegistryType (a FolderType) wh
 | GetSchema | Method |  | Optional | SchemaRegistryType | Return the schema document and metadata for a raw on-wire SchemaId fingerprint (the method form of the Opaque SchemaId NodeId fast path). |
 
 <a id="type-SchemaGroupType"></a>
+
 #### SchemaGroupType  (ns=2;i=62001)
 
 *Inherits from:* [GroupType](OPC-UA-xRegistry.md#type-GroupType)
@@ -38,6 +41,7 @@ An xRegistry GroupType keyed by an OPC UA namespace URI; a folder of schema file
 | <Schema> | Object |  | OptionalPlaceholder | SchemaGroupType | A schema file (one DataType/DataSet in one format) held by this group. |
 
 <a id="type-SchemaFileType"></a>
+
 #### SchemaFileType  (ns=2;i=62002)
 
 *Inherits from:* [ResourceType](OPC-UA-xRegistry.md#type-ResourceType)
