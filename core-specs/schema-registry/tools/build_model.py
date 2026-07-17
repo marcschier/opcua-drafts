@@ -282,15 +282,20 @@ def emit():
 def emit_csv():
     return "\n".join(f"{NODES[nid].symbolic},{nid},{NODES[nid].cls[2:]}" for nid in ORDER) + "\n"
 
+XREGISTRY_SPEC_URL = (
+    "https://github.com/marcschier/opcua-drafts/blob/main/"
+    "core-specs/xregistry/OPC-UA-xRegistry.md"
+)
+
 LINK_MAP = {
     "BaseObjectType": "https://reference.opcfoundation.org/specs/OPC-10000-5/6.2",
     "FolderType": "https://reference.opcfoundation.org/specs/OPC-10000-5/6.6",
     "PropertyType": "https://reference.opcfoundation.org/specs/OPC-10000-5/7.3",
     "BaseDataVariableType": "https://reference.opcfoundation.org/specs/OPC-10000-5/7.4",
     "ConfigurationVersionDataType": "https://reference.opcfoundation.org/specs/OPC-10000-14/6.2.3#6.2.3.2.6",
-    "RegistryType": "../xregistry/OPC-UA-xRegistry.md#type-RegistryType",
-    "GroupType": "../xregistry/OPC-UA-xRegistry.md#type-GroupType",
-    "ResourceType": "../xregistry/OPC-UA-xRegistry.md#type-ResourceType",
+    "RegistryType": XREGISTRY_SPEC_URL + "#type-RegistryType",
+    "GroupType": XREGISTRY_SPEC_URL + "#type-GroupType",
+    "ResourceType": XREGISTRY_SPEC_URL + "#type-ResourceType",
 }
 _BASE_NAMES = {"i=58": "BaseObjectType", "i=61": "FolderType", "i=63": "BaseDataVariableType", "i=68": "PropertyType"}
 # abstract xRegistry base types this spec extends (required model, ns=1)
@@ -363,7 +368,7 @@ def emit_md():
             if n.bname == "InputArguments": method_args[pid] = names
             else: method_out[pid] = names
     md = ['<a id="annex-a"></a>', '', '## Annex A — Information model\n',
-          'This annex is the normative node reference. It is generated from `tools/build_model.py` and always matches `Opc.Ua.SchemaRegistry.NodeSet2.xml`. All nodes are proposed additions in the companion namespace `http://opcfoundation.org/UA/SchemaRegistry/` (namespace index `2` in this NodeSet, after the required `http://opcfoundation.org/UA/xRegistry/` base model at index `1`). The Schema Registry types **extend the abstract [OPC UA — xRegistry](../xregistry/OPC-UA-xRegistry.md) base types** (`RegistryType`/`GroupType`/`ResourceType`). The numeric NodeIds shown are **provisional** (final IDs are assigned by the OPC Foundation). The **Declared in** column marks members inherited from a supertype.\n']
+          f'This annex is the normative node reference. It is generated from `tools/build_model.py` and always matches `Opc.Ua.SchemaRegistry.NodeSet2.xml`. All nodes are proposed additions in the companion namespace `http://opcfoundation.org/UA/SchemaRegistry/` (namespace index `2` in this NodeSet, after the required `http://opcfoundation.org/UA/xRegistry/` base model at index `1`). The Schema Registry types **extend the abstract [OPC UA — xRegistry]({XREGISTRY_SPEC_URL}) base types** (`RegistryType`/`GroupType`/`ResourceType`). The numeric NodeIds shown are **provisional** (final IDs are assigned by the OPC Foundation). The **Declared in** column marks members inherited from a supertype.\n']
     md.append('### Type overview\n')
     md.append('| NodeId | BrowseName | NodeClass | Subtype of |')
     md.append('|---|---|---|---|')
