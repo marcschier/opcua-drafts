@@ -28,7 +28,7 @@
   </Aliases>
   <UAObjectType NodeId="ns=2;i=62000" BrowseName="2:SchemaRegistryType">
     <DisplayName>SchemaRegistryType</DisplayName>
-    <Description>The in-server Schema Registry root - an xRegistry RegistryType (a FolderType) whose group folders hold schema files. Adds SchemaId-based resolution (GetSchema and the Opaque SchemaId NodeId fast path). Exposed as a well-known object under the Part 14 PublishSubscribe object.</Description>
+    <Description>The in-server Schema Registry root - an xRegistry RegistryType (a FolderType) whose group folders hold schema files. Adds SchemaId-based resolution (GetSchema and the Opaque SchemaId NodeId fast path). Exposed as a well-known object under the Server object; a server does not have to support PubSub to be a schema registry.</Description>
     <Category>Schema Registry</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=63000</Reference>
@@ -59,6 +59,9 @@
       <Reference ReferenceType="HasProperty">ns=2;i=62510</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=62511</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=62512</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=62513</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=62514</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=62515</Reference>
     </References>
   </UAObjectType>
   <UAObject NodeId="ns=2;i=62500" BrowseName="2:&lt;SchemaGroup&gt;" ParentNodeId="ns=2;i=62000">
@@ -143,7 +146,34 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=62002</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=62509" BrowseName="2:ModelVersion" ParentNodeId="ns=2;i=62002" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=62509" BrowseName="2:Compatibility" ParentNodeId="ns=2;i=62002" DataType="String" ValueRank="-1">
+    <DisplayName>Compatibility</DisplayName>
+    <Description>xRegistry compatibility mode governing this schema's versions, such as NONE, BACKWARD, FORWARD or FULL. All versions of one schema adhere to this mode; a breaking change starts a new schema.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=62002</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=2;i=62510" BrowseName="2:IsDefault" ParentNodeId="ns=2;i=62002" DataType="Boolean" ValueRank="-1">
+    <DisplayName>IsDefault</DisplayName>
+    <Description>xRegistry isdefault: true when this file is the schema's default (latest) version in the flat projection.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=62002</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=2;i=62511" BrowseName="2:Ancestor" ParentNodeId="ns=2;i=62002" DataType="String" ValueRank="-1">
+    <DisplayName>Ancestor</DisplayName>
+    <Description>xRegistry ancestor: the versionid of the version this one derives from, establishing the version lineage.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=62002</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=2;i=62512" BrowseName="2:ModelVersion" ParentNodeId="ns=2;i=62002" DataType="String" ValueRank="-1">
     <DisplayName>ModelVersion</DisplayName>
     <Description>OPC UA NodeSet model version label (opcua.modelversion).</Description>
     <References>
@@ -152,16 +182,16 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=62002</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=62510" BrowseName="2:ConfigurationVersion" ParentNodeId="ns=2;i=62002" DataType="i=14593" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=62513" BrowseName="2:ConfigurationVersion" ParentNodeId="ns=2;i=62002" DataType="i=14593" ValueRank="-1">
     <DisplayName>ConfigurationVersion</DisplayName>
-    <Description>PubSub ConfigurationVersion (opcua.configurationversion) when the schema describes a DataSet.</Description>
+    <Description>PubSub DataSet schema profile only: the Part 14 ConfigurationVersion (opcua.configurationversion) when the schema describes a DataSet. Omitted for a non-PubSub schema registry.</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=80</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=62002</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=62511" BrowseName="2:ExpiryTime" ParentNodeId="ns=2;i=62002" DataType="DateTime" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=62514" BrowseName="2:ExpiryTime" ParentNodeId="ns=2;i=62002" DataType="DateTime" ValueRank="-1">
     <DisplayName>ExpiryTime</DisplayName>
     <Description>Optional UTC expiry time for mirror/cache mode.</Description>
     <References>
@@ -170,7 +200,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=62002</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=62512" BrowseName="2:Ttl" ParentNodeId="ns=2;i=62002" DataType="Duration" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=62515" BrowseName="2:Ttl" ParentNodeId="ns=2;i=62002" DataType="Duration" ValueRank="-1">
     <DisplayName>Ttl</DisplayName>
     <Description>Optional time-to-live for mirror/cache mode.</Description>
     <References>
@@ -179,13 +209,13 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=62002</Reference>
     </References>
   </UAVariable>
-  <UAObject NodeId="ns=2;i=62100" BrowseName="2:SchemaRegistry" ParentNodeId="i=14443">
+  <UAObject NodeId="ns=2;i=62100" BrowseName="2:SchemaRegistry" ParentNodeId="i=2253">
     <DisplayName>SchemaRegistry</DisplayName>
-    <Description>Server-wide in-server Schema Registry, discoverable from the PublishSubscribe object.</Description>
+    <Description>Server-wide in-server Schema Registry, a well-known component of the Server object. A server that supports PubSub may additionally reference this object from PublishSubscribe.</Description>
     <Category>Schema Registry Instances</Category>
     <References>
       <Reference ReferenceType="HasTypeDefinition">ns=2;i=62000</Reference>
-      <Reference ReferenceType="HasComponent" IsForward="false">i=14443</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">i=2253</Reference>
     </References>
   </UAObject>
 </UANodeSet>

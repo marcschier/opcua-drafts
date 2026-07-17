@@ -44,6 +44,7 @@ Duration = "i=290"
 Argument = "i=296"
 ConfigurationVersionDataType = "i=14593"
 PublishSubscribe = "i=14443"
+Server = "i=2253"
 
 XR_NS = 1          # required model: the abstract xRegistry base (http://opcfoundation.org/UA/xRegistry/)
 OWN_NS = 2         # this specification's own namespace (SchemaRegistry)
@@ -168,7 +169,8 @@ CAT_INST = "Schema Registry Instances"
 object_type(62000, "SchemaRegistryType", XRegistry_RegistryType,
             "The in-server Schema Registry root - an xRegistry RegistryType (a FolderType) whose group "
             "folders hold schema files. Adds SchemaId-based resolution (GetSchema and the Opaque SchemaId "
-            "NodeId fast path). Exposed as a well-known object under the Part 14 PublishSubscribe object.", CAT)
+            "NodeId fast path). Exposed as a well-known object under the Server object; a server does not "
+            "have to support PubSub to be a schema registry.", CAT)
 object_type(62001, "SchemaGroupType", XRegistry_GroupType,
             "An xRegistry GroupType keyed by an OPC UA namespace URI; a folder of schema files for the "
             "DataTypes and PublishedDataSets of that namespace.", CAT)
@@ -192,15 +194,18 @@ SF = "SchemaFileType"
 prop_var(62002, SF, "SchemaId", ByteString, "Raw on-wire SchemaId fingerprint bytes. The schema file is additionally addressable by an Opaque NodeId whose identifier bytes are exactly this value.", rule=MR_Mandatory)
 prop_var(62002, SF, "SchemaIdAlg", String, "SchemaId algorithm name, such as CRC-64-AVRO or SHA-256.", rule=MR_Mandatory)
 prop_var(62002, SF, "DataTypeEncoding", String, "The OPC UA DataTypeEncoding name, for example Default Avro or Default Arrow.")
+prop_var(62002, SF, "Compatibility", String, "xRegistry compatibility mode governing this schema's versions, such as NONE, BACKWARD, FORWARD or FULL. All versions of one schema adhere to this mode; a breaking change starts a new schema.")
+prop_var(62002, SF, "IsDefault", Boolean, "xRegistry isdefault: true when this file is the schema's default (latest) version in the flat projection.")
+prop_var(62002, SF, "Ancestor", String, "xRegistry ancestor: the versionid of the version this one derives from, establishing the version lineage.")
 prop_var(62002, SF, "ModelVersion", String, "OPC UA NodeSet model version label (opcua.modelversion).")
-prop_var(62002, SF, "ConfigurationVersion", ConfigurationVersionDataType, "PubSub ConfigurationVersion (opcua.configurationversion) when the schema describes a DataSet.")
+prop_var(62002, SF, "ConfigurationVersion", ConfigurationVersionDataType, "PubSub DataSet schema profile only: the Part 14 ConfigurationVersion (opcua.configurationversion) when the schema describes a DataSet. Omitted for a non-PubSub schema registry.")
 prop_var(62002, SF, "ExpiryTime", DateTime, "Optional UTC expiry time for mirror/cache mode.")
 prop_var(62002, SF, "Ttl", Duration, "Optional time-to-live for mirror/cache mode.")
 
-# Well-known instance hooked onto Part 14 PublishSubscribe.
-add(62100, "UAObject", "SchemaRegistry", "SchemaRegistry", desc="Server-wide in-server Schema Registry, discoverable from the PublishSubscribe object.", parent=PublishSubscribe, category=CAT_INST)
+# Well-known instance hooked onto the Server object (PubSub-independent).
+add(62100, "UAObject", "SchemaRegistry", "SchemaRegistry", desc="Server-wide in-server Schema Registry, a well-known component of the Server object. A server that supports PubSub may additionally reference this object from PublishSubscribe.", parent=Server, category=CAT_INST)
 ref(62100, HasTypeDefinition, T(62000))
-ref(62100, HasComponent, PublishSubscribe, forward=False)
+ref(62100, HasComponent, Server, forward=False)
 
 # Emission
 NAMESPACE = "http://opcfoundation.org/UA/SchemaRegistry/"

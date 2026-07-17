@@ -20,7 +20,7 @@ This annex is the normative node reference. It is generated from `tools/build_mo
 
 *Inherits from:* [RegistryType](OPC-UA-xRegistry.md#type-RegistryType)
 
-The in-server Schema Registry root - an xRegistry RegistryType (a FolderType) whose group folders hold schema files. Adds SchemaId-based resolution (GetSchema and the Opaque SchemaId NodeId fast path). Exposed as a well-known object under the Part 14 PublishSubscribe object.
+The in-server Schema Registry root - an xRegistry RegistryType (a FolderType) whose group folders hold schema files. Adds SchemaId-based resolution (GetSchema and the Opaque SchemaId NodeId fast path). Exposed as a well-known object under the Server object; a server does not have to support PubSub to be a schema registry.
 
 | BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
 |---|---|---|---|---|---|
@@ -53,8 +53,11 @@ An xRegistry ResourceType whose file content is one concrete schema document (Av
 | SchemaId | Variable | ByteString | Mandatory | SchemaFileType | Raw on-wire SchemaId fingerprint bytes. The schema file is additionally addressable by an Opaque NodeId whose identifier bytes are exactly this value. |
 | SchemaIdAlg | Variable | String | Mandatory | SchemaFileType | SchemaId algorithm name, such as CRC-64-AVRO or SHA-256. |
 | DataTypeEncoding | Variable | String | Optional | SchemaFileType | The OPC UA DataTypeEncoding name, for example Default Avro or Default Arrow. |
+| Compatibility | Variable | String | Optional | SchemaFileType | xRegistry compatibility mode governing this schema's versions, such as NONE, BACKWARD, FORWARD or FULL. All versions of one schema adhere to this mode; a breaking change starts a new schema. |
+| IsDefault | Variable | Boolean | Optional | SchemaFileType | xRegistry isdefault: true when this file is the schema's default (latest) version in the flat projection. |
+| Ancestor | Variable | String | Optional | SchemaFileType | xRegistry ancestor: the versionid of the version this one derives from, establishing the version lineage. |
 | ModelVersion | Variable | String | Optional | SchemaFileType | OPC UA NodeSet model version label (opcua.modelversion). |
-| ConfigurationVersion | Variable | [ConfigurationVersionDataType](https://reference.opcfoundation.org/specs/OPC-10000-14/6.2.3#6.2.3.2.6) | Optional | SchemaFileType | PubSub ConfigurationVersion (opcua.configurationversion) when the schema describes a DataSet. |
+| ConfigurationVersion | Variable | [ConfigurationVersionDataType](https://reference.opcfoundation.org/specs/OPC-10000-14/6.2.3#6.2.3.2.6) | Optional | SchemaFileType | PubSub DataSet schema profile only: the Part 14 ConfigurationVersion (opcua.configurationversion) when the schema describes a DataSet. Omitted for a non-PubSub schema registry. |
 | ExpiryTime | Variable | DateTime | Optional | SchemaFileType | Optional UTC expiry time for mirror/cache mode. |
 | Ttl | Variable | Duration | Optional | SchemaFileType | Optional time-to-live for mirror/cache mode. |
 
@@ -68,5 +71,5 @@ An xRegistry ResourceType whose file content is one concrete schema document (Av
 
 | BrowseName | NodeId | TypeDefinition | Note |
 |---|---|---|---|
-| SchemaRegistry | ns=2;i=62100 | [SchemaRegistryType](#type-SchemaRegistryType) | Server-wide in-server Schema Registry, discoverable from the PublishSubscribe object. |
+| SchemaRegistry | ns=2;i=62100 | [SchemaRegistryType](#type-SchemaRegistryType) | Server-wide in-server Schema Registry, a well-known component of the Server object. A server that supports PubSub may additionally reference this object from PublishSubscribe. |
 

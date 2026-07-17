@@ -10,8 +10,11 @@ SchemaGroupType_Schema,62505,Object
 SchemaFileType_SchemaId,62506,Variable
 SchemaFileType_SchemaIdAlg,62507,Variable
 SchemaFileType_DataTypeEncoding,62508,Variable
-SchemaFileType_ModelVersion,62509,Variable
-SchemaFileType_ConfigurationVersion,62510,Variable
-SchemaFileType_ExpiryTime,62511,Variable
-SchemaFileType_Ttl,62512,Variable
+SchemaFileType_Compatibility,62509,Variable
+SchemaFileType_IsDefault,62510,Variable
+SchemaFileType_Ancestor,62511,Variable
+SchemaFileType_ModelVersion,62512,Variable
+SchemaFileType_ConfigurationVersion,62513,Variable
+SchemaFileType_ExpiryTime,62514,Variable
+SchemaFileType_Ttl,62515,Variable
 SchemaRegistry,62100,Object

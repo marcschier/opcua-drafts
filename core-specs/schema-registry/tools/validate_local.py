@@ -23,7 +23,7 @@ def load_ids(p):
 
 _ua_csv = os.path.join(REF, "UA.NodeIds.csv")
 UA = load_ids(_ua_csv) if os.path.exists(_ua_csv) else None
-UA_EXTRA = {297}
+UA_EXTRA = {297, 2253}
 # xRegistry base NodeIds (the required model this spec extends), resolved across the two-file dependency.
 _xr_csv = os.path.join(GEN, "..", "xregistry", "Opc.Ua.XRegistry.NodeIds.csv")
 XR = load_ids(_xr_csv) if os.path.exists(_xr_csv) else None
@@ -129,12 +129,12 @@ for cid in csv_ids:
     if cid not in defined:
         errors.append(f"csv id {cid} not in XML")
 
-# The SchemaRegistry well-known instance must be parallel to other PubSub services.
+# The SchemaRegistry well-known instance is a component of the Server object (PubSub-independent).
 registry = next((el for tag, el in elems if el.get("NodeId") == "ns=2;i=62100"), None)
 if registry is None:
     errors.append("SchemaRegistry well-known instance ns=2;i=62100 missing")
-elif registry.get("ParentNodeId") != "i=14443":
-    errors.append("SchemaRegistry well-known instance is not parented by PublishSubscribe i=14443")
+elif registry.get("ParentNodeId") != "i=2253":
+    errors.append("SchemaRegistry well-known instance is not parented by the Server object i=2253")
 
 print(f"XML nodes: {len(defined)}   CSV rows: {len(rows)}   base ids: {len(UA) if UA is not None else 'skipped (no local base table)'}   xRegistry base ids: {len(XR) if XR is not None else 'skipped'}")
 print(f"ERRORS: {len(errors)}")
