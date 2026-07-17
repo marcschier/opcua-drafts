@@ -8,7 +8,7 @@
 
 ## 1 Scope
 
-This addendum binds one OPC 40010 `MotionDeviceSystem` (`RobotCell`) to `/Cell` in an OpenUSD stage. It defines recursive composition from the system to two articulated `MotionDevice` robots (`/Cell/Robots/R1`, `/Cell/Robots/R2`) and from each robot to six Axis link Xforms. Each Axis carries a read-only telemetry binding (`UaToUsdTelemetry`) from `ParameterSet/ActualPosition` in degrees to a USD rotate op (`xformOp:rotateZ`, `xformOp:rotateY`, or `xformOp:rotateX`). It also shows an emergency-stop alarm binding driving beacon visibility and a per-robot warning-halo visibility, an opt-in speed-override command binding, and a dynamic gripper tool reference mounted on R1's flange.
+This addendum binds one OPC 40010 `MotionDeviceSystem` (`RobotCell`) to `/Cell` in an OpenUSD stage. It defines recursive composition from the system to two articulated `MotionDevice` robots (`/Cell/Robots/R1`, `/Cell/Robots/R2`) and from each robot to six Axis link Xforms. Each Axis carries a read-only telemetry binding (`OpenUsdValueChangeBindingType`) from `ParameterSet/ActualPosition` in degrees to a USD rotate op (`xformOp:rotateZ`, `xformOp:rotateY`, or `xformOp:rotateX`). It also shows an emergency-stop alarm binding driving beacon visibility and a per-robot warning-halo visibility, an opt-in speed-override command binding, and a dynamic gripper tool reference mounted on R1's flange.
 
 ## 2 Normative references
 
@@ -27,20 +27,20 @@ RobotCell : MotionDeviceSystemType
        PrimPath = "/Cell"
        ├─ <Component> RobotsAggregation : OpenUsdComponentBindingType
        │    MotionDevices (Organizes, Many) -> /Cell/Robots/<BrowseName>, Reference @robot.usda@</Robot>
-       ├─ EmergencyStopBeacon : OpenUsdLiveBindingType (UaAlarmToUsd -> /Cell/SafetyBeacon.visibility)
-       └─ SpeedOverrideCommand : OpenUsdLiveBindingType (UsdToUaCommand -> /Cell.inputs:speedOverride)
+       ├─ EmergencyStopBeacon : OpenUsdAlarmBindingType (-> /Cell/SafetyBeacon.visibility)
+       └─ SpeedOverrideCommand : OpenUsdCommandBindingType (-> /Cell.inputs:speedOverride)
 
 MotionDevices/R1 : MotionDeviceType
   └─ HasAddIn OpenUsdRepresentation
        PrimPath = "/Cell/Robots/R1"
        ├─ <Component> AxesAggregation : Axes (HasComponent, Many) -> child link Xforms
        ├─ <Component> GripperTool : Flange/MountedTool -> /Cell/Robots/R1/Base/J1/J2/J3/J4/J5/J6/Flange/Tool, Reference @tool.usda@</Gripper>, Dynamic=true
-       └─ EmergencyStopWarning : OpenUsdLiveBindingType (UaAlarmToUsd -> /Cell/Robots/R1/Warning.visibility)
+       └─ EmergencyStopWarning : OpenUsdAlarmBindingType (-> /Cell/Robots/R1/Warning.visibility)
 
 MotionDevices/R1/Axes/A1 : AxisType
   └─ HasAddIn OpenUsdRepresentation
        PrimPath = "/Cell/Robots/R1/Base/J1"
-       └─ AxisActualPosition : OpenUsdLiveBindingType
+       └─ AxisActualPosition : OpenUsdValueChangeBindingType
             SourceBrowsePath = "/ParameterSet/ActualPosition"
             TargetPropertyName = "xformOp:rotateZ"
             RenderTargetKind = Rotation
@@ -76,7 +76,13 @@ The robotics example exercises recursive composition (base spec §5.12–5.14). 
 
 Reference, not Instance, is intentional for `/Cell/Robots/R1` and `/Cell/Robots/R2`: both robots use the same reusable `robot.usda` asset, but each needs independent live opinions on the same relative joint paths. Instanceable prims share prototype composition and are not suitable when every robot must articulate independently. The R1 gripper uses dynamic Reference composition so a model-change event can add or remove `/Cell/Robots/R1/Base/J1/J2/J3/J4/J5/J6/Flange/Tool` without mutating `Cell.usda`.
 
-## 4.2 Reference implementation
+## 4.2 Asset content delivery
+
+The reference server also demonstrates the optional `OU-AssetDelivery` capability from the base spec §5.15. `RobotCellStage` exposes an `Assets` folder whose `OpenUsdAssetType` children serve the `.usda` layers through read-only Part 5 `FileType` streams: `Cell.usda` (`RootLayer`), `robot.usda` (`Reference`), and `tool.usda` (`Reference`). Each served layer carries a SHA-256 digest.
+
+A generic connector can therefore browse `<Stage>.Assets`, download and verify the layers, cache them with the same relative `AssetIdentifier` paths, and compose the live layer over the local `Cell.usda`. The rendered robot-cell twin is self-contained: no external asset repository or manual USD asset setup is required when the server advertises this capability.
+
+## 4.3 Reference implementation
 
 The `RoboticsDeviceIntegrationServer` sample realizes this design and validates it with `RobotOpenUsdE2eTests`: the companion Robotics model is served; the `RobotCell` representation and child robot/Axis representations are discoverable through `Server/OpenUSD/Representations`; live Axis telemetry drives a generic connector into a USD sink; the e-stop alarm updates cell beacon and robot warning visibility; the speed override command is declared but fail-closed unless the connector enables commands and the server authorizes the write; and the dynamic gripper is reconciled from model-change events.
 

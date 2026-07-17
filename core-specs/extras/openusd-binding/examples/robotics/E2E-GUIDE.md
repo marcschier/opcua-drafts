@@ -26,7 +26,7 @@ OpenUsdConnector  ──► UsdFileSink ──►  live.usda        (runtime ove
 
 ## Articulation bindings
 
-Each Axis representation carries the same `UaToUsdTelemetry` binding shape: `ParameterSet/ActualPosition` in degrees maps 1:1 to a USD rotate op. USD rotate ops are degrees, so the connector applies `Scale = 1.0`, `Offset = 0.0`.
+Each Axis representation carries the same `OpenUsdValueChangeBindingType` binding shape: `ParameterSet/ActualPosition` in degrees maps 1:1 to a USD rotate op. USD rotate ops are degrees, so the connector applies `Scale = 1.0`, `Offset = 0.0`.
 
 | Robot | Axis | Axis source | USD target prim | Target property | Home |
 |---|---|---|---|---|---|
@@ -43,9 +43,9 @@ The nested link Xforms form a serial kinematic chain, so changing A2 also moves 
 
 | Binding | Intent | Source / command | USD target | Effect |
 |---|---|---|---|---|
-| `EmergencyStopBeacon` | `UaAlarmToUsd` | `/SafetyStates/EmergencyStop` ActiveState | `/Cell/SafetyBeacon.visibility` | beacon visible while e-stop is active |
-| `EmergencyStopWarning` | `UaAlarmToUsd` | same cell e-stop | `/Cell/Robots/R1/Warning.visibility` and `/Cell/Robots/R2/Warning.visibility` | warning halos become visible while stopped, hidden when clear |
-| `SpeedOverrideCommand` | `UsdToUaCommand` | USD `inputs:speedOverride` → controller SpeedOverride Variable | `/Cell.inputs:speedOverride` | opt-in command intent, fail-closed unless the bridge enables commands |
+| `EmergencyStopBeacon` | `OpenUsdAlarmBindingType` | `/SafetyStates/EmergencyStop` ActiveState | `/Cell/SafetyBeacon.visibility` | beacon visible while e-stop is active |
+| `EmergencyStopWarning` | `OpenUsdAlarmBindingType` | same cell e-stop | `/Cell/Robots/R1/Warning.visibility` and `/Cell/Robots/R2/Warning.visibility` | warning halos become visible while stopped, hidden when clear |
+| `SpeedOverrideCommand` | `OpenUsdCommandBindingType` | USD `inputs:speedOverride` → controller SpeedOverride Variable | `/Cell.inputs:speedOverride` | opt-in command intent, fail-closed unless the bridge enables commands |
 | `GripperTool` | composition | `/Flange/MountedTool` model change | `/Cell/Robots/R1/.../Flange/Tool` reference to `tool.usda` | dynamically attaches the gripper to R1 |
 
 ## Composition
@@ -53,6 +53,10 @@ The nested link Xforms form a serial kinematic chain, so changing A2 also moves 
 The system representation composes `/Cell`. Its `<Component>` binding `RobotsAggregation` maps `MotionDevices` to non-instanceable `Reference` prims under `/Cell/Robots`; these robot prims are authored by the connector into `live.usda`, not by the base `Cell.usda` asset. Reference is used deliberately instead of Instance because R1 and R2 must carry independent opinions for `xformOp:rotate*`; an instanceable prim would share a prototype and cannot independently articulate the same joint paths.
 
 Each robot representation recursively composes its `Axes` by `Child` arcs. The Axis representation does not create new geometry; it targets the pre-authored link Xform inside `robot.usda` and drives the rotate op on that link. The R1 tool uses dynamic `Reference` composition and is authored when the server adds the mounted tool node and emits a model-change event.
+
+## Optional asset delivery (zero-setup base layers)
+
+When the server advertises `RobotCellStage.Assets` (`OU-AssetDelivery`), the bridge can download `Cell.usda`, `robot.usda`, and `tool.usda` from the server through Part 5 `FileType`, verify their SHA-256 digests, and write them into a local cache before composing `live.usda`. In that mode `usdview` or Omniverse opens a fully local, self-contained `stage.usda`; no external asset repository or manual base-layer copy is needed. If the server does not advertise `Assets`, provide the base `.usda` files out-of-band as in Step 1.
 
 ## Prerequisites
 

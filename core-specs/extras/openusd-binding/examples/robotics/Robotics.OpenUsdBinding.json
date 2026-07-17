@@ -10,8 +10,16 @@
     "rootLayerDigestAlgorithm": "Sha256",
     "rootLayerDigestNote": "The server publishes RootLayerDigest = SHA-256 over the resolved root layer (a Twin-BOM content-integrity check). The demo digests the rootLayerIdentifier as a deterministic stand-in; a connector verifies it before composing the stage."
   },
-
-  "kinematics": {
+  "servedAssets": {
+    "note": "Optional OU-AssetDelivery capability: the server serves these USD layers through <Stage>.Assets (Part 5 FileType); a connector fetches + verifies + caches them and composes the stage locally, no external asset repo needed.",
+    "digestAlgorithm": "Sha256",
+    "assets": [
+      { "assetIdentifier": "Cell.usda", "assetKind": "RootLayer", "mediaType": "model/vnd.usda" },
+      { "assetIdentifier": "robot.usda", "assetKind": "Reference", "mediaType": "model/vnd.usda" },
+      { "assetIdentifier": "tool.usda", "assetKind": "Reference", "mediaType": "model/vnd.usda" }
+    ]
+  },
+"kinematics": {
     "note": "6-axis articulated arm. The link Xforms are nested in robot.usda so each joint's local rotate composes onto the previous link (a serial kinematic chain). rotationAxis picks the xformOp the Axis' ActualPosition drives; angles are in degrees (USD rotate ops are degrees, so the connector applies them directly). linkPrimPath is relative to the robot representation PrimPath.",
     "axisTemplate": [
       { "name": "A1", "linkPrimPath": "Base/J1", "rotateOp": "xformOp:rotateZ", "rotationAxis": "Z", "home": 0.0, "min": -170.0, "max": 170.0, "engineeringUnits": "deg", "note": "base slew (about Z)" },
@@ -26,7 +34,7 @@
   },
 
   "articulationBinding": {
-    "intentProfile": "UaToUsdTelemetry",
+    "bindingType": "OpenUsdValueChangeBindingType",
     "signalRole": "Observable",
     "sourceBrowsePath": "/ParameterSet/ActualPosition",
     "sourceSemanticId": "0173-1#02-BAF564#005",
@@ -67,7 +75,7 @@
         {
           "bindingDefinitionId": "a1b2c3d4-0002-4a10-9c01-100000000002",
           "name": "EmergencyStopBeacon",
-          "intentProfile": "UaAlarmToUsd",
+          "bindingType": "OpenUsdAlarmBindingType",
           "signalRole": "Observable",
           "alarmAspect": "ActiveState",
           "sourceBrowsePath": "/SafetyStates/EmergencyStop",
@@ -80,7 +88,7 @@
         {
           "bindingDefinitionId": "a1b2c3d4-0003-4a10-9c01-100000000003",
           "name": "SpeedOverrideCommand",
-          "intentProfile": "UsdToUaCommand",
+          "bindingType": "OpenUsdCommandBindingType",
           "signalRole": "Controllable",
           "enabled": true,
           "commandTargetBrowsePath": "/Controllers/Controller_C1/ParameterSet/SpeedOverride",
@@ -121,8 +129,8 @@
             "cardinality": "One",
             "compositionArc": "Reference",
             "componentReferenceType": "HasComponent",
-            "componentBrowsePath": "/Flange/MountedTool",
-            "componentTypeDefinition": "MotionDeviceType",
+            "componentBrowsePath": "/MountedTool",
+            "componentTypeDefinition": "BaseObjectType",
             "targetPrimPath": "/Cell/Robots/R1/Base/J1/J2/J3/J4/J5/J6/Flange/Tool",
             "componentAssetReference": "@tool.usda@</Gripper>",
             "dynamic": true,
@@ -133,7 +141,7 @@
           {
             "bindingDefinitionId": "b1c2d3e4-0013-4a20-9c02-200000000013",
             "name": "EmergencyStopWarning",
-            "intentProfile": "UaAlarmToUsd",
+            "bindingType": "OpenUsdAlarmBindingType",
             "signalRole": "Observable",
             "alarmAspect": "ActiveState",
             "sourceBrowsePath": "/SafetyStates/EmergencyStop",
@@ -170,7 +178,7 @@
           {
             "bindingDefinitionId": "b1c2d3e4-0023-4a20-9c02-200000000023",
             "name": "EmergencyStopWarning",
-            "intentProfile": "UaAlarmToUsd",
+            "bindingType": "OpenUsdAlarmBindingType",
             "signalRole": "Observable",
             "alarmAspect": "ActiveState",
             "sourceBrowsePath": "/SafetyStates/EmergencyStop",

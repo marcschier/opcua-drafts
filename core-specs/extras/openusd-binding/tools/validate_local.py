@@ -26,6 +26,7 @@ KNOWN_BASE = {
     "i=1", "i=7", "i=11", "i=12", "i=14", "i=17", "i=20", "i=21", "i=540", "i=887",
     "i=29", "i=45", "i=46", "i=47", "i=35", "i=40", "i=37", "i=17603",
     "i=58", "i=61", "i=68", "i=17602", "i=78", "i=80", "i=11508", "i=2253",
+    "i=11575",  # FileType (Part 5) — SuperType of OpenUsdAssetType (asset node IS the file)
 }
 HIER = {"i=47", "i=46", "i=35", "i=17603"}  # HasComponent/HasProperty/Organizes/HasInterface (+HasSubtype handled apart)
 # Type-level constants intentionally without a ModellingRule:

@@ -1,6 +1,6 @@
 # OPC UA Pumps — OpenUSD Bindings Addendum
 
-**Implementer Annex to *OPC UA — OpenUSD Bindings* (Release 0.1.0 — Draft).**
+**Implementer Annex to *OPC UA — OpenUSD Bindings* (Release 0.2.0 — Draft).**
 
 > This addendum is the **implementer (Pump) annex** for the generic *OPC UA — OpenUSD Bindings* companion model. All Pump-specific and end-to-end detail lives here; the base specification (`../OPC-UA-OpenUSD-Bindings.md`) remains domain-agnostic. It shows how a `PumpType` instance (OPC 40223 Pumps) is bound to an OpenUSD prim and how three live measurements drive the render. The machine-readable source of truth is `../../extras/openusd-binding/examples/pumps/Pumps.OpenUsdBinding.json`; a runnable USD writer is `../../extras/openusd-binding/examples/pumps/usd_writer.py`; the C# end-to-end validation lives in the `marcschier/UA-.NETStandard` `PumpDeviceIntegrationServer` sample.
 
@@ -8,11 +8,11 @@
 
 ## 1 Scope
 
-This addendum binds one `PumpType` instance to a USD prim and defines three read-only telemetry bindings (Part 2, `UaToUsdTelemetry`): impeller rotation from mass flow, body colour from bearing temperature, and status-light glow from differential pressure. It also shows the 0.2 capability bindings on the same pump — an alarm binding (`UaAlarmToUsd`) driving status-light visibility and an opt-in command binding (`UsdToUaCommand`) writing a speed setpoint — plus a stage content-integrity digest. It is illustrative; a concrete server supplies the exact source BrowsePaths and stage identifiers.
+This addendum binds one `PumpType` instance to a USD prim and defines three read-only telemetry bindings (Part 2, `OpenUsdValueChangeBindingType`): impeller rotation from mass flow, body colour from bearing temperature, and status-light glow from differential pressure. It also shows the 0.2 capability bindings on the same pump — an alarm binding (`OpenUsdAlarmBindingType`) driving status-light visibility and an opt-in command binding (`OpenUsdCommandBindingType`) writing a speed setpoint — plus a stage content-integrity digest. It is illustrative; a concrete server supplies the exact source BrowsePaths and stage identifiers.
 
 ## 2 Normative references
 
-- *OPC UA — OpenUSD Bindings*, Release 0.1.0 (the base specification).
+- *OPC UA — OpenUSD Bindings*, Release 0.2.0 (the base specification).
 - [OPC 40223](https://reference.opcfoundation.org/specs/OPC-40223/) — OPC UA for Pumps and Vacuum Pumps (`PumpType`, namespace `http://opcfoundation.org/UA/Pumps/`).
 - [OPC 10000-100](https://reference.opcfoundation.org/specs/OPC-10000-100/) — Devices (DI), the base of `PumpType`.
 
@@ -25,11 +25,11 @@ Pump101 : PumpType
   └─ HasAddIn OpenUsdRepresentation : OpenUsdRepresentationType
        Stage    = NodeId(Server/OpenUSD/Stages/PlantStage)
        PrimPath = "/Plant/Pumps/P101"
-       ├─ MassFlowSpin           : OpenUsdLiveBindingType   (UaToUsdTelemetry, +SourceSemanticId)
-       ├─ BearingTempColor       : OpenUsdLiveBindingType   (UaToUsdTelemetry)
-       ├─ DiffPressureEmissive   : OpenUsdLiveBindingType   (UaToUsdTelemetry)
-       ├─ AlarmActiveVisibility  : OpenUsdLiveBindingType   (UaAlarmToUsd)
-       └─ SpeedSetpointCommand   : OpenUsdLiveBindingType   (UsdToUaCommand, opt-in)
+       ├─ MassFlowSpin           : OpenUsdValueChangeBindingType   (+SourceSemanticId)
+       ├─ BearingTempColor       : OpenUsdValueChangeBindingType
+       ├─ DiffPressureEmissive   : OpenUsdValueChangeBindingType
+       ├─ AlarmActiveVisibility  : OpenUsdAlarmBindingType
+       └─ SpeedSetpointCommand   : OpenUsdCommandBindingType   (opt-in)
 ```
 
 The AddIn is also `Organizes`-listed from `Server/OpenUSD/Representations`, so a generic connector discovers it without knowing anything about pumps. Each binding's source resolves **relative to `Pump101`** via `SourceBrowsePath` (or, from 0.2, a portable `SourceSemanticId`), so the same declaration applies to every pump instance; the effective runtime key is `(Pump101, BindingDefinitionId)`. The alarm and command bindings target two extra pump Variables — `AlarmActive` (Boolean) and a writable `SpeedSetpoint` (Double) — and the `PlantStage` carries a `RootLayerDigest` (SHA-256) a connector verifies before composing.
@@ -60,7 +60,7 @@ The `PumpDeviceIntegrationServer` sample in `marcschier/UA-.NETStandard` realize
 | **AlarmActiveVisibility** | `AlarmActive` (supervision alarm ActiveState) | `visibility` (on `…/StatusLight`) | `token` | Visibility |
 | **SpeedSetpointCommand** | *(command)* → `SpeedSetpoint` | `inputs:speedSetpoint` (on `…/Impeller`) | `double` | — |
 
-The alarm binding (`UaAlarmToUsd`, `AlarmAspect = ActiveState`) shows the status light when a supervision alarm is active; the command binding (`UsdToUaCommand`, `SignalRole = Controllable`) is opt-in — the bridge writes the setpoint only with `--enable-commands` (single-writer, fail-closed). The `PlantStage` publishes a `RootLayerDigest` (`Sha256`) the connector verifies before composing.
+The alarm binding (`OpenUsdAlarmBindingType`, `AlarmAspect = ActiveState`) shows the status light when a supervision alarm is active; the command binding (`OpenUsdCommandBindingType`, `SignalRole = Controllable`) is opt-in — the bridge writes the setpoint only with `--enable-commands` (single-writer, fail-closed). The `PlantStage` publishes a `RootLayerDigest` (`Sha256`) the connector verifies before composing.
 
 Implementer findings from the source-generated OPC UA .NET model (generic, not Pump-specific — applies to any server built from this companion NodeSet):
 
@@ -83,7 +83,13 @@ Composition-specific implementer findings (generic):
 - **Process every representation.** Composition spans the aggregating representation and each component's own representation, so a connector iterates all registry entries, not just the first.
 - **One `OfType` filter covers both model-change events.** `GeneralModelChangeEventType` and `SemanticChangeEventType` both derive from `BaseModelChangeEventType`, so a single `OfType(BaseModelChangeEventType)` event filter suffices.
 
-`PumpOpenUsdE2eTests` now has **fifteen** passing cases; the five composition cases are `PumpComponentsComposeChildPrims`, `ProductionLineAggregatesPumps`, `DynamicPumpIsComposedThenDeactivated`, `CrossServerComponentIsComposed`, and `ComponentBindingsAreDiscoverable`.
+`PumpOpenUsdE2eTests` now has **sixteen** passing cases; the five composition cases are `PumpComponentsComposeChildPrims`, `ProductionLineAggregatesPumps`, `DynamicPumpIsComposedThenDeactivated`, `CrossServerComponentIsComposed`, and `ComponentBindingsAreDiscoverable`.
+
+## 4.3 Asset content delivery
+
+The reference server also demonstrates the optional `OU-AssetDelivery` capability from the base spec §5.15. `PlantStage` exposes an `Assets` folder whose `OpenUsdAssetType` children serve the `.usda` layers through read-only Part 5 `FileType` streams: `Plant.usda` (`RootLayer`), `pump.usda` (`Reference`), and `remote-pump.usda` (`Reference`). Each served layer carries a SHA-256 digest.
+
+A generic connector can therefore browse `<Stage>.Assets`, download and verify the layers, cache them with the same relative `AssetIdentifier` paths, and compose the live layer over the local `Plant.usda`. The rendered pump twin is self-contained: no external asset repository or manual USD asset setup is required when the server advertises this capability.
 
 ## 5 Where the bindings live
 

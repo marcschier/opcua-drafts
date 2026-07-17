@@ -4,87 +4,98 @@
 
 | NodeId | BrowseName | NodeClass | Description |
 |---|---|---|---|
-| ns=1;i=3001 | OpenUsdIntentProfileEnum | DataType | The intent/direction of a binding. UaToUsdTelemetry (read-only UA -> USD) is the default; UaAlarmToUsd and UaHistoryToUsd are read-only variants; UsdToUaCommand is the opt-in, authorized control direction (USD -> UA). |
-| ns=1;i=3901 | EnumStrings | Variable |  |
 | ns=1;i=3002 | OpenUsdRenderTargetKindEnum | DataType | Classifies the USD render target a live value drives (advisory routing hint). |
 | ns=1;i=3902 | EnumStrings | Variable |  |
 | ns=1;i=3003 | OpenUsdBadQualityActionEnum | DataType | What the connector does with a non-Good source value. |
 | ns=1;i=3903 | EnumStrings | Variable |  |
 | ns=1;i=3004 | OpenUsdBindingStateEnum | DataType | Runtime lifecycle state of a live binding, exposed for diagnostics. |
 | ns=1;i=3904 | EnumStrings | Variable |  |
-| ns=1;i=1004 | OpenUsdLiveBindingType | ObjectType | One read-only live binding: a source OPC UA Variable value drives one target USD attribute. The binding declaration is portable; the runtime connector resolves and applies it. The effective runtime identity is (represented object, BindingDefinitionId). |
+| ns=1;i=1004 | OpenUsdLiveBindingType | ObjectType | Abstract base for one read-only live binding: a source OPC UA Variable value drives one target USD attribute. The binding intent is expressed by the concrete subtype (ValueChange/Alarm/History/Command), not by an enum. The declaration is portable; the runtime connector resolves and applies it. The effective runtime identity is (represented object, BindingDefinitionId). |
 | ns=1;i=6001 | BindingDefinitionId | Variable | Stable declaration identifier used for override/tombstone matching across type and instance levels. NOT a runtime instance key. |
 | ns=1;i=6002 | Enabled | Variable | False acts as a tombstone that suppresses an inherited binding. |
-| ns=1;i=6003 | IntentProfile | Variable | The binding intent/direction; default UaToUsdTelemetry. |
-| ns=1;i=6004 | SourceNodeId | Variable | Absolute NodeId of the source Variable (instance-level). Optional; prefer SourceBrowsePath for type-level declarations. |
-| ns=1;i=6005 | SourceBrowsePath | Variable | RelativePath to the source Variable, resolved from the represented object. Preferred, instance-portable form. |
-| ns=1;i=6006 | AttributeId | Variable | Source attribute id; default 13 (Value). Telemetry binds Value only. |
-| ns=1;i=6007 | TargetStage | Variable | NodeId of the OpenUsdStageType instance holding the target prim. |
-| ns=1;i=6008 | TargetPrimPath | Variable | Prim path of the target: absolute, or relative to the representation PrimPath. |
-| ns=1;i=6009 | TargetPropertyName | Variable | USD attribute name on the target prim, e.g. 'xformOp:rotateZ' or 'primvars:displayColor'. |
-| ns=1;i=6010 | TargetUsdTypeName | Variable | Expected USD Sdf value type name, e.g. 'double', 'float', 'bool', 'color3f'. |
-| ns=1;i=6011 | RenderTargetKind | Variable | Advisory routing hint for the render target category. |
-| ns=1;i=6012 | ValueSemanticUri | Variable | Value semantics: scalar/angle/length/point/vector/quaternion/matrix. The transform profile uses RSL CartesianFrameAngleOrientationType semantics. |
-| ns=1;i=6013 | Scale | Variable | Linear conversion scale: target = Scale * converted + Offset. |
-| ns=1;i=6014 | Offset | Variable | Linear conversion offset. |
-| ns=1;i=6015 | SourceEngineeringUnits | Variable | Asserted source engineering units (UNECE). |
-| ns=1;i=6016 | TargetEngineeringUnits | Variable | Requested target engineering units. |
-| ns=1;i=6017 | BadQualityAction | Variable | How the connector treats a non-Good source value. Default Skip. |
-| ns=1;i=6018 | SamplingIntervalHint | Variable | Requested sampling interval hint in milliseconds. A HINT only; the actual MonitoredItem parameters are negotiated per client Subscription. |
-| ns=1;i=6019 | State | Variable | Runtime lifecycle state (diagnostic). |
-| ns=1;i=6020 | LastError | Variable | Last operation error text (diagnostic). |
+| ns=1;i=6003 | SourceNodeId | Variable | Absolute NodeId of the source Variable (instance-level). Optional; prefer SourceBrowsePath for type-level declarations. |
+| ns=1;i=6004 | SourceBrowsePath | Variable | RelativePath to the source Variable, resolved from the represented object. Preferred, instance-portable form. |
+| ns=1;i=6005 | AttributeId | Variable | Source attribute id; default 13 (Value). Telemetry binds Value only. |
+| ns=1;i=6006 | TargetStage | Variable | NodeId of the OpenUsdStageType instance holding the target prim. |
+| ns=1;i=6007 | TargetPrimPath | Variable | Prim path of the target: absolute, or relative to the representation PrimPath. |
+| ns=1;i=6008 | TargetPropertyName | Variable | USD attribute name on the target prim, e.g. 'xformOp:rotateZ' or 'primvars:displayColor'. |
+| ns=1;i=6009 | TargetUsdTypeName | Variable | Expected USD Sdf value type name, e.g. 'double', 'float', 'bool', 'color3f'. |
+| ns=1;i=6010 | RenderTargetKind | Variable | Advisory routing hint for the render target category. |
+| ns=1;i=6011 | ValueSemanticUri | Variable | Value semantics: scalar/angle/length/point/vector/quaternion/matrix. The transform profile uses RSL CartesianFrameAngleOrientationType semantics. |
+| ns=1;i=6012 | Scale | Variable | Linear conversion scale: target = Scale * converted + Offset. |
+| ns=1;i=6013 | Offset | Variable | Linear conversion offset. |
+| ns=1;i=6014 | SourceEngineeringUnits | Variable | Asserted source engineering units (UNECE). |
+| ns=1;i=6015 | TargetEngineeringUnits | Variable | Requested target engineering units. |
+| ns=1;i=6016 | BadQualityAction | Variable | How the connector treats a non-Good source value. Default Skip. |
+| ns=1;i=6017 | SamplingIntervalHint | Variable | Requested sampling interval hint in milliseconds. A HINT only; the actual MonitoredItem parameters are negotiated per client Subscription. |
+| ns=1;i=6018 | State | Variable | Runtime lifecycle state (diagnostic). |
+| ns=1;i=6019 | LastError | Variable | Last operation error text (diagnostic). |
 | ns=1;i=1002 | OpenUsdStageType | ObjectType | Describes one OpenUSD stage available to the server. Identity is the root layer identifier plus, where used, the session layer and resolver context; the stage Object NodeId is its same-server identity. |
-| ns=1;i=6021 | RootLayerIdentifier | Variable | Opaque authored root-layer / resolver identifier (NOT necessarily a URI). |
-| ns=1;i=6022 | SessionLayerIdentifier | Variable | Opaque session-layer identifier, if any. Contributes to stage identity. |
-| ns=1;i=6023 | ResolverContext | Variable | Opaque resolver-context descriptor (e.g. a named context profile). |
-| ns=1;i=6024 | ResolvedRootLayerUri | Variable | Informative current resolution as a URI, when representable. Not authoritative. |
+| ns=1;i=6020 | RootLayerIdentifier | Variable | Opaque authored root-layer / resolver identifier (NOT necessarily a URI). |
+| ns=1;i=6021 | SessionLayerIdentifier | Variable | Opaque session-layer identifier, if any. Contributes to stage identity. |
+| ns=1;i=6022 | ResolverContext | Variable | Opaque resolver-context descriptor (e.g. a named context profile). |
+| ns=1;i=6023 | ResolvedRootLayerUri | Variable | Informative current resolution as a URI, when representable. Not authoritative. |
 | ns=1;i=1003 | OpenUsdRepresentationType | ObjectType | AddIn that binds a domain Object to a canonical composed USD prim path on a specific stage. Mounted with HasAddIn; carries live bindings as children. |
-| ns=1;i=6025 | DefaultInstanceBrowseName | Variable | Default BrowseName for instances of this AddIn (Part 3 AddIn convention). |
-| ns=1;i=6026 | Stage | Variable | NodeId of the OpenUsdStageType instance this representation targets. |
-| ns=1;i=6027 | PrimPath | Variable | Canonical, absolute, composed-stage prim path (SdfPath) for this instance. Instance-level: a reusable type cannot supply an absolute instance path. |
-| ns=1;i=6028 | <Binding> | Object | A live binding whose source resolves relative to the represented object. |
+| ns=1;i=6024 | DefaultInstanceBrowseName | Variable | Default BrowseName for instances of this AddIn (Part 3 AddIn convention). |
+| ns=1;i=6025 | Stage | Variable | NodeId of the OpenUsdStageType instance this representation targets. |
+| ns=1;i=6026 | PrimPath | Variable | Canonical, absolute, composed-stage prim path (SdfPath) for this instance. Instance-level: a reusable type cannot supply an absolute instance path. |
+| ns=1;i=6027 | <Binding> | Object | A live binding whose source resolves relative to the represented object. |
 | ns=1;i=1001 | OpenUsdRootType | ObjectType | Root of the server-wide OpenUSD facility. Contains the stage registry and the representation registry for deterministic discovery. |
-| ns=1;i=6029 | Stages | Object | Registry of OpenUsdStageType instances available to the server. |
-| ns=1;i=6030 | Representations | Object | Registry that Organizes every OpenUsdRepresentation AddIn in the server, so a connector can enumerate all representations from one place. |
+| ns=1;i=6028 | Stages | Object | Registry of OpenUsdStageType instances available to the server. |
+| ns=1;i=6029 | Representations | Object | Registry that Organizes every OpenUsdRepresentation AddIn in the server, so a connector can enumerate all representations from one place. |
 | ns=1;i=1010 | IOpenUsdRepresentedType | ObjectType | Optional interface advertising that a domain ObjectType participates in OpenUSD representation. Applied with HasInterface; informative for browsing. |
-| ns=1;i=6031 | <OpenUsdRepresentation> | Object | Placeholder for the representation AddIn on an implementing instance. |
+| ns=1;i=6030 | <OpenUsdRepresentation> | Object | Placeholder for the representation AddIn on an implementing instance. |
 | ns=1;i=3005 | OpenUsdSignalRoleEnum | DataType | Role of the bound signal, mirroring the asset-definition observable/controllable tagging. Only Controllable signals are eligible for a command binding. |
 | ns=1;i=3905 | EnumStrings | Variable |  |
-| ns=1;i=3006 | OpenUsdAlarmAspectEnum | DataType | For UaAlarmToUsd bindings: which A&C condition aspect drives the target attribute. |
+| ns=1;i=3006 | OpenUsdAlarmAspectEnum | DataType | For OpenUsdAlarmBindingType bindings: which A&C condition aspect drives the target attribute. |
 | ns=1;i=3906 | EnumStrings | Variable |  |
 | ns=1;i=3007 | OpenUsdDigestAlgorithmEnum | DataType | Digest algorithm for OpenUsdStageType.RootLayerDigest (Twin BOM content integrity). |
 | ns=1;i=3907 | EnumStrings | Variable |  |
-| ns=1;i=6032 | SignalRole | Variable | Observable (read-only, default) or Controllable (eligible for a command binding). |
-| ns=1;i=6033 | SourceSemanticId | Variable | Semantic identifier (e.g. ECLASS / IEC CDD IRDI) of the source signal; resolved against the source's semantic annotations for cross-vendor portability. |
-| ns=1;i=6034 | AlarmAspect | Variable | For UaAlarmToUsd: which A&C condition aspect drives the target. |
-| ns=1;i=6035 | TimeSampled | Variable | For UaHistoryToUsd: author values as USD time samples (playback) rather than the latest default. |
-| ns=1;i=6036 | CommandTargetNodeId | Variable | For UsdToUaCommand: the Variable to write, or the Object on which to Call CommandMethodId. |
-| ns=1;i=6037 | CommandMethodId | Variable | For UsdToUaCommand: optional Method to invoke instead of a Variable write. |
-| ns=1;i=6038 | CommandTriggerPropertyName | Variable | For UsdToUaCommand: the USD attribute whose change is interpreted as the command intent/value. |
-| ns=1;i=6039 | RootLayerDigest | Variable | Cryptographic digest of the resolved root layer, for content-integrity verification (Twin BOM). Verify before composing the stage. |
-| ns=1;i=6040 | RootLayerDigestAlgorithm | Variable | Digest algorithm for RootLayerDigest (default SHA-256). |
-| ns=1;i=6041 | Signature | Variable | Optional detached signature over the digest / stage identity, for provenance. |
-| ns=1;i=6042 | ProvenanceUri | Variable | Optional URI locating provenance / a signed Twin BOM manifest for the stage. |
+| ns=1;i=6031 | SignalRole | Variable | Observable (read-only, default) or Controllable (eligible for a command binding). |
+| ns=1;i=6032 | SourceSemanticId | Variable | Semantic identifier (e.g. ECLASS / IEC CDD IRDI) of the source signal; resolved against the source's semantic annotations for cross-vendor portability. |
+| ns=1;i=1007 | OpenUsdValueChangeBindingType | ObjectType | A source UA Variable Value change drives a USD attribute (the default binding). Adds no members beyond the abstract base; binds the source Value (AttributeId 13). |
+| ns=1;i=1008 | OpenUsdAlarmBindingType | ObjectType | Read-only OPC UA A&C condition aspect (Part 9) drives a USD attribute. |
+| ns=1;i=6033 | AlarmAspect | Variable | Which A&C condition aspect drives the target (ActiveState/Severity/AckedState/EnabledState). |
+| ns=1;i=1009 | OpenUsdHistoryBindingType | ObjectType | Read-only history (Part 11 HistoryRead) authored as USD time samples. |
+| ns=1;i=6034 | TimeSampled | Variable | Author values as USD time samples (playback) rather than the latest default. |
+| ns=1;i=1011 | OpenUsdCommandBindingType | ObjectType | Opt-in, authorized USD-side intent drives an OPC UA write / Method call (USD -> UA). |
+| ns=1;i=6035 | CommandTargetNodeId | Variable | The Variable to write, or the Object on which to Call CommandMethodId. |
+| ns=1;i=6036 | CommandMethodId | Variable | Optional Method to invoke instead of a Variable write. |
+| ns=1;i=6037 | CommandTriggerPropertyName | Variable | The USD attribute whose change is interpreted as the command intent/value. |
+| ns=1;i=6038 | RootLayerDigest | Variable | Cryptographic digest of the resolved root layer, for content-integrity verification (Twin BOM). Verify before composing the stage. |
+| ns=1;i=6039 | RootLayerDigestAlgorithm | Variable | Digest algorithm for RootLayerDigest (default SHA-256). |
+| ns=1;i=6040 | Signature | Variable | Optional detached signature over the digest / stage identity, for provenance. |
+| ns=1;i=6041 | ProvenanceUri | Variable | Optional URI locating provenance / a signed Twin BOM manifest for the stage. |
 | ns=1;i=3008 | OpenUsdCardinalityEnum | DataType | Cardinality of a component binding: 1:1 or 1..n. |
 | ns=1;i=3908 | EnumStrings | Variable |  |
 | ns=1;i=3009 | OpenUsdCompositionArcEnum | DataType | USD composition arc used to place a component prim under its parent. |
 | ns=1;i=3909 | EnumStrings | Variable |  |
 | ns=1;i=1005 | OpenUsdComponentBindingType | ObjectType | One composition/aggregation binding: maps an OPC UA component relationship of the represented Object onto a USD composition arc, so a connector assembles the component prim(s). Carried as a <Component> child of a representation. |
-| ns=1;i=6043 | BindingDefinitionId | Variable | Stable declaration id for override/tombstone matching. |
-| ns=1;i=6044 | Enabled | Variable | False acts as a tombstone that suppresses an inherited component binding. |
-| ns=1;i=6045 | Cardinality | Variable | One (1:1) or Many (1..n). |
-| ns=1;i=6046 | CompositionArc | Variable | How the component maps into the parent prim: Child, Reference, Payload, Instance. |
-| ns=1;i=6047 | ComponentReferenceType | Variable | Aggregating ReferenceType from the represented Object to its component(s); default HasComponent. |
-| ns=1;i=6048 | ComponentBrowsePath | Variable | RelativePath to the component Object (One) or to the container from which components are enumerated (Many). |
-| ns=1;i=6049 | ComponentTypeDefinition | Variable | Expected component ObjectType; selects children for Many and locates each component's own representation. |
-| ns=1;i=6050 | TargetPrimPath | Variable | Child prim (One) or parent scope prim (Many), relative to the parent representation PrimPath (or absolute). |
-| ns=1;i=6051 | TargetPrimNameSource | Variable | For Many: how to name each instance prim (BrowseName default, a source-property RelativePath, or a {...} template). |
-| ns=1;i=6052 | ComponentAssetReference | Variable | For Reference/Payload/Instance: the external USD asset + default prim, e.g. @pump.usda@</Pump>. |
-| ns=1;i=6053 | ComponentRepresentation | Variable | NodeId of the component's own OpenUsdRepresentation AddIn (its sub-bindings compose under the component prim). |
-| ns=1;i=6054 | Dynamic | Variable | The component set may change at runtime (reconciled from model-change events). |
-| ns=1;i=6055 | ChangeEventSource | Variable | Node whose GeneralModelChange/SemanticChange events signal recomposition; default the Server Object (i=2253). |
-| ns=1;i=6056 | ComponentServerUri | Variable | For a component on another server: the remote Server's application/namespace URI. |
-| ns=1;i=6057 | ComponentEndpointUrl | Variable | For a component on another server: the remote endpoint URL (else discovered). |
-| ns=1;i=6058 | State | Variable | Runtime lifecycle state (diagnostic). |
-| ns=1;i=6059 | LastError | Variable | Last operation error text (diagnostic). |
-| ns=1;i=6060 | <Component> | Object | A component/aggregation binding composing this Object's components into the USD prim tree. |
+| ns=1;i=6042 | BindingDefinitionId | Variable | Stable declaration id for override/tombstone matching. |
+| ns=1;i=6043 | Enabled | Variable | False acts as a tombstone that suppresses an inherited component binding. |
+| ns=1;i=6044 | Cardinality | Variable | One (1:1) or Many (1..n). |
+| ns=1;i=6045 | CompositionArc | Variable | How the component maps into the parent prim: Child, Reference, Payload, Instance. |
+| ns=1;i=6046 | ComponentReferenceType | Variable | Aggregating ReferenceType from the represented Object to its component(s); default HasComponent. |
+| ns=1;i=6047 | ComponentBrowsePath | Variable | RelativePath to the component Object (One) or to the container from which components are enumerated (Many). |
+| ns=1;i=6048 | ComponentTypeDefinition | Variable | Expected component ObjectType; selects children for Many and locates each component's own representation. |
+| ns=1;i=6049 | TargetPrimPath | Variable | Child prim (One) or parent scope prim (Many), relative to the parent representation PrimPath (or absolute). |
+| ns=1;i=6050 | TargetPrimNameSource | Variable | For Many: how to name each instance prim (BrowseName default, a source-property RelativePath, or a {...} template). |
+| ns=1;i=6051 | ComponentAssetReference | Variable | For Reference/Payload/Instance: the external USD asset + default prim, e.g. @pump.usda@</Pump>. |
+| ns=1;i=6052 | ComponentRepresentation | Variable | NodeId of the component's own OpenUsdRepresentation AddIn (its sub-bindings compose under the component prim). |
+| ns=1;i=6053 | Dynamic | Variable | The component set may change at runtime (reconciled from model-change events). |
+| ns=1;i=6054 | ChangeEventSource | Variable | Node whose GeneralModelChange/SemanticChange events signal recomposition; default the Server Object (i=2253). |
+| ns=1;i=6055 | ComponentServerUri | Variable | For a component on another server: the remote Server's application/namespace URI. |
+| ns=1;i=6056 | ComponentEndpointUrl | Variable | For a component on another server: the remote endpoint URL (else discovered). |
+| ns=1;i=6057 | State | Variable | Runtime lifecycle state (diagnostic). |
+| ns=1;i=6058 | LastError | Variable | Last operation error text (diagnostic). |
+| ns=1;i=6059 | <Component> | Object | A component/aggregation binding composing this Object's components into the USD prim tree. |
+| ns=1;i=3010 | OpenUsdAssetKindEnum | DataType | Role of a served USD asset within a stage's served layer closure. |
+| ns=1;i=3910 | EnumStrings | Variable |  |
+| ns=1;i=1006 | OpenUsdAssetType | ObjectType | One served USD asset/layer: authored content the server delivers through the address space so a connector can fetch it and compose the stage locally, with no external resolver. OpenUsdAssetType subtypes the Part 5 FileType, so the asset's bytes are streamed directly through the node's own Open/Read/Close; AssetIdentifier is the resolver identifier / relative path used to place the asset in the local cache so that @...@ references resolve. |
+| ns=1;i=6060 | AssetIdentifier | Variable | Resolver identifier / relative path of this asset, matching the stage RootLayerIdentifier or a ComponentAssetReference asset path; used for @...@ resolution and cache placement. |
+| ns=1;i=6061 | AssetKind | Variable | Role of this asset within the stage's served layer closure. |
+| ns=1;i=6062 | MediaType | Variable | IANA media type of the content, e.g. 'model/vnd.usda', 'model/vnd.usdz+zip', 'image/png'. |
+| ns=1;i=6063 | Digest | Variable | Cryptographic digest of this asset's resolved content, for per-layer integrity verification. A connector verifies it before composing the asset. |
+| ns=1;i=6064 | DigestAlgorithm | Variable | Digest algorithm for Digest (default SHA-256). |
+| ns=1;i=6065 | Assets | Object | Optional registry of OpenUsdAssetType instances forming this stage's served layer closure (exactly one RootLayer). Present only when the server delivers its geometry; a connector that finds it fetches and composes the stage locally, else it resolves RootLayerIdentifier externally as before. |
+| ns=1;i=6066 | ComponentAssetNode | Variable | NodeId of the OpenUsdAssetType (under the stage's Assets folder) serving this component's asset, when the server delivers it. Complements ComponentAssetReference. |
