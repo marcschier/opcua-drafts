@@ -10,7 +10,7 @@ footer: 'OPC UA — Observability Export · working draft'
 <!--
 Non-normative overview deck for the Observability Export companion specification.
 Rendered on GitHub (the mermaid diagrams render inline). To export slides:
-`npx --yes @marp-team/marp-cli OPC-UA-Observability-Export-Deck.md -o deck.html`
+`npx --yes @marp-team/marp-cli README.md -o deck.html`
 (mermaid needs a Marp mermaid plugin, or just present the GitHub-rendered file).
 -->
 
