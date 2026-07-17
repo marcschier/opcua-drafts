@@ -4,6 +4,17 @@ A scratch pad for **OPC UA specification drafts**.
 
 This repository is a working area for authoring and iterating on draft OPC UA information models and companion specifications. It is intentionally informal: contents are experimental drafts used to explore modelling approaches, try out tooling, and prototype NodeSets before anything is proposed or released. Nothing here is normative, official, or final, and everything is subject to change or removal without notice.
 
+## Contributing
+
+Feedback on these drafts is welcome — and you don't have to write the specification yourself. Fork the repo, create a branch, and either make changes or just **annotate** the drafts (inline comments, notes, or open questions); then open a pull request and discuss. Maintainers use **AI agents** to turn the feedback and discussion into concrete specification text, information-model (NodeSet / CSV) updates, and regenerated artifacts.
+
+1. Fork `marcschier/opcua-drafts` and check out a topic branch.
+2. Make your changes or annotations — for generated specs, edit the source (a descriptor or `tools/build_model.py`), not the generated NodeSet / CSV, and regenerate.
+3. Open a pull request against `main` and discuss.
+4. Maintainers apply the agreed changes with AI, regenerate, and validate (`python core-specs/extras/validate_all.py`).
+
+See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the full workflow, validation, and conventions.
+
 ## Layout
 
 - `companion-specs/` — draft OPC UA companion specifications, one folder per domain.
@@ -16,18 +27,3 @@ This repository is a working area for authoring and iterating on draft OPC UA in
   - `extras/` — everything **secondary to standardization**, mirroring the structure above: per‑folder `tools/`, `examples/`, and generated (non‑base) `schemas/`; the shared `_common/` (`opcua_enc` package: canonical OPC UA type model, reversibility **corpus**, NodeSet DataType loader, JSON control codec, fingerprint/hexdump helpers); and `validate_all.py` + `requirements.txt`. Run `python core-specs/extras/validate_all.py` to (re)generate and validate every extension.
 - `skills/` — reusable authoring **skills** (agent instructions) that operate on the drafts.
   - `opcua-observability-export/` — a skill that generates observability-export bindings for any companion specification from its NodeSet (classifying its Variables and events into OTEL metrics, logs and traces; over RPC, optionally realized over PubSub; a machine-readable binding descriptor, an instance-overlay NodeSet, and a companion-spec addendum with annex tables and diagrams).
-
-## Status
-
-Draft / experimental. These drafts are not affiliated with, reviewed by, or endorsed by the OPC Foundation, and the use of `opcfoundation.org` namespace URIs is for prototyping only.
-
-## Contributing
-
-Feedback on these drafts is welcome — and you don't have to write the specification yourself. Fork the repo, create a branch, and either make changes or just **annotate** the drafts (inline comments, notes, or open questions); then open a pull request and discuss. Maintainers use **AI agents** to turn the feedback and discussion into concrete specification text, information-model (NodeSet / CSV) updates, and regenerated artifacts.
-
-1. Fork `marcschier/opcua-drafts` and check out a topic branch.
-2. Make your changes or annotations — for generated specs, edit the source (a descriptor or `tools/build_model.py`), not the generated NodeSet / CSV, and regenerate.
-3. Open a pull request against `main` and discuss.
-4. Maintainers apply the agreed changes with AI, regenerate, and validate (`python core-specs/extras/validate_all.py`).
-
-See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the full workflow, validation, and conventions.
