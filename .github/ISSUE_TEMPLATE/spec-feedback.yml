@@ -1,0 +1,64 @@
+name: Spec feedback or annotation
+description: Suggest a change, raise a concern, or annotate a draft spec — no need to write the spec text yourself.
+title: "[feedback]: "
+labels: ["feedback"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve the drafts! You **don't** need to author specification text.
+        Describe what you'd change or what you observed, and a maintainer (with AI assistance) will
+        turn it into concrete spec / model updates, regenerate the derived artifacts, and open the
+        change for discussion. A concrete suggestion is welcome but not required.
+  - type: input
+    id: spec
+    attributes:
+      label: Which spec / file
+      description: Path or name of the draft this is about.
+      placeholder: core-specs/observability-export/OPC-UA-Observability-Export.md
+    validations:
+      required: true
+  - type: input
+    id: section
+    attributes:
+      label: Section / node / anchor
+      description: Section number, heading, NodeId, or type name (if applicable).
+      placeholder: "§5.7, BoundMethodType, i=60014, …"
+    validations:
+      required: false
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Type of feedback
+      options:
+        - Correctness / semantic issue
+        - Clarification / wording
+        - Missing capability / gap
+        - Simplification
+        - Adoptability / implementability
+        - New example or use case
+        - Question
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: feedback
+    attributes:
+      label: Feedback / annotation
+      description: What should change, or what did you observe? Quoting the text or annotating inline is helpful.
+    validations:
+      required: true
+  - type: textarea
+    id: rationale
+    attributes:
+      label: Rationale / references
+      description: Why does this matter? Link OPC UA parts, a real-world need, or prior art.
+    validations:
+      required: false
+  - type: textarea
+    id: suggested
+    attributes:
+      label: Suggested direction (optional)
+      description: A concrete suggestion if you have one — prose is fine. You don't have to produce the NodeSet or generated artifacts.
+    validations:
+      required: false

@@ -1,0 +1,59 @@
+{
+  "domain": "DI",
+  "appliesToType": "IVendorNameplateType",
+  "baseModelNamespaceUri": "http://opcfoundation.org/UA/DI/",
+  "exampleNamespaceUri": "http://opcfoundation.org/UA/PubSub/Examples/DI/",
+  "instanceName": "ExampleDeviceNameplate",
+  "summary": "The DI IVendorNameplateType facet exposes vendor nameplate identity as OTEL resource attributes/dimensions for any device, machine or component that composes it.",
+  "companionSpec": {
+    "name": "OPC UA Devices (DI, OPC 10000-100)",
+    "ref": "https://reference.opcfoundation.org/DI/v104/docs/"
+  },
+  "instanceModel": {
+    "note": "A compact instance implementing IVendorNameplateType. A pump's Identification object composes the same DI facet, so the Pumps metrics binding extends this one."
+  },
+  "configurationVersion": {
+    "majorVersion": 1,
+    "minorVersion": 0
+  },
+  "companionSpecificationUri": "http://opcfoundation.org/UA/DI/",
+  "modelNamespaceUris": [
+    "http://opcfoundation.org/UA/DI/"
+  ],
+  "baseNodeSets": [
+    "Opc.Ua.Di.NodeSet2.xml"
+  ],
+  "requiredModels": [
+    {
+      "uri": "http://opcfoundation.org/UA/DI/"
+    }
+  ],
+  "observabilityBindings": [
+    {
+      "name": "Metrics",
+      "signalKind": "Metrics",
+      "boundItems": [
+        {
+          "kind": "Identification",
+          "metricInstrumentType": "Gauge",
+          "browsePath": "/Manufacturer"
+        },
+        {
+          "kind": "Identification",
+          "metricInstrumentType": "Gauge",
+          "browsePath": "/Model"
+        },
+        {
+          "kind": "Identification",
+          "metricInstrumentType": "Gauge",
+          "browsePath": "/SerialNumber"
+        },
+        {
+          "kind": "Identification",
+          "metricInstrumentType": "Gauge",
+          "browsePath": "/ProductInstanceUri"
+        }
+      ]
+    }
+  ]
+}

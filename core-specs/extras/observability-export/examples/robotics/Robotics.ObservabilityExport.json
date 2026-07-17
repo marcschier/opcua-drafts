@@ -1,0 +1,270 @@
+{
+  "domain": "Robotics",
+  "appliesToType": "MotionDeviceSystemType",
+  "baseModelNamespaceUri": "http://opcfoundation.org/UA/Robotics/",
+  "exampleNamespaceUri": "http://opcfoundation.org/UA/PubSub/Examples/Robotics/",
+  "instanceName": "ExampleRobotSystem",
+  "summary": "Robotics exposes motion-device, axis, motor, controller and safety state information for OTEL metrics, logs and traces.",
+  "companionSpec": {
+    "name": "OPC UA for Robotics (OPC 40010)",
+    "ref": "https://reference.opcfoundation.org/Robotics/v100/docs/"
+  },
+  "instanceModel": {
+    "note": "Robotics publishes no public instance example, so a compact theoretical MotionDeviceSystem is synthesised with one MotionDevice, one Axis, one PowerTrain/Motor, one Controller and one SafetyState. Placeholder path segments remain in type-level BrowsePaths."
+  },
+  "configurationVersion": {
+    "majorVersion": 1,
+    "minorVersion": 0
+  },
+  "companionSpecificationUri": "http://opcfoundation.org/UA/Robotics/",
+  "modelNamespaceUris": [
+    "http://opcfoundation.org/UA/Robotics/"
+  ],
+  "groupName": "Robotics",
+  "resolutionTopologies": [
+    {
+      "name": "Single 6-axis articulated robot",
+      "devices": [
+        {
+          "name": "Robot_1",
+          "axes": 6,
+          "motors": 6
+        }
+      ],
+      "controllers": [
+        "Controller_1"
+      ]
+    },
+    {
+      "name": "Single 4-axis SCARA",
+      "devices": [
+        {
+          "name": "Scara_1",
+          "axes": 4,
+          "motors": 4
+        }
+      ],
+      "controllers": [
+        "Controller_1"
+      ]
+    },
+    {
+      "name": "Two-robot cell (6+4 axes)",
+      "devices": [
+        {
+          "name": "Robot_1",
+          "axes": 6,
+          "motors": 6
+        },
+        {
+          "name": "Robot_2",
+          "axes": 4,
+          "motors": 4
+        }
+      ],
+      "controllers": [
+        "Controller_1"
+      ]
+    }
+  ],
+  "baseNodeSets": [
+    "Opc.Ua.Robotics.NodeSet2.xml",
+    "Opc.Ua.Di.NodeSet2.xml",
+    "Opc.Ua.IA.NodeSet2.xml",
+    "Opc.Ua.Machinery.NodeSet2.xml"
+  ],
+  "requiredModels": [
+    {
+      "uri": "http://opcfoundation.org/UA/Robotics/"
+    },
+    {
+      "uri": "http://opcfoundation.org/UA/DI/"
+    },
+    {
+      "uri": "http://opcfoundation.org/UA/IA/"
+    },
+    {
+      "uri": "http://opcfoundation.org/UA/Machinery/"
+    }
+  ],
+  "observabilityBindings": [
+    {
+      "name": "Metrics",
+      "signalKind": "Metrics",
+      "boundItems": [
+        {
+          "fieldName": "AxisActualPosition",
+          "kind": "Telemetry",
+          "metricInstrumentType": "Gauge",
+          "unit": "deg",
+          "browsePath": "/MotionDevices/<MotionDeviceIdentifier>/Axes/<AxisIdentifier>/ParameterSet/ActualPosition",
+          "samplingIntervalHint": 200
+        },
+        {
+          "fieldName": "MotorTemperature",
+          "kind": "Telemetry",
+          "metricInstrumentType": "Gauge",
+          "unit": "Cel",
+          "browsePath": "/MotionDevices/<MotionDeviceIdentifier>/PowerTrains/<PowerTrainIdentifier>/<MotorIdentifier>/ParameterSet/MotorTemperature",
+          "samplingIntervalHint": 2000
+        },
+        {
+          "fieldName": "SpeedOverride",
+          "kind": "Status",
+          "metricInstrumentType": "Gauge",
+          "unit": "%",
+          "browsePath": "/MotionDevices/<MotionDeviceIdentifier>/ParameterSet/SpeedOverride",
+          "samplingIntervalHint": 500
+        },
+        {
+          "fieldName": "ControllerTemperature",
+          "kind": "Telemetry",
+          "metricInstrumentType": "Gauge",
+          "unit": "Cel",
+          "browsePath": "/Controllers/<ControllerIdentifier>/ParameterSet/Temperature",
+          "samplingIntervalHint": 5000
+        },
+        {
+          "fieldName": "CabinetFanSpeed",
+          "kind": "Telemetry",
+          "metricInstrumentType": "Gauge",
+          "unit": "1/min",
+          "browsePath": "/Controllers/<ControllerIdentifier>/ParameterSet/CabinetFanSpeed",
+          "samplingIntervalHint": 5000
+        },
+        {
+          "fieldName": "CPUFanSpeed",
+          "kind": "Telemetry",
+          "metricInstrumentType": "Gauge",
+          "unit": "1/min",
+          "browsePath": "/Controllers/<ControllerIdentifier>/ParameterSet/CPUFanSpeed",
+          "samplingIntervalHint": 5000
+        },
+        {
+          "fieldName": "TotalPowerOnTime",
+          "kind": "Counter",
+          "metricInstrumentType": "Counter",
+          "metricTemporality": "Cumulative",
+          "monotonic": true,
+          "browsePath": "/Controllers/<ControllerIdentifier>/ParameterSet/TotalPowerOnTime",
+          "samplingIntervalHint": 30000
+        },
+        {
+          "fieldName": "Manufacturer",
+          "kind": "Dimension",
+          "browsePath": "/Manufacturer"
+        },
+        {
+          "fieldName": "Model",
+          "kind": "Dimension",
+          "browsePath": "/Model"
+        },
+        {
+          "fieldName": "SerialNumber",
+          "kind": "Dimension",
+          "browsePath": "/SerialNumber"
+        },
+        {
+          "fieldName": "ProductInstanceUri",
+          "kind": "Dimension",
+          "browsePath": "/ProductInstanceUri"
+        },
+        {
+          "fieldName": "service.name",
+          "kind": "Dimension",
+          "dimensionConstantValue": "robotics-observability"
+        }
+      ]
+    },
+    {
+      "name": "Logs",
+      "signalKind": "Logs",
+      "eventSourcePath": "/",
+      "eventType": "AlarmConditionType",
+      "logTemplate": "{SourceName}: {Message} (severity {Severity})",
+      "logSeverityFieldName": "Severity",
+      "logBodyFieldName": "Message",
+      "logTimestampFieldName": "Time",
+      "boundItems": [
+        {
+          "fieldName": "EventId",
+          "kind": "Event",
+          "browsePath": "/EventId"
+        },
+        {
+          "fieldName": "EventType",
+          "kind": "Event",
+          "browsePath": "/EventType"
+        },
+        {
+          "fieldName": "SourceName",
+          "kind": "Event",
+          "browsePath": "/SourceName"
+        },
+        {
+          "fieldName": "Time",
+          "kind": "Event",
+          "browsePath": "/Time"
+        },
+        {
+          "fieldName": "Severity",
+          "kind": "Event",
+          "browsePath": "/Severity"
+        },
+        {
+          "fieldName": "Message",
+          "kind": "Event",
+          "browsePath": "/Message"
+        },
+        {
+          "fieldName": "service.name",
+          "kind": "Dimension",
+          "dimensionConstantValue": "robotics-observability"
+        }
+      ]
+    },
+    {
+      "name": "Traces",
+      "signalKind": "Traces",
+      "eventSourcePath": "/",
+      "eventType": "BaseEventType",
+      "spanNameTemplate": "Robot program/state {SourceName}",
+      "spanStartTimeFieldName": "Time",
+      "spanStatusFieldName": "Severity",
+      "spanKind": "Internal",
+      "spanCorrelationFieldName": "EventId",
+      "boundItems": [
+        {
+          "fieldName": "EventId",
+          "kind": "Event",
+          "browsePath": "/EventId"
+        },
+        {
+          "fieldName": "SourceName",
+          "kind": "Event",
+          "browsePath": "/SourceName"
+        },
+        {
+          "fieldName": "Time",
+          "kind": "Event",
+          "browsePath": "/Time"
+        },
+        {
+          "fieldName": "Severity",
+          "kind": "Event",
+          "browsePath": "/Severity"
+        },
+        {
+          "fieldName": "Message",
+          "kind": "Event",
+          "browsePath": "/Message"
+        },
+        {
+          "fieldName": "service.name",
+          "kind": "Dimension",
+          "dimensionConstantValue": "robotics-observability"
+        }
+      ]
+    }
+  ]
+}

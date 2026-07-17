@@ -1,0 +1,591 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Facets: illustrative overlay for the Observability Export inheritance/composition example. PROVISIONAL. -->
+<UANodeSet xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd" xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd">
+  <NamespaceUris>
+    <Uri>http://opcfoundation.org/UA/PubSub/Examples/Facets/</Uri>
+    <Uri>http://opcfoundation.org/UA/FacetDemo/</Uri>
+    <Uri>http://opcfoundation.org/UA/ObservabilityExport/</Uri>
+  </NamespaceUris>
+  <Models>
+    <Model ModelUri="http://opcfoundation.org/UA/PubSub/Examples/Facets/" Version="0.1.0" PublicationDate="2026-07-01T00:00:00Z">
+      <RequiredModel ModelUri="http://opcfoundation.org/UA/ObservabilityExport/"/>
+    </Model>
+  </Models>
+  <Aliases>
+    <Alias Alias="Int32">i=6</Alias>
+    <Alias Alias="Guid">i=14</Alias>
+    <Alias Alias="String">i=12</Alias>
+    <Alias Alias="RelativePath">i=540</Alias>
+    <Alias Alias="HasComponent">i=47</Alias>
+    <Alias Alias="HasProperty">i=46</Alias>
+    <Alias Alias="Organizes">i=35</Alias>
+    <Alias Alias="HasInterface">i=17603</Alias>
+    <Alias Alias="HasTypeDefinition">i=40</Alias>
+    <Alias Alias="HasBaseBinding">ns=3;i=60003</Alias>
+    <Alias Alias="Collects">ns=3;i=60004</Alias>
+  </Aliases>
+  <UAObject NodeId="ns=1;i=5001" BrowseName="1:FacetDemoInstance">
+    <DisplayName>FacetDemoInstance</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">i=58</Reference>
+      <Reference ReferenceType="i=17603">ns=3;i=60016</Reference>
+      <Reference ReferenceType="i=35" IsForward="false">i=85</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="ns=1;i=5002" BrowseName="1:FacetDemo" ParentNodeId="ns=1;i=5001">
+    <DisplayName>FacetDemo</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">ns=3;i=60018</Reference>
+      <Reference ReferenceType="i=47" IsForward="false">ns=1;i=5001</Reference>
+      <Reference ReferenceType="ns=3;i=60004" IsForward="false">ns=3;i=60101</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=5003" BrowseName="1:CompanionSpecificationUri" ParentNodeId="ns=1;i=5002" DataType="i=12">
+    <DisplayName>CompanionSpecificationUri</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">i=68</Reference>
+      <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5002</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">http://opcfoundation.org/UA/FacetDemo/</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5004" BrowseName="1:ModelNamespaceUris" ParentNodeId="ns=1;i=5002" DataType="i=12" ValueRank="1" ArrayDimensions="0">
+    <DisplayName>ModelNamespaceUris</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">i=68</Reference>
+      <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5002</Reference>
+    </References>
+    <Value><uax:ListOfString xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>http://opcfoundation.org/UA/FacetDemo/</uax:String></uax:ListOfString></Value>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=5005" BrowseName="1:DeviceObservability" ParentNodeId="ns=1;i=5002">
+    <DisplayName>DeviceObservability</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">ns=3;i=60011</Reference>
+      <Reference ReferenceType="i=47" IsForward="false">ns=1;i=5002</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=5006" BrowseName="1:SignalKind" ParentNodeId="ns=1;i=5005" DataType="ns=3;i=60052">
+    <DisplayName>SignalKind</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">i=68</Reference>
+      <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5005</Reference>
+    </References>
+    <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">0</uax:Int32></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5007" BrowseName="1:DataSetClassId" ParentNodeId="ns=1;i=5005" DataType="i=14">
+    <DisplayName>DataSetClassId</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">i=68</Reference>
+      <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5005</Reference>
+    </References>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>1760c83f-c0c2-59c3-8bfa-e0c7c353aa97</uax:String></uax:Guid></Value>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=5008" BrowseName="1:Manufacturer" ParentNodeId="ns=1;i=5005">
+    <DisplayName>Manufacturer</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">ns=3;i=60013</Reference>
+      <Reference ReferenceType="i=47" IsForward="false">ns=1;i=5005</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=5009" BrowseName="1:FieldName" ParentNodeId="ns=1;i=5008" DataType="i=12">
+    <DisplayName>FieldName</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">i=68</Reference>
+      <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5008</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">Manufacturer</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5010" BrowseName="1:Kind" ParentNodeId="ns=1;i=5008" DataType="ns=3;i=60051">
+    <DisplayName>Kind</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">i=68</Reference>
+      <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5008</Reference>
+    </References>
+    <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">6</uax:Int32></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5011" BrowseName="1:BrowsePath" ParentNodeId="ns=1;i=5008" DataType="i=540">
+    <DisplayName>BrowsePath</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">i=68</Reference>
+      <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5008</Reference>
+    </References>
+    <Value><uax:RelativePath xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:Elements><uax:RelativePathElement><uax:ReferenceTypeId><uax:Identifier>i=33</uax:Identifier></uax:ReferenceTypeId><uax:IsInverse>false</uax:IsInverse><uax:IncludeSubtypes>true</uax:IncludeSubtypes><uax:TargetName><uax:NamespaceIndex>2</uax:NamespaceIndex><uax:Name>Manufacturer</uax:Name></uax:TargetName></uax:RelativePathElement></uax:Elements></uax:RelativePath></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5012" BrowseName="1:DataSetFieldId" ParentNodeId="ns=1;i=5008" DataType="i=14">
+    <DisplayName>DataSetFieldId</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">i=68</Reference>
+      <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5008</Reference>
+    </References>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>d478d2ac-7178-55f2-82a7-7d21d5c468e9</uax:String></uax:Guid></Value>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=5013" BrowseName="1:SerialNumber" ParentNodeId="ns=1;i=5005">
+    <DisplayName>SerialNumber</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">ns=3;i=60013</Reference>
+      <Reference ReferenceType="i=47" IsForward="false">ns=1;i=5005</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=5014" BrowseName="1:FieldName" ParentNodeId="ns=1;i=5013" DataType="i=12">
+    <DisplayName>FieldName</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">i=68</Reference>
+      <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5013</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">SerialNumber</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5015" BrowseName="1:Kind" ParentNodeId="ns=1;i=5013" DataType="ns=3;i=60051">
+    <DisplayName>Kind</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">i=68</Reference>
+      <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5013</Reference>
+    </References>
+    <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">6</uax:Int32></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5016" BrowseName="1:BrowsePath" ParentNodeId="ns=1;i=5013" DataType="i=540">
+    <DisplayName>BrowsePath</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">i=68</Reference>
+      <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5013</Reference>
+    </References>
+    <Value><uax:RelativePath xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:Elements><uax:RelativePathElement><uax:ReferenceTypeId><uax:Identifier>i=33</uax:Identifier></uax:ReferenceTypeId><uax:IsInverse>false</uax:IsInverse><uax:IncludeSubtypes>true</uax:IncludeSubtypes><uax:TargetName><uax:NamespaceIndex>2</uax:NamespaceIndex><uax:Name>SerialNumber</uax:Name></uax:TargetName></uax:RelativePathElement></uax:Elements></uax:RelativePath></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5017" BrowseName="1:DataSetFieldId" ParentNodeId="ns=1;i=5013" DataType="i=14">
+    <DisplayName>DataSetFieldId</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">i=68</Reference>
+      <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5013</Reference>
+    </References>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>ce58c764-c5fc-5895-97af-95048bbb17c9</uax:String></uax:Guid></Value>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=5018" BrowseName="1:DeviceHealth" ParentNodeId="ns=1;i=5005">
+    <DisplayName>DeviceHealth</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">ns=3;i=60013</Reference>
+      <Reference ReferenceType="i=47" IsForward="false">ns=1;i=5005</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=5019" BrowseName="1:FieldName" ParentNodeId="ns=1;i=5018" DataType="i=12">
+    <DisplayName>FieldName</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">i=68</Reference>
+      <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5018</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">DeviceHealth</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5020" BrowseName="1:Kind" ParentNodeId="ns=1;i=5018" DataType="ns=3;i=60051">
+    <DisplayName>Kind</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">i=68</Reference>
+      <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5018</Reference>
+    </References>
+    <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">1</uax:Int32></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5021" BrowseName="1:BrowsePath" ParentNodeId="ns=1;i=5018" DataType="i=540">
+    <DisplayName>BrowsePath</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">i=68</Reference>
+      <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5018</Reference>
+    </References>
+    <Value><uax:RelativePath xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:Elements><uax:RelativePathElement><uax:ReferenceTypeId><uax:Identifier>i=33</uax:Identifier></uax:ReferenceTypeId><uax:IsInverse>false</uax:IsInverse><uax:IncludeSubtypes>true</uax:IncludeSubtypes><uax:TargetName><uax:NamespaceIndex>2</uax:NamespaceIndex><uax:Name>DeviceHealth</uax:Name></uax:TargetName></uax:RelativePathElement></uax:Elements></uax:RelativePath></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5022" BrowseName="1:DataSetFieldId" ParentNodeId="ns=1;i=5018" DataType="i=14">
+    <DisplayName>DataSetFieldId</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">i=68</Reference>
+      <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5018</Reference>
+    </References>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>6eb2f99c-37e6-59d9-b30e-995240c52f05</uax:String></uax:Guid></Value>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=5023" BrowseName="1:LocationObservability" ParentNodeId="ns=1;i=5002">
+    <DisplayName>LocationObservability</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">ns=3;i=60011</Reference>
+      <Reference ReferenceType="i=47" IsForward="false">ns=1;i=5002</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=5024" BrowseName="1:SignalKind" ParentNodeId="ns=1;i=5023" DataType="ns=3;i=60052">
+    <DisplayName>SignalKind</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">i=68</Reference>
+      <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5023</Reference>
+    </References>
+    <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">0</uax:Int32></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5025" BrowseName="1:DataSetClassId" ParentNodeId="ns=1;i=5023" DataType="i=14">
+    <DisplayName>DataSetClassId</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">i=68</Reference>
+      <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5023</Reference>
+    </References>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>5d376ec7-f02c-539b-9a87-6126367fe4e0</uax:String></uax:Guid></Value>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=5026" BrowseName="1:Latitude" ParentNodeId="ns=1;i=5023">
+    <DisplayName>Latitude</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">ns=3;i=60013</Reference>
+      <Reference ReferenceType="i=47" IsForward="false">ns=1;i=5023</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=5027" BrowseName="1:FieldName" ParentNodeId="ns=1;i=5026" DataType="i=12">
+    <DisplayName>FieldName</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">i=68</Reference>
+      <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5026</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">Latitude</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5028" BrowseName="1:Kind" ParentNodeId="ns=1;i=5026" DataType="ns=3;i=60051">
+    <DisplayName>Kind</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">i=68</Reference>
+      <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5026</Reference>
+    </References>
+    <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">0</uax:Int32></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5029" BrowseName="1:BrowsePath" ParentNodeId="ns=1;i=5026" DataType="i=540">
+    <DisplayName>BrowsePath</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">i=68</Reference>
+      <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5026</Reference>
+    </References>
+    <Value><uax:RelativePath xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:Elements><uax:RelativePathElement><uax:ReferenceTypeId><uax:Identifier>i=33</uax:Identifier></uax:ReferenceTypeId><uax:IsInverse>false</uax:IsInverse><uax:IncludeSubtypes>true</uax:IncludeSubtypes><uax:TargetName><uax:NamespaceIndex>2</uax:NamespaceIndex><uax:Name>Latitude</uax:Name></uax:TargetName></uax:RelativePathElement></uax:Elements></uax:RelativePath></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5030" BrowseName="1:DataSetFieldId" ParentNodeId="ns=1;i=5026" DataType="i=14">
+    <DisplayName>DataSetFieldId</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">i=68</Reference>
+      <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5026</Reference>
+    </References>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>26689ce9-07b2-5330-a8ce-e99bae9c4fd0</uax:String></uax:Guid></Value>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=5031" BrowseName="1:Longitude" ParentNodeId="ns=1;i=5023">
+    <DisplayName>Longitude</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">ns=3;i=60013</Reference>
+      <Reference ReferenceType="i=47" IsForward="false">ns=1;i=5023</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=5032" BrowseName="1:FieldName" ParentNodeId="ns=1;i=5031" DataType="i=12">
+    <DisplayName>FieldName</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">i=68</Reference>
+      <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5031</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">Longitude</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5033" BrowseName="1:Kind" ParentNodeId="ns=1;i=5031" DataType="ns=3;i=60051">
+    <DisplayName>Kind</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">i=68</Reference>
+      <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5031</Reference>
+    </References>
+    <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">0</uax:Int32></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5034" BrowseName="1:BrowsePath" ParentNodeId="ns=1;i=5031" DataType="i=540">
+    <DisplayName>BrowsePath</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">i=68</Reference>
+      <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5031</Reference>
+    </References>
+    <Value><uax:RelativePath xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:Elements><uax:RelativePathElement><uax:ReferenceTypeId><uax:Identifier>i=33</uax:Identifier></uax:ReferenceTypeId><uax:IsInverse>false</uax:IsInverse><uax:IncludeSubtypes>true</uax:IncludeSubtypes><uax:TargetName><uax:NamespaceIndex>2</uax:NamespaceIndex><uax:Name>Longitude</uax:Name></uax:TargetName></uax:RelativePathElement></uax:Elements></uax:RelativePath></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5035" BrowseName="1:DataSetFieldId" ParentNodeId="ns=1;i=5031" DataType="i=14">
+    <DisplayName>DataSetFieldId</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">i=68</Reference>
+      <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5031</Reference>
+    </References>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>6d1ffbe4-6a41-5df5-ae16-e61f692fd6f1</uax:String></uax:Guid></Value>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=5036" BrowseName="1:Altitude" ParentNodeId="ns=1;i=5023">
+    <DisplayName>Altitude</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">ns=3;i=60013</Reference>
+      <Reference ReferenceType="i=47" IsForward="false">ns=1;i=5023</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=5037" BrowseName="1:FieldName" ParentNodeId="ns=1;i=5036" DataType="i=12">
+    <DisplayName>FieldName</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">i=68</Reference>
+      <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5036</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">Altitude</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5038" BrowseName="1:Kind" ParentNodeId="ns=1;i=5036" DataType="ns=3;i=60051">
+    <DisplayName>Kind</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">i=68</Reference>
+      <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5036</Reference>
+    </References>
+    <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">0</uax:Int32></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5039" BrowseName="1:BrowsePath" ParentNodeId="ns=1;i=5036" DataType="i=540">
+    <DisplayName>BrowsePath</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">i=68</Reference>
+      <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5036</Reference>
+    </References>
+    <Value><uax:RelativePath xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:Elements><uax:RelativePathElement><uax:ReferenceTypeId><uax:Identifier>i=33</uax:Identifier></uax:ReferenceTypeId><uax:IsInverse>false</uax:IsInverse><uax:IncludeSubtypes>true</uax:IncludeSubtypes><uax:TargetName><uax:NamespaceIndex>2</uax:NamespaceIndex><uax:Name>Altitude</uax:Name></uax:TargetName></uax:RelativePathElement></uax:Elements></uax:RelativePath></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5040" BrowseName="1:DataSetFieldId" ParentNodeId="ns=1;i=5036" DataType="i=14">
+    <DisplayName>DataSetFieldId</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">i=68</Reference>
+      <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5036</Reference>
+    </References>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>19f28c19-f61c-59bd-8167-a82651cf524f</uax:String></uax:Guid></Value>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=5041" BrowseName="1:Maintenance" ParentNodeId="ns=1;i=5002">
+    <DisplayName>Maintenance</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">ns=3;i=60011</Reference>
+      <Reference ReferenceType="i=47" IsForward="false">ns=1;i=5002</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=5042" BrowseName="1:SignalKind" ParentNodeId="ns=1;i=5041" DataType="ns=3;i=60052">
+    <DisplayName>SignalKind</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">i=68</Reference>
+      <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5041</Reference>
+    </References>
+    <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">0</uax:Int32></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5043" BrowseName="1:DataSetClassId" ParentNodeId="ns=1;i=5041" DataType="i=14">
+    <DisplayName>DataSetClassId</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">i=68</Reference>
+      <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5041</Reference>
+    </References>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>7e967a1b-d266-56a2-8a44-68a07e36aec6</uax:String></uax:Guid></Value>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=5044" BrowseName="1:LastMaintenanceDate" ParentNodeId="ns=1;i=5041">
+    <DisplayName>LastMaintenanceDate</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">ns=3;i=60013</Reference>
+      <Reference ReferenceType="i=47" IsForward="false">ns=1;i=5041</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=5045" BrowseName="1:FieldName" ParentNodeId="ns=1;i=5044" DataType="i=12">
+    <DisplayName>FieldName</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">i=68</Reference>
+      <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5044</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">LastMaintenanceDate</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5046" BrowseName="1:Kind" ParentNodeId="ns=1;i=5044" DataType="ns=3;i=60051">
+    <DisplayName>Kind</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">i=68</Reference>
+      <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5044</Reference>
+    </References>
+    <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">7</uax:Int32></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5047" BrowseName="1:BrowsePath" ParentNodeId="ns=1;i=5044" DataType="i=540">
+    <DisplayName>BrowsePath</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">i=68</Reference>
+      <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5044</Reference>
+    </References>
+    <Value><uax:RelativePath xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:Elements><uax:RelativePathElement><uax:ReferenceTypeId><uax:Identifier>i=33</uax:Identifier></uax:ReferenceTypeId><uax:IsInverse>false</uax:IsInverse><uax:IncludeSubtypes>true</uax:IncludeSubtypes><uax:TargetName><uax:NamespaceIndex>2</uax:NamespaceIndex><uax:Name>LastMaintenanceDate</uax:Name></uax:TargetName></uax:RelativePathElement></uax:Elements></uax:RelativePath></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5048" BrowseName="1:DataSetFieldId" ParentNodeId="ns=1;i=5044" DataType="i=14">
+    <DisplayName>DataSetFieldId</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">i=68</Reference>
+      <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5044</Reference>
+    </References>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>258b9d8c-d3d1-58d1-acc8-3d9a74f1b92d</uax:String></uax:Guid></Value>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=5049" BrowseName="1:MachineObservability" ParentNodeId="ns=1;i=5002">
+    <DisplayName>MachineObservability</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">ns=3;i=60011</Reference>
+      <Reference ReferenceType="i=47" IsForward="false">ns=1;i=5002</Reference>
+      <Reference ReferenceType="ns=3;i=60003">ns=1;i=5005</Reference>
+      <Reference ReferenceType="ns=3;i=60003">ns=1;i=5023</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=5050" BrowseName="1:SignalKind" ParentNodeId="ns=1;i=5049" DataType="ns=3;i=60052">
+    <DisplayName>SignalKind</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">i=68</Reference>
+      <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5049</Reference>
+    </References>
+    <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">0</uax:Int32></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5051" BrowseName="1:DataSetClassId" ParentNodeId="ns=1;i=5049" DataType="i=14">
+    <DisplayName>DataSetClassId</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">i=68</Reference>
+      <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5049</Reference>
+    </References>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>53dc8a49-b4ec-50d2-a122-e1ce44825662</uax:String></uax:Guid></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5052" BrowseName="1:BaseDataSetClassIds" ParentNodeId="ns=1;i=5049" DataType="i=14" ValueRank="1" ArrayDimensions="0">
+    <DisplayName>BaseDataSetClassIds</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">i=68</Reference>
+      <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5049</Reference>
+    </References>
+    <Value><uax:ListOfGuid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>1760c83f-c0c2-59c3-8bfa-e0c7c353aa97</uax:String></uax:Guid><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>5d376ec7-f02c-539b-9a87-6126367fe4e0</uax:String></uax:Guid></uax:ListOfGuid></Value>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=5053" BrowseName="1:SpindleSpeed" ParentNodeId="ns=1;i=5049">
+    <DisplayName>SpindleSpeed</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">ns=3;i=60013</Reference>
+      <Reference ReferenceType="i=47" IsForward="false">ns=1;i=5049</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=5054" BrowseName="1:FieldName" ParentNodeId="ns=1;i=5053" DataType="i=12">
+    <DisplayName>FieldName</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">i=68</Reference>
+      <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5053</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">SpindleSpeed</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5055" BrowseName="1:Kind" ParentNodeId="ns=1;i=5053" DataType="ns=3;i=60051">
+    <DisplayName>Kind</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">i=68</Reference>
+      <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5053</Reference>
+    </References>
+    <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">0</uax:Int32></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5056" BrowseName="1:BrowsePath" ParentNodeId="ns=1;i=5053" DataType="i=540">
+    <DisplayName>BrowsePath</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">i=68</Reference>
+      <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5053</Reference>
+    </References>
+    <Value><uax:RelativePath xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:Elements><uax:RelativePathElement><uax:ReferenceTypeId><uax:Identifier>i=33</uax:Identifier></uax:ReferenceTypeId><uax:IsInverse>false</uax:IsInverse><uax:IncludeSubtypes>true</uax:IncludeSubtypes><uax:TargetName><uax:NamespaceIndex>2</uax:NamespaceIndex><uax:Name>SpindleSpeed</uax:Name></uax:TargetName></uax:RelativePathElement></uax:Elements></uax:RelativePath></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5057" BrowseName="1:DataSetFieldId" ParentNodeId="ns=1;i=5053" DataType="i=14">
+    <DisplayName>DataSetFieldId</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">i=68</Reference>
+      <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5053</Reference>
+    </References>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>ef6f212e-002f-5cb8-ad26-d1ae0deaacee</uax:String></uax:Guid></Value>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=5058" BrowseName="1:AxisLoad" ParentNodeId="ns=1;i=5049">
+    <DisplayName>AxisLoad</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">ns=3;i=60013</Reference>
+      <Reference ReferenceType="i=47" IsForward="false">ns=1;i=5049</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=5059" BrowseName="1:FieldName" ParentNodeId="ns=1;i=5058" DataType="i=12">
+    <DisplayName>FieldName</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">i=68</Reference>
+      <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5058</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">AxisLoad</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5060" BrowseName="1:Kind" ParentNodeId="ns=1;i=5058" DataType="ns=3;i=60051">
+    <DisplayName>Kind</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">i=68</Reference>
+      <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5058</Reference>
+    </References>
+    <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">0</uax:Int32></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5061" BrowseName="1:BrowsePath" ParentNodeId="ns=1;i=5058" DataType="i=540">
+    <DisplayName>BrowsePath</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">i=68</Reference>
+      <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5058</Reference>
+    </References>
+    <Value><uax:RelativePath xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:Elements><uax:RelativePathElement><uax:ReferenceTypeId><uax:Identifier>i=33</uax:Identifier></uax:ReferenceTypeId><uax:IsInverse>false</uax:IsInverse><uax:IncludeSubtypes>true</uax:IncludeSubtypes><uax:TargetName><uax:NamespaceIndex>2</uax:NamespaceIndex><uax:Name>AxisLoad</uax:Name></uax:TargetName></uax:RelativePathElement></uax:Elements></uax:RelativePath></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5062" BrowseName="1:DataSetFieldId" ParentNodeId="ns=1;i=5058" DataType="i=14">
+    <DisplayName>DataSetFieldId</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">i=68</Reference>
+      <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5058</Reference>
+    </References>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>ff56a88d-6107-54b6-b36c-9c98db27da58</uax:String></uax:Guid></Value>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=5063" BrowseName="1:DeviceHealth" ParentNodeId="ns=1;i=5049">
+    <DisplayName>DeviceHealth</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">ns=3;i=60013</Reference>
+      <Reference ReferenceType="i=47" IsForward="false">ns=1;i=5049</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=5064" BrowseName="1:FieldName" ParentNodeId="ns=1;i=5063" DataType="i=12">
+    <DisplayName>FieldName</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">i=68</Reference>
+      <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5063</Reference>
+    </References>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">DeviceHealth</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5065" BrowseName="1:Kind" ParentNodeId="ns=1;i=5063" DataType="ns=3;i=60051">
+    <DisplayName>Kind</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">i=68</Reference>
+      <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5063</Reference>
+    </References>
+    <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">1</uax:Int32></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5066" BrowseName="1:BrowsePath" ParentNodeId="ns=1;i=5063" DataType="i=540">
+    <DisplayName>BrowsePath</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">i=68</Reference>
+      <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5063</Reference>
+    </References>
+    <Value><uax:RelativePath xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:Elements><uax:RelativePathElement><uax:ReferenceTypeId><uax:Identifier>i=33</uax:Identifier></uax:ReferenceTypeId><uax:IsInverse>false</uax:IsInverse><uax:IncludeSubtypes>true</uax:IncludeSubtypes><uax:TargetName><uax:NamespaceIndex>2</uax:NamespaceIndex><uax:Name>DeviceHealth</uax:Name></uax:TargetName></uax:RelativePathElement></uax:Elements></uax:RelativePath></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5067" BrowseName="1:SourceObservabilityExportClassId" ParentNodeId="ns=1;i=5063" DataType="i=14">
+    <DisplayName>SourceObservabilityExportClassId</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">i=68</Reference>
+      <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5063</Reference>
+    </References>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>1760c83f-c0c2-59c3-8bfa-e0c7c353aa97</uax:String></uax:Guid></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5068" BrowseName="1:DataSetFieldId" ParentNodeId="ns=1;i=5063" DataType="i=14">
+    <DisplayName>DataSetFieldId</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">i=68</Reference>
+      <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5063</Reference>
+    </References>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>c410e972-12ed-515e-9b9e-3dcad1e02ef9</uax:String></uax:Guid></Value>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=5069" BrowseName="1:MachineMaintenance" ParentNodeId="ns=1;i=5002">
+    <DisplayName>MachineMaintenance</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">ns=3;i=60011</Reference>
+      <Reference ReferenceType="i=47" IsForward="false">ns=1;i=5002</Reference>
+      <Reference ReferenceType="ns=3;i=60003">ns=1;i=5041</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=5070" BrowseName="1:SignalKind" ParentNodeId="ns=1;i=5069" DataType="ns=3;i=60052">
+    <DisplayName>SignalKind</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">i=68</Reference>
+      <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5069</Reference>
+    </References>
+    <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">0</uax:Int32></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5071" BrowseName="1:DataSetClassId" ParentNodeId="ns=1;i=5069" DataType="i=14">
+    <DisplayName>DataSetClassId</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">i=68</Reference>
+      <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5069</Reference>
+    </References>
+    <Value><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>53dc8a49-b4ec-50d2-a122-e1ce44825662</uax:String></uax:Guid></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5072" BrowseName="1:BaseDataSetClassIds" ParentNodeId="ns=1;i=5069" DataType="i=14" ValueRank="1" ArrayDimensions="0">
+    <DisplayName>BaseDataSetClassIds</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">i=68</Reference>
+      <Reference ReferenceType="i=46" IsForward="false">ns=1;i=5069</Reference>
+    </References>
+    <Value><uax:ListOfGuid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:Guid xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:String>7e967a1b-d266-56a2-8a44-68a07e36aec6</uax:String></uax:Guid></uax:ListOfGuid></Value>
+  </UAVariable>
+</UANodeSet>
