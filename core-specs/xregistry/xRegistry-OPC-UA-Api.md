@@ -1,12 +1,10 @@
 # xRegistry — OPC UA API
 
-**Working draft for submission to the OPC Foundation Working Group and the xRegistry organization**
-**Proposed Part: OPC 10000-2xx (number to be assigned)**
-**Companion namespace:** `http://opcfoundation.org/UA/xRegistry/`
+**Status:** Working draft for submission to xRegistry project/organization
 **Version:** 0.1.0 · **Date:** 2026-07-16
 **Target:** xRegistry submission as `core/opcua.md`, or an xRegistry extension proposal.
 
-> **Status — working draft.** This document defines the self-contained OPC UA API binding of the xRegistry core model, using the OPC UA FileTransfer-based information model defined by [*OPC UA — xRegistry*](OPC-UA-xRegistry.md). It is a first-class protocol binding, not a derivation from another binding, so xRegistry registries can be discovered, read, created, updated, deleted, exported and federated natively through OPC UA AddressSpace nodes, Services and FileTransfer Methods.
+> **Status — working draft.** This document defines the self-contained OPC UA API binding of the xRegistry core model, using the OPC UA FileTransfer-based information model defined by [*OPC UA — xRegistry*](OPC-UA-xRegistry.md). xRegistry registries can be discovered, read, created, updated, deleted, exported and federated natively through OPC UA AddressSpace nodes, Services and FileTransfer Methods.
 
 ---
 
@@ -16,7 +14,7 @@ This specification defines the OPC UA API binding for [xRegistry](https://github
 
 The abstract information model is defined by [*OPC UA — xRegistry*](OPC-UA-xRegistry.md): a registry is a `RegistryType` folder (subtype of `FolderType`), each group is a `GroupType` folder (subtype of `FolderType`), and each resource or resource version document is a `ResourceType` file (subtype of `FileType`). This API specifies how clients interact with those nodes using Browse, BrowseNext, Read, Write, Call, DeleteNodes, TranslateBrowsePathsToNodeIds and the FileTransfer Methods inherited by `ResourceType`.
 
-This binding stands on its own and does not depend on any particular transport binding. Annex A provides an informative correspondence for readers familiar with a sibling protocol binding, while §9 describes federation, including references to registries hosted behind other APIs.
+> Annex A provides an informative correspondence for readers familiar with sibling protocol bindings, while §9 describes federation, including references to registries hosted behind other APIs.
 
 This binding is independent of any domain registry. A concrete companion specification subtypes `RegistryType`, `GroupType` and `ResourceType`, constrains group and resource names, and may add domain Properties or Methods; the OPC UA API patterns in this document remain the same.
 
@@ -36,7 +34,7 @@ Key words **shall**, **should**, **may**, **shall not** and **should not** are i
 
 The xRegistry terms registry, group, resource, version, document, attributes, collection, `xid`, `self`, `epoch`, `labels`, model, capabilities, request flags, representation and federation have the meanings defined by the xRegistry core specification and primer. In this document, an `xid` is the xRegistry relative identifier of an entity within a registry, for example `/schemagroups/g1/schemas/s1`; it is not a protocol URL and is resolved against the selected `RegistryType` root.
 
-OPC UA type and member names are written exactly as defined by [*OPC UA — xRegistry*](OPC-UA-xRegistry.md) Annex A and the corresponding NodeSet: `RegistryType`, `GroupType`, `ResourceType`, `AttributesType`, `RegistryId`, `SpecVersion`, `Capabilities`, `Model`, `GroupId`, `ResourceId`, `VersionId`, `Format`, `ContentType`, `ExternalReference`, `ResourceUrl`, `Xid`, `Epoch`, `Name`, `Description`, `Documentation`, `Labels`, `<Attribute>`, `CreatedAt`, `ModifiedAt`, `CreateGroup`, `GetOrCreateGroup`, `CreateResource`, `GetOrCreateResource`, `AddAttribute`, `RemoveAttribute`, `ExpectedEpoch` and `DeleteNodes`.
+OPC UA type and member names follow OPC UA naming conventions and are written exactly as defined by [*OPC UA — xRegistry*](OPC-UA-xRegistry.md) Annex A and the corresponding NodeSet: `RegistryType`, `GroupType`, `ResourceType`, `AttributesType`, `RegistryId`, `SpecVersion`, `Capabilities`, `Model`, `GroupId`, `ResourceId`, `VersionId`, `Format`, `ContentType`, `ExternalReference`, `ResourceUrl`, `Xid`, `Epoch`, `Name`, `Description`, `Documentation`, `Labels`, `<Attribute>`, `CreatedAt`, `ModifiedAt`, `CreateGroup`, `GetOrCreateGroup`, `CreateResource`, `GetOrCreateResource`, `AddAttribute`, `RemoveAttribute`, `ExpectedEpoch` and `DeleteNodes`.
 
 The OPC UA Services used by this API are Browse for collection enumeration, BrowseNext for continuation points, Read for Properties and node metadata, Write for writable Properties, Call for FileTransfer and xRegistry Methods, DeleteNodes for entity deletion, TranslateBrowsePathsToNodeIds for path resolution, and the FileTransfer Methods inherited from `FileType` by `ResourceType`.
 
@@ -46,13 +44,13 @@ In pseudo-signatures, FileTransfer Methods are shown by their BrowseNames rather
 
 ### 4.1 AddressSpace root and service model
 
-An OPC UA xRegistry API is an AddressSpace subtree rooted at a selected `RegistryType` or domain subtype instance. Each registry root represents one xRegistry registry; each `GroupType` child represents a group; each `ResourceType` child represents a resource or resource version whose document bytes are obtained through `FileType` Methods; and xRegistry labels and extension attributes are represented by Property Variables under each entity's optional `Labels` object of type `AttributesType`.
+An OPC UA xRegistry API is an AddressSpace subtree rooted at a selected `RegistryType` domain subtype instance. Each registry root represents one xRegistry registry; each `GroupType` child represents a group; each `ResourceType` child represents a resource or resource version whose document (raw bytes) are obtained through `FileType` Methods; and xRegistry labels and extension attributes are represented by Property Variables under each entity's optional `Labels` object of type `AttributesType`.
 
 A server may expose more than one registry. A client selects the registry root by NodeId, BrowsePath, discovery metadata or domain convention before applying this API.
 
 The selected registry root is the API authority for the operation sequence. No URL authority is involved in the native OPC UA API; entity identity is carried by xRegistry identifier Properties and `Xid`, while the OPC UA session, endpoint and NodeIds identify where those entities are currently served.
 
-The baseline operation model is: Browse a folder to enumerate a collection, select entities from the Browse result by BrowseName, NodeClass, TypeDefinition and target NodeId, Read Properties and the `Labels` container's `<Attribute>` Property Variables to obtain attributes that are not already in the Browse result, Write writable Properties to change fixed mutable attributes, Call `Open`/`Read`/`Write`/`Close` to read or replace document bytes, Call `CreateGroup`, `GetOrCreateGroup`, `CreateResource` or `GetOrCreateResource` to create entities, use the `DeleteNodes` Service (OPC 10000-4) to delete entities, and Call `Labels.AddAttribute` or `Labels.RemoveAttribute` for supported labels and extension attributes.
+The baseline operation model is: Browse a folder to enumerate a collection, select entities from the Browse result by BrowseName, NodeClass, TypeDefinition and target NodeId, Read Properties and the `Labels` container's `<Attribute>` Property Variables to obtain attributes that are not already in the Browse result, Write writable Properties to change fixed mutable attributes, Call `Open`/`Read`/`Write`/`Close` to read or replace document bytes, Call `CreateGroup`, `GetOrCreateGroup`, `CreateResource` or `GetOrCreateResource` to create entities, use the `DeleteNodes` Service (OPC 10000-4) to delete entities or portions of the registry, and Call `Labels.AddAttribute` or `Labels.RemoveAttribute` for supported labels and extension attributes.
 
 If an optional xRegistry function is not supported for an otherwise supported node, the server shall return `Bad_NotSupported`, `Bad_UserAccessDenied`, `Bad_NotWritable`, `Bad_MethodInvalid` or `Bad_InvalidArgument` as appropriate. If the requested node or Property cannot be resolved, the server shall return an appropriate StatusCode such as `Bad_NodeIdUnknown`, `Bad_BrowseNameInvalid` or `Bad_NotFound` where available.
 
