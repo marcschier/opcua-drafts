@@ -110,7 +110,7 @@ No registry-specific Method is required. A domain registry **may** additionally 
 
 A writer registers a document by creating a file in the target group folder and writing the bytes, using the `CreateResource` Method (and `CreateGroup` for a new group):
 
-1. `CreateResource(ResourceId, RequestFileOpen = true)` on the target `GroupType` folder → the new resource file's `NodeId` and a write `fileHandle` (or `CreateGroup` first to create a new group). The idempotent `GetOrCreateResource` (and `GetOrCreateGroup`) collapse an existence check and creation into one call, returning the file plus a `Created` flag.
+1. `CreateResource(ResourceId, VersionId, RequestFileOpen = true)` on the target `GroupType` folder → the new resource file's `NodeId`, the assigned `VersionId`, and a write `fileHandle` (or `CreateGroup` first to create a new group). A version is identified by `(ResourceId, VersionId)`: a new `ResourceId` creates the resource with its first version, an existing `ResourceId` with a new `VersionId` creates a new sibling version, and an empty `VersionId` lets the server assign the next versionid. The idempotent `GetOrCreateResource` (and `GetOrCreateGroup`) collapse an existence check and creation into one call, returning the file plus a `Created` flag.
 2. one or more `Write(fileHandle, data)` calls with the document bytes.
 3. `Close(fileHandle)`.
 
@@ -126,7 +126,7 @@ The abstract base namespace is `http://opcfoundation.org/UA/xRegistry/`. Draft n
 
 ### 6.2 GroupType
 
-`GroupType` is a subtype of `FolderType` and is a group folder — an entry of an xRegistry `GROUPS` collection. It carries the Mandatory `GroupId` and the common attributes of §6.4, and its `<Resource>` OptionalPlaceholder declares that its members are `ResourceType` files, created through its `CreateResource` Method (or the idempotent `GetOrCreateResource`). The group is removed by its own `Delete(ExpectedEpoch: UInt32)` Method, which deletes the group together with the resources it contains; `ExpectedEpoch` provides the same optimistic-concurrency check as in §6.6 (non-zero and unequal to the group's `Epoch` → `Bad_InvalidState`, no change; `0` disables it). A domain group subtypes `GroupType` to add the **group key**: for example `SchemaGroupType` adds a Mandatory `NamespaceUri`.
+`GroupType` is a subtype of `FolderType` and is a group folder — an entry of an xRegistry `GROUPS` collection. It carries the Mandatory `GroupId` and the common attributes of §6.4, and its `<Resource>` OptionalPlaceholder declares that its members are `ResourceType` files, created through its `CreateResource` Method (or the idempotent `GetOrCreateResource`); a new version of an existing resource is created as a new sibling file keyed by `(ResourceId, VersionId)` through the same Method. The group is removed by its own `Delete(ExpectedEpoch: UInt32)` Method, which deletes the group together with the resources it contains; `ExpectedEpoch` provides the same optimistic-concurrency check as in §6.6 (non-zero and unequal to the group's `Epoch` → `Bad_InvalidState`, no change; `0` disables it). A domain group subtypes `GroupType` to add the **group key**: for example `SchemaGroupType` adds a Mandatory `NamespaceUri`.
 
 ### 6.3 ResourceType
 
@@ -261,8 +261,8 @@ An abstract xRegistry group, expressed as a FolderType that organizes its resour
 | CreatedAt | Variable | DateTime | Optional | GroupType | UTC timestamp when the entity was created. |
 | ModifiedAt | Variable | DateTime | Optional | GroupType | UTC timestamp when the entity was last modified. |
 | <Resource> | Object |  | OptionalPlaceholder | GroupType | A resource file held by this group. |
-| CreateResource | Method |  | Optional | GroupType | Create a resource - or a new version of a resource - as a ResourceType file in this group, optionally opened for writing. The server bootstraps the resource's xRegistry attributes when the file is closed. Fails if a resource with the same ResourceId already exists; use GetOrCreateResource for idempotent create-or-get. |
-| GetOrCreateResource | Method |  | Optional | GroupType | Idempotently return the resource with this ResourceId, creating it if absent, optionally opened for writing. One-shot form that avoids a separate existence check: returns the existing ResourceType file (Created = false) or a newly created one (Created = true); a write FileHandle is returned when RequestFileOpen is true. |
+| CreateResource | Method |  | Optional | GroupType | Create a resource, or a new version of an existing resource, as a ResourceType file in this group, optionally opened for writing. A resource version is identified by (ResourceId, VersionId): when the ResourceId is new the resource is created with this first version; when the ResourceId already exists a new sibling version is created. When VersionId is empty the server assigns the next versionid per the registry model. The server bootstraps the resource's xRegistry attributes when the file is closed. Fails with Bad_NodeIdExists if that exact (ResourceId, VersionId) already exists; use GetOrCreateResource for idempotent create-or-get. |
+| GetOrCreateResource | Method |  | Optional | GroupType | Idempotently return the (ResourceId, VersionId) version, creating it if absent, optionally opened for writing. When VersionId is empty the resource's default (latest) version is returned, or - if the resource does not yet exist - created as its first version. One-shot form that avoids a separate existence check: returns the existing ResourceType file (Created = false) or a newly created one (Created = true); a write FileHandle is returned when RequestFileOpen is true. |
 | Delete | Method |  | Optional | GroupType | Delete this group and everything it contains (its resources and their versions and labels). The xRegistry-semantic deletion Method, symmetric with CreateResource. If ExpectedEpoch is non-zero and does not equal the group's current Epoch, the call fails with Bad_InvalidState and deletes nothing; 0 disables the check. Success or failure is conveyed by the Method Call StatusCode. |
 
 <a id="type-ResourceType"></a>
@@ -335,8 +335,8 @@ The typed form of the xRegistry capabilities document (xRegistry /capabilities),
 | RemoveAttribute | [AttributesType](#type-AttributesType) | Key, ExpectedEpoch | (none) |
 | CreateGroup | [RegistryType](#type-RegistryType) | GroupId | GroupNodeId |
 | GetOrCreateGroup | [RegistryType](#type-RegistryType) | GroupId | GroupNodeId, Created |
-| CreateResource | [GroupType](#type-GroupType) | ResourceId, RequestFileOpen | ResourceNodeId, FileHandle |
-| GetOrCreateResource | [GroupType](#type-GroupType) | ResourceId, RequestFileOpen | ResourceNodeId, FileHandle, Created |
+| CreateResource | [GroupType](#type-GroupType) | ResourceId, VersionId, RequestFileOpen | ResourceNodeId, VersionId, FileHandle |
+| GetOrCreateResource | [GroupType](#type-GroupType) | ResourceId, VersionId, RequestFileOpen | ResourceNodeId, VersionId, FileHandle, Created |
 | Delete | [GroupType](#type-GroupType) | ExpectedEpoch | (none) |
 | Delete | [ResourceType](#type-ResourceType) | ExpectedEpoch | (none) |
 

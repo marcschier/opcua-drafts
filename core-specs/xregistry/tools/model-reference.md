@@ -63,8 +63,8 @@ An abstract xRegistry group, expressed as a FolderType that organizes its resour
 | CreatedAt | Variable | DateTime | Optional | GroupType | UTC timestamp when the entity was created. |
 | ModifiedAt | Variable | DateTime | Optional | GroupType | UTC timestamp when the entity was last modified. |
 | <Resource> | Object |  | OptionalPlaceholder | GroupType | A resource file held by this group. |
-| CreateResource | Method |  | Optional | GroupType | Create a resource - or a new version of a resource - as a ResourceType file in this group, optionally opened for writing. The server bootstraps the resource's xRegistry attributes when the file is closed. Fails if a resource with the same ResourceId already exists; use GetOrCreateResource for idempotent create-or-get. |
-| GetOrCreateResource | Method |  | Optional | GroupType | Idempotently return the resource with this ResourceId, creating it if absent, optionally opened for writing. One-shot form that avoids a separate existence check: returns the existing ResourceType file (Created = false) or a newly created one (Created = true); a write FileHandle is returned when RequestFileOpen is true. |
+| CreateResource | Method |  | Optional | GroupType | Create a resource, or a new version of an existing resource, as a ResourceType file in this group, optionally opened for writing. A resource version is identified by (ResourceId, VersionId): when the ResourceId is new the resource is created with this first version; when the ResourceId already exists a new sibling version is created. When VersionId is empty the server assigns the next versionid per the registry model. The server bootstraps the resource's xRegistry attributes when the file is closed. Fails with Bad_NodeIdExists if that exact (ResourceId, VersionId) already exists; use GetOrCreateResource for idempotent create-or-get. |
+| GetOrCreateResource | Method |  | Optional | GroupType | Idempotently return the (ResourceId, VersionId) version, creating it if absent, optionally opened for writing. When VersionId is empty the resource's default (latest) version is returned, or - if the resource does not yet exist - created as its first version. One-shot form that avoids a separate existence check: returns the existing ResourceType file (Created = false) or a newly created one (Created = true); a write FileHandle is returned when RequestFileOpen is true. |
 | Delete | Method |  | Optional | GroupType | Delete this group and everything it contains (its resources and their versions and labels). The xRegistry-semantic deletion Method, symmetric with CreateResource. If ExpectedEpoch is non-zero and does not equal the group's current Epoch, the call fails with Bad_InvalidState and deletes nothing; 0 disables the check. Success or failure is conveyed by the Method Call StatusCode. |
 
 <a id="type-ResourceType"></a>
@@ -137,8 +137,8 @@ The typed form of the xRegistry capabilities document (xRegistry /capabilities),
 | RemoveAttribute | [AttributesType](#type-AttributesType) | Key, ExpectedEpoch | (none) |
 | CreateGroup | [RegistryType](#type-RegistryType) | GroupId | GroupNodeId |
 | GetOrCreateGroup | [RegistryType](#type-RegistryType) | GroupId | GroupNodeId, Created |
-| CreateResource | [GroupType](#type-GroupType) | ResourceId, RequestFileOpen | ResourceNodeId, FileHandle |
-| GetOrCreateResource | [GroupType](#type-GroupType) | ResourceId, RequestFileOpen | ResourceNodeId, FileHandle, Created |
+| CreateResource | [GroupType](#type-GroupType) | ResourceId, VersionId, RequestFileOpen | ResourceNodeId, VersionId, FileHandle |
+| GetOrCreateResource | [GroupType](#type-GroupType) | ResourceId, VersionId, RequestFileOpen | ResourceNodeId, VersionId, FileHandle, Created |
 | Delete | [GroupType](#type-GroupType) | ExpectedEpoch | (none) |
 | Delete | [ResourceType](#type-ResourceType) | ExpectedEpoch | (none) |
 

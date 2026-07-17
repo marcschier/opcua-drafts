@@ -300,22 +300,31 @@ prop_var(63001, GP, "GroupId", String, "xRegistry groupid: the stable identifier
 common_attrs(63001, GP)
 placeholder_obj(63001, GP, "<Resource>", T(63002), "A resource file held by this group.")
 method(63001, GP, "CreateResource",
-       "Create a resource - or a new version of a resource - as a ResourceType file in this group, optionally opened "
-       "for writing. The server bootstraps the resource's xRegistry attributes when the file is closed. Fails if a "
-       "resource with the same ResourceId already exists; use GetOrCreateResource for idempotent create-or-get.",
-       inargs=[("ResourceId", String, "The resourceid of the resource; a versionid is assigned or supplied per the registry model."),
+       "Create a resource, or a new version of an existing resource, as a ResourceType file in this group, optionally "
+       "opened for writing. A resource version is identified by (ResourceId, VersionId): when the ResourceId is new "
+       "the resource is created with this first version; when the ResourceId already exists a new sibling version is "
+       "created. When VersionId is empty the server assigns the next versionid per the registry model. The server "
+       "bootstraps the resource's xRegistry attributes when the file is closed. Fails with Bad_NodeIdExists if that "
+       "exact (ResourceId, VersionId) already exists; use GetOrCreateResource for idempotent create-or-get.",
+       inargs=[("ResourceId", String, "The resourceid of the resource."),
+               ("VersionId", String, "The versionid of the version to create; empty to let the server assign the next versionid per the registry model."),
                ("RequestFileOpen", Boolean, "If true, the new resource file is opened for writing and a FileHandle is returned.")],
-       outargs=[("ResourceNodeId", NodeId, "NodeId of the created resource Object."),
+       outargs=[("ResourceNodeId", NodeId, "NodeId of the created resource/version Object."),
+                ("VersionId", String, "The versionid assigned to the created version."),
                 ("FileHandle", UInt32, "Write handle when RequestFileOpen is true; otherwise 0.")])
 method(63001, GP, "GetOrCreateResource",
-       "Idempotently return the resource with this ResourceId, creating it if absent, optionally opened for writing. "
-       "One-shot form that avoids a separate existence check: returns the existing ResourceType file (Created = false) "
-       "or a newly created one (Created = true); a write FileHandle is returned when RequestFileOpen is true.",
+       "Idempotently return the (ResourceId, VersionId) version, creating it if absent, optionally opened for writing. "
+       "When VersionId is empty the resource's default (latest) version is returned, or - if the resource does not yet "
+       "exist - created as its first version. One-shot form that avoids a separate existence check: returns the existing "
+       "ResourceType file (Created = false) or a newly created one (Created = true); a write FileHandle is returned when "
+       "RequestFileOpen is true.",
        inargs=[("ResourceId", String, "The resourceid to get or create."),
+               ("VersionId", String, "The versionid to get or create; empty selects or creates the default version."),
                ("RequestFileOpen", Boolean, "If true, the resource file is opened for writing and a FileHandle is returned.")],
-       outargs=[("ResourceNodeId", NodeId, "NodeId of the existing or newly created resource Object."),
+       outargs=[("ResourceNodeId", NodeId, "NodeId of the existing or newly created resource/version Object."),
+                ("VersionId", String, "The versionid of the returned version."),
                 ("FileHandle", UInt32, "Write handle when RequestFileOpen is true; otherwise 0."),
-                ("Created", Boolean, "True if the resource was created, false if it already existed.")])
+                ("Created", Boolean, "True if the resource/version was created, false if it already existed.")])
 method(63001, GP, "Delete",
        "Delete this group and everything it contains (its resources and their versions and labels). The xRegistry-"
        "semantic deletion Method, symmetric with CreateResource. If ExpectedEpoch is non-zero and does not equal the "

@@ -50,8 +50,8 @@ An xRegistry ResourceType whose file content is one concrete schema document (Av
 
 | BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
 |---|---|---|---|---|---|
-| SchemaId | Variable | ByteString | Mandatory | SchemaFileType | Raw on-wire SchemaId fingerprint bytes. The schema file is additionally addressable by an Opaque NodeId whose identifier bytes are exactly this value. |
-| SchemaIdAlg | Variable | String | Mandatory | SchemaFileType | SchemaId algorithm name, such as CRC-64-AVRO or SHA-256. |
+| SchemaId | Variable | ByteString | Mandatory | SchemaFileType | Raw on-wire SchemaId fingerprint bytes, computed by the schema format's fingerprint provider (per-format and pluggable; defined for every format including JSON Schema). The schema file is additionally addressable by an Opaque NodeId whose identifier bytes are exactly this value. |
+| SchemaIdAlg | Variable | String | Mandatory | SchemaFileType | SchemaId algorithm name identifying the (canonicalization, hash) used, such as CRC-64-AVRO (Avro), SHA-256/ApacheArrow (Arrow) or SHA-256/JCS (JSON Schema). |
 | DataTypeEncoding | Variable | String | Optional | SchemaFileType | The OPC UA DataTypeEncoding name, for example Default Avro or Default Arrow. |
 | Compatibility | Variable | String | Optional | SchemaFileType | xRegistry compatibility mode the schema's versions adhere to, such as NONE, BACKWARD, FORWARD or FULL. This is Resource-level metadata: it is identical across all versions of one schema, and a change that would break it starts a new schema rather than a new version. |
 | IsDefault | Variable | Boolean | Optional | SchemaFileType | xRegistry isdefault: true for the schema's default version - the one served when no explicit version is selected. The default is usually the latest version but MAY be pinned to an earlier one (sticky default). |

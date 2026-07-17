@@ -191,8 +191,8 @@ prop_var(62001, SG, "NamespaceUri", String, "The OPC UA namespace URI represente
 placeholder_obj(62001, SG, "<Schema>", T(62002), "A schema file (one DataType/DataSet in one format) held by this group.")
 
 SF = "SchemaFileType"
-prop_var(62002, SF, "SchemaId", ByteString, "Raw on-wire SchemaId fingerprint bytes. The schema file is additionally addressable by an Opaque NodeId whose identifier bytes are exactly this value.", rule=MR_Mandatory)
-prop_var(62002, SF, "SchemaIdAlg", String, "SchemaId algorithm name, such as CRC-64-AVRO or SHA-256.", rule=MR_Mandatory)
+prop_var(62002, SF, "SchemaId", ByteString, "Raw on-wire SchemaId fingerprint bytes, computed by the schema format's fingerprint provider (per-format and pluggable; defined for every format including JSON Schema). The schema file is additionally addressable by an Opaque NodeId whose identifier bytes are exactly this value.", rule=MR_Mandatory)
+prop_var(62002, SF, "SchemaIdAlg", String, "SchemaId algorithm name identifying the (canonicalization, hash) used, such as CRC-64-AVRO (Avro), SHA-256/ApacheArrow (Arrow) or SHA-256/JCS (JSON Schema).", rule=MR_Mandatory)
 prop_var(62002, SF, "DataTypeEncoding", String, "The OPC UA DataTypeEncoding name, for example Default Avro or Default Arrow.")
 prop_var(62002, SF, "Compatibility", String, "xRegistry compatibility mode the schema's versions adhere to, such as NONE, BACKWARD, FORWARD or FULL. This is Resource-level metadata: it is identical across all versions of one schema, and a change that would break it starts a new schema rather than a new version.")
 prop_var(62002, SF, "IsDefault", Boolean, "xRegistry isdefault: true for the schema's default version - the one served when no explicit version is selected. The default is usually the latest version but MAY be pinned to an earlier one (sticky default).")
