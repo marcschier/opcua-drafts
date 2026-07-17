@@ -2,15 +2,15 @@
 
 ## Annex A — Information model
 
-This annex is the normative node reference. It is generated from `tools/build_model.py` and always matches `Opc.Ua.SchemaRegistry.NodeSet2.xml`. All nodes are proposed additions in the companion namespace `http://opcfoundation.org/UA/SchemaRegistry/` (namespace index `2` in this NodeSet, after the required `http://opcfoundation.org/UA/xRegistry/` base model at index `1`). The Schema Registry types **extend the abstract [OPC UA — xRegistry](OPC-UA-xRegistry.md) base types** (`RegistryType`/`GroupType`/`ResourceType`). The numeric NodeIds shown are **provisional** (final IDs are assigned by the OPC Foundation). The **Declared in** column marks members inherited from a supertype.
+This annex is the normative node reference. It is generated from `tools/build_model.py` and always matches `Opc.Ua.SchemaRegistry.NodeSet2.xml`. All nodes are proposed additions in the companion namespace `http://opcfoundation.org/UA/SchemaRegistry/` (namespace index `2` in this NodeSet, after the required `http://opcfoundation.org/UA/xRegistry/` base model at index `1`). The Schema Registry types **extend the abstract [OPC UA — xRegistry](../xregistry/OPC-UA-xRegistry.md) base types** (`RegistryType`/`GroupType`/`ResourceType`). The numeric NodeIds shown are **provisional** (final IDs are assigned by the OPC Foundation). The **Declared in** column marks members inherited from a supertype.
 
 ### Type overview
 
 | NodeId | BrowseName | NodeClass | Subtype of |
 |---|---|---|---|
-| ns=2;i=62000 | [SchemaRegistryType](#type-SchemaRegistryType) | ObjectType | [RegistryType](OPC-UA-xRegistry.md#type-RegistryType) |
-| ns=2;i=62001 | [SchemaGroupType](#type-SchemaGroupType) | ObjectType | [GroupType](OPC-UA-xRegistry.md#type-GroupType) |
-| ns=2;i=62002 | [SchemaFileType](#type-SchemaFileType) | ObjectType | [ResourceType](OPC-UA-xRegistry.md#type-ResourceType) |
+| ns=2;i=62000 | [SchemaRegistryType](#type-SchemaRegistryType) | ObjectType | [RegistryType](../xregistry/OPC-UA-xRegistry.md#type-RegistryType) |
+| ns=2;i=62001 | [SchemaGroupType](#type-SchemaGroupType) | ObjectType | [GroupType](../xregistry/OPC-UA-xRegistry.md#type-GroupType) |
+| ns=2;i=62002 | [SchemaFileType](#type-SchemaFileType) | ObjectType | [ResourceType](../xregistry/OPC-UA-xRegistry.md#type-ResourceType) |
 
 ### Object types
 
@@ -18,7 +18,7 @@ This annex is the normative node reference. It is generated from `tools/build_mo
 
 #### SchemaRegistryType  (ns=2;i=62000)
 
-*Inherits from:* [RegistryType](OPC-UA-xRegistry.md#type-RegistryType)
+*Inherits from:* [RegistryType](../xregistry/OPC-UA-xRegistry.md#type-RegistryType)
 
 The in-server Schema Registry root - an xRegistry RegistryType (a FolderType) whose group folders hold schema files. Adds SchemaId-based resolution (GetSchema and the Opaque SchemaId NodeId fast path). Exposed as a well-known object under the Server object; a server does not have to support PubSub to be a schema registry.
 
@@ -31,7 +31,7 @@ The in-server Schema Registry root - an xRegistry RegistryType (a FolderType) wh
 
 #### SchemaGroupType  (ns=2;i=62001)
 
-*Inherits from:* [GroupType](OPC-UA-xRegistry.md#type-GroupType)
+*Inherits from:* [GroupType](../xregistry/OPC-UA-xRegistry.md#type-GroupType)
 
 An xRegistry GroupType keyed by an OPC UA namespace URI; a folder of schema files for the DataTypes and PublishedDataSets of that namespace.
 
@@ -44,7 +44,7 @@ An xRegistry GroupType keyed by an OPC UA namespace URI; a folder of schema file
 
 #### SchemaFileType  (ns=2;i=62002)
 
-*Inherits from:* [ResourceType](OPC-UA-xRegistry.md#type-ResourceType)
+*Inherits from:* [ResourceType](../xregistry/OPC-UA-xRegistry.md#type-ResourceType)
 
 An xRegistry ResourceType whose file content is one concrete schema document (Avro, Apache Arrow or JSON Schema). Adds the OPC UA schema-decoding metadata (SchemaId and per-encoding fields) used by a consumer that must resolve a schema from an on-wire fingerprint.
 
@@ -53,9 +53,9 @@ An xRegistry ResourceType whose file content is one concrete schema document (Av
 | SchemaId | Variable | ByteString | Mandatory | SchemaFileType | Raw on-wire SchemaId fingerprint bytes. The schema file is additionally addressable by an Opaque NodeId whose identifier bytes are exactly this value. |
 | SchemaIdAlg | Variable | String | Mandatory | SchemaFileType | SchemaId algorithm name, such as CRC-64-AVRO or SHA-256. |
 | DataTypeEncoding | Variable | String | Optional | SchemaFileType | The OPC UA DataTypeEncoding name, for example Default Avro or Default Arrow. |
-| Compatibility | Variable | String | Optional | SchemaFileType | xRegistry compatibility mode governing this schema's versions, such as NONE, BACKWARD, FORWARD or FULL. All versions of one schema adhere to this mode; a breaking change starts a new schema. |
-| IsDefault | Variable | Boolean | Optional | SchemaFileType | xRegistry isdefault: true when this file is the schema's default (latest) version in the flat projection. |
-| Ancestor | Variable | String | Optional | SchemaFileType | xRegistry ancestor: the versionid of the version this one derives from, establishing the version lineage. |
+| Compatibility | Variable | String | Optional | SchemaFileType | xRegistry compatibility mode the schema's versions adhere to, such as NONE, BACKWARD, FORWARD or FULL. This is Resource-level metadata: it is identical across all versions of one schema, and a change that would break it starts a new schema rather than a new version. |
+| IsDefault | Variable | Boolean | Optional | SchemaFileType | xRegistry isdefault: true for the schema's default version - the one served when no explicit version is selected. The default is usually the latest version but MAY be pinned to an earlier one (sticky default). |
+| Ancestor | Variable | String | Optional | SchemaFileType | xRegistry ancestor: the versionid of the version this one derives from, establishing the version lineage. The root version's ancestor is its own VersionId. |
 | ModelVersion | Variable | String | Optional | SchemaFileType | OPC UA NodeSet model version label (opcua.modelversion). |
 | ConfigurationVersion | Variable | [ConfigurationVersionDataType](https://reference.opcfoundation.org/specs/OPC-10000-14/6.2.3#6.2.3.2.6) | Optional | SchemaFileType | PubSub DataSet schema profile only: the Part 14 ConfigurationVersion (opcua.configurationversion) when the schema describes a DataSet. Omitted for a non-PubSub schema registry. |
 | ExpiryTime | Variable | DateTime | Optional | SchemaFileType | Optional UTC expiry time for mirror/cache mode. |

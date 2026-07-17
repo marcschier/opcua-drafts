@@ -194,9 +194,9 @@ SF = "SchemaFileType"
 prop_var(62002, SF, "SchemaId", ByteString, "Raw on-wire SchemaId fingerprint bytes. The schema file is additionally addressable by an Opaque NodeId whose identifier bytes are exactly this value.", rule=MR_Mandatory)
 prop_var(62002, SF, "SchemaIdAlg", String, "SchemaId algorithm name, such as CRC-64-AVRO or SHA-256.", rule=MR_Mandatory)
 prop_var(62002, SF, "DataTypeEncoding", String, "The OPC UA DataTypeEncoding name, for example Default Avro or Default Arrow.")
-prop_var(62002, SF, "Compatibility", String, "xRegistry compatibility mode governing this schema's versions, such as NONE, BACKWARD, FORWARD or FULL. All versions of one schema adhere to this mode; a breaking change starts a new schema.")
-prop_var(62002, SF, "IsDefault", Boolean, "xRegistry isdefault: true when this file is the schema's default (latest) version in the flat projection.")
-prop_var(62002, SF, "Ancestor", String, "xRegistry ancestor: the versionid of the version this one derives from, establishing the version lineage.")
+prop_var(62002, SF, "Compatibility", String, "xRegistry compatibility mode the schema's versions adhere to, such as NONE, BACKWARD, FORWARD or FULL. This is Resource-level metadata: it is identical across all versions of one schema, and a change that would break it starts a new schema rather than a new version.")
+prop_var(62002, SF, "IsDefault", Boolean, "xRegistry isdefault: true for the schema's default version - the one served when no explicit version is selected. The default is usually the latest version but MAY be pinned to an earlier one (sticky default).")
+prop_var(62002, SF, "Ancestor", String, "xRegistry ancestor: the versionid of the version this one derives from, establishing the version lineage. The root version's ancestor is its own VersionId.")
 prop_var(62002, SF, "ModelVersion", String, "OPC UA NodeSet model version label (opcua.modelversion).")
 prop_var(62002, SF, "ConfigurationVersion", ConfigurationVersionDataType, "PubSub DataSet schema profile only: the Part 14 ConfigurationVersion (opcua.configurationversion) when the schema describes a DataSet. Omitted for a non-PubSub schema registry.")
 prop_var(62002, SF, "ExpiryTime", DateTime, "Optional UTC expiry time for mirror/cache mode.")
@@ -288,9 +288,9 @@ LINK_MAP = {
     "PropertyType": "https://reference.opcfoundation.org/specs/OPC-10000-5/7.3",
     "BaseDataVariableType": "https://reference.opcfoundation.org/specs/OPC-10000-5/7.4",
     "ConfigurationVersionDataType": "https://reference.opcfoundation.org/specs/OPC-10000-14/6.2.3#6.2.3.2.6",
-    "RegistryType": "OPC-UA-xRegistry.md#type-RegistryType",
-    "GroupType": "OPC-UA-xRegistry.md#type-GroupType",
-    "ResourceType": "OPC-UA-xRegistry.md#type-ResourceType",
+    "RegistryType": "../xregistry/OPC-UA-xRegistry.md#type-RegistryType",
+    "GroupType": "../xregistry/OPC-UA-xRegistry.md#type-GroupType",
+    "ResourceType": "../xregistry/OPC-UA-xRegistry.md#type-ResourceType",
 }
 _BASE_NAMES = {"i=58": "BaseObjectType", "i=61": "FolderType", "i=63": "BaseDataVariableType", "i=68": "PropertyType"}
 # abstract xRegistry base types this spec extends (required model, ns=1)
@@ -363,7 +363,7 @@ def emit_md():
             if n.bname == "InputArguments": method_args[pid] = names
             else: method_out[pid] = names
     md = ['<a id="annex-a"></a>', '', '## Annex A — Information model\n',
-          'This annex is the normative node reference. It is generated from `tools/build_model.py` and always matches `Opc.Ua.SchemaRegistry.NodeSet2.xml`. All nodes are proposed additions in the companion namespace `http://opcfoundation.org/UA/SchemaRegistry/` (namespace index `2` in this NodeSet, after the required `http://opcfoundation.org/UA/xRegistry/` base model at index `1`). The Schema Registry types **extend the abstract [OPC UA — xRegistry](OPC-UA-xRegistry.md) base types** (`RegistryType`/`GroupType`/`ResourceType`). The numeric NodeIds shown are **provisional** (final IDs are assigned by the OPC Foundation). The **Declared in** column marks members inherited from a supertype.\n']
+          'This annex is the normative node reference. It is generated from `tools/build_model.py` and always matches `Opc.Ua.SchemaRegistry.NodeSet2.xml`. All nodes are proposed additions in the companion namespace `http://opcfoundation.org/UA/SchemaRegistry/` (namespace index `2` in this NodeSet, after the required `http://opcfoundation.org/UA/xRegistry/` base model at index `1`). The Schema Registry types **extend the abstract [OPC UA — xRegistry](../xregistry/OPC-UA-xRegistry.md) base types** (`RegistryType`/`GroupType`/`ResourceType`). The numeric NodeIds shown are **provisional** (final IDs are assigned by the OPC Foundation). The **Declared in** column marks members inherited from a supertype.\n']
     md.append('### Type overview\n')
     md.append('| NodeId | BrowseName | NodeClass | Subtype of |')
     md.append('|---|---|---|---|')

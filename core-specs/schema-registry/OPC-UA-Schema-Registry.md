@@ -92,8 +92,8 @@ Everything the base model provides applies unchanged: the three representations 
 
 The xRegistry model has interchangeable *representations* served by peer *protocol bindings*. [*xRegistry — OPC UA API*](../xregistry/xRegistry-OPC-UA-Api.md) is the OPC UA binding — a first-class binding of the xRegistry API, defined natively over OPC UA Services and FileTransfer, not derived from the HTTP binding. A Schema Registry served over OPC UA is therefore **accessed and federated the same way as one served over HTTP**, and the two are interchangeable endpoints of the same registry:
 
-- **Access parity.** Every schema-registry operation has the same effect over either binding: *download* a schema (HTTP `GET` on the schema's `self` URL ↔ OPC UA `Open`/`Read`/`Close` or the SchemaId fast path), *register* a schema (HTTP `POST`/`PUT` ↔ OPC UA `CreateResource`/`Write`), *list* groups/schemas/versions (HTTP collection `GET` ↔ OPC UA Browse), and *read metadata* (HTTP `$details` ↔ OPC UA Read of the Properties). A consumer needs no OPC-UA-specific knowledge beyond the standard FileTransfer read to download a schema. The HTTP method/path correspondence is tabulated in Annex D.
-- **Federation parity.** A schema referenced by one registry but hosted by another is resolved uniformly regardless of the hosting binding (base §8). The federation link is an `ExpandedNodeId` (`ExternalReference`) when the host is an OPC UA registry — its `ServerUri` is the remote OPC UA endpoint — and/or a URL (`ResourceUrl`) when the host is reached over another protocol, for example an HTTP xRegistry endpoint. A client follows an OPC UA link by connecting to the `ServerUri` and browsing/reading, and an HTTP link by an HTTP `GET`; in both cases the schema's identity (`SchemaId`, `xid`) is stable across registries, so the same schema federated from several endpoints keeps one identity and can be de-duplicated by `SchemaId`. Annex B specifies the resolution algorithm.
+- **Access parity.** Every schema-registry operation is available over the OPC UA binding with the same effect as over any other binding: *download* a schema (OPC UA `Open`/`Read`/`Close`, or the SchemaId fast path), *register* a schema (`CreateResource`/`Write`), *list* groups/schemas/versions (Browse), and *read metadata* (Read of the Properties). A consumer needs no OPC-UA-specific knowledge beyond the standard FileTransfer read to download a schema. The operation-by-operation correspondence to the xRegistry HTTP binding is tabulated in the informative Annex D.
+- **Federation parity.** A schema referenced by one registry but hosted by another is resolved uniformly regardless of the hosting binding (base §8). The federation link is an `ExpandedNodeId` (`ExternalReference`) when the host is an OPC UA registry — its `ServerUri` identifies the remote OPC UA server — and/or a URL (`ResourceUrl`) when the host is reached over another protocol, for example an HTTP xRegistry endpoint. A client follows an OPC UA link by resolving the `ServerUri` to an endpoint and browsing/reading, and a URL link by dereferencing it over its own protocol; in both cases the schema's identity (`SchemaId`, `xid`) is stable across registries, so the same schema federated from several endpoints keeps one identity and can be de-duplicated by `SchemaId`. Annex B specifies the resolution algorithm.
 
 Consequently an OPC UA Schema Registry can front, mirror or be mirrored by an HTTP xRegistry Schema Registry, and a heterogeneous federation of OPC UA and HTTP registries resolves as one logical registry.
 
@@ -135,9 +135,9 @@ The companion namespace is `http://opcfoundation.org/UA/SchemaRegistry/`. Draft 
 
 - `SchemaId` (Mandatory, ByteString) — the raw on-wire SchemaId fingerprint bytes; the file is additionally addressable by the Opaque NodeId built from these bytes (§6.4).
 - `SchemaIdAlg` (Mandatory, String) — the SchemaId algorithm name, such as `CRC-64-AVRO` or `SHA-256`.
-- `Compatibility` (String) — the xRegistry `compatibility` mode the schema's versions adhere to, such as `NONE`, `BACKWARD`, `FORWARD` or `FULL`. All versions of one schema adhere to this mode; a change that breaks it starts a **new** schema (a new `SchemaFileType`), not a new version. A registry that enforces compatibility advertises it through the base `RegistryCapabilitiesDataType.EnforceCompatibility` capability.
-- `IsDefault` (Boolean) — the xRegistry `isdefault`: `true` when this file is the schema's default (latest) version in the flat projection.
-- `Ancestor` (String) — the xRegistry `ancestor`: the `VersionId` of the version this one derives from, establishing the version lineage when historic versions are kept as sibling files.
+- `Compatibility` (String) — the xRegistry `compatibility` mode the schema's versions adhere to, such as `NONE`, `BACKWARD`, `FORWARD` or `FULL`. This is **Resource-level** metadata — identical across all versions of one schema — so in the flat projection every version file of the same schema carries the same value; a change that would break it starts a **new** schema (a new `SchemaFileType` with a fresh lineage), not a new version. A registry that enforces compatibility advertises it through the base `RegistryCapabilitiesDataType.EnforceCompatibility` capability.
+- `IsDefault` (Boolean) — the xRegistry `isdefault`: `true` for the schema's default version, the one a consumer gets by reading the schema without selecting a version. The default is usually the latest but MAY be pinned to an earlier version (a sticky default); exactly one version file of a schema has `IsDefault = true`.
+- `Ancestor` (String) — the xRegistry `ancestor`: the `VersionId` of the version this one derives from, establishing the version lineage when historic versions are kept as sibling files. The root version's `Ancestor` is its own `VersionId`.
 - `DataTypeEncoding` (String) — the related OPC UA DataTypeEncoding name, for example `Default Avro` or `Default Arrow`.
 - `ModelVersion` (String) — the originating NodeSet model version (`opcua.modelversion`).
 - `ConfigurationVersion` (`ConfigurationVersionDataType`) — **PubSub DataSet schema profile only** (Annex C): the Part 14 `ConfigurationVersion` when the schema describes a DataSet. Omitted by a schema registry that does not serve PubSub DataSets.
@@ -167,7 +167,7 @@ The node addressed by this Opaque NodeId is the schema file's content as a ByteS
 | Apache Arrow | `ApacheArrow/1.0` (extension format) | `application/vnd.apache.arrow.schema+json` | the JSON Arrow-schema description as the file content |
 | JSON Schema | `JsonSchema/2020-12` | `application/schema+json` | the JSON Schema as the file content |
 
-`Avro/1.11` and `JsonSchema/*` are the format names refined by the xRegistry Schema Registry spec; `ApacheArrow/1.0` is an application-defined extension format, which xRegistry permits. The `contenttype` above is the schema *document* media type recorded on the schema file. The message/transport content-type differs by usage and selects the format at resolution time (§8): Avro PubSub `application/vnd.apache.avro`, JSON PubSub `application/json`, and Apache Arrow `application/vnd.apache.arrow.stream` (batch PubSub and historian/ADBC streams) or `application/vnd.apache.arrow.file` where applicable.
+`Avro/1.x` and `JsonSchema/*` follow the xRegistry Schema Registry format-naming convention (the spec lists names such as `Avro/1.9`, `Protobuf/3`, `JsonSchema/draft-07`, `XSD/1.1`; the exact revision token is chosen to match the document); `ApacheArrow/1.0` is an application-defined extension format, which xRegistry permits. Every schema file **shall** set `Format` (the base `ResourceType.Format` is Optional in general, but a schema is identified by its format), and all versions of one schema share the same `Format` value. The `contenttype` above is the schema *document* media type recorded on the schema file. The message/transport content-type differs by usage and selects the format at resolution time (§8): Avro PubSub `application/vnd.apache.avro`, JSON PubSub `application/json`, and Apache Arrow `application/vnd.apache.arrow.stream` (batch PubSub and historian/ADBC streams) or `application/vnd.apache.arrow.file` where applicable.
 
 ### 6.6 Schema identity (`SchemaId`) and per-encoding fingerprints
 
@@ -180,9 +180,9 @@ Each schema file records its `SchemaId` (raw bytes) and `SchemaIdAlg`. A consume
 
 ## 7 Schema versioning and compatibility
 
-A schema is an xRegistry *schema Resource*: a semantic umbrella over one or more concrete *versions*, each a `SchemaFileType` document. Versioning follows the base xRegistry model (base §6.4, §6.6):
+A schema is an xRegistry *schema Resource*: a semantic umbrella over one or more concrete *versions*, each a `SchemaFileType` document. Versioning follows the base xRegistry model (base §6.3 `ResourceType`/`VersionId` and §6.8 collection ordering):
 
-- Each version has a `VersionId`; the default (latest) version is marked `IsDefault = true` and is the document a consumer gets by reading the schema file without selecting a version. Historic versions, when kept, are sibling files linked to their predecessor by the `Ancestor` (`VersionId`) attribute, so a client can reconstruct the lineage from Browse results.
+- Each version has a `VersionId`; the default version is marked `IsDefault = true` and is the document a consumer gets by reading the schema file without selecting a version — usually the latest, but a server MAY pin an earlier version as a sticky default. Historic versions, when kept, are sibling files linked to their predecessor by the `Ancestor` (`VersionId`) attribute, so a client can reconstruct the lineage from Browse results.
 - A schema's `Compatibility` attribute (`NONE`, `BACKWARD`, `FORWARD`, `FULL`, …) states the contract every version of that schema honours. Adding a version that would break the mode is **not** a new version: it starts a **new schema** (a new `SchemaFileType`, per the xRegistry rule that any breaking change yields a new schema Resource). A registry that enforces this advertises `RegistryCapabilitiesDataType.EnforceCompatibility` (base §6.7).
 - `SchemaId` is the on-wire content fingerprint of the concrete version document and is independent of the version number: each version is a distinct document with a distinct `SchemaId`, and a message carries the `SchemaId` of the exact writer version. A consumer compares the **`SchemaId`**, not the version number, to decide whether it already holds the schema.
 
@@ -201,7 +201,7 @@ Given a received schema-based message, a consumer **shall** resolve its schema a
 2. If the message header carries an explicit **schema reference** (a schema file's `self`/URL, carried in the Part 14 message header extension or the transport header, modelled on CloudEvents `dataschema`), read it and decode. Otherwise, continue.
 3. Resolve the **schema group** from the namespace, then the **schema file** and **Version**:
    - against a reference **DataType** registry: by `<BrowseName>:<fmt>` (the DataType BrowseName) and the `ModelVersion` metadata;
-   - against a live **PubSub** registry that registers per-DataSet schemas (PubSub DataSet profile, Annex C): by `<DataSetName>:<fmt>` and `ConfigurationVersion` = the message `DataSetMessage` header `ConfigurationVersion`.
+   - against a live **PubSub** registry that registers per-DataSet schemas (PubSub DataSet profile, Annex C): by `<DataSetName>:<fmt>` and `ConfigurationVersion` = the message `DataSetMessage` header `ConfigurationVersion`. This name+`ConfigurationVersion` lookup is unambiguous only when schema generation is **deterministic** (schema-driven, Annex C.2) or the DataSet has a single writer; under publisher-local data-driven growth several distinct schemas may share one `ConfigurationVersion`, so the lookup MAY return multiple candidates that the consumer disambiguates by the on-wire **`SchemaId`** (step 0), which remains the authoritative key.
 4. `Open`/`Read` the resolved schema file and decode the payload per the corresponding Part 6 or Part 14 addition.
 
 The `ConfigurationVersion` correlation (step 3, PubSub DataSet profile) is the same mechanism the OPC UA JSON/UADP mappings already use to detect DataSet layout change; a mismatch **shall** cause the consumer to re-resolve the schema. A PubSub decoder follows the Avro §9 or Arrow §5.2 cache-miss flow: if the message carries a SchemaId and the decoder cache does not contain it, it first attempts the Opaque NodeId Read or `GetSchema`; if neither succeeds, it may fall back to an announcement frame, a federated registry lookup, or AddressSpace schema regeneration as defined by the encoding mapping.
@@ -267,15 +267,15 @@ The NodeSet, CSV and Annex A are generated from `tools/build_model.py`. The loca
 
 ## Annex A — Information model
 
-This annex is the normative node reference. It is generated from `tools/build_model.py` and always matches `Opc.Ua.SchemaRegistry.NodeSet2.xml`. All nodes are proposed additions in the companion namespace `http://opcfoundation.org/UA/SchemaRegistry/` (namespace index `2` in this NodeSet, after the required `http://opcfoundation.org/UA/xRegistry/` base model at index `1`). The Schema Registry types **extend the abstract [OPC UA — xRegistry](OPC-UA-xRegistry.md) base types** (`RegistryType`/`GroupType`/`ResourceType`). The numeric NodeIds shown are **provisional** (final IDs are assigned by the OPC Foundation). The **Declared in** column marks members inherited from a supertype.
+This annex is the normative node reference. It is generated from `tools/build_model.py` and always matches `Opc.Ua.SchemaRegistry.NodeSet2.xml`. All nodes are proposed additions in the companion namespace `http://opcfoundation.org/UA/SchemaRegistry/` (namespace index `2` in this NodeSet, after the required `http://opcfoundation.org/UA/xRegistry/` base model at index `1`). The Schema Registry types **extend the abstract [OPC UA — xRegistry](../xregistry/OPC-UA-xRegistry.md) base types** (`RegistryType`/`GroupType`/`ResourceType`). The numeric NodeIds shown are **provisional** (final IDs are assigned by the OPC Foundation). The **Declared in** column marks members inherited from a supertype.
 
 ### Type overview
 
 | NodeId | BrowseName | NodeClass | Subtype of |
 |---|---|---|---|
-| ns=2;i=62000 | [SchemaRegistryType](#type-SchemaRegistryType) | ObjectType | [RegistryType](OPC-UA-xRegistry.md#type-RegistryType) |
-| ns=2;i=62001 | [SchemaGroupType](#type-SchemaGroupType) | ObjectType | [GroupType](OPC-UA-xRegistry.md#type-GroupType) |
-| ns=2;i=62002 | [SchemaFileType](#type-SchemaFileType) | ObjectType | [ResourceType](OPC-UA-xRegistry.md#type-ResourceType) |
+| ns=2;i=62000 | [SchemaRegistryType](#type-SchemaRegistryType) | ObjectType | [RegistryType](../xregistry/OPC-UA-xRegistry.md#type-RegistryType) |
+| ns=2;i=62001 | [SchemaGroupType](#type-SchemaGroupType) | ObjectType | [GroupType](../xregistry/OPC-UA-xRegistry.md#type-GroupType) |
+| ns=2;i=62002 | [SchemaFileType](#type-SchemaFileType) | ObjectType | [ResourceType](../xregistry/OPC-UA-xRegistry.md#type-ResourceType) |
 
 ### Object types
 
@@ -283,7 +283,7 @@ This annex is the normative node reference. It is generated from `tools/build_mo
 
 #### SchemaRegistryType  (ns=2;i=62000)
 
-*Inherits from:* [RegistryType](OPC-UA-xRegistry.md#type-RegistryType)
+*Inherits from:* [RegistryType](../xregistry/OPC-UA-xRegistry.md#type-RegistryType)
 
 The in-server Schema Registry root - an xRegistry RegistryType (a FolderType) whose group folders hold schema files. Adds SchemaId-based resolution (GetSchema and the Opaque SchemaId NodeId fast path). Exposed as a well-known object under the Server object; a server does not have to support PubSub to be a schema registry.
 
@@ -296,7 +296,7 @@ The in-server Schema Registry root - an xRegistry RegistryType (a FolderType) wh
 
 #### SchemaGroupType  (ns=2;i=62001)
 
-*Inherits from:* [GroupType](OPC-UA-xRegistry.md#type-GroupType)
+*Inherits from:* [GroupType](../xregistry/OPC-UA-xRegistry.md#type-GroupType)
 
 An xRegistry GroupType keyed by an OPC UA namespace URI; a folder of schema files for the DataTypes and PublishedDataSets of that namespace.
 
@@ -309,7 +309,7 @@ An xRegistry GroupType keyed by an OPC UA namespace URI; a folder of schema file
 
 #### SchemaFileType  (ns=2;i=62002)
 
-*Inherits from:* [ResourceType](OPC-UA-xRegistry.md#type-ResourceType)
+*Inherits from:* [ResourceType](../xregistry/OPC-UA-xRegistry.md#type-ResourceType)
 
 An xRegistry ResourceType whose file content is one concrete schema document (Avro, Apache Arrow or JSON Schema). Adds the OPC UA schema-decoding metadata (SchemaId and per-encoding fields) used by a consumer that must resolve a schema from an on-wire fingerprint.
 
@@ -318,9 +318,9 @@ An xRegistry ResourceType whose file content is one concrete schema document (Av
 | SchemaId | Variable | ByteString | Mandatory | SchemaFileType | Raw on-wire SchemaId fingerprint bytes. The schema file is additionally addressable by an Opaque NodeId whose identifier bytes are exactly this value. |
 | SchemaIdAlg | Variable | String | Mandatory | SchemaFileType | SchemaId algorithm name, such as CRC-64-AVRO or SHA-256. |
 | DataTypeEncoding | Variable | String | Optional | SchemaFileType | The OPC UA DataTypeEncoding name, for example Default Avro or Default Arrow. |
-| Compatibility | Variable | String | Optional | SchemaFileType | xRegistry compatibility mode governing this schema's versions, such as NONE, BACKWARD, FORWARD or FULL. All versions of one schema adhere to this mode; a breaking change starts a new schema. |
-| IsDefault | Variable | Boolean | Optional | SchemaFileType | xRegistry isdefault: true when this file is the schema's default (latest) version in the flat projection. |
-| Ancestor | Variable | String | Optional | SchemaFileType | xRegistry ancestor: the versionid of the version this one derives from, establishing the version lineage. |
+| Compatibility | Variable | String | Optional | SchemaFileType | xRegistry compatibility mode the schema's versions adhere to, such as NONE, BACKWARD, FORWARD or FULL. This is Resource-level metadata: it is identical across all versions of one schema, and a change that would break it starts a new schema rather than a new version. |
+| IsDefault | Variable | Boolean | Optional | SchemaFileType | xRegistry isdefault: true for the schema's default version - the one served when no explicit version is selected. The default is usually the latest version but MAY be pinned to an earlier one (sticky default). |
+| Ancestor | Variable | String | Optional | SchemaFileType | xRegistry ancestor: the versionid of the version this one derives from, establishing the version lineage. The root version's ancestor is its own VersionId. |
 | ModelVersion | Variable | String | Optional | SchemaFileType | OPC UA NodeSet model version label (opcua.modelversion). |
 | ConfigurationVersion | Variable | [ConfigurationVersionDataType](https://reference.opcfoundation.org/specs/OPC-10000-14/6.2.3#6.2.3.2.6) | Optional | SchemaFileType | PubSub DataSet schema profile only: the Part 14 ConfigurationVersion (opcua.configurationversion) when the schema describes a DataSet. Omitted for a non-PubSub schema registry. |
 | ExpiryTime | Variable | DateTime | Optional | SchemaFileType | Optional UTC expiry time for mirror/cache mode. |
@@ -340,13 +340,13 @@ An xRegistry ResourceType whose file content is one concrete schema document (Av
 
 ## Annex B — Federation and OPC UA / HTTP resolution parity (informative)
 
-A Schema Registry inherits the base model's federation (base §8). A schema hosted by another registry is represented locally by a `SchemaFileType` whose `ExternalReference` Property (an `ExpandedNodeId`) points to the remote schema file — `ServerUri` = the remote registry's OPC UA endpoint, `NamespaceUri` + `Identifier` = the remote group/schema identity — and/or whose `ResourceUrl` carries the same link in string form (an `opc.tcp` endpoint plus browse path, or an HTTP URL for a non-OPC-UA registry). A consumer that cannot resolve an on-wire SchemaId locally (§8 step 0c) follows the federation resolution algorithm of the base spec's Annex B: connect to the referenced `ServerUri`, translate the `NamespaceUri`, and read the referenced schema file there with the FileType Methods. Because a schema's identity (its `SchemaId` and `xid`) is stable across registries while the endpoint authority is not, the same schema federated from several registries keeps one identity and can be de-duplicated by `SchemaId`.
+A Schema Registry inherits the base model's federation (base §8). A schema hosted by another registry is represented locally by a proxy `SchemaFileType` whose `ExternalReference` Property (an `ExpandedNodeId`) points to the remote schema file — its `ServerUri` names the remote OPC UA server (an application URI, resolved to a concrete endpoint through the local server's `ServerArray`/discovery or a GDS), and its `NamespaceUri` + `Identifier` are the remote schema node's identity — and/or whose `ResourceUrl` carries the same link in string form (an `opc.tcp` endpoint plus the remote node, or an HTTP URL for a non-OPC-UA registry). A consumer resolves such a proxy by resolving the `ServerUri` to an endpoint, mapping the `NamespaceUri` to the remote server's `NamespaceArray` index to form the remote NodeId, and reading that schema file with the FileType Methods (or calling the remote `GetSchema`). Because a schema's identity (its `SchemaId` and `xid`) is stable across registries while the endpoint authority is not, the same schema federated from several registries keeps one identity and can be de-duplicated by `SchemaId`.
 
-Federation is **protocol-uniform**: the hosting registry may itself be an OPC UA registry or an HTTP xRegistry registry, and a client resolves the reference by the mechanism its link type implies — an OPC UA `ExpandedNodeId`/`opc.tcp` link by connecting and browsing/reading, an HTTP `ResourceUrl` by an HTTP `GET` on the schema's `self` URL (the same URL a `dataschema` reference would carry). The two are peer bindings of one registry model, so an OPC UA Schema Registry can federate to, mirror, or be mirrored by an HTTP one with no change to the schema identity or content, and a mixed OPC UA + HTTP federation resolves as a single logical registry (§4.3). The resolution algorithm is:
+Resolving an on-wire SchemaId that is **not registered locally** (§8 step 0c) requires a **registry-level peer**, not just a per-schema proxy: the local registry is configured with one or more peer registry endpoints (OPC UA `SchemaRegistry` objects or HTTP xRegistry endpoints), and the consumer queries a peer by SchemaId — calling the peer's `GetSchema` / Opaque-NodeId Read over OPC UA, or the equivalent HTTP lookup — then optionally caches the result as a local proxy. Federation is **protocol-uniform**: a peer or a proxy target may be an OPC UA registry or an HTTP xRegistry registry, and a client resolves it by the mechanism the link type implies. The two are peer bindings of one registry model, so an OPC UA Schema Registry can federate to, mirror, or be mirrored by an HTTP one with no change to the schema identity or content, and a mixed OPC UA + HTTP federation resolves as a single logical registry (§4.3). The resolution algorithm is:
 
-1. Read the local `SchemaFileType`'s `ExternalReference` and/or `ResourceUrl`.
-2. If an `ExpandedNodeId` is present, connect to its `ServerUri`, `TranslateBrowsePathsToNodeIds` for the `NamespaceUri` + identifier, and `Open`/`Read`/`Close` the remote schema file (or call the remote `GetSchema`).
-3. Otherwise, if a `ResourceUrl` is present, dereference it with the protocol it names — an `opc.tcp` URL as in step 2, an `http(s)` URL by a `GET` returning the schema document (with metadata in the response headers / `$details`).
+1. If a local proxy `SchemaFileType` for the target exists, read its `ExternalReference` and/or `ResourceUrl`; otherwise select a configured peer registry endpoint.
+2. For an OPC UA target (`ExpandedNodeId` or `opc.tcp` `ResourceUrl`, or an OPC UA peer): resolve the `ServerUri`/endpoint through discovery, map the `NamespaceUri` to the remote `NamespaceArray` index to construct the remote NodeId directly, and `Open`/`Read`/`Close` the remote schema file — or call the remote `GetSchema(SchemaId)`.
+3. For a non-OPC-UA target (an `http(s)` `ResourceUrl` or HTTP peer): dereference it over that protocol to obtain the schema document and its metadata (Annex D).
 4. De-duplicate by `SchemaId`: if the resolved document's `SchemaId` matches one already held, reuse the cached document.
 
 ## Annex C — PubSub DataSet schema profile (normative for the profile, optional)
@@ -357,8 +357,10 @@ This annex defines the OPTIONAL behaviours a Server that also implements Part 14
 
 A DataSet schema evolves along a **major.minor** lineage that corresponds to the PubSub `ConfigurationVersion` `{MajorVersion, MinorVersion}` of the DataSet it describes. The two components carry a compatibility contract a consumer can rely on without inspecting the schema bytes:
 
-- A **MajorVersion** increment is a **reset**: the schema starts a fresh lineage with no compatibility guarantee against any earlier major. A reset is produced by a structural DataSet change — a field added, removed, reordered or retyped, or a change to a field's DataType or DataTypeEncoding — or by an explicit operator or configuration reset. This matches the OPC 10000-14 rule that an incompatible DataSet change increments MajorVersion, and starts a **new schema** in the sense of §7.
-- A **MinorVersion** increment is an **append-only aggregation**: the new schema is a superset of the immediately preceding minor of the same major, produced only by appending members to the open unions described below. This matches the OPC 10000-14 rule that a compatible, additive DataSet change increments MinorVersion, and is a new **version** of the same schema in the sense of §7.
+> **Note on terminology.** In OPC 10000-14, `ConfigurationVersion.MajorVersion` and `MinorVersion` are `VersionTime` values (change timestamps), not sequential counters; an incompatible change advances `MajorVersion` (and `MinorVersion`), a compatible additive change advances only `MinorVersion`. The "major.minor" and "3.0 → 3.1" notation in this annex is an **illustrative lineage label** for those two change classes, not a claim that the fields increment by one. The authoritative schema-lineage key is the **`SchemaId`** (each distinct schema document has a distinct `SchemaId`); `ConfigurationVersion` is carried as the opaque Part 14 correlation value that signals *whether* the layout changed, and its `{Major, Minor}` pair classifies the change as a reset or an append.
+
+- A **MajorVersion** change is a **reset**: the schema starts a fresh lineage with no compatibility guarantee against any earlier major. A reset is produced by a structural DataSet change — a field added, removed, reordered or retyped, or a change to a field's DataType or DataTypeEncoding — or by an explicit operator or configuration reset. This matches the OPC 10000-14 rule that an incompatible DataSet change advances MajorVersion, and starts a **new schema** in the sense of §7.
+- A **MinorVersion** change is an **append-only aggregation**: the new schema is a superset of the immediately preceding minor of the same major, produced only by appending members to the open unions described below. This matches the OPC 10000-14 rule that a compatible, additive DataSet change advances MinorVersion, and is a new **version** of the same schema in the sense of §7.
 
 ### C.2 Open unions subject to aggregation
 

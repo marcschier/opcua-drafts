@@ -148,7 +148,7 @@
   </UAVariable>
   <UAVariable NodeId="ns=2;i=62509" BrowseName="2:Compatibility" ParentNodeId="ns=2;i=62002" DataType="String" ValueRank="-1">
     <DisplayName>Compatibility</DisplayName>
-    <Description>xRegistry compatibility mode governing this schema's versions, such as NONE, BACKWARD, FORWARD or FULL. All versions of one schema adhere to this mode; a breaking change starts a new schema.</Description>
+    <Description>xRegistry compatibility mode the schema's versions adhere to, such as NONE, BACKWARD, FORWARD or FULL. This is Resource-level metadata: it is identical across all versions of one schema, and a change that would break it starts a new schema rather than a new version.</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=80</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
@@ -157,7 +157,7 @@
   </UAVariable>
   <UAVariable NodeId="ns=2;i=62510" BrowseName="2:IsDefault" ParentNodeId="ns=2;i=62002" DataType="Boolean" ValueRank="-1">
     <DisplayName>IsDefault</DisplayName>
-    <Description>xRegistry isdefault: true when this file is the schema's default (latest) version in the flat projection.</Description>
+    <Description>xRegistry isdefault: true for the schema's default version - the one served when no explicit version is selected. The default is usually the latest version but MAY be pinned to an earlier one (sticky default).</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=80</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
@@ -166,7 +166,7 @@
   </UAVariable>
   <UAVariable NodeId="ns=2;i=62511" BrowseName="2:Ancestor" ParentNodeId="ns=2;i=62002" DataType="String" ValueRank="-1">
     <DisplayName>Ancestor</DisplayName>
-    <Description>xRegistry ancestor: the versionid of the version this one derives from, establishing the version lineage.</Description>
+    <Description>xRegistry ancestor: the versionid of the version this one derives from, establishing the version lineage. The root version's ancestor is its own VersionId.</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=80</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
