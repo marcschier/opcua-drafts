@@ -16,7 +16,7 @@
 
 This specification defines *one* mapping of the generic xRegistry structure onto the OPC UA AddressSpace: a registry and its groups are **folders** (`FolderType`) that organize their members, and each resource/version document *is* a **file** (`FileType`) so it is downloaded with the standard OPC UA FileTransfer read (OPC 10000-20) — the AddressSpace *is* the registry:
 
-- a **registry** and each **group** are `FolderType` folders that organize their children; a group is created with the `CreateGroup` (or idempotent `GetOrCreateGroup`) Method on the registry, a resource or version with the `CreateResource` (or idempotent `GetOrCreateResource`) Method on the group, and an entry is removed with the standard `DeleteNodes` Service;
+- a **registry** and each **group** are `FolderType` folders that organize their children; a group is created with the `CreateGroup` (or idempotent `GetOrCreateGroup`) Method on the registry, a resource or version with the `CreateResource` (or idempotent `GetOrCreateResource`) Method on the group, and an entry is removed with its own `Delete` Method (optionally epoch-matched);
 - a **resource/version document** is a `FileType` file, whose bytes are read and written with the inherited `Open` / `Read` / `Write` / `Close` Methods;
 - xRegistry **attributes** (`xid`, `epoch`, `name`, timestamps, `format`, `contenttype`, …) are OPC UA Properties on those Objects; the extensible **`labels`** are a browsable `AttributesType` container whose `AddAttribute` / `RemoveAttribute` Methods add and remove them as individual Property Variables;
 - **federation** links to resources hosted by other registries are OPC UA `ExpandedNodeId` values.
@@ -31,7 +31,7 @@ It is explicitly out of scope to re-specify the xRegistry core model or its HTTP
 - [xRegistry primer, v1.0-rc3](https://github.com/xregistry/spec/blob/v1.0-rc3/core/primer.md) — §7 the three representations (file / static-file-server / API-server) and their symmetry; §8 cross-registry links and federation.
 - [xRegistry HTTP binding, v1.0-rc3](https://github.com/xregistry/spec/blob/v1.0-rc3/core/http.md) — the HTTP protocol binding of xRegistry; an informative sibling of the OPC UA API binding ([*xRegistry — OPC UA API*](xRegistry-OPC-UA-Api.md)), both realizing the same core model over their respective protocols.
 - [OPC 10000-3](https://reference.opcfoundation.org/specs/OPC-10000-3/) — Address Space Model: NodeIds, References, TypeDefinitions, and the `ExpandedNodeId` structure (§8.2.3) used for federation.
-- [OPC 10000-4](https://reference.opcfoundation.org/specs/OPC-10000-4/) — Services: Browse, Read, Write, Call, and the `DeleteNodes` Service used to remove a group or resource.
+- [OPC 10000-4](https://reference.opcfoundation.org/specs/OPC-10000-4/) — Services: Browse, Read, Write and Call.
 - [OPC 10000-5](https://reference.opcfoundation.org/specs/OPC-10000-5/) — Base Information Model: `FolderType`, `BaseObjectType` and `PropertyType`.
 - [OPC 10000-20](https://reference.opcfoundation.org/specs/OPC-10000-20/) — File Transfer: `FileType` (§4.2) with the `Open` / `Read` / `Write` / `Close` Methods used to read and write a resource document.
 
@@ -78,7 +78,7 @@ xRegistry (primer §7) defines three interchangeable representations of the same
 | xRegistry representation | Realization in this model |
 |---|---|
 | **Files** / **static file server** — a directory tree of documents + attribute sidecars | The AddressSpace subtree: `FolderType` folders and `FileType` files under the `RegistryType` root. Browse = list; Read = fetch a document. |
-| **API server** — a live service that serves and mutates the registry | OPC UA Client/Server services over the same subtree: Browse, Read, `Open`/`Read`/`Write`, `CreateGroup`/`GetOrCreateGroup`/`CreateResource`/`GetOrCreateResource`, the `DeleteNodes` Service, and `AddAttribute`/`RemoveAttribute` on each entity's `Labels` container — defined by [*xRegistry — OPC UA API*](xRegistry-OPC-UA-Api.md). |
+| **API server** — a live service that serves and mutates the registry | OPC UA Client/Server services over the same subtree: Browse, Read, `Open`/`Read`/`Write`, `CreateGroup`/`GetOrCreateGroup`/`CreateResource`/`GetOrCreateResource`, the `Delete` Method, and `AddAttribute`/`RemoveAttribute` on each entity's `Labels` container — defined by [*xRegistry — OPC UA API*](xRegistry-OPC-UA-Api.md). |
 | **Document** — a single serialized registry document | An OPC UA Read/export of the subtree serializes to the xRegistry JSON document shape (the inverse of importing a document to bootstrap the subtree). |
 
 The three are **symmetric**: the same entity has the same `xid` and identity in every representation, so a resource registered through the API server is immediately visible as a file, and a document imported to bootstrap the AddressSpace is immediately serveable through the API.
@@ -122,15 +122,15 @@ The abstract base namespace is `http://opcfoundation.org/UA/xRegistry/`. Draft n
 
 ### 6.1 RegistryType
 
-`RegistryType` is a subtype of `FolderType` and is the registry root — a folder that organizes the groups it contains. It creates a group through its `CreateGroup` Method (or the idempotent `GetOrCreateGroup`) and a group is removed with the standard `DeleteNodes` Service. Its Properties carry the registry-level xRegistry attributes: the Mandatory `RegistryId` and the optional `SpecVersion` (the xRegistry spec version), plus the common attributes of §6.4. The `Capabilities` and `Model` documents (the xRegistry `/capabilities` and `/model` JSON) are exposed as component **`FileType`** objects read with `Open`/`Read`/`Close`, so an arbitrarily large model document is not bounded by `MaxStringLength`. Its `<Group>` OptionalPlaceholder declares that its folder members are `GroupType` instances. A domain registry subtypes `RegistryType` (for example `SchemaRegistryType`) and constrains `<Group>` to its own group type.
+`RegistryType` is a subtype of `FolderType` and is the registry root — a folder that organizes the groups it contains. It creates a group through its `CreateGroup` Method (or the idempotent `GetOrCreateGroup`); a group is removed with the group's own `Delete` Method. Its Properties carry the registry-level xRegistry attributes: the Mandatory `RegistryId` and the optional `SpecVersion` (the xRegistry spec version), plus the common attributes of §6.4. The `Capabilities` document (xRegistry `/capabilities`) is exposed **two ways**: as a component `FileType` object (`Capabilities`, the raw JSON read with `Open`/`Read`/`Close`) and as a typed Variable (`CapabilitiesInfo`) of the `RegistryCapabilitiesDataType` Structure (§6.7) whose fixed fields a client reads in one Variant value without parsing JSON. The `Model` document (xRegistry `/model`) is exposed only as a `FileType` object, because the OPC UA AddressSpace type system (the ObjectTypes and their members) is the structural equivalent of the model, so no structured DataType is defined for it. Its `<Group>` OptionalPlaceholder declares that its folder members are `GroupType` instances. A domain registry subtypes `RegistryType` (for example `SchemaRegistryType`) and constrains `<Group>` to its own group type.
 
 ### 6.2 GroupType
 
-`GroupType` is a subtype of `FolderType` and is a group folder — an entry of an xRegistry `GROUPS` collection. It carries the Mandatory `GroupId` and the common attributes of §6.4, and its `<Resource>` OptionalPlaceholder declares that its members are `ResourceType` files, created through its `CreateResource` Method (or the idempotent `GetOrCreateResource`). A domain group subtypes `GroupType` to add the **group key**: for example `SchemaGroupType` adds a Mandatory `NamespaceUri`.
+`GroupType` is a subtype of `FolderType` and is a group folder — an entry of an xRegistry `GROUPS` collection. It carries the Mandatory `GroupId` and the common attributes of §6.4, and its `<Resource>` OptionalPlaceholder declares that its members are `ResourceType` files, created through its `CreateResource` Method (or the idempotent `GetOrCreateResource`). The group is removed by its own `Delete(ExpectedEpoch: UInt32)` Method, which deletes the group together with the resources it contains; `ExpectedEpoch` provides the same optimistic-concurrency check as in §6.6 (non-zero and unequal to the group's `Epoch` → `Bad_InvalidState`, no change; `0` disables it). A domain group subtypes `GroupType` to add the **group key**: for example `SchemaGroupType` adds a Mandatory `NamespaceUri`.
 
 ### 6.3 ResourceType
 
-`ResourceType` is a subtype of `FileType`: the resource/version **document is the file**, read and written through the inherited `Open` / `Read` / `Write` / `Close` Methods. It carries the resource-level xRegistry attributes: the Mandatory `ResourceId`, the `VersionId`, the `Format` (the xRegistry format string) and `ContentType` (the document media type), the federation links `ExternalReference` and `ResourceUrl` (§8), and the common attributes of §6.4 (including its `Labels` container, §6.6). A domain resource subtypes `ResourceType` (for example `SchemaFileType`) to add its own metadata.
+`ResourceType` is a subtype of `FileType`: the resource/version **document is the file**, read and written through the inherited `Open` / `Read` / `Write` / `Close` Methods. It carries the resource-level xRegistry attributes: the Mandatory `ResourceId`, the `VersionId`, the `Format` (the xRegistry format string) and `ContentType` (the document media type), the federation links `ExternalReference` and `ResourceUrl` (§8), and the common attributes of §6.4 (including its `Labels` container, §6.6). It is removed by its own `Delete(ExpectedEpoch: UInt32)` Method, symmetric with `GroupType.Delete` — a resource is a file, and deleting it removes its versions and `Labels`; `ExpectedEpoch` applies the same optimistic-concurrency check (non-zero and unequal to the resource's `Epoch` → `Bad_InvalidState`, no change; `0` disables it). A domain resource subtypes `ResourceType` (for example `SchemaFileType`) to add its own metadata.
 
 ### 6.4 Common xRegistry attributes
 
@@ -152,9 +152,17 @@ Subsequent `Write`s or `AddAttribute` / `RemoveAttribute` calls (on the entity's
 The extensible xRegistry `labels` (and any other dynamic extension attributes) are modelled as an **`AttributesType`** container rather than a single array Property, so each label is an individually browsable, readable and enumerable node and cannot collide with an entity's fixed attribute BrowseNames. `AttributesType` (a subtype of `BaseObjectType`) has:
 
 - an OptionalPlaceholder `<Attribute>` `PropertyType` Variable — a server materializes one `PropertyType` Variable per present label, whose BrowseName is the label key and whose value is the label string; and
-- the `AddAttribute(Key: String, Value: String, ExpectedEpoch: UInt32) → (Success: Boolean)` and `RemoveAttribute(Key: String, ExpectedEpoch: UInt32) → (Success: Boolean)` Methods, which add/update and remove those Variables and increment the owning entity's `Epoch`. `ExpectedEpoch` provides optimistic concurrency: when it is non-zero and does not equal the owning entity's current `Epoch`, the Method fails `Bad_InvalidState` and makes no change; `0` disables the check.
+- the `AddAttribute(Key: String, Value: String, ExpectedEpoch: UInt32)` and `RemoveAttribute(Key: String, ExpectedEpoch: UInt32)` Methods, which add/update and remove those Variables and increment the owning entity's `Epoch`; success or failure is conveyed by the Method Call StatusCode (they return no output). `ExpectedEpoch` provides optimistic concurrency: when it is non-zero and does not equal the owning entity's current `Epoch`, the Method fails `Bad_InvalidState` and makes no change; `0` disables the check.
 
 This follows the established OPC UA extensible-container pattern (a container ObjectType with an OptionalPlaceholder member plus Add/Remove Methods, as used for dynamic parameter/property sets), and is the OPC UA form of an xRegistry `PATCH` of an entity's `labels`. Each entity exposes one such container as its `Labels` component (§6.4); the labels are deleted together with the entity. A server that does not allow post-creation configuration need not expose the Methods. An `AddIn`/interface composition (`HasAddIn`/`HasInterface`) is a viable alternative for attaching the container; the component form is used here for simplicity.
+
+### 6.7 RegistryCapabilitiesDataType
+
+`RegistryCapabilitiesDataType` is a Structure DataType that carries the fixed fields of the xRegistry `/capabilities` document, so a client reads a registry's advertised capabilities as one typed Variant value (the `RegistryType.CapabilitiesInfo` Variable, §6.1) without parsing the `Capabilities` file JSON. Its fields mirror the xRegistry capabilities schema: `Flags` (`String[]`, the enabled request-flag names), `Mutable` (`String[]`, the mutable entity kinds), `Pagination` (`Boolean`), `ShortSelf` (`Boolean`), `SpecVersions` (`String[]`), `StickyVersions` (`Boolean`), `EnforceCompatibility` (`Boolean`), `Apis` (`String[]`) and `Schemas` (`String[]`). xRegistry allows vendor-defined capability keys; a server that advertises such extension keys conveys them through the raw `Capabilities` file, which remains the authoritative document. The typed value is a convenience view of the standard fields.
+
+### 6.8 Collection ordering
+
+xRegistry `GROUPS`, resource and version collections are **unordered maps keyed by id**; the registry does not prescribe a stored order for their entries, and version order is conveyed by attributes (`ancestor`, `createdat`, `defaultversionid`), not by position. OPC UA correspondingly defines no ordered-collection interface, so this model uses none: the order in which a Browse returns a folder's members is server-defined and **not** significant. A client that needs a specific presentation order applies the xRegistry `?sort` hint itself, ordering the Browse results client-side by an attribute it reads (for example `VersionId` or `CreatedAt`). A server that requires a deterministic domain order MAY add its own index Property to the entities, but the base model does not mandate one.
 
 ## 7 The xRegistry API over OPC UA
 
@@ -167,7 +175,7 @@ The AddressSpace subtree is simultaneously the xRegistry **API server**: each xR
 | Read an entity's attributes | Read the Properties of the Object (and its `Labels` container) |
 | Create a resource or version | `CreateResource` / `GetOrCreateResource` (+ `CreateGroup` / `GetOrCreateGroup`) then `Write` |
 | Update an entity's labels | `AddAttribute` / `RemoveAttribute` on the entity's `Labels` container |
-| Delete an entity | the `DeleteNodes` Service on the group/resource node |
+| Delete an entity | the entity's own `Delete(ExpectedEpoch)` Method on the group/resource node |
 | Export a subtree as a document | Read/serialize the subtree to the xRegistry document shape |
 
 ## 8 Federation
@@ -202,6 +210,7 @@ This annex is the normative node reference. It is generated from `tools/build_mo
 | ns=1;i=63001 | [GroupType](#type-GroupType) | ObjectType | [FolderType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.6) |
 | ns=1;i=63002 | [ResourceType](#type-ResourceType) | ObjectType | [FileType](https://reference.opcfoundation.org/specs/OPC-10000-20/4.2) |
 | ns=1;i=63003 | [AttributesType](#type-AttributesType) | ObjectType | [BaseObjectType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.2) |
+| ns=1;i=63004 | [RegistryCapabilitiesDataType](#type-RegistryCapabilitiesDataType) | DataType | [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24) |
 
 ### Object types
 
@@ -211,14 +220,15 @@ This annex is the normative node reference. It is generated from `tools/build_mo
 
 *Inherits from:* [FolderType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.6)
 
-The abstract xRegistry root, expressed as a FolderType that organizes its Group objects. It creates groups through the CreateGroup Method; a group is removed with the standard DeleteNodes Service. The physical backing may be a file-system directory, but the type is a plain organizing folder. Domain registries subtype this.
+The abstract xRegistry root, expressed as a FolderType that organizes its Group objects. It creates groups through the CreateGroup Method; a group is removed with its own Delete Method. The physical backing may be a file-system directory, but the type is a plain organizing folder. Domain registries subtype this.
 
 | BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
 |---|---|---|---|---|---|
 | RegistryId | Variable | String | Mandatory | RegistryType | xRegistry registryid: the stable identifier of this registry. |
 | SpecVersion | Variable | String | Optional | RegistryType | The xRegistry specification version this registry conforms to. |
 | Capabilities | Object |  | Optional | RegistryType | The registry capabilities document (xRegistry /capabilities): a FileType whose content is the capabilities JSON, read with the inherited Open/Read/Close Methods (so an arbitrarily large document is not bounded by MaxStringLength). |
-| Model | Object |  | Optional | RegistryType | The registry model document (xRegistry /model): a FileType whose content is the model JSON, read with the inherited Open/Read/Close Methods. |
+| Model | Object |  | Optional | RegistryType | The registry model document (xRegistry /model): a FileType whose content is the model JSON, read with the inherited Open/Read/Close Methods. No structured DataType is defined for the model because the OPC UA AddressSpace type system (the ObjectTypes and their members) is the structural equivalent of the model. |
+| CapabilitiesInfo | Variable | [RegistryCapabilitiesDataType](#type-RegistryCapabilitiesDataType) | Optional | RegistryType | The typed form of the registry capabilities (RegistryCapabilitiesDataType), read as a single Variant value, in addition to the raw JSON of the Capabilities FileType. |
 | Xid | Variable | String | Optional | RegistryType | xRegistry relative identifier (xid): the entity's stable path within the registry, independent of the hosting endpoint. |
 | Epoch | Variable | UInt32 | Optional | RegistryType | xRegistry epoch: a counter that increments on every change to the entity. |
 | Name | Variable | String | Optional | RegistryType | Human-readable name of the entity. |
@@ -237,7 +247,7 @@ The abstract xRegistry root, expressed as a FolderType that organizes its Group 
 
 *Inherits from:* [FolderType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.6)
 
-An abstract xRegistry group, expressed as a FolderType that organizes its resource files. It creates resources and versions through the CreateResource Method; an entry is removed with the DeleteNodes Service. Domain group types subtype this and add the group key (e.g. a namespace URI).
+An abstract xRegistry group, expressed as a FolderType that organizes its resource files. It creates resources and versions through the CreateResource Method and is removed with its own Delete Method. Domain group types subtype this and add the group key (e.g. a namespace URI).
 
 | BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
 |---|---|---|---|---|---|
@@ -253,6 +263,7 @@ An abstract xRegistry group, expressed as a FolderType that organizes its resour
 | <Resource> | Object |  | OptionalPlaceholder | GroupType | A resource file held by this group. |
 | CreateResource | Method |  | Optional | GroupType | Create a resource - or a new version of a resource - as a ResourceType file in this group, optionally opened for writing. The server bootstraps the resource's xRegistry attributes when the file is closed. Fails if a resource with the same ResourceId already exists; use GetOrCreateResource for idempotent create-or-get. |
 | GetOrCreateResource | Method |  | Optional | GroupType | Idempotently return the resource with this ResourceId, creating it if absent, optionally opened for writing. One-shot form that avoids a separate existence check: returns the existing ResourceType file (Created = false) or a newly created one (Created = true); a write FileHandle is returned when RequestFileOpen is true. |
+| Delete | Method |  | Optional | GroupType | Delete this group and everything it contains (its resources and their versions and labels). The xRegistry-semantic deletion Method, symmetric with CreateResource. If ExpectedEpoch is non-zero and does not equal the group's current Epoch, the call fails with Bad_InvalidState and deletes nothing; 0 disables the check. Success or failure is conveyed by the Method Call StatusCode. |
 
 <a id="type-ResourceType"></a>
 
@@ -278,6 +289,7 @@ An abstract xRegistry resource/version whose document IS the file: the content i
 | Labels | Object |  | Optional | ResourceType | The entity's extensible xRegistry labels/attributes, exposed as an AttributesType container: each label is a browsable PropertyType Variable, added and removed with the container's AddAttribute/RemoveAttribute Methods. Deleted together with the entity. |
 | CreatedAt | Variable | DateTime | Optional | ResourceType | UTC timestamp when the entity was created. |
 | ModifiedAt | Variable | DateTime | Optional | ResourceType | UTC timestamp when the entity was last modified. |
+| Delete | Method |  | Optional | ResourceType | Delete this resource file and everything it contains (its versions and labels). The xRegistry-semantic deletion Method, symmetric with the group's Delete and consistent with the resource being a FileType. If ExpectedEpoch is non-zero and does not equal the resource's current Epoch, the call fails with Bad_InvalidState and deletes nothing; 0 disables the check. Success or failure is conveyed by the Method Call StatusCode. |
 
 <a id="type-AttributesType"></a>
 
@@ -290,19 +302,43 @@ A container for an entity's extensible xRegistry attributes/labels. Each attribu
 | BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
 |---|---|---|---|---|---|
 | <Attribute> | Variable | String | OptionalPlaceholder | AttributesType | An xRegistry attribute or label materialized as a PropertyType Variable: the BrowseName is the attribute key and the Value is its string value. OptionalPlaceholder so a server exposes one Variable per present attribute. |
-| AddAttribute | Method |  | Optional | AttributesType | Add or update an xRegistry attribute/label in this container. The server materializes it as a browsable PropertyType Variable whose BrowseName is the Key, and increments the owning entity's Epoch. If ExpectedEpoch is non-zero and does not equal the owning entity's current Epoch, the call fails with Bad_InvalidState and makes no change (optimistic concurrency). |
-| RemoveAttribute | Method |  | Optional | AttributesType | Remove an xRegistry attribute/label (the Variable whose BrowseName is the Key) from this container. If ExpectedEpoch is non-zero and does not equal the owning entity's current Epoch, the call fails with Bad_InvalidState and makes no change. |
+| AddAttribute | Method |  | Optional | AttributesType | Add or update an xRegistry attribute/label in this container. The server materializes it as a browsable PropertyType Variable whose BrowseName is the Key, and increments the owning entity's Epoch. If ExpectedEpoch is non-zero and does not equal the owning entity's current Epoch, the call fails with Bad_InvalidState and makes no change (optimistic concurrency). Success or failure is conveyed by the Method Call StatusCode. |
+| RemoveAttribute | Method |  | Optional | AttributesType | Remove an xRegistry attribute/label (the Variable whose BrowseName is the Key) from this container. If ExpectedEpoch is non-zero and does not equal the owning entity's current Epoch, the call fails with Bad_InvalidState and makes no change. Success or failure is conveyed by the Method Call StatusCode. |
+
+### DataTypes
+
+<a id="type-RegistryCapabilitiesDataType"></a>
+
+#### RegistryCapabilitiesDataType  (ns=1;i=63004)
+
+*Subtype of:* [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24)
+
+The typed form of the xRegistry capabilities document (xRegistry /capabilities), whose fields have a fixed schema in the xRegistry core specification. Read as a single Variant value from RegistryType.CapabilitiesInfo, in addition to the raw JSON exposed by the Capabilities FileType. Additional/vendor capability keys that are not among these fixed fields remain available through the Capabilities FileType JSON.
+
+| Field | DataType | Description |
+|---|---|---|
+| Flags | String\[\] | The request flags the registry supports (e.g. doc, epoch, filter, inline, sort). |
+| Mutable | String\[\] | Which parts of the registry are mutable (e.g. capabilities, model, entities). |
+| Pagination | Boolean | Whether the registry supports pagination of collections. |
+| ShortSelf | Boolean | Whether the registry offers a shortself alias for entity self URLs. |
+| SpecVersions | String\[\] | The xRegistry specification versions the registry supports. |
+| StickyVersions | Boolean | Whether the registry keeps the default version sticky across updates. |
+| EnforceCompatibility | Boolean | Whether the registry enforces version compatibility on updates. |
+| Apis | String\[\] | The additional API endpoints the registry offers (e.g. /export). |
+| Schemas | String\[\] | The schema formats the registry can validate against (schema-domain registries). |
 
 ### Methods
 
 | Method | Owning type | Input arguments | Output arguments |
 |---|---|---|---|
-| AddAttribute | [AttributesType](#type-AttributesType) | Key, Value, ExpectedEpoch | Success |
-| RemoveAttribute | [AttributesType](#type-AttributesType) | Key, ExpectedEpoch | Success |
+| AddAttribute | [AttributesType](#type-AttributesType) | Key, Value, ExpectedEpoch | (none) |
+| RemoveAttribute | [AttributesType](#type-AttributesType) | Key, ExpectedEpoch | (none) |
 | CreateGroup | [RegistryType](#type-RegistryType) | GroupId | GroupNodeId |
 | GetOrCreateGroup | [RegistryType](#type-RegistryType) | GroupId | GroupNodeId, Created |
 | CreateResource | [GroupType](#type-GroupType) | ResourceId, RequestFileOpen | ResourceNodeId, FileHandle |
 | GetOrCreateResource | [GroupType](#type-GroupType) | ResourceId, RequestFileOpen | ResourceNodeId, FileHandle, Created |
+| Delete | [GroupType](#type-GroupType) | ExpectedEpoch | (none) |
+| Delete | [ResourceType](#type-ResourceType) | ExpectedEpoch | (none) |
 
 ## Annex B — Federation resolution via ExpandedNodeId (informative)
 

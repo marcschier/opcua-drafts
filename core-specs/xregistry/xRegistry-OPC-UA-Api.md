@@ -12,7 +12,7 @@
 
 This specification defines the OPC UA API binding for [xRegistry](https://github.com/xregistry/spec): how a registry, its groups, resources, versions, documents and attributes are discovered, read, created, updated and deleted natively over OPC UA Services while realizing the xRegistry core model on the OPC UA AddressSpace and FileTransfer model of [*OPC UA — xRegistry*](OPC-UA-xRegistry.md).
 
-The abstract information model is defined by [*OPC UA — xRegistry*](OPC-UA-xRegistry.md): a registry is a `RegistryType` folder (subtype of `FolderType`), each group is a `GroupType` folder (subtype of `FolderType`), and each resource or resource version document is a `ResourceType` file (subtype of `FileType`). This API specifies how clients interact with those nodes using Browse, BrowseNext, Read, Write, Call, DeleteNodes, TranslateBrowsePathsToNodeIds and the FileTransfer Methods inherited by `ResourceType`.
+The abstract information model is defined by [*OPC UA — xRegistry*](OPC-UA-xRegistry.md): a registry is a `RegistryType` folder (subtype of `FolderType`), each group is a `GroupType` folder (subtype of `FolderType`), and each resource or resource version document is a `ResourceType` file (subtype of `FileType`). This API specifies how clients interact with those nodes using Browse, BrowseNext, Read, Write, Call, TranslateBrowsePathsToNodeIds and the FileTransfer Methods inherited by `ResourceType`; deletion is an xRegistry `Delete(ExpectedEpoch)` Method call on the `GroupType` or `ResourceType` entity being deleted.
 
 > Annex A provides an informative correspondence for readers familiar with sibling protocol bindings, while §9 describes federation, including references to registries hosted behind other APIs.
 
@@ -24,7 +24,7 @@ This binding is independent of any domain registry. A concrete companion specifi
 - [xRegistry primer, v1.0-rc3](https://github.com/xregistry/spec/blob/v1.0-rc3/core/primer.md) — the xRegistry concepts, representations, request-shaping concepts and federation model.
 - [OPC UA — xRegistry](OPC-UA-xRegistry.md) — the OPC UA companion information model used by this API.
 - [OPC 10000-3](https://reference.opcfoundation.org/specs/OPC-10000-3/) — Address Space Model, including NodeIds, References, TypeDefinitions and `ExpandedNodeId`.
-- [OPC 10000-4](https://reference.opcfoundation.org/specs/OPC-10000-4/) — Services, including Browse, BrowseNext, Read, Write, Call, DeleteNodes, TranslateBrowsePathsToNodeIds and StatusCodes.
+- [OPC 10000-4](https://reference.opcfoundation.org/specs/OPC-10000-4/) — Services, including Browse, BrowseNext, Read, Write, Call, TranslateBrowsePathsToNodeIds and StatusCodes.
 - [OPC 10000-5](https://reference.opcfoundation.org/specs/OPC-10000-5/) — Base Information Model, including `FolderType` and `PropertyType`.
 - [OPC 10000-20](https://reference.opcfoundation.org/specs/OPC-10000-20/) — File Transfer, including `FileType` and its `Open` / `Read` / `Write` / `Close` Methods.
 
@@ -34,9 +34,9 @@ Key words **shall**, **should**, **may**, **shall not** and **should not** are i
 
 The xRegistry terms registry, group, resource, version, document, attributes, collection, `xid`, `self`, `epoch`, `labels`, model, capabilities, request flags, representation and federation have the meanings defined by the xRegistry core specification and primer. In this document, an `xid` is the xRegistry relative identifier of an entity within a registry, for example `/schemagroups/g1/schemas/s1`; it is not a protocol URL and is resolved against the selected `RegistryType` root.
 
-OPC UA type and member names follow OPC UA naming conventions and are written exactly as defined by [*OPC UA — xRegistry*](OPC-UA-xRegistry.md) Annex A and the corresponding NodeSet: `RegistryType`, `GroupType`, `ResourceType`, `AttributesType`, `RegistryId`, `SpecVersion`, `Capabilities`, `Model`, `GroupId`, `ResourceId`, `VersionId`, `Format`, `ContentType`, `ExternalReference`, `ResourceUrl`, `Xid`, `Epoch`, `Name`, `Description`, `Documentation`, `Labels`, `<Attribute>`, `CreatedAt`, `ModifiedAt`, `CreateGroup`, `GetOrCreateGroup`, `CreateResource`, `GetOrCreateResource`, `AddAttribute`, `RemoveAttribute`, `ExpectedEpoch` and `DeleteNodes`.
+OPC UA type and member names follow OPC UA naming conventions and are written exactly as defined by [*OPC UA — xRegistry*](OPC-UA-xRegistry.md) Annex A and the corresponding NodeSet: `RegistryType`, `GroupType`, `ResourceType`, `AttributesType`, `RegistryCapabilitiesDataType`, `RegistryId`, `SpecVersion`, `Capabilities`, `CapabilitiesInfo`, `Model`, `GroupId`, `ResourceId`, `VersionId`, `Format`, `ContentType`, `ExternalReference`, `ResourceUrl`, `Xid`, `Epoch`, `Name`, `Description`, `Documentation`, `Labels`, `<Attribute>`, `CreatedAt`, `ModifiedAt`, `CreateGroup`, `GetOrCreateGroup`, `CreateResource`, `GetOrCreateResource`, `AddAttribute`, `RemoveAttribute`, `Delete` and `ExpectedEpoch`.
 
-The OPC UA Services used by this API are Browse for collection enumeration, BrowseNext for continuation points, Read for Properties and node metadata, Write for writable Properties, Call for FileTransfer and xRegistry Methods, DeleteNodes for entity deletion, TranslateBrowsePathsToNodeIds for path resolution, and the FileTransfer Methods inherited from `FileType` by `ResourceType`.
+The OPC UA Services used by this API are Browse for collection enumeration, BrowseNext for continuation points, Read for Properties and node metadata, Write for writable Properties, Call for FileTransfer and xRegistry Methods including `Delete`, TranslateBrowsePathsToNodeIds for path resolution, and the FileTransfer Methods inherited from `FileType` by `ResourceType`.
 
 In pseudo-signatures, FileTransfer Methods are shown by their BrowseNames rather than by numeric NodeIds because a concrete server may expose them on domain subtypes of `ResourceType`.
 
@@ -50,7 +50,7 @@ A server may expose more than one registry. A client selects the registry root b
 
 The selected registry root is the API authority for the operation sequence. No URL authority is involved in the native OPC UA API; entity identity is carried by xRegistry identifier Properties and `Xid`, while the OPC UA session, endpoint and NodeIds identify where those entities are currently served.
 
-The baseline operation model is: Browse a folder to enumerate a collection, select entities from the Browse result by BrowseName, NodeClass, TypeDefinition and target NodeId, Read Properties and the `Labels` container's `<Attribute>` Property Variables to obtain attributes that are not already in the Browse result, Write writable Properties to change fixed mutable attributes, Call `Open`/`Read`/`Write`/`Close` to read or replace document bytes, Call `CreateGroup`, `GetOrCreateGroup`, `CreateResource` or `GetOrCreateResource` to create entities, use the `DeleteNodes` Service (OPC 10000-4) to delete entities or portions of the registry, and Call `Labels.AddAttribute` or `Labels.RemoveAttribute` for supported labels and extension attributes.
+The baseline operation model is: Browse a folder to enumerate a collection, select entities from the Browse result by BrowseName, NodeClass, TypeDefinition and target NodeId, Read Properties and the `Labels` container's `<Attribute>` Property Variables to obtain attributes that are not already in the Browse result, Write writable Properties to change fixed mutable attributes, Call `Open`/`Read`/`Write`/`Close` to read or replace document bytes, Call `CreateGroup`, `GetOrCreateGroup`, `CreateResource` or `GetOrCreateResource` to create entities, Call the entity's `Delete(ExpectedEpoch)` Method to delete it and everything it contains, and Call `Labels.AddAttribute` or `Labels.RemoveAttribute` for supported labels and extension attributes.
 
 If an optional xRegistry function is not supported for an otherwise supported node, the server shall return `Bad_NotSupported`, `Bad_UserAccessDenied`, `Bad_NotWritable`, `Bad_MethodInvalid` or `Bad_InvalidArgument` as appropriate. If the requested node or Property cannot be resolved, the server shall return an appropriate StatusCode such as `Bad_NodeIdUnknown`, `Bad_BrowseNameInvalid` or `Bad_NotFound` where available.
 
@@ -61,13 +61,13 @@ The following table defines the native addressing model from xRegistry `xid` or 
 | xRegistry `xid` / relative identifier | OPC UA target | Primary OPC UA operation |
 |---|---|---|
 | `/` | selected `RegistryType` root node | Read registry Properties and Browse group children |
-| `/capabilities` | `RegistryType.Capabilities` `FileType` component Object | `Open`/`Read`/`Close` the JSON bytes; when writable, `Open(write)`/`Write`/`Close` replaces the document |
+| `/capabilities` | `RegistryType.CapabilitiesInfo` Variable or `RegistryType.Capabilities` `FileType` component Object | Prefer Read of `CapabilitiesInfo` as a single `RegistryCapabilitiesDataType` Variant for fixed capability fields; use `Open`/`Read`/`Close` on `Capabilities` for raw JSON, including vendor or extension keys; when writable, `Open(write)`/`Write`/`Close` replaces the JSON document |
 | `/capabilitiesoffered` | offered-capabilities structure exposed by the server, if any | Read a domain Property or an offered section inside the `Capabilities` JSON document |
 | `/model` | `RegistryType.Model` `FileType` component Object | `Open`/`Read`/`Close` the JSON bytes; when writable as model source, `Open(write)`/`Write`/`Close` replaces the document |
 | `/modelsource` | server-specific model-source Property or operation, if exposed | Read or Write the domain-defined model-source target, or reject as unsupported |
 | `/export` | selected `RegistryType` subtree serialized as an xRegistry document | Browse and Read the subtree, or use a domain export Method or Property if advertised |
 | `/<GROUPS>` | collection of `GroupType` children under the registry whose collection name is `<GROUPS>` | Browse and optionally `CreateGroup` or `GetOrCreateGroup` on the registry |
-| `/<GROUPS>/<GID>` | `GroupType` child whose `GroupId` is `<GID>` | Read/Write Properties, Browse resources, delete with the `DeleteNodes` Service |
+| `/<GROUPS>/<GID>` | `GroupType` child whose `GroupId` is `<GID>` | Read/Write Properties, Browse resources, or Call `Delete(ExpectedEpoch)` on the group |
 | `/<GROUPS>/<GID>/<RESOURCES>` | collection of `ResourceType` children under the group whose collection name is `<RESOURCES>` | Browse and optionally `CreateResource` or `GetOrCreateResource` on the group |
 | `/<GROUPS>/<GID>/<RESOURCES>/<RID>` | default `ResourceType` for `ResourceId = <RID>` | `Open`/`Read` document bytes or Read metadata Properties |
 | `/<GROUPS>/<GID>/<RESOURCES>/<RID>$details` | same `ResourceType`, metadata view | Read/Write Properties and optionally `Labels.AddAttribute`/`Labels.RemoveAttribute` |
@@ -88,13 +88,13 @@ Reading a collection is Browse over the corresponding folder. Reading an entity 
 
 Full replacement of an entity targets the entity node or the parent folder from which the entity can be created. If the entity does not exist, the server creates a `GroupType` folder or `ResourceType` file; if it exists, the server updates it. Mutable Properties or `Labels` entries omitted from the replacement representation shall be deleted, reset to default or left unchanged only where the xRegistry core rules or server-managed semantics require that behavior.
 
-Partial update of an entity changes only explicitly named mutable attributes and removes explicitly null attributes where removal is supported. It is realized by Write of writable Properties and, where extension attributes or labels are involved, by Call of `Labels.AddAttribute(Key, Value, ExpectedEpoch) -> Success` or `Labels.RemoveAttribute(Key, ExpectedEpoch) -> Success` on the entity's `Labels` `AttributesType` object. Partial update shall not patch arbitrary bytes inside a resource document; document content changes use complete replacement of the document byte stream.
+Partial update of an entity changes only explicitly named mutable attributes and removes explicitly null attributes where removal is supported. It is realized by Write of writable Properties and, where extension attributes or labels are involved, by Call of `Labels.AddAttribute(Key: String, Value: String, ExpectedEpoch: UInt32)` or `Labels.RemoveAttribute(Key: String, ExpectedEpoch: UInt32)` on the entity's `Labels` `AttributesType` object; success/failure is conveyed by the Method Call StatusCode. Partial update shall not patch arbitrary bytes inside a resource document; document content changes use complete replacement of the document byte stream.
 
 Collection processing creates or updates one or more child entities under the collection's parent folder. A client preferably creates or resolves groups with `GetOrCreateGroup` on `RegistryType` and resources or versions with `GetOrCreateResource` on `GroupType`; strict create operations use `CreateGroup` and `CreateResource` when existence is an error. After creation or resolution the client writes mandatory and mutable Properties, updates the `Labels` container where supplied, and writes document bytes where supplied. A server shall apply the xRegistry atomicity rule: if one entity in a collection operation cannot be processed, the server should reject the whole operation and avoid partial effects; if the server cannot guarantee multi-node atomicity, it shall advertise that limitation in `Capabilities`.
 
 Nested collection processing on an entity shall process only nested collection entries and shall not modify the owning entity's own Properties. For example, processing resources under a selected group creates or updates `ResourceType` children without changing the group's own Properties.
 
-Deleting an entity is performed with the standard OPC UA `DeleteNodes` Service (OPC 10000-4), targeting the child folder or file node to remove. Deleting a collection subset is a batch of `DeleteNodes` operations over selected children.
+Deleting an entity is performed by Calling its `Delete(ExpectedEpoch: UInt32)` Method on the `GroupType` or `ResourceType` node to remove. The Method deletes that entity and everything it contains: a group deletes its resources, and a resource deletes its versions and `Labels`. Deleting a collection subset is a sequence or server-defined batch of `Delete(ExpectedEpoch)` Calls over selected children.
 
 Unless otherwise stated, a request to update a read-only Property shall be ignored only if xRegistry says that read-only attribute updates are ignored; otherwise the server shall reject the Write with `Bad_NotWritable` or `Bad_UserAccessDenied`. A request that supplies an identifier Property (`RegistryId`, `GroupId`, `ResourceId` or `VersionId`) whose value conflicts with the target entity shall fail with `Bad_InvalidArgument` or `Bad_IdentityChangeNotSupported`.
 
@@ -112,7 +112,7 @@ The xRegistry `contenttype` attribute maps to `ContentType`, not to `MimeType`. 
 
 ### 4.5 Method signatures and argument mapping
 
-The creation and mutation Method signatures used by this API are the domain-named `CreateGroup`, `GetOrCreateGroup`, `CreateResource` and `GetOrCreateResource` Methods defined by the xRegistry base model, the `AddAttribute` and `RemoveAttribute` Methods on `AttributesType`, the `DeleteNodes` Service defined by OPC 10000-4, and the inherited `Open` / `Read` / `Write` / `Close` Methods of `ResourceType` whose exact argument definitions are normative in OPC 10000-20.
+The creation and mutation Method signatures used by this API are the domain-named `CreateGroup`, `GetOrCreateGroup`, `CreateResource` and `GetOrCreateResource` Methods defined by the xRegistry base model, the `Delete` Method on `GroupType` and `ResourceType`, the `AddAttribute` and `RemoveAttribute` Methods on `AttributesType`, and the inherited `Open` / `Read` / `Write` / `Close` Methods of `ResourceType` whose exact argument definitions are normative in OPC 10000-20.
 
 | xRegistry action | OPC UA Method or Service | Argument mapping |
 |---|---|---|
@@ -120,13 +120,13 @@ The creation and mutation Method signatures used by this API are the domain-name
 | Get or create group | `RegistryType.GetOrCreateGroup(GroupId) -> (GroupNodeId, Created)` | `GroupId` is the groupid to resolve; the server returns the existing group with `Created = false` or creates, bootstraps and returns a new group with `Created = true` |
 | Create resource or version | `GroupType.CreateResource(ResourceId, RequestFileOpen) -> (ResourceNodeId, FileHandle)` | `ResourceId` identifies the `ResourceType` (or subtype); `RequestFileOpen = true` returns a write `FileHandle` when document bytes follow; fails if the resource already exists |
 | Get or create resource | `GroupType.GetOrCreateResource(ResourceId, RequestFileOpen) -> (ResourceNodeId, FileHandle, Created)` | `ResourceId` identifies the resource to resolve; the server returns the existing resource with `Created = false` or creates and returns a new one with `Created = true`; `RequestFileOpen = true` returns a write `FileHandle` |
-| Delete group/resource/version | `DeleteNodes` Service (OPC 10000-4) | The target `NodeId` is resolved from the xRegistry `xid` or identifier Properties; move/copy is out of scope for the base API and can be modeled by re-creating the entity and deleting the original where permitted |
+| Delete group/resource/version | `Delete(ExpectedEpoch: UInt32)` on the selected `GroupType` or `ResourceType` | The target node is resolved from the xRegistry `xid` or identifier Properties; `ExpectedEpoch` is optional, `0` or omission disables the epoch check, and a non-zero value must equal the entity's current `Epoch` or the Call fails with `Bad_InvalidState` and deletes nothing; the Method returns no output arguments |
 | Read document | `ResourceType.Open(mode)` -> `Read(fileHandle, length)` -> `Close(fileHandle)` | `mode` is read-only; `length` and repeated Reads are bounded by `Size` |
 | Replace document | `ResourceType.Open(mode)` -> `SetPosition(fileHandle, 0)` -> `Write(fileHandle, data)` -> `Close(fileHandle)` | `mode` allows write; the complete replacement byte stream is written; server updates `ModifiedAt` and `Epoch` |
 | Read metadata | Read Service on Properties | Property BrowseNames map to xRegistry attribute names by the tables in this document and the domain model |
 | Replace scalar metadata | Write Service on Properties | Value DataTypes are those in Annex A of the base model |
-| Add/update extension attribute or label | `Labels.AddAttribute(Key: String, Value: String, ExpectedEpoch: UInt32) -> (Success: Boolean)` | `Labels` is the entity's `AttributesType` object; `Key` is the xRegistry attribute or label key, `Value` is the canonical string representation materialized as a `<Attribute>` Property Variable, and `ExpectedEpoch` provides the optional optimistic-concurrency check |
-| Remove extension attribute or label | `Labels.RemoveAttribute(Key: String, ExpectedEpoch: UInt32) -> (Success: Boolean)` | `Labels` is the entity's `AttributesType` object; `Key` is the xRegistry attribute or label key, `ExpectedEpoch` provides the optional optimistic-concurrency check, and `Success = true` indicates the effective absence of the `<Attribute>` Property Variable |
+| Add/update extension attribute or label | `Labels.AddAttribute(Key: String, Value: String, ExpectedEpoch: UInt32)` | `Labels` is the entity's `AttributesType` object; `Key` is the xRegistry attribute or label key, `Value` is the canonical string representation materialized as a `<Attribute>` Property Variable, and `ExpectedEpoch` provides the optional optimistic-concurrency check; success/failure is conveyed by the Method Call StatusCode |
+| Remove extension attribute or label | `Labels.RemoveAttribute(Key: String, ExpectedEpoch: UInt32)` | `Labels` is the entity's `AttributesType` object; `Key` is the xRegistry attribute or label key and `ExpectedEpoch` provides the optional optimistic-concurrency check; success/failure is conveyed by the Method Call StatusCode |
 
 The base model defines `CreateGroup` and `GetOrCreateGroup` on `RegistryType`, `CreateResource` and `GetOrCreateResource` on `GroupType`, and `AttributesType` with `AddAttribute` / `RemoveAttribute`; each registry, group or resource may expose a `Labels` object of type `AttributesType`, and clients call those Methods on that `Labels` object for label or extension-attribute updates. The creation Methods are the base API create operations; move/copy is out of scope for the base API and can be modeled by re-creating an entity and deleting the original where permitted.
 
@@ -138,7 +138,7 @@ For label or metadata mutation through `Labels.AddAttribute` and `Labels.RemoveA
 
 For document replacement, exclusive `Open(write)` serializes writers. An epoch-matched replacement sequence is: Read `Epoch`, call `Open(write)`, re-Read `Epoch`, abort and `Close` if the value changed, otherwise `Write` the complete replacement document and `Close`; the server increments `Epoch` on successful `Close`.
 
-For deletion, a client Reads `Epoch` immediately before `DeleteNodes`. A server that advertises `epoch` in `Capabilities` performs the check-and-delete atomically and rejects a stale delete with `Bad_InvalidState`; otherwise the precondition is best-effort.
+For deletion, a client passes the current entity `Epoch` as the optional `ExpectedEpoch` input to `Delete(ExpectedEpoch)`. If `ExpectedEpoch` is non-zero and does not equal the entity's current `Epoch`, the Method Call shall fail with `Bad_InvalidState`, delete nothing and produce no partial effects; `ExpectedEpoch = 0` or omission disables the check. Deletion is therefore an atomic epoch-matched Method call rather than a read-then-delete sequence.
 
 Beyond this, a server **may** optionally expose coarser-grained exclusive access using the standard OPC UA locking mechanism — a `LockingServicesType` component (`InitLock` / `RenewLock` / `ExitLock` / `BreakLock`, OPC 10000-5) — on the registry root, a group or a resource, so that a client can hold an explicit exclusive lock across a multi-step create/update sequence. This API does not require locking; when it is absent, clients rely on FileTransfer `Open` exclusivity and `Epoch` preconditions.
 
@@ -150,8 +150,8 @@ The base model Properties map to xRegistry attributes as follows.
 |---|---|---|
 | `registryid` | `RegistryId` | `RegistryType` |
 | `specversion` | `SpecVersion` | `RegistryType` |
-| `capabilities` | `Capabilities` Object (`FileType`) whose content is the capabilities JSON | `RegistryType` |
-| `model` | `Model` Object (`FileType`) whose content is the model JSON | `RegistryType` |
+| `capabilities` | preferred: `CapabilitiesInfo` Variable (`RegistryCapabilitiesDataType`) for fixed fields; alternative: `Capabilities` Object (`FileType`) whose content is the raw capabilities JSON | `RegistryType` |
+| `model` | `Model` Object (`FileType`) whose content is the model JSON; no structured DataType is defined because the OPC UA AddressSpace type system is the structural equivalent | `RegistryType` |
 | `<GROUP>id` | `GroupId` | `GroupType` |
 | `<RESOURCE>id` | `ResourceId` | `ResourceType` |
 | `versionid` | `VersionId` | `ResourceType` |
@@ -170,11 +170,11 @@ The base model Properties map to xRegistry attributes as follows.
 
 The xRegistry attributes `self`, collection `url` attributes, collection `count` attributes, `metaurl`, `versionsurl`, `versionscount`, `defaultversionurl`, `isdefault`, `ancestor`, `<RESOURCE>` and `<RESOURCE>base64` are serialization artifacts or domain/model attributes rather than mandatory base Properties. A server may expose them as domain Properties, but a client shall be able to derive them from `Xid`, `ResourceId`, `VersionId`, Browse results and the document bytes where possible.
 
-Labels and extension attributes are enumerated by Browsing the `Labels` object and Reading each `<Attribute>` Property Variable. They are added or updated with `Labels.AddAttribute`, removed with `Labels.RemoveAttribute`, and deleted together with the owning registry, group or resource node when that entity is removed with `DeleteNodes`.
+Labels and extension attributes are enumerated by Browsing the `Labels` object and Reading each `<Attribute>` Property Variable. They are added or updated with `Labels.AddAttribute`, removed with `Labels.RemoveAttribute`, and deleted together with the owning group or resource when that entity's `Delete(ExpectedEpoch)` Method succeeds.
 
 ### 4.7 Supported operations discovery and pagination
 
-A client discovers supported operations by browsing the target node for Methods, by reading `Writable`, `UserWritable`, AccessLevel and UserAccessLevel attributes of Variables, by reading the `Capabilities` `FileType` content, and by inspecting executable and user-executable bits of Method nodes.
+A client discovers supported operations by browsing the target node for Methods, by reading `Writable`, `UserWritable`, AccessLevel and UserAccessLevel attributes of Variables, by reading the typed `CapabilitiesInfo` Variable or the `Capabilities` `FileType` content, and by inspecting executable and user-executable bits of Method nodes.
 
 A server shall not require a side-effecting operation for discovery. If a FileTransfer Method, `CreateGroup`, `GetOrCreateGroup`, `CreateResource`, `GetOrCreateResource`, a `Labels` object, or `Labels.AddAttribute`/`Labels.RemoveAttribute` is absent, non-executable or rejected with `Bad_UserAccessDenied`, the corresponding xRegistry write capability is not available to that client.
 
@@ -188,13 +188,13 @@ This section defines successful native OPC UA interaction patterns for xRegistry
 
 ### 5.1 Reading the registry
 
-A client reads the selected `RegistryType` root by Reading its Properties, Browsing its optional `Labels` object where labels are requested, Browsing its `Capabilities` and `Model` `FileType` component Objects when those JSON documents are requested, and Browsing its group children. The standard base Properties are `RegistryId`, `SpecVersion`, `Xid`, `Epoch`, `Name`, `Description`, `Documentation`, `CreatedAt` and `ModifiedAt` where present; `Capabilities` and `Model` are optional `FileType` component Objects, and `Labels` is an optional `AttributesType` Object.
+A client reads the selected `RegistryType` root by Reading its Properties, Reading the optional typed `CapabilitiesInfo` Variable when fixed capabilities are requested, Browsing its optional `Labels` object where labels are requested, Browsing its `Capabilities` and `Model` `FileType` component Objects when those JSON documents are requested, and Browsing its group children. The standard base Properties are `RegistryId`, `SpecVersion`, `CapabilitiesInfo`, `Xid`, `Epoch`, `Name`, `Description`, `Documentation`, `CreatedAt` and `ModifiedAt` where present; `Capabilities` and `Model` are optional `FileType` component Objects, and `Labels` is an optional `AttributesType` Object.
 
 A serialized registry representation derives collection URL and count attributes from the registry model and Browse results rather than from mandatory OPC UA nodes. Domain group subtypes and the `Model` JSON document determine how browsed groups are grouped into xRegistry collections.
 
 ### 5.2 Creating and updating the registry
 
-A registry-level full replacement writes the full replacement set of mutable `RegistryType` Properties; omitted mutable attributes are removed or reset according to xRegistry rules. `Capabilities` and `Model` are `FileType` component Objects: absence shall not require a change, while presence shall be written as a complete replacement document with `Open(write)`/`Write`/`Close` unless the server supports finer-grained update semantics.
+A registry-level full replacement writes the full replacement set of mutable `RegistryType` Properties; omitted mutable attributes are removed or reset according to xRegistry rules. `Capabilities` and `Model` are `FileType` component Objects: absence shall not require a change, while presence shall be written as a complete replacement document with `Open(write)`/`Write`/`Close` unless the server supports finer-grained update semantics. When the raw `Capabilities` JSON is changed, the server shall keep `CapabilitiesInfo` consistent for the fixed fields it exposes.
 
 A registry-level partial update writes only included Properties and calls `Labels.AddAttribute` or `Labels.RemoveAttribute` for included label or extension-attribute changes. A null attribute is represented by writing a server-defined null/default value if the DataType permits it, by calling `Labels.RemoveAttribute` for a dynamic label or extension attribute, or by failing with `Bad_NotSupported` if the attribute is mandatory or cannot be removed.
 
@@ -212,11 +212,11 @@ A server may expose an optimized domain Method or Property for export, but such 
 
 ### 5.4 Reading capabilities and model documents
 
-A client reads registry capabilities by calling `Open` for read on the `RegistryType.Capabilities` `FileType` component Object, repeatedly calling `Read` until the complete JSON byte stream is returned, and calling `Close`. The content is the xRegistry capabilities map, including any OPC UA binding features the server supports, such as create, update, delete, filter, inline, export, versioning, federation, writable model and multi-operation atomicity.
+A client reads registry capabilities either by Reading the typed `RegistryType.CapabilitiesInfo` Variable or by calling `Open` for read on the `RegistryType.Capabilities` `FileType` component Object, repeatedly calling `Read` until the complete JSON byte stream is returned, and calling `Close`. `CapabilitiesInfo` is the preferred read for fixed capability fields because it returns a single `RegistryCapabilitiesDataType` Variant value and requires no JSON parsing. The `Capabilities` `FileType` content is the raw xRegistry capabilities JSON and remains the source for vendor or extension keys not represented by `RegistryCapabilitiesDataType`.
 
-The base information model does not define a separate `CapabilitiesOffered` Property. If a server supports mutable capabilities, it shall expose the offered-capabilities information either inside the `Capabilities` JSON, as a domain subtype Property, or through domain documentation referenced by `Model`. If no offered-capabilities target is exposed, the operation shall fail with `Bad_NodeIdUnknown` or `Bad_NotSupported` rather than inventing an unmapped base node.
+`RegistryCapabilitiesDataType` contains `Flags: String[]`, `Mutable: String[]`, `Pagination: Boolean`, `ShortSelf: Boolean`, `SpecVersions: String[]`, `StickyVersions: Boolean`, `EnforceCompatibility: Boolean`, `Apis: String[]` and `Schemas: String[]`. The base information model does not define a separate `CapabilitiesOffered` Property. If a server supports mutable capabilities, it shall expose the offered-capabilities information either inside the `Capabilities` JSON, as a domain subtype Property, or through domain documentation referenced by `Model`. If no offered-capabilities target is exposed, the operation shall fail with `Bad_NodeIdUnknown` or `Bad_NotSupported` rather than inventing an unmapped base node.
 
-A client reads the registry model by calling `Open` for read on the `RegistryType.Model` `FileType` component Object, repeatedly calling `Read` until the complete JSON byte stream is returned, and calling `Close`. The content is the full xRegistry model definition, and clients may use it to resolve domain collection names to `GroupType` and `ResourceType` subtype BrowseNames before browsing entities.
+A client reads the registry model by calling `Open` for read on the `RegistryType.Model` `FileType` component Object, repeatedly calling `Read` until the complete JSON byte stream is returned, and calling `Close`. The content is the full xRegistry model definition, and clients may use it to resolve domain collection names to `GroupType` and `ResourceType` subtype BrowseNames before browsing entities. `Model` remains FileType JSON only; no structured DataType is defined for the model because the OPC UA AddressSpace type system is the structural equivalent.
 
 The base information model does not define a distinct `ModelSource` Property. If a server distinguishes the effective model from the client-provided model source, it shall expose the model source as a domain subtype Property or inside the `Model` JSON using a documented shape. If the model source has never been set and a model-source target exists, the server shall return an empty JSON object (`{}`) as the model-source JSON content, matching xRegistry semantics.
 
@@ -230,7 +230,7 @@ Model-source updates use the domain-defined model-source target or another domai
 
 ### 5.6 Listing group collections
 
-A client lists a group collection by Browse over the selected `RegistryType` root to return `GroupType` children that belong to the requested group collection.
+A client lists a group collection by Browse over the selected `RegistryType` root to return `GroupType` children that belong to the requested group collection. xRegistry group collections are unordered maps keyed by id; OPC UA Browse returns children in a server-defined order, so a client shall not infer collection order from Browse position.
 
 The client filters Browse results by NodeClass, TypeDefinition (`GroupType` or subtype), collection metadata in the `Model` JSON document, domain subtype and BrowseName. Because each group BrowseName is its `groupid`, the serialized collection keys are obtained directly from BrowseName without reading `GroupId` for every candidate.
 
@@ -254,9 +254,9 @@ The standard base Properties are `GroupId`, `Xid`, `Epoch`, `Name`, `Description
 
 ### 5.9 Deleting groups
 
-Deleting a selected group uses the `DeleteNodes` Service (OPC 10000-4), where the target is the resolved group NodeId. Deleting a collection subset is a batch of `DeleteNodes` operations, one for each selected group child.
+Deleting a selected group uses the group's own `Delete(ExpectedEpoch: UInt32)` Method, where `ExpectedEpoch` is optional and `0` disables the check. The Method deletes the group and everything it contains, including its resources and their versions and `Labels`. Deleting a collection subset is a sequence or server-defined batch of `Delete(ExpectedEpoch)` Calls, one for each selected group child.
 
-If an entity-specific `epoch` precondition is supplied for deletion, the client shall Read `Epoch` immediately before `DeleteNodes`. A server that advertises `epoch` in `Capabilities` shall perform the check-and-delete atomically and reject a stale delete with `Bad_InvalidState`; otherwise the precondition is best-effort and the server shall advertise the limitation in `Capabilities`.
+If an entity-specific `epoch` precondition is supplied for deletion, the client shall pass it as `ExpectedEpoch`. If `ExpectedEpoch` is non-zero and does not equal the group's current `Epoch`, the Call shall fail with `Bad_InvalidState` and delete nothing; `ExpectedEpoch = 0` or omission disables the check.
 
 ### 5.10 Resource metadata and resource documents
 
@@ -274,7 +274,7 @@ If `ResourceUrl` is present and the document is external, `Open` may fail with `
 
 ### 5.11 Listing resource collections
 
-A client lists a resource collection by Browse over the `GroupType` folder to return `ResourceType` children in the requested resource collection.
+A client lists a resource collection by Browse over the `GroupType` folder to return `ResourceType` children in the requested resource collection. xRegistry resource collections are unordered maps keyed by id; OPC UA Browse returns children in a server-defined order, so a client shall not infer collection order from Browse position.
 
 The serialized collection keys are `ResourceId` values and are available from each resource BrowseName. The default version of each resource is represented by the `ResourceType` selected by the server as the default for that `ResourceId`; in a flat implementation with one file per resource, that file's `VersionId` is the default version.
 
@@ -314,7 +314,7 @@ Partial patching of document bytes is not defined. A client that wants to change
 
 ### 5.16 Deleting resources
 
-Deleting a selected resource uses the `DeleteNodes` Service (OPC 10000-4) to delete the default resource entity or all version files associated with the selected `ResourceId`, depending on the server's version representation and xRegistry model configuration. Deleting a resource collection subset is a batch of `DeleteNodes` operations, one for each selected `ResourceType` or resource-version set.
+Deleting a selected resource uses the resource's own `Delete(ExpectedEpoch: UInt32)` Method, where `ExpectedEpoch` is optional and `0` disables the check, to delete the resource and everything it contains, including versions and `Labels`, depending on the server's version representation and xRegistry model configuration. Deleting a resource collection subset is a sequence or server-defined batch of `Delete(ExpectedEpoch)` Calls, one for each selected `ResourceType` or resource-version set.
 
 If the implementation represents multiple versions as sibling files, deleting a resource collection entry shall delete all version files for the selected `ResourceId` unless the request specifically targets a version entity.
 
@@ -322,7 +322,7 @@ A server shall not leave dangling version files that remain discoverable as the 
 
 ### 5.17 Listing versions
 
-A client lists versions by Browse for all `ResourceType` files associated with the selected `ResourceId` and a non-empty `VersionId` under the owning `GroupType`.
+A client lists versions by Browse for all `ResourceType` files associated with the selected `ResourceId` and a non-empty `VersionId` under the owning `GroupType`. xRegistry version collections are unordered maps keyed by `VersionId`; OPC UA Browse returns children in a server-defined order, and version order is conveyed by attributes such as `ancestor`, `createdat` and `defaultversionid`, not by container position.
 
 An implementation may represent the default version as the same file reached by the resource identity and additional versions as sibling files, or it may expose only one version if it does not support version history. The serialized version collection keys are `VersionId` values.
 
@@ -352,7 +352,7 @@ Partial patching of version document bytes is not defined.
 
 ### 5.21 Deleting versions
 
-Deleting a selected version uses the `DeleteNodes` Service (OPC 10000-4), targeting the resolved version file. Deleting a versions collection subset is a batch of `DeleteNodes` operations targeting the version files selected by `VersionId`.
+Deleting a selected version uses the version file's own `Delete(ExpectedEpoch: UInt32)` Method, where `ExpectedEpoch` is optional and `0` disables the check. Deleting a versions collection subset is a sequence or server-defined batch of `Delete(ExpectedEpoch)` Calls targeting the version files selected by `VersionId`.
 
 A server shall reject deletion of the last required version of a resource if the xRegistry model requires every resource to have at least one version. A server shall also reject deletion of a default version unless it can atomically select a new default or the request explicitly sets one through a supported flag or meta update.
 
@@ -368,12 +368,12 @@ Unknown or unsupported flags should be ignored when xRegistry defines them as re
 |---|---|
 | `inline` | Browse and Read the named child collections or Properties in the same client operation sequence; a domain export may inline server-side |
 | `filter` | Filter collection Browse results by BrowseName, NodeClass, TypeDefinition and target NodeId; read Properties or `Labels` only for predicates on values not present in the Browse result |
-| `sort` | Client-side ordering of Browse results and any additional Properties used as sort keys |
+| `sort` | Client-side ordering of Browse results by a chosen attribute such as BrowseName, `VersionId` or `CreatedAt`, plus any additional Properties used as sort keys; OPC UA collection nodes remain unordered |
 | pagination | Browse continuation points, `BrowseNext`, file `Read` length, and Read `IndexRange` |
 | `doc` | Serialize using document shape, omitting redundant URL/count metadata as defined by xRegistry |
 | `meta` | Read metadata Properties rather than document bytes; equivalent to metadata operation mode for resources and versions |
 | `export` | Serialize the selected subtree as an xRegistry document |
-| `epoch` | Pass `ExpectedEpoch` to `Labels.AddAttribute`/`Labels.RemoveAttribute`; for document replacement and deletion, use the epoch-matched sequences in §4.5.1 |
+| `epoch` | Pass `ExpectedEpoch` to `Labels.AddAttribute`, `Labels.RemoveAttribute` and `Delete`; for document replacement, use the epoch-matched sequence in §4.5.1 |
 | `ignore` | Server-side write processing option advertised in `Capabilities`; unsupported ignore values fail with `Bad_InvalidArgument` |
 | `setdefaultversionid` | Domain-defined default-version update, normally a meta Property or Method |
 | `specversion` | Compare requested version against `SpecVersion` and `Capabilities`; reject incompatible processing with `Bad_InvalidArgument` |
@@ -400,9 +400,9 @@ Inlining `capabilities` and `model` means reading the `Capabilities` and `Model`
 
 ### 6.4 Sorting
 
-Clients sort collection entries locally. Sort keys available in Browse results, such as BrowseName and DisplayName, require no per-result Read; sort keys based on fixed Properties, domain Properties or label values require reading those values for the candidate entries.
+Clients sort collection entries locally. xRegistry group, resource and version collections are unordered maps keyed by id, and OPC UA defines no ordered-collection interface, so none is used. Sort keys available in Browse results, such as BrowseName and DisplayName, require no per-result Read; sort keys based on fixed Properties such as `VersionId` or `CreatedAt`, domain Properties or label values require reading those values for the candidate entries.
 
-Browse order alone shall not be assumed to be xRegistry sort order unless the server explicitly documents that behavior in `Capabilities`.
+Browse order alone shall not be assumed to be xRegistry sort order unless the server explicitly documents that behavior in `Capabilities`. Version order is conveyed by attributes such as `ancestor`, `createdat` and `defaultversionid`, not by container position; a server may expose a domain index Property if it needs deterministic order.
 
 ### 6.5 Document and metadata modes
 
@@ -477,7 +477,7 @@ The following mapping is normative unless a more specific OPC UA StatusCode appl
 | unsupported metadata mode | `Bad_NotSupported` or `Bad_InvalidArgument` |
 | partial update attempted on document bytes | `Bad_NotSupported` |
 | unsupported flag or ignore value | `Bad_NotSupported` or `Bad_InvalidArgument` |
-| `epoch` precondition failed | `Bad_InvalidState` |
+| `ExpectedEpoch` on `Delete`, `Labels.AddAttribute` or `Labels.RemoveAttribute` does not match current `Epoch` | `Bad_InvalidState` |
 | delete would violate version/default-version constraints | `Bad_InvalidState` |
 | filter not supported | `Bad_FilterNotAllowed` or `Bad_NotSupported` |
 | continuation point invalid or expired | `Bad_ContinuationPointInvalid` |
@@ -495,7 +495,7 @@ Authorization failures shall use `Bad_UserAccessDenied` or `Bad_SecurityChecksFa
 
 A server conforms to the read-only OPC UA xRegistry API if it exposes a `RegistryType` root or domain subtype, exposes groups as `GroupType` or subtypes, exposes resource/version documents as `ResourceType` or subtypes, and supports Browse, Read and `Open`/`Read`/`Close` sufficient to retrieve registry metadata, collections and resource documents.
 
-A server conforms to the writable OPC UA xRegistry API if, in addition to read-only conformance, it supports the applicable creation and mutation operations (`CreateGroup`, `GetOrCreateGroup`, `CreateResource`, `GetOrCreateResource`, `DeleteNodes`, and `Labels.AddAttribute`/`Labels.RemoveAttribute` with `ExpectedEpoch` on each mutable entity's `Labels` `AttributesType` container), writable Properties, and `Open`/`Write`/`Close` on `ResourceType`, `Capabilities` and `Model` where document replacement is mutable.
+A server conforms to the writable OPC UA xRegistry API if, in addition to read-only conformance, it supports the applicable creation and mutation operations (`CreateGroup`, `GetOrCreateGroup`, `CreateResource`, `GetOrCreateResource`, `Delete`, and `Labels.AddAttribute`/`Labels.RemoveAttribute` with `ExpectedEpoch` on each mutable entity's `Labels` `AttributesType` container), writable Properties, and `Open`/`Write`/`Close` on `ResourceType`, `Capabilities` and `Model` where document replacement is mutable.
 
 A server conforms to the export-capable OPC UA xRegistry API if it implements the request-flag mappings it advertises in `Capabilities`, including Browse continuation point pagination, Browse-result filtering, and export serialization that follows the xRegistry document shape.
 
@@ -513,7 +513,7 @@ This annex is informative and provides a cross-walk for readers coming from the 
 | Replace or partially update registry attributes | Write mutable `RegistryType` Properties, call `Labels.AddAttribute`/`Labels.RemoveAttribute` for labels, and process nested groups when supplied (§5.2) | `PUT /`, `PATCH /` |
 | Process group collections at the registry root | Resolve or create `GroupType` children with `GetOrCreateGroup` or strict `CreateGroup` and Write Properties (§5.2) | `POST /` |
 | Export registry document | Browse/Read the `RegistryType` subtree and serialize it (§5.3, §8) | `GET /export` or `GET /?export` |
-| Read capabilities | `Open`/`Read`/`Close` on `RegistryType.Capabilities` (§5.4) | `GET /capabilities` |
+| Read capabilities | Prefer Read of typed `RegistryType.CapabilitiesInfo`; alternatively `Open`/`Read`/`Close` on raw JSON `RegistryType.Capabilities` (§5.4) | `GET /capabilities` |
 | Read offered capabilities | Read a domain offered-capabilities Property or offered section in the `Capabilities` JSON document (§5.4) | `GET /capabilitiesoffered` |
 | Replace or partially update capabilities | `Open(write)`/`Write`/`Close` on `RegistryType.Capabilities` if writable (§5.5) | `PUT /capabilities`, `PATCH /capabilities` |
 | Read model | `Open`/`Read`/`Close` on `RegistryType.Model` (§5.4) | `GET /model` |
@@ -521,28 +521,28 @@ This annex is informative and provides a cross-walk for readers coming from the 
 | Replace model source | Write the domain model-source target if supported (§5.5) | `PUT /modelsource` |
 | List a group collection | Browse `GroupType` children under the registry (§5.6) | `GET /<GROUPS>` |
 | Create or update a group collection subset | Resolve/create `GroupType` children and Write group Properties (§5.7) | `PATCH /<GROUPS>`, `POST /<GROUPS>` |
-| Delete a group collection subset | Batch `DeleteNodes` operations for selected `GroupType` nodes (§5.9) | `DELETE /<GROUPS>` |
+| Delete a group collection subset | Call `Delete(ExpectedEpoch)` for each selected `GroupType` node (§5.9) | `DELETE /<GROUPS>` |
 | Read a group | Resolve the `GroupType` by BrowseName, then Read Properties and Browse resources (§5.8) | `GET /<GROUPS>/<GID>` |
 | Replace or partially update a group | Create if needed with `GetOrCreateGroup` or strict `CreateGroup`, then Write mutable group Properties and optionally call `Labels.AddAttribute`/`Labels.RemoveAttribute` (§5.7) | `PUT /<GROUPS>/<GID>`, `PATCH /<GROUPS>/<GID>` |
 | Process resource collections under a group | Resolve/create `ResourceType` children and Write documents, Properties or `Labels` entries (§5.7) | `POST /<GROUPS>/<GID>` |
-| Delete a group | `DeleteNodes` for the selected `GroupType` node (§5.9) | `DELETE /<GROUPS>/<GID>` |
+| Delete a group | Call `Delete(ExpectedEpoch)` on the selected `GroupType` node (§5.9) | `DELETE /<GROUPS>/<GID>` |
 | List a resource collection | Browse `ResourceType` children under the group (§5.11) | `GET /<GROUPS>/<GID>/<RESOURCES>` |
 | Create or update a resource collection subset | Resolve/create `ResourceType` children with `GetOrCreateResource` or strict `CreateResource`, then Write documents, Properties or `Labels` entries (§5.12) | `PATCH /<GROUPS>/<GID>/<RESOURCES>`, `POST /<GROUPS>/<GID>/<RESOURCES>` |
-| Delete a resource collection subset | Batch `DeleteNodes` operations for selected `ResourceType` nodes (§5.16) | `DELETE /<GROUPS>/<GID>/<RESOURCES>` |
+| Delete a resource collection subset | Call `Delete(ExpectedEpoch)` for each selected `ResourceType` node (§5.16) | `DELETE /<GROUPS>/<GID>/<RESOURCES>` |
 | Read a resource document | `Open`/`Read`/`Close` on the default `ResourceType` (§5.13) | `GET /<GROUPS>/<GID>/<RESOURCES>/<RID>` |
 | Read resource metadata | Read Properties of the default `ResourceType` (§5.14) | `GET /<GROUPS>/<GID>/<RESOURCES>/<RID>$details` |
 | Replace or partially update resource metadata | Write resource Properties and optionally call `Labels.AddAttribute`/`Labels.RemoveAttribute` (§5.14) | `PUT /<GROUPS>/<GID>/<RESOURCES>/<RID>$details`, `PATCH /<GROUPS>/<GID>/<RESOURCES>/<RID>$details` |
 | Replace a resource document | Create if needed with `GetOrCreateResource` or strict `CreateResource`, then `Open`/`SetPosition`/`Write`/`Close` (§5.15) | `PUT /<GROUPS>/<GID>/<RESOURCES>/<RID>` |
 | Create or update a resource version | Create/update a `ResourceType` with matching `ResourceId` and `VersionId` using `GetOrCreateResource` or strict `CreateResource` where needed (§5.18) | `POST /<GROUPS>/<GID>/<RESOURCES>/<RID>` |
-| Delete a resource | `DeleteNodes` for the default resource or all associated version files according to model rules (§5.16) | `DELETE /<GROUPS>/<GID>/<RESOURCES>/<RID>` |
+| Delete a resource | Call `Delete(ExpectedEpoch)` on the selected `ResourceType` node, deleting the resource and its versions according to model rules (§5.16) | `DELETE /<GROUPS>/<GID>/<RESOURCES>/<RID>` |
 | Read resource meta entity | Read resource-level Properties and domain meta Properties (§5.14) | `GET /<GROUPS>/<GID>/<RESOURCES>/<RID>/meta` |
 | Replace or partially update resource meta entity | Write supported meta Properties or domain default-version state (§5.14) | `PUT /<GROUPS>/<GID>/<RESOURCES>/<RID>/meta`, `PATCH /<GROUPS>/<GID>/<RESOURCES>/<RID>/meta` |
 | Delete resource meta entity | Reject as unsupported or reset individual mutable meta attributes when domain-defined (§5.14) | `DELETE /<GROUPS>/<GID>/<RESOURCES>/<RID>/meta` |
 | List versions | Browse version `ResourceType` files (§5.17) | `GET /<GROUPS>/<GID>/<RESOURCES>/<RID>/versions` |
 | Create or update version collection subset | Resolve/create version files with `GetOrCreateResource` or strict `CreateResource`, then Write version documents, Properties or `Labels` entries (§5.18) | `PATCH /<GROUPS>/<GID>/<RESOURCES>/<RID>/versions`, `POST /<GROUPS>/<GID>/<RESOURCES>/<RID>/versions` |
-| Delete version collection subset | Batch `DeleteNodes` operations for selected version files (§5.21) | `DELETE /<GROUPS>/<GID>/<RESOURCES>/<RID>/versions` |
+| Delete version collection subset | Call `Delete(ExpectedEpoch)` for each selected version file (§5.21) | `DELETE /<GROUPS>/<GID>/<RESOURCES>/<RID>/versions` |
 | Read a version document | `Open`/`Read`/`Close` on the selected version file (§5.19) | `GET /<GROUPS>/<GID>/<RESOURCES>/<RID>/versions/<VID>` |
 | Read version metadata | Read Properties of the selected version file (§5.19) | `GET /<GROUPS>/<GID>/<RESOURCES>/<RID>/versions/<VID>$details` |
 | Replace or partially update version metadata | Write version Properties and optionally call `Labels.AddAttribute`/`Labels.RemoveAttribute` (§5.18) | `PUT /<GROUPS>/<GID>/<RESOURCES>/<RID>/versions/<VID>$details`, `PATCH /<GROUPS>/<GID>/<RESOURCES>/<RID>/versions/<VID>$details` |
 | Replace a version document | Create if needed with `GetOrCreateResource` or strict `CreateResource`, then `Open`/`SetPosition`/`Write`/`Close` on the version file (§5.20) | `PUT /<GROUPS>/<GID>/<RESOURCES>/<RID>/versions/<VID>` |
-| Delete a version | `DeleteNodes` for the selected version `ResourceType` node (§5.21) | `DELETE /<GROUPS>/<GID>/<RESOURCES>/<RID>/versions/<VID>` |
+| Delete a version | Call `Delete(ExpectedEpoch)` on the selected version `ResourceType` node (§5.21) | `DELETE /<GROUPS>/<GID>/<RESOURCES>/<RID>/versions/<VID>` |

@@ -40,7 +40,7 @@ It is explicitly out of scope to re-specify the Avro, Arrow or JSON encodings th
 - [xRegistry Schema Registry Service, v1.0-rc3](https://github.com/xregistry/spec/blob/v1.0-rc3/schema/spec.md) — the `schemagroups`, `schemas`, `versions`, `format` model this domain profile aligns with.
 - [CloudEvents v1.0](https://github.com/cloudevents/spec) — the `dataschema` attribute convention reused for an optional on-wire schema reference.
 - [OPC 10000-3](https://reference.opcfoundation.org/specs/OPC-10000-3/) — Address Space Model, NodeIds, References, TypeDefinitions and the `ExpandedNodeId` structure.
-- [OPC 10000-4](https://reference.opcfoundation.org/specs/OPC-10000-4/) — Services: Browse, Read, Write, Call, and the `DeleteNodes` Service.
+- [OPC 10000-4](https://reference.opcfoundation.org/specs/OPC-10000-4/) — Services: Browse, Read, Write and Call.
 - [OPC 10000-5](https://reference.opcfoundation.org/specs/OPC-10000-5/) — Base Information Model, `FolderType`, `BaseObjectType`, `PropertyType`.
 - [OPC 10000-6](https://reference.opcfoundation.org/specs/OPC-10000-6/) — Mappings, with the Avro and Arrow DataEncoding additions in this repository.
 - [OPC 10000-14](https://reference.opcfoundation.org/specs/OPC-10000-14/) — PubSub, including the well-known `PublishSubscribe` object (`i=14443`), `DataSetMetaData`, `ConfigurationVersionDataType`, `ConfigurationVersion` and the Security Key Service relationship, with the Avro and Arrow message-mapping additions in this repository.
@@ -140,7 +140,7 @@ Identifier     = the exact raw on-wire SchemaId bytes
 
 The node addressed by this Opaque NodeId is the schema file's content as a ByteString Variable with the same Value. A Client that receives a schema-based message and finds a cache miss constructs this NodeId from the received SchemaId bytes and performs one `Read` of the Value Attribute; if the node exists, the returned ByteString is the schema document. The Identifier is the raw byte sequence used on the wire (8 bytes for Avro CRC-64-AVRO, 8 bytes for Arrow's truncated SHA-256, or any other length an encoding mapping defines); Opaque NodeIds allow arbitrary byte lengths. The SchemaId NodeId is content-derived and stable: a TTL refresh or metadata update that does not change the document keeps the same NodeId; a changed document produces a new SchemaId and therefore a new Opaque NodeId.
 
-`GetSchema(SchemaId: ByteString) → (Document: ByteString, Format: String, ContentType: String, Found: Boolean)` on the `SchemaRegistry` Object resolves the raw on-wire SchemaId bytes and returns the schema document and enough metadata to parse it. It is the method form of the Opaque-NodeId fast path for decoders that cannot or do not want to construct the NodeId. `Found = false` indicates that no schema with this SchemaId is registered.
+`GetSchema(SchemaId: ByteString) → (Document: ByteString, Format: String, ContentType: String)` on the `SchemaRegistry` Object resolves the raw on-wire SchemaId bytes and returns the schema document and enough metadata to parse it. It is the method form of the Opaque-NodeId fast path for decoders that cannot or do not want to construct the NodeId. When no schema with this SchemaId is registered the Method returns the `Bad_NotFound` Call StatusCode rather than an empty result.
 
 ### 6.5 Formats and content-types
 
@@ -282,7 +282,7 @@ The in-server Schema Registry root - an xRegistry RegistryType (a FolderType) wh
 | BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
 |---|---|---|---|---|---|
 | <SchemaGroup> | Object |  | OptionalPlaceholder | SchemaRegistryType | A schema group folder (per OPC UA namespace) held by the registry. |
-| GetSchema | Method |  | Optional | SchemaRegistryType | Return the schema document and metadata for a raw on-wire SchemaId fingerprint (the method form of the Opaque SchemaId NodeId fast path). |
+| GetSchema | Method |  | Optional | SchemaRegistryType | Return the schema document and metadata for a raw on-wire SchemaId fingerprint (the method form of the Opaque SchemaId NodeId fast path). An unresolved SchemaId returns the Method Call StatusCode Bad_NotFound rather than an empty result. |
 
 <a id="type-SchemaGroupType"></a>
 
@@ -319,7 +319,7 @@ An xRegistry ResourceType whose file content is one concrete schema document (Av
 
 | Method | Owning type | Input arguments | Output arguments |
 |---|---|---|---|
-| GetSchema | [SchemaRegistryType](#type-SchemaRegistryType) | SchemaId | Document, Format, ContentType, Found |
+| GetSchema | [SchemaRegistryType](#type-SchemaRegistryType) | SchemaId | Document, Format, ContentType |
 
 ### Well-known instances
 

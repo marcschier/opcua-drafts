@@ -180,9 +180,9 @@ object_type(62002, "SchemaFileType", XRegistry_ResourceType,
 SR = "SchemaRegistryType"
 placeholder_obj(62000, SR, "<SchemaGroup>", T(62001), "A schema group folder (per OPC UA namespace) held by the registry.")
 method(62000, SR, "GetSchema",
-       "Return the schema document and metadata for a raw on-wire SchemaId fingerprint (the method form of the Opaque SchemaId NodeId fast path).",
+       "Return the schema document and metadata for a raw on-wire SchemaId fingerprint (the method form of the Opaque SchemaId NodeId fast path). An unresolved SchemaId returns the Method Call StatusCode Bad_NotFound rather than an empty result.",
        inargs=[("SchemaId", ByteString, "Raw on-wire SchemaId fingerprint bytes.")],
-       outargs=[("Document", ByteString, "Schema document bytes."), ("Format", String, "xRegistry format string."), ("ContentType", String, "Schema document media type."), ("Found", Boolean, "True if the SchemaId was resolved.")])
+       outargs=[("Document", ByteString, "Schema document bytes."), ("Format", String, "xRegistry format string."), ("ContentType", String, "Schema document media type.")])
 
 SG = "SchemaGroupType"
 prop_var(62001, SG, "NamespaceUri", String, "The OPC UA namespace URI represented by this schema group (the xRegistry group key).", rule=MR_Mandatory)

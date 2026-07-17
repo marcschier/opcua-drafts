@@ -50,6 +50,9 @@ Duration = "i=290"
 Argument = "i=296"
 KeyValuePair = "i=14533"
 NodeId = "i=17"
+Structure = "i=22"
+HasEncoding = "i=38"
+DataTypeEncodingType = "i=76"
 
 OWN_NS = 1
 OWN_MIN = 63000
@@ -157,6 +160,38 @@ def _args(method_nid, method_sym, bname, args):
     parts.append("</ListOfExtensionObject></Value>")
     NODES[nid].value = "".join(parts)
 
+DATATYPE_FIELDS = {}
+
+def data_type(nid, name, fields, desc, category, base=Structure, encodings=("Binary", "JSON")):
+    """Emit a Structure DataType with a StructureDefinition and DataTypeEncoding objects.
+
+    fields: list of (FieldName, DataType, Description, valuerank) - valuerank optional (default -1 scalar).
+    """
+    add(nid, "UADataType", name, name, desc=desc, category=category)
+    ref(nid, HasSubtype, base, forward=False)
+    DATATYPE_FIELDS[nid] = fields
+    parts = [f'<Definition Name="{sx.escape(name)}">']
+    for f in fields:
+        fname, fdt, fdesc = f[0], f[1], f[2]
+        frank = f[3] if len(f) > 3 else -1
+        attrs = f'Name="{sx.escape(fname)}" DataType="{fdt}"'
+        if frank is not None and frank >= 0:
+            attrs += f' ValueRank="{frank}"'
+        parts.append(f"<Field {attrs}>")
+        if fdesc:
+            parts.append(f"<Description>{sx.escape(fdesc)}</Description>")
+        parts.append("</Field>")
+    parts.append("</Definition>")
+    NODES[nid].definition = "".join(parts)
+    for enc in encodings:
+        enc_nid = _mid()
+        bn = f"Default {enc}"
+        add(enc_nid, "UAObject", bn, f"{name}_Default{enc}", parent=T(nid), attrs={"_ns0bn": True})
+        ref(enc_nid, HasTypeDefinition, DataTypeEncodingType)
+        ref(enc_nid, HasEncoding, T(nid), forward=False)
+        ref(nid, HasEncoding, T(enc_nid))
+    return nid
+
 def common_attrs(nid, sym):
     """The xRegistry attributes common to a registry, group and resource entity."""
     prop_var(nid, sym, "Xid", String, "xRegistry relative identifier (xid): the entity's stable path within the registry, independent of the hosting endpoint.")
@@ -176,13 +211,13 @@ CAT = "xRegistry"
 
 object_type(63000, "RegistryType", FolderType,
             "The abstract xRegistry root, expressed as a FolderType that organizes its Group objects. It creates groups "
-            "through the CreateGroup Method; a group is removed with the standard DeleteNodes Service. The physical "
+            "through the CreateGroup Method; a group is removed with its own Delete Method. The physical "
             "backing may be a file-system directory, but the type is a plain organizing folder. Domain registries "
             "subtype this.", CAT)
 object_type(63001, "GroupType", FolderType,
             "An abstract xRegistry group, expressed as a FolderType that organizes its resource files. It creates "
-            "resources and versions through the CreateResource Method; an entry is removed with the DeleteNodes "
-            "Service. Domain group types subtype this and add the group key (e.g. a namespace URI).", CAT)
+            "resources and versions through the CreateResource Method and is removed with its own Delete Method. "
+            "Domain group types subtype this and add the group key (e.g. a namespace URI).", CAT)
 object_type(63002, "ResourceType", FileType,
             "An abstract xRegistry resource/version whose document IS the file: the content is read and written "
             "through the inherited FileType methods (Open/Read/Write/Close). Carries the xRegistry attributes and "
@@ -204,17 +239,31 @@ method(63003, AT, "AddAttribute",
        "Add or update an xRegistry attribute/label in this container. The server materializes it as a browsable "
        "PropertyType Variable whose BrowseName is the Key, and increments the owning entity's Epoch. If ExpectedEpoch "
        "is non-zero and does not equal the owning entity's current Epoch, the call fails with Bad_InvalidState and "
-       "makes no change (optimistic concurrency).",
+       "makes no change (optimistic concurrency). Success or failure is conveyed by the Method Call StatusCode.",
        inargs=[("Key", String, "Attribute (or label) name."), ("Value", String, "Attribute value."),
-               ("ExpectedEpoch", UInt32, "Expected current Epoch of the owning entity for optimistic concurrency; 0 disables the check.")],
-       outargs=[("Success", Boolean, "True if the attribute was added or updated.")])
+               ("ExpectedEpoch", UInt32, "Expected current Epoch of the owning entity for optimistic concurrency; 0 disables the check.")])
 method(63003, AT, "RemoveAttribute",
        "Remove an xRegistry attribute/label (the Variable whose BrowseName is the Key) from this container. If "
        "ExpectedEpoch is non-zero and does not equal the owning entity's current Epoch, the call fails with "
-       "Bad_InvalidState and makes no change.",
+       "Bad_InvalidState and makes no change. Success or failure is conveyed by the Method Call StatusCode.",
        inargs=[("Key", String, "Attribute (or label) name."),
-               ("ExpectedEpoch", UInt32, "Expected current Epoch of the owning entity for optimistic concurrency; 0 disables the check.")],
-       outargs=[("Success", Boolean, "True if the attribute existed and was removed.")])
+               ("ExpectedEpoch", UInt32, "Expected current Epoch of the owning entity for optimistic concurrency; 0 disables the check.")])
+
+data_type(63004, "RegistryCapabilitiesDataType",
+          [("Flags", String, "The request flags the registry supports (e.g. doc, epoch, filter, inline, sort).", 1),
+           ("Mutable", String, "Which parts of the registry are mutable (e.g. capabilities, model, entities).", 1),
+           ("Pagination", Boolean, "Whether the registry supports pagination of collections."),
+           ("ShortSelf", Boolean, "Whether the registry offers a shortself alias for entity self URLs."),
+           ("SpecVersions", String, "The xRegistry specification versions the registry supports.", 1),
+           ("StickyVersions", Boolean, "Whether the registry keeps the default version sticky across updates."),
+           ("EnforceCompatibility", Boolean, "Whether the registry enforces version compatibility on updates."),
+           ("Apis", String, "The additional API endpoints the registry offers (e.g. /export).", 1),
+           ("Schemas", String, "The schema formats the registry can validate against (schema-domain registries).", 1)],
+          "The typed form of the xRegistry capabilities document (xRegistry /capabilities), whose fields have a fixed "
+          "schema in the xRegistry core specification. Read as a single Variant value from RegistryType.CapabilitiesInfo, "
+          "in addition to the raw JSON exposed by the Capabilities FileType. Additional/vendor capability keys that are "
+          "not among these fixed fields remain available through the Capabilities FileType JSON.", CAT)
+
 
 RG = "RegistryType"
 prop_var(63000, RG, "RegistryId", String, "xRegistry registryid: the stable identifier of this registry.", rule=MR_Mandatory)
@@ -225,7 +274,11 @@ obj_member(63000, RG, "Capabilities", FileType,
            "MaxStringLength).")
 obj_member(63000, RG, "Model", FileType,
            "The registry model document (xRegistry /model): a FileType whose content is the model JSON, read with the "
-           "inherited Open/Read/Close Methods.")
+           "inherited Open/Read/Close Methods. No structured DataType is defined for the model because the OPC UA "
+           "AddressSpace type system (the ObjectTypes and their members) is the structural equivalent of the model.")
+prop_var(63000, RG, "CapabilitiesInfo", T(63004),
+         "The typed form of the registry capabilities (RegistryCapabilitiesDataType), read as a single Variant value, "
+         "in addition to the raw JSON of the Capabilities FileType.")
 common_attrs(63000, RG)
 placeholder_obj(63000, RG, "<Group>", T(63001), "A group held by this registry.")
 method(63000, RG, "CreateGroup",
@@ -263,6 +316,12 @@ method(63001, GP, "GetOrCreateResource",
        outargs=[("ResourceNodeId", NodeId, "NodeId of the existing or newly created resource Object."),
                 ("FileHandle", UInt32, "Write handle when RequestFileOpen is true; otherwise 0."),
                 ("Created", Boolean, "True if the resource was created, false if it already existed.")])
+method(63001, GP, "Delete",
+       "Delete this group and everything it contains (its resources and their versions and labels). The xRegistry-"
+       "semantic deletion Method, symmetric with CreateResource. If ExpectedEpoch is non-zero and does not equal the "
+       "group's current Epoch, the call fails with Bad_InvalidState and deletes nothing; 0 disables the check. Success "
+       "or failure is conveyed by the Method Call StatusCode.",
+       inargs=[("ExpectedEpoch", UInt32, "Expected current Epoch of the group for optimistic concurrency; 0 disables the check.")])
 
 RS = "ResourceType"
 prop_var(63002, RS, "ResourceId", String, "xRegistry resourceid: the stable identifier of the resource within its group.", rule=MR_Mandatory)
@@ -277,6 +336,12 @@ prop_var(63002, RS, "ResourceUrl", String,
          "Federation link (string form): the URL from which the document can be obtained (xRegistry <RESOURCE>url), "
          "for example an opc.tcp endpoint plus browse path, or an HTTP URL.")
 common_attrs(63002, RS)
+method(63002, RS, "Delete",
+       "Delete this resource file and everything it contains (its versions and labels). The xRegistry-semantic "
+       "deletion Method, symmetric with the group's Delete and consistent with the resource being a FileType. If "
+       "ExpectedEpoch is non-zero and does not equal the resource's current Epoch, the call fails with Bad_InvalidState "
+       "and deletes nothing; 0 disables the check. Success or failure is conveyed by the Method Call StatusCode.",
+       inargs=[("ExpectedEpoch", UInt32, "Expected current Epoch of the resource for optimistic concurrency; 0 disables the check.")])
 
 # Emission
 NAMESPACE = "http://opcfoundation.org/UA/xRegistry/"
@@ -290,7 +355,7 @@ ALIASES = [
     ("Argument", Argument), ("KeyValuePair", KeyValuePair), ("NodeId", NodeId),
     ("Organizes", Organizes), ("HasModellingRule", HasModellingRule),
     ("HasTypeDefinition", HasTypeDefinition), ("HasSubtype", HasSubtype),
-    ("HasProperty", HasProperty), ("HasComponent", HasComponent),
+    ("HasProperty", HasProperty), ("HasComponent", HasComponent), ("HasEncoding", HasEncoding),
 ]
 REFTYPE_ALIAS = {v: k for k, v in ALIASES}
 DATATYPE_ALIAS = {v: k for k, v in ALIASES}
@@ -306,6 +371,8 @@ def _fmt_datatype(t):
     return DATATYPE_ALIAS.get(t, t)
 
 def _fmt_browse_name(n):
+    if n.attrs.get("_ns0bn"):
+        return sx.escape(n.bname)
     return f"{OWN_NS}:{sx.escape(n.bname)}"
 
 def _emit_node(n):
@@ -363,9 +430,11 @@ LINK_MAP = {
     "FileDirectoryType": "https://reference.opcfoundation.org/specs/OPC-10000-20/4.3.1",
     "KeyValuePair": "https://reference.opcfoundation.org/specs/OPC-10000-5/12.23",
     "ExpandedNodeId": "https://reference.opcfoundation.org/specs/OPC-10000-3/8.2.3",
+    "Structure": "https://reference.opcfoundation.org/specs/OPC-10000-5/8.24",
 }
 _BASE_NAMES = {"i=58": "BaseObjectType", "i=61": "FolderType", "i=63": "BaseDataVariableType",
-               "i=68": "PropertyType", FileType: "FileType", FileDirectoryType: "FileDirectoryType"}
+               "i=68": "PropertyType", FileType: "FileType", FileDirectoryType: "FileDirectoryType",
+               Structure: "Structure"}
 _OWN = None
 
 def _friendly(tgt):
@@ -420,6 +489,7 @@ def emit_md():
     global _OWN
     _OWN = {NODES[nid].bname for nid in ORDER if NODES[nid].cls in ("UAObjectType", "UADataType", "UAReferenceType")}
     obj_types = [nid for nid in ORDER if NODES[nid].cls == "UAObjectType"]
+    dt_types = [nid for nid in ORDER if NODES[nid].cls == "UADataType"]
     method_args = {}
     method_out = {}
     for nid in ORDER:
@@ -434,7 +504,7 @@ def emit_md():
     md.append('### Type overview\n')
     md.append('| NodeId | BrowseName | NodeClass | Subtype of |')
     md.append('|---|---|---|---|')
-    for nid in obj_types:
+    for nid in obj_types + dt_types:
         n = NODES[nid]
         md.append(f"| ns=1;i={nid} | {_link(n.bname)} | {n.cls[2:]} | {_link(_friendly(_supertype(n)))} |")
     md.append('')
@@ -459,6 +529,27 @@ def emit_md():
             for r in rows:
                 md.append(f"| {r[0]} | {r[1]} | {r[2]} | {r[3]} | {r[4]} | {r[5]} |")
             md.append('')
+    if dt_types:
+        md.append('### DataTypes\n')
+        for nid in dt_types:
+            n = NODES[nid]
+            md.append(f'<a id="{_anchor(n.bname)}"></a>')
+            md.append('')
+            md.append(f"#### {n.bname}  (ns=1;i={nid})\n")
+            md.append(f"*Subtype of:* {_link(_friendly(_supertype(n)))}\n")
+            if n.desc: md.append(n.desc + "\n")
+            flds = DATATYPE_FIELDS.get(nid, [])
+            if flds:
+                md.append("| Field | DataType | Description |")
+                md.append("|---|---|---|")
+                for f in flds:
+                    fname, fdt, fdesc = f[0], f[1], f[2]
+                    frank = f[3] if len(f) > 3 else -1
+                    dt = _link(_friendly(fdt))
+                    if frank is not None and frank >= 0:
+                        dt += r"\[\]"
+                    md.append(f"| {fname} | {dt} | {(fdesc or '').replace('|', '/')} |")
+                md.append('')
     md.append('### Methods\n')
     md.append('| Method | Owning type | Input arguments | Output arguments |')
     md.append('|---|---|---|---|')

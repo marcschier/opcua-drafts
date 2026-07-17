@@ -25,7 +25,7 @@ The in-server Schema Registry root - an xRegistry RegistryType (a FolderType) wh
 | BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
 |---|---|---|---|---|---|
 | <SchemaGroup> | Object |  | OptionalPlaceholder | SchemaRegistryType | A schema group folder (per OPC UA namespace) held by the registry. |
-| GetSchema | Method |  | Optional | SchemaRegistryType | Return the schema document and metadata for a raw on-wire SchemaId fingerprint (the method form of the Opaque SchemaId NodeId fast path). |
+| GetSchema | Method |  | Optional | SchemaRegistryType | Return the schema document and metadata for a raw on-wire SchemaId fingerprint (the method form of the Opaque SchemaId NodeId fast path). An unresolved SchemaId returns the Method Call StatusCode Bad_NotFound rather than an empty result. |
 
 <a id="type-SchemaGroupType"></a>
 
@@ -62,7 +62,7 @@ An xRegistry ResourceType whose file content is one concrete schema document (Av
 
 | Method | Owning type | Input arguments | Output arguments |
 |---|---|---|---|
-| GetSchema | [SchemaRegistryType](#type-SchemaRegistryType) | SchemaId | Document, Format, ContentType, Found |
+| GetSchema | [SchemaRegistryType](#type-SchemaRegistryType) | SchemaId | Document, Format, ContentType |
 
 ### Well-known instances
 
