@@ -139,10 +139,28 @@ def method(owner, owner_sym, name, desc, rule=MR_Optional, inargs=None, outargs=
         _args(nid, f"{owner_sym}_{name}", "OutputArguments", outargs)
     return nid
 
-def _args(method_nid, method_sym, bname, args):
+def instance_method(owner, owner_sym, name, decl_nid, desc, inargs=None, outargs=None):
+    """Materialize a concrete (instance) method under a well-known instance object, so the
+    NodeSet yields a functional object rather than a bare instance. No HasModellingRule
+    (instances carry none); MethodDeclarationId links to the type's method for the signature."""
     nid = _mid()
-    add(nid, "UAVariable", bname, f"{method_sym}_{bname}", parent=T(method_nid), attrs={"DataType": Argument, "ValueRank": "1", "ArrayDimensions": str(len(args))})
-    ref(nid, HasModellingRule, MR_Mandatory)
+    add(nid, "UAMethod", name, f"{owner_sym}_{name}", desc=desc, parent=T(owner),
+        category=CAT_INST, attrs={"MethodDeclarationId": T(decl_nid)})
+    ref(nid, HasComponent, T(owner), forward=False)
+    ref(owner, HasComponent, T(nid))
+    if inargs:
+        _args(nid, f"{owner_sym}_{name}", "InputArguments", inargs, instance=True)
+    if outargs:
+        _args(nid, f"{owner_sym}_{name}", "OutputArguments", outargs, instance=True)
+    return nid
+
+def _args(method_nid, method_sym, bname, args, instance=False):
+    nid = _mid()
+    add(nid, "UAVariable", bname, f"{method_sym}_{bname}", parent=T(method_nid),
+        attrs={"DataType": Argument, "ValueRank": "1", "ArrayDimensions": str(len(args))},
+        category=(CAT_INST if instance else None))
+    if not instance:
+        ref(nid, HasModellingRule, MR_Mandatory)
     ref(nid, HasTypeDefinition, PropertyType)
     ref(nid, HasProperty, T(method_nid), forward=False)
     ref(method_nid, HasProperty, T(nid))
@@ -181,7 +199,7 @@ object_type(62002, "SchemaFileType", XRegistry_ResourceType,
 
 SR = "SchemaRegistryType"
 placeholder_obj(62000, SR, "<SchemaGroup>", T(62001), "A schema group folder (per OPC UA namespace) held by the registry.")
-method(62000, SR, "GetSchema",
+gs_type = method(62000, SR, "GetSchema",
        "Return the schema document and metadata for a raw on-wire SchemaId fingerprint (the method form of the Opaque SchemaId NodeId fast path). An unresolved SchemaId returns the Method Call StatusCode Bad_NotFound rather than an empty result.",
        inargs=[("SchemaId", ByteString, "Raw on-wire SchemaId fingerprint bytes.")],
        outargs=[("Document", ByteString, "Schema document bytes."), ("Format", String, "xRegistry format string."), ("ContentType", String, "Schema document media type.")])
@@ -206,6 +224,13 @@ prop_var(62002, SF, "Ttl", Duration, "Optional time-to-live for mirror/cache mod
 add(62100, "UAObject", "SchemaRegistry", "SchemaRegistry", desc="Server-wide in-server Schema Registry, a well-known component of the Server object. A server that supports PubSub may additionally reference this object from PublishSubscribe.", parent=Server, category=CAT_INST)
 ref(62100, HasTypeDefinition, T(62000))
 ref(62100, HasComponent, Server, forward=False)
+# Materialize the well-known instance's functional GetSchema method (the mandatory download
+# fast path, spec 5.1/6.4), so loading the NodeSet yields a callable registry - as the Part 14
+# PublishSubscribe object declares its methods. A server binds the concrete method handler.
+instance_method(62100, "SchemaRegistry", "GetSchema", gs_type,
+       "Return the schema document and metadata for a raw on-wire SchemaId fingerprint. The functional method on the well-known SchemaRegistry object; an unresolved SchemaId returns the Method Call StatusCode Bad_NotFound.",
+       inargs=[("SchemaId", ByteString, "Raw on-wire SchemaId fingerprint bytes.")],
+       outargs=[("Document", ByteString, "Schema document bytes."), ("Format", String, "xRegistry format string."), ("ContentType", String, "Schema document media type.")])
 
 # Emission
 NAMESPACE = "http://opcfoundation.org/UA/SchemaRegistry/"
@@ -238,7 +263,7 @@ def _emit_node(n):
     a = [f'{n.cls} NodeId="{T(n.nid)}"', f'BrowseName="{_fmt_browse_name(n)}"']
     if n.parent is not None:
         a.append(f'ParentNodeId="{n.parent}"')
-    for k in ("DataType", "ValueRank", "ArrayDimensions"):
+    for k in ("DataType", "ValueRank", "ArrayDimensions", "MethodDeclarationId"):
         if k in n.attrs:
             v = _fmt_datatype(n.attrs[k]) if k == "DataType" else n.attrs[k]
             a.append(f'{k}="{v}"')
@@ -402,6 +427,7 @@ def emit_md():
     for nid in ORDER:
         n = NODES[nid]
         if n.cls != "UAMethod": continue
+        if n.category == CAT_INST: continue  # instance methods materialized on the well-known object, not type declarations
         owner = NODES[int(n.parent.split("i=")[1])].bname if n.parent else ""
         md.append(f"| {n.bname} | {_link(owner)} | {', '.join(method_args.get(nid, [])) or '(none)'} | {', '.join(method_out.get(nid, [])) or '(none)'} |")
     md.append('')

@@ -18,3 +18,6 @@ SchemaFileType_ConfigurationVersion,62513,Variable
 SchemaFileType_ExpiryTime,62514,Variable
 SchemaFileType_Ttl,62515,Variable
 SchemaRegistry,62100,Object
+SchemaRegistry_GetSchema,62516,Method
+SchemaRegistry_GetSchema_InputArguments,62517,Variable
+SchemaRegistry_GetSchema_OutputArguments,62518,Variable

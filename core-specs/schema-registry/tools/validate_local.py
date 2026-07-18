@@ -105,9 +105,12 @@ for tag, el in elems:
     if tag in ("UAVariable", "UAObject", "UAMethod") and el.get("ParentNodeId"):
         p = parse_numeric_nodeid(el.get("ParentNodeId"))
         wellknown_parent = p is not None and p[0] == 0
+        cat_el = el.find(NS + "Category")
+        is_instance = cat_el is not None and (cat_el.text or "").strip() == "Schema Registry Instances"
         if "HasModellingRule" not in reftypes and not is_enc and not wellknown_parent:
-            # Runtime instances under the well-known registry are concrete, not type declarations.
-            if not (parsed and parsed[1] in (62100,)):
+            # Runtime instances under the well-known registry (and the materialized members of
+            # the well-known SchemaRegistry object) are concrete, not type declarations.
+            if not (parsed and parsed[1] in (62100,)) and not is_instance:
                 warnings.append(f"{ctx}: instance/member without HasModellingRule")
         if tag in ("UAVariable", "UAObject") and not typedef and not is_enc:
             errors.append(f"{ctx}: missing HasTypeDefinition")
