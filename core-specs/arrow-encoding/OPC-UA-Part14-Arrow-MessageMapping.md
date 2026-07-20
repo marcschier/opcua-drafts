@@ -34,7 +34,7 @@ Insert a new message mapping `7.2.8 Arrow message mapping` after the existing me
 | §5.2.4 SchemaRequest | New `7.2.8.x SchemaRequest` | Defines the `ArrowSchemaRequest` descriptor for late joiners and cache misses. |
 | §5.2.5 Encoder change tracking | New `7.2.8.x Encoder change tracking` | Requires per-destination announcement tracking and homogeneous streams per SchemaId. |
 | §5.2.6 Decoder cache-miss resolution | New `7.2.8.x Decoder cache-miss resolution` | Orders IPC/announcement wait, SchemaRequest, xRegistry lookup, AddressSpace Schema Registry read, and Part 6 re-derivation. |
-| §5.2.7 Relationship to ConfigurationVersion | New `7.2.8.x Relationship to ConfigurationVersion` | States that SchemaId is independent of ConfigurationVersion, and defines the minor/major schema compatibility contract (Schema Registry §5.6). |
+| §5.2.7 Relationship to ConfigurationVersion | New `7.2.8.x Relationship to ConfigurationVersion` | States that SchemaId is independent of ConfigurationVersion, and defines the minor/major schema compatibility contract (Schema Registry §7). |
 | §5.2.8 Schema-exchange sequences | New `7.2.8.x Schema-exchange sequences` | Provides the normative exchange patterns as sequence diagrams. |
 | §3 `7.3.4.x Content types` | New `7.3.4.x Arrow content types` | Adds Arrow IPC stream/file media types. |
 | §3 `9.2.x Configuration model` | New `9.2.x Arrow message mapping ObjectTypes` | Describes Arrow mapping configuration model entries. |
@@ -164,7 +164,7 @@ A decoder shall maintain `cache: SchemaId -> schema`. Once cached, each received
 
 1. Await the Arrow IPC Schema message in the current stream or an `ArrowSchemaAnnouncement` on the configured announcement channel, then verify the recomputed 8-byte SchemaId and insert the schema into the cache.
 2. Send `ArrowSchemaRequest` listing the unknown SchemaId when the transport supports request/response or a control side channel, then process the returned IPC Schema message or `ArrowSchemaAnnouncement`.
-3. Fetch the schema from the out-of-band xRegistry by matching the `opcua.schemaid` label, as defined by *OPC UA — Schema Registry* (`../schema-registry/OPC-UA-Schema-Registry.md`) §8.
+3. Resolve the schema from an external (federated) xRegistry that the local registry references, as defined by *OPC UA — Schema Registry* (`../schema-registry/OPC-UA-Schema-Registry.md`) §8.
 4. Read the in-server AddressSpace Schema Registry by a SchemaId-NodeId. The companion NodeSet authored in `core-specs\schema-registry\` uses namespace `http://opcfoundation.org/UA/SchemaRegistry/` and exposes each schema at an Opaque NodeId whose Identifier is the raw 8-byte SchemaId. A decoder may perform a single `Read` on that NodeId without browsing or recomputing candidate NodeIds. Servers may additionally expose `GetSchema(SchemaId)` for clients that prefer a Method call over direct NodeId construction.
 5. Re-derive the Arrow Schema from the AddressSpace DataTypeDefinition using the Part 6 Arrow schema-generation algorithm, compute the 8-byte SchemaId over the serialized Arrow Schema, and verify that it equals the referenced SchemaId.
 
