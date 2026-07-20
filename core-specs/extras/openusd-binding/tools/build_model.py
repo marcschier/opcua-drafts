@@ -3,8 +3,8 @@
 Generator for the OPC UA — OpenUSD Bindings companion specification (WG draft).
 
 Emits, from a single in-code source of truth:
-  * ../../../openusd-binding/Opc.Ua.OpenUsdBinding.NodeSet2.xml  - the information model (UANodeSet)
-  * ../../../openusd-binding/Opc.Ua.OpenUsdBinding.NodeIds.csv   - the NodeId assignments (SymbolicName,Id,NodeClass)
+  * ../../../openusd-binding/Opc.Ua.OpenUsd.NodeSet2.xml  - the information model (UANodeSet)
+  * ../../../openusd-binding/Opc.Ua.OpenUsd.NodeIds.csv   - the NodeId assignments (SymbolicName,Id,NodeClass)
   * model-reference.md                                           - the generated Annex A (node reference)
 
 The model is a COMPANION specification in its OWN namespace
@@ -727,10 +727,10 @@ def main():
     here = os.path.dirname(os.path.abspath(__file__))
     std = os.path.normpath(os.path.join(here, "..", "..", "..", "openusd-binding"))
     os.makedirs(std, exist_ok=True)
-    with open(os.path.join(std, "Opc.Ua.OpenUsdBinding.NodeSet2.xml"), "w",
+    with open(os.path.join(std, "Opc.Ua.OpenUsd.NodeSet2.xml"), "w",
               encoding="utf-8", newline="\n") as f:
         f.write(emit())
-    with open(os.path.join(std, "Opc.Ua.OpenUsdBinding.NodeIds.csv"), "w",
+    with open(os.path.join(std, "Opc.Ua.OpenUsd.NodeIds.csv"), "w",
               encoding="utf-8", newline="\n") as f:
         f.write(emit_csv())
     with open(os.path.join(here, "model-reference.md"), "w",

@@ -3,7 +3,7 @@
 Local structural + modelling-rule validator for the OpenUSD Bindings NodeSet.
 
 Reproducible in-repo gate (mirrors the observability-export validate_local.py convention).
-Checks, against Opc.Ua.OpenUsdBinding.NodeSet2.xml:
+Checks, against Opc.Ua.OpenUsd.NodeSet2.xml:
   * XML well-formedness and single <Model> with a base-UA <RequiredModel>.
   * Unique NodeIds; every reference target resolves (own ns=1 node or known base-UA id).
   * Every UAObjectType/UADataType/UAReferenceType has an inverse HasSubtype to a base.
@@ -43,7 +43,7 @@ def err(m):
 def main():
     here = os.path.dirname(os.path.abspath(__file__))
     path = os.path.normpath(os.path.join(here, "..", "..", "..", "openusd-binding",
-                                          "Opc.Ua.OpenUsdBinding.NodeSet2.xml"))
+                                          "Opc.Ua.OpenUsd.NodeSet2.xml"))
     try:
         tree = ET.parse(path)
     except ET.ParseError as e:

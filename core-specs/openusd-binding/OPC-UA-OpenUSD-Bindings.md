@@ -4,7 +4,7 @@
 **Namespace:** `http://opcfoundation.org/UA/OpenUSD/`
 **Publication date:** 2026-07-13
 
-> Status: Working-group draft. This document, together with `Opc.Ua.OpenUsdBinding.NodeSet2.xml` and `Opc.Ua.OpenUsdBinding.NodeIds.csv`, defines an OPC UA information model that lets a Server declare **which OpenUSD (Universal Scene Description) prim represents a given OPC UA Object**, and **which live OPC UA Variable values drive which USD attributes** (and, where authorized, which USD-side intents command OPC UA back), so that a generic connector can render live industrial data in an OpenUSD renderer (for example NVIDIA Omniverse) without hard-coding the mapping. Nothing here is normative, official, or endorsed by the OPC Foundation or the Alliance for OpenUSD; namespace URIs and NodeIds are **provisional** and for prototyping only. The design rationale, prior art, and the corrections that shaped this draft are recorded in the companion research report (`research/openuds-and-omniverse-what-would-be-needed-to-supp.md`, §0).
+> Status: Working-group draft. This document, together with `Opc.Ua.OpenUsd.NodeSet2.xml` and `Opc.Ua.OpenUsd.NodeIds.csv`, defines an OPC UA information model that lets a Server declare **which OpenUSD (Universal Scene Description) prim represents a given OPC UA Object**, and **which live OPC UA Variable values drive which USD attributes** (and, where authorized, which USD-side intents command OPC UA back), so that a generic connector can render live industrial data in an OpenUSD renderer (for example NVIDIA Omniverse) without hard-coding the mapping. Nothing here is normative, official, or endorsed by the OPC Foundation or the Alliance for OpenUSD; namespace URIs and NodeIds are **provisional** and for prototyping only. The design rationale, prior art, and the corrections that shaped this draft are recorded in the companion research report (`research/openuds-and-omniverse-what-would-be-needed-to-supp.md`, §0).
 
 ---
 
@@ -500,8 +500,8 @@ The intended standards path is a family of thin, composable binding contracts (t
 | Artifact | Path |
 |---|---|
 | This specification | `core-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md` |
-| Base NodeSet | `core-specs/openusd-binding/Opc.Ua.OpenUsdBinding.NodeSet2.xml` |
-| NodeIds | `core-specs/openusd-binding/Opc.Ua.OpenUsdBinding.NodeIds.csv` |
+| Base NodeSet | `core-specs/openusd-binding/Opc.Ua.OpenUsd.NodeSet2.xml` |
+| NodeIds | `core-specs/openusd-binding/Opc.Ua.OpenUsd.NodeIds.csv` |
 | Annex A (generated node table) | `core-specs/extras/openusd-binding/tools/model-reference.md` |
 | Generator | `core-specs/extras/openusd-binding/tools/build_model.py` |
 | Validator | `core-specs/extras/openusd-binding/tools/validate_local.py` |

@@ -94,7 +94,7 @@ A generic connector can therefore browse `<Stage>.Assets`, download and verify t
 ## 5 Where the bindings live
 
 - **Machine-readable descriptor:** `../../extras/openusd-binding/examples/pumps/Pumps.OpenUsdBinding.json`.
-- **Illustrative instance overlay (NodeSet):** `Opc.Ua.Pumps.OpenUsdBinding.NodeSet2.xml` (this folder) — a concrete `Pump101` with the AddIn and the three telemetry bindings, for browsing/inspection. The alarm, command, and integrity capabilities are shown in the descriptor JSON and the C# sample.
+- **Illustrative instance overlay (NodeSet):** `Opc.Ua.Pumps.OpenUsd.NodeSet2.xml` (this folder) — a concrete `Pump101` with the AddIn and the three telemetry bindings, for browsing/inspection. The alarm, command, and integrity capabilities are shown in the descriptor JSON and the C# sample.
 - **Runnable USD writer:** `../../extras/openusd-binding/examples/pumps/usd_writer.py` (+ generated `live.usda`).
 - **C# end-to-end:** the `PumpDeviceIntegrationServer` sample in `marcschier/UA-.NETStandard` exposes the representation + bindings, and `PumpOpenUsdE2eTests` starts the server via the generic host, connects a client session, discovers the representation and bindings through `Server/OpenUSD/Representations`, subscribes to the bound source Variables, and drives a generic connector into a mock USD sink (asserted in CI). A Python `pxr` writer authors a real `live.usda` locally (Omniverse rendering is out of CI scope).
 
@@ -103,6 +103,6 @@ A generic connector can therefore browse `<Stage>.Assets`, download and verify t
 | Artifact | Path |
 |---|---|
 | This addendum | `core-specs/openusd-binding/pumps/OPC-UA-Pumps-OpenUSD-Bindings-Addendum.md` |
-| Instance overlay | `core-specs/openusd-binding/pumps/Opc.Ua.Pumps.OpenUsdBinding.NodeSet2.xml` |
+| Instance overlay | `core-specs/openusd-binding/pumps/Opc.Ua.Pumps.OpenUsd.NodeSet2.xml` |
 | Descriptor | `core-specs/extras/openusd-binding/examples/pumps/Pumps.OpenUsdBinding.json` |
 | USD writer + example stage | `core-specs/extras/openusd-binding/examples/pumps/usd_writer.py`, `live.usda` |

@@ -91,7 +91,7 @@ The connector/bridge is the same generic implementation used for the pump exampl
 ## 5 Where the bindings live
 
 - **Machine-readable descriptor:** `../../extras/openusd-binding/examples/robotics/Robotics.OpenUsdBinding.json`.
-- **Illustrative instance overlay (NodeSet):** `Opc.Ua.Robotics.OpenUsdBinding.NodeSet2.xml` (this folder) — a concrete `RobotCell` with an `OpenUsdRepresentation` AddIn, a `RobotsAggregation` component binding, and representative robot/Axis bindings for browsing/inspection.
+- **Illustrative instance overlay (NodeSet):** `Opc.Ua.Robotics.OpenUsd.NodeSet2.xml` (this folder) — a concrete `RobotCell` with an `OpenUsdRepresentation` AddIn, a `RobotsAggregation` component binding, and representative robot/Axis bindings for browsing/inspection.
 - **Runnable USD writer:** `../../extras/openusd-binding/examples/robotics/usd_writer.py` (+ generated `live.usda`).
 - **USD assets and tutorial:** `../../extras/openusd-binding/examples/robotics/Cell.usda`, `robot.usda`, `tool.usda`, `stage.usda`, `render_robot.py`, and `E2E-GUIDE.md`.
 - **C# end-to-end:** the `RoboticsDeviceIntegrationServer` sample exposes the representation + bindings, and `RobotOpenUsdE2eTests` discovers them through the registry and drives the same generic connector infrastructure used by pumps.
@@ -101,7 +101,7 @@ The connector/bridge is the same generic implementation used for the pump exampl
 | Artifact | Path |
 |---|---|
 | This addendum | `core-specs/openusd-binding/robotics/OPC-UA-Robotics-OpenUSD-Bindings-Addendum.md` |
-| Instance overlay | `core-specs/openusd-binding/robotics/Opc.Ua.Robotics.OpenUsdBinding.NodeSet2.xml` |
+| Instance overlay | `core-specs/openusd-binding/robotics/Opc.Ua.Robotics.OpenUsd.NodeSet2.xml` |
 | Descriptor | `core-specs/extras/openusd-binding/examples/robotics/Robotics.OpenUsdBinding.json` |
 | USD writer + example stage | `core-specs/extras/openusd-binding/examples/robotics/usd_writer.py`, `live.usda`, `stage.usda` |
 | USD assets | `core-specs/extras/openusd-binding/examples/robotics/Cell.usda`, `robot.usda`, `tool.usda` |
