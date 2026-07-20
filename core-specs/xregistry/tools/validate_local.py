@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Local structural validator for the Schema Registry NodeSet + CSV."""
+"""Local structural validator for the abstract xRegistry NodeSet + CSV."""
 import os, sys, csv, re
 import xml.etree.ElementTree as ET
 
@@ -7,11 +7,10 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 GEN = os.path.dirname(HERE)
 REF = os.path.join(HERE, "ref")
 NS = "{http://opcfoundation.org/UA/2011/03/UANodeSet.xsd}"
-XML = os.path.join(GEN, "Opc.Ua.SchemaRegistry.NodeSet2.xml")
-CSVF = os.path.join(GEN, "Opc.Ua.SchemaRegistry.NodeIds.csv")
-XR_NS = 1          # required model: abstract xRegistry base (http://opcfoundation.org/UA/xRegistry/)
-OWN_NS = 2         # this specification's own namespace (SchemaRegistry)
-OWN_MIN = 62000
+XML = os.path.join(GEN, "Opc.Ua.XRegistry.NodeSet2.xml")
+CSVF = os.path.join(GEN, "Opc.Ua.XRegistry.NodeIds.csv")
+OWN_NS = 1
+OWN_MIN = 63000
 
 def load_ids(p):
     s = set()
@@ -23,10 +22,7 @@ def load_ids(p):
 
 _ua_csv = os.path.join(REF, "UA.NodeIds.csv")
 UA = load_ids(_ua_csv) if os.path.exists(_ua_csv) else None
-UA_EXTRA = {297, 2253}
-# xRegistry base NodeIds (the required model this spec extends), resolved across the two-file dependency.
-_xr_csv = os.path.join(GEN, "..", "xregistry", "Opc.Ua.XRegistry.NodeIds.csv")
-XR = load_ids(_xr_csv) if os.path.exists(_xr_csv) else None
+UA_EXTRA = {297}
 errors, warnings = [], []
 ALIAS = {}
 tree = ET.parse(XML)
@@ -70,23 +66,18 @@ def check(t, ctx):
             return
         errors.append(f"{ctx}: ns={OWN_NS};i={v} not defined here")
         return
-    if ns == XR_NS:
-        if XR is None or v in XR:
-            return
-        errors.append(f"{ctx}: ns={XR_NS};i={v} not defined in the xRegistry base model")
-        return
     if UA is None:
         return
     if v in UA or v in UA_EXTRA:
         return
-    errors.append(f"{ctx}: i={v} not defined here and not a known base/Part 14 id")
+    errors.append(f"{ctx}: i={v} not defined here and not a known base UA id")
 
 for tag, el in elems:
     bn = el.get("BrowseName"); nid = el.get("NodeId")
     ctx = f"{tag} {bn} ({nid})"
     parsed = parse_numeric_nodeid(nid)
     if parsed and parsed[0] == OWN_NS and parsed[1] < OWN_MIN:
-        errors.append(f"{ctx}: own NodeId below reserved provisional block {OWN_MIN}")
+        errors.append(f"{ctx}: own NodeId below reserved draft block {OWN_MIN}")
     if el.get("ParentNodeId"):
         check(el.get("ParentNodeId"), ctx + " parent")
     if el.get("DataType"):
@@ -105,13 +96,8 @@ for tag, el in elems:
     if tag in ("UAVariable", "UAObject", "UAMethod") and el.get("ParentNodeId"):
         p = parse_numeric_nodeid(el.get("ParentNodeId"))
         wellknown_parent = p is not None and p[0] == 0
-        cat_el = el.find(NS + "Category")
-        is_instance = cat_el is not None and (cat_el.text or "").strip() == "Schema Registry Instances"
         if "HasModellingRule" not in reftypes and not is_enc and not wellknown_parent:
-            # Runtime instances under the well-known registry (and the materialized members of
-            # the well-known SchemaRegistry object) are concrete, not type declarations.
-            if not (parsed and parsed[1] in (62100,)) and not is_instance:
-                warnings.append(f"{ctx}: instance/member without HasModellingRule")
+            warnings.append(f"{ctx}: instance/member without HasModellingRule")
         if tag in ("UAVariable", "UAObject") and not typedef and not is_enc:
             errors.append(f"{ctx}: missing HasTypeDefinition")
 
@@ -132,14 +118,7 @@ for cid in csv_ids:
     if cid not in defined:
         errors.append(f"csv id {cid} not in XML")
 
-# The SchemaRegistry well-known instance is a component of the Server object (PubSub-independent).
-registry = next((el for tag, el in elems if el.get("NodeId") == "ns=2;i=62100"), None)
-if registry is None:
-    errors.append("SchemaRegistry well-known instance ns=2;i=62100 missing")
-elif registry.get("ParentNodeId") != "i=2253":
-    errors.append("SchemaRegistry well-known instance is not parented by the Server object i=2253")
-
-print(f"XML nodes: {len(defined)}   CSV rows: {len(rows)}   base ids: {len(UA) if UA is not None else 'skipped (no local base table)'}   xRegistry base ids: {len(XR) if XR is not None else 'skipped'}")
+print(f"XML nodes: {len(defined)}   CSV rows: {len(rows)}   base ids: {len(UA) if UA is not None else 'skipped (no local base table)'}")
 print(f"ERRORS: {len(errors)}")
 for e in errors[:50]: print("  ERR", e)
 print(f"WARNINGS: {len(warnings)}")
