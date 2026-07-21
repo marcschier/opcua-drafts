@@ -32,7 +32,6 @@ NEEDS_BASE_DATA = [
     "../schema-registry/tools/validate_local.py",
     "observability-export/tools/validate_local.py",
     "observability-export/examples/tools/validate_examples.py",
-    "openusd-binding/tools/validate_local.py",
 ]
 
 
