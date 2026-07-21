@@ -29,7 +29,6 @@ This document supersedes Release 0.1.0. The 0.1 baseline (Representation + read-
 
 **Companion — Part 2 (Scene Materialization).** This document (Part 1) binds OPC UA Objects to prims on an **external** USD stage. A companion draft, *OPC UA — OpenUSD Scene Materialization (Part 2)* (`../openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md`, namespace `http://opcfoundation.org/UA/OpenUSD/Scene/`), instead **materializes the composed USD scene graph natively as an OPC UA address space** (Stage/Prim/Attribute/Relationship/typed+API schemas), and is round-trippable to/from `.usd`. Part 2 is **additive and self-contained** (it does not change or require this model); the two interoperate — a Part 1 binding may target a Part 2 attribute Variable, and a materialized stage may be listed under `Server/OpenUSD/Stages`.
 
-
 ### 1.1 Motivation
 
 Industrial "digital twin" visualization repeatedly re-implements the same brittle glue: a bespoke script maps specific OPC UA NodeIds to specific USD prim attributes and pushes values into a stage. That mapping lives in a connector nobody else can see; it is invisible to other tools, breaks silently when the address space changes, cannot be discovered, and cannot be reviewed, versioned, or governed. Every new pairing of a server with a viewer starts the integration from scratch.
