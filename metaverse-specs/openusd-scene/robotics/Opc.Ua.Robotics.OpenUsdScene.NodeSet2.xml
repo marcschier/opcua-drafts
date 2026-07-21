@@ -327,7 +327,7 @@
     </References>
     <Value><uax:Boolean xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">false</uax:Boolean></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5035" BrowseName="2:primvars:displayColor" ParentNodeId="ns=2;i=5021" DataType="i=10" ValueRank="2" ArrayDimensions="3">
+  <UAVariable NodeId="ns=2;i=5035" BrowseName="2:primvars:displayColor" ParentNodeId="ns=2;i=5021" DataType="ns=1;i=3013" ValueRank="2" ArrayDimensions="3">
     <DisplayName>primvars:displayColor</DisplayName>
     <References>
       <Reference ReferenceType="i=40">ns=1;i=2001</Reference>
@@ -705,7 +705,7 @@
     </References>
     <Value><uax:Boolean xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">false</uax:Boolean></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5078" BrowseName="2:primvars:displayColor" ParentNodeId="ns=2;i=5064" DataType="i=10" ValueRank="2" ArrayDimensions="3">
+  <UAVariable NodeId="ns=2;i=5078" BrowseName="2:primvars:displayColor" ParentNodeId="ns=2;i=5064" DataType="ns=1;i=3013" ValueRank="2" ArrayDimensions="3">
     <DisplayName>primvars:displayColor</DisplayName>
     <References>
       <Reference ReferenceType="i=40">ns=1;i=2001</Reference>
@@ -996,7 +996,7 @@
     </References>
     <Value><uax:Boolean xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">false</uax:Boolean></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5111" BrowseName="2:primvars:displayColor" ParentNodeId="ns=2;i=5097" DataType="i=10" ValueRank="2" ArrayDimensions="3">
+  <UAVariable NodeId="ns=2;i=5111" BrowseName="2:primvars:displayColor" ParentNodeId="ns=2;i=5097" DataType="ns=1;i=3013" ValueRank="2" ArrayDimensions="3">
     <DisplayName>primvars:displayColor</DisplayName>
     <References>
       <Reference ReferenceType="i=40">ns=1;i=2001</Reference>
@@ -1287,7 +1287,7 @@
     </References>
     <Value><uax:Boolean xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">false</uax:Boolean></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5144" BrowseName="2:primvars:displayColor" ParentNodeId="ns=2;i=5130" DataType="i=10" ValueRank="2" ArrayDimensions="3">
+  <UAVariable NodeId="ns=2;i=5144" BrowseName="2:primvars:displayColor" ParentNodeId="ns=2;i=5130" DataType="ns=1;i=3013" ValueRank="2" ArrayDimensions="3">
     <DisplayName>primvars:displayColor</DisplayName>
     <References>
       <Reference ReferenceType="i=40">ns=1;i=2001</Reference>
@@ -1613,7 +1613,7 @@
     </References>
     <Value><uax:Boolean xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">false</uax:Boolean></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5181" BrowseName="2:primvars:displayColor" ParentNodeId="ns=2;i=5163" DataType="i=10" ValueRank="2" ArrayDimensions="3">
+  <UAVariable NodeId="ns=2;i=5181" BrowseName="2:primvars:displayColor" ParentNodeId="ns=2;i=5163" DataType="ns=1;i=3013" ValueRank="2" ArrayDimensions="3">
     <DisplayName>primvars:displayColor</DisplayName>
     <References>
       <Reference ReferenceType="i=40">ns=1;i=2001</Reference>
@@ -2209,7 +2209,7 @@
     </References>
     <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">expandPrims</uax:String></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5249" BrowseName="2:primvars:displayColor" ParentNodeId="ns=2;i=5234" DataType="i=10" ValueRank="2" ArrayDimensions="3">
+  <UAVariable NodeId="ns=2;i=5249" BrowseName="2:primvars:displayColor" ParentNodeId="ns=2;i=5234" DataType="ns=1;i=3013" ValueRank="2" ArrayDimensions="3">
     <DisplayName>primvars:displayColor</DisplayName>
     <References>
       <Reference ReferenceType="i=40">ns=1;i=2001</Reference>
@@ -2473,7 +2473,7 @@
     </References>
     <Value><uax:Boolean xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">false</uax:Boolean></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5279" BrowseName="2:primvars:displayColor" ParentNodeId="ns=2;i=5257" DataType="i=10" ValueRank="2" ArrayDimensions="3">
+  <UAVariable NodeId="ns=2;i=5279" BrowseName="2:primvars:displayColor" ParentNodeId="ns=2;i=5257" DataType="ns=1;i=3013" ValueRank="2" ArrayDimensions="3">
     <DisplayName>primvars:displayColor</DisplayName>
     <References>
       <Reference ReferenceType="i=40">ns=1;i=2001</Reference>
@@ -3003,7 +3003,7 @@
     </References>
     <Value><uax:Boolean xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">false</uax:Boolean></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5339" BrowseName="2:primvars:displayColor" ParentNodeId="ns=2;i=5317" DataType="i=10" ValueRank="2" ArrayDimensions="3">
+  <UAVariable NodeId="ns=2;i=5339" BrowseName="2:primvars:displayColor" ParentNodeId="ns=2;i=5317" DataType="ns=1;i=3013" ValueRank="2" ArrayDimensions="3">
     <DisplayName>primvars:displayColor</DisplayName>
     <References>
       <Reference ReferenceType="i=40">ns=1;i=2001</Reference>
@@ -3462,7 +3462,7 @@
     </References>
     <Value><uax:Boolean xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">false</uax:Boolean></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5391" BrowseName="2:primvars:displayColor" ParentNodeId="ns=2;i=5377" DataType="i=10" ValueRank="2" ArrayDimensions="3">
+  <UAVariable NodeId="ns=2;i=5391" BrowseName="2:primvars:displayColor" ParentNodeId="ns=2;i=5377" DataType="ns=1;i=3013" ValueRank="2" ArrayDimensions="3">
     <DisplayName>primvars:displayColor</DisplayName>
     <References>
       <Reference ReferenceType="i=40">ns=1;i=2001</Reference>
@@ -3965,7 +3965,7 @@
     </References>
     <Value><uax:Boolean xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">false</uax:Boolean></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5448" BrowseName="2:primvars:displayColor" ParentNodeId="ns=2;i=5434" DataType="i=10" ValueRank="2" ArrayDimensions="3">
+  <UAVariable NodeId="ns=2;i=5448" BrowseName="2:primvars:displayColor" ParentNodeId="ns=2;i=5434" DataType="ns=1;i=3013" ValueRank="2" ArrayDimensions="3">
     <DisplayName>primvars:displayColor</DisplayName>
     <References>
       <Reference ReferenceType="i=40">ns=1;i=2001</Reference>
@@ -4537,7 +4537,7 @@
     </References>
     <Value><uax:Boolean xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">false</uax:Boolean></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5513" BrowseName="2:primvars:displayColor" ParentNodeId="ns=2;i=5491" DataType="i=10" ValueRank="2" ArrayDimensions="3">
+  <UAVariable NodeId="ns=2;i=5513" BrowseName="2:primvars:displayColor" ParentNodeId="ns=2;i=5491" DataType="ns=1;i=3013" ValueRank="2" ArrayDimensions="3">
     <DisplayName>primvars:displayColor</DisplayName>
     <References>
       <Reference ReferenceType="i=40">ns=1;i=2001</Reference>
@@ -4916,7 +4916,7 @@
     </References>
     <Value><uax:Boolean xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">false</uax:Boolean></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5556" BrowseName="2:primvars:displayColor" ParentNodeId="ns=2;i=5542" DataType="i=10" ValueRank="2" ArrayDimensions="3">
+  <UAVariable NodeId="ns=2;i=5556" BrowseName="2:primvars:displayColor" ParentNodeId="ns=2;i=5542" DataType="ns=1;i=3013" ValueRank="2" ArrayDimensions="3">
     <DisplayName>primvars:displayColor</DisplayName>
     <References>
       <Reference ReferenceType="i=40">ns=1;i=2001</Reference>
@@ -5444,7 +5444,7 @@
     </References>
     <Value><uax:Boolean xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">false</uax:Boolean></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5616" BrowseName="2:primvars:displayColor" ParentNodeId="ns=2;i=5594" DataType="i=10" ValueRank="2" ArrayDimensions="3">
+  <UAVariable NodeId="ns=2;i=5616" BrowseName="2:primvars:displayColor" ParentNodeId="ns=2;i=5594" DataType="ns=1;i=3013" ValueRank="2" ArrayDimensions="3">
     <DisplayName>primvars:displayColor</DisplayName>
     <References>
       <Reference ReferenceType="i=40">ns=1;i=2001</Reference>
@@ -5909,7 +5909,7 @@
     </References>
     <Value><uax:Boolean xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">false</uax:Boolean></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5669" BrowseName="2:primvars:displayColor" ParentNodeId="ns=2;i=5655" DataType="i=10" ValueRank="2" ArrayDimensions="3">
+  <UAVariable NodeId="ns=2;i=5669" BrowseName="2:primvars:displayColor" ParentNodeId="ns=2;i=5655" DataType="ns=1;i=3013" ValueRank="2" ArrayDimensions="3">
     <DisplayName>primvars:displayColor</DisplayName>
     <References>
       <Reference ReferenceType="i=40">ns=1;i=2001</Reference>
@@ -6200,7 +6200,7 @@
     </References>
     <Value><uax:Boolean xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">false</uax:Boolean></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5702" BrowseName="2:primvars:displayColor" ParentNodeId="ns=2;i=5688" DataType="i=10" ValueRank="2" ArrayDimensions="3">
+  <UAVariable NodeId="ns=2;i=5702" BrowseName="2:primvars:displayColor" ParentNodeId="ns=2;i=5688" DataType="ns=1;i=3013" ValueRank="2" ArrayDimensions="3">
     <DisplayName>primvars:displayColor</DisplayName>
     <References>
       <Reference ReferenceType="i=40">ns=1;i=2001</Reference>
@@ -6491,7 +6491,7 @@
     </References>
     <Value><uax:Boolean xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">false</uax:Boolean></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5735" BrowseName="2:primvars:displayColor" ParentNodeId="ns=2;i=5721" DataType="i=10" ValueRank="2" ArrayDimensions="3">
+  <UAVariable NodeId="ns=2;i=5735" BrowseName="2:primvars:displayColor" ParentNodeId="ns=2;i=5721" DataType="ns=1;i=3013" ValueRank="2" ArrayDimensions="3">
     <DisplayName>primvars:displayColor</DisplayName>
     <References>
       <Reference ReferenceType="i=40">ns=1;i=2001</Reference>
@@ -6818,7 +6818,7 @@
     </References>
     <Value><uax:Boolean xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">false</uax:Boolean></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5772" BrowseName="2:primvars:displayColor" ParentNodeId="ns=2;i=5754" DataType="i=10" ValueRank="2" ArrayDimensions="3">
+  <UAVariable NodeId="ns=2;i=5772" BrowseName="2:primvars:displayColor" ParentNodeId="ns=2;i=5754" DataType="ns=1;i=3013" ValueRank="2" ArrayDimensions="3">
     <DisplayName>primvars:displayColor</DisplayName>
     <References>
       <Reference ReferenceType="i=40">ns=1;i=2001</Reference>
@@ -7330,7 +7330,7 @@
     </References>
     <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">info</uax:String></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5831" BrowseName="2:inputs:diffuseColor" ParentNodeId="ns=2;i=5816" DataType="i=10" ValueRank="1" ArrayDimensions="3">
+  <UAVariable NodeId="ns=2;i=5831" BrowseName="2:inputs:diffuseColor" ParentNodeId="ns=2;i=5816" DataType="ns=1;i=3013" ValueRank="1" ArrayDimensions="3">
     <DisplayName>inputs:diffuseColor</DisplayName>
     <References>
       <Reference ReferenceType="i=40">ns=1;i=2001</Reference>
@@ -7804,7 +7804,7 @@
     </References>
     <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">expandPrims</uax:String></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5885" BrowseName="2:primvars:displayColor" ParentNodeId="ns=2;i=5870" DataType="i=10" ValueRank="2" ArrayDimensions="3">
+  <UAVariable NodeId="ns=2;i=5885" BrowseName="2:primvars:displayColor" ParentNodeId="ns=2;i=5870" DataType="ns=1;i=3013" ValueRank="2" ArrayDimensions="3">
     <DisplayName>primvars:displayColor</DisplayName>
     <References>
       <Reference ReferenceType="i=40">ns=1;i=2001</Reference>
@@ -8068,7 +8068,7 @@
     </References>
     <Value><uax:Boolean xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">false</uax:Boolean></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5915" BrowseName="2:primvars:displayColor" ParentNodeId="ns=2;i=5893" DataType="i=10" ValueRank="2" ArrayDimensions="3">
+  <UAVariable NodeId="ns=2;i=5915" BrowseName="2:primvars:displayColor" ParentNodeId="ns=2;i=5893" DataType="ns=1;i=3013" ValueRank="2" ArrayDimensions="3">
     <DisplayName>primvars:displayColor</DisplayName>
     <References>
       <Reference ReferenceType="i=40">ns=1;i=2001</Reference>
@@ -8598,7 +8598,7 @@
     </References>
     <Value><uax:Boolean xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">false</uax:Boolean></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5975" BrowseName="2:primvars:displayColor" ParentNodeId="ns=2;i=5953" DataType="i=10" ValueRank="2" ArrayDimensions="3">
+  <UAVariable NodeId="ns=2;i=5975" BrowseName="2:primvars:displayColor" ParentNodeId="ns=2;i=5953" DataType="ns=1;i=3013" ValueRank="2" ArrayDimensions="3">
     <DisplayName>primvars:displayColor</DisplayName>
     <References>
       <Reference ReferenceType="i=40">ns=1;i=2001</Reference>
@@ -9057,7 +9057,7 @@
     </References>
     <Value><uax:Boolean xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">false</uax:Boolean></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=6027" BrowseName="2:primvars:displayColor" ParentNodeId="ns=2;i=6013" DataType="i=10" ValueRank="2" ArrayDimensions="3">
+  <UAVariable NodeId="ns=2;i=6027" BrowseName="2:primvars:displayColor" ParentNodeId="ns=2;i=6013" DataType="ns=1;i=3013" ValueRank="2" ArrayDimensions="3">
     <DisplayName>primvars:displayColor</DisplayName>
     <References>
       <Reference ReferenceType="i=40">ns=1;i=2001</Reference>
@@ -9560,7 +9560,7 @@
     </References>
     <Value><uax:Boolean xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">false</uax:Boolean></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=6084" BrowseName="2:primvars:displayColor" ParentNodeId="ns=2;i=6070" DataType="i=10" ValueRank="2" ArrayDimensions="3">
+  <UAVariable NodeId="ns=2;i=6084" BrowseName="2:primvars:displayColor" ParentNodeId="ns=2;i=6070" DataType="ns=1;i=3013" ValueRank="2" ArrayDimensions="3">
     <DisplayName>primvars:displayColor</DisplayName>
     <References>
       <Reference ReferenceType="i=40">ns=1;i=2001</Reference>
@@ -10132,7 +10132,7 @@
     </References>
     <Value><uax:Boolean xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">false</uax:Boolean></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=6149" BrowseName="2:primvars:displayColor" ParentNodeId="ns=2;i=6127" DataType="i=10" ValueRank="2" ArrayDimensions="3">
+  <UAVariable NodeId="ns=2;i=6149" BrowseName="2:primvars:displayColor" ParentNodeId="ns=2;i=6127" DataType="ns=1;i=3013" ValueRank="2" ArrayDimensions="3">
     <DisplayName>primvars:displayColor</DisplayName>
     <References>
       <Reference ReferenceType="i=40">ns=1;i=2001</Reference>
@@ -10511,7 +10511,7 @@
     </References>
     <Value><uax:Boolean xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">false</uax:Boolean></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=6192" BrowseName="2:primvars:displayColor" ParentNodeId="ns=2;i=6178" DataType="i=10" ValueRank="2" ArrayDimensions="3">
+  <UAVariable NodeId="ns=2;i=6192" BrowseName="2:primvars:displayColor" ParentNodeId="ns=2;i=6178" DataType="ns=1;i=3013" ValueRank="2" ArrayDimensions="3">
     <DisplayName>primvars:displayColor</DisplayName>
     <References>
       <Reference ReferenceType="i=40">ns=1;i=2001</Reference>
@@ -11039,7 +11039,7 @@
     </References>
     <Value><uax:Boolean xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">false</uax:Boolean></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=6252" BrowseName="2:primvars:displayColor" ParentNodeId="ns=2;i=6230" DataType="i=10" ValueRank="2" ArrayDimensions="3">
+  <UAVariable NodeId="ns=2;i=6252" BrowseName="2:primvars:displayColor" ParentNodeId="ns=2;i=6230" DataType="ns=1;i=3013" ValueRank="2" ArrayDimensions="3">
     <DisplayName>primvars:displayColor</DisplayName>
     <References>
       <Reference ReferenceType="i=40">ns=1;i=2001</Reference>
@@ -11408,7 +11408,7 @@
     </References>
     <Value><uax:Boolean xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">false</uax:Boolean></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=6294" BrowseName="2:primvars:displayColor" ParentNodeId="ns=2;i=6276" DataType="i=10" ValueRank="2" ArrayDimensions="3">
+  <UAVariable NodeId="ns=2;i=6294" BrowseName="2:primvars:displayColor" ParentNodeId="ns=2;i=6276" DataType="ns=1;i=3013" ValueRank="2" ArrayDimensions="3">
     <DisplayName>primvars:displayColor</DisplayName>
     <References>
       <Reference ReferenceType="i=40">ns=1;i=2001</Reference>
@@ -11920,7 +11920,7 @@
     </References>
     <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">info</uax:String></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=6353" BrowseName="2:inputs:diffuseColor" ParentNodeId="ns=2;i=6338" DataType="i=10" ValueRank="1" ArrayDimensions="3">
+  <UAVariable NodeId="ns=2;i=6353" BrowseName="2:inputs:diffuseColor" ParentNodeId="ns=2;i=6338" DataType="ns=1;i=3013" ValueRank="1" ArrayDimensions="3">
     <DisplayName>inputs:diffuseColor</DisplayName>
     <References>
       <Reference ReferenceType="i=40">ns=1;i=2001</Reference>

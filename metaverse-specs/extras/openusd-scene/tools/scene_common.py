@@ -15,6 +15,14 @@ FolderType = "i=61"; PropertyType = "i=68"; ObjectsFolder = "i=85"
 Boolean = "i=1"; SByte = "i=2"; Int32 = "i=6"; UInt32 = "i=7"; Int64 = "i=8"; Float = "i=10"; Double = "i=11"; String = "i=12"; NodeId_ = "i=17"; BaseDataType = "i=24"
 S = lambda nid: f"ns=1;i={nid}"
 I = lambda nid: f"ns=2;i={nid}"
+# USD role-carrying value DataTypes (ns=1) and the built-in numeric encoding each
+# uses on the wire. Subtypes of a built-in primitive per the OPC UA idiom (cf.
+# Duration : Double): the semantic type conveys the USD role, the value is encoded
+# as its built-in supertype (Float/Double). Keep in sync with build_model.py 3013-3020.
+NUMERIC_ENCODING = {Double: "Double", Float: "Float", Int32: "Int32", UInt32: "UInt32",
+                    SByte: "SByte", Int64: "Int64", S(3008): "Double",
+                    S(3013): "Float", S(3014): "Float", S(3015): "Float", S(3016): "Float",
+                    S(3017): "Float", S(3018): "Float", S(3019): "Double", S(3020): "Double"}
 TYPE_IDS = {"UsdStageType": S(1001), "UsdPrimType": S(1002), "UsdGeomXformType": S(1006), "UsdGeomScopeType": S(1007), "UsdGeomMeshType": S(1009), "UsdGeomCylinderType": S(1010), "UsdGeomSphereType": S(1011), "UsdGeomCubeType": S(1012), "UsdGeomConeType": S(1013), "UsdGeomCapsuleType": S(1014), "UsdShadeMaterialType": S(1015), "UsdShadeShaderType": S(1016), "UsdRelationshipType": S(1017), "UsdVariantSetType": S(1018), "UsdCompositionArcType": S(1019), "UsdApiSchemaType": S(1020), "UsdCollectionAPIType": S(1021), "UsdAttributeType": S(2001)}
 PRIM_TYPE_BY_USD = {"Xform": "UsdGeomXformType", "Scope": "UsdGeomScopeType", "Mesh": "UsdGeomMeshType", "Cylinder": "UsdGeomCylinderType", "Sphere": "UsdGeomSphereType", "Cube": "UsdGeomCubeType", "Cone": "UsdGeomConeType", "Capsule": "UsdGeomCapsuleType", "Material": "UsdShadeMaterialType", "Shader": "UsdShadeShaderType"}
 ENUM = {"Def": 0, "Over": 1, "Class": 2, "Varying": 0, "Uniform": 1, "Unspecified": 0, "Model": 1, "Group": 2, "Assembly": 3, "Component": 4, "Subcomponent": 5, "Explicit": 0, "Prepend": 1, "Append": 2, "Delete": 3, "Ordered": 4, "Reference": 0, "Payload": 1, "Inherit": 2, "Specialize": 3, "VariantSet": 4, "Sublayer": 5, "Instance": 6}
@@ -199,7 +207,7 @@ def _flat(v):
     return [v]
 def sdf_mapping(t):
     arr=t.endswith("[]"); b=t[:-2] if arr else t
-    vec={"float2":(Float,1,"2"),"float3":(Float,1,"3"),"float4":(Float,1,"4"),"double2":(Double,1,"2"),"double3":(Double,1,"3"),"double4":(Double,1,"4"),"int2":(Int32,1,"2"),"int3":(Int32,1,"3"),"int4":(Int32,1,"4"),"color3f":(Float,1,"3"),"normal3f":(Float,1,"3"),"point3f":(Float,1,"3"),"vector3f":(Float,1,"3"),"texCoord2f":(Float,1,"2"),"quatf":(Float,1,"4"),"quatd":(Double,1,"4"),"matrix4d":(Double,1,"16")}
+    vec={"float2":(Float,1,"2"),"float3":(Float,1,"3"),"float4":(Float,1,"4"),"double2":(Double,1,"2"),"double3":(Double,1,"3"),"double4":(Double,1,"4"),"int2":(Int32,1,"2"),"int3":(Int32,1,"3"),"int4":(Int32,1,"4"),"color3f":(S(3013),1,"3"),"normal3f":(S(3014),1,"3"),"point3f":(S(3015),1,"3"),"vector3f":(S(3016),1,"3"),"texCoord2f":(S(3017),1,"2"),"quatf":(S(3018),1,"4"),"quatd":(S(3019),1,"4"),"matrix4d":(S(3020),1,"16")}
     sc={"bool":Boolean,"uchar":SByte,"int":Int32,"int64":Int64,"uint":UInt32,"float":Float,"half":Float,"double":Double,"string":String,"token":S(3006),"asset":S(3007),"timecode":S(3008)}
     if b in vec:
         dt,r,d=vec[b]; return dt, r+(1 if arr else 0), d
@@ -208,16 +216,16 @@ def sdf_mapping(t):
 def _value_xml(dt, val, tn=""):
     if val is None: return ""
     vals=_flat(val) if isinstance(val,(list,tuple)) or tn.endswith("[]") or re.search(r"\d|color|point|vector|normal|quat|matrix|texCoord", tn) else [val]
-    num=dt in (Double,Float,Int32,UInt32,SByte,Int64,S(3008)) or isinstance(val, int)
+    num=dt in NUMERIC_ENCODING or isinstance(val, int)
     if len(vals)>1 or isinstance(val,(list,tuple)) or tn.endswith("[]"):
         if num:
-            tag={Double:"Double",Float:"Float",Int32:"Int32",UInt32:"UInt32",SByte:"SByte",Int64:"Int64",S(3008):"Double"}.get(dt, "Int32")
+            tag=NUMERIC_ENCODING.get(dt, "Int32")
             return f'<Value><uax:ListOf{tag} xmlns:uax="{TYPES_NS}">' + "".join(f"<uax:{tag}>{x}</uax:{tag}>" for x in vals) + f"</uax:ListOf{tag}></Value>"
         return f'<Value><uax:ListOfString xmlns:uax="{TYPES_NS}">' + "".join(f"<uax:String>{sx.escape(str(x))}</uax:String>" for x in vals) + "</uax:ListOfString></Value>"
     v=vals[0]
     if dt == Boolean: return f'<Value><uax:Boolean xmlns:uax="{TYPES_NS}">{str(bool(v)).lower()}</uax:Boolean></Value>'
     if num:
-        tag={Double:"Double",Float:"Float",Int32:"Int32",UInt32:"UInt32",SByte:"SByte",Int64:"Int64",S(3008):"Double"}.get(dt, "Int32")
+        tag=NUMERIC_ENCODING.get(dt, "Int32")
         return f'<Value><uax:{tag} xmlns:uax="{TYPES_NS}">{v}</uax:{tag}></Value>'
     return f'<Value><uax:String xmlns:uax="{TYPES_NS}">{sx.escape(str(v))}</uax:String></Value>'
 

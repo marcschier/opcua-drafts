@@ -312,6 +312,31 @@ enum_type(3005, "UsdArcKindEnum", "USD composition arc kind.",
 subtype_datatype(3006, "UsdToken", String, "USD token value represented as a UA String subtype.")
 subtype_datatype(3007, "UsdAssetPath", String, "USD asset path represented as a UA String subtype.")
 subtype_datatype(3008, "UsdTimeCode", Double, "USD time code represented as a UA Double subtype.")
+# Role-carrying value types. Following the OPC UA idiom of subtyping a built-in
+# primitive to convey semantics (e.g. Duration : Double), these DataTypes carry
+# the USD SdfValueTypeName role that a raw Float/Double array cannot express:
+# color3f/normal3f/point3f/vector3f all decompose to a Float[3] but differ only
+# by role. Each is the element DataType of a fixed-length array Variable, so the
+# renderer-friendly array encoding of the built-in supertype is preserved while
+# the role becomes discoverable from the type system (and reversible without the
+# UsdTypeName annotation). Generic float3/int3/... tuples with no role beyond
+# shape stay as the plain built-in + ArrayDimensions.
+subtype_datatype(3013, "UsdColor3f", Float,
+                 "USD color3f value (RGB float triple); UA Float subtype carried as a 3-element Float array.")
+subtype_datatype(3014, "UsdNormal3f", Float,
+                 "USD normal3f value (float triple); UA Float subtype carried as a 3-element Float array.")
+subtype_datatype(3015, "UsdPoint3f", Float,
+                 "USD point3f value (float triple); UA Float subtype carried as a 3-element Float array.")
+subtype_datatype(3016, "UsdVector3f", Float,
+                 "USD vector3f value (float triple); UA Float subtype carried as a 3-element Float array.")
+subtype_datatype(3017, "UsdTexCoord2f", Float,
+                 "USD texCoord2f value (float pair); UA Float subtype carried as a 2-element Float array.")
+subtype_datatype(3018, "UsdQuatf", Float,
+                 "USD quatf value (float quaternion); UA Float subtype carried as a 4-element Float array.")
+subtype_datatype(3019, "UsdQuatd", Double,
+                 "USD quatd value (double quaternion); UA Double subtype carried as a 4-element Double array.")
+subtype_datatype(3020, "UsdMatrix4d", Double,
+                 "USD matrix4d value (row-major); UA Double subtype carried as a 16-element Double array.")
 struct_datatype(3010, "UsdLayerOffset", "USD layer offset and scale.",
                 [("Offset", Double, None), ("Scale", Double, None)])
 struct_datatype(3011, "UsdReferenceSpec", "USD reference specification.",
@@ -328,6 +353,14 @@ UsdArcKindEnum = T(3005)
 UsdToken = T(3006)
 UsdAssetPath = T(3007)
 UsdTimeCode = T(3008)
+UsdColor3f = T(3013)
+UsdNormal3f = T(3014)
+UsdPoint3f = T(3015)
+UsdVector3f = T(3016)
+UsdTexCoord2f = T(3017)
+UsdQuatf = T(3018)
+UsdQuatd = T(3019)
+UsdMatrix4d = T(3020)
 
 # ---- ReferenceTypes --------------------------------------------------------
 reference_type(4001, "UsdRelationshipTarget", NonHierarchicalReferences,

@@ -17,6 +17,14 @@
 | ns=1;i=3006 | UsdToken | DataType | USD token value represented as a UA String subtype. |
 | ns=1;i=3007 | UsdAssetPath | DataType | USD asset path represented as a UA String subtype. |
 | ns=1;i=3008 | UsdTimeCode | DataType | USD time code represented as a UA Double subtype. |
+| ns=1;i=3013 | UsdColor3f | DataType | USD color3f value (RGB float triple); UA Float subtype carried as a 3-element Float array. |
+| ns=1;i=3014 | UsdNormal3f | DataType | USD normal3f value (float triple); UA Float subtype carried as a 3-element Float array. |
+| ns=1;i=3015 | UsdPoint3f | DataType | USD point3f value (float triple); UA Float subtype carried as a 3-element Float array. |
+| ns=1;i=3016 | UsdVector3f | DataType | USD vector3f value (float triple); UA Float subtype carried as a 3-element Float array. |
+| ns=1;i=3017 | UsdTexCoord2f | DataType | USD texCoord2f value (float pair); UA Float subtype carried as a 2-element Float array. |
+| ns=1;i=3018 | UsdQuatf | DataType | USD quatf value (float quaternion); UA Float subtype carried as a 4-element Float array. |
+| ns=1;i=3019 | UsdQuatd | DataType | USD quatd value (double quaternion); UA Double subtype carried as a 4-element Double array. |
+| ns=1;i=3020 | UsdMatrix4d | DataType | USD matrix4d value (row-major); UA Double subtype carried as a 16-element Double array. |
 | ns=1;i=3010 | UsdLayerOffset | DataType | USD layer offset and scale. |
 | ns=1;i=3011 | UsdReferenceSpec | DataType | USD reference specification. |
 | ns=1;i=3012 | UsdVariantSelection | DataType | USD variant set selection. |

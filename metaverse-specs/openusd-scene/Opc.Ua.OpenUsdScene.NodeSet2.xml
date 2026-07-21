@@ -157,6 +157,70 @@
       <Reference ReferenceType="HasSubtype" IsForward="false">i=11</Reference>
     </References>
   </UADataType>
+  <UADataType NodeId="ns=1;i=3013" BrowseName="1:UsdColor3f">
+    <DisplayName>UsdColor3f</DisplayName>
+    <Description>USD color3f value (RGB float triple); UA Float subtype carried as a 3-element Float array.</Description>
+    <Category>OpenUSD Scene DataTypes</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=10</Reference>
+    </References>
+  </UADataType>
+  <UADataType NodeId="ns=1;i=3014" BrowseName="1:UsdNormal3f">
+    <DisplayName>UsdNormal3f</DisplayName>
+    <Description>USD normal3f value (float triple); UA Float subtype carried as a 3-element Float array.</Description>
+    <Category>OpenUSD Scene DataTypes</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=10</Reference>
+    </References>
+  </UADataType>
+  <UADataType NodeId="ns=1;i=3015" BrowseName="1:UsdPoint3f">
+    <DisplayName>UsdPoint3f</DisplayName>
+    <Description>USD point3f value (float triple); UA Float subtype carried as a 3-element Float array.</Description>
+    <Category>OpenUSD Scene DataTypes</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=10</Reference>
+    </References>
+  </UADataType>
+  <UADataType NodeId="ns=1;i=3016" BrowseName="1:UsdVector3f">
+    <DisplayName>UsdVector3f</DisplayName>
+    <Description>USD vector3f value (float triple); UA Float subtype carried as a 3-element Float array.</Description>
+    <Category>OpenUSD Scene DataTypes</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=10</Reference>
+    </References>
+  </UADataType>
+  <UADataType NodeId="ns=1;i=3017" BrowseName="1:UsdTexCoord2f">
+    <DisplayName>UsdTexCoord2f</DisplayName>
+    <Description>USD texCoord2f value (float pair); UA Float subtype carried as a 2-element Float array.</Description>
+    <Category>OpenUSD Scene DataTypes</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=10</Reference>
+    </References>
+  </UADataType>
+  <UADataType NodeId="ns=1;i=3018" BrowseName="1:UsdQuatf">
+    <DisplayName>UsdQuatf</DisplayName>
+    <Description>USD quatf value (float quaternion); UA Float subtype carried as a 4-element Float array.</Description>
+    <Category>OpenUSD Scene DataTypes</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=10</Reference>
+    </References>
+  </UADataType>
+  <UADataType NodeId="ns=1;i=3019" BrowseName="1:UsdQuatd">
+    <DisplayName>UsdQuatd</DisplayName>
+    <Description>USD quatd value (double quaternion); UA Double subtype carried as a 4-element Double array.</Description>
+    <Category>OpenUSD Scene DataTypes</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=11</Reference>
+    </References>
+  </UADataType>
+  <UADataType NodeId="ns=1;i=3020" BrowseName="1:UsdMatrix4d">
+    <DisplayName>UsdMatrix4d</DisplayName>
+    <Description>USD matrix4d value (row-major); UA Double subtype carried as a 16-element Double array.</Description>
+    <Category>OpenUSD Scene DataTypes</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=11</Reference>
+    </References>
+  </UADataType>
   <UADataType NodeId="ns=1;i=3010" BrowseName="1:UsdLayerOffset">
     <DisplayName>UsdLayerOffset</DisplayName>
     <Description>USD layer offset and scale.</Description>

@@ -11,6 +11,14 @@ UsdArcKindEnum_EnumStrings,3905,Variable
 UsdToken,3006,DataType
 UsdAssetPath,3007,DataType
 UsdTimeCode,3008,DataType
+UsdColor3f,3013,DataType
+UsdNormal3f,3014,DataType
+UsdPoint3f,3015,DataType
+UsdVector3f,3016,DataType
+UsdTexCoord2f,3017,DataType
+UsdQuatf,3018,DataType
+UsdQuatd,3019,DataType
+UsdMatrix4d,3020,DataType
 UsdLayerOffset,3010,DataType
 UsdReferenceSpec,3011,DataType
 UsdVariantSelection,3012,DataType

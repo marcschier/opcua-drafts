@@ -129,7 +129,7 @@ A prim of a **known** typed schema is materialized as the matching subtype (its 
 
 ### 5.4 `UsdAttributeType : BaseDataVariableType` (VariableType)
 
-The materialized attribute. Its `Value` is the resolved attribute value; its DataType/ValueRank are chosen per the value-type map (§6.2). Optional Property members: `UsdTypeName` (the exact `SdfValueTypeName`, e.g. `float3`, `token`, `asset`, `color3f[]`), `Variability` (`UsdVariabilityEnum`), `Custom`, `Namespace` (property namespace, e.g. `primvars`, `xformOp`), `Interpolation`. Attribute **connections** are expressed as `UsdConnection` references to the connected attribute(s).
+The materialized attribute. Its `Value` is the resolved attribute value; its DataType/ValueRank are chosen per the value-type map (§6.2) — for a role-carrying USD value type the DataType is the corresponding **semantic subtype of the built-in** (§5.7) so the role is discoverable from the type system. Optional Property members: `UsdTypeName` (the exact `SdfValueTypeName`, e.g. `float3`, `token`, `asset`, `color3f[]`, retained as a fidelity annotation of the precise spelling), `Variability` (`UsdVariabilityEnum`), `Custom`, `Namespace` (property namespace, e.g. `primvars`, `xformOp`), `Interpolation`. Attribute **connections** are expressed as `UsdConnection` references to the connected attribute(s).
 
 ### 5.5 `UsdRelationshipType : BaseObjectType`
 
@@ -144,7 +144,7 @@ A relationship. Mandatory `Targets` (ordered `NodeId[]` — the materialized tar
 ### 5.7 DataTypes and ReferenceTypes
 
 - Enumerations: `UsdSpecifierEnum`, `UsdVariabilityEnum`, `UsdPrimKindEnum`, `UsdListOpTypeEnum`, `UsdArcKindEnum`.
-- Simple subtypes: `UsdToken : String`, `UsdAssetPath : String`, `UsdTimeCode : Double`.
+- Semantic subtypes of built-ins — the OPC UA idiom for conveying meaning by **extending a primitive type**, exactly as the standard defines `Duration : Double`, `UtcTime : DateTime`, or `LocaleId : String`. Scalars: `UsdToken : String`, `UsdAssetPath : String`, `UsdTimeCode : Double`. Role-carrying value types: `UsdColor3f`, `UsdNormal3f`, `UsdPoint3f`, `UsdVector3f`, `UsdTexCoord2f`, `UsdQuatf` (all `: Float`) and `UsdQuatd`, `UsdMatrix4d` (both `: Double`). USD's `color3f`, `normal3f`, `point3f` and `vector3f` all decompose to a `Float[3]` and differ **only by role**; giving each its own DataType makes that role discoverable and the mapping reversible from the type system rather than only from the `UsdTypeName` annotation. Each is the **element** DataType of a fixed-length array Variable (§6.2), so the built-in value encoding of the supertype (`Float`/`Double`) is unchanged and remains renderer-friendly. A generic client browses such a Variable as its nearest built-in supertype. Vendors add their own role types the same way (§8.3).
 - Structured: `UsdLayerOffset`, `UsdReferenceSpec`, `UsdVariantSelection`.
 - ReferenceTypes: `UsdRelationshipTarget` and `UsdConnection` (both `: NonHierarchicalReferences`) — the browsable relationship and connection edges.
 
@@ -171,7 +171,7 @@ A relationship. Mandatory `Targets` (ordered `NodeId[]` — the materialized tar
 
 ### 6.2 `SdfValueTypeName` → OPC UA DataType + ValueRank
 
-Scalars map to built-ins; fixed-size math types map to fixed-length OPC UA **arrays** (via `ValueRank`/`ArrayDimensions`); arrays add one rank. The exact USD type name is always preserved in the attribute's `UsdTypeName` property, so the mapping is reversible even where it is many-to-one.
+Scalars map to built-ins or, where USD attaches a **role/semantic**, to a DataType that **subtypes the built-in** (the `Duration : Double` idiom, §5.7); fixed-size math types map to fixed-length OPC UA **arrays** (via `ValueRank`/`ArrayDimensions`); arrays add one rank. A role-carrying vector uses its semantic DataType as the array's element type. The exact USD type name is always also preserved in the attribute's `UsdTypeName` property, so the mapping is reversible even where the built-in encoding is many-to-one.
 
 | SdfValueTypeName | DataType | ValueRank / ArrayDimensions |
 |---|---|---|
@@ -180,16 +180,18 @@ Scalars map to built-ins; fixed-size math types map to fixed-length OPC UA **arr
 | `uint`, `uint64` | UInt32 / UInt64 | Scalar |
 | `half`,`float` / `double` | Float / Double | Scalar |
 | `string` | String | Scalar |
-| `token` | `UsdToken` (String) | Scalar |
-| `asset` | `UsdAssetPath` (String) | Scalar |
-| `timecode` | `UsdTimeCode` (Double) | Scalar |
+| `token` | `UsdToken` (: String) | Scalar |
+| `asset` | `UsdAssetPath` (: String) | Scalar |
+| `timecode` | `UsdTimeCode` (: Double) | Scalar |
 | `float2/3/4`, `double2/3/4`, `int2/3/4` | Float/Double/Int32 | 1‑D array, `ArrayDimensions=2/3/4` |
-| `color3f`, `normal3f`, `point3f`, `vector3f` | Float | 1‑D array, `ArrayDimensions=3` |
-| `texCoord2f` | Float | 1‑D array, `=2` |
-| `quatf`/`quatd` | Float/Double | 1‑D array, `=4` |
-| `matrix4d` | Double | 1‑D array, `=16` |
+| `color3f` / `normal3f` / `point3f` / `vector3f` | `UsdColor3f` / `UsdNormal3f` / `UsdPoint3f` / `UsdVector3f` (: Float) | 1‑D array, `ArrayDimensions=3` |
+| `texCoord2f` | `UsdTexCoord2f` (: Float) | 1‑D array, `=2` |
+| `quatf` / `quatd` | `UsdQuatf` (: Float) / `UsdQuatd` (: Double) | 1‑D array, `=4` |
+| `matrix4d` | `UsdMatrix4d` (: Double) | 1‑D array, `=16` |
 | `<T>[]` (any array) | as above, +1 rank | ValueRank +1 |
 | anything else | BaseDataType (opaque) + `UsdTypeName` | — |
+
+A **generic** numeric tuple (`float3`, `int2`, …) carries no role beyond its shape, which `ArrayDimensions` already conveys, so it stays a plain built-in array; a `Float[3]` therefore unambiguously means `float3`, while the role variants are distinguished by their semantic DataType. Because these role types subtype a built-in, the value bytes are identical to the plain array form — a client that does not recognise the subtype reads it as `Float[3]`/`Double[16]`, while a role-aware client (a renderer, a material editor) can tell a colour from a point without parsing a string.
 
 ### 6.3 Metadata
 
@@ -235,7 +237,7 @@ A vendor materializes a new applied API schema either as an **AddIn** ObjectType
 
 ### 8.3 New value types → DataType subtyping
 
-A vendor adds a USD value type by subtyping `UsdToken`/a structured DataType, or by registering a `UsdTypeName` token that maps (per §6.2) to an existing OPC UA DataType.
+A vendor adds a USD value type by **subtyping the built-in primitive it decomposes to**, conveying the role in the type system exactly as this model defines `UsdColor3f : Float` or the standard defines `Duration : Double` (§5.7): e.g. a `UsdColor3d : Double` for `color3d`, a `UsdHalf : Float` for a `half`-precision channel, or a `UsdFrustum`-style structured DataType for a compound value. Instances use the new DataType (as the element type of the fixed-length array, for vector roles); a client that does not recognise it reads the built-in supertype. Alternatively a vendor registers a `UsdTypeName` token that maps (per §6.2) to an existing OPC UA DataType. Either way the `UsdTypeName` annotation still records the exact `SdfValueTypeName` for lossless export.
 
 ### 8.4 Unknown-type fallback (normative)
 
