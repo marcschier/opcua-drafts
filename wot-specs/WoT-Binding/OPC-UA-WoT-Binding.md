@@ -299,7 +299,7 @@ Conversion is bidirectional. Every NodeClass, attribute, reference, and value ha
 | `HasComponent` / `HasProperty` (forward) | `uav:hasComponent`, or a component `link` |
 | `HasComponent` (inverse) | `uav:componentOf` |
 | Other references | link with `rel` `uav:typedReference` and `uav:refType` |
-| Modelling rule (`Mandatory` `i=78`, `Optional` `i=80`, `MandatoryPlaceholder` `i=11508`, `OptionalPlaceholder` `i=11509`) | `uav:modellingRule` |
+| Modelling rule (`Mandatory` `i=78`, `Optional` `i=80`, `MandatoryPlaceholder` `i=11510`, `OptionalPlaceholder` `i=11508`) | `uav:modellingRule` |
 | Namespace table | `@context` prefix bindings keyed by namespace index |
 | Events (`BaseEventType` subtypes) | event affordance with `uav:isEvent: true` |
 

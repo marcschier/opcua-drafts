@@ -360,6 +360,46 @@ def check_containment(parsed):
                     f"named '{contained_in}'")
 
 
+MODELLING_RULE_IDS = {
+    "Mandatory": "i=78",
+    "Optional": "i=80",
+    "MandatoryPlaceholder": "i=11510",
+    "OptionalPlaceholder": "i=11508",
+}
+
+MODELLING_RULE_TABLE_RE = re.compile(
+    r"Modelling rule \(`Mandatory` `(i=\d+)`, `Optional` `(i=\d+)`, "
+    r"`MandatoryPlaceholder` `(i=\d+)`, `OptionalPlaceholder` `(i=\d+)`\)"
+)
+
+
+def check_modelling_rule_ids():
+    """The normative modelling-rule NodeIds documented in the spec (Section 9
+    NodeSet2 and WoT conversion table) shall match the OPC 10000-3 standard
+    values: Mandatory i=78, Optional i=80, MandatoryPlaceholder i=11510,
+    OptionalPlaceholder i=11508. This guards against the two placeholder
+    NodeIds being swapped or mistyped."""
+    try:
+        text = open(SPEC, encoding="utf-8").read()
+    except OSError as exc:
+        err(f"{rel(SPEC)}: cannot read ({exc})")
+        return
+    match = MODELLING_RULE_TABLE_RE.search(text)
+    if not match:
+        err(f"{rel(SPEC)}: modelling rule NodeId table not found or not in expected format")
+        return
+    found = {
+        "Mandatory": match.group(1),
+        "Optional": match.group(2),
+        "MandatoryPlaceholder": match.group(3),
+        "OptionalPlaceholder": match.group(4),
+    }
+    for rule, expected in MODELLING_RULE_IDS.items():
+        if found[rule] != expected:
+            err(f"{rel(SPEC)}: modelling rule '{rule}' documented as '{found[rule]}', "
+                f"expected '{expected}'")
+
+
 def check_forbidden_tokens():
     for path in all_text_files():
         try:
@@ -388,6 +428,7 @@ def main() -> int:
     check_relative_refs(parsed)
     check_unit_properties(parsed)
     check_containment(parsed)
+    check_modelling_rule_ids()
     check_forbidden_tokens()
 
     print(f"context: {rel(CONTEXT)}")

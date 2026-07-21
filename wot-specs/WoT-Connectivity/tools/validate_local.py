@@ -13,6 +13,8 @@ Checks:
     (except the well-known instance, encodings and well-known-parent members).
   * UAObject/UAVariable carry a HasTypeDefinition.
   * Structure DataTypes carry Default Binary + Default JSON encodings.
+  * Well-known Properties (InputArguments, OutputArguments, EnumStrings) carry a
+    namespace-0 BrowseName, not a namespace-2 (this spec's own) BrowseName.
   * CSV <-> XML consistency (ids, classes, no orphans).
   * The well-known WoTRegistry instance is a component of the Server object
     (i=2253), is an EventNotifier and is a HasNotifier target of the Server
@@ -187,6 +189,19 @@ for tag, el in elems:
     if subtype == (0, 22):
         if parsed and parsed[1] not in enc_types:
             errors.append(f"UADataType {el.get('BrowseName')}: Structure without HasEncoding objects")
+
+# Well-known Properties (InputArguments, OutputArguments, EnumStrings) must carry a
+# namespace-0 BrowseName (Part 5/Part 6 well-known names), not this spec's own
+# namespace-2 BrowseName prefix.
+WELLKNOWN_NS0_PROPERTIES = {"InputArguments", "OutputArguments", "EnumStrings"}
+for tag, el in elems:
+    bn = el.get("BrowseName")
+    if not bn:
+        continue
+    prefix, _, local = bn.rpartition(":") if ":" in bn else (None, None, bn)
+    if local in WELLKNOWN_NS0_PROPERTIES and prefix not in (None, "0"):
+        errors.append(f"{tag} {bn} ({el.get('NodeId')}): well-known Property must use the namespace-0 "
+                       f"BrowseName '{local}', not '{bn}'")
 
 # CSV consistency
 rows = [r for r in csv.reader(open(CSVF, encoding="utf-8")) if r]
