@@ -1,0 +1,64 @@
+{
+  "@context": [
+    "https://www.w3.org/2022/wot/td/v1.1",
+    {
+      "uav": "http://opcfoundation.org/UA/WoT-Binding/",
+      "qudt-quantitykind": "http://qudt.org/vocab/quantitykind/"
+    },
+    "../opc-ua-wot-binding.context.jsonld"
+  ],
+  "@type": ["tm:ThingModel", "uav:objectType"],
+  "title": "ImpellerType",
+  "description": "A Thing Model of an OPC UA ObjectType showing type, reference and modelling-rule mappings: subtype extension, contained-in composition, congruent type identity, forward and inverse HasComponent references, a typed reference, and the four modelling-rule values.",
+  "uav:browseName": "1:ImpellerType",
+  "uav:id": "nsu=http://example.com/demo/pump;i=1005",
+  "uav:containedIn": "PumpType",
+  "uav:componentOf": ["nsu=http://example.com/demo/pump;i=1001"],
+  "uav:congruentType": "nsu=http://example.com/demo/pump;i=1005",
+  "links": [
+    { "rel": "tm:extends", "href": "https://example.com/models/BaseComponentType.tm.jsonld" },
+    {
+      "rel": "uav:typedReference",
+      "href": "https://example.com/models/MaterialType.tm.jsonld",
+      "uav:refName": "Material",
+      "uav:refType": "nsu=http://example.com/demo/pump;i=5001"
+    }
+  ],
+  "properties": {
+    "diameter": {
+      "@type": "uav:variableType",
+      "title": "Diameter",
+      "uav:browseName": "1:Diameter",
+      "type": "number",
+      "unit": "qudt-quantitykind:Length",
+      "uav:modellingRule": "Mandatory",
+      "uav:unitProperty": "/properties/diameter/unit"
+    },
+    "bladeAngle": {
+      "@type": "uav:variableType",
+      "title": "Blade Angle",
+      "uav:browseName": "1:BladeAngle",
+      "type": "number",
+      "unit": "qudt-quantitykind:Angle",
+      "uav:modellingRule": "OptionalPlaceholder",
+      "uav:scaleFactor": 0.01,
+      "uav:decimalPlaces": 3
+    },
+    "vibration": {
+      "@type": "uav:variableType",
+      "title": "Vibration",
+      "uav:browseName": "1:Vibration",
+      "type": "number",
+      "uav:modellingRule": "Optional"
+    }
+  },
+  "actions": {
+    "recalibrate": {
+      "@type": "uav:method",
+      "title": "Recalibrate",
+      "uav:browseName": "1:Recalibrate",
+      "uav:modellingRule": "Optional",
+      "uav:hasComponent": ["nsu=http://example.com/demo/pump;i=7001"]
+    }
+  }
+}

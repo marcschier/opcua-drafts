@@ -1,0 +1,148 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "http://opcfoundation.org/UA/WoT-Binding/opc-ua-wot-binding.schema.json",
+  "title": "OPC UA WoT Binding extension and NodeSet preservation schema",
+  "description": "Structural constraints for the uav model/platform vocabulary and the uav:nodeSet preservation envelope defined by the OPC UA Web of Things Binding. This schema validates the extension members that a Thing Description or Thing Model MAY carry; it does not restate the base W3C Thing Description schema. Apply it in addition to the base Thing Description validation.",
+  "type": "object",
+  "$defs": {
+    "nodeId": {
+      "type": "string",
+      "minLength": 1,
+      "description": "OPC UA NodeId in the string form of OPC 10000-6 (for example 'ns=1;i=1001' or 'nsu=...;s=...')."
+    },
+    "absoluteIri": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9+.-]*:",
+      "description": "An absolute IRI (has a scheme)."
+    },
+    "jsonPointer": {
+      "type": "string",
+      "pattern": "^(/([^/~]|~0|~1)*)+$",
+      "description": "A non-empty RFC 6901 JSON Pointer that locates a string property."
+    },
+    "modellingRule": {
+      "type": "string",
+      "enum": ["Mandatory", "Optional", "MandatoryPlaceholder", "OptionalPlaceholder"]
+    },
+    "group": {
+      "type": "object",
+      "required": ["title"],
+      "properties": {
+        "title": { "type": "string", "minLength": 1 },
+        "description": { "type": "string" },
+        "uav:semanticId": { "$ref": "#/$defs/absoluteIri" }
+      }
+    },
+    "groupSet": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/group" }
+    },
+    "opaqueJson": {
+      "description": "An opaque JSON value carried verbatim; consumers that do not understand it preserve it unchanged.",
+      "type": ["object", "array", "string", "number", "boolean", "null"]
+    },
+    "nodeSetEnvelope": {
+      "type": "object",
+      "description": "The uav:nodeSet preservation envelope: the authoritative, byte-exact NodeSet2 baseline.",
+      "required": ["@type", "contentType", "encoding", "sha256", "data"],
+      "properties": {
+        "@type": { "const": "uav:nodeSet" },
+        "contentType": {
+          "type": "string",
+          "description": "The media type of the decoded bytes.",
+          "default": "application/opcua-nodeset+xml"
+        },
+        "encoding": { "const": "base64" },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$",
+          "description": "Lower-case hexadecimal SHA-256 digest of the decoded (canonical NodeSet2 XML) bytes."
+        },
+        "data": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9+/]+={0,2}$",
+          "description": "Base64 (RFC 4648 section 4) encoding of the canonical NodeSet2 XML bytes."
+        },
+        "profileVersion": {
+          "type": "string",
+          "description": "The preservation profile version, for example '1.0'."
+        }
+      }
+    },
+    "uavMembers": {
+      "type": "object",
+      "description": "The uav extension members that MAY appear on a Thing Description, Thing Model, affordance, form, or link.",
+      "properties": {
+        "uav:id": { "$ref": "#/$defs/nodeId" },
+        "uav:browsePath": { "type": "string" },
+        "uav:browseName": { "type": "string" },
+        "uav:hasComponent": { "type": "array", "items": { "$ref": "#/$defs/nodeId" } },
+        "uav:componentOf": { "type": "array", "items": { "$ref": "#/$defs/nodeId" } },
+        "uav:mapToNodeId": { "$ref": "#/$defs/nodeId" },
+        "uav:mapToType": { "$ref": "#/$defs/nodeId" },
+        "uav:mapByFieldPath": { "type": "string" },
+
+        "uav:isComposite": { "type": "boolean" },
+        "uav:isEvent": { "type": "boolean" },
+        "uav:refName": { "type": "string" },
+        "uav:refType": { "type": "string" },
+        "uav:contains": { "type": "array", "items": { "type": "string" } },
+        "uav:containedIn": { "type": "string" },
+        "uav:congruentType": { "type": "string" },
+        "uav:nameNamespace": { "$ref": "#/$defs/absoluteIri" },
+        "uav:scaleFactor": { "type": "number" },
+        "uav:decimalPlaces": { "type": "integer", "minimum": 0 },
+        "uav:propertyGroups": { "$ref": "#/$defs/groupSet" },
+        "uav:eventGroups": { "$ref": "#/$defs/groupSet" },
+        "uav:actionGroups": { "$ref": "#/$defs/groupSet" },
+        "uav:memberOf": { "type": "string" },
+        "uav:unitProperty": { "$ref": "#/$defs/jsonPointer" },
+        "uav:metadata": { "$ref": "#/$defs/opaqueJson" },
+        "uav:semanticId": { "$ref": "#/$defs/absoluteIri" },
+        "uav:actionConfiguration": { "$ref": "#/$defs/opaqueJson" },
+        "uav:propertyConfiguration": { "$ref": "#/$defs/opaqueJson" },
+        "uav:eventConfiguration": { "$ref": "#/$defs/opaqueJson" },
+        "uav:includeInherited": { "type": "boolean" },
+        "uav:additionalProperties": { "type": "boolean" },
+        "uav:externalSchema": { "type": "string" },
+        "uav:modellingRule": { "$ref": "#/$defs/modellingRule" },
+        "uav:nodeSet": { "$ref": "#/$defs/nodeSetEnvelope" }
+      }
+    },
+    "securityChannelScheme": {
+      "type": "object",
+      "properties": {
+        "scheme": { "const": "uav:channelsec" },
+        "uav:securityMode": {
+          "type": "string",
+          "enum": ["None", "Sign", "SignAndEncrypt"]
+        },
+        "uav:securityPolicy": {
+          "type": "string",
+          "enum": [
+            "None",
+            "Basic256Sha256",
+            "Aes128_Sha256_RsaOaep",
+            "Aes256_Sha256_RsaPss",
+            "Basic256",
+            "Basic128Rsa15"
+          ]
+        }
+      },
+      "required": ["scheme", "uav:securityMode", "uav:securityPolicy"]
+    },
+    "securityAuthenticationScheme": {
+      "type": "object",
+      "properties": {
+        "scheme": { "const": "uav:authentication" },
+        "uav:userIdentityToken": {
+          "type": "string",
+          "enum": ["Anonymous", "UserName", "Certificate", "IssuedToken"]
+        },
+        "uav:issueToken": { "type": "string" }
+      },
+      "required": ["scheme", "uav:userIdentityToken"]
+    }
+  },
+  "allOf": [{ "$ref": "#/$defs/uavMembers" }]
+}

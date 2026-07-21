@@ -1,0 +1,86 @@
+{
+  "@context": [
+    "https://www.w3.org/2022/wot/td/v1.1",
+    { "uav": "http://opcfoundation.org/UA/WoT-Binding/" },
+    "../../WoT-Binding/opc-ua-wot-binding.context.jsonld"
+  ],
+  "@type": ["Thing", "uav:object"],
+  "id": "urn:dev:opcua:pump-01",
+  "title": "Pump 01",
+  "description": "A WoT-TD/1.1 Thing Description stored as a thingdescription resource in a WoT Connectivity V2 registry. It derives from the PumpType Thing Model (links rel=type -> the Thing Model's registry self URL) and, when enabled and refreshed, is projected to an OPC UA Object instance whose Variables/Methods/EventTypes and forms are bound to the OPC UA protocol binding.",
+  "version": { "instance": "1.0.0" },
+  "uav:browseName": "1:Pump",
+  "uav:id": "nsu=http://example.com/demo/pump;s=Pump",
+  "links": [
+    {
+      "rel": "type",
+      "href": "../01-thing-model-pump.tm.jsonld",
+      "type": "application/tm+json"
+    }
+  ],
+  "securityDefinitions": {
+    "opcua_channel_sc": {
+      "scheme": "uav:channelsec",
+      "uav:securityMode": "SignAndEncrypt",
+      "uav:securityPolicy": "Aes256_Sha256_RsaPss"
+    },
+    "opcua_authentication_sc": {
+      "scheme": "uav:authentication",
+      "uav:userIdentityToken": "UserName"
+    },
+    "opcua_sc": { "scheme": "combo", "allOf": ["opcua_channel_sc", "opcua_authentication_sc"] }
+  },
+  "security": "opcua_sc",
+  "base": "opc.tcp://opcuademo.com:4840",
+  "properties": {
+    "pumpSpeed": {
+      "@type": "uav:variable",
+      "title": "Pump Speed",
+      "uav:browseName": "1:PumpSpeed",
+      "uav:browsePath": "/Objects/1:Pump/1:PumpSpeed",
+      "type": "number",
+      "unit": "rpm",
+      "readOnly": true,
+      "observable": true,
+      "forms": [
+        {
+          "href": "/?id=nsu=http://example.com/demo/pump;s=PumpSpeed",
+          "contentType": "application/octet-stream",
+          "op": ["readproperty", "observeproperty"]
+        }
+      ]
+    },
+    "speedSetpoint": {
+      "@type": "uav:variable",
+      "title": "Speed Setpoint",
+      "uav:browseName": "1:SpeedSetpoint",
+      "uav:browsePath": "/Objects/1:Pump/1:SpeedSetpoint",
+      "type": "number",
+      "unit": "rpm",
+      "readOnly": false,
+      "observable": true,
+      "forms": [
+        {
+          "href": "/?id=nsu=http://example.com/demo/pump;s=SpeedSetpoint",
+          "contentType": "application/octet-stream",
+          "op": ["readproperty", "writeproperty", "observeproperty"]
+        }
+      ]
+    }
+  },
+  "actions": {
+    "reset": {
+      "@type": "uav:method",
+      "title": "Reset",
+      "uav:browseName": "1:Reset",
+      "uav:browsePath": "/Objects/1:Pump/1:Reset",
+      "forms": [
+        {
+          "href": "/?id=nsu=http://example.com/demo/pump;s=Reset",
+          "contentType": "application/octet-stream",
+          "op": ["invokeaction"]
+        }
+      ]
+    }
+  }
+}
