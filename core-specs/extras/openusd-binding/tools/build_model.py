@@ -3,8 +3,8 @@
 Generator for the OPC UA — OpenUSD Bindings companion specification (WG draft).
 
 Emits, from a single in-code source of truth:
-  * ../../../openusd-binding/Opc.Ua.OpenUsdBinding.NodeSet2.xml  - the information model (UANodeSet)
-  * ../../../openusd-binding/Opc.Ua.OpenUsdBinding.NodeIds.csv   - the NodeId assignments (SymbolicName,Id,NodeClass)
+  * ../../../openusd-binding/Opc.Ua.OpenUsd.NodeSet2.xml  - the information model (UANodeSet)
+  * ../../../openusd-binding/Opc.Ua.OpenUsd.NodeIds.csv   - the NodeId assignments (SymbolicName,Id,NodeClass)
   * model-reference.md                                           - the generated Annex A (node reference)
 
 The model is a COMPANION specification in its OWN namespace
@@ -27,8 +27,8 @@ import os
 import xml.sax.saxutils as sx
 
 NAMESPACE = "http://opcfoundation.org/UA/OpenUSD/"
-VERSION = "0.1.0"
-PUBDATE = "2026-07-12T00:00:00Z"
+VERSION = "0.2.0"
+PUBDATE = "2026-07-13T00:00:00Z"
 BASE_UA_VERSION = "1.05.04"
 BASE_UA_PUBDATE = "2023-12-15T00:00:00Z"
 
@@ -62,6 +62,7 @@ QualifiedName = "i=20"
 LocalizedText = "i=21"
 RelativePath = "i=540"
 EUInformation = "i=887"
+FileType = "i=11575"
 
 Server = "i=2253"
 
@@ -256,15 +257,6 @@ CAT = "OpenUSD Binding"
 CAT_DT = "OpenUSD Binding DataTypes"
 
 # ---- DataTypes (enums) ----------------------------------------------------
-enum_type(3001, "OpenUsdIntentProfileEnum",
-          "The intent/direction of a binding. UaToUsdTelemetry (read-only UA -> USD) is "
-          "the default; UaAlarmToUsd and UaHistoryToUsd are read-only variants; "
-          "UsdToUaCommand is the opt-in, authorized control direction (USD -> UA).",
-          [("UaToUsdTelemetry", 0, "Read-only UA Variable value drives a USD attribute."),
-           ("UaAlarmToUsd", 1, "Read-only A&C condition aspect drives a USD attribute."),
-           ("UaHistoryToUsd", 2, "Read-only history (HistoryRead) authored as USD time samples."),
-           ("UsdToUaCommand", 3, "Opt-in, authorized USD-side intent drives an UA write/Method call.")])
-
 enum_type(3002, "OpenUsdRenderTargetKindEnum",
           "Classifies the USD render target a live value drives (advisory routing hint).",
           [("Translation", 0, None), ("Rotation", 1, None), ("Scale", 2, None),
@@ -283,7 +275,6 @@ enum_type(3004, "OpenUsdBindingStateEnum",
           [("Disabled", 0, None), ("Unresolved", 1, None), ("Ready", 2, None),
            ("Active", 3, None), ("Degraded", 4, None), ("Error", 5, None)])
 
-OpenUsdIntentProfileEnum = T(3001)
 OpenUsdRenderTargetKindEnum = T(3002)
 OpenUsdBadQualityActionEnum = T(3003)
 OpenUsdBindingStateEnum = T(3004)
@@ -291,18 +282,18 @@ OpenUsdBindingStateEnum = T(3004)
 # ---- ObjectType: OpenUsdLiveBindingType (1004) ----------------------------
 # Defined first so the representation AddIn can reference it as a placeholder typedef.
 object_type(1004, "OpenUsdLiveBindingType", BaseObjectType,
-            "One read-only live binding: a source OPC UA Variable value drives one "
-            "target USD attribute. The binding declaration is portable; the runtime "
-            "connector resolves and applies it. The effective runtime identity is "
-            "(represented object, BindingDefinitionId).")
+            "Abstract base for one read-only live binding: a source OPC UA Variable "
+            "value drives one target USD attribute. The binding intent is expressed by "
+            "the concrete subtype (ValueChange/Alarm/History/Command), not by an enum. The "
+            "declaration is portable; the runtime connector resolves and applies it. The "
+            "effective runtime identity is (represented object, BindingDefinitionId).",
+            abstract=True)
 B = 1004
 prop_var(B, "OpenUsdLiveBindingType", "BindingDefinitionId", Guid,
          "Stable declaration identifier used for override/tombstone matching across "
          "type and instance levels. NOT a runtime instance key.", MR_Mandatory)
 prop_var(B, "OpenUsdLiveBindingType", "Enabled", Boolean,
          "False acts as a tombstone that suppresses an inherited binding.", MR_Mandatory)
-prop_var(B, "OpenUsdLiveBindingType", "IntentProfile", OpenUsdIntentProfileEnum,
-         "The binding intent/direction; default UaToUsdTelemetry.", MR_Mandatory)
 # Source locator (exactly one of SourceNodeId / SourceBrowsePath resolves)
 prop_var(B, "OpenUsdLiveBindingType", "SourceNodeId", NodeId_,
          "Absolute NodeId of the source Variable (instance-level). Optional; prefer "
@@ -426,7 +417,7 @@ enum_type(3005, "OpenUsdSignalRoleEnum",
            ("Controllable", 1, "May be commanded via an opt-in, authorized command binding.")])
 
 enum_type(3006, "OpenUsdAlarmAspectEnum",
-          "For UaAlarmToUsd bindings: which A&C condition aspect drives the target attribute.",
+          "For OpenUsdAlarmBindingType bindings: which A&C condition aspect drives the target attribute.",
           [("ActiveState", 0, "Condition ActiveState (boolean)."),
            ("Severity", 1, "Condition Severity (numeric)."),
            ("AckedState", 2, "Condition AckedState (boolean)."),
@@ -448,20 +439,39 @@ prop_var(B, "OpenUsdLiveBindingType", "SignalRole", OpenUsdSignalRoleEnum,
 prop_var(B, "OpenUsdLiveBindingType", "SourceSemanticId", String,
          "Semantic identifier (e.g. ECLASS / IEC CDD IRDI) of the source signal; resolved "
          "against the source's semantic annotations for cross-vendor portability.", MR_Optional)
-prop_var(B, "OpenUsdLiveBindingType", "AlarmAspect", OpenUsdAlarmAspectEnum,
-         "For UaAlarmToUsd: which A&C condition aspect drives the target.", MR_Optional)
-prop_var(B, "OpenUsdLiveBindingType", "TimeSampled", Boolean,
-         "For UaHistoryToUsd: author values as USD time samples (playback) rather than "
-         "the latest default.", MR_Optional)
-prop_var(B, "OpenUsdLiveBindingType", "CommandTargetNodeId", NodeId_,
-         "For UsdToUaCommand: the Variable to write, or the Object on which to Call "
-         "CommandMethodId.", MR_Optional)
-prop_var(B, "OpenUsdLiveBindingType", "CommandMethodId", NodeId_,
-         "For UsdToUaCommand: optional Method to invoke instead of a Variable write.",
+
+# ---- Intent-specific subtypes of OpenUsdLiveBindingType --------------------
+# The concrete binding type encodes the intent; intent-specific members live only
+# on their subtype (replaces the former IntentProfile enum discriminator).
+object_type(1007, "OpenUsdValueChangeBindingType", T(1004),
+            "A source UA Variable Value change drives a USD attribute (the default "
+            "binding). Adds no members beyond the abstract base; binds the source "
+            "Value (AttributeId 13).")
+
+object_type(1008, "OpenUsdAlarmBindingType", T(1004),
+            "Read-only OPC UA A&C condition aspect (Part 9) drives a USD attribute.")
+AL = 1008
+prop_var(AL, "OpenUsdAlarmBindingType", "AlarmAspect", OpenUsdAlarmAspectEnum,
+         "Which A&C condition aspect drives the target "
+         "(ActiveState/Severity/AckedState/EnabledState).", MR_Optional)
+
+object_type(1009, "OpenUsdHistoryBindingType", T(1004),
+            "Read-only history (Part 11 HistoryRead) authored as USD time samples.")
+HI = 1009
+prop_var(HI, "OpenUsdHistoryBindingType", "TimeSampled", Boolean,
+         "Author values as USD time samples (playback) rather than the latest default.",
          MR_Optional)
-prop_var(B, "OpenUsdLiveBindingType", "CommandTriggerPropertyName", String,
-         "For UsdToUaCommand: the USD attribute whose change is interpreted as the command "
-         "intent/value.", MR_Optional)
+
+object_type(1011, "OpenUsdCommandBindingType", T(1004),
+            "Opt-in, authorized USD-side intent drives an OPC UA write / Method call (USD -> UA).")
+CM = 1011
+prop_var(CM, "OpenUsdCommandBindingType", "CommandTargetNodeId", NodeId_,
+         "The Variable to write, or the Object on which to Call CommandMethodId.", MR_Mandatory)
+prop_var(CM, "OpenUsdCommandBindingType", "CommandMethodId", NodeId_,
+         "Optional Method to invoke instead of a Variable write.", MR_Optional)
+prop_var(CM, "OpenUsdCommandBindingType", "CommandTriggerPropertyName", String,
+         "The USD attribute whose change is interpreted as the command intent/value.",
+         MR_Mandatory)
 
 # --- OpenUsdStageType (1002): appended content-integrity members -----------
 prop_var(S, "OpenUsdStageType", "RootLayerDigest", ByteString,
@@ -550,6 +560,72 @@ prop_var(K, "OpenUsdComponentBindingType", "LastError", LocalizedText,
 placeholder_obj(R, "OpenUsdRepresentationType", "<Component>", T(1005),
                 "A component/aggregation binding composing this Object's components into the USD "
                 "prim tree.")
+
+
+# ===========================================================================
+# ============  0.2.0 (cont.): asset content delivery (optional)  ===========
+# ===========================================================================
+# Optional server capability (conformance unit OU-AssetDelivery): the server
+# serves the artist-authored USD asset layers (the base/root layer plus its full
+# dependency closure) through the address space via Part 5 FileType streaming, so
+# a generic connector can enumerate, download, verify, cache, compose, and render
+# the twin with no external asset resolution — then live-update as usual. Appended
+# so every earlier NodeId stays stable; the base NodeSet still depends only on the
+# base UA namespace (FileType is a base-UA type).
+
+# ---- DataType: OpenUsdAssetKindEnum (3010) --------------------------------
+enum_type(3010, "OpenUsdAssetKindEnum",
+          "Role of a served USD asset within a stage's served layer closure.",
+          [("RootLayer", 0, "The stage's root/base layer (exactly one served RootLayer per stage)."),
+           ("SubLayer", 1, "A sublayer contributing to the root layer's composition."),
+           ("Reference", 2, "An asset introduced by a reference arc (e.g. a component's asset)."),
+           ("Payload", 3, "An asset introduced by a payload arc (deferred-loaded)."),
+           ("Texture", 4, "A texture / image asset referenced by a material."),
+           ("Package", 5, "A packaged asset bundle (e.g. USDZ) carrying the whole closure.")])
+OpenUsdAssetKindEnum = T(3010)
+
+# ---- ObjectType: OpenUsdAssetType : FileType (1006) -----------------------
+# Subtypes the OPC UA Part 5 FileType so the asset node IS the file: its bytes
+# are streamed through the node's own Open/Read/Close (no separate File child).
+object_type(1006, "OpenUsdAssetType", FileType,
+            "One served USD asset/layer: authored content the server delivers through the address "
+            "space so a connector can fetch it and compose the stage locally, with no external "
+            "resolver. OpenUsdAssetType subtypes the Part 5 FileType, so the asset's bytes are "
+            "streamed directly through the node's own Open/Read/Close; AssetIdentifier is the "
+            "resolver identifier / relative path used to place the asset in the local cache so "
+            "that @...@ references resolve.")
+A = 1006
+prop_var(A, "OpenUsdAssetType", "AssetIdentifier", String,
+         "Resolver identifier / relative path of this asset, matching the stage RootLayerIdentifier "
+         "or a ComponentAssetReference asset path; used for @...@ resolution and cache placement.",
+         MR_Mandatory)
+prop_var(A, "OpenUsdAssetType", "AssetKind", OpenUsdAssetKindEnum,
+         "Role of this asset within the stage's served layer closure.", MR_Mandatory)
+prop_var(A, "OpenUsdAssetType", "MediaType", String,
+         "IANA media type of the content, e.g. 'model/vnd.usda', 'model/vnd.usdz+zip', 'image/png'.",
+         MR_Optional)
+prop_var(A, "OpenUsdAssetType", "Digest", ByteString,
+         "Cryptographic digest of this asset's resolved content, for per-layer integrity "
+         "verification. A connector verifies it before composing the asset.",
+         MR_Optional)
+prop_var(A, "OpenUsdAssetType", "DigestAlgorithm", OpenUsdDigestAlgorithmEnum,
+         "Digest algorithm for Digest (default SHA-256).", MR_Optional)
+# The streamed bytes are the node's own Part 5 FileType interface (Open/Read/Close/
+# GetPosition/SetPosition + Size), inherited by subtyping FileType. Read-only.
+
+# ---- OpenUsdStageType (1002): appended served-asset facility ---------------
+folder_member(S, "OpenUsdStageType", "Assets",
+              "Optional registry of OpenUsdAssetType instances forming this stage's served layer "
+              "closure (exactly one RootLayer). Present only when the server delivers its geometry; "
+              "a connector that finds it fetches and composes the stage locally, else it resolves "
+              "RootLayerIdentifier externally as before.",
+              rule=MR_Optional)
+
+# ---- OpenUsdComponentBindingType (1005): appended component asset pointer ---
+prop_var(K, "OpenUsdComponentBindingType", "ComponentAssetNode", NodeId_,
+         "NodeId of the OpenUsdAssetType (under the stage's Assets folder) serving this component's "
+         "asset, when the server delivers it. Complements ComponentAssetReference.",
+         MR_Optional)
 
 
 # ===========================================================================
@@ -651,10 +727,10 @@ def main():
     here = os.path.dirname(os.path.abspath(__file__))
     std = os.path.normpath(os.path.join(here, "..", "..", "..", "openusd-binding"))
     os.makedirs(std, exist_ok=True)
-    with open(os.path.join(std, "Opc.Ua.OpenUsdBinding.NodeSet2.xml"), "w",
+    with open(os.path.join(std, "Opc.Ua.OpenUsd.NodeSet2.xml"), "w",
               encoding="utf-8", newline="\n") as f:
         f.write(emit())
-    with open(os.path.join(std, "Opc.Ua.OpenUsdBinding.NodeIds.csv"), "w",
+    with open(os.path.join(std, "Opc.Ua.OpenUsd.NodeIds.csv"), "w",
               encoding="utf-8", newline="\n") as f:
         f.write(emit_csv())
     with open(os.path.join(here, "model-reference.md"), "w",

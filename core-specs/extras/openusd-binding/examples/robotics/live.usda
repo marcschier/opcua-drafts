@@ -1,0 +1,132 @@
+#usda 1.0
+(
+    doc = "OPC UA -> OpenUSD robotics live bindings (override layer)"
+)
+
+over "Cell"
+{
+    custom double inputs:speedOverride = 75.0000
+    over "Robots"
+    {
+        over "R1" (
+            prepend references = @robot.usda@</Robot>
+        )
+        {
+            over "A1"
+            {
+            }
+            over "Base"
+            {
+                over "J1"
+                {
+                    double xformOp:rotateZ = 30.3109
+                    over "J2"
+                    {
+                        double xformOp:rotateY = 0.3109
+                        over "J3"
+                        {
+                            double xformOp:rotateY = 75.3109
+                            over "J4"
+                            {
+                                double xformOp:rotateX = 30.3109
+                                over "J5"
+                                {
+                                    double xformOp:rotateY = 90.3109
+                                    over "J6"
+                                    {
+                                        double xformOp:rotateX = 30.3109
+                                        over "Flange"
+                                        {
+                                            def Xform "Tool" (
+                                                prepend references = @tool.usda@</Gripper>
+                                            )
+                                            {
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            over "A2"
+            {
+            }
+            over "A3"
+            {
+            }
+            over "A4"
+            {
+            }
+            over "A5"
+            {
+            }
+            over "A6"
+            {
+            }
+            over "Warning"
+            {
+                custom token visibility = "invisible"
+            }
+        }
+        over "R2" (
+            prepend references = @robot.usda@</Robot>
+        )
+        {
+            over "A1"
+            {
+            }
+            over "Base"
+            {
+                over "J1"
+                {
+                    double xformOp:rotateZ = 17.5000
+                    over "J2"
+                    {
+                        double xformOp:rotateY = -12.5000
+                        over "J3"
+                        {
+                            double xformOp:rotateY = 62.5000
+                            over "J4"
+                            {
+                                double xformOp:rotateX = 17.5000
+                                over "J5"
+                                {
+                                    double xformOp:rotateY = 77.5000
+                                    over "J6"
+                                    {
+                                        double xformOp:rotateX = 17.5000
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            over "A2"
+            {
+            }
+            over "A3"
+            {
+            }
+            over "A4"
+            {
+            }
+            over "A5"
+            {
+            }
+            over "A6"
+            {
+            }
+            over "Warning"
+            {
+                custom token visibility = "invisible"
+            }
+        }
+    }
+    over "SafetyBeacon"
+    {
+        custom token visibility = "invisible"
+    }
+}
