@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Run every metaverse (OPC UA <-> OpenUSD) extension's local validation from one place.
+"""Run every metaverse-specs (OPC UA <-> OpenUSD) extension's local validation from one place.
 
 Usage (from repo root):
-    python metaverse/validate_all.py                  # all metaverse extensions
-    python metaverse/validate_all.py --self-contained # only checks that need no untracked ref data (CI)
+    python metaverse-specs/validate_all.py                  # all metaverse-specs extensions
+    python metaverse-specs/validate_all.py --self-contained # only checks that need no untracked ref data (CI)
 
 The OpenUSD validators are stdlib-only structural checks against the committed NodeSets, so they run on
 a clean checkout. Exit code is non-zero if any run extension fails.
@@ -17,6 +17,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 # Structural validators that run on a clean checkout (stdlib only, validate committed NodeSets).
 SELF_CONTAINED = [
     "extras/openusd-binding/tools/validate_local.py",
+    "extras/openusd-scene/tools/validate_local.py",
     # openusd-scene added in the Scene Materialization (Part 2) work.
 ]
 
@@ -28,7 +29,7 @@ def run(targets):
     failed = []
     for rel in targets:
         path = os.path.join(HERE, *rel.split("/"))
-        print(f"=== metaverse/{rel} ===")
+        print(f"=== metaverse-specs/{rel} ===")
         rc = subprocess.run([sys.executable, path], cwd=HERE).returncode
         if rc != 0:
             failed.append(rel)

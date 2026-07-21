@@ -80,7 +80,7 @@ jobs:
           python-version: "3.12"
       - run: pip install -r core-specs/extras/requirements.txt
       - run: python core-specs/extras/validate_all.py --self-contained
-      - run: python metaverse/validate_all.py --self-contained
+      - run: python metaverse-specs/validate_all.py --self-contained
 
   determinism:
     name: Determinism / generated files (advisory)

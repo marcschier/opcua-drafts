@@ -39,7 +39,7 @@ You are welcome to stop after step 5 — or after just filing an issue. Turning 
 Most specifications here are **generated from a single source of truth**, so that the prose, the NodeSet, the NodeId CSV, and the Annex tables can never drift apart. For those:
 
 - **Do not hand-edit** generated files (`*.NodeSet2.xml`, `*.NodeIds.csv`, generated Annex tables, per-spec addenda). Edit the **source** — the specification document, the JSON descriptor, or the `tools/build_model.py` / `build_*.py` generator — and **regenerate**.
-- Each `core-specs/<extension>/` folder holds only the normative documents and the base schema; its tooling, descriptors, and examples live under the mirrored `core-specs/extras/<extension>/` tree. The OpenUSD specifications follow the same split under the top-level `metaverse/` tree (`metaverse/<extension>/` normative + `metaverse/extras/<extension>/` tooling), validated by `python metaverse/validate_all.py`.
+- Each `core-specs/<extension>/` folder holds only the normative documents and the base schema; its tooling, descriptors, and examples live under the mirrored `core-specs/extras/<extension>/` tree. The OpenUSD specifications follow the same split under the top-level `metaverse-specs/` tree (`metaverse-specs/<extension>/` normative + `metaverse-specs/extras/<extension>/` tooling), validated by `python metaverse-specs/validate_all.py`.
 - Generators are **deterministic** — regenerating without a source change produces byte-identical output, so a clean diff confirms your change is exactly what you intended.
 
 If you are unsure which file is the source, say so in the issue or PR and a maintainer (or the AI agent) will find it — this is precisely the kind of thing the assisted flow handles.
