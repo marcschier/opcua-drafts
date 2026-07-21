@@ -269,10 +269,18 @@ Neither model requires the other; a Server may implement either alone.
 
 ## 11 Examples (informative)
 
-Two worked examples materialize the Part 1 demo assets as Part 2 address spaces (see the example nodesets and notes under `pumps/` and `robotics/`):
+Two worked examples materialize the Part 1 demo assets as Part 2 address spaces (the generated nodesets are `pumps/Opc.Ua.Pumps.OpenUsdScene.NodeSet2.xml` and `robotics/Opc.Ua.Robotics.OpenUsdScene.NodeSet2.xml`, each `RequiredModel`-ing this Scene model + base UA):
 
-- **Pump / Plant.** The composed **Plant** stage (`Plant.usda`, which references and instances `pump.usda`) materialized as `UsdStageType` + prim tree (`/Plant`, `/Plant/Pumps/P101`, `Pump`/`Body`/`Impeller`), with a **live** `Impeller` `xformOp:rotateZ` attribute (Mode A) driven from pump flow, and a `UsdCompositionArcType` recording the `Reference`/`Instance` aggregation of the ProductionLine.
-- **Robot / Cell.** The composed **Cell** stage (`Cell.usda` → `robot.usda` + `tool.usda`) materialized with nested `Xform` joints (`Base`/`J1`…`J6`/`Flange`/`Tool`), **live** joint-angle attributes (Mode A), a `UsdVariantSetType` (or an applied API schema) demonstrating vendor extension, and a dynamically added tool prim.
+- **Pump / Plant.** The composed **Plant** stage (`Plant.usda`, which references and instances `pump.usda`) materialized as a `UsdStageType` + prim tree (`/Plant`, `/Plant/Pumps/P101`, `Pump`/`Body`/`Impeller`), with a **live** `Impeller` `xformOp:rotateZ` attribute (Mode A, historizing) driven from pump flow, and `UsdCompositionArcType` entries recording the `Reference`/`Instance` aggregation of the pumps.
+- **Robot / Cell.** The composed **Cell** stage (`Cell.usda` → `robot.usda` + `tool.usda`) materialized with nested `Xform` joints (`Base`/`J1`…`J6`/`Flange`/`Tool`), **live** joint-rotate attributes (Mode A), and a vendor-extension demo — an applied `UsdCollectionAPIType` (a materialized API schema) attached via `HasAddIn`.
+
+**Reproduce.** The example nodesets are generated from the `.usda` assets by the reference converter and are byte-deterministic:
+
+```text
+python metaverse-specs/extras/openusd-scene/tools/regen_examples.py     # (re)generate both example nodesets
+python metaverse-specs/extras/openusd-scene/tools/roundtrip_check.py     # export back to .usda and diff (composed-scene equivalent)
+python metaverse-specs/validate_all.py --self-contained                 # structural validation (model + examples)
+```
 
 ---
 

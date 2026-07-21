@@ -18,6 +18,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 SELF_CONTAINED = [
     "extras/openusd-binding/tools/validate_local.py",
     "extras/openusd-scene/tools/validate_local.py",
+    "extras/openusd-scene/tools/validate_examples.py",
     # openusd-scene added in the Scene Materialization (Part 2) work.
 ]
 
