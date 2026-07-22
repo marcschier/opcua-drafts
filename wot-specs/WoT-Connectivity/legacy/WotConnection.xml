@@ -148,7 +148,7 @@
       <opc:Argument Name="Status" DataType="ua:String" />
     </opc:OutputArguments>
   </opc:Method>
-  
+
   <opc:ObjectType SymbolicName="WoTAssetConfigurationType" BaseType="ua:BaseInterfaceType" IsAbstract="false">
     <opc:Children>
       <opc:Property SymbolicName="WoTConfigurationParameterName_Placeholder" ModellingRule="OptionalPlaceholder">
@@ -172,13 +172,13 @@
   <opc:ReferenceType SymbolicName="HasWoTComponent" BaseType="ua:HasComponent">
     <opc:InverseName>WoTComponentOf</opc:InverseName>
   </opc:ReferenceType>
-  
+
   <opc:Method SymbolicName="CloseAndUpdateMethodType">
     <opc:InputArguments>
       <opc:Argument Name="FileHandle" DataType="ua:UInt32" />
     </opc:InputArguments>
   </opc:Method>
-  
+
   <opc:ObjectType SymbolicName="WoTAssetFileType" BaseType="ua:FileType">
     <opc:Children>
       <opc:Method SymbolicName="CloseAndUpdate" ModellingRule="Mandatory" TypeDefinition="CloseAndUpdateMethodType"></opc:Method>
