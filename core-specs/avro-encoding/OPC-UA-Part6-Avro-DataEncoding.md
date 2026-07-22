@@ -5,7 +5,7 @@
 **Namespace:** `http://opcfoundation.org/UA/` (base OPC UA namespace)
 **Version:** 0.1.0 · **Date:** 2026-07-02
 
-> **Status — working draft.** This document proposes an additional OPC UA DataEncoding named **Default Avro** for lossless Apache Avro binary representation of OPC UA values. NodeIds for the DataTypeEncoding Objects are not assigned here; they would be added to the base namespace by the OPC Foundation. This draft defines one canonical Avro form only and requires `decode(encode(x)) == x` for every value of the described DataType.
+> **Status — working draft.** This document proposes an additional OPC UA DataEncoding named **Default Avro** for lossless Apache Avro binary representation of OPC UA values. NodeIds for the DataTypeEncoding Objects are not assigned here; they will be added to the base namespace by the OPC Foundation. This draft defines one canonical Avro form only and requires `decode(encode(x)) == x` for every value of the described DataType.
 
 ---
 
@@ -41,7 +41,7 @@ Each OPC UA DataType maps to exactly one Avro schema. Primitive built-ins use Av
 
 The content type for a standalone Avro payload using this DataEncoding shall be `application/vnd.apache.avro`. Where a transport distinguishes container files from schemaless Avro binary payloads it may use the parameter `encoding=binary` or `container=object-container-file`; PubSub messages defined by the companion Part 14 mapping use schemaless Avro binary with schema resolution from configuration or registry.
 
-A DataTypeEncoding Object named **Default Avro** would be added for DataTypes that support this encoding. The Object would be linked from the DataType with `HasEncoding` in the same pattern as `Default Binary`, `Default XML` and `Default JSON`. This working draft intentionally describes that node only and does not assign or ship NodeIds.
+A DataTypeEncoding Object named **Default Avro** shall be added for DataTypes that support this encoding. The Object shall be linked from the DataType with `HasEncoding` in the same pattern as `Default Binary`, `Default XML` and `Default JSON`. This working draft intentionally describes that node only and does not assign or ship NodeIds.
 
 ## 5 Avro mapping
 
