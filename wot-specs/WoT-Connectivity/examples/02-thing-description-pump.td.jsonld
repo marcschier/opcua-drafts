@@ -7,7 +7,7 @@
   "@type": ["Thing", "uav:object"],
   "id": "urn:dev:opcua:pump-01",
   "title": "Pump 01",
-  "description": "A WoT-TD/1.1 Thing Description stored as a thingdescription resource in a WoT Connectivity V2 registry. It derives from the PumpType Thing Model (links rel=type -> the Thing Model's registry self URL) and, when enabled and refreshed, is projected to an OPC UA Object instance whose Variables/Methods/EventTypes and forms are bound to the OPC UA protocol binding.",
+  "description": "A WoT-TD/1.1 Thing Description stored as a thingdescription resource in a WoT Connectivity 1.1 registry. It derives from the PumpType Thing Model (links rel=type -> the Thing Model's registry self URL) and, when enabled and refreshed, is projected to an OPC UA Object instance whose Variables/Methods/EventTypes and forms are bound to the OPC UA protocol binding.",
   "version": { "instance": "1.0.0" },
   "uav:browseName": "1:Pump",
   "uav:id": "nsu=http://example.com/demo/pump;s=Pump",

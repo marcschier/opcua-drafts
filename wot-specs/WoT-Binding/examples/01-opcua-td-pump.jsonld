@@ -10,6 +10,9 @@
   "description": "A Thing Description of a single OPC UA Object using only the preserved OPC 10101 vocabulary: Read, Write, Observe (Monitor) and Call, plus the explicit OPC UA security schemes.",
   "uav:browseName": "1:Pump",
   "uav:id": "nsu=http://example.com/demo/pump;s=Pump",
+  "links": [
+    { "rel": "uav:componentOf", "href": "nsu=http://example.com/demo/pump;s=Line01" }
+  ],
   "securityDefinitions": {
     "opcua_channel_sc": {
       "scheme": "uav:channelsec",

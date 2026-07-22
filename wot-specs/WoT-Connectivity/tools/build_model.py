@@ -1,43 +1,54 @@
 #!/usr/bin/env python3
 """
-Generator for the OPC UA WoT Connectivity V2 companion NodeSet (WG draft).
+Generator for the OPC UA WoT Connectivity 1.1 companion NodeSet (WG draft).
 
-Emits, from a single in-code source of truth:
-  * Opc.Ua.WoTConV2.NodeSet2.xml   - the machine-readable information model
-  * Opc.Ua.WoTConV2.NodeIds.csv    - the numeric NodeId assignments
-  * tools/model-reference.md        - the generated Annex A node reference
+Emits, from a single deterministic source of truth (in-code registry model plus
+the pinned legacy sources under legacy/):
+  * Opc.Ua.WoTCon.NodeSet2.xml   - the combined machine-readable information model
+  * Opc.Ua.WoTCon.NodeIds.csv    - the numeric NodeId assignments
+  * tools/model-reference.md     - the generated Annex A node reference
 
-WoT Connectivity V2 is a *registry-first* re-authoring of OPC 10100-1
-(WoT Connectivity, namespace http://opcfoundation.org/UA/WoT-Con/, v1.02.0).
-Instead of a flat asset-connection manager it layers a W3C Thing Model /
-Thing Description document registry over the abstract OPC UA xRegistry base
-model (http://opcfoundation.org/UA/xRegistry/): a WoTRegistryType RegistryType
-holds ThingDescriptionGroupType / ThingModelGroupType groups whose files are
+WoT Connectivity 1.1 is an *additive* revision of OPC 10100-1 (WoT Connectivity,
+namespace http://opcfoundation.org/UA/WoT-Con/, published baseline v1.02.0). It
+keeps the same NamespaceUri and incorporates the full published 1.02 model into
+one combined NodeSet, then adds a registry-first document-registry layer over
+the abstract OPC UA xRegistry base model: a WoTRegistryType RegistryType holds
+ThingDescriptionGroupType / ThingModelGroupType groups whose files are
 ThingDescriptionFileType / ThingModelFileType resources (concrete subtypes of
 the abstract WoTDocumentType xRegistry ResourceType). The registry files and
 versions are canonical; the projected AddressSpace (types from Thing Models,
 instances from Thing Descriptions) is derived and refreshed.
 
-Namespace layout inside this NodeSet:
+Namespace layout inside this combined NodeSet:
     index 0 (implicit) : http://opcfoundation.org/UA/            (Core)
     index 1            : http://opcfoundation.org/UA/xRegistry/  (xRegistry base, RequiredModel)
-    index 2            : http://opcfoundation.org/UA/WoT-Con/V2/ (this spec, own)
+    index 2            : http://opcfoundation.org/UA/WoT-Con/     (this spec, own - legacy + registry)
+
+The published 1.02 model is emitted in the SAME own namespace (index 2). Because
+xRegistry occupies index 1 in this combined document, the 1.02 nodes are the
+own-namespace nodes at index 2; every published numeric NodeId (1..172) and
+NodeClass is preserved exactly from the pinned legacy/WotConnection.csv table,
+and the legacy management/upload surface is marked ReleaseStatus="Deprecated"
+(machine-readable, per OPC 11030) without being removed. The additive registry
+types/members use a non-conflicting 64000+ block. The legacy sources are a
+source INPUT (parsed at generation time), not hand-copied output.
 
 The revised WoT Binding JSON-LD vocabulary (http://opcfoundation.org/UA/WoT-Binding/)
 is a normative dependency but NOT a NodeSet RequiredModel - it is a JSON-LD
 vocabulary, not an OPC UA information model.
 
-Draft numeric identifiers are PROVISIONAL and drawn from a dedicated 64000+
-block (types) with members allocated append-only from 64500; final NodeIds are
-assigned by the OPC Foundation. The 64000 block was chosen to avoid the ranges
+Additive registry numeric identifiers are PROVISIONAL and drawn from a dedicated
+64000+ block (types) with members allocated append-only from 64500; final NodeIds
+are assigned by the OPC Foundation. The 64000 block was chosen to avoid the ranges
 already used by sibling drafts in this repository (Generators 1001-6xxx,
 Schema Registry 62000, xRegistry 63000) and does not overlap any published
-OPC Foundation range.
+OPC Foundation range or the preserved 1.02 range (1..172).
 """
 from __future__ import annotations
 import os
 import re
 import xml.sax.saxutils as sx
+import xml.etree.ElementTree as ET
 
 # ---------------------------------------------------------------------------
 # Well-known base NodeIds (Core, ns=0)
@@ -81,11 +92,33 @@ Argument = "i=296"
 
 Server = "i=2253"
 
+# --- additional Core (ns=0) NodeIds used by the incorporated 1.02 legacy model ---
+Byte = "i=3"
+UInt16 = "i=5"
+Int32 = "i=6"
+BaseDataType = "i=24"
+UtcTime = "i=294"
+IdType = "i=256"
+NumericRange = "i=291"
+RolePermissionType = "i=96"
+AccessRestrictionType = "i=95"
+SemanticVersionString = "i=24263"
+VersionTime = "i=20998"
+UriString = "i=23751"
+BaseInterfaceType = "i=17602"
+HasInterface = "i=17603"
+FileType = "i=11575"
+NamespaceMetadataType = "i=11616"
+ObjectsFolder = "i=85"
+Server_Namespaces = "i=11715"
+MR_Mandatory_ = MR_Mandatory
+MR_MandatoryPlaceholder = "i=11510"
+
 # ---------------------------------------------------------------------------
 # Namespace indices
 # ---------------------------------------------------------------------------
 XR_NS = 1          # required model: abstract xRegistry base
-OWN_NS = 2         # this specification's own namespace (WoT-Con V2)
+OWN_NS = 2         # this specification's own namespace (WoT-Con, index 2)
 OWN_MIN = 64000
 _next_member = [64500]
 
@@ -365,11 +398,11 @@ def struct_type(nid, name, fields, desc, category, base=Structure):
 # ===========================================================================
 # ==============================  MODEL DEFINITION  =========================
 # ===========================================================================
-CAT = "WoT Connectivity V2"
-CAT_DT = "WoT Connectivity V2 DataTypes"
-CAT_EV = "WoT Connectivity V2 Events"
-CAT_REF = "WoT Connectivity V2 References"
-CAT_INST = "WoT Connectivity V2 Instances"
+CAT = "WoT Connectivity 1.1"
+CAT_DT = "WoT Connectivity 1.1 DataTypes"
+CAT_EV = "WoT Connectivity 1.1 Events"
+CAT_REF = "WoT Connectivity 1.1 References"
+CAT_INST = "WoT Connectivity 1.1 Instances"
 
 # --- DataTypes: enumerations ----------------------------------------------
 enum_type(64020, "WoTDocumentKindEnum",
@@ -528,7 +561,7 @@ struct_type(64046, "WoTDependencyDataType",
 
 # --- ObjectTypes: registry, groups, documents, bindings --------------------
 object_type(64000, "WoTRegistryType", XRegistry_RegistryType,
-            "The WoT Connectivity V2 registry root - an xRegistry RegistryType (a FolderType) that holds "
+            "The WoT Connectivity 1.1 registry root - an xRegistry RegistryType (a FolderType) that holds "
             "ThingDescriptionGroupType and ThingModelGroupType groups. The stored Thing Description / Thing Model "
             "files and their versions are canonical; the projected AddressSpace (types from Thing Models, instances "
             "from Thing Descriptions) is derived code-behind. Exposed as a well-known WoTRegistry object under the "
@@ -758,7 +791,7 @@ event_field(64014, RC, "Generation", UInt32, "The committed generation.")
 
 # ---- Well-known WoTRegistry instance (component of the Server object) -----
 add(64100, "UAObject", "WoTRegistry", "WoTRegistry",
-    desc="The server-wide WoT Connectivity V2 registry, a well-known component of the Server object. Its stored "
+    desc="The server-wide WoT Connectivity 1.1 registry, a well-known component of the Server object. Its stored "
          "Thing Description / Thing Model files are canonical; the projected AddressSpace is derived. It is the "
          "notifier for the WoT resource lifecycle events raised by its groups and resources.",
     parent=Server, category=CAT_INST, attrs={"EventNotifier": "1"})
@@ -788,11 +821,358 @@ instance_var(64100, "WoTRegistry", "RefreshGeneration", UInt32,
     _scalar_value("UInt32", 0))
 
 # ===========================================================================
+# ==============  LEGACY OPC 10100-1 v1.02 MODEL (incorporated)  ============
+# ===========================================================================
+# The published WoT Connectivity 1.02 model (NamespaceUri
+# http://opcfoundation.org/UA/WoT-Con/) is incorporated into THIS combined
+# NodeSet from the pinned authoring sources under legacy/:
+#   * legacy/WotConnection.csv  - the authoritative NodeId/NodeClass table
+#                                 (every published id 1..172 preserved exactly)
+#   * legacy/WotConnection.xml  - the ModelDesign (type bases, method signatures)
+# The nodes are emitted in the own namespace (index 2), because xRegistry
+# occupies index 1 in this combined document; numeric identifiers are unchanged.
+# The management/upload surface is marked ReleaseStatus="Deprecated" (per OPC
+# 11030); nothing is removed. Standard inherited members (FileType, Part 20;
+# NamespaceMetadataType, Part 5) are expanded from OPC UA base definitions.
+CAT_LEGACY = "WoT Connectivity 1.02 legacy (deprecated)"
+CAT_LEGACY_INST = "WoT Connectivity 1.02 Legacy Instances"
+
+_HERE = os.path.dirname(os.path.abspath(__file__))
+LEGACY_DIR = os.path.join(os.path.dirname(_HERE), "legacy")
+LEGACY_CSV = os.path.join(LEGACY_DIR, "WotConnection.csv")
+LEGACY_XML = os.path.join(LEGACY_DIR, "WotConnection.xml")
+_OPC = "{http://opcfoundation.org/UA/ModelDesign.xsd}"
+
+# The 1.02 namespace this legacy surface belongs to, and the additive revision
+# it is re-published under (values carried by the generated NamespaceMetadata).
+LEGACY_NS = "http://opcfoundation.org/UA/WoT-Con/"
+
+# BrowseNames that are namespace-0 well-known inherited members.
+_NS0_LEAF = {
+    "Size", "Writable", "UserWritable", "OpenCount", "MimeType", "MaxByteStringLength",
+    "LastModifiedTime", "Open", "Close", "Read", "Write", "GetPosition", "SetPosition",
+    "InputArguments", "OutputArguments", "ExportNamespace",
+    "NamespaceUri", "NamespaceVersion", "NamespacePublicationDate", "IsNamespaceSubset",
+    "StaticNodeIdTypes", "StaticNumericNodeIdRange", "StaticStringNodeIdPattern",
+    "ConfigurationVersion", "ModelVersion",
+    "DefaultRolePermissions", "DefaultUserRolePermissions", "DefaultAccessRestrictions",
+}
+# Placeholder leaf -> emitted BrowseName.
+_PLACEHOLDER_BN = {
+    "WoTAssetName_Placeholder": "<WoTAssetName>",
+    "WoTPropertyName_Placeholder": "<WoTPropertyName>",
+    "WoTConfigurationParameterName_Placeholder": "<WoTConfigurationParameterName>",
+}
+# Standard FileType Property member -> (DataType, modelling rule when a type member).
+_FILE_VAR = {
+    "Size": (UInt64, "Mandatory"), "Writable": (Boolean, "Mandatory"),
+    "UserWritable": (Boolean, "Mandatory"), "OpenCount": (UInt16, "Mandatory"),
+    "MimeType": (String, "Optional"), "MaxByteStringLength": (UInt32, "Optional"),
+    "LastModifiedTime": (UtcTime, "Optional"),
+}
+# Standard method signatures (Part 20 FileType + the NamespaceMetadata export)
+# not carried by the WoT ModelDesign. arg = (Name, DataType, ValueRank).
+_STD_METHOD_ARGS = {
+    "Open": ([("Mode", Byte, -1)], [("FileHandle", UInt32, -1)]),
+    "Close": ([("FileHandle", UInt32, -1)], []),
+    "Read": ([("FileHandle", UInt32, -1), ("Length", Int32, -1)], [("Data", ByteString, -1)]),
+    "Write": ([("FileHandle", UInt32, -1), ("Data", ByteString, -1)], []),
+    "GetPosition": ([("FileHandle", UInt32, -1)], [("Position", UInt64, -1)]),
+    "SetPosition": ([("FileHandle", UInt32, -1), ("Position", UInt64, -1)], []),
+    "ExportNamespace": ([], []),
+}
+_FILE_METHOD_LEAVES = set(_STD_METHOD_ARGS) | {"CloseAndUpdate"}
+# NamespaceMetadataType member -> (DataType, ValueRank as str).
+_NS_META_DT = {
+    "NamespaceUri": (String, "-1"), "NamespaceVersion": (String, "-1"),
+    "NamespacePublicationDate": (DateTime, "-1"), "IsNamespaceSubset": (Boolean, "-1"),
+    "StaticNodeIdTypes": (IdType, "1"), "StaticNumericNodeIdRange": (NumericRange, "1"),
+    "StaticStringNodeIdPattern": (String, "-1"), "ConfigurationVersion": (VersionTime, "-1"),
+    "ModelVersion": (SemanticVersionString, "-1"),
+    "DefaultRolePermissions": (RolePermissionType, "1"),
+    "DefaultUserRolePermissions": (RolePermissionType, "1"),
+    "DefaultAccessRestrictions": (AccessRestrictionType, "-1"),
+}
+# Model-specific member -> (DataType, ValueRank as str).
+_WOT_MEMBER_DT = {
+    "SupportedWoTBindings": (UriString, "1"), "AssetEndpoint": (String, "-1"),
+    "License": (String, "-1"), "WoTConfigurationParameterName_Placeholder": (BaseDataType, "-1"),
+    "WoTPropertyName_Placeholder": (BaseDataType, "-1"),
+}
+# Modelling rule of model-specific members when declared on a type.
+_WOT_MEMBER_RULE = {
+    "WoTAssetName_Placeholder": "OptionalPlaceholder",
+    "WoTPropertyName_Placeholder": "OptionalPlaceholder",
+    "WoTConfigurationParameterName_Placeholder": "OptionalPlaceholder",
+    "WoTFile": "Mandatory", "AssetEndpoint": "Optional", "SupportedWoTBindings": "Optional",
+    "CreateAsset": "Mandatory", "DeleteAsset": "Mandatory", "DiscoverAssets": "Optional",
+    "CreateAssetForEndpoint": "Optional", "ConnectionTest": "Optional",
+    "Configuration": "Optional", "License": "Optional", "CloseAndUpdate": "Mandatory",
+}
+_RULE_ID = {"Mandatory": MR_Mandatory, "Optional": MR_Optional,
+            "OptionalPlaceholder": MR_OptionalPlaceholder, "MandatoryPlaceholder": MR_MandatoryPlaceholder}
+# ModelDesign ua:Type name -> NodeId (for parsed DataTypes/base types).
+_UA_NAME = {
+    "String": String, "NodeId": NodeId, "Boolean": Boolean, "UInt32": UInt32, "UInt64": UInt64,
+    "UInt16": UInt16, "Byte": Byte, "Int32": Int32, "ByteString": ByteString, "DateTime": DateTime,
+    "UriString": UriString, "SemanticVersionString": SemanticVersionString, "IdType": IdType,
+    "NumericRange": NumericRange, "BaseDataType": BaseDataType,
+    "BaseObjectType": BaseObjectType, "BaseInterfaceType": BaseInterfaceType, "FileType": FileType,
+    "HasComponent": HasComponent, "BaseDataVariableType": BaseDataVariableType,
+}
+# Instance root symbolics carry values / no modelling rule; type roots carry modelling rules.
+_LEGACY_INSTANCE_ROOTS = {"WoTAssetConnectionManagement", "WotConNamespaceMetadata"}
+_LEGACY_TYPE_ROOTS = {"WoTAssetConnectionManagementType", "IWoTAssetType",
+                      "WoTAssetConfigurationType", "WoTAssetFileType"}
+# Roots (and their whole subtree) marked deprecated: the entire 1.02 management/
+# upload surface is superseded by the additive registry. NamespaceMetadata is not.
+_LEGACY_DEPRECATED_ROOTS = _LEGACY_TYPE_ROOTS | {"WoTAssetConnectionManagement",
+                                                 "HasWoTComponent"}
+
+
+def _ua(name):
+    return _UA_NAME.get((name or "").split(":")[-1], BaseDataType)
+
+
+def _parse_modeldesign():
+    """Parse the pinned ModelDesign for type bases/abstract/inverse and the WoT
+    method-argument signatures (the parts a NodeId table cannot carry)."""
+    root = ET.parse(LEGACY_XML).getroot()
+    types, methodsig, concrete_mt = {}, {}, {}
+
+    def args_of(mel, which):
+        out = []
+        grp = mel.find(_OPC + which)
+        if grp is None:
+            return out
+        for a in grp.findall(_OPC + "Argument"):
+            vr = (a.get("ValueRank") or "").lower()
+            out.append((a.get("Name"), _ua(a.get("DataType")), 1 if vr == "array" else -1))
+        return out
+
+    for e in list(root):
+        tag = e.tag.split("}")[-1]
+        sym = e.get("SymbolicName")
+        if tag in ("ObjectType", "ReferenceType"):
+            inv = e.find(_OPC + "InverseName")
+            types[sym] = (tag, e.get("BaseType"), e.get("IsAbstract", "false") == "true",
+                          inv.text if inv is not None else None)
+        elif tag == "Method":
+            methodsig[sym] = (args_of(e, "InputArguments"), args_of(e, "OutputArguments"))
+    for m in root.iter(_OPC + "Method"):
+        td, sym = m.get("TypeDefinition"), m.get("SymbolicName")
+        if td and sym:
+            concrete_mt[sym] = td
+    return types, methodsig, concrete_mt
+
+
+def _argument_value(args):
+    """Build the <Value> Argument[] fragment for a method InputArguments/OutputArguments."""
+    parts = ['<Value>', '<ListOfExtensionObject xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">']
+    for (aname, adtype, arank) in args:
+        parts.append("<ExtensionObject><TypeId><Identifier>i=297</Identifier></TypeId><Body><Argument>")
+        parts.append(f"<Name>{sx.escape(aname)}</Name><DataType><Identifier>{adtype}</Identifier></DataType>")
+        if arank is not None and arank >= 0:
+            parts.append(f"<ValueRank>{arank}</ValueRank><ArrayDimensions><UInt32>0</UInt32></ArrayDimensions>")
+        else:
+            parts.append("<ValueRank>-1</ValueRank><ArrayDimensions/>")
+        parts.append("</Argument></Body></ExtensionObject>")
+    parts.append("</ListOfExtensionObject></Value>")
+    return "".join(parts)
+
+
+def build_legacy():
+    """Reconstruct the incorporated 1.02 nodes from the pinned sources, preserving
+    every numeric NodeId and NodeClass. Reserved ('Unspecified') CSV rows are kept
+    in the CSV but not emitted as nodes."""
+    types_md, methodsig_md, concrete_mt = _parse_modeldesign()
+
+    rows = []
+    with open(LEGACY_CSV, encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            sym, sid, cls = line.split(",")
+            rows.append((sym, int(sid), cls))
+    sym2id = {sym: sid for sym, sid, cls in rows}
+
+    def parent_sym(sym):
+        best = None
+        for other in sym2id:
+            if other != sym and sym.startswith(other + "_") and (best is None or len(other) > len(best)):
+                best = other
+        return best
+
+    parents = {sym: parent_sym(sym) for sym, _, _ in rows}
+
+    def root_sym(sym):
+        cur = sym
+        while parents[cur] is not None:
+            cur = parents[cur]
+        return cur
+
+    def leaf_of(sym):
+        p = parents[sym]
+        return sym[len(p) + 1:] if p else sym
+
+    def method_args(method_leaf):
+        if method_leaf in _STD_METHOD_ARGS:
+            return _STD_METHOD_ARGS[method_leaf]
+        mt = concrete_mt.get(method_leaf)
+        if mt is None and method_leaf in methodsig_md:
+            mt = method_leaf
+        return methodsig_md.get(mt, ([], []))
+
+    # ---- pass 1: create the node objects (ids/classes from the pinned CSV) -----
+    meta = {}
+    for sym, sid, cls in rows:
+        if cls == "Unspecified":
+            continue  # reserved id, retained in CSV only
+        p = parents[sym]
+        leaf = leaf_of(sym)
+        root = root_sym(sym)
+        is_instance = root in _LEGACY_INSTANCE_ROOTS
+        bn = LEGACY_NS if sym == "WotConNamespaceMetadata" else _PLACEHOLDER_BN.get(leaf, leaf)
+        attrs = {}
+        if leaf in _NS0_LEAF:
+            attrs["_ns0bn"] = True
+        if root in _LEGACY_DEPRECATED_ROOTS:
+            attrs["_release_status"] = "Deprecated"
+        if p is not None:
+            parent_nid = T(sym2id[p])
+        elif sym == "WoTAssetConnectionManagement":
+            parent_nid = ObjectsFolder
+        elif sym == "WotConNamespaceMetadata":
+            parent_nid = Server_Namespaces
+        else:
+            parent_nid = None
+        add(sid, "UA" + cls, bn, sym, desc=None, parent=parent_nid, attrs=attrs,
+            category=(CAT_LEGACY_INST if is_instance else CAT_LEGACY))
+        meta[sid] = (sym, cls, p, leaf, root, is_instance)
+
+    # ---- pass 2: attributes and references (all nodes now exist) ---------------
+    for sid, (sym, cls, p, leaf, root, is_instance) in meta.items():
+        n = NODES[sid]
+        pid = sym2id[p] if p else None
+        is_type_member = root in _LEGACY_TYPE_ROOTS and p is not None
+        is_method_template_child = root.endswith("MethodType") and p is not None
+
+        if cls == "ObjectType":
+            _, base, abstract, _inv = types_md.get(sym, ("ObjectType", "ua:BaseObjectType", False, None))
+            ref(sid, HasSubtype, _ua(base), forward=False)
+            n.abstract = abstract
+            continue
+        if cls == "ReferenceType":
+            _, base, abstract, inv = types_md.get(sym, ("ReferenceType", "ua:HasComponent", False, None))
+            ref(sid, HasSubtype, _ua(base), forward=False)
+            n.inverse = inv
+            continue
+
+        # Instance/type roots (Objects with no legacy parent).
+        if p is None and sym == "WoTAssetConnectionManagement":
+            ref(sid, HasTypeDefinition, T(1))
+            ref(sid, Organizes, ObjectsFolder, forward=False)
+            continue
+        if p is None and sym == "WotConNamespaceMetadata":
+            ref(sid, HasTypeDefinition, NamespaceMetadataType)
+            ref(sid, HasComponent, Server_Namespaces, forward=False)
+            continue
+        if p is None:
+            # Standalone *MethodType declaration node (Method).
+            continue
+
+        # Hierarchical reference to the (legacy) parent.
+        if leaf == "WoTAssetName_Placeholder":
+            reftype = Organizes
+        elif leaf == "WoTPropertyName_Placeholder":
+            reftype = T(142)  # HasWoTComponent
+        elif cls == "Variable":
+            reftype = HasProperty
+        else:
+            reftype = HasComponent
+        ref(sid, reftype, T(pid), forward=False)
+        ref(pid, reftype, T(sid))
+
+        # Modelling rule (type members and method-template args only).
+        if (is_type_member or is_method_template_child) and not is_instance:
+            if leaf in _WOT_MEMBER_RULE:
+                rule = _WOT_MEMBER_RULE[leaf]
+            elif leaf in _FILE_VAR:
+                rule = _FILE_VAR[leaf][1]
+            elif leaf in _FILE_METHOD_LEAVES or leaf == "ExportNamespace":
+                rule = "Mandatory"
+            elif leaf in ("InputArguments", "OutputArguments"):
+                rule = "Mandatory"
+            else:
+                rule = "Optional"
+            ref(sid, HasModellingRule, _RULE_ID[rule])
+
+        # TypeDefinition + DataType by NodeClass.
+        if cls == "Object":
+            if leaf == "WoTFile":
+                td = T(110)
+            elif leaf == "NamespaceFile":
+                td = FileType
+            elif leaf == "Configuration":
+                td = T(105)
+            elif leaf == "WoTAssetName_Placeholder":
+                td = BaseObjectType
+            else:
+                td = BaseObjectType
+            ref(sid, HasTypeDefinition, td)
+        elif cls == "Variable":
+            if leaf in ("InputArguments", "OutputArguments"):
+                which = 0 if leaf == "InputArguments" else 1
+                margs = method_args(leaf_of(p))[which]
+                n.attrs["DataType"] = Argument
+                n.attrs["ValueRank"] = "1"
+                n.attrs["ArrayDimensions"] = str(len(margs))
+                n.value = _argument_value(margs)
+                ref(sid, HasTypeDefinition, PropertyType)
+            else:
+                if leaf in _WOT_MEMBER_DT:
+                    dt, vr = _WOT_MEMBER_DT[leaf]
+                elif leaf in _FILE_VAR:
+                    dt, vr = _FILE_VAR[leaf][0], "-1"
+                elif leaf in _NS_META_DT:
+                    dt, vr = _NS_META_DT[leaf]
+                else:
+                    dt, vr = BaseDataType, "-1"
+                n.attrs["DataType"] = dt
+                n.attrs["ValueRank"] = vr
+                if vr == "1":
+                    n.attrs["ArrayDimensions"] = "0"
+                td = BaseDataVariableType if leaf == "WoTPropertyName_Placeholder" else PropertyType
+                ref(sid, HasTypeDefinition, td)
+                # NamespaceMetadata instance property values reflect the 1.1 revision.
+                if is_instance and leaf in _NS_META_VALUE:
+                    n.value = _NS_META_VALUE[leaf]
+
+    # HasInterface on the <WoTAssetName> placeholder (implements IWoTAssetType).
+    if 2 in NODES and 42 in NODES:
+        ref(2, HasInterface, T(42))
+
+
+# NamespaceMetadata property values for the incorporated legacy namespace, carrying
+# the new 1.1 revision metadata while the stable NodeIds are preserved.
+_NS_META_VALUE = {
+    "NamespaceUri": _scalar_value("String", LEGACY_NS),
+    "NamespaceVersion": _scalar_value("String", "1.1.0"),
+    "NamespacePublicationDate": _scalar_value("DateTime", "2026-07-22T00:00:00Z"),
+    "IsNamespaceSubset": _scalar_value("Boolean", "false"),
+    "StaticStringNodeIdPattern": _scalar_value("String", ""),
+    "ModelVersion": _scalar_value("String", "1.1.0"),
+}
+
+build_legacy()
+
+# ===========================================================================
 # Emission
 # ===========================================================================
-NAMESPACE = "http://opcfoundation.org/UA/WoT-Con/V2/"
-VERSION = "0.1.0"
-PUBDATE = "2026-07-20T00:00:00Z"
+NAMESPACE = "http://opcfoundation.org/UA/WoT-Con/"
+VERSION = "1.1.0"
+PUBDATE = "2026-07-22T00:00:00Z"
 XR_NAMESPACE = "http://opcfoundation.org/UA/xRegistry/"
 XR_VERSION = "0.1.0"
 XR_PUBDATE = "2026-07-16T00:00:00Z"
@@ -800,14 +1180,16 @@ UA_REQUIRED_VERSION = "1.05.04"
 UA_REQUIRED_PUBDATE = "2024-05-01T00:00:00Z"
 
 ALIASES = [
-    ("Boolean", Boolean), ("UInt32", UInt32), ("UInt64", UInt64), ("Double", Double),
-    ("String", String), ("DateTime", DateTime), ("ByteString", ByteString),
+    ("Boolean", Boolean), ("Byte", Byte), ("UInt16", UInt16), ("Int32", Int32),
+    ("UInt32", UInt32), ("UInt64", UInt64), ("Double", Double),
+    ("String", String), ("DateTime", DateTime), ("UtcTime", UtcTime), ("ByteString", ByteString),
     ("NodeId", NodeId), ("ExpandedNodeId", ExpandedNodeId), ("LocalizedText", LocalizedText),
     ("Duration", Duration), ("Argument", Argument), ("Structure", Structure),
-    ("Enumeration", Enumeration),
+    ("Enumeration", Enumeration), ("UriString", UriString), ("BaseDataType", BaseDataType),
     ("Organizes", Organizes), ("HasModellingRule", HasModellingRule),
     ("HasTypeDefinition", HasTypeDefinition), ("HasSubtype", HasSubtype),
     ("HasProperty", HasProperty), ("HasComponent", HasComponent), ("HasEncoding", HasEncoding),
+    ("HasInterface", HasInterface),
     ("GeneratesEvent", GeneratesEvent), ("HasNotifier", HasNotifier),
     ("NonHierarchicalReferences", NonHierarchicalReferences),
 ]
@@ -844,6 +1226,8 @@ def _emit_node(n):
             a.append(f'{k}="{v}"')
     if n.cls in ("UAObjectType", "UAReferenceType") and n.abstract:
         a.append('IsAbstract="true"')
+    if n.attrs.get("_release_status"):
+        a.append(f'ReleaseStatus="{n.attrs["_release_status"]}"')
     lines = ["  <" + " ".join(a) + ">"]
     lines.append(f"    <DisplayName>{sx.escape(n.display)}</DisplayName>")
     if n.desc:
@@ -867,7 +1251,8 @@ def _emit_node(n):
 
 def emit():
     out = ['<?xml version="1.0" encoding="utf-8"?>',
-           '<!-- OPC UA WoT Connectivity V2 companion namespace. PROVISIONAL NodeIds (final IDs assigned by the OPC Foundation). -->',
+           '<!-- OPC UA WoT Connectivity 1.1 combined namespace (incorporated 1.02 legacy + additive registry).'
+           ' PROVISIONAL registry NodeIds (final IDs assigned by the OPC Foundation); 1.02 NodeIds 1..172 preserved. -->',
            '<UANodeSet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd" xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd">',
            '  <NamespaceUris>', f'    <Uri>{XR_NAMESPACE}</Uri>', f'    <Uri>{NAMESPACE}</Uri>', '  </NamespaceUris>',
            '  <Models>', f'    <Model ModelUri="{NAMESPACE}" Version="{VERSION}" PublicationDate="{PUBDATE}">',
@@ -884,7 +1269,13 @@ def emit():
 
 
 def emit_csv():
-    return "\n".join(f"{NODES[nid].symbolic},{nid},{NODES[nid].cls[2:]}" for nid in ORDER) + "\n"
+    """Combined NodeId table: the pinned 1.02 rows verbatim (every id 1..172 and
+    NodeClass preserved, including reserved 'Unspecified' rows) followed by the
+    additive registry rows (64000+)."""
+    legacy = open(LEGACY_CSV, encoding="utf-8").read().replace("\r\n", "\n").strip("\n")
+    registry = "\n".join(f"{NODES[nid].symbolic},{nid},{NODES[nid].cls[2:]}"
+                         for nid in ORDER if nid >= OWN_MIN)
+    return legacy + "\n" + registry + "\n"
 
 
 # ---------------------------------------------------------------------------
@@ -908,6 +1299,8 @@ LINK_MAP = {
     "NonHierarchicalReferences": "https://reference.opcfoundation.org/specs/OPC-10000-5/11.3",
     "NodeId": "https://reference.opcfoundation.org/specs/OPC-10000-3/8.2.1",
     "ExpandedNodeId": "https://reference.opcfoundation.org/specs/OPC-10000-3/8.2.3",
+    "BaseInterfaceType": "https://reference.opcfoundation.org/specs/OPC-10000-5/6.2",
+    "HasComponent": "https://reference.opcfoundation.org/specs/OPC-10000-5/11.3",
     "RegistryType": XREGISTRY_SPEC + "#type-RegistryType",
     "GroupType": XREGISTRY_SPEC + "#type-GroupType",
     "ResourceType": XREGISTRY_SPEC + "#type-ResourceType",
@@ -916,6 +1309,7 @@ _BASE_NAMES = {
     BaseObjectType: "BaseObjectType", FolderType: "FolderType", BaseDataVariableType: "BaseDataVariableType",
     PropertyType: "PropertyType", BaseEventType: "BaseEventType", Structure: "Structure",
     Enumeration: "Enumeration", NonHierarchicalReferences: "NonHierarchicalReferences",
+    BaseInterfaceType: "BaseInterfaceType", FileType: "FileType", HasComponent: "HasComponent",
 }
 _XR_NAMES = {XRegistry_RegistryType: "RegistryType", XRegistry_GroupType: "GroupType",
              XRegistry_ResourceType: "ResourceType"}
@@ -1002,7 +1396,14 @@ def emit_md():
     event_types = [nid for nid in ORDER if NODES[nid].cls == "UAObjectType" and NODES[nid].category == CAT_EV]
     enum_types = [nid for nid in ORDER if nid in ENUM_FIELDS]
     struct_types = [nid for nid in ORDER if nid in STRUCT_FIELDS]
-    ref_types = [nid for nid in ORDER if NODES[nid].cls == "UAReferenceType"]
+    ref_types = [nid for nid in ORDER if NODES[nid].cls == "UAReferenceType" and NODES[nid].category == CAT_REF]
+    legacy_types = [nid for nid in ORDER if NODES[nid].category == CAT_LEGACY
+                    and NODES[nid].cls in ("UAObjectType", "UAReferenceType")]
+    legacy_instances = [nid for nid in ORDER if NODES[nid].category == CAT_LEGACY_INST
+                        and NODES[nid].cls == "UAObject" and NODES[nid].parent
+                        and not NODES[nid].parent.startswith(f"ns={OWN_NS};")
+                        and any(rt == HasTypeDefinition and str(tgt).startswith(f"ns={OWN_NS};")
+                                for rt, tgt, fwd in NODES[nid].refs)]
     method_args, method_out = {}, {}
     for nid in ORDER:
         n = NODES[nid]
@@ -1013,12 +1414,14 @@ def emit_md():
 
     md = ['<a id="annex-a"></a>', '', '## Annex A — Information model\n',
           'This annex is the normative node reference. It is generated from `tools/build_model.py` and always '
-          'matches `Opc.Ua.WoTConV2.NodeSet2.xml`. All nodes are proposed additions in the companion namespace '
+          'matches `Opc.Ua.WoTCon.NodeSet2.xml`. It documents one combined model in the companion namespace '
           f'`{NAMESPACE}` (namespace index `2` in this NodeSet, after the required '
-          f'`{XR_NAMESPACE}` base model at index `1`). The WoT Connectivity V2 registry types **extend the abstract '
-          f'[OPC UA — xRegistry]({XREGISTRY_SPEC}) base types** (`RegistryType`/`GroupType`/`ResourceType`). The '
-          'numeric NodeIds shown are **provisional** (final IDs are assigned by the OPC Foundation). The **Declared '
-          'in** column marks members inherited from a supertype.\n']
+          f'`{XR_NAMESPACE}` base model at index `1`). The additive **WoT Connectivity 1.1** registry types '
+          f'**extend the abstract [OPC UA — xRegistry]({XREGISTRY_SPEC}) base types** '
+          '(`RegistryType`/`GroupType`/`ResourceType`) and use provisional NodeIds in the `64000+` block (final IDs '
+          'are assigned by the OPC Foundation). The incorporated **OPC 10100-1 v1.02** legacy model is preserved '
+          'unchanged at its published NodeIds `1..172` and is documented, with its `Deprecated` release status, under '
+          '*Legacy model* below. The **Declared in** column marks members inherited from a supertype.\n']
 
     md.append('### Type overview\n')
     md.append('| NodeId | BrowseName | NodeClass | Subtype of |')
@@ -1124,8 +1527,8 @@ def emit_md():
     md.append('|---|---|---|---|')
     for nid in ORDER:
         n = NODES[nid]
-        if n.cls != "UAMethod" or n.category == CAT_INST:
-            continue
+        if n.cls != "UAMethod" or n.category is not None:
+            continue  # registry declaration methods only; legacy methods are listed under §13.1
         owner = NODES[int(n.parent.split("i=")[1])].bname if n.parent else ""
         ins = ", ".join(method_args.get(nid, [])) or "(none)"
         outs = ", ".join(method_out.get(nid, [])) or "(none)"
@@ -1144,15 +1547,47 @@ def emit_md():
             if rt == HasTypeDefinition:
                 td = _link(_friendly(tgt))
         md.append(f"| {n.bname} | ns={OWN_NS};i={nid} | {td} | {(n.desc or '').replace('|','/')} |")
-    return "\n".join(md) + "\n"
+    md.append('')
+
+    # ---- Legacy model (OPC 10100-1 v1.02, incorporated and deprecated) --------
+    md.append('### Legacy model (OPC 10100-1 v1.02 — preserved, deprecated)\n')
+    md.append('The published OPC 10100-1 v1.02 WoT Connectivity model is incorporated into this combined NodeSet '
+              'unchanged, at its exact published NodeIds (`1..172`) and NodeClasses (preserved from the pinned '
+              '`legacy/WotConnection.csv`). Because the additive registry supersedes it, the whole management/upload '
+              'surface carries `ReleaseStatus="Deprecated"` — it is deprecated, not removed, so existing 1.02 clients '
+              'keep working. The `WoTAssetConnectionManagement` object remains at its published NodeId and callable. '
+              'Method signatures are unchanged and are listed in §13.1.\n')
+    for nid in legacy_types:
+        md.append(f'<a id="{_anchor(NODES[nid].bname)}"></a>')
+    md.append('')
+    md.append('| NodeId | BrowseName | NodeClass | Subtype of | Release status |')
+    md.append('|---|---|---|---|---|')
+    for nid in legacy_types:
+        n = NODES[nid]
+        status = n.attrs.get("_release_status", "Released")
+        md.append(f"| ns={OWN_NS};i={nid} | {n.bname} | {n.cls[2:]} | {_link(_friendly(_supertype(n)))} | {status} |")
+    md.append('')
+    if legacy_instances:
+        md.append('| Well-known instance | NodeId | TypeDefinition | Release status |')
+        md.append('|---|---|---|---|')
+        for nid in legacy_instances:
+            n = NODES[nid]
+            td = ""
+            for rt, tgt, fwd in n.refs:
+                if rt == HasTypeDefinition:
+                    td = _link(_friendly(tgt))
+            status = n.attrs.get("_release_status", "Released")
+            md.append(f"| {n.bname} | ns={OWN_NS};i={nid} | {td} | {status} |")
+        md.append('')
+    return "\n".join(md).rstrip("\n") + "\n"
 
 
 if __name__ == "__main__":
     here = os.path.dirname(os.path.abspath(__file__))
     outdir = os.path.dirname(here)
-    with open(os.path.join(outdir, "Opc.Ua.WoTConV2.NodeSet2.xml"), "w", encoding="utf-8") as f:
+    with open(os.path.join(outdir, "Opc.Ua.WoTCon.NodeSet2.xml"), "w", encoding="utf-8") as f:
         f.write(emit())
-    with open(os.path.join(outdir, "Opc.Ua.WoTConV2.NodeIds.csv"), "w", encoding="utf-8") as f:
+    with open(os.path.join(outdir, "Opc.Ua.WoTCon.NodeIds.csv"), "w", encoding="utf-8") as f:
         f.write(emit_csv())
     with open(os.path.join(here, "model-reference.md"), "w", encoding="utf-8") as f:
         f.write(emit_md())

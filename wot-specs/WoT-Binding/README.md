@@ -16,7 +16,7 @@ A complete, standalone draft revision of the OPC UA companion specification for 
 - [W3C Web of Things (WoT) Thing Description 1.1](https://www.w3.org/TR/wot-thing-description11/) and [WoT Binding Templates](https://www.w3.org/TR/wot-binding-templates/).
 - [OPC 10000-3](https://reference.opcfoundation.org/specs/OPC-10000-3/), [10000-4](https://reference.opcfoundation.org/specs/OPC-10000-4/), [10000-5](https://reference.opcfoundation.org/specs/OPC-10000-5/), [10000-6](https://reference.opcfoundation.org/specs/OPC-10000-6/), [10000-7](https://reference.opcfoundation.org/specs/OPC-10000-7/).
 - [QUDT](http://qudt.org/) for quantity kinds and units; [RFC 6901](https://www.rfc-editor.org/rfc/rfc6901), [RFC 4648](https://www.rfc-editor.org/rfc/rfc4648), and [RFC 3986](https://www.rfc-editor.org/rfc/rfc3986).
-- Two architecture decision records (ADR 0029 and ADR 0032) are used only as design inputs for the model vocabulary; the [specification](OPC-UA-WoT-Binding.md) records the crosswalk in Section 12. No vocabulary, prefix, or namespace of those inputs is reused.
+- Two architecture decision records (ADR 0029 and ADR 0032) are used only as design inputs for the model vocabulary; a design-input crosswalk is kept, informatively, under [`../extras/WoT-Binding/adr-to-uav-crosswalk.md`](../extras/WoT-Binding/adr-to-uav-crosswalk.md) — **not** in the normative specification. No vocabulary, prefix, or namespace of those inputs is reused.
 
 ## Artifacts
 

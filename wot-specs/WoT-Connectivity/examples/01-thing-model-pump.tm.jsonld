@@ -9,7 +9,7 @@
   ],
   "@type": ["tm:ThingModel", "uav:objectType"],
   "title": "PumpType",
-  "description": "A WoT-TM/1.1 Thing Model stored as a thingmodel resource in a WoT Connectivity V2 registry. A Refresh projects it to an OPC UA ObjectType (uav:objectType) whose members carry the modelling rules and units declared here. This document is canonical; the ObjectType it produces is derived code-behind.",
+  "description": "A WoT-TM/1.1 Thing Model stored as a thingmodel resource in a WoT Connectivity 1.1 registry. A Refresh projects it to an OPC UA ObjectType (uav:objectType) whose members carry the modelling rules and units declared here. This document is canonical; the ObjectType it produces is derived code-behind.",
   "version": { "model": "1.2.0" },
   "uav:browseName": "1:PumpType",
   "uav:id": "nsu=http://example.com/demo/pump;i=1001",

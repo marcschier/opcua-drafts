@@ -2,7 +2,7 @@
 
 ## Annex A — Information model
 
-This annex is the normative node reference. It is generated from `tools/build_model.py` and always matches `Opc.Ua.WoTConV2.NodeSet2.xml`. All nodes are proposed additions in the companion namespace `http://opcfoundation.org/UA/WoT-Con/V2/` (namespace index `2` in this NodeSet, after the required `http://opcfoundation.org/UA/xRegistry/` base model at index `1`). The WoT Connectivity V2 registry types **extend the abstract [OPC UA — xRegistry](https://github.com/marcschier/opcua-drafts/blob/main/core-specs/xregistry/OPC-UA-xRegistry.md) base types** (`RegistryType`/`GroupType`/`ResourceType`). The numeric NodeIds shown are **provisional** (final IDs are assigned by the OPC Foundation). The **Declared in** column marks members inherited from a supertype.
+This annex is the normative node reference. It is generated from `tools/build_model.py` and always matches `Opc.Ua.WoTCon.NodeSet2.xml`. It documents one combined model in the companion namespace `http://opcfoundation.org/UA/WoT-Con/` (namespace index `2` in this NodeSet, after the required `http://opcfoundation.org/UA/xRegistry/` base model at index `1`). The additive **WoT Connectivity 1.1** registry types **extend the abstract [OPC UA — xRegistry](https://github.com/marcschier/opcua-drafts/blob/main/core-specs/xregistry/OPC-UA-xRegistry.md) base types** (`RegistryType`/`GroupType`/`ResourceType`) and use provisional NodeIds in the `64000+` block (final IDs are assigned by the OPC Foundation). The incorporated **OPC 10100-1 v1.02** legacy model is preserved unchanged at its published NodeIds `1..172` and is documented, with its `Deprecated` release status, under *Legacy model* below. The **Declared in** column marks members inherited from a supertype.
 
 ### Type overview
 
@@ -45,7 +45,7 @@ This annex is the normative node reference. It is generated from `tools/build_mo
 
 *Inherits from:* [RegistryType](https://github.com/marcschier/opcua-drafts/blob/main/core-specs/xregistry/OPC-UA-xRegistry.md#type-RegistryType)
 
-The WoT Connectivity V2 registry root - an xRegistry RegistryType (a FolderType) that holds ThingDescriptionGroupType and ThingModelGroupType groups. The stored Thing Description / Thing Model files and their versions are canonical; the projected AddressSpace (types from Thing Models, instances from Thing Descriptions) is derived code-behind. Exposed as a well-known WoTRegistry object under the Server object (i=2253). Adds registry-wide refresh, generation and validation-policy state and the Refresh Method.
+The WoT Connectivity 1.1 registry root - an xRegistry RegistryType (a FolderType) that holds ThingDescriptionGroupType and ThingModelGroupType groups. The stored Thing Description / Thing Model files and their versions are canonical; the projected AddressSpace (types from Thing Models, instances from Thing Descriptions) is derived code-behind. Exposed as a well-known WoTRegistry object under the Server object (i=2253). Adds registry-wide refresh, generation and validation-policy state and the Refresh Method.
 
 | BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
 |---|---|---|---|---|---|
@@ -538,4 +538,26 @@ An immutable edge of the document dependency DAG, used to describe closures in r
 
 | BrowseName | NodeId | TypeDefinition | Note |
 |---|---|---|---|
-| WoTRegistry | ns=2;i=64100 | [WoTRegistryType](#type-WoTRegistryType) | The server-wide WoT Connectivity V2 registry, a well-known component of the Server object. Its stored Thing Description / Thing Model files are canonical; the projected AddressSpace is derived. It is the notifier for the WoT resource lifecycle events raised by its groups and resources. |
+| WoTRegistry | ns=2;i=64100 | [WoTRegistryType](#type-WoTRegistryType) | The server-wide WoT Connectivity 1.1 registry, a well-known component of the Server object. Its stored Thing Description / Thing Model files are canonical; the projected AddressSpace is derived. It is the notifier for the WoT resource lifecycle events raised by its groups and resources. |
+
+### Legacy model (OPC 10100-1 v1.02 — preserved, deprecated)
+
+The published OPC 10100-1 v1.02 WoT Connectivity model is incorporated into this combined NodeSet unchanged, at its exact published NodeIds (`1..172`) and NodeClasses (preserved from the pinned `legacy/WotConnection.csv`). Because the additive registry supersedes it, the whole management/upload surface carries `ReleaseStatus="Deprecated"` — it is deprecated, not removed, so existing 1.02 clients keep working. The `WoTAssetConnectionManagement` object remains at its published NodeId and callable. Method signatures are unchanged and are listed in §13.1.
+
+<a id="type-WoTAssetConnectionManagementType"></a>
+<a id="type-IWoTAssetType"></a>
+<a id="type-WoTAssetConfigurationType"></a>
+<a id="type-WoTAssetFileType"></a>
+<a id="type-HasWoTComponent"></a>
+
+| NodeId | BrowseName | NodeClass | Subtype of | Release status |
+|---|---|---|---|---|
+| ns=2;i=1 | WoTAssetConnectionManagementType | ObjectType | [BaseObjectType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.2) | Deprecated |
+| ns=2;i=42 | IWoTAssetType | ObjectType | [BaseInterfaceType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.2) | Deprecated |
+| ns=2;i=105 | WoTAssetConfigurationType | ObjectType | [BaseInterfaceType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.2) | Deprecated |
+| ns=2;i=110 | WoTAssetFileType | ObjectType | [FileType](https://reference.opcfoundation.org/specs/OPC-10000-20/4.2) | Deprecated |
+| ns=2;i=142 | HasWoTComponent | ReferenceType | [HasComponent](https://reference.opcfoundation.org/specs/OPC-10000-5/11.3) | Deprecated |
+
+| Well-known instance | NodeId | TypeDefinition | Release status |
+|---|---|---|---|
+| WoTAssetConnectionManagement | ns=2;i=31 | [WoTAssetConnectionManagementType](#type-WoTAssetConnectionManagementType) | Deprecated |
