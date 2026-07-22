@@ -31,6 +31,7 @@ The model is **domain-agnostic** and **self-contained**: it depends only on the 
 - [OPC 10000-4](https://reference.opcfoundation.org/specs/OPC-10000-4/), [10000-5](https://reference.opcfoundation.org/specs/OPC-10000-5/) — Services and the base information model.
 - [OPC 10000-11](https://reference.opcfoundation.org/specs/OPC-10000-11/) — Historical Access (time-sampled attribute values, §9).
 - [OPC 10000-7](https://reference.opcfoundation.org/specs/OPC-10000-7/) — Profiles and Conformance Units.
+- [OPC 10000-210 (RSL)](https://reference.opcfoundation.org/specs/OPC-10000-210) and [OPC 10000-211 (GPOS)](https://reference.opcfoundation.org/specs/OPC-10000-211) — Relative Spatial Location and Global Positioning; the OPC UA relative-pose and global-position source models that the geospatial materialization (§5.8, Annex B) maps to.
 - [AOUSD OpenUSD Core Specification 1.0.1](https://github.com/aousd/specifications-public/blob/2f9e746c4fbd7f48d6d2c9ac568133fe398bbfc0/core/1.0.1/core_spec.md) — normative for USD paths, prims, properties, metadata, composition, variants, and value resolution. **Note:** the Core Specification excludes the domain schemas (UsdGeom, UsdShade, …); the UsdGeom subset materialized here (§5.4) pins a versioned OpenUSD schema release for those type names.
 - *OPC UA — OpenUSD Bindings* (Part 1) — the representation/live-binding companion model this document extends (interop in §9, §10).
 
@@ -148,6 +149,28 @@ A relationship. Mandatory `Targets` (ordered `NodeId[]` — the materialized tar
 - Structured: `UsdLayerOffset`, `UsdReferenceSpec`, `UsdVariantSelection`.
 - ReferenceTypes: `UsdRelationshipTarget` and `UsdConnection` (both `: NonHierarchicalReferences`) — the browsable relationship and connection edges.
 
+### 5.8 Geospatial and georeferencing (normative)
+
+USD places prims in a **local** Cartesian stage frame and defines no geodetic (latitude/longitude) schema in its Core Specification. A georeferenced stage — one anchored to real-world global coordinates — is therefore expressed today through **applied API schemas** provided by extensions (NVIDIA `omni.usd.schema.geospatial`, Cesium for Omniverse). This model materializes those schemas through the ordinary vendor-extension mechanism (§8): a georeference/anchor API schema materializes as a `UsdApiSchemaType` AddIn under a prim's `AppliedSchemas/` (§8.2), and a georeference *prim* type (e.g. Cesium's `CesiumGeoreferencePrim`) materializes as a `UsdTypedType` subtype (§8.1). The concrete Cesium mapping is given in **Annex B**.
+
+To give a client a **vendor-neutral** anchor it can read without knowing which extension authored the stage, this model additionally defines two portable applied API schemas:
+
+- **`UsdGeoreferenceApiType : UsdApiSchemaType`** — a stage-level georeference origin: `Latitude`, `Longitude` (decimal degrees), `Height` (metres above the ellipsoid), `EpsgCode` (EPSG CRS; 0 = local, 4326 = WGS84/GPS), `TangentPlane` (e.g. `ENU`). Applied via `HasAddIn` to the stage's root/anchor prim.
+- **`UsdGlobeAnchorApiType : UsdApiSchemaType`** — a per-prim geodetic position (`Latitude`, `Longitude`, `Height`) resolved against the stage `UsdGeoreferenceApiType`. Applied to any placed prim.
+
+A materializer that recognises a vendor georeference schema **should** additionally populate the portable schema (dual-authoring the same values), so a generic client obtains the anchor from one well-known type while a vendor-aware client still reads the native schema.
+
+**Bridge to the OPC UA spatial companion specs.** The portable georeference corresponds directly to the OPC UA global- and relative-positioning models:
+
+| Portable georeference | OPC UA source (OPC 10000-210 / 211) |
+|---|---|
+| `UsdGeoreferenceApiType` origin (`Latitude`/`Longitude`/`Height`/`EpsgCode`) | GPOS `GlobalPositionType` at a reference point / `ZoneType` |
+| `UsdGlobeAnchorApiType` per-prim position | a per-asset GPOS `GlobalPosition` |
+| origin ↔ local frame (the tangent-plane transform) | GPOS `GroundControlPointDataType` (local XYZ ↔ global lat/lon) |
+| a placed prim's `UsdGeomXformable` transform ops | RSL `CartesianFrameAngleOrientationType` (`3DFrame`); see the Bindings spec §5.8 / Annex D |
+
+Latitude/longitude are decimal degrees, height/elevation metres; a non-WGS84 `EpsgCode` is reprojected before authoring. USD's stage `upAxis` and `metersPerUnit` do **not** auto-reconcile with a geodetic frame; the materializer records them on the `UsdStageType` (§5.1) and the tangent-plane convention on the georeference so a consumer can compose the correct local↔global transform.
+
 ---
 
 ## 6 Mapping tables (normative)
@@ -165,6 +188,7 @@ A relationship. Mandatory `Targets` (ordered `NodeId[]` — the materialized tar
 | Attribute connection | `UsdConnection` reference |
 | Prim/stage metadata | Property Variables (well-known ones as typed members; the rest under `Metadata/`) |
 | Applied API schema | `UsdApiSchemaType` AddIn (`HasAddIn`) or Interface (`HasInterface`) |
+| Georeference / globe anchor (geodetic) | portable `UsdGeoreferenceApiType` / `UsdGlobeAnchorApiType` AddIn (§5.8); a vendor georeference prim → a `UsdTypedType` subtype, a vendor anchor schema → its own `UsdApiSchemaType` subtype |
 | Composition arc | `UsdCompositionArcType` under `Composition/` |
 | VariantSet / selection | `UsdVariantSetType` under `VariantSets/` |
 | Specifier / Kind / Variability | `UsdSpecifierEnum` / `UsdPrimKindEnum` / `UsdVariabilityEnum` |
@@ -294,6 +318,7 @@ python metaverse-specs/validate_all.py --self-contained                 # struct
 | **Composition Provenance** | Populate `Composition/` arcs and `VariantSets/` per §5.6, §7.4. |
 | **Typed Schemas** | Materialize known typed prims as the UsdGeom subtypes of §5.3; unknown → fallback §8.4. |
 | **Applied Schemas** | Materialize applied API schemas as AddIns/Interfaces per §5.6, §8.2. |
+| **Georeferencing** | Materialize georeference/globe-anchor API schemas per §5.8 — the portable `UsdGeoreferenceApiType`/`UsdGlobeAnchorApiType`, and vendor schemas (Cesium/NVIDIA) as AddIns/typed prims per §8 (Annex B). |
 | **Live Attributes** | Mode-A live attribute Values and, where retained, HistoricalAccess time samples per §9. |
 | **Conversion** | Bidirectional `.usd`↔address-space per §7 with the §7.4 round-trip contract. |
 | **Part 1 Interop** | Discovery under `Server/OpenUSD/Stages` and Part 1 bindings targeting Part 2 attributes per §10. |
@@ -305,3 +330,72 @@ Each CU is independent and additive; a Server implements only what it needs (Sce
 ## Annex A — Information model (generated)
 
 The complete node reference (every ObjectType, VariableType, DataType, ReferenceType, member, ModellingRule and NodeId) is generated from `Opc.Ua.OpenUsdScene.NodeSet2.xml` into `../extras/openusd-scene/tools/model-reference.md` and is authoritative for identifiers.
+
+---
+
+## Annex B — Concrete Cesium for Omniverse georeference mapping (informative)
+
+Core OpenUSD has no geodetic schema, and the Alliance for OpenUSD's native geolocation schema (an AECO Interest Group proposal to the Geometry Working Group) is, as of this draft, still in progress and unratified. Georeferencing today is therefore done with extension schemas. This annex shows exactly how a **Cesium for Omniverse** georeferenced stage materializes and how it relates to the portable georeference schemas of §5.8. Cesium georeferences a stage with a `CesiumGeoreferencePrim` (a typed prim) and anchors individual prims with the `CesiumGlobeAnchorAPI` (an applied API schema).
+
+### B.1 `CesiumGeoreferencePrim` → `UsdTypedType` subtype
+
+A vendor typed prim materializes as an ObjectType subtyping `UsdTypedType` (§8.1); its attributes materialize as `UsdAttributeType` Variables (§5.4):
+
+| Cesium USD attribute | SdfValueTypeName | Materialized as |
+|---|---|---|
+| `cesium:anchor:latitude` | `double` | `UsdAttributeType` (Double), `UsdTypeName = "double"` |
+| `cesium:anchor:longitude` | `double` | `UsdAttributeType` (Double) |
+| `cesium:anchor:height` | `double` | `UsdAttributeType` (Double) |
+| `ecefToUsdTransform` (read-only) | `matrix4d` | `UsdAttributeType` (`UsdMatrix4d`, `Double[16]`) |
+
+### B.2 `CesiumGlobeAnchorAPI` → `UsdApiSchemaType` AddIn
+
+An applied API schema materializes as a `UsdApiSchemaType` AddIn under the prim's `AppliedSchemas/` (§8.2, §5.6):
+
+| Cesium USD attribute | SdfValueTypeName | Materialized as |
+|---|---|---|
+| `cesium:anchor:latitude` | `double` | `UsdAttributeType` (Double) on the AddIn |
+| `cesium:anchor:longitude` | `double` | `UsdAttributeType` (Double) |
+| `cesium:anchor:height` | `double` | `UsdAttributeType` (Double) |
+
+The materializer **should** also apply the portable `UsdGlobeAnchorApiType` carrying the same `Latitude`/`Longitude`/`Height`, so a generic client reads the anchor without Cesium-specific knowledge (§5.8).
+
+### B.3 Worked example — `.usd` ↔ address space
+
+```usda
+#usda 1.0
+( upAxis = "Z"  metersPerUnit = 1.0 )
+
+def "World" ( prepend apiSchemas = ["CesiumGeoreferencePrim"] ) {
+    double cesium:anchor:latitude  = 47.6062
+    double cesium:anchor:longitude = -122.3321
+    double cesium:anchor:height    = 56.0
+
+    def Xform "AGV_07" ( prepend apiSchemas = ["CesiumGlobeAnchorAPI"] ) {
+        double cesium:anchor:latitude  = 47.6061
+        double cesium:anchor:longitude = -122.3319
+        double cesium:anchor:height    = 56.0
+    }
+}
+```
+
+materializes as (abbreviated address space):
+
+```text
+World : UsdCesiumGeoreferencePrimType (: UsdTypedType)          # vendor typed prim (§8.1)
+  ├─ cesium:anchor:latitude   : UsdAttributeType = 47.6062
+  ├─ cesium:anchor:longitude  : UsdAttributeType = -122.3321
+  ├─ cesium:anchor:height     : UsdAttributeType = 56.0
+  ├─ AppliedSchemas/ → HasAddIn UsdGeoreferenceApiType          # portable dual-author (§5.8)
+  │     Latitude=47.6062  Longitude=-122.3321  Height=56.0  EpsgCode=4326  TangentPlane="ENU"
+  └─ HasComponent AGV_07 : UsdGeomXformType
+        └─ AppliedSchemas/
+              ├─ HasAddIn UsdCesiumGlobeAnchorAPIType (: UsdApiSchemaType)   # vendor (§8.2)
+              │     cesium:anchor:latitude=47.6061 …
+              └─ HasAddIn UsdGlobeAnchorApiType                              # portable (§5.8)
+                    Latitude=47.6061  Longitude=-122.3319  Height=56.0
+```
+
+### B.4 Round-trip
+
+Export reproduces the vendor schema names (`CesiumGeoreferencePrim`, `CesiumGlobeAnchorAPI`) and attribute values from the materialized nodes; the portable `UsdGeoreferenceApiType` / `UsdGlobeAnchorApiType` AddIns are additive provenance that need not be re-emitted to `.usd` (they carry no opinion the vendor schema does not). The georeference round-trip is therefore composed-scene lossless per §7.4, with the local↔global transform recovered from the vendor schema (or recomputed from the portable origin plus the stage `metersPerUnit`/`upAxis`).

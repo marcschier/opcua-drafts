@@ -69,9 +69,10 @@ The result is an **N×M integration problem**: *N* servers (pumps, robots, machi
 - [OPC 11030](https://reference.opcfoundation.org/specs/OPC-11030/) — OPC UA Modelling Best Practices.
 - [AOUSD OpenUSD Core Specification 1.0.1](https://github.com/aousd/specifications-public/blob/2f9e746c4fbd7f48d6d2c9ac568133fe398bbfc0/core/1.0.1/core_spec.md) — normative for USD paths, composition, layers, and identity. **Note:** the Core Specification excludes domain schemas (UsdGeom, UsdShade, UsdLux, UsdSkel, UsdPhysics); the render-target semantics referenced by the transform profile therefore additionally pin a versioned OpenUSD schema release.
 
-Referenced for the transform profile only (not a RequiredModel of the base NodeSet):
+Referenced for the transform and geospatial profiles only (not a RequiredModel of the base NodeSet):
 
 - [OPC 10000-210 (RSL) / OPC 10000-5 Spatial Data](https://reference.opcfoundation.org/specs/OPC-10000-210) — the `CartesianFrameAngleOrientationType`, `3DFrame`, `3DCartesianCoordinates`, `3DOrientation` types and their RPY mathematics.
+- [OPC 10000-211 (GPOS)](https://reference.opcfoundation.org/specs/OPC-10000-211) — Global Positioning: `GlobalPositionType` (latitude/longitude/elevation, EPSG `CoordinateReferenceSystem`), `GlobalLocationType` (a subtype of RSL `SpatialLocationType`), and `GroundControlPointDataType` (local↔global tie points) — the geospatial anchor for the `Georeference` render target (§5.8, Annex D).
 
 ---
 
@@ -252,7 +253,7 @@ An optional interface a domain ObjectType may apply (`HasInterface`) to advertis
 
 ### 5.6 DataTypes (Enumerations)
 
-- `OpenUsdRenderTargetKindEnum` — `Translation(0) Rotation(1) Scale(2) Transform(3) Visibility(4) DisplayColor(5) EmissiveColor(6) Opacity(7) Custom(8)`.
+- `OpenUsdRenderTargetKindEnum` — `Translation(0) Rotation(1) Scale(2) Transform(3) Visibility(4) DisplayColor(5) EmissiveColor(6) Opacity(7) Custom(8) Georeference(9)` (`Georeference` = a geodetic anchor coordinate target — latitude/longitude/height; see §5.8 and Annex D).
 - `OpenUsdBadQualityActionEnum` — `Skip(0) HoldLast(1) ClearOpinion(2) Fallback(3)`.
 - `OpenUsdBindingStateEnum` — `Disabled(0) Unresolved(1) Ready(2) Active(3) Degraded(4) Error(5)`.
 - `OpenUsdSignalRoleEnum` — `Observable(0) Controllable(1)`.
@@ -277,6 +278,9 @@ Conversion order: engineering-unit conversion → `Scale`/`Offset` → (transfor
 - USD rotation ops are expressed in **degrees**; OPC UA/RSL orientation is in radians per ISO 9787 — the connector applies `× 180/π`.
 - The stage `metersPerUnit` is **not** applied to a raw `xformOp:translate` (intervening scale ops and referenced-asset corrections affect the metric); length conversion is applied only per the transform profile against a controlled xform stack.
 - USD is right-handed. A Z-up source with a Y-up stage (`upAxis`) **shall** be reconciled by an explicit frame declared in the profile.
+- A quaternion orientation authored to `xformOp:orient` **shall** be reordered from the OPC UA/RSL `(x, y, z, w)` component order to USD's `(w, x, y, z)` (real part first).
+
+**Geospatial (georeference) target.** When `RenderTargetKind = Georeference`, the source is a geographic position (an OPC UA/GPOS `GlobalPosition` — latitude/longitude/elevation with an EPSG `CoordinateReferenceSystem`, per OPC 10000-211) and the target is a USD **georeference origin** or per-prim **globe anchor** coordinate. The connector **shall** treat latitude/longitude as decimal degrees and elevation/height as metres, **shall** honour the target schema's coordinate reference system and tangent-plane (East-North-Up) convention, and **shall not** author a raw `xformOp` for this target. Because core OpenUSD defines no geodetic schema, the concrete target is a vendor/extension georeference schema; the mapping to NVIDIA Omniverse and Cesium for Omniverse is given in **Annex D**.
 
 ### 5.9 Quality, timestamp and persistence (hints, normative defaults)
 
@@ -428,6 +432,7 @@ Conformance Units (each a normative, testable requirement):
 - **OU-Binding** — a concrete `OpenUsdLiveBindingType` subtype (the baseline `OpenUsdValueChangeBindingType`) with a resolvable source and target and a stable `BindingDefinitionId`.
 - **OU-Conversion-Scalar** — scalar unit/scale/offset conversion.
 - **OU-Conversion-Transform** — RSL transform profile (angles, units, up-axis).
+- **OU-Conversion-Geo** — geospatial/georeference target conversion: a binding whose `RenderTargetKind = Georeference` maps an OPC UA/GPOS `GlobalPosition` (latitude/longitude/elevation, EPSG CRS) to a USD georeference-origin or globe-anchor coordinate per §5.8 and Annex D.
 - **OU-Quality** — Good-default handling and `BadQualityAction`.
 - **OU-Diagnostics** — `State` / `LastError` populated at runtime.
 - **OU-SemanticSource** — a binding whose source resolves via `SourceSemanticId` (ECLASS / IEC CDD).
@@ -443,7 +448,7 @@ Conformance Units (each a normative, testable requirement):
 Profiles:
 
 - **OpenUSD Representation Server** — OU-Namespace, OU-Discovery, OU-Stage, OU-Representation, OU-RepresentationRegistry.
-- **OpenUSD Live Rendering Server** — the Representation profile + OU-Binding, OU-Conversion-Scalar, OU-Quality (OU-Conversion-Transform, OU-SemanticSource, OU-Integrity, and OU-Diagnostics optional).
+- **OpenUSD Live Rendering Server** — the Representation profile + OU-Binding, OU-Conversion-Scalar, OU-Quality (OU-Conversion-Transform, OU-Conversion-Geo, OU-SemanticSource, OU-Integrity, and OU-Diagnostics optional).
 - **OpenUSD Interactive Server** — the Live Rendering profile + OU-Command (and typically OU-Alarm); adds the authorized, opt-in control path for agent/operator interaction. OU-History is optional.
 - **OpenUSD Composite Server** — the Live Rendering profile + OU-Composition (OU-DynamicComposition, OU-CrossServerComposition, and OU-AssetDelivery optional); exposes the asset's component structure as composed USD prims.
 
@@ -618,3 +623,71 @@ The wider asset-definition strategy is deliberately **plural**: the same enrichm
 | `OpenUsdComponentBindingType` (composition) | a "Component" `SubmodelElementCollection` (or an `Entity` with a `RelationshipElement`) referencing the component's submodel and carrying `Cardinality`, `CompositionArc`, and the component `semanticId` — mirroring the AAS "bill of material" / part-of structure |
 
 Because the **source is anchored on a semantic id**, a binding authored against an OPC UA server and one authored against an AAS submodel describe the *same* signal → prim mapping and can be reconciled automatically. Co-publishing the submodel template with the IDTA, anchored on ECLASS / IEC CDD, keeps the two standards' expressions of this enrichment convergent rather than competing. This annex is a direction, not a normative binding; the normative artifact remains the OPC UA NodeSet.
+
+---
+
+## Annex D — Geospatial rendering: mapping OPC UA spatial and geospatial data to NVIDIA Omniverse and Cesium (informative)
+
+This annex shows how a connector drives the **3D placement** — relative pose and absolute geolocation — of the prims it binds, using the OPC UA spatial companion specifications as the source of truth and the USD georeferencing schemas that exist today as the target. It complements the normative transform and geospatial rules of §5.8; the corresponding conformance unit is `OU-Conversion-Geo` (§7).
+
+### D.1 Why this is an annex (and not core USD)
+
+OpenUSD's Core Specification defines no geodetic/geographic schema — there is no native latitude/longitude/CRS concept in USD. Georeferencing a stage is therefore done with **vendor/extension** schemas: NVIDIA's `omni.usd.schema.geospatial` and Cesium for Omniverse's `CesiumGeoreferencePrim` / `CesiumGlobeAnchorAPI`. The Alliance for OpenUSD (AOUSD) has an **in-progress geolocation proposal** (AECO Interest Group → Geometry Working Group) to add a native geospatial coordinate schema to USD, but as of this draft none is ratified. This mapping therefore targets the extension schemas that exist today and is expected to track a native AOUSD schema once it lands; the OPC UA side (RSL Part 210 relative pose, GPOS Part 211 global position) is already standardised and stable.
+
+### D.2 Relative pose (OPC 10000-210 RSL) → USD `xformOp` — fidelity reference
+
+RSL conveys a 6-DoF pose as `CartesianFrameAngleOrientationType` = a `3DFrame` (a `3DCartesianCoordinates` X/Y/Z plus a `3DOrientation` roll/pitch/yaw). This table pins every conversion detail §5.8 references:
+
+| RSL / OPC UA | USD target | Rule |
+|---|---|---|
+| `3DCartesianCoordinates` X/Y/Z (+ `LengthUnit`) | `xformOp:translate` (`double3`) | metric; honour stage `metersPerUnit` per the controlled xform stack (§5.8) |
+| `3DOrientation` A/B/C = roll/pitch/yaw (radians, ISO 9787, intrinsic z-y′-x″) | `xformOp:rotateXYZ` (`float3`, **degrees**) | roll→rx, pitch→ry, yaw→rz; `× 180/π`; USD `rotateXYZ` = intrinsic XYZ = extrinsic ZYX, matching RSL |
+| quaternion form (if used) | `xformOp:orient` (`quatf`/`quatd`) | reorder **USD `(w,x,y,z)` ← OPC UA `(x,y,z,w)`** |
+| frame chain (`SpatialLocationType.Base`) | prim parent-child nesting | each frame = one `UsdGeomXformable` prim |
+| `WorldFrame` (`Base = null`) | stage world / root prim | set `upAxis = "Z"`, `metersPerUnit = 1.0` for an OPC UA (Z-up, metric) source |
+
+USD is right-handed, row-major, with row-vector pre-multiplication and translation in the fourth matrix row; a Z-up source in a Y-up stage is reconciled by an explicit frame (e.g. a `-90°` X rotation) per §5.8.
+
+### D.3 Global position (OPC 10000-211 GPOS) → USD georeference
+
+GPOS conveys an absolute position as `GlobalPositionType` (latitude, longitude, elevation, EPSG `CoordinateReferenceSystem`) and anchors a local frame to the globe with `GroundControlPointDataType` (a local-Cartesian ↔ global-geographic tie point). This maps onto the two georeference targets in use today.
+
+**Cesium for Omniverse**
+
+| OPC UA / GPOS | Cesium USD | Note |
+|---|---|---|
+| stage anchor origin (a reference `GlobalPosition` / `Zone`) | `CesiumGeoreferencePrim` — `cesium:anchor:latitude`, `cesium:anchor:longitude`, `cesium:anchor:height` | stage-level WGS84 origin; `ecefToUsdTransform` (matrix4d) is derived, read-only |
+| per-asset `GlobalPosition` (moving robot / AGV) | `CesiumGlobeAnchorAPI` on the prim — `cesium:anchor:latitude/longitude/height` | drives the prim's `xformOp` stack from geodetic coordinates |
+| `GroundControlPointDataType` (local XYZ ↔ global lat/lon) | the ENU tangent-plane transform captured by `ecefToUsdTransform` | one control point fixes the origin; several refine the local-frame registration |
+
+**NVIDIA Omniverse (`omni.usd.schema.geospatial`)**
+
+| OPC UA / GPOS | NVIDIA USD | Note |
+|---|---|---|
+| stage anchor origin | `WGS84ReferencePositionAPI` — `omni:geospatial:wgs84:reference:referencePosition` (lat, lon, alt), `:tangentPlane` = `ENU` | altitude in metres regardless of `metersPerUnit` |
+| per-asset `GlobalPosition` | `WGS84LocalPositionAPI` on the prim | resolves against the reference position up the hierarchy |
+| `ElevationReference` | tangent-plane / altitude datum choice | ENU vs NED; sea-level vs floor-relative |
+
+The EPSG `CoordinateReferenceSystem` enum (0 = local, 4326 = WGS84/GPS, 326xx = UTM) selects the projection; both target schemas assume WGS84, so a non-WGS84 CRS is reprojected by the connector before authoring.
+
+### D.4 A binding for `RenderTargetKind = Georeference`
+
+A representation binds a moving asset's live geographic position to its globe anchor:
+
+```usda
+# Stage georeference origin (from a GPOS reference GlobalPosition / Zone)
+def "Georeference" ( prepend apiSchemas = ["CesiumGeoreferencePrim"] ) {
+    double cesium:anchor:latitude  = 47.6062     # GlobalPosition.Latitude
+    double cesium:anchor:longitude = -122.3321   # GlobalPosition.Longitude
+    double cesium:anchor:height    = 56.0        # GlobalPosition.Elevation (m)
+}
+
+# A moving AGV, its live position driven by a Georeference binding
+def Xform "AGV_07" ( prepend apiSchemas = ["CesiumGlobeAnchorAPI"] ) {
+    double cesium:anchor:latitude  = 47.6061     # <- source: GPOS GlobalPosition.Latitude
+    double cesium:anchor:longitude = -122.3319   # <- source: GPOS GlobalPosition.Longitude
+    double cesium:anchor:height    = 56.0        # <- source: GPOS GlobalPosition.Elevation
+}
+```
+
+The corresponding binding: `SourceSemanticId`/`SourceNodeId` → a GPOS `GlobalPosition` (or its `Latitude`/`Longitude`/`Elevation` components); `TargetPrimPath = /AGV_07`; `TargetPropertyName = cesium:anchor:latitude` (…`longitude`/`height`); `RenderTargetKind = Georeference`. The connector applies the §5.8 geospatial rule (degrees, metres, CRS/tangent-plane) rather than the raw `xformOp` transform profile. Where the deployment uses NVIDIA's schema instead of Cesium, only the target property names change (`omni:geospatial:wgs84:*`); the OPC UA source and the binding are identical — the model's **N + M** property holds for geolocation exactly as it does for telemetry.
