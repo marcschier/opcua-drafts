@@ -4,6 +4,7 @@ This working area contains the Apache Arrow (columnar) OPC UA DataEncoding draft
 
 ## Contents
 
+- [`OPC-UA-Arrow-Encoding.md`](OPC-UA-Arrow-Encoding.md) — **standalone combined companion spec**: a self-contained read that merges the Part 6 DataEncoding, the Part 14 PubSub mapping and the Part 11 historian/ADBC access mapping (with the base OPC UA context a standalone reader needs) plus a duplicated snapshot of the generated per-type reference annex. The three errata-style documents below remain the authoritative, insertion-ready proposals.
 - [`OPC-UA-Part6-Arrow-DataEncoding.md`](OPC-UA-Part6-Arrow-DataEncoding.md) — proposed insertion into OPC 10000-6 v1.05.07.
 - [`OPC-UA-Part11-Arrow-ADBC-Access.md`](OPC-UA-Part11-Arrow-ADBC-Access.md) — ADBC-style HistoryRead result mapping to ArrowArrayStream.
 - [`OPC-UA-Part14-Arrow-MessageMapping.md`](OPC-UA-Part14-Arrow-MessageMapping.md) — proposed insertion into OPC 10000-14 v1.05.06.
