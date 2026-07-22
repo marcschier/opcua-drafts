@@ -5,10 +5,12 @@
   "description": "Structural constraints for the uav model/platform vocabulary and the uav:nodeSet preservation envelope defined by the OPC UA Web of Things Binding. This schema validates the extension members that a Thing Description or Thing Model MAY carry; it does not restate the base W3C Thing Description schema. Apply it in addition to the base Thing Description validation.",
   "type": "object",
   "$defs": {
-    "nodeId": {
+    "expandedNodeId": {
       "type": "string",
       "minLength": 1,
-      "description": "OPC UA NodeId in the string form of OPC 10000-6 (for example 'ns=1;i=1001' or 'nsu=...;s=...')."
+      "pattern": "^(svr=[0-9]+;)?(nsu=[^;]+;)?[isgb]=.+$",
+      "not": { "pattern": "ns=[0-9]" },
+      "description": "OPC 10000-6 ExpandedNodeId string form that identifies a UA Node portably: 'nsu=<NamespaceUri>;<idtype>=<id>' (for example 'nsu=http://example.com/demo/pump;s=Pump') or, for the base OPC UA namespace, the canonical 'i=<id>' (for example 'i=49'). The session-local 'ns=<index>' form is not permitted in a persisted or interchanged document because a Server may reorder its namespace table."
     },
     "absoluteIri": {
       "type": "string",
@@ -73,19 +75,23 @@
       "type": "object",
       "description": "The uav extension members that MAY appear on a Thing Description, Thing Model, affordance, form, or link.",
       "properties": {
-        "uav:id": { "$ref": "#/$defs/nodeId" },
+        "uav:id": { "$ref": "#/$defs/expandedNodeId" },
         "uav:browsePath": { "type": "string" },
         "uav:browseName": { "type": "string" },
-        "uav:hasComponent": { "type": "array", "items": { "$ref": "#/$defs/nodeId" } },
-        "uav:componentOf": { "type": "array", "items": { "$ref": "#/$defs/nodeId" } },
-        "uav:mapToNodeId": { "$ref": "#/$defs/nodeId" },
-        "uav:mapToType": { "$ref": "#/$defs/nodeId" },
+        "uav:hasComponent": { "type": "array", "items": { "$ref": "#/$defs/expandedNodeId" } },
+        "uav:componentOf": { "type": "array", "items": { "$ref": "#/$defs/expandedNodeId" } },
+        "uav:mapToNodeId": { "$ref": "#/$defs/expandedNodeId" },
+        "uav:mapToType": { "$ref": "#/$defs/expandedNodeId" },
         "uav:mapByFieldPath": { "type": "string" },
 
         "uav:isComposite": { "type": "boolean" },
         "uav:isEvent": { "type": "boolean" },
         "uav:refName": { "type": "string" },
-        "uav:refType": { "type": "string" },
+        "uav:refType": {
+          "type": "string",
+          "description": "The ReferenceType of a uav:typedReference: either a reference-type BrowseName (for example 'HasComponent') or, when given as a NodeId, an ExpandedNodeId string per #/$defs/expandedNodeId (for example 'i=49' for HasOrderedComponent). A NodeId-valued uav:refType shall not use the session-local ns=<index> form.",
+          "not": { "pattern": "ns=[0-9]" }
+        },
         "uav:contains": { "type": "array", "items": { "type": "string" } },
         "uav:containedIn": { "type": "string" },
         "uav:congruentType": { "type": "string" },
@@ -142,7 +148,28 @@
         "uav:issueToken": { "type": "string" }
       },
       "required": ["scheme", "uav:userIdentityToken"]
+    },
+    "eventTypeAnnotation": {
+      "description": "An event affordance whose @type includes the uav:eventType annotation projects a UA EventType (a subtype of BaseEventType, OPC 10000-5). uav:eventType is the type-annotation counterpart of the uav:isEvent flag: where the annotation is present, uav:isEvent shall not be false.",
+      "if": {
+        "type": "object",
+        "required": ["@type"],
+        "properties": {
+          "@type": {
+            "anyOf": [
+              { "const": "uav:eventType" },
+              { "type": "array", "contains": { "const": "uav:eventType" } }
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": { "uav:isEvent": { "not": { "const": false } } }
+      }
     }
   },
-  "allOf": [{ "$ref": "#/$defs/uavMembers" }]
+  "allOf": [
+    { "$ref": "#/$defs/uavMembers" },
+    { "$ref": "#/$defs/eventTypeAnnotation" }
+  ]
 }

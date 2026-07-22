@@ -27,7 +27,7 @@ A complete, standalone draft revision of the OPC UA companion specification for 
   - [`01-opcua-td-pump.jsonld`](examples/01-opcua-td-pump.jsonld) — a Thing Description using the preserved Read / Write / Observe / Call and security vocabulary.
   - [`02-thing-model-pump.jsonld`](examples/02-thing-model-pump.jsonld) — a Thing Model using the model and platform vocabulary.
   - [`03-nodeset-preservation-envelope.jsonld`](examples/03-nodeset-preservation-envelope.jsonld) — a `uav:nodeSet` preservation envelope carrying a canonical NodeSet2 baseline.
-  - [`04-type-reference-modelling-rule.jsonld`](examples/04-type-reference-modelling-rule.jsonld) — type, reference, and modelling-rule mappings.
+  - [`04-type-reference-modelling-rule.jsonld`](examples/04-type-reference-modelling-rule.jsonld) — type, reference (including a `HasOrderedComponent` subtype pinned by a typed link), and modelling-rule mappings.
 - [`tools/validate_local.py`](tools/validate_local.py) — the deterministic, standard-library validator.
 
 ## Namespace and prefix
@@ -42,4 +42,4 @@ Run the validator from the repository root (standard library only, no dependenci
 python wot-specs/WoT-Binding/tools/validate_local.py
 ```
 
-It checks that every JSON and JSON-LD artifact parses, that the context contains every documented `uav` term, that each example declares the `uav` context, that each preservation envelope's base64 and SHA-256 are valid and decode to a well-formed `UANodeSet` root, that internal relative references resolve, and that no forbidden vendor prefix, namespace, or legacy modelling-language name appears. It prints `OK` and exits `0` on success.
+It checks that every JSON and JSON-LD artifact parses, that the context contains every documented `uav` term, that each example declares the `uav` context, that each preservation envelope's base64 and SHA-256 are valid and decode to a well-formed `UANodeSet` root, that internal relative references resolve, that every NodeId-valued term in an example is a portable ExpandedNodeId (never the session-local `ns=<index>` form), that `@type: uav:eventType` is never paired with `uav:isEvent: false`, and that no forbidden vendor prefix, namespace, or legacy modelling-language name appears. It prints `OK` and exits `0` on success.

@@ -32,7 +32,7 @@
       "observable": true,
       "forms": [
         {
-          "href": "/?id=ns=1;i=6001",
+          "href": "/?id=nsu=http://example.com/demo/pump;i=6001",
           "contentType": "application/octet-stream",
           "op": [
             "readproperty",

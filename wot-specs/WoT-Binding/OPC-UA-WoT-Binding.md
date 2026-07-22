@@ -26,7 +26,7 @@ Out of scope: the OPC UA wire protocol itself (defined by OPC 10000-6), transpor
 This document re-authors [OPC 10101 v1.00](https://reference.opcfoundation.org/specs/OPC-10101/) in original prose and, on top of the preserved baseline, makes the following substantive additions. It is otherwise backward compatible: a Thing Description written against v1.00 remains valid here.
 
 - **Preserved baseline (unchanged behaviour).** Every namespace, prefix and term of the published vocabulary, and every service, URI, access-level and security mapping, is preserved byte-for-byte and only re-worded (Section 5). The `uav` prefix and its namespace are unchanged. Where this draft and the published baseline disagree on a preserved term, the published baseline governs.
-- **Event mapping (new).** An explicit mapping of OPC UA events (`BaseEventType` subtypes) to WoT event affordances, anchored by `uav:isEvent`, including the standard event fields and `subscribeevent`/`unsubscribeevent` realized by OPC UA event MonitoredItems (Section 8). The published baseline had no event mapping.
+- **Event mapping (new).** An explicit mapping of OPC UA events (`BaseEventType` subtypes) to WoT event affordances, anchored by the `uav:eventType` type annotation and the `uav:isEvent` flag, including the standard event fields and `subscribeevent`/`unsubscribeevent` realized by OPC UA event MonitoredItems (Section 8). The published baseline had no event mapping.
 - **Model and platform vocabulary (new).** A collision-safe vocabulary that lets a Thing Model record the structural facts of an OPC UA type — composition, references, groups, units, scaling, configuration, metadata, inheritance and modelling rules (Section 6) — so a Thing Model is a faithful, tool-processable projection of an ObjectType, not only a client-facing description.
 - **Exact NodeSet2 round trip and preservation (new).** A bidirectional NodeSet2 ↔ WoT conversion with defined round-trip invariants (Section 9) and a digest-verified `uav:nodeSet` preservation envelope (Section 10) that makes any OPC UA construct without a native WoT form survive a round trip exactly, while natively representable constructs stay readable without decoding the envelope.
 - **Implementer guidance (new).** Independent conformance units and recommended profiles (Section 11), a deterministic standard-library validator, worked examples, and an iterative implementer walkthrough (Annex D) covering both conversion directions.
@@ -80,9 +80,21 @@ This section restates the published baseline vocabulary and its service, URI, an
 
 | Term | Where used | Type | Meaning |
 | --- | --- | --- | --- |
-| `uav:id` | in `href` context and on an affordance | string | The `NodeId` value in the string form of OPC 10000-6, identifying the UA Node an affordance targets. |
+| `uav:id` | in `href` context and on an affordance | string | The identity of the UA Node an affordance targets, given as an **ExpandedNodeId** in the string form of OPC 10000-6 (Section 5.1.1). |
 | `uav:browsePath` | in a form, or on an affordance | string | The browse path of a UA Node as a string, following OPC 10000-4 Annex A.2, starting at the root of the address space, for example `/Objects/1:Machine/1:Pressure`. |
 | `uav:browseName` | at Thing level, on a property, or on an action | string | The originating `BrowseName` of the UA Node: the Object or ObjectType at Thing level, and the Variable or Method at affordance level, in `namespaceIndex:name` form. |
+
+#### 5.1.1 Portable identity (ExpandedNodeId)
+
+A persisted or interchanged Thing Description or Thing Model **shall** identify UA Nodes and types portably, so that a document keeps referring to the same Nodes even after a Server reorders its namespace table. Every NodeId-valued term — `uav:id`, each entry of `uav:hasComponent` and `uav:componentOf`, `uav:mapToNodeId`, `uav:mapToType`, and any NodeId-valued `uav:refType` (Section 6.2) — **shall** be written as an OPC 10000-6 **ExpandedNodeId** string that names its namespace by URI:
+
+```text
+nsu=<NamespaceUri>;<idtype>=<id>
+```
+
+for example `nsu=http://example.com/demo/pump;s=Pump` or `nsu=http://example.com/demo/pump;i=1001`. For a Node in the base OPC UA namespace (namespace 0) the canonical namespace-0 form `i=<id>` **may** be used without an `nsu=` prefix, for example the `HasOrderedComponent` ReferenceType `i=49`.
+
+A document **shall not** use the session-local `ns=<index>` form in any of these terms, because the namespace index is only meaningful within a single Server session and is invalidated by a namespace-table reordering. A client resolves each `nsu=<NamespaceUri>` to the target Server's current namespace index at session establishment, reading the Server `NamespaceArray` (OPC 10000-5), before issuing a request. A namespace index still appears legitimately in two places that this identity rule does not govern: the qualified `BrowseName` and `browsePath` form `namespaceIndex:name` (for example `1:Pump`), which a reader resolves through the `@context` prefix bindings (Section 5.8); and inside the canonical NodeSet2 XML carried by a `uav:nodeSet` preservation envelope (Sections 9 and 10), which resolves its indices through its own `NamespaceUris` table and is therefore unaffected by this rule.
 
 ### 5.2 Type-annotation terms
 
@@ -95,15 +107,35 @@ The `@type` of a Thing or affordance is annotated to record which NodeClass it p
 | `uav:variable` | `@type` of a TD property | a UA Variable |
 | `uav:variableType` | `@type` of a TM property | a UA VariableType |
 | `uav:method` | `@type` of an action | a UA Method |
+| `uav:eventType` | `@type` of an event affordance | a UA EventType (a subtype of `BaseEventType`, OPC 10000-5) |
 
-`uav:objectType` and `uav:variableType` are only meaningful in a Thing Model.
+`uav:objectType` and `uav:variableType` are only meaningful in a Thing Model. `uav:eventType` annotates an event affordance that projects a UA EventType; because an OPC UA event is always defined by a type derived from `BaseEventType`, it is meaningful in both a Thing Model and a Thing Description. `uav:eventType` is the type-annotation counterpart of the `uav:isEvent` flag (Section 6.1): the annotation records the projected NodeClass in `@type`, exactly as the other rows of this table do, while `uav:isEvent` is the boolean anchor of the event mapping (Section 8). When an event affordance carries `uav:eventType` in its `@type`, it **shall** be treated as projecting a UA EventType and `uav:isEvent` **shall not** be `false`; an author **should** set both for symmetry. A converter treats an event affordance as an EventType projection when either `uav:eventType` or `uav:isEvent: true` is present.
 
 ### 5.3 Component reference terms
 
 | Term | Type | Meaning |
 | --- | --- | --- |
-| `uav:hasComponent` | array of string | One or more `NodeId` values of child Nodes; equivalent to a forward `HasComponent` reference. |
-| `uav:componentOf` | array of string | One or more `NodeId` values of parent Nodes; equivalent to an inverse `HasComponent` reference. |
+| `uav:hasComponent` | array of string | One or more **ExpandedNodeId** values (Section 5.1.1) of child Nodes; equivalent to a forward `HasComponent` reference, and covering every subtype of `HasComponent` for parent-child discovery. |
+| `uav:componentOf` | array of string | One or more **ExpandedNodeId** values (Section 5.1.1) of parent Nodes; equivalent to an inverse `HasComponent` reference, and covering every subtype of `HasComponent` for parent-child discovery. |
+
+**Component subtypes.** `uav:hasComponent` and `uav:componentOf` record parent-child ownership uniformly across `HasComponent` **and all of its subtypes** (for example `HasOrderedComponent`). A consumer that only needs to *discover* the children (or the parent) of a Node treats every `HasComponent`-derived reference the same way and reads these terms directly. When the exact subtype semantics matter — for example the ordering guaranteed by `HasOrderedComponent` — the document **shall** additionally record the reference as a typed link (Section 6.2): a `links` entry with `rel: uav:typedReference`, `uav:refType` set to the ReferenceType's ExpandedNodeId, and a `uav:refName`. Reverse conversion recreates the exact subtype from that typed link; when no typed link is present for a listed component, conversion uses plain `HasComponent`.
+
+```jsonc
+// Two ordered stages: discoverable through uav:hasComponent, and pinned to
+// HasOrderedComponent (i=49, a namespace-0 canonical ExpandedNodeId) by typed links.
+"uav:hasComponent": [
+  "nsu=http://example.com/demo/pump;s=Stage_1",
+  "nsu=http://example.com/demo/pump;s=Stage_2"
+],
+"links": [
+  { "rel": "uav:typedReference", "href": "nsu=http://example.com/demo/pump;s=Stage_1",
+    "uav:refType": "i=49", "uav:refName": "Stage_1" },
+  { "rel": "uav:typedReference", "href": "nsu=http://example.com/demo/pump;s=Stage_2",
+    "uav:refType": "i=49", "uav:refName": "Stage_2" }
+]
+```
+
+*Explanation.* Both stages appear in `uav:hasComponent`, so any consumer can enumerate the children without knowing the reference subtype. The two typed links additionally pin the subtype to `HasOrderedComponent` (`i=49`), so a converter recreates ordered components rather than plain `HasComponent`; a document that omitted the typed links would round-trip the stages as plain `HasComponent`.
 
 ### 5.4 Data-model mapping terms
 
@@ -111,8 +143,8 @@ These terms map a runtime datapoint of a Thing to an external OPC UA Node or typ
 
 | Term | Type | Meaning |
 | --- | --- | --- |
-| `uav:mapToNodeId` | string | The `NodeId` of an external target UA Node (for example a UA Variable) that the property's runtime data maps to. |
-| `uav:mapToType` | string | The `NodeId` of an external target UA type that the property's runtime data maps to. |
+| `uav:mapToNodeId` | string | The **ExpandedNodeId** (Section 5.1.1) of an external target UA Node (for example a UA Variable) that the property's runtime data maps to. |
+| `uav:mapToType` | string | The **ExpandedNodeId** (Section 5.1.1) of an external target UA type that the property's runtime data maps to. |
 | `uav:mapByFieldPath` | string | Used only together with `uav:mapToType`. When the target type is a Structure, names the field within that type to which the runtime data maps. |
 
 ### 5.5 URI, base, and href rules
@@ -123,11 +155,11 @@ The OPC UA client/server address of a Thing follows this grammar:
 opc.tcp://<address>:<port>[/<resourcePath>]/?id=<nodeId>
 ```
 
-where `<address>` is the Server endpoint address, `<port>` is the Server port, `<resourcePath>` is an optional endpoint resource path, and `<nodeId>` is the target `NodeId`.
+where `<address>` is the Server endpoint address, `<port>` is the Server port, `<resourcePath>` is an optional endpoint resource path, and `<nodeId>` is the target Node identity, written as an **ExpandedNodeId** (Section 5.1.1).
 
-The following percent-encoding rules **shall** be applied to `<nodeId>` to keep the URI unambiguous under RFC 3986: every `#` **shall** be written as `%23` and every `&` **shall** be written as `%26`. When the whole URI is transmitted, all non-ASCII characters **shall** first be encoded as UTF-8 bytes and each byte then percent-encoded.
+The following percent-encoding rules **shall** be applied to `<nodeId>` to keep the URI unambiguous under RFC 3986: every `#` **shall** be written as `%23` and every `&` **shall** be written as `%26`. When the whole URI is transmitted, all non-ASCII characters **shall** first be encoded as UTF-8 bytes and each byte then percent-encoded. These rules apply to the whole ExpandedNodeId, including the characters of an `nsu=<NamespaceUri>` prefix.
 
-The address may be given whole in a form `href`, or split into the Thing-level `base` (the Server location only) and a per-form `href` that is relative to `base` and carries only the `?id=` fragment. When a namespace is resolved in the `@context` (Section 5.8), its index may be used directly in the `NodeId`, for example `href: "/?id=ns=10;i=12345"`.
+The address may be given whole in a form `href`, or split into the Thing-level `base` (the Server location only) and a per-form `href` that is relative to `base` and carries only the `?id=` fragment. The `<nodeId>` in `?id=` **shall** be the same portable ExpandedNodeId form required by Section 5.1.1, for example `href: "/?id=nsu=http://example.com/demo/pump;s=PumpSpeed"`; a document **shall not** use the session-local `ns=<index>` form here. A client resolves the `nsu=<NamespaceUri>` to the addressed Server's current namespace index (Section 5.8) at session establishment, so the reference survives a namespace-table reordering. A Node in the base OPC UA namespace **may** use the canonical `i=<id>` form.
 
 ### 5.6 Service mappings (Read, Write, Observe, Call)
 
@@ -202,13 +234,13 @@ This section adds terms that let a Thing Model record the structural facts of an
 
 *Explanation.* The Thing Model is a composite ObjectType with one directly contained part named `Impeller`; a converter expands that part into a component sub-node rather than a scalar value.
 
-**`uav:isEvent`** (boolean) — on a WoT event affordance, declares that the affordance projects an OPC UA event (a type derived from `BaseEventType`, OPC 10000-5) rather than an ad-hoc notification. This is an OPC UA model fact whenever the source model defines an EventType; the flag is the anchor of the event mapping of Section 8 and tells a consumer to realize subscription with event MonitoredItems.
+**`uav:isEvent`** (boolean) — on a WoT event affordance, declares that the affordance projects an OPC UA event (a type derived from `BaseEventType`, OPC 10000-5) rather than an ad-hoc notification. This is an OPC UA model fact whenever the source model defines an EventType; the flag is the anchor of the event mapping of Section 8 and tells a consumer to realize subscription with event MonitoredItems. It is the boolean counterpart of the `uav:eventType` type annotation (Section 5.2): an event affordance annotated with `@type: uav:eventType` **shall not** set `uav:isEvent: false`, and an author **should** set both for symmetry with the other NodeClass annotations.
 
 ```jsonc
-"events": { "overTemperature": { "uav:isEvent": true, "uav:browseName": "1:OverTemperatureEventType" } }
+"events": { "overTemperature": { "@type": "uav:eventType", "uav:isEvent": true, "uav:browseName": "1:OverTemperatureEventType" } }
 ```
 
-*Explanation.* `overTemperature` is not a plain notification: it projects the `1:OverTemperatureEventType` EventType, so `subscribeevent` becomes an OPC UA event MonitoredItem.
+*Explanation.* `overTemperature` is not a plain notification: its `@type` annotation `uav:eventType` (with the matching `uav:isEvent: true` flag) projects the `1:OverTemperatureEventType` EventType, so `subscribeevent` becomes an OPC UA event MonitoredItem.
 
 ### 6.2 Links and references
 
@@ -217,10 +249,10 @@ References between types are carried on WoT `links`. The `rel` value selects the
 - **`rel: uav:capability`** — the linked resource is a capability the type exposes (an interface-like mix-in), projecting to a `HasInterface`-style facet.
 - **`rel: uav:componentModel`** — the linked resource is the Thing Model of a contained sub-component (a strong, owned `HasComponent` part).
 - **`rel: uav:reference`** — the linked resource is referenced non-hierarchically, without a specific reference type.
-- **`rel: uav:typedReference`** — the linked resource is referenced by a specific OPC UA reference type named in `uav:refType`.
+- **`rel: uav:typedReference`** — the linked resource is referenced by a specific OPC UA reference type named in `uav:refType`. This is also how a subtype of a hierarchical reference is pinned when its exact semantics matter — for example a `HasOrderedComponent` (`i=49`) that is also listed for discovery in `uav:hasComponent` (Section 5.3).
 - **`rel: uav:componentOf`** — the linked resource is the **parent** (container) of this Thing or type; it projects to an inverse `HasComponent` (a `HasComponent` from the parent to this node). It lets a Thing Description author select the parent under which its projected instance is exposed (used by [WoT Connectivity](../WoT-Connectivity/OPC-UA-WoT-Connectivity.md) §7.3); the link is directional, naming the parent, and a materializer resolves the target and creates the OPC UA `HasComponent` Reference.
 - **`uav:refName`** (string) — the browse name a reference is exposed under on the referencing type; unique among the references of one type.
-- **`uav:refType`** (string) — the reference type of a `uav:typedReference`, given as a `NodeId` or a reference-type browse name.
+- **`uav:refType`** (string) — the reference type of a `uav:typedReference`, given either as a reference-type browse name (for example `HasComponent`) or as a NodeId. When given as a NodeId it **shall** be an **ExpandedNodeId** (Section 5.1.1) and **shall not** use the session-local `ns=<index>` form; a base-namespace reference type **may** use the canonical `i=<id>` form, for example `i=49` for `HasOrderedComponent`.
 
 ```jsonc
 "links": [
@@ -329,11 +361,13 @@ A document that uses the vocabulary of Section 6 **shall** satisfy the following
 | --- | --- | --- |
 | `uav:isComposite` | type (TM root) | boolean |
 | `uav:isEvent` | event affordance | boolean |
+| `uav:eventType` | `@type` of an event affordance | the literal term; requires `uav:isEvent` not `false` |
 | `uav:capability`, `uav:componentModel`, `uav:reference`, `uav:typedReference`, `uav:componentOf` | a link `rel` value | the literal term |
 | `uav:refName` | a link | non-empty string, unique among a type's links |
-| `uav:refType` | a `uav:typedReference` link | `NodeId` or reference-type browse name |
+| `uav:refType` | a `uav:typedReference` link | reference-type browse name, or an ExpandedNodeId (Section 5.1.1) with no `ns=<index>` |
 | `uav:contains` | composite type | array of `uav:refName` values declared on the same type |
 | `uav:containedIn` | contained type | the name of exactly one composite |
+| `uav:id`, `uav:hasComponent`, `uav:componentOf`, `uav:mapToNodeId`, `uav:mapToType` | as defined in Sections 5.1, 5.3, 5.4 | ExpandedNodeId (Section 5.1.1) with no `ns=<index>` |
 | `uav:congruentType` | type | `NodeId` or absolute IRI |
 | `uav:nameNamespace` | type | absolute IRI |
 | `uav:scaleFactor` | property | number, non-zero |
@@ -351,6 +385,9 @@ A document that uses the vocabulary of Section 6 **shall** satisfy the following
 
 - **Unique group titles.** The `title` of every group is globally unique across `uav:propertyGroups`, `uav:eventGroups`, and `uav:actionGroups` of a type. Two groups **shall not** share a title.
 - **Membership target.** A `uav:memberOf` value **shall** name a group of the matching kind: a property's `uav:memberOf` **shall** name a `uav:propertyGroups` title, an event's an `uav:eventGroups` title, and an action's an `uav:actionGroups` title.
+- **Portable identity.** Every NodeId-valued term — `uav:id`, each entry of `uav:hasComponent` and `uav:componentOf`, `uav:mapToNodeId`, `uav:mapToType`, a NodeId-valued `uav:refType`, and the `<nodeId>` of a `?id=` href — **shall** be an ExpandedNodeId per Section 5.1.1 and **shall not** use the session-local `ns=<index>` form. This rule does not govern the qualified `BrowseName`/`browsePath` form `namespaceIndex:name` (Section 5.8) or the namespace indices inside the canonical NodeSet2 XML of a `uav:nodeSet` preservation envelope, which are resolved through that NodeSet's own `NamespaceUris` table.
+- **Component subtypes.** `uav:hasComponent` / `uav:componentOf` cover `HasComponent` and all of its subtypes for parent-child discovery. When a listed component's exact subtype matters (for example `HasOrderedComponent`), the document **shall** also carry a `rel: uav:typedReference` link whose `uav:refType` is that ReferenceType's ExpandedNodeId and whose `uav:refName` names the reference; a converter recreates the exact subtype from that link and otherwise uses plain `HasComponent` (Section 5.3).
+- **Event annotation consistency.** An event affordance annotated with `@type: uav:eventType` **shall not** set `uav:isEvent: false`; the two forms record the same fact (Section 5.2), and a consumer treats an affordance as an EventType projection when either is present.
 - **Containment consistency.** If a composite `A` lists refName `b` in `uav:contains`, the type reached by the link named `b` **shall** declare `uav:containedIn: "A"`; conversely every `uav:containedIn: "A"` **shall** be matched by an entry in `A`'s `uav:contains`.
 - **Parent link direction.** A `rel: uav:componentOf` link names the **parent** (container) of this Thing or type: it projects to an OPC UA `HasComponent` Reference *from the linked (parent) node to this node* (equivalently an inverse `HasComponent` from this node to its parent). A materializer **shall** resolve the link `href` to the parent node and create that Reference; it **shall not** invert the direction.
 - **Cycle-safety.** The containment graph induced by `uav:contains` / `uav:containedIn` **shall** be acyclic; a type **shall not** transitively contain itself.
@@ -368,7 +405,7 @@ A Thing Model is the class-level projection and a Thing Description is the insta
 - **Object maps to a Thing Description.** An Object becomes a TD whose `@type` includes `uav:object`; a TD may reference the TM of its type through a `tm:instanceOf` style link and carries concrete values and forms.
 - **Variables map to properties.** A UA Variable or the declaration of a VariableType member becomes a WoT property with `@type` `uav:variable` (TD) or `uav:variableType` (TM), a `type` from the DataType, and `readOnly` / `writeOnly` / `observable` from the AccessLevel.
 - **Methods map to actions.** A UA Method becomes a WoT action with `@type` `uav:method`; its input and output arguments become the action's `input` and `output` DataSchemas.
-- **OPC UA events map to WoT events.** An EventType (derived from `BaseEventType`) becomes a WoT event affordance with `uav:isEvent: true`; the event's fields become the event `data` schema, the standard fields (`EventId`, `EventType`, `SourceNode`, `Time`, `Severity`, `Message`) map to the corresponding `data` properties, and `uav:eventConfiguration` carries opaque delivery configuration. Subscription uses the WoT `subscribeevent` / `unsubscribeevent` operations, realized by OPC UA event MonitoredItems. This event mapping is new in this document.
+- **OPC UA events map to WoT events.** An EventType (derived from `BaseEventType`) becomes a WoT event affordance whose `@type` includes `uav:eventType` and that carries `uav:isEvent: true`; the event's fields become the event `data` schema, the standard fields (`EventId`, `EventType`, `SourceNode`, `Time`, `Severity`, `Message`) map to the corresponding `data` properties, and `uav:eventConfiguration` carries opaque delivery configuration. Subscription uses the WoT `subscribeevent` / `unsubscribeevent` operations, realized by OPC UA event MonitoredItems. This event mapping is new in this document.
 - **Links and references.** Non-hierarchical and typed references map to `links` as in Section 6.2; hierarchical component references map to `uav:hasComponent` / `uav:componentOf` (Section 5.3) or, at model level, to `uav:contains` / `uav:containedIn`.
 - **Custom DataTypes and encodings.** A custom DataType maps to a WoT DataSchema; where the schema cannot be expressed inline, `uav:externalSchema` points to its definition and, for a Structure, `uav:mapByFieldPath` addresses a field.
 - **Placeholders and optionality.** Modelling rules map to `uav:modellingRule`; placeholder members are templates (Section 7) and optional members are omitted per instance when absent.
@@ -386,10 +423,11 @@ Conversion is bidirectional. Every NodeClass, attribute, reference, and value ha
 | Method | action, `@type` `uav:method` |
 | ObjectType | Thing Model, `@type` `uav:objectType` |
 | VariableType | property in a TM, `@type` `uav:variableType` |
+| EventType (subtype of `BaseEventType`) | event affordance, `@type` `uav:eventType`, `uav:isEvent: true` |
 | DataType | WoT DataSchema; custom types via `uav:externalSchema` |
 | ReferenceType | link `rel` `uav:typedReference` with `uav:refType` |
 | View | link (`rel` `collection`) grouping the viewed Nodes |
-| `NodeId` | `uav:id` |
+| `NodeId` | `uav:id` (ExpandedNodeId, Section 5.1.1) |
 | `BrowseName` | `uav:browseName` |
 | `DisplayName` | `title` |
 | `Description` | `description` |
@@ -398,10 +436,11 @@ Conversion is bidirectional. Every NodeClass, attribute, reference, and value ha
 | `Value` | property value or `const` / `default` |
 | `HasComponent` / `HasProperty` (forward) | `uav:hasComponent`, or a component `link` |
 | `HasComponent` (inverse) | `uav:componentOf` |
+| `HasComponent` subtype (for example `HasOrderedComponent`) | `uav:hasComponent` for discovery **and** a `uav:typedReference` link with `uav:refType` (Section 5.3) |
 | Other references | link with `rel` `uav:typedReference` and `uav:refType` |
 | Modelling rule (`Mandatory` `i=78`, `Optional` `i=80`, `MandatoryPlaceholder` `i=11510`, `OptionalPlaceholder` `i=11508`) | `uav:modellingRule` |
-| Namespace table | `@context` prefix bindings keyed by namespace index |
-| Events (`BaseEventType` subtypes) | event affordance with `uav:isEvent: true` |
+| Namespace table | `@context` prefix bindings keyed by namespace index; identity terms name namespaces by URI (Section 5.1.1) |
+| Events (`BaseEventType` subtypes) | event affordance, `@type` `uav:eventType`, `uav:isEvent: true` |
 
 ### 9.2 Preservation envelope
 
@@ -469,7 +508,7 @@ The machine-readable vocabulary is [`opc-ua-wot-binding.context.jsonld`](opc-ua-
 - [`examples/01-opcua-td-pump.jsonld`](examples/01-opcua-td-pump.jsonld) — a Thing Description using the preserved Read, Write, Observe, Call, and security vocabulary.
 - [`examples/02-thing-model-pump.jsonld`](examples/02-thing-model-pump.jsonld) — a Thing Model using the model and platform vocabulary.
 - [`examples/03-nodeset-preservation-envelope.jsonld`](examples/03-nodeset-preservation-envelope.jsonld) — a preservation envelope carrying a canonical NodeSet2 baseline.
-- [`examples/04-type-reference-modelling-rule.jsonld`](examples/04-type-reference-modelling-rule.jsonld) — a Thing Model exercising type, reference, and modelling-rule mappings.
+- [`examples/04-type-reference-modelling-rule.jsonld`](examples/04-type-reference-modelling-rule.jsonld) — a Thing Model exercising type, reference (including a `HasOrderedComponent` subtype pinned by a typed link), and modelling-rule mappings.
 
 ## Annex C — Validation (informative)
 
@@ -479,7 +518,7 @@ Run the deterministic, standard-library validator from the repository root:
 python wot-specs/WoT-Binding/tools/validate_local.py
 ```
 
-It confirms that every artifact parses, that the context declares every documented `uav` term, that each example declares the `uav` context, that each preservation envelope's base64 and SHA-256 are valid and decode to a well-formed `UANodeSet`, that internal relative references resolve, and that no forbidden vendor prefix, namespace, or legacy modelling-language name appears.
+It confirms that every artifact parses, that the context declares every documented `uav` term, that each example declares the `uav` context, that each preservation envelope's base64 and SHA-256 are valid and decode to a well-formed `UANodeSet`, that internal relative references resolve, that every NodeId-valued term in an example is a portable ExpandedNodeId and never the session-local `ns=<index>` form (Section 5.1.1), that `@type: uav:eventType` is never paired with `uav:isEvent: false` (Section 5.2), and that no forbidden vendor prefix, namespace, or legacy modelling-language name appears.
 
 ## Annex D — Implementer walkthrough (informative)
 
@@ -512,9 +551,16 @@ This annex walks an implementer through both conversion directions for the pump 
 
 → `Method 1:Reset` (`HasModellingRule Optional`).
 
-**Step 4 — Event members → EventTypes.** An affordance with `uav:isEvent: true` projects an EventType derived from `BaseEventType`; its `data` schema becomes the event fields (Section 8).
+**Step 4 — Event members → EventTypes.** An affordance whose `@type` includes `uav:eventType` (equivalently `uav:isEvent: true`) projects an EventType derived from `BaseEventType`; its `data` schema becomes the event fields (Section 8).
 
-**Step 5 — References.** `links` become References: `uav:componentModel` → `HasComponent` (the `Impeller` part), `uav:typedReference` → the `uav:refType` reference, `uav:reference`/`uav:capability` → non-hierarchical/`HasInterface` references, `uav:componentOf` → the parent `HasComponent` (Section 6.2). `uav:contains` / `uav:containedIn` rebuild the `HasComponent` ownership tree.
+```jsonc
+"overTemperature": { "@type": "uav:eventType", "uav:isEvent": true,
+  "uav:browseName": "1:OverTemperatureEventType" }
+```
+
+→ `EventType 1:OverTemperatureEventType` (a `BaseEventType` subtype); `subscribeevent` → an event MonitoredItem.
+
+**Step 5 — References.** `links` become References: `uav:componentModel` → `HasComponent` (the `Impeller` part), `uav:typedReference` → the `uav:refType` reference, `uav:reference`/`uav:capability` → non-hierarchical/`HasInterface` references, `uav:componentOf` → the parent `HasComponent` (Section 6.2). `uav:contains` / `uav:containedIn` rebuild the `HasComponent` ownership tree. A component listed in `uav:hasComponent` is recreated as a plain `HasComponent` unless a matching `uav:typedReference` link pins a subtype such as `HasOrderedComponent` (`uav:refType: "i=49"`), in which case that exact subtype is emitted (Section 5.3).
 
 **Step 6 — Groups and modelling rules.** `uav:propertyGroups` etc. become organizing folders over the members; the modelling rules from Step 2/3 govern how instances of `PumpType` are built.
 
@@ -526,7 +572,7 @@ This annex walks an implementer through both conversion directions for the pump 
 "@type": ["Thing", "uav:object"], "uav:browseName": "1:Pump", "uav:id": "nsu=...;s=Pump"
 ```
 
-→ `Object 1:Pump` (`HasTypeDefinition PumpType`, `NodeId` from `uav:id`).
+→ `Object 1:Pump` (`HasTypeDefinition PumpType`, `NodeId` resolved from the `uav:id` ExpandedNodeId; the `nsu=` namespace URI is mapped to the Server's current namespace index at session time, Section 5.1.1).
 
 **Step 2 — Properties → Variables with values and forms.** Each TD property is a `Variable`; `readOnly`/`writeOnly`/`observable` set the `AccessLevel`; each `form` compiles to a service call.
 
@@ -537,7 +583,7 @@ This annex walks an implementer through both conversion directions for the pump 
 
 → `Variable 1:PumpSpeed` (`AccessLevel CurrentRead`); `readproperty` → Read, `observeproperty` → a Subscription MonitoredItem.
 
-**Step 3 — Actions → Methods; events → event MonitoredItems.** `uav:method` actions become callable `Method` instances (`invokeaction` → Call); `uav:isEvent` events are subscribed via event MonitoredItems (`subscribeevent`).
+**Step 3 — Actions → Methods; events → event MonitoredItems.** `uav:method` actions become callable `Method` instances (`invokeaction` → Call); events annotated `@type uav:eventType` (with `uav:isEvent: true`) are subscribed via event MonitoredItems (`subscribeevent`).
 
 **Step 4 — Parent placement.** With no parent link, the `Object` is `Organizes`d under `Objects`; a `rel: uav:componentOf` link makes it a `HasComponent` child of the resolved parent (Section 6.2).
 
@@ -547,14 +593,14 @@ The reverse is the mirror image; a converter walks the NodeSet2 and emits `uav` 
 
 **Step 1 — Classify the root.** An `ObjectType` → a TM with `@type uav:objectType`; an `Object` → a TD with `@type uav:object`. Emit `uav:browseName` from `BrowseName`, `title` from `DisplayName`, `description` from `Description`.
 
-**Step 2 — Members → affordances.** Each `HasComponent`/`HasProperty` `Variable` → a property (`uav:variable`/`uav:variableType`); each `Method` → an action; each `GeneratesEvent` EventType → an event with `uav:isEvent: true`. Emit `type` from `DataType` + `ValueRank`, `readOnly`/`observable` from `AccessLevel`, and `uav:modellingRule` from the `HasModellingRule` target.
+**Step 2 — Members → affordances.** Each `HasComponent`/`HasProperty` `Variable` → a property (`uav:variable`/`uav:variableType`); each `Method` → an action; each `GeneratesEvent` EventType → an event with `@type uav:eventType` and `uav:isEvent: true`. Emit `type` from `DataType` + `ValueRank`, `readOnly`/`observable` from `AccessLevel`, and `uav:modellingRule` from the `HasModellingRule` target. Emit every identity term (`uav:id`, `uav:hasComponent`, `uav:componentOf`) as an ExpandedNodeId, mapping each namespace index to its `NamespaceUris` URI (Section 5.1.1).
 
 ```text
 Variable 1:PumpSpeed (DataType Double, CurrentRead, Mandatory)
 → "pumpSpeed": { "@type":"uav:variableType", "type":"number", "readOnly":true, "uav:modellingRule":"Mandatory" }
 ```
 
-**Step 3 — References → links / containment.** `HasComponent` (forward) → `uav:contains` / a `uav:componentModel` link; `HasComponent` (inverse) → a `uav:componentOf` link; a typed Reference → a `uav:typedReference` link with `uav:refType`; other non-hierarchical References → `uav:reference`/`uav:capability`.
+**Step 3 — References → links / containment.** `HasComponent` (forward) → `uav:contains` / a `uav:componentModel` link; `HasComponent` (inverse) → a `uav:componentOf` link; a typed Reference → a `uav:typedReference` link with `uav:refType` (an ExpandedNodeId). A `HasComponent` **subtype** such as `HasOrderedComponent` is emitted both as a `uav:hasComponent` entry (for discovery) and as a `uav:typedReference` link carrying its `uav:refType` (`i=49`), so the exact subtype survives the round trip (Section 5.3). Other non-hierarchical References → `uav:reference`/`uav:capability`.
 
 **Step 4 — Units, scaling, groups, semantics.** An `AnalogUnitType` `EngineeringUnits` Property → `uav:unitProperty` + a QUDT quantity kind; scaling Properties → `uav:scaleFactor` / `uav:decimalPlaces`; organizing folders → `uav:propertyGroups`/`memberOf`; `HasDictionaryEntry`-style references → `uav:semanticId`.
 

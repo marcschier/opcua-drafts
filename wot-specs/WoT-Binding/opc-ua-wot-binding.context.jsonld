@@ -13,6 +13,7 @@
     "uav:variable": { "@id": "uav:variable" },
     "uav:variableType": { "@id": "uav:variableType" },
     "uav:method": { "@id": "uav:method" },
+    "uav:eventType": { "@id": "uav:eventType" },
     "uav:hasComponent": { "@id": "uav:hasComponent", "@container": "@set" },
     "uav:componentOf": { "@id": "uav:componentOf", "@container": "@set" },
     "uav:mapToNodeId": { "@id": "uav:mapToNodeId" },

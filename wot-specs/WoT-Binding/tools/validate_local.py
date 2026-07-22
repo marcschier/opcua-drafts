@@ -25,6 +25,12 @@ same result. It verifies, for the wot-specs/WoT-Binding/ folder:
      declares `uav:isComposite`; when a local `uav:componentModel` link connects
      the two examples, the composite's `uav:contains` must reciprocally list the
      link's `uav:refName` (containment consistency, Section 7 of the spec).
+  9. Every NodeId-valued term (`uav:id`, `uav:hasComponent`, `uav:componentOf`,
+     `uav:mapToNodeId`, `uav:mapToType`, a NodeId-valued `uav:refType`, and each
+     `?id=` / NodeId link `href`) in an example is a portable OPC 10000-6
+     ExpandedNodeId and never the session-local `ns=<index>` form (Section 5.1.1).
+ 10. Event annotations are consistent: an affordance annotated `@type uav:eventType`
+     never sets `uav:isEvent: false` (Section 5.2).
 
 Exit code is 0 and the last line is "OK" on success; non-zero with an ERRORS
 list otherwise.
@@ -57,7 +63,7 @@ UANODESET_LOCALNAME = "UANodeSet"
 DOCUMENTED_TERMS = [
     # Preserved OPC 10101 vocabulary.
     "id", "browsePath", "browseName",
-    "object", "objectType", "variable", "variableType", "method",
+    "object", "objectType", "variable", "variableType", "method", "eventType",
     "hasComponent", "componentOf",
     "mapToNodeId", "mapToType", "mapByFieldPath",
     # Preserved OPC 10101 security vocabulary.
@@ -100,6 +106,15 @@ FORBIDDEN = [
 TEXT_EXTS = {".md", ".json", ".jsonld", ".py", ".txt"}
 REL_RE = re.compile(r"^\.{1,2}/")
 HEX64_RE = re.compile(r"^[0-9a-f]{64}$")
+
+# Portable identity (Section 5.1.1): NodeId-valued terms shall be OPC 10000-6
+# ExpandedNodeId strings (nsu=<NamespaceUri>;<idtype>=<id>, or a namespace-0
+# canonical i=<id>) and shall not use the session-local ns=<index> form.
+PORTABLE_ID_STRING_KEYS = ("uav:id", "uav:mapToNodeId", "uav:mapToType")
+PORTABLE_ID_ARRAY_KEYS = ("uav:hasComponent", "uav:componentOf")
+SESSION_NS_RE = re.compile(r"ns=[0-9]")
+EXPANDED_NODEID_RE = re.compile(r"^(svr=[0-9]+;)?(nsu=[^;]+;)?[isgb]=.+$")
+NODEID_HREF_PREFIX_RE = re.compile(r"^(svr=|nsu=|ns=|[isgb]=)")
 
 ERR: list[str] = []
 
@@ -360,6 +375,78 @@ def check_containment(parsed):
                     f"named '{contained_in}'")
 
 
+def _expanded_nodeid(path, where, value):
+    """Assert that value is a portable OPC 10000-6 ExpandedNodeId (Section 5.1.1):
+    no session-local ns=<index> form, and a recognizable idtype (i/s/g/b)."""
+    if not isinstance(value, str) or not value:
+        err(f"{rel(path)}: {where} is not a non-empty string")
+        return
+    if SESSION_NS_RE.search(value):
+        err(f"{rel(path)}: {where} uses the session-local ns=<index> form ('{value}'); "
+            f"a persisted document shall use an ExpandedNodeId (nsu=<NamespaceUri>;... "
+            f"or namespace-0 i=...)")
+        return
+    if not EXPANDED_NODEID_RE.match(value):
+        err(f"{rel(path)}: {where} '{value}' is not a valid ExpandedNodeId string")
+
+
+def check_portable_identity(parsed):
+    """Portable identity (Section 5.1.1 / Section 7 'Portable identity'): every
+    NodeId-valued term shall be an ExpandedNodeId and shall not use ns=<index>.
+    Checked on examples only: the context and schema files declare the terms, not
+    usages of them. The canonical NodeSet2 XML inside a uav:nodeSet envelope is
+    carried base64-encoded under the 'data' key and is therefore never scanned, so
+    its own namespace indices (resolved through its NamespaceUris table) are not
+    affected by this rule."""
+    for path, doc in parsed.items():
+        if os.path.dirname(path) != EXAMPLES or not isinstance(doc, dict):
+            continue
+        for node in iter_dicts(doc):
+            if not isinstance(node, dict):
+                continue
+            for key in PORTABLE_ID_STRING_KEYS:
+                if key in node:
+                    _expanded_nodeid(path, key, node[key])
+            for key in PORTABLE_ID_ARRAY_KEYS:
+                if key in node:
+                    values = node[key]
+                    if not isinstance(values, list):
+                        err(f"{rel(path)}: {key} is not an array")
+                        continue
+                    for value in values:
+                        _expanded_nodeid(path, f"{key} entry", value)
+            ref_type = node.get("uav:refType")
+            if isinstance(ref_type, str) and "=" in ref_type:
+                # A NodeId-valued uav:refType (a browse name such as HasComponent
+                # carries no '='); it shall be a portable ExpandedNodeId.
+                _expanded_nodeid(path, "uav:refType", ref_type)
+            href = node.get("href")
+            if isinstance(href, str):
+                if "?id=" in href:
+                    _expanded_nodeid(path, "form href ?id=", href.split("?id=", 1)[1])
+                elif NODEID_HREF_PREFIX_RE.match(href):
+                    _expanded_nodeid(path, "link href NodeId", href)
+
+
+def check_event_annotations(parsed):
+    """Event annotation consistency (Section 5.2 / Section 7 'Event annotation
+    consistency'): uav:eventType is the @type counterpart of the uav:isEvent flag,
+    so an affordance annotated @type uav:eventType shall not set uav:isEvent: false.
+    Checked on examples only."""
+    for path, doc in parsed.items():
+        if os.path.dirname(path) != EXAMPLES or not isinstance(doc, dict):
+            continue
+        for node in iter_dicts(doc):
+            if not isinstance(node, dict):
+                continue
+            types = node.get("@type")
+            type_list = (types if isinstance(types, list)
+                         else [types] if isinstance(types, str) else [])
+            if "uav:eventType" in type_list and node.get("uav:isEvent") is False:
+                err(f"{rel(path)}: an affordance annotated @type uav:eventType shall not "
+                    f"set uav:isEvent: false (Section 5.2)")
+
+
 MODELLING_RULE_IDS = {
     "Mandatory": "i=78",
     "Optional": "i=80",
@@ -428,6 +515,8 @@ def main() -> int:
     check_relative_refs(parsed)
     check_unit_properties(parsed)
     check_containment(parsed)
+    check_portable_identity(parsed)
+    check_event_annotations(parsed)
     check_modelling_rule_ids()
     check_forbidden_tokens()
 

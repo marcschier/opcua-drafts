@@ -9,12 +9,16 @@
   ],
   "@type": ["tm:ThingModel", "uav:objectType"],
   "title": "ImpellerType",
-  "description": "A Thing Model of an OPC UA ObjectType showing type, reference and modelling-rule mappings: subtype extension, contained-in composition, congruent type identity, forward and inverse HasComponent references, a typed reference, and the four modelling-rule values.",
+  "description": "A Thing Model of an OPC UA ObjectType showing type, reference and modelling-rule mappings: subtype extension, contained-in composition, congruent type identity, forward and inverse HasComponent references, a typed reference, a HasOrderedComponent subtype pinned by a typed link, and the four modelling-rule values.",
   "uav:browseName": "1:ImpellerType",
   "uav:id": "nsu=http://example.com/demo/pump;i=1005",
   "uav:containedIn": "PumpType",
   "uav:componentOf": ["nsu=http://example.com/demo/pump;i=1001"],
   "uav:congruentType": "nsu=http://example.com/demo/pump;i=1005",
+  "uav:hasComponent": [
+    "nsu=http://example.com/demo/pump;s=Blade_1",
+    "nsu=http://example.com/demo/pump;s=Blade_2"
+  ],
   "links": [
     { "rel": "tm:extends", "href": "https://example.com/models/BaseComponentType.tm.jsonld" },
     {
@@ -22,6 +26,18 @@
       "href": "https://example.com/models/MaterialType.tm.jsonld",
       "uav:refName": "Material",
       "uav:refType": "nsu=http://example.com/demo/pump;i=5001"
+    },
+    {
+      "rel": "uav:typedReference",
+      "href": "nsu=http://example.com/demo/pump;s=Blade_1",
+      "uav:refName": "Blade_1",
+      "uav:refType": "i=49"
+    },
+    {
+      "rel": "uav:typedReference",
+      "href": "nsu=http://example.com/demo/pump;s=Blade_2",
+      "uav:refName": "Blade_2",
+      "uav:refType": "i=49"
     }
   ],
   "properties": {

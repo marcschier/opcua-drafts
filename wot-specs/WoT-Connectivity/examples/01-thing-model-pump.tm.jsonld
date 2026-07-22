@@ -57,6 +57,7 @@
   },
   "events": {
     "overTemperature": {
+      "@type": "uav:eventType",
       "title": "Over Temperature",
       "uav:isEvent": true,
       "uav:browseName": "1:OverTemperatureEventType",
