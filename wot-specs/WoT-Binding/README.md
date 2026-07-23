@@ -1,6 +1,6 @@
 # OPC UA — Web of Things (WoT) Binding
 
-A complete, standalone draft revision of the OPC UA companion specification for Web of Things connectivity. It is not an addendum: the specification can be read on its own. It preserves every namespace, prefix, term, and normative behaviour of the published baseline and adds a collision-safe model and platform vocabulary together with a bidirectional NodeSet2 conversion and a preservation envelope.
+A complete, standalone draft revision of the OPC UA companion specification for Web of Things connectivity. It is not an addendum: the specification can be read on its own. It preserves every namespace, prefix, term, and normative behaviour of the published baseline and adds a collision-safe model and platform vocabulary together with native-first, bidirectional NodeSet2 conversion.
 
 > Experimental and non-normative. Nothing here is official or endorsed by the OPC Foundation or the W3C; `opcfoundation.org` namespace URIs are used for prototyping only.
 
@@ -8,7 +8,7 @@ A complete, standalone draft revision of the OPC UA companion specification for 
 
 - Describe an OPC UA interface as a W3C Thing Description or Thing Model, using the preserved Read / Write / Observe / Call and security vocabulary.
 - Express the structural facts of an OPC UA type — composition, references, groups, units, scaling, configuration, metadata, and modelling rules — in a Thing Model.
-- Convert between an OPC UA NodeSet2 information model and a Thing Description or Thing Model without loss, preserving exact constructs in a `uav:nodeSet` envelope and reading everything else natively.
+- Convert between an OPC UA NodeSet2 information model and a Thing Description or Thing Model without loss through the complete `uav:nodes` projection, preserving unmapped WoT members as pointer-addressed NodeSet extension residue. `uav:nodeSet` is reserved for explicit byte archival or a demonstrated fallback.
 
 ## Sources
 
@@ -28,6 +28,7 @@ A complete, standalone draft revision of the OPC UA companion specification for 
   - [`02-thing-model-pump.jsonld`](examples/02-thing-model-pump.jsonld) — a Thing Model using the model and platform vocabulary.
   - [`03-nodeset-preservation-envelope.jsonld`](examples/03-nodeset-preservation-envelope.jsonld) — a `uav:nodeSet` preservation envelope carrying a canonical NodeSet2 baseline.
   - [`04-type-reference-modelling-rule.jsonld`](examples/04-type-reference-modelling-rule.jsonld) — type, reference (including a `HasOrderedComponent` subtype pinned by a typed link), and modelling-rule mappings.
+  - [`05-native-node-model.jsonld`](examples/05-native-node-model.jsonld) — the default schema-complete `uav:nodes` representation without an envelope.
 - [`tools/validate_local.py`](tools/validate_local.py) — the deterministic, standard-library validator.
 
 ## Namespace and prefix
@@ -42,4 +43,4 @@ Run the validator from the repository root (standard library only, no dependenci
 python wot-specs/WoT-Binding/tools/validate_local.py
 ```
 
-It checks that every JSON and JSON-LD artifact parses, that the context contains every documented `uav` term, that each example declares the `uav` context, that each preservation envelope's base64 and SHA-256 are valid and decode to a well-formed `UANodeSet` root, that internal relative references resolve, that every NodeId-valued term in an example is a portable ExpandedNodeId (never the session-local `ns=<index>` form), that `@type: uav:eventType` is never paired with `uav:isEvent: false`, and that no forbidden vendor prefix, namespace, or legacy modelling-language name appears. It prints `OK` and exits `0` on success.
+It checks that every JSON and JSON-LD artifact parses, that the context contains every documented `uav` term, that each example declares the `uav` context, that the native example uses `uav:NodeModel` profile `1.0` without an envelope, that each exceptional envelope's base64 and SHA-256 are valid and decode to a well-formed `UANodeSet` root, that internal relative references resolve, that every NodeId-valued readable term in an example is a portable ExpandedNodeId (never the session-local `ns=<index>` form), that `@type: uav:eventType` is never paired with `uav:isEvent: false`, and that no forbidden vendor prefix, namespace, or legacy modelling-language name appears. It prints `OK` and exits `0` on success.

@@ -8,8 +8,8 @@
   ],
   "@type": "uav:object",
   "id": "urn:dev:opcua:pump-01-preserved",
-  "title": "Pump 01 (with preserved NodeSet baseline)",
-  "description": "A Thing Description that carries the authoritative, byte-exact NodeSet2 baseline in a uav:nodeSet preservation envelope. Consumers verify the SHA-256 digest, decode the base64 data, and use the resulting canonical NodeSet2 XML as the baseline; the native members overlay it.",
+  "title": "Pump 01 (explicit byte-exact NodeSet archive)",
+  "description": "An exceptional archival example that explicitly carries a byte-exact NodeSet2 baseline in a uav:nodeSet envelope. Native uav:nodes conversion is the default; a converter emits this envelope only when byte identity is requested or a future/unsupported construct cannot be represented natively.",
   "uav:browseName": "1:Pump",
   "uav:id": "nsu=http://example.com/demo/pump;s=Pump",
   "uav:nodeSet": {

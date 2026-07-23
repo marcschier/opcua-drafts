@@ -12,7 +12,8 @@ same result. It verifies, for the wot-specs/WoT-Binding/ folder:
      every documented uav term (preserved OPC 10101 terms, the model/platform
      vocabulary, and the preservation-envelope member terms).
   3. Every example declares an @context that binds the uav namespace.
-  4. Every uav:nodeSet preservation envelope is internally consistent: encoding
+  4. The default native example uses uav:NodeModel profile 1.0 without an
+     envelope, and every exceptional uav:nodeSet envelope is internally consistent: encoding
      is base64, the SHA-256 field matches the digest of the decoded bytes, and
      the decoded bytes are a well-formed XML document rooted at UANodeSet.
   5. Every internal relative reference resolves to a file on disk, and the
@@ -31,6 +32,7 @@ same result. It verifies, for the wot-specs/WoT-Binding/ folder:
      ExpandedNodeId and never the session-local `ns=<index>` form (Section 5.1.1).
  10. Event annotations are consistent: an affordance annotated `@type uav:eventType`
      never sets `uav:isEvent: false` (Section 5.2).
+ 11. The native projection example has the required root/model/node structure.
 
 Exit code is 0 and the last line is "OK" on success; non-zero with an ERRORS
 list otherwise.
@@ -83,6 +85,7 @@ DOCUMENTED_TERMS = [
     "includeInherited",
     "additionalProperties", "externalSchema", "modellingRule",
     # Preservation envelope.
+    "nodes", "NodeModel",
     "nodeSet", "contentType", "encoding", "sha256", "data", "profileVersion",
 ]
 
@@ -91,6 +94,7 @@ REQUIRED_EXAMPLES = [
     "02-thing-model-pump.jsonld",
     "03-nodeset-preservation-envelope.jsonld",
     "04-type-reference-modelling-rule.jsonld",
+    "05-native-node-model.jsonld",
 ]
 
 # Forbidden tokens are assembled from fragments so that this file never contains
@@ -211,8 +215,8 @@ def check_examples(parsed):
         p for p in sorted(parsed)
         if os.path.dirname(p) == EXAMPLES and p.lower().endswith(".jsonld")
     ]
-    if len(example_paths) < 4:
-        err(f"expected at least 4 .jsonld examples, found {len(example_paths)}")
+    if len(example_paths) < 5:
+        err(f"expected at least 5 .jsonld examples, found {len(example_paths)}")
     for path in example_paths:
         doc = parsed[path]
         if not isinstance(doc, dict) or "@context" not in doc:
@@ -270,6 +274,39 @@ def check_envelopes(parsed):
         err("no uav:nodeSet preservation envelope found in any example")
     for path, env in envelopes:
         check_envelope(path, env)
+
+
+def check_native_projection(parsed):
+    path = os.path.join(EXAMPLES, "05-native-node-model.jsonld")
+    doc = parsed.get(path)
+    if not isinstance(doc, dict):
+        return
+    if "uav:nodeSet" in doc:
+        err(f"{rel(path)}: native completeness example shall not contain uav:nodeSet")
+    projection = doc.get("uav:nodes")
+    if not isinstance(projection, dict):
+        err(f"{rel(path)}: missing uav:nodes object")
+        return
+    if projection.get("@type") != "uav:NodeModel":
+        err(f"{rel(path)}: uav:nodes @type shall be uav:NodeModel")
+    if projection.get("profileVersion") != "1.0":
+        err(f"{rel(path)}: uav:nodes profileVersion shall be 1.0")
+    nodes = projection.get("nodes")
+    if not isinstance(nodes, list) or not nodes:
+        err(f"{rel(path)}: uav:nodes nodes shall be a non-empty array")
+        return
+    node_classes = set()
+    for index, node in enumerate(nodes):
+        if not isinstance(node, dict):
+            err(f"{rel(path)}: uav:nodes nodes[{index}] is not an object")
+            continue
+        for field in ("nodeClass", "nodeId", "browseName"):
+            if not isinstance(node.get(field), str) or not node[field]:
+                err(f"{rel(path)}: uav:nodes nodes[{index}] missing '{field}'")
+        if isinstance(node.get("nodeClass"), str):
+            node_classes.add(node["nodeClass"])
+    if "ObjectType" not in node_classes or "Variable" not in node_classes:
+        err(f"{rel(path)}: native example shall include ObjectType and Variable records")
 
 
 def check_relative_refs(parsed):
@@ -395,9 +432,10 @@ def check_portable_identity(parsed):
     NodeId-valued term shall be an ExpandedNodeId and shall not use ns=<index>.
     Checked on examples only: the context and schema files declare the terms, not
     usages of them. The canonical NodeSet2 XML inside a uav:nodeSet envelope is
-    carried base64-encoded under the 'data' key and is therefore never scanned, so
-    its own namespace indices (resolved through its NamespaceUris table) are not
-    affected by this rule."""
+    carried base64-encoded under the 'data' key. NodeSet-local nodeId/reference
+    fields inside uav:nodes are paired with that projection's namespaceUris table
+    and are not readable identity terms, so neither representation is affected by
+    this rule."""
     for path, doc in parsed.items():
         if os.path.dirname(path) != EXAMPLES or not isinstance(doc, dict):
             continue
@@ -511,6 +549,7 @@ def main() -> int:
         check_context(ctx_doc)
 
     check_examples(parsed)
+    check_native_projection(parsed)
     check_envelopes(parsed)
     check_relative_refs(parsed)
     check_unit_properties(parsed)

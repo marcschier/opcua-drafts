@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "http://opcfoundation.org/UA/WoT-Binding/opc-ua-wot-binding.schema.json",
-  "title": "OPC UA WoT Binding extension and NodeSet preservation schema",
-  "description": "Structural constraints for the uav model/platform vocabulary and the uav:nodeSet preservation envelope defined by the OPC UA Web of Things Binding. This schema validates the extension members that a Thing Description or Thing Model MAY carry; it does not restate the base W3C Thing Description schema. Apply it in addition to the base Thing Description validation.",
+  "title": "OPC UA WoT Binding extension and NodeSet conversion schema",
+  "description": "Structural constraints for the uav model/platform vocabulary, the complete uav:nodes native projection, and the exceptional uav:nodeSet preservation envelope defined by the OPC UA Web of Things Binding. This schema validates extension members that a Thing Description or Thing Model MAY carry; it does not restate the base W3C Thing Description schema. Apply it in addition to the base Thing Description validation.",
   "type": "object",
   "$defs": {
     "expandedNodeId": {
@@ -45,7 +45,7 @@
     },
     "nodeSetEnvelope": {
       "type": "object",
-      "description": "The uav:nodeSet preservation envelope: the authoritative, byte-exact NodeSet2 baseline.",
+      "description": "The exceptional uav:nodeSet preservation envelope: an explicit byte-exact archival baseline or a last-resort fallback when a future/unsupported construct cannot be represented by uav:nodes. A converter shall not emit it by default when the native projection is complete.",
       "required": ["@type", "contentType", "encoding", "sha256", "data"],
       "properties": {
         "@type": { "const": "uav:nodeSet" },
@@ -68,6 +68,81 @@
         "profileVersion": {
           "type": "string",
           "description": "The preservation profile version, for example '1.0'."
+        }
+      }
+    },
+    "nodeModel": {
+      "type": "object",
+      "description": "The versioned, schema-complete native projection of the UANodeSet XSD. It represents root metadata, namespace/server URI tables, models and dependencies, aliases, XML extensions, and one complete record for each of the eight NodeClasses. XML-valued Value and Extension members are represented as individual XML fragments, never as a whole-document NodeSet blob.",
+      "required": ["@type", "profileVersion", "nodes"],
+      "properties": {
+        "@type": { "const": "uav:NodeModel" },
+        "profileVersion": { "const": "1.0" },
+        "namespaceUris": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "serverUris": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "models": {
+          "type": "array",
+          "items": { "type": "object" }
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["alias", "value"],
+            "properties": {
+              "alias": { "type": "string", "minLength": 1 },
+              "value": { "type": "string", "minLength": 1 }
+            }
+          }
+        },
+        "extensions": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "lastModified": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "nodes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["nodeClass", "nodeId", "browseName"],
+            "properties": {
+              "nodeClass": {
+                "enum": [
+                  "Object",
+                  "Variable",
+                  "Method",
+                  "View",
+                  "ObjectType",
+                  "VariableType",
+                  "DataType",
+                  "ReferenceType"
+                ]
+              },
+              "nodeId": { "type": "string", "minLength": 1 },
+              "browseName": { "type": "string", "minLength": 1 },
+              "references": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["referenceType", "target"],
+                  "properties": {
+                    "referenceType": { "type": "string", "minLength": 1 },
+                    "isForward": { "type": "boolean" },
+                    "target": { "type": "string", "minLength": 1 }
+                  }
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -112,6 +187,7 @@
         "uav:additionalProperties": { "type": "boolean" },
         "uav:externalSchema": { "type": "string" },
         "uav:modellingRule": { "$ref": "#/$defs/modellingRule" },
+        "uav:nodes": { "$ref": "#/$defs/nodeModel" },
         "uav:nodeSet": { "$ref": "#/$defs/nodeSetEnvelope" }
       }
     },

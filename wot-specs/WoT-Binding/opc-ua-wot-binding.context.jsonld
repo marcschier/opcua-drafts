@@ -66,6 +66,15 @@
     "uav:externalSchema": { "@id": "uav:externalSchema" },
     "uav:modellingRule": { "@id": "uav:modellingRule" },
 
+    "uav:NodeModel": { "@id": "uav:NodeModel" },
+    "uav:nodes": {
+      "@id": "uav:nodes",
+      "@context": {
+        "@version": 1.1,
+        "@vocab": "http://opcfoundation.org/UA/WoT-Binding/"
+      }
+    },
+
     "uav:nodeSet": {
       "@id": "uav:nodeSet",
       "@context": {

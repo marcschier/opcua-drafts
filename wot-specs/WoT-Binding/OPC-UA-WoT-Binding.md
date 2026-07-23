@@ -17,7 +17,7 @@ It has three layers, each usable on its own:
 
 - A **preserved protocol binding** that lets a Thing Description carry enough metadata for a client to open a session with an OPC UA Server, select a security configuration, and Read, Write, Observe (monitor), or Call a datapoint. This layer is byte-for-byte compatible with the published baseline vocabulary and semantics.
 - A **model and platform vocabulary** that lets a Thing Model express the structural facts of an OPC UA type — composition, references, groups, units, scaling, configuration, metadata, and modelling rules — so that a Thing Model is a faithful, tool-processable projection of an ObjectType.
-- A **bidirectional NodeSet2 conversion** with a preservation envelope, so that any OPC UA construct that has no native WoT representation survives a round trip exactly, and any construct that does have a native representation is readable without decoding the envelope.
+- A **bidirectional NodeSet2 conversion** whose default `uav:nodes` projection covers the complete UANodeSet schema without an opaque envelope. The `uav:nodeSet` envelope is reserved for explicit byte-exact archival or a future construct that a converter cannot represent.
 
 Out of scope: the OPC UA wire protocol itself (defined by OPC 10000-6), transport security key management, and the domain semantics of any particular companion specification. This binding references the Variables, Methods, and types that a domain model already defines; it does not re-model process data.
 
@@ -28,7 +28,7 @@ This document re-authors [OPC 10101 v1.00](https://reference.opcfoundation.org/s
 - **Preserved baseline (unchanged behaviour).** Every namespace, prefix and term of the published vocabulary, and every service, URI, access-level and security mapping, is preserved byte-for-byte and only re-worded (Section 5). The `uav` prefix and its namespace are unchanged. Where this draft and the published baseline disagree on a preserved term, the published baseline governs.
 - **Event mapping (new).** An explicit mapping of OPC UA events (`BaseEventType` subtypes) to WoT event affordances, anchored by the `uav:eventType` type annotation and the `uav:isEvent` flag, including the standard event fields and `subscribeevent`/`unsubscribeevent` realized by OPC UA event MonitoredItems (Section 8). The published baseline had no event mapping.
 - **Model and platform vocabulary (new).** A collision-safe vocabulary that lets a Thing Model record the structural facts of an OPC UA type — composition, references, groups, units, scaling, configuration, metadata, inheritance and modelling rules (Section 6) — so a Thing Model is a faithful, tool-processable projection of an ObjectType, not only a client-facing description.
-- **Exact NodeSet2 round trip and preservation (new).** A bidirectional NodeSet2 ↔ WoT conversion with defined round-trip invariants (Section 9) and a digest-verified `uav:nodeSet` preservation envelope (Section 10) that makes any OPC UA construct without a native WoT form survive a round trip exactly, while natively representable constructs stay readable without decoding the envelope.
+- **Exact NodeSet2 round trip and preservation (new).** A bidirectional NodeSet2 ↔ WoT conversion with defined round-trip invariants (Section 9), a versioned and schema-complete `uav:nodes` projection, pointer-addressed preservation of unmapped WoT JSON members in standard NodeSet `Extensions`, and an exceptional digest-verified `uav:nodeSet` byte archive (Section 10).
 - **Implementer guidance (new).** Independent conformance units and recommended profiles (Section 11), a deterministic standard-library validator, worked examples, and an iterative implementer walkthrough (Annex D) covering both conversion directions.
 
 ## 2 Normative and informative references
@@ -54,7 +54,7 @@ The keywords **shall**, **shall not**, **should**, **should not**, and **may** a
 
 ### 3.2 JSON-LD conventions
 
-A Thing Description and a Thing Model are JSON-LD 1.1 documents. Every example in this specification declares an `@context` array whose entries bind the base WoT Thing Description context, the `uav` prefix to the namespace of Section 4, and the companion context document [`opc-ua-wot-binding.context.jsonld`](opc-ua-wot-binding.context.jsonld). A `uav` member is written in prefixed form, for example `uav:browseName`. The structural constraints of the `uav` members and of the preservation envelope are stated by [`opc-ua-wot-binding.schema.json`](opc-ua-wot-binding.schema.json) and validated by [`tools/validate_local.py`](tools/validate_local.py).
+A Thing Description and a Thing Model are JSON-LD 1.1 documents. Every example in this specification declares an `@context` array whose entries bind the base WoT Thing Description context, the `uav` prefix to the namespace of Section 4, and the companion context document [`opc-ua-wot-binding.context.jsonld`](opc-ua-wot-binding.context.jsonld). A `uav` member is written in prefixed form, for example `uav:browseName`. The structural constraints of the `uav` members, native projection, and exceptional preservation envelope are stated by [`opc-ua-wot-binding.schema.json`](opc-ua-wot-binding.schema.json) and validated by [`tools/validate_local.py`](tools/validate_local.py).
 
 ### 3.3 Abbreviations
 
@@ -94,7 +94,7 @@ nsu=<NamespaceUri>;<idtype>=<id>
 
 for example `nsu=http://example.com/demo/pump;s=Pump` or `nsu=http://example.com/demo/pump;i=1001`. For a Node in the base OPC UA namespace (namespace 0) the canonical namespace-0 form `i=<id>` **may** be used without an `nsu=` prefix, for example the `HasOrderedComponent` ReferenceType `i=49`.
 
-A document **shall not** use the session-local `ns=<index>` form in any of these terms, because the namespace index is only meaningful within a single Server session and is invalidated by a namespace-table reordering. A client resolves each `nsu=<NamespaceUri>` to the target Server's current namespace index at session establishment, reading the Server `NamespaceArray` (OPC 10000-5), before issuing a request. A namespace index still appears legitimately in two places that this identity rule does not govern: the qualified `BrowseName` and `browsePath` form `namespaceIndex:name` (for example `1:Pump`), which a reader resolves through the `@context` prefix bindings (Section 5.8); and inside the canonical NodeSet2 XML carried by a `uav:nodeSet` preservation envelope (Sections 9 and 10), which resolves its indices through its own `NamespaceUris` table and is therefore unaffected by this rule.
+A document **shall not** use the session-local `ns=<index>` form in any of these terms, because the namespace index is only meaningful within a single Server session and is invalidated by a namespace-table reordering. A client resolves each `nsu=<NamespaceUri>` to the target Server's current namespace index at session establishment, reading the Server `NamespaceArray` (OPC 10000-5), before issuing a request. A namespace index still appears legitimately in three places that this identity rule does not govern: the qualified `BrowseName` and `browsePath` form `namespaceIndex:name` (for example `1:Pump`), which a reader resolves through the `@context` prefix bindings (Section 5.8); the NodeSet-local `nodeId` and reference fields inside `uav:nodes`, which resolve through that projection's `namespaceUris`; and the canonical NodeSet2 XML carried by a `uav:nodeSet` preservation envelope (Sections 9 and 10), which resolves its indices through its own `NamespaceUris` table.
 
 ### 5.2 Type-annotation terms
 
@@ -340,16 +340,29 @@ References between types are carried on WoT `links`. The `rel` value selects the
 
 *Explanation.* Every instance must carry a `serialNumber`; `stage` is a placeholder that expands, per instance, into one or more uniquely named `stage` members.
 
-### 6.10 Preservation envelope term
+### 6.10 Native projection and preservation terms
 
-**`uav:nodeSet`** (object) — the preservation envelope defined in Section 10. It carries the authoritative, byte-exact NodeSet2 baseline of the type or Thing, so any OPC UA construct without a native WoT representation survives a round trip exactly (Section 9). When present it is authoritative and a consumer **shall** verify its digest before use.
+**`uav:nodes`** (object) — the default, schema-complete native projection defined in Sections 9.2 and 10.1. Its `@type` is `uav:NodeModel`; it carries the UANodeSet root tables and one complete structured record for every node.
+
+```jsonc
+"uav:nodes": {
+  "@type": "uav:NodeModel", "profileVersion": "1.0",
+  "namespaceUris": ["http://example.com/demo/pump"],
+  "nodes": [{ "nodeClass": "ObjectType", "nodeId": "ns=1;i=1001",
+              "browseName": "1:PumpType", "references": [ ... ] }]
+}
+```
+
+*Explanation.* This is the normal lossless conversion representation. It is readable JSON, covers every field of the UANodeSet schema, and is reconstructed and compared before a converter claims completeness.
+
+**`uav:nodeSet`** (object) — the exceptional preservation envelope defined in Section 10.3. It carries an authoritative, byte-exact NodeSet2 baseline for explicit archival or a reported fallback when a future/unsupported construct cannot be represented by the supported `uav:NodeModel` profile. A converter **shall not** emit it by default when `uav:nodes` is complete. When present, a consumer **shall** verify its digest before use.
 
 ```jsonc
 "uav:nodeSet": { "@type": "uav:nodeSet", "contentType": "application/opcua-nodeset+xml",
   "encoding": "base64", "sha256": "…", "data": "…" }
 ```
 
-*Explanation.* The envelope pins the exact NodeSet2 bytes and their SHA-256, letting a converter recover the original model losslessly while native `uav` members remain readable without decoding it.
+*Explanation.* The envelope pins exact NodeSet2 bytes and their SHA-256. It is separate from the native completeness proof and is not required for current UANodeSet constructs.
 
 ## 7 Validation rules
 
@@ -380,12 +393,14 @@ A document that uses the vocabulary of Section 6 **shall** satisfy the following
 | `uav:includeInherited`, `uav:additionalProperties` | type | boolean |
 | `uav:externalSchema` | affordance | URI or path |
 | `uav:modellingRule` | member | one of `Mandatory`, `Optional`, `MandatoryPlaceholder`, `OptionalPlaceholder` |
+| `uav:nodes` | TD or TM root | `uav:NodeModel` object with supported `profileVersion` and a complete `nodes` array |
+| `uav:nodeSet` | TD or TM root | exceptional envelope of Section 10.3 |
 
 **Cross-cutting rules.**
 
 - **Unique group titles.** The `title` of every group is globally unique across `uav:propertyGroups`, `uav:eventGroups`, and `uav:actionGroups` of a type. Two groups **shall not** share a title.
 - **Membership target.** A `uav:memberOf` value **shall** name a group of the matching kind: a property's `uav:memberOf` **shall** name a `uav:propertyGroups` title, an event's an `uav:eventGroups` title, and an action's an `uav:actionGroups` title.
-- **Portable identity.** Every NodeId-valued term — `uav:id`, each entry of `uav:hasComponent` and `uav:componentOf`, `uav:mapToNodeId`, `uav:mapToType`, a NodeId-valued `uav:refType`, and the `<nodeId>` of a `?id=` href — **shall** be an ExpandedNodeId per Section 5.1.1 and **shall not** use the session-local `ns=<index>` form. This rule does not govern the qualified `BrowseName`/`browsePath` form `namespaceIndex:name` (Section 5.8) or the namespace indices inside the canonical NodeSet2 XML of a `uav:nodeSet` preservation envelope, which are resolved through that NodeSet's own `NamespaceUris` table.
+- **Portable identity.** Every NodeId-valued readable term — `uav:id`, each entry of `uav:hasComponent` and `uav:componentOf`, `uav:mapToNodeId`, `uav:mapToType`, a NodeId-valued `uav:refType`, and the `<nodeId>` of a `?id=` href — **shall** be an ExpandedNodeId per Section 5.1.1 and **shall not** use the session-local `ns=<index>` form. This rule does not govern qualified `BrowseName`/`browsePath`, NodeSet-local identities inside `uav:nodes`, or namespace indices inside `uav:nodeSet`; each of those representations carries or resolves through its own namespace table.
 - **Component subtypes.** `uav:hasComponent` / `uav:componentOf` cover `HasComponent` and all of its subtypes for parent-child discovery. When a listed component's exact subtype matters (for example `HasOrderedComponent`), the document **shall** also carry a `rel: uav:typedReference` link whose `uav:refType` is that ReferenceType's ExpandedNodeId and whose `uav:refName` names the reference; a converter recreates the exact subtype from that link and otherwise uses plain `HasComponent` (Section 5.3).
 - **Event annotation consistency.** An event affordance annotated with `@type: uav:eventType` **shall not** set `uav:isEvent: false`; the two forms record the same fact (Section 5.2), and a consumer treats an affordance as an EventType projection when either is present.
 - **Containment consistency.** If a composite `A` lists refName `b` in `uav:contains`, the type reached by the link named `b` **shall** declare `uav:containedIn: "A"`; conversely every `uav:containedIn: "A"` **shall** be matched by an entry in `A`'s `uav:contains`.
@@ -403,7 +418,7 @@ A Thing Model is the class-level projection and a Thing Description is the insta
 
 - **ObjectType maps to a Thing Model.** An ObjectType becomes a TM whose `@type` includes `uav:objectType`; its InstanceDeclarations become the TM's affordances with a `uav:modellingRule`.
 - **Object maps to a Thing Description.** An Object becomes a TD whose `@type` includes `uav:object`; a TD may reference the TM of its type through a `tm:instanceOf` style link and carries concrete values and forms.
-- **Variables map to properties.** A UA Variable or the declaration of a VariableType member becomes a WoT property with `@type` `uav:variable` (TD) or `uav:variableType` (TM), a `type` from the DataType, and `readOnly` / `writeOnly` / `observable` from the AccessLevel.
+- **Variables map to properties.** A UA Variable or the declaration of a VariableType member becomes a WoT property with `@type` `uav:variable` (TD) or `uav:variableType` (TM), a `type` from the DataType, and `readOnly` / `writeOnly` / `observable` from the AccessLevel. `observable: true` and an `observeproperty` form declare that the TD exposes observation through this binding; their absence does not state that the UA Variable is technically incapable of becoming a MonitoredItem, because OPC UA permits monitoring any Variable for which the Server grants the required access.
 - **Methods map to actions.** A UA Method becomes a WoT action with `@type` `uav:method`; its input and output arguments become the action's `input` and `output` DataSchemas.
 - **OPC UA events map to WoT events.** An EventType (derived from `BaseEventType`) becomes a WoT event affordance whose `@type` includes `uav:eventType` and that carries `uav:isEvent: true`; the event's fields become the event `data` schema, the standard fields (`EventId`, `EventType`, `SourceNode`, `Time`, `Severity`, `Message`) map to the corresponding `data` properties, and `uav:eventConfiguration` carries opaque delivery configuration. Subscription uses the WoT `subscribeevent` / `unsubscribeevent` operations, realized by OPC UA event MonitoredItems. This event mapping is new in this document.
 - **Links and references.** Non-hierarchical and typed references map to `links` as in Section 6.2; hierarchical component references map to `uav:hasComponent` / `uav:componentOf` (Section 5.3) or, at model level, to `uav:contains` / `uav:containedIn`.
@@ -412,7 +427,7 @@ A Thing Model is the class-level projection and a Thing Description is the insta
 
 ## 9 NodeSet2 and WoT conversion
 
-Conversion is bidirectional. Every NodeClass, attribute, reference, and value has a **native readable mapping** so that a consumer can act on a Thing Description without decoding any envelope. Constructs that have no faithful native representation are preserved exactly by the envelope of Section 10.
+Conversion is bidirectional. The readable mapping lets a WoT consumer act on a Thing without decoding model records. Alongside it, `uav:nodes` is a versioned, structured projection of the complete UANodeSet schema and is the default lossless conversion form. No NodeClass, attribute, Reference, Value, DataType definition, model-table entry, alias, role permission, or standard UANodeSet extension defined by OPC 10000-3, OPC 10000-5, or the UANodeSet schema requires the opaque envelope of Section 10.3.
 
 ### 9.1 Native readable mapping
 
@@ -442,31 +457,90 @@ Conversion is bidirectional. Every NodeClass, attribute, reference, and value ha
 | Namespace table | `@context` prefix bindings keyed by namespace index; identity terms name namespaces by URI (Section 5.1.1) |
 | Events (`BaseEventType` subtypes) | event affordance, `@type` `uav:eventType`, `uav:isEvent: true` |
 
-### 9.2 Preservation envelope
+### 9.2 Complete native `uav:nodes` projection
 
-When a `uav:nodeSet` envelope is present it is **authoritative**: it carries the canonical NodeSet2 XML of the type or Thing as base64, together with its content type, encoding, SHA-256 digest, and preservation profile version. A consumer **shall** verify the digest against the decoded bytes before using the envelope, and **shall** treat the decoded NodeSet2 as the baseline model.
+A converter from NodeSet2 **shall by default** emit a `uav:nodes` object whose `@type` is `uav:NodeModel` and whose `profileVersion` identifies the projection grammar. Version `1.0` represents:
 
-### 9.3 Overlay and conflict rules
+- the complete `NamespaceUris`, `ServerUris`, `Models`, `Aliases`, root `Extensions`, and `LastModified` fields;
+- every top-level and required model entry, including role permissions and access restrictions;
+- every node of all eight NodeClasses, in source order;
+- every common and NodeClass-specific UANodeSet attribute, localized text, category, documentation, role permission, Reference, method argument, translation, DataType definition field, and Value;
+- each arbitrary XML `Value` or `Extension` element as an individual XML fragment, not as an encoded copy of the NodeSet document.
 
-When both the envelope and native members are present, the native members **overlay** the decoded baseline according to these rules:
+The projection keeps NodeSet-local `ns=<index>` identities together with its own `namespaceUris` table. Those internal values are not persisted AddressSpace identities and are therefore outside the portable-identity rule of Section 5.1.1. The readable `uav:id`, link, and form identities remain URI-qualified ExpandedNodeIds.
 
-- A native member that adds information absent from the baseline (for example a `title`, a `uav:semanticId`, or a group membership) is applied as an addition.
-- A native member that restates a baseline fact **shall** be consistent with it; an inconsistent native member (for example a `uav:browseName` that differs from the baseline `BrowseName`, or a `uav:modellingRule` that differs from the baseline modelling rule) is a **conflict**.
-- A consumer that detects a conflict **shall** report an error and **shall not** silently choose one side.
+Because UANodeSet provides `Extensions` at the document and UANode levels and because arbitrary XML content is representable as an extension fragment, the projection has no exception for a construct defined by the current UANodeSet schema. A converter **shall** reconstruct the projection and compare the result with its source before claiming lossless conversion.
 
-### 9.4 Synthesis when the envelope is absent
+### 9.3 Default and exceptional preservation policy
 
-When no envelope is present, a converter synthesizes a NodeSet2 from the native members. NodeIds that the native members do not supply are **generated deterministically**: the same input Thing Description or Thing Model always yields the same NodeIds, derived from a stable hash of the target namespace URI and the member's browse path so that repeated conversions are byte-identical. The converter **shall** report the result's **lossless-subset status**: whether every native member was represented (a lossless subset) or whether some WoT construct had no NodeSet2 representation.
+The native projection is the default:
 
-### 9.5 Roundtrip invariants and unknown-member preservation
+- If the reconstructed `uav:nodes` model is equivalent to the source NodeSet2, a converter **shall not** emit `uav:nodeSet` merely to prove the round trip.
+- A converter **may** emit `uav:nodeSet` when a caller explicitly requests byte-exact archival.
+- A converter **may** use `uav:nodeSet` as a last-resort fallback for a future schema revision or unsupported extension that it can demonstrate is not represented by the supported `uav:NodeModel` profile. It **shall** report that fallback.
+- A conformance/completeness test **shall** forbid or remove `uav:nodeSet`; a test that succeeds by decoding the envelope does not prove the native mapping complete.
 
-- **NodeSet2 → WoT → NodeSet2.** When the envelope is retained, the canonical NodeSet2 recovered from the envelope is byte-identical to the input; native edits that Section 9.3 permits are the only allowed differences.
-- **WoT → NodeSet2 → WoT.** A Thing Description or Thing Model converted to a synthesized NodeSet2 and back reproduces every native member and every `uav` member unchanged.
-- **Unknown members.** A converter **shall** carry through unchanged any JSON-LD member it does not recognize, at every level of the document, so that vocabulary it does not implement survives a round trip.
+When `uav:nodeSet` is present it is authoritative for the exact XML baseline. A consumer **shall** verify its digest before use. A simultaneously present `uav:nodes` projection and readable members **shall** be consistent with that baseline; a conflict **shall** be reported and **shall not** be silently resolved.
 
-## 10 Preservation envelope format
+### 9.4 Synthesis from an authored TD or TM
 
-The `uav:nodeSet` envelope is a JSON object with these members:
+When an authored document has no `uav:nodes`, a converter synthesizes NodeSet2 from the readable members. NodeIds that the document does not supply are generated deterministically from the target namespace URI and browse path. The same document therefore yields the same identities.
+
+Recognized WoT and `uav` facts are represented as NodeSet model facts. A JSON-LD member that the converter does not recognize or cannot map is **not** grounds for a whole-document envelope. Instead, the converter stores only that unmapped value as a `WoTJsonResidue` entry in the root UANodeSet `Extensions` collection (Section 10.2). Each entry identifies the original location by RFC 6901 JSON Pointer and carries the JSON value with an integrity digest. Mapped members **shall not** be copied into the residue.
+
+On conversion back to WoT, the converter first generates the document from OPC UA model facts and then applies each residue entry. A residue entry that targets an already generated member **shall** have the same JSON value; otherwise it is a conflict and the converter **shall** report an error rather than overwrite the OPC UA fact.
+
+### 9.5 Roundtrip invariants
+
+- **NodeSet2 → WoT → NodeSet2 (default).** With `uav:nodeSet` absent, conversion through `uav:nodes` reproduces an equivalent UANodeSet: all model-table data, nodes, attributes, References, values, definitions, aliases, permissions, and extensions are retained. XML formatting or prefix choices need not be byte-identical.
+- **WoT → NodeSet2 → WoT.** Every recognized member is regenerated from OPC UA model facts and every unrecognized/unmapped JSON-LD member is restored from pointer-addressed residue with the same JSON value.
+- **Explicit byte archive.** When a caller explicitly retains `uav:nodeSet`, decoding it reproduces the original NodeSet2 bytes exactly after digest verification.
+
+## 10 Native projection, residue, and exceptional envelope formats
+
+### 10.1 `uav:nodes`
+
+The `uav:nodes` value is a JSON object:
+
+| Member | Required | Value |
+| --- | --- | --- |
+| `@type` | yes | the constant `uav:NodeModel` |
+| `profileVersion` | yes | the native projection grammar, currently `1.0` |
+| `namespaceUris`, `serverUris` | when present in source | ordered URI arrays |
+| `models` | when present in source | ordered model-table entries and recursive `requiredModels` |
+| `aliases` | when present in source | ordered alias/value records |
+| `extensions` | when present in source | ordered XML extension fragments |
+| `lastModified` | when present in source | XML Schema `dateTime` |
+| `nodes` | yes | ordered complete node records |
+
+Each node record has `nodeClass`, `nodeId`, and `browseName`, followed by the applicable fields of `UANode` and its concrete NodeClass in the UANodeSet schema. The grammar uses lower-camel-case names corresponding to the XSD field names. `references`, localized-text arrays, DataType `definition`, `argumentDescriptions`, and `translations` are structured JSON. `valueXml` and entries of `extensions` contain one well-formed XML element each. A worked example is [`examples/05-native-node-model.jsonld`](examples/05-native-node-model.jsonld).
+
+### 10.2 `WoTJsonResidue` NodeSet Extension
+
+The root UANodeSet `Extensions` collection may contain one `WoTJsonResidue` element in the Binding namespace:
+
+```xml
+<uav:WoTJsonResidue
+    xmlns:uav="http://opcfoundation.org/UA/WoT-Binding/"
+    Version="1.0">
+  <uav:Member Pointer="/properties/PumpSpeed/vendor:quality"
+      Encoding="base64"
+      Sha256="...">eyJtb2RlIjoiZ29vZCJ9</uav:Member>
+  <uav:Member Pointer="/links/-"
+      LinkRel="tm:extends"
+      LinkHref="nsu=http://example.com/base;i=1001"
+      Encoding="base64"
+      Sha256="...">eyJocmVmbGFuZyI6ImVuIn0=</uav:Member>
+</uav:WoTJsonResidue>
+```
+
+`Pointer` is an RFC 6901 JSON Pointer into the regenerated WoT document. `Encoding` is `base64`; the decoded bytes are exactly one JSON value; `Sha256` is the lower-case hexadecimal SHA-256 digest of those decoded bytes. A link whose array position is not stable across regeneration uses `Pointer="/links/-"` and the optional selector attributes `LinkRel`, `LinkHref`, `LinkRefType`, and `LinkRefName`; the decoded JSON object then contains only the unmapped link members. The converter matches the regenerated link by those stable identifiers or creates it if the readable mapping did not emit one. It **shall not** address mapped-link extras by the source array index.
+
+A converter **shall** verify the digest, JSON syntax, pointer syntax, size/depth limits, selectors, and conflicts before applying residue. It **shall** store only unmapped members or unmapped submembers, never a copy of the complete TD/TM and never a duplicate of a mapped OPC UA fact. Additional `@context` terms are merged into the regenerated `uav` context object by term name rather than by the authored array position.
+
+### 10.3 Exceptional `uav:nodeSet` envelope
+
+The optional `uav:nodeSet` envelope is a JSON object with these members:
 
 | Member | Required | Value |
 | --- | --- | --- |
@@ -477,7 +551,7 @@ The `uav:nodeSet` envelope is a JSON object with these members:
 | `data` | yes | the base64 encoding of the canonical NodeSet2 XML bytes |
 | `profileVersion` | recommended | the preservation profile version, for example `1.0` |
 
-The decoded bytes **shall** be a well-formed XML document whose root element is `UANodeSet` in the namespace `http://opcfoundation.org/UA/2011/03/UANodeSet.xsd`. A worked example is [`examples/03-nodeset-preservation-envelope.jsonld`](examples/03-nodeset-preservation-envelope.jsonld).
+The decoded bytes **shall** be a well-formed XML document whose root element is `UANodeSet` in the namespace `http://opcfoundation.org/UA/2011/03/UANodeSet.xsd`. This format is not the default conversion representation. An explicit archival example is [`examples/03-nodeset-preservation-envelope.jsonld`](examples/03-nodeset-preservation-envelope.jsonld).
 
 ## 11 Conformance units and profiles
 
@@ -486,9 +560,10 @@ A Server, a Thing Description author, or a converter declares conformance to the
 | Unit | Requirement |
 | --- | --- |
 | **WoT-ProtocolBinding** | The preserved protocol binding of Section 5: URI/base/href, the four service mappings, access levels, and the security schemes. |
-| **WoT-NativeMapping** | The native readable mapping of Section 9.1 for every listed NodeClass, attribute, and reference. |
-| **WoT-NodeSetPreservation** | The `uav:nodeSet` envelope of Section 10, including digest verification. |
-| **WoT-ExactRoundtrip** | The roundtrip invariants of Section 9.5, including unknown-member preservation. |
+| **WoT-NativeMapping** | The readable mapping of Section 9.1 and the complete `uav:nodes` projection of Sections 9.2 and 10.1. |
+| **WoT-JsonResidue** | Pointer-addressed unmapped-member preservation using the NodeSet Extension of Section 10.2. |
+| **WoT-NodeSetPreservation** | The exceptional `uav:nodeSet` envelope of Section 10.3, including digest verification. |
+| **WoT-ExactRoundtrip** | The native, envelope-free roundtrip invariants of Section 9.5, including JSON residue. |
 | **WoT-EventMapping** | The OPC UA event to WoT event mapping of Section 8. |
 | **WoT-ModelVocabulary** | The model and platform vocabulary of Section 6 and its validation rules in Section 7. |
 | **WoT-ExternalResolver** | Resolution of `uav:externalSchema`, `uav:mapToType`, `uav:mapToNodeId`, and cross-document links. |
@@ -497,11 +572,12 @@ Recommended profiles:
 
 - **WoT-Reader** — WoT-ProtocolBinding and WoT-NativeMapping. The minimum for a client that reads a Thing Description and talks to the Server.
 - **WoT-Modeller** — WoT-Reader plus WoT-ModelVocabulary and WoT-EventMapping. For tools that author or interpret Thing Models.
-- **WoT-Converter** — WoT-Modeller plus WoT-NodeSetPreservation and WoT-ExactRoundtrip. For tools that convert between NodeSet2 and WoT losslessly.
+- **WoT-Converter** — WoT-Modeller plus WoT-JsonResidue and WoT-ExactRoundtrip. For tools that convert between NodeSet2 and WoT losslessly without requiring an envelope.
+- **WoT-ArchivalConverter** — WoT-Converter plus WoT-NodeSetPreservation. For callers that explicitly require the original NodeSet2 bytes.
 
 ## Annex A — JSON-LD context and schema (informative)
 
-The machine-readable vocabulary is [`opc-ua-wot-binding.context.jsonld`](opc-ua-wot-binding.context.jsonld); it binds the `uav` prefix and declares every term of Sections 5, 6, and 10. The structural constraints are [`opc-ua-wot-binding.schema.json`](opc-ua-wot-binding.schema.json), a JSON Schema (2020-12) that validates the `uav` members and the preservation envelope in addition to the base Thing Description schema.
+The machine-readable vocabulary is [`opc-ua-wot-binding.context.jsonld`](opc-ua-wot-binding.context.jsonld); it binds the `uav` prefix and declares every term of Sections 5, 6, and 10. The structural constraints are [`opc-ua-wot-binding.schema.json`](opc-ua-wot-binding.schema.json), a JSON Schema (2020-12) that validates the `uav` members, native projection, and exceptional preservation envelope in addition to the base Thing Description schema.
 
 ## Annex B — Examples (informative)
 
@@ -509,6 +585,7 @@ The machine-readable vocabulary is [`opc-ua-wot-binding.context.jsonld`](opc-ua-
 - [`examples/02-thing-model-pump.jsonld`](examples/02-thing-model-pump.jsonld) — a Thing Model using the model and platform vocabulary.
 - [`examples/03-nodeset-preservation-envelope.jsonld`](examples/03-nodeset-preservation-envelope.jsonld) — a preservation envelope carrying a canonical NodeSet2 baseline.
 - [`examples/04-type-reference-modelling-rule.jsonld`](examples/04-type-reference-modelling-rule.jsonld) — a Thing Model exercising type, reference (including a `HasOrderedComponent` subtype pinned by a typed link), and modelling-rule mappings.
+- [`examples/05-native-node-model.jsonld`](examples/05-native-node-model.jsonld) — the default, schema-complete `uav:nodes` projection with no preservation envelope.
 
 ## Annex C — Validation (informative)
 
@@ -518,7 +595,7 @@ Run the deterministic, standard-library validator from the repository root:
 python wot-specs/WoT-Binding/tools/validate_local.py
 ```
 
-It confirms that every artifact parses, that the context declares every documented `uav` term, that each example declares the `uav` context, that each preservation envelope's base64 and SHA-256 are valid and decode to a well-formed `UANodeSet`, that internal relative references resolve, that every NodeId-valued term in an example is a portable ExpandedNodeId and never the session-local `ns=<index>` form (Section 5.1.1), that `@type: uav:eventType` is never paired with `uav:isEvent: false` (Section 5.2), and that no forbidden vendor prefix, namespace, or legacy modelling-language name appears.
+It confirms that every artifact parses, that the context declares every documented `uav` term, that each example declares the `uav` context, that the native example carries `uav:NodeModel` profile `1.0` and no envelope, that each exceptional envelope's base64 and SHA-256 are valid and decode to a well-formed `UANodeSet`, that internal relative references resolve, that every NodeId-valued readable term in an example is a portable ExpandedNodeId and never the session-local `ns=<index>` form (Section 5.1.1), that `@type: uav:eventType` is never paired with `uav:isEvent: false` (Section 5.2), and that no forbidden vendor prefix, namespace, or legacy modelling-language name appears.
 
 ## Annex D — Implementer walkthrough (informative)
 
@@ -581,7 +658,7 @@ This annex walks an implementer through both conversion directions for the pump 
   "observable": true, "forms": [{ "op": ["readproperty","observeproperty"] }] }
 ```
 
-→ `Variable 1:PumpSpeed` (`AccessLevel CurrentRead`); `readproperty` → Read, `observeproperty` → a Subscription MonitoredItem.
+→ `Variable 1:PumpSpeed` (`AccessLevel CurrentRead`); `readproperty` → Read, `observeproperty` → a Subscription MonitoredItem. The operation advertises observation through the WoT binding; it does not define whether the Variable is technically monitorable in OPC UA, because any Variable may be monitored when the Server permits it.
 
 **Step 3 — Actions → Methods; events → event MonitoredItems.** `uav:method` actions become callable `Method` instances (`invokeaction` → Call); events annotated `@type uav:eventType` (with `uav:isEvent: true`) are subscribed via event MonitoredItems (`subscribeevent`).
 
@@ -589,7 +666,7 @@ This annex walks an implementer through both conversion directions for the pump 
 
 ### D.3 Reverse: OPC UA AddressSpace / NodeSet2 → Thing Model / Thing Description
 
-The reverse is the mirror image; a converter walks the NodeSet2 and emits `uav` terms, preserving anything without a native form in a `uav:nodeSet` envelope (Section 10).
+The reverse is the mirror image; a converter walks the NodeSet2, emits the readable `uav` terms, and emits the complete `uav:nodes` projection. It does not emit `uav:nodeSet` in the normal case.
 
 **Step 1 — Classify the root.** An `ObjectType` → a TM with `@type uav:objectType`; an `Object` → a TD with `@type uav:object`. Emit `uav:browseName` from `BrowseName`, `title` from `DisplayName`, `description` from `Description`.
 
@@ -604,6 +681,8 @@ Variable 1:PumpSpeed (DataType Double, CurrentRead, Mandatory)
 
 **Step 4 — Units, scaling, groups, semantics.** An `AnalogUnitType` `EngineeringUnits` Property → `uav:unitProperty` + a QUDT quantity kind; scaling Properties → `uav:scaleFactor` / `uav:decimalPlaces`; organizing folders → `uav:propertyGroups`/`memberOf`; `HasDictionaryEntry`-style references → `uav:semanticId`.
 
-**Step 5 — Preserve the exact baseline.** Emit a `uav:nodeSet` envelope carrying the canonical NodeSet2 bytes, content type, `base64` encoding, and SHA-256 digest so that `NodeSet2 → WoT → NodeSet2` is byte-identical (Section 9.5). Any construct with no native `uav` mapping survives only through this envelope; everything with a native mapping stays readable without decoding it.
+**Step 5 — Emit the complete native model.** Emit `uav:nodes` with `@type: uav:NodeModel`, profile `1.0`, the namespace/model/alias tables, and complete records for every node. Values and XML extensions are individual XML fragments. Reconstruct this projection and compare it with the source before reporting success.
 
-**Roundtrip check.** Converting `PumpType` to a TM and back reproduces every member declaration, modelling rule, unit, reference and group; converting the retained envelope back yields the original NodeSet2 byte-for-byte.
+**Step 6 — Use the envelope only by exception.** Do not emit `uav:nodeSet` when Step 5 is complete. Emit it only when the caller explicitly requests byte-exact archival or when a future/unsupported construct demonstrably cannot be represented by the supported native profile, and report that fallback.
+
+**Roundtrip check.** Converting `PumpType` to a TM and back with `uav:nodeSet` forbidden reproduces every member declaration, modelling rule, unit, reference, value, DataType definition, permission, alias and extension. This envelope-free check is the conformance proof; an optional archival check may separately verify byte identity.
