@@ -118,7 +118,7 @@ An OPC UA Union shall be represented as an Arrow dense `union` with a `null` bra
 
 A one-dimensional OPC UA array shall be represented as `list<Elem>`, where `Elem` is the Arrow mapping of the element DataType. A null array is a null list slot. An empty array is a present list slot with length zero. Null elements are represented by the element validity bitmap when the element type permits nulls.
 
-A multi-dimensional OPC UA Matrix shall be represented as `struct<dimensions:list<int32>, values:list<Elem>>`. `dimensions` contains the OPC UA dimension lengths. `values` contains the elements in row-major order. The product of `dimensions` shall equal the length of `values`. Arrow `fixed_shape_tensor` and `variable_shape_tensor` extension types may be referenced informatively, but this struct is the only canonical Matrix carrier.
+A multi-dimensional OPC UA Matrix shall be represented as `struct<dimensions:list<int32>, values:list<Elem>>`. `dimensions` contains the OPC UA dimension lengths. `values` contains the elements in row-major order. An OPC UA matrix has **at least two dimensions**, and the product of `dimensions` shall equal the length of `values`; a decoder **shall reject**, with `Bad_DecodingError`, a matrix whose `dimensions` has fewer than two entries or whose dimension product does not equal the length of `values`. Arrow `fixed_shape_tensor` and `variable_shape_tensor` extension types may be referenced informatively, but this struct is the only canonical Matrix carrier.
 
 #### 5.6.6 Variant
 
@@ -235,6 +235,8 @@ Arrow is schema-based: the Arrow schema of the IPC stream is required to decode 
 ##### 6.9.2.1 SchemaId and canonical schema bytes
 
 The Arrow mapping defines a lightweight SchemaId handshake that is independent of PubSub `ConfigurationVersion`. A SchemaId is derived only from the serialized Arrow Schema canonical form defined by Part 6. The SchemaId shall be the first 8 bytes of the SHA-256 fingerprint of the serialized Arrow `Schema` IPC message bytes, for example `SHA-256(schema.serialize().to_pybytes())[:8]`. The lowercase hexadecimal form used in descriptors and diagnostics is 16 characters; the on-wire field is the raw 8-byte value unless a profile specifies a longer length. Any carried `schemaId` metadata is a reference to the canonical schema and shall not be inserted into the canonical schema bytes before calculating the SchemaId.
+
+The Arrow `Schema` describes one DataSet — the columns of that DataSet's RecordBatch(es) — so the SchemaId identifies a **single DataSet's** schema. An IPC stream, file or bare `batch` carries one DataSet's schema; a deployment that multiplexes several DataSets uses a separate stream or SchemaId per DataSet. A producer accordingly computes and tracks the SchemaId, and advances the DataSet `ConfigurationVersion`, **per DataSet**, not per transport frame.
 
 A NetworkMessage, DataSetMessage or transport envelope shall reference the schema by SchemaId, carried either in Arrow IPC custom metadata or in the DataSetMessage/transport header. The SchemaId may coexist with `ConfigurationVersion`, but it does not depend on it; a ConfigurationVersion change that does not change the Arrow Schema keeps the same SchemaId, and an Arrow Schema change produces a new SchemaId even if a publisher's configuration versioning policy is separate.
 

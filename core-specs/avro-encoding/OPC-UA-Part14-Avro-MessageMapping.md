@@ -306,6 +306,8 @@ This gives a natural SchemaId announcement path. The DataSetMetaData or configur
 
 Single OPC UA values encoded with Default Avro should use Avro single-object encoding: the two magic bytes `0xC3 0x01`, followed by the 8-byte little-endian Rabin fingerprint, followed by the Avro binary body. The fingerprint bytes are the SchemaId. PubSub DataSetMessages or NetworkMessages that do not use single-object encoding shall carry the same SchemaId in the DataSetMessage header, NetworkMessage header, or transport metadata agreed for the mapping.
 
+The SchemaId identifies the schema of a **single DataSet** — the schema of one DataSetMessage payload. A NetworkMessage-level SchemaId is therefore valid only when **every** DataSetMessage the NetworkMessage carries was written under the same schema; a NetworkMessage that carries DataSetMessages of different DataSets, or of the same DataSet at different schema minors, shall carry a **per-DataSetMessage SchemaId** (§8.2). A producer accordingly computes and tracks the SchemaId, and advances the DataSet `ConfigurationVersion` (§8.8), **per DataSet**, not per NetworkMessage.
+
 ### 8.2 SchemaId carrier placement
 
 The following carrier placement rules are normative. When more than one carrier is present for the same Avro payload, all present carriers shall contain the same SchemaId value; a receiver shall treat disagreement as a decoding error.

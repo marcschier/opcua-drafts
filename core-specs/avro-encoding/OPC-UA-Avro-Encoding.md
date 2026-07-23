@@ -124,7 +124,7 @@ A one-dimensional OPC UA array of element type `T` shall be encoded as `["null",
 
 ### 5.5 Matrices
 
-A matrix shall be encoded as a record with fields `dimensions` and `values`: `{ "dimensions": {"type":"array","items":"int"}, "values": {"type":"array","items": <element-or-null>} }`. Values are row-major. The product of dimensions shall equal the length of `values`. A null matrix is the null branch of `["null", MatrixRecord]` and is distinct from a matrix with an empty dimensions vector and empty values vector.
+A matrix shall be encoded as a record with fields `dimensions` and `values`: `{ "dimensions": {"type":"array","items":"int"}, "values": {"type":"array","items": <element-or-null>} }`. Values are row-major. An OPC UA matrix has **at least two dimensions**, and the product of dimensions shall equal the length of `values`. A decoder **shall reject**, with `Bad_DecodingError`, a matrix whose `dimensions` has fewer than two entries or whose dimension product does not equal the length of `values`. A null matrix is the null branch of `["null", MatrixRecord]` and is distinct from a present matrix record.
 
 ### 5.6 Structures and optional fields
 
@@ -505,6 +505,8 @@ This gives a natural SchemaId announcement path. The DataSetMetaData or configur
 #### 8.4.1 Framing
 
 Single OPC UA values encoded with Default Avro should use Avro single-object encoding: the two magic bytes `0xC3 0x01`, followed by the 8-byte little-endian Rabin fingerprint, followed by the Avro binary body. The fingerprint bytes are the SchemaId. PubSub DataSetMessages or NetworkMessages that do not use single-object encoding shall carry the same SchemaId in the DataSetMessage header, NetworkMessage header, or transport metadata agreed for the mapping.
+
+The SchemaId identifies the schema of a **single DataSet** — the schema of one DataSetMessage payload. A NetworkMessage-level SchemaId is therefore valid only when **every** DataSetMessage the NetworkMessage carries was written under the same schema; a NetworkMessage that carries DataSetMessages of different DataSets, or of the same DataSet at different schema minors, shall carry a **per-DataSetMessage SchemaId** (§8.4.2). A producer accordingly computes and tracks the SchemaId, and advances the DataSet `ConfigurationVersion` (§8.4.8), **per DataSet**, not per NetworkMessage.
 
 #### 8.4.2 SchemaId carrier placement
 

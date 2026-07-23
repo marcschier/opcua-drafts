@@ -106,7 +106,7 @@ A one-dimensional OPC UA array of element type `T` shall be encoded as `["null",
 
 ### 5.5 Matrices
 
-A matrix shall be encoded as a record with fields `dimensions` and `values`: `{ "dimensions": {"type":"array","items":"int"}, "values": {"type":"array","items": <element-or-null>} }`. Values are row-major. The product of dimensions shall equal the length of `values`. A null matrix is the null branch of `["null", MatrixRecord]` and is distinct from a matrix with an empty dimensions vector and empty values vector.
+A matrix shall be encoded as a record with fields `dimensions` and `values`: `{ "dimensions": {"type":"array","items":"int"}, "values": {"type":"array","items": <element-or-null>} }`. Values are row-major. An OPC UA matrix has **at least two dimensions**, and the product of dimensions shall equal the length of `values`. A decoder **shall reject**, with `Bad_DecodingError`, a matrix whose `dimensions` has fewer than two entries or whose dimension product does not equal the length of `values`. A null matrix is the null branch of `["null", MatrixRecord]` and is distinct from a present matrix record.
 
 ### 5.6 Structures and optional fields
 
