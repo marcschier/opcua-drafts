@@ -31,6 +31,6 @@ Extensions **must treat `opcua_enc` as a read-only API** — add code only under
 
 ## Validate
 
-```
+```powershell
 python core-specs/_common/validate_local.py     # 100 cases, 0 failures
 ```

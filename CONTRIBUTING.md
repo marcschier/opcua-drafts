@@ -81,7 +81,6 @@ python core-specs/extras/validate_all.py --self-contained
 python .github/scripts/check_determinism.py
 ```
 
-
 ## Conventions
 
 - **Branch names** — short and descriptive of the change (for example `avro-action-response-fields`).

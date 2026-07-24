@@ -1,4 +1,5 @@
 <a id="annex-a"></a>
+
 ## Annex A — Information model
 
 This annex is the normative node reference. It is generated from `core-specs/extras/observability-export/tools/build_model.py` and always matches `Opc.Ua.ObservabilityExport.NodeSet2.xml`. All nodes are defined in this specification's own namespace `http://opcfoundation.org/UA/ObservabilityExport/` (namespace index 1 in the NodeSet, which requires the base OPC UA namespace); the NodeIds shown are the draft numeric identifiers within that namespace. The **Declared in** column marks members inherited from a supertype.
@@ -27,6 +28,7 @@ This annex is the normative node reference. It is generated from `core-specs/ext
 ### Reference types
 
 <a id="type-BindsToNode"></a>
+
 #### BindsToNode  (i=60001)
 
 *Subtype of:* [NonHierarchicalReferences](https://reference.opcfoundation.org/specs/OPC-10000-3/7.4) · *InverseName:* `IsBoundBy`
@@ -34,6 +36,7 @@ This annex is the normative node reference. It is generated from `core-specs/ext
 Links a BoundItem to the companion-specification Variable, event source or Program in the AddressSpace that it exposes for observability export. The target is the authoritative semantic node; the BoundItem does not copy its meaning.
 
 <a id="type-ExportedBy"></a>
+
 #### ExportedBy  (i=60002)
 
 *Subtype of:* [NonHierarchicalReferences](https://reference.opcfoundation.org/specs/OPC-10000-3/7.4) · *InverseName:* `Exports`
@@ -41,6 +44,7 @@ Links a BoundItem to the companion-specification Variable, event source or Progr
 Links an ObservabilityBinding to the optional OPC UA Part 14 PubSub node(s) that export it (a PublishedDataSet, DataSetWriter or DataSetReader) - the concrete OTEL exporter for the binding's signal. Forward 'ExportedBy' reads binding -> exporter; the inverse 'Exports' reads exporter -> binding. Absent (and never required) when the binding is not exported over PubSub - a Server may instead serve the binding over the classic client/server (RPC) interface.
 
 <a id="type-HasBaseBinding"></a>
+
 #### HasBaseBinding  (i=60003)
 
 *Subtype of:* [NonHierarchicalReferences](https://reference.opcfoundation.org/specs/OPC-10000-3/7.4) · *InverseName:* `IsBaseBindingOf`
@@ -48,6 +52,7 @@ Links an ObservabilityBinding to the optional OPC UA Part 14 PubSub node(s) that
 Links a derived or composing ObservabilityBinding to a base ObservabilityBinding whose fields it extends or composes (e.g. a Machine binding to the Device-facet binding it builds on). Optional browse convenience used where the base binding node is present in the same AddressSpace; the portable, cross-specification lineage carrier is ObservabilityBinding.BaseDataSetClassIds.
 
 <a id="type-Collects"></a>
+
 #### Collects  (i=60004)
 
 *Subtype of:* [NonHierarchicalReferences](https://reference.opcfoundation.org/specs/OPC-10000-3/7.4) · *InverseName:* `CollectedBy`
@@ -57,6 +62,7 @@ Links the server-wide Observability registry to the ObservabilityBindingGroups i
 ### Object types
 
 <a id="type-BoundItemType"></a>
+
 #### BoundItemType  (i=60012)
 
 *Inherits from:* [BaseObjectType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.2)
@@ -82,6 +88,7 @@ A single item bound for observability export: it references the companion-spec n
 | DimensionConstantValue | Variable | String | Optional | BoundItemType | For a Kind=Dimension item whose attribute value is a constant (not read from a node): the attribute value; the attribute key is FieldName. Absent for a node-sourced dimension (which uses its BrowsePath). |
 
 <a id="type-BoundVariableType"></a>
+
 #### BoundVariableType  (i=60013)
 
 *Inherits from:* [BoundItemType](#type-BoundItemType)
@@ -112,6 +119,7 @@ A bound Variable exposed as a PubSub DataSet field.
 | DimensionConstantValue | Variable | String | Optional | [BoundItemType](#type-BoundItemType) | For a Kind=Dimension item whose attribute value is a constant (not read from a node): the attribute value; the attribute key is FieldName. Absent for a node-sourced dimension (which uses its BrowsePath). |
 
 <a id="type-BoundEventFieldType"></a>
+
 #### BoundEventFieldType  (i=60017)
 
 *Inherits from:* [BoundItemType](#type-BoundItemType)
@@ -138,6 +146,7 @@ A bound event field of a log or trace (event-sourced) binding, selected by a Par
 | DimensionConstantValue | Variable | String | Optional | [BoundItemType](#type-BoundItemType) | For a Kind=Dimension item whose attribute value is a constant (not read from a node): the attribute value; the attribute key is FieldName. Absent for a node-sourced dimension (which uses its BrowsePath). |
 
 <a id="type-ObservabilityBindingType"></a>
+
 #### ObservabilityBindingType  (i=60011)
 
 *Inherits from:* [BaseObjectType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.2)
@@ -172,6 +181,7 @@ One observability binding on a bound object or type. It declares the OTEL signal
 | <BoundItem> | Object |  | OptionalPlaceholder | ObservabilityBindingType | A browsable bound item (rich form of a BoundItems entry). |
 
 <a id="type-ObservabilityBindingGroupType"></a>
+
 #### ObservabilityBindingGroupType  (i=60018)
 
 *Inherits from:* [FolderType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.6)
@@ -185,6 +195,7 @@ A per-companion-specification group of that spec's ObservabilityBinding objects.
 | <ObservabilityBinding> | Object |  | OptionalPlaceholder | ObservabilityBindingGroupType | An observability binding of this companion specification. |
 
 <a id="type-ObservabilityFolderType"></a>
+
 #### ObservabilityFolderType  (i=60010)
 
 *Inherits from:* [FolderType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.6)
@@ -192,6 +203,7 @@ A per-companion-specification group of that spec's ObservabilityBinding objects.
 The type of the server-wide Observability registry, exposed as a component of the Server Object. It is the discovery entry point: it Collects every ObservabilityBindingGroup that exports observability data through non-hierarchical Collects references (the groups themselves stay contained by their bound instances). Extensible - companion specifications contribute their instances' groups.
 
 <a id="type-IObservableType"></a>
+
 #### IObservableType  (i=60016)
 
 *Inherits from:* [BaseInterfaceType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.9)
@@ -205,6 +217,7 @@ Interface implemented by a companion-specification ObjectType (or instance) to a
 ### Data types
 
 <a id="type-BoundItemKindEnum"></a>
+
 #### BoundItemKindEnum  (i=60051)
 
 *Subtype of:* Enumeration
@@ -223,6 +236,7 @@ Generic role of a bound item for routing/bridging to an observability backend. I
 | Other | 7 | Any other role. |
 
 <a id="type-MetricInstrumentTypeEnum"></a>
+
 #### MetricInstrumentTypeEnum  (i=60053)
 
 *Subtype of:* Enumeration
@@ -240,6 +254,7 @@ The OpenTelemetry-style metric instrument a bound value maps to. Lets a bridge e
 | ObservableGauge | 6 | Asynchronous last-value sample (OTEL ObservableGauge). |
 
 <a id="type-MetricTemporalityEnum"></a>
+
 #### MetricTemporalityEnum  (i=60054)
 
 *Subtype of:* Enumeration
@@ -252,6 +267,7 @@ Aggregation temporality of a metric value, so a bridge accumulates or reports it
 | Delta | 1 | The value is the change since the previous report (OTEL delta). |
 
 <a id="type-ObservabilitySignalKindEnum"></a>
+
 #### ObservabilitySignalKindEnum  (i=60052)
 
 *Subtype of:* Enumeration
@@ -265,6 +281,7 @@ The OTEL signal an observability binding exposes: metrics (a Part 14 data DataSe
 | Traces | 2 | A trace/span stream: Program executions, audit events or correlated events mapped to OTEL spans (PublishedEventsType). |
 
 <a id="type-BoundItemDataType"></a>
+
 #### BoundItemDataType  (i=60060)
 
 *Subtype of:* Structure
@@ -305,4 +322,3 @@ Machine-readable descriptor of a single bound item: how to LOCATE it (BrowsePath
 | BrowseName | NodeId | TypeDefinition | Note |
 |---|---|---|---|
 | Observability | i=60101 | [ObservabilityFolderType](#type-ObservabilityFolderType) | Server-wide registry of observability bindings, discoverable as a component of the Server object. It Collects every ObservabilityBindingGroup exposed by the Server's instances; its presence does not require any PubSub configuration. |
-
