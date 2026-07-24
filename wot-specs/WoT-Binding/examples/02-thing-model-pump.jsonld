@@ -3,6 +3,7 @@
     "https://www.w3.org/2022/wot/td/v1.1",
     {
       "uav": "http://opcfoundation.org/UA/WoT-Binding/",
+      "pump": "http://example.com/demo/pump#",
       "qudt-quantitykind": "http://qudt.org/vocab/quantitykind/"
     },
     "../opc-ua-wot-binding.context.jsonld"
@@ -17,6 +18,7 @@
   "uav:additionalProperties": false,
   "uav:nameNamespace": "http://example.com/demo/pump#",
   "uav:semanticId": "http://example.com/ontology/Pump",
+  "uav:congruentTypeName": "pump:PumpType",
   "uav:congruentType": "nsu=http://example.com/demo/pump;i=1001",
   "uav:contains": ["Impeller"],
   "uav:metadata": {
@@ -38,10 +40,10 @@
       "rel": "uav:componentModel",
       "href": "./04-type-reference-modelling-rule.jsonld",
       "uav:refName": "Impeller",
-      "uav:refType": "HasComponent"
+      "uav:refType": "i=47"
     },
     {
-      "rel": "uav:typedReference",
+      "rel": "pump:DriveReference",
       "href": "https://example.com/models/MotorType.tm.jsonld",
       "uav:refName": "Drive",
       "uav:refType": "nsu=http://example.com/demo/pump;i=4002"

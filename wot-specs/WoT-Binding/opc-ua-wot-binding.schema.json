@@ -17,6 +17,11 @@
       "pattern": "^[A-Za-z][A-Za-z0-9+.-]*:",
       "description": "An absolute IRI (has a scheme)."
     },
+    "modelConceptName": {
+      "type": "string",
+      "pattern": "^[A-Za-z_][A-Za-z0-9._-]*:.+$",
+      "description": "Binding compact model name '<non-numeric context prefix>:<BrowseName>'. The prefix resolves to the defining OPC UA NamespaceUri. This is a semantic model lookup hint, not Node identity."
+    },
     "jsonPointer": {
       "type": "string",
       "pattern": "^(/([^/~]|~0|~1)*)+$",
@@ -157,19 +162,17 @@
         "uav:componentOf": { "type": "array", "items": { "$ref": "#/$defs/expandedNodeId" } },
         "uav:mapToNodeId": { "$ref": "#/$defs/expandedNodeId" },
         "uav:mapToType": { "$ref": "#/$defs/expandedNodeId" },
+        "uav:mapToTypeName": { "$ref": "#/$defs/modelConceptName" },
         "uav:mapByFieldPath": { "type": "string" },
 
         "uav:isComposite": { "type": "boolean" },
         "uav:isEvent": { "type": "boolean" },
         "uav:refName": { "type": "string" },
-        "uav:refType": {
-          "type": "string",
-          "description": "The ReferenceType of a uav:typedReference: either a reference-type BrowseName (for example 'HasComponent') or, when given as a NodeId, an ExpandedNodeId string per #/$defs/expandedNodeId (for example 'i=49' for HasOrderedComponent). A NodeId-valued uav:refType shall not use the session-local ns=<index> form.",
-          "not": { "pattern": "ns=[0-9]" }
-        },
+        "uav:refType": { "$ref": "#/$defs/expandedNodeId" },
         "uav:contains": { "type": "array", "items": { "type": "string" } },
         "uav:containedIn": { "type": "string" },
         "uav:congruentType": { "type": "string" },
+        "uav:congruentTypeName": { "$ref": "#/$defs/modelConceptName" },
         "uav:nameNamespace": { "$ref": "#/$defs/absoluteIri" },
         "uav:scaleFactor": { "type": "number" },
         "uav:decimalPlaces": { "type": "integer", "minimum": 0 },
@@ -189,6 +192,10 @@
         "uav:modellingRule": { "$ref": "#/$defs/modellingRule" },
         "uav:nodes": { "$ref": "#/$defs/nodeModel" },
         "uav:nodeSet": { "$ref": "#/$defs/nodeSetEnvelope" }
+      },
+      "dependentRequired": {
+        "uav:mapToTypeName": ["uav:mapToType"],
+        "uav:congruentTypeName": ["uav:congruentType"]
       }
     },
     "securityChannelScheme": {

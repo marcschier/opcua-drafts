@@ -33,6 +33,9 @@ same result. It verifies, for the wot-specs/WoT-Binding/ folder:
  10. Event annotations are consistent: an affordance annotated `@type uav:eventType`
      never sets `uav:isEvent: false` (Section 5.2).
  11. The native projection example has the required root/model/node structure.
+ 12. Compact model names use non-numeric context prefixes bound to OPC UA
+     NamespaceUris, require definitive identifiers where specified, and agree
+     with known base-namespace ReferenceTypes.
 
 Exit code is 0 and the last line is "OK" on success; non-zero with an ERRORS
 list otherwise.
@@ -67,16 +70,16 @@ DOCUMENTED_TERMS = [
     "id", "browsePath", "browseName",
     "object", "objectType", "variable", "variableType", "method", "eventType",
     "hasComponent", "componentOf",
-    "mapToNodeId", "mapToType", "mapByFieldPath",
+    "mapToNodeId", "mapToType", "mapToTypeName", "mapByFieldPath",
     # Preserved OPC 10101 security vocabulary.
     "channelsec", "authentication", "securityMode", "securityPolicy",
     "userIdentityToken", "issueToken",
     # Model and platform vocabulary.
     "isComposite", "isEvent",
-    "capability", "componentModel", "reference", "typedReference",
+    "capability", "componentModel", "reference",
     "refName", "refType",
     "contains", "containedIn",
-    "congruentType", "nameNamespace",
+    "congruentType", "congruentTypeName", "nameNamespace",
     "scaleFactor", "decimalPlaces",
     "propertyGroups", "eventGroups", "actionGroups", "memberOf",
     "unitProperty",
@@ -119,6 +122,13 @@ PORTABLE_ID_ARRAY_KEYS = ("uav:hasComponent", "uav:componentOf")
 SESSION_NS_RE = re.compile(r"ns=[0-9]")
 EXPANDED_NODEID_RE = re.compile(r"^(svr=[0-9]+;)?(nsu=[^;]+;)?[isgb]=.+$")
 NODEID_HREF_PREFIX_RE = re.compile(r"^(svr=|nsu=|ns=|[isgb]=)")
+MODEL_CONCEPT_RE = re.compile(r"^([A-Za-z_][A-Za-z0-9._-]*):(.+)$")
+UA_NS = "http://opcfoundation.org/UA/"
+KNOWN_LINK_RELS = {
+    "tm:extends", "uav:capability", "uav:componentModel",
+    "uav:reference", "uav:componentOf", "type", "collection", "item",
+    "alternate", "describedby", "self"
+}
 
 ERR: list[str] = []
 
@@ -466,6 +476,69 @@ def check_portable_identity(parsed):
                     _expanded_nodeid(path, "link href NodeId", href)
 
 
+def _context_prefixes(doc):
+    prefixes = {"uav": UAV_NS, "ua": UA_NS}
+    context = doc.get("@context") if isinstance(doc, dict) else None
+    entries = context if isinstance(context, list) else [context]
+    for entry in entries:
+        if not isinstance(entry, dict):
+            continue
+        for prefix, value in entry.items():
+            if isinstance(value, str) and MODEL_CONCEPT_RE.match(f"{prefix}:x"):
+                prefixes[prefix] = value
+    return prefixes
+
+
+def _model_concept(path, where, value, prefixes):
+    if not isinstance(value, str) or not value:
+        err(f"{rel(path)}: {where} is not a non-empty compact model name")
+        return
+    match = MODEL_CONCEPT_RE.match(value)
+    if not match:
+        err(f"{rel(path)}: {where} '{value}' is not '<non-numeric prefix>:<BrowseName>'")
+        return
+    prefix = match.group(1)
+    if prefix not in prefixes:
+        err(f"{rel(path)}: {where} prefix '{prefix}' is not bound in @context")
+    elif prefix == "ua" and prefixes[prefix] != UA_NS:
+        err(f"{rel(path)}: reserved prefix 'ua' shall bind {UA_NS}")
+
+
+def check_model_concept_names(parsed):
+    """Section 5.1.2 compact model names are semantic lookup hints, not Node
+    identity. Prefixes shall resolve to NamespaceUris; data-plane/congruence
+    hints require their definitive identifiers; known base concepts shall agree."""
+    for path, doc in parsed.items():
+        if os.path.dirname(path) != EXAMPLES or not isinstance(doc, dict):
+            continue
+        prefixes = _context_prefixes(doc)
+        for node in iter_dicts(doc):
+            if not isinstance(node, dict):
+                continue
+            for key in ("uav:mapToTypeName", "uav:congruentTypeName"):
+                if key in node:
+                    _model_concept(path, key, node[key], prefixes)
+            relation = node.get("rel")
+            if isinstance(relation, str) and relation not in KNOWN_LINK_RELS:
+                if relation.startswith(("http:", "https:", "urn:")):
+                    pass
+                elif relation.startswith("uav:"):
+                    err(f"{rel(path)}: Binding relation '{relation}' is not defined")
+                elif ("uav:refType" in node or "uav:refName" in node or
+                      relation.startswith("ua:") or
+                      re.match(r"^ns[0-9]+:", relation)):
+                    _model_concept(path, "typed Reference rel", relation, prefixes)
+            if "uav:mapToTypeName" in node and "uav:mapToType" not in node:
+                err(f"{rel(path)}: uav:mapToTypeName requires uav:mapToType")
+            if "uav:congruentTypeName" in node and "uav:congruentType" not in node:
+                err(f"{rel(path)}: uav:congruentTypeName requires uav:congruentType")
+            if node.get("rel") == "ua:HasOrderedComponent":
+                fallback = node.get("uav:refType")
+                if fallback is not None and fallback != "i=49":
+                    err(f"{rel(path)}: ua:HasOrderedComponent conflicts with "
+                        f"uav:refType '{fallback}', expected i=49")
+
+
 def check_event_annotations(parsed):
     """Event annotation consistency (Section 5.2 / Section 7 'Event annotation
     consistency'): uav:eventType is the @type counterpart of the uav:isEvent flag,
@@ -555,6 +628,7 @@ def main() -> int:
     check_unit_properties(parsed)
     check_containment(parsed)
     check_portable_identity(parsed)
+    check_model_concept_names(parsed)
     check_event_annotations(parsed)
     check_modelling_rule_ids()
     check_forbidden_tokens()

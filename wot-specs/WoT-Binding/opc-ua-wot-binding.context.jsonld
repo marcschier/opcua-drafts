@@ -2,6 +2,7 @@
   "@context": {
     "@version": 1.1,
     "uav": "http://opcfoundation.org/UA/WoT-Binding/",
+    "ua": "http://opcfoundation.org/UA/",
     "qudt": "http://qudt.org/schema/qudt/",
     "qudt-quantitykind": "http://qudt.org/vocab/quantitykind/",
 
@@ -18,6 +19,7 @@
     "uav:componentOf": { "@id": "uav:componentOf", "@container": "@set" },
     "uav:mapToNodeId": { "@id": "uav:mapToNodeId" },
     "uav:mapToType": { "@id": "uav:mapToType" },
+    "uav:mapToTypeName": { "@id": "uav:mapToTypeName" },
     "uav:mapByFieldPath": { "@id": "uav:mapByFieldPath" },
 
     "uav:channelsec": { "@id": "uav:channelsec" },
@@ -33,7 +35,6 @@
     "uav:capability": { "@id": "uav:capability" },
     "uav:componentModel": { "@id": "uav:componentModel" },
     "uav:reference": { "@id": "uav:reference" },
-    "uav:typedReference": { "@id": "uav:typedReference" },
     "uav:refName": { "@id": "uav:refName" },
     "uav:refType": { "@id": "uav:refType" },
 
@@ -41,6 +42,7 @@
     "uav:containedIn": { "@id": "uav:containedIn" },
 
     "uav:congruentType": { "@id": "uav:congruentType" },
+    "uav:congruentTypeName": { "@id": "uav:congruentTypeName" },
     "uav:nameNamespace": { "@id": "uav:nameNamespace", "@type": "@id" },
 
     "uav:scaleFactor": { "@id": "uav:scaleFactor" },

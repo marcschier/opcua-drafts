@@ -3,6 +3,8 @@
     "https://www.w3.org/2022/wot/td/v1.1",
     {
       "uav": "http://opcfoundation.org/UA/WoT-Binding/",
+      "ua": "http://opcfoundation.org/UA/",
+      "pump": "http://example.com/demo/pump#",
       "qudt-quantitykind": "http://qudt.org/vocab/quantitykind/"
     },
     "../opc-ua-wot-binding.context.jsonld"
@@ -14,6 +16,7 @@
   "uav:id": "nsu=http://example.com/demo/pump;i=1005",
   "uav:containedIn": "PumpType",
   "uav:componentOf": ["nsu=http://example.com/demo/pump;i=1001"],
+  "uav:congruentTypeName": "pump:ImpellerType",
   "uav:congruentType": "nsu=http://example.com/demo/pump;i=1005",
   "uav:hasComponent": [
     "nsu=http://example.com/demo/pump;s=Blade_1",
@@ -22,19 +25,19 @@
   "links": [
     { "rel": "tm:extends", "href": "https://example.com/models/BaseComponentType.tm.jsonld" },
     {
-      "rel": "uav:typedReference",
+      "rel": "pump:MaterialReference",
       "href": "https://example.com/models/MaterialType.tm.jsonld",
       "uav:refName": "Material",
       "uav:refType": "nsu=http://example.com/demo/pump;i=5001"
     },
     {
-      "rel": "uav:typedReference",
+      "rel": "ua:HasOrderedComponent",
       "href": "nsu=http://example.com/demo/pump;s=Blade_1",
       "uav:refName": "Blade_1",
       "uav:refType": "i=49"
     },
     {
-      "rel": "uav:typedReference",
+      "rel": "ua:HasOrderedComponent",
       "href": "nsu=http://example.com/demo/pump;s=Blade_2",
       "uav:refName": "Blade_2",
       "uav:refType": "i=49"
@@ -65,6 +68,8 @@
       "title": "Vibration",
       "uav:browseName": "1:Vibration",
       "type": "number",
+      "uav:mapToTypeName": "pump:MeasurementDataType",
+      "uav:mapToType": "nsu=http://example.com/demo/pump;i=3010",
       "uav:modellingRule": "Optional"
     }
   },

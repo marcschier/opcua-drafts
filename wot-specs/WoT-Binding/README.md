@@ -8,11 +8,12 @@ A complete, standalone draft revision of the OPC UA companion specification for 
 
 - Describe an OPC UA interface as a W3C Thing Description or Thing Model, using the preserved Read / Write / Observe / Call and security vocabulary.
 - Express the structural facts of an OPC UA type — composition, references, groups, units, scaling, configuration, metadata, and modelling rules — in a Thing Model.
+- Pair definitive ExpandedNodeIds with NamespaceUri-qualified model names such as `ua:HasOrderedComponent` so type-level concepts remain semantically readable without weakening instance identity.
 - Convert between an OPC UA NodeSet2 information model and a Thing Description or Thing Model without loss through the complete `uav:nodes` projection, preserving unmapped WoT members as pointer-addressed NodeSet extension residue. `uav:nodeSet` is reserved for explicit byte archival or a demonstrated fallback.
 
 ## Sources
 
-- [OPC 10101 — OPC UA for WoT Binding](https://reference.opcfoundation.org/specs/OPC-10101/) — the published baseline this draft re-authors and preserves.
+- [OPC 10101 — OPC UA for WoT Binding](https://reference.opcfoundation.org/specs/OPC-10101/) — the published version superseded by this draft.
 - [W3C Web of Things (WoT) Thing Description 1.1](https://www.w3.org/TR/wot-thing-description11/) and [WoT Binding Templates](https://www.w3.org/TR/wot-binding-templates/).
 - [OPC 10000-3](https://reference.opcfoundation.org/specs/OPC-10000-3/), [10000-4](https://reference.opcfoundation.org/specs/OPC-10000-4/), [10000-5](https://reference.opcfoundation.org/specs/OPC-10000-5/), [10000-6](https://reference.opcfoundation.org/specs/OPC-10000-6/), [10000-7](https://reference.opcfoundation.org/specs/OPC-10000-7/).
 - [QUDT](http://qudt.org/) for quantity kinds and units; [RFC 6901](https://www.rfc-editor.org/rfc/rfc6901), [RFC 4648](https://www.rfc-editor.org/rfc/rfc4648), and [RFC 3986](https://www.rfc-editor.org/rfc/rfc3986).
@@ -27,7 +28,7 @@ A complete, standalone draft revision of the OPC UA companion specification for 
   - [`01-opcua-td-pump.jsonld`](examples/01-opcua-td-pump.jsonld) — a Thing Description using the preserved Read / Write / Observe / Call and security vocabulary.
   - [`02-thing-model-pump.jsonld`](examples/02-thing-model-pump.jsonld) — a Thing Model using the model and platform vocabulary.
   - [`03-nodeset-preservation-envelope.jsonld`](examples/03-nodeset-preservation-envelope.jsonld) — a `uav:nodeSet` preservation envelope carrying a canonical NodeSet2 baseline.
-  - [`04-type-reference-modelling-rule.jsonld`](examples/04-type-reference-modelling-rule.jsonld) — type, reference (including a `HasOrderedComponent` subtype pinned by a typed link), and modelling-rule mappings.
+  - [`04-type-reference-modelling-rule.jsonld`](examples/04-type-reference-modelling-rule.jsonld) — type, semantic model-name/reference (including `ua:HasOrderedComponent` plus its `i=49` fallback), and modelling-rule mappings.
   - [`05-native-node-model.jsonld`](examples/05-native-node-model.jsonld) — the default schema-complete `uav:nodes` representation without an envelope.
 - [`tools/validate_local.py`](tools/validate_local.py) — the deterministic, standard-library validator.
 
