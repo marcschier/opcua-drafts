@@ -107,6 +107,8 @@ Arrow is schema-based: the Arrow schema of the IPC stream is required to decode 
 
 The Arrow mapping defines a lightweight SchemaId handshake that is independent of PubSub `ConfigurationVersion`. A SchemaId is derived only from the serialized Arrow Schema canonical form defined by Part 6. The SchemaId shall be the first 8 bytes of the SHA-256 fingerprint of the serialized Arrow `Schema` IPC message bytes, for example `SHA-256(schema.serialize().to_pybytes())[:8]`. The lowercase hexadecimal form used in descriptors and diagnostics is 16 characters; the on-wire field is the raw 8-byte value unless a profile specifies a longer length. Any carried `schemaId` metadata is a reference to the canonical schema and shall not be inserted into the canonical schema bytes before calculating the SchemaId.
 
+The Arrow `Schema` describes one DataSet — the columns of that DataSet's RecordBatch(es) — so the SchemaId identifies a **single DataSet's** schema. An IPC stream, file or bare `batch` carries one DataSet's schema; a deployment that multiplexes several DataSets uses a separate stream or SchemaId per DataSet. A producer accordingly computes and tracks the SchemaId, and advances the DataSet `ConfigurationVersion`, **per DataSet**, not per transport frame.
+
 A NetworkMessage, DataSetMessage or transport envelope shall reference the schema by SchemaId, carried either in Arrow IPC custom metadata or in the DataSetMessage/transport header. The SchemaId may coexist with `ConfigurationVersion`, but it does not depend on it; a ConfigurationVersion change that does not change the Arrow Schema keeps the same SchemaId, and an Arrow Schema change produces a new SchemaId even if a publisher's configuration versioning policy is separate.
 
 #### 5.2.2 Carrier placement

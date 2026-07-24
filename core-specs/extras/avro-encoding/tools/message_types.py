@@ -141,6 +141,42 @@ PUBLISHER_ENDPOINTS_ANNOUNCEMENT = t.Struct(
     ),
 )
 
+# Fixed NetworkMessage envelope (Part 14 Avro mapping §8.1). Each DataSetMessage is carried
+# opaquely as a { SchemaId, DataSetMessage } payload entry and decoded via its own per-DataSet
+# schema, so the envelope schema is stable and never varies with the DataSets it carries.
+DATASET_PAYLOAD_ENTRY = t.Struct(
+    "AvroDataSetPayloadEntry",
+    (
+        t.Field("SchemaId", t.BYTESTRING),
+        t.Field("DataSetMessage", t.BYTESTRING),
+    ),
+)
+
+NETWORK_MESSAGE = t.Struct(
+    "AvroNetworkMessage",
+    (
+        t.Field("PublisherId", t.STRING),
+        t.Field("DataSetClassId", t.GUID),
+        t.Field("WriterGroupId", t.UINT16),
+        t.Field("GroupVersion", t.UINT32),
+        t.Field("NetworkMessageNumber", t.UINT16),
+        t.Field("SequenceNumber", t.UINT32),
+        t.Field("Timestamp", t.DATETIME),
+        t.Field("PicoSeconds", t.UINT16),
+        t.Field("PromotedFields", t.Array(t.VARIANT)),
+        t.Field("Payload", t.Array(DATASET_PAYLOAD_ENTRY)),
+    ),
+)
+
+# Un-enveloped batch (Part 14 Avro mapping §8.1): the same payload-entry array as the envelope,
+# carried directly by the transport without a NetworkMessage wrapper.
+DATASET_MESSAGE_BATCH = t.Struct(
+    "AvroDataSetMessageBatch",
+    (
+        t.Field("Payload", t.Array(DATASET_PAYLOAD_ENTRY)),
+    ),
+)
+
 HAND_AUTHORED_MESSAGE_SCHEMAS: dict[str, object] = {
     "AvroSchemaAnnouncement": {
         "type": "record",
@@ -176,4 +212,7 @@ MESSAGE_STRUCTS: tuple[t.Struct, ...] = (
     DISCOVERY_PROBE,
     ENDPOINT_DESCRIPTION,
     PUBLISHER_ENDPOINTS_ANNOUNCEMENT,
+    DATASET_PAYLOAD_ENTRY,
+    NETWORK_MESSAGE,
+    DATASET_MESSAGE_BATCH,
 )
