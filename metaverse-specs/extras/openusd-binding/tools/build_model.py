@@ -261,7 +261,11 @@ enum_type(3002, "OpenUsdRenderTargetKindEnum",
           "Classifies the USD render target a live value drives (advisory routing hint).",
           [("Translation", 0, None), ("Rotation", 1, None), ("Scale", 2, None),
            ("Transform", 3, None), ("Visibility", 4, None), ("DisplayColor", 5, None),
-           ("EmissiveColor", 6, None), ("Opacity", 7, None), ("Custom", 8, None)])
+           ("EmissiveColor", 6, None), ("Opacity", 7, None), ("Custom", 8, None),
+           ("Georeference", 9,
+            "A geodetic anchor coordinate (latitude/longitude/height) on a USD "
+            "georeference or globe-anchor schema; see the geospatial rule (Bindings spec "
+            "\u00a75.8) and Annex D.")])
 
 enum_type(3003, "OpenUsdBadQualityActionEnum",
           "What the connector does with a non-Good source value.",

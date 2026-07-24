@@ -541,7 +541,7 @@
       <Reference ReferenceType="HasModellingRule">i=80</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=61</Reference>
       <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=1002</Reference>
-      <Reference ReferenceType="HasAddIn">ns=1;i=6066</Reference>
+      <Reference ReferenceType="HasAddIn">ns=1;i=6074</Reference>
     </References>
   </UAObject>
   <UAObject NodeId="ns=1;i=6026" BrowseName="1:Composition" ParentNodeId="ns=1;i=1002">
@@ -551,7 +551,7 @@
       <Reference ReferenceType="HasModellingRule">i=80</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=61</Reference>
       <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=1002</Reference>
-      <Reference ReferenceType="HasComponent">ns=1;i=6067</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=6075</Reference>
     </References>
   </UAObject>
   <UAObject NodeId="ns=1;i=6027" BrowseName="1:VariantSets" ParentNodeId="ns=1;i=1002">
@@ -561,7 +561,7 @@
       <Reference ReferenceType="HasModellingRule">i=80</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=61</Reference>
       <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=1002</Reference>
-      <Reference ReferenceType="HasComponent">ns=1;i=6068</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=6076</Reference>
     </References>
   </UAObject>
   <UAObject NodeId="ns=1;i=6028" BrowseName="1:Metadata" ParentNodeId="ns=1;i=1002">
@@ -571,7 +571,7 @@
       <Reference ReferenceType="HasModellingRule">i=80</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=61</Reference>
       <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=1002</Reference>
-      <Reference ReferenceType="HasProperty">ns=1;i=6069</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6077</Reference>
     </References>
   </UAObject>
   <UAObjectType NodeId="ns=1;i=1003" BrowseName="1:UsdTypedType" IsAbstract="true">
@@ -1096,7 +1096,103 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1021</Reference>
     </References>
   </UAVariable>
-  <UAObject NodeId="ns=1;i=6066" BrowseName="1:&lt;UsdApiSchema&gt;" ParentNodeId="ns=1;i=6025">
+  <UAObjectType NodeId="ns=1;i=1022" BrowseName="1:UsdGeoreferenceApiType">
+    <DisplayName>UsdGeoreferenceApiType</DisplayName>
+    <Description>Portable stage georeference applied API schema: the geodetic origin that anchors the stage's local Cartesian frame to the globe. Vendor-neutral materialization of Cesium CesiumGeoreferencePrim / NVIDIA WGS84ReferencePositionAPI; maps to OPC UA GPOS (OPC 10000-211) GlobalPosition + GroundControlPoints (Annex B).</Description>
+    <Category>OpenUSD Scene Materialization</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=1020</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6066</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6067</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6068</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6069</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6070</Reference>
+    </References>
+  </UAObjectType>
+  <UAVariable NodeId="ns=1;i=6066" BrowseName="1:Latitude" ParentNodeId="ns=1;i=1022" DataType="Double" ValueRank="-1">
+    <DisplayName>Latitude</DisplayName>
+    <Description>Origin latitude in decimal degrees (WGS84 unless EpsgCode indicates otherwise).</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1022</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6067" BrowseName="1:Longitude" ParentNodeId="ns=1;i=1022" DataType="Double" ValueRank="-1">
+    <DisplayName>Longitude</DisplayName>
+    <Description>Origin longitude in decimal degrees.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1022</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6068" BrowseName="1:Height" ParentNodeId="ns=1;i=1022" DataType="Double" ValueRank="-1">
+    <DisplayName>Height</DisplayName>
+    <Description>Origin height above the ellipsoid in metres.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1022</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6069" BrowseName="1:EpsgCode" ParentNodeId="ns=1;i=1022" DataType="UInt32" ValueRank="-1">
+    <DisplayName>EpsgCode</DisplayName>
+    <Description>EPSG coordinate reference system code (0 = local, 4326 = WGS84/GPS).</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1022</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6070" BrowseName="1:TangentPlane" ParentNodeId="ns=1;i=1022" DataType="ns=1;i=3006" ValueRank="-1">
+    <DisplayName>TangentPlane</DisplayName>
+    <Description>Local tangent-plane convention token (e.g. ENU or NED).</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1022</Reference>
+    </References>
+  </UAVariable>
+  <UAObjectType NodeId="ns=1;i=1023" BrowseName="1:UsdGlobeAnchorApiType">
+    <DisplayName>UsdGlobeAnchorApiType</DisplayName>
+    <Description>Portable per-prim globe anchor applied API schema: the geodetic position of an individual prim, resolved against the stage UsdGeoreferenceApiType. Vendor-neutral materialization of Cesium CesiumGlobeAnchorAPI / NVIDIA WGS84LocalPositionAPI; maps to a per-asset OPC UA GPOS GlobalPosition.</Description>
+    <Category>OpenUSD Scene Materialization</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=1020</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6071</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6072</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6073</Reference>
+    </References>
+  </UAObjectType>
+  <UAVariable NodeId="ns=1;i=6071" BrowseName="1:Latitude" ParentNodeId="ns=1;i=1023" DataType="Double" ValueRank="-1">
+    <DisplayName>Latitude</DisplayName>
+    <Description>Prim latitude in decimal degrees.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1023</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6072" BrowseName="1:Longitude" ParentNodeId="ns=1;i=1023" DataType="Double" ValueRank="-1">
+    <DisplayName>Longitude</DisplayName>
+    <Description>Prim longitude in decimal degrees.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1023</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6073" BrowseName="1:Height" ParentNodeId="ns=1;i=1023" DataType="Double" ValueRank="-1">
+    <DisplayName>Height</DisplayName>
+    <Description>Prim height above the ellipsoid in metres.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1023</Reference>
+    </References>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=6074" BrowseName="1:&lt;UsdApiSchema&gt;" ParentNodeId="ns=1;i=6025">
     <DisplayName>&lt;UsdApiSchema&gt;</DisplayName>
     <Description>Applied API schema AddIn instances.</Description>
     <References>
@@ -1105,7 +1201,7 @@
       <Reference ReferenceType="HasAddIn" IsForward="false">ns=1;i=6025</Reference>
     </References>
   </UAObject>
-  <UAObject NodeId="ns=1;i=6067" BrowseName="1:&lt;UsdCompositionArc&gt;" ParentNodeId="ns=1;i=6026">
+  <UAObject NodeId="ns=1;i=6075" BrowseName="1:&lt;UsdCompositionArc&gt;" ParentNodeId="ns=1;i=6026">
     <DisplayName>&lt;UsdCompositionArc&gt;</DisplayName>
     <Description>Composition arcs contributing opinions.</Description>
     <References>
@@ -1114,7 +1210,7 @@
       <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=6026</Reference>
     </References>
   </UAObject>
-  <UAObject NodeId="ns=1;i=6068" BrowseName="1:&lt;UsdVariantSet&gt;" ParentNodeId="ns=1;i=6027">
+  <UAObject NodeId="ns=1;i=6076" BrowseName="1:&lt;UsdVariantSet&gt;" ParentNodeId="ns=1;i=6027">
     <DisplayName>&lt;UsdVariantSet&gt;</DisplayName>
     <Description>Variant sets available on this prim.</Description>
     <References>
@@ -1123,7 +1219,7 @@
       <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=6027</Reference>
     </References>
   </UAObject>
-  <UAVariable NodeId="ns=1;i=6069" BrowseName="1:&lt;Metadata&gt;" ParentNodeId="ns=1;i=6028" DataType="BaseDataType" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=6077" BrowseName="1:&lt;Metadata&gt;" ParentNodeId="ns=1;i=6028" DataType="BaseDataType" ValueRank="-1">
     <DisplayName>&lt;Metadata&gt;</DisplayName>
     <Description>Arbitrary metadata properties.</Description>
     <References>

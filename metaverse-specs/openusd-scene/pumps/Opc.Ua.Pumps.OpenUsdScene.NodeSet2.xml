@@ -691,7 +691,7 @@
     </References>
     <Value><uax:Boolean xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">false</uax:Boolean></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5077" BrowseName="2:primvars:displayColor" ParentNodeId="ns=2;i=5055" DataType="ns=1;i=3013" ValueRank="2" ArrayDimensions="3">
+  <UAVariable NodeId="ns=2;i=5077" BrowseName="2:primvars:displayColor" ParentNodeId="ns=2;i=5055" DataType="ns=1;i=3013" ValueRank="2" ArrayDimensions="0,3">
     <DisplayName>primvars:displayColor</DisplayName>
     <References>
       <Reference ReferenceType="i=40">ns=1;i=2001</Reference>
@@ -937,7 +937,7 @@
     </References>
     <Value><uax:Boolean xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">false</uax:Boolean></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5105" BrowseName="2:primvars:displayColor" ParentNodeId="ns=2;i=5091" DataType="ns=1;i=3013" ValueRank="2" ArrayDimensions="3">
+  <UAVariable NodeId="ns=2;i=5105" BrowseName="2:primvars:displayColor" ParentNodeId="ns=2;i=5091" DataType="ns=1;i=3013" ValueRank="2" ArrayDimensions="0,3">
     <DisplayName>primvars:displayColor</DisplayName>
     <References>
       <Reference ReferenceType="i=40">ns=1;i=2001</Reference>
@@ -1440,7 +1440,7 @@
     </References>
     <Value><uax:Boolean xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">false</uax:Boolean></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5162" BrowseName="2:primvars:displayColor" ParentNodeId="ns=2;i=5148" DataType="ns=1;i=3013" ValueRank="2" ArrayDimensions="3">
+  <UAVariable NodeId="ns=2;i=5162" BrowseName="2:primvars:displayColor" ParentNodeId="ns=2;i=5148" DataType="ns=1;i=3013" ValueRank="2" ArrayDimensions="0,3">
     <DisplayName>primvars:displayColor</DisplayName>
     <References>
       <Reference ReferenceType="i=40">ns=1;i=2001</Reference>
@@ -1686,7 +1686,7 @@
     </References>
     <Value><uax:Boolean xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">false</uax:Boolean></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5190" BrowseName="2:primvars:displayColor" ParentNodeId="ns=2;i=5176" DataType="ns=1;i=3013" ValueRank="2" ArrayDimensions="3">
+  <UAVariable NodeId="ns=2;i=5190" BrowseName="2:primvars:displayColor" ParentNodeId="ns=2;i=5176" DataType="ns=1;i=3013" ValueRank="2" ArrayDimensions="0,3">
     <DisplayName>primvars:displayColor</DisplayName>
     <References>
       <Reference ReferenceType="i=40">ns=1;i=2001</Reference>
@@ -2156,7 +2156,9 @@
       <Reference ReferenceType="i=40">ns=1;i=1017</Reference>
       <Reference ReferenceType="i=46">ns=2;i=5244</Reference>
       <Reference ReferenceType="i=46">ns=2;i=5245</Reference>
+      <Reference ReferenceType="i=46">ns=2;i=5291</Reference>
       <Reference ReferenceType="i=47" IsForward="false">ns=2;i=5227</Reference>
+      <Reference ReferenceType="ns=1;i=4001">ns=2;i=5246</Reference>
     </References>
   </UAObject>
   <UAVariable NodeId="ns=2;i=5244" BrowseName="2:Custom" ParentNodeId="ns=2;i=5243" DataType="i=1" ValueRank="-1">
@@ -2270,6 +2272,7 @@
       <Reference ReferenceType="i=46">ns=2;i=5259</Reference>
       <Reference ReferenceType="i=46">ns=2;i=5260</Reference>
       <Reference ReferenceType="i=47" IsForward="false">ns=2;i=5246</Reference>
+      <Reference ReferenceType="ns=1;i=4002">ns=2;i=5286</Reference>
     </References>
   </UAVariable>
   <UAVariable NodeId="ns=2;i=5257" BrowseName="2:UsdTypeName" ParentNodeId="ns=2;i=5256" DataType="ns=1;i=3006" ValueRank="-1">
@@ -2566,5 +2569,13 @@
       <Reference ReferenceType="i=46" IsForward="false">ns=2;i=5286</Reference>
     </References>
     <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">outputs</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=2;i=5291" BrowseName="2:Targets" ParentNodeId="ns=2;i=5243" DataType="i=17" ValueRank="1">
+    <DisplayName>Targets</DisplayName>
+    <References>
+      <Reference ReferenceType="i=40">i=68</Reference>
+      <Reference ReferenceType="i=46" IsForward="false">ns=2;i=5243</Reference>
+    </References>
+    <Value><uax:ListOfNodeId xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:NodeId><uax:Identifier>ns=2;i=5246</uax:Identifier></uax:NodeId></uax:ListOfNodeId></Value>
   </UAVariable>
 </UANodeSet>

@@ -500,6 +500,29 @@ prop_var(COL, "UsdCollectionAPIType", "IncludesTargets", NodeId_,
          "Included target NodeIds.", valuerank="1")
 prop_var(COL, "UsdCollectionAPIType", "ExcludesTargets", NodeId_,
          "Excluded target NodeIds.", valuerank="1")
+object_type(1022, "UsdGeoreferenceApiType", T(API),
+            "Portable stage georeference applied API schema: the geodetic origin that anchors the "
+            "stage's local Cartesian frame to the globe. Vendor-neutral materialization of Cesium "
+            "CesiumGeoreferencePrim / NVIDIA WGS84ReferencePositionAPI; maps to OPC UA GPOS "
+            "(OPC 10000-211) GlobalPosition + GroundControlPoints (Annex B).")
+GEOREF = 1022
+prop_var(GEOREF, "UsdGeoreferenceApiType", "Latitude", Double,
+         "Origin latitude in decimal degrees (WGS84 unless EpsgCode indicates otherwise).")
+prop_var(GEOREF, "UsdGeoreferenceApiType", "Longitude", Double, "Origin longitude in decimal degrees.")
+prop_var(GEOREF, "UsdGeoreferenceApiType", "Height", Double, "Origin height above the ellipsoid in metres.")
+prop_var(GEOREF, "UsdGeoreferenceApiType", "EpsgCode", UInt32,
+         "EPSG coordinate reference system code (0 = local, 4326 = WGS84/GPS).")
+prop_var(GEOREF, "UsdGeoreferenceApiType", "TangentPlane", UsdToken,
+         "Local tangent-plane convention token (e.g. ENU or NED).")
+object_type(1023, "UsdGlobeAnchorApiType", T(API),
+            "Portable per-prim globe anchor applied API schema: the geodetic position of an "
+            "individual prim, resolved against the stage UsdGeoreferenceApiType. Vendor-neutral "
+            "materialization of Cesium CesiumGlobeAnchorAPI / NVIDIA WGS84LocalPositionAPI; maps to "
+            "a per-asset OPC UA GPOS GlobalPosition.")
+ANCHOR = 1023
+prop_var(ANCHOR, "UsdGlobeAnchorApiType", "Latitude", Double, "Prim latitude in decimal degrees.")
+prop_var(ANCHOR, "UsdGlobeAnchorApiType", "Longitude", Double, "Prim longitude in decimal degrees.")
+prop_var(ANCHOR, "UsdGlobeAnchorApiType", "Height", Double, "Prim height above the ellipsoid in metres.")
 
 placeholder_obj(applied_schemas, "UsdPrimType_AppliedSchemas", "<UsdApiSchema>", T(API),
                 "Applied API schema AddIn instances.", reftype=HasAddIn)

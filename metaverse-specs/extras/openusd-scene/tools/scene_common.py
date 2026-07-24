@@ -108,7 +108,7 @@ def _stage_meta(text):
         if x: meta[k]=float(x.group(1))
     return meta, text[m.end():]
 def _prim_meta(lines):
-    b="\n".join(lines); kind="Unspecified"; inst=False; apis=[]
+    b="\n".join(lines); kind="Unspecified"; inst=False; apis=[]; arcs=[]; variants=[]
     m=re.search(r'kind\s*=\s*"([^"]+)"', b)
     if m: kind=m.group(1).capitalize()
     m=re.search(r'instanceable\s*=\s*(true|false)', b)
@@ -117,7 +117,19 @@ def _prim_meta(lines):
     if m:
         try: apis=list(ast.literal_eval(m.group(1)))
         except Exception: apis=[]
-    return kind, inst, apis
+    poskw={"prepend":"Prepend","append":"Append","delete":"Delete"}
+    kindkw={"references":"Reference","payload":"Payload","inherits":"Inherit","specializes":"Specialize"}
+    for mm in re.finditer(r'(?:(prepend|append|delete)\s+)?(references|payload|inherits|specializes)\s*=\s*@([^@]+)@(?:<([^>]*)>)?', b):
+        pos,kw,asset,prim=mm.groups()
+        arcs.append(CompositionArc(kindkw[kw], asset, prim or "", poskw.get(pos or "prepend","Prepend")))
+    for mm in re.finditer(r'variants\s*=\s*\{\s*string\s+(\w+)\s*=\s*"([^"]*)"\s*\}', b):
+        variants.append(VariantSet(mm.group(1), mm.group(2)))
+    # An `instanceable` reference reconstructs the overlay's paired Instance arc
+    # (every Instance arc mirrors a Reference/Payload arc to the same asset).
+    if inst:
+        ref=next((a for a in arcs if a.arc_kind in ("Reference","Payload")), None)
+        if ref: arcs.append(CompositionArc("Instance", ref.asset_path, ref.prim_path, ref.list_position))
+    return kind, inst, apis, arcs, variants
 def parse_usda(path, stage_name=None, apply_example_overlays=True):
     text=_strip_comments(open(path, encoding="utf-8").read()); meta, body=_stage_meta(text)
     st=Stage(path, stage_name or os.path.splitext(os.path.basename(path))[0], meta.get("defaultPrim",""), meta.get("upAxis","Z"), float(meta.get("metersPerUnit",1)), meta.get("kilogramsPerUnit"), meta.get("timeCodesPerSecond"), meta.get("startTimeCode"), meta.get("endTimeCode"), meta.get("doc",""))
@@ -130,7 +142,7 @@ def parse_usda(path, stage_name=None, apply_example_overlays=True):
         if pending and inmeta:
             if ")" in ln:
                 ml.append(ln.split(")",1)[0]); inmeta=False
-                pending.kind,pending.instanceable,apis=_prim_meta(ml); pending.api_schemas=[ApiSchema(a) for a in apis]; ml=[]
+                pending.kind,pending.instanceable,apis,arcs,variants=_prim_meta(ml); pending.api_schemas=[ApiSchema(a) for a in apis]; pending.composition=arcs; pending.variant_sets=variants; ml=[]
                 if "{" in ln: (stack[-1].children if stack else st.root_prims).append(pending); pending.parent=stack[-1] if stack else None; stack.append(pending); pending=None
                 continue
             ml.append(ln); continue
@@ -140,7 +152,7 @@ def parse_usda(path, stage_name=None, apply_example_overlays=True):
             if par or "(" in ln:
                 after=ln.split("(",1)[1]
                 if ")" in after:
-                    ml=[after.split(")",1)[0]]; pending.kind,pending.instanceable,apis=_prim_meta(ml); pending.api_schemas=[ApiSchema(a) for a in apis]; ml=[]
+                    ml=[after.split(")",1)[0]]; pending.kind,pending.instanceable,apis,arcs,variants=_prim_meta(ml); pending.api_schemas=[ApiSchema(a) for a in apis]; pending.composition=arcs; pending.variant_sets=variants; ml=[]
                     if "{" in ln: (stack[-1].children if stack else st.root_prims).append(pending); pending.parent=stack[-1] if stack else None; stack.append(pending); pending=None
                 else: inmeta=True; ml=[after]
             elif "{" in ln: (stack[-1].children if stack else st.root_prims).append(pending); pending.parent=stack[-1] if stack else None; stack.append(pending); pending=None
@@ -166,9 +178,21 @@ def _clone(p,parent=None):
     def f(x):
         for c in x.children: c.parent=x; f(c)
     f(q); return q
+def _remap_paths(prim, old, new):
+    # Reference composition remaps a referenced sub-tree's internal target/connection
+    # paths from the asset root (e.g. /Robot) to the composed location (e.g. /Cell/Robots/R1).
+    def rmap(s):
+        if s==old: return new
+        if s.startswith(old+"/") or s.startswith(old+"."): return new+s[len(old):]
+        return s
+    for a in prim.attributes:
+        if a.connections: a.connections=[rmap(c) for c in a.connections]
+    for r in prim.relationships: r.targets=[rmap(t) for t in r.targets]
+    for c in prim.children: _remap_paths(c, old, new)
 def _merge(dst, src):
     dst.attributes += copy.deepcopy(src.attributes); dst.relationships += copy.deepcopy(src.relationships); dst.api_schemas += copy.deepcopy(src.api_schemas)
     for c in src.children: dst.children.append(_clone(c,dst))
+    _remap_paths(dst, src.path, dst.path)
 def _apply_overlays(st):
     b=os.path.basename(st.source).lower(); d=os.path.dirname(st.source)
     if b == "plant.usda":
@@ -196,7 +220,7 @@ def _apply_overlays(st):
         if os.path.exists(tp):
             tool=parse_usda(tp,"ToolAsset",False).root_prims[0]; fl=st.find("/Cell/Robots/R1/Base/J1/J2/J3/J4/J5/J6/Flange")
             if fl:
-                t=_clone(tool,fl); t.name="Tool"; t.composition.append(CompositionArc("Reference","tool.usda","/Gripper","Append")); fl.children.append(t)
+                t=_clone(tool,fl); old_tp=tool.path; t.name="Tool"; t.composition.append(CompositionArc("Reference","tool.usda","/Gripper","Append")); fl.children.append(t); _remap_paths(t, old_tp, t.path)
 
 def _flat(v):
     if isinstance(v, tuple): v=list(v)
@@ -210,7 +234,7 @@ def sdf_mapping(t):
     vec={"float2":(Float,1,"2"),"float3":(Float,1,"3"),"float4":(Float,1,"4"),"double2":(Double,1,"2"),"double3":(Double,1,"3"),"double4":(Double,1,"4"),"int2":(Int32,1,"2"),"int3":(Int32,1,"3"),"int4":(Int32,1,"4"),"color3f":(S(3013),1,"3"),"normal3f":(S(3014),1,"3"),"point3f":(S(3015),1,"3"),"vector3f":(S(3016),1,"3"),"texCoord2f":(S(3017),1,"2"),"quatf":(S(3018),1,"4"),"quatd":(S(3019),1,"4"),"matrix4d":(S(3020),1,"16")}
     sc={"bool":Boolean,"uchar":SByte,"int":Int32,"int64":Int64,"uint":UInt32,"float":Float,"half":Float,"double":Double,"string":String,"token":S(3006),"asset":S(3007),"timecode":S(3008)}
     if b in vec:
-        dt,r,d=vec[b]; return dt, r+(1 if arr else 0), d
+        dt,r,d=vec[b]; return dt, r+(1 if arr else 0), (("0,"+d) if arr else d)
     if b in sc: return sc[b], 1 if arr else -1, None
     return BaseDataType, -2 if arr else -1, None
 def _value_xml(dt, val, tn=""):
@@ -233,7 +257,10 @@ class Node:
     def __init__(self,nid,cls,bn,td=None,parent=None,dt=None,vr=None,dims=None,val=None,attrs=None):
         self.nid=nid; self.cls=cls; self.bn=bn; self.td=td; self.parent=parent; self.dt=dt; self.vr=vr; self.dims=dims; self.val=val; self.attrs=attrs or {}; self.refs=[]
 def emit_nodeset(st, namespace):
-    nodes=[]; nxt=[5000]; by={}
+    nodes=[]; nxt=[5000]; by={}; nid_by_path={}; deferred_rels=[]; deferred_conns=[]
+    def _nodeid_list_val(nids):
+        inner="".join(f"<uax:NodeId><uax:Identifier>{n}</uax:Identifier></uax:NodeId>" for n in nids)
+        return f'<Value><uax:ListOfNodeId xmlns:uax="{TYPES_NS}">{inner}</uax:ListOfNodeId></Value>'
     def new(cls,bn,td=None,parent=None,dt=None,vr=None,dims=None,val=None,attrs=None,reftype=HasComponent):
         nxt[0]+=1; n=Node(nxt[0],cls,bn,td,parent,dt,vr,dims,val,attrs); nodes.append(n); by[I(n.nid)]=n
         if parent: n.refs.append((reftype,parent,False))
@@ -246,7 +273,7 @@ def emit_nodeset(st, namespace):
     stage=new("UAObject",st.stage_name,TYPE_IDS["UsdStageType"],I(root.nid)); root.refs.append((HasComponent,I(stage.nid),True))
     for bn,dt,val,tn in [("DefaultPrim",S(3006),st.default_prim,"token"),("UpAxis",S(3006),st.up_axis,"token"),("MetersPerUnit",Double,st.meters_per_unit,"double"),("KilogramsPerUnit",Double,st.kilograms_per_unit,"double"),("TimeCodesPerSecond",Double,st.time_codes_per_second,"double"),("StartTimeCode",S(3008),st.start_time_code,"timecode"),("EndTimeCode",S(3008),st.end_time_code,"timecode"),("RootLayerIdentifier",String,os.path.basename(st.source),"string"),("Documentation",String,st.documentation,"string")]: prop(I(stage.nid),bn,dt,val,tn)
     def add_prim(p,parent):
-        td=TYPE_IDS.get(PRIM_TYPE_BY_USD.get(p.type_name,""),TYPE_IDS["UsdPrimType"]); pn=new("UAObject",p.name,td,I(parent.nid)); parent.refs.append((HasComponent,I(pn.nid),True))
+        td=TYPE_IDS.get(PRIM_TYPE_BY_USD.get(p.type_name,""),TYPE_IDS["UsdPrimType"]); pn=new("UAObject",p.name,td,I(parent.nid)); parent.refs.append((HasComponent,I(pn.nid),True)); nid_by_path[p.path]=I(pn.nid)
         prop(I(pn.nid),"Specifier",S(3001),p.specifier,enum=True); prop(I(pn.nid),"TypeName",S(3006),p.type_name,"token"); prop(I(pn.nid),"Kind",S(3003),p.kind,enum=True); prop(I(pn.nid),"Active",Boolean,p.active,"bool"); prop(I(pn.nid),"Instanceable",Boolean,p.instanceable,"bool")
         folders={}
         for nm in ("AppliedSchemas","Composition","VariantSets","Metadata"):
@@ -260,10 +287,24 @@ def emit_nodeset(st, namespace):
         for a in p.attributes:
             dt,vr,d=sdf_mapping(a.type_name); av=new("UAVariable",a.name,TYPE_IDS["UsdAttributeType"],I(pn.nid),dt,vr,d,_value_xml(dt,a.value,a.type_name),{"AccessLevel":"3","UserAccessLevel":"3","Historizing":"true"} if a.live else {}); pn.refs.append((HasComponent,I(av.nid),True))
             ns=a.name.split(":")[0] if ":" in a.name else ""; prop(I(av.nid),"UsdTypeName",S(3006),a.type_name,"token"); prop(I(av.nid),"Variability",S(3002),a.variability,enum=True); prop(I(av.nid),"Custom",Boolean,a.custom,"bool"); prop(I(av.nid),"Namespace",S(3006),ns,"token")
+            nid_by_path[p.path+"."+a.name]=I(av.nid)
+            if a.connections: deferred_conns.append((I(av.nid), list(a.connections)))
         for r in p.relationships:
             rn=new("UAObject",r.name,TYPE_IDS["UsdRelationshipType"],I(pn.nid)); pn.refs.append((HasComponent,I(rn.nid),True)); prop(I(rn.nid),"Custom",Boolean,r.custom,"bool"); prop(I(rn.nid),"TargetPaths",String,r.targets,"string[]",1)
+            deferred_rels.append((I(rn.nid), list(r.targets)))
         for c in p.children: add_prim(c,pn)
     for r in st.root_prims: add_prim(r,stage)
+    # Second pass (paths now fully indexed): materialize relationship Targets +
+    # browsable UsdRelationshipTarget / UsdConnection edges (ns=1 ReferenceTypes).
+    UsdRelTarget=S(4001); UsdConn=S(4002)
+    for rnid,targets in deferred_rels:
+        resolved=[nid_by_path[t] for t in targets if t in nid_by_path]
+        tn=new("UAVariable","Targets",PropertyType,rnid,NodeId_,1,None,_nodeid_list_val(resolved),reftype=HasProperty); by[rnid].refs.append((HasProperty,I(tn.nid),True))
+        for tg in resolved: by[rnid].refs.append((UsdRelTarget,tg,True))
+    for anid,conns in deferred_conns:
+        for c in conns:
+            tg=nid_by_path.get(c)
+            if tg: by[anid].refs.append((UsdConn,tg,True))
     aliases=[("Boolean",Boolean),("Int32",Int32),("UInt32",UInt32),("Int64",Int64),("Float",Float),("Double",Double),("String",String),("NodeId",NodeId_),("BaseDataType",BaseDataType),("HasComponent",HasComponent),("HasProperty",HasProperty),("Organizes",Organizes),("HasTypeDefinition",HasTypeDefinition),("HasAddIn",HasAddIn)]
     amap=dict(aliases); fmt=lambda x: amap.get(x,x)
     def enode(n):
@@ -311,12 +352,16 @@ def read_nodeset(path):
     sp=props(stage_el); st.default_prim=sp.get("DefaultPrim",""); st.up_axis=sp.get("UpAxis","Z"); st.meters_per_unit=sp.get("MetersPerUnit",1.0)
     rev_type={v:k for k,v in TYPE_IDS.items()}; usd_by_scene={v:k for k,v in PRIM_TYPE_BY_USD.items()}
     spec_enum={0:"Def",1:"Over",2:"Class"}; var_enum={0:"Varying",1:"Uniform"}; kind_enum={0:"Unspecified",1:"Model",2:"Group",3:"Assembly",4:"Component",5:"Subcomponent"}; arc_enum={0:"Reference",1:"Payload",2:"Inherit",3:"Specialize",4:"VariantSet",5:"Sublayer",6:"Instance"}; list_enum={0:"Explicit",1:"Prepend",2:"Append",3:"Delete",4:"Ordered"}
+    path_by_nid={}; conn_fixups=[]
     def rp(e,parent=None):
-        pp=props(e); p=Prim(_bn(e), usd_by_scene.get(rev_type.get(_td(e),""), pp.get("TypeName","") or ""), kind_enum.get(pp.get("Kind"),"Unspecified"), spec_enum.get(pp.get("Specifier"),"Def"), bool(pp.get("Active",True)), bool(pp.get("Instanceable",False)), parent=parent)
+        pp=props(e); p=Prim(_bn(e), usd_by_scene.get(rev_type.get(_td(e),""), pp.get("TypeName","") or ""), kind_enum.get(pp.get("Kind"),"Unspecified"), spec_enum.get(pp.get("Specifier"),"Def"), bool(pp.get("Active",True)), bool(pp.get("Instanceable",False)), parent=parent); path_by_nid[e.get("NodeId")]=p.path
         for c in children.get(e.get("NodeId"),[]):
             td=_td(c)
             if td==TYPE_IDS["UsdAttributeType"]:
-                ap=props(c); p.attributes.append(Attribute(_bn(c), ap.get("UsdTypeName",""), _val(c), var_enum.get(ap.get("Variability"),"Varying"), bool(ap.get("Custom",False)), live=(c.get("Historizing")=="true")))
+                ap=props(c); at=Attribute(_bn(c), ap.get("UsdTypeName",""), _val(c), var_enum.get(ap.get("Variability"),"Varying"), bool(ap.get("Custom",False)), live=(c.get("Historizing")=="true")); p.attributes.append(at)
+                path_by_nid[c.get("NodeId")]=p.path+"."+_bn(c)
+                cns=[(r.text or "").strip() for r in _refs(c) if r.get("ReferenceType")=="ns=1;i=4002" and r.get("IsForward","true")!="false"]
+                if cns: conn_fixups.append((at, cns))
             elif td==TYPE_IDS["UsdRelationshipType"]:
                 rp0=props(c); p.relationships.append(Relationship(_bn(c), rp0.get("TargetPaths") or [], bool(rp0.get("Custom",False))))
             elif td==FolderType and _bn(c)=="AppliedSchemas":
@@ -327,11 +372,16 @@ def read_nodeset(path):
                 for a in children.get(c.get("NodeId"),[]):
                     if _td(a)==TYPE_IDS["UsdCompositionArcType"]:
                         ap=props(a); p.composition.append(CompositionArc(arc_enum.get(ap.get("ArcKind"),"Reference"), ap.get("AssetPath","") or "", ap.get("PrimPath","") or "", list_enum.get(ap.get("ListPosition"),"Explicit")))
+            elif td==FolderType and _bn(c)=="VariantSets":
+                for a in children.get(c.get("NodeId"),[]):
+                    if _td(a)==TYPE_IDS["UsdVariantSetType"]:
+                        ap=props(a); p.variant_sets.append(VariantSet(ap.get("SetName") or _bn(a), ap.get("Selection","") or ""))
             elif td in TYPE_IDS.values() and td not in (TYPE_IDS["UsdAttributeType"],TYPE_IDS["UsdRelationshipType"],TYPE_IDS["UsdCompositionArcType"],TYPE_IDS["UsdApiSchemaType"],TYPE_IDS["UsdCollectionAPIType"],TYPE_IDS["UsdVariantSetType"]):
                 p.children.append(rp(c,p))
         return p
     for c in children.get(stage_el.get("NodeId"),[]):
         if _td(c) in TYPE_IDS.values() and _td(c) != TYPE_IDS["UsdAttributeType"]: st.root_prims.append(rp(c,None))
+    for at,cns in conn_fixups: at.connections=[path_by_nid.get(n,n) for n in cns]
     return st
 def _usd_val(v,tn):
     if v is None: return ""
@@ -348,17 +398,40 @@ def write_usda(st,path):
     lines=["#usda 1.0","(",f'    defaultPrim = "{st.default_prim}"',f"    metersPerUnit = {st.meters_per_unit}",f'    upAxis = "{st.up_axis}"',")",""]
     def ep(p,ind=0):
         s={"Def":"def","Over":"over","Class":"class"}.get(p.specifier,"def"); typ=(p.type_name+" ") if p.type_name else ""; pad="    "*ind
-        lines.append(f'{pad}{s} {typ}"{p.name}"' + (" (" if p.kind!="Unspecified" or p.api_schemas else ""))
-        if p.kind!="Unspecified" or p.api_schemas:
+        refkw={"Reference":"references","Payload":"payload","Inherit":"inherits","Specialize":"specializes"}
+        poskw={"Prepend":"prepend","Append":"append","Delete":"delete","Explicit":"prepend","Ordered":"prepend"}
+        arclines=[]
+        for a in p.composition:
+            if a.arc_kind=="Instance": continue
+            kw=refkw.get(a.arc_kind)
+            if not kw: continue
+            ref=f'@{a.asset_path}@<{a.prim_path}>' if a.prim_path else f'@{a.asset_path}@'
+            arclines.append(f'{pad}    {poskw.get(a.list_position,"prepend")} {kw} = {ref}')
+        inst=p.instanceable or any(a.arc_kind=="Instance" for a in p.composition)
+        varlines=[]
+        for vs in p.variant_sets:
+            if vs.selection: varlines.append(f'{pad}    variants = {{ string {vs.set_name} = "{vs.selection}" }}')
+            varlines.append(f'{pad}    prepend variantSets = "{vs.set_name}"')
+        has_meta = p.kind!="Unspecified" or p.api_schemas or arclines or inst or varlines
+        lines.append(f'{pad}{s} {typ}"{p.name}"' + (" (" if has_meta else ""))
+        if has_meta:
             if p.kind!="Unspecified": lines.append(f'{pad}    kind = "{p.kind.lower()}"')
             if p.api_schemas: lines.append((f'{pad}    prepend apiSchemas = {[a.schema_name for a in p.api_schemas]}').replace("'","\""))
+            lines.extend(arclines)
+            if inst: lines.append(f'{pad}    instanceable = true')
+            lines.extend(varlines)
             lines.append(f"{pad})")
         lines.append(pad+"{")
         for a in p.attributes:
             pre=("custom " if a.custom else "") + ("uniform " if a.variability=="Uniform" else "")
             if a.connections: lines.append(f"{pad}    {pre}{a.type_name} {a.name}.connect = <{a.connections[0]}>")
-            else: lines.append(f"{pad}    {pre}{a.type_name} {a.name} = {_usd_val(a.value,a.type_name)}")
-        for r in p.relationships: lines.append(f"{pad}    rel {r.name} = <{r.targets[0]}>")
+            else:
+                v=_usd_val(a.value,a.type_name)
+                lines.append(f"{pad}    {pre}{a.type_name} {a.name}" + (f" = {v}" if v!="" else ""))
+        for r in p.relationships:
+            if len(r.targets)==1: lines.append(f"{pad}    rel {r.name} = <{r.targets[0]}>")
+            elif r.targets: lines.append(f"{pad}    rel {r.name} = [" + ", ".join(f"<{t}>" for t in r.targets) + "]")
+            else: lines.append(f"{pad}    rel {r.name} = []")
         for c in p.children: ep(c,ind+1)
         lines.append(pad+"}")
     for r in st.root_prims: ep(r,0)
@@ -369,4 +442,8 @@ def _norm(v):
     if isinstance(v, list): return [_norm(x) for x in v]
     return v
 def scene_signature(st):
-    return [(p.path,p.type_name,p.kind,p.specifier,sorted((a.name,a.type_name,json.dumps(_norm(a.value),sort_keys=True),a.variability,a.custom) for a in p.attributes),sorted((r.name,tuple(r.targets)) for r in p.relationships)) for p in sorted(st.all_prims(),key=lambda p:p.path)]
+    return [(p.path,p.type_name,p.kind,p.specifier,p.documentation,
+             sorted((a.name,a.type_name,json.dumps(_norm(a.value),sort_keys=True),a.variability,a.custom,tuple(a.connections)) for a in p.attributes),
+             sorted((r.name,tuple(r.targets)) for r in p.relationships),
+             tuple((a.arc_kind,a.asset_path,a.prim_path,a.list_position) for a in p.composition),
+             tuple((v.set_name,v.selection) for v in p.variant_sets)) for p in sorted(st.all_prims(),key=lambda p:p.path)]
