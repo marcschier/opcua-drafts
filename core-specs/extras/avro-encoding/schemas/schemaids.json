@@ -39,9 +39,17 @@
     "algorithm": "CRC-64-AVRO Rabin",
     "schemaid": "f6eade35b327896b"
   },
+  "AvroDataSetMessageBatch": {
+    "algorithm": "CRC-64-AVRO Rabin",
+    "schemaid": "3c2e6894ea574355"
+  },
   "AvroDataSetMetaData": {
     "algorithm": "CRC-64-AVRO Rabin",
     "schemaid": "becf1b48829babf7"
+  },
+  "AvroDataSetPayloadEntry": {
+    "algorithm": "CRC-64-AVRO Rabin",
+    "schemaid": "409ed1ddf086da7e"
   },
   "AvroDataSetWriterConfigurationAnnouncement": {
     "algorithm": "CRC-64-AVRO Rabin",
@@ -58,6 +66,10 @@
   "AvroFieldMetaData": {
     "algorithm": "CRC-64-AVRO Rabin",
     "schemaid": "5f0e0ddcc1841aa1"
+  },
+  "AvroNetworkMessage": {
+    "algorithm": "CRC-64-AVRO Rabin",
+    "schemaid": "3825bdd255152ee2"
   },
   "AvroPublisherEndpointsAnnouncement": {
     "algorithm": "CRC-64-AVRO Rabin",
