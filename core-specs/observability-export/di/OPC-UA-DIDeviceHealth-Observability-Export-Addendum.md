@@ -26,14 +26,13 @@ Only the bound signals are materialised in the overlay; it is illustrative, not 
 
 Bindings for `IDeviceHealthType` in `http://opcfoundation.org/UA/DI/`, per the [Observability Export](../OPC-UA-Observability-Export.md) base specification. Each binding exposes one OTEL signal (`Metrics`, `Logs` or `Traces`) with a deterministic `DataSetClassId`.
 
-#### Metrics — Metrics
+### Metrics — Metrics
 
 *Signal:* OTEL metrics (PublishedDataItems) · *DataSetClassId:* `021ecf01-f573-54e1-b4c5-112ced3f846f` · *Cardinality:* one DataSet (bound root)
 
 | Field | Kind | BrowsePath | Source type | DataType | OTEL |
 |---|---|---|---|---|---|
 | DeviceHealth | Status | `/DeviceHealth` | `i=63` | i=6244 | Gauge |
-
 
 ## 5 Where the bindings live
 
@@ -67,4 +66,3 @@ graph TD
 | [`Opc.Ua.DIDeviceHealth.ObservabilityExport.NodeSet2.xml`](Opc.Ua.DIDeviceHealth.ObservabilityExport.NodeSet2.xml) | The binding instances on the theoretical `ExampleDeviceHealth` instance. |
 
 Regenerate from [`core-specs/extras/observability-export/examples/`](../../extras/observability-export/examples/) with `python tools/build_bindings.py di/DI.DeviceHealth.ObservabilityExport.json tools/ref`.
-

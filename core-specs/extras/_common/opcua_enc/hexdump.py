@@ -44,7 +44,8 @@ def hex_table(data: bytes, fields: list[Field], *, check: bool = True) -> str:
     rows = ["| Offset | Len | Bytes | Field |", "|---:|---:|---|---|"]
     for f in fields:
         chunk = data[f.offset:f.offset + f.length]
-        rows.append(f"| {f.offset} | {f.length} | `{_fmt(chunk)}` | {f.label} |")
+        label = f.label.replace("[", r"\[").replace("]", r"\]")
+        rows.append(f"| {f.offset} | {f.length} | `{_fmt(chunk)}` | {label} |")
     return "\n".join(rows)
 
 

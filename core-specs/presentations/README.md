@@ -31,6 +31,16 @@ npx --yes @marp-team/marp-cli core-specs/presentations/OPC-UA-Encoding-and-Regis
 npx --yes @marp-team/marp-cli core-specs/presentations/OPC-UA-Encoding-and-Registry-Overview.md --pptx -o overview.pptx
 ```
 
+### PPTX with rendered diagrams (build script)
+
+`marp --pptx` does **not** render Mermaid. To export every deck in this folder to PPTX with the Mermaid diagrams pre-rendered and embedded, run the build script:
+
+```powershell
+pwsh core-specs/presentations/build-pptx.ps1
+```
+
+For each Marp deck (`marp: true` in front matter) it renders the ```mermaid blocks to PNG via the Mermaid CLI, substitutes them into a temporary build copy (with a small build-only stylesheet so the diagrams and text fit), and runs marp-cli — writing `<deck>.pptx` next to each deck. The source Markdown is never modified. Requires Node.js on PATH.
+
 ### Mermaid diagrams
 
 Standard Marp does not render Mermaid natively. Two supported paths:

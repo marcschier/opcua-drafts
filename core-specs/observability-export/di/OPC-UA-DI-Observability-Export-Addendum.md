@@ -26,7 +26,7 @@ Only the bound signals are materialised in the overlay; it is illustrative, not 
 
 Bindings for `IVendorNameplateType` in `http://opcfoundation.org/UA/DI/`, per the [Observability Export](../OPC-UA-Observability-Export.md) base specification. Each binding exposes one OTEL signal (`Metrics`, `Logs` or `Traces`) with a deterministic `DataSetClassId`.
 
-#### Metrics — Metrics
+### Metrics — Metrics
 
 *Signal:* OTEL metrics (PublishedDataItems) · *DataSetClassId:* `ac52dde1-e3db-5534-bc44-5b18d9335b72` · *Cardinality:* one DataSet (bound root)
 
@@ -36,7 +36,6 @@ Bindings for `IVendorNameplateType` in `http://opcfoundation.org/UA/DI/`, per th
 | Model | Identification | `/Model` | `i=68` | LocalizedText | Gauge |
 | SerialNumber | Identification | `/SerialNumber` | `i=68` | String | Gauge |
 | ProductInstanceUri | Identification | `/ProductInstanceUri` | `i=68` | String | Gauge |
-
 
 ## 5 Where the bindings live
 
@@ -77,4 +76,3 @@ graph TD
 | [`Opc.Ua.DI.ObservabilityExport.NodeSet2.xml`](Opc.Ua.DI.ObservabilityExport.NodeSet2.xml) | The binding instances on the theoretical `ExampleDeviceNameplate` instance. |
 
 Regenerate from [`core-specs/extras/observability-export/examples/`](../../extras/observability-export/examples/) with `python tools/build_bindings.py di/DI.ObservabilityExport.json tools/ref`.
-

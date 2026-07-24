@@ -12,7 +12,7 @@ the normative spec; it is a tutorial for implementers.
 
 ## What you will build
 
-```
+```text
 PumpDeviceIntegrationServer            (OPC UA server: PumpType + OpenUSD bindings)
         │  Server/OpenUSD/Representations  (discovery)
         ▼
@@ -163,7 +163,7 @@ dotnet run --project Applications/PumpDeviceIntegrationBridge -c Release -f net1
 
 You should see:
 
-```
+```text
 Connecting to opc.tcp://localhost:62810/PumpDeviceIntegrationServer ...
 Streaming live OPC UA values into ~/pump-live/live.usda. Press Ctrl+C to stop.
 ```

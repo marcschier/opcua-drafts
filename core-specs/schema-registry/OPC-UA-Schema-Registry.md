@@ -47,7 +47,7 @@ It is explicitly out of scope to re-specify the Avro, Arrow or JSON encodings th
 - [OPC 10000-6](https://reference.opcfoundation.org/specs/OPC-10000-6/) — Mappings, with the Avro and Arrow DataEncoding additions in this repository.
 - [OPC 10000-14](https://reference.opcfoundation.org/specs/OPC-10000-14/) — PubSub, including the `PublishSubscribe` object (`i=14443`), `DataSetMetaData`, `ConfigurationVersionDataType`, `ConfigurationVersion` and the Security Key Service relationship — required only for the optional PubSub DataSet schema profile (Annex C), with the Avro and Arrow message-mapping additions in this repository.
 - [OPC 10000-20](https://reference.opcfoundation.org/specs/OPC-10000-20/) — File Transfer: `FileType` (§4.2), the base type of the schema file.
-- OPC UA Avro Message Mapping draft §9 — SchemaId handshake and decoder cache-miss behaviour.
+- OPC UA Avro Message Mapping draft §8 — SchemaId handshake and decoder cache-miss behaviour.
 - OPC UA Arrow Message Mapping draft §5.2 — SchemaId handshake and cache-miss behaviour.
 
 ## 3 Terms, definitions and abbreviations

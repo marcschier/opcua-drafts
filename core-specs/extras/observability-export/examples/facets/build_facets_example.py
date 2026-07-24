@@ -426,7 +426,7 @@ def emit_addendum(db):
       "inherited/AddIn/interface bindings at resolve time per §5.12. NodeIds and the example "
       "namespace are provisional.")
     A("")
-    return "\n".join(L) + "\n"
+    return "\n".join(L).rstrip() + "\n"
 
 
 def main():

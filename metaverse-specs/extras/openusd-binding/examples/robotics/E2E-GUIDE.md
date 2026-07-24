@@ -6,7 +6,7 @@ It realizes the collaboration flow described in Annex B of the base specificatio
 
 ## What you will build
 
-```
+```text
 RoboticsDeviceIntegrationServer       (OPC UA server: MotionDeviceSystem + OpenUSD bindings)
         │  Server/OpenUSD/Representations  (discovery)
         ▼

@@ -4,6 +4,7 @@ This folder contains the working draft for a canonical Apache Avro binary DataEn
 
 ## Contents
 
+- `OPC-UA-Avro-Encoding.md` — **standalone combined companion spec**: a self-contained read that merges the Part 6 DataEncoding and Part 14 PubSub mapping (with the base OPC UA context a standalone reader needs), a duplicated snapshot of the generated per-type reference annex, and hand-authored on-the-wire byte-layout examples (Annex D). The two errata-style documents below remain the authoritative, insertion-ready proposals.
 - `OPC-UA-Part6-Avro-DataEncoding.md` — Part 6 Default Avro DataEncoding proposal.
 - `OPC-UA-Part14-Avro-MessageMapping.md` — Part 14 Avro PubSub message mapping proposal.
 - `schemas\opcua.builtins.avsc` — normative base schema.
