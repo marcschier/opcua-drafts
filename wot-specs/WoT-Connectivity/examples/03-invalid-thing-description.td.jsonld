@@ -1,0 +1,46 @@
+{
+  "@context": [
+    "https://www.w3.org/2022/wot/td/v1.1",
+    { "uav": "http://opcfoundation.org/UA/WoT-Binding/" },
+    "../../WoT-Binding/opc-ua-wot-binding.context.jsonld"
+  ],
+  "@type": ["Thing", "uav:object"],
+  "id": "urn:dev:opcua:pump-broken",
+  "description": "An intentionally INVALID WoT-TD/1.1 Thing Description used to exercise validation-failure handling. A conformant WoT Connectivity 1.1 registry keeps this document stored, marks its LoadState Failed, records a WoTValidationOutcomeDataType with FormatOutcome=Failed, raises a WoTValidationFailureEventType, and leaves any previously active projection of pump-broken untouched. The specific defects are: (1) the required top-level 'title' member is missing; (2) 'security' names 'missing_sc', which is not present in securityDefinitions; (3) the pumpSpeed form declares op 'frobnicate', which is not a valid WoT form operation; (4) the links rel=type href points to a Thing Model that does not resolve in the registry.",
+  "uav:browseName": "1:PumpBroken",
+  "uav:id": "nsu=http://example.com/demo/pump;s=PumpBroken",
+  "links": [
+    {
+      "rel": "type",
+      "href": "../thingmodels/does-not-exist.tm.jsonld",
+      "type": "application/tm+json"
+    }
+  ],
+  "securityDefinitions": {
+    "opcua_channel_sc": {
+      "scheme": "uav:channelsec",
+      "uav:securityMode": "SignAndEncrypt",
+      "uav:securityPolicy": "Aes256_Sha256_RsaPss"
+    }
+  },
+  "security": "missing_sc",
+  "base": "opc.tcp://opcuademo.com:4840",
+  "properties": {
+    "pumpSpeed": {
+      "@type": "uav:variable",
+      "title": "Pump Speed",
+      "uav:browseName": "1:PumpSpeed",
+      "type": "number",
+      "unit": "rpm",
+      "readOnly": true,
+      "observable": true,
+      "forms": [
+        {
+          "href": "/?id=nsu=http://example.com/demo/pump;s=PumpSpeed",
+          "contentType": "application/octet-stream",
+          "op": ["frobnicate"]
+        }
+      ]
+    }
+  }
+}

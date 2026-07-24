@@ -1,0 +1,92 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "uav": "http://opcfoundation.org/UA/WoT-Binding/",
+    "ua": "http://opcfoundation.org/UA/",
+    "qudt": "http://qudt.org/schema/qudt/",
+    "qudt-quantitykind": "http://qudt.org/vocab/quantitykind/",
+
+    "uav:id": { "@id": "uav:id" },
+    "uav:browsePath": { "@id": "uav:browsePath" },
+    "uav:browseName": { "@id": "uav:browseName" },
+    "uav:object": { "@id": "uav:object" },
+    "uav:objectType": { "@id": "uav:objectType" },
+    "uav:variable": { "@id": "uav:variable" },
+    "uav:variableType": { "@id": "uav:variableType" },
+    "uav:method": { "@id": "uav:method" },
+    "uav:eventType": { "@id": "uav:eventType" },
+    "uav:hasComponent": { "@id": "uav:hasComponent", "@container": "@set" },
+    "uav:componentOf": { "@id": "uav:componentOf", "@container": "@set" },
+    "uav:mapToNodeId": { "@id": "uav:mapToNodeId" },
+    "uav:mapToType": { "@id": "uav:mapToType" },
+    "uav:mapToTypeName": { "@id": "uav:mapToTypeName" },
+    "uav:mapByFieldPath": { "@id": "uav:mapByFieldPath" },
+
+    "uav:channelsec": { "@id": "uav:channelsec" },
+    "uav:authentication": { "@id": "uav:authentication" },
+    "uav:securityMode": { "@id": "uav:securityMode" },
+    "uav:securityPolicy": { "@id": "uav:securityPolicy" },
+    "uav:userIdentityToken": { "@id": "uav:userIdentityToken" },
+    "uav:issueToken": { "@id": "uav:issueToken" },
+
+    "uav:isComposite": { "@id": "uav:isComposite" },
+    "uav:isEvent": { "@id": "uav:isEvent" },
+
+    "uav:capability": { "@id": "uav:capability" },
+    "uav:componentModel": { "@id": "uav:componentModel" },
+    "uav:reference": { "@id": "uav:reference" },
+    "uav:refName": { "@id": "uav:refName" },
+    "uav:refType": { "@id": "uav:refType" },
+
+    "uav:contains": { "@id": "uav:contains", "@container": "@set" },
+    "uav:containedIn": { "@id": "uav:containedIn" },
+
+    "uav:congruentType": { "@id": "uav:congruentType" },
+    "uav:congruentTypeName": { "@id": "uav:congruentTypeName" },
+    "uav:nameNamespace": { "@id": "uav:nameNamespace", "@type": "@id" },
+
+    "uav:scaleFactor": { "@id": "uav:scaleFactor" },
+    "uav:decimalPlaces": { "@id": "uav:decimalPlaces" },
+
+    "uav:propertyGroups": { "@id": "uav:propertyGroups", "@container": "@set" },
+    "uav:eventGroups": { "@id": "uav:eventGroups", "@container": "@set" },
+    "uav:actionGroups": { "@id": "uav:actionGroups", "@container": "@set" },
+    "uav:memberOf": { "@id": "uav:memberOf" },
+
+    "uav:unitProperty": { "@id": "uav:unitProperty" },
+
+    "uav:metadata": { "@id": "uav:metadata", "@type": "@json" },
+    "uav:semanticId": { "@id": "uav:semanticId", "@type": "@id" },
+
+    "uav:actionConfiguration": { "@id": "uav:actionConfiguration", "@type": "@json" },
+    "uav:propertyConfiguration": { "@id": "uav:propertyConfiguration", "@type": "@json" },
+    "uav:eventConfiguration": { "@id": "uav:eventConfiguration", "@type": "@json" },
+
+    "uav:includeInherited": { "@id": "uav:includeInherited" },
+
+    "uav:additionalProperties": { "@id": "uav:additionalProperties" },
+    "uav:externalSchema": { "@id": "uav:externalSchema" },
+    "uav:modellingRule": { "@id": "uav:modellingRule" },
+
+    "uav:NodeModel": { "@id": "uav:NodeModel" },
+    "uav:nodes": {
+      "@id": "uav:nodes",
+      "@context": {
+        "@version": 1.1,
+        "@vocab": "http://opcfoundation.org/UA/WoT-Binding/"
+      }
+    },
+
+    "uav:nodeSet": {
+      "@id": "uav:nodeSet",
+      "@context": {
+        "@version": 1.1,
+        "contentType": "uav:contentType",
+        "encoding": "uav:encoding",
+        "sha256": "uav:sha256",
+        "data": "uav:data",
+        "profileVersion": "uav:profileVersion"
+      }
+    }
+  }
+}
