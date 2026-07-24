@@ -2243,6 +2243,7 @@ def emit_md():
 
     md = []
     md.append('<a id="annex-a"></a>')
+    md.append("")
     md.append("## Annex A \u2014 Information model\n")
     md.append("This annex is the normative node reference. It is generated directly from "
               "`tools/build_model.py` and therefore always matches "
@@ -2265,6 +2266,7 @@ def emit_md():
         n = NODES[nid]
         base = _friendly(supertype(n))
         md.append(f'<a id="{_anchor(n.bname)}"></a>')
+        md.append("")
         md.append(f"#### {n.bname}  (ns=1;i={nid})\n")
         md.append(f"*Inherits from:* {_link(base)}\n")
         if n.desc:
@@ -2287,6 +2289,7 @@ def emit_md():
     for nid in data_types:
         n = NODES[nid]
         md.append(f'<a id="{_anchor(n.bname)}"></a>')
+        md.append("")
         md.append(f"#### {n.bname}  (ns=1;i={nid})\n")
         md.append(f"*Subtype of:* {_link(_friendly(supertype(n)))}\n")
         if n.desc:
@@ -2346,7 +2349,7 @@ def emit_md():
         f"{_clink('HasInterface')}, {_clink('GeneratesEvent')}, {_clink('HasSubtype')}, "
         f"{_clink('HasTypeDefinition')}, {_clink('HasModellingRule')}, {_clink('FromState')}, "
         f"{_clink('ToState')} and {_clink('HasEncoding')}.\n")
-    return "\n".join(md) + "\n"
+    return "\n".join(md).rstrip() + "\n"
 
 
 if __name__ == "__main__":
@@ -2364,5 +2367,4 @@ if __name__ == "__main__":
     n_types = sum(1 for k in NODES if NODES[k].cls in ("UAObjectType", "UADataType"))
     print(f"Nodes: {len(NODES)}  (ObjectTypes+DataTypes: {n_types})")
     print(f"Member id range: 6001..{_next_member[0] - 1}")
-
 

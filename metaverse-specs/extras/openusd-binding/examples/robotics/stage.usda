@@ -1,0 +1,18 @@
+#usda 1.0
+(
+    doc = """Composed robotics stage for the OPC UA - OpenUSD Bindings end-to-end.
+
+    This is the stage an operator opens in usdview or NVIDIA Omniverse. It composes two sublayers, strongest first:
+
+      1. live.usda  - runtime composition and override opinions authored by the connector (robot references, joint xformOp rotations, safety visibility, dynamic tool, command intent).
+      2. Cell.usda  - the static base asset (environment + positioned robot mount Xforms).
+
+    Open this file; run the connector (see E2E-GUIDE.md) to author live.usda; reload in usdview or watch it update live in Omniverse.
+    """
+    subLayers = [
+        @./live.usda@,
+        @./Cell.usda@
+    ]
+    defaultPrim = "Cell"
+    upAxis = "Z"
+)

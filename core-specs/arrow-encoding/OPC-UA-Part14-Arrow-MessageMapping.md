@@ -18,6 +18,8 @@ An Arrow NetworkMessage is an Arrow IPC stream whose schema describes one Publis
 
 The batching advantage is that many samples from the same DataSet can be transmitted in one message: timestamps, status values and field values become cache-friendly columns, and subscribers can process a batch without per-sample decoding overhead.
 
+Multi-byte values in the Arrow buffers of every RecordBatch are little-endian, as required by the Apache Arrow columnar format and the Part 6 Arrow DataType mapping.
+
 ## 3 Insertion into OPC 10000-14 v1.05.06
 
 Insert a new message mapping `7.2.8 Arrow message mapping` after the existing message mappings, mirroring the structure of `7.2.5 JSON message mapping`. Add configuration parameters in `6.3.x`, configuration model entries in `9.2.x`, header layout descriptions in `Annex A.x`, and content-type entries in `7.3.4.x` and `Annex B`.

@@ -38,6 +38,8 @@ The canonical Arrow encoding is type-directed. Encoders determine the Arrow `Dat
 
 There is one canonical form. Encoders shall not choose alternative Arrow layouts for the same OPC UA DataType. Informative Arrow extension types, such as tensor extension types for matrices, may be exposed by tools but are not the canonical interchange representation.
 
+Multi-byte values in Arrow buffers are little-endian, as required by the Apache Arrow columnar format.
+
 ## 5 Insertion into OPC 10000-6 v1.05.07
 
 Insert the following new clause after `5.4 OPC UA JSON` and after the sibling additive clause `5.5 OPC UA Avro`, before clause `6`.

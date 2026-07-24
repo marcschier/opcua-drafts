@@ -5,7 +5,7 @@
 **Namespace:** `http://opcfoundation.org/UA/` (base OPC UA namespace)
 **Version:** 0.1.0 · **Date:** 2026-07-02
 
-> **Status — working draft.** This document proposes an additional OPC UA DataEncoding named **Default Avro** for lossless Apache Avro binary representation of OPC UA values. NodeIds for the DataTypeEncoding Objects are not assigned here; they would be added to the base namespace by the OPC Foundation. This draft defines one canonical Avro form only and requires `decode(encode(x)) == x` for every value of the described DataType.
+> **Status — working draft.** This document proposes an additional OPC UA DataEncoding named **Default Avro** for lossless Apache Avro binary representation of OPC UA values. NodeIds for the DataTypeEncoding Objects are not assigned here; they will be added to the base namespace by the OPC Foundation. This draft defines one canonical Avro form only and requires `decode(encode(x)) == x` for every value of the described DataType.
 
 ---
 
@@ -37,11 +37,13 @@ Key words **shall**, **should**, **may**, **shall not** are to be interpreted as
 
 ## 4 Overview
 
+Default Avro is added for **PubSub integration with downstream systems that speak Apache Avro but not the OPC UA Binary encoding** — stream processors, data lakes, message-bus consumers and hot-path analytics pipelines that increasingly ingest OPC UA telemetry yet cannot decode UA Binary and gain little from the verbosity of JSON. It lets a Publisher emit that telemetry in a compact binary form these consumers read **unchanged** while preserving OPC UA semantics: the type information needed to interpret each value — DataTypes drawn from companion specifications and from a server's AddressSpace — is captured once in the Avro schema and shared out of band through a schema registry rather than repeated in every message, so a subscriber relates each field back to its OPC UA meaning without an OPC UA session. The encoding is therefore optimized for high throughput and low resource consumption on the hot path.
+
 Each OPC UA DataType maps to exactly one Avro schema. Primitive built-ins use Avro primitives where the Avro type can carry the complete OPC UA domain; composite built-ins use Avro records; nullable OPC UA values use Avro unions with `"null"` as the first branch. Avro schema names are stable qualified names under the namespace `org.opcfoundation.ua.avro` unless the type comes from another OPC UA NamespaceUri, which is mapped to a more specific Avro namespace by the deterministic function in §6.5. Annex A gives generated per-type examples and byte layouts.
 
 The content type for a standalone Avro payload using this DataEncoding shall be `application/vnd.apache.avro`. Where a transport distinguishes container files from schemaless Avro binary payloads it may use the parameter `encoding=binary` or `container=object-container-file`; PubSub messages defined by the companion Part 14 mapping use schemaless Avro binary with schema resolution from configuration or registry.
 
-A DataTypeEncoding Object named **Default Avro** would be added for DataTypes that support this encoding. The Object would be linked from the DataType with `HasEncoding` in the same pattern as `Default Binary`, `Default XML` and `Default JSON`. This working draft intentionally describes that node only and does not assign or ship NodeIds.
+A DataTypeEncoding Object named **Default Avro** shall be added for DataTypes that support this encoding. The Object shall be linked from the DataType with `HasEncoding` in the same pattern as `Default Binary`, `Default XML` and `Default JSON`. This working draft intentionally describes that node only and does not assign or ship NodeIds.
 
 ## 5 Avro mapping
 
@@ -80,6 +82,8 @@ Avro unions used for nullability shall be ordered as `["null", T]`, and the defa
 | DataValue | `record DataValue` | Optional members as described in §5.10. |
 | Variant | `record Variant` | Recursive typed body as described in §5.7. |
 | DiagnosticInfo | `record DiagnosticInfo` | Recursive optional members as described in §5.11. |
+
+Avro integers are zig-zag base-128 varints and are therefore byte-order-neutral; the fixed-width `float` and `double` are IEEE-754 **little-endian** and the `fixed(16)` Guid preserves the 16 OPC UA Guid bytes verbatim. Annex D shows these on-the-wire layouts byte by byte.
 
 #### 5.2.1 Textual NodeId and ExpandedNodeId form
 
@@ -1243,19 +1247,19 @@ The `body` member is the append-only **growing union** governed by §6.4 (see al
 | 0 | 1 | `0c` | $.builtInType: int = 6 |
 | 1 | 1 | `02` | $.dimensions: union branch index = 1 |
 | 2 | 1 | `04` | $.dimensions: branch 1 (array): array block 0 count = 2 |
-| 3 | 1 | `04` | $.dimensions: branch 1 (array)[0]: int = 2 |
-| 4 | 1 | `04` | $.dimensions: branch 1 (array)[1]: int = 2 |
+| 3 | 1 | `04` | $.dimensions: branch 1 (array)\[0\]: int = 2 |
+| 4 | 1 | `04` | $.dimensions: branch 1 (array)\[1\]: int = 2 |
 | 5 | 1 | `00` | $.dimensions: branch 1 (array): array block 1 count = 0 |
 | 6 | 1 | `24` | $.body: union branch index = 18 |
 | 7 | 1 | `04` | $.body: branch 18 (org.opcfoundation.ua.avro.VariantInt32MatrixBody).matrix.dimensions: array block 0 count = 2 |
-| 8 | 1 | `04` | $.body: branch 18 (org.opcfoundation.ua.avro.VariantInt32MatrixBody).matrix.dimensions[0]: int = 2 |
-| 9 | 1 | `04` | $.body: branch 18 (org.opcfoundation.ua.avro.VariantInt32MatrixBody).matrix.dimensions[1]: int = 2 |
+| 8 | 1 | `04` | $.body: branch 18 (org.opcfoundation.ua.avro.VariantInt32MatrixBody).matrix.dimensions\[0\]: int = 2 |
+| 9 | 1 | `04` | $.body: branch 18 (org.opcfoundation.ua.avro.VariantInt32MatrixBody).matrix.dimensions\[1\]: int = 2 |
 | 10 | 1 | `00` | $.body: branch 18 (org.opcfoundation.ua.avro.VariantInt32MatrixBody).matrix.dimensions: array block 1 count = 0 |
 | 11 | 1 | `08` | $.body: branch 18 (org.opcfoundation.ua.avro.VariantInt32MatrixBody).matrix.values: array block 0 count = 4 |
-| 12 | 1 | `02` | $.body: branch 18 (org.opcfoundation.ua.avro.VariantInt32MatrixBody).matrix.values[0]: int = 1 |
-| 13 | 1 | `04` | $.body: branch 18 (org.opcfoundation.ua.avro.VariantInt32MatrixBody).matrix.values[1]: int = 2 |
-| 14 | 1 | `06` | $.body: branch 18 (org.opcfoundation.ua.avro.VariantInt32MatrixBody).matrix.values[2]: int = 3 |
-| 15 | 1 | `08` | $.body: branch 18 (org.opcfoundation.ua.avro.VariantInt32MatrixBody).matrix.values[3]: int = 4 |
+| 12 | 1 | `02` | $.body: branch 18 (org.opcfoundation.ua.avro.VariantInt32MatrixBody).matrix.values\[0\]: int = 1 |
+| 13 | 1 | `04` | $.body: branch 18 (org.opcfoundation.ua.avro.VariantInt32MatrixBody).matrix.values\[1\]: int = 2 |
+| 14 | 1 | `06` | $.body: branch 18 (org.opcfoundation.ua.avro.VariantInt32MatrixBody).matrix.values\[2\]: int = 3 |
+| 15 | 1 | `08` | $.body: branch 18 (org.opcfoundation.ua.avro.VariantInt32MatrixBody).matrix.values\[3\]: int = 4 |
 | 16 | 1 | `00` | $.body: branch 18 (org.opcfoundation.ua.avro.VariantInt32MatrixBody).matrix.values: array block 1 count = 0 |
 
 ### Built-in DiagnosticInfo
@@ -1422,14 +1426,14 @@ The `body` member is the append-only **growing union** governed by §6.4 (see al
 |---:|---:|---|---|
 | 0 | 1 | `02` | $: union branch index = 1 |
 | 1 | 1 | `06` | $: branch 1 (array): array block 0 count = 3 |
-| 2 | 1 | `02` | $: branch 1 (array)[0]: union branch index = 1 |
-| 3 | 1 | `02` | $: branch 1 (array)[0]: branch 1 (string): string length = 1 |
-| 4 | 1 | `61` | $: branch 1 (array)[0]: branch 1 (string): string data |
-| 5 | 1 | `00` | $: branch 1 (array)[1]: union branch index = 0 |
-| 6 | 0 | `—` | $: branch 1 (array)[1]: branch 0 (null): null |
-| 6 | 1 | `02` | $: branch 1 (array)[2]: union branch index = 1 |
-| 7 | 1 | `00` | $: branch 1 (array)[2]: branch 1 (string): string length = 0 |
-| 8 | 0 | `—` | $: branch 1 (array)[2]: branch 1 (string): string data |
+| 2 | 1 | `02` | $: branch 1 (array)\[0\]: union branch index = 1 |
+| 3 | 1 | `02` | $: branch 1 (array)\[0\]: branch 1 (string): string length = 1 |
+| 4 | 1 | `61` | $: branch 1 (array)\[0\]: branch 1 (string): string data |
+| 5 | 1 | `00` | $: branch 1 (array)\[1\]: union branch index = 0 |
+| 6 | 0 | `—` | $: branch 1 (array)\[1\]: branch 0 (null): null |
+| 6 | 1 | `02` | $: branch 1 (array)\[2\]: union branch index = 1 |
+| 7 | 1 | `00` | $: branch 1 (array)\[2\]: branch 1 (string): string length = 0 |
+| 8 | 0 | `—` | $: branch 1 (array)\[2\]: branch 1 (string): string data |
 | 8 | 1 | `00` | $: branch 1 (array): array block 1 count = 0 |
 
 ### Matrix
@@ -1491,18 +1495,18 @@ The `body` member is the append-only **growing union** governed by §6.4 (see al
 |---:|---:|---|---|
 | 0 | 1 | `02` | $: union branch index = 1 |
 | 1 | 1 | `04` | $: branch 1 (org.opcfoundation.ua.avro.TopMatrixOfDouble).dimensions: array block 0 count = 2 |
-| 2 | 1 | `04` | $: branch 1 (org.opcfoundation.ua.avro.TopMatrixOfDouble).dimensions[0]: int = 2 |
-| 3 | 1 | `04` | $: branch 1 (org.opcfoundation.ua.avro.TopMatrixOfDouble).dimensions[1]: int = 2 |
+| 2 | 1 | `04` | $: branch 1 (org.opcfoundation.ua.avro.TopMatrixOfDouble).dimensions\[0\]: int = 2 |
+| 3 | 1 | `04` | $: branch 1 (org.opcfoundation.ua.avro.TopMatrixOfDouble).dimensions\[1\]: int = 2 |
 | 4 | 1 | `00` | $: branch 1 (org.opcfoundation.ua.avro.TopMatrixOfDouble).dimensions: array block 1 count = 0 |
 | 5 | 1 | `08` | $: branch 1 (org.opcfoundation.ua.avro.TopMatrixOfDouble).values: array block 0 count = 4 |
-| 6 | 1 | `02` | $: branch 1 (org.opcfoundation.ua.avro.TopMatrixOfDouble).values[0]: union branch index = 1 |
-| 7 | 8 | `00 00 00 00 00 00 f0 3f` | $: branch 1 (org.opcfoundation.ua.avro.TopMatrixOfDouble).values[0]: branch 1 (double): float64 little-endian |
-| 15 | 1 | `02` | $: branch 1 (org.opcfoundation.ua.avro.TopMatrixOfDouble).values[1]: union branch index = 1 |
-| 16 | 8 | `00 00 00 00 00 00 f8 7f` | $: branch 1 (org.opcfoundation.ua.avro.TopMatrixOfDouble).values[1]: branch 1 (double): float64 little-endian |
-| 24 | 1 | `02` | $: branch 1 (org.opcfoundation.ua.avro.TopMatrixOfDouble).values[2]: union branch index = 1 |
-| 25 | 8 | `00 00 00 00 00 00 f0 ff` | $: branch 1 (org.opcfoundation.ua.avro.TopMatrixOfDouble).values[2]: branch 1 (double): float64 little-endian |
-| 33 | 1 | `02` | $: branch 1 (org.opcfoundation.ua.avro.TopMatrixOfDouble).values[3]: union branch index = 1 |
-| 34 | 8 | `00 00 00 00 00 00 00 80` | $: branch 1 (org.opcfoundation.ua.avro.TopMatrixOfDouble).values[3]: branch 1 (double): float64 little-endian |
+| 6 | 1 | `02` | $: branch 1 (org.opcfoundation.ua.avro.TopMatrixOfDouble).values\[0\]: union branch index = 1 |
+| 7 | 8 | `00 00 00 00 00 00 f0 3f` | $: branch 1 (org.opcfoundation.ua.avro.TopMatrixOfDouble).values\[0\]: branch 1 (double): float64 little-endian |
+| 15 | 1 | `02` | $: branch 1 (org.opcfoundation.ua.avro.TopMatrixOfDouble).values\[1\]: union branch index = 1 |
+| 16 | 8 | `00 00 00 00 00 00 f8 7f` | $: branch 1 (org.opcfoundation.ua.avro.TopMatrixOfDouble).values\[1\]: branch 1 (double): float64 little-endian |
+| 24 | 1 | `02` | $: branch 1 (org.opcfoundation.ua.avro.TopMatrixOfDouble).values\[2\]: union branch index = 1 |
+| 25 | 8 | `00 00 00 00 00 00 f0 ff` | $: branch 1 (org.opcfoundation.ua.avro.TopMatrixOfDouble).values\[2\]: branch 1 (double): float64 little-endian |
+| 33 | 1 | `02` | $: branch 1 (org.opcfoundation.ua.avro.TopMatrixOfDouble).values\[3\]: union branch index = 1 |
+| 34 | 8 | `00 00 00 00 00 00 00 80` | $: branch 1 (org.opcfoundation.ua.avro.TopMatrixOfDouble).values\[3\]: branch 1 (double): float64 little-endian |
 | 42 | 1 | `00` | $: branch 1 (org.opcfoundation.ua.avro.TopMatrixOfDouble).values: array block 1 count = 0 |
 
 ### Structure
@@ -1823,14 +1827,14 @@ The `body` member is the append-only **growing union** governed by §6.4 (see al
 | 4 | 8 | `00 00 00 00 00 00 00 00` | $.Location.X: float64 little-endian |
 | 12 | 8 | `00 00 00 00 00 00 00 00` | $.Location.Y: float64 little-endian |
 | 20 | 1 | `06` | $.Tags: array block 0 count = 3 |
-| 21 | 1 | `02` | $.Tags[0]: union branch index = 1 |
-| 22 | 1 | `02` | $.Tags[0]: branch 1 (string): string length = 1 |
-| 23 | 1 | `78` | $.Tags[0]: branch 1 (string): string data |
-| 24 | 1 | `00` | $.Tags[1]: union branch index = 0 |
-| 25 | 0 | `—` | $.Tags[1]: branch 0 (null): null |
-| 25 | 1 | `02` | $.Tags[2]: union branch index = 1 |
-| 26 | 1 | `02` | $.Tags[2]: branch 1 (string): string length = 1 |
-| 27 | 1 | `7a` | $.Tags[2]: branch 1 (string): string data |
+| 21 | 1 | `02` | $.Tags\[0\]: union branch index = 1 |
+| 22 | 1 | `02` | $.Tags\[0\]: branch 1 (string): string length = 1 |
+| 23 | 1 | `78` | $.Tags\[0\]: branch 1 (string): string data |
+| 24 | 1 | `00` | $.Tags\[1\]: union branch index = 0 |
+| 25 | 0 | `—` | $.Tags\[1\]: branch 0 (null): null |
+| 25 | 1 | `02` | $.Tags\[2\]: union branch index = 1 |
+| 26 | 1 | `02` | $.Tags\[2\]: branch 1 (string): string length = 1 |
+| 27 | 1 | `7a` | $.Tags\[2\]: branch 1 (string): string data |
 | 28 | 1 | `00` | $.Tags: array block 1 count = 0 |
 | 29 | 1 | `02` | $.Payload: union branch index = 1 |
 | 30 | 1 | `00` | $.Payload: branch 1 (org.opcfoundation.ua.avro.ExtensionObject).typeId.namespace: int = 0 |
@@ -2286,3 +2290,126 @@ The nested `event.detail` Variant now carries a Float, so `VariantEventDetail_Fl
 
 A `Sample` written under 1.0 — `signal` = Int32(42), `event` = SensorEvent{ detail = Boolean(true) } — encodes to `0c0002540c693d31303031020a6465762d3102000201` and decodes unchanged under the 1.3 schema. Each per-field record keeps its members' branch indices under growth (`VariantSignal_Int32Scalar`, `VariantEventDetail_BooleanScalar` and `SensorEvent` all stay at branch 1), because members are only ever appended, never reordered. Each minor is a distinct SchemaId in one lineage; a decoder holding the 1.3 schema decodes every earlier minor of that lineage, while the appended members stay unused for older values (§6.4). Note that between 1.1 and 1.2 the `VariantSignal` schema is byte-identical: growing `detail` cannot affect `signal` because they are separate records.
 <!-- END GENERATED: evolution-annex -->
+
+## Annex D Wire byte-layout examples (illustrative)
+
+This annex illustrates, byte by byte, how representative values look **on the wire** under Default Avro. Avro binary carries **no per-value type tags** — the schema alone defines the layout — so these diagrams show the exact bytes a decoder consumes for a given schema. The byte values are taken from the shared conformance corpus and match the annotated breakdowns in Annex A; they are informative examples, not additional normative rules.
+
+Recurring layout patterns:
+
+- **Integers, lengths, enum values and union branch indices** use Avro's **zig-zag + base-128 varint**. Each byte carries 7 value bits; the high bit (`0x80`) is a continuation flag, so the encoding is **byte-order-neutral** (there is no "little vs big endian" for a varint). Zig-zag maps signed values so small magnitudes stay short: `0→0`, `-1→1`, `1→2`, `-128→255`.
+- **`float` and `double`** are fixed-width **IEEE-754, little-endian** (4 and 8 bytes; least-significant byte first).
+- **`fixed`** (used for Guid) is written **verbatim**, preserving the 16 OPC UA Guid bytes.
+- **`string` / `bytes`** are a varint **length** followed by the raw UTF-8 / octet payload.
+- A **nullable** value is preceded by a **union branch index** varint: `0` selects `null`, a non-zero index selects the value branch (for `["null", T]`, branch `1` = `T`).
+- A **record** is simply its fields **concatenated in schema order**, with no length prefix or separators.
+- An **array** is one or more **blocks**; each block is a varint **item count** followed by that many items, and the array ends with a **`0`** count block.
+
+### D.1 Boolean — `true`
+
+```text
+Boolean  true  ->  1 byte
+ off  0
+     +----+
+     | 01 |   0x00 = false, 0x01 = true
+     +----+
+```
+
+### D.2 SByte — `-128` (zig-zag varint)
+
+```text
+SByte  -128  ->  2 bytes  (int, zig-zag base-128 varint; byte-order-neutral)
+ off  0    1
+     +----+----+
+     | FF | 01 |   zigzag(-128)=255 ; varint(255)=0xFF 0x01
+     +----+----+
+       ^    ^
+       |    +-- 0x01: high bit clear -> last varint byte
+       +------- 0xFF: high bit set   -> continues
+```
+
+### D.3 Int32 — `-2147483648` (zig-zag varint)
+
+```text
+Int32  -2147483648  ->  5 bytes  (int, zig-zag base-128 varint)
+ off  0    1    2    3    4
+     +----+----+----+----+----+
+     | FF | FF | FF | FF | 0F |   zigzag(-2147483648)=4294967295
+     +----+----+----+----+----+
+      <-------- continues ------->  last byte 0x0F clears the high bit
+```
+
+### D.4 Double — `1.0` (IEEE-754 little-endian)
+
+```text
+Double  1.0  ->  8 bytes  (double, IEEE-754 binary64, little-endian)
+ off  0    1    2    3    4    5    6    7
+     +----+----+----+----+----+----+----+----+
+     | 00 | 00 | 00 | 00 | 00 | 00 | F0 | 3F |
+     +----+----+----+----+----+----+----+----+
+      LSB                                 MSB   (0x3FF0000000000000 = 1.0)
+```
+
+### D.5 String — `"grüße-中文-😀"` (union branch, varint length, UTF-8)
+
+```text
+String  "grüße-中文-😀"  ->  21 bytes   schema ["null","string"]
+ off  0    1    2 ....................... 20
+     +----+----+---------------------------+
+     | 02 | 26 | 67 72 C3 BC ... (19 bytes)|
+     +----+----+---------------------------+
+       ^    ^    ^
+       |    |    +-- UTF-8 code units (not normalized)
+       |    +------- length  = zigzag(19) = 38 = 0x26
+       +------------ branch  = zigzag(1)  = 2  -> "string" (non-null; 0 would be null)
+```
+
+### D.6 DateTime — `133000000000000000` ticks (zig-zag varint long)
+
+```text
+DateTime  133000000000000000  ->  9 bytes  (long ticks of 100 ns since 1601-01-01 UTC)
+ off  0    1    2    3    4    5    6    7    8
+     +----+----+----+----+----+----+----+----+----+
+     | 80 | 80 | 84 | B2 | F3 | B2 | C1 | D8 | 03 |
+     +----+----+----+----+----+----+----+----+----+
+      <----------------- continues ------------------->  final 0x03 ends the varint
+```
+
+### D.7 Guid — `01020304-0506-0708-090a-0b0c0d0e0f10` (fixed 16, verbatim)
+
+```text
+Guid  ->  16 bytes  (fixed[16] logical type opcua-guid; OPC UA Guid bytes preserved verbatim)
+ off  0                                                             15
+     +----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+
+     | 01 | 02 | 03 | 04 | 05 | 06 | 07 | 08 | 09 | 0A | 0B | 0C | 0D | 0E | 0F | 10 |
+     +----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+
+```
+
+### D.8 Structure — `Point { X: 1.25, Y: -3.5 }` (record = fields concatenated)
+
+```text
+Point { X: 1.25, Y: -3.5 }  ->  16 bytes  (record: fields in DataTypeDefinition order, no framing)
+ off  0                       7   8                      15
+     +-------------------------+-------------------------+
+     | 00 00 00 00 00 00 F4 3F | 00 00 00 00 00 00 0C C0 |
+     +-------------------------+-------------------------+
+       X: double LE (1.25)       Y: double LE (-3.5)
+```
+
+### D.9 Matrix — `2×2 double` (array block-count framing)
+
+```text
+Matrix { dimensions:[2,2], values:[1.0, NaN, -Infinity, -0.0] }  ->  43 bytes
+schema ["null", record{ dimensions: array<int>, values: array<["null","double"]> }]
+ off  0    1    2    3    4    5    6    7 ...... 14   15  ....        ....        42
+     +----+----+----+----+----+----+----+---------+---- ....  four doubles ....  ----+----+
+     | 02 | 04 | 04 | 04 | 00 | 08 | 02 |  8 bytes | 02  8B    02  8B    02  8B    | 00 |
+     +----+----+----+----+----+----+----+---------+---- .................. --------+----+
+       |    |    \_______/   |    |    |   \_____/
+       |    |    dims 2,2     |    |    |   value[0]=1.0 (double LE)
+       |    |                 |    |    +-- value union branch = 1 (non-null)
+       |    |                 |    +------- values: block count = zigzag-varint 4
+       |    |                 +------------ dimensions: end-of-array 0-count block
+       |    +------------------------------ dimensions: block count = 2, then ints 2, 2
+       +----------------------------------- outer union branch = 1 (non-null matrix record)
+```
