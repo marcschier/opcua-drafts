@@ -26,7 +26,7 @@ Only the bound signals are materialised in the overlay; it is illustrative, not 
 
 Bindings for `PumpType` in `http://opcfoundation.org/UA/Pumps/`, per the [Observability Export](../OPC-UA-Observability-Export.md) base specification. Each binding exposes one OTEL signal (`Metrics`, `Logs` or `Traces`) with a deterministic `DataSetClassId`.
 
-#### Metrics — Metrics
+### Metrics — Metrics
 
 *Signal:* OTEL metrics (PublishedDataItems) · *DataSetClassId:* `04ec3212-44fd-579c-ad2f-38b3c32df9e8` · *Cardinality:* one DataSet (bound root)
 
@@ -61,7 +61,7 @@ Bindings for `PumpType` in `http://opcfoundation.org/UA/Pumps/`, per the [Observ
 | Location | Dimension | `/Identification/Location` | `i=68` | String | dimension |
 | service.name | Dimension | — | — | — | dimension = `pump-observability` (const) |
 
-#### Logs — Logs
+### Logs — Logs
 
 *Signal:* OTEL logs (PublishedEvents) · *DataSetClassId:* `46d1c23b-a92c-5056-b5d8-084e848a761e` · *Cardinality:* one DataSet (bound root) · *Event source:* `/` · *Event type:* BaseEventType
 
@@ -77,7 +77,7 @@ Bindings for `PumpType` in `http://opcfoundation.org/UA/Pumps/`, per the [Observ
 
 *OTEL LogRecord mapping:* body template `{SourceName}: {Message} (severity {Severity})`; severity = `Severity`, body = `Message`, timestamp = `Time`.
 
-#### Traces — Traces
+### Traces — Traces
 
 *Signal:* OTEL traces/spans (PublishedEvents) · *DataSetClassId:* `cd367489-b1eb-5e95-ad67-32eebfdc438a` · *Cardinality:* one DataSet (bound root) · *Event source:* `/` · *Event type:* BaseEventType
 
@@ -91,7 +91,6 @@ Bindings for `PumpType` in `http://opcfoundation.org/UA/Pumps/`, per the [Observ
 | service.name | Dimension | dimension = `pump-observability` (const) |
 
 *OTEL Span mapping:* name template `Pump operation {SourceName}`, start = `Time`, end = `—`, status = `Severity`, kind = `Internal`.
-
 
 ## 5 Where the bindings live
 
@@ -162,4 +161,3 @@ graph TD
 | [`Opc.Ua.Pumps.ObservabilityExport.NodeSet2.xml`](Opc.Ua.Pumps.ObservabilityExport.NodeSet2.xml) | The binding instances on the theoretical `ExamplePump` instance. |
 
 Regenerate from [`core-specs/extras/observability-export/examples/`](../../extras/observability-export/examples/) with `python tools/build_bindings.py pumps/Pumps.ObservabilityExport.json tools/ref`.
-

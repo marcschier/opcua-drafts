@@ -76,4 +76,3 @@ A semantics-agnostic subscriber that understands only a **base facet** recognise
 ## 6. Where the binding nodes live
 
 `Opc.Ua.Facets.ObservabilityExport.NodeSet2.xml` in this folder collapses the four base bindings and the two derived bindings under one `ObservabilityBindingGroup` (`FacetDemo`) for readability, exposed on an illustrative `FacetDemoInstance` that implements `IObservableType`. A conformant Server does not collapse them: it exposes one group per (`SignalUri` × `CompanionSpecificationUri`) with unique sibling BrowseNames (§5.1.1), so each facet type carries its own group (Device on `DeviceType`, Location on `LocationAddInType`, Maintenance on `IMaintenanceFacetType`) and a `MachineType` instance exposes the derived bindings' group, which the Server/bridge composes with the inherited/AddIn/interface bindings at resolve time per §5.12. NodeIds and the example namespace are provisional.
-

@@ -933,7 +933,7 @@ def emit_md():
             if pid is not None:
                 method_args[pid] = names
 
-    md = ['<a id="annex-a"></a>', "## Annex A \u2014 Information model\n",
+    md = ['<a id="annex-a"></a>', "", "## Annex A \u2014 Information model\n",
           "This annex is the normative node reference. It is generated from "
           "`core-specs/extras/observability-export/tools/build_model.py` and always matches `Opc.Ua.ObservabilityExport.NodeSet2.xml`. "
           "All nodes are defined in this specification's own namespace "
@@ -955,6 +955,7 @@ def emit_md():
     for nid in ref_types:
         n = NODES[nid]
         md.append(f'<a id="{_anchor(n.bname)}"></a>')
+        md.append("")
         md.append(f"#### {n.bname}  (i={nid})\n")
         md.append(f"*Subtype of:* {_link(_friendly(_supertype(n)))} \u00b7 *InverseName:* `{n.inverse}`\n")
         if n.desc:
@@ -964,6 +965,7 @@ def emit_md():
     for nid in obj_types:
         n = NODES[nid]
         md.append(f'<a id="{_anchor(n.bname)}"></a>')
+        md.append("")
         md.append(f"#### {n.bname}  (i={nid})\n")
         md.append(f"*Inherits from:* {_link(_friendly(_supertype(n)))}\n")
         if n.desc:
@@ -994,6 +996,7 @@ def emit_md():
     for nid in data_types:
         n = NODES[nid]
         md.append(f'<a id="{_anchor(n.bname)}"></a>')
+        md.append("")
         md.append(f"#### {n.bname}  (i={nid})\n")
         md.append(f"*Subtype of:* {_link(_friendly(_supertype(n)))}\n")
         if n.desc:
@@ -1045,7 +1048,7 @@ def emit_md():
                 td = _link(_friendly(tgt))
         md.append(f"| {n.bname} | i={nid} | {td} | {(n.desc or '').replace('|','/')} |")
     md.append("")
-    return "\n".join(md) + "\n"
+    return "\n".join(md).rstrip() + "\n"
 
 
 if __name__ == "__main__":

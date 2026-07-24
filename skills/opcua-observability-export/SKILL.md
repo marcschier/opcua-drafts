@@ -422,6 +422,7 @@ Traces binding fragment (a Program run → one span):
 ```
 
 Field notes:
+
 - `companionSpecificationUri` is the stable **spec-level** identifier for the companion specification
   facet of each group. It is distinct from any namespace URI because one companion specification can
   define several model namespaces.

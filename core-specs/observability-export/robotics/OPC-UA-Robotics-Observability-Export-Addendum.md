@@ -26,7 +26,7 @@ Only the bound signals are materialised in the overlay; it is illustrative, not 
 
 Bindings for `MotionDeviceSystemType` in `http://opcfoundation.org/UA/Robotics/`, per the [Observability Export](../OPC-UA-Observability-Export.md) base specification. Each binding exposes one OTEL signal (`Metrics`, `Logs` or `Traces`) with a deterministic `DataSetClassId`.
 
-#### Metrics — Metrics
+### Metrics — Metrics
 
 *Signal:* OTEL metrics (PublishedDataItems) · *DataSetClassId:* `142d1e8e-93e7-5436-8a2b-c99fe45b80e7` · *Cardinality:* one DataSet (bound root)
 
@@ -45,7 +45,7 @@ Bindings for `MotionDeviceSystemType` in `http://opcfoundation.org/UA/Robotics/`
 | ProductInstanceUri | Dimension | `/ProductInstanceUri` | `i=68` | String | dimension |
 | service.name | Dimension | — | — | — | dimension = `robotics-observability` (const) |
 
-#### Logs — Logs
+### Logs — Logs
 
 *Signal:* OTEL logs (PublishedEvents) · *DataSetClassId:* `38f93e0c-7ad5-5e8d-bee9-1f2096b6c24f` · *Cardinality:* one DataSet (bound root) · *Event source:* `/` · *Event type:* AlarmConditionType
 
@@ -61,7 +61,7 @@ Bindings for `MotionDeviceSystemType` in `http://opcfoundation.org/UA/Robotics/`
 
 *OTEL LogRecord mapping:* body template `{SourceName}: {Message} (severity {Severity})`; severity = `Severity`, body = `Message`, timestamp = `Time`.
 
-#### Traces — Traces
+### Traces — Traces
 
 *Signal:* OTEL traces/spans (PublishedEvents) · *DataSetClassId:* `1d01f74f-5b27-5bf0-b933-5fa3019d1544` · *Cardinality:* one DataSet (bound root) · *Event source:* `/` · *Event type:* BaseEventType
 
@@ -75,7 +75,6 @@ Bindings for `MotionDeviceSystemType` in `http://opcfoundation.org/UA/Robotics/`
 | service.name | Dimension | dimension = `robotics-observability` (const) |
 
 *OTEL Span mapping:* name template `Robot program/state {SourceName}`, start = `Time`, end = `—`, status = `Severity`, kind = `Internal`.
-
 
 ## 5 Where the bindings live
 
@@ -180,7 +179,6 @@ The type-level bindings above use placeholder BrowsePaths. A bridge resolves the
 
 Across all topologies the `DataSetClassId` per signal is unchanged — a subscriber recognizes each DataSet's class regardless of how many robots, axes or controllers a particular cell has; only the number of DataSets (writers) and the field counts differ.
 
-
 ## 7 Deliverables
 
 | File | Content |
@@ -189,4 +187,3 @@ Across all topologies the `DataSetClassId` per signal is unchanged — a subscri
 | [`Opc.Ua.Robotics.ObservabilityExport.NodeSet2.xml`](Opc.Ua.Robotics.ObservabilityExport.NodeSet2.xml) | The binding instances on the theoretical `ExampleRobotSystem` instance. |
 
 Regenerate from [`core-specs/extras/observability-export/examples/`](../../extras/observability-export/examples/) with `python tools/build_bindings.py robotics/Robotics.ObservabilityExport.json tools/ref`.
-

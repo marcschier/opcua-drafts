@@ -28,6 +28,8 @@ The following HistoryRead details map to Arrow result sets:
 
 The same Part 6 Arrow DataType mapping used for PubSub DataSet fields is used for the result `Value` column.
 
+Multi-byte values in the Arrow buffers of every result RecordBatch are little-endian, as required by the Apache Arrow columnar format and the Part 6 Arrow DataType mapping.
+
 ## 3 ADBC-style statement model
 
 An implementation exposing this mapping shall provide an ADBC-style logical surface:

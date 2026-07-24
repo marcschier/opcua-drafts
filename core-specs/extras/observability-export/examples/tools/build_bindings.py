@@ -631,7 +631,7 @@ def load_base_names(ref_dir):
     return names
 
 
-def emit_annex(descriptor, db, base_names):
+def emit_annex(descriptor, db, base_names, binding_heading="####"):
     d = descriptor
     L = [f"### Observability export bindings for `{d['appliesToType']}`", "",
          f"Bindings for `{d['appliesToType']}` in `{d['baseModelNamespaceUri']}`, per the "
@@ -643,7 +643,7 @@ def emit_annex(descriptor, db, base_names):
         content = {"Metrics": "OTEL metrics (PublishedDataItems)",
                    "Logs": "OTEL logs (PublishedEvents)",
                    "Traces": "OTEL traces/spans (PublishedEvents)"}[sig]
-        L.append(f"#### {sb['name']} — {sig}")
+        L.append(f"{binding_heading} {sb['name']} — {sig}")
         L.append("")
         hdr = f"*Signal:* {content} · *DataSetClassId:* `{dscid}`"
         card = sb.get("dataSetCardinalityPath")
@@ -755,19 +755,20 @@ def emit_addendum(descriptor, db, base_names, spec_folder, desc_base):
     A("")
     A("Only the bound signals are materialised in the overlay; it is illustrative, not a full companion instance.")
     A("")
-    A("## 4 " + emit_annex(d, db, base_names).split("\n", 1)[0].lstrip("# ").strip())
+    annex = emit_annex(d, db, base_names, binding_heading="###")
+    A("## 4 " + annex.split("\n", 1)[0].lstrip("# ").strip())
     A("")
-    A("\n".join(emit_annex(d, db, base_names).split("\n")[2:]))
+    A("\n".join(annex.split("\n")[2:]).rstrip())
     A("## 5 Where the bindings live")
     A("")
     A("Overview of the observability bindings and their placement on the theoretical instance:")
     A("")
-    A(emit_diagrams(d))
+    A(emit_diagrams(d).rstrip())
     res = emit_resolution_examples(d)
     if res:
         A("## 6 BrowsePath resolution — worked examples")
         A("")
-        A(res)
+        A(res.rstrip())
     A("## 7 Deliverables")
     A("")
     A("| File | Content |")
@@ -777,7 +778,7 @@ def emit_addendum(descriptor, db, base_names, spec_folder, desc_base):
     A("")
     A(f"Regenerate from [`core-specs/extras/observability-export/examples/`](../../extras/observability-export/examples/) with `python tools/build_bindings.py {spec_folder}/{desc_base} tools/ref`.")
     A("")
-    return "\n".join(L) + "\n"
+    return "\n".join(L).rstrip() + "\n"
 
 
 # --- BrowsePath resolution worked examples ---------------------------------
