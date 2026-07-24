@@ -2,7 +2,8 @@
   "@context": [
     "https://www.w3.org/2022/wot/td/v1.1",
     {
-      "uav": "http://opcfoundation.org/UA/WoT-Binding/"
+      "uav": "http://opcfoundation.org/UA/WoT-Binding/",
+      "pump": "http://example.com/demo/pump"
     },
     "../opc-ua-wot-binding.context.jsonld"
   ],
@@ -10,7 +11,7 @@
   "id": "urn:dev:opcua:pump-01-preserved",
   "title": "Pump 01 (explicit byte-exact NodeSet archive)",
   "description": "An exceptional archival example that explicitly carries a byte-exact NodeSet2 baseline in a uav:nodeSet envelope. The semantic/readable vocabulary is primary, uav:nodes is an exceptional structured fallback, and this opaque envelope is emitted only when byte identity is requested or a future/unsupported construct cannot be represented structurally.",
-  "uav:browseName": "nsu=http://example.com/demo/pump;Pump",
+  "uav:browseName": "pump:Pump",
   "uav:id": "nsu=http://example.com/demo/pump;s=Pump",
   "uav:nodeSet": {
     "@type": "uav:nodeSet",
@@ -24,7 +25,7 @@
     "pumpSpeed": {
       "@type": "uav:variable",
       "title": "Pump Speed",
-      "uav:browseName": "nsu=http://example.com/demo/pump;PumpSpeed",
+      "uav:browseName": "pump:PumpSpeed",
       "uav:id": "nsu=http://example.com/demo/pump;i=6001",
       "type": "number",
       "unit": "rpm",

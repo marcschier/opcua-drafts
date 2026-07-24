@@ -3,7 +3,7 @@
     "https://www.w3.org/2022/wot/td/v1.1",
     {
       "uav": "http://opcfoundation.org/UA/WoT-Binding/",
-      "pump": "http://example.com/demo/pump#",
+      "pump": "http://example.com/demo/pump",
       "qudt-quantitykind": "http://qudt.org/vocab/quantitykind/"
     },
     "../opc-ua-wot-binding.context.jsonld"
@@ -11,12 +11,12 @@
   "@type": ["tm:ThingModel", "uav:objectType"],
   "title": "PumpType",
   "description": "A Thing Model of an OPC UA ObjectType that exercises the model and platform vocabulary: composition, groups, membership, references, units and scaling, configuration, metadata and modelling rules.",
-  "uav:browseName": "nsu=http://example.com/demo/pump;PumpType",
+  "uav:browseName": "pump:PumpType",
   "uav:id": "nsu=http://example.com/demo/pump;i=1001",
   "uav:isComposite": true,
   "uav:includeInherited": true,
   "uav:additionalProperties": false,
-  "uav:nameNamespace": "http://example.com/demo/pump#",
+  "uav:nameNamespace": "http://example.com/demo/pump",
   "uav:semanticId": "http://example.com/ontology/Pump",
   "uav:congruentTypeName": "pump:PumpType",
   "uav:congruentType": "nsu=http://example.com/demo/pump;i=1001",
@@ -55,7 +55,7 @@
     "pumpSpeed": {
       "@type": "uav:variableType",
       "title": "Pump Speed",
-      "uav:browseName": "nsu=http://example.com/demo/pump;PumpSpeed",
+      "uav:browseName": "pump:PumpSpeed",
       "type": "number",
       "unit": "qudt-quantitykind:AngularVelocity",
       "uav:modellingRule": "Mandatory",
@@ -69,7 +69,7 @@
     "serialNumber": {
       "@type": "uav:variableType",
       "title": "Serial Number",
-      "uav:browseName": "nsu=http://example.com/demo/pump;SerialNumber",
+      "uav:browseName": "pump:SerialNumber",
       "type": "string",
       "uav:modellingRule": "Mandatory",
       "uav:memberOf": "Nameplate"
@@ -77,7 +77,7 @@
     "stage": {
       "@type": "uav:variableType",
       "title": "Stage",
-      "uav:browseName": "nsu=http://example.com/demo/pump;Stage",
+      "uav:browseName": "pump:Stage",
       "type": "number",
       "uav:modellingRule": "MandatoryPlaceholder",
       "uav:memberOf": "Operational"
@@ -87,7 +87,7 @@
     "reset": {
       "@type": "uav:method",
       "title": "Reset",
-      "uav:browseName": "nsu=http://example.com/demo/pump;Reset",
+      "uav:browseName": "pump:Reset",
       "uav:modellingRule": "Optional",
       "uav:memberOf": "Maintenance",
       "uav:actionConfiguration": { "timeoutMs": 5000, "confirm": true },
@@ -99,7 +99,7 @@
       "@type": "uav:eventType",
       "title": "Over Temperature",
       "uav:isEvent": true,
-      "uav:browseName": "nsu=http://example.com/demo/pump;OverTemperatureEventType",
+      "uav:browseName": "pump:OverTemperatureEventType",
       "uav:memberOf": "Diagnostics",
       "uav:semanticId": "http://example.com/ontology/OverTemperature",
       "uav:eventConfiguration": { "severity": 500 },

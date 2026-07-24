@@ -515,6 +515,19 @@ def check_model_concept_names(parsed):
         if os.path.dirname(path) != EXAMPLES or not isinstance(doc, dict):
             continue
         prefixes = _context_prefixes(doc)
+        name_namespace = doc.get("uav:nameNamespace")
+        browse_name = doc.get("uav:browseName")
+        if isinstance(name_namespace, str) and isinstance(browse_name, str):
+            model_match = MODEL_CONCEPT_RE.match(browse_name)
+            uri_match = QUALIFIED_NAME_URI_RE.match(browse_name)
+            browse_namespace = (
+                prefixes.get(model_match.group(1)) if model_match
+                else uri_match.group(1) if uri_match
+                else UA_NS
+            )
+            if browse_namespace != name_namespace:
+                err(f"{rel(path)}: uav:nameNamespace '{name_namespace}' does not "
+                    f"match the uav:browseName namespace '{browse_namespace}'")
         for node in iter_dicts(doc):
             if not isinstance(node, dict):
                 continue
@@ -545,7 +558,7 @@ def check_model_concept_names(parsed):
 def check_portable_qualified_names(parsed):
     """Readable QualifiedNames use OPC 10000-6 §5.1.12 URI form; internal
     uav:nodes records retain their own NamespaceUris/indexes."""
-    def walk(path, node):
+    def walk(path, node, prefixes):
         if isinstance(node, dict):
             browse_name = node.get("uav:browseName")
             if browse_name is not None:
@@ -558,20 +571,32 @@ def check_portable_qualified_names(parsed):
                         browse_name):
                     err(f"{rel(path)}: uav:browseName '{browse_name}' is not a valid "
                         "NamespaceUri-qualified QualifiedName")
+                elif (match := MODEL_CONCEPT_RE.match(browse_name)) and (
+                        match.group(1) not in prefixes):
+                    err(f"{rel(path)}: uav:browseName prefix '{match.group(1)}' "
+                        "is not bound in @context")
             browse_path = node.get("uav:browsePath")
             if isinstance(browse_path, str) and NUMERIC_PATH_ELEMENT_RE.search(browse_path):
                 err(f"{rel(path)}: uav:browsePath '{browse_path}' persists a numeric "
-                    "NamespaceIndex; use NamespaceUri-qualified path elements")
+                    "NamespaceIndex; use context-prefix or NamespaceUri-qualified elements")
+            elif isinstance(browse_path, str):
+                for element in browse_path.split("/"):
+                    if not element or element.startswith("{"):
+                        continue
+                    match = MODEL_CONCEPT_RE.match(element)
+                    if match and match.group(1) not in prefixes:
+                        err(f"{rel(path)}: uav:browsePath element '{element}' uses "
+                            f"unbound prefix '{match.group(1)}'")
             for key, value in node.items():
                 if key != "uav:nodes":
-                    walk(path, value)
+                    walk(path, value, prefixes)
         elif isinstance(node, list):
             for item in node:
-                walk(path, item)
+                walk(path, item, prefixes)
 
     for path, doc in parsed.items():
         if os.path.dirname(path) == EXAMPLES:
-            walk(path, doc)
+            walk(path, doc, _context_prefixes(doc))
 
 
 def check_event_annotations(parsed):

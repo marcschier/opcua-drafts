@@ -4,7 +4,7 @@
     {
       "uav": "http://opcfoundation.org/UA/WoT-Binding/",
       "ua": "http://opcfoundation.org/UA/",
-      "pump": "http://example.com/demo/pump#",
+      "pump": "http://example.com/demo/pump",
       "qudt-quantitykind": "http://qudt.org/vocab/quantitykind/"
     },
     "../opc-ua-wot-binding.context.jsonld"
@@ -12,7 +12,7 @@
   "@type": ["tm:ThingModel", "uav:objectType"],
   "title": "ImpellerType",
   "description": "A Thing Model of an OPC UA ObjectType showing type, reference and modelling-rule mappings: subtype extension, contained-in composition, congruent type identity, forward and inverse HasComponent references, a typed reference, a HasOrderedComponent subtype pinned by a typed link, and the four modelling-rule values.",
-  "uav:browseName": "nsu=http://example.com/demo/pump;ImpellerType",
+  "uav:browseName": "pump:ImpellerType",
   "uav:id": "nsu=http://example.com/demo/pump;i=1005",
   "uav:containedIn": "PumpType",
   "uav:componentOf": ["nsu=http://example.com/demo/pump;i=1001"],
@@ -47,7 +47,7 @@
     "diameter": {
       "@type": "uav:variableType",
       "title": "Diameter",
-      "uav:browseName": "nsu=http://example.com/demo/pump;Diameter",
+      "uav:browseName": "pump:Diameter",
       "type": "number",
       "unit": "qudt-quantitykind:Length",
       "uav:modellingRule": "Mandatory",
@@ -56,7 +56,7 @@
     "bladeAngle": {
       "@type": "uav:variableType",
       "title": "Blade Angle",
-      "uav:browseName": "nsu=http://example.com/demo/pump;BladeAngle",
+      "uav:browseName": "pump:BladeAngle",
       "type": "number",
       "unit": "qudt-quantitykind:Angle",
       "uav:modellingRule": "OptionalPlaceholder",
@@ -66,7 +66,7 @@
     "vibration": {
       "@type": "uav:variableType",
       "title": "Vibration",
-      "uav:browseName": "nsu=http://example.com/demo/pump;Vibration",
+      "uav:browseName": "pump:Vibration",
       "type": "number",
       "uav:mapToTypeName": "pump:MeasurementDataType",
       "uav:mapToType": "nsu=http://example.com/demo/pump;i=3010",
@@ -77,7 +77,7 @@
     "recalibrate": {
       "@type": "uav:method",
       "title": "Recalibrate",
-      "uav:browseName": "nsu=http://example.com/demo/pump;Recalibrate",
+      "uav:browseName": "pump:Recalibrate",
       "uav:modellingRule": "Optional",
       "uav:hasComponent": ["nsu=http://example.com/demo/pump;i=7001"]
     }

@@ -15,7 +15,7 @@
   "uav:id": "nsu=http://example.com/demo/pump;i=1001",
   "uav:isComposite": true,
   "uav:includeInherited": true,
-  "uav:nameNamespace": "http://example.com/demo/pump#",
+  "uav:nameNamespace": "http://example.com/demo/pump",
   "uav:semanticId": "http://example.com/ontology/Pump",
   "uav:propertyGroups": [
     { "title": "Operational", "uav:semanticId": "http://example.com/ontology/Operational" },

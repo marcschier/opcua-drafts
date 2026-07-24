@@ -2,7 +2,8 @@
   "@context": [
     "https://www.w3.org/2022/wot/td/v1.1",
     {
-      "uav": "http://opcfoundation.org/UA/WoT-Binding/"
+      "uav": "http://opcfoundation.org/UA/WoT-Binding/",
+      "pump": "http://example.com/demo/pump"
     },
     "../opc-ua-wot-binding.context.jsonld"
   ],
@@ -11,7 +12,7 @@
     "uav:objectType"
   ],
   "title": "PumpType (exceptional structured NodeSet projection)",
-  "uav:browseName": "nsu=http://example.com/demo/pump;PumpType",
+  "uav:browseName": "pump:PumpType",
   "uav:id": "nsu=http://example.com/demo/pump;i=1001",
   "uav:nodes": {
     "@type": "uav:NodeModel",

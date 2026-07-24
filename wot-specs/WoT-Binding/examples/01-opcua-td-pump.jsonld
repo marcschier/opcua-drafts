@@ -1,14 +1,17 @@
 {
   "@context": [
     "https://www.w3.org/2022/wot/td/v1.1",
-    { "uav": "http://opcfoundation.org/UA/WoT-Binding/" },
+    {
+      "uav": "http://opcfoundation.org/UA/WoT-Binding/",
+      "pump": "http://example.com/demo/pump"
+    },
     "../opc-ua-wot-binding.context.jsonld"
   ],
   "@type": "uav:object",
   "id": "urn:dev:opcua:pump-01",
   "title": "Pump 01",
   "description": "A Thing Description of a single OPC UA Object using only the preserved OPC 10101 vocabulary: Read, Write, Observe (Monitor) and Call, plus the explicit OPC UA security schemes.",
-  "uav:browseName": "nsu=http://example.com/demo/pump;Pump",
+  "uav:browseName": "pump:Pump",
   "uav:id": "nsu=http://example.com/demo/pump;s=Pump",
   "links": [
     { "rel": "uav:componentOf", "href": "nsu=http://example.com/demo/pump;s=Line01" }
@@ -34,8 +37,8 @@
     "pumpSpeed": {
       "@type": "uav:variable",
       "title": "Pump Speed",
-      "uav:browseName": "nsu=http://example.com/demo/pump;PumpSpeed",
-      "uav:browsePath": "/Objects/{http://example.com/demo/pump}Pump/{http://example.com/demo/pump}PumpSpeed",
+      "uav:browseName": "pump:PumpSpeed",
+      "uav:browsePath": "/Objects/pump:Pump/pump:PumpSpeed",
       "type": "number",
       "unit": "rpm",
       "readOnly": true,
@@ -51,8 +54,8 @@
     "speedSetpoint": {
       "@type": "uav:variable",
       "title": "Speed Setpoint",
-      "uav:browseName": "nsu=http://example.com/demo/pump;SpeedSetpoint",
-      "uav:browsePath": "/Objects/{http://example.com/demo/pump}Pump/{http://example.com/demo/pump}SpeedSetpoint",
+      "uav:browseName": "pump:SpeedSetpoint",
+      "uav:browsePath": "/Objects/pump:Pump/pump:SpeedSetpoint",
       "type": "number",
       "unit": "rpm",
       "readOnly": false,
@@ -70,8 +73,8 @@
     "reset": {
       "@type": "uav:method",
       "title": "Reset",
-      "uav:browseName": "nsu=http://example.com/demo/pump;Reset",
-      "uav:browsePath": "/Objects/{http://example.com/demo/pump}Pump/{http://example.com/demo/pump}Reset",
+      "uav:browseName": "pump:Reset",
+      "uav:browsePath": "/Objects/pump:Pump/pump:Reset",
       "forms": [
         {
           "href": "/?id=nsu=http://example.com/demo/pump;s=Reset",

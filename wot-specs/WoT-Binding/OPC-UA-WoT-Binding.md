@@ -80,7 +80,7 @@ This section defines the preserved OPC 10101 vocabulary and its service, URI, ac
 | Term | Where used | Type | Meaning |
 | --- | --- | --- | --- |
 | `uav:id` | in `href` context and on an affordance | string | The identity of the UA Node an affordance targets, given as an **ExpandedNodeId** in the string form of OPC 10000-6 (Section 5.1.1). |
-| `uav:browsePath` | in a form, or on an affordance | string | The browse path of a UA Node as a string, following OPC 10000-4 Annex A.2 and starting at the root of the AddressSpace. Non-base path elements use the NamespaceUri form, for example `/Objects/{http://example.com/demo}Machine/{http://example.com/demo}Pressure`. |
+| `uav:browsePath` | in a form, or on an affordance | string | The browse path of a UA Node as a string, following OPC 10000-4 Annex A.2 and starting at the root of the AddressSpace. Non-base path elements use a context prefix (preferred) or the NamespaceUri form, for example `/Objects/pump:Machine/pump:Pressure`. |
 | `uav:browseName` | at Thing level, on a property, or on an action | string | The originating `BrowseName` of the UA Node, encoded as a portable OPC 10000-6 QualifiedName string (Section 5.1.3). |
 
 #### 5.1.1 Portable identity (ExpandedNodeId)
@@ -110,7 +110,7 @@ For example, the `pump:` names used throughout this specification come from this
 ```jsonc
 "@context": [
   "https://www.w3.org/2022/wot/td/v1.1",
-  { "pump": "http://example.com/demo/pump#" }
+  { "pump": "http://example.com/demo/pump" }
 ]
 ```
 
@@ -129,7 +129,15 @@ A consumer resolves the prefix to a NamespaceUri, searches the loaded model defi
 
 #### 5.1.3 Portable QualifiedName
 
-`uav:browseName` is a QualifiedName and **shall** use the normative OPC 10000-6 Section 5.1.12 string encoding. A BrowseName in the base OPC UA namespace uses the bare `<name>` form. A BrowseName in any other namespace uses:
+`uav:browseName` is a QualifiedName. In WoT documents, the preferred portable presentation is the context-prefix form:
+
+```text
+<prefix>:<name>
+```
+
+where the non-numeric prefix is bound by `@context` to the QualifiedName NamespaceUri. A consumer **shall** resolve that prefix before constructing the OPC UA QualifiedName; it shall not pass the compact presentation unchanged to an OPC 10000-6 decoder.
+
+The normative OPC 10000-6 Section 5.1.12 string encoding is also allowed. A BrowseName in the base OPC UA namespace uses the bare `<name>` form. A BrowseName in any other namespace uses:
 
 ```text
 nsu=<percent-encoded NamespaceUri>;<name>
@@ -139,12 +147,13 @@ For example:
 
 ```text
 InputArguments
+pump:OverTemperatureEventType
 nsu=http://example.com/demo/pump;OverTemperatureEventType
 ```
 
 Semicolons in the NamespaceUri **shall** be percent-encoded as `%3B`; the name follows the delimiter semicolon and is otherwise retained as the QualifiedName `Name`. The numeric `<namespaceIndex>:<name>` form (for example `1:PumpType`) **shall not** be used in persisted readable `uav:browseName` values because a namespace index is session/document local.
 
-A compact model name such as `pump:PumpType` is **not** a QualifiedName string and shall not be used as `uav:browseName`; it is reserved for the model-concept uses in Section 5.1.2. NodeSet-local `browseName` fields inside `uav:nodes` remain in their UANodeSet lexical form and are resolved through that projection's `namespaceUris` table.
+The same compact lexical form is used for model concepts (Section 5.1.2), but the containing term disambiguates the meaning: in `uav:browseName` it is a QualifiedName presentation; in a typed link `rel` it identifies a model-definition concept. NodeSet-local `browseName` fields inside `uav:nodes` remain in their UANodeSet lexical form and are resolved through that projection's `namespaceUris` table.
 
 ### 5.2 Type-annotation terms
 
@@ -250,7 +259,7 @@ The two OPC UA schemes are combined with the standard WoT `combo` scheme using `
 
 Every NamespaceUri used by a compact model name (Section 5.1.2) **shall** be bound to a stable, non-numeric prefix in the active `@context`; `ua` is reserved for the base OPC UA NamespaceUri. Authors should use recognizable domain prefixes such as `isa`, while a converter that has no authored prefix may generate deterministic `ns1`, `ns2`, and so on from the NodeSet `NamespaceUris` order.
 
-These context prefixes identify model concepts only. `uav:browseName` uses the OPC 10000-6 URI-qualified syntax of Section 5.1.3, and `uav:browsePath` uses the OPC 10000-4 RelativePath text syntax with `{NamespaceUri}` qualification for non-base path elements. Numeric namespace indexes are permitted only inside representations that carry their own namespace table, such as `uav:nodes`.
+These context prefixes identify model concepts and provide the preferred portable presentation for readable QualifiedNames and BrowsePath elements. `uav:browseName` may alternatively use the OPC 10000-6 URI-qualified syntax of Section 5.1.3, and `uav:browsePath` may use OPC 10000-4 `{NamespaceUri}` qualification. Numeric namespace indexes are permitted only inside representations that carry their own namespace table, such as `uav:nodes`.
 
 ### 5.9 Address-space example
 
@@ -260,7 +269,7 @@ The figure below reads left-to-right: a short WoT Thing Description sample on th
 graph LR
   subgraph WoT["WoT Thing Description (left)"]
     direction TB
-    T["Thing @type=uav:object<br/>uav:browseName nsu=...;Pump"]
+    T["Thing @type=uav:object<br/>uav:browseName pump:Pump"]
     P["property pumpSpeed<br/>@type uav:variable<br/>type number, readOnly, observable<br/>form op readproperty/observeproperty"]
     A["action reset<br/>@type uav:method<br/>form op invokeaction"]
     T --> P
@@ -299,7 +308,7 @@ This section adds terms that let a Thing Model record the structural facts of an
 
 ```jsonc
 "events": { "overTemperature": { "@type": "uav:eventType", "uav:isEvent": true,
-  "uav:browseName": "nsu=http://example.com/demo/pump;OverTemperatureEventType" } }
+  "uav:browseName": "pump:OverTemperatureEventType" } }
 ```
 
 *Explanation.* `overTemperature` is not a plain notification: its `@type` annotation `uav:eventType` (with the matching `uav:isEvent: true` flag) projects the `OverTemperatureEventType` EventType in the pump NamespaceUri, so `subscribeevent` becomes an OPC UA event MonitoredItem.
@@ -348,12 +357,12 @@ If the ReferenceType relation resolves uniquely, `uav:refId` is optional; if loo
 **`uav:congruentType`** (string) — the definitive ExpandedNodeId (or an external absolute IRI) of a type that is structurally congruent with this one: a shared, co-typed definition used to reconcile two models that describe the same OPC UA type. **`uav:congruentTypeName`** (string) — the compact model name (Section 5.1.2) of that OPC UA type; when used, it **shall** accompany `uav:congruentType`. **`uav:nameNamespace`** (absolute IRI) — the naming namespace against which this type's local names are resolved; it corresponds to the OPC UA namespace that qualifies the type's BrowseNames and **shall** be an absolute IRI.
 
 ```jsonc
-"uav:nameNamespace": "http://example.com/demo/pump#",
+"uav:nameNamespace": "http://example.com/demo/pump",
 "uav:congruentTypeName": "pump:PumpType",
 "uav:congruentType": "nsu=http://example.com/demo/pump;i=1001"
 ```
 
-*Explanation.* The type's local names resolve within the `pump#` naming namespace. `pump:PumpType` conveys the model concept, while the ExpandedNodeId definitively identifies the congruent type so independently authored prefixes do not affect comparison.
+*Explanation.* The type's local names resolve within the pump NamespaceUri. `pump:PumpType` conveys the model concept, while the ExpandedNodeId definitively identifies the congruent type so independently authored prefixes do not affect comparison.
 
 ### 6.5 Units, quantity kinds, and scaling
 
@@ -475,7 +484,7 @@ A document that uses the vocabulary of Section 6 **shall** satisfy the following
 - **Unique group titles.** The `title` of every group is globally unique across `uav:propertyGroups`, `uav:eventGroups`, and `uav:actionGroups` of a type. Two groups **shall not** share a title.
 - **Membership target.** A `uav:memberOf` value **shall** name a group of the matching kind: a property's `uav:memberOf` **shall** name a `uav:propertyGroups` title, an event's an `uav:eventGroups` title, and an action's an `uav:actionGroups` title.
 - **Portable identity.** Every NodeId-valued readable term — `uav:id`, each entry of `uav:hasComponent` and `uav:componentOf`, `uav:mapToNodeId`, `uav:mapToType`, `uav:refId`, and the `<nodeId>` of a `?id=` href — **shall** be an ExpandedNodeId per Section 5.1.1 and **shall not** use the session-local `ns=<index>` form. NodeSet-local identities inside `uav:nodes` and namespace indexes inside `uav:nodeSet` are resolved through their own namespace tables.
-- **Portable names and paths.** `uav:browseName` **shall** use the URI-qualified QualifiedName syntax of Section 5.1.3 (or the bare name for namespace 0), and `uav:browsePath` **shall** use NamespaceUri-qualified non-base path elements. Neither readable term shall persist numeric namespace indexes.
+- **Portable names and paths.** `uav:browseName` **shall** use a context-bound non-numeric prefix or the URI-qualified QualifiedName syntax of Section 5.1.3 (or the bare name for namespace 0). `uav:browsePath` **shall** use context-bound or NamespaceUri-qualified non-base path elements. Neither readable term shall persist numeric namespace indexes.
 - **Model concept names.** Every typed Reference `rel`, `uav:mapToTypeName`, and `uav:congruentTypeName` value **shall** use the compact model-name form of Section 5.1.2, with a non-numeric prefix bound to the defining NamespaceUri. A consumer resolves it against the expected NodeClass; zero or multiple matches require the accompanying ExpandedNodeId, and disagreement between the two forms is an error.
 - **Component subtypes.** `uav:hasComponent` / `uav:componentOf` cover `HasComponent` and all of its subtypes for parent-child discovery. When a listed component's exact subtype matters (for example `HasOrderedComponent`), the document **shall** also carry a link whose `rel` is that ReferenceType's compact model name and whose `uav:refName` names the reference; `uav:refId` supplies the definitive ExpandedNodeId when required. A converter recreates the exact subtype from that link and otherwise uses plain `HasComponent` (Section 5.3).
 - **Event annotation consistency.** An event affordance annotated with `@type: uav:eventType` **shall not** set `uav:isEvent: false`; the two forms record the same fact (Section 5.2), and a consumer treats an affordance as an EventType projection when either is present.
@@ -685,7 +694,7 @@ This annex walks an implementer through both conversion directions for the pump 
 
 ```jsonc
 "@type": ["tm:ThingModel", "uav:objectType"],
-"uav:browseName": "nsu=http://example.com/demo/pump;PumpType",
+"uav:browseName": "pump:PumpType",
 "uav:isComposite": true
 ```
 
@@ -695,7 +704,7 @@ This annex walks an implementer through both conversion directions for the pump 
 
 ```jsonc
 "pumpSpeed": { "@type": "uav:variableType",
-  "uav:browseName": "nsu=http://example.com/demo/pump;PumpSpeed",
+  "uav:browseName": "pump:PumpSpeed",
   "type": "number", "uav:modellingRule": "Mandatory", "uav:scaleFactor": 0.1 }
 ```
 
@@ -705,7 +714,7 @@ This annex walks an implementer through both conversion directions for the pump 
 
 ```jsonc
 "reset": { "@type": "uav:method",
-  "uav:browseName": "nsu=http://example.com/demo/pump;Reset",
+  "uav:browseName": "pump:Reset",
   "uav:modellingRule": "Optional" }
 ```
 
@@ -715,7 +724,7 @@ This annex walks an implementer through both conversion directions for the pump 
 
 ```jsonc
 "overTemperature": { "@type": "uav:eventType", "uav:isEvent": true,
-  "uav:browseName": "nsu=http://example.com/demo/pump;OverTemperatureEventType" }
+  "uav:browseName": "pump:OverTemperatureEventType" }
 ```
 
 → `EventType 1:OverTemperatureEventType` (a `BaseEventType` subtype); `subscribeevent` → an event MonitoredItem.
@@ -730,7 +739,7 @@ This annex walks an implementer through both conversion directions for the pump 
 
 ```jsonc
 "@type": ["Thing", "uav:object"],
-"uav:browseName": "nsu=http://example.com/demo/pump;Pump",
+"uav:browseName": "pump:Pump",
 "uav:id": "nsu=...;s=Pump"
 ```
 

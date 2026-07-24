@@ -25,8 +25,8 @@
     "qualifiedName": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^(nsu=[^;]+;.+|(?![0-9]+:).+)$",
-      "description": "Portable OPC 10000-6 QualifiedName string: bare Name for namespace 0 or 'nsu=<percent-encoded NamespaceUri>;<Name>' for any other namespace. Numeric NamespaceIndex prefixes are not permitted in persisted readable members."
+      "pattern": "^(nsu=[^;]+;.+|[A-Za-z_][A-Za-z0-9._-]*:.+|(?![0-9]+:).+)$",
+      "description": "Portable QualifiedName presentation: preferred '<non-numeric context prefix>:<Name>', bare Name for namespace 0, or OPC 10000-6 'nsu=<percent-encoded NamespaceUri>;<Name>'. Numeric NamespaceIndex prefixes are not permitted in persisted readable members."
     },
     "jsonPointer": {
       "type": "string",
