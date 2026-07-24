@@ -11,10 +11,10 @@ The model and platform vocabulary of the WoT Binding was informed by two archite
 | Capability facet link | `rel: uav:capability` | An exposed capability or interface-like mix-in. |
 | Component sub-model link | `rel: uav:componentModel` | An owned, contained sub-component model. |
 | Plain relationship link | `rel: uav:reference` | A non-hierarchical, untyped relationship. |
-| Typed relationship link | ReferenceType compact model name in `rel` + optional/required `uav:refType` | A relationship qualified semantically by NamespaceUri + BrowseName and definitively by NodeId when needed. |
+| Typed relationship link | ReferenceType compact model name in `rel` + optional/required `uav:refId` | A relationship qualified semantically by NamespaceUri + BrowseName and definitively by NodeId when needed. |
 | Parent (container) link | `rel: uav:componentOf` | The parent under which the instance is exposed (inverse `HasComponent`). |
 | Relationship name | `uav:refName` | The name a relationship is exposed under. |
-| Relationship type fallback | `uav:refType` | The definitive ReferenceType ExpandedNodeId used when model-name lookup is unavailable or ambiguous. |
+| Relationship identifier | `uav:refId` | The definitive ReferenceType ExpandedNodeId used when model-name lookup is unavailable or ambiguous. |
 | Containment (child set) | `uav:contains` | The parts a composite directly contains. |
 | Containment (parent) | `uav:containedIn` | The single composite that contains a part. |
 | Co-typed / congruent definition | `uav:congruentType` | A structurally congruent shared definition. |

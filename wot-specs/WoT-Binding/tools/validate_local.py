@@ -27,7 +27,7 @@ same result. It verifies, for the wot-specs/WoT-Binding/ folder:
      the two examples, the composite's `uav:contains` must reciprocally list the
      link's `uav:refName` (containment consistency, Section 7 of the spec).
   9. Every NodeId-valued term (`uav:id`, `uav:hasComponent`, `uav:componentOf`,
-     `uav:mapToNodeId`, `uav:mapToType`, a NodeId-valued `uav:refType`, and each
+     `uav:mapToNodeId`, `uav:mapToType`, `uav:refId`, and each
      `?id=` / NodeId link `href`) in an example is a portable OPC 10000-6
      ExpandedNodeId and never the session-local `ns=<index>` form (Section 5.1.1).
  10. Event annotations are consistent: an affordance annotated `@type uav:eventType`
@@ -36,6 +36,8 @@ same result. It verifies, for the wot-specs/WoT-Binding/ folder:
  12. Compact model names use non-numeric context prefixes bound to OPC UA
      NamespaceUris, require definitive identifiers where specified, and agree
      with known base-namespace ReferenceTypes.
+ 13. Readable uav:browseName and uav:browsePath values do not persist numeric
+     namespace indexes; QualifiedNames use OPC 10000-6 NamespaceUri form.
 
 Exit code is 0 and the last line is "OK" on success; non-zero with an ERRORS
 list otherwise.
@@ -77,7 +79,7 @@ DOCUMENTED_TERMS = [
     # Model and platform vocabulary.
     "isComposite", "isEvent",
     "capability", "componentModel", "reference",
-    "refName", "refType",
+    "refName", "refId",
     "contains", "containedIn",
     "congruentType", "congruentTypeName", "nameNamespace",
     "scaleFactor", "decimalPlaces",
@@ -123,6 +125,9 @@ SESSION_NS_RE = re.compile(r"ns=[0-9]")
 EXPANDED_NODEID_RE = re.compile(r"^(svr=[0-9]+;)?(nsu=[^;]+;)?[isgb]=.+$")
 NODEID_HREF_PREFIX_RE = re.compile(r"^(svr=|nsu=|ns=|[isgb]=)")
 MODEL_CONCEPT_RE = re.compile(r"^([A-Za-z_][A-Za-z0-9._-]*):(.+)$")
+QUALIFIED_NAME_URI_RE = re.compile(r"^nsu=([^;]+);(.+)$")
+NUMERIC_QUALIFIED_NAME_RE = re.compile(r"^[0-9]+:")
+NUMERIC_PATH_ELEMENT_RE = re.compile(r"(^|/)[0-9]+:")
 UA_NS = "http://opcfoundation.org/UA/"
 KNOWN_LINK_RELS = {
     "tm:extends", "uav:capability", "uav:componentModel",
@@ -463,11 +468,9 @@ def check_portable_identity(parsed):
                         continue
                     for value in values:
                         _expanded_nodeid(path, f"{key} entry", value)
-            ref_type = node.get("uav:refType")
-            if isinstance(ref_type, str) and "=" in ref_type:
-                # A NodeId-valued uav:refType (a browse name such as HasComponent
-                # carries no '='); it shall be a portable ExpandedNodeId.
-                _expanded_nodeid(path, "uav:refType", ref_type)
+            ref_id = node.get("uav:refId")
+            if ref_id is not None:
+                _expanded_nodeid(path, "uav:refId", ref_id)
             href = node.get("href")
             if isinstance(href, str):
                 if "?id=" in href:
@@ -524,7 +527,7 @@ def check_model_concept_names(parsed):
                     pass
                 elif relation.startswith("uav:"):
                     err(f"{rel(path)}: Binding relation '{relation}' is not defined")
-                elif ("uav:refType" in node or "uav:refName" in node or
+                elif ("uav:refId" in node or "uav:refName" in node or
                       relation.startswith("ua:") or
                       re.match(r"^ns[0-9]+:", relation)):
                     _model_concept(path, "typed Reference rel", relation, prefixes)
@@ -533,10 +536,42 @@ def check_model_concept_names(parsed):
             if "uav:congruentTypeName" in node and "uav:congruentType" not in node:
                 err(f"{rel(path)}: uav:congruentTypeName requires uav:congruentType")
             if node.get("rel") == "ua:HasOrderedComponent":
-                fallback = node.get("uav:refType")
+                fallback = node.get("uav:refId")
                 if fallback is not None and fallback != "i=49":
                     err(f"{rel(path)}: ua:HasOrderedComponent conflicts with "
-                        f"uav:refType '{fallback}', expected i=49")
+                        f"uav:refId '{fallback}', expected i=49")
+
+
+def check_portable_qualified_names(parsed):
+    """Readable QualifiedNames use OPC 10000-6 §5.1.12 URI form; internal
+    uav:nodes records retain their own NamespaceUris/indexes."""
+    def walk(path, node):
+        if isinstance(node, dict):
+            browse_name = node.get("uav:browseName")
+            if browse_name is not None:
+                if not isinstance(browse_name, str) or not browse_name:
+                    err(f"{rel(path)}: uav:browseName is not a non-empty string")
+                elif NUMERIC_QUALIFIED_NAME_RE.match(browse_name):
+                    err(f"{rel(path)}: uav:browseName '{browse_name}' persists a "
+                        "numeric NamespaceIndex; use nsu=<NamespaceUri>;<Name>")
+                elif browse_name.startswith("nsu=") and not QUALIFIED_NAME_URI_RE.match(
+                        browse_name):
+                    err(f"{rel(path)}: uav:browseName '{browse_name}' is not a valid "
+                        "NamespaceUri-qualified QualifiedName")
+            browse_path = node.get("uav:browsePath")
+            if isinstance(browse_path, str) and NUMERIC_PATH_ELEMENT_RE.search(browse_path):
+                err(f"{rel(path)}: uav:browsePath '{browse_path}' persists a numeric "
+                    "NamespaceIndex; use NamespaceUri-qualified path elements")
+            for key, value in node.items():
+                if key != "uav:nodes":
+                    walk(path, value)
+        elif isinstance(node, list):
+            for item in node:
+                walk(path, item)
+
+    for path, doc in parsed.items():
+        if os.path.dirname(path) == EXAMPLES:
+            walk(path, doc)
 
 
 def check_event_annotations(parsed):
@@ -629,6 +664,7 @@ def main() -> int:
     check_containment(parsed)
     check_portable_identity(parsed)
     check_model_concept_names(parsed)
+    check_portable_qualified_names(parsed)
     check_event_annotations(parsed)
     check_modelling_rule_ids()
     check_forbidden_tokens()

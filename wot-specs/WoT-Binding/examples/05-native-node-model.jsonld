@@ -10,8 +10,8 @@
     "tm:ThingModel",
     "uav:objectType"
   ],
-  "title": "PumpType (native NodeSet projection)",
-  "uav:browseName": "1:PumpType",
+  "title": "PumpType (exceptional structured NodeSet projection)",
+  "uav:browseName": "nsu=http://example.com/demo/pump;PumpType",
   "uav:id": "nsu=http://example.com/demo/pump;i=1001",
   "uav:nodes": {
     "@type": "uav:NodeModel",

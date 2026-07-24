@@ -8,7 +8,7 @@
   "id": "urn:dev:opcua:pump-01",
   "title": "Pump 01",
   "description": "A Thing Description of a single OPC UA Object using only the preserved OPC 10101 vocabulary: Read, Write, Observe (Monitor) and Call, plus the explicit OPC UA security schemes.",
-  "uav:browseName": "1:Pump",
+  "uav:browseName": "nsu=http://example.com/demo/pump;Pump",
   "uav:id": "nsu=http://example.com/demo/pump;s=Pump",
   "links": [
     { "rel": "uav:componentOf", "href": "nsu=http://example.com/demo/pump;s=Line01" }
@@ -34,8 +34,8 @@
     "pumpSpeed": {
       "@type": "uav:variable",
       "title": "Pump Speed",
-      "uav:browseName": "1:PumpSpeed",
-      "uav:browsePath": "/Objects/1:Pump/1:PumpSpeed",
+      "uav:browseName": "nsu=http://example.com/demo/pump;PumpSpeed",
+      "uav:browsePath": "/Objects/{http://example.com/demo/pump}Pump/{http://example.com/demo/pump}PumpSpeed",
       "type": "number",
       "unit": "rpm",
       "readOnly": true,
@@ -51,8 +51,8 @@
     "speedSetpoint": {
       "@type": "uav:variable",
       "title": "Speed Setpoint",
-      "uav:browseName": "1:SpeedSetpoint",
-      "uav:browsePath": "/Objects/1:Pump/1:SpeedSetpoint",
+      "uav:browseName": "nsu=http://example.com/demo/pump;SpeedSetpoint",
+      "uav:browsePath": "/Objects/{http://example.com/demo/pump}Pump/{http://example.com/demo/pump}SpeedSetpoint",
       "type": "number",
       "unit": "rpm",
       "readOnly": false,
@@ -70,8 +70,8 @@
     "reset": {
       "@type": "uav:method",
       "title": "Reset",
-      "uav:browseName": "1:Reset",
-      "uav:browsePath": "/Objects/1:Pump/1:Reset",
+      "uav:browseName": "nsu=http://example.com/demo/pump;Reset",
+      "uav:browsePath": "/Objects/{http://example.com/demo/pump}Pump/{http://example.com/demo/pump}Reset",
       "forms": [
         {
           "href": "/?id=nsu=http://example.com/demo/pump;s=Reset",

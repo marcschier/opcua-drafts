@@ -22,6 +22,12 @@
       "pattern": "^[A-Za-z_][A-Za-z0-9._-]*:.+$",
       "description": "Binding compact model name '<non-numeric context prefix>:<BrowseName>'. The prefix resolves to the defining OPC UA NamespaceUri. This is a semantic model lookup hint, not Node identity."
     },
+    "qualifiedName": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(nsu=[^;]+;.+|(?![0-9]+:).+)$",
+      "description": "Portable OPC 10000-6 QualifiedName string: bare Name for namespace 0 or 'nsu=<percent-encoded NamespaceUri>;<Name>' for any other namespace. Numeric NamespaceIndex prefixes are not permitted in persisted readable members."
+    },
     "jsonPointer": {
       "type": "string",
       "pattern": "^(/([^/~]|~0|~1)*)+$",
@@ -50,7 +56,7 @@
     },
     "nodeSetEnvelope": {
       "type": "object",
-      "description": "The exceptional uav:nodeSet preservation envelope: an explicit byte-exact archival baseline or a last-resort fallback when a future/unsupported construct cannot be represented by uav:nodes. A converter shall not emit it by default when the native projection is complete.",
+      "description": "The exceptional uav:nodeSet preservation envelope: an explicit byte-exact archival baseline or a last-resort fallback when a future/unsupported construct cannot be represented by uav:nodes. A converter shall not emit it when the semantic mapping or structured projection is complete.",
       "required": ["@type", "contentType", "encoding", "sha256", "data"],
       "properties": {
         "@type": { "const": "uav:nodeSet" },
@@ -78,7 +84,7 @@
     },
     "nodeModel": {
       "type": "object",
-      "description": "The versioned, schema-complete native projection of the UANodeSet XSD. It represents root metadata, namespace/server URI tables, models and dependencies, aliases, XML extensions, and one complete record for each of the eight NodeClasses. XML-valued Value and Extension members are represented as individual XML fragments, never as a whole-document NodeSet blob.",
+      "description": "The exceptional, versioned, schema-complete structured projection of the UANodeSet XSD, used only when source information cannot yet be expressed by the semantic/readable vocabulary. It represents root metadata, namespace/server URI tables, models and dependencies, aliases, XML extensions, and one complete record for each of the eight NodeClasses. XML-valued Value and Extension members are represented as individual XML fragments, never as a whole-document NodeSet blob.",
       "required": ["@type", "profileVersion", "nodes"],
       "properties": {
         "@type": { "const": "uav:NodeModel" },
@@ -157,7 +163,7 @@
       "properties": {
         "uav:id": { "$ref": "#/$defs/expandedNodeId" },
         "uav:browsePath": { "type": "string" },
-        "uav:browseName": { "type": "string" },
+        "uav:browseName": { "$ref": "#/$defs/qualifiedName" },
         "uav:hasComponent": { "type": "array", "items": { "$ref": "#/$defs/expandedNodeId" } },
         "uav:componentOf": { "type": "array", "items": { "$ref": "#/$defs/expandedNodeId" } },
         "uav:mapToNodeId": { "$ref": "#/$defs/expandedNodeId" },
@@ -168,7 +174,7 @@
         "uav:isComposite": { "type": "boolean" },
         "uav:isEvent": { "type": "boolean" },
         "uav:refName": { "type": "string" },
-        "uav:refType": { "$ref": "#/$defs/expandedNodeId" },
+        "uav:refId": { "$ref": "#/$defs/expandedNodeId" },
         "uav:contains": { "type": "array", "items": { "type": "string" } },
         "uav:containedIn": { "type": "string" },
         "uav:congruentType": { "type": "string" },

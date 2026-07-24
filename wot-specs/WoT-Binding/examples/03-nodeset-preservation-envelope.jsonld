@@ -9,8 +9,8 @@
   "@type": "uav:object",
   "id": "urn:dev:opcua:pump-01-preserved",
   "title": "Pump 01 (explicit byte-exact NodeSet archive)",
-  "description": "An exceptional archival example that explicitly carries a byte-exact NodeSet2 baseline in a uav:nodeSet envelope. Native uav:nodes conversion is the default; a converter emits this envelope only when byte identity is requested or a future/unsupported construct cannot be represented natively.",
-  "uav:browseName": "1:Pump",
+  "description": "An exceptional archival example that explicitly carries a byte-exact NodeSet2 baseline in a uav:nodeSet envelope. The semantic/readable vocabulary is primary, uav:nodes is an exceptional structured fallback, and this opaque envelope is emitted only when byte identity is requested or a future/unsupported construct cannot be represented structurally.",
+  "uav:browseName": "nsu=http://example.com/demo/pump;Pump",
   "uav:id": "nsu=http://example.com/demo/pump;s=Pump",
   "uav:nodeSet": {
     "@type": "uav:nodeSet",
@@ -24,7 +24,7 @@
     "pumpSpeed": {
       "@type": "uav:variable",
       "title": "Pump Speed",
-      "uav:browseName": "1:PumpSpeed",
+      "uav:browseName": "nsu=http://example.com/demo/pump;PumpSpeed",
       "uav:id": "nsu=http://example.com/demo/pump;i=6001",
       "type": "number",
       "unit": "rpm",
