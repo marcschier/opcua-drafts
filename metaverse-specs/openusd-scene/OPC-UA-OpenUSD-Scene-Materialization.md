@@ -335,7 +335,7 @@ The complete node reference (every ObjectType, VariableType, DataType, Reference
 
 ## Annex B — Concrete Cesium for Omniverse georeference mapping (informative)
 
-Core OpenUSD has no geodetic schema, and the Alliance for OpenUSD's native geolocation schema (an AECO Interest Group proposal to the Geometry Working Group) is, as of this draft, still in progress and unratified. Georeferencing today is therefore done with extension schemas. This annex shows exactly how a **Cesium for Omniverse** georeferenced stage materializes and how it relates to the portable georeference schemas of §5.8. Cesium georeferences a stage with a `CesiumGeoreferencePrim` (a typed prim) and anchors individual prims with the `CesiumGlobeAnchorAPI` (an applied API schema).
+Core OpenUSD has no geodetic schema, and the Alliance for OpenUSD's native geolocation schema (an [AECO Interest Group proposal to the Geometry Working Group](https://aousd.org/news/alliance-for-openusd-announces-new-members-interest-groups-and-working-group-progress/), tracked in the [OpenUSD-proposals](https://github.com/PixarAnimationStudios/OpenUSD-proposals) repository) is, as of this draft, still in progress and unratified. Georeferencing today is therefore done with extension schemas. This annex shows exactly how a **Cesium for Omniverse** georeferenced stage materializes and how it relates to the portable georeference schemas of §5.8. Cesium georeferences a stage with a `CesiumGeoreferencePrim` (a typed prim) and anchors individual prims with the `CesiumGlobeAnchorAPI` (an applied API schema).
 
 ### B.1 `CesiumGeoreferencePrim` → `UsdTypedType` subtype
 
