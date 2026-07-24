@@ -1265,19 +1265,19 @@ The `body` member is the append-only **growing union** governed by §6.4 (see al
 | 0 | 1 | `0c` | $.builtInType: int = 6 |
 | 1 | 1 | `02` | $.dimensions: union branch index = 1 |
 | 2 | 1 | `04` | $.dimensions: branch 1 (array): array block 0 count = 2 |
-| 3 | 1 | `04` | $.dimensions: branch 1 (array)[0]: int = 2 |
-| 4 | 1 | `04` | $.dimensions: branch 1 (array)[1]: int = 2 |
+| 3 | 1 | `04` | $.dimensions: branch 1 (array)\[0\]: int = 2 |
+| 4 | 1 | `04` | $.dimensions: branch 1 (array)\[1\]: int = 2 |
 | 5 | 1 | `00` | $.dimensions: branch 1 (array): array block 1 count = 0 |
 | 6 | 1 | `24` | $.body: union branch index = 18 |
 | 7 | 1 | `04` | $.body: branch 18 (org.opcfoundation.ua.avro.VariantInt32MatrixBody).matrix.dimensions: array block 0 count = 2 |
-| 8 | 1 | `04` | $.body: branch 18 (org.opcfoundation.ua.avro.VariantInt32MatrixBody).matrix.dimensions[0]: int = 2 |
-| 9 | 1 | `04` | $.body: branch 18 (org.opcfoundation.ua.avro.VariantInt32MatrixBody).matrix.dimensions[1]: int = 2 |
+| 8 | 1 | `04` | $.body: branch 18 (org.opcfoundation.ua.avro.VariantInt32MatrixBody).matrix.dimensions\[0\]: int = 2 |
+| 9 | 1 | `04` | $.body: branch 18 (org.opcfoundation.ua.avro.VariantInt32MatrixBody).matrix.dimensions\[1\]: int = 2 |
 | 10 | 1 | `00` | $.body: branch 18 (org.opcfoundation.ua.avro.VariantInt32MatrixBody).matrix.dimensions: array block 1 count = 0 |
 | 11 | 1 | `08` | $.body: branch 18 (org.opcfoundation.ua.avro.VariantInt32MatrixBody).matrix.values: array block 0 count = 4 |
-| 12 | 1 | `02` | $.body: branch 18 (org.opcfoundation.ua.avro.VariantInt32MatrixBody).matrix.values[0]: int = 1 |
-| 13 | 1 | `04` | $.body: branch 18 (org.opcfoundation.ua.avro.VariantInt32MatrixBody).matrix.values[1]: int = 2 |
-| 14 | 1 | `06` | $.body: branch 18 (org.opcfoundation.ua.avro.VariantInt32MatrixBody).matrix.values[2]: int = 3 |
-| 15 | 1 | `08` | $.body: branch 18 (org.opcfoundation.ua.avro.VariantInt32MatrixBody).matrix.values[3]: int = 4 |
+| 12 | 1 | `02` | $.body: branch 18 (org.opcfoundation.ua.avro.VariantInt32MatrixBody).matrix.values\[0\]: int = 1 |
+| 13 | 1 | `04` | $.body: branch 18 (org.opcfoundation.ua.avro.VariantInt32MatrixBody).matrix.values\[1\]: int = 2 |
+| 14 | 1 | `06` | $.body: branch 18 (org.opcfoundation.ua.avro.VariantInt32MatrixBody).matrix.values\[2\]: int = 3 |
+| 15 | 1 | `08` | $.body: branch 18 (org.opcfoundation.ua.avro.VariantInt32MatrixBody).matrix.values\[3\]: int = 4 |
 | 16 | 1 | `00` | $.body: branch 18 (org.opcfoundation.ua.avro.VariantInt32MatrixBody).matrix.values: array block 1 count = 0 |
 
 ### Built-in DiagnosticInfo
@@ -1444,14 +1444,14 @@ The `body` member is the append-only **growing union** governed by §6.4 (see al
 |---:|---:|---|---|
 | 0 | 1 | `02` | $: union branch index = 1 |
 | 1 | 1 | `06` | $: branch 1 (array): array block 0 count = 3 |
-| 2 | 1 | `02` | $: branch 1 (array)[0]: union branch index = 1 |
-| 3 | 1 | `02` | $: branch 1 (array)[0]: branch 1 (string): string length = 1 |
-| 4 | 1 | `61` | $: branch 1 (array)[0]: branch 1 (string): string data |
-| 5 | 1 | `00` | $: branch 1 (array)[1]: union branch index = 0 |
-| 6 | 0 | `—` | $: branch 1 (array)[1]: branch 0 (null): null |
-| 6 | 1 | `02` | $: branch 1 (array)[2]: union branch index = 1 |
-| 7 | 1 | `00` | $: branch 1 (array)[2]: branch 1 (string): string length = 0 |
-| 8 | 0 | `—` | $: branch 1 (array)[2]: branch 1 (string): string data |
+| 2 | 1 | `02` | $: branch 1 (array)\[0\]: union branch index = 1 |
+| 3 | 1 | `02` | $: branch 1 (array)\[0\]: branch 1 (string): string length = 1 |
+| 4 | 1 | `61` | $: branch 1 (array)\[0\]: branch 1 (string): string data |
+| 5 | 1 | `00` | $: branch 1 (array)\[1\]: union branch index = 0 |
+| 6 | 0 | `—` | $: branch 1 (array)\[1\]: branch 0 (null): null |
+| 6 | 1 | `02` | $: branch 1 (array)\[2\]: union branch index = 1 |
+| 7 | 1 | `00` | $: branch 1 (array)\[2\]: branch 1 (string): string length = 0 |
+| 8 | 0 | `—` | $: branch 1 (array)\[2\]: branch 1 (string): string data |
 | 8 | 1 | `00` | $: branch 1 (array): array block 1 count = 0 |
 
 ### Matrix
@@ -1513,18 +1513,18 @@ The `body` member is the append-only **growing union** governed by §6.4 (see al
 |---:|---:|---|---|
 | 0 | 1 | `02` | $: union branch index = 1 |
 | 1 | 1 | `04` | $: branch 1 (org.opcfoundation.ua.avro.TopMatrixOfDouble).dimensions: array block 0 count = 2 |
-| 2 | 1 | `04` | $: branch 1 (org.opcfoundation.ua.avro.TopMatrixOfDouble).dimensions[0]: int = 2 |
-| 3 | 1 | `04` | $: branch 1 (org.opcfoundation.ua.avro.TopMatrixOfDouble).dimensions[1]: int = 2 |
+| 2 | 1 | `04` | $: branch 1 (org.opcfoundation.ua.avro.TopMatrixOfDouble).dimensions\[0\]: int = 2 |
+| 3 | 1 | `04` | $: branch 1 (org.opcfoundation.ua.avro.TopMatrixOfDouble).dimensions\[1\]: int = 2 |
 | 4 | 1 | `00` | $: branch 1 (org.opcfoundation.ua.avro.TopMatrixOfDouble).dimensions: array block 1 count = 0 |
 | 5 | 1 | `08` | $: branch 1 (org.opcfoundation.ua.avro.TopMatrixOfDouble).values: array block 0 count = 4 |
-| 6 | 1 | `02` | $: branch 1 (org.opcfoundation.ua.avro.TopMatrixOfDouble).values[0]: union branch index = 1 |
-| 7 | 8 | `00 00 00 00 00 00 f0 3f` | $: branch 1 (org.opcfoundation.ua.avro.TopMatrixOfDouble).values[0]: branch 1 (double): float64 little-endian |
-| 15 | 1 | `02` | $: branch 1 (org.opcfoundation.ua.avro.TopMatrixOfDouble).values[1]: union branch index = 1 |
-| 16 | 8 | `00 00 00 00 00 00 f8 7f` | $: branch 1 (org.opcfoundation.ua.avro.TopMatrixOfDouble).values[1]: branch 1 (double): float64 little-endian |
-| 24 | 1 | `02` | $: branch 1 (org.opcfoundation.ua.avro.TopMatrixOfDouble).values[2]: union branch index = 1 |
-| 25 | 8 | `00 00 00 00 00 00 f0 ff` | $: branch 1 (org.opcfoundation.ua.avro.TopMatrixOfDouble).values[2]: branch 1 (double): float64 little-endian |
-| 33 | 1 | `02` | $: branch 1 (org.opcfoundation.ua.avro.TopMatrixOfDouble).values[3]: union branch index = 1 |
-| 34 | 8 | `00 00 00 00 00 00 00 80` | $: branch 1 (org.opcfoundation.ua.avro.TopMatrixOfDouble).values[3]: branch 1 (double): float64 little-endian |
+| 6 | 1 | `02` | $: branch 1 (org.opcfoundation.ua.avro.TopMatrixOfDouble).values\[0\]: union branch index = 1 |
+| 7 | 8 | `00 00 00 00 00 00 f0 3f` | $: branch 1 (org.opcfoundation.ua.avro.TopMatrixOfDouble).values\[0\]: branch 1 (double): float64 little-endian |
+| 15 | 1 | `02` | $: branch 1 (org.opcfoundation.ua.avro.TopMatrixOfDouble).values\[1\]: union branch index = 1 |
+| 16 | 8 | `00 00 00 00 00 00 f8 7f` | $: branch 1 (org.opcfoundation.ua.avro.TopMatrixOfDouble).values\[1\]: branch 1 (double): float64 little-endian |
+| 24 | 1 | `02` | $: branch 1 (org.opcfoundation.ua.avro.TopMatrixOfDouble).values\[2\]: union branch index = 1 |
+| 25 | 8 | `00 00 00 00 00 00 f0 ff` | $: branch 1 (org.opcfoundation.ua.avro.TopMatrixOfDouble).values\[2\]: branch 1 (double): float64 little-endian |
+| 33 | 1 | `02` | $: branch 1 (org.opcfoundation.ua.avro.TopMatrixOfDouble).values\[3\]: union branch index = 1 |
+| 34 | 8 | `00 00 00 00 00 00 00 80` | $: branch 1 (org.opcfoundation.ua.avro.TopMatrixOfDouble).values\[3\]: branch 1 (double): float64 little-endian |
 | 42 | 1 | `00` | $: branch 1 (org.opcfoundation.ua.avro.TopMatrixOfDouble).values: array block 1 count = 0 |
 
 ### Structure
@@ -1845,14 +1845,14 @@ The `body` member is the append-only **growing union** governed by §6.4 (see al
 | 4 | 8 | `00 00 00 00 00 00 00 00` | $.Location.X: float64 little-endian |
 | 12 | 8 | `00 00 00 00 00 00 00 00` | $.Location.Y: float64 little-endian |
 | 20 | 1 | `06` | $.Tags: array block 0 count = 3 |
-| 21 | 1 | `02` | $.Tags[0]: union branch index = 1 |
-| 22 | 1 | `02` | $.Tags[0]: branch 1 (string): string length = 1 |
-| 23 | 1 | `78` | $.Tags[0]: branch 1 (string): string data |
-| 24 | 1 | `00` | $.Tags[1]: union branch index = 0 |
-| 25 | 0 | `—` | $.Tags[1]: branch 0 (null): null |
-| 25 | 1 | `02` | $.Tags[2]: union branch index = 1 |
-| 26 | 1 | `02` | $.Tags[2]: branch 1 (string): string length = 1 |
-| 27 | 1 | `7a` | $.Tags[2]: branch 1 (string): string data |
+| 21 | 1 | `02` | $.Tags\[0\]: union branch index = 1 |
+| 22 | 1 | `02` | $.Tags\[0\]: branch 1 (string): string length = 1 |
+| 23 | 1 | `78` | $.Tags\[0\]: branch 1 (string): string data |
+| 24 | 1 | `00` | $.Tags\[1\]: union branch index = 0 |
+| 25 | 0 | `—` | $.Tags\[1\]: branch 0 (null): null |
+| 25 | 1 | `02` | $.Tags\[2\]: union branch index = 1 |
+| 26 | 1 | `02` | $.Tags\[2\]: branch 1 (string): string length = 1 |
+| 27 | 1 | `7a` | $.Tags\[2\]: branch 1 (string): string data |
 | 28 | 1 | `00` | $.Tags: array block 1 count = 0 |
 | 29 | 1 | `02` | $.Payload: union branch index = 1 |
 | 30 | 1 | `00` | $.Payload: branch 1 (org.opcfoundation.ua.avro.ExtensionObject).typeId.namespace: int = 0 |

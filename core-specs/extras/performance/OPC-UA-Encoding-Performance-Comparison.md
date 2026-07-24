@@ -25,7 +25,7 @@ Each scenario runs warmup iterations, then measures a fixed iteration count. `Pa
 
 ### Reproduce
 
-```
+```bash
 # Part 6
 dotnet test Tests/Opc.Ua.Core.Experimental.Tests/Opc.Ua.Core.Experimental.Tests.csproj \
   -c Release -f net10.0 --filter "Category=EncoderComparison" \

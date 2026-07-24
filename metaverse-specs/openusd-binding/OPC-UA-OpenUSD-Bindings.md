@@ -110,7 +110,7 @@ A connector therefore starts at `Server/OpenUSD/Representations`, follows `Organ
 
 The identity of a represented prim is the pair:
 
-```
+```text
 OpenUsdStageType instance  +  OpenUsdRepresentationType.PrimPath
 ```
 
@@ -329,6 +329,7 @@ An asset is usually **composed of components** (a pump has an impeller and a bea
 | `LastError` | LocalizedText | O | Last operation error (diagnostic). |
 
 **Resolution.**
+
 - `One` — resolve `ComponentBrowsePath` (constrained by `ComponentReferenceType` / `ComponentTypeDefinition`) to exactly one component Object; zero → *unresolved*; more than one → `Bad_TooManyMatches`. When `ComponentRepresentation` is present it names the component's representation directly, giving unambiguous 1:1 targeting without a browse.
 - `Many` — enumerate every component Object reached by `ComponentReferenceType` from the container that matches `ComponentTypeDefinition`; each yields one instance prim under the `TargetPrimPath` scope, named per `TargetPrimNameSource`.
 
@@ -354,7 +355,6 @@ The connector **shall not** delete or deactivate prims it did not author, and **
 A component may live on a **different OPC UA server** — e.g. an OEM sub-asset with its own server and USD asset. When `ComponentServerUri` (and optionally `ComponentEndpointUrl`) is present, the component binding is resolved by **federation**: the connector opens a session to the remote server, discovers the remote `OpenUsdRepresentation` for the component (via that server's `Server/OpenUSD/Representations`, matched by `ComponentTypeDefinition` / semantic id), and composes the component's sub-asset prim (typically a `Reference` / `Payload` to the OEM asset) under the parent prim. The remote representation's own bindings are driven from the remote session.
 
 Security (§9) applies per session: the connector **shall** establish an authenticated, integrity-protected channel to each server and honor each server's trust and authorization independently. Cross-server dynamic composition uses the remote server's model-change events on its own `ChangeEventSource`.
-
 
 ### 5.15 Asset content delivery (normative, optional)
 
@@ -483,7 +483,6 @@ This model is the **visual-projection binding** of a broader "asset definition a
 
 The intended standards path is a family of thin, composable binding contracts (this OpenUSD binding being one) advanced through the OPC Foundation and bridged to the AAS/IDTA on shared semantic ids, rather than a single monolithic profile.
 
-
 ---
 
 ## 9 Security
@@ -511,7 +510,7 @@ The intended standards path is a family of thin, composable binding contracts (t
 
 The Release 0.2.0 optional deliverables include semantic source, command, alarm/history, integrity, composition, cross-server composition, and asset delivery. Regenerate and validate:
 
-```
+```powershell
 python core-specs/extras/openusd-binding/tools/build_model.py
 python core-specs/extras/openusd-binding/tools/validate_local.py
 ```
@@ -588,7 +587,6 @@ sequenceDiagram
 6. The **visualization operator** opens the composed stage in Omniverse (or `usdview`) and sees the pump spin, warm toward red, and glow — driven live, with no pump-specific code anywhere in the connector or renderer.
 
 A runnable realization of this pass (server, connector, base asset, and a step-by-step guide) is provided in `core-specs/extras/openusd-binding/examples/pumps/` and the `PumpDeviceIntegrationServer` sample.
-
 
 ### B.5 Concrete pass — the robotics example
 

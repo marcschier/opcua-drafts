@@ -305,6 +305,7 @@ The NodeSet has been validated to be structurally correct: XML well‑formedness
 ---
 
 <a id="annex-a"></a>
+
 ## Annex A — Information model
 
 This annex is the normative node reference. It is generated directly from `tools/build_model.py` and therefore always matches `Opc.Ua.Generators.NodeSet2.xml`. It is organised by NodeClass. For every ObjectType and DataType the full structure is given, and the **Declared in** column names the type that declares each member — rows whose *Declared in* value differs from the type being described are **inherited** from a base type in OPC UA, Devices (DI) or Machinery.
@@ -354,6 +355,7 @@ This annex is the normative node reference. It is generated directly from `tools
 ### Object types
 
 <a id="type-GeneratorIdentificationType"></a>
+
 #### GeneratorIdentificationType  (ns=1;i=1016)
 
 *Inherits from:* [MachineIdentificationType](https://reference.opcfoundation.org/specs/OPC-40001-1/8.6) \[Machinery\]
@@ -395,6 +397,7 @@ Identification and nameplate of a generator set. Extends the Machinery MachineId
 | UIElement | Variable |  | Optional | [FunctionalGroupType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.4.1) | |
 
 <a id="type-GeneratorStateMachineType"></a>
+
 #### GeneratorStateMachineType  (ns=1;i=1011)
 
 *Inherits from:* [FiniteStateMachineType](https://reference.opcfoundation.org/specs/OPC-10000-16/4.4.5)
@@ -444,6 +447,7 @@ Finite state machine describing the operating state of a generator set: Off, Rea
 | AvailableTransitions | Variable | NodeId\[\] | Optional | [FiniteStateMachineType](https://reference.opcfoundation.org/specs/OPC-10000-16/4.4.5) | |
 
 <a id="type-J1939DiagnosticInterfaceType"></a>
+
 #### J1939DiagnosticInterfaceType  (ns=1;i=1010)
 
 *Inherits from:* [BaseObjectType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.2)
@@ -466,6 +470,7 @@ The engine CAN bus / SAE J1939 diagnostic interface. Surfaces the network connec
 | ClearPreviouslyActiveDtcs | Method |  | Optional | J1939DiagnosticInterfaceType | Clear previously active diagnostic trouble codes (J1939 DM3/DM11). |
 
 <a id="type-ExhaustAftertreatmentType"></a>
+
 #### ExhaustAftertreatmentType  (ns=1;i=1018)
 
 *Inherits from:* [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) \[DI\]
@@ -506,6 +511,7 @@ Exhaust aftertreatment subsystem (DPF/SCR/DEF) for Tier 4 / Stage V engines.
 | Lock | Object |  | Optional | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
 
 <a id="type-EngineType"></a>
+
 #### EngineType  (ns=1;i=1002)
 
 *Inherits from:* [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) \[DI\]
@@ -556,6 +562,7 @@ The prime-mover engine of a generator set. Exposes engine telemetry, typically o
 | Lock | Object |  | Optional | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
 
 <a id="type-AlternatorPhaseType"></a>
+
 #### AlternatorPhaseType  (ns=1;i=1004)
 
 *Inherits from:* [BaseObjectType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.2)
@@ -573,6 +580,7 @@ Per-phase electrical measurements of the alternator output.
 | PowerFactor | Variable | Double | Optional | AlternatorPhaseType | Per-phase power factor (-1..1). |
 
 <a id="type-AlternatorType"></a>
+
 #### AlternatorType  (ns=1;i=1003)
 
 *Inherits from:* [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) \[DI\]
@@ -625,6 +633,7 @@ The alternator (generator end) that converts mechanical power into AC electrical
 | Lock | Object |  | Optional | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
 
 <a id="type-FuelSystemType"></a>
+
 #### FuelSystemType  (ns=1;i=1005)
 
 *Inherits from:* [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) \[DI\]
@@ -664,6 +673,7 @@ The fuel storage and delivery subsystem of a generator set.
 | Lock | Object |  | Optional | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
 
 <a id="type-CoolingSystemType"></a>
+
 #### CoolingSystemType  (ns=1;i=1006)
 
 *Inherits from:* [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) \[DI\]
@@ -700,6 +710,7 @@ The engine cooling subsystem of a generator set.
 | Lock | Object |  | Optional | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
 
 <a id="type-LubricationSystemType"></a>
+
 #### LubricationSystemType  (ns=1;i=1007)
 
 *Inherits from:* [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) \[DI\]
@@ -733,6 +744,7 @@ The engine lubrication subsystem of a generator set.
 | Lock | Object |  | Optional | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
 
 <a id="type-StartingSystemType"></a>
+
 #### StartingSystemType  (ns=1;i=1008)
 
 *Inherits from:* [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) \[DI\]
@@ -766,6 +778,7 @@ The starting/battery subsystem of a generator set.
 | Lock | Object |  | Optional | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
 
 <a id="type-GeneratorControllerType"></a>
+
 #### GeneratorControllerType  (ns=1;i=1009)
 
 *Inherits from:* [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) \[DI\]
@@ -806,6 +819,7 @@ The generator set control panel. Provides controller identity, mode/state visibi
 | Lock | Object |  | Optional | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
 
 <a id="type-GeneratorRatingType"></a>
+
 #### GeneratorRatingType  (ns=1;i=1012)
 
 *Inherits from:* [BaseObjectType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.2)
@@ -828,6 +842,7 @@ A single nameplate power rating point of a generator set for a given application
 | Altitude | Variable | Double | Optional | GeneratorRatingType | Reference altitude for the rating. EngineeringUnits: m. |
 
 <a id="type-GeneratorProtectionAlarmType"></a>
+
 #### GeneratorProtectionAlarmType  (ns=1;i=1017)
 
 *Inherits from:* [OffNormalAlarmType](https://reference.opcfoundation.org/specs/OPC-10000-9/5.8.24#5.8.24.2)
@@ -902,6 +917,7 @@ Alarm raised by a generator protection/shutdown function. Extends OffNormalAlarm
 | Severity | Variable | UInt16 | Mandatory | [BaseEventType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.4.2) | |
 
 <a id="type-GeneratorSetType"></a>
+
 #### GeneratorSetType  (ns=1;i=1001)
 
 *Inherits from:* [DeviceType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.7) \[DI\]
@@ -964,6 +980,7 @@ A generator set (GenSet): a complete electrical power generation asset composed 
 | Lock | Object |  | Optional | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
 
 <a id="type-TransferSwitchSourceType"></a>
+
 #### TransferSwitchSourceType  (ns=1;i=1019)
 
 *Inherits from:* [BaseObjectType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.2)
@@ -979,6 +996,7 @@ One power source (normal/utility or emergency/generator) of an automatic transfe
 | PhaseRotation | Variable | String | Optional | TransferSwitchSourceType | Phase rotation of the source (e.g. ABC or CBA). |
 
 <a id="type-AutomaticTransferSwitchType"></a>
+
 #### AutomaticTransferSwitchType  (ns=1;i=1013)
 
 *Inherits from:* [DeviceType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.7) \[DI\]
@@ -1039,6 +1057,7 @@ An automatic transfer switch (ATS) that transfers a load between a normal source
 | Lock | Object |  | Optional | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
 
 <a id="type-ParallelingControllerType"></a>
+
 #### ParallelingControllerType  (ns=1;i=1014)
 
 *Inherits from:* [ComponentType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.6) \[DI\]
@@ -1088,6 +1107,7 @@ A paralleling / switchgear controller that synchronizes and shares load among ge
 | Lock | Object |  | Optional | [TopologyElementType](https://reference.opcfoundation.org/specs/OPC-10000-100/4.3) | |
 
 <a id="type-GeneratorSystemType"></a>
+
 #### GeneratorSystemType  (ns=1;i=1015)
 
 *Inherits from:* [BaseObjectType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.2)
@@ -1107,6 +1127,7 @@ A power-generation system aggregating one or more paralleled generator sets, an 
 ### Data types
 
 <a id="type-GeneratorOperatingModeEnum"></a>
+
 #### GeneratorOperatingModeEnum  (ns=1;i=3001)
 
 *Subtype of:* [Enumeration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.14)
@@ -1125,6 +1146,7 @@ Selector mode of the generator set control panel.
 | Lockout | 7 | Locked out; starting is blocked until reset. |
 
 <a id="type-FuelTypeEnum"></a>
+
 #### FuelTypeEnum  (ns=1;i=3002)
 
 *Subtype of:* [Enumeration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.14)
@@ -1151,6 +1173,7 @@ Primary fuel of the generator set.
 | Other | 15 |  |
 
 <a id="type-GeneratorApplicationRatingEnum"></a>
+
 #### GeneratorApplicationRatingEnum  (ns=1;i=3003)
 
 *Subtype of:* [Enumeration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.14)
@@ -1166,6 +1189,7 @@ Application/duty rating per ISO 8528 plus the data-center-continuous rating.
 | DataCenterContinuous | 4 | DCC: continuous operation for data-center loads. |
 
 <a id="type-ElectricalConnectionEnum"></a>
+
 #### ElectricalConnectionEnum  (ns=1;i=3004)
 
 *Subtype of:* [Enumeration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.14)
@@ -1185,6 +1209,7 @@ Winding/connection configuration of the alternator output.
 | SinglePhaseThreeWire | 8 |  |
 
 <a id="type-ExcitationTypeEnum"></a>
+
 #### ExcitationTypeEnum  (ns=1;i=3005)
 
 *Subtype of:* [Enumeration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.14)
@@ -1201,6 +1226,7 @@ Excitation method of the alternator.
 | StaticExciter | 5 |  |
 
 <a id="type-CoolingMethodEnum"></a>
+
 #### CoolingMethodEnum  (ns=1;i=3006)
 
 *Subtype of:* [Enumeration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.14)
@@ -1213,6 +1239,7 @@ Primary cooling method of the engine.
 | LiquidCooled | 1 |  |
 
 <a id="type-AspirationEnum"></a>
+
 #### AspirationEnum  (ns=1;i=3007)
 
 *Subtype of:* [Enumeration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.14)
@@ -1226,6 +1253,7 @@ Air induction method of the engine.
 | TurbochargedAftercooled | 2 |  |
 
 <a id="type-EmissionsStandardEnum"></a>
+
 #### EmissionsStandardEnum  (ns=1;i=3008)
 
 *Subtype of:* [Enumeration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.14)
@@ -1246,6 +1274,7 @@ Emissions certification standard of the engine.
 | Other | 9 |  |
 
 <a id="type-CanBusStateEnum"></a>
+
 #### CanBusStateEnum  (ns=1;i=3009)
 
 *Subtype of:* [Enumeration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.14)
@@ -1261,6 +1290,7 @@ State of the engine CAN bus / SAE J1939 network interface.
 | BusOff | 4 |  |
 
 <a id="type-TransferSwitchPositionEnum"></a>
+
 #### TransferSwitchPositionEnum  (ns=1;i=3010)
 
 *Subtype of:* [Enumeration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.14)
@@ -1279,6 +1309,7 @@ Contact position of an automatic transfer switch.
 | Isolated | 7 |  |
 
 <a id="type-TransferTransitionTypeEnum"></a>
+
 #### TransferTransitionTypeEnum  (ns=1;i=3011)
 
 *Subtype of:* [Enumeration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.14)
@@ -1294,6 +1325,7 @@ Transition method of an automatic transfer switch.
 | BypassIsolation | 4 |  |
 
 <a id="type-AtsOperatingStateEnum"></a>
+
 #### AtsOperatingStateEnum  (ns=1;i=3012)
 
 *Subtype of:* [Enumeration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.14)
@@ -1317,6 +1349,7 @@ Operating state of an automatic transfer switch.
 | Isolated | 12 |  |
 
 <a id="type-AlarmSeverityEnum"></a>
+
 #### AlarmSeverityEnum  (ns=1;i=3013)
 
 *Subtype of:* [Enumeration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.14)
@@ -1334,6 +1367,7 @@ Severity class of a generator protection event.
 | EmergencyStop | 6 |  |
 
 <a id="type-GeneratorProtectionFunctionEnum"></a>
+
 #### GeneratorProtectionFunctionEnum  (ns=1;i=3014)
 
 *Subtype of:* [Enumeration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.14)
@@ -1408,6 +1442,7 @@ Protection / fault function that raised a generator alarm.
 | SynchronizationFailure | 63 |  |
 
 <a id="type-ParallelingSystemStateEnum"></a>
+
 #### ParallelingSystemStateEnum  (ns=1;i=3015)
 
 *Subtype of:* [Enumeration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.14)
@@ -1435,6 +1470,7 @@ Operating state of a paralleling / switchgear system.
 | MaintenanceBypass | 16 |  |
 
 <a id="type-AftertreatmentStateEnum"></a>
+
 #### AftertreatmentStateEnum  (ns=1;i=3016)
 
 *Subtype of:* [Enumeration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.14)
@@ -1453,6 +1489,7 @@ State of the exhaust aftertreatment system.
 | Faulted | 7 |  |
 
 <a id="type-J1939LampStatusEnum"></a>
+
 #### J1939LampStatusEnum  (ns=1;i=3017)
 
 *Subtype of:* [Enumeration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.14)
@@ -1468,6 +1505,7 @@ SAE J1939 DM1 diagnostic lamp status (lamp state plus flash rate).
 | NotAvailable | 4 | The lamp status is not available. |
 
 <a id="type-DiagnosticTroubleCodeType"></a>
+
 #### DiagnosticTroubleCodeType  (ns=1;i=3050)
 
 *Subtype of:* [Structure](https://reference.opcfoundation.org/specs/OPC-10000-3/8.32)
@@ -1516,5 +1554,3 @@ All Variable-class nodes are instance declarations of the types above. Measured 
 ### Reference types
 
 This specification defines no custom ReferenceTypes. It uses the standard OPC UA references [`HasComponent`](https://reference.opcfoundation.org/specs/OPC-10000-3/7.7), [`HasProperty`](https://reference.opcfoundation.org/specs/OPC-10000-3/5.3.3#5.3.3.2), [`HasAddIn`](https://reference.opcfoundation.org/specs/OPC-10000-3/7.20), [`HasInterface`](https://reference.opcfoundation.org/specs/OPC-10000-3/7.19), [`GeneratesEvent`](https://reference.opcfoundation.org/specs/OPC-10000-3/7.15), [`HasSubtype`](https://reference.opcfoundation.org/specs/OPC-10000-3/5.3.3#5.3.3.3), [`HasTypeDefinition`](https://reference.opcfoundation.org/specs/OPC-10000-3/7.13), [`HasModellingRule`](https://reference.opcfoundation.org/specs/OPC-10000-3/7.12), [`FromState`](https://reference.opcfoundation.org/specs/OPC-10000-16/4.4.11), [`ToState`](https://reference.opcfoundation.org/specs/OPC-10000-16/4.4.12) and [`HasEncoding`](https://reference.opcfoundation.org/specs/OPC-10000-3/7.14).
-
-
