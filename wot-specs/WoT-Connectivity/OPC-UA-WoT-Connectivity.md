@@ -108,35 +108,79 @@ This section defines each information-model concept the additive registry introd
 
 ### 6.1 Registry root — `WoTRegistryType`
 
-**What.** [`WoTRegistryType`](#type-WoTRegistryType) (`i=64000`) is the registry root type, a subtype of the abstract xRegistry [`RegistryType`](../../core-specs/xregistry/OPC-UA-xRegistry.md#type-RegistryType) (itself a `FolderType`). **Where.** It is instantiated once as the well-known `WoTRegistry` object under the `Server` object (§6.7). **Why.** It is the single entry point from which a client discovers every stored Thing Model and Thing Description and controls their projection. **How.** It holds the two group placeholders `<ThingDescriptionGroup>` / `<ThingModelGroup>` and adds registry-wide lifecycle state (`RefreshGeneration`, `AutoRefresh`, `RefreshMode`, `RefreshInterval`, `LastRefreshTime`, `LastRefreshSummary`, `DefaultAtomicity`, `DeletePolicy`), validation policy (`ValidateFormat`, `ValidateCompatibility`, `StrictValidation`, `VocabularyVersion`), the binding surface (`SupportedBindings`, `SelectedBindings`) and the `Refresh` Method (§9). A client browses `Server → WoTRegistry`, reads `RefreshGeneration` to learn the current projection generation, and calls `Refresh` to re-project on demand.
+[`WoTRegistryType`](#type-WoTRegistryType) (`i=64000`) is the registry root type, a subtype of the abstract xRegistry [`RegistryType`](../../core-specs/xregistry/OPC-UA-xRegistry.md#type-RegistryType) (itself a `FolderType`).
+
+It is instantiated once as the well-known `WoTRegistry` object under the `Server` object (§6.7).
+
+It is the single entry point from which a client discovers every stored Thing Model and Thing Description and controls their projection.
+
+It holds the two group placeholders `<ThingDescriptionGroup>` / `<ThingModelGroup>` and adds registry-wide lifecycle state (`RefreshGeneration`, `AutoRefresh`, `RefreshMode`, `RefreshInterval`, `LastRefreshTime`, `LastRefreshSummary`, `DefaultAtomicity`, `DeletePolicy`), validation policy (`ValidateFormat`, `ValidateCompatibility`, `StrictValidation`, `VocabularyVersion`), the binding surface (`SupportedBindings`, `SelectedBindings`) and the `Refresh` Method (§9). A client browses `Server → WoTRegistry`, reads `RefreshGeneration` to learn the current projection generation, and calls `Refresh` to re-project on demand.
 
 ### 6.2 Groups — `ThingDescriptionGroupType` and `ThingModelGroupType`
 
-**What.** [`ThingDescriptionGroupType`](#type-ThingDescriptionGroupType) (`i=64001`) and [`ThingModelGroupType`](#type-ThingModelGroupType) (`i=64002`) are xRegistry [`GroupType`](../../core-specs/xregistry/OPC-UA-xRegistry.md#type-GroupType) subtypes. **Where.** Instances appear directly under the registry, one group per related set of documents (for example one group per site or per vendor catalog). **Why.** Groups are the unit of organisation, access control and policy: read access to a group is the authorisation boundary for discovering the Things it contains (§7.11). **How.** Each group carries the group-level validation policy (`ValidateFormat`, `ValidateCompatibility`, `ConsistentFormat`) and a constrained `<ThingDescription>` / `<ThingModel>` placeholder that limits its members to the matching document subtype. A Thing Description group holds only Thing Descriptions; a Thing Model group holds only Thing Models.
+[`ThingDescriptionGroupType`](#type-ThingDescriptionGroupType) (`i=64001`) and [`ThingModelGroupType`](#type-ThingModelGroupType) (`i=64002`) are xRegistry [`GroupType`](../../core-specs/xregistry/OPC-UA-xRegistry.md#type-GroupType) subtypes.
+
+Instances appear directly under the registry, one group per related set of documents (for example one group per site or per vendor catalog).
+
+Groups are the unit of organisation, access control and policy: read access to a group is the authorisation boundary for discovering the Things it contains (§7.11).
+
+Each group carries the group-level validation policy (`ValidateFormat`, `ValidateCompatibility`, `ConsistentFormat`) and a constrained `<ThingDescription>` / `<ThingModel>` placeholder that limits its members to the matching document subtype. A Thing Description group holds only Thing Descriptions; a Thing Model group holds only Thing Models.
 
 ### 6.3 Documents — `WoTDocumentType`, `ThingDescriptionFileType`, `ThingModelFileType`
 
-**What.** [`WoTDocumentType`](#type-WoTDocumentType) (`i=64003`, **abstract**) is the base of a stored WoT document, a subtype of the xRegistry [`ResourceType`](../../core-specs/xregistry/OPC-UA-xRegistry.md#type-ResourceType). [`ThingDescriptionFileType`](#type-ThingDescriptionFileType) (`i=64004`) and [`ThingModelFileType`](#type-ThingModelFileType) (`i=64005`) are the concrete subtypes. **Where.** Document instances are the members of the groups. **Why.** The document *is* the canonical source of truth; everything a client browses in the projection is derived from these bytes and their versions. **How.** Because `ResourceType` is a `FileType`, the JSON-LD document bytes are read and written with the inherited `Open`/`Read`/`Write`/`Close` Methods, so a client fetches the exact stored TD/TM. `WoTDocumentType` adds the derived-projection metadata (`DocumentKind`, `Enabled`, `LoadState`, `DesiredVersionId`, `ActiveVersionId`, `IsDefault`, `Ancestor`, `Compatibility`, `AutoRefresh`, `RefreshGeneration`, `LastRefreshTime`, `ContentDigest`, `ValidationOutcome`, `MaterializedNodeCount`, `RootNodeId`, `SelectedBindings`) and the `Validate` / `SetEnabled` / `SetDefaultVersion` Methods. `ThingDescriptionFileType` adds the TD instance identity (`ThingId`, `ThingTitle`, `BaseUri`, `ModelReference`); `ThingModelFileType` adds the TM type identity (`ModelTitle`, `ModelVersion`, `DerivedTypeNodeId`). For example, after a Thing Model is projected, a client reads `ThingModelFileType.DerivedTypeNodeId` to find the ObjectType it produced.
+[`WoTDocumentType`](#type-WoTDocumentType) (`i=64003`, **abstract**) is the base of a stored WoT document, a subtype of the xRegistry [`ResourceType`](../../core-specs/xregistry/OPC-UA-xRegistry.md#type-ResourceType). [`ThingDescriptionFileType`](#type-ThingDescriptionFileType) (`i=64004`) and [`ThingModelFileType`](#type-ThingModelFileType) (`i=64005`) are the concrete subtypes.
+
+Document instances are the members of the groups.
+
+The document *is* the canonical source of truth; everything a client browses in the projection is derived from these bytes and their versions.
+
+Because `ResourceType` is a `FileType`, the JSON-LD document bytes are read and written with the inherited `Open`/`Read`/`Write`/`Close` Methods, so a client fetches the exact stored TD/TM. `WoTDocumentType` adds the derived-projection metadata (`DocumentKind`, `Enabled`, `LoadState`, `DesiredVersionId`, `ActiveVersionId`, `IsDefault`, `Ancestor`, `Compatibility`, `AutoRefresh`, `RefreshGeneration`, `LastRefreshTime`, `ContentDigest`, `ValidationOutcome`, `MaterializedNodeCount`, `RootNodeId`, `SelectedBindings`) and the `Validate` / `SetEnabled` / `SetDefaultVersion` Methods. `ThingDescriptionFileType` adds the TD instance identity (`ThingId`, `ThingTitle`, `BaseUri`, `ModelReference`); `ThingModelFileType` adds the TM type identity (`ModelTitle`, `ModelVersion`, `DerivedTypeNodeId`). For example, after a Thing Model is projected, a client reads `ThingModelFileType.DerivedTypeNodeId` to find the ObjectType it produced.
 
 ### 6.4 Bindings — `WoTBindingType`
 
-**What.** [`WoTBindingType`](#type-WoTBindingType) (`i=64006`) is a browseable protocol-binding descriptor. **Where.** The registry's `SupportedBindings` folder holds one `WoTBindingType` object per protocol binding the server can realise (OPC UA, HTTP, Modbus, …). **Why.** It lets a client discover which W3C binding templates the server supports, at which pinned document version and maturity, before relying on a form. **How.** Its `BindingUri`, `Title`, `ProfileVersion`, `DraftMaturity`, `Enabled`, `ContentTypes` and a `Capabilities` snapshot are individual, browseable nodes. Immutable *snapshots* of the selected binding set are additionally exposed as arrays of [`WoTBindingCapabilityDataType`](#type-WoTBindingCapabilityDataType) (`SelectedBindings`, on the registry and on each document). Browseable policy/identity is always exposed as Objects/Properties; arrays are used **only** for immutable snapshots. No credentials or secrets are ever exposed on a binding node.
+[`WoTBindingType`](#type-WoTBindingType) (`i=64006`) is a browseable protocol-binding descriptor.
+
+The registry's `SupportedBindings` folder holds one `WoTBindingType` object per protocol binding the server can realise (OPC UA, HTTP, Modbus, …).
+
+It lets a client discover which W3C binding templates the server supports, at which pinned document version and maturity, before relying on a form.
+
+Its `BindingUri`, `Title`, `ProfileVersion`, `DraftMaturity`, `Enabled`, `ContentTypes` and a `Capabilities` snapshot are individual, browseable nodes. Immutable *snapshots* of the selected binding set are additionally exposed as arrays of [`WoTBindingCapabilityDataType`](#type-WoTBindingCapabilityDataType) (`SelectedBindings`, on the registry and on each document). Browseable policy/identity is always exposed as Objects/Properties; arrays are used **only** for immutable snapshots. No credentials or secrets are ever exposed on a binding node.
 
 ### 6.5 DataTypes
 
-**What.** The model defines eight enumerations and seven structures. **Where.** They type the Properties, method arguments and event fields above. **Why.** The enumerations give lifecycle and outcome values a stable, machine-readable meaning; the structures package related, versioned facts as a single immutable snapshot. **How.** The enumerations are [`WoTDocumentKindEnum`](#type-WoTDocumentKindEnum), [`WoTLoadStateEnum`](#type-WoTLoadStateEnum), [`WoTRefreshModeEnum`](#type-WoTRefreshModeEnum), [`WoTAtomicityEnum`](#type-WoTAtomicityEnum), [`WoTDeletePolicyEnum`](#type-WoTDeletePolicyEnum), [`WoTOutcomeEnum`](#type-WoTOutcomeEnum), [`WoTPhaseEnum`](#type-WoTPhaseEnum) and [`WoTBindingCapabilityEnum`](#type-WoTBindingCapabilityEnum). The structures — [`WoTValidationOutcomeDataType`](#type-WoTValidationOutcomeDataType), [`WoTBindingCapabilityDataType`](#type-WoTBindingCapabilityDataType), [`WoTRefreshOptionsDataType`](#type-WoTRefreshOptionsDataType), [`WoTResourceSelectorDataType`](#type-WoTResourceSelectorDataType), [`WoTResourceLoadResultDataType`](#type-WoTResourceLoadResultDataType), [`WoTRefreshSummaryDataType`](#type-WoTRefreshSummaryDataType) and [`WoTDependencyDataType`](#type-WoTDependencyDataType) — are each an **immutable versioned snapshot**, read as a single Variant and never mutated in place; each carries `Default Binary` and `Default JSON` encodings. `examples/04-refresh-results.json` (§12) shows the two refresh structures populated.
+The model defines eight enumerations and seven structures.
+
+They type the Properties, method arguments and event fields above.
+
+The enumerations give lifecycle and outcome values a stable, machine-readable meaning; the structures package related, versioned facts as a single immutable snapshot.
+
+The enumerations are [`WoTDocumentKindEnum`](#type-WoTDocumentKindEnum), [`WoTLoadStateEnum`](#type-WoTLoadStateEnum), [`WoTRefreshModeEnum`](#type-WoTRefreshModeEnum), [`WoTAtomicityEnum`](#type-WoTAtomicityEnum), [`WoTDeletePolicyEnum`](#type-WoTDeletePolicyEnum), [`WoTOutcomeEnum`](#type-WoTOutcomeEnum), [`WoTPhaseEnum`](#type-WoTPhaseEnum) and [`WoTBindingCapabilityEnum`](#type-WoTBindingCapabilityEnum). The structures — [`WoTValidationOutcomeDataType`](#type-WoTValidationOutcomeDataType), [`WoTBindingCapabilityDataType`](#type-WoTBindingCapabilityDataType), [`WoTRefreshOptionsDataType`](#type-WoTRefreshOptionsDataType), [`WoTResourceSelectorDataType`](#type-WoTResourceSelectorDataType), [`WoTResourceLoadResultDataType`](#type-WoTResourceLoadResultDataType), [`WoTRefreshSummaryDataType`](#type-WoTRefreshSummaryDataType) and [`WoTDependencyDataType`](#type-WoTDependencyDataType) — are each an **immutable versioned snapshot**, read as a single Variant and never mutated in place; each carries `Default Binary` and `Default JSON` encodings. `examples/04-refresh-results.json` (§12) shows the two refresh structures populated.
 
 ### 6.6 Events and the notifier chain
 
-**What.** [`WoTResourceEventType`](#type-WoTResourceEventType) (`i=64010`, **abstract**, subtype of `BaseEventType`) is the common WoT resource event, carrying the affected identity (`Xid`, `ResourceId`, `VersionId`), `DocumentKind`, `Generation`, `Phase` and `Outcome`. Its concrete failure subtypes are [`WoTValidationFailureEventType`](#type-WoTValidationFailureEventType) (`i=64011`), [`WoTLoadFailureEventType`](#type-WoTLoadFailureEventType) (`i=64012`) and [`WoTBindingFailureEventType`](#type-WoTBindingFailureEventType) (`i=64013`); [`WoTRefreshCompletedEventType`](#type-WoTRefreshCompletedEventType) (`i=64014`) carries the `Summary` and committed `Generation`. **Where.** The failing **resource** is the source of a failure event; the **registry** is the source of the refresh-completed event. **Why.** Events let an operator observe validation, projection and binding problems and refresh completion without polling. **How.** The notifier chain is **Server → WoTRegistry → groups → resources**: the well-known `WoTRegistry` object declares `EventNotifier = SubscribeToEvents` and is a `HasNotifier` target of the `Server` object (`i=2253`); groups are `HasNotifier` targets of the registry and resources of their group. A subscriber on `WoTRegistry` therefore receives every failure event raised by any contained resource and the refresh-completed event raised by the registry itself.
+[`WoTResourceEventType`](#type-WoTResourceEventType) (`i=64010`, **abstract**, subtype of `BaseEventType`) is the common WoT resource event, carrying the affected identity (`Xid`, `ResourceId`, `VersionId`), `DocumentKind`, `Generation`, `Phase` and `Outcome`. Its concrete failure subtypes are [`WoTValidationFailureEventType`](#type-WoTValidationFailureEventType) (`i=64011`), [`WoTLoadFailureEventType`](#type-WoTLoadFailureEventType) (`i=64012`) and [`WoTBindingFailureEventType`](#type-WoTBindingFailureEventType) (`i=64013`); [`WoTRefreshCompletedEventType`](#type-WoTRefreshCompletedEventType) (`i=64014`) carries the `Summary` and committed `Generation`.
+
+The failing **resource** is the source of a failure event; the **registry** is the source of the refresh-completed event.
+
+Events let an operator observe validation, projection and binding problems and refresh completion without polling.
+
+The notifier chain is **Server → WoTRegistry → groups → resources**: the well-known `WoTRegistry` object declares `EventNotifier = SubscribeToEvents` and is a `HasNotifier` target of the `Server` object (`i=2253`); groups are `HasNotifier` targets of the registry and resources of their group. A subscriber on `WoTRegistry` therefore receives every failure event raised by any contained resource and the refresh-completed event raised by the registry itself.
 
 ### 6.7 Reference type and projection correlation — `HasWoTProjection`
 
-**What.** [`HasWoTProjection`](#type-HasWoTProjection) (`i=64060`, subtype of `NonHierarchicalReferences`, inverse `WoTProjectionOf`). **Where.** It links a stored document resource (source) to the root node of its derived projection (target). **Why.** It lets a client navigate in both directions — find the projected node behind a document and the document behind a projected node — and it anchors `NodeVersion` correlation (§7.9). **How.** After a Thing Description is projected to an Object, the resource carries `HasWoTProjection` to that Object; browsing the inverse `WoTProjectionOf` from any projected node reaches its canonical document.
+[`HasWoTProjection`](#type-HasWoTProjection) (`i=64060`, subtype of `NonHierarchicalReferences`, inverse `WoTProjectionOf`) links a stored document resource (source) to the root node of its derived projection (target).
+
+It lets a client navigate in both directions — find the projected node behind a document and the document behind a projected node — and it anchors `NodeVersion` correlation (§7.9).
+
+After a Thing Description is projected to an Object, the resource carries `HasWoTProjection` to that Object; browsing the inverse `WoTProjectionOf` from any projected node reaches its canonical document.
 
 ### 6.8 Well-known registry instance — `WoTRegistry`
 
-**What.** `WoTRegistry` (`i=64100`, type definition `WoTRegistryType`). **Where.** It is a `HasComponent` of the `Server` object (`i=2253`). **Why.** A fixed, well-known location makes the registry discoverable without configuration, exactly as the incorporated 1.02 `WoTAssetConnectionManagement` object is discoverable under `Objects`. **How.** The generated NodeSet materialises the instance with a functional `Refresh` Method and concrete Values for every Mandatory member (own and inherited), so loading the NodeSet alone yields a structurally complete, callable registry; a server binds the concrete handlers.
+`WoTRegistry` (`i=64100`, type definition `WoTRegistryType`) is a `HasComponent` of the `Server` object (`i=2253`).
+
+A fixed, well-known location makes the registry discoverable without configuration, exactly as the incorporated 1.02 `WoTAssetConnectionManagement` object is discoverable under `Objects`.
+
+The generated NodeSet materialises the instance with a functional `Refresh` Method and concrete Values for every Mandatory member (own and inherited), so loading the NodeSet alone yields a structurally complete, callable registry; a server binds the concrete handlers.
 
 ## 7 Registry semantics and lifecycle (normative)
 
@@ -169,6 +213,10 @@ When the parent resolves, the materializer **shall** create a forward OPC UA `Ha
 
 Documents form a **dependency DAG**. A refresh **shall** construct this graph before projecting: a Thing Description depends on the Thing Models it derives from (`links rel=type`) and on any parent it references (`links rel=uav:componentOf`, §7.3); a Thing Model depends on the Thing Models it extends or references (`tm:extends`, `tm:ref`). Each resolved and unresolved edge **shall** be recorded as a `WoTDependencyDataType` (`SourceXid`, `TargetXid`, `TargetUri`, `RefType`, `Resolved`) so the closure is inspectable. A document together with its transitive dependencies is a **closure**.
 
+A dependency shall be resolved against the selected registry snapshot. A matching local resource version is used first; if no local match exists, a configured xRegistry federation provider may supply a pinned remote registry resource and version. Known contexts and schemas may be satisfied from implementation-provided, version-pinned local catalogs. A materializer shall not dereference an arbitrary Web URL found in a context, schema reference, link or form while refreshing a projection. `ExternalReference` and `ResourceUrl` are federation metadata and do not by themselves grant permission to fetch a document.
+
+TD form endpoints and security declarations are informative to protocol clients and may be inputs to an explicitly enabled protocol binder. They do not select the registry transport, establish trust, authorize dependency resolution or weaken the registry access requirements of §7.11.
+
 A refresh **shall** reject a graph that is not a DAG: if a cycle is detected (for example two Thing Models that `tm:extends` each other), the affected documents **shall** be reported `Failed` with `Phase = DependencyResolution` and a `WoTLoadFailureEventType`, and **shall not** be projected. When the applied atomicity is `PerClosure` or coarser, the whole closure **shall** be projected into a shadow generation and committed together or not at all: a closure with any unresolved or invalid dependency **shall not** be partially activated — no node of that closure becomes visible. When the applied atomicity is `PerResource`, an independent resource with no unresolved dependency **may** commit even if an unrelated resource in the same refresh fails.
 
 *Example.* Refreshing `pump-01` (which `links rel=type` to `PumpType`) with `Atomicity = PerClosure` activates the pair `{pump-01, PumpType}` atomically; if `PumpType` is missing, neither is projected and `pump-01` is reported `Failed` with an unresolved `WoTDependencyDataType` edge.
@@ -179,9 +227,16 @@ Validation failure **shall not** destroy data. An invalid document (format or co
 
 `DesiredVersionId` records the version an operator wants projected; `ActiveVersionId` records the version currently serving. They **may** differ transiently during a switch. When the desired version is invalid, they **shall** diverge persistently — the last valid active version keeps serving while `DesiredVersionId` points at the rejected version — and this divergence **shall** be observable so operator tooling can surface it. A server **shall not** silently activate a desired version that fails validation.
 
-### 7.6 Shadow prepare, switch, drain and retire
+### 7.6 Shadow prepare, switch and retirement
 
-Projection **shall** be generational and use a shadow-then-switch discipline so a client never observes a half-built model. A refresh **shall** proceed through the phases of `WoTPhaseEnum`: it **prepares** the new nodes as a **shadow generation** beside the active one (`LoadState = Loading`), validates and binds them, then **switches atomically** to make them visible (`LoadState = Active`) and increments `RefreshGeneration`. The superseded generation **shall not** be deleted immediately: it **shall** enter `Superseded`, then `Retiring`, and **shall** be retired (`Retired`) only **after its monitored items and subscriptions have drained** onto the new generation, so active subscriptions are not disrupted by the switch. Concretely, a server **shall** migrate or settle monitored items against the new nodes before removing the old nodes; this drain-then-retire approach follows the behaviour validated in [PR #4015](https://github.com/OPCFoundation/UA-.NETStandard/pull/4015). The number of generations retired **shall** be reported in the refresh summary (`WoTRefreshSummaryDataType.Retired`).
+Projection **shall** be generational and use a shadow-then-switch discipline so a client never observes a half-built model. A refresh **shall** proceed through the phases of `WoTPhaseEnum`: it **prepares** the new nodes as a **shadow generation** beside the active one (`LoadState = Loading`), validates and binds them, then **switches atomically** to make them visible (`LoadState = Active`) and increments `RefreshGeneration`.
+
+The implementation shall apply one documented retirement policy after the switch:
+
+- **graceful retirement** — the superseded generation enters `Superseded`, then `Retiring`. Existing MonitoredItems, continuation points and in-flight requests continue against it until they drain or are migrated to equivalent nodes. New service requests use the active generation. The server removes the old nodes and binding plans only after the retained work drains; or
+- **immediate retirement** — new service requests use the active generation and the prior generation is retired without waiting for its MonitoredItems to drain. The server shall invalidate every affected MonitoredItem. Each affected data-change MonitoredItem shall report `BadNodeIdUnknown`; affected event MonitoredItems shall cease producing events and subsequent monitored-item service operations on them shall return `BadNodeIdUnknown`. Clients may then delete or recreate those MonitoredItems.
+
+The policy may be implementation- or configuration-selected but shall be deterministic for a refresh and documented by the implementation. Graceful retirement is the continuity-preserving policy validated by [PR #4015](https://github.com/OPCFoundation/UA-.NETStandard/pull/4015); immediate retirement is suitable when retaining an old projection is not supported or desired. The number of generations retired **shall** be reported in the refresh summary (`WoTRefreshSummaryDataType.Retired`).
 
 ```mermaid
 stateDiagram-v2
@@ -190,8 +245,9 @@ stateDiagram-v2
   Loading --> Active: atomic switch (RefreshGeneration++)
   Loading --> Failed: validation/projection error
   Active --> Superseded: newer generation switched in
-  Superseded --> Retiring: begin drain
-  Retiring --> Retired: monitored items drained
+  Superseded --> Retiring: graceful retirement
+  Superseded --> Retired: immediate retirement / BadNodeIdUnknown
+  Retiring --> Retired: monitored items and requests drained
   Failed --> Loading: corrected document refreshed
 ```
 
@@ -203,10 +259,10 @@ A refresh **shall** be idempotent: a document whose `ContentDigest` is unchanged
 
 ### 7.8 Version switch, unload, delete and federation
 
-- **Version switch.** Setting `DesiredVersionId` (or calling `SetDefaultVersion`) and refreshing **shall** shadow-switch the resource's projection to the selected version per §7.6; the prior generation **shall** retire only after drain. Live subscriptions on the switched nodes **shall not** lose notifications across the switch.
+- **Version switch.** Setting `DesiredVersionId` (or calling `SetDefaultVersion`) and refreshing **shall** shadow-switch the resource's projection to the selected version per §7.6. With graceful retirement, live subscriptions continue against the prior generation until drain or migration. With immediate retirement, affected MonitoredItems report `BadNodeIdUnknown`.
 - **Unload.** `SetEnabled(false)` **shall** request unloading the projection while keeping the stored document. Dependents **shall** be treated per the effective `DeletePolicy`: `Reject` **shall** refuse the operation while any loaded document still depends on the resource; `Retire` **shall** retire the projection but keep the document resolvable for dependents; `Cascade` **shall** unload dependents that resolve only through this document; `Force` **shall** unload the projection even while dependents remain, marking those dependents `Failed`.
 - **Delete.** The inherited xRegistry `Delete` **shall** remove the stored resource/version; its projection **shall** be retired first, subject to the same `DeletePolicy`.
-- **Federation.** A document **may** be served by reference through the inherited xRegistry `ExternalReference` (`ExpandedNodeId`) / `ResourceUrl`. A server **shall** resolve and project a federated document the same way as a local one, and a federated Thing Model **may** satisfy a local Thing Description's dependency closure. A federated dependency that cannot be resolved **shall** be reported as an unresolved `WoTDependencyDataType` edge and handled as in §7.4.
+- **Federation.** A document **may** be served by reference through the inherited xRegistry `ExternalReference` (`ExpandedNodeId`) / `ResourceUrl`. A server **shall** resolve it only through a configured xRegistry federation provider, not by treating either Property as permission for an arbitrary network fetch. A federated Thing Model **may** satisfy a local Thing Description's dependency closure when the provider pins its registry identity, version and digest. A federated dependency that cannot be resolved **shall** be reported as an unresolved `WoTDependencyDataType` edge and handled as in §7.4.
 
 *Example.* Unloading `PumpType` with `DeletePolicy = Reject` while `pump-01` still depends on it is rejected; retrying with `Cascade` unloads `pump-01`'s projection first, then `PumpType`'s.
 
@@ -220,7 +276,11 @@ When a refresh changes the *meaning* of a type or instance (for example a DataTy
 
 ### 7.11 Security
 
-Fetching a document's `@context`, external JSON schemas and federated referents shall use transport security and honour the registry's configured trust; credentials for those fetches and for protocol-binding endpoints are held out of band and **never** exposed on registry or binding nodes (binding nodes carry policy and identity only). Management Methods (`Refresh`, `Validate`, `SetEnabled`, `SetDefaultVersion`, and the inherited xRegistry create/delete Methods) are subject to OPC UA role-based access control; read access to a group MAY be restricted to authorise discovery of the Things it contains. Operators should be aware that a TD can expose device endpoints and security schemes and should scope group read access accordingly.
+Document dependencies shall be resolved only from the selected local registry snapshot, version-pinned local catalogs or a configured xRegistry federation provider. Federation transport shall use the registry's configured trust and credentials. Credentials for federation and protocol-binding endpoints are held out of band and **never** exposed on registry or binding nodes.
+
+Management Methods (`Refresh`, `Validate`, `SetEnabled`, `SetDefaultVersion`, and the inherited xRegistry create/delete Methods) are subject to OPC UA role-based access control. Every operation that creates, modifies, selects, enables, disables or deletes registry content or metadata, including FileType write/commit operations and `Refresh`, shall be accepted only over an OPC UA SecureChannel using `MessageSecurityMode` `SignAndEncrypt`. Registry reads should use a secured channel. An implementation may expose read-only Browse, Read and FileType download operations over `MessageSecurityMode` `None` when its deployment policy permits this; clients shall not infer authenticity, integrity or confidentiality from such a channel.
+
+Read access to a group MAY be restricted to authorise discovery of the Things it contains. TD form endpoints and security declarations are informative to protocol clients and may be consumed by an explicitly enabled binder. They do not configure or secure the registry, authorize document resolution, or override the server's endpoint allowlist, trust store, credential provider or SecureChannel policy.
 
 ## 8 Protocol binder (normative)
 
@@ -258,13 +318,13 @@ On each invocation the server **shall**:
 
 1. **Check concurrency.** If `ExpectedGeneration` is non-zero and ≠ `RefreshGeneration`, fail `Bad_InvalidState`, change nothing.
 2. **Select.** Expand `Selection` to a resource set; an empty `Selection` selects the whole registry. If `Options.IncludeDependents`, add every document that transitively depends on a selected document.
-3. **Fetch and parse.** For each selected document, fetch its bytes and referenced `@context`/schemas (`Phase = Fetch`/`Parse`).
+3. **Resolve and parse.** For each selected document, read its bytes from the registry snapshot and resolve referenced contexts, schemas and linked TDs/TMs from that snapshot, a version-pinned local catalog or configured xRegistry federation only (`Phase = Fetch`/`Parse`). Do not perform arbitrary external Web resolution.
 4. **Validate.** Perform format and, when enabled, compatibility validation (`Phase = FormatValidation`/`CompatibilityValidation`), recording a `WoTValidationOutcomeDataType`. An invalid document is marked `Failed` and excluded from projection; its prior active projection is retained (§7.5).
 5. **Resolve dependencies.** Build the dependency DAG (§7.4) and group the valid documents into closures; a cyclic or unresolved-dependency closure is failed at `Phase = DependencyResolution`.
 6. **Plan.** For each document, compare `ContentDigest` and vocabulary version against the last projection; unchanged documents are marked `Unchanged` and skipped unless `Options.Force`.
 7. **Project (shadow).** Materialize the changed closures into a shadow generation (`Phase = Projection`, `LoadState = Loading`), honouring `MaxParallelism`. If `Options.DryRun`, stop here and report the plan without committing.
 8. **Activate.** Switch the shadow generation in atomically at the granularity of `Options.Atomicity` (`Phase = Activation`), increment `RefreshGeneration`, emit Core model change events (§7.9), and stamp `NodeVersion`.
-9. **Retire.** Move superseded generations to `Superseded`/`Retiring` and retire them after monitored items drain (`Phase = Retirement`, §7.6).
+9. **Retire.** Apply the configured graceful or immediate retirement policy to superseded generations (`Phase = Retirement`, §7.6). Immediate retirement reports `BadNodeIdUnknown` for affected MonitoredItems.
 10. **Summarize.** Populate `Summary`/`Results`, cache `Summary` as `LastRefreshSummary`, set `LastRefreshTime`, and raise `WoTRefreshCompletedEventType`.
 
 ### 9.5 Concurrency and generation behaviour
@@ -299,7 +359,11 @@ sequenceDiagram
     else commit
       P->>AS: atomic switch (Atomicity), RefreshGeneration++
       AS-->>R: model change events, NodeVersion stamped
-      R->>AS: drain monitored items, retire superseded generation
+      alt graceful retirement
+        R->>AS: drain or migrate monitored items, then retire
+      else immediate retirement
+        R->>AS: report BadNodeIdUnknown and retire immediately
+      end
       R-->>Op: Summary + Results + NewGeneration
       R->>Op: WoTRefreshCompletedEventType
     end
@@ -312,7 +376,13 @@ Events let an operator observe the registry without polling; an implementer shou
 
 ## 11 Security (normative)
 
-Security applies at two boundaries: what the server fetches, and who may operate the registry. A server **shall** fetch a document's `@context`, external JSON schemas and federated referents over transport security and **shall** honour the registry's configured trust; credentials for those fetches and for protocol-binding endpoints are held out of band and **shall never** be exposed on registry or binding nodes (binding nodes carry policy and identity only, §6.4). The management Methods — `Refresh`, `Validate`, `SetEnabled`, `SetDefaultVersion` and the inherited xRegistry create/delete Methods — **shall** be subject to OPC UA role-based access control. Read access to a group **should** be restrictable, because it is the authorisation boundary that decides who can discover the Things a group contains. Operators **should** be aware that a Thing Description can expose device endpoints and security schemes, and **should** scope group read access accordingly. A server **shall not** weaken these controls for the incorporated 1.02 asset-management surface: the deprecated methods are subject to the same role-based access control as the registry methods that back them (§13.2).
+Security applies at three boundaries: registry transport, federation, and optional protocol binders.
+
+Projection refresh shall resolve documents only from the selected local registry snapshot, a version-pinned local catalog or a configured xRegistry federation provider. It shall not issue a direct network request merely because a TD/TM contains a context URI, schema URI, link target, `ResourceUrl`, form endpoint or security declaration. A federation provider shall apply endpoint allowlists, trust policy, authentication, size limits and version/digest pinning.
+
+The management Methods — `Refresh`, `Validate`, `SetEnabled`, `SetDefaultVersion` and the inherited xRegistry create/delete Methods — **shall** be subject to OPC UA role-based access control and **shall** require a `SignAndEncrypt` SecureChannel for every mutation. Registry reads **should** use a secured channel; an implementation **may** permit read-only access with `MessageSecurityMode` `None`. Read access to a group **should** be restrictable, because it is the authorisation boundary that decides who can discover the Things a group contains.
+
+Credentials for federation and protocol-binding endpoints are held out of band and **shall never** be exposed on registry or binding nodes. TD endpoint and security metadata is informative to clients and optional binders; it does not establish registry trust or authorize document resolution. Operators **should** scope group read access accordingly. A server **shall not** weaken these controls for the incorporated 1.02 asset-management surface: the deprecated methods are subject to the same role-based access control as the registry methods that back them (§13.2).
 
 ## 12 Worked examples (informative)
 
@@ -382,7 +452,7 @@ The `Refresh` output over the three documents pairs a `WoTRefreshSummaryDataType
 ]
 ```
 
-The summary reports two successes and one failure in generation 7, with one superseded generation retired after drain (§7.6); the failed `pump-broken` is isolated because its closure never activated, exactly as §7.4 requires.
+The summary reports two successes and one failure in generation 7, with one superseded generation retired under the configured policy (§7.6); the failed `pump-broken` is isolated because its closure never activated, exactly as §7.4 requires.
 
 ## 13 Incorporated OPC 10100-1 v1.02 model (normative)
 
@@ -443,7 +513,7 @@ Conformance is composed from independently implementable **conformance units (CU
 | `WoT-Con Federation` | Resolve/project federated documents via `ExternalReference`/`ResourceUrl`. |
 | `WoT-Con Binder Core` | Compile forms to binder plans; op→service mapping. |
 | `WoT-Con Binder <Protocol>` | A specific per-binding module (OPC UA, HTTP, Modbus, …) with capabilities + version pinning. |
-| `WoT-Con Atomicity Modes` | Per-resource / per-group / per-closure / per-registry atomicity with shadow switch + drain-retire. |
+| `WoT-Con Atomicity Modes` | Per-resource / per-group / per-closure / per-registry atomicity with shadow switch and documented graceful or immediate retirement. |
 | `WoT-Con Legacy 1.02 Compatibility` | The incorporated OPC 10100-1 v1.02 model and scenarios, callable and preserved (§13). |
 
 **Profiles.** *WoT-Con Registry Server* = Registry Discovery + Document Read/Write + TD/TM Validation + Type/Instance/Reference Materialization + Refresh + Events + Version Lifecycle + Binder Core + at least one Binder module. *WoT-Con Full* adds Model/Semantic Change, Federation and Atomicity Modes. *WoT-Con Legacy 1.02 Compatibility* is the incorporated-and-deprecated 1.02 surface (§13), independently conformant so existing 1.02 clients are served without the registry profile.
@@ -457,10 +527,11 @@ Each scenario is an end-to-end acceptance test for the CUs it exercises.
 3. **Ingest a derived TD** — Create a `thingdescription` resource, write `Pump 01`, `Refresh` with `Atomicity=PerClosure`; expect the TD's closure (TD + PumpType TM) to activate atomically, an Object with `PumpSpeed`/`SpeedSetpoint`/`Reset`, forms bound to the OPC UA binder, and `HasWoTProjection` from the resource to the Object. *(Instance/Reference Materialization, Binder Core, Atomicity)*
 4. **Invalid TD stays stored** — Write `pump-broken`, `Refresh`; expect `LoadState=Failed`, a `WoTValidationFailureEventType`, the document still readable, and any prior valid projection of that resource unchanged. *(TD Validation, Events)*
 5. **Idempotent refresh** — Re-run scenario 3's `Refresh` unchanged; expect every result `Unchanged`, no node churn, `RefreshGeneration` unchanged. *(Refresh idempotence)*
-6. **Version switch with live subscriptions** — Subscribe to `PumpSpeed`; publish `pump-01` v1.1.0; set `DesiredVersionId=1.1.0`; `Refresh`; expect a shadow switch, model change events for the committed change, `NodeVersion` updated, the old generation retired only after the subscription drains, and no lost notifications. *(Version Lifecycle, Model Change, Atomicity)*
-7. **Unload with dependents** — `SetEnabled(false)` on the `PumpType` TM with `DeletePolicy=Reject` while `Pump 01` depends on it; expect rejection; retry with `Cascade`; expect the dependent TD's projection to unload. *(Version Lifecycle)*
-8. **Federated dependency** — Point `Pump 01`'s TM dependency at a federated TM via `ResourceUrl`; `Refresh`; expect the closure to resolve and activate across the federation link. *(Federation)*
-9. **Legacy round-trip** — Via the deprecated `WoTAssetConnectionManagement`, `CreateAsset("Pump01")`, `Open`/`Write`/`CloseAndUpdate` the TD, browse the mapped Variables; when the registry backs the surface, expect the same asset to appear as a `thingdescription` registry document with an identical projection. *(Legacy 1.02 Compatibility)*
+6. **Version switch with graceful retirement** — Subscribe to `PumpSpeed`; publish `pump-01` v1.1.0; set `DesiredVersionId=1.1.0`; `Refresh`; expect a shadow switch, model change events for the committed change, `NodeVersion` updated, the old generation retired only after the subscription drains or migrates, and no lost notifications. *(Version Lifecycle, Model Change, Atomicity)*
+7. **Version switch with immediate retirement** — Repeat the switch with immediate retirement selected; expect new reads to use v1.1.0, each affected MonitoredItem to report `BadNodeIdUnknown`, and the old generation to be disposed without waiting for drain. *(Version Lifecycle, Atomicity)*
+8. **Unload with dependents** — `SetEnabled(false)` on the `PumpType` TM with `DeletePolicy=Reject` while `Pump 01` depends on it; expect rejection; retry with `Cascade`; expect the dependent TD's projection to unload. *(Version Lifecycle)*
+9. **Federated dependency** — Point `Pump 01`'s TM dependency at a federated TM via `ResourceUrl`; configure that remote registry in the federation provider; `Refresh`; expect the closure to resolve and activate through the pinned federation link. *(Federation)*
+10. **Legacy round-trip** — Via the deprecated `WoTAssetConnectionManagement`, `CreateAsset("Pump01")`, `Open`/`Write`/`CloseAndUpdate` the TD, browse the mapped Variables; when the registry backs the surface, expect the same asset to appear as a `thingdescription` registry document with an identical projection. *(Legacy 1.02 Compatibility)*
 
 ## 16 NodeSet validation
 
@@ -535,7 +606,7 @@ The WoT Connectivity 1.1 registry root - an xRegistry RegistryType (a FolderType
 | SupportedBindings | Object |  | Optional | WoTRegistryType | A folder of browseable WoTBindingType binding descriptors the server can realize (the live, per-field form of the selected-bindings snapshot). |
 | <ThingDescriptionGroup> | Object |  | OptionalPlaceholder | WoTRegistryType | A Thing Description Group held by this registry (constrained to the ThingDescriptionGroupType subtype). |
 | <ThingModelGroup> | Object |  | OptionalPlaceholder | WoTRegistryType | A Thing Model Group held by this registry (constrained to the ThingModelGroupType subtype). |
-| Refresh | Method |  | Optional | WoTRegistryType | Re-project selected stored documents into the AddressSpace. Idempotent: a document whose content digest is unchanged is reported Unchanged and not re-materialized unless Options.Force is set. Projects into a shadow generation and switches atomically per Options.Atomicity; superseded generations are retired after their monitored items drain. If ExpectedGeneration is non-zero and does not equal RefreshGeneration, the call fails with Bad_InvalidState and changes nothing (optimistic concurrency). An empty Selection selects the whole registry. |
+| Refresh | Method |  | Optional | WoTRegistryType | Re-project selected stored documents into the AddressSpace. Idempotent: a document whose content digest is unchanged is reported Unchanged and not re-materialized unless Options.Force is set. Projects into a shadow generation and switches atomically per Options.Atomicity; superseded generations use the implementation's documented graceful or immediate retirement policy. If ExpectedGeneration is non-zero and does not equal RefreshGeneration, the call fails with Bad_InvalidState and changes nothing (optimistic concurrency). An empty Selection selects the whole registry. |
 
 *Generates events:* [WoTRefreshCompletedEventType](#type-WoTRefreshCompletedEventType)
 
@@ -751,8 +822,8 @@ The lifecycle state of a WoT document's derived projection in the AddressSpace. 
 | Loading | 2 | The projection is being materialized under a shadow generation. |
 | Active | 3 | The projection is committed and serving as the active generation. |
 | Failed | 4 | Validation or projection failed; the last valid projection (if any) stays active. |
-| Superseded | 5 | A newer generation has replaced this one; retained until monitored items drain. |
-| Retiring | 6 | Being retired; awaiting monitored-item drain before node removal. |
+| Superseded | 5 | A newer generation has replaced this one; awaiting the configured retirement policy. |
+| Retiring | 6 | Graceful retirement is waiting for monitored items and requests to drain. |
 | Retired | 7 | The projection has been removed from the AddressSpace. |
 
 <a id="type-WoTRefreshModeEnum"></a>
@@ -827,14 +898,14 @@ The processing phase a document reached, used to locate where an outcome was pro
 
 | Name | Value | Description |
 |---|---|---|
-| Fetch | 0 | Fetching the document bytes and its @context/schema references. |
+| Fetch | 0 | Reading document bytes and resolving registry-scoped context/schema references. |
 | Parse | 1 | Parsing the JSON-LD document. |
 | FormatValidation | 2 | Validating the document against its WoT-TD/WoT-TM format. |
 | CompatibilityValidation | 3 | Validating the version against the resource compatibility policy. |
 | DependencyResolution | 4 | Resolving the dependency closure (tm:extends, tm:ref, links rel=type). |
 | Projection | 5 | Materializing types/instances into a shadow generation. |
 | Activation | 6 | Committing the shadow generation as active. |
-| Retirement | 7 | Retiring a superseded generation after monitored items drain. |
+| Retirement | 7 | Applying the configured graceful or immediate retirement policy. |
 
 <a id="type-WoTBindingCapabilityEnum"></a>
 
@@ -1031,48 +1102,3 @@ The published OPC 10100-1 v1.02 WoT Connectivity model is incorporated into this
 | Well-known instance | NodeId | TypeDefinition | Release status |
 |---|---|---|---|
 | WoTAssetConnectionManagement | ns=2;i=31 | [WoTAssetConnectionManagementType](#type-WoTAssetConnectionManagementType) | Deprecated |
-
-## Annex B — Incorporated 1.02 to registry crosswalk (informative)
-
-This annex maps each OPC 10100-1 v1.02 element to its registry equivalent in revision 1.1. The incorporated 1.02 signatures and node numbering are unchanged (Section 13); the mapping shows how a server backs the deprecated asset-management surface with the registry.
-
-| 1.02 element | 1.02 signature / shape | Registry equivalent (revision 1.1) |
-|---|---|---|
-| WoTAssetConnectionManagement | Well-known Object under Objects (deprecated) | Coexists with the well-known WoTRegistry (ns=2;i=64100) under Server. |
-| CreateAsset | (in String AssetName, out NodeId AssetId) | CreateResource of a ThingDescriptionFileType in a default group; AssetId is the projected Object NodeId. |
-| WoTFile / WoTAssetFileType | FileType with CloseAndUpdate | The ThingDescriptionFileType resource's inherited FileType (Open/Read/Write/Close). |
-| CloseAndUpdate | (in UInt32 FileHandle) | Write-close of the resource + implicit single-resource Refresh (validate + project). |
-| DeleteAsset | (in NodeId AssetId) | SetEnabled(false) + inherited xRegistry Delete of the backing resource. |
-| DiscoverAssets | (out String[] AssetEndpoints) | Preserved unchanged; discovered TDs become thingdescription resources. |
-| CreateAssetForEndpoint | (in String AssetName, in String AssetEndpoint, out NodeId AssetId) | Preserved unchanged; the auto-generated TD is stored as a resource. |
-| ConnectionTest | (in String AssetEndpoint, out Boolean Success, out String Status) | Preserved unchanged. |
-| SupportedWoTBindings | UriString[] Property | Surfaces the registry SupportedBindings / SelectedBindings set. |
-| IWoTAssetType.<WoTPropertyName> | HasWoTComponent Variables | Legacy references preserved; registry instances also carry HasWoTProjection to their document. |
-| HasWoTComponent | Subtype of HasComponent, inverse WoTComponentOf | Preserved; the registry adds HasWoTProjection (ns=2;i=64060) for document correlation. |
-
-## Annex C — Example ingest-to-subscribe flow (informative)
-
-The worked examples in `examples/` (a Thing Model, a matching Thing Description, an invalid Thing Description and a representative refresh-results document) exercise the registry-first lifecycle. The sequence below shows the canonical ingest, validate, refresh (shadow switch) and subscribe flow.
-
-```mermaid
-sequenceDiagram
-  actor Op as Operator/Client
-  participant Reg as WoTRegistry
-  participant Grp as Group (TD/TM)
-  participant Doc as Document (FileType)
-  participant Proj as Projection (shadow then active)
-  Op->>Grp: CreateResource(TM) then Open/Write/Close (TM bytes)
-  Op->>Grp: CreateResource(TD) then Open/Write/Close (TD bytes)
-  Op->>Reg: Refresh(Selection=all, Atomicity=PerClosure)
-  Reg->>Doc: Validate format + compatibility
-  Doc-->>Reg: ValidationOutcome (TM ok, TD ok, broken=Failed)
-  Reg->>Proj: Build shadow generation for valid closure
-  Proj-->>Reg: Bind forms to binder plans
-  Reg->>Proj: Atomic switch then retire prior gen after drain
-  Reg-->>Op: Summary + Results, NewGeneration
-  Reg->>Op: WoTRefreshCompletedEventType
-  Reg->>Op: WoTValidationFailureEventType (broken)
-  Op->>Proj: Subscribe to projected Variable (survives future switches)
-```
-
-The invalid Thing Description (`03-invalid-thing-description.td.jsonld`) stays stored, reports `LoadState=Failed`, and does not disturb the active projection of any other resource; the refresh results (`04-refresh-results.json`) record its failing phase and reason alongside the two successful projections.

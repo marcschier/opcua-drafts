@@ -65,7 +65,7 @@ The WoT Connectivity 1.1 registry root - an xRegistry RegistryType (a FolderType
 | SupportedBindings | Object |  | Optional | WoTRegistryType | A folder of browseable WoTBindingType binding descriptors the server can realize (the live, per-field form of the selected-bindings snapshot). |
 | <ThingDescriptionGroup> | Object |  | OptionalPlaceholder | WoTRegistryType | A Thing Description Group held by this registry (constrained to the ThingDescriptionGroupType subtype). |
 | <ThingModelGroup> | Object |  | OptionalPlaceholder | WoTRegistryType | A Thing Model Group held by this registry (constrained to the ThingModelGroupType subtype). |
-| Refresh | Method |  | Optional | WoTRegistryType | Re-project selected stored documents into the AddressSpace. Idempotent: a document whose content digest is unchanged is reported Unchanged and not re-materialized unless Options.Force is set. Projects into a shadow generation and switches atomically per Options.Atomicity; superseded generations are retired after their monitored items drain. If ExpectedGeneration is non-zero and does not equal RefreshGeneration, the call fails with Bad_InvalidState and changes nothing (optimistic concurrency). An empty Selection selects the whole registry. |
+| Refresh | Method |  | Optional | WoTRegistryType | Re-project selected stored documents into the AddressSpace. Idempotent: a document whose content digest is unchanged is reported Unchanged and not re-materialized unless Options.Force is set. Projects into a shadow generation and switches atomically per Options.Atomicity; superseded generations use the implementation's documented graceful or immediate retirement policy. If ExpectedGeneration is non-zero and does not equal RefreshGeneration, the call fails with Bad_InvalidState and changes nothing (optimistic concurrency). An empty Selection selects the whole registry. |
 
 *Generates events:* [WoTRefreshCompletedEventType](#type-WoTRefreshCompletedEventType)
 
@@ -281,8 +281,8 @@ The lifecycle state of a WoT document's derived projection in the AddressSpace. 
 | Loading | 2 | The projection is being materialized under a shadow generation. |
 | Active | 3 | The projection is committed and serving as the active generation. |
 | Failed | 4 | Validation or projection failed; the last valid projection (if any) stays active. |
-| Superseded | 5 | A newer generation has replaced this one; retained until monitored items drain. |
-| Retiring | 6 | Being retired; awaiting monitored-item drain before node removal. |
+| Superseded | 5 | A newer generation has replaced this one; awaiting the configured retirement policy. |
+| Retiring | 6 | Graceful retirement is waiting for monitored items and requests to drain. |
 | Retired | 7 | The projection has been removed from the AddressSpace. |
 
 <a id="type-WoTRefreshModeEnum"></a>
@@ -357,14 +357,14 @@ The processing phase a document reached, used to locate where an outcome was pro
 
 | Name | Value | Description |
 |---|---|---|
-| Fetch | 0 | Fetching the document bytes and its @context/schema references. |
+| Fetch | 0 | Reading document bytes and resolving registry-scoped context/schema references. |
 | Parse | 1 | Parsing the JSON-LD document. |
 | FormatValidation | 2 | Validating the document against its WoT-TD/WoT-TM format. |
 | CompatibilityValidation | 3 | Validating the version against the resource compatibility policy. |
 | DependencyResolution | 4 | Resolving the dependency closure (tm:extends, tm:ref, links rel=type). |
 | Projection | 5 | Materializing types/instances into a shadow generation. |
 | Activation | 6 | Committing the shadow generation as active. |
-| Retirement | 7 | Retiring a superseded generation after monitored items drain. |
+| Retirement | 7 | Applying the configured graceful or immediate retirement policy. |
 
 <a id="type-WoTBindingCapabilityEnum"></a>
 
