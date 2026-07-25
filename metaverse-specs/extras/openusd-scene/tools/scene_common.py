@@ -9,6 +9,10 @@ UANS = "http://opcfoundation.org/UA/2011/03/UANodeSet.xsd"
 NS = "{" + UANS + "}"
 TYPES_NS = "http://opcfoundation.org/UA/2008/02/Types.xsd"
 SCENE_URI = "http://opcfoundation.org/UA/OpenUSD/Scene/"
+# Version/publication date of the Scene model the examples RequiredModel-pin.
+# Keep in sync with build_model.py VERSION/PUBDATE.
+SCENE_VERSION = "0.2.0"
+SCENE_PUBDATE = "2026-07-25T00:00:00Z"
 BASE_URI = "http://opcfoundation.org/UA/"
 HasComponent = "i=47"; HasProperty = "i=46"; Organizes = "i=35"; HasTypeDefinition = "i=40"; HasAddIn = "i=17604"
 FolderType = "i=61"; PropertyType = "i=68"; ObjectsFolder = "i=85"
@@ -321,7 +325,7 @@ def emit_nodeset(st, namespace):
         out.append("    </References>")
         if n.val: out.append("    "+n.val)
         out.append(f"  </{n.cls}>"); return "\n".join(out)
-    out=['<?xml version="1.0" encoding="utf-8"?>','<UANodeSet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd" xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd">','  <NamespaceUris>',f'    <Uri>{SCENE_URI}</Uri>',f'    <Uri>{namespace}</Uri>','  </NamespaceUris>','  <Models>',f'    <Model ModelUri="{namespace}" Version="0.1.0" PublicationDate="2026-07-21T00:00:00Z">','      <RequiredModel ModelUri="http://opcfoundation.org/UA/" Version="1.05.04" PublicationDate="2023-12-15T00:00:00Z" />',f'      <RequiredModel ModelUri="{SCENE_URI}" Version="0.1.0" PublicationDate="2026-07-21T00:00:00Z" />','    </Model>','  </Models>','  <Aliases>']
+    out=['<?xml version="1.0" encoding="utf-8"?>','<UANodeSet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd" xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd">','  <NamespaceUris>',f'    <Uri>{SCENE_URI}</Uri>',f'    <Uri>{namespace}</Uri>','  </NamespaceUris>','  <Models>',f'    <Model ModelUri="{namespace}" Version="0.1.0" PublicationDate="2026-07-21T00:00:00Z">','      <RequiredModel ModelUri="http://opcfoundation.org/UA/" Version="1.05.04" PublicationDate="2023-12-15T00:00:00Z" />',f'      <RequiredModel ModelUri="{SCENE_URI}" Version="{SCENE_VERSION}" PublicationDate="{SCENE_PUBDATE}" />','    </Model>','  </Models>','  <Aliases>']
     out += [f'    <Alias Alias="{a}">{v}</Alias>' for a,v in aliases] + ['  </Aliases>'] + [enode(n) for n in nodes] + ['</UANodeSet>']
     return "\n".join(out)+"\n"
 
