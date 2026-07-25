@@ -4,6 +4,7 @@ import argparse
 import json
 import os
 import shutil
+import sys
 
 from fastavro import parse_schema
 from fastavro.schema import to_parsing_canonical_form
@@ -29,7 +30,7 @@ OUT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "schemas
 STD_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..", "avro-encoding"))
 STD_SCHEMAS = os.path.join(STD_DIR, "schemas")
 BUILTINS_SCHEMA = os.path.join(STD_SCHEMAS, "opcua.builtins.avsc")
-DEFAULT_NODESET = repo_path("core-specs", "pubsub-binding", "Opc.Ua.PubSubBinding.NodeSet2.xml")
+DEFAULT_NODESET = repo_path("core-specs", "observability-export", "Opc.Ua.ObservabilityExport.NodeSet2.xml")
 
 
 def _struct_dependencies(ty: t.Type) -> set[str]:
@@ -138,6 +139,17 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("nodeset", nargs="?", default=DEFAULT_NODESET)
     args = ap.parse_args()
+    if not os.path.isfile(args.nodeset):
+        # Fail before touching the output directory: a missing NodeSet must never leave the
+        # committed schema artifacts half-deleted (the source NodeSet is untracked base data,
+        # see core-specs/extras/validate_all.py).
+        print(
+            f"error: source NodeSet not found: {args.nodeset}\n"
+            "       Pass a UANodeSet2 XML path, for example:\n"
+            "         python build_schemas.py <path-to>/Opc.Ua.<Model>.NodeSet2.xml",
+            file=sys.stderr,
+        )
+        return 2
     if os.path.isdir(OUT_DIR):
         shutil.rmtree(OUT_DIR)
     os.makedirs(OUT_DIR, exist_ok=True)

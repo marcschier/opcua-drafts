@@ -21,7 +21,7 @@ STD = os.path.abspath(os.path.join(ROOT, "..", "..", "arrow-encoding"))
 SCHEMA_DIR = os.path.join(ROOT, "schemas")
 BASE_SCHEMA_DIR = os.path.join(STD, "schemas")
 EXAMPLES_DIR = os.path.join(ROOT, "examples")
-NODESET = os.path.abspath(os.path.join(STD, "..", "pubsub-binding", "Opc.Ua.PubSubBinding.NodeSet2.xml"))
+NODESET = os.path.abspath(os.path.join(STD, "..", "observability-export", "Opc.Ua.ObservabilityExport.NodeSet2.xml"))
 ARROW_SCHEMAID_BYTES = 8
 
 
