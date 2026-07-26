@@ -200,7 +200,8 @@ A domain Object gains a representation by composing this AddIn with `HasAddIn` (
 | `SourceBrowsePath` | RelativePath | O | RelativePath from the represented Object to the source Variable (instance-portable). |
 | `SourceSemanticId` | String | O | Semantic identifier (e.g. ECLASS / IEC CDD IRDI) of the source signal; resolved against the source's `HasDictionaryEntry` / semantic annotations for cross-vendor portability. |
 | `AttributeId` | UInt32 | O | Source attribute; default 13 (Value). Telemetry binds Value only. |
-| `TargetStage` | NodeId | M | The `OpenUsdStageType` instance holding the target prim. |
+| `TargetStage` | NodeId | M | The stage holding the target prim: an `OpenUsdStageType` instance, or a **materialized Part 2 `UsdStageType`** instance when the target is an in-server materialized scene (§10). |
+| `TargetNodeId` | NodeId | O | Direct NodeId of the target when it is an **in-server materialized Variable** (a Part 2 `UsdAttributeType`). When present it takes precedence over `TargetPrimPath`/`TargetPropertyName`, which remain the portable descriptors and **shall** still be authored. |
 | `TargetPrimPath` | String | M | Target prim path: absolute, or relative to the representation `PrimPath`. |
 | `TargetPropertyName` | String | M | USD attribute name, e.g. `xformOp:rotateZ`, `primvars:displayColor`. |
 | `TargetUsdTypeName` | String | M | Expected USD Sdf value type, e.g. `double`, `bool`, `color3f`. |
@@ -267,7 +268,9 @@ An optional interface a domain ObjectType may apply (`HasInterface`) to advertis
 
 **Source.** In precedence order: if `SourceNodeId` is present use it; else if `SourceSemanticId` is present resolve it against the represented Object's subtree by matching the source Variable's semantic annotation (`HasDictionaryEntry` target IRDI or equivalent); else resolve `SourceBrowsePath` from the represented Object. Zero matches → the binding is *unresolved* (no update). More than one match → `Bad_TooManyMatches`. The connector validates NodeClass = Variable and the Value attribute.
 
-**Target.** Resolve `TargetStage` (validate it is an `OpenUsdStageType`; verify `RootLayerDigest` if present per §5.2). Resolve `TargetPrimPath`: absolute, or relative to the representation `PrimPath`. Append `TargetPropertyName` to obtain the target attribute. Validate the prim, the attribute, and `TargetUsdTypeName`. For an `xformOp`, the op **shall** be present in the prim's `xformOpOrder`. The connector **shall not** fall back by name, nearest prim, first match, or a compatible type, and **shall not** create a property unless an explicit authoring profile permits it.
+**Target.** If `TargetNodeId` is present, the target is that Variable directly — the connector validates NodeClass = Variable and, when the Variable is a materialized Part 2 `UsdAttributeType`, that its `UsdTypeName` is compatible with `TargetUsdTypeName`; `TargetPrimPath`/`TargetPropertyName` remain authored as the portable descriptors and **shall** be consistent with the resolved node. Otherwise: resolve `TargetStage` (validate it is an `OpenUsdStageType`, or a Part 2 `UsdStageType` for a materialized scene; verify `RootLayerDigest` if present per §5.2). Resolve `TargetPrimPath`: absolute, or relative to the representation `PrimPath` — a relative path **shall** be joined to the representation `PrimPath`, never authored at the layer root. Append `TargetPropertyName` to obtain the target attribute. Validate the prim, the attribute, and `TargetUsdTypeName`. For an `xformOp`, the op **shall** be present in the prim's `xformOpOrder`. The connector **shall not** fall back by name, nearest prim, first match, or a compatible type, and **shall not** create a property unless an explicit authoring profile permits it.
+
+For a **materialized (Part 2) stage** the prim path and property name resolve against the materialized address space by BrowseName path — `<stage>/<prim>/…/<attribute>` — which is the path-based equivalent of `TargetNodeId`. A Server materializing a scene **should** author both, so that a connector that resolves by NodeId and one that resolves by path reach the same Variable.
 
 ### 5.8 Conversion (normative)
 

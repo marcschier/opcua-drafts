@@ -114,8 +114,9 @@
       <Reference ReferenceType="HasProperty">ns=1;i=6017</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6018</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6019</Reference>
-      <Reference ReferenceType="HasProperty">ns=1;i=6031</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6020</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6032</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6033</Reference>
     </References>
   </UAObjectType>
   <UAVariable NodeId="ns=1;i=6001" BrowseName="1:BindingDefinitionId" ParentNodeId="ns=1;i=1004" DataType="Guid" ValueRank="-1">
@@ -165,14 +166,23 @@
   </UAVariable>
   <UAVariable NodeId="ns=1;i=6006" BrowseName="1:TargetStage" ParentNodeId="ns=1;i=1004" DataType="NodeId" ValueRank="-1">
     <DisplayName>TargetStage</DisplayName>
-    <Description>NodeId of the OpenUsdStageType instance holding the target prim.</Description>
+    <Description>NodeId of the stage holding the target prim: an OpenUsdStageType instance, or a materialized Part 2 UsdStageType instance when the target is an in-server materialized scene.</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=78</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1004</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=6007" BrowseName="1:TargetPrimPath" ParentNodeId="ns=1;i=1004" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=6007" BrowseName="1:TargetNodeId" ParentNodeId="ns=1;i=1004" DataType="NodeId" ValueRank="-1">
+    <DisplayName>TargetNodeId</DisplayName>
+    <Description>Optional direct NodeId of the target when it is an in-server materialized Variable (a Part 2 UsdAttributeType). When present it takes precedence over the TargetPrimPath/TargetPropertyName pair, which remain the portable descriptors.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1004</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6008" BrowseName="1:TargetPrimPath" ParentNodeId="ns=1;i=1004" DataType="String" ValueRank="-1">
     <DisplayName>TargetPrimPath</DisplayName>
     <Description>Prim path of the target: absolute, or relative to the representation PrimPath.</Description>
     <References>
@@ -181,7 +191,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1004</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=6008" BrowseName="1:TargetPropertyName" ParentNodeId="ns=1;i=1004" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=6009" BrowseName="1:TargetPropertyName" ParentNodeId="ns=1;i=1004" DataType="String" ValueRank="-1">
     <DisplayName>TargetPropertyName</DisplayName>
     <Description>USD attribute name on the target prim, e.g. 'xformOp:rotateZ' or 'primvars:displayColor'.</Description>
     <References>
@@ -190,7 +200,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1004</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=6009" BrowseName="1:TargetUsdTypeName" ParentNodeId="ns=1;i=1004" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=6010" BrowseName="1:TargetUsdTypeName" ParentNodeId="ns=1;i=1004" DataType="String" ValueRank="-1">
     <DisplayName>TargetUsdTypeName</DisplayName>
     <Description>Expected USD Sdf value type name, e.g. 'double', 'float', 'bool', 'color3f'.</Description>
     <References>
@@ -199,7 +209,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1004</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=6010" BrowseName="1:RenderTargetKind" ParentNodeId="ns=1;i=1004" DataType="ns=1;i=3002" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=6011" BrowseName="1:RenderTargetKind" ParentNodeId="ns=1;i=1004" DataType="ns=1;i=3002" ValueRank="-1">
     <DisplayName>RenderTargetKind</DisplayName>
     <Description>Advisory routing hint for the render target category.</Description>
     <References>
@@ -208,7 +218,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1004</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=6011" BrowseName="1:ValueSemanticUri" ParentNodeId="ns=1;i=1004" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=6012" BrowseName="1:ValueSemanticUri" ParentNodeId="ns=1;i=1004" DataType="String" ValueRank="-1">
     <DisplayName>ValueSemanticUri</DisplayName>
     <Description>Value semantics: scalar/angle/length/point/vector/quaternion/matrix. The transform profile uses RSL CartesianFrameAngleOrientationType semantics.</Description>
     <References>
@@ -217,7 +227,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1004</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=6012" BrowseName="1:Scale" ParentNodeId="ns=1;i=1004" DataType="Double" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=6013" BrowseName="1:Scale" ParentNodeId="ns=1;i=1004" DataType="Double" ValueRank="-1">
     <DisplayName>Scale</DisplayName>
     <Description>Linear conversion scale: target = Scale * converted + Offset.</Description>
     <References>
@@ -226,7 +236,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1004</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=6013" BrowseName="1:Offset" ParentNodeId="ns=1;i=1004" DataType="Double" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=6014" BrowseName="1:Offset" ParentNodeId="ns=1;i=1004" DataType="Double" ValueRank="-1">
     <DisplayName>Offset</DisplayName>
     <Description>Linear conversion offset.</Description>
     <References>
@@ -235,7 +245,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1004</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=6014" BrowseName="1:SourceEngineeringUnits" ParentNodeId="ns=1;i=1004" DataType="EUInformation" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=6015" BrowseName="1:SourceEngineeringUnits" ParentNodeId="ns=1;i=1004" DataType="EUInformation" ValueRank="-1">
     <DisplayName>SourceEngineeringUnits</DisplayName>
     <Description>Asserted source engineering units (UNECE).</Description>
     <References>
@@ -244,7 +254,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1004</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=6015" BrowseName="1:TargetEngineeringUnits" ParentNodeId="ns=1;i=1004" DataType="EUInformation" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=6016" BrowseName="1:TargetEngineeringUnits" ParentNodeId="ns=1;i=1004" DataType="EUInformation" ValueRank="-1">
     <DisplayName>TargetEngineeringUnits</DisplayName>
     <Description>Requested target engineering units.</Description>
     <References>
@@ -253,7 +263,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1004</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=6016" BrowseName="1:BadQualityAction" ParentNodeId="ns=1;i=1004" DataType="ns=1;i=3003" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=6017" BrowseName="1:BadQualityAction" ParentNodeId="ns=1;i=1004" DataType="ns=1;i=3003" ValueRank="-1">
     <DisplayName>BadQualityAction</DisplayName>
     <Description>How the connector treats a non-Good source value. Default Skip.</Description>
     <References>
@@ -262,7 +272,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1004</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=6017" BrowseName="1:SamplingIntervalHint" ParentNodeId="ns=1;i=1004" DataType="Double" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=6018" BrowseName="1:SamplingIntervalHint" ParentNodeId="ns=1;i=1004" DataType="Double" ValueRank="-1">
     <DisplayName>SamplingIntervalHint</DisplayName>
     <Description>Requested sampling interval hint in milliseconds. A HINT only; the actual MonitoredItem parameters are negotiated per client Subscription.</Description>
     <References>
@@ -271,7 +281,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1004</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=6018" BrowseName="1:State" ParentNodeId="ns=1;i=1004" DataType="ns=1;i=3004" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=6019" BrowseName="1:State" ParentNodeId="ns=1;i=1004" DataType="ns=1;i=3004" ValueRank="-1">
     <DisplayName>State</DisplayName>
     <Description>Runtime lifecycle state (diagnostic).</Description>
     <References>
@@ -280,7 +290,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1004</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=6019" BrowseName="1:LastError" ParentNodeId="ns=1;i=1004" DataType="LocalizedText" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=6020" BrowseName="1:LastError" ParentNodeId="ns=1;i=1004" DataType="LocalizedText" ValueRank="-1">
     <DisplayName>LastError</DisplayName>
     <Description>Last operation error text (diagnostic).</Description>
     <References>
@@ -295,18 +305,18 @@
     <Category>OpenUSD Binding</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
-      <Reference ReferenceType="HasProperty">ns=1;i=6020</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6021</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6022</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6023</Reference>
-      <Reference ReferenceType="HasProperty">ns=1;i=6038</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6024</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6039</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6040</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6041</Reference>
-      <Reference ReferenceType="HasComponent">ns=1;i=6065</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6042</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=6066</Reference>
     </References>
   </UAObjectType>
-  <UAVariable NodeId="ns=1;i=6020" BrowseName="1:RootLayerIdentifier" ParentNodeId="ns=1;i=1002" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=6021" BrowseName="1:RootLayerIdentifier" ParentNodeId="ns=1;i=1002" DataType="String" ValueRank="-1">
     <DisplayName>RootLayerIdentifier</DisplayName>
     <Description>Opaque authored root-layer / resolver identifier (NOT necessarily a URI).</Description>
     <References>
@@ -315,7 +325,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1002</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=6021" BrowseName="1:SessionLayerIdentifier" ParentNodeId="ns=1;i=1002" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=6022" BrowseName="1:SessionLayerIdentifier" ParentNodeId="ns=1;i=1002" DataType="String" ValueRank="-1">
     <DisplayName>SessionLayerIdentifier</DisplayName>
     <Description>Opaque session-layer identifier, if any. Contributes to stage identity.</Description>
     <References>
@@ -324,7 +334,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1002</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=6022" BrowseName="1:ResolverContext" ParentNodeId="ns=1;i=1002" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=6023" BrowseName="1:ResolverContext" ParentNodeId="ns=1;i=1002" DataType="String" ValueRank="-1">
     <DisplayName>ResolverContext</DisplayName>
     <Description>Opaque resolver-context descriptor (e.g. a named context profile).</Description>
     <References>
@@ -333,7 +343,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1002</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=6023" BrowseName="1:ResolvedRootLayerUri" ParentNodeId="ns=1;i=1002" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=6024" BrowseName="1:ResolvedRootLayerUri" ParentNodeId="ns=1;i=1002" DataType="String" ValueRank="-1">
     <DisplayName>ResolvedRootLayerUri</DisplayName>
     <Description>Informative current resolution as a URI, when representable. Not authoritative.</Description>
     <References>
@@ -348,14 +358,14 @@
     <Category>OpenUSD Binding</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
-      <Reference ReferenceType="HasProperty">ns=1;i=6024</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6025</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6026</Reference>
-      <Reference ReferenceType="HasComponent">ns=1;i=6027</Reference>
-      <Reference ReferenceType="HasComponent">ns=1;i=6059</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6027</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=6028</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=6060</Reference>
     </References>
   </UAObjectType>
-  <UAVariable NodeId="ns=1;i=6024" BrowseName="1:DefaultInstanceBrowseName" ParentNodeId="ns=1;i=1003" DataType="QualifiedName">
+  <UAVariable NodeId="ns=1;i=6025" BrowseName="1:DefaultInstanceBrowseName" ParentNodeId="ns=1;i=1003" DataType="QualifiedName">
     <DisplayName>DefaultInstanceBrowseName</DisplayName>
     <Description>Default BrowseName for instances of this AddIn (Part 3 AddIn convention).</Description>
     <References>
@@ -364,7 +374,7 @@
     </References>
     <Value><uax:QualifiedName xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:NamespaceIndex>1</uax:NamespaceIndex><uax:Name>OpenUsdRepresentation</uax:Name></uax:QualifiedName></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=6025" BrowseName="1:Stage" ParentNodeId="ns=1;i=1003" DataType="NodeId" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=6026" BrowseName="1:Stage" ParentNodeId="ns=1;i=1003" DataType="NodeId" ValueRank="-1">
     <DisplayName>Stage</DisplayName>
     <Description>NodeId of the OpenUsdStageType instance this representation targets.</Description>
     <References>
@@ -373,7 +383,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1003</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=6026" BrowseName="1:PrimPath" ParentNodeId="ns=1;i=1003" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=6027" BrowseName="1:PrimPath" ParentNodeId="ns=1;i=1003" DataType="String" ValueRank="-1">
     <DisplayName>PrimPath</DisplayName>
     <Description>Canonical, absolute, composed-stage prim path (SdfPath) for this instance. Instance-level: a reusable type cannot supply an absolute instance path.</Description>
     <References>
@@ -382,7 +392,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1003</Reference>
     </References>
   </UAVariable>
-  <UAObject NodeId="ns=1;i=6027" BrowseName="1:&lt;Binding&gt;" ParentNodeId="ns=1;i=1003">
+  <UAObject NodeId="ns=1;i=6028" BrowseName="1:&lt;Binding&gt;" ParentNodeId="ns=1;i=1003">
     <DisplayName>&lt;Binding&gt;</DisplayName>
     <Description>A live binding whose source resolves relative to the represented object.</Description>
     <References>
@@ -397,11 +407,11 @@
     <Category>OpenUSD Binding</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
-      <Reference ReferenceType="HasComponent">ns=1;i=6028</Reference>
       <Reference ReferenceType="HasComponent">ns=1;i=6029</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=6030</Reference>
     </References>
   </UAObjectType>
-  <UAObject NodeId="ns=1;i=6028" BrowseName="1:Stages" ParentNodeId="ns=1;i=1001">
+  <UAObject NodeId="ns=1;i=6029" BrowseName="1:Stages" ParentNodeId="ns=1;i=1001">
     <DisplayName>Stages</DisplayName>
     <Description>Registry of OpenUsdStageType instances available to the server.</Description>
     <References>
@@ -410,7 +420,7 @@
       <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=1001</Reference>
     </References>
   </UAObject>
-  <UAObject NodeId="ns=1;i=6029" BrowseName="1:Representations" ParentNodeId="ns=1;i=1001">
+  <UAObject NodeId="ns=1;i=6030" BrowseName="1:Representations" ParentNodeId="ns=1;i=1001">
     <DisplayName>Representations</DisplayName>
     <Description>Registry that Organizes every OpenUsdRepresentation AddIn in the server, so a connector can enumerate all representations from one place.</Description>
     <References>
@@ -425,10 +435,10 @@
     <Category>OpenUSD Binding</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=17602</Reference>
-      <Reference ReferenceType="HasComponent">ns=1;i=6030</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=6031</Reference>
     </References>
   </UAObjectType>
-  <UAObject NodeId="ns=1;i=6030" BrowseName="1:&lt;OpenUsdRepresentation&gt;" ParentNodeId="ns=1;i=1010">
+  <UAObject NodeId="ns=1;i=6031" BrowseName="1:&lt;OpenUsdRepresentation&gt;" ParentNodeId="ns=1;i=1010">
     <DisplayName>&lt;OpenUsdRepresentation&gt;</DisplayName>
     <Description>Placeholder for the representation AddIn on an implementing instance.</Description>
     <References>
@@ -494,7 +504,7 @@
     </References>
     <Value><uax:ListOfLocalizedText xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:LocalizedText><uax:Text>None</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Sha256</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Sha384</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Sha512</uax:Text></uax:LocalizedText></uax:ListOfLocalizedText></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=6031" BrowseName="1:SignalRole" ParentNodeId="ns=1;i=1004" DataType="ns=1;i=3005" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=6032" BrowseName="1:SignalRole" ParentNodeId="ns=1;i=1004" DataType="ns=1;i=3005" ValueRank="-1">
     <DisplayName>SignalRole</DisplayName>
     <Description>Observable (read-only, default) or Controllable (eligible for a command binding).</Description>
     <References>
@@ -503,7 +513,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1004</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=6032" BrowseName="1:SourceSemanticId" ParentNodeId="ns=1;i=1004" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=6033" BrowseName="1:SourceSemanticId" ParentNodeId="ns=1;i=1004" DataType="String" ValueRank="-1">
     <DisplayName>SourceSemanticId</DisplayName>
     <Description>Semantic identifier (e.g. ECLASS / IEC CDD IRDI) of the source signal; resolved against the source's semantic annotations for cross-vendor portability.</Description>
     <References>
@@ -526,10 +536,10 @@
     <Category>OpenUSD Binding</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=1004</Reference>
-      <Reference ReferenceType="HasProperty">ns=1;i=6033</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6034</Reference>
     </References>
   </UAObjectType>
-  <UAVariable NodeId="ns=1;i=6033" BrowseName="1:AlarmAspect" ParentNodeId="ns=1;i=1008" DataType="ns=1;i=3006" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=6034" BrowseName="1:AlarmAspect" ParentNodeId="ns=1;i=1008" DataType="ns=1;i=3006" ValueRank="-1">
     <DisplayName>AlarmAspect</DisplayName>
     <Description>Which A&amp;C condition aspect drives the target (ActiveState/Severity/AckedState/EnabledState).</Description>
     <References>
@@ -544,10 +554,10 @@
     <Category>OpenUSD Binding</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=1004</Reference>
-      <Reference ReferenceType="HasProperty">ns=1;i=6034</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6035</Reference>
     </References>
   </UAObjectType>
-  <UAVariable NodeId="ns=1;i=6034" BrowseName="1:TimeSampled" ParentNodeId="ns=1;i=1009" DataType="Boolean" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=6035" BrowseName="1:TimeSampled" ParentNodeId="ns=1;i=1009" DataType="Boolean" ValueRank="-1">
     <DisplayName>TimeSampled</DisplayName>
     <Description>Author values as USD time samples (playback) rather than the latest default.</Description>
     <References>
@@ -562,12 +572,12 @@
     <Category>OpenUSD Binding</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=1004</Reference>
-      <Reference ReferenceType="HasProperty">ns=1;i=6035</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6036</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6037</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6038</Reference>
     </References>
   </UAObjectType>
-  <UAVariable NodeId="ns=1;i=6035" BrowseName="1:CommandTargetNodeId" ParentNodeId="ns=1;i=1011" DataType="NodeId" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=6036" BrowseName="1:CommandTargetNodeId" ParentNodeId="ns=1;i=1011" DataType="NodeId" ValueRank="-1">
     <DisplayName>CommandTargetNodeId</DisplayName>
     <Description>The Variable to write, or the Object on which to Call CommandMethodId.</Description>
     <References>
@@ -576,7 +586,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1011</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=6036" BrowseName="1:CommandMethodId" ParentNodeId="ns=1;i=1011" DataType="NodeId" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=6037" BrowseName="1:CommandMethodId" ParentNodeId="ns=1;i=1011" DataType="NodeId" ValueRank="-1">
     <DisplayName>CommandMethodId</DisplayName>
     <Description>Optional Method to invoke instead of a Variable write.</Description>
     <References>
@@ -585,7 +595,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1011</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=6037" BrowseName="1:CommandTriggerPropertyName" ParentNodeId="ns=1;i=1011" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=6038" BrowseName="1:CommandTriggerPropertyName" ParentNodeId="ns=1;i=1011" DataType="String" ValueRank="-1">
     <DisplayName>CommandTriggerPropertyName</DisplayName>
     <Description>The USD attribute whose change is interpreted as the command intent/value.</Description>
     <References>
@@ -594,7 +604,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1011</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=6038" BrowseName="1:RootLayerDigest" ParentNodeId="ns=1;i=1002" DataType="ByteString" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=6039" BrowseName="1:RootLayerDigest" ParentNodeId="ns=1;i=1002" DataType="ByteString" ValueRank="-1">
     <DisplayName>RootLayerDigest</DisplayName>
     <Description>Cryptographic digest of the resolved root layer, for content-integrity verification (Twin BOM). Verify before composing the stage.</Description>
     <References>
@@ -603,7 +613,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1002</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=6039" BrowseName="1:RootLayerDigestAlgorithm" ParentNodeId="ns=1;i=1002" DataType="ns=1;i=3007" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=6040" BrowseName="1:RootLayerDigestAlgorithm" ParentNodeId="ns=1;i=1002" DataType="ns=1;i=3007" ValueRank="-1">
     <DisplayName>RootLayerDigestAlgorithm</DisplayName>
     <Description>Digest algorithm for RootLayerDigest (default SHA-256).</Description>
     <References>
@@ -612,7 +622,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1002</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=6040" BrowseName="1:Signature" ParentNodeId="ns=1;i=1002" DataType="ByteString" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=6041" BrowseName="1:Signature" ParentNodeId="ns=1;i=1002" DataType="ByteString" ValueRank="-1">
     <DisplayName>Signature</DisplayName>
     <Description>Optional detached signature over the digest / stage identity, for provenance.</Description>
     <References>
@@ -621,7 +631,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1002</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=6041" BrowseName="1:ProvenanceUri" ParentNodeId="ns=1;i=1002" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=6042" BrowseName="1:ProvenanceUri" ParentNodeId="ns=1;i=1002" DataType="String" ValueRank="-1">
     <DisplayName>ProvenanceUri</DisplayName>
     <Description>Optional URI locating provenance / a signed Twin BOM manifest for the stage.</Description>
     <References>
@@ -674,7 +684,6 @@
     <Category>OpenUSD Binding</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
-      <Reference ReferenceType="HasProperty">ns=1;i=6042</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6043</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6044</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6045</Reference>
@@ -691,10 +700,11 @@
       <Reference ReferenceType="HasProperty">ns=1;i=6056</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6057</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6058</Reference>
-      <Reference ReferenceType="HasProperty">ns=1;i=6066</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6059</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6067</Reference>
     </References>
   </UAObjectType>
-  <UAVariable NodeId="ns=1;i=6042" BrowseName="1:BindingDefinitionId" ParentNodeId="ns=1;i=1005" DataType="Guid" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=6043" BrowseName="1:BindingDefinitionId" ParentNodeId="ns=1;i=1005" DataType="Guid" ValueRank="-1">
     <DisplayName>BindingDefinitionId</DisplayName>
     <Description>Stable declaration id for override/tombstone matching.</Description>
     <References>
@@ -703,7 +713,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1005</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=6043" BrowseName="1:Enabled" ParentNodeId="ns=1;i=1005" DataType="Boolean" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=6044" BrowseName="1:Enabled" ParentNodeId="ns=1;i=1005" DataType="Boolean" ValueRank="-1">
     <DisplayName>Enabled</DisplayName>
     <Description>False acts as a tombstone that suppresses an inherited component binding.</Description>
     <References>
@@ -712,7 +722,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1005</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=6044" BrowseName="1:Cardinality" ParentNodeId="ns=1;i=1005" DataType="ns=1;i=3008" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=6045" BrowseName="1:Cardinality" ParentNodeId="ns=1;i=1005" DataType="ns=1;i=3008" ValueRank="-1">
     <DisplayName>Cardinality</DisplayName>
     <Description>One (1:1) or Many (1..n).</Description>
     <References>
@@ -721,7 +731,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1005</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=6045" BrowseName="1:CompositionArc" ParentNodeId="ns=1;i=1005" DataType="ns=1;i=3009" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=6046" BrowseName="1:CompositionArc" ParentNodeId="ns=1;i=1005" DataType="ns=1;i=3009" ValueRank="-1">
     <DisplayName>CompositionArc</DisplayName>
     <Description>How the component maps into the parent prim: Child, Reference, Payload, Instance.</Description>
     <References>
@@ -730,7 +740,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1005</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=6046" BrowseName="1:ComponentReferenceType" ParentNodeId="ns=1;i=1005" DataType="NodeId" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=6047" BrowseName="1:ComponentReferenceType" ParentNodeId="ns=1;i=1005" DataType="NodeId" ValueRank="-1">
     <DisplayName>ComponentReferenceType</DisplayName>
     <Description>Aggregating ReferenceType from the represented Object to its component(s); default HasComponent.</Description>
     <References>
@@ -739,7 +749,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1005</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=6047" BrowseName="1:ComponentBrowsePath" ParentNodeId="ns=1;i=1005" DataType="RelativePath" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=6048" BrowseName="1:ComponentBrowsePath" ParentNodeId="ns=1;i=1005" DataType="RelativePath" ValueRank="-1">
     <DisplayName>ComponentBrowsePath</DisplayName>
     <Description>RelativePath to the component Object (One) or to the container from which components are enumerated (Many).</Description>
     <References>
@@ -748,7 +758,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1005</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=6048" BrowseName="1:ComponentTypeDefinition" ParentNodeId="ns=1;i=1005" DataType="NodeId" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=6049" BrowseName="1:ComponentTypeDefinition" ParentNodeId="ns=1;i=1005" DataType="NodeId" ValueRank="-1">
     <DisplayName>ComponentTypeDefinition</DisplayName>
     <Description>Expected component ObjectType; selects children for Many and locates each component's own representation.</Description>
     <References>
@@ -757,7 +767,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1005</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=6049" BrowseName="1:TargetPrimPath" ParentNodeId="ns=1;i=1005" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=6050" BrowseName="1:TargetPrimPath" ParentNodeId="ns=1;i=1005" DataType="String" ValueRank="-1">
     <DisplayName>TargetPrimPath</DisplayName>
     <Description>Child prim (One) or parent scope prim (Many), relative to the parent representation PrimPath (or absolute).</Description>
     <References>
@@ -766,7 +776,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1005</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=6050" BrowseName="1:TargetPrimNameSource" ParentNodeId="ns=1;i=1005" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=6051" BrowseName="1:TargetPrimNameSource" ParentNodeId="ns=1;i=1005" DataType="String" ValueRank="-1">
     <DisplayName>TargetPrimNameSource</DisplayName>
     <Description>For Many: how to name each instance prim (BrowseName default, a source-property RelativePath, or a {...} template).</Description>
     <References>
@@ -775,7 +785,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1005</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=6051" BrowseName="1:ComponentAssetReference" ParentNodeId="ns=1;i=1005" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=6052" BrowseName="1:ComponentAssetReference" ParentNodeId="ns=1;i=1005" DataType="String" ValueRank="-1">
     <DisplayName>ComponentAssetReference</DisplayName>
     <Description>For Reference/Payload/Instance: the external USD asset + default prim, e.g. @pump.usda@&lt;/Pump&gt;.</Description>
     <References>
@@ -784,7 +794,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1005</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=6052" BrowseName="1:ComponentRepresentation" ParentNodeId="ns=1;i=1005" DataType="NodeId" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=6053" BrowseName="1:ComponentRepresentation" ParentNodeId="ns=1;i=1005" DataType="NodeId" ValueRank="-1">
     <DisplayName>ComponentRepresentation</DisplayName>
     <Description>NodeId of the component's own OpenUsdRepresentation AddIn (its sub-bindings compose under the component prim).</Description>
     <References>
@@ -793,7 +803,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1005</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=6053" BrowseName="1:Dynamic" ParentNodeId="ns=1;i=1005" DataType="Boolean" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=6054" BrowseName="1:Dynamic" ParentNodeId="ns=1;i=1005" DataType="Boolean" ValueRank="-1">
     <DisplayName>Dynamic</DisplayName>
     <Description>The component set may change at runtime (reconciled from model-change events).</Description>
     <References>
@@ -802,7 +812,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1005</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=6054" BrowseName="1:ChangeEventSource" ParentNodeId="ns=1;i=1005" DataType="NodeId" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=6055" BrowseName="1:ChangeEventSource" ParentNodeId="ns=1;i=1005" DataType="NodeId" ValueRank="-1">
     <DisplayName>ChangeEventSource</DisplayName>
     <Description>Node whose GeneralModelChange/SemanticChange events signal recomposition; default the Server Object (i=2253).</Description>
     <References>
@@ -811,7 +821,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1005</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=6055" BrowseName="1:ComponentServerUri" ParentNodeId="ns=1;i=1005" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=6056" BrowseName="1:ComponentServerUri" ParentNodeId="ns=1;i=1005" DataType="String" ValueRank="-1">
     <DisplayName>ComponentServerUri</DisplayName>
     <Description>For a component on another server: the remote Server's application/namespace URI.</Description>
     <References>
@@ -820,7 +830,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1005</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=6056" BrowseName="1:ComponentEndpointUrl" ParentNodeId="ns=1;i=1005" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=6057" BrowseName="1:ComponentEndpointUrl" ParentNodeId="ns=1;i=1005" DataType="String" ValueRank="-1">
     <DisplayName>ComponentEndpointUrl</DisplayName>
     <Description>For a component on another server: the remote endpoint URL (else discovered).</Description>
     <References>
@@ -829,7 +839,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1005</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=6057" BrowseName="1:State" ParentNodeId="ns=1;i=1005" DataType="ns=1;i=3004" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=6058" BrowseName="1:State" ParentNodeId="ns=1;i=1005" DataType="ns=1;i=3004" ValueRank="-1">
     <DisplayName>State</DisplayName>
     <Description>Runtime lifecycle state (diagnostic).</Description>
     <References>
@@ -838,7 +848,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1005</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=6058" BrowseName="1:LastError" ParentNodeId="ns=1;i=1005" DataType="LocalizedText" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=6059" BrowseName="1:LastError" ParentNodeId="ns=1;i=1005" DataType="LocalizedText" ValueRank="-1">
     <DisplayName>LastError</DisplayName>
     <Description>Last operation error text (diagnostic).</Description>
     <References>
@@ -847,7 +857,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1005</Reference>
     </References>
   </UAVariable>
-  <UAObject NodeId="ns=1;i=6059" BrowseName="1:&lt;Component&gt;" ParentNodeId="ns=1;i=1003">
+  <UAObject NodeId="ns=1;i=6060" BrowseName="1:&lt;Component&gt;" ParentNodeId="ns=1;i=1003">
     <DisplayName>&lt;Component&gt;</DisplayName>
     <Description>A component/aggregation binding composing this Object's components into the USD prim tree.</Description>
     <References>
@@ -881,14 +891,14 @@
     <Category>OpenUSD Binding</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=11575</Reference>
-      <Reference ReferenceType="HasProperty">ns=1;i=6060</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6061</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6062</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6063</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6064</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6065</Reference>
     </References>
   </UAObjectType>
-  <UAVariable NodeId="ns=1;i=6060" BrowseName="1:AssetIdentifier" ParentNodeId="ns=1;i=1006" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=6061" BrowseName="1:AssetIdentifier" ParentNodeId="ns=1;i=1006" DataType="String" ValueRank="-1">
     <DisplayName>AssetIdentifier</DisplayName>
     <Description>Resolver identifier / relative path of this asset, matching the stage RootLayerIdentifier or a ComponentAssetReference asset path; used for @...@ resolution and cache placement.</Description>
     <References>
@@ -897,7 +907,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1006</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=6061" BrowseName="1:AssetKind" ParentNodeId="ns=1;i=1006" DataType="ns=1;i=3010" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=6062" BrowseName="1:AssetKind" ParentNodeId="ns=1;i=1006" DataType="ns=1;i=3010" ValueRank="-1">
     <DisplayName>AssetKind</DisplayName>
     <Description>Role of this asset within the stage's served layer closure.</Description>
     <References>
@@ -906,7 +916,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1006</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=6062" BrowseName="1:MediaType" ParentNodeId="ns=1;i=1006" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=6063" BrowseName="1:MediaType" ParentNodeId="ns=1;i=1006" DataType="String" ValueRank="-1">
     <DisplayName>MediaType</DisplayName>
     <Description>IANA media type of the content, e.g. 'model/vnd.usda', 'model/vnd.usdz+zip', 'image/png'.</Description>
     <References>
@@ -915,7 +925,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1006</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=6063" BrowseName="1:Digest" ParentNodeId="ns=1;i=1006" DataType="ByteString" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=6064" BrowseName="1:Digest" ParentNodeId="ns=1;i=1006" DataType="ByteString" ValueRank="-1">
     <DisplayName>Digest</DisplayName>
     <Description>Cryptographic digest of this asset's resolved content, for per-layer integrity verification. A connector verifies it before composing the asset.</Description>
     <References>
@@ -924,7 +934,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1006</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=6064" BrowseName="1:DigestAlgorithm" ParentNodeId="ns=1;i=1006" DataType="ns=1;i=3007" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=6065" BrowseName="1:DigestAlgorithm" ParentNodeId="ns=1;i=1006" DataType="ns=1;i=3007" ValueRank="-1">
     <DisplayName>DigestAlgorithm</DisplayName>
     <Description>Digest algorithm for Digest (default SHA-256).</Description>
     <References>
@@ -933,7 +943,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1006</Reference>
     </References>
   </UAVariable>
-  <UAObject NodeId="ns=1;i=6065" BrowseName="1:Assets" ParentNodeId="ns=1;i=1002">
+  <UAObject NodeId="ns=1;i=6066" BrowseName="1:Assets" ParentNodeId="ns=1;i=1002">
     <DisplayName>Assets</DisplayName>
     <Description>Optional registry of OpenUsdAssetType instances forming this stage's served layer closure (exactly one RootLayer). Present only when the server delivers its geometry; a connector that finds it fetches and composes the stage locally, else it resolves RootLayerIdentifier externally as before.</Description>
     <References>
@@ -942,7 +952,7 @@
       <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=1002</Reference>
     </References>
   </UAObject>
-  <UAVariable NodeId="ns=1;i=6066" BrowseName="1:ComponentAssetNode" ParentNodeId="ns=1;i=1005" DataType="NodeId" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=6067" BrowseName="1:ComponentAssetNode" ParentNodeId="ns=1;i=1005" DataType="NodeId" ValueRank="-1">
     <DisplayName>ComponentAssetNode</DisplayName>
     <Description>NodeId of the OpenUsdAssetType (under the stage's Assets folder) serving this component's asset, when the server delivers it. Complements ComponentAssetReference.</Description>
     <References>

@@ -309,7 +309,14 @@ prop_var(B, "OpenUsdLiveBindingType", "AttributeId", UInt32,
          "Source attribute id; default 13 (Value). Telemetry binds Value only.", MR_Optional)
 # Target locator
 prop_var(B, "OpenUsdLiveBindingType", "TargetStage", NodeId_,
-         "NodeId of the OpenUsdStageType instance holding the target prim.", MR_Mandatory)
+         "NodeId of the stage holding the target prim: an OpenUsdStageType instance, or a "
+         "materialized Part 2 UsdStageType instance when the target is an in-server "
+         "materialized scene.", MR_Mandatory)
+prop_var(B, "OpenUsdLiveBindingType", "TargetNodeId", NodeId_,
+         "Optional direct NodeId of the target when it is an in-server materialized Variable "
+         "(a Part 2 UsdAttributeType). When present it takes precedence over the "
+         "TargetPrimPath/TargetPropertyName pair, which remain the portable descriptors.",
+         MR_Optional)
 prop_var(B, "OpenUsdLiveBindingType", "TargetPrimPath", String,
          "Prim path of the target: absolute, or relative to the representation PrimPath.",
          MR_Mandatory)
