@@ -312,11 +312,6 @@ prop_var(B, "OpenUsdLiveBindingType", "TargetStage", NodeId_,
          "NodeId of the stage holding the target prim: an OpenUsdStageType instance, or a "
          "materialized Part 2 UsdStageType instance when the target is an in-server "
          "materialized scene.", MR_Mandatory)
-prop_var(B, "OpenUsdLiveBindingType", "TargetNodeId", NodeId_,
-         "Optional direct NodeId of the target when it is an in-server materialized Variable "
-         "(a Part 2 UsdAttributeType). When present it takes precedence over the "
-         "TargetPrimPath/TargetPropertyName pair, which remain the portable descriptors.",
-         MR_Optional)
 prop_var(B, "OpenUsdLiveBindingType", "TargetPrimPath", String,
          "Prim path of the target: absolute, or relative to the representation PrimPath.",
          MR_Mandatory)
@@ -636,6 +631,16 @@ folder_member(S, "OpenUsdStageType", "Assets",
 prop_var(K, "OpenUsdComponentBindingType", "ComponentAssetNode", NodeId_,
          "NodeId of the OpenUsdAssetType (under the stage's Assets folder) serving this component's "
          "asset, when the server delivers it. Complements ComponentAssetReference.",
+         MR_Optional)
+
+# --- 0.3.0 additions -------------------------------------------------------
+# Declared last on purpose: instance-member NodeIds are assigned sequentially from
+# 6001 in declaration order, so appending keeps every previously published member
+# NodeId stable. New members must be added here, never inserted above.
+prop_var(B, "OpenUsdLiveBindingType", "TargetNodeId", NodeId_,
+         "Optional direct NodeId of the target when it is an in-server materialized Variable "
+         "(a Part 2 UsdAttributeType). When present it takes precedence over the "
+         "TargetPrimPath/TargetPropertyName pair, which remain the portable descriptors.",
          MR_Optional)
 
 
