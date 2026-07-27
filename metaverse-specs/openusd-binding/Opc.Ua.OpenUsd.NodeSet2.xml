@@ -356,7 +356,6 @@
       <Reference ReferenceType="HasProperty">ns=2;i=6026</Reference>
       <Reference ReferenceType="HasComponent">ns=2;i=6027</Reference>
       <Reference ReferenceType="HasComponent">ns=2;i=6059</Reference>
-      <Reference ReferenceType="HasComponent">ns=2;i=6071</Reference>
     </References>
   </UAObjectType>
   <UAVariable NodeId="ns=2;i=6024" BrowseName="2:DefaultInstanceBrowseName" ParentNodeId="ns=2;i=1003" DataType="QualifiedName">
@@ -403,6 +402,7 @@
       <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
       <Reference ReferenceType="HasComponent">ns=2;i=6028</Reference>
       <Reference ReferenceType="HasComponent">ns=2;i=6029</Reference>
+      <Reference ReferenceType="HasComponent">ns=2;i=6071</Reference>
     </References>
   </UAObjectType>
   <UAObject NodeId="ns=2;i=6028" BrowseName="2:Stages" ParentNodeId="ns=2;i=1001">
@@ -881,7 +881,7 @@
   </UAVariable>
   <UAObjectType NodeId="ns=2;i=1006" BrowseName="2:OpenUsdAssetType">
     <DisplayName>OpenUsdAssetType</DisplayName>
-    <Description>One served USD artifact: authored content the server delivers through the address space so a connector can fetch it and compose the stage locally, with no external resolver. OpenUsdAssetType subtypes the xRegistry ResourceType, which is itself a Part 5 FileType, so the artifact's bytes are streamed directly through the node's own Open/Read/Close while the node also carries the xRegistry entity attributes. AssetIdentifier is the USD resolver identifier and is normatively the same string as the inherited xRegistry Xid, which is what makes the registry addressable as an ArResolver backend.</Description>
+    <Description>One served USD artifact: authored content the server delivers through the address space so a connector can fetch it and compose the stage locally, with no external resolver. OpenUsdAssetType subtypes the xRegistry ResourceType, which is itself a Part 5 FileType, so the artifact's bytes are streamed directly through the node's own Open/Read/Close while the node also carries the xRegistry entity attributes. AssetIdentifier is the authored USD resolver identifier, normalized relative to its asset container; the inherited xRegistry ResourceId is its URL-safe encoding, so the two are inter-derivable and the registry is addressable as an ArResolver backend without conflating the two identifier grammars.</Description>
     <Category>OpenUSD Binding</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=63002</Reference>
@@ -940,7 +940,7 @@
   </UAVariable>
   <UAObject NodeId="ns=2;i=6065" BrowseName="2:Assets" ParentNodeId="ns=2;i=1002">
     <DisplayName>Assets</DisplayName>
-    <Description>Optional registry of OpenUsdAssetType instances forming this stage's served layer closure (exactly one RootLayer). Present only when the server delivers its geometry; a connector that finds it fetches and composes the stage locally, else it resolves RootLayerIdentifier externally as before.</Description>
+    <Description>Optional VIEW onto this stage's served layer closure: a Folder that Organizes the OpenUsdAssetType artifacts of the server's Artifacts registry which this stage needs (exactly one RootLayer). From 0.4.0 it does NOT own the artifacts - an artifact shared by several stages exists once in the registry. Present only when the server delivers its geometry; a connector that finds it fetches and composes the stage locally, else it resolves RootLayerIdentifier externally as before.</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=80</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=61</Reference>
@@ -967,24 +967,27 @@
   </UAVariable>
   <UAObjectType NodeId="ns=2;i=1012" BrowseName="2:OpenUsdArtifactRegistryType">
     <DisplayName>OpenUsdArtifactRegistryType</DisplayName>
-    <Description>The server's OpenUSD artifact registry - an xRegistry RegistryType (a FolderType) holding every USD artifact the server serves: layers, packages, textures, MaterialX documents, volumes, schema plugins and manifests. Exposed as the Artifacts component of OpenUsdRootType, it is the single backbone all stages resolve against, replacing per-stage duplication. Each artifact's Xid is its USD asset identifier, so the registry is directly addressable as an ArResolver backend and xRegistry federation (ResourceUrl / ExternalReference) is the resolver fallback chain.</Description>
+    <Description>The server's OpenUSD artifact registry - an xRegistry RegistryType (a FolderType) holding every USD artifact the server serves: layers, packages, textures, MaterialX documents, volumes, schema plugins and manifests. Exposed as the Artifacts component of OpenUsdRootType, it is the single backbone all stages resolve against, replacing per-stage duplication. Each artifact's ResourceId is the URL-safe encoding of its USD asset identifier, so the registry is directly addressable as an ArResolver backend and xRegistry federation (ResourceUrl / ExternalReference) is the resolver fallback chain.</Description>
     <Category>OpenUSD Binding</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=63000</Reference>
+      <Reference ReferenceType="Organizes">ns=2;i=6072</Reference>
+      <Reference ReferenceType="Organizes">ns=2;i=6073</Reference>
     </References>
   </UAObjectType>
   <UAObjectType NodeId="ns=2;i=1013" BrowseName="2:OpenUsdAssetGroupType">
     <DisplayName>OpenUsdAssetGroupType</DisplayName>
-    <Description>An xRegistry GroupType collecting the artifacts of ONE asset container - a named, versioned USD asset in the AOUSD sense (its root layer plus the sublayers, references, payloads, textures, MaterialX documents and volumes it needs). The group key is the asset container identifier, the common prefix of the member artifacts' asset identifiers.</Description>
+    <Description>An xRegistry GroupType collecting the artifacts of ONE asset container - a named, versioned USD asset in the AOUSD sense (its root layer plus the sublayers, references, payloads, textures, MaterialX documents and volumes it needs). The group key is the asset container identifier; member artifacts are addressed by their AssetIdentifier relative to it.</Description>
     <Category>OpenUSD Binding</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=63001</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=6068</Reference>
+      <Reference ReferenceType="Organizes">ns=2;i=6074</Reference>
     </References>
   </UAObjectType>
   <UAVariable NodeId="ns=2;i=6068" BrowseName="2:AssetContainerId" ParentNodeId="ns=2;i=1013" DataType="String" ValueRank="-1">
     <DisplayName>AssetContainerId</DisplayName>
-    <Description>Identifier of the asset container this group represents - the asset-identifier prefix shared by its artifacts, e.g. 'pumps/Plant'. Together with an artifact's relative path it reconstructs the full asset identifier (the artifact's Xid).</Description>
+    <Description>Identifier of the asset container this group represents. This is the group key: its value is identical to the inherited GroupId and to the group's BrowseName, e.g. 'pumps'. It is NOT an asset-identifier prefix - member AssetIdentifiers are already normalized relative to the container. Together with an artifact's AssetIdentifier it locates the artifact within the registry (see spec 5.15.3).</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=78</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
@@ -998,6 +1001,7 @@
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=63001</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=6069</Reference>
+      <Reference ReferenceType="Organizes">ns=2;i=6075</Reference>
     </References>
   </UAObjectType>
   <UAVariable NodeId="ns=2;i=6069" BrowseName="2:PluginName" ParentNodeId="ns=2;i=1014" DataType="String" ValueRank="-1">
@@ -1009,22 +1013,58 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1014</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=6070" BrowseName="2:DependsOn" ParentNodeId="ns=2;i=1006" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=6070" BrowseName="2:DependsOn" ParentNodeId="ns=2;i=1006" DataType="String" ValueRank="1">
     <DisplayName>DependsOn</DisplayName>
-    <Description>Ordered asset identifiers this artifact directly references (sublayers, references, payloads, textures, MaterialX documents). Makes the 5.15 dependency closure explicit and queryable instead of only procedural, so a connector can verify completeness before composing.</Description>
+    <Description>Ordered asset identifiers this artifact directly references (sublayers, references, payloads, textures, MaterialX documents), as authored - not Xids, so a resolver matches them against @...@ references directly. Makes the 5.15 dependency closure explicit and queryable instead of only procedural, so a connector can verify completeness before composing.</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=80</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1006</Reference>
     </References>
   </UAVariable>
-  <UAObject NodeId="ns=2;i=6071" BrowseName="2:Artifacts" ParentNodeId="ns=2;i=1003">
+  <UAObject NodeId="ns=2;i=6071" BrowseName="2:Artifacts" ParentNodeId="ns=2;i=1001">
     <DisplayName>Artifacts</DisplayName>
     <Description>Optional OpenUsdArtifactRegistryType holding every USD artifact the server serves. Present when the server delivers content; a stage's Assets folder then Organizes the artifacts of its closure from here rather than owning them.</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=80</Reference>
-      <Reference ReferenceType="HasTypeDefinition">i=61</Reference>
-      <Reference ReferenceType="HasComponent" IsForward="false">ns=2;i=1003</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=2;i=1012</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=2;i=1001</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="ns=2;i=6072" BrowseName="2:&lt;AssetContainer&gt;" ParentNodeId="ns=2;i=1012">
+    <DisplayName>&lt;AssetContainer&gt;</DisplayName>
+    <Description>Constrains the inherited &lt;Group&gt; placeholder: an asset container group held by this registry, keyed by AssetContainerId.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=11508</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=2;i=1013</Reference>
+      <Reference ReferenceType="Organizes" IsForward="false">ns=2;i=1012</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="ns=2;i=6073" BrowseName="2:&lt;SchemaPlugin&gt;" ParentNodeId="ns=2;i=1012">
+    <DisplayName>&lt;SchemaPlugin&gt;</DisplayName>
+    <Description>Constrains the inherited &lt;Group&gt; placeholder: a USD schema plugin group held by this registry, keyed by PluginName.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=11508</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=2;i=1014</Reference>
+      <Reference ReferenceType="Organizes" IsForward="false">ns=2;i=1012</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="ns=2;i=6074" BrowseName="2:&lt;Asset&gt;" ParentNodeId="ns=2;i=1013">
+    <DisplayName>&lt;Asset&gt;</DisplayName>
+    <Description>Constrains the inherited &lt;Resource&gt; placeholder: an artifact of this asset container, addressed by the URL-safe encoding of its AssetIdentifier.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=11508</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=2;i=1006</Reference>
+      <Reference ReferenceType="Organizes" IsForward="false">ns=2;i=1013</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="ns=2;i=6075" BrowseName="2:&lt;Asset&gt;" ParentNodeId="ns=2;i=1014">
+    <DisplayName>&lt;Asset&gt;</DisplayName>
+    <Description>Constrains the inherited &lt;Resource&gt; placeholder: a file of this schema plugin - its plugInfo.json manifest or its generatedSchema.usda.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=11508</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=2;i=1006</Reference>
+      <Reference ReferenceType="Organizes" IsForward="false">ns=2;i=1014</Reference>
     </References>
   </UAObject>
 </UANodeSet>

@@ -8,8 +8,9 @@ Emits, from a single in-code source of truth:
   * model-reference.md                                           - the generated Annex A (node reference)
 
 The model is a COMPANION specification in its OWN namespace
-(http://opcfoundation.org/UA/OpenUSD/, namespace index 1). Nodes therefore use
-`ns=1;i=<n>` NodeIds; references to base UA types use plain `i=<n>`.
+(http://opcfoundation.org/UA/OpenUSD/, namespace index 2). Nodes therefore use
+`ns=2;i=<n>` NodeIds; the required xRegistry model occupies index 1 and its nodes
+use `ns=1;i=<n>`; references to base UA types use plain `i=<n>`.
 
 NodeIds are PROVISIONAL (final IDs assigned by the OPC Foundation) and follow the
 repo convention: ObjectTypes 1001+, DataTypes/Enums 3001+, EnumStrings = datatype+900,
@@ -181,9 +182,10 @@ def _member_var(owner, owner_sym, name, datatype, typedef, rule, reftype, desc,
     return nid
 
 
-def prop_var(owner, owner_sym, name, datatype, desc, rule=MR_Optional):
+def prop_var(owner, owner_sym, name, datatype, desc, rule=MR_Optional,
+             valuerank="-1"):
     return _member_var(owner, owner_sym, name, datatype, PropertyType, rule,
-                       HasProperty, desc)
+                       HasProperty, desc, valuerank=valuerank)
 
 
 def static_qname_prop(owner, owner_sym, name, ns_index, qname_value, desc):
@@ -202,11 +204,15 @@ def static_qname_prop(owner, owner_sym, name, ns_index, qname_value, desc):
     return nid
 
 
-def folder_member(owner, owner_sym, name, desc, rule=MR_Mandatory):
+def folder_member(owner, owner_sym, name, desc, rule=MR_Mandatory,
+                  typedef=FolderType):
+    """A component Object member. `typedef` defaults to FolderType but may name a
+    concrete ObjectType (for example the artifact registry, which is a FolderType
+    subtype and must carry its own TypeDefinition, not the base FolderType)."""
     nid = _mid()
     add(nid, "UAObject", name, f"{owner_sym}_{name}", desc=desc, parent=T(owner))
     ref(nid, HasModellingRule, rule)
-    ref(nid, HasTypeDefinition, FolderType)
+    ref(nid, HasTypeDefinition, typedef)
     ref(nid, HasComponent, T(owner), forward=False)
     ref(owner, HasComponent, T(nid))
     return nid
@@ -628,9 +634,10 @@ object_type(1006, "OpenUsdAssetType", XRegistry_ResourceType,
             "resolver. OpenUsdAssetType subtypes the xRegistry ResourceType, which is itself a "
             "Part 5 FileType, so the artifact's bytes are streamed directly through the node's "
             "own Open/Read/Close while the node also carries the xRegistry entity attributes. "
-            "AssetIdentifier is the USD resolver identifier and is normatively the same string "
-            "as the inherited xRegistry Xid, which is what makes the registry addressable as an "
-            "ArResolver backend.")
+            "AssetIdentifier is the authored USD resolver identifier, normalized relative to its "
+            "asset container; the inherited xRegistry ResourceId is its URL-safe encoding, so the "
+            "two are inter-derivable and the registry is addressable as an ArResolver backend "
+            "without conflating the two identifier grammars.")
 A = 1006
 prop_var(A, "OpenUsdAssetType", "AssetIdentifier", String,
          "Resolver identifier / relative path of this asset, matching the stage RootLayerIdentifier "
@@ -652,10 +659,12 @@ prop_var(A, "OpenUsdAssetType", "DigestAlgorithm", OpenUsdDigestAlgorithmEnum,
 
 # ---- OpenUsdStageType (1002): appended served-asset facility ---------------
 folder_member(S, "OpenUsdStageType", "Assets",
-              "Optional registry of OpenUsdAssetType instances forming this stage's served layer "
-              "closure (exactly one RootLayer). Present only when the server delivers its geometry; "
-              "a connector that finds it fetches and composes the stage locally, else it resolves "
-              "RootLayerIdentifier externally as before.",
+              "Optional VIEW onto this stage's served layer closure: a Folder that Organizes the "
+              "OpenUsdAssetType artifacts of the server's Artifacts registry which this stage "
+              "needs (exactly one RootLayer). From 0.4.0 it does NOT own the artifacts - an "
+              "artifact shared by several stages exists once in the registry. Present only when "
+              "the server delivers its geometry; a connector that finds it fetches and composes "
+              "the stage locally, else it resolves RootLayerIdentifier externally as before.",
               rule=MR_Optional)
 
 # ---- OpenUsdComponentBindingType (1005): appended component asset pointer ---
@@ -683,20 +692,22 @@ object_type(1012, "OpenUsdArtifactRegistryType", XRegistry_RegistryType,
             "holding every USD artifact the server serves: layers, packages, textures, MaterialX "
             "documents, volumes, schema plugins and manifests. Exposed as the Artifacts component "
             "of OpenUsdRootType, it is the single backbone all stages resolve against, replacing "
-            "per-stage duplication. Each artifact's Xid is its USD asset identifier, so the "
+            "per-stage duplication. Each artifact's ResourceId is the URL-safe encoding of its USD asset identifier, so the "
             "registry is directly addressable as an ArResolver backend and xRegistry federation "
             "(ResourceUrl / ExternalReference) is the resolver fallback chain.")
 object_type(1013, "OpenUsdAssetGroupType", XRegistry_GroupType,
             "An xRegistry GroupType collecting the artifacts of ONE asset container - a named, "
             "versioned USD asset in the AOUSD sense (its root layer plus the sublayers, "
             "references, payloads, textures, MaterialX documents and volumes it needs). The "
-            "group key is the asset container identifier, the common prefix of the member "
-            "artifacts' asset identifiers.")
+            "group key is the asset container identifier; member artifacts are addressed by "
+            "their AssetIdentifier relative to it.")
 AG = 1013
 prop_var(AG, "OpenUsdAssetGroupType", "AssetContainerId", String,
-         "Identifier of the asset container this group represents - the asset-identifier prefix "
-         "shared by its artifacts, e.g. 'pumps/Plant'. Together with an artifact's relative path "
-         "it reconstructs the full asset identifier (the artifact's Xid).", MR_Mandatory)
+         "Identifier of the asset container this group represents. This is the group key: its "
+         "value is identical to the inherited GroupId and to the group's BrowseName, e.g. "
+         "'pumps'. It is NOT an asset-identifier prefix - member AssetIdentifiers are already "
+         "normalized relative to the container. Together with an artifact's AssetIdentifier it "
+         "locates the artifact within the registry (see spec 5.15.3).", MR_Mandatory)
 object_type(1014, "OpenUsdSchemaPluginGroupType", XRegistry_GroupType,
             "An xRegistry GroupType collecting the files of ONE USD schema plugin: its "
             "plugInfo.json manifest and its generatedSchema.usda. A codeless USD schema needs "
@@ -710,15 +721,43 @@ prop_var(SPG, "OpenUsdSchemaPluginGroupType", "PluginName", String,
 
 prop_var(A, "OpenUsdAssetType", "DependsOn", String,
          "Ordered asset identifiers this artifact directly references (sublayers, references, "
-         "payloads, textures, MaterialX documents). Makes the 5.15 dependency closure explicit "
-         "and queryable instead of only procedural, so a connector can verify completeness "
-         "before composing.", MR_Optional)
+         "payloads, textures, MaterialX documents), as authored - not Xids, so a resolver "
+         "matches them against @...@ references directly. Makes the 5.15 dependency closure "
+         "explicit and queryable instead of only procedural, so a connector can verify "
+         "completeness before composing.", MR_Optional, valuerank="1")
 
-folder_member(R, "OpenUsdRootType", "Artifacts",
+# NOTE: pass the ObjectType NodeId literally. The module-level single-letter
+# aliases (R, S, A, ...) are reused across sections, so referring to one here
+# silently parents the member to whatever type was last assigned.
+folder_member(1001, "OpenUsdRootType", "Artifacts",
               "Optional OpenUsdArtifactRegistryType holding every USD artifact the server "
               "serves. Present when the server delivers content; a stage's Assets folder then "
               "Organizes the artifacts of its closure from here rather than owning them.",
-              rule=MR_Optional)
+              rule=MR_Optional, typedef=T(1012))
+
+# xRegistry 6.1 requires a domain registry to constrain the inherited <Group>
+# placeholder to its own group types, and a domain group to constrain <Resource>
+# to its own resource type. Without these the subtypes add metadata but do not
+# actually narrow what a registry may hold, and a client cannot tell which group
+# type a given folder is. Organizes matches the base declarations (<Group> on
+# RegistryType, <Resource> on GroupType); NodeIds are literal for the same
+# reason as above.
+placeholder_obj(1012, "OpenUsdArtifactRegistryType", "<AssetContainer>", T(1013),
+                "Constrains the inherited <Group> placeholder: an asset container group "
+                "held by this registry, keyed by AssetContainerId.",
+                reftype=Organizes)
+placeholder_obj(1012, "OpenUsdArtifactRegistryType", "<SchemaPlugin>", T(1014),
+                "Constrains the inherited <Group> placeholder: a USD schema plugin group "
+                "held by this registry, keyed by PluginName.",
+                reftype=Organizes)
+placeholder_obj(1013, "OpenUsdAssetGroupType", "<Asset>", T(1006),
+                "Constrains the inherited <Resource> placeholder: an artifact of this asset "
+                "container, addressed by the URL-safe encoding of its AssetIdentifier.",
+                reftype=Organizes)
+placeholder_obj(1014, "OpenUsdSchemaPluginGroupType", "<Asset>", T(1006),
+                "Constrains the inherited <Resource> placeholder: a file of this schema "
+                "plugin - its plugInfo.json manifest or its generatedSchema.usda.",
+                reftype=Organizes)
 
 
 # ===========================================================================
@@ -808,14 +847,15 @@ def emit_md():
     lines = ["# OPC UA — OpenUSD Bindings — Annex A: Information model (generated)",
              "",
              "> Generated by `build_model.py`. Do not edit by hand. Namespace "
-             f"`{NAMESPACE}` (index 1). NodeIds are provisional.",
+             f"`{NAMESPACE}` (index 2; index 1 is the required xRegistry model "
+             f"`{XREG_NAMESPACE}`). NodeIds are provisional.",
              "",
              "| NodeId | BrowseName | NodeClass | Description |",
              "|---|---|---|---|"]
     for nid in ORDER:
         n = NODES[nid]
         desc = (n.desc or "").replace("|", "\\|")
-        lines.append(f"| ns=1;i={nid} | {n.bname} | {n.cls[2:]} | {desc} |")
+        lines.append(f"| {T(nid)} | {n.bname} | {n.cls[2:]} | {desc} |")
     return "\n".join(lines) + "\n"
 
 

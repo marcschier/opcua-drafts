@@ -1,13 +1,13 @@
 {
-  "description": "OpenUSD artifact registry (draft): artist-authored USD layers and a codeless schema plugin for the OPC UA <-> OpenUSD bindings, addressable as a USD ArResolver backend (AssetIdentifier == Xid).",
+  "description": "OpenUSD artifact registry (draft): artist-authored USD layers and a codeless schema plugin for the OPC UA <-> OpenUSD bindings, addressable as a USD ArResolver backend (AssetIdentifier <-> ResourceId <-> Xid, inter-derivable per §5.15.3).",
   "registryid": "openusd-artifact-registry",
   "self": "https://registry.example.com/",
   "specversion": "1.0-rc3",
   "usdassetgroups": {
     "pumps": {
       "labels": {
-        "openusd.assetcontainerid": "/usdassetgroups/pumps/usdassets/",
-        "openusd.rootlayer": "/usdassetgroups/pumps/usdassets/stage.usda"
+        "openusd.assetcontainerid": "pumps",
+        "openusd.rootlayer": "Plant.usda"
       },
       "name": "pumps/Plant",
       "usdassetgroupid": "pumps",
@@ -18,9 +18,9 @@
           "format": "OpenUSD/1.0",
           "isdefault": true,
           "labels": {
-            "openusd.assetidentifier": "/usdassetgroups/pumps/usdassets/Plant.usda",
-            "openusd.assetkind": "SubLayer",
-            "openusd.dependson": "[]",
+            "openusd.assetidentifier": "Plant.usda",
+            "openusd.assetkind": "RootLayer",
+            "openusd.dependson": "[\"pump.usda\",\"remote-pump.usda\"]",
             "openusd.digest": "51314c455f1c8f269bff2dd4bab2c3f01b092f5b986fab1b3b989810e540a82d",
             "openusd.digestalg": "Sha256",
             "openusd.mediatype": "model/vnd.usda"
@@ -31,51 +31,51 @@
           "versionid": "1",
           "xid": "/usdassetgroups/pumps/usdassets/Plant.usda"
         },
-        "live.usda": {
+        "pump.usda": {
           "contenttype": "model/vnd.usda",
           "epoch": 1,
           "format": "OpenUSD/1.0",
           "isdefault": true,
           "labels": {
-            "openusd.assetidentifier": "/usdassetgroups/pumps/usdassets/live.usda",
-            "openusd.assetkind": "SubLayer",
+            "openusd.assetidentifier": "pump.usda",
+            "openusd.assetkind": "Reference",
             "openusd.dependson": "[]",
-            "openusd.digest": "6d0af7aeecdb292cb41d38b0d744bebaff53b27f628a18e4ce52147c1f181d93",
+            "openusd.digest": "d2043c6bbe06a4423d5b43a5bea2ccec1de645685df75a4b9b950b13fbf1cec1",
             "openusd.digestalg": "Sha256",
             "openusd.mediatype": "model/vnd.usda"
           },
-          "name": "live.usda",
-          "usdasset": "#usda 1.0\n\nover \"Plant\"\n{\n    over \"Pumps\"\n    {\n        over \"P101\"\n        {\n            over \"Impeller\"\n            {\n                custom double xformOp:rotateZ = 42\n            }\n\n            over \"Body\"\n            {\n                custom color3f[] primvars:displayColor = [(0.65625, 0, 0.34375)]\n            }\n\n            over \"StatusLight\"\n            {\n                over \"Mat\"\n                {\n                    over \"Surface\"\n                    {\n                        custom color3f inputs:emissiveColor = (0.053333335, 0.53333336, 0.10666667)\n                    }\n                }\n            }\n        }\n    }\n}\n\n",
-          "usdassetid": "live.usda",
+          "name": "pump.usda",
+          "usdasset": "#usda 1.0\n(\n    doc = \"\"\"Reusable single-pump USD asset for the OPC UA - OpenUSD Bindings\n    composition demo. A ProductionLine aggregates 1..n pumps by *referencing*\n    (and instancing) this asset's default prim </Pump> once per aggregated pump\n    (spec §5.12, CompositionArc = Instance/Reference). The cross-server component\n    references an equivalent OEM asset (remote-pump.usda) on another server (§5.14).\n\n    This is the component asset the connector's authored reference/instance prims\n    point at; it carries only geometry so many instances compose cheaply.\n    \"\"\"\n    defaultPrim = \"Pump\"\n    metersPerUnit = 1\n    upAxis = \"Z\"\n)\n\ndef Xform \"Pump\" (\n    kind = \"component\"\n)\n{\n    def Cylinder \"Body\"\n    {\n        uniform token axis = \"Z\"\n        double height = 1.0\n        double radius = 0.5\n        color3f[] primvars:displayColor = [(0.6, 0.6, 0.65)]\n        double3 xformOp:translate = (0, 0, 0.5)\n        uniform token[] xformOpOrder = [\"xformOp:translate\"]\n    }\n\n    def Xform \"Impeller\"\n    {\n        double xformOp:rotateZ = 0\n        double3 xformOp:translate = (0, 0, 1.05)\n        uniform token[] xformOpOrder = [\"xformOp:translate\", \"xformOp:rotateZ\"]\n    }\n}\n",
+          "usdassetid": "pump.usda",
           "versionid": "1",
-          "xid": "/usdassetgroups/pumps/usdassets/live.usda"
+          "xid": "/usdassetgroups/pumps/usdassets/pump.usda"
         },
-        "stage.usda": {
+        "remote-pump.usda": {
           "contenttype": "model/vnd.usda",
           "epoch": 1,
           "format": "OpenUSD/1.0",
           "isdefault": true,
           "labels": {
-            "openusd.assetidentifier": "/usdassetgroups/pumps/usdassets/stage.usda",
-            "openusd.assetkind": "RootLayer",
-            "openusd.dependson": "[\"/usdassetgroups/pumps/usdassets/live.usda\",\"/usdassetgroups/pumps/usdassets/Plant.usda\"]",
-            "openusd.digest": "4256a9bd4274339ab67a1e9c44369d5103cd5dbc7228a1197afd241daf3aeb3a",
+            "openusd.assetidentifier": "remote-pump.usda",
+            "openusd.assetkind": "Reference",
+            "openusd.dependson": "[]",
+            "openusd.digest": "0a3263ce6f74717b675b7a809ad92064a7bc119e5f3a5205edc89c09035d6bf4",
             "openusd.digestalg": "Sha256",
             "openusd.mediatype": "model/vnd.usda"
           },
-          "name": "stage.usda",
-          "usdasset": "#usda 1.0\n(\n    doc = \"\"\"Composed pump stage for the OPC UA - OpenUSD Bindings end-to-end.\n\n    This is the stage an operator opens in usdview or NVIDIA Omniverse. It\n    composes two sublayers, strongest first:\n\n      1. live.usda   - runtime override opinions authored by the connector\n                       (xformOp:rotateZ, primvars:displayColor, inputs:emissiveColor).\n                       In Omniverse this is the equivalent of a Nucleus `.live` layer.\n      2. Plant.usda  - the static base asset (geometry + materials).\n\n    Open this file; run the connector (see E2E-GUIDE.md) to author live.usda;\n    reload in usdview or watch it update live in Omniverse.\n    \"\"\"\n    subLayers = [\n        @./live.usda@,\n        @./Plant.usda@\n    ]\n    defaultPrim = \"Plant\"\n    upAxis = \"Z\"\n)\n",
-          "usdassetid": "stage.usda",
+          "name": "remote-pump.usda",
+          "usdasset": "#usda 1.0\n(\n    doc = \"\"\"OEM (cross-server) single-pump USD asset stand-in for the OPC UA - OpenUSD Bindings\n    composition demo. A ProductionLine aggregates 1..n pumps by *referencing*\n    (and instancing) this asset's default prim </Pump> once per aggregated pump\n    (spec §5.12, CompositionArc = Instance/Reference). The cross-server component\n    references an equivalent OEM asset (remote-pump.usda) on another server (§5.14).\n\n    This is the component asset the connector's authored reference/instance prims\n    point at; it carries only geometry so many instances compose cheaply.\n    \"\"\"\n    defaultPrim = \"Pump\"\n    metersPerUnit = 1\n    upAxis = \"Z\"\n)\n\ndef Xform \"Pump\" (\n    kind = \"component\"\n)\n{\n    def Cylinder \"Body\"\n    {\n        uniform token axis = \"Z\"\n        double height = 1.0\n        double radius = 0.5\n        color3f[] primvars:displayColor = [(0.6, 0.6, 0.65)]\n        double3 xformOp:translate = (0, 0, 0.5)\n        uniform token[] xformOpOrder = [\"xformOp:translate\"]\n    }\n\n    def Xform \"Impeller\"\n    {\n        double xformOp:rotateZ = 0\n        double3 xformOp:translate = (0, 0, 1.05)\n        uniform token[] xformOpOrder = [\"xformOp:translate\", \"xformOp:rotateZ\"]\n    }\n}\n\n",
+          "usdassetid": "remote-pump.usda",
           "versionid": "1",
-          "xid": "/usdassetgroups/pumps/usdassets/stage.usda"
+          "xid": "/usdassetgroups/pumps/usdassets/remote-pump.usda"
         }
       },
       "usdassetscount": 3
     },
     "robotics": {
       "labels": {
-        "openusd.assetcontainerid": "/usdassetgroups/robotics/usdassets/",
-        "openusd.rootlayer": "/usdassetgroups/robotics/usdassets/stage.usda"
+        "openusd.assetcontainerid": "robotics",
+        "openusd.rootlayer": "Cell.usda"
       },
       "name": "robotics/Cell",
       "usdassetgroupid": "robotics",
@@ -86,9 +86,9 @@
           "format": "OpenUSD/1.0",
           "isdefault": true,
           "labels": {
-            "openusd.assetidentifier": "/usdassetgroups/robotics/usdassets/Cell.usda",
-            "openusd.assetkind": "SubLayer",
-            "openusd.dependson": "[]",
+            "openusd.assetidentifier": "Cell.usda",
+            "openusd.assetkind": "RootLayer",
+            "openusd.dependson": "[\"robot.usda\",\"tool.usda\"]",
             "openusd.digest": "a642a179d4a2d8fd838f47811db190ce61206ad8aa1d494eebe70af74cddfd96",
             "openusd.digestalg": "Sha256",
             "openusd.mediatype": "model/vnd.usda"
@@ -99,32 +99,13 @@
           "versionid": "1",
           "xid": "/usdassetgroups/robotics/usdassets/Cell.usda"
         },
-        "live.usda": {
-          "contenttype": "model/vnd.usda",
-          "epoch": 1,
-          "format": "OpenUSD/1.0",
-          "isdefault": true,
-          "labels": {
-            "openusd.assetidentifier": "/usdassetgroups/robotics/usdassets/live.usda",
-            "openusd.assetkind": "SubLayer",
-            "openusd.dependson": "[\"/usdassetgroups/robotics/usdassets/robot.usda\",\"/usdassetgroups/robotics/usdassets/tool.usda\"]",
-            "openusd.digest": "3635b55c31f6c55cd25859530634b649b3462fd13119cd978730f45dccf7631f",
-            "openusd.digestalg": "Sha256",
-            "openusd.mediatype": "model/vnd.usda"
-          },
-          "name": "live.usda",
-          "usdasset": "#usda 1.0\n(\n    doc = \"OPC UA -> OpenUSD robotics live bindings (override layer)\"\n)\n\nover \"Cell\"\n{\n    custom double inputs:speedOverride = 75.0000\n    over \"Robots\"\n    {\n        over \"R1\" (\n            prepend references = @robot.usda@</Robot>\n        )\n        {\n            over \"A1\"\n            {\n            }\n            over \"Base\"\n            {\n                over \"J1\"\n                {\n                    double xformOp:rotateZ = 30.3109\n                    over \"J2\"\n                    {\n                        double xformOp:rotateY = 0.3109\n                        over \"J3\"\n                        {\n                            double xformOp:rotateY = 75.3109\n                            over \"J4\"\n                            {\n                                double xformOp:rotateX = 30.3109\n                                over \"J5\"\n                                {\n                                    double xformOp:rotateY = 90.3109\n                                    over \"J6\"\n                                    {\n                                        double xformOp:rotateX = 30.3109\n                                        over \"Flange\"\n                                        {\n                                            def Xform \"Tool\" (\n                                                prepend references = @tool.usda@</Gripper>\n                                            )\n                                            {\n                                            }\n                                        }\n                                    }\n                                }\n                            }\n                        }\n                    }\n                }\n            }\n            over \"A2\"\n            {\n            }\n            over \"A3\"\n            {\n            }\n            over \"A4\"\n            {\n            }\n            over \"A5\"\n            {\n            }\n            over \"A6\"\n            {\n            }\n            over \"Warning\"\n            {\n                custom token visibility = \"invisible\"\n            }\n        }\n        over \"R2\" (\n            prepend references = @robot.usda@</Robot>\n        )\n        {\n            over \"A1\"\n            {\n            }\n            over \"Base\"\n            {\n                over \"J1\"\n                {\n                    double xformOp:rotateZ = 17.5000\n                    over \"J2\"\n                    {\n                        double xformOp:rotateY = -12.5000\n                        over \"J3\"\n                        {\n                            double xformOp:rotateY = 62.5000\n                            over \"J4\"\n                            {\n                                double xformOp:rotateX = 17.5000\n                                over \"J5\"\n                                {\n                                    double xformOp:rotateY = 77.5000\n                                    over \"J6\"\n                                    {\n                                        double xformOp:rotateX = 17.5000\n                                    }\n                                }\n                            }\n                        }\n                    }\n                }\n            }\n            over \"A2\"\n            {\n            }\n            over \"A3\"\n            {\n            }\n            over \"A4\"\n            {\n            }\n            over \"A5\"\n            {\n            }\n            over \"A6\"\n            {\n            }\n            over \"Warning\"\n            {\n                custom token visibility = \"invisible\"\n            }\n        }\n    }\n    over \"SafetyBeacon\"\n    {\n        custom token visibility = \"invisible\"\n    }\n}\n",
-          "usdassetid": "live.usda",
-          "versionid": "1",
-          "xid": "/usdassetgroups/robotics/usdassets/live.usda"
-        },
         "robot.usda": {
           "contenttype": "model/vnd.usda",
           "epoch": 1,
           "format": "OpenUSD/1.0",
           "isdefault": true,
           "labels": {
-            "openusd.assetidentifier": "/usdassetgroups/robotics/usdassets/robot.usda",
+            "openusd.assetidentifier": "robot.usda",
             "openusd.assetkind": "Reference",
             "openusd.dependson": "[]",
             "openusd.digest": "f8da1f227b277b752357a4c00a53074a6248d9850c33058a686cb86e4da774e9",
@@ -137,32 +118,13 @@
           "versionid": "1",
           "xid": "/usdassetgroups/robotics/usdassets/robot.usda"
         },
-        "stage.usda": {
-          "contenttype": "model/vnd.usda",
-          "epoch": 1,
-          "format": "OpenUSD/1.0",
-          "isdefault": true,
-          "labels": {
-            "openusd.assetidentifier": "/usdassetgroups/robotics/usdassets/stage.usda",
-            "openusd.assetkind": "RootLayer",
-            "openusd.dependson": "[\"/usdassetgroups/robotics/usdassets/live.usda\",\"/usdassetgroups/robotics/usdassets/Cell.usda\"]",
-            "openusd.digest": "51a1f66e3c93d9f0845f71e951a6e92a75ff0e16ef689a60f6d615ddfd518c62",
-            "openusd.digestalg": "Sha256",
-            "openusd.mediatype": "model/vnd.usda"
-          },
-          "name": "stage.usda",
-          "usdasset": "#usda 1.0\n(\n    doc = \"\"\"Composed robotics stage for the OPC UA - OpenUSD Bindings end-to-end.\n\n    This is the stage an operator opens in usdview or NVIDIA Omniverse. It composes two sublayers, strongest first:\n\n      1. live.usda  - runtime composition and override opinions authored by the connector (robot references, joint xformOp rotations, safety visibility, dynamic tool, command intent).\n      2. Cell.usda  - the static base asset (environment + positioned robot mount Xforms).\n\n    Open this file; run the connector (see E2E-GUIDE.md) to author live.usda; reload in usdview or watch it update live in Omniverse.\n    \"\"\"\n    subLayers = [\n        @./live.usda@,\n        @./Cell.usda@\n    ]\n    defaultPrim = \"Cell\"\n    upAxis = \"Z\"\n)\n",
-          "usdassetid": "stage.usda",
-          "versionid": "1",
-          "xid": "/usdassetgroups/robotics/usdassets/stage.usda"
-        },
         "tool.usda": {
           "contenttype": "model/vnd.usda",
           "epoch": 1,
           "format": "OpenUSD/1.0",
           "isdefault": true,
           "labels": {
-            "openusd.assetidentifier": "/usdassetgroups/robotics/usdassets/tool.usda",
+            "openusd.assetidentifier": "tool.usda",
             "openusd.assetkind": "Reference",
             "openusd.dependson": "[]",
             "openusd.digest": "bd8a22a72079cd2d7509de12af65e2c1d1ccb976dbcc44671b5e5e5f0141a0c7",
@@ -176,7 +138,7 @@
           "xid": "/usdassetgroups/robotics/usdassets/tool.usda"
         }
       },
-      "usdassetscount": 5
+      "usdassetscount": 3
     }
   },
   "usdassetgroupscount": 2,
@@ -193,7 +155,7 @@
           "format": "OpenUSD/1.0",
           "isdefault": true,
           "labels": {
-            "openusd.assetidentifier": "/usdschemaplugingroups/opcUaOpenUsdGeoDemo/usdassets/generatedSchema.usda",
+            "openusd.assetidentifier": "generatedSchema.usda",
             "openusd.assetkind": "GeneratedSchema",
             "openusd.dependson": "[]",
             "openusd.digest": "0b69e3605ac5f6b82d037e58c4f1507355d2f4f643f1179ef5eed6cf2c891c1a",
@@ -212,7 +174,7 @@
           "format": "OpenUSD-PlugInfo/1.0",
           "isdefault": true,
           "labels": {
-            "openusd.assetidentifier": "/usdschemaplugingroups/opcUaOpenUsdGeoDemo/usdassets/plugInfo.json",
+            "openusd.assetidentifier": "plugInfo.json",
             "openusd.assetkind": "SchemaPlugin",
             "openusd.dependson": "[]",
             "openusd.digest": "fcff31959e0e19575a58b749b0f4ccad9be9802f811ae91212953243a8eb1f20",
