@@ -23,9 +23,9 @@ SELF_CONTAINED = [
 ]
 
 # Validators that additionally need untracked base data — a base NodeSet (e.g.
-# core-specs/pubsub-binding/Opc.Ua.PubSubBinding.NodeSet2.xml, which the encoding generators map) or
-# the gitignored **/tools/ref/ tables — so they only run where that data is present (locally, not on
-# a clean CI checkout).
+# core-specs/observability-export/Opc.Ua.ObservabilityExport.NodeSet2.xml, which the encoding
+# generators map) or the gitignored **/tools/ref/ tables — so they only run where that data is
+# present (locally, not on a clean CI checkout).
 NEEDS_BASE_DATA = [
     "avro-encoding/tools/validate_local.py",
     "arrow-encoding/tools/validate_local.py",

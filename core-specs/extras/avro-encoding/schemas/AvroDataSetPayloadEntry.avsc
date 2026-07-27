@@ -1,0 +1,21 @@
+{
+  "fields": [
+    {
+      "name": "SchemaId",
+      "type": [
+        "null",
+        "bytes"
+      ]
+    },
+    {
+      "name": "DataSetMessage",
+      "type": [
+        "null",
+        "bytes"
+      ]
+    }
+  ],
+  "name": "AvroDataSetPayloadEntry",
+  "namespace": "org.opcfoundation.ua.avro",
+  "type": "record"
+}

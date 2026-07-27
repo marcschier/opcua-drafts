@@ -69,7 +69,11 @@ Avro variable-length integers (zig-zag over a base-128 varint) are byte-order-ne
 
 ### 5.1 General rules
 
-Avro records preserve OPC UA field order as defined by the DataTypeDefinition. Record field names shall be the OPC UA field names converted to legal Avro names by replacing non-name characters with `_` and prefixing `_` if required. The published `.avsc` schema documents are the canonical wire contract; encoders and decoders shall use those schemas directly and shall not substitute implementation-specific alternate branches or abbreviated records. See Annex A for the generated reference schemas, example values and annotated bytes for each built-in and composite category.
+Avro records preserve OPC UA field order as defined by the DataTypeDefinition. Record field names shall be the OPC UA field names converted to legal Avro names by replacing non-name characters with `_` and prefixing `_` if required. The published `.avsc` schema documents are the canonical wire contract.
+
+An encoder is not handed a foreign schema to encode against. Instead, encoding a value **produces** its schema deterministically from the OPC UA type model (§6.1). Where a Variant body form or an ExtensionObject concrete type has evolved, the encoder **grows** its own previous schema by appending the new union branch rather than starting over (§6.1, §6.4). Where no previous schema exists, the encoder creates a new schema from scratch, which begins a new MajorVersion of the DataSet (§6.4, §8.4.8). The CRC-64-AVRO fingerprint of the produced schema is the value's **SchemaId** (§6.3).
+
+A **decoder** needs that schema to interpret the bytes. It resolves the schema by SchemaId from a registry or announcement, or re-derives it from the AddressSpace (§7). See Annex A for the generated reference schemas, example values and annotated bytes for each built-in and composite category.
 
 Avro unions used for nullability shall be ordered as `["null", T]`, and the default value for optional fields shall be `null`. A null scalar, a null array, an empty array, a null array element and an absent optional structure field are distinct states and shall not be collapsed.
 
@@ -124,7 +128,7 @@ A one-dimensional OPC UA array of element type `T` shall be encoded as `["null",
 
 ### 5.5 Matrices
 
-A matrix shall be encoded as a record with fields `dimensions` and `values`: `{ "dimensions": {"type":"array","items":"int"}, "values": {"type":"array","items": <element-or-null>} }`. Values are row-major. The product of dimensions shall equal the length of `values`. A null matrix is the null branch of `["null", MatrixRecord]` and is distinct from a matrix with an empty dimensions vector and empty values vector.
+A matrix shall be encoded as a record with fields `dimensions` and `values`: `{ "dimensions": {"type":"array","items":"int"}, "values": {"type":"array","items": <element-or-null>} }`. Values are row-major. An OPC UA matrix has **at least two dimensions**, and the product of dimensions shall equal the length of `values`. A decoder **shall reject**, with `Bad_DecodingError`, a matrix whose `dimensions` has fewer than two entries or whose dimension product does not equal the length of `values`. A null matrix is the null branch of `["null", MatrixRecord]` and is distinct from a present matrix record.
 
 ### 5.6 Structures and optional fields
 
@@ -136,11 +140,23 @@ An OPC UA Union DataType shall be encoded canonically as an Avro record with `sw
 
 ### 5.8 Variant
 
-Variant shall be a record carrying `builtInType`, nullable `dimensions`, and `body`. A null Variant has `builtInType = 0`, `dimensions = null`, and `body = null`. A scalar body uses one record-wrapped Avro union branch for the selected built-in body type. A one-dimensional array body uses the corresponding `Array` wrapper. A matrix body uses the corresponding Matrix wrapper and sets `dimensions`. The `body` union excludes nested Variant, DataValue and DiagnosticInfo. Its member set is the set of body types the Variant may carry: a self-describing encoding may include the full set of built-in body types (including ExtensionObject), whereas a schema-governed encoding may narrow the union to the aggregated set for the field and grow it across MinorVersions under the append-only rule of the Schema Registry (see *OPC UA — Schema Registry* §5.6), so an existing branch keeps its Avro union branch index in every later minor of the same major. The branch wrappers and the `builtInType` field are both present so decoders can disambiguate Avro unions and recover the exact OPC UA type. By default the Variant record is specialized per field, so each Variant field's `body` union grows independently; a single shared Variant record is an option (§6.6).
+Variant shall be a record carrying `builtInType`, nullable `dimensions`, and `body`. A null Variant has `builtInType = 0`, `dimensions = null`, and `body = null`. A scalar body uses one record-wrapped Avro union branch for the selected built-in body type. A one-dimensional array body uses the corresponding `Array` wrapper. A matrix body uses the corresponding Matrix wrapper and sets `dimensions`.
+
+The `body` union excludes nested Variant, DataValue and DiagnosticInfo. Its member set is the set of body types the Variant may carry. A self-describing encoding may include the full set of built-in body types, including ExtensionObject. A schema-governed encoding may instead narrow the union to the aggregated set for the field and grow it across MinorVersions under the append-only rule of the Schema Registry (see *OPC UA — Schema Registry* §5.6). An existing branch therefore keeps its Avro union branch index in every later minor of the same major. The branch wrappers and the `builtInType` field are both present so that decoders can disambiguate Avro unions and recover the exact OPC UA type.
+
+By default the Variant record is specialized per field, so that each Variant field's `body` union grows independently. A single shared Variant record is an option (§6.6).
 
 ### 5.9 ExtensionObject and abstract or subtyped fields
 
-ExtensionObject shall be a record `{ "typeId": NodeId, "body": ["null", <known-struct-records...>, <opaque fallback branches...>] }`, where the opaque fallback branches are `"bytes"` for a Binary body and `"string"` for an XML or textual body. The `typeId` shall identify the concrete DataType or DataTypeEncoding NodeId. If the concrete structured DataType is known to the decoder, the body shall use that record branch. If the type is unknown but the sender has an opaque encoded representation, the body may use the `bytes` branch (a Binary body) or the `string` branch (an XML or textual body), and the receiver shall preserve the opaque value with the TypeId. Fields declared as abstract structures or fields that allow subtypes shall use the same representation so the concrete runtime type is carried inline. The `known-struct` branches are the aggregated concrete-type set for the field per the Schema Registry (see *OPC UA — Schema Registry* §5.6): generated from the subtype hierarchy where bounded, or grown append-only across MinorVersions as new concrete types are encoded, with an existing branch keeping its Avro union branch index. The opaque fallback branches are appended append-only alongside the known-struct branches when a value first requires them, so a fallback may occupy any branch index and its index is fixed once appended; a fallback carries any body not represented by a known-struct branch. By default the ExtensionObject record is specialized per field, so each field's known-struct union grows independently; a single shared ExtensionObject record is an option (§6.6).
+ExtensionObject shall be a record `{ "typeId": NodeId, "body": ["null", <known-struct-records...>, <opaque fallback branches...>] }`. The opaque fallback branches are `"bytes"` for a Binary body and `"string"` for an XML or textual body. The `typeId` shall identify the concrete DataType or DataTypeEncoding NodeId.
+
+If the concrete structured DataType is known to the decoder, the body shall use that record branch. If the type is unknown but the sender has an opaque encoded representation, the body may use the `bytes` branch for a Binary body or the `string` branch for an XML or textual body. In that case the receiver shall preserve the opaque value together with the TypeId. Fields declared as abstract structures, and fields that allow subtypes, shall use the same representation so that the concrete runtime type is carried inline.
+
+The `known-struct` branches are the aggregated concrete-type set for the field. They are derived deterministically from the OPC UA type model — the subtype hierarchy of the field's abstract DataType — and ordered by that derivation. Where the hierarchy is bounded, the branches are generated from it. Otherwise they grow append-only across MinorVersions as new concrete types are encoded, and an existing branch keeps its Avro union branch index. An encoder therefore computes each body-union branch index from the type model alone. The Schema Registry (see *OPC UA — Schema Registry* §5.6) shares the resulting schema with decoders, but is never consulted in order to encode.
+
+The opaque fallback branches are appended append-only alongside the known-struct branches when a value first requires them. A fallback may therefore occupy any branch index, and its index is fixed once appended. A fallback carries any body not represented by a known-struct branch.
+
+By default the ExtensionObject record is specialized per field, so that each field's known-struct union grows independently. A single shared ExtensionObject record is an option (§6.6).
 
 ### 5.10 DataValue
 
@@ -152,9 +168,11 @@ DiagnosticInfo shall be an Avro record with nullable fields `symbolicId`, `names
 
 ## 6 Deterministic schema generation and SchemaId
 
+Schema generation is a deterministic function of the OPC UA type model. Encoding a value **produces** its schema by this function, and the schema's CRC-64-AVRO fingerprint is the **SchemaId** that identifies it (§6.3). The encoder is never handed a schema — it derives one from the type model as it encodes; the same function lets a publisher compute the SchemaId it announces, and lets a decoder that lacks a shared schema produce one (§7).
+
 ### 6.1 Inputs
 
-An encoder shall derive the Avro schema from the OPC UA DataTypeDefinition of the value's declared DataType. For Variant values and for fields declared as abstract or allowing subtypes, the encoder shall also use the concrete runtime built-in type or concrete structured DataType of the value. A decoder that re-derives a schema shall use the same inputs: the DataTypeDefinition read from the AddressSpace and, where present, the inline Variant built-in type or ExtensionObject TypeId.
+The inputs to schema generation are the OPC UA DataTypeDefinition of the value's declared DataType and, for Variant values and for fields declared as abstract or allowing subtypes, the concrete runtime built-in type or concrete structured DataType of the value. When a schema is **grown** rather than created from scratch, the **previous schema of the lineage is also an input**: the generator appends the newly encountered Variant body form or ExtensionObject concrete type to that prior schema as an additional union branch (§6.4), leaving every existing branch at its index. When **no previous schema is supplied, generation starts a fresh lineage — a reset that begins a new MajorVersion** (§6.4, §8.4.8). An **encoder** produces the schema from these inputs as it encodes the value; it is not handed a foreign schema to encode against. A **decoder** that re-derives a schema uses the identical inputs: the DataTypeDefinition read from the AddressSpace and, where present, the inline Variant built-in type or ExtensionObject TypeId. Because both sides derive from one deterministic type model — and, for a grown lineage, the shared previous schema — they agree on every record, union branch and branch order.
 
 ### 6.2 Generation algorithm
 
@@ -186,7 +204,7 @@ The Variant body-type union (§5.8) and the ExtensionObject known-struct union (
 
 3. **Append the opaque fallback like any other branch.** An ExtensionObject body that cannot be represented as a known-struct record is carried in an opaque fallback branch — `"bytes"` for a Binary body, or `"string"` for an XML or textual body. A fallback branch is **appended** when a value first requires it, exactly like a known-struct branch (step 2); it is not reserved at a fixed index and may therefore occupy any position. For example a body union may grow `["null", <Struct>]` → `["null", <Struct>, "bytes"]` → `["null", <Struct>, "bytes", <Struct'>]`. Because every branch is append-only, a fallback's index is fixed once appended, so an opaque body written under an earlier minor still decodes to the same fallback branch under a grown schema.
 
-4. **Recompute the SchemaId and announce.** Each grown union is a new self-contained schema; recompute the CRC-64-AVRO SchemaId per §6, advance the DataSet `ConfigurationVersion` MinorVersion, then re-announce the schema and SchemaId over the Part 14 handshake before sending a message that uses the appended branch.
+4. **Recompute the SchemaId, publish and announce.** Each grown union is a new self-contained schema; recompute the CRC-64-AVRO SchemaId per §6, advance the DataSet `ConfigurationVersion` MinorVersion, then **publish the new schema to subscribers — both by registering it in the Schema Registry (*OPC UA — Schema Registry* §5.2) and by re-announcing the schema and SchemaId over the Part 14 handshake (§8.4)** — before sending a message that uses the appended branch.
 
 5. **Decode with the latest minor.** A decoder that holds the latest minor of a lineage decodes every earlier-minor message of that lineage directly, because reading the branch index resolves to the same branch. A decoder that lacks the exact writer SchemaId may decode with a later minor of the same lineage after confirming, from the registry or announced lineage, that the on-wire SchemaId is an earlier minor of it (Schema Registry §7, §8); it shall not compare the on-wire fingerprint against the later schema's canonical form.
 
@@ -228,7 +246,7 @@ A decoder shall use one of the following schema resolution paths.
 
 **AddressSpace-driven path.** If the decoder does not have a schema body but can read the DataType from the server, it shall read the DataTypeDefinition and recursively referenced definitions from the AddressSpace and run the same schema-generation function defined in §6. For Variant and abstract/subtyped fields, it shall use the inline built-in type, dimensions and TypeId carried in the value to select the same concrete branch as the encoder. The re-derived self-contained Parsing Canonical Form shall produce the same SchemaId. When this check fails, the value shall not be decoded with the mismatched schema.
 
-The encoder and decoder therefore run the same deterministic generation function. When both sides already have the relevant DataTypeDefinitions, schema bodies need not be transferred for every value; the SchemaId is sufficient to verify that both sides selected the same schema.
+The encoder writes bytes from the type model. In the **primary use case the decoder — a subscriber or downstream Avro consumer — likely does not have the OPC UA type model or DataTypeDefinitions at consumption time**; the type model may live elsewhere but is unavailable where the value is decoded, so the decoder cannot re-derive the schema and instead **obtains the shared schema by SchemaId** (from a registry, announcement or cache) and uses it to decode. Only where a decoder does hold the relevant DataTypeDefinitions — the AddressSpace-driven path above — may it re-derive the schema instead of receiving it; the SchemaId is then sufficient to verify that both sides **are using** the same schema.
 
 **Textual NodeId fields.** The Avro schema alone determines the NodeId/ExpandedNodeId representation: where a NodeId or ExpandedNodeId field's schema type is `string`, the decoder shall parse the OPC UA textual syntax of §5.2.1; where it is the `record NodeId` / `record ExpandedNodeId`, the decoder shall decode structurally. A decoder shall not infer the textual form from the value; it follows the field's declared Avro type.
 
@@ -238,15 +256,21 @@ This clause maps the OPC 10000-14 PubSub message model onto Default Avro: Networ
 
 ### 8.1 NetworkMessage
 
-An Avro NetworkMessage shall be an Avro record with the selected PubSub header fields represented as nullable Avro fields and a `payload` array of DataSetMessage records. Header fields that are disabled by the NetworkMessageContentMask shall be null or omitted according to the canonical schema for the configured writer group; enabled fields shall be present. The following fields are defined for the canonical envelope: PublisherId, DataSetClassId, GroupHeader fields, WriterGroupId, GroupVersion, NetworkMessageNumber, SequenceNumber, Timestamp, PicoSeconds, PromotedFields, SchemaId and Payload. Data NetworkMessages that carry the canonical envelope shall carry the SchemaId header field unless the SchemaId is carried by a lower transport metadata field that is part of the configured mapping.
+An Avro NetworkMessage is a **fixed envelope** whose Avro record schema is defined by this specification and does **not** vary with the DataSets it carries. Because a NetworkMessage may, over its lifetime, carry any DataSet its WriterGroup is configured for, an envelope schema that inlined every DataSet's fields would be the union of all of them and would change whenever the group's configuration changed. Instead the envelope carries each DataSetMessage **opaquely**: the `payload` is an array of entries, each `{ "schemaId": bytes, "dataSetMessage": bytes }`, where `dataSetMessage` is the Avro-binary encoding of the DataSetMessage (§8.2) under **its own** DataSet schema, identified by the entry's `schemaId`. The envelope record therefore has a **stable, specification-defined schema** — and thus a fixed SchemaId — that never changes as DataSets are added, removed or evolved.
 
-The Payload field shall contain one or more Avro DataSetMessage records unless the transport mapping uses a single DataSetMessage without NetworkMessage wrapper by explicit configuration. When promoted fields are enabled, the values shall use Default Avro DataEncoding and shall preserve their configured DataTypes.
+The envelope record has the selected PubSub header fields as nullable Avro fields. Fields disabled by the NetworkMessageContentMask are null. The following envelope fields are defined: PublisherId, DataSetClassId, GroupHeader fields, WriterGroupId, GroupVersion, NetworkMessageNumber, SequenceNumber, Timestamp, PicoSeconds, PromotedFields, and the Payload array of `{ schemaId, dataSetMessage }` entries. When promoted fields are enabled, their values use Default Avro DataEncoding and preserve their configured DataTypes.
+
+The fixed envelope is a published artifact. Its generated schema is `../extras/avro-encoding/schemas/AvroNetworkMessage.avsc`, and each payload entry is `../extras/avro-encoding/schemas/AvroDataSetPayloadEntry.avsc`. Both are reproduced in Annex B.
+
+A receiver decodes the envelope with the fixed envelope schema, then decodes each entry's opaque `dataSetMessage` with the per-DataSet schema resolved by the entry's `schemaId` (§8.4). This makes the outer envelope a stable, published contract and confines schema evolution to the per-DataSet schemas.
+
+**Single DataSet and un-enveloped batches.** Where a transport carries a **single** DataSetMessage without a NetworkMessage wrapper (by explicit configuration), the payload is that DataSetMessage's Avro-binary encoding directly, identified by the DataSet `schemaId` carried in the DataSetMessage header, transport metadata, or Avro single-object framing (§8.4.1). A **batch** of DataSetMessages without an envelope is the same `{ schemaId, dataSetMessage }` entry array as the envelope `payload`, carried directly by the transport. In every case a DataSet payload is decoded only through its per-DataSet schema. The un-enveloped batch is likewise a published artifact: its generated schema is `../extras/avro-encoding/schemas/AvroDataSetMessageBatch.avsc`, reproduced in Annex B.
 
 ### 8.2 DataSetMessage
 
 #### 8.2.1 Common header
 
-Each Avro DataSetMessage shall carry DataSetWriterId, DataSetMessage type, ConfigurationVersion, SequenceNumber, Status, Timestamp, PicoSeconds, optional SchemaId and message flags according to the DataSetMessageContentMask. Disabled header fields shall be nullable and default to null in the canonical schema. DataSetWriterId and message type are mandatory because they select the DataSetMetaData and frame interpretation. A DataSetMessage SchemaId header may override the NetworkMessage SchemaId when one NetworkMessage carries DataSetMessages with different schemas.
+Each Avro DataSetMessage shall carry DataSetWriterId, DataSetMessage type, ConfigurationVersion, SequenceNumber, Status, Timestamp, PicoSeconds, optional SchemaId and message flags according to the DataSetMessageContentMask. Disabled header fields shall be nullable and default to null in the canonical schema. DataSetWriterId and message type are mandatory because they select the DataSetMetaData and frame interpretation. Each DataSetMessage is identified by its own DataSet SchemaId, carried in the enclosing NetworkMessage payload entry (§8.1) or, for an un-enveloped DataSetMessage, in the header, transport metadata, or single-object framing.
 
 #### 8.2.2 Data key frame
 
@@ -504,6 +528,8 @@ This gives a natural SchemaId announcement path. The DataSetMetaData or configur
 
 Single OPC UA values encoded with Default Avro should use Avro single-object encoding: the two magic bytes `0xC3 0x01`, followed by the 8-byte little-endian Rabin fingerprint, followed by the Avro binary body. The fingerprint bytes are the SchemaId. PubSub DataSetMessages or NetworkMessages that do not use single-object encoding shall carry the same SchemaId in the DataSetMessage header, NetworkMessage header, or transport metadata agreed for the mapping.
 
+The SchemaId identifies the schema of a **single DataSet** — the schema of one DataSetMessage payload. The NetworkMessage **envelope** has its own fixed, specification-defined schema (§8.1) that never changes, so the envelope is not the unit of schema evolution; each DataSetMessage the envelope carries is opaque and is identified and decoded by **its own** per-DataSet SchemaId, carried in the payload entry (§8.1). A producer accordingly computes and tracks the SchemaId, and advances the `ConfigurationVersion` (§8.4.8), **per DataSet**, not per NetworkMessage.
+
 #### 8.4.2 SchemaId carrier placement
 
 The following carrier placement rules are normative. When more than one carrier is present for the same Avro payload, all present carriers shall contain the same SchemaId value; a receiver shall treat disagreement as a decoding error.
@@ -511,8 +537,8 @@ The following carrier placement rules are normative. When more than one carrier 
 | Scope | Carrier field | When used |
 |---|---|---|
 | Single OPC UA value | Avro single-object framing: `0xC3 0x01` plus the 8-byte little-endian Rabin fingerprint | Used when an individual value is encoded as a standalone Avro value; the 8-byte fingerprint is the SchemaId. |
-| Data NetworkMessage | Explicit `SchemaId` header field on the canonical NetworkMessage envelope defined in §8.1 | Used for data NetworkMessages whose payload DataSetMessages share one schema, and for Action or Discovery envelopes that already expose the same header field. |
-| DataSetMessage | Optional per-message `SchemaId` header field | Used when a NetworkMessage carries DataSetMessages with different schemas or when a single DataSetMessage is transported without a NetworkMessage wrapper. |
+| DataSet payload entry | The `schemaId` of each `{ schemaId, dataSetMessage }` envelope payload entry (§8.1) | Each opaque DataSetMessage in a NetworkMessage carries its own DataSet SchemaId; the fixed envelope schema itself is specification-defined and needs no per-message SchemaId. |
+| Un-enveloped DataSetMessage | The DataSet `SchemaId` in the DataSetMessage header, transport metadata, or single-object framing | Used when a single DataSetMessage, or an un-enveloped batch of `{ schemaId, dataSetMessage }` entries, is transported without a NetworkMessage wrapper. |
 | Transport metadata | MQTT 5 `ContentType` `schemaid` parameter, AMQP `content-type` `schemaid` parameter, or Kafka header `opcua-avro-schema-id` | Used by a transport profile or deployment convention to make the SchemaId available before payload decoding; the binary payload still uses the canonical Avro schema identified by the same SchemaId. |
 
 #### 8.4.3 Schema announcement message
@@ -582,7 +608,7 @@ The published schema request schema is `../extras/avro-encoding/schemas/AvroSche
 
 #### 8.4.5 Encoder change tracking
 
-An encoder shall maintain `announced: set[SchemaId]` per destination. Before sending each value or message, it shall recompute the SchemaId from the generated self-contained Avro schema. If the SchemaId is not in the destination's announced set, the encoder shall emit the schema announcement before the first value using that SchemaId and then add it to the set. A changed DataType, referenced DataType, DataSet field list, field order, optional-field shape, Variant body type or RawData schema produces a different SchemaId and therefore automatically triggers a new announcement. An optional monotonic `SchemaEpoch` may be sent for operator correlation, but receivers shall not use it as the decoding key.
+An encoder shall maintain `announced: set[SchemaId]` per destination. Before sending each value or message, it shall recompute the SchemaId from the generated self-contained Avro schema. If the SchemaId is not in the destination's announced set, the encoder shall **publish the schema — register it in the Schema Registry (*OPC UA — Schema Registry* §5.2) and emit the schema announcement** — before the first value using that SchemaId, and then add it to the set. A changed DataType, referenced DataType, DataSet field list, field order, optional-field shape, Variant body type or RawData schema produces a different SchemaId and therefore automatically triggers a new publish and announcement. An optional monotonic `SchemaEpoch` may be sent for operator correlation, but receivers shall not use it as the decoding key.
 
 #### 8.4.6 Decoder behavior
 
@@ -639,9 +665,9 @@ sequenceDiagram
 
 #### 8.4.8 Relationship to ConfigurationVersion
 
-SchemaId derives only from the Avro schema. It does not depend on PubSub ConfigurationVersion, writer group version numbers, sequence numbers or transport session state. A ConfigurationVersion change that does not alter the Avro schema keeps the same SchemaId. A schema change produces a new SchemaId even if a deployment accidentally fails to advance ConfigurationVersion; decoders shall use SchemaId to select the Avro decoder and may use ConfigurationVersion for the existing PubSub metadata checks.
+SchemaId derives only from the Avro schema. It does not depend on PubSub ConfigurationVersion, writer group version numbers, sequence numbers or transport session state. A ConfigurationVersion change that does not alter the Avro schema keeps the same SchemaId. Conversely, a schema change produces a new SchemaId, and a **publisher shall advance the DataSet `ConfigurationVersion` whenever the produced schema changes — MinorVersion for an append-only growth, MajorVersion for a reset**. Decoders do not rely on ConfigurationVersion for decoding — they shall select the Avro decoder by SchemaId — and may use ConfigurationVersion for the existing PubSub metadata checks; a decoder shall still decode correctly by SchemaId even if a misbehaving publisher fails to advance ConfigurationVersion.
 
-Although SchemaId is not computed from ConfigurationVersion, the `{MajorVersion, MinorVersion}` lineage carries a compatibility relationship between successive schemas per *OPC UA — Schema Registry* §5.6. A MinorVersion increment is an append-only-compatible superset of the same lineage, so a subscriber holding the latest minor of a lineage decodes every message produced under any earlier minor of that lineage — the appended Avro union branches are simply unused for older values. Where data-driven growth is used, a lineage is a single publisher's chain of SchemaIds (§5.6), so a consumer keys on SchemaId rather than on `major.minor` alone. A MajorVersion increment is a reset with no such guarantee. A publisher shall advance MinorVersion when it aggregates a new Variant body form or ExtensionObject concrete type into the schema, and re-announce the resulting SchemaId. The per-encoding procedure for narrowing and append-only growing these unions is in §6.4.
+Although SchemaId is not computed from ConfigurationVersion, the `{MajorVersion, MinorVersion}` lineage carries a compatibility relationship between successive schemas per *OPC UA — Schema Registry* §5.6. A MinorVersion increment is an append-only-compatible superset of the same lineage, so a subscriber holding the latest minor of a lineage decodes every message produced under any earlier minor of that lineage — the appended Avro union branches are simply unused for older values. Where data-driven growth is used, a lineage is a single publisher's chain of SchemaIds (§5.6), so a consumer keys on SchemaId rather than on `major.minor` alone. A MajorVersion increment is a reset with no such guarantee. A publisher shall advance MinorVersion when it aggregates a new Variant body form or ExtensionObject concrete type into the schema, and register and re-announce the resulting SchemaId. The per-encoding procedure for narrowing and append-only growing these unions is in §6.4.
 
 ### 8.5 Configuration parameters
 
@@ -2291,9 +2317,124 @@ The `body` member is the append-only **growing union** governed by §6.4 (see al
 
 ## Annex B PubSub Action and Discovery schema examples
 
-The Part 14 Avro mapping publishes compact envelope schemas for Action and Discovery messages in `../extras/avro-encoding/schemas/`. The Action request/response envelopes are `AvroActionRequestNetworkMessage.avsc` and `AvroActionResponseNetworkMessage.avsc`, each containing an array of request/response DataSetMessages. Discovery examples include `AvroDataSetMetaData.avsc`, `AvroDataSetWriterConfigurationAnnouncement.avsc`, `AvroActionResponderConfigurationAnnouncement.avsc`, `AvroDiscoveryProbe.avsc` and `AvroPublisherEndpointsAnnouncement.avsc`. The generated schemas use the built-in `Variant`, `DataValue`, `NodeId`, `StatusCode`, `DiagnosticInfo` and `ExtensionObject` records from Annex A; reduced base-UA shapes and fallbacks are documented in the Part 14 draft.
+The Part 14 Avro mapping publishes the fixed data NetworkMessage envelope (§8.1) and compact envelope schemas for Action and Discovery messages in `../extras/avro-encoding/schemas/`. The fixed data NetworkMessage envelope is `AvroNetworkMessage.avsc`, its opaque payload entry is `AvroDataSetPayloadEntry.avsc`, and the un-enveloped batch is `AvroDataSetMessageBatch.avsc`. The Action request/response envelopes are `AvroActionRequestNetworkMessage.avsc` and `AvroActionResponseNetworkMessage.avsc`, each containing an array of request/response DataSetMessages. Discovery examples include `AvroDataSetMetaData.avsc`, `AvroDataSetWriterConfigurationAnnouncement.avsc`, `AvroActionResponderConfigurationAnnouncement.avsc`, `AvroDiscoveryProbe.avsc` and `AvroPublisherEndpointsAnnouncement.avsc`. The generated schemas use the built-in `Variant`, `DataValue`, `NodeId`, `StatusCode`, `DiagnosticInfo` and `ExtensionObject` records from Annex A; reduced base-UA shapes and fallbacks are documented in the Part 14 draft.
 
 Compact examples publish the exact generated schema files below. Do not edit these JSON blocks by hand; copy them from `..\extras\avro-encoding\schemas\*.avsc`.
+
+The published fixed NetworkMessage envelope schema is `../extras/avro-encoding/schemas/AvroNetworkMessage.avsc`:
+
+```json
+{
+  "fields": [
+    {
+      "name": "PublisherId",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "name": "DataSetClassId",
+      "type": "org.opcfoundation.ua.avro.Guid"
+    },
+    {
+      "name": "WriterGroupId",
+      "type": "int"
+    },
+    {
+      "name": "GroupVersion",
+      "type": "int"
+    },
+    {
+      "name": "NetworkMessageNumber",
+      "type": "int"
+    },
+    {
+      "name": "SequenceNumber",
+      "type": "int"
+    },
+    {
+      "name": "Timestamp",
+      "type": "long"
+    },
+    {
+      "name": "PicoSeconds",
+      "type": "int"
+    },
+    {
+      "name": "PromotedFields",
+      "type": {
+        "items": [
+          "null",
+          "org.opcfoundation.ua.avro.Variant"
+        ],
+        "type": "array"
+      }
+    },
+    {
+      "name": "Payload",
+      "type": {
+        "items": [
+          "null",
+          "org.opcfoundation.ua.avro.AvroDataSetPayloadEntry"
+        ],
+        "type": "array"
+      }
+    }
+  ],
+  "name": "AvroNetworkMessage",
+  "namespace": "org.opcfoundation.ua.avro",
+  "type": "record"
+}
+```
+
+The published payload entry schema is `../extras/avro-encoding/schemas/AvroDataSetPayloadEntry.avsc`. Each entry carries an opaque DataSetMessage together with its per-DataSet SchemaId:
+
+```json
+{
+  "fields": [
+    {
+      "name": "SchemaId",
+      "type": [
+        "null",
+        "bytes"
+      ]
+    },
+    {
+      "name": "DataSetMessage",
+      "type": [
+        "null",
+        "bytes"
+      ]
+    }
+  ],
+  "name": "AvroDataSetPayloadEntry",
+  "namespace": "org.opcfoundation.ua.avro",
+  "type": "record"
+}
+```
+
+The published un-enveloped batch schema is `../extras/avro-encoding/schemas/AvroDataSetMessageBatch.avsc`. It is the same payload-entry array as the envelope, carried directly by the transport without a NetworkMessage wrapper:
+
+```json
+{
+  "fields": [
+    {
+      "name": "Payload",
+      "type": {
+        "items": [
+          "null",
+          "org.opcfoundation.ua.avro.AvroDataSetPayloadEntry"
+        ],
+        "type": "array"
+      }
+    }
+  ],
+  "name": "AvroDataSetMessageBatch",
+  "namespace": "org.opcfoundation.ua.avro",
+  "type": "record"
+}
+```
 
 The published Action request DataSetMessage schema is `../extras/avro-encoding/schemas/AvroActionRequestDataSetMessage.avsc`:
 
