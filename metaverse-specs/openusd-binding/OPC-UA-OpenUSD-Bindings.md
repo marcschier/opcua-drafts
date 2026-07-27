@@ -18,16 +18,22 @@ The model has five portable capability groups and one informative profile:
 - **Live property binding (telemetry).** A read-only mapping from a source OPC UA `Variable` `Value` — resolved by NodeId, RelativePath, or **semantic id** — to a target USD attribute, with conversion and with quality/timestamp/persistence **hints**. This binds **existing** domain Variables; it does not duplicate process data. Event/alarm state and historical playback are expressed as additional intent profiles on the same binding type.
 - **Command binding (control).** An **opt-in**, authorized, single-writer mapping from a USD-side intent to an OPC UA setpoint write or `Method` call, so an agent or operator can act on the plant through the same declared, discoverable model. The opt-in is a matter of connector configuration and server `RolePermissions` (not the `Enabled` flag): a Server declares a command binding only deliberately and a conformant connector actuates it only when explicitly enabled and authorized, so the default posture of the model remains read-only.
 - **Composition (aggregation).** A declarative mapping of an asset's **components** onto the USD prim hierarchy — 1:1 or 1..n, inline child prims or referenced/instanced sub-assets, static or **dynamic** (reconciled from model-change events), and even components hosted on **another server** — so the visual twin mirrors the asset's *is-composed-of* structure.
-- **Asset content delivery.** An optional address-space facility by which a server serves the artist-authored USD root layer and its dependency closure through OPC UA Part 5 `FileType`, with per-layer digests, so a generic connector can download, verify, cache, compose, and render without external asset-repository setup.
+- **Asset content delivery.** An optional address-space facility by which a server serves the artist-authored USD root layer and its dependency closure through OPC UA Part 5 `FileType`, with per-layer digests, so a generic connector can download, verify, cache, compose, and render without external asset-repository setup. From Release 0.4.0 this facility is an **xRegistry artifact registry** (§5.15): the served artifacts are a registry of groups, versions and labels rather than a per-stage folder of files, and each artifact's registry identifier *is* its USD asset identifier, which makes the server directly addressable as a USD `ArResolver` backend.
 - **Omniverse realization (informative).** How a connector realizes the model in NVIDIA Omniverse (Nucleus `.live` layers, Fabric/USDRT, OmniGraph, frame coalescing). This is a separate, vendor-governed profile and is **not** part of the portable normative model.
 
 Out of scope (reserved for later work): Part 14 Actions, PubSub realization, a USD-side applied API schema mirror, persistent-UUID identity, and normative geometry/material/skeleton/physics profiles. Command, event/alarm, history, composition, and asset delivery are **normative but optional** capabilities a Server may choose not to implement.
 
 ### 1.4 Capabilities and versioning
 
-This document supersedes Release 0.2.0. The 0.1 baseline (Representation + read-only telemetry binding + the Omniverse informative profile) remains conformant; 0.2.0 **adds** capabilities — semantic-id source, command, alarm, history, content integrity, **composition/aggregation**, and **asset content delivery**; **0.3.0 adds the geospatial capability** — the `Georeference` render target, the geospatial conversion profile (§5.8) and the `OU-Conversion-Geo` conformance unit (§7), mapped to the USD georeference schemas in Annex D. New capabilities are additive and each is gated by its own conformance unit (§7), so a Server implements only what it needs. Because 0.3.0 adds a member to `OpenUsdRenderTargetKindEnum`, the NodeSet's `Version`/`PublicationDate` are bumped so a Client can detect the model change; a Server that implements no geospatial binding is otherwise unaffected. 0.2.0 also refines the live-binding information model: a binding is now an **abstract `OpenUsdLiveBindingType` with one concrete subtype per intent** (`OpenUsdValueChangeBindingType`, `OpenUsdAlarmBindingType`, `OpenUsdHistoryBindingType`, `OpenUsdCommandBindingType`; §5.4) rather than a single type discriminated by an `IntentProfile` enum — the 0.1 telemetry binding is expressed as `OpenUsdValueChangeBindingType`. Where this document refers to "the 0.1 baseline" it means the read-only representation + telemetry core; everything else is an optional 0.2.0 capability.
+This document supersedes Release 0.3.0. The 0.1 baseline (Representation + read-only telemetry binding + the Omniverse informative profile) remains conformant; 0.2.0 **adds** capabilities — semantic-id source, command, alarm, history, content integrity, **composition/aggregation**, and **asset content delivery**; **0.3.0 adds the geospatial capability** — the `Georeference` render target, the geospatial conversion profile (§5.8) and the `OU-Conversion-Geo` conformance unit (§7), mapped to the USD georeference schemas in Annex D. New capabilities are additive and each is gated by its own conformance unit (§7), so a Server implements only what it needs. Because 0.3.0 adds a member to `OpenUsdRenderTargetKindEnum`, the NodeSet's `Version`/`PublicationDate` are bumped so a Client can detect the model change; a Server that implements no geospatial binding is otherwise unaffected. 0.2.0 also refines the live-binding information model: a binding is now an **abstract `OpenUsdLiveBindingType` with one concrete subtype per intent** (`OpenUsdValueChangeBindingType`, `OpenUsdAlarmBindingType`, `OpenUsdHistoryBindingType`, `OpenUsdCommandBindingType`; §5.4) rather than a single type discriminated by an `IntentProfile` enum — the 0.1 telemetry binding is expressed as `OpenUsdValueChangeBindingType`. Where this document refers to "the 0.1 baseline" it means the read-only representation + telemetry core; everything else is an optional 0.2.0 capability.
 
-**Companion — Part 2 (Scene Materialization).** This document (Part 1) binds OPC UA Objects to prims on an **external** USD stage. A companion draft, *OPC UA — OpenUSD Scene Materialization (Part 2)* (`../openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md`, namespace `http://opcfoundation.org/UA/OpenUSD/Scene/`), instead **materializes the composed USD scene graph natively as an OPC UA address space** (Stage/Prim/Attribute/Relationship/typed+API schemas), and is round-trippable to/from `.usd`. Part 2 is **additive and self-contained** (it does not change or require this model); the two interoperate — a Part 1 binding may target a Part 2 attribute Variable, and a materialized stage may be listed under `Server/OpenUSD/Stages`.
+**0.4.0 — the artifact registry.** Release 0.4.0 rebases asset content delivery (§5.15) on [*OPC UA — xRegistry*](../../core-specs/xregistry/OPC-UA-xRegistry.md), which becomes a **`RequiredModel` of this specification**. This is the one place where this model is no longer self-contained on base UA alone, and the trade is deliberate: a per-stage folder of files cannot express versions, change detection, labels or federation, and duplicates artifacts across stages that share them.
+
+The change is **structurally additive for a consumer**. `OpenUsdAssetType` now subtypes the xRegistry `ResourceType`, and because `ResourceType` is *itself* a Part 5 `FileType`, the streaming contract of 0.2.0/0.3.0 is unchanged: an asset node still **is** the file and its bytes are still read with the node's own `Open`/`Read`/`Close`. A connector that only downloads a root layer needs no change. What the retype adds is the xRegistry entity surface (`Xid`, `Epoch`, versions, `Labels`, federation) and a **server-wide** registry — `Server/OpenUSD/Artifacts` — that stages reference rather than duplicate. In the NodeSet, xRegistry occupies namespace index 1 and this model moves to index 2; the per-namespace NodeId numbers are unchanged and every previously published member NodeId is stable.
+
+0.4.0 also **appends** five `OpenUsdAssetKindEnum` members (`MaterialX`, `Volume`, `SchemaPlugin`, `GeneratedSchema`, `Manifest`) so the registry can carry the artifact kinds a real USD asset needs beyond layers and textures, including the two files that constitute a **codeless USD schema** (§5.15.4).
+
+**Companion — Part 2 (Scene Materialization).** This document (Part 1) binds OPC UA Objects to prims on an **external** USD stage. A companion draft, *OPC UA — OpenUSD Scene Materialization (Part 2)* (`../openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md`, namespace `http://opcfoundation.org/UA/OpenUSD/Scene/`), instead **materializes the composed USD scene graph natively as an OPC UA address space** (Stage/Prim/Attribute/Relationship/typed+API schemas), and is round-trippable to/from `.usd`. Part 2 is **additive and self-contained** (it does not change or require this model, and it does **not** take the xRegistry dependency — it reaches the artifact registry only indirectly, through this specification, when a Server implements both); the two interoperate — a Part 1 binding may target a Part 2 attribute Variable, and a materialized stage may be listed under `Server/OpenUSD/Stages`.
 
 ### 1.1 Motivation
 
@@ -66,6 +72,9 @@ The result is an **N×M integration problem**: *N* servers (pumps, robots, machi
 
 - [OPC 10000-1 … 10000-8](https://reference.opcfoundation.org/specs/OPC-10000-1/) — OPC Unified Architecture, Parts 1–8 (core), in particular Part 3 [AddIns §4.10.3](https://reference.opcfoundation.org/specs/OPC-10000-3/4.10.3), Part 4 [RelativePath §7.30](https://reference.opcfoundation.org/specs/OPC-10000-4/7.30) and [DataValue §7.11](https://reference.opcfoundation.org/specs/OPC-10000-4/7.11), Part 6 [DataValue encoding §5.2.2.17](https://reference.opcfoundation.org/specs/OPC-10000-6/5.2.2.17), and Part 8 [EUInformation §5.6.4](https://reference.opcfoundation.org/specs/OPC-10000-8/5.6.4).
 - [OPC 10000-7](https://reference.opcfoundation.org/specs/OPC-10000-7/4) — Profiles and Conformance Units.
+- [OPC 10000-20](https://reference.opcfoundation.org/specs/OPC-10000-20/) — File Transfer: `FileType` (§4.2) and its `Open` / `Read` / `Close` Methods, the streaming contract for a served artifact (§5.15).
+- [OPC UA — xRegistry](../../core-specs/xregistry/OPC-UA-xRegistry.md) — the abstract registry base model (`RegistryType` / `GroupType` / `ResourceType` / `AttributesType`, the common attributes, auto-bootstrap and federation) that the artifact registry of §5.15 extends. **A `RequiredModel` of this specification from Release 0.4.0.**
+- [xRegistry Core specification, v1.0-rc3](https://github.com/xregistry/spec/blob/v1.0-rc3/core/spec.md) — the registry / group / resource / version / attribute model, `xid`, `epoch` and `labels` that the OPC UA base model realizes.
 - [OPC 11030](https://reference.opcfoundation.org/specs/OPC-11030/) — OPC UA Modelling Best Practices.
 - [AOUSD OpenUSD Core Specification 1.0.1](https://github.com/aousd/specifications-public/blob/2f9e746c4fbd7f48d6d2c9ac568133fe398bbfc0/core/1.0.1/core_spec.md) — normative for USD paths, composition, layers, and identity. **Note:** the Core Specification excludes domain schemas (UsdGeom, UsdShade, UsdLux, UsdSkel, UsdPhysics); the render-target semantics referenced by the transform profile therefore additionally pin a versioned OpenUSD schema release.
 
@@ -148,7 +157,7 @@ flowchart TD
 
 ## 5 Information model
 
-All types are in the namespace `http://opcfoundation.org/UA/OpenUSD/` (index 1). Numeric NodeIds are **provisional**: ObjectTypes `1001–1099`, Interfaces `1010+`, DataTypes/Enumerations `3001+` (with EnumStrings at `datatype-id + 900`), and all remaining instance declarations sequentially from `6001`. The base NodeSet's only RequiredModel is the base UA namespace, so a Server can adopt the representation + telemetry core without pulling in RSL or DI. New 0.2.0 members are appended so 0.1 NodeIds are unchanged. The full generated node table is Annex A.
+All types are in the namespace `http://opcfoundation.org/UA/OpenUSD/` (index **2** from Release 0.4.0; index 1 is the RequiredModel `http://opcfoundation.org/UA/xRegistry/`). Numeric NodeIds are **provisional**: ObjectTypes `1001–1099`, Interfaces `1010+`, DataTypes/Enumerations `3001+` (with EnumStrings at `datatype-id + 900`), and all remaining instance declarations sequentially from `6001`. Per-namespace NodeId numbers are unaffected by the namespace-index change, and every previously published member NodeId is stable. From 0.4.0 the NodeSet has two RequiredModels — the base UA namespace and xRegistry (§5.15); a Server that adopts only the representation + telemetry core still needs neither RSL nor DI. New members are appended so earlier NodeIds are unchanged. The full generated node table is Annex A.
 
 ### 5.1 `OpenUsdRootType : BaseObjectType`
 
@@ -156,6 +165,7 @@ All types are in the namespace `http://opcfoundation.org/UA/OpenUSD/` (index 1).
 |---|---|---:|---|
 | `Stages` | HasComponent → FolderType | M | Registry of `OpenUsdStageType` instances. |
 | `Representations` | HasComponent → FolderType | M | Registry that Organizes every representation AddIn. |
+| `Artifacts` | HasComponent → `OpenUsdArtifactRegistryType` | O | The server's xRegistry artifact registry (§5.15). Present when the server delivers USD content; a stage's `Assets` view then Organizes artifacts from here. |
 
 The well-known instance `Server/OpenUSD` is of this type (§4.2).
 
@@ -375,33 +385,73 @@ A component may live on a **different OPC UA server** — e.g. an OEM sub-asset 
 
 Security (§9) applies per session: the connector **shall** establish an authenticated, integrity-protected channel to each server and honor each server's trust and authorization independently. Cross-server dynamic composition uses the remote server's model-change events on its own `ChangeEventSource`.
 
-### 5.15 Asset content delivery (normative, optional)
+### 5.15 Asset content delivery — the artifact registry (normative, optional)
 
-A server may optionally serve the artist-authored USD asset content needed to open a stage directly through the OPC UA address space. The facility is exposed by the optional `OpenUsdStageType.Assets` Folder, which Organizes `OpenUsdAssetType` instances for the stage. A server that does not expose `Assets` remains conformant; connectors then resolve `RootLayerIdentifier` and `ComponentAssetReference` externally as in earlier releases.
+A server may optionally serve the artist-authored USD content needed to open a stage directly through the OPC UA address space. From Release 0.4.0 the facility is an **xRegistry artifact registry**: the optional `OpenUsdRootType.Artifacts` component, an `OpenUsdArtifactRegistryType` (an xRegistry `RegistryType`, itself a `FolderType`). A server that does not expose `Artifacts` remains conformant; connectors then resolve `RootLayerIdentifier` and `ComponentAssetReference` externally as in earlier releases.
 
-Each `OpenUsdAssetType` represents one served asset or layer. **`OpenUsdAssetType` subtypes the OPC UA Part 5 `FileType`**: each instance *is* the file for its asset, so the bytes are streamed directly through the node's own `Open`/`Read`/`Close` (there is no separate `File` child). Beyond the members inherited from `FileType` (`Open`, `Read`, `Close`, `GetPosition`, `SetPosition`, `Size`, …) it adds:
+Why a registry rather than a folder: a per-stage folder of files cannot express **versions**, **change detection**, **labels** or **federation**, and it duplicates an artifact that several stages share. A registry gives all four, and — because its identifiers are USD asset identifiers (§5.15.3) — makes the server usable as a USD resolver backend rather than only as a download endpoint.
+
+#### 5.15.1 Structure
+
+```text
+Server/OpenUSD/Artifacts                 OpenUsdArtifactRegistryType : RegistryType
+  ├─ <assetContainer>                    OpenUsdAssetGroupType : GroupType
+  │     ├─ <artifact>                    OpenUsdAssetType : ResourceType : FileType
+  │     └─ …
+  └─ <plugin>                            OpenUsdSchemaPluginGroupType : GroupType
+        ├─ plugInfo.json                 OpenUsdAssetType (AssetKind = SchemaPlugin)
+        └─ generatedSchema.usda          OpenUsdAssetType (AssetKind = GeneratedSchema)
+```
+
+A group is one **asset container** — a named, versioned USD asset in the AOUSD sense: its root layer together with the sublayers, references, payloads, textures, MaterialX documents and volumes it needs. `OpenUsdAssetGroupType.AssetContainerId` is the group key and is the asset-identifier prefix shared by the group's artifacts.
+
+`OpenUsdAssetType` **subtypes the xRegistry `ResourceType`**, which is itself an OPC UA Part 5 `FileType`. The streaming contract is therefore exactly as in 0.2.0: the artifact node **is** the file, and its bytes are read with the node's own `Open` / `Read` / `Close` (`Size`, `GetPosition`, `SetPosition` remain available for progress, range retry and resume). All served streams are read-only. Beyond the members inherited from `ResourceType` (`Xid`, `Epoch`, `ResourceId`, `VersionId`, `Format`, `ContentType`, `Labels`, `ExternalReference`, `ResourceUrl`, the `FileType` Methods) it adds:
 
 | Member | DataType / Type | Rule | Meaning |
 |---|---|---:|---|
-| `AssetIdentifier` | String | M | Authored resolver identifier or relative asset path. It is the identifier used in USD `@...@` references and the relative cache location a connector recreates locally. |
-| `AssetKind` | `OpenUsdAssetKindEnum` | M | `RootLayer`, `SubLayer`, `Reference`, `Payload`, `Texture`, or `Package`. |
+| `AssetIdentifier` | String | M | Authored resolver identifier or relative asset path. It is the identifier used in USD `@...@` references and, normatively, the same string as the inherited `Xid` (§5.15.3). |
+| `AssetKind` | `OpenUsdAssetKindEnum` | M | `RootLayer`, `SubLayer`, `Reference`, `Payload`, `Texture`, `Package`, `MaterialX`, `Volume`, `SchemaPlugin`, `GeneratedSchema`, or `Manifest`. |
 | `MediaType` | String | O | Media type hint, e.g. `model/vnd.usda`, `model/vnd.usdz+zip`, `image/png`. |
 | `Digest` | ByteString | O | Digest of the exact bytes streamed by this node's `FileType` interface; required for the `OU-AssetDelivery` conformance unit. |
-| `DigestAlgorithm` | `OpenUsdDigestAlgorithmEnum` | O | Algorithm for `Digest`; required with `Digest` and defaulting by convention to `Sha256` when not otherwise constrained. |
+| `DigestAlgorithm` | `OpenUsdDigestAlgorithmEnum` | O | Algorithm for `Digest`; required with `Digest` and defaulting by convention to `Sha256`. |
+| `DependsOn` | String[] | O | Ordered asset identifiers this artifact directly references. Makes the dependency closure explicit and queryable rather than only procedural. |
 
-A server claiming `OU-AssetDelivery` **shall** expose the full dependency closure needed to compose the served stage without external asset resolution: exactly one `AssetKind = RootLayer` asset whose `AssetIdentifier` matches the stage root identifier used for USD resolution, plus every sublayer, referenced layer, payload, package, and texture reachable from that root and from component assets. For each component binding whose `ComponentAssetReference` is served by the stage, `ComponentAssetNode` **should** point to the corresponding `OpenUsdAssetType` so a connector can link the composition declaration to the bytes it will cache. All served asset `FileType` streams are read-only.
+#### 5.15.2 The stage view and the delivery contract
 
-The streaming contract is the OPC UA Part 5 `FileType` contract: a connector opens the asset node (a Part 5 `FileType`) in read mode, reads until the requested byte count returns fewer bytes or end-of-file is reached, and closes the handle. A connector may use `Size`, `GetPosition`, and `SetPosition` for progress, range retry, or resume, but it shall not require write access. A server shall close abandoned handles according to normal session cleanup and server resource policy.
+`OpenUsdStageType.Assets` remains, but from 0.4.0 it is a **view**: a Folder that `Organizes` the registry artifacts making up that stage's closure. `Organizes` does not imply ownership, so an artifact shared by several stages exists **once** in the registry and is organized by each stage that needs it. A server that exposes `Artifacts` **shall not** duplicate artifact nodes under `Assets`.
 
-A connector supporting this capability uses the following algorithm:
+A server claiming `OU-AssetDelivery` **shall** expose the full dependency closure needed to compose the served stage without external asset resolution: exactly one `AssetKind = RootLayer` artifact whose `AssetIdentifier` matches the stage root identifier, plus every sublayer, referenced layer, payload, package, texture, MaterialX document and volume reachable from that root and from component assets. Where `DependsOn` is present it **shall** be consistent with that closure. For each component binding whose `ComponentAssetReference` is served, `ComponentAssetNode` **should** point to the corresponding artifact.
 
-1. Browse the stage's `Assets` Folder and read every asset's `AssetIdentifier`, `AssetKind`, `MediaType`, `Digest`, and `DigestAlgorithm`, and open its Part 5 `FileType` stream directly on the asset node.
-2. Validate that there is exactly one `RootLayer` asset and that every authored sublayer, component asset (`Reference`/`Payload`/`Instance`), package member, and texture needed by the root is represented in the set; missing entries are a delivery failure for the self-contained mode.
-3. Stream each asset through Part 5 `Open`/`Read`/`Close` on the asset node, compute the declared digest over the received bytes, and refuse to use an asset whose digest does not match.
-4. Write each verified asset into a connector-controlled local cache at the sanitized relative path derived from `AssetIdentifier`, preserving the authored relative layout so USD `@...@` asset paths resolve locally.
-5. Open the cached root layer, compose the connector's live override/session layer above it, and render or update the stage as usual.
+A connector supporting this capability:
 
-The delivery facility is additive. If `Assets` is absent, incomplete, unauthorized, or fails digest verification, a connector may fall back to its configured external resolver only when its operator policy permits that fallback; it shall not silently mix unverified delivered bytes into the stage.
+1. Browses `Server/OpenUSD/Artifacts`, or follows the stage's `Assets` view, and reads each artifact's `AssetIdentifier`, `AssetKind`, `MediaType`, `Digest`, `DigestAlgorithm` and `DependsOn`.
+2. Validates that there is exactly one `RootLayer` and that the closure is complete; a missing entry is a delivery failure for the self-contained mode.
+3. Streams each artifact through `Open`/`Read`/`Close` on the artifact node, computes the declared digest over the received bytes, and **refuses** to use an artifact whose digest does not match.
+4. Writes each verified artifact into a connector-controlled local cache at the sanitized relative path derived from `AssetIdentifier`, preserving the authored relative layout so USD `@...@` paths resolve locally.
+5. Opens the cached root layer, composes its live override/session layer above it, and renders as usual.
+
+A connector **should** use `Epoch` to detect that a cached artifact is stale: an artifact whose `Epoch` differs from the cached value has changed and **shall** be re-fetched and re-verified before reuse.
+
+The facility remains additive. If `Artifacts` is absent, incomplete, unauthorized, or fails digest verification, a connector may fall back to its configured external resolver only when operator policy permits; it **shall not** silently mix unverified delivered bytes into the stage.
+
+#### 5.15.3 Resolver identity — `Xid` is the asset identifier (normative)
+
+xRegistry defines `Xid` as the **stable path of an entity within its registry, independent of the hosting endpoint**. A USD **asset identifier** is the stable, location-independent name an authored layer uses in an `@...@` reference, which a USD `ArResolver` maps to a **resolved path**. These are the same concept, and this specification makes them the same string:
+
+> An artifact's `AssetIdentifier` **shall** equal its inherited xRegistry `Xid`.
+
+The consequence is that an OPC UA server exposing `Artifacts` **is** an addressable resolver backend: *asset identifier → resolved path* becomes *`Xid` → the artifact's `FileType` node*, and a USD-side resolver plugin can serve `@...@` references straight out of the address space with no separate asset repository. Two corollaries:
+
+- **Federation is the resolver fallback chain.** An artifact that this registry knows about but does not host carries the xRegistry federation links `ResourceUrl` and/or `ExternalReference` (an `ExpandedNodeId`) instead of bytes. A resolver follows them exactly as it would consult the next resolver in its chain, so a plant-level registry can delegate to a vendor's without copying content.
+- **Package-relative paths.** A USD package-relative identifier such as `@pkg.usdz[textures/albedo.png]@` resolves to the artifact whose `AssetIdentifier` is that same string, within the group of the containing package. A server may serve both the whole `Package` artifact and its members; when it serves both, the member's `Digest` is over the extracted member bytes, not the package.
+
+#### 5.15.4 Serving codeless schemas (normative, optional)
+
+Part 2 §8 lets a vendor introduce new typed prims by subtyping `UsdTypedType` in OPC UA. A USD-side client has no way to interpret those prims unless it also has the corresponding **USD** schema. OpenUSD solves this with **codeless schemas**, which require exactly two files — a `plugInfo.json` manifest and a `generatedSchema.usda` — discovered through `PlugRegistry` and registered by `UsdSchemaRegistry` without any compiled code.
+
+A server that materializes vendor prim types **should** therefore serve the matching codeless schema as an `OpenUsdSchemaPluginGroupType` group whose `PluginName` is the plugin name from the manifest (`Plugins[].Name`), containing one `SchemaPlugin` artifact (the `plugInfo.json`) and one `GeneratedSchema` artifact (the `generatedSchema.usda`).
+
+This closes the loop between the two type systems: a client fetches the plugin from the same registry it fetches layers from, registers it, and can then read a Part 2 materialized scene — or a Part 1 bound external stage — with the vendor's prim types fully understood rather than degraded to the §8.4 fallback.
 
 ---
 
@@ -459,15 +509,19 @@ Conformance Units (each a normative, testable requirement):
 - **OU-DynamicComposition** — a `Dynamic` component binding reconciled on `GeneralModelChangeEventType` / `SemanticChangeEventType`.
 - **OU-CrossServerComposition** — a component binding resolved by federation to `ComponentServerUri` / `ComponentEndpointUrl`.
 - **OU-AssetDelivery** — a server serves the stage's complete USD asset closure as `OpenUsdAssetType` nodes with read-only Part 5 `FileType` streams and per-layer digests; a connector fetches, verifies, caches by `AssetIdentifier`, and composes a self-contained local stage.
+- **OU-ArtifactRegistry** — the served artifacts are exposed as the xRegistry artifact registry of §5.15: an `OpenUsdArtifactRegistryType` at `Server/OpenUSD/Artifacts`, artifacts grouped per asset container, each artifact's `AssetIdentifier` equal to its `Xid`, and a stage's `Assets` folder Organizing (not duplicating) them. Implies OU-AssetDelivery.
+- **OU-ArtifactFederation** — the registry resolves artifacts it does not host through the xRegistry federation links (`ResourceUrl` / `ExternalReference`), so a connector follows the chain to another registry (§5.15.3). Requires OU-ArtifactRegistry.
+- **OU-SchemaPluginDelivery** — the registry serves codeless USD schemas as `OpenUsdSchemaPluginGroupType` groups (a `plugInfo.json` plus a `generatedSchema.usda`), so a USD client can register a vendor schema and interpret vendor prim types rather than degrading them (§5.15.4). Requires OU-ArtifactRegistry.
 
 Profiles:
 
 - **OpenUSD Representation Server** — OU-Namespace, OU-Discovery, OU-Stage, OU-Representation, OU-RepresentationRegistry.
 - **OpenUSD Live Rendering Server** — the Representation profile + OU-Binding, OU-Conversion-Scalar, OU-Quality (OU-Conversion-Transform, OU-Conversion-Geo, OU-SemanticSource, OU-Integrity, and OU-Diagnostics optional).
 - **OpenUSD Interactive Server** — the Live Rendering profile + OU-Command (and typically OU-Alarm); adds the authorized, opt-in control path for agent/operator interaction. OU-History is optional.
-- **OpenUSD Composite Server** — the Live Rendering profile + OU-Composition (OU-DynamicComposition, OU-CrossServerComposition, and OU-AssetDelivery optional); exposes the asset's component structure as composed USD prims.
+- **OpenUSD Composite Server** — the Live Rendering profile + OU-Composition (OU-DynamicComposition, OU-CrossServerComposition, OU-AssetDelivery, OU-ArtifactRegistry, OU-ArtifactFederation and OU-SchemaPluginDelivery optional); exposes the asset's component structure as composed USD prims.
+- **OpenUSD Artifact Server** — OU-Namespace, OU-Discovery, OU-Stage + OU-AssetDelivery and OU-ArtifactRegistry (OU-ArtifactFederation and OU-SchemaPluginDelivery optional). A server whose purpose is to *deliver* USD content: it hosts the artifact registry and is addressable as a USD resolver backend (§5.15.3), with or without live bindings.
 
-Each CU requires a conformance test (Browse the node, Read the properties, and — for bindings — resolve source/target and observe a converted value or, for OU-Command, an authorized write/`Call`; for OU-AssetDelivery, stream at least the root and one dependent asset, verify their digests, and open the cached composed stage). See the Pumps addendum for a worked, testable instance.
+Each CU requires a conformance test (Browse the node, Read the properties, and — for bindings — resolve source/target and observe a converted value or, for OU-Command, an authorized write/`Call`; for OU-AssetDelivery, stream at least the root and one dependent asset, verify their digests, and open the cached composed stage; for OU-ArtifactRegistry, additionally confirm that every artifact's `AssetIdentifier` equals its `Xid` and that a stage's `Assets` folder Organizes rather than duplicates the registry artifacts). See the Pumps addendum for a worked, testable instance.
 
 ---
 

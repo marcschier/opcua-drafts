@@ -67,8 +67,25 @@ def main():
             err(f"duplicate NodeId {nid}")
         by_id[nid] = n
 
+    # Targets in the required xRegistry model (ns=1) are resolved against that
+    # model's published NodeIds rather than this NodeSet, exactly as the WoT
+    # Connectivity validator does for the same base model.
+    _xr_csv = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)),
+        "..", "..", "..", "..", "core-specs", "xregistry", "Opc.Ua.XRegistry.NodeIds.csv")
+    _xr_csv = os.path.normpath(_xr_csv)
+    XREG_IDS = set()
+    if os.path.exists(_xr_csv):
+        with open(_xr_csv, encoding="utf-8") as fh:
+            for line in fh:
+                parts = line.strip().split(",")
+                if len(parts) >= 2 and parts[1].isdigit():
+                    XREG_IDS.add(f"ns=1;i={parts[1]}")
+    else:
+        INFO.append("xRegistry NodeIds.csv not found; required-model targets are unchecked")
+
     def resolves(tid):
-        return tid in by_id or tid in KNOWN_BASE
+        return tid in by_id or tid in KNOWN_BASE or tid in XREG_IDS
 
     # A node is a concrete instance (no ModellingRule expected) if the root of its
     # ParentNodeId chain within this namespace hangs off an EXTERNAL/base node

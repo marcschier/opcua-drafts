@@ -27,10 +27,19 @@ import os
 import xml.sax.saxutils as sx
 
 NAMESPACE = "http://opcfoundation.org/UA/OpenUSD/"
-VERSION = "0.3.0"
-PUBDATE = "2026-07-25T00:00:00Z"
+VERSION = "0.4.0"
+PUBDATE = "2026-07-27T00:00:00Z"
 BASE_UA_VERSION = "1.05.04"
 BASE_UA_PUBDATE = "2023-12-15T00:00:00Z"
+
+# --- required model: the abstract OPC UA xRegistry base ---------------------
+# Release 0.4.0 rebases asset content delivery (spec 5.15) on xRegistry, so the
+# served artifacts are a real registry (groups, versions, labels, federation)
+# instead of a per-stage folder of files. xRegistry takes namespace index 1 and
+# this model moves to index 2; the per-namespace NodeId numbers are unchanged.
+XREG_NAMESPACE = "http://opcfoundation.org/UA/xRegistry/"
+XREG_VERSION = "0.1.0"
+XREG_PUBDATE = "2026-07-16T00:00:00Z"
 
 # --- base UA NodeIds (namespace 0) -----------------------------------------
 HasComponent = "i=47"
@@ -119,8 +128,19 @@ def _mid():
 
 
 def T(nid):
-    """Own-namespace NodeId (ns=1)."""
+    """Own-namespace NodeId (ns=2; xRegistry occupies index 1)."""
+    return f"ns=2;i={nid}"
+
+
+def X(nid):
+    """xRegistry base-model NodeId (required model, ns=1)."""
     return f"ns=1;i={nid}"
+
+
+# Abstract xRegistry base types this model extends (see core-specs/xregistry).
+XRegistry_RegistryType = X(63000)
+XRegistry_GroupType = X(63001)
+XRegistry_ResourceType = X(63002)
 
 
 def add(nid, cls, bname, symbolic, display=None, desc=None, parent=None,
@@ -372,7 +392,7 @@ object_type(1003, "OpenUsdRepresentationType", BaseObjectType,
             "AddIn that binds a domain Object to a canonical composed USD prim path on "
             "a specific stage. Mounted with HasAddIn; carries live bindings as children.")
 R = 1003
-static_qname_prop(R, "OpenUsdRepresentationType", "DefaultInstanceBrowseName", 1,
+static_qname_prop(R, "OpenUsdRepresentationType", "DefaultInstanceBrowseName", 2,
                   "OpenUsdRepresentation",
                   "Default BrowseName for instances of this AddIn (Part 3 AddIn convention).")
 prop_var(R, "OpenUsdRepresentationType", "Stage", NodeId_,
@@ -581,25 +601,36 @@ placeholder_obj(R, "OpenUsdRepresentationType", "<Component>", T(1005),
 
 # ---- DataType: OpenUsdAssetKindEnum (3010) --------------------------------
 enum_type(3010, "OpenUsdAssetKindEnum",
-          "Role of a served USD asset within a stage's served layer closure.",
+          "Role of a served USD artifact within a stage's served layer closure.",
           [("RootLayer", 0, "The stage's root/base layer (exactly one served RootLayer per stage)."),
            ("SubLayer", 1, "A sublayer contributing to the root layer's composition."),
            ("Reference", 2, "An asset introduced by a reference arc (e.g. a component's asset)."),
            ("Payload", 3, "An asset introduced by a payload arc (deferred-loaded)."),
            ("Texture", 4, "A texture / image asset referenced by a material."),
-           ("Package", 5, "A packaged asset bundle (e.g. USDZ) carrying the whole closure.")])
+           ("Package", 5, "A packaged asset bundle (e.g. USDZ) carrying the whole closure."),
+           # Appended in 0.4.0 - existing values keep their numbers.
+           ("MaterialX", 6, "A MaterialX document (.mtlx) defining a material/shader network."),
+           ("Volume", 7, "A volume or geometry cache asset (OpenVDB, Alembic)."),
+           ("SchemaPlugin", 8, "A USD plugin manifest (plugInfo.json) declaring a schema plugin."),
+           ("GeneratedSchema", 9, "A generatedSchema.usda carrying codeless schema definitions."),
+           ("Manifest", 10, "An asset manifest or metadata sidecar describing the container.")])
 OpenUsdAssetKindEnum = T(3010)
 
-# ---- ObjectType: OpenUsdAssetType : FileType (1006) -----------------------
-# Subtypes the OPC UA Part 5 FileType so the asset node IS the file: its bytes
-# are streamed through the node's own Open/Read/Close (no separate File child).
-object_type(1006, "OpenUsdAssetType", FileType,
-            "One served USD asset/layer: authored content the server delivers through the address "
+# ---- ObjectType: OpenUsdAssetType : ResourceType (1006) -------------------
+# Release 0.4.0 rebases this on the xRegistry ResourceType. Because ResourceType
+# is ITSELF a Part 5 FileType, the streaming contract is unchanged: the asset
+# node still IS the file and its bytes are still read through the node's own
+# Open/Read/Close. What the retype adds is the xRegistry entity surface -
+# Xid, Epoch, versions, Labels, federation - and a server-wide registry scope.
+object_type(1006, "OpenUsdAssetType", XRegistry_ResourceType,
+            "One served USD artifact: authored content the server delivers through the address "
             "space so a connector can fetch it and compose the stage locally, with no external "
-            "resolver. OpenUsdAssetType subtypes the Part 5 FileType, so the asset's bytes are "
-            "streamed directly through the node's own Open/Read/Close; AssetIdentifier is the "
-            "resolver identifier / relative path used to place the asset in the local cache so "
-            "that @...@ references resolve.")
+            "resolver. OpenUsdAssetType subtypes the xRegistry ResourceType, which is itself a "
+            "Part 5 FileType, so the artifact's bytes are streamed directly through the node's "
+            "own Open/Read/Close while the node also carries the xRegistry entity attributes. "
+            "AssetIdentifier is the USD resolver identifier and is normatively the same string "
+            "as the inherited xRegistry Xid, which is what makes the registry addressable as an "
+            "ArResolver backend.")
 A = 1006
 prop_var(A, "OpenUsdAssetType", "AssetIdentifier", String,
          "Resolver identifier / relative path of this asset, matching the stage RootLayerIdentifier "
@@ -643,6 +674,52 @@ prop_var(B, "OpenUsdLiveBindingType", "TargetNodeId", NodeId_,
          "TargetPrimPath/TargetPropertyName pair, which remain the portable descriptors.",
          MR_Optional)
 
+# --- 0.4.0 additions: the xRegistry artifact backbone ----------------------
+# Still append-only. The registry owns the artifact nodes; a stage's Assets
+# folder Organizes the subset it needs (Organizes does not imply ownership), so
+# the bytes are not duplicated per stage.
+object_type(1012, "OpenUsdArtifactRegistryType", XRegistry_RegistryType,
+            "The server's OpenUSD artifact registry - an xRegistry RegistryType (a FolderType) "
+            "holding every USD artifact the server serves: layers, packages, textures, MaterialX "
+            "documents, volumes, schema plugins and manifests. Exposed as the Artifacts component "
+            "of OpenUsdRootType, it is the single backbone all stages resolve against, replacing "
+            "per-stage duplication. Each artifact's Xid is its USD asset identifier, so the "
+            "registry is directly addressable as an ArResolver backend and xRegistry federation "
+            "(ResourceUrl / ExternalReference) is the resolver fallback chain.")
+object_type(1013, "OpenUsdAssetGroupType", XRegistry_GroupType,
+            "An xRegistry GroupType collecting the artifacts of ONE asset container - a named, "
+            "versioned USD asset in the AOUSD sense (its root layer plus the sublayers, "
+            "references, payloads, textures, MaterialX documents and volumes it needs). The "
+            "group key is the asset container identifier, the common prefix of the member "
+            "artifacts' asset identifiers.")
+AG = 1013
+prop_var(AG, "OpenUsdAssetGroupType", "AssetContainerId", String,
+         "Identifier of the asset container this group represents - the asset-identifier prefix "
+         "shared by its artifacts, e.g. 'pumps/Plant'. Together with an artifact's relative path "
+         "it reconstructs the full asset identifier (the artifact's Xid).", MR_Mandatory)
+object_type(1014, "OpenUsdSchemaPluginGroupType", XRegistry_GroupType,
+            "An xRegistry GroupType collecting the files of ONE USD schema plugin: its "
+            "plugInfo.json manifest and its generatedSchema.usda. A codeless USD schema needs "
+            "exactly those two files, so serving them lets a USD client register a vendor schema "
+            "through PlugRegistry and then interpret the vendor prim types a Part 2 server "
+            "materializes (Part 2 8.1/8.3), closing the loop between the OPC UA and USD type "
+            "systems.")
+SPG = 1014
+prop_var(SPG, "OpenUsdSchemaPluginGroupType", "PluginName", String,
+         "The USD plugin name as it appears in plugInfo.json (Plugins[].Name).", MR_Mandatory)
+
+prop_var(A, "OpenUsdAssetType", "DependsOn", String,
+         "Ordered asset identifiers this artifact directly references (sublayers, references, "
+         "payloads, textures, MaterialX documents). Makes the 5.15 dependency closure explicit "
+         "and queryable instead of only procedural, so a connector can verify completeness "
+         "before composing.", MR_Optional)
+
+folder_member(R, "OpenUsdRootType", "Artifacts",
+              "Optional OpenUsdArtifactRegistryType holding every USD artifact the server "
+              "serves. Present when the server delivers content; a stage's Assets folder then "
+              "Organizes the artifacts of its closure from here rather than owning them.",
+              rule=MR_Optional)
+
 
 # ===========================================================================
 # ==================================  EMIT  =================================
@@ -660,7 +737,7 @@ def _fmt_reftype(t):
 
 def _emit_node(n):
     tag = n.cls
-    a = [f'{tag} NodeId="{T(n.nid)}"', f'BrowseName="1:{sx.escape(n.bname)}"']
+    a = [f'{tag} NodeId="{T(n.nid)}"', f'BrowseName="2:{sx.escape(n.bname)}"']
     if n.parent is not None:
         a.append(f'ParentNodeId="{n.parent}"')
     for k in ("DataType", "ValueRank", "ArrayDimensions"):
@@ -700,12 +777,15 @@ def emit():
            'xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd" '
            'xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd">',
            '  <NamespaceUris>',
+           f'    <Uri>{XREG_NAMESPACE}</Uri>',
            f'    <Uri>{NAMESPACE}</Uri>',
            '  </NamespaceUris>',
            '  <Models>',
            f'    <Model ModelUri="{NAMESPACE}" Version="{VERSION}" PublicationDate="{PUBDATE}">',
            f'      <RequiredModel ModelUri="http://opcfoundation.org/UA/" '
            f'Version="{BASE_UA_VERSION}" PublicationDate="{BASE_UA_PUBDATE}" />',
+           f'      <RequiredModel ModelUri="{XREG_NAMESPACE}" '
+           f'Version="{XREG_VERSION}" PublicationDate="{XREG_PUBDATE}" />',
            '    </Model>',
            '  </Models>',
            '  <Aliases>']
