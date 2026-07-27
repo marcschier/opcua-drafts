@@ -535,6 +535,15 @@ placeholder_obj(variant_sets, "UsdPrimType_VariantSets", "<UsdVariantSet>", T(VS
 _member_var(metadata, "UsdPrimType_Metadata", "<Metadata>", BaseDataType, PropertyType,
             MR_OptionalPlaceholder, HasProperty, "Arbitrary metadata properties.")
 
+# Member NodeIds are handed out sequentially in declaration order, so a member
+# inserted above this point silently renumbers every member after it. New
+# members must therefore be APPENDED here.
+prop_var(A, "UsdAttributeType", "ConnectionPaths", String,
+         "Ordered SdfPath strings of the attribute's authored connections, the connection "
+         "counterpart of UsdRelationshipType.TargetPaths: a connection whose target lies "
+         "outside the materialized subtree has no browsable UsdConnection edge, and without "
+         "this member it could not be exported.", valuerank="1")
+
 # ===========================================================================
 # ==================================  EMIT  =================================
 # ===========================================================================

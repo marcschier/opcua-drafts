@@ -130,7 +130,9 @@ A prim of a **known** typed schema is materialized as the matching subtype (its 
 
 ### 5.4 `UsdAttributeType : BaseDataVariableType` (VariableType)
 
-The materialized attribute. Its `Value` is the resolved attribute value; its DataType/ValueRank are chosen per the value-type map (§6.2) — for a role-carrying USD value type the DataType is the corresponding **semantic subtype of the built-in** (§5.7) so the role is discoverable from the type system. Optional Property members: `UsdTypeName` (the exact `SdfValueTypeName`, e.g. `float3`, `token`, `asset`, `color3f[]`, retained as a fidelity annotation of the precise spelling), `Variability` (`UsdVariabilityEnum`), `Custom`, `Namespace` (property namespace, e.g. `primvars`, `xformOp`), `Interpolation`. Attribute **connections** are expressed as `UsdConnection` references to the connected attribute(s).
+The materialized attribute. Its `Value` is the resolved attribute value; its DataType/ValueRank are chosen per the value-type map (§6.2) — for a role-carrying USD value type the DataType is the corresponding **semantic subtype of the built-in** (§5.7) so the role is discoverable from the type system. Optional Property members: `UsdTypeName` (the exact `SdfValueTypeName`, e.g. `float3`, `token`, `asset`, `color3f[]`, retained as a fidelity annotation of the precise spelling), `Variability` (`UsdVariabilityEnum`), `Custom`, `Namespace` (property namespace, e.g. `primvars`, `xformOp`), `Interpolation`, and `ConnectionPaths` (ordered `String[]`). Attribute **connections** are expressed as `UsdConnection` references to the connected attribute(s), and — exactly as `UsdRelationshipType` pairs `Targets` with `TargetPaths` (§5.5) — the ordered `ConnectionPaths` carry the authored SdfPath strings. Both are needed: a connection whose target lies outside the materialized subtree has no node to point at, so without `ConnectionPaths` it could not be exported, and the reference set alone does not preserve authored order.
+
+An attribute may carry a **default value and a connection at once**; a materializer shall retain both.
 
 ### 5.5 `UsdRelationshipType : BaseObjectType`
 

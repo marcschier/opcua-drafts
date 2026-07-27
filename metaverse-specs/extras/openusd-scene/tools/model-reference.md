@@ -131,3 +131,4 @@
 | ns=1;i=6075 | <UsdCompositionArc> | Object | Composition arcs contributing opinions. |
 | ns=1;i=6076 | <UsdVariantSet> | Object | Variant sets available on this prim. |
 | ns=1;i=6077 | <Metadata> | Variable | Arbitrary metadata properties. |
+| ns=1;i=6078 | ConnectionPaths | Variable | Ordered SdfPath strings of the attribute's authored connections, the connection counterpart of UsdRelationshipType.TargetPaths: a connection whose target lies outside the materialized subtree has no browsable UsdConnection edge, and without this member it could not be exported. |
