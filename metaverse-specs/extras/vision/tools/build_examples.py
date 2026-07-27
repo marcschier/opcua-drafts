@@ -587,38 +587,72 @@ def build_overlay(d):
 # ---------------------------------------------------------------------------
 # Addendum
 # ---------------------------------------------------------------------------
-def emit_addendum(d):
+def emit_addendum(d, annex=None):
+    """Render the worked example.
+
+    With annex=None the result is the standalone addendum published next to its
+    overlay. With annex set to a letter it is the same content rendered for
+    embedding as an annex of OPC-UA-Vision.md: headings demoted one level and
+    numbered within the annex, and relative links rebased from vision/<folder>/ to
+    vision/. One renderer, so the two cannot drift.
+    """
     s = d["sensor"]
     st = d["stream"]
     cl = d["clip"]
     ai = d["ai"]
     dep = ai["deployment"]
-    rel = f"../../extras/vision/examples/{d['folder']}/{d['descriptorFile']}"
+    up = ".." if annex else "../.."
+    rel = f"{up}/extras/vision/examples/{d['folder']}/{d['descriptorFile']}"
+    nodeset = f"Opc.Ua.{d['domain']}.Vision.NodeSet2.xml"
+    nodeset_link = f"{d['outputFolder']}/{nodeset}" if annex else nodeset
     L = []
     A = L.append
-    A(f"# OPC UA {d['domain']} — Vision Addendum")
-    A("")
-    A(f"**Implementer annex to *OPC UA — Vision* (Release {vm.VERSION} — Draft).**")
-    A("")
-    A(f"> {d['summary']} The machine-readable source of truth is "
-      f"[`{d['descriptorFile']}`]({rel}); this document and "
-      f"`Opc.Ua.{d['domain']}.Vision.NodeSet2.xml` are both generated from it by "
-      "`build_examples.py`, so prose and model cannot drift.")
-    A("")
-    A("---")
-    A("")
-    A("## 1 Scope")
+    sec = [0]
+
+    def head(title):
+        sec[0] += 1
+        A(f"### {annex}.{sec[0]} {title}" if annex else f"## {sec[0]} {title}")
+
+    if annex:
+        A(f"## Annex {annex} — Worked example: {d['annexTitle']} (informative)")
+        A("")
+        A(f"> {d['summary']} This annex and the overlay "
+          f"[`{nodeset}`]({nodeset_link}) are both generated from "
+          f"[`{d['descriptorFile']}`]({rel}) by `build_examples.py`, so prose and "
+          "model cannot drift. The same content is published beside the overlay as "
+          f"[`OPC-UA-{d['domain']}-Vision-Addendum.md`]"
+          f"({d['outputFolder']}/OPC-UA-{d['domain']}-Vision-Addendum.md).")
+        A("")
+    else:
+        A(f"# OPC UA {d['domain']} — Vision Addendum")
+        A("")
+        A(f"**Implementer annex to *OPC UA — Vision* (Release {vm.VERSION} — "
+          "Draft).**")
+        A("")
+        A(f"> {d['summary']} The machine-readable source of truth is "
+          f"[`{d['descriptorFile']}`]({rel}); this document and "
+          f"`{nodeset}` are both generated from it by "
+          "`build_examples.py`, so prose and model cannot drift. It is also published "
+          f"as Annex {d['annexLetter']} of "
+          "[`OPC-UA-Vision.md`](../OPC-UA-Vision.md).")
+        A("")
+        A("---")
+        A("")
+    head("Scope")
     A("")
     A(d["scope"])
     A("")
-    A("## 2 Normative references")
+    head("Normative references")
     A("")
-    A("- *OPC UA — Vision*, Release " + vm.VERSION + " (the base specification), "
-      "`../OPC-UA-Vision.md`.")
+    if not annex:
+        A("- *OPC UA — Vision*, Release " + vm.VERSION + " (the base specification), "
+          "`../OPC-UA-Vision.md`.")
     for r in d.get("references", []):
         A(f"- {r}")
+    if annex and not d.get("references"):
+        A("None beyond the normative references of clause 2.")
     A("")
-    A("## 3 The sensor")
+    head("The sensor")
     A("")
     A("| Member | Value |")
     A("|---|---|")
@@ -652,12 +686,6 @@ def emit_addendum(d):
           "implements *OPC UA — OpenUSD Scene Materialization* (base specification "
           "Annex C).")
         A("")
-    sec = [3]
-
-    def head(title):
-        sec[0] += 1
-        A(f"## {sec[0]} {title}")
-
     head("Media endpoints")
     A("")
     A("Both mandatory defaults of base specification §6.2 are present — an RTSP stream "
@@ -805,12 +833,40 @@ def emit_addendum(d):
     A("|---|---|")
     A(f"| [`{d['descriptorFile']}`]({rel}) | Machine-readable descriptor (single "
       "source). |")
-    A(f"| [`Opc.Ua.{d['domain']}.Vision.NodeSet2.xml`]"
-      f"(Opc.Ua.{d['domain']}.Vision.NodeSet2.xml) | The generated instance overlay. |")
+    A(f"| [`{nodeset}`]({nodeset_link}) | The generated instance overlay. |")
+    if annex:
+        A(f"| [`OPC-UA-{d['domain']}-Vision-Addendum.md`]"
+          f"({d['outputFolder']}/OPC-UA-{d['domain']}-Vision-Addendum.md) | This annex, "
+          "published standalone beside the overlay. |")
     A("")
     A("Regenerate from the repository root with "
       "`python metaverse-specs/extras/vision/tools/build_examples.py`.")
     return "\n".join(L).rstrip() + "\n"
+
+
+SPEC_PATH = os.path.normpath(os.path.join(HERE, "..", "..", "..", "vision",
+                                          "OPC-UA-Vision.md"))
+
+
+def splice(marker, body):
+    """Replace the region between the generated-annex markers in the base spec.
+
+    Same mechanism the core-specs generators use, so the annex text in the spec is
+    generated output guarded by the repository's determinism check rather than
+    hand-maintained prose that could drift from the overlay.
+    """
+    begin = f"<!-- BEGIN GENERATED: {marker} -->"
+    end = f"<!-- END GENERATED: {marker} -->"
+    with open(SPEC_PATH, encoding="utf-8") as f:
+        text = f.read()
+    if begin not in text or end not in text:
+        raise SystemExit(f"markers for '{marker}' not found in {SPEC_PATH}")
+    start = text.index(begin) + len(begin)
+    finish = text.index(end)
+    new_text = text[:start] + "\n\n" + body.rstrip() + "\n\n" + text[finish:]
+    if new_text != text:
+        with open(SPEC_PATH, "w", encoding="utf-8", newline="\n") as f:
+            f.write(new_text)
 
 
 def process(path):
@@ -828,7 +884,9 @@ def process(path):
         f.write(ov.emit(d["domain"]))
     with open(md_path, "w", encoding="utf-8", newline="\n") as f:
         f.write(emit_addendum(d))
-    print(f"{d['domain']}: {len(ov.nodes)} instance nodes -> {d['outputFolder']}/")
+    splice(d["annexMarker"], emit_addendum(d, annex=d["annexLetter"]))
+    print(f"{d['domain']}: {len(ov.nodes)} instance nodes -> {d['outputFolder']}/ "
+          f"(+ Annex {d['annexLetter']})")
 
 
 def main():

@@ -346,6 +346,31 @@ def main():
 
     print(f"nodes: {len(nodes)}")
 
+    # ---- generated annexes in the base spec --------------------------------
+    # Annexes F and G are spliced into OPC-UA-Vision.md by build_examples.py. If the
+    # markers go missing the splice silently stops updating them, so the spec would
+    # keep stale worked examples while every other artifact regenerated.
+    spec_path = os.path.normpath(os.path.join(here, "..", "..", "..", "vision",
+                                              "OPC-UA-Vision.md"))
+    if not os.path.exists(spec_path):
+        err("OPC-UA-Vision.md not found")
+    else:
+        with open(spec_path, encoding="utf-8") as f:
+            spec_text = f.read()
+        for marker, letter in (("annex-robotics", "F"),
+                               ("annex-machine-vision", "G")):
+            begin = f"<!-- BEGIN GENERATED: {marker} -->"
+            end = f"<!-- END GENERATED: {marker} -->"
+            if begin not in spec_text or end not in spec_text:
+                err(f"OPC-UA-Vision.md is missing the '{marker}' generated-annex "
+                    "markers; build_examples.py cannot splice the annex")
+                continue
+            body = spec_text[spec_text.index(begin) + len(begin):
+                             spec_text.index(end)]
+            if f"## Annex {letter} " not in body:
+                err(f"OPC-UA-Vision.md '{marker}' region does not contain an "
+                    f"'Annex {letter}' heading; regenerate with build_examples.py")
+
     # ---- example overlays --------------------------------------------------
     # Each overlay instantiates the base model. Verify it is well-formed, declares the
     # Vision namespace as a RequiredModel, and only references type NodeIds that this

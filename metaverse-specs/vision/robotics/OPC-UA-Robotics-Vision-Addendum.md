@@ -2,13 +2,13 @@
 
 **Implementer annex to *OPC UA — Vision* (Release 0.1.0 — Draft).**
 
-> A worked example of vision-guided robotics: an eye-in-hand 3D camera on a robot flange detects parts in a bin and publishes 6-DoF pick poses, with inference running off-server on an edge GPU and a simulated twin sensor rendering the same cell in NVIDIA Isaac Sim. The machine-readable source of truth is [`Robotics.Vision.json`](../../extras/vision/examples/robotics/Robotics.Vision.json); this document and `Opc.Ua.Robotics.Vision.NodeSet2.xml` are both generated from it by `build_examples.py`, so prose and model cannot drift.
+> A worked example of vision-guided robotics: an eye-in-hand 3D camera on a robot flange detects parts in a bin and publishes 6-DoF pick poses, with inference running off-server on an edge GPU and a simulated twin sensor rendering the same cell in NVIDIA Isaac Sim. The machine-readable source of truth is [`Robotics.Vision.json`](../../extras/vision/examples/robotics/Robotics.Vision.json); this document and `Opc.Ua.Robotics.Vision.NodeSet2.xml` are both generated from it by `build_examples.py`, so prose and model cannot drift. It is also published as Annex F of [`OPC-UA-Vision.md`](../OPC-UA-Vision.md).
 
 ---
 
 ## 1 Scope
 
-This addendum binds one eye-in-hand camera to a robot flange frame and shows the full perception path: a hand-eye `ExtrinsicCalibrationType` that makes poses actionable, a `DetectionResultType` carrying 6-DoF grasp poses in a named frame, an off-server GPU deployment, and an RTSP stream with detection overlay feedback. It is the case OPC UA has no coverage for today: OPC 40010-1 Robotics contains no vision, camera, perception or calibration types at all, and neither it nor OPC 40100 references the other.
+This worked example binds one eye-in-hand camera to a robot flange frame and shows the full perception path: a hand-eye `ExtrinsicCalibrationType` that makes poses actionable, a `DetectionResultType` carrying 6-DoF grasp poses in a named frame, an off-server GPU deployment, and an RTSP stream with detection overlay feedback. It is the case OPC UA has no coverage for today: OPC 40010-1 Robotics contains no vision, camera, perception or calibration types at all, and neither it nor OPC 40100 references the other.
 
 ## 2 Normative references
 

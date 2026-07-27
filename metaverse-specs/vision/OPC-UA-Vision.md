@@ -652,13 +652,17 @@ When `InferenceLocation` is not `OnServer`, results were computed by a system th
 | Annex A (generated node table) | `metaverse-specs/extras/vision/tools/model-reference.md` |
 | Generator | `metaverse-specs/extras/vision/tools/build_model.py` |
 | Validator | `metaverse-specs/extras/vision/tools/validate_local.py` |
-| Robotics addendum | `metaverse-specs/vision/robotics/` |
-| Machine-vision addendum | `metaverse-specs/vision/machine-vision/` |
+| Annex F — robotics worked example | `metaverse-specs/vision/robotics/` |
+| Annex G — machine-vision worked example | `metaverse-specs/vision/machine-vision/` |
+| Example generator | `metaverse-specs/extras/vision/tools/build_examples.py` |
+
+Annexes F and G are **generated** into this document from the descriptors under `metaverse-specs/extras/vision/examples/`, between `<!-- BEGIN GENERATED -->` markers, by the same run that writes their overlays. They are also published standalone beside those overlays. Do not edit them here; edit the descriptor and regenerate.
 
 Regenerate and validate from the repository root:
 
 ```powershell
 python metaverse-specs/extras/vision/tools/build_model.py
+python metaverse-specs/extras/vision/tools/build_examples.py
 python metaverse-specs/extras/vision/tools/validate_local.py
 python metaverse-specs/validate_all.py --self-contained
 ```
@@ -860,3 +864,304 @@ There is no IDTA submodel template for machine vision, so `VisionSensorType` and
 | `VisionCharacteristicDataType.Uncertainty` | ISO 14253 |
 | `ExtrinsicCalibrationType` | no standard defines the hand-eye procedure; only the result is portable |
 | Terminology | ISO 8373:2021 robotics vocabulary |
+
+---
+
+<!-- BEGIN GENERATED: annex-robotics -->
+
+## Annex F — Worked example: robotics vision, eye-in-hand picking (informative)
+
+> A worked example of vision-guided robotics: an eye-in-hand 3D camera on a robot flange detects parts in a bin and publishes 6-DoF pick poses, with inference running off-server on an edge GPU and a simulated twin sensor rendering the same cell in NVIDIA Isaac Sim. This annex and the overlay [`Opc.Ua.Robotics.Vision.NodeSet2.xml`](robotics/Opc.Ua.Robotics.Vision.NodeSet2.xml) are both generated from [`Robotics.Vision.json`](../extras/vision/examples/robotics/Robotics.Vision.json) by `build_examples.py`, so prose and model cannot drift. The same content is published beside the overlay as [`OPC-UA-Robotics-Vision-Addendum.md`](robotics/OPC-UA-Robotics-Vision-Addendum.md).
+
+### F.1 Scope
+
+This worked example binds one eye-in-hand camera to a robot flange frame and shows the full perception path: a hand-eye `ExtrinsicCalibrationType` that makes poses actionable, a `DetectionResultType` carrying 6-DoF grasp poses in a named frame, an off-server GPU deployment, and an RTSP stream with detection overlay feedback. It is the case OPC UA has no coverage for today: OPC 40010-1 Robotics contains no vision, camera, perception or calibration types at all, and neither it nor OPC 40100 references the other.
+
+### F.2 Normative references
+
+- [OPC 40010-1](https://reference.opcfoundation.org/specs/OPC-40010-1/) — OPC UA for Robotics, whose `MotionDeviceSystemType` describes the robot this camera is mounted on. Not a dependency of this model.
+- ISO 9787:2013 — coordinate systems, the source of the frame roles used here.
+- ROS 2 `vision_msgs` — the convention `VisionDetectionDataType` field naming follows.
+
+### F.3 The sensor
+
+| Member | Value |
+|---|---|
+| Type | `ImageSensorType` |
+| `SensorId` | `cam-eih-01` |
+| `RealityKind` | `Physical` |
+| `Modality` | `Area2D` |
+| `Width` | `2448` |
+| `Height` | `2048` |
+| `PixelFormat` | `BayerRG8` |
+| `ExposureTime` (µs) | `4000.0` |
+| `Gain` | `2.5` |
+| `AcquisitionFrameRate` | `15.0` |
+| `TriggerMode` | `On` |
+| `DeviceUri` | `gev://192.0.2.41/0` |
+| `FrameId` | `camera_eih` |
+
+### F.4 Media endpoints
+
+Both mandatory defaults of base specification §6.2 are present — an RTSP stream and a JPEG clip endpoint:
+
+| Endpoint | Type | Key members |
+|---|---|---|
+| `LiveRtsp` | `StreamEndpointType` | `StreamProtocol = Rtsp`, `EndpointUri = rtsp://192.0.2.41:554/main` |
+| `PickFrames` | `ClipEndpointType` | `ClipFormat = Jpeg`, `EndpointUri = https://192.0.2.41/clips/{resultId}.jpg` |
+
+This clip endpoint implements the optional **VIS-Media-Inline** facet but leaves it switched off: `InlineDeliveryEnabled = false`, so per base specification §6.4 rule 5 the Server reports `LatestClip` with `Bad_NotSupported` while `LatestClipMetadata` stays readable. Clips are obtained through `GetClip` and fetched from the returned `Uri`, which is the default path. Clause 11 requires the facet's four members to be present together even in this state, which is why the overlay declares all four.
+
+### F.5 Coordinate frames and calibration
+
+The frame tree. `ParentFrame` is what makes it composable: a client walks from the frame a pose is expressed in up to the frame it needs, composing the transforms it finds on the way.
+
+| Instance | `FrameId` | `Role` | `ParentFrame` |
+|---|---|---|---|
+| `WorldFrame` | `world` | `World` | none (tree root) |
+| `RobotBaseFrame` | `robot_base` | `Base` | `world` |
+| `FlangeFrame` | `flange` | `Tool` | `robot_base` |
+| `CameraFrame` | `camera_eih` | `Camera` | `flange` |
+
+**`Intrinsics2448x2048`** (`IntrinsicCalibrationType`) — Pinhole intrinsics with Brown-Conrady distortion at full resolution.
+
+| Member | Value |
+|---|---|
+| `CalibrationId` | `intr-cam-eih-01-2448` |
+| `PerformedAt` | `2026-06-14T09:12:00Z` |
+| `Valid` | `true` |
+| `Method` | `Zhang` |
+| `ResidualError` | `0.21` |
+
+`Intrinsics` field values, in the units fixed by base specification §5.10:
+
+| Field | Value | Unit / convention |
+|---|---|---|
+| `Fx` | `2140.5` | px |
+| `Fy` | `2139.8` | px |
+| `Cx` | `1223.1` | px, corner-datum per 5.10 |
+| `Cy` | `1021.7` | px, corner-datum per 5.10 |
+| `Skew` | `0.0` | px |
+| `DistortionModel` | `BrownConrady` | 5.10 ordering: k1, k2, p1, p2, k3 |
+| `DistortionCoefficients` | `[-0.1721, 0.0934, 0.0002, -0.0001, -0.0188]` | dimensionless |
+| `Width` | `2448` | px |
+| `Height` | `2048` | px |
+
+**`HandEye`** (`ExtrinsicCalibrationType`) — Transform from the camera frame to the robot flange frame. Eye-in-hand: the camera moves with the tool.
+
+| Member | Value |
+|---|---|
+| `CalibrationId` | `hand-eye-cam-eih-01` |
+| `PerformedAt` | `2026-06-14T10:40:00Z` |
+| `Valid` | `true` |
+| `Method` | `Daniilidis` |
+| `ResidualError` | `0.0008` |
+| `Mount` | `EyeInHand` |
+| `SourceFrame` | `camera_eih` |
+| `TargetFrame` | `flange` |
+
+`Transform` field values, in the units fixed by base specification §5.10:
+
+| Field | Value | Unit / convention |
+|---|---|---|
+| `FrameId` | `flange` | equals the TargetFrame's FrameId, per the 5.10 frame-precedence rule |
+| `Position` | `(0.062, -0.031, 0.115)` | metres, ordered (x, y, z) |
+| `Orientation` | `(0.0, 0.0, 0.7071, 0.7071)` | unit quaternion ordered (x, y, z, w) |
+| `Covariance` | `empty array` | not reported, per the 5.10 sentinel |
+
+Each calibration is reachable from the sensor by a `HasCalibration` reference, as base specification §5.9 requires.
+
+### F.6 The simulated twin
+
+The same cell is rendered in NVIDIA Isaac Sim, and the synthetic sensor is modelled here alongside the physical one. Note what is *not* different: same type, same members, same units, same mandatory RTSP and JPEG endpoints. A client written against `VisionSensorType` consumes either without modification, and can tell them apart only by reading `RealityKind`. That is the sim/real symmetry of base specification §4.3, and it is what lets a model be trained on synthetic data and then deployed against the physical camera unchanged.
+
+| Member | Physical sensor | Simulated twin |
+|---|---|---|
+| Instance | `BinPickingCamera` | `BinPickingCameraTwin` |
+| `RealityKind` | `Physical` | `Simulated` |
+| Type | `ImageSensorType` | `ImageSensorType` |
+| `Width` x `Height` | `2448` x `2048` | `2448` x `2048` |
+| `PixelFormat` | `BayerRG8` | `BayerRG8` |
+| Media endpoints | RTSP + JPEG | RTSP + JPEG |
+
+The twin additionally implements `IVisionSimulatedType`:
+
+| Member | Value |
+|---|---|
+| `SimulatorUri` | `isaacsim://cell-sim-01` |
+| `StageIdentifier` | `omniverse://plant/Cell_A/stage.usda` |
+| `PrimPath` | `/Cell/Robots/R1/Flange/Camera` |
+| `GroundTruthAvailable` | `true` |
+
+`PrimPath` resolves to a `UsdGeomCameraType` instance where the Server also implements *OPC UA — OpenUSD Scene Materialization* and claims the base specification's *VIS-Interop-Scene* facet (Annex C), so the camera's aperture and focal-length attributes are both the scene description and the imaging intrinsics.
+
+### F.7 Inference
+
+| Member | Value |
+|---|---|
+| Model | `GraspPoseNet` v`3.2.0` (TensorRT) |
+| `TaskKind` | `PoseEstimation` |
+| `InferenceLocation` | **`EdgeOffServer`** |
+| `AcceleratorKind` | `Gpu` |
+| `EndpointUri` | `grpc://192.0.2.60:8001/graspposenet` |
+
+Inference runs **off-server** on a cell-side GPU appliance. The Server publishes results it did not compute. Nothing else in the model changes: a client reads `DetectionResultType` exactly as it would if `InferenceLocation` were `OnServer`, and consults that property only if it cares about the latency or trust boundary. Because the deployment is remote, base specification §12.6 applies: the channel to the inference service is authenticated and integrity-protected, and `AiModelType.Digest` lets a consumer confirm which artefact produced a result.
+
+The deployment carries exactly one `UsesModel` reference to the model above, as base specification §5.9 requires. That reference is the only defined path from a result to the model artefact and its `Digest`, so it is what makes the §12.6 provenance check possible.
+
+### F.8 Results
+
+Each cycle produces a `DetectionResultType` whose `Detections` carry `ClassLabel`, `Confidence`, a `BoundingBox2D`, a `BoundingBox3D` and — the member that makes the result actionable — a 6-DoF `Pose`. Every pose names its `FrameId` (`camera_eih`), which is only meaningful because the `HandEye` calibration above relates that frame to the flange. A consumer composes camera → flange → base through the `CoordinateFrameType` tree to obtain a pose the robot controller can execute. `ResidualError` on the calibration is what tells the consumer how much to trust it.
+
+### F.9 Feedback
+
+Two feedback paths are exercised. During commissioning, the HMI calls `SubmitDetections` with `Purpose = Overlay` so the operator sees candidate grasps drawn on the RTSP stream. In production, a failed pick calls `SubmitCorrection` with `Purpose = GroundTruthLabel`, and the corrected pose is retained by the `LearningJobType` as a labelled sample — so the cases the model gets wrong are exactly the cases the next dataset contains. Feedback images are passed by reference through `SubmitImageReference`; this example does not enable inline feedback images.
+
+### F.10 Deliverables
+
+| File | Content |
+|---|---|
+| [`Robotics.Vision.json`](../extras/vision/examples/robotics/Robotics.Vision.json) | Machine-readable descriptor (single source). |
+| [`Opc.Ua.Robotics.Vision.NodeSet2.xml`](robotics/Opc.Ua.Robotics.Vision.NodeSet2.xml) | The generated instance overlay. |
+| [`OPC-UA-Robotics-Vision-Addendum.md`](robotics/OPC-UA-Robotics-Vision-Addendum.md) | This annex, published standalone beside the overlay. |
+
+Regenerate from the repository root with `python metaverse-specs/extras/vision/tools/build_examples.py`.
+
+<!-- END GENERATED: annex-robotics -->
+
+---
+
+<!-- BEGIN GENERATED: annex-machine-vision -->
+
+## Annex G — Worked example: machine vision, dimensional inspection (informative)
+
+> A worked example of machine-vision inspection: a fixed camera measures a sealing surface, on-server inference produces a verdict with QIF-shaped characteristics including measurement uncertainty, and each result carries a subscribable JPEG thumbnail through the optional size-gated inline delivery facet. This annex and the overlay [`Opc.Ua.Inspection.Vision.NodeSet2.xml`](machine-vision/Opc.Ua.Inspection.Vision.NodeSet2.xml) are both generated from [`Inspection.Vision.json`](../extras/vision/examples/machine-vision/Inspection.Vision.json) by `build_examples.py`, so prose and model cannot drift. The same content is published beside the overlay as [`OPC-UA-Inspection-Vision-Addendum.md`](machine-vision/OPC-UA-Inspection-Vision-Addendum.md).
+
+### G.1 Scope
+
+This worked example shows the case OPC 40100-1 orchestrates but does not describe: the *content* of an inspection result. A fixed area-scan camera inspects a sealing surface; the result is an `InspectionResultType` carrying an `Evaluation` and a set of `VisionCharacteristicDataType` entries with nominal, actual, deviation, tolerances and uncertainty. It also demonstrates the optional **VIS-Media-Inline** facet: a small JPEG thumbnail is published as `LatestClip` and can be subscribed to with a MonitoredItem, while the full-resolution image stays behind a URI.
+
+### G.2 Normative references
+
+- [OPC 40100-1](https://reference.opcfoundation.org/specs/OPC-40100-1/) — OPC UA for Machine Vision Part 1, whose `ResultContent` this example populates. Not a dependency of this model.
+- ISO 23952:2020 (QIF) — the shape `VisionCharacteristicDataType` mirrors.
+- ISO 14253 — the uncertainty semantics used by `Uncertainty` and `NotDecidable`.
+
+### G.3 The sensor
+
+| Member | Value |
+|---|---|
+| Type | `ImageSensorType` |
+| `SensorId` | `cam-insp-07` |
+| `RealityKind` | `Physical` |
+| `Modality` | `Area2D` |
+| `Width` | `2592` |
+| `Height` | `1944` |
+| `PixelFormat` | `Mono8` |
+| `ExposureTime` (µs) | `1200.0` |
+| `Gain` | `1.0` |
+| `AcquisitionFrameRate` | `8.0` |
+| `TriggerMode` | `On` |
+| `DeviceUri` | `u3v://0x2A0B/0x0410/SN-9083-1174` |
+| `FrameId` | `camera_insp_07` |
+
+### G.4 Media endpoints
+
+Both mandatory defaults of base specification §6.2 are present — an RTSP stream and a JPEG clip endpoint:
+
+| Endpoint | Type | Key members |
+|---|---|---|
+| `LiveRtsp` | `StreamEndpointType` | `StreamProtocol = Rtsp`, `EndpointUri = rtsp://192.0.2.77:554/setup` |
+| `PartFrames` | `ClipEndpointType` | `ClipFormat = Jpeg`, `EndpointUri = https://192.0.2.77/clips/{resultId}.jpg` |
+
+This clip endpoint additionally enables the optional **VIS-Media-Inline** facet, with `MaxInlineClipSize = 262144` bytes. Clause 11 requires all four members of that facet together, so the endpoint instantiates `InlineDeliveryEnabled`, `MaxInlineClipSize`, `LatestClip` and `LatestClipMetadata`. A client may subscribe to `LatestClip` and receive the encoded JPEG directly; if an image exceeds that bound the Server sets `Bad_EncodingLimitsExceeded` and the client falls back to `LatestClipMetadata.Uri` (base specification §6.4).
+
+### G.5 Coordinate frames and calibration
+
+The frame tree. `ParentFrame` is what makes it composable: a client walks from the frame a pose is expressed in up to the frame it needs, composing the transforms it finds on the way.
+
+| Instance | `FrameId` | `Role` | `ParentFrame` |
+|---|---|---|---|
+| `StationFrame` | `station` | `World` | none (tree root) |
+| `CameraFrame` | `camera_insp_07` | `Camera` | `station` |
+
+**`Intrinsics2592x1944`** (`IntrinsicCalibrationType`) — Pinhole intrinsics at full resolution; a telecentric lens leaves very little residual distortion.
+
+| Member | Value |
+|---|---|
+| `CalibrationId` | `intr-cam-insp-07` |
+| `PerformedAt` | `2026-05-02T07:55:00Z` |
+| `Valid` | `true` |
+| `Method` | `Zhang` |
+| `ResidualError` | `0.08` |
+
+`Intrinsics` field values, in the units fixed by base specification §5.10:
+
+| Field | Value | Unit / convention |
+|---|---|---|
+| `Fx` | `8310.2` | px |
+| `Fy` | `8309.6` | px |
+| `Cx` | `1295.4` | px, corner-datum per 5.10 |
+| `Cy` | `971.2` | px, corner-datum per 5.10 |
+| `Skew` | `0.0` | px |
+| `DistortionModel` | `BrownConrady` | 5.10 ordering: k1, k2, p1, p2, k3 |
+| `DistortionCoefficients` | `[-0.0021, 0.0004, 0.0, 0.0, 0.0]` | dimensionless; a telecentric lens is close to distortion-free |
+| `Width` | `2592` | px |
+| `Height` | `1944` | px |
+
+**`StationMounting`** (`ExtrinsicCalibrationType`) — Transform from the camera frame to the station world frame. The camera is fixed, so there is no kinematic chain.
+
+| Member | Value |
+|---|---|
+| `CalibrationId` | `extr-cam-insp-07` |
+| `PerformedAt` | `2026-05-02T08:20:00Z` |
+| `Valid` | `true` |
+| `Method` | `TargetPlate` |
+| `ResidualError` | `0.00015` |
+| `Mount` | `Fixed` |
+| `SourceFrame` | `camera_insp_07` |
+| `TargetFrame` | `station` |
+
+`Transform` field values, in the units fixed by base specification §5.10:
+
+| Field | Value | Unit / convention |
+|---|---|---|
+| `FrameId` | `station` | equals the TargetFrame's FrameId, per the 5.10 frame-precedence rule |
+| `Position` | `(0.0, 0.0, 0.320)` | metres, ordered (x, y, z) |
+| `Orientation` | `(1.0, 0.0, 0.0, 0.0)` | unit quaternion ordered (x, y, z, w); a 180 degree rotation about x, so the camera looks down at the station |
+| `Covariance` | `empty array` | not reported, per the 5.10 sentinel |
+
+Each calibration is reachable from the sensor by a `HasCalibration` reference, as base specification §5.9 requires.
+
+### G.6 Inference
+
+| Member | Value |
+|---|---|
+| Model | `SealDefectNet` v`1.4.1` (ONNX) |
+| `TaskKind` | `Segmentation` |
+| `InferenceLocation` | **`OnServer`** |
+| `AcceleratorKind` | `Npu` |
+
+Inference runs **on-server**: `InferenceLocation = OnServer`, on an NPU in the station industrial PC. A client consuming the results cannot distinguish this from the off-server robotics example except by reading that one property — which is the intent of base specification §8.2. Because the pipeline is not continuous, `RunInference` is called per part by the station PLC and returns the `ResultId` it produced.
+
+The deployment carries exactly one `UsesModel` reference to the model above, as base specification §5.9 requires. That reference is the only defined path from a result to the model artefact and its `Digest`, so it is what makes the §12.6 provenance check possible.
+
+### G.7 Results
+
+Each part produces an `InspectionResultType`. `Evaluation` uses the OPC 40001-101 value semantics, and the `Characteristics` array carries one `VisionCharacteristicDataType` per measured feature — for example a flatness with `Nominal = 0.0`, `Actual = 0.018`, `UpperTolerance = 0.020`, `Unit = mm` and `Uncertainty = 0.004`. That last field is the point: because the expanded uncertainty spans the tolerance limit, the Server reports `NotDecidable` rather than asserting `Ok` from the point estimate alone. A verdict recorded this way is reproducible by a third party, and a QIF document can be generated from it without inventing information.
+
+### G.8 Feedback
+
+When a quality engineer overrides a verdict at the review station, the HMI calls `SubmitCorrection` with `Purpose = GroundTruthLabel`, passing the corrected characteristics and a reason. Because this endpoint enables inline delivery, the corrected thumbnail may accompany the call as an inline `ByteString` provided it fits `MaxInlineFeedbackImageSize`; anything larger is rejected with `Bad_EncodingLimitsExceeded` and resubmitted through `SubmitImageReference`. Downstream leak-test results arrive through `SubmitInspectionResult`, which reconciles a downstream `Evaluation` and its characteristics against what the vision system originally reported — and the disagreements are precisely the samples the next `LearningJobType` collects.
+
+### G.9 Deliverables
+
+| File | Content |
+|---|---|
+| [`Inspection.Vision.json`](../extras/vision/examples/machine-vision/Inspection.Vision.json) | Machine-readable descriptor (single source). |
+| [`Opc.Ua.Inspection.Vision.NodeSet2.xml`](machine-vision/Opc.Ua.Inspection.Vision.NodeSet2.xml) | The generated instance overlay. |
+| [`OPC-UA-Inspection-Vision-Addendum.md`](machine-vision/OPC-UA-Inspection-Vision-Addendum.md) | This annex, published standalone beside the overlay. |
+
+Regenerate from the repository root with `python metaverse-specs/extras/vision/tools/build_examples.py`.
+
+<!-- END GENERATED: annex-machine-vision -->
