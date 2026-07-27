@@ -549,12 +549,12 @@ def main():
                        and r.get("IsForward", "true") != "false"]
             if len(targets) != 1:
                 err(f"{label}: {e.get('NodeId')} is an AiDeploymentType with "
-                    f"{len(targets)} UsesModel references; clause 5.9 requires exactly "
+                    f"{len(targets)} UsesModel references; clause 5.11 requires exactly "
                     "one, and clause 12.6 depends on it")
             for t in targets:
                 if type_of.get(t) != model_td:
                     err(f"{label}: {e.get('NodeId')} UsesModel targets {t}, which is "
-                        "not an AiModelType instance (clause 5.9)")
+                        "not an AiModelType instance (clause 5.11)")
 
         # Clause 11: VIS-Media-Inline is all four members or none.
         clip_td = type_named("ClipEndpointType")

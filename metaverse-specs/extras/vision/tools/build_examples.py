@@ -481,7 +481,7 @@ def build_overlay(d):
         put(ov, fr, "ParentFrame", "NodeId",
             frame_ids.get(f.get("parentFrame"), "i=0"))
 
-    # A sensor mounted on a frame says so with MountedOn (§5.9).
+    # A sensor mounted on a frame says so with MountedOn (§5.11).
     if s.get("mountedOn") in frame_ids:
         ov.ref(sensor, MountedOn, frame_ids[s["mountedOn"]])
 
@@ -498,7 +498,7 @@ def build_overlay(d):
                 put(ov, cal, "ResidualError", "Double", c["residualError"])
             if "method" in c:
                 put(ov, cal, "Method", "String", c["method"])
-            # §5.9: the sensor a calibration belongs to is reachable by HasCalibration.
+            # §5.11: the sensor a calibration belongs to is reachable by HasCalibration.
             ov.ref(sensor, HasCalibration, f"ns=1;i={cal}")
             if c["type"] == "ExtrinsicCalibrationType":
                 put_enum(ov, cal, "Mount", "VisionCalibrationMountEnum", c["mount"])
@@ -542,7 +542,7 @@ def build_overlay(d):
         put(ov, deployment, "AcceleratorName", "String", dep["acceleratorName"])
     if "endpointUri" in dep:
         put(ov, deployment, "EndpointUri", "String", dep["endpointUri"])
-    # §5.9 requires exactly one UsesModel per deployment. It is the only path from a
+    # §5.11 requires exactly one UsesModel per deployment. It is the only path from a
     # result to the model artefact and its Digest, which §12.6 depends on.
     ov.ref(deployment, UsesModel, f"ns=1;i={model}")
 
@@ -754,7 +754,7 @@ def emit_addendum(d, annex=None):
             field_var = ("Transform" if c["type"] == "ExtrinsicCalibrationType"
                          else "Intrinsics")
             A(f"`{field_var}` field values, in the units fixed by base specification "
-              "§5.10:")
+              "§5.12:")
             A("")
             A("| Field | Value | Unit / convention |")
             A("|---|---|---|")
@@ -763,7 +763,7 @@ def emit_addendum(d, annex=None):
             A("")
     if d.get("calibrations"):
         A("Each calibration is reachable from the sensor by a `HasCalibration` "
-          "reference, as base specification §5.9 requires.")
+          "reference, as base specification §5.11 requires.")
         A("")
     if "twin" in d:
         tw = d["twin"]
@@ -815,7 +815,7 @@ def emit_addendum(d, annex=None):
     A(d["inferenceNote"])
     A("")
     A("The deployment carries exactly one `UsesModel` reference to the model above, as "
-      "base specification §5.9 requires. That reference is the only defined path from a "
+      "base specification §5.11 requires. That reference is the only defined path from a "
       "result to the model artefact and its `Digest`, so it is what makes the §12.6 "
       "provenance check possible.")
     A("")

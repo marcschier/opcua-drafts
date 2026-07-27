@@ -72,7 +72,7 @@ This annex is the authoritative node reference for the specification: it carries
 | ns=1;i=4001 | HasCalibration | IsCalibrationOf | NonHierarchicalReferences | Links a sensor to a calibration currently valid for it. |
 | ns=1;i=4002 | MountedOn | HasMounted | NonHierarchicalReferences | Links a sensor to the CoordinateFrame it is rigidly mounted on, for example a robot flange frame for an eye-in-hand camera. |
 | ns=1;i=4003 | HasScenePrim | IsScenePrimOf | NonHierarchicalReferences | Links a sensor to the materialized USD prim representing it, when the Server also implements OPC UA - OpenUSD Scene Materialization. The target is expected to be a UsdGeomCameraType instance. Optional: PrimPath remains the portable descriptor. |
-| ns=1;i=4004 | UsesModel | IsUsedByDeployment | NonHierarchicalReferences | Links an AiDeploymentType instance to the AiModelType instance it executes. Clause 5.9 requires exactly one such reference per deployment; it is the only defined path from a result to the model artefact and its Digest, on which clause 12.6 depends. |
+| ns=1;i=4004 | UsesModel | IsUsedByDeployment | NonHierarchicalReferences | Links an AiDeploymentType instance to the AiModelType instance it executes. Clause 5.11 requires exactly one such reference per deployment; it is the only defined path from a result to the model artefact and its Digest, on which clause 12.6 depends. |
 | ns=1;i=4005 | ProducedBy | Produces | NonHierarchicalReferences | Links a result to the inference pipeline that produced it. |
 
 ## A.3 ObjectTypes

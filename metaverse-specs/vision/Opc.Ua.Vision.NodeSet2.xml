@@ -553,7 +553,7 @@
   </UAReferenceType>
   <UAReferenceType NodeId="ns=1;i=4004" BrowseName="1:UsesModel">
     <DisplayName>UsesModel</DisplayName>
-    <Description>Links an AiDeploymentType instance to the AiModelType instance it executes. Clause 5.9 requires exactly one such reference per deployment; it is the only defined path from a result to the model artefact and its Digest, on which clause 12.6 depends.</Description>
+    <Description>Links an AiDeploymentType instance to the AiModelType instance it executes. Clause 5.11 requires exactly one such reference per deployment; it is the only defined path from a result to the model artefact and its Digest, on which clause 12.6 depends.</Description>
     <Category>Vision ReferenceTypes</Category>
     <InverseName>IsUsedByDeployment</InverseName>
     <References>

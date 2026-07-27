@@ -67,7 +67,7 @@ The frame tree. `ParentFrame` is what makes it composable: a client walks from t
 | `Method` | `Zhang` |
 | `ResidualError` | `0.21` |
 
-`Intrinsics` field values, in the units fixed by base specification §5.10:
+`Intrinsics` field values, in the units fixed by base specification §5.12:
 
 | Field | Value | Unit / convention |
 |---|---|---|
@@ -94,7 +94,7 @@ The frame tree. `ParentFrame` is what makes it composable: a client walks from t
 | `SourceFrame` | `camera_eih` |
 | `TargetFrame` | `flange` |
 
-`Transform` field values, in the units fixed by base specification §5.10:
+`Transform` field values, in the units fixed by base specification §5.12:
 
 | Field | Value | Unit / convention |
 |---|---|---|
@@ -103,7 +103,7 @@ The frame tree. `ParentFrame` is what makes it composable: a client walks from t
 | `Orientation` | `(0.0, 0.0, 0.7071, 0.7071)` | unit quaternion ordered (x, y, z, w) |
 | `Covariance` | `empty array` | not reported, per the 5.10 sentinel |
 
-Each calibration is reachable from the sensor by a `HasCalibration` reference, as base specification §5.9 requires.
+Each calibration is reachable from the sensor by a `HasCalibration` reference, as base specification §5.11 requires.
 
 ## 6 The simulated twin
 
@@ -141,7 +141,7 @@ The twin additionally implements `IVisionSimulatedType`:
 
 Inference runs **off-server** on a cell-side GPU appliance. The Server publishes results it did not compute. Nothing else in the model changes: a client reads `DetectionResultType` exactly as it would if `InferenceLocation` were `OnServer`, and consults that property only if it cares about the latency or trust boundary. Because the deployment is remote, base specification §12.6 applies: the channel to the inference service is authenticated and integrity-protected, and `AiModelType.Digest` lets a consumer confirm which artefact produced a result.
 
-The deployment carries exactly one `UsesModel` reference to the model above, as base specification §5.9 requires. That reference is the only defined path from a result to the model artefact and its `Digest`, so it is what makes the §12.6 provenance check possible.
+The deployment carries exactly one `UsesModel` reference to the model above, as base specification §5.11 requires. That reference is the only defined path from a result to the model artefact and its `Digest`, so it is what makes the §12.6 provenance check possible.
 
 ## 8 Results
 

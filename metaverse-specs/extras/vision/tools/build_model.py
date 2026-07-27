@@ -642,7 +642,7 @@ reference_type(4003, "HasScenePrim", "IsScenePrimOf",
                "the portable descriptor.")
 reference_type(4004, "UsesModel", "IsUsedByDeployment",
                "Links an AiDeploymentType instance to the AiModelType instance it "
-               "executes. Clause 5.9 requires exactly one such reference per deployment; "
+               "executes. Clause 5.11 requires exactly one such reference per deployment; "
                "it is the only defined path from a result to the model artefact and its "
                "Digest, on which clause 12.6 depends.")
 reference_type(4005, "ProducedBy", "Produces",
