@@ -27,8 +27,8 @@ import os
 import xml.sax.saxutils as sx
 
 NAMESPACE = "http://opcfoundation.org/UA/OpenUSD/"
-VERSION = "0.2.0"
-PUBDATE = "2026-07-13T00:00:00Z"
+VERSION = "0.3.0"
+PUBDATE = "2026-07-25T00:00:00Z"
 BASE_UA_VERSION = "1.05.04"
 BASE_UA_PUBDATE = "2023-12-15T00:00:00Z"
 
@@ -261,7 +261,11 @@ enum_type(3002, "OpenUsdRenderTargetKindEnum",
           "Classifies the USD render target a live value drives (advisory routing hint).",
           [("Translation", 0, None), ("Rotation", 1, None), ("Scale", 2, None),
            ("Transform", 3, None), ("Visibility", 4, None), ("DisplayColor", 5, None),
-           ("EmissiveColor", 6, None), ("Opacity", 7, None), ("Custom", 8, None)])
+           ("EmissiveColor", 6, None), ("Opacity", 7, None), ("Custom", 8, None),
+           ("Georeference", 9,
+            "A geodetic anchor coordinate (latitude/longitude/height) on a USD "
+            "georeference or globe-anchor schema; see the geospatial rule (Bindings spec "
+            "\u00a75.8) and Annex D.")])
 
 enum_type(3003, "OpenUsdBadQualityActionEnum",
           "What the connector does with a non-Good source value.",
@@ -305,7 +309,9 @@ prop_var(B, "OpenUsdLiveBindingType", "AttributeId", UInt32,
          "Source attribute id; default 13 (Value). Telemetry binds Value only.", MR_Optional)
 # Target locator
 prop_var(B, "OpenUsdLiveBindingType", "TargetStage", NodeId_,
-         "NodeId of the OpenUsdStageType instance holding the target prim.", MR_Mandatory)
+         "NodeId of the stage holding the target prim: an OpenUsdStageType instance, or a "
+         "materialized Part 2 UsdStageType instance when the target is an in-server "
+         "materialized scene.", MR_Mandatory)
 prop_var(B, "OpenUsdLiveBindingType", "TargetPrimPath", String,
          "Prim path of the target: absolute, or relative to the representation PrimPath.",
          MR_Mandatory)
@@ -625,6 +631,16 @@ folder_member(S, "OpenUsdStageType", "Assets",
 prop_var(K, "OpenUsdComponentBindingType", "ComponentAssetNode", NodeId_,
          "NodeId of the OpenUsdAssetType (under the stage's Assets folder) serving this component's "
          "asset, when the server delivers it. Complements ComponentAssetReference.",
+         MR_Optional)
+
+# --- 0.3.0 additions -------------------------------------------------------
+# Declared last on purpose: instance-member NodeIds are assigned sequentially from
+# 6001 in declaration order, so appending keeps every previously published member
+# NodeId stable. New members must be added here, never inserted above.
+prop_var(B, "OpenUsdLiveBindingType", "TargetNodeId", NodeId_,
+         "Optional direct NodeId of the target when it is an in-server materialized Variable "
+         "(a Part 2 UsdAttributeType). When present it takes precedence over the "
+         "TargetPrimPath/TargetPropertyName pair, which remain the portable descriptors.",
          MR_Optional)
 
 

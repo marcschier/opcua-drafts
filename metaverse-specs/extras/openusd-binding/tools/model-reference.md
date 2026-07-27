@@ -16,7 +16,7 @@
 | ns=1;i=6003 | SourceNodeId | Variable | Absolute NodeId of the source Variable (instance-level). Optional; prefer SourceBrowsePath for type-level declarations. |
 | ns=1;i=6004 | SourceBrowsePath | Variable | RelativePath to the source Variable, resolved from the represented object. Preferred, instance-portable form. |
 | ns=1;i=6005 | AttributeId | Variable | Source attribute id; default 13 (Value). Telemetry binds Value only. |
-| ns=1;i=6006 | TargetStage | Variable | NodeId of the OpenUsdStageType instance holding the target prim. |
+| ns=1;i=6006 | TargetStage | Variable | NodeId of the stage holding the target prim: an OpenUsdStageType instance, or a materialized Part 2 UsdStageType instance when the target is an in-server materialized scene. |
 | ns=1;i=6007 | TargetPrimPath | Variable | Prim path of the target: absolute, or relative to the representation PrimPath. |
 | ns=1;i=6008 | TargetPropertyName | Variable | USD attribute name on the target prim, e.g. 'xformOp:rotateZ' or 'primvars:displayColor'. |
 | ns=1;i=6009 | TargetUsdTypeName | Variable | Expected USD Sdf value type name, e.g. 'double', 'float', 'bool', 'color3f'. |
@@ -99,3 +99,4 @@
 | ns=1;i=6064 | DigestAlgorithm | Variable | Digest algorithm for Digest (default SHA-256). |
 | ns=1;i=6065 | Assets | Object | Optional registry of OpenUsdAssetType instances forming this stage's served layer closure (exactly one RootLayer). Present only when the server delivers its geometry; a connector that finds it fetches and composes the stage locally, else it resolves RootLayerIdentifier externally as before. |
 | ns=1;i=6066 | ComponentAssetNode | Variable | NodeId of the OpenUsdAssetType (under the stage's Assets folder) serving this component's asset, when the server delivers it. Complements ComponentAssetReference. |
+| ns=1;i=6067 | TargetNodeId | Variable | Optional direct NodeId of the target when it is an in-server materialized Variable (a Part 2 UsdAttributeType). When present it takes precedence over the TargetPrimPath/TargetPropertyName pair, which remain the portable descriptors. |

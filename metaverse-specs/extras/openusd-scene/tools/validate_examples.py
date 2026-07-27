@@ -39,6 +39,12 @@ def validate(path, scene_ids):
             tgt = (r.text or "").strip()
             if not resolves(tgt):
                 err.append(f"{nid} unresolved reference target {tgt}")
+        ad = n.get("ArrayDimensions"); vr = n.get("ValueRank")
+        if ad is not None and vr is not None:
+            try: rank = int(vr)
+            except ValueError: rank = None
+            if rank is not None and rank >= 0 and len(ad.split(",")) != rank:
+                err.append(f"{nid} ValueRank={rank} but ArrayDimensions '{ad}' has {len(ad.split(','))} entries")
         if n.get("ParentNodeId") and cls in ("UAObject","UAVariable"):
             if not any(r.get("ReferenceType") in ("HasTypeDefinition", "i=40") for r in refs):
                 err.append(f"{nid} has ParentNodeId but no HasTypeDefinition")

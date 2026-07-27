@@ -117,7 +117,17 @@
 | ns=1;i=6063 | ExpansionRule | Variable | Collection expansion rule token. |
 | ns=1;i=6064 | IncludesTargets | Variable | Included target NodeIds. |
 | ns=1;i=6065 | ExcludesTargets | Variable | Excluded target NodeIds. |
-| ns=1;i=6066 | <UsdApiSchema> | Object | Applied API schema AddIn instances. |
-| ns=1;i=6067 | <UsdCompositionArc> | Object | Composition arcs contributing opinions. |
-| ns=1;i=6068 | <UsdVariantSet> | Object | Variant sets available on this prim. |
-| ns=1;i=6069 | <Metadata> | Variable | Arbitrary metadata properties. |
+| ns=1;i=1022 | UsdGeoreferenceApiType | ObjectType | Portable stage georeference applied API schema: the geodetic origin that anchors the stage's local Cartesian frame to the globe. Vendor-neutral materialization of Cesium CesiumGeoreferencePrim / NVIDIA WGS84ReferencePositionAPI; maps to OPC UA GPOS (OPC 10000-211) GlobalPosition + GroundControlPoints (Annex B). |
+| ns=1;i=6066 | Latitude | Variable | Origin latitude in decimal degrees (WGS84 unless EpsgCode indicates otherwise). |
+| ns=1;i=6067 | Longitude | Variable | Origin longitude in decimal degrees. |
+| ns=1;i=6068 | Height | Variable | Origin height above the ellipsoid in metres. |
+| ns=1;i=6069 | EpsgCode | Variable | EPSG coordinate reference system code (0 = local, 4326 = WGS84/GPS). |
+| ns=1;i=6070 | TangentPlane | Variable | Local tangent-plane convention token (e.g. ENU or NED). |
+| ns=1;i=1023 | UsdGlobeAnchorApiType | ObjectType | Portable per-prim globe anchor applied API schema: the geodetic position of an individual prim, resolved against the stage UsdGeoreferenceApiType. Vendor-neutral materialization of Cesium CesiumGlobeAnchorAPI / NVIDIA WGS84LocalPositionAPI; maps to a per-asset OPC UA GPOS GlobalPosition. |
+| ns=1;i=6071 | Latitude | Variable | Prim latitude in decimal degrees. |
+| ns=1;i=6072 | Longitude | Variable | Prim longitude in decimal degrees. |
+| ns=1;i=6073 | Height | Variable | Prim height above the ellipsoid in metres. |
+| ns=1;i=6074 | <UsdApiSchema> | Object | Applied API schema AddIn instances. |
+| ns=1;i=6075 | <UsdCompositionArc> | Object | Composition arcs contributing opinions. |
+| ns=1;i=6076 | <UsdVariantSet> | Object | Variant sets available on this prim. |
+| ns=1;i=6077 | <Metadata> | Variable | Arbitrary metadata properties. |
