@@ -50,11 +50,28 @@ KNOWN_BASE = {
     # type definitions
     "i=58", "i=61", "i=63", "i=68", "i=76", "i=17602",
     # modelling rules
-    "i=78", "i=80", "i=11508",
+    "i=78", "i=80", "i=11508", "i=11510",
     # the Server object, parent of the well-known Vision entry point
     "i=2253",
 }
 HIER = {"i=47", "i=46", "i=35", "i=17603"}  # HasComponent/HasProperty/Organizes/HasInterface
+
+# Alias -> NodeId, so a DataType written as an alias in one NodeSet can be compared with
+# the same DataType written either way in another.
+ALIAS_TARGETS = {
+    "Boolean": "i=1", "Int32": "i=6", "UInt32": "i=7", "UInt64": "i=9",
+    "Double": "i=11", "String": "i=12", "Guid": "i=14", "ByteString": "i=15",
+    "NodeId": "i=17", "QualifiedName": "i=20", "LocalizedText": "i=21",
+    "UtcTime": "i=294", "Duration": "i=290", "Argument": "i=296",
+    "EUInformation": "i=887", "BaseDataType": "i=24",
+}
+
+
+def norm_dt(dt):
+    """Normalise a DataType written as an alias, a base NodeId, or a Vision NodeId."""
+    if dt is None:
+        return None
+    return ALIAS_TARGETS.get(dt, dt)
 
 ERR = []
 
@@ -154,6 +171,13 @@ def main():
                 err(f"{cls} {nid} ({bname}) ParentNodeId {parent} not backed by an "
                     "inverse hierarchical reference")
 
+        # The DataType attribute is as much a reference as anything in <References>;
+        # a typo here would otherwise pass silently.
+        if cls == "UAVariable" and n.get("DataType"):
+            dt = n.get("DataType")
+            if norm_dt(dt) not in KNOWN_BASE and not resolves(dt):
+                err(f"{cls} {nid} ({bname}) has unresolved DataType {dt}")
+
     # ---- forward/inverse hierarchical pairing -----------------------------
     for n in nodes:
         nid = n.get("NodeId")
@@ -184,6 +208,12 @@ def main():
 
         if is_enum:
             enum_values[bname] = {f.get("Name"): int(f.get("Value")) for f in fields}
+            # EnumStrings is index-addressed, so the literals must be contiguous from 0
+            # or the string mapping is silently wrong.
+            vals = sorted(int(f.get("Value")) for f in fields)
+            if vals != list(range(len(fields))):
+                err(f"enum {nid} ({bname}) values {vals} are not contiguous from 0; "
+                    "EnumStrings is index-addressed and would mis-map")
             es_id = None
             for r in n.findall(f"{NS}References/{NS}Reference"):
                 if (r.get("ReferenceType") == "HasProperty"
@@ -270,6 +300,48 @@ def main():
                 overlays.append(os.path.join(subdir, fn))
 
     own_ids = {int(k.split("i=")[1]) for k in by_id if k.startswith("ns=1;i=")}
+
+    # Resolve, per type, its Mandatory instance declarations and each member's declared
+    # DataType - including inherited ones - so an overlay can be checked against them.
+    def type_chain(tid):
+        chain, cur, guard = [], tid, 0
+        while cur is not None and guard < 20:
+            guard += 1
+            chain.append(cur)
+            nxt = None
+            node = by_id.get(f"ns=1;i={cur}")
+            if node is not None:
+                for r in node.findall(f"{NS}References/{NS}Reference"):
+                    if (r.get("ReferenceType") == "HasSubtype"
+                            and r.get("IsForward", "true") == "false"):
+                        t = (r.text or "").strip()
+                        if t.startswith("ns=1;i="):
+                            nxt = int(t.split("i=")[1])
+            cur = nxt
+        return chain
+
+    members_by_type = {}
+    for n in nodes:
+        p = n.get("ParentNodeId")
+        if not p or not p.startswith("ns=1;i="):
+            continue
+        owner = int(p.split("i=")[1])
+        rule = ""
+        for r in n.findall(f"{NS}References/{NS}Reference"):
+            if r.get("ReferenceType") == "HasModellingRule":
+                rule = {"i=78": "Mandatory", "i=80": "Optional",
+                        "i=11508": "OptionalPlaceholder",
+                        "i=11510": "MandatoryPlaceholder"}.get((r.text or "").strip(), "")
+        members_by_type.setdefault(owner, []).append(
+            (simple_name(n), rule, n.get("DataType")))
+
+    # Interfaces are applied with HasInterface, so their members count too.
+    iface_members = {}
+    for n in nodes:
+        if n.tag[len(NS):] == "UAObjectType":
+            tid = int(n.get("NodeId").split("i=")[1])
+            iface_members[tid] = members_by_type.get(tid, [])
+
     total_overlay_nodes = 0
     for ov_path in overlays:
         label = os.path.relpath(ov_path, vision_dir).replace("\\", "/")
@@ -308,6 +380,52 @@ def main():
                 if not any(r.get("ReferenceType") == "HasTypeDefinition"
                            for r in e.findall(f"{NS}References/{NS}Reference")):
                     err(f"{label}: {e.get('NodeId')} has no HasTypeDefinition")
+
+        # Mandatory-member and DataType conformance against the base model. Without
+        # this an overlay can instantiate a type and omit the members that make it
+        # meaningful, or narrow a member to an incompatible DataType.
+        ov_by_id = {e.get("NodeId"): e for e in ov_nodes}
+        children = {}
+        for e in ov_nodes:
+            p = e.get("ParentNodeId")
+            if p:
+                children.setdefault(p, []).append(e)
+        for e in ov_nodes:
+            td = None
+            ifaces = []
+            for r in e.findall(f"{NS}References/{NS}Reference"):
+                t = (r.text or "").strip()
+                if r.get("ReferenceType") == "HasTypeDefinition":
+                    td = t
+                elif (r.get("ReferenceType") == "HasInterface"
+                      and r.get("IsForward", "true") != "false"):
+                    ifaces.append(t)
+            if not td or not td.startswith("ns=2;i="):
+                continue
+            tid = int(td.split("i=")[1])
+            present = {simple_name(c) for c in children.get(e.get("NodeId"), [])}
+            declared = {}
+            for t in type_chain(tid) + [int(i.split("i=")[1]) for i in ifaces
+                                        if i.startswith("ns=2;i=")]:
+                for (mname, rule, mdt) in members_by_type.get(t, []):
+                    declared.setdefault(mname, (rule, mdt))
+            missing = sorted(m for m, (rule, _dt) in declared.items()
+                             if rule == "Mandatory" and m not in present)
+            if missing:
+                err(f"{label}: {e.get('NodeId')} ({simple_name(e)}) instantiates "
+                    f"ns=2;i={tid} but omits Mandatory member(s) {missing}")
+            for c in children.get(e.get("NodeId"), []):
+                cname = simple_name(c)
+                if cname in declared and c.get("DataType"):
+                    # The base model writes its own types as ns=1; in an overlay the
+                    # Vision namespace is index 2. Same type, different index.
+                    decl_dt = norm_dt(declared[cname][1])
+                    if decl_dt and decl_dt.startswith("ns=1;i="):
+                        decl_dt = decl_dt.replace("ns=1;i=", "ns=2;i=")
+                    if decl_dt and norm_dt(c.get("DataType")) != decl_dt:
+                        err(f"{label}: {c.get('NodeId')} ({cname}) has DataType "
+                            f"{c.get('DataType')} but the declaration on ns=2;i={tid} "
+                            f"is {declared[cname][1]}")
 
     if overlays:
         print(f"overlays: {len(overlays)} ({total_overlay_nodes} instance nodes)")

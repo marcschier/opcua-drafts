@@ -33,19 +33,52 @@ VISION_NS = vm.NAMESPACE
 # Base-UA NodeIds used by the overlays. Emitted through an <Aliases> block, as the
 # base NodeSets in this repository do, so the XML stays readable.
 ALIASES = [
-    ("Boolean", "i=1"), ("Int32", "i=6"), ("UInt32", "i=7"), ("Double", "i=11"),
-    ("String", "i=12"), ("LocalizedText", "i=21"),
+    ("Boolean", "i=1"), ("Int32", "i=6"), ("UInt32", "i=7"), ("UInt64", "i=9"),
+    ("Double", "i=11"), ("String", "i=12"), ("LocalizedText", "i=21"),
     ("HasComponent", "i=47"), ("HasProperty", "i=46"),
     ("HasTypeDefinition", "i=40"), ("HasInterface", "i=17603"),
+    ("Organizes", "i=35"), ("NodeId", "i=17"), ("UtcTime", "i=294"),
 ]
 
 HasComponent = "HasComponent"
 HasProperty = "HasProperty"
 HasTypeDefinition = "HasTypeDefinition"
 HasInterface = "HasInterface"
+Organizes = "Organizes"
 FolderType = "i=61"
 PropertyType = "i=68"
 BaseDataVariableType = "i=63"
+
+
+def method_decl(type_name, method_name):
+    """NodeId of a Method's declaration on a Vision type, for MethodDeclarationId."""
+    tid = TYPE_ID.get(type_name)
+    for n in vm.NODES.values():
+        if (n.cls == "UAMethod" and n.bname == method_name
+                and n.parent == f"ns=1;i={tid}"):
+            return f"ns=2;i={n.nid}"
+    raise SystemExit(f"no Method '{method_name}' on '{type_name}'")
+
+
+def mandatory_members(type_name):
+    """Mandatory member BrowseNames declared on a Vision type, including inherited."""
+    out = {}
+    tid = TYPE_ID.get(type_name)
+    guard = 0
+    while tid is not None and guard < 20:
+        guard += 1
+        for n in vm.NODES.values():
+            if n.parent != f"ns=1;i={tid}":
+                continue
+            for rt, tgt, fwd in n.refs:
+                if rt == vm.HasModellingRule and tgt == vm.MR_Mandatory:
+                    out.setdefault(n.bname, n)
+        nxt = None
+        for rt, tgt, fwd in vm.NODES[tid].refs:
+            if rt == vm.HasSubtype and not fwd and tgt.startswith("ns=1;i="):
+                nxt = int(tgt.split("i=")[1])
+        tid = nxt
+    return out
 
 # Type BrowseName -> NodeId in the Vision namespace, taken from the base model.
 TYPE_ID = {n.bname: n.nid for n in vm.NODES.values()
@@ -94,6 +127,28 @@ class Overlay:
         self.nodes.append(dict(cls="UAObject", nid=nid, browse=browse, desc=desc,
                                parent=(f"ns=1;i={parent}" if parent else None),
                                refs=refs, attrs={}, value=None))
+        return nid
+
+    def meth(self, browse, decl_id, parent, desc=None):
+        """A Method instance. Methods carry MethodDeclarationId, not HasTypeDefinition."""
+        nid = self._nid()
+        refs = [(HasComponent, f"ns=1;i={parent}", False)]
+        self._add_forward(parent, HasComponent, nid)
+        self.nodes.append(dict(cls="UAMethod", nid=nid, browse=browse, desc=desc,
+                               parent=f"ns=1;i={parent}", refs=refs,
+                               attrs={"MethodDeclarationId": decl_id}, value=None))
+        return nid
+
+    def struct_var(self, browse, datatype, parent, desc=None):
+        """A structure-valued member, declared with the right DataType. The concrete
+        value is carried in the addendum rather than encoded here."""
+        nid = self._nid()
+        refs = [(HasTypeDefinition, BaseDataVariableType, True),
+                (HasComponent, f"ns=1;i={parent}", False)]
+        self._add_forward(parent, HasComponent, nid)
+        self.nodes.append(dict(cls="UAVariable", nid=nid, browse=browse, desc=desc,
+                               parent=f"ns=1;i={parent}",
+                               refs=refs, attrs={"DataType": datatype}, value=None))
         return nid
 
     def folder(self, browse, parent, desc=None):
@@ -161,6 +216,8 @@ class Overlay:
             a.append(f'ParentNodeId="{n["parent"]}"')
         if "DataType" in n["attrs"]:
             a.append(f'DataType="{n["attrs"]["DataType"]}"')
+        if "MethodDeclarationId" in n["attrs"]:
+            a.append(f'MethodDeclarationId="{n["attrs"]["MethodDeclarationId"]}"')
         lines = ["  <" + " ".join(a) + ">"]
         lines.append(f'    <DisplayName>{sx.escape(n["browse"])}</DisplayName>')
         if n["desc"]:
@@ -187,6 +244,10 @@ def v_uint32(i):
     return f'<Value><uax:UInt32 {UAX}>{int(i)}</uax:UInt32></Value>'
 
 
+def v_uint64(i):
+    return f'<Value><uax:UInt64 {UAX}>{int(i)}</uax:UInt64></Value>'
+
+
 def v_double(d):
     return f'<Value><uax:Double {UAX}>{float(d)}</uax:Double></Value>'
 
@@ -200,6 +261,15 @@ def v_int32(i):
     return f'<Value><uax:Int32 {UAX}>{int(i)}</uax:Int32></Value>'
 
 
+def v_nodeid(s):
+    return (f'<Value><uax:NodeId {UAX}><uax:Identifier>{sx.escape(str(s))}'
+            f'</uax:Identifier></uax:NodeId></Value>')
+
+
+def v_datetime(s):
+    return f'<Value><uax:DateTime {UAX}>{sx.escape(str(s))}</uax:DateTime></Value>'
+
+
 def v_ltext(s):
     return (f'<Value><uax:LocalizedText {UAX}>'
             f'<uax:Text>{sx.escape(str(s))}</uax:Text></uax:LocalizedText></Value>')
@@ -208,11 +278,14 @@ def v_ltext(s):
 # Property name -> (DataType alias, value emitter). Anything not listed is a String.
 DT = {
     "UInt32": ("UInt32", v_uint32),
+    "UInt64": ("UInt64", v_uint64),
     "Double": ("Double", v_double),
     "Boolean": ("Boolean", v_bool),
     "Int32": ("Int32", v_int32),
     "String": ("String", v_string),
     "LocalizedText": ("LocalizedText", v_ltext),
+    "NodeId": ("NodeId", v_nodeid),
+    "UtcTime": ("UtcTime", v_datetime),
 }
 
 
@@ -242,6 +315,7 @@ def build_media(ov, sensor, st, cl):
     put(ov, stream, "EndpointId", "String", st["endpointId"])
     put(ov, stream, "EndpointUri", "String", st["endpointUri"])
     put_enum(ov, stream, "StreamProtocol", "VisionStreamProtocolEnum", st["protocol"])
+    put(ov, stream, "ProtocolVersion", "String", st.get("protocolVersion", "1.0"))
     put_enum(ov, stream, "State", "VisionEndpointStateEnum", st.get("state", "Ready"))
     put_enum(ov, stream, "Authentication", "VisionEndpointAuthenticationEnum",
              st.get("authentication", "Digest"))
@@ -265,13 +339,19 @@ def build_media(ov, sensor, st, cl):
         put(ov, clip, "InlineDeliveryEnabled", "Boolean", cl["inlineDeliveryEnabled"])
     if "maxInlineClipSize" in cl:
         put(ov, clip, "MaxInlineClipSize", "UInt32", cl["maxInlineClipSize"])
+
+    # Mandatory Methods of VisionMediaManagementType.
+    for mname in ("GetStreamEndpoint", "ReleaseStreamEndpoint", "GetClip"):
+        ov.meth(mname, method_decl("VisionMediaManagementType", mname), media,
+                desc=f"{mname} as declared by VisionMediaManagementType.")
     return media
 
 
-def build_sensor(ov, name, s, sim=None):
+def build_sensor(ov, name, s, sim=None, parent=None):
     """One sensor instance, physical or simulated. Both take the identical shape -
     that is the sim/real symmetry the base specification requires."""
-    sensor = ov.obj(name, vtype(s["type"]), desc=s.get("description"))
+    sensor = ov.obj(name, vtype(s["type"]), parent, reftype=Organizes,
+                    desc=s.get("description"))
     if s.get("realityKind") in ("Simulated", "Hybrid"):
         ov.iface(sensor, vtype("IVisionSimulatedType"))
 
@@ -301,8 +381,7 @@ def build_sensor(ov, name, s, sim=None):
             put(ov, sensor, "GroundTruthAvailable", "Boolean",
                 sim["groundTruthAvailable"])
         if "randomizationSeed" in sim:
-            put(ov, sensor, "RandomizationSeed", "String",
-                str(sim["randomizationSeed"]))
+            put(ov, sensor, "RandomizationSeed", "UInt64", sim["randomizationSeed"])
     return sensor
 
 
@@ -310,8 +389,20 @@ def build_overlay(d):
     ov = Overlay(d["exampleNamespaceUri"])
     s = d["sensor"]
 
+    # A browsable root, so the example follows the mandatory §4.2 discovery path rather
+    # than leaving instances unreachable in the address space.
+    root = ov.obj("Vision", vtype("VisionRootType"),
+                  desc="Well-known Vision entry point for this example.")
+    f_sensors = ov.folder("Sensors", root)
+    f_pipelines = ov.folder("Pipelines", root)
+    f_models = ov.folder("Models", root)
+    f_frames = ov.folder("Frames", root)
+    f_jobs = ov.folder("LearningJobs", root)
+    ov.roots = dict(sensors=f_sensors, pipelines=f_pipelines, models=f_models,
+                    frames=f_frames, jobs=f_jobs)
+
     sim = d.get("simulation") if s.get("realityKind") in ("Simulated", "Hybrid") else None
-    sensor = build_sensor(ov, d["instanceName"], s, sim)
+    sensor = build_sensor(ov, d["instanceName"], s, sim, parent=f_sensors)
     build_media(ov, sensor, d["stream"], d["clip"])
 
     # --- optics -------------------------------------------------------------
@@ -327,12 +418,23 @@ def build_overlay(d):
             if key in o:
                 put(ov, optics, name, "String", o[key])
 
+    # --- coordinate frames (built first so calibrations can reference them) ----
+    frame_ids = {}
+    for f in d.get("frames", []):
+        fr = ov.obj(f["name"], vtype("CoordinateFrameType"), ov.roots["frames"],
+                    reftype=Organizes, desc=f.get("description"))
+        put(ov, fr, "FrameId", "String", f["frameId"])
+        put_enum(ov, fr, "Role", "VisionFrameRoleEnum", f["role"])
+        frame_ids[f["frameId"]] = f"ns=1;i={fr}"
+
     # --- calibration --------------------------------------------------------
     if d.get("calibrations"):
         cals = ov.folder("Calibrations", sensor)
         for c in d["calibrations"]:
             cal = ov.obj(c["name"], vtype(c["type"]), cals, desc=c.get("description"))
             put(ov, cal, "CalibrationId", "String", c["calibrationId"])
+            put(ov, cal, "PerformedAt", "UtcTime",
+                c.get("performedAt", "2026-07-01T00:00:00Z"))
             put(ov, cal, "Valid", "Boolean", c.get("valid", True))
             if "residualError" in c:
                 put(ov, cal, "ResidualError", "Double", c["residualError"])
@@ -340,11 +442,23 @@ def build_overlay(d):
                 put(ov, cal, "Method", "String", c["method"])
             if c["type"] == "ExtrinsicCalibrationType":
                 put_enum(ov, cal, "Mount", "VisionCalibrationMountEnum", c["mount"])
+                put(ov, cal, "SourceFrame", "NodeId",
+                    frame_ids.get(c["sourceFrame"], "i=0"))
+                put(ov, cal, "TargetFrame", "NodeId",
+                    frame_ids.get(c["targetFrame"], "i=0"))
+                ov.struct_var("Transform", f"ns=2;i={TYPE_ID['VisionPose3DDataType']}",
+                              cal, desc="Pose of SourceFrame expressed in TargetFrame; "
+                                        "the values are tabulated in the addendum.")
+            else:
+                ov.struct_var("Intrinsics",
+                              f"ns=2;i={TYPE_ID['VisionIntrinsicsDataType']}", cal,
+                              desc="Intrinsic parameters; the values are tabulated in "
+                                   "the addendum.")
 
     # --- AI -----------------------------------------------------------------
     ai = d["ai"]
-    model = ov.obj(ai["model"]["name"], vtype("AiModelType"),
-                   desc=ai["model"].get("description"))
+    model = ov.obj(ai["model"]["name"], vtype("AiModelType"), ov.roots["models"],
+                   reftype=Organizes, desc=ai["model"].get("description"))
     m = ai["model"]
     put(ov, model, "ModelId", "String", m["modelId"])
     put(ov, model, "Name", "LocalizedText", m["name"])
@@ -355,8 +469,8 @@ def build_overlay(d):
             put(ov, model, name, "String", m[key])
 
     dep = ai["deployment"]
-    deployment = ov.obj(dep["name"], vtype("AiDeploymentType"),
-                        desc=dep.get("description"))
+    deployment = ov.obj(dep["name"], vtype("AiDeploymentType"), ov.roots["models"],
+                        reftype=Organizes, desc=dep.get("description"))
     put(ov, deployment, "DeploymentId", "String", dep["deploymentId"])
     put_enum(ov, deployment, "InferenceLocation", "VisionInferenceLocationEnum",
              dep["inferenceLocation"])
@@ -369,9 +483,11 @@ def build_overlay(d):
         put(ov, deployment, "EndpointUri", "String", dep["endpointUri"])
 
     pl = ai["pipeline"]
-    pipeline = ov.obj(pl["name"], vtype("InferencePipelineType"),
-                      desc=pl.get("description"))
+    pipeline = ov.obj(pl["name"], vtype("InferencePipelineType"), ov.roots["pipelines"],
+                      reftype=Organizes, desc=pl.get("description"))
     put(ov, pipeline, "PipelineId", "String", pl["pipelineId"])
+    put(ov, pipeline, "Sensor", "NodeId", f"ns=1;i={sensor}")
+    put(ov, pipeline, "Deployment", "NodeId", f"ns=1;i={deployment}")
     put_enum(ov, pipeline, "State", "VisionEndpointStateEnum",
              pl.get("state", "Active"))
     put(ov, pipeline, "Continuous", "Boolean", pl.get("continuous", True))
@@ -384,17 +500,19 @@ def build_overlay(d):
     # point: a client cannot distinguish them except by reading RealityKind.
     if "twin" in d:
         tw = d["twin"]
-        twin = build_sensor(ov, tw["instanceName"], tw["sensor"], tw["simulation"])
+        twin = build_sensor(ov, tw["instanceName"], tw["sensor"], tw["simulation"],
+                            parent=ov.roots["sensors"])
         build_media(ov, twin, tw["stream"], tw["clip"])
         if "learningJob" in tw:
             lj = tw["learningJob"]
             dataset = ov.obj(lj["datasetName"], vtype("AiDatasetType"),
+                             ov.roots["models"], reftype=Organizes,
                              desc="Synthetic dataset produced from the twin.")
             put(ov, dataset, "DatasetId", "String", lj["datasetId"])
             put_enum(ov, dataset, "SourceKind", "VisionDatasetSourceEnum",
                      lj.get("sourceKind", "Synthetic"))
-            job = ov.obj(lj["name"], vtype("LearningJobType"),
-                         desc=lj.get("description"))
+            job = ov.obj(lj["name"], vtype("LearningJobType"), ov.roots["jobs"],
+                         reftype=Organizes, desc=lj.get("description"))
             put(ov, job, "JobId", "String", lj["jobId"])
             put_enum(ov, job, "State", "VisionLearningJobStateEnum",
                      lj.get("state", "Collecting"))

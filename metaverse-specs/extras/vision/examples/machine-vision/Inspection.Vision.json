@@ -39,25 +39,45 @@
     "mountType": "C",
     "lensType": "Telecentric"
   },
+  "frames": [
+    {
+      "name": "StationFrame",
+      "description": "Inspection station world frame.",
+      "frameId": "station",
+      "role": "World"
+    },
+    {
+      "name": "CameraFrame",
+      "description": "Optical frame of the fixed inspection camera.",
+      "frameId": "camera_insp_07",
+      "role": "Camera"
+    }
+  ],
   "calibrations": [
     {
       "name": "Intrinsics2592x1944",
       "type": "IntrinsicCalibrationType",
       "description": "Pinhole intrinsics at full resolution; a telecentric lens leaves very little residual distortion.",
       "calibrationId": "intr-cam-insp-07",
+      "performedAt": "2026-05-02T07:55:00Z",
       "valid": true,
       "residualError": 0.08,
-      "method": "Zhang"
+      "method": "Zhang",
+      "values": "Fx = 8310.2 px, Fy = 8309.6 px, Cx = 1295.4 px, Cy = 971.2 px, Skew = 0, DistortionModel = BrownConrady, DistortionCoefficients = [-0.0021, 0.0004, 0.0, 0.0, 0.0], Width = 2592, Height = 1944"
     },
     {
       "name": "StationMounting",
       "type": "ExtrinsicCalibrationType",
       "description": "Transform from the camera frame to the station world frame. The camera is fixed, so there is no kinematic chain.",
       "calibrationId": "extr-cam-insp-07",
+      "performedAt": "2026-05-02T08:20:00Z",
       "valid": true,
       "residualError": 0.00015,
       "method": "TargetPlate",
-      "mount": "Fixed"
+      "mount": "Fixed",
+      "sourceFrame": "camera_insp_07",
+      "targetFrame": "station",
+      "values": "FrameId = station, Position = (0.0, 0.0, 0.320) m, Orientation = (1.0, 0.0, 0.0, 0.0) as (x, y, z, w), Covariance = empty"
     }
   ],
   "stream": {
@@ -113,5 +133,5 @@
   },
   "inferenceNote": "Inference runs **on-server**: `InferenceLocation = OnServer`, on an NPU in the station industrial PC. A client consuming the results cannot distinguish this from the off-server robotics example except by reading that one property — which is the intent of base specification §8.2. Because the pipeline is not continuous, `RunInference` is called per part by the station PLC and returns the `ResultId` it produced.",
   "resultsNote": "Each part produces an `InspectionResultType`. `Evaluation` uses the OPC 40001-101 value semantics, and the `Characteristics` array carries one `VisionCharacteristicDataType` per measured feature — for example a flatness with `Nominal = 0.0`, `Actual = 0.018`, `UpperTolerance = 0.020`, `Unit = mm` and `Uncertainty = 0.004`. That last field is the point: because the expanded uncertainty spans the tolerance limit, the Server reports `NotDecidable` rather than asserting `Ok` from the point estimate alone. A verdict recorded this way is reproducible by a third party, and a QIF document can be generated from it without inventing information.",
-  "feedbackNote": "When a quality engineer overrides a verdict at the review station, the HMI calls `SubmitCorrection` with `Purpose = GroundTruthLabel`, passing the corrected characteristics and a reason. Because this endpoint enables inline delivery, the corrected thumbnail may accompany the call as an inline `ByteString` provided it fits `MaxInlineFeedbackImageSize`; anything larger is rejected with `Bad_EncodingLimitsExceeded` and resubmitted through `SubmitImageReference`. Downstream leak-test results arrive through `SubmitInspectionResult` with `Purpose = Reconciliation`, so what the line concluded can be compared against what the vision system reported — and the disagreements are precisely the samples the next `LearningJobType` collects."
+  "feedbackNote": "When a quality engineer overrides a verdict at the review station, the HMI calls `SubmitCorrection` with `Purpose = GroundTruthLabel`, passing the corrected characteristics and a reason. Because this endpoint enables inline delivery, the corrected thumbnail may accompany the call as an inline `ByteString` provided it fits `MaxInlineFeedbackImageSize`; anything larger is rejected with `Bad_EncodingLimitsExceeded` and resubmitted through `SubmitImageReference`. Downstream leak-test results arrive through `SubmitInspectionResult`, which reconciles a downstream `Evaluation` and its characteristics against what the vision system originally reported — and the disagreements are precisely the samples the next `LearningJobType` collects."
 }

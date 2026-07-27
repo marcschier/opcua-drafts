@@ -46,12 +46,12 @@ Release 0.1.0 covers sensors, media endpoints, frames and calibration, AI model/
 
 ## 2 Normative references
 
-- **OPC 10000-3, -4, -5** — Address Space Model, Services, Information Model. The base UA namespace is the only required model.
-- **OPC 10000-6** — Mappings. `MaxByteStringLength` in §6.5 is the encoding limit negotiated per session, and is the bound on inline media delivery.
+- **OPC 10000-3, -4, -5** — Address Space Model, Services, Information Model. The base UA namespace is the only required model. `Server.ServerCapabilities.MaxByteStringLength` (OPC 10000-5) bounds inline media delivery (§6.4).
+- **OPC 10000-6** — Mappings. The channel's negotiated `MaxMessageSize` and the Session's `MaxResponseMessageSize` further bound inline delivery (§6.4).
 - **ISO 9787:2013** — *Robots and robotic devices — Coordinate systems and motion nomenclatures*. Source of the frame roles in `VisionFrameRoleEnum`.
-- **ISO 14253** — *Geometrical product specifications — Inspection by measurement of workpieces and measuring equipment*. Source of the uncertainty semantics in `VisionCharacteristicDataType`.
-- **RFC 7826** — Real-Time Streaming Protocol version 2.0 (and RFC 2326 for RTSP 1.0). The mandatory default streaming protocol.
-- **ISO/IEC 10918** — JPEG. The mandatory default clip format.
+- **ISO 14253-1** — *Geometrical product specifications — Inspection by measurement*. Source of the uncertainty semantics and the coverage factor in §5.10 and §7.2.
+- **RFC 2326** — Real-Time Streaming Protocol 1.0. The mandatory default streaming protocol (§6.2). RTSP 2.0 (RFC 7826) is **not** backward compatible with 1.0 and is an optional additional protocol; `StreamEndpointType.ProtocolVersion` distinguishes them.
+- **ISO/IEC 10918** — JPEG. The mandatory default clip format (§6.2).
 
 Informative alignments — GenICam SFNC and PFNC, QIF (ISO 23952), ROS 2 `vision_msgs`, IDTA 02058/02059/02060 — are listed in Annex E. They are **not** normative references and impose no dependency.
 
@@ -203,11 +203,68 @@ Enumerations: `VisionRealityKindEnum`, `VisionStreamProtocolEnum`, `VisionClipFo
 
 Structures: `VisionPose3DDataType`, `VisionBoundingBox2DDataType`, `VisionBoundingBox3DDataType`, `VisionImageReferenceDataType`, `VisionIntrinsicsDataType`, `VisionDetectionDataType`, `VisionCharacteristicDataType`, `VisionStreamSessionDataType`, `VisionTensorSignatureDataType`.
 
-Full field-level detail is in the generated Annex A.
+Full field-level detail — DataType, ValueRank, ModellingRule, structure fields, enumeration values and Method signatures — is in the generated Annex A. Units and orderings for every quantity are fixed normatively in §5.10.
 
 ### 5.9 ReferenceTypes
 
-`HasCalibration`, `MountedOn`, `HasScenePrim`, `UsesModel`, `ProducedBy` — each with an inverse name, each subtyping `NonHierarchicalReferences`.
+Each ReferenceType subtypes `NonHierarchicalReferences`. The following constraints are **normative**; a Server **shall not** use these ReferenceTypes with other SourceNode or TargetNode types.
+
+| ReferenceType | InverseName | SourceNode | TargetNode | Cardinality |
+|---|---|---|---|---|
+| `HasCalibration` | `IsCalibrationOf` | `VisionSensorType` | `VisionCalibrationType` | 0..n, at most one *valid* per calibration kind |
+| `MountedOn` | `HasMounted` | `VisionSensorType` | `CoordinateFrameType` | 0..1 |
+| `HasScenePrim` | `IsScenePrimOf` | `VisionSensorType` | a materialized camera prim (Annex C) | 0..1 |
+| `UsesModel` | `IsUsedByPipeline` | `AiDeploymentType` | `AiModelType` | **exactly 1** |
+| `ProducedBy` | `Produces` | `VisionResultType` | `InferencePipelineType` | 0..1 |
+
+The following are **normative**:
+
+- An `AiDeploymentType` instance **shall** have exactly one `UsesModel` reference to an `AiModelType` instance. This is the only defined path from a result to the model artefact and its `Digest`, and §12.6 depends on it.
+- A `VisionResultType` instance **shall** identify its producer either by the `Pipeline` Property or by a `ProducedBy` reference. Where both are present they **shall** designate the same `InferencePipelineType` instance; a client **shall** treat the `ProducedBy` reference as authoritative.
+- Where a sensor is calibrated, it **shall** carry a `HasCalibration` reference to each applicable calibration in addition to listing it under `Calibrations`.
+
+### 5.10 Units, encodings and conventions (normative)
+
+Every physical quantity in this model is fixed here. A Server **shall** use these units and orderings, and **shall not** substitute others.
+
+| Member or field | Unit / encoding |
+|---|---|
+| `ImageSensorType.ExposureTime` | microseconds |
+| `ImageSensorType.Width`, `Height`, `OffsetX`, `OffsetY` | pixels |
+| `VisionPose3DDataType.Position` | metres, ordered (x, y, z) |
+| `VisionPose3DDataType.Orientation` | **unit quaternion ordered (x, y, z, w)** |
+| `VisionPose3DDataType.Covariance` | row-major 6×6 over (x, y, z, rx, ry, rz), rotations in radians; an **empty array** means not reported |
+| `VisionBoundingBox2DDataType` | pixels; origin is the **top-left** pixel; `Rotation` is **degrees clockwise** about the box centre |
+| `VisionBoundingBox3DDataType.Size` | metres, ordered (x, y, z) |
+| `VisionIntrinsicsDataType.Fx`, `Fy`, `Cx`, `Cy` | pixels, in the top-left-origin image frame |
+| `OpticsType.FocalLength` | millimetres |
+| `OpticsType.WorkingDistance`, `MinimumWorkingDistance` | metres |
+| `IlluminationType.Wavelength` | nanometres |
+| `IlluminationType.RelativeIntensity`, `Quality` | percent (0–100) |
+| `Depth3DSensorType.MinDepth`, `MaxDepth`, `Baseline` | metres |
+| `StreamEndpointType.Bitrate` | bits per second |
+| `StreamEndpointType.FrameRate`, `ImageSensorType.AcquisitionFrameRate` | frames per second |
+| `Confidence`, `VisionDetectionDataType.Confidence` | 0.0 to 1.0 inclusive |
+| `ClipEndpointType.Quality` | 0 to 100, format-defined |
+| `MaxInlineClipSize`, `MaxInlineFeedbackImageSize`, `SizeBytes` | bytes |
+| `PixelFormat` | a GenICam **PFNC** name, e.g. `Mono8`, `BayerRG12`, `RGB8` |
+| `DigestAlgorithm` | an IANA hash-function name; the default is `SHA-256` |
+
+**Measurement uncertainty.** `VisionCharacteristicDataType.Uncertainty` is the **expanded** uncertainty at **coverage factor k = 2** (approximately 95 %), per ISO 14253-1, expressed in the same unit as `Actual`. A value of `0` means uncertainty is not reported, and a Server that does not evaluate uncertainty **shall** report `0` rather than a guess. Without a fixed coverage factor the §7.2 `NotDecidable` rule would not be reproducible between Servers, so a Server **shall not** report uncertainty at another coverage factor.
+
+**Distortion coefficient ordering.** `VisionIntrinsicsDataType.DistortionCoefficients` **shall** be ordered per `DistortionModel`:
+
+| `DistortionModel` | Ordering |
+|---|---|
+| `None` | empty array |
+| `BrownConrady` | k1, k2, p1, p2, k3 (further radial terms k4, k5, k6 may follow) |
+| `KannalaBrandt` | k1, k2, k3, k4 |
+| `RationalPolynomial` | k1, k2, p1, p2, k3, k4, k5, k6 |
+| `Other` | undefined; a client **shall not** attempt to undistort |
+
+**Structure field optionality.** The structures of this specification are plain structures: every field is always encoded. Optionality is expressed by explicit `Has…` Boolean fields. Where a `Has…` field is `false`, the corresponding field **shall** be encoded with default values and a client **shall** ignore its content. Where a field has no `Has…` companion, the sentinel for "not reported" is: empty array (`Covariance`, `DistortionCoefficients`), `0` (`Uncertainty`), empty `ByteString` (`Digest`), or empty `String` (`TrackId`, `Uri`).
+
+**NodeId-valued Properties.** A Property whose DataType is `NodeId` (`Sensor`, `Pipeline`, `Deployment`, `ParentFrame`, `SourceFrame`, `TargetFrame`, `PreferredStreamEndpoint`, `PreferredClipEndpoint`, `Dataset`, `BaseModel`, `CandidateModel`) **shall** contain either a NodeId resolvable in the same Server or a null NodeId. A null NodeId means "not set"; a Server **shall not** use a non-null NodeId that does not resolve.
 
 ---
 
@@ -219,45 +276,101 @@ Full field-level detail is in the generated Annex A.
 
 ### 6.2 Mandatory defaults
 
-A conformant Server **shall** expose, for every sensor:
-
-- at least one `StreamEndpointType` instance whose `StreamProtocol` is **`Rtsp`**; and
-- at least one `ClipEndpointType` instance whose `ClipFormat` is **`Jpeg`**.
+A Server claiming the *VIS-Media-Rtsp* facet **shall** expose, for every sensor, at least one `StreamEndpointType` instance whose `StreamProtocol` is **`Rtsp`**. A Server claiming the *VIS-Media-Jpeg* facet **shall** expose, for every sensor, at least one `ClipEndpointType` instance whose `ClipFormat` is **`Jpeg`**. Both facets are required by *VIS-Base* (§11), so for any conformant Server both hold.
 
 Every other protocol (`Rtsps`, `WebRtc`, `Srt`, `Hls`, `Mjpeg`, `GenDc`) and every other format (`Png`, `Tiff`, `Bmp`, `WebP`, `GenDc`) is **optional**. A client may therefore assume, without negotiation, that RTSP and JPEG are available.
 
-`Rtsp` is value 0 of `VisionStreamProtocolEnum` and `Jpeg` is value 0 of `VisionClipFormatEnum`; the repository validator enforces both, so the guarantee cannot drift.
+`Rtsp` is value 0 of `VisionStreamProtocolEnum` and `Jpeg` is value 0 of `VisionClipFormatEnum`; the repository validator enforces both, so the guarantee cannot drift. The `StreamEndpoints` and `ClipEndpoints` folders each declare a `MandatoryPlaceholder` member, so the requirement is discoverable from the type and not only from this clause.
+
+RTSP means **RTSP/1.0 (RFC 2326)** unless `ProtocolVersion` says otherwise. RTSP 2.0 is not backward compatible, so a Server offering only 2.0 **shall not** claim *VIS-Media-Rtsp*.
 
 ### 6.3 Selecting and configuring endpoints
 
-`VisionMediaManagementType` holds `StreamEndpoints` and `ClipEndpoints` folders, the `PreferredStreamEndpoint` and `PreferredClipEndpoint` pointers, and these Methods:
+`VisionMediaManagementType` holds `StreamEndpoints` and `ClipEndpoints` folders, the `PreferredStreamEndpoint` and `PreferredClipEndpoint` pointers, and the Methods defined in §6.5.
 
-| Method | Rule | Purpose |
-|---|---|---|
-| `GetStreamEndpoint` | M | Lease a stream; returns a `VisionStreamSessionDataType` |
-| `ReleaseStreamEndpoint` | M | End a lease |
-| `GetClip` | M | Obtain the still for a `ResultId` or a timestamp |
-| `ConfigureStreamEndpoint` | O | Change codec, resolution, frame rate, bitrate |
-| `SelectEndpoint` | O | Set the preferred endpoints |
+**Endpoint selection (normative).** `GetStreamEndpoint` and `GetClip` each take an `Endpoint` argument. When it is null the Server **shall** use `PreferredStreamEndpoint` / `PreferredClipEndpoint`; when that pointer is also null the Server **shall** select the first endpoint in the corresponding folder, in BrowseName order, that satisfies the request. Both Methods return the `Endpoint` actually used, so the choice is never ambiguous to the caller.
 
-`GetStreamEndpoint` returns a session whose `Uri` **may** embed a single-use or time-limited credential, which is why it is a Method result and not a browsable Variable. A Server **shall** honour `ExpiresAt` and **shall** expire leases automatically even if `ReleaseStreamEndpoint` is never called.
+Where `GetClip.Format` and the selected endpoint's `ClipFormat` differ, the **argument wins**: the Server either transcodes or returns `Bad_NotSupported` (§6.5). `Jpeg` is always supported by at least one endpoint (§6.2).
 
-`PreferredProtocol` is advisory: a Server returns what it can serve, which is at minimum RTSP.
+`PreferredProtocol` on `GetStreamEndpoint` is advisory: the Server returns what it can serve, which is at minimum RTSP.
 
 ### 6.4 Optional inline clip delivery
 
 A `ClipEndpointType` **may** additionally publish the encoded image inline, so that clients can `Read` it or, more usefully, **subscribe to it with a MonitoredItem**. The value changes once per acquisition, which suits one-image-per-inspected-part operation.
 
-This facet is governed by four rules:
+This facet is governed by five rules:
 
-1. **The out-of-band path remains the default.** Inline delivery is optional, is declared by the *Media Inline Delivery* facet, and a Server is fully conformant without it. `InlineDeliveryEnabled` states whether it is active.
-2. **Size is bounded.** `MaxInlineClipSize` **shall not** exceed the session's negotiated `MaxByteStringLength`, and a Server **shall not** publish an inline clip larger than `MaxInlineClipSize`.
-3. **Overflow is explicit.** When the encoded image exceeds the limit, the Server **shall** set the `LatestClip` StatusCode to **`Bad_EncodingLimitsExceeded`**. The client **shall** fall back to `LatestClipMetadata.Uri`, which remains valid. `LatestClipMetadata` is populated whenever a clip exists, whether or not the bytes are published inline.
-4. **Degrade rather than fail.** A Server **should** offer a reduced-resolution or reduced-quality thumbnail profile that fits the limit, rather than persistently returning `Bad_EncodingLimitsExceeded`.
+1. **The out-of-band path remains the default.** Inline delivery is optional, is declared by the *VIS-Media-Inline* facet, and a Server is fully conformant without it. `InlineDeliveryEnabled` states whether it is active.
+2. **Size is bounded, and the bound is a Server capability.** A Server implementing this facet **shall** publish `Server.ServerCapabilities.MaxByteStringLength`, and `MaxInlineClipSize` **shall not** exceed it. A Server **shall not** publish an inline clip larger than `MaxInlineClipSize`. Where a Session's `MaxResponseMessageSize`, or the channel's negotiated `MaxMessageSize`, is smaller than `MaxInlineClipSize`, the Server **shall** treat that Session as though `MaxInlineClipSize` were the smaller value and apply rule 3 accordingly. `MaxByteStringLength` is a Server-wide capability rather than a per-Session negotiated value; this rule is what makes one published bound safe for Sessions with differing message limits.
+3. **Overflow is explicit.** When the encoded image exceeds the effective limit of rule 2, the Server **shall** set the `LatestClip` StatusCode to **`Bad_EncodingLimitsExceeded`** and **shall not** truncate. The client **shall** fall back to `LatestClipMetadata.Uri`, which remains valid.
+4. **Correlation is defined.** A Server **shall** update `LatestClip` and `LatestClipMetadata` so that both reflect the same acquisition, and where both are reported in a Subscription they **shall** be reported in the same NotificationMessage. A client **shall** use `LatestClipMetadata.Timestamp` together with `Digest` as the correlation key, and **shall not** assume that two independently received values belong to the same frame.
+5. **Initial and disabled states are defined.** Before the first acquisition a Server **shall** report both `LatestClip` and `LatestClipMetadata` with StatusCode `Bad_NoDataAvailable`. Where `InlineDeliveryEnabled` is `false` the Server **shall** report `LatestClip` with StatusCode `Bad_NotSupported`; `LatestClipMetadata` remains readable.
+
+A Server **should** offer a reduced-resolution or reduced-quality thumbnail profile that fits the limit, rather than persistently returning `Bad_EncodingLimitsExceeded`.
 
 `GetClip` follows the same discipline: it always returns a descriptor carrying a `Uri`, and returns bytes in `InlineImage` only when `RequestInline` is true **and** the encoded image fits.
 
 **Inline delivery is not a video path.** It exists for single stills. A client that wants continuous imagery uses a `StreamEndpointType`.
+
+### 6.5 Media Method definitions (normative)
+
+Argument order is as declared in Annex A. A null or empty argument means "not specified" unless stated otherwise. A Server **shall** return the listed StatusCode when the stated condition holds, and **shall not** return `Good` in that case.
+
+**`GetStreamEndpoint(Endpoint, ProfileName, PreferredProtocol) → (Session, Endpoint)`** — leases a stream. `Endpoint` null selects per §6.3; `ProfileName` empty selects the endpoint's default profile. The returned `Session.Uri` **may** embed a single-use or time-limited credential, which is why it is a Method result and not a browsable Variable. A Server **shall** set `Session.ExpiresAt` and **shall** expire the lease then, even if `ReleaseStreamEndpoint` is never called.
+
+| StatusCode | Condition |
+|---|---|
+| `Bad_NotFound` | `Endpoint` is non-null but is not a `StreamEndpointType` of this sensor |
+| `Bad_InvalidArgument` | `ProfileName` is non-empty and unknown to the selected endpoint |
+| `Bad_ResourceUnavailable` | `ActiveSessions` has reached `MaxSessions` |
+| `Bad_NotSupported` | no endpoint can serve `PreferredProtocol` and the caller rejected the fallback |
+| `Bad_UserAccessDenied` | the caller is not authorized for media access (§12.1) |
+
+**`ReleaseStreamEndpoint(SessionToken)`** — ends a lease. Releasing an already-expired or already-released token is **not** an error: a Server **shall** return `Good`, so a client's cleanup path is idempotent.
+
+| StatusCode | Condition |
+|---|---|
+| `Bad_NotFound` | `SessionToken` was never issued by this Server |
+
+**`ConfigureStreamEndpoint(Endpoint, Codec, Width, Height, FrameRate, Bitrate)`** — changes encoding parameters. A Server **shall** either apply the request exactly, or clamp each unsupported value to the nearest supported one and return `Good_Clamped`, or reject with `Bad_OutOfRange`. It **shall not** silently apply a different value and return `Good`. The effective values are readable on the endpoint afterwards.
+
+| StatusCode | Condition |
+|---|---|
+| `Good_Clamped` | one or more values were clamped to a supported value |
+| `Bad_NotFound` | `Endpoint` is not a `StreamEndpointType` of this sensor |
+| `Bad_OutOfRange` | a value is unsupported and the Server does not clamp |
+| `Bad_NotSupported` | `Codec` is not supported by the endpoint |
+| `Bad_InvalidState` | the endpoint has active sessions and cannot be reconfigured |
+
+**`SelectEndpoint(StreamEndpoint, ClipEndpoint)`** — sets the preferred pointers. A null argument leaves that pointer unchanged.
+
+| StatusCode | Condition |
+|---|---|
+| `Bad_NotFound` | an argument is non-null and does not resolve |
+| `Bad_TypeMismatch` | an argument resolves to a node of the wrong endpoint kind |
+
+**`GetClip(Endpoint, ResultId, Timestamp, Format, RequestInline) → (Image, Endpoint, InlineImage)`** — returns the still associated with `ResultId`, or the frame nearest `Timestamp` when `ResultId` is empty. Exactly one selector **shall** be supplied. `Image` is always populated with a resolvable `Uri`; `InlineImage` is populated only when `RequestInline` is true and the encoded image fits the effective limit of §6.4 rule 2, and is otherwise empty with `Image.Uri` still valid.
+
+| StatusCode | Condition |
+|---|---|
+| `Bad_InvalidArgument` | `ResultId` empty **and** `Timestamp` null, or both supplied |
+| `Bad_NotFound` | `ResultId` unknown, or no frame near `Timestamp` within retention |
+| `Bad_NotSupported` | `Format` cannot be produced by any clip endpoint of this sensor |
+| `Bad_UserAccessDenied` | the caller is not authorized for media access (§12.1) |
+
+### 6.6 Endpoint state model (normative)
+
+`VisionEndpointStateEnum` is used by `MediaEndpointType`, `AiDeploymentType` and `InferencePipelineType`. All transitions are **Server-driven**; no Method sets `State` directly.
+
+| State | Media endpoint | Deployment | Pipeline |
+|---|---|---|---|
+| `Inactive` | declared, not serving | model not loaded | not bound, or disabled |
+| `Ready` | able to serve, no session | model loaded, idle | bound, awaiting a trigger |
+| `Active` | at least one session leased | executing inference | producing results |
+| `Degraded` | serving below configured quality | exceeding `LatencyBudget` | producing results at reduced quality or rate |
+| `Faulted` | unable to serve | model failed to load or execute | unable to produce results |
+
+A Server **shall** report `Degraded` rather than `Active` when it knows the configured quality, latency budget or rate is not being met, and `Faulted` rather than `Inactive` when the cause is a failure rather than configuration.
 
 ---
 
@@ -277,15 +390,17 @@ The machine-vision outcome. Mandatory `Evaluation` and `Characteristics`; option
 
 `VisionResultEvaluationEnum` reuses the value semantics of the OPC 40001-101 `ResultEvaluationEnum` — `Undefined`, `Ok`, `NotOk`, `NotDecidable` — so a client already consuming Machinery results needs no new interpretation rules.
 
-`VisionCharacteristicDataType` mirrors the QIF (ISO 23952) Results field set: `Nominal`, `Actual`, `Deviation`, `LowerTolerance`, `UpperTolerance`, `Unit`, **`Uncertainty`** and `Status`. Uncertainty is what makes a verdict reproducible by a third party, and it is the reason `NotDecidable` exists: when the expanded uncertainty spans a tolerance limit, a Server **shall not** assert `Ok` or `NotOk` merely because the point estimate falls on one side.
+`VisionCharacteristicDataType` mirrors the QIF (ISO 23952) Results field set: `Nominal`, `Actual`, `Deviation`, `LowerTolerance`, `UpperTolerance`, `Unit`, **`Uncertainty`** and `Status`. Units, the sentinel for "not reported", and the coverage factor are fixed in §5.10.
+
+Uncertainty is what makes a verdict reproducible by a third party, and it is the reason `NotDecidable` exists. The rule is normative: where the interval `Actual ± Uncertainty` crosses a tolerance limit, a Server **shall** report `Status = Indeterminate` for that characteristic, and **shall not** assert `Ok` or `NotOk` for the result on the strength of the point estimate alone. Where any characteristic is `Indeterminate`, the result `Evaluation` **shall** be `NotDecidable` unless another characteristic is independently `OutOfTolerance`, in which case it **shall** be `NotOk`. Because §5.10 fixes the coverage factor at k = 2, two conformant Servers presented with the same measurement reach the same verdict.
 
 ### 7.3 `DetectionResultType`
 
 The robotics-vision outcome. Mandatory `Detections`; optional `FrameId` naming the frame that detection poses are expressed in.
 
-`VisionDetectionDataType` follows ROS 2 `vision_msgs` conventions: a class label and id, a confidence, an optional 2-D box, an optional 3-D box, an optional 6-DoF `Pose`, and an optional `TrackId`. The `HasBoundingBox2D`, `HasBoundingBox3D` and `HasPose` flags state which geometry is meaningful, so a consumer never has to infer it from zero values.
+`VisionDetectionDataType` follows ROS 2 `vision_msgs` conventions: a class label and id, a confidence, an optional 2-D box, an optional 3-D box, an optional 6-DoF `Pose`, and an optional `TrackId`. The `HasBoundingBox2D`, `HasBoundingBox3D` and `HasPose` flags state which geometry is meaningful, and the rule governing them is in §5.10: where a flag is `false` a client **shall** ignore the corresponding field's content.
 
-A pose is only actionable if its frame is known, which is why `VisionPose3DDataType` carries `FrameId` and why §5.6 exists.
+A pose is only actionable if its frame is known, which is why `VisionPose3DDataType` carries `FrameId` and why §5.6 exists. A Server **shall** populate `FrameId` with the `FrameId` of a `CoordinateFrameType` instance that exists in the same Server.
 
 ### 7.4 `SegmentationResultType`
 
@@ -315,6 +430,28 @@ Binds a `Sensor` to a `Deployment`, exposes `State` and `Continuous`, holds a `R
 
 A Server whose inference is entirely off-server and continuously running may implement none of the three Methods; the pipeline still describes the binding and publishes the results.
 
+### 8.4 Inference Method definitions (normative)
+
+**`RunInference(Timestamp) → (ResultId)`** — runs inference once on the frame nearest `Timestamp`, or on the newest frame when `Timestamp` is null, and returns the identifier of the result produced. The result **shall** exist and be retrievable under `Results` before the Method returns `Good`.
+
+| StatusCode | Condition |
+|---|---|
+| `Bad_InvalidState` | `State` is `Inactive` or `Faulted` |
+| `Bad_NotFound` | no frame exists near `Timestamp` within retention |
+| `Bad_ResourceUnavailable` | an off-server deployment is unreachable |
+| `Bad_Timeout` | inference exceeded the deployment's `LatencyBudget` and was abandoned |
+| `Bad_UserAccessDenied` | the caller is not authorized to trigger inference |
+
+**`StartContinuous()`** and **`Stop()`** — start and stop per-frame inference. Both are **idempotent**: calling `StartContinuous` while `Continuous` is already true, or `Stop` while it is already false, **shall** return `Good` and change nothing.
+
+| StatusCode | Condition |
+|---|---|
+| `Bad_InvalidState` | `State` is `Inactive` or `Faulted` (`StartContinuous` only) |
+| `Bad_ResourceUnavailable` | an off-server deployment is unreachable (`StartContinuous` only) |
+| `Bad_UserAccessDenied` | the caller is not authorized |
+
+On success `StartContinuous` **shall** set `Continuous` to true and drive `State` toward `Active`; `Stop` **shall** set `Continuous` to false and drive `State` toward `Ready` (§6.6).
+
 ---
 
 ## 9 Feedback and the learning loop (normative)
@@ -331,7 +468,7 @@ A Server whose inference is entirely off-server and continuously running may imp
 
 ### 9.2 Feedback images
 
-Feedback images follow exactly the discipline of §6.4. `SubmitImageReference` — passing a `VisionImageReferenceDataType` — is the **default** path. `SubmitDetections` and `SubmitCorrection` accept an optional inline `ByteString`, which a Server **shall** accept only within `MaxInlineFeedbackImageSize`, itself bounded by the session's `MaxByteStringLength`. An oversized payload **shall** be rejected with **`Bad_EncodingLimitsExceeded`**, and the client **shall** retry by reference.
+Feedback images follow exactly the discipline of §6.4. `SubmitImageReference` — passing a `VisionImageReferenceDataType` — is the **default** path. `SubmitDetections` and `SubmitCorrection` each additionally accept an optional inline `ByteString`, which a Server **shall** accept only within `MaxInlineFeedbackImageSize`, itself bounded as in §6.4 rule 2. An oversized payload **shall** be rejected with **`Bad_EncodingLimitsExceeded`**, and the client **shall** retry by reference.
 
 ### 9.3 Closing the loop
 
@@ -354,6 +491,55 @@ A Server **may** implement only the capture stages and leave training to an exte
 
 `PromoteModel` changes what the system decides. A Server **should** require a distinct authorization for it, separate from the authorization that permits ordinary feedback.
 
+### 9.4 Feedback and learning Method definitions (normative)
+
+Every Method in this clause is a **write** and **shall** be authorized independently (§12.5). None of them changes a published result: a correction is recorded alongside the original, never in place of it, so the audit trail is preserved.
+
+**`SubmitDetections(Purpose, Detections, FrameReference, InlineImage)`** and **`SubmitCorrection(ResultId, Purpose, CorrectedDetections, CorrectedCharacteristics, Reason, InlineImage)`** — `InlineImage` is optional and **shall** be accepted only within `MaxInlineFeedbackImageSize`, itself bounded as in §6.4 rule 2. For `SubmitCorrection`, exactly one of `CorrectedDetections` and `CorrectedCharacteristics` **shall** be non-empty, matching the kind of the referenced result.
+
+**`SubmitInspectionResult(ResultId, Evaluation, Characteristics)`** — records a downstream verdict against an existing result for reconciliation.
+
+**`SubmitImageReference(Purpose, Image, ResultId)`** — the default feedback-image path. `ResultId` may be empty when the image is not tied to a result.
+
+| StatusCode | Condition | Applies to |
+|---|---|---|
+| `Bad_NotFound` | `ResultId` is non-empty and unknown | all four |
+| `Bad_InvalidArgument` | `Detections` empty; or `SubmitCorrection` supplies both or neither corrected array | `SubmitDetections`, `SubmitCorrection` |
+| `Bad_TypeMismatch` | the corrected array kind does not match the referenced result | `SubmitCorrection` |
+| `Bad_EncodingLimitsExceeded` | `InlineImage` exceeds `MaxInlineFeedbackImageSize` | `SubmitDetections`, `SubmitCorrection` |
+| `Bad_NotSupported` | `Purpose` is `Overlay` but `OverlayEnabled` is false | `SubmitDetections`, `SubmitImageReference` |
+| `Bad_UserAccessDenied` | the caller is not authorized to write feedback | all four |
+
+A Server that accepts a correction with `Purpose = GroundTruthLabel` **shall** either retain it for the associated `LearningJobType` or return `Bad_NotSupported`; it **shall not** return `Good` and discard it, because a client has no other way to learn that its label was dropped.
+
+**`StartCollection()`**, **`StopCollection()`**, **`TriggerTraining() → (Accepted)`**, **`PromoteModel(Deployment) → (PromotedModel)`**
+
+| StatusCode | Condition |
+|---|---|
+| `Bad_InvalidState` | `StartCollection` when `State` is not `Idle` or `Collecting`; `TriggerTraining` when `State` is not `Collecting` or `Labelling`; `PromoteModel` when `State` is not `Ready` |
+| `Bad_NothingToDo` | `TriggerTraining` when `SamplesCollected` is 0 |
+| `Bad_NotFound` | `PromoteModel` when `Deployment` is non-null and does not resolve, or `CandidateModel` is null |
+| `Bad_UserAccessDenied` | the caller is not authorized; `PromoteModel` requires the distinct authorization of §12.5 |
+
+`StartCollection` and `StopCollection` are idempotent. `TriggerTraining` returns `Accepted = false`, with `Good`, when the Server queued nothing but the request was otherwise valid — for example because an external MLOps system declined it; `LastError` **shall** then carry the reason.
+
+### 9.5 Learning job state model (normative)
+
+| From | Trigger | To |
+|---|---|---|
+| `Idle` | `StartCollection` | `Collecting` |
+| `Collecting` | `StopCollection` | `Labelling` |
+| `Collecting`, `Labelling` | `TriggerTraining` (accepted) | `Training` |
+| `Training` | Server: training finished | `Validating` |
+| `Validating` | Server: candidate met acceptance criteria | `Ready` |
+| `Validating` | Server: candidate rejected | `Failed` |
+| `Ready` | `PromoteModel` | `Promoted` |
+| `Promoted` | `StartCollection` | `Collecting` |
+| `Training`, `Validating` | Server: error | `Failed` |
+| `Failed` | `StartCollection` | `Collecting` |
+
+Transitions marked *Server* are driven by the Server or its MLOps backend; the rest are Method-driven. A Server **shall not** perform a transition not in this table, and **shall** populate `LastError` on entry to `Failed`. `CandidateModel` **shall** be non-null on entry to `Ready`.
+
 ---
 
 ## 10 Simulation parity (normative)
@@ -371,25 +557,25 @@ A simulated sensor **shall** expose the same members, with the same units and me
 
 | Facet | Requires |
 |---|---|
-| **Vision Base** | The well-known `Vision` object, `Sensors`, and at least one sensor with `SensorId`, `RealityKind`, `Modality` and `Media` |
-| **Sensor Parameters** | `ImageSensorType` with `Width`, `Height`, `PixelFormat` |
-| **Optics and Illumination** | `OpticsType` and/or `IlluminationType` |
-| **Media Streaming (RTSP)** | At least one `StreamEndpointType` with `StreamProtocol = Rtsp`; `GetStreamEndpoint`, `ReleaseStreamEndpoint` |
-| **Media Clips (JPEG)** | At least one `ClipEndpointType` with `ClipFormat = Jpeg`; `GetClip` |
-| **Media Inline Delivery** | `LatestClip`, `LatestClipMetadata`, `MaxInlineClipSize`, `InlineDeliveryEnabled`, and the §6.4 overflow behaviour |
-| **Endpoint Configuration** | `ConfigureStreamEndpoint`, `SelectEndpoint` |
-| **Calibration** | `CoordinateFrameType` plus `IntrinsicCalibrationType` and/or `ExtrinsicCalibrationType` |
-| **Inspection Results** | `InspectionResultType` with `Evaluation` and `Characteristics` |
-| **Detection Results** | `DetectionResultType` with `Detections` |
-| **Feedback** | `VisionFeedbackType` with at least `SubmitImageReference` and the §9.2 size rules |
-| **On-Server Inference** | `InferencePipelineType` with a deployment whose `InferenceLocation` is `OnServer` |
-| **Off-Server Inference** | As above with any other `InferenceLocation`, plus `EndpointUri` |
-| **Simulation Parity** | `IVisionSimulatedType` on every simulated or hybrid sensor |
-| **Learning Loop** | `LearningJobType` and `SubmitCorrection` |
-| **OpenUSD Scene Interop** | Annex C |
-| **OPC 40100 Interop** | Annex D |
+| **VIS-Base** | The well-known `Vision` object, `Sensors`, and at least one sensor with `SensorId`, `RealityKind`, `Modality` and `Media`. Requires *VIS-Media-Rtsp* and *VIS-Media-Jpeg*. |
+| **VIS-Sensor-Params** | `ImageSensorType` with `Width`, `Height`, `PixelFormat` |
+| **VIS-Optics** | `OpticsType` and/or `IlluminationType` |
+| **VIS-Media-Rtsp** | At least one `StreamEndpointType` with `StreamProtocol = Rtsp` and `ProtocolVersion`; `GetStreamEndpoint`, `ReleaseStreamEndpoint` (§6.5) |
+| **VIS-Media-Jpeg** | At least one `ClipEndpointType` with `ClipFormat = Jpeg`; `GetClip` (§6.5) |
+| **VIS-Media-Inline** | `LatestClip`, `LatestClipMetadata`, `MaxInlineClipSize`, `InlineDeliveryEnabled`, and all five §6.4 rules |
+| **VIS-Endpoint-Config** | `ConfigureStreamEndpoint`, `SelectEndpoint` (§6.5) |
+| **VIS-Calibration** | `CoordinateFrameType` plus `IntrinsicCalibrationType` and/or `ExtrinsicCalibrationType`, with the §5.9 reference constraints |
+| **VIS-Result-Inspection** | `InspectionResultType` with `Evaluation` and `Characteristics`, and the §7.2 uncertainty rule |
+| **VIS-Result-Detection** | `DetectionResultType` with `Detections`, and §5.10 pose conventions |
+| **VIS-Feedback** | `VisionFeedbackType` with at least `SubmitImageReference`, and the §9.2 and §9.4 rules |
+| **VIS-Inference-OnServer** | `InferencePipelineType` with a deployment whose `InferenceLocation` is `OnServer`, and the §5.9 `UsesModel` constraint |
+| **VIS-Inference-OffServer** | As above with any other `InferenceLocation`, plus `EndpointUri` |
+| **VIS-Simulation** | `IVisionSimulatedType` on every simulated or hybrid sensor (§10) |
+| **VIS-Learning** | `LearningJobType`, `SubmitCorrection`, and the §9.5 state model |
+| **VIS-Interop-Scene** | Annex C |
+| **VIS-Interop-40100** | Annex D |
 
-Facets are independent and additive; *Vision Base*, *Media Streaming (RTSP)* and *Media Clips (JPEG)* together are the baseline.
+Facets are independent and additive except where a row states a dependency: *VIS-Base* requires *VIS-Media-Rtsp* and *VIS-Media-Jpeg*, so the §6.2 guarantee holds for every conformant Server. A Server declares the facets it implements; a facet is claimed only when every member and rule it lists is satisfied.
 
 ---
 
@@ -411,7 +597,7 @@ A `Uri` returned by `GetStreamEndpoint` or `GetClip` **may** embed a credential.
 
 ### 12.4 Inline payloads are a denial-of-service surface
 
-Inline delivery amplifies payload size by orders of magnitude relative to ordinary Variables. A Server **shall** enforce `MaxInlineClipSize` and `MaxInlineFeedbackImageSize`, **should** enforce a minimum publishing interval on image-bearing MonitoredItems, and **should** bound their queue size to a small value — an image-bearing queue of any depth multiplies memory by the image size. These are normative bounds, not tuning advice.
+Inline delivery amplifies payload size by orders of magnitude relative to ordinary Variables. A Server **shall** enforce `MaxInlineClipSize` and `MaxInlineFeedbackImageSize` as bounded in §6.4 rule 2, **shall** enforce a minimum publishing interval on image-bearing MonitoredItems, and **shall** bound their queue size — an image-bearing queue of any depth multiplies memory by the image size, so a Server **should** use a queue size of 1 unless a larger value is explicitly configured. These are normative bounds, not tuning advice.
 
 ### 12.5 Feedback and promotion are writes
 
@@ -453,7 +639,7 @@ The NodeSet and NodeIds are generated and byte-deterministic; do not hand-edit t
 
 ## Annex A — Information model (generated)
 
-The complete node reference — every ObjectType, DataType, ReferenceType, member, ModellingRule and NodeId — is generated from `Opc.Ua.Vision.NodeSet2.xml` into [`../extras/vision/tools/model-reference.md`](../extras/vision/tools/model-reference.md) and is authoritative for identifiers.
+The complete node reference is generated from `Opc.Ua.Vision.NodeSet2.xml` into [`../extras/vision/tools/model-reference.md`](../extras/vision/tools/model-reference.md) and is **authoritative for identifiers and for the model's shape**. It carries, for every type: the DataType, ValueRank and ModellingRule of every member; the field list, DataType and array rank of every structure; the value of every enumeration literal; and the full argument signature of every Method. Clause 5 describes intent and constraints; Annex A is where an implementer reads the exact declarations.
 
 ---
 
@@ -479,14 +665,16 @@ That is not incidental. A camera prim's aperture and focal-length attributes *ar
 | `OpticsType.Aperture` | depth-of-field f-stop | `FStop` |
 | `OpticsType.WorkingDistance` | focus plane | `FocusDistance` |
 
-Intrinsics are derived rather than stored twice. For a render product of width `W` and height `H`:
+Intrinsics are derived rather than stored twice. For a render product of width `W` and height `H`, with pixel coordinates in the **top-left-origin** frame of §5.10:
 
 ```text
 Fx = FocalLength * W / HorizontalAperture
 Fy = FocalLength * H / VerticalAperture
-Cx = W / 2 + HorizontalApertureOffset * W / HorizontalAperture
+Cx = W / 2 - HorizontalApertureOffset * W / HorizontalAperture
 Cy = H / 2 + VerticalApertureOffset   * H / VerticalAperture
 ```
+
+`Fx` and `Fy` are ratios and are therefore independent of the stage's `metersPerUnit`. `Cx` carries a **minus**: USD's aperture window spans `[-HorizontalAperture/2 + offset, +HorizontalAperture/2 + offset]` in camera space, so a positive offset slides the film in `+x` and moves the principal point **left** in the image. `Cy` carries the opposite sign because the image row axis is inverted relative to USD's `+Y` up.
 
 Resolution belongs to the render product, not the camera prim, which is why `Width` and `Height` live on `ImageSensorType` and not in USD. USD cameras look down −Z with +Y up; a client converting to a computer-vision convention applies the standard 180° rotation about X.
 
@@ -542,7 +730,16 @@ A Server that implements both this specification and *OPC UA — OpenUSD Scene M
 
 1. `IVisionSimulatedType.PrimPath` resolves, within the stage named by `StageIdentifier`, to an instance of `UsdGeomCameraType`.
 2. The sensor carries a `HasScenePrim` reference to that instance, so a client can navigate from sensor to prim without string resolution.
-3. Where both describe the same quantity, the values agree: `OpticsType.FocalLength` with the prim's `FocalLength`, `OpticsType.Aperture` with `FStop`, `OpticsType.WorkingDistance` with `FocusDistance`, and `Depth3DSensorType.MinDepth`/`MaxDepth` with `ClippingRange`.
+3. Where both describe the same quantity the values are **converted, not equal** — USD lengths are in world units scaled by the stage's `metersPerUnit`, whereas this model fixes SI units in §5.10:
+
+   ```text
+   OpticsType.FocalLength[mm]                 = prim.FocalLength   * metersPerUnit * 100
+   OpticsType.WorkingDistance[m]              = prim.FocusDistance * metersPerUnit
+   OpticsType.Aperture[f-number]              = prim.FStop
+   Depth3DSensorType.MinDepth/MaxDepth[m]     = prim.ClippingRange * metersPerUnit
+   ```
+
+   Under no single stage scale would all of these be numerically identical, so a Server **shall** apply the conversion rather than copying the value.
 4. `VisionIntrinsicsDataType` is consistent with the prim's aperture and focal-length attributes at the sensor's `Width` and `Height`, per the derivation in B.2.
 
 A Server that implements only this specification uses `PrimPath` as an opaque, portable descriptor and is fully conformant. This profile takes no NodeSet dependency in either direction.

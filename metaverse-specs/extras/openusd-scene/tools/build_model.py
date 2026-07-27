@@ -157,9 +157,11 @@ def variable_type(nid, name, base, datatype, valuerank, desc):
 
 
 def _member_var(owner, owner_sym, name, datatype, typedef, rule, reftype, desc,
-                valuerank="-1"):
+                valuerank="-1", arraydims=None):
     nid = _mid()
     attrs = {"DataType": datatype, "ValueRank": str(valuerank)}
+    if arraydims is not None:
+        attrs["ArrayDimensions"] = str(arraydims)
     add(nid, "UAVariable", name, f"{owner_sym}_{name.strip('<>')}", desc=desc, parent=T(owner),
         attrs=attrs)
     ref(nid, HasModellingRule, rule)
@@ -169,9 +171,10 @@ def _member_var(owner, owner_sym, name, datatype, typedef, rule, reftype, desc,
     return nid
 
 
-def prop_var(owner, owner_sym, name, datatype, desc, rule=MR_Optional, valuerank="-1"):
+def prop_var(owner, owner_sym, name, datatype, desc, rule=MR_Optional, valuerank="-1",
+             arraydims=None):
     return _member_var(owner, owner_sym, name, datatype, PropertyType, rule,
-                       HasProperty, desc, valuerank)
+                       HasProperty, desc, valuerank, arraydims)
 
 
 def component_var(owner, owner_sym, name, datatype, typedef, desc,
@@ -559,7 +562,8 @@ prop_var(CAMERA, "UsdGeomCameraType", "HorizontalApertureOffset", Float,
 prop_var(CAMERA, "UsdGeomCameraType", "VerticalApertureOffset", Float,
          "Vertical aperture offset from centre, in tenths of a world unit.")
 prop_var(CAMERA, "UsdGeomCameraType", "ClippingRange", Float,
-         "Near and far clipping distances as a two-element array (USD float2).", valuerank="1")
+         "Near and far clipping distances as a two-element array (USD float2).",
+         valuerank="1", arraydims=2)
 prop_var(CAMERA, "UsdGeomCameraType", "FStop", Float,
          "Lens aperture f-number; 0 disables depth of field.")
 prop_var(CAMERA, "UsdGeomCameraType", "FocusDistance", Float,

@@ -33,6 +33,7 @@ Design notes (see ../../../vision/OPC-UA-Vision-Research.md for the evidence bas
 """
 from __future__ import annotations
 import os
+import re
 import xml.sax.saxutils as sx
 
 NAMESPACE = "http://opcfoundation.org/UA/Vision/"
@@ -54,6 +55,7 @@ HasEncoding = "i=38"
 MR_Mandatory = "i=78"
 MR_Optional = "i=80"
 MR_OptionalPlaceholder = "i=11508"
+MR_MandatoryPlaceholder = "i=11510"
 
 BaseObjectType = "i=58"
 FolderType = "i=61"
@@ -96,6 +98,7 @@ ALIASES = [
     ("HasInterface", HasInterface), ("HasEncoding", HasEncoding),
     ("Mandatory", MR_Mandatory), ("Optional", MR_Optional),
     ("OptionalPlaceholder", MR_OptionalPlaceholder),
+    ("MandatoryPlaceholder", MR_MandatoryPlaceholder),
 ]
 
 REFTYPE_ALIAS = {v: k for k, v in ALIASES}
@@ -711,6 +714,10 @@ object_type(1008, "StreamEndpointType", T(ME),
 SE = 1008
 prop_var(SE, "StreamEndpointType", "StreamProtocol", VisionStreamProtocolEnum,
          "Protocol of this stream. Rtsp is the mandatory default.", MR_Mandatory)
+prop_var(SE, "StreamEndpointType", "ProtocolVersion", String,
+         "Version of StreamProtocol served, e.g. '1.0' for RTSP/1.0 (RFC 2326) or '2.0' "
+         "for RTSP/2.0 (RFC 7826). RTSP 2.0 is not backward compatible with 1.0, so a "
+         "client that must interoperate without probing reads this.", MR_Mandatory)
 prop_var(SE, "StreamEndpointType", "Codec", VisionVideoCodecEnum,
          "Codec carried by the stream.")
 prop_var(SE, "StreamEndpointType", "Width", UInt32, "Streamed frame width in pixels.")
@@ -761,12 +768,20 @@ object_type(1010, "VisionMediaManagementType", BaseObjectType,
             "Container and control surface for a sensor's media endpoints. Holds the "
             "endpoint folders and the Methods that select, configure and lease them.")
 MM = 1010
-folder_member(MM, "VisionMediaManagementType", "StreamEndpoints",
-              "StreamEndpointType instances offered by this sensor. At least one uses "
-              "Rtsp.", MR_Mandatory)
-folder_member(MM, "VisionMediaManagementType", "ClipEndpoints",
-              "ClipEndpointType instances offered by this sensor. At least one uses "
-              "Jpeg.", MR_Mandatory)
+placeholder_obj = obj_member  # MandatoryPlaceholder members are ordinary obj_members
+
+sef = folder_member(MM, "VisionMediaManagementType", "StreamEndpoints",
+                    "StreamEndpointType instances offered by this sensor. At least one "
+                    "uses Rtsp.", MR_Mandatory)
+placeholder_obj(sef, "VisionMediaManagementType_StreamEndpoints", "<StreamEndpoint>",
+                T(SE), "A stream endpoint offered by this sensor.",
+                rule=MR_MandatoryPlaceholder)
+cef = folder_member(MM, "VisionMediaManagementType", "ClipEndpoints",
+                    "ClipEndpointType instances offered by this sensor. At least one "
+                    "uses Jpeg.", MR_Mandatory)
+placeholder_obj(cef, "VisionMediaManagementType_ClipEndpoints", "<ClipEndpoint>",
+                T(CE), "A clip endpoint offered by this sensor.",
+                rule=MR_MandatoryPlaceholder)
 prop_var(MM, "VisionMediaManagementType", "PreferredStreamEndpoint", NodeId_,
          "The StreamEndpoint a client should use unless it has a reason not to.")
 prop_var(MM, "VisionMediaManagementType", "PreferredClipEndpoint", NodeId_,
@@ -777,7 +792,11 @@ method(MM, "VisionMediaManagementType", "GetStreamEndpoint",
        "protocol is advisory - the Server returns what it can serve, which is at "
        "minimum RTSP.",
        MR_Mandatory,
-       inargs=[("ProfileName", String, "Requested profile, or empty for the default."),
+       inargs=[("Endpoint", NodeId_,
+                "StreamEndpoint to lease. Null selects PreferredStreamEndpoint, or, "
+                "when that is also null, the first endpoint in StreamEndpoints in "
+                "BrowseName order that satisfies the request."),
+               ("ProfileName", String, "Requested profile, or empty for the default."),
                ("PreferredProtocol", VisionStreamProtocolEnum,
                 "Advisory protocol preference.")],
        outargs=[("Session", VisionStreamSessionDataType, "The leased session."),
@@ -813,7 +832,11 @@ method(MM, "VisionMediaManagementType", "GetClip",
        "fits MaxInlineClipSize; otherwise InlineImage is empty and the client uses the "
        "Uri.",
        MR_Mandatory,
-       inargs=[("ResultId", String, "Result whose frame is wanted, or empty."),
+       inargs=[("Endpoint", NodeId_,
+                "ClipEndpoint to use. Null selects PreferredClipEndpoint, or, when that "
+                "is also null, the first endpoint in ClipEndpoints in BrowseName order "
+                "that supports Format."),
+               ("ResultId", String, "Result whose frame is wanted, or empty."),
                ("Timestamp", UtcTime,
                 "Frame nearest this time, used when ResultId is empty."),
                ("Format", VisionClipFormatEnum,
@@ -821,6 +844,7 @@ method(MM, "VisionMediaManagementType", "GetClip",
                ("RequestInline", Boolean,
                 "Ask for the bytes inline in addition to the Uri.")],
        outargs=[("Image", VisionImageReferenceDataType, "Descriptor of the clip."),
+                ("Endpoint", NodeId_, "The ClipEndpoint that served the clip."),
                 ("InlineImage", ByteString,
                  "Encoded bytes, or empty when not requested or too large.")])
 
@@ -1169,7 +1193,10 @@ method(FB, "VisionFeedbackType", "SubmitCorrection",
                 "Corrected detections, where the result was a detection.", 1),
                ("CorrectedCharacteristics", VisionCharacteristicDataType,
                 "Corrected characteristics, where the result was an inspection.", 1),
-               ("Reason", LocalizedText, "Why the correction was made.")])
+               ("Reason", LocalizedText, "Why the correction was made."),
+               ("InlineImage", ByteString,
+                "Optional corrected or annotated image, accepted only within "
+                "MaxInlineFeedbackImageSize; otherwise use SubmitImageReference.")])
 method(FB, "VisionFeedbackType", "SubmitImageReference",
        "The default way to hand an image back: by reference. Used whenever the image "
        "exceeds MaxInlineFeedbackImageSize, and preferred in all cases.",
@@ -1360,19 +1387,199 @@ def emit_csv():
                      for nid in ORDER) + "\n"
 
 
+def _rule_name(nid):
+    for rt, tgt, fwd in NODES[nid].refs:
+        if rt == HasModellingRule:
+            return {MR_Mandatory: "Mandatory", MR_Optional: "Optional",
+                    MR_OptionalPlaceholder: "OptionalPlaceholder",
+                    MR_MandatoryPlaceholder: "MandatoryPlaceholder"}.get(tgt, "")
+    return ""
+
+
+def _supertype(nid):
+    for rt, tgt, fwd in NODES[nid].refs:
+        if rt == HasSubtype and not fwd:
+            return tgt
+    return ""
+
+
+BASE_TYPE_NAMES = {
+    "i=22": "Structure", "i=29": "Enumeration", "i=58": "BaseObjectType",
+    "i=61": "FolderType", "i=68": "PropertyType", "i=63": "BaseDataVariableType",
+    "i=17602": "BaseInterfaceType", "i=32": "NonHierarchicalReferences",
+    "i=76": "DataTypeEncodingType", "i=24": "BaseDataType",
+}
+
+
+def _dt_name(dt):
+    """Render a DataType or supertype NodeId as a readable name."""
+    if not dt:
+        return ""
+    if dt in BASE_TYPE_NAMES:
+        return BASE_TYPE_NAMES[dt]
+    if dt in DATATYPE_ALIAS:
+        return DATATYPE_ALIAS[dt]
+    if dt.startswith("ns=1;i="):
+        n = NODES.get(int(dt.split("=")[-1]))
+        if n is not None:
+            return n.bname
+    return dt
+
+
+def _rank(vr):
+    return {"-1": "Scalar", "1": "Array"}.get(str(vr), str(vr))
+
+
+def _members_of(nid):
+    """Instance declarations owned by a type, in declaration order."""
+    out = []
+    for m in ORDER:
+        n = NODES[m]
+        if n.parent == T(nid) and n.cls in ("UAVariable", "UAObject", "UAMethod"):
+            out.append(m)
+    return out
+
+
+def _method_args(nid, which):
+    for m in _members_of(nid):
+        n = NODES[m]
+        if n.bname == which and n.value:
+            names = re.findall(r"<uax:Name>([^<]*)</uax:Name>", n.value)
+            types = re.findall(r"<uax:Identifier>([^<]*)</uax:Identifier>", n.value)
+            types = [t for t in types if t != "i=297"]
+            descs = re.findall(r"<uax:Text>([^<]*)</uax:Text>", n.value)
+            ranks = re.findall(r"<uax:ValueRank>(-?\d+)</uax:ValueRank>", n.value)
+            out = []
+            for i, nm in enumerate(names):
+                out.append((nm,
+                            _dt_name(types[i]) if i < len(types) else "",
+                            "Array" if i < len(ranks) and ranks[i] != "-1" else "Scalar",
+                            descs[i] if i < len(descs) else ""))
+            return out
+    return []
+
+
+def _esc(s):
+    return (s or "").replace("|", "\\|")
+
+
 def emit_md():
-    lines = ["# OPC UA — Vision — Annex A: Information model (generated)",
-             "",
-             "> Generated by `build_model.py`. Do not edit by hand. Namespace "
-             f"`{NAMESPACE}` (index 1). NodeIds are provisional.",
-             "",
-             "| NodeId | BrowseName | NodeClass | Description |",
-             "|---|---|---|---|"]
-    for nid in ORDER:
+    """Annex A. This is the authoritative node reference, so it must carry everything an
+    implementer needs: DataType, ValueRank and ModellingRule for every member, the field
+    list of every structure, the value of every enumeration literal, and the full
+    signature of every Method. A bare NodeId/BrowseName table is not sufficient."""
+    obj_types = [n for n in ORDER if NODES[n].cls == "UAObjectType"]
+    data_types = [n for n in ORDER if NODES[n].cls == "UADataType"]
+    ref_types = [n for n in ORDER if NODES[n].cls == "UAReferenceType"]
+
+    L = ["# OPC UA — Vision — Annex A: Information model (generated)",
+         "",
+         "> Generated by `build_model.py`. Do not edit by hand. Namespace "
+         f"`{NAMESPACE}` (index 1). NodeIds are provisional.",
+         "",
+         "This annex is the authoritative node reference for the specification: it "
+         "carries the DataType, ValueRank and ModellingRule of every member, the field "
+         "list of every structure, the value of every enumeration literal, and the full "
+         "signature of every Method.",
+         ""]
+
+    L += ["## A.1 Type overview", "",
+          "| NodeId | BrowseName | NodeClass | Subtype of |", "|---|---|---|---|"]
+    for nid in ref_types + obj_types + data_types:
         n = NODES[nid]
-        desc = (n.desc or "").replace("|", "\\|")
-        lines.append(f"| ns=1;i={nid} | {n.bname} | {n.cls[2:]} | {desc} |")
-    return "\n".join(lines) + "\n"
+        L.append(f"| ns=1;i={nid} | {n.bname} | {n.cls[2:]} | "
+                 f"{_dt_name(_supertype(nid))} |")
+    L.append("")
+
+    L += ["## A.2 ReferenceTypes", "",
+          "| NodeId | BrowseName | InverseName | Subtype of | Description |",
+          "|---|---|---|---|---|"]
+    for nid in ref_types:
+        n = NODES[nid]
+        L.append(f"| ns=1;i={nid} | {n.bname} | {n.inverse} | "
+                 f"{_dt_name(_supertype(nid))} | {_esc(n.desc)} |")
+    L.append("")
+
+    L += ["## A.3 ObjectTypes", ""]
+    for nid in obj_types:
+        n = NODES[nid]
+        abstract = " (abstract)" if n.abstract else ""
+        L.append(f"### {n.bname}{abstract} — `ns=1;i={nid}`")
+        L.append("")
+        L.append(f"*Subtype of:* `{_dt_name(_supertype(nid))}`")
+        L.append("")
+        if n.desc:
+            L.append(_esc(n.desc))
+            L.append("")
+        members = _members_of(nid)
+        variables = [m for m in members if NODES[m].cls in ("UAVariable", "UAObject")]
+        methods = [m for m in members if NODES[m].cls == "UAMethod"]
+        if variables:
+            L.append("| BrowseName | NodeClass | DataType | ValueRank | ModellingRule "
+                     "| Description |")
+            L.append("|---|---|---|---|---|---|")
+            for m in variables:
+                mn = NODES[m]
+                dt = _dt_name(mn.attrs.get("DataType", ""))
+                vr = _rank(mn.attrs.get("ValueRank", "-1")) if mn.cls == "UAVariable" else ""
+                L.append(f"| {mn.bname} | {mn.cls[2:]} | {dt} | {vr} | "
+                         f"{_rule_name(m)} | {_esc(mn.desc)} |")
+            L.append("")
+        for m in methods:
+            mn = NODES[m]
+            L.append(f"**Method `{mn.bname}`** ({_rule_name(m)}) — {_esc(mn.desc)}")
+            L.append("")
+            for which, label in (("InputArguments", "In"),
+                                 ("OutputArguments", "Out")):
+                args = _method_args(m, which)
+                if not args:
+                    continue
+                L.append(f"| {label} | DataType | ValueRank | Meaning |")
+                L.append("|---|---|---|---|")
+                for (an, at, ar, ad) in args:
+                    L.append(f"| {an} | {at} | {ar} | {_esc(ad)} |")
+                L.append("")
+            if not _method_args(m, "InputArguments") and \
+                    not _method_args(m, "OutputArguments"):
+                L.append("Takes no arguments and returns none.")
+                L.append("")
+
+    L += ["## A.4 DataTypes", ""]
+    for nid in data_types:
+        n = NODES[nid]
+        defn = n.definition or ""
+        is_enum = 'Value="' in defn
+        L.append(f"### {n.bname} — `ns=1;i={nid}`")
+        L.append("")
+        L.append(f"*Subtype of:* `{_dt_name(_supertype(nid))}`")
+        L.append("")
+        if n.desc:
+            L.append(_esc(n.desc))
+            L.append("")
+        if is_enum:
+            L.append("| Name | Value | Description |")
+            L.append("|---|---|---|")
+            for mm in re.finditer(
+                    r'<Field Name="([^"]+)" Value="(\d+)"\s*(?:/>|>'
+                    r'(?:<Description>([^<]*)</Description>)?</Field>)', defn):
+                L.append(f"| {mm.group(1)} | {mm.group(2)} | "
+                         f"{_esc(mm.group(3) or '')} |")
+        else:
+            L.append("| Field | DataType | ValueRank | ArrayDimensions | Description |")
+            L.append("|---|---|---|---|---|")
+            for mm in re.finditer(
+                    r'<Field Name="([^"]+)" DataType="([^"]+)"([^>]*?)(?:/>|>'
+                    r'(?:<Description>([^<]*)</Description>)?</Field>)', defn):
+                extra = mm.group(3) or ""
+                vr = re.search(r'ValueRank="(-?\d+)"', extra)
+                ad = re.search(r'ArrayDimensions="(\d+)"', extra)
+                L.append(f"| {mm.group(1)} | {_dt_name(mm.group(2))} | "
+                         f"{_rank(vr.group(1)) if vr else 'Scalar'} | "
+                         f"{ad.group(1) if ad else ''} | "
+                         f"{_esc(mm.group(4) or '')} |")
+        L.append("")
+
+    return "\n".join(L).rstrip() + "\n"
 
 
 def main():

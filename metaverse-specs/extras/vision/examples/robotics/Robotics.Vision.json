@@ -38,25 +38,57 @@
     "mountType": "C",
     "lensType": "Entocentric"
   },
+  "frames": [
+    {
+      "name": "WorldFrame",
+      "description": "Cell world frame; the root of the frame tree.",
+      "frameId": "world",
+      "role": "World"
+    },
+    {
+      "name": "RobotBaseFrame",
+      "description": "Robot base frame, fixed in the cell.",
+      "frameId": "robot_base",
+      "role": "Base"
+    },
+    {
+      "name": "FlangeFrame",
+      "description": "Robot flange / tool centre point frame; the camera moves with it.",
+      "frameId": "flange",
+      "role": "Tool"
+    },
+    {
+      "name": "CameraFrame",
+      "description": "Optical frame of the eye-in-hand camera; detection poses are expressed here.",
+      "frameId": "camera_eih",
+      "role": "Camera"
+    }
+  ],
   "calibrations": [
     {
       "name": "Intrinsics2448x2048",
       "type": "IntrinsicCalibrationType",
       "description": "Pinhole intrinsics with Brown-Conrady distortion at full resolution.",
       "calibrationId": "intr-cam-eih-01-2448",
+      "performedAt": "2026-06-14T09:12:00Z",
       "valid": true,
       "residualError": 0.21,
-      "method": "Zhang"
+      "method": "Zhang",
+      "values": "Fx = 2140.5 px, Fy = 2139.8 px, Cx = 1223.1 px, Cy = 1021.7 px, Skew = 0, DistortionModel = BrownConrady, DistortionCoefficients = [-0.1721, 0.0934, 0.0002, -0.0001, -0.0188], Width = 2448, Height = 2048"
     },
     {
       "name": "HandEye",
       "type": "ExtrinsicCalibrationType",
       "description": "Transform from the camera frame to the robot flange frame. Eye-in-hand: the camera moves with the tool.",
       "calibrationId": "hand-eye-cam-eih-01",
+      "performedAt": "2026-06-14T10:40:00Z",
       "valid": true,
       "residualError": 0.0008,
       "method": "Daniilidis",
-      "mount": "EyeInHand"
+      "mount": "EyeInHand",
+      "sourceFrame": "camera_eih",
+      "targetFrame": "flange",
+      "values": "FrameId = flange, Position = (0.062, -0.031, 0.115) m, Orientation = (0.0, 0.0, 0.7071, 0.7071) as (x, y, z, w), Covariance = empty"
     }
   ],
   "stream": {

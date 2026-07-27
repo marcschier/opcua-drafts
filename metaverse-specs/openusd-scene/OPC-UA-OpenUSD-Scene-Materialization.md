@@ -424,20 +424,22 @@ Isaac Sim configures a camera through the standard `UsdGeomCamera` attributes, s
 | `verticalAperture` | `float` | `VerticalAperture` | sensor height; with `focalLength` gives vertical FOV |
 | `horizontalApertureOffset` | `float` | `HorizontalApertureOffset` | principal-point offset in x |
 | `verticalApertureOffset` | `float` | `VerticalApertureOffset` | principal-point offset in y |
-| `clippingRange` | `float2` | `ClippingRange` (`Float`, `ValueRank=1`) | near/far planes; bounds depth annotators |
+| `clippingRange` | `float2` | `ClippingRange` (`Float`, `ValueRank=1`, `ArrayDimensions=2`) | near/far planes; bounds depth annotators |
 | `fStop` | `float` | `FStop` | depth of field (0 disables) |
 | `focusDistance` | `float` | `FocusDistance` | focus plane |
 | `projection` | `token` | `Projection` | `perspective` or `orthographic` |
 | `exposure` | `float` | `Exposure` | scene-linear exposure scale |
 
-The pinhole intrinsic matrix a vision client needs is derived, not stored: with a render product of `width`×`height` pixels,
+The pinhole intrinsic matrix a vision client needs is derived, not stored: with a render product of `width`×`height` pixels and pixel coordinates in a top-left origin,
 
 ```text
 fx = focalLength * width  / horizontalAperture
 fy = focalLength * height / verticalAperture
-cx = width  / 2 + horizontalApertureOffset * width  / horizontalAperture
+cx = width  / 2 - horizontalApertureOffset * width  / horizontalAperture
 cy = height / 2 + verticalApertureOffset   * height / verticalAperture
 ```
+
+`cx` carries a **minus** because USD's aperture window spans `[-horizontalAperture/2 + offset, +horizontalAperture/2 + offset]` in camera space, so a positive offset slides the film in `+x` and moves the principal point **left** in the image; `cy` carries the opposite sign because the image row axis is inverted relative to USD's `+Y` up. `fx`/`fy` are ratios and so are unaffected by the stage's `metersPerUnit`.
 
 Resolution is a property of the **render product**, not of the camera prim, which is why it lives in *OPC UA — Vision* (`ImageSensorType.Width`/`Height`) rather than here. This is the clean division: the prim owns optics and pose, the vision model owns the imaging pipeline.
 

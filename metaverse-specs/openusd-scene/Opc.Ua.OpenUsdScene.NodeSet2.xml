@@ -1291,7 +1291,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1024</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=6083" BrowseName="1:ClippingRange" ParentNodeId="ns=1;i=1024" DataType="Float" ValueRank="1">
+  <UAVariable NodeId="ns=1;i=6083" BrowseName="1:ClippingRange" ParentNodeId="ns=1;i=1024" DataType="Float" ValueRank="1" ArrayDimensions="2">
     <DisplayName>ClippingRange</DisplayName>
     <Description>Near and far clipping distances as a two-element array (USD float2).</Description>
     <References>
