@@ -294,7 +294,7 @@ The delivery mode is negotiated per channel by `OpenDataChannel`. What it can ac
 | `PartiallyReliable` | Sender-side: a droppable frame still queued at its deadline is discarded. `MaxRetransmits` has no effect, because TCP owns retransmission. | Retransmission over DATAGRAM up to `MaxRetransmits` or the deadline, then abandoned. |
 | `Unreliable` | Sender-side discard only. Once a byte is written to the socket, TCP will deliver it. | Exact. A DATAGRAM is sent once and never retransmitted. |
 
-The honest summary for inline framing is that **loss happens in the send queue, not on the wire**. That is a real and useful property — it bounds latency and discards stale media in favour of fresh media — and it is what a TCP-based media path can offer. A Server that needs genuine in-flight loss offers an `opc.quic` endpoint and says so through `SupportsUnreliableDatagrams`.
+The plain summary for inline framing is that **loss happens in the send queue, not on the wire**. That is a real and useful property — it bounds latency and discards stale media in favour of fresh media — and it is what a TCP-based media path can offer. A Server that needs genuine in-flight loss offers an `opc.quic` endpoint and says so through `SupportsUnreliableDatagrams`.
 
 A sender **shall** apply deadline expiry only to frames carrying `Droppable`. A frame without that flag is transmitted however late it is.
 
@@ -432,6 +432,30 @@ else:
 ```
 
 **Buffer sizing.** `InitialCredit` **should** be at least the bandwidth-delay product of the path — the channel's expected rate multiplied by the round trip measured by `PING`/`PONG` — because a window smaller than that caps throughput at `InitialCredit` / RTT regardless of available bandwidth. `MaxFrameSize` trades per-frame overhead against latency and loss granularity: the 36-byte inline and 24-byte QUIC overheads of §5.5 are amortized better by large frames, while a small frame lowers the time an urgent frame waits behind the one in front of it and reduces what a single loss destroys. For media over `opc.quic` the frame size **should** be chosen so that a whole frame fits one QUIC DATAGRAM without IP fragmentation, which is what fixes the 1200-byte figure used in the worked example of the combined specification.
+
+### 5.16 Interoperability with implementations that do not support data channels
+
+A `STR` frame is a MessageChunk carrying a `MessageType` that no existing implementation recognizes. OPC 10000-6 §6.7.2.2 gives an unrecognized `MessageType` one outcome: it is a protocol error, and the receiver closes the SecureChannel. **Sending a single `STR` frame to a peer that does not implement this specification therefore destroys the connection, including every Session, Subscription and Service call on it.** That consequence is severe enough that the rules below are normative, and they are deliberately independent of the AddressSpace: a Client must be able to establish interoperability at this layer without first browsing or reading anything.
+
+**Support is proved by the Service, never assumed and never probed with a frame.**
+
+- A peer **shall not** transmit a `STR` frame on a SecureChannel until an `OpenDataChannel` on that SecureChannel has completed successfully. The successful Service response is the *only* admissible evidence that the peer implements this specification.
+- A peer **shall not** probe for support by sending a `STR` frame and observing whether the connection survives. The probe is indistinguishable from an attack and its failure mode is the loss of the whole connection.
+- A Server that does not implement the DataChannel Service Set returns `Bad_ServiceUnsupported` for `OpenDataChannel`, as OPC 10000-4 requires of any unimplemented Service. A Client **shall** treat that, and `Bad_DataChannelNotSupported`, as a definitive negative for the SecureChannel and **shall not** retry with frames.
+- The absence of the `DataChannelCapabilities` Object is an additional, earlier signal (Part 3 errata §6), but a Client **shall not** depend on it: a Server may restrict Browse, and a Client may need to open a channel before its AddressSpace is usable.
+
+**The two asymmetric cases are both safe by construction.**
+
+| | Legacy peer | Data-channel-capable peer |
+|---|---|---|
+| **Legacy Client, capable Server** | Never calls `OpenDataChannel`, so no channel exists. | **Shall not** send `STR` unsolicited: §5.1 already forbids a frame naming a ChannelId that is not open, and no ChannelId can be open. A Server **shall not** offer a channel by sending frames; it offers through an Event the Client must have subscribed to (Part 4 errata clause 6). |
+| **Capable Client, legacy Server** | Returns `Bad_ServiceUnsupported`; the SecureChannel is untouched. | Falls back to the mechanisms of Annex E — FileTransfer, Subscriptions or PubSub — and **shall not** send `STR`. |
+
+Because a capable peer never speaks first, a capable and a legacy implementation interoperate with no negotiation, no version bump and no special case on either side. This is what the decision to leave `Hello` and `Acknowledge` unmodified (§4.3) buys, and it is why that decision is worth its cost.
+
+**Intermediaries.** A gateway, aggregating Server or protocol bridge that relays MessageChunks between SecureChannels **shall not** forward a `STR` frame onto a SecureChannel on which it has not itself completed an `OpenDataChannel`. An intermediary that does not implement this specification **shall** reject the frame as it would any unrecognized `MessageType`, and **shall not** silently drop it: silently dropping payload the sender believes was delivered is worse than closing the connection, because the sender has no gap to detect and no `GAP` frame will ever arrive.
+
+**Version skew within this specification.** A peer that implements this specification but not an optional conformance unit refuses at the Service level with the StatusCode for that unit — `Bad_DeliveryModeUnsupported`, `Bad_DataChannelTransportUnsupported` and the rest of the Part 4 errata §9 list — and never by dropping frames. Every capability difference is therefore visible in a Service response before any frame is sent.
 
 ## 6 Transport bindings for inline framing
 
@@ -612,6 +636,8 @@ A conformance unit is only useful if a laboratory can derive test cases from it,
 | DCF-033 | Credit-exempt control frames are rate-bounded | Emit `CREDIT`/`GAP` above the stated rate | Rate enforced; `RESET` with `Bad_DataChannelLimitsExceeded` on persistence (§5.1.1) |
 | DCF-034 | `SequenceNumber` exhaustion forces renewal | Drive the space to fewer than `2^30` values remaining | `OpenSecureChannel` with `RenewalRequest` is issued before reuse (§5.1.1) |
 | DCF-035 | SecurityMode `None` is refused | `OpenDataChannel` on a `None` SecureChannel with no explicit permission | `Bad_SecurityModeInsufficient`, enforced by the **Server** (§5.8.3) |
+| DCF-036 | A capable peer never speaks first | Connect a capable peer to one that returns `Bad_ServiceUnsupported` for `OpenDataChannel` | No `STR` frame is ever transmitted; the SecureChannel survives (§5.16) |
+| DCF-037 | An unsolicited `STR` frame is refused | Send a `STR` frame naming a ChannelId that was never opened | SecureChannel closed; never silently dropped (§5.1, §5.16) |
 
 **Data Channel Partial Reliability**
 
@@ -651,6 +677,7 @@ DCF-015 and DCF-016 fail only under load, which is what makes them the assertion
 | §5.13 state machine | New `6.7.11 Data channel states` | The state transition table. Referenced normatively by the Part 3 `DataChannelState` enumeration. |
 | §5.14 timeouts | New `6.7.12 Data channel timeouts` | The four named constants and their defaults. |
 | §5.15 algorithms | A new informative annex of OPC 10000-6 | Sender and receiver algorithms and buffer-sizing guidance; informative, and marked as such. |
+| §5.16 interoperability | New `6.7.13 Data channel interoperability`, cross-referenced from `6.7.2.2` | The rule that a capable peer never sends a `STR` frame before a successful `OpenDataChannel`, and the behaviour of both asymmetric pairings and of intermediaries. Belongs beside the `MessageType` table, because an unrecognized `MessageType` closing the SecureChannel is what makes it necessary. |
 | §6.1 | `7.2 OPC UA TCP` | No normative change; a note that `STR` chunks are carried like `MSG` chunks. |
 | §6.2 | `7.5 WebSockets` | No normative change; a note that a `STR` frame is one binary WebSocket frame under `opcua+uacp`. No new sub-protocol. |
 | §6.3 | `7.4 OPC UA HTTPS` | A statement that data channels are not available over this transport. |
