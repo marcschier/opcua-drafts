@@ -605,20 +605,20 @@ The intended standards path is a family of thin, composable binding contracts (t
 
 | Artifact | Path |
 |---|---|
-| This specification | `core-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md` |
-| Base NodeSet | `core-specs/openusd-binding/Opc.Ua.OpenUsd.NodeSet2.xml` |
-| NodeIds | `core-specs/openusd-binding/Opc.Ua.OpenUsd.NodeIds.csv` |
-| Annex A (generated node table) | `core-specs/extras/openusd-binding/tools/model-reference.md` |
-| Generator | `core-specs/extras/openusd-binding/tools/build_model.py` |
-| Validator | `core-specs/extras/openusd-binding/tools/validate_local.py` |
-| Pumps addendum (implementer Annex) | `core-specs/openusd-binding/pumps/` |
-| Robotics addendum (implementer Annex) | `core-specs/openusd-binding/robotics/` |
+| This specification | `metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md` |
+| Base NodeSet | `metaverse-specs/openusd-binding/Opc.Ua.OpenUsd.NodeSet2.xml` |
+| NodeIds | `metaverse-specs/openusd-binding/Opc.Ua.OpenUsd.NodeIds.csv` |
+| Annex A (generated node table) | `metaverse-specs/extras/openusd-binding/tools/model-reference.md` |
+| Generator | `metaverse-specs/extras/openusd-binding/tools/build_model.py` |
+| Validator | `metaverse-specs/extras/openusd-binding/tools/validate_local.py` |
+| Pumps addendum (implementer Annex) | `metaverse-specs/openusd-binding/pumps/` |
+| Robotics addendum (implementer Annex) | `metaverse-specs/openusd-binding/robotics/` |
 
 The Release 0.2.0 optional deliverables include semantic source, command, alarm/history, integrity, composition, cross-server composition, and asset delivery. Regenerate and validate:
 
 ```powershell
-python core-specs/extras/openusd-binding/tools/build_model.py
-python core-specs/extras/openusd-binding/tools/validate_local.py
+python metaverse-specs/extras/openusd-binding/tools/build_model.py
+python metaverse-specs/extras/openusd-binding/tools/validate_local.py
 ```
 
 The NodeSet and NodeIds are generated and byte-deterministic; do not hand-edit them. The generated model passes the OPC UA modelling validator with 0 errors / 0 warnings.
@@ -627,7 +627,7 @@ The NodeSet and NodeIds are generated and byte-deterministic; do not hand-edit t
 
 ## Annex A — Information model (generated)
 
-See `core-specs/extras/openusd-binding/tools/model-reference.md` for the full generated node table (BrowseName, NodeId, NodeClass, description for all nodes in this namespace).
+See `metaverse-specs/extras/openusd-binding/tools/model-reference.md` for the full generated node table (BrowseName, NodeId, NodeClass, description for all nodes in this namespace).
 
 ---
 
@@ -692,7 +692,7 @@ sequenceDiagram
 5. A **connector vendor's** generic connector browses `Server/OpenUSD/Representations`, subscribes to the three Variables, converts, and writes a `.live` override layer.
 6. The **visualization operator** opens the composed stage in Omniverse (or `usdview`) and sees the pump spin, warm toward red, and glow — driven live, with no pump-specific code anywhere in the connector or renderer.
 
-A runnable realization of this pass (server, connector, base asset, and a step-by-step guide) is provided in `core-specs/extras/openusd-binding/examples/pumps/` and the `PumpDeviceIntegrationServer` sample.
+A runnable realization of this pass (server, connector, base asset, and a step-by-step guide) is provided in `metaverse-specs/extras/openusd-binding/examples/pumps/` and the `PumpDeviceIntegrationServer` sample.
 
 ### B.5 Concrete pass — the robotics example
 
@@ -703,7 +703,7 @@ A runnable realization of this pass (server, connector, base asset, and a step-b
 5. A **connector vendor's** generic connector browses `Server/OpenUSD/Representations`, composes `/Cell/Robots/R1` and `/Cell/Robots/R2` as references in `live.usda`, subscribes to the twelve Axis Variables plus safety state, and writes live override opinions.
 6. The **visualization operator** opens the composed stage in Omniverse (or `usdview`) and sees two independently articulated robots, safety beacon and warning visibility, and a dynamically mounted R1 gripper — driven live, with no robotics-specific code in the connector or renderer.
 
-A runnable realization of this pass (descriptor, USD assets, Python writer, fallback renderer, and step-by-step guide) is provided in `core-specs/extras/openusd-binding/examples/robotics/` and the `RoboticsDeviceIntegrationServer` sample.
+A runnable realization of this pass (descriptor, USD assets, Python writer, fallback renderer, and step-by-step guide) is provided in `metaverse-specs/extras/openusd-binding/examples/robotics/` and the `RoboticsDeviceIntegrationServer` sample.
 
 ---
 

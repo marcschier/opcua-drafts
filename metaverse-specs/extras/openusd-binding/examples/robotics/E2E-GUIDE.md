@@ -56,7 +56,9 @@ Each robot representation recursively composes its `Axes` by `Child` arcs. The A
 
 ## Optional asset delivery (zero-setup base layers)
 
-When the server advertises `RobotCellStage.Assets` (`OU-AssetDelivery`), the bridge can download `Cell.usda`, `robot.usda`, and `tool.usda` from the server through Part 5 `FileType`, verify their SHA-256 digests, and write them into a local cache before composing `live.usda`. In that mode `usdview` or Omniverse opens a fully local, self-contained `stage.usda`; no external asset repository or manual base-layer copy is needed. If the server does not advertise `Assets`, provide the base `.usda` files out-of-band as in Step 1.
+When the server offers `OU-AssetDelivery`, the bridge can download `Cell.usda`, `robot.usda`, and `tool.usda` from the server through Part 5 `FileType`, verify their SHA-256 digests, and write them into a local cache before composing `live.usda`. In that mode `usdview` or Omniverse opens a fully local, self-contained `stage.usda`; no external asset repository or manual base-layer copy is needed. If the server does not offer it, provide the base `.usda` files out-of-band as in Step 1.
+
+Where the served artifacts live depends on the Part 1 release. Up to 0.3.0 they hang directly under `RobotCellStage.Assets`. From **0.4.0** they are owned by the server's artifact registry at `Server/OpenUSD/Artifacts`, and `RobotCellStage.Assets` becomes a *view* that `Organizes` the subset this stage needs — so an asset shared by several stages exists once. The download steps are unchanged either way: `OpenUsdAssetType` subtypes the xRegistry `ResourceType`, which is itself a Part 5 `FileType`, so the artifact node still *is* the file and `Open`/`Read`/`Close` behave exactly as before. Note that `stage.usda` is **not** a served asset in either release — it is the local composition root you copy in Step 1.
 
 ## Prerequisites
 
@@ -69,10 +71,10 @@ When the server advertises `RobotCellStage.Assets` (`OU-AssetDelivery`), the bri
 
 ```bash
 mkdir ~/robot-live
-cp opcua-drafts/core-specs/extras/openusd-binding/examples/robotics/Cell.usda ~/robot-live/
-cp opcua-drafts/core-specs/extras/openusd-binding/examples/robotics/robot.usda ~/robot-live/
-cp opcua-drafts/core-specs/extras/openusd-binding/examples/robotics/tool.usda ~/robot-live/
-cp opcua-drafts/core-specs/extras/openusd-binding/examples/robotics/stage.usda ~/robot-live/
+cp opcua-drafts/metaverse-specs/extras/openusd-binding/examples/robotics/Cell.usda ~/robot-live/
+cp opcua-drafts/metaverse-specs/extras/openusd-binding/examples/robotics/robot.usda ~/robot-live/
+cp opcua-drafts/metaverse-specs/extras/openusd-binding/examples/robotics/tool.usda ~/robot-live/
+cp opcua-drafts/metaverse-specs/extras/openusd-binding/examples/robotics/stage.usda ~/robot-live/
 ```
 
 `stage.usda` sublayers `live.usda` (stronger) over `Cell.usda`. `Cell.usda` shows only the environment; the full articulated robots appear when the connector or `usd_writer.py --demo` authors the robot references and joint overrides into `live.usda`.
@@ -106,7 +108,7 @@ You will see two articulated robots inside a fenced cell. With the connector run
 ## Alternative — the Python demo writer
 
 ```bash
-cd opcua-drafts/core-specs/extras/openusd-binding/examples/robotics
+cd opcua-drafts/metaverse-specs/extras/openusd-binding/examples/robotics
 python usd_writer.py --demo
 python render_robot.py stage.usda robot_render.png
 ```
