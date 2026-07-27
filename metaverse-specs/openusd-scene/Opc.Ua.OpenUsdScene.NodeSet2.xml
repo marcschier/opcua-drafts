@@ -1040,9 +1040,9 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1019</Reference>
     </References>
   </UAVariable>
-  <UAObjectType NodeId="ns=1;i=1020" BrowseName="1:UsdApiSchemaType" IsAbstract="true">
+  <UAObjectType NodeId="ns=1;i=1020" BrowseName="1:UsdApiSchemaType">
     <DisplayName>UsdApiSchemaType</DisplayName>
-    <Description>Abstract base for applied USD API schema AddIns.</Description>
+    <Description>Base for applied USD API schema AddIns. Concrete, because §8.4 requires an unknown applied schema to degrade to a UsdApiSchemaType AddIn carrying its SchemaName rather than being dropped; vendors still subtype it (§8.2).</Description>
     <Category>OpenUSD Scene Materialization</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>

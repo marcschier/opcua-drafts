@@ -111,7 +111,7 @@
 | ns=1;i=6059 | ListPosition | Variable | List operation position/type. |
 | ns=1;i=6060 | VariantSet | Variable | Variant set name for variant arcs. |
 | ns=1;i=6061 | VariantSelection | Variable | Variant selection name. |
-| ns=1;i=1020 | UsdApiSchemaType | ObjectType | Abstract base for applied USD API schema AddIns. |
+| ns=1;i=1020 | UsdApiSchemaType | ObjectType | Base for applied USD API schema AddIns. Concrete, because §8.4 requires an unknown applied schema to degrade to a UsdApiSchemaType AddIn carrying its SchemaName rather than being dropped; vendors still subtype it (§8.2). |
 | ns=1;i=6062 | SchemaName | Variable | Applied API schema name. |
 | ns=1;i=1021 | UsdCollectionAPIType | ObjectType | USD CollectionAPI applied API schema. |
 | ns=1;i=6063 | ExpansionRule | Variable | Collection expansion rule token. |

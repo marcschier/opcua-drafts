@@ -490,7 +490,9 @@ prop_var(ARC, "UsdCompositionArcType", "ListPosition", UsdListOpTypeEnum, "List 
 prop_var(ARC, "UsdCompositionArcType", "VariantSet", String, "Variant set name for variant arcs.")
 prop_var(ARC, "UsdCompositionArcType", "VariantSelection", String, "Variant selection name.")
 object_type(1020, "UsdApiSchemaType", BaseObjectType,
-            "Abstract base for applied USD API schema AddIns.", abstract=True)
+            "Base for applied USD API schema AddIns. Concrete, because §8.4 requires an "
+            "unknown applied schema to degrade to a UsdApiSchemaType AddIn carrying its "
+            "SchemaName rather than being dropped; vendors still subtype it (§8.2).")
 API = 1020
 prop_var(API, "UsdApiSchemaType", "SchemaName", UsdToken, "Applied API schema name.")
 object_type(1021, "UsdCollectionAPIType", T(API), "USD CollectionAPI applied API schema.")

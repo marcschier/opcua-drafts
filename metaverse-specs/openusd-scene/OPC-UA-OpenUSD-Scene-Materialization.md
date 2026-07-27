@@ -140,7 +140,7 @@ A relationship. Mandatory `Targets` (ordered `NodeId[]` — the materialized tar
 
 - `UsdCompositionArcType` (under a prim's `Composition/`): `ArcKind` (`UsdArcKindEnum` — `Reference`/`Payload`/`Inherit`/`Specialize`/`VariantSet`/`Sublayer`/`Instance`), `AssetPath`, `PrimPath`, `ListPosition` (`UsdListOpTypeEnum`), `VariantSet`, `VariantSelection`. This records **how** the composed prim came to be, so the arc structure round-trips (§7.4).
 - `UsdVariantSetType` (under a prim's `VariantSets/`): `SetName`, `Selection` (the selected variant), and `<Variant>` `OptionalPlaceholder` branches.
-- `UsdApiSchemaType : BaseObjectType` (abstract) is the base for **applied API schemas**, applied to a prim via **HasAddIn** under `AppliedSchemas/`. `UsdCollectionAPIType` is a worked example. Vendors add new API schemas by **subtyping** `UsdApiSchemaType` (or as Interfaces, §8.2).
+- `UsdApiSchemaType : BaseObjectType` is the base for **applied API schemas**, applied to a prim via **HasAddIn** under `AppliedSchemas/`. `UsdCollectionAPIType` is a worked example. It is deliberately **concrete**, because §8.4 requires an unknown applied schema to degrade to a `UsdApiSchemaType` AddIn carrying its `SchemaName` — an Object cannot take an abstract ObjectType as its `HasTypeDefinition`. Vendors add new API schemas by **subtyping** `UsdApiSchemaType` (or as Interfaces, §8.2).
 
 ### 5.7 DataTypes and ReferenceTypes
 
@@ -265,7 +265,7 @@ A vendor adds a USD value type by **subtyping the built-in primitive it decompos
 
 ### 8.4 Unknown-type fallback (normative)
 
-An importer that encounters an unknown typed schema, API schema, or value type **shall not drop it**: it degrades the prim to `UsdPrimType`/`UsdTypedType` (carrying `TypeName`), the API schema to a `UsdApiSchemaType` AddIn (carrying `SchemaName`), and the value to an opaque value carrying the `UsdTypeName` — so an exporter reproduces it faithfully and a vendor-aware client can still interpret it.
+An importer that encounters an unknown typed schema, API schema, or value type **shall not drop it**: it degrades the prim to `UsdPrimType` (the concrete base — `UsdTypedType` is abstract and so cannot be an instance's `HasTypeDefinition`) carrying `TypeName`, the API schema to a `UsdApiSchemaType` AddIn (carrying `SchemaName`; this is why that type is concrete, §5.6), and the value to an opaque value carrying the `UsdTypeName` — so an exporter reproduces it faithfully and a vendor-aware client can still interpret it. An opaque value **shall** retain the authored text of the value, not a host-language rendering of it, so that export is byte-faithful.
 
 ---
 
@@ -367,7 +367,7 @@ The materializer **should** also apply the portable `UsdGlobeAnchorApiType` carr
 #usda 1.0
 ( upAxis = "Z"  metersPerUnit = 1.0 )
 
-def "World" ( prepend apiSchemas = ["CesiumGeoreferencePrim"] ) {
+def CesiumGeoreferencePrim "World" {
     double cesium:anchor:latitude  = 47.6062
     double cesium:anchor:longitude = -122.3321
     double cesium:anchor:height    = 56.0
@@ -379,6 +379,8 @@ def "World" ( prepend apiSchemas = ["CesiumGeoreferencePrim"] ) {
     }
 }
 ```
+
+`CesiumGeoreferencePrim` is a **typed prim** (§8.1) and `CesiumGlobeAnchorAPI` an **applied API schema** (§8.2), so they are authored differently — the first as the prim's `typeName`, the second in `apiSchemas`. A materializer **should** nevertheless recognise a georeference declared either way, since stages in the wild author `CesiumGeoreferencePrim` through `apiSchemas` as well; the portable dual-authoring of §5.8 applies in both cases.
 
 materializes as (abbreviated address space):
 
