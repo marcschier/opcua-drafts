@@ -131,7 +131,7 @@
 | ns=1;i=6075 | <UsdCompositionArc> | Object | Composition arcs contributing opinions. |
 | ns=1;i=6076 | <UsdVariantSet> | Object | Variant sets available on this prim. |
 | ns=1;i=6077 | <Metadata> | Variable | Arbitrary metadata properties. |
-| ns=1;i=1024 | UsdGeomCameraType | ObjectType | USD Camera prim: a transformable prim describing a view frustum. Materializes the UsdGeomCamera IsA schema. A conforming OPC UA - Vision sensor whose PrimPath resolves into a materialized stage SHALL resolve to an instance of this type; the aperture/focal-length attributes carry the camera intrinsics (Annex C). |
+| ns=1;i=1024 | UsdGeomCameraType | ObjectType | USD Camera prim: a transformable prim describing a view frustum. Materializes the UsdGeomCamera IsA schema. Its aperture and focal-length attributes are the surface from which camera intrinsics are derived (Annex C). OPC UA - Vision defines, in its own VIS-Interop-Scene facet, when a Vision sensor's PrimPath is required to resolve to an instance of this type; that requirement belongs to that specification and is not imposed here. |
 | ns=1;i=6078 | FocalLength | Variable | Perspective focal length, in tenths of a world unit (USD convention: mm). |
 | ns=1;i=6079 | HorizontalAperture | Variable | Horizontal aperture (sensor width), in tenths of a world unit. |
 | ns=1;i=6080 | VerticalAperture | Variable | Vertical aperture (sensor height), in tenths of a world unit. |

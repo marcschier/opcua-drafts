@@ -640,8 +640,11 @@ reference_type(4003, "HasScenePrim", "IsScenePrimOf",
                "Server also implements OPC UA - OpenUSD Scene Materialization. The target "
                "is expected to be a UsdGeomCameraType instance. Optional: PrimPath remains "
                "the portable descriptor.")
-reference_type(4004, "UsesModel", "IsUsedByPipeline",
-               "Links an inference pipeline or deployment to the AI model it executes.")
+reference_type(4004, "UsesModel", "IsUsedByDeployment",
+               "Links an AiDeploymentType instance to the AiModelType instance it "
+               "executes. Clause 5.9 requires exactly one such reference per deployment; "
+               "it is the only defined path from a result to the model artefact and its "
+               "Digest, on which clause 12.6 depends.")
 reference_type(4005, "ProducedBy", "Produces",
                "Links a result to the inference pipeline that produced it.")
 
@@ -735,9 +738,9 @@ object_type(1009, "ClipEndpointType", T(ME),
             "instance whose ClipFormat is Jpeg; every other format is optional. In "
             "addition to the default URI path, this type MAY publish the encoded image "
             "inline as a ByteString so that clients can Read or Subscribe to it - but "
-            "only within MaxInlineClipSize, which SHALL NOT exceed the session's "
-            "negotiated MaxByteStringLength. Inline delivery serves single stills; it is "
-            "not a substitute for a StreamEndpoint.")
+            "only within MaxInlineClipSize, which SHALL NOT exceed the Server's "
+            "ServerCapabilities.MaxByteStringLength. Inline delivery serves single "
+            "stills; it is not a substitute for a StreamEndpoint.")
 CE = 1009
 prop_var(CE, "ClipEndpointType", "ClipFormat", VisionClipFormatEnum,
          "Encoding of clips from this endpoint. Jpeg is the mandatory default.",
@@ -753,7 +756,9 @@ prop_var(CE, "ClipEndpointType", "InlineDeliveryEnabled", Boolean,
          "URI path exclusively.")
 prop_var(CE, "ClipEndpointType", "MaxInlineClipSize", UInt32,
          "Largest inline payload this endpoint will publish, in bytes. SHALL NOT exceed "
-         "the session's negotiated MaxByteStringLength.")
+         "Server.ServerCapabilities.MaxByteStringLength, and a Read or Publish response "
+         "carrying the value is additionally bounded by the Session's "
+         "MaxResponseMessageSize. See clause 6.4.")
 data_var(CE, "ClipEndpointType", "LatestClip", ByteString,
          "The most recently produced clip, encoded per ClipFormat. Subscribable: the "
          "value changes once per acquisition, which suits one-image-per-part inspection. "
@@ -1159,10 +1164,11 @@ prop_var(FB, "VisionFeedbackType", "OverlayStyle", String,
 prop_var(FB, "VisionFeedbackType", "OverlayTtl", Duration,
          "How long submitted overlay geometry remains rendered.")
 prop_var(FB, "VisionFeedbackType", "MaxInlineFeedbackImageSize", UInt32,
-         "Largest inline image this surface accepts, in bytes. SHALL NOT exceed the "
-         "session's negotiated MaxByteStringLength. An oversized payload is rejected "
-         "with Bad_EncodingLimitsExceeded and the client uses SubmitImageReference "
-         "instead.")
+         "Largest inline image this surface accepts, in bytes. SHALL NOT exceed "
+         "Server.ServerCapabilities.MaxByteStringLength, and a Call request carrying the "
+         "value is additionally bounded by the Session's MaxRequestMessageSize. An "
+         "oversized payload is rejected with Bad_EncodingLimitsExceeded and the client "
+         "uses SubmitImageReference instead. See clause 6.4.")
 method(FB, "VisionFeedbackType", "SubmitDetections",
        "Push detected geometry back into the vision system. With Purpose set to Overlay "
        "the boxes are drawn on the stream; with Purpose set to GroundTruthLabel they are "

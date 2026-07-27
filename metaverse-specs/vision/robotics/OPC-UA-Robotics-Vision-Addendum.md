@@ -44,9 +44,68 @@ Both mandatory defaults of base specification §6.2 are present — an RTSP stre
 | `LiveRtsp` | `StreamEndpointType` | `StreamProtocol = Rtsp`, `EndpointUri = rtsp://192.0.2.41:554/main` |
 | `PickFrames` | `ClipEndpointType` | `ClipFormat = Jpeg`, `EndpointUri = https://192.0.2.41/clips/{resultId}.jpg` |
 
-This example does **not** enable inline delivery: clips are obtained through `GetClip` and fetched from the returned `Uri`, which is the default path.
+This clip endpoint implements the optional **VIS-Media-Inline** facet but leaves it switched off: `InlineDeliveryEnabled = false`, so per base specification §6.4 rule 5 the Server reports `LatestClip` with `Bad_NotSupported` while `LatestClipMetadata` stays readable. Clips are obtained through `GetClip` and fetched from the returned `Uri`, which is the default path. Clause 11 requires the facet's four members to be present together even in this state, which is why the overlay declares all four.
 
-## 5 The simulated twin
+## 5 Coordinate frames and calibration
+
+The frame tree. `ParentFrame` is what makes it composable: a client walks from the frame a pose is expressed in up to the frame it needs, composing the transforms it finds on the way.
+
+| Instance | `FrameId` | `Role` | `ParentFrame` |
+|---|---|---|---|
+| `WorldFrame` | `world` | `World` | none (tree root) |
+| `RobotBaseFrame` | `robot_base` | `Base` | `world` |
+| `FlangeFrame` | `flange` | `Tool` | `robot_base` |
+| `CameraFrame` | `camera_eih` | `Camera` | `flange` |
+
+**`Intrinsics2448x2048`** (`IntrinsicCalibrationType`) — Pinhole intrinsics with Brown-Conrady distortion at full resolution.
+
+| Member | Value |
+|---|---|
+| `CalibrationId` | `intr-cam-eih-01-2448` |
+| `PerformedAt` | `2026-06-14T09:12:00Z` |
+| `Valid` | `true` |
+| `Method` | `Zhang` |
+| `ResidualError` | `0.21` |
+
+`Intrinsics` field values, in the units fixed by base specification §5.10:
+
+| Field | Value | Unit / convention |
+|---|---|---|
+| `Fx` | `2140.5` | px |
+| `Fy` | `2139.8` | px |
+| `Cx` | `1223.1` | px, corner-datum per 5.10 |
+| `Cy` | `1021.7` | px, corner-datum per 5.10 |
+| `Skew` | `0.0` | px |
+| `DistortionModel` | `BrownConrady` | 5.10 ordering: k1, k2, p1, p2, k3 |
+| `DistortionCoefficients` | `[-0.1721, 0.0934, 0.0002, -0.0001, -0.0188]` | dimensionless |
+| `Width` | `2448` | px |
+| `Height` | `2048` | px |
+
+**`HandEye`** (`ExtrinsicCalibrationType`) — Transform from the camera frame to the robot flange frame. Eye-in-hand: the camera moves with the tool.
+
+| Member | Value |
+|---|---|
+| `CalibrationId` | `hand-eye-cam-eih-01` |
+| `PerformedAt` | `2026-06-14T10:40:00Z` |
+| `Valid` | `true` |
+| `Method` | `Daniilidis` |
+| `ResidualError` | `0.0008` |
+| `Mount` | `EyeInHand` |
+| `SourceFrame` | `camera_eih` |
+| `TargetFrame` | `flange` |
+
+`Transform` field values, in the units fixed by base specification §5.10:
+
+| Field | Value | Unit / convention |
+|---|---|---|
+| `FrameId` | `flange` | equals the TargetFrame's FrameId, per the 5.10 frame-precedence rule |
+| `Position` | `(0.062, -0.031, 0.115)` | metres, ordered (x, y, z) |
+| `Orientation` | `(0.0, 0.0, 0.7071, 0.7071)` | unit quaternion ordered (x, y, z, w) |
+| `Covariance` | `empty array` | not reported, per the 5.10 sentinel |
+
+Each calibration is reachable from the sensor by a `HasCalibration` reference, as base specification §5.9 requires.
+
+## 6 The simulated twin
 
 The same cell is rendered in NVIDIA Isaac Sim, and the synthetic sensor is modelled here alongside the physical one. Note what is *not* different: same type, same members, same units, same mandatory RTSP and JPEG endpoints. A client written against `VisionSensorType` consumes either without modification, and can tell them apart only by reading `RealityKind`. That is the sim/real symmetry of base specification §4.3, and it is what lets a model be trained on synthetic data and then deployed against the physical camera unchanged.
 
@@ -68,9 +127,9 @@ The twin additionally implements `IVisionSimulatedType`:
 | `PrimPath` | `/Cell/Robots/R1/Flange/Camera` |
 | `GroundTruthAvailable` | `true` |
 
-`PrimPath` resolves to a `UsdGeomCameraType` instance where the Server also implements *OPC UA — OpenUSD Scene Materialization* (base specification Annex C), so the camera's aperture and focal-length attributes are both the scene description and the imaging intrinsics.
+`PrimPath` resolves to a `UsdGeomCameraType` instance where the Server also implements *OPC UA — OpenUSD Scene Materialization* and claims the base specification's *VIS-Interop-Scene* facet (Annex C), so the camera's aperture and focal-length attributes are both the scene description and the imaging intrinsics.
 
-## 6 Inference
+## 7 Inference
 
 | Member | Value |
 |---|---|
@@ -82,15 +141,17 @@ The twin additionally implements `IVisionSimulatedType`:
 
 Inference runs **off-server** on a cell-side GPU appliance. The Server publishes results it did not compute. Nothing else in the model changes: a client reads `DetectionResultType` exactly as it would if `InferenceLocation` were `OnServer`, and consults that property only if it cares about the latency or trust boundary. Because the deployment is remote, base specification §12.6 applies: the channel to the inference service is authenticated and integrity-protected, and `AiModelType.Digest` lets a consumer confirm which artefact produced a result.
 
-## 7 Results
+The deployment carries exactly one `UsesModel` reference to the model above, as base specification §5.9 requires. That reference is the only defined path from a result to the model artefact and its `Digest`, so it is what makes the §12.6 provenance check possible.
+
+## 8 Results
 
 Each cycle produces a `DetectionResultType` whose `Detections` carry `ClassLabel`, `Confidence`, a `BoundingBox2D`, a `BoundingBox3D` and — the member that makes the result actionable — a 6-DoF `Pose`. Every pose names its `FrameId` (`camera_eih`), which is only meaningful because the `HandEye` calibration above relates that frame to the flange. A consumer composes camera → flange → base through the `CoordinateFrameType` tree to obtain a pose the robot controller can execute. `ResidualError` on the calibration is what tells the consumer how much to trust it.
 
-## 8 Feedback
+## 9 Feedback
 
 Two feedback paths are exercised. During commissioning, the HMI calls `SubmitDetections` with `Purpose = Overlay` so the operator sees candidate grasps drawn on the RTSP stream. In production, a failed pick calls `SubmitCorrection` with `Purpose = GroundTruthLabel`, and the corrected pose is retained by the `LearningJobType` as a labelled sample — so the cases the model gets wrong are exactly the cases the next dataset contains. Feedback images are passed by reference through `SubmitImageReference`; this example does not enable inline feedback images.
 
-## 9 Deliverables
+## 10 Deliverables
 
 | File | Content |
 |---|---|

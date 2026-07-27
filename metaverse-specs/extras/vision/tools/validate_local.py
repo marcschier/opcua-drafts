@@ -362,6 +362,15 @@ def main():
 
     own_ids = {int(k.split("i=")[1]) for k in by_id if k.startswith("ns=1;i=")}
 
+    # Base-model type BrowseName -> numeric id, so overlay checks can name the types
+    # they care about instead of hard-coding provisional NodeIds.
+    own_by_name = {}
+    for n in nodes:
+        if n.tag[len(NS):] in ("UAObjectType", "UADataType", "UAReferenceType"):
+            nid = n.get("NodeId", "")
+            if nid.startswith("ns=1;i="):
+                own_by_name[simple_name(n)] = int(nid.split("i=")[1])
+
     # Resolve, per type, its Mandatory instance declarations and each member's declared
     # DataType - including inherited ones - so an overlay can be checked against them.
     def type_chain(tid):
@@ -487,6 +496,72 @@ def main():
                         err(f"{label}: {c.get('NodeId')} ({cname}) has DataType "
                             f"{c.get('DataType')} but the declaration on ns=2;i={tid} "
                             f"is {declared[cname][1]}")
+
+        # ---- spec invariants the overlays must satisfy ----------------------
+        # These are the rules a worked example is most likely to quietly break, and
+        # every one of them was in fact broken before this check existed.
+        type_of = {}
+        for e in ov_nodes:
+            for r in e.findall(f"{NS}References/{NS}Reference"):
+                if r.get("ReferenceType") == "HasTypeDefinition":
+                    type_of[e.get("NodeId")] = (r.text or "").strip()
+
+        def type_named(name):
+            tid = own_by_name.get(name)
+            return f"ns=2;i={tid}" if tid else None
+
+        # 5.9: an AiDeploymentType instance shall have exactly one UsesModel reference,
+        # and it shall target an AiModelType instance.
+        dep_td = type_named("AiDeploymentType")
+        model_td = type_named("AiModelType")
+        uses_model = type_named("UsesModel")
+        for e in ov_nodes:
+            if type_of.get(e.get("NodeId")) != dep_td:
+                continue
+            targets = [(r.text or "").strip()
+                       for r in e.findall(f"{NS}References/{NS}Reference")
+                       if r.get("ReferenceType") in ("UsesModel", uses_model)
+                       and r.get("IsForward", "true") != "false"]
+            if len(targets) != 1:
+                err(f"{label}: {e.get('NodeId')} is an AiDeploymentType with "
+                    f"{len(targets)} UsesModel references; clause 5.9 requires exactly "
+                    "one, and clause 12.6 depends on it")
+            for t in targets:
+                if type_of.get(t) != model_td:
+                    err(f"{label}: {e.get('NodeId')} UsesModel targets {t}, which is "
+                        "not an AiModelType instance (clause 5.9)")
+
+        # Clause 11: VIS-Media-Inline is all four members or none.
+        clip_td = type_named("ClipEndpointType")
+        inline = ("InlineDeliveryEnabled", "MaxInlineClipSize", "LatestClip",
+                  "LatestClipMetadata")
+        for e in ov_nodes:
+            if type_of.get(e.get("NodeId")) != clip_td:
+                continue
+            have = {simple_name(c) for c in children.get(e.get("NodeId"), [])}
+            got = [m for m in inline if m in have]
+            if got and len(got) != len(inline):
+                err(f"{label}: {e.get('NodeId')} declares a proper subset of the "
+                    f"VIS-Media-Inline members {sorted(got)}; clause 11 requires all "
+                    f"of {list(inline)} together or none")
+
+        # 4.2: exactly one well-known Vision root, a component of the Server Object,
+        # with its BrowseName qualified by the Vision namespace (index 2 here).
+        root_td = type_named("VisionRootType")
+        roots = [e for e in ov_nodes if type_of.get(e.get("NodeId")) == root_td]
+        if len(roots) != 1:
+            err(f"{label}: expected exactly one VisionRootType instance, found "
+                f"{len(roots)} (clause 4.2)")
+        for e in roots:
+            if not any((r.text or "").strip() == "i=2253"
+                       for r in e.findall(f"{NS}References/{NS}Reference")):
+                err(f"{label}: {e.get('NodeId')} is the Vision root but has no "
+                    "reference to the Server Object i=2253, so it is unreachable "
+                    "after import (clause 4.2)")
+            if not (e.get("BrowseName") or "").startswith("2:"):
+                err(f"{label}: Vision root BrowseName is "
+                    f"{e.get('BrowseName')}; clause 4.2 qualifies it with the Vision "
+                    "namespace, which is index 2 in an overlay")
 
     if overlays:
         print(f"overlays: {len(overlays)} ({total_overlay_nodes} instance nodes)")

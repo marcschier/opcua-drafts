@@ -553,9 +553,9 @@
   </UAReferenceType>
   <UAReferenceType NodeId="ns=1;i=4004" BrowseName="1:UsesModel">
     <DisplayName>UsesModel</DisplayName>
-    <Description>Links an inference pipeline or deployment to the AI model it executes.</Description>
+    <Description>Links an AiDeploymentType instance to the AiModelType instance it executes. Clause 5.9 requires exactly one such reference per deployment; it is the only defined path from a result to the model artefact and its Digest, on which clause 12.6 depends.</Description>
     <Category>Vision ReferenceTypes</Category>
-    <InverseName>IsUsedByPipeline</InverseName>
+    <InverseName>IsUsedByDeployment</InverseName>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=32</Reference>
     </References>
@@ -883,7 +883,7 @@
   </UAVariable>
   <UAObjectType NodeId="ns=1;i=1009" BrowseName="1:ClipEndpointType">
     <DisplayName>ClipEndpointType</DisplayName>
-    <Description>A still-image access point. A conformant Server SHALL expose at least one instance whose ClipFormat is Jpeg; every other format is optional. In addition to the default URI path, this type MAY publish the encoded image inline as a ByteString so that clients can Read or Subscribe to it - but only within MaxInlineClipSize, which SHALL NOT exceed the session's negotiated MaxByteStringLength. Inline delivery serves single stills; it is not a substitute for a StreamEndpoint.</Description>
+    <Description>A still-image access point. A conformant Server SHALL expose at least one instance whose ClipFormat is Jpeg; every other format is optional. In addition to the default URI path, this type MAY publish the encoded image inline as a ByteString so that clients can Read or Subscribe to it - but only within MaxInlineClipSize, which SHALL NOT exceed the Server's ServerCapabilities.MaxByteStringLength. Inline delivery serves single stills; it is not a substitute for a StreamEndpoint.</Description>
     <Category>Vision</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=1007</Reference>
@@ -954,7 +954,7 @@
   </UAVariable>
   <UAVariable NodeId="ns=1;i=6035" BrowseName="1:MaxInlineClipSize" ParentNodeId="ns=1;i=1009" DataType="UInt32" ValueRank="-1">
     <DisplayName>MaxInlineClipSize</DisplayName>
-    <Description>Largest inline payload this endpoint will publish, in bytes. SHALL NOT exceed the session's negotiated MaxByteStringLength.</Description>
+    <Description>Largest inline payload this endpoint will publish, in bytes. SHALL NOT exceed Server.ServerCapabilities.MaxByteStringLength, and a Read or Publish response carrying the value is additionally bounded by the Session's MaxResponseMessageSize. See clause 6.4.</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=80</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
@@ -2297,7 +2297,7 @@
   </UAVariable>
   <UAVariable NodeId="ns=1;i=6156" BrowseName="1:MaxInlineFeedbackImageSize" ParentNodeId="ns=1;i=1024" DataType="UInt32" ValueRank="-1">
     <DisplayName>MaxInlineFeedbackImageSize</DisplayName>
-    <Description>Largest inline image this surface accepts, in bytes. SHALL NOT exceed the session's negotiated MaxByteStringLength. An oversized payload is rejected with Bad_EncodingLimitsExceeded and the client uses SubmitImageReference instead.</Description>
+    <Description>Largest inline image this surface accepts, in bytes. SHALL NOT exceed Server.ServerCapabilities.MaxByteStringLength, and a Call request carrying the value is additionally bounded by the Session's MaxRequestMessageSize. An oversized payload is rejected with Bad_EncodingLimitsExceeded and the client uses SubmitImageReference instead. See clause 6.4.</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=80</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>

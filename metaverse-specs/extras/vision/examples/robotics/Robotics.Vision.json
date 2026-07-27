@@ -21,6 +21,7 @@
     "serialNumber": "SN-4417-2291",
     "deviceUri": "gev://192.0.2.41/0",
     "frameId": "camera_eih",
+    "mountedOn": "flange",
     "width": 2448,
     "height": 2048,
     "pixelFormat": "BayerRG8",
@@ -49,18 +50,21 @@
       "name": "RobotBaseFrame",
       "description": "Robot base frame, fixed in the cell.",
       "frameId": "robot_base",
+      "parentFrame": "world",
       "role": "Base"
     },
     {
       "name": "FlangeFrame",
       "description": "Robot flange / tool centre point frame; the camera moves with it.",
       "frameId": "flange",
+      "parentFrame": "robot_base",
       "role": "Tool"
     },
     {
       "name": "CameraFrame",
       "description": "Optical frame of the eye-in-hand camera; detection poses are expressed here.",
       "frameId": "camera_eih",
+      "parentFrame": "flange",
       "role": "Camera"
     }
   ],
@@ -74,7 +78,17 @@
       "valid": true,
       "residualError": 0.21,
       "method": "Zhang",
-      "values": "Fx = 2140.5 px, Fy = 2139.8 px, Cx = 1223.1 px, Cy = 1021.7 px, Skew = 0, DistortionModel = BrownConrady, DistortionCoefficients = [-0.1721, 0.0934, 0.0002, -0.0001, -0.0188], Width = 2448, Height = 2048"
+      "fields": [
+        ["Fx", "2140.5", "px"],
+        ["Fy", "2139.8", "px"],
+        ["Cx", "1223.1", "px, corner-datum per 5.10"],
+        ["Cy", "1021.7", "px, corner-datum per 5.10"],
+        ["Skew", "0.0", "px"],
+        ["DistortionModel", "BrownConrady", "5.10 ordering: k1, k2, p1, p2, k3"],
+        ["DistortionCoefficients", "[-0.1721, 0.0934, 0.0002, -0.0001, -0.0188]", "dimensionless"],
+        ["Width", "2448", "px"],
+        ["Height", "2048", "px"]
+      ]
     },
     {
       "name": "HandEye",
@@ -88,7 +102,12 @@
       "mount": "EyeInHand",
       "sourceFrame": "camera_eih",
       "targetFrame": "flange",
-      "values": "FrameId = flange, Position = (0.062, -0.031, 0.115) m, Orientation = (0.0, 0.0, 0.7071, 0.7071) as (x, y, z, w), Covariance = empty"
+      "fields": [
+        ["FrameId", "flange", "equals the TargetFrame's FrameId, per the 5.10 frame-precedence rule"],
+        ["Position", "(0.062, -0.031, 0.115)", "metres, ordered (x, y, z)"],
+        ["Orientation", "(0.0, 0.0, 0.7071, 0.7071)", "unit quaternion ordered (x, y, z, w)"],
+        ["Covariance", "empty array", "not reported, per the 5.10 sentinel"]
+      ]
     }
   ],
   "stream": {

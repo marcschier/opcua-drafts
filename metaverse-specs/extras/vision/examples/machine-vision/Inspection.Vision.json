@@ -4,7 +4,7 @@
   "exampleNamespaceUri": "http://opcfoundation.org/UA/Vision/Examples/Inspection/",
   "instanceName": "SealInspectionCamera",
   "summary": "A worked example of machine-vision inspection: a fixed camera measures a sealing surface, on-server inference produces a verdict with QIF-shaped characteristics including measurement uncertainty, and each result carries a subscribable JPEG thumbnail through the optional size-gated inline delivery facet.",
-  "scope": "This addendum shows the case OPC 40100-1 orchestrates but does not describe: the *content* of an inspection result. A fixed area-scan camera inspects a sealing surface; the result is an `InspectionResultType` carrying an `Evaluation` and a set of `VisionCharacteristicDataType` entries with nominal, actual, deviation, tolerances and uncertainty. It also demonstrates the optional **Media Inline Delivery** facet: a small JPEG thumbnail is published as `LatestClip` and can be subscribed to with a MonitoredItem, while the full-resolution image stays behind a URI.",
+  "scope": "This addendum shows the case OPC 40100-1 orchestrates but does not describe: the *content* of an inspection result. A fixed area-scan camera inspects a sealing surface; the result is an `InspectionResultType` carrying an `Evaluation` and a set of `VisionCharacteristicDataType` entries with nominal, actual, deviation, tolerances and uncertainty. It also demonstrates the optional **VIS-Media-Inline** facet: a small JPEG thumbnail is published as `LatestClip` and can be subscribed to with a MonitoredItem, while the full-resolution image stays behind a URI.",
   "references": [
     "[OPC 40100-1](https://reference.opcfoundation.org/specs/OPC-40100-1/) — OPC UA for Machine Vision Part 1, whose `ResultContent` this example populates. Not a dependency of this model.",
     "ISO 23952:2020 (QIF) — the shape `VisionCharacteristicDataType` mirrors.",
@@ -21,6 +21,7 @@
     "serialNumber": "SN-9083-1174",
     "deviceUri": "u3v://0x2A0B/0x0410/SN-9083-1174",
     "frameId": "camera_insp_07",
+    "mountedOn": "station",
     "width": 2592,
     "height": 1944,
     "pixelFormat": "Mono8",
@@ -50,6 +51,7 @@
       "name": "CameraFrame",
       "description": "Optical frame of the fixed inspection camera.",
       "frameId": "camera_insp_07",
+      "parentFrame": "station",
       "role": "Camera"
     }
   ],
@@ -63,7 +65,17 @@
       "valid": true,
       "residualError": 0.08,
       "method": "Zhang",
-      "values": "Fx = 8310.2 px, Fy = 8309.6 px, Cx = 1295.4 px, Cy = 971.2 px, Skew = 0, DistortionModel = BrownConrady, DistortionCoefficients = [-0.0021, 0.0004, 0.0, 0.0, 0.0], Width = 2592, Height = 1944"
+      "fields": [
+        ["Fx", "8310.2", "px"],
+        ["Fy", "8309.6", "px"],
+        ["Cx", "1295.4", "px, corner-datum per 5.10"],
+        ["Cy", "971.2", "px, corner-datum per 5.10"],
+        ["Skew", "0.0", "px"],
+        ["DistortionModel", "BrownConrady", "5.10 ordering: k1, k2, p1, p2, k3"],
+        ["DistortionCoefficients", "[-0.0021, 0.0004, 0.0, 0.0, 0.0]", "dimensionless; a telecentric lens is close to distortion-free"],
+        ["Width", "2592", "px"],
+        ["Height", "1944", "px"]
+      ]
     },
     {
       "name": "StationMounting",
@@ -77,7 +89,12 @@
       "mount": "Fixed",
       "sourceFrame": "camera_insp_07",
       "targetFrame": "station",
-      "values": "FrameId = station, Position = (0.0, 0.0, 0.320) m, Orientation = (1.0, 0.0, 0.0, 0.0) as (x, y, z, w), Covariance = empty"
+      "fields": [
+        ["FrameId", "station", "equals the TargetFrame's FrameId, per the 5.10 frame-precedence rule"],
+        ["Position", "(0.0, 0.0, 0.320)", "metres, ordered (x, y, z)"],
+        ["Orientation", "(1.0, 0.0, 0.0, 0.0)", "unit quaternion ordered (x, y, z, w); a 180 degree rotation about x, so the camera looks down at the station"],
+        ["Covariance", "empty array", "not reported, per the 5.10 sentinel"]
+      ]
     }
   ],
   "stream": {

@@ -38,6 +38,7 @@ ALIASES = [
     ("HasComponent", "i=47"), ("HasProperty", "i=46"),
     ("HasTypeDefinition", "i=40"), ("HasInterface", "i=17603"),
     ("Organizes", "i=35"), ("NodeId", "i=17"), ("UtcTime", "i=294"),
+    ("ByteString", "i=15"),
 ]
 
 HasComponent = "HasComponent"
@@ -48,6 +49,7 @@ Organizes = "Organizes"
 FolderType = "i=61"
 PropertyType = "i=68"
 BaseDataVariableType = "i=63"
+SERVER_OBJECT = "i=2253"
 
 
 def method_decl(type_name, method_name):
@@ -84,6 +86,13 @@ def mandatory_members(type_name):
 TYPE_ID = {n.bname: n.nid for n in vm.NODES.values()
            if n.cls in ("UAObjectType", "UADataType", "UAReferenceType")}
 
+# The Vision ReferenceTypes the overlays use, aliased so the XML stays readable.
+for _rt in ("HasCalibration", "MountedOn", "UsesModel"):
+    ALIASES.append((_rt, f"ns=2;i={TYPE_ID[_rt]}"))
+HasCalibration = "HasCalibration"
+MountedOn = "MountedOn"
+UsesModel = "UsesModel"
+
 
 def vtype(name):
     if name not in TYPE_ID:
@@ -118,16 +127,36 @@ class Overlay:
         self.next_id += 1
         return v
 
-    def obj(self, browse, typedef, parent=None, reftype=HasComponent, desc=None):
+    def obj(self, browse, typedef, parent=None, reftype=HasComponent, desc=None,
+            external_parent=None, browse_ns=1):
         nid = self._nid()
         refs = [(HasTypeDefinition, typedef, True)]
-        if parent is not None:
+        parent_attr = None
+        if external_parent is not None:
+            # A node rooted at a base-UA node (the Server Object). The inverse
+            # reference is all the overlay can emit; the forward reference is added by
+            # the Server when it merges this NodeSet into the address space.
+            refs.append((reftype, external_parent, False))
+            parent_attr = external_parent
+        elif parent is not None:
             refs.append((reftype, f"ns=1;i={parent}", False))
             self._add_forward(parent, reftype, nid)
+            parent_attr = f"ns=1;i={parent}"
         self.nodes.append(dict(cls="UAObject", nid=nid, browse=browse, desc=desc,
-                               parent=(f"ns=1;i={parent}" if parent else None),
+                               parent=parent_attr, browse_ns=browse_ns,
                                refs=refs, attrs={}, value=None))
         return nid
+
+    def ref(self, source, reftype, target):
+        """A non-hierarchical reference between two overlay nodes, emitted on both."""
+        self._add_forward(source, reftype, None, explicit=target)
+        if target.startswith("ns=1;i="):
+            tgt_nid = int(target.split("i=")[1])
+            for n in self.nodes:
+                if n["nid"] == tgt_nid:
+                    n["refs"].append((reftype, f"ns=1;i={source}", False))
+                    return
+            raise SystemExit(f"reference target {target} not found")
 
     def meth(self, browse, decl_id, parent, desc=None):
         """A Method instance. Methods carry MethodDeclarationId, not HasTypeDefinition."""
@@ -142,6 +171,10 @@ class Overlay:
     def struct_var(self, browse, datatype, parent, desc=None):
         """A structure-valued member, declared with the right DataType. The concrete
         value is carried in the addendum rather than encoded here."""
+        return self.data_var(browse, datatype, parent, desc=desc)
+
+    def data_var(self, browse, datatype, parent, desc=None):
+        """A DataVariable component with an explicit DataType and no encoded value."""
         nid = self._nid()
         refs = [(HasTypeDefinition, BaseDataVariableType, True),
                 (HasComponent, f"ns=1;i={parent}", False)]
@@ -211,7 +244,7 @@ class Overlay:
     @staticmethod
     def _emit_node(n):
         a = [f'{n["cls"]} NodeId="ns=1;i={n["nid"]}"',
-             f'BrowseName="1:{sx.escape(n["browse"])}"']
+             f'BrowseName="{n.get("browse_ns", 1)}:{sx.escape(n["browse"])}"']
         if n["parent"]:
             a.append(f'ParentNodeId="{n["parent"]}"')
         if "DataType" in n["attrs"]:
@@ -335,10 +368,22 @@ def build_media(ov, sensor, st, cl):
     put_enum(ov, clip, "State", "VisionEndpointStateEnum", cl.get("state", "Ready"))
     put_enum(ov, clip, "Authentication", "VisionEndpointAuthenticationEnum",
              cl.get("authentication", "Token"))
+    # Instantiating any of the four VIS-Media-Inline members claims the facet, so
+    # clause 11 requires all four. InlineDeliveryEnabled = false is the "supported but
+    # currently off" state of §6.4 rule 5, not the absence of the facet - an endpoint
+    # that does not offer inline delivery at all simply omits the key.
     if "inlineDeliveryEnabled" in cl:
         put(ov, clip, "InlineDeliveryEnabled", "Boolean", cl["inlineDeliveryEnabled"])
-    if "maxInlineClipSize" in cl:
-        put(ov, clip, "MaxInlineClipSize", "UInt32", cl["maxInlineClipSize"])
+        put(ov, clip, "MaxInlineClipSize", "UInt32", cl.get("maxInlineClipSize", 0))
+        ov.data_var("LatestClip", "ByteString", clip,
+                    desc="Most recent clip, published inline within MaxInlineClipSize. "
+                         "Subscribable; see §6.4 rules 3 to 5 for the overflow, "
+                         "correlation and initial-state behaviour.")
+        ov.struct_var("LatestClipMetadata",
+                      f"ns=2;i={TYPE_ID['VisionImageReferenceDataType']}", clip,
+                      desc="Descriptor for LatestClip, carrying the Uri that remains "
+                           "valid when the inline payload does not fit, and the "
+                           "Timestamp and Digest that correlate the two (§6.4 rule 4).")
 
     # Mandatory Methods of VisionMediaManagementType.
     for mname in ("GetStreamEndpoint", "ReleaseStreamEndpoint", "GetClip"):
@@ -389,10 +434,11 @@ def build_overlay(d):
     ov = Overlay(d["exampleNamespaceUri"])
     s = d["sensor"]
 
-    # A browsable root, so the example follows the mandatory §4.2 discovery path rather
-    # than leaving instances unreachable in the address space.
-    root = ov.obj("Vision", vtype("VisionRootType"),
-                  desc="Well-known Vision entry point for this example.")
+    # The well-known entry point required by §4.2: a component of the Server Object,
+    # BrowseName qualified with the Vision namespace (index 2 in this overlay).
+    root = ov.obj("Vision", vtype("VisionRootType"), external_parent=SERVER_OBJECT,
+                  browse_ns=2,
+                  desc="Well-known Vision entry point for this example (§4.2).")
     f_sensors = ov.folder("Sensors", root)
     f_pipelines = ov.folder("Pipelines", root)
     f_models = ov.folder("Models", root)
@@ -420,12 +466,24 @@ def build_overlay(d):
 
     # --- coordinate frames (built first so calibrations can reference them) ----
     frame_ids = {}
+    frame_nodes = {}
     for f in d.get("frames", []):
         fr = ov.obj(f["name"], vtype("CoordinateFrameType"), ov.roots["frames"],
                     reftype=Organizes, desc=f.get("description"))
         put(ov, fr, "FrameId", "String", f["frameId"])
         put_enum(ov, fr, "Role", "VisionFrameRoleEnum", f["role"])
         frame_ids[f["frameId"]] = f"ns=1;i={fr}"
+        frame_nodes[f["frameId"]] = fr
+    # ParentFrame is what makes the tree composable; §7.3 and the addendum both depend
+    # on a client being able to walk camera -> flange -> base.
+    for f in d.get("frames", []):
+        fr = frame_nodes[f["frameId"]]
+        put(ov, fr, "ParentFrame", "NodeId",
+            frame_ids.get(f.get("parentFrame"), "i=0"))
+
+    # A sensor mounted on a frame says so with MountedOn (§5.9).
+    if s.get("mountedOn") in frame_ids:
+        ov.ref(sensor, MountedOn, frame_ids[s["mountedOn"]])
 
     # --- calibration --------------------------------------------------------
     if d.get("calibrations"):
@@ -440,6 +498,8 @@ def build_overlay(d):
                 put(ov, cal, "ResidualError", "Double", c["residualError"])
             if "method" in c:
                 put(ov, cal, "Method", "String", c["method"])
+            # §5.9: the sensor a calibration belongs to is reachable by HasCalibration.
+            ov.ref(sensor, HasCalibration, f"ns=1;i={cal}")
             if c["type"] == "ExtrinsicCalibrationType":
                 put_enum(ov, cal, "Mount", "VisionCalibrationMountEnum", c["mount"])
                 put(ov, cal, "SourceFrame", "NodeId",
@@ -447,13 +507,14 @@ def build_overlay(d):
                 put(ov, cal, "TargetFrame", "NodeId",
                     frame_ids.get(c["targetFrame"], "i=0"))
                 ov.struct_var("Transform", f"ns=2;i={TYPE_ID['VisionPose3DDataType']}",
-                              cal, desc="Pose of SourceFrame expressed in TargetFrame; "
-                                        "the values are tabulated in the addendum.")
+                              cal, desc="Pose of SourceFrame expressed in TargetFrame. "
+                                        "The field values are tabulated in the "
+                                        "addendum's calibration clause.")
             else:
                 ov.struct_var("Intrinsics",
                               f"ns=2;i={TYPE_ID['VisionIntrinsicsDataType']}", cal,
-                              desc="Intrinsic parameters; the values are tabulated in "
-                                   "the addendum.")
+                              desc="Intrinsic parameters. The field values are "
+                                   "tabulated in the addendum's calibration clause.")
 
     # --- AI -----------------------------------------------------------------
     ai = d["ai"]
@@ -481,6 +542,9 @@ def build_overlay(d):
         put(ov, deployment, "AcceleratorName", "String", dep["acceleratorName"])
     if "endpointUri" in dep:
         put(ov, deployment, "EndpointUri", "String", dep["endpointUri"])
+    # §5.9 requires exactly one UsesModel per deployment. It is the only path from a
+    # result to the model artefact and its Digest, which §12.6 depends on.
+    ov.ref(deployment, UsesModel, f"ns=1;i={model}")
 
     pl = ai["pipeline"]
     pipeline = ov.obj(pl["name"], vtype("InferencePipelineType"), ov.roots["pipelines"],
@@ -588,7 +652,13 @@ def emit_addendum(d):
           "implements *OPC UA — OpenUSD Scene Materialization* (base specification "
           "Annex C).")
         A("")
-    A("## 4 Media endpoints")
+    sec = [3]
+
+    def head(title):
+        sec[0] += 1
+        A(f"## {sec[0]} {title}")
+
+    head("Media endpoints")
     A("")
     A("Both mandatory defaults of base specification §6.2 are present — an RTSP stream "
       "and a JPEG clip endpoint:")
@@ -601,21 +671,77 @@ def emit_addendum(d):
       f"`EndpointUri = {cl['endpointUri']}` |")
     A("")
     if cl.get("inlineDeliveryEnabled"):
-        A(f"This clip endpoint additionally enables the optional **Media Inline "
-          f"Delivery** facet, with `MaxInlineClipSize = {cl['maxInlineClipSize']}` "
-          "bytes. A client may subscribe to `LatestClip` and receive the encoded JPEG "
-          "directly; if an image exceeds that bound the Server sets "
+        A(f"This clip endpoint additionally enables the optional **VIS-Media-Inline** "
+          f"facet, with `MaxInlineClipSize = {cl['maxInlineClipSize']}` bytes. Clause 11 "
+          "requires all four members of that facet together, so the endpoint "
+          "instantiates `InlineDeliveryEnabled`, `MaxInlineClipSize`, `LatestClip` and "
+          "`LatestClipMetadata`. A client may subscribe to `LatestClip` and receive the "
+          "encoded JPEG directly; if an image exceeds that bound the Server sets "
           "`Bad_EncodingLimitsExceeded` and the client falls back to "
           "`LatestClipMetadata.Uri` (base specification §6.4).")
     else:
-        A("This example does **not** enable inline delivery: clips are obtained through "
-          "`GetClip` and fetched from the returned `Uri`, which is the default path.")
+        A("This clip endpoint implements the optional **VIS-Media-Inline** facet but "
+          "leaves it switched off: `InlineDeliveryEnabled = false`, so per base "
+          "specification §6.4 rule 5 the Server reports `LatestClip` with "
+          "`Bad_NotSupported` while `LatestClipMetadata` stays readable. Clips are "
+          "obtained through `GetClip` and fetched from the returned `Uri`, which is the "
+          "default path. Clause 11 requires the facet's four members to be present "
+          "together even in this state, which is why the overlay declares all four.")
     A("")
+    if d.get("frames") or d.get("calibrations"):
+        head("Coordinate frames and calibration")
+        A("")
+    if d.get("frames"):
+        A("The frame tree. `ParentFrame` is what makes it composable: a client walks "
+          "from the frame a pose is expressed in up to the frame it needs, composing "
+          "the transforms it finds on the way.")
+        A("")
+        A("| Instance | `FrameId` | `Role` | `ParentFrame` |")
+        A("|---|---|---|---|")
+        for f in d["frames"]:
+            parent = f.get("parentFrame")
+            A(f"| `{f['name']}` | `{f['frameId']}` | `{f['role']}` | "
+              f"{('`' + parent + '`') if parent else 'none (tree root)'} |")
+        A("")
+    for c in d.get("calibrations", []):
+        A(f"**`{c['name']}`** (`{c['type']}`) — {c['description']}")
+        A("")
+        A("| Member | Value |")
+        A("|---|---|")
+        A(f"| `CalibrationId` | `{c['calibrationId']}` |")
+        A(f"| `PerformedAt` | `{c.get('performedAt', 'n/a')}` |")
+        A(f"| `Valid` | `{str(c.get('valid', True)).lower()}` |")
+        if "method" in c:
+            A(f"| `Method` | `{c['method']}` |")
+        if "residualError" in c:
+            A(f"| `ResidualError` | `{c['residualError']}` |")
+        if "mount" in c:
+            A(f"| `Mount` | `{c['mount']}` |")
+        if "sourceFrame" in c:
+            A(f"| `SourceFrame` | `{c['sourceFrame']}` |")
+        if "targetFrame" in c:
+            A(f"| `TargetFrame` | `{c['targetFrame']}` |")
+        A("")
+        if c.get("fields"):
+            field_var = ("Transform" if c["type"] == "ExtrinsicCalibrationType"
+                         else "Intrinsics")
+            A(f"`{field_var}` field values, in the units fixed by base specification "
+              "§5.10:")
+            A("")
+            A("| Field | Value | Unit / convention |")
+            A("|---|---|---|")
+            for fname, fval, funit in c["fields"]:
+                A(f"| `{fname}` | `{fval}` | {funit} |")
+            A("")
+    if d.get("calibrations"):
+        A("Each calibration is reachable from the sensor by a `HasCalibration` "
+          "reference, as base specification §5.9 requires.")
+        A("")
     if "twin" in d:
         tw = d["twin"]
         ts = tw["sensor"]
         sim = tw["simulation"]
-        A("## 5 The simulated twin")
+        head("The simulated twin")
         A("")
         A(tw["note"])
         A("")
@@ -640,13 +766,12 @@ def emit_addendum(d):
             A(f"| `GroundTruthAvailable` | `{str(sim['groundTruthAvailable']).lower()}` |")
         A("")
         A("`PrimPath` resolves to a `UsdGeomCameraType` instance where the Server also "
-          "implements *OPC UA — OpenUSD Scene Materialization* (base specification "
-          "Annex C), so the camera's aperture and focal-length attributes are both the "
-          "scene description and the imaging intrinsics.")
+          "implements *OPC UA — OpenUSD Scene Materialization* and claims the base "
+          "specification's *VIS-Interop-Scene* facet (Annex C), so the camera's "
+          "aperture and focal-length attributes are both the scene description and the "
+          "imaging intrinsics.")
         A("")
-        A("## 6 Inference")
-    else:
-        A("## 5 Inference")
+    head("Inference")
     A("")
     A("| Member | Value |")
     A("|---|---|")
@@ -661,16 +786,20 @@ def emit_addendum(d):
     A("")
     A(d["inferenceNote"])
     A("")
-    n = 7 if "twin" in d else 6
-    A(f"## {n} Results")
+    A("The deployment carries exactly one `UsesModel` reference to the model above, as "
+      "base specification §5.9 requires. That reference is the only defined path from a "
+      "result to the model artefact and its `Digest`, so it is what makes the §12.6 "
+      "provenance check possible.")
+    A("")
+    head("Results")
     A("")
     A(d["resultsNote"])
     A("")
-    A(f"## {n + 1} Feedback")
+    head("Feedback")
     A("")
     A(d["feedbackNote"])
     A("")
-    A(f"## {n + 2} Deliverables")
+    head("Deliverables")
     A("")
     A("| File | Content |")
     A("|---|---|")

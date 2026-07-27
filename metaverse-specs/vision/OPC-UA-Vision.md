@@ -98,7 +98,7 @@ A Server implementing this model almost always uses GenICam internally to talk t
 
 ### 4.2 Discovery (normative)
 
-A conforming Server **shall** expose exactly one well-known Object `Vision` of type `VisionRootType` as a component of the Server Object (`i=2253`), with BrowseName `1:Vision`. It contains:
+A conforming Server **shall** expose exactly one well-known Object `Vision` of type `VisionRootType` as a component of the Server Object (`i=2253`), with BrowseName `Vision` qualified by the namespace `http://opcfoundation.org/UA/Vision/`. A client **shall** resolve that namespace's index from `Server.NamespaceArray` rather than assuming a fixed index. It contains:
 
 - `Sensors` (Mandatory) — every `VisionSensorType` instance;
 - `Pipelines`, `Models`, `Frames`, `LearningJobs` (Optional).
@@ -107,7 +107,7 @@ A client therefore starts at `Server/Vision/Sensors` and follows references outw
 
 ### 4.3 Sim/real symmetry (normative)
 
-Every `VisionSensorType` instance **shall** declare `RealityKind`. A Server **shall not** vary the meaning, units or semantics of any other member based on its value. A sensor whose `RealityKind` is `Simulated` or `Hybrid` **shall** additionally implement `IVisionSimulatedType`, which names the simulator and the scene prim being rendered.
+Every `VisionSensorType` instance **shall** declare `RealityKind`. A Server **shall not** vary the meaning, units or semantics of any other member based on its value. A sensor whose `RealityKind` is `Simulated` or `Hybrid` **shall** additionally implement `IVisionSimulatedType`, which names the simulator and the scene prim being rendered; clause 11 accordingly makes *VIS-Simulation* required of any Server that reports either value, rather than optional.
 
 The intent is that a client written against `VisionSensorType` works unchanged against a physical camera, against its digital twin, and against a purely synthetic sensor used to generate training data.
 
@@ -266,6 +266,22 @@ Every physical quantity in this model is fixed here. A Server **shall** use thes
 
 **NodeId-valued Properties.** A Property whose DataType is `NodeId` (`Sensor`, `Pipeline`, `Deployment`, `ParentFrame`, `SourceFrame`, `TargetFrame`, `PreferredStreamEndpoint`, `PreferredClipEndpoint`, `Dataset`, `BaseModel`, `CandidateModel`) **shall** contain either a NodeId resolvable in the same Server or a null NodeId. A null NodeId means "not set"; a Server **shall not** use a non-null NodeId that does not resolve.
 
+**Pixel datum.** The origin corner is the top-left of the image, and the datum is the **corner** of the top-left pixel: the image occupies the continuous range `[0, W] × [0, H]`, so the centre of the top-left pixel is `(0.5, 0.5)` and a perfectly centred principal point is `Cx = W/2`. This is the convention the Annex B.2 derivation produces. It differs by exactly 0.5 px from the OpenCV convention used by `sensor_msgs/CameraInfo`, in which pixel *centres* fall on integer coordinates and a centred principal point is `(W−1)/2`; a client bridging to OpenCV or ROS **shall** subtract 0.5 from `Cx` and `Cy`, and Annex E.3 restates this.
+
+**Frame precedence.** Where a pose is reachable both through a NodeId-valued frame Property and through the `FrameId` String inside `VisionPose3DDataType`, the structure field is authoritative for the pose's own frame and the Property is authoritative for the model's topology. Specifically, `ExtrinsicCalibrationType.Transform.FrameId` **shall** equal the `FrameId` of the `CoordinateFrameType` instance referenced by `TargetFrame`, and a Server **shall not** publish the two in disagreement. A client that finds them inconsistent **shall** treat the calibration as unusable rather than choosing one.
+
+**"Not specified" Method arguments.** Clause 6.5, 8.4 and 9.4 rely on a caller being able to leave an argument unspecified. Because most OPC UA built-in types have no distinguished null, the encoding is fixed here and **shall** be used:
+
+| Argument DataType | "not specified" is encoded as | Notes |
+|---|---|---|
+| `NodeId` | a null NodeId | as for Properties, above |
+| `String`, `ByteString` | an empty (zero-length) value | a null value **shall** be treated identically |
+| `UtcTime`, `DateTime` | `0`, that is `1601-01-01T00:00:00Z` | the null DateTime of OPC 10000-6; a Server **shall not** interpret it as a literal instant |
+| `UInt32`, `Double` (configuration arguments) | `0` | means "leave the current value unchanged"; a Server **shall not** return `Bad_OutOfRange` for `0` |
+| Enumerations | *no unspecified value exists* | see below |
+
+No enumeration argument of this specification has an "unspecified" literal, and none **shall** be added: `VisionStreamProtocolEnum.Rtsp` and `VisionClipFormatEnum.Jpeg` are fixed at value `0` by §6.2, so value `0` is an explicit request for the mandatory default. A caller with no preference therefore passes `0` and receives the default, which is the same outcome an "unspecified" literal would produce.
+
 ---
 
 ## 6 Media endpoints (normative)
@@ -303,7 +319,7 @@ This facet is governed by five rules:
 1. **The out-of-band path remains the default.** Inline delivery is optional, is declared by the *VIS-Media-Inline* facet, and a Server is fully conformant without it. `InlineDeliveryEnabled` states whether it is active.
 2. **Size is bounded, and the bound is a Server capability.** A Server implementing this facet **shall** publish `Server.ServerCapabilities.MaxByteStringLength`, and `MaxInlineClipSize` **shall not** exceed it. A Server **shall not** publish an inline clip larger than `MaxInlineClipSize`. Where a Session's `MaxResponseMessageSize`, or the channel's negotiated `MaxMessageSize`, is smaller than `MaxInlineClipSize`, the Server **shall** treat that Session as though `MaxInlineClipSize` were the smaller value and apply rule 3 accordingly. `MaxByteStringLength` is a Server-wide capability rather than a per-Session negotiated value; this rule is what makes one published bound safe for Sessions with differing message limits.
 3. **Overflow is explicit.** When the encoded image exceeds the effective limit of rule 2, the Server **shall** set the `LatestClip` StatusCode to **`Bad_EncodingLimitsExceeded`** and **shall not** truncate. The client **shall** fall back to `LatestClipMetadata.Uri`, which remains valid.
-4. **Correlation is defined.** A Server **shall** update `LatestClip` and `LatestClipMetadata` so that both reflect the same acquisition, and where both are reported in a Subscription they **shall** be reported in the same NotificationMessage. A client **shall** use `LatestClipMetadata.Timestamp` together with `Digest` as the correlation key, and **shall not** assume that two independently received values belong to the same frame.
+4. **Correlation is defined.** A Server **shall** update `LatestClip` and `LatestClipMetadata` so that both reflect the same acquisition. A client **shall** use `LatestClipMetadata.Timestamp` together with `Digest` as the correlation key, and **shall not** assume that two independently received values belong to the same frame. A Server **should** report both in the same NotificationMessage where the Subscription's revised `maxNotificationsPerPublish` permits it, but correlation **shall not** depend on that: `maxNotificationsPerPublish` is chosen by the client, so a Server cannot guarantee co-delivery.
 5. **Initial and disabled states are defined.** Before the first acquisition a Server **shall** report both `LatestClip` and `LatestClipMetadata` with StatusCode `Bad_NoDataAvailable`. Where `InlineDeliveryEnabled` is `false` the Server **shall** report `LatestClip` with StatusCode `Bad_NotSupported`; `LatestClipMetadata` remains readable.
 
 A Server **should** offer a reduced-resolution or reduced-quality thumbnail profile that fits the limit, rather than persistently returning `Bad_EncodingLimitsExceeded`.
@@ -314,31 +330,31 @@ A Server **should** offer a reduced-resolution or reduced-quality thumbnail prof
 
 ### 6.5 Media Method definitions (normative)
 
-Argument order is as declared in Annex A. A null or empty argument means "not specified" unless stated otherwise. A Server **shall** return the listed StatusCode when the stated condition holds, and **shall not** return `Good` in that case.
+Argument order is as declared in Annex A. An argument that is "not specified" is encoded as defined in §5.10, which fixes the encoding for each DataType used below. A Server **shall** return the listed StatusCode when the stated condition holds, and **shall not** return `Good` in that case.
 
-**`GetStreamEndpoint(Endpoint, ProfileName, PreferredProtocol) → (Session, Endpoint)`** — leases a stream. `Endpoint` null selects per §6.3; `ProfileName` empty selects the endpoint's default profile. The returned `Session.Uri` **may** embed a single-use or time-limited credential, which is why it is a Method result and not a browsable Variable. A Server **shall** set `Session.ExpiresAt` and **shall** expire the lease then, even if `ReleaseStreamEndpoint` is never called.
+**`GetStreamEndpoint(Endpoint, ProfileName, PreferredProtocol) → (Session, Endpoint)`** — leases a stream. `Endpoint` null selects per §6.3; `ProfileName` empty selects the endpoint's default profile. `PreferredProtocol` is advisory — the Server selects per §6.3 and reports what it actually granted in `Session`, so a caller that requires a specific protocol **shall** inspect the result rather than assume. The returned `Session.Uri` **may** embed a single-use or time-limited credential, which is why it is a Method result and not a browsable Variable. A Server **shall** set `Session.ExpiresAt` and **shall** expire the lease then, even if `ReleaseStreamEndpoint` is never called.
 
 | StatusCode | Condition |
 |---|---|
 | `Bad_NotFound` | `Endpoint` is non-null but is not a `StreamEndpointType` of this sensor |
 | `Bad_InvalidArgument` | `ProfileName` is non-empty and unknown to the selected endpoint |
 | `Bad_ResourceUnavailable` | `ActiveSessions` has reached `MaxSessions` |
-| `Bad_NotSupported` | no endpoint can serve `PreferredProtocol` and the caller rejected the fallback |
+| `Bad_NotSupported` | `Endpoint` is non-null and cannot serve `PreferredProtocol` — the caller named both an endpoint and a protocol that endpoint does not offer, so §6.3 fallback does not apply |
 | `Bad_UserAccessDenied` | the caller is not authorized for media access (§12.1) |
 
-**`ReleaseStreamEndpoint(SessionToken)`** — ends a lease. Releasing an already-expired or already-released token is **not** an error: a Server **shall** return `Good`, so a client's cleanup path is idempotent.
+**`ReleaseStreamEndpoint(SessionToken)`** — ends a lease. A Server **shall** return `Good` for any token it is not currently holding, whether that token has expired, has already been released, was garbage-collected, or was never issued. This makes a client's cleanup path idempotent and survivable across Server restart; distinguishing "never issued" would require unbounded token retention, so no StatusCode is defined for it.
 
 | StatusCode | Condition |
 |---|---|
-| `Bad_NotFound` | `SessionToken` was never issued by this Server |
+| `Bad_UserAccessDenied` | the caller is not authorized for media access (§12.1) |
 
-**`ConfigureStreamEndpoint(Endpoint, Codec, Width, Height, FrameRate, Bitrate)`** — changes encoding parameters. A Server **shall** either apply the request exactly, or clamp each unsupported value to the nearest supported one and return `Good_Clamped`, or reject with `Bad_OutOfRange`. It **shall not** silently apply a different value and return `Good`. The effective values are readable on the endpoint afterwards.
+**`ConfigureStreamEndpoint(Endpoint, Codec, Width, Height, FrameRate, Bitrate)`** — changes encoding parameters. Per §5.10, a numeric argument of `0` means "leave unchanged", so a caller may change the codec alone. A Server **shall** either apply the request exactly, or clamp each unsupported value to the nearest supported one and return `Good_Clamped`, or reject with `Bad_OutOfRange`. It **shall not** silently apply a different value and return `Good`. The effective values are readable on the endpoint afterwards.
 
 | StatusCode | Condition |
 |---|---|
 | `Good_Clamped` | one or more values were clamped to a supported value |
 | `Bad_NotFound` | `Endpoint` is not a `StreamEndpointType` of this sensor |
-| `Bad_OutOfRange` | a value is unsupported and the Server does not clamp |
+| `Bad_OutOfRange` | a non-zero value is unsupported and the Server does not clamp |
 | `Bad_NotSupported` | `Codec` is not supported by the endpoint |
 | `Bad_InvalidState` | the endpoint has active sessions and cannot be reconfigured |
 
@@ -349,11 +365,11 @@ Argument order is as declared in Annex A. A null or empty argument means "not sp
 | `Bad_NotFound` | an argument is non-null and does not resolve |
 | `Bad_TypeMismatch` | an argument resolves to a node of the wrong endpoint kind |
 
-**`GetClip(Endpoint, ResultId, Timestamp, Format, RequestInline) → (Image, Endpoint, InlineImage)`** — returns the still associated with `ResultId`, or the frame nearest `Timestamp` when `ResultId` is empty. Exactly one selector **shall** be supplied. `Image` is always populated with a resolvable `Uri`; `InlineImage` is populated only when `RequestInline` is true and the encoded image fits the effective limit of §6.4 rule 2, and is otherwise empty with `Image.Uri` still valid.
+**`GetClip(Endpoint, ResultId, Timestamp, Format, RequestInline) → (Image, Endpoint, InlineImage)`** — returns the still associated with `ResultId`, or the frame nearest `Timestamp` when `ResultId` is empty. Exactly one selector **shall** be supplied; per §5.10 an unspecified `ResultId` is the empty String and an unspecified `Timestamp` is `1601-01-01T00:00:00Z`. `Image` is always populated with a resolvable `Uri`; `InlineImage` is populated only when `RequestInline` is true and the encoded image fits the effective limit of §6.4 rule 2, and is otherwise empty with `Image.Uri` still valid.
 
 | StatusCode | Condition |
 |---|---|
-| `Bad_InvalidArgument` | `ResultId` empty **and** `Timestamp` null, or both supplied |
+| `Bad_InvalidArgument` | both selectors unspecified, or both specified |
 | `Bad_NotFound` | `ResultId` unknown, or no frame near `Timestamp` within retention |
 | `Bad_NotSupported` | `Format` cannot be produced by any clip endpoint of this sensor |
 | `Bad_UserAccessDenied` | the caller is not authorized for media access (§12.1) |
@@ -392,7 +408,9 @@ The machine-vision outcome. Mandatory `Evaluation` and `Characteristics`; option
 
 `VisionCharacteristicDataType` mirrors the QIF (ISO 23952) Results field set: `Nominal`, `Actual`, `Deviation`, `LowerTolerance`, `UpperTolerance`, `Unit`, **`Uncertainty`** and `Status`. Units, the sentinel for "not reported", and the coverage factor are fixed in §5.10.
 
-Uncertainty is what makes a verdict reproducible by a third party, and it is the reason `NotDecidable` exists. The rule is normative: where the interval `Actual ± Uncertainty` crosses a tolerance limit, a Server **shall** report `Status = Indeterminate` for that characteristic, and **shall not** assert `Ok` or `NotOk` for the result on the strength of the point estimate alone. Where any characteristic is `Indeterminate`, the result `Evaluation` **shall** be `NotDecidable` unless another characteristic is independently `OutOfTolerance`, in which case it **shall** be `NotOk`. Because §5.10 fixes the coverage factor at k = 2, two conformant Servers presented with the same measurement reach the same verdict.
+Uncertainty is what makes a verdict reproducible by a third party, and it is the reason `NotDecidable` exists. The rule is normative: where the interval `Actual ± Uncertainty` crosses a tolerance limit, a Server **shall** report `Status = Indeterminate` for that characteristic, and **shall not** assert `Ok` or `NotOk` for the result on the strength of the point estimate alone. Where any characteristic is `Indeterminate`, the result `Evaluation` **shall** be `NotDecidable` unless another characteristic is independently `OutOfTolerance`, in which case it **shall** be `NotOk`.
+
+Because §5.10 fixes the coverage factor at k = 2, two Servers that both evaluate uncertainty and are presented with the same measurement reach the same verdict. The converse is equally normative and is the limit of the guarantee: `Uncertainty = 0` means uncertainty was **not evaluated**, not that it is negligible, so the interval test above degenerates to the point estimate and the resulting `Evaluation` is **not comparable** with that of a Server which does evaluate it. A Server claiming *VIS-Result-Inspection* **shall** therefore either report a genuine expanded uncertainty for every characteristic it publishes, or report `0` for every characteristic — it **shall not** mix the two within one result, since that would make the result's own `Evaluation` incoherent. A client **shall not** compare verdicts across Servers, or across results, whose uncertainty reporting differs in this respect.
 
 ### 7.3 `DetectionResultType`
 
@@ -400,7 +418,7 @@ The robotics-vision outcome. Mandatory `Detections`; optional `FrameId` naming t
 
 `VisionDetectionDataType` follows ROS 2 `vision_msgs` conventions: a class label and id, a confidence, an optional 2-D box, an optional 3-D box, an optional 6-DoF `Pose`, and an optional `TrackId`. The `HasBoundingBox2D`, `HasBoundingBox3D` and `HasPose` flags state which geometry is meaningful, and the rule governing them is in §5.10: where a flag is `false` a client **shall** ignore the corresponding field's content.
 
-A pose is only actionable if its frame is known, which is why `VisionPose3DDataType` carries `FrameId` and why §5.6 exists. A Server **shall** populate `FrameId` with the `FrameId` of a `CoordinateFrameType` instance that exists in the same Server.
+A pose is only actionable if its frame is known, which is why `VisionPose3DDataType` carries `FrameId` and why §5.6 exists. `FrameId` **shall** be non-empty whenever `HasPose` is `true`. Where the Server also implements *VIS-Calibration*, `FrameId` **shall** be the `FrameId` of a `CoordinateFrameType` instance that exists in the same Server, so that the pose can be composed through the frame tree. Where the Server does not implement *VIS-Calibration* it has no frame tree to resolve against; `FrameId` **shall** then be an identifier that is stable for the lifetime of the Server and agreed out of band, and a client **shall not** assume it is resolvable in the address space. A Server that publishes poses **should** implement *VIS-Calibration* for exactly this reason.
 
 ### 7.4 `SegmentationResultType`
 
@@ -432,7 +450,7 @@ A Server whose inference is entirely off-server and continuously running may imp
 
 ### 8.4 Inference Method definitions (normative)
 
-**`RunInference(Timestamp) → (ResultId)`** — runs inference once on the frame nearest `Timestamp`, or on the newest frame when `Timestamp` is null, and returns the identifier of the result produced. The result **shall** exist and be retrievable under `Results` before the Method returns `Good`.
+**`RunInference(Timestamp) → (ResultId)`** — runs inference once on the frame nearest `Timestamp`, or on the newest frame when `Timestamp` is unspecified per §5.10, and returns the identifier of the result produced. A Server that implements `RunInference` **shall** instantiate `Results`, and the result **shall** exist and be retrievable under it before the Method returns `Good`. Clause 11 makes this a condition of the inference facets.
 
 | StatusCode | Condition |
 |---|---|
@@ -523,6 +541,8 @@ A Server that accepts a correction with `Purpose = GroundTruthLabel` **shall** e
 
 `StartCollection` and `StopCollection` are idempotent. `TriggerTraining` returns `Accepted = false`, with `Good`, when the Server queued nothing but the request was otherwise valid — for example because an external MLOps system declined it; `LastError` **shall** then carry the reason.
 
+`PromoteModel` moves `CandidateModel` into service. A null `Deployment` means *every* deployment fed by this job: the Server **shall** promote the candidate to all of them, or to none, and **shall not** promote a subset. `PromotedModel` returns the NodeId of the `AiModelType` instance that was promoted, which is the same node in either case — it identifies the model, not the deployment — so a caller that needs to know which deployments changed browses their `UsesModel` references afterwards.
+
 ### 9.5 Learning job state model (normative)
 
 | From | Trigger | To |
@@ -547,7 +567,7 @@ Transitions marked *Server* are driven by the Server or its MLOps backend; the r
 A simulated sensor **shall** expose the same members, with the same units and meanings, as a physical one (§4.3). Beyond that:
 
 - `IVisionSimulatedType.PrimPath` **shall** be an absolute, composed-stage prim path, using the same identity contract as the OpenUSD specifications.
-- Where the Server also implements *OPC UA — OpenUSD Scene Materialization*, `PrimPath` **shall** resolve to a `UsdGeomCameraType` instance, and the sensor **should** carry a `HasScenePrim` reference to it (Annex C).
+- Where the Server claims *VIS-Interop-Scene*, `PrimPath` **shall** resolve to a `UsdGeomCameraType` instance and the sensor **shall** carry a `HasScenePrim` reference to it. Annex C states the full requirement set for that facet and is the single normative source for it; a Server that implements both specifications without claiming the facet uses `PrimPath` as an opaque descriptor.
 - Where `GroundTruthAvailable` is true, results produced from that sensor are simulator ground truth rather than inference output. A Server **shall** make this distinguishable — by pipeline, by `ModelVersionUsed` being absent, or by an explicit convention — so that ground truth is never mistaken for a prediction.
 - `RandomizationSeed` **should** be published whenever domain randomization is active, so a dataset can be reproduced.
 
@@ -555,27 +575,37 @@ A simulated sensor **shall** expose the same members, with the same units and me
 
 ## 11 Profiles and conformance units
 
+### 11.1 Declaring conformance
+
+*VIS-Base* is **mandatory**: a Server **shall not** claim conformance to this specification unless it satisfies *VIS-Base*. Every other facet is optional and additive. This is what makes the §6.2 guarantee unconditional — *VIS-Base* requires *VIS-Media-Rtsp* and *VIS-Media-Jpeg*, so a client may assume RTSP and JPEG on any conformant Server without negotiation.
+
+A claim **shall** be discoverable. A Server **shall** add the URI of each facet it implements to `Server.ServerCapabilities.ServerProfileArray`, and **shall not** add the URI of a facet whose members and rules it does not satisfy. Facet URIs are formed by appending the facet identifier to `http://opcfoundation.org/UA/Vision/Facet/` — for example `http://opcfoundation.org/UA/Vision/Facet/VIS-Media-Inline`. A client determines what a Server supports by reading `ServerProfileArray`; it **should** additionally verify the members it depends on, because the address space, not the claim, is authoritative.
+
+Where a facet's row names members, a Server claiming it **shall** instantiate every named member on every instance of the stated type — an Optional ModellingRule in the model becomes mandatory under the facet that names it. Where a row names a clause, every **shall** in that clause applies.
+
+### 11.2 Facets
+
 | Facet | Requires |
 |---|---|
-| **VIS-Base** | The well-known `Vision` object, `Sensors`, and at least one sensor with `SensorId`, `RealityKind`, `Modality` and `Media`. Requires *VIS-Media-Rtsp* and *VIS-Media-Jpeg*. |
+| **VIS-Base** *(mandatory)* | The well-known `Vision` object per §4.2, `Sensors`, and at least one sensor with `SensorId`, `RealityKind`, `Modality` and `Media`. Requires *VIS-Media-Rtsp* and *VIS-Media-Jpeg*. |
 | **VIS-Sensor-Params** | `ImageSensorType` with `Width`, `Height`, `PixelFormat` |
 | **VIS-Optics** | `OpticsType` and/or `IlluminationType` |
 | **VIS-Media-Rtsp** | At least one `StreamEndpointType` with `StreamProtocol = Rtsp` and `ProtocolVersion`; `GetStreamEndpoint`, `ReleaseStreamEndpoint` (§6.5) |
 | **VIS-Media-Jpeg** | At least one `ClipEndpointType` with `ClipFormat = Jpeg`; `GetClip` (§6.5) |
-| **VIS-Media-Inline** | `LatestClip`, `LatestClipMetadata`, `MaxInlineClipSize`, `InlineDeliveryEnabled`, and all five §6.4 rules |
+| **VIS-Media-Inline** | On the same `ClipEndpointType` instance: all four of `LatestClip`, `LatestClipMetadata`, `MaxInlineClipSize`, `InlineDeliveryEnabled`, and all five §6.4 rules. A Server **shall not** instantiate a proper subset of the four. |
 | **VIS-Endpoint-Config** | `ConfigureStreamEndpoint`, `SelectEndpoint` (§6.5) |
-| **VIS-Calibration** | `CoordinateFrameType` plus `IntrinsicCalibrationType` and/or `ExtrinsicCalibrationType`, with the §5.9 reference constraints |
-| **VIS-Result-Inspection** | `InspectionResultType` with `Evaluation` and `Characteristics`, and the §7.2 uncertainty rule |
-| **VIS-Result-Detection** | `DetectionResultType` with `Detections`, and §5.10 pose conventions |
+| **VIS-Calibration** | `CoordinateFrameType` plus `IntrinsicCalibrationType` and/or `ExtrinsicCalibrationType`, with the §5.9 reference constraints and the §5.10 frame-precedence rule |
+| **VIS-Result-Inspection** | `InspectionResultType` with `Evaluation` and `Characteristics`, and the §7.2 uncertainty rule including its uniform-reporting requirement |
+| **VIS-Result-Detection** | `DetectionResultType` with `Detections`, the §5.10 pose conventions, and the §7.3 `FrameId` rule |
 | **VIS-Feedback** | `VisionFeedbackType` with at least `SubmitImageReference`, and the §9.2 and §9.4 rules |
-| **VIS-Inference-OnServer** | `InferencePipelineType` with a deployment whose `InferenceLocation` is `OnServer`, and the §5.9 `UsesModel` constraint |
+| **VIS-Inference-OnServer** | `InferencePipelineType` with a deployment whose `InferenceLocation` is `OnServer`, and the §5.9 `UsesModel` constraint. Where `RunInference` is implemented, `Results` (§8.4) |
 | **VIS-Inference-OffServer** | As above with any other `InferenceLocation`, plus `EndpointUri` |
-| **VIS-Simulation** | `IVisionSimulatedType` on every simulated or hybrid sensor (§10) |
-| **VIS-Learning** | `LearningJobType`, `SubmitCorrection`, and the §9.5 state model |
-| **VIS-Interop-Scene** | Annex C |
-| **VIS-Interop-40100** | Annex D |
+| **VIS-Simulation** | `IVisionSimulatedType` on every sensor whose `RealityKind` is `Simulated` or `Hybrid` (§4.3, §10). **Required** of any Server that reports either value. |
+| **VIS-Learning** | `LearningJobType`, `SubmitCorrection`, the §9.5 state model, and every Method that drives a transition in it: `StartCollection`, `StopCollection`, `TriggerTraining`, `PromoteModel` |
+| **VIS-Interop-Scene** | The numbered requirements of Annex C, which are normative for a Server claiming this facet |
+| **VIS-Interop-40100** | The numbered requirements of Annex D, which are normative for a Server claiming this facet |
 
-Facets are independent and additive except where a row states a dependency: *VIS-Base* requires *VIS-Media-Rtsp* and *VIS-Media-Jpeg*, so the §6.2 guarantee holds for every conformant Server. A Server declares the facets it implements; a facet is claimed only when every member and rule it lists is satisfied.
+Facets are independent and additive except where a row states a dependency. Two dependencies exist: *VIS-Base* requires *VIS-Media-Rtsp* and *VIS-Media-Jpeg*, and *VIS-Simulation* is required — not merely permitted — of any Server that reports `RealityKind` as `Simulated` or `Hybrid`. A facet is claimed only when every member and rule it lists is satisfied.
 
 ---
 
@@ -597,7 +627,7 @@ A `Uri` returned by `GetStreamEndpoint` or `GetClip` **may** embed a credential.
 
 ### 12.4 Inline payloads are a denial-of-service surface
 
-Inline delivery amplifies payload size by orders of magnitude relative to ordinary Variables. A Server **shall** enforce `MaxInlineClipSize` and `MaxInlineFeedbackImageSize` as bounded in §6.4 rule 2, **shall** enforce a minimum publishing interval on image-bearing MonitoredItems, and **shall** bound their queue size — an image-bearing queue of any depth multiplies memory by the image size, so a Server **should** use a queue size of 1 unless a larger value is explicitly configured. These are normative bounds, not tuning advice.
+Inline delivery amplifies payload size by orders of magnitude relative to ordinary Variables. A Server **shall** enforce `MaxInlineClipSize` and `MaxInlineFeedbackImageSize` as bounded in §6.4 rule 2, **shall** revise the requested `SamplingInterval` of a MonitoredItem on an image-bearing Variable upward to a rate it can sustain, and **shall** bound that item's `QueueSize` — an image-bearing queue of any depth multiplies memory by the image size, so a Server **should** revise the queue size to 1 unless a larger value is explicitly configured. Both are per-MonitoredItem revised values, which is the lever a Server actually controls; the Subscription's publishing interval is client-set and **shall not** be relied on for this bound. These are normative bounds, not tuning advice.
 
 ### 12.5 Feedback and promotion are writes
 
@@ -724,12 +754,12 @@ Step 2 is what makes step 4 worth doing: a randomization run seeded from real pl
 
 ---
 
-## Annex C — OpenUSD Scene interop profile (informative, optional)
+## Annex C — OpenUSD Scene interop profile (normative for *VIS-Interop-Scene*)
 
-A Server that implements both this specification and *OPC UA — OpenUSD Scene Materialization* **should** additionally satisfy:
+This annex is informative for a Server that does not claim *VIS-Interop-Scene*, and normative for one that does. A Server claiming the facet implements both this specification and *OPC UA — OpenUSD Scene Materialization*, and **shall** satisfy all four requirements below. This profile takes no NodeSet dependency in either direction; it constrains only a Server that publishes both models.
 
-1. `IVisionSimulatedType.PrimPath` resolves, within the stage named by `StageIdentifier`, to an instance of `UsdGeomCameraType`.
-2. The sensor carries a `HasScenePrim` reference to that instance, so a client can navigate from sensor to prim without string resolution.
+1. `IVisionSimulatedType.PrimPath` **shall** resolve, within the stage named by `StageIdentifier`, to an instance of `UsdGeomCameraType`.
+2. The sensor **shall** carry a `HasScenePrim` reference to that instance, so a client can navigate from sensor to prim without string resolution.
 3. Where both describe the same quantity the values are **converted, not equal** — USD lengths are in world units scaled by the stage's `metersPerUnit`, whereas this model fixes SI units in §5.10:
 
    ```text
@@ -740,17 +770,25 @@ A Server that implements both this specification and *OPC UA — OpenUSD Scene M
    ```
 
    Under no single stage scale would all of these be numerically identical, so a Server **shall** apply the conversion rather than copying the value.
-4. `VisionIntrinsicsDataType` is consistent with the prim's aperture and focal-length attributes at the sensor's `Width` and `Height`, per the derivation in B.2.
+4. `VisionIntrinsicsDataType` **shall** be consistent with the prim's aperture and focal-length attributes at the sensor's `Width` and `Height`, per the derivation in B.2 and the pixel datum of §5.10.
 
-A Server that implements only this specification uses `PrimPath` as an opaque, portable descriptor and is fully conformant. This profile takes no NodeSet dependency in either direction.
+A Server that implements only this specification uses `PrimPath` as an opaque, portable descriptor and is fully conformant without this facet.
 
 ---
 
-## Annex D — OPC 40100 Machine Vision interop profile (informative, optional)
+## Annex D — OPC 40100 Machine Vision interop profile (normative for *VIS-Interop-40100*)
 
 OPC 40100-1 orchestrates a vision system — its state machine, recipes and configurations — and OPC 40100-2 describes its components as assets. This specification describes the sensing, the media, the AI and the result content. The two are complementary, and a Server may expose both.
 
-Where it does, the following alignments apply:
+This annex is informative for a Server that does not claim *VIS-Interop-40100*, and normative for one that does. A Server claiming the facet exposes both this model and OPC 40100 for the same equipment, and **shall** satisfy all five requirements below.
+
+1. The Server **shall not** duplicate OPC 40100-1 job orchestration or its state machine in this model; the OPC 40100-1 instance remains the single source for job state.
+2. For every inspection the Server reports through both models, the OPC 40100-1 `ResultDataType.ResultContent` **shall** be populated from the corresponding `InspectionResultType.Characteristics`, and `ResultDataType.ResultId` **shall** be equal to `VisionResultType.ResultId`. This equality is what lets a client join the two views; without it the mapping is unverifiable.
+3. Where the Server exposes an OPC 40100-2 `ILensType` and an `OpticsType` for the same lens, the two **shall** describe it consistently, converted into the units fixed by §5.10.
+4. Where the Server exposes an OPC 40100-2 `ILampType` or `ILightingControllerType` and an `IlluminationType` for the same emitter, the same consistency requirement applies.
+5. Where the Server exposes an OPC 40100-2 `VisionImageSensorType`, the corresponding `ImageSensorType` **shall** describe the same physical sensor. OPC 40100-2 `VisionImageSensorType` adds no members of its own, so this model supplies the imaging parameters; the two **shall not** identify different devices.
+
+The alignment table below records the correspondence the requirements above rest on:
 
 | OPC 40100 | This specification |
 |---|---|
@@ -763,7 +801,7 @@ Where it does, the following alignments apply:
 | OPC 40100-2 `VisionImageSensorType` (no members) | `ImageSensorType` supplies the imaging parameters it lacks |
 | OPC 40100-2 `SoftwareComponents` | `AiModelType` for the model specifically |
 
-The intended division is that OPC 40100 answers *"what job is the system running"* and this specification answers *"what did it see, how, and with what model"*. Neither requires the other.
+The intended division is that OPC 40100 answers *"what job is the system running"* and this specification answers *"what did it see, how, and with what model"*. Neither requires the other, and a Server is fully conformant to this specification without this facet.
 
 ---
 
@@ -801,6 +839,8 @@ GenICam configures and streams from the device; this model publishes semantics a
 | `VisionIntrinsicsDataType` | `sensor_msgs/CameraInfo` K, D, and size |
 | `SegmentationResultType` | `vision_msgs` segmentation messages |
 | `CoordinateFrameType` tree | the TF frame tree |
+
+The `CameraInfo` mapping is **not** a copy. Two adjustments are required, both fixed normatively in §5.10: the principal point uses a different sub-pixel datum, so a bridge **shall** compute `K[2] = Cx − 0.5` and `K[5] = Cy − 0.5` when producing `CameraInfo`, and add 0.5 when consuming it; and `D` is ordered by `DistortionModel` per the §5.10 table, which for `BrownConrady` already matches the OpenCV `plumb_bob` order. Quaternions in `geometry_msgs` are ordered (x, y, z, w), which matches §5.10 and needs no reordering.
 
 ### E.4 IDTA Asset Administration Shell submodels
 

@@ -1230,7 +1230,7 @@
   </UAVariable>
   <UAObjectType NodeId="ns=1;i=1024" BrowseName="1:UsdGeomCameraType">
     <DisplayName>UsdGeomCameraType</DisplayName>
-    <Description>USD Camera prim: a transformable prim describing a view frustum. Materializes the UsdGeomCamera IsA schema. A conforming OPC UA - Vision sensor whose PrimPath resolves into a materialized stage SHALL resolve to an instance of this type; the aperture/focal-length attributes carry the camera intrinsics (Annex C).</Description>
+    <Description>USD Camera prim: a transformable prim describing a view frustum. Materializes the UsdGeomCamera IsA schema. Its aperture and focal-length attributes are the surface from which camera intrinsics are derived (Annex C). OPC UA - Vision defines, in its own VIS-Interop-Scene facet, when a Vision sensor's PrimPath is required to resolve to an instance of this type; that requirement belongs to that specification and is not imposed here.</Description>
     <Category>OpenUSD Scene Materialization</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=1005</Reference>

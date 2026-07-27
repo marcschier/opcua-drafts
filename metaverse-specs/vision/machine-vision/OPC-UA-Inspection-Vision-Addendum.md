@@ -8,7 +8,7 @@
 
 ## 1 Scope
 
-This addendum shows the case OPC 40100-1 orchestrates but does not describe: the *content* of an inspection result. A fixed area-scan camera inspects a sealing surface; the result is an `InspectionResultType` carrying an `Evaluation` and a set of `VisionCharacteristicDataType` entries with nominal, actual, deviation, tolerances and uncertainty. It also demonstrates the optional **Media Inline Delivery** facet: a small JPEG thumbnail is published as `LatestClip` and can be subscribed to with a MonitoredItem, while the full-resolution image stays behind a URI.
+This addendum shows the case OPC 40100-1 orchestrates but does not describe: the *content* of an inspection result. A fixed area-scan camera inspects a sealing surface; the result is an `InspectionResultType` carrying an `Evaluation` and a set of `VisionCharacteristicDataType` entries with nominal, actual, deviation, tolerances and uncertainty. It also demonstrates the optional **VIS-Media-Inline** facet: a small JPEG thumbnail is published as `LatestClip` and can be subscribed to with a MonitoredItem, while the full-resolution image stays behind a URI.
 
 ## 2 Normative references
 
@@ -44,9 +44,66 @@ Both mandatory defaults of base specification §6.2 are present — an RTSP stre
 | `LiveRtsp` | `StreamEndpointType` | `StreamProtocol = Rtsp`, `EndpointUri = rtsp://192.0.2.77:554/setup` |
 | `PartFrames` | `ClipEndpointType` | `ClipFormat = Jpeg`, `EndpointUri = https://192.0.2.77/clips/{resultId}.jpg` |
 
-This clip endpoint additionally enables the optional **Media Inline Delivery** facet, with `MaxInlineClipSize = 262144` bytes. A client may subscribe to `LatestClip` and receive the encoded JPEG directly; if an image exceeds that bound the Server sets `Bad_EncodingLimitsExceeded` and the client falls back to `LatestClipMetadata.Uri` (base specification §6.4).
+This clip endpoint additionally enables the optional **VIS-Media-Inline** facet, with `MaxInlineClipSize = 262144` bytes. Clause 11 requires all four members of that facet together, so the endpoint instantiates `InlineDeliveryEnabled`, `MaxInlineClipSize`, `LatestClip` and `LatestClipMetadata`. A client may subscribe to `LatestClip` and receive the encoded JPEG directly; if an image exceeds that bound the Server sets `Bad_EncodingLimitsExceeded` and the client falls back to `LatestClipMetadata.Uri` (base specification §6.4).
 
-## 5 Inference
+## 5 Coordinate frames and calibration
+
+The frame tree. `ParentFrame` is what makes it composable: a client walks from the frame a pose is expressed in up to the frame it needs, composing the transforms it finds on the way.
+
+| Instance | `FrameId` | `Role` | `ParentFrame` |
+|---|---|---|---|
+| `StationFrame` | `station` | `World` | none (tree root) |
+| `CameraFrame` | `camera_insp_07` | `Camera` | `station` |
+
+**`Intrinsics2592x1944`** (`IntrinsicCalibrationType`) — Pinhole intrinsics at full resolution; a telecentric lens leaves very little residual distortion.
+
+| Member | Value |
+|---|---|
+| `CalibrationId` | `intr-cam-insp-07` |
+| `PerformedAt` | `2026-05-02T07:55:00Z` |
+| `Valid` | `true` |
+| `Method` | `Zhang` |
+| `ResidualError` | `0.08` |
+
+`Intrinsics` field values, in the units fixed by base specification §5.10:
+
+| Field | Value | Unit / convention |
+|---|---|---|
+| `Fx` | `8310.2` | px |
+| `Fy` | `8309.6` | px |
+| `Cx` | `1295.4` | px, corner-datum per 5.10 |
+| `Cy` | `971.2` | px, corner-datum per 5.10 |
+| `Skew` | `0.0` | px |
+| `DistortionModel` | `BrownConrady` | 5.10 ordering: k1, k2, p1, p2, k3 |
+| `DistortionCoefficients` | `[-0.0021, 0.0004, 0.0, 0.0, 0.0]` | dimensionless; a telecentric lens is close to distortion-free |
+| `Width` | `2592` | px |
+| `Height` | `1944` | px |
+
+**`StationMounting`** (`ExtrinsicCalibrationType`) — Transform from the camera frame to the station world frame. The camera is fixed, so there is no kinematic chain.
+
+| Member | Value |
+|---|---|
+| `CalibrationId` | `extr-cam-insp-07` |
+| `PerformedAt` | `2026-05-02T08:20:00Z` |
+| `Valid` | `true` |
+| `Method` | `TargetPlate` |
+| `ResidualError` | `0.00015` |
+| `Mount` | `Fixed` |
+| `SourceFrame` | `camera_insp_07` |
+| `TargetFrame` | `station` |
+
+`Transform` field values, in the units fixed by base specification §5.10:
+
+| Field | Value | Unit / convention |
+|---|---|---|
+| `FrameId` | `station` | equals the TargetFrame's FrameId, per the 5.10 frame-precedence rule |
+| `Position` | `(0.0, 0.0, 0.320)` | metres, ordered (x, y, z) |
+| `Orientation` | `(1.0, 0.0, 0.0, 0.0)` | unit quaternion ordered (x, y, z, w); a 180 degree rotation about x, so the camera looks down at the station |
+| `Covariance` | `empty array` | not reported, per the 5.10 sentinel |
+
+Each calibration is reachable from the sensor by a `HasCalibration` reference, as base specification §5.9 requires.
+
+## 6 Inference
 
 | Member | Value |
 |---|---|
@@ -57,15 +114,17 @@ This clip endpoint additionally enables the optional **Media Inline Delivery** f
 
 Inference runs **on-server**: `InferenceLocation = OnServer`, on an NPU in the station industrial PC. A client consuming the results cannot distinguish this from the off-server robotics example except by reading that one property — which is the intent of base specification §8.2. Because the pipeline is not continuous, `RunInference` is called per part by the station PLC and returns the `ResultId` it produced.
 
-## 6 Results
+The deployment carries exactly one `UsesModel` reference to the model above, as base specification §5.9 requires. That reference is the only defined path from a result to the model artefact and its `Digest`, so it is what makes the §12.6 provenance check possible.
+
+## 7 Results
 
 Each part produces an `InspectionResultType`. `Evaluation` uses the OPC 40001-101 value semantics, and the `Characteristics` array carries one `VisionCharacteristicDataType` per measured feature — for example a flatness with `Nominal = 0.0`, `Actual = 0.018`, `UpperTolerance = 0.020`, `Unit = mm` and `Uncertainty = 0.004`. That last field is the point: because the expanded uncertainty spans the tolerance limit, the Server reports `NotDecidable` rather than asserting `Ok` from the point estimate alone. A verdict recorded this way is reproducible by a third party, and a QIF document can be generated from it without inventing information.
 
-## 7 Feedback
+## 8 Feedback
 
 When a quality engineer overrides a verdict at the review station, the HMI calls `SubmitCorrection` with `Purpose = GroundTruthLabel`, passing the corrected characteristics and a reason. Because this endpoint enables inline delivery, the corrected thumbnail may accompany the call as an inline `ByteString` provided it fits `MaxInlineFeedbackImageSize`; anything larger is rejected with `Bad_EncodingLimitsExceeded` and resubmitted through `SubmitImageReference`. Downstream leak-test results arrive through `SubmitInspectionResult`, which reconciles a downstream `Evaluation` and its characteristics against what the vision system originally reported — and the disagreements are precisely the samples the next `LearningJobType` collects.
 
-## 8 Deliverables
+## 9 Deliverables
 
 | File | Content |
 |---|---|

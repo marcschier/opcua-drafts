@@ -72,7 +72,7 @@ This annex is the authoritative node reference for the specification: it carries
 | ns=1;i=4001 | HasCalibration | IsCalibrationOf | NonHierarchicalReferences | Links a sensor to a calibration currently valid for it. |
 | ns=1;i=4002 | MountedOn | HasMounted | NonHierarchicalReferences | Links a sensor to the CoordinateFrame it is rigidly mounted on, for example a robot flange frame for an eye-in-hand camera. |
 | ns=1;i=4003 | HasScenePrim | IsScenePrimOf | NonHierarchicalReferences | Links a sensor to the materialized USD prim representing it, when the Server also implements OPC UA - OpenUSD Scene Materialization. The target is expected to be a UsdGeomCameraType instance. Optional: PrimPath remains the portable descriptor. |
-| ns=1;i=4004 | UsesModel | IsUsedByPipeline | NonHierarchicalReferences | Links an inference pipeline or deployment to the AI model it executes. |
+| ns=1;i=4004 | UsesModel | IsUsedByDeployment | NonHierarchicalReferences | Links an AiDeploymentType instance to the AiModelType instance it executes. Clause 5.9 requires exactly one such reference per deployment; it is the only defined path from a result to the model artefact and its Digest, on which clause 12.6 depends. |
 | ns=1;i=4005 | ProducedBy | Produces | NonHierarchicalReferences | Links a result to the inference pipeline that produced it. |
 
 ## A.3 ObjectTypes
@@ -145,7 +145,7 @@ A continuous media stream. A conformant Server SHALL expose at least one instanc
 
 *Subtype of:* `MediaEndpointType`
 
-A still-image access point. A conformant Server SHALL expose at least one instance whose ClipFormat is Jpeg; every other format is optional. In addition to the default URI path, this type MAY publish the encoded image inline as a ByteString so that clients can Read or Subscribe to it - but only within MaxInlineClipSize, which SHALL NOT exceed the session's negotiated MaxByteStringLength. Inline delivery serves single stills; it is not a substitute for a StreamEndpoint.
+A still-image access point. A conformant Server SHALL expose at least one instance whose ClipFormat is Jpeg; every other format is optional. In addition to the default URI path, this type MAY publish the encoded image inline as a ByteString so that clients can Read or Subscribe to it - but only within MaxInlineClipSize, which SHALL NOT exceed the Server's ServerCapabilities.MaxByteStringLength. Inline delivery serves single stills; it is not a substitute for a StreamEndpoint.
 
 | BrowseName | NodeClass | DataType | ValueRank | ModellingRule | Description |
 |---|---|---|---|---|---|
@@ -155,7 +155,7 @@ A still-image access point. A conformant Server SHALL expose at least one instan
 | Height | Variable | UInt32 | Scalar | Optional | Clip height in pixels. |
 | Retention | Variable | Duration | Scalar | Optional | How long a generated clip remains retrievable at its Uri. |
 | InlineDeliveryEnabled | Variable | Boolean | Scalar | Optional | True when LatestClip is published. False, the default, means clients use the URI path exclusively. |
-| MaxInlineClipSize | Variable | UInt32 | Scalar | Optional | Largest inline payload this endpoint will publish, in bytes. SHALL NOT exceed the session's negotiated MaxByteStringLength. |
+| MaxInlineClipSize | Variable | UInt32 | Scalar | Optional | Largest inline payload this endpoint will publish, in bytes. SHALL NOT exceed Server.ServerCapabilities.MaxByteStringLength, and a Read or Publish response carrying the value is additionally bounded by the Session's MaxResponseMessageSize. See clause 6.4. |
 | LatestClip | Variable | ByteString | Scalar | Optional | The most recently produced clip, encoded per ClipFormat. Subscribable: the value changes once per acquisition, which suits one-image-per-part inspection. When the encoded image exceeds MaxInlineClipSize the Server SHALL set the StatusCode to Bad_EncodingLimitsExceeded, and the client SHALL fall back to LatestClipMetadata.Uri, which remains valid. |
 | LatestClipMetadata | Variable | VisionImageReferenceDataType | Scalar | Optional | Descriptor of LatestClip, including the out-of-band Uri and Digest. Populated whenever a clip exists, whether or not the bytes are published inline. |
 
@@ -468,7 +468,7 @@ The return path into the vision system. It serves three purposes at once: drawin
 | OverlayEnabled | Variable | Boolean | Scalar | Optional | True when submitted geometry is rendered onto the outgoing stream. |
 | OverlayStyle | Variable | String | Scalar | Optional | Vendor-defined overlay style identifier. |
 | OverlayTtl | Variable | Duration | Scalar | Optional | How long submitted overlay geometry remains rendered. |
-| MaxInlineFeedbackImageSize | Variable | UInt32 | Scalar | Optional | Largest inline image this surface accepts, in bytes. SHALL NOT exceed the session's negotiated MaxByteStringLength. An oversized payload is rejected with Bad_EncodingLimitsExceeded and the client uses SubmitImageReference instead. |
+| MaxInlineFeedbackImageSize | Variable | UInt32 | Scalar | Optional | Largest inline image this surface accepts, in bytes. SHALL NOT exceed Server.ServerCapabilities.MaxByteStringLength, and a Call request carrying the value is additionally bounded by the Session's MaxRequestMessageSize. An oversized payload is rejected with Bad_EncodingLimitsExceeded and the client uses SubmitImageReference instead. See clause 6.4. |
 
 **Method `SubmitDetections`** (Optional) — Push detected geometry back into the vision system. With Purpose set to Overlay the boxes are drawn on the stream; with Purpose set to GroundTruthLabel they are retained as corrected labels for the associated learning job.
 
