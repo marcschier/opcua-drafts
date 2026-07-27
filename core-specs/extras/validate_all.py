@@ -16,10 +16,14 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 
 # Validators that run on a clean checkout: they need no untracked base data — neither the gitignored
 # **/tools/ref/ tables nor a base NodeSet. `_common` exercises the shared corpus/codec foundation;
-# `xregistry-catalog` validates its committed catalog artifacts without rebuilding.
+# `xregistry-catalog` validates its committed catalog artifacts without rebuilding; the two
+# `data-channels` validators check a base-namespace errata overlay and its wire tooling, and skip
+# their optional base-UA-id cross-check when the ref table is absent.
 SELF_CONTAINED = [
     "_common/validate_local.py",
     "xregistry-catalog/tools/validate_local.py",
+    "../data-channels/tools/validate_local.py",
+    "data-channels/tools/validate_local.py",
 ]
 
 # Validators that additionally need untracked base data — a base NodeSet (e.g.
