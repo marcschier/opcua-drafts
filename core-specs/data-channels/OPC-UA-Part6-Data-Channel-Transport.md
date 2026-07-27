@@ -139,7 +139,9 @@ Comparison is performed in serial-number arithmetic over the `2^32 - 1` values `
 
 A receiver **shall** apply this clause to `DATA` frames only. `CREDIT`, `GAP`, `RESET`, `END`, `PING` and `PONG` frames carry a `FrameSequenceNumber` for audit and duplicate detection but **shall not** advance `HighestReceived` and **shall not** cause a gap to be reported. Were control frames to advance it, a `GAP` announcing an expiry would push `HighestReceived` past a lower-numbered frame that survived and is still to be transmitted, and the receiver would then discard as a duplicate precisely the frame the per-run rule of §5.10 exists to protect.
 
-A receiver **shall** maintain, per channel and per direction, a `HighestReceived` value initialized to the first `DATA` `FrameSequenceNumber` it accepts, and a **replay window** of at least the last 64 sequence numbers at or below `HighestReceived`. For each accepted `DATA` frame it **shall** apply exactly these rules, in order:
+A receiver **shall** maintain, per channel and per direction, a `HighestReceived` value initialized to the first `DATA` `FrameSequenceNumber` it accepts, and a **replay window** of at least the last 64 sequence numbers at or below `HighestReceived`. It **shall** retain a run named by a `GAP` until `HighestReceived` has advanced past that run's `LastDiscarded` by more than the size of the replay window, and **shall** then discard the run. Bounding the retained runs matters for the same reason bounding the replay window does: an unbounded set grows without limit on a lossy media channel, and after the sequence wraps a legitimate frame whose number was named four billion frames earlier would be silently discarded. Because `DATA` is transmitted in ascending order (§5.2), no frame within a run can legitimately arrive after that point.
+
+For each accepted `DATA` frame a receiver **shall** apply exactly these rules, in order:
 
 | Condition | Receiver action |
 |---|---|
@@ -290,7 +292,7 @@ A `GAP` frame **shall not** be sent for a `ReliableOrdered` or `ReliableUnordere
 ### 5.11 Reset, half-close and round-trip measurement
 
 - **`RESET`** aborts or summarily closes one data channel and nothing else. The sender discards its queue for that channel and the receiver discards its reassembly state. The `StatusCode` it carries determines the outcome, and is the only wire signal distinguishing the two: a `RESET` carrying `Good` is an **orderly discard-and-close** and both peers transition to `Closed`; a `RESET` carrying a Bad StatusCode is an **abort** and both peers transition to `Faulted`. Without this distinction a `CloseDataChannel` with `deleteQueued` `True` would leave the Server in `Closed` and the Client — which sees only the frame — in `Faulted`, reporting contradictory states for the same channel. The SecureChannel, the Session and every other data channel are unaffected. This separation is the point: a failed stream is not a failed connection.
-- **`END`** half-closes. A sender **shall** emit `END` only after every `DATA` frame already queued in that direction has been handed to the transport, and `END` **shall** be the last frame the sender emits in that direction; a receiver **shall** `RESET` the channel with `Bad_DataChannelClosed` on any subsequent `DATA` in that direction. Making `END` terminal rather than merely announcing an intent to drain is what lets a receiver tell a legitimate draining frame from a violation — it never has to, because there are none. On a `SourceToSink` or `SinkToSource` channel the direction that carries no payload is considered ended at open, so a single `END` closes the channel. On a `Bidirectional` channel both directions **shall** send `END`, and the channel enters `Closed` when both have been observed. The pre-`END` drain is bounded by `DrainTimeout` (§5.14).
+- **`END`** half-closes. A sender **shall** emit `END` only after every `DATA` frame already queued in that direction has been handed to the transport, and **no `DATA` frame shall follow `END` in that direction**; a receiver **shall** `RESET` the channel with `Bad_DataChannelClosed` on any subsequent `DATA` in that direction. A sender **may** continue to emit `CREDIT`, `GAP`, `PING`, `PONG`, `RESET` and `END` on the channel after `END`, as §5.3 and §5.13 require — on a `SourceToSink` channel the sink's direction is ended at open yet it remains the only party that can grant credit, so a rule silencing it entirely would stall the source the moment its initial window ran out. Making `END` terminal for payload rather than merely announcing an intent to drain is what lets a receiver tell a legitimate draining frame from a violation: it never has to, because there are none. On a `SourceToSink` or `SinkToSource` channel the direction that carries no payload is considered ended at open, so a single `END` closes the channel. On a `Bidirectional` channel both directions **shall** send `END`, and the channel enters `Closed` when both have been observed.
 - **`PING`** and **`PONG`** measure the round trip and keep an idle connection alive. A receiver **shall** answer a `PING` with a `PONG` copying the `Timestamp` verbatim and **should** do so ahead of queued `DATA`, so the measurement reflects the path rather than the queue. Copying rather than restamping means the prober keeps no state. `PING` on ChannelId `0` measures the connection; on a data channel it additionally confirms that channel is alive.
 
 **ChannelId reuse.** A Server **shall not** reassign a ChannelId while the SecureChannel that owns it is open. ChannelIds are allocated monotonically from `1`; when the space is exhausted `OpenDataChannel` **shall** return `Bad_TooManyDataChannels`. The alternative — reusing an identifier once "both ends have seen" the close — is not decidable, because no acknowledgement of `RESET` or `END` exists, and a Server guessing wrongly delivers a stale frame from the previous occupant of the identifier to its successor. Monotonic allocation costs a 32-bit counter and removes the hazard entirely; a connection that genuinely opens four billion channels can be recycled by renewing the SecureChannel.
@@ -319,10 +321,10 @@ The dividing line is whether the sender's framing can still be trusted. A bad Ch
 | `Opening` | Service failure, or `OpenTimeout` expires | `Faulted` | none |
 | `Open` | remaining send window for this direction is less than the payload length of the head frame ready to send | `Paused` (that direction only) | all except `DATA` in that direction |
 | `Paused` | `CREDIT` received making the window at least the head frame's payload length | `Open` | all |
-| `Open`, `Paused` | `END` sent or received | `Closing` | `GAP`, `CREDIT`, `PING`, `PONG`, `RESET`, `END` |
-| `Open`, `Paused` | `CloseDataChannel` with `deleteQueued` `False` | `Closing` | as above |
+| `Open`, `Paused` | `END` sent or received | `Closing` | `GAP`, `CREDIT`, `PING`, `PONG`, `RESET`, `END` — no `DATA` in the ended direction |
+| `Open`, `Paused` | `CloseDataChannel` with `deleteQueued` `False` | `Closing` | `DATA` already queued at the transition, until the drain completes, then `END`; plus `GAP`, `CREDIT`, `PING`, `PONG`, `RESET` |
 | `Closing` | `END` observed in every direction the channel carries | `Closed` | none |
-| `Closing` | `DrainTimeout` expires | `Faulted` | none |
+| `Closing` | `DrainTimeout` expires before this peer has emitted its own `END` | `Faulted` | none |
 | any | `RESET` carrying `Good` sent or received | `Closed` | none |
 | any | `RESET` carrying a Bad StatusCode sent or received | `Faulted` | none |
 | any | SecureChannel closed, transport lost, Session closed, authorizing user identity changed, or the Session transferred to a different SecureChannel | `Faulted` | none |
@@ -330,7 +332,9 @@ The dividing line is whether the sender's framing can still be trusted. A bad Ch
 The following are normative consequences:
 
 - `Paused` is **per direction**. A `Bidirectional` channel whose send window is exhausted while its receive window is open is `Paused` in the send direction only, and the `DataChannelStatusDataType.State` reported for it is the state of the direction the reader is sending in. Entry and exit use the same test — the window against the head frame's payload length — so a channel cannot be stalled under §5.8.2 while still reporting `Open`.
-- A sender **shall not** enqueue new payload on a channel in `Closing`. `END` is terminal in its direction (§5.11), so no `DATA` follows it and a receiver never has to distinguish a draining frame from a violation.
+- A sender **shall not** enqueue **new** payload on a channel in `Closing`; frames already queued when it entered `Closing` may still be sent, and `END` follows the last of them. `END` is terminal for payload in its direction (§5.11), so once a peer has emitted `END` no `DATA` follows it and a receiver never has to distinguish a draining frame from a violation.
+- The two entry paths into `Closing` differ deliberately. Entering through `END` means the drain has already happened, so no `DATA` may follow. Entering through `CloseDataChannel` with `deleteQueued` `False` means the drain is the point, so queued `DATA` still flows until `END`.
+- `DrainTimeout` bounds a peer's **own** drain — the interval between entering `Closing` and emitting its own `END` — not the wait for the peer's reverse `END`. A `Bidirectional` channel on which one end half-closes while the other is still legitimately sending a long upload must not be destroyed five seconds later; the wait for the reverse `END` is bounded by `PingTimeout` instead, which tests whether the peer is alive rather than whether it is finished.
 - `CloseDataChannel` with `deleteQueued` `True` is realized as a `RESET` carrying `Good` and therefore reaches `Closed` by that row, on both peers.
 - Over `opc.quic` there are no `CREDIT` frames (§5.8, §7.4), so `Paused` is entered when the channel's QUIC stream or the QUIC connection is flow-control blocked, and left when it unblocks.
 - A `DataChannelStateChangeEventType` Event **shall** be raised for every transition **except** `Open` ⇄ `Paused`, which a Server **shall** report at no more than one Event per channel per second and which is otherwise observed through the `CreditStalls` counter of `DataChannelDiagnosticsDataType`. Without this ceiling a saturated media channel would generate an Event per credit stall — an Event storm at frame rate, on the very Subscription path §5.7 exists to protect.
@@ -342,7 +346,7 @@ Every timeout below is a named constant so that a test plan can reference it and
 | Constant | Applies to | Default | On expiry |
 |---|---|---|---|
 | `OpenTimeout` | `Opening` | 10 s | The channel enters `Faulted`; `OpenDataChannel` returns `Bad_Timeout`. |
-| `DrainTimeout` | `Closing` | 5 s | Queued frames are discarded and the channel enters `Faulted`. |
+| `DrainTimeout` | the interval between a peer entering `Closing` and emitting its own `END` | 5 s | Queued frames are discarded and the channel enters `Faulted`. It does **not** bound the wait for the peer's reverse `END`, which `PingTimeout` covers. |
 | `PingTimeout` | an unanswered `PING` | 3 × the most recently measured round trip, floored at 1 s and capped at 30 s | The peer **may** `RESET` the channel, or close the SecureChannel if the `PING` was on ChannelId `0`. |
 | `IdleTimeout` | an `Open` channel carrying no `DATA` | Server-defined; `0` disables it | The Server **may** `RESET` the channel with `Bad_DataChannelClosed`. |
 
@@ -362,6 +366,7 @@ for each channel C with a non-empty queue:
     C.deficit += (C.priority + 1) * C.maxFrameSize                  # §5.7
 drain one pending MSG/OPN/CLO chunk if any                          # §5.7 obligation 1
 for each channel C in descending priority:
+    emit any queued control frames for C   # exempt from credit and deficit, §5.8.2
     while C.queue is non-empty:
         F = head(C.queue)              # DATA frames leave in ascending FSN order, §5.2
         if len(F.payload) > C.deficit:            break
@@ -375,7 +380,7 @@ for each channel C in descending priority:
     if C.queue is empty: C.deficit = 0
 ```
 
-`GAP` frames are queued rather than emitted immediately so that they interleave with the surviving `DATA` frames instead of preceding all of them. Either order is legal on the wire, because §5.2.1 does not let a control frame advance the receiver's `HighestReceived`.
+`GAP` frames are queued rather than emitted inside the expiry loop so that they interleave with the surviving `DATA` frames instead of preceding all of them, but they are drained ahead of the credit-gated loop because §5.8.2 exempts control frames from flow control — a `GAP` stuck behind a credit-blocked `DATA` frame would never be sent, and a credit stall is exactly what caused the expiry it reports. Either relative order is legal on the wire, because §5.2.1 does not let a control frame advance the receiver's `HighestReceived`.
 
 **Receiver, per frame:**
 
@@ -558,7 +563,7 @@ A conformance unit is only useful if a laboratory can derive test cases from it,
 | DCF-024 | `Open` ⇄ `Paused` Events are rate-limited | Saturate a channel for 10 s | At most 10 such Events for that channel; `CreditStalls` increments freely (§5.13) |
 | DCF-025 | A ChannelId is not reused while the SecureChannel is open | Open and close channels repeatedly | Every assigned ChannelId is distinct (§5.11) |
 | DCF-026 | A sender bounds its own `PING` rate | Observe a sender for 10 s | At most one `PING` per ChannelId per second, and never a second while one is unanswered (§5.11) |
-| DCF-027 | `DrainTimeout` is enforced | Send `END`, then withhold the reverse `END` | Channel reaches `Faulted` within `DrainTimeout` (§5.14) |
+| DCF-027 | `DrainTimeout` bounds a peer's own drain | Enter `Closing`, then withhold the local `END` | Channel reaches `Faulted` within `DrainTimeout`; a peer awaiting the *reverse* `END` is not faulted by it (§5.14) |
 | DCF-028 | A `RESET` carrying `Good` closes rather than faults | Send one | Channel reports `Closed`, not `Faulted` (§5.11, §5.13) |
 
 **Data Channel Partial Reliability**
