@@ -49,7 +49,7 @@ Interface implemented by any Object or Variable that can act as one end of a dat
 | SupportedDeliveryModes | Variable | [DataChannelDeliveryMode](#type-DataChannelDeliveryMode)\[\] | Mandatory | IDataChannelSourceType | The delivery modes this endpoint accepts in OpenDataChannel. A mode that is not listed is rejected with Bad_DeliveryModeUnsupported. |
 | ContentType | Variable | String | Mandatory | IDataChannelSourceType | The IANA media type of the byte stream this endpoint produces or consumes, for example video/H264 or application/octet-stream. The data channel layer never interprets the payload; this Property is what tells an application how to. |
 | ContentParameters | Variable | [KeyValuePair](https://reference.opcfoundation.org/specs/OPC-10000-5/12.19)\[\] | Optional | IDataChannelSourceType | Content-specific parameters that qualify ContentType, for example a codec profile, a sample rate or a frame geometry. Opaque to the data channel layer. |
-| MaxFrameSize | Variable | UInt32 | Optional | IDataChannelSourceType | The largest data channel frame payload, in bytes, this endpoint will emit or accept. The value actually used is additionally bounded by the negotiated transport buffer size and returned as RevisedMaxFrameSize by OpenDataChannel. |
+| MaxFrameSize | Variable | UInt32 | Optional | IDataChannelSourceType | The largest data channel frame payload, in bytes, this endpoint will emit or accept. The value actually used is additionally bounded by the negotiated transport buffer size and is returned as revisedParameters.MaxFrameSize by OpenDataChannel. |
 | MaxBitrate | Variable | UInt32 | Optional | IDataChannelSourceType | The peak rate, in bits per second, this endpoint may produce. A client uses it to decide whether the connection can carry the stream before opening it. |
 | Priority | Variable | Byte | Optional | IDataChannelSourceType | The default scheduling priority (0 lowest, 7 highest) applied to channels opened on this endpoint when the client does not request one. |
 | MaxChannels | Variable | UInt16 | Optional | IDataChannelSourceType | The maximum number of data channels that may be open on this endpoint at the same time. Exceeding it is rejected with Bad_TooManyDataChannels. |
@@ -85,7 +85,7 @@ Server-wide data channel limits and capabilities, exposed as the DataChannelCapa
 | SupportedDeliveryModes | Variable | [DataChannelDeliveryMode](#type-DataChannelDeliveryMode)\[\] | Mandatory | DataChannelCapabilitiesType | The delivery modes the Server implements. A mode absent here is unsupported everywhere on this Server. |
 | SupportedTransportProfileUris | Variable | String\[\] | Mandatory | DataChannelCapabilitiesType | The TransportProfileUris over which this Server carries data channels, for example the uatcp-uasc-uabinary and quic-uasc-uabinary profiles. |
 | MaxTotalBitrate | Variable | UInt32 | Optional | DataChannelCapabilitiesType | The aggregate rate, in bits per second, the Server will emit across all data channels of one SecureChannel. |
-| MaxCreditPerChannel | Variable | UInt32 | Optional | DataChannelCapabilitiesType | The largest flow control credit window, in bytes, the Server will grant to one channel. |
+| MaxCreditPerChannel | Variable | UInt32 | Mandatory | DataChannelCapabilitiesType | The largest flow control credit window, in bytes, the Server will grant to one channel. Mandatory because the connection-level credit bootstrap is bounded by this value multiplied by MaxDataChannels; a Server that omitted it would leave the bound on its own receive memory undefined. |
 | SupportsUnreliableDatagrams | Variable | Boolean | Optional | DataChannelCapabilitiesType | True when the Server can carry Unreliable channels over a genuinely lossy path, which requires a transport that provides one. False on a Server reachable only over opc.tcp or opc.wss, where Unreliable degrades to sender-side discard. |
 | ActiveChannelCount | Variable | UInt16 | Optional | DataChannelCapabilitiesType | The number of data channels currently open across the whole Server. |
 
@@ -168,16 +168,16 @@ The delivery guarantee requested for a data channel. What a mode can actually de
 
 *Subtype of:* [Enumeration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.14)
 
-The lifecycle state of a data channel.
+The lifecycle state of a data channel. The normative state transition table - which event causes which transition, which transitions are legal, and what may be sent in each state - is clause 5.13 of the Part 6 Data Channel Transport errata. Paused is maintained per direction.
 
 | Name | Value | Description |
 |---|---|---|
-| Opening | 0 | OpenDataChannel has been accepted and the endpoint is being prepared; no payload flows yet. |
+| Opening | 0 | OpenDataChannel has been accepted and the endpoint is being prepared; no frame may be sent for this ChannelId until the response has been handed to the transport. |
 | Open | 1 | Payload may flow in the negotiated directions. |
-| Paused | 2 | The channel is open but the peer's flow control credit is exhausted, so no payload may be sent. |
-| Closing | 3 | An orderly half-close is in progress; already queued frames are still being drained. |
-| Closed | 4 | The channel is closed and its ChannelId may be reused. |
-| Faulted | 5 | The channel was aborted by a RESET frame or by loss of the SecureChannel. |
+| Paused | 2 | The channel is open but the peer's flow control credit is exhausted in this direction, so no payload may be sent. Over opc.quic this is QUIC stream or connection blocking instead. |
+| Closing | 3 | An orderly half-close is in progress; already queued frames are still being drained and no new payload may be enqueued. |
+| Closed | 4 | The channel is closed. Its ChannelId is not reassigned while the owning SecureChannel remains open. |
+| Faulted | 5 | The channel was aborted by a RESET frame, by a timeout, or by loss of the SecureChannel, Session or authorizing user identity. |
 
 <a id="type-DataChannelParametersDataType"></a>
 

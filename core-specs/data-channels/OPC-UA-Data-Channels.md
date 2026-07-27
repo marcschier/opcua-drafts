@@ -86,27 +86,33 @@ ChannelId `0` is reserved for connection-level control and carries only `CREDIT`
 
 ### 5.1 Credit
 
-Every channel has a byte window, and the connection has one too. A sender may not transmit a `DATA` frame whose payload exceeds either. Control frames are exempt — a creditable `CREDIT` frame would deadlock a stalled channel permanently, and a channel that cannot be reset or probed while stalled cannot be recovered.
+Every channel has a byte window, and the connection has one too, **maintained independently for each direction**. A sender may not transmit a `DATA` frame whose payload exceeds either. Control frames are exempt — a creditable `CREDIT` frame would deadlock a stalled channel permanently, and a channel that cannot be reset or probed while stalled cannot be recovered.
 
-The result is that backpressure is *per channel*: a consumer that cannot keep up with a video stream stalls that stream and nothing else. The connection window exists so the sum of channels cannot exhaust the receiver even when each is individually within its window.
+Two obligations make the window usable rather than merely defined. Connection credit starts at **zero** and each peer must announce it — the Server within one round-trip of accepting the first channel, the Client before its first `DATA` frame — so a sender always knows whether it is waiting for a grant that is coming or one that never will. And a receiver **shall** replenish: once it has consumed and released payload and its outstanding grant has fallen below half the last grant or one frame, whichever is larger, it must grant again. Without that a receiver could legally consume its whole window and stall the channel forever while remaining conformant.
+
+The result is that backpressure is *per channel and per direction*: a consumer that cannot keep up with a video stream stalls that stream and nothing else. The connection window exists so the sum of channels cannot exhaust the receiver even when each is individually within its window. Over `opc.quic` this whole mechanism is replaced by QUIC's own flow control and no `CREDIT` frames are sent.
 
 ### 5.2 Two scheduling obligations
 
 1. **Service traffic has precedence.** A sender shall not delay a `MSG`, `OPN` or `CLO` chunk by more than the transmission of one maximum-size frame. Without this, a saturated video channel starves the `Publish` response path and the Session dies of a keep-alive timeout on a connection that is demonstrably busy. In Service terms: a Server that cannot keep up shall stall data channels — the credit window is exactly the mechanism — rather than delay `Publish`. Losing video is recoverable; losing the Subscription that reports the alarm is not.
-2. **No channel starves.** Priority (0 to 7) determines *share*, never *exclusivity*. A weighted deficit round robin over the ready channels, with the Service queue drained between frames, satisfies both obligations; `core-specs/extras/data-channels/tools/scheduler_demo.py` is an executable reference.
+2. **No channel starves.** Priority (0 to 7) determines *share*, never *exclusivity*.
 
-### 5.3 What "unreliable" honestly means
+Both are realized by a deficit round robin whose per-round quantum is (`Priority` + 1) × `MaxFrameSize`, with one Service chunk drained after each data frame. The quantum is normative-by-recommendation in the Part 6 errata §5.7 rather than left to the implementer, because "priority weighting" without a stated quantum produces different bandwidth shares in different implementations. `core-specs/extras/data-channels/tools/scheduler_demo.py` is an informative executable realization.
+
+### 5.3 State, and what "unreliable" honestly means
+
+A channel moves through `Opening` → `Open` ⇄ `Paused` → `Closing` → `Closed`, with `Faulted` reachable from anywhere. The Part 6 errata §5.13 gives the full transition table — which event causes which transition, which are legal, and what may be sent in each state — and §5.14 names the four timeouts (`OpenTimeout`, `DrainTimeout`, `PingTimeout`, `IdleTimeout`) that bound the states which would otherwise be open-ended. `Paused` is per direction, and the `Open` ⇄ `Paused` transition is exempt from the state-change Event so that a saturated channel does not generate an Event per credit stall.
 
 | Mode | Inline framing over TCP | `opc.quic` |
 |---|---|---|
 | `ReliableOrdered` | Exact. | Exact, on one QUIC stream. |
-| `ReliableUnordered` | Every frame arrives; the receiver may skip reassembly buffering. | Exact. |
+| `ReliableUnordered` | Every frame arrives; the receiver may skip reassembly buffering. | Carried on the channel's QUIC stream; ordered by the transport, so the saving is buffering rather than latency. |
 | `PartiallyReliable` | Sender-side: a droppable frame still queued at its deadline is discarded. `MaxRetransmits` has no effect. | Retransmission over DATAGRAM up to `MaxRetransmits` or the deadline. |
 | `Unreliable` | Sender-side discard only. Once a byte is written to the socket, TCP will deliver it. | Exact. Sent once, never retransmitted. |
 
 For inline framing, **loss happens in the send queue, not on the wire**. This specification says so plainly rather than implying otherwise. It is still a real and useful property — it bounds latency and discards stale media in favour of fresh media, which is what an operator actually wants — and it is what a TCP-based media path can offer. A Server that needs genuine in-flight loss offers an `opc.quic` endpoint and advertises it through `SupportsUnreliableDatagrams`, so a Client learns the difference by reading rather than by measuring.
 
-When frames are discarded, the sender emits a `GAP` frame naming the range. A receiver also detects loss on its own from a `FrameSequenceNumber` discontinuity, which matters over DATAGRAM where the `GAP` may itself be lost. Without gap information a media decoder cannot tell a stall from a loss, and so cannot decide whether to conceal or to wait.
+When frames are discarded, the sender emits one `GAP` frame **per contiguous run** of discarded sequence numbers — never a single widened range, which would declare a surviving frame lost and then transmit it. A receiver also detects loss on its own from a `FrameSequenceNumber` discontinuity, using the serial-number arithmetic of the Part 6 errata §5.2.1 that distinguishes a genuine gap from the counter wrapping and from a datagram retransmission. This matters over DATAGRAM where the `GAP` may itself be lost. Without gap information a media decoder cannot tell a stall from a loss, and so cannot decide whether to conceal or to wait.
 
 ## 6 The QUIC transport
 
@@ -136,7 +142,7 @@ Three Services form the new **DataChannel Service Set**:
 
 - **`OpenDataChannel`** takes a source `NodeId`, an optional `OfferId`, and a `DataChannelParametersDataType`. It returns a `ChannelId`, the revised parameters and the transport identifier. The Server revises rather than rejects wherever it can — frame size, credit, priority and deadlines are all negotiated down — but `Direction` and `DeliveryMode` are never revised, because silently strengthening a guarantee adds unbounded latency to a media channel and silently weakening one loses data.
 - **`ModifyDataChannel`** changes priority, frame size, credit and deadlines on a running channel. This is mid-call renegotiation: an adaptive encoder dropping from 1080p to 720p adjusts rather than tearing down and losing its pipeline. `Direction` and `DeliveryMode` are immutable.
-- **`CloseDataChannel`** closes in an orderly fashion, draining or discarding queued frames as asked. The ChannelId is not reassigned until both ends have seen the close, so a late frame from the previous occupant cannot reach its successor.
+- **`CloseDataChannel`** closes in an orderly fashion, draining or discarding queued frames as asked, and drives the frame-level `END` or `RESET` that realizes it. A ChannelId is never reassigned while its SecureChannel is open, so a late frame from a previous occupant of an identifier can never reach a successor — the alternative, reusing an identifier once both ends have "seen" the close, is not decidable, because no acknowledgement of `END` or `RESET` exists.
 
 Each call opens or closes exactly one channel. A batched form was rejected: a partial success would leave the Client holding channels it did not want and could not name in the failure.
 
@@ -213,6 +219,8 @@ Three Profiles are proposed for OPC 10000-7:
 
 The minimum useful implementation is the Data Channel Server Facet: inline framing over `opc.tcp`, the three Services, and the model. Everything else is additive.
 
+Each unit is decomposed into individually checkable **test assertions** — 26 for framing, 4 for partial reliability, 6 for QUIC in the Part 6 errata §8.1, and 20 for the Services in the Part 4 errata §10.1. They are the certification surface: a laboratory derives one test case per assertion, and the assertions that fail only under load (Service precedence, priority share, and the four timeouts) are the ones that distinguish a conforming implementation from one that merely interoperates on a bench.
+
 <!-- BEGIN GENERATED: model-reference -->
 
 <a id="annex-a"></a>
@@ -266,7 +274,7 @@ Interface implemented by any Object or Variable that can act as one end of a dat
 | SupportedDeliveryModes | Variable | [DataChannelDeliveryMode](#type-DataChannelDeliveryMode)\[\] | Mandatory | IDataChannelSourceType | The delivery modes this endpoint accepts in OpenDataChannel. A mode that is not listed is rejected with Bad_DeliveryModeUnsupported. |
 | ContentType | Variable | String | Mandatory | IDataChannelSourceType | The IANA media type of the byte stream this endpoint produces or consumes, for example video/H264 or application/octet-stream. The data channel layer never interprets the payload; this Property is what tells an application how to. |
 | ContentParameters | Variable | [KeyValuePair](https://reference.opcfoundation.org/specs/OPC-10000-5/12.19)\[\] | Optional | IDataChannelSourceType | Content-specific parameters that qualify ContentType, for example a codec profile, a sample rate or a frame geometry. Opaque to the data channel layer. |
-| MaxFrameSize | Variable | UInt32 | Optional | IDataChannelSourceType | The largest data channel frame payload, in bytes, this endpoint will emit or accept. The value actually used is additionally bounded by the negotiated transport buffer size and returned as RevisedMaxFrameSize by OpenDataChannel. |
+| MaxFrameSize | Variable | UInt32 | Optional | IDataChannelSourceType | The largest data channel frame payload, in bytes, this endpoint will emit or accept. The value actually used is additionally bounded by the negotiated transport buffer size and is returned as revisedParameters.MaxFrameSize by OpenDataChannel. |
 | MaxBitrate | Variable | UInt32 | Optional | IDataChannelSourceType | The peak rate, in bits per second, this endpoint may produce. A client uses it to decide whether the connection can carry the stream before opening it. |
 | Priority | Variable | Byte | Optional | IDataChannelSourceType | The default scheduling priority (0 lowest, 7 highest) applied to channels opened on this endpoint when the client does not request one. |
 | MaxChannels | Variable | UInt16 | Optional | IDataChannelSourceType | The maximum number of data channels that may be open on this endpoint at the same time. Exceeding it is rejected with Bad_TooManyDataChannels. |
@@ -302,7 +310,7 @@ Server-wide data channel limits and capabilities, exposed as the DataChannelCapa
 | SupportedDeliveryModes | Variable | [DataChannelDeliveryMode](#type-DataChannelDeliveryMode)\[\] | Mandatory | DataChannelCapabilitiesType | The delivery modes the Server implements. A mode absent here is unsupported everywhere on this Server. |
 | SupportedTransportProfileUris | Variable | String\[\] | Mandatory | DataChannelCapabilitiesType | The TransportProfileUris over which this Server carries data channels, for example the uatcp-uasc-uabinary and quic-uasc-uabinary profiles. |
 | MaxTotalBitrate | Variable | UInt32 | Optional | DataChannelCapabilitiesType | The aggregate rate, in bits per second, the Server will emit across all data channels of one SecureChannel. |
-| MaxCreditPerChannel | Variable | UInt32 | Optional | DataChannelCapabilitiesType | The largest flow control credit window, in bytes, the Server will grant to one channel. |
+| MaxCreditPerChannel | Variable | UInt32 | Mandatory | DataChannelCapabilitiesType | The largest flow control credit window, in bytes, the Server will grant to one channel. Mandatory because the connection-level credit bootstrap is bounded by this value multiplied by MaxDataChannels; a Server that omitted it would leave the bound on its own receive memory undefined. |
 | SupportsUnreliableDatagrams | Variable | Boolean | Optional | DataChannelCapabilitiesType | True when the Server can carry Unreliable channels over a genuinely lossy path, which requires a transport that provides one. False on a Server reachable only over opc.tcp or opc.wss, where Unreliable degrades to sender-side discard. |
 | ActiveChannelCount | Variable | UInt16 | Optional | DataChannelCapabilitiesType | The number of data channels currently open across the whole Server. |
 
@@ -385,16 +393,16 @@ The delivery guarantee requested for a data channel. What a mode can actually de
 
 *Subtype of:* [Enumeration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.14)
 
-The lifecycle state of a data channel.
+The lifecycle state of a data channel. The normative state transition table - which event causes which transition, which transitions are legal, and what may be sent in each state - is clause 5.13 of the Part 6 Data Channel Transport errata. Paused is maintained per direction.
 
 | Name | Value | Description |
 |---|---|---|
-| Opening | 0 | OpenDataChannel has been accepted and the endpoint is being prepared; no payload flows yet. |
+| Opening | 0 | OpenDataChannel has been accepted and the endpoint is being prepared; no frame may be sent for this ChannelId until the response has been handed to the transport. |
 | Open | 1 | Payload may flow in the negotiated directions. |
-| Paused | 2 | The channel is open but the peer's flow control credit is exhausted, so no payload may be sent. |
-| Closing | 3 | An orderly half-close is in progress; already queued frames are still being drained. |
-| Closed | 4 | The channel is closed and its ChannelId may be reused. |
-| Faulted | 5 | The channel was aborted by a RESET frame or by loss of the SecureChannel. |
+| Paused | 2 | The channel is open but the peer's flow control credit is exhausted in this direction, so no payload may be sent. Over opc.quic this is QUIC stream or connection blocking instead. |
+| Closing | 3 | An orderly half-close is in progress; already queued frames are still being drained and no new payload may be enqueued. |
+| Closed | 4 | The channel is closed. Its ChannelId is not reassigned while the owning SecureChannel remains open. |
+| Faulted | 5 | The channel was aborted by a RESET frame, by a timeout, or by loss of the SecureChannel, Session or authorizing user identity. |
 
 <a id="type-DataChannelParametersDataType"></a>
 
@@ -873,13 +881,15 @@ It browses the camera Object, follows `HasDataChannel`, and finds three sources:
 
 | Channel | DeliveryMode | Priority | FrameDeadline | Revised frame size | Rationale |
 |---|---|---|---|---|---|
-| 1 `VideoMain` | `Unreliable` | 5 | 200 ms | 1200 | A frame that misses its deadline is worthless; the next key frame recovers. Sized to one datagram. |
+| 1 `VideoMain` | `Unreliable` | 5 | 200 ms | 1200 | A frame that misses its deadline is worthless; the next key frame recovers. |
 | 2 `AudioOut` | `PartiallyReliable`, `MaxRetransmits` 1 | 6 | 60 ms | 1200 | Audio dropout is more objectionable than video artefacting, so it outranks video and gets one retry. |
 | 3 `Control` | `ReliableOrdered` | 7 | — | 4096 | A pan-tilt-zoom command must not be lost or reordered. Tiny and bursty, so highest priority costs nothing. |
 
+The 1200-byte frame size is not arbitrary: both media channels ride QUIC DATAGRAM, a frame is never fragmented across datagrams, and 1200 bytes is the largest QUIC payload that fits an IPv6 minimum MTU without IP fragmentation. Subtracting the 24-byte QUIC-framing overhead of §5.5 leaves 1176 bytes of payload. `Control` needs no such bound because it rides a QUIC stream, which the transport segments itself. `InitialCredit` on the video channel is set to the bandwidth-delay product — 8 Mbit/s × the 12 ms round trip ≈ 12 KB — because a smaller window would cap throughput below the bitrate the source is producing regardless of available bandwidth.
+
 **Running.** Video is the bulk of the traffic and is scheduled below audio and control, but its priority guarantees it a share rather than the remainder. Every video frame carries `MessageStart`+`MessageEnd` or, when a picture exceeds 1200 bytes, `MessageStart` … `MessageEnd` across several frames; a key frame additionally carries `Marker`.
 
-**Congestion.** The uplink degrades. Frames queue, deadlines pass, the sender discards video frames 4102-4117 and emits a `GAP`. `PONG` round trips climb from 12 ms to 90 ms. The camera's adaptive encoder — reading the same counters the Client can read in `Diagnostics` — drops to 4 Mbit/s and calls `ModifyDataChannel` to lower the video frame size. Audio is untouched, because its channel has its own window and a higher priority. Control is untouched, because it is reliable and tiny. The Subscription reporting the motion alarm is untouched, because Service traffic outranks all three.
+**Congestion.** The uplink degrades. Frames queue, deadlines pass, the sender discards video frames 4102-4109 and 4112-4117 — frame 4110 and 4111 carried a longer deadline and survive — so it emits **two** `GAP` frames, `4102..4109` and `4112..4117`, and transmits the two survivors. `PONG` round trips climb from 12 ms to 90 ms. The camera's adaptive encoder — reading the same counters the Client can read in `Diagnostics` — drops to 4 Mbit/s and calls `ModifyDataChannel` to lower the video frame size; the reduction takes effect at the next logical message boundary, and the Client keeps accepting the previous size until it sees a `MessageStart` frame within the new one. Audio is untouched, because its channel has its own window and a higher priority. Control is untouched, because it is reliable and tiny. The Subscription reporting the motion alarm is untouched, because Service traffic outranks all three.
 
 **Roaming.** The operator's tablet moves from Wi-Fi to cellular. QUIC validates the new path and the connection ID is unchanged, so the SecureChannel, the Session and all three channels survive; the video shows a brief rate dip and nothing else. Over `opc.tcp` the connection would have died and every channel would have had to be reopened after a fresh `OpenSecureChannel` and `ActivateSession`.
 

@@ -281,7 +281,7 @@ prop_var(65010, IDCS, "ContentParameters", KeyValuePair,
 prop_var(65010, IDCS, "MaxFrameSize", UInt32,
          "The largest data channel frame payload, in bytes, this endpoint will emit or accept. "
          "The value actually used is additionally bounded by the negotiated transport buffer size "
-         "and returned as RevisedMaxFrameSize by OpenDataChannel.")
+         "and is returned as revisedParameters.MaxFrameSize by OpenDataChannel.")
 prop_var(65010, IDCS, "MaxBitrate", UInt32,
          "The peak rate, in bits per second, this endpoint may produce. A client uses it to decide "
          "whether the connection can carry the stream before opening it.")
@@ -332,7 +332,10 @@ prop_var(65012, DCC, "MaxTotalBitrate", UInt32,
          "The aggregate rate, in bits per second, the Server will emit across all data channels "
          "of one SecureChannel.")
 prop_var(65012, DCC, "MaxCreditPerChannel", UInt32,
-         "The largest flow control credit window, in bytes, the Server will grant to one channel.")
+         "The largest flow control credit window, in bytes, the Server will grant to one channel. "
+         "Mandatory because the connection-level credit bootstrap is bounded by this value "
+         "multiplied by MaxDataChannels; a Server that omitted it would leave the bound on its "
+         "own receive memory undefined.", rule=MR_Mandatory)
 prop_var(65012, DCC, "SupportsUnreliableDatagrams", Boolean,
          "True when the Server can carry Unreliable channels over a genuinely lossy path, which "
          "requires a transport that provides one. False on a Server reachable only over opc.tcp "
@@ -396,13 +399,16 @@ enum_type(65031, "DataChannelDeliveryMode",
            ("Unreliable", 3, "A frame is sent once and never retried. Frames still queued when their deadline passes are discarded.")])
 
 enum_type(65032, "DataChannelState",
-          "The lifecycle state of a data channel.",
-          [("Opening", 0, "OpenDataChannel has been accepted and the endpoint is being prepared; no payload flows yet."),
+          "The lifecycle state of a data channel. The normative state transition table - which "
+          "event causes which transition, which transitions are legal, and what may be sent in "
+          "each state - is clause 5.13 of the Part 6 Data Channel Transport errata. Paused is "
+          "maintained per direction.",
+          [("Opening", 0, "OpenDataChannel has been accepted and the endpoint is being prepared; no frame may be sent for this ChannelId until the response has been handed to the transport."),
            ("Open", 1, "Payload may flow in the negotiated directions."),
-           ("Paused", 2, "The channel is open but the peer's flow control credit is exhausted, so no payload may be sent."),
-           ("Closing", 3, "An orderly half-close is in progress; already queued frames are still being drained."),
-           ("Closed", 4, "The channel is closed and its ChannelId may be reused."),
-           ("Faulted", 5, "The channel was aborted by a RESET frame or by loss of the SecureChannel.")])
+           ("Paused", 2, "The channel is open but the peer's flow control credit is exhausted in this direction, so no payload may be sent. Over opc.quic this is QUIC stream or connection blocking instead."),
+           ("Closing", 3, "An orderly half-close is in progress; already queued frames are still being drained and no new payload may be enqueued."),
+           ("Closed", 4, "The channel is closed. Its ChannelId is not reassigned while the owning SecureChannel remains open."),
+           ("Faulted", 5, "The channel was aborted by a RESET frame, by a timeout, or by loss of the SecureChannel, Session or authorizing user identity.")])
 
 struct_type(65033, "DataChannelParametersDataType",
             "The negotiated properties of one data channel. The same structure carries the "

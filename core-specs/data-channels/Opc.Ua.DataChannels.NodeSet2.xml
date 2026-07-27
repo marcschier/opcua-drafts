@@ -103,7 +103,7 @@
   </UAVariable>
   <UAVariable NodeId="i=66004" BrowseName="MaxFrameSize" ParentNodeId="i=65010" DataType="UInt32" ValueRank="-1">
     <DisplayName>MaxFrameSize</DisplayName>
-    <Description>The largest data channel frame payload, in bytes, this endpoint will emit or accept. The value actually used is additionally bounded by the negotiated transport buffer size and returned as RevisedMaxFrameSize by OpenDataChannel.</Description>
+    <Description>The largest data channel frame payload, in bytes, this endpoint will emit or accept. The value actually used is additionally bounded by the negotiated transport buffer size and is returned as revisedParameters.MaxFrameSize by OpenDataChannel.</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=80</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
@@ -238,9 +238,9 @@
   </UAVariable>
   <UAVariable NodeId="i=66016" BrowseName="MaxCreditPerChannel" ParentNodeId="i=65012" DataType="UInt32" ValueRank="-1">
     <DisplayName>MaxCreditPerChannel</DisplayName>
-    <Description>The largest flow control credit window, in bytes, the Server will grant to one channel.</Description>
+    <Description>The largest flow control credit window, in bytes, the Server will grant to one channel. Mandatory because the connection-level credit bootstrap is bounded by this value multiplied by MaxDataChannels; a Server that omitted it would leave the bound on its own receive memory undefined.</Description>
     <References>
-      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
       <Reference ReferenceType="HasProperty" IsForward="false">i=65012</Reference>
     </References>
@@ -395,13 +395,13 @@
   </UAVariable>
   <UADataType NodeId="i=65032" BrowseName="DataChannelState">
     <DisplayName>DataChannelState</DisplayName>
-    <Description>The lifecycle state of a data channel.</Description>
+    <Description>The lifecycle state of a data channel. The normative state transition table - which event causes which transition, which transitions are legal, and what may be sent in each state - is clause 5.13 of the Part 6 Data Channel Transport errata. Paused is maintained per direction.</Description>
     <Category>Data Channels Data Types</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
       <Reference ReferenceType="HasProperty">i=65932</Reference>
     </References>
-    <Definition Name="DataChannelState"><Field Name="Opening" Value="0"><Description>OpenDataChannel has been accepted and the endpoint is being prepared; no payload flows yet.</Description></Field><Field Name="Open" Value="1"><Description>Payload may flow in the negotiated directions.</Description></Field><Field Name="Paused" Value="2"><Description>The channel is open but the peer's flow control credit is exhausted, so no payload may be sent.</Description></Field><Field Name="Closing" Value="3"><Description>An orderly half-close is in progress; already queued frames are still being drained.</Description></Field><Field Name="Closed" Value="4"><Description>The channel is closed and its ChannelId may be reused.</Description></Field><Field Name="Faulted" Value="5"><Description>The channel was aborted by a RESET frame or by loss of the SecureChannel.</Description></Field></Definition>
+    <Definition Name="DataChannelState"><Field Name="Opening" Value="0"><Description>OpenDataChannel has been accepted and the endpoint is being prepared; no frame may be sent for this ChannelId until the response has been handed to the transport.</Description></Field><Field Name="Open" Value="1"><Description>Payload may flow in the negotiated directions.</Description></Field><Field Name="Paused" Value="2"><Description>The channel is open but the peer's flow control credit is exhausted in this direction, so no payload may be sent. Over opc.quic this is QUIC stream or connection blocking instead.</Description></Field><Field Name="Closing" Value="3"><Description>An orderly half-close is in progress; already queued frames are still being drained and no new payload may be enqueued.</Description></Field><Field Name="Closed" Value="4"><Description>The channel is closed. Its ChannelId is not reassigned while the owning SecureChannel remains open.</Description></Field><Field Name="Faulted" Value="5"><Description>The channel was aborted by a RESET frame, by a timeout, or by loss of the SecureChannel, Session or authorizing user identity.</Description></Field></Definition>
   </UADataType>
   <UAVariable NodeId="i=65932" BrowseName="EnumStrings" ParentNodeId="i=65032" DataType="LocalizedText" ValueRank="1" ArrayDimensions="6">
     <DisplayName>EnumStrings</DisplayName>

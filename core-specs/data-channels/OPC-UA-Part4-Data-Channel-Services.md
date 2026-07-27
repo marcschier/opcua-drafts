@@ -70,7 +70,8 @@ This Service is not a Node operation and therefore takes no `NodesToRead`-style 
 | requestHeader | RequestHeader | Common request parameters (OPC 10000-4 §7.32). |
 | sourceNodeId | NodeId | The data channel source to open the channel on. It **shall** be a Node that implements `IDataChannelSourceType`, directly or through `HasDataChannel`. |
 | offerId | UInt32 | `0` for a Client-initiated open. Otherwise the `OfferId` of a `DataChannelOfferedEventType` Event being accepted, in which case `sourceNodeId` **shall** match the offer. |
-| requestedParameters | DataChannelParametersDataType | The parameters the Client asks for. Every member is a request, not a requirement; the Server returns what it will actually do. |
+| transportChannelId | UInt64 | Over `opc.quic`, for a Client-initiated direction (`SinkToSource` or `Bidirectional`), the id of the QUIC stream the Client has already opened and will not write to until the response arrives. `0` otherwise, and always `0` over inline framing. See the Part 6 errata §7.4. |
+| requestedParameters | DataChannelParametersDataType | The parameters the Client asks for. Every member is a request, not a requirement; the Server returns what it will actually do. `0` in a numeric member means "no preference" (§5.1.1). |
 
 **Response**
 
@@ -79,7 +80,26 @@ This Service is not a Node operation and therefore takes no `NodesToRead`-style 
 | responseHeader | ResponseHeader | Common response parameters (OPC 10000-4 §7.33). |
 | channelId | UInt32 | The identifier of the new channel within the owning SecureChannel. Never `0`, which the Part 6 errata reserves for connection control. |
 | revisedParameters | DataChannelParametersDataType | The parameters actually in force. |
-| transportChannelId | UInt64 | The underlying transport identifier: the QUIC stream id over `opc.quic`, `0` for inline framing. |
+| transportChannelId | UInt64 | The underlying transport identifier: the QUIC stream id over `opc.quic`, `0` for inline framing. For a Client-initiated direction this is the value supplied in the request, echoed unchanged. |
+
+<a id="defaults-and-ranges"></a>
+
+#### 5.1.1 Defaults, ranges and the "no preference" sentinel
+
+`DataChannelParametersDataType` has no optional fields, so a Client that has no opinion about a parameter must still send a value. `0` is that value: in every numeric member it means **no preference**, and the Server substitutes its default. Without this convention a `MaxFrameSize` of `0` would win the "revised down to the least of" rule below and open a channel on which no frame can ever be sent.
+
+| Parameter | Unit | Valid range | `0` means | Server default when `0` |
+|---|---|---|---|---|
+| `MaxFrameSize` | bytes | 1 .. 2^32−1 | no preference | the least of the source's `MaxFrameSize`, the Server's `MaxFrameSize` and the transport bound |
+| `InitialCredit` | payload bytes | 1 .. 2^32−1 | no preference | Server-chosen |
+| `Priority` | — | 0 .. 7 | lowest priority | `0`; a value above `7` **shall** be revised to `7` |
+| `MaxRetransmits` | attempts | 0 .. 65535 | no retransmission | `0` |
+| `FrameDeadline` | ms | ≥ 0 | no deadline | `0`; a sender **shall not** set `Droppable` when the revised value is `0` |
+| `MaxBitrate` | bit/s | — | unconstrained | the source's `MaxBitrate` |
+
+A Server **shall** revise `InitialCredit` to at least the revised `MaxFrameSize`. A window smaller than one frame is an immediate deadlock: the channel opens `Paused` and the first frame can never be sent.
+
+The Part 6 errata §5.4 states how a non-zero `FrameDeadline` becomes the on-wire `Deadline` field.
 
 **Parameter negotiation.** The Server revises rather than rejects wherever it can, because a Client that asked for more than it can have usually wants the largest amount available:
 
@@ -89,14 +109,16 @@ This Service is not a Node operation and therefore takes no `NodesToRead`-style 
 | `DeliveryMode` | **Not** revisable. Silently downgrading to a stronger guarantee would add unbounded latency to a media channel; silently downgrading to a weaker one would lose data. A mode absent from `SupportedDeliveryModes` is rejected with `Bad_DeliveryModeUnsupported`. |
 | `ContentType` | The Server **may** narrow it to a more specific type it will actually produce. A type it cannot produce is rejected with `Bad_ContentTypeUnsupported`. |
 | `ContentParameters` | The Server returns the effective set: entries it honoured, entries it changed, and entries it added. Entries it does not understand are **omitted** from the response rather than echoed, so a Client can see what took effect. |
-| `MaxFrameSize` | Revised down to the least of the requested value, the source's `MaxFrameSize`, the Server's `MaxFrameSize`, and the transport bound derived from the negotiated buffer size. Never revised up. |
-| `InitialCredit` | Revised down to the Server's `MaxCreditPerChannel`. May be revised up if the Client requested less than the Server's minimum useful window. |
-| `Priority` | Revised down where the Server reserves the higher bands. Never revised up. |
+| `MaxFrameSize` | Revised down to the least of the requested value, the source's `MaxFrameSize`, the Server's `MaxFrameSize`, and the transport bound derived from the negotiated buffer size. Never revised up. `0` means no preference (§5.1.1). |
+| `InitialCredit` | Revised down to the Server's `MaxCreditPerChannel`, and **shall** be revised up where necessary to at least the revised `MaxFrameSize`. |
+| `Priority` | Revised down where the Server reserves the higher bands; a value above `7` **shall** be revised to `7`. Never revised up. |
 | `MaxRetransmits`, `FrameDeadline` | Revised to the Server's supported range. Both are ignored where the transport is already reliable, and the Server **shall** return them as `0` in that case so the Client can see they had no effect. |
 
-**Preconditions.** The Session **shall** be activated. The SecureChannel **shall** be one over which the transport supports data channels; `Bad_DataChannelTransportUnsupported` is returned otherwise. Opening the channel **shall not** take the count over `MaxDataChannels` for the connection or `MaxChannels` for the source.
+**Preconditions.** The Session **shall** be activated. The SecureChannel **shall** be one over which the transport supports data channels; `Bad_DataChannelTransportUnsupported` is returned otherwise. Opening the channel **shall not** take the count over `MaxDataChannels` for the connection or `MaxChannels` for the source. Over `opc.quic`, a request for a Client-initiated direction **shall** carry `transportChannelId`.
 
-**Effect.** On success the channel enters `Opening` and then `Open`, a `DataChannelStateChangeEventType` Event is raised for each transition, and an `AuditOpenDataChannelEventType` Event is generated. On failure an `AuditOpenDataChannelEventType` Event is still generated, carrying the requested parameters and no `ChannelId`: a refused attempt to start a media stream is exactly as interesting to an auditor as a successful one.
+**Effect.** On success the channel enters `Opening` and then `Open` per the state machine in the Part 6 errata §5.13, and an `AuditOpenDataChannelEventType` Event is generated. On failure an `AuditOpenDataChannelEventType` Event is still generated, carrying the requested parameters and no `ChannelId`: a refused attempt to start a media stream is exactly as interesting to an auditor as a successful one.
+
+A Server **shall not** transmit any frame for the assigned ChannelId before the response carrying that ChannelId has been handed to the transport, and a Client **shall** buffer rather than reject a frame naming a ChannelId whose `OpenDataChannel` is still outstanding. Over `opc.quic` the response and the frames travel on different QUIC streams, which are not ordered relative to each other, so without this rule the first `DATA` frame can legitimately overtake the response and be rejected as an unknown ChannelId. The Part 6 errata §7.4 states the transport-level form of the same obligation.
 
 **Service result StatusCodes**
 
@@ -134,7 +156,15 @@ Changes the mutable parameters of an open channel without interrupting it. This 
 | responseHeader | ResponseHeader | Common response parameters. |
 | revisedParameters | DataChannelParametersDataType | The parameters now in force, revised by the same rules as `OpenDataChannel`. |
 
-A reduction of `MaxFrameSize` takes effect for frames not yet handed to the transport; frames already in flight are unaffected. A change to `InitialCredit` does **not** retroactively adjust the outstanding window — credit is granted by `CREDIT` frames, and `ModifyDataChannel` changes only the size of future grants.
+A reduction of `MaxFrameSize` cannot take effect instantaneously at both ends, because `ModifyDataChannel` is a Service: the revised parameters reach only the caller, there is no `MODIFY` frame type, and over `opc.quic` the response and the frames are not ordered relative to each other. A Client that applied a smaller limit the moment the response arrived would see legitimately in-flight larger frames and, under the Part 6 errata §5.12, kill the channel. Therefore:
+
+- A sender **shall** apply a reduced `MaxFrameSize` from the next logical message boundary, and **shall not** begin a logical message under the old limit after the `ModifyDataChannel` response has been sent.
+- A receiver **shall** continue to accept frames sized up to the previous `MaxFrameSize` until it has received one frame carrying `MessageStart` whose length does not exceed the revised value, and **shall** apply the revised limit from that frame onward.
+- A revised `Priority` applies from the next scheduling round.
+- A revised `FrameDeadline` applies only to frames enqueued after the response; the absolute `Deadline` of an already-queued frame is **not** recomputed.
+- A change to `InitialCredit` does **not** retroactively adjust the outstanding window — credit is granted by `CREDIT` frames, and `ModifyDataChannel` changes only the size of future grants.
+
+A Server has no means of initiating a modification, because the Service is Client-invoked. A Server that needs to change a channel's parameters **shall** `RESET` the channel and **may** raise a `DataChannelOfferedEventType` Event offering a replacement on the new terms.
 
 **Service result StatusCodes:** `Bad_DataChannelIdInvalid`, `Bad_DataChannelClosed`, `Bad_DataChannelLimitsExceeded`, `Bad_UserAccessDenied`, plus the common Session faults.
 
@@ -149,7 +179,7 @@ Closes a data channel in an orderly fashion.
 | requestHeader | RequestHeader | Common request parameters. |
 | channelId | UInt32 | The channel to close. |
 | reason | StatusCode | Why. `Good` for a normal close; any other value is recorded in the state-change Event and the audit trail. |
-| deleteQueued | Boolean | `True` discards frames still queued in either direction and closes immediately. `False` drains them first, subject to the Server's own timeout. |
+| deleteQueued | Boolean | `True` discards frames still queued in either direction and closes immediately. `False` drains them first, bounded by `DrainTimeout` (Part 6 errata §5.14). |
 
 **Response**
 
@@ -157,7 +187,14 @@ Closes a data channel in an orderly fashion.
 |---|---|---|
 | responseHeader | ResponseHeader | Common response parameters. |
 
-The channel enters `Closing` and then `Closed`, and a `DataChannelStateChangeEventType` Event is raised for each transition. The `ChannelId` **shall not** be reassigned until both ends have observed the close, so that a late frame from the previous occupant of the identifier cannot be delivered to its successor.
+`CloseDataChannel` and the frame-level `END` are not independent paths to the same state; the Service drives the frames:
+
+- With `deleteQueued` `False` the Server **shall** emit `END` in each direction it still owns, and the Client **shall** emit `END` in each direction it still owns on receiving the response. The channel enters `Closing`, then `Closed` when every direction has ended and the queues have drained, and `Faulted` if `DrainTimeout` expires first.
+- With `deleteQueued` `True` the Server **shall** emit `RESET` carrying `reason`, discard queued frames in both directions, and the channel enters `Closed` without passing through `Closing`.
+
+On a `SourceToSink` or `SinkToSource` channel the direction that carries no payload is considered ended at open, so a single `END` closes the channel; a `Bidirectional` channel requires one from each end. The state transitions are those of the Part 6 errata §5.13, and a `DataChannelStateChangeEventType` Event is raised for each.
+
+The `ChannelId` **shall not** be reassigned while the SecureChannel that owns it is open (Part 6 errata §5.11), so a late frame from the previous occupant of an identifier can never be delivered to a successor.
 
 Closing an already-closed channel returns `Bad_DataChannelClosed` rather than `Good`. A Client that lost track of a channel needs to know whether it is closing something or nothing.
 
@@ -238,6 +275,7 @@ A Server that supports auditing **shall** generate an `AuditOpenDataChannelEvent
 | `Bad_DataChannelCreditExceeded` | A flow control grant would overflow the credit window, or a sender transmitted beyond its window. |
 | `Bad_DataChannelOfferInvalid` | The offer is unknown, expired, already accepted, or does not match the source. |
 | `Uncertain_DataDiscarded` | Delivered payload is incomplete because frames were discarded or lost. Reported by a receiving application, and the value a gap-aware consumer surfaces upward. |
+| `Bad_Timeout` | Existing StatusCode, reused: returned when `OpenTimeout` expires before the channel reaches `Open` (Part 6 errata §5.14). |
 
 Numeric values are **provisional**; final assignments are made by the OPC Foundation alongside the existing StatusCode registry.
 
@@ -253,6 +291,31 @@ Numeric values are **provisional**; final assignments are made by the OPC Founda
 *Data Channel Model* is a prerequisite of *Data Channel Services* rather than an optional companion: the negotiation rules of §5 revise against limits a Client can only read from the model, and the `DataChannelCapabilities` Object is how a Client discovers that data channels exist at all.
 
 A Server claiming *Data Channel Services* **shall** also claim at least one Part 6 transport unit, and **shall** expose the `DataChannelCapabilities` Object defined by the Part 3 errata.
+
+### 10.1 Test assertions
+
+| Id | Assertion | Stimulus | Expected |
+|---|---|---|---|
+| DCS-001 | An unactivated Session cannot open a channel | `OpenDataChannel` before `ActivateSession` | `Bad_SessionNotActivated` |
+| DCS-002 | Authorization matches the source Node | Open as a user denied read on the source | `Bad_UserAccessDenied` |
+| DCS-003 | A non-source Node is refused | Open on a plain `BaseObjectType` instance | `Bad_DataChannelNotSupported` |
+| DCS-004 | `Direction` is not revised | Request an unsupported direction | `Bad_DataChannelDirectionUnsupported` |
+| DCS-005 | `DeliveryMode` is not revised | Request a mode absent from `SupportedDeliveryModes` | `Bad_DeliveryModeUnsupported` |
+| DCS-006 | `MaxFrameSize` is revised down, never up | Request more than the Server's limit | Revised value ≤ the Server's limit |
+| DCS-007 | `0` means no preference | Request `MaxFrameSize` `0` | A usable non-zero revised value (§5.1.1) |
+| DCS-008 | `InitialCredit` is at least `MaxFrameSize` | Request `InitialCredit` `1` | Revised `InitialCredit` ≥ revised `MaxFrameSize` |
+| DCS-009 | `Priority` above 7 is revised to 7 | Request `Priority` `200` | Revised `Priority` = `7` |
+| DCS-010 | `MaxDataChannels` is enforced | Open one channel beyond the limit | `Bad_TooManyDataChannels` |
+| DCS-011 | Channels survive channel-token renewal | Renew mid-stream | Frames continue uninterrupted (§7.1) |
+| DCS-012 | Channels are aborted on Session close | Close the Session | Every channel it authorized reaches `Faulted` |
+| DCS-013 | Channels are aborted on identity change | `ActivateSession` with a different user | Every channel it authorized reaches `Faulted` |
+| DCS-014 | Frames are not Session activity | Stream past the Session timeout with no Service call | Session times out (§8) |
+| DCS-015 | Closing a closed channel is an error | `CloseDataChannel` twice | Second returns `Bad_DataChannelClosed` |
+| DCS-016 | An audit event is raised on refusal | A rejected `OpenDataChannel` | `AuditOpenDataChannelEventType` with no `ChannelId` |
+| DCS-017 | An offer is single-use | Accept the same `OfferId` twice | Second returns `Bad_DataChannelOfferInvalid` |
+| DCS-018 | An offer expires | Accept after `ExpirationTime` | `Bad_DataChannelOfferInvalid` |
+| DCS-019 | `Direction` and `DeliveryMode` are immutable | `ModifyDataChannel` changing either | `Bad_DataChannelLimitsExceeded` |
+| DCS-020 | `Publish` is not delayed by data channel load | Saturate channels, keep a Subscription | No keep-alive missed (§8) |
 
 ## 11 Insertion into OPC 10000-4 v1.05.07
 

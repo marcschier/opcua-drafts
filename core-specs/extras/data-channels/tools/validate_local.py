@@ -236,10 +236,26 @@ if not sim["video_discarded"]:
     err("the scenario did not exercise deadline expiry")
 if not sim["gaps"]:
     err("frames were discarded without a GAP notification")
-gap = sim["gaps"][0]
-if (gap[2], gap[3]) != (min(sim["video_discarded"]), max(sim["video_discarded"])):
-    err(f"the GAP range {gap[2]}..{gap[3]} does not match the discarded frames "
-        f"{sim['video_discarded']}")
+
+# Part 6 §5.10: a GAP names one contiguous inclusive run, and shall not name a frame the
+# sender may still transmit. A non-contiguous discard set must therefore produce one GAP
+# per run -- widening to first..last would declare a surviving frame lost and then send it.
+expected_runs = scheduler_demo._runs(sim["video_discarded"])
+actual_runs = [(g[2], g[3]) for g in sim["gaps"]]
+if actual_runs != expected_runs:
+    err(f"GAP runs {actual_runs} do not match the contiguous runs of the discarded "
+        f"frames {sim['video_discarded']} (expected {expected_runs})")
+if len(expected_runs) < 2:
+    err("the scenario did not exercise a non-contiguous discard set, so the per-run "
+        "GAP rule of §5.10 is untested")
+named = {n for first, last in actual_runs for n in range(first, last + 1)}
+transmitted = {t[4] for t in sim["sends"] if t[1] == 1 and t[2] == "DATA"}
+if named & set(sim["video_discarded"]) != named:
+    err(f"a GAP named a FrameSequenceNumber that was not discarded: "
+        f"{named - set(sim['video_discarded'])}")
+if named & transmitted:
+    err(f"a GAP named a frame that was subsequently transmitted: {named & transmitted}")
+
 if sim["video_stalls"] == 0 or sim["bulk_stalls"] == 0:
     err("the scenario did not exercise credit-based backpressure on both channels")
 if sim["remaining"] != {1: 0, 2: 0}:
@@ -249,7 +265,7 @@ if sim["remaining"] != {1: 0, 2: 0}:
 # sent back to back, because an RPC chunk goes out between them.
 pending = len(sim["rpc_sent"])
 consecutive = 0
-for kind, channel, _label, _cost in sim["sends"]:
+for kind, channel, _label, _cost, _fsn in sim["sends"]:
     if channel is None:
         pending -= 1
         consecutive = 0

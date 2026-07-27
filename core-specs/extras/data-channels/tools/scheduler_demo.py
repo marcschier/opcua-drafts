@@ -35,6 +35,17 @@ from frame_codec import (  # noqa: E402
 MAX_PRIORITY = 7
 
 
+def _runs(numbers: list[int]) -> list[tuple[int, int]]:
+    """Split an ascending list of FrameSequenceNumbers into contiguous inclusive runs."""
+    out: list[tuple[int, int]] = []
+    for n in sorted(numbers):
+        if out and n == out[-1][1] + 1:
+            out[-1] = (out[-1][0], n)
+        else:
+            out.append((n, n))
+    return out
+
+
 @dataclass
 class Queued:
     frame: Frame
@@ -99,19 +110,25 @@ class Sender:
             return False
         ch.queue = kept
         ch.discarded.extend(dropped)
-        gap = Frame(channel_id=ch.channel_id, frame_type=FT_GAP,
-                    frame_sequence_number=ch.next_fsn,
-                    extras={"FirstDiscarded": dropped[0], "LastDiscarded": dropped[-1]})
-        ch.next_fsn += 1
-        self.trace.append(("gap", ch.channel_id, dropped[0], dropped[-1]))
-        self.trace.append(("send", ch.channel_id, gap.type_name, 0))
+        # Per-frame deadlines make a NON-CONTIGUOUS discard set the normal case: frames 1
+        # and 3 expire while frame 2, enqueued with a longer deadline, is still live. A GAP
+        # names one contiguous inclusive run, and shall not name a frame the sender may
+        # still transmit, so the discarded set is split into runs and one GAP is emitted
+        # per run. Widening to first..last would declare frame 2 lost and then deliver it.
+        for first, last in _runs(dropped):
+            gap = Frame(channel_id=ch.channel_id, frame_type=FT_GAP,
+                        frame_sequence_number=ch.next_fsn,
+                        extras={"FirstDiscarded": first, "LastDiscarded": last})
+            ch.next_fsn += 1
+            self.trace.append(("gap", ch.channel_id, first, last))
+            self.trace.append(("send", ch.channel_id, gap.type_name, 0, gap.frame_sequence_number))
         return True
 
     # -- obligations 1 and 2 ------------------------------------------------
     def _send_one_rpc(self) -> bool:
         if not self.rpc_queue:
             return False
-        self.trace.append(("send", None, "MSG", self.rpc_queue.pop(0)))
+        self.trace.append(("send", None, "MSG", self.rpc_queue.pop(0), None))
         return True
 
     def _ready(self, ch: Channel) -> Queued | None:
@@ -152,7 +169,8 @@ class Sender:
                 ch.deficit -= cost
                 ch.credit -= cost
                 self.connection_credit -= cost
-                self.trace.append(("send", ch.channel_id, q.frame.type_name, cost))
+                self.trace.append(("send", ch.channel_id, q.frame.type_name, cost,
+                                   q.frame.frame_sequence_number))
                 progressed = True
                 self._send_one_rpc()
             if not ch.queue:
@@ -181,10 +199,12 @@ def simulate() -> dict:
     bulk = s.add_channel(2, priority=1, credit=8192)
 
     for i in range(6):
-        # The first two frames fit the initial credit and go out immediately. The rest
-        # queue behind the stall carrying a deadline: for live media a late frame is
-        # worse than a missing one, so they are discarded rather than delivered.
-        video.enqueue(b"V" * 512, deadline=None if i < 2 else 3)
+        # The first two frames fit the initial credit and go out immediately. Of the rest,
+        # which queue behind the credit stall, frames 3, 4 and 6 carry a short deadline and
+        # frame 5 a long one -- so the discarded set is NON-CONTIGUOUS (3, 4 and 6) and must
+        # produce two GAP frames rather than one range that would falsely declare frame 5
+        # lost and then transmit it.
+        video.enqueue(b"V" * 512, deadline=None if i < 2 else (50 if i == 4 else 3))
     for _ in range(4):
         bulk.enqueue(b"B" * 1024)
     for i in range(3):
