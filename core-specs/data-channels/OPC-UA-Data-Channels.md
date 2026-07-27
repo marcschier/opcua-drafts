@@ -101,7 +101,7 @@ Both are realized by a deficit round robin whose per-round quantum is (`Priority
 
 ### 5.3 State, and what "unreliable" honestly means
 
-A channel moves through `Opening` → `Open` ⇄ `Paused` → `Closing` → `Closed`, with `Faulted` reachable from anywhere. The Part 6 errata §5.13 gives the full transition table — which event causes which transition, which are legal, and what may be sent in each state — and §5.14 names the four timeouts (`OpenTimeout`, `DrainTimeout`, `PingTimeout`, `IdleTimeout`) that bound the states which would otherwise be open-ended. `Paused` is per direction, and the `Open` ⇄ `Paused` transition is exempt from the state-change Event so that a saturated channel does not generate an Event per credit stall.
+A channel moves through `Opening` → `Open` ⇄ `Paused` → `Closing` → `Closed`, with `Faulted` reachable from anywhere. The Part 6 errata §5.13 gives the full transition table — which event causes which transition, which are legal, and what may be sent in each state — and §5.14 names the four timeouts (`OpenTimeout`, `DrainTimeout`, `PingTimeout`, `IdleTimeout`) that bound the states which would otherwise be open-ended. **`Paused` and `Closing` are both per direction**: a channel is `Paused` only in the direction whose window is exhausted, and receiving `END` ends the peer's direction without touching this peer's own — which is what makes `END` a half-close rather than a close, and what stops a half-close from destroying a long transfer the other end is still legitimately making. The `Open` ⇄ `Paused` transition is rate-limited to one Event per channel per second so that a saturated channel does not generate an Event per credit stall.
 
 | Mode | Inline framing over TCP | `opc.quic` |
 |---|---|---|
@@ -219,7 +219,7 @@ Three Profiles are proposed for OPC 10000-7:
 
 The minimum useful implementation is the Data Channel Server Facet: inline framing over `opc.tcp`, the three Services, and the model. Everything else is additive.
 
-Each unit is decomposed into individually checkable **test assertions** — 28 for framing, 4 for partial reliability, 6 for QUIC in the Part 6 errata §8.1, and 20 for the Services in the Part 4 errata §10.1. They are the certification surface: a laboratory derives one test case per assertion, and the assertions that fail only under load (Service precedence, anti-starvation, and the drain timeout) are the ones that distinguish a conforming implementation from one that merely interoperates on a bench.
+Each unit is decomposed into individually checkable **test assertions** — 29 for framing, 4 for partial reliability, 6 for QUIC in the Part 6 errata §8.1, and 20 for the Services in the Part 4 errata §10.1. They are the certification surface: a laboratory derives one test case per assertion, and the assertions that fail only under load (Service precedence, anti-starvation, and the drain timeout) are the ones that distinguish a conforming implementation from one that merely interoperates on a bench.
 
 <!-- BEGIN GENERATED: model-reference -->
 
@@ -400,7 +400,7 @@ The lifecycle state of a data channel. The normative state transition table - wh
 | Opening | 0 | OpenDataChannel has been accepted and the endpoint is being prepared; no frame may be sent for this ChannelId until the response has been handed to the transport. |
 | Open | 1 | Payload may flow in the negotiated directions. |
 | Paused | 2 | The channel is open but the peer's flow control credit is exhausted in this direction, so no payload may be sent. Over opc.quic this is QUIC stream or connection blocking instead. |
-| Closing | 3 | An orderly half-close is in progress. No new payload may be enqueued; frames already queued when the channel entered Closing may still be sent, and END follows the last of them. |
+| Closing | 3 | This peer has decided to close a direction and is draining it. Closing is per direction, like Paused: receiving END marks only the peer's direction ended. No new payload may be enqueued in a Closing direction; frames already queued may still be sent, and END follows the last of them. |
 | Closed | 4 | The channel is closed, either by END in every direction it carries or by a RESET carrying Good. Its ChannelId is not reassigned while the owning SecureChannel remains open. |
 | Faulted | 5 | The channel was aborted by a RESET frame carrying a Bad StatusCode, by a timeout, or by loss of the SecureChannel, Session or authorizing user identity. |
 
