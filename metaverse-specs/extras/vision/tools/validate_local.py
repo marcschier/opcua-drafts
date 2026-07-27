@@ -20,6 +20,10 @@ Checks, against Opc.Ua.Vision.NodeSet2.xml:
   * Every Definition Field DataType resolves.
   * Every Method's InputArguments/OutputArguments ArrayDimensions matches the number of
     encoded Argument entries.
+  * Opc.Ua.Vision.NodeIds.csv and the NodeSet agree exactly - same id set in both
+    directions, same NodeClass, and the CSV name resolves to the NodeSet BrowseName
+    (the CSV qualifies members as Owner_Member), so the two published artifacts and
+    their NodeId assignments cannot drift apart.
 
 Specification invariants (the reason this file is not generic):
   * VisionStreamProtocolEnum.Rtsp MUST be value 0 - RTSP is the mandatory default
@@ -32,6 +36,7 @@ Specification invariants (the reason this file is not generic):
 Exit code 0 and "OK" on success; non-zero with an ERRORS list otherwise.
 """
 from __future__ import annotations
+import csv
 import os
 import sys
 import xml.etree.ElementTree as ET
@@ -78,6 +83,18 @@ ERR = []
 
 def err(m):
     ERR.append(m)
+
+
+def _name_matches(csv_name: str, browse_name: str) -> bool:
+    """True if a CSV symbolic name resolves to a NodeSet BrowseName.
+
+    The CSV follows the OPC Foundation NodeIds.csv convention: members are qualified as
+    Owner_Member, and the symbolic form drops the characters that are legal in a
+    BrowseName but not in an identifier - the space in "Default Binary" and the angle
+    brackets on a placeholder such as <StreamEndpoint>.
+    """
+    bn = browse_name.replace(" ", "").replace("<", "").replace(">", "")
+    return csv_name == bn or csv_name.endswith("_" + bn)
 
 
 def main():
@@ -282,6 +299,50 @@ def main():
         if required not in clip_members:
             err(f"ClipEndpointType is missing '{required}', required by the size-gated "
                 "inline delivery facet")
+
+    # ---- NodeId CSV <-> NodeSet cross-check --------------------------------
+    # Convention shared with the other extension validators (observability-export,
+    # schema-registry, xregistry, WoT-Connectivity): the published CSV and the NodeSet
+    # are two views of one model, so every id must appear in both with the same
+    # NodeClass and BrowseName. This is what catches a hand-edited artifact, or one of
+    # the pair being regenerated without the other.
+    csv_path = os.path.normpath(os.path.join(here, "..", "..", "..", "vision",
+                                             "Opc.Ua.Vision.NodeIds.csv"))
+    if not os.path.exists(csv_path):
+        err("Opc.Ua.Vision.NodeIds.csv not found next to the NodeSet")
+    else:
+        csv_ids = {}
+        with open(csv_path, encoding="utf-8") as f:
+            for r in csv.reader(f):
+                if not r:
+                    continue
+                if len(r) != 3:
+                    err(f"csv bad row {r}")
+                    continue
+                if not r[1].isdigit():
+                    err(f"csv nonnumeric id {r}")
+                    continue
+                num = int(r[1])
+                if num in csv_ids:
+                    err(f"csv duplicate id {num}")
+                csv_ids[num] = (r[2], r[0])
+        xml_ids = {}
+        for n in nodes:
+            nid = n.get("NodeId", "")
+            if not nid.startswith("ns=1;i="):
+                continue
+            xml_ids[int(nid.split("i=")[1])] = (n.tag[len(NS) + 2:], simple_name(n))
+        for num, (cls, bn) in sorted(xml_ids.items()):
+            if num not in csv_ids:
+                err(f"i={num} {bn} is in the NodeSet but missing from the CSV")
+            elif csv_ids[num][0] != cls:
+                err(f"i={num} {bn}: CSV NodeClass {csv_ids[num][0]} != NodeSet {cls}")
+            elif not _name_matches(csv_ids[num][1], bn):
+                err(f"i={num}: CSV name {csv_ids[num][1]} does not resolve to NodeSet "
+                    f"BrowseName {bn}")
+        for num in sorted(csv_ids):
+            if num not in xml_ids:
+                err(f"csv id {num} ({csv_ids[num][1]}) is not defined in the NodeSet")
 
     print(f"nodes: {len(nodes)}")
 
