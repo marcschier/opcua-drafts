@@ -401,7 +401,7 @@ Every physical quantity in this model is fixed here. A Server **shall** use thes
 | `ClipEndpointType.Quality` | 0 to 100, format-defined |
 | `MaxInlineClipSize`, `MaxInlineFeedbackImageSize`, `SizeBytes` | bytes |
 | `PixelFormat` | a GenICam **PFNC** name, e.g. `Mono8`, `BayerRG12`, `RGB8` |
-| `DigestAlgorithm` | an IANA hash-function name; the default is `SHA-256` |
+| `DigestAlgorithm` | an IANA hash-function name with **at least 256-bit output and no known collision weakness**; the default is `SHA-256`. `MD5`, `SHA-1` and truncated variants **shall not** be used — see §12.6 |
 
 **Measurement uncertainty.** `VisionCharacteristicDataType.Uncertainty` is the **expanded** uncertainty at **coverage factor k = 2** (approximately 95 %), per ISO 14253-1, expressed in the same unit as `Actual`. A value of `0` means uncertainty is not reported, and a Server that does not evaluate uncertainty **shall** report `0` rather than a guess. Without a fixed coverage factor the §7.2 `NotDecidable` rule would not be reproducible between Servers, so a Server **shall not** report uncertainty at another coverage factor.
 
@@ -523,9 +523,11 @@ Argument order is as declared in Annex A. An argument that is "not specified" is
 | StatusCode | Condition |
 |---|---|
 | `Bad_InvalidArgument` | both selectors unspecified, or both specified |
-| `Bad_NotFound` | `ResultId` unknown, or no frame near `Timestamp` within retention |
+| `Bad_NotFound` | `ResultId` does not designate a result produced from **this sensor**, or no frame near `Timestamp` within retention |
 | `Bad_NotSupported` | `Format` cannot be produced by any clip endpoint of this sensor |
 | `Bad_UserAccessDenied` | the caller is not authorized for media access (§12.1) |
+
+`ResultId` is unique Server-wide, but this Method is scoped to one sensor. A Server **shall** return `Bad_NotFound` when `ResultId` designates a result produced from a different sensor, and **shall not** disclose whether the identifier exists elsewhere in the Server — otherwise the per-sensor authorization of §12.1 could be bypassed simply by presenting another sensor's identifier here. Where results are subject to per-sensor authorization, `ResultId` **shall not** be derived from a predictable sequence.
 
 ### 6.6 Endpoint state model (normative)
 
@@ -674,7 +676,7 @@ graph LR
 
 A Server **may** implement only the capture stages and leave training to an external MLOps system; the state machine is the same either way, and `TriggerTraining` simply reports whether the request was queued.
 
-`PromoteModel` changes what the system decides. A Server **should** require a distinct authorization for it, separate from the authorization that permits ordinary feedback.
+`PromoteModel` changes what the system decides. A Server **shall** require an authorization for it that is distinct from, and not implied by, the authorization for any `VisionFeedbackType` Method or for `StartCollection`, `StopCollection` and `TriggerTraining` (§12.5). Clause 11 makes this a condition of *VIS-Learning*.
 
 ### 9.4 Feedback and learning Method definitions (normative)
 
@@ -688,14 +690,18 @@ Every Method in this clause is a **write** and **shall** be authorized independe
 
 | StatusCode | Condition | Applies to |
 |---|---|---|
-| `Bad_NotFound` | `ResultId` is non-empty and unknown | all four |
+| `Bad_NotFound` | `ResultId` is non-empty and does not designate a result of **this pipeline** | all four |
 | `Bad_InvalidArgument` | `Detections` empty; or `SubmitCorrection` supplies both or neither corrected array | `SubmitDetections`, `SubmitCorrection` |
 | `Bad_TypeMismatch` | the corrected array kind does not match the referenced result | `SubmitCorrection` |
 | `Bad_EncodingLimitsExceeded` | `InlineImage` exceeds `MaxInlineFeedbackImageSize` | `SubmitDetections`, `SubmitCorrection` |
 | `Bad_NotSupported` | `Purpose` is `Overlay` but `OverlayEnabled` is false | `SubmitDetections`, `SubmitImageReference` |
 | `Bad_UserAccessDenied` | the caller is not authorized to write feedback | all four |
 
-A Server that accepts a correction with `Purpose = GroundTruthLabel` **shall** either retain it for the associated `LearningJobType` or return `Bad_NotSupported`; it **shall not** return `Good` and discard it, because a client has no other way to learn that its label was dropped.
+As in §6.5, the selector is scoped to the object carrying the Method: a Server **shall** return `Bad_NotFound` when `ResultId` designates a result of a different `InferencePipelineType`, and **shall not** disclose that it exists elsewhere. Without this, a client authorized on one pipeline's feedback surface could attach corrections and ground-truth labels to another pipeline's results.
+
+Any `Uri` inside a submitted `VisionImageReferenceDataType` is a client-supplied location the Server will dereference; §12.3 states the validation a Server **shall** apply before doing so.
+
+A Server that accepts a correction with `Purpose = GroundTruthLabel` **shall** either retain it for the associated `LearningJobType` or return `Bad_NotSupported`; it **shall not** return `Good` and discard it, because a client has no other way to learn that its label was dropped. Retention is not acceptance as truth — §12.7 states what a Server **shall** record alongside the sample and what **shall** gate its admission to a training run.
 
 **`StartCollection()`**, **`StopCollection()`**, **`TriggerTraining() → (Accepted)`**, **`PromoteModel(Deployment) → (PromotedModel)`**
 
@@ -757,18 +763,18 @@ Where a facet's row names members, a Server claiming it **shall** instantiate ev
 | **VIS-Base** *(mandatory)* | The well-known `Vision` object per §4.2, `Sensors`, and at least one sensor with `SensorId`, `RealityKind`, `Modality` and `Media`. Requires *VIS-Media-Rtsp* and *VIS-Media-Jpeg*. |
 | **VIS-Sensor-Params** | `ImageSensorType` with `Width`, `Height`, `PixelFormat` |
 | **VIS-Optics** | `OpticsType` and/or `IlluminationType` |
-| **VIS-Media-Rtsp** | At least one `StreamEndpointType` with `StreamProtocol = Rtsp` and `ProtocolVersion`; `GetStreamEndpoint`, `ReleaseStreamEndpoint` (§6.5) |
-| **VIS-Media-Jpeg** | At least one `ClipEndpointType` with `ClipFormat = Jpeg`; `GetClip` (§6.5) |
+| **VIS-Media-Rtsp** | At least one `StreamEndpointType` with `StreamProtocol = Rtsp`, `ProtocolVersion` and `SecureTransport`; `GetStreamEndpoint`, `ReleaseStreamEndpoint` (§6.5), and the §12.2 credential conditions |
+| **VIS-Media-Jpeg** | At least one `ClipEndpointType` with `ClipFormat = Jpeg` and `SecureTransport`; `GetClip` (§6.5) |
 | **VIS-Media-Inline** | On the same `ClipEndpointType` instance: all four of `LatestClip`, `LatestClipMetadata`, `MaxInlineClipSize`, `InlineDeliveryEnabled`, and all five §6.4 rules. A Server **shall not** instantiate a proper subset of the four. |
 | **VIS-Endpoint-Config** | `ConfigureStreamEndpoint`, `SelectEndpoint` (§6.5) |
 | **VIS-Calibration** | `CoordinateFrameType` plus `IntrinsicCalibrationType` and/or `ExtrinsicCalibrationType`, with the §5.11 reference constraints and the §5.12 frame-precedence rule |
 | **VIS-Result-Inspection** | `InspectionResultType` with `Evaluation` and `Characteristics`, and the §7.2 uncertainty rule including its uniform-reporting requirement |
 | **VIS-Result-Detection** | `DetectionResultType` with `Detections`, the §5.12 pose conventions, and the §7.3 `FrameId` rule |
-| **VIS-Feedback** | `VisionFeedbackType` with at least `SubmitImageReference`, and the §9.2 and §9.4 rules |
-| **VIS-Inference-OnServer** | `InferencePipelineType` with a deployment whose `InferenceLocation` is `OnServer`, and the §5.11 `UsesModel` constraint. Where `RunInference` is implemented, `Results` (§8.4) |
-| **VIS-Inference-OffServer** | As above with any other `InferenceLocation`, plus `EndpointUri` |
+| **VIS-Feedback** | `VisionFeedbackType` with at least `SubmitImageReference`, the §9.2 and §9.4 rules, the §12.3 inbound-URI validation, and the §12.7 feedback-integrity rules |
+| **VIS-Inference-OnServer** | `InferencePipelineType` with a deployment whose `InferenceLocation` is `OnServer`, and the §5.11 `UsesModel` constraint. Where `RunInference` is implemented, `Results` (§8.4). `AiModelType.Digest` and `DigestAlgorithm` per §12.6 |
+| **VIS-Inference-OffServer** | As above with any other `InferenceLocation`, plus `EndpointUri` naming an authenticated, confidential scheme (§12.6) |
 | **VIS-Simulation** | `IVisionSimulatedType` on every sensor whose `RealityKind` is `Simulated` or `Hybrid` (§4.3, §10). **Required** of any Server that reports either value. |
-| **VIS-Learning** | `LearningJobType`, `SubmitCorrection`, the §9.5 state model, and every Method that drives a transition in it: `StartCollection`, `StopCollection`, `TriggerTraining`, `PromoteModel` |
+| **VIS-Learning** | `LearningJobType`, `SubmitCorrection`, the §9.5 state model, every Method that drives a transition in it — `StartCollection`, `StopCollection`, `TriggerTraining`, `PromoteModel` — and the **distinct `PromoteModel` authorization** of §12.5 |
 | **VIS-Interop-Scene** | The numbered requirements of Annex C, which are normative for a Server claiming this facet |
 | **VIS-Interop-40100** | The numbered requirements of Annex D, which are normative for a Server claiming this facet |
 
@@ -784,13 +790,36 @@ A media endpoint has its own authentication, stated by `MediaEndpointType.Authen
 
 `Authentication = None` is appropriate only on an isolated network and **should not** be used otherwise.
 
-### 12.2 Leases expire
+### 12.2 Leases expire, and credentials need a protected channel
 
 A `Uri` returned by `GetStreamEndpoint` or `GetClip` **may** embed a credential. It is therefore returned by a Method — auditable and addressed to one caller — and never published as a browsable Variable. A Server **shall** enforce `ExpiresAt` and **shall** bound the number of concurrent leases per session.
 
-### 12.3 URIs are untrusted input
+Delivering a credential to one caller is not sufficient if the channel carrying it is readable. A Server **shall not** return a `Session.Uri` or `Image.Uri` that embeds a credential unless **both** of the following hold, and **shall** return `Bad_SecurityModeInsufficient` otherwise:
 
-`EndpointUri`, `ArtifactUri`, `ProvenanceUri`, `ExplanationUri` and `VisionImageReferenceDataType.Uri` are server-provided and could direct a client at an arbitrary location — an SSRF-class risk. A client **shall** apply a scheme and host allowlist and **shall** impose resource limits when resolving them. Where a `Digest` is present, a client **shall** verify the fetched bytes against it and **shall** refuse a mismatch. This mirrors the resolver-safety treatment in *OPC UA — OpenUSD Bindings* §9.
+1. the OPC UA SecureChannel carrying the Method response has `MessageSecurityMode` of `SignAndEncrypt`; and
+2. the selected endpoint's `MediaEndpointType.SecureTransport` is `true`.
+
+`SecureTransport` is Mandatory on every `MediaEndpointType` for this reason: it is the member on which rule 2 is evaluated, and a client **shall** treat `false` as meaning the media transport itself offers no confidentiality, whatever the endpoint's `Authentication` states. A Server that publishes only `Rtsp` endpoints therefore cannot issue embedded credentials, since RTSP/1.0 has no transport security; such a Server **shall** rely on the endpoint's own out-of-band authentication instead, and **should** additionally offer an `Rtsps` or `Srt` endpoint so that credentialed access is available at all.
+
+A credential-bearing URI **shall not** be written to any log, trace or audit record. The §12.5 audit record **shall** reference the `EndpointId` and the lease identifier instead. This is a distinct requirement because URLs carrying credentials are routinely captured by media-server access logs, proxies and process listings, where they outlive the lease.
+
+### 12.3 URIs are untrusted input — in both directions
+
+Two directions have to be considered separately, and only the first was historically obvious.
+
+**Server-published URIs, consumed by a client.** `EndpointUri`, `ArtifactUri`, `ProvenanceUri` and `ExplanationUri` are published by the Server and could direct a client at an arbitrary location — an SSRF-class risk for the client. A client **shall** apply a scheme and host allowlist and **shall** impose resource limits when resolving them. Where a `Digest` is present, a client **shall** verify the fetched bytes against it per §12.6 and **shall** refuse a mismatch. This mirrors the resolver-safety treatment in *OPC UA — OpenUSD Bindings* §9.
+
+**Client-supplied URIs, consumed by the Server.** `VisionImageReferenceDataType.Uri` is *also* a client input: it arrives through `SubmitImageReference` — the default feedback-image path of §9.2, required by *VIS-Feedback* — and through the `FrameReference` argument of `SubmitDetections`. Because §9.3 requires submitted imagery to become retained training data, the Server or its backend dereferences a location chosen by the caller. That makes the Server the SSRF target.
+
+A Server **shall** treat every `Uri` received from a client as untrusted, and **shall**:
+
+1. restrict accepted schemes to an explicit allowlist — `https`, and the Server's own clip endpoints — and reject all others, including `file`, `ftp`, `gopher` and `data`;
+2. reject destinations that resolve to loopback, link-local (`169.254.0.0/16`, `fe80::/10`), unique-local (`fc00::/7`) or otherwise non-routable addresses, unless an operator has explicitly configured that destination;
+3. re-validate the destination **after** DNS resolution and **after every redirect**, so that a name resolving to an internal address, or a redirect to one, is rejected rather than followed;
+4. bound the response size, the connection and total time, and the number of redirects; and
+5. where the submitted `Digest` is present, verify it per §12.6 **before** the bytes are admitted to any dataset.
+
+A Server **shall not** disclose connection failure detail that would let a caller distinguish a filtered destination from an unreachable one, since that turns the feedback surface into an internal port scanner.
 
 ### 12.4 Inline payloads are a denial-of-service surface
 
@@ -798,13 +827,33 @@ Inline delivery amplifies payload size by orders of magnitude relative to ordina
 
 ### 12.5 Feedback and promotion are writes
 
-Every `VisionFeedbackType` Method mutates state: overlays change what operators see, reconciliation changes the record, and corrections change what the next model learns. A Server **shall** require explicit authorization for each, and **should** require a distinct and more restrictive authorization for `LearningJobType.PromoteModel`, which changes what the system decides.
+Every `VisionFeedbackType` Method mutates state: overlays change what operators see, reconciliation changes the record, and corrections change what the next model learns. A Server **shall** require explicit authorization for each.
 
-A Server **should** retain an audit record of every correction and promotion, including the caller identity. Where the deployment falls under a high-risk regulatory regime, this record and the §7.1 trust members are what make the decision chain reconstructible.
+`LearningJobType.PromoteModel` changes what the system *decides*, on every deployment fed by the job (§9.4). A Server **shall** require an authorization for `PromoteModel` that is **distinct from, and not implied by**, the authorization required for any `VisionFeedbackType` Method or for `StartCollection`, `StopCollection` or `TriggerTraining`. A principal able to submit corrections **shall not** thereby be able to promote a model. This is the requirement §8.1.1 consequence 3 refers to, and clause 11 makes it a condition of *VIS-Learning* so that it is testable.
+
+A Server **shall** retain an audit record of every correction and promotion, including the authenticated caller identity and the timestamp, and **shall not** include a credential-bearing URI in it (§12.2). Where the deployment falls under a high-risk regulatory regime, this record and the §7.1 trust members are what make the decision chain reconstructible.
 
 ### 12.6 Off-server inference crosses a trust boundary
 
-When `InferenceLocation` is not `OnServer`, results were computed by a system the OPC UA client cannot inspect. A Server **shall** establish an authenticated, integrity-protected channel to that service, and **should** publish `AiModelType.Digest` so a consumer can confirm which artefact produced the result.
+When `InferenceLocation` is not `OnServer`, results were computed by a system the OPC UA client cannot inspect. A Server **shall** establish an authenticated, integrity-protected channel to that service. `AiDeploymentType.EndpointUri` **shall** name a scheme that provides authentication and confidentiality — for example `https` or `grpcs`, not their plaintext counterparts — and a Server **shall not** publish a plaintext scheme for a deployment it claims conformance for.
+
+**Artefact integrity.** A Server **shall** publish `AiModelType.Digest` together with `AiModelType.DigestAlgorithm` for every model whose artefact is obtainable through `ArtifactUri`; both are Mandatory for this reason, and clause 11 makes the pair a condition of the inference facets. `DigestAlgorithm` **shall** name a hash function with at least 256-bit output and no known collision weakness — SHA-256 is the default and is always acceptable. A Server **shall not** publish `MD5`, `SHA-1`, or a truncated variant of any function; chosen-prefix collisions against those are practical, so a digest computed with them would let a substituted artefact pass verification. A client **shall** refuse a digest whose algorithm it does not recognise, or that does not meet this bar, rather than skipping verification and reporting success. Where `Digest` is non-empty, `DigestAlgorithm` **shall** be non-empty.
+
+Digest verification is the only integrity control this specification defines for bytes fetched out of band, and it is the terminus of the provenance chain that §5.11 requires `UsesModel` to keep intact.
+
+### 12.7 Feedback is untrusted training data
+
+§12.5 governs *permission to call* a feedback Method. This clause governs what may then be *believed*, which is a separate question: §9.3 routes a submitted `GroundTruthLabel` into `AiDatasetType`, then into a training run, a `CandidateModel` and — after promotion — into every verdict the line produces. A single misused credential on the feedback surface is therefore a path to influencing safety-relevant decisions, and authorization alone does not bound it.
+
+A Server **shall**:
+
+1. record the authenticated caller identity with every retained sample whose `Purpose` is `GroundTruthLabel`, and make it available to the `LearningJobType` that consumes the dataset — an unattributable label set cannot be reviewed or retracted;
+2. distinguish, within `AiDatasetType`, samples originating from client feedback from samples originating from capture, so that a reviewer can weigh them differently; and
+3. require a distinct authorization or an explicit approval step before client-submitted labels are admitted to a training run, mirroring the `PromoteModel` gate of §12.5.
+
+A Server **should** bound the proportion of any dataset contributed by a single principal, and **should** support retracting all samples attributed to one identity.
+
+**Overlays are also untrusted.** Geometry submitted through `SubmitDetections` with `Purpose = Overlay` is drawn on the stream a human operator watches (§9.1), and `ClassLabel` is free-form text. A Server **shall** render client-submitted overlay geometry so that it is visually distinguishable from Server-generated annotation, and **shall** bound `OverlayTtl` to a Server-configured maximum, so that an authorized-but-untrusted client cannot present a persistent misleading view to a human decision-maker.
 
 ---
 
@@ -1170,7 +1219,7 @@ The twin additionally implements `IVisionSimulatedType`:
 | `TaskKind` | `PoseEstimation` |
 | `InferenceLocation` | **`EdgeOffServer`** |
 | `AcceleratorKind` | `Gpu` |
-| `EndpointUri` | `grpc://192.0.2.60:8001/graspposenet` |
+| `EndpointUri` | `grpcs://192.0.2.60:8001/graspposenet` |
 
 Inference runs **off-server** on a cell-side GPU appliance. The Server publishes results it did not compute. Nothing else in the model changes: a client reads `DetectionResultType` exactly as it would if `InferenceLocation` were `OnServer`, and consults that property only if it cares about the latency or trust boundary. Because the deployment is remote, base specification §12.6 applies: the channel to the inference service is authenticated and integrity-protected, and `AiModelType.Digest` lets a consumer confirm which artefact produced a result.
 

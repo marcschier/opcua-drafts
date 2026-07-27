@@ -209,7 +209,9 @@
       "framework": "PyTorch",
       "format": "TensorRT",
       "taskKind": "PoseEstimation",
-      "artifactUri": "https://models.example.com/graspposenet/3.2.0.plan"
+      "artifactUri": "https://models.example.com/graspposenet/3.2.0.plan",
+      "digest": "a1b2c3d4e5f60718293a4b5c6d7e8f90123456789abcdef0fedcba9876543210",
+      "digestAlgorithm": "SHA-256"
     },
     "deployment": {
       "name": "EdgeGpuDeployment",
@@ -218,7 +220,7 @@
       "inferenceLocation": "EdgeOffServer",
       "acceleratorKind": "Gpu",
       "acceleratorName": "Example RTX A2000",
-      "endpointUri": "grpc://192.0.2.60:8001/graspposenet"
+      "endpointUri": "grpcs://192.0.2.60:8001/graspposenet"
     },
     "pipeline": {
       "name": "BinPickingPipeline",

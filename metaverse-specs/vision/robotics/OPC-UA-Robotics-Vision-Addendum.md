@@ -137,7 +137,7 @@ The twin additionally implements `IVisionSimulatedType`:
 | `TaskKind` | `PoseEstimation` |
 | `InferenceLocation` | **`EdgeOffServer`** |
 | `AcceleratorKind` | `Gpu` |
-| `EndpointUri` | `grpc://192.0.2.60:8001/graspposenet` |
+| `EndpointUri` | `grpcs://192.0.2.60:8001/graspposenet` |
 
 Inference runs **off-server** on a cell-side GPU appliance. The Server publishes results it did not compute. Nothing else in the model changes: a client reads `DetectionResultType` exactly as it would if `InferenceLocation` were `OnServer`, and consults that property only if it cares about the latency or trust boundary. Because the deployment is remote, base specification §12.6 applies: the channel to the inference service is authenticated and integrity-protected, and `AiModelType.Digest` lets a consumer confirm which artefact produced a result.
 

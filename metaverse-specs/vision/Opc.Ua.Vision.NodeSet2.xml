@@ -767,9 +767,9 @@
   </UAVariable>
   <UAVariable NodeId="ns=1;i=6018" BrowseName="1:SecureTransport" ParentNodeId="ns=1;i=1007" DataType="Boolean" ValueRank="-1">
     <DisplayName>SecureTransport</DisplayName>
-    <Description>True when the media transport is encrypted, for example RTSPS or HTTPS.</Description>
+    <Description>True when the media transport itself provides confidentiality, for example RTSPS, SRT with encryption, or HTTPS. Mandatory because clause 12.2 evaluates credential issuance on it: a Server SHALL NOT return a URI embedding a credential unless this is true and the OPC UA SecureChannel is SignAndEncrypt. A client SHALL treat false as meaning the media transport offers no confidentiality, whatever Authentication states.</Description>
     <References>
-      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1007</Reference>
     </References>
@@ -1813,18 +1813,18 @@
   </UAVariable>
   <UAVariable NodeId="ns=1;i=6113" BrowseName="1:Digest" ParentNodeId="ns=1;i=1015" DataType="ByteString" ValueRank="-1">
     <DisplayName>Digest</DisplayName>
-    <Description>Cryptographic digest of the model artefact, for provenance and integrity.</Description>
+    <Description>Cryptographic digest of the model artefact, for provenance and integrity. Mandatory: clause 12.6 requires it for every model whose artefact is obtainable through ArtifactUri, and it is the terminus of the provenance chain that UsesModel keeps intact.</Description>
     <References>
-      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1015</Reference>
     </References>
   </UAVariable>
   <UAVariable NodeId="ns=1;i=6114" BrowseName="1:DigestAlgorithm" ParentNodeId="ns=1;i=1015" DataType="String" ValueRank="-1">
     <DisplayName>DigestAlgorithm</DisplayName>
-    <Description>Digest algorithm; default SHA-256.</Description>
+    <Description>Hash function used for Digest. SHALL name a function with at least 256-bit output and no known collision weakness; SHA-256 is the default and is always acceptable. SHALL NOT be MD5, SHA-1 or a truncated variant - chosen-prefix collisions against those are practical, so a substituted artefact would pass verification. SHALL be non-empty where Digest is non-empty. See clause 12.6.</Description>
     <References>
-      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1015</Reference>
     </References>

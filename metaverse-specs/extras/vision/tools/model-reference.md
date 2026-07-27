@@ -120,7 +120,7 @@ Abstract base for a media access point. The endpoint DESCRIBES where media can b
 | EndpointUri | Variable | String | Scalar | Mandatory | Base URI at which the media is served. May be a template that GetStreamEndpoint or GetClip resolves into a session-specific URI. |
 | State | Variable | VisionEndpointStateEnum | Scalar | Mandatory | Runtime state of this endpoint. |
 | Authentication | Variable | VisionEndpointAuthenticationEnum | Scalar | Mandatory | Credential the media plane requires. Independent of the OPC UA session. |
-| SecureTransport | Variable | Boolean | Scalar | Optional | True when the media transport is encrypted, for example RTSPS or HTTPS. |
+| SecureTransport | Variable | Boolean | Scalar | Mandatory | True when the media transport itself provides confidentiality, for example RTSPS, SRT with encryption, or HTTPS. Mandatory because clause 12.2 evaluates credential issuance on it: a Server SHALL NOT return a URI embedding a credential unless this is true and the OPC UA SecureChannel is SignAndEncrypt. A client SHALL treat false as meaning the media transport offers no confidentiality, whatever Authentication states. |
 | ProfileName | Variable | String | Scalar | Optional | Vendor profile label, for example main or sub. |
 
 ### StreamEndpointType — `ns=1;i=1008`
@@ -362,8 +362,8 @@ Nameplate of a trained model. The member set is deliberately aligned with the ID
 | Framework | Variable | String | Scalar | Optional | Producing framework, for example PyTorch, TensorFlow or scikit-learn. |
 | Format | Variable | String | Scalar | Optional | Serialization format, for example ONNX, TensorRT or OpenVINO IR. |
 | TaskKind | Variable | String | Scalar | Optional | What the model does, for example Detection2D, Detection3D, Classification, Segmentation, PoseEstimation or AnomalyDetection. |
-| Digest | Variable | ByteString | Scalar | Optional | Cryptographic digest of the model artefact, for provenance and integrity. |
-| DigestAlgorithm | Variable | String | Scalar | Optional | Digest algorithm; default SHA-256. |
+| Digest | Variable | ByteString | Scalar | Mandatory | Cryptographic digest of the model artefact, for provenance and integrity. Mandatory: clause 12.6 requires it for every model whose artefact is obtainable through ArtifactUri, and it is the terminus of the provenance chain that UsesModel keeps intact. |
+| DigestAlgorithm | Variable | String | Scalar | Mandatory | Hash function used for Digest. SHALL name a function with at least 256-bit output and no known collision weakness; SHA-256 is the default and is always acceptable. SHALL NOT be MD5, SHA-1 or a truncated variant - chosen-prefix collisions against those are practical, so a substituted artefact would pass verification. SHALL be non-empty where Digest is non-empty. See clause 12.6. |
 | ArtifactUri | Variable | String | Scalar | Optional | Where the model artefact can be obtained. Treated as untrusted input. |
 | ProvenanceUri | Variable | String | Scalar | Optional | Training provenance or model card location. |
 | LabelClasses | Variable | String | Array | Optional | Ordered class label set; the index corresponds to VisionDetectionDataType.ClassId. |

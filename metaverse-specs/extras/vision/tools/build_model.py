@@ -706,7 +706,13 @@ prop_var(ME, "MediaEndpointType", "Authentication", VisionEndpointAuthentication
          "Credential the media plane requires. Independent of the OPC UA session.",
          MR_Mandatory)
 prop_var(ME, "MediaEndpointType", "SecureTransport", Boolean,
-         "True when the media transport is encrypted, for example RTSPS or HTTPS.")
+         "True when the media transport itself provides confidentiality, for example "
+         "RTSPS, SRT with encryption, or HTTPS. Mandatory because clause 12.2 "
+         "evaluates credential issuance on it: a Server SHALL NOT return a URI "
+         "embedding a credential unless this is true and the OPC UA SecureChannel is "
+         "SignAndEncrypt. A client SHALL treat false as meaning the media transport "
+         "offers no confidentiality, whatever Authentication states.",
+         MR_Mandatory)
 prop_var(ME, "MediaEndpointType", "ProfileName", String,
          "Vendor profile label, for example main or sub.")
 
@@ -1031,9 +1037,18 @@ prop_var(AM, "AiModelType", "TaskKind", String,
          "What the model does, for example Detection2D, Detection3D, Classification, "
          "Segmentation, PoseEstimation or AnomalyDetection.")
 prop_var(AM, "AiModelType", "Digest", ByteString,
-         "Cryptographic digest of the model artefact, for provenance and integrity.")
+         "Cryptographic digest of the model artefact, for provenance and integrity. "
+         "Mandatory: clause 12.6 requires it for every model whose artefact is "
+         "obtainable through ArtifactUri, and it is the terminus of the provenance "
+         "chain that UsesModel keeps intact.",
+         MR_Mandatory)
 prop_var(AM, "AiModelType", "DigestAlgorithm", String,
-         "Digest algorithm; default SHA-256.")
+         "Hash function used for Digest. SHALL name a function with at least 256-bit "
+         "output and no known collision weakness; SHA-256 is the default and is always "
+         "acceptable. SHALL NOT be MD5, SHA-1 or a truncated variant - chosen-prefix "
+         "collisions against those are practical, so a substituted artefact would pass "
+         "verification. SHALL be non-empty where Digest is non-empty. See clause 12.6.",
+         MR_Mandatory)
 prop_var(AM, "AiModelType", "ArtifactUri", String,
          "Where the model artefact can be obtained. Treated as untrusted input.")
 prop_var(AM, "AiModelType", "ProvenanceUri", String,

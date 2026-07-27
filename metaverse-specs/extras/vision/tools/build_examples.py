@@ -21,6 +21,7 @@ a type id that the base model does not define.
 from __future__ import annotations
 import json
 import os
+import re
 import sys
 import xml.sax.saxutils as sx
 
@@ -219,16 +220,18 @@ class Overlay:
                'xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd" '
                'xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd">',
                '  <NamespaceUris>',
-               f'    <Uri>{self.example_uri}</Uri>',
-               f'    <Uri>{VISION_NS}</Uri>',
+               f'    <Uri>{sx.escape(self.example_uri)}</Uri>',
+               f'    <Uri>{sx.escape(VISION_NS)}</Uri>',
                '  </NamespaceUris>',
                '  <Models>',
-               f'    <Model ModelUri="{self.example_uri}" Version="0.1.0" '
+               f'    <Model ModelUri={sx.quoteattr(self.example_uri)} '
+               f'Version="0.1.0" '
                f'PublicationDate="{vm.PUBDATE}">',
                '      <RequiredModel ModelUri="http://opcfoundation.org/UA/" '
                f'Version="{vm.BASE_UA_VERSION}" '
                f'PublicationDate="{vm.BASE_UA_PUBDATE}" />',
-               f'      <RequiredModel ModelUri="{VISION_NS}" Version="{vm.VERSION}" '
+               f'      <RequiredModel ModelUri={sx.quoteattr(VISION_NS)} '
+               f'Version="{vm.VERSION}" '
                f'PublicationDate="{vm.PUBDATE}" />',
                '    </Model>',
                '  </Models>',
@@ -244,7 +247,7 @@ class Overlay:
     @staticmethod
     def _emit_node(n):
         a = [f'{n["cls"]} NodeId="ns=1;i={n["nid"]}"',
-             f'BrowseName="{n.get("browse_ns", 1)}:{sx.escape(n["browse"])}"']
+             f'BrowseName={sx.quoteattr(str(n.get("browse_ns", 1)) + ":" + n["browse"])}']
         if n["parent"]:
             a.append(f'ParentNodeId="{n["parent"]}"')
         if "DataType" in n["attrs"]:
@@ -308,6 +311,10 @@ def v_ltext(s):
             f'<uax:Text>{sx.escape(str(s))}</uax:Text></uax:LocalizedText></Value>')
 
 
+def v_bytestring(s):
+    return f'<Value><uax:ByteString {UAX}>{sx.escape(str(s))}</uax:ByteString></Value>'
+
+
 # Property name -> (DataType alias, value emitter). Anything not listed is a String.
 DT = {
     "UInt32": ("UInt32", v_uint32),
@@ -319,6 +326,7 @@ DT = {
     "LocalizedText": ("LocalizedText", v_ltext),
     "NodeId": ("NodeId", v_nodeid),
     "UtcTime": ("UtcTime", v_datetime),
+    "ByteString": ("ByteString", v_bytestring),
 }
 
 
@@ -336,6 +344,16 @@ def put_enum(ov, parent, name, enum_name, field, desc=None):
 # ---------------------------------------------------------------------------
 # Overlay construction
 # ---------------------------------------------------------------------------
+SECURE_SCHEMES = ("rtsps://", "https://", "srts://", "grpcs://", "wss://")
+
+
+def secure_transport(uri):
+    """§12.2: SecureTransport states whether the media transport itself is
+    confidential. Derived from the endpoint scheme so the example cannot claim
+    protection its own URI contradicts."""
+    return str(uri).lower().startswith(SECURE_SCHEMES)
+
+
 def build_media(ov, sensor, st, cl):
     """Media management object with one stream and one clip endpoint."""
     media = ov.obj("Media", vtype("VisionMediaManagementType"), sensor,
@@ -352,6 +370,8 @@ def build_media(ov, sensor, st, cl):
     put_enum(ov, stream, "State", "VisionEndpointStateEnum", st.get("state", "Ready"))
     put_enum(ov, stream, "Authentication", "VisionEndpointAuthenticationEnum",
              st.get("authentication", "Digest"))
+    put(ov, stream, "SecureTransport", "Boolean", secure_transport(st["endpointUri"]),
+        desc="Derived from the endpoint scheme; see base specification §12.2.")
     if "codec" in st:
         put_enum(ov, stream, "Codec", "VisionVideoCodecEnum", st["codec"])
     for name, kind in (("Width", "UInt32"), ("Height", "UInt32"),
@@ -368,6 +388,8 @@ def build_media(ov, sensor, st, cl):
     put_enum(ov, clip, "State", "VisionEndpointStateEnum", cl.get("state", "Ready"))
     put_enum(ov, clip, "Authentication", "VisionEndpointAuthenticationEnum",
              cl.get("authentication", "Token"))
+    put(ov, clip, "SecureTransport", "Boolean", secure_transport(cl["endpointUri"]),
+        desc="Derived from the endpoint scheme; see base specification §12.2.")
     # Instantiating any of the four VIS-Media-Inline members claims the facet, so
     # clause 11 requires all four. InlineDeliveryEnabled = false is the "supported but
     # currently off" state of §6.4 rule 5, not the absence of the facet - an endpoint
@@ -528,6 +550,10 @@ def build_overlay(d):
         key = name[0].lower() + name[1:]
         if key in m:
             put(ov, model, name, "String", m[key])
+    # §12.6 requires both for any model reachable through ArtifactUri.
+    put(ov, model, "Digest", "ByteString", m["digest"],
+        desc="SHA-256 of the model artefact at ArtifactUri (base specification §12.6).")
+    put(ov, model, "DigestAlgorithm", "String", m.get("digestAlgorithm", "SHA-256"))
 
     dep = ai["deployment"]
     deployment = ov.obj(dep["name"], vtype("AiDeploymentType"), ov.roots["models"],
@@ -869,13 +895,38 @@ def splice(marker, body):
             f.write(new_text)
 
 
+SAFE_NAME = re.compile(r"[A-Za-z0-9._-]+")
+
+
+def safe_component(value, field):
+    """A descriptor value used to build a filesystem path or a filename.
+
+    Descriptors are contributor-supplied and a maintainer runs this generator over a
+    PR branch, so a value like '../../..' or an absolute path would silently write
+    outside the tree - os.path.join discards everything before an absolute component,
+    and normpath does not undo traversal.
+    """
+    if not isinstance(value, str) or not SAFE_NAME.fullmatch(value):
+        raise SystemExit(f"descriptor field '{field}' must match "
+                         f"[A-Za-z0-9._-]+; got {value!r}")
+    if value in (".", ".."):
+        raise SystemExit(f"descriptor field '{field}' must not be {value!r}")
+    return value
+
+
 def process(path):
     with open(path, encoding="utf-8") as f:
         d = json.load(f)
     d["descriptorFile"] = os.path.basename(path)
     d["folder"] = os.path.basename(os.path.dirname(os.path.abspath(path)))
-    outdir = os.path.normpath(os.path.join(HERE, "..", "..", "..", "vision",
-                                           d["outputFolder"]))
+    for field in ("outputFolder", "domain", "annexLetter", "annexMarker"):
+        safe_component(d[field], field)
+    vision_root = os.path.normpath(os.path.join(HERE, "..", "..", "..", "vision"))
+    outdir = os.path.normpath(os.path.join(vision_root, d["outputFolder"]))
+    if os.path.commonpath([os.path.abspath(outdir),
+                           os.path.abspath(vision_root)]) != os.path.abspath(
+                               vision_root):
+        raise SystemExit(f"outputFolder escapes the vision tree: {outdir}")
     os.makedirs(outdir, exist_ok=True)
     ov = build_overlay(d)
     xml_path = os.path.join(outdir, f"Opc.Ua.{d['domain']}.Vision.NodeSet2.xml")
