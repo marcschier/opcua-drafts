@@ -467,11 +467,11 @@ Because a capable peer never speaks first, a capable and a legacy implementation
 
 ### 6.1 OPC UA TCP
 
-No change to OPC 10000-6 §7.2 is required. A `STR` frame is a MessageChunk and is written to the socket exactly as `MSG` chunks are. The URL scheme remains `opc.tcp` and the TransportProfileUri is unchanged.
+No change to OPC 10000-6 §7.2 is required. A `STR` frame is a MessageChunk and is written to the socket exactly as `MSG` chunks are. The URL scheme remains `opc.tcp` and the TransportProfileUri is unchanged. Reverse connect (§7.1.3) is likewise unchanged and fully supported: it alters only which peer opens the socket, and every rule in clause 5 is expressed in terms of the SecureChannel rather than of who dialled whom.
 
 ### 6.2 WebSockets
 
-No change to OPC 10000-6 §7.5 is required. Under the `opcua+uacp` sub-protocol each WebSocket binary frame is one MessageChunk, and a `STR` frame is one MessageChunk, so it is one WebSocket binary frame. No new sub-protocol is registered.
+No change to OPC 10000-6 §7.5 is required. Under the `opcua+uacp` sub-protocol each WebSocket binary frame is one MessageChunk, and a `STR` frame is one MessageChunk, so it is one WebSocket binary frame. No new sub-protocol is registered, and reverse connect behaves as in §6.1.
 
 ### 6.3 HTTPS and SOAP/HTTP
 
@@ -499,7 +499,7 @@ A Server that offers both transports returns one `EndpointDescription` per trans
 
 ### 7.3 Connection establishment and the control stream
 
-The first client-initiated bidirectional QUIC stream carries the UACP and Secure Conversation conversation — `HEL`, `ACK`, `ERR`, `OPN`, `MSG`, `CLO` — byte for byte as it appears over `opc.tcp`. The QUIC connection is the TransportConnection; the SecureChannel is established on it by `OpenSecureChannel` exactly as today.
+The first client-initiated bidirectional QUIC stream carries the UACP and Secure Conversation conversation — `HEL`, `ACK`, `ERR`, `OPN`, `MSG`, `CLO` — byte for byte as it appears over `opc.tcp`. The QUIC connection is the TransportConnection; the SecureChannel is established on it by `OpenSecureChannel` exactly as today. Throughout this clause *client-initiated* and *server-initiated* name the **QUIC** roles, which are normally the OPC UA roles too; §7.10 covers the reverse-connect case, where they are not.
 
 `Hello` and `Acknowledge` are exchanged unchanged. Their `ReceiveBufferSize` and `SendBufferSize` continue to bound MessageChunks on the control stream. A data channel frame is bounded by the smaller of `revisedParameters.MaxFrameSize` and the QUIC stream or datagram limit, not by these values.
 
@@ -564,7 +564,8 @@ The `TransportSecured` profile rests on one premise — that the TLS connection 
 
 - A Client **shall** validate the Server's TLS certificate under RFC 5280 and RFC 9001, against the trust list it uses for Application Instance Certificates or an explicitly configured TLS trust list, and **shall** verify that a subjectAltName covers the host of the `EndpointUrl`. A Client **shall** abandon the connection if validation fails.
 - **The binding is by key, not by name.** The Server's TLS certificate **shall** be the Server's Application Instance Certificate, or **shall** contain the same `subjectPublicKeyInfo`. A Client **shall** compare the certificate presented in the TLS handshake with the `serverCertificate` of the `EndpointDescription` it selected **and** with the certificate returned in the `OpenSecureChannel` response, and **shall** abort the SecureChannel unless all three carry the same `subjectPublicKeyInfo`. Equality of an `ApplicationUri` subjectAltName is necessary but **not** sufficient: a certificate asserting an `ApplicationUri` proves only that some CA in the Client's trust list issued it, and CA and GDS implementations commonly populate the URI SAN from the requester's own CSR without checking it against an authoritative registry — so an attacker able to obtain any certificate from an accepted anchor could otherwise name the victim's `ApplicationUri` and mount the relay above. Comparing the key removes the CA from the trust decision entirely, and costs one comparison the Client is already positioned to make.
-- Where the SecurityPolicy in force supports channel-bound signatures, the Client and Server **shall** additionally bind the two layers by including the TLS exporter value (RFC 8446 §7.5, label `EXPORTER-opcua-quic`) in the `ChannelThumbprint` computation of OPC 10000-6 §6.7.5. Where the Server requires TLS client authentication, the same key-equality obligation applies symmetrically to the Client's TLS certificate.
+- **The obligation follows the TLS role, not the OPC UA role.** Stated generally: the peer acting as the **TLS server** presents a certificate that **shall** be key-equal to its own Application Instance Certificate, and the peer acting as the TLS client **shall** verify that equality against the certificate the same peer presents in the `OpenSecureChannel` exchange. Under a normal connection the TLS server is the OPC UA Server and the two readings coincide; under reverse connect (§7.10) the roles invert, and the rule then binds the OPC UA Client's TLS certificate.
+- Where the SecurityPolicy in force supports channel-bound signatures, the Client and Server **shall** additionally bind the two layers by including the TLS exporter value (RFC 8446 §7.5, label `EXPORTER-opcua-quic`) in the `ChannelThumbprint` computation of OPC 10000-6 §6.7.5. Where either peer requires TLS authentication of the other, the same key-equality obligation applies symmetrically to that peer's TLS certificate.
 - **`opc.quic` data channels shall not traverse an intermediary that terminates TLS.** There is no profile that makes them safe there: the key-equality check above is precisely what such an intermediary cannot satisfy, and a construction carrying full UA-SC message security over QUIC is not available because the Secure Conversation sequence number is a single monotonic space per SecureChannel (§5.1.1) while QUIC spreads chunks across independently ordered streams and, for the lossy modes, over datagrams that are dropped by design. A deployment that must be reached through such an intermediary **shall** use inline framing over `opc.tcp` or `opc.wss`, where every frame carries UA-SC message security end to end and the intermediary sees only ciphertext. This mirrors OPC 10000-6 §7.4.1, which already states that transport security "does not allow untrusted intermediaries or proxy servers to handle traffic".
 
 ### 7.7 Connection migration
@@ -584,6 +585,17 @@ What this specification does provide is the information an application needs to 
 A Client that cannot reach an `opc.quic` endpoint — no implementation, blocked UDP, a middlebox that drops QUIC — **may** fall back to `opc.tcp` or `opc.wss` and use inline framing. The Services, the AddressSpace model, the frame layout above the Message header and the application contract are identical; only the four properties in the table of §4.2 differ.
 
 Fallback **shall not** be a downgrade. A Client **shall not** fall back to an endpoint whose SecurityMode or SecurityPolicy is weaker than the one it required of the `opc.quic` endpoint, and **shall** report the failure to the application rather than accept the weaker endpoint. Making fallback unconditional would hand an off-path attacker a downgrade primitive: dropping UDP on port 4840 is a single firewall rule, and it would otherwise move every Client to a transport of the attacker's choosing.
+
+### 7.10 Reverse connect
+
+Reverse connect (OPC 10000-6 §7.1.3) lets a Server behind a firewall or NAT reach a Client: the **Server** opens the transport connection and sends `RHE`, after which the Client sends `HEL` and the conversation continues normally. It works over `opc.quic` with no new mechanism, and data channels are unaffected by it, but two consequences have to be stated because they invert the transport roles this clause otherwise assumes.
+
+- The **OPC UA Server is the QUIC client**: it initiates the QUIC connection, performs ALPN negotiation, opens the first client-initiated bidirectional stream and sends `RHE` on it. The Client replies `HEL` on the same stream and §7.3 applies from there unchanged. The Client is configured with the address it listens on, so `GetEndpoints` plays no part in reaching it; endpoint selection still happens afterwards over the established connection, exactly as over `opc.tcp`.
+- Because the OPC UA roles are unchanged above the transport, **§7.4 applies verbatim**: the *Initiator* and *where the id is carried* columns still name OPC UA roles and are unaffected. Only the QUIC stream **type** inverts — a stream the OPC UA Server opens is now QUIC-client-initiated and one the OPC UA Client opens is QUIC-server-initiated. An implementation that keys its stream handling off the QUIC role rather than the OPC UA role will otherwise mis-assign every data channel.
+
+The TLS obligations of §7.6.1 follow the TLS role, so under reverse connect it is the **Client** that presents the TLS server certificate and the **Server** that verifies key-equality against the certificate the Client presents in `OpenSecureChannel`. The Client's own validation of the Server's identity is then carried by TLS client authentication, or by the `OpenSecureChannel` exchange alone where the deployment does not use it.
+
+Nothing else changes. Reverse connect is a property of how the connection is established, and every rule in clause 5 is expressed in terms of the SecureChannel and the data channel rather than of who dialled whom — including §5.16, whose "a capable peer never speaks first" rule is about `STR` frames and is untouched by the Server sending `RHE` first at the transport layer.
 
 A Server **shall not** require QUIC for any capability it also exposes over `opc.tcp`, and **shall** report through `SupportsUnreliableDatagrams` whether genuine loss is available, so a Client learns the difference by reading rather than by measuring.
 
@@ -667,6 +679,7 @@ A conformance unit is only useful if a laboratory can derive test cases from it,
 | DCQ-007 | The TLS certificate is key-bound to the OPC UA identity | Present a valid TLS certificate from an accepted CA carrying the Server's `ApplicationUri` but a different key | Client aborts the SecureChannel: `subjectPublicKeyInfo` must match the `EndpointDescription` and `OpenSecureChannel` certificates (§7.6.1) |
 | DCQ-008 | Fallback is not a downgrade | Block UDP, offer only a weaker-SecurityMode `opc.tcp` endpoint | Client reports failure rather than falling back (§7.9) |
 | DCQ-009 | Unknown-ChannelId buffering is bounded | Flood frames naming unopened ChannelIds | At most `MaxFrameSize` × 4 bytes buffered, excess discarded (§7.4) |
+| DCQ-010 | Reverse connect assigns streams by OPC UA role, not QUIC role | Establish by reverse connect, then open one channel per direction | Every channel is assigned as §7.4 requires; `transportChannelId` travels in the same message as under a normal connection (§7.10) |
 
 DCF-015 and DCF-016 fail only under load, which is what makes them the assertions that most often distinguish a conforming implementation from one that merely interoperates in the laboratory. DCF-016 checks the anti-starvation `shall` of §5.7 obligation 2 rather than a particular bandwidth ratio, because the (`Priority` + 1) × `MaxFrameSize` quantum that would fix the ratio is a `should` and a laboratory cannot fail an implementation on a recommendation. `OpenTimeout` has no assertion of its own: §5.13 ends `Opening` when the Server hands its own response to the transport, so no external harness can stall it.
 
@@ -688,6 +701,7 @@ DCF-015 and DCF-016 fail only under load, which is what makes them the assertion
 | §6.2 | `7.5 WebSockets` | No normative change; a note that a `STR` frame is one binary WebSocket frame under `opcua+uacp`. No new sub-protocol. |
 | §6.3 | `7.4 OPC UA HTTPS` | A statement that data channels are not available over this transport. |
 | Clause 7 | New `7.7 OPC UA QUIC` | The complete new transport, parallel in structure to `7.2 OPC UA TCP` and `7.5 WebSockets`. It is appended after `7.6 Well known addresses`, which already occupies `7.6`; the editor may renumber. The QUIC well-known LDS address is added to Table 82 in `7.6`, and the TransportProfileUri is registered in OPC 10000-7. |
+| §7.10 reverse connect | `7.1.3 Reverse connect`, plus a subclause of the new QUIC clause | A note that reverse connect applies to `opc.quic`, and the statement that the OPC UA Server holds the QUIC client role there — which inverts the QUIC stream types of §7.4 without changing the OPC UA roles, and moves the TLS server certificate to the Client for §7.6.1. |
 | §8 conformance units | OPC 10000-7 | New conformance units and the Profiles that group them. |
 
 The `STR` MessageType, the ALPN identifier and the frame type and flag values are the items an editor must confirm are free before adoption; all are chosen from currently unassigned space. The clause number for the new transport is **not** free — `7.6` is `Well known addresses` in v1.05.07 — so the transport is proposed as `7.7` and the editor assigns the final number.

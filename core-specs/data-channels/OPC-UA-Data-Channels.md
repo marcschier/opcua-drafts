@@ -390,6 +390,8 @@ A QUIC stream carries frames in **QUIC framing**: Message header, stream header,
 
 Because QUIC applies its own flow control, `CREDIT` frames **shall not** be sent over `opc.quic`; duplicating the window in two layers gains nothing and deadlocks when the two disagree. `RESET` is realized as QUIC `RESET_STREAM` with the StatusCode in the application error code.
 
+**Reverse connect** works over `opc.quic` unchanged — the Server opens the QUIC connection and sends `RHE`, the Client replies `HEL`, and everything above the transport proceeds as normal. It is worth one note because it inverts the *transport* roles: the OPC UA Server holds the QUIC client role, so the QUIC stream **types** in the table above invert while the OPC UA initiator and the `transportChannelId` direction do not, and the TLS server certificate that §9.5 binds is then the **Client's**. The Part 6 errata §7.10 states both consequences.
+
 ### 9.4 Unreliable datagrams
 
 Where the negotiated mode is `Unreliable`, or `PartiallyReliable` with the QUIC DATAGRAM extension available at both ends, `DATA` frames are sent as QUIC DATAGRAM frames (RFC 9221) rather than on the channel's stream. Control frames always use the stream, so a `RESET` or an `END` is never lost.
@@ -471,7 +473,7 @@ Three Profiles are proposed for OPC 10000-7:
 
 The minimum useful implementation is the Data Channel Server Facet: inline framing over `opc.tcp`, the three Services, and the model. Everything else is additive.
 
-Each unit is decomposed into individually checkable **test assertions** — 37 for framing, 4 for partial reliability, 9 for QUIC in the Part 6 errata §8.1, and 22 for the Services in the Part 4 errata §10.1. They are the certification surface: a laboratory derives one test case per assertion, and the assertions that fail only under load (Service precedence, anti-starvation, and the drain timeout) are the ones that distinguish a conforming implementation from one that merely interoperates on a bench.
+Each unit is decomposed into individually checkable **test assertions** — 37 for framing, 4 for partial reliability, 10 for QUIC in the Part 6 errata §8.1, and 22 for the Services in the Part 4 errata §10.1. They are the certification surface: a laboratory derives one test case per assertion, and the assertions that fail only under load (Service precedence, anti-starvation, and the drain timeout) are the ones that distinguish a conforming implementation from one that merely interoperates on a bench.
 
 <!-- BEGIN GENERATED: model-reference -->
 
