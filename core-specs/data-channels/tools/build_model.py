@@ -286,8 +286,8 @@ prop_var(65010, IDCS, "MaxBitrate", UInt32,
          "The peak rate, in bits per second, this endpoint may produce. A client uses it to decide "
          "whether the connection can carry the stream before opening it.")
 prop_var(65010, IDCS, "Priority", Byte,
-         "The default scheduling priority (0 lowest, 7 highest) applied to channels opened on this "
-         "endpoint when the client does not request one.")
+         "The default scheduling priority (0 lowest, 7 highest) applied to channels opened on "
+         "this endpoint when the client requests Priority 255, the no-preference encoding.")
 prop_var(65010, IDCS, "MaxChannels", UInt16,
          "The maximum number of data channels that may be open on this endpoint at the same time. "
          "Exceeding it is rejected with Bad_TooManyDataChannels.")
@@ -420,7 +420,7 @@ struct_type(65033, "DataChannelParametersDataType",
              ("ContentParameters", KeyValuePair, "1", "Content-specific parameters qualifying ContentType."),
              ("MaxFrameSize", UInt32, None, "Largest frame payload in bytes."),
              ("InitialCredit", UInt32, None, "Flow control credit, in payload bytes, granted to the peer at open."),
-             ("Priority", Byte, None, "Scheduling priority, 0 lowest to 7 highest."),
+             ("Priority", Byte, None, "Scheduling priority, 0 lowest to 7 highest. 255 requests the source's default; other values above 7 are revised to 7."),
              ("MaxRetransmits", UInt16, None, "PartiallyReliable only: attempts before a frame is abandoned. Ignored where the transport is already reliable."),
              ("FrameDeadline", Duration, None, "PartiallyReliable and Unreliable only: how long a frame may wait in the send queue before it is discarded.")])
 

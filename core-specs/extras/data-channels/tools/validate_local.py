@@ -261,6 +261,14 @@ if sim["video_stalls"] == 0 or sim["bulk_stalls"] == 0:
 if sim["remaining"] != {1: 0, 2: 0}:
     err(f"the scenario did not drain: {sim['remaining']}")
 
+# Part 6 §5.2: a sender assigns FrameSequenceNumber at enqueue and transmits the DATA
+# frames of a channel in ascending order. Expiry leaves holes but must not reorder what
+# survives, because the receiver's arithmetic in §5.2.1 depends on monotonicity.
+for ch in (1, 2):
+    order = [t[4] for t in sim["sends"] if t[1] == ch and t[2] == "DATA"]
+    if order != sorted(order):
+        err(f"channel {ch} transmitted DATA out of FrameSequenceNumber order: {order}")
+
 # Obligation 2 is testable directly: while RPC is pending, no two data frames may be
 # sent back to back, because an RPC chunk goes out between them.
 pending = len(sim["rpc_sent"])

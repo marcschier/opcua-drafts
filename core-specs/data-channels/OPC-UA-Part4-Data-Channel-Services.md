@@ -92,12 +92,14 @@ This Service is not a Node operation and therefore takes no `NodesToRead`-style 
 |---|---|---|---|---|
 | `MaxFrameSize` | bytes | 1 .. 2^32−1 | no preference | the least of the source's `MaxFrameSize`, the Server's `MaxFrameSize` and the transport bound |
 | `InitialCredit` | payload bytes | 1 .. 2^32−1 | no preference | Server-chosen |
-| `Priority` | — | 0 .. 7 | lowest priority | `0`; a value above `7` **shall** be revised to `7` |
+| `Priority` | — | 0 .. 7, or `255` | `0` is the lowest priority, not a sentinel; **`255`** means no preference | the source's `Priority` where present, otherwise `0`. Values `8 .. 254` **shall** be revised to `7` |
 | `MaxRetransmits` | attempts | 0 .. 65535 | no retransmission | `0` |
 | `FrameDeadline` | ms | ≥ 0 | no deadline | `0`; a sender **shall not** set `Droppable` when the revised value is `0` |
 | `MaxBitrate` | bit/s | — | unconstrained | the source's `MaxBitrate` |
 
 A Server **shall** revise `InitialCredit` to at least the revised `MaxFrameSize`. A window smaller than one frame is an immediate deadlock: the channel opens `Paused` and the first frame can never be sent.
+
+`Priority` is the one member for which `0` is a real value rather than the sentinel, because `0` is the lowest of the eight defined priorities. `255` is its no-preference encoding, and is what lets `IDataChannelSourceType.Priority` — the source's own default — actually take effect.
 
 The Part 6 errata §5.4 states how a non-zero `FrameDeadline` becomes the on-wire `Deadline` field.
 
@@ -111,7 +113,7 @@ The Part 6 errata §5.4 states how a non-zero `FrameDeadline` becomes the on-wir
 | `ContentParameters` | The Server returns the effective set: entries it honoured, entries it changed, and entries it added. Entries it does not understand are **omitted** from the response rather than echoed, so a Client can see what took effect. |
 | `MaxFrameSize` | Revised down to the least of the requested value, the source's `MaxFrameSize`, the Server's `MaxFrameSize`, and the transport bound derived from the negotiated buffer size. Never revised up. `0` means no preference (§5.1.1). |
 | `InitialCredit` | Revised down to the Server's `MaxCreditPerChannel`, and **shall** be revised up where necessary to at least the revised `MaxFrameSize`. |
-| `Priority` | Revised down where the Server reserves the higher bands; a value above `7` **shall** be revised to `7`. Never revised up. |
+| `Priority` | Revised down where the Server reserves the higher bands; `255` means no preference and selects the source's default, and any other value above `7` **shall** be revised to `7`. Never revised up beyond the requested value except when `255` was requested. |
 | `MaxRetransmits`, `FrameDeadline` | Revised to the Server's supported range. Both are ignored where the transport is already reliable, and the Server **shall** return them as `0` in that case so the Client can see they had no effect. |
 
 **Preconditions.** The Session **shall** be activated. The SecureChannel **shall** be one over which the transport supports data channels; `Bad_DataChannelTransportUnsupported` is returned otherwise. Opening the channel **shall not** take the count over `MaxDataChannels` for the connection or `MaxChannels` for the source. Over `opc.quic`, a request for a Client-initiated direction **shall** carry `transportChannelId`.
@@ -189,8 +191,8 @@ Closes a data channel in an orderly fashion.
 
 `CloseDataChannel` and the frame-level `END` are not independent paths to the same state; the Service drives the frames:
 
-- With `deleteQueued` `False` the Server **shall** emit `END` in each direction it still owns, and the Client **shall** emit `END` in each direction it still owns on receiving the response. The channel enters `Closing`, then `Closed` when every direction has ended and the queues have drained, and `Faulted` if `DrainTimeout` expires first.
-- With `deleteQueued` `True` the Server **shall** emit `RESET` carrying `reason`, discard queued frames in both directions, and the channel enters `Closed` without passing through `Closing`.
+- With `deleteQueued` `False` the Server **shall** emit `END` in each direction it still owns once its queued frames have drained, and the Client **shall** emit `END` in each direction it still owns on receiving the response. The channel enters `Closing`, then `Closed` when every direction has ended, and `Faulted` if `DrainTimeout` expires first.
+- With `deleteQueued` `True` the Server **shall** discard queued frames in both directions and emit `RESET` carrying `reason`. Where `reason` is `Good` this is an orderly discard-and-close and **both** peers transition to `Closed`; where it is a Bad StatusCode both transition to `Faulted`. The StatusCode is the only wire signal that distinguishes the two, which is why it determines the state on both ends rather than only in the audit trail.
 
 On a `SourceToSink` or `SinkToSource` channel the direction that carries no payload is considered ended at open, so a single `END` closes the channel; a `Bidirectional` channel requires one from each end. The state transitions are those of the Part 6 errata §5.13, and a `DataChannelStateChangeEventType` Event is raised for each.
 
