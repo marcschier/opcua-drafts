@@ -37,7 +37,7 @@ Data channels close that gap on the connection that is already open.
 
 **The handshake does not change.** `Hello` and `Acknowledge` are untouched and `ProtocolVersion` is not bumped, so a data-channel-capable Client and a legacy Server still connect; the capability is simply never advertised. Negotiation happens at the Service level, which costs a round trip the Client was making anyway.
 
-**Ownership and authorization are separate.** A channel is owned by the SecureChannel, because that is where its bytes flow and it cannot outlive that. It is authorized by the Session, because that is where the user identity is, and `OpenDataChannel` is checked against the source Node's `RolePermissions` exactly as a `Read` would be. Renewing the channel token does not disturb a channel; closing the Session revokes it.
+**Ownership and authorization are separate.** A channel is owned by the SecureChannel, because that is where its bytes flow and it cannot outlive that. It is authorized by the Session, because that is where the user identity is, and `OpenDataChannel` is checked against the source Node's `RolePermissions` exactly as a `Read` would be. Every Service in the set is scoped to **both** — a SecureChannel may carry several Sessions, and ChannelIds are guessable — and the authorization is re-evaluated rather than granted once, so revoking a permission actually terminates the stream it was protecting. Renewing the channel token does not disturb a channel; closing the Session revokes it.
 
 **Streamability is an Interface.** No new Node Attribute, no new NodeClass. A type becomes streamable by adding one `HasInterface` reference to `IDataChannelSourceType`, so its supertype is untouched and every existing Client sees exactly what it saw before.
 
@@ -130,11 +130,11 @@ QUIC provides in the transport exactly what clause 4 has to construct by hand. `
 | `RESET` | QUIC `RESET_STREAM`, StatusCode in the application error code |
 | Congestion control | RFC 9002; this specification adds none |
 
-**Security.** The control stream keeps full UA-SC message security, so `OpenSecureChannel` still runs and the application instance certificates still authenticate the two applications — the OPC UA security model does not become TLS's job. Data channel frames are protected by QUIC's TLS 1.3 record layer alone, under the mandatory `TransportSecured` profile: applying UA-SC message security a second time to bulk media would double the cost of the hot path for no additional guarantee, since the same TLS connection already authenticates the same peer. **0-RTT shall not carry `OpenSecureChannel`, `OpenDataChannel` or any frame** — 0-RTT is replayable, and a replayed channel open is a replayed authorization.
+**Security.** The control stream keeps full UA-SC message security, so `OpenSecureChannel` still runs and the application instance certificates still authenticate the two applications — the OPC UA security model does not become TLS's job. Data channel frames are protected by QUIC's TLS 1.3 record layer alone under the `TransportSecured` profile, which avoids a second cryptographic pass over bulk media. That is sound **only** because §7.6.1 binds the two layers: a Client validates the Server's TLS certificate and verifies it asserts the same `ApplicationUri` as the certificate returned by `OpenSecureChannel`. Without that check a TLS-terminating relay could byte-forward the end-to-end-secured control stream — so every certificate check passes and both ends report an authenticated `SignAndEncrypt` channel — while reading and modifying every media frame in the clear. A `MessageSecured` profile is available where the QUIC path is not point-to-point, and **0-RTT shall not carry `OpenSecureChannel`, `OpenDataChannel` or any frame** — 0-RTT is replayable, and a replayed channel open is a replayed authorization.
 
-**Migration.** QUIC identifies a connection by connection ID rather than by the four-tuple, so a Client whose address changes — a vehicle moving between access points, a handheld leaving Wi-Fi for cellular — keeps the same connection, the same SecureChannel, the same Session and every open channel. Over `opc.tcp` all of that is destroyed and must be rebuilt.
+**Migration.** QUIC identifies a connection by connection ID rather than by the four-tuple, so a Client whose address changes — a vehicle moving between access points, a handheld leaving Wi-Fi for cellular — keeps the same connection, the same SecureChannel, the same Session and every open channel. Over `opc.tcp` all of that is destroyed and must be rebuilt. A Server records the path change and re-evaluates any location-dependent authorization, because migration is exactly what lets an authenticated Client carry a live stream onto an unauthorized network.
 
-**Fallback.** A Client that cannot reach a QUIC endpoint uses inline framing, and a Server shall not require QUIC for any capability it also exposes over `opc.tcp`.
+**Fallback.** A Client that cannot reach a QUIC endpoint may use inline framing, but **shall not** fall back to a weaker SecurityMode or SecurityPolicy — otherwise dropping UDP would be a downgrade primitive. A Server shall not require QUIC for any capability it also exposes over `opc.tcp`.
 
 ## 7 The Services
 
@@ -219,7 +219,7 @@ Three Profiles are proposed for OPC 10000-7:
 
 The minimum useful implementation is the Data Channel Server Facet: inline framing over `opc.tcp`, the three Services, and the model. Everything else is additive.
 
-Each unit is decomposed into individually checkable **test assertions** — 29 for framing, 4 for partial reliability, 6 for QUIC in the Part 6 errata §8.1, and 20 for the Services in the Part 4 errata §10.1. They are the certification surface: a laboratory derives one test case per assertion, and the assertions that fail only under load (Service precedence, anti-starvation, and the drain timeout) are the ones that distinguish a conforming implementation from one that merely interoperates on a bench.
+Each unit is decomposed into individually checkable **test assertions** — 35 for framing, 4 for partial reliability, 9 for QUIC in the Part 6 errata §8.1, and 22 for the Services in the Part 4 errata §10.1. They are the certification surface: a laboratory derives one test case per assertion, and the assertions that fail only under load (Service precedence, anti-starvation, and the drain timeout) are the ones that distinguish a conforming implementation from one that merely interoperates on a bench.
 
 <!-- BEGIN GENERATED: model-reference -->
 

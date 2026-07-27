@@ -95,11 +95,15 @@ It exists for placement 2 of §4.2 — a Server that needs a Node to hang an end
 
 The two Variables are the operator's view. `Diagnostics` in particular is what turns "the video is bad" into an answer: a rising `FramesDiscarded` says the source is producing faster than the link can carry, a rising `CreditStalls` says the consumer is not reading fast enough, and a rising `RoundTripTime` says the path is congesting. Those are three different faults with three different remedies, and without the counters they look identical.
 
+**`Channels`, `Diagnostics` and `ActiveChannelCount` are security-related.** They aggregate across every SecureChannel, Session and user, so an unrestricted reader learns, for every other user's channel, its `ChannelId`, `SourceNodeId`, `State`, full negotiated `Parameters`, transport stream id, `StartTime` and running byte and frame counters — enough to profile who is streaming from which device, when, at what rate and for how long. That is surveillance metadata about exactly the content the payload permissions were meant to protect, and OPC 10000-5 §6.3.4 already treats the equivalent `SessionSecurityDiagnosticsArray` the same way. A Server **shall** restrict these Variables to authorized users over an encrypted SecureChannel, **shall** apply `RolePermissions` and `UserRolePermissions` to them at least as restrictively as to the source Node itself, and **should** report to a given Session only the entries for channels that Session authorized.
+
 ### 5.3 HasDataChannel
 
 Links a functional Node to a data channel source. `InverseName` is `DataChannelOf`, so browsing back from a source names the thing it streams.
 
 A Server **may** place the source Object anywhere; the reference is what makes it findable. This matters because the natural home for a `VideoOut` Object — under the camera, under a media folder, under the Server — differs between Servers, and a Client should not have to guess.
+
+Where the source is a separate Object, its `RolePermissions`, `UserRolePermissions` and `AccessRestrictions` **shall** be at least as restrictive as those of the functional Node that references it. Otherwise the Part 4 rule that a Server "shall not grant a data channel where it would refuse a `Read` of the same content" is sidestepped by targeting the endpoint Object instead of the restricted Node it streams for.
 
 ### 5.4 Adopting the Interface in a companion specification
 

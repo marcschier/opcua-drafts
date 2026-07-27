@@ -148,7 +148,7 @@ Changes the mutable parameters of an open channel without interrupting it. This 
 | Name | Type | Description |
 |---|---|---|
 | requestHeader | RequestHeader | Common request parameters. |
-| channelId | UInt32 | The channel to modify. It **shall** belong to the SecureChannel carrying this request. |
+| channelId | UInt32 | The channel to modify. It **shall** belong to the SecureChannel carrying this request **and** have been authorized by the Session carrying it (§7.2). |
 | requestedParameters | DataChannelParametersDataType | The new parameters. `Direction` and `DeliveryMode` **shall** equal the values in force; a request that changes either is rejected with `Bad_DataChannelLimitsExceeded`, because both change what the receiver's pipeline is. |
 
 **Response**
@@ -179,7 +179,7 @@ Closes a data channel in an orderly fashion.
 | Name | Type | Description |
 |---|---|---|
 | requestHeader | RequestHeader | Common request parameters. |
-| channelId | UInt32 | The channel to close. |
+| channelId | UInt32 | The channel to close. It **shall** belong to the SecureChannel carrying this request **and** have been authorized by the Session carrying it (§7.2). |
 | reason | StatusCode | Why. `Good` for a normal close; any other value is recorded in the state-change Event and the audit trail. |
 | deleteQueued | Boolean | `True` discards frames still queued in either direction and closes immediately. `False` drains them first, bounded by `DrainTimeout` (Part 6 errata §5.14). |
 
@@ -243,7 +243,14 @@ A Client that must survive a reconnect reopens its channels after `ActivateSessi
 
 `OpenDataChannel` **shall** be authorized against the source Node using the same rules as any other access to it: the Session's user identity, the `RolePermissions` and `UserRolePermissions` Attributes of the Node, and the `AccessRestrictions` in force. A Server **shall not** grant a data channel where it would refuse a `Read` of the same content.
 
-Because a channel outlives the call that created it, a Server **shall** re-evaluate the authorization whenever the identity it was granted to changes, and abort on a negative result (§7.1). A Server **may** re-evaluate periodically or on a permission change, and **shall** abort with `Bad_UserAccessDenied` if it does so and the result is now negative.
+**Every Service in this set is scoped to both the SecureChannel and the authorizing Session.** OPC 10000-4 §5.7.2 permits multiple Sessions on one SecureChannel — an aggregating Server acting as agent for several users is the normal case — and those Sessions share one ChannelId space. Since ChannelIds are allocated monotonically from `1` and are therefore trivially guessable, scoping only to the SecureChannel would let one user enumerate and seize another's channels. Therefore:
+
+- `ModifyDataChannel` and `CloseDataChannel` **shall** be rejected with `Bad_DataChannelIdInvalid` unless `channelId` names a channel owned by the SecureChannel carrying the request **and** authorized by the Session carrying it.
+- A Server **shall** re-check the source Node's `RolePermissions`, `UserRolePermissions` and `AccessRestrictions` against the calling Session's user identity on every `ModifyDataChannel` and `CloseDataChannel`, and **shall** return `Bad_UserAccessDenied` on a negative result.
+- A Server **shall not** disclose, through a StatusCode or otherwise, the existence of a channel authorized by another Session. `Bad_DataChannelIdInvalid` and `Bad_DataChannelClosed` **shall not** be used in a way that distinguishes another Session's live channel from an unassigned identifier.
+- At the frame layer the same scoping applies: a peer **shall not** `RESET` or `END` a ChannelId it did not open, and a Server **shall** treat such a frame as a protocol error.
+
+**Authorization is re-evaluated, not merely granted once.** A channel is long-lived and moves content out of the Server continuously and outside the Service path, so a permission that is checked only at open is a permission that cannot be revoked. A Server **shall** re-evaluate the authorization of every open data channel whenever the `RolePermissions`, `UserRolePermissions` or `AccessRestrictions` of its source Node change, whenever the Role set of the authorizing Session changes, and at least once every `AuthorizationRecheckInterval` (default 60 s). It **shall** abort the channel with `Bad_UserAccessDenied` on a negative result. The identity-change and Session-close cases are covered separately and unconditionally by §7.1.
 
 ### 7.3 Auditing
 
@@ -278,6 +285,7 @@ A Server that supports auditing **shall** generate an `AuditOpenDataChannelEvent
 | `Bad_DataChannelOfferInvalid` | The offer is unknown, expired, already accepted, or does not match the source. |
 | `Uncertain_DataDiscarded` | Delivered payload is incomplete because frames were discarded or lost. Reported by a receiving application, and the value a gap-aware consumer surfaces upward. |
 | `Bad_Timeout` | Existing StatusCode, reused: returned when `OpenTimeout` expires before the channel reaches `Open` (Part 6 errata §5.14). |
+| `Bad_SecurityModeInsufficient` | Existing StatusCode, reused: returned when `OpenDataChannel` is attempted on a SecureChannel whose SecurityMode is `None` and the source Node does not permit it (Part 6 errata §5.8.3). |
 
 Numeric values are **provisional**; final assignments are made by the OPC Foundation alongside the existing StatusCode registry.
 
@@ -318,6 +326,8 @@ A Server claiming *Data Channel Services* **shall** also claim at least one Part
 | DCS-018 | An offer expires | Accept after `ExpirationTime` | `Bad_DataChannelOfferInvalid` |
 | DCS-019 | `Direction` and `DeliveryMode` are immutable | `ModifyDataChannel` changing either | `Bad_DataChannelLimitsExceeded` |
 | DCS-020 | `Publish` is not delayed by data channel load | Saturate channels, keep a Subscription | No keep-alive missed (§8) |
+| DCS-021 | Another Session's channel cannot be modified or closed | Open as user A, then `CloseDataChannel`/`ModifyDataChannel` from a second Session on the same SecureChannel as user B | `Bad_DataChannelIdInvalid`, indistinguishable from an unassigned identifier (§7.2) |
+| DCS-022 | Revoked permissions terminate a live channel | Open a channel, then revoke the user's `RolePermissions` on the source Node | Channel aborted with `Bad_UserAccessDenied` within `AuthorizationRecheckInterval` (§7.2) |
 
 ## 11 Insertion into OPC 10000-4 v1.05.07
 

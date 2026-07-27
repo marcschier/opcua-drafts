@@ -99,6 +99,8 @@ good = fc.encode(
 expect_reject("wrong MessageType", lambda: fc.decode(b"MSG" + good[3:], fc.INLINE))
 expect_reject("IsFinal 'C' (a frame is never chunked)",
               lambda: fc.decode(good[:3] + b"C" + good[4:], fc.INLINE))
+expect_reject("IsFinal 'A' (an abort chunk's body would reinterpret the stream header)",
+              lambda: fc.decode(good[:3] + b"A" + good[4:], fc.INLINE))
 expect_reject("MessageSize disagreeing with the received length",
               lambda: fc.decode(good + b"\x00", fc.INLINE))
 expect_reject("non-zero RequestId",

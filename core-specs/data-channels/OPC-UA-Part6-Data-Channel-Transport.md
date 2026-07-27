@@ -109,11 +109,26 @@ Message footer             varies    PaddingSize, Padding and Signature, per §6
 
 The following rules apply to the reused headers:
 
-- `IsFinal` **shall** be `F`. A data channel frame is always a single chunk (§5.5). `A` **may** be sent to abort the SecureChannel under the existing rules; `C` **shall not** be sent and a receiver **shall** treat it as a protocol error.
-- `SecureChannelId`, `TokenId` and `SequenceNumber` are those of the enclosing SecureChannel. `STR` frames share the single monotonically increasing `SequenceNumber` sequence with `MSG`, `OPN` and `CLO`, because that sequence is what protects the channel against replay, reordering and injection. A separate sequence per data channel would weaken it.
+- `IsFinal` **shall** be `F`, and a receiver **shall** treat any other value on a `STR` chunk — including `A` and `C` — as a protocol error and close the SecureChannel under OPC 10000-6 §6.7.7. A `STR` chunk is never a Message abort: a data channel frame is a single chunk (§5.5), so there is never a partially received Message to abort, and a peer that must abort the SecureChannel uses the existing `MSG`, `OPN` and `CLO` mechanism. Accepting `A` would be actively dangerous, because an Abort chunk's secured body is `Error` (UInt32) followed by `Reason` (String) per OPC 10000-6 §6.7.3: a receiver applying that parser to a `STR` chunk would read a 32-bit string length out of the attacker-controlled `FrameType`, `Flags` and `Reserved` bytes of the stream header.
+- `SecureChannelId`, `TokenId` and `SequenceNumber` are those of the enclosing SecureChannel. `STR` frames share the single monotonically increasing `SequenceNumber` sequence with `MSG`, `OPN` and `CLO`, because that sequence is what protects the channel against replay, reordering and injection. A separate sequence per data channel would weaken it. §5.1.1 states the token-lifetime obligation this creates.
 - `RequestId` **shall** be `0` and a receiver **shall** reject a frame that carries any other value. A data channel frame is not a Service invocation. Folding the ChannelId into `RequestId` was considered and rejected (Annex A): a Client allocates RequestIds, so no allocation rule could keep the two spaces from colliding.
 
-A Server **shall not** send a `STR` frame on a SecureChannel on which no data channel has been opened, and a receiver **shall** treat such a frame as a protocol error and close the SecureChannel.
+A peer **shall not** send a `STR` frame naming a ChannelId that is not open on that SecureChannel, and a receiver **shall** treat such a frame as a protocol error and close the SecureChannel — except for ChannelId `0`, the connection control channel, which exists precisely so that flow control and round-trip probing work on a connection with no data channel open (§5.6). The prohibition binds both peers, not only the Server.
+
+<a id="sequence-number-budget"></a>
+
+#### 5.1.1 SequenceNumber consumption and token lifetime
+
+OPC 10000-6 §6.7.2.4 requires that a `SequenceNumber` is never reused under one `TokenId`, and discharges that requirement by assuming the SecurityToken lifetime is short enough relative to the chunk rate. Data channels invalidate the assumption rather than the rule: `STR` frames consume `SequenceNumber` values at the **data rate of the channel** rather than at Service call rate, which is three to six orders of magnitude higher. On a 10 Gbit/s link, minimum-size frames exhaust the 32-bit space in roughly two and a half minutes — well inside a typical one-hour token lifetime.
+
+Reuse under one token is not a cosmetic fault. Where a SecurityPolicy derives a per-chunk initialization vector or AEAD nonce from the `SequenceNumber`, reuse under one key is a cryptographic failure; where it does not, replay and injection detection for that token silently degrades, because a stack that checks only "incremented by exactly one" accepts the wrap.
+
+Therefore:
+
+- A sender **shall** track the `SequenceNumber` space remaining under the current `TokenId` and **shall** initiate `OpenSecureChannel` with `RenewalRequest` before fewer than `2^30` values remain, in addition to the normal lifetime-based renewal.
+- A receiver **shall** enforce OPC 10000-6 §6.7.2.4 and **shall** close the SecureChannel if a `SequenceNumber` is reused under one `TokenId`.
+- A Server **shall** revise `revisedLifetime` on `OpenSecureChannel` down to a value consistent with the aggregate `MaxBitrate` and `MaxFrameSize` it has granted on that SecureChannel.
+- Because `CREDIT` and `GAP` are exempt from flow control (§5.8.2) they would otherwise let a peer consume the sequence space at line rate for free. A peer **shall not** emit more than 100 `CREDIT` or `GAP` frames per channel per second, and a receiver **may** `RESET` the channel with `Bad_DataChannelLimitsExceeded` on persistent violation.
 
 ### 5.2 Stream header
 
@@ -139,7 +154,11 @@ Comparison is performed in serial-number arithmetic over the `2^32 - 1` values `
 
 A receiver **shall** apply this clause to `DATA` frames only. `CREDIT`, `GAP`, `RESET`, `END`, `PING` and `PONG` frames carry a `FrameSequenceNumber` for audit and duplicate detection but **shall not** advance `HighestReceived` and **shall not** cause a gap to be reported. Were control frames to advance it, a `GAP` announcing an expiry would push `HighestReceived` past a lower-numbered frame that survived and is still to be transmitted, and the receiver would then discard as a duplicate precisely the frame the per-run rule of §5.10 exists to protect.
 
-A receiver **shall** maintain, per channel and per direction, a `HighestReceived` value initialized to the first `DATA` `FrameSequenceNumber` it accepts, and a **replay window** of at least the last 64 sequence numbers at or below `HighestReceived`. It **shall** retain a run named by a `GAP` until `HighestReceived` has advanced past that run's `LastDiscarded` by more than the size of the replay window, and **shall** then discard the run. Bounding the retained runs matters for the same reason bounding the replay window does: an unbounded set grows without limit on a lossy media channel, and after the sequence wraps a legitimate frame whose number was named four billion frames earlier would be silently discarded. Because `DATA` is transmitted in ascending order (§5.2), no frame within a run can legitimately arrive after that point.
+A receiver **shall** maintain, per channel and per direction, a `HighestReceived` value initialized to the first `DATA` `FrameSequenceNumber` it accepts, and a **replay window** of at least the last 64 sequence numbers at or below `HighestReceived`.
+
+Retained `GAP` runs are bounded **absolutely**, not by progress the peer controls. A receiver **shall** retain at most `MaxGapRuns` runs per channel and direction, default 64, and on receiving a `GAP` that would exceed the bound **shall** discard the oldest retained run. It **should** additionally discard a run once `HighestReceived` has advanced past that run's `LastDiscarded` by more than the replay window, at which point no frame in the run can legitimately arrive because `DATA` is transmitted in ascending order (§5.2).
+
+A receiver **shall** `RESET` the channel with `Bad_DataChannelLimitsExceeded` on a `GAP` that names a run *after* `HighestReceived`, that arrives in a direction the channel's `Direction` does not permit to carry `DATA`, or that arrives before the first `DATA` frame on that channel and direction. Without these three rules the retention bound is worthless: `HighestReceived` is advanced only by `DATA`, so on a `SourceToSink` channel — where the Client never sends `DATA` at all but **may** send control frames (§5.3) — a Client could emit flow-control-exempt `GAP` frames naming distinct runs forever, each costing it 44 bytes and costing the Server permanent state.
 
 For each accepted `DATA` frame a receiver **shall** apply exactly these rules, in order:
 
@@ -257,6 +276,12 @@ Stating who sends first, and that the window is zero until they do, is what make
 - A receiver that is deliberately withholding credit as backpressure **shall** nevertheless answer `PING` and **shall** accept and act on `RESET` and `END`.
 
 Backpressure is therefore per channel and per direction: a consumer that cannot keep up with a video stream stalls that stream and nothing else. The connection window exists so the sum of channels cannot exhaust the receiver's memory even when each is individually within its window.
+
+### 5.8.3 Minimum SecureChannel security
+
+A **Server shall** reject `OpenDataChannel` with `Bad_SecurityModeInsufficient` on a SecureChannel whose SecurityMode is `None`, unless the source Node's `AccessRestrictions` explicitly permit it.
+
+This is a transport-independent, Server-enforced rule, and both properties are deliberate. It is placed here rather than in the QUIC clause because inline framing over `opc.tcp` and `opc.wss` is where it is actually needed: on a SecurityMode `None` SecureChannel a `STR` frame carries neither signature nor encryption, so its payload, its `FrameSequenceNumber` and the SecureChannel's own `SequenceNumber` are all attacker-forgeable, and every protection in §5.2.1 and §5.12 rests on bytes anyone on the path can rewrite. Over `opc.quic` the TLS 1.3 record layer already provides confidentiality and integrity, so the rule binds there too but adds less. And it is a Server obligation because a rule that only the attacker is asked to obey is not a rule: a Client-side prohibition is ignored by exactly the Client that matters.
 
 ### 5.9 Delivery modes and partial reliability
 
@@ -469,7 +494,9 @@ Each data channel is bound at open to one QUIC stream, whose identifier is carri
 
 The same obligation applies to inline framing, where the sender controls the byte order and can simply serialize the two.
 
-A QUIC stream carries a sequence of frames in **QUIC framing**: the Message header followed directly by the stream header, payload and nothing else. The symmetric security header, the sequence header and the message footer are omitted, because QUIC's TLS 1.3 record layer already authenticates and encrypts every byte and QUIC already orders and deduplicates each stream. The Message header is retained so that one decoder serves both transports and an intermediary can delimit frames without possessing keys. `MessageSize` remains the authoritative frame length, so a stream is self-delimiting.
+A QUIC stream carries a sequence of frames in **QUIC framing**: the Message header followed directly by the stream header, payload and nothing else. The symmetric security header, the sequence header and the message footer are omitted under the `TransportSecured` profile, because QUIC's TLS 1.3 record layer already authenticates and encrypts every byte and QUIC already orders and deduplicates each stream. The Message header is retained so that one decoder serves both transports and so a frame is self-delimiting without reassembly state; `MessageSize` remains the authoritative frame length. It is **not** retained to let an intermediary parse frames — over QUIC an intermediary could only do so by terminating TLS, which §7.6.1 forbids for this profile.
+
+A receiver **shall** buffer at most `MaxFrameSize` × 4 bytes of frames naming ChannelIds it does not yet know, and **shall** discard the excess. Without that bound the buffering rule above is itself an unbounded-state primitive, because a not-yet-open ChannelId has no credit window to charge against.
 
 Because QUIC applies its own per-stream and per-connection flow control, `CREDIT` frames **shall not** be sent over `opc.quic` and a receiver **shall** ignore one. Duplicating the window in two layers gains nothing and deadlocks when the two disagree.
 
@@ -492,20 +519,29 @@ For `PartiallyReliable`, a sender **may** retransmit a datagram up to `MaxRetran
 QUIC mandates TLS 1.3 (RFC 9001), so `opc.quic` is a transport-secured protocol in the sense of OPC 10000-6 §7.4, like HTTPS. Two layers are therefore available, and this specification is explicit about which does what:
 
 - **Control stream.** UA-SC message security applies unchanged. `OpenSecureChannel` runs, the security policy is negotiated, the application instance certificates authenticate the two applications, and SecurityMode is honoured. This is what preserves the OPC UA security model — application authentication and user authorization do not become TLS's job.
-- **Data channel streams and datagrams.** Frames are protected by QUIC's TLS 1.3 record layer only. This is the `TransportSecured` data channel profile and it is **mandatory** over `opc.quic`; applying UA-SC message security a second time to bulk media would double the cryptographic cost of the hot path for no additional guarantee, since the same TLS connection already authenticates the same peer.
+- **Data channel streams and datagrams.** Frames are protected by QUIC's TLS 1.3 record layer only. This is the `TransportSecured` data channel profile, and it is the default over `opc.quic`; applying UA-SC message security a second time to bulk media would double the cryptographic cost of the hot path. It is sound **only** where the TLS peer is proved to be the OPC UA peer, which §7.6.1 requires and which is not otherwise true.
 
 The following are normative consequences:
 
 - A Server **shall** validate the Client's application instance certificate during `OpenSecureChannel` on the control stream, exactly as over `opc.tcp`. The TLS certificate authenticates the transport endpoint; it does **not** substitute for the OPC UA application certificate.
-- A Client **shall not** open a data channel on a SecureChannel whose SecurityMode is `None` unless the Server explicitly permits it, because the audit trail then rests on TLS alone.
-- **0-RTT data shall not be used to carry `OpenDataChannel`, `OpenSecureChannel` or any data channel frame.** 0-RTT is replayable, and a replayed channel open is a replayed authorization. 0-RTT **may** be used to resume the QUIC connection itself.
+- §5.8.3 governs the minimum SecureChannel SecurityMode, transport-independently and as a Server obligation.
+- **0-RTT data shall not be used to carry `OpenDataChannel`, `OpenSecureChannel` or any data channel frame.** 0-RTT is replayable, and a replayed channel open is a replayed authorization. A Server **shall** reject, and **shall not** act on, any UACP octet or data channel frame received in 0-RTT. 0-RTT **may** be used to resume the QUIC connection itself.
 - QUIC key updates and OPC UA channel-token renewal are independent and neither triggers the other.
+
+#### 7.6.1 Binding the TLS peer to the OPC UA peer
+
+The `TransportSecured` profile rests on one premise — that the TLS connection carrying the frames terminates at the same application the control stream authenticated. That premise is not self-evident and **shall** be established rather than assumed. Without it, any party able to terminate QUIC between the two — a transparent proxy, an OT protocol gateway, a compromised middlebox, a redirected discovery URL — byte-forwards the end-to-end-secured control stream so that `OpenSecureChannel`, `CreateSession` and `ActivateSession` all succeed and every certificate check passes, while reading, modifying, dropping and injecting every data channel frame in the clear. Both ends would report a fully authenticated `SignAndEncrypt` SecureChannel. Over `opc.tcp` the same relay is harmless, because `MSG` chunks are secured end to end; it is the `TransportSecured` profile that turns it into total compromise of the content.
+
+- A Client **shall** validate the Server's TLS certificate under RFC 5280 and RFC 9001, against the trust list it uses for Application Instance Certificates or an explicitly configured TLS trust list, and **shall** verify that a subjectAltName covers the host of the `EndpointUrl`. A Client **shall** abandon the connection if validation fails.
+- The Server's TLS certificate **shall** identify the same application instance as its Application Instance Certificate: it **shall** carry the Server's `ApplicationUri` in a uniformResourceIdentifier subjectAltName, and the Client **shall** verify that this value equals the `ApplicationUri` of the certificate returned in the `OpenSecureChannel` response. A Client **shall** abort the SecureChannel if the two differ. This single comparison is what defeats the relay: a proxy can present a valid TLS certificate for its own name, but not one asserting the Server's `ApplicationUri` unless it holds the Server's key.
+- Where the SecurityPolicy in force supports channel-bound signatures, the two layers **shall** additionally be bound by including the TLS exporter value (RFC 8446 §7.5, label `EXPORTER-opcua-quic`) in the `ChannelThumbprint` computation of OPC 10000-6 §6.7.5.
+- The `TransportSecured` profile **shall not** be used across an intermediary that terminates TLS. A Server that must be reached through such an intermediary **shall** offer the `MessageSecured` data channel profile instead, in which `STR` frames over `opc.quic` carry the full UA-SC symmetric security header, sequence header and footer exactly as in inline framing, and are therefore protected end to end at the cost of the second cryptographic pass. A Server **shall** indicate which profile an endpoint uses in its `EndpointDescription`.
 
 ### 7.7 Connection migration
 
 QUIC identifies a connection by its connection ID rather than by the four-tuple, so a client whose address changes — a vehicle moving between access points, a handheld leaving Wi-Fi for cellular — keeps the same QUIC connection, the same SecureChannel, the same Session and every open data channel. Over `opc.tcp` all of that is destroyed and must be rebuilt.
 
-A Server **shall** accept migration under the RFC 9000 path-validation rules and **shall not** treat a validated path change as a security event, since the connection remains cryptographically bound to the same peer. A Server **may** re-evaluate a network-location-based authorization decision after migration; if it does and the decision is now negative, it **shall** abort the affected data channels with `Bad_UserAccessDenied` rather than silently continuing.
+A Server **shall** accept migration under the RFC 9000 path-validation rules and **shall not** abort the connection on a validated path change, since it remains cryptographically bound to the same peer. A Server **shall** record the path change in the audit trail, and **shall** re-evaluate any authorization decision that depended on the network location of the peer, aborting the affected data channels with `Bad_UserAccessDenied` on a negative result. This last obligation is not optional, because migration is precisely what lets an authenticated Client carry a live stream from an authorized network segment to an unauthorized one — over `opc.tcp` the same move destroys the connection and forces re-authentication, so leaving it discretionary would make QUIC a regression against the transport it replaces.
 
 ### 7.8 Congestion control
 
@@ -515,7 +551,9 @@ What this specification does provide is the information an application needs to 
 
 ### 7.9 Fallback and feature parity
 
-A Client that cannot reach an `opc.quic` endpoint — no implementation, blocked UDP, a middlebox that drops QUIC — **shall** fall back to `opc.tcp` or `opc.wss` and use inline framing. The Services, the AddressSpace model, the frame layout above the Message header and the application contract are identical; only the four properties in the table of §4.2 differ.
+A Client that cannot reach an `opc.quic` endpoint — no implementation, blocked UDP, a middlebox that drops QUIC — **may** fall back to `opc.tcp` or `opc.wss` and use inline framing. The Services, the AddressSpace model, the frame layout above the Message header and the application contract are identical; only the four properties in the table of §4.2 differ.
+
+Fallback **shall not** be a downgrade. A Client **shall not** fall back to an endpoint whose SecurityMode or SecurityPolicy is weaker than the one it required of the `opc.quic` endpoint, and **shall** report the failure to the application rather than accept the weaker endpoint. Making fallback unconditional would hand an off-path attacker a downgrade primitive: dropping UDP on port 4840 is a single firewall rule, and it would otherwise move every Client to a transport of the attacker's choosing.
 
 A Server **shall not** require QUIC for any capability it also exposes over `opc.tcp`, and **shall** report through `SupportsUnreliableDatagrams` whether genuine loss is available, so a Client learns the difference by reading rather than by measuring.
 
@@ -568,6 +606,12 @@ A conformance unit is only useful if a laboratory can derive test cases from it,
 | DCF-027 | `DrainTimeout` bounds a peer's own drain | Call `CloseDataChannel` with `deleteQueued` `False`, then withhold the SUT's `END` | Channel reaches `Faulted` within `DrainTimeout` (§5.14) |
 | DCF-028 | Receiving `END` does not close the receiver's own direction | Send `END` to the SUT while it is still sending | The SUT is **not** faulted and continues to send `DATA` in its own direction (§5.13) |
 | DCF-029 | A `RESET` carrying `Good` closes rather than faults | Send one | Channel reports `Closed`, not `Faulted` (§5.11, §5.13) |
+| DCF-030 | `IsFinal` other than `F` is rejected | Send a `STR` chunk with `IsFinal` `A` | SecureChannel closed; the body is **not** parsed as an abort `Error`/`Reason` (§5.1) |
+| DCF-031 | Retained `GAP` runs are absolutely bounded | Emit `MaxGapRuns` + 1 distinct single-frame `GAP` runs | The oldest run is discarded; retained state does not grow (§5.2.1) |
+| DCF-032 | A `GAP` that cannot correspond to real loss is rejected | `GAP` naming a run after `HighestReceived`, or before any `DATA`, or in a direction that carries no `DATA` | `RESET` with `Bad_DataChannelLimitsExceeded` (§5.2.1) |
+| DCF-033 | Credit-exempt control frames are rate-bounded | Emit `CREDIT`/`GAP` above the stated rate | Rate enforced; `RESET` with `Bad_DataChannelLimitsExceeded` on persistence (§5.1.1) |
+| DCF-034 | `SequenceNumber` exhaustion forces renewal | Drive the space to fewer than `2^30` values remaining | `OpenSecureChannel` with `RenewalRequest` is issued before reuse (§5.1.1) |
+| DCF-035 | SecurityMode `None` is refused | `OpenDataChannel` on a `None` SecureChannel with no explicit permission | `Bad_SecurityModeInsufficient`, enforced by the **Server** (§5.8.3) |
 
 **Data Channel Partial Reliability**
 
@@ -586,8 +630,11 @@ A conformance unit is only useful if a laboratory can derive test cases from it,
 | DCQ-002 | The Client supplies the stream id for Client-initiated directions | `OpenDataChannel` for `Bidirectional` with no `transportChannelId` | `Bad_DataChannelLimitsExceeded` (§7.4) |
 | DCQ-003 | No frame precedes the `OpenDataChannel` response | Observe the control stream and the data stream | Response written first (§7.4) |
 | DCQ-004 | `CREDIT` frames are not sent over `opc.quic` | Open a channel and saturate it | No `CREDIT` frame observed (§7.4) |
-| DCQ-005 | 0-RTT carries no channel open | Attempt one | Rejected (§7.6) |
+| DCQ-005 | 0-RTT carries no channel open | Attempt one | Rejected and not acted on (§7.6) |
 | DCQ-006 | Datagram modes are refused without the extension | Request `Unreliable` with `max_datagram_frame_size` absent | `Bad_DeliveryModeUnsupported` (§7.5) |
+| DCQ-007 | The TLS certificate is bound to the OPC UA identity | Present a valid TLS certificate whose `ApplicationUri` differs from the `OpenSecureChannel` certificate | Client aborts the SecureChannel (§7.6.1) |
+| DCQ-008 | Fallback is not a downgrade | Block UDP, offer only a weaker-SecurityMode `opc.tcp` endpoint | Client reports failure rather than falling back (§7.9) |
+| DCQ-009 | Unknown-ChannelId buffering is bounded | Flood frames naming unopened ChannelIds | At most `MaxFrameSize` × 4 bytes buffered, excess discarded (§7.4) |
 
 DCF-015 and DCF-016 fail only under load, which is what makes them the assertions that most often distinguish a conforming implementation from one that merely interoperates in the laboratory. DCF-016 checks the anti-starvation `shall` of §5.7 obligation 2 rather than a particular bandwidth ratio, because the (`Priority` + 1) × `MaxFrameSize` quantum that would fix the ratio is a `should` and a laboratory cannot fail an implementation on a recommendation. `OpenTimeout` has no assertion of its own: §5.13 ends `Opening` when the Server hands its own response to the transport, so no external harness can stall it.
 

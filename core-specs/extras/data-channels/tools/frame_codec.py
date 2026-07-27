@@ -21,7 +21,10 @@ header:
           record layer already authenticates and encrypts it and whose per-stream
           ordering already sequences it. The UA-SC security header, sequence header
           and footer are therefore omitted; the Message header is retained so one
-          decoder serves both transports and so a relay can frame without decrypting.
+          decoder serves both transports and so a frame can be delimited without
+          reassembly state. Note that over QUIC an intermediary could only delimit
+          frames by terminating TLS, which the specification forbids: the QUIC
+          `TransportSecured` profile leaves payload protected by TLS alone.
 
 Every integer is little-endian, matching the OPC UA Binary DataEncoding.
 """
@@ -36,7 +39,6 @@ QUIC = "quic"
 
 MESSAGE_TYPE = b"STR"
 CHUNK_TYPE_FINAL = b"F"
-CHUNK_TYPE_ABORT = b"A"
 
 MESSAGE_HEADER_SIZE = 12       # MessageType[3] + IsFinal[1] + MessageSize + SecureChannelId
 SECURITY_HEADER_SIZE = 4       # TokenId
@@ -128,7 +130,6 @@ class Frame:
     secure_channel_id: int = 0
     token_id: int = 0
     sequence_number: int = 0
-    abort: bool = False
 
     def __post_init__(self):
         if self.deadline is not None:
@@ -211,8 +212,7 @@ def encode(frame: Frame, mode: str = INLINE, *, footer: bytes = b"") -> bytes:
         raise FrameError(f"unknown framing mode {mode!r}")
 
     total = MESSAGE_HEADER_SIZE + len(body) + len(footer)
-    chunk = CHUNK_TYPE_ABORT if frame.abort else CHUNK_TYPE_FINAL
-    head = MESSAGE_TYPE + chunk + struct.pack("<II", total, frame.secure_channel_id)
+    head = MESSAGE_TYPE + CHUNK_TYPE_FINAL + struct.pack("<II", total, frame.secure_channel_id)
     return head + body + footer
 
 
@@ -224,9 +224,14 @@ def decode(data: bytes, mode: str = INLINE, *, footer_size: int = 0) -> Frame:
     if data[0:3] != MESSAGE_TYPE:
         raise FrameError(f"not a data channel frame: MessageType {data[0:3]!r}")
     chunk = data[3:4]
-    if chunk not in (CHUNK_TYPE_FINAL, CHUNK_TYPE_ABORT):
+    if chunk != CHUNK_TYPE_FINAL:
+        # 'F' is the only legal value. 'A' is deliberately rejected: an Abort chunk's
+        # secured body is Error + Reason per OPC 10000-6 6.7.3, so accepting 'A' here
+        # would let an attacker have the stream header's bytes reinterpreted as a
+        # 32-bit string length. A data channel frame is a single chunk and there is
+        # never a partially received Message to abort.
         raise FrameError("a data channel frame is always a single chunk: IsFinal "
-                         "shall be 'F', or 'A' to abort the SecureChannel")
+                         "shall be 'F'")
     size, secure_channel_id = struct.unpack("<II", data[4:12])
     if size != len(data):
         raise FrameError(f"MessageSize {size} does not match the {len(data)} bytes received")
@@ -285,7 +290,7 @@ def decode(data: bytes, mode: str = INLINE, *, footer_size: int = 0) -> Frame:
     return Frame(channel_id=channel_id, frame_type=frame_type, flags=flags & ~FLAG_DEADLINE,
                  frame_sequence_number=fsn, payload=payload, deadline=deadline,
                  extras=extras, secure_channel_id=secure_channel_id, token_id=token_id,
-                 sequence_number=sequence_number, abort=(chunk == CHUNK_TYPE_ABORT))
+                 sequence_number=sequence_number)
 
 
 # --- Byte-layout annotation -------------------------------------------------
