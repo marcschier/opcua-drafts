@@ -340,6 +340,13 @@ prop_var(65012, DCC, "SupportsUnreliableDatagrams", Boolean,
          "True when the Server can carry Unreliable channels over a genuinely lossy path, which "
          "requires a transport that provides one. False on a Server reachable only over opc.tcp "
          "or opc.wss, where Unreliable degrades to sender-side discard.")
+prop_var(65012, DCC, "AllowInsecureDataChannels", Boolean,
+         "True only where the Server permits a data channel to be opened on a SecureChannel whose "
+         "SecurityMode is None. Absence shall be read as False. On such a channel a frame carries "
+         "neither signature nor encryption, so its payload and both sequence numbers are "
+         "attacker-forgeable; the permission is therefore an explicit, separately readable, "
+         "default-false opt-in rather than something inferred from AccessRestrictions, which "
+         "defines only restriction bits and no bit that grants anything.")
 comp_var(65012, DCC, "ActiveChannelCount", UInt16,
          "The number of data channels currently open across the whole Server.")
 

@@ -188,7 +188,8 @@
       <Reference ReferenceType="HasProperty">i=66015</Reference>
       <Reference ReferenceType="HasProperty">i=66016</Reference>
       <Reference ReferenceType="HasProperty">i=66017</Reference>
-      <Reference ReferenceType="HasComponent">i=66018</Reference>
+      <Reference ReferenceType="HasProperty">i=66018</Reference>
+      <Reference ReferenceType="HasComponent">i=66019</Reference>
     </References>
   </UAObjectType>
   <UAVariable NodeId="i=66011" BrowseName="MaxDataChannels" ParentNodeId="i=65012" DataType="UInt16" ValueRank="-1">
@@ -254,7 +255,16 @@
       <Reference ReferenceType="HasProperty" IsForward="false">i=65012</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="i=66018" BrowseName="ActiveChannelCount" ParentNodeId="i=65012" DataType="UInt16" ValueRank="-1">
+  <UAVariable NodeId="i=66018" BrowseName="AllowInsecureDataChannels" ParentNodeId="i=65012" DataType="Boolean" ValueRank="-1">
+    <DisplayName>AllowInsecureDataChannels</DisplayName>
+    <Description>True only where the Server permits a data channel to be opened on a SecureChannel whose SecurityMode is None. Absence shall be read as False. On such a channel a frame carries neither signature nor encryption, so its payload and both sequence numbers are attacker-forgeable; the permission is therefore an explicit, separately readable, default-false opt-in rather than something inferred from AccessRestrictions, which defines only restriction bits and no bit that grants anything.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">i=65012</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="i=66019" BrowseName="ActiveChannelCount" ParentNodeId="i=65012" DataType="UInt16" ValueRank="-1">
     <DisplayName>ActiveChannelCount</DisplayName>
     <Description>The number of data channels currently open across the whole Server.</Description>
     <References>
@@ -269,10 +279,10 @@
     <Category>Data Channels Event Types</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=2041</Reference>
-      <Reference ReferenceType="HasProperty">i=66019</Reference>
+      <Reference ReferenceType="HasProperty">i=66020</Reference>
     </References>
   </UAObjectType>
-  <UAVariable NodeId="i=66019" BrowseName="Offer" ParentNodeId="i=65020" DataType="i=65035" ValueRank="-1">
+  <UAVariable NodeId="i=66020" BrowseName="Offer" ParentNodeId="i=65020" DataType="i=65035" ValueRank="-1">
     <DisplayName>Offer</DisplayName>
     <Description>The offered channel: its OfferId, its source Node, the parameters the Server proposes and the time after which the offer lapses.</Description>
     <References>
@@ -287,12 +297,12 @@
     <Category>Data Channels Event Types</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=2041</Reference>
-      <Reference ReferenceType="HasProperty">i=66020</Reference>
       <Reference ReferenceType="HasProperty">i=66021</Reference>
       <Reference ReferenceType="HasProperty">i=66022</Reference>
+      <Reference ReferenceType="HasProperty">i=66023</Reference>
     </References>
   </UAObjectType>
-  <UAVariable NodeId="i=66020" BrowseName="ChannelId" ParentNodeId="i=65021" DataType="UInt32" ValueRank="-1">
+  <UAVariable NodeId="i=66021" BrowseName="ChannelId" ParentNodeId="i=65021" DataType="UInt32" ValueRank="-1">
     <DisplayName>ChannelId</DisplayName>
     <Description>The data channel whose state changed, unique within its SecureChannel.</Description>
     <References>
@@ -301,7 +311,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">i=65021</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="i=66021" BrowseName="State" ParentNodeId="i=65021" DataType="i=65032" ValueRank="-1">
+  <UAVariable NodeId="i=66022" BrowseName="State" ParentNodeId="i=65021" DataType="i=65032" ValueRank="-1">
     <DisplayName>State</DisplayName>
     <Description>The state entered.</Description>
     <References>
@@ -310,7 +320,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">i=65021</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="i=66022" BrowseName="Status" ParentNodeId="i=65021" DataType="StatusCode" ValueRank="-1">
+  <UAVariable NodeId="i=66023" BrowseName="Status" ParentNodeId="i=65021" DataType="StatusCode" ValueRank="-1">
     <DisplayName>Status</DisplayName>
     <Description>The StatusCode that caused the transition, for a transition into Closed or Faulted.</Description>
     <References>
@@ -325,12 +335,12 @@
     <Category>Data Channels Event Types</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=2069</Reference>
-      <Reference ReferenceType="HasProperty">i=66023</Reference>
       <Reference ReferenceType="HasProperty">i=66024</Reference>
       <Reference ReferenceType="HasProperty">i=66025</Reference>
+      <Reference ReferenceType="HasProperty">i=66026</Reference>
     </References>
   </UAObjectType>
-  <UAVariable NodeId="i=66023" BrowseName="DataChannelSourceNodeId" ParentNodeId="i=65022" DataType="NodeId" ValueRank="-1">
+  <UAVariable NodeId="i=66024" BrowseName="DataChannelSourceNodeId" ParentNodeId="i=65022" DataType="NodeId" ValueRank="-1">
     <DisplayName>DataChannelSourceNodeId</DisplayName>
     <Description>The endpoint the channel was requested on.</Description>
     <References>
@@ -339,7 +349,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">i=65022</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="i=66024" BrowseName="Parameters" ParentNodeId="i=65022" DataType="i=65033" ValueRank="-1">
+  <UAVariable NodeId="i=66025" BrowseName="Parameters" ParentNodeId="i=65022" DataType="i=65033" ValueRank="-1">
     <DisplayName>Parameters</DisplayName>
     <Description>The parameters as revised by the Server, or as requested when the request was rejected.</Description>
     <References>
@@ -348,7 +358,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">i=65022</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="i=66025" BrowseName="ChannelId" ParentNodeId="i=65022" DataType="UInt32" ValueRank="-1">
+  <UAVariable NodeId="i=66026" BrowseName="ChannelId" ParentNodeId="i=65022" DataType="UInt32" ValueRank="-1">
     <DisplayName>ChannelId</DisplayName>
     <Description>The assigned ChannelId. Omitted when the request was rejected.</Description>
     <References>
@@ -417,27 +427,27 @@
     <Category>Data Channels Data Types</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=22</Reference>
-      <Reference ReferenceType="HasEncoding">i=66026</Reference>
       <Reference ReferenceType="HasEncoding">i=66027</Reference>
       <Reference ReferenceType="HasEncoding">i=66028</Reference>
+      <Reference ReferenceType="HasEncoding">i=66029</Reference>
     </References>
     <Definition Name="DataChannelParametersDataType"><Field Name="Direction" DataType="i=65030"><Description>The direction payload flows in.</Description></Field><Field Name="DeliveryMode" DataType="i=65031"><Description>The delivery guarantee.</Description></Field><Field Name="ContentType" DataType="i=12"><Description>IANA media type of the payload.</Description></Field><Field Name="ContentParameters" DataType="i=14533" ValueRank="1"><Description>Content-specific parameters qualifying ContentType.</Description></Field><Field Name="MaxFrameSize" DataType="i=7"><Description>Largest frame payload in bytes.</Description></Field><Field Name="InitialCredit" DataType="i=7"><Description>Flow control credit, in payload bytes, granted to the peer at open.</Description></Field><Field Name="Priority" DataType="i=3"><Description>Scheduling priority, 0 lowest to 7 highest. 255 requests the source's default; other values above 7 are revised to 7.</Description></Field><Field Name="MaxRetransmits" DataType="i=5"><Description>PartiallyReliable only: attempts before a frame is abandoned. Ignored where the transport is already reliable.</Description></Field><Field Name="FrameDeadline" DataType="i=290"><Description>PartiallyReliable and Unreliable only: how long a frame may wait in the send queue before it is discarded.</Description></Field></Definition>
   </UADataType>
-  <UAObject NodeId="i=66026" BrowseName="Default Binary" ParentNodeId="i=65033">
+  <UAObject NodeId="i=66027" BrowseName="Default Binary" ParentNodeId="i=65033">
     <DisplayName>Default Binary</DisplayName>
     <References>
       <Reference ReferenceType="HasTypeDefinition">i=76</Reference>
       <Reference ReferenceType="HasEncoding" IsForward="false">i=65033</Reference>
     </References>
   </UAObject>
-  <UAObject NodeId="i=66027" BrowseName="Default XML" ParentNodeId="i=65033">
+  <UAObject NodeId="i=66028" BrowseName="Default XML" ParentNodeId="i=65033">
     <DisplayName>Default XML</DisplayName>
     <References>
       <Reference ReferenceType="HasTypeDefinition">i=76</Reference>
       <Reference ReferenceType="HasEncoding" IsForward="false">i=65033</Reference>
     </References>
   </UAObject>
-  <UAObject NodeId="i=66028" BrowseName="Default JSON" ParentNodeId="i=65033">
+  <UAObject NodeId="i=66029" BrowseName="Default JSON" ParentNodeId="i=65033">
     <DisplayName>Default JSON</DisplayName>
     <References>
       <Reference ReferenceType="HasTypeDefinition">i=76</Reference>
@@ -450,27 +460,27 @@
     <Category>Data Channels Data Types</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=22</Reference>
-      <Reference ReferenceType="HasEncoding">i=66029</Reference>
       <Reference ReferenceType="HasEncoding">i=66030</Reference>
       <Reference ReferenceType="HasEncoding">i=66031</Reference>
+      <Reference ReferenceType="HasEncoding">i=66032</Reference>
     </References>
     <Definition Name="DataChannelStatusDataType"><Field Name="ChannelId" DataType="i=7"><Description>Identifier of the channel within its SecureChannel.</Description></Field><Field Name="SourceNodeId" DataType="i=17"><Description>The endpoint the channel was opened on.</Description></Field><Field Name="State" DataType="i=65032"><Description>Current lifecycle state.</Description></Field><Field Name="Parameters" DataType="i=65033"><Description>The parameters in force, as revised by the Server.</Description></Field><Field Name="TransportChannelId" DataType="i=9"><Description>The underlying transport identifier: the QUIC stream id over opc.quic, 0 for inline framing.</Description></Field><Field Name="StartTime" DataType="i=294"><Description>When the channel entered the Open state.</Description></Field></Definition>
   </UADataType>
-  <UAObject NodeId="i=66029" BrowseName="Default Binary" ParentNodeId="i=65034">
+  <UAObject NodeId="i=66030" BrowseName="Default Binary" ParentNodeId="i=65034">
     <DisplayName>Default Binary</DisplayName>
     <References>
       <Reference ReferenceType="HasTypeDefinition">i=76</Reference>
       <Reference ReferenceType="HasEncoding" IsForward="false">i=65034</Reference>
     </References>
   </UAObject>
-  <UAObject NodeId="i=66030" BrowseName="Default XML" ParentNodeId="i=65034">
+  <UAObject NodeId="i=66031" BrowseName="Default XML" ParentNodeId="i=65034">
     <DisplayName>Default XML</DisplayName>
     <References>
       <Reference ReferenceType="HasTypeDefinition">i=76</Reference>
       <Reference ReferenceType="HasEncoding" IsForward="false">i=65034</Reference>
     </References>
   </UAObject>
-  <UAObject NodeId="i=66031" BrowseName="Default JSON" ParentNodeId="i=65034">
+  <UAObject NodeId="i=66032" BrowseName="Default JSON" ParentNodeId="i=65034">
     <DisplayName>Default JSON</DisplayName>
     <References>
       <Reference ReferenceType="HasTypeDefinition">i=76</Reference>
@@ -483,27 +493,27 @@
     <Category>Data Channels Data Types</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=22</Reference>
-      <Reference ReferenceType="HasEncoding">i=66032</Reference>
       <Reference ReferenceType="HasEncoding">i=66033</Reference>
       <Reference ReferenceType="HasEncoding">i=66034</Reference>
+      <Reference ReferenceType="HasEncoding">i=66035</Reference>
     </References>
     <Definition Name="DataChannelOfferDataType"><Field Name="OfferId" DataType="i=7"><Description>Identifies the offer. Unique within the SecureChannel until the offer lapses.</Description></Field><Field Name="SourceNodeId" DataType="i=17"><Description>The endpoint the Server is offering.</Description></Field><Field Name="Parameters" DataType="i=65033"><Description>The parameters the Server proposes.</Description></Field><Field Name="ExpirationTime" DataType="i=294"><Description>After this time the offer lapses and OpenDataChannel returns Bad_DataChannelOfferInvalid.</Description></Field></Definition>
   </UADataType>
-  <UAObject NodeId="i=66032" BrowseName="Default Binary" ParentNodeId="i=65035">
+  <UAObject NodeId="i=66033" BrowseName="Default Binary" ParentNodeId="i=65035">
     <DisplayName>Default Binary</DisplayName>
     <References>
       <Reference ReferenceType="HasTypeDefinition">i=76</Reference>
       <Reference ReferenceType="HasEncoding" IsForward="false">i=65035</Reference>
     </References>
   </UAObject>
-  <UAObject NodeId="i=66033" BrowseName="Default XML" ParentNodeId="i=65035">
+  <UAObject NodeId="i=66034" BrowseName="Default XML" ParentNodeId="i=65035">
     <DisplayName>Default XML</DisplayName>
     <References>
       <Reference ReferenceType="HasTypeDefinition">i=76</Reference>
       <Reference ReferenceType="HasEncoding" IsForward="false">i=65035</Reference>
     </References>
   </UAObject>
-  <UAObject NodeId="i=66034" BrowseName="Default JSON" ParentNodeId="i=65035">
+  <UAObject NodeId="i=66035" BrowseName="Default JSON" ParentNodeId="i=65035">
     <DisplayName>Default JSON</DisplayName>
     <References>
       <Reference ReferenceType="HasTypeDefinition">i=76</Reference>
@@ -516,27 +526,27 @@
     <Category>Data Channels Data Types</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=22</Reference>
-      <Reference ReferenceType="HasEncoding">i=66035</Reference>
       <Reference ReferenceType="HasEncoding">i=66036</Reference>
       <Reference ReferenceType="HasEncoding">i=66037</Reference>
+      <Reference ReferenceType="HasEncoding">i=66038</Reference>
     </References>
     <Definition Name="DataChannelDiagnosticsDataType"><Field Name="ChannelId" DataType="i=7"><Description>The channel these counters belong to.</Description></Field><Field Name="FramesSent" DataType="i=9"><Description>Data frames written to the transport.</Description></Field><Field Name="FramesReceived" DataType="i=9"><Description>Data frames accepted from the transport.</Description></Field><Field Name="BytesSent" DataType="i=9"><Description>Payload bytes written, excluding frame headers.</Description></Field><Field Name="BytesReceived" DataType="i=9"><Description>Payload bytes accepted, excluding frame headers.</Description></Field><Field Name="FramesDiscarded" DataType="i=9"><Description>Frames dropped before transmission because their deadline passed.</Description></Field><Field Name="CreditStalls" DataType="i=7"><Description>Times the sender had payload ready but no flow control credit.</Description></Field><Field Name="RoundTripTime" DataType="i=290"><Description>Most recent round trip time measured by PING/PONG.</Description></Field><Field Name="LastGapSequenceNumber" DataType="i=7"><Description>FrameSequenceNumber of the last frame reported as discarded in a gap notification.</Description></Field></Definition>
   </UADataType>
-  <UAObject NodeId="i=66035" BrowseName="Default Binary" ParentNodeId="i=65036">
+  <UAObject NodeId="i=66036" BrowseName="Default Binary" ParentNodeId="i=65036">
     <DisplayName>Default Binary</DisplayName>
     <References>
       <Reference ReferenceType="HasTypeDefinition">i=76</Reference>
       <Reference ReferenceType="HasEncoding" IsForward="false">i=65036</Reference>
     </References>
   </UAObject>
-  <UAObject NodeId="i=66036" BrowseName="Default XML" ParentNodeId="i=65036">
+  <UAObject NodeId="i=66037" BrowseName="Default XML" ParentNodeId="i=65036">
     <DisplayName>Default XML</DisplayName>
     <References>
       <Reference ReferenceType="HasTypeDefinition">i=76</Reference>
       <Reference ReferenceType="HasEncoding" IsForward="false">i=65036</Reference>
     </References>
   </UAObject>
-  <UAObject NodeId="i=66037" BrowseName="Default JSON" ParentNodeId="i=65036">
+  <UAObject NodeId="i=66038" BrowseName="Default JSON" ParentNodeId="i=65036">
     <DisplayName>Default JSON</DisplayName>
     <References>
       <Reference ReferenceType="HasTypeDefinition">i=76</Reference>
