@@ -533,6 +533,42 @@ placeholder_obj(variant_sets, "UsdPrimType_VariantSets", "<UsdVariantSet>", T(VS
 _member_var(metadata, "UsdPrimType_Metadata", "<Metadata>", BaseDataType, PropertyType,
             MR_OptionalPlaceholder, HasProperty, "Arbitrary metadata properties.")
 
+# --- UsdGeomCamera -----------------------------------------------------------
+# Appended (ObjectType 1024, members after the existing highest member id) rather than
+# inserted next to the other UsdGeom prims, so that no existing NodeId shifts: the
+# pumps/ and robotics/ scene overlays reference type ids 1001..1021 directly. The
+# georeference API types (1022/1023) were appended the same way.
+#
+# This is the OpenUSD <-> vision intersection: a camera prim is both a scene object
+# (materialized here) and an imaging sensor (OPC UA - Vision, VisionSensorType). Its
+# attributes are also the intrinsics surface used by NVIDIA Isaac Sim (Annex C).
+object_type(1024, "UsdGeomCameraType", T(XFORMABLE),
+            "USD Camera prim: a transformable prim describing a view frustum. Materializes "
+            "the UsdGeomCamera IsA schema. A conforming OPC UA - Vision sensor whose PrimPath "
+            "resolves into a materialized stage SHALL resolve to an instance of this type; the "
+            "aperture/focal-length attributes carry the camera intrinsics (Annex C).")
+CAMERA = 1024
+prop_var(CAMERA, "UsdGeomCameraType", "FocalLength", Float,
+         "Perspective focal length, in tenths of a world unit (USD convention: mm).")
+prop_var(CAMERA, "UsdGeomCameraType", "HorizontalAperture", Float,
+         "Horizontal aperture (sensor width), in tenths of a world unit.")
+prop_var(CAMERA, "UsdGeomCameraType", "VerticalAperture", Float,
+         "Vertical aperture (sensor height), in tenths of a world unit.")
+prop_var(CAMERA, "UsdGeomCameraType", "HorizontalApertureOffset", Float,
+         "Horizontal aperture offset from centre, in tenths of a world unit.")
+prop_var(CAMERA, "UsdGeomCameraType", "VerticalApertureOffset", Float,
+         "Vertical aperture offset from centre, in tenths of a world unit.")
+prop_var(CAMERA, "UsdGeomCameraType", "ClippingRange", Float,
+         "Near and far clipping distances as a two-element array (USD float2).", valuerank="1")
+prop_var(CAMERA, "UsdGeomCameraType", "FStop", Float,
+         "Lens aperture f-number; 0 disables depth of field.")
+prop_var(CAMERA, "UsdGeomCameraType", "FocusDistance", Float,
+         "Distance from the camera to the focus plane, in world units.")
+prop_var(CAMERA, "UsdGeomCameraType", "Projection", UsdToken,
+         "Projection token: perspective or orthographic.")
+prop_var(CAMERA, "UsdGeomCameraType", "Exposure", Float,
+         "Exposure adjustment in stops, applied as a scene-linear scale.")
+
 # ===========================================================================
 # ==================================  EMIT  =================================
 # ===========================================================================

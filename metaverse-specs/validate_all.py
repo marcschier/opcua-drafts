@@ -20,6 +20,8 @@ SELF_CONTAINED = [
     "extras/openusd-scene/tools/validate_local.py",
     "extras/openusd-scene/tools/validate_examples.py",
     # openusd-scene added in the Scene Materialization (Part 2) work.
+    "extras/vision/tools/validate_local.py",
+    # vision added in the OPC UA - Vision work.
 ]
 
 # Validators that additionally need untracked base data (none yet).

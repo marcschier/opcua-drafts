@@ -131,3 +131,14 @@
 | ns=1;i=6075 | <UsdCompositionArc> | Object | Composition arcs contributing opinions. |
 | ns=1;i=6076 | <UsdVariantSet> | Object | Variant sets available on this prim. |
 | ns=1;i=6077 | <Metadata> | Variable | Arbitrary metadata properties. |
+| ns=1;i=1024 | UsdGeomCameraType | ObjectType | USD Camera prim: a transformable prim describing a view frustum. Materializes the UsdGeomCamera IsA schema. A conforming OPC UA - Vision sensor whose PrimPath resolves into a materialized stage SHALL resolve to an instance of this type; the aperture/focal-length attributes carry the camera intrinsics (Annex C). |
+| ns=1;i=6078 | FocalLength | Variable | Perspective focal length, in tenths of a world unit (USD convention: mm). |
+| ns=1;i=6079 | HorizontalAperture | Variable | Horizontal aperture (sensor width), in tenths of a world unit. |
+| ns=1;i=6080 | VerticalAperture | Variable | Vertical aperture (sensor height), in tenths of a world unit. |
+| ns=1;i=6081 | HorizontalApertureOffset | Variable | Horizontal aperture offset from centre, in tenths of a world unit. |
+| ns=1;i=6082 | VerticalApertureOffset | Variable | Vertical aperture offset from centre, in tenths of a world unit. |
+| ns=1;i=6083 | ClippingRange | Variable | Near and far clipping distances as a two-element array (USD float2). |
+| ns=1;i=6084 | FStop | Variable | Lens aperture f-number; 0 disables depth of field. |
+| ns=1;i=6085 | FocusDistance | Variable | Distance from the camera to the focus plane, in world units. |
+| ns=1;i=6086 | Projection | Variable | Projection token: perspective or orthographic. |
+| ns=1;i=6087 | Exposure | Variable | Exposure adjustment in stops, applied as a scene-linear scale. |

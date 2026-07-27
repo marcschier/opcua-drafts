@@ -115,6 +115,9 @@ UsdTypedType
  │   ├─ UsdGeomScopeType
  │   └─ UsdGeomXformableType     (XformOpOrder)
  │        ├─ UsdGeomXformType
+ │        ├─ UsdGeomCameraType   (FocalLength, HorizontalAperture, VerticalAperture,
+ │        │                       HorizontalApertureOffset, VerticalApertureOffset,
+ │        │                       ClippingRange, FStop, FocusDistance, Projection, Exposure)
  │        └─ UsdGeomGprimType    (DisplayColor, DisplayOpacity, DoubleSided)
  │             ├─ UsdGeomMeshType     (Points, FaceVertexCounts, FaceVertexIndices)
  │             ├─ UsdGeomCylinderType (Height, Radius, Axis)
@@ -127,6 +130,8 @@ UsdTypedType
 ```
 
 A prim of a **known** typed schema is materialized as the matching subtype (its `HasTypeDefinition`), and its `TypeName` property still carries the exact USD `typeName`. A prim of an **unknown** typed schema degrades to `UsdPrimType`/`UsdTypedType` carrying the `TypeName` token — never dropped (§8.4). Vendors add new typed prims by **subtyping** `UsdTypedType` (§8.1).
+
+`UsdGeomCameraType` is the materialization point for **sensing**, and therefore the intersection between this specification and *OPC UA — Vision*: a camera prim is simultaneously a scene object (materialized here) and an imaging sensor (a `VisionSensorType` there). Its aperture and focal-length attributes are the camera **intrinsics**, which is also exactly the surface a synthetic-data simulator such as NVIDIA Isaac Sim configures — see [Annex C](#annex-c--isaac-sim-and-omniverse-replicator-mapping-informative). A Vision server whose sensor `PrimPath` resolves into a materialized stage resolves it to an instance of this type.
 
 ### 5.4 `UsdAttributeType : BaseDataVariableType` (VariableType)
 
@@ -188,6 +193,7 @@ Latitude/longitude are decimal degrees, height/elevation metres; a non-WGS84 `Ep
 | Attribute connection | `UsdConnection` reference |
 | Prim/stage metadata | Property Variables (well-known ones as typed members; the rest under `Metadata/`) |
 | Applied API schema | `UsdApiSchemaType` AddIn (`HasAddIn`) or Interface (`HasInterface`) |
+| Camera prim (`UsdGeomCamera`) | `UsdGeomCameraType` Object; aperture/focal-length attributes carry the intrinsics (§5.3, Annex C) |
 | Georeference / globe anchor (geodetic) | portable `UsdGeoreferenceApiType` / `UsdGlobeAnchorApiType` AddIn (§5.8); a vendor georeference prim → a `UsdTypedType` subtype, a vendor anchor schema → its own `UsdApiSchemaType` subtype |
 | Composition arc | `UsdCompositionArcType` under `Composition/` |
 | VariantSet / selection | `UsdVariantSetType` under `VariantSets/` |
@@ -400,3 +406,106 @@ World : UsdCesiumGeoreferencePrimType (: UsdTypedType)          # vendor typed p
 ### B.4 Round-trip
 
 Export reproduces the vendor schema names (`CesiumGeoreferencePrim`, `CesiumGlobeAnchorAPI`) and attribute values from the materialized nodes; the portable `UsdGeoreferenceApiType` / `UsdGlobeAnchorApiType` AddIns are additive provenance that need not be re-emitted to `.usd` (they carry no opinion the vendor schema does not). The georeference round-trip is therefore composed-scene lossless per §7.4, with the local↔global transform recovered from the vendor schema (or recomputed from the portable origin plus the stage `metersPerUnit`/`upAxis`).
+
+---
+
+## Annex C — Isaac Sim and Omniverse Replicator mapping (informative)
+
+Where Annex B showed a vendor schema materializing *into* the address space, this annex shows the **camera prim** materializing *out of* it into a synthetic-data simulator. NVIDIA Isaac Sim is built on OpenUSD, so a materialized stage is directly loadable; `UsdGeomCameraType` (§5.3) is the prim a simulator turns into a render product, and the same prim is the sensor that *OPC UA — Vision* describes. That makes this annex the scene-side half of the sim/real contract — the vision-side half is Annex B of *OPC UA — Vision*.
+
+### C.1 Camera intrinsics — the shared surface
+
+Isaac Sim configures a camera through the standard `UsdGeomCamera` attributes, so no vendor schema is required. Each maps one-to-one to a `UsdGeomCameraType` member:
+
+| USD attribute (`UsdGeomCamera`) | SdfValueTypeName | `UsdGeomCameraType` member | Isaac Sim use |
+|---|---|---|---|
+| `focalLength` | `float` | `FocalLength` | perspective focal length (intrinsics) |
+| `horizontalAperture` | `float` | `HorizontalAperture` | sensor width; with `focalLength` gives horizontal FOV |
+| `verticalAperture` | `float` | `VerticalAperture` | sensor height; with `focalLength` gives vertical FOV |
+| `horizontalApertureOffset` | `float` | `HorizontalApertureOffset` | principal-point offset in x |
+| `verticalApertureOffset` | `float` | `VerticalApertureOffset` | principal-point offset in y |
+| `clippingRange` | `float2` | `ClippingRange` (`Float`, `ValueRank=1`) | near/far planes; bounds depth annotators |
+| `fStop` | `float` | `FStop` | depth of field (0 disables) |
+| `focusDistance` | `float` | `FocusDistance` | focus plane |
+| `projection` | `token` | `Projection` | `perspective` or `orthographic` |
+| `exposure` | `float` | `Exposure` | scene-linear exposure scale |
+
+The pinhole intrinsic matrix a vision client needs is derived, not stored: with a render product of `width`×`height` pixels,
+
+```text
+fx = focalLength * width  / horizontalAperture
+fy = focalLength * height / verticalAperture
+cx = width  / 2 + horizontalApertureOffset * width  / horizontalAperture
+cy = height / 2 + verticalApertureOffset   * height / verticalAperture
+```
+
+Resolution is a property of the **render product**, not of the camera prim, which is why it lives in *OPC UA — Vision* (`ImageSensorType.Width`/`Height`) rather than here. This is the clean division: the prim owns optics and pose, the vision model owns the imaging pipeline.
+
+### C.2 Camera pose
+
+Camera pose is ordinary `UsdGeomXformable` transform data (`XformOpOrder` plus the `xformOp:*` attributes, §5.3), materialized and round-tripped like any other prim. USD cameras look down **−Z** with **+Y** up in camera space; a client converting to a computer-vision convention (+Z forward, +Y down) applies the standard 180° rotation about X. Where the stage is georeferenced, camera pose composes with the georeference of §5.8 exactly as for any other prim, so a globally-anchored camera needs no extra schema.
+
+### C.3 Ground truth — Replicator annotators
+
+Isaac Sim's Replicator attaches *annotators* to a render product to emit synthetic ground truth. These are outputs of a simulation run, not stage content, so they are **not** materialized as prims; they are the payloads a Vision server publishes as results:
+
+| Replicator annotator | Emits | Consumed as |
+|---|---|---|
+| `rgb` | colour frame | a clip/stream payload |
+| `distance_to_camera`, `distance_to_image_plane` | per-pixel depth | depth sensor output |
+| `pointcloud` | 3-D points | 3-D sensor output |
+| `bounding_box_2d_tight`, `bounding_box_2d_loose` | 2-D boxes + class | 2-D detection results |
+| `bounding_box_3d` | 3-D boxes + pose | 6-DoF detection results |
+| `semantic_segmentation`, `instance_segmentation` | per-pixel labels | segmentation results |
+| `normals`, `motion_vectors` | auxiliary buffers | auxiliary channels |
+
+### C.4 Semantic labels
+
+Replicator derives class labels from the `Semantics` applied API schema on prims. Because §5.6/§8.2 materialize applied API schemas as `UsdApiSchemaType` AddIns, a semantic label is already first-class in the address space:
+
+```text
+Widget_07 : UsdGeomMeshType
+  └─ AppliedSchemas/ → HasAddIn UsdSemanticsAPIType (: UsdApiSchemaType)
+        semantic:Semantics:params:semanticType = "class"
+        semantic:Semantics:params:semanticData = "widget"
+```
+
+A client can therefore read the label set of a materialized stage over OPC UA and know, before running the simulation, which classes the generated dataset will contain.
+
+### C.5 Worked example — a materialized inspection camera
+
+```usda
+def Camera "InspectionCam"
+{
+    float  focalLength         = 24.0
+    float  horizontalAperture  = 20.955
+    float  verticalAperture    = 15.2908
+    float2 clippingRange       = (0.1, 1000000)
+    float  fStop               = 0.0
+    token  projection          = "perspective"
+    double3 xformOp:translate  = (0.4, 0, 1.2)
+    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ"]
+}
+```
+
+materializes as:
+
+```text
+InspectionCam : UsdGeomCameraType (: UsdGeomXformableType)
+  ├─ FocalLength        = 24.0
+  ├─ HorizontalAperture = 20.955
+  ├─ VerticalAperture   = 15.2908
+  ├─ ClippingRange      = [0.1, 1000000.0]
+  ├─ FStop              = 0.0
+  ├─ Projection         = "perspective"
+  ├─ XformOpOrder       = ["xformOp:translate", "xformOp:rotateXYZ"]
+  └─ HasComponent xformOp:translate : UsdAttributeType (Double[3])
+```
+
+Export reproduces the `def Camera` prim and every attribute, so the camera round-trips losslessly under §7.4 like any other typed prim — the simulator and the address space stay one artefact rather than two.
+
+### C.6 Relationship to the other parts
+
+- **Part 1 (Bindings)** drives *live* values onto this prim — see its Annex E for the binding-side Isaac Sim view.
+- ***OPC UA — Vision*** describes the sensor, the AI that consumes its frames, and the results; its sensors bind to a `UsdGeomCameraType` instance by `PrimPath`. Its Annex B carries the full simulator mapping and the sim→train→deploy loop.
+- Because the same prim is materialized here and referenced there, a **simulated** and a **physical** camera present an identical contract to a client — which is the point of the split.

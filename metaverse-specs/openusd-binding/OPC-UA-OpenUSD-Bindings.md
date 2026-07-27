@@ -704,3 +704,52 @@ def Xform "AGV_07" ( prepend apiSchemas = ["CesiumGlobeAnchorAPI"] ) {
 ```
 
 The corresponding binding: `SourceSemanticId`/`SourceNodeId` → a GPOS `GlobalPosition` (or its `Latitude`/`Longitude`/`Elevation` components); `TargetPrimPath = /AGV_07`; `TargetPropertyName = cesium:anchor:latitude` (…`longitude`/`height`); `RenderTargetKind = Georeference`. The connector applies the §5.8 geospatial rule (degrees, metres, CRS/tangent-plane) rather than the raw `xformOp` transform profile. Where the deployment uses NVIDIA's schema instead of Cesium, only the target property names change (`omni:geospatial:wgs84:*`); the OPC UA source and the binding are identical — the model's **N + M** property holds for geolocation exactly as it does for telemetry.
+
+---
+
+## Annex E — Isaac Sim and Omniverse Replicator mapping (informative)
+
+Annex D mapped a binding onto a **georeference** target. This annex maps bindings onto a **camera** target, and explains what changes when the renderer on the other end is a simulator rather than a viewer.
+
+NVIDIA Isaac Sim is an OpenUSD application, so nothing in this specification changes when it is the consumer: the connector still browses `Server/OpenUSD/Representations`, resolves a `PrimPath`, and writes override opinions into a live layer. What differs is the *direction of value* — a viewer renders what the plant is doing, whereas a simulator additionally **produces** data (synthetic frames and ground truth) that flows back into training.
+
+### E.1 The camera prim as a binding target
+
+Part 2 materializes `UsdGeomCameraType` (Part 2 §5.3, Annex C). From Part 1's perspective a camera prim is an ordinary `UsdGeomXformable` target, so existing `RenderTargetKind` values already cover it:
+
+| Intent | `RenderTargetKind` | Target property on the camera prim |
+|---|---|---|
+| Pan / tilt / move an inspection or PTZ camera | `Transform` / `Rotation` | `xformOp:translate`, `xformOp:rotateXYZ`, `xformOp:orient` |
+| Drive zoom from a live lens position | `Custom` | `focalLength` |
+| Drive focus / aperture | `Custom` | `focusDistance`, `fStop` |
+| Show or hide a camera's frustum gizmo | `Visibility` | `visibility` |
+| Anchor a camera on a georeferenced site | `Georeference` | per Annex D |
+
+A PTZ camera whose pan and tilt are live OPC UA Variables therefore needs **no new binding type** — two `OpenUsdValueChangeBindingType` instances with `RenderTargetKind = Rotation` targeting `xformOp:rotateXYZ` are sufficient, and the simulated camera in Isaac Sim moves exactly as the physical one does.
+
+### E.2 What Part 1 deliberately does not carry
+
+A binding moves **one scalar or vector value** onto **one USD property**. It is not a media path. Frames, depth buffers, point clouds and detection payloads are orders of magnitude larger than a binding value and have their own transports (RTSP, GenDC, GigE Vision, a file endpoint). Those belong to *OPC UA — Vision*, which brokers the endpoint and leaves the pixels out of OPC UA — the same layering discipline that keeps this specification's bindings small and its `SamplingIntervalHint` meaningful.
+
+The division across the three documents is therefore:
+
+| Concern | Where it lives |
+|---|---|
+| Camera prim exists in the address space, with intrinsics and pose | Part 2 (`UsdGeomCameraType`) |
+| A live OPC UA value drives a camera property | **Part 1** (this document) |
+| The sensor, its imaging parameters, its media endpoints, the AI, and the results | *OPC UA — Vision* |
+
+### E.3 Closing the loop — simulation as a producer
+
+When the consumer is a simulator, the connector's live layer becomes the *input* to synthetic-data generation:
+
+1. Part 2 materializes the cell — geometry, semantic labels, and one or more camera prims.
+2. Part 1 bindings drive the cell's live state (robot joint angles, conveyor position, camera pose) into the stage, so the simulated scene tracks the real one.
+3. Replicator renders that stage and emits annotators (`rgb`, `bounding_box_2d_tight`, `bounding_box_3d`, `semantic_segmentation`, depth, point cloud) — see Part 2 Annex C.
+4. *OPC UA — Vision* publishes the resulting detections/inspection results, and its feedback path returns corrected labels as training data.
+
+Steps 2 and 3 mean a domain-randomized training run can be seeded from **real plant state** rather than a hand-authored pose, which is the practical reason to bind a simulator at all. The binding model is unchanged; only the consumer differs.
+
+### E.4 Sim/real symmetry
+
+Because a binding names its target by `(Stage, PrimPath, PropertyName)` and never by renderer, the *same* representation and the *same* bindings serve a physical cell and its simulated twin — the deployment simply points at a different stage. A connector cannot tell, and does not need to tell, whether the stage it is writing into will be rendered by `usdview`, Omniverse, or Isaac Sim. *OPC UA — Vision* makes that distinction explicit where it matters, on the sensor, via its `RealityKind` property.
