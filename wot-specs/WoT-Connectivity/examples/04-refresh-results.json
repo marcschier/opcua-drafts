@@ -1,0 +1,94 @@
+{
+  "$comment": "Representative JSON projection of the outputs of WoTRegistryType.Refresh (Summary + Results), mirroring WoTRefreshSummaryDataType and WoTResourceLoadResultDataType from Opc.Ua.WoTCon.NodeSet2.xml. Enumeration values are shown by their symbolic names; NodeIds and xids are strings; ContentDigest is base64. This run refreshed the whole registry after ingesting the PumpType Thing Model, the Pump 01 Thing Description, and the intentionally invalid pump-broken Thing Description.",
+  "requestId": "req-2026-07-20-0001",
+  "summary": {
+    "RequestId": "req-2026-07-20-0001",
+    "Generation": 7,
+    "Outcome": "Success",
+    "Atomicity": "PerClosure",
+    "StartTime": "2026-07-20T15:34:40Z",
+    "EndTime": "2026-07-20T15:34:41Z",
+    "Total": 3,
+    "Succeeded": 2,
+    "Unchanged": 0,
+    "Failed": 1,
+    "Skipped": 0,
+    "Retired": 1
+  },
+  "results": [
+    {
+      "Xid": "/thingmodelgroups/fabrikam.pumps/thingmodels/pumptype/versions/1.2.0",
+      "GroupId": "fabrikam.pumps",
+      "ResourceId": "pumptype",
+      "VersionId": "1.2.0",
+      "Kind": "ThingModel",
+      "Outcome": "Success",
+      "Phase": "Activation",
+      "LoadState": "Active",
+      "Generation": 7,
+      "MaterializedNodeCount": 12,
+      "RootNodeId": "nsu=http://example.com/demo/pump;i=1001",
+      "ContentDigest": "3q2+7wAAAAA=",
+      "Message": "Projected Thing Model to ObjectType PumpType (1 mandatory Variable, 1 optional Method, 1 EventType)."
+    },
+    {
+      "Xid": "/thingdescriptiongroups/fabrikam.factory-floor-01/thingdescriptions/pump-01/versions/1.0.0",
+      "GroupId": "fabrikam.factory-floor-01",
+      "ResourceId": "pump-01",
+      "VersionId": "1.0.0",
+      "Kind": "ThingDescription",
+      "Outcome": "Success",
+      "Phase": "Activation",
+      "LoadState": "Active",
+      "Generation": 7,
+      "MaterializedNodeCount": 5,
+      "RootNodeId": "nsu=http://example.com/demo/pump;s=Pump",
+      "ContentDigest": "98AF8w6M2sQ=",
+      "Message": "Projected Thing Description to Object Pump; 3 forms bound to the OPC UA binding."
+    },
+    {
+      "Xid": "/thingdescriptiongroups/fabrikam.factory-floor-01/thingdescriptions/pump-broken/versions/1.0.0",
+      "GroupId": "fabrikam.factory-floor-01",
+      "ResourceId": "pump-broken",
+      "VersionId": "1.0.0",
+      "Kind": "ThingDescription",
+      "Outcome": "Failed",
+      "Phase": "FormatValidation",
+      "LoadState": "Failed",
+      "Generation": 7,
+      "MaterializedNodeCount": 0,
+      "RootNodeId": "i=0",
+      "ContentDigest": "AAECAwQFBgc=",
+      "Message": "Format validation failed: missing 'title'; 'security' names undefined scheme 'missing_sc'; invalid form op 'frobnicate'."
+    }
+  ],
+  "validationOutcomes": {
+    "pump-broken": {
+      "FormatValidated": true,
+      "FormatOutcome": "Failed",
+      "FormatReason": "missing 'title'; 'security' names undefined scheme 'missing_sc'; invalid form op 'frobnicate'",
+      "CompatibilityValidated": false,
+      "CompatibilityOutcome": "Skipped",
+      "CompatibilityReason": "",
+      "CompatibilityPolicy": "BACKWARD",
+      "ValidatedAt": "2026-07-20T15:34:41Z",
+      "VocabularyVersion": "http://opcfoundation.org/UA/WoT-Binding/@2026-07-16"
+    }
+  },
+  "dependencies": [
+    {
+      "SourceXid": "/thingdescriptiongroups/fabrikam.factory-floor-01/thingdescriptions/pump-01/versions/1.0.0",
+      "TargetXid": "/thingmodelgroups/fabrikam.pumps/thingmodels/pumptype/versions/1.2.0",
+      "TargetUri": "../01-thing-model-pump.tm.jsonld",
+      "RefType": "links.rel=type",
+      "Resolved": true
+    },
+    {
+      "SourceXid": "/thingdescriptiongroups/fabrikam.factory-floor-01/thingdescriptions/pump-broken/versions/1.0.0",
+      "TargetXid": "",
+      "TargetUri": "../thingmodels/does-not-exist.tm.jsonld",
+      "RefType": "links.rel=type",
+      "Resolved": false
+    }
+  ]
+}

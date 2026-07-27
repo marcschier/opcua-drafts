@@ -116,6 +116,12 @@ A writer registers a document by creating a file in the target group folder and 
 
 On `Close` the server **auto-bootstraps** (§6.5): it assigns the entity's `xid`, `epoch`, `CreatedAt`/`ModifiedAt`, and any domain-derived attributes, and links the new file under its group and registry so it is immediately visible in all three representations. A server that is read-only (a published catalogue or a mirror) need not expose `CreateResource`.
 
+### 5.3 SecureChannel requirements
+
+Every operation that creates, modifies or deletes registry content or metadata shall be accepted only over an OPC UA SecureChannel using `MessageSecurityMode` `SignAndEncrypt`. This requirement applies to `CreateGroup`, `GetOrCreateGroup`, `CreateResource`, `GetOrCreateResource`, FileType `Open` for writing, `Write`, the `Close` that commits written content, `Delete`, `AddAttribute`, `RemoveAttribute`, and domain-specific Methods that change version selection, enablement or other registry state. Roles and Permissions remain independently applicable and may impose stricter authorization.
+
+Registry reads should use a secured channel. An implementation may expose read-only Browse, Read and FileType `Open`/`Read`/`Close` operations over `MessageSecurityMode` `None` when its deployment policy permits this. A client using such an endpoint shall not infer authenticity, integrity or confidentiality for the returned registry metadata or document bytes.
+
 ## 6 Information model
 
 The abstract base namespace is `http://opcfoundation.org/UA/xRegistry/`. Draft numeric NodeIds use the provisional `63000+` block; final NodeIds are assigned by the OPC Foundation. The four base ObjectTypes and their members are the normative node reference in Annex A. This clause describes their intent. Every Variable in the model has an explicit TypeDefinition: fixed attributes are `PropertyType` Variables, and each dynamic label is a `PropertyType` Variable under an `AttributesType` container (§6.6). A server **shall** set each group's, resource's and version's BrowseName to its identifier (`GroupId` / `ResourceId` / `VersionId`, a URL-safe token) so a client selects and filters entities directly from Browse results without a Read per candidate; the [*xRegistry — OPC UA API*](xRegistry-OPC-UA-Api.md) relies on this for read-free collection filtering.
