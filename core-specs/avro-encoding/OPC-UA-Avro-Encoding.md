@@ -5,7 +5,7 @@
 **Namespace:** `http://opcfoundation.org/UA/` (base OPC UA namespace)
 **Version:** 0.1.0 · **Date:** 2026-07-22
 
-> **Status — working draft.** This is a **single, self-contained** companion specification for the OPC UA **Default Avro** DataEncoding and its PubSub message mapping. It combines the two errata-style drafts — `OPC-UA-Part6-Avro-DataEncoding.md` (DataEncoding) and `OPC-UA-Part14-Avro-MessageMapping.md` (PubSub message mapping) — into one document and folds in the base OPC UA context a standalone reader needs. The errata-style drafts remain the authoritative statement of the proposed insertions into OPC 10000-6 and OPC 10000-14; this document is an alternative, combined presentation of the same normative content. Annex A is a snapshot of the generated per-type reference; the authoritative generator is `../extras/avro-encoding/tools/gen_type_reference.py`, run against the errata Part 6 draft.
+> **Status — working draft.** This is a **single, self-contained** companion specification for the OPC UA **Avro** DataEncoding and its PubSub message mapping. It combines the two errata-style drafts — `OPC-UA-Part6-Avro-DataEncoding.md` (DataEncoding) and `OPC-UA-Part14-Avro-MessageMapping.md` (PubSub message mapping) — into one document and folds in the base OPC UA context a standalone reader needs. The errata-style drafts remain the authoritative statement of the proposed insertions into OPC 10000-6 and OPC 10000-14; this document is an alternative, combined presentation of the same normative content. Annex A is a snapshot of the generated per-type reference; the authoritative generator is `../extras/avro-encoding/tools/gen_type_reference.py`, run against the errata Part 6 draft.
 
 ---
 
@@ -20,7 +20,7 @@ This specification does not define a new OPC UA Service, transport or security p
 ## 2 Normative references
 
 - [OPC 10000-3](https://reference.opcfoundation.org/specs/OPC-10000-3/) — Address Space Model, DataTypes and DataTypeDefinition.
-- [OPC 10000-6 v1.05.07](https://reference.opcfoundation.org/specs/OPC-10000-6/) — Mappings (Binary, XML, JSON DataEncodings; the Default Avro DataEncoding is the subject of §5–§7).
+- [OPC 10000-6 v1.05.07](https://reference.opcfoundation.org/specs/OPC-10000-6/) — Mappings (Binary, XML, JSON DataEncodings; the Avro DataEncoding is the subject of §5–§7).
 - [OPC 10000-14 v1.05.06](https://reference.opcfoundation.org/specs/OPC-10000-14/) — PubSub (NetworkMessage / DataSetMessage model; the Avro message mapping is the subject of §8).
 - [Apache Avro Specification](https://avro.apache.org/docs/) — Binary encoding, schemas, unions, records, arrays, fixed and logical types, Parsing Canonical Form and single-object encoding.
 
@@ -29,13 +29,13 @@ This specification does not define a new OPC UA Service, transport or security p
 | Term | Definition |
 |---|---|
 | Avro binary encoding | The compact binary encoding defined by Apache Avro for a value written with a known Avro schema. |
-| Default Avro | The OPC UA DataTypeEncoding for this mapping; the analogue of Default Binary, Default XML and Default JSON. |
+| Avro | The OPC UA DataTypeEncoding for this mapping; the analogue of Default Binary, Default XML and Default JSON. |
 | Canonical schema | The single Avro schema form generated for an OPC UA DataType by this specification. Equivalent alternative encodings are not allowed on the wire. |
 | Parsing Canonical Form | The Apache Avro canonical text form of a self-contained schema over which the SchemaId fingerprint is computed. |
 | SchemaId | The CRC-64-AVRO Rabin fingerprint of the Parsing Canonical Form of the self-contained schema; the 8 fingerprint bytes in little-endian order. It identifies the exact Avro schema needed to decode a payload and is independent of PubSub ConfigurationVersion. |
 | Matrix | An OPC UA multi-dimensional array represented as row-major values plus a dimensions vector. |
 | Reversible | Decoding an encoded value reconstructs the same OPC UA value, including null-vs-empty distinctions, unsigned integer bit patterns, NaN and signed zero. |
-| RawData field | A DataSet field encoded with the Default Avro schema for the field DataType rather than Variant or DataValue wrapping. |
+| RawData field | A DataSet field encoded with the Avro schema for the field DataType rather than Variant or DataValue wrapping. |
 
 Key words **shall**, **should**, **may**, **shall not** are to be interpreted as in the ISO/IEC directives.
 
@@ -43,13 +43,13 @@ Key words **shall**, **should**, **may**, **shall not** are to be interpreted as
 
 ### 4.1 Use cases and motivation
 
-The Binary, XML and JSON DataEncodings of OPC 10000-6 serve OPC UA clients and servers directly. Default Avro instead targets **PubSub integration with downstream systems that speak Apache Avro but not the OPC UA Binary encoding** — stream processors, data lakes, message-bus consumers and hot-path analytics pipelines. These systems increasingly ingest OPC UA telemetry, yet cannot decode UA Binary and gain little from the verbosity of JSON.
+The Binary, XML and JSON DataEncodings of OPC 10000-6 serve OPC UA clients and servers directly. Avro instead targets **PubSub integration with downstream systems that speak Apache Avro but not the OPC UA Binary encoding** — stream processors, data lakes, message-bus consumers and hot-path analytics pipelines. These systems increasingly ingest OPC UA telemetry, yet cannot decode UA Binary and gain little from the verbosity of JSON.
 
-Default Avro lets a Publisher emit that telemetry in a compact binary form these consumers read **unchanged**, while preserving OPC UA semantics. The type information needed to interpret each value — DataTypes drawn from companion specifications and from a server's AddressSpace — is captured once in the Avro schema and shared out of band through a schema registry rather than repeated in every message, so a subscriber relates each field back to its OPC UA meaning without an OPC UA session. The encoding is therefore optimized for **high throughput and low resource consumption on the hot path**: small messages, no per-message schema, and a wire format that Avro toolchains decode natively. Where a consumer needs full OPC UA interoperability it still uses UA Binary; Default Avro is the bridge for Avro-native systems that could otherwise not consume OPC UA data at all.
+Avro lets a Publisher emit that telemetry in a compact binary form these consumers read **unchanged**, while preserving OPC UA semantics. The type information needed to interpret each value — DataTypes drawn from companion specifications and from a server's AddressSpace — is captured once in the Avro schema and shared out of band through a schema registry rather than repeated in every message, so a subscriber relates each field back to its OPC UA meaning without an OPC UA session. The encoding is therefore optimized for **high throughput and low resource consumption on the hot path**: small messages, no per-message schema, and a wire format that Avro toolchains decode natively. Where a consumer needs full OPC UA interoperability it still uses UA Binary; Avro is the bridge for Avro-native systems that could otherwise not consume OPC UA data at all.
 
 ### 4.2 Where Avro fits
 
-OPC UA separates a **value's DataType** (its structure, from the DataTypeDefinition in the AddressSpace) from its **DataEncoding** (how that structure is serialized on the wire). OPC 10000-6 defines the Binary, XML and JSON DataEncodings; each is exposed as a **DataTypeEncoding** Object linked from the DataType with a `HasEncoding` reference. This specification adds **Default Avro** as a further DataTypeEncoding: a DataType that supports it shall gain a `Default Avro` encoding Object in the same pattern as `Default Binary`, `Default XML` and `Default JSON`. This draft describes that encoding; it does not assign or ship NodeIds for the encoding Objects.
+OPC UA separates a **value's DataType** (its structure, from the DataTypeDefinition in the AddressSpace) from its **DataEncoding** (how that structure is serialized on the wire). OPC 10000-6 defines the Binary, XML and JSON DataEncodings; each is exposed as a **DataTypeEncoding** Object linked from the DataType with a `HasEncoding` reference. This specification adds **Avro** as a further DataTypeEncoding: a DataType that supports it shall gain a `Avro` encoding Object in the same pattern as `Default Binary`, `Default XML` and `Default JSON`. This draft describes that encoding; it does not assign or ship NodeIds for the encoding Objects.
 
 Each OPC UA DataType maps to exactly **one** Avro schema (§5). Primitive built-ins use Avro primitives where the Avro type can carry the complete OPC UA domain; composite built-ins use Avro records; nullable OPC UA values use Avro unions with `"null"` as the first branch. The published `.avsc` schema documents are the canonical wire contract. The content type for a standalone Avro payload is `application/vnd.apache.avro`.
 
@@ -252,13 +252,13 @@ The encoder writes bytes from the type model. In the **primary use case the deco
 
 ## 8 PubSub message mapping
 
-This clause maps the OPC 10000-14 PubSub message model onto Default Avro: NetworkMessages carrying DataSetMessages (§8.1, §8.2), Action and Discovery messages (§8.3), the SchemaId handshake that lets a receiver obtain the schema before decoding (§8.4), the configuration parameters that select the mapping (§8.5), and the transport content types that identify an Avro payload (§8.6). It applies on top of the value encoding of §5–§7 and mirrors the OPC 10000-14 message mapping structure used by the JSON mapping.
+This clause maps the OPC 10000-14 PubSub message model onto Avro: NetworkMessages carrying DataSetMessages (§8.1, §8.2), Action and Discovery messages (§8.3), the SchemaId handshake that lets a receiver obtain the schema before decoding (§8.4), the configuration parameters that select the mapping (§8.5), and the transport content types that identify an Avro payload (§8.6). It applies on top of the value encoding of §5–§7 and mirrors the OPC 10000-14 message mapping structure used by the JSON mapping.
 
 ### 8.1 NetworkMessage
 
 An Avro NetworkMessage is a **fixed envelope** whose Avro record schema is defined by this specification and does **not** vary with the DataSets it carries. Because a NetworkMessage may, over its lifetime, carry any DataSet its WriterGroup is configured for, an envelope schema that inlined every DataSet's fields would be the union of all of them and would change whenever the group's configuration changed. Instead the envelope carries each DataSetMessage **opaquely**: the `payload` is an array of entries, each `{ "schemaId": bytes, "dataSetMessage": bytes }`, where `dataSetMessage` is the Avro-binary encoding of the DataSetMessage (§8.2) under **its own** DataSet schema, identified by the entry's `schemaId`. The envelope record therefore has a **stable, specification-defined schema** — and thus a fixed SchemaId — that never changes as DataSets are added, removed or evolved.
 
-The envelope record has the selected PubSub header fields as nullable Avro fields. Fields disabled by the NetworkMessageContentMask are null. The following envelope fields are defined: PublisherId, DataSetClassId, GroupHeader fields, WriterGroupId, GroupVersion, NetworkMessageNumber, SequenceNumber, Timestamp, PicoSeconds, PromotedFields, and the Payload array of `{ schemaId, dataSetMessage }` entries. When promoted fields are enabled, their values use Default Avro DataEncoding and preserve their configured DataTypes.
+The envelope record has the selected PubSub header fields as nullable Avro fields. Fields disabled by the NetworkMessageContentMask are null. The following envelope fields are defined: PublisherId, DataSetClassId, GroupHeader fields, WriterGroupId, GroupVersion, NetworkMessageNumber, SequenceNumber, Timestamp, PicoSeconds, PromotedFields, and the Payload array of `{ schemaId, dataSetMessage }` entries. When promoted fields are enabled, their values use Avro DataEncoding and preserve their configured DataTypes.
 
 The fixed envelope is a published artifact. Its generated schema is `../extras/avro-encoding/schemas/AvroNetworkMessage.avsc`, and each payload entry is `../extras/avro-encoding/schemas/AvroDataSetPayloadEntry.avsc`. Both are reproduced in Annex B.
 
@@ -284,7 +284,7 @@ A data delta frame shall contain only changed fields. Each changed field entry s
 
 #### 8.2.4 Field representation and DataSetFieldContentMask
 
-If the DataSetFieldContentMask selects StatusCode, timestamps or picoseconds, the field shall be encoded as a DataValue using the Default Avro DataValue mapping. If it selects Value wrapped as Variant, the field shall be encoded as a Variant. If RawData is selected, the field shall be encoded directly with the published Default Avro `.avsc` schema for the FieldMetaData DataType, including array dimensions, nullable element rules, and optional-field wrapper records. RawData shall not be used when the field DataType is not known to the receiver schema.
+If the DataSetFieldContentMask selects StatusCode, timestamps or picoseconds, the field shall be encoded as a DataValue using the Avro DataValue mapping. If it selects Value wrapped as Variant, the field shall be encoded as a Variant. If RawData is selected, the field shall be encoded directly with the published Avro `.avsc` schema for the FieldMetaData DataType, including array dimensions, nullable element rules, and optional-field wrapper records. RawData shall not be used when the field DataType is not known to the receiver schema.
 
 Every field slot shall be **nullable**: the field's Avro type is a union with a `null` branch. For a Variant or ExtensionObject field this is the `null` branch already present in its growing union (§6.4); for a DataValue or RawData field the value type shall be wrapped as `["null", <fieldType>]` so that the key can be omitted.
 
@@ -526,7 +526,7 @@ This gives a natural SchemaId announcement path. The DataSetMetaData or configur
 
 #### 8.4.1 Framing
 
-Single OPC UA values encoded with Default Avro should use Avro single-object encoding: the two magic bytes `0xC3 0x01`, followed by the 8-byte little-endian Rabin fingerprint, followed by the Avro binary body. The fingerprint bytes are the SchemaId. PubSub DataSetMessages or NetworkMessages that do not use single-object encoding shall carry the same SchemaId in the DataSetMessage header, NetworkMessage header, or transport metadata agreed for the mapping.
+Single OPC UA values encoded with Avro should use Avro single-object encoding: the two magic bytes `0xC3 0x01`, followed by the 8-byte little-endian Rabin fingerprint, followed by the Avro binary body. The fingerprint bytes are the SchemaId. PubSub DataSetMessages or NetworkMessages that do not use single-object encoding shall carry the same SchemaId in the DataSetMessage header, NetworkMessage header, or transport metadata agreed for the mapping.
 
 The SchemaId identifies the schema of a **single DataSet** — the schema of one DataSetMessage payload. The NetworkMessage **envelope** has its own fixed, specification-defined schema (§8.1) that never changes, so the envelope is not the unit of schema evolution; each DataSetMessage the envelope carries is opaque and is identified and decoded by **its own** per-DataSet SchemaId, carried in the payload entry (§8.1). A producer accordingly computes and tracks the SchemaId, and advances the `ConfigurationVersion` (§8.4.8), **per DataSet**, not per NetworkMessage.
 
@@ -2870,7 +2870,7 @@ A `Sample` written under 1.0 — `signal` = Int32(42), `event` = SensorEvent{ de
 
 ## Annex D Wire byte-layout examples (illustrative)
 
-This annex illustrates, byte by byte, how representative values look **on the wire** under Default Avro. Avro binary carries **no per-value type tags** — the schema alone defines the layout — so these diagrams show the exact bytes a decoder consumes for a given schema. The byte values are taken from the shared conformance corpus and match the annotated breakdowns in Annex A; they are informative examples, not additional normative rules.
+This annex illustrates, byte by byte, how representative values look **on the wire** under Avro. Avro binary carries **no per-value type tags** — the schema alone defines the layout — so these diagrams show the exact bytes a decoder consumes for a given schema. The byte values are taken from the shared conformance corpus and match the annotated breakdowns in Annex A; they are informative examples, not additional normative rules.
 
 Recurring layout patterns:
 
