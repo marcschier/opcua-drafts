@@ -19,8 +19,10 @@ SELF_CONTAINED = [
     "extras/openusd-binding/tools/validate_local.py",
     "extras/openusd-scene/tools/validate_local.py",
     "extras/openusd-scene/tools/validate_examples.py",
-    # openusd-scene added in the Scene Materialization (Part 2) work.
+    "extras/openusd-artifacts/tools/validate_local.py",
     "extras/vision/tools/validate_local.py",
+    # openusd-scene added in the Scene Materialization (Part 2) work.
+    # openusd-artifacts added with the xRegistry artifact registry (Bindings 0.4.0).
     # vision added in the OPC UA - Vision work.
 ]
 

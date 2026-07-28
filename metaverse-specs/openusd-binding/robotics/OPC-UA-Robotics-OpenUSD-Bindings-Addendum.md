@@ -100,9 +100,9 @@ The connector/bridge is the same generic implementation used for the pump exampl
 
 | Artifact | Path |
 |---|---|
-| This addendum | `core-specs/openusd-binding/robotics/OPC-UA-Robotics-OpenUSD-Bindings-Addendum.md` |
-| Instance overlay | `core-specs/openusd-binding/robotics/Opc.Ua.Robotics.OpenUsd.NodeSet2.xml` |
-| Descriptor | `core-specs/extras/openusd-binding/examples/robotics/Robotics.OpenUsdBinding.json` |
-| USD writer + example stage | `core-specs/extras/openusd-binding/examples/robotics/usd_writer.py`, `live.usda`, `stage.usda` |
-| USD assets | `core-specs/extras/openusd-binding/examples/robotics/Cell.usda`, `robot.usda`, `tool.usda` |
-| Tutorial + fallback renderer | `core-specs/extras/openusd-binding/examples/robotics/E2E-GUIDE.md`, `render_robot.py` |
+| This addendum | `metaverse-specs/openusd-binding/robotics/OPC-UA-Robotics-OpenUSD-Bindings-Addendum.md` |
+| Instance overlay | `metaverse-specs/openusd-binding/robotics/Opc.Ua.Robotics.OpenUsd.NodeSet2.xml` |
+| Descriptor | `metaverse-specs/extras/openusd-binding/examples/robotics/Robotics.OpenUsdBinding.json` |
+| USD writer + example stage | `metaverse-specs/extras/openusd-binding/examples/robotics/usd_writer.py`, `live.usda`, `stage.usda` |
+| USD assets | `metaverse-specs/extras/openusd-binding/examples/robotics/Cell.usda`, `robot.usda`, `tool.usda` |
+| Tutorial + fallback renderer | `metaverse-specs/extras/openusd-binding/examples/robotics/E2E-GUIDE.md`, `render_robot.py` |

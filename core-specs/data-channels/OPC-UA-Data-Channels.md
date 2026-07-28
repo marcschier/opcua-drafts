@@ -176,7 +176,7 @@ Opens a data channel on a data channel source, or accepts a Server offer (§6.4)
 | responseHeader | ResponseHeader | Common response parameters (OPC 10000-4 §7.33). |
 | channelId | UInt32 | Identifier of the new channel within the owning SecureChannel. Never `0`, which is reserved for connection control. |
 | revisedParameters | DataChannelParametersDataType | The parameters actually in force. |
-| transportChannelId | UInt64 | The transport identifier: the QUIC stream id over `opc.quic`, `0` for inline framing. Echoed unchanged for a Client-initiated direction. |
+| revisedTransportChannelId | UInt64 | The transport identifier in force: the QUIC stream id over `opc.quic`, `0` for inline framing. Echoed unchanged for a Client-initiated direction. It is not named `transportChannelId` because no OPC UA Service reuses a parameter name across a request and its response, and the model compiler rejects one that does. |
 
 **Parameter revision**
 
