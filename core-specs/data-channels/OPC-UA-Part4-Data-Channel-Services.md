@@ -80,7 +80,7 @@ This Service is not a Node operation and therefore takes no `NodesToRead`-style 
 | responseHeader | ResponseHeader | Common response parameters (OPC 10000-4 §7.33). |
 | channelId | UInt32 | The identifier of the new channel within the owning SecureChannel. Never `0`, which the Part 6 errata reserves for connection control. |
 | revisedParameters | DataChannelParametersDataType | The parameters actually in force. |
-| transportChannelId | UInt64 | The underlying transport identifier: the QUIC stream id over `opc.quic`, `0` for inline framing. For a Client-initiated direction this is the value supplied in the request, echoed unchanged. |
+| revisedTransportChannelId | UInt64 | The underlying transport identifier in force: the QUIC stream id over `opc.quic`, `0` for inline framing. For a Client-initiated direction this is the value supplied in the request, echoed unchanged. It is **not** named `transportChannelId`: OPC UA Service definitions do not reuse a parameter name across a request and its response, and the standard model compiler enforces that by validating both against one field-name table, so a Service carrying `transportChannelId` in both is rejected outright. |
 
 <a id="defaults-and-ranges"></a>
 
