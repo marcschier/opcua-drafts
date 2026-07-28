@@ -22,7 +22,7 @@ Pick Part 1 when you already have an artist-authored USD asset and want to drive
 
 ## Layout
 
-- `openusd-binding/` — Part 1 specification, NodeSet, CSV, and implementer addenda for `pumps/` and `robotics/`.
+- `openusd-binding/` — Part 1 specification, NodeSet, CSV, implementer addenda for `pumps/` and `robotics/`, and the standalone **xRegistry domain specification** for the artifact registry (`xRegistry-OpenUsd.md`), which defines the same registry independently of OPC UA so the two projections federate.
 - `openusd-scene/` — Part 2 specification, NodeSet, CSV, and materialized example overlays.
 - `extras/` — everything secondary to standardization, mirroring the two folders above:
   - `openusd-binding/tools/` — the model generator and validator; `examples/` — the pumps and robotics USD assets, binding descriptors, writers, renderers and end-to-end guides.

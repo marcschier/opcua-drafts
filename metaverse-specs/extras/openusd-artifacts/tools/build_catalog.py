@@ -67,9 +67,21 @@ ASSET_GROUPS = "usdassetgroups"
 PLUGIN_GROUPS = "usdschemaplugingroups"
 RESOURCES = "usdassets"
 
-# format / contenttype / mediatype by artifact media.
-USDA = ("OpenUSD/1.0", "model/vnd.usda", "model/vnd.usda")
-PLUGINFO = ("OpenUSD-PlugInfo/1.0", "application/json", "application/json")
+# format / contenttype by artifact media. Format identifiers are the enum of
+# xRegistry-OpenUsd.md §4.5; they describe the DOCUMENT, while AssetKind
+# describes the artifact's ROLE in the closure. The two are orthogonal.
+USDA = ("OpenUSD/1.0", "model/vnd.usda")
+PLUGINFO = ("USD-PlugInfo/1.0", "application/json")
+GENSCHEMA = ("USD-GeneratedSchema/1.0", "model/vnd.usda")
+
+# Extension by format identifier for served layers and other artifact classes.
+_FORMAT_BY_EXT = {
+    ".usda": "OpenUSD/1.0",
+    ".usdc": "OpenUSD/1.0",
+    ".usd": "OpenUSD/1.0",
+    ".usdz": "USDZ/1.0",
+    ".mtlx": "MaterialX/1.39",
+}
 
 # Asset containers to emit: (container id / group key, human name, source subdir).
 # The served-asset set and kinds come from each subdir's *.OpenUsdBinding.json.
@@ -79,9 +91,11 @@ CONTAINERS = [
 ]
 
 # The two files of a codeless schema map to fixed AssetKinds (spec §5.15.1/§5.15.4).
+# A generatedSchema.usda is syntactically a USD layer but is registered rather
+# than composed, so it carries its own format identifier (xRegistry spec §4.5.5).
 SCHEMA_FILE_KIND = {
     "plugInfo.json": ("SchemaPlugin", PLUGINFO),
-    "generatedSchema.usda": ("GeneratedSchema", USDA),
+    "generatedSchema.usda": ("GeneratedSchema", GENSCHEMA),
 }
 
 # Matches the asset path inside a USD ``@...@`` reference (excludes any trailing
@@ -169,20 +183,25 @@ def _asset_stem(identifier: str) -> str:
     return os.path.splitext(base)[0]
 
 
-def _fmt_for(asset_id: str, media_type: str) -> tuple[str, str, str]:
-    """(format, contenttype, mediatype) for a served asset. contenttype is kept
-    equal to the descriptor's mediaType; format is derived from the extension."""
+def _fmt_for(asset_id: str, media_type: str) -> tuple[str, str]:
+    """(format, contenttype) for a served asset. contenttype is kept equal to the
+    descriptor's mediaType; format is derived from the extension and is one of the
+    identifiers enumerated in xRegistry-OpenUsd.md §4.5. Anything whose internal
+    structure the spec does not describe (textures, volumes) is Opaque/1.0."""
     base = asset_id.replace("\\", "/").split("/")[-1].split("[", 1)[0]
     ext = os.path.splitext(base)[1].lower()
-    fmt = "OpenUSD-PlugInfo/1.0" if ext == ".json" else "OpenUSD/1.0"
-    return (fmt, media_type, media_type)
+    return (_FORMAT_BY_EXT.get(ext, "Opaque/1.0"), media_type)
 
 
 def _resource(collection, group_id, asset_id, text, kind, fmt_tuple, depends_ids):
-    fmt, contenttype, mediatype = fmt_tuple
+    fmt, contenttype = fmt_tuple
     # asset_id is the single source of truth; ResourceId and Xid derive from it.
     resource_id = _resource_id(asset_id)
     xid = f"/{collection}/{group_id}/{RESOURCES}/{resource_id}"
+    # Domain metadata are TYPED xRegistry attributes declared in
+    # xRegistry-OpenUsd.model.json - not labels. labels is a map<string,string>,
+    # which would force dependson to be a JSON-encoded string and break symmetry
+    # with the OPC UA projection, where DependsOn is a String[].
     resource = {
         "usdassetid": resource_id,
         "xid": xid,
@@ -193,18 +212,15 @@ def _resource(collection, group_id, asset_id, text, kind, fmt_tuple, depends_ids
         "format": fmt,
         "contenttype": contenttype,
         "usdasset": text,
-        "labels": {
-            # The authored, container-relative asset identifier (§5.15.3). The
-            # ResourceId in the xid is quote(assetidentifier); the identifier is
-            # recoverable by unquoting the xid's last segment.
-            "openusd.assetidentifier": asset_id,
-            "openusd.assetkind": kind,
-            "openusd.mediatype": mediatype,
-            "openusd.digest": _sha256_hex(text),
-            "openusd.digestalg": "Sha256",
-            # authored asset identifiers, so a resolver matches them vs @...@.
-            "openusd.dependson": json.dumps(depends_ids, separators=(",", ":")),
-        },
+        # The authored, container-relative asset identifier (§5.1). The ResourceId
+        # in the xid is quote(assetidentifier); the identifier is recoverable by
+        # unquoting the xid's last segment.
+        "assetidentifier": asset_id,
+        "assetkind": kind,
+        # authored asset identifiers, so a resolver matches them vs @...@.
+        "dependson": list(depends_ids),
+        "digest": _sha256_hex(text),
+        "digestalg": "Sha256",
     }
     return resource
 
@@ -232,7 +248,7 @@ def _build_container_group(collection, group_id, name, src_dir):
             raise SystemExit(f"{src_dir}: duplicate servedAsset {aid!r}")
         served_ids.append(aid)
         kind_of[aid] = a["assetKind"]
-        media_of[aid] = a.get("mediaType", USDA[2])
+        media_of[aid] = a.get("mediaType", USDA[1])
 
     roots = [aid for aid in served_ids if kind_of[aid] == "RootLayer"]
     if len(roots) != 1:
@@ -271,10 +287,9 @@ def _build_container_group(collection, group_id, name, src_dir):
     group = {
         "usdassetgroupid": group_id,
         "name": name,
-        "labels": {
-            "openusd.assetcontainerid": group_id,  # the group key (§5.15.3)
-            "openusd.rootlayer": root,             # the root layer's authored asset id
-        },
+        # The group id IS the asset container identifier (xRegistry spec §4.1), so
+        # no separate attribute restates it. rootlayer is a real typed attribute.
+        "rootlayer": root,
         f"{RESOURCES}count": len(resources),
         RESOURCES: resources,
     }
@@ -295,7 +310,7 @@ def _build_schema_plugin_group(collection):
     group = {
         "usdschemaplugingroupid": plugin_name,
         "name": plugin_name,
-        "labels": {"openusd.pluginname": plugin_name},
+        # The group id IS the plugin name (xRegistry spec §4.3); no label restates it.
         f"{RESOURCES}count": len(resources),
         RESOURCES: resources,
     }
