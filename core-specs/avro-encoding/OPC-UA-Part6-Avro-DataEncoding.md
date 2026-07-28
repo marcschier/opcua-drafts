@@ -5,7 +5,7 @@
 **Namespace:** `http://opcfoundation.org/UA/` (base OPC UA namespace)
 **Version:** 0.1.0 · **Date:** 2026-07-02
 
-> **Status — working draft.** This document proposes an additional OPC UA DataEncoding named **Default Avro** for lossless Apache Avro binary representation of OPC UA values. NodeIds for the DataTypeEncoding Objects are not assigned here; they will be added to the base namespace by the OPC Foundation. This draft defines one canonical Avro form only and requires `decode(encode(x)) == x` for every value of the described DataType.
+> **Status — working draft.** This document proposes an additional OPC UA DataEncoding named **Avro** for lossless Apache Avro binary representation of OPC UA values. NodeIds for the DataTypeEncoding Objects are not assigned here; they will be added to the base namespace by the OPC Foundation. This draft defines one canonical Avro form only and requires `decode(encode(x)) == x` for every value of the described DataType.
 
 ---
 
@@ -28,7 +28,7 @@ This specification does not define a new OPC UA Service, transport protocol or s
 | Term | Definition |
 |---|---|
 | Avro binary encoding | The compact binary encoding defined by Apache Avro for a value written with a known Avro schema. |
-| Default Avro | The OPC UA DataTypeEncoding Object for this mapping. It is described here; this draft does not ship a NodeSet. |
+| Avro | The OPC UA DataTypeEncoding Object for this mapping. It is described here; this draft does not ship a NodeSet. |
 | Canonical schema | The single Avro schema form generated for an OPC UA DataType by this specification. Equivalent alternative encodings are not allowed on the wire. |
 | Matrix | An OPC UA multi-dimensional array represented as row-major values plus dimensions. |
 | Reversible | Decoding an encoded value reconstructs the same OPC UA value, including null-vs-empty distinctions, unsigned integer bit patterns, NaN and signed zero. |
@@ -37,13 +37,13 @@ Key words **shall**, **should**, **may**, **shall not** are to be interpreted as
 
 ## 4 Overview
 
-Default Avro is added for **PubSub integration with downstream systems that speak Apache Avro but not the OPC UA Binary encoding** — stream processors, data lakes, message-bus consumers and hot-path analytics pipelines that increasingly ingest OPC UA telemetry yet cannot decode UA Binary and gain little from the verbosity of JSON. It lets a Publisher emit that telemetry in a compact binary form these consumers read **unchanged** while preserving OPC UA semantics: the type information needed to interpret each value — DataTypes drawn from companion specifications and from a server's AddressSpace — is captured once in the Avro schema and shared out of band through a schema registry rather than repeated in every message, so a subscriber relates each field back to its OPC UA meaning without an OPC UA session. The encoding is therefore optimized for high throughput and low resource consumption on the hot path.
+Avro is added for **PubSub integration with downstream systems that speak Apache Avro but not the OPC UA Binary encoding** — stream processors, data lakes, message-bus consumers and hot-path analytics pipelines that increasingly ingest OPC UA telemetry yet cannot decode UA Binary and gain little from the verbosity of JSON. It lets a Publisher emit that telemetry in a compact binary form these consumers read **unchanged** while preserving OPC UA semantics: the type information needed to interpret each value — DataTypes drawn from companion specifications and from a server's AddressSpace — is captured once in the Avro schema and shared out of band through a schema registry rather than repeated in every message, so a subscriber relates each field back to its OPC UA meaning without an OPC UA session. The encoding is therefore optimized for high throughput and low resource consumption on the hot path.
 
 Each OPC UA DataType maps to exactly one Avro schema. Primitive built-ins use Avro primitives where the Avro type can carry the complete OPC UA domain; composite built-ins use Avro records; nullable OPC UA values use Avro unions with `"null"` as the first branch. Avro schema names are stable qualified names under the namespace `org.opcfoundation.ua.avro` unless the type comes from another OPC UA NamespaceUri, which is mapped to a more specific Avro namespace by the deterministic function in §6.5. Annex A gives generated per-type examples and byte layouts.
 
 The content type for a standalone Avro payload using this DataEncoding shall be `application/vnd.apache.avro`. Where a transport distinguishes container files from schemaless Avro binary payloads it may use the parameter `encoding=binary` or `container=object-container-file`; PubSub messages defined by the companion Part 14 mapping use schemaless Avro binary with schema resolution from configuration or registry.
 
-A DataTypeEncoding Object named **Default Avro** shall be added for DataTypes that support this encoding. The Object shall be linked from the DataType with `HasEncoding` in the same pattern as `Default Binary`, `Default XML` and `Default JSON`. This working draft intentionally describes that node only and does not assign or ship NodeIds.
+A DataTypeEncoding Object named **Avro** shall be added for DataTypes that support this encoding. The Object shall be linked from the DataType with `HasEncoding` in the same pattern as `Default Binary`, `Default XML` and `Default JSON`. This working draft intentionally describes that node only and does not assign or ship NodeIds.
 
 ## 5 Avro mapping
 
@@ -238,7 +238,7 @@ This text is intended to be inserted after clause `5.4 OPC UA JSON` and before c
 
 | Draft section | Target clause in OPC 10000-6 | Notes |
 |---|---|---|
-| §4 Overview and content type | `5.5.1 General` | Introduces Default Avro, canonical schemas, content type `application/vnd.apache.avro`, schema resolution and reversibility. |
+| §4 Overview and content type | `5.5.1 General` | Introduces Avro, canonical schemas, content type `application/vnd.apache.avro`, schema resolution and reversibility. |
 | §5.2 Built-in DataTypes | `5.5.2 Built-in Types` | Adds the full built-in mapping table and unsigned reinterpretation rules. §5.2.1 adds the optional textual `string` form for NodeId and ExpandedNodeId. |
 | §5.4 Arrays and §5.5 Matrices | `5.5.3 Arrays` | Defines null array, empty array, nullable elements and matrix record layout. |
 | §5.6 Structures and optional fields | `5.5.4 Structures` and `5.5.5 Structures with optional fields` | Parallels the JSON clauses while using Avro records and null unions. |
@@ -247,7 +247,7 @@ This text is intended to be inserted after clause `5.4 OPC UA JSON` and before c
 | §5.8-§5.11 Variant, ExtensionObject, DataValue, DiagnosticInfo | `5.5.2` child subclauses | These are built-in DataTypes but need dedicated detail comparable to JSON Variant/DataValue text. |
 | §6-§7 Schema generation, SchemaId and decoding | `5.5.x Schema resolution` | Defines Parsing Canonical Form, CRC-64-AVRO SchemaId, schema-driven decoding and AddressSpace-driven re-derivation. §6.5 defines the deterministic NamespaceUri to Avro-namespace mapping. |
 
-Conformance text should require that senders and receivers claiming Default Avro support use the canonical schema generated from the DataTypeDefinition and reject non-canonical alternate encodings where a reversible decode cannot be guaranteed.
+Conformance text should require that senders and receivers claiming Avro support use the canonical schema generated from the DataTypeDefinition and reject non-canonical alternate encodings where a reversible decode cannot be guaranteed.
 
 ## Annex A Generated type reference
 
@@ -2311,7 +2311,7 @@ A `Sample` written under 1.0 — `signal` = Int32(42), `event` = SensorEvent{ de
 
 ## Annex D Wire byte-layout examples (illustrative)
 
-This annex illustrates, byte by byte, how representative values look **on the wire** under Default Avro. Avro binary carries **no per-value type tags** — the schema alone defines the layout — so these diagrams show the exact bytes a decoder consumes for a given schema. The byte values are taken from the shared conformance corpus and match the annotated breakdowns in Annex A; they are informative examples, not additional normative rules.
+This annex illustrates, byte by byte, how representative values look **on the wire** under Avro. Avro binary carries **no per-value type tags** — the schema alone defines the layout — so these diagrams show the exact bytes a decoder consumes for a given schema. The byte values are taken from the shared conformance corpus and match the annotated breakdowns in Annex A; they are informative examples, not additional normative rules.
 
 Recurring layout patterns:
 
