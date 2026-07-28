@@ -1,4 +1,4 @@
-# OPC UA — OpenUSD Bindings
+# OPC UA — OpenUSD Binding (Part 1)
 
 **Release 0.3.0 — Draft**
 **Namespace:** `http://opcfoundation.org/UA/OpenUSD/`
