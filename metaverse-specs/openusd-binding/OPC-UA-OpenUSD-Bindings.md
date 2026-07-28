@@ -1,8 +1,8 @@
 # OPC UA — OpenUSD Binding (Part 1)
 
-**Release 0.3.0 — Draft**
+**Release 0.4.0 — Draft**
 **Namespace:** `http://opcfoundation.org/UA/OpenUSD/`
-**Publication date:** 2026-07-25
+**Publication date:** 2026-07-27
 
 > Status: Working-group draft. This document, together with `Opc.Ua.OpenUsd.NodeSet2.xml` and `Opc.Ua.OpenUsd.NodeIds.csv`, defines an OPC UA information model that lets a Server declare **which OpenUSD (Universal Scene Description) prim represents a given OPC UA Object**, and **which live OPC UA Variable values drive which USD attributes** (and, where authorized, which USD-side intents command OPC UA back), so that a generic connector can render live industrial data in an OpenUSD renderer (for example NVIDIA Omniverse) without hard-coding the mapping. Nothing here is normative, official, or endorsed by the OPC Foundation or the Alliance for OpenUSD; namespace URIs and NodeIds are **provisional** and for prototyping only. The design rationale, prior art, and the corrections that shaped this draft are recorded in the companion research report (`research/openuds-and-omniverse-what-would-be-needed-to-supp.md`, §0).
 
@@ -19,7 +19,7 @@ The model has five portable capability groups and one informative profile:
 - **Command binding (control).** An **opt-in**, authorized, single-writer mapping from a USD-side intent to an OPC UA setpoint write or `Method` call, so an agent or operator can act on the plant through the same declared, discoverable model. The opt-in is a matter of connector configuration and server `RolePermissions` (not the `Enabled` flag): a Server declares a command binding only deliberately and a conformant connector actuates it only when explicitly enabled and authorized, so the default posture of the model remains read-only.
 - **Composition (aggregation).** A declarative mapping of an asset's **components** onto the USD prim hierarchy — 1:1 or 1..n, inline child prims or referenced/instanced sub-assets, static or **dynamic** (reconciled from model-change events), and even components hosted on **another server** — so the visual twin mirrors the asset's *is-composed-of* structure.
 - **Asset content delivery.** An optional address-space facility by which a server serves the artist-authored USD root layer and its dependency closure through OPC UA Part 5 `FileType`, with per-layer digests, so a generic connector can download, verify, cache, compose, and render without external asset-repository setup. From Release 0.4.0 this facility is an **xRegistry artifact registry** (§5.15): the served artifacts are a registry of groups, versions and labels rather than a per-stage folder of files, and an artifact's registry identifier is derived from its USD asset identifier by a closed-form encoding, which makes the server directly addressable as a USD `ArResolver` backend.
-- **Omniverse realization (informative).** How a connector realizes the model in NVIDIA Omniverse (Nucleus `.live` layers, Fabric/USDRT, OmniGraph, frame coalescing). This is a separate, vendor-governed profile and is **not** part of the portable normative model.
+- **Omniverse realization (informative).** How a connector realizes the model in NVIDIA Omniverse (Nucleus `.live` layers, USDRT, OmniGraph, frame coalescing). This is a separate, vendor-governed profile and is **not** part of the portable normative model.
 
 Out of scope (reserved for later work): Part 14 Actions, PubSub realization, a USD-side applied API schema mirror, persistent-UUID identity, and normative geometry/material/skeleton/physics profiles. Command, event/alarm, history, composition, and asset delivery are **normative but optional** capabilities a Server may choose not to implement.
 
@@ -503,7 +503,7 @@ A minimal connector:
 sequenceDiagram
   participant C as Connector
   participant S as OPC UA Server
-  participant U as USD stage / Fabric
+  participant U as USD stage
   C->>S: Browse Server/OpenUSD/Representations
   S-->>C: representation AddIns (Stage, PrimPath, bindings)
   C->>S: TranslateBrowsePaths / resolve sources
@@ -573,7 +573,7 @@ Each CU requires a conformance test (Browse the node, Read the properties, and �
 
 ### 8.1 Omniverse realization (informative, vendor-governed)
 
-In NVIDIA Omniverse a connector opens the stage on Nucleus, creates or joins a `.live` layer, and writes target attributes there (flushing with `omni.client.live_process()` on the main thread), or applies high-rate updates through **Fabric/USDRT** and coalesces to the latest value **once per render frame** rather than persisting every sample. USD-side command intents (§5.10) map to an OmniGraph/Action Graph node that issues the authorized OPC UA write/`Method` call. These behaviors are a vendor profile and are not part of the portable model; the base model must not normatively require Kit, Fabric, Nucleus, `.live`, MDL, or PhysX.
+In NVIDIA Omniverse a connector opens the stage on Nucleus, creates or joins a `.live` layer, and writes target attributes there (flushing with `omni.client.live_process()` on the main thread), or applies high-rate updates through a **runtime scene cache (USDRT)** and coalesces to the latest value **once per render frame** rather than persisting every sample. USD-side command intents (§5.10) map to an OmniGraph/Action Graph node that issues the authorized OPC UA write/`Method` call. These behaviors are a vendor profile and are not part of the portable model; the base model must not normatively require Kit, USDRT, Nucleus, `.live`, MDL, or PhysX.
 
 ### 8.2 Alignment with an asset-definition-centric strategy (informative)
 
