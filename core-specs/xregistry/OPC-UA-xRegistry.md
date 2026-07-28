@@ -341,8 +341,8 @@ The typed form of the xRegistry capabilities document (xRegistry /capabilities),
 | RemoveAttribute | [AttributesType](#type-AttributesType) | Key, ExpectedEpoch | (none) |
 | CreateGroup | [RegistryType](#type-RegistryType) | GroupId | GroupNodeId |
 | GetOrCreateGroup | [RegistryType](#type-RegistryType) | GroupId | GroupNodeId, Created |
-| CreateResource | [GroupType](#type-GroupType) | ResourceId, VersionId, RequestFileOpen | ResourceNodeId, VersionId, FileHandle |
-| GetOrCreateResource | [GroupType](#type-GroupType) | ResourceId, VersionId, RequestFileOpen | ResourceNodeId, VersionId, FileHandle, Created |
+| CreateResource | [GroupType](#type-GroupType) | ResourceId, VersionId, RequestFileOpen | ResourceNodeId, AssignedVersionId, FileHandle |
+| GetOrCreateResource | [GroupType](#type-GroupType) | ResourceId, VersionId, RequestFileOpen | ResourceNodeId, AssignedVersionId, FileHandle, Created |
 | Delete | [GroupType](#type-GroupType) | ExpectedEpoch | (none) |
 | Delete | [ResourceType](#type-ResourceType) | ExpectedEpoch | (none) |
 
