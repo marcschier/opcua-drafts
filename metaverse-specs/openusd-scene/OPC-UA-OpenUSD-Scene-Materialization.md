@@ -130,7 +130,9 @@ A prim of a **known** typed schema is materialized as the matching subtype (its 
 
 ### 5.4 `UsdAttributeType : BaseDataVariableType` (VariableType)
 
-The materialized attribute. Its `Value` is the resolved attribute value; its DataType/ValueRank are chosen per the value-type map (§6.2) — for a role-carrying USD value type the DataType is the corresponding **semantic subtype of the built-in** (§5.7) so the role is discoverable from the type system. Optional Property members: `UsdTypeName` (the exact `SdfValueTypeName`, e.g. `float3`, `token`, `asset`, `color3f[]`, retained as a fidelity annotation of the precise spelling), `Variability` (`UsdVariabilityEnum`), `Custom`, `Namespace` (property namespace, e.g. `primvars`, `xformOp`), `Interpolation`. Attribute **connections** are expressed as `UsdConnection` references to the connected attribute(s).
+The materialized attribute. Its `Value` is the resolved attribute value; its DataType/ValueRank are chosen per the value-type map (§6.2) — for a role-carrying USD value type the DataType is the corresponding **semantic subtype of the built-in** (§5.7) so the role is discoverable from the type system. Optional Property members: `UsdTypeName` (the exact `SdfValueTypeName`, e.g. `float3`, `token`, `asset`, `color3f[]`, retained as a fidelity annotation of the precise spelling), `Variability` (`UsdVariabilityEnum`), `Custom`, `Namespace` (property namespace, e.g. `primvars`, `xformOp`), `Interpolation`, and `ConnectionPaths` (ordered `String[]`). Attribute **connections** are expressed as `UsdConnection` references to the connected attribute(s), and — exactly as `UsdRelationshipType` pairs `Targets` with `TargetPaths` (§5.5) — the ordered `ConnectionPaths` carry the authored SdfPath strings. Both are needed: a connection whose target lies outside the materialized subtree has no node to point at, so without `ConnectionPaths` it could not be exported, and the reference set alone does not preserve authored order.
+
+An attribute may carry a **default value and a connection at once**; a materializer shall retain both.
 
 ### 5.5 `UsdRelationshipType : BaseObjectType`
 
@@ -140,7 +142,7 @@ A relationship. Mandatory `Targets` (ordered `NodeId[]` — the materialized tar
 
 - `UsdCompositionArcType` (under a prim's `Composition/`): `ArcKind` (`UsdArcKindEnum` — `Reference`/`Payload`/`Inherit`/`Specialize`/`VariantSet`/`Sublayer`/`Instance`), `AssetPath`, `PrimPath`, `ListPosition` (`UsdListOpTypeEnum`), `VariantSet`, `VariantSelection`. This records **how** the composed prim came to be, so the arc structure round-trips (§7.4).
 - `UsdVariantSetType` (under a prim's `VariantSets/`): `SetName`, `Selection` (the selected variant), and `<Variant>` `OptionalPlaceholder` branches.
-- `UsdApiSchemaType : BaseObjectType` (abstract) is the base for **applied API schemas**, applied to a prim via **HasAddIn** under `AppliedSchemas/`. `UsdCollectionAPIType` is a worked example. Vendors add new API schemas by **subtyping** `UsdApiSchemaType` (or as Interfaces, §8.2).
+- `UsdApiSchemaType : BaseObjectType` is the base for **applied API schemas**, applied to a prim via **HasAddIn** under `AppliedSchemas/`. `UsdCollectionAPIType` is a worked example. It is deliberately **concrete**, because §8.4 requires an unknown applied schema to degrade to a `UsdApiSchemaType` AddIn carrying its `SchemaName` — an Object cannot take an abstract ObjectType as its `HasTypeDefinition`. Vendors add new API schemas by **subtyping** `UsdApiSchemaType` (or as Interfaces, §8.2).
 
 ### 5.7 DataTypes and ReferenceTypes
 
@@ -255,6 +257,8 @@ USD's two schema kinds map to OPC UA's two extension mechanisms:
 
 A vendor materializes a new typed prim by defining an ObjectType that **subtypes** the closest materialized ancestor (e.g. a robot-joint prim type `: UsdGeomXformableType`, a custom gprim `: UsdGeomGprimType`). Instances use it as their `HasTypeDefinition` and still carry the USD `TypeName` token. A generic client that does not know the subtype browses it as its nearest known supertype — subtyping is transparent to browse.
 
+A USD-side client, however, cannot interpret such a prim without the corresponding **USD** schema: a `plugInfo.json` manifest plus a `generatedSchema.usda`, the two files OpenUSD's `PlugRegistry`/`UsdSchemaRegistry` need and the only two a codeless schema requires. This Part defines no mechanism for serving files, so it places no requirement on how they are delivered. Where Part 1 ≥ 0.4.0 is also implemented, a Server **should** publish them through its artifact registry, which defines a schema-plugin group for exactly this purpose (Part 1 §5.15.4); a client then fetches the plugin from the same registry it fetches layers from, registers it, and reads the materialized scene with the vendor's prim types fully understood instead of degraded to the §8.4 fallback. A Server implementing this Part alone may publish them by any out-of-band means, or not at all — in which case a USD-side client falls back to §8.4.
+
 ### 8.2 Applied (API) schemas → AddIns / Interfaces
 
 A vendor materializes a new applied API schema either as an **AddIn** ObjectType (`: UsdApiSchemaType`, applied with `HasAddIn` under `AppliedSchemas/`) or as an **Interface** (`: BaseInterfaceType`, applied with `HasInterface`) when the schema's members should appear inline on the prim. Multiple API schemas compose on one prim exactly as multiple AddIns/Interfaces do.
@@ -265,7 +269,7 @@ A vendor adds a USD value type by **subtyping the built-in primitive it decompos
 
 ### 8.4 Unknown-type fallback (normative)
 
-An importer that encounters an unknown typed schema, API schema, or value type **shall not drop it**: it degrades the prim to `UsdPrimType`/`UsdTypedType` (carrying `TypeName`), the API schema to a `UsdApiSchemaType` AddIn (carrying `SchemaName`), and the value to an opaque value carrying the `UsdTypeName` — so an exporter reproduces it faithfully and a vendor-aware client can still interpret it.
+An importer that encounters an unknown typed schema, API schema, or value type **shall not drop it**: it degrades the prim to `UsdPrimType` (the concrete base — `UsdTypedType` is abstract and so cannot be an instance's `HasTypeDefinition`) carrying `TypeName`, the API schema to a `UsdApiSchemaType` AddIn (carrying `SchemaName`; this is why that type is concrete, §5.6), and the value to an opaque value carrying the `UsdTypeName` — so an exporter reproduces it faithfully and a vendor-aware client can still interpret it. An opaque value **shall** retain the authored text of the value, not a host-language rendering of it, so that export is byte-faithful.
 
 ---
 
@@ -288,6 +292,7 @@ Part 2 is additive and self-contained, but designed to interoperate with Part 1:
 - **Binding source.** A Part 2 attribute may be the **source** a Part 1 binding reads (e.g. to mirror the materialized scene onto an external stage).
 - **Discovery.** A materialized `UsdStageType` may be organized under Part 1's `Server/OpenUSD/Stages`, so one connector discovers both the external-stage bindings and the in-server materialized stages.
 - **Identity.** A Part 1 `OpenUsdRepresentation.PrimPath` and a Part 2 prim node identify the same prim on the same stage, so a client can pivot from an OPC UA domain Object (Pump, Robot axis) to its materialized prim and back.
+- **Artifacts.** Part 1 ≥ 0.4.0 serves USD content from an **xRegistry artifact registry** at `Server/OpenUSD/Artifacts` (Part 1 §5.15). Part 2 does **not** take that dependency: it remains base-UA-only and reaches the registry only *indirectly*, when a Server implements both. Where it does, a materialized stage's `RootLayerIdentifier` (§5.1) is the asset identifier of the registry artifact whose `AssetKind` is `RootLayer` — and because Part 1 makes an artifact's registry `ResourceId` the URL-safe encoding of that identifier (Part 1 §5.15.3), the stage's authored bytes are located by computation rather than by search. A Part 2 Server with no Part 1 registry continues to treat `RootLayerIdentifier` as an opaque provenance string, exactly as before.
 - **Who drives Mode A.** A Part 1 *connector* authors into a USD sink and cannot write an in-server Variable; driving a materialized attribute's `Value` (§9 Mode A) is therefore a **Server-side** responsibility — a Part 1 binding declares the mapping, the Server (or a server-hosted connector) applies it.
 
 Neither model requires the other; a Server may implement either alone.
@@ -367,7 +372,7 @@ The materializer **should** also apply the portable `UsdGlobeAnchorApiType` carr
 #usda 1.0
 ( upAxis = "Z"  metersPerUnit = 1.0 )
 
-def "World" ( prepend apiSchemas = ["CesiumGeoreferencePrim"] ) {
+def CesiumGeoreferencePrim "World" {
     double cesium:anchor:latitude  = 47.6062
     double cesium:anchor:longitude = -122.3321
     double cesium:anchor:height    = 56.0
@@ -379,6 +384,8 @@ def "World" ( prepend apiSchemas = ["CesiumGeoreferencePrim"] ) {
     }
 }
 ```
+
+`CesiumGeoreferencePrim` is a **typed prim** (§8.1) and `CesiumGlobeAnchorAPI` an **applied API schema** (§8.2), so they are authored differently — the first as the prim's `typeName`, the second in `apiSchemas`. A materializer **should** nevertheless recognise a georeference declared either way, since stages in the wild author `CesiumGeoreferencePrim` through `apiSchemas` as well; the portable dual-authoring of §5.8 applies in both cases.
 
 materializes as (abbreviated address space):
 

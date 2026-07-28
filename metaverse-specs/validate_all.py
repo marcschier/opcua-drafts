@@ -19,7 +19,9 @@ SELF_CONTAINED = [
     "extras/openusd-binding/tools/validate_local.py",
     "extras/openusd-scene/tools/validate_local.py",
     "extras/openusd-scene/tools/validate_examples.py",
+    "extras/openusd-artifacts/tools/validate_local.py",
     # openusd-scene added in the Scene Materialization (Part 2) work.
+    # openusd-artifacts added with the xRegistry artifact registry (Bindings 0.4.0).
 ]
 
 # Validators that additionally need untracked base data (none yet).

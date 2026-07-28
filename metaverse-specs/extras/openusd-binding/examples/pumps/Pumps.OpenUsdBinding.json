@@ -11,7 +11,7 @@
     "rootLayerDigestNote": "The server publishes RootLayerDigest = SHA-256 over the resolved root layer (a Twin-BOM content-integrity check). The demo digests the rootLayerIdentifier as a deterministic stand-in; a connector verifies it before composing the stage."
   },
   "servedAssets": {
-    "note": "Optional OU-AssetDelivery capability: the server serves these USD layers through <Stage>.Assets (Part 5 FileType); a connector fetches + verifies + caches them and composes the stage locally, no external asset repo needed.",
+    "note": "Optional OU-AssetDelivery capability: the server serves these USD layers as Part 5 FileType nodes; a connector fetches + verifies + caches them and composes the stage locally, no external asset repo needed. Up to Part 1 0.3.0 they hang under <Stage>.Assets; from 0.4.0 they are owned by the artifact registry at Server/OpenUSD/Artifacts and <Stage>.Assets Organizes them as a view.",
     "digestAlgorithm": "Sha256",
     "assets": [
       { "assetIdentifier": "Plant.usda", "assetKind": "RootLayer", "mediaType": "model/vnd.usda" },

@@ -490,7 +490,9 @@ prop_var(ARC, "UsdCompositionArcType", "ListPosition", UsdListOpTypeEnum, "List 
 prop_var(ARC, "UsdCompositionArcType", "VariantSet", String, "Variant set name for variant arcs.")
 prop_var(ARC, "UsdCompositionArcType", "VariantSelection", String, "Variant selection name.")
 object_type(1020, "UsdApiSchemaType", BaseObjectType,
-            "Abstract base for applied USD API schema AddIns.", abstract=True)
+            "Base for applied USD API schema AddIns. Concrete, because §8.4 requires an "
+            "unknown applied schema to degrade to a UsdApiSchemaType AddIn carrying its "
+            "SchemaName rather than being dropped; vendors still subtype it (§8.2).")
 API = 1020
 prop_var(API, "UsdApiSchemaType", "SchemaName", UsdToken, "Applied API schema name.")
 object_type(1021, "UsdCollectionAPIType", T(API), "USD CollectionAPI applied API schema.")
@@ -532,6 +534,15 @@ placeholder_obj(variant_sets, "UsdPrimType_VariantSets", "<UsdVariantSet>", T(VS
                 "Variant sets available on this prim.")
 _member_var(metadata, "UsdPrimType_Metadata", "<Metadata>", BaseDataType, PropertyType,
             MR_OptionalPlaceholder, HasProperty, "Arbitrary metadata properties.")
+
+# Member NodeIds are handed out sequentially in declaration order, so a member
+# inserted above this point silently renumbers every member after it. New
+# members must therefore be APPENDED here.
+prop_var(A, "UsdAttributeType", "ConnectionPaths", String,
+         "Ordered SdfPath strings of the attribute's authored connections, the connection "
+         "counterpart of UsdRelationshipType.TargetPaths: a connection whose target lies "
+         "outside the materialized subtree has no browsable UsdConnection edge, and without "
+         "this member it could not be exported.", valuerank="1")
 
 # ===========================================================================
 # ==================================  EMIT  =================================

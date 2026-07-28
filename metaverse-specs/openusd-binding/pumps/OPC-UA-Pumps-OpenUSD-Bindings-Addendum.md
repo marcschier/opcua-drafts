@@ -102,7 +102,7 @@ A generic connector can therefore browse `<Stage>.Assets`, download and verify t
 
 | Artifact | Path |
 |---|---|
-| This addendum | `core-specs/openusd-binding/pumps/OPC-UA-Pumps-OpenUSD-Bindings-Addendum.md` |
-| Instance overlay | `core-specs/openusd-binding/pumps/Opc.Ua.Pumps.OpenUsd.NodeSet2.xml` |
-| Descriptor | `core-specs/extras/openusd-binding/examples/pumps/Pumps.OpenUsdBinding.json` |
-| USD writer + example stage | `core-specs/extras/openusd-binding/examples/pumps/usd_writer.py`, `live.usda` |
+| This addendum | `metaverse-specs/openusd-binding/pumps/OPC-UA-Pumps-OpenUSD-Bindings-Addendum.md` |
+| Instance overlay | `metaverse-specs/openusd-binding/pumps/Opc.Ua.Pumps.OpenUsd.NodeSet2.xml` |
+| Descriptor | `metaverse-specs/extras/openusd-binding/examples/pumps/Pumps.OpenUsdBinding.json` |
+| USD writer + example stage | `metaverse-specs/extras/openusd-binding/examples/pumps/usd_writer.py`, `live.usda` |
