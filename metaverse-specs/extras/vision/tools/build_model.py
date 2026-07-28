@@ -24,9 +24,12 @@ Structures 3050+, ReferenceTypes 4001+, DataType encodings 5001+, well-known ins
 be APPENDED so that previously published member NodeIds stay stable.
 
 Design notes (see ../../../vision/OPC-UA-Vision-Research.md for the evidence base):
-  * Pixels never traverse OPC UA on the default path. The model brokers media ENDPOINTS
-    (RTSP for streams, JPEG for clips) and leaves the bytes out-of-band. A size-gated
-    inline ByteString path exists as an OPTIONAL facet for single stills.
+  * Pixels never traverse OPC UA on the DEFAULT path. The model brokers media ENDPOINTS
+    (RTSP for streams, JPEG for clips) and leaves the bytes out-of-band. Two OPTIONAL
+    facets exist beside that default: a size-gated inline ByteString for single stills,
+    and - where a Server implements the OPC UA - Data Channels errata proposal - a data
+    channel multiplexed onto the SecureChannel. Neither is required, and the RTSP/JPEG
+    guarantee is unchanged by either.
   * Result CONTENT is defined here - deliberately doing what OPC 40100-1 declined to do.
   * Inference location (on-server vs off-server) is an explicit property, so the same
     result contract serves both deployments.
@@ -377,7 +380,13 @@ enum_type(3002, "VisionStreamProtocolEnum",
            ("Hls", 4, "HTTP Live Streaming."),
            ("Mjpeg", 5, "Motion JPEG over HTTP."),
            ("GenDc", 6, "GenICam GenDC container stream."),
-           ("Other", 7, "A protocol identified by the endpoint URI scheme.")])
+           ("Other", 7, "A protocol identified by the endpoint URI scheme."),
+           ("DataChannel", 8,
+            "The stream is carried on an OPC UA data channel multiplexed onto the "
+            "SecureChannel the client already has, per the OPC UA - Data Channels "
+            "errata proposal. OPTIONAL and never a default: see clause 6.7. That "
+            "proposal is a DRAFT in this repository, not a released OPC UA "
+            "specification, so a Server is fully conformant without it.")])
 
 enum_type(3003, "VisionClipFormatEnum",
           "Encoding of a still clip. Jpeg is the mandatory default: a conformant Server "
@@ -1322,6 +1331,27 @@ well_known(7001, "Vision", T(VRT), Server,
 # Instance-member NodeIds are assigned sequentially from 6001 in declaration order, so
 # new members MUST be appended below this line, never inserted above it, to keep every
 # previously published member NodeId stable.
+
+# Optional binding to the OPC UA - Data Channels errata proposal (clause 6.7). Declared
+# on the shared MediaEndpointType base so a stream endpoint and a clip endpoint inherit
+# it identically. Both members are inert on a Server that does not implement that
+# proposal, and this model deliberately takes NO dependency on it: nothing here
+# references its provisional NodeIds, so the Vision NodeSet loads unchanged on a Server
+# that has never heard of it.
+prop_var(ME, "MediaEndpointType", "DataChannelSource", NodeId_,
+         "NodeId of the Object through which this endpoint's bytes can also be obtained "
+         "on an OPC UA data channel, per the OPC UA - Data Channels errata proposal. "
+         "Non-null means the data channel path is offered IN ADDITION to the endpoint's "
+         "out-of-band path; null or absent means out-of-band only. The target is created "
+         "by the Server - typically a DataChannelSourceType instance, or any Object "
+         "implementing IDataChannelSourceType - and is NOT defined by this "
+         "specification. That proposal is a DRAFT: a conformant Server may leave this "
+         "null forever. See clause 6.7.")
+prop_var(ME, "MediaEndpointType", "DataChannelContentType", String,
+         "IANA media type the data channel carries, for example video/H264 or "
+         "image/jpeg. Mirrors IDataChannelSourceType.ContentType so a client can learn "
+         "the payload type from this model alone, without the Data Channels model being "
+         "present. Meaningful only where DataChannelSource is non-null.")
 
 
 # ===========================================================================

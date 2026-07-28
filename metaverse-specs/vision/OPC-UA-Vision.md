@@ -37,7 +37,7 @@ Two of these are permanent boundaries, and two are deferrals this working group 
 
 **Out of scope by design:**
 
-- It does **not** carry pixels on its default path. Media is brokered by reference (§6); an optional, size-gated inline facet exists for single stills only.
+- It does **not** carry pixels on its default path. Media is brokered by reference (§6). Two optional facets exist beside that default — a size-gated inline `ByteString` for single stills (§6.4), and, where a Server implements the *OPC UA — Data Channels* draft, a data channel multiplexed onto the SecureChannel (§6.7). Neither changes the default, and a Server is conformant with neither.
 - It does **not** replace GenICam, GigE Vision, USB3 Vision or CoaXPress. Those move and configure image data at the device layer; this model sits above them and borrows their vocabulary without depending on them (Annex E).
 
 **Not addressed yet:**
@@ -63,6 +63,10 @@ Release 0.1.0 covers sensors, media endpoints, frames and calibration, AI model/
 - **ISO/IEC 10918** — JPEG. The mandatory default clip format (§6.2).
 
 Informative alignments — GenICam SFNC and PFNC, QIF (ISO 23952), ROS 2 `vision_msgs`, IDTA 02058/02059/02060 — are listed in Annex E. They are **not** normative references and impose no dependency.
+
+One further informative reference is called out here rather than in Annex E, because §6.7 defines an optional facet against it:
+
+- **OPC UA — Data Channels** — [`../../core-specs/data-channels/OPC-UA-Data-Channels.md`](../../core-specs/data-channels/OPC-UA-Data-Channels.md). A **working draft in this repository**, written as an errata package against OPC 10000-3, -4 and -6. It is **not a released OPC UA specification**: its NodeIds (`65000+`), its `STR` MessageType, its ALPN identifier and its StatusCodes are all provisional, and it may change or be abandoned. It is **informative and non-normative here, and imposes no dependency** — §6.7 defines an entirely optional facet against it, this model references none of its identifiers, and a Server that has never heard of it is fully conformant to this specification.
 
 ---
 
@@ -443,11 +447,13 @@ No enumeration argument of this specification has an "unspecified" literal, and 
 
 **Media is obtained out-of-band.** OPC UA describes and controls the endpoint; the bytes travel over RTSP or HTTP. This preserves the layering of §4.1, keeps OPC UA payloads small, and keeps subscription semantics meaningful.
 
+This is the default and the only path a Server is required to offer. Two optional facets deliver bytes through OPC UA itself, each for a narrow reason: §6.4 for a single still small enough to fit a `ByteString`, and §6.7 for a continuous stream where the Server implements the *OPC UA — Data Channels* draft. Neither displaces this clause.
+
 ### 6.2 Mandatory defaults
 
 A Server claiming the *VIS-Media-Rtsp* facet **shall** expose, for every sensor, at least one `StreamEndpointType` instance whose `StreamProtocol` is **`Rtsp`**. A Server claiming the *VIS-Media-Jpeg* facet **shall** expose, for every sensor, at least one `ClipEndpointType` instance whose `ClipFormat` is **`Jpeg`**. Both facets are required by *VIS-Base* (§11), so for any conformant Server both hold.
 
-Every other protocol (`Rtsps`, `WebRtc`, `Srt`, `Hls`, `Mjpeg`, `GenDc`) and every other format (`Png`, `Tiff`, `Bmp`, `WebP`, `GenDc`) is **optional**. A client may therefore assume, without negotiation, that RTSP and JPEG are available.
+Every other protocol (`Rtsps`, `WebRtc`, `Srt`, `Hls`, `Mjpeg`, `GenDc`, `DataChannel`) and every other format (`Png`, `Tiff`, `Bmp`, `WebP`, `GenDc`) is **optional**. A client may therefore assume, without negotiation, that RTSP and JPEG are available.
 
 `Rtsp` is value 0 of `VisionStreamProtocolEnum` and `Jpeg` is value 0 of `VisionClipFormatEnum`; the repository validator enforces both, so the guarantee cannot drift. The `StreamEndpoints` and `ClipEndpoints` folders each declare a `MandatoryPlaceholder` member, so the requirement is discoverable from the type and not only from this clause.
 
@@ -463,6 +469,8 @@ Where `GetClip.Format` and the selected endpoint's `ClipFormat` differ, the **ar
 
 `PreferredProtocol` on `GetStreamEndpoint` is advisory: the Server returns what it can serve, which is at minimum RTSP.
 
+**Data-channel endpoints are never selected implicitly (normative).** A `StreamEndpointType` whose `StreamProtocol` is `DataChannel`, and any endpoint whose `DataChannelSource` is non-null, **shall not** be returned by the selection rule above unless the caller passed `PreferredProtocol = DataChannel` explicitly. A Server **shall not** make such an endpoint the target of `PreferredStreamEndpoint` or `PreferredClipEndpoint`. The reason is that §5.12 fixes value `0` (`Rtsp`) as what an unspecified preference means, and a data channel additionally requires a client capability the Server cannot assume: a client that cannot open one would receive an endpoint it cannot use. A caller that *does* pass `DataChannel` and finds none available receives `Bad_NotSupported` (§6.5) and falls back to the out-of-band path.
+
 ### 6.4 Optional inline clip delivery
 
 A `ClipEndpointType` **may** additionally publish the encoded image inline, so that clients can `Read` it or, more usefully, **subscribe to it with a MonitoredItem**. The value changes once per acquisition, which suits one-image-per-inspected-part operation.
@@ -476,6 +484,8 @@ This facet is governed by five rules:
 5. **Initial and disabled states are defined.** Before the first acquisition a Server **shall** report both `LatestClip` and `LatestClipMetadata` with StatusCode `Bad_NoDataAvailable`. Where `InlineDeliveryEnabled` is `false` the Server **shall** report `LatestClip` with StatusCode `Bad_NotSupported`; `LatestClipMetadata` remains readable.
 
 A Server **should** offer a reduced-resolution or reduced-quality thumbnail profile that fits the limit, rather than persistently returning `Bad_EncodingLimitsExceeded`.
+
+**Where a data channel is also available.** A still that exceeds the effective limit of rule 2 is exactly the case §6.7 handles better: a data channel is not bounded by `MaxByteStringLength` and does not force the client onto a second protocol. Where a Server implements both facets on the same `ClipEndpointType`, it **should** offer the oversized image on the data channel rather than only returning `Bad_EncodingLimitsExceeded`. This is a *should*, not a *shall*, because the data channel depends on a draft and on a client capability. The inline facet is **not** deprecated by §6.7 and remains fully conformant on its own: it is the only in-band still path available to a Server that does not implement that draft.
 
 `GetClip` follows the same discipline: it always returns a descriptor carrying a `Uri`, and returns bytes in `InlineImage` only when `RequestInline` is true **and** the encoded image fits.
 
@@ -492,8 +502,10 @@ Argument order is as declared in Annex A. An argument that is "not specified" is
 | `Bad_NotFound` | `Endpoint` is non-null but is not a `StreamEndpointType` of this sensor |
 | `Bad_InvalidArgument` | `ProfileName` is non-empty and unknown to the selected endpoint |
 | `Bad_ResourceUnavailable` | `ActiveSessions` has reached `MaxSessions` |
-| `Bad_NotSupported` | `Endpoint` is non-null and cannot serve `PreferredProtocol` — the caller named both an endpoint and a protocol that endpoint does not offer, so §6.3 fallback does not apply |
+| `Bad_NotSupported` | `Endpoint` is non-null and cannot serve `PreferredProtocol` — the caller named both an endpoint and a protocol that endpoint does not offer, so §6.3 fallback does not apply; **or** `PreferredProtocol` is `DataChannel` and no data-channel endpoint is available on this sensor (§6.7) |
 | `Bad_UserAccessDenied` | the caller is not authorized for media access (§12.1) |
+
+Where the selected endpoint is a data-channel endpoint (§6.7), `Session.Uri` **shall** be empty: the bytes arrive on a data channel the client opens against the endpoint's `DataChannelSource`, not at a location the Server can name in a URI. `Session.ExpiresAt` still applies and still bounds the lease. A client **shall** read `DataChannelSource` from the returned `Endpoint` rather than expecting it in `Session`, because the source Node is a property of the endpoint and outlives any one lease.
 
 **`ReleaseStreamEndpoint(SessionToken)`** — ends a lease. A Server **shall** return `Good` for any token it is not currently holding, whether that token has expired, has already been released, was garbage-collected, or was never issued. This makes a client's cleanup path idempotent and survivable across Server restart; distinguishing "never issued" would require unbounded token retention, so no StatusCode is defined for it.
 
@@ -542,6 +554,33 @@ Argument order is as declared in Annex A. An argument that is "not specified" is
 | `Faulted` | unable to serve | model failed to load or execute | unable to produce results |
 
 A Server **shall** report `Degraded` rather than `Active` when it knows the configured quality, latency budget or rate is not being met, and `Faulted` rather than `Inactive` when the cause is a failure rather than configuration.
+
+### 6.7 Media on an OPC UA data channel (optional)
+
+> **Draft dependency.** This clause is defined against *OPC UA — Data Channels*, a **working draft in this repository** (§2), not a released OPC UA specification. Its NodeIds, MessageType and StatusCodes are provisional and may change or be withdrawn. This facet is **entirely optional**: *VIS-Base* does not require it, §6.2's RTSP and JPEG guarantee is unaffected by it, and a Server that does not implement it — which will be most Servers — is fully conformant. Nothing in this specification's NodeSet references that draft's identifiers, so adopting or ignoring it changes nothing about loading this model.
+
+**What it is for.** Every other path in this clause requires a second protocol beside OPC UA: a client that has an authenticated OPC UA session must still reach the camera over RTSP or HTTPS, through whatever firewall, NAT and credential arrangement that implies. A data channel carries the bytes on the SecureChannel the client **already has**. There is no second connection to authorize, no media credential to issue or leak (§12.2), and no second port to open.
+
+**How a data-channel endpoint is recognised.** A Server offering this facet publishes it on an existing `StreamEndpointType` or `ClipEndpointType`:
+
+- `DataChannelSource` (`NodeId`) is **non-null** and designates the Object on which the client opens the data channel. This is the discriminator.
+- `EndpointUri` is **empty** where the data channel is the endpoint's only path, because there is no location a URI could name. Where the endpoint also serves out-of-band, `EndpointUri` keeps its usual meaning and the data channel is an additional path to the same content.
+- `DataChannelContentType` names the IANA media type the channel carries — `video/H264`, `image/jpeg`. It duplicates the source's own `ContentType` deliberately, so a client can learn the payload type from **this** model without the Data Channels model being present.
+- For a stream endpoint, `StreamProtocol` **may** be `DataChannel`. A Server **shall** set it to `DataChannel` only where the data channel is the endpoint's only path; where the endpoint also serves RTSP, `StreamProtocol` keeps naming the out-of-band protocol and `DataChannelSource` alone signals the additional path.
+
+**What this specification does not define.** Framing, flow control, delivery modes, the Services that open and close a channel, and the transport bindings are **all** defined by the Data Channels draft. This clause adds no wire format and no Service. It states only *where* the data channel for a media endpoint is, and *what* the bytes on it are.
+
+**Discovery and graceful absence (normative).** A client **shall** determine support before relying on it, and **shall** be able to proceed without it:
+
+1. A client **shall** treat the absence of `Server.ServerCapabilities.DataChannelCapabilities` as meaning the Server does not support data channels, and **shall not** attempt to open one.
+2. A client **shall** treat `Bad_ServiceUnsupported` from `OpenDataChannel` as definitive for that SecureChannel, and **shall not** retry.
+3. A client **shall not** probe by sending frames. On a Server that does not implement the draft this is indistinguishable from an attack and costs the connection.
+4. Where a data channel is unavailable for any reason, a client **shall** fall back to the endpoint's out-of-band path, which §6.2 guarantees exists.
+5. A Server **shall not** require a client to use a data channel. Every sensor still carries the mandatory RTSP and JPEG endpoints of §6.2.
+
+**Correlation for clips.** Where a clip endpoint delivers stills on a data channel, the correlation problem is the one §6.4 rule 4 already solves, and the same rule applies: a client **shall** correlate bytes received on the channel with `LatestClipMetadata` — or with the `Image` descriptor returned by `GetClip` — using `Timestamp` together with `Digest`. No second correlation mechanism is defined, and a Server **shall not** invent one.
+
+**Relationship to the other facets.** *VIS-Media-DataChannel* is additive to *VIS-Media-Rtsp*, *VIS-Media-Jpeg* and *VIS-Media-Inline*; it replaces none of them. Its most useful role is the case §6.4 rule 3 handles least well — a still too large for `MaxByteStringLength` — where it removes the size ceiling entirely rather than forcing the client onto a URI fetch.
 
 ---
 
@@ -766,6 +805,7 @@ Where a facet's row names members, a Server claiming it **shall** instantiate ev
 | **VIS-Media-Rtsp** | At least one `StreamEndpointType` with `StreamProtocol = Rtsp`, `ProtocolVersion` and `SecureTransport`; `GetStreamEndpoint`, `ReleaseStreamEndpoint` (§6.5), and the §12.2 credential conditions |
 | **VIS-Media-Jpeg** | At least one `ClipEndpointType` with `ClipFormat = Jpeg` and `SecureTransport`; `GetClip` (§6.5) |
 | **VIS-Media-Inline** | On the same `ClipEndpointType` instance: all four of `LatestClip`, `LatestClipMetadata`, `MaxInlineClipSize`, `InlineDeliveryEnabled`, and all five §6.4 rules. A Server **shall not** instantiate a proper subset of the four. |
+| **VIS-Media-DataChannel** *(depends on a draft)* | On at least one `MediaEndpointType` instance: `DataChannelSource` non-null and `DataChannelContentType` non-empty, plus all of §6.7 and the §6.3 no-implicit-selection rule. Requires the *Data Channel Media Server Facet* of *OPC UA — Data Channels*, which is a **working draft** (§2) — this facet is therefore provisional, is **not** required by *VIS-Base*, and a Server claiming it **shall** still satisfy *VIS-Media-Rtsp* and *VIS-Media-Jpeg*. |
 | **VIS-Endpoint-Config** | `ConfigureStreamEndpoint`, `SelectEndpoint` (§6.5) |
 | **VIS-Calibration** | `CoordinateFrameType` plus `IntrinsicCalibrationType` and/or `ExtrinsicCalibrationType`, with the §5.11 reference constraints and the §5.12 frame-precedence rule |
 | **VIS-Result-Inspection** | `InspectionResultType` with `Evaluation` and `Characteristics`, and the §7.2 uncertainty rule including its uniform-reporting requirement |
@@ -779,6 +819,8 @@ Where a facet's row names members, a Server claiming it **shall** instantiate ev
 | **VIS-Interop-40100** | The numbered requirements of Annex D, which are normative for a Server claiming this facet |
 
 Facets are independent and additive except where a row states a dependency. Two dependencies exist: *VIS-Base* requires *VIS-Media-Rtsp* and *VIS-Media-Jpeg*, and *VIS-Simulation* is required — not merely permitted — of any Server that reports `RealityKind` as `Simulated` or `Hybrid`. A facet is claimed only when every member and rule it lists is satisfied.
+
+*VIS-Media-DataChannel* is the only facet defined against a document that is not a released specification. It is marked as such in its row and in §6.7, and it is deliberately structured so that its withdrawal would cost nothing: the two members it uses become permanently null, the enumeration literal goes unused, and every other facet is unaffected.
 
 ---
 
@@ -802,6 +844,13 @@ Delivering a credential to one caller is not sufficient if the channel carrying 
 `SecureTransport` is Mandatory on every `MediaEndpointType` for this reason: it is the member on which rule 2 is evaluated, and a client **shall** treat `false` as meaning the media transport itself offers no confidentiality, whatever the endpoint's `Authentication` states. A Server that publishes only `Rtsp` endpoints therefore cannot issue embedded credentials, since RTSP/1.0 has no transport security; such a Server **shall** rely on the endpoint's own out-of-band authentication instead, and **should** additionally offer an `Rtsps` or `Srt` endpoint so that credentialed access is available at all.
 
 A credential-bearing URI **shall not** be written to any log, trace or audit record. The §12.5 audit record **shall** reference the `EndpointId` and the lease identifier instead. This is a distinct requirement because URLs carrying credentials are routinely captured by media-server access logs, proxies and process listings, where they outlive the lease.
+
+**A data channel needs no media credential at all.** This is the security argument for §6.7 and is worth stating plainly: a data channel is carried on the SecureChannel the client has already authenticated, so it inherits that channel's authentication, signing and encryption. There is no second credential to mint, embed in a URI, transmit or leak, and the whole of the preceding requirement is simply inapplicable. Where a Server offers both, the data-channel path is therefore the *more* secure one, and §12.3's client-side allowlist obligation does not arise either, because there is no URI to resolve.
+
+Two conditions apply to it:
+
+1. A Server **shall** set `SecureTransport` to `true` on a data-channel endpoint only where the SecureChannel carrying the channel has `MessageSecurityMode` of `SignAndEncrypt`. On a `Sign`-only or `None` channel the media is not confidential, whatever the transport is.
+2. A Server **shall not** carry media on a data channel opened over a SecureChannel whose SecurityMode is `None`, and **shall not** rely on `DataChannelCapabilities.AllowInsecureDataChannels` for media. That flag exists in the Data Channels draft for cases where payload confidentiality is not required; imagery is not such a case, and on such a channel a frame carries neither signature nor encryption, so both the payload and its sequence numbers are forgeable.
 
 ### 12.3 URIs are untrusted input — in both directions
 
@@ -1127,6 +1176,17 @@ Both mandatory defaults of base specification §6.2 are present — an RTSP stre
 | `PickFrames` | `ClipEndpointType` | `ClipFormat = Jpeg`, `EndpointUri = https://192.0.2.41/clips/{resultId}.jpg` |
 
 This clip endpoint implements the optional **VIS-Media-Inline** facet but leaves it switched off: `InlineDeliveryEnabled = false`, so per base specification §6.4 rule 5 the Server reports `LatestClip` with `Bad_NotSupported` while `LatestClipMetadata` stays readable. Clips are obtained through `GetClip` and fetched from the returned `Uri`, which is the default path. Clause 11 requires the facet's four members to be present together even in this state, which is why the overlay declares all four.
+
+Both endpoints additionally offer the optional **VIS-Media-DataChannel** facet of base specification §6.7, so this example shows the case where a data channel is an *additional* path to the same content rather than the only one:
+
+| Endpoint | `StreamProtocol` / `ClipFormat` | `EndpointUri` | `DataChannelSource` | `DataChannelContentType` |
+|---|---|---|---|---|
+| `LiveRtsp` | `Rtsp` | `rtsp://192.0.2.41:554/main` | `H264DataChannelSource` | `video/H264` |
+| `PickFrames` | `Jpeg` | `https://192.0.2.41/clips/{resultId}.jpg` | `JpegDataChannelSource` | `image/jpeg` |
+
+`StreamProtocol` stays `Rtsp` and `EndpointUri` keeps its out-of-band value, because per §6.7 a Server sets `StreamProtocol = DataChannel` only where the data channel is the endpoint's *only* path. A non-null `DataChannelSource` is what signals the additional path. Per §6.3 the Server will not return these on the data-channel path unless a client asks for `PreferredProtocol = DataChannel` explicitly, so a client that cannot open a data channel is unaffected.
+
+The source Objects in this overlay are plain `BaseObjectType` instances standing in for Server-created nodes. On a Server implementing the *OPC UA — Data Channels* draft each would also implement `IDataChannelSourceType` and be reachable by `HasDataChannel`. This overlay emits neither, because those are provisional identifiers in the **base** namespace: a NodeSet referencing them would fail to load on the majority of Servers, which have not adopted that draft. That draft is a **working draft**, and both this example and the base specification are fully conformant without it.
 
 ### F.5 Coordinate frames and calibration
 

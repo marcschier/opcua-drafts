@@ -289,6 +289,41 @@ def main():
         err("VisionClipFormatEnum.Jpeg must be value 0 (JPEG is the mandatory default "
             f"clip format); found {clip.get('Jpeg')}")
 
+    # Clause 6.7 is defined against the OPC UA - Data Channels DRAFT. The whole design
+    # rests on taking no dependency on it, so the literal must be an append that leaves
+    # Rtsp at 0, and the members carrying the binding must exist on the shared base.
+    if "DataChannel" not in proto:
+        err("VisionStreamProtocolEnum is missing the 'DataChannel' literal required by "
+            "clause 6.7")
+    elif proto["DataChannel"] != max(proto.values()):
+        err("VisionStreamProtocolEnum.DataChannel must be the highest literal (it was "
+            f"appended so earlier values stay stable); found {proto['DataChannel']} "
+            f"with max {max(proto.values())}")
+    me_members = set()
+    for n in nodes:
+        p = n.get("ParentNodeId")
+        if p and p in by_id and simple_name(by_id[p]) == "MediaEndpointType":
+            me_members.add(simple_name(n))
+    for required in ("DataChannelSource", "DataChannelContentType"):
+        if required not in me_members:
+            err(f"MediaEndpointType is missing '{required}', required by the optional "
+                "clause 6.7 data channel facet. It belongs on the shared base so that "
+                "StreamEndpointType and ClipEndpointType both inherit it.")
+
+    # The load-bearing guard for clause 6.7: OPC UA - Data Channels is a base-namespace
+    # errata using PROVISIONAL ids in 65000..65999. Emitting one here would dangle on
+    # every Server that has not adopted that draft, so the NodeSet must contain none.
+    for n in nodes:
+        for r in n.findall(f"{NS}References/{NS}Reference"):
+            tgt = (r.text or "").strip()
+            if tgt.startswith("i="):
+                num = tgt[2:]
+                if num.isdigit() and 65000 <= int(num) <= 65999:
+                    err(f"{n.get('NodeId')} references {tgt}, a PROVISIONAL Data "
+                        "Channels identifier. Clause 6.7 is deliberately a prose-only "
+                        "binding: this model takes no dependency on that draft, so its "
+                        "NodeSet must reference none of its ids.")
+
     clip_members = set()
     for n in nodes:
         p = n.get("ParentNodeId")
@@ -569,6 +604,29 @@ def main():
                 err(f"{label}: {e.get('NodeId')} declares a proper subset of the "
                     f"VIS-Media-Inline members {sorted(got)}; clause 11 requires all "
                     f"of {list(inline)} together or none")
+
+        # Clause 6.7: an endpoint that says its protocol IS a data channel must say
+        # where that channel is, or a client has no way to open it.
+        stream_td = type_named("StreamEndpointType")
+        dc_value = enum_values.get("VisionStreamProtocolEnum", {}).get("DataChannel")
+        for e in ov_nodes:
+            if type_of.get(e.get("NodeId")) != stream_td or dc_value is None:
+                continue
+            kids = {simple_name(c): c for c in children.get(e.get("NodeId"), [])}
+            proto_node = kids.get("StreamProtocol")
+            if proto_node is None:
+                continue
+            # Read the encoded scalar, not the surrounding prose - a Description
+            # containing the digit would otherwise trip this.
+            val = None
+            for v in proto_node.findall(f"{NS}Value"):
+                for child in v:
+                    if (child.text or "").strip().lstrip("-").isdigit():
+                        val = int((child.text or "").strip())
+            if val == dc_value and "DataChannelSource" not in kids:
+                err(f"{label}: {e.get('NodeId')} ({simple_name(e)}) declares "
+                    "StreamProtocol=DataChannel but no DataChannelSource, so a client "
+                    "cannot open the channel (clause 6.7)")
 
         # 4.2: exactly one well-known Vision root, a component of the Server Object,
         # with its BrowseName qualified by the Vision namespace (index 2 here).

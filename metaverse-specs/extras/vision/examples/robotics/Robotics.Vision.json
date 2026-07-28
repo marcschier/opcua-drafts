@@ -124,7 +124,11 @@
     "codec": "H264",
     "width": 1224,
     "height": 1024,
-    "frameRate": 15.0
+    "frameRate": 15.0,
+    "dataChannel": {
+      "sourceName": "H264DataChannelSource",
+      "contentType": "video/H264"
+    }
   },
   "clip": {
     "name": "PickFrames",
@@ -134,7 +138,11 @@
     "format": "Jpeg",
     "state": "Ready",
     "authentication": "Token",
-    "inlineDeliveryEnabled": false
+    "inlineDeliveryEnabled": false,
+    "dataChannel": {
+      "sourceName": "JpegDataChannelSource",
+      "contentType": "image/jpeg"
+    }
   },
   "simulation": {
     "simulatorUri": "isaacsim://cell-sim-01",

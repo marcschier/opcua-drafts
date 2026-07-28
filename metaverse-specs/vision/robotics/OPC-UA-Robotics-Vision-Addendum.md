@@ -46,6 +46,17 @@ Both mandatory defaults of base specification §6.2 are present — an RTSP stre
 
 This clip endpoint implements the optional **VIS-Media-Inline** facet but leaves it switched off: `InlineDeliveryEnabled = false`, so per base specification §6.4 rule 5 the Server reports `LatestClip` with `Bad_NotSupported` while `LatestClipMetadata` stays readable. Clips are obtained through `GetClip` and fetched from the returned `Uri`, which is the default path. Clause 11 requires the facet's four members to be present together even in this state, which is why the overlay declares all four.
 
+Both endpoints additionally offer the optional **VIS-Media-DataChannel** facet of base specification §6.7, so this example shows the case where a data channel is an *additional* path to the same content rather than the only one:
+
+| Endpoint | `StreamProtocol` / `ClipFormat` | `EndpointUri` | `DataChannelSource` | `DataChannelContentType` |
+|---|---|---|---|---|
+| `LiveRtsp` | `Rtsp` | `rtsp://192.0.2.41:554/main` | `H264DataChannelSource` | `video/H264` |
+| `PickFrames` | `Jpeg` | `https://192.0.2.41/clips/{resultId}.jpg` | `JpegDataChannelSource` | `image/jpeg` |
+
+`StreamProtocol` stays `Rtsp` and `EndpointUri` keeps its out-of-band value, because per §6.7 a Server sets `StreamProtocol = DataChannel` only where the data channel is the endpoint's *only* path. A non-null `DataChannelSource` is what signals the additional path. Per §6.3 the Server will not return these on the data-channel path unless a client asks for `PreferredProtocol = DataChannel` explicitly, so a client that cannot open a data channel is unaffected.
+
+The source Objects in this overlay are plain `BaseObjectType` instances standing in for Server-created nodes. On a Server implementing the *OPC UA — Data Channels* draft each would also implement `IDataChannelSourceType` and be reachable by `HasDataChannel`. This overlay emits neither, because those are provisional identifiers in the **base** namespace: a NodeSet referencing them would fail to load on the majority of Servers, which have not adopted that draft. That draft is a **working draft**, and both this example and the base specification are fully conformant without it.
+
 ## 5 Coordinate frames and calibration
 
 The frame tree. `ParentFrame` is what makes it composable: a client walks from the frame a pose is expressed in up to the frame it needs, composing the transforms it finds on the way.

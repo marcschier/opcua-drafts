@@ -50,6 +50,7 @@ Organizes = "Organizes"
 FolderType = "i=61"
 PropertyType = "i=68"
 BaseDataVariableType = "i=63"
+BaseObjectType = "i=58"
 SERVER_OBJECT = "i=2253"
 
 
@@ -354,6 +355,29 @@ def secure_transport(uri):
     return str(uri).lower().startswith(SECURE_SCHEMES)
 
 
+def add_data_channel(ov, endpoint, dc):
+    """Wire the optional §6.7 data-channel path onto a media endpoint.
+
+    The source Object is created by the Server, not by this specification, so the
+    overlay emits a plain BaseObjectType standing in for it. On a Server that
+    implements the OPC UA - Data Channels draft this Object would also implement
+    IDataChannelSourceType and be reachable by HasDataChannel - neither of which this
+    overlay emits, because those are provisional identifiers in the base namespace and
+    a NodeSet referencing them would not load on a Server without that draft.
+    """
+    src = ov.obj(dc["sourceName"], BaseObjectType, endpoint,
+                 desc="Stands in for the Server-created data channel source. On a "
+                      "Server implementing the OPC UA - Data Channels draft this "
+                      "Object implements IDataChannelSourceType; this overlay does not "
+                      "reference that draft's provisional NodeIds, so it loads "
+                      "unchanged on a Server without it.")
+    put(ov, endpoint, "DataChannelSource", "NodeId", f"ns=1;i={src}",
+        desc="The Object on which a client opens the data channel (§6.7).")
+    put(ov, endpoint, "DataChannelContentType", "String", dc["contentType"],
+        desc="IANA media type carried on the data channel (§6.7).")
+    return src
+
+
 def build_media(ov, sensor, st, cl):
     """Media management object with one stream and one clip endpoint."""
     media = ov.obj("Media", vtype("VisionMediaManagementType"), sensor,
@@ -372,6 +396,8 @@ def build_media(ov, sensor, st, cl):
              st.get("authentication", "Digest"))
     put(ov, stream, "SecureTransport", "Boolean", secure_transport(st["endpointUri"]),
         desc="Derived from the endpoint scheme; see base specification §12.2.")
+    if "dataChannel" in st:
+        add_data_channel(ov, stream, st["dataChannel"])
     if "codec" in st:
         put_enum(ov, stream, "Codec", "VisionVideoCodecEnum", st["codec"])
     for name, kind in (("Width", "UInt32"), ("Height", "UInt32"),
@@ -390,6 +416,8 @@ def build_media(ov, sensor, st, cl):
              cl.get("authentication", "Token"))
     put(ov, clip, "SecureTransport", "Boolean", secure_transport(cl["endpointUri"]),
         desc="Derived from the endpoint scheme; see base specification §12.2.")
+    if "dataChannel" in cl:
+        add_data_channel(ov, clip, cl["dataChannel"])
     # Instantiating any of the four VIS-Media-Inline members claims the facet, so
     # clause 11 requires all four. InlineDeliveryEnabled = false is the "supported but
     # currently off" state of §6.4 rule 5, not the absence of the facet - an endpoint
@@ -742,6 +770,42 @@ def emit_addendum(d, annex=None):
           "default path. Clause 11 requires the facet's four members to be present "
           "together even in this state, which is why the overlay declares all four.")
     A("")
+    dc_eps = [(st, "stream"), (cl, "clip")]
+    if any("dataChannel" in e for e, _k in dc_eps):
+        A("Both endpoints additionally offer the optional **VIS-Media-DataChannel** "
+          "facet of base specification §6.7, so this example shows the case where a "
+          "data channel is an *additional* path to the same content rather than the "
+          "only one:")
+        A("")
+        A("| Endpoint | `StreamProtocol` / `ClipFormat` | `EndpointUri` | "
+          "`DataChannelSource` | `DataChannelContentType` |")
+        A("|---|---|---|---|---|")
+        for e, kind in dc_eps:
+            if "dataChannel" not in e:
+                continue
+            what = e["protocol"] if kind == "stream" else e["format"]
+            A(f"| `{e['name']}` | `{what}` | `{e['endpointUri']}` | "
+              f"`{e['dataChannel']['sourceName']}` | "
+              f"`{e['dataChannel']['contentType']}` |")
+        A("")
+        A("`StreamProtocol` stays `Rtsp` and `EndpointUri` keeps its out-of-band value, "
+          "because per §6.7 a Server sets `StreamProtocol = DataChannel` only where the "
+          "data channel is the endpoint's *only* path. A non-null `DataChannelSource` "
+          "is what signals the additional path. Per §6.3 the Server will not return "
+          "these on the data-channel path unless a client asks for "
+          "`PreferredProtocol = DataChannel` explicitly, so a client that cannot open "
+          "a data channel is unaffected.")
+        A("")
+        A("The source Objects in this overlay are plain `BaseObjectType` instances "
+          "standing in for Server-created nodes. On a Server implementing the "
+          "*OPC UA — Data Channels* draft each would also implement "
+          "`IDataChannelSourceType` and be reachable by `HasDataChannel`. This overlay "
+          "emits neither, because those are provisional identifiers in the **base** "
+          "namespace: a NodeSet referencing them would fail to load on the majority of "
+          "Servers, which have not adopted that draft. That draft is a **working "
+          "draft**, and both this example and the base specification are fully "
+          "conformant without it.")
+        A("")
     if d.get("frames") or d.get("calibrations"):
         head("Coordinate frames and calibration")
         A("")

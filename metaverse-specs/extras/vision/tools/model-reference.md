@@ -122,6 +122,8 @@ Abstract base for a media access point. The endpoint DESCRIBES where media can b
 | Authentication | Variable | VisionEndpointAuthenticationEnum | Scalar | Mandatory | Credential the media plane requires. Independent of the OPC UA session. |
 | SecureTransport | Variable | Boolean | Scalar | Mandatory | True when the media transport itself provides confidentiality, for example RTSPS, SRT with encryption, or HTTPS. Mandatory because clause 12.2 evaluates credential issuance on it: a Server SHALL NOT return a URI embedding a credential unless this is true and the OPC UA SecureChannel is SignAndEncrypt. A client SHALL treat false as meaning the media transport offers no confidentiality, whatever Authentication states. |
 | ProfileName | Variable | String | Scalar | Optional | Vendor profile label, for example main or sub. |
+| DataChannelSource | Variable | NodeId | Scalar | Optional | NodeId of the Object through which this endpoint's bytes can also be obtained on an OPC UA data channel, per the OPC UA - Data Channels errata proposal. Non-null means the data channel path is offered IN ADDITION to the endpoint's out-of-band path; null or absent means out-of-band only. The target is created by the Server - typically a DataChannelSourceType instance, or any Object implementing IDataChannelSourceType - and is NOT defined by this specification. That proposal is a DRAFT: a conformant Server may leave this null forever. See clause 6.7. |
+| DataChannelContentType | Variable | String | Scalar | Optional | IANA media type the data channel carries, for example video/H264 or image/jpeg. Mirrors IDataChannelSourceType.ContentType so a client can learn the payload type from this model alone, without the Data Channels model being present. Meaningful only where DataChannelSource is non-null. |
 
 ### StreamEndpointType — `ns=1;i=1008`
 
@@ -624,6 +626,7 @@ Wire protocol of a continuous media stream. Rtsp is the mandatory default: a con
 | Mjpeg | 5 | Motion JPEG over HTTP. |
 | GenDc | 6 | GenICam GenDC container stream. |
 | Other | 7 | A protocol identified by the endpoint URI scheme. |
+| DataChannel | 8 | The stream is carried on an OPC UA data channel multiplexed onto the SecureChannel the client already has, per the OPC UA - Data Channels errata proposal. OPTIONAL and never a default: see clause 6.7. That proposal is a DRAFT in this repository, not a released OPC UA specification, so a Server is fully conformant without it. |
 
 ### VisionClipFormatEnum — `ns=1;i=3003`
 

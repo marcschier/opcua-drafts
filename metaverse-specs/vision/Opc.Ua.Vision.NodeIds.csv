@@ -276,3 +276,5 @@ VisionRootType_Models,6193,Object
 VisionRootType_Frames,6194,Object
 VisionRootType_LearningJobs,6195,Object
 Vision,7001,Object
+MediaEndpointType_DataChannelSource,6196,Variable
+MediaEndpointType_DataChannelContentType,6197,Variable

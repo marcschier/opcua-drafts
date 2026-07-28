@@ -66,16 +66,16 @@
       <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=3902</Reference>
     </References>
-    <Definition Name="VisionStreamProtocolEnum"><Field Name="Rtsp" Value="0"><Description>RTSP (RFC 7826/2326). MANDATORY default streaming protocol.</Description></Field><Field Name="Rtsps" Value="1"><Description>RTSP over TLS.</Description></Field><Field Name="WebRtc" Value="2"><Description>WebRTC.</Description></Field><Field Name="Srt" Value="3"><Description>Secure Reliable Transport.</Description></Field><Field Name="Hls" Value="4"><Description>HTTP Live Streaming.</Description></Field><Field Name="Mjpeg" Value="5"><Description>Motion JPEG over HTTP.</Description></Field><Field Name="GenDc" Value="6"><Description>GenICam GenDC container stream.</Description></Field><Field Name="Other" Value="7"><Description>A protocol identified by the endpoint URI scheme.</Description></Field></Definition>
+    <Definition Name="VisionStreamProtocolEnum"><Field Name="Rtsp" Value="0"><Description>RTSP (RFC 7826/2326). MANDATORY default streaming protocol.</Description></Field><Field Name="Rtsps" Value="1"><Description>RTSP over TLS.</Description></Field><Field Name="WebRtc" Value="2"><Description>WebRTC.</Description></Field><Field Name="Srt" Value="3"><Description>Secure Reliable Transport.</Description></Field><Field Name="Hls" Value="4"><Description>HTTP Live Streaming.</Description></Field><Field Name="Mjpeg" Value="5"><Description>Motion JPEG over HTTP.</Description></Field><Field Name="GenDc" Value="6"><Description>GenICam GenDC container stream.</Description></Field><Field Name="Other" Value="7"><Description>A protocol identified by the endpoint URI scheme.</Description></Field><Field Name="DataChannel" Value="8"><Description>The stream is carried on an OPC UA data channel multiplexed onto the SecureChannel the client already has, per the OPC UA - Data Channels errata proposal. OPTIONAL and never a default: see clause 6.7. That proposal is a DRAFT in this repository, not a released OPC UA specification, so a Server is fully conformant without it.</Description></Field></Definition>
   </UADataType>
-  <UAVariable NodeId="ns=1;i=3902" BrowseName="1:EnumStrings" ParentNodeId="ns=1;i=3002" DataType="LocalizedText" ValueRank="1" ArrayDimensions="8">
+  <UAVariable NodeId="ns=1;i=3902" BrowseName="1:EnumStrings" ParentNodeId="ns=1;i=3002" DataType="LocalizedText" ValueRank="1" ArrayDimensions="9">
     <DisplayName>EnumStrings</DisplayName>
     <References>
       <Reference ReferenceType="HasModellingRule">i=78</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=3002</Reference>
     </References>
-    <Value><uax:ListOfLocalizedText xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:LocalizedText><uax:Text>Rtsp</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Rtsps</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>WebRtc</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Srt</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Hls</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Mjpeg</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>GenDc</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Other</uax:Text></uax:LocalizedText></uax:ListOfLocalizedText></Value>
+    <Value><uax:ListOfLocalizedText xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:LocalizedText><uax:Text>Rtsp</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Rtsps</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>WebRtc</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Srt</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Hls</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Mjpeg</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>GenDc</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Other</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>DataChannel</uax:Text></uax:LocalizedText></uax:ListOfLocalizedText></Value>
   </UAVariable>
   <UADataType NodeId="ns=1;i=3003" BrowseName="1:VisionClipFormatEnum">
     <DisplayName>VisionClipFormatEnum</DisplayName>
@@ -727,6 +727,8 @@
       <Reference ReferenceType="HasProperty">ns=1;i=6017</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6018</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6019</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6196</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6197</Reference>
     </References>
   </UAObjectType>
   <UAVariable NodeId="ns=1;i=6014" BrowseName="1:EndpointId" ParentNodeId="ns=1;i=1007" DataType="String" ValueRank="-1">
@@ -2711,4 +2713,22 @@
       <Reference ReferenceType="HasComponent" IsForward="false">i=2253</Reference>
     </References>
   </UAObject>
+  <UAVariable NodeId="ns=1;i=6196" BrowseName="1:DataChannelSource" ParentNodeId="ns=1;i=1007" DataType="NodeId" ValueRank="-1">
+    <DisplayName>DataChannelSource</DisplayName>
+    <Description>NodeId of the Object through which this endpoint's bytes can also be obtained on an OPC UA data channel, per the OPC UA - Data Channels errata proposal. Non-null means the data channel path is offered IN ADDITION to the endpoint's out-of-band path; null or absent means out-of-band only. The target is created by the Server - typically a DataChannelSourceType instance, or any Object implementing IDataChannelSourceType - and is NOT defined by this specification. That proposal is a DRAFT: a conformant Server may leave this null forever. See clause 6.7.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1007</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6197" BrowseName="1:DataChannelContentType" ParentNodeId="ns=1;i=1007" DataType="String" ValueRank="-1">
+    <DisplayName>DataChannelContentType</DisplayName>
+    <Description>IANA media type the data channel carries, for example video/H264 or image/jpeg. Mirrors IDataChannelSourceType.ContentType so a client can learn the payload type from this model alone, without the Data Channels model being present. Meaningful only where DataChannelSource is non-null.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1007</Reference>
+    </References>
+  </UAVariable>
 </UANodeSet>
