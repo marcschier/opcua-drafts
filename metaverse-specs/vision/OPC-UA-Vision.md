@@ -19,7 +19,7 @@ This specification defines an OPC UA information model that lets a Server descri
 
 ### 1.1 Motivation
 
-Two OPC UA machine vision companion specifications already exist, and a robotics one. None of them describes the four things above. OPC 40100-1 orchestrates jobs but states that result content is *"application-specific and not defined at this time"*. OPC 40100-2 models lenses and lamps in detail but adds **no members at all** to its image sensor type. OPC 40010-1 contains no vision, camera, perception or calibration types whatsoever. And no OPC UA specification describes an AI model. The evidence for each of these statements, with quotations and section numbers, is in [the research report](OPC-UA-Vision-Research.md).
+Two OPC UA machine vision companion specifications already exist, as well as a robotics one (OPC 40010-1). None of them describes the four things above. OPC 40100-1 orchestrates jobs but states that result content is *"application-specific and not defined at this time"*. OPC 40100-2 models lenses and lamps in detail but adds no members to its image sensor type. OPC 40010-1 contains no vision, camera, perception or calibration types whatsoever. And no OPC UA specification describes an AI model. The evidence for each of these statements, with quotations and section numbers, is in [the research report](OPC-UA-Vision-Research.md).
 
 The consequence is that every vision integration is bespoke: two Servers can be fully conformant to the existing specifications and still be mutually unintelligible.
 
@@ -84,7 +84,16 @@ One further informative reference is called out here rather than in Annex E, bec
 | **Detection** | One detected instance, with a class, a score, and geometry. |
 | **Deployment** | A model made executable at a stated location. |
 | **On-server / off-server inference** | Whether the computation happens in the Server's process or elsewhere. Distinguished by `VisionInferenceLocationEnum`, and by nothing else. |
-| **Sim/real symmetry** | The property that a physical and a simulated sensor expose the same members with the same meaning. |
+| **Sim/real symmetry** | The property that a physical and a simulated sensor expose the same members with the same meaning, so a client works against either without change (§4.3). |
+| **Point cloud** | An unordered set of 3-D points, each at least an (x, y, z) coordinate in a named frame and optionally carrying intensity, colour or a normal. It is the native output of a depth or laser-triangulation sensor. A single frame is routinely megabytes, so this specification obtains one through a media endpoint and never as an OPC UA array (§5.6). |
+| **6-DoF pose** | A rigid-body placement with **six degrees of freedom** — three of position (x, y, z) and three of orientation — expressed relative to a named frame. It is what a robot controller needs in order to move to an object: position alone cannot say how to approach or grip it. Carried by `VisionPose3DDataType`, whose orientation is a unit quaternion ordered (x, y, z, w) per §5.12. |
+| **Frame (coordinate frame)** | A named right-handed Cartesian coordinate system that a pose or a measurement is expressed relative to. Frames form a tree through `ParentFrame`, so a pose can be re-expressed in another frame by composing the transforms between them. Modelled as `CoordinateFrameType`. Not to be confused with a *video frame*, which this specification calls an image or a clip. |
+| **Intrinsic calibration** | The parameters of the camera itself — focal lengths, principal point and lens distortion — that map a direction in space to a pixel. Needed to turn a 2-D detection into a ray. |
+| **Extrinsic calibration** | The rigid transform between two frames, for example from a camera to the robot flange it is bolted to. Needed to turn a ray or a pose into something the robot can act on. |
+| **Hand-eye calibration** | The particular extrinsic calibration relating a camera to a robot. *Eye-in-hand* means the camera moves with the tool; *eye-to-hand* means it is fixed and watches the robot. |
+| **Ground truth** | A label known to be correct — from a simulator, which knows the true answer by construction, or from a human correcting a result. Used to train and to evaluate a model, and never to be confused with a prediction (§10). |
+| **Inference** | One execution of a trained AI model over sensor data to produce a result. |
+| **Facet** | A named, individually claimable subset of this specification's requirements, published in `ServerProfileArray` so a client can discover what a Server supports. Defined in clause 11; *VIS-Base* is the only mandatory one. |
 | **PFNC** | Pixel Format Naming Convention (EMVA GenICam). Used for pixel format strings. |
 | **SFNC** | Standard Features Naming Convention (EMVA GenICam). Used for acquisition parameter names. |
 | **TCP** | Tool centre point (ISO 9787). A frame role, not the transport protocol. |
@@ -107,7 +116,7 @@ This model occupies one layer of a stack it does not attempt to own:
    Pixel transport               GigE Vision, USB3 Vision, CoaXPress, MIPI CSI-2
 ```
 
-A Server implementing this model almost always uses GenICam internally to talk to its cameras. That is invisible here by design, and is why `VisionSensorType.DeviceUri` exists: it lets a client correlate the semantic sensor with the transport-level device without this model reaching down into it.
+A Server implementing this model almost always uses GenICam internally to talk to its cameras. That is invisible here by design, and is why `VisionSensorType.DeviceUri` exists: it lets a client correlate the semantic sensor with the transport-level device without this model reaching down into it. Annex H gives the member-by-member binding for a Server that does.
 
 ### 4.2 Discovery (normative)
 
@@ -119,6 +128,8 @@ A conforming Server **shall** expose exactly one well-known Object `Vision` of t
 A client therefore starts at `Server/Vision/Sensors` and follows references outward. This mirrors the discovery pattern of *OPC UA — OpenUSD Bindings*.
 
 ### 4.3 Sim/real symmetry (normative)
+
+**Sim/real symmetry** is the property that a physical sensor and a simulated one are described by the *same* members, carrying the *same* units and the *same* meaning, so that a client cannot tell them apart except by reading `RealityKind` — and does not need to. "Sim" is a simulated or rendered sensor, typically one that exists only inside a scene simulator such as NVIDIA Isaac Sim; "real" is a physical device on the plant floor. The symmetry is what lets one client, one recipe and one trained model move between a simulation used to generate training data and the production cell it was built to represent.
 
 Every `VisionSensorType` instance **shall** declare `RealityKind`. A Server **shall not** vary the meaning, units or semantics of any other member based on its value. A sensor whose `RealityKind` is `Simulated` or `Hybrid` **shall** additionally implement `IVisionSimulatedType`, which names the simulator and the scene prim being rendered; clause 11 accordingly makes *VIS-Simulation* required of any Server that reports either value, rather than optional.
 
@@ -168,7 +179,7 @@ The model has **25 ObjectTypes**, and they exist in five groups, each answering 
 
 Plus two structural types: `VisionRootType`, the entry point (§4.2), and `IVisionSimulatedType`, the interface that makes a synthetic sensor addressable (§5.9).
 
-A Server does not implement all of this. `VisionSensorType` with `Media` is the mandatory core; everything else is claimed through the facets of clause 11. The subclauses below give, for each type, **why it exists, when a Server instantiates it, and what a client does with it**. Field-level declarations are in Annex A; units and orderings are fixed in §5.12.
+A Server does not need to implement all of it. `VisionSensorType` with `Media` is the mandatory core; everything else is claimed through the facets of clause 11. The subclauses below describe, for each type, why it exists, when a Server instantiates it and what a client does with it. Field-level declarations are in Annex A; units and orderings are fixed in §5.12.
 
 ### 5.1 Type hierarchy
 
@@ -258,7 +269,7 @@ The three chains worth tracing are:
 
 The single entry point (§4.2). Holds the five folders and nothing else.
 
-**Why it exists.** Discovery has to be deterministic. Without a well-known root a client would have to search the address space for anything that looks like a camera, and two Servers would place them differently. A Server instantiates exactly one, as a component of the Server Object.
+This type exists because discovery has to be deterministic. Without a well-known root a client would have to search the address space for anything that looks like a camera, and two Servers would place them differently. A Server instantiates exactly one, as a component of the Server Object.
 
 `Sensors` is Mandatory; `Pipelines`, `Models`, `Frames` and `LearningJobs` are Optional, and their absence is meaningful — a Server with no `Models` folder is not doing AI, and a client can determine that in one Browse rather than by inference.
 
@@ -279,47 +290,45 @@ The base of everything that senses.
 | `Illumination` | `IlluminationType` | O | The light source |
 | `Calibrations` | Folder | O | `VisionCalibrationType` instances |
 
-**Why it exists, and why it is abstract.** Everything a client needs in order to *address* a sensor — identify it, learn what kind of sensing it does, and obtain imagery — is the same whether the device is a 2-D camera, a depth sensor, or a thermal imager. Putting that on an abstract base means a generic viewer, an asset inventory, or a monitoring system can be written once against `VisionSensorType` and work against every sensor kind, including kinds added later. Only the *acquisition parameters* differ, and those live on the concrete subtypes.
+This type is abstract because everything a client needs in order to *address* a sensor — identify it, learn what kind of sensing it does, and obtain imagery — is the same whether the device is a 2-D camera, a depth sensor, or a thermal imager. Putting that on an abstract base means a generic viewer, an asset inventory, or a monitoring system can be written once against `VisionSensorType` and work against every sensor kind, including kinds added later. Only the *acquisition parameters* differ, and those live on the concrete subtypes.
 
-**When a Server instantiates it.** Never directly — it is abstract. A Server instantiates `ImageSensorType`, `Depth3DSensorType`, or a vendor subtype, under `Vision/Sensors`.
+A Server never instantiates it directly. It instantiates `ImageSensorType`, `Depth3DSensorType`, or a vendor subtype, under `Vision/Sensors`.
 
 `Media` is mandatory because a sensor a client cannot obtain imagery from is not usefully described. `RealityKind` is mandatory because a client that cannot tell a rendered frame from a real one cannot safely act on it (§4.3).
 
 ### 5.5 `ImageSensorType : VisionSensorType`
 
-The 2-D imaging sensor, and the layer OPC 40100-2 leaves empty. Acquisition parameters use **GenICam SFNC 2.8 names and semantics**, and `PixelFormat` uses **PFNC** naming, so that a Server bridging a GenICam device maps them one-to-one and a client that knows SFNC needs no translation table.
+The 2-D imaging sensor, and the layer OPC 40100-2 leaves empty. Acquisition parameters use GenICam SFNC 2.8 names and semantics, and `PixelFormat` uses PFNC naming; Annex H gives the member-by-member binding.
 
 Mandatory: `Width`, `Height`, `PixelFormat`. Optional: `ExposureTime` (microseconds), `Gain`, `AcquisitionFrameRate`, `TriggerMode`, `TriggerSource`, `OffsetX`, `OffsetY`, `BinningHorizontal`, `BinningVertical`, `ReverseX`, `ReverseY`, and `Intrinsics`.
 
-**Why it exists.** This is the gap that makes vision integration bespoke today. OPC 40100-2 models the lens and the lamp in detail but its `VisionImageSensorType` adds **no members at all**, and no OPC UA specification references GenICam. So the parameters that determine what an image actually *is* — resolution, pixel format, exposure, gain — have no standard place to live, and every integration invents one.
+This type exists to close the gap that makes vision integration bespoke today: OPC 40100-2 models the lens and the lamp in detail but its `VisionImageSensorType` adds no members, and no OPC UA specification references GenICam. The parameters that determine what an image actually *is* — resolution, pixel format, exposure, gain — therefore have no standard place to live, and every integration invents one.
 
-**When a Server instantiates it.** For any 2-D camera: area-scan, line-scan or thermal. `Modality` distinguishes them; the member set does not need to.
+A Server instantiates it for any 2-D camera: area-scan, line-scan or thermal. `Modality` distinguishes them, so the member set does not have to.
 
-**What a client does with it.** Three things. It sizes buffers and picks a decoder from `Width`, `Height` and `PixelFormat`. It reasons about motion blur and throughput from `ExposureTime` and `AcquisitionFrameRate` — a result that arrives late is often an exposure problem, not a network one. And it uses `Width`/`Height` together with `Intrinsics` to convert pixel coordinates into rays, which is what makes a 2-D detection usable in 3-D.
-
-Borrowing the names is deliberate; taking a dependency is not. Nothing here requires a GenICam device.
+A client uses it for three things. It sizes buffers and picks a decoder from `Width`, `Height` and `PixelFormat`. It reasons about motion blur and throughput from `ExposureTime` and `AcquisitionFrameRate` — a result that arrives late is often an exposure problem, not a network one. And it uses `Width` and `Height` together with `Intrinsics` to convert pixel coordinates into rays, which is what makes a 2-D detection usable in 3-D.
 
 ### 5.6 `Depth3DSensorType : VisionSensorType`
 
 Depth and point-cloud sensing: `MinDepth`, `MaxDepth`, `DepthScale`, `Baseline`, `PointsPerFrame`.
 
-**Why it exists.** A depth sensor's usable output is bounded in a way a 2-D camera's is not. `MinDepth` and `MaxDepth` state where measurements are valid at all; `Baseline` determines how depth precision degrades with distance for a stereo device. A bin-picking client that ignores these will confidently return poses computed from noise at the edge of the working volume.
+A **point cloud** (§3) is an unordered set of 3-D points, each carrying at least an (x, y, z) coordinate in a named frame. This type exists because a depth sensor's usable output is bounded in a way a 2-D camera's is not: `MinDepth` and `MaxDepth` state where measurements are valid at all, and `Baseline` determines how depth precision degrades with distance for a stereo device. A bin-picking client that ignores these will confidently return poses computed from noise at the edge of the working volume.
 
-**When a Server instantiates it.** For stereo, time-of-flight, structured-light or laser-triangulation devices. A device that produces both a depth map and a registered 2-D image is modelled as two sensors sharing a `FrameId`, not as one sensor with both member sets.
+A Server instantiates it for stereo, time-of-flight, structured-light or laser-triangulation devices. A device that produces both a depth map and a registered 2-D image is modelled as two sensors sharing a `FrameId`, not as one sensor carrying both member sets.
 
-**What a client does with it.** Rejects detections outside `[MinDepth, MaxDepth]`, converts raw depth samples using `DepthScale`, and sizes its expectations from `PointsPerFrame`.
+A client uses it to reject detections outside `[MinDepth, MaxDepth]`, to convert raw depth samples with `DepthScale`, and to size its expectations from `PointsPerFrame`.
 
-Point clouds are large and are obtained through a media endpoint, never read as an OPC UA array — a single frame would exceed practical message limits, and §12.4 explains why an OPC UA Subscription is the wrong transport for it.
+Point clouds are obtained through a media endpoint and are never read as an OPC UA array: a single frame is routinely megabytes and would exceed practical message limits, and §12.4 explains why an OPC UA Subscription is the wrong transport for one.
 
 ### 5.7 `OpticsType` and `IlluminationType`
 
 Lens and light-source description. Member names are aligned with the `ILensType`, `ILampType` and `ILightingControllerType` of OPC 40100-2, so a Server implementing both models reports one set of values under two vocabularies rather than maintaining two.
 
-**Why they exist.** In machine vision the lens and the lighting determine whether a measurement is possible at all, and both are routinely changed in the field without the camera changing. Modelling them separately from the sensor means a maintenance system can record that a lens was swapped, and a diagnostic client can correlate a drift in results with a lamp whose `RelativeIntensity` has been falling.
+These types exist because in machine vision the lens and the lighting determine whether a measurement is possible at all, and both are routinely changed in the field without the camera changing. Modelling them separately from the sensor means a maintenance system can record that a lens was swapped, and a diagnostic client can correlate a drift in results with a lamp whose `RelativeIntensity` has been falling.
 
-**When a Server instantiates them.** Whenever the values are known — typically on an inspection station where they were chosen deliberately. A robot cell camera with a fixed lens and ambient light will often omit both.
+A Server instantiates them whenever the values are known — typically on an inspection station, where they were chosen deliberately. A robot cell camera with a fixed lens and ambient light will often omit both.
 
-**What a client does with them.** `OpticsType.FocalLength` and `WorkingDistance` let it sanity-check that the calibration it holds still corresponds to the physical setup; `IlluminationType.Wavelength` tells a colour-sensitive inspection whether the illuminant matches what the recipe assumed.
+A client uses `OpticsType.FocalLength` and `WorkingDistance` to sanity-check that the calibration it holds still corresponds to the physical setup, and `IlluminationType.Wavelength` to confirm that the illuminant matches what a colour-sensitive recipe assumed.
 
 ### 5.8 Frames and calibration
 
@@ -330,39 +339,69 @@ Lens and light-source description. Member names are aligned with the `ILensType`
 - `IntrinsicCalibrationType` adds `Intrinsics`.
 - `ExtrinsicCalibrationType` adds `Mount` (`EyeInHand`, `EyeToHand`, `Fixed`), `SourceFrame`, `TargetFrame` and `Transform`.
 
-**Why they exist.** A 6-DoF pose is meaningless without the frame it is expressed in, and a frame is useless without a path to the frame the consumer cares about. This is the single most common failure in robot-vision integration: the pose is correct and the robot moves to the wrong place, because the two ends disagreed about what the numbers were relative to. `CoordinateFrameType` makes the frame a first-class node with a stable identity instead of a string convention, and `ExtrinsicCalibrationType` supplies the transforms that connect them.
+These types exist because a 6-DoF pose is meaningless without the frame it is expressed in, and a frame is useless without a path to the frame the consumer cares about. This is the single most common failure in robot-vision integration: the pose is correct and the robot moves to the wrong place, because the two ends disagreed about what the numbers were relative to. `CoordinateFrameType` makes the frame a first-class node with a stable identity instead of a string convention, and `ExtrinsicCalibrationType` supplies the transforms that connect them.
 
-**When a Server instantiates them.** `CoordinateFrameType` whenever it publishes poses — clause 11 ties this to *VIS-Result-Detection* through §7.3. `IntrinsicCalibrationType` whenever pixel coordinates need to become rays. `ExtrinsicCalibrationType` whenever the sensor's output must be expressed in someone else's frame, which for a robot cell is always.
+A Server instantiates `CoordinateFrameType` whenever it publishes poses — clause 11 ties this to *VIS-Result-Detection* through §7.3 — `IntrinsicCalibrationType` whenever pixel coordinates need to become rays, and `ExtrinsicCalibrationType` whenever the sensor's output must be expressed in someone else's frame, which for a robot cell is always.
 
-**What a client does with them.** It walks `ParentFrame` from the pose's own frame toward the frame it needs, composing each `Transform` on the way, exactly as Annex F.5 tabulates. Before doing so it checks `Valid` and `PerformedAt` — a stale calibration is worse than none, because it is wrong silently — and it uses `ResidualError` to decide how much positional tolerance to allow.
+A client walks `ParentFrame` from the pose's own frame toward the frame it needs, composing each `Transform` on the way, exactly as Annex F.5 tabulates. Before doing so it **should** check `Valid` and `PerformedAt` — a stale calibration is worse than none, because it is wrong silently — and it uses `ResidualError` to decide how much positional tolerance to allow.
 
-**Design note.** ISO 9787 standardises *which* frames exist; **no** ISO, IEC, VDI or ANSI standard defines the hand-eye calibration *procedure*. Only the outcome is portable, so this model carries the outcome — the transform, the arrangement it applies to, and its residual — and says nothing about how it was obtained.
+ISO 9787 standardises *which* frames exist, but no ISO, IEC, VDI or ANSI standard defines the hand-eye calibration *procedure*. Only the outcome is portable, so this model carries the outcome — the transform, the arrangement it applies to, and its residual — and says nothing about how it was obtained.
 
 ### 5.9 `IVisionSimulatedType : BaseInterfaceType`
 
 Applied to a simulated or hybrid sensor. Mandatory `SimulatorUri`, `StageIdentifier` and `PrimPath`; optional `GroundTruthAvailable` and `RandomizationSeed`. `StageIdentifier` and `PrimPath` reuse the identity contract of the OpenUSD specifications verbatim, so a synthetic sensor is addressable in exactly the terms a scene already uses (Annex C).
 
-**Why it is an interface rather than a subtype.** Being simulated is orthogonal to what a sensor senses. If it were a subtype, the model would need a simulated variant of every sensor type — `SimulatedImageSensorType`, `SimulatedDepth3DSensorType` — and a client would need to handle both. As an interface it applies to any sensor type, present and future, and the sensor's own member set is unchanged. That is what makes the sim/real symmetry of §4.3 hold: a client reads the identical members either way, and consults `RealityKind` only when it needs to care.
+It is an interface rather than a subtype because being simulated is orthogonal to what a sensor senses. A subtype would force a simulated variant of every sensor type — `SimulatedImageSensorType`, `SimulatedDepth3DSensorType` — and a client would have to handle both. As an interface it applies to any sensor type, present and future, and leaves the sensor's own member set unchanged. That is what makes the sim/real symmetry of §4.3 hold: a client reads identical members either way and consults `RealityKind` only when it needs to care.
 
-**When a Server instantiates it.** On every sensor whose `RealityKind` is `Simulated` or `Hybrid` — clause 11 makes *VIS-Simulation* required in that case, not optional.
+A Server applies it to every sensor whose `RealityKind` is `Simulated` or `Hybrid`; clause 11 makes *VIS-Simulation* required in that case rather than optional.
 
-**What a client does with it.** A training-data pipeline uses `RandomizationSeed` to reproduce a run exactly. A validation client uses `GroundTruthAvailable` to know that results from this sensor are simulator truth rather than predictions, and so must not be used to measure model accuracy. An operator tool uses `PrimPath` to open the corresponding camera in the scene.
+A training-data pipeline uses `RandomizationSeed` to reproduce a run exactly. A validation client uses `GroundTruthAvailable` to know that results from this sensor are simulator truth rather than predictions, and so **shall not** use them to measure model accuracy. An operator tool uses `PrimPath` to open the corresponding camera in the scene.
 
 ### 5.10 DataTypes
 
-Enumerations: `VisionRealityKindEnum`, `VisionStreamProtocolEnum`, `VisionClipFormatEnum`, `VisionVideoCodecEnum`, `VisionEndpointStateEnum`, `VisionEndpointAuthenticationEnum`, `VisionInferenceLocationEnum`, `VisionAcceleratorKindEnum`, `VisionResultEvaluationEnum`, `VisionToleranceStatusEnum`, `VisionFeedbackPurposeEnum`, `VisionCalibrationMountEnum`, `VisionFrameRoleEnum`, `VisionDistortionModelEnum`, `VisionSensorModalityEnum`, `VisionLearningJobStateEnum`, `VisionDatasetSourceEnum`.
+The enumerations are closed: each is contiguous from 0, and the repository validator enforces that. `Rtsp` and `Jpeg` are pinned at value 0 so that §6.2's mandatory-default guarantee is structural rather than editorial — an implementer reading only the NodeSet still gets it right.
 
-Structures: `VisionPose3DDataType`, `VisionBoundingBox2DDataType`, `VisionBoundingBox3DDataType`, `VisionImageReferenceDataType`, `VisionIntrinsicsDataType`, `VisionDetectionDataType`, `VisionCharacteristicDataType`, `VisionStreamSessionDataType`, `VisionTensorSignatureDataType`.
+| Enumeration | What it states |
+|---|---|
+| `VisionRealityKindEnum` | Whether a sensor is `Physical`, `Simulated` or `Hybrid` (§4.3). |
+| `VisionSensorModalityEnum` | What the sensor senses — `Area2D`, `Line2D`, `Depth3D`, `Thermal` and so on. |
+| `VisionStreamProtocolEnum` | Wire protocol of a continuous stream. `Rtsp` is value 0 and the mandatory default (§6.2); `DataChannel` is the optional in-band path of §6.7. |
+| `VisionClipFormatEnum` | Encoding of a single still. `Jpeg` is value 0 and the mandatory default. |
+| `VisionVideoCodecEnum` | Codec carried by a stream endpoint, for example H.264. |
+| `VisionEndpointStateEnum` | Lifecycle state shared by media endpoints, deployments and pipelines (§6.6). |
+| `VisionEndpointAuthenticationEnum` | How the media plane authenticates, independently of the OPC UA session (§12.1). |
+| `VisionInferenceLocationEnum` | Where inference runs — `OnServer`, `EdgeOffServer`, `Cloud`, `InSimulator`. Changes the trust boundary and nothing else (§8.2). |
+| `VisionAcceleratorKindEnum` | Class of hardware executing the model, for example GPU or NPU. |
+| `VisionResultEvaluationEnum` | Overall inspection verdict — `Undefined`, `Ok`, `NotOk`, `NotDecidable`. Value semantics reused from OPC 40001-101. |
+| `VisionToleranceStatusEnum` | Per-characteristic outcome, including `Indeterminate` when uncertainty crosses a tolerance limit (§7.2). |
+| `VisionFeedbackPurposeEnum` | Why a client is submitting feedback — to draw an overlay, to reconcile a record, or to supply a ground-truth label (§9). |
+| `VisionCalibrationMountEnum` | The camera-to-robot arrangement a hand-eye calibration applies to: `EyeInHand`, `EyeToHand` or `Fixed`. |
+| `VisionFrameRoleEnum` | The role a coordinate frame plays, from the ISO 9787 vocabulary — world, base, tool, camera. |
+| `VisionDistortionModelEnum` | Which lens-distortion model the coefficients follow; §5.12 fixes their ordering per model. |
+| `VisionLearningJobStateEnum` | Where a learning job is in its lifecycle (§9.6). |
+| `VisionDatasetSourceEnum` | Whether a dataset is `Real`, `Synthetic` or `Mixed` — the provenance a reviewer needs when synthetic data is involved. |
 
-**Why structures rather than folders of Variables.** A detection, a measured characteristic and a pose are each read as a unit or not at all. Splitting `VisionPose3DDataType` into seven Variables would let a client read a position from one frame and an orientation from the next, and would multiply the MonitoredItem count on a busy line by an order of magnitude. Structures also make the array cases — `Detections`, `Characteristics` — a single value change rather than a variable-length subtree that has to be re-browsed whenever the part changes.
+The structures are structures, not folders of Variables, because each is read as a unit or not at all. Splitting `VisionPose3DDataType` into seven Variables would let a client read a position from one acquisition and an orientation from the next, and would multiply the MonitoredItem count on a busy line by an order of magnitude. It also makes the array cases — `Detections`, `Characteristics` — a single value change rather than a variable-length subtree that has to be re-browsed whenever the part changes.
 
-**Why the enumerations are closed.** Every enumeration here is contiguous from 0 and validated as such. `Rtsp` and `Jpeg` are pinned at value 0 specifically so that §6.2's guarantee is structural rather than editorial — an implementer reading only the NodeSet still gets the mandatory default right.
+| Structure | What it carries |
+|---|---|
+| `VisionPose3DDataType` | A 6-DoF pose (§3): position in metres, orientation as a unit quaternion, the `FrameId` it is relative to, and an optional covariance. |
+| `VisionBoundingBox2DDataType` | An axis-aligned or rotated box in pixel coordinates, for a detection in the image plane. |
+| `VisionBoundingBox3DDataType` | An oriented box in metres, for a detection localised in space. |
+| `VisionImageReferenceDataType` | A descriptor for an image the client fetches elsewhere: `Uri`, `Timestamp`, `Digest` and format. The correlation key of §6.4 rule 4. |
+| `VisionIntrinsicsDataType` | Camera intrinsics — focal lengths, principal point, skew, distortion model and coefficients, and the resolution they were computed at. |
+| `VisionDetectionDataType` | One detected instance: class label and id, confidence, optional 2-D and 3-D geometry, optional pose, optional track id. Shaped on ROS 2 `vision_msgs`. |
+| `VisionCharacteristicDataType` | One measured property of a part: nominal, actual, deviation, tolerances, unit, **uncertainty** and status. Shaped on QIF (ISO 23952) Results. |
+| `VisionStreamSessionDataType` | A granted media lease: the `Uri`, its expiry, and the protocol actually served. Returned by `GetStreamEndpoint`, never published as a Variable (§12.2). |
+| `VisionTensorSignatureDataType` | The shape, element type and layout of one model input or output, so a client can tell whether it can feed the model. |
 
 Full field-level detail — DataType, ValueRank, ModellingRule, structure fields, enumeration values and Method signatures — is in the generated Annex A. Units and orderings for every quantity are fixed normatively in §5.12.
 
 ### 5.11 ReferenceTypes
 
-Each ReferenceType subtypes `NonHierarchicalReferences`. The following constraints are **normative**; a Server **shall not** use these ReferenceTypes with other SourceNode or TargetNode types.
+Each ReferenceType subtypes `NonHierarchicalReferences`. They exist alongside the hierarchy because the hierarchy answers *what is part of this sensor*, whereas these answer *what does this node depend on*, and the two are not the same shape. A calibration is listed under its sensor, but a frame is not part of any one sensor and a model is not part of any one pipeline — both are shared and live in their own folders. A NodeId Property could express such a link, but a reference is browsable in **both** directions, which is what lets a client ask the reverse question — *which deployments use this model?* — the question that is asked the moment a model is found to be defective.
+
+The following constraints are **normative**; a Server **shall not** use these ReferenceTypes with other SourceNode or TargetNode types.
 
 | ReferenceType | InverseName | SourceNode | TargetNode | Cardinality |
 |---|---|---|---|---|
@@ -372,7 +411,11 @@ Each ReferenceType subtypes `NonHierarchicalReferences`. The following constrain
 | `UsesModel` | `IsUsedByDeployment` | `AiDeploymentType` | `AiModelType` | **exactly 1** |
 | `ProducedBy` | `Produces` | `VisionResultType` | `InferencePipelineType` | 0..1 |
 
-**Why references rather than only Properties.** The hierarchy answers "what is part of this sensor"; these references answer "what does this node *depend on*", and the two are not the same shape. A calibration is listed under its sensor, but a frame is not part of any one sensor and a model is not part of any one pipeline — both are shared and live in their own folders. A NodeId Property could express the link, but a reference is browsable in both directions, which is what lets a client ask the reverse question: *which deployments use this model?* That is exactly the question asked when a model is found to be defective.
+- **`HasCalibration`** links a sensor to a calibration that applies to it. Following it forward answers *how do I interpret this sensor's output*; following `IsCalibrationOf` back answers *which sensors does this calibration affect*, which is what a maintenance client asks after re-calibrating. The cardinality allows a history of superseded calibrations to remain browsable, so long as only one per kind is `Valid`.
+- **`MountedOn`** links a sensor to the coordinate frame it is physically attached to — a robot flange for an eye-in-hand camera, a station frame for a fixed one. It is the structural statement of what the extrinsic calibration measures numerically, and it lets a client find the mounting frame without parsing a calibration.
+- **`HasScenePrim`** links a sensor to the camera prim it corresponds to in a materialized OpenUSD stage. It exists so a client can navigate from sensor to scene without resolving `PrimPath` as a string. Required only where the Server claims *VIS-Interop-Scene* (Annex C).
+- **`UsesModel`** links a deployment to the single model artefact it executes. This is the only defined path from a published result to the artefact and its `Digest`, so the §12.6 provenance check depends on it entirely — which is why the cardinality is exactly one rather than 0..1. `IsUsedByDeployment` is how an operator finds every deployment affected by a recalled model.
+- **`ProducedBy`** links a result to the pipeline that computed it. It duplicates the `Pipeline` Property deliberately: the Property is convenient to read with the result, the reference is browsable in reverse so a client can enumerate everything one pipeline produced.
 
 The following are **normative**:
 
@@ -423,7 +466,7 @@ Every physical quantity in this model is fixed here. A Server **shall** use thes
 
 **NodeId-valued Properties.** A Property whose DataType is `NodeId` (`Sensor`, `Pipeline`, `Deployment`, `ParentFrame`, `SourceFrame`, `TargetFrame`, `PreferredStreamEndpoint`, `PreferredClipEndpoint`, `Dataset`, `BaseModel`, `CandidateModel`) **shall** contain either a NodeId resolvable in the same Server or a null NodeId. A null NodeId means "not set"; a Server **shall not** use a non-null NodeId that does not resolve.
 
-**Pixel datum.** The origin corner is the top-left of the image, and the datum is the **corner** of the top-left pixel: the image occupies the continuous range `[0, W] × [0, H]`, so the centre of the top-left pixel is `(0.5, 0.5)` and a perfectly centred principal point is `Cx = W/2`. This is the convention the Annex B.2 derivation produces. It differs by exactly 0.5 px from the OpenCV convention used by `sensor_msgs/CameraInfo`, in which pixel *centres* fall on integer coordinates and a centred principal point is `(W−1)/2`; a client bridging to OpenCV or ROS **shall** subtract 0.5 from `Cx` and `Cy`, and Annex E.3 restates this.
+**Pixel datum.** The origin corner is the top-left of the image, and the datum is the **corner** of the top-left pixel: the image occupies the continuous range `[0, W] × [0, H]`, so the centre of the top-left pixel is `(0.5, 0.5)` and a perfectly centred principal point is `Cx = W/2`. This is the convention the Annex B.2 derivation produces. It differs by exactly 0.5 px from the OpenCV convention used by `sensor_msgs/CameraInfo`, in which pixel *centres* fall on integer coordinates and a centred principal point is `(W−1)/2`; a client bridging to OpenCV or ROS **shall** subtract 0.5 from `Cx` and `Cy`, and Annex E.4 restates this.
 
 **Frame precedence.** Where a pose is reachable both through a NodeId-valued frame Property and through the `FrameId` String inside `VisionPose3DDataType`, the structure field is authoritative for the pose's own frame and the Property is authoritative for the model's topology. Specifically, `ExtrinsicCalibrationType.Transform.FrameId` **shall** equal the `FrameId` of the `CoordinateFrameType` instance referenced by `TargetFrame`, and a Server **shall not** publish the two in disagreement. A client that finds them inconsistent **shall** treat the calibration as unusable rather than choosing one.
 
@@ -545,6 +588,22 @@ Where the selected endpoint is a data-channel endpoint (§6.7), `Session.Uri` **
 
 `VisionEndpointStateEnum` is used by `MediaEndpointType`, `AiDeploymentType` and `InferencePipelineType`. All transitions are **Server-driven**; no Method sets `State` directly.
 
+```mermaid
+stateDiagram-v2
+    [*] --> Inactive
+    Inactive --> Ready: configured and able to serve
+    Ready --> Active: first session leased / inference begins
+    Active --> Ready: last session released / stopped
+    Active --> Degraded: quality, latency or rate not met
+    Degraded --> Active: recovered
+    Ready --> Inactive: disabled by configuration
+    Ready --> Faulted: failure
+    Active --> Faulted: failure
+    Degraded --> Faulted: failure
+    Faulted --> Ready: fault cleared
+    Faulted --> Inactive: disabled while faulted
+```
+
 | State | Media endpoint | Deployment | Pipeline |
 |---|---|---|---|
 | `Inactive` | declared, not serving | model not loaded | not bound, or disabled |
@@ -559,16 +618,16 @@ A Server **shall** report `Degraded` rather than `Active` when it knows the conf
 
 > **Draft dependency.** This clause is defined against *OPC UA — Data Channels*, a **working draft in this repository** (§2), not a released OPC UA specification. Its NodeIds, MessageType and StatusCodes are provisional and may change or be withdrawn. This facet is **entirely optional**: *VIS-Base* does not require it, §6.2's RTSP and JPEG guarantee is unaffected by it, and a Server that does not implement it — which will be most Servers — is fully conformant. Nothing in this specification's NodeSet references that draft's identifiers, so adopting or ignoring it changes nothing about loading this model.
 
-**What it is for.** Every other path in this clause requires a second protocol beside OPC UA: a client that has an authenticated OPC UA session must still reach the camera over RTSP or HTTPS, through whatever firewall, NAT and credential arrangement that implies. A data channel carries the bytes on the SecureChannel the client **already has**. There is no second connection to authorize, no media credential to issue or leak (§12.2), and no second port to open.
+Every other path in this clause requires a second protocol beside OPC UA: a client that has an authenticated OPC UA session must still reach the camera over RTSP or HTTPS, through whatever firewall, NAT and credential arrangement that implies. A data channel carries the bytes over the SecureChannel the client **already has**. There is no second connection to authorize, no media credential to issue or leak (§12.2), and no second port to open.
 
-**How a data-channel endpoint is recognised.** A Server offering this facet publishes it on an existing `StreamEndpointType` or `ClipEndpointType`:
+A Server offering this facet publishes it on an existing `StreamEndpointType` or `ClipEndpointType`, and a client recognises it by:
 
 - `DataChannelSource` (`NodeId`) is **non-null** and designates the Object on which the client opens the data channel. This is the discriminator.
 - `EndpointUri` is **empty** where the data channel is the endpoint's only path, because there is no location a URI could name. Where the endpoint also serves out-of-band, `EndpointUri` keeps its usual meaning and the data channel is an additional path to the same content.
 - `DataChannelContentType` names the IANA media type the channel carries — `video/H264`, `image/jpeg`. It duplicates the source's own `ContentType` deliberately, so a client can learn the payload type from **this** model without the Data Channels model being present.
 - For a stream endpoint, `StreamProtocol` **may** be `DataChannel`. A Server **shall** set it to `DataChannel` only where the data channel is the endpoint's only path; where the endpoint also serves RTSP, `StreamProtocol` keeps naming the out-of-band protocol and `DataChannelSource` alone signals the additional path.
 
-**What this specification does not define.** Framing, flow control, delivery modes, the Services that open and close a channel, and the transport bindings are **all** defined by the Data Channels draft. This clause adds no wire format and no Service. It states only *where* the data channel for a media endpoint is, and *what* the bytes on it are.
+This specification defines no wire format and no Service. Framing, flow control, delivery modes, the Services that open and close a channel, and the transport bindings are all defined by the Data Channels draft. This clause states only *where* the data channel for a media endpoint is, and *what* the bytes on it are.
 
 **Discovery and graceful absence (normative).** A client **shall** determine support before relying on it, and **shall** be able to proceed without it:
 
@@ -632,7 +691,7 @@ All three align member-for-member with the IDTA submodel templates **02060** (AI
 
 This is the assumption the whole clause rests on, and it is why the model is separated from the sensor that uses it.
 
-An AI model is **supplied and governed by the business**, not baked into the device by its manufacturer. In practice it is trained, approved and released by the operator, a system integrator, or a model vendor, against that organisation's own quality, safety and regulatory obligations. The same physical camera runs different models over its life; the same model runs on many cameras and on off-server hardware the camera vendor never sees. A device-embedded model would be indistinguishable from firmware and would need none of `AiModelType`.
+An AI model is **supplied and governed by the end-user**, not baked into the device by its manufacturer. In practice it is trained, approved and released by the operator, a system integrator, or a model vendor, against that organisation's own quality, safety and regulatory obligations. The same physical camera runs different models over its life; the same model runs on many cameras and on off-server hardware the camera vendor never sees. A device-embedded model would be indistinguishable from firmware and would need none of `AiModelType`.
 
 Three consequences are normative:
 
@@ -649,6 +708,83 @@ Where a vendor *does* ship a fixed model with a device, that is expressible — 
 **This property changes where computation happens and therefore the trust boundary. It changes nothing else.** A Server **shall** publish results through the same types, with the same members and the same meaning, regardless of its value. When inference is off-server the Server publishes results it did not compute; a client that does not care where inference ran does not have to look.
 
 For off-server deployments, `EndpointUri` names the inference service and `LatencyBudget` states the latency it is expected to meet, so a client can detect regression rather than merely observing it.
+
+#### 8.2.1 Usage model
+
+The four values differ in who runs the model, what the Server must reach, and what fails when the link fails. In every case the **client sees the same exchange** — that is the point of the property.
+
+| Value | Where the model runs | What the Server must reach | Typical reason to choose it |
+|---|---|---|---|
+| `OnServer` | In the Server's own process or device | nothing | Lowest latency, no external dependency; bounded by the device's own compute |
+| `EdgeOffServer` | A separate box on the same network, e.g. an edge GPU | `EndpointUri` on the local network | Model too large for the camera; keeps data on-premises |
+| `Cloud` | A hosted service | `EndpointUri` across the internet | Elastic capacity, centrally managed models; adds a WAN dependency |
+| `InSimulator` | Inside the scene simulator | the simulator | Synthetic data generation and validation before deployment (§10) |
+
+**The client's exchange is identical in all four cases.** It calls the pipeline, reads the result, and optionally follows the provenance chain — none of which mentions where inference ran:
+
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant S as OPC UA Server
+    C->>S: Call RunInference(Timestamp)
+    S-->>C: ResultId (Good)
+    C->>S: Read Results/<ResultId>
+    S-->>C: InspectionResultType / DetectionResultType
+    C->>S: Browse result -> ProducedBy -> Deployment -> UsesModel
+    S-->>C: AiModelType (Version, Digest)
+```
+
+**`OnServer`** — the Server computes the result itself, so the only failure mode is its own:
+
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant S as OPC UA Server
+    participant M as Model in-process
+    C->>S: RunInference
+    S->>M: execute
+    M-->>S: detections / characteristics
+    S-->>C: ResultId (Good)
+    Note over S: Bad_InvalidState if State is Inactive or Faulted
+```
+
+**`EdgeOffServer` and `Cloud`** — the Server is a broker. It publishes a result it did not compute, and the extra failure modes are reachability and latency:
+
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant S as OPC UA Server
+    participant I as Inference service at EndpointUri
+    C->>S: RunInference
+    S->>I: authenticated, integrity-protected request (§12.6)
+    alt service responds within LatencyBudget
+        I-->>S: inference output
+        S-->>C: ResultId (Good)
+    else unreachable
+        S-->>C: Bad_ResourceUnavailable
+    else exceeded LatencyBudget
+        S-->>C: Bad_Timeout
+        Note over S: State moves to Degraded (§6.6)
+    end
+```
+
+**`InSimulator`** — the sensor is simulated, so results may be simulator **ground truth** rather than predictions. A client **shall** consult `GroundTruthAvailable` before treating them as model output (§10):
+
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant S as OPC UA Server
+    participant Sim as Simulator
+    C->>S: Read sensor RealityKind, GroundTruthAvailable
+    S-->>C: Simulated, true
+    C->>S: RunInference
+    S->>Sim: render frame + evaluate
+    Sim-->>S: result (ground truth, not a prediction)
+    S-->>C: ResultId (Good)
+    Note over C: shall not use as a measure of model accuracy
+```
+
+A Server **shall not** vary the result types, member meanings or StatusCodes by `InferenceLocation`; the only observable differences are the failure modes above and the presence of `EndpointUri` and `LatencyBudget`.
 
 ### 8.3 `InferencePipelineType`
 
@@ -682,21 +818,57 @@ On success `StartContinuous` **shall** set `Continuous` to true and drive `State
 
 ## 9 Feedback and the learning loop (normative)
 
-### 9.1 The return path
+### 9.1 Why this clause exists
+
+Clauses 6 to 8 describe one direction only: the vision system observes, and a consumer reads what it concluded. That is sufficient for a system that is always right, and no vision system is. Three things routinely need to travel the *other* way, from the consumer back into the vision system, and none of them has a home in any existing OPC UA specification:
+
+- An operator watching a live stream needs to **see what the system saw** — the boxes it drew, on the image it drew them on — in order to judge whether to trust it.
+- A downstream station that measured the part independently, or a quality engineer who overrode a verdict, holds information the vision system does not: **what actually turned out to be true**.
+- A model that is wrong about a new part variant can only be fixed by **being told what the right answer was**, in a form that can become training data.
+
+Without a defined path for these, each is rebuilt per site: an HMI writes overlay boxes into a vendor-specific tag, corrections end up in a spreadsheet, and the labels needed to retrain the model are re-created by hand from images someone exported. This clause gives all three one surface, and §12.7 states what a Server may then believe.
+
+**"Return path"** means exactly this reverse direction: `VisionFeedbackType` is the object through which a *client* writes information back into the vision system, in contrast with the rest of the model, through which the *Server* publishes information outward. It is a return path in the control-loop sense — an output of the process is fed back to influence its future behaviour — not a network path or a message route.
+
+```mermaid
+sequenceDiagram
+    participant Op as Operator / HMI
+    participant C as Client
+    participant S as OPC UA Server
+    participant J as LearningJobType
+
+    Note over C,S: forward direction, clauses 6 to 8
+    S-->>C: result published (verdict, detections)
+    C-->>Op: rendered for a human
+
+    Note over Op,J: return path, this clause
+    Op->>C: disagrees with the verdict
+    C->>S: SubmitDetections(Purpose = Overlay)
+    S-->>Op: boxes drawn on the live stream
+    C->>S: SubmitInspectionResult(Purpose = Reconciliation)
+    S-->>C: Good (recorded against the result)
+    C->>S: SubmitCorrection(Purpose = GroundTruthLabel)
+    S->>J: retained as a labelled sample (12.7)
+    S-->>C: Good, or Bad_NotSupported if it will not retain it
+```
+
+### 9.2 The three purposes
 
 `VisionFeedbackType` serves three purposes with one surface:
 
-- **Overlay** — submitted geometry is drawn onto the outgoing stream, governed by `OverlayEnabled`, `OverlayStyle` and `OverlayTtl`.
-- **Reconciliation** — a downstream verdict is recorded against a result, so what the line concluded can be compared with what the vision system reported.
-- **Ground-truth labelling** — a correction is retained as labelled training data.
+- **Overlay** — submitted geometry is drawn onto the outgoing stream, governed by `OverlayEnabled`, `OverlayStyle` and `OverlayTtl`. Used during commissioning and for operator confidence; it changes what a human sees and nothing else.
+- **Reconciliation** — a downstream verdict is recorded against a result, so what the line concluded can be compared with what the vision system reported. It changes the record, not the model.
+- **Ground-truth labelling** — a correction is retained as labelled training data. It is the only one of the three that can change what the system decides in future, which is why §12.7 gates it.
 
 `VisionFeedbackPurposeEnum` states which applies. The Methods are `SubmitDetections`, `SubmitInspectionResult`, `SubmitCorrection` and `SubmitImageReference`.
 
-### 9.2 Feedback images
+### 9.3 Feedback images
 
 Feedback images follow exactly the discipline of §6.4. `SubmitImageReference` — passing a `VisionImageReferenceDataType` — is the **default** path. `SubmitDetections` and `SubmitCorrection` each additionally accept an optional inline `ByteString`, which a Server **shall** accept only within `MaxInlineFeedbackImageSize`, itself bounded as in §6.4 rule 2. An oversized payload **shall** be rejected with **`Bad_EncodingLimitsExceeded`**, and the client **shall** retry by reference.
 
-### 9.3 Closing the loop
+Any `Uri` in a submitted `VisionImageReferenceDataType` is a location the Server will dereference, so §12.3 states the validation it **shall** apply first.
+
+### 9.4 Closing the loop
 
 `LearningJobType` is where corrections accumulate and become a new model version. Its `State` moves through `Idle`, `Collecting`, `Labelling`, `Training`, `Validating`, `Ready`, `Promoted` or `Failed`, and it links a `Dataset`, a `BaseModel` and a `CandidateModel`.
 
@@ -717,7 +889,7 @@ A Server **may** implement only the capture stages and leave training to an exte
 
 `PromoteModel` changes what the system decides. A Server **shall** require an authorization for it that is distinct from, and not implied by, the authorization for any `VisionFeedbackType` Method or for `StartCollection`, `StopCollection` and `TriggerTraining` (§12.5). Clause 11 makes this a condition of *VIS-Learning*.
 
-### 9.4 Feedback and learning Method definitions (normative)
+### 9.5 Feedback and learning Method definitions (normative)
 
 Every Method in this clause is a **write** and **shall** be authorized independently (§12.5). None of them changes a published result: a correction is recorded alongside the original, never in place of it, so the audit trail is preserved.
 
@@ -755,7 +927,24 @@ A Server that accepts a correction with `Purpose = GroundTruthLabel` **shall** e
 
 `PromoteModel` moves `CandidateModel` into service. A null `Deployment` means *every* deployment fed by this job: the Server **shall** promote the candidate to all of them, or to none, and **shall not** promote a subset. `PromotedModel` returns the NodeId of the `AiModelType` instance that was promoted, which is the same node in either case — it identifies the model, not the deployment — so a caller that needs to know which deployments changed browses their `UsesModel` references afterwards.
 
-### 9.5 Learning job state model (normative)
+### 9.6 Learning job state model (normative)
+
+```mermaid
+stateDiagram-v2
+    [*] --> Idle
+    Idle --> Collecting: StartCollection
+    Collecting --> Labelling: StopCollection
+    Collecting --> Training: TriggerTraining (accepted)
+    Labelling --> Training: TriggerTraining (accepted)
+    Training --> Validating: Server, training finished
+    Validating --> Ready: Server, candidate accepted
+    Validating --> Failed: Server, candidate rejected
+    Ready --> Promoted: PromoteModel
+    Promoted --> Collecting: StartCollection
+    Training --> Failed: Server, error
+    Validating --> Failed: Server, error
+    Failed --> Collecting: StartCollection
+```
 
 | From | Trigger | To |
 |---|---|---|
@@ -810,11 +999,11 @@ Where a facet's row names members, a Server claiming it **shall** instantiate ev
 | **VIS-Calibration** | `CoordinateFrameType` plus `IntrinsicCalibrationType` and/or `ExtrinsicCalibrationType`, with the §5.11 reference constraints and the §5.12 frame-precedence rule |
 | **VIS-Result-Inspection** | `InspectionResultType` with `Evaluation` and `Characteristics`, and the §7.2 uncertainty rule including its uniform-reporting requirement |
 | **VIS-Result-Detection** | `DetectionResultType` with `Detections`, the §5.12 pose conventions, and the §7.3 `FrameId` rule |
-| **VIS-Feedback** | `VisionFeedbackType` with at least `SubmitImageReference`, the §9.2 and §9.4 rules, the §12.3 inbound-URI validation, and the §12.7 feedback-integrity rules |
+| **VIS-Feedback** | `VisionFeedbackType` with at least `SubmitImageReference`, the §9.3 and §9.5 rules, the §12.3 inbound-URI validation, and the §12.7 feedback-integrity rules |
 | **VIS-Inference-OnServer** | `InferencePipelineType` with a deployment whose `InferenceLocation` is `OnServer`, and the §5.11 `UsesModel` constraint. Where `RunInference` is implemented, `Results` (§8.4). `AiModelType.Digest` and `DigestAlgorithm` per §12.6 |
 | **VIS-Inference-OffServer** | As above with any other `InferenceLocation`, plus `EndpointUri` naming an authenticated, confidential scheme (§12.6) |
 | **VIS-Simulation** | `IVisionSimulatedType` on every sensor whose `RealityKind` is `Simulated` or `Hybrid` (§4.3, §10). **Required** of any Server that reports either value. |
-| **VIS-Learning** | `LearningJobType`, `SubmitCorrection`, the §9.5 state model, every Method that drives a transition in it — `StartCollection`, `StopCollection`, `TriggerTraining`, `PromoteModel` — and the **distinct `PromoteModel` authorization** of §12.5 |
+| **VIS-Learning** | `LearningJobType`, `SubmitCorrection`, the §9.6 state model, every Method that drives a transition in it — `StartCollection`, `StopCollection`, `TriggerTraining`, `PromoteModel` — and the **distinct `PromoteModel` authorization** of §12.5 |
 | **VIS-Interop-Scene** | The numbered requirements of Annex C, which are normative for a Server claiming this facet |
 | **VIS-Interop-40100** | The numbered requirements of Annex D, which are normative for a Server claiming this facet |
 
@@ -858,7 +1047,7 @@ Two directions have to be considered separately, and only the first was historic
 
 **Server-published URIs, consumed by a client.** `EndpointUri`, `ArtifactUri`, `ProvenanceUri` and `ExplanationUri` are published by the Server and could direct a client at an arbitrary location — an SSRF-class risk for the client. A client **shall** apply a scheme and host allowlist and **shall** impose resource limits when resolving them. Where a `Digest` is present, a client **shall** verify the fetched bytes against it per §12.6 and **shall** refuse a mismatch. This mirrors the resolver-safety treatment in *OPC UA — OpenUSD Bindings* §9.
 
-**Client-supplied URIs, consumed by the Server.** `VisionImageReferenceDataType.Uri` is *also* a client input: it arrives through `SubmitImageReference` — the default feedback-image path of §9.2, required by *VIS-Feedback* — and through the `FrameReference` argument of `SubmitDetections`. Because §9.3 requires submitted imagery to become retained training data, the Server or its backend dereferences a location chosen by the caller. That makes the Server the SSRF target.
+**Client-supplied URIs, consumed by the Server.** `VisionImageReferenceDataType.Uri` is *also* a client input: it arrives through `SubmitImageReference` — the default feedback-image path of §9.3, required by *VIS-Feedback* — and through the `FrameReference` argument of `SubmitDetections`. Because §9.4 requires submitted imagery to become retained training data, the Server or its backend dereferences a location chosen by the caller. That makes the Server the SSRF target.
 
 A Server **shall** treat every `Uri` received from a client as untrusted, and **shall**:
 
@@ -878,7 +1067,7 @@ Inline delivery amplifies payload size by orders of magnitude relative to ordina
 
 Every `VisionFeedbackType` Method mutates state: overlays change what operators see, reconciliation changes the record, and corrections change what the next model learns. A Server **shall** require explicit authorization for each.
 
-`LearningJobType.PromoteModel` changes what the system *decides*, on every deployment fed by the job (§9.4). A Server **shall** require an authorization for `PromoteModel` that is **distinct from, and not implied by**, the authorization required for any `VisionFeedbackType` Method or for `StartCollection`, `StopCollection` or `TriggerTraining`. A principal able to submit corrections **shall not** thereby be able to promote a model. This is the requirement §8.1.1 consequence 3 refers to, and clause 11 makes it a condition of *VIS-Learning* so that it is testable.
+`LearningJobType.PromoteModel` changes what the system *decides*, on every deployment fed by the job (§9.5). A Server **shall** require an authorization for `PromoteModel` that is **distinct from, and not implied by**, the authorization required for any `VisionFeedbackType` Method or for `StartCollection`, `StopCollection` or `TriggerTraining`. A principal able to submit corrections **shall not** thereby be able to promote a model. This is the requirement §8.1.1 consequence 3 refers to, and clause 11 makes it a condition of *VIS-Learning* so that it is testable.
 
 A Server **shall** retain an audit record of every correction and promotion, including the authenticated caller identity and the timestamp, and **shall not** include a credential-bearing URI in it (§12.2). Where the deployment falls under a high-risk regulatory regime, this record and the §7.1 trust members are what make the decision chain reconstructible.
 
@@ -892,7 +1081,7 @@ Digest verification is the only integrity control this specification defines for
 
 ### 12.7 Feedback is untrusted training data
 
-§12.5 governs *permission to call* a feedback Method. This clause governs what may then be *believed*, which is a separate question: §9.3 routes a submitted `GroundTruthLabel` into `AiDatasetType`, then into a training run, a `CandidateModel` and — after promotion — into every verdict the line produces. A single misused credential on the feedback surface is therefore a path to influencing safety-relevant decisions, and authorization alone does not bound it.
+§12.5 governs *permission to call* a feedback Method. This clause governs what may then be *believed*, which is a separate question: §9.4 routes a submitted `GroundTruthLabel` into `AiDatasetType`, then into a training run, a `CandidateModel` and — after promotion — into every verdict the line produces. A single misused credential on the feedback surface is therefore a path to influencing safety-relevant decisions, and authorization alone does not bound it.
 
 A Server **shall**:
 
@@ -902,7 +1091,7 @@ A Server **shall**:
 
 A Server **should** bound the proportion of any dataset contributed by a single principal, and **should** support retracting all samples attributed to one identity.
 
-**Overlays are also untrusted.** Geometry submitted through `SubmitDetections` with `Purpose = Overlay` is drawn on the stream a human operator watches (§9.1), and `ClassLabel` is free-form text. A Server **shall** render client-submitted overlay geometry so that it is visually distinguishable from Server-generated annotation, and **shall** bound `OverlayTtl` to a Server-configured maximum, so that an authorized-but-untrusted client cannot present a persistent misleading view to a human decision-maker.
+**Overlays are also untrusted.** Geometry submitted through `SubmitDetections` with `Purpose = Overlay` is drawn on the stream a human operator watches (§9.2), and `ClassLabel` is free-form text. A Server **shall** render client-submitted overlay geometry so that it is visually distinguishable from Server-generated annotation, and **shall** bound `OverlayTtl` to a Server-configured maximum, so that an authorized-but-untrusted client cannot present a persistent misleading view to a human decision-maker.
 
 ---
 
@@ -1080,6 +1269,8 @@ None of the following is a normative reference. Names and field sets were borrow
 
 ### E.1 GenICam — SFNC and PFNC
 
+**Annex H is the full binding.** The summary below is retained here so this annex lists every adjacent standard in one place.
+
 | This specification | GenICam |
 |---|---|
 | `ImageSensorType.Width`, `Height`, `OffsetX`, `OffsetY` | SFNC `Width`, `Height`, `OffsetX`, `OffsetY` |
@@ -1090,13 +1281,27 @@ None of the following is a normative reference. Names and field sets were borrow
 | `VisionSensorType.DeviceUri` | the GenTL device identifier |
 | `VisionStreamProtocolEnum.GenDc` | a GenDC container stream |
 
-GenICam configures and streams from the device; this model publishes semantics and brokers endpoints. There is no published GenICam-to-OPC-UA mapping specification, and this annex is not one.
+GenICam configures and streams from the device; this model publishes semantics and brokers endpoints. There is no published GenICam-to-OPC-UA mapping specification, and neither this annex nor Annex H is one.
 
-### E.2 QIF — ISO 23952
+### E.2 ONVIF — Profiles S, T and M
+
+ONVIF is the dominant standard in network video and physical security, and an increasing number of industrial cameras expose it. It reached the same layering conclusion as §6.1 independently: Profiles S and T broker an RTSP endpoint and leave the pixels on RTP.
+
+| This specification | ONVIF |
+|---|---|
+| `StreamEndpointType` with `StreamProtocol = Rtsp` | Profile S / T media service, RTSP + RTP |
+| `StreamEndpointType` with `Rtsps`, `SecureTransport` | Profile T secure transport |
+| `StreamEndpointType.Codec` | Profile T H.264 / H.265 encoder configuration |
+| `VisionSensorType.DeviceUri` | the ONVIF device service address |
+| `DetectionResultType.Detections` | Profile M analytics metadata — *partial*, see below |
+
+Profile M is the closest external analogue to clause 7 and the strongest evidence that result content *can* be standardised — but its vocabulary is surveillance (faces, licence plates, line crossing), and it carries no measured characteristic, no tolerance, no ISO 14253 uncertainty, no 6-DoF pose in a named frame and no description of the model that produced the output. It is therefore adjacent on the **media** axis and not usable on the **semantics** axis. A Server fronting an ONVIF camera publishes its stream through `StreamEndpointType` exactly as it would a GenICam device; this model is indifferent to which. The research report §3.1a sets out the comparison in full.
+
+### E.3 QIF — ISO 23952
 
 `VisionCharacteristicDataType` mirrors QIF Results: `Nominal`, `Actual`, `Deviation`, `LowerTolerance`, `UpperTolerance`, `Unit`, `Uncertainty` (per ISO 14253) and `Status`. A QIF document can be produced from an `InspectionResultType` without inventing information. The reverse — a full QIF-to-OPC-UA semantic mapping — does not exist as a standard; OPC 40210 §5.3.3 names QIF as a result format and explicitly defines "only the transport".
 
-### E.3 ROS 2 `vision_msgs`
+### E.4 ROS 2 `vision_msgs`
 
 | This specification | ROS 2 |
 |---|---|
@@ -1111,7 +1316,7 @@ GenICam configures and streams from the device; this model publishes semantics a
 
 The `CameraInfo` mapping is **not** a copy. Two adjustments are required, both fixed normatively in §5.12: the principal point uses a different sub-pixel datum, so a bridge **shall** compute `K[2] = Cx − 0.5` and `K[5] = Cy − 0.5` when producing `CameraInfo`, and add 0.5 when consuming it; and `D` is ordered by `DistortionModel` per the §5.12 table, which for `BrownConrady` already matches the OpenCV `plumb_bob` order. Quaternions in `geometry_msgs` are ordered (x, y, z, w), which matches §5.12 and needs no reordering.
 
-### E.4 IDTA Asset Administration Shell submodels
+### E.5 IDTA Asset Administration Shell submodels
 
 | This specification | IDTA template |
 |---|---|
@@ -1121,7 +1326,7 @@ The `CameraInfo` mapping is **not** a copy. Two adjustments are required, both f
 
 There is no IDTA submodel template for machine vision, so `VisionSensorType` and the result types have no counterpart. The OPC UA bridge to the AAS, OPC 30270, currently maps AAS V2.0.1 and is slated for replacement; this model therefore aligns by field name rather than depending on that bridge.
 
-### E.5 ISO robotics and metrology
+### E.6 ISO robotics and metrology
 
 | This specification | Standard |
 |---|---|
@@ -1441,3 +1646,72 @@ When a quality engineer overrides a verdict at the review station, the HMI calls
 Regenerate from the repository root with `python metaverse-specs/extras/vision/tools/build_examples.py`.
 
 <!-- END GENERATED: annex-machine-vision -->
+
+---
+
+## Annex H — GenICam binding (informative)
+
+This annex is the binding that clause 5.5 refers to. It exists because a Server implementing this model almost always talks to its cameras through GenICam, and the question *"which SFNC feature does this member come from"* would otherwise be answered differently by every implementer. It is **informative**: nothing here requires a GenICam device, and a Server whose cameras are not GenICam devices populates the same members from whatever its driver provides.
+
+### H.1 Why the names were borrowed
+
+`ImageSensorType` uses GenICam **SFNC 2.8** feature names and semantics, and `PixelFormat` uses **PFNC** naming. The alternative — inventing OPC UA names for parameters that already have universally understood ones — would have forced every Server to maintain a translation table and every client to learn a second vocabulary for the same physical quantities. Borrowing the names makes the bridge mechanical in both directions.
+
+Borrowing names is not taking a dependency. This specification declares no GenICam reference, requires no GenTL producer, and works unchanged over a camera exposed by any other means.
+
+### H.2 Acquisition parameters
+
+Read as: the Server reads the SFNC feature and publishes it as the member, applying the stated conversion.
+
+| `ImageSensorType` member | SFNC 2.8 feature | Type in SFNC | Conversion |
+|---|---|---|---|
+| `Width` | `Width` | IInteger | none |
+| `Height` | `Height` | IInteger | none |
+| `OffsetX` | `OffsetX` | IInteger | none |
+| `OffsetY` | `OffsetY` | IInteger | none |
+| `PixelFormat` | `PixelFormat` | IEnumeration | the PFNC **name** of the selected entry, as a String — not the numeric PFNC value |
+| `ExposureTime` | `ExposureTime` | IFloat, microseconds | none; §5.12 fixes microseconds for exactly this reason |
+| `Gain` | `Gain` | IFloat | none. SFNC `Gain` is in dB where `GainAuto` is off and the device declares it so; this model does not fix a unit for `Gain` and a Server **should** publish the device's own |
+| `AcquisitionFrameRate` | `AcquisitionFrameRate` | IFloat, Hz | none |
+| `TriggerMode` | `TriggerMode` | IEnumeration (`Off`, `On`) | the entry name as a String |
+| `TriggerSource` | `TriggerSource` | IEnumeration | the entry name as a String |
+| `BinningHorizontal` | `BinningHorizontal` | IInteger | none |
+| `BinningVertical` | `BinningVertical` | IInteger | none |
+| `ReverseX` | `ReverseX` | IBoolean | none |
+| `ReverseY` | `ReverseY` | IBoolean | none |
+
+Two SFNC conventions matter when reading this table:
+
+1. **Selectors.** Several SFNC features are qualified by a selector — `GainSelector`, `TriggerSelector`, `ExposureTimeSelector`. This model publishes the value for the device's **currently selected** entry and does not model the selector. A Server that must expose more than one selector value models it as more than one sensor, or as a vendor extension.
+2. **`…Auto` features.** `ExposureAuto`, `GainAuto` and `BalanceWhiteAuto` have no member here. Where they are active the corresponding value is being changed by the device, so a Server **should** publish the current effective value and a client **should not** assume it is stable between acquisitions.
+
+### H.3 Pixel formats
+
+`PixelFormat` carries a PFNC *name*, not a numeric value, because the name is stable across PFNC revisions and is what appears in every camera datasheet and SDK.
+
+| Family | Examples | Note |
+|---|---|---|
+| Monochrome | `Mono8`, `Mono10`, `Mono12`, `Mono16` | bit depth is part of the name |
+| Bayer | `BayerRG8`, `BayerGB12`, `BayerBG16` | the two letters give the CFA phase; the client needs them to demosaic correctly |
+| Colour | `RGB8`, `BGR8`, `RGBa8`, `YCbCr422_8` | |
+| 3-D | `Coord3D_ABC32f`, `Coord3D_C16` | produced by `Depth3DSensorType`, not by `ImageSensorType` |
+
+A client that does not recognise a `PixelFormat` **shall not** guess: it obtains the image through a media endpoint in a format it does understand — JPEG is always available (§6.2) — rather than misinterpreting the bytes.
+
+### H.4 Device identity and transport
+
+| This specification | GenICam / transport layer |
+|---|---|
+| `VisionSensorType.DeviceUri` | the GenTL device identifier, or a transport-specific URI such as `gev://<ip>/<n>` for GigE Vision or `u3v://<vid>/<pid>/<serial>` for USB3 Vision |
+| `VisionSensorType.Manufacturer`, `Model`, `SerialNumber` | the corresponding GenTL device information |
+| `VisionStreamProtocolEnum.GenDc` | a GenDC container stream, where the Server brokers the device stream directly |
+
+`DeviceUri` is the join key: it is what lets a maintenance tool holding a GenTL device list match a camera to its OPC UA node.
+
+### H.5 What deliberately has no binding
+
+- **Streaming itself.** GigE Vision, USB3 Vision and CoaXPress move pixels; this model brokers endpoints (§6.1). A Server does not re-publish a GenICam stream through OPC UA.
+- **The full SFNC feature set.** SFNC has hundreds of features. This model publishes the ones that determine what an image *is* and how to interpret a result. A Server needing more exposes them as vendor members.
+- **Writing features.** Nothing in this model configures a camera through GenICam. `ConfigureStreamEndpoint` (§6.5) configures the *encoder* of a media endpoint, not the sensor.
+
+There is no published GenICam-to-OPC-UA mapping specification. This annex is a binding for this model only, and does not claim to be one.

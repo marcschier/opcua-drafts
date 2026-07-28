@@ -111,6 +111,31 @@ No published GenICam-to-OPC-UA mapping specification exists. The VDMA Embedded V
 
 **Design consequence — the layering rule.** GigE Vision and GenDC carry pixels; OPC UA carries semantics and control. The Vision model therefore brokers **endpoints**, and its default media path keeps image bytes out of the OPC UA payload entirely. The inline `ByteString` facet is a bounded exception for single stills, gated on `MaxByteStringLength`, and is explicitly not a streaming path.
 
+### 3.1a ONVIF — the same layering, solved for a different industry
+
+GenICam and GigE Vision dominate **industrial** machine vision. **ONVIF** dominates the adjacent **network-video and physical-security** industry, and it is worth examining because it independently arrived at the same layering this specification adopts, and because a growing number of industrial cameras ship an ONVIF interface alongside — or instead of — a GenICam one.
+
+| ONVIF profile | Scope | Relationship to this model |
+|---|---|---|
+| **Profile S** (2012) | Baseline video streaming: RTSP/RTP delivery, basic PTZ, media configuration, basic events | The RTSP-brokered stream of §6.2 is exactly this shape |
+| **Profile T** (2018) | Current streaming baseline: H.264/H.265, secure transport (TLS), advanced imaging (WDR, day/night), motion and tampering events | The optional `Rtsps` / `SecureTransport` path of §12.2 |
+| **Profile M** (2021) | **Analytics metadata and events**: structured object detection, classification, bounding boxes, geolocation and attributes, streamed as XML over RTP or delivered over MQTT; plus configuration and query of analytics | The closest external analogue to `DetectionResultType` |
+
+Three observations matter for the design of this specification.
+
+**ONVIF confirms the layering rule rather than contradicting it.** Profile S and Profile T broker an RTSP endpoint and leave the pixels on RTP. That is the same decision as §6.1, reached independently by a different industry for the same reasons. It is corroboration that brokering endpoints, rather than carrying pixels in the control protocol, is the correct layering.
+
+**Profile M is genuinely adjacent to clause 7, and is the strongest external evidence that result content can be standardised.** It carries object detections with class, geometry and attributes, and it explicitly standardises *the structure and transport of the metadata, not the analytics that produced it* — precisely the boundary this specification draws in §8.2 with `InferenceLocation`. Where OPC 40100-1 declined to define result content, ONVIF did define it, for its own domain.
+
+**It is nevertheless not usable here, for four reasons:**
+
+1. **Wrong domain semantics.** Profile M's vocabulary is surveillance — faces, licence plates, line crossing, intrusion, loitering. It has no notion of a measured *characteristic*, a tolerance, a measurement *uncertainty*, or a pass/fail verdict against a specification, which is the entire content of `InspectionResultType`.
+2. **No metrology.** Nothing in ONVIF corresponds to ISO 14253 uncertainty or to QIF Results. A verdict that cannot state its uncertainty cannot support the `NotDecidable` rule of §7.2.
+3. **No robot-facing geometry.** Profile M geometry is image-plane and geolocation. There is no 6-DoF pose in a named frame, no coordinate-frame tree and no hand-eye calibration — the three things §5.8 exists to provide.
+4. **No AI model description.** Profile M describes analytics *output*. It does not describe the model, its version, its digest, its training dataset or where it executes, which is clause 8 in its entirety.
+
+**Design consequence.** ONVIF is treated as an adjacent standard on the *media* axis, not the *semantics* axis. A Server fronting an ONVIF camera exposes its RTSP stream through `StreamEndpointType` exactly as it would a GenICam device — the model is indifferent to which the Server used — and `VisionSensorType.DeviceUri` is the correlation key in both cases. Profile M metadata can be *mapped into* `DetectionResultType` where a deployment wishes to, but this specification takes no dependency on ONVIF and does not adopt its event vocabulary: the industrial inspection and robot-guidance cases it exists to serve are outside what Profile M models. This is the same posture taken toward GenICam in §3.1 — borrow the layering, do not take the dependency.
+
 ### 3.2 Inspection semantics are solved — by QIF, which OPC UA does not map
 
 **QIF — Quality Information Framework**, governed by DMSC, standardised as **ISO 23952:2020** (also ANSI/QIF 3.0-2018), is an XML schema family: QIF Library, MBD, Plans, Resources, Rules, **Results**, Statistics.
