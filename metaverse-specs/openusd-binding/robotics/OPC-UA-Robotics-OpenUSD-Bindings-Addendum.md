@@ -1,6 +1,6 @@
 # OPC UA Robotics — OpenUSD Bindings Addendum
 
-**Implementer Annex to *OPC UA — OpenUSD Bindings* (Release 0.2.0 — Draft).**
+**Implementer Annex to *OPC UA — OpenUSD Binding* (Release 0.4.0 — Draft).**
 
 > This addendum is the **implementer (Robotics) annex** for the generic *OPC UA — OpenUSD Bindings* companion model. All Robotics-specific and end-to-end detail lives here; the base specification (`../OPC-UA-OpenUSD-Bindings.md`) remains domain-agnostic. It shows how an OPC 40010 `MotionDeviceSystem` instance representing a robot cell is bound to an OpenUSD prim, how two 6-axis `MotionDevice` robots are recursively composed, and how each Axis' `ActualPosition` drives one USD joint rotate op. The machine-readable source of truth is `../../extras/openusd-binding/examples/robotics/Robotics.OpenUsdBinding.json`; a runnable USD writer is `../../extras/openusd-binding/examples/robotics/usd_writer.py`; the C# end-to-end validation lives in the `RoboticsDeviceIntegrationServer` sample and `RobotOpenUsdE2eTests`.
 
@@ -12,7 +12,7 @@ This addendum binds one OPC 40010 `MotionDeviceSystem` (`RobotCell`) to `/Cell` 
 
 ## 2 Normative references
 
-- *OPC UA — OpenUSD Bindings*, Release 0.2.0 (the base specification).
+- *OPC UA — OpenUSD Binding* (the base specification).
 - [OPC 40010](https://reference.opcfoundation.org/specs/40010/) — OPC UA for Robotics, namespace `http://opcfoundation.org/UA/Robotics/`.
 - [OPC 10000-100](https://reference.opcfoundation.org/specs/OPC-10000-100/) — Devices (DI), the base for component and device integration modelling.
 
