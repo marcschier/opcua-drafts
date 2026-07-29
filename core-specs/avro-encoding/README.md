@@ -4,14 +4,12 @@ This folder contains the working draft for a canonical Apache Avro binary DataEn
 
 ## Contents
 
-- `OPC-UA-Avro-Encoding.md` — **standalone combined companion spec**: a self-contained read that merges the Part 6 DataEncoding and Part 14 PubSub mapping (with the base OPC UA context a standalone reader needs), a duplicated snapshot of the generated per-type reference annex, and hand-authored on-the-wire byte-layout examples (Annex D). The two errata-style documents below remain the authoritative, insertion-ready proposals.
-- `OPC-UA-Part6-Avro-DataEncoding.md` — Part 6 Default Avro DataEncoding proposal.
-- `OPC-UA-Part14-Avro-MessageMapping.md` — Part 14 Avro PubSub message mapping proposal.
+- `OPC-UA-Avro-Encoding.md` — **the specification**: a self-contained read covering the Avro DataEncoding and the PubSub message mapping (with the base OPC UA context a standalone reader needs), the generated per-type reference annex, and hand-authored on-the-wire byte-layout examples (Annex D).
 - `schemas\opcua.builtins.avsc` — normative base schema.
 - `..\extras\avro-encoding\tools\build_schemas.py` — NodeSet-driven Avro schema generator.
 - `..\extras\avro-encoding\tools\avro_codec.py` — reversible fastavro codec over `core-specs\extras\_common\opcua_enc` descriptors.
-- `..\extras\avro-encoding\tools\wire_annotate.py` — Avro-binary byte layout annotator used by the generated Part 6 annex.
-- `..\extras\avro-encoding\tools\gen_type_reference.py` — regenerates and drift-checks the Part 6 per-type reference annex.
+- `..\extras\avro-encoding\tools\wire_annotate.py` — Avro-binary byte layout annotator used by the generated type-reference annex.
+- `..\extras\avro-encoding\tools\gen_type_reference.py` — regenerates and drift-checks the per-type reference annex.
 - `..\extras\avro-encoding\tools\schema_handshake_demo.py` — executable SchemaId announcement/cache demo.
 - `..\extras\avro-encoding\tools\action_discovery_demo.py` — executable Action request/response and Discovery announcement demo using published `.avsc`.
 - `..\extras\avro-encoding\tools\roundtrip.py` — runs the shared CORPUS through `decode(encode(x))`.

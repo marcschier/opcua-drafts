@@ -43,8 +43,7 @@ MESSAGE_EXAMPLE_NAMES = {
 }
 
 DOC_SCHEMA_DOCS = [
-    STD / "OPC-UA-Part14-Avro-MessageMapping.md",
-    STD / "OPC-UA-Part6-Avro-DataEncoding.md",
+    STD / "OPC-UA-Avro-Encoding.md",
 ]
 DOC_SCHEMA_INTRO_RE = re.compile(r"`((?:\.\.[/\\]extras[/\\]avro-encoding[/\\])?schemas[/\\]([^`]+\.avsc))`")
 

@@ -20,7 +20,7 @@ SCHEMAS = ROOT / "schemas"
 STD_SCHEMAS = STD / "schemas"
 BUILTINS_SCHEMA = STD_SCHEMAS / "opcua.builtins.avsc"
 SCHEMAIDS = SCHEMAS / "schemaids.json"
-PART6 = STD / "OPC-UA-Part6-Avro-DataEncoding.md"
+SPEC = STD / "OPC-UA-Avro-Encoding.md"
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "_common")))
 from opcua_enc import corpus, hexdump, types as t, values as v
@@ -359,10 +359,10 @@ def validate_annotations() -> None:
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--check", action="store_true", help="fail if the committed Part 6 generated block is stale")
+    ap.add_argument("--check", action="store_true", help="fail if the committed generated block is stale")
     args = ap.parse_args()
     content = generated_content()
-    old = PART6.read_text(encoding="utf-8")
+    old = SPEC.read_text(encoding="utf-8")
     new = inject(old, content)
     if args.check:
         if old != new:
@@ -371,8 +371,8 @@ def main() -> int:
         validate_annotations()
         print(f"type reference: {len(reference_cases())} sections checked")
         return 0
-    PART6.write_text(new, encoding="utf-8", newline="\n")
-    print(f"wrote {len(reference_cases())} generated type-reference sections to {PART6}")
+    SPEC.write_text(new, encoding="utf-8", newline="\n")
+    print(f"wrote {len(reference_cases())} generated type-reference sections to {SPEC}")
     return 0
 
 

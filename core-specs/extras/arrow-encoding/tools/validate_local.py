@@ -137,7 +137,7 @@ def conformance_gate() -> int:
 
 
 def type_reference_drift_gate() -> int:
-    with open(os.path.join(STD, "OPC-UA-Part6-Arrow-DataEncoding.md"), encoding="utf-8") as f:
+    with open(os.path.join(STD, "OPC-UA-Arrow-Encoding.md"), encoding="utf-8") as f:
         text = f.read()
     begin = gen_type_reference.BEGIN
     end = gen_type_reference.END
