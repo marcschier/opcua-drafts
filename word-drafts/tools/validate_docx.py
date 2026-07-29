@@ -294,6 +294,13 @@ def check_references_resolve(doc, res):
             res.error('xrefs', 'REF field points at unknown bookmark %r' % m.group(1))
 
 
+# Every Node of these classes owns a clause and therefore a definition table. Instances
+# are excluded: a well-known instance is documented in the Instances clause when the
+# specification declares one, but a type's child Nodes appear inside their owner's table.
+REQUIRE_DEFINITION_TABLE = ('UAObjectType', 'UAVariableType', 'UAReferenceType',
+                            'UADataType')
+
+
 def check_node_tables(doc, model, res, doc_ns_index):
     """Re-derive every type table from the NodeSet and compare against the document."""
     kids = doc.blocks()
@@ -315,7 +322,7 @@ def check_node_tables(doc, model, res, doc_ns_index):
         expected = nodeset_tables.type_table(model, name, doc_ns_index=doc_ns_index)
         _compare_type_table(name, expected, el, res)
     for name, node in model.by_name.items():
-        if node.tag == 'UAObjectType' and name not in seen:
+        if node.tag in REQUIRE_DEFINITION_TABLE and name not in seen:
             res.error('node-tables', '%s has no definition table in the document' % name)
 
 
@@ -386,15 +393,64 @@ def check_conformance_units(doc, model, res):
                       'clause' % cu)
 
 
-def check_template_slices(doc, template, res):
+def check_deviations_declared(doc, deviations, res):
+    """A relaxation is only legitimate when the document itself states it.
+
+    The template admits no deviation, so the pipeline cannot quietly skip a rule to make
+    a document build. A deviation has to be declared in the config *and* printed in the
+    document; this check is what makes the declaration load-bearing rather than a comment,
+    because the checks a deviation relaxes are skipped only once its statement is found.
+    """
+    text = ' '.join(iter_text(doc.body).split())
+    for dev in deviations:
+        if dev['id'] not in contract.KNOWN_DEVIATIONS:
+            res.error('deviations', 'unknown template deviation %r' % dev['id'])
+            continue
+        statement = ' '.join(dev['statement'].split())
+        if statement not in text:
+            res.error('deviations',
+                      'deviation %r is declared but its statement does not appear in '
+                      'the document' % dev['id'])
+
+
+def check_subject_introduction(doc, cfg, res):
+    """Clause 4.1 must introduce this document's subject, not another document's.
+
+    Two shipped documents once introduced themselves with three paragraphs about OpenUSD,
+    because the generator that produced clause 4.1 was named after the first specification
+    converted and simply reused. Nothing failed: the prose was well formed, the styles were
+    right, every field resolved. This check is the missing one.
+    """
+    intro = cfg['identity'].get('introduction')
+    if not intro:
+        res.error('introduction', 'identity.introduction is missing')
+        return
+    text = ' '.join(iter_text(doc.body).split())
+    for paragraph in intro:
+        if ' '.join(paragraph.split()) not in text:
+            res.error('introduction',
+                      'introduction paragraph is missing from the document: %r'
+                      % paragraph[:60])
+    subject = cfg['identity'].get('subjectTerm') or cfg['identity']['title']
+    joined = ' '.join(intro)
+    if subject.lower() not in joined.lower():
+        res.error('introduction',
+                  'the introduction never names this document\'s subject (%r)' % subject)
+
+
+def check_template_slices(doc, template, res, deviation_ids=()):
     """The retained template regions must survive verbatim."""
     expected = [
         'Node definitions are specified using tables',
         'Attributes are defined by providing the Attribute name and a value',
         'OPC UA is an open and royalty free set of standards',
         'A complete description of the different types of Nodes and References',
-        'An Information Model is formally defined in an XML file called a NodeSet',
     ]
+    if 'no-information-model' not in deviation_ids:
+        # This sentence lives in the template's Annex A, which a document that publishes
+        # no NodeSet replaces rather than retains.
+        expected.append(
+            'An Information Model is formally defined in an XML file called a NodeSet')
     text = ' '.join(iter_text(doc.body).split())
     for sentence in expected:
         if sentence not in text:
@@ -416,7 +472,19 @@ def main(argv=None):
     with open(args.config, encoding='utf-8') as f:
         cfg = json.load(f)
     docx_path = args.docx or os.path.join(REPO, cfg['output']['docx'])
-    model = nodeset_tables.Model(os.path.join(REPO, cfg['source']['nodeset']))
+    deviations = list(cfg.get('templateDeviations', []))
+    deviation_ids = {d['id'] for d in deviations}
+    if cfg['source'].get('nodeset'):
+        model = nodeset_tables.Model(os.path.join(REPO, cfg['source']['nodeset']))
+    elif 'no-information-model' in deviation_ids:
+        model = nodeset_tables.NullModel(
+            model_uri=cfg['identity']['namespaceUri'],
+            version=cfg['identity']['version'],
+            publication_date=cfg['identity']['publicationDate'])
+    else:
+        print('config has no source.nodeset and declares no "no-information-model" '
+              'deviation')
+        return 1
     doc_ns_index = cfg['identity']['namespaceIndexInDocument']
 
     doc = Doc(docx_path)
@@ -451,9 +519,17 @@ def main(argv=None):
     check_forbidden_links(doc, res, annex_a_start)
     check_placeholders(doc, res, (conv_lo, conv_hi))
     check_references_resolve(doc, res)
-    check_node_tables(doc, model, res, doc_ns_index)
-    check_conformance_units(doc, model, res)
-    check_template_slices(doc, TEMPLATE, res)
+    check_deviations_declared(doc, deviations, res)
+    check_subject_introduction(doc, cfg, res)
+    if 'no-information-model' in deviation_ids:
+        if model.nodes:
+            res.error('deviations',
+                      'the "no-information-model" deviation is declared but the config '
+                      'supplies a NodeSet')
+    else:
+        check_node_tables(doc, model, res, doc_ns_index)
+        check_conformance_units(doc, model, res)
+    check_template_slices(doc, TEMPLATE, res, deviation_ids)
 
     print('validating %s' % _display(docx_path))
     return res.report()

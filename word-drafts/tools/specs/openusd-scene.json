@@ -27,6 +27,11 @@
     "releaseType": "Draft",
     "mantisProjectId": "<nnn>",
     "otherOrganization": "Alliance for OpenUSD",
+    "introduction": [
+      "OpenUSD (Universal Scene Description) is an open, extensible framework for describing, composing, simulating and collaborating on three-dimensional scenes. Its scene graph is assembled from layers that compose into a single stage, so several authors and tools contribute to one scene without rewriting it. A stage is a hierarchy of prims, each carrying typed attributes and relationships, addressed by a canonical prim path.",
+      "OpenUSD is governed by the Alliance for OpenUSD (AOUSD), which publishes the OpenUSD Core Specification. The Core Specification covers paths, composition, layers and identity; the domain schemas that describe geometry, materials, lighting, skeletons and physics are versioned separately with the OpenUSD software releases.",
+      "Industrial visualization pairs OpenUSD with live process data. This document defines how an OPC UA Server declares that pairing as part of its own address space, so that any conforming connector can apply it without prior knowledge of the domain model."
+    ],
     "draftBanner": "PROVISIONAL WORKING DRAFT — not normative, not endorsed by the OPC Foundation or the Alliance for OpenUSD. The document number, the Mantis project identifier and every NodeId in this document are placeholders; the OPC Foundation assigns the real values."
   },
 
@@ -80,7 +85,7 @@
     {"from": null,                                             "number": "3.4",  "title": "Conventions used in this document",         "slice": "conventions"},
 
     {"from": null,                                             "number": "4",    "title": "General information to OpenUSD and OPC UA", "region": "general"},
-    {"from": null,                                             "number": "4.1",  "title": "Introduction to OpenUSD",                   "generated": "intro-openusd"},
+    {"from": null,                                             "number": "4.1",  "title": "Introduction to OpenUSD",                   "generated": "subject-introduction"},
     {"from": null,                                             "number": "4.2",  "title": "Introduction to OPC Unified Architecture",  "slice": "opcua-intro"},
 
     {"from": "11 Examples (informative)",                      "number": "5",    "title": "Use cases",                                 "region": "use-cases"},
@@ -160,6 +165,9 @@
   },
 
   "_comment_xrefMap": "Applied to every section reference in the restructured markdown and in every sibling document that cites this one. Longest key wins.",
+  "_comment_foreignAnchors": "Names this document uses for other documents. A section reference anchored on one of them belongs to that document and is left exactly as written.",
+  "foreignAnchors": ["Bindings spec", "Part 1"],
+
   "xrefMap": {
     "4.1": "6.1", "4.2": "6.2", "4.3": "6.3", "4": "6",
     "5.1": "7.1", "5.2": "7.2", "5.3": "7.3", "5.4": "8.1", "5.5": "7.4",

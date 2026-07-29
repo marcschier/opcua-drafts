@@ -84,10 +84,8 @@
             "text": " (xRegistry primer "
           },
           {
-            "r": "xref",
-            "target": "c7",
-            "kind": "clause",
-            "prefix": "7"
+            "r": "t",
+            "text": "§7"
           },
           {
             "r": "t",
@@ -1171,10 +1169,8 @@
             "text": " (primer "
           },
           {
-            "r": "xref",
-            "target": "c7",
-            "kind": "clause",
-            "prefix": "7"
+            "r": "t",
+            "text": "§7"
           },
           {
             "r": "t",
@@ -1194,10 +1190,8 @@
             "text": "The xRegistry mechanism (primer "
           },
           {
-            "r": "xref",
-            "target": "c8",
-            "kind": "clause",
-            "prefix": "8"
+            "r": "t",
+            "text": "§8"
           },
           {
             "r": "t",
@@ -1400,7 +1394,7 @@
         "runs": [
           {
             "r": "t",
-            "text": "OpenUSD (Universal Scene Description) is an open, extensible framework for describing, composing, simulating and collaborating on three-dimensional scenes. Its scene graph is assembled from layers that compose into a single stage, so several authors and tools contribute to one scene without rewriting it. A stage is a hierarchy of prims, each carrying typed attributes and relationships, addressed by a canonical prim path."
+            "text": "xRegistry is an open specification for describing registries of documents. A registry contains groups, a group contains resources, and a resource carries versioned documents together with the metadata that identifies them, so that a document can be published, discovered and retrieved by identity and version rather than by location."
           }
         ]
       },
@@ -1410,7 +1404,7 @@
         "runs": [
           {
             "r": "t",
-            "text": "OpenUSD is governed by the Alliance for OpenUSD (AOUSD), which publishes the OpenUSD Core Specification. The Core Specification covers paths, composition, layers and identity; the domain schemas that describe geometry, materials, lighting, skeletons and physics are versioned separately with the OpenUSD software releases."
+            "text": "Servers already hold documents of exactly this shape: NodeSet files, schemas, device descriptions, model definitions and their revisions. What they lack is a uniform way to publish them, so each vendor invents its own folder convention and every client has to learn it."
           }
         ]
       },
@@ -1420,7 +1414,7 @@
         "runs": [
           {
             "r": "t",
-            "text": "Industrial visualization pairs OpenUSD with live process data. This document defines how an OPC UA Server declares that pairing as part of its own address space, so that any conforming connector can apply it without prior knowledge of the domain model."
+            "text": "This document defines that uniform way. It maps the xRegistry model onto OPC UA so that a Server exposes its documents as part of its own address space, browsable, readable and writable with the standard Services and with no prior knowledge of the domain."
           }
         ]
       },
@@ -1469,10 +1463,8 @@
             "text": "). A consumer reads it with the standard FileType Methods (OPC 10000-20 "
           },
           {
-            "r": "xref",
-            "target": "c4-2",
-            "kind": "clause",
-            "prefix": "4.2"
+            "r": "t",
+            "text": "§4.2"
           },
           {
             "r": "t",
@@ -1760,9 +1752,9 @@
           },
           {
             "r": "xref",
-            "target": "c6-5",
+            "target": "c6-6",
             "kind": "clause",
-            "prefix": "6.5"
+            "prefix": "6.6"
           },
           {
             "r": "t",
@@ -2016,7 +2008,7 @@
       },
       {
         "t": "figure",
-        "id": "fig1",
+        "id": "fig-xreg-shape",
         "caption": "The registry is folders of files",
         "source": "mermaid",
         "mermaid": "graph TD\n  REG[RegistryType : FolderType] -->|Organizes| G1[GroupType : FolderType]\n  REG -->|Organizes| G2[GroupType : FolderType]\n  G1 -->|Organizes| R1[ResourceType : FileType]\n  G1 -->|Organizes| R2[ResourceType : FileType]\n  G2 -->|Organizes| R3[ResourceType : FileType]\n  R1 -.Open/Read/Write.-> DOC[(document bytes)]"
@@ -2079,10 +2071,8 @@
             "text": "xRegistry (primer "
           },
           {
-            "r": "xref",
-            "target": "c7",
-            "kind": "clause",
-            "prefix": "7"
+            "r": "t",
+            "text": "§7"
           },
           {
             "r": "t",
@@ -2456,9 +2446,9 @@
             },
             {
               "r": "xref",
-              "target": "c6-5",
+              "target": "c6-6",
               "kind": "clause",
-              "prefix": "6.5"
+              "prefix": "6.6"
             },
             {
               "r": "t",
@@ -2511,9 +2501,9 @@
             },
             {
               "r": "xref",
-              "target": "c6",
+              "target": "c6-4",
               "kind": "clause",
-              "prefix": "6"
+              "prefix": "6.4"
             },
             {
               "r": "t",
@@ -2531,10 +2521,8 @@
               "text": " The same subtree is exposed as the xRegistry API server through the OPC UA API of the companion document, including federation to other registries ("
             },
             {
-              "r": "xref",
-              "target": "c7",
-              "kind": "clause",
-              "prefix": "7"
+              "r": "t",
+              "text": "§7"
             },
             {
               "r": "t",
@@ -2542,9 +2530,9 @@
             },
             {
               "r": "xref",
-              "target": "c8",
+              "target": "c6-9",
               "kind": "clause",
-              "prefix": "8"
+              "prefix": "6.9"
             },
             {
               "r": "t",
@@ -2628,9 +2616,9 @@
           },
           {
             "r": "xref",
-            "target": "c6-6",
+            "target": "c7-4",
             "kind": "clause",
-            "prefix": "6.6"
+            "prefix": "7.4"
           },
           {
             "r": "t",
@@ -2777,9 +2765,9 @@
           },
           {
             "r": "xref",
-            "target": "c6-6",
+            "target": "c7-4",
             "kind": "clause",
-            "prefix": "6.6"
+            "prefix": "7.4"
           },
           {
             "r": "t",
@@ -2802,10 +2790,8 @@
             "text": " is stable across representations and across registries ("
           },
           {
-            "r": "xref",
-            "target": "c8",
-            "kind": "clause",
-            "prefix": "8"
+            "r": "t",
+            "text": "§8"
           },
           {
             "r": "t",
@@ -3406,10 +3392,8 @@
             "text": "xRegistry federation (primer "
           },
           {
-            "r": "xref",
-            "target": "c8",
-            "kind": "clause",
-            "prefix": "8"
+            "r": "t",
+            "text": "§8"
           },
           {
             "r": "t",
@@ -3664,10 +3648,8 @@
             "text": " (the xRegistry spec version), plus the common attributes of "
           },
           {
-            "r": "xref",
-            "target": "c6-4",
-            "kind": "clause",
-            "prefix": "6.4"
+            "r": "t",
+            "text": "§6.4"
           },
           {
             "r": "t",
@@ -3756,9 +3738,9 @@
           },
           {
             "r": "xref",
-            "target": "c6-7",
+            "target": "c8",
             "kind": "clause",
-            "prefix": "6.7"
+            "prefix": "8"
           },
           {
             "r": "t",
@@ -3904,10 +3886,8 @@
             "text": " and the common attributes of "
           },
           {
-            "r": "xref",
-            "target": "c6-4",
-            "kind": "clause",
-            "prefix": "6.4"
+            "r": "t",
+            "text": "§6.4"
           },
           {
             "r": "t",
@@ -3971,9 +3951,9 @@
           },
           {
             "r": "xref",
-            "target": "c6-6",
+            "target": "c7-4",
             "kind": "clause",
-            "prefix": "6.6"
+            "prefix": "7.4"
           },
           {
             "r": "t",
@@ -4198,9 +4178,9 @@
           },
           {
             "r": "xref",
-            "target": "c8",
+            "target": "c6-9",
             "kind": "clause",
-            "prefix": "8"
+            "prefix": "6.9"
           },
           {
             "r": "t",
@@ -4208,9 +4188,9 @@
           },
           {
             "r": "xref",
-            "target": "c6-4",
+            "target": "c6-5",
             "kind": "clause",
-            "prefix": "6.4"
+            "prefix": "6.5"
           },
           {
             "r": "t",
@@ -4226,9 +4206,9 @@
           },
           {
             "r": "xref",
-            "target": "c6-6",
+            "target": "c7-4",
             "kind": "clause",
-            "prefix": "6.6"
+            "prefix": "7.4"
           },
           {
             "r": "t",
@@ -4508,10 +4488,8 @@
             "text": " component ("
           },
           {
-            "r": "xref",
-            "target": "c6-4",
-            "kind": "clause",
-            "prefix": "6.4"
+            "r": "t",
+            "text": "§6.4"
           },
           {
             "r": "t",
@@ -4612,9 +4590,9 @@
           },
           {
             "r": "xref",
-            "target": "c6-1",
+            "target": "c7-1",
             "kind": "clause",
-            "prefix": "6.1"
+            "prefix": "7.1"
           },
           {
             "r": "t",
@@ -4900,19 +4878,17 @@
           },
           {
             "r": "xref",
-            "target": "c6",
+            "target": "c6-4",
             "kind": "clause",
-            "prefix": "6"
+            "prefix": "6.4"
           },
           {
             "r": "t",
             "text": "), the xRegistry API mapping ("
           },
           {
-            "r": "xref",
-            "target": "c7",
-            "kind": "clause",
-            "prefix": "7"
+            "r": "t",
+            "text": "§7"
           },
           {
             "r": "t",
@@ -4920,9 +4896,9 @@
           },
           {
             "r": "xref",
-            "target": "c8",
+            "target": "c6-9",
             "kind": "clause",
-            "prefix": "8"
+            "prefix": "6.9"
           },
           {
             "r": "t",
@@ -5037,9 +5013,9 @@
               },
               {
                 "r": "xref",
-                "target": "c6-1",
+                "target": "c7-1",
                 "kind": "clause",
-                "prefix": "6.1"
+                "prefix": "7.1"
               },
               {
                 "r": "t",
@@ -5070,9 +5046,9 @@
               },
               {
                 "r": "xref",
-                "target": "c6-2",
+                "target": "c7-2",
                 "kind": "clause",
-                "prefix": "6.2"
+                "prefix": "7.2"
               },
               {
                 "r": "t",
@@ -5146,9 +5122,9 @@
               },
               {
                 "r": "xref",
-                "target": "c6-3",
+                "target": "c7-3",
                 "kind": "clause",
-                "prefix": "6.3"
+                "prefix": "7.3"
               },
               {
                 "r": "t",
@@ -5203,9 +5179,9 @@
               },
               {
                 "r": "xref",
-                "target": "c6-6",
+                "target": "c7-4",
                 "kind": "clause",
-                "prefix": "6.6"
+                "prefix": "7.4"
               },
               {
                 "r": "t",
@@ -5278,9 +5254,9 @@
               },
               {
                 "r": "xref",
-                "target": "c7",
+                "target": "c6-8",
                 "kind": "clause",
-                "prefix": "7"
+                "prefix": "6.8"
               },
               {
                 "r": "t",
@@ -5311,9 +5287,9 @@
               },
               {
                 "r": "xref",
-                "target": "c6-7",
+                "target": "c8",
                 "kind": "clause",
-                "prefix": "6.7"
+                "prefix": "8"
               },
               {
                 "r": "t",
@@ -5352,9 +5328,9 @@
               },
               {
                 "r": "xref",
-                "target": "c8",
+                "target": "c6-9",
                 "kind": "clause",
-                "prefix": "8"
+                "prefix": "6.9"
               },
               {
                 "r": "t",

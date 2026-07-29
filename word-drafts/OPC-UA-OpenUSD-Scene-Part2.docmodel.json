@@ -318,10 +318,8 @@
               "text": " time samples — and may be driven by, or serve as the target of, Part 1 live bindings ("
             },
             {
-              "r": "xref",
-              "target": "c11",
-              "kind": "clause",
-              "prefix": "11"
+              "r": "t",
+              "text": "§11"
             },
             {
               "r": "t",
@@ -4963,10 +4961,8 @@
             "text": " subset (a versioned schema release, "
           },
           {
-            "r": "xref",
-            "target": "c2",
-            "kind": "clause",
-            "prefix": "2"
+            "r": "t",
+            "text": "§2"
           },
           {
             "r": "t",

@@ -239,9 +239,9 @@
           },
           {
             "r": "xref",
-            "target": "c8",
+            "target": "cC",
             "kind": "clause",
-            "prefix": "8"
+            "prefix": "Annex C"
           },
           {
             "r": "t",
@@ -320,10 +320,8 @@
             "text": " Program executions — rather than redefining how they are represented ("
           },
           {
-            "r": "xref",
-            "target": "c6-14",
-            "kind": "clause",
-            "prefix": "6.14"
+            "r": "t",
+            "text": "§5.13"
           },
           {
             "r": "t",
@@ -1281,7 +1279,7 @@
         "runs": [
           {
             "r": "t",
-            "text": "OpenUSD (Universal Scene Description) is an open, extensible framework for describing, composing, simulating and collaborating on three-dimensional scenes. Its scene graph is assembled from layers that compose into a single stage, so several authors and tools contribute to one scene without rewriting it. A stage is a hierarchy of prims, each carrying typed attributes and relationships, addressed by a canonical prim path."
+            "text": "Observability is the practice of understanding a running system from the telemetry it emits: metrics that quantify behaviour over time, logs that record discrete events, and traces that follow one operation across the components that serve it. OpenTelemetry is the vendor-neutral standard for that telemetry, and its protocol, OTLP, carries all three signal kinds to any conforming backend."
           }
         ]
       },
@@ -1291,7 +1289,7 @@
         "runs": [
           {
             "r": "t",
-            "text": "OpenUSD is governed by the Alliance for OpenUSD (AOUSD), which publishes the OpenUSD Core Specification. The Core Specification covers paths, composition, layers and identity; the domain schemas that describe geometry, materials, lighting, skeletons and physics are versioned separately with the OpenUSD software releases."
+            "text": "An OPC UA Server already holds the values, events and diagnostics an observability backend wants. What it does not hold is a declaration of which of them are telemetry, what each one means, and how it maps onto the OpenTelemetry data model, so every integration is written by hand for one Server."
           }
         ]
       },
@@ -1301,7 +1299,7 @@
         "runs": [
           {
             "r": "t",
-            "text": "Industrial visualization pairs OpenUSD with live process data. This document defines how an OPC UA Server declares that pairing as part of its own address space, so that any conforming connector can apply it without prior knowledge of the domain model."
+            "text": "This document defines that declaration. A Server states, in its own address space, which Nodes carry telemetry and how they map to OpenTelemetry, so that a generic bridge can export them without prior knowledge of the domain model."
           }
         ]
       },
@@ -1422,9 +1420,9 @@
           },
           {
             "r": "xref",
-            "target": "c8",
+            "target": "cC",
             "kind": "clause",
-            "prefix": "8"
+            "prefix": "Annex C"
           },
           {
             "r": "t",
@@ -1900,9 +1898,9 @@
           },
           {
             "r": "xref",
-            "target": "c6",
+            "target": "cB",
             "kind": "clause",
-            "prefix": "6"
+            "prefix": "Annex B"
           },
           {
             "r": "t",
@@ -2274,9 +2272,9 @@
           },
           {
             "r": "xref",
-            "target": "c7",
+            "target": "c10",
             "kind": "clause",
-            "prefix": "7"
+            "prefix": "10"
           },
           {
             "r": "t",
@@ -2866,8 +2864,10 @@
             "text": ", "
           },
           {
-            "r": "t",
-            "text": "§5.13.3"
+            "r": "xref",
+            "target": "c6-14",
+            "kind": "clause",
+            "prefix": "6.14"
           },
           {
             "r": "t",
@@ -3259,8 +3259,10 @@
             "text": " leaves placeholder segments below the cardinality anchor ("
           },
           {
-            "r": "t",
-            "text": "§5.2.1"
+            "r": "xref",
+            "target": "c7-2",
+            "kind": "clause",
+            "prefix": "7.2"
           },
           {
             "r": "t",
@@ -3336,10 +3338,8 @@
             "text": " ("
           },
           {
-            "r": "xref",
-            "target": "c6-13",
-            "kind": "clause",
-            "prefix": "6.13"
+            "r": "t",
+            "text": "§5.12"
           },
           {
             "r": "t",
@@ -4532,8 +4532,10 @@
             "text": " expose it as its own DataSet(s) per "
           },
           {
-            "r": "t",
-            "text": "§5.2.1"
+            "r": "xref",
+            "target": "c7-2",
+            "kind": "clause",
+            "prefix": "7.2"
           },
           {
             "r": "t",
@@ -4610,9 +4612,9 @@
           },
           {
             "r": "xref",
-            "target": "c8",
+            "target": "cC",
             "kind": "clause",
-            "prefix": "8"
+            "prefix": "Annex C"
           },
           {
             "r": "t",
@@ -4802,10 +4804,8 @@
             "text": " (Mandatory) is the stable Part 14 class identity for the binding and already encodes the signal kind ("
           },
           {
-            "r": "xref",
-            "target": "c6-9",
-            "kind": "clause",
-            "prefix": "6.9"
+            "r": "t",
+            "text": "§5.7"
           },
           {
             "r": "t",
@@ -4905,10 +4905,8 @@
             "text": " schema offline ("
           },
           {
-            "r": "xref",
-            "target": "c6-10",
-            "kind": "clause",
-            "prefix": "6.10"
+            "r": "t",
+            "text": "§5.8"
           },
           {
             "r": "t",
@@ -5223,8 +5221,10 @@
             "text": " components directly — typically one for a single-specification instance — rather than a separate container; sibling group BrowseNames are unique ("
           },
           {
-            "r": "t",
-            "text": "§5.1.1"
+            "r": "xref",
+            "target": "c7-1",
+            "kind": "clause",
+            "prefix": "7.1"
           },
           {
             "r": "t",
@@ -5922,16 +5922,20 @@
                 "text": " items as attributes/Resource ("
               },
               {
-                "r": "t",
-                "text": "§5.13.1"
+                "r": "xref",
+                "target": "c6-14",
+                "kind": "clause",
+                "prefix": "6.14"
               },
               {
                 "r": "t",
                 "text": ", "
               },
               {
-                "r": "t",
-                "text": "§5.13.4"
+                "r": "xref",
+                "target": "c6-14",
+                "kind": "clause",
+                "prefix": "6.14"
               },
               {
                 "r": "t",
@@ -5985,8 +5989,10 @@
                 "text": ", carrying dimensions as attributes ("
               },
               {
-                "r": "t",
-                "text": "§5.13.2"
+                "r": "xref",
+                "target": "c6-14",
+                "kind": "clause",
+                "prefix": "6.14"
               },
               {
                 "r": "t",
@@ -6016,8 +6022,10 @@
                 "text": " members (name, identity, timing, correlation, status, kind), carrying dimensions as attributes ("
               },
               {
-                "r": "t",
-                "text": "§5.13.3"
+                "r": "xref",
+                "target": "c6-14",
+                "kind": "clause",
+                "prefix": "6.14"
               },
               {
                 "r": "t",
@@ -6241,8 +6249,10 @@
                 "text": " per "
               },
               {
-                "r": "t",
-                "text": "§5.4.1"
+                "r": "xref",
+                "target": "c6-6",
+                "kind": "clause",
+                "prefix": "6.6"
               },
               {
                 "r": "t",
@@ -6807,9 +6817,9 @@
           },
           {
             "r": "xref",
-            "target": "c7",
+            "target": "c10",
             "kind": "clause",
-            "prefix": "7"
+            "prefix": "10"
           },
           {
             "r": "t",
@@ -7310,8 +7320,10 @@
               "text": " The "
             },
             {
-              "r": "t",
-              "text": "§5.13.3"
+              "r": "xref",
+              "target": "c6-14",
+              "kind": "clause",
+              "prefix": "6.14"
             },
             {
               "r": "t",

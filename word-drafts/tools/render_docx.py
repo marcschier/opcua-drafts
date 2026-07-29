@@ -56,7 +56,7 @@ TEMPLATE_HEADINGS = [
     ('Abbreviated terms', 'Heading2', 'terms', 'abbreviations', []),
     ('Conventions used in this document', 'Heading2', 'terms', 'conventions', []),
     ('General information to', 'Heading1', 'general', None, []),
-    ('Introduction to OpenUSD', 'Heading2', 'general', 'intro-openusd', []),
+    ('Introduction to ', 'Heading2', 'general', 'subject-introduction', []),
     ('Introduction to OPC Unified Architecture', 'Heading2', 'general', 'opcua-intro', []),
     ('Use cases', 'Heading1', 'use-cases', None, []),
     ('information model overview', 'Heading1', 'model-overview', None, []),
@@ -83,6 +83,12 @@ def _alias_plan(build):
         if names:
             plan.append((text, style, names))
     plan.extend(FIXED_ALIASES)
+    if 'no-information-model' in build.deviation_ids:
+        # The template defines this bookmark on its own Annex A title, which a build
+        # without an information model replaces; clause 3.4 references it.
+        entry = _entry_for(build, 'annex-a', None)
+        if entry is not None:
+            plan.append((entry['title'], 'ANNEXtitle', ['_Ref37835123']))
     return plan
 
 
@@ -174,7 +180,7 @@ def render(build, doc, template_path, out_path):
         idx[key] = pkg.find_paragraph(text, style=style)
 
     ident = build.identity
-    tokens = _token_map(ident)
+    tokens = _token_map(ident, build.deviation_ids)
 
     figures = _prepare_figures(build, writer)
 
@@ -183,7 +189,7 @@ def render(build, doc, template_path, out_path):
     _insert_after_namespaces(pkg, rendered, doc, idx)
     _replace_namespaces(pkg, rendered, idx)
     _replace_profiles(pkg, rendered, idx)
-    _replace_types(pkg, rendered, doc, idx)
+    _replace_types(pkg, build, rendered, doc, idx)
     _replace_model_overview(pkg, rendered, idx, ident)
     _replace_use_cases(pkg, rendered, idx)
     _retitle(pkg, idx['intro_title'], 'Introduction to %s' % ident['title'])
@@ -227,8 +233,8 @@ def render(build, doc, template_path, out_path):
 # --------------------------------------------------------------------------- regions
 
 
-def _token_map(ident):
-    return {
+def _token_map(ident, deviation_ids=()):
+    tokens = {
         '<title>': ident['title'],
         '<Title>': ident['title'],
         '<short name>': ident['shortName'],
@@ -246,6 +252,20 @@ def _token_map(ident):
         'Draft 1.xy': '%s %s' % (ident['releaseType'], ident['version']),
         'Draft 1.x': '%s %s' % (ident['releaseType'], ident['version']),
     }
+    if 'no-information-model' in deviation_ids:
+        # Retained template text in clause 3.4 promises that Annex A defines this
+        # document's NodeIds. A document that defines no Nodes must not say so; the two
+        # halves are substituted separately because the cross-reference field to Annex A
+        # sits between them and has to survive.
+        tokens.update({
+            'The NodeIds of all Nodes described in this standard are only symbolic '
+            'names.': 'This document describes no Nodes and therefore allocates no '
+                      'NodeIds.',
+            ' defines the actual NodeIds.':
+                ' defines the machine-readable artifacts this document publishes '
+                'instead.',
+        })
+    return tokens
 
 
 def _retitle(pkg, index, text):
@@ -334,7 +354,7 @@ def _replace_model_overview(pkg, rendered, idx, ident):
              '%s information model overview' % ident['title'])
 
 
-def _replace_types(pkg, rendered, doc, idx):
+def _replace_types(pkg, build, rendered, doc, idx):
     """Replace the template's ObjectTypes .. Well-Known BrowseNames block.
 
     The template ships a clause per NodeClass. Which of them a specification needs is a
@@ -347,7 +367,7 @@ def _replace_types(pkg, rendered, doc, idx):
     for name in doc.order:
         if name in contract.TYPE_REGIONS and rendered.get(name):
             elements.extend(rendered[name])
-    if not elements:
+    if not elements and 'no-information-model' not in build.deviation_ids:
         raise ValueError('the model produced no type clauses at all')
     pkg.replace_range(idx['objecttypes'], idx['profiles'], elements)
 
@@ -382,14 +402,22 @@ def _insert_after_namespaces(pkg, rendered, doc, idx):
 
 def _replace_annex_a(pkg, build, writer, rendered, doc, idx):
     """Annex A keeps the template's own structure; the node reference is appended."""
-    node_rows = nodeset_tables.annex_node_table(build.model,
-                                                doc_ns_index=build.doc_ns_index)
-    node_table = _annex_node_table(writer, node_rows)
     tail = []
     for region in doc.order:
         if region.startswith('annex-') and region != 'annex-a':
             tail.extend(rendered[region])
-    pkg.insert_at(idx['backmatter'], node_table + tail)
+    if 'no-information-model' in build.deviation_ids:
+        # The template's Annex A states where to download this document's NodeSet. For a
+        # specification that has none that text is simply false, so the whole annex body
+        # is replaced by the annex the source document actually wrote — the machine-
+        # readable artifacts it does define. Retaining the boilerplate would publish a
+        # link to a NodeSet that will never exist.
+        pkg.replace_range(idx['annex_a'], idx['backmatter'],
+                          rendered['annex-a'] + tail)
+        return
+    node_rows = nodeset_tables.annex_node_table(build.model,
+                                                doc_ns_index=build.doc_ns_index)
+    pkg.insert_at(idx['backmatter'], _annex_node_table(writer, node_rows) + tail)
 
 
 def _annex_node_table(writer, rows):

@@ -26,6 +26,11 @@
     "releaseType": "Draft",
     "mantisProjectId": "<nnn>",
     "otherOrganization": "xRegistry project",
+    "introduction": [
+      "xRegistry is an open specification for describing registries of documents. A registry contains groups, a group contains resources, and a resource carries versioned documents together with the metadata that identifies them, so that a document can be published, discovered and retrieved by identity and version rather than by location.",
+      "Servers already hold documents of exactly this shape: NodeSet files, schemas, device descriptions, model definitions and their revisions. What they lack is a uniform way to publish them, so each vendor invents its own folder convention and every client has to learn it.",
+      "This document defines that uniform way. It maps the xRegistry model onto OPC UA so that a Server exposes its documents as part of its own address space, browsable, readable and writable with the standard Services and with no prior knowledge of the domain."
+    ],
     "draftBanner": "PROVISIONAL WORKING DRAFT — not normative, not endorsed by the OPC Foundation. The document number, the Mantis project identifier and every NodeId in this document are placeholders; the OPC Foundation assigns the real values."
   },
 
@@ -66,7 +71,7 @@
     {"from": null,                                       "number": "3.4",  "title": "Conventions used in this document",        "slice": "conventions"},
 
     {"from": null,                                       "number": "4",    "title": "General information to xRegistry and OPC UA", "region": "general"},
-    {"from": null,                                       "number": "4.1",  "title": "Introduction to xRegistry",                "generated": "intro-openusd"},
+    {"from": null,                                       "number": "4.1",  "title": "Introduction to xRegistry",                "generated": "subject-introduction"},
     {"from": null,                                       "number": "4.2",  "title": "Introduction to OPC Unified Architecture", "slice": "opcua-intro"},
 
     {"from": "5 Minimal binding",                        "number": "5",    "title": "Use cases",                                "region": "use-cases"},
@@ -121,6 +126,9 @@
 
   "annexMap": {"A": "A", "B": "B"},
 
+  "_comment_foreignAnchors": "Names this document uses for other documents. A section reference anchored on one of them belongs to that document and is left exactly as written.",
+  "foreignAnchors": ["primer"],
+
   "xrefMap": {
     "4.1": "6.1", "4.2": "6.2", "4.3": "6.3", "4": "6",
     "5.1": "5.1", "5.2": "5.2", "5.3": "5.3", "5": "5",
@@ -129,5 +137,7 @@
     "7": "6.8", "8": "6.9", "9": "9", "10": "A"
   },
 
-  "figures": []
+  "figures": [
+    {"id": "fig-xreg-shape", "caption": "The registry is folders of files", "pptx": "xRegistry-Fig1-RegistryShape.pptx"}
+  ]
 }

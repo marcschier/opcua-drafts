@@ -289,7 +289,7 @@ def _types_markdown(cfg, entry, model):
         return []
     lines = []
     n = entry.get('numberFrom', 1) - 1
-    for name in model.names_of_class(entry['nodeClass']):
+    for name in model.names_of_class(entry['nodeClass'], entry.get('select')):
         if name in _EMITTED_TYPES:
             continue
         _EMITTED_TYPES.add(name)

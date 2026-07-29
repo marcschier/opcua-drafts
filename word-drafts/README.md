@@ -12,6 +12,7 @@ assigns the real values.
 |---|---|
 | `OPC-UA-OpenUSD-Binding-Part1.docx` | Part 1, generated. Committed, so a reviewer needs no toolchain. |
 | `OPC-UA-OpenUSD-Scene-Part2.docx` | Part 2, generated. |
+| `OPC-UA-xRegistry.docx`, `OPC-UA-Observability-Export.docx`, `OPC-UA-WoT-Connectivity.docx`, `OPC-UA-WoT-Binding.docx` | The other four, generated the same way. |
 | `*.docmodel.json` | The intermediate representation the document was rendered from. Committed **because a `.docx` diff is unreadable** — review this instead. |
 | `figures/*.pptx` | The editable PowerPoint behind each figure, embedded in the document as an OLE object. |
 | `figures/*.png` | The preview image Word displays for each embedded object. |
@@ -24,20 +25,18 @@ assigns the real values.
 pip install -r word-drafts/tools/requirements.txt
 
 # markdown + NodeSet -> .docx  (pure Python, cross-platform, byte-reproducible)
-python word-drafts/tools/build_docx.py word-drafts/tools/specs/openusd-binding.json
-python word-drafts/tools/build_docx.py word-drafts/tools/specs/openusd-scene.json
-
-# check the result against the template contract
-python word-drafts/tools/validate_docx.py word-drafts/tools/specs/openusd-binding.json
-python word-drafts/tools/validate_docx.py word-drafts/tools/specs/openusd-scene.json
-
-# prove the validator actually catches what it claims to
-python word-drafts/tools/test_validate_docx.py word-drafts/tools/specs/openusd-binding.json
+# every specification in tools/specs/ takes the same three commands
+for s in openusd-binding openusd-scene xregistry observability-export wot-connectivity wot-binding
+do
+  python word-drafts/tools/build_docx.py    word-drafts/tools/specs/$s.json  # build
+  python word-drafts/tools/validate_docx.py word-drafts/tools/specs/$s.json  # check the contract
+  python word-drafts/tools/test_validate_docx.py word-drafts/tools/specs/$s.json  # check the checker
+done
 
 # update the table of contents, the table of figures, the table of tables and every
 # cross-reference, so the committed file opens fully paginated  (needs Word; local only)
 pwsh word-drafts/tools/finalize_word.ps1 -Path word-drafts/OPC-UA-OpenUSD-Binding-Part1.docx
-pwsh word-drafts/tools/finalize_word.ps1 -Path word-drafts/OPC-UA-OpenUSD-Scene-Part2.docx
+pwsh word-drafts/tools/finalize_word.ps1 -Path word-drafts/OPC-UA-WoT-Connectivity.docx
 
 # rewrite the markdown source into the same clause skeleton  (one-shot per restructure)
 python word-drafts/tools/restructure_markdown.py word-drafts/tools/specs/openusd-binding.json
@@ -85,19 +84,25 @@ a new config file; a genuinely new shape needs a generalisation in `opcdocx/` fi
 | `OPC-UA-OpenUSD-Scene-Part2.docx` | `metaverse-specs/openusd-scene/` + `Opc.Ua.OpenUsdScene.NodeSet2.xml` |
 | `OPC-UA-xRegistry.docx` | `core-specs/xregistry/` + `Opc.Ua.XRegistry.NodeSet2.xml` |
 | `OPC-UA-Observability-Export.docx` | `core-specs/observability-export/` + `Opc.Ua.ObservabilityExport.NodeSet2.xml` |
+| `OPC-UA-WoT-Connectivity.docx` | `wot-specs/WoT-Connectivity/` + `Opc.Ua.WoTCon.NodeSet2.xml` |
+| `OPC-UA-WoT-Binding.docx` | `wot-specs/WoT-Binding/` — **no NodeSet**; see below |
 
-## Not converted
+## Declared deviations
 
-- **`wot-specs/WoT-Binding/`** has **no NodeSet and defines no ObjectTypes** — its deliverables are a
-  JSON-LD context and a JSON Schema. OPC 20020 is the *UA Companion Specification Template*, whose
-  type clauses and Annex A exist to present an information model, so rendering this document into it
-  would produce empty type clauses and an Annex A pointing at nothing. That is a deviation, not a
-  conversion.
-- **`wot-specs/WoT-Connectivity/`** fits the template but has not been converted yet: 16 ObjectTypes,
-  **43 Methods**, 15 DataTypes, EventTypes and a large deprecated 1.02 legacy block, none of whose
-  conformance units carry identifiers. The pipeline now handles every shape it needs — Methods were
-  added for xRegistry — so what remains is the editorial work of assigning conformance units across
-  ~180 nodes and deciding how the deprecated legacy block is presented.
+Five of the six documents comply with OPC 20020 without deviation. **WoT Binding cannot**: it defines
+a JSON-LD vocabulary and a NodeSet-to-WoT mapping, so it has no NodeSet, no ObjectTypes and no
+Instances, and the template's NodeClass clauses and Annex A NodeSet block have nothing to present.
+
+A deviation is therefore something the pipeline refuses to take quietly. It must be
+
+1. declared in the spec config (`templateDeviations`, with an `id` the contract knows),
+2. printed into the document by the build — WoT Binding states it in clause 1.2, and
+3. found there by `validate_docx.py`, which only then skips the checks that deviation names.
+
+An undeclared deviation still fails, and a declared one whose statement is missing from the document
+fails too. The result is a document validated against a smaller contract that the document itself
+states.
+
 
 ## The clause map
 

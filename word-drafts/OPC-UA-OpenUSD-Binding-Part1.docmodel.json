@@ -259,10 +259,8 @@
               "text": " ("
             },
             {
-              "r": "xref",
-              "target": "c7-11",
-              "kind": "clause",
-              "prefix": "7.11"
+              "r": "t",
+              "text": "§7.11"
             },
             {
               "r": "t",
@@ -2541,10 +2539,8 @@
             "text": ". The NodeSet has two RequiredModels — the base UA namespace and xRegistry ("
           },
           {
-            "r": "xref",
-            "target": "c7-11",
-            "kind": "clause",
-            "prefix": "7.11"
+            "r": "t",
+            "text": "§7.11"
           },
           {
             "r": "t",
@@ -3145,10 +3141,8 @@
             "text": " if present per "
           },
           {
-            "r": "xref",
-            "target": "c7-2",
-            "kind": "clause",
-            "prefix": "7.2"
+            "r": "t",
+            "text": "§7.2"
           },
           {
             "r": "t",
@@ -6440,10 +6434,8 @@
             "text": "Following xRegistry "
           },
           {
-            "r": "xref",
-            "target": "c6-1",
-            "kind": "clause",
-            "prefix": "6.1"
+            "r": "t",
+            "text": "§6.1"
           },
           {
             "r": "t",
@@ -6660,10 +6652,8 @@
             "text": " A server that auto-populates the registry from its own configuration (xRegistry "
           },
           {
-            "r": "xref",
-            "target": "c6-5",
-            "kind": "clause",
-            "prefix": "6.5"
+            "r": "t",
+            "text": "§6.5"
           },
           {
             "r": "t",
@@ -6993,10 +6983,8 @@
                 "text": " is its URL-safe encoding, so the two are inter-derivable ("
               },
               {
-                "r": "xref",
-                "target": "c7-11-3",
-                "kind": "clause",
-                "prefix": "7.11.3"
+                "r": "t",
+                "text": "§7.11.3"
               },
               {
                 "r": "t",
@@ -7868,10 +7856,8 @@
             "text": " mutation of the entity, including a label edit (xRegistry "
           },
           {
-            "r": "xref",
-            "target": "c6-5",
-            "kind": "clause",
-            "prefix": "6.5"
+            "r": "t",
+            "text": "§6.5"
           },
           {
             "r": "t",
@@ -8530,10 +8516,8 @@
             "text": ", which would make this clause and the staleness rule of "
           },
           {
-            "r": "xref",
-            "target": "c7-11-2",
-            "kind": "clause",
-            "prefix": "7.11.2"
+            "r": "t",
+            "text": "§7.11.2"
           },
           {
             "r": "t",
@@ -9970,10 +9954,8 @@
               "text": " — the served artifacts are exposed as the xRegistry artifact registry of "
             },
             {
-              "r": "xref",
-              "target": "c7-11",
-              "kind": "clause",
-              "prefix": "7.11"
+              "r": "t",
+              "text": "§7.11"
             },
             {
               "r": "t",
@@ -10057,10 +10039,8 @@
               "text": "), so a connector follows the chain to another registry ("
             },
             {
-              "r": "xref",
-              "target": "c7-11-3",
-              "kind": "clause",
-              "prefix": "7.11.3"
+              "r": "t",
+              "text": "§7.11.3"
             },
             {
               "r": "t",

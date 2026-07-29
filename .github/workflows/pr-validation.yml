@@ -68,10 +68,19 @@ jobs:
       - run: python word-drafts/tools/test_validate_docx.py word-drafts/tools/specs/openusd-binding.json
       - run: python word-drafts/tools/build_docx.py word-drafts/tools/specs/openusd-scene.json
       - run: python word-drafts/tools/validate_docx.py word-drafts/tools/specs/openusd-scene.json
+      - run: python word-drafts/tools/test_validate_docx.py word-drafts/tools/specs/openusd-scene.json
       - run: python word-drafts/tools/build_docx.py word-drafts/tools/specs/xregistry.json
       - run: python word-drafts/tools/validate_docx.py word-drafts/tools/specs/xregistry.json
+      - run: python word-drafts/tools/test_validate_docx.py word-drafts/tools/specs/xregistry.json
       - run: python word-drafts/tools/build_docx.py word-drafts/tools/specs/observability-export.json
       - run: python word-drafts/tools/validate_docx.py word-drafts/tools/specs/observability-export.json
+      - run: python word-drafts/tools/test_validate_docx.py word-drafts/tools/specs/observability-export.json
+      - run: python word-drafts/tools/build_docx.py word-drafts/tools/specs/wot-connectivity.json
+      - run: python word-drafts/tools/validate_docx.py word-drafts/tools/specs/wot-connectivity.json
+      - run: python word-drafts/tools/test_validate_docx.py word-drafts/tools/specs/wot-connectivity.json
+      - run: python word-drafts/tools/build_docx.py word-drafts/tools/specs/wot-binding.json
+      - run: python word-drafts/tools/validate_docx.py word-drafts/tools/specs/wot-binding.json
+      - run: python word-drafts/tools/test_validate_docx.py word-drafts/tools/specs/wot-binding.json
 
   mermaid:
     name: Mermaid diagrams (advisory)

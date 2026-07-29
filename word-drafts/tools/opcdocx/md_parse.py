@@ -21,13 +21,69 @@ BLOCKQUOTE_RE = re.compile(r'^>\s?(.*)$')
 # `§5.15.3`, `§5.15`, `§7` and the "Part 1 §5.15" form used across the sibling drafts.
 SECTION_REF_RE = re.compile(r'§\s*([0-9]+(?:\.[0-9]+)*)')
 
+# Some drafts spell a cross-reference out as "Section 9.2" or "Sections 9.2 and 10.1"
+# instead of using §. Those are references too, and a build that did not recognise them
+# shipped a document whose every cross-reference still pointed at the source document's
+# pre-restructure numbering.
+WORD_REF_RE = re.compile(r'(?P<word>\bSections?\s+)(?P<num>[0-9]+(?:\.[0-9]+)*)'
+                         r'(?!\.?[0-9])')
+
+# A list form: "Sections 9.2 and 10.1", "Sections 5, 6, and 10". Every number in the list
+# is a reference; rewriting only the first would leave the rest pointing at the source
+# document's own numbering.
+_NUM = r'[0-9]+(?:\.[0-9]+)*'
+WORD_REF_LIST_RE = re.compile(
+    r'\bSections?\s+' + _NUM + r'(?:(?:,\s+and\s+|,\s+|\s+and\s+)' + _NUM + r')*'
+    r'(?!\.?[0-9])')
+
 _INLINE_RE = re.compile(
     r'(?P<code>`[^`]+`)'
     r'|(?P<bold>\*\*(?:[^*]|\*(?!\*))+\*\*)'
     r'|(?P<italic>(?<!\*)\*(?!\*)(?:[^*]+)\*(?!\*))'
     r'|(?P<link>\[[^\]]+\]\([^)]+\))'
     r'|(?P<ref>§\s*[0-9]+(?:\.[0-9]+)*)'
+    r'|(?P<wordref>' + WORD_REF_LIST_RE.pattern + r')'
 )
+
+
+_NUM = r'[0-9]+(?:\.[0-9]+)*'
+
+# A reference qualified by another document belongs to that document, and resolving it
+# through this document's clause map corrupts it: "OPC 10000-6 Section 5.1.1" is a clause
+# of Part 6, not of the document being built. The window is bounded so that a qualifier
+# earlier in the same sentence does not mask a genuine self-reference.
+FOREIGN_QUALIFIER_RE = re.compile(
+    r'(?:OPC\s*\d{4,5}|IEC\s*\d+|RFC\s*\d+|W3C|AOUSD|xRegistry'
+    r'|WoT\s+Binding|WoT-Binding|Thing\s+Description\s+1\.1'
+    r'|Part\s*\d+|\bthe base\b|\bbase (?:spec|specification|model)\b)'
+    r'[^\u00a7]{0,120}$', re.IGNORECASE)
+
+
+_LINK_TARGET_RE = re.compile(r'\]\([^)]*\)')
+
+
+def _is_foreign(text, start, extra=None):
+    window = text[max(0, start - 260):start]
+    # A markdown link's URL is invisible to the reader but counts against the distance
+    # between the qualifier and the reference, and a single reference.opcfoundation.org
+    # URL is long enough on its own to hide "OPC 10000-3" from the window.
+    window = _LINK_TARGET_RE.sub('', window).replace('[', '')
+    if extra is not None and extra.search(window):
+        return True
+    return bool(FOREIGN_QUALIFIER_RE.search(window))
+
+
+def foreign_anchor_re(anchors):
+    """A qualifier pattern for the names this document uses for other documents.
+
+    The built-in list only knows standards bodies and part numbers. A draft cites its
+    siblings by nickname — "the Bindings spec", "the primer" — and a reference anchored
+    on one of those belongs to that document, not this one.
+    """
+    if not anchors:
+        return None
+    alt = '|'.join(re.escape(a) for a in anchors)
+    return re.compile(r'(?:' + alt + r')[^\u00a7]{0,120}$', re.IGNORECASE)
 
 
 class Section:
@@ -83,7 +139,7 @@ def _in_fence(lines):
 # --------------------------------------------------------------------------- inline
 
 
-def parse_inline(text, *, xref_resolver=None):
+def parse_inline(text, *, xref_resolver=None, foreign_anchors=None):
     """Inline markdown -> docmodel runs."""
     runs = []
     pos = 0
@@ -101,12 +157,18 @@ def parse_inline(text, *, xref_resolver=None):
             runs.append(dm.link(_unescape(label), href))
         elif m.group('ref'):
             number = SECTION_REF_RE.match(m.group('ref')).group(1)
-            resolved = xref_resolver(number) if xref_resolver else None
+            resolved = (xref_resolver(number)
+                        if xref_resolver and not _is_foreign(text, m.start(), foreign_anchors)
+                        else None)
             if resolved:
                 target, label = resolved
                 runs.append(dm.xref(target, kind='clause', prefix=label))
             else:
                 runs.append(dm.t(m.group('ref')))
+        elif m.group('wordref'):
+            resolver = (None if _is_foreign(text, m.start(), foreign_anchors)
+                        else xref_resolver)
+            runs.extend(_word_reference_runs(m.group('wordref'), resolver))
         pos = m.end()
     if pos < len(text):
         runs.append(dm.t(_unescape(text[pos:])))
@@ -115,6 +177,30 @@ def parse_inline(text, *, xref_resolver=None):
 
 def _unescape(s):
     return s.replace('\\|', '|').replace('\\*', '*').replace('\\_', '_')
+
+
+def _word_reference_runs(text, xref_resolver):
+    """`Sections 9.2 and 10.1` -> a cross-reference per number, separators preserved.
+
+    The leading word is kept ("Clause"/"Clauses" in template style is left to the source
+    document); only the numbers become fields, so a reader still reads a sentence and
+    Word still renumbers the targets.
+    """
+    runs = []
+    pos = 0
+    for m in re.finditer(_NUM + r'(?!\.?[0-9])', text):
+        if m.start() > pos:
+            runs.append(dm.t(text[pos:m.start()]))
+        resolved = xref_resolver(m.group(0)) if xref_resolver else None
+        if resolved:
+            target, label = resolved
+            runs.append(dm.xref(target, kind='clause', prefix=label))
+        else:
+            runs.append(dm.t(m.group(0)))
+        pos = m.end()
+    if pos < len(text):
+        runs.append(dm.t(text[pos:]))
+    return runs
 
 
 def _split_row(raw):
@@ -148,12 +234,15 @@ def _split_row(raw):
 
 
 class BlockParser:
-    def __init__(self, *, xref_resolver=None, table_captions=None):
+    def __init__(self, *, xref_resolver=None, table_captions=None,
+                 foreign_anchors=None):
         self.xref_resolver = xref_resolver
+        self.foreign_anchors = foreign_anchors
         self.table_captions = table_captions or {}
 
     def inline(self, text):
-        return parse_inline(text, xref_resolver=self.xref_resolver)
+        return parse_inline(text, xref_resolver=self.xref_resolver,
+                            foreign_anchors=self.foreign_anchors)
 
     def parse(self, lines, *, context=''):
         blocks = []

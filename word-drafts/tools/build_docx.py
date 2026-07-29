@@ -13,6 +13,7 @@ and only have their placeholder tokens substituted.
 import argparse
 import json
 import os
+import re
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -52,11 +53,28 @@ class Build:
         with open(os.path.join(REPO, src['markdown']), encoding='utf-8') as f:
             self.md_text = f.read()
         self.sections, self.section_order = md_parse.split_sections(self.md_text)
-        self.model = nodeset_tables.Model(os.path.join(REPO, src['nodeset']))
+        self.deviations = list(self.cfg.get('templateDeviations', []))
+        self.deviation_ids = {d['id'] for d in self.deviations}
+        if src.get('nodeset'):
+            self.model = nodeset_tables.Model(os.path.join(REPO, src['nodeset']))
+        else:
+            # Only a declared deviation may drop the information model; otherwise a
+            # missing NodeSet would silently produce a document with no node tables.
+            if 'no-information-model' not in self.deviation_ids:
+                raise SystemExit(
+                    'config has no source.nodeset but does not declare the '
+                    '"no-information-model" template deviation')
+            self.model = nodeset_tables.NullModel(
+                model_uri=self.identity['namespaceUri'],
+                version=self.identity['version'],
+                publication_date=self.identity['publicationDate'])
         self.doc_ns_index = self.identity['namespaceIndexInDocument']
 
         self.by_number = {str(e['number']): e for e in self.cfg['clauseMap']}
         self.xref_map = self.cfg['xrefMap']
+        # Whether the markdown already carries this map's numbering. Both forms build,
+        # and which one it is decides how an ambiguous reference resolves.
+        self.restructured = self._detect_restructured()
         self.doc = dm.DocModel()
         self.figure_specs = list(self.cfg.get('figures', []))
         # Types already given a clause by the clause map, so `_gen_types` does not
@@ -71,9 +89,20 @@ class Build:
         A restructured document already carries the final numbers, so those resolve
         directly; the clause map is only consulted for a document still written against
         the previous numbering.
+
+        Which of the two is tried first matters. A document that has not been
+        restructured may use a number that is also a *new* number of some other clause —
+        WoT-Binding's clause 5 becomes 6.2 while an unrelated clause becomes 5 — and
+        resolving it directly would point the reference confidently at the wrong clause.
         """
-        if number in self.by_number:
-            return clause_id(number), number
+        if self.restructured:
+            if number in self.by_number:
+                return clause_id(number), number
+            return self._from_xref_map(number)
+        return self._from_xref_map(number) or (
+            (clause_id(number), number) if number in self.by_number else None)
+
+    def _from_xref_map(self, number):
         target = self.xref_map.get(number)
         if target is None:
             return None
@@ -84,8 +113,29 @@ class Build:
             return None
         return clause_id(target), label
 
+    def unresolved_references(self):
+        """Internal section references the clause map cannot resolve.
+
+        A reference that resolves to nothing is printed as plain text carrying the source
+        document's own numbering, which after restructuring is simply a wrong number.
+        Nothing else in the pipeline notices — the styles are right and no field is
+        broken — so the build fails on it.
+        """
+        anchors = md_parse.foreign_anchor_re(self.cfg.get('foreignAnchors', []))
+        out = []
+        pattern = r'(?:\u00a7\s*|\bSections?\s+)([0-9]+(?:\.[0-9]+)*)'
+        for m in re.finditer(pattern, self.md_text):
+            if md_parse._is_foreign(self.md_text, m.start(), anchors):
+                continue
+            if self.resolve_xref(m.group(1)) is None:
+                out.append(m.group(1))
+        return sorted(set(out))
+
     def parser(self):
-        return md_parse.BlockParser(xref_resolver=self.resolve_xref)
+        return md_parse.BlockParser(
+            xref_resolver=self.resolve_xref,
+            foreign_anchors=md_parse.foreign_anchor_re(
+                self.cfg.get('foreignAnchors', [])))
 
     # ------------------------------------------------------------------ docmodel
 
@@ -136,6 +186,14 @@ class Build:
 
     def _restructured(self, entry):
         return self._heading_key(entry) in self.sections
+
+    def _detect_restructured(self):
+        """True when the markdown's headings are this map's output rather than its input."""
+        new = sum(1 for e in self.cfg['clauseMap']
+                  if self._heading_key(e) in self.sections)
+        old = sum(1 for e in self.cfg['clauseMap']
+                  if e.get('from') and e['from'] in self.sections)
+        return new > old
 
     def _section_for(self, entry):
         """Locate a clause's markdown section, before or after restructuring.
@@ -248,6 +306,22 @@ class Build:
                 out.append(dm.text_para(ref['url'], 'ReferenceDocuments'))
         return out
 
+    def _gen_template_deviations(self, entry):
+        """State every declared deviation from OPC 20020 in the document itself.
+
+        The validator looks for exactly these statements and relaxes only the checks of a
+        deviation it can find, so a deviation cannot be taken without also being published.
+        """
+        out = [dm.text_para(
+            'This document follows OPC 20020 - UA Companion Specification Template '
+            'version %s. The template admits no deviation. The departures below are '
+            'stated here because the subject matter of this document cannot satisfy the '
+            'clause concerned; every other requirement of the template is met.'
+            % contract.TEMPLATE_VERSION)]
+        for dev in self.deviations:
+            out.append(dm.text_para(dev['statement']))
+        return out
+
     def _gen_terms_overview(self, entry):
         title = self.identity['title']
         return [dm.text_para(
@@ -261,7 +335,13 @@ class Build:
                          'italicized in the document.')]
 
     def _gen_terms(self, entry):
-        """The markdown term table becomes the template's TERM entry structure."""
+        """The markdown terms become the template's TERM entry structure.
+
+        Two markdown shapes are accepted, because both appear across these drafts: a
+        two-column table, and a bullet list whose item begins with the bolded term
+        followed by an em dash. Requiring one shape would mean rewriting a source
+        document to suit the converter rather than the other way round.
+        """
         section = self._section_for(entry)
         if section is None:
             raise KeyError('terms section not found')
@@ -269,42 +349,77 @@ class Build:
         blocks = parser.parse(section.lines, context=section.key)
         out = []
         for b in blocks:
-            if b['t'] != 'table':
-                continue
-            for r in b['rows']:
-                if len(r) < 2:
-                    continue
-                name = dm.plain_text(r[0]).strip()
-                if not name:
-                    continue
-                out.append(dm.term(name, r[1]))
+            if b['t'] == 'table':
+                for r in b['rows']:
+                    if len(r) < 2:
+                        continue
+                    name = dm.plain_text(r[0]).strip()
+                    if name:
+                        out.append(dm.term(name, r[1]))
+            elif b['t'] == 'list':
+                out.extend(self._terms_from_list(b))
         if not out:
             raise ValueError('no terms parsed from %r' % entry['from'])
+        return out
+
+    @staticmethod
+    def _terms_from_list(block):
+        out = []
+        for item in block['items']:
+            if not item or not item[0].get('b'):
+                continue
+            name = dm.plain_text(item[:1]).strip()
+            rest = list(item[1:])
+            while rest and not dm.plain_text(rest[:1]).strip(' \u2014-'):
+                rest = rest[1:]
+            if rest:
+                head = dict(rest[0])
+                head['text'] = head.get('text', '').lstrip(' \u2014-')
+                rest = [head] + rest[1:]
+            if name and rest:
+                out.append(dm.term(name, rest))
         return out
 
     def _gen_abbreviations(self, entry):
         return [dm.para([dm.t(abbr), dm.tab(), dm.t(expansion)], 'PARAGRAPHCompressed')
                 for abbr, expansion in self.cfg['abbreviations']]
 
-    def _gen_intro_openusd(self, entry):
-        return [dm.text_para(
-            'OpenUSD (Universal Scene Description) is an open, extensible framework for '
-            'describing, composing, simulating and collaborating on three-dimensional '
-            'scenes. Its scene graph is assembled from layers that compose into a single '
-            'stage, so several authors and tools contribute to one scene without '
-            'rewriting it. A stage is a hierarchy of prims, each carrying typed '
-            'attributes and relationships, addressed by a canonical prim path.'),
+    def _gen_annex_a_identity(self, entry):
+        """Annex A's identity block for a specification that publishes no NodeSet.
+
+        The template's Annex A tells the reader where to download the NodeSet. A document
+        that defines no information model has none, so it states its namespace and its
+        capability identifier and says plainly what it publishes instead.
+        """
+        ident = self.identity
+        return [
             dm.text_para(
-                'OpenUSD is governed by the Alliance for OpenUSD (AOUSD), which publishes '
-                'the OpenUSD Core Specification. The Core Specification covers paths, '
-                'composition, layers and identity; the domain schemas that describe '
-                'geometry, materials, lighting, skeletons and physics are versioned '
-                'separately with the OpenUSD software releases.'),
+                'The vocabulary defined by this document is identified by the following '
+                'URI:'),
+            dm.text_para(ident['namespaceUri'], 'CODE'),
             dm.text_para(
-                'Industrial visualization pairs OpenUSD with live process data. This '
-                'document defines how an OPC UA Server declares that pairing as part of '
-                'its own address space, so that any conforming connector can apply it '
-                'without prior knowledge of the domain model.')]
+                'The capability identifier of this document, used in the conformance '
+                'units of %s, is %s.'
+                % (ident['title'], ident['capabilityIdentifier'])),
+            dm.text_para(
+                'This document publishes no UANodeSet XML file, because it defines no '
+                'OPC UA information model. The machine-readable artifacts it does define '
+                'are the JSON-LD context and the JSON Schema described below; they are '
+                'normative and a conforming implementation is validated against them.'),
+        ]
+
+    def _gen_subject_introduction(self, entry):
+        """The introduction to the subject matter, clause 4.1 of the template.
+
+        This is config text rather than code because it was code once: a generator named
+        after the first specification converted was reused by the others, and two shipped
+        documents introduced themselves with three paragraphs about OpenUSD. The validator
+        now checks that this prose names the document's own subject.
+        """
+        paragraphs = self.identity.get('introduction')
+        if not paragraphs:
+            raise KeyError('identity.introduction is required for clause 4.1')
+        return [dm.text_para(p) for p in paragraphs]
 
     def _gen_datatypes(self, entry):
         return self._gen_types(dict(entry, nodeClass='UADataType'))
@@ -316,6 +431,10 @@ class Build:
         emitted from the model. Without this a model with 23 ObjectTypes would need 23
         near-identical config entries, and `check_node_tables` fails the build for any
         type the document forgets.
+
+        `select` narrows the NodeClass so one clause can take a subset — EventTypes are
+        ObjectTypes in the NodeSet, and a deprecated legacy block is emitted after the
+        current types inside the same clause rather than in a clause of its own.
         """
         node_class = entry['nodeClass']
         out = []
@@ -324,8 +443,9 @@ class Build:
             intro = [b for b in self.parser().parse(section.lines, context=section.key)
                      if b['t'] == 'para']
             out.extend(intro[:1])
+        deprecated = entry.get('deprecated')
         n = entry.get('numberFrom', 1) - 1
-        for name in self.model.names_of_class(node_class):
+        for name in self.model.names_of_class(node_class, entry.get('select')):
             if name in self.emitted_types:
                 continue
             self.emitted_types.add(name)
@@ -333,6 +453,8 @@ class Build:
             number = '%s.%d' % (entry['number'], n)
             node = self.model.by_name[name]
             out.append(dm.clause(clause_id(number), name, level=clause_level(number)))
+            if deprecated:
+                out.append(dm.note([dm.t(deprecated)]))
             if node.description:
                 out.append(dm.text_para(node.description))
             if node.definition and node_class == 'UADataType':
@@ -455,6 +577,12 @@ def main(argv=None):
     args = ap.parse_args(argv)
 
     build = Build(args.config)
+    unresolved = build.unresolved_references()
+    if unresolved:
+        raise SystemExit(
+            'unresolved internal section references: %s\n'
+            'Add them to xrefMap, or add the citing document to foreignAnchors if they '
+            'belong to another specification.' % ', '.join(unresolved))
     doc = build.build_docmodel()
 
     out_docmodel = os.path.join(REPO, build.cfg['output']['docmodel'])

@@ -70,13 +70,11 @@ def _replace_all(pattern, replacement):
     return apply
 
 
-MUTATIONS = [
-    ('a node table loses a member row',
-     'node-tables',
-     _drop_first(r'<w:tr[^>]*>(?:(?!</w:tr>).)*?RootLayerIdentifier.*?</w:tr>')),
-    ('a member DataType disagrees with the NodeSet',
-     'node-tables',
-     _replace_first(r'(<w:t[^>]*>)0:Guid(</w:t>)', r'\g<1>0:Int32\g<2>')),
+# Mutations that hold for any document. The rest are derived from the document under
+# test: hard-coding one specification's type and unit names made the suite silently
+# inapplicable to every other specification, reporting "the test itself is broken"
+# instead of testing anything.
+STATIC_MUTATIONS = [
     ('a table caption loses its SEQ field',
      'table-captions',
      _drop_first(r'<w:instrText[^>]*> SEQ Table \\\* ARABIC </w:instrText>')),
@@ -84,9 +82,6 @@ MUTATIONS = [
      'heading-numbers',
      _replace_first(r'(<w:pStyle w:val="Heading1"/>.*?<w:t[^>]*>)Scope',
                     r'\g<1>1 Scope')),
-    ('a cross-reference points at a bookmark that does not exist',
-     'xrefs',
-     _replace_first(r'REF _Clause_c7_11 ', 'REF _Clause_cGONE ')),
     ('a forbidden online-reference link appears in the body',
      'forbidden-links',
      _replace_first(r'(<w:pStyle w:val="Heading1"/></w:pPr>)',
@@ -95,15 +90,92 @@ MUTATIONS = [
     ('a retained template clause is deleted',
      'template-slices',
      _drop_first(r'<w:t[^>]*>[^<]*royalty[^<]*</w:t>')),
-    ('an embedded PowerPoint is wired as a compound-file object',
-     'embedded-packages',
-     _replace_first(r'(Type="http://schemas\.openxmlformats\.org/officeDocument/2006/'
-                    r'relationships/)package("[^>]*\.pptx")', r'\g<1>oleObject\g<2>'),
-     'word/_rels/document.xml.rels'),
-    ('a conformance unit is dropped from the conformance-units clause',
-     'conformance-units',
-     _replace_all(r'OU-SchemaPluginDelivery', 'OU-Renamed')),
 ]
+
+
+def _corrupt_cell(row_marker, was, now):
+    """Change one cell inside the table row that declares `row_marker`.
+
+    Substituting the first occurrence in the whole document is not the same thing: a
+    DataType name also appears in prose and in its own clause heading, and mutating one
+    of those proves nothing about the node tables.
+    """
+    row_re = re.compile(r'<w:tr[^>]*>(?:(?!</w:tr>).)*?' + re.escape(row_marker)
+                        + r'.*?</w:tr>', re.S)
+
+    def apply(text):
+        m = row_re.search(text)
+        if not m or was not in m.group(0):
+            return text
+        return text[:m.start()] + m.group(0).replace(was, now, 1) + text[m.end():]
+    return apply
+
+
+def derived_mutations(document_xml, rels_xml, model, doc_ns_index):
+    """Mutations built from the document under test, plus the reason for any it skips."""
+    out, skipped = [], []
+
+    ref = re.search(r'REF (_Clause_c[A-Za-z0-9_]+) ', document_xml)
+    if ref:
+        out.append(('a cross-reference points at a bookmark that does not exist', 'xrefs',
+                    _replace_first(r'REF ' + re.escape(ref.group(1)) + r' ',
+                                   'REF _Clause_cGONE ')))
+    else:
+        skipped.append('xrefs: the document contains no clause cross-reference')
+
+    typed = _a_typed_member(document_xml, model, doc_ns_index)
+    if typed:
+        member, data_type = typed
+        out.append(('a node table loses a member row', 'node-tables',
+                    _drop_first(r'<w:tr[^>]*>(?:(?!</w:tr>).)*?' + re.escape(member)
+                                + r'.*?</w:tr>')))
+        other = '0:Int32' if data_type != '0:Int32' else '0:Boolean'
+        out.append(('a member DataType disagrees with the NodeSet', 'node-tables',
+                    _corrupt_cell(member, data_type, other)))
+    else:
+        skipped.append('node-tables: the document defines no type members')
+
+    unit = _a_conformance_unit(document_xml, model)
+    if unit:
+        out.append(('a conformance unit is dropped from the conformance-units clause',
+                    'conformance-units', _replace_all(re.escape(unit), 'XX-Renamed')))
+    else:
+        skipped.append('conformance-units: the model declares none')
+
+    if '.pptx' in rels_xml:
+        out.append(('an embedded PowerPoint is wired as a compound-file object',
+                    'embedded-packages',
+                    _replace_first(
+                        r'(Type="http://schemas\.openxmlformats\.org/officeDocument/2006/'
+                        r'relationships/)package("[^>]*\.pptx")', r'\g<1>oleObject\g<2>'),
+                    'word/_rels/document.xml.rels'))
+    else:
+        skipped.append('embedded-packages: the document embeds no figure')
+    return out, skipped
+
+
+def _a_typed_member(document_xml, model, doc_ns_index):
+    """A member BrowseName that appears in a node table, with its printed DataType."""
+    from opcdocx import nodeset_tables
+    for node in model.nodes.values():
+        if node.tag != 'UAObjectType':
+            continue
+        for _, child in model.members_of(node):
+            if not child.name.isalnum() or child.name not in document_xml:
+                continue
+            data_type = nodeset_tables.data_type_cell(model, child,
+                                                      doc_ns_index=doc_ns_index)
+            if data_type:
+                return child.name, data_type
+    return None
+
+
+def _a_conformance_unit(document_xml, model):
+    units = sorted({c for n in model.nodes.values() for c in n.categories})
+    for unit in units:
+        if document_xml.count(unit) >= 2:
+            return unit
+    return None
 
 
 def main(argv=None):
@@ -127,7 +199,16 @@ def main(argv=None):
             return 1
         print('ok    baseline document validates cleanly')
 
-        for mutation in MUTATIONS:
+        with zipfile.ZipFile(src) as z:
+            document_xml = z.read('word/document.xml').decode('utf-8')
+            rels_xml = z.read('word/_rels/document.xml.rels').decode('utf-8')
+        model = _model_for(cfg)
+        derived, skipped = derived_mutations(
+            document_xml, rels_xml, model, cfg['identity']['namespaceIndexInDocument'])
+        for reason in skipped:
+            print('skip  %s' % reason)
+
+        for mutation in STATIC_MUTATIONS + derived:
             description, check, transform = mutation[:3]
             part = mutation[3] if len(mutation) > 3 else 'word/document.xml'
             dst = os.path.join(tmpdir, 'mutated.docx')
@@ -149,6 +230,16 @@ def main(argv=None):
 
     print('%d mutation(s) escaped detection' % failures)
     return 1 if failures else 0
+
+
+def _model_for(cfg):
+    from opcdocx import nodeset_tables
+    if cfg['source'].get('nodeset'):
+        return nodeset_tables.Model(os.path.join(REPO, cfg['source']['nodeset']))
+    return nodeset_tables.NullModel(
+        model_uri=cfg['identity']['namespaceUri'],
+        version=cfg['identity']['version'],
+        publication_date=cfg['identity']['publicationDate'])
 
 
 def _run(config, docx):

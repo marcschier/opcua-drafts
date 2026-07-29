@@ -137,13 +137,56 @@ truth exactly the way hand-editing a generated NodeSet does.
 - **Drop clauses the model has no content for** rather than shipping them empty.
 - **Repo-internal prose does not belong in a submission.** Paths, build commands and links to a
   `CHANGELOG.md` are for contributors, not for the standards body.
+- **A generator named after the first specification will be reused by the next one.** A generator
+  called `intro-openusd` produced clause 4.1 for every document, so the xRegistry and Observability
+  Export drafts each shipped three paragraphs introducing *OpenUSD* under a heading that promised
+  their own subject. Nothing failed: styles, fields and numbering were all correct. Put per-document
+  prose in the config, and check that clause 4.1 actually names the document's subject.
+- **A reference to another document must not be renumbered.** `OPC 10000-6 Section 5.1.1` and
+  `the Bindings spec §7.4.2` belong to those documents; resolving them through this document's
+  clause map produces a confident, wrong cross-reference. Match a qualifier in a *bounded window*
+  before the reference — and strip markdown link targets first, because one
+  `reference.opcfoundation.org` URL is long enough on its own to push `OPC 10000-3` out of the
+  window. Nicknames (`the primer`, `the Bindings spec`) are per-document, so keep them in config.
+- **A reference that resolves to nothing is worse than one that fails loudly.** It is printed as
+  plain text carrying the source document's own numbering, which after restructuring is simply a
+  wrong number, and no style or field check notices. Fail the build on an unresolved internal
+  section reference.
+- **Not every draft writes `§`.** `Section 9.2`, `Sections 9.2 and 10.1`, `Sections 5, 6, and 10`
+  are references too. Every number in the list is one; rewriting only the first leaves the rest
+  pointing at the old numbering.
+- **An old clause number may collide with a new one.** In an unrestructured document, resolving a
+  reference directly before consulting the clause map sends `Section 5` to whatever clause 5 has
+  *become* instead of to what clause 5 *was*. Decide which numbering the markdown carries, then
+  resolve in that order.
+- **An unparsed diagram construct became a node.** `A -- label --> B` and `-.->|label|` were not in
+  the edge splitter, so the edge text was taken for a node id and drawn as a box. Make an
+  unrecognised endpoint an error; a diagram that renders nonsense is worse than one that fails.
+- **Mermaid subgraphs nest, and clusters must stay contiguous.** Layer the clusters first and the
+  nodes inside each cluster second, or two subgraphs interleave, their frames overlap, and whatever
+  pushes them apart makes the canvas metres wide. A node inside a *nested* subgraph is inside its
+  parent's frame too.
+- **A cyclic diagram diverges under longest-path layering.** A state machine legitimately loops;
+  drop cycle-closing back edges from the layering (still drawing them) or the canvas grows by one
+  layer per iteration until the guard trips.
+- **An edge label is occluded by whatever is drawn after it.** Place labels clear of the node boxes
+  *and* of each other, and include them in the canvas extents — otherwise the figure needs the
+  manual repair the pipeline exists to avoid. The editable PowerPoint needs the labels too; drawing
+  them only in the preview bitmap hands an editor a diagram whose edges say nothing.
+- **A mutation test that hard-codes one document's names is not a test.** Reusing OpenUSD type and
+  unit names made the suite report "the test itself is broken" for every other specification.
+  Derive each mutation from the document under test, and *skip* with a reason where a mutation
+  cannot apply.
 
 ## Verification checklist
 
 - [ ] `validate_docx.py` reports 0 errors.
-- [ ] `test_validate_docx.py` reports 0 escaped mutations.
+- [ ] `test_validate_docx.py` reports 0 escaped mutations, and every skip has a real reason.
+- [ ] `build_docx.py` reports no unresolved internal section references.
 - [ ] `check_section_refs.py` is clean for the documents you touched.
 - [ ] Two consecutive builds are byte-identical.
 - [ ] `finalize_word.ps1` reports *all fields resolved*.
 - [ ] The `.docx` opens, the table of contents is populated, figures render, and no field shows an
       error.
+- [ ] Any `templateDeviations` are declared, printed in the document, and are the *only* checks
+      relaxed.

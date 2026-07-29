@@ -132,6 +132,20 @@ PLACEHOLDER_TOKENS = (
 # the template's own placeholders until the OPC Foundation assigns real values.
 RETAINED_PLACEHOLDER_TOKENS = ('OPC nnnnn-m', 'project_id=<nnn>', '<nnn>')
 
+# --------------------------------------------------------------------------- deviations
+
+# The template admits no deviation, so the pipeline refuses to relax a rule unless the
+# relaxation is named here *and* declared by the build config *and* printed in the
+# document. That chain is what keeps "no deviation" enforceable: a spec that genuinely
+# cannot satisfy a clause says so in its own text, and everything else still fails.
+KNOWN_DEVIATIONS = {
+    'no-information-model': (
+        'The specification defines no OPC UA information model — it has no NodeSet — so '
+        'the NodeClass clauses and the Annex A NodeSet block have no content. Relaxes '
+        'check_node_tables and check_conformance_units, and lets Annex A carry the '
+        'machine-readable artifacts the specification does define.'),
+}
+
 # --------------------------------------------------------------------------- properties
 
 # Custom document properties surfaced through DOCPROPERTY fields in the cover and headers.
@@ -167,6 +181,11 @@ CLAUSE_SKELETON = (
 # a build emits only those its model has content for, in this order.
 TYPE_REGIONS = ('objecttypes', 'eventtypes', 'variabletypes', 'datatypes',
                 'referencetypes', 'instances', 'well-known-browsenames')
+
+# Instances the Instances clause never lists. Every namespace carries a NamespaceMetadata
+# Object, and the template gives it a clause of its own under Namespaces, so listing it
+# again as a well-known instance would document the same Node twice.
+INSTANCE_EXCLUDED_TYPE_DEFINITIONS = ('NamespaceMetadataType',)
 
 
 def modelling_rule_short(name):

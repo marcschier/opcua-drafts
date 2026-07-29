@@ -99,7 +99,7 @@ Verify with two builds and a hash comparison.
 7. List the `figures`.
 8. Build, validate, mutation-test, finalise.
 
-**How much of this is really config.** Four specifications have now been onboarded, and each new
+**How much of this is really config.** Six specifications have now been onboarded, and each new
 *shape* cost a generalisation before its config worked:
 
 | Specification | New shape it forced |
@@ -108,15 +108,31 @@ Verify with two builds and a hash comparison.
 | OpenUSD Part 2 | VariableTypes and ReferenceTypes clauses; no Security clause; annex regions and bookmark aliases had been hardcoded to Part 1's clause numbers; per-NodeClass type-clause generation |
 | xRegistry | **Methods** — signature block, Table 20 arguments, Table 21 AddressSpace definition, and Method lookup disambiguated by owning type |
 | Observability Export | Mermaid **classDiagram**; a lower-case-initial proper noun (`xRegistry`) in a heading |
+| WoT Connectivity | **EventTypes** and **Instances** clauses; NodeClass *selection* (`select`) because an EventType is a `UAObjectType` and a deprecated legacy block has to follow the current types inside the same clause; a per-subclause deprecation NOTE; the `stateDiagram-v2` dialect; an instance table's `TypeDefinition` row |
+| WoT Binding | **declared partial compliance** — no NodeSet at all: a null model, an Annex A that states the artifacts a document publishes when it publishes no NodeSet, and prose references spelled `Section 9.2` rather than `§9.2` |
 
-Everything above is now driven by the docmodel and the config, and a fifth specification of any of
+Everything above is now driven by the docmodel and the config, and a seventh specification of any of
 those shapes is genuinely a config file. **Config carries what varies between documents of the same
-shape; a new shape is code.** Expect the next round for EventTypes, Structures with optional fields,
-or a specification that needs the *Instances* and *Well-Known BrowseNames* clauses.
+shape; a new shape is code.**
 
-**A specification with no information model does not fit this template at all.** OPC 20020 is the
-*UA Companion Specification Template*, and its spine — the type clauses and Annex A — exists to
-present a NodeSet. A document that defines a vocabulary or a mapping rather than an address space
-(for example a binding whose deliverables are a JSON-LD context and a JSON Schema) has nothing to
-put there. Rendering it into this template produces empty type clauses and an Annex A that points
-at no NodeSet, which is a deviation, not a conversion. Say so rather than generate it.
+## Declared partial compliance
+
+The template admits no deviation, and for five of the six documents none was needed. WoT Binding
+defines a JSON-LD vocabulary and a NodeSet↔WoT mapping: it has no NodeSet, no ObjectTypes and no
+Instances, so the NodeClass clauses and Annex A's NodeSet block have nothing to present.
+
+The answer is not to relax the checker. It is to make a deviation **impossible to take quietly**:
+
+1. the config declares it (`templateDeviations`, `id` drawn from `contract.KNOWN_DEVIATIONS`),
+2. the build prints the declared statement into the document (clause 1.2),
+3. the validator refuses a deviation it does not know, refuses one whose statement it cannot find in
+   the produced document, and only then skips the checks that deviation names.
+
+So the document is validated against a smaller contract that is *stated in the document itself*, and
+anything undeclared still fails. Two consequences are easy to miss and both were real defects:
+
+* Annex A's retained boilerplate says where to download the NodeSet. For a document that has none
+  that text is false, so the whole annex body is replaced rather than retained.
+* Clause 3.4's retained text promises that "Annex A defines the actual NodeIds". The two halves of
+  that sentence are substituted separately, because the cross-reference field to Annex A sits
+  between them and has to survive.

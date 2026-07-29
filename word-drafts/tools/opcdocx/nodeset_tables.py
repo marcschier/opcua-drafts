@@ -36,6 +36,9 @@ STANDARD_NODES = {
     'i=33': 'HierarchicalReferences', 'i=44': 'Aggregates',
     'i=78': 'Mandatory', 'i=80': 'Optional', 'i=11508': 'OptionalPlaceholder',
     'i=11510': 'MandatoryPlaceholder', 'i=2253': 'Server',
+    'i=2041': 'BaseEventType', 'i=2130': 'SystemEventType',
+    'i=11446': 'ProgressEventType', 'i=2782': 'ConditionType',
+    'i=11616': 'NamespaceMetadataType', 'i=11715': 'Namespaces',
 }
 
 # The RequiredModel's types, referred to by NodeId from this model.
@@ -56,11 +59,14 @@ NODE_CLASS = {
 }
 
 
+def _as_list(value):
+    return [value] if isinstance(value, str) else list(value)
+
+
 class Node:
     __slots__ = ('node_id', 'tag', 'browse_name', 'ns_index', 'name', 'display',
                  'description', 'categories', 'parent', 'refs', 'attrs', 'abstract',
                  'definition', 'inverse_name', 'symmetric', 'value')
-
     def __init__(self):
         self.refs = []
         self.categories = []
@@ -138,9 +144,70 @@ class Model:
         for n in self.nodes.values():
             self.by_name.setdefault(n.name, n)
 
-    def names_of_class(self, tag):
-        """BrowseNames of every Node of a NodeClass, in declaration order."""
-        return [self.nodes[n].name for n in self.order if self.nodes[n].tag == tag]
+    def names_of_class(self, tag, select=None):
+        """BrowseNames of every Node of a NodeClass, in declaration order.
+
+        `select` narrows the result so that one NodeClass can feed several clauses.
+        Two cases force this. EventTypes are ordinary `UAObjectType` elements, so the
+        only way to route them to the EventTypes clause is to walk the supertype chain
+        to BaseEventType. And a model that carries a deprecated legacy block needs those
+        types emitted after the current ones inside the same clause.
+
+        Recognised keys, all optional and ANDed together:
+          category / excludeCategory  substring match against the Node's <Category> values
+          descendsFrom / notDescendsFrom  supertype-chain test by BrowseName
+          parentOutsideModel          True keeps only Nodes whose parent is not a Node of
+                                      this model, i.e. well-known instances rather than
+                                      the child Nodes of a type
+        """
+        names = [self.nodes[n].name for n in self.order if self.nodes[n].tag == tag]
+        if not select:
+            return names
+        return [n for n in names if self._selected(self.by_name[n], select)]
+
+    def _selected(self, node, select):
+        cats = ' | '.join(node.categories)
+        include = select.get('category')
+        if include and not any(c in cats for c in _as_list(include)):
+            return False
+        exclude = select.get('excludeCategory')
+        if exclude and any(c in cats for c in _as_list(exclude)):
+            return False
+        descends = select.get('descendsFrom')
+        if descends and not any(self.descends_from(node, d) for d in _as_list(descends)):
+            return False
+        not_descends = select.get('notDescendsFrom')
+        if not_descends and any(self.descends_from(node, d) for d in _as_list(not_descends)):
+            return False
+        if select.get('parentOutsideModel'):
+            if node.parent is not None and self.resolve_id(node.parent) in self.nodes:
+                return False
+            type_definition = self.type_definition_of(node)
+            if (type_definition and self.plain_name_of(type_definition)
+                    in contract.INSTANCE_EXCLUDED_TYPE_DEFINITIONS):
+                return False
+        return True
+
+    def descends_from(self, node, ancestor_name):
+        """True when the Node's supertype chain reaches a type of this BrowseName.
+
+        Walks HasSubtype upwards. The chain leaves this model as soon as it reaches a
+        base-namespace type, which is why STANDARD_NODES has to name BaseEventType.
+        """
+        seen = set()
+        current = node
+        while current is not None:
+            supertype = self.supertype_of(current)
+            if supertype is None:
+                return False
+            supertype_id = self.resolve_id(supertype)
+            if supertype_id in seen:
+                return False
+            seen.add(supertype_id)
+            if self.plain_name_of(supertype) == ancestor_name:
+                return True
+            current = self.nodes.get(supertype_id)
+        return False
 
     def method_named(self, name, *, owner=None):
         """A Method by BrowseName, disambiguated by its owning type where needed.
@@ -226,6 +293,28 @@ class Model:
         return self.modelling_rule_of(node) is None and node.tag == 'UAVariable'
 
 
+class NullModel(Model):
+    """A stand-in for a specification that defines no OPC UA information model.
+
+    WoT-Binding defines a JSON-LD vocabulary and a NodeSet-to-WoT mapping rather than an
+    address space, so there is no NodeSet to parse. Every model query answers empty,
+    which makes the NodeClass clauses generate nothing and Annex A omit the node table.
+    A build may only use this when its config declares the matching template deviation.
+    """
+
+    def __init__(self, *, model_uri, version, publication_date):
+        self.namespace_uris = [model_uri]
+        self.model_uri = model_uri
+        self.version = version
+        self.publication_date = publication_date
+        self.required_models = []
+        self.aliases = {}
+        self._alias_to_id = {}
+        self.nodes = {}
+        self.order = []
+        self.by_name = {}
+
+
 # --------------------------------------------------------------------------- tables
 
 
@@ -276,6 +365,14 @@ def type_table(model, type_name, *, doc_ns_index):
     attributes = [('BrowseName', '%d:%s' % (node.ns_index, node.name))]
     if node.tag in ('UAObjectType', 'UAVariableType', 'UADataType', 'UAReferenceType'):
         attributes.append(('IsAbstract', 'True' if node.abstract else 'False'))
+    if node.tag in ('UAObject', 'UAVariable'):
+        # An instance declaration table states the type it instantiates; without it the
+        # table says nothing about what the well-known Node actually is.
+        instance_td = model.type_definition_of(node)
+        if instance_td:
+            attributes.append(
+                ('TypeDefinition',
+                 model.browse_name_of(instance_td, doc_ns_index=doc_ns_index)))
     if node.tag == 'UAVariableType':
         attributes.append(('ValueRank', node.attrs.get('ValueRank', '-1')))
         attributes.append(('DataType', model.browse_name_of(
