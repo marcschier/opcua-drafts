@@ -661,10 +661,12 @@ prop_var(A, "OpenUsdAssetType", "DigestAlgorithm", OpenUsdDigestAlgorithmEnum,
 folder_member(S, "OpenUsdStageType", "Assets",
               "Optional VIEW onto this stage's served layer closure: a Folder that Organizes the "
               "OpenUsdAssetType artifacts of the server's Artifacts registry which this stage "
-              "needs (exactly one RootLayer). From 0.4.0 it does NOT own the artifacts - an "
-              "artifact shared by several stages exists once in the registry. Present only when "
-              "the server delivers its geometry; a connector that finds it fetches and composes "
-              "the stage locally, else it resolves RootLayerIdentifier externally as before.",
+              "needs (exactly one RootLayer). It does NOT own the artifacts - an artifact shared "
+              "by several stages exists once in the registry, and an artifact the registry "
+              "federates rather than hosts (ResourceUrl / ExternalReference) is organized here "
+              "the same way, so a stage's closure may span registries. Present only when the "
+              "server delivers its geometry; a connector that finds it fetches and composes the "
+              "stage locally, else it resolves RootLayerIdentifier externally.",
               rule=MR_Optional)
 
 # ---- OpenUsdComponentBindingType (1005): appended component asset pointer ---

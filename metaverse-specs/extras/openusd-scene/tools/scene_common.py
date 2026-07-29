@@ -11,8 +11,8 @@ TYPES_NS = "http://opcfoundation.org/UA/2008/02/Types.xsd"
 SCENE_URI = "http://opcfoundation.org/UA/OpenUSD/Scene/"
 # Version/publication date of the Scene model the examples RequiredModel-pin.
 # Keep in sync with build_model.py VERSION/PUBDATE.
-SCENE_VERSION = "0.2.0"
-SCENE_PUBDATE = "2026-07-25T00:00:00Z"
+SCENE_VERSION = "0.3.0"
+SCENE_PUBDATE = "2026-07-29T00:00:00Z"
 BASE_URI = "http://opcfoundation.org/UA/"
 HasComponent = "i=47"; HasProperty = "i=46"; Organizes = "i=35"; HasTypeDefinition = "i=40"; HasAddIn = "i=17604"
 FolderType = "i=61"; PropertyType = "i=68"; ObjectsFolder = "i=85"

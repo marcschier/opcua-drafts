@@ -5,26 +5,23 @@
   "specversion": "1.0-rc3",
   "usdassetgroups": {
     "pumps": {
-      "labels": {
-        "openusd.assetcontainerid": "pumps",
-        "openusd.rootlayer": "Plant.usda"
-      },
       "name": "pumps/Plant",
+      "rootlayer": "Plant.usda",
       "usdassetgroupid": "pumps",
       "usdassets": {
         "Plant.usda": {
+          "assetidentifier": "Plant.usda",
+          "assetkind": "RootLayer",
           "contenttype": "model/vnd.usda",
+          "dependson": [
+            "pump.usda",
+            "remote-pump.usda"
+          ],
+          "digest": "51314c455f1c8f269bff2dd4bab2c3f01b092f5b986fab1b3b989810e540a82d",
+          "digestalg": "Sha256",
           "epoch": 1,
           "format": "OpenUSD/1.0",
           "isdefault": true,
-          "labels": {
-            "openusd.assetidentifier": "Plant.usda",
-            "openusd.assetkind": "RootLayer",
-            "openusd.dependson": "[\"pump.usda\",\"remote-pump.usda\"]",
-            "openusd.digest": "51314c455f1c8f269bff2dd4bab2c3f01b092f5b986fab1b3b989810e540a82d",
-            "openusd.digestalg": "Sha256",
-            "openusd.mediatype": "model/vnd.usda"
-          },
           "name": "Plant.usda",
           "usdasset": "#usda 1.0\n(\n    doc = \"\"\"Base pump asset for the OPC UA - OpenUSD Bindings pump end-to-end.\n\n    Authored by the '3D / USD asset author' actor (Annex B). It carries only\n    geometry and materials; it contains NO live values. The live OPC UA values\n    are composed on top by `live.usda` (see `stage.usda`), which a connector\n    authors at runtime. The prim paths and attribute names here are the contract\n    the OpenUSD bindings target:\n\n      /Plant/Pumps/P101/Impeller       xformOp:rotateZ      (MassFlow -> Rotation)\n      /Plant/Pumps/P101/Body           primvars:displayColor(BearingTemperature -> DisplayColor)\n      /Plant/Pumps/P101/StatusLight/Mat/Surface.inputs:emissiveColor\n                                                            (DifferentialPressure -> EmissiveColor)\n      /Plant/Pumps/P101/StatusLight.visibility              (alarm ActiveState -> Visibility)\n      /Plant/Pumps/P101/Impeller.inputs:speedSetpoint       (opt-in command intent -> UA write)\n    \"\"\"\n    defaultPrim = \"Plant\"\n    metersPerUnit = 1\n    upAxis = \"Z\"\n)\n\ndef Xform \"Plant\"\n{\n    def Scope \"Pumps\"\n    {\n        def Xform \"P101\" (\n            kind = \"component\"\n        )\n        {\n            double3 xformOp:translate = (0, 0, 0)\n            uniform token[] xformOpOrder = [\"xformOp:translate\"]\n\n            # Static pump casing/body. Its displayColor is driven by bearing\n            # temperature at runtime (blue = cool, red = hot).\n            def Cylinder \"Body\"\n            {\n                uniform token axis = \"Z\"\n                double height = 1.0\n                double radius = 0.5\n                color3f[] primvars:displayColor = [(0, 0, 1)]\n                double3 xformOp:translate = (0, 0, 0.5)\n                uniform token[] xformOpOrder = [\"xformOp:translate\"]\n            }\n\n            # Bearing sub-component (1:1 composition: the pump is composed of a\n            # Bearing component Object mapped to this child prim, §5.12).\n            def Sphere \"Bearing\"\n            {\n                double radius = 0.12\n                color3f[] primvars:displayColor = [(0.3, 0.3, 0.32)]\n                double3 xformOp:translate = (0, 0, 0.15)\n                uniform token[] xformOpOrder = [\"xformOp:translate\"]\n            }\n\n            # Impeller that spins about the pump's vertical (Z) axis. Its\n            # xformOp:rotateZ angle is driven by mass flow at runtime.\n            def Xform \"Impeller\"\n            {\n                double xformOp:rotateZ = 0\n                double3 xformOp:translate = (0, 0, 1.05)\n                uniform token[] xformOpOrder = [\"xformOp:translate\", \"xformOp:rotateZ\"]\n\n                # Opt-in command intent: a controller writes this setpoint on the\n                # USD side; the connector maps it to a UA write (UsdToUaCommand).\n                custom double inputs:speedSetpoint = 0\n\n                def Cube \"BladeA\"\n                {\n                    double size = 1.0\n                    color3f[] primvars:displayColor = [(0.8, 0.8, 0.82)]\n                    double3 xformOp:scale = (0.9, 0.12, 0.04)\n                    uniform token[] xformOpOrder = [\"xformOp:scale\"]\n                }\n                def Cube \"BladeB\"\n                {\n                    double size = 1.0\n                    color3f[] primvars:displayColor = [(0.8, 0.8, 0.82)]\n                    double3 xformOp:scale = (0.12, 0.9, 0.04)\n                    uniform token[] xformOpOrder = [\"xformOp:scale\"]\n                }\n            }\n\n            # Status indicator whose emissive colour is driven by differential\n            # pressure at runtime (glows in an RTX renderer).\n            def Xform \"StatusLight\"\n            {\n                double3 xformOp:translate = (0.6, 0, 0.6)\n                uniform token[] xformOpOrder = [\"xformOp:translate\"]\n\n                # Driven by a UaAlarmToUsd binding: the supervision alarm\n                # ActiveState toggles this prim's visibility (\"inherited\" when\n                # active, \"invisible\" when clear).\n                token visibility = \"inherited\"\n\n                def Sphere \"Bulb\" (\n                    prepend apiSchemas = [\"MaterialBindingAPI\"]\n                )\n                {\n                    double radius = 0.15\n                    rel material:binding = </Plant/Pumps/P101/StatusLight/Mat>\n                }\n\n                def Material \"Mat\"\n                {\n                    token outputs:surface.connect = </Plant/Pumps/P101/StatusLight/Mat/Surface.outputs:surface>\n\n                    def Shader \"Surface\"\n                    {\n                        uniform token info:id = \"UsdPreviewSurface\"\n                        color3f inputs:diffuseColor = (0.1, 0.1, 0.1)\n                        color3f inputs:emissiveColor = (0, 0, 0)\n                        token outputs:surface\n                    }\n                }\n            }\n        }\n    }\n}\n",
           "usdassetid": "Plant.usda",
@@ -32,18 +29,15 @@
           "xid": "/usdassetgroups/pumps/usdassets/Plant.usda"
         },
         "pump.usda": {
+          "assetidentifier": "pump.usda",
+          "assetkind": "Reference",
           "contenttype": "model/vnd.usda",
+          "dependson": [],
+          "digest": "d2043c6bbe06a4423d5b43a5bea2ccec1de645685df75a4b9b950b13fbf1cec1",
+          "digestalg": "Sha256",
           "epoch": 1,
           "format": "OpenUSD/1.0",
           "isdefault": true,
-          "labels": {
-            "openusd.assetidentifier": "pump.usda",
-            "openusd.assetkind": "Reference",
-            "openusd.dependson": "[]",
-            "openusd.digest": "d2043c6bbe06a4423d5b43a5bea2ccec1de645685df75a4b9b950b13fbf1cec1",
-            "openusd.digestalg": "Sha256",
-            "openusd.mediatype": "model/vnd.usda"
-          },
           "name": "pump.usda",
           "usdasset": "#usda 1.0\n(\n    doc = \"\"\"Reusable single-pump USD asset for the OPC UA - OpenUSD Bindings\n    composition demo. A ProductionLine aggregates 1..n pumps by *referencing*\n    (and instancing) this asset's default prim </Pump> once per aggregated pump\n    (spec §5.12, CompositionArc = Instance/Reference). The cross-server component\n    references an equivalent OEM asset (remote-pump.usda) on another server (§5.14).\n\n    This is the component asset the connector's authored reference/instance prims\n    point at; it carries only geometry so many instances compose cheaply.\n    \"\"\"\n    defaultPrim = \"Pump\"\n    metersPerUnit = 1\n    upAxis = \"Z\"\n)\n\ndef Xform \"Pump\" (\n    kind = \"component\"\n)\n{\n    def Cylinder \"Body\"\n    {\n        uniform token axis = \"Z\"\n        double height = 1.0\n        double radius = 0.5\n        color3f[] primvars:displayColor = [(0.6, 0.6, 0.65)]\n        double3 xformOp:translate = (0, 0, 0.5)\n        uniform token[] xformOpOrder = [\"xformOp:translate\"]\n    }\n\n    def Xform \"Impeller\"\n    {\n        double xformOp:rotateZ = 0\n        double3 xformOp:translate = (0, 0, 1.05)\n        uniform token[] xformOpOrder = [\"xformOp:translate\", \"xformOp:rotateZ\"]\n    }\n}\n",
           "usdassetid": "pump.usda",
@@ -51,18 +45,15 @@
           "xid": "/usdassetgroups/pumps/usdassets/pump.usda"
         },
         "remote-pump.usda": {
+          "assetidentifier": "remote-pump.usda",
+          "assetkind": "Reference",
           "contenttype": "model/vnd.usda",
+          "dependson": [],
+          "digest": "0a3263ce6f74717b675b7a809ad92064a7bc119e5f3a5205edc89c09035d6bf4",
+          "digestalg": "Sha256",
           "epoch": 1,
           "format": "OpenUSD/1.0",
           "isdefault": true,
-          "labels": {
-            "openusd.assetidentifier": "remote-pump.usda",
-            "openusd.assetkind": "Reference",
-            "openusd.dependson": "[]",
-            "openusd.digest": "0a3263ce6f74717b675b7a809ad92064a7bc119e5f3a5205edc89c09035d6bf4",
-            "openusd.digestalg": "Sha256",
-            "openusd.mediatype": "model/vnd.usda"
-          },
           "name": "remote-pump.usda",
           "usdasset": "#usda 1.0\n(\n    doc = \"\"\"OEM (cross-server) single-pump USD asset stand-in for the OPC UA - OpenUSD Bindings\n    composition demo. A ProductionLine aggregates 1..n pumps by *referencing*\n    (and instancing) this asset's default prim </Pump> once per aggregated pump\n    (spec §5.12, CompositionArc = Instance/Reference). The cross-server component\n    references an equivalent OEM asset (remote-pump.usda) on another server (§5.14).\n\n    This is the component asset the connector's authored reference/instance prims\n    point at; it carries only geometry so many instances compose cheaply.\n    \"\"\"\n    defaultPrim = \"Pump\"\n    metersPerUnit = 1\n    upAxis = \"Z\"\n)\n\ndef Xform \"Pump\" (\n    kind = \"component\"\n)\n{\n    def Cylinder \"Body\"\n    {\n        uniform token axis = \"Z\"\n        double height = 1.0\n        double radius = 0.5\n        color3f[] primvars:displayColor = [(0.6, 0.6, 0.65)]\n        double3 xformOp:translate = (0, 0, 0.5)\n        uniform token[] xformOpOrder = [\"xformOp:translate\"]\n    }\n\n    def Xform \"Impeller\"\n    {\n        double xformOp:rotateZ = 0\n        double3 xformOp:translate = (0, 0, 1.05)\n        uniform token[] xformOpOrder = [\"xformOp:translate\", \"xformOp:rotateZ\"]\n    }\n}\n\n",
           "usdassetid": "remote-pump.usda",
@@ -73,26 +64,23 @@
       "usdassetscount": 3
     },
     "robotics": {
-      "labels": {
-        "openusd.assetcontainerid": "robotics",
-        "openusd.rootlayer": "Cell.usda"
-      },
       "name": "robotics/Cell",
+      "rootlayer": "Cell.usda",
       "usdassetgroupid": "robotics",
       "usdassets": {
         "Cell.usda": {
+          "assetidentifier": "Cell.usda",
+          "assetkind": "RootLayer",
           "contenttype": "model/vnd.usda",
+          "dependson": [
+            "robot.usda",
+            "tool.usda"
+          ],
+          "digest": "a642a179d4a2d8fd838f47811db190ce61206ad8aa1d494eebe70af74cddfd96",
+          "digestalg": "Sha256",
           "epoch": 1,
           "format": "OpenUSD/1.0",
           "isdefault": true,
-          "labels": {
-            "openusd.assetidentifier": "Cell.usda",
-            "openusd.assetkind": "RootLayer",
-            "openusd.dependson": "[\"robot.usda\",\"tool.usda\"]",
-            "openusd.digest": "a642a179d4a2d8fd838f47811db190ce61206ad8aa1d494eebe70af74cddfd96",
-            "openusd.digestalg": "Sha256",
-            "openusd.mediatype": "model/vnd.usda"
-          },
           "name": "Cell.usda",
           "usdasset": "#usda 1.0\n(\n    doc = \"\"\"Base robot-cell asset for the OPC UA - OpenUSD Bindings Robotics end-to-end.\n\n    Authored by the 3D / USD asset author actor. It carries only the static cell environment. The generic connector composes the aggregated robot references into live.usda; this base layer provides only positioned /Cell/Robots/R1 and /Cell/Robots/R2 mount-point Xforms.\n    \"\"\"\n    defaultPrim = \"Cell\"\n    metersPerUnit = 1\n    upAxis = \"Z\"\n)\n\ndef Xform \"Cell\"\n{\n    custom double inputs:speedOverride = 100\n\n    def Cube \"Ground\"\n    {\n        double size = 1\n        color3f[] primvars:displayColor = [(0.22, 0.24, 0.25)]\n        double3 xformOp:translate = (0, 0, -0.025)\n        double3 xformOp:scale = (3.8, 2.4, 0.025)\n        uniform token[] xformOpOrder = [\"xformOp:translate\", \"xformOp:scale\"]\n    }\n\n    def Xform \"Fence\"\n    {\n        def Cube \"Back\"\n        {\n            double size = 1\n            color3f[] primvars:displayColor = [(0.95, 0.78, 0.05)]\n            double3 xformOp:translate = (0, 1.2, 0.45)\n            double3 xformOp:scale = (3.8, 0.035, 0.45)\n            uniform token[] xformOpOrder = [\"xformOp:translate\", \"xformOp:scale\"]\n        }\n        def Cube \"Left\"\n        {\n            double size = 1\n            color3f[] primvars:displayColor = [(0.95, 0.78, 0.05)]\n            double3 xformOp:translate = (-1.9, 0, 0.45)\n            double3 xformOp:scale = (0.035, 1.2, 0.45)\n            uniform token[] xformOpOrder = [\"xformOp:translate\", \"xformOp:scale\"]\n        }\n        def Cube \"Right\"\n        {\n            double size = 1\n            color3f[] primvars:displayColor = [(0.95, 0.78, 0.05)]\n            double3 xformOp:translate = (1.9, 0, 0.45)\n            double3 xformOp:scale = (0.035, 1.2, 0.45)\n            uniform token[] xformOpOrder = [\"xformOp:translate\", \"xformOp:scale\"]\n        }\n    }\n\n    def Sphere \"SafetyBeacon\"\n    {\n        token visibility = \"invisible\"\n        double radius = 0.12\n        color3f[] primvars:displayColor = [(1, 0, 0)]\n        double3 xformOp:translate = (0, 1.05, 1.15)\n        uniform token[] xformOpOrder = [\"xformOp:translate\"]\n    }\n\n    def Xform \"Robots\"\n    {\n        def Xform \"R1\"\n        {\n            double3 xformOp:translate = (-1.2, 0, 0)\n            uniform token[] xformOpOrder = [\"xformOp:translate\"]\n        }\n\n        def Xform \"R2\"\n        {\n            double3 xformOp:translate = (1.2, 0, 0)\n            uniform token[] xformOpOrder = [\"xformOp:translate\"]\n        }\n    }\n\n    def DistantLight \"KeyLight\"\n    {\n        float intensity = 650\n        double3 xformOp:rotateXYZ = (-45, 0, 35)\n        uniform token[] xformOpOrder = [\"xformOp:rotateXYZ\"]\n    }\n}\n",
           "usdassetid": "Cell.usda",
@@ -100,18 +88,15 @@
           "xid": "/usdassetgroups/robotics/usdassets/Cell.usda"
         },
         "robot.usda": {
+          "assetidentifier": "robot.usda",
+          "assetkind": "Reference",
           "contenttype": "model/vnd.usda",
+          "dependson": [],
+          "digest": "f8da1f227b277b752357a4c00a53074a6248d9850c33058a686cb86e4da774e9",
+          "digestalg": "Sha256",
           "epoch": 1,
           "format": "OpenUSD/1.0",
           "isdefault": true,
-          "labels": {
-            "openusd.assetidentifier": "robot.usda",
-            "openusd.assetkind": "Reference",
-            "openusd.dependson": "[]",
-            "openusd.digest": "f8da1f227b277b752357a4c00a53074a6248d9850c33058a686cb86e4da774e9",
-            "openusd.digestalg": "Sha256",
-            "openusd.mediatype": "model/vnd.usda"
-          },
           "name": "robot.usda",
           "usdasset": "#usda 1.0\n(\n    doc = \"\"\"Reusable 6-axis articulated robot asset for the OPC UA - OpenUSD Bindings Robotics example.\n\n    The nested Xforms are the kinematic contract declared in Robotics.OpenUsdBinding.json. Each J{i} prim carries the rotate op driven by that Axis' ActualPosition (degrees). The asset contains only static geometry and home-pose defaults; live joint values are authored by live.usda.\n    \"\"\"\n    defaultPrim = \"Robot\"\n    metersPerUnit = 1\n    upAxis = \"Z\"\n)\n\ndef Xform \"Robot\" (\n    kind = \"component\"\n)\n{\n    def Xform \"Base\" (\n        prepend apiSchemas = [\"MaterialBindingAPI\"]\n    )\n    {\n        color3f[] primvars:displayColor = [(0.0, 0.55, 0.18)]\n        rel material:binding = </Robot/Materials/BaseGreen>\n\n        def Cylinder \"Pedestal\"\n        {\n            uniform token axis = \"Z\"\n            double height = 0.18\n            double radius = 0.28\n            color3f[] primvars:displayColor = [(0.0, 0.55, 0.18)]\n            double3 xformOp:translate = (0, 0, 0.09)\n            uniform token[] xformOpOrder = [\"xformOp:translate\"]\n        }\n\n        def Xform \"J1\"\n        {\n            double3 xformOp:translate = (0, 0, 0.18)\n            double xformOp:rotateZ = 0\n            uniform token[] xformOpOrder = [\"xformOp:translate\", \"xformOp:rotateZ\"]\n\n            def Cylinder \"Column\"\n            {\n                uniform token axis = \"Z\"\n                double height = 0.45\n                double radius = 0.12\n                color3f[] primvars:displayColor = [(0.72, 0.72, 0.76)]\n                double3 xformOp:translate = (0, 0, 0.225)\n                uniform token[] xformOpOrder = [\"xformOp:translate\"]\n            }\n\n            def Xform \"J2\"\n            {\n                double3 xformOp:translate = (0, 0, 0.45)\n                double xformOp:rotateY = -30\n                uniform token[] xformOpOrder = [\"xformOp:translate\", \"xformOp:rotateY\"]\n\n                def Cube \"UpperArm\"\n                {\n                    double size = 1\n                    color3f[] primvars:displayColor = [(0.88, 0.62, 0.18)]\n                    double3 xformOp:translate = (0.35, 0, 0)\n                    double3 xformOp:scale = (0.35, 0.07, 0.07)\n                    uniform token[] xformOpOrder = [\"xformOp:translate\", \"xformOp:scale\"]\n                }\n\n                def Xform \"J3\"\n                {\n                    double3 xformOp:translate = (0.70, 0, 0)\n                    double xformOp:rotateY = 45\n                    uniform token[] xformOpOrder = [\"xformOp:translate\", \"xformOp:rotateY\"]\n\n                    def Cube \"Forearm\"\n                    {\n                        double size = 1\n                        color3f[] primvars:displayColor = [(0.86, 0.50, 0.14)]\n                        double3 xformOp:translate = (0.28, 0, 0)\n                        double3 xformOp:scale = (0.28, 0.055, 0.055)\n                        uniform token[] xformOpOrder = [\"xformOp:translate\", \"xformOp:scale\"]\n                    }\n\n                    def Xform \"J4\"\n                    {\n                        double3 xformOp:translate = (0.56, 0, 0)\n                        double xformOp:rotateX = 0\n                        uniform token[] xformOpOrder = [\"xformOp:translate\", \"xformOp:rotateX\"]\n\n                        def Cylinder \"WristRoll\"\n                        {\n                            uniform token axis = \"X\"\n                            double height = 0.22\n                            double radius = 0.06\n                            color3f[] primvars:displayColor = [(0.78, 0.78, 0.82)]\n                        }\n\n                        def Xform \"J5\"\n                        {\n                            double3 xformOp:translate = (0.22, 0, 0)\n                            double xformOp:rotateY = 60\n                            uniform token[] xformOpOrder = [\"xformOp:translate\", \"xformOp:rotateY\"]\n\n                            def Cube \"WristBend\"\n                            {\n                                double size = 1\n                                color3f[] primvars:displayColor = [(0.82, 0.82, 0.86)]\n                                double3 xformOp:scale = (0.10, 0.05, 0.05)\n                                uniform token[] xformOpOrder = [\"xformOp:scale\"]\n                            }\n\n                            def Xform \"J6\"\n                            {\n                                double3 xformOp:translate = (0.20, 0, 0)\n                                double xformOp:rotateX = 0\n                                uniform token[] xformOpOrder = [\"xformOp:translate\", \"xformOp:rotateX\"]\n\n                                def Cylinder \"FlangeDisc\"\n                                {\n                                    uniform token axis = \"X\"\n                                    double height = 0.08\n                                    double radius = 0.09\n                                    color3f[] primvars:displayColor = [(0.25, 0.25, 0.28)]\n                                }\n\n                                def Xform \"Flange\"\n                                {\n                                    double3 xformOp:translate = (0.08, 0, 0)\n                                    uniform token[] xformOpOrder = [\"xformOp:translate\"]\n                                }\n                            }\n                        }\n                    }\n                }\n            }\n        }\n    }\n\n    def Sphere \"Warning\"\n    {\n        token visibility = \"invisible\"\n        double radius = 0.36\n        color3f[] primvars:displayColor = [(1, 0, 0)]\n        double3 xformOp:translate = (0, 0, 0.42)\n        double3 xformOp:scale = (1, 1, 0.08)\n        uniform token[] xformOpOrder = [\"xformOp:translate\", \"xformOp:scale\"]\n    }\n\n    def Scope \"Materials\"\n    {\n        def Material \"BaseGreen\"\n        {\n            token outputs:surface.connect = </Robot/Materials/BaseGreen/Surface.outputs:surface>\n            def Shader \"Surface\"\n            {\n                uniform token info:id = \"UsdPreviewSurface\"\n                color3f inputs:diffuseColor = (0.0, 0.55, 0.18)\n                token outputs:surface\n            }\n        }\n    }\n}\n",
           "usdassetid": "robot.usda",
@@ -119,18 +104,15 @@
           "xid": "/usdassetgroups/robotics/usdassets/robot.usda"
         },
         "tool.usda": {
+          "assetidentifier": "tool.usda",
+          "assetkind": "Reference",
           "contenttype": "model/vnd.usda",
+          "dependson": [],
+          "digest": "bd8a22a72079cd2d7509de12af65e2c1d1ccb976dbcc44671b5e5e5f0141a0c7",
+          "digestalg": "Sha256",
           "epoch": 1,
           "format": "OpenUSD/1.0",
           "isdefault": true,
-          "labels": {
-            "openusd.assetidentifier": "tool.usda",
-            "openusd.assetkind": "Reference",
-            "openusd.dependson": "[]",
-            "openusd.digest": "bd8a22a72079cd2d7509de12af65e2c1d1ccb976dbcc44671b5e5e5f0141a0c7",
-            "openusd.digestalg": "Sha256",
-            "openusd.mediatype": "model/vnd.usda"
-          },
           "name": "tool.usda",
           "usdasset": "#usda 1.0\n(\n    doc = \"Simple gripper tool dynamically referenced on R1's flange by the Robotics OpenUSD example.\"\n    defaultPrim = \"Gripper\"\n    metersPerUnit = 1\n    upAxis = \"Z\"\n)\n\ndef Xform \"Gripper\" (\n    kind = \"component\"\n)\n{\n    def Cube \"Body\"\n    {\n        double size = 1\n        color3f[] primvars:displayColor = [(0.18, 0.20, 0.22)]\n        double3 xformOp:translate = (0.08, 0, 0)\n        double3 xformOp:scale = (0.08, 0.12, 0.06)\n        uniform token[] xformOpOrder = [\"xformOp:translate\", \"xformOp:scale\"]\n    }\n\n    def Cube \"JawUpper\"\n    {\n        double size = 1\n        color3f[] primvars:displayColor = [(0.05, 0.05, 0.06)]\n        double3 xformOp:translate = (0.20, 0.08, 0)\n        double3 xformOp:scale = (0.12, 0.025, 0.025)\n        uniform token[] xformOpOrder = [\"xformOp:translate\", \"xformOp:scale\"]\n    }\n\n    def Cube \"JawLower\"\n    {\n        double size = 1\n        color3f[] primvars:displayColor = [(0.05, 0.05, 0.06)]\n        double3 xformOp:translate = (0.20, -0.08, 0)\n        double3 xformOp:scale = (0.12, 0.025, 0.025)\n        uniform token[] xformOpOrder = [\"xformOp:translate\", \"xformOp:scale\"]\n    }\n}\n",
           "usdassetid": "tool.usda",
@@ -144,24 +126,18 @@
   "usdassetgroupscount": 2,
   "usdschemaplugingroups": {
     "opcUaOpenUsdGeoDemo": {
-      "labels": {
-        "openusd.pluginname": "opcUaOpenUsdGeoDemo"
-      },
       "name": "opcUaOpenUsdGeoDemo",
       "usdassets": {
         "generatedSchema.usda": {
+          "assetidentifier": "generatedSchema.usda",
+          "assetkind": "GeneratedSchema",
           "contenttype": "model/vnd.usda",
+          "dependson": [],
+          "digest": "0b69e3605ac5f6b82d037e58c4f1507355d2f4f643f1179ef5eed6cf2c891c1a",
+          "digestalg": "Sha256",
           "epoch": 1,
-          "format": "OpenUSD/1.0",
+          "format": "USD-GeneratedSchema/1.0",
           "isdefault": true,
-          "labels": {
-            "openusd.assetidentifier": "generatedSchema.usda",
-            "openusd.assetkind": "GeneratedSchema",
-            "openusd.dependson": "[]",
-            "openusd.digest": "0b69e3605ac5f6b82d037e58c4f1507355d2f4f643f1179ef5eed6cf2c891c1a",
-            "openusd.digestalg": "Sha256",
-            "openusd.mediatype": "model/vnd.usda"
-          },
           "name": "generatedSchema.usda",
           "usdasset": "#usda 1.0\n(\n    \"\"\"Codeless schema for the OPC UA <-> OpenUSD prototype demo (Part 2, Annex B).\n    ILLUSTRATIVE ONLY - this is a prototype demonstration schema, not an official\n    Cesium, NVIDIA, or Pixar schema. Hand-authored to match the usdGenSchema\n    output format and validated by loading into pxr.Usd.SchemaRegistry.\"\"\"\n)\n\nclass OpcUaGeoreferencePrim \"OpcUaGeoreferencePrim\" (\n    customData = {\n        string userDocBrief = \"\"\"A concrete typed prim that georeferences a USD stage\n    against a global (ECEF) coordinate system, as sketched for the OPC UA\n    <-> OpenUSD vendor-type demo.\"\"\"\n    }\n)\n{\n    uniform matrix4d geo:ecefToStageTransform = ( (1, 0, 0, 0), (0, 1, 0, 0), (0, 0, 1, 0), (0, 0, 0, 1) ) (\n        customData = {\n            string userDocBrief = \"\"\"The 4x4 transform mapping Earth-Centered,\n        Earth-Fixed (ECEF) coordinates into the local USD stage frame.\"\"\"\n        }\n    )\n    double geo:height = 0 (\n        customData = {\n            string userDocBrief = \"Ellipsoidal height, in metres, of the stage origin.\"\n        }\n    )\n    double geo:latitude = 0 (\n        customData = {\n            string userDocBrief = \"Geodetic latitude, in degrees, of the stage origin.\"\n        }\n    )\n    double geo:longitude = 0 (\n        customData = {\n            string userDocBrief = \"Geodetic longitude, in degrees, of the stage origin.\"\n        }\n    )\n}\n\nclass \"OpcUaGlobeAnchorAPI\" (\n    customData = {\n        string userDocBrief = \"\"\"A single-apply API schema that anchors any prim to a\n    geodetic position, as sketched for the OPC UA <-> OpenUSD vendor-type demo.\"\"\"\n    }\n)\n{\n    double geo:height = 0 (\n        customData = {\n            string userDocBrief = \"Ellipsoidal height, in metres, of the anchored prim.\"\n        }\n    )\n    double geo:latitude = 0 (\n        customData = {\n            string userDocBrief = \"Geodetic latitude, in degrees, of the anchored prim.\"\n        }\n    )\n    double geo:longitude = 0 (\n        customData = {\n            string userDocBrief = \"Geodetic longitude, in degrees, of the anchored prim.\"\n        }\n    )\n}\n",
           "usdassetid": "generatedSchema.usda",
@@ -169,18 +145,15 @@
           "xid": "/usdschemaplugingroups/opcUaOpenUsdGeoDemo/usdassets/generatedSchema.usda"
         },
         "plugInfo.json": {
+          "assetidentifier": "plugInfo.json",
+          "assetkind": "SchemaPlugin",
           "contenttype": "application/json",
+          "dependson": [],
+          "digest": "fcff31959e0e19575a58b749b0f4ccad9be9802f811ae91212953243a8eb1f20",
+          "digestalg": "Sha256",
           "epoch": 1,
-          "format": "OpenUSD-PlugInfo/1.0",
+          "format": "USD-PlugInfo/1.0",
           "isdefault": true,
-          "labels": {
-            "openusd.assetidentifier": "plugInfo.json",
-            "openusd.assetkind": "SchemaPlugin",
-            "openusd.dependson": "[]",
-            "openusd.digest": "fcff31959e0e19575a58b749b0f4ccad9be9802f811ae91212953243a8eb1f20",
-            "openusd.digestalg": "Sha256",
-            "openusd.mediatype": "application/json"
-          },
           "name": "plugInfo.json",
           "usdasset": "{\n    \"Plugins\": [\n        {\n            \"Info\": {\n                \"Types\": {\n                    \"OpcUaGeoreferencePrim\": {\n                        \"autoGenerated\": true,\n                        \"bases\": [\n                            \"UsdTyped\"\n                        ],\n                        \"schemaIdentifier\": \"OpcUaGeoreferencePrim\",\n                        \"schemaKind\": \"concreteTyped\"\n                    },\n                    \"OpcUaGlobeAnchorAPI\": {\n                        \"autoGenerated\": true,\n                        \"bases\": [\n                            \"UsdAPISchemaBase\"\n                        ],\n                        \"schemaIdentifier\": \"OpcUaGlobeAnchorAPI\",\n                        \"schemaKind\": \"singleApplyAPI\"\n                    }\n                }\n            },\n            \"LibraryPath\": \"\",\n            \"Name\": \"opcUaOpenUsdGeoDemo\",\n            \"ResourcePath\": \".\",\n            \"Root\": \".\",\n            \"Type\": \"resource\"\n        }\n    ]\n}\n",
           "usdassetid": "plugInfo.json",

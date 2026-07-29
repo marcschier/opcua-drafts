@@ -1,8 +1,8 @@
 # OPC UA — OpenUSD Scene Materialization (Part 2)
 
-**Release 0.2.0 — Draft**
+**Release 0.3.0 — Draft**
 **Namespace:** `http://opcfoundation.org/UA/OpenUSD/Scene/`
-**Publication date:** 2026-07-25
+**Publication date:** 2026-07-29
 
 > Status: Working-group draft. This document, together with `Opc.Ua.OpenUsdScene.NodeSet2.xml` and `Opc.Ua.OpenUsdScene.NodeIds.csv`, defines an OPC UA information model that **natively materializes the OpenUSD (Universal Scene Description) data model** — Stage, Prim, Attribute, Relationship, Metadata, Composition arcs, VariantSets, and typed/API schemas — as OPC UA ObjectTypes, VariableTypes, and DataTypes, so that a composed USD scene *is* an OPC UA address space: browsable, subscribable, historizable, and vendor-extensible with native OPC UA semantics. It is **Part 2** of the *OPC UA — OpenUSD* work and **extends** the Part 1 *OPC UA — OpenUSD Bindings* model without changing it. Nothing here is normative, official, or endorsed by the OPC Foundation or the Alliance for OpenUSD; namespace URIs and NodeIds are **provisional** and for prototyping only.
 
@@ -22,6 +22,8 @@ The model is **domain-agnostic** and **self-contained**: it depends only on the 
 **Fidelity (normative boundary).** This model materializes the **composed** (resolved) stage as the primary address space, plus **composition-arc and provenance metadata** sufficient to reconstruct the arc structure. It does **not** materialize the per-layer opinion stack (the authoring layer stack, per-layer overrides, and value-clip machinery); those are summarised as provenance metadata. Round-trip is therefore **composed-scene lossless**, not authoring-layer lossless (§7.4).
 
 **Out of scope (reserved):** value clips, per-layer opinion editing, the full UsdShade/UsdLux/UsdSkel/UsdPhysics schema surface (vendor/extension packages), USD `Sdf` layer-file muting/permissions, and the render/materialization semantics of specific renderers.
+
+The release history of this specification is recorded in [`CHANGELOG.md`](CHANGELOG.md).
 
 ---
 
@@ -263,7 +265,7 @@ USD's two schema kinds map to OPC UA's two extension mechanisms:
 
 A vendor materializes a new typed prim by defining an ObjectType that **subtypes** the closest materialized ancestor (e.g. a robot-joint prim type `: UsdGeomXformableType`, a custom gprim `: UsdGeomGprimType`). Instances use it as their `HasTypeDefinition` and still carry the USD `TypeName` token. A generic client that does not know the subtype browses it as its nearest known supertype — subtyping is transparent to browse.
 
-A USD-side client, however, cannot interpret such a prim without the corresponding **USD** schema: a `plugInfo.json` manifest plus a `generatedSchema.usda`, the two files OpenUSD's `PlugRegistry`/`UsdSchemaRegistry` need and the only two a codeless schema requires. This Part defines no mechanism for serving files, so it places no requirement on how they are delivered. Where Part 1 ≥ 0.4.0 is also implemented, a Server **should** publish them through its artifact registry, which defines a schema-plugin group for exactly this purpose (Part 1 §5.15.4); a client then fetches the plugin from the same registry it fetches layers from, registers it, and reads the materialized scene with the vendor's prim types fully understood instead of degraded to the §8.4 fallback. A Server implementing this Part alone may publish them by any out-of-band means, or not at all — in which case a USD-side client falls back to §8.4.
+A USD-side client, however, cannot interpret such a prim without the corresponding **USD** schema: a `plugInfo.json` manifest plus a `generatedSchema.usda`, the two files OpenUSD's `PlugRegistry`/`UsdSchemaRegistry` need and the only two a codeless schema requires. This Part defines no mechanism for serving files, so it places no requirement on how they are delivered. Where Part 1 is also implemented, a Server **should** publish them through its artifact registry, which defines a schema-plugin group for exactly this purpose (Part 1 §5.15.4); a client then fetches the plugin from the same registry it fetches layers from, registers it, and reads the materialized scene with the vendor's prim types fully understood instead of degraded to the §8.4 fallback. A Server implementing this Part alone may publish them by any out-of-band means, or not at all — in which case a USD-side client falls back to §8.4.
 
 ### 8.2 Applied (API) schemas → AddIns / Interfaces
 
@@ -294,11 +296,11 @@ Timecode ↔ wall-clock: USD time codes are stage-timeline ordinates and OPC UA 
 
 Part 2 is additive and self-contained, but designed to interoperate with Part 1:
 
-- **Binding target.** A Part 1 live binding may resolve its **target** to a Part 2 attribute Variable instead of an external-stage attribute — the materialized scene becomes the binding sink, and Part 1's discovery/conversion/quality machinery applies unchanged. Part 1 ≥ 0.3.0 carries this two ways: the optional `TargetNodeId` names the materialized `UsdAttributeType` Variable directly, and the mandatory `TargetStage`/`TargetPrimPath`/`TargetPropertyName` triple resolves to the same Variable by BrowseName path (with `TargetStage` naming this model's `UsdStageType`). A Server **should** author both so path-resolving and NodeId-resolving connectors agree.
+- **Binding target.** A Part 1 live binding may resolve its **target** to a Part 2 attribute Variable instead of an external-stage attribute — the materialized scene becomes the binding sink, and Part 1's discovery/conversion/quality machinery applies unchanged. Part 1 carries this two ways: the optional `TargetNodeId` names the materialized `UsdAttributeType` Variable directly, and the mandatory `TargetStage`/`TargetPrimPath`/`TargetPropertyName` triple resolves to the same Variable by BrowseName path (with `TargetStage` naming this model's `UsdStageType`). A Server **should** author both so path-resolving and NodeId-resolving connectors agree.
 - **Binding source.** A Part 2 attribute may be the **source** a Part 1 binding reads (e.g. to mirror the materialized scene onto an external stage).
 - **Discovery.** A materialized `UsdStageType` may be organized under Part 1's `Server/OpenUSD/Stages`, so one connector discovers both the external-stage bindings and the in-server materialized stages.
 - **Identity.** A Part 1 `OpenUsdRepresentation.PrimPath` and a Part 2 prim node identify the same prim on the same stage, so a client can pivot from an OPC UA domain Object (Pump, Robot axis) to its materialized prim and back.
-- **Artifacts.** Part 1 ≥ 0.4.0 serves USD content from an **xRegistry artifact registry** at `Server/OpenUSD/Artifacts` (Part 1 §5.15). Part 2 does **not** take that dependency: it remains base-UA-only and reaches the registry only *indirectly*, when a Server implements both. Where it does, a materialized stage's `RootLayerIdentifier` (§5.1) is the asset identifier of the registry artifact whose `AssetKind` is `RootLayer` — and because Part 1 makes an artifact's registry `ResourceId` the URL-safe encoding of that identifier (Part 1 §5.15.3), the stage's authored bytes are located by computation rather than by search. A Part 2 Server with no Part 1 registry continues to treat `RootLayerIdentifier` as an opaque provenance string, exactly as before.
+- **Artifacts.** Part 1 serves USD content from an **xRegistry artifact registry** at `Server/OpenUSD/Artifacts` (Part 1 §5.15). Part 2 does **not** take that dependency: it is base-UA-only and reaches the registry only *indirectly*, when a Server implements both. Where it does, a materialized stage's `RootLayerIdentifier` (§5.1) is the asset identifier of the registry artifact whose `AssetKind` is `RootLayer` — and because Part 1 makes an artifact's registry `ResourceId` the URL-safe encoding of that identifier (Part 1 §5.15.3), the stage's authored bytes are located by computation rather than by search. A Part 2 Server with no Part 1 registry treats `RootLayerIdentifier` as an opaque provenance string.
 - **Who drives Mode A.** A Part 1 *connector* authors into a USD sink and cannot write an in-server Variable; driving a materialized attribute's `Value` (§9 Mode A) is therefore a **Server-side** responsibility — a Part 1 binding declares the mapping, the Server (or a server-hosted connector) applies it.
 
 Neither model requires the other; a Server may implement either alone.

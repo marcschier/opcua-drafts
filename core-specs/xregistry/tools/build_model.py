@@ -139,7 +139,7 @@ def method(owner, owner_sym, name, desc, rule=MR_Optional, inargs=None, outargs=
 
 def _args(method_nid, method_sym, bname, args):
     nid = _mid()
-    add(nid, "UAVariable", bname, f"{method_sym}_{bname}", parent=T(method_nid), attrs={"DataType": Argument, "ValueRank": "1", "ArrayDimensions": str(len(args))})
+    add(nid, "UAVariable", bname, f"{method_sym}_{bname}", parent=T(method_nid), attrs={"DataType": Argument, "ValueRank": "1", "ArrayDimensions": str(len(args)), "_ns0bn": True})
     ref(nid, HasModellingRule, MR_Mandatory)
     ref(nid, HasTypeDefinition, PropertyType)
     ref(nid, HasProperty, T(method_nid), forward=False)
@@ -310,7 +310,7 @@ method(63001, GP, "CreateResource",
                ("VersionId", String, "The versionid of the version to create; empty to let the server assign the next versionid per the registry model."),
                ("RequestFileOpen", Boolean, "If true, the new resource file is opened for writing and a FileHandle is returned.")],
        outargs=[("ResourceNodeId", NodeId, "NodeId of the created resource/version Object."),
-                ("VersionId", String, "The versionid assigned to the created version."),
+                ("AssignedVersionId", String, "The versionid assigned to the created version."),
                 ("FileHandle", UInt32, "Write handle when RequestFileOpen is true; otherwise 0.")])
 method(63001, GP, "GetOrCreateResource",
        "Idempotently return the (ResourceId, VersionId) version, creating it if absent, optionally opened for writing. "
@@ -322,7 +322,7 @@ method(63001, GP, "GetOrCreateResource",
                ("VersionId", String, "The versionid to get or create; empty selects or creates the default version."),
                ("RequestFileOpen", Boolean, "If true, the resource file is opened for writing and a FileHandle is returned.")],
        outargs=[("ResourceNodeId", NodeId, "NodeId of the existing or newly created resource/version Object."),
-                ("VersionId", String, "The versionid of the returned version."),
+                ("AssignedVersionId", String, "The versionid of the returned version."),
                 ("FileHandle", UInt32, "Write handle when RequestFileOpen is true; otherwise 0."),
                 ("Created", Boolean, "True if the resource/version was created, false if it already existed.")])
 method(63001, GP, "Delete",

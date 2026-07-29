@@ -28,6 +28,8 @@ This is the one place the model is no longer self-contained on base OPC UA alone
 - `OPC-UA-OpenUSD-Bindings.md` — the specification.
 - `Opc.Ua.OpenUsd.NodeSet2.xml` — generated NodeSet.
 - `Opc.Ua.OpenUsd.NodeIds.csv` — generated NodeId assignments.
+- `xRegistry-OpenUsd.md` — *OpenUSD Artifact Registry Service*: the artifact registry of §5.15 defined as a standalone **xRegistry domain specification**, structured for submission to the [xRegistry](https://github.com/xregistry/spec) project. It is the wire-format peer of §5.15 — same collections, same attributes, same identifier rules — so the two projections federate. It does not depend on OPC UA.
+- `xRegistry-OpenUsd.model.json` — the authoritative xRegistry model for that spec (becomes `model.json` on submission).
 - `pumps/` — implementer addendum + instance-overlay NodeSet for the pumps example.
 - `robotics/` — implementer addendum + instance-overlay NodeSet for the robotics example.
 

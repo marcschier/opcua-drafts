@@ -14,7 +14,7 @@
   </NamespaceUris>
   <Models>
     <Model ModelUri="urn:example:robotcell" Version="0.1.0" PublicationDate="2026-07-15T00:00:00Z">
-      <RequiredModel ModelUri="http://opcfoundation.org/UA/OpenUSD/" Version="0.2.0" PublicationDate="2026-07-13T00:00:00Z" />
+      <RequiredModel ModelUri="http://opcfoundation.org/UA/OpenUSD/" Version="0.4.0" PublicationDate="2026-07-27T00:00:00Z" />
       <RequiredModel ModelUri="http://opcfoundation.org/UA/Robotics/" Version="1.02.0" PublicationDate="2024-01-01T00:00:00Z" />
     </Model>
   </Models>

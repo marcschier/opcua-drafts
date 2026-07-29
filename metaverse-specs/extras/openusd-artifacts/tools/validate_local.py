@@ -64,11 +64,36 @@ PLUGIN_GROUPS = "usdschemaplugingroups"
 RESOURCES = "usdassets"
 DESCRIPTOR_SUFFIX = ".OpenUsdBinding.json"
 
-ALLOWED_FORMATS = {"OpenUSD/1.0", "OpenUSD-PlugInfo/1.0"}
-ALLOWED_KINDS = {
-    "RootLayer", "SubLayer", "Reference", "Payload", "Texture", "Package",
-    "MaterialX", "Volume", "SchemaPlugin", "GeneratedSchema", "Manifest",
-}
+# The xRegistry domain model is the single source of truth for the collection
+# names and the enums. Reading them from it rather than restating them here is
+# what stops the emitted document, the validator and the submittable spec from
+# drifting apart.
+MODEL = os.path.abspath(os.path.join(
+    ART_ROOT, "..", "..", "openusd-binding", "xRegistry-OpenUsd.model.json"))
+
+
+def _load_model() -> dict:
+    with open(MODEL, encoding="utf-8") as fh:
+        return json.load(fh)
+
+
+def _model_enums(model: dict) -> tuple[set[str], set[str], set[str]]:
+    """(formats, kinds, digestalgs) as declared by the model, unioned across both
+    group kinds so a divergence between the two definitions is visible."""
+    formats: set[str] = set()
+    kinds: set[str] = set()
+    algs: set[str] = set()
+    for grp in model.get("groups", {}).values():
+        for res in grp.get("resources", {}).values():
+            attrs = res.get("attributes", {})
+            formats |= set(attrs.get("format", {}).get("enum", []))
+            kinds |= set(attrs.get("assetkind", {}).get("enum", []))
+            algs |= set(attrs.get("digestalg", {}).get("enum", []))
+    return formats, kinds, algs
+
+
+_MODEL = _load_model()
+ALLOWED_FORMATS, ALLOWED_KINDS, ALLOWED_DIGESTALGS = _model_enums(_MODEL)
 
 _REF = re.compile(r"@([^@]+)@")
 
@@ -102,7 +127,13 @@ def _authored_refs(text: str) -> list[str]:
 
 
 def _deps(res) -> list[str]:
-    return json.loads(res.get("labels", {}).get("openusd.dependson", "[]"))
+    """The declared dependency list. A real JSON array now (an xRegistry typed
+    attribute), not a JSON-encoded string in labels."""
+    v = res.get("dependson", [])
+    if not isinstance(v, list) or any(not isinstance(x, str) for x in v):
+        err(f"{res.get('usdassetid')!r}: dependson is not an array of strings")
+        return []
+    return v
 
 
 def _load_descriptors() -> dict[str, dict]:
@@ -130,14 +161,15 @@ def _load_descriptors() -> dict[str, dict]:
 def _check_resource(collection, gid, rid, res, all_xids):
     if res.get("usdassetid") != rid:
         err(f"{collection}/{gid}/{RESOURCES}/{rid}: usdassetid mismatch ({res.get('usdassetid')!r})")
-    labels = res.get("labels", {})
+    if "labels" in res:
+        err(f"{rid}: domain metadata must be typed attributes, not labels")
     xid = res.get("xid")
-    aid = labels.get("openusd.assetidentifier")
+    aid = res.get("assetidentifier")
 
-    # §5.15.3 round-trip: ResourceId percent-decodes to the authored identifier,
+    # §5.1 round-trip: ResourceId percent-decodes to the authored identifier,
     # and the identifier is recoverable from the xid's last segment.
     if aid is None:
-        err(f"{rid}: missing openusd.assetidentifier")
+        err(f"{rid}: missing assetidentifier")
     else:
         if urllib.parse.unquote(rid) != aid:
             err(f"{rid}: ResourceId does not percent-decode to assetidentifier {aid!r}")
@@ -154,14 +186,16 @@ def _check_resource(collection, gid, rid, res, all_xids):
     fmt = res.get("format")
     if fmt not in ALLOWED_FORMATS:
         err(f"{rid}: bad format {fmt!r}")
-    kind = labels.get("openusd.assetkind")
+    kind = res.get("assetkind")
     if kind not in ALLOWED_KINDS:
-        err(f"{rid}: bad openusd.assetkind {kind!r}")
+        err(f"{rid}: bad assetkind {kind!r}")
 
-    # contenttype must agree with the declared media type.
-    ct, media = res.get("contenttype"), labels.get("openusd.mediatype")
-    if ct != media:
-        err(f"{rid}: contenttype {ct!r} != openusd.mediatype {media!r}")
+    # The media type travels in the core contenttype attribute; this domain
+    # defines no separate mediatype (xRegistry spec §4.2).
+    if "mediatype" in res:
+        err(f"{rid}: mediatype is not defined by this domain; use contenttype")
+    if not res.get("contenttype"):
+        err(f"{rid}: missing contenttype")
 
     doc_text = res.get("usdasset")
     if doc_text is None and res.get("usdasseturl") is None:
@@ -169,12 +203,12 @@ def _check_resource(collection, gid, rid, res, all_xids):
 
     # digest matches a recomputed SHA-256 over the embedded bytes.
     if doc_text is not None:
-        if labels.get("openusd.digestalg") != "Sha256":
-            err(f"{rid}: openusd.digestalg != 'Sha256'")
+        if res.get("digestalg") != "Sha256":
+            err(f"{rid}: digestalg != 'Sha256'")
         recomputed = hashlib.sha256(doc_text.encode("utf-8")).hexdigest()
-        if labels.get("openusd.digest") != recomputed:
-            err(f"{rid}: openusd.digest does not match recomputed SHA-256")
-        if fmt == "OpenUSD-PlugInfo/1.0":
+        if res.get("digest") != recomputed:
+            err(f"{rid}: digest does not match recomputed SHA-256")
+        if fmt == "USD-PlugInfo/1.0":
             try:
                 json.loads(doc_text)
             except json.JSONDecodeError:
@@ -246,20 +280,23 @@ def _check_asset_container(collection, gid, group, descriptors, all_xids) -> int
             if aid in served_kind and kind != served_kind[aid]:
                 err(f"{collection}/{gid}/{aid}: assetkind {kind!r} != descriptor {served_kind[aid]!r}")
 
-    # Exactly one RootLayer, agreeing with the descriptor and the group label.
+    # Exactly one RootLayer, agreeing with the descriptor and the group attribute.
     if len(roots) != 1:
         err(f"{collection}/{gid}: expected exactly one RootLayer, found {sorted(roots)}")
     else:
         root = roots[0]
         if root_stem and _asset_stem(root) != root_stem:
             err(f"{collection}/{gid}: RootLayer {root!r} != descriptor rootLayerIdentifier stem {root_stem!r}")
-        label_root = group.get("labels", {}).get("openusd.rootlayer")
-        if label_root not in (None, root):
-            err(f"{collection}/{gid}: openusd.rootlayer {label_root!r} != RootLayer {root!r}")
+        declared_root = group.get("rootlayer")
+        if declared_root not in (None, root):
+            err(f"{collection}/{gid}: rootlayer {declared_root!r} != RootLayer {root!r}")
 
-    acid = group.get("labels", {}).get("openusd.assetcontainerid")
-    if acid not in (None, gid):
-        err(f"{collection}/{gid}: openusd.assetcontainerid {acid!r} != group key {gid!r}")
+    # The group id IS the asset container identifier (xRegistry spec §4.1), so no
+    # attribute may restate it - a restatement is a second source of truth.
+    if "labels" in group:
+        err(f"{collection}/{gid}: group metadata must be typed attributes, not labels")
+    if "assetcontainerid" in group:
+        err(f"{collection}/{gid}: assetcontainerid is not defined; the group id is the container id")
 
     for aid, text in text_by_aid.items():
         _check_dependencies(collection, gid, aid, text, deps_by_aid[aid], ids_in_group, "container")
@@ -286,7 +323,7 @@ def _check_plugin_group(collection, gid, group, all_xids) -> int:
             ids_in_group.add(aid)
             text_by_aid[aid] = res.get("usdasset") or ""
             deps_by_aid[aid] = _deps(res)
-        if res.get("format") == "OpenUSD-PlugInfo/1.0" and res.get("usdasset"):
+        if res.get("format") == "USD-PlugInfo/1.0" and res.get("usdasset"):
             try:
                 manifest_name = json.loads(res["usdasset"])["Plugins"][0]["Name"]
             except (json.JSONDecodeError, KeyError, IndexError):
@@ -295,13 +332,13 @@ def _check_plugin_group(collection, gid, group, all_xids) -> int:
     if kinds.count("SchemaPlugin") != 1 or kinds.count("GeneratedSchema") != 1:
         err(f"{collection}/{gid}: need exactly one SchemaPlugin and one GeneratedSchema, got {sorted(kinds)}")
 
-    # openusd.pluginname is the embedded manifest's Plugins[0].Name (re-read here).
-    label_name = group.get("labels", {}).get("openusd.pluginname")
+    # The group id IS the plugin name (xRegistry spec §4.3), checked against the
+    # embedded manifest's Plugins[0].Name re-read from the document itself.
+    if "labels" in group:
+        err(f"{collection}/{gid}: group metadata must be typed attributes, not labels")
     if manifest_name is None:
         err(f"{collection}/{gid}: no parseable plugInfo manifest Name in the document")
     else:
-        if label_name != manifest_name:
-            err(f"{collection}/{gid}: openusd.pluginname {label_name!r} != manifest Name {manifest_name!r}")
         if gid != manifest_name:
             err(f"{collection}/{gid}: group key != manifest Name {manifest_name!r}")
 
@@ -345,6 +382,55 @@ def _verify_schema_plugin_with_usd(doc):
         shutil.rmtree(base, ignore_errors=True)
 
 
+def _check_model_conformance(doc: dict) -> None:
+    """Check the emitted document against the declared xRegistry model: the model's
+    group and resource collection names exist, every REQUIRED resource attribute is
+    present, and no attribute is emitted that the model does not declare (the model
+    permits '*': any, but the emitter should not rely on that - an undeclared
+    attribute here means the model and the emitter have drifted)."""
+    groups = _MODEL.get("groups", {})
+    core_res = {
+        "usdassetid", "versionid", "self", "xid", "epoch", "name", "description",
+        "documentation", "labels", "createdat", "modifiedat", "ancestor",
+        "contenttype", "isdefault", "usdasset", "usdasseturl", "usdassetbase64",
+        "metaurl", "meta", "versionsurl", "versionscount", "versions",
+        "formatvalidated", "formatvalidatedreason",
+        "compatibilityvalidated", "compatibilityvalidatedreason",
+    }
+    core_grp = {
+        "self", "xid", "epoch", "name", "description", "documentation", "labels",
+        "createdat", "modifiedat", "deprecated",
+    }
+
+    for gcoll, gdef in groups.items():
+        if gcoll not in doc:
+            err(f"model declares group collection {gcoll!r}, absent from the document")
+            continue
+        gid_attr = gdef["singular"] + "id"
+        declared_gattrs = set(gdef.get("attributes", {})) - {"*"}
+        for rcoll, rdef in gdef.get("resources", {}).items():
+            rid_attr = rdef["singular"] + "id"
+            declared_rattrs = set(rdef.get("attributes", {})) - {"*"}
+            required = {n for n, a in rdef.get("attributes", {}).items()
+                        if a.get("required")}
+            for gid, group in doc[gcoll].items():
+                extra_g = set(group) - declared_gattrs - core_grp - {gid_attr, rcoll, f"{rcoll}count"}
+                if extra_g:
+                    err(f"{gcoll}/{gid}: attributes not declared by the model: {sorted(extra_g)}")
+                for rid, res in group.get(rcoll, {}).items():
+                    missing = required - set(res)
+                    if missing:
+                        err(f"{gcoll}/{gid}/{rcoll}/{rid}: missing REQUIRED attributes {sorted(missing)}")
+                    extra_r = set(res) - declared_rattrs - core_res - {rid_attr}
+                    if extra_r:
+                        err(f"{gcoll}/{gid}/{rcoll}/{rid}: attributes not declared by the model: {sorted(extra_r)}")
+                    alg = res.get("digestalg")
+                    if alg is not None and alg not in ALLOWED_DIGESTALGS:
+                        err(f"{gcoll}/{gid}/{rcoll}/{rid}: digestalg {alg!r} not in model enum")
+                    if res.get("digest") is not None and alg is None:
+                        err(f"{gcoll}/{gid}/{rcoll}/{rid}: digest present without digestalg")
+
+
 def main() -> int:
     if not os.path.exists(EXAMPLE):
         print(f"missing {EXAMPLE}; run build_catalog.py first")
@@ -359,6 +445,8 @@ def main() -> int:
         err(f"{ASSET_GROUPS}count != number of {ASSET_GROUPS}")
     if doc.get(f"{PLUGIN_GROUPS}count") != len(doc.get(PLUGIN_GROUPS, {})):
         err(f"{PLUGIN_GROUPS}count != number of {PLUGIN_GROUPS}")
+
+    _check_model_conformance(doc)
 
     descriptors = _load_descriptors()
     all_xids: set[str] = set()

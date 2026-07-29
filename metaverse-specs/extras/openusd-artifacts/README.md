@@ -13,9 +13,13 @@ server serves through `Server/OpenUSD/Artifacts` — per §5.15 of
 
 ## Chosen vocabulary
 
-The base xRegistry model names each collection for its domain. This document uses:
+The collection names and the domain attributes are **normatively defined** by
+[`xRegistry-OpenUsd.md`](../../openusd-binding/xRegistry-OpenUsd.md) and its
+model, [`xRegistry-OpenUsd.model.json`](../../openusd-binding/xRegistry-OpenUsd.model.json)
+— the submittable xRegistry domain specification. This folder emits a conformant
+instance of it.
 
-| xRegistry role | Collection | Group / resource id | Model type |
+| xRegistry role | Collection | Group / resource id | OPC UA type (Part 1 §5.15) |
 |---|---|---|---|
 | Groups (asset containers) | `usdassetgroups` | `usdassetgroupid` | `OpenUsdAssetGroupType` |
 | Groups (schema plugins) | `usdschemaplugingroups` | `usdschemaplugingroupid` | `OpenUsdSchemaPluginGroupType` |
@@ -23,30 +27,50 @@ The base xRegistry model names each collection for its domain. This document use
 | Inline document field | `usdasset` | — | the `FileType` bytes |
 
 Both group kinds hold `OpenUsdAssetType` resources, so both use the same
-`usdassets` collection. The domain attributes travel as `openusd.*` labels
-(`assetidentifier`, `assetkind`, `mediatype`, `digest`, `digestalg`, `dependson`).
+`usdassets` collection.
 
-## Asset identifier &harr; `xid` (inter-derivable, §5.15.3)
+The domain metadata are **typed xRegistry attributes** declared in the model —
+`assetidentifier`, `assetkind`, `dependson`, `digest`, `digestalg` on a resource
+and `rootlayer` on an asset-container group — *not* `openusd.*` labels. This
+matters beyond tidiness: xRegistry `labels` is a `map<string,string>`, so under
+the previous label encoding `dependson` had to be a JSON-encoded *string*, while
+Part 1 declares `DependsOn` as `String[]`. Declaring a model makes it a real
+array and restores symmetry between the two projections.
+
+Two attributes deliberately do **not** exist:
+
+- **`assetcontainerid` / `pluginname`** — the *group id is* the container
+  identifier and the plugin name. Restating a key as an attribute creates a
+  second source of truth that can disagree with the first.
+- **`mediatype`** — the core `contenttype` attribute already carries it. Part 1
+  keeps a redundant `MediaType` for historical reasons and declares `ContentType`
+  authoritative; the xRegistry projection simply omits it.
+
+`validate_local.py` reads the enums and the required-attribute set straight out
+of the model file, so the emitted document, the validator and the spec cannot
+drift apart.
+
+## Asset identifier &harr; `xid` (inter-derivable, §5.1)
 
 The authored USD asset identifier and the xRegistry `xid` are **inter-derivable,
 not equal** — equating them would lose the authored `@...@` string a resolver
 needs:
 
-- `openusd.assetidentifier` = the **authored** asset identifier, normalized
-  relative to its container (a leading `./` is stripped; sub-paths and package
-  `[...]` selectors are kept). A `componentAssetReference` of `@pump.usda@</Pump>`
+- `assetidentifier` = the **authored** asset identifier, normalized relative to
+  its container (a leading `./` is stripped; sub-paths and package `[...]`
+  selectors are kept). A `componentAssetReference` of `@pump.usda@</Pump>`
   yields the identifier `pump.usda`.
 - `ResourceId` (the resource key, `usdassetid`) = the URL-safe **percent-encoding**
   of the identifier — `pump.usda` stays `pump.usda`, while `textures/albedo.png`
   would become `textures%2Falbedo.png`.
-- `xid` = `/<collection>/<AssetContainerId>/usdassets/<ResourceId>`; the identifier
+- `xid` = `/<collection>/<usdassetgroupid>/usdassets/<ResourceId>`; the identifier
   is recovered by percent-decoding the xid's last segment.
 
 The build derives them **one-directionally** (identifier → ResourceId → xid), so
 they cannot diverge, and `validate_local.py` checks the round-trip
 (`unquote(ResourceId) == assetidentifier`) rather than equality. Emitting the
 *authored* identifier — not the xid — is what lets a connector cache each artifact
-at its authored relative path so USD `@...@` references resolve locally (§5.15.2).
+at its authored relative path so USD `@...@` references resolve locally.
 
 ## What is emitted
 
