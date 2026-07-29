@@ -41,6 +41,14 @@ python .github/scripts/check_links.py
 python .github/scripts/check_mermaid.py     # needs: npm install -g @mermaid-js/mermaid-cli
 python .github/scripts/check_yaml_json.py   # needs: pip install pyyaml
 python .github/scripts/check_determinism.py
+python .github/scripts/check_section_refs.py
+
+# the Word rendering (see word-drafts/README.md)
+pip install -r word-drafts/tools/requirements.txt
+python word-drafts/tools/build_docx.py word-drafts/tools/specs/openusd-binding.json
+python word-drafts/tools/validate_docx.py word-drafts/tools/specs/openusd-binding.json
+python word-drafts/tools/test_validate_docx.py word-drafts/tools/specs/openusd-binding.json
+pwsh word-drafts/tools/finalize_word.ps1 -Path word-drafts/OPC-UA-OpenUSD-Binding-Part1.docx
 ```
 
 `--self-contained` means **"needs no untracked base data"**, not "no dependencies". Full runs
@@ -62,6 +70,8 @@ Four independent specification trees, plus `skills/` (agent instructions that op
 | `metaverse-specs/` | OPC UA ⇄ OpenUSD (two parts: binding, scene materialization) |
 | `wot-specs/` | W3C Web of Things binding and connectivity |
 | `companion-specs/` | Domain companion specifications |
+| `word-drafts/` | Submission-ready Word renderings built into the official OPC Foundation template, plus the build that produces them |
+| `templates/` | The official OPC Foundation companion specification template the Word build clones |
 
 **Normative / tooling split.** A spec folder holds only the normative documents and generated
 base artifacts; tooling, descriptors and examples live in a mirrored `extras/` tree — for example
@@ -159,6 +169,27 @@ several releases without anyone noticing.
 
 **Prose wraps at paragraph boundaries**, one line per paragraph, not at a fixed column
 (`MD013` is disabled in `.markdownlint-cli2.yaml`).
+
+**A `§` reference must resolve to a real clause.** Renumbering a specification moves every
+reference to it, in the document *and* in every sibling that cites it — a stale `§5.15` is
+invisible to a spell-checker, a link checker, and a reader who does not follow it.
+`python .github/scripts/check_section_refs.py` is the gate.
+
+## The Word rendering
+
+`word-drafts/` holds submission-ready Word documents built into the official OPC Foundation
+companion specification template. **The clause map in `word-drafts/tools/specs/<spec>.json` drives
+both the Word build and the markdown restructure**, so the two cannot drift into different
+structures; the node tables are generated from the UANodeSet, so the document cannot drift from the
+model.
+
+Never hand-edit a generated `.docx` — it is a generated artifact exactly like a NodeSet. The
+committed `*.docmodel.json` beside it exists so a reviewer can diff the document semantically
+instead of diffing a ZIP.
+
+The build is pure Python and byte-reproducible. `finalize_word.ps1` (Word COM, Windows-only, like
+the determinism gate) updates the table of contents and every field so the committed file opens
+fully paginated. See `word-drafts/README.md` and `skills/opcua-spec-to-word/`.
 
 ## The information model
 

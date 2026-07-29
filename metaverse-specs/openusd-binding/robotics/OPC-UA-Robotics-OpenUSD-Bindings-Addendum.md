@@ -1,6 +1,6 @@
 # OPC UA Robotics — OpenUSD Bindings Addendum
 
-**Implementer Annex to *OPC UA — OpenUSD Binding* (Release 0.4.0 — Draft).**
+**Implementer Annex to *OPC UA — OpenUSD Binding* (Release 0.5.0 — Draft).**
 
 > This addendum is the **implementer (Robotics) annex** for the generic *OPC UA — OpenUSD Bindings* companion model. All Robotics-specific and end-to-end detail lives here; the base specification (`../OPC-UA-OpenUSD-Bindings.md`) remains domain-agnostic. It shows how an OPC 40010 `MotionDeviceSystem` instance representing a robot cell is bound to an OpenUSD prim, how two 6-axis `MotionDevice` robots are recursively composed, and how each Axis' `ActualPosition` drives one USD joint rotate op. The machine-readable source of truth is `../../extras/openusd-binding/examples/robotics/Robotics.OpenUsdBinding.json`; a runnable USD writer is `../../extras/openusd-binding/examples/robotics/usd_writer.py`; the C# end-to-end validation lives in the `RoboticsDeviceIntegrationServer` sample and `RobotOpenUsdE2eTests`.
 
@@ -72,13 +72,13 @@ Notes:
 
 ## 4.1 Composition / aggregation
 
-The robotics example exercises recursive composition (base spec §5.12–5.14). The system aggregates MotionDevices using `CompositionArc = Reference`; the base `Cell.usda` layer contains positioned empty `/Cell/Robots/R1` and `/Cell/Robots/R2` mount-point Xforms, and the connector authors reference arcs on those prims in the stronger `live.usda` layer. Each robot then composes its Axes using `CompositionArc = Child`, because the link prims are pre-authored inside `robot.usda`. The nesting mirrors the OPC 40010 structure while preserving an artist-authored USD kinematic chain.
+The robotics example exercises recursive composition (base spec §7.10–5.14). The system aggregates MotionDevices using `CompositionArc = Reference`; the base `Cell.usda` layer contains positioned empty `/Cell/Robots/R1` and `/Cell/Robots/R2` mount-point Xforms, and the connector authors reference arcs on those prims in the stronger `live.usda` layer. Each robot then composes its Axes using `CompositionArc = Child`, because the link prims are pre-authored inside `robot.usda`. The nesting mirrors the OPC 40010 structure while preserving an artist-authored USD kinematic chain.
 
 Reference, not Instance, is intentional for `/Cell/Robots/R1` and `/Cell/Robots/R2`: both robots use the same reusable `robot.usda` asset, but each needs independent live opinions on the same relative joint paths. Instanceable prims share prototype composition and are not suitable when every robot must articulate independently. The R1 gripper uses dynamic Reference composition so a model-change event can add or remove `/Cell/Robots/R1/Base/J1/J2/J3/J4/J5/J6/Flange/Tool` without mutating `Cell.usda`.
 
 ## 4.2 Asset content delivery
 
-The reference server also demonstrates the optional `OU-AssetDelivery` capability from the base spec §5.15. `RobotCellStage` exposes an `Assets` folder whose `OpenUsdAssetType` children serve the `.usda` layers through read-only Part 5 `FileType` streams: `Cell.usda` (`RootLayer`), `robot.usda` (`Reference`), and `tool.usda` (`Reference`). Each served layer carries a SHA-256 digest.
+The reference server also demonstrates the optional `OU-AssetDelivery` capability from the base spec §7.11. `RobotCellStage` exposes an `Assets` folder whose `OpenUsdAssetType` children serve the `.usda` layers through read-only Part 5 `FileType` streams: `Cell.usda` (`RootLayer`), `robot.usda` (`Reference`), and `tool.usda` (`Reference`). Each served layer carries a SHA-256 digest.
 
 A generic connector can therefore browse `<Stage>.Assets`, download and verify the layers, cache them with the same relative `AssetIdentifier` paths, and compose the live layer over the local `Cell.usda`. The rendered robot-cell twin is self-contained: no external asset repository or manual USD asset setup is required when the server advertises this capability.
 

@@ -1,0 +1,444 @@
+#!/usr/bin/env python3
+"""Check a produced document against the OPC 20020 template contract.
+
+    python word-drafts/tools/validate_docx.py word-drafts/tools/specs/openusd-binding.json
+
+The checks re-derive their expectations from the template and the UANodeSet, never from
+the docmodel the writer produced, so this validates the document rather than validating
+the generator against itself.
+"""
+
+import argparse
+import json
+import os
+import re
+import sys
+import zipfile
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
+from opcdocx import contract, nodeset_tables, oxml
+from opcdocx.oxml import iter_text, para_style, q
+
+REPO = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))
+TEMPLATE = os.path.join(
+    REPO, 'templates', 'OPC 20020 - UA Companion Specification Template v1.01.19.docx')
+
+# Words that keep their capitalisation in a heading: OPC UA terms, type names and
+# proper nouns (OPC 20020 Guideline 2).
+PROPER_NOUNS = {
+    'OPC', 'UA', 'OpenUSD', 'USD', 'NodeSet', 'NodeId', 'NodeIds', 'BrowseName',
+    'BrowseNames', 'ObjectTypes', 'ObjectType', 'EventTypes', 'VariableTypes',
+    'DataTypes', 'DataType', 'ReferenceTypes', 'Instances', 'AddIn', 'Omniverse',
+    'Cesium', 'NVIDIA', 'Annex', 'Georeference', 'Information', 'Model', 'Scope',
+    'IEC', 'AOUSD', 'xRegistry', 'Namespace', 'Namespaces', 'Server', 'Servers',
+    'Nodes', 'Node', 'Well-Known', 'Conventions', 'Contents', 'Figures', 'Tables',
+    'CONTENTS',
+}
+TYPE_NAME_RE = re.compile(r'^(?:I?[A-Z][a-zA-Z0-9]*Type|Usd[A-Za-z0-9]+|OpenUsd[A-Za-z0-9]+)$')
+
+
+class Result:
+    def __init__(self):
+        self.errors = []
+        self.warnings = []
+
+    def error(self, check, message):
+        self.errors.append((check, message))
+
+    def warn(self, check, message):
+        self.warnings.append((check, message))
+
+    def report(self):
+        for check, msg in self.warnings:
+            print('WARN  [%s] %s' % (check, msg))
+        for check, msg in self.errors:
+            print('ERROR [%s] %s' % (check, msg))
+        print('%d error(s), %d warning(s)' % (len(self.errors), len(self.warnings)))
+        return 1 if self.errors else 0
+
+
+class Doc:
+    def __init__(self, path):
+        with zipfile.ZipFile(path) as z:
+            self.parts = {n: z.read(n) for n in z.namelist()}
+        self.document = oxml.parse(self.parts['word/document.xml'])
+        self.body = self.document.find(q('w:body'))
+        self.styles = oxml.parse(self.parts['word/styles.xml'])
+        self.rels = oxml.parse(self.parts['word/_rels/document.xml.rels'])
+
+    def style_ids(self):
+        ns = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
+        return {s.get('{%s}styleId' % ns) for s in self.styles}
+
+    def paragraphs(self):
+        return self.body.findall(q('w:p'))
+
+    def blocks(self):
+        return list(self.body)
+
+    def bookmarks(self):
+        return {el.get(q('w:name')) for el in self.document.iter(q('w:bookmarkStart'))}
+
+    def field_instructions(self):
+        return [(el.text or '').strip() for el in self.document.iter(q('w:instrText'))]
+
+
+# --------------------------------------------------------------------------- checks
+
+
+def check_styles(doc, res):
+    defined = doc.style_ids()
+    for p in doc.document.iter(q('w:p')):
+        style = para_style(p)
+        if style not in defined:
+            res.error('styles', 'paragraph uses undefined style %r' % style)
+        elif style not in contract.ALLOWED_PARAGRAPH_STYLES:
+            res.warn('styles', 'paragraph uses style %r, which is outside the '
+                               'writer allow-list' % style)
+
+
+def check_heading_numbers(doc, res):
+    """Word supplies clause numbers; a literal number in the text double-numbers it."""
+    pattern = re.compile(r'^\s*(?:\d+(?:\.\d+)*|[A-Z]\.\d+(?:\.\d+)*)\s+\S')
+    for p in doc.paragraphs():
+        style = para_style(p)
+        if style not in contract.AUTO_NUMBERED_STYLES:
+            continue
+        text = iter_text(p).strip()
+        if pattern.match(text):
+            res.error('heading-numbers',
+                      'heading carries a literal clause number: %r' % text[:70])
+
+
+ANNEX_MARKER_RE = re.compile(r'^\s*\((?:normative|informative)\)\s*')
+
+
+def check_heading_capitalisation(doc, res):
+    for p in doc.paragraphs():
+        style = para_style(p)
+        if style not in contract.AUTO_NUMBERED_STYLES and style not in (
+                'TABLE-title', 'FIGURE-title'):
+            continue
+        text = iter_text(p).strip()
+        if not text:
+            continue
+        if style in ('TABLE-title', 'FIGURE-title'):
+            text = re.sub(r'^(Table|Figure)\s*\d*\s*[\u2013-]\s*', '', text)
+        text = ANNEX_MARKER_RE.sub('', text)
+        words = [w for w in re.split(r'[\s/()]+', text) if w]
+        if not words:
+            continue
+        head = words[0].strip('"\u201c')
+        if head and head[0].islower():
+            res.error('heading-caps', 'heading does not start with a capital: %r' % text[:70])
+        for w in words[1:]:
+            bare = w.strip('.,;:"\u201c\u201d\u2019()[]')
+            if not bare or not bare[0].isupper():
+                continue
+            if bare in PROPER_NOUNS or TYPE_NAME_RE.match(bare) or bare.isupper():
+                continue
+            if '.' in bare or bare[1:].islower() is False:
+                continue
+            res.warn('heading-caps',
+                     'possible mid-heading capital %r in %r' % (bare, text[:70]))
+
+
+def check_table_captions(doc, res, body_start):
+    """Every table in the body proper is introduced by a TABLE-title with a SEQ field.
+
+    Front-matter tables (the cover block, the template revision history and the release
+    highlights) carry no caption in the template either, so they are exempt.
+    """
+    kids = doc.blocks()
+    for i, el in enumerate(kids):
+        if el.tag != q('w:tbl') or i < body_start:
+            continue
+        caption = None
+        for j in range(i - 1, max(-1, i - 4), -1):
+            if kids[j].tag == q('w:p') and para_style(kids[j]) == 'TABLE-title':
+                caption = kids[j]
+                break
+        if caption is None:
+            first = ' '.join(iter_text(el).split())[:60]
+            res.error('table-captions', 'table has no TABLE-title caption: %r' % first)
+            continue
+        instrs = [(x.text or '') for x in caption.iter(q('w:instrText'))]
+        if not any('SEQ Table' in s for s in instrs):
+            res.error('table-captions',
+                      'caption has no SEQ Table field: %r' % iter_text(caption)[:60])
+
+
+def check_figures_are_ole(doc, res):
+    """Guideline 1: a figure is an embedded object, not an inline Word drawing."""
+    kids = doc.blocks()
+    for i, el in enumerate(kids):
+        if el.tag != q('w:p'):
+            continue
+        if para_style(el) not in ('FIGURE', 'Figure0'):
+            continue
+        has_object = el.find('.//' + q('w:object')) is not None
+        has_drawing = el.find('.//' + q('w:drawing')) is not None
+        if has_drawing and not has_object:
+            res.error('figure-ole',
+                      'figure paragraph %d uses an inline drawing, not an embedded '
+                      'object' % i)
+        if not (has_object or has_drawing):
+            continue
+        caption = None
+        for j in range(i + 1, min(len(kids), i + 3)):
+            if kids[j].tag == q('w:p') and para_style(kids[j]) in ('FIGURE-title', 'Caption'):
+                caption = kids[j]
+                break
+        if caption is None:
+            res.warn('figure-ole', 'embedded object at %d has no FIGURE-title caption' % i)
+
+
+def check_embedded_packages(doc, res):
+    """Every embedded OPC package must be wired with the `package` relationship type.
+
+    Word silently discards an OPC-package embedding declared with the `oleObject`
+    relationship type the next time the document is saved, leaving only the preview
+    picture — a figure that looks right and violates Guideline 1.
+    """
+    rel_ns = 'http://schemas.openxmlformats.org/package/2006/relationships'
+    r_ns = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships'
+    package_rel = r_ns + '/package'
+    ole_rel = r_ns + '/oleObject'
+    package_exts = ('.pptx', '.sldx', '.xlsx', '.docx', '.vsdx')
+
+    by_id = {}
+    for rel in doc.rels:
+        by_id[rel.get('Id')] = (rel.get('Type'), rel.get('Target') or '')
+    for rel_id, (rel_type, target) in by_id.items():
+        if target.lower().endswith(package_exts) and rel_type == ole_rel:
+            res.error('embedded-packages',
+                      '%s is an OPC package but uses the oleObject relationship type; '
+                      'Word will discard it on save' % target)
+
+    ole_ids = set()
+    for el in doc.document.iter('{urn:schemas-microsoft-com:office:office}OLEObject'):
+        rid = el.get('{%s}id' % r_ns)
+        if rid:
+            ole_ids.add(rid)
+        prog = el.get('ProgID') or ''
+        rel_type, target = by_id.get(rid, ('', ''))
+        if not rel_type:
+            res.error('embedded-packages',
+                      'OLE object %r points at an undeclared relationship %r'
+                      % (prog, rid))
+        elif rel_type not in (package_rel, ole_rel):
+            res.error('embedded-packages',
+                      'OLE object %r uses an unexpected relationship type %r'
+                      % (prog, rel_type))
+    if not ole_ids:
+        res.error('embedded-packages', 'the document contains no embedded objects at all')
+
+
+def check_forbidden_links(doc, res, annex_a_start):
+    """Guideline 5: no links into the online reference, except Annex A's NodeSet URLs.
+
+    Annex A is where the template itself mandates the reference.opcfoundation.org
+    NodeSet download URLs, so they are legitimate there and nowhere else.
+    """
+    kids = doc.blocks()
+    for i, el in enumerate(kids):
+        if i >= annex_a_start:
+            continue
+        text = iter_text(el)
+        for host in contract.FORBIDDEN_LINK_HOSTS:
+            if host in text:
+                res.error('forbidden-links',
+                          'link to %s outside Annex A: %r' % (host, text.strip()[:80]))
+
+
+def check_placeholders(doc, res, conventions_range):
+    """No template placeholder survives, except inside the retained conventions clause.
+
+    Clause 3.4 illustrates the node-table formats with `<some>Type` examples; those are
+    the template's own didactic content and are meant to stay.
+    """
+    kids = doc.blocks()
+    lo, hi = conventions_range
+    outside = []
+    for i, el in enumerate(kids):
+        if lo <= i < hi:
+            continue
+        # A table of contents mirrors captions that are checked where they are defined;
+        # flagging the generated copy would report the same text twice.
+        if el.tag == q('w:p') and para_style(el).startswith(('TOC', 'TableofFigures')):
+            continue
+        outside.append(iter_text(el))
+    text = ' '.join(outside)
+    for token in contract.PLACEHOLDER_TOKENS:
+        if token in text:
+            res.error('placeholders', 'template placeholder survives: %r' % token)
+    whole = iter_text(doc.body)
+    for token in contract.RETAINED_PLACEHOLDER_TOKENS:
+        if token in whole:
+            res.warn('placeholders',
+                     'identity placeholder retained by design: %r' % token)
+
+
+def check_references_resolve(doc, res):
+    marks = doc.bookmarks()
+    for instr in doc.field_instructions():
+        m = re.match(r'REF\s+(\S+)', instr)
+        if m and m.group(1) not in marks:
+            res.error('xrefs', 'REF field points at unknown bookmark %r' % m.group(1))
+
+
+def check_node_tables(doc, model, res, doc_ns_index):
+    """Re-derive every type table from the NodeSet and compare against the document."""
+    kids = doc.blocks()
+    seen = set()
+    for i, el in enumerate(kids):
+        if el.tag != q('w:tbl'):
+            continue
+        caption = None
+        for j in range(i - 1, max(-1, i - 4), -1):
+            if kids[j].tag == q('w:p') and para_style(kids[j]) == 'TABLE-title':
+                caption = iter_text(kids[j])
+                break
+        if not caption or not caption.rstrip().endswith('definition'):
+            continue
+        name = caption.split('\u2013')[-1].strip().rsplit(' ', 1)[0].strip()
+        if name not in model.by_name:
+            continue
+        seen.add(name)
+        expected = nodeset_tables.type_table(model, name, doc_ns_index=doc_ns_index)
+        _compare_type_table(name, expected, el, res)
+    for name, node in model.by_name.items():
+        if node.tag == 'UAObjectType' and name not in seen:
+            res.error('node-tables', '%s has no definition table in the document' % name)
+
+
+def _compare_type_table(name, expected, tbl, res):
+    rows = tbl.findall(q('w:tr'))
+    cells = [[' '.join(iter_text(tc).split()) for tc in r.findall(q('w:tc'))] for r in rows]
+    flat = ['|'.join(r) for r in cells]
+
+    want_bn = '%s' % expected['attributes'][0][1]
+    if not any(r[0] == 'BrowseName' and r[1] == want_bn for r in cells if len(r) >= 2):
+        res.error('node-tables', '%s: BrowseName row missing or wrong (want %s)'
+                  % (name, want_bn))
+
+    for m in expected['members']:
+        match = [r for r in cells
+                 if len(r) >= 6 and r[2] == m['browseName'] and r[0] == m['referenceType']]
+        if not match:
+            res.error('node-tables', '%s: member %s (%s) missing from the table'
+                      % (name, m['browseName'], m['referenceType']))
+            continue
+        got = match[0]
+        if got[3] != m['dataType']:
+            res.error('node-tables', '%s.%s: DataType is %r, NodeSet says %r'
+                      % (name, m['browseName'], got[3], m['dataType']))
+        if got[5] != m['other']:
+            res.error('node-tables', '%s.%s: Other is %r, NodeSet says %r'
+                      % (name, m['browseName'], got[5], m['other']))
+
+    for cu in expected['conformanceUnits']:
+        if not any(cu == r[0] for r in cells):
+            res.error('node-tables', '%s: ConformanceUnit %s missing from the table'
+                      % (name, cu))
+
+    if any('HasSubtype' in f for f in flat):
+        res.error('node-tables',
+                  '%s: HasSubtype reference in a type table (Guideline 3)' % name)
+
+
+def check_conformance_units(doc, model, res):
+    """Every unit a table names must also be named in the conformance-units clause."""
+    declared = set()
+    for node in model.nodes.values():
+        declared.update(node.categories)
+    text = iter_text(doc.body)
+    for cu in sorted(declared):
+        if cu not in text:
+            res.error('conformance-units',
+                      '%s is used by the model but not named in the document' % cu)
+
+
+def check_template_slices(doc, template, res):
+    """The retained template regions must survive verbatim."""
+    expected = [
+        'Node definitions are specified using tables',
+        'Attributes are defined by providing the Attribute name and a value',
+        'OPC UA is an open and royalty free set of standards',
+        'A complete description of the different types of Nodes and References',
+        'An Information Model is formally defined in an XML file called a NodeSet',
+    ]
+    text = ' '.join(iter_text(doc.body).split())
+    for sentence in expected:
+        if sentence not in text:
+            res.error('template-slices', 'retained template text is missing: %r' % sentence)
+    if 'EDITING Guidelines' in text:
+        res.error('template-slices',
+                  'the EDITING Guidelines clause was not removed before publication')
+
+
+# --------------------------------------------------------------------------- main
+
+
+def main(argv=None):
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument('config')
+    ap.add_argument('--docx', default=None)
+    args = ap.parse_args(argv)
+
+    with open(args.config, encoding='utf-8') as f:
+        cfg = json.load(f)
+    docx_path = args.docx or os.path.join(REPO, cfg['output']['docx'])
+    model = nodeset_tables.Model(os.path.join(REPO, cfg['source']['nodeset']))
+    doc_ns_index = cfg['identity']['namespaceIndexInDocument']
+
+    doc = Doc(docx_path)
+    res = Result()
+
+    annex_a_start = 0
+    for i, el in enumerate(doc.blocks()):
+        if el.tag == q('w:p') and para_style(el) == 'ANNEXtitle':
+            annex_a_start = i
+            break
+
+    body_start = 0
+    conv_lo = conv_hi = 0
+    for i, el in enumerate(doc.blocks()):
+        if el.tag != q('w:p'):
+            continue
+        text = iter_text(el).strip()
+        style = para_style(el)
+        if style == 'Heading1' and text == 'Scope':
+            body_start = i
+        if style == 'Heading2' and text == 'Conventions used in this document':
+            conv_lo = i
+        if conv_lo and style == 'Heading1' and i > conv_lo and not conv_hi:
+            conv_hi = i
+
+    check_styles(doc, res)
+    check_heading_numbers(doc, res)
+    check_heading_capitalisation(doc, res)
+    check_table_captions(doc, res, body_start)
+    check_figures_are_ole(doc, res)
+    check_embedded_packages(doc, res)
+    check_forbidden_links(doc, res, annex_a_start)
+    check_placeholders(doc, res, (conv_lo, conv_hi))
+    check_references_resolve(doc, res)
+    check_node_tables(doc, model, res, doc_ns_index)
+    check_conformance_units(doc, model, res)
+    check_template_slices(doc, TEMPLATE, res)
+
+    print('validating %s' % _display(docx_path))
+    return res.report()
+
+
+def _display(path):
+    try:
+        return os.path.relpath(path, REPO)
+    except ValueError:
+        return path
+
+
+if __name__ == '__main__':
+    raise SystemExit(main())

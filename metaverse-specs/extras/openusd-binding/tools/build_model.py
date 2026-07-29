@@ -28,8 +28,8 @@ import os
 import xml.sax.saxutils as sx
 
 NAMESPACE = "http://opcfoundation.org/UA/OpenUSD/"
-VERSION = "0.4.0"
-PUBDATE = "2026-07-27T00:00:00Z"
+VERSION = "0.5.0"
+PUBDATE = "2026-07-29T00:00:00Z"
 BASE_UA_VERSION = "1.05.04"
 BASE_UA_PUBDATE = "2023-12-15T00:00:00Z"
 
@@ -109,7 +109,10 @@ class Node:
         self.parent = parent
         self.attrs = attrs or {}
         self.refs = []
-        self.category = category
+        # OPC 20020 3.4.1.1: the ConformanceUnits that require the Node in the
+        # AddressSpace are carried as Category elements, one per unit.
+        self.category = ((category,) if isinstance(category, str)
+                         else tuple(category or ()))
         self.definition = None
         self.value = None
         self.abstract = abstract
@@ -157,14 +160,14 @@ def ref(nid, reftype, target, forward=True):
 
 
 # --- builders --------------------------------------------------------------
-def object_type(nid, name, base, desc, abstract=False):
-    add(nid, "UAObjectType", name, name, desc=desc, category=CAT, abstract=abstract)
+def object_type(nid, name, base, desc, abstract=False, cu=()):
+    add(nid, "UAObjectType", name, name, desc=desc, category=cu, abstract=abstract)
     ref(nid, HasSubtype, base, forward=False)
     return nid
 
 
-def interface_type(nid, name, base, desc):
-    add(nid, "UAObjectType", name, name, desc=desc, category=CAT, abstract=True)
+def interface_type(nid, name, base, desc, cu=()):
+    add(nid, "UAObjectType", name, name, desc=desc, category=cu, abstract=True)
     ref(nid, HasSubtype, base, forward=False)
     return nid
 
@@ -230,8 +233,8 @@ def placeholder_obj(owner, owner_sym, name, typedef, desc,
     return nid
 
 
-def enum_type(nid, name, desc, fields):
-    add(nid, "UADataType", name, name, desc=desc, category=CAT_DT)
+def enum_type(nid, name, desc, fields, cu=()):
+    add(nid, "UADataType", name, name, desc=desc, category=cu)
     ref(nid, HasSubtype, Enumeration, forward=False)
     dparts = [f'<Definition Name="{name}">']
     for (fname, val, fdesc) in fields:
@@ -259,8 +262,8 @@ def enum_type(nid, name, desc, fields):
     return nid
 
 
-def well_known(nid, name, typedef, parent_nodeid, desc, reftype=HasComponent):
-    add(nid, "UAObject", name, name, desc=desc, parent=parent_nodeid)
+def well_known(nid, name, typedef, parent_nodeid, desc, reftype=HasComponent, cu=()):
+    add(nid, "UAObject", name, name, desc=desc, parent=parent_nodeid, category=cu)
     ref(nid, HasTypeDefinition, typedef)
     ref(nid, reftype, parent_nodeid, forward=False)
     return nid
@@ -279,8 +282,34 @@ def instance_folder(nid, name, parent_nid, desc, reftype=HasComponent):
 # ===========================================================================
 # ==============================  MODEL DEFINITION  =========================
 # ===========================================================================
-CAT = "OpenUSD Binding"
-CAT_DT = "OpenUSD Binding DataTypes"
+# OPC 20020 3.4.1.1: every Type Node and well-known Instance Node carries the
+# ConformanceUnits that require it in the AddressSpace, as Category elements.
+# These are the units defined in the specification clause "Profiles and
+# conformance units"; the Word node tables are generated from them, so a unit
+# that is not named here cannot appear in the document.
+CU_NAMESPACE = "OU-Namespace"
+CU_DISCOVERY = "OU-Discovery"
+CU_STAGE = "OU-Stage"
+CU_REPRESENTATION = "OU-Representation"
+CU_REPRESENTATION_REGISTRY = "OU-RepresentationRegistry"
+CU_BINDING = "OU-Binding"
+CU_CONVERSION_SCALAR = "OU-Conversion-Scalar"
+CU_CONVERSION_TRANSFORM = "OU-Conversion-Transform"
+CU_CONVERSION_GEO = "OU-Conversion-Geo"
+CU_QUALITY = "OU-Quality"
+CU_DIAGNOSTICS = "OU-Diagnostics"
+CU_SEMANTIC_SOURCE = "OU-SemanticSource"
+CU_ALARM = "OU-Alarm"
+CU_HISTORY = "OU-History"
+CU_COMMAND = "OU-Command"
+CU_INTEGRITY = "OU-Integrity"
+CU_COMPOSITION = "OU-Composition"
+CU_DYNAMIC_COMPOSITION = "OU-DynamicComposition"
+CU_CROSS_SERVER_COMPOSITION = "OU-CrossServerComposition"
+CU_ASSET_DELIVERY = "OU-AssetDelivery"
+CU_ARTIFACT_REGISTRY = "OU-ArtifactRegistry"
+CU_ARTIFACT_FEDERATION = "OU-ArtifactFederation"
+CU_SCHEMA_PLUGIN_DELIVERY = "OU-SchemaPluginDelivery"
 
 # ---- DataTypes (enums) ----------------------------------------------------
 enum_type(3002, "OpenUsdRenderTargetKindEnum",
@@ -291,19 +320,22 @@ enum_type(3002, "OpenUsdRenderTargetKindEnum",
            ("Georeference", 9,
             "A geodetic anchor coordinate (latitude/longitude/height) on a USD "
             "georeference or globe-anchor schema; see the geospatial rule (Bindings spec "
-            "\u00a75.8) and Annex D.")])
+            "\u00a75.8) and Annex D.")],
+          cu=(CU_BINDING, CU_CONVERSION_TRANSFORM, CU_CONVERSION_GEO))
 
 enum_type(3003, "OpenUsdBadQualityActionEnum",
           "What the connector does with a non-Good source value.",
           [("Skip", 0, "Do not update the target."),
            ("HoldLast", 1, "Keep the last Good value."),
            ("ClearOpinion", 2, "Remove the authored opinion (reveal a weaker layer)."),
-           ("Fallback", 3, "Author a configured fallback value.")])
+           ("Fallback", 3, "Author a configured fallback value.")],
+          cu=(CU_QUALITY,))
 
 enum_type(3004, "OpenUsdBindingStateEnum",
           "Runtime lifecycle state of a live binding, exposed for diagnostics.",
           [("Disabled", 0, None), ("Unresolved", 1, None), ("Ready", 2, None),
-           ("Active", 3, None), ("Degraded", 4, None), ("Error", 5, None)])
+           ("Active", 3, None), ("Degraded", 4, None), ("Error", 5, None)],
+          cu=(CU_DIAGNOSTICS,))
 
 OpenUsdRenderTargetKindEnum = T(3002)
 OpenUsdBadQualityActionEnum = T(3003)
@@ -317,7 +349,8 @@ object_type(1004, "OpenUsdLiveBindingType", BaseObjectType,
             "the concrete subtype (ValueChange/Alarm/History/Command), not by an enum. The "
             "declaration is portable; the runtime connector resolves and applies it. The "
             "effective runtime identity is (represented object, BindingDefinitionId).",
-            abstract=True)
+            abstract=True,
+            cu=(CU_BINDING,))
 B = 1004
 prop_var(B, "OpenUsdLiveBindingType", "BindingDefinitionId", Guid,
          "Stable declaration identifier used for override/tombstone matching across "
@@ -378,7 +411,8 @@ prop_var(B, "OpenUsdLiveBindingType", "LastError", LocalizedText,
 object_type(1002, "OpenUsdStageType", BaseObjectType,
             "Describes one OpenUSD stage available to the server. Identity is the "
             "root layer identifier plus, where used, the session layer and resolver "
-            "context; the stage Object NodeId is its same-server identity.")
+            "context; the stage Object NodeId is its same-server identity.",
+            cu=(CU_STAGE, CU_INTEGRITY))
 S = 1002
 prop_var(S, "OpenUsdStageType", "RootLayerIdentifier", String,
          "Opaque authored root-layer / resolver identifier (NOT necessarily a URI).",
@@ -396,7 +430,8 @@ prop_var(S, "OpenUsdStageType", "ResolvedRootLayerUri", String,
 # ---- ObjectType: OpenUsdRepresentationType (1003, the AddIn) ---------------
 object_type(1003, "OpenUsdRepresentationType", BaseObjectType,
             "AddIn that binds a domain Object to a canonical composed USD prim path on "
-            "a specific stage. Mounted with HasAddIn; carries live bindings as children.")
+            "a specific stage. Mounted with HasAddIn; carries live bindings as children.",
+            cu=(CU_REPRESENTATION, CU_REPRESENTATION_REGISTRY))
 R = 1003
 static_qname_prop(R, "OpenUsdRepresentationType", "DefaultInstanceBrowseName", 2,
                   "OpenUsdRepresentation",
@@ -413,7 +448,8 @@ placeholder_obj(R, "OpenUsdRepresentationType", "<Binding>", T(1004),
 # ---- ObjectType: OpenUsdRootType (1001, the well-known root) ---------------
 object_type(1001, "OpenUsdRootType", BaseObjectType,
             "Root of the server-wide OpenUSD facility. Contains the stage registry and "
-            "the representation registry for deterministic discovery.")
+            "the representation registry for deterministic discovery.",
+            cu=(CU_DISCOVERY,))
 ROOT = 1001
 folder_member(ROOT, "OpenUsdRootType", "Stages",
               "Registry of OpenUsdStageType instances available to the server.")
@@ -424,7 +460,8 @@ folder_member(ROOT, "OpenUsdRootType", "Representations",
 # ---- Interface: IOpenUsdRepresentedType (1010) ----------------------------
 interface_type(1010, "IOpenUsdRepresentedType", BaseInterfaceType,
                "Optional interface advertising that a domain ObjectType participates in "
-               "OpenUSD representation. Applied with HasInterface; informative for browsing.")
+               "OpenUSD representation. Applied with HasInterface; informative for browsing.",
+               cu=(CU_REPRESENTATION,))
 placeholder_obj(1010, "IOpenUsdRepresentedType", "<OpenUsdRepresentation>", T(1003),
                 "Placeholder for the representation AddIn on an implementing instance.",
                 reftype=HasComponent)
@@ -446,19 +483,22 @@ enum_type(3005, "OpenUsdSignalRoleEnum",
           "Role of the bound signal, mirroring the asset-definition observable/controllable "
           "tagging. Only Controllable signals are eligible for a command binding.",
           [("Observable", 0, "Read-only; drives USD but cannot be commanded."),
-           ("Controllable", 1, "May be commanded via an opt-in, authorized command binding.")])
+           ("Controllable", 1, "May be commanded via an opt-in, authorized command binding.")],
+          cu=(CU_SEMANTIC_SOURCE, CU_COMMAND))
 
 enum_type(3006, "OpenUsdAlarmAspectEnum",
           "For OpenUsdAlarmBindingType bindings: which A&C condition aspect drives the target attribute.",
           [("ActiveState", 0, "Condition ActiveState (boolean)."),
            ("Severity", 1, "Condition Severity (numeric)."),
            ("AckedState", 2, "Condition AckedState (boolean)."),
-           ("EnabledState", 3, "Condition EnabledState (boolean).")])
+           ("EnabledState", 3, "Condition EnabledState (boolean).")],
+          cu=(CU_ALARM,))
 
 enum_type(3007, "OpenUsdDigestAlgorithmEnum",
           "Digest algorithm for OpenUsdStageType.RootLayerDigest (Twin BOM content integrity).",
           [("None", 0, None), ("Sha256", 1, "SHA-256."), ("Sha384", 2, "SHA-384."),
-           ("Sha512", 3, "SHA-512.")])
+           ("Sha512", 3, "SHA-512.")],
+          cu=(CU_INTEGRITY,))
 
 OpenUsdSignalRoleEnum = T(3005)
 OpenUsdAlarmAspectEnum = T(3006)
@@ -478,24 +518,28 @@ prop_var(B, "OpenUsdLiveBindingType", "SourceSemanticId", String,
 object_type(1007, "OpenUsdValueChangeBindingType", T(1004),
             "A source UA Variable Value change drives a USD attribute (the default "
             "binding). Adds no members beyond the abstract base; binds the source "
-            "Value (AttributeId 13).")
+            "Value (AttributeId 13).",
+            cu=(CU_BINDING, CU_CONVERSION_SCALAR))
 
 object_type(1008, "OpenUsdAlarmBindingType", T(1004),
-            "Read-only OPC UA A&C condition aspect (Part 9) drives a USD attribute.")
+            "Read-only OPC UA A&C condition aspect (Part 9) drives a USD attribute.",
+            cu=(CU_ALARM,))
 AL = 1008
 prop_var(AL, "OpenUsdAlarmBindingType", "AlarmAspect", OpenUsdAlarmAspectEnum,
          "Which A&C condition aspect drives the target "
          "(ActiveState/Severity/AckedState/EnabledState).", MR_Optional)
 
 object_type(1009, "OpenUsdHistoryBindingType", T(1004),
-            "Read-only history (Part 11 HistoryRead) authored as USD time samples.")
+            "Read-only history (Part 11 HistoryRead) authored as USD time samples.",
+            cu=(CU_HISTORY,))
 HI = 1009
 prop_var(HI, "OpenUsdHistoryBindingType", "TimeSampled", Boolean,
          "Author values as USD time samples (playback) rather than the latest default.",
          MR_Optional)
 
 object_type(1011, "OpenUsdCommandBindingType", T(1004),
-            "Opt-in, authorized USD-side intent drives an OPC UA write / Method call (USD -> UA).")
+            "Opt-in, authorized USD-side intent drives an OPC UA write / Method call (USD -> UA).",
+            cu=(CU_COMMAND,))
 CM = 1011
 prop_var(CM, "OpenUsdCommandBindingType", "CommandTargetNodeId", NodeId_,
          "The Variable to write, or the Object on which to Call CommandMethodId.", MR_Mandatory)
@@ -523,14 +567,16 @@ prop_var(S, "OpenUsdStageType", "ProvenanceUri", String,
 enum_type(3008, "OpenUsdCardinalityEnum",
           "Cardinality of a component binding: 1:1 or 1..n.",
           [("One", 0, "Exactly one component (1:1)."),
-           ("Many", 1, "Zero or more components of a type (1..n).")])
+           ("Many", 1, "Zero or more components of a type (1..n).")],
+          cu=(CU_COMPOSITION,))
 
 enum_type(3009, "OpenUsdCompositionArcEnum",
           "USD composition arc used to place a component prim under its parent.",
           [("Child", 0, "Inline nested prim under the parent prim."),
            ("Reference", 1, "Prim that references the component's external asset."),
            ("Payload", 2, "Prim that payloads (deferred-load) the component's external asset."),
-           ("Instance", 3, "Instanceable reference (instanceable=true), for efficient 1..n.")])
+           ("Instance", 3, "Instanceable reference (instanceable=true), for efficient 1..n.")],
+          cu=(CU_COMPOSITION,))
 
 OpenUsdCardinalityEnum = T(3008)
 OpenUsdCompositionArcEnum = T(3009)
@@ -539,7 +585,8 @@ OpenUsdCompositionArcEnum = T(3009)
 object_type(1005, "OpenUsdComponentBindingType", BaseObjectType,
             "One composition/aggregation binding: maps an OPC UA component relationship of the "
             "represented Object onto a USD composition arc, so a connector assembles the component "
-            "prim(s). Carried as a <Component> child of a representation.")
+            "prim(s). Carried as a <Component> child of a representation.",
+            cu=(CU_COMPOSITION, CU_DYNAMIC_COMPOSITION, CU_CROSS_SERVER_COMPOSITION))
 K = 1005
 prop_var(K, "OpenUsdComponentBindingType", "BindingDefinitionId", Guid,
          "Stable declaration id for override/tombstone matching.", MR_Mandatory)
@@ -619,7 +666,8 @@ enum_type(3010, "OpenUsdAssetKindEnum",
            ("Volume", 7, "A volume or geometry cache asset (OpenVDB, Alembic)."),
            ("SchemaPlugin", 8, "A USD plugin manifest (plugInfo.json) declaring a schema plugin."),
            ("GeneratedSchema", 9, "A generatedSchema.usda carrying codeless schema definitions."),
-           ("Manifest", 10, "An asset manifest or metadata sidecar describing the container.")])
+           ("Manifest", 10, "An asset manifest or metadata sidecar describing the container.")],
+          cu=(CU_ASSET_DELIVERY, CU_SCHEMA_PLUGIN_DELIVERY))
 OpenUsdAssetKindEnum = T(3010)
 
 # ---- ObjectType: OpenUsdAssetType : ResourceType (1006) -------------------
@@ -637,7 +685,8 @@ object_type(1006, "OpenUsdAssetType", XRegistry_ResourceType,
             "AssetIdentifier is the authored USD resolver identifier, normalized relative to its "
             "asset container; the inherited xRegistry ResourceId is its URL-safe encoding, so the "
             "two are inter-derivable and the registry is addressable as an ArResolver backend "
-            "without conflating the two identifier grammars.")
+            "without conflating the two identifier grammars.",
+            cu=(CU_ASSET_DELIVERY, CU_ARTIFACT_REGISTRY, CU_ARTIFACT_FEDERATION))
 A = 1006
 prop_var(A, "OpenUsdAssetType", "AssetIdentifier", String,
          "Resolver identifier / relative path of this asset, matching the stage RootLayerIdentifier "
@@ -696,13 +745,15 @@ object_type(1012, "OpenUsdArtifactRegistryType", XRegistry_RegistryType,
             "of OpenUsdRootType, it is the single backbone all stages resolve against, replacing "
             "per-stage duplication. Each artifact's ResourceId is the URL-safe encoding of its USD asset identifier, so the "
             "registry is directly addressable as an ArResolver backend and xRegistry federation "
-            "(ResourceUrl / ExternalReference) is the resolver fallback chain.")
+            "(ResourceUrl / ExternalReference) is the resolver fallback chain.",
+            cu=(CU_ARTIFACT_REGISTRY, CU_ARTIFACT_FEDERATION))
 object_type(1013, "OpenUsdAssetGroupType", XRegistry_GroupType,
             "An xRegistry GroupType collecting the artifacts of ONE asset container - a named, "
             "versioned USD asset in the AOUSD sense (its root layer plus the sublayers, "
             "references, payloads, textures, MaterialX documents and volumes it needs). The "
             "group key is the asset container identifier; member artifacts are addressed by "
-            "their AssetIdentifier relative to it.")
+            "their AssetIdentifier relative to it.",
+            cu=(CU_ARTIFACT_REGISTRY,))
 AG = 1013
 prop_var(AG, "OpenUsdAssetGroupType", "AssetContainerId", String,
          "Identifier of the asset container this group represents. This is the group key: its "
@@ -716,7 +767,8 @@ object_type(1014, "OpenUsdSchemaPluginGroupType", XRegistry_GroupType,
             "exactly those two files, so serving them lets a USD client register a vendor schema "
             "through PlugRegistry and then interpret the vendor prim types a Part 2 server "
             "materializes (Part 2 8.1/8.3), closing the loop between the OPC UA and USD type "
-            "systems.")
+            "systems.",
+            cu=(CU_SCHEMA_PLUGIN_DELIVERY,))
 SPG = 1014
 prop_var(SPG, "OpenUsdSchemaPluginGroupType", "PluginName", String,
          "The USD plugin name as it appears in plugInfo.json (Plugins[].Name).", MR_Mandatory)
@@ -793,8 +845,8 @@ def _emit_node(n):
     lines.append(f"    <DisplayName>{sx.escape(n.display)}</DisplayName>")
     if n.desc:
         lines.append(f"    <Description>{sx.escape(n.desc)}</Description>")
-    if n.category:
-        lines.append(f"    <Category>{sx.escape(n.category)}</Category>")
+    for cat in n.category:
+        lines.append(f"    <Category>{sx.escape(cat)}</Category>")
     lines.append("    <References>")
     for i in _sorted_refs(n.refs):
         rt, tgt, fwd = n.refs[i]

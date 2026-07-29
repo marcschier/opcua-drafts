@@ -2,7 +2,7 @@
 
 This is a hands-on guide for the **RoboticsDeviceIntegrationServer** bound to an **OpenUSD** model. It shows a robot cell whose two 6-axis articulated robots are rendered from live OPC UA Axis `ActualPosition` values: every joint in USD is driven by a generic binding, with **no robot-specific code** in the connector or renderer.
 
-It realizes the collaboration flow described in Annex B of the base specification (`../../../openusd-binding/OPC-UA-OpenUSD-Bindings.md`). This document lives **outside** the normative spec; it is a tutorial for implementers.
+It realizes the collaboration flow described in Annex F of the base specification (`../../../openusd-binding/OPC-UA-OpenUSD-Bindings.md`). This document lives **outside** the normative spec; it is a tutorial for implementers.
 
 ## What you will build
 

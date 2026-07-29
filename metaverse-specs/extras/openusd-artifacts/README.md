@@ -1,6 +1,6 @@
 # `openusd-artifacts` — xRegistry artifact registry for the OpenUSD binding
 
-> **Draft-tracking artifact.** The OpenUSD binding model (Part 1 §5.15,
+> **Draft-tracking artifact.** The OpenUSD binding model (Part 1 §7.11,
 > `Opc.Ua.OpenUsd.NodeSet2.xml` 0.4.0) is a **draft** and is being edited; this
 > folder tracks it and is regenerated from source. Treat the emitted JSON as
 > illustrative, not authoritative.
@@ -19,7 +19,7 @@ model, [`xRegistry-OpenUsd.model.json`](../../openusd-binding/xRegistry-OpenUsd.
 — the submittable xRegistry domain specification. This folder emits a conformant
 instance of it.
 
-| xRegistry role | Collection | Group / resource id | OPC UA type (Part 1 §5.15) |
+| xRegistry role | Collection | Group / resource id | OPC UA type (Part 1 §7.11) |
 |---|---|---|---|
 | Groups (asset containers) | `usdassetgroups` | `usdassetgroupid` | `OpenUsdAssetGroupType` |
 | Groups (schema plugins) | `usdschemaplugingroups` | `usdschemaplugingroupid` | `OpenUsdSchemaPluginGroupType` |

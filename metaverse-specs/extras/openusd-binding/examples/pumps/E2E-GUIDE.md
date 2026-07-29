@@ -6,7 +6,7 @@ impeller spins with mass flow, the body warms from blue to red with bearing
 temperature, and a status light glows with differential pressure — all driven live over
 OPC UA, with **no pump-specific code** in the connector or the renderer.
 
-It realizes the collaboration flow described in Annex B of the base specification
+It realizes the collaboration flow described in Annex F of the base specification
 (`../../../openusd-binding/OPC-UA-OpenUSD-Bindings.md`). This document lives **outside**
 the normative spec; it is a tutorial for implementers.
 
@@ -60,7 +60,7 @@ digest the connector verifies before it composes the stage (fail-closed on misma
 
 ## Composition (the asset is composed of components)
 
-The server also exercises composition/aggregation (spec §5.12–5.14), so the connector assembles a
+The server also exercises composition/aggregation (spec §7.10–5.14), so the connector assembles a
 USD prim hierarchy that mirrors the asset's *is-composed-of* structure:
 
 - **1:1** — the pump is composed of an `Impeller` and a `Bearing` component Object (each with its own
@@ -285,16 +285,16 @@ PY
 
 ## How this maps to the specification
 
-- **Discovery** — the connector starts at `Server/OpenUSD/Representations` (base spec §4.2),
+- **Discovery** — the connector starts at `Server/OpenUSD/Representations` (base spec §6.2),
   never at "the pump". The same connector binary works for any conforming server.
 - **Bindings** — each `OpenUsdLiveBinding` declares `SourceNodeId`, target prim/property,
   `RenderTargetKind`, and `Scale`; the connector reads them and applies the conversion
-  (§5.7–§5.8). 0.2 bindings add `SignalRole`, `SourceSemanticId`, alarm (`OpenUsdAlarmBindingType` +
+  (§7.4.1–§7.4.2). 0.2 bindings add `SignalRole`, `SourceSemanticId`, alarm (`OpenUsdAlarmBindingType` +
   `AlarmAspect`), and opt-in command (`OpenUsdCommandBindingType` + `CommandTargetNodeId`) members.
 - **Integrity** — the stage's `RootLayerDigest` / `RootLayerDigestAlgorithm` let the connector
-  verify the resolved root layer before composing it (Twin-BOM content integrity, §5.11/§9).
+  verify the resolved root layer before composing it (Twin-BOM content integrity, §7.6/§9).
 - **Command safety** — command bindings are normative but opt-in: disabled by default,
-  single-writer, authorized, and fail-closed (§5.10).
+  single-writer, authorized, and fail-closed (§7.8).
 - **Layering** — OPC UA is the single mapping authority; the base USD asset is never
   modified. Live values live in a composed override layer (`live.usda`), the equivalent of
   an Omniverse Nucleus `.live` layer (Part 3).

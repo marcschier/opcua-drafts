@@ -8,6 +8,35 @@ NodeId assignment is **append-only**: new members take the next free id, so ever
 previously published NodeId is stable across all releases below, and a namespace
 index change does not affect per-namespace NodeId numbers.
 
+## 0.5.0 — 2026-07-29
+
+**Conformance units in the model, and a Word rendering.**
+
+- Every Type Node now carries the ConformanceUnits that require it in the AddressSpace,
+  as `Category` elements in the UANodeSet. OPC 20020 3.4.1.1 requires this, and the
+  node tables of the Word rendering are generated from it. The previous `Category`
+  values were coarse grouping labels (`OpenUSD Binding`, `OpenUSD Binding DataTypes`)
+  that no conformance test could use. No NodeId changed.
+- The specification is restructured into the clause skeleton the OPC Foundation
+  companion specification template mandates: Scope, Normative references, Terms and
+  conventions, General information, Use cases, Information model overview, ObjectTypes,
+  DataTypes, Profiles and conformance units, Namespaces, Security, then Annexes A–F.
+  Every clause number therefore moved; the mapping is recorded in
+  `word-drafts/tools/specs/openusd-binding.json` and was applied mechanically to this
+  document and to every sibling that cites it.
+- The behavioural clauses now sit with the type they constrain: source and target
+  resolution, conversion, and quality/timestamp/persistence are subclauses of
+  `OpenUsdLiveBindingType`; the command rules belong to `OpenUsdCommandBindingType`;
+  dynamic and cross-server composition belong to `OpenUsdComponentBindingType`; asset
+  content delivery belongs to `OpenUsdArtifactRegistryType`.
+- Informative material moved to annexes: using the model (Annex B), interoperability
+  with OpenUSD and Omniverse (Annex C), the end-to-end collaboration flow (Annex D),
+  bridging to the asset administration shell (Annex E) and geospatial rendering
+  (Annex F). "Deliverables and reproducibility" is repository documentation and now
+  lives in `README.md` alone.
+- A submission-ready Word rendering is generated into `word-drafts/`. It is built from
+  this document and the UANodeSet, so the node tables cannot drift from the model.
+
 ## 0.4.0 — 2026-07-27
 
 **The artifact registry.**
