@@ -99,16 +99,24 @@ Verify with two builds and a hash comparison.
 7. List the `figures`.
 8. Build, validate, mutation-test, finalise.
 
-**How much of this is really config.** Part 2 was onboarded to test the claim. Its config was
-written from scratch, but four generalisations to `opcdocx/` were needed first, because Part 1 had
-never exercised them:
+**How much of this is really config.** Four specifications have now been onboarded, and each new
+*shape* cost a generalisation before its config worked:
 
-- the renderer hardcoded *ObjectTypes + DataTypes*; Part 2 has VariableTypes and ReferenceTypes;
-- `Security` was assumed to exist as a clause after Namespaces; Part 2 has none;
-- the annex regions were hardcoded `annex-b` … `annex-f`;
-- the retained-heading bookmark aliases hardcoded Part 1's clause numbers (its Profiles clause is
-  9, Part 2's is 11).
+| Specification | New shape it forced |
+|---|---|
+| OpenUSD Part 1 | the pipeline itself |
+| OpenUSD Part 2 | VariableTypes and ReferenceTypes clauses; no Security clause; annex regions and bookmark aliases had been hardcoded to Part 1's clause numbers; per-NodeClass type-clause generation |
+| xRegistry | **Methods** — signature block, Table 20 arguments, Table 21 AddressSpace definition, and Method lookup disambiguated by owning type |
+| Observability Export | Mermaid **classDiagram**; a lower-case-initial proper noun (`xRegistry`) in a heading |
 
-All four are now driven by the docmodel and the config. Expect the *first* specification with a
-genuinely new shape — Methods, EventTypes, Structures with optional fields — to need a similar
-round. The config carries what varies between documents of the same shape; a new shape is code.
+Everything above is now driven by the docmodel and the config, and a fifth specification of any of
+those shapes is genuinely a config file. **Config carries what varies between documents of the same
+shape; a new shape is code.** Expect the next round for EventTypes, Structures with optional fields,
+or a specification that needs the *Instances* and *Well-Known BrowseNames* clauses.
+
+**A specification with no information model does not fit this template at all.** OPC 20020 is the
+*UA Companion Specification Template*, and its spine — the type clauses and Annex A — exists to
+present a NodeSet. A document that defines a vocabulary or a mapping rather than an address space
+(for example a binding whose deliverables are a JSON-LD context and a JSON Schema) has nothing to
+put there. Rendering it into this template produces empty type clauses and an Annex A that points
+at no NodeSet, which is a deviation, not a conversion. Say so rather than generate it.

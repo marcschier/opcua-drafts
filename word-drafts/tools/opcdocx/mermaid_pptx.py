@@ -84,7 +84,70 @@ def parse(source):
     head = next((ln.strip() for ln in source.splitlines() if ln.strip()), '')
     if head.startswith('sequenceDiagram'):
         return parse_sequence(source)
+    if head.startswith('classDiagram'):
+        return parse_class_diagram(source)
     return parse_flowchart(source)
+
+
+CLASS_OPEN_RE = re.compile(r'^class\s+(?P<id>[A-Za-z0-9_]+)\s*\{$')
+CLASS_ONELINE_RE = re.compile(r'^class\s+(?P<id>[A-Za-z0-9_]+)\s*$')
+CLASS_REL_RE = re.compile(
+    r'^(?P<a>[A-Za-z0-9_]+)\s*(?P<rel><\|--|--\|>|\*--|o--|-->|<--|\.\.>|--)\s*'
+    r'(?P<b>[A-Za-z0-9_]+)\s*(?::\s*(?P<label>.*))?$')
+
+
+def parse_class_diagram(source):
+    """A UML class diagram, laid out with the same machinery as a flowchart.
+
+    Each class becomes a node whose label is its name over its members, and each
+    relation becomes an edge; inheritance is drawn from the subtype to its base so the
+    layering puts bases above their subtypes.
+    """
+    g = Graph()
+    members = {}
+    current = None
+    for raw in source.splitlines():
+        line = raw.strip()
+        if not line or line.startswith('%%'):
+            continue
+        if line.startswith('classDiagram') or line.startswith('direction'):
+            continue
+        if line == '}':
+            current = None
+            continue
+        m = CLASS_OPEN_RE.match(line)
+        if m:
+            current = m.group('id')
+            g.node(current)
+            members.setdefault(current, [])
+            continue
+        if current:
+            members[current].append(line.lstrip('+-#').strip())
+            continue
+        m = CLASS_ONELINE_RE.match(line)
+        if m:
+            g.node(m.group('id'))
+            continue
+        m = CLASS_REL_RE.match(line)
+        if m:
+            a, b = g.node(m.group('a')).id, g.node(m.group('b')).id
+            rel = m.group('rel')
+            # `B --|> A` and `A <|-- B` both mean "B is a subtype of A".
+            if rel in ('--|>', '*--', 'o--'):
+                src, dst = a, b
+            elif rel == '<|--':
+                src, dst = b, a
+            else:
+                src, dst = a, b
+            g.edges.append(Edge(src, dst, _clean(m.group('label') or '') or None,
+                                rel in ('..>',)))
+            continue
+        raise ValueError('unsupported mermaid class-diagram line: %r' % raw)
+
+    for nid, lines in members.items():
+        if lines:
+            g.nodes[nid].label = nid + '\n' + '\n'.join(lines)
+    return g
 
 
 def parse_flowchart(source):

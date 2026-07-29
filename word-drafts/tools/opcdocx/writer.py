@@ -40,7 +40,8 @@ class Writer:
         which is exactly the kind of defect that survives a casual read-through.
         """
         kinds = {'clause': 'Clause', 'annex': 'Annex', 'annex-clause': 'Clause',
-                 'table': 'Tab', 'nodetable': 'Tab', 'enumtable': 'Tab', 'figure': 'Fig'}
+                 'table': 'Tab', 'nodetable': 'Tab', 'enumtable': 'Tab',
+                 'methodtable': 'Tab', 'figure': 'Fig'}
         for _region, b in doc.iter_blocks():
             kind = kinds.get(b['t'])
             if kind and b.get('id'):
@@ -203,6 +204,83 @@ class Writer:
         from . import nodeset_tables as nt
         spec = nt.enum_table(self.model, b['browseName'])
         return self.enum_tables(b['id'], spec)
+
+    def _b_methodtable(self, b, *, annex=False):
+        """OPC 20020 8.1.3: signature, Method Arguments, AddressSpace definition."""
+        from . import nodeset_tables as nt
+        spec = nt.method_table(self.model, b['browseName'],
+                               doc_ns_index=self.doc_ns_index, owner=b.get('owner'))
+        out = []
+        if spec['description']:
+            out.append(paragraph('PARAGRAPH', [run(spec['description'])]))
+        out.append(paragraph('PARAGRAPH', [run('Signature')]))
+        for line in spec['signature']:
+            out.append(paragraph('MethodSignature', [run(line)]))
+
+        if spec['arguments']:
+            g = [2200, 6726]
+            out.append(self.caption(b['id'] + '-args',
+                                    '%s Method Arguments' % spec['browseName']))
+            tbl = table(g)
+            tbl.append(row([
+                cell(g[0], [cell_paragraph('Argument', bold=True)], bottom='double'),
+                cell(g[1], [cell_paragraph('Description', bold=True)], bottom='double'),
+            ], header=True))
+            for a in spec['arguments']:
+                tbl.append(row([
+                    cell(g[0], [cell_paragraph(a['name'])]),
+                    cell(g[1], [cell_paragraph(a['description'])]),
+                ]))
+            out.append(tbl)
+            out.append(paragraph('spacer', []))
+
+        # The template omits the AddressSpace table when a Method has no Properties
+        # beyond InputArguments and OutputArguments.
+        if spec['hasExtraProperties'] or spec['arguments']:
+            out.extend(self.method_addressspace_table(b['id'] + '-as', spec))
+        return out
+
+    def method_addressspace_table(self, ident, spec):
+        g = contract.TYPE_TABLE_GRID
+        total = sum(g)
+        rest = total - g[0]
+        out = [self.caption(ident, '%s Method AddressSpace definition'
+                            % spec['browseName'])]
+        tbl = table(g)
+        tbl.append(row([
+            cell(g[0], [cell_paragraph('Attribute', bold=True)], bottom='double'),
+            cell(rest, [cell_paragraph('Value', bold=True)], span=5, bottom='double'),
+        ], header=True))
+        tbl.append(row([
+            cell(g[0], [cell_paragraph('BrowseName')], top='double'),
+            cell(rest, [cell_paragraph(spec['browseName'])], span=5, top='double'),
+        ]))
+        headers = ['References', 'NodeClass', 'BrowseName', 'DataType',
+                   'TypeDefinition', 'ModellingRule']
+        tbl.append(row([cell(g[i], [cell_paragraph(h, bold=True)],
+                             top='double', bottom='double')
+                        for i, h in enumerate(headers)]))
+        for present, name in ((spec['inputs'], 'InputArguments'),
+                              (spec['outputs'], 'OutputArguments')):
+            if not present:
+                continue
+            tbl.append(row([
+                cell(g[0], [cell_paragraph('0:HasProperty')]),
+                cell(g[1], [cell_paragraph('Variable')]),
+                cell(g[2], [cell_paragraph('0:' + name, style='TableTextWithTabs')]),
+                cell(g[3], [cell_paragraph('0:Argument[]')]),
+                cell(g[4], [cell_paragraph('0:PropertyType')]),
+                cell(g[5], [cell_paragraph('0:Mandatory')]),
+            ]))
+        if spec['conformanceUnits']:
+            tbl.append(row([cell(total, [cell_paragraph('Conformance Units', bold=True)],
+                                 span=6, bottom='double')]))
+            for i, cu in enumerate(spec['conformanceUnits']):
+                tbl.append(row([cell(total, [cell_paragraph(cu)], span=6,
+                                     top='double' if i == 0 else 'single')]))
+        out.append(tbl)
+        out.append(paragraph('spacer', []))
+        return out
 
     def type_definition_table(self, ident, caption, spec):
         """The Table 2 shape: Attribute/Value rows, a References block, ConformanceUnits."""

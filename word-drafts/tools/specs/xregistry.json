@@ -1,0 +1,133 @@
+{
+  "id": "xregistry",
+  "source": {
+    "markdown": "core-specs/xregistry/OPC-UA-xRegistry.md",
+    "nodeset": "core-specs/xregistry/Opc.Ua.XRegistry.NodeSet2.xml"
+  },
+  "output": {
+    "docx": "word-drafts/OPC-UA-xRegistry.docx",
+    "docmodel": "word-drafts/OPC-UA-xRegistry.docmodel.json",
+    "figures": "word-drafts/figures"
+  },
+
+  "identity": {
+    "docNumber": "OPC nnnnn-m",
+    "partNumber": "Part 1",
+    "partName": "xRegistry",
+    "title": "xRegistry",
+    "mainTitle": "OPC UA FOR XREGISTRY",
+    "subTitle": "Part 1: Registry base model",
+    "shortName": "XREG",
+    "capabilityIdentifier": "XREG",
+    "namespaceUri": "http://opcfoundation.org/UA/xRegistry/",
+    "namespaceIndexInDocument": 1,
+    "version": "0.2.0",
+    "publicationDate": "2026-07-29",
+    "releaseType": "Draft",
+    "mantisProjectId": "<nnn>",
+    "otherOrganization": "xRegistry project",
+    "draftBanner": "PROVISIONAL WORKING DRAFT — not normative, not endorsed by the OPC Foundation. The document number, the Mantis project identifier and every NodeId in this document are placeholders; the OPC Foundation assigns the real values."
+  },
+
+  "abbreviations": [
+    ["API", "Application Programming Interface"],
+    ["CRUD", "Create, Read, Update, Delete"],
+    ["HTTP", "Hypertext Transfer Protocol"],
+    ["JSON", "JavaScript Object Notation"],
+    ["URI", "Uniform Resource Identifier"],
+    ["URL", "Uniform Resource Locator"],
+    ["UTC", "Coordinated Universal Time"],
+    ["XID", "xRegistry entity identifier"]
+  ],
+
+  "normativeReferences": [
+    {"id": "UAPart1", "label": "OPC 10000-1", "title": "OPC Unified Architecture - Part 1: Overview and Concepts", "url": "http://www.opcfoundation.org/documents/10000-1/"},
+    {"id": "UAPart2", "label": "OPC 10000-2", "title": "OPC Unified Architecture - Part 2: Security Model", "url": "http://www.opcfoundation.org/documents/10000-2/"},
+    {"id": "UAPart3", "label": "OPC 10000-3", "title": "OPC Unified Architecture - Part 3: Address Space Model", "url": "http://www.opcfoundation.org/documents/10000-3/"},
+    {"id": "UAPart4", "label": "OPC 10000-4", "title": "OPC Unified Architecture - Part 4: Services", "url": "http://www.opcfoundation.org/documents/10000-4/"},
+    {"id": "UAPart5", "label": "OPC 10000-5", "title": "OPC Unified Architecture - Part 5: Information Model", "url": "http://www.opcfoundation.org/documents/10000-5/"},
+    {"id": "UAPart6", "label": "OPC 10000-6", "title": "OPC Unified Architecture - Part 6: Mappings", "url": "http://www.opcfoundation.org/documents/10000-6/"},
+    {"id": "UAPart7", "label": "OPC 10000-7", "title": "OPC Unified Architecture - Part 7: Profiles", "url": "http://www.opcfoundation.org/documents/10000-7/"},
+    {"id": "UAPart12", "label": "OPC 10000-12", "title": "OPC Unified Architecture - Part 12: Discovery and Global Services", "url": "http://www.opcfoundation.org/documents/10000-12/"},
+    {"id": "UAPart20", "label": "OPC 10000-20", "title": "OPC Unified Architecture - Part 20: File Transfer", "url": "http://www.opcfoundation.org/documents/10000-20/"},
+    {"id": "UA11030", "label": "OPC 11030", "title": "OPC UA Modelling Best Practices", "url": "http://www.opcfoundation.org/documents/11030/"},
+    {"id": "xRegistryCore", "label": "xRegistry Core specification, v1.0-rc3", "title": "The registry / group / resource / version / attribute model, xid, epoch and labels that this model realizes.", "url": "https://github.com/xregistry/spec/blob/v1.0-rc3/core/spec.md"}
+  ],
+
+  "clauseMap": [
+    {"from": "1 Scope",                                  "number": "1",    "title": "Scope",                                    "region": "scope"},
+
+    {"from": "2 Normative references",                   "number": "2",    "title": "Normative references",                     "region": "normative-references", "generated": "normative-references"},
+
+    {"from": null,                                       "number": "3",    "title": "Terms, abbreviated terms and conventions", "region": "terms"},
+    {"from": null,                                       "number": "3.1",  "title": "Overview",                                 "generated": "terms-overview"},
+    {"from": "3 Terms, definitions and abbreviations",   "number": "3.2",  "title": "xRegistry terms",                          "generated": "terms"},
+    {"from": null,                                       "number": "3.3",  "title": "Abbreviated terms",                        "generated": "abbreviations"},
+    {"from": null,                                       "number": "3.4",  "title": "Conventions used in this document",        "slice": "conventions"},
+
+    {"from": null,                                       "number": "4",    "title": "General information to xRegistry and OPC UA", "region": "general"},
+    {"from": null,                                       "number": "4.1",  "title": "Introduction to xRegistry",                "generated": "intro-openusd"},
+    {"from": null,                                       "number": "4.2",  "title": "Introduction to OPC Unified Architecture", "slice": "opcua-intro"},
+
+    {"from": "5 Minimal binding",                        "number": "5",    "title": "Use cases",                                "region": "use-cases"},
+    {"from": "5.1 Reading a resource document (mandatory)", "number": "5.1", "title": "Reading a resource document"},
+    {"from": "5.2 Registering a resource (optional)",    "number": "5.2",  "title": "Registering a resource"},
+    {"from": "5.3 SecureChannel requirements",           "number": "5.3",  "title": "SecureChannel requirements"},
+
+    {"from": "4 Overview",                               "number": "6",    "title": "xRegistry information model overview",     "region": "model-overview"},
+    {"from": "4.1 The registry *is* folders of files",   "number": "6.1",  "title": "The registry is folders of files"},
+    {"from": "4.2 The three representations",            "number": "6.2",  "title": "The three representations"},
+    {"from": "4.3 Minimal first — download is mandatory, everything else is optional", "number": "6.3", "title": "Minimal first"},
+    {"from": "6 Information model",                      "number": "6.4",  "title": "Organisation of the model"},
+    {"from": "6.4 Common xRegistry attributes",          "number": "6.5",  "title": "Common xRegistry attributes"},
+    {"from": "6.5 Auto-bootstrap",                       "number": "6.6",  "title": "Auto-bootstrap"},
+    {"from": "6.8 Collection ordering",                  "number": "6.7",  "title": "Collection ordering"},
+    {"from": "7 The xRegistry API over OPC UA",          "number": "6.8",  "title": "The xRegistry API over OPC UA"},
+    {"from": "8 Federation",                             "number": "6.9",  "title": "Federation"},
+
+    {"from": null,                                       "number": "7",    "title": "OPC UA ObjectTypes",                       "region": "objecttypes"},
+    {"from": "6.1 RegistryType",                         "number": "7.1",  "title": "RegistryType",     "nodetable": "RegistryType"},
+    {"from": "6.2 GroupType",                            "number": "7.2",  "title": "GroupType",        "nodetable": "GroupType"},
+    {"from": "6.3 ResourceType",                         "number": "7.3",  "title": "ResourceType",     "nodetable": "ResourceType"},
+    {"from": "6.6 AttributesType",                       "number": "7.4",  "title": "AttributesType",   "nodetable": "AttributesType"},
+
+    {"from": "6.7 RegistryCapabilitiesDataType",         "number": "8",    "title": "OPC UA DataTypes", "region": "datatypes", "generated": "datatypes"},
+
+    {"from": "9 Conformance",                            "number": "9",    "title": "Profiles and conformance units",           "region": "profiles"},
+
+    {"from": null,                                       "number": "10",   "title": "Namespaces",                               "region": "namespaces"},
+    {"from": null,                                       "number": "10.1", "title": "Namespace metadata",                       "generated": "namespace-metadata"},
+    {"from": null,                                       "number": "10.2", "title": "Handling of OPC UA namespaces",            "generated": "namespace-handling"},
+
+    {"from": "Annex A — Information model",              "number": "A",    "title": "xRegistry namespace and mappings",         "annex": true, "normative": true, "region": "annex-a", "slice": "annex-a"},
+    {"from": "Annex B — Federation resolution via ExpandedNodeId (informative)", "number": "B", "title": "Federation resolution via ExpandedNodeId", "annex": true, "region": "annex-b"}
+  ],
+
+  "dropped": [
+    "10 NodeSet validation",
+    "Type overview",
+    "Object types",
+    "DataTypes",
+    "Methods"
+  ],
+
+  "dropParagraphsContaining": [
+    "tools/build_model.py",
+    "tools/validate_local.py",
+    "core-specs/"
+  ],
+
+  "citedAs": ["xRegistry", "base model", "OPC UA \u2014 xRegistry"],
+
+  "annexMap": {"A": "A", "B": "B"},
+
+  "xrefMap": {
+    "4.1": "6.1", "4.2": "6.2", "4.3": "6.3", "4": "6",
+    "5.1": "5.1", "5.2": "5.2", "5.3": "5.3", "5": "5",
+    "6.1": "7.1", "6.2": "7.2", "6.3": "7.3", "6.4": "6.5",
+    "6.5": "6.6", "6.6": "7.4", "6.7": "8", "6.8": "6.7", "6": "6.4",
+    "7": "6.8", "8": "6.9", "9": "9", "10": "A"
+  },
+
+  "figures": []
+}

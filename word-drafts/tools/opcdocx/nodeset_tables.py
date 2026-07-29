@@ -59,7 +59,7 @@ NODE_CLASS = {
 class Node:
     __slots__ = ('node_id', 'tag', 'browse_name', 'ns_index', 'name', 'display',
                  'description', 'categories', 'parent', 'refs', 'attrs', 'abstract',
-                 'definition', 'inverse_name', 'symmetric')
+                 'definition', 'inverse_name', 'symmetric', 'value')
 
     def __init__(self):
         self.refs = []
@@ -71,6 +71,7 @@ class Node:
         self.parent = None
         self.inverse_name = None
         self.symmetric = False
+        self.value = None
 
 
 class Model:
@@ -118,6 +119,7 @@ class Model:
             inv = el.find(UANS + 'InverseName')
             n.inverse_name = inv.text if inv is not None else None
             n.symmetric = el.get('Symmetric') == 'true'
+            n.value = el.find(UANS + 'Value')
             n.categories = [c.text for c in el.findall(UANS + 'Category')]
             defn = el.find(UANS + 'Definition')
             if defn is not None:
@@ -139,6 +141,24 @@ class Model:
     def names_of_class(self, tag):
         """BrowseNames of every Node of a NodeClass, in declaration order."""
         return [self.nodes[n].name for n in self.order if self.nodes[n].tag == tag]
+
+    def method_named(self, name, *, owner=None):
+        """A Method by BrowseName, disambiguated by its owning type where needed.
+
+        The same Method name legitimately appears on several types (`AddAttribute` on
+        every registry container), so a lookup by name alone would silently return
+        whichever happened to be declared first.
+        """
+        owner_node = self.by_name.get(owner) if owner else None
+        for nid in self.order:
+            n = self.nodes[nid]
+            if n.tag != 'UAMethod' or n.name != name:
+                continue
+            if owner_node is None:
+                return n
+            if n.parent == owner_node.node_id:
+                return n
+        return None
 
     # ------------------------------------------------------------------ lookups
 
@@ -294,6 +314,89 @@ def type_table(model, type_name, *, doc_ns_index):
         'description': node.description,
         'definition': node.definition,
     }
+
+
+# --------------------------------------------------------------------------- methods
+
+# The Argument structure of OPC 10000-4, as encoded in a UANodeSet Value.
+TYPES_NS = '{http://opcfoundation.org/UA/2008/02/Types.xsd}'
+
+
+def _arguments(model, variable, *, doc_ns_index):
+    """Decode an InputArguments / OutputArguments Value into argument descriptors."""
+    if variable is None or variable.value is None:
+        return []
+    out = []
+    for arg in variable.value.iter(TYPES_NS + 'Argument'):
+        name = arg.findtext(TYPES_NS + 'Name') or ''
+        dt = arg.find(TYPES_NS + 'DataType')
+        identifier = dt.findtext(TYPES_NS + 'Identifier') if dt is not None else None
+        rank = arg.findtext(TYPES_NS + 'ValueRank') or '-1'
+        desc = ''
+        d = arg.find(TYPES_NS + 'Description')
+        if d is not None:
+            desc = d.findtext(TYPES_NS + 'Text') or ''
+        type_name = (model.browse_name_of(identifier, doc_ns_index=doc_ns_index)
+                     if identifier else '')
+        if rank not in ('-1', None):
+            type_name += '[]'
+        out.append({'name': name, 'dataType': type_name, 'description': desc})
+    return out
+
+
+def method_table(model, method_name, *, doc_ns_index, owner=None):
+    """The signature, argument table and AddressSpace table of a Method.
+
+    Follows OPC 20020 clause 8.1.3: a signature block, Table 20 (Method Arguments)
+    and Table 21 (Method AddressSpace definition). Table 21 is omitted when the Method
+    has no Properties beyond InputArguments and OutputArguments, as the template says.
+    """
+    node = model.method_named(method_name, owner=owner)
+    if node is None:
+        raise KeyError('Method not in NodeSet: %s' % method_name)
+
+    inputs = outputs = None
+    others = []
+    for rt_name, child in model.members_of(node):
+        if child.name == 'InputArguments':
+            inputs = child
+        elif child.name == 'OutputArguments':
+            outputs = child
+        else:
+            others.append((rt_name, child))
+
+    in_args = _arguments(model, inputs, doc_ns_index=doc_ns_index)
+    out_args = _arguments(model, outputs, doc_ns_index=doc_ns_index)
+
+    signature = ['%s (' % node.name]
+    lines = (['[in]  %-14s %s,' % (a['dataType'], a['name']) for a in in_args]
+             + ['[out] %-14s %s,' % (a['dataType'], a['name']) for a in out_args])
+    if lines:
+        lines[-1] = lines[-1].rstrip(',') + ');'
+    else:
+        signature[0] = '%s ();' % node.name
+    signature.extend('    ' + ln for ln in lines)
+
+    return {
+        'browseName': node.name,
+        'description': node.description,
+        'signature': signature,
+        'arguments': in_args + out_args,
+        'hasExtraProperties': bool(others),
+        'inputs': bool(in_args),
+        'outputs': bool(out_args),
+        'conformanceUnits': list(node.categories),
+        'modellingRule': model.modelling_rule_of(node),
+    }
+
+
+def methods_of(model, type_name):
+    """The Methods a type owns, in declaration order."""
+    node = model.by_name.get(type_name)
+    if node is None:
+        return []
+    return [child.name for rt, child in model.members_of(node)
+            if child.tag == 'UAMethod']
 
 
 def enum_table(model, type_name):

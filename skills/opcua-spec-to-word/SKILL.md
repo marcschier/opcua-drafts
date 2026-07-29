@@ -101,6 +101,25 @@ truth exactly the way hand-editing a generated NodeSet does.
   embedded object (type 1). Check it that way; the XML alone will not tell you.
 - **`Category` elements are not conformance units by default.** A model may carry coarse grouping
   labels there. The template expects the ConformanceUnit names; grep the NodeSet before assuming.
+- **Migrate every call site, not just the builders.** Changing `Category` from one grouping label to
+  per-node conformance units leaves coarse labels behind wherever a call passes the old constant
+  explicitly, and generators also *branch* on the category string (`if n.category != "… Instances"`).
+  `check_conformance_units` catches the leftovers, which is what it is for.
+- **A conformance unit needs an identifier, not a prose name.** Specifications often name their
+  units in prose ("Binding Grouping", "Scene Structure"). A `Category` element and a Word table row
+  need a token: prefix the specification's short name (`OBS-BindingGrouping`, `OUS-SceneStructure`,
+  `XREG-Registry`). Give the specification's conformance clause the same identifiers, or
+  `check_conformance_units` will fail — correctly.
+- **A proper noun may start lower-case.** `xRegistry`, `xformOp`, `usdview`. Guideline 2 exempts
+  proper nouns and type names from the initial capital, so a naive "headings start with a capital"
+  check produces false errors.
+- **The same Method name appears on several types.** `Delete` on both `GroupType` and
+  `ResourceType`, `AddAttribute` on every container. Look a Method up by name *and owning type*, or
+  the document silently documents whichever was declared first.
+- **Running the full validation suite regenerates other specifications' artifacts.** The Avro
+  encoding validators derive schemas from other specs' NodeSets, so changing one model leaves
+  unrelated files modified in the working tree. Check `git status` for changes outside your scope
+  and revert them; they belong in their own change.
 - **Bookmarks die with the clause you replace.** Retained template text points at bookmarks such as
   `UAPart3`, `_Ref85018491` and `_Ref16577438` that live in clauses the build regenerates. Re-attach
   those names to the new equivalents, or Word prints *"Error! Reference source not found"* inside

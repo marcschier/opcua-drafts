@@ -1,0 +1,163 @@
+{
+  "id": "observability-export",
+  "source": {
+    "markdown": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+    "nodeset": "core-specs/observability-export/Opc.Ua.ObservabilityExport.NodeSet2.xml"
+  },
+  "output": {
+    "docx": "word-drafts/OPC-UA-Observability-Export.docx",
+    "docmodel": "word-drafts/OPC-UA-Observability-Export.docmodel.json",
+    "figures": "word-drafts/figures"
+  },
+
+  "identity": {
+    "docNumber": "OPC nnnnn-m",
+    "partNumber": "Part 1",
+    "partName": "Observability Export",
+    "title": "Observability Export",
+    "mainTitle": "OPC UA FOR OBSERVABILITY EXPORT",
+    "subTitle": "Part 1: Bindings to OpenTelemetry",
+    "shortName": "OBS",
+    "capabilityIdentifier": "OBS",
+    "namespaceUri": "http://opcfoundation.org/UA/Observability/",
+    "namespaceIndexInDocument": 1,
+    "version": "0.2.0",
+    "publicationDate": "2026-07-29",
+    "releaseType": "Draft",
+    "mantisProjectId": "<nnn>",
+    "otherOrganization": "OpenTelemetry project",
+    "draftBanner": "PROVISIONAL WORKING DRAFT — not normative, not endorsed by the OPC Foundation. The document number, the Mantis project identifier and every NodeId in this document are placeholders; the OPC Foundation assigns the real values."
+  },
+
+  "abbreviations": [
+    ["A&C", "Alarms and Conditions"],
+    ["API", "Application Programming Interface"],
+    ["CDD", "Common Data Dictionary"],
+    ["DI", "Devices"],
+    ["HTTP", "Hypertext Transfer Protocol"],
+    ["IRDI", "International Registration Data Identifier"],
+    ["JSON", "JavaScript Object Notation"],
+    ["OTEL", "OpenTelemetry"],
+    ["OTLP", "OpenTelemetry Protocol"],
+    ["RPC", "Remote Procedure Call"],
+    ["URI", "Uniform Resource Identifier"],
+    ["UTC", "Coordinated Universal Time"]
+  ],
+
+  "normativeReferences": [
+    {"id": "UAPart1", "label": "OPC 10000-1", "title": "OPC Unified Architecture - Part 1: Overview and Concepts", "url": "http://www.opcfoundation.org/documents/10000-1/"},
+    {"id": "UAPart2", "label": "OPC 10000-2", "title": "OPC Unified Architecture - Part 2: Security Model", "url": "http://www.opcfoundation.org/documents/10000-2/"},
+    {"id": "UAPart3", "label": "OPC 10000-3", "title": "OPC Unified Architecture - Part 3: Address Space Model", "url": "http://www.opcfoundation.org/documents/10000-3/"},
+    {"id": "UAPart4", "label": "OPC 10000-4", "title": "OPC Unified Architecture - Part 4: Services", "url": "http://www.opcfoundation.org/documents/10000-4/"},
+    {"id": "UAPart5", "label": "OPC 10000-5", "title": "OPC Unified Architecture - Part 5: Information Model", "url": "http://www.opcfoundation.org/documents/10000-5/"},
+    {"id": "UAPart6", "label": "OPC 10000-6", "title": "OPC Unified Architecture - Part 6: Mappings", "url": "http://www.opcfoundation.org/documents/10000-6/"},
+    {"id": "UAPart7", "label": "OPC 10000-7", "title": "OPC Unified Architecture - Part 7: Profiles", "url": "http://www.opcfoundation.org/documents/10000-7/"},
+    {"id": "UAPart9", "label": "OPC 10000-9", "title": "OPC Unified Architecture - Part 9: Alarms and Conditions", "url": "http://www.opcfoundation.org/documents/10000-9/"},
+    {"id": "UAPart10", "label": "OPC 10000-10", "title": "OPC Unified Architecture - Part 10: Programs", "url": "http://www.opcfoundation.org/documents/10000-10/"},
+    {"id": "UAPart11", "label": "OPC 10000-11", "title": "OPC Unified Architecture - Part 11: Historical Access", "url": "http://www.opcfoundation.org/documents/10000-11/"},
+    {"id": "UAPart12", "label": "OPC 10000-12", "title": "OPC Unified Architecture - Part 12: Discovery and Global Services", "url": "http://www.opcfoundation.org/documents/10000-12/"},
+    {"id": "UAPart14", "label": "OPC 10000-14", "title": "OPC Unified Architecture - Part 14: PubSub", "url": "http://www.opcfoundation.org/documents/10000-14/"},
+    {"id": "UAPart19", "label": "OPC 10000-19", "title": "OPC Unified Architecture - Part 19: Dictionary References", "url": "http://www.opcfoundation.org/documents/10000-19/"},
+    {"id": "UAPart100", "label": "OPC 10000-100", "title": "OPC Unified Architecture - Part 100: Devices", "url": "http://www.opcfoundation.org/documents/10000-100/"},
+    {"id": "UA11030", "label": "OPC 11030", "title": "OPC UA Modelling Best Practices", "url": "http://www.opcfoundation.org/documents/11030/"},
+    {"id": "OTEL", "label": "OpenTelemetry specification", "title": "The metrics, logs and traces data model and the OTLP protocol this document maps onto.", "url": "https://opentelemetry.io/docs/specs/otel/"}
+  ],
+
+  "clauseMap": [
+    {"from": "1 Scope",                         "number": "1",    "title": "Scope",                                    "region": "scope"},
+    {"from": "1.1 Motivation",                  "number": "1.1",  "title": "Motivation"},
+
+    {"from": "2 Normative references",          "number": "2",    "title": "Normative references",                     "region": "normative-references", "generated": "normative-references"},
+
+    {"from": null,                              "number": "3",    "title": "Terms, abbreviated terms and conventions",  "region": "terms"},
+    {"from": null,                              "number": "3.1",  "title": "Overview",                                  "generated": "terms-overview"},
+    {"from": "3 Terms, definitions and abbreviations", "number": "3.2", "title": "Observability terms",                 "generated": "terms"},
+    {"from": null,                              "number": "3.3",  "title": "Abbreviated terms",                         "generated": "abbreviations"},
+    {"from": null,                              "number": "3.4",  "title": "Conventions used in this document",         "slice": "conventions"},
+
+    {"from": null,                              "number": "4",    "title": "General information to observability and OPC UA", "region": "general"},
+    {"from": null,                              "number": "4.1",  "title": "Introduction to observability export",      "generated": "intro-openusd"},
+    {"from": null,                              "number": "4.2",  "title": "Introduction to OPC Unified Architecture",  "slice": "opcua-intro"},
+
+    {"from": "1.2 Motivating use cases",        "number": "5",    "title": "Use cases",                                 "region": "use-cases"},
+
+    {"from": "4 Overview and concepts",         "number": "6",    "title": "Observability information model overview",  "region": "model-overview"},
+    {"from": "4.1 The two‑layer contract",      "number": "6.1",  "title": "The two-layer contract"},
+    {"from": "4.2 Discovery",                   "number": "6.2",  "title": "Discovery"},
+    {"from": "4.3 Realization (hybrid)",        "number": "6.3",  "title": "Realization"},
+    {"from": "4.4 Architecture",                "number": "6.4",  "title": "Architecture"},
+    {"from": "5 Information model",             "number": "6.5",  "title": "Organisation of the model"},
+    {"from": "5.4 Semantic cross-reference (normative)", "number": "6.6", "title": "Semantic cross-reference"},
+    {"from": "5.5 Propagation to Part 14 configuration (normative)", "number": "6.7", "title": "Propagation to Part 14 configuration"},
+    {"from": "5.6 Signal kind and granularity (normative)", "number": "6.8", "title": "Signal kind and granularity"},
+    {"from": "5.7 DataSetClassId (normative)",  "number": "6.9",  "title": "DataSetClassId"},
+    {"from": "5.8 DataSetMetaData exposure",    "number": "6.10", "title": "DataSetMetaData exposure"},
+    {"from": "5.10 Locating bound items — BrowsePath resolution (normative)", "number": "6.11", "title": "Locating bound items by BrowsePath resolution"},
+    {"from": "5.11 Registry and adoption",      "number": "6.12", "title": "Registry and adoption"},
+    {"from": "5.12 Binding inheritance and facet composition (normative)", "number": "6.13", "title": "Binding inheritance and facet composition"},
+    {"from": "5.13 OTEL mapping (normative)",   "number": "6.14", "title": "OTEL mapping"},
+
+    {"from": null,                              "number": "7",    "title": "OPC UA ObjectTypes",                        "region": "objecttypes"},
+    {"from": "5.1 ObservabilityFolderType",     "number": "7.1",  "title": "ObservabilityFolderType", "nodetable": "ObservabilityFolderType"},
+    {"from": "5.2 ObservabilityBindingType",    "number": "7.2",  "title": "ObservabilityBindingType", "nodetable": "ObservabilityBindingType"},
+    {"from": "5.3 BoundItemType and its subtypes", "number": "7.3", "title": "BoundItemType",          "nodetable": "BoundItemType"},
+    {"from": "5.9 IObservableType",             "number": "7.4",  "title": "IObservableType",          "nodetable": "IObservableType"},
+    {"from": null,                              "number": "7",    "title": "OPC UA ObjectTypes",       "generated": "types", "nodeClass": "UAObjectType", "numberFrom": 5, "emitHeading": false},
+
+    {"from": null,                              "number": "8",    "title": "OPC UA DataTypes",         "region": "datatypes", "generated": "datatypes"},
+
+    {"from": null,                              "number": "9",    "title": "OPC UA ReferenceTypes",    "region": "referencetypes", "generated": "types", "nodeClass": "UAReferenceType"},
+
+    {"from": "7 Profiles and Conformance Units", "number": "10",  "title": "Profiles and conformance units",            "region": "profiles"},
+
+    {"from": null,                              "number": "11",   "title": "Namespaces",                                "region": "namespaces"},
+    {"from": null,                              "number": "11.1", "title": "Namespace metadata",                        "generated": "namespace-metadata"},
+    {"from": null,                              "number": "11.2", "title": "Handling of OPC UA namespaces",             "generated": "namespace-handling"},
+
+    {"from": "Annex A — Information model",     "number": "A",    "title": "Observability namespace and mappings",      "annex": true, "normative": true, "region": "annex-a", "slice": "annex-a"},
+    {"from": "6 Using the model (informative)", "number": "B",    "title": "Using the model",                           "annex": true, "region": "annex-b"},
+    {"from": "6.1 Walkthrough",                 "number": "B.1",  "title": "Walkthrough"},
+    {"from": "6.2 Sequence — classic server (the default)", "number": "B.2", "title": "Sequence for a classic server"},
+    {"from": "6.3 Sequence — PubSub-capable server (less common)", "number": "B.3", "title": "Sequence for a PubSub-capable server"},
+    {"from": "8 Other observability backends (informative)", "number": "C", "title": "Other observability backends",     "annex": true, "region": "annex-c"}
+  ],
+
+  "dropped": [
+    "9 Deliverables and reproducibility",
+    "Type overview",
+    "Reference types",
+    "Object types",
+    "Data types",
+    "Methods",
+    "Well-known instances"
+  ],
+
+  "dropParagraphsContaining": [
+    "core-specs/",
+    "build_model.py",
+    "validate_local.py",
+    "CHANGELOG.md"
+  ],
+
+  "citedAs": ["Observability Export", "base specification", "observability spec"],
+
+  "annexMap": {"A": "A"},
+
+  "xrefMap": {
+    "1.1": "1.1", "1.2": "5",
+    "4.1": "6.1", "4.2": "6.2", "4.3": "6.3", "4.4": "6.4", "4": "6",
+    "5.1": "7.1", "5.2": "7.2", "5.3": "7.3", "5.4": "6.6", "5.5": "6.7",
+    "5.6": "6.8", "5.7": "6.9", "5.8": "6.10", "5.9": "7.4", "5.10": "6.11",
+    "5.11": "6.12", "5.12": "6.13", "5.13": "6.14", "5": "6.5",
+    "6.1": "B.1", "6.2": "B.2", "6.3": "B.3", "6": "Annex B",
+    "7": "10", "8": "Annex C", "9": "A"
+  },
+
+  "figures": [
+    {"id": "fig-obs-landscape",   "caption": "Observability export landscape",                 "pptx": "Observability-Fig1-Landscape.pptx"},
+    {"id": "fig-obs-addressspace", "caption": "The observability facility in the address space", "pptx": "Observability-Fig2-AddressSpace.pptx"},
+    {"id": "fig-obs-bounditem",   "caption": "BoundItemType and its subtypes",                  "pptx": "Observability-Fig3-BoundItem.pptx"},
+    {"id": "fig-obs-classic",     "caption": "Bridge sequence for a classic Server",            "pptx": "Observability-Fig4-ClassicSequence.pptx"},
+    {"id": "fig-obs-pubsub",      "caption": "Bridge sequence for a PubSub-capable Server",     "pptx": "Observability-Fig5-PubSubSequence.pptx"}
+  ]
+}

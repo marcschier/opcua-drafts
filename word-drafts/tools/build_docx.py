@@ -201,7 +201,9 @@ class Build:
             raise KeyError('%s is not in the NodeSet' % name)
         self.emitted_types.add(name)
         caption = '%s definition' % name
-        return [dm.nodetable(clause_id(entry['number']) + '-tab', caption, name)]
+        blocks = [dm.nodetable(clause_id(entry['number']) + '-tab', caption, name)]
+        blocks.extend(self._method_clauses(str(entry['number']), name))
+        return blocks
 
     def assign_ids(self):
         """Give every table and figure a stable id and a caption in template style."""
@@ -338,6 +340,18 @@ class Build:
                             'browseName': name})
             out.append(dm.nodetable(clause_id(number) + '-def',
                                     '%s definition' % name, name))
+            out.extend(self._method_clauses(number, name))
+        return out
+
+    def _method_clauses(self, type_number, type_name):
+        """A subclause per Method the type owns, as OPC 20020 8.1.3 places them."""
+        out = []
+        for k, method in enumerate(nodeset_tables.methods_of(self.model, type_name), 1):
+            number = '%s.%d' % (type_number, k)
+            out.append(dm.clause(clause_id(number), method,
+                                 level=clause_level(number)))
+            out.append({'t': 'methodtable', 'id': clause_id(number) + '-m',
+                        'browseName': method, 'owner': type_name})
         return out
 
     def _gen_type_stub(self, entry):

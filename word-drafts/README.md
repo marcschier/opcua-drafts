@@ -83,6 +83,21 @@ a new config file; a genuinely new shape needs a generalisation in `opcdocx/` fi
 |---|---|
 | `OPC-UA-OpenUSD-Binding-Part1.docx` | `metaverse-specs/openusd-binding/` + `Opc.Ua.OpenUsd.NodeSet2.xml` |
 | `OPC-UA-OpenUSD-Scene-Part2.docx` | `metaverse-specs/openusd-scene/` + `Opc.Ua.OpenUsdScene.NodeSet2.xml` |
+| `OPC-UA-xRegistry.docx` | `core-specs/xregistry/` + `Opc.Ua.XRegistry.NodeSet2.xml` |
+| `OPC-UA-Observability-Export.docx` | `core-specs/observability-export/` + `Opc.Ua.ObservabilityExport.NodeSet2.xml` |
+
+## Not converted
+
+- **`wot-specs/WoT-Binding/`** has **no NodeSet and defines no ObjectTypes** — its deliverables are a
+  JSON-LD context and a JSON Schema. OPC 20020 is the *UA Companion Specification Template*, whose
+  type clauses and Annex A exist to present an information model, so rendering this document into it
+  would produce empty type clauses and an Annex A pointing at nothing. That is a deviation, not a
+  conversion.
+- **`wot-specs/WoT-Connectivity/`** fits the template but has not been converted yet: 16 ObjectTypes,
+  **43 Methods**, 15 DataTypes, EventTypes and a large deprecated 1.02 legacy block, none of whose
+  conformance units carry identifiers. The pipeline now handles every shape it needs — Methods were
+  added for xRegistry — so what remains is the editorial work of assigning conformance units across
+  ~180 nodes and deciding how the deprecated legacy block is presented.
 
 ## The clause map
 

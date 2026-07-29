@@ -33,7 +33,8 @@ PROPER_NOUNS = {
     'Cesium', 'NVIDIA', 'Annex', 'Georeference', 'Information', 'Model', 'Scope',
     'IEC', 'AOUSD', 'xRegistry', 'Namespace', 'Namespaces', 'Server', 'Servers',
     'Nodes', 'Node', 'Well-Known', 'Conventions', 'Contents', 'Figures', 'Tables',
-    'CONTENTS',
+    'CONTENTS', 'xRegistry', 'WoT', 'OTEL', 'PubSub', 'Registry', 'Group', 'Resource',
+    'Attributes', 'Methods', 'Method', 'Observability', 'Thing', 'Things',
 }
 TYPE_NAME_RE = re.compile(r'^(?:I?[A-Z][a-zA-Z0-9]*Type|Usd[A-Za-z0-9]+|OpenUsd[A-Za-z0-9]+)$')
 
@@ -130,7 +131,12 @@ def check_heading_capitalisation(doc, res):
         if not words:
             continue
         head = words[0].strip('"\u201c')
-        if head and head[0].islower():
+        # Guideline 2 exempts proper nouns and type names, some of which are
+        # deliberately lower-case first ("xRegistry", "xformOp", "usdview").
+        if (head and head[0].islower()
+                and head not in PROPER_NOUNS
+                and not TYPE_NAME_RE.match(head)
+                and not re.match(r'^[a-z][A-Z]', head)):
             res.error('heading-caps', 'heading does not start with a capital: %r' % text[:70])
         for w in words[1:]:
             bare = w.strip('.,;:"\u201c\u201d\u2019()[]')
