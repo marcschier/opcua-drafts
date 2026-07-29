@@ -1,6 +1,6 @@
 # The pipeline
 
-```
+```text
 markdown draft ─┐
 UANodeSet ──────┼─► build_docx.py ─► docmodel.json ─► render_docx.py ─► .docx
 build config ───┘                                          │

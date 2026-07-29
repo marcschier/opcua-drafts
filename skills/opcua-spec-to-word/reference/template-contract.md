@@ -36,7 +36,7 @@ cross-reference is a field.
 
 ## Numbering
 
-```
+```text
 Heading1        numPr numId=23              -> "1", "2", ...
 Heading2..5     pStyle-linked, abstractNum 14 -> "1.1", "1.1.1", ...
 ANNEXtitle      numPr numId=14 (abstractNum 16, upperLetter) -> "Annex A"
@@ -47,7 +47,7 @@ ANNEX-heading1  same sequence, level 1       -> "A.1"
 
 Captions carry a `SEQ` field:
 
-```
+```text
 TABLE-title    "Table " + { SEQ Table \* ARABIC } + " – " + caption
 FIGURE-title   "Figure " + { SEQ Figure \* ARABIC } + " – " + caption
 ```
@@ -55,7 +55,7 @@ FIGURE-title   "Figure " + { SEQ Figure \* ARABIC } + " – " + caption
 Cross-references are `REF` fields: `{ REF _Clause_c7_11 \r \h }` for a clause number,
 `{ REF _Tab_x \h }` for a table. The three tables of contents are `TOC` fields:
 
-```
+```text
 { TOC \o "1-3" \h \z \u }
 { TOC \t "FIGURE-title" \c \h }
 { TOC \t "TABLE-title" \c \h }
@@ -69,7 +69,7 @@ Column grid, in twentieths of a point: `1696, 1134, 2127, 1275, 1843, 851` (tota
 the template's text width). Geometry: `tblW=8926 dxa`, `jc=center`, 12 pt grey outer borders,
 6 pt grey inner, `tblLayout=fixed`, `tblLook=0000`. Cell text uses `TableText`.
 
-```
+```text
 | Attribute        | Value (gridSpan 5)                                          |   <- bold, bottom double
 | BrowseName       | 2:OpenUsdStageType                                          |
 | IsAbstract       | False                                                       |
@@ -148,7 +148,7 @@ document's own namespace is printed without one.
                  DrawAspect="Content" ObjectID="_1900000001" r:id="rIdEmbed"/>
   </w:object></w:r>
 </w:p>
-```
+```xml
 
 The `v:shapetype id="_x0000_t75"` definition must appear once before the first `v:shape` that
 references it. Parts: the preview under `word/media/*.png` (relationship type `image`) and the
@@ -169,7 +169,7 @@ next time Word saves it. `[Content_Types].xml` also needs an override for the pa
 
 `docProps/custom.xml` drives the cover and both headers through `DOCPROPERTY` fields:
 
-```
+```text
 Version  Published  OPCVersion  OPCReleaseType  Part Name  Part Number
 HeaderLeft  DocNumber  HeaderRight  TemplateVersion  "Date completed"
 ```

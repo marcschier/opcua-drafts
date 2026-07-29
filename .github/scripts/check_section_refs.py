@@ -9,7 +9,14 @@ walks every markdown document, collects the clause numbers its headings declare,
 reports any `§` reference that names a clause the document does not have.
 
 References that name another document explicitly (`Part 1 §7.11`, `Bindings spec §7.4.2`)
-are resolved against that document when it can be located, and skipped otherwise.
+are resolved against that document when it can be located, and references qualified by
+another standard (`OPC 10000-3 …§4.10.3`, `Schema Registry §7`) are skipped.
+
+Qualifiers are matched in a **bounded window** around the reference. A document name
+elsewhere in the same sentence must not mask a genuine stale self-reference, which is
+exactly the defect this exists to catch. The cost is that a reference whose qualifier sits
+far away cannot be classified, so only the trees in `STRICT_PREFIXES` fail the check;
+elsewhere findings are printed as advisory notes.
 """
 
 import os
@@ -22,10 +29,43 @@ HEADING_RE = re.compile(r'^#{2,6}\s+(?:Annex\s+([A-Z])\b|([0-9A-Z](?:\.[0-9]+)*)
 REF_RE = re.compile(r'(?P<qualifier>.{0,44})§\s*(?P<number>[0-9A-Z](?:\.[0-9]+)*)')
 FENCE_RE = re.compile(r'^```')
 
-# A reference qualified by another standard is that standard's clause, not ours.
-EXTERNAL_QUALIFIERS = re.compile(
-    r'(OPC\s*1\d{4}|OPC\s*\d{5}|IEC\s*\d+|Part\s*\d+\b(?!\s*§?\s*$)|xRegistry|AOUSD'
-    r'|Core Specification|core spec|RFC\s*\d+|W3C)', re.IGNORECASE)
+# A reference qualified by another standard is that standard's clause, not ours. These
+# are matched in a short window immediately around the reference: a document name
+# elsewhere in the same sentence must not mask a genuine self-reference.
+WINDOW = 70
+LINK_WINDOW = 130
+
+EXTERNAL_BEFORE = re.compile(
+    r'(OPC\s*1\d{4}|OPC\s*\d{5}|IEC\s*\d+|AOUSD|RFC\s*\d+|W3C'
+    r'|Core Specification|core spec'
+    r'|\bthe base\b|\bbase (?:specification|model|spec)\b|\bthat specification\b'
+    r'|\bbase\s*$'
+    r'|\*[^*]*OPC UA[^*]*\*'
+    r'|`[^`]*\.md`'
+    r')', re.IGNORECASE)
+
+# The qualifier sometimes follows the reference: "(§4.2 of the base)", "§8 of that
+# specification".
+EXTERNAL_AFTER = re.compile(
+    r'^[^.]{0,40}?\bof (?:the base|that specification|\[|\*)', re.IGNORECASE)
+
+# A markdown link to another document just before the reference names that document.
+LINK_BEFORE = re.compile(r'\[[^\]]*\]\([^)]*\)[^§]{0,20}$')
+
+# "Schema Registry §7", "WoT Connectivity §7.3", "Avro Part 14 §8.1".
+NAMED_SPEC_BEFORE = re.compile(
+    r'(?<!\bPart )[A-Z][A-Za-z]+(?: [A-Z][A-Za-z0-9]+)+(?:\s+\d+)?[\s,(]*$')
+
+# A chained list — "Schema Registry §7, §8" — carries the qualifier of its first member.
+CHAINED_BEFORE = re.compile(r'§\s*[0-9A-Z](?:\.[0-9]+)*\s*(?:,|and|/)\s*$')
+
+# "Part 14 Arrow mapping §7.2.8" names another standard's clause. "Part 1"/"Part 2" name
+# this repository's own documents and are resolved before this rule is reached.
+PART_NEAR = re.compile(r'\bPart\s+\d{1,3}\b[^§]{0,40}$')
+
+# A bibliography entry — a list item that opens with a markdown link — cites another
+# document throughout, however far the clause number sits from the link.
+BIBLIOGRAPHY_LINE = re.compile(r'^\s*[-*]\s*\[')
 
 # Documents that are cited by name from their siblings.
 NAMED_DOCUMENTS = {
@@ -39,6 +79,13 @@ SKIP_DIRS = {'.git', 'node_modules', '__pycache__'}
 # A changelog records the numbering of the release it describes, and a generated model
 # reference is not prose; neither is a place to chase a renumbering.
 SKIP_FILES = ('CHANGELOG.md', 'model-reference.md')
+
+# Trees where an unresolved reference fails the check. Elsewhere findings are printed
+# as advisory notes: a reference whose qualifier sits far from it ("No change to
+# OPC 10000-6 §7.2 is required. … Reverse connect (§7.1.3) …") cannot be classified from
+# a bounded window, and widening the window is what makes the check miss real defects.
+# Opting a tree in is a deliberate act by whoever has verified its references.
+STRICT_PREFIXES = ('metaverse-specs/',)
 
 
 def clause_numbers(text):
@@ -66,11 +113,26 @@ def references(text):
             continue
         if in_fence:
             continue
+        skipped_here = False
+        bibliography = bool(BIBLIOGRAPHY_LINE.match(line))
         for m in REF_RE.finditer(line):
             qualifier = m.group('qualifier') or ''
             before = line[:m.start('number')]
-            if EXTERNAL_QUALIFIERS.search(before) and not _names_sibling(qualifier):
+            head = before.rstrip().rstrip('\u00a7').rstrip()
+            after = line[m.end('number'):]
+            if _names_sibling(qualifier):
+                yield lineno, qualifier.strip().lower(), m.group('number')
                 continue
+            if (bibliography
+                    or EXTERNAL_BEFORE.search(head[-WINDOW:])
+                    or EXTERNAL_AFTER.match(after)
+                    or LINK_BEFORE.search(head[-LINK_WINDOW:])
+                    or NAMED_SPEC_BEFORE.search(head[-WINDOW:])
+                    or PART_NEAR.search(head[-WINDOW:])
+                    or (skipped_here and CHAINED_BEFORE.search(head))):
+                skipped_here = True
+                continue
+            skipped_here = False
             yield lineno, qualifier.strip().lower(), m.group('number')
 
 
@@ -96,51 +158,60 @@ def main():
                 cache[path] = clause_numbers(f.read())
         return cache[path]
 
-    def owning_spec(path):
-        """A README or addendum has no clauses of its own; its `§` means its spec."""
+    def sibling_specs(path):
+        """The specification documents a bare `§` in this file could reasonably mean.
+
+        A README or an addendum has no clauses of its own, and a multi-part
+        specification splits its clauses across sibling files, so a reference is
+        resolved against every specification document beside it and one level up.
+        """
+        found = []
         folder = os.path.dirname(path)
         for candidate_dir in (folder, os.path.dirname(folder)):
+            if not os.path.isdir(candidate_dir):
+                continue
             for name in sorted(os.listdir(candidate_dir)):
                 if not name.startswith('OPC-UA-') or not name.endswith('.md'):
                     continue
                 candidate = os.path.join(candidate_dir, name)
                 if candidate != path and len(numbers_for(candidate)) > 3:
-                    return candidate
-        return None
+                    found.append(candidate)
+        return found
 
     problems = 0
+    notes = 0
     checked = 0
     for path in sorted(markdown_files()):
         with open(path, encoding='utf-8') as f:
             text = f.read()
         own = numbers_for(path)
-        default_target = path if len(own) > 3 else owning_spec(path)
-        if default_target is None:
+        siblings = sibling_specs(path)
+        if len(own) <= 3 and not siblings:
             continue
         checked += 1
+        rel = os.path.relpath(path, ROOT).replace('\\', '/')
+        strict = rel.startswith(STRICT_PREFIXES)
         for lineno, qualifier, number in references(text):
-            targets = [default_target]
-            if default_target != path:
-                targets.insert(0, path)
-            spec = owning_spec(path)
-            if spec and spec not in targets:
-                targets.append(spec)
-            for name, rel in NAMED_DOCUMENTS.items():
+            targets = [path] + siblings
+            for name, target_rel in NAMED_DOCUMENTS.items():
                 if qualifier.endswith(name):
-                    candidate = os.path.join(ROOT, rel)
+                    candidate = os.path.join(ROOT, target_rel)
                     if os.path.exists(candidate):
                         targets = [candidate]
                     break
-            if any(number in numbers_for(t) for t in targets if t):
+            if any(number in numbers_for(t) for t in targets):
                 continue
-            rel = os.path.relpath(path, ROOT).replace('\\', '/')
             tgt = os.path.relpath(targets[0], ROOT).replace('\\', '/')
             where = 'this document' if targets[0] == path else tgt
-            print('%s:%d: \u00a7%s does not resolve to a clause of %s'
-                  % (rel, lineno, number, where))
-            problems += 1
+            print('%s%s:%d: \u00a7%s does not resolve to a clause of %s'
+                  % ('' if strict else 'note: ', rel, lineno, number, where))
+            if strict:
+                problems += 1
+            else:
+                notes += 1
 
-    print('checked %d document(s), %d unresolved reference(s)' % (checked, problems))
+    print('checked %d document(s), %d unresolved reference(s), %d advisory note(s)'
+          % (checked, problems, notes))
     return 1 if problems else 0
 
 
