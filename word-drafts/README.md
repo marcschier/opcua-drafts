@@ -43,6 +43,11 @@ Run `finalize_word.ps1` before committing. The pure-Python build cannot paginate
 the table of contents and every page number carry no correct value until a reader updates the
 fields by hand.
 
+The committed `.docx` is therefore the **post-finalise** file. A plain rebuild produces the
+pre-finalise one, so the working tree will look dirty until you finalise again — Word's own save is
+not byte-deterministic. The *build* is: two consecutive `build_docx.py` runs produce identical
+bytes, which is what makes a `docmodel.json` diff meaningful.
+
 ## How it works
 
 The template is **cloned, not rebuilt**. `build_docx.py` opens the template package and replaces
