@@ -606,6 +606,41 @@ The `TransportSecured` profile rests on one premise — that the TLS connection 
 
 §7.6.1 binds several artifacts together — the certificate presented in the TLS handshake, the `serverCertificate` of the selected `EndpointDescription`, and the certificate the peer presents in the `OpenSecureChannel` exchange — and obliges the verifying peer to abort unless all carry the same `subjectPublicKeyInfo`. Replacing an Application Instance Certificate therefore moves several things at once, and a peer that moves them independently violates the binding with no attacker present. This is not an exotic case: certificates are renewed on a schedule, a GDS-driven renewal is routine, and the data channels this document exists to carry are long-lived enough that a media stream will normally outlive at least one renewal.
 
+The rules below are stated from two sides, and are easier to read that way. The first figure is what the peer **holding** the certificate does when it is replaced; the second is what the peer **verifying** it does when a connection is established.
+
+**Figure 7.6.2-1 — the holder, on activating a replacement.** The whole of the teardown hangs on one question, and it is not "has the certificate changed" but "has the *key* changed":
+
+```mermaid
+flowchart TD
+    A[Replacement certificate activated] --> B{Same subjectPublicKeyInfo<br/>as the superseded one?}
+    B -->|Yes, a re-issue| C[Nothing is disturbed.<br/>The binding is by key, so every<br/>live connection stays valid]
+    B -->|No, a key change| D[Send any Service response<br/>that ordered the activation]
+    D --> E[Refuse admission to handshakes<br/>begun under the superseded key]
+    E --> F[CONNECTION_CLOSE each bound connection<br/>with Bad_SecurityChecksFailed]
+    F --> G[Invalidate TLS session tickets<br/>or disable resumption]
+    G --> H[Publish the replacement from<br/>GetEndpoints and OpenSecureChannel]
+    C --> I[Peers re-open channels only<br/>if their connection ended]
+    H --> I
+```
+
+**Figure 7.6.2-2 — the verifier, on establishing a connection.** Note that a mismatch is never resolved by asking the same party again:
+
+```mermaid
+flowchart TD
+    A[Connection established] --> B{Resumed from<br/>a session ticket?}
+    B -->|Yes| C[Bound certificate is the one from the<br/>full handshake that issued the ticket]
+    B -->|No| D[Compare the artifacts of this<br/>connection per 7.6.1]
+    C --> E{All carry the same<br/>subjectPublicKeyInfo?}
+    D --> E
+    E -->|Yes| F[Proceed, and re-check at every<br/>SecurityToken renewal]
+    E -->|No| G[Abort and raise<br/>AuditSecurityEventType]
+    G --> H{Independently authenticated<br/>discovery path available?}
+    H -->|Yes| I[Re-read endpoints there<br/>once and retry]
+    H -->|No| J[Report a security failure.<br/>A new key needs explicit approval,<br/>never a CA chain plus ApplicationUri]
+    F --> K{Bound certificate later revoked,<br/>untrusted or expired?}
+    K -->|Yes| L[Close the connection, whether<br/>it is the peer's or one's own]
+```
+
 - **The binding is evaluated against the selected `EndpointDescription`, not against whatever discovery currently returns.** A connection's binding is fixed when it is established, from the artifacts §7.6.1 compares — which pair or triple applies depends on the TLS role, as the last rule of this subclause sets out — and all of them **shall** carry the same `subjectPublicKeyInfo`. `GetEndpoints` **shall** advertise the certificate currently in use for new connections, on whichever connection the request arrives, because a discovery response exists to configure the *next* connection and one naming a superseded certificate would describe a connection that can no longer be established.
 - **A peer shall not present two different keys within one connection.** The certificate a peer presents in TLS and the certificate it presents in the `OpenSecureChannel` exchange on the same connection — including at every SecurityToken renewal — **shall** carry the same `subjectPublicKeyInfo` for the life of that connection. A renewal that re-issues the *same* key is therefore transparent: the binding of §7.6.1 is by key, so a re-issued certificate satisfies it and no connection need be disturbed. It is a change of key that the rules below constrain. An implementation that resolves its TLS certificate once when the listener starts, while its certificate registry rotates underneath it, will present two different keys on one connection; the resulting failure is indistinguishable at the verifying peer from the relay attack §7.6.1 exists to prevent, which is what makes it worth stating.
 - **Activating a new key closes the connections established under the superseded one.** TLS 1.3 fixes the server certificate at handshake and offers no renegotiation, so a running connection cannot be moved to a new key, and the rule above forbids serving it over that connection. On activating a replacement carrying a different `subjectPublicKeyInfo` a peer **shall** close every `opc.quic` connection bound to the superseded key, and **shall** close it with a QUIC application `CONNECTION_CLOSE` whose error code carries `Bad_SecurityChecksFailed`, so that each peer learns why every stream on it ended at once. A per-stream `RESET` **shall not** be relied on here: RFC 9000 §10.2 makes `CONNECTION_CLOSE` terminate every stream immediately, so resets queued behind it are not guaranteed to arrive, and a receive-only stream cannot carry one at all. Activation **shall** be atomic with respect to connection admission: a handshake still in flight at the cutover **shall not** be allowed to reach the established state under the superseded key, since a connection that merely had not yet completed is otherwise admitted after the key it presents has been retired. Where the activation was triggered by a Service call, it **shall** take effect only after that call's response has been sent, so that closing the connection does not suppress the response that ordered the change. Each peer then re-establishes and re-opens its channels under the replacement.
@@ -619,7 +654,7 @@ The `TransportSecured` profile rests on one premise — that the TLS connection 
 
 ### 7.7 Connection migration
 
-QUIC identifies a connection by its connection ID rather than by the four-tuple, so a client whose address changes — a vehicle moving between access points, a handheld leaving Wi-Fi for cellular — keeps the same QUIC connection, the same SecureChannel, the same Session and every open data channel. Over `opc.tcp` all of that is destroyed and must be rebuilt.
+QUIC identifies a connection by its connection ID rather than by the four-tuple — the source address, source port, destination address and destination port that identify a TCP connection, any one of which changing makes it a different connection. A client whose address changes therefore — a vehicle moving between access points, a handheld leaving Wi-Fi for cellular — keeps the same QUIC connection, the same SecureChannel, the same Session and every open data channel. Over `opc.tcp` all of that is destroyed and must be rebuilt.
 
 A Server **shall** accept migration under the RFC 9000 path-validation rules and **shall not** abort the connection on a validated path change, since it remains cryptographically bound to the same peer. A Server **shall** record the path change in the audit trail, and **shall** re-evaluate any authorization decision that depended on the network location of the peer, aborting the affected data channels with `Bad_UserAccessDenied` on a negative result. This last obligation is not optional, because migration is precisely what lets an authenticated Client carry a live stream from an authorized network segment to an unauthorized one — over `opc.tcp` the same move destroys the connection and forces re-authentication, so leaving it discretionary would make QUIC a regression against the transport it replaces.
 
