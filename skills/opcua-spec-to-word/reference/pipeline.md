@@ -87,10 +87,28 @@ Verify with two builds and a hash comparison.
 2. Point `source.markdown` and `source.nodeset` at the new draft.
 3. Fill `identity`, `abbreviations` and `normativeReferences`.
 4. Write the `clauseMap`: for each clause, its number, its template-capitalised title, the markdown
-   heading it comes from, and — for a type clause — the `nodetable` BrowseName.
-5. Write the `xrefMap` from the draft's current clause numbers to the new ones.
-6. List the `figures`.
-7. Build, validate, mutation-test, finalise.
+   heading it comes from, and — for a type clause — the `nodetable` BrowseName. A model with many
+   types does not need one entry each: an entry with `"generated": "types"` and a `nodeClass` emits
+   a subclause per Node of that class from the model, continuing the numbering from `numberFrom`
+   and skipping anything the map already named. Set `"emitHeading": false` on such an entry when it
+   continues a clause the map has already opened.
+5. Write the `xrefMap` from the draft's current clause numbers to the new ones, and the `annexMap`
+   for annex letters.
+6. List `citedAs` — how sibling documents name this one — and `unanchoredSiblings` for any README
+   beside it whose bare `§` references mean it.
+7. List the `figures`.
+8. Build, validate, mutation-test, finalise.
 
-No new code should be needed. If it is, the missing behaviour belongs in `opcdocx/`, not in the
-config.
+**How much of this is really config.** Part 2 was onboarded to test the claim. Its config was
+written from scratch, but four generalisations to `opcdocx/` were needed first, because Part 1 had
+never exercised them:
+
+- the renderer hardcoded *ObjectTypes + DataTypes*; Part 2 has VariableTypes and ReferenceTypes;
+- `Security` was assumed to exist as a clause after Namespaces; Part 2 has none;
+- the annex regions were hardcoded `annex-b` … `annex-f`;
+- the retained-heading bookmark aliases hardcoded Part 1's clause numbers (its Profiles clause is
+  9, Part 2's is 11).
+
+All four are now driven by the docmodel and the config. Expect the *first* specification with a
+genuinely new shape — Methods, EventTypes, Structures with optional fields — to need a similar
+round. The config carries what varies between documents of the same shape; a new shape is code.

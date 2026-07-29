@@ -122,7 +122,7 @@ embedded **inline**; a binary or oversized artifact would instead carry a
 concrete typed prim `OpcUaGeoreferencePrim` and a single-apply
 `OpcUaGlobeAnchorAPI`), verified by loading the pair through USD's `PlugRegistry`
 / `UsdSchemaRegistry` (if `pxr` is installed, `validate_local.py` re-runs that
-check). It mirrors the **shape** of the Part 2 Annex B georeference vendor types
+check). It mirrors the **shape** of the Part 2 Annex C georeference vendor types
 under prototype-owned names — it is **not** the official Cesium for Omniverse
 schema. `schema.usda` is the `usdGenSchema` input kept for provenance.
 

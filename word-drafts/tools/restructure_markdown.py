@@ -16,7 +16,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from opcdocx import md_parse
+from opcdocx import md_parse, nodeset_tables
 
 REPO = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))
 
@@ -101,6 +101,11 @@ def restructure(cfg):
     with open(src, encoding='utf-8') as f:
         text = f.read()
     sections, order = md_parse.split_sections(text)
+    model = nodeset_tables.Model(os.path.join(REPO, cfg['source']['nodeset']))
+    _EMITTED_TYPES.clear()
+    for entry in cfg['clauseMap']:
+        if entry.get('nodetable'):
+            _EMITTED_TYPES.add(entry['nodetable'])
 
     ident = cfg['identity']
     out = []
@@ -116,7 +121,9 @@ def restructure(cfg):
     for entry in cfg['clauseMap']:
         number = str(entry['number'])
         title = entry['title']
-        if is_annex(number) and '.' not in number:
+        if not entry.get('emitHeading', True):
+            pass
+        elif is_annex(number) and '.' not in number:
             out.append('')
             out.append('---')
             out.append('')
@@ -139,9 +146,12 @@ def restructure(cfg):
         if entry.get('from'):
             body.extend(_body(sections, entry['from']))
             used.add(entry['from'])
-        elif entry.get('generated'):
-            body.extend(_generated_markdown(entry['generated'], cfg))
-        elif entry.get('slice'):
+        if entry.get('generated') == 'types':
+            # The authored prose introduces the clause; the per-type subclauses follow.
+            body.extend(_generated_markdown('types', cfg, entry, model))
+        elif not entry.get('from') and entry.get('generated'):
+            body.extend(_generated_markdown(entry['generated'], cfg, entry, model))
+        elif not entry.get('from') and entry.get('slice'):
             body.extend(_slice_markdown(entry['slice']))
         if entry.get('append'):
             key, _, anchor = entry['append'].partition('#')
@@ -162,6 +172,33 @@ def restructure(cfg):
                if k != '__preamble__' and k not in used
                and not any(k.startswith(d) for d in cfg.get('dropped', []))]
     return body_text, missing
+
+
+def _assert_no_old_numbers(text, cfg):
+    """Deliberately not used as a gate.
+
+    Checking the rewritten text against the map's own keys is unsound: a clause that
+    moves to 8.1 collides with 8.1 as an *old* key, so a correctly-rewritten reference
+    is indistinguishable from a missed one. The meaningful property — does a reference
+    resolve to a clause that exists? — is checked by
+    `.github/scripts/check_section_refs.py`, which is the gate.
+
+    Kept as a diagnostic for tracking down a suspected miss.
+    """
+    keys = {k for k, v in cfg['xrefMap'].items() if v != k}
+    survivors = []
+    in_fence = False
+    for lineno, line in enumerate(text.split('\n'), 1):
+        if line.startswith('```'):
+            in_fence = not in_fence
+            continue
+        if in_fence:
+            continue
+        for m in re.finditer(r'§\s*(\d+(?:\.\d+)*)', line):
+            if m.group(1) in keys and not FOREIGN_QUALIFIER.search(line[:m.start()]):
+                survivors.append('  line %d: \u00a7%s in %r'
+                                 % (lineno, m.group(1), line[:90]))
+    return survivors
 
 
 def _lookup(sections, order, key):
@@ -242,8 +279,38 @@ def _slice_markdown(kind):
     return []
 
 
-def _generated_markdown(kind, cfg):
+def _types_markdown(cfg, entry, model):
+    """Mirror the Word build's generated type subclauses.
+
+    Both forms must declare the same clause numbers, or a reference that resolves in
+    one fails in the other — which is the drift the shared clause map exists to prevent.
+    """
+    if model is None or entry is None:
+        return []
+    lines = []
+    n = entry.get('numberFrom', 1) - 1
+    for name in model.names_of_class(entry['nodeClass']):
+        if name in _EMITTED_TYPES:
+            continue
+        _EMITTED_TYPES.add(name)
+        n += 1
+        number = '%s.%d' % (entry['number'], n)
+        node = model.by_name[name]
+        lines.append('')
+        lines.append('%s %s `%s`' % (heading_prefix(number), number, name))
+        lines.append('')
+        if node.description:
+            lines.append(node.description)
+    return lines
+
+
+_EMITTED_TYPES = set()
+
+
+def _generated_markdown(kind, cfg, entry=None, model=None):
     ident = cfg['identity']
+    if kind == 'types':
+        return _types_markdown(cfg, entry, model)
     if kind == 'terms-overview':
         return [
             'It is assumed that basic concepts of OPC UA information modelling and of '
@@ -330,16 +397,34 @@ def _generated_markdown(kind, cfg):
 def rewrite_siblings(cfg, paths):
     """Rewrite `Part 1 §x.y` style references in the documents that cite this one."""
     changed = []
+    unanchored = set(cfg.get('unanchoredSiblings') or [])
     xref = cfg['xrefMap']
+    annex_map = cfg.get('annexMap') or {}
     keys = sorted(xref, key=len, reverse=True)
-    pattern = re.compile(r'(Part 1[^.\n]{0,40}?)§\s*('
-                         + '|'.join(re.escape(k) for k in keys) + r')(?!\.?\d)')
+    # How sibling documents name this one. A reference is only rewritten when it is
+    # anchored on one of these, so this document's clause map is never applied to a
+    # reference that belongs elsewhere.
+    anchors = cfg.get('citedAs') or [cfg['identity']['partNumber']]
+    anchor_alt = '|'.join(re.escape(a) for a in anchors)
+    pattern = re.compile(
+        r'(?P<anchor>(?:' + anchor_alt + r')[^.\n]{0,60}?)§\s*(?P<num>'
+        + '|'.join(re.escape(k) for k in keys) + r')(?!\.?\d)'
+        r'(?P<range>\s*[\u2013\u2014-]\s*(?:' + '|'.join(re.escape(k) for k in keys)
+        + r')(?!\.?\d))?')
+    annex_pattern = re.compile(
+        r'(?P<anchor>(?:' + anchor_alt + r')[^.\n]{0,60}?)Annex\s+(?P<letter>[A-Z])\b')
 
     def repl(m):
-        new = xref[m.group(2)]
-        if new.startswith('Annex '):
-            return m.group(1) + new
-        return m.group(1) + '\u00a7' + new
+        out = m.group('anchor') + _mapped(xref, m.group('num'))
+        tail = m.group('range')
+        if tail:
+            end = tail.lstrip(' \u2013\u2014-')
+            out += tail[:len(tail) - len(end)] + _mapped(xref, end.strip())
+        return out
+
+    def annex_repl(m):
+        return m.group('anchor') + 'Annex ' + annex_map.get(m.group('letter'),
+                                                            m.group('letter'))
 
     for rel in paths:
         full = os.path.join(REPO, rel)
@@ -348,6 +433,12 @@ def rewrite_siblings(cfg, paths):
         with open(full, encoding='utf-8') as f:
             text = f.read()
         new_text = pattern.sub(repl, text)
+        if annex_map:
+            new_text = annex_pattern.sub(annex_repl, new_text)
+        if rel in unanchored:
+            # A README beside the specification cites it without naming it, so every
+            # bare reference in the file means this document.
+            new_text = rewrite_refs(new_text, xref, annex_map)
         if new_text != text:
             with open(full, 'w', encoding='utf-8', newline='\n') as f:
                 f.write(new_text)
@@ -355,10 +446,11 @@ def rewrite_siblings(cfg, paths):
     return changed
 
 
-SIBLINGS = [
+DEFAULT_SIBLINGS = [
     'metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md',
+    'metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md',
     'metaverse-specs/openusd-binding/README.md',
-    'metaverse-specs/openusd-binding/CHANGELOG.md',
+    'metaverse-specs/openusd-scene/README.md',
     'metaverse-specs/openusd-binding/pumps/OPC-UA-Pumps-OpenUSD-Bindings-Addendum.md',
     'metaverse-specs/openusd-binding/robotics/OPC-UA-Robotics-OpenUSD-Bindings-Addendum.md',
     'metaverse-specs/extras/openusd-binding/examples/pumps/E2E-GUIDE.md',
@@ -388,7 +480,7 @@ def main(argv=None):
         with open(target, 'w', encoding='utf-8', newline='\n') as f:
             f.write(text)
         print('rewrote %s' % cfg['source']['markdown'])
-        changed = rewrite_siblings(cfg, SIBLINGS)
+        changed = rewrite_siblings(cfg, cfg.get('siblingDocuments') or DEFAULT_SIBLINGS)
         for c in changed:
             print('updated references in %s' % c)
     if missing:

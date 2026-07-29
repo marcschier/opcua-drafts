@@ -59,6 +59,9 @@ class Build:
         self.xref_map = self.cfg['xrefMap']
         self.doc = dm.DocModel()
         self.figure_specs = list(self.cfg.get('figures', []))
+        # Types already given a clause by the clause map, so `_gen_types` does not
+        # emit them a second time.
+        self.emitted_types = set()
 
     # ------------------------------------------------------------------ xrefs
 
@@ -98,7 +101,10 @@ class Build:
 
             blocks = []
             cid = clause_id(number)
-            if entry.get('annex'):
+            emit_heading = entry.get('emitHeading', True)
+            if not emit_heading:
+                pass
+            elif entry.get('annex'):
                 blocks.append(dm.annex(cid, entry['title'],
                                        normative=entry.get('normative', False)))
             elif is_annex_number(number):
@@ -193,6 +199,7 @@ class Build:
         node = self.model.by_name.get(name)
         if node is None:
             raise KeyError('%s is not in the NodeSet' % name)
+        self.emitted_types.add(name)
         caption = '%s definition' % name
         return [dm.nodetable(clause_id(entry['number']) + '-tab', caption, name)]
 
@@ -298,25 +305,37 @@ class Build:
                 'without prior knowledge of the domain model.')]
 
     def _gen_datatypes(self, entry):
-        """One subclause per enumeration, each with its Items table."""
+        return self._gen_types(dict(entry, nodeClass='UADataType'))
+
+    def _gen_types(self, entry):
+        """One subclause per Node of a NodeClass: description, then its tables.
+
+        Types the clause map names explicitly keep their authored prose; the rest are
+        emitted from the model. Without this a model with 23 ObjectTypes would need 23
+        near-identical config entries, and `check_node_tables` fails the build for any
+        type the document forgets.
+        """
+        node_class = entry['nodeClass']
         out = []
         section = self._section_for(entry)
         if section is not None:
             intro = [b for b in self.parser().parse(section.lines, context=section.key)
                      if b['t'] == 'para']
             out.extend(intro[:1])
-        n = 0
-        for name in nodeset_tables.data_types(self.model):
-            node = self.model.by_name[name]
-            if not node.definition:
+        n = entry.get('numberFrom', 1) - 1
+        for name in self.model.names_of_class(node_class):
+            if name in self.emitted_types:
                 continue
+            self.emitted_types.add(name)
             n += 1
             number = '%s.%d' % (entry['number'], n)
+            node = self.model.by_name[name]
             out.append(dm.clause(clause_id(number), name, level=clause_level(number)))
             if node.description:
                 out.append(dm.text_para(node.description))
-            out.append({'t': 'enumtable', 'id': clause_id(number) + '-items',
-                        'browseName': name})
+            if node.definition and node_class == 'UADataType':
+                out.append({'t': 'enumtable', 'id': clause_id(number) + '-items',
+                            'browseName': name})
             out.append(dm.nodetable(clause_id(number) + '-def',
                                     '%s definition' % name, name))
         return out

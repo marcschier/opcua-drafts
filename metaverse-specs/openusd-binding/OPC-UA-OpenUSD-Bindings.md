@@ -527,7 +527,7 @@ The consequence is that a server exposing `Artifacts` **is** an addressable reso
 
 ### 7.13 OpenUsdSchemaPluginGroupType
 
-Part 2 §8 lets a vendor introduce new typed prims by subtyping `UsdTypedType` in OPC UA. A USD-side client has no way to interpret those prims unless it also has the corresponding **USD** schema. OpenUSD solves this with **codeless schemas**, which require exactly two files — a `plugInfo.json` manifest and a `generatedSchema.usda` — discovered through `PlugRegistry` and registered by `UsdSchemaRegistry` without any compiled code.
+Part 2 §6.7 lets a vendor introduce new typed prims by subtyping `UsdTypedType` in OPC UA. A USD-side client has no way to interpret those prims unless it also has the corresponding **USD** schema. OpenUSD solves this with **codeless schemas**, which require exactly two files — a `plugInfo.json` manifest and a `generatedSchema.usda` — discovered through `PlugRegistry` and registered by `UsdSchemaRegistry` without any compiled code.
 
 A server that materializes vendor prim types **should** therefore serve the matching codeless schema as an `OpenUsdSchemaPluginGroupType` group whose `PluginName` is the plugin name from the manifest (`Plugins[].Name`), containing one `SchemaPlugin` artifact (the `plugInfo.json`) and one `GeneratedSchema` artifact (the `generatedSchema.usda`). A server claiming `OU-SchemaPluginDelivery` **shall** serve exactly that pair for every vendor prim type it materializes, so the capability is testable rather than advisory.
 

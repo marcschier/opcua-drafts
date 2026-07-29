@@ -59,7 +59,9 @@ truth exactly the way hand-editing a generated NodeSet does.
 1. The **markdown draft** — the prose.
 2. The **UANodeSet** — the authority for every type table and every conformance unit.
 3. A **build config** (`word-drafts/tools/specs/<spec>.json`) — identity, normative references,
-   abbreviations, the clause map, the figure list. Adding a specification is a config file, not code.
+   abbreviations, the clause map, the figure list. Adding a specification of the same *shape* is a
+   config file; a genuinely new shape (Methods, EventTypes, Structures) needs a generalisation in
+   `opcdocx/` first. See `reference/pipeline.md` for what onboarding Part 2 actually cost.
 
 ## Outputs
 

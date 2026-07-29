@@ -7,6 +7,33 @@ current model; this file records how it got there.
 NodeId assignment is **append-only**: new members take the next free id, so every
 previously published NodeId is stable across all releases below.
 
+## 0.4.0 — 2026-07-29
+
+**Conformance units in the model, and a Word rendering.**
+
+- The conformance units gain identifiers — `OUS-SceneStructure`,
+  `OUS-CompositionProvenance`, `OUS-TypedSchemas`, `OUS-AppliedSchemas`,
+  `OUS-Georeferencing`, `OUS-LiveAttributes`, `OUS-Conversion` and
+  `OUS-Part1Interop` — and every Type Node now names the units that require it
+  in the AddressSpace, as `Category` elements in the UANodeSet. OPC 20020
+  3.4.1.1 requires this, and the node tables of the Word rendering are generated
+  from it. The previous `Category` values were coarse grouping labels
+  (`OpenUSD Scene Materialization`, `… DataTypes`, `… ReferenceTypes`) that no
+  conformance test could name. No NodeId changed.
+- The specification is restructured into the clause skeleton the OPC Foundation
+  companion specification template mandates. The conversion, mapping, vendor
+  extension and live-data clauses become subclauses of the information model
+  overview; the type clauses are split by NodeClass into ObjectTypes,
+  VariableTypes, DataTypes and ReferenceTypes; the examples become the Use cases
+  clause; and *Relationship to Part 1* becomes an informative annex. The mapping
+  is recorded in `word-drafts/tools/specs/openusd-scene.json` and was applied
+  mechanically to this document and to every sibling that cites it — including
+  Part 1, whose reference to this document's vendor-extension clause moved with it.
+- A submission-ready Word rendering is generated into `word-drafts/`. It is built
+  from this document and the UANodeSet, so the node tables cannot drift from the
+  model. Part 2 is the first document to exercise the template's VariableTypes and
+  ReferenceTypes clauses.
+
 ## 0.3.0 — 2026-07-29
 
 **Model corrections found while implementing Part 2.**

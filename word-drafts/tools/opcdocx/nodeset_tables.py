@@ -32,6 +32,8 @@ STANDARD_NODES = {
     'i=58': 'BaseObjectType', 'i=61': 'FolderType', 'i=62': 'BaseVariableType',
     'i=63': 'BaseDataVariableType', 'i=68': 'PropertyType',
     'i=17602': 'BaseInterfaceType', 'i=11575': 'FileType',
+    'i=31': 'References', 'i=32': 'NonHierarchicalReferences',
+    'i=33': 'HierarchicalReferences', 'i=44': 'Aggregates',
     'i=78': 'Mandatory', 'i=80': 'Optional', 'i=11508': 'OptionalPlaceholder',
     'i=11510': 'MandatoryPlaceholder', 'i=2253': 'Server',
 }
@@ -57,7 +59,7 @@ NODE_CLASS = {
 class Node:
     __slots__ = ('node_id', 'tag', 'browse_name', 'ns_index', 'name', 'display',
                  'description', 'categories', 'parent', 'refs', 'attrs', 'abstract',
-                 'definition')
+                 'definition', 'inverse_name', 'symmetric')
 
     def __init__(self):
         self.refs = []
@@ -67,6 +69,8 @@ class Node:
         self.definition = None
         self.description = ''
         self.parent = None
+        self.inverse_name = None
+        self.symmetric = False
 
 
 class Model:
@@ -111,6 +115,9 @@ class Model:
             n.display = dn.text if dn is not None else n.name
             de = el.find(UANS + 'Description')
             n.description = (de.text or '') if de is not None else ''
+            inv = el.find(UANS + 'InverseName')
+            n.inverse_name = inv.text if inv is not None else None
+            n.symmetric = el.get('Symmetric') == 'true'
             n.categories = [c.text for c in el.findall(UANS + 'Category')]
             defn = el.find(UANS + 'Definition')
             if defn is not None:
@@ -128,6 +135,10 @@ class Model:
         self.by_name = {}
         for n in self.nodes.values():
             self.by_name.setdefault(n.name, n)
+
+    def names_of_class(self, tag):
+        """BrowseNames of every Node of a NodeClass, in declaration order."""
+        return [self.nodes[n].name for n in self.order if self.nodes[n].tag == tag]
 
     # ------------------------------------------------------------------ lookups
 
@@ -249,6 +260,10 @@ def type_table(model, type_name, *, doc_ns_index):
         attributes.append(('ValueRank', node.attrs.get('ValueRank', '-1')))
         attributes.append(('DataType', model.browse_name_of(
             node.attrs.get('DataType', 'i=24'), doc_ns_index=doc_ns_index)))
+    if node.tag == 'UAReferenceType':
+        if node.inverse_name:
+            attributes.append(('InverseName', node.inverse_name))
+        attributes.append(('Symmetric', 'True' if node.symmetric else 'False'))
 
     supertype = model.supertype_of(node)
     subtype_of = model.browse_name_of(supertype, doc_ns_index=doc_ns_index) if supertype else None

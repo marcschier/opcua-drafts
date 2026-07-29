@@ -14,9 +14,9 @@ The two specifications approach the same problem from opposite ends and are deli
 | The scene lives | outside OPC UA, in `.usd` files a connector renders | inside OPC UA, as first-class browsable nodes |
 | You get | a thin binding layer over an existing USD asset | Stage/Prim/Attribute/Relationship/Composition as ObjectTypes |
 | Namespace | `http://opcfoundation.org/UA/OpenUSD/` | `http://opcfoundation.org/UA/OpenUSD/Scene/` |
-| Release | 0.5.0 | 0.3.0 |
+| Release | 0.5.0 | 0.4.0 |
 
-**Part 2 does not require Part 1.** It is self-contained on base OPC UA. Where a Server implements both, Part 1's `Server/OpenUSD/Stages` discovery and its bindings can target Part 2 attributes — see Part 2 §10.
+**Part 2 does not require Part 1.** It is self-contained on base OPC UA. Where a Server implements both, Part 1's `Server/OpenUSD/Stages` discovery and its bindings can target Part 2 attributes — see Part 2 Annex C.
 
 Pick Part 1 when you already have an artist-authored USD asset and want to drive it. Pick Part 2 when the scene itself should be the address space — browsable, subscribable, historizable.
 

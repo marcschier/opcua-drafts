@@ -41,35 +41,71 @@ MARKERS = [
 # clauses this build replaces, so the names are re-attached to the new equivalents —
 # otherwise Word renders "Error! Reference source not found" inside template text we
 # never touched.
-ALIAS_BOOKMARKS = [
-    ('Scope', 'Heading1', ['_Clause_c1']),
-    ('Normative references', 'Heading1', ['_Clause_c2']),
-    ('Terms, abbreviated terms and conventions', 'Heading1', ['_Clause_c3']),
-    ('Overview', 'Heading2', ['_Clause_c3-1']),
-    ('OpenUSD terms', 'Heading2', ['_Clause_c3-2']),
-    ('Abbreviated terms', 'Heading2', ['_Clause_c3-3']),
-    ('Conventions used in this document', 'Heading2', ['_Clause_c3-4']),
-    ('General information to OpenUSD and OPC UA', 'Heading1', ['_Clause_c4']),
-    ('Introduction to OpenUSD', 'Heading2', ['_Clause_c4-1']),
-    ('Introduction to OPC Unified Architecture', 'Heading2', ['_Clause_c4-2']),
-    ('Use cases', 'Heading1', ['_Clause_c5']),
-    ('OpenUSD information model overview', 'Heading1', ['_Clause_c6']),
-    ('Profiles and conformance units', 'Heading1', ['_Ref85018491', '_Clause_c9']),
+# Bookmarks the retained template slices point at, and the retained headings whose
+# generated counterpart (and therefore its bookmark) the surgery discards. The clause
+# ids are derived from the build config, because the clause a given template heading
+# becomes is a per-specification decision: Part 1's Profiles clause is 9, Part 2's is 11.
+TEMPLATE_HEADINGS = [
+    # (marker text, style, region, the `generated`/`slice` key that identifies the
+    #  subclause, extra template bookmark names to re-attach)
+    ('Scope', 'Heading1', 'scope', None, []),
+    ('Normative references', 'Heading1', 'normative-references', None, []),
+    ('Terms, abbreviated terms and conventions', 'Heading1', 'terms', None, []),
+    ('Overview', 'Heading2', 'terms', 'terms-overview', []),
+    ('terms', 'Heading2', 'terms', 'terms', []),
+    ('Abbreviated terms', 'Heading2', 'terms', 'abbreviations', []),
+    ('Conventions used in this document', 'Heading2', 'terms', 'conventions', []),
+    ('General information to', 'Heading1', 'general', None, []),
+    ('Introduction to OpenUSD', 'Heading2', 'general', 'intro-openusd', []),
+    ('Introduction to OPC Unified Architecture', 'Heading2', 'general', 'opcua-intro', []),
+    ('Use cases', 'Heading1', 'use-cases', None, []),
+    ('information model overview', 'Heading1', 'model-overview', None, []),
+    ('Profiles and conformance units', 'Heading1', 'profiles', None, ['_Ref85018491']),
+]
+
+# Bookmarks in retained template text whose target the build regenerates.
+FIXED_ALIASES = [
     ('Namespace metadata', 'Heading2', ['_Ref127248897']),
     ('Handling of OPC UA namespaces', 'Heading2', ['_Ref55114991']),
     ('Namespaces used in this document', 'TABLE-title', ['_Ref16577438']),
-    ('Namespaces used in an OpenUSD Server', 'TABLE-title', ['_Ref16778538']),
     ('NamespaceMetadata Object for this document', 'TABLE-title', ['_Ref16863029']),
 ]
 
 
-def _add_alias_bookmarks(pkg, bookmarks, writer):
+def _alias_plan(build):
+    """Which bookmark names to re-attach to which retained template heading."""
+    plan = []
+    for text, style, region, key, extra in TEMPLATE_HEADINGS:
+        names = list(extra)
+        entry = _entry_for(build, region, key)
+        if entry is not None:
+            names.append('_Clause_c' + str(entry['number']).replace('.', '-'))
+        if names:
+            plan.append((text, style, names))
+    plan.extend(FIXED_ALIASES)
+    return plan
+
+
+def _entry_for(build, region, key):
+    """The clause-map entry a retained template heading corresponds to."""
+    current = None
+    for entry in build.cfg['clauseMap']:
+        if entry.get('region'):
+            current = entry['region']
+        if current != region:
+            continue
+        if key is None:
+            if entry.get('region') == region:
+                return entry
+        elif entry.get('generated') == key or entry.get('slice') == key:
+            return entry
+    return None
+
+
+def _add_alias_bookmarks(pkg, bookmarks, writer, build):
     from opcdocx.oxml import q
     existing = {el.get(q('w:name')) for el in pkg.document.iter(q('w:bookmarkStart'))}
-    for text, style, names in ALIAS_BOOKMARKS:
-        # Names go through the writer's own sanitiser: a clause id such as `c3-1`
-        # becomes `_Clause_c3_1`, and a hand-written dashed alias would never be the
-        # bookmark a REF field actually looks for.
+    for text, style, names in _alias_plan(build):
         wanted = [n for n in (_alias_name(writer, n) for n in names)
                   if n not in existing]
         if not wanted:
@@ -79,7 +115,8 @@ def _add_alias_bookmarks(pkg, bookmarks, writer):
         except LookupError:
             index = _find_containing(pkg, text, style)
             if index is None:
-                raise LookupError('alias bookmark anchor not found: %r' % text)
+                # A specification that omits an optional clause omits its heading too.
+                continue
         p = pkg.children()[index]
         for name in wanted:
             bid = bookmarks.allocate(name)
@@ -95,7 +132,6 @@ def _alias_name(writer, name):
         if name.startswith(prefix):
             return writer.bookmark_name(prefix.strip('_'), name[len(prefix):])
     return name
-
 
 def _find_containing(pkg, text, style):
     from opcdocx import oxml
@@ -143,11 +179,11 @@ def render(build, doc, template_path, out_path):
     figures = _prepare_figures(build, writer)
 
     # ---------------------------------------------------------------- bottom-up
-    _replace_annex_a(pkg, build, writer, rendered, idx)
-    _insert_after_namespaces(pkg, rendered, idx)
+    _replace_annex_a(pkg, build, writer, rendered, doc, idx)
+    _insert_after_namespaces(pkg, rendered, doc, idx)
     _replace_namespaces(pkg, rendered, idx)
     _replace_profiles(pkg, rendered, idx)
-    _replace_types(pkg, rendered, idx)
+    _replace_types(pkg, rendered, doc, idx)
     _replace_model_overview(pkg, rendered, idx, ident)
     _replace_use_cases(pkg, rendered, idx)
     _retitle(pkg, idx['intro_title'], 'Introduction to %s' % ident['title'])
@@ -162,7 +198,7 @@ def render(build, doc, template_path, out_path):
     _replace_toc(pkg, idx)
 
     substitute_tokens(pkg.body, tokens)
-    _add_alias_bookmarks(pkg, bookmarks, writer)
+    _add_alias_bookmarks(pkg, bookmarks, writer, build)
     _attach_figures(pkg, figures)
 
     pkg.set_custom_properties({
@@ -298,14 +334,22 @@ def _replace_model_overview(pkg, rendered, idx, ident):
              '%s information model overview' % ident['title'])
 
 
-def _replace_types(pkg, rendered, idx):
+def _replace_types(pkg, rendered, doc, idx):
     """Replace the template's ObjectTypes .. Well-Known BrowseNames block.
 
-    The model defines no EventTypes, VariableTypes or ReferenceTypes and declares no
-    well-known Instances, so those template clauses are removed rather than left empty.
+    The template ships a clause per NodeClass. Which of them a specification needs is a
+    property of its model, so the block is replaced by whichever type regions the
+    docmodel actually produced, in document order; the rest are removed rather than
+    left empty, following the template's own Annex A instruction ("if not needed, this
+    Annex section shall be deleted").
     """
-    pkg.replace_range(idx['objecttypes'], idx['profiles'],
-                      rendered['objecttypes'] + rendered['datatypes'])
+    elements = []
+    for name in doc.order:
+        if name in contract.TYPE_REGIONS and rendered.get(name):
+            elements.extend(rendered[name])
+    if not elements:
+        raise ValueError('the model produced no type clauses at all')
+    pkg.replace_range(idx['objecttypes'], idx['profiles'], elements)
 
 
 def _replace_profiles(pkg, rendered, idx):
@@ -317,23 +361,35 @@ def _replace_namespaces(pkg, rendered, idx):
     pkg.replace_range(idx['namespaces'], idx['annex_a'], rendered['namespaces'])
 
 
-def _insert_after_namespaces(pkg, rendered, idx):
-    pkg.insert_at(idx['annex_a'], rendered['security'])
+def _insert_after_namespaces(pkg, rendered, doc, idx):
+    """Numbered clauses the specification adds after Namespaces, such as Security.
+
+    The template has no slot for them, so they are inserted before Annex A. A
+    specification that adds none simply inserts nothing.
+    """
+    try:
+        tail_start = doc.order.index('namespaces') + 1
+    except ValueError:
+        return
+    elements = []
+    for region in doc.order[tail_start:]:
+        if region.startswith('annex-'):
+            break
+        elements.extend(rendered[region])
+    if elements:
+        pkg.insert_at(idx['annex_a'], elements)
 
 
-def _replace_annex_a(pkg, build, writer, rendered, idx):
+def _replace_annex_a(pkg, build, writer, rendered, doc, idx):
     """Annex A keeps the template's own structure; the node reference is appended."""
-    annex_blocks = rendered['annex-a']
     node_rows = nodeset_tables.annex_node_table(build.model,
                                                 doc_ns_index=build.doc_ns_index)
     node_table = _annex_node_table(writer, node_rows)
     tail = []
-    for region in ('annex-b', 'annex-c', 'annex-d', 'annex-e', 'annex-f'):
-        tail.extend(rendered[region])
+    for region in doc.order:
+        if region.startswith('annex-') and region != 'annex-a':
+            tail.extend(rendered[region])
     pkg.insert_at(idx['backmatter'], node_table + tail)
-    # The markdown Annex A only points at the generated table; its prose is redundant
-    # next to the template's own Annex A text.
-    del annex_blocks
 
 
 def _annex_node_table(writer, rows):

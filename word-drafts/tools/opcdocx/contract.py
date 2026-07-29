@@ -124,8 +124,8 @@ FORBIDDEN_LINK_HOSTS = ('reference.opcfoundation.org',)
 PLACEHOLDER_TOKENS = (
     '<title>', '<Title>', '<short name>', '<other organization>', '<some>',
     '<someStructure>', '<someUnion>', '<someEnumeration>', '<someOptionSet>',
-    '<someReferenceType>', '<someInstance>', '<Type>', '<TheLocationInAddressSpace>',
-    'XXXXX', '<mm>',
+    '<someReferenceType>', '<someInstance>', 'Well-Known <Type>',
+    '<TheLocationInAddressSpace>', 'XXXXX', 'Part <mm>',
 )
 
 # Identity placeholders this draft intentionally retains, per the build decision to keep
@@ -162,6 +162,11 @@ CLAUSE_SKELETON = (
     ('profiles', 'Profiles and conformance units', False),
     ('namespaces', 'Namespaces', False),
 )
+
+# The clauses that describe the model by NodeClass. The template ships one of each;
+# a build emits only those its model has content for, in this order.
+TYPE_REGIONS = ('objecttypes', 'eventtypes', 'variabletypes', 'datatypes',
+                'referencetypes', 'instances', 'well-known-browsenames')
 
 
 def modelling_rule_short(name):

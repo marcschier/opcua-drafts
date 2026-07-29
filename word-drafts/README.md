@@ -10,8 +10,9 @@ assigns the real values.
 
 | Artifact | What it is |
 |---|---|
-| `OPC-UA-OpenUSD-Binding-Part1.docx` | The generated document. Committed, so a reviewer needs no toolchain. |
-| `OPC-UA-OpenUSD-Binding-Part1.docmodel.json` | The intermediate representation the document was rendered from. Committed **because a `.docx` diff is unreadable** — review this instead. |
+| `OPC-UA-OpenUSD-Binding-Part1.docx` | Part 1, generated. Committed, so a reviewer needs no toolchain. |
+| `OPC-UA-OpenUSD-Scene-Part2.docx` | Part 2, generated. |
+| `*.docmodel.json` | The intermediate representation the document was rendered from. Committed **because a `.docx` diff is unreadable** — review this instead. |
 | `figures/*.pptx` | The editable PowerPoint behind each figure, embedded in the document as an OLE object. |
 | `figures/*.png` | The preview image Word displays for each embedded object. |
 | `tools/` | The build, the validator and its mutation test. |
@@ -24,9 +25,11 @@ pip install -r word-drafts/tools/requirements.txt
 
 # markdown + NodeSet -> .docx  (pure Python, cross-platform, byte-reproducible)
 python word-drafts/tools/build_docx.py word-drafts/tools/specs/openusd-binding.json
+python word-drafts/tools/build_docx.py word-drafts/tools/specs/openusd-scene.json
 
 # check the result against the template contract
 python word-drafts/tools/validate_docx.py word-drafts/tools/specs/openusd-binding.json
+python word-drafts/tools/validate_docx.py word-drafts/tools/specs/openusd-scene.json
 
 # prove the validator actually catches what it claims to
 python word-drafts/tools/test_validate_docx.py word-drafts/tools/specs/openusd-binding.json
@@ -34,8 +37,9 @@ python word-drafts/tools/test_validate_docx.py word-drafts/tools/specs/openusd-b
 # update the table of contents, the table of figures, the table of tables and every
 # cross-reference, so the committed file opens fully paginated  (needs Word; local only)
 pwsh word-drafts/tools/finalize_word.ps1 -Path word-drafts/OPC-UA-OpenUSD-Binding-Part1.docx
+pwsh word-drafts/tools/finalize_word.ps1 -Path word-drafts/OPC-UA-OpenUSD-Scene-Part2.docx
 
-# rewrite the markdown source into the same clause skeleton
+# rewrite the markdown source into the same clause skeleton  (one-shot per restructure)
 python word-drafts/tools/restructure_markdown.py word-drafts/tools/specs/openusd-binding.json
 ```
 
@@ -72,8 +76,13 @@ Everything else is generated:
   fields, and cross-references are `REF` fields over bookmarks.
 
 `tools/specs/<spec>.json` holds the whole per-document contract — identity, normative references,
-abbreviations, the clause map and the figure list. Adding another specification is a new config
-file, not new code.
+abbreviations, the clause map and the figure list. Adding another specification of the same shape is
+a new config file; a genuinely new shape needs a generalisation in `opcdocx/` first.
+
+| Document | Built from |
+|---|---|
+| `OPC-UA-OpenUSD-Binding-Part1.docx` | `metaverse-specs/openusd-binding/` + `Opc.Ua.OpenUsd.NodeSet2.xml` |
+| `OPC-UA-OpenUSD-Scene-Part2.docx` | `metaverse-specs/openusd-scene/` + `Opc.Ua.OpenUsdScene.NodeSet2.xml` |
 
 ## The clause map
 

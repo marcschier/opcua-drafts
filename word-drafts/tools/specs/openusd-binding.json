@@ -158,6 +158,9 @@
     {"from": "D.4 A binding for `RenderTargetKind = Georeference`", "number": "F.4", "title": "A binding for the Georeference render target"}
   ],
 
+  "_comment_citedAs": "How sibling documents name this one.",
+  "citedAs": ["Part 1", "Bindings spec", "base spec", "base specification"],
+
   "dropped": [
     "10 Deliverables and reproducibility"
   ],
