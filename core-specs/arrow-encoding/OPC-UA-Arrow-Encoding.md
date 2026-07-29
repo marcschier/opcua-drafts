@@ -4,7 +4,7 @@
 **Companion to:** OPC 10000-6 (Mappings), OPC 10000-14 (PubSub) and OPC 10000-11 (Historical Access)
 **Version:** 0.1.0 · **Date:** 2026-07-22
 
-> **Status — working draft.** This is a **single, self-contained** specification for the OPC UA **Default Arrow** (columnar) DataEncoding, its PubSub batch message mapping, and its historian / ADBC access mapping, covering the material proposed for OPC 10000-6, OPC 10000-14 and OPC 10000-11, and folding in the base OPC UA context a standalone reader needs. Annex A is the generated per-type reference; the authoritative generator is `../extras/arrow-encoding/tools/gen_type_reference.py`, run against this document.
+> **Status — working draft.** Per review feedback, the material covering the end-to-end use cases is specified as a **stand-alone companion specification**, to be added in the OPC UA **core numbering range** or in the **Cloud Initiative numbering range**. This document is that companion specification for the OPC UA **Default Arrow** (columnar) DataEncoding, its PubSub batch message mapping, and its historian / ADBC access mapping, and folds in the base OPC UA context a standalone reader needs. Annex A is the generated per-type reference; the authoritative generator is `../extras/arrow-encoding/tools/gen_type_reference.py`, run against this document.
 
 ---
 
@@ -212,9 +212,62 @@ The relative benefit of `batch` framing is largest for small or single-sample me
 
 The Arrow IPC stream content type shall be `application/vnd.apache.arrow.stream`. The Arrow IPC file content type shall be `application/vnd.apache.arrow.file`. Transports that expose MIME content types shall use these values for Arrow PubSub messages.
 
-### 6.5 Configuration model
+### 6.5 Part 14 configuration model mapping
 
-The PubSub configuration model shall describe an Arrow message mapping option for WriterGroup and DataSetWriter MessageSettings. The described-only configuration nodes reference the `Default Arrow` DataTypeEncoding from Part 6 and the schema generated from DataSetMetaData. Final BrowseNames and NodeIds are assigned by the OPC Foundation.
+This clause defines how the Arrow message mapping is represented in the OPC 10000-14 PubSub configuration model, and the Information Model extension that carries it. It fixes the names used so that two implementations configure the mapping identically. NodeIds are assigned by the OPC Foundation; this document defines the BrowseNames, the type hierarchy and the field sets.
+
+OPC 10000-14 selects a message mapping through the `MessageSettings` of each configuration object, an ExtensionObject whose concrete DataType identifies the mapping. The Arrow mapping adds an `Arrow*` set parallel to the `Uadp*` and `Json*` sets.
+
+| Configuration object | Field | Base DataType (OPC 10000-14) | Arrow DataType |
+|---|---|---|---|
+| `WriterGroupDataType` | `MessageSettings` | `WriterGroupMessageDataType` | `ArrowWriterGroupMessageDataType` |
+| `DataSetWriterDataType` | `MessageSettings` | `DataSetWriterMessageDataType` | `ArrowDataSetWriterMessageDataType` |
+| `DataSetReaderDataType` | `MessageSettings` | `DataSetReaderMessageDataType` | `ArrowDataSetReaderMessageDataType` |
+
+A WriterGroup uses the Arrow message mapping if and only if its `MessageSettings` is an `ArrowWriterGroupMessageDataType`. `TransportSettings` are unchanged; the mapping is identified on the wire by the content types of §6.4.
+
+**`ArrowWriterGroupMessageDataType`** — subtype of `WriterGroupMessageDataType`. Carries the mapping parameters of §6.1.
+
+| Field | DataType | Description |
+|---|---|---|
+| `ArrowIpcFormat` | `ArrowIpcFormatEnum` | `batch` (default), `stream` or `file` (Table 6.2-1). |
+| `MaxRowsPerRecordBatch` | UInt32 | Batching target for rows per RecordBatch. |
+| `IncludeSchemaMetadata` | Boolean | Whether NetworkMessage header fields are carried as schema metadata (§6.6). |
+| `DeltaFrameMode` | `ArrowDeltaFrameModeEnum` | `nullable-columns` (default) or `selected-columns` (§6.2). |
+| `Compression` | `ArrowCompressionEnum` | `none` or an Arrow IPC-supported codec. |
+| `ArrowSchemaUri` | String | Optional URI of the schema registry or catalog serving this group's schemas. |
+
+**`ArrowDataSetWriterMessageDataType`** — subtype of `DataSetWriterMessageDataType`
+
+| Field | DataType | Description |
+|---|---|---|
+| `ArrowSchemaId` | String | SchemaId of the DataSet schema currently published by this writer (§4.3), in hexadecimal. |
+| `DataSetFieldContentMask` | `DataSetFieldContentMask` | Selects RawData, Variant or DataValue column representation (§6.2). |
+
+**`ArrowDataSetReaderMessageDataType`** — subtype of `DataSetReaderMessageDataType`
+
+| Field | DataType | Description |
+|---|---|---|
+| `ArrowIpcFormat` | `ArrowIpcFormatEnum` | Framing the reader expects. |
+| `ArrowSchemaUri` | String | Optional URI from which the reader resolves schemas by SchemaId (§6.9.2.6). |
+
+Three enumeration DataTypes support the above: `ArrowIpcFormatEnum` (`Batch` = 0, `Stream` = 1, `File` = 2), `ArrowDeltaFrameModeEnum` (`NullableColumns` = 0, `SelectedColumns` = 1) and `ArrowCompressionEnum` (`None` = 0, `Lz4Frame` = 1, `Zstd` = 2).
+
+The Information Model representation mirrors the JSON message mapping ObjectTypes, each with the Properties of the corresponding DataType above.
+
+| ObjectType | Subtype of (OPC 10000-14) |
+|---|---|
+| `ArrowWriterGroupMessageType` | `WriterGroupMessageType` |
+| `ArrowDataSetWriterMessageType` | `DataSetWriterMessageType` |
+| `ArrowDataSetReaderMessageType` | `DataSetReaderMessageType` |
+
+These additions ship as an Information Model extension rather than as changes to the Part 14 NodeSet, so that they can be adopted independently.
+
+- Namespace URI: `http://opcfoundation.org/UA/Arrow/`
+- NodeSet: `Opc.Ua.Arrow.NodeSet2.xml`, with the matching `Opc.Ua.Arrow.NodeIds.csv`
+- Contents: the three enumeration DataTypes, the three MessageSettings DataTypes and the three ObjectTypes above
+
+The NodeSet is generated from this clause by the repository tooling and is not authored by hand. NodeIds are assigned by the OPC Foundation when the namespace is registered; until then the NodeSet is a draft and its numeric identifiers are provisional. These additions concern only the **configuration** model; no DataTypeEncoding Objects or `HasEncoding` references are added for `Default Arrow`.
 
 ### 6.6 Header layouts
 
@@ -394,7 +447,7 @@ The following HistoryRead details map to Arrow result sets:
 - `ReadProcessedDetails` produces one row per aggregate interval result.
 - `ReadAtTimeDetails` produces one row per requested timestamp result.
 
-The same Part 6 Arrow DataType mapping used for PubSub DataSet fields is used for the result `Value` column.
+The same §5 Arrow DataType mapping used for PubSub DataSet fields is used for the result `Value` column. Multi-byte values in the Arrow buffers of every result RecordBatch are little-endian, as required by the Arrow columnar format and the §5 DataType mapping (§4.2).
 
 ### 7.3 ADBC-style statement model
 
