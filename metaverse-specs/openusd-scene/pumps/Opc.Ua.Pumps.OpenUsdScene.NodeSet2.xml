@@ -7,7 +7,7 @@
   <Models>
     <Model ModelUri="http://example.com/UA/OpenUSD/Scene/Pumps/" Version="0.1.0" PublicationDate="2026-07-21T00:00:00Z">
       <RequiredModel ModelUri="http://opcfoundation.org/UA/" Version="1.05.04" PublicationDate="2023-12-15T00:00:00Z" />
-      <RequiredModel ModelUri="http://opcfoundation.org/UA/OpenUSD/Scene/" Version="0.2.0" PublicationDate="2026-07-25T00:00:00Z" />
+      <RequiredModel ModelUri="http://opcfoundation.org/UA/OpenUSD/Scene/" Version="0.3.0" PublicationDate="2026-07-29T00:00:00Z" />
     </Model>
   </Models>
   <Aliases>
