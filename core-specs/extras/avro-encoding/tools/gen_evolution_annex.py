@@ -1,4 +1,4 @@
-"""Generate Annex C of the Avro Part 6 spec: a worked incremental-schema example
+"""Generate Annex C of the Avro Encoding spec: a worked incremental-schema example
 using the **per-field** Variant/ExtensionObject model.
 
 Each Variant field carries its own record named by field path (`VariantSignal`,
@@ -33,7 +33,7 @@ from fastavro.schema import to_parsing_canonical_form
 
 ROOT = Path(__file__).resolve().parents[1]
 STD = ROOT.parents[1] / "avro-encoding"
-PART6 = STD / "OPC-UA-Part6-Avro-DataEncoding.md"
+SPEC = STD / "OPC-UA-Avro-Encoding.md"
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "_common")))
 from opcua_enc import fingerprint  # noqa: E402
@@ -261,7 +261,7 @@ def main() -> int:
     ap.add_argument("--check", action="store_true", help="fail if the committed Annex C is stale")
     args = ap.parse_args()
     content = generated_content()
-    old = PART6.read_text(encoding="utf-8")
+    old = SPEC.read_text(encoding="utf-8")
     new = inject(old, content)
     if args.check:
         if old != new:
@@ -269,8 +269,8 @@ def main() -> int:
             return 1
         print(f"evolution annex: {len(MINORS)} minors checked")
         return 0
-    PART6.write_text(new, encoding="utf-8", newline="\n")
-    print(f"wrote evolution annex ({len(MINORS)} minors) to {PART6}")
+    SPEC.write_text(new, encoding="utf-8", newline="\n")
+    print(f"wrote evolution annex ({len(MINORS)} minors) to {SPEC}")
     return 0
 
 

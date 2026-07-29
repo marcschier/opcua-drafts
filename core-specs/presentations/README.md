@@ -54,7 +54,7 @@ Each deck summarizes and should stay consistent with its normative sources.
 
 **`OPC-UA-Encoding-and-Registry-Overview.md`**
 
-- [Avro Part 6 — DataEncoding](../avro-encoding/OPC-UA-Part6-Avro-DataEncoding.md) and [Avro Part 14 — PubSub mapping](../avro-encoding/OPC-UA-Part14-Avro-MessageMapping.md)
+- [Avro Encoding](../avro-encoding/OPC-UA-Avro-Encoding.md) — DataEncoding and PubSub message mapping
 - [xRegistry base](../xregistry/OPC-UA-xRegistry.md) and its [OPC UA API binding](../xregistry/xRegistry-OPC-UA-Api.md)
 - [Schema Registry](../schema-registry/OPC-UA-Schema-Registry.md)
 - [Encoding performance comparison](../extras/performance/OPC-UA-Encoding-Performance-Comparison.md) (all performance numbers on the Avro slide are cited from this report)
