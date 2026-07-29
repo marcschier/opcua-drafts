@@ -131,8 +131,8 @@ The answer is not to relax the checker. It is to make a deviation **impossible t
 So the document is validated against a smaller contract that is *stated in the document itself*, and
 anything undeclared still fails. Two consequences are easy to miss and both were real defects:
 
-* Annex A's retained boilerplate says where to download the NodeSet. For a document that has none
+- Annex A's retained boilerplate says where to download the NodeSet. For a document that has none
   that text is false, so the whole annex body is replaced rather than retained.
-* Clause 3.4's retained text promises that "Annex A defines the actual NodeIds". The two halves of
+- Clause 3.4's retained text promises that "Annex A defines the actual NodeIds". The two halves of
   that sentence are substituted separately, because the cross-reference field to Annex A sits
   between them and has to survive.

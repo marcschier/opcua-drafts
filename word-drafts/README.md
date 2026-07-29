@@ -103,7 +103,6 @@ An undeclared deviation still fails, and a declared one whose statement is missi
 fails too. The result is a document validated against a smaller contract that the document itself
 states.
 
-
 ## The clause map
 
 One mapping drives two consumers. `build_docx.py` orders the Word clauses from it, and
