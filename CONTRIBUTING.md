@@ -83,6 +83,10 @@ python .github/scripts/check_determinism.py
 
 ## Conventions
 
+Specification **authoring style** — voice and tense, normative language, model and generator
+conventions, and how examples and validators are built — is documented separately in
+[`instructions.md`](instructions.md). Read it before drafting or editing spec text or a model.
+
 - **Branch names** — short and descriptive of the change (for example `avro-action-response-fields`).
 - **Commit messages** — a concise, imperative summary line; add a body explaining *why* for anything non-trivial.
 - **Markdown** — wrap prose at logical / paragraph boundaries (roughly one line per paragraph), not at a fixed column; code snippets are exempt.
