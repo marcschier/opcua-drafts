@@ -13,7 +13,7 @@ Feedback on these drafts is welcome — and you don't have to write the specific
 3. Open a pull request against `main` and discuss.
 4. Maintainers apply the agreed changes with AI, regenerate, and validate (`python core-specs/extras/validate_all.py`).
 
-See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the full workflow, validation, and conventions, and [`instructions.md`](instructions.md) for the specification authoring style — voice and tense, normative language, and the model, example and validator conventions the drafts follow.
+See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the full workflow, validation, and conventions, and [`.github/copilot-instructions.md`](.github/copilot-instructions.md) for the specification authoring style — voice and tense, normative language, and the model, example and validator conventions the drafts follow — together with the build and validation commands and a map of the repository.
 
 ## Layout
 
