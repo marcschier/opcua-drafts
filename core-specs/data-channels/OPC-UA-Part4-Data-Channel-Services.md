@@ -109,7 +109,7 @@ The Part 6 errata §5.4 states how a non-zero `FrameDeadline` becomes the on-wir
 |---|---|
 | `Direction` | **Not** revisable. A direction the source does not support is rejected with `Bad_DataChannelDirectionUnsupported`. |
 | `DeliveryMode` | **Not** revisable. Silently downgrading to a stronger guarantee would add unbounded latency to a media channel; silently downgrading to a weaker one would lose data. A mode absent from `SupportedDeliveryModes` is rejected with `Bad_DeliveryModeUnsupported`. |
-| `ContentType` | The Server **may** narrow it to a more specific type it will actually produce. A type it cannot produce is rejected with `Bad_ContentTypeUnsupported`. |
+| `ContentType` | The Server **may** narrow it to a more specific type it will actually produce. A requested type whose subtype is `*` **shall** match any type the Server can produce with the same top-level type, and the response **shall** name the concrete type in force; a Client therefore learns what it will receive rather than inferring it. A type the Server cannot produce is rejected with `Bad_ContentTypeUnsupported`. |
 | `ContentParameters` | The Server returns the effective set: entries it honoured, entries it changed, and entries it added. Entries it does not understand are **omitted** from the response rather than echoed, so a Client can see what took effect. |
 | `MaxFrameSize` | Revised down to the least of the requested value, the source's `MaxFrameSize`, the Server's `MaxFrameSize`, and the transport bound derived from the negotiated buffer size. Never revised up. `0` means no preference (§5.1.1). |
 | `InitialCredit` | Revised down to the Server's `MaxCreditPerChannel`, and **shall** be revised up where necessary to at least the revised `MaxFrameSize`. |
@@ -283,6 +283,8 @@ A Server that supports auditing **shall** generate an `AuditOpenDataChannelEvent
 | `Bad_DataChannelLimitsExceeded` | A requested parameter is outside anything the Server can revise to, or an immutable parameter was changed. |
 | `Bad_DataChannelCreditExceeded` | A flow control grant would overflow the credit window, or a sender transmitted beyond its window. |
 | `Bad_DataChannelOfferInvalid` | The offer is unknown, expired, already accepted, or does not match the source. |
+| `Bad_DataChannelFrameTypeUnsupported` | A frame carried a `FrameType` the receiver does not implement, or one held back for a future revision. |
+| `Bad_DataChannelFrameInvalid` | A frame was well-formed as a header but not as a frame of its own type — most commonly payload on a frame type that carries none. |
 | `Uncertain_DataDiscarded` | Delivered payload is incomplete because frames were discarded or lost. Reported by a receiving application, and the value a gap-aware consumer surfaces upward. |
 | `Bad_Timeout` | Existing StatusCode, reused: returned when `OpenTimeout` expires before the channel reaches `Open` (Part 6 errata §5.14). |
 | `Bad_SecurityModeInsufficient` | Existing StatusCode, reused: returned when `OpenDataChannel` is attempted on a SecureChannel whose SecurityMode is `None` and the source Node does not permit it (Part 6 errata §5.8.3). |
