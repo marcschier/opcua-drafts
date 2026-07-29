@@ -72,7 +72,7 @@ Notes:
 
 ## 4.1 Composition / aggregation
 
-The robotics example exercises recursive composition (base spec §7.10–5.14). The system aggregates MotionDevices using `CompositionArc = Reference`; the base `Cell.usda` layer contains positioned empty `/Cell/Robots/R1` and `/Cell/Robots/R2` mount-point Xforms, and the connector authors reference arcs on those prims in the stronger `live.usda` layer. Each robot then composes its Axes using `CompositionArc = Child`, because the link prims are pre-authored inside `robot.usda`. The nesting mirrors the OPC 40010 structure while preserving an artist-authored USD kinematic chain.
+The robotics example exercises recursive composition (base spec §7.10–§7.10.2). The system aggregates MotionDevices using `CompositionArc = Reference`; the base `Cell.usda` layer contains positioned empty `/Cell/Robots/R1` and `/Cell/Robots/R2` mount-point Xforms, and the connector authors reference arcs on those prims in the stronger `live.usda` layer. Each robot then composes its Axes using `CompositionArc = Child`, because the link prims are pre-authored inside `robot.usda`. The nesting mirrors the OPC 40010 structure while preserving an artist-authored USD kinematic chain.
 
 Reference, not Instance, is intentional for `/Cell/Robots/R1` and `/Cell/Robots/R2`: both robots use the same reusable `robot.usda` asset, but each needs independent live opinions on the same relative joint paths. Instanceable prims share prototype composition and are not suitable when every robot must articulate independently. The R1 gripper uses dynamic Reference composition so a model-change event can add or remove `/Cell/Robots/R1/Base/J1/J2/J3/J4/J5/J6/Flange/Tool` without mutating `Cell.usda`.
 

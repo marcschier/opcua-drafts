@@ -52,6 +52,24 @@ def _replace_first(pattern, replacement):
     return apply
 
 
+def _replace_last(pattern, replacement):
+    """Mutate the final match — the node tables precede the conformance-units clause,
+    so the last occurrence of a unit name is the one in that clause."""
+    def apply(text):
+        matches = list(re.finditer(pattern, text))
+        if not matches:
+            return text
+        m = matches[-1]
+        return text[:m.start()] + m.expand(replacement) + text[m.end():]
+    return apply
+
+
+def _replace_all(pattern, replacement):
+    def apply(text):
+        return re.sub(pattern, replacement, text)
+    return apply
+
+
 MUTATIONS = [
     ('a node table loses a member row',
      'node-tables',
@@ -82,6 +100,9 @@ MUTATIONS = [
      _replace_first(r'(Type="http://schemas\.openxmlformats\.org/officeDocument/2006/'
                     r'relationships/)package("[^>]*\.pptx")', r'\g<1>oleObject\g<2>'),
      'word/_rels/document.xml.rels'),
+    ('a conformance unit is dropped from the conformance-units clause',
+     'conformance-units',
+     _replace_all(r'OU-SchemaPluginDelivery', 'OU-Renamed')),
 ]
 
 

@@ -25,8 +25,15 @@ import sys
 
 ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))
 
-HEADING_RE = re.compile(r'^#{2,6}\s+(?:Annex\s+([A-Z])\b|([0-9A-Z](?:\.[0-9]+)*))\s')
-REF_RE = re.compile(r'(?P<qualifier>.{0,44})§\s*(?P<number>[0-9A-Z](?:\.[0-9]+)*)')
+HEADING_RE = re.compile(r'^#{2,6}\s+(?:Annex\s+([A-Z])\b|([0-9]+(?:\.[0-9]+)*|[A-Z](?:\.[0-9]+)+))\s')
+REF_RE = re.compile(r'(?P<qualifier>.{0,44})§\s*(?P<number>[0-9]+(?:\.[0-9]+)*|[A-Z](?:\.[0-9]+)*)')
+
+# A clause range — "§7.10–7.10.2" — whose second endpoint carries no § of its own.
+RANGE_AFTER = re.compile(r'^\s*[\u2013\u2014-]\s*([0-9]+(?:\.[0-9]+)*)')
+
+# A bare annex citation: "see Annex D", "(Annex F)". Renumbering moves these too, and
+# nothing else checks them.
+ANNEX_REF_RE = re.compile(r'\bAnnex\s+([A-Z])\b')
 FENCE_RE = re.compile(r'^```')
 
 # A reference qualified by another standard is that standard's clause, not ours. These
@@ -38,7 +45,7 @@ LINK_WINDOW = 130
 EXTERNAL_BEFORE = re.compile(
     r'(OPC\s*1\d{4}|OPC\s*\d{5}|IEC\s*\d+|AOUSD|RFC\s*\d+|W3C'
     r'|Core Specification|core spec'
-    r'|\bthe base\b|\bbase (?:specification|model|spec)\b|\bthat specification\b'
+    r'|\bthat specification\b'
     r'|\bbase\s*$'
     r'|\*[^*]*OPC UA[^*]*\*'
     r'|`[^`]*\.md`'
@@ -105,6 +112,34 @@ def clause_numbers(text):
     return numbers
 
 
+def annex_letters(text):
+    """The annex letters a document declares."""
+    out = set()
+    for line in text.splitlines():
+        if not line.startswith('#'):
+            continue
+        m = re.match(r'^#{2,6}\s+Annex\s+([A-Z])\b', line)
+        if m:
+            out.add(m.group(1))
+    return out
+
+
+def annex_references(text):
+    """Bare `Annex X` citations, excluding the headings that declare them."""
+    in_fence = False
+    for lineno, line in enumerate(text.splitlines(), 1):
+        if FENCE_RE.match(line):
+            in_fence = not in_fence
+            continue
+        if in_fence or line.startswith('#'):
+            continue
+        for m in ANNEX_REF_RE.finditer(line):
+            before = line[:m.start()]
+            if EXTERNAL_BEFORE.search(before[-WINDOW:]) or BIBLIOGRAPHY_LINE.match(line):
+                continue
+            yield lineno, before.strip().lower(), m.group(1)
+
+
 def references(text):
     in_fence = False
     for lineno, line in enumerate(text.splitlines(), 1):
@@ -134,6 +169,11 @@ def references(text):
                 continue
             skipped_here = False
             yield lineno, qualifier.strip().lower(), m.group('number')
+            # "§7.10–7.10.2": the second endpoint carries no § and would otherwise
+            # never be checked, which is how "§7.10–5.14" survived a renumbering.
+            rng = RANGE_AFTER.match(after)
+            if rng:
+                yield lineno, qualifier.strip().lower(), rng.group(1)
 
 
 def _names_sibling(qualifier):
@@ -158,12 +198,13 @@ def main():
                 cache[path] = clause_numbers(f.read())
         return cache[path]
 
-    def sibling_specs(path):
+    def sibling_specs(path, text=''):
         """The specification documents a bare `§` in this file could reasonably mean.
 
         A README or an addendum has no clauses of its own, and a multi-part
         specification splits its clauses across sibling files, so a reference is
-        resolved against every specification document beside it and one level up.
+        resolved against every specification document beside it, one level up, and any
+        document this file cites by relative path.
         """
         found = []
         folder = os.path.dirname(path)
@@ -176,7 +217,21 @@ def main():
                 candidate = os.path.join(candidate_dir, name)
                 if candidate != path and len(numbers_for(candidate)) > 3:
                     found.append(candidate)
+        for rel in set(re.findall(r'[\w./-]*OPC-UA-[\w.-]+\.md', text)):
+            for base in (folder, ROOT):
+                candidate = os.path.normpath(os.path.join(base, rel))
+                if (os.path.exists(candidate) and candidate != path
+                        and candidate not in found
+                        and len(numbers_for(candidate)) > 3):
+                    found.append(candidate)
+                    break
         return found
+
+    def annexes_for(path):
+        if ('annex', path) not in cache:
+            with open(path, encoding='utf-8') as f:
+                cache[('annex', path)] = annex_letters(f.read())
+        return cache[('annex', path)]
 
     problems = 0
     notes = 0
@@ -185,30 +240,43 @@ def main():
         with open(path, encoding='utf-8') as f:
             text = f.read()
         own = numbers_for(path)
-        siblings = sibling_specs(path)
+        siblings = sibling_specs(path, text)
         if len(own) <= 3 and not siblings:
             continue
         checked += 1
         rel = os.path.relpath(path, ROOT).replace('\\', '/')
         strict = rel.startswith(STRICT_PREFIXES)
-        for lineno, qualifier, number in references(text):
+
+        def resolve(qualifier):
             targets = [path] + siblings
             for name, target_rel in NAMED_DOCUMENTS.items():
                 if qualifier.endswith(name):
                     candidate = os.path.join(ROOT, target_rel)
                     if os.path.exists(candidate):
-                        targets = [candidate]
-                    break
+                        return [candidate]
+            return targets
+
+        def report(lineno, what, where):
+            print('%s%s:%d: %s does not resolve to %s'
+                  % ('' if strict else 'note: ', rel, lineno, what, where))
+
+        for lineno, qualifier, number in references(text):
+            targets = resolve(qualifier)
             if any(number in numbers_for(t) for t in targets):
                 continue
             tgt = os.path.relpath(targets[0], ROOT).replace('\\', '/')
-            where = 'this document' if targets[0] == path else tgt
-            print('%s%s:%d: \u00a7%s does not resolve to a clause of %s'
-                  % ('' if strict else 'note: ', rel, lineno, number, where))
-            if strict:
-                problems += 1
-            else:
-                notes += 1
+            report(lineno, '\u00a7%s' % number,
+                   'a clause of %s' % ('this document' if targets[0] == path else tgt))
+            problems, notes = (problems + 1, notes) if strict else (problems, notes + 1)
+
+        for lineno, qualifier, letter in annex_references(text):
+            targets = resolve(qualifier)
+            if any(letter in annexes_for(t) for t in targets):
+                continue
+            tgt = os.path.relpath(targets[0], ROOT).replace('\\', '/')
+            report(lineno, 'Annex %s' % letter,
+                   'an annex of %s' % ('this document' if targets[0] == path else tgt))
+            problems, notes = (problems + 1, notes) if strict else (problems, notes + 1)
 
     print('checked %d document(s), %d unresolved reference(s), %d advisory note(s)'
           % (checked, problems, notes))

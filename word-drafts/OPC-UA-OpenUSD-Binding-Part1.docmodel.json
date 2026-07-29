@@ -634,7 +634,7 @@
             },
             {
               "r": "t",
-              "text": "Annex F",
+              "text": "Annex D",
               "b": true
             },
             {
@@ -8964,7 +8964,17 @@
         "runs": [
           {
             "r": "t",
-            "text": "Part 2 Annex E lets a vendor introduce new typed prims by subtyping "
+            "text": "Part 2 "
+          },
+          {
+            "r": "xref",
+            "target": "c8",
+            "kind": "clause",
+            "prefix": "8"
+          },
+          {
+            "r": "t",
+            "text": " lets a vendor introduce new typed prims by subtyping "
           },
           {
             "r": "code",
@@ -11654,7 +11664,7 @@
             },
             {
               "r": "t",
-              "text": " (ECLASS / IEC CDD) lets the same binding apply to assets from different vendors that share companion-spec types and semantic ids — the cross-vendor portability the strategy depends on — and is the natural bridge to an AAS submodel expression (Annex C)."
+              "text": " (ECLASS / IEC CDD) lets the same binding apply to assets from different vendors that share companion-spec types and semantic ids — the cross-vendor portability the strategy depends on — and is the natural bridge to an AAS submodel expression (Annex E)."
             }
           ],
           [

@@ -171,7 +171,7 @@ A materializer that recognises a vendor georeference schema **should** additiona
 | `UsdGeoreferenceApiType` origin (`Latitude`/`Longitude`/`Height`/`EpsgCode`) | GPOS `GlobalPositionType` at a reference point / `ZoneType` |
 | `UsdGlobeAnchorApiType` per-prim position | a per-asset GPOS `GlobalPosition` |
 | origin ↔ local frame (the tangent-plane transform) | GPOS `GroundControlPointDataType` (local XYZ ↔ global lat/lon) |
-| a placed prim's `UsdGeomXformable` transform ops | RSL `CartesianFrameAngleOrientationType` (`3DFrame`); see the Bindings spec §7.4.2 / Annex F |
+| a placed prim's `UsdGeomXformable` transform ops | RSL `CartesianFrameAngleOrientationType` (`3DFrame`); see the Bindings spec §7.4.2 and Bindings spec Annex F |
 
 Latitude/longitude are decimal degrees, height/elevation metres; a non-WGS84 `EpsgCode` is reprojected before authoring. USD's stage `upAxis` and `metersPerUnit` do **not** auto-reconcile with a geodetic frame; the materializer records them on the `UsdStageType` (§5.1) and the tangent-plane convention on the georeference so a consumer can compose the correct local↔global transform.
 

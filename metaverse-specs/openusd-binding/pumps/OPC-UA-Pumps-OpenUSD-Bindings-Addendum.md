@@ -71,7 +71,7 @@ Implementer findings from the source-generated OPC UA .NET model (generic, not P
 
 ## 4.2 Composition / aggregation (validated)
 
-The sample also exercises the composition model (base spec §7.10–5.14):
+The sample also exercises the composition model (base spec §7.10–§7.10.2):
 
 - **1:1 (Child).** The pump is composed of an `Impeller` and a `Bearing` component Object, each with its own representation, declared as `One` `<Component>` bindings (`CompositionArc = Child`) that compose the `…/Impeller` and `…/Bearing` child prims.
 - **1..n (Instance) + dynamic.** A `ProductionLine` Object aggregates 1..n pumps via a `Many` `<Component>` binding (`CompositionArc = Instance`, `Dynamic = true`), authoring an instanceable reference prim per pump under `/Plant/Line1/Pumps`. A pump is added and removed at runtime; with `ModelChangeEmissionEnabled` the server emits `GeneralModelChangeEvent`s and the connector reconciles the prims (new prim authored; removed prim set `active = false`).

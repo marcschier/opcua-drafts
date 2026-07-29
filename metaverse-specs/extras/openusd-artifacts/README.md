@@ -8,7 +8,7 @@
 The OpenUSD counterpart of `core-specs/extras/xregistry-catalog/`. Where that
 folder emits an xRegistry **schema** catalog from an OPC UA NodeSet, this one
 emits an xRegistry **artifact registry** — the artist-authored USD content a
-server serves through `Server/OpenUSD/Artifacts` — per §5.15 of
+server serves through `Server/OpenUSD/Artifacts` — per §7.11 of
 `metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md`.
 
 ## Chosen vocabulary
@@ -50,7 +50,7 @@ Two attributes deliberately do **not** exist:
 of the model file, so the emitted document, the validator and the spec cannot
 drift apart.
 
-## Asset identifier &harr; `xid` (inter-derivable, §5.1)
+## Asset identifier &harr; `xid` (inter-derivable, §7.11.3)
 
 The authored USD asset identifier and the xRegistry `xid` are **inter-derivable,
 not equal** — equating them would lose the authored `@...@` string a resolver
@@ -83,7 +83,7 @@ at its authored relative path so USD `@...@` references resolve locally.
 A container group is **descriptor-driven**, not scanned. Each container's served
 set, the authoritative `AssetKind` (including which artifact is the `RootLayer`),
 and each `mediaType` come from its `*.OpenUsdBinding.json` descriptor's
-`servedAssets.assets` (§5.15.2) — `pumps/Pumps.OpenUsdBinding.json` and
+`servedAssets.assets` (§7.11.2) — `pumps/Pumps.OpenUsdBinding.json` and
 `robotics/Robotics.OpenUsdBinding.json`. The build fails loudly if a container's
 descriptor is missing and cross-checks the served `RootLayer` against the
 descriptor's `stage.rootLayerIdentifier`.
@@ -93,7 +93,7 @@ string, restricted to the served set) so a resolver can match it directly agains
 a layer's `@...@` paths. Its edges come from two sources:
 
 - the descriptor's **`componentAssetReference`** entries, which a connector authors
-  at runtime (`dynamic: true`, §5.12/§5.13) and which therefore **cannot be seen by
+  at runtime (`dynamic: true`, §7.10/§7.10.1) and which therefore **cannot be seen by
   static scanning** — these attach to the root (the composition anchor);
 - static `@...@` scanning of each served layer, used only as a **supplement** for
   sublayer/reference edges authored inside a served layer.
@@ -101,15 +101,15 @@ a layer's `@...@` paths. Its edges come from two sources:
 Static scanning never decides the artifact set or the root. Anything **not** in
 `servedAssets` is excluded — in particular the connector's own `live.usda` runtime
 override layer (serving it with a digest would freeze runtime values into
-"delivered content", §5.13/§5.15.2 step 5) and the local `stage.usda` the operator
+"delivered content", §7.10.1/§7.11.2 step 5) and the local `stage.usda` the operator
 copies for the E2E walkthrough. `openusd.assetcontainerid` is the **group key**
-(`pumps`, `robotics`), so it substitutes cleanly into §5.15.3's
+(`pumps`, `robotics`), so it substitutes cleanly into §7.11.3's
 `Xid = /<groups>/<AssetContainerId>/<resources>/<ResourceId>`.
 
 `openusd.digest` is a SHA-256 over the exact embedded `usdasset` bytes
 (`digestalg = Sha256`). All source layers here are text, so every artifact is
 embedded **inline**; a binary or oversized artifact would instead carry a
-`usdasseturl` (federation, §5.15.3).
+`usdasseturl` (federation, §7.11.3).
 
 > The pumps closure shows why scanning alone is unsound: `pump.usda` and
 > `remote-pump.usda` contain **no** `@...@` at all, yet the descriptor lists them

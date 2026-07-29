@@ -22,6 +22,14 @@ REPO = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)),
 
 SECTION_REF_RE = re.compile(r'§\s*(\d+(?:\.\d+)*)')
 
+# A reference qualified by another document belongs to that document, and applying this
+# document's clause map to it corrupts it — that is how a `Part 2 §8` citation became
+# `Part 2 Annex E`. Anything naming another standard or Part is left alone.
+FOREIGN_QUALIFIER = re.compile(
+    r'(?:OPC\s*\d{4,5}|IEC\s*\d+|xRegistry|AOUSD|RFC\s*\d+|W3C'
+    r'|Part\s*\d+|\bthe base\b|\bbase (?:spec|specification|model)\b'
+    r'|\*[^*]*OPC UA[^*]*\*)[^§]{0,60}$', re.IGNORECASE)
+
 
 def heading_prefix(number):
     """`7.11.3` -> '####' (the document title owns level 1)."""
@@ -32,23 +40,60 @@ def is_annex(number):
     return str(number)[0].isalpha()
 
 
-def rewrite_refs(text, xref_map):
+def rewrite_refs(text, xref_map, annex_map=None):
     """Rewrite every section reference through the clause map, longest key first."""
     keys = sorted(xref_map, key=len, reverse=True)
+    pattern = re.compile(
+        r'§\s*(' + '|'.join(re.escape(k) for k in keys) + r')(?!\.?\d)'
+        # A range endpoint carries no § of its own and would otherwise be left behind,
+        # producing a range whose end is below its start.
+        r'(?P<range>\s*[\u2013\u2014-]\s*(?:' + '|'.join(re.escape(k) for k in keys)
+        + r')(?!\.?\d))?')
 
     def repl(m):
-        old = m.group(1)
-        new = xref_map.get(old)
-        if new is None:
+        if FOREIGN_QUALIFIER.search(m.string[:m.start()]):
             return m.group(0)
-        if new.startswith('Annex '):
-            return new
-        return '\u00a7' + new
+        out = _mapped(xref_map, m.group(1))
+        tail = m.group('range')
+        if tail:
+            end = tail.lstrip(' \u2013\u2014-')
+            dash = tail[:len(tail) - len(end)]
+            out += dash + _mapped(xref_map, end.strip())
+        return out
 
-    # A single pass with a longest-match alternation avoids rewriting a result twice.
-    # The lookahead blocks only a longer clause number, not a sentence-ending period.
-    pattern = re.compile(r'§\s*(' + '|'.join(re.escape(k) for k in keys) + r')(?!\.?\d)')
-    return pattern.sub(repl, text)
+    text = pattern.sub(repl, text)
+    if annex_map:
+        text = _rewrite_annexes(text, annex_map)
+    return text
+
+
+def _mapped(xref_map, old):
+    new = xref_map.get(old)
+    if new is None:
+        return '\u00a7' + old
+    return new if new.startswith('Annex ') else '\u00a7' + new
+
+
+def _rewrite_annexes(text, annex_map):
+    """Renumber bare `Annex X` citations, leaving the headings that declare them."""
+    pattern = re.compile(r'\bAnnex\s+([A-Z])\b')
+
+    def repl(m):
+        line_start = text.rfind('\n', 0, m.start()) + 1
+        if text[line_start:line_start + 1] == '#':
+            return m.group(0)
+        if FOREIGN_QUALIFIER.search(text[line_start:m.start()]):
+            return m.group(0)
+        return 'Annex ' + annex_map.get(m.group(1), m.group(1))
+
+    out = []
+    pos = 0
+    for m in pattern.finditer(text):
+        out.append(text[pos:m.start()])
+        out.append(repl(m))
+        pos = m.end()
+    out.append(text[pos:])
+    return ''.join(out)
 
 
 def restructure(cfg):
@@ -110,7 +155,7 @@ def restructure(cfg):
 
     out.append('')
     body_text = '\n'.join(out).rstrip() + '\n'
-    body_text = rewrite_refs(body_text, cfg['xrefMap'])
+    body_text = rewrite_refs(body_text, cfg['xrefMap'], cfg.get('annexMap'))
     body_text = re.sub(r'\n{3,}', '\n\n', body_text)
 
     missing = [k for k in order

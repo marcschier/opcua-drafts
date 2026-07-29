@@ -63,11 +63,15 @@ ALIAS_BOOKMARKS = [
 ]
 
 
-def _add_alias_bookmarks(pkg, bookmarks):
+def _add_alias_bookmarks(pkg, bookmarks, writer):
     from opcdocx.oxml import q
     existing = {el.get(q('w:name')) for el in pkg.document.iter(q('w:bookmarkStart'))}
     for text, style, names in ALIAS_BOOKMARKS:
-        wanted = [n for n in names if n not in existing]
+        # Names go through the writer's own sanitiser: a clause id such as `c3-1`
+        # becomes `_Clause_c3_1`, and a hand-written dashed alias would never be the
+        # bookmark a REF field actually looks for.
+        wanted = [n for n in (_alias_name(writer, n) for n in names)
+                  if n not in existing]
         if not wanted:
             continue
         try:
@@ -83,6 +87,14 @@ def _add_alias_bookmarks(pkg, bookmarks):
             p.insert(insert_at, bookmark_start(bid, name))
             p.append(bookmark_end(bid))
             existing.add(name)
+
+
+def _alias_name(writer, name):
+    """`_Clause_c3-1` -> the name the writer would have generated for clause id c3-1."""
+    for prefix in ('_Clause_', '_Annex_', '_Tab_', '_Fig_'):
+        if name.startswith(prefix):
+            return writer.bookmark_name(prefix.strip('_'), name[len(prefix):])
+    return name
 
 
 def _find_containing(pkg, text, style):
@@ -150,7 +162,7 @@ def render(build, doc, template_path, out_path):
     _replace_toc(pkg, idx)
 
     substitute_tokens(pkg.body, tokens)
-    _add_alias_bookmarks(pkg, bookmarks)
+    _add_alias_bookmarks(pkg, bookmarks, writer)
     _attach_figures(pkg, figures)
 
     pkg.set_custom_properties({

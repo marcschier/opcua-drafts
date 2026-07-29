@@ -349,15 +349,35 @@ def _compare_type_table(name, expected, tbl, res):
 
 
 def check_conformance_units(doc, model, res):
-    """Every unit a table names must also be named in the conformance-units clause."""
+    """Every unit the model uses must be named in the conformance-units clause.
+
+    The search is scoped to that clause on purpose. Searching the whole body would be
+    vacuous: every unit is reprinted in its type's own node table, which `check_node_tables`
+    already requires, so a whole-body search could never fail.
+    """
+    kids = doc.blocks()
+    start = end = None
+    for i, el in enumerate(kids):
+        if el.tag != q('w:p') or para_style(el) != 'Heading1':
+            continue
+        text = iter_text(el).strip().lower()
+        if start is None and text.startswith('profiles and conformance units'):
+            start = i
+        elif start is not None and end is None:
+            end = i
+    if start is None:
+        res.error('conformance-units', 'no "Profiles and conformance units" clause')
+        return
+    clause_text = ' '.join(iter_text(el) for el in kids[start:end or len(kids)])
+
     declared = set()
     for node in model.nodes.values():
         declared.update(node.categories)
-    text = iter_text(doc.body)
     for cu in sorted(declared):
-        if cu not in text:
+        if cu not in clause_text:
             res.error('conformance-units',
-                      '%s is used by the model but not named in the document' % cu)
+                      '%s is used by the model but not named in the conformance-units '
+                      'clause' % cu)
 
 
 def check_template_slices(doc, template, res):

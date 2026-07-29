@@ -45,7 +45,7 @@ The result is an **N×M integration problem**: *N* servers (pumps, robots, machi
 - **Vendor-neutral, auditable digital twins.** Because the mapping is authoritative, versioned, and part of the model, it can be reviewed, diffed, validated, and governed like any other engineering artifact.
 - **Toolable pipelines.** The mapping is machine-readable, so it can be generated from engineering data, checked in CI, and migrated across versions (override/tombstone matching via `BindingDefinitionId`).
 - **Incremental adoption and clean evolution.** Servers implement the representation core alone first, add value bindings when ready, and refine bindings over time without invalidating previously deployed connectors.
-- **An ecosystem division of labour.** Asset authors, machine OEMs, integrators, connector vendors, and visualization operators collaborate through the model as a shared contract rather than through private, point-to-point agreements (see **Annex F**).
+- **An ecosystem division of labour.** Asset authors, machine OEMs, integrators, connector vendors, and visualization operators collaborate through the model as a shared contract rather than through private, point-to-point agreements (see **Annex D**).
 
 ### 1.3 Capabilities and conformance
 
@@ -76,7 +76,7 @@ The release history of this specification is recorded in [`CHANGELOG.md`](CHANGE
 Referenced for the transform and geospatial profiles only (not a RequiredModel of the base NodeSet):
 
 - [OPC 10000-210 (RSL) / OPC 10000-5 Spatial Data](https://reference.opcfoundation.org/specs/OPC-10000-210) — the `CartesianFrameAngleOrientationType`, `3DFrame`, `3DCartesianCoordinates`, `3DOrientation` types and their RPY mathematics.
-- [OPC 10000-211 (GPOS)](https://reference.opcfoundation.org/specs/OPC-10000-211) — Global Positioning: `GlobalPositionType` (latitude/longitude/elevation, EPSG `CoordinateReferenceSystem`), `GlobalLocationType` (a subtype of RSL `SpatialLocationType`), and `GroundControlPointDataType` (local↔global tie points) — the geospatial anchor for the `Georeference` render target (§7.4.2, Annex D).
+- [OPC 10000-211 (GPOS)](https://reference.opcfoundation.org/specs/OPC-10000-211) — Global Positioning: `GlobalPositionType` (latitude/longitude/elevation, EPSG `CoordinateReferenceSystem`), `GlobalLocationType` (a subtype of RSL `SpatialLocationType`), and `GroundControlPointDataType` (local↔global tie points) — the geospatial anchor for the `Georeference` render target (§7.4.2, Annex F).
 
 ---
 
@@ -527,7 +527,7 @@ The consequence is that a server exposing `Artifacts` **is** an addressable reso
 
 ### 7.13 OpenUsdSchemaPluginGroupType
 
-Part 2 Annex E lets a vendor introduce new typed prims by subtyping `UsdTypedType` in OPC UA. A USD-side client has no way to interpret those prims unless it also has the corresponding **USD** schema. OpenUSD solves this with **codeless schemas**, which require exactly two files — a `plugInfo.json` manifest and a `generatedSchema.usda` — discovered through `PlugRegistry` and registered by `UsdSchemaRegistry` without any compiled code.
+Part 2 §8 lets a vendor introduce new typed prims by subtyping `UsdTypedType` in OPC UA. A USD-side client has no way to interpret those prims unless it also has the corresponding **USD** schema. OpenUSD solves this with **codeless schemas**, which require exactly two files — a `plugInfo.json` manifest and a `generatedSchema.usda` — discovered through `PlugRegistry` and registered by `UsdSchemaRegistry` without any compiled code.
 
 A server that materializes vendor prim types **should** therefore serve the matching codeless schema as an `OpenUsdSchemaPluginGroupType` group whose `PluginName` is the plugin name from the manifest (`Plugins[].Name`), containing one `SchemaPlugin` artifact (the `plugInfo.json`) and one `GeneratedSchema` artifact (the `generatedSchema.usda`). A server claiming `OU-SchemaPluginDelivery` **shall** serve exactly that pair for every vendor prim type it materializes, so the capability is testable rather than advisory.
 
@@ -539,7 +539,7 @@ This closes the loop between the two type systems: a client fetches the plugin f
 
 ## 8 OPC UA DataTypes
 
-- `OpenUsdRenderTargetKindEnum` — `Translation(0) Rotation(1) Scale(2) Transform(3) Visibility(4) DisplayColor(5) EmissiveColor(6) Opacity(7) Custom(8) Georeference(9)` (`Georeference` = a geodetic anchor coordinate target — latitude/longitude/height; see §7.4.2 and Annex D).
+- `OpenUsdRenderTargetKindEnum` — `Translation(0) Rotation(1) Scale(2) Transform(3) Visibility(4) DisplayColor(5) EmissiveColor(6) Opacity(7) Custom(8) Georeference(9)` (`Georeference` = a geodetic anchor coordinate target — latitude/longitude/height; see §7.4.2 and Annex F).
 - `OpenUsdBadQualityActionEnum` — `Skip(0) HoldLast(1) ClearOpinion(2) Fallback(3)`.
 - `OpenUsdBindingStateEnum` — `Disabled(0) Unresolved(1) Ready(2) Active(3) Degraded(4) Error(5)`.
 - `OpenUsdSignalRoleEnum` — `Observable(0) Controllable(1)`.
@@ -691,7 +691,7 @@ In NVIDIA Omniverse a connector opens the stage on Nucleus, creates or joins a `
 This model is the **visual-projection binding** of a broader "asset definition at the center" strategy, in which a single governed, standards-based asset definition drives multiple projections — meaning (ontology), appearance (this model → OpenUSD/Omniverse), place (geospatial, OPC UA Parts 210/211), and behavior (a declarative operating envelope). The design choices here serve that role:
 
 - **Declared, discoverable binding.** The signal → USD-prim binding lives in the OPC UA address space (browsable, versioned, discoverable), so visualization is a *projection* of the asset definition rather than a bespoke per-scene integration. This is exactly the "declared signal → USD-prim binding contract" the strategy needs on the spine.
-- **Semantic-id portability.** `SourceSemanticId` (ECLASS / IEC CDD) lets the same binding apply to assets from different vendors that share companion-spec types and semantic ids — the cross-vendor portability the strategy depends on — and is the natural bridge to an AAS submodel expression (Annex C).
+- **Semantic-id portability.** `SourceSemanticId` (ECLASS / IEC CDD) lets the same binding apply to assets from different vendors that share companion-spec types and semantic ids — the cross-vendor portability the strategy depends on — and is the natural bridge to an AAS submodel expression (Annex E).
 - **Signal role + command.** `SignalRole` mirrors the strategy's *observable vs controllable* signal tagging, and `OpenUsdCommandBindingType` provides the authorized, opt-in control path an agent needs to *act* on the plant (gated externally by the operating envelope).
 - **Twin BOM integrity.** `RootLayerDigest`/`Signature`/`ProvenanceUri` let the referenced USD asset be digest-pinned and verified, so the visual reference can be packaged into a signed *Twin BOM* alongside the definition, semantic ids, and provenance.
 - **Twin BOM payload delivery.** Optional `OpenUsdStageType.Assets` lets the machine ship the signed *Twin BOM* payload itself — root layer, component assets, packages, and textures — through OPC UA, enabling zero-setup remote rendering of the twin without a preconfigured external asset repository.
