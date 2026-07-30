@@ -323,6 +323,13 @@ def apply_edits(text, edits):
     return '\n'.join(lines)
 
 
+def _group_by_path(edits):
+    out = {}
+    for edit in edits:
+        out.setdefault(edit.path, []).append(edit)
+    return out
+
+
 # --------------------------------------------------------------------------- comments
 
 
@@ -452,11 +459,29 @@ class Ingest:
 
     def patched(self):
         """`path -> new text` for every file this ingest changes."""
-        by_path = {}
-        for edit in self.edits:
-            by_path.setdefault(edit.path, []).append(edit)
-        return {path: apply_edits(self.sources.at_review[path], edits)
-                for path, edits in by_path.items()}
+        return {path: apply_edits(self.sources.at_review[path], group)
+                for path, group in _group_by_path(self.edits).items()}
+
+    def patched_by_author(self):
+        """`[(author, {path: text})]`, each reviewer's edits stacked on the last.
+
+        One commit per reviewer means each has to build on the one before it rather than
+        on the original text, or the second commit would revert the first. Where two
+        reviewers changed the same words, `apply_edits` raises instead of picking one,
+        which is the right answer: that is a conflict, not a merge.
+        """
+        current = dict(self.sources.at_review)
+        out = []
+        for author in (self.doc.authors() or [None]):
+            edits = [e for e in self.edits if e.author == author]
+            if not edits:
+                continue
+            files = {}
+            for path, group in _group_by_path(edits).items():
+                current[path] = apply_edits(current[path], group)
+                files[path] = current[path]
+            out.append((author, files))
+        return out
 
     def verify(self, template=None):
         """Rebuild from the patched markdown and check the reviewer's intent survived.

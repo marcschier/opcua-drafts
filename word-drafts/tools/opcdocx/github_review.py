@@ -210,20 +210,17 @@ def publish(ingest, *, repo_root, base='main', draft=False, dry_run=False):
 
     start = git(['rev-parse', '--abbrev-ref', 'HEAD'], repo_root=repo_root)
     from_commit = ingest.commit if ingest.commit != 'unknown' else base
+    # Everything the branch needs is computed before the checkout. That checkout moves
+    # the working tree to the revision the reviewer's document was built from, which may
+    # predate this tool — anything worked out afterwards would be worked out against a
+    # repository that does not contain it.
+    per_author = ingest.patched_by_author()
     git(['checkout', '-b', branch, from_commit], repo_root=repo_root)
     try:
-        # Applied cumulatively: two reviewers may have marked up the same file, and each
-        # commit has to build on the last rather than on the original text.
-        current = dict(ingest.sources.at_review)
-        for author in authors:
-            edits = [e for e in ingest.edits if e.author == author]
-            if not edits:
-                continue
-            for path, group in _by_path(edits).items():
-                import ingest_docx
-                current[path] = ingest_docx.apply_edits(current[path], group)
-                ingest.sources.write(path, current[path])
-            git(['add', '--'] + sorted({e.path for e in edits}), repo_root=repo_root)
+        for author, files in per_author:
+            for path, text in files.items():
+                ingest.sources.write(path, text)
+            git(['add', '--'] + sorted(files), repo_root=repo_root)
             git(['commit', '-m', commit_message(ingest, author)], repo_root=repo_root)
 
         git(['push', '--set-upstream', 'origin', branch], repo_root=repo_root)
@@ -251,7 +248,6 @@ def _by_path(edits):
     for edit in edits:
         out.setdefault(edit.path, []).append(edit)
     return out
-
 
 def post_review(repo, number, comments, *, repo_root):
     """One review carrying every inline comment, so the reviewer sees one event."""
