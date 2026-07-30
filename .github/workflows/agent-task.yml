@@ -115,12 +115,30 @@ jobs:
         run: npm install -g @github/copilot
 
       - name: Run the agent
+        id: agent
         env:
-          # No stored secret: the built-in token plus copilot-requests: write is enough.
+          # The built-in token plus `copilot-requests: write` needs no stored secret.
+          # GitHub documents that path for organization-owned repositories, so on a
+          # user-owned one it may be refused — in which case setting a
+          # COPILOT_GITHUB_TOKEN secret (a PAT with "Copilot Requests") switches over with
+          # no change to any workflow.
           GITHUB_TOKEN: ${{ github.token }}
+          FALLBACK_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}
           PROMPT: ${{ inputs.prompt }}
         run: |
-          copilot --yolo -p "$PROMPT" 2>&1 | tee agent.log
+          if [ -n "$FALLBACK_TOKEN" ]; then
+            export COPILOT_GITHUB_TOKEN="$FALLBACK_TOKEN"
+            echo 'authenticating with the COPILOT_GITHUB_TOKEN secret'
+          else
+            echo 'authenticating with the built-in token and copilot-requests: write'
+          fi
+          if ! copilot --yolo -p "$PROMPT" 2>&1 | tee agent.log; then
+            echo "::error::the agent did not run. If the log shows an authentication or \
+              entitlement failure, this repository cannot use copilot-requests: write — \
+              add a COPILOT_GITHUB_TOKEN secret (a fine-grained PAT with the \
+              'Copilot Requests' permission) and re-run."
+            exit 1
+          fi
 
       - name: Revert anything generated
         id: guard

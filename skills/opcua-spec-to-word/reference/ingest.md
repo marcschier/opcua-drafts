@@ -160,10 +160,17 @@ text.
 
 In GitHub Actions the agent runs as Copilot CLI — `npm install -g @github/copilot`, then
 `copilot --yolo -p "…"` — authenticated by the **built-in token** with
-`permissions: copilot-requests: write`. No stored secret. Two things are worth enforcing in
-the workflow rather than asking for in the prompt: revert any edit to a generated artifact
-before committing, since the next build would discard it silently anyway; and refuse to run
-on any branch outside a known agent prefix.
+`permissions: copilot-requests: write`. No stored secret. GitHub documents that path for
+organization-owned repositories, so on a user-owned one it may be refused; the workflow
+therefore uses a `COPILOT_GITHUB_TOKEN` secret when one exists and says which it used, so
+switching over is a secret rather than an edit. Note that `copilot-requests` is newer than
+actionlint's built-in scope list, so the linter reports it as unknown — that is a false
+positive, and CI ignores exactly that message and nothing else.
+
+Two things are worth enforcing in the workflow rather than asking for in the prompt: revert
+any edit to a generated artifact before committing, since the next build would discard it
+silently anyway; and refuse to run on any branch outside a known agent prefix. A prompt is
+a wish; a workflow step is a rule.
 
 ## What CI cannot do
 

@@ -96,6 +96,23 @@ jobs:
       - run: pip install pyyaml
       - run: python .github/scripts/check_yaml_json.py
 
+  workflows:
+    name: Workflow syntax (advisory)
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      # The agent workflows are triggered by labels and pushes to main, so a pull request
+      # never runs them — a typo in one would only surface the first time somebody relied
+      # on it. This reads them instead: unknown keys, bad expressions, `needs` that point
+      # at nothing, action inputs that do not exist.
+      - name: Lint the workflows
+        run: |
+          # `copilot-requests` is documented by GitHub but is newer than actionlint's
+          # built-in list of permission scopes, so it reports a false positive.
+          bash <(curl -sSL https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)
+          ./actionlint -color -ignore 'unknown permission scope "copilot-requests"'
+
   spec-validate:
     name: Spec validation, self-contained (advisory)
     runs-on: ubuntu-latest

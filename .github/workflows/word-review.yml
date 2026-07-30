@@ -208,6 +208,7 @@ jobs:
     needs: ingest
     if: needs.ingest.outputs.needs_agent == 'true'
     uses: ./.github/workflows/agent-task.yml
+    secrets: inherit
     permissions:
       contents: write
       pull-requests: write
