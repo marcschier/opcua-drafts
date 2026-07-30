@@ -129,9 +129,8 @@
             "text": "This document supersedes "
           },
           {
-            "r": "link",
-            "text": "OPC 10101 v1.00",
-            "href": "https://reference.opcfoundation.org/specs/OPC-10101/"
+            "r": "t",
+            "text": "OPC 10101 v1.00"
           },
           {
             "r": "t",
@@ -1059,9 +1058,8 @@
             "text": "This annex walks an implementer through both conversion directions for the pump example, step by step, using concise snippets rather than full files. The source files are "
           },
           {
-            "r": "link",
-            "text": "`examples/02-thing-model-pump.jsonld`",
-            "href": "examples/02-thing-model-pump.jsonld"
+            "r": "code",
+            "text": "examples/02-thing-model-pump.jsonld"
           },
           {
             "r": "t",
@@ -1076,9 +1074,8 @@
             "text": " Thing Model) and "
           },
           {
-            "r": "link",
-            "text": "`examples/01-opcua-td-pump.jsonld`",
-            "href": "examples/01-opcua-td-pump.jsonld"
+            "r": "code",
+            "text": "examples/01-opcua-td-pump.jsonld"
           },
           {
             "r": "t",
@@ -5735,9 +5732,8 @@
             "text": ". Credentials such as passwords and certificates are never carried in a Thing Description; they are supplied out of band. A worked example is "
           },
           {
-            "r": "link",
-            "text": "`examples/01-opcua-td-pump.jsonld`",
-            "href": "examples/01-opcua-td-pump.jsonld"
+            "r": "code",
+            "text": "examples/01-opcua-td-pump.jsonld"
           },
           {
             "r": "t",
@@ -6191,9 +6187,8 @@
             "text": ", and a complete worked instance is "
           },
           {
-            "r": "link",
-            "text": "`examples/01-opcua-td-pump.jsonld`",
-            "href": "examples/01-opcua-td-pump.jsonld"
+            "r": "code",
+            "text": "examples/01-opcua-td-pump.jsonld"
           },
           {
             "r": "t",
@@ -6251,9 +6246,8 @@
         "style": "PARAGRAPH",
         "runs": [
           {
-            "r": "t",
-            "text": "`uav:isComposite`",
-            "b": true
+            "r": "code",
+            "text": "uav:isComposite"
           },
           {
             "r": "t",
@@ -6364,9 +6358,8 @@
         "style": "PARAGRAPH",
         "runs": [
           {
-            "r": "t",
-            "text": "`uav:isEvent`",
-            "b": true
+            "r": "code",
+            "text": "uav:isEvent"
           },
           {
             "r": "t",
@@ -6570,9 +6563,8 @@
         "items": [
           [
             {
-              "r": "t",
-              "text": "`rel: uav:capability`",
-              "b": true
+              "r": "code",
+              "text": "rel: uav:capability"
             },
             {
               "r": "t",
@@ -6589,9 +6581,8 @@
           ],
           [
             {
-              "r": "t",
-              "text": "`rel: uav:componentModel`",
-              "b": true
+              "r": "code",
+              "text": "rel: uav:componentModel"
             },
             {
               "r": "t",
@@ -6608,9 +6599,8 @@
           ],
           [
             {
-              "r": "t",
-              "text": "`rel: uav:reference`",
-              "b": true
+              "r": "code",
+              "text": "rel: uav:reference"
             },
             {
               "r": "t",
@@ -6619,9 +6609,8 @@
           ],
           [
             {
-              "r": "t",
-              "text": "`rel: <ReferenceType compact model name>`",
-              "b": true
+              "r": "code",
+              "text": "rel: <ReferenceType compact model name>"
             },
             {
               "r": "t",
@@ -6646,9 +6635,8 @@
           ],
           [
             {
-              "r": "t",
-              "text": "`rel: uav:componentOf`",
-              "b": true
+              "r": "code",
+              "text": "rel: uav:componentOf"
             },
             {
               "r": "t",
@@ -6707,9 +6695,8 @@
           ],
           [
             {
-              "r": "t",
-              "text": "`uav:refName`",
-              "b": true
+              "r": "code",
+              "text": "uav:refName"
             },
             {
               "r": "t",
@@ -6718,9 +6705,8 @@
           ],
           [
             {
-              "r": "t",
-              "text": "`uav:refId`",
-              "b": true
+              "r": "code",
+              "text": "uav:refId"
             },
             {
               "r": "t",
@@ -6862,9 +6848,8 @@
         "style": "PARAGRAPH",
         "runs": [
           {
-            "r": "t",
-            "text": "`uav:contains`",
-            "b": true
+            "r": "code",
+            "text": "uav:contains"
           },
           {
             "r": "t",
@@ -6879,9 +6864,8 @@
             "text": " values of the sub-components it directly contains. "
           },
           {
-            "r": "t",
-            "text": "`uav:containedIn`",
-            "b": true
+            "r": "code",
+            "text": "uav:containedIn"
           },
           {
             "r": "t",
@@ -6995,18 +6979,16 @@
         "style": "PARAGRAPH",
         "runs": [
           {
-            "r": "t",
-            "text": "`uav:congruentType`",
-            "b": true
+            "r": "code",
+            "text": "uav:congruentType"
           },
           {
             "r": "t",
             "text": " (string) — the definitive ExpandedNodeId (or an external absolute IRI) of a type that is structurally congruent with this one: a shared, co-typed definition used to reconcile two models that describe the same OPC UA type. "
           },
           {
-            "r": "t",
-            "text": "`uav:congruentTypeName`",
-            "b": true
+            "r": "code",
+            "text": "uav:congruentTypeName"
           },
           {
             "r": "t",
@@ -7044,9 +7026,8 @@
             "text": ". "
           },
           {
-            "r": "t",
-            "text": "`uav:nameNamespace`",
-            "b": true
+            "r": "code",
+            "text": "uav:nameNamespace"
           },
           {
             "r": "t",
@@ -7106,9 +7087,8 @@
         "style": "PARAGRAPH",
         "runs": [
           {
-            "r": "t",
-            "text": "`uav:unitProperty`",
-            "b": true
+            "r": "code",
+            "text": "uav:unitProperty"
           },
           {
             "r": "t",
@@ -7147,9 +7127,8 @@
             "text": " term. "
           },
           {
-            "r": "t",
-            "text": "`uav:scaleFactor`",
-            "b": true
+            "r": "code",
+            "text": "uav:scaleFactor"
           },
           {
             "r": "t",
@@ -7164,9 +7143,8 @@
             "text": ". "
           },
           {
-            "r": "t",
-            "text": "`uav:decimalPlaces`",
-            "b": true
+            "r": "code",
+            "text": "uav:decimalPlaces"
           },
           {
             "r": "t",
@@ -7232,9 +7210,26 @@
         "style": "PARAGRAPH",
         "runs": [
           {
+            "r": "code",
+            "text": "uav:propertyGroups"
+          },
+          {
             "r": "t",
-            "text": "`uav:propertyGroups`, `uav:eventGroups`, `uav:actionGroups`",
+            "text": ", ",
             "b": true
+          },
+          {
+            "r": "code",
+            "text": "uav:eventGroups"
+          },
+          {
+            "r": "t",
+            "text": ", ",
+            "b": true
+          },
+          {
+            "r": "code",
+            "text": "uav:actionGroups"
           },
           {
             "r": "t",
@@ -7265,9 +7260,8 @@
             "text": ". "
           },
           {
-            "r": "t",
-            "text": "`uav:memberOf`",
-            "b": true
+            "r": "code",
+            "text": "uav:memberOf"
           },
           {
             "r": "t",
@@ -7412,18 +7406,16 @@
         "style": "PARAGRAPH",
         "runs": [
           {
-            "r": "t",
-            "text": "`uav:metadata`",
-            "b": true
+            "r": "code",
+            "text": "uav:metadata"
           },
           {
             "r": "t",
             "text": " (JSON value) — an opaque object of implementation- or vendor-defined annotations, carried verbatim; it preserves model facts a converter does not interpret. "
           },
           {
-            "r": "t",
-            "text": "`uav:semanticId`",
-            "b": true
+            "r": "code",
+            "text": "uav:semanticId"
           },
           {
             "r": "t",
@@ -7438,9 +7430,26 @@
             "text": "-style) fact. "
           },
           {
+            "r": "code",
+            "text": "uav:propertyConfiguration"
+          },
+          {
             "r": "t",
-            "text": "`uav:propertyConfiguration`, `uav:actionConfiguration`, `uav:eventConfiguration`",
+            "text": ", ",
             "b": true
+          },
+          {
+            "r": "code",
+            "text": "uav:actionConfiguration"
+          },
+          {
+            "r": "t",
+            "text": ", ",
+            "b": true
+          },
+          {
+            "r": "code",
+            "text": "uav:eventConfiguration"
           },
           {
             "r": "t",
@@ -7514,9 +7523,8 @@
         "style": "PARAGRAPH",
         "runs": [
           {
-            "r": "t",
-            "text": "`uav:includeInherited`",
-            "b": true
+            "r": "code",
+            "text": "uav:includeInherited"
           },
           {
             "r": "t",
@@ -7539,9 +7547,8 @@
             "text": "); this maps to whether a projection walks the OPC UA supertype chain. "
           },
           {
-            "r": "t",
-            "text": "`uav:additionalProperties`",
-            "b": true
+            "r": "code",
+            "text": "uav:additionalProperties"
           },
           {
             "r": "t",
@@ -7598,18 +7605,16 @@
         "style": "PARAGRAPH",
         "runs": [
           {
-            "r": "t",
-            "text": "`uav:externalSchema`",
-            "b": true
+            "r": "code",
+            "text": "uav:externalSchema"
           },
           {
             "r": "t",
             "text": " (string) — a URI or path to an external schema that defines a custom DataType or payload encoding the affordance uses; it records the model fact that a member's DataType is not inline. "
           },
           {
-            "r": "t",
-            "text": "`uav:modellingRule`",
-            "b": true
+            "r": "code",
+            "text": "uav:modellingRule"
           },
           {
             "r": "t",
@@ -7716,9 +7721,8 @@
         "style": "PARAGRAPH",
         "runs": [
           {
-            "r": "t",
-            "text": "`uav:nodes`",
-            "b": true
+            "r": "code",
+            "text": "uav:nodes"
           },
           {
             "r": "t",
@@ -7798,9 +7802,8 @@
         "style": "PARAGRAPH",
         "runs": [
           {
-            "r": "t",
-            "text": "`uav:nodeSet`",
-            "b": true
+            "r": "code",
+            "text": "uav:nodeSet"
           },
           {
             "r": "t",
@@ -12034,9 +12037,8 @@
             "text": " contain one well-formed XML element each. A worked example is "
           },
           {
-            "r": "link",
-            "text": "`examples/05-native-node-model.jsonld`",
-            "href": "examples/05-native-node-model.jsonld"
+            "r": "code",
+            "text": "examples/05-native-node-model.jsonld"
           },
           {
             "r": "t",
@@ -12462,9 +12464,8 @@
             "text": ". This format is not the default conversion representation. An explicit archival example is "
           },
           {
-            "r": "link",
-            "text": "`examples/03-nodeset-preservation-envelope.jsonld`",
-            "href": "examples/03-nodeset-preservation-envelope.jsonld"
+            "r": "code",
+            "text": "examples/03-nodeset-preservation-envelope.jsonld"
           },
           {
             "r": "t",
@@ -13378,9 +13379,8 @@
             "text": "The machine-readable vocabulary is "
           },
           {
-            "r": "link",
-            "text": "`opc-ua-wot-binding.context.jsonld`",
-            "href": "opc-ua-wot-binding.context.jsonld"
+            "r": "code",
+            "text": "opc-ua-wot-binding.context.jsonld"
           },
           {
             "r": "t",
@@ -13423,9 +13423,8 @@
             "text": ". The structural constraints are "
           },
           {
-            "r": "link",
-            "text": "`opc-ua-wot-binding.schema.json`",
-            "href": "opc-ua-wot-binding.schema.json"
+            "r": "code",
+            "text": "opc-ua-wot-binding.schema.json"
           },
           {
             "r": "t",
@@ -13456,9 +13455,8 @@
         "items": [
           [
             {
-              "r": "link",
-              "text": "`examples/01-opcua-td-pump.jsonld`",
-              "href": "examples/01-opcua-td-pump.jsonld"
+              "r": "code",
+              "text": "examples/01-opcua-td-pump.jsonld"
             },
             {
               "r": "t",
@@ -13467,9 +13465,8 @@
           ],
           [
             {
-              "r": "link",
-              "text": "`examples/02-thing-model-pump.jsonld`",
-              "href": "examples/02-thing-model-pump.jsonld"
+              "r": "code",
+              "text": "examples/02-thing-model-pump.jsonld"
             },
             {
               "r": "t",
@@ -13478,9 +13475,8 @@
           ],
           [
             {
-              "r": "link",
-              "text": "`examples/03-nodeset-preservation-envelope.jsonld`",
-              "href": "examples/03-nodeset-preservation-envelope.jsonld"
+              "r": "code",
+              "text": "examples/03-nodeset-preservation-envelope.jsonld"
             },
             {
               "r": "t",
@@ -13489,9 +13485,8 @@
           ],
           [
             {
-              "r": "link",
-              "text": "`examples/04-type-reference-modelling-rule.jsonld`",
-              "href": "examples/04-type-reference-modelling-rule.jsonld"
+              "r": "code",
+              "text": "examples/04-type-reference-modelling-rule.jsonld"
             },
             {
               "r": "t",
@@ -13508,9 +13503,8 @@
           ],
           [
             {
-              "r": "link",
-              "text": "`examples/05-native-node-model.jsonld`",
-              "href": "examples/05-native-node-model.jsonld"
+              "r": "code",
+              "text": "examples/05-native-node-model.jsonld"
             },
             {
               "r": "t",

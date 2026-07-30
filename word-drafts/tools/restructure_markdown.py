@@ -101,7 +101,8 @@ def restructure(cfg):
     with open(src, encoding='utf-8') as f:
         text = f.read()
     sections, order = md_parse.split_sections(text)
-    model = nodeset_tables.Model(os.path.join(REPO, cfg['source']['nodeset']))
+    model = nodeset_tables.Model(os.path.join(REPO, cfg['source']['nodeset']),
+                                 cfg.get('requiredModelNodes'))
     _EMITTED_TYPES.clear()
     for entry in cfg['clauseMap']:
         if entry.get('nodetable'):

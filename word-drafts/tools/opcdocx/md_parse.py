@@ -8,6 +8,7 @@ field over a bookmark and let Word supply the live clause number.
 
 import re
 
+from . import contract
 from . import docmodel as dm
 
 HEADING_RE = re.compile(r'^(#{1,6})\s+(.*?)\s*$')
@@ -36,6 +37,8 @@ WORD_REF_LIST_RE = re.compile(
     r'\bSections?\s+' + _NUM + r'(?:(?:,\s+and\s+|,\s+|\s+and\s+)' + _NUM + r')*'
     r'(?!\.?[0-9])')
 
+_MARKUP_IN_LABEL_RE = re.compile(r'[`*]')
+
 _INLINE_RE = re.compile(
     r'(?P<code>`[^`]+`)'
     r'|(?P<bold>\*\*(?:[^*]|\*(?!\*))+\*\*)'
@@ -55,7 +58,8 @@ _NUM = r'[0-9]+(?:\.[0-9]+)*'
 FOREIGN_QUALIFIER_RE = re.compile(
     r'(?:OPC\s*\d{4,5}|IEC\s*\d+|RFC\s*\d+|W3C|AOUSD|xRegistry'
     r'|WoT\s+Binding|WoT-Binding|Thing\s+Description\s+1\.1'
-    r'|Part\s*\d+|\bthe base\b|\bbase (?:spec|specification|model)\b)'
+    r'|Part\s*\d+|\bthe base\b|\bbase (?:spec|specification|model)\b'
+    r'|\*[^*]*OPC UA[^*]*\*)'
     r'[^\u00a7]{0,120}$', re.IGNORECASE)
 
 
@@ -149,12 +153,29 @@ def parse_inline(text, *, xref_resolver=None, foreign_anchors=None):
         if m.group('code'):
             runs.append(dm.code(m.group('code')[1:-1]))
         elif m.group('bold'):
-            runs.append(dm.t(_unescape(m.group('bold')[2:-2]), b=True))
+            runs.extend(_styled(m.group('bold')[2:-2], xref_resolver, foreign_anchors,
+                                b=True))
         elif m.group('italic'):
-            runs.append(dm.t(_unescape(m.group('italic')[1:-1]), i=True))
+            runs.extend(_styled(m.group('italic')[1:-1], xref_resolver, foreign_anchors,
+                                i=True))
         elif m.group('link'):
             label, _, href = m.group('link')[1:-1].partition('](')
-            runs.append(dm.link(_unescape(label), href))
+            if href.startswith(contract.FORBIDDEN_LINK_HOSTS) or any(
+                    host in href for host in contract.FORBIDDEN_LINK_HOSTS):
+                # Guideline 5 forbids a link into the online reference anywhere but
+                # Annex A. The citation is what matters, so the link is dropped and its
+                # label kept — including any code formatting inside it.
+                runs.extend(parse_inline(label, xref_resolver=xref_resolver,
+                                         foreign_anchors=foreign_anchors))
+            elif _MARKUP_IN_LABEL_RE.search(label):
+                # A label such as [`WoTRegistryType`](#type-WoTRegistryType) carries its
+                # own inline markup. Emitting it as one plain run put the backticks into
+                # the document; the writer drops the href for every link anyway, so the
+                # label is parsed and its formatting kept.
+                runs.extend(parse_inline(label, xref_resolver=xref_resolver,
+                                         foreign_anchors=foreign_anchors))
+            else:
+                runs.append(dm.link(_unescape(label), href))
         elif m.group('ref'):
             number = SECTION_REF_RE.match(m.group('ref')).group(1)
             resolved = (xref_resolver(number)
@@ -177,6 +198,27 @@ def parse_inline(text, *, xref_resolver=None, foreign_anchors=None):
 
 def _unescape(s):
     return s.replace('\\|', '|').replace('\\*', '*').replace('\\_', '_')
+
+
+def _styled(text, xref_resolver, foreign_anchors, *, b=False, i=False):
+    """Emphasised text, with the inline markup inside it still parsed.
+
+    Bold and italic used to be emitted as a single plain run, so a code span, a link or a
+    section reference written inside them reached the document as literal markdown. It is
+    not a rare construct — `**the `EngineType` component**` is ordinary prose in these
+    drafts — and it left stray backticks in every document built before this.
+    """
+    out = []
+    for run in parse_inline(text, xref_resolver=xref_resolver,
+                            foreign_anchors=foreign_anchors):
+        if run.get('r') == 't':
+            run = dict(run)
+            if b:
+                run['b'] = True
+            if i:
+                run['i'] = True
+        out.append(run)
+    return out
 
 
 def _word_reference_runs(text, xref_resolver):

@@ -818,28 +818,25 @@
             "text": " Asset content delivery ("
           },
           {
-            "r": "xref",
-            "target": "c7-11",
-            "kind": "clause",
-            "prefix": "7.11"
+            "r": "t",
+            "text": "§7.11"
           },
           {
             "r": "t",
             "text": ") builds on "
           },
           {
-            "r": "link",
-            "text": "*OPC UA — xRegistry*",
-            "href": "../../core-specs/xregistry/OPC-UA-xRegistry.md"
+            "r": "t",
+            "text": "OPC UA — xRegistry",
+            "i": true
           },
           {
             "r": "t",
             "text": ", which is a "
           },
           {
-            "r": "t",
-            "text": "`RequiredModel`",
-            "b": true
+            "r": "code",
+            "text": "RequiredModel"
           },
           {
             "r": "t",
@@ -3456,7 +3453,16 @@
         "runs": [
           {
             "r": "t",
-            "text": "Transform profile (driving a USD `xformOp`).",
+            "text": "Transform profile (driving a USD ",
+            "b": true
+          },
+          {
+            "r": "code",
+            "text": "xformOp"
+          },
+          {
+            "r": "t",
+            "text": ").",
             "b": true
           },
           {
@@ -4083,7 +4089,16 @@
         "runs": [
           {
             "r": "t",
-            "text": "Geospatial profile (`RenderTargetKind = Georeference`).",
+            "text": "Geospatial profile (",
+            "b": true
+          },
+          {
+            "r": "code",
+            "text": "RenderTargetKind = Georeference"
+          },
+          {
+            "r": "t",
+            "text": ").",
             "b": true
           },
           {
@@ -6258,18 +6273,17 @@
             "text": ", in "
           },
           {
-            "r": "link",
-            "text": "*OpenUSD Artifact Registry Service*",
-            "href": "xRegistry-OpenUsd.md"
+            "r": "t",
+            "text": "OpenUSD Artifact Registry Service",
+            "i": true
           },
           {
             "r": "t",
             "text": " (with its model in "
           },
           {
-            "r": "link",
-            "text": "`xRegistry-OpenUsd.model.json`",
-            "href": "xRegistry-OpenUsd.model.json"
+            "r": "code",
+            "text": "xRegistry-OpenUsd.model.json"
           },
           {
             "r": "t",
@@ -6748,8 +6762,12 @@
           },
           {
             "r": "t",
-            "text": "subtypes the xRegistry `ResourceType`",
+            "text": "subtypes the xRegistry ",
             "b": true
+          },
+          {
+            "r": "code",
+            "text": "ResourceType"
           },
           {
             "r": "t",
@@ -8719,8 +8737,21 @@
           ],
           [
             {
+              "r": "code",
+              "text": "DependsOn"
+            },
+            {
               "r": "t",
-              "text": "`DependsOn` carries asset identifiers, not `Xid`s",
+              "text": " carries asset identifiers, not ",
+              "b": true
+            },
+            {
+              "r": "code",
+              "text": "Xid"
+            },
+            {
+              "r": "t",
+              "text": "s",
               "b": true
             },
             {
@@ -13597,8 +13628,21 @@
               },
               {
                 "r": "t",
-                "text": "USD `(w,x,y,z)` ← OPC UA `(x,y,z,w)`",
+                "text": "USD ",
                 "b": true
+              },
+              {
+                "r": "code",
+                "text": "(w,x,y,z)"
+              },
+              {
+                "r": "t",
+                "text": " ← OPC UA ",
+                "b": true
+              },
+              {
+                "r": "code",
+                "text": "(x,y,z,w)"
               }
             ]
           ],
@@ -13945,7 +13989,16 @@
         "runs": [
           {
             "r": "t",
-            "text": "NVIDIA Omniverse (`omni.usd.schema.geospatial`)",
+            "text": "NVIDIA Omniverse (",
+            "b": true
+          },
+          {
+            "r": "code",
+            "text": "omni.usd.schema.geospatial"
+          },
+          {
+            "r": "t",
+            "text": ")",
             "b": true
           }
         ]

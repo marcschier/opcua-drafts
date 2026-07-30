@@ -93,6 +93,28 @@ STATIC_MUTATIONS = [
 ]
 
 
+def _member_row_re(row_marker, data_type):
+    """The table row that declares this member of a type.
+
+    Matching on the BrowseName alone is not enough: `NamespaceUri` also appears in the
+    template's own example tables and in the Namespaces clause, so the first match was a
+    row the node-table check never looks at and the mutation proved nothing. Requiring the
+    member's printed DataType in the same row pins it to a real node table.
+    """
+    return re.compile(r'<w:tr[^>]*>(?:(?!</w:tr>).)*?' + re.escape(row_marker)
+                      + r'(?:(?!</w:tr>).)*?' + re.escape(data_type)
+                      + r'(?:(?!</w:tr>).)*?</w:tr>', re.S)
+
+
+def _drop_member_row(row_marker, data_type):
+    row_re = _member_row_re(row_marker, data_type)
+
+    def apply(text):
+        m = row_re.search(text)
+        return text if not m else text[:m.start()] + text[m.end():]
+    return apply
+
+
 def _corrupt_cell(row_marker, was, now):
     """Change one cell inside the table row that declares `row_marker`.
 
@@ -100,12 +122,11 @@ def _corrupt_cell(row_marker, was, now):
     DataType name also appears in prose and in its own clause heading, and mutating one
     of those proves nothing about the node tables.
     """
-    row_re = re.compile(r'<w:tr[^>]*>(?:(?!</w:tr>).)*?' + re.escape(row_marker)
-                        + r'.*?</w:tr>', re.S)
+    row_re = _member_row_re(row_marker, was)
 
     def apply(text):
         m = row_re.search(text)
-        if not m or was not in m.group(0):
+        if not m:
             return text
         return text[:m.start()] + m.group(0).replace(was, now, 1) + text[m.end():]
     return apply
@@ -127,8 +148,7 @@ def derived_mutations(document_xml, rels_xml, model, doc_ns_index):
     if typed:
         member, data_type = typed
         out.append(('a node table loses a member row', 'node-tables',
-                    _drop_first(r'<w:tr[^>]*>(?:(?!</w:tr>).)*?' + re.escape(member)
-                                + r'.*?</w:tr>')))
+                    _drop_member_row(member, data_type)))
         other = '0:Int32' if data_type != '0:Int32' else '0:Boolean'
         out.append(('a member DataType disagrees with the NodeSet', 'node-tables',
                     _corrupt_cell(member, data_type, other)))
@@ -235,7 +255,8 @@ def main(argv=None):
 def _model_for(cfg):
     from opcdocx import nodeset_tables
     if cfg['source'].get('nodeset'):
-        return nodeset_tables.Model(os.path.join(REPO, cfg['source']['nodeset']))
+        return nodeset_tables.Model(os.path.join(REPO, cfg['source']['nodeset']),
+                                    cfg.get('requiredModelNodes'))
     return nodeset_tables.NullModel(
         model_uri=cfg['identity']['namespaceUri'],
         version=cfg['identity']['version'],

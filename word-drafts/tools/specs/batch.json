@@ -1,0 +1,111 @@
+{
+  "_comment": "The conversion batch. `converted` are the specifications that have a config in this directory and a committed document; `ready` are the ones whose shape the pipeline already handles, so onboarding them is a config file plus the editorial work named in `needs`. Run them with tools/build_all.py.",
+
+  "converted": [
+    "openusd-binding",
+    "openusd-scene",
+    "xregistry",
+    "observability-export",
+    "wot-connectivity",
+    "wot-binding",
+    "schema-registry",
+    "generators"
+  ],
+
+  "ready": [
+    {
+      "id": "data-channels",
+      "markdown": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "nodeset": "core-specs/data-channels/Opc.Ua.DataChannels.NodeSet2.xml",
+      "shape": "companion specification with an information model",
+      "needs": "conformance-unit identifier tokens (DCH-*) assigned per node in its build_model.py; its clause 10 already separates the units in prose"
+    },
+    {
+      "id": "avro-encoding",
+      "markdown": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+      "nodeset": null,
+      "shape": "declared partial compliance, as WoT Binding",
+      "needs": "the no-information-model deviation declared in its config; it defines a DataEncoding, not an address space, so it has no NodeSet"
+    },
+    {
+      "id": "arrow-encoding",
+      "markdown": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+      "nodeset": null,
+      "shape": "declared partial compliance, as WoT Binding",
+      "needs": "the no-information-model deviation declared in its config; at 322 KB it is the largest draft in the repository"
+    },
+    {
+      "id": "observability-di",
+      "markdown": "core-specs/observability-export/di/OPC-UA-DI-Observability-Export-Addendum.md",
+      "nodeset": "core-specs/observability-export/di/Opc.Ua.DI.ObservabilityExport.NodeSet2.xml",
+      "shape": "instance-only addendum",
+      "needs": "a conformance clause, which the addendum does not have; its model declares instances rather than types, so it fills the Instances clause and no type clause"
+    },
+    {
+      "id": "observability-facets",
+      "markdown": "core-specs/observability-export/facets/OPC-UA-Facets-Observability-Export-Addendum.md",
+      "nodeset": "core-specs/observability-export/facets/Opc.Ua.Facets.ObservabilityExport.NodeSet2.xml",
+      "shape": "instance-only addendum",
+      "needs": "a conformance clause"
+    },
+    {
+      "id": "observability-pumps",
+      "markdown": "core-specs/observability-export/pumps/OPC-UA-Pumps-Observability-Export-Addendum.md",
+      "nodeset": "core-specs/observability-export/pumps/Opc.Ua.Pumps.ObservabilityExport.NodeSet2.xml",
+      "shape": "instance-only addendum",
+      "needs": "a conformance clause"
+    },
+    {
+      "id": "observability-robotics",
+      "markdown": "core-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
+      "nodeset": "core-specs/observability-export/robotics/Opc.Ua.Robotics.ObservabilityExport.NodeSet2.xml",
+      "shape": "instance-only addendum",
+      "needs": "a conformance clause"
+    },
+    {
+      "id": "openusd-pumps",
+      "markdown": "metaverse-specs/openusd-binding/pumps/OPC-UA-Pumps-OpenUSD-Bindings-Addendum.md",
+      "nodeset": "metaverse-specs/openusd-binding/pumps/Opc.Ua.Pumps.OpenUsd.NodeSet2.xml",
+      "shape": "instance-only addendum",
+      "needs": "a conformance clause"
+    },
+    {
+      "id": "openusd-robotics",
+      "markdown": "metaverse-specs/openusd-binding/robotics/OPC-UA-Robotics-OpenUSD-Bindings-Addendum.md",
+      "nodeset": "metaverse-specs/openusd-binding/robotics/Opc.Ua.Robotics.OpenUsd.NodeSet2.xml",
+      "shape": "instance-only addendum",
+      "needs": "a conformance clause"
+    }
+  ],
+
+  "notAFit": [
+    {
+      "markdown": "core-specs/data-channels/OPC-UA-Part3-Data-Channel-Model.md",
+      "why": "an amendment to OPC 10000-3, not a companion specification. OPC 20020 is the companion-specification template; rendering a core-part amendment into it would misrepresent what the document is. The same content is carried by OPC-UA-Data-Channels.md, which is a companion specification and is listed as ready."
+    },
+    {
+      "markdown": "core-specs/data-channels/OPC-UA-Part4-Data-Channel-Services.md",
+      "why": "an amendment to OPC 10000-4; see above."
+    },
+    {
+      "markdown": "core-specs/data-channels/OPC-UA-Part6-Data-Channel-Transport.md",
+      "why": "an amendment to OPC 10000-6; see above."
+    },
+    {
+      "markdown": "core-specs/presentations/OPC-UA-Encoding-and-Registry-Overview.md",
+      "why": "a presentation, not a specification."
+    },
+    {
+      "markdown": "core-specs/presentations/OPC-UA-Observability-Export-Overview.md",
+      "why": "a presentation, not a specification."
+    },
+    {
+      "markdown": "core-specs/extras/performance/OPC-UA-Encoding-Performance-Comparison.md",
+      "why": "a measurement report, not a specification."
+    },
+    {
+      "markdown": "core-specs/observability-export/di/OPC-UA-DI-Pumps-Inheritance.md",
+      "why": "an explanatory note about how two addenda compose, not a specification of its own."
+    }
+  ]
+}

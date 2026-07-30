@@ -63,24 +63,7 @@ jobs:
           python-version: "3.12"
       - run: pip install -r word-drafts/tools/requirements.txt
       # The build is pure Python; only finalize_word.ps1 needs Word, so it stays local.
-      - run: python word-drafts/tools/build_docx.py word-drafts/tools/specs/openusd-binding.json
-      - run: python word-drafts/tools/validate_docx.py word-drafts/tools/specs/openusd-binding.json
-      - run: python word-drafts/tools/test_validate_docx.py word-drafts/tools/specs/openusd-binding.json
-      - run: python word-drafts/tools/build_docx.py word-drafts/tools/specs/openusd-scene.json
-      - run: python word-drafts/tools/validate_docx.py word-drafts/tools/specs/openusd-scene.json
-      - run: python word-drafts/tools/test_validate_docx.py word-drafts/tools/specs/openusd-scene.json
-      - run: python word-drafts/tools/build_docx.py word-drafts/tools/specs/xregistry.json
-      - run: python word-drafts/tools/validate_docx.py word-drafts/tools/specs/xregistry.json
-      - run: python word-drafts/tools/test_validate_docx.py word-drafts/tools/specs/xregistry.json
-      - run: python word-drafts/tools/build_docx.py word-drafts/tools/specs/observability-export.json
-      - run: python word-drafts/tools/validate_docx.py word-drafts/tools/specs/observability-export.json
-      - run: python word-drafts/tools/test_validate_docx.py word-drafts/tools/specs/observability-export.json
-      - run: python word-drafts/tools/build_docx.py word-drafts/tools/specs/wot-connectivity.json
-      - run: python word-drafts/tools/validate_docx.py word-drafts/tools/specs/wot-connectivity.json
-      - run: python word-drafts/tools/test_validate_docx.py word-drafts/tools/specs/wot-connectivity.json
-      - run: python word-drafts/tools/build_docx.py word-drafts/tools/specs/wot-binding.json
-      - run: python word-drafts/tools/validate_docx.py word-drafts/tools/specs/wot-binding.json
-      - run: python word-drafts/tools/test_validate_docx.py word-drafts/tools/specs/wot-binding.json
+      - run: python word-drafts/tools/build_all.py
 
   mermaid:
     name: Mermaid diagrams (advisory)

@@ -267,9 +267,8 @@
             "text": " to define new PubSub transports, message mappings, security, or the lifecycle of PubSub configuration; these are defined by "
           },
           {
-            "r": "link",
-            "text": "OPC 10000-14",
-            "href": "https://reference.opcfoundation.org/specs/OPC-10000-14/"
+            "r": "t",
+            "text": "OPC 10000-14"
           },
           {
             "r": "t",
@@ -294,9 +293,8 @@
             "text": " existing OPC UA sources — Events, "
           },
           {
-            "r": "link",
-            "text": "OPC 10000‑26",
-            "href": "https://reference.opcfoundation.org/specs/OPC-10000-26/"
+            "r": "t",
+            "text": "OPC 10000‑26"
           },
           {
             "r": "t",
@@ -311,9 +309,8 @@
             "text": " log entries, and "
           },
           {
-            "r": "link",
-            "text": "OPC 10000‑10",
-            "href": "https://reference.opcfoundation.org/specs/OPC-10000-10/"
+            "r": "t",
+            "text": "OPC 10000‑10"
           },
           {
             "r": "t",
@@ -1572,9 +1569,8 @@
               "text": ", and — where available — a dictionary entry ("
             },
             {
-              "r": "link",
-              "text": "OPC 10000‑19",
-              "href": "https://reference.opcfoundation.org/specs/OPC-10000-19/"
+              "r": "t",
+              "text": "OPC 10000‑19"
             },
             {
               "r": "t",
@@ -1634,9 +1630,8 @@
             "text": " Object of "
           },
           {
-            "r": "link",
-            "text": "`ObservabilityFolderType`",
-            "href": "#type-ObservabilityFolderType"
+            "r": "code",
+            "text": "ObservabilityFolderType"
           },
           {
             "r": "t",
@@ -1660,18 +1655,16 @@
             "text": "); it is the discovery entry point. The registry references, through non-hierarchical "
           },
           {
-            "r": "link",
-            "text": "`Collects`",
-            "href": "#type-Collects"
+            "r": "code",
+            "text": "Collects"
           },
           {
             "r": "t",
             "text": " references, every "
           },
           {
-            "r": "link",
-            "text": "`ObservabilityBindingGroupType`",
-            "href": "#type-ObservabilityBindingGroupType"
+            "r": "code",
+            "text": "ObservabilityBindingGroupType"
           },
           {
             "r": "t",
@@ -1694,9 +1687,8 @@
             "text": " to the groups, and browses each group's "
           },
           {
-            "r": "link",
-            "text": "`ObservabilityBindingType`",
-            "href": "#type-ObservabilityBindingType"
+            "r": "code",
+            "text": "ObservabilityBindingType"
           },
           {
             "r": "t",
@@ -1713,9 +1705,8 @@
             "text": "Each "
           },
           {
-            "r": "link",
-            "text": "`ObservabilityBindingGroupType`",
-            "href": "#type-ObservabilityBindingGroupType"
+            "r": "code",
+            "text": "ObservabilityBindingGroupType"
           },
           {
             "r": "t",
@@ -1730,9 +1721,8 @@
             "text": " child of the "
           },
           {
-            "r": "link",
-            "text": "`IObservableType`",
-            "href": "#type-IObservableType"
+            "r": "code",
+            "text": "IObservableType"
           },
           {
             "r": "t",
@@ -1942,9 +1932,8 @@
             "text": "), linked from the binding by "
           },
           {
-            "r": "link",
-            "text": "`ExportedBy`",
-            "href": "#type-ExportedBy"
+            "r": "code",
+            "text": "ExportedBy"
           },
           {
             "r": "t",
@@ -1988,9 +1977,9 @@
             "text": "The full node reference — every type, member, DataType and well-known instance — is generated in "
           },
           {
-            "r": "t",
-            "text": "[Annex A](#annex-a)",
-            "b": true
+            "r": "link",
+            "text": "Annex A",
+            "href": "#annex-a"
           },
           {
             "r": "t",
@@ -2120,9 +2109,8 @@
               "text": " — the TypeDefinition NodeId of the source node, or for "
             },
             {
-              "r": "link",
-              "text": "`BoundEventFieldType`",
-              "href": "#type-BoundEventFieldType"
+              "r": "code",
+              "text": "BoundEventFieldType"
             },
             {
               "r": "t",
@@ -2163,9 +2151,8 @@
               "text": " — a portable external semantic identifier for the item (an IRDI/CDD, e.g. the identifier of a "
             },
             {
-              "r": "link",
-              "text": "OPC 10000-19",
-              "href": "https://reference.opcfoundation.org/specs/OPC-10000-19/"
+              "r": "t",
+              "text": "OPC 10000-19"
             },
             {
               "r": "t",
@@ -2253,9 +2240,8 @@
             "text": " ModellingRule on "
           },
           {
-            "r": "link",
-            "text": "`BoundItemType`",
-            "href": "#type-BoundItemType"
+            "r": "code",
+            "text": "BoundItemType"
           },
           {
             "r": "t",
@@ -2514,27 +2500,24 @@
               "text": ", realize the DataSet as "
             },
             {
-              "r": "link",
-              "text": "`PublishedDataItemsType`",
-              "href": "https://reference.opcfoundation.org/specs/OPC-10000-14/9.1.4"
+              "r": "code",
+              "text": "PublishedDataItemsType"
             },
             {
               "r": "t",
               "text": " and map each "
             },
             {
-              "r": "link",
-              "text": "`BoundVariableType`",
-              "href": "#type-BoundVariableType"
+              "r": "code",
+              "text": "BoundVariableType"
             },
             {
               "r": "t",
               "text": " or data "
             },
             {
-              "r": "link",
-              "text": "`BoundItemDataType`",
-              "href": "#type-BoundItemDataType"
+              "r": "code",
+              "text": "BoundItemDataType"
             },
             {
               "r": "t",
@@ -2563,18 +2546,16 @@
               "text": ", realize the DataSet as "
             },
             {
-              "r": "link",
-              "text": "`PublishedEventsType`",
-              "href": "https://reference.opcfoundation.org/specs/OPC-10000-14/9.1.5"
+              "r": "code",
+              "text": "PublishedEventsType"
             },
             {
               "r": "t",
               "text": ", map "
             },
             {
-              "r": "link",
-              "text": "`BoundEventFieldType`",
-              "href": "#type-BoundEventFieldType"
+              "r": "code",
+              "text": "BoundEventFieldType"
             },
             {
               "r": "t",
@@ -2656,9 +2637,8 @@
             "text": "An "
           },
           {
-            "r": "link",
-            "text": "`ObservabilityBindingType`",
-            "href": "#type-ObservabilityBindingType"
+            "r": "code",
+            "text": "ObservabilityBindingType"
           },
           {
             "r": "t",
@@ -2708,9 +2688,8 @@
             "text": " mix metric Variables and event fields as peer content. An "
           },
           {
-            "r": "link",
-            "text": "`ObservabilityBindingGroupType`",
-            "href": "#type-ObservabilityBindingGroupType"
+            "r": "code",
+            "text": "ObservabilityBindingGroupType"
           },
           {
             "r": "t",
@@ -2744,27 +2723,24 @@
             "text": ", the DataSet is a data DataSet: grouped Variable values modeled by Part 14 "
           },
           {
-            "r": "link",
-            "text": "`PublishedDataItemsType`",
-            "href": "https://reference.opcfoundation.org/specs/OPC-10000-14/9.1.4"
+            "r": "code",
+            "text": "PublishedDataItemsType"
           },
           {
             "r": "t",
             "text": ". The fields are "
           },
           {
-            "r": "link",
-            "text": "`BoundVariableType`",
-            "href": "#type-BoundVariableType"
+            "r": "code",
+            "text": "BoundVariableType"
           },
           {
             "r": "t",
             "text": " objects, or "
           },
           {
-            "r": "link",
-            "text": "`BoundItemDataType`",
-            "href": "#type-BoundItemDataType"
+            "r": "code",
+            "text": "BoundItemDataType"
           },
           {
             "r": "t",
@@ -2797,9 +2773,8 @@
             "text": ", the DataSet is an event DataSet modeled by Part 14 "
           },
           {
-            "r": "link",
-            "text": "`PublishedEventsType`",
-            "href": "https://reference.opcfoundation.org/specs/OPC-10000-14/9.1.5"
+            "r": "code",
+            "text": "PublishedEventsType"
           },
           {
             "r": "t",
@@ -2814,18 +2789,16 @@
             "text": " names the event notifier to subscribe to; if absent, the notifier is the cardinality anchor. The fields are "
           },
           {
-            "r": "link",
-            "text": "`BoundEventFieldType`",
-            "href": "#type-BoundEventFieldType"
+            "r": "code",
+            "text": "BoundEventFieldType"
           },
           {
             "r": "t",
             "text": " objects, or "
           },
           {
-            "r": "link",
-            "text": "`BoundItemDataType`",
-            "href": "#type-BoundItemDataType"
+            "r": "code",
+            "text": "BoundItemDataType"
           },
           {
             "r": "t",
@@ -2984,9 +2957,8 @@
             "text": " is the binding's signal kind expressed as the exact "
           },
           {
-            "r": "link",
-            "text": "`ObservabilitySignalKindEnum`",
-            "href": "#type-ObservabilitySignalKindEnum"
+            "r": "code",
+            "text": "ObservabilitySignalKindEnum"
           },
           {
             "r": "t",
@@ -3477,9 +3449,8 @@
               "text": " is a "
             },
             {
-              "r": "link",
-              "text": "`RelativePath`",
-              "href": "https://reference.opcfoundation.org/specs/OPC-10000-4/7.30"
+              "r": "code",
+              "text": "RelativePath"
             },
             {
               "r": "t",
@@ -3521,18 +3492,16 @@
               "text": ": the Server resolves it per instance with "
             },
             {
-              "r": "link",
-              "text": "TranslateBrowsePathsToNodeIds",
-              "href": "https://reference.opcfoundation.org/specs/OPC-10000-4/"
+              "r": "t",
+              "text": "TranslateBrowsePathsToNodeIds"
             },
             {
               "r": "t",
               "text": ". This is the recommended mechanism and the form emitted by the authoring tool. For "
             },
             {
-              "r": "link",
-              "text": "`BoundEventFieldType`",
-              "href": "#type-BoundEventFieldType"
+              "r": "code",
+              "text": "BoundEventFieldType"
             },
             {
               "r": "t",
@@ -3846,18 +3815,16 @@
             "text": " registry is an "
           },
           {
-            "r": "link",
-            "text": "`ObservabilityFolderType`",
-            "href": "#type-ObservabilityFolderType"
+            "r": "code",
+            "text": "ObservabilityFolderType"
           },
           {
             "r": "t",
             "text": " Object under the Server Object and is the discovery entry point. A companion specification adopts this specification by applying "
           },
           {
-            "r": "link",
-            "text": "`IObservableType`",
-            "href": "#type-IObservableType"
+            "r": "code",
+            "text": "IObservableType"
           },
           {
             "r": "t",
@@ -3896,9 +3863,8 @@
             "text": ", browses each group's "
           },
           {
-            "r": "link",
-            "text": "`ObservabilityBindingType`",
-            "href": "#type-ObservabilityBindingType"
+            "r": "code",
+            "text": "ObservabilityBindingType"
           },
           {
             "r": "t",
@@ -4372,8 +4338,12 @@
             },
             {
               "r": "t",
-              "text": "base facet binding's `DataSetClassId`",
+              "text": "base facet binding's ",
               "b": true
+            },
+            {
+              "r": "code",
+              "text": "DataSetClassId"
             },
             {
               "r": "t",
@@ -4602,9 +4572,8 @@
             "text": "This clause defines how a bridge maps an "
           },
           {
-            "r": "link",
-            "text": "`ObservabilityBindingType`",
-            "href": "#type-ObservabilityBindingType"
+            "r": "code",
+            "text": "ObservabilityBindingType"
           },
           {
             "r": "t",
@@ -4653,9 +4622,8 @@
             "text": " registry is an "
           },
           {
-            "r": "link",
-            "text": "`ObservabilityFolderType`",
-            "href": "#type-ObservabilityFolderType"
+            "r": "code",
+            "text": "ObservabilityFolderType"
           },
           {
             "r": "t",
@@ -4671,18 +4639,16 @@
             "text": ". It references, through "
           },
           {
-            "r": "link",
-            "text": "`Collects`",
-            "href": "#type-Collects"
+            "r": "code",
+            "text": "Collects"
           },
           {
             "r": "t",
             "text": ", every "
           },
           {
-            "r": "link",
-            "text": "`ObservabilityBindingGroupType`",
-            "href": "#type-ObservabilityBindingGroupType"
+            "r": "code",
+            "text": "ObservabilityBindingGroupType"
           },
           {
             "r": "t",
@@ -4720,9 +4686,8 @@
             "text": "An "
           },
           {
-            "r": "link",
-            "text": "`ObservabilityBindingType`",
-            "href": "#type-ObservabilityBindingType"
+            "r": "code",
+            "text": "ObservabilityBindingType"
           },
           {
             "r": "t",
@@ -4737,9 +4702,8 @@
             "text": " (Mandatory, an "
           },
           {
-            "r": "link",
-            "text": "`ObservabilitySignalKindEnum`",
-            "href": "#type-ObservabilitySignalKindEnum"
+            "r": "code",
+            "text": "ObservabilitySignalKindEnum"
           },
           {
             "r": "t",
@@ -4864,9 +4828,8 @@
             "text": " array of "
           },
           {
-            "r": "link",
-            "text": "`BoundItemDataType`",
-            "href": "#type-BoundItemDataType"
+            "r": "code",
+            "text": "BoundItemDataType"
           },
           {
             "r": "t",
@@ -4896,9 +4859,8 @@
             "text": " (Optional) exposes the Part 14 "
           },
           {
-            "r": "link",
-            "text": "`DataSetMetaDataType`",
-            "href": "https://reference.opcfoundation.org/specs/OPC-10000-14/6.2.3#6.2.3.2.4"
+            "r": "code",
+            "text": "DataSetMetaDataType"
           },
           {
             "r": "t",
@@ -4937,9 +4899,8 @@
             "text": " (Optional, a "
           },
           {
-            "r": "link",
-            "text": "`ContentFilter`",
-            "href": "https://reference.opcfoundation.org/specs/OPC-10000-4/7.4.1"
+            "r": "code",
+            "text": "ContentFilter"
           },
           {
             "r": "t",
@@ -4972,9 +4933,8 @@
             "text": ". Where PubSub is configured, this binding references the realizing Part 14 node with "
           },
           {
-            "r": "link",
-            "text": "`ExportedBy`",
-            "href": "#type-ExportedBy"
+            "r": "code",
+            "text": "ExportedBy"
           },
           {
             "r": "t",
@@ -5004,9 +4964,8 @@
             "text": "A "
           },
           {
-            "r": "link",
-            "text": "`BoundItemType`",
-            "href": "#type-BoundItemType"
+            "r": "code",
+            "text": "BoundItemType"
           },
           {
             "r": "t",
@@ -5038,9 +4997,8 @@
             "text": " (a "
           },
           {
-            "r": "link",
-            "text": "`BoundItemKindEnum`",
-            "href": "#type-BoundItemKindEnum"
+            "r": "code",
+            "text": "BoundItemKindEnum"
           },
           {
             "r": "t",
@@ -5067,9 +5025,8 @@
             "text": "). "
           },
           {
-            "r": "link",
-            "text": "`BoundVariableType`",
-            "href": "#type-BoundVariableType"
+            "r": "code",
+            "text": "BoundVariableType"
           },
           {
             "r": "t",
@@ -5132,18 +5089,16 @@
             "text": "). "
           },
           {
-            "r": "link",
-            "text": "`BoundEventFieldType`",
-            "href": "#type-BoundEventFieldType"
+            "r": "code",
+            "text": "BoundEventFieldType"
           },
           {
             "r": "t",
             "text": " binds an event field of a log or trace stream, selected by a "
           },
           {
-            "r": "link",
-            "text": "`SimpleAttributeOperand`",
-            "href": "https://reference.opcfoundation.org/specs/OPC-10000-4/7.4.4"
+            "r": "code",
+            "text": "SimpleAttributeOperand"
           },
           {
             "r": "t",
@@ -5212,9 +5167,8 @@
             "text": " "
           },
           {
-            "r": "link",
-            "text": "`ObservabilityBindingGroupType`",
-            "href": "#type-ObservabilityBindingGroupType"
+            "r": "code",
+            "text": "ObservabilityBindingGroupType"
           },
           {
             "r": "t",
@@ -5641,9 +5595,8 @@
                 "text": " registry of type "
               },
               {
-                "r": "link",
-                "text": "`ObservabilityFolderType`",
-                "href": "#type-ObservabilityFolderType"
+                "r": "code",
+                "text": "ObservabilityFolderType"
               },
               {
                 "r": "t",
@@ -7119,9 +7072,8 @@
               "text": " If the binding is "
             },
             {
-              "r": "link",
-              "text": "`ExportedBy`",
-              "href": "#type-ExportedBy"
+              "r": "code",
+              "text": "ExportedBy"
             },
             {
               "r": "t",

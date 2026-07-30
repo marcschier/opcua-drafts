@@ -110,10 +110,20 @@ Verify with two builds and a hash comparison.
 | Observability Export | Mermaid **classDiagram**; a lower-case-initial proper noun (`xRegistry`) in a heading |
 | WoT Connectivity | **EventTypes** and **Instances** clauses; NodeClass *selection* (`select`) because an EventType is a `UAObjectType` and a deprecated legacy block has to follow the current types inside the same clause; a per-subclause deprecation NOTE; the `stateDiagram-v2` dialect; an instance table's `TypeDefinition` row |
 | WoT Binding | **declared partial compliance** — no NodeSet at all: a null model, an Annex A that states the artifacts a document publishes when it publishes no NodeSet, and prose references spelled `Section 9.2` rather than `§9.2` |
+| Schema Registry | a conformance clause with **no units at all** — the units had to be derived from the capabilities the clause describes in prose, not tokenised from an existing list |
+| Generators | **RequiredModel BrowseNames**: a type borrowed from DI or Machinery is a bare NodeId in the NodeSet and there is nothing to resolve it against, so the names come from config; markdown that **links into the online reference** in body prose, which Guideline 5 forbids |
 
-Everything above is now driven by the docmodel and the config, and a seventh specification of any of
+Everything above is now driven by the docmodel and the config, and a ninth specification of any of
 those shapes is genuinely a config file. **Config carries what varies between documents of the same
 shape; a new shape is code.**
+
+## The batch
+
+`tools/specs/batch.json` records which specifications are converted, which the pipeline could take
+next and what editorial work each of those still needs, and which are not a fit and why.
+`tools/build_all.py` runs build, validate and mutation-test across the batch;
+`build_all.py --list` prints the inventory. Finalising in Word stays separate, because it needs
+Word and is not byte-deterministic.
 
 ## Declared partial compliance
 

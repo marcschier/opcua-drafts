@@ -1715,9 +1715,8 @@
         "style": "PARAGRAPH",
         "runs": [
           {
-            "r": "link",
-            "text": "`WoTRegistryType`",
-            "href": "#type-WoTRegistryType"
+            "r": "code",
+            "text": "WoTRegistryType"
           },
           {
             "r": "t",
@@ -1732,9 +1731,8 @@
             "text": ") is the registry root type, a subtype of the abstract xRegistry "
           },
           {
-            "r": "link",
-            "text": "`RegistryType`",
-            "href": "../../core-specs/xregistry/OPC-UA-xRegistry.md#type-RegistryType"
+            "r": "code",
+            "text": "RegistryType"
           },
           {
             "r": "t",
@@ -1987,9 +1985,8 @@
         "style": "PARAGRAPH",
         "runs": [
           {
-            "r": "link",
-            "text": "`ThingDescriptionGroupType`",
-            "href": "#type-ThingDescriptionGroupType"
+            "r": "code",
+            "text": "ThingDescriptionGroupType"
           },
           {
             "r": "t",
@@ -2004,9 +2001,8 @@
             "text": ") and "
           },
           {
-            "r": "link",
-            "text": "`ThingModelGroupType`",
-            "href": "#type-ThingModelGroupType"
+            "r": "code",
+            "text": "ThingModelGroupType"
           },
           {
             "r": "t",
@@ -2021,9 +2017,8 @@
             "text": ") are xRegistry "
           },
           {
-            "r": "link",
-            "text": "`GroupType`",
-            "href": "../../core-specs/xregistry/OPC-UA-xRegistry.md#type-GroupType"
+            "r": "code",
+            "text": "GroupType"
           },
           {
             "r": "t",
@@ -2122,9 +2117,8 @@
         "style": "PARAGRAPH",
         "runs": [
           {
-            "r": "link",
-            "text": "`WoTDocumentType`",
-            "href": "#type-WoTDocumentType"
+            "r": "code",
+            "text": "WoTDocumentType"
           },
           {
             "r": "t",
@@ -2148,18 +2142,16 @@
             "text": ") is the base of a stored WoT document, a subtype of the xRegistry "
           },
           {
-            "r": "link",
-            "text": "`ResourceType`",
-            "href": "../../core-specs/xregistry/OPC-UA-xRegistry.md#type-ResourceType"
+            "r": "code",
+            "text": "ResourceType"
           },
           {
             "r": "t",
             "text": ". "
           },
           {
-            "r": "link",
-            "text": "`ThingDescriptionFileType`",
-            "href": "#type-ThingDescriptionFileType"
+            "r": "code",
+            "text": "ThingDescriptionFileType"
           },
           {
             "r": "t",
@@ -2174,9 +2166,8 @@
             "text": ") and "
           },
           {
-            "r": "link",
-            "text": "`ThingModelFileType`",
-            "href": "#type-ThingModelFileType"
+            "r": "code",
+            "text": "ThingModelFileType"
           },
           {
             "r": "t",
@@ -2530,9 +2521,8 @@
         "style": "PARAGRAPH",
         "runs": [
           {
-            "r": "link",
-            "text": "`WoTBindingType`",
-            "href": "#type-WoTBindingType"
+            "r": "code",
+            "text": "WoTBindingType"
           },
           {
             "r": "t",
@@ -2658,9 +2648,8 @@
             "text": " of the selected binding set are additionally exposed as arrays of "
           },
           {
-            "r": "link",
-            "text": "`WoTBindingCapabilityDataType`",
-            "href": "#type-WoTBindingCapabilityDataType"
+            "r": "code",
+            "text": "WoTBindingCapabilityDataType"
           },
           {
             "r": "t",
@@ -2730,135 +2719,120 @@
             "text": "The enumerations are "
           },
           {
-            "r": "link",
-            "text": "`WoTDocumentKindEnum`",
-            "href": "#type-WoTDocumentKindEnum"
+            "r": "code",
+            "text": "WoTDocumentKindEnum"
           },
           {
             "r": "t",
             "text": ", "
           },
           {
-            "r": "link",
-            "text": "`WoTLoadStateEnum`",
-            "href": "#type-WoTLoadStateEnum"
+            "r": "code",
+            "text": "WoTLoadStateEnum"
           },
           {
             "r": "t",
             "text": ", "
           },
           {
-            "r": "link",
-            "text": "`WoTRefreshModeEnum`",
-            "href": "#type-WoTRefreshModeEnum"
+            "r": "code",
+            "text": "WoTRefreshModeEnum"
           },
           {
             "r": "t",
             "text": ", "
           },
           {
-            "r": "link",
-            "text": "`WoTAtomicityEnum`",
-            "href": "#type-WoTAtomicityEnum"
+            "r": "code",
+            "text": "WoTAtomicityEnum"
           },
           {
             "r": "t",
             "text": ", "
           },
           {
-            "r": "link",
-            "text": "`WoTDeletePolicyEnum`",
-            "href": "#type-WoTDeletePolicyEnum"
+            "r": "code",
+            "text": "WoTDeletePolicyEnum"
           },
           {
             "r": "t",
             "text": ", "
           },
           {
-            "r": "link",
-            "text": "`WoTOutcomeEnum`",
-            "href": "#type-WoTOutcomeEnum"
+            "r": "code",
+            "text": "WoTOutcomeEnum"
           },
           {
             "r": "t",
             "text": ", "
           },
           {
-            "r": "link",
-            "text": "`WoTPhaseEnum`",
-            "href": "#type-WoTPhaseEnum"
+            "r": "code",
+            "text": "WoTPhaseEnum"
           },
           {
             "r": "t",
             "text": " and "
           },
           {
-            "r": "link",
-            "text": "`WoTBindingCapabilityEnum`",
-            "href": "#type-WoTBindingCapabilityEnum"
+            "r": "code",
+            "text": "WoTBindingCapabilityEnum"
           },
           {
             "r": "t",
             "text": ". The structures — "
           },
           {
-            "r": "link",
-            "text": "`WoTValidationOutcomeDataType`",
-            "href": "#type-WoTValidationOutcomeDataType"
+            "r": "code",
+            "text": "WoTValidationOutcomeDataType"
           },
           {
             "r": "t",
             "text": ", "
           },
           {
-            "r": "link",
-            "text": "`WoTBindingCapabilityDataType`",
-            "href": "#type-WoTBindingCapabilityDataType"
+            "r": "code",
+            "text": "WoTBindingCapabilityDataType"
           },
           {
             "r": "t",
             "text": ", "
           },
           {
-            "r": "link",
-            "text": "`WoTRefreshOptionsDataType`",
-            "href": "#type-WoTRefreshOptionsDataType"
+            "r": "code",
+            "text": "WoTRefreshOptionsDataType"
           },
           {
             "r": "t",
             "text": ", "
           },
           {
-            "r": "link",
-            "text": "`WoTResourceSelectorDataType`",
-            "href": "#type-WoTResourceSelectorDataType"
+            "r": "code",
+            "text": "WoTResourceSelectorDataType"
           },
           {
             "r": "t",
             "text": ", "
           },
           {
-            "r": "link",
-            "text": "`WoTResourceLoadResultDataType`",
-            "href": "#type-WoTResourceLoadResultDataType"
+            "r": "code",
+            "text": "WoTResourceLoadResultDataType"
           },
           {
             "r": "t",
             "text": ", "
           },
           {
-            "r": "link",
-            "text": "`WoTRefreshSummaryDataType`",
-            "href": "#type-WoTRefreshSummaryDataType"
+            "r": "code",
+            "text": "WoTRefreshSummaryDataType"
           },
           {
             "r": "t",
             "text": " and "
           },
           {
-            "r": "link",
-            "text": "`WoTDependencyDataType`",
-            "href": "#type-WoTDependencyDataType"
+            "r": "code",
+            "text": "WoTDependencyDataType"
           },
           {
             "r": "t",
@@ -2920,9 +2894,8 @@
         "style": "PARAGRAPH",
         "runs": [
           {
-            "r": "link",
-            "text": "`WoTResourceEventType`",
-            "href": "#type-WoTResourceEventType"
+            "r": "code",
+            "text": "WoTResourceEventType"
           },
           {
             "r": "t",
@@ -3010,9 +2983,8 @@
             "text": ". Its concrete failure subtypes are "
           },
           {
-            "r": "link",
-            "text": "`WoTValidationFailureEventType`",
-            "href": "#type-WoTValidationFailureEventType"
+            "r": "code",
+            "text": "WoTValidationFailureEventType"
           },
           {
             "r": "t",
@@ -3027,9 +2999,8 @@
             "text": "), "
           },
           {
-            "r": "link",
-            "text": "`WoTLoadFailureEventType`",
-            "href": "#type-WoTLoadFailureEventType"
+            "r": "code",
+            "text": "WoTLoadFailureEventType"
           },
           {
             "r": "t",
@@ -3044,9 +3015,8 @@
             "text": ") and "
           },
           {
-            "r": "link",
-            "text": "`WoTBindingFailureEventType`",
-            "href": "#type-WoTBindingFailureEventType"
+            "r": "code",
+            "text": "WoTBindingFailureEventType"
           },
           {
             "r": "t",
@@ -3061,9 +3031,8 @@
             "text": "); "
           },
           {
-            "r": "link",
-            "text": "`WoTRefreshCompletedEventType`",
-            "href": "#type-WoTRefreshCompletedEventType"
+            "r": "code",
+            "text": "WoTRefreshCompletedEventType"
           },
           {
             "r": "t",
@@ -3219,9 +3188,8 @@
         "style": "PARAGRAPH",
         "runs": [
           {
-            "r": "link",
-            "text": "`HasWoTProjection`",
-            "href": "#type-HasWoTProjection"
+            "r": "code",
+            "text": "HasWoTProjection"
           },
           {
             "r": "t",
@@ -3901,9 +3869,8 @@
             "text": " entry with the relation "
           },
           {
-            "r": "t",
-            "text": "`rel: uav:componentOf`",
-            "b": true
+            "r": "code",
+            "text": "rel: uav:componentOf"
           },
           {
             "r": "t",
@@ -7826,9 +7793,8 @@
         "items": [
           [
             {
-              "r": "t",
-              "text": "`CreateAsset(AssetName) → AssetId`",
-              "b": true
+              "r": "code",
+              "text": "CreateAsset(AssetName) → AssetId"
             },
             {
               "r": "t",
@@ -7886,9 +7852,17 @@
           ],
           [
             {
+              "r": "code",
+              "text": "WoTFile"
+            },
+            {
               "r": "t",
-              "text": "`WoTFile` / `WoTAssetFileType`",
+              "text": " / ",
               "b": true
+            },
+            {
+              "r": "code",
+              "text": "WoTAssetFileType"
             },
             {
               "r": "t",
@@ -7945,9 +7919,8 @@
           ],
           [
             {
-              "r": "t",
-              "text": "`CloseAndUpdate(FileHandle)`",
-              "b": true
+              "r": "code",
+              "text": "CloseAndUpdate(FileHandle)"
             },
             {
               "r": "t",
@@ -7988,9 +7961,8 @@
           ],
           [
             {
-              "r": "t",
-              "text": "`DeleteAsset(AssetId)`",
-              "b": true
+              "r": "code",
+              "text": "DeleteAsset(AssetId)"
             },
             {
               "r": "t",
@@ -8015,9 +7987,26 @@
           ],
           [
             {
+              "r": "code",
+              "text": "DiscoverAssets"
+            },
+            {
               "r": "t",
-              "text": "`DiscoverAssets` / `ConnectionTest` / `CreateAssetForEndpoint`",
+              "text": " / ",
               "b": true
+            },
+            {
+              "r": "code",
+              "text": "ConnectionTest"
+            },
+            {
+              "r": "t",
+              "text": " / ",
+              "b": true
+            },
+            {
+              "r": "code",
+              "text": "CreateAssetForEndpoint"
             },
             {
               "r": "t",
@@ -8034,8 +8023,21 @@
           ],
           [
             {
+              "r": "code",
+              "text": "SupportedWoTBindings"
+            },
+            {
               "r": "t",
-              "text": "`SupportedWoTBindings` (`UriString[]`)",
+              "text": " (",
+              "b": true
+            },
+            {
+              "r": "code",
+              "text": "UriString[]"
+            },
+            {
+              "r": "t",
+              "text": ")",
               "b": true
             },
             {
@@ -8061,9 +8063,8 @@
           ],
           [
             {
-              "r": "t",
-              "text": "`HasWoTComponent`",
-              "b": true
+              "r": "code",
+              "text": "HasWoTComponent"
             },
             {
               "r": "t",

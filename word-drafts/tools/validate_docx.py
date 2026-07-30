@@ -361,6 +361,35 @@ def _compare_type_table(name, expected, tbl, res):
                   '%s: HasSubtype reference in a type table (Guideline 3)' % name)
 
 
+def check_browse_names_resolved(doc, model, res, doc_ns_index):
+    """No node table may print a raw NodeId where a BrowseName belongs.
+
+    A NodeId the model cannot name — a type borrowed from a RequiredModel, or a base
+    Node the table of standard Nodes does not list — falls through to its numeric form
+    and is printed as `ns=2;i=15063`. The document still validates against the NodeSet,
+    because both sides agree on the same unreadable string. Only a check on the printed
+    form catches it.
+    """
+    raw = re.compile(r'^(ns=\d+;)?[isgb]=')
+    seen = set()
+    for name, node in model.by_name.items():
+        if node.tag not in REQUIRE_DEFINITION_TABLE + ('UAObject', 'UAVariable'):
+            continue
+        table = nodeset_tables.type_table(model, name, doc_ns_index=doc_ns_index)
+        cells = [table.get('subtypeOf') or '']
+        for value in table['attributes']:
+            cells.append(value[1])
+        for member in table['members']:
+            cells.extend((member['referenceType'], member['dataType'],
+                          member['typeDefinition']))
+        for cell in cells:
+            if cell and raw.match(cell) and cell not in seen:
+                seen.add(cell)
+                res.error('browse-names',
+                          '%s: %s is printed as a NodeId; add it to requiredModelNodes '
+                          'or to STANDARD_NODES' % (name, cell))
+
+
 def check_conformance_units(doc, model, res):
     """Every unit the model uses must be named in the conformance-units clause.
 
@@ -438,6 +467,25 @@ def check_subject_introduction(doc, cfg, res):
                   'the introduction never names this document\'s subject (%r)' % subject)
 
 
+def check_no_leaked_markdown(doc, res):
+    """No paragraph outside a code block may contain unparsed markdown.
+
+    Inline markup nested inside bold, italic or a link label used to be emitted as one
+    plain run, so `**the `EngineType` component**` reached the document with its
+    backticks and `[label](url)` with its brackets. Every document built before this
+    carried some. A backtick or a `](` outside a code block is always a parser failure.
+    """
+    for el in doc.blocks():
+        if el.tag != q('w:p') or para_style(el) in ('CODE', 'CODE-TableCell'):
+            continue
+        text = iter_text(el)
+        for token in ('`', ']('):
+            if token in text:
+                res.error('leaked-markdown',
+                          'unparsed markdown %r in %r' % (token, text.strip()[:80]))
+                break
+
+
 def check_template_slices(doc, template, res, deviation_ids=()):
     """The retained template regions must survive verbatim."""
     expected = [
@@ -475,7 +523,8 @@ def main(argv=None):
     deviations = list(cfg.get('templateDeviations', []))
     deviation_ids = {d['id'] for d in deviations}
     if cfg['source'].get('nodeset'):
-        model = nodeset_tables.Model(os.path.join(REPO, cfg['source']['nodeset']))
+        model = nodeset_tables.Model(os.path.join(REPO, cfg['source']['nodeset']),
+                                     cfg.get('requiredModelNodes'))
     elif 'no-information-model' in deviation_ids:
         model = nodeset_tables.NullModel(
             model_uri=cfg['identity']['namespaceUri'],
@@ -521,6 +570,7 @@ def main(argv=None):
     check_references_resolve(doc, res)
     check_deviations_declared(doc, deviations, res)
     check_subject_introduction(doc, cfg, res)
+    check_no_leaked_markdown(doc, res)
     if 'no-information-model' in deviation_ids:
         if model.nodes:
             res.error('deviations',
@@ -528,6 +578,7 @@ def main(argv=None):
                       'supplies a NodeSet')
     else:
         check_node_tables(doc, model, res, doc_ns_index)
+        check_browse_names_resolved(doc, model, res, doc_ns_index)
         check_conformance_units(doc, model, res)
     check_template_slices(doc, TEMPLATE, res, deviation_ids)
 

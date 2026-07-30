@@ -56,7 +56,9 @@ class Build:
         self.deviations = list(self.cfg.get('templateDeviations', []))
         self.deviation_ids = {d['id'] for d in self.deviations}
         if src.get('nodeset'):
-            self.model = nodeset_tables.Model(os.path.join(REPO, src['nodeset']))
+            self.model = nodeset_tables.Model(
+                os.path.join(REPO, src['nodeset']),
+                self.cfg.get('requiredModelNodes'))
         else:
             # Only a declared deviation may drop the information model; otherwise a
             # missing NodeSet would silently produce a document with no node tables.

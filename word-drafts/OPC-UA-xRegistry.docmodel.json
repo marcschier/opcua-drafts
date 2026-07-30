@@ -387,9 +387,8 @@
               "text": ", …) are OPC UA Properties on those Objects; the extensible "
             },
             {
-              "r": "t",
-              "text": "`labels`",
-              "b": true
+              "r": "code",
+              "text": "labels"
             },
             {
               "r": "t",
@@ -543,9 +542,9 @@
             "text": "It is explicitly out of scope to re-specify the xRegistry core model or its HTTP API; the OPC UA API for xRegistry — how these nodes are discovered, read and mutated over OPC UA Services — is defined in the companion "
           },
           {
-            "r": "link",
-            "text": "*xRegistry — OPC UA API*",
-            "href": "xRegistry-OPC-UA-Api.md"
+            "r": "t",
+            "text": "xRegistry — OPC UA API",
+            "i": true
           },
           {
             "r": "t",
@@ -1987,18 +1986,16 @@
             "text": "xRegistry's static-file-server representation lays a registry out as a directory tree: a directory per group, a document file per resource version, and a sidecar of attributes. OPC UA models exactly this shape with the standard "
           },
           {
-            "r": "t",
-            "text": "`FolderType`",
-            "b": true
+            "r": "code",
+            "text": "FolderType"
           },
           {
             "r": "t",
             "text": " (a browsable container that organizes its members) for the registry and its groups, and the "
           },
           {
-            "r": "t",
-            "text": "`FileType`",
-            "b": true
+            "r": "code",
+            "text": "FileType"
           },
           {
             "r": "t",
@@ -2258,9 +2255,9 @@
                 "text": " container — defined by "
               },
               {
-                "r": "link",
-                "text": "*xRegistry — OPC UA API*",
-                "href": "xRegistry-OPC-UA-Api.md"
+                "r": "t",
+                "text": "xRegistry — OPC UA API",
+                "i": true
               },
               {
                 "r": "t",
@@ -2658,9 +2655,9 @@
             "text": ", a URL-safe token) so a client selects and filters entities directly from Browse results without a Read per candidate; the "
           },
           {
-            "r": "link",
-            "text": "*xRegistry — OPC UA API*",
-            "href": "xRegistry-OPC-UA-Api.md"
+            "r": "t",
+            "text": "xRegistry — OPC UA API",
+            "i": true
           },
           {
             "r": "t",
@@ -2747,9 +2744,8 @@
             "text": " Variable — plus an optional "
           },
           {
-            "r": "t",
-            "text": "`Labels`",
-            "b": true
+            "r": "code",
+            "text": "Labels"
           },
           {
             "r": "t",
@@ -3141,9 +3137,9 @@
             "text": ": each xRegistry operation is realized natively by OPC UA Services over the same nodes. The full OPC UA API — reading, listing, creating, updating and deleting registries, groups, resources, versions and their documents and attributes, together with the request flags and error handling — is defined in the companion "
           },
           {
-            "r": "link",
-            "text": "*xRegistry — OPC UA API*",
-            "href": "xRegistry-OPC-UA-Api.md"
+            "r": "t",
+            "text": "xRegistry — OPC UA API",
+            "i": true
           },
           {
             "r": "t",
@@ -4330,9 +4326,8 @@
             "text": " (and any other dynamic extension attributes) are modelled as an "
           },
           {
-            "r": "t",
-            "text": "`AttributesType`",
-            "b": true
+            "r": "code",
+            "text": "AttributesType"
           },
           {
             "r": "t",

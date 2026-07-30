@@ -25,18 +25,20 @@ assigns the real values.
 pip install -r word-drafts/tools/requirements.txt
 
 # markdown + NodeSet -> .docx  (pure Python, cross-platform, byte-reproducible)
-# every specification in tools/specs/ takes the same three commands
-for s in openusd-binding openusd-scene xregistry observability-export wot-connectivity wot-binding
-do
-  python word-drafts/tools/build_docx.py    word-drafts/tools/specs/$s.json  # build
-  python word-drafts/tools/validate_docx.py word-drafts/tools/specs/$s.json  # check the contract
-  python word-drafts/tools/test_validate_docx.py word-drafts/tools/specs/$s.json  # check the checker
-done
+# the whole batch: build, validate and mutation-test every converted specification
+python word-drafts/tools/build_all.py
+
+# what is converted, what is ready to convert next, and what is not a fit
+python word-drafts/tools/build_all.py --list
+
+# one specification at a time
+python word-drafts/tools/build_docx.py         word-drafts/tools/specs/generators.json
+python word-drafts/tools/validate_docx.py      word-drafts/tools/specs/generators.json
+python word-drafts/tools/test_validate_docx.py word-drafts/tools/specs/generators.json
 
 # update the table of contents, the table of figures, the table of tables and every
 # cross-reference, so the committed file opens fully paginated  (needs Word; local only)
-pwsh word-drafts/tools/finalize_word.ps1 -Path word-drafts/OPC-UA-OpenUSD-Binding-Part1.docx
-pwsh word-drafts/tools/finalize_word.ps1 -Path word-drafts/OPC-UA-WoT-Connectivity.docx
+pwsh word-drafts/tools/finalize_word.ps1 -Path word-drafts/OPC-UA-Generators.docx
 
 # rewrite the markdown source into the same clause skeleton  (one-shot per restructure)
 python word-drafts/tools/restructure_markdown.py word-drafts/tools/specs/openusd-binding.json
@@ -86,6 +88,19 @@ a new config file; a genuinely new shape needs a generalisation in `opcdocx/` fi
 | `OPC-UA-Observability-Export.docx` | `core-specs/observability-export/` + `Opc.Ua.ObservabilityExport.NodeSet2.xml` |
 | `OPC-UA-WoT-Connectivity.docx` | `wot-specs/WoT-Connectivity/` + `Opc.Ua.WoTCon.NodeSet2.xml` |
 | `OPC-UA-WoT-Binding.docx` | `wot-specs/WoT-Binding/` — **no NodeSet**; see below |
+| `OPC-UA-Schema-Registry.docx` | `core-specs/schema-registry/` + `Opc.Ua.SchemaRegistry.NodeSet2.xml` |
+| `OPC-UA-Generators.docx` | `companion-specs/Generators/` + `Opc.Ua.Generators.NodeSet2.xml` |
+
+## What is converted, and what is next
+
+`tools/specs/batch.json` is the inventory. It lists the specifications that are converted, the ones
+whose shape the pipeline already handles — so onboarding them is a config file plus the editorial
+work the entry names — and the ones that are not a fit, with the reason. `build_all.py --list`
+prints it.
+
+A document is "not a fit" only for a reason about the document, not about the tooling: an amendment
+to a core Part is not a companion specification, and a presentation or a measurement report is not a
+specification at all.
 
 ## Declared deviations
 

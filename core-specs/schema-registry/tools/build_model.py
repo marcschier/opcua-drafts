@@ -184,6 +184,49 @@ def _args(method_nid, method_sym, bname, args, instance=False):
 CAT = "Schema Registry"
 CAT_INST = "Schema Registry Instances"
 
+# ---------------------------------------------------------------------------
+# Conformance units
+# ---------------------------------------------------------------------------
+# OPC 20020 requires each type's definition table to name the conformance units that
+# carry it, and a unit has to be an identifier token rather than a prose capability. The
+# CAT_* values above group nodes for generation only; they are not conformance units and
+# are never emitted as <Category>. The units below are the capabilities clause 12 of the
+# specification already distinguishes.
+CU_DOWNLOAD = "SREG-SchemaDownload"
+CU_REGISTRATION = "SREG-SchemaRegistration"
+CU_VERSIONING = "SREG-SchemaVersioning"
+CU_TTL_MIRROR = "SREG-TtlMirror"
+CU_MATERIALIZATION = "SREG-StructureMaterialization"
+CU_XREGISTRY_API = "SREG-XRegistryApi"
+CU_FEDERATION = "SREG-Federation"
+CU_PUBSUB = "SREG-PubSubProfile"
+
+# Every unit, in the order the conformance clause lists them. The document and this table
+# have to agree, or the check that each emitted unit is named in the clause is circular.
+ALL_CONFORMANCE_UNITS = (
+    CU_DOWNLOAD, CU_REGISTRATION, CU_VERSIONING, CU_TTL_MIRROR, CU_MATERIALIZATION,
+    CU_XREGISTRY_API, CU_FEDERATION, CU_PUBSUB,
+)
+
+UNITS_BY_NAME = {
+    "SchemaRegistryType": (CU_DOWNLOAD, CU_MATERIALIZATION, CU_XREGISTRY_API),
+    "SchemaGroupType": (CU_DOWNLOAD, CU_MATERIALIZATION),
+    "SchemaFileType": (CU_DOWNLOAD, CU_VERSIONING, CU_TTL_MIRROR),
+    "SchemaRegistry": (CU_DOWNLOAD,),
+}
+
+UNITS_BY_CATEGORY = {CAT: (CU_DOWNLOAD,), CAT_INST: (CU_DOWNLOAD,)}
+
+
+def units_of(n):
+    """The conformance units a Node declares, as <Category> elements."""
+    if n.bname in UNITS_BY_NAME:
+        return UNITS_BY_NAME[n.bname]
+    if n.category:
+        return UNITS_BY_CATEGORY.get(n.category, ())
+    return ()
+
+
 object_type(62000, "SchemaRegistryType", XRegistry_RegistryType,
             "The in-server Schema Registry root - an xRegistry RegistryType (a FolderType) whose group "
             "folders hold schema files. Adds SchemaId-based resolution (GetSchema and the Opaque SchemaId "
@@ -234,7 +277,7 @@ instance_method(62100, "SchemaRegistry", "GetSchema", gs_type,
 
 # Emission
 NAMESPACE = "http://opcfoundation.org/UA/SchemaRegistry/"
-VERSION = "0.1.0"
+VERSION = "0.2.0"
 PUBDATE = "2026-07-16T00:00:00Z"
 ALIASES = [
     ("Boolean", Boolean), ("UInt32", UInt32), ("String", String), ("DateTime", DateTime),
@@ -273,8 +316,8 @@ def _emit_node(n):
     lines.append(f"    <DisplayName>{sx.escape(n.display)}</DisplayName>")
     if n.desc:
         lines.append(f"    <Description>{sx.escape(n.desc)}</Description>")
-    if n.category:
-        lines.append(f"    <Category>{sx.escape(n.category)}</Category>")
+    for unit in units_of(n):
+        lines.append(f"    <Category>{sx.escape(unit)}</Category>")
     lines.append("    <References>")
     for i in _sorted_refs(n.refs):
         rt, tgt, fwd = n.refs[i]

@@ -176,7 +176,27 @@ truth exactly the way hand-editing a generated NodeSet does.
 - **A mutation test that hard-codes one document's names is not a test.** Reusing OpenUSD type and
   unit names made the suite report "the test itself is broken" for every other specification.
   Derive each mutation from the document under test, and *skip* with a reason where a mutation
-  cannot apply.
+  cannot apply. Anchor a node-table mutation on the member's BrowseName **and** its printed
+  DataType: the BrowseName alone also matches the template's own example tables, so the mutation
+  lands somewhere the check never looks and proves nothing.
+- **Inline markup nested inside bold, italic or a link label leaks.** `**the `EngineType`
+  component**` and `` [`WoTRegistryType`](#type-X) `` are ordinary prose in these drafts. Emitting
+  the span as one plain run put literal backticks and `](url)` into *every* document built before
+  this was found — well formed, correctly styled, and wrong. Parse the content recursively and
+  carry the emphasis down onto the text runs.
+- **A BrowseName the model cannot resolve is printed as a NodeId.** A type borrowed from a
+  RequiredModel (`ns=2;i=15063`) or a base Node missing from the table of standard Nodes falls
+  through to its numeric form, and the document still agrees with the NodeSet because both sides
+  carry the same unreadable string. Only a check on the *printed* form catches it; twenty of them
+  had reached print. The names cannot be guessed — take them from the generator that wrote the
+  NodeSet, which names every one of them as a constant.
+- **A conformance clause may name no units at all.** Two specifications described their
+  capabilities only in prose. Units then have to be *derived* from what the clause distinguishes,
+  written into the clause as a table, and assigned per node — inventing them from the model's
+  grouping labels alone produces units that no reader can claim.
+- **A draft may hyperlink the online reference in body prose.** Guideline 5 forbids that outside
+  Annex A. The citation is what matters, so the link is dropped and its label kept; that is a
+  transformation the pipeline can make on its own rather than an edit to the source.
 
 ## Verification checklist
 

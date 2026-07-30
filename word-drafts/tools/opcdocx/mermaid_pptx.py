@@ -323,6 +323,8 @@ V_GAP = 58
 MARGIN = 26
 SUBGRAPH_PAD = 18
 TITLE_H = 24
+# The widest row a figure may have. A page is about six boxes wide at a readable size.
+MAX_ROW = 6
 
 
 def _acyclic_edges(g):
@@ -440,19 +442,28 @@ def layout(g):
     for lv in layers:
         layers[lv].sort(key=lambda nid: (g.nodes[nid].subgraph is None,))
 
-    width = max((len(v) for v in layers.values()), default=1)
-    total_w = width * BOX_W + (width - 1) * H_GAP
+    # A layer of a hub-and-spoke model can hold a dozen nodes, and one row of a dozen
+    # boxes is four times wider than the page it has to print on. Wide layers wrap, so a
+    # figure grows downwards — where a document has room — instead of sideways.
+    rows = []
     for lv in sorted(layers):
         ids = layers[lv]
+        for start in range(0, len(ids), MAX_ROW):
+            rows.append(ids[start:start + MAX_ROW])
+
+    width = max((len(r) for r in rows), default=1)
+    total_w = width * BOX_W + (width - 1) * H_GAP
+    y = MARGIN + TITLE_H
+    for ids in rows:
         row_w = len(ids) * BOX_W + (len(ids) - 1) * H_GAP
         x0 = MARGIN + (total_w - row_w) / 2
-        y = MARGIN + TITLE_H + lv * (BOX_H + V_GAP)
         for i, nid in enumerate(ids):
             n = g.nodes[nid]
             n.x = x0 + i * (BOX_W + H_GAP)
             n.y = y
             n.w = BOX_W
             n.h = BOX_H
+        y += BOX_H + V_GAP
 
     _push_outsiders_clear(g)
     _place_edge_labels(g)

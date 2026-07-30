@@ -39,9 +39,24 @@ STANDARD_NODES = {
     'i=2041': 'BaseEventType', 'i=2130': 'SystemEventType',
     'i=11446': 'ProgressEventType', 'i=2782': 'ConditionType',
     'i=11616': 'NamespaceMetadataType', 'i=11715': 'Namespaces',
+    'i=38': 'HasEncoding', 'i=41': 'GeneratesEvent',
+    'i=51': 'FromState', 'i=52': 'ToState',
+    'i=76': 'DataTypeEncodingType', 'i=2307': 'StateType',
+    'i=2309': 'InitialStateType', 'i=2310': 'TransitionType',
+    'i=2771': 'FiniteStateMachineType', 'i=10637': 'OffNormalAlarmType',
+    'i=17497': 'AnalogUnitType',
+    'i=18': 'ExpandedNodeId', 'i=95': 'AccessRestrictionType',
+    'i=96': 'RolePermissionType', 'i=256': 'IdType', 'i=290': 'Duration',
+    'i=291': 'NumericRange', 'i=294': 'UtcTime', 'i=586': 'ContentFilter',
+    'i=601': 'SimpleAttributeOperand', 'i=14523': 'DataSetMetaDataType',
+    'i=14593': 'ConfigurationVersionDataType', 'i=20998': 'VersionTime',
+    'i=23751': 'UriString', 'i=24263': 'SemanticVersionString',
 }
 
-# The RequiredModel's types, referred to by NodeId from this model.
+# NodeIds a document borrows from a RequiredModel. These cannot be derived: the NodeSet
+# names the required model but not the BrowseNames inside it, and guessing one is how a
+# wrong TypeDefinition reaches print. Each build supplies its own through the config, and
+# the printed namespace prefix comes from the NodeId itself rather than being assumed.
 REQUIRED_MODEL_NODES = {
     'ns=1;i=63000': 'RegistryType',
     'ns=1;i=63001': 'GroupType',
@@ -61,6 +76,13 @@ NODE_CLASS = {
 
 def _as_list(value):
     return [value] if isinstance(value, str) else list(value)
+
+
+def _ns_index_of(node_id):
+    """The namespace index a NodeId carries, `0` when it names the base namespace."""
+    if node_id.startswith('ns='):
+        return node_id[3:].split(';', 1)[0]
+    return '0'
 
 
 class Node:
@@ -83,9 +105,11 @@ class Node:
 class Model:
     """A parsed UANodeSet with the lookups the table builders need."""
 
-    def __init__(self, path):
+    def __init__(self, path, required_model_nodes=None):
         tree = ET.parse(path)
         root = tree.getroot()
+        self.required_model_nodes = dict(REQUIRED_MODEL_NODES)
+        self.required_model_nodes.update(required_model_nodes or {})
         self.namespace_uris = [u.text for u in root.findall(UANS + 'NamespaceUris/' + UANS + 'Uri')]
         model_el = root.find(UANS + 'Models/' + UANS + 'Model')
         self.model_uri = model_el.get('ModelUri')
@@ -245,8 +269,8 @@ class Model:
             return n.name if n.ns_index == doc_ns_index else '%d:%s' % (n.ns_index, n.name)
         if node_id in STANDARD_NODES:
             return '0:' + STANDARD_NODES[node_id]
-        if node_id in REQUIRED_MODEL_NODES:
-            return '1:' + REQUIRED_MODEL_NODES[node_id]
+        if node_id in self.required_model_nodes:
+            return '%s:%s' % (_ns_index_of(node_id), self.required_model_nodes[node_id])
         return node_id
 
     def plain_name_of(self, value):
@@ -254,7 +278,8 @@ class Model:
         n = self.nodes.get(node_id)
         if n is not None:
             return n.name
-        return STANDARD_NODES.get(node_id) or REQUIRED_MODEL_NODES.get(node_id) or node_id
+        return (STANDARD_NODES.get(node_id) or self.required_model_nodes.get(node_id)
+                or node_id)
 
     def supertype_of(self, node):
         for rt, target, forward in node.refs:
@@ -303,6 +328,7 @@ class NullModel(Model):
     """
 
     def __init__(self, *, model_uri, version, publication_date):
+        self.required_model_nodes = dict(REQUIRED_MODEL_NODES)
         self.namespace_uris = [model_uri]
         self.model_uri = model_uri
         self.version = version

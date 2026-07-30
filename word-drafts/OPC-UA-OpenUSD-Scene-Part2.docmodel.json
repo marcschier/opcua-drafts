@@ -232,10 +232,8 @@
               "text": ". This is the vendor-extension mechanism ("
             },
             {
-              "r": "xref",
-              "target": "c6-7",
-              "kind": "clause",
-              "prefix": "6.7"
+              "r": "t",
+              "text": "§6.7"
             },
             {
               "r": "t",
@@ -1982,8 +1980,12 @@
           },
           {
             "r": "t",
-            "text": "listed under Part 1's `Server/OpenUSD/Stages`",
+            "text": "listed under Part 1's ",
             "b": true
+          },
+          {
+            "r": "code",
+            "text": "Server/OpenUSD/Stages"
           },
           {
             "r": "t",
@@ -5679,9 +5681,8 @@
         "items": [
           [
             {
-              "r": "t",
-              "text": "`UsdGeoreferenceApiType : UsdApiSchemaType`",
-              "b": true
+              "r": "code",
+              "text": "UsdGeoreferenceApiType : UsdApiSchemaType"
             },
             {
               "r": "t",
@@ -5746,9 +5747,8 @@
           ],
           [
             {
-              "r": "t",
-              "text": "`UsdGlobeAnchorApiType : UsdApiSchemaType`",
-              "b": true
+              "r": "code",
+              "text": "UsdGlobeAnchorApiType : UsdApiSchemaType"
             },
             {
               "r": "t",
