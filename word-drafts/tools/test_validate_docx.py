@@ -90,6 +90,10 @@ STATIC_MUTATIONS = [
     ('a retained template clause is deleted',
      'template-slices',
      _drop_first(r'<w:t[^>]*>[^<]*royalty[^<]*</w:t>')),
+    ('change tracking is turned off',
+     'track-changes',
+     _drop_first(r'<w:trackChanges/>'),
+     'word/settings.xml'),
 ]
 
 
@@ -170,8 +174,7 @@ def derived_mutations(document_xml, rels_xml, model, doc_ns_index):
     else:
         skipped.append('conformance-units: the model declares none')
 
-    if '.pptx' in rels_xml:
-        out.append(('an embedded PowerPoint is wired as a compound-file object',
+    if '.pptx' in rels_xml:        out.append(('an embedded PowerPoint is wired as a compound-file object',
                     'embedded-packages',
                     _replace_first(
                         r'(Type="http://schemas\.openxmlformats\.org/officeDocument/2006/'

@@ -8,15 +8,50 @@ Nothing here is normative or endorsed by the OPC Foundation. The document number
 project identifier and every NodeId are the template's own placeholders; the OPC Foundation
 assigns the real values.
 
+## These files are generated — please do not edit them
+
+Every `.docx` and every `.docmodel.json` in this folder is a **build output**. The next build
+overwrites it, so an edit made here is lost and leaves no trace. Change the source instead:
+
+| To change | Edit |
+|---|---|
+| the words of a specification | its markdown under `core-specs/`, `companion-specs/`, `metaverse-specs/` or `wot-specs/` |
+| a type, a Property, a NodeId | that specification's `tools/build_model.py`, then regenerate its NodeSet |
+| the clause order, titles, identity, figures | that document's config in `tools/specs/` |
+| the shape of the rendering itself | `tools/opcdocx/` |
+
+Then rebuild with `python word-drafts/tools/build_all.py`. This mirrors what the repository
+README already asks for generated artifacts: *edit the source, not the generated NodeSet /
+CSV, and regenerate.*
+
+## Reviewing and collaborating
+
+**The documents open with Word's change tracking already turned on.** Mark one up and your
+edits are recorded as visible, attributable revisions rather than silent changes — which is
+exactly what makes a marked-up `.docx` useful as review feedback, even though the file itself
+is regenerated.
+
+To give feedback, follow the *Contributing* section of the [repository
+README](../README.md) and [`CONTRIBUTING.md`](../CONTRIBUTING.md): fork, branch, annotate or
+change, then **open a pull request — or open an issue** if you would rather just raise a point
+than edit anything. You do not have to write specification text yourself; maintainers turn the
+discussion into concrete changes to the source and regenerate everything here.
+
 | Artifact | What it is |
 |---|---|
-| `OPC-UA-OpenUSD-Binding-Part1.docx` | Part 1, generated. Committed, so a reviewer needs no toolchain. |
-| `OPC-UA-OpenUSD-Scene-Part2.docx` | Part 2, generated. |
-| `OPC-UA-xRegistry.docx`, `OPC-UA-Observability-Export.docx`, `OPC-UA-WoT-Connectivity.docx`, `OPC-UA-WoT-Binding.docx` | The other four, generated the same way. |
-| `*.docmodel.json` | The intermediate representation the document was rendered from. Committed **because a `.docx` diff is unreadable** — review this instead. |
+| `OPC-UA-OpenUSD-Binding-Part1.docx` | OpenUSD Binding, Part 1. |
+| `OPC-UA-OpenUSD-Scene-Part2.docx` | OpenUSD Scene Materialization, Part 2. |
+| `OPC-UA-xRegistry.docx` | xRegistry, the abstract registry base model. |
+| `OPC-UA-Schema-Registry.docx` | Schema Registry, a domain registry on that base. |
+| `OPC-UA-Observability-Export.docx` | Observability Export. |
+| `OPC-UA-WoT-Connectivity.docx` | WoT Connectivity. |
+| `OPC-UA-WoT-Binding.docx` | WoT Binding — declares a template deviation; see below. |
+| `OPC-UA-Generators.docx` | Generators (generator sets). |
+| `OPC-UA-Data-Channels.docx` | Data Channels — extends the base namespace; see below. |
+| `*.docmodel.json` | The intermediate representation each document was rendered from. Committed **because a `.docx` diff is unreadable** — review this instead. |
 | `figures/*.pptx` | The editable PowerPoint behind each figure, embedded in the document as an OLE object. |
 | `figures/*.png` | The preview image Word displays for each embedded object. |
-| `tools/` | The build, the validator and its mutation test. |
+| `tools/` | The build, the validator, its mutation test and the batch runner. |
 
 ## Commands
 

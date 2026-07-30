@@ -28,6 +28,48 @@ DC_NS = 'http://purl.org/dc/elements/1.1/'
 FIXED_ZIP_DATE = (2026, 1, 1, 0, 0, 0)
 
 
+TRACK_CHANGES_EL = b'<w:trackChanges/>'
+TRACK_CHANGES_ANCHOR = b'<w:defaultTabStop'
+
+
+def insert_track_changes(settings_xml):
+    """Arm Word's change tracking in a `word/settings.xml` part.
+
+    `w:trackChanges` is a child of `w:settings` in a schema-ordered sequence, and this
+    template's order puts it immediately before `w:defaultTabStop`; inserted elsewhere Word
+    may reject the file, so the anchor is required rather than guessed at.
+    """
+    if TRACK_CHANGES_EL in settings_xml:
+        return settings_xml
+    at = settings_xml.find(TRACK_CHANGES_ANCHOR)
+    if at < 0:
+        raise ValueError('cannot place w:trackChanges: settings.xml has no '
+                         'w:defaultTabStop to anchor it before')
+    return settings_xml[:at] + TRACK_CHANGES_EL + settings_xml[at:]
+
+
+def arm_track_changes(path):
+    """Re-arm change tracking in a saved .docx.
+
+    Word rewrites `word/settings.xml` from its own state whenever it actually changes the
+    document, and its own state says tracking is off — so the finalise pass drops the
+    element the build wrote. Assigning the COM property does not help: setting it False
+    removes the element and setting it back True does not restore it. The reliable place to
+    do this is the package, after Word has closed.
+    """
+    with zipfile.ZipFile(path) as z:
+        infos = z.infolist()
+        parts = {i.filename: z.read(i.filename) for i in infos}
+    updated = insert_track_changes(parts['word/settings.xml'])
+    if updated == parts['word/settings.xml']:
+        return False
+    parts['word/settings.xml'] = updated
+    with zipfile.ZipFile(path, 'w', zipfile.ZIP_DEFLATED) as z:
+        for info in infos:
+            z.writestr(info.filename, parts[info.filename])
+    return True
+
+
 class Package:
     def __init__(self, template_path):
         self.parts = {}
@@ -42,6 +84,11 @@ class Package:
         self.content_types = oxml.parse(self.parts['[Content_Types].xml'])
         self._next_rel = self._max_rel_id() + 1
         self.next_bookmark_id = self._max_bookmark_id() + 1
+
+    def enable_track_changes(self):
+        """Arm Word's change tracking in the produced package."""
+        self.parts['word/settings.xml'] = insert_track_changes(
+            self.parts['word/settings.xml'])
 
     # ------------------------------------------------------------------ ids
 

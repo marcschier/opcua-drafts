@@ -88,6 +88,36 @@ class Doc:
 # --------------------------------------------------------------------------- checks
 
 
+# Revision markup. A generated document should arrive with tracking armed and none of its
+# own edits recorded; anything here means the pipeline tracked its own work.
+REVISION_TAGS = ('w:ins', 'w:del', 'w:moveFrom', 'w:moveTo')
+
+
+def check_track_changes(doc, res):
+    """Tracking is armed, and the document carries no revisions of its own.
+
+    The template ships without `w:trackChanges`, so the build adds it: a reviewer who marks
+    a draft up then produces visible, attributable revisions rather than a silently edited
+    file. The second half of this check is the load-bearing one — Word records every edit
+    made while tracking is on, so a finalise pass that updates five hundred fields with the
+    setting already armed would ship a document full of the pipeline's own revisions. It
+    would still validate, and it would still look right.
+    """
+    settings = doc.parts.get('word/settings.xml')
+    if settings is None:
+        res.error('track-changes', 'the package has no word/settings.xml')
+    elif b'<w:trackChanges' not in settings:
+        res.error('track-changes',
+                  'change tracking is not turned on: word/settings.xml has no '
+                  'w:trackChanges')
+    for tag in REVISION_TAGS:
+        found = sum(1 for _ in doc.document.iter(q(tag)))
+        if found:
+            res.error('track-changes',
+                      'the document carries %d <%s> revision(s) of its own; the build or '
+                      'the Word pass recorded its own edits' % (found, tag))
+
+
 def check_styles(doc, res):
     defined = doc.style_ids()
     for p in doc.document.iter(q('w:p')):
@@ -560,6 +590,7 @@ def main(argv=None):
             conv_hi = i
 
     check_styles(doc, res)
+    check_track_changes(doc, res)
     check_heading_numbers(doc, res)
     check_heading_capitalisation(doc, res)
     check_table_captions(doc, res, body_start)

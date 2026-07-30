@@ -217,10 +217,25 @@ truth exactly the way hand-editing a generated NodeSet does.
   derives from `AuditSessionEventType`, which is a base-namespace type the NodeSet does not
   describe, so walking the supertype chain gives up and the type is filed under ObjectTypes.
   The base event types have to be named explicitly; nothing in the file says they are events.
+- **Change tracking has to be armed in the package, after Word.** The template ships without
+  `w:trackChanges`, so the build writes it into `word/settings.xml` — but Word rewrites that
+  part from its own state whenever it actually changes the document, and drops the element.
+  Going through the COM property is worse, not better: setting `Document.TrackRevisions` to
+  false *removes* the element, setting it back to true does not restore it, and in this
+  environment Word does not write the element even for a document it created itself with
+  tracking on. So: the build writes it, the finalise pass leaves `TrackRevisions` alone, and
+  `arm_track_changes.py` re-inserts it once Word has closed the file. The guarantee is the
+  file content, which the validator checks — not a Word round-trip.
+- **Arming tracking and then editing records your own edits.** If the finalise pass ran with
+  tracking active, five hundred field updates would ship as five hundred revisions, in a
+  document that still validates and still looks right. The check that no `w:ins`, `w:del`,
+  `w:moveFrom` or `w:moveTo` exists is what makes that impossible to miss; write it before
+  trusting the arming.
 
 ## Verification checklist
 
 - [ ] `validate_docx.py` reports 0 errors.
+- [ ] Change tracking is armed and the document carries no revisions of its own.
 - [ ] `test_validate_docx.py` reports 0 escaped mutations, and every skip has a real reason.
 - [ ] `build_docx.py` reports no unresolved internal section references.
 - [ ] `check_section_refs.py` is clean for the documents you touched.

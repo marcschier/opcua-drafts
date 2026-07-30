@@ -42,6 +42,13 @@ try {
 
     $doc = $word.Documents.Open($full, [ref]$false, [ref]$false)
 
+    # This pass deliberately does not touch $doc.TrackRevisions. The build arms change
+    # tracking by writing w:trackChanges into word/settings.xml, and Word preserves that
+    # element across a save; but assigning the COM property *removes* it and assigning it
+    # back does not restore it, so the document would ship with tracking silently off.
+    # Word opens with tracking inactive, so the field updates below are never recorded —
+    # which is what the revision count at the end verifies.
+
     # Fields first, then each table of contents twice: the first pass inserts the
     # entries, the second settles the page numbers once pagination has shifted.
     $doc.Fields.Update() | Out-Null
@@ -64,6 +71,9 @@ try {
     }
     if ($text -match 'Right-click and choose Update Field') {
         $broken += 'a table of contents did not update'
+    }
+    if ($doc.Revisions.Count -gt 0) {
+        $broken += ("this pass recorded {0} tracked revision(s) of its own" -f $doc.Revisions.Count)
     }
 
     Write-Host ("pages: {0}, words: {1}, tables: {2}, fields: {3}" -f `
@@ -89,4 +99,14 @@ finally {
     if ($null -ne $word) { [void][Runtime.InteropServices.Marshal]::ReleaseComObject($word) }
     [GC]::Collect()
     [GC]::WaitForPendingFinalizers()
+}
+
+# Word rewrites word/settings.xml from its own state and drops the change-tracking element
+# the build wrote, so tracking is re-armed here, after Word has closed the file. Doing it
+# through the COM property does not work: setting it False removes the element and setting
+# it back True does not restore it.
+if (-not $KeepOpen) {
+    $tools = Split-Path -Parent $PSCommandPath
+    python (Join-Path $tools 'arm_track_changes.py') $full
+    if ($LASTEXITCODE -ne 0) { throw 'could not re-arm change tracking' }
 }

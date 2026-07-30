@@ -227,6 +227,7 @@ def render(build, doc, template_path, out_path):
                     'http://www.opcfoundation.org/errata',
         keywords='OPC UA, OpenUSD, companion specification, draft')
     pkg.force_field_update_on_open()
+    pkg.enable_track_changes()
     pkg.save(out_path)
 
 

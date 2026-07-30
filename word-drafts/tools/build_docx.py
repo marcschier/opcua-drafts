@@ -53,6 +53,13 @@ class Build:
         with open(os.path.join(REPO, src['markdown']), encoding='utf-8') as f:
             self.md_text = f.read()
         self.sections, self.section_order = md_parse.split_sections(self.md_text)
+        # A clause may come from another markdown file: an addendum folded in as an annex
+        # brings its own "1 Scope" and "2 Normative references", so sections are keyed per
+        # source or they collide with the base document's.
+        self.extra_sections = {}
+        for key, path in (self.cfg.get('additionalMarkdown') or {}).items():
+            with open(os.path.join(REPO, path), encoding='utf-8') as f:
+                self.extra_sections[key], _ = md_parse.split_sections(f.read())
         self.deviations = list(self.cfg.get('templateDeviations', []))
         self.deviation_ids = {d['id'] for d in self.deviations}
         if src.get('nodeset'):
@@ -126,11 +133,16 @@ class Build:
         anchors = md_parse.foreign_anchor_re(self.cfg.get('foreignAnchors', []))
         out = []
         pattern = r'(?:\u00a7\s*|\bSections?\s+)([0-9]+(?:\.[0-9]+)*)'
-        for m in re.finditer(pattern, self.md_text):
-            if md_parse._is_foreign(self.md_text, m.start(), anchors):
-                continue
-            if self.resolve_xref(m.group(1)) is None:
-                out.append(m.group(1))
+        texts = [self.md_text]
+        for key, path in (self.cfg.get('additionalMarkdown') or {}).items():
+            with open(os.path.join(REPO, path), encoding='utf-8') as f:
+                texts.append(f.read())
+        for text in texts:
+            for m in re.finditer(pattern, text):
+                if md_parse._is_foreign(text, m.start(), anchors):
+                    continue
+                if self.resolve_xref(m.group(1)) is None:
+                    out.append(m.group(1))
         return sorted(set(out))
 
     def parser(self):
@@ -187,14 +199,13 @@ class Build:
         return '%s %s' % (number, entry['title'])
 
     def _restructured(self, entry):
-        return self._heading_key(entry) in self.sections
+        return self._heading_key(entry) in self._sections_for(entry)
 
     def _detect_restructured(self):
         """True when the markdown's headings are this map's output rather than its input."""
-        new = sum(1 for e in self.cfg['clauseMap']
-                  if self._heading_key(e) in self.sections)
-        old = sum(1 for e in self.cfg['clauseMap']
-                  if e.get('from') and e['from'] in self.sections)
+        entries = [e for e in self.cfg['clauseMap'] if not e.get('in')]
+        new = sum(1 for e in entries if self._heading_key(e) in self.sections)
+        old = sum(1 for e in entries if e.get('from') and e['from'] in self.sections)
         return new > old
 
     def _section_for(self, entry):
@@ -204,13 +215,25 @@ class Build:
         form: the original headings the map was written against, and the restructured
         headings the map produces. That is what lets the markdown and the document be
         regenerated from one another without a manual step in between.
+
+        An entry carrying `in` is read from the additional source of that name instead.
         """
+        sections = self._sections_for(entry)
         key = self._heading_key(entry)
-        if key in self.sections:
-            return self.sections[key]
-        if entry.get('from') and entry['from'] in self.sections:
-            return self.sections[entry['from']]
+        if key in sections:
+            return sections[key]
+        if entry.get('from') and entry['from'] in sections:
+            return sections[entry['from']]
         return None
+
+    def _sections_for(self, entry):
+        source = entry.get('in')
+        if source is None:
+            return self.sections
+        if source not in self.extra_sections:
+            raise KeyError('clause %s reads source %r, which additionalMarkdown does not '
+                           'define' % (entry['number'], source))
+        return self.extra_sections[source]
 
     def section_blocks(self, entry, parser):
         section = self._section_for(entry)
@@ -336,6 +359,20 @@ class Build:
             dm.text_para('OPC UA terms and terms defined in this document are '
                          'italicized in the document.')]
 
+    def _gen_config_prose(self, entry):
+        """A clause written in config, named by the entry's `prose` key.
+
+        The template requires clauses that a given specification may have no material for —
+        a Use cases clause, or a conformance clause in a document that states its
+        conformance in prose scattered through the text. Authoring it in config keeps it
+        beside the rest of that document's decisions instead of in code.
+        """
+        key = entry['prose']
+        paragraphs = (self.cfg.get('prose') or {}).get(key)
+        if not paragraphs:
+            raise KeyError('prose[%r] is required by clause %s' % (key, entry['number']))
+        return [dm.text_para(p) for p in paragraphs]
+
     def _gen_use_cases(self, entry):
         """A Use cases clause written in config.
 
@@ -419,10 +456,11 @@ class Build:
         capability identifier and says plainly what it publishes instead.
         """
         ident = self.identity
+        subject = ident.get('annexASubject', 'vocabulary')
         return [
             dm.text_para(
-                'The vocabulary defined by this document is identified by the following '
-                'URI:'),
+                'The %s defined by this document is identified by the following URI:'
+                % subject),
             dm.text_para(ident['namespaceUri'], 'CODE'),
             dm.text_para(
                 'The capability identifier of this document, used in the conformance '
