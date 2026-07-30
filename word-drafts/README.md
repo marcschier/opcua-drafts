@@ -38,6 +38,11 @@ You need no git and no markdown, and you never describe the same change twice. W
 possible is that every paragraph carries the address of the source line it was rendered from,
 so a mark can be traced back rather than guessed at — see *Sending a review back* below.
 
+**These documents are regenerated automatically.** Every push to `main` that changes a
+specification rebuilds them and collects the result on one standing pull request, so a `.docx`
+here cannot quietly fall behind the markdown it renders. That pull request opens as a draft,
+because finishing a document needs Microsoft Word — see *Sending a review back*.
+
 If you would rather work in the repository directly, follow the *Contributing* section of the
 [repository README](../README.md) and [`CONTRIBUTING.md`](../CONTRIBUTING.md): fork, branch,
 annotate or change, then open a pull request — or open an issue if you would rather just raise
@@ -263,6 +268,34 @@ So a comment on a paragraph the reviewer also changed becomes a real inline comm
 comment on a paragraph they left alone is collected into the review body with a permanent
 link to the exact lines, which GitHub renders as a quoted snippet. Inventing an edit to host
 a comment would make the diff claim a change nobody asked for, so the ingest does not.
+
+### Where the agent takes over
+
+The ingest is deliberately narrow: it applies a change only where it can place it exactly,
+and refuses everything else. What is left is not a failure but a different kind of work — a
+comment states a problem rather than supplying replacement text, a mark may belong in the
+information model, an edit may be unplaceable because the prose around it was rewritten.
+
+That remainder goes to the coding agent, on the branch the ingest already built. It is given
+the **report, not the document**, so it cannot revert or re-apply the exact edits; and it is
+told that changing nothing is a valid outcome, because the branch already carries the
+reviewer's marks and a guessed interpretation is worse than none.
+
+Mechanical where it is exact, agentic where it needs judgement, and never both on the same
+text.
+
+### Regenerating on `main`
+
+`.github/workflows/word-drafts-refresh.yml` rebuilds every document on each push to `main`
+and collects the result on one standing pull request, from the branch `word-drafts/refresh`.
+The build is byte-reproducible, so a document whose sources did not change comes out
+identical and simply does not appear in the diff — nothing has to work out which documents
+to rebuild.
+
+It opens as a **draft** and stays one until the documents are finalised. CI cannot finalise
+them — that needs Word — but it can *check* it, so the pull request flips to ready for
+review on the next run once `validate_docx.py --finalized` passes for every document.
+Merging it deletes the branch, and the next specification change opens a fresh one.
 
 ## The clause map
 

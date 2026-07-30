@@ -186,6 +186,13 @@ def publish(ingest, *, repo_root, base='main', draft=False, dry_run=False):
             'files': sorted({e.path for e in ingest.edits}),
             'inlineComments': 0, 'linkedComments': 0}
 
+    if not ingest.edits:
+        # A review can be entirely comments. There is nothing to commit, so there is no
+        # branch and no pull request — but the comments are still real feedback, and the
+        # caller decides what to do with them.
+        plan['skipped'] = 'the review changed no text that the markdown owns'
+        return plan
+
     if dry_run:
         # Every line an edit touches would be in the diff, so that is the set to test
         # the comments against without building the branch.

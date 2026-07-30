@@ -140,3 +140,39 @@ Two traps in that script, both found the hard way:
 
 The template ships **one comment of its own** — Randy Armstrong, 2019, "This figure is an
 embedded Visio object." Exclude it by identity, or every ingest reports it as new feedback.
+
+## Where the mechanical part ends
+
+The ingest is narrow on purpose, and that leaves a remainder: comments state a problem
+rather than supplying replacement text, some marks belong in the information model, and an
+edit is sometimes unplaceable because the prose around it was rewritten. That remainder is
+work of a different kind, not a failure, and it goes to a coding agent.
+
+Two rules keep the two halves from fighting:
+
+- **The agent gets the report, not the document.** It cannot then revert or re-apply the
+  exact edits the ingest already made, because it never sees them as marks.
+- **Changing nothing is a stated, valid outcome.** The branch already carries the reviewer's
+  marks; a guessed interpretation on top of them is worse than none.
+
+Mechanical where it is exact, agentic where it needs judgement, and never both on the same
+text.
+
+In GitHub Actions the agent runs as Copilot CLI — `npm install -g @github/copilot`, then
+`copilot --yolo -p "…"` — authenticated by the **built-in token** with
+`permissions: copilot-requests: write`. No stored secret. Two things are worth enforcing in
+the workflow rather than asking for in the prompt: revert any edit to a generated artifact
+before committing, since the next build would discard it silently anyway; and refuse to run
+on any branch outside a known agent prefix.
+
+## What CI cannot do
+
+`build_all.py` is pure Python and runs anywhere, so a hosted runner can regenerate every
+document — but it **cannot finish one**. Resolving the table of contents and the
+cross-references needs Microsoft Word.
+
+That asymmetry has a clean resolution, because verifying finalisation needs no Word at all:
+a finalised document carries one cached `PAGEREF` per contents entry and a fresh build
+carries none. So the regeneration pull request opens as a **draft**, and CI flips it to
+ready for review once `validate_docx.py --finalized` passes. The draft state *is* the
+message, and it cannot be forgotten the way a note in a pull request body can.

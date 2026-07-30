@@ -1,0 +1,138 @@
+# Turn an issue into a pull request.
+#
+# Label an issue `needs pr` and the coding agent reads it — title, body and every comment,
+# because the ask is usually refined in the thread — then opens a pull request that closes
+# it.
+#
+# Only a user with write access can apply a label, so the label is the authorisation. That
+# is deliberate: anyone may open an issue, but starting an agent that writes to the
+# repository is a maintainer's decision.
+
+name: Issue to pull request
+
+on:
+  issues:
+    types: [labeled]
+  workflow_dispatch:
+    inputs:
+      issue:
+        description: Issue number to work from
+        required: true
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+  copilot-requests: write
+
+jobs:
+  read:
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      github.event.label.name == 'needs pr'
+    runs-on: ubuntu-latest
+    outputs:
+      prompt: ${{ steps.brief.outputs.prompt }}
+      issue: ${{ steps.brief.outputs.issue }}
+      title: ${{ steps.brief.outputs.title }}
+    steps:
+      - name: Acknowledge
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          ISSUE: ${{ github.event.issue.number || github.event.inputs.issue }}
+          RUN: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          gh issue comment "$ISSUE" --repo "$REPO" --body \
+            "Working on this — [run]($RUN). I will open a pull request, or explain why I did not."
+
+      - name: Assemble the brief
+        id: brief
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          ISSUE: ${{ github.event.issue.number || github.event.inputs.issue }}
+        run: |
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import json, os, subprocess, uuid
+
+          repo = os.environ['REPO']
+          number = os.environ['ISSUE']
+          raw = subprocess.run(
+              ['gh', 'issue', 'view', number, '--repo', repo, '--json',
+               'title,body,comments,labels'],
+              capture_output=True, text=True, check=True).stdout
+          issue = json.loads(raw)
+
+          # The thread matters as much as the opening post: an ask is usually sharpened,
+          # narrowed or withdrawn in the comments, and acting on the first message alone
+          # produces a pull request nobody asked for any more.
+          thread = '\n\n'.join(
+              '%s wrote:\n%s' % (c['author']['login'], c['body'])
+              for c in issue.get('comments') or [])
+
+          prompt = '''You are working in the opcua-drafts repository. Read
+          `.github/copilot-instructions.md` first and follow it exactly — the voice, the
+          normative language, the structure and cross-reference rules, and the model
+          conventions are not optional.
+
+          A maintainer has labelled the issue below `needs pr`. Implement what it asks for.
+
+          ## Issue #%s: %s
+
+          %s
+
+          ## Thread
+
+          %s
+
+          ## How to do it
+
+          - Change the markdown specification and, where the ask is about the information
+            model, the generator that produces the NodeSet — never the generated NodeSet,
+            CSV or reference tables directly, and never anything under `word-drafts/`
+            except `word-drafts/tools/`. Those are build outputs.
+          - Regenerate whatever your change invalidates, using the commands in the
+            instructions, and run the validators named there.
+          - Keep the change as small as the ask. Do not tidy neighbouring text, do not
+            renumber clauses, and do not restructure a document unless that is the ask.
+          - If a section reference or a cross-document citation moves, fix every document
+            that cites it — `python .github/scripts/check_section_refs.py` has to stay clean.
+
+          ## If there is nothing concrete to do
+
+          Some issues are questions, or observations, or a discussion that has not settled
+          on a change. **Make no change at all** in that case. Do not invent an
+          interpretation to have something to commit: an empty pull request wastes a
+          reviewer's time and a guessed one wastes more. Leaving the tree untouched is a
+          valid and expected outcome, and it is reported as such.''' % (
+              number, issue['title'], issue['body'] or '(no description)',
+              thread or '(no comments)')
+
+          delim = 'EOF%s' % uuid.uuid4().hex
+          # A title reaches GITHUB_OUTPUT as a single line, so a newline in it would end
+          # the value early and let the rest be read as further outputs. Anyone can open
+          # an issue, so the title is untrusted input.
+          title = ' '.join((issue['title'] or '').split())[:60]
+          print('issue=%s' % number)
+          print('title=Address issue #%s: %s' % (number, title))
+          print('prompt<<%s' % delim)
+          print(prompt)
+          print(delim)
+          PY
+
+  write:
+    needs: read
+    uses: ./.github/workflows/agent-task.yml
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+      copilot-requests: write
+    with:
+      branch: agent/issue-${{ needs.read.outputs.issue }}
+      base: main
+      title: ${{ needs.read.outputs.title }}
+      prompt: ${{ needs.read.outputs.prompt }}
+      issue: ${{ needs.read.outputs.issue }}
+      reuse-branch: true

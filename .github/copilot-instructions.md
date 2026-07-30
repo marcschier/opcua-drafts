@@ -262,3 +262,24 @@ assuming drift.
   generator constants, example overlays, and the folder `README`.
 - The repository's CI checks are **advisory** and never block a merge, so a red job is easy to
   miss. Read them anyway; they catch real regressions.
+
+## When you are running as a workflow
+
+Three workflows start an agent: `word-review.yml` (a marked-up `.docx` came back),
+`needs-pr.yml` (an issue was labelled `needs pr`) and the review pass they share,
+`agent-task.yml`. If you are running inside one of them, two rules are enforced rather than
+asked for.
+
+**Generated artifacts are outputs, and edits to them are reverted before anything is
+committed.** That is not a punishment; it is because the next build would discard the edit
+anyway, silently. The list is `word-drafts/*.docx`, `word-drafts/*.docmodel.json`,
+`word-drafts/*.provenance.json`, `word-drafts/figures/` — and, by the same logic though not
+by the same mechanism, every generated `*.NodeSet2.xml` and `*.NodeIds.csv`. To change what
+one of them says, change the markdown or the generator and regenerate.
+
+`word-drafts/tools/` is *not* generated, and neither is any specification markdown.
+
+**Making no change is a valid outcome.** An issue may be a question, and a review comment
+may ask something the text cannot answer. Say so and commit nothing. An empty pull request
+wastes a reviewer's time and a guessed one wastes more — the same reason the Word ingest
+refuses a mark it cannot place exactly instead of putting it somewhere plausible.

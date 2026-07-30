@@ -1,0 +1,258 @@
+# Run the coding agent on a branch and turn what it did into a pull request.
+#
+# Called by the workflows that have something for an agent to do — a review that could not
+# be applied mechanically, an issue asking for a change. One place knows how to run the
+# agent safely, so the guardrails cannot drift apart across callers.
+#
+# Two properties make this safe to automate:
+#
+#   * every caller is started by a *label*, and only a user with write access can apply
+#     one, so an untrusted party cannot start an agent run;
+#   * the agent writes to its own branch and only to source files. Generated artifacts are
+#     reverted before anything is committed, because the way to change a generated file is
+#     to change its source and regenerate.
+
+name: Agent task
+
+on:
+  workflow_call:
+    inputs:
+      branch:
+        description: Branch the agent works on. Must be under agent/, review/ or word-drafts/.
+        required: true
+        type: string
+      base:
+        description: Branch the pull request targets.
+        required: false
+        type: string
+        default: main
+      title:
+        description: Pull request title, used when one has to be created.
+        required: true
+        type: string
+      prompt:
+        description: What the agent is being asked to do.
+        required: true
+        type: string
+      issue:
+        description: Issue number to link and reply to, if any.
+        required: false
+        type: string
+        default: ''
+      reuse-branch:
+        description: Continue on an existing branch instead of starting from the base.
+        required: false
+        type: boolean
+        default: false
+      draft:
+        description: Open the pull request as a draft.
+        required: false
+        type: boolean
+        default: false
+    outputs:
+      url:
+        description: The pull request, if one was opened or updated.
+        value: ${{ jobs.run.outputs.url }}
+      changed:
+        description: Whether the agent changed anything.
+        value: ${{ jobs.run.outputs.changed }}
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+  copilot-requests: write
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: agent-${{ inputs.branch }}
+      cancel-in-progress: false
+    outputs:
+      url: ${{ steps.pr.outputs.url }}
+      changed: ${{ steps.commit.outputs.changed }}
+    steps:
+      - name: Refuse a branch the agent has no business writing to
+        env:
+          BRANCH: ${{ inputs.branch }}
+        run: |
+          case "$BRANCH" in
+            agent/*|review/*|word-drafts/*) ;;
+            *) echo "::error::refusing to run an agent on '$BRANCH'; agent branches are \
+               under agent/, review/ or word-drafts/"; exit 1 ;;
+          esac
+
+      - uses: actions/checkout@v4
+        with:
+          # The agent reads history to understand what changed and why, and the branch may
+          # already exist from an earlier run.
+          fetch-depth: 0
+          ref: ${{ inputs.base }}
+
+      - name: Put the branch in place
+        env:
+          BRANCH: ${{ inputs.branch }}
+          BASE: ${{ inputs.base }}
+          REUSE: ${{ inputs.reuse-branch }}
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if [ "$REUSE" = "true" ] && git ls-remote --exit-code --heads origin "$BRANCH" >/dev/null 2>&1; then
+            git fetch origin "$BRANCH"
+            git checkout -B "$BRANCH" "origin/$BRANCH"
+          else
+            git checkout -B "$BRANCH" "origin/$BASE"
+          fi
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r word-drafts/tools/requirements.txt
+
+      - uses: actions/setup-node@v4
+      - name: Install Copilot CLI
+        run: npm install -g @github/copilot
+
+      - name: Run the agent
+        env:
+          # No stored secret: the built-in token plus copilot-requests: write is enough.
+          GITHUB_TOKEN: ${{ github.token }}
+          PROMPT: ${{ inputs.prompt }}
+        run: |
+          copilot --yolo -p "$PROMPT" 2>&1 | tee agent.log
+
+      - name: Revert anything generated
+        id: guard
+        run: |
+          # Generated artifacts are outputs. An agent that edits one has made a change that
+          # the next build silently discards, so the edit is undone here and reported
+          # rather than committed and quietly lost.
+          GENERATED='word-drafts/*.docx word-drafts/*.docmodel.json
+                     word-drafts/*.provenance.json word-drafts/figures'
+          touched=$(git status --porcelain -- $GENERATED || true)
+          if [ -n "$touched" ]; then
+            git checkout -- $GENERATED 2>/dev/null || true
+            git clean -fd -- word-drafts/figures 2>/dev/null || true
+            {
+              echo 'reverted<<EOF'
+              echo "$touched"
+              echo 'EOF'
+            } >> "$GITHUB_OUTPUT"
+            echo "::warning::the agent edited generated artifacts; those edits were reverted"
+          fi
+
+      - name: Run the repository's own checks
+        id: checks
+        continue-on-error: true
+        run: |
+          set +e
+          out=''
+          for script in check_links check_section_refs check_yaml_json; do
+            result=$(python ".github/scripts/$script.py" 2>&1 | tail -1)
+            out="$out- \`$script\`: $result"$'\n'
+          done
+          {
+            echo 'summary<<EOF'
+            echo "$out"
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Commit what the agent changed
+        id: commit
+        env:
+          TITLE: ${{ inputs.title }}
+          ISSUE: ${{ inputs.issue }}
+          BRANCH: ${{ inputs.branch }}
+        run: |
+          git add -A
+          if git diff --cached --quiet; then
+            echo 'changed=false' >> "$GITHUB_OUTPUT"
+            echo 'the agent changed nothing'
+            exit 0
+          fi
+          echo 'changed=true' >> "$GITHUB_OUTPUT"
+          {
+            echo "$TITLE"
+            echo
+            echo 'Written by the coding agent from a task in this repository.'
+            [ -n "$ISSUE" ] && { echo; echo "Refs #$ISSUE"; }
+            echo
+            echo 'Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>'
+          } > .commit-message
+          git commit -F .commit-message
+          rm -f .commit-message agent.log
+          git push --force-with-lease --set-upstream origin "$BRANCH"
+
+      - name: Open or update the pull request
+        id: pr
+        if: steps.commit.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BRANCH: ${{ inputs.branch }}
+          BASE: ${{ inputs.base }}
+          TITLE: ${{ inputs.title }}
+          ISSUE: ${{ inputs.issue }}
+          PROMPT: ${{ inputs.prompt }}
+          CHECKS: ${{ steps.checks.outputs.summary }}
+          REVERTED: ${{ steps.guard.outputs.reverted }}
+          DRAFT: ${{ inputs.draft }}
+        run: |
+          {
+            echo 'Written by the coding agent. **Review it as you would any other change** —'
+            echo 'it is a draft of an answer, not an answer.'
+            echo
+            [ -n "$ISSUE" ] && { echo "Closes #$ISSUE"; echo; }
+            echo '<details><summary>What it was asked to do</summary>'
+            echo
+            echo '```'
+            echo "$PROMPT"
+            echo '```'
+            echo
+            echo '</details>'
+            echo
+            echo '### Checks'
+            echo
+            echo "$CHECKS"
+            if [ -n "$REVERTED" ]; then
+              echo
+              echo '### Reverted'
+              echo
+              echo 'The agent edited generated artifacts. Those are build outputs, so the'
+              echo 'edits were undone — change the source and regenerate instead.'
+              echo
+              echo '```'
+              echo "$REVERTED"
+              echo '```'
+            fi
+          } > pr-body.md
+
+          existing=$(gh pr list --head "$BRANCH" --base "$BASE" --state open \
+                       --json number --jq '.[0].number // empty')
+          if [ -n "$existing" ]; then
+            gh pr edit "$existing" --body-file pr-body.md
+            url=$(gh pr view "$existing" --json url --jq .url)
+          else
+            args=''
+            [ "$DRAFT" = "true" ] && args='--draft'
+            url=$(gh pr create --base "$BASE" --head "$BRANCH" --title "$TITLE" \
+                    --body-file pr-body.md $args | tail -1)
+          fi
+          rm -f pr-body.md
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+
+      - name: Reply on the issue
+        if: inputs.issue != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE: ${{ inputs.issue }}
+          URL: ${{ steps.pr.outputs.url }}
+        run: |
+          if [ -n "$URL" ]; then
+            gh issue comment "$ISSUE" --body "Opened $URL from this issue."
+          else
+            gh issue comment "$ISSUE" --body \
+              "I read this issue but did not open a pull request: there was no concrete
+              change to make. If that is wrong, say what should change and re-apply the
+              label."
+          fi

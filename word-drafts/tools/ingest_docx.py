@@ -673,6 +673,9 @@ def main(argv=None):
     ap.add_argument('--no-verify', action='store_true',
                     help='skip the rebuild that checks the edits really took effect')
     ap.add_argument('--report', default=None, help='write the report to this file')
+    ap.add_argument('--emit', default=None,
+                    help='write a machine-readable summary to this file, for a workflow '
+                         'that has to decide what is left to do')
     ap.add_argument('--pr', action='store_true',
                     help='open a pull request and post the comments as a review')
     ap.add_argument('--base', default='main', help='the branch the pull request targets')
@@ -680,6 +683,7 @@ def main(argv=None):
     ap.add_argument('--dry-run', action='store_true',
                     help='with --pr, print what would be published and change nothing')
     args = ap.parse_args(argv)
+    plan = None
 
     try:
         ingest = Ingest(args.docx, spec_id=args.spec).run()
@@ -717,7 +721,36 @@ def main(argv=None):
             print('cannot publish: %s' % exc)
             return 4
         print(json.dumps(plan, indent=2))
+
+    if args.emit:
+        _emit(ingest, plan, args.emit)
     return 0
+
+
+def _emit(ingest, plan, path):
+    """A summary a workflow can branch on.
+
+    The mechanical ingest is exact where it applies and silent about the rest, so the part
+    worth automating further is precisely what it *could not* do: the marks it refused,
+    the marks that belong in another artifact, and the comments — which state a problem
+    rather than a substitution and so always need judgement.
+    """
+    summary = {
+        'specId': ingest.spec_id,
+        'sourceCommit': ingest.commit,
+        'reviewers': [a for a in ingest.doc.authors() if a],
+        'applied': len(ingest.edits),
+        'refused': len(ingest.refusals),
+        'comments': len(ingest.notes),
+        'unverified': len(ingest.unverified or []),
+        'branch': (plan or {}).get('branch'),
+        'url': (plan or {}).get('url'),
+        'skipped': (plan or {}).get('skipped'),
+    }
+    summary['needsAgent'] = bool(summary['refused'] or summary['comments'])
+    with open(path, 'w', encoding='utf-8', newline='\n') as f:
+        json.dump(summary, f, indent=2)
+        f.write('\n')
 
 
 if __name__ == '__main__':
