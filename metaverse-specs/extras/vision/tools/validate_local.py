@@ -311,14 +311,17 @@ def main():
                 "StreamEndpointType and ClipEndpointType both inherit it.")
 
     # The load-bearing guard for clause 6.7: OPC UA - Data Channels is a base-namespace
-    # errata using PROVISIONAL ids in 65000..65999. Emitting one here would dangle on
-    # every Server that has not adopted that draft, so the NodeSet must contain none.
+    # errata using PROVISIONAL ids. Its README allocates 65000..65099 types,
+    # 65100..65199 well-known instances, 65900..65999 EnumStrings and 66000+ members,
+    # so the guarded range has to run to the top of the member block, not stop at
+    # 65999. Emitting any of them here would dangle on every Server that has not
+    # adopted that draft, so the NodeSet must contain none.
     for n in nodes:
         for r in n.findall(f"{NS}References/{NS}Reference"):
             tgt = (r.text or "").strip()
             if tgt.startswith("i="):
                 num = tgt[2:]
-                if num.isdigit() and 65000 <= int(num) <= 65999:
+                if num.isdigit() and 65000 <= int(num) <= 66999:
                     err(f"{n.get('NodeId')} references {tgt}, a PROVISIONAL Data "
                         "Channels identifier. Clause 6.7 is deliberately a prose-only "
                         "binding: this model takes no dependency on that draft, so its "
