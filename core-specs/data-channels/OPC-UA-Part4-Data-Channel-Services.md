@@ -222,6 +222,10 @@ sequenceDiagram
 
 An `OfferId` is single-use and scoped to the SecureChannel it was delivered on. A Server **shall not** hold resources for an unaccepted offer beyond its `ExpirationTime`, or an unsubscribed Client would leak them.
 
+**An offer shall be delivered to one authorized Session and no other.** An OPC UA Event propagates to every MonitoredItem whose filter matches and whose Session may receive it, which for an offer is the wrong distribution entirely: the offer names a `SourceNodeId`, its negotiated `Parameters` and a redeemable `OfferId`, so an unmodified Event broadcast tells every subscriber on a shared EventNotifier what another user is about to stream and from where. Before raising the Event a Server **shall** select exactly one activated recipient Session and **shall** authorize the offer against that Session's identity under §7.2, as though the recipient had asked for it. The Event **shall** carry the recipient's `SessionId`, and the Server **shall** apply that match itself — before any Client-supplied `EventFilter` is evaluated, so that filtering cannot widen it — and **shall not** deliver the Event to any other Session. A Server whose Event infrastructure cannot enforce a recipient match **shall** deliver offers by a Session-scoped mechanism instead rather than by ordinary Event propagation.
+
+The same obligation applies to `DataChannelStateChangeEventType`: a state change names a channel, and a Session that could not have opened that channel **shall not** be told about it.
+
 A Client that is not subscribed to the Event never learns of the offer, which is the correct outcome: a Server must not be able to push bytes at a Client that has not asked for them.
 
 ## 7 Lifecycle and authorization
@@ -241,7 +245,11 @@ A Client that must survive a reconnect reopens its channels after `ActivateSessi
 
 ### 7.2 Authorization
 
-`OpenDataChannel` **shall** be authorized against the source Node using the same rules as any other access to it: the Session's user identity, the `RolePermissions` and `UserRolePermissions` Attributes of the Node, and the `AccessRestrictions` in force. A Server **shall not** grant a data channel where it would refuse a `Read` of the same content.
+`OpenDataChannel` **shall** be authorized against the source Node using the same rules as any other access to it: the Session's user identity, the `RolePermissions` and `UserRolePermissions` Attributes of the Node, and the `AccessRestrictions` in force.
+
+**Authorization shall be evaluated per direction, because the directions are not the same operation.** A `SourceToSink` channel moves content out of the Server and is a read; a `SinkToSource` channel moves Client-supplied content *into* the Server and is a write; `Bidirectional` is both. A Server **shall not** grant the outbound direction where it would refuse a `Read` of the same content, and **shall not** grant the inbound direction where it would refuse a `Write`, a `Call`, or whatever operation the source's companion specification defines as the means of delivering that content by ordinary Services. `Browse`, `Read` and `ReceiveEvents` **shall not** be taken to imply the inbound permission.
+
+Stating only the read floor would be a serious under-specification rather than a conservative one, because it is the *inbound* direction that changes the Server's state: a user permitted to watch a drive but not to command it could otherwise open the `SinkToSource` channel that drive advertises and send it firmware, setpoints or console input, and a Server implementing this clause exactly as written would accept. The permission also has to apply to Objects, since a data channel source may be an Object and OPC UA's `Read` permission is defined for Variables — a Server **shall not** advertise an inbound direction on a source for which it cannot identify the governing permission.
 
 **Every Service in this set is scoped to both the SecureChannel and the authorizing Session.** OPC 10000-4 §5.7.2 permits multiple Sessions on one SecureChannel — an aggregating Server acting as agent for several users is the normal case — and those Sessions share one ChannelId space. Since ChannelIds are allocated monotonically from `1` and are therefore trivially guessable, scoping only to the SecureChannel would let one user enumerate and seize another's channels. Therefore:
 
@@ -330,6 +338,9 @@ A Server claiming *Data Channel Services* **shall** also claim at least one Part
 | DCS-020 | `Publish` is not delayed by data channel load | Saturate channels, keep a Subscription | No keep-alive missed (§8) |
 | DCS-021 | Another Session's channel cannot be modified or closed | Open as user A, then `CloseDataChannel`/`ModifyDataChannel` from a second Session on the same SecureChannel as user B | `Bad_DataChannelIdInvalid`, indistinguishable from an unassigned identifier (§7.2) |
 | DCS-022 | Revoked permissions terminate a live channel | Open a channel, then revoke the user's `RolePermissions` on the source Node | Channel aborted with `Bad_UserAccessDenied` within `AuthorizationRecheckInterval` (§7.2) |
+| DCS-023 | The inbound direction needs write authorization | As a user permitted to read the source but not to write it, open `SinkToSource`, then `Bidirectional` | `Bad_UserAccessDenied` in both cases; read permission alone does not grant an inbound channel (§7.2) |
+| DCS-024 | An offer reaches only its recipient | Subscribe two Sessions to the same EventNotifier and raise an offer for one of them | Only the recipient Session receives the Event; the other observes neither the `OfferId` nor the `SourceNodeId` (§6) |
+| DCS-025 | Diagnostics are projected per Session | Open channels from two Sessions, then read `Channels`, `Diagnostics` and `ActiveChannelCount` as each | Each Session sees only its own channels, and the count matches (Part 3 §5.2) |
 
 ## 11 Insertion into OPC 10000-4 v1.05.07
 
