@@ -113,6 +113,7 @@ Verify with two builds and a hash comparison.
 | Schema Registry | a conformance clause with **no units at all** — the units had to be derived from the capabilities the clause describes in prose, not tokenised from an existing list |
 | Generators | **RequiredModel BrowseNames**: a type borrowed from DI or Machinery is a bare NodeId in the NodeSet and there is nothing to resolve it against, so the names come from config; markdown that **links into the online reference** in body prose, which Guideline 5 forbids |
 | Data Channels | **a document that owns no namespace** — its Nodes are additions to the base namespace, so `namespaceIndexInDocument` is 0, `IsNamespaceSubset` is True, and base names must print unprefixed; a Terms clause read from a *sibling* document (`termsFrom`); a Use cases clause **written in config** because the document has no material shaped like one |
+| Avro and Arrow Encoding | **scale, and nothing else** — 121 and 106 clause-map entries, five heading levels deep. Both are the WoT Binding shape (`no-information-model`), and the only new mechanism either needed was a clause **authored in config**, because neither has a Use cases or a conformance clause of its own |
 
 Everything above is now driven by the docmodel and the config, and a tenth specification of any of
 those shapes is genuinely a config file. **Config carries what varies between documents of the same

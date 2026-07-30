@@ -217,6 +217,10 @@ truth exactly the way hand-editing a generated NodeSet does.
   derives from `AuditSessionEventType`, which is a base-namespace type the NodeSet does not
   describe, so walking the supertype chain gives up and the type is filed under ObjectTypes.
   The base event types have to be named explicitly; nothing in the file says they are events.
+- **A clause title is plain text, so strip the markup out of it.** A heading written
+  ``### 6.3 Bare RecordBatch framing (`batch`)`` yields a title with backticks in it, and an
+  annex heading written `### D.1 Boolean` yields one with a literal clause number — which the
+  numbering check rejects, correctly, because Word supplies the number.
 - **Change tracking has to be armed in the package, after Word.** The template ships without
   `w:trackChanges`, so the build writes it into `word/settings.xml` — but Word rewrites that
   part from its own state whenever it actually changes the document, and drops the element.

@@ -1,6 +1,5 @@
 {
   "_comment": "The conversion batch. `converted` are the specifications that have a config in this directory and a committed document; `ready` are the ones whose shape the pipeline already handles, so onboarding them is a config file plus the editorial work named in `needs`. Run them with tools/build_all.py.",
-
   "converted": [
     "openusd-binding",
     "openusd-scene",
@@ -10,24 +9,11 @@
     "wot-binding",
     "schema-registry",
     "generators",
-    "data-channels"
+    "data-channels",
+    "avro-encoding",
+    "arrow-encoding"
   ],
-
   "ready": [
-    {
-      "id": "avro-encoding",
-      "markdown": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
-      "nodeset": null,
-      "shape": "declared partial compliance, as WoT Binding",
-      "needs": "the no-information-model deviation declared in its config; it defines a DataEncoding, not an address space, so it has no NodeSet"
-    },
-    {
-      "id": "arrow-encoding",
-      "markdown": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
-      "nodeset": null,
-      "shape": "declared partial compliance, as WoT Binding",
-      "needs": "the no-information-model deviation declared in its config; at 322 KB it is the largest draft in the repository"
-    },
     {
       "id": "observability-di",
       "markdown": "core-specs/observability-export/di/OPC-UA-DI-Observability-Export-Addendum.md",
@@ -71,7 +57,6 @@
       "needs": "a conformance clause"
     }
   ],
-
   "notAFit": [
     {
       "markdown": "core-specs/data-channels/OPC-UA-Part3-Data-Channel-Model.md",

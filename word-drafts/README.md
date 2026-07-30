@@ -48,6 +48,8 @@ discussion into concrete changes to the source and regenerate everything here.
 | `OPC-UA-WoT-Binding.docx` | WoT Binding — declares a template deviation; see below. |
 | `OPC-UA-Generators.docx` | Generators (generator sets). |
 | `OPC-UA-Data-Channels.docx` | Data Channels — extends the base namespace; see below. |
+| `OPC-UA-Avro-Encoding.docx` | Apache Avro DataEncoding — declares a template deviation; see below. |
+| `OPC-UA-Arrow-Encoding.docx` | Apache Arrow DataEncoding — declares a template deviation; see below. |
 | `*.docmodel.json` | The intermediate representation each document was rendered from. Committed **because a `.docx` diff is unreadable** — review this instead. |
 | `figures/*.pptx` | The editable PowerPoint behind each figure, embedded in the document as an OLE object. |
 | `figures/*.png` | The preview image Word displays for each embedded object. |
