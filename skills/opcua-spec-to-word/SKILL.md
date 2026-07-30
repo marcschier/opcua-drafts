@@ -86,7 +86,8 @@ truth exactly the way hand-editing a generated NodeSet does.
 4. **Restructure the markdown** (`restructure_markdown.py`), then rewrite `§` references in every
    sibling document, then run `check_section_refs.py` until it is clean.
 5. **Build** (`build_docx.py`), **validate** (`validate_docx.py`), **finalise** with Word COM
-   (`finalize_word.ps1`).
+   (`finalize_word.ps1`, or `finalize_all.ps1` after a batch build — a rebuild always leaves the
+   document unfinalised).
 6. **Prove the build is deterministic** — build twice and compare hashes.
 7. **Mutation-test the validator** (`test_validate_docx.py`). A checker that passes trivially is
    worthless.
@@ -244,6 +245,14 @@ truth exactly the way hand-editing a generated NodeSet does.
   through the clause map, and **every diagram in the folded source needs a `figures` entry** —
   otherwise the build silently writes `figure6.png` … `figureN.png` with the containing clause
   title as the caption. Count the diagrams first.
+- **A build un-finalises the document, and a batch build un-finalises all of them.** The build
+  writes fields, not field *results*, so a freshly built document opens with an **empty table of
+  contents and blank cross-references**. Nothing catches it: the package is well formed, the
+  styles are right, every other check passes, and the file is simply not finished. Seven of
+  eleven documents were committed in that state here, because they had been rebuilt for an
+  unrelated change and only the documents whose *content* changed were re-finalised. The rule is
+  that `build_all.py` is always followed by `finalize_all.ps1`, and the check that makes it
+  visible is a populated `TOC` — one cached `PAGEREF` per entry, absent in a fresh build.
 
 ## Verification checklist
 
@@ -254,6 +263,8 @@ truth exactly the way hand-editing a generated NodeSet does.
 - [ ] `check_section_refs.py` is clean for the documents you touched.
 - [ ] Two consecutive builds are byte-identical.
 - [ ] `finalize_word.ps1` reports *all fields resolved*.
+- [ ] **Every** document is finalised, not just the ones you changed:
+      `finalize_all.ps1 -VerifyOnly` is clean.
 - [ ] The `.docx` opens, the table of contents is populated, figures render, and no field shows an
       error.
 - [ ] Any `templateDeviations` are declared, printed in the document, and are the *only* checks

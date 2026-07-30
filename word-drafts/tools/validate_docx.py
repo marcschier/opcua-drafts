@@ -118,6 +118,37 @@ def check_track_changes(doc, res):
                       'the Word pass recorded its own edits' % (found, tag))
 
 
+def check_finalized(doc, res):
+    """The document has been through the Word pass, so it opens ready to read.
+
+    `build_docx.py` writes fields, not field *results*: every clause number, caption
+    number, cross-reference and table-of-contents entry is a `REF`, `SEQ` or `TOC` field
+    with nothing cached behind it. Word fills those in, and until it has, the document
+    opens with an empty table of contents and blank cross-references.
+
+    Nothing else notices. The package is well formed, the styles are right, every other
+    check passes — the document is simply not finished. And because `build_all.py`
+    rebuilds every specification, it silently un-finalises the whole set each time it
+    runs, so this is not a one-off mistake but the default state after any build.
+
+    A populated `TOC` caches one `PAGEREF` field per entry, so their absence is the
+    signal. `docProps/app.xml` reporting the template's own page count is the corroborating
+    one: Word rewrites it, the build does not.
+    """
+    pagerefs = sum(1 for t in doc.document.iter(q('w:instrText'))
+                   if 'PAGEREF' in (t.text or ''))
+    if not pagerefs:
+        res.error('finalized',
+                  'the table of contents has no cached entries, so this document has '
+                  'not been through finalize_word.ps1 and would open with an empty '
+                  'contents page and blank cross-references')
+    errors = sum(1 for t in doc.document.iter(q('w:t'))
+                 if t.text and 'Error!' in t.text)
+    if errors:
+        res.error('finalized',
+                  '%d field(s) resolved to a Word error message' % errors)
+
+
 def check_styles(doc, res):
     defined = doc.style_ids()
     for p in doc.document.iter(q('w:p')):
@@ -545,6 +576,10 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('config')
     ap.add_argument('--docx', default=None)
+    ap.add_argument('--finalized', action='store_true',
+                    help='also require that the document has been through '
+                         'finalize_word.ps1: use this on a committed document, not on '
+                         'one that has just been built')
     args = ap.parse_args(argv)
 
     with open(args.config, encoding='utf-8') as f:
@@ -591,6 +626,8 @@ def main(argv=None):
 
     check_styles(doc, res)
     check_track_changes(doc, res)
+    if args.finalized:
+        check_finalized(doc, res)
     check_heading_numbers(doc, res)
     check_heading_capitalisation(doc, res)
     check_table_captions(doc, res, body_start)

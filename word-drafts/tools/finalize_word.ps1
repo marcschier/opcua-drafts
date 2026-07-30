@@ -15,6 +15,10 @@
     Requires Microsoft Word, so it is a local-only gate — like the repository's
     determinism check. The build itself stays pure Python and cross-platform.
 
+    Every build un-finalises the document it writes, and `build_all.py` does it to the
+    whole set, so this is not an optional polish step: run `finalize_all.ps1` after any
+    build that will be committed.
+
 .EXAMPLE
     pwsh word-drafts/tools/finalize_word.ps1 -Path word-drafts/OPC-UA-OpenUSD-Binding-Part1.docx
 #>

@@ -77,13 +77,22 @@ python word-drafts/tools/test_validate_docx.py word-drafts/tools/specs/generator
 # cross-reference, so the committed file opens fully paginated  (needs Word; local only)
 pwsh word-drafts/tools/finalize_word.ps1 -Path word-drafts/OPC-UA-Generators.docx
 
+# the same for every converted document, then re-validate that each really is finalised
+pwsh word-drafts/tools/finalize_all.ps1
+
+# check the committed documents without opening Word
+pwsh word-drafts/tools/finalize_all.ps1 -VerifyOnly
+
 # rewrite the markdown source into the same clause skeleton  (one-shot per restructure)
 python word-drafts/tools/restructure_markdown.py word-drafts/tools/specs/openusd-binding.json
 ```
 
-Run `finalize_word.ps1` before committing. The pure-Python build cannot paginate, so without it
-the table of contents and every page number carry no correct value until a reader updates the
-fields by hand.
+**`build_all.py` un-finalises everything it rebuilds, so always follow it with
+`finalize_all.ps1`.** The pure-Python build writes fields, not field *results*: without the Word
+pass the table of contents is empty and every cross-reference is blank until a reader presses F9.
+Nothing else notices — the package is well formed and every other check passes — so
+`validate_docx.py --finalized` exists to say so, and `finalize_all.ps1 -VerifyOnly` runs it across
+the set.
 
 The committed `.docx` is therefore the **post-finalise** file. A plain rebuild produces the
 pre-finalise one, so the working tree will look dirty until you finalise again — Word's own save is
