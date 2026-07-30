@@ -119,19 +119,36 @@ a new config file; a genuinely new shape needs a generalisation in `opcdocx/` fi
 
 | Document | Built from |
 |---|---|
-| `OPC-UA-OpenUSD-Binding-Part1.docx` | `metaverse-specs/openusd-binding/` + `Opc.Ua.OpenUsd.NodeSet2.xml` |
+| `OPC-UA-OpenUSD-Binding-Part1.docx` | `metaverse-specs/openusd-binding/` + `Opc.Ua.OpenUsd.NodeSet2.xml` — plus two folded annexes; see below |
 | `OPC-UA-OpenUSD-Scene-Part2.docx` | `metaverse-specs/openusd-scene/` + `Opc.Ua.OpenUsdScene.NodeSet2.xml` |
 | `OPC-UA-xRegistry.docx` | `core-specs/xregistry/` + `Opc.Ua.XRegistry.NodeSet2.xml` |
-| `OPC-UA-Observability-Export.docx` | `core-specs/observability-export/` + `Opc.Ua.ObservabilityExport.NodeSet2.xml` |
+| `OPC-UA-Observability-Export.docx` | `core-specs/observability-export/` + `Opc.Ua.ObservabilityExport.NodeSet2.xml` — plus five folded annexes; see below |
 | `OPC-UA-WoT-Connectivity.docx` | `wot-specs/WoT-Connectivity/` + `Opc.Ua.WoTCon.NodeSet2.xml` |
 | `OPC-UA-WoT-Binding.docx` | `wot-specs/WoT-Binding/` — **no NodeSet**; see below |
 | `OPC-UA-Schema-Registry.docx` | `core-specs/schema-registry/` + `Opc.Ua.SchemaRegistry.NodeSet2.xml` |
 | `OPC-UA-Generators.docx` | `companion-specs/Generators/` + `Opc.Ua.Generators.NodeSet2.xml` |
 | `OPC-UA-Data-Channels.docx` | `core-specs/data-channels/` + `Opc.Ua.DataChannels.NodeSet2.xml` — **base namespace**; see below |
+| `OPC-UA-Avro-Encoding.docx` | `core-specs/encodings/avro/` — **no NodeSet**; see below |
+| `OPC-UA-Arrow-Encoding.docx` | `core-specs/encodings/arrow/` — **no NodeSet**; see below |
+
+## The ones that are annexes, not submissions
+
+Seven markdown files in this repository are worked examples: they show what an existing
+specification looks like applied to DI, to Facets, to Pumps, to Robotics. Each carries a
+provisional `Examples` namespace or an example URN, defines instances rather than types, and has
+no conformance clause — so none of them is a submission in its own right, and rendering each as a
+standalone companion specification would have said something untrue on its title page.
+
+They are published as what they are: **informative annexes of the specification they illustrate**.
+A config may name extra sources under `additionalMarkdown`, and a clause-map entry may then carry
+`in` to say which source it is drawn from. Sections are keyed per source, so an annex's own
+"1 Scope" does not collide with the base document's. Two land in OpenUSD Binding Part 1 (annexes G
+and H) and five in Observability Export (annexes D to H). `tools/specs/batch.json` records each one
+under `notAFit`, naming the document it folds into.
 
 ## The one that owns no namespace
 
-Eight of the nine documents own a namespace. **Data Channels does not**: it proposes additions to
+Ten of the eleven documents own a namespace. **Data Channels does not**: it proposes additions to
 OPC 10000-3, -4 and -6, and its NodeSet declares `ModelUri = http://opcfoundation.org/UA/`, so its
 Nodes live in the base namespace. It is rendered without a declared deviation — the NamespaceUri in
 Annex A genuinely *is* that — but only because three things were made true first:
@@ -140,7 +157,7 @@ Annex A genuinely *is* that — but only because three things were made true fir
   base namespace. It used to be hard-coded `False` with prose to match, which here would have been
   a plain untruth.
 - `StaticNumericNodeIdRange` is derived from the model (`65000:66038`) instead of the constant
-  `1001:9999`, which was wrong for six of the other eight documents too.
+  `1001:9999`, which was wrong for six of the other documents too.
 - A base BrowseName prints unprefixed, because a document whose own namespace *is* namespace 0
   would otherwise show the same namespace two ways in one table.
 
@@ -155,20 +172,26 @@ whose shape the pipeline already handles — so onboarding them is a config file
 work the entry names — and the ones that are not a fit, with the reason. `build_all.py --list`
 prints it.
 
+**Every specification in this repository is now converted**, so the middle list is empty. The next
+markdown specification added to the repository gets an entry there, then a config, then a row in the
+tables above.
+
 A document is "not a fit" only for a reason about the document, not about the tooling: an amendment
-to a core Part is not a companion specification, and a presentation or a measurement report is not a
-specification at all.
+to a core Part is not a companion specification, a worked example belongs in the specification it
+illustrates rather than beside it, and a presentation or a measurement report is not a specification
+at all.
 
 ## Declared deviations
 
-Five of the six documents comply with OPC 20020 without deviation. **WoT Binding cannot**: it defines
-a JSON-LD vocabulary and a NodeSet-to-WoT mapping, so it has no NodeSet, no ObjectTypes and no
-Instances, and the template's NodeClass clauses and Annex A NodeSet block have nothing to present.
+Eight of the eleven documents comply with OPC 20020 without deviation. Three cannot, all for the
+same reason: **WoT Binding** defines a JSON-LD vocabulary and a NodeSet-to-WoT mapping, and the two
+**encoding** specifications define a wire format. None of them has a NodeSet, ObjectTypes or
+Instances, so the template's NodeClass clauses and Annex A NodeSet block have nothing to present.
 
 A deviation is therefore something the pipeline refuses to take quietly. It must be
 
 1. declared in the spec config (`templateDeviations`, with an `id` the contract knows),
-2. printed into the document by the build — WoT Binding states it in clause 1.2, and
+2. printed into the document by the build — each of the three states it in clause 1.2, and
 3. found there by `validate_docx.py`, which only then skips the checks that deviation names.
 
 An undeclared deviation still fails, and a declared one whose statement is missing from the document

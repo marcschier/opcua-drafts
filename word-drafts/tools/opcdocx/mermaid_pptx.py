@@ -152,7 +152,8 @@ def _state_node(g, token, pseudo_id):
 CLASS_OPEN_RE = re.compile(r'^class\s+(?P<id>[A-Za-z0-9_]+)\s*\{$')
 CLASS_ONELINE_RE = re.compile(r'^class\s+(?P<id>[A-Za-z0-9_]+)\s*$')
 CLASS_REL_RE = re.compile(
-    r'^(?P<a>[A-Za-z0-9_]+)\s*(?P<rel><\|--|--\|>|\*--|o--|-->|<--|\.\.>|--)\s*'
+    r'^(?P<a>[A-Za-z0-9_]+)\s*'
+    r'(?P<rel><\|--|--\|>|\.\.\|>|<\|\.\.|\*--|o--|-->|<--|\.\.>|\.\.|--)\s*'
     r'(?P<b>[A-Za-z0-9_]+)\s*(?::\s*(?P<label>.*))?$')
 
 

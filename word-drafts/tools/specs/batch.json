@@ -13,50 +13,7 @@
     "avro-encoding",
     "arrow-encoding"
   ],
-  "ready": [
-    {
-      "id": "observability-di",
-      "markdown": "core-specs/observability-export/di/OPC-UA-DI-Observability-Export-Addendum.md",
-      "nodeset": "core-specs/observability-export/di/Opc.Ua.DI.ObservabilityExport.NodeSet2.xml",
-      "shape": "instance-only addendum",
-      "needs": "a conformance clause, which the addendum does not have; its model declares instances rather than types, so it fills the Instances clause and no type clause"
-    },
-    {
-      "id": "observability-facets",
-      "markdown": "core-specs/observability-export/facets/OPC-UA-Facets-Observability-Export-Addendum.md",
-      "nodeset": "core-specs/observability-export/facets/Opc.Ua.Facets.ObservabilityExport.NodeSet2.xml",
-      "shape": "instance-only addendum",
-      "needs": "a conformance clause"
-    },
-    {
-      "id": "observability-pumps",
-      "markdown": "core-specs/observability-export/pumps/OPC-UA-Pumps-Observability-Export-Addendum.md",
-      "nodeset": "core-specs/observability-export/pumps/Opc.Ua.Pumps.ObservabilityExport.NodeSet2.xml",
-      "shape": "instance-only addendum",
-      "needs": "a conformance clause"
-    },
-    {
-      "id": "observability-robotics",
-      "markdown": "core-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
-      "nodeset": "core-specs/observability-export/robotics/Opc.Ua.Robotics.ObservabilityExport.NodeSet2.xml",
-      "shape": "instance-only addendum",
-      "needs": "a conformance clause"
-    },
-    {
-      "id": "openusd-pumps",
-      "markdown": "metaverse-specs/openusd-binding/pumps/OPC-UA-Pumps-OpenUSD-Bindings-Addendum.md",
-      "nodeset": "metaverse-specs/openusd-binding/pumps/Opc.Ua.Pumps.OpenUsd.NodeSet2.xml",
-      "shape": "instance-only addendum",
-      "needs": "a conformance clause"
-    },
-    {
-      "id": "openusd-robotics",
-      "markdown": "metaverse-specs/openusd-binding/robotics/OPC-UA-Robotics-OpenUSD-Bindings-Addendum.md",
-      "nodeset": "metaverse-specs/openusd-binding/robotics/Opc.Ua.Robotics.OpenUsd.NodeSet2.xml",
-      "shape": "instance-only addendum",
-      "needs": "a conformance clause"
-    }
-  ],
+  "ready": [],
   "notAFit": [
     {
       "markdown": "core-specs/data-channels/OPC-UA-Part3-Data-Channel-Model.md",
@@ -85,6 +42,34 @@
     {
       "markdown": "core-specs/observability-export/di/OPC-UA-DI-Pumps-Inheritance.md",
       "why": "an explanatory note about how two addenda compose, not a specification of its own."
+    },
+    {
+      "markdown": "core-specs/observability-export/di/OPC-UA-DI-Observability-Export-Addendum.md",
+      "why": "an implementer annex / worked example of a specification already converted, not a specification of its own: a provisional Examples namespace or an example URN, instances rather than types, and no conformance clause. Its prose is folded into Observability Export, Annex D, so it is published — as what it is."
+    },
+    {
+      "markdown": "core-specs/observability-export/facets/OPC-UA-Facets-Observability-Export-Addendum.md",
+      "why": "an implementer annex / worked example of a specification already converted, not a specification of its own: a provisional Examples namespace or an example URN, instances rather than types, and no conformance clause. Its prose is folded into Observability Export, Annex F, so it is published — as what it is."
+    },
+    {
+      "markdown": "core-specs/observability-export/pumps/OPC-UA-Pumps-Observability-Export-Addendum.md",
+      "why": "an implementer annex / worked example of a specification already converted, not a specification of its own: a provisional Examples namespace or an example URN, instances rather than types, and no conformance clause. Its prose is folded into Observability Export, Annex G, so it is published — as what it is."
+    },
+    {
+      "markdown": "core-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
+      "why": "an implementer annex / worked example of a specification already converted, not a specification of its own: a provisional Examples namespace or an example URN, instances rather than types, and no conformance clause. Its prose is folded into Observability Export, Annex H, so it is published — as what it is."
+    },
+    {
+      "markdown": "metaverse-specs/openusd-binding/pumps/OPC-UA-Pumps-OpenUSD-Bindings-Addendum.md",
+      "why": "an implementer annex / worked example of a specification already converted, not a specification of its own: a provisional Examples namespace or an example URN, instances rather than types, and no conformance clause. Its prose is folded into OpenUSD Binding Part 1, Annex G, so it is published — as what it is."
+    },
+    {
+      "markdown": "metaverse-specs/openusd-binding/robotics/OPC-UA-Robotics-OpenUSD-Bindings-Addendum.md",
+      "why": "an implementer annex / worked example of a specification already converted, not a specification of its own: a provisional Examples namespace or an example URN, instances rather than types, and no conformance clause. Its prose is folded into OpenUSD Binding Part 1, Annex H, so it is published — as what it is."
+    },
+    {
+      "markdown": "core-specs/observability-export/di/OPC-UA-DIDeviceHealth-Observability-Export-Addendum.md",
+      "why": "an implementer annex / worked example of a specification already converted, not a specification of its own: a provisional Examples namespace or an example URN, instances rather than types, and no conformance clause. Its prose is folded into Observability Export, Annex E, so it is published — as what it is."
     }
   ]
 }

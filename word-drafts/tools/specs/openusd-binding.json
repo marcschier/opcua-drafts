@@ -10,7 +10,6 @@
     "docmodel": "word-drafts/OPC-UA-OpenUSD-Binding-Part1.docmodel.json",
     "figures": "word-drafts/figures"
   },
-
   "identity": {
     "docNumber": "OPC nnnnn-m",
     "partNumber": "Part 1",
@@ -34,142 +33,707 @@
     ],
     "draftBanner": "PROVISIONAL WORKING DRAFT — not normative, not endorsed by the OPC Foundation or the Alliance for OpenUSD. The document number, the Mantis project identifier and every NodeId in this document are placeholders; the OPC Foundation assigns the real values."
   },
-
   "abbreviations": [
-    ["A&C", "Alarms and Conditions"],
-    ["AAS", "Asset Administration Shell"],
-    ["AGV", "Automated Guided Vehicle"],
-    ["AOUSD", "Alliance for OpenUSD"],
-    ["BOM", "Bill of Materials"],
-    ["CDD", "Common Data Dictionary"],
-    ["CRS", "Coordinate Reference System"],
-    ["ECEF", "Earth-Centred, Earth-Fixed"],
-    ["ENU", "East-North-Up"],
-    ["EPSG", "European Petroleum Survey Group"],
-    ["GPOS", "Global Positioning"],
-    ["HMI", "Human Machine Interface"],
-    ["IRDI", "International Registration Data Identifier"],
-    ["RSL", "Relative Spatial Location"],
-    ["RTX", "Ray Tracing Texel eXtreme"],
-    ["SdfPath", "Scene Description Foundation path"],
-    ["UNECE", "United Nations Economic Commission for Europe"],
-    ["URI", "Uniform Resource Identifier"],
-    ["USD", "Universal Scene Description"],
-    ["WGS84", "World Geodetic System 1984"]
+    [
+      "A&C",
+      "Alarms and Conditions"
+    ],
+    [
+      "AAS",
+      "Asset Administration Shell"
+    ],
+    [
+      "AGV",
+      "Automated Guided Vehicle"
+    ],
+    [
+      "AOUSD",
+      "Alliance for OpenUSD"
+    ],
+    [
+      "BOM",
+      "Bill of Materials"
+    ],
+    [
+      "CDD",
+      "Common Data Dictionary"
+    ],
+    [
+      "CRS",
+      "Coordinate Reference System"
+    ],
+    [
+      "ECEF",
+      "Earth-Centred, Earth-Fixed"
+    ],
+    [
+      "ENU",
+      "East-North-Up"
+    ],
+    [
+      "EPSG",
+      "European Petroleum Survey Group"
+    ],
+    [
+      "GPOS",
+      "Global Positioning"
+    ],
+    [
+      "HMI",
+      "Human Machine Interface"
+    ],
+    [
+      "IRDI",
+      "International Registration Data Identifier"
+    ],
+    [
+      "RSL",
+      "Relative Spatial Location"
+    ],
+    [
+      "RTX",
+      "Ray Tracing Texel eXtreme"
+    ],
+    [
+      "SdfPath",
+      "Scene Description Foundation path"
+    ],
+    [
+      "UNECE",
+      "United Nations Economic Commission for Europe"
+    ],
+    [
+      "URI",
+      "Uniform Resource Identifier"
+    ],
+    [
+      "USD",
+      "Universal Scene Description"
+    ],
+    [
+      "WGS84",
+      "World Geodetic System 1984"
+    ]
   ],
-
   "normativeReferences": [
-    {"id": "UAPart1", "label": "OPC 10000-1", "title": "OPC Unified Architecture - Part 1: Overview and Concepts", "url": "http://www.opcfoundation.org/documents/10000-1/"},
-    {"id": "UAPart2", "label": "OPC 10000-2", "title": "OPC Unified Architecture - Part 2: Security Model", "url": "http://www.opcfoundation.org/documents/10000-2/"},
-    {"id": "UAPart3", "label": "OPC 10000-3", "title": "OPC Unified Architecture - Part 3: Address Space Model", "url": "http://www.opcfoundation.org/documents/10000-3/"},
-    {"id": "UAPart4", "label": "OPC 10000-4", "title": "OPC Unified Architecture - Part 4: Services", "url": "http://www.opcfoundation.org/documents/10000-4/"},
-    {"id": "UAPart5", "label": "OPC 10000-5", "title": "OPC Unified Architecture - Part 5: Information Model", "url": "http://www.opcfoundation.org/documents/10000-5/"},
-    {"id": "UAPart6", "label": "OPC 10000-6", "title": "OPC Unified Architecture - Part 6: Mappings", "url": "http://www.opcfoundation.org/documents/10000-6/"},
-    {"id": "UAPart7", "label": "OPC 10000-7", "title": "OPC Unified Architecture - Part 7: Profiles", "url": "http://www.opcfoundation.org/documents/10000-7/"},
-    {"id": "UAPart8", "label": "OPC 10000-8", "title": "OPC Unified Architecture - Part 8: Data Access", "url": "http://www.opcfoundation.org/documents/10000-8/"},
-    {"id": "UAPart9", "label": "OPC 10000-9", "title": "OPC Unified Architecture - Part 9: Alarms and Conditions", "url": "http://www.opcfoundation.org/documents/10000-9/"},
-    {"id": "UAPart11", "label": "OPC 10000-11", "title": "OPC Unified Architecture - Part 11: Historical Access", "url": "http://www.opcfoundation.org/documents/10000-11/"},
-    {"id": "UAPart12", "label": "OPC 10000-12", "title": "OPC Unified Architecture - Part 12: Discovery and Global Services", "url": "http://www.opcfoundation.org/documents/10000-12/"},
-    {"id": "UAPart18", "label": "OPC 10000-18", "title": "OPC Unified Architecture - Part 18: Role-Based Security", "url": "http://www.opcfoundation.org/documents/10000-18/"},
-    {"id": "UAPart19", "label": "OPC 10000-19", "title": "OPC Unified Architecture - Part 19: Dictionary References", "url": "http://www.opcfoundation.org/documents/10000-19/"},
-    {"id": "UAPart20", "label": "OPC 10000-20", "title": "OPC Unified Architecture - Part 20: File Transfer", "url": "http://www.opcfoundation.org/documents/10000-20/"},
-    {"id": "UAPart210", "label": "OPC 10000-210", "title": "OPC Unified Architecture - Part 210: Relative Spatial Location", "url": "http://www.opcfoundation.org/documents/10000-210/"},
-    {"id": "UAPart211", "label": "OPC 10000-211", "title": "OPC Unified Architecture - Part 211: Global Positioning", "url": "http://www.opcfoundation.org/documents/10000-211/"},
-    {"id": "UA11030", "label": "OPC 11030", "title": "OPC UA Modelling Best Practices", "url": "http://www.opcfoundation.org/documents/11030/"},
-    {"id": "UAxRegistry", "label": "OPC UA - xRegistry", "title": "OPC Unified Architecture - xRegistry: the abstract registry base model. A RequiredModel of this document.", "url": null},
-    {"id": "xRegistryCore", "label": "xRegistry Core specification, v1.0-rc3", "title": "The registry / group / resource / version / attribute model, xid, epoch and labels that the OPC UA base model realizes.", "url": "https://github.com/xregistry/spec/blob/v1.0-rc3/core/spec.md"},
-    {"id": "AOUSD", "label": "AOUSD OpenUSD Core Specification 1.0.1", "title": "Alliance for OpenUSD - normative for USD paths, composition, layers and identity.", "url": "https://aousd.org/"}
+    {
+      "id": "UAPart1",
+      "label": "OPC 10000-1",
+      "title": "OPC Unified Architecture - Part 1: Overview and Concepts",
+      "url": "http://www.opcfoundation.org/documents/10000-1/"
+    },
+    {
+      "id": "UAPart2",
+      "label": "OPC 10000-2",
+      "title": "OPC Unified Architecture - Part 2: Security Model",
+      "url": "http://www.opcfoundation.org/documents/10000-2/"
+    },
+    {
+      "id": "UAPart3",
+      "label": "OPC 10000-3",
+      "title": "OPC Unified Architecture - Part 3: Address Space Model",
+      "url": "http://www.opcfoundation.org/documents/10000-3/"
+    },
+    {
+      "id": "UAPart4",
+      "label": "OPC 10000-4",
+      "title": "OPC Unified Architecture - Part 4: Services",
+      "url": "http://www.opcfoundation.org/documents/10000-4/"
+    },
+    {
+      "id": "UAPart5",
+      "label": "OPC 10000-5",
+      "title": "OPC Unified Architecture - Part 5: Information Model",
+      "url": "http://www.opcfoundation.org/documents/10000-5/"
+    },
+    {
+      "id": "UAPart6",
+      "label": "OPC 10000-6",
+      "title": "OPC Unified Architecture - Part 6: Mappings",
+      "url": "http://www.opcfoundation.org/documents/10000-6/"
+    },
+    {
+      "id": "UAPart7",
+      "label": "OPC 10000-7",
+      "title": "OPC Unified Architecture - Part 7: Profiles",
+      "url": "http://www.opcfoundation.org/documents/10000-7/"
+    },
+    {
+      "id": "UAPart8",
+      "label": "OPC 10000-8",
+      "title": "OPC Unified Architecture - Part 8: Data Access",
+      "url": "http://www.opcfoundation.org/documents/10000-8/"
+    },
+    {
+      "id": "UAPart9",
+      "label": "OPC 10000-9",
+      "title": "OPC Unified Architecture - Part 9: Alarms and Conditions",
+      "url": "http://www.opcfoundation.org/documents/10000-9/"
+    },
+    {
+      "id": "UAPart11",
+      "label": "OPC 10000-11",
+      "title": "OPC Unified Architecture - Part 11: Historical Access",
+      "url": "http://www.opcfoundation.org/documents/10000-11/"
+    },
+    {
+      "id": "UAPart12",
+      "label": "OPC 10000-12",
+      "title": "OPC Unified Architecture - Part 12: Discovery and Global Services",
+      "url": "http://www.opcfoundation.org/documents/10000-12/"
+    },
+    {
+      "id": "UAPart18",
+      "label": "OPC 10000-18",
+      "title": "OPC Unified Architecture - Part 18: Role-Based Security",
+      "url": "http://www.opcfoundation.org/documents/10000-18/"
+    },
+    {
+      "id": "UAPart19",
+      "label": "OPC 10000-19",
+      "title": "OPC Unified Architecture - Part 19: Dictionary References",
+      "url": "http://www.opcfoundation.org/documents/10000-19/"
+    },
+    {
+      "id": "UAPart20",
+      "label": "OPC 10000-20",
+      "title": "OPC Unified Architecture - Part 20: File Transfer",
+      "url": "http://www.opcfoundation.org/documents/10000-20/"
+    },
+    {
+      "id": "UAPart210",
+      "label": "OPC 10000-210",
+      "title": "OPC Unified Architecture - Part 210: Relative Spatial Location",
+      "url": "http://www.opcfoundation.org/documents/10000-210/"
+    },
+    {
+      "id": "UAPart211",
+      "label": "OPC 10000-211",
+      "title": "OPC Unified Architecture - Part 211: Global Positioning",
+      "url": "http://www.opcfoundation.org/documents/10000-211/"
+    },
+    {
+      "id": "UA11030",
+      "label": "OPC 11030",
+      "title": "OPC UA Modelling Best Practices",
+      "url": "http://www.opcfoundation.org/documents/11030/"
+    },
+    {
+      "id": "UAxRegistry",
+      "label": "OPC UA - xRegistry",
+      "title": "OPC Unified Architecture - xRegistry: the abstract registry base model. A RequiredModel of this document.",
+      "url": null
+    },
+    {
+      "id": "xRegistryCore",
+      "label": "xRegistry Core specification, v1.0-rc3",
+      "title": "The registry / group / resource / version / attribute model, xid, epoch and labels that the OPC UA base model realizes.",
+      "url": "https://github.com/xregistry/spec/blob/v1.0-rc3/core/spec.md"
+    },
+    {
+      "id": "AOUSD",
+      "label": "AOUSD OpenUSD Core Specification 1.0.1",
+      "title": "Alliance for OpenUSD - normative for USD paths, composition, layers and identity.",
+      "url": "https://aousd.org/"
+    }
   ],
-
   "_comment_clauseMap": "One mapping, two consumers: build_docx.py orders the Word clauses from it, and restructure_markdown.py rewrites the markdown to match. `from` names a heading in the current markdown; `number` is the clause number after restructuring; `title` is the clause title in template capitalisation.",
-
   "clauseMap": [
-    {"from": "1 Scope",                                        "number": "1",      "title": "Scope",                                         "region": "scope"},
-    {"from": "1.1 Motivation",                                 "number": "1.1",    "title": "Motivation"},
-    {"from": "1.3 What it simplifies and what it enables",     "number": "1.2",    "title": "What it simplifies and what it enables"},
-    {"from": "1.4 Capabilities and conformance",               "number": "1.3",    "title": "Capabilities and conformance"},
-
-    {"from": "2 Normative references",                         "number": "2",      "title": "Normative references",                          "region": "normative-references", "generated": "normative-references"},
-
-    {"from": null,                                             "number": "3",      "title": "Terms, abbreviated terms and conventions",      "region": "terms"},
-    {"from": null,                                             "number": "3.1",    "title": "Overview",                                      "generated": "terms-overview"},
-    {"from": "3 Terms, definitions and abbreviations",         "number": "3.2",    "title": "OpenUSD terms",                                 "generated": "terms"},
-    {"from": null,                                             "number": "3.3",    "title": "Abbreviated terms",                             "generated": "abbreviations"},
-    {"from": null,                                             "number": "3.4",    "title": "Conventions used in this document",             "slice": "conventions"},
-
-    {"from": null,                                             "number": "4",      "title": "General information to OpenUSD and OPC UA",     "region": "general"},
-    {"from": null,                                             "number": "4.1",    "title": "Introduction to OpenUSD",                       "generated": "subject-introduction"},
-    {"from": null,                                             "number": "4.2",    "title": "Introduction to OPC Unified Architecture",      "slice": "opcua-intro"},
-
-    {"from": "1.2 Motivating use cases",                       "number": "5",      "title": "Use cases",                                     "region": "use-cases"},
-
-    {"from": "4 Overview and concepts",                        "number": "6",      "title": "OpenUSD information model overview",            "region": "model-overview"},
-    {"from": "4.1 Layered contract",                           "number": "6.1",    "title": "Layered contract"},
-    {"from": "4.2 Discovery (normative)",                      "number": "6.2",    "title": "Discovery"},
-    {"from": "4.3 Identity and the stage-open contract (normative)", "number": "6.3", "title": "Identity and the stage-open contract"},
-    {"from": "4.4 Architecture",                               "number": "6.4",    "title": "Architecture"},
-    {"from": "5 Information model",                            "number": "6.5",    "title": "Organisation of the model"},
-
-    {"from": null,                                             "number": "7",      "title": "OPC UA ObjectTypes",                            "region": "objecttypes"},
-    {"from": "5.1 `OpenUsdRootType : BaseObjectType`",         "number": "7.1",    "title": "OpenUsdRootType",                               "nodetable": "OpenUsdRootType"},
-    {"from": "5.2 `OpenUsdStageType : BaseObjectType`",        "number": "7.2",    "title": "OpenUsdStageType",                              "nodetable": "OpenUsdStageType"},
-    {"from": "5.3 `OpenUsdRepresentationType : BaseObjectType` — the AddIn", "number": "7.3", "title": "OpenUsdRepresentationType",           "nodetable": "OpenUsdRepresentationType"},
-    {"from": "5.4 `OpenUsdLiveBindingType : BaseObjectType` (abstract) and its intent subtypes", "number": "7.4", "title": "OpenUsdLiveBindingType", "nodetable": "OpenUsdLiveBindingType"},
-    {"from": "5.7 Source and target resolution (normative)",   "number": "7.4.1",  "title": "Source and target resolution"},
-    {"from": "5.8 Conversion (normative)",                     "number": "7.4.2",  "title": "Conversion"},
-    {"from": "5.9 Quality, timestamp and persistence (hints, normative defaults)", "number": "7.4.3", "title": "Quality, timestamp and persistence"},
-    {"from": "5.4.1 `OpenUsdValueChangeBindingType : OpenUsdLiveBindingType`", "number": "7.5", "title": "OpenUsdValueChangeBindingType", "nodetable": "OpenUsdValueChangeBindingType"},
-    {"from": "5.4.2 `OpenUsdAlarmBindingType : OpenUsdLiveBindingType`", "number": "7.6", "title": "OpenUsdAlarmBindingType", "nodetable": "OpenUsdAlarmBindingType", "append": "5.11#alarm"},
-    {"from": "5.4.3 `OpenUsdHistoryBindingType : OpenUsdLiveBindingType`", "number": "7.7", "title": "OpenUsdHistoryBindingType", "nodetable": "OpenUsdHistoryBindingType", "append": "5.11#history"},
-    {"from": "5.4.4 `OpenUsdCommandBindingType : OpenUsdLiveBindingType`", "number": "7.8", "title": "OpenUsdCommandBindingType", "nodetable": "OpenUsdCommandBindingType", "append": "5.10 Command bindings (normative, optional, opt-in)"},
-    {"from": "5.5 `IOpenUsdRepresentedType : BaseInterfaceType`", "number": "7.9", "title": "IOpenUsdRepresentedType",                        "nodetable": "IOpenUsdRepresentedType"},
-    {"from": "5.12 Composition and aggregation bindings (normative, optional)", "number": "7.10", "title": "OpenUsdComponentBindingType",     "nodetable": "OpenUsdComponentBindingType"},
-    {"from": "5.13 Dynamic composition (normative, optional)", "number": "7.10.1", "title": "Dynamic composition"},
-    {"from": "5.14 Cross-server composition (normative, optional)", "number": "7.10.2", "title": "Cross-server composition"},
-    {"from": "5.15 Asset content delivery — the artifact registry (normative, optional)", "number": "7.11", "title": "OpenUsdArtifactRegistryType", "nodetable": "OpenUsdArtifactRegistryType"},
-    {"from": "5.15.1 Structure",                               "number": "7.11.1", "title": "Structure"},
-    {"from": "5.15.2 The stage view and the delivery contract","number": "7.11.2", "title": "The stage view and the delivery contract"},
-    {"from": "5.15.3 Resolver identity — the registry is addressable by asset identifier (normative)", "number": "7.11.3", "title": "Resolver identity"},
-    {"from": null,                                             "number": "7.12",   "title": "OpenUsdAssetGroupType",                         "nodetable": "OpenUsdAssetGroupType", "generated": "type-stub"},
-    {"from": "5.15.4 Serving codeless schemas (normative, optional)", "number": "7.13", "title": "OpenUsdSchemaPluginGroupType",              "nodetable": "OpenUsdSchemaPluginGroupType"},
-    {"from": null,                                             "number": "7.14",   "title": "OpenUsdAssetType",                              "nodetable": "OpenUsdAssetType", "generated": "type-stub"},
-
-    {"from": "5.6 DataTypes (Enumerations)",                   "number": "8",      "title": "OPC UA DataTypes",                              "region": "datatypes", "generated": "datatypes"},
-
-    {"from": "7 Profiles and Conformance Units",               "number": "9",      "title": "Profiles and conformance units",                "region": "profiles"},
-
-    {"from": null,                                             "number": "10",     "title": "Namespaces",                                    "region": "namespaces"},
-    {"from": null,                                             "number": "10.1",   "title": "Namespace metadata",                            "generated": "namespace-metadata"},
-    {"from": null,                                             "number": "10.2",   "title": "Handling of OPC UA namespaces",                 "generated": "namespace-handling"},
-
-    {"from": "9 Security",                                     "number": "11",     "title": "Security",                                      "region": "security"},
-
-    {"from": "Annex A — Information model (generated)",        "number": "A",      "title": "OpenUSD namespace and mappings",                "annex": true, "normative": true, "region": "annex-a", "slice": "annex-a"},
-    {"from": "6 Using the model (informative)",                "number": "B",      "title": "Using the model",                               "annex": true, "region": "annex-b"},
-    {"from": "8 Interoperability — mapping to OpenUSD / Omniverse (informative)", "number": "C", "title": "Interoperability with OpenUSD and Omniverse", "annex": true, "region": "annex-c"},
-    {"from": "8.1 Omniverse realization (informative, vendor-governed)", "number": "C.1", "title": "Omniverse realization"},
-    {"from": "8.2 Alignment with an asset-definition-centric strategy (informative)", "number": "C.2", "title": "Alignment with an asset-definition-centric strategy"},
-    {"from": "Annex B — End-to-end collaboration flow (informative)", "number": "D", "title": "End-to-end collaboration flow",               "annex": true, "region": "annex-d"},
-    {"from": "B.1 Actors and what each contributes",           "number": "D.1",    "title": "Actors and what each contributes"},
-    {"from": "B.2 The flow",                                   "number": "D.2",    "title": "The flow"},
-    {"from": "B.3 Where the contract lives at each hand-off",  "number": "D.3",    "title": "Where the contract lives at each hand-off"},
-    {"from": "B.4 Concrete pass — the pump example",           "number": "D.4",    "title": "Concrete pass: the pump example"},
-    {"from": "B.5 Concrete pass — the robotics example",       "number": "D.5",    "title": "Concrete pass: the robotics example"},
-    {"from": "Annex C — Bridging to the Asset Administration Shell (informative)", "number": "E", "title": "Bridging to the asset administration shell", "annex": true, "region": "annex-e"},
-    {"from": "Annex D — Geospatial rendering: mapping OPC UA spatial and geospatial data to NVIDIA Omniverse and Cesium (informative)", "number": "F", "title": "Geospatial rendering", "annex": true, "region": "annex-f"},
-    {"from": "D.1 Why this is an annex (and not core USD)",    "number": "F.1",    "title": "Why this is an annex and not core USD"},
-    {"from": "D.2 Relative pose (OPC 10000-210 RSL) → USD `xformOp` — fidelity reference", "number": "F.2", "title": "Relative pose to USD xformOp fidelity reference"},
-    {"from": "D.3 Global position (OPC 10000-211 GPOS) → USD georeference", "number": "F.3", "title": "Global position to USD georeference"},
-    {"from": "D.4 A binding for `RenderTargetKind = Georeference`", "number": "F.4", "title": "A binding for the Georeference render target"}
+    {
+      "from": "1 Scope",
+      "number": "1",
+      "title": "Scope",
+      "region": "scope"
+    },
+    {
+      "from": "1.1 Motivation",
+      "number": "1.1",
+      "title": "Motivation"
+    },
+    {
+      "from": "1.3 What it simplifies and what it enables",
+      "number": "1.2",
+      "title": "What it simplifies and what it enables"
+    },
+    {
+      "from": "1.4 Capabilities and conformance",
+      "number": "1.3",
+      "title": "Capabilities and conformance"
+    },
+    {
+      "from": "2 Normative references",
+      "number": "2",
+      "title": "Normative references",
+      "region": "normative-references",
+      "generated": "normative-references"
+    },
+    {
+      "from": null,
+      "number": "3",
+      "title": "Terms, abbreviated terms and conventions",
+      "region": "terms"
+    },
+    {
+      "from": null,
+      "number": "3.1",
+      "title": "Overview",
+      "generated": "terms-overview"
+    },
+    {
+      "from": "3 Terms, definitions and abbreviations",
+      "number": "3.2",
+      "title": "OpenUSD terms",
+      "generated": "terms"
+    },
+    {
+      "from": null,
+      "number": "3.3",
+      "title": "Abbreviated terms",
+      "generated": "abbreviations"
+    },
+    {
+      "from": null,
+      "number": "3.4",
+      "title": "Conventions used in this document",
+      "slice": "conventions"
+    },
+    {
+      "from": null,
+      "number": "4",
+      "title": "General information to OpenUSD and OPC UA",
+      "region": "general"
+    },
+    {
+      "from": null,
+      "number": "4.1",
+      "title": "Introduction to OpenUSD",
+      "generated": "subject-introduction"
+    },
+    {
+      "from": null,
+      "number": "4.2",
+      "title": "Introduction to OPC Unified Architecture",
+      "slice": "opcua-intro"
+    },
+    {
+      "from": "1.2 Motivating use cases",
+      "number": "5",
+      "title": "Use cases",
+      "region": "use-cases"
+    },
+    {
+      "from": "4 Overview and concepts",
+      "number": "6",
+      "title": "OpenUSD information model overview",
+      "region": "model-overview"
+    },
+    {
+      "from": "4.1 Layered contract",
+      "number": "6.1",
+      "title": "Layered contract"
+    },
+    {
+      "from": "4.2 Discovery (normative)",
+      "number": "6.2",
+      "title": "Discovery"
+    },
+    {
+      "from": "4.3 Identity and the stage-open contract (normative)",
+      "number": "6.3",
+      "title": "Identity and the stage-open contract"
+    },
+    {
+      "from": "4.4 Architecture",
+      "number": "6.4",
+      "title": "Architecture"
+    },
+    {
+      "from": "5 Information model",
+      "number": "6.5",
+      "title": "Organisation of the model"
+    },
+    {
+      "from": null,
+      "number": "7",
+      "title": "OPC UA ObjectTypes",
+      "region": "objecttypes"
+    },
+    {
+      "from": "5.1 `OpenUsdRootType : BaseObjectType`",
+      "number": "7.1",
+      "title": "OpenUsdRootType",
+      "nodetable": "OpenUsdRootType"
+    },
+    {
+      "from": "5.2 `OpenUsdStageType : BaseObjectType`",
+      "number": "7.2",
+      "title": "OpenUsdStageType",
+      "nodetable": "OpenUsdStageType"
+    },
+    {
+      "from": "5.3 `OpenUsdRepresentationType : BaseObjectType` — the AddIn",
+      "number": "7.3",
+      "title": "OpenUsdRepresentationType",
+      "nodetable": "OpenUsdRepresentationType"
+    },
+    {
+      "from": "5.4 `OpenUsdLiveBindingType : BaseObjectType` (abstract) and its intent subtypes",
+      "number": "7.4",
+      "title": "OpenUsdLiveBindingType",
+      "nodetable": "OpenUsdLiveBindingType"
+    },
+    {
+      "from": "5.7 Source and target resolution (normative)",
+      "number": "7.4.1",
+      "title": "Source and target resolution"
+    },
+    {
+      "from": "5.8 Conversion (normative)",
+      "number": "7.4.2",
+      "title": "Conversion"
+    },
+    {
+      "from": "5.9 Quality, timestamp and persistence (hints, normative defaults)",
+      "number": "7.4.3",
+      "title": "Quality, timestamp and persistence"
+    },
+    {
+      "from": "5.4.1 `OpenUsdValueChangeBindingType : OpenUsdLiveBindingType`",
+      "number": "7.5",
+      "title": "OpenUsdValueChangeBindingType",
+      "nodetable": "OpenUsdValueChangeBindingType"
+    },
+    {
+      "from": "5.4.2 `OpenUsdAlarmBindingType : OpenUsdLiveBindingType`",
+      "number": "7.6",
+      "title": "OpenUsdAlarmBindingType",
+      "nodetable": "OpenUsdAlarmBindingType",
+      "append": "5.11#alarm"
+    },
+    {
+      "from": "5.4.3 `OpenUsdHistoryBindingType : OpenUsdLiveBindingType`",
+      "number": "7.7",
+      "title": "OpenUsdHistoryBindingType",
+      "nodetable": "OpenUsdHistoryBindingType",
+      "append": "5.11#history"
+    },
+    {
+      "from": "5.4.4 `OpenUsdCommandBindingType : OpenUsdLiveBindingType`",
+      "number": "7.8",
+      "title": "OpenUsdCommandBindingType",
+      "nodetable": "OpenUsdCommandBindingType",
+      "append": "5.10 Command bindings (normative, optional, opt-in)"
+    },
+    {
+      "from": "5.5 `IOpenUsdRepresentedType : BaseInterfaceType`",
+      "number": "7.9",
+      "title": "IOpenUsdRepresentedType",
+      "nodetable": "IOpenUsdRepresentedType"
+    },
+    {
+      "from": "5.12 Composition and aggregation bindings (normative, optional)",
+      "number": "7.10",
+      "title": "OpenUsdComponentBindingType",
+      "nodetable": "OpenUsdComponentBindingType"
+    },
+    {
+      "from": "5.13 Dynamic composition (normative, optional)",
+      "number": "7.10.1",
+      "title": "Dynamic composition"
+    },
+    {
+      "from": "5.14 Cross-server composition (normative, optional)",
+      "number": "7.10.2",
+      "title": "Cross-server composition"
+    },
+    {
+      "from": "5.15 Asset content delivery — the artifact registry (normative, optional)",
+      "number": "7.11",
+      "title": "OpenUsdArtifactRegistryType",
+      "nodetable": "OpenUsdArtifactRegistryType"
+    },
+    {
+      "from": "5.15.1 Structure",
+      "number": "7.11.1",
+      "title": "Structure"
+    },
+    {
+      "from": "5.15.2 The stage view and the delivery contract",
+      "number": "7.11.2",
+      "title": "The stage view and the delivery contract"
+    },
+    {
+      "from": "5.15.3 Resolver identity — the registry is addressable by asset identifier (normative)",
+      "number": "7.11.3",
+      "title": "Resolver identity"
+    },
+    {
+      "from": null,
+      "number": "7.12",
+      "title": "OpenUsdAssetGroupType",
+      "nodetable": "OpenUsdAssetGroupType",
+      "generated": "type-stub"
+    },
+    {
+      "from": "5.15.4 Serving codeless schemas (normative, optional)",
+      "number": "7.13",
+      "title": "OpenUsdSchemaPluginGroupType",
+      "nodetable": "OpenUsdSchemaPluginGroupType"
+    },
+    {
+      "from": null,
+      "number": "7.14",
+      "title": "OpenUsdAssetType",
+      "nodetable": "OpenUsdAssetType",
+      "generated": "type-stub"
+    },
+    {
+      "from": "5.6 DataTypes (Enumerations)",
+      "number": "8",
+      "title": "OPC UA DataTypes",
+      "region": "datatypes",
+      "generated": "datatypes"
+    },
+    {
+      "from": "7 Profiles and Conformance Units",
+      "number": "9",
+      "title": "Profiles and conformance units",
+      "region": "profiles"
+    },
+    {
+      "from": null,
+      "number": "10",
+      "title": "Namespaces",
+      "region": "namespaces"
+    },
+    {
+      "from": null,
+      "number": "10.1",
+      "title": "Namespace metadata",
+      "generated": "namespace-metadata"
+    },
+    {
+      "from": null,
+      "number": "10.2",
+      "title": "Handling of OPC UA namespaces",
+      "generated": "namespace-handling"
+    },
+    {
+      "from": "9 Security",
+      "number": "11",
+      "title": "Security",
+      "region": "security"
+    },
+    {
+      "from": "Annex A — Information model (generated)",
+      "number": "A",
+      "title": "OpenUSD namespace and mappings",
+      "annex": true,
+      "normative": true,
+      "region": "annex-a",
+      "slice": "annex-a"
+    },
+    {
+      "from": "6 Using the model (informative)",
+      "number": "B",
+      "title": "Using the model",
+      "annex": true,
+      "region": "annex-b"
+    },
+    {
+      "from": "8 Interoperability — mapping to OpenUSD / Omniverse (informative)",
+      "number": "C",
+      "title": "Interoperability with OpenUSD and Omniverse",
+      "annex": true,
+      "region": "annex-c"
+    },
+    {
+      "from": "8.1 Omniverse realization (informative, vendor-governed)",
+      "number": "C.1",
+      "title": "Omniverse realization"
+    },
+    {
+      "from": "8.2 Alignment with an asset-definition-centric strategy (informative)",
+      "number": "C.2",
+      "title": "Alignment with an asset-definition-centric strategy"
+    },
+    {
+      "from": "Annex B — End-to-end collaboration flow (informative)",
+      "number": "D",
+      "title": "End-to-end collaboration flow",
+      "annex": true,
+      "region": "annex-d"
+    },
+    {
+      "from": "B.1 Actors and what each contributes",
+      "number": "D.1",
+      "title": "Actors and what each contributes"
+    },
+    {
+      "from": "B.2 The flow",
+      "number": "D.2",
+      "title": "The flow"
+    },
+    {
+      "from": "B.3 Where the contract lives at each hand-off",
+      "number": "D.3",
+      "title": "Where the contract lives at each hand-off"
+    },
+    {
+      "from": "B.4 Concrete pass — the pump example",
+      "number": "D.4",
+      "title": "Concrete pass: the pump example"
+    },
+    {
+      "from": "B.5 Concrete pass — the robotics example",
+      "number": "D.5",
+      "title": "Concrete pass: the robotics example"
+    },
+    {
+      "from": "Annex C — Bridging to the Asset Administration Shell (informative)",
+      "number": "E",
+      "title": "Bridging to the asset administration shell",
+      "annex": true,
+      "region": "annex-e"
+    },
+    {
+      "from": "Annex D — Geospatial rendering: mapping OPC UA spatial and geospatial data to NVIDIA Omniverse and Cesium (informative)",
+      "number": "F",
+      "title": "Geospatial rendering",
+      "annex": true,
+      "region": "annex-f"
+    },
+    {
+      "from": "D.1 Why this is an annex (and not core USD)",
+      "number": "F.1",
+      "title": "Why this is an annex and not core USD"
+    },
+    {
+      "from": "D.2 Relative pose (OPC 10000-210 RSL) → USD `xformOp` — fidelity reference",
+      "number": "F.2",
+      "title": "Relative pose to USD xformOp fidelity reference"
+    },
+    {
+      "from": "D.3 Global position (OPC 10000-211 GPOS) → USD georeference",
+      "number": "F.3",
+      "title": "Global position to USD georeference"
+    },
+    {
+      "from": "D.4 A binding for `RenderTargetKind = Georeference`",
+      "number": "F.4",
+      "title": "A binding for the Georeference render target"
+    },
+    {
+      "from": null,
+      "number": "G",
+      "title": "OpenUSD bindings for pumps",
+      "annex": true,
+      "region": "annex-g",
+      "in": "pumps"
+    },
+    {
+      "from": "1 Scope",
+      "number": "G.1",
+      "title": "Scope",
+      "in": "pumps"
+    },
+    {
+      "from": "3 How the bindings are applied",
+      "number": "G.2",
+      "title": "How the bindings are applied",
+      "in": "pumps"
+    },
+    {
+      "from": "4 OpenUSD bindings for `PumpType`",
+      "number": "G.3",
+      "title": "OpenUSD bindings for PumpType",
+      "in": "pumps"
+    },
+    {
+      "from": "4.1 Reference implementation (validated end-to-end)",
+      "number": "G.4",
+      "title": "Reference implementation (validated end-to-end)",
+      "in": "pumps"
+    },
+    {
+      "from": "4.2 Composition / aggregation (validated)",
+      "number": "G.5",
+      "title": "Composition / aggregation (validated)",
+      "in": "pumps"
+    },
+    {
+      "from": "4.3 Asset content delivery",
+      "number": "G.6",
+      "title": "Asset content delivery",
+      "in": "pumps"
+    },
+    {
+      "from": "5 Where the bindings live",
+      "number": "G.7",
+      "title": "Where the bindings live",
+      "in": "pumps"
+    },
+    {
+      "from": null,
+      "number": "H",
+      "title": "OpenUSD bindings for robotics",
+      "annex": true,
+      "region": "annex-h",
+      "in": "robotics"
+    },
+    {
+      "from": "1 Scope",
+      "number": "H.1",
+      "title": "Scope",
+      "in": "robotics"
+    },
+    {
+      "from": "3 How the bindings are applied",
+      "number": "H.2",
+      "title": "How the bindings are applied",
+      "in": "robotics"
+    },
+    {
+      "from": "4 OpenUSD bindings for `MotionDeviceSystem` / `MotionDevice` / `Axis`",
+      "number": "H.3",
+      "title": "OpenUSD bindings for MotionDeviceSystem / MotionDevice / Axis",
+      "in": "robotics"
+    },
+    {
+      "from": "4.1 Composition / aggregation",
+      "number": "H.4",
+      "title": "Composition / aggregation",
+      "in": "robotics"
+    },
+    {
+      "from": "4.2 Asset content delivery",
+      "number": "H.5",
+      "title": "Asset content delivery",
+      "in": "robotics"
+    },
+    {
+      "from": "4.3 Reference implementation",
+      "number": "H.6",
+      "title": "Reference implementation",
+      "in": "robotics"
+    },
+    {
+      "from": "5 Where the bindings live",
+      "number": "H.7",
+      "title": "Where the bindings live",
+      "in": "robotics"
+    }
   ],
-
   "_comment_citedAs": "How sibling documents name this one.",
-  "citedAs": ["Part 1", "Bindings spec", "base spec", "base specification"],
-
+  "citedAs": [
+    "Part 1",
+    "Bindings spec",
+    "base spec",
+    "base specification"
+  ],
   "dropped": [
     "10 Deliverables and reproducibility"
   ],
-
   "_comment_dropParagraphsContaining": "Paragraphs about the repository rather than the model. A submitted specification does not cite its own source tree.",
   "dropParagraphsContaining": [
     "CHANGELOG.md",
@@ -178,7 +742,6 @@
     "validate_local.py",
     "research/openuds-and-omniverse"
   ],
-
   "_comment_annexMap": "Old annex letter -> new. Bare `Annex X` citations carry no section sign, so they need their own map; getting this wrong silently retargets a reference at a real but unrelated annex, which no checker can see.",
   "annexMap": {
     "A": "A",
@@ -186,31 +749,55 @@
     "C": "E",
     "D": "F"
   },
-
   "_comment_xrefMap": "Applied to every section reference in the restructured markdown and in every sibling document that cites this one. Longest key wins.",
   "_comment_foreignAnchors": "Names this document uses for other documents. A section reference anchored on one of them belongs to that document and is left exactly as written.",
-  "foreignAnchors": ["Scene spec", "Part 2", "Scene Materialization"],
-
+  "foreignAnchors": [
+    "Scene spec",
+    "Part 2",
+    "Scene Materialization"
+  ],
   "xrefMap": {
-    "1.1": "1.1", "1.2": "5", "1.3": "1.2", "1.4": "1.3",
-    "4.1": "6.1", "4.2": "6.2", "4.3": "6.3", "4.4": "6.4",
-    "5.1": "7.1", "5.2": "7.2", "5.3": "7.3",
-    "5.4.1": "7.5", "5.4.2": "7.6", "5.4.3": "7.7", "5.4.4": "7.8", "5.4": "7.4",
-    "5.5": "7.9", "5.6": "8",
-    "5.7": "7.4.1", "5.8": "7.4.2", "5.9": "7.4.3",
-    "5.10": "7.8", "5.11": "7.6",
-    "5.12": "7.10", "5.13": "7.10.1", "5.14": "7.10.2",
-    "5.15.1": "7.11.1", "5.15.2": "7.11.2", "5.15.3": "7.11.3", "5.15.4": "7.13",
+    "1.1": "1.1",
+    "1.2": "5",
+    "1.3": "1.2",
+    "1.4": "1.3",
+    "4.1": "6.1",
+    "4.2": "6.2",
+    "4.3": "6.3",
+    "4.4": "6.4",
+    "5.1": "7.1",
+    "5.2": "7.2",
+    "5.3": "7.3",
+    "5.4.1": "7.5",
+    "5.4.2": "7.6",
+    "5.4.3": "7.7",
+    "5.4.4": "7.8",
+    "5.4": "7.4",
+    "5.5": "7.9",
+    "5.6": "8",
+    "5.7": "7.4.1",
+    "5.8": "7.4.2",
+    "5.9": "7.4.3",
+    "5.10": "7.8",
+    "5.11": "7.6",
+    "5.12": "7.10",
+    "5.13": "7.10.1",
+    "5.14": "7.10.2",
+    "5.15.1": "7.11.1",
+    "5.15.2": "7.11.2",
+    "5.15.3": "7.11.3",
+    "5.15.4": "7.13",
     "5.15": "7.11",
     "5": "7",
     "4": "6",
-    "8.1": "C.1", "8.2": "C.2", "8": "Annex C",
+    "8.1": "C.1",
+    "8.2": "C.2",
+    "8": "Annex C",
     "6": "Annex B",
     "7": "9",
     "9": "11",
     "10": "Annex A"
   },
-
   "figures": [
     {
       "id": "fig-architecture",
@@ -230,5 +817,10 @@
       "caption": "End-to-end collaboration flow",
       "pptx": "OpenUSD-Fig3-Collaboration.pptx"
     }
-  ]
+  ],
+  "_comment_additionalMarkdown": "Addenda folded in as informative annexes. They are worked examples and implementer annexes of this specification, not specifications of their own: provisional namespaces, instances rather than types, and no conformance clause. Only their prose is carried; their NodeSets are separate models and this document’s node tables stay derived from its own.",
+  "additionalMarkdown": {
+    "pumps": "metaverse-specs/openusd-binding/pumps/OPC-UA-Pumps-OpenUSD-Bindings-Addendum.md",
+    "robotics": "metaverse-specs/openusd-binding/robotics/OPC-UA-Robotics-OpenUSD-Bindings-Addendum.md"
+  }
 }

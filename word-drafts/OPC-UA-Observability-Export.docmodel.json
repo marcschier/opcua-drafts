@@ -7326,6 +7326,6361 @@
           }
         ]
       }
+    ],
+    "annex-d": [
+      {
+        "t": "annex",
+        "id": "cD",
+        "title": "Observability export bindings for devices",
+        "normative": false
+      },
+      {
+        "t": "annex-clause",
+        "id": "cD-1",
+        "title": "Scope",
+        "level": 1
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "This addendum defines example "
+          },
+          {
+            "r": "t",
+            "text": "observability export bindings",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " for "
+          },
+          {
+            "r": "code",
+            "text": "IVendorNameplateType"
+          },
+          {
+            "r": "t",
+            "text": " — 4 bound items across Metrics (Metrics). The DI IVendorNameplateType facet exposes vendor nameplate identity as OTEL resource attributes/dimensions for any device, machine or component that composes it."
+          }
+        ]
+      },
+      {
+        "t": "annex-clause",
+        "id": "cD-2",
+        "title": "How the bindings are applied",
+        "level": 1
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The machine-readable descriptor "
+          },
+          {
+            "r": "code",
+            "text": "DI.ObservabilityExport.json"
+          },
+          {
+            "r": "t",
+            "text": " lists each bound item as a "
+          },
+          {
+            "r": "code",
+            "text": "BrowsePath"
+          },
+          {
+            "r": "t",
+            "text": " from "
+          },
+          {
+            "r": "code",
+            "text": "IVendorNameplateType"
+          },
+          {
+            "r": "t",
+            "text": ", with its observability "
+          },
+          {
+            "r": "code",
+            "text": "Kind"
+          },
+          {
+            "r": "t",
+            "text": " and OTEL "
+          },
+          {
+            "r": "code",
+            "text": "SignalKind"
+          },
+          {
+            "r": "t",
+            "text": ". The generated overlay "
+          },
+          {
+            "r": "code",
+            "text": "Opc.Ua.DI.ObservabilityExport.NodeSet2.xml"
+          },
+          {
+            "r": "t",
+            "text": " instantiates a compact "
+          },
+          {
+            "r": "code",
+            "text": "ExampleDeviceNameplate"
+          },
+          {
+            "r": "t",
+            "text": " object, applies "
+          },
+          {
+            "r": "code",
+            "text": "IObservableType"
+          },
+          {
+            "r": "t",
+            "text": ", and exposes an "
+          },
+          {
+            "r": "code",
+            "text": "ObservabilityBindingGroup"
+          },
+          {
+            "r": "t",
+            "text": " collected by ("
+          },
+          {
+            "r": "code",
+            "text": "CollectedBy"
+          },
+          {
+            "r": "t",
+            "text": ") the server-wide "
+          },
+          {
+            "r": "code",
+            "text": "Observability"
+          },
+          {
+            "r": "t",
+            "text": " registry."
+          }
+        ]
+      },
+      {
+        "t": "note",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Theoretical instance model.",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " A compact instance implementing IVendorNameplateType. A pump's Identification object composes the same DI facet, so the Pumps metrics binding extends this one."
+          }
+        ]
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Only the bound signals are materialised in the overlay; it is illustrative, not a full companion instance."
+          }
+        ]
+      },
+      {
+        "t": "annex-clause",
+        "id": "cD-3",
+        "title": "Observability export bindings for IVendorNameplateType",
+        "level": 1
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Bindings for "
+          },
+          {
+            "r": "code",
+            "text": "IVendorNameplateType"
+          },
+          {
+            "r": "t",
+            "text": " in "
+          },
+          {
+            "r": "code",
+            "text": "http://opcfoundation.org/UA/DI/"
+          },
+          {
+            "r": "t",
+            "text": ", per the "
+          },
+          {
+            "r": "link",
+            "text": "Observability Export",
+            "href": "../OPC-UA-Observability-Export.md"
+          },
+          {
+            "r": "t",
+            "text": " base specification. Each binding exposes one OTEL signal ("
+          },
+          {
+            "r": "code",
+            "text": "Metrics"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "Logs"
+          },
+          {
+            "r": "t",
+            "text": " or "
+          },
+          {
+            "r": "code",
+            "text": "Traces"
+          },
+          {
+            "r": "t",
+            "text": ") with a deterministic "
+          },
+          {
+            "r": "code",
+            "text": "DataSetClassId"
+          },
+          {
+            "r": "t",
+            "text": "."
+          }
+        ]
+      },
+      {
+        "t": "annex-clause",
+        "id": "cD-3-1",
+        "title": "Metrics — Metrics",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Signal:",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " OTEL metrics (PublishedDataItems) · "
+          },
+          {
+            "r": "t",
+            "text": "DataSetClassId:",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " "
+          },
+          {
+            "r": "code",
+            "text": "ac52dde1-e3db-5534-bc44-5b18d9335b72"
+          },
+          {
+            "r": "t",
+            "text": " · "
+          },
+          {
+            "r": "t",
+            "text": "Cardinality:",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " one DataSet (bound root)"
+          }
+        ]
+      },
+      {
+        "t": "table",
+        "id": "metrics---metrics-tab1",
+        "caption": "Metrics — Metrics",
+        "kind": "generic",
+        "headers": [
+          [
+            {
+              "r": "t",
+              "text": "Field"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Kind"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "BrowsePath"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Source type"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "DataType"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "OTEL"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "r": "t",
+                "text": "Manufacturer"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Identification"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/Manufacturer"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "i=68"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "LocalizedText"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Gauge"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "Model"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Identification"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/Model"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "i=68"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "LocalizedText"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Gauge"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "SerialNumber"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Identification"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/SerialNumber"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "i=68"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "String"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Gauge"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "ProductInstanceUri"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Identification"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/ProductInstanceUri"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "i=68"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "String"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Gauge"
+              }
+            ]
+          ]
+        ],
+        "widths": null,
+        "note": null
+      },
+      {
+        "t": "annex-clause",
+        "id": "cD-4",
+        "title": "Where the bindings live",
+        "level": 1
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Overview of the observability bindings and their placement on the theoretical instance:"
+          }
+        ]
+      },
+      {
+        "t": "figure",
+        "id": "fig-obs-di-tree",
+        "caption": "Device nameplate bindings in the address space",
+        "source": "mermaid",
+        "mermaid": "graph LR\n  ROOT[\"ExampleDeviceNameplate : IVendorNameplateType\"]\n  ROOT --> G[\"DI<br/>ObservabilityBindingGroup\"]\n  G -.CollectedBy.-> O[\"Observability registry i=60101\"]\n  G --> S0[\"Metrics<br/>Metrics\"]\n  S0 --> S0_0[\"Manufacturer : Identification\"]\n  S0 --> S0_1[\"Model : Identification\"]\n  S0 --> S0_2[\"SerialNumber : Identification\"]\n  S0 --> S0_3[\"ProductInstanceUri : Identification\"]"
+      },
+      {
+        "t": "figure",
+        "id": "fig-obs-di-dataset",
+        "caption": "Device nameplate DataSet composition",
+        "source": "mermaid",
+        "mermaid": "graph TD\n  R[\"ExampleDeviceNameplate : IVendorNameplateType\"]\n  R -->|HasInterface| I([IObservableType])\n  R -->|HasComponent| G[\"DI : ObservabilityBindingGroupType\"]\n  G -.CollectedBy.-> O[\"Observability : ObservabilityFolderType\"]\n  G -->|HasComponent| B0[\"Metrics : ObservabilityBindingType<br/>Metrics\"]\n  B0 -->|HasComponent| IT00[\"Manufacturer : BoundVariableType\"]\n  IT00 -->|BindsToNode| N00[\"Manufacturer\"]\n  B0 -->|HasComponent| IT01[\"Model : BoundVariableType\"]\n  IT01 -->|BindsToNode| N01[\"Model\"]\n  B0 -->|HasComponent| IT02[\"SerialNumber : BoundVariableType\"]\n  IT02 -->|BindsToNode| N02[\"SerialNumber\"]"
+      }
+    ],
+    "annex-e": [
+      {
+        "t": "annex",
+        "id": "cE",
+        "title": "Observability export bindings for device health",
+        "normative": false
+      },
+      {
+        "t": "annex-clause",
+        "id": "cE-1",
+        "title": "Scope",
+        "level": 1
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "This addendum defines example "
+          },
+          {
+            "r": "t",
+            "text": "observability export bindings",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " for "
+          },
+          {
+            "r": "code",
+            "text": "IDeviceHealthType"
+          },
+          {
+            "r": "t",
+            "text": " — 1 bound items across Metrics (Metrics). The DI IDeviceHealthType facet exposes DeviceHealth as an OTEL status gauge. A pump does not compose IDeviceHealthType, so this binding is device-only."
+          }
+        ]
+      },
+      {
+        "t": "annex-clause",
+        "id": "cE-2",
+        "title": "How the bindings are applied",
+        "level": 1
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The machine-readable descriptor "
+          },
+          {
+            "r": "code",
+            "text": "DI.DeviceHealth.ObservabilityExport.json"
+          },
+          {
+            "r": "t",
+            "text": " lists each bound item as a "
+          },
+          {
+            "r": "code",
+            "text": "BrowsePath"
+          },
+          {
+            "r": "t",
+            "text": " from "
+          },
+          {
+            "r": "code",
+            "text": "IDeviceHealthType"
+          },
+          {
+            "r": "t",
+            "text": ", with its observability "
+          },
+          {
+            "r": "code",
+            "text": "Kind"
+          },
+          {
+            "r": "t",
+            "text": " and OTEL "
+          },
+          {
+            "r": "code",
+            "text": "SignalKind"
+          },
+          {
+            "r": "t",
+            "text": ". The generated overlay "
+          },
+          {
+            "r": "code",
+            "text": "Opc.Ua.DIDeviceHealth.ObservabilityExport.NodeSet2.xml"
+          },
+          {
+            "r": "t",
+            "text": " instantiates a compact "
+          },
+          {
+            "r": "code",
+            "text": "ExampleDeviceHealth"
+          },
+          {
+            "r": "t",
+            "text": " object, applies "
+          },
+          {
+            "r": "code",
+            "text": "IObservableType"
+          },
+          {
+            "r": "t",
+            "text": ", and exposes an "
+          },
+          {
+            "r": "code",
+            "text": "ObservabilityBindingGroup"
+          },
+          {
+            "r": "t",
+            "text": " collected by ("
+          },
+          {
+            "r": "code",
+            "text": "CollectedBy"
+          },
+          {
+            "r": "t",
+            "text": ") the server-wide "
+          },
+          {
+            "r": "code",
+            "text": "Observability"
+          },
+          {
+            "r": "t",
+            "text": " registry."
+          }
+        ]
+      },
+      {
+        "t": "note",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Theoretical instance model.",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " A compact instance implementing IDeviceHealthType."
+          }
+        ]
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Only the bound signals are materialised in the overlay; it is illustrative, not a full companion instance."
+          }
+        ]
+      },
+      {
+        "t": "annex-clause",
+        "id": "cE-3",
+        "title": "Observability export bindings for IDeviceHealthType",
+        "level": 1
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Bindings for "
+          },
+          {
+            "r": "code",
+            "text": "IDeviceHealthType"
+          },
+          {
+            "r": "t",
+            "text": " in "
+          },
+          {
+            "r": "code",
+            "text": "http://opcfoundation.org/UA/DI/"
+          },
+          {
+            "r": "t",
+            "text": ", per the "
+          },
+          {
+            "r": "link",
+            "text": "Observability Export",
+            "href": "../OPC-UA-Observability-Export.md"
+          },
+          {
+            "r": "t",
+            "text": " base specification. Each binding exposes one OTEL signal ("
+          },
+          {
+            "r": "code",
+            "text": "Metrics"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "Logs"
+          },
+          {
+            "r": "t",
+            "text": " or "
+          },
+          {
+            "r": "code",
+            "text": "Traces"
+          },
+          {
+            "r": "t",
+            "text": ") with a deterministic "
+          },
+          {
+            "r": "code",
+            "text": "DataSetClassId"
+          },
+          {
+            "r": "t",
+            "text": "."
+          }
+        ]
+      },
+      {
+        "t": "annex-clause",
+        "id": "cE-3-1",
+        "title": "Metrics — Metrics",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Signal:",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " OTEL metrics (PublishedDataItems) · "
+          },
+          {
+            "r": "t",
+            "text": "DataSetClassId:",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " "
+          },
+          {
+            "r": "code",
+            "text": "021ecf01-f573-54e1-b4c5-112ced3f846f"
+          },
+          {
+            "r": "t",
+            "text": " · "
+          },
+          {
+            "r": "t",
+            "text": "Cardinality:",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " one DataSet (bound root)"
+          }
+        ]
+      },
+      {
+        "t": "table",
+        "id": "metrics---metrics-tab1",
+        "caption": "Metrics — Metrics",
+        "kind": "generic",
+        "headers": [
+          [
+            {
+              "r": "t",
+              "text": "Field"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Kind"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "BrowsePath"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Source type"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "DataType"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "OTEL"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "r": "t",
+                "text": "DeviceHealth"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Status"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/DeviceHealth"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "i=63"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "i=6244"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Gauge"
+              }
+            ]
+          ]
+        ],
+        "widths": null,
+        "note": null
+      },
+      {
+        "t": "annex-clause",
+        "id": "cE-4",
+        "title": "Where the bindings live",
+        "level": 1
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Overview of the observability bindings and their placement on the theoretical instance:"
+          }
+        ]
+      },
+      {
+        "t": "figure",
+        "id": "fig-obs-health-tree",
+        "caption": "Device health bindings in the address space",
+        "source": "mermaid",
+        "mermaid": "graph LR\n  ROOT[\"ExampleDeviceHealth : IDeviceHealthType\"]\n  ROOT --> G[\"DIDeviceHealth<br/>ObservabilityBindingGroup\"]\n  G -.CollectedBy.-> O[\"Observability registry i=60101\"]\n  G --> S0[\"Metrics<br/>Metrics\"]\n  S0 --> S0_0[\"DeviceHealth : Status\"]"
+      },
+      {
+        "t": "figure",
+        "id": "fig-obs-health-dataset",
+        "caption": "Device health DataSet composition",
+        "source": "mermaid",
+        "mermaid": "graph TD\n  R[\"ExampleDeviceHealth : IDeviceHealthType\"]\n  R -->|HasInterface| I([IObservableType])\n  R -->|HasComponent| G[\"DIDeviceHealth : ObservabilityBindingGroupType\"]\n  G -.CollectedBy.-> O[\"Observability : ObservabilityFolderType\"]\n  G -->|HasComponent| B0[\"Metrics : ObservabilityBindingType<br/>Metrics\"]\n  B0 -->|HasComponent| IT00[\"DeviceHealth : BoundVariableType\"]\n  IT00 -->|BindsToNode| N00[\"DeviceHealth\"]"
+      }
+    ],
+    "annex-f": [
+      {
+        "t": "annex",
+        "id": "cF",
+        "title": "Facets and inheritance",
+        "normative": false
+      },
+      {
+        "t": "annex-clause",
+        "id": "cF-1",
+        "title": "1. The model",
+        "level": 1
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "A "
+          },
+          {
+            "r": "code",
+            "text": "MachineType"
+          },
+          {
+            "r": "t",
+            "text": " reuses base-facet observability bindings across "
+          },
+          {
+            "r": "t",
+            "text": "all three",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " OPC UA composition axes, instead of restating their fields:"
+          }
+        ]
+      },
+      {
+        "t": "list",
+        "ordered": false,
+        "level": 0,
+        "items": [
+          [
+            {
+              "r": "t",
+              "text": "subtype",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": " — "
+            },
+            {
+              "r": "code",
+              "text": "MachineType"
+            },
+            {
+              "r": "t",
+              "text": " "
+            },
+            {
+              "r": "t",
+              "text": "is-a",
+              "i": true
+            },
+            {
+              "r": "t",
+              "text": " "
+            },
+            {
+              "r": "code",
+              "text": "DeviceType"
+            },
+            {
+              "r": "t",
+              "text": ", so it inherits the "
+            },
+            {
+              "r": "t",
+              "text": "Device Observability",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": " binding;"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "AddIn",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": " — "
+            },
+            {
+              "r": "code",
+              "text": "MachineType"
+            },
+            {
+              "r": "t",
+              "text": " "
+            },
+            {
+              "r": "t",
+              "text": "composes",
+              "i": true
+            },
+            {
+              "r": "t",
+              "text": " a "
+            },
+            {
+              "r": "code",
+              "text": "Location"
+            },
+            {
+              "r": "t",
+              "text": " block ("
+            },
+            {
+              "r": "code",
+              "text": "HasAddIn"
+            },
+            {
+              "r": "t",
+              "text": " → "
+            },
+            {
+              "r": "code",
+              "text": "LocationAddInType"
+            },
+            {
+              "r": "t",
+              "text": "), so it composes the "
+            },
+            {
+              "r": "t",
+              "text": "Location Observability",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": " binding;"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "interface",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": " — "
+            },
+            {
+              "r": "code",
+              "text": "MachineType"
+            },
+            {
+              "r": "t",
+              "text": " "
+            },
+            {
+              "r": "t",
+              "text": "implements",
+              "i": true
+            },
+            {
+              "r": "t",
+              "text": " "
+            },
+            {
+              "r": "code",
+              "text": "IMaintenanceFacetType"
+            },
+            {
+              "r": "t",
+              "text": " ("
+            },
+            {
+              "r": "code",
+              "text": "HasInterface"
+            },
+            {
+              "r": "t",
+              "text": "), so it inherits the "
+            },
+            {
+              "r": "t",
+              "text": "Maintenance",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": " binding."
+            }
+          ]
+        ]
+      },
+      {
+        "t": "figure",
+        "id": "fig-obs-facets",
+        "caption": "Facet inheritance across the composition axes",
+        "source": "mermaid",
+        "mermaid": "classDiagram\n  class DeviceType\n  class LocationAddInType\n  class IMaintenanceFacetType {\n    <<interface>>\n  }\n  class MachineType\n  DeviceType <|-- MachineType : HasSubtype\n  MachineType --> LocationAddInType : HasAddIn (Location)\n  MachineType ..|> IMaintenanceFacetType : HasInterface"
+      },
+      {
+        "t": "annex-clause",
+        "id": "cF-2",
+        "title": "2. Base facet bindings",
+        "level": 1
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Each facet defines its observability binding "
+          },
+          {
+            "r": "t",
+            "text": "once",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": ", on its own type:"
+          }
+        ]
+      },
+      {
+        "t": "table",
+        "id": "2--base-facet-bindings-tab1",
+        "caption": "2. Base facet bindings",
+        "kind": "generic",
+        "headers": [
+          [
+            {
+              "r": "t",
+              "text": "Binding"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Defined on (axis)"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Signal"
+            }
+          ],
+          [
+            {
+              "r": "code",
+              "text": "DataSetClassId"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Fields"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "r": "t",
+                "text": "DeviceObservability",
+                "b": true
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "DeviceType"
+              },
+              {
+                "r": "t",
+                "text": " — ObjectType (subtype base)"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Metrics"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "1760c83f…"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "Manufacturer"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "SerialNumber"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "DeviceHealth"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "LocationObservability",
+                "b": true
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "LocationAddInType"
+              },
+              {
+                "r": "t",
+                "text": " — AddIn (structural facet)"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Metrics"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "5d376ec7…"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "Latitude"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "Longitude"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "Altitude"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "Maintenance",
+                "b": true
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "IMaintenanceFacetType"
+              },
+              {
+                "r": "t",
+                "text": " — Interface (contract facet)"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Metrics"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "7e967a1b…"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "LastMaintenanceDate"
+              }
+            ]
+          ]
+        ],
+        "widths": null,
+        "note": null
+      },
+      {
+        "t": "annex-clause",
+        "id": "cF-3",
+        "title": "3. Derived bindings — delta only",
+        "level": 1
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "A derived binding lists "
+          },
+          {
+            "r": "t",
+            "text": "only its added (delta) fields",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " and references the base classes it builds on via "
+          },
+          {
+            "r": "code",
+            "text": "BaseDataSetClassIds"
+          },
+          {
+            "r": "t",
+            "text": " (and, where the base node is local, "
+          },
+          {
+            "r": "code",
+            "text": "HasBaseBinding"
+          },
+          {
+            "r": "t",
+            "text": "). It never restates or removes an inherited field, so its DataSet is always a "
+          },
+          {
+            "r": "t",
+            "text": "superset",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " of each base."
+          }
+        ]
+      },
+      {
+        "t": "table",
+        "id": "3--derived-bindings---delta-only-tab1",
+        "caption": "3. Derived bindings — delta only",
+        "kind": "generic",
+        "headers": [
+          [
+            {
+              "r": "t",
+              "text": "Derived binding"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Signal"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Own "
+            },
+            {
+              "r": "code",
+              "text": "DataSetClassId"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Delta fields"
+            }
+          ],
+          [
+            {
+              "r": "code",
+              "text": "BaseDataSetClassIds"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "r": "t",
+                "text": "MachineObservability",
+                "b": true
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Metrics"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "53dc8a49…"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "SpindleSpeed"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "AxisLoad"
+              },
+              {
+                "r": "t",
+                "text": " · overrides "
+              },
+              {
+                "r": "code",
+                "text": "DeviceHealth"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "1760c83f…"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "5d376ec7…"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "MachineMaintenance",
+                "b": true
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Metrics"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "53dc8a49…"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "(none — pure inheritance)",
+                "i": true
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "7e967a1b…"
+              }
+            ]
+          ]
+        ],
+        "widths": null,
+        "note": null
+      },
+      {
+        "t": "annex-clause",
+        "id": "cF-4",
+        "title": "4. What the bridge produces — the composed DataSets",
+        "level": 1
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "A bridge composes the effective DataSet for "
+          },
+          {
+            "r": "code",
+            "text": "MachineType"
+          },
+          {
+            "r": "t",
+            "text": " + a signal by "
+          },
+          {
+            "r": "t",
+            "text": "unioning",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " the bindings reachable via subtype, "
+          },
+          {
+            "r": "code",
+            "text": "HasAddIn"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "HasInterface"
+          },
+          {
+            "r": "t",
+            "text": " (override by "
+          },
+          {
+            "r": "code",
+            "text": "FieldName"
+          },
+          {
+            "r": "t",
+            "text": "), re-rooting each base facet's BrowsePaths under its mount point (the AddIn is mounted at "
+          },
+          {
+            "r": "code",
+            "text": "/Location"
+          },
+          {
+            "r": "t",
+            "text": "), and tagging every field with the "
+          },
+          {
+            "r": "code",
+            "text": "SourceObservabilityExportClassId"
+          },
+          {
+            "r": "t",
+            "text": " of the base binding it came from. The composed DataSet keeps "
+          },
+          {
+            "r": "code",
+            "text": "MachineType"
+          },
+          {
+            "r": "t",
+            "text": "'s own "
+          },
+          {
+            "r": "code",
+            "text": "DataSetClassId"
+          },
+          {
+            "r": "t",
+            "text": " and advertises the contributing base classes in "
+          },
+          {
+            "r": "code",
+            "text": "BaseDataSetClassIds"
+          },
+          {
+            "r": "t",
+            "text": "."
+          }
+        ]
+      },
+      {
+        "t": "annex-clause",
+        "id": "cF-4-1",
+        "title": "MachineObservability — Metrics DataSet (8 fields, class 53dc8a49…)",
+        "level": 2
+      },
+      {
+        "t": "table",
+        "id": "machineobservability---metrics-dataset--8-fields--class-53dc8a49-tab1",
+        "caption": "MachineObservability — Metrics DataSet (8 fields, class 53dc8a49…)",
+        "kind": "generic",
+        "headers": [
+          [
+            {
+              "r": "t",
+              "text": "Field"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Resolved BrowsePath (on a Machine instance)"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "From facet"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Provenance "
+            },
+            {
+              "r": "code",
+              "text": "SourceObservabilityExportClassId"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Note"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "r": "code",
+                "text": "Manufacturer"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/Manufacturer"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "DeviceObservability"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "1760c83f…"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "inherited"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "code",
+                "text": "SerialNumber"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/SerialNumber"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "DeviceObservability"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "1760c83f…"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "inherited"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "code",
+                "text": "DeviceHealth"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/DeviceHealth"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "DeviceObservability"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "1760c83f…"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "overrides base field"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "code",
+                "text": "Latitude"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/Location/Latitude"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "LocationObservability"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "5d376ec7…"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "inherited"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "code",
+                "text": "Longitude"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/Location/Longitude"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "LocationObservability"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "5d376ec7…"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "inherited"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "code",
+                "text": "Altitude"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/Location/Altitude"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "LocationObservability"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "5d376ec7…"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "inherited"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "code",
+                "text": "SpindleSpeed"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/SpindleSpeed"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "MachineObservability"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "—"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "own field"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "code",
+                "text": "AxisLoad"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/AxisLoad"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "MachineObservability"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "—"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "own field"
+              }
+            ]
+          ]
+        ],
+        "widths": null,
+        "note": null
+      },
+      {
+        "t": "annex-clause",
+        "id": "cF-4-2",
+        "title": "MachineMaintenance — Metrics DataSet (1 fields, class 53dc8a49…)",
+        "level": 2
+      },
+      {
+        "t": "table",
+        "id": "machinemaintenance---metrics-dataset--1-fields--class-53dc8a49-tab1",
+        "caption": "MachineMaintenance — Metrics DataSet (1 fields, class 53dc8a49…)",
+        "kind": "generic",
+        "headers": [
+          [
+            {
+              "r": "t",
+              "text": "Field"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Resolved BrowsePath (on a Machine instance)"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "From facet"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Provenance "
+            },
+            {
+              "r": "code",
+              "text": "SourceObservabilityExportClassId"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Note"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "r": "code",
+                "text": "LastMaintenanceDate"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/LastMaintenanceDate"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Maintenance"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "7e967a1b…"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "inherited"
+              }
+            ]
+          ]
+        ],
+        "widths": null,
+        "note": null
+      },
+      {
+        "t": "annex-clause",
+        "id": "cF-5",
+        "title": "5. Facet-scoped subset recognition",
+        "level": 1
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "A semantics-agnostic subscriber that understands only a "
+          },
+          {
+            "r": "t",
+            "text": "base facet",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " recognises the base "
+          },
+          {
+            "r": "code",
+            "text": "DataSetClassId"
+          },
+          {
+            "r": "t",
+            "text": " in the composed DataSet's "
+          },
+          {
+            "r": "code",
+            "text": "BaseDataSetClassIds"
+          },
+          {
+            "r": "t",
+            "text": " and consumes exactly the fields tagged with that class in "
+          },
+          {
+            "r": "code",
+            "text": "SourceObservabilityExportClassId"
+          },
+          {
+            "r": "t",
+            "text": " — without understanding "
+          },
+          {
+            "r": "code",
+            "text": "MachineType"
+          },
+          {
+            "r": "t",
+            "text": ":"
+          }
+        ]
+      },
+      {
+        "t": "list",
+        "ordered": false,
+        "level": 0,
+        "items": [
+          [
+            {
+              "r": "t",
+              "text": "A "
+            },
+            {
+              "r": "t",
+              "text": "DeviceObservability",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": " subscriber (knows "
+            },
+            {
+              "r": "code",
+              "text": "1760c83f…"
+            },
+            {
+              "r": "t",
+              "text": ") selects 3 of 8 fields: "
+            },
+            {
+              "r": "code",
+              "text": "Manufacturer"
+            },
+            {
+              "r": "t",
+              "text": ", "
+            },
+            {
+              "r": "code",
+              "text": "SerialNumber"
+            },
+            {
+              "r": "t",
+              "text": ", "
+            },
+            {
+              "r": "code",
+              "text": "DeviceHealth"
+            },
+            {
+              "r": "t",
+              "text": "."
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "A "
+            },
+            {
+              "r": "t",
+              "text": "LocationObservability",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": " subscriber (knows "
+            },
+            {
+              "r": "code",
+              "text": "5d376ec7…"
+            },
+            {
+              "r": "t",
+              "text": ") selects 3 of 8 fields: "
+            },
+            {
+              "r": "code",
+              "text": "Latitude"
+            },
+            {
+              "r": "t",
+              "text": ", "
+            },
+            {
+              "r": "code",
+              "text": "Longitude"
+            },
+            {
+              "r": "t",
+              "text": ", "
+            },
+            {
+              "r": "code",
+              "text": "Altitude"
+            },
+            {
+              "r": "t",
+              "text": "."
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "A subscriber that understands the full "
+            },
+            {
+              "r": "code",
+              "text": "MachineObservability"
+            },
+            {
+              "r": "t",
+              "text": " class ("
+            },
+            {
+              "r": "code",
+              "text": "53dc8a49…"
+            },
+            {
+              "r": "t",
+              "text": ") consumes all 8 fields."
+            }
+          ]
+        ]
+      },
+      {
+        "t": "annex-clause",
+        "id": "cF-6",
+        "title": "6. Where the binding nodes live",
+        "level": 1
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "code",
+            "text": "Opc.Ua.Facets.ObservabilityExport.NodeSet2.xml"
+          },
+          {
+            "r": "t",
+            "text": " in this folder collapses the four base bindings and the two derived bindings under one "
+          },
+          {
+            "r": "code",
+            "text": "ObservabilityBindingGroup"
+          },
+          {
+            "r": "t",
+            "text": " ("
+          },
+          {
+            "r": "code",
+            "text": "FacetDemo"
+          },
+          {
+            "r": "t",
+            "text": ") for readability, exposed on an illustrative "
+          },
+          {
+            "r": "code",
+            "text": "FacetDemoInstance"
+          },
+          {
+            "r": "t",
+            "text": " that implements "
+          },
+          {
+            "r": "code",
+            "text": "IObservableType"
+          },
+          {
+            "r": "t",
+            "text": ". A conformant Server does not collapse them: it exposes one group per ("
+          },
+          {
+            "r": "code",
+            "text": "SignalUri"
+          },
+          {
+            "r": "t",
+            "text": " × "
+          },
+          {
+            "r": "code",
+            "text": "CompanionSpecificationUri"
+          },
+          {
+            "r": "t",
+            "text": ") with unique sibling BrowseNames ("
+          },
+          {
+            "r": "xref",
+            "target": "c7-1",
+            "kind": "clause",
+            "prefix": "7.1"
+          },
+          {
+            "r": "t",
+            "text": "), so each facet type carries its own group (Device on "
+          },
+          {
+            "r": "code",
+            "text": "DeviceType"
+          },
+          {
+            "r": "t",
+            "text": ", Location on "
+          },
+          {
+            "r": "code",
+            "text": "LocationAddInType"
+          },
+          {
+            "r": "t",
+            "text": ", Maintenance on "
+          },
+          {
+            "r": "code",
+            "text": "IMaintenanceFacetType"
+          },
+          {
+            "r": "t",
+            "text": ") and a "
+          },
+          {
+            "r": "code",
+            "text": "MachineType"
+          },
+          {
+            "r": "t",
+            "text": " instance exposes the derived bindings' group, which the Server/bridge composes with the inherited/AddIn/interface bindings at resolve time per "
+          },
+          {
+            "r": "xref",
+            "target": "c6-13",
+            "kind": "clause",
+            "prefix": "6.13"
+          },
+          {
+            "r": "t",
+            "text": ". NodeIds and the example namespace are provisional."
+          }
+        ]
+      }
+    ],
+    "annex-g": [
+      {
+        "t": "annex",
+        "id": "cG",
+        "title": "Observability export bindings for pumps",
+        "normative": false
+      },
+      {
+        "t": "annex-clause",
+        "id": "cG-1",
+        "title": "Scope",
+        "level": 1
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "This addendum defines example "
+          },
+          {
+            "r": "t",
+            "text": "observability export bindings",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " for "
+          },
+          {
+            "r": "code",
+            "text": "PumpType"
+          },
+          {
+            "r": "t",
+            "text": " — 41 bound items across Metrics (Metrics), Logs (Logs), Traces (Traces). Pumps expose operational measurements, identity dimensions and events that map naturally to OTEL metrics, logs and traces."
+          }
+        ]
+      },
+      {
+        "t": "annex-clause",
+        "id": "cG-2",
+        "title": "How the bindings are applied",
+        "level": 1
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The machine-readable descriptor "
+          },
+          {
+            "r": "code",
+            "text": "Pumps.ObservabilityExport.json"
+          },
+          {
+            "r": "t",
+            "text": " lists each bound item as a "
+          },
+          {
+            "r": "code",
+            "text": "BrowsePath"
+          },
+          {
+            "r": "t",
+            "text": " from "
+          },
+          {
+            "r": "code",
+            "text": "PumpType"
+          },
+          {
+            "r": "t",
+            "text": ", with its observability "
+          },
+          {
+            "r": "code",
+            "text": "Kind"
+          },
+          {
+            "r": "t",
+            "text": " and OTEL "
+          },
+          {
+            "r": "code",
+            "text": "SignalKind"
+          },
+          {
+            "r": "t",
+            "text": ". The generated overlay "
+          },
+          {
+            "r": "code",
+            "text": "Opc.Ua.Pumps.ObservabilityExport.NodeSet2.xml"
+          },
+          {
+            "r": "t",
+            "text": " instantiates a compact "
+          },
+          {
+            "r": "code",
+            "text": "ExamplePump"
+          },
+          {
+            "r": "t",
+            "text": " object, applies "
+          },
+          {
+            "r": "code",
+            "text": "IObservableType"
+          },
+          {
+            "r": "t",
+            "text": ", and exposes an "
+          },
+          {
+            "r": "code",
+            "text": "ObservabilityBindingGroup"
+          },
+          {
+            "r": "t",
+            "text": " collected by ("
+          },
+          {
+            "r": "code",
+            "text": "CollectedBy"
+          },
+          {
+            "r": "t",
+            "text": ") the server-wide "
+          },
+          {
+            "r": "code",
+            "text": "Observability"
+          },
+          {
+            "r": "t",
+            "text": " registry."
+          }
+        ]
+      },
+      {
+        "t": "note",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Theoretical instance model.",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " The theoretical instance mirrors the official Pumps instanceexample.xml (an ExamplePump : PumpType with Operational/Measurements, Identification, Supervision*, Maintenance and a <Drive>); the bound BrowsePaths resolve against exactly that structure. See "
+          },
+          {
+            "r": "link",
+            "text": "Pumps/instanceexample.xml",
+            "href": "https://github.com/OPCFoundation/UA-Nodeset/blob/latest/Pumps/instanceexample.xml"
+          },
+          {
+            "r": "t",
+            "text": "."
+          }
+        ]
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Only the bound signals are materialised in the overlay; it is illustrative, not a full companion instance."
+          }
+        ]
+      },
+      {
+        "t": "annex-clause",
+        "id": "cG-3",
+        "title": "Observability export bindings for PumpType",
+        "level": 1
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Bindings for "
+          },
+          {
+            "r": "code",
+            "text": "PumpType"
+          },
+          {
+            "r": "t",
+            "text": " in "
+          },
+          {
+            "r": "code",
+            "text": "http://opcfoundation.org/UA/Pumps/"
+          },
+          {
+            "r": "t",
+            "text": ", per the "
+          },
+          {
+            "r": "link",
+            "text": "Observability Export",
+            "href": "../OPC-UA-Observability-Export.md"
+          },
+          {
+            "r": "t",
+            "text": " base specification. Each binding exposes one OTEL signal ("
+          },
+          {
+            "r": "code",
+            "text": "Metrics"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "Logs"
+          },
+          {
+            "r": "t",
+            "text": " or "
+          },
+          {
+            "r": "code",
+            "text": "Traces"
+          },
+          {
+            "r": "t",
+            "text": ") with a deterministic "
+          },
+          {
+            "r": "code",
+            "text": "DataSetClassId"
+          },
+          {
+            "r": "t",
+            "text": "."
+          }
+        ]
+      },
+      {
+        "t": "annex-clause",
+        "id": "cG-3-1",
+        "title": "Metrics — Metrics",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Signal:",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " OTEL metrics (PublishedDataItems) · "
+          },
+          {
+            "r": "t",
+            "text": "DataSetClassId:",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " "
+          },
+          {
+            "r": "code",
+            "text": "04ec3212-44fd-579c-ad2f-38b3c32df9e8"
+          },
+          {
+            "r": "t",
+            "text": " · "
+          },
+          {
+            "r": "t",
+            "text": "Cardinality:",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " one DataSet (bound root)"
+          }
+        ]
+      },
+      {
+        "t": "table",
+        "id": "metrics---metrics-tab1",
+        "caption": "Metrics — Metrics",
+        "kind": "generic",
+        "headers": [
+          [
+            {
+              "r": "t",
+              "text": "Field"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Kind"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "BrowsePath"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Source type"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "DataType"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "OTEL"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "r": "t",
+                "text": "Speed"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Telemetry"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/Operational/Measurements/Speed"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "i=15318"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Double"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Gauge [1/min]"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "Throughput"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Telemetry"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/Operational/Measurements/Throughput"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "i=15318"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Double"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Gauge [m3/s]"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "MassFlow"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Telemetry"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/Operational/Measurements/MassFlow"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "i=15318"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Double"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Gauge [kg/s]"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "ProcessPressure"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Telemetry"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/Operational/Measurements/ProcessPressure"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "i=15318"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Double"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Gauge [Pa]"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "DifferentialPressure"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Telemetry"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/Operational/Measurements/DifferentialPressure"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "i=15318"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Double"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Gauge [Pa]"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "PumpTotalHead"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Telemetry"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/Operational/Measurements/PumpTotalHead"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "i=15318"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Double"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Gauge [m]"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "PumpPowerInput"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Telemetry"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/Operational/Measurements/PumpPowerInput"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "i=15318"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Double"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Gauge [W]"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "PumpPowerOutput"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Telemetry"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/Operational/Measurements/PumpPowerOutput"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "i=15318"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Double"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Gauge [W]"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "OverallEfficiency"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Metric"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/Operational/Measurements/OverallEfficiency"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "i=15318"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Double"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Gauge [%]"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "PumpEfficiency"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Metric"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/Operational/Measurements/PumpEfficiency"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "i=15318"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Double"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Gauge [%]"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "HydraulicEfficiency"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Metric"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/Operational/Measurements/HydraulicEfficiency"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "i=15318"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Double"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Gauge [%]"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "FluidTemperature"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Telemetry"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/Operational/Measurements/FluidTemperature"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "i=15318"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Double"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Gauge [Cel]"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "BearingTemperature"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Telemetry"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/Operational/Measurements/BearingTemperature"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "i=15318"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Double"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Histogram [Cel] buckets 40,60,80,100,120"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "PumpTemperature"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Telemetry"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/Operational/Measurements/PumpTemperature"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "i=15318"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Double"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Gauge [Cel]"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "AxialLoadOfPumpRotor"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Telemetry"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/Operational/Measurements/AxialLoadOfPumpRotor"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "i=15318"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Double"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Gauge [N]"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "RadialLoadOfPumpRotor"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Telemetry"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/Operational/Measurements/RadialLoadOfPumpRotor"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "i=15318"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Double"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Gauge [N]"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "LubricatingOilPressure"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Telemetry"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/Operational/Measurements/LubricatingOilPressure"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "i=15318"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Double"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Gauge [Pa]"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "AxialRotorPosition"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Telemetry"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/Operational/Measurements/AxialRotorPosition"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "i=15318"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Double"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Gauge [m]"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "SoundPower"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Telemetry"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/Operational/Measurements/SoundPower"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "i=15318"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Double"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Gauge [dB]"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "SoundPressureLevel"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Telemetry"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/Operational/Measurements/SoundPressureLevel"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "i=15318"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Double"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Gauge [dB]"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "NumberOfStarts"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Counter"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/Operational/Measurements/NumberOfStarts"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "i=15318"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "UInt32"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Counter cumulative monotonic"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "Manufacturer"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Dimension"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/Identification/Manufacturer"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "i=68"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "LocalizedText"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "dimension"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "Model"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Dimension"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/Identification/Model"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "i=68"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "LocalizedText"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "dimension"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "SerialNumber"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Dimension"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/Identification/SerialNumber"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "i=68"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "String"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "dimension"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "ProductInstanceUri"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Dimension"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/Identification/ProductInstanceUri"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "i=68"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "String"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "dimension"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "AssetId"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Dimension"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/Identification/AssetId"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "i=68"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "String"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "dimension"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "Location"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Dimension"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/Identification/Location"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "i=68"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "String"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "dimension"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "service.name"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Dimension"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "—"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "—"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "—"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "dimension = "
+              },
+              {
+                "r": "code",
+                "text": "pump-observability"
+              },
+              {
+                "r": "t",
+                "text": " (const)"
+              }
+            ]
+          ]
+        ],
+        "widths": null,
+        "note": null
+      },
+      {
+        "t": "annex-clause",
+        "id": "cG-3-2",
+        "title": "Logs — Logs",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Signal:",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " OTEL logs (PublishedEvents) · "
+          },
+          {
+            "r": "t",
+            "text": "DataSetClassId:",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " "
+          },
+          {
+            "r": "code",
+            "text": "46d1c23b-a92c-5056-b5d8-084e848a761e"
+          },
+          {
+            "r": "t",
+            "text": " · "
+          },
+          {
+            "r": "t",
+            "text": "Cardinality:",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " one DataSet (bound root) · "
+          },
+          {
+            "r": "t",
+            "text": "Event source:",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " "
+          },
+          {
+            "r": "code",
+            "text": "/"
+          },
+          {
+            "r": "t",
+            "text": " · "
+          },
+          {
+            "r": "t",
+            "text": "Event type:",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " BaseEventType"
+          }
+        ]
+      },
+      {
+        "t": "table",
+        "id": "logs---logs-tab1",
+        "caption": "Logs — Logs",
+        "kind": "generic",
+        "headers": [
+          [
+            {
+              "r": "t",
+              "text": "Field"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Kind"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Event field / attribute"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "r": "t",
+                "text": "EventId"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Event"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/EventId"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "EventType"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Event"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/EventType"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "SourceName"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Event"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/SourceName"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "Time"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Event"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/Time"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "Severity"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Event"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/Severity"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "Message"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Event"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/Message"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "service.name"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Dimension"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "dimension = "
+              },
+              {
+                "r": "code",
+                "text": "pump-observability"
+              },
+              {
+                "r": "t",
+                "text": " (const)"
+              }
+            ]
+          ]
+        ],
+        "widths": null,
+        "note": null
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "OTEL LogRecord mapping:",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " body template "
+          },
+          {
+            "r": "code",
+            "text": "{SourceName}: {Message} (severity {Severity})"
+          },
+          {
+            "r": "t",
+            "text": "; severity = "
+          },
+          {
+            "r": "code",
+            "text": "Severity"
+          },
+          {
+            "r": "t",
+            "text": ", body = "
+          },
+          {
+            "r": "code",
+            "text": "Message"
+          },
+          {
+            "r": "t",
+            "text": ", timestamp = "
+          },
+          {
+            "r": "code",
+            "text": "Time"
+          },
+          {
+            "r": "t",
+            "text": "."
+          }
+        ]
+      },
+      {
+        "t": "annex-clause",
+        "id": "cG-3-3",
+        "title": "Traces — Traces",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Signal:",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " OTEL traces/spans (PublishedEvents) · "
+          },
+          {
+            "r": "t",
+            "text": "DataSetClassId:",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " "
+          },
+          {
+            "r": "code",
+            "text": "cd367489-b1eb-5e95-ad67-32eebfdc438a"
+          },
+          {
+            "r": "t",
+            "text": " · "
+          },
+          {
+            "r": "t",
+            "text": "Cardinality:",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " one DataSet (bound root) · "
+          },
+          {
+            "r": "t",
+            "text": "Event source:",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " "
+          },
+          {
+            "r": "code",
+            "text": "/"
+          },
+          {
+            "r": "t",
+            "text": " · "
+          },
+          {
+            "r": "t",
+            "text": "Event type:",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " BaseEventType"
+          }
+        ]
+      },
+      {
+        "t": "table",
+        "id": "traces---traces-tab1",
+        "caption": "Traces — Traces",
+        "kind": "generic",
+        "headers": [
+          [
+            {
+              "r": "t",
+              "text": "Field"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Kind"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Event field / attribute"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "r": "t",
+                "text": "EventId"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Event"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/EventId"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "SourceName"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Event"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/SourceName"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "Time"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Event"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/Time"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "Severity"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Event"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/Severity"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "Message"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Event"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/Message"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "service.name"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Dimension"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "dimension = "
+              },
+              {
+                "r": "code",
+                "text": "pump-observability"
+              },
+              {
+                "r": "t",
+                "text": " (const)"
+              }
+            ]
+          ]
+        ],
+        "widths": null,
+        "note": null
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "OTEL Span mapping:",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " name template "
+          },
+          {
+            "r": "code",
+            "text": "Pump operation {SourceName}"
+          },
+          {
+            "r": "t",
+            "text": ", start = "
+          },
+          {
+            "r": "code",
+            "text": "Time"
+          },
+          {
+            "r": "t",
+            "text": ", end = "
+          },
+          {
+            "r": "code",
+            "text": "—"
+          },
+          {
+            "r": "t",
+            "text": ", status = "
+          },
+          {
+            "r": "code",
+            "text": "Severity"
+          },
+          {
+            "r": "t",
+            "text": ", kind = "
+          },
+          {
+            "r": "code",
+            "text": "Internal"
+          },
+          {
+            "r": "t",
+            "text": "."
+          }
+        ]
+      },
+      {
+        "t": "annex-clause",
+        "id": "cG-4",
+        "title": "Where the bindings live",
+        "level": 1
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Overview of the observability bindings and their placement on the theoretical instance:"
+          }
+        ]
+      },
+      {
+        "t": "figure",
+        "id": "fig-obs-pumps-tree",
+        "caption": "Pump bindings in the address space",
+        "source": "mermaid",
+        "mermaid": "graph LR\n  ROOT[\"ExamplePump : PumpType\"]\n  ROOT --> G[\"Pumps<br/>ObservabilityBindingGroup\"]\n  G -.CollectedBy.-> O[\"Observability registry i=60101\"]\n  G --> S0[\"Metrics<br/>Metrics\"]\n  S0 --> S0_0[\"Speed : Telemetry\"]\n  S0 --> S0_1[\"Throughput : Telemetry\"]\n  S0 --> S0_2[\"MassFlow : Telemetry\"]\n  S0 --> S0_3[\"ProcessPressure : Telemetry\"]\n  S0 --> S0_4[\"DifferentialPressure : Telemetry\"]\n  S0 --> S0_5[\"PumpTotalHead : Telemetry\"]\n  G --> S1[\"Logs<br/>Logs\"]\n  S1 --> S1_0[\"EventId : Event\"]\n  S1 --> S1_1[\"EventType : Event\"]\n  S1 --> S1_2[\"SourceName : Event\"]\n  S1 --> S1_3[\"Time : Event\"]\n  S1 --> S1_4[\"Severity : Event\"]\n  S1 --> S1_5[\"Message : Event\"]\n  G --> S2[\"Traces<br/>Traces\"]\n  S2 --> S2_0[\"EventId : Event\"]\n  S2 --> S2_1[\"SourceName : Event\"]\n  S2 --> S2_2[\"Time : Event\"]\n  S2 --> S2_3[\"Severity : Event\"]\n  S2 --> S2_4[\"Message : Event\"]\n  S2 --> S2_5[\"service.name : Dimension\"]"
+      },
+      {
+        "t": "figure",
+        "id": "fig-obs-pumps-dataset",
+        "caption": "Pump DataSet composition",
+        "source": "mermaid",
+        "mermaid": "graph TD\n  R[\"ExamplePump : PumpType\"]\n  R -->|HasInterface| I([IObservableType])\n  R -->|HasComponent| G[\"Pumps : ObservabilityBindingGroupType\"]\n  G -.CollectedBy.-> O[\"Observability : ObservabilityFolderType\"]\n  G -->|HasComponent| B0[\"Metrics : ObservabilityBindingType<br/>Metrics\"]\n  B0 -->|HasComponent| IT00[\"Speed : BoundVariableType\"]\n  IT00 -->|BindsToNode| N00[\"Operational/Measurements/Speed\"]\n  B0 -->|HasComponent| IT01[\"Throughput : BoundVariableType\"]\n  IT01 -->|BindsToNode| N01[\"Operational/Measurements/Throughput\"]\n  B0 -->|HasComponent| IT02[\"MassFlow : BoundVariableType\"]\n  IT02 -->|BindsToNode| N02[\"Operational/Measurements/MassFlow\"]\n  G -->|HasComponent| B1[\"Logs : ObservabilityBindingType<br/>Logs\"]\n  B1 -->|HasComponent| IT10[\"EventId : BoundEventFieldType\"]\n  IT10 -.event field.-> N10[\"BaseEventType/EventId\"]\n  B1 -->|HasComponent| IT11[\"EventType : BoundEventFieldType\"]\n  IT11 -.event field.-> N11[\"BaseEventType/EventType\"]\n  B1 -->|HasComponent| IT12[\"SourceName : BoundEventFieldType\"]\n  IT12 -.event field.-> N12[\"BaseEventType/SourceName\"]\n  G -->|HasComponent| B2[\"Traces : ObservabilityBindingType<br/>Traces\"]\n  B2 -->|HasComponent| IT20[\"EventId : BoundEventFieldType\"]\n  IT20 -.event field.-> N20[\"BaseEventType/EventId\"]\n  B2 -->|HasComponent| IT21[\"SourceName : BoundEventFieldType\"]\n  IT21 -.event field.-> N21[\"BaseEventType/SourceName\"]\n  B2 -->|HasComponent| IT22[\"Time : BoundEventFieldType\"]\n  IT22 -.event field.-> N22[\"BaseEventType/Time\"]"
+      }
+    ],
+    "annex-h": [
+      {
+        "t": "annex",
+        "id": "cH",
+        "title": "Observability export bindings for robotics",
+        "normative": false
+      },
+      {
+        "t": "annex-clause",
+        "id": "cH-1",
+        "title": "Scope",
+        "level": 1
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "This addendum defines example "
+          },
+          {
+            "r": "t",
+            "text": "observability export bindings",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " for "
+          },
+          {
+            "r": "code",
+            "text": "MotionDeviceSystemType"
+          },
+          {
+            "r": "t",
+            "text": " — 25 bound items across Metrics (Metrics), Logs (Logs), Traces (Traces). Robotics exposes motion-device, axis, motor, controller and safety state information for OTEL metrics, logs and traces."
+          }
+        ]
+      },
+      {
+        "t": "annex-clause",
+        "id": "cH-2",
+        "title": "How the bindings are applied",
+        "level": 1
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The machine-readable descriptor "
+          },
+          {
+            "r": "code",
+            "text": "Robotics.ObservabilityExport.json"
+          },
+          {
+            "r": "t",
+            "text": " lists each bound item as a "
+          },
+          {
+            "r": "code",
+            "text": "BrowsePath"
+          },
+          {
+            "r": "t",
+            "text": " from "
+          },
+          {
+            "r": "code",
+            "text": "MotionDeviceSystemType"
+          },
+          {
+            "r": "t",
+            "text": ", with its observability "
+          },
+          {
+            "r": "code",
+            "text": "Kind"
+          },
+          {
+            "r": "t",
+            "text": " and OTEL "
+          },
+          {
+            "r": "code",
+            "text": "SignalKind"
+          },
+          {
+            "r": "t",
+            "text": ". The generated overlay "
+          },
+          {
+            "r": "code",
+            "text": "Opc.Ua.Robotics.ObservabilityExport.NodeSet2.xml"
+          },
+          {
+            "r": "t",
+            "text": " instantiates a compact "
+          },
+          {
+            "r": "code",
+            "text": "ExampleRobotSystem"
+          },
+          {
+            "r": "t",
+            "text": " object, applies "
+          },
+          {
+            "r": "code",
+            "text": "IObservableType"
+          },
+          {
+            "r": "t",
+            "text": ", and exposes an "
+          },
+          {
+            "r": "code",
+            "text": "ObservabilityBindingGroup"
+          },
+          {
+            "r": "t",
+            "text": " collected by ("
+          },
+          {
+            "r": "code",
+            "text": "CollectedBy"
+          },
+          {
+            "r": "t",
+            "text": ") the server-wide "
+          },
+          {
+            "r": "code",
+            "text": "Observability"
+          },
+          {
+            "r": "t",
+            "text": " registry."
+          }
+        ]
+      },
+      {
+        "t": "note",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Theoretical instance model.",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " Robotics publishes no public instance example, so a compact theoretical MotionDeviceSystem is synthesised with one MotionDevice, one Axis, one PowerTrain/Motor, one Controller and one SafetyState. Placeholder path segments remain in type-level BrowsePaths."
+          }
+        ]
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Only the bound signals are materialised in the overlay; it is illustrative, not a full companion instance."
+          }
+        ]
+      },
+      {
+        "t": "annex-clause",
+        "id": "cH-3",
+        "title": "Observability export bindings for MotionDeviceSystemType",
+        "level": 1
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Bindings for "
+          },
+          {
+            "r": "code",
+            "text": "MotionDeviceSystemType"
+          },
+          {
+            "r": "t",
+            "text": " in "
+          },
+          {
+            "r": "code",
+            "text": "http://opcfoundation.org/UA/Robotics/"
+          },
+          {
+            "r": "t",
+            "text": ", per the "
+          },
+          {
+            "r": "link",
+            "text": "Observability Export",
+            "href": "../OPC-UA-Observability-Export.md"
+          },
+          {
+            "r": "t",
+            "text": " base specification. Each binding exposes one OTEL signal ("
+          },
+          {
+            "r": "code",
+            "text": "Metrics"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "Logs"
+          },
+          {
+            "r": "t",
+            "text": " or "
+          },
+          {
+            "r": "code",
+            "text": "Traces"
+          },
+          {
+            "r": "t",
+            "text": ") with a deterministic "
+          },
+          {
+            "r": "code",
+            "text": "DataSetClassId"
+          },
+          {
+            "r": "t",
+            "text": "."
+          }
+        ]
+      },
+      {
+        "t": "annex-clause",
+        "id": "cH-3-1",
+        "title": "Metrics — Metrics",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Signal:",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " OTEL metrics (PublishedDataItems) · "
+          },
+          {
+            "r": "t",
+            "text": "DataSetClassId:",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " "
+          },
+          {
+            "r": "code",
+            "text": "142d1e8e-93e7-5436-8a2b-c99fe45b80e7"
+          },
+          {
+            "r": "t",
+            "text": " · "
+          },
+          {
+            "r": "t",
+            "text": "Cardinality:",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " one DataSet (bound root)"
+          }
+        ]
+      },
+      {
+        "t": "table",
+        "id": "metrics---metrics-tab1",
+        "caption": "Metrics — Metrics",
+        "kind": "generic",
+        "headers": [
+          [
+            {
+              "r": "t",
+              "text": "Field"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Kind"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "BrowsePath"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Source type"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "DataType"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "OTEL"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "r": "t",
+                "text": "AxisActualPosition"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Telemetry"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/MotionDevices/<MotionDeviceIdentifier>/Axes/<AxisIdentifier>/ParameterSet/ActualPosition"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "i=17497"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Double"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Gauge [deg]"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "MotorTemperature"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Telemetry"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/MotionDevices/<MotionDeviceIdentifier>/PowerTrains/<PowerTrainIdentifier>/<MotorIdentifier>/ParameterSet/MotorTemperature"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "i=17497"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Double"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Gauge [Cel]"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "SpeedOverride"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Status"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/MotionDevices/<MotionDeviceIdentifier>/ParameterSet/SpeedOverride"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "i=63"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Double"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Gauge [%]"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "ControllerTemperature"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Telemetry"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/Controllers/<ControllerIdentifier>/ParameterSet/Temperature"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "i=17497"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Double"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Gauge [Cel]"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "CabinetFanSpeed"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Telemetry"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/Controllers/<ControllerIdentifier>/ParameterSet/CabinetFanSpeed"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "i=17497"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Double"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Gauge [1/min]"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "CPUFanSpeed"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Telemetry"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/Controllers/<ControllerIdentifier>/ParameterSet/CPUFanSpeed"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "i=17497"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Double"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Gauge [1/min]"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "TotalPowerOnTime"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Counter"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/Controllers/<ControllerIdentifier>/ParameterSet/TotalPowerOnTime"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "i=63"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "i=12879"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Counter cumulative monotonic"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "Manufacturer"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Dimension"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/Manufacturer"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "i=68"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "LocalizedText"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "dimension"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "Model"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Dimension"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/Model"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "i=68"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "LocalizedText"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "dimension"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "SerialNumber"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Dimension"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/SerialNumber"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "i=68"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "String"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "dimension"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "ProductInstanceUri"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Dimension"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/ProductInstanceUri"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "i=68"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "String"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "dimension"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "service.name"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Dimension"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "—"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "—"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "—"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "dimension = "
+              },
+              {
+                "r": "code",
+                "text": "robotics-observability"
+              },
+              {
+                "r": "t",
+                "text": " (const)"
+              }
+            ]
+          ]
+        ],
+        "widths": null,
+        "note": null
+      },
+      {
+        "t": "annex-clause",
+        "id": "cH-3-2",
+        "title": "Logs — Logs",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Signal:",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " OTEL logs (PublishedEvents) · "
+          },
+          {
+            "r": "t",
+            "text": "DataSetClassId:",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " "
+          },
+          {
+            "r": "code",
+            "text": "38f93e0c-7ad5-5e8d-bee9-1f2096b6c24f"
+          },
+          {
+            "r": "t",
+            "text": " · "
+          },
+          {
+            "r": "t",
+            "text": "Cardinality:",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " one DataSet (bound root) · "
+          },
+          {
+            "r": "t",
+            "text": "Event source:",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " "
+          },
+          {
+            "r": "code",
+            "text": "/"
+          },
+          {
+            "r": "t",
+            "text": " · "
+          },
+          {
+            "r": "t",
+            "text": "Event type:",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " AlarmConditionType"
+          }
+        ]
+      },
+      {
+        "t": "table",
+        "id": "logs---logs-tab1",
+        "caption": "Logs — Logs",
+        "kind": "generic",
+        "headers": [
+          [
+            {
+              "r": "t",
+              "text": "Field"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Kind"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Event field / attribute"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "r": "t",
+                "text": "EventId"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Event"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/EventId"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "EventType"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Event"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/EventType"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "SourceName"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Event"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/SourceName"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "Time"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Event"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/Time"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "Severity"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Event"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/Severity"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "Message"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Event"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/Message"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "service.name"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Dimension"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "dimension = "
+              },
+              {
+                "r": "code",
+                "text": "robotics-observability"
+              },
+              {
+                "r": "t",
+                "text": " (const)"
+              }
+            ]
+          ]
+        ],
+        "widths": null,
+        "note": null
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "OTEL LogRecord mapping:",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " body template "
+          },
+          {
+            "r": "code",
+            "text": "{SourceName}: {Message} (severity {Severity})"
+          },
+          {
+            "r": "t",
+            "text": "; severity = "
+          },
+          {
+            "r": "code",
+            "text": "Severity"
+          },
+          {
+            "r": "t",
+            "text": ", body = "
+          },
+          {
+            "r": "code",
+            "text": "Message"
+          },
+          {
+            "r": "t",
+            "text": ", timestamp = "
+          },
+          {
+            "r": "code",
+            "text": "Time"
+          },
+          {
+            "r": "t",
+            "text": "."
+          }
+        ]
+      },
+      {
+        "t": "annex-clause",
+        "id": "cH-3-3",
+        "title": "Traces — Traces",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Signal:",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " OTEL traces/spans (PublishedEvents) · "
+          },
+          {
+            "r": "t",
+            "text": "DataSetClassId:",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " "
+          },
+          {
+            "r": "code",
+            "text": "1d01f74f-5b27-5bf0-b933-5fa3019d1544"
+          },
+          {
+            "r": "t",
+            "text": " · "
+          },
+          {
+            "r": "t",
+            "text": "Cardinality:",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " one DataSet (bound root) · "
+          },
+          {
+            "r": "t",
+            "text": "Event source:",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " "
+          },
+          {
+            "r": "code",
+            "text": "/"
+          },
+          {
+            "r": "t",
+            "text": " · "
+          },
+          {
+            "r": "t",
+            "text": "Event type:",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " BaseEventType"
+          }
+        ]
+      },
+      {
+        "t": "table",
+        "id": "traces---traces-tab1",
+        "caption": "Traces — Traces",
+        "kind": "generic",
+        "headers": [
+          [
+            {
+              "r": "t",
+              "text": "Field"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Kind"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Event field / attribute"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "r": "t",
+                "text": "EventId"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Event"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/EventId"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "SourceName"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Event"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/SourceName"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "Time"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Event"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/Time"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "Severity"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Event"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/Severity"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "Message"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Event"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/Message"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "service.name"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Dimension"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "dimension = "
+              },
+              {
+                "r": "code",
+                "text": "robotics-observability"
+              },
+              {
+                "r": "t",
+                "text": " (const)"
+              }
+            ]
+          ]
+        ],
+        "widths": null,
+        "note": null
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "OTEL Span mapping:",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " name template "
+          },
+          {
+            "r": "code",
+            "text": "Robot program/state {SourceName}"
+          },
+          {
+            "r": "t",
+            "text": ", start = "
+          },
+          {
+            "r": "code",
+            "text": "Time"
+          },
+          {
+            "r": "t",
+            "text": ", end = "
+          },
+          {
+            "r": "code",
+            "text": "—"
+          },
+          {
+            "r": "t",
+            "text": ", status = "
+          },
+          {
+            "r": "code",
+            "text": "Severity"
+          },
+          {
+            "r": "t",
+            "text": ", kind = "
+          },
+          {
+            "r": "code",
+            "text": "Internal"
+          },
+          {
+            "r": "t",
+            "text": "."
+          }
+        ]
+      },
+      {
+        "t": "annex-clause",
+        "id": "cH-4",
+        "title": "Where the bindings live",
+        "level": 1
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Overview of the observability bindings and their placement on the theoretical instance:"
+          }
+        ]
+      },
+      {
+        "t": "figure",
+        "id": "fig-obs-robotics-tree",
+        "caption": "Motion device bindings in the address space",
+        "source": "mermaid",
+        "mermaid": "graph LR\n  ROOT[\"ExampleRobotSystem : MotionDeviceSystemType\"]\n  ROOT --> G[\"Robotics<br/>ObservabilityBindingGroup\"]\n  G -.CollectedBy.-> O[\"Observability registry i=60101\"]\n  G --> S0[\"Metrics<br/>Metrics\"]\n  S0 --> S0_0[\"AxisActualPosition : Telemetry\"]\n  S0 --> S0_1[\"MotorTemperature : Telemetry\"]\n  S0 --> S0_2[\"SpeedOverride : Status\"]\n  S0 --> S0_3[\"ControllerTemperature : Telemetry\"]\n  S0 --> S0_4[\"CabinetFanSpeed : Telemetry\"]\n  S0 --> S0_5[\"CPUFanSpeed : Telemetry\"]\n  G --> S1[\"Logs<br/>Logs\"]\n  S1 --> S1_0[\"EventId : Event\"]\n  S1 --> S1_1[\"EventType : Event\"]\n  S1 --> S1_2[\"SourceName : Event\"]\n  S1 --> S1_3[\"Time : Event\"]\n  S1 --> S1_4[\"Severity : Event\"]\n  S1 --> S1_5[\"Message : Event\"]\n  G --> S2[\"Traces<br/>Traces\"]\n  S2 --> S2_0[\"EventId : Event\"]\n  S2 --> S2_1[\"SourceName : Event\"]\n  S2 --> S2_2[\"Time : Event\"]\n  S2 --> S2_3[\"Severity : Event\"]\n  S2 --> S2_4[\"Message : Event\"]\n  S2 --> S2_5[\"service.name : Dimension\"]"
+      },
+      {
+        "t": "figure",
+        "id": "fig-obs-robotics-dataset",
+        "caption": "Motion device DataSet composition",
+        "source": "mermaid",
+        "mermaid": "graph TD\n  R[\"ExampleRobotSystem : MotionDeviceSystemType\"]\n  R -->|HasInterface| I([IObservableType])\n  R -->|HasComponent| G[\"Robotics : ObservabilityBindingGroupType\"]\n  G -.CollectedBy.-> O[\"Observability : ObservabilityFolderType\"]\n  G -->|HasComponent| B0[\"Metrics : ObservabilityBindingType<br/>Metrics\"]\n  B0 -->|HasComponent| IT00[\"AxisActualPosition : BoundVariableType\"]\n  IT00 -->|BindsToNode| N00[\"MotionDevices/MotionDevice_1/Axes/Axis_1/ParameterSet/ActualPosition\"]\n  B0 -->|HasComponent| IT01[\"MotorTemperature : BoundVariableType\"]\n  IT01 -->|BindsToNode| N01[\"MotionDevices/MotionDevice_1/PowerTrains/PowerTrain_1/Motor_1/ParameterSet/MotorTemperature\"]\n  B0 -->|HasComponent| IT02[\"SpeedOverride : BoundVariableType\"]\n  IT02 -->|BindsToNode| N02[\"MotionDevices/MotionDevice_1/ParameterSet/SpeedOverride\"]\n  G -->|HasComponent| B1[\"Logs : ObservabilityBindingType<br/>Logs\"]\n  B1 -->|HasComponent| IT10[\"EventId : BoundEventFieldType\"]\n  IT10 -.event field.-> N10[\"AlarmConditionType/EventId\"]\n  B1 -->|HasComponent| IT11[\"EventType : BoundEventFieldType\"]\n  IT11 -.event field.-> N11[\"AlarmConditionType/EventType\"]\n  B1 -->|HasComponent| IT12[\"SourceName : BoundEventFieldType\"]\n  IT12 -.event field.-> N12[\"AlarmConditionType/SourceName\"]\n  G -->|HasComponent| B2[\"Traces : ObservabilityBindingType<br/>Traces\"]\n  B2 -->|HasComponent| IT20[\"EventId : BoundEventFieldType\"]\n  IT20 -.event field.-> N20[\"BaseEventType/EventId\"]\n  B2 -->|HasComponent| IT21[\"SourceName : BoundEventFieldType\"]\n  IT21 -.event field.-> N21[\"BaseEventType/SourceName\"]\n  B2 -->|HasComponent| IT22[\"Time : BoundEventFieldType\"]\n  IT22 -.event field.-> N22[\"BaseEventType/Time\"]"
+      },
+      {
+        "t": "annex-clause",
+        "id": "cH-5",
+        "title": "BrowsePath resolution — worked examples",
+        "level": 1
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The type-level bindings above use placeholder BrowsePaths. A bridge resolves them against a concrete instance (via "
+          },
+          {
+            "r": "code",
+            "text": "TranslateBrowsePathsToNodeIds"
+          },
+          {
+            "r": "t",
+            "text": ") and produces "
+          },
+          {
+            "r": "t",
+            "text": "one DataSet per matched instance of each binding's cardinality anchor",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " ("
+          },
+          {
+            "r": "code",
+            "text": "DataSetCardinalityPath"
+          },
+          {
+            "r": "t",
+            "text": "); placeholders "
+          },
+          {
+            "r": "t",
+            "text": "below",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " the anchor become fields, their name disambiguated by the matched instance (per "
+          },
+          {
+            "r": "xref",
+            "target": "c6-11",
+            "kind": "clause",
+            "prefix": "6.11"
+          },
+          {
+            "r": "t",
+            "text": " of the base spec). The "
+          },
+          {
+            "r": "code",
+            "text": "DataSetClassId"
+          },
+          {
+            "r": "t",
+            "text": " is identical for every DataSet of a signal — it names the "
+          },
+          {
+            "r": "t",
+            "text": "class",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": ", of which there are many DataSetWriters. The same bindings resolve differently for different instance topologies:"
+          }
+        ]
+      },
+      {
+        "t": "annex-clause",
+        "id": "cH-5-1",
+        "title": "Topology 1: Single 6-axis articulated robot",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "MotionDevices:",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " Robot_1 (6 axes, 6 motors) · "
+          },
+          {
+            "r": "t",
+            "text": "Controllers:",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " Controller_1"
+          }
+        ]
+      },
+      {
+        "t": "table",
+        "id": "topology-1--single-6-axis-articulated-robot-tab1",
+        "caption": "Topology 1: Single 6-axis articulated robot",
+        "kind": "generic",
+        "headers": [
+          [
+            {
+              "r": "t",
+              "text": "Binding"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "DataSet (cardinality instance)"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "# fields"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Example fields"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "r": "t",
+                "text": "Metrics"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "ExampleRobotSystem"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "12"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "AxisActualPosition, MotorTemperature, SpeedOverride, ControllerTemperature …"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "Logs"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "ExampleRobotSystem"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "7"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "EventId, EventType, SourceName, Time …"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "Traces"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "ExampleRobotSystem"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "6"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "EventId, SourceName, Time, Severity …"
+              }
+            ]
+          ]
+        ],
+        "widths": null,
+        "note": null
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "→ "
+          },
+          {
+            "r": "t",
+            "text": "3 DataSets",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " produced by the bridge for this topology."
+          }
+        ]
+      },
+      {
+        "t": "annex-clause",
+        "id": "cH-5-2",
+        "title": "Topology 2: Single 4-axis SCARA",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "MotionDevices:",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " Scara_1 (4 axes, 4 motors) · "
+          },
+          {
+            "r": "t",
+            "text": "Controllers:",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " Controller_1"
+          }
+        ]
+      },
+      {
+        "t": "table",
+        "id": "topology-2--single-4-axis-scara-tab1",
+        "caption": "Topology 2: Single 4-axis SCARA",
+        "kind": "generic",
+        "headers": [
+          [
+            {
+              "r": "t",
+              "text": "Binding"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "DataSet (cardinality instance)"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "# fields"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Example fields"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "r": "t",
+                "text": "Metrics"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "ExampleRobotSystem"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "12"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "AxisActualPosition, MotorTemperature, SpeedOverride, ControllerTemperature …"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "Logs"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "ExampleRobotSystem"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "7"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "EventId, EventType, SourceName, Time …"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "Traces"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "ExampleRobotSystem"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "6"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "EventId, SourceName, Time, Severity …"
+              }
+            ]
+          ]
+        ],
+        "widths": null,
+        "note": null
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "→ "
+          },
+          {
+            "r": "t",
+            "text": "3 DataSets",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " produced by the bridge for this topology."
+          }
+        ]
+      },
+      {
+        "t": "annex-clause",
+        "id": "cH-5-3",
+        "title": "Topology 3: Two-robot cell (6+4 axes)",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "MotionDevices:",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " Robot_1 (6 axes, 6 motors), Robot_2 (4 axes, 4 motors) · "
+          },
+          {
+            "r": "t",
+            "text": "Controllers:",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " Controller_1"
+          }
+        ]
+      },
+      {
+        "t": "table",
+        "id": "topology-3--two-robot-cell--6-4-axes-tab1",
+        "caption": "Topology 3: Two-robot cell (6+4 axes)",
+        "kind": "generic",
+        "headers": [
+          [
+            {
+              "r": "t",
+              "text": "Binding"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "DataSet (cardinality instance)"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "# fields"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Example fields"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "r": "t",
+                "text": "Metrics"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "ExampleRobotSystem"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "12"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "AxisActualPosition, MotorTemperature, SpeedOverride, ControllerTemperature …"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "Logs"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "ExampleRobotSystem"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "7"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "EventId, EventType, SourceName, Time …"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "Traces"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "ExampleRobotSystem"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "6"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "EventId, SourceName, Time, Severity …"
+              }
+            ]
+          ]
+        ],
+        "widths": null,
+        "note": null
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "→ "
+          },
+          {
+            "r": "t",
+            "text": "3 DataSets",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " produced by the bridge for this topology."
+          }
+        ]
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Across all topologies the "
+          },
+          {
+            "r": "code",
+            "text": "DataSetClassId"
+          },
+          {
+            "r": "t",
+            "text": " per signal is unchanged — a subscriber recognizes each DataSet's class regardless of how many robots, axes or controllers a particular cell has; only the number of DataSets (writers) and the field counts differ."
+          }
+        ]
+      }
     ]
   },
   "order": [
@@ -7342,6 +13697,11 @@
     "namespaces",
     "annex-a",
     "annex-b",
-    "annex-c"
+    "annex-c",
+    "annex-d",
+    "annex-e",
+    "annex-f",
+    "annex-g",
+    "annex-h"
   ]
 }

@@ -235,6 +235,15 @@ truth exactly the way hand-editing a generated NodeSet does.
   document that still validates and still looks right. The check that no `w:ins`, `w:del`,
   `w:moveFrom` or `w:moveTo` exists is what makes that impossible to miss; write it before
   trusting the arming.
+- **A worked example is an annex of the specification it illustrates, not a submission of its
+  own.** Seven drafts here each apply an existing specification to one domain — provisional
+  `Examples` namespace, instances not types, no conformance clause. Rendering one standalone
+  puts a false claim on its title page; dropping it loses real content. Fold it in with
+  `additionalMarkdown` plus `"in"` on the clause-map entries. Then remember the two things that
+  come with it: a reference back to the base specification becomes *internal* and must resolve
+  through the clause map, and **every diagram in the folded source needs a `figures` entry** —
+  otherwise the build silently writes `figure6.png` … `figureN.png` with the containing clause
+  title as the caption. Count the diagrams first.
 
 ## Verification checklist
 

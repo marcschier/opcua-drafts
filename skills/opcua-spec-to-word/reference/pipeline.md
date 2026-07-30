@@ -99,8 +99,8 @@ Verify with two builds and a hash comparison.
 7. List the `figures`.
 8. Build, validate, mutation-test, finalise.
 
-**How much of this is really config.** Six specifications have now been onboarded, and each new
-*shape* cost a generalisation before its config worked:
+**How much of this is really config.** Each new *shape* cost a generalisation before its config
+worked:
 
 | Specification | New shape it forced |
 |---|---|
@@ -114,8 +114,12 @@ Verify with two builds and a hash comparison.
 | Generators | **RequiredModel BrowseNames**: a type borrowed from DI or Machinery is a bare NodeId in the NodeSet and there is nothing to resolve it against, so the names come from config; markdown that **links into the online reference** in body prose, which Guideline 5 forbids |
 | Data Channels | **a document that owns no namespace** — its Nodes are additions to the base namespace, so `namespaceIndexInDocument` is 0, `IsNamespaceSubset` is True, and base names must print unprefixed; a Terms clause read from a *sibling* document (`termsFrom`); a Use cases clause **written in config** because the document has no material shaped like one |
 | Avro and Arrow Encoding | **scale, and nothing else** — 121 and 106 clause-map entries, five heading levels deep. Both are the WoT Binding shape (`no-information-model`), and the only new mechanism either needed was a clause **authored in config**, because neither has a Use cases or a conformance clause of its own |
+| The seven folded annexes | **more than one markdown source per document** — `additionalMarkdown` plus `"in"` on a clause-map entry, with sections keyed per source so a folded "1 Scope" does not collide with the base document's; and the class-diagram relations `..|>` and `<|..`, which only a worked example drew |
 
-Everything above is now driven by the docmodel and the config, and a tenth specification of any of
+**How much of this is really config.** Eleven specifications have now been onboarded, and each new
+*shape* cost a generalisation before its config worked.
+
+Everything above is now driven by the docmodel and the config, and a twelfth specification of any of
 those shapes is genuinely a config file. **Config carries what varies between documents of the same
 shape; a new shape is code.**
 
@@ -136,6 +140,37 @@ document says it is. Three signals decide it, and the NodeSet settles the argume
 A base-namespace document can still be rendered faithfully — Data Channels is — but only once the
 generated Namespaces clause stops claiming to describe a namespace the document does not own.
 
+## An annex is not a submission
+
+The other way a draft fails the "is this a companion specification?" test is by being a **worked
+example**: it shows an existing specification applied to DI, to Facets, to Pumps, to Robotics. The
+signals are consistent — a provisional `Examples` namespace or an example URN, instances rather than
+types, no conformance clause, and prose that only makes sense beside the document it illustrates.
+
+Do not render it standalone. Its title page would claim it is a companion specification, and that
+would be false. Do not drop it either — the content is real. **Fold it into the specification it
+illustrates as an informative annex**, which is what it always was:
+
+```jsonc
+"additionalMarkdown": { "pumps": "metaverse-specs/.../OPC-UA-Pumps-...-Addendum.md" },
+// then, on each clause-map entry drawn from it:
+{ "id": "annex-g", "title": "Pumps", "in": "pumps", ... }
+```
+
+Sections are keyed per source, so the annex's own "1 Scope" does not collide with the base
+document's. Two consequences catch people out:
+
+- A reference from the annex **to its base specification is now internal** and must resolve through
+  the clause map. References to anything else stay foreign. Both are checked, so getting it wrong
+  fails the build rather than shipping a dead cross-reference.
+- Figures come with it. `_detect_restructured` ignores entries carrying `in`, but the figure list
+  does not: every diagram in the folded source needs an entry in `figures`, or the build writes
+  `figure6.png` … `figureN.png` into the figures folder with the containing clause title as the
+  caption. Count the diagrams in the source before rebuilding.
+
+Record the fold in `batch.json` under `notAFit`, naming the document it folds into — "not a fit"
+then reads as *published as what it is*, not *dropped*.
+
 ## The batch
 
 `tools/specs/batch.json` records which specifications are converted, which the pipeline could take
@@ -146,8 +181,9 @@ Word and is not byte-deterministic.
 
 ## Declared partial compliance
 
-The template admits no deviation, and for five of the six documents none was needed. WoT Binding
-defines a JSON-LD vocabulary and a NodeSet↔WoT mapping: it has no NodeSet, no ObjectTypes and no
+The template admits no deviation, and for eight of the eleven documents none was needed. Three need
+one, all for the same reason: WoT Binding defines a JSON-LD vocabulary and a NodeSet↔WoT mapping,
+and the Avro and Arrow specifications define a wire format. None has a NodeSet, ObjectTypes or
 Instances, so the NodeClass clauses and Annex A's NodeSet block have nothing to present.
 
 The answer is not to relax the checker. It is to make a deviation **impossible to take quietly**:

@@ -14313,6 +14313,3392 @@
           }
         ]
       }
+    ],
+    "annex-g": [
+      {
+        "t": "annex",
+        "id": "cG",
+        "title": "OpenUSD bindings for pumps",
+        "normative": false
+      },
+      {
+        "t": "annex-clause",
+        "id": "cG-1",
+        "title": "Scope",
+        "level": 1
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "This addendum binds one "
+          },
+          {
+            "r": "code",
+            "text": "PumpType"
+          },
+          {
+            "r": "t",
+            "text": " instance to a USD prim and defines three read-only telemetry bindings (Part 2, "
+          },
+          {
+            "r": "code",
+            "text": "OpenUsdValueChangeBindingType"
+          },
+          {
+            "r": "t",
+            "text": "): impeller rotation from mass flow, body colour from bearing temperature, and status-light glow from differential pressure. It also shows the 0.2 capability bindings on the same pump — an alarm binding ("
+          },
+          {
+            "r": "code",
+            "text": "OpenUsdAlarmBindingType"
+          },
+          {
+            "r": "t",
+            "text": ") driving status-light visibility and an opt-in command binding ("
+          },
+          {
+            "r": "code",
+            "text": "OpenUsdCommandBindingType"
+          },
+          {
+            "r": "t",
+            "text": ") writing a speed setpoint — plus a stage content-integrity digest. It is illustrative; a concrete server supplies the exact source BrowsePaths and stage identifiers."
+          }
+        ]
+      },
+      {
+        "t": "annex-clause",
+        "id": "cG-2",
+        "title": "How the bindings are applied",
+        "level": 1
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "A "
+          },
+          {
+            "r": "code",
+            "text": "PumpType"
+          },
+          {
+            "r": "t",
+            "text": " instance (for example "
+          },
+          {
+            "r": "code",
+            "text": "Pump101"
+          },
+          {
+            "r": "t",
+            "text": ") gains an OpenUSD representation by composing an "
+          },
+          {
+            "r": "code",
+            "text": "OpenUsdRepresentation"
+          },
+          {
+            "r": "t",
+            "text": " AddIn ("
+          },
+          {
+            "r": "code",
+            "text": "HasAddIn"
+          },
+          {
+            "r": "t",
+            "text": ") that targets a stage and a prim path, and by carrying the live bindings as children of that AddIn:"
+          }
+        ]
+      },
+      {
+        "t": "code",
+        "lang": "text",
+        "lines": [
+          "Pump101 : PumpType",
+          "  └─ HasAddIn OpenUsdRepresentation : OpenUsdRepresentationType",
+          "       Stage    = NodeId(Server/OpenUSD/Stages/PlantStage)",
+          "       PrimPath = \"/Plant/Pumps/P101\"",
+          "       ├─ MassFlowSpin           : OpenUsdValueChangeBindingType   (+SourceSemanticId)",
+          "       ├─ BearingTempColor       : OpenUsdValueChangeBindingType",
+          "       ├─ DiffPressureEmissive   : OpenUsdValueChangeBindingType",
+          "       ├─ AlarmActiveVisibility  : OpenUsdAlarmBindingType",
+          "       └─ SpeedSetpointCommand   : OpenUsdCommandBindingType   (opt-in)"
+        ]
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The AddIn is also "
+          },
+          {
+            "r": "code",
+            "text": "Organizes"
+          },
+          {
+            "r": "t",
+            "text": "-listed from "
+          },
+          {
+            "r": "code",
+            "text": "Server/OpenUSD/Representations"
+          },
+          {
+            "r": "t",
+            "text": ", so a generic connector discovers it without knowing anything about pumps. Each binding's source resolves "
+          },
+          {
+            "r": "t",
+            "text": "relative to ",
+            "b": true
+          },
+          {
+            "r": "code",
+            "text": "Pump101"
+          },
+          {
+            "r": "t",
+            "text": " via "
+          },
+          {
+            "r": "code",
+            "text": "SourceBrowsePath"
+          },
+          {
+            "r": "t",
+            "text": " (or, from 0.2, a portable "
+          },
+          {
+            "r": "code",
+            "text": "SourceSemanticId"
+          },
+          {
+            "r": "t",
+            "text": "), so the same declaration applies to every pump instance; the effective runtime key is "
+          },
+          {
+            "r": "code",
+            "text": "(Pump101, BindingDefinitionId)"
+          },
+          {
+            "r": "t",
+            "text": ". The alarm and command bindings target two extra pump Variables — "
+          },
+          {
+            "r": "code",
+            "text": "AlarmActive"
+          },
+          {
+            "r": "t",
+            "text": " (Boolean) and a writable "
+          },
+          {
+            "r": "code",
+            "text": "SpeedSetpoint"
+          },
+          {
+            "r": "t",
+            "text": " (Double) — and the "
+          },
+          {
+            "r": "code",
+            "text": "PlantStage"
+          },
+          {
+            "r": "t",
+            "text": " carries a "
+          },
+          {
+            "r": "code",
+            "text": "RootLayerDigest"
+          },
+          {
+            "r": "t",
+            "text": " (SHA-256) a connector verifies before composing."
+          }
+        ]
+      },
+      {
+        "t": "annex-clause",
+        "id": "cG-3",
+        "title": "OpenUSD bindings for PumpType",
+        "level": 1
+      },
+      {
+        "t": "table",
+        "id": "openusd-bindings-for-pumptype-tab1",
+        "caption": "OpenUSD bindings for PumpType",
+        "kind": "generic",
+        "headers": [
+          [
+            {
+              "r": "t",
+              "text": "Binding"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Source (relative to the Pump)"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Target property"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "USD type"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "RenderTargetKind"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Conversion"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "r": "t",
+                "text": "MassFlowSpin",
+                "b": true
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/Operational/Measurements/MassFlow"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "xformOp:rotateZ"
+              },
+              {
+                "r": "t",
+                "text": " (on "
+              },
+              {
+                "r": "code",
+                "text": "…/Impeller"
+              },
+              {
+                "r": "t",
+                "text": ")"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "double"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Rotation"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "flow → rotateZ angle (Scale)"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "BearingTempColor",
+                "b": true
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/Operational/Measurements/BearingTemperature"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "primvars:displayColor"
+              },
+              {
+                "r": "t",
+                "text": " (on "
+              },
+              {
+                "r": "code",
+                "text": "…/Body"
+              },
+              {
+                "r": "t",
+                "text": ")"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "color3f"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "DisplayColor"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "°C → blue→red gradient (connector mapping)"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "DiffPressureEmissive",
+                "b": true
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/Operational/Measurements/DifferentialPressure"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "inputs:emissiveColor"
+              },
+              {
+                "r": "t",
+                "text": " (on the status-light material)"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "color3f"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "EmissiveColor"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "bar → emissive glow (connector mapping)"
+              }
+            ]
+          ]
+        ],
+        "widths": null,
+        "note": null
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Notes:"
+          }
+        ]
+      },
+      {
+        "t": "list",
+        "ordered": false,
+        "level": 0,
+        "items": [
+          [
+            {
+              "r": "t",
+              "text": "MassFlowSpin",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": " targets the impeller prim; "
+            },
+            {
+              "r": "code",
+              "text": "xformOp:rotateZ"
+            },
+            {
+              "r": "t",
+              "text": " must appear in that prim's "
+            },
+            {
+              "r": "code",
+              "text": "xformOpOrder"
+            },
+            {
+              "r": "t",
+              "text": "."
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "BearingTempColor",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": " targets a child prim ("
+            },
+            {
+              "r": "code",
+              "text": "…/Body"
+            },
+            {
+              "r": "t",
+              "text": ") and drives a colour; the numeric-to-"
+            },
+            {
+              "r": "code",
+              "text": "color3f"
+            },
+            {
+              "r": "t",
+              "text": " mapping is a connector responsibility declared by "
+            },
+            {
+              "r": "code",
+              "text": "RenderTargetKind = DisplayColor"
+            },
+            {
+              "r": "t",
+              "text": " and "
+            },
+            {
+              "r": "code",
+              "text": "ValueSemanticUri"
+            },
+            {
+              "r": "t",
+              "text": "."
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "DiffPressureEmissive",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": " drives a "
+            },
+            {
+              "r": "code",
+              "text": "UsdPreviewSurface"
+            },
+            {
+              "r": "t",
+              "text": " emissive input; a non-Good source value uses the binding's "
+            },
+            {
+              "r": "code",
+              "text": "BadQualityAction"
+            },
+            {
+              "r": "t",
+              "text": " (default "
+            },
+            {
+              "r": "code",
+              "text": "Skip"
+            },
+            {
+              "r": "t",
+              "text": ")."
+            }
+          ]
+        ]
+      },
+      {
+        "t": "annex-clause",
+        "id": "cG-4",
+        "title": "Reference implementation (validated end-to-end)",
+        "level": 1
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The "
+          },
+          {
+            "r": "code",
+            "text": "PumpDeviceIntegrationServer"
+          },
+          {
+            "r": "t",
+            "text": " sample in "
+          },
+          {
+            "r": "code",
+            "text": "marcschier/UA-.NETStandard"
+          },
+          {
+            "r": "t",
+            "text": " realizes this design and validates it with an automated end-to-end test suite ("
+          },
+          {
+            "r": "code",
+            "text": "PumpOpenUsdE2eTests"
+          },
+          {
+            "r": "t",
+            "text": ", ten passing cases): the companion model is served; the facility is browsable from the Server Object; the representation and its five bindings are discoverable through the registry; live telemetry flows through a generic connector into a mock USD sink; the semantic id + signal role are surfaced; the stage "
+          },
+          {
+            "r": "code",
+            "text": "RootLayerDigest"
+          },
+          {
+            "r": "t",
+            "text": " verifies; the alarm binding drives status-light visibility; the command binding is fail-closed by default and writes the server setpoint when enabled; and history replay degrades gracefully on a non-historizing source. Because the sample's "
+          },
+          {
+            "r": "code",
+            "text": "PumpType"
+          },
+          {
+            "r": "t",
+            "text": " instance ("
+          },
+          {
+            "r": "code",
+            "text": "Pump #1"
+          },
+          {
+            "r": "t",
+            "text": ") exposes the OPC 40223 measurement surface, the reference bindings use the measurements actually present rather than the illustrative "
+          },
+          {
+            "r": "code",
+            "text": "Speed"
+          },
+          {
+            "r": "t",
+            "text": "/"
+          },
+          {
+            "r": "code",
+            "text": "Running"
+          },
+          {
+            "r": "t",
+            "text": " above:"
+          }
+        ]
+      },
+      {
+        "t": "table",
+        "id": "reference-implementation--validated-end-to-end-tab1",
+        "caption": "Reference implementation (validated end-to-end)",
+        "kind": "generic",
+        "headers": [
+          [
+            {
+              "r": "t",
+              "text": "Reference binding"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Source (Pump measurement)"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Target property"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "USD type"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "RenderTargetKind"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "r": "t",
+                "text": "MassFlowSpin",
+                "b": true
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "MassFlow"
+              },
+              {
+                "r": "t",
+                "text": " (+ "
+              },
+              {
+                "r": "code",
+                "text": "SourceSemanticId"
+              },
+              {
+                "r": "t",
+                "text": " IRDI)"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "xformOp:rotateZ"
+              },
+              {
+                "r": "t",
+                "text": " (on the represented prim)"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "double"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Rotation"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "BearingTempColor",
+                "b": true
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "BearingTemperature"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "primvars:displayColor"
+              },
+              {
+                "r": "t",
+                "text": " (on "
+              },
+              {
+                "r": "code",
+                "text": "…/Body"
+              },
+              {
+                "r": "t",
+                "text": ")"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "color3f"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "DisplayColor"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "DiffPressureEmissive",
+                "b": true
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "DifferentialPressure"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "inputs:emissiveColor"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "color3f"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "EmissiveColor"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "AlarmActiveVisibility",
+                "b": true
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "AlarmActive"
+              },
+              {
+                "r": "t",
+                "text": " (supervision alarm ActiveState)"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "visibility"
+              },
+              {
+                "r": "t",
+                "text": " (on "
+              },
+              {
+                "r": "code",
+                "text": "…/StatusLight"
+              },
+              {
+                "r": "t",
+                "text": ")"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "token"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Visibility"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "SpeedSetpointCommand",
+                "b": true
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "(command)",
+                "i": true
+              },
+              {
+                "r": "t",
+                "text": " → "
+              },
+              {
+                "r": "code",
+                "text": "SpeedSetpoint"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "inputs:speedSetpoint"
+              },
+              {
+                "r": "t",
+                "text": " (on "
+              },
+              {
+                "r": "code",
+                "text": "…/Impeller"
+              },
+              {
+                "r": "t",
+                "text": ")"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "double"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "—"
+              }
+            ]
+          ]
+        ],
+        "widths": null,
+        "note": null
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The alarm binding ("
+          },
+          {
+            "r": "code",
+            "text": "OpenUsdAlarmBindingType"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "AlarmAspect = ActiveState"
+          },
+          {
+            "r": "t",
+            "text": ") shows the status light when a supervision alarm is active; the command binding ("
+          },
+          {
+            "r": "code",
+            "text": "OpenUsdCommandBindingType"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "SignalRole = Controllable"
+          },
+          {
+            "r": "t",
+            "text": ") is opt-in — the bridge writes the setpoint only with "
+          },
+          {
+            "r": "code",
+            "text": "--enable-commands"
+          },
+          {
+            "r": "t",
+            "text": " (single-writer, fail-closed). The "
+          },
+          {
+            "r": "code",
+            "text": "PlantStage"
+          },
+          {
+            "r": "t",
+            "text": " publishes a "
+          },
+          {
+            "r": "code",
+            "text": "RootLayerDigest"
+          },
+          {
+            "r": "t",
+            "text": " ("
+          },
+          {
+            "r": "code",
+            "text": "Sha256"
+          },
+          {
+            "r": "t",
+            "text": ") the connector verifies before composing."
+          }
+        ]
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Implementer findings from the source-generated OPC UA .NET model (generic, not Pump-specific — applies to any server built from this companion NodeSet):"
+          }
+        ]
+      },
+      {
+        "t": "list",
+        "ordered": false,
+        "level": 0,
+        "items": [
+          [
+            {
+              "r": "t",
+              "text": "Attach with a hierarchical ReferenceType.",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": " The generated "
+            },
+            {
+              "r": "code",
+              "text": "CreateInstanceOf…"
+            },
+            {
+              "r": "t",
+              "text": " factories leave "
+            },
+            {
+              "r": "code",
+              "text": "ReferenceTypeId = Null"
+            },
+            {
+              "r": "t",
+              "text": ", which is not a browsable reference. Attach the "
+            },
+            {
+              "r": "code",
+              "text": "OpenUsdRepresentation"
+            },
+            {
+              "r": "t",
+              "text": " AddIn to the represented Object and each "
+            },
+            {
+              "r": "code",
+              "text": "OpenUsdLiveBinding"
+            },
+            {
+              "r": "t",
+              "text": " to the representation with an explicit "
+            },
+            {
+              "r": "code",
+              "text": "HasComponent"
+            },
+            {
+              "r": "t",
+              "text": " (or "
+            },
+            {
+              "r": "code",
+              "text": "HasAddIn"
+            },
+            {
+              "r": "t",
+              "text": ") so the nodes are browsable."
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Instantiate bindings via the placeholder.",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": " Create each binding from the representation's "
+            },
+            {
+              "r": "code",
+              "text": "<Binding>"
+            },
+            {
+              "r": "t",
+              "text": " placeholder (the generated "
+            },
+            {
+              "r": "code",
+              "text": "AddxBinding_"
+            },
+            {
+              "r": "t",
+              "text": " helper), which yields a concrete instance with a valid BrowseName and reference type."
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Optional members are not auto-created.",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": " Only mandatory members exist after instantiation; the optional members a connector reads ("
+            },
+            {
+              "r": "code",
+              "text": "SourceNodeId"
+            },
+            {
+              "r": "t",
+              "text": ", "
+            },
+            {
+              "r": "code",
+              "text": "RenderTargetKind"
+            },
+            {
+              "r": "t",
+              "text": ", "
+            },
+            {
+              "r": "code",
+              "text": "Scale"
+            },
+            {
+              "r": "t",
+              "text": ", "
+            },
+            {
+              "r": "code",
+              "text": "BadQualityAction"
+            },
+            {
+              "r": "t",
+              "text": ", and the 0.2 members "
+            },
+            {
+              "r": "code",
+              "text": "SignalRole"
+            },
+            {
+              "r": "t",
+              "text": ", "
+            },
+            {
+              "r": "code",
+              "text": "SourceSemanticId"
+            },
+            {
+              "r": "t",
+              "text": ", "
+            },
+            {
+              "r": "code",
+              "text": "AlarmAspect"
+            },
+            {
+              "r": "t",
+              "text": ", "
+            },
+            {
+              "r": "code",
+              "text": "CommandTargetNodeId"
+            },
+            {
+              "r": "t",
+              "text": ", "
+            },
+            {
+              "r": "code",
+              "text": "CommandTriggerPropertyName"
+            },
+            {
+              "r": "t",
+              "text": ") must be explicitly created so they carry a BrowseName and are browsable/readable."
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Discovery uses the registry, not the represented object.",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": " A connector enumerates representations from "
+            },
+            {
+              "r": "code",
+              "text": "Server/OpenUSD/Representations"
+            },
+            {
+              "r": "t",
+              "text": " (Organizes) — it does not need to know or reach the represented Object, confirming the Part 1 discovery facility is sufficient on its own."
+            }
+          ]
+        ]
+      },
+      {
+        "t": "annex-clause",
+        "id": "cG-5",
+        "title": "Composition / aggregation (validated)",
+        "level": 1
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The sample also exercises the composition model (base spec "
+          },
+          {
+            "r": "t",
+            "text": "§7.10"
+          },
+          {
+            "r": "t",
+            "text": "–"
+          },
+          {
+            "r": "t",
+            "text": "§7.10.2"
+          },
+          {
+            "r": "t",
+            "text": "):"
+          }
+        ]
+      },
+      {
+        "t": "list",
+        "ordered": false,
+        "level": 0,
+        "items": [
+          [
+            {
+              "r": "t",
+              "text": "1:1 (Child).",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": " The pump is composed of an "
+            },
+            {
+              "r": "code",
+              "text": "Impeller"
+            },
+            {
+              "r": "t",
+              "text": " and a "
+            },
+            {
+              "r": "code",
+              "text": "Bearing"
+            },
+            {
+              "r": "t",
+              "text": " component Object, each with its own representation, declared as "
+            },
+            {
+              "r": "code",
+              "text": "One"
+            },
+            {
+              "r": "t",
+              "text": " "
+            },
+            {
+              "r": "code",
+              "text": "<Component>"
+            },
+            {
+              "r": "t",
+              "text": " bindings ("
+            },
+            {
+              "r": "code",
+              "text": "CompositionArc = Child"
+            },
+            {
+              "r": "t",
+              "text": ") that compose the "
+            },
+            {
+              "r": "code",
+              "text": "…/Impeller"
+            },
+            {
+              "r": "t",
+              "text": " and "
+            },
+            {
+              "r": "code",
+              "text": "…/Bearing"
+            },
+            {
+              "r": "t",
+              "text": " child prims."
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "1..n (Instance) + dynamic.",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": " A "
+            },
+            {
+              "r": "code",
+              "text": "ProductionLine"
+            },
+            {
+              "r": "t",
+              "text": " Object aggregates 1..n pumps via a "
+            },
+            {
+              "r": "code",
+              "text": "Many"
+            },
+            {
+              "r": "t",
+              "text": " "
+            },
+            {
+              "r": "code",
+              "text": "<Component>"
+            },
+            {
+              "r": "t",
+              "text": " binding ("
+            },
+            {
+              "r": "code",
+              "text": "CompositionArc = Instance"
+            },
+            {
+              "r": "t",
+              "text": ", "
+            },
+            {
+              "r": "code",
+              "text": "Dynamic = true"
+            },
+            {
+              "r": "t",
+              "text": "), authoring an instanceable reference prim per pump under "
+            },
+            {
+              "r": "code",
+              "text": "/Plant/Line1/Pumps"
+            },
+            {
+              "r": "t",
+              "text": ". A pump is added and removed at runtime; with "
+            },
+            {
+              "r": "code",
+              "text": "ModelChangeEmissionEnabled"
+            },
+            {
+              "r": "t",
+              "text": " the server emits "
+            },
+            {
+              "r": "code",
+              "text": "GeneralModelChangeEvent"
+            },
+            {
+              "r": "t",
+              "text": "s and the connector reconciles the prims (new prim authored; removed prim set "
+            },
+            {
+              "r": "code",
+              "text": "active = false"
+            },
+            {
+              "r": "t",
+              "text": ")."
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Cross-server (Reference).",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": " A "
+            },
+            {
+              "r": "code",
+              "text": "<Component>"
+            },
+            {
+              "r": "t",
+              "text": " binding carries "
+            },
+            {
+              "r": "code",
+              "text": "ComponentServerUri"
+            },
+            {
+              "r": "t",
+              "text": "/"
+            },
+            {
+              "r": "code",
+              "text": "ComponentEndpointUrl"
+            },
+            {
+              "r": "t",
+              "text": " for an OEM pump on another server; the connector composes its reference prim and (given a remote session factory) federates to drive its bindings."
+            }
+          ]
+        ]
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Composition-specific implementer findings (generic):"
+          }
+        ]
+      },
+      {
+        "t": "list",
+        "ordered": false,
+        "level": 0,
+        "items": [
+          [
+            {
+              "r": "t",
+              "text": "Reach the represented Object via the aggregating reference.",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": " Resolve a representation's owner by browsing the inverse of "
+            },
+            {
+              "r": "code",
+              "text": "HasComponent"
+            },
+            {
+              "r": "t",
+              "text": "/"
+            },
+            {
+              "r": "code",
+              "text": "HasAddIn"
+            },
+            {
+              "r": "t",
+              "text": " ("
+            },
+            {
+              "r": "code",
+              "text": "Aggregates"
+            },
+            {
+              "r": "t",
+              "text": "), not any hierarchical reference — otherwise the "
+            },
+            {
+              "r": "code",
+              "text": "Organizes"
+            },
+            {
+              "r": "t",
+              "text": " link from the registry is mistaken for the parent."
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Process every representation.",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": " Composition spans the aggregating representation and each component's own representation, so a connector iterates all registry entries, not just the first."
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "One ",
+              "b": true
+            },
+            {
+              "r": "code",
+              "text": "OfType"
+            },
+            {
+              "r": "t",
+              "text": " filter covers both model-change events.",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": " "
+            },
+            {
+              "r": "code",
+              "text": "GeneralModelChangeEventType"
+            },
+            {
+              "r": "t",
+              "text": " and "
+            },
+            {
+              "r": "code",
+              "text": "SemanticChangeEventType"
+            },
+            {
+              "r": "t",
+              "text": " both derive from "
+            },
+            {
+              "r": "code",
+              "text": "BaseModelChangeEventType"
+            },
+            {
+              "r": "t",
+              "text": ", so a single "
+            },
+            {
+              "r": "code",
+              "text": "OfType(BaseModelChangeEventType)"
+            },
+            {
+              "r": "t",
+              "text": " event filter suffices."
+            }
+          ]
+        ]
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "code",
+            "text": "PumpOpenUsdE2eTests"
+          },
+          {
+            "r": "t",
+            "text": " now has "
+          },
+          {
+            "r": "t",
+            "text": "sixteen",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " passing cases; the five composition cases are "
+          },
+          {
+            "r": "code",
+            "text": "PumpComponentsComposeChildPrims"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "ProductionLineAggregatesPumps"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "DynamicPumpIsComposedThenDeactivated"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "CrossServerComponentIsComposed"
+          },
+          {
+            "r": "t",
+            "text": ", and "
+          },
+          {
+            "r": "code",
+            "text": "ComponentBindingsAreDiscoverable"
+          },
+          {
+            "r": "t",
+            "text": "."
+          }
+        ]
+      },
+      {
+        "t": "annex-clause",
+        "id": "cG-6",
+        "title": "Asset content delivery",
+        "level": 1
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The reference server also demonstrates the optional "
+          },
+          {
+            "r": "code",
+            "text": "OU-AssetDelivery"
+          },
+          {
+            "r": "t",
+            "text": " capability from the base spec "
+          },
+          {
+            "r": "t",
+            "text": "§7.11"
+          },
+          {
+            "r": "t",
+            "text": ". "
+          },
+          {
+            "r": "code",
+            "text": "PlantStage"
+          },
+          {
+            "r": "t",
+            "text": " exposes an "
+          },
+          {
+            "r": "code",
+            "text": "Assets"
+          },
+          {
+            "r": "t",
+            "text": " folder whose "
+          },
+          {
+            "r": "code",
+            "text": "OpenUsdAssetType"
+          },
+          {
+            "r": "t",
+            "text": " children serve the "
+          },
+          {
+            "r": "code",
+            "text": ".usda"
+          },
+          {
+            "r": "t",
+            "text": " layers through read-only Part 5 "
+          },
+          {
+            "r": "code",
+            "text": "FileType"
+          },
+          {
+            "r": "t",
+            "text": " streams: "
+          },
+          {
+            "r": "code",
+            "text": "Plant.usda"
+          },
+          {
+            "r": "t",
+            "text": " ("
+          },
+          {
+            "r": "code",
+            "text": "RootLayer"
+          },
+          {
+            "r": "t",
+            "text": "), "
+          },
+          {
+            "r": "code",
+            "text": "pump.usda"
+          },
+          {
+            "r": "t",
+            "text": " ("
+          },
+          {
+            "r": "code",
+            "text": "Reference"
+          },
+          {
+            "r": "t",
+            "text": "), and "
+          },
+          {
+            "r": "code",
+            "text": "remote-pump.usda"
+          },
+          {
+            "r": "t",
+            "text": " ("
+          },
+          {
+            "r": "code",
+            "text": "Reference"
+          },
+          {
+            "r": "t",
+            "text": "). Each served layer carries a SHA-256 digest."
+          }
+        ]
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "A generic connector can therefore browse "
+          },
+          {
+            "r": "code",
+            "text": "<Stage>.Assets"
+          },
+          {
+            "r": "t",
+            "text": ", download and verify the layers, cache them with the same relative "
+          },
+          {
+            "r": "code",
+            "text": "AssetIdentifier"
+          },
+          {
+            "r": "t",
+            "text": " paths, and compose the live layer over the local "
+          },
+          {
+            "r": "code",
+            "text": "Plant.usda"
+          },
+          {
+            "r": "t",
+            "text": ". The rendered pump twin is self-contained: no external asset repository or manual USD asset setup is required when the server advertises this capability."
+          }
+        ]
+      },
+      {
+        "t": "annex-clause",
+        "id": "cG-7",
+        "title": "Where the bindings live",
+        "level": 1
+      },
+      {
+        "t": "list",
+        "ordered": false,
+        "level": 0,
+        "items": [
+          [
+            {
+              "r": "t",
+              "text": "Machine-readable descriptor:",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": " "
+            },
+            {
+              "r": "code",
+              "text": "../../extras/openusd-binding/examples/pumps/Pumps.OpenUsdBinding.json"
+            },
+            {
+              "r": "t",
+              "text": "."
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Illustrative instance overlay (NodeSet):",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": " "
+            },
+            {
+              "r": "code",
+              "text": "Opc.Ua.Pumps.OpenUsd.NodeSet2.xml"
+            },
+            {
+              "r": "t",
+              "text": " (this folder) — a concrete "
+            },
+            {
+              "r": "code",
+              "text": "Pump101"
+            },
+            {
+              "r": "t",
+              "text": " with the AddIn and the three telemetry bindings, for browsing/inspection. The alarm, command, and integrity capabilities are shown in the descriptor JSON and the C# sample."
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Runnable USD writer:",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": " "
+            },
+            {
+              "r": "code",
+              "text": "../../extras/openusd-binding/examples/pumps/usd_writer.py"
+            },
+            {
+              "r": "t",
+              "text": " (+ generated "
+            },
+            {
+              "r": "code",
+              "text": "live.usda"
+            },
+            {
+              "r": "t",
+              "text": ")."
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "C# end-to-end:",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": " the "
+            },
+            {
+              "r": "code",
+              "text": "PumpDeviceIntegrationServer"
+            },
+            {
+              "r": "t",
+              "text": " sample in "
+            },
+            {
+              "r": "code",
+              "text": "marcschier/UA-.NETStandard"
+            },
+            {
+              "r": "t",
+              "text": " exposes the representation + bindings, and "
+            },
+            {
+              "r": "code",
+              "text": "PumpOpenUsdE2eTests"
+            },
+            {
+              "r": "t",
+              "text": " starts the server via the generic host, connects a client session, discovers the representation and bindings through "
+            },
+            {
+              "r": "code",
+              "text": "Server/OpenUSD/Representations"
+            },
+            {
+              "r": "t",
+              "text": ", subscribes to the bound source Variables, and drives a generic connector into a mock USD sink (asserted in CI). A Python "
+            },
+            {
+              "r": "code",
+              "text": "pxr"
+            },
+            {
+              "r": "t",
+              "text": " writer authors a real "
+            },
+            {
+              "r": "code",
+              "text": "live.usda"
+            },
+            {
+              "r": "t",
+              "text": " locally (Omniverse rendering is out of CI scope)."
+            }
+          ]
+        ]
+      }
+    ],
+    "annex-h": [
+      {
+        "t": "annex",
+        "id": "cH",
+        "title": "OpenUSD bindings for robotics",
+        "normative": false
+      },
+      {
+        "t": "annex-clause",
+        "id": "cH-1",
+        "title": "Scope",
+        "level": 1
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "This addendum binds one OPC 40010 "
+          },
+          {
+            "r": "code",
+            "text": "MotionDeviceSystem"
+          },
+          {
+            "r": "t",
+            "text": " ("
+          },
+          {
+            "r": "code",
+            "text": "RobotCell"
+          },
+          {
+            "r": "t",
+            "text": ") to "
+          },
+          {
+            "r": "code",
+            "text": "/Cell"
+          },
+          {
+            "r": "t",
+            "text": " in an OpenUSD stage. It defines recursive composition from the system to two articulated "
+          },
+          {
+            "r": "code",
+            "text": "MotionDevice"
+          },
+          {
+            "r": "t",
+            "text": " robots ("
+          },
+          {
+            "r": "code",
+            "text": "/Cell/Robots/R1"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "/Cell/Robots/R2"
+          },
+          {
+            "r": "t",
+            "text": ") and from each robot to six Axis link Xforms. Each Axis carries a read-only telemetry binding ("
+          },
+          {
+            "r": "code",
+            "text": "OpenUsdValueChangeBindingType"
+          },
+          {
+            "r": "t",
+            "text": ") from "
+          },
+          {
+            "r": "code",
+            "text": "ParameterSet/ActualPosition"
+          },
+          {
+            "r": "t",
+            "text": " in degrees to a USD rotate op ("
+          },
+          {
+            "r": "code",
+            "text": "xformOp:rotateZ"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "xformOp:rotateY"
+          },
+          {
+            "r": "t",
+            "text": ", or "
+          },
+          {
+            "r": "code",
+            "text": "xformOp:rotateX"
+          },
+          {
+            "r": "t",
+            "text": "). It also shows an emergency-stop alarm binding driving beacon visibility and a per-robot warning-halo visibility, an opt-in speed-override command binding, and a dynamic gripper tool reference mounted on R1's flange."
+          }
+        ]
+      },
+      {
+        "t": "annex-clause",
+        "id": "cH-2",
+        "title": "How the bindings are applied",
+        "level": 1
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "A "
+          },
+          {
+            "r": "code",
+            "text": "MotionDeviceSystemType"
+          },
+          {
+            "r": "t",
+            "text": " instance gains an OpenUSD representation by composing an "
+          },
+          {
+            "r": "code",
+            "text": "OpenUsdRepresentation"
+          },
+          {
+            "r": "t",
+            "text": " AddIn ("
+          },
+          {
+            "r": "code",
+            "text": "HasAddIn"
+          },
+          {
+            "r": "t",
+            "text": ") that targets a stage and "
+          },
+          {
+            "r": "code",
+            "text": "/Cell"
+          },
+          {
+            "r": "t",
+            "text": ", and by carrying "
+          },
+          {
+            "r": "code",
+            "text": "<Component>"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "<Binding>"
+          },
+          {
+            "r": "t",
+            "text": " children. Component bindings then recursively compose the represented children:"
+          }
+        ]
+      },
+      {
+        "t": "code",
+        "lang": "text",
+        "lines": [
+          "RobotCell : MotionDeviceSystemType",
+          "  └─ HasAddIn OpenUsdRepresentation : OpenUsdRepresentationType",
+          "       Stage    = NodeId(Server/OpenUSD/Stages/RobotCellStage)",
+          "       PrimPath = \"/Cell\"",
+          "       ├─ <Component> RobotsAggregation : OpenUsdComponentBindingType",
+          "       │    MotionDevices (Organizes, Many) -> /Cell/Robots/<BrowseName>, Reference @robot.usda@</Robot>",
+          "       ├─ EmergencyStopBeacon : OpenUsdAlarmBindingType (-> /Cell/SafetyBeacon.visibility)",
+          "       └─ SpeedOverrideCommand : OpenUsdCommandBindingType (-> /Cell.inputs:speedOverride)",
+          "",
+          "MotionDevices/R1 : MotionDeviceType",
+          "  └─ HasAddIn OpenUsdRepresentation",
+          "       PrimPath = \"/Cell/Robots/R1\"",
+          "       ├─ <Component> AxesAggregation : Axes (HasComponent, Many) -> child link Xforms",
+          "       ├─ <Component> GripperTool : Flange/MountedTool -> /Cell/Robots/R1/Base/J1/J2/J3/J4/J5/J6/Flange/Tool, Reference @tool.usda@</Gripper>, Dynamic=true",
+          "       └─ EmergencyStopWarning : OpenUsdAlarmBindingType (-> /Cell/Robots/R1/Warning.visibility)",
+          "",
+          "MotionDevices/R1/Axes/A1 : AxisType",
+          "  └─ HasAddIn OpenUsdRepresentation",
+          "       PrimPath = \"/Cell/Robots/R1/Base/J1\"",
+          "       └─ AxisActualPosition : OpenUsdValueChangeBindingType",
+          "            SourceBrowsePath = \"/ParameterSet/ActualPosition\"",
+          "            TargetPropertyName = \"xformOp:rotateZ\"",
+          "            RenderTargetKind = Rotation"
+        ]
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The AddIns are also "
+          },
+          {
+            "r": "code",
+            "text": "Organizes"
+          },
+          {
+            "r": "t",
+            "text": "-listed from "
+          },
+          {
+            "r": "code",
+            "text": "Server/OpenUSD/Representations"
+          },
+          {
+            "r": "t",
+            "text": ", so a generic connector discovers them without knowing anything about robotics. Each Axis binding resolves its source relative to the represented Axis Object; the effective runtime key is "
+          },
+          {
+            "r": "code",
+            "text": "(Axis Object, BindingDefinitionId)"
+          },
+          {
+            "r": "t",
+            "text": "."
+          }
+        ]
+      },
+      {
+        "t": "annex-clause",
+        "id": "cH-3",
+        "title": "OpenUSD bindings for MotionDeviceSystem / MotionDevice / Axis",
+        "level": 1
+      },
+      {
+        "t": "table",
+        "id": "openusd-bindings-for-motiondevicesystem---motiondevice---axis-tab1",
+        "caption": "OpenUSD bindings for MotionDeviceSystem / MotionDevice / Axis",
+        "kind": "generic",
+        "headers": [
+          [
+            {
+              "r": "t",
+              "text": "Binding"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Source / component relationship"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Target property"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "USD type"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "RenderTargetKind / arc"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Conversion"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "r": "t",
+                "text": "RobotsAggregation",
+                "b": true
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "RobotCell/MotionDevices"
+              },
+              {
+                "r": "t",
+                "text": " ("
+              },
+              {
+                "r": "code",
+                "text": "Organizes"
+              },
+              {
+                "r": "t",
+                "text": ", Many)"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/Cell/Robots/<BrowseName>"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "prim reference"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Reference"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "compose "
+              },
+              {
+                "r": "code",
+                "text": "@robot.usda@</Robot>"
+              },
+              {
+                "r": "t",
+                "text": "; non-instanceable"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "AxisActualPosition A1",
+                "b": true
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Axis "
+              },
+              {
+                "r": "code",
+                "text": "A1/ParameterSet/ActualPosition"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "xformOp:rotateZ"
+              },
+              {
+                "r": "t",
+                "text": " on "
+              },
+              {
+                "r": "code",
+                "text": ".../Base/J1"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "double"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Rotation"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "degrees -> degrees"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "AxisActualPosition A2",
+                "b": true
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Axis "
+              },
+              {
+                "r": "code",
+                "text": "A2/ParameterSet/ActualPosition"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "xformOp:rotateY"
+              },
+              {
+                "r": "t",
+                "text": " on "
+              },
+              {
+                "r": "code",
+                "text": ".../Base/J1/J2"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "double"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Rotation"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "degrees -> degrees"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "AxisActualPosition A3",
+                "b": true
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Axis "
+              },
+              {
+                "r": "code",
+                "text": "A3/ParameterSet/ActualPosition"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "xformOp:rotateY"
+              },
+              {
+                "r": "t",
+                "text": " on "
+              },
+              {
+                "r": "code",
+                "text": ".../Base/J1/J2/J3"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "double"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Rotation"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "degrees -> degrees"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "AxisActualPosition A4",
+                "b": true
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Axis "
+              },
+              {
+                "r": "code",
+                "text": "A4/ParameterSet/ActualPosition"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "xformOp:rotateX"
+              },
+              {
+                "r": "t",
+                "text": " on "
+              },
+              {
+                "r": "code",
+                "text": ".../Base/J1/J2/J3/J4"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "double"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Rotation"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "degrees -> degrees"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "AxisActualPosition A5",
+                "b": true
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Axis "
+              },
+              {
+                "r": "code",
+                "text": "A5/ParameterSet/ActualPosition"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "xformOp:rotateY"
+              },
+              {
+                "r": "t",
+                "text": " on "
+              },
+              {
+                "r": "code",
+                "text": ".../Base/J1/J2/J3/J4/J5"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "double"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Rotation"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "degrees -> degrees"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "AxisActualPosition A6",
+                "b": true
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Axis "
+              },
+              {
+                "r": "code",
+                "text": "A6/ParameterSet/ActualPosition"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "xformOp:rotateX"
+              },
+              {
+                "r": "t",
+                "text": " on "
+              },
+              {
+                "r": "code",
+                "text": ".../Base/J1/J2/J3/J4/J5/J6"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "double"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Rotation"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "degrees -> degrees"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "EmergencyStopBeacon",
+                "b": true
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/SafetyStates/EmergencyStop"
+              },
+              {
+                "r": "t",
+                "text": " ActiveState"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/Cell/SafetyBeacon.visibility"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "token"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Visibility"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "active -> "
+              },
+              {
+                "r": "code",
+                "text": "inherited"
+              },
+              {
+                "r": "t",
+                "text": ", clear -> "
+              },
+              {
+                "r": "code",
+                "text": "invisible"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "EmergencyStopWarning",
+                "b": true
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "shared cell e-stop ActiveState"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "robot "
+              },
+              {
+                "r": "code",
+                "text": "Warning.visibility"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "token"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Visibility"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "active -> "
+              },
+              {
+                "r": "code",
+                "text": "inherited"
+              },
+              {
+                "r": "t",
+                "text": ", clear -> "
+              },
+              {
+                "r": "code",
+                "text": "invisible"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "SpeedOverrideCommand",
+                "b": true
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "USD command intent -> "
+              },
+              {
+                "r": "code",
+                "text": "/Controllers/Controller_C1/ParameterSet/SpeedOverride"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/Cell.inputs:speedOverride"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "double"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "command"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "opt-in, authorized write"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "GripperTool",
+                "b": true
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "R1/Flange/MountedTool"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "/Cell/Robots/R1/.../Flange/Tool"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "prim reference"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Reference, Dynamic"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "compose "
+              },
+              {
+                "r": "code",
+                "text": "@tool.usda@</Gripper>"
+              },
+              {
+                "r": "t",
+                "text": " while mounted"
+              }
+            ]
+          ]
+        ],
+        "widths": null,
+        "note": null
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Notes:"
+          }
+        ]
+      },
+      {
+        "t": "list",
+        "ordered": false,
+        "level": 0,
+        "items": [
+          [
+            {
+              "r": "t",
+              "text": "Every joint target prim must contain the named "
+            },
+            {
+              "r": "code",
+              "text": "xformOp:rotate*"
+            },
+            {
+              "r": "t",
+              "text": " in "
+            },
+            {
+              "r": "code",
+              "text": "xformOpOrder"
+            },
+            {
+              "r": "t",
+              "text": "."
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "The Axis values are already in degrees; no radians conversion is applied."
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "The robot safety binding targets "
+            },
+            {
+              "r": "code",
+              "text": "Warning.visibility"
+            },
+            {
+              "r": "t",
+              "text": " on each robot root. Visibility is used because the shared emergency-stop source is Boolean and the generic connector maps Boolean values reliably to the "
+            },
+            {
+              "r": "code",
+              "text": "Visibility"
+            },
+            {
+              "r": "t",
+              "text": " render target ("
+            },
+            {
+              "r": "code",
+              "text": "inherited"
+            },
+            {
+              "r": "t",
+              "text": " / "
+            },
+            {
+              "r": "code",
+              "text": "invisible"
+            },
+            {
+              "r": "t",
+              "text": ")."
+            }
+          ]
+        ]
+      },
+      {
+        "t": "annex-clause",
+        "id": "cH-4",
+        "title": "Composition / aggregation",
+        "level": 1
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The robotics example exercises recursive composition (base spec "
+          },
+          {
+            "r": "t",
+            "text": "§7.10"
+          },
+          {
+            "r": "t",
+            "text": "–"
+          },
+          {
+            "r": "t",
+            "text": "§7.10.2"
+          },
+          {
+            "r": "t",
+            "text": "). The system aggregates MotionDevices using "
+          },
+          {
+            "r": "code",
+            "text": "CompositionArc = Reference"
+          },
+          {
+            "r": "t",
+            "text": "; the base "
+          },
+          {
+            "r": "code",
+            "text": "Cell.usda"
+          },
+          {
+            "r": "t",
+            "text": " layer contains positioned empty "
+          },
+          {
+            "r": "code",
+            "text": "/Cell/Robots/R1"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "/Cell/Robots/R2"
+          },
+          {
+            "r": "t",
+            "text": " mount-point Xforms, and the connector authors reference arcs on those prims in the stronger "
+          },
+          {
+            "r": "code",
+            "text": "live.usda"
+          },
+          {
+            "r": "t",
+            "text": " layer. Each robot then composes its Axes using "
+          },
+          {
+            "r": "code",
+            "text": "CompositionArc = Child"
+          },
+          {
+            "r": "t",
+            "text": ", because the link prims are pre-authored inside "
+          },
+          {
+            "r": "code",
+            "text": "robot.usda"
+          },
+          {
+            "r": "t",
+            "text": ". The nesting mirrors the OPC 40010 structure while preserving an artist-authored USD kinematic chain."
+          }
+        ]
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Reference, not Instance, is intentional for "
+          },
+          {
+            "r": "code",
+            "text": "/Cell/Robots/R1"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "/Cell/Robots/R2"
+          },
+          {
+            "r": "t",
+            "text": ": both robots use the same reusable "
+          },
+          {
+            "r": "code",
+            "text": "robot.usda"
+          },
+          {
+            "r": "t",
+            "text": " asset, but each needs independent live opinions on the same relative joint paths. Instanceable prims share prototype composition and are not suitable when every robot must articulate independently. The R1 gripper uses dynamic Reference composition so a model-change event can add or remove "
+          },
+          {
+            "r": "code",
+            "text": "/Cell/Robots/R1/Base/J1/J2/J3/J4/J5/J6/Flange/Tool"
+          },
+          {
+            "r": "t",
+            "text": " without mutating "
+          },
+          {
+            "r": "code",
+            "text": "Cell.usda"
+          },
+          {
+            "r": "t",
+            "text": "."
+          }
+        ]
+      },
+      {
+        "t": "annex-clause",
+        "id": "cH-5",
+        "title": "Asset content delivery",
+        "level": 1
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The reference server also demonstrates the optional "
+          },
+          {
+            "r": "code",
+            "text": "OU-AssetDelivery"
+          },
+          {
+            "r": "t",
+            "text": " capability from the base spec "
+          },
+          {
+            "r": "t",
+            "text": "§7.11"
+          },
+          {
+            "r": "t",
+            "text": ". "
+          },
+          {
+            "r": "code",
+            "text": "RobotCellStage"
+          },
+          {
+            "r": "t",
+            "text": " exposes an "
+          },
+          {
+            "r": "code",
+            "text": "Assets"
+          },
+          {
+            "r": "t",
+            "text": " folder whose "
+          },
+          {
+            "r": "code",
+            "text": "OpenUsdAssetType"
+          },
+          {
+            "r": "t",
+            "text": " children serve the "
+          },
+          {
+            "r": "code",
+            "text": ".usda"
+          },
+          {
+            "r": "t",
+            "text": " layers through read-only Part 5 "
+          },
+          {
+            "r": "code",
+            "text": "FileType"
+          },
+          {
+            "r": "t",
+            "text": " streams: "
+          },
+          {
+            "r": "code",
+            "text": "Cell.usda"
+          },
+          {
+            "r": "t",
+            "text": " ("
+          },
+          {
+            "r": "code",
+            "text": "RootLayer"
+          },
+          {
+            "r": "t",
+            "text": "), "
+          },
+          {
+            "r": "code",
+            "text": "robot.usda"
+          },
+          {
+            "r": "t",
+            "text": " ("
+          },
+          {
+            "r": "code",
+            "text": "Reference"
+          },
+          {
+            "r": "t",
+            "text": "), and "
+          },
+          {
+            "r": "code",
+            "text": "tool.usda"
+          },
+          {
+            "r": "t",
+            "text": " ("
+          },
+          {
+            "r": "code",
+            "text": "Reference"
+          },
+          {
+            "r": "t",
+            "text": "). Each served layer carries a SHA-256 digest."
+          }
+        ]
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "A generic connector can therefore browse "
+          },
+          {
+            "r": "code",
+            "text": "<Stage>.Assets"
+          },
+          {
+            "r": "t",
+            "text": ", download and verify the layers, cache them with the same relative "
+          },
+          {
+            "r": "code",
+            "text": "AssetIdentifier"
+          },
+          {
+            "r": "t",
+            "text": " paths, and compose the live layer over the local "
+          },
+          {
+            "r": "code",
+            "text": "Cell.usda"
+          },
+          {
+            "r": "t",
+            "text": ". The rendered robot-cell twin is self-contained: no external asset repository or manual USD asset setup is required when the server advertises this capability."
+          }
+        ]
+      },
+      {
+        "t": "annex-clause",
+        "id": "cH-6",
+        "title": "Reference implementation",
+        "level": 1
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The "
+          },
+          {
+            "r": "code",
+            "text": "RoboticsDeviceIntegrationServer"
+          },
+          {
+            "r": "t",
+            "text": " sample realizes this design and validates it with "
+          },
+          {
+            "r": "code",
+            "text": "RobotOpenUsdE2eTests"
+          },
+          {
+            "r": "t",
+            "text": ": the companion Robotics model is served; the "
+          },
+          {
+            "r": "code",
+            "text": "RobotCell"
+          },
+          {
+            "r": "t",
+            "text": " representation and child robot/Axis representations are discoverable through "
+          },
+          {
+            "r": "code",
+            "text": "Server/OpenUSD/Representations"
+          },
+          {
+            "r": "t",
+            "text": "; live Axis telemetry drives a generic connector into a USD sink; the e-stop alarm updates cell beacon and robot warning visibility; the speed override command is declared but fail-closed unless the connector enables commands and the server authorizes the write; and the dynamic gripper is reconciled from model-change events."
+          }
+        ]
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The connector/bridge is the same generic implementation used for the pump example. It does not branch on "
+          },
+          {
+            "r": "code",
+            "text": "MotionDeviceSystemType"
+          },
+          {
+            "r": "t",
+            "text": "; it processes every "
+          },
+          {
+            "r": "code",
+            "text": "OpenUsdRepresentation"
+          },
+          {
+            "r": "t",
+            "text": " and its "
+          },
+          {
+            "r": "code",
+            "text": "<Binding>"
+          },
+          {
+            "r": "t",
+            "text": " / "
+          },
+          {
+            "r": "code",
+            "text": "<Component>"
+          },
+          {
+            "r": "t",
+            "text": " children."
+          }
+        ]
+      },
+      {
+        "t": "annex-clause",
+        "id": "cH-7",
+        "title": "Where the bindings live",
+        "level": 1
+      },
+      {
+        "t": "list",
+        "ordered": false,
+        "level": 0,
+        "items": [
+          [
+            {
+              "r": "t",
+              "text": "Machine-readable descriptor:",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": " "
+            },
+            {
+              "r": "code",
+              "text": "../../extras/openusd-binding/examples/robotics/Robotics.OpenUsdBinding.json"
+            },
+            {
+              "r": "t",
+              "text": "."
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Illustrative instance overlay (NodeSet):",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": " "
+            },
+            {
+              "r": "code",
+              "text": "Opc.Ua.Robotics.OpenUsd.NodeSet2.xml"
+            },
+            {
+              "r": "t",
+              "text": " (this folder) — a concrete "
+            },
+            {
+              "r": "code",
+              "text": "RobotCell"
+            },
+            {
+              "r": "t",
+              "text": " with an "
+            },
+            {
+              "r": "code",
+              "text": "OpenUsdRepresentation"
+            },
+            {
+              "r": "t",
+              "text": " AddIn, a "
+            },
+            {
+              "r": "code",
+              "text": "RobotsAggregation"
+            },
+            {
+              "r": "t",
+              "text": " component binding, and representative robot/Axis bindings for browsing/inspection."
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Runnable USD writer:",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": " "
+            },
+            {
+              "r": "code",
+              "text": "../../extras/openusd-binding/examples/robotics/usd_writer.py"
+            },
+            {
+              "r": "t",
+              "text": " (+ generated "
+            },
+            {
+              "r": "code",
+              "text": "live.usda"
+            },
+            {
+              "r": "t",
+              "text": ")."
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "USD assets and tutorial:",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": " "
+            },
+            {
+              "r": "code",
+              "text": "../../extras/openusd-binding/examples/robotics/Cell.usda"
+            },
+            {
+              "r": "t",
+              "text": ", "
+            },
+            {
+              "r": "code",
+              "text": "robot.usda"
+            },
+            {
+              "r": "t",
+              "text": ", "
+            },
+            {
+              "r": "code",
+              "text": "tool.usda"
+            },
+            {
+              "r": "t",
+              "text": ", "
+            },
+            {
+              "r": "code",
+              "text": "stage.usda"
+            },
+            {
+              "r": "t",
+              "text": ", "
+            },
+            {
+              "r": "code",
+              "text": "render_robot.py"
+            },
+            {
+              "r": "t",
+              "text": ", and "
+            },
+            {
+              "r": "code",
+              "text": "E2E-GUIDE.md"
+            },
+            {
+              "r": "t",
+              "text": "."
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "C# end-to-end:",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": " the "
+            },
+            {
+              "r": "code",
+              "text": "RoboticsDeviceIntegrationServer"
+            },
+            {
+              "r": "t",
+              "text": " sample exposes the representation + bindings, and "
+            },
+            {
+              "r": "code",
+              "text": "RobotOpenUsdE2eTests"
+            },
+            {
+              "r": "t",
+              "text": " discovers them through the registry and drives the same generic connector infrastructure used by pumps."
+            }
+          ]
+        ]
+      }
     ]
   },
   "order": [
@@ -14332,6 +17718,8 @@
     "annex-c",
     "annex-d",
     "annex-e",
-    "annex-f"
+    "annex-f",
+    "annex-g",
+    "annex-h"
   ]
 }
