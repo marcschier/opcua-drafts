@@ -51,6 +51,18 @@ STANDARD_NODES = {
     'i=601': 'SimpleAttributeOperand', 'i=14523': 'DataSetMetaDataType',
     'i=14593': 'ConfigurationVersionDataType', 'i=20998': 'VersionTime',
     'i=23751': 'UriString', 'i=24263': 'SemanticVersionString',
+    'i=19': 'StatusCode', 'i=14533': 'KeyValuePair',
+    'i=2069': 'AuditSessionEventType',
+}
+
+# Base-namespace types that are EventTypes. A model's own supertype chain leaves the model
+# as soon as it reaches one of these, and a NodeSet does not carry the base hierarchy, so
+# membership is stated here rather than walked. Without it an audit or alarm type is routed
+# to the ObjectTypes clause instead of the EventTypes clause.
+STANDARD_EVENT_TYPES = {
+    'i=2041': 'BaseEventType', 'i=2130': 'SystemEventType',
+    'i=11446': 'ProgressEventType', 'i=2782': 'ConditionType',
+    'i=10637': 'OffNormalAlarmType', 'i=2069': 'AuditSessionEventType',
 }
 
 # NodeIds a document borrows from a RequiredModel. These cannot be derived: the NodeSet
@@ -83,6 +95,13 @@ def _ns_index_of(node_id):
     if node_id.startswith('ns='):
         return node_id[3:].split(';', 1)[0]
     return '0'
+
+
+def _standard_prefix(name, doc_ns_index):
+    """A base-namespace BrowseName, prefixed unless this document *is* namespace 0."""
+    if name in STANDARD_NODES.values() and doc_ns_index != 0:
+        return '0:' + name
+    return name
 
 
 class Node:
@@ -230,6 +249,8 @@ class Model:
             seen.add(supertype_id)
             if self.plain_name_of(supertype) == ancestor_name:
                 return True
+            if ancestor_name == 'BaseEventType' and supertype_id in STANDARD_EVENT_TYPES:
+                return True
             current = self.nodes.get(supertype_id)
         return False
 
@@ -268,7 +289,11 @@ class Model:
         if n is not None:
             return n.name if n.ns_index == doc_ns_index else '%d:%s' % (n.ns_index, n.name)
         if node_id in STANDARD_NODES:
-            return '0:' + STANDARD_NODES[node_id]
+            # A document whose own namespace *is* namespace 0 — one that adds Nodes to the
+            # base namespace rather than owning one — must print base names the same way
+            # it prints its own, or one table shows the same namespace two ways.
+            prefix = '' if doc_ns_index == 0 else '0:'
+            return prefix + STANDARD_NODES[node_id]
         if node_id in self.required_model_nodes:
             return '%s:%s' % (_ns_index_of(node_id), self.required_model_nodes[node_id])
         return node_id
@@ -417,7 +442,7 @@ def type_table(model, type_name, *, doc_ns_index):
             continue
         td = model.type_definition_of(child)
         members.append({
-            'referenceType': '0:' + rt_name if rt_name in STANDARD_NODES.values() else rt_name,
+            'referenceType': _standard_prefix(rt_name, doc_ns_index),
             'nodeClass': NODE_CLASS[child.tag],
             'browseName': child.name,
             'dataType': data_type_cell(model, child, doc_ns_index=doc_ns_index),

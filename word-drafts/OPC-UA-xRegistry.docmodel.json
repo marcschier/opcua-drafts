@@ -2497,10 +2497,8 @@
               "text": " container ("
             },
             {
-              "r": "xref",
-              "target": "c6-4",
-              "kind": "clause",
-              "prefix": "6.4"
+              "r": "t",
+              "text": "§6"
             },
             {
               "r": "t",
@@ -2526,10 +2524,8 @@
               "text": ", "
             },
             {
-              "r": "xref",
-              "target": "c6-9",
-              "kind": "clause",
-              "prefix": "6.9"
+              "r": "t",
+              "text": "§8"
             },
             {
               "r": "t",
@@ -2786,8 +2782,10 @@
             "text": " is stable across representations and across registries ("
           },
           {
-            "r": "t",
-            "text": "§8"
+            "r": "xref",
+            "target": "c6-9",
+            "kind": "clause",
+            "prefix": "6.9"
           },
           {
             "r": "t",
@@ -3733,10 +3731,8 @@
             "text": " Structure ("
           },
           {
-            "r": "xref",
-            "target": "c8",
-            "kind": "clause",
-            "prefix": "8"
+            "r": "t",
+            "text": "§6.7"
           },
           {
             "r": "t",
@@ -3882,8 +3878,10 @@
             "text": " and the common attributes of "
           },
           {
-            "r": "t",
-            "text": "§6.4"
+            "r": "xref",
+            "target": "c6-5",
+            "kind": "clause",
+            "prefix": "6.5"
           },
           {
             "r": "t",
@@ -4173,20 +4171,16 @@
             "text": " ("
           },
           {
-            "r": "xref",
-            "target": "c6-9",
-            "kind": "clause",
-            "prefix": "6.9"
+            "r": "t",
+            "text": "§8"
           },
           {
             "r": "t",
             "text": "), and the common attributes of "
           },
           {
-            "r": "xref",
-            "target": "c6-5",
-            "kind": "clause",
-            "prefix": "6.5"
+            "r": "t",
+            "text": "§6.4"
           },
           {
             "r": "t",
@@ -4201,10 +4195,8 @@
             "text": " container, "
           },
           {
-            "r": "xref",
-            "target": "c7-4",
-            "kind": "clause",
-            "prefix": "7.4"
+            "r": "t",
+            "text": "§6.6"
           },
           {
             "r": "t",
@@ -4483,8 +4475,10 @@
             "text": " component ("
           },
           {
-            "r": "t",
-            "text": "§6.4"
+            "r": "xref",
+            "target": "c6-5",
+            "kind": "clause",
+            "prefix": "6.5"
           },
           {
             "r": "t",
@@ -4584,10 +4578,8 @@
             "text": " Variable, "
           },
           {
-            "r": "xref",
-            "target": "c7-1",
-            "kind": "clause",
-            "prefix": "7.1"
+            "r": "t",
+            "text": "§6.1"
           },
           {
             "r": "t",
@@ -4833,10 +4825,8 @@
             "text": " capability of "
           },
           {
-            "r": "xref",
-            "target": "c6-3",
-            "kind": "clause",
-            "prefix": "6.3"
+            "r": "t",
+            "text": "§4.3"
           },
           {
             "r": "t",
@@ -4890,10 +4880,8 @@
             "text": ") and federation ("
           },
           {
-            "r": "xref",
-            "target": "c6-9",
-            "kind": "clause",
-            "prefix": "6.9"
+            "r": "t",
+            "text": "§8"
           },
           {
             "r": "t",
@@ -5543,7 +5531,7 @@
             [
               {
                 "r": "t",
-                "text": "1001:9999"
+                "text": "63000:63559"
               }
             ]
           ],

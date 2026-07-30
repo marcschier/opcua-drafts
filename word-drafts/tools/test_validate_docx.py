@@ -106,26 +106,34 @@ def _member_row_re(row_marker, data_type):
                       + r'(?:(?!</w:tr>).)*?</w:tr>', re.S)
 
 
-def _drop_member_row(row_marker, data_type):
-    row_re = _member_row_re(row_marker, data_type)
+def _find_member_row(text, owner, row_marker, data_type):
+    """The member row inside the *owning type's* definition table.
 
+    A member of an abstract interface is re-declared in the tables of the types that
+    implement it and listed again in Annex A, so searching the whole document finds a row
+    that `check_node_tables` does not inspect. It inspects the table captioned
+    "<type> definition"; the search starts there.
+    """
+    anchor = text.find(owner + ' definition')
+    return _member_row_re(row_marker, data_type).search(text, max(anchor, 0))
+
+
+def _drop_member_row(owner, row_marker, data_type):
     def apply(text):
-        m = row_re.search(text)
+        m = _find_member_row(text, owner, row_marker, data_type)
         return text if not m else text[:m.start()] + text[m.end():]
     return apply
 
 
-def _corrupt_cell(row_marker, was, now):
+def _corrupt_cell(owner, row_marker, was, now):
     """Change one cell inside the table row that declares `row_marker`.
 
     Substituting the first occurrence in the whole document is not the same thing: a
     DataType name also appears in prose and in its own clause heading, and mutating one
     of those proves nothing about the node tables.
     """
-    row_re = _member_row_re(row_marker, was)
-
     def apply(text):
-        m = row_re.search(text)
+        m = _find_member_row(text, owner, row_marker, was)
         if not m:
             return text
         return text[:m.start()] + m.group(0).replace(was, now, 1) + text[m.end():]
@@ -146,12 +154,12 @@ def derived_mutations(document_xml, rels_xml, model, doc_ns_index):
 
     typed = _a_typed_member(document_xml, model, doc_ns_index)
     if typed:
-        member, data_type = typed
+        owner, member, data_type = typed
         out.append(('a node table loses a member row', 'node-tables',
-                    _drop_member_row(member, data_type)))
-        other = '0:Int32' if data_type != '0:Int32' else '0:Boolean'
+                    _drop_member_row(owner, member, data_type)))
+        other = 'Int32' if data_type.lstrip('0:') != 'Int32' else 'Boolean'
         out.append(('a member DataType disagrees with the NodeSet', 'node-tables',
-                    _corrupt_cell(member, data_type, other)))
+                    _corrupt_cell(owner, member, data_type, other)))
     else:
         skipped.append('node-tables: the document defines no type members')
 
@@ -175,10 +183,10 @@ def derived_mutations(document_xml, rels_xml, model, doc_ns_index):
 
 
 def _a_typed_member(document_xml, model, doc_ns_index):
-    """A member BrowseName that appears in a node table, with its printed DataType."""
+    """An owning type, a member BrowseName of it, and that member's printed DataType."""
     from opcdocx import nodeset_tables
     for node in model.nodes.values():
-        if node.tag != 'UAObjectType':
+        if node.tag != 'UAObjectType' or (node.name + ' definition') not in document_xml:
             continue
         for _, child in model.members_of(node):
             if not child.name.isalnum() or child.name not in document_xml:
@@ -186,7 +194,7 @@ def _a_typed_member(document_xml, model, doc_ns_index):
             data_type = nodeset_tables.data_type_cell(model, child,
                                                       doc_ns_index=doc_ns_index)
             if data_type:
-                return child.name, data_type
+                return node.name, child.name, data_type
     return None
 
 

@@ -2293,8 +2293,10 @@
             "text": " Method ("
           },
           {
-            "r": "t",
-            "text": "§6.4"
+            "r": "xref",
+            "target": "c6-6",
+            "kind": "clause",
+            "prefix": "6.6"
           },
           {
             "r": "t",
@@ -3580,10 +3582,8 @@
             "text": " because the SchemaId derives solely from the schema; the compatibility relationship between the SchemaIds of successive Versions of a DataSet is defined in "
           },
           {
-            "r": "xref",
-            "target": "c6-9",
-            "kind": "clause",
-            "prefix": "6.9"
+            "r": "t",
+            "text": "§7"
           },
           {
             "r": "t",
@@ -3680,10 +3680,8 @@
             "text": " and "
           },
           {
-            "r": "xref",
-            "target": "c6-8",
-            "kind": "clause",
-            "prefix": "6.8"
+            "r": "t",
+            "text": "§6.8"
           },
           {
             "r": "t",
@@ -5168,10 +5166,8 @@
             "text": " lookup of "
           },
           {
-            "r": "xref",
-            "target": "c6-10",
-            "kind": "clause",
-            "prefix": "6.10"
+            "r": "t",
+            "text": "§8"
           },
           {
             "r": "t",
@@ -5386,10 +5382,8 @@
             "text": " download of a schema ("
           },
           {
-            "r": "xref",
-            "target": "c5-1",
-            "kind": "clause",
-            "prefix": "5.1"
+            "r": "t",
+            "text": "§5.1"
           },
           {
             "r": "t",
@@ -5443,10 +5437,8 @@
             "text": "), TTL/mirror ("
           },
           {
-            "r": "xref",
-            "target": "c6-11",
-            "kind": "clause",
-            "prefix": "6.11"
+            "r": "t",
+            "text": "§9"
           },
           {
             "r": "t",
@@ -6112,7 +6104,7 @@
             [
               {
                 "r": "t",
-                "text": "1001:9999"
+                "text": "62000:62518"
               }
             ]
           ],
@@ -7054,10 +7046,8 @@
               "text": " of the same schema in the sense of "
             },
             {
-              "r": "xref",
-              "target": "c6-9",
-              "kind": "clause",
-              "prefix": "6.9"
+              "r": "t",
+              "text": "§7"
             },
             {
               "r": "t",
@@ -7701,10 +7691,8 @@
             "text": "); when present it is used by "
           },
           {
-            "r": "xref",
-            "target": "c6-10",
-            "kind": "clause",
-            "prefix": "6.10"
+            "r": "t",
+            "text": "§8"
           },
           {
             "r": "t",

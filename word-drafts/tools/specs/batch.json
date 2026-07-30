@@ -9,17 +9,11 @@
     "wot-connectivity",
     "wot-binding",
     "schema-registry",
-    "generators"
+    "generators",
+    "data-channels"
   ],
 
   "ready": [
-    {
-      "id": "data-channels",
-      "markdown": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "nodeset": "core-specs/data-channels/Opc.Ua.DataChannels.NodeSet2.xml",
-      "shape": "companion specification with an information model",
-      "needs": "conformance-unit identifier tokens (DCH-*) assigned per node in its build_model.py; its clause 10 already separates the units in prose"
-    },
     {
       "id": "avro-encoding",
       "markdown": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",

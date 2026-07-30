@@ -202,6 +202,21 @@ truth exactly the way hand-editing a generated NodeSet does.
 - **A draft may hyperlink the online reference in body prose.** Guideline 5 forbids that outside
   Annex A. The citation is what matters, so the link is dropped and its label kept; that is a
   transformation the pipeline can make on its own rather than an edit to the source.
+- **Generated boilerplate makes claims, and a claim can be false.** The Namespaces clause stated
+  `IsNamespaceSubset = False` and "the UANodeSet XML file contains the complete namespace", and
+  `StaticNumericNodeIdRange = 1001:9999`. Both were true of the first specification converted and
+  neither is a property of the template — the range was wrong for six of eight documents, and the
+  subset flag is *false* for any document that adds Nodes to a namespace it does not own. Derive
+  what can be derived from the model; put the rest in config.
+- **A qualifier governs the rest of its sentence, not the next few characters.** "The Part 6
+  errata §5.13 gives the full transition table … and §5.14 names the four timeouts" cites one
+  document twice; a window that stopped at the first section sign, or at a character count,
+  called the second reference an internal one. Bound the window by the sentence — a period
+  followed by whitespace, which is not the period inside §5.13.
+- **An EventType may leave the model before reaching BaseEventType.** `AuditOpenDataChannelEventType`
+  derives from `AuditSessionEventType`, which is a base-namespace type the NodeSet does not
+  describe, so walking the supertype chain gives up and the type is filed under ObjectTypes.
+  The base event types have to be named explicitly; nothing in the file says they are events.
 
 ## Verification checklist
 

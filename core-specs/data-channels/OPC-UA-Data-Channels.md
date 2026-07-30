@@ -460,29 +460,29 @@ Fallback **shall not** be a downgrade. A Client **shall not** fall back to an en
 
 ## 10 Conformance units
 
-| Unit | Requires | Defined in |
+| Conformance unit | Requires | Defined in |
 |---|---|---|
-| Data Channel Framing | — | Part 6 errata clause 5 |
-| Data Channel Inline Transport | Data Channel Framing | Part 6 errata §6.1, §6.2 |
-| Data Channel Partial Reliability | Data Channel Framing | Part 6 errata §5.9, §5.10 |
-| Data Channel QUIC Transport | Data Channel Framing | Part 6 errata clause 7 except §7.5 |
-| Data Channel Unreliable Datagram | QUIC Transport + Partial Reliability | Part 6 errata §7.5 |
-| Data Channel Services | Data Channel Framing, Data Channel Model | Part 4 errata clause 5, §7 |
-| Data Channel Modify | Data Channel Services | Part 4 errata §5.2 |
-| Data Channel Offers | Data Channel Services, Data Channel Model Events | Part 4 errata clause 6 |
-| Data Channel Auditing | Data Channel Services, Data Channel Model Auditing | Part 4 errata §7.3 |
-| Data Channel Model | — | Part 3 errata clauses 5-7 |
-| Data Channel Model Diagnostics | Data Channel Model | Part 3 errata §5.2 |
-| Data Channel Model Events | Data Channel Model | Part 3 errata clause 8 |
-| Data Channel Model Auditing | Data Channel Model Events | Part 3 errata clause 8 |
+| `DCH-Framing` | — | Part 6 errata clause 5 |
+| `DCH-InlineTransport` | `DCH-Framing` | Part 6 errata §6.1, §6.2 |
+| `DCH-PartialReliability` | `DCH-Framing` | Part 6 errata §5.9, §5.10 |
+| `DCH-QuicTransport` | `DCH-Framing` | Part 6 errata clause 7 except §7.5 |
+| `DCH-UnreliableDatagram` | `DCH-QuicTransport`, `DCH-PartialReliability` | Part 6 errata §7.5 |
+| `DCH-Services` | `DCH-Framing`, `DCH-Model` | Part 4 errata clause 5, §7 |
+| `DCH-Modify` | `DCH-Services` | Part 4 errata §5.2 |
+| `DCH-Offers` | `DCH-Services`, `DCH-ModelEvents` | Part 4 errata clause 6 |
+| `DCH-Auditing` | `DCH-Services`, `DCH-ModelAuditing` | Part 4 errata §7.3 |
+| `DCH-Model` | — | Part 3 errata clauses 5-7 |
+| `DCH-ModelDiagnostics` | `DCH-Model` | Part 3 errata §5.2 |
+| `DCH-ModelEvents` | `DCH-Model` | Part 3 errata clause 8 |
+| `DCH-ModelAuditing` | `DCH-ModelEvents` | Part 3 errata clause 8 |
 
 Three Profiles are proposed for OPC 10000-7:
 
 | Profile | Units |
 |---|---|
-| **Data Channel Server Facet** | Data Channel Framing, Data Channel Inline Transport, Data Channel Services, Data Channel Model, Data Channel Model Events |
-| **Data Channel Media Server Facet** | The above plus Data Channel Partial Reliability, Data Channel Modify, Data Channel Offers, Data Channel Model Diagnostics |
-| **Data Channel QUIC Server Facet** | Data Channel Media Server Facet plus Data Channel QUIC Transport and Data Channel Unreliable Datagram |
+| **Data Channel Server Facet** | `DCH-Framing`, `DCH-InlineTransport`, `DCH-Services`, `DCH-Model`, `DCH-ModelEvents` |
+| **Data Channel Media Server Facet** | The above plus `DCH-PartialReliability`, `DCH-Modify`, `DCH-Offers`, `DCH-ModelDiagnostics` |
+| **Data Channel QUIC Server Facet** | Data Channel Media Server Facet plus `DCH-QuicTransport` and `DCH-UnreliableDatagram` |
 
 The minimum useful implementation is the Data Channel Server Facet: inline framing over `opc.tcp`, the three Services, and the model. Everything else is additive.
 
@@ -1153,7 +1153,7 @@ It browses the camera Object, follows `HasDataChannel`, and finds three sources:
 | 2 `AudioOut` | `PartiallyReliable`, `MaxRetransmits` 1 | 6 | 60 ms | 1200 | Audio dropout is more objectionable than video artefacting, so it outranks video and gets one retry. |
 | 3 `Control` | `ReliableOrdered` | 7 | — | 4096 | A pan-tilt-zoom command must not be lost or reordered. Tiny and bursty, so highest priority costs nothing. |
 
-The 1200-byte frame size is not arbitrary: both media channels ride QUIC DATAGRAM, a frame is never fragmented across datagrams, and 1200 bytes is the largest QUIC payload that fits an IPv6 minimum MTU without IP fragmentation. Subtracting the 24-byte QUIC-framing overhead of §5.5 leaves 1176 bytes of payload. `Control` needs no such bound because it rides a QUIC stream, which the transport segments itself. `InitialCredit` on the video channel is set to the bandwidth-delay product — 8 Mbit/s × the 12 ms round trip ≈ 12 KB — because a smaller window would cap throughput below the bitrate the source is producing regardless of available bandwidth.
+The 1200-byte frame size is not arbitrary: both media channels ride QUIC DATAGRAM, a frame is never fragmented across datagrams, and 1200 bytes is the largest QUIC payload that fits an IPv6 minimum MTU without IP fragmentation. Subtracting the 24-byte QUIC-framing overhead of the Part 6 errata §5.5 leaves 1176 bytes of payload. `Control` needs no such bound because it rides a QUIC stream, which the transport segments itself. `InitialCredit` on the video channel is set to the bandwidth-delay product — 8 Mbit/s × the 12 ms round trip ≈ 12 KB — because a smaller window would cap throughput below the bitrate the source is producing regardless of available bandwidth.
 
 **Running.** Video is the bulk of the traffic and is scheduled below audio and control, but its priority guarantees it a share rather than the remainder. Every video frame carries `MessageStart`+`MessageEnd` or, when a picture exceeds 1200 bytes, `MessageStart` … `MessageEnd` across several frames; a key frame additionally carries `Marker`.
 

@@ -90,6 +90,26 @@ a new config file; a genuinely new shape needs a generalisation in `opcdocx/` fi
 | `OPC-UA-WoT-Binding.docx` | `wot-specs/WoT-Binding/` — **no NodeSet**; see below |
 | `OPC-UA-Schema-Registry.docx` | `core-specs/schema-registry/` + `Opc.Ua.SchemaRegistry.NodeSet2.xml` |
 | `OPC-UA-Generators.docx` | `companion-specs/Generators/` + `Opc.Ua.Generators.NodeSet2.xml` |
+| `OPC-UA-Data-Channels.docx` | `core-specs/data-channels/` + `Opc.Ua.DataChannels.NodeSet2.xml` — **base namespace**; see below |
+
+## The one that owns no namespace
+
+Eight of the nine documents own a namespace. **Data Channels does not**: it proposes additions to
+OPC 10000-3, -4 and -6, and its NodeSet declares `ModelUri = http://opcfoundation.org/UA/`, so its
+Nodes live in the base namespace. It is rendered without a declared deviation — the NamespaceUri in
+Annex A genuinely *is* that — but only because three things were made true first:
+
+* `IsNamespaceSubset` is `True`, since the file holds this document's additions and not the whole
+  base namespace. It used to be hard-coded `False` with prose to match, which here would have been
+  a plain untruth.
+* `StaticNumericNodeIdRange` is derived from the model (`65000:66038`) instead of the constant
+  `1001:9999`, which was wrong for six of the other eight documents too.
+* A base BrowseName prints unprefixed, because a document whose own namespace *is* namespace 0
+  would otherwise show the same namespace two ways in one table.
+
+The three insertion-ready errata beside it (`OPC-UA-Part3/4/6-*.md`) are tracked-change text against
+existing core Parts. They are listed as not a fit, and that is a statement about them, not about the
+pipeline.
 
 ## What is converted, and what is next
 

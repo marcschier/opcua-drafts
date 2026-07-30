@@ -336,6 +336,18 @@ class Build:
             dm.text_para('OPC UA terms and terms defined in this document are '
                          'italicized in the document.')]
 
+    def _gen_use_cases(self, entry):
+        """A Use cases clause written in config.
+
+        The template requires the clause, and a specification may have no material shaped
+        like it — Data Channels keeps its worked session and its when-to-use-which guidance
+        as annexes, so clause 5 summarises them instead of moving them.
+        """
+        paragraphs = self.cfg.get('useCases')
+        if not paragraphs:
+            raise KeyError('useCases is required when clause 5 is generated')
+        return [dm.text_para(p) for p in paragraphs]
+
     def _gen_terms(self, entry):
         """The markdown terms become the template's TERM entry structure.
 
@@ -343,10 +355,23 @@ class Build:
         two-column table, and a bullet list whose item begins with the bolded term
         followed by an em dash. Requiring one shape would mean rewriting a source
         document to suit the converter rather than the other way round.
+
+        `termsFrom` reads the clause out of a *sibling* document. A specification that is
+        a combined read of several others may have no terms clause of its own, and copying
+        the definitions into config would let them drift from the document they came from.
         """
-        section = self._section_for(entry)
-        if section is None:
-            raise KeyError('terms section not found')
+        source = self.cfg.get('termsFrom')
+        if source:
+            with open(os.path.join(REPO, source['markdown']), encoding='utf-8') as f:
+                sections, _ = md_parse.split_sections(f.read())
+            section = sections.get(source['heading'])
+            if section is None:
+                raise KeyError('terms heading %r not in %r'
+                               % (source['heading'], source['markdown']))
+        else:
+            section = self._section_for(entry)
+            if section is None:
+                raise KeyError('terms section not found')
         parser = self.parser()
         blocks = parser.parse(section.lines, context=section.key)
         out = []
@@ -484,17 +509,32 @@ class Build:
 
     def _gen_namespace_metadata(self, entry):
         ident = self.identity
+        # A document that adds Nodes to a namespace it does not own describes a *subset*
+        # of that namespace. Stating False there — and printing that the file "contains
+        # the complete namespace" — would be a plain untruth about the base namespace.
+        is_subset = bool(ident.get('namespaceIsSubset', False))
         rows = [
             [[dm.t('NamespaceUri')], [dm.t('String')], [dm.t(ident['namespaceUri'])]],
             [[dm.t('NamespaceVersion')], [dm.t('String')], [dm.t(self.model.version)]],
             [[dm.t('NamespacePublicationDate')], [dm.t('DateTime')],
              [dm.t(self.model.publication_date)]],
-            [[dm.t('IsNamespaceSubset')], [dm.t('Boolean')], [dm.t('False')]],
+            [[dm.t('IsNamespaceSubset')], [dm.t('Boolean')],
+             [dm.t('True' if is_subset else 'False')]],
             [[dm.t('StaticNodeIdTypes')], [dm.t('IdType[]')], [dm.t('0 (Numeric)')]],
             [[dm.t('StaticNumericNodeIdRange')], [dm.t('NumericRange[]')],
-             [dm.t('1001:9999')]],
+             [dm.t(self._numeric_node_id_range())]],
             [[dm.t('StaticStringNodeIdPattern')], [dm.t('String')], [dm.t('--')]],
         ]
+        if is_subset:
+            closing = dm.text_para(
+                'The IsNamespaceSubset Property is True because the UANodeSet XML file '
+                'contains only the Nodes this document adds, not the complete namespace. '
+                'A Server that exposes the whole namespace sets it to False.')
+        else:
+            closing = dm.text_para(
+                'The IsNamespaceSubset Property is False because the UANodeSet XML file '
+                'contains the complete namespace. A Server exposing only a subset sets '
+                'it to True.')
         return [
             dm.text_para(
                 'The namespace metadata provide standardized information about the '
@@ -510,11 +550,26 @@ class Build:
             dm.table(None, 'NamespaceMetadata Object for this document',
                      [[dm.t('Property')], [dm.t('DataType')], [dm.t('Value')]], rows,
                      widths=[2800, 2000, 4126]),
-            dm.text_para(
-                'The IsNamespaceSubset Property is False because the UANodeSet XML file '
-                'contains the complete namespace. A Server exposing only a subset sets '
-                'it to True.'),
+            closing,
         ]
+
+    def _numeric_node_id_range(self):
+        """The range this document's own numeric NodeIds occupy.
+
+        This was a constant, which happened to suit the first specification converted and
+        no other. The Property states where a Server may expect this document's Nodes, so
+        it has to come from the Nodes.
+        """
+        numbers = []
+        for node in self.model.nodes.values():
+            if node.ns_index != self.doc_ns_index:
+                continue
+            _, _, identifier = node.node_id.rpartition('i=')
+            if identifier.isdigit():
+                numbers.append(int(identifier))
+        if not numbers:
+            return '--'
+        return '%d:%d' % (min(numbers), max(numbers))
 
     def _gen_namespace_handling(self, entry):
         ident = self.identity

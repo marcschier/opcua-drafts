@@ -2829,8 +2829,10 @@
             "text": " carries the optional Part 14 event where-clause. Logs and Traces differ only in the OTEL mapping applied by the bridge ("
           },
           {
-            "r": "t",
-            "text": "§5.13.2"
+            "r": "xref",
+            "target": "c6-14",
+            "kind": "clause",
+            "prefix": "6.14"
           },
           {
             "r": "t",
@@ -6496,7 +6498,7 @@
             [
               {
                 "r": "t",
-                "text": "1001:9999"
+                "text": "60001:60550"
               }
             ]
           ],

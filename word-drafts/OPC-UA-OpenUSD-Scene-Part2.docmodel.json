@@ -232,8 +232,10 @@
               "text": ". This is the vendor-extension mechanism ("
             },
             {
-              "r": "t",
-              "text": "§6.7"
+              "r": "xref",
+              "target": "c6-7",
+              "kind": "clause",
+              "prefix": "6.7"
             },
             {
               "r": "t",
@@ -4084,10 +4086,8 @@
             "text": "); a client then fetches the plugin from the same registry it fetches layers from, registers it, and reads the materialized scene with the vendor's prim types fully understood instead of degraded to the "
           },
           {
-            "r": "xref",
-            "target": "c6-7-4",
-            "kind": "clause",
-            "prefix": "6.7.4"
+            "r": "t",
+            "text": "§6.7.4"
           },
           {
             "r": "t",
@@ -4963,8 +4963,10 @@
             "text": " subset (a versioned schema release, "
           },
           {
-            "r": "t",
-            "text": "§2"
+            "r": "xref",
+            "target": "c2",
+            "kind": "clause",
+            "prefix": "2"
           },
           {
             "r": "t",
@@ -7638,7 +7640,7 @@
             [
               {
                 "r": "t",
-                "text": "1001:9999"
+                "text": "1001:6078"
               }
             ]
           ],
@@ -8199,10 +8201,8 @@
               "text": " ("
             },
             {
-              "r": "xref",
-              "target": "c6-8",
-              "kind": "clause",
-              "prefix": "6.8"
+              "r": "t",
+              "text": "§6.8"
             },
             {
               "r": "t",

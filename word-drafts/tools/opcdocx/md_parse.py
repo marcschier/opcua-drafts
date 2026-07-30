@@ -55,12 +55,20 @@ _NUM = r'[0-9]+(?:\.[0-9]+)*'
 # through this document's clause map corrupts it: "OPC 10000-6 Section 5.1.1" is a clause
 # of Part 6, not of the document being built. The window is bounded so that a qualifier
 # earlier in the same sentence does not mask a genuine self-reference.
+# The gap between a qualifier and the reference it governs: the rest of the same sentence.
+# It may contain *other* references to the same document — "the Part 6 errata §5.13 … and
+# §5.14" is one sentence citing one document twice — so a gap that forbade the section sign
+# recognised only the first of a list. A sentence end is a period followed by whitespace,
+# which is not the period inside §5.13.
+_QUALIFIER_GAP = (r'(?:(?!\.\s)[^\u00a7\n]|\u00a7\s*[0-9][0-9.]*\s*(?:,|and|to|;)?\s*)'
+                  r'{0,300}')
+
 FOREIGN_QUALIFIER_RE = re.compile(
     r'(?:OPC\s*\d{4,5}|IEC\s*\d+|RFC\s*\d+|W3C|AOUSD|xRegistry'
     r'|WoT\s+Binding|WoT-Binding|Thing\s+Description\s+1\.1'
     r'|Part\s*\d+|\bthe base\b|\bbase (?:spec|specification|model)\b'
     r'|\*[^*]*OPC UA[^*]*\*)'
-    r'[^\u00a7]{0,120}$', re.IGNORECASE)
+    + _QUALIFIER_GAP + r'$', re.IGNORECASE)
 
 
 _LINK_TARGET_RE = re.compile(r'\]\([^)]*\)')
@@ -87,7 +95,7 @@ def foreign_anchor_re(anchors):
     if not anchors:
         return None
     alt = '|'.join(re.escape(a) for a in anchors)
-    return re.compile(r'(?:' + alt + r')[^\u00a7]{0,120}$', re.IGNORECASE)
+    return re.compile(r'(?:' + alt + r')' + _QUALIFIER_GAP + r'$', re.IGNORECASE)
 
 
 class Section:

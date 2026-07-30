@@ -112,10 +112,28 @@ Verify with two builds and a hash comparison.
 | WoT Binding | **declared partial compliance** — no NodeSet at all: a null model, an Annex A that states the artifacts a document publishes when it publishes no NodeSet, and prose references spelled `Section 9.2` rather than `§9.2` |
 | Schema Registry | a conformance clause with **no units at all** — the units had to be derived from the capabilities the clause describes in prose, not tokenised from an existing list |
 | Generators | **RequiredModel BrowseNames**: a type borrowed from DI or Machinery is a bare NodeId in the NodeSet and there is nothing to resolve it against, so the names come from config; markdown that **links into the online reference** in body prose, which Guideline 5 forbids |
+| Data Channels | **a document that owns no namespace** — its Nodes are additions to the base namespace, so `namespaceIndexInDocument` is 0, `IsNamespaceSubset` is True, and base names must print unprefixed; a Terms clause read from a *sibling* document (`termsFrom`); a Use cases clause **written in config** because the document has no material shaped like one |
 
-Everything above is now driven by the docmodel and the config, and a ninth specification of any of
+Everything above is now driven by the docmodel and the config, and a tenth specification of any of
 those shapes is genuinely a config file. **Config carries what varies between documents of the same
 shape; a new shape is code.**
+
+## Not every draft is a companion specification
+
+OPC 20020 is the *UA Companion Specification Template*. Before writing a config, read what the
+document says it is. Three signals decide it, and the NodeSet settles the argument:
+
+* **`ModelUri`.** A companion specification owns a namespace. Data Channels declares
+  `http://opcfoundation.org/UA/` — the *base* namespace — because it proposes additions to
+  OPC 10000-3, -4 and -6. That is core errata wearing a specification's clothes.
+* **What the header claims.** "Proposed addition to OPC 10000-6" is not a companion
+  specification, however complete the document is.
+* **Whether an insertion clause exists.** A document ending in "Insertion into OPC 10000-4
+  v1.05.07" is tracked-change text for an existing Part; it has no template shape at all and
+  should not be converted.
+
+A base-namespace document can still be rendered faithfully — Data Channels is — but only once the
+generated Namespaces clause stops claiming to describe a namespace the document does not own.
 
 ## The batch
 
