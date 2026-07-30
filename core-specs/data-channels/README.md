@@ -7,7 +7,7 @@ It is written as an **errata package** against three core Parts. OPC UA today ha
 ## Contents
 
 - `OPC-UA-Data-Channels.md` — **standalone combined spec**: a self-contained read merging the three errata below, plus a worked H.264 + Opus + control-channel session, a WebRTC feature-parity comparison, and guidance on when to use a data channel instead of FileTransfer, PubSub or a Subscription. The three errata documents remain the authoritative, insertion-ready proposals.
-- `OPC-UA-Part6-Data-Channel-Transport.md` — Part 6 errata: the `STR` frame, flow control, scheduling, partial reliability, and the new `opc.quic` transport.
+- `OPC-UA-Part6-Data-Channel-Transport.md` — Part 6 errata: the `STR` frame, flow control, scheduling, partial reliability, and the new `opc.quic` and `opc.wss3` transports.
 - `OPC-UA-Part4-Data-Channel-Services.md` — Part 4 errata: the DataChannel Service Set, server-initiated offers, lifecycle, authorization, auditing and StatusCodes.
 - `OPC-UA-Part3-Data-Channel-Model.md` — Part 3 errata: `IDataChannelSourceType`, `DataChannelSourceType`, `HasDataChannel`, the DataTypes, the Events and `ServerCapabilities.DataChannelCapabilities`.
 - `Opc.Ua.DataChannels.NodeSet2.xml` — generated NodeSet.

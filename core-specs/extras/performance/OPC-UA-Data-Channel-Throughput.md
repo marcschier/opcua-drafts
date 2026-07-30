@@ -57,18 +57,18 @@ The credit-stall counter stayed at zero throughout, which is the expected result
 
 Same parameters.
 
-| Publishing interval | Revised | Items | notif/s idle | notif/s loaded | Mbit/s (median) | Spread |
-|---|--:|--:|--:|--:|--:|---|
-| none | — | 0 | — | — | 767.8 | 724.6-806.5 |
-| 10 ms | 10 ms | 100 | 100 | 111 | 749.0 | 712.4-768.4 |
-| 100 ms | 100 ms | 100 | 100 | 113 | 760.8 | 743.8-784.7 |
-| 1000 ms | 1000 ms | 100 | 67 | 84 | 750.9 | 746.1-775.1 |
+| Publishing interval | Revised | Items | notif/s idle | notif/s loaded | Mbit/s (median) | Spread | Credit stalls |
+|---|--:|--:|--:|--:|--:|---|--:|
+| none | — | 0 | — | — | 767.8 | 724.6-806.5 | 0 |
+| 10 ms | 10 ms | 100 | 100 | 111 | 749.0 | 712.4-768.4 | 0 |
+| 100 ms | 100 ms | 100 | 100 | 113 | 760.8 | 743.8-784.7 | 0 |
+| 1000 ms | 1000 ms | 100 | 67 | 84 | 750.9 | 746.1-775.1 | 0 |
 
 **Not resolvable** against the baseline spread of 725-806 Mbit/s, exactly as over `opc.tcp`.
 
 **Resolvable, and the headline of this report:** `opc.quic` sustains about **1.97×** the inline figure — 767.8 against 390.0 Mbit/s — and the two spreads are nowhere near touching.
 
-> **The credit-stall counter is not meaningful over `opc.quic` in this implementation.** It reported hundreds of thousands of stalls on runs that simultaneously produced the highest throughput measured anywhere in this report. The cause is that the send window is still consulted on a transport where credit is not in force and `CREDIT` frames are neither sent nor expected, so the counter increments without anything actually stalling. The figure is omitted from the table above rather than reproduced, because a reader would reasonably interpret it as congestion. This is an implementation defect in the counter, not a property of the transport, and it does not affect the throughput figures.
+> **The credit-stall counter was wrong when these throughput figures were taken.** On the runs above it reported hundreds of thousands of stalls while simultaneously producing the highest throughput measured anywhere in this report, because the send window was still consulted on a transport where credit is not in force and `CREDIT` frames are neither sent nor expected. The counter incremented; nothing stalled. That defect has since been fixed — the window is no longer consulted at all where the transport provides its own flow control — and the column above reads zero, which is what both this specification and the implementation's own documentation always claimed it would. The throughput figures were never affected, because the ignored result never gated a send.
 
 ## 5 What this does and does not establish
 
