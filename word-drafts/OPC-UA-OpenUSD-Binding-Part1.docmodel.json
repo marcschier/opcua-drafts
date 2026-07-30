@@ -33,7 +33,12 @@
             "r": "t",
             "text": " companion specification (Pumps, Robotics, Machinery, …) to a USD scene, and it does not require modifying the USD asset."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "1 Scope",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -43,7 +48,12 @@
             "r": "t",
             "text": "The model has five portable capability groups and one informative profile:"
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "1 Scope",
+          "b": 1
+        }
       },
       {
         "t": "list",
@@ -303,7 +313,12 @@
               "text": " part of the portable normative model."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "1 Scope",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -322,7 +337,12 @@
             "r": "t",
             "text": " capabilities a Server may choose not to implement."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "1 Scope",
+          "b": 3
+        }
       },
       {
         "t": "clause",
@@ -338,7 +358,12 @@
             "r": "t",
             "text": "Industrial \"digital twin\" visualization repeatedly re-implements the same brittle glue: a bespoke script maps specific OPC UA NodeIds to specific USD prim attributes and pushes values into a stage. That mapping lives in a connector nobody else can see; it is invisible to other tools, breaks silently when the address space changes, cannot be discovered, and cannot be reviewed, versioned, or governed. Every new pairing of a server with a viewer starts the integration from scratch."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "1.1 Motivation",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -428,7 +453,12 @@
             "r": "t",
             "text": " connector can discover and apply it for any conforming server without prior knowledge of the domain."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "1.1 Motivation",
+          "b": 1
+        }
       },
       {
         "t": "clause",
@@ -445,7 +475,12 @@
             "text": "Simplifies.",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "1.2 What it simplifies and what it enables",
+          "b": 0
+        }
       },
       {
         "t": "list",
@@ -542,7 +577,12 @@
               "text": " the Variables that domain companion specs (Pumps, Robotics, Machinery, …) already expose; they do not duplicate or re-model process data."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "1.2 What it simplifies and what it enables",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -553,7 +593,12 @@
             "text": "Enables.",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "1.2 What it simplifies and what it enables",
+          "b": 2
+        }
       },
       {
         "t": "list",
@@ -640,7 +685,12 @@
               "text": ")."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "1.2 What it simplifies and what it enables",
+          "b": 3
+        }
       },
       {
         "t": "clause",
@@ -709,7 +759,12 @@
             "r": "t",
             "text": "), so a Server implements exactly what it needs and a Client discovers what a Server offers rather than assuming it."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "1.3 Capabilities and conformance",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -729,7 +784,12 @@
             "r": "t",
             "text": " group them into the combinations a real deployment tends to need."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "1.3 Capabilities and conformance",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -802,7 +862,12 @@
             "r": "t",
             "text": " rather than from a discriminating enumeration value, and a Server that does not implement an intent simply never instantiates its subtype."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "1.3 Capabilities and conformance",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -891,7 +956,12 @@
             "r": "t",
             "text": ". A Server that does not serve artifacts is unaffected by it."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "1.3 Capabilities and conformance",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -983,7 +1053,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "1.3 Capabilities and conformance",
+          "b": 4
+        }
       }
     ],
     "normative-references": [
@@ -2050,7 +2125,12 @@
               "text": " layer for RTX rendering."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "5 Use cases",
+          "b": 0
+        }
       }
     ],
     "model-overview": [
@@ -2083,7 +2163,12 @@
             "r": "t",
             "text": "; the USD asset is not modified by this specification."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "6.1 Layered contract",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -2149,7 +2234,12 @@
             "r": "t",
             "text": " contain two Folders:"
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "6.2 Discovery",
+          "b": 0
+        }
       },
       {
         "t": "list",
@@ -2192,7 +2282,12 @@
               "text": " AddIn present in the Server, so a connector can enumerate all representations from a single, deterministic entry point."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "6.2 Discovery",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -2218,7 +2313,12 @@
             "r": "t",
             "text": " to each representation AddIn, reads the target stage and prim path, and (for Part 2) reads the representation's child bindings."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "6.2 Discovery",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -2234,14 +2334,24 @@
             "r": "t",
             "text": "The identity of a represented prim is the pair:"
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "6.3 Identity and the stage-open contract",
+          "b": 0
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "OpenUsdStageType instance  +  OpenUsdRepresentationType.PrimPath"
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "6.3 Identity and the stage-open contract",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -2297,7 +2407,12 @@
             "r": "t",
             "text": ": a reusable ObjectType cannot supply a meaningful absolute path for its instances."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "6.3 Identity and the stage-open contract",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -2356,7 +2471,12 @@
             "r": "t",
             "text": " is informative only."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "6.3 Identity and the stage-open contract",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -2432,7 +2552,12 @@
             "r": "t",
             "text": " remains the authored identity used by USD resolution; the delivery mechanism does not change the stage identity."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "6.3 Identity and the stage-open contract",
+          "b": 4
+        }
       },
       {
         "t": "clause",
@@ -2445,7 +2570,12 @@
         "id": "fig-architecture",
         "caption": "OpenUSD binding architecture",
         "source": "mermaid",
-        "mermaid": "flowchart TD\n  subgraph Server[\"OPC UA Server\"]\n    OU[\"Server/OpenUSD : OpenUsdRootType\"]\n    ST[\"Stages : Folder\"]\n    RP[\"Representations : Folder\"]\n    STG[\"PlantStage : OpenUsdStageType\"]\n    OBJ[\"Pump101 : PumpType (domain Object)\"]\n    REP[\"OpenUsdRepresentation : OpenUsdRepresentationType (AddIn)\"]\n    BND[\"Speed binding : OpenUsdValueChangeBindingType\"]\n    OU --> ST --> STG\n    OU --> RP\n    OBJ -->|HasAddIn| REP\n    RP -.Organizes.-> REP\n    REP --> BND\n    REP -->|Stage| STG\n  end\n  CONN[\"Generic connector<br/>Browse + Subscribe\"] --> OU\n  CONN --> USD[\"OpenUSD stage / Omniverse\"]"
+        "mermaid": "flowchart TD\n  subgraph Server[\"OPC UA Server\"]\n    OU[\"Server/OpenUSD : OpenUsdRootType\"]\n    ST[\"Stages : Folder\"]\n    RP[\"Representations : Folder\"]\n    STG[\"PlantStage : OpenUsdStageType\"]\n    OBJ[\"Pump101 : PumpType (domain Object)\"]\n    REP[\"OpenUsdRepresentation : OpenUsdRepresentationType (AddIn)\"]\n    BND[\"Speed binding : OpenUsdValueChangeBindingType\"]\n    OU --> ST --> STG\n    OU --> RP\n    OBJ -->|HasAddIn| REP\n    RP -.Organizes.-> REP\n    REP --> BND\n    REP -->|Stage| STG\n  end\n  CONN[\"Generic connector<br/>Browse + Subscribe\"] --> OU\n  CONN --> USD[\"OpenUSD stage / Omniverse\"]",
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "6.4 Architecture",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -2543,7 +2673,12 @@
             "r": "t",
             "text": "); a Server that adopts only the representation + telemetry core needs neither RSL nor DI. The full generated node table is Annex A."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "6.5 Organisation of the model",
+          "b": 0
+        }
       }
     ],
     "objecttypes": [
@@ -2585,7 +2720,12 @@
             "r": "t",
             "text": ")."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.1 OpenUsdRootType",
+          "b": 1
+        }
       },
       {
         "t": "nodetable",
@@ -2676,7 +2816,12 @@
             "r": "t",
             "text": " (§C.2)."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.2 OpenUsdStageType",
+          "b": 1
+        }
       },
       {
         "t": "nodetable",
@@ -2739,7 +2884,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.3 OpenUsdRepresentationType",
+          "b": 1
+        }
       },
       {
         "t": "nodetable",
@@ -2836,7 +2986,12 @@
             "r": "t",
             "text": "); a type-level declaration is therefore not wrongly shared across instances. The base carries the members common to every intent:"
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.4 OpenUsdLiveBindingType",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -2920,7 +3075,12 @@
             "r": "t",
             "text": " that share the same semantic dictionary (ECLASS / IEC CDD), which is the anchor the wider asset-definition strategy relies on (§C.2)."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.4 OpenUsdLiveBindingType",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -2956,7 +3116,12 @@
             "r": "t",
             "text": ") whose declared TypeDefinition is the abstract base is materialized only by instances of a concrete subtype."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.4 OpenUsdLiveBindingType",
+          "b": 3
+        }
       },
       {
         "t": "nodetable",
@@ -3033,7 +3198,12 @@
             "r": "t",
             "text": ". The connector validates NodeClass = Variable and the Value attribute."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.4.1 Source and target resolution",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -3237,7 +3407,12 @@
             "r": "t",
             "text": " create a property unless an explicit authoring profile permits it."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.4.1 Source and target resolution",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -3281,7 +3456,12 @@
             "r": "t",
             "text": " author both, so that a connector that resolves by NodeId and one that resolves by path reach the same Variable."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.4.1 Source and target resolution",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -3382,7 +3562,12 @@
             "r": "t",
             "text": " cast to the USD attribute's value type. Scalar bindings apply steps (1), (2), (4), (5) only."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.4.2 Conversion",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -3445,7 +3630,12 @@
             "r": "t",
             "text": " targets, the nearest representable value)."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.4.2 Conversion",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -3590,7 +3780,12 @@
             "r": "t",
             "text": " coordinate system. The following rules are mandatory:"
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.4.2 Conversion",
+          "b": 2
+        }
       },
       {
         "t": "list",
@@ -4081,7 +4276,12 @@
               "text": " silently reinterpret axes."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.4.2 Conversion",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -4220,7 +4420,12 @@
             "r": "t",
             "text": "). The following rules are mandatory:"
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.4.2 Conversion",
+          "b": 4
+        }
       },
       {
         "t": "list",
@@ -4487,7 +4692,12 @@
               "text": " treat the height as unresolved rather than mis‑place the asset."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.4.2 Conversion",
+          "b": 5
+        }
       },
       {
         "t": "para",
@@ -4506,7 +4716,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.4.2 Conversion",
+          "b": 6
+        }
       },
       {
         "t": "clause",
@@ -4593,7 +4808,12 @@
             "r": "t",
             "text": " author a fabricated \"bad\" value."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.4.3 Quality, timestamp and persistence",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -4651,7 +4871,12 @@
             "r": "t",
             "text": ", not \"now\"."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.4.3 Quality, timestamp and persistence",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -4708,7 +4933,12 @@
             "r": "t",
             "text": ") and are not license to invent continuity."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.4.3 Quality, timestamp and persistence",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -4757,7 +4987,12 @@
             "r": "t",
             "text": " 13)."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.5 OpenUsdValueChangeBindingType",
+          "b": 0
+        }
       },
       {
         "t": "nodetable",
@@ -4780,7 +5015,12 @@
             "r": "t",
             "text": "The source resolves to an OPC UA Alarms & Conditions instance (Part 9) or a plain Variable exposing the aspect value. Adds:"
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.6 OpenUsdAlarmBindingType",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -4859,7 +5099,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.6 OpenUsdAlarmBindingType",
+          "b": 2
+        }
       },
       {
         "t": "nodetable",
@@ -4890,7 +5135,12 @@
             "r": "t",
             "text": ") for the source and authors it on the target. Adds:"
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.7 OpenUsdHistoryBindingType",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -4958,7 +5208,12 @@
             "r": "t",
             "text": " mapping is declared by a recording profile; absent that, samples are authored on a connector-defined uniform timeline and are informative."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.7 OpenUsdHistoryBindingType",
+          "b": 2
+        }
       },
       {
         "t": "nodetable",
@@ -4981,7 +5236,12 @@
             "r": "t",
             "text": "The opt-in, authorized control direction (USD → UA). Adds:"
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.8 OpenUsdCommandBindingType",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -5060,7 +5320,12 @@
             "r": "t",
             "text": " encode the opt-in; see below)."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.8 OpenUsdCommandBindingType",
+          "b": 2
+        }
       },
       {
         "t": "list",
@@ -5361,7 +5626,12 @@
               "text": " a USD-side intent reaches an authorized OPC UA action."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.8 OpenUsdCommandBindingType",
+          "b": 3
+        }
       },
       {
         "t": "nodetable",
@@ -5410,7 +5680,12 @@
             "r": "t",
             "text": " is authoritative)."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.9 IOpenUsdRepresentedType",
+          "b": 0
+        }
       },
       {
         "t": "nodetable",
@@ -5466,7 +5741,12 @@
             "r": "t",
             "text": "), so a connector assembles the matching USD prim structure. Each component binding maps an OPC UA component relationship to a USD composition arc."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.10 OpenUsdComponentBindingType",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -5477,7 +5757,12 @@
             "text": "Resolution.",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.10 OpenUsdComponentBindingType",
+          "b": 2
+        }
       },
       {
         "t": "list",
@@ -5585,7 +5870,12 @@
               "text": "."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.10 OpenUsdComponentBindingType",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -5665,7 +5955,12 @@
             "r": "t",
             "text": " representation in the registry, since composition spans the aggregating representation and each component's own representation."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.10 OpenUsdComponentBindingType",
+          "b": 4
+        }
       },
       {
         "t": "para",
@@ -5768,7 +6063,12 @@
             "r": "t",
             "text": ") then drive attributes within the composed sub-tree."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.10 OpenUsdComponentBindingType",
+          "b": 5
+        }
       },
       {
         "t": "para",
@@ -5799,7 +6099,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.10 OpenUsdComponentBindingType",
+          "b": 6
+        }
       },
       {
         "t": "nodetable",
@@ -5879,7 +6184,12 @@
             "r": "t",
             "text": " event filter."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.10.1 Dynamic composition",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -5925,7 +6235,12 @@
             "r": "t",
             "text": ") and reconcile the USD prims it authored:"
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.10.1 Dynamic composition",
+          "b": 1
+        }
       },
       {
         "t": "list",
@@ -5952,7 +6267,12 @@
               "text": " on its instance prim (or remove the connector's own opinion)."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.10.1 Dynamic composition",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -5989,7 +6309,12 @@
             "r": "t",
             "text": ": on any doubt (event gap, ambiguous resolution) the connector re-runs full discovery rather than applying a partial delta."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.10.1 Dynamic composition",
+          "b": 3
+        }
       },
       {
         "t": "clause",
@@ -6079,7 +6404,12 @@
             "r": "t",
             "text": " to the OEM asset) under the parent prim. The remote representation's own bindings are driven from the remote session."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.10.2 Cross-server composition",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -6116,7 +6446,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.10.2 Cross-server composition",
+          "b": 1
+        }
       },
       {
         "t": "clause",
@@ -6197,7 +6532,12 @@
             "r": "t",
             "text": " externally."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.11 OpenUsdArtifactRegistryType",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -6253,7 +6593,12 @@
             "r": "t",
             "text": ") — makes the server usable as a USD resolver backend rather than only as a download endpoint."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.11 OpenUsdArtifactRegistryType",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -6332,7 +6677,12 @@
             "r": "t",
             "text": " require implementing that one; they are two projections of one model."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.11 OpenUsdArtifactRegistryType",
+          "b": 2
+        }
       },
       {
         "t": "nodetable",
@@ -6358,7 +6708,12 @@
           "  └─ <plugin>                            OpenUsdSchemaPluginGroupType : GroupType",
           "        ├─ plugInfo.json                 OpenUsdAssetType (AssetKind = SchemaPlugin)",
           "        └─ generatedSchema.usda          OpenUsdAssetType (AssetKind = GeneratedSchema)"
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.11.1 Structure",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -6437,7 +6792,12 @@
             "r": "t",
             "text": ")."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.11.1 Structure",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -6519,7 +6879,12 @@
             "r": "t",
             "text": ". A registry therefore holds only these two kinds of group, and a client can tell them apart by TypeDefinition rather than by convention."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.11.1 Structure",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -6650,7 +7015,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.11.1 Structure",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -6746,7 +7116,12 @@
             "r": "t",
             "text": " that no layer authors."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.11.1 Structure",
+          "b": 4
+        }
       },
       {
         "t": "para",
@@ -6926,7 +7301,12 @@
             "r": "t",
             "text": " Methods) it adds:"
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.11.1 Structure",
+          "b": 5
+        }
       },
       {
         "t": "table",
@@ -7340,7 +7720,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.11.1 Structure",
+          "b": 6
+        }
       },
       {
         "t": "clause",
@@ -7419,7 +7804,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.11.2 The stage view and the delivery contract",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -7481,7 +7871,12 @@
             "r": "t",
             "text": " exactly like one the server stores, so a stage's closure may span registries without the stage view changing shape. A connector resolves each organized artifact by the same rule regardless, following the federation links when they are present."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.11.2 The stage view and the delivery contract",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -7559,7 +7954,12 @@
             "r": "t",
             "text": " refuse to delete a group whose artifacts are still organized by a stage it is currently serving."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.11.2 The stage view and the delivery contract",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -7644,7 +8044,12 @@
             "r": "t",
             "text": " point to the corresponding artifact."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.11.2 The stage view and the delivery contract",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -7654,7 +8059,12 @@
             "r": "t",
             "text": "A connector supporting this capability:"
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.11.2 The stage view and the delivery contract",
+          "b": 4
+        }
       },
       {
         "t": "list",
@@ -7820,7 +8230,12 @@
               "text": "Opens the cached root layer, composes its live override/session layer above it, and renders as usual."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.11.2 The stage view and the delivery contract",
+          "b": 5
+        }
       },
       {
         "t": "para",
@@ -7931,7 +8346,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.11.2 The stage view and the delivery contract",
+          "b": 6
+        }
       },
       {
         "t": "para",
@@ -8008,7 +8428,12 @@
             "r": "t",
             "text": " subtree can be opened concurrently on behalf of every stage that references it."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.11.2 The stage view and the delivery contract",
+          "b": 7
+        }
       },
       {
         "t": "para",
@@ -8035,7 +8460,12 @@
             "r": "t",
             "text": " silently mix unverified delivered bytes into the stage."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.11.2 The stage view and the delivery contract",
+          "b": 8
+        }
       },
       {
         "t": "clause",
@@ -8152,7 +8582,12 @@
             "r": "t",
             "text": " is not what a layer authors."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.11.3 Resolver identity",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -8171,7 +8606,12 @@
             "r": "t",
             "text": ", which is what a resolver actually needs:"
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.11.3 Resolver identity",
+          "b": 1
+        }
       },
       {
         "t": "note",
@@ -8263,7 +8703,12 @@
             "r": "t",
             "text": " by percent-decoding its last segment."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.11.3 Resolver identity",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -8273,7 +8718,12 @@
             "r": "t",
             "text": "Both directions are therefore closed-form, with no lookup table:"
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.11.3 Resolver identity",
+          "b": 3
+        }
       },
       {
         "t": "table",
@@ -8365,7 +8815,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.11.3 Resolver identity",
+          "b": 4
+        }
       },
       {
         "t": "para",
@@ -8396,7 +8851,12 @@
             "r": "t",
             "text": " reference durable — so:"
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.11.3 Resolver identity",
+          "b": 5
+        }
       },
       {
         "t": "note",
@@ -8468,7 +8928,12 @@
             "r": "t",
             "text": " be used as an asset identifier."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.11.3 Resolver identity",
+          "b": 6
+        }
       },
       {
         "t": "para",
@@ -8486,7 +8951,12 @@
             "r": "t",
             "text": "); the authored layer never names one, because a layer that pinned a version would defeat the registry's ability to serve a corrected artifact."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.11.3 Resolver identity",
+          "b": 7
+        }
       },
       {
         "t": "para",
@@ -8598,7 +9068,12 @@
             "r": "t",
             "text": ".)"
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.11.3 Resolver identity",
+          "b": 8
+        }
       },
       {
         "t": "para",
@@ -8657,7 +9132,12 @@
             "r": "t",
             "text": ". Three corollaries:"
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.11.3 Resolver identity",
+          "b": 9
+        }
       },
       {
         "t": "list",
@@ -8942,7 +9422,12 @@
               "text": " its package is a normal artifact and is subject to the ordinary closure rule."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.11.3 Resolver identity",
+          "b": 10
+        }
       },
       {
         "t": "clause",
@@ -9047,7 +9532,12 @@
             "r": "t",
             "text": " without any compiled code."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.13 OpenUsdSchemaPluginGroupType",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -9139,7 +9629,12 @@
             "r": "t",
             "text": " serve exactly that pair for every vendor prim type it materializes, so the capability is testable rather than advisory."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.13 OpenUsdSchemaPluginGroupType",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -9149,7 +9644,12 @@
             "r": "t",
             "text": "This closes the loop between the two type systems: a client fetches the plugin from the same registry it fetches layers from, registers it, and can then read a Part 2 materialized scene — or a Part 1 bound external stage — with the vendor's prim types fully understood rather than degraded to the Part 2 unknown-type fallback."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.13 OpenUsdSchemaPluginGroupType",
+          "b": 2
+        }
       },
       {
         "t": "nodetable",
@@ -9457,7 +9957,12 @@
             "r": "t",
             "text": "Conformance Units (each a normative, testable requirement):"
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "9 Profiles and conformance units",
+          "b": 0
+        }
       },
       {
         "t": "list",
@@ -10121,7 +10626,12 @@
               "text": "). Requires OU-ArtifactRegistry."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "9 Profiles and conformance units",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -10131,7 +10641,12 @@
             "r": "t",
             "text": "Profiles:"
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "9 Profiles and conformance units",
+          "b": 2
+        }
       },
       {
         "t": "list",
@@ -10212,7 +10727,12 @@
               "text": "), with or without live bindings."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "9 Profiles and conformance units",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -10262,7 +10782,12 @@
             "r": "t",
             "text": " folder Organizes rather than duplicates the registry artifacts). See the Pumps addendum for a worked, testable instance."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "9 Profiles and conformance units",
+          "b": 4
+        }
       }
     ],
     "namespaces": [
@@ -10969,7 +11494,12 @@
               "text": " discipline is required; no secrets (keys, tokens, Nucleus/broker credentials) are stored in the NodeSet or in USD metadata."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "11 Security",
+          "b": 0
+        }
       }
     ],
     "annex-a": [
@@ -11011,7 +11541,12 @@
             "r": "t",
             "text": ", both published beside this document."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "Annex A (normative) — OpenUSD namespace and mappings",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -11029,7 +11564,12 @@
             "r": "t",
             "text": " is proposed for discovery."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "Annex A (normative) — OpenUSD namespace and mappings",
+          "b": 2
+        }
       }
     ],
     "annex-b": [
@@ -11047,7 +11587,12 @@
             "r": "t",
             "text": "A minimal connector:"
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "Annex B (informative) — Using the model",
+          "b": 0
+        }
       },
       {
         "t": "list",
@@ -11258,14 +11803,24 @@
               "text": ")."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "Annex B (informative) — Using the model",
+          "b": 1
+        }
       },
       {
         "t": "figure",
         "id": "fig-connector-flow",
         "caption": "Connector interaction with a conforming Server",
         "source": "mermaid",
-        "mermaid": "sequenceDiagram\n  participant C as Connector\n  participant S as OPC UA Server\n  participant U as USD stage\n  C->>S: Browse Server/OpenUSD/Representations\n  S-->>C: representation AddIns (Stage, PrimPath, bindings)\n  C->>S: TranslateBrowsePaths / resolve sources\n  C->>S: CreateSubscription + CreateMonitoredItems\n  loop runtime\n    S-->>C: DataChange(value, status, timestamps)\n    C->>C: quality + conversion\n    C->>U: set target attribute (coalesced per frame)\n  end"
+        "mermaid": "sequenceDiagram\n  participant C as Connector\n  participant S as OPC UA Server\n  participant U as USD stage\n  C->>S: Browse Server/OpenUSD/Representations\n  S-->>C: representation AddIns (Stage, PrimPath, bindings)\n  C->>S: TranslateBrowsePaths / resolve sources\n  C->>S: CreateSubscription + CreateMonitoredItems\n  loop runtime\n    S-->>C: DataChange(value, status, timestamps)\n    C->>C: quality + conversion\n    C->>U: set target attribute (coalesced per frame)\n  end",
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "Annex B (informative) — Using the model",
+          "b": 2
+        }
       }
     ],
     "annex-c": [
@@ -11527,7 +12082,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "Annex C (informative) — Interoperability with OpenUSD and Omniverse",
+          "b": 0
+        }
       },
       {
         "t": "annex-clause",
@@ -11603,7 +12163,12 @@
             "r": "t",
             "text": ", MDL, or PhysX."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "C.1 Omniverse realization",
+          "b": 0
+        }
       },
       {
         "t": "annex-clause",
@@ -11628,7 +12193,12 @@
             "r": "t",
             "text": " of a broader \"asset definition at the center\" strategy, in which a single governed, standards-based asset definition drives multiple projections — meaning (ontology), appearance (this model → OpenUSD/Omniverse), place (geospatial, OPC UA Parts 210/211), and behavior (a declarative operating envelope). The design choices here serve that role:"
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "C.2 Alignment with an asset-definition-centric strategy",
+          "b": 0
+        }
       },
       {
         "t": "list",
@@ -11839,7 +12409,12 @@
               "text": " The normative model is AOUSD-native; Omniverse is an informative realization (§C.1), so the asset definition is not captive to one runtime."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "C.2 Alignment with an asset-definition-centric strategy",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -11849,7 +12424,12 @@
             "r": "t",
             "text": "The intended standards path is a family of thin, composable binding contracts (this OpenUSD binding being one) advanced through the OPC Foundation and bridged to the AAS/IDTA on shared semantic ids, rather than a single monolithic profile."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "C.2 Alignment with an asset-definition-centric strategy",
+          "b": 2
+        }
       }
     ],
     "annex-d": [
@@ -11876,7 +12456,12 @@
             "r": "t",
             "text": " and how the specification is the single contract that lets independent actors collaborate without private, point-to-point agreements. It is informative; nothing here adds normative requirements. The flow is generic; concrete pump and robotics passes are given at the end."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "Annex D (informative) — End-to-end collaboration flow",
+          "b": 0
+        }
       },
       {
         "t": "annex-clause",
@@ -12237,7 +12822,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "D.1 Actors and what each contributes",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -12256,7 +12846,12 @@
             "r": "t",
             "text": " of the layer beneath it, never on another actor's internal choices. A connector vendor never learns \"pump\"; a machine OEM never learns which renderer will be used; an artist never learns which NodeIds carry the data."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "D.1 Actors and what each contributes",
+          "b": 1
+        }
       },
       {
         "t": "annex-clause",
@@ -12269,7 +12864,12 @@
         "id": "fig-collaboration",
         "caption": "End-to-end collaboration flow",
         "source": "mermaid",
-        "mermaid": "sequenceDiagram\n  autonumber\n  participant OEM as Machine OEM (server author)\n  participant ART as USD asset author\n  participant SI as System integrator\n  participant CV as Connector vendor\n  participant VIZ as Visualization operator\n  Note over OEM,VIZ: Design time\n  OEM->>OEM: Expose domain model + OpenUsdRepresentation + bindings<br/>(PrimPath, Source, Target, RenderTargetKind)\n  ART->>ART: Author the machine USD asset<br/>(prims/attributes the bindings target)\n  SI->>SI: Compose plant stage (reference assets, place instances),<br/>deploy servers, point bindings at real NodeIds\n  CV->>CV: Build one generic connector (spec-only)\n  Note over OEM,VIZ: Runtime\n  CV->>OEM: Browse Server/OpenUSD/Representations\n  OEM-->>CV: representations (Stage, PrimPath) + live bindings\n  CV->>OEM: Subscribe to bound source Variables\n  loop live\n    OEM-->>CV: DataChange(value, quality, timestamps)\n    CV->>VIZ: convert + write target USD attribute (coalesced)\n  end\n  VIZ->>VIZ: Render the live stage (RTX / Hydra)"
+        "mermaid": "sequenceDiagram\n  autonumber\n  participant OEM as Machine OEM (server author)\n  participant ART as USD asset author\n  participant SI as System integrator\n  participant CV as Connector vendor\n  participant VIZ as Visualization operator\n  Note over OEM,VIZ: Design time\n  OEM->>OEM: Expose domain model + OpenUsdRepresentation + bindings<br/>(PrimPath, Source, Target, RenderTargetKind)\n  ART->>ART: Author the machine USD asset<br/>(prims/attributes the bindings target)\n  SI->>SI: Compose plant stage (reference assets, place instances),<br/>deploy servers, point bindings at real NodeIds\n  CV->>CV: Build one generic connector (spec-only)\n  Note over OEM,VIZ: Runtime\n  CV->>OEM: Browse Server/OpenUSD/Representations\n  OEM-->>CV: representations (Stage, PrimPath) + live bindings\n  CV->>OEM: Subscribe to bound source Variables\n  loop live\n    OEM-->>CV: DataChange(value, quality, timestamps)\n    CV->>VIZ: convert + write target USD attribute (coalesced)\n  end\n  VIZ->>VIZ: Render the live stage (RTX / Hydra)",
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "D.2 The flow",
+          "b": 0
+        }
       },
       {
         "t": "annex-clause",
@@ -12376,7 +12976,12 @@
               "text": " the composed stage plus the connector's live overrides are the interface; the operator swaps renderers freely."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "D.3 Where the contract lives at each hand-off",
+          "b": 0
+        }
       },
       {
         "t": "annex-clause",
@@ -12592,7 +13197,12 @@
               "text": ") and sees the pump spin, warm toward red, and glow — driven live, with no pump-specific code anywhere in the connector or renderer."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "D.4 Concrete pass: the pump example",
+          "b": 0
+        }
       },
       {
         "t": "annex-clause",
@@ -12872,7 +13482,12 @@
               "text": ") and sees two independently articulated robots, safety beacon and warning visibility, and a dynamically mounted R1 gripper — driven live, with no robotics-specific code in the connector or renderer."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "D.5 Concrete pass: the robotics example",
+          "b": 0
+        }
       }
     ],
     "annex-e": [
@@ -12908,7 +13523,12 @@
             "r": "t",
             "text": " so a curator can carry it in an AASX package or a signed Twin BOM."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "Annex E (informative) — Bridging to the asset administration shell",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -13218,7 +13838,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "Annex E (informative) — Bridging to the asset administration shell",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -13246,7 +13871,12 @@
             "r": "t",
             "text": " signal → prim mapping and can be reconciled automatically. Co-publishing the submodel template with the IDTA, anchored on ECLASS / IEC CDD, keeps the two standards' expressions of this enrichment convergent rather than competing. This annex is a direction, not a normative binding; the normative artifact remains the OPC UA NodeSet."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "Annex E (informative) — Bridging to the asset administration shell",
+          "b": 2
+        }
       }
     ],
     "annex-f": [
@@ -13301,7 +13931,12 @@
             "r": "t",
             "text": ")."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "Annex F (informative) — Geospatial rendering",
+          "b": 0
+        }
       },
       {
         "t": "annex-clause",
@@ -13377,7 +14012,12 @@
             "r": "t",
             "text": " repository) to add a native geospatial coordinate schema to USD, but as of this draft none is ratified. This mapping therefore targets the extension schemas that exist today and is expected to track a native AOUSD schema once it lands; the OPC UA side (RSL Part 210 relative pose, GPOS Part 211 global position) is already standardised and stable."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "F.1 Why this is an annex and not core USD",
+          "b": 0
+        }
       },
       {
         "t": "annex-clause",
@@ -13435,7 +14075,12 @@
             "r": "t",
             "text": " references:"
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "F.2 Relative pose to USD xformOp fidelity reference",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -13730,7 +14375,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "F.2 Relative pose to USD xformOp fidelity reference",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -13758,7 +14408,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "F.2 Relative pose to USD xformOp fidelity reference",
+          "b": 2
+        }
       },
       {
         "t": "annex-clause",
@@ -13798,7 +14453,12 @@
             "r": "t",
             "text": " (a local-Cartesian ↔ global-geographic tie point). This maps onto the two georeference targets in use today."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "F.3 Global position to USD georeference",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -13809,7 +14469,12 @@
             "text": "Cesium for Omniverse",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "F.3 Global position to USD georeference",
+          "b": 1
+        }
       },
       {
         "t": "table",
@@ -13979,7 +14644,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "F.3 Global position to USD georeference",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -13999,7 +14669,12 @@
             "text": ")",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "F.3 Global position to USD georeference",
+          "b": 3
+        }
       },
       {
         "t": "table",
@@ -14125,7 +14800,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "F.3 Global position to USD georeference",
+          "b": 4
+        }
       },
       {
         "t": "para",
@@ -14143,7 +14823,12 @@
             "r": "t",
             "text": " enum (0 = local, 4326 = WGS84/GPS, 326xx = UTM) selects the projection; both target schemas assume WGS84, so a non-WGS84 CRS is reprojected by the connector before authoring."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "F.3 Global position to USD georeference",
+          "b": 5
+        }
       },
       {
         "t": "annex-clause",
@@ -14159,7 +14844,12 @@
             "r": "t",
             "text": "A representation binds a moving asset's live geographic position to its globe anchor:"
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "F.4 A binding for the Georeference render target",
+          "b": 0
+        }
       },
       {
         "t": "code",
@@ -14178,7 +14868,12 @@
           "    double cesium:anchor:longitude = -122.3319   # <- source: GPOS GlobalPosition.Longitude",
           "    double cesium:anchor:height    = 56.0        # <- source: GPOS GlobalPosition.Elevation",
           "}"
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "F.4 A binding for the Georeference render target",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -14311,7 +15006,12 @@
             "r": "t",
             "text": " property holds for geolocation exactly as it does for telemetry."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "F.4 A binding for the Georeference render target",
+          "b": 2
+        }
       }
     ],
     "annex-g": [
@@ -14367,7 +15067,12 @@
             "r": "t",
             "text": ") writing a speed setpoint — plus a stage content-integrity digest. It is illustrative; a concrete server supplies the exact source BrowsePaths and stage identifiers."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/pumps/OPC-UA-Pumps-OpenUSD-Bindings-Addendum.md",
+          "s": "1 Scope",
+          "b": 0
+        }
       },
       {
         "t": "annex-clause",
@@ -14415,7 +15120,12 @@
             "r": "t",
             "text": ") that targets a stage and a prim path, and by carrying the live bindings as children of that AddIn:"
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/pumps/OPC-UA-Pumps-OpenUSD-Bindings-Addendum.md",
+          "s": "3 How the bindings are applied",
+          "b": 0
+        }
       },
       {
         "t": "code",
@@ -14430,7 +15140,12 @@
           "       ├─ DiffPressureEmissive   : OpenUsdValueChangeBindingType",
           "       ├─ AlarmActiveVisibility  : OpenUsdAlarmBindingType",
           "       └─ SpeedSetpointCommand   : OpenUsdCommandBindingType   (opt-in)"
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/pumps/OPC-UA-Pumps-OpenUSD-Bindings-Addendum.md",
+          "s": "3 How the bindings are applied",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -14525,7 +15240,12 @@
             "r": "t",
             "text": " (SHA-256) a connector verifies before composing."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/pumps/OPC-UA-Pumps-OpenUSD-Bindings-Addendum.md",
+          "s": "3 How the bindings are applied",
+          "b": 2
+        }
       },
       {
         "t": "annex-clause",
@@ -14724,7 +15444,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "metaverse-specs/openusd-binding/pumps/OPC-UA-Pumps-OpenUSD-Bindings-Addendum.md",
+          "s": "4 OpenUSD bindings for `PumpType`",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -14734,7 +15459,12 @@
             "r": "t",
             "text": "Notes:"
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/pumps/OPC-UA-Pumps-OpenUSD-Bindings-Addendum.md",
+          "s": "4 OpenUSD bindings for `PumpType`",
+          "b": 1
+        }
       },
       {
         "t": "list",
@@ -14846,7 +15576,12 @@
               "text": ")."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/pumps/OPC-UA-Pumps-OpenUSD-Bindings-Addendum.md",
+          "s": "4 OpenUSD bindings for `PumpType`",
+          "b": 2
+        }
       },
       {
         "t": "annex-clause",
@@ -14926,7 +15661,12 @@
             "r": "t",
             "text": " above:"
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/pumps/OPC-UA-Pumps-OpenUSD-Bindings-Addendum.md",
+          "s": "4.1 Reference implementation (validated end-to-end)",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -15198,7 +15938,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "metaverse-specs/openusd-binding/pumps/OPC-UA-Pumps-OpenUSD-Bindings-Addendum.md",
+          "s": "4.1 Reference implementation (validated end-to-end)",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -15272,7 +16017,12 @@
             "r": "t",
             "text": ") the connector verifies before composing."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/pumps/OPC-UA-Pumps-OpenUSD-Bindings-Addendum.md",
+          "s": "4.1 Reference implementation (validated end-to-end)",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -15282,7 +16032,12 @@
             "r": "t",
             "text": "Implementer findings from the source-generated OPC UA .NET model (generic, not Pump-specific — applies to any server built from this companion NodeSet):"
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/pumps/OPC-UA-Pumps-OpenUSD-Bindings-Addendum.md",
+          "s": "4.1 Reference implementation (validated end-to-end)",
+          "b": 3
+        }
       },
       {
         "t": "list",
@@ -15477,7 +16232,12 @@
               "text": " (Organizes) — it does not need to know or reach the represented Object, confirming the Part 1 discovery facility is sufficient on its own."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/pumps/OPC-UA-Pumps-OpenUSD-Bindings-Addendum.md",
+          "s": "4.1 Reference implementation (validated end-to-end)",
+          "b": 4
+        }
       },
       {
         "t": "annex-clause",
@@ -15509,7 +16269,12 @@
             "r": "t",
             "text": "):"
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/pumps/OPC-UA-Pumps-OpenUSD-Bindings-Addendum.md",
+          "s": "4.2 Composition / aggregation (validated)",
+          "b": 0
+        }
       },
       {
         "t": "list",
@@ -15701,7 +16466,12 @@
               "text": " for an OEM pump on another server; the connector composes its reference prim and (given a remote session factory) federates to drive its bindings."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/pumps/OPC-UA-Pumps-OpenUSD-Bindings-Addendum.md",
+          "s": "4.2 Composition / aggregation (validated)",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -15711,7 +16481,12 @@
             "r": "t",
             "text": "Composition-specific implementer findings (generic):"
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/pumps/OPC-UA-Pumps-OpenUSD-Bindings-Addendum.md",
+          "s": "4.2 Composition / aggregation (validated)",
+          "b": 2
+        }
       },
       {
         "t": "list",
@@ -15824,7 +16599,12 @@
               "text": " event filter suffices."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/pumps/OPC-UA-Pumps-OpenUSD-Bindings-Addendum.md",
+          "s": "4.2 Composition / aggregation (validated)",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -15887,7 +16667,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/pumps/OPC-UA-Pumps-OpenUSD-Bindings-Addendum.md",
+          "s": "4.2 Composition / aggregation (validated)",
+          "b": 4
+        }
       },
       {
         "t": "annex-clause",
@@ -16007,7 +16792,12 @@
             "r": "t",
             "text": "). Each served layer carries a SHA-256 digest."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/pumps/OPC-UA-Pumps-OpenUSD-Bindings-Addendum.md",
+          "s": "4.3 Asset content delivery",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -16041,7 +16831,12 @@
             "r": "t",
             "text": ". The rendered pump twin is self-contained: no external asset repository or manual USD asset setup is required when the server advertises this capability."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/pumps/OPC-UA-Pumps-OpenUSD-Bindings-Addendum.md",
+          "s": "4.3 Asset content delivery",
+          "b": 1
+        }
       },
       {
         "t": "annex-clause",
@@ -16186,7 +16981,12 @@
               "text": " locally (Omniverse rendering is out of CI scope)."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/pumps/OPC-UA-Pumps-OpenUSD-Bindings-Addendum.md",
+          "s": "5 Where the bindings live",
+          "b": 0
+        }
       }
     ],
     "annex-h": [
@@ -16298,7 +17098,12 @@
             "r": "t",
             "text": "). It also shows an emergency-stop alarm binding driving beacon visibility and a per-robot warning-halo visibility, an opt-in speed-override command binding, and a dynamic gripper tool reference mounted on R1's flange."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/robotics/OPC-UA-Robotics-OpenUSD-Bindings-Addendum.md",
+          "s": "1 Scope",
+          "b": 0
+        }
       },
       {
         "t": "annex-clause",
@@ -16362,7 +17167,12 @@
             "r": "t",
             "text": " children. Component bindings then recursively compose the represented children:"
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/robotics/OPC-UA-Robotics-OpenUSD-Bindings-Addendum.md",
+          "s": "3 How the bindings are applied",
+          "b": 0
+        }
       },
       {
         "t": "code",
@@ -16391,7 +17201,12 @@
           "            SourceBrowsePath = \"/ParameterSet/ActualPosition\"",
           "            TargetPropertyName = \"xformOp:rotateZ\"",
           "            RenderTargetKind = Rotation"
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/robotics/OPC-UA-Robotics-OpenUSD-Bindings-Addendum.md",
+          "s": "3 How the bindings are applied",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -16425,7 +17240,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/robotics/OPC-UA-Robotics-OpenUSD-Bindings-Addendum.md",
+          "s": "3 How the bindings are applied",
+          "b": 2
+        }
       },
       {
         "t": "annex-clause",
@@ -17044,7 +17864,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "metaverse-specs/openusd-binding/robotics/OPC-UA-Robotics-OpenUSD-Bindings-Addendum.md",
+          "s": "4 OpenUSD bindings for `MotionDeviceSystem` / `MotionDevice` / `Axis`",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -17054,7 +17879,12 @@
             "r": "t",
             "text": "Notes:"
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/robotics/OPC-UA-Robotics-OpenUSD-Bindings-Addendum.md",
+          "s": "4 OpenUSD bindings for `MotionDeviceSystem` / `MotionDevice` / `Axis`",
+          "b": 1
+        }
       },
       {
         "t": "list",
@@ -17127,7 +17957,12 @@
               "text": ")."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/robotics/OPC-UA-Robotics-OpenUSD-Bindings-Addendum.md",
+          "s": "4 OpenUSD bindings for `MotionDeviceSystem` / `MotionDevice` / `Axis`",
+          "b": 2
+        }
       },
       {
         "t": "annex-clause",
@@ -17215,7 +18050,12 @@
             "r": "t",
             "text": ". The nesting mirrors the OPC 40010 structure while preserving an artist-authored USD kinematic chain."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/robotics/OPC-UA-Robotics-OpenUSD-Bindings-Addendum.md",
+          "s": "4.1 Composition / aggregation",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -17265,7 +18105,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/robotics/OPC-UA-Robotics-OpenUSD-Bindings-Addendum.md",
+          "s": "4.1 Composition / aggregation",
+          "b": 1
+        }
       },
       {
         "t": "annex-clause",
@@ -17385,7 +18230,12 @@
             "r": "t",
             "text": "). Each served layer carries a SHA-256 digest."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/robotics/OPC-UA-Robotics-OpenUSD-Bindings-Addendum.md",
+          "s": "4.2 Asset content delivery",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -17419,7 +18269,12 @@
             "r": "t",
             "text": ". The rendered robot-cell twin is self-contained: no external asset repository or manual USD asset setup is required when the server advertises this capability."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/robotics/OPC-UA-Robotics-OpenUSD-Bindings-Addendum.md",
+          "s": "4.2 Asset content delivery",
+          "b": 1
+        }
       },
       {
         "t": "annex-clause",
@@ -17467,7 +18322,12 @@
             "r": "t",
             "text": "; live Axis telemetry drives a generic connector into a USD sink; the e-stop alarm updates cell beacon and robot warning visibility; the speed override command is declared but fail-closed unless the connector enables commands and the server authorizes the write; and the dynamic gripper is reconciled from model-change events."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/robotics/OPC-UA-Robotics-OpenUSD-Bindings-Addendum.md",
+          "s": "4.3 Reference implementation",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -17509,7 +18369,12 @@
             "r": "t",
             "text": " children."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/robotics/OPC-UA-Robotics-OpenUSD-Bindings-Addendum.md",
+          "s": "4.3 Reference implementation",
+          "b": 1
+        }
       },
       {
         "t": "annex-clause",
@@ -17697,7 +18562,12 @@
               "text": " discovers them through the registry and drives the same generic connector infrastructure used by pumps."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/robotics/OPC-UA-Robotics-OpenUSD-Bindings-Addendum.md",
+          "s": "5 Where the bindings live",
+          "b": 0
+        }
       }
     ]
   },

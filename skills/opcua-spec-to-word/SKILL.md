@@ -3,17 +3,21 @@ name: opcua-spec-to-word
 description: >-
   Convert a markdown OPC UA specification draft into a submission-ready Microsoft Word
   document that adheres to the official OPC Foundation companion specification template
-  (OPC 20020), with no manual editing afterwards. Clones the template package so styles,
-  numbering, headers and embedded figures survive byte-for-byte; generates the normative
-  node tables from the UANodeSet so the document cannot drift from the model; rebuilds
-  Mermaid diagrams as embedded PowerPoint objects because the template forbids inline
-  drawings; leaves all numbering to Word fields; and validates the result against a
-  machine-readable template contract. WHEN: turn a spec into Word, produce a .docx for
-  OPC Foundation submission, apply the OPC UA companion spec template, restructure a
-  draft into the mandated clause skeleton, generate OPC UA type-definition tables.
+  (OPC 20020), with no manual editing afterwards, and turn a reviewer's marked-up copy
+  back into a pull request. Clones the template package so styles, numbering, headers and
+  embedded figures survive byte-for-byte; generates the normative node tables from the
+  UANodeSet so the document cannot drift from the model; rebuilds Mermaid diagrams as
+  embedded PowerPoint objects because the template forbids inline drawings; leaves all
+  numbering to Word fields; validates the result against a machine-readable template
+  contract; and stamps every paragraph with its source address so tracked changes and
+  comments can be routed back to the markdown that produced them. WHEN: turn a spec into
+  Word, produce a .docx for OPC Foundation submission, apply the OPC UA companion spec
+  template, restructure a draft into the mandated clause skeleton, generate OPC UA
+  type-definition tables, ingest a reviewed .docx, turn Word tracked changes or comments
+  into a pull request.
 ---
 
-# OPC UA specification → OPC Foundation Word template
+# OPC UA specification ↔ OPC Foundation Word template
 
 The OPC Foundation accepts companion specifications as Word documents built on
 **OPC 20020 — UA Companion Specification Template**. The template is not a style sheet: it
@@ -21,16 +25,21 @@ mandates a clause skeleton, a machine-parseable table grammar that the Foundatio
 Word-versus-NodeSet validator reads, and a set of editing guidelines with hard prohibitions.
 
 This skill converts a markdown draft into that document **deterministically**, so the result
-needs no manual editing and can be rebuilt from source at any time.
+needs no manual editing and can be rebuilt from source at any time — and converts a reviewed
+copy back, so a reviewer who has Word and no git can still contribute.
 
 ## When to use
 
 Use it when a markdown specification in this repository has to become a `.docx` for review or
-submission, when an existing Word draft has to be regenerated after a model change, or when a
-draft has to be restructured into the template's clause skeleton.
+submission, when an existing Word draft has to be regenerated after a model change, when a
+draft has to be restructured into the template's clause skeleton, or when a **marked-up
+document comes back from a reviewer** and its tracked changes and comments have to become a
+pull request.
 
 Do **not** use it to hand-edit a `.docx`. Editing the generated file breaks the single source of
-truth exactly the way hand-editing a generated NodeSet does.
+truth exactly the way hand-editing a generated NodeSet does. The way to change a generated
+document is to change its source — or, if you only have Word, to mark it up and let the ingest
+route your marks to the right file.
 
 ## The five things that make this hard
 
@@ -53,6 +62,8 @@ truth exactly the way hand-editing a generated NodeSet does.
   wiring, the six table grammars, the retained regions, the prohibitions, the document properties.
 - `reference/pipeline.md` — the tool layout, the extension points, and how to onboard a new
   specification.
+- `reference/ingest.md` — the reverse direction: how a reviewer's marked-up document becomes a
+  pull request, and what it refuses to do.
 
 ## Inputs
 
@@ -91,6 +102,11 @@ truth exactly the way hand-editing a generated NodeSet does.
 6. **Prove the build is deterministic** — build twice and compare hashes.
 7. **Mutation-test the validator** (`test_validate_docx.py`). A checker that passes trivially is
    worthless.
+
+To go the other way — a reviewer's marked-up `.docx` back into a change to the source —
+see `reference/ingest.md`. In short: `ingest_docx.py reviewed.docx` reports what it would
+do, `--pr` opens the pull request and posts the comments as a review, and every applied
+edit has to survive a rebuild before anything is published.
 
 ## Traps found the hard way
 
@@ -253,6 +269,17 @@ truth exactly the way hand-editing a generated NodeSet does.
   unrelated change and only the documents whose *content* changed were re-finalised. The rule is
   that `build_all.py` is always followed by `finalize_all.ps1`, and the check that makes it
   visible is a populated `TOC` — one cached `PAGEREF` per entry, absent in a fresh build.
+- **A generated document should say what it was generated from.** Without it, a copy coming
+  back from a reviewer cannot be matched to the text it was rendered from, and every mark in
+  it has to be placed by guesswork. Stamp the specification id, the source digest and **the
+  last commit that touched the sources** — not `HEAD`, which would change every document's
+  bytes on every unrelated commit and make a rebuild permanently dirty.
+- **Word preserves a `w14:paraId` it finds, and only invents one where none exists.** That
+  turns an invisible attribute into a source address that survives a reviewer's round trip:
+  measured, 1255 of 1255 build-assigned ids came back intact. Two things make it usable —
+  derive the id from a *stable* address (file, section, block ordinal; never a line number,
+  which churns), and seed the generator with the template's own ids, because the template is
+  a real Word document and its paragraphs already carry them.
 
 ## Verification checklist
 

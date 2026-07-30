@@ -1,0 +1,111 @@
+# Turn a marked-up Word document into a pull request.
+#
+# Open an issue, attach the reviewed .docx, and add the `word-review` label. The tracked
+# changes become the pull request's diff and the comments become a review on it, then the
+# issue gets a reply with the link. A reviewer never needs git, and never has to describe
+# the same change twice.
+
+name: Word review
+
+on:
+  issues:
+    types: [labeled]
+  workflow_dispatch:
+    inputs:
+      url:
+        description: URL of a reviewed .docx
+        required: true
+      issue:
+        description: Issue number to reply to
+        required: false
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  ingest:
+    # A .docx is only ever ingested on purpose: the label is the consent.
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      github.event.label.name == 'word-review'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # The reviewed document names the commit it was built from, and the ingest
+          # reads the markdown as it was then. A shallow clone would not have it.
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - run: pip install -r word-drafts/tools/requirements.txt
+
+      - name: Find the attached document
+        id: find
+        env:
+          BODY: ${{ github.event.issue.body }}
+          INPUT_URL: ${{ github.event.inputs.url }}
+        run: |
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import os, re
+          url = (os.environ.get('INPUT_URL') or '').strip()
+          if not url:
+              body = os.environ.get('BODY') or ''
+              # Word attachments land as user-attachment links in the issue body.
+              found = re.findall(r'https://github\.com/user-attachments/files/\S+?\.docx',
+                                 body)
+              url = found[-1] if found else ''
+          print('url=%s' % url)
+          PY
+
+      - name: Explain when there is nothing to ingest
+        if: steps.find.outputs.url == ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh issue comment "${{ github.event.issue.number }}" --body \
+            "I could not find a \`.docx\` attached to this issue. Drag the reviewed
+            document into a comment, then add the \`word-review\` label again."
+          exit 1
+
+      - name: Download it
+        run: curl -sSL -o reviewed.docx "${{ steps.find.outputs.url }}"
+
+      - name: Ingest, open the pull request and post the review
+        id: ingest
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          python word-drafts/tools/ingest_docx.py reviewed.docx \
+            --pr --base "${{ github.event.repository.default_branch }}" \
+            --report ingest-report.md | tee ingest.log
+          echo "url=$(grep -o 'https://github.com/[^\"]*/pull/[0-9]*' ingest.log | head -1)" \
+            >> "$GITHUB_OUTPUT"
+
+      - name: Reply on the issue
+        if: always() && github.event.issue.number != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ -n "${{ steps.ingest.outputs.url }}" ]; then
+            gh issue comment "${{ github.event.issue.number }}" --body \
+              "Opened ${{ steps.ingest.outputs.url }} from the attached document."
+          else
+            gh issue comment "${{ github.event.issue.number }}" \
+              --body-file ingest-report.md || \
+            gh issue comment "${{ github.event.issue.number }}" --body \
+              "The ingest failed; see the workflow run for details."
+          fi
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ingest-report
+          path: ingest-report.md
+          if-no-files-found: ignore

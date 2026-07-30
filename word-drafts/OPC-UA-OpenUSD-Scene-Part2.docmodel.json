@@ -59,7 +59,12 @@
             "r": "t",
             "text": " files."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
+          "s": "1 Scope",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -96,7 +101,12 @@
             "r": "t",
             "text": " require Part 1). It covers:"
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
+          "s": "1 Scope",
+          "b": 1
+        }
       },
       {
         "t": "list",
@@ -326,7 +336,12 @@
               "text": ")."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
+          "s": "1 Scope",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -387,7 +402,12 @@
             "r": "t",
             "text": ")."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
+          "s": "1 Scope",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -410,7 +430,12 @@
             "r": "t",
             "text": " layer-file muting/permissions, and the render/materialization semantics of specific renderers."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
+          "s": "1 Scope",
+          "b": 4
+        }
       }
     ],
     "normative-references": [
@@ -1424,7 +1449,12 @@
             "r": "t",
             "text": "-ing this Scene model + base UA):"
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
+          "s": "5 Use cases",
+          "b": 0
+        }
       },
       {
         "t": "list",
@@ -1681,7 +1711,12 @@
               "text": "."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
+          "s": "5 Use cases",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -1704,7 +1739,12 @@
             "r": "t",
             "text": " assets by the reference converter and are byte-deterministic:"
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
+          "s": "5 Use cases",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -1713,7 +1753,12 @@
           "python metaverse-specs/extras/openusd-scene/tools/regen_examples.py     # (re)generate both example nodesets",
           "python metaverse-specs/extras/openusd-scene/tools/roundtrip_check.py     # export back to .usda and diff (composed-scene equivalent)",
           "python metaverse-specs/validate_all.py --self-contained                 # structural validation (model + examples)"
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
+          "s": "5 Use cases",
+          "b": 3
+        }
       }
     ],
     "model-overview": [
@@ -1746,7 +1791,12 @@
             "r": "t",
             "text": " onto the OPC UA address space:"
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
+          "s": "6.1 The materialization",
+          "b": 0
+        }
       },
       {
         "t": "code",
@@ -1763,7 +1813,12 @@
           "        ├─ Composition/     → <Arc> : UsdCompositionArcType",
           "        ├─ VariantSets/     → <Set> : UsdVariantSetType",
           "        └─ Metadata/        → (metadata Property Variables)"
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
+          "s": "6.1 The materialization",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -1816,7 +1871,12 @@
             "r": "t",
             "text": ")."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
+          "s": "6.1 The materialization",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -1951,7 +2011,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
+          "s": "6.2 Two complementary models",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -1993,7 +2058,12 @@
             "r": "t",
             "text": " for unified discovery — but neither model requires the other."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
+          "s": "6.2 Two complementary models",
+          "b": 1
+        }
       },
       {
         "t": "clause",
@@ -2041,7 +2111,12 @@
             "r": "t",
             "text": " into the prim tree."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
+          "s": "6.3 Discovery",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -2073,7 +2148,12 @@
             "r": "t",
             "text": ". This section is the normative narrative; Annex A is authoritative for identifiers."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
+          "s": "6.4 Organisation of the model",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -2485,7 +2565,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
+          "s": "6.5.1 USD concept to OPC UA Node",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -2570,7 +2655,12 @@
             "r": "t",
             "text": " property, so the mapping is reversible even where the built-in encoding is many-to-one."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
+          "s": "6.5.2 SdfValueTypeName to OPC UA DataType and ValueRank",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -3076,7 +3166,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
+          "s": "6.5.2 SdfValueTypeName to OPC UA DataType and ValueRank",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -3151,7 +3246,12 @@
             "r": "t",
             "text": ", while a role-aware client (a renderer, a material editor) can tell a colour from a point without parsing a string."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
+          "s": "6.5.2 SdfValueTypeName to OPC UA DataType and ValueRank",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -3341,7 +3441,12 @@
             "r": "t",
             "text": " folders."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
+          "s": "6.5.3 Metadata",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -3661,7 +3766,12 @@
               "text": ")."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
+          "s": "6.6.1 Importing a .usd into the address space",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -3846,7 +3956,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
+          "s": "6.6.2 Exporting the address space to .usd",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -3944,7 +4059,12 @@
             "r": "t",
             "text": ") rather than reproduced layer-by-layer."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
+          "s": "6.6.4 Round-trip contract",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -3960,7 +4080,12 @@
             "r": "t",
             "text": "USD's two schema kinds map to OPC UA's two extension mechanisms:"
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
+          "s": "6.7 Vendor extension",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -4017,7 +4142,12 @@
             "r": "t",
             "text": " token. A generic client that does not know the subtype browses it as its nearest known supertype — subtyping is transparent to browse."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
+          "s": "6.7.1 Typed schemas as ObjectType subtyping",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -4103,7 +4233,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
+          "s": "6.7.1 Typed schemas as ObjectType subtyping",
+          "b": 1
+        }
       },
       {
         "t": "clause",
@@ -4177,7 +4312,12 @@
             "r": "t",
             "text": ") when the schema's members should appear inline on the prim. Multiple API schemas compose on one prim exactly as multiple AddIns/Interfaces do."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
+          "s": "6.7.2 Applied schemas as AddIns and Interfaces",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -4302,7 +4442,12 @@
             "r": "t",
             "text": " for lossless export."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
+          "s": "6.7.3 New value types as DataType subtyping",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -4402,7 +4547,12 @@
             "r": "t",
             "text": " retain the authored text of the value, not a host-language rendering of it, so that export is byte-faithful."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
+          "s": "6.7.4 Unknown-type fallback",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -4435,7 +4585,12 @@
             "r": "t",
             "text": " a Server may mix per attribute:"
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
+          "s": "6.8 Live-data mapping",
+          "b": 0
+        }
       },
       {
         "t": "list",
@@ -4573,7 +4728,12 @@
               "text": " is the authored default; it does not change at runtime."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
+          "s": "6.8 Live-data mapping",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -4591,7 +4751,12 @@
             "r": "t",
             "text": " declared by a recording profile. Absent that, HistoricalAccess samples are on a Server-defined timeline and are informative."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
+          "s": "6.8 Live-data mapping",
+          "b": 2
+        }
       }
     ],
     "objecttypes": [
@@ -4719,7 +4884,12 @@
             "r": "t",
             "text": ")."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
+          "s": "7.1 UsdStageType",
+          "b": 0
+        }
       },
       {
         "t": "nodetable",
@@ -4926,7 +5096,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
+          "s": "7.2 UsdPrimType",
+          "b": 0
+        }
       },
       {
         "t": "nodetable",
@@ -4972,7 +5147,12 @@
             "r": "t",
             "text": "):"
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
+          "s": "7.3 UsdTypedType",
+          "b": 0
+        }
       },
       {
         "t": "code",
@@ -4992,7 +5172,12 @@
           " │             └─ UsdGeomCapsuleType  (Height, Radius, Axis)",
           " ├─ UsdShadeMaterialType",
           " └─ UsdShadeShaderType           (Info_Id)"
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
+          "s": "7.3 UsdTypedType",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -5105,7 +5290,12 @@
             "r": "t",
             "text": ")."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
+          "s": "7.3 UsdTypedType",
+          "b": 2
+        }
       },
       {
         "t": "nodetable",
@@ -5185,7 +5375,12 @@
             "r": "t",
             "text": " reference so the relationship is browsable as a graph edge."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
+          "s": "7.4 UsdRelationshipType",
+          "b": 0
+        }
       },
       {
         "t": "nodetable",
@@ -5526,7 +5721,12 @@
               "text": ")."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
+          "s": "7.5 UsdCompositionArcType",
+          "b": 0
+        }
       },
       {
         "t": "nodetable",
@@ -5655,7 +5855,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
+          "s": "7.6 UsdGeoreferenceApiType",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -5674,7 +5879,12 @@
             "r": "t",
             "text": " anchor it can read without knowing which extension authored the stage, this model additionally defines two portable applied API schemas:"
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
+          "s": "7.6 UsdGeoreferenceApiType",
+          "b": 1
+        }
       },
       {
         "t": "list",
@@ -5789,7 +5999,12 @@
               "text": ". Applied to any placed prim."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
+          "s": "7.6 UsdGeoreferenceApiType",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -5808,7 +6023,12 @@
             "r": "t",
             "text": " additionally populate the portable schema (dual-authoring the same values), so a generic client obtains the anchor from one well-known type while a vendor-aware client still reads the native schema."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
+          "s": "7.6 UsdGeoreferenceApiType",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -5823,7 +6043,12 @@
             "r": "t",
             "text": " The portable georeference corresponds directly to the OPC UA global- and relative-positioning models:"
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
+          "s": "7.6 UsdGeoreferenceApiType",
+          "b": 4
+        }
       },
       {
         "t": "para",
@@ -5884,7 +6109,12 @@
             "r": "t",
             "text": ") and the tangent-plane convention on the georeference so a consumer can compose the correct local↔global transform."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
+          "s": "7.6 UsdGeoreferenceApiType",
+          "b": 6
+        }
       },
       {
         "t": "nodetable",
@@ -6524,7 +6754,12 @@
             "r": "t",
             "text": " it could not be exported, and the reference set alone does not preserve authored order."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
+          "s": "8 OPC UA VariableTypes",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -7436,7 +7671,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
+          "s": "11 Profiles and conformance units",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -7462,7 +7702,12 @@
             "r": "t",
             "text": " prefix is the short name of this specification, so a conformance unit identifier is unique across companion specifications."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
+          "s": "11 Profiles and conformance units",
+          "b": 1
+        }
       }
     ],
     "namespaces": [
@@ -7903,7 +8148,12 @@
             "r": "t",
             "text": "Part 2 is additive and self-contained, but designed to interoperate with Part 1:"
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
+          "s": "Annex B (informative) — Relationship to Part 1",
+          "b": 0
+        }
       },
       {
         "t": "list",
@@ -8218,7 +8468,12 @@
               "text": " responsibility — a Part 1 binding declares the mapping, the Server (or a server-hosted connector) applies it."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
+          "s": "Annex B (informative) — Relationship to Part 1",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -8228,7 +8483,12 @@
             "r": "t",
             "text": "Neither model requires the other; a Server may implement either alone."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
+          "s": "Annex B (informative) — Relationship to Part 1",
+          "b": 2
+        }
       }
     ],
     "annex-c": [
@@ -8299,7 +8559,12 @@
             "r": "t",
             "text": " (an applied API schema)."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
+          "s": "Annex C (informative) — Concrete Cesium for Omniverse georeference mapping",
+          "b": 0
+        }
       },
       {
         "t": "annex-clause",
@@ -8351,7 +8616,12 @@
             "r": "t",
             "text": "):"
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
+          "s": "C.1 CesiumGeoreferencePrim as a UsdTypedType subtype",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -8501,7 +8771,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
+          "s": "C.1 CesiumGeoreferencePrim as a UsdTypedType subtype",
+          "b": 1
+        }
       },
       {
         "t": "annex-clause",
@@ -8553,7 +8828,12 @@
             "r": "t",
             "text": "):"
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
+          "s": "C.2 CesiumGlobeAnchorAPI as a UsdApiSchemaType AddIn",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -8655,7 +8935,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
+          "s": "C.2 CesiumGlobeAnchorAPI as a UsdApiSchemaType AddIn",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -8716,7 +9001,12 @@
             "r": "t",
             "text": ")."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
+          "s": "C.2 CesiumGlobeAnchorAPI as a UsdApiSchemaType AddIn",
+          "b": 2
+        }
       },
       {
         "t": "annex-clause",
@@ -8742,7 +9032,12 @@
           "        double cesium:anchor:height    = 56.0",
           "    }",
           "}"
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
+          "s": "C.3 Worked example",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -8853,7 +9148,12 @@
             "r": "t",
             "text": " applies in both cases."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
+          "s": "C.3 Worked example",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -8863,7 +9163,12 @@
             "r": "t",
             "text": "materializes as (abbreviated address space):"
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
+          "s": "C.3 Worked example",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -8881,7 +9186,12 @@
           "              │     cesium:anchor:latitude=47.6061 …",
           "              └─ HasAddIn UsdGlobeAnchorApiType                              # portable (§7.6)",
           "                    Latitude=47.6061  Longitude=-122.3319  Height=56.0"
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
+          "s": "C.3 Worked example",
+          "b": 3
+        }
       },
       {
         "t": "annex-clause",
@@ -8963,7 +9273,12 @@
             "r": "t",
             "text": ")."
           }
-        ]
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
+          "s": "C.4 Round-trip",
+          "b": 0
+        }
       }
     ]
   },

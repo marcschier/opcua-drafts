@@ -31,11 +31,18 @@ edits are recorded as visible, attributable revisions rather than silent changes
 exactly what makes a marked-up `.docx` useful as review feedback, even though the file itself
 is regenerated.
 
-To give feedback, follow the *Contributing* section of the [repository
-README](../README.md) and [`CONTRIBUTING.md`](../CONTRIBUTING.md): fork, branch, annotate or
-change, then **open a pull request — or open an issue** if you would rather just raise a point
-than edit anything. You do not have to write specification text yourself; maintainers turn the
-discussion into concrete changes to the source and regenerate everything here.
+**Send the marked-up file back and it becomes a pull request.** Open an issue, attach the
+document, add the `word-review` label, and stop there. Your tracked changes become the pull
+request's diff, your comments become a review on it, and the issue gets a reply with the link.
+You need no git and no markdown, and you never describe the same change twice. What makes that
+possible is that every paragraph carries the address of the source line it was rendered from,
+so a mark can be traced back rather than guessed at — see *Sending a review back* below.
+
+If you would rather work in the repository directly, follow the *Contributing* section of the
+[repository README](../README.md) and [`CONTRIBUTING.md`](../CONTRIBUTING.md): fork, branch,
+annotate or change, then open a pull request — or open an issue if you would rather just raise
+a point than edit anything. You do not have to write specification text yourself; maintainers
+turn the discussion into concrete changes to the source and regenerate everything here.
 
 | Artifact | What it is |
 |---|---|
@@ -51,9 +58,10 @@ discussion into concrete changes to the source and regenerate everything here.
 | `OPC-UA-Avro-Encoding.docx` | Apache Avro DataEncoding — declares a template deviation; see below. |
 | `OPC-UA-Arrow-Encoding.docx` | Apache Arrow DataEncoding — declares a template deviation; see below. |
 | `*.docmodel.json` | The intermediate representation each document was rendered from. Committed **because a `.docx` diff is unreadable** — review this instead. |
+| `*.provenance.json` | What each paragraph of the document was rendered from. This is what lets a marked-up copy be turned back into a change to the source. |
 | `figures/*.pptx` | The editable PowerPoint behind each figure, embedded in the document as an OLE object. |
 | `figures/*.png` | The preview image Word displays for each embedded object. |
-| `tools/` | The build, the validator, its mutation test and the batch runner. |
+| `tools/` | The build, the validator, its mutation test, the batch runner and the ingest. |
 
 ## Commands
 
@@ -82,6 +90,15 @@ pwsh word-drafts/tools/finalize_all.ps1
 
 # check the committed documents without opening Word
 pwsh word-drafts/tools/finalize_all.ps1 -VerifyOnly
+
+# a reviewed document -> a report, a branch, a pull request and a review
+python word-drafts/tools/ingest_docx.py reviewed.docx
+python word-drafts/tools/ingest_docx.py reviewed.docx --pr --dry-run
+python word-drafts/tools/ingest_docx.py reviewed.docx --pr
+
+# make a marked-up document to test the ingest against  (needs Word; local only)
+pwsh word-drafts/tools/make_review_fixture.ps1 -Path word-drafts/OPC-UA-Generators.docx `
+     -Out $env:TEMP/reviewed.docx -Edits 'old wording=>new wording'
 
 # rewrite the markdown source into the same clause skeleton  (one-shot per restructure)
 python word-drafts/tools/restructure_markdown.py word-drafts/tools/specs/openusd-binding.json
@@ -206,6 +223,46 @@ A deviation is therefore something the pipeline refuses to take quietly. It must
 An undeclared deviation still fails, and a declared one whose statement is missing from the document
 fails too. The result is a document validated against a smaller contract that the document itself
 states.
+
+## Sending a review back
+
+The pipeline runs both ways. A marked-up `.docx` becomes a pull request whose diff is the
+reviewer's tracked changes and whose review carries their comments.
+
+**Every paragraph knows where it came from.** The build stamps a deterministic
+`w14:paraId` on each paragraph and writes `*.provenance.json` beside the document mapping
+those ids to source addresses. Word preserves an id it finds and only invents one where none
+exists — measured: all 1255 ids in one document survived an edit-and-save round trip intact —
+so a mark can be traced to the markdown that produced it without matching text or guessing at
+positions. A paragraph whose id is unknown is one the reviewer created.
+
+**Not every mark belongs in the markdown.** The ingest routes each one to its real owner and
+applies only the first row:
+
+| Marked content | Owner | What happens |
+|---|---|---|
+| Prose rendered from markdown | that `.md` | applied |
+| Node tables | the UANodeSet / `build_model.py` | reported as a model change request |
+| Clause 4.1, use cases, Annex A identity | `tools/specs/<spec>.json` | reported |
+| Clause and caption numbers, cross-references | Word fields | reported — numbering is not authored |
+| Retained template regions | the OPC 20020 template | reported, and flagged as a deviation |
+
+**A change that cannot be placed exactly is refused.** The text a reviewer sees is not the
+markdown — inline markup is gone, cross-references have become numbers, BrowseNames have been
+resolved — so an edit is applied only where the text it replaces occurs exactly once in that
+paragraph's own source lines. Ambiguity is reported, not guessed at.
+
+**And then it is checked.** The markdown is patched, the document is rebuilt, and every
+applied edit must now read the way the reviewer wrote it. One that does not is reported as
+unapplied and blocks the pull request. That is the same discipline as the rest of the
+pipeline: check the printed form, because both sides can agree on the same wrong thing.
+
+One GitHub constraint shapes the comments. **The REST API will not attach an inline comment
+to a line that is not part of the diff** — the web interface allows it, the API answers 422.
+So a comment on a paragraph the reviewer also changed becomes a real inline comment, and a
+comment on a paragraph they left alone is collected into the review body with a permanent
+link to the exact lines, which GitHub renders as a quoted snippet. Inventing an edit to host
+a comment would make the diff claim a change nobody asked for, so the ingest does not.
 
 ## The clause map
 

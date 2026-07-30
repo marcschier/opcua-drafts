@@ -24,7 +24,12 @@
             "r": "t",
             "text": " is a named, authorized, flow-controlled, bidirectional stream of opaque bytes multiplexed onto an OPC UA SecureChannel that is already open."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "1 Scope",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -34,7 +39,12 @@
             "r": "t",
             "text": "This specification defines data channels end to end: the frame that carries them, the transports that carry the frame, the Services that create them, the AddressSpace model that describes where they may be created, and the conformance units that group all of it. It targets the capability set of WebRTC — many concurrent media and data streams, priority, backpressure, partial reliability, round-trip feedback, unreliable datagrams — obtained from the connection an OPC UA Client already has, with the certificates it already validated and the user identity it already authenticated."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "1 Scope",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -44,7 +54,12 @@
             "r": "t",
             "text": "It does not define codecs, packetization, presentation timing, media negotiation, peer-to-peer connectivity or NAT traversal. A channel carries octets qualified by an IANA media type; what those octets mean is the application's business."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "1 Scope",
+          "b": 2
+        }
       }
     ],
     "normative-references": [
@@ -831,7 +846,12 @@
             "r": "t",
             "text": " returns a slice of a file to a Client that keeps asking for the next one. Every one of those is a complete request paired with a complete response, and the Secure Conversation layer is built for exactly that shape: a Message is chunked, every chunk is reliable and ordered, and nothing is interpreted until the whole Message has arrived."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "2 The problem",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -902,7 +922,12 @@
             "text": "\"start sending, keep sending, here is how much I can absorb, throw away anything older than 40 ms, and stop when I say so.\"",
             "i": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "2 The problem",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -912,7 +937,12 @@
             "r": "t",
             "text": "Yet that is what a camera needs. And a microphone, a log tail, a point cloud, a firmware image being pushed to a drive, a remote console, a waveform capture. These produce a continuous flow whose value decays with age. The operations that suit them — start, throttle, prioritize against other traffic, discard what is already too late to matter, stop — have no expression in the protocol at all."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "2 The problem",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -941,7 +971,12 @@
             "r": "t",
             "text": " already provides — but it requires DataSetWriter and DataSetReader binding rules that belong in a Part 14 errata rather than here. This specification neither provides nor precludes it; the content type and the delivery modes are the extension point it would use."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "2 The problem",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -951,7 +986,12 @@
             "r": "t",
             "text": "So they are solved beside it. A vendor puts RTSP on port 554 next to the OPC UA endpoint on 4840, or gRPC, or a bespoke socket. That means a second port through the firewall, a second handshake, a second set of certificates, a second authorization model with no relationship to the OPC UA user identity, and a second thing to diagnose when it stops working — for data that came off the same device and is governed by the same policy as the data flowing over OPC UA."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "2 The problem",
+          "b": 4
+        }
       },
       {
         "t": "para",
@@ -961,7 +1001,12 @@
             "r": "t",
             "text": "Data channels close that gap on the connection that is already open."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "2 The problem",
+          "b": 5
+        }
       },
       {
         "t": "clause",
@@ -977,7 +1022,12 @@
             "r": "t",
             "text": "Everything in this specification is one of two arrangements, and the distinction is worth making before any detail, because it explains why two transports exist and why they behave differently."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "3.1 Two channel models",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -1238,7 +1288,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "3.1 Two channel models",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -1267,7 +1322,12 @@
             "r": "t",
             "text": " differ."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "3.1 Two channel models",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -1293,7 +1353,12 @@
             "r": "t",
             "text": " remains inline under every future carrier."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "3.1 Two channel models",
+          "b": 3
+        }
       },
       {
         "t": "clause",
@@ -1346,7 +1411,12 @@
             "r": "t",
             "text": " apply with no change at all. The only new bytes are a twelve-byte stream header at the front of the encrypted body."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "3.2 The design in one page",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -1361,7 +1431,12 @@
             "r": "t",
             "text": " This is the constraint everything else rests on. A multi-chunk frame would sit in the existing chunk assembler and block every other Message on the connection until it completed — precisely the failure a streaming layer exists to prevent. An application unit larger than one frame is segmented by flags in the stream header instead."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "3.2 The design in one page",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -1418,7 +1493,12 @@
             "r": "t",
             "text": " closes a SecureChannel, so a capable peer never speaks first."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "3.2 The design in one page",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -1466,7 +1546,12 @@
             "r": "t",
             "text": " — a SecureChannel may carry several Sessions, and ChannelIds are guessable — and the authorization is re-evaluated rather than granted once, so revoking a permission actually terminates the stream it was protecting. Renewing the channel token does not disturb a channel; closing the Session revokes it."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "3.2 The design in one page",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -1497,7 +1582,12 @@
             "r": "t",
             "text": ", so its supertype is untouched and every existing Client sees exactly what it saw before."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "3.2 The design in one page",
+          "b": 4
+        }
       },
       {
         "t": "clause",
@@ -1527,7 +1617,12 @@
             "r": "t",
             "text": ") is the outer-protocol binding this specification defines. It adds exactly four things the inline model cannot express, and nothing else:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "3.3 What the outer-protocol model adds",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -1661,7 +1756,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "3.3 What the outer-protocol model adds",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -1671,7 +1771,12 @@
             "r": "t",
             "text": "An implementation that supports only the inline model is a complete implementation of this specification."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "3.3 What the outer-protocol model adds",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -1699,7 +1804,12 @@
           "Payload                    varies    DATA frames only",
           "--------------------------------------------- end of the secured body",
           "Message footer             varies    PaddingSize · Padding · Signature   | inline framing only"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "4.1 Layout",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -1761,7 +1871,12 @@
             "r": "t",
             "text": ", inside the secured body where it cannot affect the security property."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "4.1 Layout",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -1771,7 +1886,12 @@
             "r": "t",
             "text": "Annex B gives the annotated bytes of every frame type, generated from the reference codec."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "4.1 Layout",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -2019,7 +2139,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "4.2 Frame types",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -2061,7 +2186,12 @@
             "r": "t",
             "text": ". Separating it is what lets the connection window be replenished while every individual channel is stalled."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "4.2 Frame types",
+          "b": 1
+        }
       },
       {
         "t": "clause",
@@ -2113,7 +2243,12 @@
             "r": "t",
             "text": " flags an application-defined synchronization point such as a video key frame, so a receiver recovering from a gap knows where it can resume without understanding the payload."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "4.3 The five flags",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -2160,7 +2295,12 @@
             "r": "t",
             "text": " frame would deadlock a stalled channel permanently, and a channel that cannot be reset or probed while stalled cannot be recovered."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "5.1 Credit",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -2213,7 +2353,12 @@
             "r": "t",
             "text": " replenish: once it has consumed and released payload and its outstanding grant has fallen below half the last grant or one frame, whichever is larger, it must grant again. Without that a receiver could legally consume its whole window and stall the channel forever while remaining conformant."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "5.1 Credit",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -2256,7 +2401,12 @@
             "r": "t",
             "text": " before a grant\" gate does not apply."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "5.1 Credit",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -2349,7 +2499,12 @@
               "text": "."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "5.2 Two scheduling obligations",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -2523,7 +2678,12 @@
             "r": "t",
             "text": " transition is rate-limited to one Event per channel per second so that a saturated channel does not generate an Event per credit stall."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "5.3 State, and what \"unreliable\" means",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -2649,7 +2809,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "5.3 State, and what \"unreliable\" means",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -2694,7 +2859,12 @@
             "r": "t",
             "text": ", so a Client learns the difference by reading rather than by measuring."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "5.3 State, and what \"unreliable\" means",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -2761,7 +2931,12 @@
             "r": "t",
             "text": " may itself be lost. Without gap information a media decoder cannot tell a stall from a loss, and so cannot decide whether to conceal or to wait."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "5.3 State, and what \"unreliable\" means",
+          "b": 3
+        }
       },
       {
         "t": "clause",
@@ -2787,7 +2962,12 @@
             "r": "t",
             "text": ") carries the frames."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "6 DataChannel service set",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -2797,7 +2977,12 @@
             "r": "t",
             "text": "Each call opens, modifies or closes exactly one channel. A batched form was rejected: a partial success would leave the Client holding channels it did not want and could not name in the failure."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "6 DataChannel service set",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -2832,7 +3017,12 @@
             "r": "t",
             "text": " are never revised, because silently strengthening a delivery guarantee adds unbounded latency to a media channel and silently weakening one loses data. Both are rejected outright when unsupported."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "6 DataChannel service set",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -2858,7 +3048,12 @@
             "r": "t",
             "text": ")."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "6.1 OpenDataChannel",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -2869,7 +3064,12 @@
             "text": "Request",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "6.1 OpenDataChannel",
+          "b": 1
+        }
       },
       {
         "t": "table",
@@ -3122,7 +3322,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "6.1 OpenDataChannel",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -3133,7 +3338,12 @@
             "text": "Response",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "6.1 OpenDataChannel",
+          "b": 3
+        }
       },
       {
         "t": "table",
@@ -3283,7 +3493,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "6.1 OpenDataChannel",
+          "b": 4
+        }
       },
       {
         "t": "para",
@@ -3294,7 +3509,12 @@
             "text": "Parameter revision",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "6.1 OpenDataChannel",
+          "b": 5
+        }
       },
       {
         "t": "table",
@@ -3527,7 +3747,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "6.1 OpenDataChannel",
+          "b": 6
+        }
       },
       {
         "t": "para",
@@ -3602,7 +3827,12 @@
             "r": "t",
             "text": " for the source."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "6.1 OpenDataChannel",
+          "b": 7
+        }
       },
       {
         "t": "para",
@@ -3613,7 +3843,12 @@
             "text": "Error conditions",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "6.1 OpenDataChannel",
+          "b": 8
+        }
       },
       {
         "t": "table",
@@ -3923,7 +4158,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "6.1 OpenDataChannel",
+          "b": 9
+        }
       },
       {
         "t": "para",
@@ -3971,7 +4211,12 @@
             "r": "t",
             "text": " attempt, successful or refused: a data channel moves content out of the Server continuously and outside the Service path, so the authorization decision is the only moment an audit trail can capture it. No frame for the assigned ChannelId is transmitted before the response has been handed to the transport."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "6.1 OpenDataChannel",
+          "b": 10
+        }
       },
       {
         "t": "clause",
@@ -3987,7 +4232,12 @@
             "r": "t",
             "text": "Changes the mutable parameters of a running channel — mid-call renegotiation, so that an adaptive encoder dropping from 1080p to 720p adjusts rather than tearing the channel down and losing its pipeline."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "6.2 ModifyDataChannel",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -3998,7 +4248,12 @@
             "text": "Request",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "6.2 ModifyDataChannel",
+          "b": 1
+        }
       },
       {
         "t": "table",
@@ -4131,7 +4386,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "6.2 ModifyDataChannel",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -4142,7 +4402,12 @@
             "text": "Response",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "6.2 ModifyDataChannel",
+          "b": 3
+        }
       },
       {
         "t": "table",
@@ -4222,7 +4487,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "6.2 ModifyDataChannel",
+          "b": 4
+        }
       },
       {
         "t": "para",
@@ -4293,7 +4563,12 @@
             "r": "t",
             "text": " alters only the size of future grants."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "6.2 ModifyDataChannel",
+          "b": 5
+        }
       },
       {
         "t": "para",
@@ -4303,7 +4578,12 @@
             "r": "t",
             "text": "A Server cannot initiate a modification, because the Service is Client-invoked; a Server needing new terms resets the channel and offers a replacement."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "6.2 ModifyDataChannel",
+          "b": 6
+        }
       },
       {
         "t": "para",
@@ -4366,7 +4646,12 @@
             "r": "t",
             "text": ", plus the common Session faults."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "6.2 ModifyDataChannel",
+          "b": 7
+        }
       },
       {
         "t": "clause",
@@ -4398,7 +4683,12 @@
             "r": "t",
             "text": " that realizes it."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "6.3 CloseDataChannel",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -4409,7 +4699,12 @@
             "text": "Request",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "6.3 CloseDataChannel",
+          "b": 1
+        }
       },
       {
         "t": "table",
@@ -4562,7 +4857,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "6.3 CloseDataChannel",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -4573,7 +4873,12 @@
             "text": "Response",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "6.3 CloseDataChannel",
+          "b": 3
+        }
       },
       {
         "t": "table",
@@ -4623,7 +4928,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "6.3 CloseDataChannel",
+          "b": 4
+        }
       },
       {
         "t": "para",
@@ -4735,7 +5045,12 @@
             "r": "t",
             "text": ". A ChannelId is never reassigned while its SecureChannel is open, so a late frame from a previous occupant can never reach a successor."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "6.3 CloseDataChannel",
+          "b": 5
+        }
       },
       {
         "t": "para",
@@ -4761,7 +5076,12 @@
             "r": "t",
             "text": ": a Client that lost track of a channel needs to know whether it closed something or nothing."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "6.3 CloseDataChannel",
+          "b": 6
+        }
       },
       {
         "t": "para",
@@ -4800,7 +5120,12 @@
             "r": "t",
             "text": ", plus the common Session faults."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "6.3 CloseDataChannel",
+          "b": 7
+        }
       },
       {
         "t": "clause",
@@ -4816,14 +5141,24 @@
             "r": "t",
             "text": "A Server often knows before the Client does that a stream should start — an alarm fired and the camera that saw it should push video. OPC UA Services are request/response and a Server cannot call a Client, so this specification offers instead of pushing:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "6.4 Server-initiated channels without inverting the model",
+          "b": 0
+        }
       },
       {
         "t": "figure",
         "id": "fig-dch-session",
         "caption": "Opening and using a data channel",
         "source": "mermaid",
-        "mermaid": "sequenceDiagram\n    participant C as Client\n    participant S as Server\n    Note over S: alarm fires\n    S-->>C: DataChannelOfferedEventType (OfferId, SourceNodeId, Parameters, ExpirationTime)\n    C->>S: OpenDataChannel(sourceNodeId, offerId, requestedParameters)\n    S-->>C: channelId, revisedParameters\n    S-->>C: STR frames"
+        "mermaid": "sequenceDiagram\n    participant C as Client\n    participant S as Server\n    Note over S: alarm fires\n    S-->>C: DataChannelOfferedEventType (OfferId, SourceNodeId, Parameters, ExpirationTime)\n    C->>S: OpenDataChannel(sourceNodeId, offerId, requestedParameters)\n    S-->>C: channelId, revisedParameters\n    S-->>C: STR frames",
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "6.4 Server-initiated channels without inverting the model",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -4859,7 +5194,12 @@
             "r": "t",
             "text": " authorization. A Client that never subscribed never learns of the offer — which is the correct outcome, because a Server must not be able to push bytes at a Client that has not asked for them."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "6.4 Server-initiated channels without inverting the model",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -5027,7 +5367,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "6.5 Lifecycle",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -5046,7 +5391,12 @@
             "r": "t",
             "text": " Session activity for the purpose of the Session timeout. A Client streaming for an hour without a Service call is idle by every definition Part 4 uses, and treating frames as activity would let a compromised transport keep a Session alive indefinitely without the user ever being re-checked."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "6.5 Lifecycle",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -5056,7 +5406,12 @@
             "r": "t",
             "text": "No resume token is defined. Resumption would have to replay the sender's queue across a connection the peer can no longer authenticate as the same one, and for live media the queue is worthless by then. Bulk transfer that needs resumability carries its own offset in the payload, which is what the content type is there to describe."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "6.5 Lifecycle",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -5084,7 +5439,12 @@
             "r": "t",
             "text": " is that value."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "6.6 Defaults, ranges and the no-preference sentinel",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -5392,7 +5752,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "6.6 Defaults, ranges and the no-preference sentinel",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -5422,7 +5787,12 @@
             "r": "t",
             "text": " is its no-preference encoding — without it the source's own default could never take effect."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "6.6 Defaults, ranges and the no-preference sentinel",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -5506,7 +5876,12 @@
             "r": "t",
             "text": " is what lets a Client on a constrained link choose the substream instead of discovering the problem as discarded frames ten seconds in."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "7 The model",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -5524,7 +5899,12 @@
             "r": "t",
             "text": " reference. No supertype changes, no NodeId changes, no new required model. A companion specification that has already shipped can adopt this in a revision without breaking a single existing instance."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "7 The model",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -5586,7 +5966,12 @@
             "r": "t",
             "text": " says the path is congesting. Three different faults, three different remedies, and without the counters they look identical."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "7 The model",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -5617,7 +6002,12 @@
             "r": "t",
             "text": " — a Client checks for the Object rather than learning the fact from a rejected call."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "7 The model",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -5644,7 +6034,12 @@
             "r": "t",
             "text": ": a data channel moves content out of the Server continuously and outside the Service path, so the authorization decision is the only moment an audit trail can capture it."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "7 The model",
+          "b": 4
+        }
       },
       {
         "t": "para",
@@ -5663,7 +6058,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "7 The model",
+          "b": 5
+        }
       },
       {
         "t": "clause",
@@ -5725,7 +6125,12 @@
             "text": " frame sent to a peer that does not implement this specification destroys the connection — every Session, Subscription and outstanding Service call on it.",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "8 Interoperability with implementations that do not support data channels",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -5735,7 +6140,12 @@
             "r": "t",
             "text": "That consequence is severe enough to be a protocol rule rather than an implementation note, and it is deliberately independent of the AddressSpace: a Client must be able to establish interoperability at this layer without first browsing or reading anything."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "8 Interoperability with implementations that do not support data channels",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -5746,7 +6156,12 @@
             "text": "Support is proved by the Service, never assumed and never probed with a frame.",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "8 Interoperability with implementations that do not support data channels",
+          "b": 2
+        }
       },
       {
         "t": "list",
@@ -5827,7 +6242,12 @@
               "text": ") is an earlier and cheaper signal, but a Client does not depend on it: a Server may restrict Browse, and a Client may need a channel before its AddressSpace is usable."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "8 Interoperability with implementations that do not support data channels",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -5838,7 +6258,12 @@
             "text": "Both asymmetric pairings are safe by construction.",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "8 Interoperability with implementations that do not support data channels",
+          "b": 4
+        }
       },
       {
         "t": "table",
@@ -5947,7 +6372,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "8 Interoperability with implementations that do not support data channels",
+          "b": 5
+        }
       },
       {
         "t": "para",
@@ -5973,7 +6403,12 @@
             "r": "t",
             "text": " unmodified buys, and it is why that decision is worth its cost."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "8 Interoperability with implementations that do not support data channels",
+          "b": 6
+        }
       },
       {
         "t": "para",
@@ -6029,7 +6464,12 @@
             "r": "t",
             "text": " frame will ever arrive."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "8 Interoperability with implementations that do not support data channels",
+          "b": 7
+        }
       },
       {
         "t": "para",
@@ -6070,7 +6510,12 @@
             "r": "t",
             "text": " — never by dropping frames. Every capability difference is visible in a Service response before a single frame is sent."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "8 Interoperability with implementations that do not support data channels",
+          "b": 8
+        }
       },
       {
         "t": "clause",
@@ -6126,7 +6571,12 @@
             "r": "t",
             "text": " have to construct by hand: many independently ordered and independently flow-controlled streams over one connection, a datagram extension that really can lose a packet, congestion control, and an identity for the connection that survives the client's address changing."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "9.1 Why an outer-protocol binding",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -6166,7 +6616,12 @@
             "r": "t",
             "text": " states how to choose."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "9.1 Why an outer-protocol binding",
+          "b": 1
+        }
       },
       {
         "t": "clause",
@@ -6274,7 +6729,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "9.2 URL scheme, ALPN and discovery",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -6334,7 +6794,12 @@
             "r": "t",
             "text": " abandon the connection if the Server does not select the OPC UA identifier, so that a QUIC endpoint serving another protocol on the same port is never mistaken for an OPC UA Server."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "9.2 URL scheme, ALPN and discovery",
+          "b": 1
+        }
       },
       {
         "t": "clause",
@@ -6414,7 +6879,12 @@
             "r": "t",
             "text": " exactly as today. Losing the control stream is losing the SecureChannel: every data channel is aborted."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "9.3 Connection, control stream and channel streams",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -6432,7 +6902,12 @@
             "r": "t",
             "text": ":"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "9.3 Connection, control stream and channel streams",
+          "b": 1
+        }
       },
       {
         "t": "table",
@@ -6581,7 +7056,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "9.3 Connection, control stream and channel streams",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -6595,7 +7075,12 @@
             "r": "t",
             "text": " is always Client-invoked, so for the two Client-initiated directions the Server cannot report an id it does not allocate. The Client opens the stream before calling, carries the id in the request, and writes nothing to it until the response arrives."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "9.3 Connection, control stream and channel streams",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -6630,7 +7115,12 @@
             "r": "t",
             "text": " remains authoritative, so a stream is self-delimiting."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "9.3 Connection, control stream and channel streams",
+          "b": 4
+        }
       },
       {
         "t": "para",
@@ -6681,7 +7171,12 @@
             "r": "t",
             "text": " with the StatusCode in the application error code."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "9.3 Connection, control stream and channel streams",
+          "b": 5
+        }
       },
       {
         "t": "para",
@@ -6771,7 +7266,12 @@
             "r": "t",
             "text": " states both consequences."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "9.3 Connection, control stream and channel streams",
+          "b": 6
+        }
       },
       {
         "t": "clause",
@@ -6827,7 +7327,12 @@
             "r": "t",
             "text": " is never lost."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "9.4 Unreliable datagrams",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -6871,7 +7376,12 @@
             "r": "t",
             "text": " rather than silently carrying it reliably on the stream and delivering a guarantee the application did not budget latency for."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "9.4 Unreliable datagrams",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -6897,7 +7407,12 @@
             "r": "t",
             "text": " frame is advisory."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "9.4 Unreliable datagrams",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -6929,7 +7444,12 @@
             "r": "t",
             "text": ". Two layers are available and the specification is explicit about which does what."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "9.5 Security and the TLS binding",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -6956,7 +7476,12 @@
             "r": "t",
             "text": " runs, the policy is negotiated, the application instance certificates authenticate the two applications, and SecurityMode is honoured. Application authentication and user authorization do not become TLS's job."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "9.5 Security and the TLS binding",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -7053,7 +7578,12 @@
             "r": "t",
             "text": " chunks are secured end to end."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "9.5 Security and the TLS binding",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -7119,7 +7649,12 @@
             "r": "t",
             "text": ": 0-RTT is replayable, and a replayed channel open is a replayed authorization."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "9.5 Security and the TLS binding",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -7147,7 +7682,12 @@
             "r": "t",
             "text": " changed:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "9.5 Security and the TLS binding",
+          "b": 4
+        }
       },
       {
         "t": "list",
@@ -7200,7 +7740,12 @@
               "text": " rather than per-stream resets, which are not guaranteed to survive the close."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "9.5 Security and the TLS binding",
+          "b": 5
+        }
       },
       {
         "t": "para",
@@ -7210,7 +7755,12 @@
             "r": "t",
             "text": "Two rules follow from not trusting the holder to police itself. A verifier closes a connection when it learns the bound certificate is revoked, untrusted or expired, whether that certificate is its peer's or its own. And because a resumed TLS session carries no certificate at all, a resumed connection inherits the identity of the handshake that issued its ticket — so tickets are invalidated when a key is activated, or resumption is disabled outright where the TLS stack cannot invalidate them."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "9.5 Security and the TLS binding",
+          "b": 6
+        }
       },
       {
         "t": "para",
@@ -7228,7 +7778,12 @@
             "r": "t",
             "text": " states the rules normatively and gives two flow diagrams, one for the peer holding the certificate and one for the peer verifying it."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "9.5 Security and the TLS binding",
+          "b": 7
+        }
       },
       {
         "t": "para",
@@ -7247,7 +7802,12 @@
             "r": "t",
             "text": " change may be staged, so long-lived media survives one, is left as an open question for the Working Group: granting it touches OPC 10000-12 and OPC 10000-4 rather than Part 6 alone."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "9.5 Security and the TLS binding",
+          "b": 8
+        }
       },
       {
         "t": "clause",
@@ -7272,7 +7832,12 @@
             "r": "t",
             "text": " — the source address, source port, destination address and destination port. Change any one of those four and it is a different connection, which is why a laptop moving from Wi-Fi to cellular loses everything built on it: the new source address makes a new four-tuple, and the old connection is simply gone."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "9.6 Connection migration",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -7299,7 +7864,12 @@
             "r": "t",
             "text": " all of it is destroyed and must be rebuilt, which for a media stream means an interruption the user sees."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "9.6 Connection migration",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -7317,7 +7887,12 @@
             "r": "t",
             "text": " — migration is precisely what lets an authenticated Client carry a live stream from an authorized segment onto an unauthorized one."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "9.6 Connection migration",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -7341,7 +7916,12 @@
             "r": "t",
             "text": ", TCP's over the inline transports. This specification defines no congestion controller and no rate signalling, because a second controller layered on the first oscillates against it."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "9.7 Congestion control",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -7367,7 +7947,12 @@
             "r": "t",
             "text": " round-trip measurement, the credit-stall counter and the discarded-frame counter. An adaptive encoder lowers its bitrate when frames are being discarded and the round trip is climbing; that decision is the application's, and this layer's job is to make it visible."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "9.7 Congestion control",
+          "b": 1
+        }
       },
       {
         "t": "clause",
@@ -7383,7 +7968,12 @@
             "r": "t",
             "text": "Both models present the same Services and the same model, so the choice is a deployment decision rather than an application one. It reduces to four questions."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "9.8 Choosing between the inline and outer-protocol models",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -7681,7 +8271,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "9.8 Choosing between the inline and outer-protocol models",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -7716,7 +8311,12 @@
             "r": "t",
             "text": " whether genuine loss is available — so a Client learns the difference by reading rather than by measuring."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "9.8 Choosing between the inline and outer-protocol models",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -7775,7 +8375,12 @@
             "r": "t",
             "text": " differ."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "9.9 Fallback",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -7803,7 +8408,12 @@
             "r": "t",
             "text": " fall back to an endpoint whose SecurityMode or SecurityPolicy is weaker than the one it required of the QUIC endpoint, and reports the failure to the application instead. Making fallback unconditional would hand an off-path attacker a downgrade primitive: dropping UDP on port 4840 is a single firewall rule."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "9.9 Fallback",
+          "b": 1
+        }
       }
     ],
     "objecttypes": [
@@ -8601,7 +9211,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "10 Conformance units",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -8611,7 +9226,12 @@
             "r": "t",
             "text": "Three Profiles are proposed for OPC 10000-7:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "10 Conformance units",
+          "b": 1
+        }
       },
       {
         "t": "table",
@@ -8752,7 +9372,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "10 Conformance units",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -8770,7 +9395,12 @@
             "r": "t",
             "text": ", the three Services, and the model. Everything else is additive."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "10 Conformance units",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -8805,7 +9435,12 @@
             "r": "t",
             "text": ". They are the certification surface: a laboratory derives one test case per assertion, and the assertions that fail only under load (Service precedence, anti-starvation, and the drain timeout) are the ones that distinguish a conforming implementation from one that merely interoperates on a bench."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "10 Conformance units",
+          "b": 4
+        }
       },
       {
         "t": "para",
@@ -8815,7 +9450,12 @@
             "r": "t",
             "text": "<!-- BEGIN GENERATED: model-reference -->"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "10 Conformance units",
+          "b": 5
+        }
       },
       {
         "t": "para",
@@ -8825,7 +9465,12 @@
             "r": "t",
             "text": "<a id=\"annex-a\"></a>"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "10 Conformance units",
+          "b": 6
+        }
       }
     ],
     "namespaces": [
@@ -9266,7 +9911,12 @@
             "r": "t",
             "text": "<!-- BEGIN GENERATED: wire-layouts -->"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "Annex B — Annotated byte layouts",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -9276,7 +9926,12 @@
             "r": "t",
             "text": "Every span below is verified to be contiguous and non-overlapping, and every vector is verified to decode back to the frame it was encoded from, so a table that disagrees with the bytes cannot be committed."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "Annex B — Annotated byte layouts",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -9286,7 +9941,12 @@
             "r": "t",
             "text": "All integers are little-endian, matching the OPC UA Binary DataEncoding."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "Annex B — Annotated byte layouts",
+          "b": 3
+        }
       },
       {
         "t": "annex-clause",
@@ -9342,7 +10002,12 @@
             "r": "t",
             "text": " 52 bytes"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "inline_data_first",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -9352,7 +10017,12 @@
             "r": "t",
             "text": "The first frame of a logical application message on channel 1, marked as a synchronization point. This is the layout an implementer needs to get right; every other inline frame is this one with different stream header contents."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "inline_data_first",
+          "b": 1
+        }
       },
       {
         "t": "table",
@@ -9894,7 +10564,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "inline_data_first",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -9904,7 +10579,12 @@
           "0010  33 00 00 00 00 00 00 00 01 00 00 00 00 11 00 00  3...............",
           "0020  01 00 00 00 00 01 02 03 04 05 06 07 08 09 0A 0B  ................",
           "0030  0C 0D 0E 0F                                      ...."
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "inline_data_first",
+          "b": 3
+        }
       },
       {
         "t": "annex-clause",
@@ -9960,7 +10640,12 @@
             "r": "t",
             "text": " 40 bytes"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "inline_data_final",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -9970,7 +10655,12 @@
             "r": "t",
             "text": "The closing frame of the same logical message. MessageEnd is what delimits an application message; the frame itself is still a single MessageChunk."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "inline_data_final",
+          "b": 1
+        }
       },
       {
         "t": "table",
@@ -10512,7 +11202,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "inline_data_final",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -10521,7 +11216,12 @@
           "0000  53 54 52 46 28 00 00 00 7C A1 00 00 07 00 00 00  STRF(...|.......",
           "0010  34 00 00 00 00 00 00 00 01 00 00 00 00 02 00 00  4...............",
           "0020  02 00 00 00 AA BB CC DD                          ........"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "inline_data_final",
+          "b": 3
+        }
       },
       {
         "t": "annex-clause",
@@ -10577,7 +11277,12 @@
             "r": "t",
             "text": " 52 bytes"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "inline_data_droppable",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -10587,7 +11292,12 @@
             "r": "t",
             "text": "A self-contained media frame that the sender may discard if it is still queued at the deadline. The Deadline field is present only because the DeadlinePresent flag is set, so a reliable channel never pays its eight bytes."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "inline_data_droppable",
+          "b": 1
+        }
       },
       {
         "t": "table",
@@ -11167,7 +11877,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "inline_data_droppable",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -11177,7 +11892,12 @@
           "0010  35 00 00 00 00 00 00 00 02 00 00 00 00 0F 00 00  5...............",
           "0020  61 00 00 00 00 80 20 9B CB 82 D8 01 01 02 03 04  a..... .........",
           "0030  05 06 07 08                                      ...."
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "inline_data_droppable",
+          "b": 3
+        }
       },
       {
         "t": "annex-clause",
@@ -11233,7 +11953,12 @@
             "r": "t",
             "text": " 44 bytes"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "inline_credit_channel",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -11243,7 +11968,12 @@
             "r": "t",
             "text": "A window update for channel 2 alone. CREDIT frames are exempt from flow control; a creditable CREDIT frame would deadlock a stalled channel."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "inline_credit_channel",
+          "b": 1
+        }
       },
       {
         "t": "table",
@@ -11823,7 +12553,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "inline_credit_channel",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -11832,7 +12567,12 @@
           "0000  53 54 52 46 2C 00 00 00 7C A1 00 00 07 00 00 00  STRF,...|.......",
           "0010  36 00 00 00 00 00 00 00 02 00 00 00 01 00 00 00  6...............",
           "0020  62 00 00 00 00 00 01 00 00 00 00 00              b..........."
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "inline_credit_channel",
+          "b": 3
+        }
       },
       {
         "t": "annex-clause",
@@ -11888,7 +12628,12 @@
             "r": "t",
             "text": " 44 bytes"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "inline_credit_connection",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -11898,7 +12643,12 @@
             "r": "t",
             "text": "A connection-level window update on the reserved control channel 0, which governs the total across every data channel of the SecureChannel. Channel 0 counts its own FrameSequenceNumber sequence like any other channel."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "inline_credit_connection",
+          "b": 1
+        }
       },
       {
         "t": "table",
@@ -12478,7 +13228,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "inline_credit_connection",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -12487,7 +13242,12 @@
           "0000  53 54 52 46 2C 00 00 00 7C A1 00 00 07 00 00 00  STRF,...|.......",
           "0010  37 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00  7...............",
           "0020  0B 00 00 00 00 00 00 00 00 00 04 00              ............"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "inline_credit_connection",
+          "b": 3
+        }
       },
       {
         "t": "annex-clause",
@@ -12543,7 +13303,12 @@
             "r": "t",
             "text": " 44 bytes"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "inline_gap",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -12553,7 +13318,12 @@
             "r": "t",
             "text": "The sender discarded frames 99 through 102 because their deadlines passed. Without this notification the receiver could not tell loss from a stall, and a media decoder could not decide to conceal."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "inline_gap",
+          "b": 1
+        }
       },
       {
         "t": "table",
@@ -13133,7 +13903,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "inline_gap",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -13142,7 +13917,12 @@
           "0000  53 54 52 46 2C 00 00 00 7C A1 00 00 07 00 00 00  STRF,...|.......",
           "0010  38 00 00 00 00 00 00 00 02 00 00 00 02 00 00 00  8...............",
           "0020  67 00 00 00 63 00 00 00 66 00 00 00              g...c...f..."
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "inline_gap",
+          "b": 3
+        }
       },
       {
         "t": "annex-clause",
@@ -13198,7 +13978,12 @@
             "r": "t",
             "text": " 40 bytes"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "inline_reset",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -13208,7 +13993,12 @@
             "r": "t",
             "text": "Abort one data channel and leave every other channel and the SecureChannel itself running. This is the difference between a data channel failing and a connection failing."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "inline_reset",
+          "b": 1
+        }
       },
       {
         "t": "table",
@@ -13750,7 +14540,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "inline_reset",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -13759,7 +14554,12 @@
           "0000  53 54 52 46 28 00 00 00 7C A1 00 00 07 00 00 00  STRF(...|.......",
           "0010  39 00 00 00 00 00 00 00 02 00 00 00 03 00 00 00  9...............",
           "0020  68 00 00 00 00 00 B1 81                          h......."
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "inline_reset",
+          "b": 3
+        }
       },
       {
         "t": "annex-clause",
@@ -13815,7 +14615,12 @@
             "r": "t",
             "text": " 36 bytes"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "inline_end",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -13825,7 +14630,12 @@
             "r": "t",
             "text": "Orderly half-close: this direction of channel 1 will send nothing further, while the opposite direction of a Bidirectional channel keeps flowing."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "inline_end",
+          "b": 1
+        }
       },
       {
         "t": "table",
@@ -14329,7 +15139,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "inline_end",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -14338,7 +15153,12 @@
           "0000  53 54 52 46 24 00 00 00 7C A1 00 00 07 00 00 00  STRF$...|.......",
           "0010  3A 00 00 00 00 00 00 00 01 00 00 00 04 00 00 00  :...............",
           "0020  03 00 00 00                                      ...."
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "inline_end",
+          "b": 3
+        }
       },
       {
         "t": "annex-clause",
@@ -14394,7 +15214,12 @@
             "r": "t",
             "text": " 44 bytes"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "inline_ping",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -14404,7 +15229,12 @@
             "r": "t",
             "text": "A round trip probe on the control channel. The measured round trip time is what a sender paces against and what a receiver sizes its jitter buffer from."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "inline_ping",
+          "b": 1
+        }
       },
       {
         "t": "table",
@@ -14946,7 +15776,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "inline_ping",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -14955,7 +15790,12 @@
           "0000  53 54 52 46 2C 00 00 00 7C A1 00 00 07 00 00 00  STRF,...|.......",
           "0010  3B 00 00 00 00 00 00 00 00 00 00 00 05 00 00 00  ;...............",
           "0020  0C 00 00 00 00 80 20 9B CB 82 D8 01              ...... ....."
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "inline_ping",
+          "b": 3
+        }
       },
       {
         "t": "annex-clause",
@@ -15011,7 +15851,12 @@
             "r": "t",
             "text": " 44 bytes"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "inline_pong",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -15021,7 +15866,12 @@
             "r": "t",
             "text": "The echo. The Timestamp is copied verbatim from the PING, so the sender needs to keep no state to compute the round trip."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "inline_pong",
+          "b": 1
+        }
       },
       {
         "t": "table",
@@ -15563,7 +16413,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "inline_pong",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -15572,7 +16427,12 @@
           "0000  53 54 52 46 2C 00 00 00 7C A1 00 00 07 00 00 00  STRF,...|.......",
           "0010  3C 00 00 00 00 00 00 00 00 00 00 00 06 00 00 00  <...............",
           "0020  0D 00 00 00 00 80 20 9B CB 82 D8 01              ...... ....."
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "inline_pong",
+          "b": 3
+        }
       },
       {
         "t": "annex-clause",
@@ -15628,7 +16488,12 @@
             "r": "t",
             "text": " 73 bytes"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "inline_data_signed",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -15638,7 +16503,12 @@
             "r": "t",
             "text": "The same inline frame under a signing security policy, showing where the Part 6 message footer lands. The footer bytes here are placeholder filler: they are produced by the security policy, not by this specification."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "inline_data_signed",
+          "b": 1
+        }
       },
       {
         "t": "table",
@@ -16218,7 +17088,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "inline_data_signed",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -16229,7 +17104,12 @@
           "0020  04 00 00 00 10 11 12 13 00 5A 5A 5A 5A 5A 5A 5A  .........ZZZZZZZ",
           "0030  5A 5A 5A 5A 5A 5A 5A 5A 5A 5A 5A 5A 5A 5A 5A 5A  ZZZZZZZZZZZZZZZZ",
           "0040  5A 5A 5A 5A 5A 5A 5A 5A 5A                       ZZZZZZZZZ"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "inline_data_signed",
+          "b": 3
+        }
       },
       {
         "t": "annex-clause",
@@ -16285,7 +17165,12 @@
             "r": "t",
             "text": " 40 bytes"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "quic_data_stream",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -16295,7 +17180,12 @@
             "r": "t",
             "text": "The same DATA frame carried on a QUIC stream. TLS 1.3 already authenticates and encrypts it and QUIC already orders it, so the security header, the sequence header and the footer are gone and the frame is twelve bytes shorter."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "quic_data_stream",
+          "b": 1
+        }
       },
       {
         "t": "table",
@@ -16723,7 +17613,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "quic_data_stream",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -16732,7 +17627,12 @@
           "0000  53 54 52 46 28 00 00 00 7C A1 00 00 01 00 00 00  STRF(...|.......",
           "0010  00 13 00 00 01 00 00 00 00 01 02 03 04 05 06 07  ................",
           "0020  08 09 0A 0B 0C 0D 0E 0F                          ........"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "quic_data_stream",
+          "b": 3
+        }
       },
       {
         "t": "annex-clause",
@@ -16788,7 +17688,12 @@
             "r": "t",
             "text": " 30 bytes"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "quic_datagram_unreliable",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -16798,7 +17703,12 @@
             "r": "t",
             "text": "An Unreliable frame in a QUIC DATAGRAM. This is the only place in the specification where data is genuinely lost in flight rather than discarded at the sender, which is why FrameSequenceNumber is the receiver's own gap detector."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "quic_datagram_unreliable",
+          "b": 1
+        }
       },
       {
         "t": "table",
@@ -17226,7 +18136,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "quic_datagram_unreliable",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -17234,7 +18149,12 @@
         "lines": [
           "0000  53 54 52 46 1E 00 00 00 7C A1 00 00 03 00 00 00  STRF....|.......",
           "0010  00 07 00 00 00 10 00 00 F0 F1 F2 F3 F4 F5        .............."
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "quic_datagram_unreliable",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -17244,7 +18164,12 @@
             "r": "t",
             "text": "<!-- END GENERATED: wire-layouts -->"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "quic_datagram_unreliable",
+          "b": 4
+        }
       }
     ],
     "annex-c": [
@@ -17262,7 +18187,12 @@
             "r": "t",
             "text": "A single SecureChannel to a camera carries three channels at once: H.264 video, Opus audio and a JSON control stream. This is the WebRTC arrangement, on the connection OPC UA already has."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "Annex C — A worked media session (informative)",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -17349,7 +18279,12 @@
             "r": "t",
             "text": " endpoint, because it wants genuine loss for the media."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "Annex C — A worked media session (informative)",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -17367,7 +18302,12 @@
             "r": "t",
             "text": ", and finds three sources:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "Annex C — A worked media session (informative)",
+          "b": 2
+        }
       },
       {
         "t": "table",
@@ -17545,7 +18485,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "Annex C — A worked media session (informative)",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -17568,7 +18513,12 @@
             "r": "t",
             "text": " calls on one Session:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "Annex C — A worked media session (informative)",
+          "b": 4
+        }
       },
       {
         "t": "table",
@@ -17754,7 +18704,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "Annex C — A worked media session (informative)",
+          "b": 5
+        }
       },
       {
         "t": "para",
@@ -17788,7 +18743,12 @@
             "r": "t",
             "text": " on the video channel is set to the bandwidth-delay product — 8 Mbit/s × the 12 ms round trip ≈ 12 KB — because a smaller window would cap throughput below the bitrate the source is producing regardless of available bandwidth."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "Annex C — A worked media session (informative)",
+          "b": 6
+        }
       },
       {
         "t": "para",
@@ -17843,7 +18803,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "Annex C — A worked media session (informative)",
+          "b": 7
+        }
       },
       {
         "t": "para",
@@ -17923,7 +18888,12 @@
             "r": "t",
             "text": " frame within the new one. Audio is untouched, because its channel has its own window and a higher priority. Control is untouched, because it is reliable and tiny. The Subscription reporting the motion alarm is untouched, because Service traffic outranks all three."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "Annex C — A worked media session (informative)",
+          "b": 8
+        }
       },
       {
         "t": "para",
@@ -17962,7 +18932,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "Annex C — A worked media session (informative)",
+          "b": 9
+        }
       },
       {
         "t": "para",
@@ -18001,7 +18976,12 @@
             "r": "t",
             "text": ", because queued video is stale by definition. Channel 3 stays open. The Session and SecureChannel are untouched throughout, and the Client's Subscriptions never noticed."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "Annex C — A worked media session (informative)",
+          "b": 10
+        }
       }
     ],
     "annex-d": [
@@ -18428,7 +19408,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "Annex D — Comparison with WebRTC (informative)",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -18438,7 +19423,12 @@
             "r": "t",
             "text": "The differences are deliberate. WebRTC solves connecting two arbitrary browsers across hostile networks, and most of its complexity — ICE, STUN, TURN, SDP, DTLS fingerprints, the signalling channel that has to exist before anything can be negotiated — is spent on that problem. An OPC UA Client and Server have already solved it: they have a connection, mutually validated certificates, an authenticated user and a browsable description of what is available."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "Annex D — Comparison with WebRTC (informative)",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -18457,7 +19447,12 @@
             "r": "t",
             "text": " it opens anything, and can do so with the same tooling it uses for everything else."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "Annex D — Comparison with WebRTC (informative)",
+          "b": 2
+        }
       }
     ],
     "annex-e": [
@@ -18722,7 +19717,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "Annex E — When to use which mechanism (informative)",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -18732,7 +19732,12 @@
             "r": "t",
             "text": "Three distinctions are worth making explicitly."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "Annex E — When to use which mechanism (informative)",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -18756,7 +19761,12 @@
             "r": "t",
             "text": ", streamed while the rollout runs, is a data channel. The question to ask is whether a partial result has value: if it does not, it is a file."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "Annex E — When to use which mechanism (informative)",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -18788,7 +19798,12 @@
             "r": "t",
             "text": " without a second connection — is a genuine gap this specification could fill and deliberately does not yet; it needs writer and reader binding rules that belong in a Part 14 errata."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "Annex E — When to use which mechanism (informative)",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -18803,7 +19818,12 @@
             "r": "t",
             "text": " A Variable whose value is streamed shall remain readable and subscribable, so a Client that does not implement data channels is never locked out. The data channel is an additional, faster path to the same content, not a substitute for the model."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "Annex E — When to use which mechanism (informative)",
+          "b": 4
+        }
       }
     ]
   },

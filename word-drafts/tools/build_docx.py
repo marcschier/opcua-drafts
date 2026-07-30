@@ -11,9 +11,11 @@ and only have their placeholder tokens substituted.
 """
 
 import argparse
+import hashlib
 import json
 import os
 import re
+import subprocess
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -48,18 +50,21 @@ class Build:
     def __init__(self, config_path):
         with open(config_path, encoding='utf-8') as f:
             self.cfg = json.load(f)
+        self.spec_id = os.path.splitext(os.path.basename(config_path))[0]
         self.identity = self.cfg['identity']
         src = self.cfg['source']
         with open(os.path.join(REPO, src['markdown']), encoding='utf-8') as f:
             self.md_text = f.read()
-        self.sections, self.section_order = md_parse.split_sections(self.md_text)
+        self.sections, self.section_order = md_parse.split_sections(
+            self.md_text, source=src['markdown'])
         # A clause may come from another markdown file: an addendum folded in as an annex
         # brings its own "1 Scope" and "2 Normative references", so sections are keyed per
         # source or they collide with the base document's.
         self.extra_sections = {}
         for key, path in (self.cfg.get('additionalMarkdown') or {}).items():
             with open(os.path.join(REPO, path), encoding='utf-8') as f:
-                self.extra_sections[key], _ = md_parse.split_sections(f.read())
+                self.extra_sections[key], _ = md_parse.split_sections(f.read(),
+                                                                     source=path)
         self.deviations = list(self.cfg.get('templateDeviations', []))
         self.deviation_ids = {d['id'] for d in self.deviations}
         if src.get('nodeset'):
@@ -78,6 +83,16 @@ class Build:
                 version=self.identity['version'],
                 publication_date=self.identity['publicationDate'])
         self.doc_ns_index = self.identity['namespaceIndexInDocument']
+
+        # What this document is rendered from, recorded in the package so a marked-up
+        # copy coming back from a reviewer can be matched to its exact source text.
+        self.source_paths = [os.path.relpath(config_path, REPO).replace('\\', '/'),
+                             src['markdown']]
+        if src.get('nodeset'):
+            self.source_paths.append(src['nodeset'])
+        self.source_paths.extend((self.cfg.get('additionalMarkdown') or {}).values())
+        self.source_commit = _source_commit(self.source_paths)
+        self.source_digest = _source_digest(self.source_paths)
 
         self.by_number = {str(e['number']): e for e in self.cfg['clauseMap']}
         self.xref_map = self.cfg['xrefMap']
@@ -240,7 +255,8 @@ class Build:
         if section is None:
             raise KeyError('markdown section not found for clause %s (%r)'
                            % (entry['number'], entry.get('from')))
-        blocks = parser.parse(section.lines, context=section.key)
+        blocks = parser.parse(section.lines, context=section.key,
+                              source=section.source, line_offset=section.start_line)
         if entry.get('nodetable'):
             # The generated node table is authoritative; the compact markdown member
             # table would be a second source of truth for the same facts.
@@ -266,7 +282,8 @@ class Build:
             # A `5.11#alarm` style selector names a bullet inside a section whose
             # heading text carries its old number.
             section = self._section_starting_with(key)
-        blocks = parser.parse(section.lines, context=key)
+        blocks = parser.parse(section.lines, context=key, source=section.source,
+                              line_offset=section.start_line)
         if anchor:
             blocks = [b for b in blocks if _mentions(b, anchor)]
         return blocks
@@ -400,7 +417,8 @@ class Build:
         source = self.cfg.get('termsFrom')
         if source:
             with open(os.path.join(REPO, source['markdown']), encoding='utf-8') as f:
-                sections, _ = md_parse.split_sections(f.read())
+                sections, _ = md_parse.split_sections(f.read(),
+                                                      source=source['markdown'])
             section = sections.get(source['heading'])
             if section is None:
                 raise KeyError('terms heading %r not in %r'
@@ -410,7 +428,8 @@ class Build:
             if section is None:
                 raise KeyError('terms section not found')
         parser = self.parser()
-        blocks = parser.parse(section.lines, context=section.key)
+        blocks = parser.parse(section.lines, context=section.key,
+                              source=section.source, line_offset=section.start_line)
         out = []
         for b in blocks:
             if b['t'] == 'table':
@@ -505,7 +524,9 @@ class Build:
         out = []
         section = self._section_for(entry)
         if section is not None:
-            intro = [b for b in self.parser().parse(section.lines, context=section.key)
+            intro = [b for b in self.parser().parse(
+                         section.lines, context=section.key, source=section.source,
+                         line_offset=section.start_line)
                      if b['t'] == 'para']
             out.extend(intro[:1])
         deprecated = entry.get('deprecated')
@@ -662,6 +683,37 @@ def _slug(text):
     return ''.join(ch.lower() if ch.isalnum() else '-' for ch in text).strip('-')
 
 
+def _source_commit(paths):
+    """The last commit that touched any of this document's inputs.
+
+    Not `HEAD`: stamping the current commit would make every document's bytes change on
+    every unrelated commit, so a rebuild would never be a no-op and a real change could
+    not be told from noise. The last commit to touch the sources is both stable and the
+    thing an ingest actually wants — the revision whose text the reviewer was reading.
+    """
+    try:
+        out = subprocess.run(['git', '-C', REPO, 'log', '-1', '--format=%H', '--']
+                             + list(paths),
+                             capture_output=True, text=True, check=True).stdout.strip()
+    except (OSError, subprocess.CalledProcessError):
+        return 'unknown'
+    return out or 'unknown'
+
+
+def _source_digest(paths):
+    """A digest of the exact input bytes, so an edit since that commit is detectable."""
+    h = hashlib.sha256()
+    for path in sorted(paths):
+        full = os.path.join(REPO, path)
+        h.update(path.encode('utf-8'))
+        try:
+            with open(full, 'rb') as f:
+                h.update(f.read())
+        except OSError:
+            h.update(b'\0missing')
+    return h.hexdigest()[:16]
+
+
 # --------------------------------------------------------------------------- surgery
 
 
@@ -686,10 +738,39 @@ def main(argv=None):
 
     from render_docx import render
     out_docx = os.path.join(REPO, build.cfg['output']['docx'])
-    render(build, doc, args.template, out_docx)
+    para_ids = render(build, doc, args.template, out_docx)
+
+    # The reverse map. A reviewer's document carries paraIds; this says what each one
+    # addresses, so a mark can be routed to the markdown that produced it without
+    # re-running the build.
+    out_prov = os.path.splitext(out_docmodel)[0].replace('.docmodel', '') + '.provenance.json'
+    with open(out_prov, 'w', encoding='utf-8', newline='\n') as f:
+        json.dump({'specId': build.spec_id,
+                   'sourceCommit': build.source_commit,
+                   'sourceDigest': build.source_digest,
+                   'pipelineVersion': contract.PIPELINE_VERSION,
+                   'sources': build.source_paths,
+                   'paragraphs': {k: _address(v) for k, v in sorted(para_ids.items())}},
+                  f, indent=2, ensure_ascii=False)
+        f.write('\n')
+
     print('wrote %s' % os.path.relpath(out_docx, REPO))
     print('wrote %s' % os.path.relpath(out_docmodel, REPO))
+    print('wrote %s' % os.path.relpath(out_prov, REPO))
     return 0
+
+
+def _address(key):
+    """Unpack a writer source key into the JSON shape the ingest reads."""
+    if key == 'template':
+        return {'owner': 'template'}
+    kind, _, rest = key.partition('\x1f')
+    parts = rest.split('\x1f')
+    if kind == 'md':
+        return {'owner': 'markdown', 'file': parts[0], 'section': parts[1],
+                'block': int(parts[2]), 'para': int(parts[3])}
+    return {'owner': 'generated', 'region': parts[0], 'index': int(parts[1]),
+            'kind': parts[2], 'para': int(parts[3])}
 
 
 if __name__ == '__main__':

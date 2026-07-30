@@ -15,7 +15,12 @@
             "r": "t",
             "text": "Schema-based encodings such as Apache Avro and Apache Arrow require a decoder to obtain the concrete schema document that matches the received payload. Unlike the OPC UA Binary, XML and JSON DataEncodings, which are either self-describing or resolved through the server AddressSpace, a schema-based payload that has left the server in a PubSub message, a file, a data lake, an MQTT/AMQP/Kafka stream or a historian/ADBC stream must be accompanied by a reference or identifier that lets the consumer retrieve the schema."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "1 Scope",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -134,7 +139,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "1 Scope",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -215,7 +225,12 @@
             "r": "t",
             "text": " of Annex C."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "1 Scope",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -234,7 +249,12 @@
             "r": "t",
             "text": ":"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "1 Scope",
+          "b": 3
+        }
       },
       {
         "t": "list",
@@ -311,7 +331,12 @@
               "text": "), including to disconnected consumers and across federated registries — OPC UA or HTTP."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "1 Scope",
+          "b": 4
+        }
       },
       {
         "t": "para",
@@ -321,7 +346,12 @@
             "r": "t",
             "text": "The model has these goals:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "1 Scope",
+          "b": 5
+        }
       },
       {
         "t": "list",
@@ -368,7 +398,12 @@
               "text": "be usable as a general schema registry independent of PubSub, while remaining a natural companion to PubSub setup and recovery where PubSub is present."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "1 Scope",
+          "b": 6
+        }
       },
       {
         "t": "para",
@@ -378,7 +413,12 @@
             "r": "t",
             "text": "JSON Schema is a first-class registry format, but the OPC UA JSON DataEncoding is self-describing enough that a schema fetch is optional for decoding. For JSON, the registry is used for governance, validation, code generation and documentation rather than as a mandatory decoding dependency."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "1 Scope",
+          "b": 7
+        }
       },
       {
         "t": "para",
@@ -406,7 +446,12 @@
             "r": "t",
             "text": "; this specification is a domain profile of them. The HTTP correspondence for readers familiar with the xRegistry HTTP binding is informative and confined to Annex D."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "1 Scope",
+          "b": 8
+        }
       }
     ],
     "normative-references": [
@@ -1325,7 +1370,12 @@
             "r": "t",
             "text": "A consumer that received a schema-based message obtains the matching schema document in one of two ways."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "5.1 Downloading a schema (mandatory)",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -1401,7 +1451,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "5.1 Downloading a schema (mandatory)",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -1466,7 +1521,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "5.1 Downloading a schema (mandatory)",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -1490,7 +1550,12 @@
             "r": "t",
             "text": "):"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "5.2 Registering a schema (optional)",
+          "b": 0
+        }
       },
       {
         "t": "list",
@@ -1619,7 +1684,12 @@
               "text": "."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "5.2 Registering a schema (optional)",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -1710,7 +1780,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "5.2 Registering a schema (optional)",
+          "b": 2
+        }
       }
     ],
     "model-overview": [
@@ -1754,14 +1829,24 @@
             "r": "t",
             "text": " a browsable folder tree of files:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "4 Overview",
+          "b": 0
+        }
       },
       {
         "t": "figure",
         "id": "fig-sreg-shape",
         "caption": "The schema registry in the address space",
         "source": "mermaid",
-        "mermaid": "graph TD\n  SVR[Server i=2253] -->|HasComponent| SR[SchemaRegistry : SchemaRegistryType : RegistryType]\n  PS[PublishSubscribe i=14443] -.optional reference.-> SR\n  SR -->|Organizes| G1[\"SchemaGroup (NamespaceUri = ...UA/) : SchemaGroupType : GroupType\"]\n  SR -->|Organizes| G2[\"SchemaGroup (NamespaceUri = ...UA/Pumps/) : SchemaGroupType : GroupType\"]\n  G2 -->|Organizes| S1[\"PumpDataType:avro : SchemaFileType : ResourceType\"]\n  G2 -->|Organizes| S2[\"PumpDataType:arrow : SchemaFileType : ResourceType\"]\n  S1 -.Open/Read.-> DOC[(.avsc document bytes)]\n  S1 -.Opaque SchemaId NodeId / GetSchema.-> DOC"
+        "mermaid": "graph TD\n  SVR[Server i=2253] -->|HasComponent| SR[SchemaRegistry : SchemaRegistryType : RegistryType]\n  PS[PublishSubscribe i=14443] -.optional reference.-> SR\n  SR -->|Organizes| G1[\"SchemaGroup (NamespaceUri = ...UA/) : SchemaGroupType : GroupType\"]\n  SR -->|Organizes| G2[\"SchemaGroup (NamespaceUri = ...UA/Pumps/) : SchemaGroupType : GroupType\"]\n  G2 -->|Organizes| S1[\"PumpDataType:avro : SchemaFileType : ResourceType\"]\n  G2 -->|Organizes| S2[\"PumpDataType:arrow : SchemaFileType : ResourceType\"]\n  S1 -.Open/Read.-> DOC[(.avsc document bytes)]\n  S1 -.Opaque SchemaId NodeId / GetSchema.-> DOC",
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "4 Overview",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -1787,7 +1872,12 @@
             "r": "t",
             "text": " so PubSub clients discover it in the familiar place."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "4 Overview",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -1861,7 +1951,12 @@
             "r": "t",
             "text": " of the base; Annex B here)."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "4 Overview",
+          "b": 3
+        }
       },
       {
         "t": "clause",
@@ -1913,7 +2008,12 @@
             "r": "t",
             "text": ", and the two are interchangeable endpoints of the same registry:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "4.3 OPC UA as a first-class binding — federation and access parity with HTTP",
+          "b": 0
+        }
       },
       {
         "t": "list",
@@ -2092,7 +2192,12 @@
               "text": ". Annex B specifies the resolution algorithm."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "4.3 OPC UA as a first-class binding — federation and access parity with HTTP",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -2102,7 +2207,12 @@
             "r": "t",
             "text": "Consequently an OPC UA Schema Registry can front, mirror or be mirrored by an HTTP xRegistry Schema Registry, and a heterogeneous federation of OPC UA and HTTP registries resolves as one logical registry."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "4.3 OPC UA as a first-class binding — federation and access parity with HTTP",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -2150,7 +2260,12 @@
             "r": "t",
             "text": "). The types and their members are the normative node reference in Annex A; this clause describes the schema-specific additions."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "6 Schema-specific information model",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -2367,7 +2482,12 @@
             "r": "t",
             "text": "); no bespoke register Method is required."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "6.1 SchemaRegistryType",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -2451,7 +2571,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "6.2 SchemaGroupType",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -2538,7 +2663,12 @@
             "r": "t",
             "text": " from the base, and adds the xRegistry version attributes and the OPC UA schema-decoding metadata:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "6.3 SchemaFileType",
+          "b": 0
+        }
       },
       {
         "t": "list",
@@ -2884,7 +3014,12 @@
               "text": ")."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "6.3 SchemaFileType",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -2936,7 +3071,12 @@
             "r": "t",
             "text": " Methods configure further xRegistry labels on a schema file."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "6.3 SchemaFileType",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -2961,7 +3101,12 @@
             "r": "t",
             "text": " be additionally addressable by an Opaque NodeId in the Schema Registry namespace. The deterministic construction is:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "6.4 SchemaId-NodeId fast access and GetSchema",
+          "b": 0
+        }
       },
       {
         "t": "code",
@@ -2970,7 +3115,12 @@
           "NamespaceIndex = namespace index assigned to http://opcfoundation.org/UA/SchemaRegistry/",
           "IdentifierType = Opaque",
           "Identifier     = the exact raw on-wire SchemaId bytes"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "6.4 SchemaId-NodeId fast access and GetSchema",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -3012,7 +3162,12 @@
             "r": "t",
             "text": " are the ones it is decoding before using it. The SchemaId NodeId is content-derived and stable: a TTL refresh or metadata update that does not change the document keeps the same NodeId; a changed document produces a new SchemaId and therefore a new Opaque NodeId."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "6.4 SchemaId-NodeId fast access and GetSchema",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -3042,7 +3197,12 @@
             "r": "t",
             "text": " Call StatusCode rather than an empty result."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "6.4 SchemaId-NodeId fast access and GetSchema",
+          "b": 3
+        }
       },
       {
         "t": "clause",
@@ -3182,7 +3342,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "6.5 Formats and content-types",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -3336,7 +3501,12 @@
             "r": "t",
             "text": " where applicable."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "6.5 Formats and content-types",
+          "b": 1
+        }
       },
       {
         "t": "clause",
@@ -3395,7 +3565,12 @@
             "r": "t",
             "text": ". The built-in formats define:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "6.6 Schema identity (`SchemaId`) and per-format fingerprints",
+          "b": 0
+        }
       },
       {
         "t": "list",
@@ -3467,7 +3642,12 @@
               "text": ") — the first 8 bytes of a SHA-256 fingerprint of the JSON Schema document in RFC 8785 JSON Canonicalization Scheme (JCS) form. JSON Schema therefore has a SchemaId like any other format, computed by a fingerprint provider supplied via dependency injection when JSON Schema support is registered; a registry that does not handle JSON Schema simply has no such provider registered."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "6.6 Schema identity (`SchemaId`) and per-format fingerprints",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -3510,7 +3690,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "6.6 Schema identity (`SchemaId`) and per-format fingerprints",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -3613,7 +3798,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "6.6 Schema identity (`SchemaId`) and per-format fingerprints",
+          "b": 3
+        }
       },
       {
         "t": "clause",
@@ -3687,7 +3877,12 @@
             "r": "t",
             "text": " collection ordering):"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "7 Schema versioning and compatibility",
+          "b": 0
+        }
       },
       {
         "t": "list",
@@ -3856,7 +4051,12 @@
               "text": ", not the version number, to decide whether it already holds the schema."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "7 Schema versioning and compatibility",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -3899,7 +4099,12 @@
             "r": "t",
             "text": " mode for the Avro and Arrow encodings."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "7 Schema versioning and compatibility",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -3924,7 +4129,12 @@
             "r": "t",
             "text": " resolve its schema as follows:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "8 Resolution flow",
+          "b": 0
+        }
       },
       {
         "t": "list",
@@ -4324,7 +4534,12 @@
               "text": " the resolved schema file and decode the payload per the corresponding Part 6 or Part 14 addition."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "8 Resolution flow",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -4379,7 +4594,12 @@
             "r": "t",
             "text": "; if neither succeeds, it may fall back to an announcement frame, a federated registry lookup, or AddressSpace schema regeneration as defined by the encoding mapping."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "8 Resolution flow",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -4411,7 +4631,12 @@
             "r": "t",
             "text": " are omitted."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "9 TTL and mirror semantics",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -4445,7 +4670,12 @@
             "r": "t",
             "text": " records the current expiry timestamp. On cache miss or expired lookup the Server may refetch from the external registry, update metadata and refresh the document. The SchemaId NodeId remains stable across a refresh as long as the fetched document has the same SchemaId; if the external document changes, the SchemaId changes and a different Opaque NodeId is used."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "9 TTL and mirror semantics",
+          "b": 1
+        }
       },
       {
         "t": "clause",
@@ -4629,7 +4859,12 @@
             "r": "t",
             "text": " Methods."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "10.1 Auto-bootstrap of the schema structure",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -4662,7 +4897,12 @@
             "r": "t",
             "text": ". The schema-specific projection is:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "10.2 Serving the xRegistry API and JSON projection",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -4976,7 +5216,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "10.2 Serving the xRegistry API and JSON projection",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -5018,7 +5263,12 @@
             "r": "t",
             "text": ") needs. This is a representation mapping, not a new transport. The equivalent HTTP request/response correspondence, for readers familiar with the xRegistry HTTP binding, is informative and given in Annex D."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "10.2 Serving the xRegistry API and JSON projection",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -5061,7 +5311,12 @@
             "r": "t",
             "text": " integrate the two, but only additively:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "11 Optional PubSub integration",
+          "b": 0
+        }
       },
       {
         "t": "list",
@@ -5139,7 +5394,12 @@
               "text": ", the append-only Variant/ExtensionObject evolution rule, and the optional schema-reference carrier in the message header."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "11 Optional PubSub integration",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -5173,7 +5433,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "11 Optional PubSub integration",
+          "b": 2
+        }
       }
     ],
     "objecttypes": [
@@ -5398,7 +5663,12 @@
             "r": "t",
             "text": " require Part 14 PubSub; a Server without PubSub is a fully conformant schema registry."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "12 Conformance",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -5480,7 +5750,12 @@
             "r": "t",
             "text": " may additionally be exposed as the method form."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "12 Conformance",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -5507,7 +5782,12 @@
             "r": "t",
             "text": " is mandatory; every other unit may be claimed on its own."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "12 Conformance",
+          "b": 2
+        }
       },
       {
         "t": "table",
@@ -5820,7 +6100,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "12 Conformance",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -5926,7 +6211,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "12 Conformance",
+          "b": 4
+        }
       }
     ],
     "namespaces": [
@@ -6503,7 +6793,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "Annex B — Federation and OPC UA / HTTP resolution parity (informative)",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -6576,7 +6871,12 @@
             "r": "t",
             "text": "). The resolution algorithm is:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "Annex B — Federation and OPC UA / HTTP resolution parity (informative)",
+          "b": 1
+        }
       },
       {
         "t": "list",
@@ -6743,7 +7043,12 @@
               "text": " matches one already held, reuse the cached document."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "Annex B — Federation and OPC UA / HTTP resolution parity (informative)",
+          "b": 2
+        }
       }
     ],
     "annex-c": [
@@ -6812,7 +7117,12 @@
             "r": "t",
             "text": " mode for the Avro and Arrow encodings."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "Annex C — PubSub DataSet schema profile (normative for the profile, optional)",
+          "b": 0
+        }
       },
       {
         "t": "annex-clause",
@@ -6853,7 +7163,12 @@
             "r": "t",
             "text": " of the DataSet it describes. The two components carry a compatibility contract a consumer can rely on without inspecting the schema bytes:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "C.1 ConfigurationVersion-keyed evolution",
+          "b": 0
+        }
       },
       {
         "t": "note",
@@ -6965,7 +7280,12 @@
             "r": "t",
             "text": " pair classifies the change as a reset or an append."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "C.1 ConfigurationVersion-keyed evolution",
+          "b": 1
+        }
       },
       {
         "t": "list",
@@ -7054,7 +7374,12 @@
               "text": "."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "C.1 ConfigurationVersion-keyed evolution",
+          "b": 2
+        }
       },
       {
         "t": "annex-clause",
@@ -7123,7 +7448,12 @@
             "r": "t",
             "text": " already carry unknown numeric values and bit combinations without a schema change. These are never aggregated."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "C.2 Open unions subject to aggregation",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -7206,7 +7536,12 @@
             "r": "t",
             "text": "; the choice is fixed in the schema and is part of the SchemaId."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "C.2 Open unions subject to aggregation",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -7341,7 +7676,12 @@
             "r": "t",
             "text": " Variant, or a body whose concrete type is defined in a namespace the encoder does not know in advance."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "C.2 Open unions subject to aggregation",
+          "b": 2
+        }
       },
       {
         "t": "annex-clause",
@@ -7446,7 +7786,12 @@
             "r": "t",
             "text": "). Because every member is append-only, a fallback's ordinal is fixed once appended, so an opaque body written under an earlier minor still selects it under a later minor. Any change that would remove, reorder or retype an existing member is not an aggregation and shall increment MajorVersion."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "C.3 Append-only rule (normative)",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -7520,7 +7865,12 @@
             "r": "t",
             "text": ". In all cases, until a consumer has a schema that covers a body type, the ExtensionObject opaque-body fallback still lets it decode structurally and preserve an unknown body with its TypeId."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "C.3 Append-only rule (normative)",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -7547,7 +7897,12 @@
             "r": "t",
             "text": ", not the ConfigurationVersion, to decide whether it already holds the exact schema."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "C.3 Append-only rule (normative)",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -7592,7 +7947,12 @@
             "r": "t",
             "text": ". A sparse message therefore uses the identical canonical schema as a full key frame; the schema, and thus the SchemaId, is stable across every subset of keys actually carried, and no per-subset schema is registered."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "C.3 Append-only rule (normative)",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -7624,7 +7984,12 @@
             "r": "t",
             "text": "), decode with a later minor of the same lineage after confirming — from the registry or the announced lineage — that the on-wire SchemaId is an earlier minor of that lineage; it shall not reject the message merely because the on-wire fingerprint differs from the schema it holds, and it shall not compare the on-wire fingerprint against the later schema's canonical form."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "C.3 Append-only rule (normative)",
+          "b": 4
+        }
       },
       {
         "t": "annex-clause",
@@ -7716,7 +8081,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "C.4 PubSub integration touch-points",
+          "b": 0
+        }
       },
       {
         "t": "annex-clause",
@@ -7919,7 +8289,12 @@
             "r": "t",
             "text": ". A worked incremental-schema walkthrough with concrete Avro schemas — including an ExtensionObject whose struct contains a nested Variant — is in the Avro Part 6 DataEncoding Annex C."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "C.5 Example (informative)",
+          "b": 0
+        }
       }
     ],
     "annex-d": [
@@ -8014,7 +8389,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "Annex D — HTTP binding correspondence (informative)",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -8450,7 +8830,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "Annex D — HTTP binding correspondence (informative)",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -8534,7 +8919,12 @@
             "r": "t",
             "text": " URL so a reference resolves over whichever binding hosts the schema."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "Annex D — HTTP binding correspondence (informative)",
+          "b": 2
+        }
       }
     ]
   },

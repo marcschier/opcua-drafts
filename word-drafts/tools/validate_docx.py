@@ -9,6 +9,7 @@ the generator against itself.
 """
 
 import argparse
+import hashlib
 import json
 import os
 import re
@@ -147,6 +148,67 @@ def check_finalized(doc, res):
     if errors:
         res.error('finalized',
                   '%d field(s) resolved to a Word error message' % errors)
+
+
+def check_provenance(doc, cfg, docx_path, res):
+    """Every paragraph is addressable, and the sidecar describes this exact document.
+
+    The ingest direction turns a reviewer's marked-up copy back into a markdown change,
+    and it can only do that if each paragraph says where it came from. `w14:paraId` is
+    the vehicle — Word preserves an id it finds and only invents one where none exists —
+    and the sidecar is the key. If the two disagree, a mark would be attributed to the
+    wrong source line, which is worse than not attributing it at all.
+    """
+    path = provenance_path(cfg)
+    if not os.path.exists(path):
+        res.error('provenance', 'no provenance sidecar beside the document (%s)'
+                  % os.path.basename(path))
+        return
+    with open(path, encoding='utf-8') as f:
+        prov = json.load(f)
+
+    attr = q('w14:paraId')
+    ids = [p.get(attr) for p in doc.document.iter(q('w:p'))]
+    stamped = [i for i in ids if i]
+    if len(stamped) != len(set(stamped)):
+        res.error('provenance',
+                  'two paragraphs share a paraId, so they address the same source')
+    listed = set(prov.get('paragraphs') or {})
+    for pid in set(stamped) - listed:
+        res.error('provenance', 'paragraph %s is not in the provenance sidecar' % pid)
+    for pid in listed - set(stamped):
+        res.error('provenance', 'the provenance sidecar lists %s, which the document '
+                                'does not contain' % pid)
+    if not any(a.get('owner') == 'markdown' for a in (prov.get('paragraphs') or {}).values()):
+        res.error('provenance', 'no paragraph is attributed to markdown, so nothing '
+                                'could ever be written back')
+
+    props = doc.parts.get('docProps/custom.xml', b'').decode('utf-8', 'replace')
+    for name in ('SpecId', 'SourceCommit', 'SourceDigest', 'PipelineVersion'):
+        if 'name="%s"' % name not in props:
+            res.error('provenance', 'the package does not record %s, so a reviewed copy '
+                                    'could not be matched to its source' % name)
+    if prov.get('sourceDigest') != _digest_of(prov.get('sources') or []):
+        res.error('provenance',
+                  'the sources have changed since the document was built; rebuild before '
+                  'shipping it for review, or a reviewer marks up text that no longer exists')
+
+
+def _digest_of(paths):
+    h = hashlib.sha256()
+    for path in sorted(paths):
+        h.update(path.encode('utf-8'))
+        try:
+            with open(os.path.join(REPO, path), 'rb') as f:
+                h.update(f.read())
+        except OSError:
+            h.update(b'\0missing')
+    return h.hexdigest()[:16]
+
+
+def provenance_path(cfg):
+    base = os.path.join(REPO, cfg['output']['docmodel'])
+    return os.path.splitext(base)[0].replace('.docmodel', '') + '.provenance.json'
 
 
 def check_styles(doc, res):
@@ -626,6 +688,7 @@ def main(argv=None):
 
     check_styles(doc, res)
     check_track_changes(doc, res)
+    check_provenance(doc, cfg, docx_path, res)
     if args.finalized:
         check_finalized(doc, res)
     check_heading_numbers(doc, res)

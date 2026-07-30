@@ -51,7 +51,12 @@
             "r": "t",
             "text": " result mapping for OPC 10000-11 Historical Access."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "1 Scope",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -139,7 +144,12 @@
             "r": "t",
             "text": " results to Arrow RecordBatch streams for ADBC-style clients."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "1 Scope",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -183,7 +193,12 @@
             "r": "t",
             "text": " as its column type — there is one mapping across all three parts."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "1 Scope",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -207,7 +222,12 @@
             "r": "t",
             "text": " map OPC UA Actions, action invoke requests or action invoke responses; Actions shall use the OPC UA Avro mapping. Arrow is defined for columnar historian access and Part 14 batch publish/subscribe payloads."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "1 Scope",
+          "b": 3
+        }
       },
       {
         "t": "clause",
@@ -1084,7 +1104,12 @@
             "r": "t",
             "text": "): encoders shall not choose alternative Arrow layouts for the same DataType. This draft describes the encoding Object but does not assign NodeIds."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "4.1 Where Arrow fits",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -1226,7 +1251,12 @@
             "r": "t",
             "text": " options over the identical canonical column layout, not encoding variants."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "4.2 Columnar model, IPC framing and endianness",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -1286,7 +1316,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "4.3 Schema identity and reversibility",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -1332,7 +1367,12 @@
             "r": "t",
             "text": " is used as the column type for the corresponding DataSet field."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "5.6 OPC UA Arrow",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -1372,7 +1412,12 @@
             "r": "t",
             "text": ")."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "5.6.1 General rules",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -1398,7 +1443,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "5.6.1 General rules",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -1416,7 +1466,12 @@
             "r": "t",
             "text": " DataTypeEncoding Node. This draft describes that Node but does not allocate final NodeIds."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "5.6.1 General rules",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -1441,7 +1496,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "5.6.2 Built-in DataTypes",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -2127,7 +2187,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "5.6.2 Built-in DataTypes",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -2193,7 +2258,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "5.6.2 Built-in DataTypes",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -2225,7 +2295,12 @@
             "r": "t",
             "text": " for 32-bit OptionSets unless the DataTypeDefinition states otherwise)."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "5.6.3 Enumerations and OptionSets",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -2257,7 +2332,12 @@
             "r": "t",
             "text": " optional wrapper for optional members; mandatory fields are nullable only when the field DataType itself is nullable."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "5.6.4 Structures, optional fields and Unions",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -2307,7 +2387,12 @@
             "r": "t",
             "text": " branch. Type codes shall be stable for the DataTypeDefinition field order."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "5.6.4 Structures, optional fields and Unions",
+          "b": 1
+        }
       },
       {
         "t": "clause",
@@ -2339,7 +2424,12 @@
             "r": "t",
             "text": " is the Arrow mapping of the element DataType. A null array is a null list slot. An empty array is a present list slot with length zero. Null elements are represented by the element validity bitmap when the element type permits nulls."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "5.6.5 Arrays and Matrices",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -2447,7 +2537,12 @@
             "r": "t",
             "text": " extension types may be referenced informatively, but this struct is the only canonical Matrix carrier."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "5.6.5 Arrays and Matrices",
+          "b": 1
+        }
       },
       {
         "t": "clause",
@@ -2480,7 +2575,12 @@
             "r": "t",
             "text": "), so an existing branch keeps its dense-union type code in every later minor of the same major. The union type code, list-vs-scalar form and Matrix dimensions are sufficient to reconstruct the exact OPC UA Variant type and dimensionality."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "5.6.6 Variant",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -2563,7 +2663,12 @@
             "r": "t",
             "text": ")."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "5.6.7 ExtensionObject and abstract/subtyped fields",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -2603,7 +2708,12 @@
             "r": "t",
             "text": " generated from the DataTypeDefinition."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "5.6.8 Default Arrow DataTypeEncoding Node",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -2715,7 +2825,12 @@
             "r": "t",
             "text": " numeric identifier field."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "5.6.9 Schema-generation algorithm",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -2765,7 +2880,12 @@
             "r": "t",
             "text": " is the lowercase hexadecimal SHA-256 fingerprint truncated to the first 8 bytes (16 hex chars) of the canonical schema bytes, unless a profile specifies a longer length."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "5.6.9 Schema-generation algorithm",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -2830,7 +2950,12 @@
             "r": "t",
             "text": " that re-derives a schema uses the identical inputs, so both sides agree on every field, child and type code."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "5.6.9 Schema-generation algorithm",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -2882,7 +3007,12 @@
             "r": "t",
             "text": " type and therefore no shared-record option. Two structurally identical fields still produce identical inline types, so a schema-driven bound remains deterministic across publishers."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "5.6.9 Schema-generation algorithm",
+          "b": 3
+        }
       },
       {
         "t": "clause",
@@ -2906,7 +3036,12 @@
             "r": "t",
             "text": " in a local cache or registry and compare the received serialized Arrow Schema with the cached canonical form."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "5.6.10 Decoder algorithm",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -2961,7 +3096,12 @@
             "r": "t",
             "text": "), so the decoder shall obtain the exact writer-minor schema out of band."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "5.6.10 Decoder algorithm",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -2987,7 +3127,12 @@
             "r": "t",
             "text": ") or in the DataSetMessage/NetworkMessage envelope, and resolves the serialized Arrow Schema for that SchemaId from its schema cache, a schema registry or a prior announcement, following the Part 14 cache-miss resolution order. It then validates that each field uses the canonical mapping and decodes each Arrow Array against that schema using this Part 6 mapping. A bare RecordBatch whose SchemaId is unknown and cannot be resolved is a schema error and shall not be decoded."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "5.6.10 Decoder algorithm",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -3005,7 +3150,12 @@
             "r": "t",
             "text": ". A mismatch between the received SchemaId and the re-derived SchemaId is a schema error."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "5.6.10 Decoder algorithm",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -3033,7 +3183,12 @@
             "r": "t",
             "text": ", from the embedded Schema message of an IPC stream, a cache, an announcement or a schema registry. Only a decoder that does hold the relevant DataTypeDefinitions uses the AddressSpace-driven path above; the SchemaId is then sufficient to verify that both sides are using the same schema."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "5.6.10 Decoder algorithm",
+          "b": 4
+        }
       },
       {
         "t": "clause",
@@ -3057,7 +3212,12 @@
             "r": "t",
             "text": " for conforming OPC UA values."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "5.6.11 Conformance",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -3127,7 +3287,12 @@
             "r": "t",
             "text": "), so growth is per-field: appending to one field's union does not change another field's type."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "5.6.12 Implementing schema evolution (growing unions)",
+          "b": 0
+        }
       },
       {
         "t": "list",
@@ -3204,7 +3369,12 @@
               "text": ")."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "5.6.12 Implementing schema evolution (growing unions)",
+          "b": 1
+        }
       },
       {
         "t": "list",
@@ -3248,7 +3418,12 @@
               "text": " (0–127); assign them in a documented, monotonic order. Do not remove, reorder or retype an existing child; any such change is a MajorVersion reset."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "5.6.12 Implementing schema evolution (growing unions)",
+          "b": 2
+        }
       },
       {
         "t": "list",
@@ -3282,7 +3457,12 @@
               "text": " for an XML or textual body. A fallback child is appended when a value first requires it (step 2), so it may take any dense-union type code and is not reserved at a fixed low code. Because every child is append-only, a fallback's type code is fixed once assigned, so an opaque body written under an earlier minor still resolves to it under a grown schema."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "5.6.12 Implementing schema evolution (growing unions)",
+          "b": 3
+        }
       },
       {
         "t": "list",
@@ -3360,7 +3540,12 @@
               "text": ") — before sending a batch that uses the appended child."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "5.6.12 Implementing schema evolution (growing unions)",
+          "b": 4
+        }
       },
       {
         "t": "list",
@@ -3410,7 +3595,12 @@
               "text": ")."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "5.6.12 Implementing schema evolution (growing unions)",
+          "b": 5
+        }
       },
       {
         "t": "para",
@@ -3437,7 +3627,12 @@
             "r": "t",
             "text": " for the full model, including the data-driven-first (or schema-driven) initial basis and the lineage/SchemaId relationship."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "5.6.12 Implementing schema evolution (growing unions)",
+          "b": 6
+        }
       },
       {
         "t": "clause",
@@ -3461,7 +3656,12 @@
             "r": "t",
             "text": " column mapping for every DataSet field."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6 PubSub message mapping",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -3607,7 +3807,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.1 Arrow mapping parameters",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -3655,7 +3860,12 @@
             "r": "t",
             "text": ". All three formats carry the identical canonical Part 6 Arrow column layout — one column per DataSet field using the Part 6 Arrow mapping for that field DataType — and differ only in how the schema is conveyed, so they are framing options and not encoding variants. Schema metadata carries NetworkMessage header fields such as PublisherId, WriterGroupId, DataSetWriterId, NetworkMessageNumber, SequenceNumber, ConfigurationVersion, MessageType, Timestamp, PicoSeconds, PromotedFields and security-related flags when present."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.2 Arrow message mapping",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -3675,7 +3885,12 @@
             "text": " framing options",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.2 Arrow message mapping",
+          "b": 1
+        }
       },
       {
         "t": "table",
@@ -3817,7 +4032,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.2 Arrow message mapping",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -3860,7 +4080,12 @@
             "r": "t",
             "text": ")."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.2 Arrow message mapping",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -3940,7 +4165,12 @@
             "r": "t",
             "text": ") and shall be used whenever a stable schema across sparse subsets is required."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.2 Arrow message mapping",
+          "b": 4
+        }
       },
       {
         "t": "para",
@@ -3990,7 +4220,12 @@
             "r": "t",
             "text": " batch, omitted unchanged fields shall not be decoded as null values; they are absent by delta-frame selection."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.2 Arrow message mapping",
+          "b": 5
+        }
       },
       {
         "t": "clause",
@@ -4054,7 +4289,12 @@
             "r": "t",
             "text": ", so the requirement that encoders not introduce alternate Arrow layouts or encoding variants for the same DataType is preserved."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.3 Bare RecordBatch framing (`batch`)",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -4118,7 +4358,12 @@
             "r": "t",
             "text": " cache-miss resolution order, then decode the RecordBatch against that schema. A bare RecordBatch that references an unknown SchemaId is a schema error and shall not be decoded."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.3 Bare RecordBatch framing (`batch`)",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -4160,7 +4405,12 @@
             "r": "t",
             "text": " is used for channels without a schema-announcement mechanism or when each message must be independently decodable."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.3 Bare RecordBatch framing (`batch`)",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -4192,7 +4442,12 @@
             "r": "t",
             "text": ". Transports that expose MIME content types shall use these values for Arrow PubSub messages."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.4 Content types",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -4208,7 +4463,12 @@
             "r": "t",
             "text": "This clause defines how the Arrow message mapping is represented in the OPC 10000-14 PubSub configuration model, and the Information Model extension that carries it. It fixes the names used so that two implementations configure the mapping identically. NodeIds are assigned by the OPC Foundation; this document defines the BrowseNames, the type hierarchy and the field sets."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.5 Part 14 configuration model mapping",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -4250,7 +4510,12 @@
             "r": "t",
             "text": " sets."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.5 Part 14 configuration model mapping",
+          "b": 1
+        }
       },
       {
         "t": "table",
@@ -4364,7 +4629,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.5 Part 14 configuration model mapping",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -4408,7 +4678,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.5 Part 14 configuration model mapping",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -4440,7 +4715,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.5 Part 14 configuration model mapping",
+          "b": 4
+        }
       },
       {
         "t": "table",
@@ -4646,7 +4926,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.5 Part 14 configuration model mapping",
+          "b": 5
+        }
       },
       {
         "t": "para",
@@ -4664,7 +4949,12 @@
             "r": "code",
             "text": "DataSetWriterMessageDataType"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.5 Part 14 configuration model mapping",
+          "b": 6
+        }
       },
       {
         "t": "table",
@@ -4754,7 +5044,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.5 Part 14 configuration model mapping",
+          "b": 7
+        }
       },
       {
         "t": "para",
@@ -4772,7 +5067,12 @@
             "r": "code",
             "text": "DataSetReaderMessageDataType"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.5 Part 14 configuration model mapping",
+          "b": 8
+        }
       },
       {
         "t": "table",
@@ -4852,7 +5152,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.5 Part 14 configuration model mapping",
+          "b": 9
+        }
       },
       {
         "t": "para",
@@ -4950,7 +5255,12 @@
             "r": "t",
             "text": " = 2)."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.5 Part 14 configuration model mapping",
+          "b": 10
+        }
       },
       {
         "t": "para",
@@ -4960,7 +5270,12 @@
             "r": "t",
             "text": "The Information Model representation mirrors the JSON message mapping ObjectTypes, each with the Properties of the corresponding DataType above."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.5 Part 14 configuration model mapping",
+          "b": 11
+        }
       },
       {
         "t": "table",
@@ -5026,7 +5341,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.5 Part 14 configuration model mapping",
+          "b": 12
+        }
       },
       {
         "t": "para",
@@ -5036,7 +5356,12 @@
             "r": "t",
             "text": "These additions ship as an Information Model extension rather than as changes to the Part 14 NodeSet, so that they can be adopted independently."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.5 Part 14 configuration model mapping",
+          "b": 13
+        }
       },
       {
         "t": "list",
@@ -5077,7 +5402,12 @@
               "text": "Contents: the three enumeration DataTypes, the three MessageSettings DataTypes and the three ObjectTypes above"
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.5 Part 14 configuration model mapping",
+          "b": 14
+        }
       },
       {
         "t": "para",
@@ -5112,7 +5442,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.5 Part 14 configuration model mapping",
+          "b": 15
+        }
       },
       {
         "t": "clause",
@@ -5128,7 +5463,12 @@
             "r": "t",
             "text": "Arrow NetworkMessage header fields shall be represented as schema metadata key-value pairs when they apply to the whole stream or batch, and as columns when they vary per row. DataSetMessage header fields that vary per sample, such as status, timestamp, picoSeconds or sequence number, shall be represented as leading metadata columns before DataSet field columns."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.6 Header layouts",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -5160,7 +5500,12 @@
             "r": "t",
             "text": " for bounded Arrow IPC file payloads."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.7 Content-type registry entries",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -5220,7 +5565,12 @@
             "r": "t",
             "text": "), and the SchemaId does not change with the subset of keys carried. Field properties from DataSetMetaData are copied into Arrow field metadata so a disconnected subscriber can retain engineering units, semantic references, model namespace, SourceBrowseName and SourceTypeDefinition."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.8 DataSet schema mapping",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -5236,7 +5586,12 @@
             "r": "t",
             "text": "The canonical envelope is an IPC stream with schema metadata for NetworkMessage-level values and RecordBatch rows for DataSetMessages. A bridge may wrap multiple DataSet schemas in a transport-level envelope, but each Arrow IPC stream schema shall describe exactly one DataSet schema to preserve column homogeneity."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.9 NetworkMessage and DataSetMessage envelopes",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -5319,7 +5674,12 @@
             "r": "t",
             "text": ") selects the format."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.9.1 Schema resolution",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -5373,7 +5733,12 @@
             "r": "t",
             "text": " metadata is a reference to the canonical schema and shall not be inserted into the canonical schema bytes before calculating the SchemaId."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.9.2.1 SchemaId and canonical schema bytes",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -5425,7 +5790,12 @@
             "r": "t",
             "text": ", not per transport frame."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.9.2.1 SchemaId and canonical schema bytes",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -5479,7 +5849,12 @@
             "r": "t",
             "text": " envelope's schema stable while it carries several DataSets, a problem the columnar model does not have. An implementer shall not introduce such an envelope into the Arrow mapping; a frame that would carry several DataSets is expressed as several streams or batches, each with its own SchemaId."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.9.2.1 SchemaId and canonical schema bytes",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -5497,7 +5872,12 @@
             "r": "t",
             "text": ", but it does not depend on it. A ConfigurationVersion change that does not change the Arrow Schema keeps the same SchemaId, and an Arrow Schema change produces a new SchemaId even if a publisher's configuration versioning policy is separate."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.9.2.1 SchemaId and canonical schema bytes",
+          "b": 3
+        }
       },
       {
         "t": "clause",
@@ -5513,7 +5893,12 @@
             "r": "t",
             "text": "The SchemaId shall be placed as follows."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.9.2.2 Carrier placement",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -5651,7 +6036,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.9.2.2 Carrier placement",
+          "b": 1
+        }
       },
       {
         "t": "clause",
@@ -5667,7 +6057,12 @@
             "r": "t",
             "text": "Within an Arrow IPC stream, the IPC Schema message is the schema announcement. It shall be sent once at the start of each IPC stream before any RecordBatch. A receiver that obtains the IPC Schema message has the serialized Arrow Schema bytes needed to verify the SchemaId and decode subsequent RecordBatches in that stream."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.9.2.3 Schema announcements",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -5701,7 +6096,12 @@
             "r": "t",
             "text": ":"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.9.2.3 Schema announcements",
+          "b": 1
+        }
       },
       {
         "t": "code",
@@ -5712,7 +6112,12 @@
           "  Schema: serialized Arrow Schema IPC message bytes or an equivalent schema-JSON descriptor,",
           "  SchemaEpoch: optional int64",
           "}"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.9.2.3 Schema announcements",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -5750,7 +6155,12 @@
             "r": "t",
             "text": " may be monotonically increased for operator correlation, but receivers shall not use it as the decoding key and it is not part of SchemaId calculation."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.9.2.3 Schema announcements",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -5792,7 +6202,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.9.2.3 Schema announcements",
+          "b": 4
+        }
       },
       {
         "t": "para",
@@ -5826,7 +6241,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.9.2.3 Schema announcements",
+          "b": 5
+        }
       },
       {
         "t": "clause",
@@ -5850,7 +6270,12 @@
             "r": "t",
             "text": " when the transport supports request/response or side-channel control messages:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.9.2.4 SchemaRequest",
+          "b": 0
+        }
       },
       {
         "t": "code",
@@ -5860,7 +6285,12 @@
           "  RequesterId: optional string,",
           "  SchemaIds: array<bytes(8)>",
           "}"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.9.2.4 SchemaRequest",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -5898,7 +6328,12 @@
             "r": "t",
             "text": " pair. If policy permits, publishers should periodically re-announce active schemas on lossy transports or when late joiners are expected."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.9.2.4 SchemaRequest",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -5924,7 +6359,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.9.2.4 SchemaRequest",
+          "b": 3
+        }
       },
       {
         "t": "clause",
@@ -5956,7 +6396,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.9.2.5 Encoder change tracking",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -6042,7 +6487,12 @@
             "r": "t",
             "text": "); decoders remain SchemaId-authoritative."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.9.2.5 Encoder change tracking",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -6052,7 +6502,12 @@
             "r": "t",
             "text": "A changed DataSet schema yields a new SchemaId and therefore requires a new announcement and a new homogeneous IPC stream. One Arrow IPC stream shall not mix RecordBatches that require different Arrow Schemas. Encoders shall not introduce alternate Arrow layouts or encoding variants for the same OPC UA DataType; the canonical Part 6 mapping, including the dense-union Variant form, is the only interchange form."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.9.2.5 Encoder change tracking",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -6076,7 +6531,12 @@
             "r": "t",
             "text": ". Once cached, each received stream's Schema message or governed schema shall match the cached SchemaId before RecordBatches are decoded. If a message references an unknown SchemaId, the decoder shall resolve it in the following order until one step succeeds:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.9.2.6 Decoder cache-miss resolution",
+          "b": 0
+        }
       },
       {
         "t": "list",
@@ -6194,7 +6654,12 @@
               "text": "Re-derive the Arrow Schema from the AddressSpace DataTypeDefinition using the Part 6 Arrow schema-generation algorithm, compute the 8-byte SchemaId over the serialized Arrow Schema, and verify that it equals the referenced SchemaId."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.9.2.6 Decoder cache-miss resolution",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -6212,7 +6677,12 @@
             "r": "t",
             "text": ", PublisherId, WriterGroupId and DataSetWriterId."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.9.2.6 Decoder cache-miss resolution",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -6244,7 +6714,12 @@
             "r": "t",
             "text": ". A ConfigurationVersion change that does not alter the Arrow Schema keeps the same SchemaId. A schema change produces a new SchemaId even if a deployment accidentally fails to advance ConfigurationVersion. Decoders shall use SchemaId to select the Arrow schema, and may use ConfigurationVersion for existing PubSub metadata checks."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.9.2.7 Relationship to ConfigurationVersion",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -6279,7 +6754,12 @@
             "r": "t",
             "text": ". A MinorVersion increment is an append-only-compatible superset of the same major. A MajorVersion increment is a reset with no such guarantee."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.9.2.7 Relationship to ConfigurationVersion",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -6297,7 +6777,12 @@
             "r": "t",
             "text": " embeds its writer schema and remains self-describing. A bare RecordBatch carries no schema, and its node and buffer layout matches its writer-minor schema, so a subscriber shall resolve the exact writer-minor schema by SchemaId to decode it, or apply a defined upgrade that treats union children absent from the older RecordBatch as empty."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.9.2.7 Relationship to ConfigurationVersion",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -6334,7 +6819,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.9.2.7 Relationship to ConfigurationVersion",
+          "b": 3
+        }
       },
       {
         "t": "clause",
@@ -6350,14 +6840,24 @@
             "r": "t",
             "text": "Normal stream startup announces the schema with the IPC Schema message before any RecordBatch:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.9.2.8 Schema-exchange sequences",
+          "b": 0
+        }
       },
       {
         "t": "figure",
         "id": "fig-arrow-1",
         "caption": "Where the Arrow encoding fits",
         "source": "mermaid",
-        "mermaid": "sequenceDiagram\n  participant P as Publisher\n  participant D as Decoder\n  P->>D: Arrow IPC Schema message<br/>schema metadata schemaId\n  D->>D: verify SHA-256(Schema) == SchemaId<br/>cache[SchemaId] = Schema\n  P->>D: RecordBatch rows for SchemaId\n  P->>D: RecordBatch rows for SchemaId\n  D->>D: decode batches with cached Schema"
+        "mermaid": "sequenceDiagram\n  participant P as Publisher\n  participant D as Decoder\n  P->>D: Arrow IPC Schema message<br/>schema metadata schemaId\n  D->>D: verify SHA-256(Schema) == SchemaId<br/>cache[SchemaId] = Schema\n  P->>D: RecordBatch rows for SchemaId\n  P->>D: RecordBatch rows for SchemaId\n  D->>D: decode batches with cached Schema",
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.9.2.8 Schema-exchange sequences",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -6367,14 +6867,24 @@
             "r": "t",
             "text": "A late joiner or cache-miss receiver requests the missing schema and decodes only after the announcement is verified:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.9.2.8 Schema-exchange sequences",
+          "b": 2
+        }
       },
       {
         "t": "figure",
         "id": "fig-arrow-2",
         "caption": "Batch publish and subscribe",
         "source": "mermaid",
-        "mermaid": "sequenceDiagram\n  participant D as Late-joiner decoder\n  participant P as Publisher\n  D->>D: receive payload reference<br/>unknown SchemaId\n  D->>P: ArrowSchemaRequest{SchemaIds:[SchemaId]}\n  P->>D: IPC Schema message or ArrowSchemaAnnouncement\n  D->>D: verify SHA-256(Schema) == SchemaId<br/>cache[SchemaId] = Schema\n  P->>D: RecordBatch rows for SchemaId\n  D->>D: decode with cached Schema"
+        "mermaid": "sequenceDiagram\n  participant D as Late-joiner decoder\n  participant P as Publisher\n  D->>D: receive payload reference<br/>unknown SchemaId\n  D->>P: ArrowSchemaRequest{SchemaIds:[SchemaId]}\n  P->>D: IPC Schema message or ArrowSchemaAnnouncement\n  D->>D: verify SHA-256(Schema) == SchemaId<br/>cache[SchemaId] = Schema\n  P->>D: RecordBatch rows for SchemaId\n  D->>D: decode with cached Schema",
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.9.2.8 Schema-exchange sequences",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -6384,14 +6894,24 @@
             "r": "t",
             "text": "A schema change creates a new SchemaId and a new homogeneous IPC stream or announcement:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.9.2.8 Schema-exchange sequences",
+          "b": 4
+        }
       },
       {
         "t": "figure",
         "id": "fig-arrow-3",
         "caption": "Historian access as record batches",
         "source": "mermaid",
-        "mermaid": "sequenceDiagram\n  participant P as Publisher\n  participant D as Decoder\n  P->>D: IPC Schema message for SchemaId A\n  P->>D: RecordBatches using SchemaId A\n  P->>P: DataSet field schema changes\n  P->>D: IPC Schema message or ArrowSchemaAnnouncement for SchemaId B\n  D->>D: cache SchemaId B independently\n  P->>D: RecordBatches using SchemaId B in a new homogeneous stream"
+        "mermaid": "sequenceDiagram\n  participant P as Publisher\n  participant D as Decoder\n  P->>D: IPC Schema message for SchemaId A\n  P->>D: RecordBatches using SchemaId A\n  P->>P: DataSet field schema changes\n  P->>D: IPC Schema message or ArrowSchemaAnnouncement for SchemaId B\n  D->>D: cache SchemaId B independently\n  P->>D: RecordBatches using SchemaId B in a new homogeneous stream",
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.9.2.8 Schema-exchange sequences",
+          "b": 5
+        }
       },
       {
         "t": "clause",
@@ -6415,7 +6935,12 @@
             "r": "t",
             "text": " column mapping for the result Value column."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "7 Historian and ADBC access",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -6431,14 +6956,24 @@
             "r": "t",
             "text": "This mapping exposes OPC UA Historical Access results as Arrow IPC streams for clients that use an ADBC-like access pattern:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "7.1 Scope",
+          "b": 0
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "Connection -> Statement -> ExecuteQuery -> ArrowArrayStream"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "7.1 Scope",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -6448,7 +6983,12 @@
             "r": "t",
             "text": "ADBC (Arrow Database Connectivity) is a client API surface. Arrow Flight SQL is the natural Arrow wire transport for remote ADBC clients. This specification defines the OPC-UA-to-Arrow result mapping returned by such a surface; it is not a new database wire protocol and does not replace OPC UA services."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "7.1 Scope",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -6472,7 +7012,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "7.2 Access basis",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -6482,7 +7027,12 @@
             "r": "t",
             "text": "The following HistoryRead details map to Arrow result sets:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "7.2 Access basis",
+          "b": 1
+        }
       },
       {
         "t": "list",
@@ -6519,7 +7069,12 @@
               "text": " produces one row per requested timestamp result."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "7.2 Access basis",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -6567,7 +7122,12 @@
             "r": "t",
             "text": ")."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "7.2 Access basis",
+          "b": 3
+        }
       },
       {
         "t": "clause",
@@ -6583,7 +7143,12 @@
             "r": "t",
             "text": "An implementation exposing this mapping shall provide an ADBC-style logical surface:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "7.3 ADBC-style statement model",
+          "b": 0
+        }
       },
       {
         "t": "list",
@@ -6636,7 +7201,12 @@
               "text": ", i.e. a stream of Arrow RecordBatches with one stable schema."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "7.3 ADBC-style statement model",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -6646,7 +7216,12 @@
             "r": "t",
             "text": "Statement parameters include:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "7.3 ADBC-style statement model",
+          "b": 2
+        }
       },
       {
         "t": "list",
@@ -6739,7 +7314,12 @@
               "text": ": the client or service batching target."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "7.3 ADBC-style statement model",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -6757,7 +7337,12 @@
             "r": "t",
             "text": " map to Arrow stream batching. Each service page or continuation page shall be emitted as one or more RecordBatches; the Arrow stream order is the HistoryRead result order. A continuation point is not encoded as a data row. If a transport needs explicit continuation metadata, it shall carry it outside the rows as stream, batch, or transport metadata."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "7.3 ADBC-style statement model",
+          "b": 4
+        }
       },
       {
         "t": "clause",
@@ -6782,7 +7367,12 @@
             "r": "t",
             "text": ". Every row identifies the source node and one historical sample:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "7.4 Canonical result shape",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -6932,7 +7522,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "7.4 Canonical result shape",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -6942,7 +7537,12 @@
             "r": "t",
             "text": "Long form is canonical because it is stable for ADBC consumers, composes naturally with SQL predicates, and avoids schema changes when the node set changes. A column-per-node shape is useful for specialized time-series pivots, but it changes the schema with every node selection and is not canonical."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "7.4 Canonical result shape",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -6976,7 +7576,12 @@
             "r": "t",
             "text": " mapping."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "7.4 Canonical result shape",
+          "b": 3
+        }
       },
       {
         "t": "clause",
@@ -7040,7 +7645,12 @@
             "r": "t",
             "text": " are copied from the DataValue using the Part 6 Arrow mapping for the node DataType."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "7.5 Raw, modified, and at-time reads",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -7050,7 +7660,12 @@
             "r": "t",
             "text": "For modified reads, implementations may add metadata columns such as modification time, update type, or user name when requested by the statement. Such columns are extensions and shall not alter the canonical meaning of the five base columns."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "7.5 Raw, modified, and at-time reads",
+          "b": 1
+        }
       },
       {
         "t": "clause",
@@ -7074,7 +7689,12 @@
             "r": "t",
             "text": ", the base columns are followed by aggregate interval columns:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "7.6 Processed aggregate reads",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -7188,7 +7808,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "7.6 Processed aggregate reads",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -7214,7 +7839,12 @@
             "r": "t",
             "text": "; additional aggregate diagnostics such as percent good or percent bad may be added as extension columns."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "7.6 Processed aggregate reads",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -7230,14 +7860,24 @@
             "r": "t",
             "text": "The Arrow IPC stream content type is:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "7.7 Content types and transport",
+          "b": 0
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "application/vnd.apache.arrow.stream"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "7.7 Content types and transport",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -7247,14 +7887,24 @@
             "r": "t",
             "text": "The Arrow IPC file content type for bounded exports is:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "7.7 Content types and transport",
+          "b": 2
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "application/vnd.apache.arrow.file"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "7.7 Content types and transport",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -7280,7 +7930,12 @@
             "r": "t",
             "text": ". Other transports may carry the same Arrow IPC stream when they preserve the schema and RecordBatch boundaries."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "7.7 Content types and transport",
+          "b": 4
+        }
       },
       {
         "t": "clause",
@@ -7304,7 +7959,12 @@
             "r": "t",
             "text": " result values. PubSub is optimized for publishing batches of live or buffered DataSetMessages, while this mapping is optimized for query-style historical access."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "7.8 Relationship to Part 14 PubSub",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -7320,7 +7980,12 @@
             "r": "t",
             "text": "This Arrow mapping does not map OPC UA Actions, invoke requests, or invoke responses. Actions shall use the OPC UA Avro mapping for action invocation and response payloads."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "7.9 Exclusions",
+          "b": 0
+        }
       }
     ],
     "profiles": [
@@ -7338,7 +8003,12 @@
             "r": "t",
             "text": "An Arrow PubSub publisher conforms when it emits RecordBatches whose columns use the Part 6 Arrow mapping, whose rows reconstruct the intended DataSetMessages, and whose key-frame and delta-frame rules preserve null-vs-absent semantics. A subscriber conforms when it reconstructs DataSet field values with the same Part 6 reversibility guarantees and uses DataSetMetaData plus Arrow schema metadata to interpret the batch."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "6.10 Conformance",
+          "b": 0
+        }
       }
     ],
     "namespaces": [
@@ -7823,7 +8493,12 @@
             "r": "t",
             "text": "<!-- BEGIN GENERATED: type-reference -->"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Annex A Generated per-type reference",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -7841,7 +8516,12 @@
             "r": "t",
             "text": ". Do not edit between the markers."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Annex A Generated per-type reference",
+          "b": 1
+        }
       },
       {
         "t": "annex-clause",
@@ -7873,7 +8553,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in Boolean",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -7935,7 +8620,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in Boolean",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -7945,7 +8635,12 @@
             "r": "t",
             "text": "Arrow schema:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in Boolean",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -7954,7 +8649,12 @@
           "value: bool",
           "-- schema metadata --",
           "opcua-arrow: '1'"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in Boolean",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -7964,14 +8664,24 @@
             "r": "t",
             "text": "Example value:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in Boolean",
+          "b": 4
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "True"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in Boolean",
+          "b": 5
+        }
       },
       {
         "t": "annex-clause",
@@ -8003,7 +8713,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in SByte",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -8065,7 +8780,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in SByte",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -8075,7 +8795,12 @@
             "r": "t",
             "text": "Arrow schema:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in SByte",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -8084,7 +8809,12 @@
           "value: int8",
           "-- schema metadata --",
           "opcua-arrow: '1'"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in SByte",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -8094,14 +8824,24 @@
             "r": "t",
             "text": "Example value:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in SByte",
+          "b": 4
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "-128"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in SByte",
+          "b": 5
+        }
       },
       {
         "t": "annex-clause",
@@ -8133,7 +8873,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in Byte",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -8195,7 +8940,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in Byte",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -8205,7 +8955,12 @@
             "r": "t",
             "text": "Arrow schema:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in Byte",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -8214,7 +8969,12 @@
           "value: uint8",
           "-- schema metadata --",
           "opcua-arrow: '1'"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in Byte",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -8224,14 +8984,24 @@
             "r": "t",
             "text": "Example value:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in Byte",
+          "b": 4
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "255"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in Byte",
+          "b": 5
+        }
       },
       {
         "t": "annex-clause",
@@ -8263,7 +9033,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in Int16",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -8325,7 +9100,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in Int16",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -8335,7 +9115,12 @@
             "r": "t",
             "text": "Arrow schema:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in Int16",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -8344,7 +9129,12 @@
           "value: int16",
           "-- schema metadata --",
           "opcua-arrow: '1'"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in Int16",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -8354,14 +9144,24 @@
             "r": "t",
             "text": "Example value:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in Int16",
+          "b": 4
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "-32768"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in Int16",
+          "b": 5
+        }
       },
       {
         "t": "annex-clause",
@@ -8393,7 +9193,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in UInt16",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -8455,7 +9260,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in UInt16",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -8465,7 +9275,12 @@
             "r": "t",
             "text": "Arrow schema:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in UInt16",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -8474,7 +9289,12 @@
           "value: uint16",
           "-- schema metadata --",
           "opcua-arrow: '1'"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in UInt16",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -8484,14 +9304,24 @@
             "r": "t",
             "text": "Example value:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in UInt16",
+          "b": 4
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "65535"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in UInt16",
+          "b": 5
+        }
       },
       {
         "t": "annex-clause",
@@ -8523,7 +9353,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in Int32",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -8585,7 +9420,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in Int32",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -8595,7 +9435,12 @@
             "r": "t",
             "text": "Arrow schema:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in Int32",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -8604,7 +9449,12 @@
           "value: int32",
           "-- schema metadata --",
           "opcua-arrow: '1'"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in Int32",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -8614,14 +9464,24 @@
             "r": "t",
             "text": "Example value:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in Int32",
+          "b": 4
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "2147483647"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in Int32",
+          "b": 5
+        }
       },
       {
         "t": "annex-clause",
@@ -8653,7 +9513,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in UInt32",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -8715,7 +9580,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in UInt32",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -8725,7 +9595,12 @@
             "r": "t",
             "text": "Arrow schema:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in UInt32",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -8734,7 +9609,12 @@
           "value: uint32",
           "-- schema metadata --",
           "opcua-arrow: '1'"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in UInt32",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -8744,14 +9624,24 @@
             "r": "t",
             "text": "Example value:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in UInt32",
+          "b": 4
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "4294967295"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in UInt32",
+          "b": 5
+        }
       },
       {
         "t": "annex-clause",
@@ -8783,7 +9673,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in Int64",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -8845,7 +9740,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in Int64",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -8855,7 +9755,12 @@
             "r": "t",
             "text": "Arrow schema:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in Int64",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -8864,7 +9769,12 @@
           "value: int64",
           "-- schema metadata --",
           "opcua-arrow: '1'"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in Int64",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -8874,14 +9784,24 @@
             "r": "t",
             "text": "Example value:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in Int64",
+          "b": 4
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "9223372036854775807"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in Int64",
+          "b": 5
+        }
       },
       {
         "t": "annex-clause",
@@ -8913,7 +9833,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in UInt64",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -8975,7 +9900,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in UInt64",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -8985,7 +9915,12 @@
             "r": "t",
             "text": "Arrow schema:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in UInt64",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -8994,7 +9929,12 @@
           "value: uint64",
           "-- schema metadata --",
           "opcua-arrow: '1'"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in UInt64",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -9004,14 +9944,24 @@
             "r": "t",
             "text": "Example value:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in UInt64",
+          "b": 4
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "18446744073709551615"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in UInt64",
+          "b": 5
+        }
       },
       {
         "t": "annex-clause",
@@ -9043,7 +9993,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in Float",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -9105,7 +10060,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in Float",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -9115,7 +10075,12 @@
             "r": "t",
             "text": "Arrow schema:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in Float",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -9124,7 +10089,12 @@
           "value: float",
           "-- schema metadata --",
           "opcua-arrow: '1'"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in Float",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -9134,14 +10104,24 @@
             "r": "t",
             "text": "Example value:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in Float",
+          "b": 4
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "1.5"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in Float",
+          "b": 5
+        }
       },
       {
         "t": "annex-clause",
@@ -9173,7 +10153,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in Double",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -9235,7 +10220,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in Double",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -9245,7 +10235,12 @@
             "r": "t",
             "text": "Arrow schema:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in Double",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -9254,7 +10249,12 @@
           "value: double",
           "-- schema metadata --",
           "opcua-arrow: '1'"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in Double",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -9264,14 +10264,24 @@
             "r": "t",
             "text": "Example value:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in Double",
+          "b": 4
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "-0.0"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in Double",
+          "b": 5
+        }
       },
       {
         "t": "annex-clause",
@@ -9303,7 +10313,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in String",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -9365,7 +10380,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in String",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -9375,7 +10395,12 @@
             "r": "t",
             "text": "Arrow schema:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in String",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -9384,7 +10409,12 @@
           "value: string",
           "-- schema metadata --",
           "opcua-arrow: '1'"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in String",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -9394,14 +10424,24 @@
             "r": "t",
             "text": "Example value:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in String",
+          "b": 4
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "'grüße-中文-😀'"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in String",
+          "b": 5
+        }
       },
       {
         "t": "annex-clause",
@@ -9433,7 +10473,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in DateTime",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -9495,7 +10540,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in DateTime",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -9505,7 +10555,12 @@
             "r": "t",
             "text": "Arrow schema:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in DateTime",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -9514,7 +10569,12 @@
           "value: int64",
           "-- schema metadata --",
           "opcua-arrow: '1'"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in DateTime",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -9524,14 +10584,24 @@
             "r": "t",
             "text": "Example value:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in DateTime",
+          "b": 4
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "DateTime(ticks=133000000000000000)"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in DateTime",
+          "b": 5
+        }
       },
       {
         "t": "annex-clause",
@@ -9563,7 +10633,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in Guid",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -9625,7 +10700,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in Guid",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -9635,7 +10715,12 @@
             "r": "t",
             "text": "Arrow schema:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in Guid",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -9644,7 +10729,12 @@
           "value: fixed_size_binary[16]",
           "-- schema metadata --",
           "opcua-arrow: '1'"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in Guid",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -9654,14 +10744,24 @@
             "r": "t",
             "text": "Example value:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in Guid",
+          "b": 4
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "Guid(bytes=b'\\x01\\x02\\x03\\x04\\x05\\x06\\x07\\x08\\t\\n\\x0b\\x0c\\r\\x0e\\x0f\\x10')"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in Guid",
+          "b": 5
+        }
       },
       {
         "t": "annex-clause",
@@ -9693,7 +10793,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in ByteString",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -9755,7 +10860,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in ByteString",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -9765,7 +10875,12 @@
             "r": "t",
             "text": "Arrow schema:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in ByteString",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -9774,7 +10889,12 @@
           "value: binary",
           "-- schema metadata --",
           "opcua-arrow: '1'"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in ByteString",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -9784,14 +10904,24 @@
             "r": "t",
             "text": "Example value:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in ByteString",
+          "b": 4
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "b'\\x00\\x01\\x02\\x03\\x04\\x05\\x06\\x07'"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in ByteString",
+          "b": 5
+        }
       },
       {
         "t": "annex-clause",
@@ -9823,7 +10953,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in XmlElement",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -9885,7 +11020,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in XmlElement",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -9895,7 +11035,12 @@
             "r": "t",
             "text": "Arrow schema:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in XmlElement",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -9904,7 +11049,12 @@
           "value: string",
           "-- schema metadata --",
           "opcua-arrow: '1'"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in XmlElement",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -9914,14 +11064,24 @@
             "r": "t",
             "text": "Example value:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in XmlElement",
+          "b": 4
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "XmlElement(value=\"<a x='1'>t</a>\")"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in XmlElement",
+          "b": 5
+        }
       },
       {
         "t": "annex-clause",
@@ -9953,7 +11113,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in NodeId",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -10015,7 +11180,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in NodeId",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -10025,7 +11195,12 @@
             "r": "t",
             "text": "Arrow schema:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in NodeId",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -10034,7 +11209,12 @@
           "value: string",
           "-- schema metadata --",
           "opcua-arrow: '1'"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in NodeId",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -10044,7 +11224,12 @@
             "r": "t",
             "text": "Example value:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in NodeId",
+          "b": 4
+        }
       },
       {
         "t": "code",
@@ -10054,7 +11239,12 @@
           "       id_type=<IdType.GUID: 2>,",
           "       identifier=Guid(bytes=b'\\x07\\x08\\t\\n\\x0b\\x0c\\r\\x0e\\x0f\\x10\\x11\\x12'",
           "                             b'\\x13\\x14\\x15\\x16'))"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in NodeId",
+          "b": 5
+        }
       },
       {
         "t": "annex-clause",
@@ -10086,7 +11276,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in ExpandedNodeId",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -10148,7 +11343,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in ExpandedNodeId",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -10158,7 +11358,12 @@
             "r": "t",
             "text": "Arrow schema:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in ExpandedNodeId",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -10167,7 +11372,12 @@
           "value: string",
           "-- schema metadata --",
           "opcua-arrow: '1'"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in ExpandedNodeId",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -10177,7 +11387,12 @@
             "r": "t",
             "text": "Example value:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in ExpandedNodeId",
+          "b": 4
+        }
       },
       {
         "t": "code",
@@ -10188,7 +11403,12 @@
           "                              identifier='X'),",
           "               namespace_uri='http://example.org/UA/',",
           "               server_index=5)"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in ExpandedNodeId",
+          "b": 5
+        }
       },
       {
         "t": "annex-clause",
@@ -10220,7 +11440,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in StatusCode",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -10282,7 +11507,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in StatusCode",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -10292,7 +11522,12 @@
             "r": "t",
             "text": "Arrow schema:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in StatusCode",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -10301,7 +11536,12 @@
           "value: uint32",
           "-- schema metadata --",
           "opcua-arrow: '1'"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in StatusCode",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -10311,14 +11551,24 @@
             "r": "t",
             "text": "Example value:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in StatusCode",
+          "b": 4
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "StatusCode(value=2158755840)"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in StatusCode",
+          "b": 5
+        }
       },
       {
         "t": "annex-clause",
@@ -10350,7 +11600,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in QualifiedName",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -10464,7 +11719,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in QualifiedName",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -10474,7 +11734,12 @@
             "r": "t",
             "text": "Arrow schema:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in QualifiedName",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -10485,7 +11750,12 @@
           "  child 1, name: string",
           "-- schema metadata --",
           "opcua-arrow: '1'"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in QualifiedName",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -10495,14 +11765,24 @@
             "r": "t",
             "text": "Example value:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in QualifiedName",
+          "b": 4
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "QualifiedName(namespace=1, name='Temp')"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in QualifiedName",
+          "b": 5
+        }
       },
       {
         "t": "annex-clause",
@@ -10534,7 +11814,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in LocalizedText",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -10648,7 +11933,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in LocalizedText",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -10658,7 +11948,12 @@
             "r": "t",
             "text": "Arrow schema:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in LocalizedText",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -10669,7 +11964,12 @@
           "  child 1, text: string",
           "-- schema metadata --",
           "opcua-arrow: '1'"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in LocalizedText",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -10679,14 +11979,24 @@
             "r": "t",
             "text": "Example value:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in LocalizedText",
+          "b": 4
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "LocalizedText(locale='en', text='Hello')"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in LocalizedText",
+          "b": 5
+        }
       },
       {
         "t": "annex-clause",
@@ -10718,7 +12028,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in ExtensionObject",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -12928,7 +14243,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in ExtensionObject",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -12938,7 +14258,12 @@
             "r": "t",
             "text": "Arrow schema:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in ExtensionObject",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -13040,7 +14365,12 @@
           "      child 7, binary: binary",
           "-- schema metadata --",
           "opcua-arrow: '1'"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in ExtensionObject",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -13050,7 +14380,12 @@
             "r": "t",
             "text": "Example value:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in ExtensionObject",
+          "b": 4
+        }
       },
       {
         "t": "code",
@@ -13060,7 +14395,12 @@
           "                               id_type=<IdType.NUMERIC: 0>,",
           "                               identifier=3001),",
           "                body=StructValue(fields={'X': 1.0, 'Y': 1.0}, type_name='Point'))"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in ExtensionObject",
+          "b": 5
+        }
       },
       {
         "t": "annex-clause",
@@ -13092,7 +14432,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in DataValue",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -15390,7 +16735,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in DataValue",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -15400,7 +16750,12 @@
             "r": "t",
             "text": "Arrow schema:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in DataValue",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -15883,7 +17238,12 @@
           "  child 5, server_picoseconds: uint16",
           "-- schema metadata --",
           "opcua-arrow: '1'"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in DataValue",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -15893,7 +17253,12 @@
             "r": "t",
             "text": "Example value:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in DataValue",
+          "b": 4
+        }
       },
       {
         "t": "code",
@@ -15907,7 +17272,12 @@
           "          source_picoseconds=500,",
           "          server_timestamp=DateTime(ticks=2000),",
           "          server_picoseconds=250)"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in DataValue",
+          "b": 5
+        }
       },
       {
         "t": "annex-clause",
@@ -15939,7 +17309,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in Variant",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -27073,7 +28448,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in Variant",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -27083,7 +28463,12 @@
             "r": "t",
             "text": "Arrow schema:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in Variant",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -27560,7 +28945,12 @@
           "                  child 7, binary: binary",
           "-- schema metadata --",
           "opcua-arrow: '1'"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in Variant",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -27570,14 +28960,24 @@
             "r": "t",
             "text": "Example value:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in Variant",
+          "b": 4
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "Variant(vtype=Builtin(id=<BuiltInType.Int32: 6>), value=99, dimensions=None)"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in Variant",
+          "b": 5
+        }
       },
       {
         "t": "annex-clause",
@@ -27609,7 +29009,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in DiagnosticInfo",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -28035,7 +29440,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in DiagnosticInfo",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -28045,7 +29455,12 @@
             "r": "t",
             "text": "Arrow schema:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in DiagnosticInfo",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -28068,7 +29483,12 @@
           "          child 5, inner_status_code: uint32",
           "-- schema metadata --",
           "opcua-arrow: '1'"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in DiagnosticInfo",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -28078,7 +29498,12 @@
             "r": "t",
             "text": "Example value:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in DiagnosticInfo",
+          "b": 4
+        }
       },
       {
         "t": "code",
@@ -28097,7 +29522,12 @@
           "                                                    additional_info='inner',",
           "                                                    inner_status_code=None,",
           "                                                    inner_diagnostic_info=None))"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Built-in DiagnosticInfo",
+          "b": 5
+        }
       },
       {
         "t": "annex-clause",
@@ -28129,7 +29559,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Composite Array<String>",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -28217,7 +29652,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Composite Array<String>",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -28227,7 +29667,12 @@
             "r": "t",
             "text": "Arrow schema:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Composite Array<String>",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -28237,7 +29682,12 @@
           "  child 0, item: string",
           "-- schema metadata --",
           "opcua-arrow: '1'"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Composite Array<String>",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -28247,14 +29697,24 @@
             "r": "t",
             "text": "Example value:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Composite Array<String>",
+          "b": 4
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "['a', None, '']"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Composite Array<String>",
+          "b": 5
+        }
       },
       {
         "t": "annex-clause",
@@ -28286,7 +29746,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Composite Matrix<Double>",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -28452,7 +29917,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Composite Matrix<Double>",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -28462,7 +29932,12 @@
             "r": "t",
             "text": "Arrow schema:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Composite Matrix<Double>",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -28475,7 +29950,12 @@
           "      child 0, item: double",
           "-- schema metadata --",
           "opcua-arrow: '1'"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Composite Matrix<Double>",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -28485,14 +29965,24 @@
             "r": "t",
             "text": "Example value:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Composite Matrix<Double>",
+          "b": 4
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "Matrix(dimensions=(2, 2), values=[1.0, nan, -inf, -0.0])"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Composite Matrix<Double>",
+          "b": 5
+        }
       },
       {
         "t": "annex-clause",
@@ -28524,7 +30014,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Composite plain Structure Point",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -28638,7 +30133,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Composite plain Structure Point",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -28648,7 +30148,12 @@
             "r": "t",
             "text": "Arrow schema:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Composite plain Structure Point",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -28659,7 +30164,12 @@
           "  child 1, Y: double not null",
           "-- schema metadata --",
           "opcua-arrow: '1'"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Composite plain Structure Point",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -28669,14 +30179,24 @@
             "r": "t",
             "text": "Example value:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Composite plain Structure Point",
+          "b": 4
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "StructValue(fields={'X': 1.25, 'Y': -3.5}, type_name='Point')"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Composite plain Structure Point",
+          "b": 5
+        }
       },
       {
         "t": "annex-clause",
@@ -28708,7 +30228,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Composite StructureWithOptionalFields Person",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -28986,7 +30511,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Composite StructureWithOptionalFields Person",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -28996,7 +30526,12 @@
             "r": "t",
             "text": "Arrow schema:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Composite StructureWithOptionalFields Person",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -29013,7 +30548,12 @@
           "      child 1, value: string",
           "-- schema metadata --",
           "opcua-arrow: '1'"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Composite StructureWithOptionalFields Person",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -29023,14 +30563,24 @@
             "r": "t",
             "text": "Example value:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Composite StructureWithOptionalFields Person",
+          "b": 4
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "StructValue(fields={'Name': 'Zed', 'Age': 9, 'Email': None}, type_name='Person')"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Composite StructureWithOptionalFields Person",
+          "b": 5
+        }
       },
       {
         "t": "annex-clause",
@@ -29062,7 +30612,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Composite dense Union Measurement",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -29358,7 +30913,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Composite dense Union Measurement",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -29368,7 +30928,12 @@
             "r": "t",
             "text": "Arrow schema:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Composite dense Union Measurement",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -29386,7 +30951,12 @@
           "          child 1, Y: double not null",
           "-- schema metadata --",
           "opcua-arrow: '1'"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Composite dense Union Measurement",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -29396,14 +30966,24 @@
             "r": "t",
             "text": "Example value:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Composite dense Union Measurement",
+          "b": 4
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "UnionValue(field_name='AsText', value=None)"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Composite dense Union Measurement",
+          "b": 5
+        }
       },
       {
         "t": "annex-clause",
@@ -29435,7 +31015,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Worked structured DataType Envelope",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -30805,7 +32390,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Worked structured DataType Envelope",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -30815,7 +32405,12 @@
             "r": "t",
             "text": "Arrow schema:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Worked structured DataType Envelope",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -30874,7 +32469,12 @@
           "          child 7, binary: binary",
           "-- schema metadata --",
           "opcua-arrow: '1'"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Worked structured DataType Envelope",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -30884,7 +32484,12 @@
             "r": "t",
             "text": "Example value:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Worked structured DataType Envelope",
+          "b": 4
+        }
       },
       {
         "t": "code",
@@ -30901,7 +32506,12 @@
           "                                                                type_name='Point')),",
           "                    'Tags': ['x', None, 'z']},",
           "            type_name='Envelope')"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Worked structured DataType Envelope",
+          "b": 5
+        }
       },
       {
         "t": "para",
@@ -30911,7 +32521,12 @@
             "r": "t",
             "text": "<!-- END GENERATED: type-reference -->"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
+          "s": "Worked structured DataType Envelope",
+          "b": 6
+        }
       }
     ]
   },

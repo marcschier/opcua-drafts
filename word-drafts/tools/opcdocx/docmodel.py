@@ -192,3 +192,35 @@ def plain_text(runs):
         elif kind == 'br':
             out.append(' ')
     return ''.join(out)
+
+
+# --------------------------------------------------------------------------- provenance
+
+
+def source_key(block, region, index):
+    """The stable address of a block, as a string.
+
+    A block parsed out of markdown carries `src` and is addressed by file, section and
+    ordinal — an address that survives editing the paragraph above it. A generated block
+    has no markdown behind it and is addressed by its position in the region, which is
+    all the address it can have and all it needs: nothing will ever be written back to it.
+    """
+    src = block.get('src')
+    if src:
+        return 'md\x1f%s\x1f%s\x1f%s' % (src['f'], src['s'], src['b'])
+    return 'gen\x1f%s\x1f%d\x1f%s' % (region, index, block.get('t', '?'))
+
+
+def owner_of(block):
+    """Which artifact a reviewer's edit to this block belongs in.
+
+    `markdown` is the only answer the ingest can act on. The rest are reported, naming
+    the artifact that really owns the text, because applying an edit to the wrong file
+    is worse than not applying it and saying so.
+    """
+    src = block.get('src')
+    if src and src.get('f'):
+        return 'markdown'
+    if block.get('t') in ('nodetable', 'enumtable', 'methodtable'):
+        return 'nodeset'
+    return 'generated'

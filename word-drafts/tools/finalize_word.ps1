@@ -113,4 +113,10 @@ if (-not $KeepOpen) {
     $tools = Split-Path -Parent $PSCommandPath
     python (Join-Path $tools 'arm_track_changes.py') $full
     if ($LASTEXITCODE -ne 0) { throw 'could not re-arm change tracking' }
+
+    # Word adds paragraph ids of its own to the template's retained paragraphs. The
+    # sidecar has to know about them, or the ingest would read a mark on the cover page
+    # as text the reviewer wrote.
+    python (Join-Path $tools 'sync_provenance.py') $full
+    if ($LASTEXITCODE -ne 0) { throw 'could not sync the provenance sidecar' }
 }

@@ -23,6 +23,10 @@ VT_NS = 'http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes'
 CORE_NS = 'http://schemas.openxmlformats.org/package/2006/metadata/core-properties'
 DC_NS = 'http://purl.org/dc/elements/1.1/'
 
+# The one fmtid every Word custom property carries.
+CUSTOM_PROPS_NS = CUSTOM_NS
+FMTID = '{D5CDD505-2E9C-101B-9397-08002B2CF9AE}'
+
 # A fixed timestamp keeps the build byte-reproducible, so a clean git diff proves the
 # change is exactly the one intended.
 FIXED_ZIP_DATE = (2026, 1, 1, 0, 0, 0)
@@ -110,6 +114,11 @@ class Package:
                 pass
         return best
 
+    def para_ids(self):
+        """Every `w14:paraId` already present, keyed to nothing — just the taken names."""
+        attr = q('w14:paraId')
+        return {p.get(attr) for p in self.document.iter(q('w:p')) if p.get(attr)}
+
     def add_relationship(self, rel_type, target, *, mode=None):
         rid = 'rId%d' % self._next_rel
         self._next_rel += 1
@@ -188,13 +197,28 @@ class Package:
     # ------------------------------------------------------------------ properties
 
     def set_custom_properties(self, values):
-        data = self.parts.get('docProps/custom.xml')
-        root = oxml.parse(data)
+        """Set the template's custom properties, adding any the template does not define.
+
+        The template ships the properties its cover and headers read. The build adds a
+        few of its own — which specification this is and which source revision it was
+        rendered from — so that a document coming back from a reviewer can say what it
+        was built from instead of being guessed at.
+        """
+        root = oxml.parse(self.parts.get('docProps/custom.xml'))
+        remaining = dict(values)
         for prop in root:
             name = prop.get('name')
-            if name in values:
+            if name in remaining:
                 for child in prop:
-                    child.text = values[name]
+                    child.text = remaining.pop(name)
+        next_pid = max([int(p.get('pid') or 1) for p in root] or [1]) + 1
+        for name, value in remaining.items():
+            prop = etree.SubElement(root, '{%s}property' % CUSTOM_PROPS_NS)
+            prop.set('fmtid', FMTID)
+            prop.set('pid', str(next_pid))
+            prop.set('name', name)
+            etree.SubElement(prop, '{%s}lpwstr' % VT_NS).text = value
+            next_pid += 1
         self.parts['docProps/custom.xml'] = _xml(root)
 
     def set_core_properties(self, *, title=None, subject=None, creator=None,

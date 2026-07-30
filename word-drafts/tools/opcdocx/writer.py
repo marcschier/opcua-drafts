@@ -3,9 +3,18 @@
 Numbering is Word's job: headings carry no literal clause number, table and figure
 captions carry a SEQ field, and every cross-reference is a REF field over a bookmark.
 That is what makes the produced document renumber itself correctly when a clause moves.
+
+Every paragraph is stamped with a `w14:paraId` derived from the block's source address
+rather than left for Word to invent. Word preserves an id it finds and only assigns one
+where it is missing, so after a reviewer's round trip a paragraph with a known id is
+traceable to the markdown that produced it, and a paragraph with an unknown id is one the
+reviewer created. That is what makes a marked-up document ingestible.
 """
 
+import hashlib
+
 from . import contract
+from . import docmodel as dm
 from . import oxml
 from .oxml import (bookmark_end, bookmark_start, cell, cell_paragraph, paragraph, ref_field,
                    row, run, seq_field, table, wel)
@@ -14,10 +23,21 @@ HEADING_STYLES = {1: 'Heading1', 2: 'Heading2', 3: 'Heading3', 4: 'Heading4', 5:
 ANNEX_HEADING_STYLES = {1: 'ANNEX-heading1', 2: 'ANNEX-heading2', 3: 'ANNEX-heading3'}
 
 
+def para_id(key):
+    """An 8-hex-digit `w14:paraId` derived deterministically from a source address.
+
+    Word treats `00000000` as absent and reserves ids with the high bit set, so the
+    digest is masked into `00000001`..`7FFFFFFF`.
+    """
+    digest = hashlib.blake2b(key.encode('utf-8'), digest_size=8).digest()
+    value = int.from_bytes(digest, 'big') & 0x7FFFFFFF
+    return '%08X' % (value or 1)
+
+
 class Writer:
     """Turns docmodel blocks into body elements and keeps the bookmark bookkeeping."""
 
-    def __init__(self, bookmarks, *, model=None, doc_ns_index=2):
+    def __init__(self, bookmarks, *, model=None, doc_ns_index=2, reserved_ids=()):
         self.bm = bookmarks
         self.model = model
         self.doc_ns_index = doc_ns_index
@@ -25,6 +45,13 @@ class Writer:
         self.figure_seq = 0
         self.targets = {}          # docmodel id -> bookmark name
         self.pending_figures = []  # (bookmark, docmodel figure block)
+        self.para_ids = {}         # paraId -> source address, for the provenance sidecar
+        # The template is a real Word document, so its retained paragraphs already carry
+        # paraIds. Generating one that collides would make two paragraphs — one of them
+        # the reviewer's, one of them the template's — indistinguishable on the way back.
+        self.reserved_ids = set(reserved_ids)
+        self._region = ''
+        self._block_index = 0
 
     # ------------------------------------------------------------------ helpers
 
@@ -80,13 +107,53 @@ class Writer:
         handler = getattr(self, '_b_' + kind.replace('-', '_'), None)
         if handler is None:
             raise ValueError('unknown docmodel block: %r' % kind)
-        return handler(b, annex=annex)
-
-    def blocks(self, seq, *, annex=False):
-        out = []
-        for b in seq:
-            out.extend(self.block(b, annex=annex))
+        out = handler(b, annex=annex)
+        self._stamp(out, b)
         return out
+
+    def blocks(self, seq, *, annex=False, region=''):
+        out = []
+        previous, self._region = self._region, region or self._region
+        for index, b in enumerate(seq):
+            self._block_index = index
+            out.extend(self.block(b, annex=annex))
+        self._region = previous
+        return out
+
+    def _stamp(self, elements, block):
+        """Give every paragraph a paraId derived from where the block came from.
+
+        A block can emit many paragraphs — a list one per item, a table one per cell —
+        so the ordinal within the block is part of the address. Collisions are resolved
+        by rehashing rather than ignored: two paragraphs sharing an id would silently
+        merge two source locations into one on the way back.
+        """
+        self.stamp(elements, dm.source_key(block, self._region, self._block_index))
+
+    def stamp(self, elements, base):
+        """Stamp a run of elements against an explicit source key.
+
+        Some markup is built outside the block dispatcher — Annex A's node reference
+        table, the draft banner, the tables of contents. Left unstamped, Word assigns its
+        own ids on the first save and the ingest reads them as the template's, so a mark
+        on a generated node table would be reported as a template deviation instead of a
+        change to the information model.
+        """
+        for ordinal, p in enumerate(_iter_paragraphs(elements)):
+            key = '%s\x1f%d' % (base, ordinal)
+            pid = para_id(key)
+            attempt = 0
+            while pid in self.reserved_ids or (pid in self.para_ids
+                                               and self.para_ids[pid] != key):
+                attempt += 1
+                pid = para_id('%s\x1f#%d' % (key, attempt))
+            self.para_ids[pid] = key
+            p.set(oxml.q('w14:paraId'), pid)
+        return elements
+
+    def stamp_generated(self, elements, region, kind, index=0):
+        """Stamp markup that has no docmodel block, naming what generated it."""
+        return self.stamp(elements, 'gen\x1f%s\x1f%d\x1f%s' % (region, index, kind))
 
     def _b_clause(self, b, *, annex=False):
         style = HEADING_STYLES[b['level']]
@@ -351,6 +418,18 @@ class Writer:
 
 
 # --------------------------------------------------------------------------- helpers
+
+
+def _iter_paragraphs(elements):
+    """Every `w:p` an element list contains, including the ones inside table cells.
+
+    `iter()` already yields the element itself when it matches, so a top-level paragraph
+    must not be yielded separately or it would be stamped twice and keep the second id.
+    """
+    tag = oxml.q('w:p')
+    for el in elements:
+        for p in el.iter(tag):
+            yield p
 
 
 def _after_ppr(p):

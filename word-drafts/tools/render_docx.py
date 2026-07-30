@@ -168,12 +168,13 @@ def render(build, doc, template_path, out_path):
     pkg = Package(template_path)
     bookmarks = BookmarkAllocator(pkg.next_bookmark_id)
     writer = Writer(bookmarks, model=build.model,
-                    doc_ns_index=build.doc_ns_index)
+                    doc_ns_index=build.doc_ns_index,
+                    reserved_ids=pkg.para_ids())
     writer.prepare(doc)
 
     # Render every region in document order first, so the cached SEQ numbers are in the
     # order a reader sees them even before Word recalculates the fields.
-    rendered = {name: writer.blocks(doc.regions[name]) for name in doc.order}
+    rendered = {name: writer.blocks(doc.regions[name], region=name) for name in doc.order}
 
     idx = {}
     for key, text, style in MARKERS:
@@ -199,9 +200,9 @@ def render(build, doc, template_path, out_path):
     pkg.delete_range(idx['editing_guidelines'], idx['general'])
     _replace_terms(pkg, rendered, idx, ident)
     _replace_normative_references(pkg, rendered, idx)
-    _replace_scope(pkg, rendered, idx, ident)
+    _replace_scope(pkg, rendered, idx, ident, writer)
     _set_main_title(pkg, idx, ident)
-    _replace_toc(pkg, idx)
+    _replace_toc(pkg, idx, writer)
 
     substitute_tokens(pkg.body, tokens)
     _add_alias_bookmarks(pkg, bookmarks, writer, build)
@@ -218,6 +219,12 @@ def render(build, doc, template_path, out_path):
         'DocNumber': ident['docNumber'],
         'HeaderRight': '%s %s' % (ident['releaseType'], ident['version']),
         'Date completed': ident['publicationDate'],
+        # What this document was rendered from, so a copy coming back from a reviewer
+        # can be matched to its source instead of guessed at.
+        'SpecId': build.spec_id,
+        'SourceCommit': build.source_commit,
+        'SourceDigest': build.source_digest,
+        'PipelineVersion': contract.PIPELINE_VERSION,
     })
     pkg.set_core_properties(
         title='OPC UA for %s' % ident['title'],
@@ -229,6 +236,27 @@ def render(build, doc, template_path, out_path):
     pkg.force_field_update_on_open()
     pkg.enable_track_changes()
     pkg.save(out_path)
+    return _provenance(pkg, writer)
+
+
+def _provenance(pkg, writer):
+    """Map every paragraph in the *saved* document to what owns its text.
+
+    Built by walking the package rather than by trusting the writer's intent: blocks are
+    rendered for regions that are then not inserted, and the template contributes
+    paragraphs of its own. A sidecar that describes the document the reviewer will open
+    is the only one worth having.
+    """
+    from opcdocx.oxml import q
+    attr = q('w14:paraId')
+    out = {}
+    for p in pkg.document.iter(q('w:p')):
+        pid = p.get(attr)
+        if not pid:
+            continue
+        key = writer.para_ids.get(pid)
+        out[pid] = key if key is not None else 'template'
+    return out
 
 
 # --------------------------------------------------------------------------- regions
@@ -290,12 +318,13 @@ def _set_main_title(pkg, idx, ident):
     _retitle(pkg, i + 2, ident['subTitle'])
 
 
-def _replace_scope(pkg, rendered, idx, ident):
+def _replace_scope(pkg, rendered, idx, ident, writer):
     # Keep the template's own "OPC Foundation" boilerplate that closes the clause.
     start = idx['scope'] + 1
     end = start + 2                      # the two instructional paragraphs
     body = list(rendered['scope'][1:])   # drop the clause heading; the template has it
-    banner = [paragraph('NOTE', [run('NOTE   ' + ident['draftBanner'])])]
+    banner = writer.stamp_generated(
+        [paragraph('NOTE', [run('NOTE   ' + ident['draftBanner'])])], 'scope', 'config')
     pkg.replace_range(start, end, body + banner)
 
 
@@ -444,10 +473,12 @@ def _annex_node_table(writer, rows):
         ]))
     out.append(tbl)
     out.append(paragraph('spacer', []))
-    return out
+    # Generated from the UANodeSet, so a reviewer's mark here belongs in the model, not
+    # in the template it happens to sit inside.
+    return writer.stamp_generated(out, 'annex-a', 'nodetable')
 
 
-def _replace_toc(pkg, idx):
+def _replace_toc(pkg, idx, writer):
     """Replace the template's cached tables of contents with live fields."""
     from opcdocx.oxml import para_style, q
     kids = pkg.children()
@@ -463,11 +494,15 @@ def _replace_toc(pkg, idx):
                     if para_style(kids[i]) == 'HEADINGNonumber'
                     and 'Tables' in _text(kids[i]))
 
-    tables_block = [paragraph('TableofFigures',
-                              toc_field('TOC \\t "TABLE-title" \\c \\h'))]
-    figures_block = [paragraph('TableofFigures',
-                               toc_field('TOC \\t "FIGURE-title" \\c \\h'))]
-    contents_block = [paragraph('TOC1', toc_field('TOC \\o "1-3" \\h \\z \\u'))]
+    tables_block = writer.stamp_generated(
+        [paragraph('TableofFigures', toc_field('TOC \\t "TABLE-title" \\c \\h'))],
+        'frontmatter', 'toc', 0)
+    figures_block = writer.stamp_generated(
+        [paragraph('TableofFigures', toc_field('TOC \\t "FIGURE-title" \\c \\h'))],
+        'frontmatter', 'toc', 1)
+    contents_block = writer.stamp_generated(
+        [paragraph('TOC1', toc_field('TOC \\o "1-3" \\h \\z \\u'))],
+        'frontmatter', 'toc', 2)
     pkg.replace_range(tables_i + 1, end, tables_block)
     pkg.replace_range(figures_i + 1, tables_i, figures_block)
     pkg.replace_range(contents_i, figures_i, contents_block)

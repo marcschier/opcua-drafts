@@ -7,6 +7,11 @@ contract against the *produced* document, independently of the writer.
 
 TEMPLATE_VERSION = '1.01.19'
 
+# Bumped when a change alters what a produced document means to the ingest direction —
+# paragraph identity, provenance or the sidecar shape — so a marked-up copy built by an
+# older pipeline is recognised rather than misread.
+PIPELINE_VERSION = '2'
+
 # --------------------------------------------------------------------------- styles
 
 # Paragraph styles the writer is allowed to emit. Anything else is a defect: the

@@ -33,7 +33,12 @@
             "r": "t",
             "text": " exposing a CAN bus / SAE J1939 interface."
           }
-        ]
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "1 Scope",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -43,7 +48,12 @@
             "r": "t",
             "text": "The model covers:"
           }
-        ]
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "1 Scope",
+          "b": 1
+        }
       },
       {
         "t": "list",
@@ -183,7 +193,12 @@
               "text": " for multi‑set power systems."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "1 Scope",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -211,7 +226,12 @@
             "r": "t",
             "text": " companion specifications so that generator sets appear as first‑class members of the existing OPC UA machine/asset ecosystem."
           }
-        ]
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "1 Scope",
+          "b": 3
+        }
       }
     ],
     "normative-references": [
@@ -1050,7 +1070,12 @@
             "r": "t",
             "text": ") instance."
           }
-        ]
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "10 PubSub dataset bindings",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -1212,7 +1237,12 @@
               "text": " publishes its own detailed datasets."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "10.1 General binding guidance",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -1228,7 +1258,12 @@
             "r": "t",
             "text": "Real‑time monitoring, SCADA/HMI and remote operations. Low latency, small payloads, cyclic."
           }
-        ]
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "10.2 Scenario — Operational observability",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -1436,7 +1471,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "10.2 Scenario — Operational observability",
+          "b": 1
+        }
       },
       {
         "t": "clause",
@@ -1452,7 +1492,12 @@
             "r": "t",
             "text": "Trending of wear‑ and condition‑related signals together with diagnostic codes and usage counters; historized. Moderate rate."
           }
-        ]
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "10.3 Scenario — Analytics: predictive maintenance",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -1670,7 +1715,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "10.3 Scenario — Analytics: predictive maintenance",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -1680,7 +1730,12 @@
             "r": "t",
             "text": "Predictive models correlate the condition signals with usage counters and DTC history to forecast wear (bearings, injectors, cooling and lubrication systems) and to schedule service before failure."
           }
-        ]
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "10.3 Scenario — Analytics: predictive maintenance",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -1696,7 +1751,12 @@
             "r": "t",
             "text": "High‑resolution, correlated electrical and mechanical signals for baseline modelling and deviation/outlier detection (phase imbalance, load‑vs‑fuel drift, incipient faults)."
           }
-        ]
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "10.4 Scenario — Analytics: anomaly detection",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -1810,7 +1870,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "10.4 Scenario — Analytics: anomaly detection",
+          "b": 1
+        }
       },
       {
         "t": "clause",
@@ -1826,7 +1891,12 @@
             "r": "t",
             "text": "Load sharing, peak shaving, demand response and grid‑services coordination across a bus or fleet."
           }
-        ]
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "10.5 Scenario — Energy & load management and paralleling",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -1976,7 +2046,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "10.5 Scenario — Energy & load management and paralleling",
+          "b": 1
+        }
       },
       {
         "t": "clause",
@@ -1992,7 +2067,12 @@
             "r": "t",
             "text": "Protection and condition events for operators, CMMS/EAM systems and safety functions."
           }
-        ]
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "10.6 Scenario — Alarm & event distribution",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -2102,7 +2182,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "10.6 Scenario — Alarm & event distribution",
+          "b": 1
+        }
       },
       {
         "t": "clause",
@@ -2118,7 +2203,12 @@
             "r": "t",
             "text": "Multi‑site supervision, contractual reporting and regulatory / emergency‑power compliance (for example NFPA 110 test records and emissions reporting)."
           }
-        ]
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "10.7 Scenario — Fleet monitoring & compliance",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -2368,7 +2458,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "10.7 Scenario — Fleet monitoring & compliance",
+          "b": 1
+        }
       }
     ],
     "model-overview": [
@@ -2428,7 +2523,12 @@
             "r": "t",
             "text": " of diesel at full load. Between those extremes lie commercial standby, data‑center, healthcare, rental/mobile and marine products."
           }
-        ]
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "4.1 What is a generator set?",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -2438,7 +2538,12 @@
             "r": "t",
             "text": "Whatever the size, every set exposes broadly the same information: identity, ratings, an operating state and mode, engine and alternator telemetry, fuel/cooling/lubrication/battery status, protections/alarms and start/stop control. This specification captures that common information once, so that a single client can monitor and (where permitted) control any conforming set."
           }
-        ]
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "4.1 What is a generator set?",
+          "b": 1
+        }
       },
       {
         "t": "clause",
@@ -2454,7 +2559,12 @@
             "r": "t",
             "text": "This model is layered on established OPC UA building blocks rather than reinventing them:"
           }
-        ]
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "4.2 Relationship to other companion specifications",
+          "b": 0
+        }
       },
       {
         "t": "list",
@@ -2713,7 +2823,12 @@
               "text": "."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "4.2 Relationship to other companion specifications",
+          "b": 1
+        }
       },
       {
         "t": "clause",
@@ -2829,7 +2944,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "4.3 Namespaces",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -2879,7 +2999,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "4.3 Namespaces",
+          "b": 1
+        }
       },
       {
         "t": "clause",
@@ -2898,7 +3023,12 @@
         "id": "fig-gen-composition",
         "caption": "Composition of a generator set",
         "source": "mermaid",
-        "mermaid": "graph TD\n  GS[GeneratorSetType : DI.DeviceType]\n  GS -->|HasAddIn 2:Identification| ID[GeneratorIdentificationType]\n  GS -->|HasAddIn 3:MachineryBuildingBlocks| BB[Folder]\n  BB --> MIS[MachineryItemState]\n  BB --> MOM[MachineryOperationMode]\n  GS -->|OperatingState| SM[GeneratorStateMachineType]\n  GS -->|OperatingMode| OM[GeneratorOperatingModeEnum]\n  GS --> ENG[Engine : EngineType]\n  GS --> ALT[Alternator : AlternatorType]\n  GS --> CTRL[Controller : GeneratorControllerType]\n  GS --> FUEL[FuelSystem : FuelSystemType]\n  GS --> COOL[CoolingSystem : CoolingSystemType]\n  GS --> LUBE[LubricationSystem : LubricationSystemType]\n  GS --> BATT[StartingSystem : StartingSystemType]\n  GS --> RAT[Ratings folder → GeneratorRatingType]\n  ENG -->|CanInterface| CAN[J1939DiagnosticInterfaceType]\n  ENG -->|Aftertreatment| AT[ExhaustAftertreatmentType]\n  ALT --> L1[L1 : AlternatorPhaseType]\n  ALT --> L2[L2 : AlternatorPhaseType]\n  ALT --> L3[L3 : AlternatorPhaseType]\n  GS -.GeneratesEvent.-> AL[GeneratorProtectionAlarmType]"
+        "mermaid": "graph TD\n  GS[GeneratorSetType : DI.DeviceType]\n  GS -->|HasAddIn 2:Identification| ID[GeneratorIdentificationType]\n  GS -->|HasAddIn 3:MachineryBuildingBlocks| BB[Folder]\n  BB --> MIS[MachineryItemState]\n  BB --> MOM[MachineryOperationMode]\n  GS -->|OperatingState| SM[GeneratorStateMachineType]\n  GS -->|OperatingMode| OM[GeneratorOperatingModeEnum]\n  GS --> ENG[Engine : EngineType]\n  GS --> ALT[Alternator : AlternatorType]\n  GS --> CTRL[Controller : GeneratorControllerType]\n  GS --> FUEL[FuelSystem : FuelSystemType]\n  GS --> COOL[CoolingSystem : CoolingSystemType]\n  GS --> LUBE[LubricationSystem : LubricationSystemType]\n  GS --> BATT[StartingSystem : StartingSystemType]\n  GS --> RAT[Ratings folder → GeneratorRatingType]\n  ENG -->|CanInterface| CAN[J1939DiagnosticInterfaceType]\n  ENG -->|Aftertreatment| AT[ExhaustAftertreatmentType]\n  ALT --> L1[L1 : AlternatorPhaseType]\n  ALT --> L2[L2 : AlternatorPhaseType]\n  ALT --> L3[L3 : AlternatorPhaseType]\n  GS -.GeneratesEvent.-> AL[GeneratorProtectionAlarmType]",
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "5.1 Composition of a generator set",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -2940,7 +3070,12 @@
             "r": "t",
             "text": " instances."
           }
-        ]
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "5.1 Composition of a generator set",
+          "b": 1
+        }
       },
       {
         "t": "clause",
@@ -3220,7 +3355,12 @@
               "text": " add‑in carrying the network parameters, the J1939 lamp status and the active/previously‑active DTC arrays."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "5.2 Design rationale",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -3245,7 +3385,12 @@
             "r": "t",
             "text": ". This clause summarises the intent of each type."
           }
-        ]
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "6 ObjectTypes",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -3453,7 +3598,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "6.1 [GeneratorSetType](#type-GeneratorSetType)",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -3513,7 +3663,12 @@
             "r": "t",
             "text": " (SPN 247), boost, exhaust and intake temperatures, percent load/torque, etc. The referenced SPN for each variable is recorded in the variable description so that a gateway can map J1939 signals directly onto the model."
           }
-        ]
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "6.2 [EngineType](#type-EngineType) and the CAN bus / SAE J1939 interface",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -3699,7 +3854,12 @@
             "r": "t",
             "text": " corresponds to J1939 DM3/DM11."
           }
-        ]
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "6.2 [EngineType](#type-EngineType) and the CAN bus / SAE J1939 interface",
+          "b": 1
+        }
       },
       {
         "t": "clause",
@@ -3839,7 +3999,12 @@
             "r": "t",
             "text": " (mandatory); three‑phase sets populate all three."
           }
-        ]
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "6.3 [AlternatorType](#type-AlternatorType) and [AlternatorPhaseType](#type-AlternatorPhaseType)",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -3883,7 +4048,12 @@
             "r": "t",
             "text": " (battery voltage/charging current, charger status, start attempts) model the balance‑of‑plant. All are optional so the type fits both a bare air‑cooled residential set and a fully instrumented industrial set."
           }
-        ]
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "6.4 Support subsystems",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -3987,7 +4157,12 @@
             "r": "t",
             "text": ")."
           }
-        ]
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "6.5 [GeneratorControllerType](#type-GeneratorControllerType)",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -4035,7 +4210,12 @@
             "r": "t",
             "text": " (ESP/PRP/COP/LTP/DCC) and the rated power, voltage, current, frequency, speed, power factor, phase count and reference ambient/altitude."
           }
-        ]
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "6.6 [GeneratorRatingType](#type-GeneratorRatingType) and ratings",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -4063,14 +4243,24 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "6.7 [GeneratorStateMachineType](#type-GeneratorStateMachineType)",
+          "b": 0
+        }
       },
       {
         "t": "figure",
         "id": "fig-gen-statemachine",
         "caption": "The generator operating state machine",
         "source": "mermaid",
-        "mermaid": "stateDiagram-v2\n  [*] --> Off\n  Off --> Ready\n  Ready --> Starting\n  Ready --> Off\n  Starting --> Warmup\n  Starting --> Fault\n  Warmup --> Running\n  Running --> Loaded\n  Running --> Synchronizing\n  Synchronizing --> Paralleled\n  Synchronizing --> Running\n  Paralleled --> Loaded\n  Loaded --> Cooldown\n  Running --> Cooldown\n  Cooldown --> Stopping\n  Stopping --> Off\n  Running --> Fault\n  Loaded --> Fault\n  Paralleled --> Fault\n  Fault --> Off\n  Running --> EmergencyStopped\n  Loaded --> EmergencyStopped\n  Paralleled --> EmergencyStopped\n  EmergencyStopped --> Off"
+        "mermaid": "stateDiagram-v2\n  [*] --> Off\n  Off --> Ready\n  Ready --> Starting\n  Ready --> Off\n  Starting --> Warmup\n  Starting --> Fault\n  Warmup --> Running\n  Running --> Loaded\n  Running --> Synchronizing\n  Synchronizing --> Paralleled\n  Synchronizing --> Running\n  Paralleled --> Loaded\n  Loaded --> Cooldown\n  Running --> Cooldown\n  Cooldown --> Stopping\n  Stopping --> Off\n  Running --> Fault\n  Loaded --> Fault\n  Paralleled --> Fault\n  Fault --> Off\n  Running --> EmergencyStopped\n  Loaded --> EmergencyStopped\n  Paralleled --> EmergencyStopped\n  EmergencyStopped --> Off",
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "6.7 [GeneratorStateMachineType](#type-GeneratorStateMachineType)",
+          "b": 1
+        }
       },
       {
         "t": "clause",
@@ -4178,7 +4368,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "6.8 Operating modes",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -4319,7 +4514,12 @@
             "r": "t",
             "text": " instances on the corresponding measured variables."
           }
-        ]
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "6.9 Protections and alarms",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -4547,7 +4747,12 @@
             "r": "t",
             "text": " methods."
           }
-        ]
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "6.10 Transfer switches and paralleling",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -4627,7 +4832,12 @@
             "r": "t",
             "text": ")."
           }
-        ]
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "6.11 [GeneratorSystemType](#type-GeneratorSystemType)",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -4748,7 +4958,12 @@
             "r": "t",
             "text": ")."
           }
-        ]
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "7 DataTypes",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -4764,7 +4979,12 @@
             "r": "t",
             "text": "The model is vendor‑neutral. The following mapping shows how representative product tiers across the generator industry are expressed with the types defined here; products from any manufacturer map the same way."
           }
-        ]
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "8 Coverage of the industry",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -5146,7 +5366,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "8 Coverage of the industry",
+          "b": 1
+        }
       }
     ],
     "objecttypes": [
@@ -6353,7 +6578,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "9 Profiles and conformance",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -6572,7 +6802,12 @@
             "r": "t",
             "text": " — should be provided where the information is available."
           }
-        ]
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "9 Profiles and conformance",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -6599,7 +6834,12 @@
             "r": "t",
             "text": " is mandatory; every other unit may be claimed on its own."
           }
-        ]
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "9 Profiles and conformance",
+          "b": 2
+        }
       },
       {
         "t": "table",
@@ -6796,7 +7036,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "9 Profiles and conformance",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -6918,7 +7163,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "9 Profiles and conformance",
+          "b": 4
+        }
       }
     ],
     "namespaces": [

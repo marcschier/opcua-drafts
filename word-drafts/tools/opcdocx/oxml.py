@@ -9,6 +9,7 @@ the one used by Table 16 of OPC 20020.
 from lxml import etree
 
 W = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
+W14 = 'http://schemas.microsoft.com/office/word/2010/wordml'
 R = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships'
 V = 'urn:schemas-microsoft-com:vml'
 O = 'urn:schemas-microsoft-com:office:office'
@@ -17,7 +18,8 @@ A = 'http://schemas.openxmlformats.org/drawingml/2006/main'
 PIC = 'http://schemas.openxmlformats.org/drawingml/2006/picture'
 XML = 'http://www.w3.org/XML/1998/namespace'
 
-NSMAP = {'w': W, 'r': R, 'v': V, 'o': O, 'wp': WP, 'a': A, 'pic': PIC, 'xml': XML}
+NSMAP = {'w': W, 'w14': W14, 'r': R, 'v': V, 'o': O, 'wp': WP, 'a': A, 'pic': PIC,
+         'xml': XML}
 
 
 def q(tag):

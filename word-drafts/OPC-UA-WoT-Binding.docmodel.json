@@ -24,7 +24,12 @@
             "r": "t",
             "text": " (TD) and Thing Model (TM) describe an OPC UA interface, and how an OPC UA information model expressed as a NodeSet2 document and a Thing Description or Thing Model are converted into one another."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "1 Scope",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -34,7 +39,12 @@
             "r": "t",
             "text": "It has three layers, each usable on its own:"
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "1 Scope",
+          "b": 1
+        }
       },
       {
         "t": "list",
@@ -102,7 +112,12 @@
               "text": " envelope is reserved for explicit byte-exact archival or a future construct that cannot be represented structurally."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "1 Scope",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -112,7 +127,12 @@
             "r": "t",
             "text": "Out of scope: the OPC UA wire protocol itself (defined by OPC 10000-6), transport security key management, and the domain semantics of any particular companion specification. This binding references the Variables, Methods, and types that a domain model already defines; it does not re-model process data."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "1 Scope",
+          "b": 3
+        }
       },
       {
         "t": "clause",
@@ -156,7 +176,12 @@
             "r": "t",
             "text": "), and adds the following substantive capabilities. A Thing Description written against v1.00 remains valid here."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "1.1 Differences from the published OPC 10101 v1.00",
+          "b": 0
+        }
       },
       {
         "t": "list",
@@ -341,7 +366,12 @@
               "text": "), a deterministic standard-library validator, worked examples, and an iterative implementer walkthrough (Annex D) covering both conversion directions."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "1.1 Differences from the published OPC 10101 v1.00",
+          "b": 1
+        }
       },
       {
         "t": "clause",
@@ -1087,7 +1117,12 @@
             "r": "t",
             "text": " Thing Description)."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "Annex D — Implementer walkthrough (informative)",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -1156,7 +1191,12 @@
             "r": "t",
             "text": " its namespace."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "D.1 Forward: Thing Model → OPC UA types",
+          "b": 0
+        }
       },
       {
         "t": "code",
@@ -1165,7 +1205,12 @@
           "\"@type\": [\"tm:ThingModel\", \"uav:objectType\"],",
           "\"uav:browseName\": \"pump:PumpType\",",
           "\"uav:isComposite\": true"
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "D.1 Forward: Thing Model → OPC UA types",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -1191,7 +1236,12 @@
             "r": "t",
             "text": " / links)."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "D.1 Forward: Thing Model → OPC UA types",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -1244,7 +1294,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "D.1 Forward: Thing Model → OPC UA types",
+          "b": 3
+        }
       },
       {
         "t": "code",
@@ -1253,7 +1308,12 @@
           "\"pumpSpeed\": { \"@type\": \"uav:variableType\",",
           "  \"uav:browseName\": \"pump:PumpSpeed\",",
           "  \"type\": \"number\", \"uav:modellingRule\": \"Mandatory\", \"uav:scaleFactor\": 0.1 }"
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "D.1 Forward: Thing Model → OPC UA types",
+          "b": 4
+        }
       },
       {
         "t": "para",
@@ -1303,7 +1363,12 @@
             "r": "t",
             "text": ") becomes a placeholder declaration."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "D.1 Forward: Thing Model → OPC UA types",
+          "b": 5
+        }
       },
       {
         "t": "para",
@@ -1366,7 +1431,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "D.1 Forward: Thing Model → OPC UA types",
+          "b": 6
+        }
       },
       {
         "t": "code",
@@ -1375,7 +1445,12 @@
           "\"reset\": { \"@type\": \"uav:method\",",
           "  \"uav:browseName\": \"pump:Reset\",",
           "  \"uav:modellingRule\": \"Optional\" }"
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "D.1 Forward: Thing Model → OPC UA types",
+          "b": 7
+        }
       },
       {
         "t": "para",
@@ -1401,7 +1476,12 @@
             "r": "t",
             "text": ")."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "D.1 Forward: Thing Model → OPC UA types",
+          "b": 8
+        }
       },
       {
         "t": "para",
@@ -1470,7 +1550,12 @@
             "r": "t",
             "text": ")."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "D.1 Forward: Thing Model → OPC UA types",
+          "b": 9
+        }
       },
       {
         "t": "code",
@@ -1478,7 +1563,12 @@
         "lines": [
           "\"overTemperature\": { \"@type\": \"uav:eventType\", \"uav:isEvent\": true,",
           "  \"uav:browseName\": \"pump:OverTemperatureEventType\" }"
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "D.1 Forward: Thing Model → OPC UA types",
+          "b": 10
+        }
       },
       {
         "t": "para",
@@ -1512,7 +1602,12 @@
             "r": "t",
             "text": " → an event MonitoredItem."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "D.1 Forward: Thing Model → OPC UA types",
+          "b": 11
+        }
       },
       {
         "t": "para",
@@ -1699,7 +1794,12 @@
             "r": "t",
             "text": ")."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "D.1 Forward: Thing Model → OPC UA types",
+          "b": 12
+        }
       },
       {
         "t": "para",
@@ -1730,7 +1830,12 @@
             "r": "t",
             "text": " are built."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "D.1 Forward: Thing Model → OPC UA types",
+          "b": 13
+        }
       },
       {
         "t": "clause",
@@ -1799,7 +1904,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "D.2 Forward: Thing Description → OPC UA instance",
+          "b": 0
+        }
       },
       {
         "t": "code",
@@ -1808,7 +1918,12 @@
           "\"@type\": [\"Thing\", \"uav:object\"],",
           "\"uav:browseName\": \"pump:Pump\",",
           "\"uav:id\": \"nsu=...;s=Pump\""
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "D.2 Forward: Thing Description → OPC UA instance",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -1872,7 +1987,12 @@
             "r": "t",
             "text": ")."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "D.2 Forward: Thing Description → OPC UA instance",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -1935,7 +2055,12 @@
             "r": "t",
             "text": " compiles to a service call."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "D.2 Forward: Thing Description → OPC UA instance",
+          "b": 3
+        }
       },
       {
         "t": "code",
@@ -1943,7 +2068,12 @@
         "lines": [
           "\"pumpSpeed\": { \"@type\": \"uav:variable\", \"uav:id\": \"nsu=...;s=PumpSpeed\", \"readOnly\": true,",
           "  \"observable\": true, \"forms\": [{ \"op\": [\"readproperty\",\"observeproperty\"] }] }"
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "D.2 Forward: Thing Description → OPC UA instance",
+          "b": 4
+        }
       },
       {
         "t": "para",
@@ -1985,7 +2115,12 @@
             "r": "t",
             "text": " → a Subscription MonitoredItem. The operation advertises observation through the WoT binding; it does not define whether the Variable is technically monitorable in OPC UA, because any Variable may be monitored when the Server permits it."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "D.2 Forward: Thing Description → OPC UA instance",
+          "b": 5
+        }
       },
       {
         "t": "para",
@@ -2048,7 +2183,12 @@
             "r": "t",
             "text": ")."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "D.2 Forward: Thing Description → OPC UA instance",
+          "b": 6
+        }
       },
       {
         "t": "para",
@@ -2117,7 +2257,12 @@
             "r": "t",
             "text": ")."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "D.2 Forward: Thing Description → OPC UA instance",
+          "b": 7
+        }
       },
       {
         "t": "clause",
@@ -2157,7 +2302,12 @@
             "r": "t",
             "text": " in the normal case."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "D.3 Reverse: OPC UA AddressSpace / NodeSet2 → Thing Model / Thing Description",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -2252,7 +2402,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "D.3 Reverse: OPC UA AddressSpace / NodeSet2 → Thing Model / Thing Description",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -2449,7 +2604,12 @@
             "r": "t",
             "text": ")."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "D.3 Reverse: OPC UA AddressSpace / NodeSet2 → Thing Model / Thing Description",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -2457,7 +2617,12 @@
         "lines": [
           "Variable 1:PumpSpeed (DataType Double, CurrentRead, Mandatory)",
           "→ \"pumpSpeed\": { \"@type\":\"uav:variableType\", \"type\":\"number\", \"readOnly\":true, \"uav:modellingRule\":\"Mandatory\" }"
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "D.3 Reverse: OPC UA AddressSpace / NodeSet2 → Thing Model / Thing Description",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -2607,7 +2772,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "D.3 Reverse: OPC UA AddressSpace / NodeSet2 → Thing Model / Thing Description",
+          "b": 4
+        }
       },
       {
         "t": "para",
@@ -2694,7 +2864,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "D.3 Reverse: OPC UA AddressSpace / NodeSet2 → Thing Model / Thing Description",
+          "b": 5
+        }
       },
       {
         "t": "para",
@@ -2741,7 +2916,12 @@
             "r": "t",
             "text": ", the namespace/model/alias tables, and complete records for every node. Values and XML extensions are individual XML fragments. Reconstruct this projection and compare it with the source before reporting success."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "D.3 Reverse: OPC UA AddressSpace / NodeSet2 → Thing Model / Thing Description",
+          "b": 6
+        }
       },
       {
         "t": "para",
@@ -2764,7 +2944,12 @@
             "r": "t",
             "text": " when Step 5 is complete. Emit it only when the caller explicitly requests byte-exact archival or when a future/unsupported construct demonstrably cannot be represented by the supported native profile, and report that fallback."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "D.3 Reverse: OPC UA AddressSpace / NodeSet2 → Thing Model / Thing Description",
+          "b": 7
+        }
       },
       {
         "t": "para",
@@ -2795,7 +2980,12 @@
             "r": "t",
             "text": " forbidden reproduces every member declaration, modelling rule, unit, reference, value, DataType definition, permission, alias and extension. This envelope-free check is the conformance proof; an optional archival check may separately verify byte identity."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "D.3 Reverse: OPC UA AddressSpace / NodeSet2 → Thing Model / Thing Description",
+          "b": 8
+        }
       }
     ],
     "model-overview": [
@@ -2813,14 +3003,24 @@
             "r": "t",
             "text": "The terms this specification adds to a Thing Description are identified by the namespace"
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "4 Namespace and prefix",
+          "b": 0
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "http://opcfoundation.org/UA/WoT-Binding/"
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "4 Namespace and prefix",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -2865,7 +3065,12 @@
             "r": "t",
             "text": " rebind the prefix to any other namespace."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "4 Namespace and prefix",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -2887,7 +3092,12 @@
             "r": "t",
             "text": "This section defines the preserved OPC 10101 vocabulary and its service, URI, access-level, and security mappings."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "5 Preserved OPC 10101 vocabulary and service mappings",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -3064,7 +3274,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "5.1 Node and path terms",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -3169,14 +3384,24 @@
             "r": "t",
             "text": " string that names its namespace by URI:"
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "5.1.1 Portable identity (ExpandedNodeId)",
+          "b": 0
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "nsu=<NamespaceUri>;<idtype>=<id>"
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "5.1.1 Portable identity (ExpandedNodeId)",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -3243,7 +3468,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "5.1.1 Portable identity (ExpandedNodeId)",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -3310,7 +3540,12 @@
             "r": "t",
             "text": " table."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "5.1.1 Portable identity (ExpandedNodeId)",
+          "b": 3
+        }
       },
       {
         "t": "clause",
@@ -3335,14 +3570,24 @@
             "r": "t",
             "text": ":"
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "5.1.2 NamespaceUri-qualified model names",
+          "b": 0
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "<prefix>:<BrowseName>"
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "5.1.2 NamespaceUri-qualified model names",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -3425,7 +3670,12 @@
             "r": "t",
             "text": " is bound to that model's NamespaceUri."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "5.1.2 NamespaceUri-qualified model names",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -3443,7 +3693,12 @@
             "r": "t",
             "text": " names used throughout this specification come from this context binding:"
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "5.1.2 NamespaceUri-qualified model names",
+          "b": 3
+        }
       },
       {
         "t": "code",
@@ -3453,7 +3708,12 @@
           "  \"https://www.w3.org/2022/wot/td/v1.1\",",
           "  { \"pump\": \"http://example.com/demo/pump\" }",
           "]"
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "5.1.2 NamespaceUri-qualified model names",
+          "b": 4
+        }
       },
       {
         "t": "para",
@@ -3496,7 +3756,12 @@
             "r": "t",
             "text": " replace an ExpandedNodeId for an arbitrary Object, Variable, Method, or other instance Node, because multiple instances may have the same NamespaceUri-qualified BrowseName."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "5.1.2 NamespaceUri-qualified model names",
+          "b": 5
+        }
       },
       {
         "t": "para",
@@ -3506,7 +3771,12 @@
             "r": "t",
             "text": "An author:"
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "5.1.2 NamespaceUri-qualified model names",
+          "b": 6
+        }
       },
       {
         "t": "list",
@@ -3590,7 +3860,12 @@
               "text": " assume that textual equality of two compact names proves identity, because different documents may bind different prefixes to the same NamespaceUri."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "5.1.2 NamespaceUri-qualified model names",
+          "b": 7
+        }
       },
       {
         "t": "para",
@@ -3627,7 +3902,12 @@
             "r": "t",
             "text": " invent a NodeId. When the compact model name and ExpandedNodeId resolve to different Nodes, the document is invalid."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "5.1.2 NamespaceUri-qualified model names",
+          "b": 8
+        }
       },
       {
         "t": "para",
@@ -3649,7 +3929,12 @@
             "r": "t",
             "text": " declares the naming namespace of the type being authored; it does not by itself identify another model concept."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "5.1.2 NamespaceUri-qualified model names",
+          "b": 9
+        }
       },
       {
         "t": "clause",
@@ -3669,14 +3954,24 @@
             "r": "t",
             "text": " is a QualifiedName. In WoT documents, the preferred portable presentation is the context-prefix form:"
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "5.1.3 Portable QualifiedName",
+          "b": 0
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "<prefix>:<name>"
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "5.1.3 Portable QualifiedName",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -3703,7 +3998,12 @@
             "r": "t",
             "text": " resolve that prefix before constructing the OPC UA QualifiedName; it shall not pass the compact presentation unchanged to an OPC 10000-6 decoder."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "5.1.3 Portable QualifiedName",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -3733,14 +4033,24 @@
             "r": "t",
             "text": " form. A BrowseName in any other namespace uses:"
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "5.1.3 Portable QualifiedName",
+          "b": 3
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "nsu=<percent-encoded NamespaceUri>;<name>"
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "5.1.3 Portable QualifiedName",
+          "b": 4
+        }
       },
       {
         "t": "para",
@@ -3750,7 +4060,12 @@
             "r": "t",
             "text": "For example:"
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "5.1.3 Portable QualifiedName",
+          "b": 5
+        }
       },
       {
         "t": "code",
@@ -3759,7 +4074,12 @@
           "InputArguments",
           "pump:OverTemperatureEventType",
           "nsu=http://example.com/demo/pump;OverTemperatureEventType"
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "5.1.3 Portable QualifiedName",
+          "b": 6
+        }
       },
       {
         "t": "para",
@@ -3827,7 +4147,12 @@
             "r": "t",
             "text": " values because a namespace index is session/document local."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "5.1.3 Portable QualifiedName",
+          "b": 7
+        }
       },
       {
         "t": "para",
@@ -3891,7 +4216,12 @@
             "r": "t",
             "text": " table."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "5.1.3 Portable QualifiedName",
+          "b": 8
+        }
       },
       {
         "t": "clause",
@@ -3915,7 +4245,12 @@
             "r": "t",
             "text": " of a Thing or affordance is annotated to record which NodeClass it projects."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "5.2 Type-annotation terms",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -4097,7 +4432,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "5.2 Type-annotation terms",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -4270,7 +4610,12 @@
             "r": "t",
             "text": " is present."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "5.2 Type-annotation terms",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -4424,7 +4769,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "5.3 Component reference terms",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -4586,7 +4936,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "5.3 Component reference terms",
+          "b": 1
+        }
       },
       {
         "t": "code",
@@ -4604,7 +4959,12 @@
           "  { \"rel\": \"ua:HasOrderedComponent\", \"href\": \"nsu=http://example.com/demo/pump;s=Stage_2\",",
           "    \"uav:refId\": \"i=49\", \"uav:refName\": \"Stage_2\" }",
           "]"
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "5.3 Component reference terms",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -4659,7 +5019,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "5.3 Component reference terms",
+          "b": 3
+        }
       },
       {
         "t": "clause",
@@ -4684,7 +5049,12 @@
             "r": "t",
             "text": " appear at form level."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "5.4 Runtime Node and DataType mapping terms",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -4888,7 +5258,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "5.4 Runtime Node and DataType mapping terms",
+          "b": 1
+        }
       },
       {
         "t": "code",
@@ -4897,7 +5272,12 @@
           "\"uav:mapToTypeName\": \"pump:MeasurementDataType\",",
           "\"uav:mapToType\": \"nsu=http://example.com/demo/pump;i=3010\",",
           "\"uav:mapByFieldPath\": \"Value\""
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "5.4 Runtime Node and DataType mapping terms",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -4912,7 +5292,12 @@
             "r": "t",
             "text": " The compact name conveys which DataType concept is intended; the ExpandedNodeId remains mandatory and definitive for runtime DataType resolution and field decoding."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "5.4 Runtime Node and DataType mapping terms",
+          "b": 3
+        }
       },
       {
         "t": "clause",
@@ -4928,14 +5313,24 @@
             "r": "t",
             "text": "The OPC UA client/server address of a Thing follows this grammar:"
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "5.5 URI, base, and href rules",
+          "b": 0
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "opc.tcp://<address>:<port>[/<resourcePath>]/?id=<nodeId>"
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "5.5 URI, base, and href rules",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -5000,7 +5395,12 @@
             "r": "t",
             "text": ")."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "5.5 URI, base, and href rules",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -5094,7 +5494,12 @@
             "r": "t",
             "text": " prefix."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "5.5 URI, base, and href rules",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -5247,7 +5652,12 @@
             "r": "t",
             "text": " form."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "5.5 URI, base, and href rules",
+          "b": 4
+        }
       },
       {
         "t": "clause",
@@ -5271,7 +5681,12 @@
             "r": "t",
             "text": " term. The mapping is fixed:"
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "5.6 Service mappings (Read, Write, Observe, Call)",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -5355,7 +5770,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "5.6 Service mappings (Read, Write, Observe, Call)",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -5390,7 +5810,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "5.6 Service mappings (Read, Write, Observe, Call)",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -5448,7 +5873,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "5.6 Service mappings (Read, Write, Observe, Call)",
+          "b": 3
+        }
       },
       {
         "t": "clause",
@@ -5464,7 +5894,12 @@
             "r": "t",
             "text": "An OPC UA Server's endpoint security may be described implicitly with the standard WoT schemes or explicitly with the OPC UA schemes."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "5.7 Security schemes",
+          "b": 0
+        }
       },
       {
         "t": "list",
@@ -5703,7 +6138,12 @@
               "text": " scheme) in the same document."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "5.7 Security schemes",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -5737,7 +6177,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "5.7 Security schemes",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -5824,7 +6269,12 @@
             "r": "t",
             "text": " order."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "5.8 Namespaces in the @context",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -5878,7 +6328,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "5.8 Namespaces in the @context",
+          "b": 1
+        }
       },
       {
         "t": "clause",
@@ -6024,14 +6479,24 @@
             "r": "t",
             "text": ") carry the browse names and the Read/Observe/Call forms."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "5.9 Address-space example",
+          "b": 0
+        }
       },
       {
         "t": "figure",
         "id": "fig-wotb-mapping",
         "caption": "A Thing Description and the OPC UA Nodes it maps to",
         "source": "mermaid",
-        "mermaid": "graph LR\n  subgraph WoT[\"WoT Thing Description (left)\"]\n    direction TB\n    T[\"Thing @type=uav:object<br/>uav:browseName pump:Pump\"]\n    P[\"property pumpSpeed<br/>@type uav:variable<br/>type number, readOnly, observable<br/>form op readproperty/observeproperty\"]\n    A[\"action reset<br/>@type uav:method<br/>form op invokeaction\"]\n    T --> P\n    T --> A\n  end\n  subgraph UA[\"OPC UA AddressSpace (right)\"]\n    direction TB\n    O[\"Object 1:Pump<br/>(HasTypeDefinition ...)\"]\n    V[\"Variable 1:PumpSpeed<br/>DataType Double, AccessLevel CurrentRead\"]\n    M[\"Method 1:Reset\"]\n    O -- HasComponent --> V\n    O -- HasComponent --> M\n  end\n  T -. projects to .-> O\n  P -. Read/Observe .-> V\n  A -. Call .-> M"
+        "mermaid": "graph LR\n  subgraph WoT[\"WoT Thing Description (left)\"]\n    direction TB\n    T[\"Thing @type=uav:object<br/>uav:browseName pump:Pump\"]\n    P[\"property pumpSpeed<br/>@type uav:variable<br/>type number, readOnly, observable<br/>form op readproperty/observeproperty\"]\n    A[\"action reset<br/>@type uav:method<br/>form op invokeaction\"]\n    T --> P\n    T --> A\n  end\n  subgraph UA[\"OPC UA AddressSpace (right)\"]\n    direction TB\n    O[\"Object 1:Pump<br/>(HasTypeDefinition ...)\"]\n    V[\"Variable 1:PumpSpeed<br/>DataType Double, AccessLevel CurrentRead\"]\n    M[\"Method 1:Reset\"]\n    O -- HasComponent --> V\n    O -- HasComponent --> M\n  end\n  T -. projects to .-> O\n  P -. Read/Observe .-> V\n  A -. Call .-> M",
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "5.9 Address-space example",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -6192,7 +6657,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "5.9 Address-space example",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -6231,7 +6701,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "6 Model and platform vocabulary",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -6319,14 +6794,24 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "6.1 Composition and events",
+          "b": 0
+        }
       },
       {
         "t": "code",
         "lang": "jsonc",
         "lines": [
           "\"@type\": [\"tm:ThingModel\", \"uav:objectType\"], \"uav:isComposite\": true, \"uav:contains\": [\"Impeller\"]"
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "6.1 Composition and events",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -6349,7 +6834,12 @@
             "r": "t",
             "text": "; a converter expands that part into a component sub-node rather than a scalar value."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "6.1 Composition and events",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -6441,7 +6931,12 @@
             "r": "t",
             "text": " set both for symmetry with the other NodeClass annotations."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "6.1 Composition and events",
+          "b": 3
+        }
       },
       {
         "t": "code",
@@ -6449,7 +6944,12 @@
         "lines": [
           "\"events\": { \"overTemperature\": { \"@type\": \"uav:eventType\", \"uav:isEvent\": true,",
           "  \"uav:browseName\": \"pump:OverTemperatureEventType\" } }"
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "6.1 Composition and events",
+          "b": 4
+        }
       },
       {
         "t": "para",
@@ -6512,7 +7012,12 @@
             "r": "t",
             "text": " becomes an OPC UA event MonitoredItem."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "6.1 Composition and events",
+          "b": 5
+        }
       },
       {
         "t": "clause",
@@ -6552,7 +7057,12 @@
             "r": "t",
             "text": " to express an exact OPC UA ReferenceType. These forms exist because an OPC UA type graph is more than containment: types reference each other hierarchically and non-hierarchically, and a faithful Thing Model must record which ReferenceType connects them."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "6.2 Links and references",
+          "b": 0
+        }
       },
       {
         "t": "list",
@@ -6744,7 +7254,12 @@
               "text": "."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "6.2 Links and references",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -6779,7 +7294,12 @@
             "r": "t",
             "text": " resolve to the same ReferenceType Node."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "6.2 Links and references",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -6794,7 +7314,12 @@
           "    \"uav:refId\": \"nsu=http://example.com/demo/pump;i=5001\" },",
           "  { \"rel\": \"uav:componentOf\", \"href\": \"urn:machine:line-01\" }",
           "]"
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "6.2 Links and references",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -6833,7 +7358,12 @@
             "r": "t",
             "text": ", with the ExpandedNodeId available for definitive resolution; the third targets a concrete parent instance and therefore uses an instance IRI rather than a compact model name."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "6.2 Links and references",
+          "b": 4
+        }
       },
       {
         "t": "clause",
@@ -6909,7 +7439,12 @@
             "r": "t",
             "text": ")."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "6.3 Containment",
+          "b": 0
+        }
       },
       {
         "t": "code",
@@ -6917,7 +7452,12 @@
         "lines": [
           "// composite:            // part:",
           "\"uav:contains\": [\"Impeller\"]   \"uav:containedIn\": \"PumpType\""
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "6.3 Containment",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -6964,7 +7504,12 @@
             "r": "t",
             "text": " tree."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "6.3 Containment",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -7040,7 +7585,12 @@
             "r": "t",
             "text": " be an absolute IRI."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "6.4 Type identity and naming",
+          "b": 0
+        }
       },
       {
         "t": "code",
@@ -7049,7 +7599,12 @@
           "\"uav:nameNamespace\": \"http://example.com/demo/pump\",",
           "\"uav:congruentTypeName\": \"pump:PumpType\",",
           "\"uav:congruentType\": \"nsu=http://example.com/demo/pump;i=1001\""
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "6.4 Type identity and naming",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -7072,7 +7627,12 @@
             "r": "t",
             "text": " conveys the model concept, while the ExpandedNodeId definitively identifies the congruent type so independently authored prefixes do not affect comparison."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "6.4 Type identity and naming",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -7148,7 +7708,12 @@
             "r": "t",
             "text": " (integer ≥ 0) — the number of fractional decimal places retained after scaling. These capture the analog-scaling model facts a raw transport value needs to become an engineering value."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "6.5 Units, quantity kinds, and scaling",
+          "b": 0
+        }
       },
       {
         "t": "code",
@@ -7156,7 +7721,12 @@
         "lines": [
           "\"pumpSpeed\": { \"type\": \"number\", \"unit\": \"qudt-quantitykind:AngularVelocity\",",
           "  \"uav:unitProperty\": \"/properties/pumpSpeed/unit\", \"uav:scaleFactor\": 0.1, \"uav:decimalPlaces\": 2 }"
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "6.5 Units, quantity kinds, and scaling",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -7195,7 +7765,12 @@
             "r": "t",
             "text": ", two decimals); the unit string is located by the JSON Pointer, and the quantity kind is angular velocity."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "6.5 Units, quantity kinds, and scaling",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -7321,7 +7896,12 @@
             "r": "t",
             "text": ")."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "6.6 Groups and membership",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -7352,7 +7932,12 @@
             "r": "t",
             "text": " would expose the target protocol model instead of the WoT document model."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "6.6 Groups and membership",
+          "b": 1
+        }
       },
       {
         "t": "code",
@@ -7360,7 +7945,12 @@
         "lines": [
           "\"uav:propertyGroups\": [{ \"title\": \"Operational\" }],",
           "\"pumpSpeed\": { \"uav:memberOf\": \"Operational\" }"
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "6.6 Groups and membership",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -7391,7 +7981,12 @@
             "r": "t",
             "text": " property group, which a converter can expose as an organizing folder over the projected Variables."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "6.6 Groups and membership",
+          "b": 3
+        }
       },
       {
         "t": "clause",
@@ -7485,7 +8080,12 @@
             "r": "t",
             "text": ")."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "6.7 Metadata, semantics, and configuration",
+          "b": 0
+        }
       },
       {
         "t": "code",
@@ -7493,7 +8093,12 @@
         "lines": [
           "\"uav:semanticId\": \"http://example.com/ontology/Pump\",",
           "\"uav:metadata\": { \"revision\": 3, \"maintainer\": \"Modeling WG\" }"
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "6.7 Metadata, semantics, and configuration",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -7508,7 +8113,12 @@
             "r": "t",
             "text": " The type carries a stable semantic identity and a verbatim metadata bag; a converter preserves both even though it does not act on the metadata."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "6.7 Metadata, semantics, and configuration",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -7568,14 +8178,24 @@
             "r": "t",
             "text": ", closed content), corresponding to whether the ObjectType is extensible."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "6.8 Inheritance and open content",
+          "b": 0
+        }
       },
       {
         "t": "code",
         "lang": "jsonc",
         "lines": [
           "\"uav:includeInherited\": true, \"uav:additionalProperties\": false"
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "6.8 Inheritance and open content",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -7590,7 +8210,12 @@
             "r": "t",
             "text": " The model spans inherited members, and instances are closed: a validator rejects any instance member the type does not declare."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "6.8 Inheritance and open content",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -7659,7 +8284,12 @@
             "r": "t",
             "text": " (OPC 10000-3). The modelling rule is the single most important type-level model fact: it decides whether an instance must, may, or may repeatedly instantiate the member."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "6.9 Generic mapping terms and modelling rules",
+          "b": 0
+        }
       },
       {
         "t": "code",
@@ -7667,7 +8297,12 @@
         "lines": [
           "\"serialNumber\": { \"uav:modellingRule\": \"Mandatory\" },",
           "\"stage\":        { \"uav:modellingRule\": \"MandatoryPlaceholder\" }"
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "6.9 Generic mapping terms and modelling rules",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -7706,7 +8341,12 @@
             "r": "t",
             "text": " members."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "6.9 Generic mapping terms and modelling rules",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -7766,7 +8406,12 @@
             "r": "t",
             "text": "; it carries the UANodeSet root tables and one complete structured record for every node when some source information cannot yet be expressed by the readable vocabulary."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "6.10 Native projection and preservation terms",
+          "b": 0
+        }
       },
       {
         "t": "code",
@@ -7778,7 +8423,12 @@
           "  \"nodes\": [{ \"nodeClass\": \"ObjectType\", \"nodeId\": \"ns=1;i=1001\",",
           "              \"browseName\": \"1:PumpType\", \"references\": [ ... ] }]",
           "}"
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "6.10 Native projection and preservation terms",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -7793,7 +8443,12 @@
             "r": "t",
             "text": " This fallback is used only when the semantic/readable vocabulary is incomplete for the source NodeSet. It covers every field of the UANodeSet schema and is reconstructed and compared before a converter claims completeness."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "6.10 Native projection and preservation terms",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -7855,7 +8510,12 @@
             "r": "t",
             "text": " verify its digest before use."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "6.10 Native projection and preservation terms",
+          "b": 3
+        }
       },
       {
         "t": "code",
@@ -7863,7 +8523,12 @@
         "lines": [
           "\"uav:nodeSet\": { \"@type\": \"uav:nodeSet\", \"contentType\": \"application/opcua-nodeset+xml\",",
           "  \"encoding\": \"base64\", \"sha256\": \"…\", \"data\": \"…\" }"
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "6.10 Native projection and preservation terms",
+          "b": 4
+        }
       },
       {
         "t": "para",
@@ -7878,7 +8543,12 @@
             "r": "t",
             "text": " The envelope pins exact NodeSet2 bytes and their SHA-256. It is separate from the native completeness proof and is not required for current UANodeSet constructs."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "6.10 Native projection and preservation terms",
+          "b": 5
+        }
       },
       {
         "t": "clause",
@@ -7926,7 +8596,12 @@
             "r": "t",
             "text": " treat the document as invalid rather than silently repairing it."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "7 Validation rules",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -7937,7 +8612,12 @@
             "text": "Per-term domain and range.",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "7 Validation rules",
+          "b": 1
+        }
       },
       {
         "t": "table",
@@ -8809,7 +9489,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "7 Validation rules",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -8820,7 +9505,12 @@
             "text": "Cross-cutting rules.",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "7 Validation rules",
+          "b": 3
+        }
       },
       {
         "t": "list",
@@ -9733,7 +10423,12 @@
               "text": " is a template that expands, per instance, to zero or more uniquely named members; an optional non-placeholder member is omitted per instance when absent."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "7 Validation rules",
+          "b": 4
+        }
       },
       {
         "t": "clause",
@@ -9749,7 +10444,12 @@
             "r": "t",
             "text": "A Thing Model is the class-level projection and a Thing Description is the instance-level projection of the same OPC UA constructs."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "8 Thing Description and Thing Model mapping",
+          "b": 0
+        }
       },
       {
         "t": "list",
@@ -10222,7 +10922,12 @@
               "text": ") and optional members are omitted per instance when absent."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "8 Thing Description and Thing Model mapping",
+          "b": 1
+        }
       },
       {
         "t": "clause",
@@ -10260,7 +10965,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "9 NodeSet2 and WoT conversion",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -11011,7 +11721,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "9.1 Native readable mapping",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -11116,7 +11831,12 @@
             "r": "t",
             "text": " represents:"
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "9.2 Exceptional structured `uav:nodes` projection",
+          "b": 0
+        }
       },
       {
         "t": "list",
@@ -11217,7 +11937,12 @@
               "text": " element as an individual XML fragment, not as an encoded copy of the NodeSet document."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "9.2 Exceptional structured `uav:nodes` projection",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -11265,7 +11990,12 @@
             "r": "t",
             "text": ", link, and form identities remain URI-qualified ExpandedNodeIds."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "9.2 Exceptional structured `uav:nodes` projection",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -11300,7 +12030,12 @@
             "r": "t",
             "text": " merely as a duplicate of an already-complete readable mapping is non-conformant."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "9.2 Exceptional structured `uav:nodes` projection",
+          "b": 3
+        }
       },
       {
         "t": "clause",
@@ -11316,7 +12051,12 @@
             "r": "t",
             "text": "The conversion layers are applied in this order:"
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "9.3 Layered exceptional preservation policy",
+          "b": 0
+        }
       },
       {
         "t": "list",
@@ -11450,7 +12190,12 @@
               "text": "; a test that succeeds by decoding the envelope does not prove the readable mapping plus exceptional structured projection complete."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "9.3 Layered exceptional preservation policy",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -11512,7 +12257,12 @@
             "r": "t",
             "text": " be silently resolved."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "9.3 Layered exceptional preservation policy",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -11536,7 +12286,12 @@
             "r": "t",
             "text": ", a converter synthesizes NodeSet2 from the readable members. NodeIds that the document does not supply are generated deterministically from the target namespace URI and browse path. The same document therefore yields the same identities."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "9.4 Synthesis from an authored TD or TM",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -11602,7 +12357,12 @@
             "r": "t",
             "text": " be copied into the residue."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "9.4 Synthesis from an authored TD or TM",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -11630,7 +12390,12 @@
             "r": "t",
             "text": " report an error rather than overwrite the OPC UA fact."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "9.4 Synthesis from an authored TD or TM",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -11700,7 +12465,12 @@
               "text": ", decoding it reproduces the original NodeSet2 bytes exactly after digest verification."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "9.5 Roundtrip invariants",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -11730,7 +12500,12 @@
             "r": "t",
             "text": " value is a JSON object:"
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "10.1 `uav:nodes`",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -11944,7 +12719,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "10.1 `uav:nodes`",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -12042,7 +12822,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "10.1 `uav:nodes`",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -12074,7 +12859,12 @@
             "r": "t",
             "text": " element in the Binding namespace:"
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "10.2 `WoTJsonResidue` NodeSet Extension",
+          "b": 0
+        }
       },
       {
         "t": "code",
@@ -12092,7 +12882,12 @@
           "      Encoding=\"base64\"",
           "      Sha256=\"...\">eyJocmVmbGFuZyI6ImVuIn0=</uav:Member>",
           "</uav:WoTJsonResidue>"
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "10.2 `WoTJsonResidue` NodeSet Extension",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -12179,7 +12974,12 @@
             "r": "t",
             "text": " address mapped-link extras by the source array index."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "10.2 `WoTJsonResidue` NodeSet Extension",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -12223,7 +13023,12 @@
             "r": "t",
             "text": " context object by term name rather than by the authored array position."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "10.2 `WoTJsonResidue` NodeSet Extension",
+          "b": 3
+        }
       },
       {
         "t": "clause",
@@ -12247,7 +13052,12 @@
             "r": "t",
             "text": " envelope is a JSON object with these members:"
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "10.3 Exceptional `uav:nodeSet` envelope",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -12426,7 +13236,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "10.3 Exceptional `uav:nodeSet` envelope",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -12469,7 +13284,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "10.3 Exceptional `uav:nodeSet` envelope",
+          "b": 2
+        }
       }
     ],
     "profiles": [
@@ -12487,7 +13307,12 @@
             "r": "t",
             "text": "A Server, a Thing Description author, or a converter declares conformance to the units it implements. The units are independent; a profile is a named set of units."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "11 Conformance units and profiles",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -12830,7 +13655,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "11 Conformance units and profiles",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -12840,7 +13670,12 @@
             "r": "t",
             "text": "Recommended profiles:"
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "11 Conformance units and profiles",
+          "b": 2
+        }
       },
       {
         "t": "list",
@@ -12891,7 +13726,12 @@
               "text": " — WoT-Converter plus WoT-NodeSetPreservation. For callers that explicitly require the original NodeSet2 bytes."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "11 Conformance units and profiles",
+          "b": 3
+        }
       }
     ],
     "namespaces": [
@@ -13436,7 +14276,12 @@
             "r": "t",
             "text": " members, native projection, and exceptional preservation envelope in addition to the base Thing Description schema."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "Annex A — JSON-LD context and schema (informative)",
+          "b": 0
+        }
       }
     ],
     "annex-b": [
@@ -13517,7 +14362,12 @@
               "text": " projection with no opaque preservation envelope."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "Annex B — Examples (informative)",
+          "b": 0
+        }
       }
     ],
     "annex-c": [
@@ -13535,14 +14385,24 @@
             "r": "t",
             "text": "Run the deterministic, standard-library validator from the repository root:"
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "Annex C — Validation (informative)",
+          "b": 0
+        }
       },
       {
         "t": "code",
         "lang": "bash",
         "lines": [
           "python wot-specs/WoT-Binding/tools/validate_local.py"
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "Annex C — Validation (informative)",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -13644,7 +14504,12 @@
             "r": "t",
             "text": "), and that no forbidden vendor prefix, namespace, or legacy modelling-language name appears."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+          "s": "Annex C — Validation (informative)",
+          "b": 2
+        }
       }
     ]
   },

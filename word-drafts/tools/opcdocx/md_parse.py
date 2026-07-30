@@ -99,19 +99,28 @@ def foreign_anchor_re(anchors):
 
 
 class Section:
-    """One markdown heading and the blocks under it, excluding nested subsections."""
+    """One markdown heading and the blocks under it, excluding nested subsections.
 
-    def __init__(self, level, title, key):
+    `source` and `start_line` are the section's address in the repository. They are not
+    written into the docmodel — a line number churns whenever anything above it moves,
+    which would swamp the semantic diff the docmodel exists to provide — but they let a
+    caller resolve a block back to the lines it came from, which is what turns a
+    reviewer's edit in Word into an edit in the markdown.
+    """
+
+    def __init__(self, level, title, key, *, source=None, start_line=1):
         self.level = level
         self.title = title
         self.key = key
+        self.source = source
+        self.start_line = start_line
         self.lines = []
 
     def __repr__(self):
         return 'Section(%d, %r, %d lines)' % (self.level, self.key, len(self.lines))
 
 
-def split_sections(text):
+def split_sections(text, source=None):
     """Split a markdown document into an ordered mapping of `key -> Section`.
 
     The key is the heading text with markdown emphasis intact, matching the `from`
@@ -119,11 +128,11 @@ def split_sections(text):
     """
     sections = {}
     order = []
-    preamble = Section(0, '', '__preamble__')
+    preamble = Section(0, '', '__preamble__', source=source, start_line=1)
     sections['__preamble__'] = preamble
     order.append('__preamble__')
     current = preamble
-    for line in text.splitlines():
+    for lineno, line in enumerate(text.splitlines(), start=1):
         m = HEADING_RE.match(line)
         if m and not _in_fence(current.lines):
             level = len(m.group(1))
@@ -131,7 +140,7 @@ def split_sections(text):
             key = title
             if key in sections:
                 raise ValueError('duplicate heading: %r' % key)
-            current = Section(level, title, key)
+            current = Section(level, title, key, source=source, start_line=lineno + 1)
             sections[key] = current
             order.append(key)
             continue
@@ -289,16 +298,41 @@ class BlockParser:
         self.xref_resolver = xref_resolver
         self.foreign_anchors = foreign_anchors
         self.table_captions = table_captions or {}
+        self.last_spans = []
 
     def inline(self, text):
         return parse_inline(text, xref_resolver=self.xref_resolver,
                             foreign_anchors=self.foreign_anchors)
 
-    def parse(self, lines, *, context=''):
+    def parse(self, lines, *, context='', source=None, line_offset=1):
+        """Parse markdown lines into docmodel blocks.
+
+        When `source` is given every block is stamped with the address it came from —
+        the file, the section key and the block's ordinal inside that section. That
+        address is what lets a mark made in Word be routed back to the markdown that
+        produced it. The ordinal is used rather than a line number because it is stable:
+        editing one paragraph does not renumber the ones below it.
+
+        `last_spans` records the 1-based `(first, last)` line of each block for a caller
+        that has to *edit* the source rather than just name it. It is deliberately not
+        part of the docmodel, for the same reason: it churns.
+        """
         blocks = []
+        spans = []
         i = 0
         n = len(lines)
+        state = {'start': 0, 'ordinal': 0}
+
+        def add(block, end):
+            if source is not None:
+                block['src'] = {'f': source, 's': context or '__preamble__',
+                                'b': state['ordinal']}
+            state['ordinal'] += 1
+            blocks.append(block)
+            spans.append((state['start'] + line_offset, end - 1 + line_offset))
+
         while i < n:
+            state['start'] = i
             line = lines[i]
             stripped = line.strip()
             if not stripped:
@@ -318,15 +352,15 @@ class BlockParser:
                     i += 1
                 i += 1
                 if lang == 'mermaid':
-                    blocks.append(dm.figure(None, None, source='mermaid',
-                                            mermaid='\n'.join(body)))
+                    add(dm.figure(None, None, source='mermaid',
+                                  mermaid='\n'.join(body)), i)
                 else:
-                    blocks.append(dm.codeblock(body, lang=lang))
+                    add(dm.codeblock(body, lang=lang), i)
                 continue
 
             if stripped.startswith('|'):
                 rows, i = self._read_table(lines, i)
-                blocks.append(self._table_block(rows, context))
+                add(self._table_block(rows, context), i)
                 continue
 
             bq = BLOCKQUOTE_RE.match(stripped)
@@ -335,16 +369,17 @@ class BlockParser:
                 while i < n and BLOCKQUOTE_RE.match(lines[i].strip()):
                     body.append(BLOCKQUOTE_RE.match(lines[i].strip()).group(1))
                     i += 1
-                blocks.append(dm.note(self.inline(' '.join(x for x in body if x))))
+                add(dm.note(self.inline(' '.join(x for x in body if x))), i)
                 continue
 
             if BULLET_RE.match(line) or ORDERED_RE.match(line):
                 items, ordered, i = self._read_list(lines, i)
-                blocks.append(dm.blist([self.inline(x) for x in items], ordered=ordered))
+                add(dm.blist([self.inline(x) for x in items], ordered=ordered), i)
                 continue
 
-            blocks.append(dm.para(self.inline(stripped)))
             i += 1
+            add(dm.para(self.inline(stripped)), i)
+        self.last_spans = spans
         return blocks
 
     def _read_table(self, lines, i):

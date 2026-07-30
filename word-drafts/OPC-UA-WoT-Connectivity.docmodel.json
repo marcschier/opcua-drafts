@@ -50,7 +50,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "1 Scope",
+          "b": 0
+        }
       },
       {
         "t": "list",
@@ -105,7 +110,12 @@
               "text": " whose interaction affordances are bound to protocol bindings."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "1 Scope",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -124,7 +134,12 @@
             "r": "t",
             "text": " that a server refreshes, atomically and idempotently, from the stored documents."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "1 Scope",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -203,7 +218,12 @@
             "r": "t",
             "text": ", following OPC 11030) — deprecated, not removed, so existing 1.02 clients keep working unchanged. This is a single combined model in one namespace, not a separate namespace and not a dual profile."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "1 Scope",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -231,7 +251,12 @@
             "r": "t",
             "text": "), and the concrete wire protocols of individual W3C binding templates."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "1 Scope",
+          "b": 4
+        }
       }
     ],
     "normative-references": [
@@ -970,7 +995,12 @@
             "r": "t",
             "text": " run. Representative fragments are shown and discussed below; the full files carry the complete context and forms."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "12 Worked examples (informative)",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -1002,7 +1032,12 @@
             "r": "t",
             "text": " makes a refresh project it to an OPC UA ObjectType, and each affordance becomes a member declaration with the modelling rule the TM declares."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "12.1 Thing Model → ObjectType (`examples/01-thing-model-pump.tm.jsonld`)",
+          "b": 0
+        }
       },
       {
         "t": "code",
@@ -1019,7 +1054,12 @@
           "  }",
           "},",
           "\"actions\": { \"reset\": { \"@type\": \"uav:method\", \"uav:modellingRule\": \"Optional\" } }"
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "12.1 Thing Model → ObjectType (`examples/01-thing-model-pump.tm.jsonld`)",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -1069,7 +1109,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "12.1 Thing Model → ObjectType (`examples/01-thing-model-pump.tm.jsonld`)",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -1119,7 +1164,12 @@
             "r": "t",
             "text": " — and binds each affordance to a protocol form."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "12.2 Thing Description → Object instance (`examples/02-thing-description-pump.td.jsonld`)",
+          "b": 0
+        }
       },
       {
         "t": "code",
@@ -1132,7 +1182,12 @@
           "\"properties\": { \"pumpSpeed\": { \"@type\": \"uav:variable\",",
           "  \"forms\": [ { \"href\": \"/?id=nsu=http://example.com/demo/pump;s=PumpSpeed\",",
           "              \"op\": [\"readproperty\", \"observeproperty\"] } ] } }"
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "12.2 Thing Description → Object instance (`examples/02-thing-description-pump.td.jsonld`)",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -1226,7 +1281,12 @@
             "r": "t",
             "text": ")."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "12.2 Thing Description → Object instance (`examples/02-thing-description-pump.td.jsonld`)",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -1260,7 +1320,12 @@
             "r": "t",
             "text": ", and leaves any prior projection untouched."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "12.3 Invalid Thing Description stays stored (`examples/03-invalid-thing-description.td.jsonld`)",
+          "b": 0
+        }
       },
       {
         "t": "code",
@@ -1270,7 +1335,12 @@
           "\"security\": \"missing_sc\",",
           "\"properties\": { \"pumpSpeed\": { \"forms\": [ { \"op\": [\"frobnicate\"] } ] } },",
           "\"links\": [ { \"rel\": \"type\", \"href\": \"../thingmodels/does-not-exist.tm.jsonld\" } ]"
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "12.3 Invalid Thing Description stays stored (`examples/03-invalid-thing-description.td.jsonld`)",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -1320,7 +1390,12 @@
             "r": "t",
             "text": " edge for the missing Thing Model."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "12.3 Invalid Thing Description stays stored (`examples/03-invalid-thing-description.td.jsonld`)",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -1360,7 +1435,12 @@
             "r": "t",
             "text": " rows."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "12.4 Refresh results (`examples/04-refresh-results.json`)",
+          "b": 0
+        }
       },
       {
         "t": "code",
@@ -1374,7 +1454,12 @@
           "  { \"ResourceId\": \"pump-01\",    \"Outcome\": \"Success\", \"Phase\": \"Activation\", \"LoadState\": \"Active\" },",
           "  { \"ResourceId\": \"pump-broken\",\"Outcome\": \"Failed\",  \"Phase\": \"FormatValidation\", \"LoadState\": \"Failed\" }",
           "]"
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "12.4 Refresh results (`examples/04-refresh-results.json`)",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -1412,7 +1497,12 @@
             "r": "t",
             "text": " requires."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "12.4 Refresh results (`examples/04-refresh-results.json`)",
+          "b": 2
+        }
       }
     ],
     "model-overview": [
@@ -1456,14 +1546,24 @@
             "r": "t",
             "text": " control surface."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "4 Overview and architecture",
+          "b": 0
+        }
       },
       {
         "t": "figure",
         "id": "fig-wotcon-registry",
         "caption": "Canonical documents and the projection derived from them",
         "source": "mermaid",
-        "mermaid": "graph TD\n  subgraph canonical[\"Sources of truth (canonical)\"]\n    R[WoTRegistry i=64100]\n    TDG[ThingDescriptionGroup]\n    TMG[ThingModelGroup]\n    TDF[ThingDescriptionFile - TD bytes]\n    TMF[ThingModelFile - TM bytes]\n    R --> TDG --> TDF\n    R --> TMG --> TMF\n  end\n  subgraph derived[\"Derived projection (code-behind)\"]\n    OT[ObjectType / VariableType]\n    OBJ[Object instance]\n    VARS[Variables / Methods / EventTypes]\n    BIND[Binder plans from forms]\n  end\n  TMF -- TM to types --> OT\n  TDF -- TD to instances --> OBJ\n  OBJ --> VARS\n  VARS -- forms --> BIND\n  TDF -. links rel=type .-> TMF\n  R -- HasWoTProjection --> OBJ\n  R -- Refresh / generation --> VARS"
+        "mermaid": "graph TD\n  subgraph canonical[\"Sources of truth (canonical)\"]\n    R[WoTRegistry i=64100]\n    TDG[ThingDescriptionGroup]\n    TMG[ThingModelGroup]\n    TDF[ThingDescriptionFile - TD bytes]\n    TMF[ThingModelFile - TM bytes]\n    R --> TDG --> TDF\n    R --> TMG --> TMF\n  end\n  subgraph derived[\"Derived projection (code-behind)\"]\n    OT[ObjectType / VariableType]\n    OBJ[Object instance]\n    VARS[Variables / Methods / EventTypes]\n    BIND[Binder plans from forms]\n  end\n  TMF -- TM to types --> OT\n  TDF -- TD to instances --> OBJ\n  OBJ --> VARS\n  VARS -- forms --> BIND\n  TDF -. links rel=type .-> TMF\n  R -- HasWoTProjection --> OBJ\n  R -- Refresh / generation --> VARS",
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "4 Overview and architecture",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -1536,7 +1636,12 @@
             "r": "t",
             "text": ", because it is a JSON-LD vocabulary, not an OPC UA information model."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "4 Overview and architecture",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -1593,7 +1698,12 @@
             "r": "t",
             "text": " records how it is backed by the registry without any signature change. New deployments use the registry surface directly."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "4 Overview and architecture",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -1625,7 +1735,12 @@
             "r": "t",
             "text": " vocabulary. This mirrors the xRegistry separation of registry metadata from resource content."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "4 Overview and architecture",
+          "b": 4
+        }
       },
       {
         "t": "clause",
@@ -1702,7 +1817,12 @@
             "r": "t",
             "text": "). All registry NodeIds are provisional."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "6 Information model",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -1746,7 +1866,12 @@
             "r": "t",
             "text": ")."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "6.1 Registry root — `WoTRegistryType`",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -1782,7 +1907,12 @@
             "r": "t",
             "text": ")."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "6.1 Registry root — `WoTRegistryType`",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -1792,7 +1922,12 @@
             "r": "t",
             "text": "It is the single entry point from which a client discovers every stored Thing Model and Thing Description and controls their projection."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "6.1 Registry root — `WoTRegistryType`",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -1972,7 +2107,12 @@
             "r": "t",
             "text": " to re-project on demand."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "6.1 Registry root — `WoTRegistryType`",
+          "b": 3
+        }
       },
       {
         "t": "clause",
@@ -2024,7 +2164,12 @@
             "r": "t",
             "text": " subtypes."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "6.2 Groups — `ThingDescriptionGroupType` and `ThingModelGroupType`",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -2034,7 +2179,12 @@
             "r": "t",
             "text": "Instances appear directly under the registry, one group per related set of documents (for example one group per site or per vendor catalog)."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "6.2 Groups — `ThingDescriptionGroupType` and `ThingModelGroupType`",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -2054,7 +2204,12 @@
             "r": "t",
             "text": ")."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "6.2 Groups — `ThingDescriptionGroupType` and `ThingModelGroupType`",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -2104,7 +2259,12 @@
             "r": "t",
             "text": " placeholder that limits its members to the matching document subtype. A Thing Description group holds only Thing Descriptions; a Thing Model group holds only Thing Models."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "6.2 Groups — `ThingDescriptionGroupType` and `ThingModelGroupType`",
+          "b": 3
+        }
       },
       {
         "t": "clause",
@@ -2181,7 +2341,12 @@
             "r": "t",
             "text": ") are the concrete subtypes."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "6.3 Documents — `WoTDocumentType`, `ThingDescriptionFileType`, `ThingModelFileType`",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -2191,7 +2356,12 @@
             "r": "t",
             "text": "Document instances are the members of the groups."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "6.3 Documents — `WoTDocumentType`, `ThingDescriptionFileType`, `ThingModelFileType`",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -2210,7 +2380,12 @@
             "r": "t",
             "text": " the canonical source of truth; everything a client browses in the projection is derived from these bytes and their versions."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "6.3 Documents — `WoTDocumentType`, `ThingDescriptionFileType`, `ThingModelFileType`",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -2508,7 +2683,12 @@
             "r": "t",
             "text": " to find the ObjectType it produced."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "6.3 Documents — `WoTDocumentType`, `ThingDescriptionFileType`, `ThingModelFileType`",
+          "b": 3
+        }
       },
       {
         "t": "clause",
@@ -2536,7 +2716,12 @@
             "r": "t",
             "text": ") is a browseable protocol-binding descriptor."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "6.4 Bindings — `WoTBindingType`",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -2562,7 +2747,12 @@
             "r": "t",
             "text": " object per protocol binding the server can realise (OPC UA, HTTP, Modbus, …)."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "6.4 Bindings — `WoTBindingType`",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -2572,7 +2762,12 @@
             "r": "t",
             "text": "It lets a client discover which W3C binding templates the server supports, at which pinned document version and maturity, before relying on a form."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "6.4 Bindings — `WoTBindingType`",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -2672,7 +2867,12 @@
             "r": "t",
             "text": " for immutable snapshots. No credentials or secrets are ever exposed on a binding node."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "6.4 Bindings — `WoTBindingType`",
+          "b": 3
+        }
       },
       {
         "t": "clause",
@@ -2688,7 +2888,12 @@
             "r": "t",
             "text": "The model defines eight enumerations and seven structures."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "6.5 DataTypes",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -2698,7 +2903,12 @@
             "r": "t",
             "text": "They type the Properties, method arguments and event fields above."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "6.5 DataTypes",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -2708,7 +2918,12 @@
             "r": "t",
             "text": "The enumerations give lifecycle and outcome values a stable, machine-readable meaning; the structures package related, versioned facts as a single immutable snapshot."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "6.5 DataTypes",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -2881,7 +3096,12 @@
             "r": "t",
             "text": ") shows the two refresh structures populated."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "6.5 DataTypes",
+          "b": 3
+        }
       },
       {
         "t": "clause",
@@ -3062,7 +3282,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "6.6 Events and the notifier chain",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -3090,7 +3315,12 @@
             "r": "t",
             "text": " is the source of the refresh-completed event."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "6.6 Events and the notifier chain",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -3100,7 +3330,12 @@
             "r": "t",
             "text": "Events let an operator observe validation, projection and binding problems and refresh completion without polling."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "6.6 Events and the notifier chain",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -3175,7 +3410,12 @@
             "r": "t",
             "text": " therefore receives every failure event raised by any contained resource and the refresh-completed event raised by the registry itself."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "6.6 Events and the notifier chain",
+          "b": 3
+        }
       },
       {
         "t": "clause",
@@ -3219,7 +3459,12 @@
             "r": "t",
             "text": ") links a stored document resource (source) to the root node of its derived projection (target)."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "6.7 Reference type and projection correlation — `HasWoTProjection`",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -3247,7 +3492,12 @@
             "r": "t",
             "text": ")."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "6.7 Reference type and projection correlation — `HasWoTProjection`",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -3273,7 +3523,12 @@
             "r": "t",
             "text": " from any projected node reaches its canonical document."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "6.7 Reference type and projection correlation — `HasWoTProjection`",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -3333,7 +3588,12 @@
             "r": "t",
             "text": ")."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "6.8 Well-known registry instance — `WoTRegistry`",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -3359,7 +3619,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "6.8 Well-known registry instance — `WoTRegistry`",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -3377,7 +3642,12 @@
             "r": "t",
             "text": " Method and concrete Values for every Mandatory member (own and inherited), so loading the NodeSet alone yields a structurally complete, callable registry; a server binds the concrete handlers."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "6.8 Well-known registry instance — `WoTRegistry`",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -3416,7 +3686,12 @@
             "r": "t",
             "text": " vocabulary version and the registry's model, without any additional hidden state. A client shall not rely on projected nodes surviving a change to the underlying document except as governed by the generation and retirement rules below."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "7.1 Canonical files, derived projection",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -3457,7 +3732,12 @@
             "r": "t",
             "text": " term maps to an OPC UA construct, and this section applies it:"
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "7.2 Projection mapping",
+          "b": 0
+        }
       },
       {
         "t": "list",
@@ -3825,7 +4105,12 @@
               "text": ") that the server executes to read/write/observe/invoke/subscribe the affordance over the form's protocol binding."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "7.2 Projection mapping",
+          "b": 1
+        }
       },
       {
         "t": "clause",
@@ -3850,7 +4135,12 @@
             "r": "t",
             "text": " impose a mandatory flat \"Assets\" root as a container for every projected instance; the authored hierarchy and references of the stored documents determine where each Thing appears."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "7.3 Placement and parent selection (no mandatory flat root)",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -3946,7 +4236,12 @@
             "r": "t",
             "text": " resolve it in this order:"
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "7.3 Placement and parent selection (no mandatory flat root)",
+          "b": 1
+        }
       },
       {
         "t": "list",
@@ -3987,7 +4282,12 @@
               "text": "the projection root of the Thing Model the TD derives from (a self-reference to the type instance owner), when the href names it."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "7.3 Placement and parent selection (no mandatory flat root)",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -4114,7 +4414,12 @@
             "r": "t",
             "text": " assume, any additional convenience container."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "7.3 Placement and parent selection (no mandatory flat root)",
+          "b": 3
+        }
       },
       {
         "t": "clause",
@@ -4256,7 +4561,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "7.4 Dependency graph construction and closure atomicity",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -4282,7 +4592,12 @@
             "r": "t",
             "text": " are federation metadata and do not by themselves grant permission to fetch a document."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "7.4 Dependency graph construction and closure atomicity",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -4302,7 +4617,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "7.4 Dependency graph construction and closure atomicity",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -4414,7 +4734,12 @@
             "r": "t",
             "text": " commit even if an unrelated resource in the same refresh fails."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "7.4 Dependency graph construction and closure atomicity",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -4501,7 +4826,12 @@
             "r": "t",
             "text": " edge."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "7.4 Dependency graph construction and closure atomicity",
+          "b": 4
+        }
       },
       {
         "t": "clause",
@@ -4612,7 +4942,12 @@
             "r": "t",
             "text": " instead keep the prior committed generation of that closure serving."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "7.5 Invalid documents and desired-versus-active divergence",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -4678,7 +5013,12 @@
             "r": "t",
             "text": " silently activate a desired version that fails validation."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "7.5 Invalid documents and desired-versus-active divergence",
+          "b": 1
+        }
       },
       {
         "t": "clause",
@@ -4771,7 +5111,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "7.6 Shadow prepare, switch and retirement",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -4781,7 +5126,12 @@
             "r": "t",
             "text": "The implementation shall apply one documented retirement policy after the switch:"
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "7.6 Shadow prepare, switch and retirement",
+          "b": 1
+        }
       },
       {
         "t": "list",
@@ -4842,7 +5192,12 @@
               "text": ". Clients may then delete or recreate those MonitoredItems."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "7.6 Shadow prepare, switch and retirement",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -4878,14 +5233,24 @@
             "r": "t",
             "text": ")."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "7.6 Shadow prepare, switch and retirement",
+          "b": 3
+        }
       },
       {
         "t": "figure",
         "id": "fig-wotcon-lifecycle",
         "caption": "Projection lifecycle of a stored document",
         "source": "mermaid",
-        "mermaid": "stateDiagram-v2\n  [*] --> Unloaded\n  Unloaded --> Loading: prepare shadow generation\n  Loading --> Active: atomic switch (RefreshGeneration++)\n  Loading --> Failed: validation/projection error\n  Active --> Superseded: newer generation switched in\n  Superseded --> Retiring: graceful retirement\n  Superseded --> Retired: immediate retirement / BadNodeIdUnknown\n  Retiring --> Retired: monitored items and requests drained\n  Failed --> Loading: corrected document refreshed"
+        "mermaid": "stateDiagram-v2\n  [*] --> Unloaded\n  Unloaded --> Loading: prepare shadow generation\n  Loading --> Active: atomic switch (RefreshGeneration++)\n  Loading --> Failed: validation/projection error\n  Active --> Superseded: newer generation switched in\n  Superseded --> Retiring: graceful retirement\n  Superseded --> Retired: immediate retirement / BadNodeIdUnknown\n  Retiring --> Retired: monitored items and requests drained\n  Failed --> Loading: corrected document refreshed",
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "7.6 Shadow prepare, switch and retirement",
+          "b": 4
+        }
       },
       {
         "t": "clause",
@@ -5010,7 +5375,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "7.7 Automatic and explicit refresh; idempotence",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -5113,7 +5483,12 @@
             "r": "t",
             "text": " over the canonical document bytes so that semantically insignificant reformatting does not force re-projection."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "7.7 Automatic and explicit refresh; idempotence",
+          "b": 1
+        }
       },
       {
         "t": "clause",
@@ -5435,7 +5810,12 @@
               "text": "."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "7.8 Version switch, unload, delete and federation",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -5498,7 +5878,12 @@
             "r": "t",
             "text": "'s."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "7.8 Version switch, unload, delete and federation",
+          "b": 1
+        }
       },
       {
         "t": "clause",
@@ -5564,7 +5949,12 @@
             "r": "t",
             "text": " graph changes only — never for shadow-generation scratch work."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "7.9 Model change events and NodeVersion correlation",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -5606,7 +5996,12 @@
             "r": "t",
             "text": ") for the affected nodes. Concrete subtypes of the abstract model/semantic change event types are defined only where required for emission; this specification relies on the Core types unless a WoT-specific subtype is needed."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "7.10 Semantic change events (optional)",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -5631,7 +6026,12 @@
             "r": "t",
             "text": " exposed on registry or binding nodes."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "7.11 Security",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -5713,7 +6113,12 @@
             "r": "t",
             "text": " when its deployment policy permits this; clients shall not infer authenticity, integrity or confidentiality from such a channel."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "7.11 Security",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -5723,7 +6128,12 @@
             "r": "t",
             "text": "Read access to a group MAY be restricted to authorise discovery of the Things it contains. TD form endpoints and security declarations are informative to protocol clients and may be consumed by an explicitly enabled binder. They do not configure or secure the registry, authorize document resolution, or override the server's endpoint allowlist, trust store, credential provider or SecureChannel policy."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "7.11 Security",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -5766,7 +6176,12 @@
             "r": "t",
             "text": " modules."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "8 Protocol binder (normative)",
+          "b": 0
+        }
       },
       {
         "t": "list",
@@ -5895,7 +6310,12 @@
               "text": "."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "8 Protocol binder (normative)",
+          "b": 1
+        }
       },
       {
         "t": "clause",
@@ -5993,7 +6413,12 @@
             "r": "t",
             "text": " after a vocabulary-version change even though document bytes are unchanged."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "9.1 Purpose and use cases",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -6013,7 +6438,12 @@
             "r": "t",
             "text": ":"
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "9.2 Signature",
+          "b": 0
+        }
       },
       {
         "t": "list",
@@ -6226,7 +6656,12 @@
               "text": " — the committed generation; unchanged on a dry run or a full failure."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "9.2 Signature",
+          "b": 1
+        }
       },
       {
         "t": "clause",
@@ -6322,7 +6757,12 @@
             "r": "t",
             "text": " to commit. Steps 1 and 4 make the operation safe under concurrency: if another refresh committed in between, the generation no longer matches and the commit fails without effect, so the caller re-plans against the new generation."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "9.3 Caller workflow",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -6347,7 +6787,12 @@
             "r": "t",
             "text": ":"
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "9.4 Validation, planning and apply algorithm",
+          "b": 0
+        }
       },
       {
         "t": "list",
@@ -6760,7 +7205,12 @@
               "text": "."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "9.4 Validation, planning and apply algorithm",
+          "b": 1
+        }
       },
       {
         "t": "clause",
@@ -6835,7 +7285,12 @@
             "r": "t",
             "text": ", a lost update is impossible: a stale plan cannot overwrite a newer generation."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "9.5 Concurrency and generation behaviour",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -7045,7 +7500,12 @@
             "r": "t",
             "text": ")."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "9.6 Outcomes, errors and implementer responsibilities",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -7058,7 +7518,12 @@
         "id": "fig-wotcon-refresh",
         "caption": "Refresh sequence",
         "source": "mermaid",
-        "mermaid": "sequenceDiagram\n  actor Op as Operator/Client\n  participant R as WoTRegistry (Refresh)\n  participant V as Validator\n  participant P as Projector (shadow)\n  participant AS as AddressSpace\n  Op->>R: Refresh(Selection, Options, ExpectedGeneration, RequestId)\n  R->>R: check ExpectedGeneration == RefreshGeneration\n  alt mismatch\n    R-->>Op: Bad_InvalidState (no change)\n  else match\n    R->>V: fetch, parse, validate selected documents\n    V-->>R: WoTValidationOutcome per document\n    R->>R: resolve dependency DAG -> closures\n    R->>P: materialize changed closures (shadow generation)\n    alt DryRun\n      P-->>R: predicted node counts / roots\n      R-->>Op: Summary + Results (NewGeneration unchanged)\n    else commit\n      P->>AS: atomic switch (Atomicity), RefreshGeneration++\n      AS-->>R: model change events, NodeVersion stamped\n      alt graceful retirement\n        R->>AS: drain or migrate monitored items, then retire\n      else immediate retirement\n        R->>AS: report BadNodeIdUnknown and retire immediately\n      end\n      R-->>Op: Summary + Results + NewGeneration\n      R->>Op: WoTRefreshCompletedEventType\n    end\n  end"
+        "mermaid": "sequenceDiagram\n  actor Op as Operator/Client\n  participant R as WoTRegistry (Refresh)\n  participant V as Validator\n  participant P as Projector (shadow)\n  participant AS as AddressSpace\n  Op->>R: Refresh(Selection, Options, ExpectedGeneration, RequestId)\n  R->>R: check ExpectedGeneration == RefreshGeneration\n  alt mismatch\n    R-->>Op: Bad_InvalidState (no change)\n  else match\n    R->>V: fetch, parse, validate selected documents\n    V-->>R: WoTValidationOutcome per document\n    R->>R: resolve dependency DAG -> closures\n    R->>P: materialize changed closures (shadow generation)\n    alt DryRun\n      P-->>R: predicted node counts / roots\n      R-->>Op: Summary + Results (NewGeneration unchanged)\n    else commit\n      P->>AS: atomic switch (Atomicity), RefreshGeneration++\n      AS-->>R: model change events, NodeVersion stamped\n      alt graceful retirement\n        R->>AS: drain or migrate monitored items, then retire\n      else immediate retirement\n        R->>AS: report BadNodeIdUnknown and retire immediately\n      end\n      R-->>Op: Summary + Results + NewGeneration\n      R->>Op: WoTRefreshCompletedEventType\n    end\n  end",
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "9.7 Refresh sequence",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -7247,7 +7712,12 @@
             "r": "t",
             "text": ")."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "10 Events and change notifications (normative)",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -7302,7 +7772,12 @@
             "r": "t",
             "text": " and all own-namespace references and BrowseNames are consistent. The types, methods and method signatures are:"
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "13.1 Preserved 1.02 model (unchanged)",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -7652,7 +8127,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "13.1 Preserved 1.02 model (unchanged)",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -7750,7 +8230,12 @@
             "r": "t",
             "text": ") so tools can steer new development to the registry surface."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "13.1 Preserved 1.02 model (unchanged)",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -7784,7 +8269,12 @@
             "r": "t",
             "text": ":"
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "13.2 Backing the deprecated surface with the registry (signatures unchanged)",
+          "b": 0
+        }
       },
       {
         "t": "list",
@@ -8079,7 +8569,12 @@
               "text": " back to their document."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "13.2 Backing the deprecated surface with the registry (signatures unchanged)",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -8089,7 +8584,12 @@
             "r": "t",
             "text": "Because the incorporation keeps the 1.02 namespace, types, node numbering and method signatures intact, a legacy client cannot tell whether the registry backs the asset manager; a registry-aware client sees the same assets as registry documents."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "13.2 Backing the deprecated surface with the registry (signatures unchanged)",
+          "b": 2
+        }
       }
     ],
     "objecttypes": [
@@ -9231,7 +9731,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "14 Conformance units and profiles",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -9609,7 +10114,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "14 Conformance units and profiles",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -9805,7 +10315,12 @@
             "r": "t",
             "text": "), independently conformant so existing 1.02 clients are served without the registry profile."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "14 Conformance units and profiles",
+          "b": 2
+        }
       }
     ],
     "namespaces": [
@@ -10238,7 +10753,12 @@
             "r": "t",
             "text": "Security applies at three boundaries: registry transport, federation, and optional protocol binders."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "11 Security (normative)",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -10256,7 +10776,12 @@
             "r": "t",
             "text": ", form endpoint or security declaration. A federation provider shall apply endpoint allowlists, trust policy, authentication, size limits and version/digest pinning."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "11 Security (normative)",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -10367,7 +10892,12 @@
             "r": "t",
             "text": " be restrictable, because it is the authorisation boundary that decides who can discover the Things a group contains."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "11 Security (normative)",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -10414,7 +10944,12 @@
             "r": "t",
             "text": ")."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "11 Security (normative)",
+          "b": 3
+        }
       }
     ],
     "annex-a": [
@@ -10440,7 +10975,12 @@
             "r": "t",
             "text": "Each scenario is an end-to-end acceptance test for the CUs it exercises."
           }
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "15 Acceptance scenarios",
+          "b": 0
+        }
       },
       {
         "t": "list",
@@ -10967,7 +11507,12 @@
               "i": true
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "15 Acceptance scenarios",
+          "b": 1
+        }
       }
     ]
   },

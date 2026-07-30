@@ -33,7 +33,12 @@
             "r": "t",
             "text": " discover those declarations and forward the data to that observability system without understanding the domain semantics."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "1 Scope",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -43,7 +48,12 @@
             "r": "t",
             "text": "It specifies:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "1 Scope",
+          "b": 1
+        }
       },
       {
         "t": "list",
@@ -218,7 +228,12 @@
               "text": " for Servers and Clients."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "1 Scope",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -247,7 +262,12 @@
             "r": "t",
             "text": "), since the mapping metadata is expressed in OTEL-shaped but backend-agnostic terms."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "1 Scope",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -333,7 +353,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "1 Scope",
+          "b": 4
+        }
       },
       {
         "t": "clause",
@@ -367,7 +392,12 @@
             "r": "t",
             "text": " system — metrics dashboards, log search, distributed tracing — is a separate, repetitive integration problem: someone must decide which Variables are metrics and of what instrument and unit, which event fields become structured log records, which Program or audit events become spans, and how each is labelled. Today this is solved ad-hoc, once per model and once per project, usually by hand-wiring an OPC UA client to a metrics/log agent."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "1.1 Motivation",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -413,7 +443,12 @@
             "r": "t",
             "text": ", not the pump, the robot or the generator."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "1.1 Motivation",
+          "b": 1
+        }
       }
     ],
     "normative-references": [
@@ -1348,14 +1383,24 @@
             "r": "t",
             "text": ", not by knowing the pump, the robot or the generator. The use cases below are illustrative; product names are examples only and imply no endorsement."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "1.2 Motivating use cases",
+          "b": 0
+        }
       },
       {
         "t": "figure",
         "id": "fig-obs-landscape",
         "caption": "Observability export landscape",
         "source": "mermaid",
-        "mermaid": "flowchart LR\n  subgraph Servers[OPC UA Servers with Observability Export]\n    S1[Pumps]\n    S2[Robotics]\n    S3[Generators]\n  end\n  B[\"Generic bridge<br/>discovers Server/Observability<br/>Subscriptions/Reads or PubSub\"]\n  OT[OTEL Collector]\n  M[\"Metrics backend<br/>Prometheus · Grafana · Fabric RTI\"]\n  L[\"Logs backend<br/>Loki · Splunk · Elastic\"]\n  TR[\"Traces backend<br/>Jaeger · Tempo · Zipkin\"]\n  S1 --> B\n  S2 --> B\n  S3 --> B\n  B -->|OTLP metrics| OT --> M\n  B -->|OTLP logs| OT --> L\n  B -->|OTLP traces| OT --> TR"
+        "mermaid": "flowchart LR\n  subgraph Servers[OPC UA Servers with Observability Export]\n    S1[Pumps]\n    S2[Robotics]\n    S3[Generators]\n  end\n  B[\"Generic bridge<br/>discovers Server/Observability<br/>Subscriptions/Reads or PubSub\"]\n  OT[OTEL Collector]\n  M[\"Metrics backend<br/>Prometheus · Grafana · Fabric RTI\"]\n  L[\"Logs backend<br/>Loki · Splunk · Elastic\"]\n  TR[\"Traces backend<br/>Jaeger · Tempo · Zipkin\"]\n  S1 --> B\n  S2 --> B\n  S3 --> B\n  B -->|OTLP metrics| OT --> M\n  B -->|OTLP logs| OT --> L\n  B -->|OTLP traces| OT --> TR",
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "1.2 Motivating use cases",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -1370,7 +1415,12 @@
             "r": "t",
             "text": " The Metrics binding declares which Variables are metrics — with their OTEL instrument type, unit and histogram buckets — and which items are dimensions. A bridge subscribes to the metric set and emits OTEL metrics to an OTEL Collector, which drives Grafana (or any metrics backend) for live factory-operations dashboards. Because the OTEL semantics are carried in the model, the same bridge lights up dashboards for a new machine or a new vendor with no per-model wiring."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "1.2 Motivating use cases",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -1385,7 +1435,12 @@
             "r": "t",
             "text": " A Logs binding maps selected event fields of a notifier to OTEL LogRecords, with a message template, severity and timestamp. A bridge subscribes to the events and emits structured OTEL logs to any log backend (Loki, Splunk, Elastic), each record carrying the companion-model field names and the binding's dimensions as attributes."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "1.2 Motivating use cases",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -1400,7 +1455,12 @@
             "r": "t",
             "text": " A Traces binding maps a Program state machine's executions — or correlated audit events — to OTEL spans, with trace/span identity, timing and status. A bridge emits spans to a tracing backend (Jaeger, Tempo, Zipkin), so an operation on the floor (a recipe run, a maintenance job) becomes a first-class trace correlated with the metrics and logs around it."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "1.2 Motivating use cases",
+          "b": 4
+        }
       },
       {
         "t": "para",
@@ -1433,7 +1493,12 @@
             "r": "t",
             "text": "s."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "1.2 Motivating use cases",
+          "b": 5
+        }
       }
     ],
     "model-overview": [
@@ -1457,7 +1522,12 @@
             "r": "t",
             "text": "An observability binding carries two distinct kinds of metadata, and keeping them separate is the central design idea:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "4.1 The two‑layer contract",
+          "b": 0
+        }
       },
       {
         "t": "list",
@@ -1595,7 +1665,12 @@
               "text": "."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "4.1 The two‑layer contract",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -1605,7 +1680,12 @@
             "r": "t",
             "text": "The bridge never needs the semantic layer to do its job; it forwards it verbatim (as OTEL attributes / Part 14 FieldMetaData) so the ultimate consumer can use it."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "4.1 The two‑layer contract",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -1694,7 +1774,12 @@
             "r": "t",
             "text": " children."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "4.2 Discovery",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -1760,7 +1845,12 @@
             "r": "t",
             "text": " for namespace matching, and it remains the BrowseName collision boundary for the bindings on that instance."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "4.2 Discovery",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -1778,7 +1868,12 @@
             "r": "t",
             "text": " registry and one group per (companion specification × observable instance)."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "4.2 Discovery",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -1803,7 +1898,12 @@
             "r": "t",
             "text": " intent; whether and how it is realized over the wire is separate."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "4.3 Realization (hybrid)",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -1896,7 +1996,12 @@
             "r": "t",
             "text": "); this is the baseline realization."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "4.3 Realization (hybrid)",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -1947,7 +2052,12 @@
             "r": "t",
             "text": ". The bridge then consumes the DataSet as a subscriber. Either way, the bridge emits the same OTEL."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "4.3 Realization (hybrid)",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -1960,7 +2070,12 @@
         "id": "fig-obs-addressspace",
         "caption": "The observability facility in the address space",
         "source": "mermaid",
-        "mermaid": "flowchart TB\n  subgraph Server[OPC UA Server]\n    SO[Server Object i=2253]\n    OB[\"Observability<br/>(ObservabilityFolderType)\"]\n    subgraph Inst[\"Bound instance (IObservableType)\"]\n      G[\"ObservabilityBindingGroup<br/>CompanionSpecificationUri<br/>ModelNamespaceUris\"]\n      M[\"ObservabilityBinding · Metrics<br/>DataSetClassId, BoundItems\"]\n      L[\"ObservabilityBinding · Logs\"]\n      T[\"ObservabilityBinding · Traces\"]\n    end\n    PDS[\"(optional) PublishedDataSet<br/>DataSetWriter\"]\n  end\n  Bridge[\"Bridge (read-only Client)\"]\n  Coll[OTEL Collector]\n  SO -->|HasComponent| OB\n  OB -.->|Collects| G\n  G -->|HasComponent| M\n  G --> L\n  G --> T\n  M -.->|ExportedBy opt.| PDS\n  Bridge -->|Browse Server/Observability| OB\n  Bridge -->|Subscriptions/Reads or DataSetReader| Server\n  Bridge -->|OTLP metrics/logs/traces| Coll"
+        "mermaid": "flowchart TB\n  subgraph Server[OPC UA Server]\n    SO[Server Object i=2253]\n    OB[\"Observability<br/>(ObservabilityFolderType)\"]\n    subgraph Inst[\"Bound instance (IObservableType)\"]\n      G[\"ObservabilityBindingGroup<br/>CompanionSpecificationUri<br/>ModelNamespaceUris\"]\n      M[\"ObservabilityBinding · Metrics<br/>DataSetClassId, BoundItems\"]\n      L[\"ObservabilityBinding · Logs\"]\n      T[\"ObservabilityBinding · Traces\"]\n    end\n    PDS[\"(optional) PublishedDataSet<br/>DataSetWriter\"]\n  end\n  Bridge[\"Bridge (read-only Client)\"]\n  Coll[OTEL Collector]\n  SO -->|HasComponent| OB\n  OB -.->|Collects| G\n  G -->|HasComponent| M\n  G --> L\n  G --> T\n  M -.->|ExportedBy opt.| PDS\n  Bridge -->|Browse Server/Observability| OB\n  Bridge -->|Subscriptions/Reads or DataSetReader| Server\n  Bridge -->|OTLP metrics/logs/traces| Coll",
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "4.4 Architecture",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -1993,7 +2108,12 @@
             "r": "t",
             "text": " (which requires the base OPC UA namespace); NodeIds are draft."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "5 Information model",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -2067,7 +2187,12 @@
             "r": "t",
             "text": " Objects."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "5 Information model",
+          "b": 1
+        }
       },
       {
         "t": "clause",
@@ -2092,7 +2217,12 @@
             "r": "t",
             "text": " retain enough information to identify the model node it exposes independently of the live AddressSpace — as applicable to its NodeClass:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "5.4 Semantic cross-reference (normative)",
+          "b": 0
+        }
       },
       {
         "t": "list",
@@ -2192,7 +2322,12 @@
               "text": " is the carrier used in the compact form and for propagation, so the linkage survives export."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "5.4 Semantic cross-reference (normative)",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -2220,7 +2355,12 @@
             "r": "t",
             "text": " populate them mechanically to avoid drift."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "5.4 Semantic cross-reference (normative)",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -2332,7 +2472,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "5.4 Semantic cross-reference (normative)",
+          "b": 3
+        }
       },
       {
         "t": "clause",
@@ -2357,7 +2502,12 @@
             "r": "t",
             "text": " propagate the binding into Part 14 configuration as follows:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "5.5 Propagation to Part 14 configuration (normative)",
+          "b": 0
+        }
       },
       {
         "t": "list",
@@ -2610,7 +2760,12 @@
               "text": "."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "5.5 Propagation to Part 14 configuration (normative)",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -2620,7 +2775,12 @@
             "r": "t",
             "text": "Applicable only where the Server implements PubSub."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "5.5 Propagation to Part 14 configuration (normative)",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -2704,7 +2864,12 @@
             "r": "t",
             "text": " a Logs binding). This class is the granularity at which class identity, configuration versioning and subscriber recognition are defined: per signal kind, per bound ObjectType, per major version."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "5.6 Signal kind and granularity (normative)",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -2746,7 +2911,12 @@
             "r": "t",
             "text": " entries whose source locators identify Variables."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "5.6 Signal kind and granularity (normative)",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -2848,7 +3018,12 @@
             "r": "t",
             "text": ")."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "5.6 Signal kind and granularity (normative)",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -2877,14 +3052,24 @@
             "r": "t",
             "text": " be a Version-5 UUID as defined by RFC 4122, computed over the canonical UTF-8 string:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "5.7 DataSetClassId (normative)",
+          "b": 0
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "ObservabilityExport|<AppliesToType>|<SignalKind>|<MajorVersion>"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "5.7 DataSetClassId (normative)",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -2919,7 +3104,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "5.7 DataSetClassId (normative)",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -3115,7 +3305,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "5.7 DataSetClassId (normative)",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -3192,7 +3387,12 @@
             "r": "t",
             "text": "s."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "5.7 DataSetClassId (normative)",
+          "b": 4
+        }
       },
       {
         "t": "para",
@@ -3285,7 +3485,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "5.7 DataSetClassId (normative)",
+          "b": 5
+        }
       },
       {
         "t": "para",
@@ -3319,7 +3524,12 @@
             "r": "t",
             "text": ")."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "5.7 DataSetClassId (normative)",
+          "b": 6
+        }
       },
       {
         "t": "clause",
@@ -3409,7 +3619,12 @@
             "r": "t",
             "text": ". This lets a subscriber or offline tool obtain the class schema without browsing the bound model or reading the runtime PubSub configuration."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "5.8 DataSetMetaData exposure",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -3425,7 +3640,12 @@
             "r": "t",
             "text": "A bound item locates its source node in one of two ways:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "5.10 Locating bound items — BrowsePath resolution (normative)",
+          "b": 0
+        }
       },
       {
         "t": "list",
@@ -3561,7 +3781,12 @@
               "text": " reference on the browsable form) identifies the node directly, for server-specific or instance-specific bindings. It is not used to select event fields inside a PublishedEvents DataSet."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "5.10 Locating bound items — BrowsePath resolution (normative)",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -3616,7 +3841,12 @@
             "r": "t",
             "text": ") traversal."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "5.10 Locating bound items — BrowsePath resolution (normative)",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -3635,7 +3865,12 @@
             "r": "t",
             "text": " apply:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "5.10 Locating bound items — BrowsePath resolution (normative)",
+          "b": 3
+        }
       },
       {
         "t": "list",
@@ -3792,7 +4027,12 @@
               "text": ") — rather than polling."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "5.10 Locating bound items — BrowsePath resolution (normative)",
+          "b": 4
+        }
       },
       {
         "t": "clause",
@@ -3872,7 +4112,12 @@
             "r": "t",
             "text": " children, then resolves each binding through the classic baseline or optional PubSub realization."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "5.11 Registry and adoption",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -3972,7 +4217,12 @@
             "r": "t",
             "text": ")."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "5.12 Binding inheritance and facet composition (normative)",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -3982,7 +4232,12 @@
             "r": "t",
             "text": "Inheritance is uniform across the three OPC UA composition axes: a subtype inherits the bindings of its supertype, a type (or one of its component objects) implementing a facet Interface inherits the facet's bindings, and a host composing an AddIn inherits the AddIn's bindings. A facet implemented by a component object is composed at that component's path."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "5.12 Binding inheritance and facet composition (normative)",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -4061,7 +4316,12 @@
             "r": "t",
             "text": " remove an inherited field; every derived binding is a superset of each base binding it extends, which makes base-class field-subset recognition safe."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "5.12 Binding inheritance and facet composition (normative)",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -4080,7 +4340,12 @@
             "r": "t",
             "text": " compose the effective binding as follows:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "5.12 Binding inheritance and facet composition (normative)",
+          "b": 3
+        }
       },
       {
         "t": "list",
@@ -4432,7 +4697,12 @@
               "text": "."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "5.12 Binding inheritance and facet composition (normative)",
+          "b": 4
+        }
       },
       {
         "t": "para",
@@ -4521,7 +4791,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "5.12 Binding inheritance and facet composition (normative)",
+          "b": 5
+        }
       },
       {
         "t": "para",
@@ -4547,7 +4822,12 @@
             "r": "t",
             "text": "; a subscriber that understands the full composed class consumes every field."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "5.12 Binding inheritance and facet composition (normative)",
+          "b": 6
+        }
       },
       {
         "t": "para",
@@ -4557,7 +4837,12 @@
             "r": "t",
             "text": "Guidance: use a subtype binding for is-a refinement, use an Interface facet binding for a contract capability implemented by many types, and use an AddIn binding for a reusable structural block that brings its own sub-objects."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "5.12 Binding inheritance and facet composition (normative)",
+          "b": 7
+        }
       },
       {
         "t": "clause",
@@ -4591,7 +4876,12 @@
             "r": "t",
             "text": " notes how the same metadata drives other backends."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "5.13 OTEL mapping (normative)",
+          "b": 0
+        }
       }
     ],
     "objecttypes": [
@@ -4664,7 +4954,12 @@
             "r": "t",
             "text": " children. No query Method is defined — Browse and Read already provide enumeration and selection, and requiring a Method would burden the classic Servers that are the common case."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "5.1 ObservabilityFolderType",
+          "b": 0
+        }
       },
       {
         "t": "nodetable",
@@ -4785,7 +5080,12 @@
             "r": "t",
             "text": " (Optional) selects the cardinality level for instances of that class; when omitted, the cardinality level is the bound root."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "5.2 ObservabilityBindingType",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -4846,7 +5146,12 @@
             "r": "t",
             "text": " carry equivalent bound-item information (the same members and values). The bound items are homogeneous per binding: Variables for a metric set, event fields for a log or trace stream."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "5.2 ObservabilityBindingType",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -4942,7 +5247,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "5.2 ObservabilityBindingType",
+          "b": 2
+        }
       },
       {
         "t": "nodetable",
@@ -5122,14 +5432,24 @@
             "r": "t",
             "text": ", not to the AddressSpace instance."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "5.3 BoundItemType and its subtypes",
+          "b": 0
+        }
       },
       {
         "t": "figure",
         "id": "fig-obs-bounditem",
         "caption": "BoundItemType and its subtypes",
         "source": "mermaid",
-        "mermaid": "classDiagram\n  direction LR\n  class BoundItemType {\n    +FieldName\n    +Kind\n    +BrowsePath\n    +DimensionConstantValue\n    +SourceTypeDefinition\n    +SourceBrowseName\n    +ModelNamespaceUri\n    +SemanticReferenceUri\n  }\n  class BoundVariableType {\n    +MetricInstrumentType\n    +Unit\n    +ExplicitBucketBoundaries\n    +MetricTemporality\n    +Monotonic\n  }\n  class BoundEventFieldType {\n    +EventFieldOperand\n  }\n  class BoundItemKindEnum {\n    <<enumeration>>\n    Telemetry = 0\n    Status = 1\n    Metric = 2\n    Counter = 3\n    Event = 4\n    Dimension = 5\n    Identification = 6\n    Other = 7\n  }\n  BoundVariableType --|> BoundItemType\n  BoundEventFieldType --|> BoundItemType\n  BoundItemType --> BoundItemKindEnum : Kind"
+        "mermaid": "classDiagram\n  direction LR\n  class BoundItemType {\n    +FieldName\n    +Kind\n    +BrowsePath\n    +DimensionConstantValue\n    +SourceTypeDefinition\n    +SourceBrowseName\n    +ModelNamespaceUri\n    +SemanticReferenceUri\n  }\n  class BoundVariableType {\n    +MetricInstrumentType\n    +Unit\n    +ExplicitBucketBoundaries\n    +MetricTemporality\n    +Monotonic\n  }\n  class BoundEventFieldType {\n    +EventFieldOperand\n  }\n  class BoundItemKindEnum {\n    <<enumeration>>\n    Telemetry = 0\n    Status = 1\n    Metric = 2\n    Counter = 3\n    Event = 4\n    Dimension = 5\n    Identification = 6\n    Other = 7\n  }\n  BoundVariableType --|> BoundItemType\n  BoundEventFieldType --|> BoundItemType\n  BoundItemType --> BoundItemKindEnum : Kind",
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "5.3 BoundItemType and its subtypes",
+          "b": 1
+        }
       },
       {
         "t": "nodetable",
@@ -5211,7 +5531,12 @@
             "r": "t",
             "text": " level, with type-level BrowsePath bindings, is the recommended way for a companion specification to adopt this specification without changing its own types' semantics."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "5.9 IObservableType",
+          "b": 0
+        }
       },
       {
         "t": "nodetable",
@@ -5553,7 +5878,12 @@
             "r": "t",
             "text": "The following Conformance Units (CUs) are defined; Facets group them for Servers and Clients."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "7 Profiles and Conformance Units",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -6227,7 +6557,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "7 Profiles and Conformance Units",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -6238,7 +6573,12 @@
             "text": "Facets (informative grouping):",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "7 Profiles and Conformance Units",
+          "b": 2
+        }
       },
       {
         "t": "list",
@@ -6320,7 +6660,12 @@
               "text": ", realize via the classic path (default) or PubSub where configured, and emit OTEL per the Metrics/Logs/Traces mapping CUs."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "7 Profiles and Conformance Units",
+          "b": 3
+        }
       }
     ],
     "namespaces": [
@@ -6780,7 +7125,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "6 Using the model (informative)",
+          "b": 0
+        }
       },
       {
         "t": "annex-clause",
@@ -7140,7 +7490,12 @@
               "b": true
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "6.1 Walkthrough",
+          "b": 0
+        }
       },
       {
         "t": "annex-clause",
@@ -7153,7 +7508,12 @@
         "id": "fig-obs-classic",
         "caption": "Bridge sequence for a classic Server",
         "source": "mermaid",
-        "mermaid": "sequenceDiagram\n  participant S as Server (no PubSub surface)\n  participant B as Bridge (Client)\n  participant C as OTEL Collector\n  B->>S: Browse Server/Observability\n  S-->>B: ObservabilityBindingGroup { CompanionSpecificationUri, ModelNamespaceUris }\n  B->>S: Browse selected group children\n  S-->>B: ObservabilityBinding { SignalKind, DataSetClassId, DataSetCardinalityPath, BoundItems... }\n  B->>B: Compose effective class via §5.12 union\n  B->>S: Resolve DataSetCardinalityPath (default bound root)\n  alt Metrics\n    loop per BoundVariable\n      B->>S: TranslateBrowsePathsToNodeIds (BrowsePath)\n      B->>S: CreateSubscription + CreateMonitoredItems (AttributeId, SamplingIntervalHint)\n    end\n  else Logs or Traces\n    B->>S: Resolve EventSourcePath (default: cardinality anchor)\n    B->>S: Subscribe to Events (SelectedFields + Filter)\n  end\n  loop runtime\n    S-->>B: DataChange or Event notification\n    B->>C: OTLP metric / LogRecord / Span (+ dimensions + semantic cross-ref)\n  end"
+        "mermaid": "sequenceDiagram\n  participant S as Server (no PubSub surface)\n  participant B as Bridge (Client)\n  participant C as OTEL Collector\n  B->>S: Browse Server/Observability\n  S-->>B: ObservabilityBindingGroup { CompanionSpecificationUri, ModelNamespaceUris }\n  B->>S: Browse selected group children\n  S-->>B: ObservabilityBinding { SignalKind, DataSetClassId, DataSetCardinalityPath, BoundItems... }\n  B->>B: Compose effective class via §5.12 union\n  B->>S: Resolve DataSetCardinalityPath (default bound root)\n  alt Metrics\n    loop per BoundVariable\n      B->>S: TranslateBrowsePathsToNodeIds (BrowsePath)\n      B->>S: CreateSubscription + CreateMonitoredItems (AttributeId, SamplingIntervalHint)\n    end\n  else Logs or Traces\n    B->>S: Resolve EventSourcePath (default: cardinality anchor)\n    B->>S: Subscribe to Events (SelectedFields + Filter)\n  end\n  loop runtime\n    S-->>B: DataChange or Event notification\n    B->>C: OTLP metric / LogRecord / Span (+ dimensions + semantic cross-ref)\n  end",
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "6.2 Sequence — classic server (the default)",
+          "b": 0
+        }
       },
       {
         "t": "annex-clause",
@@ -7166,7 +7526,12 @@
         "id": "fig-obs-pubsub",
         "caption": "Bridge sequence for a PubSub-capable Server",
         "source": "mermaid",
-        "mermaid": "sequenceDiagram\n  participant S as Server (PubSub configured)\n  participant B as Bridge (Client)\n  participant C as OTEL Collector\n  B->>S: Browse Server/Observability\n  S-->>B: ObservabilityBindingGroup { CompanionSpecificationUri, ModelNamespaceUris }\n  B->>S: Browse selected group children\n  S-->>B: ObservabilityBinding + realization (PublishedDataSet Exports binding)\n  B->>S: Read DataSetMetaData + WriterGroup/PubSubConnection\n  B->>B: Match or cache DataSetClassId\n  B->>B: Create DataSetReader (subscriber)\n  loop runtime\n    S-->>B: PubSub DataSetMessage\n    B->>C: OTLP metric / LogRecord / Span (+ dimensions + semantic cross-ref)\n  end"
+        "mermaid": "sequenceDiagram\n  participant S as Server (PubSub configured)\n  participant B as Bridge (Client)\n  participant C as OTEL Collector\n  B->>S: Browse Server/Observability\n  S-->>B: ObservabilityBindingGroup { CompanionSpecificationUri, ModelNamespaceUris }\n  B->>S: Browse selected group children\n  S-->>B: ObservabilityBinding + realization (PublishedDataSet Exports binding)\n  B->>S: Read DataSetMetaData + WriterGroup/PubSubConnection\n  B->>B: Match or cache DataSetClassId\n  B->>B: Create DataSetReader (subscriber)\n  loop runtime\n    S-->>B: PubSub DataSetMessage\n    B->>C: OTLP metric / LogRecord / Span (+ dimensions + semantic cross-ref)\n  end",
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "6.3 Sequence — PubSub-capable server (less common)",
+          "b": 0
+        }
       }
     ],
     "annex-c": [
@@ -7202,7 +7567,12 @@
             "r": "t",
             "text": " (semantic cross-reference), not an OTEL-specific wire format. A bridge therefore drives other observability stacks with a thin adapter that consumes the same bindings:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "8 Other observability backends (informative)",
+          "b": 0
+        }
       },
       {
         "t": "list",
@@ -7314,7 +7684,12 @@
               "text": " Shape a metric or event DataSet into a columnar Arrow RecordBatch (one column per bound field, engineering units and semantic references carried as field metadata) for a data lake."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "8 Other observability backends (informative)",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -7324,7 +7699,12 @@
             "r": "t",
             "text": "Because the semantic cross-reference travels with every field, any of these destinations recovers the companion-model meaning of each value without connecting to the Server."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "8 Other observability backends (informative)",
+          "b": 2
+        }
       }
     ],
     "annex-d": [
@@ -7365,7 +7745,12 @@
             "r": "t",
             "text": " — 4 bound items across Metrics (Metrics). The DI IVendorNameplateType facet exposes vendor nameplate identity as OTEL resource attributes/dimensions for any device, machine or component that composes it."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/di/OPC-UA-DI-Observability-Export-Addendum.md",
+          "s": "1 Scope",
+          "b": 0
+        }
       },
       {
         "t": "annex-clause",
@@ -7469,7 +7854,12 @@
             "r": "t",
             "text": " registry."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/di/OPC-UA-DI-Observability-Export-Addendum.md",
+          "s": "3 How the bindings are applied",
+          "b": 0
+        }
       },
       {
         "t": "note",
@@ -7483,7 +7873,12 @@
             "r": "t",
             "text": " A compact instance implementing IVendorNameplateType. A pump's Identification object composes the same DI facet, so the Pumps metrics binding extends this one."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/di/OPC-UA-DI-Observability-Export-Addendum.md",
+          "s": "3 How the bindings are applied",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -7493,7 +7888,12 @@
             "r": "t",
             "text": "Only the bound signals are materialised in the overlay; it is illustrative, not a full companion instance."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/di/OPC-UA-DI-Observability-Export-Addendum.md",
+          "s": "3 How the bindings are applied",
+          "b": 2
+        }
       },
       {
         "t": "annex-clause",
@@ -7566,7 +7966,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/di/OPC-UA-DI-Observability-Export-Addendum.md",
+          "s": "4 Observability export bindings for `IVendorNameplateType`",
+          "b": 0
+        }
       },
       {
         "t": "annex-clause",
@@ -7613,7 +8018,12 @@
             "r": "t",
             "text": " one DataSet (bound root)"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/di/OPC-UA-DI-Observability-Export-Addendum.md",
+          "s": "Metrics — Metrics",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -7813,7 +8223,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/observability-export/di/OPC-UA-DI-Observability-Export-Addendum.md",
+          "s": "Metrics — Metrics",
+          "b": 1
+        }
       },
       {
         "t": "annex-clause",
@@ -7829,21 +8244,36 @@
             "r": "t",
             "text": "Overview of the observability bindings and their placement on the theoretical instance:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/di/OPC-UA-DI-Observability-Export-Addendum.md",
+          "s": "5 Where the bindings live",
+          "b": 0
+        }
       },
       {
         "t": "figure",
         "id": "fig-obs-di-tree",
         "caption": "Device nameplate bindings in the address space",
         "source": "mermaid",
-        "mermaid": "graph LR\n  ROOT[\"ExampleDeviceNameplate : IVendorNameplateType\"]\n  ROOT --> G[\"DI<br/>ObservabilityBindingGroup\"]\n  G -.CollectedBy.-> O[\"Observability registry i=60101\"]\n  G --> S0[\"Metrics<br/>Metrics\"]\n  S0 --> S0_0[\"Manufacturer : Identification\"]\n  S0 --> S0_1[\"Model : Identification\"]\n  S0 --> S0_2[\"SerialNumber : Identification\"]\n  S0 --> S0_3[\"ProductInstanceUri : Identification\"]"
+        "mermaid": "graph LR\n  ROOT[\"ExampleDeviceNameplate : IVendorNameplateType\"]\n  ROOT --> G[\"DI<br/>ObservabilityBindingGroup\"]\n  G -.CollectedBy.-> O[\"Observability registry i=60101\"]\n  G --> S0[\"Metrics<br/>Metrics\"]\n  S0 --> S0_0[\"Manufacturer : Identification\"]\n  S0 --> S0_1[\"Model : Identification\"]\n  S0 --> S0_2[\"SerialNumber : Identification\"]\n  S0 --> S0_3[\"ProductInstanceUri : Identification\"]",
+        "src": {
+          "f": "core-specs/observability-export/di/OPC-UA-DI-Observability-Export-Addendum.md",
+          "s": "5 Where the bindings live",
+          "b": 1
+        }
       },
       {
         "t": "figure",
         "id": "fig-obs-di-dataset",
         "caption": "Device nameplate DataSet composition",
         "source": "mermaid",
-        "mermaid": "graph TD\n  R[\"ExampleDeviceNameplate : IVendorNameplateType\"]\n  R -->|HasInterface| I([IObservableType])\n  R -->|HasComponent| G[\"DI : ObservabilityBindingGroupType\"]\n  G -.CollectedBy.-> O[\"Observability : ObservabilityFolderType\"]\n  G -->|HasComponent| B0[\"Metrics : ObservabilityBindingType<br/>Metrics\"]\n  B0 -->|HasComponent| IT00[\"Manufacturer : BoundVariableType\"]\n  IT00 -->|BindsToNode| N00[\"Manufacturer\"]\n  B0 -->|HasComponent| IT01[\"Model : BoundVariableType\"]\n  IT01 -->|BindsToNode| N01[\"Model\"]\n  B0 -->|HasComponent| IT02[\"SerialNumber : BoundVariableType\"]\n  IT02 -->|BindsToNode| N02[\"SerialNumber\"]"
+        "mermaid": "graph TD\n  R[\"ExampleDeviceNameplate : IVendorNameplateType\"]\n  R -->|HasInterface| I([IObservableType])\n  R -->|HasComponent| G[\"DI : ObservabilityBindingGroupType\"]\n  G -.CollectedBy.-> O[\"Observability : ObservabilityFolderType\"]\n  G -->|HasComponent| B0[\"Metrics : ObservabilityBindingType<br/>Metrics\"]\n  B0 -->|HasComponent| IT00[\"Manufacturer : BoundVariableType\"]\n  IT00 -->|BindsToNode| N00[\"Manufacturer\"]\n  B0 -->|HasComponent| IT01[\"Model : BoundVariableType\"]\n  IT01 -->|BindsToNode| N01[\"Model\"]\n  B0 -->|HasComponent| IT02[\"SerialNumber : BoundVariableType\"]\n  IT02 -->|BindsToNode| N02[\"SerialNumber\"]",
+        "src": {
+          "f": "core-specs/observability-export/di/OPC-UA-DI-Observability-Export-Addendum.md",
+          "s": "5 Where the bindings live",
+          "b": 2
+        }
       }
     ],
     "annex-e": [
@@ -7884,7 +8314,12 @@
             "r": "t",
             "text": " — 1 bound items across Metrics (Metrics). The DI IDeviceHealthType facet exposes DeviceHealth as an OTEL status gauge. A pump does not compose IDeviceHealthType, so this binding is device-only."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/di/OPC-UA-DIDeviceHealth-Observability-Export-Addendum.md",
+          "s": "1 Scope",
+          "b": 0
+        }
       },
       {
         "t": "annex-clause",
@@ -7988,7 +8423,12 @@
             "r": "t",
             "text": " registry."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/di/OPC-UA-DIDeviceHealth-Observability-Export-Addendum.md",
+          "s": "3 How the bindings are applied",
+          "b": 0
+        }
       },
       {
         "t": "note",
@@ -8002,7 +8442,12 @@
             "r": "t",
             "text": " A compact instance implementing IDeviceHealthType."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/di/OPC-UA-DIDeviceHealth-Observability-Export-Addendum.md",
+          "s": "3 How the bindings are applied",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -8012,7 +8457,12 @@
             "r": "t",
             "text": "Only the bound signals are materialised in the overlay; it is illustrative, not a full companion instance."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/di/OPC-UA-DIDeviceHealth-Observability-Export-Addendum.md",
+          "s": "3 How the bindings are applied",
+          "b": 2
+        }
       },
       {
         "t": "annex-clause",
@@ -8085,7 +8535,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/di/OPC-UA-DIDeviceHealth-Observability-Export-Addendum.md",
+          "s": "4 Observability export bindings for `IDeviceHealthType`",
+          "b": 0
+        }
       },
       {
         "t": "annex-clause",
@@ -8132,7 +8587,12 @@
             "r": "t",
             "text": " one DataSet (bound root)"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/di/OPC-UA-DIDeviceHealth-Observability-Export-Addendum.md",
+          "s": "Metrics — Metrics",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -8218,7 +8678,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/observability-export/di/OPC-UA-DIDeviceHealth-Observability-Export-Addendum.md",
+          "s": "Metrics — Metrics",
+          "b": 1
+        }
       },
       {
         "t": "annex-clause",
@@ -8234,21 +8699,36 @@
             "r": "t",
             "text": "Overview of the observability bindings and their placement on the theoretical instance:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/di/OPC-UA-DIDeviceHealth-Observability-Export-Addendum.md",
+          "s": "5 Where the bindings live",
+          "b": 0
+        }
       },
       {
         "t": "figure",
         "id": "fig-obs-health-tree",
         "caption": "Device health bindings in the address space",
         "source": "mermaid",
-        "mermaid": "graph LR\n  ROOT[\"ExampleDeviceHealth : IDeviceHealthType\"]\n  ROOT --> G[\"DIDeviceHealth<br/>ObservabilityBindingGroup\"]\n  G -.CollectedBy.-> O[\"Observability registry i=60101\"]\n  G --> S0[\"Metrics<br/>Metrics\"]\n  S0 --> S0_0[\"DeviceHealth : Status\"]"
+        "mermaid": "graph LR\n  ROOT[\"ExampleDeviceHealth : IDeviceHealthType\"]\n  ROOT --> G[\"DIDeviceHealth<br/>ObservabilityBindingGroup\"]\n  G -.CollectedBy.-> O[\"Observability registry i=60101\"]\n  G --> S0[\"Metrics<br/>Metrics\"]\n  S0 --> S0_0[\"DeviceHealth : Status\"]",
+        "src": {
+          "f": "core-specs/observability-export/di/OPC-UA-DIDeviceHealth-Observability-Export-Addendum.md",
+          "s": "5 Where the bindings live",
+          "b": 1
+        }
       },
       {
         "t": "figure",
         "id": "fig-obs-health-dataset",
         "caption": "Device health DataSet composition",
         "source": "mermaid",
-        "mermaid": "graph TD\n  R[\"ExampleDeviceHealth : IDeviceHealthType\"]\n  R -->|HasInterface| I([IObservableType])\n  R -->|HasComponent| G[\"DIDeviceHealth : ObservabilityBindingGroupType\"]\n  G -.CollectedBy.-> O[\"Observability : ObservabilityFolderType\"]\n  G -->|HasComponent| B0[\"Metrics : ObservabilityBindingType<br/>Metrics\"]\n  B0 -->|HasComponent| IT00[\"DeviceHealth : BoundVariableType\"]\n  IT00 -->|BindsToNode| N00[\"DeviceHealth\"]"
+        "mermaid": "graph TD\n  R[\"ExampleDeviceHealth : IDeviceHealthType\"]\n  R -->|HasInterface| I([IObservableType])\n  R -->|HasComponent| G[\"DIDeviceHealth : ObservabilityBindingGroupType\"]\n  G -.CollectedBy.-> O[\"Observability : ObservabilityFolderType\"]\n  G -->|HasComponent| B0[\"Metrics : ObservabilityBindingType<br/>Metrics\"]\n  B0 -->|HasComponent| IT00[\"DeviceHealth : BoundVariableType\"]\n  IT00 -->|BindsToNode| N00[\"DeviceHealth\"]",
+        "src": {
+          "f": "core-specs/observability-export/di/OPC-UA-DIDeviceHealth-Observability-Export-Addendum.md",
+          "s": "5 Where the bindings live",
+          "b": 2
+        }
       }
     ],
     "annex-f": [
@@ -8289,7 +8769,12 @@
             "r": "t",
             "text": " OPC UA composition axes, instead of restating their fields:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/facets/OPC-UA-Facets-Observability-Export-Addendum.md",
+          "s": "1. The model",
+          "b": 0
+        }
       },
       {
         "t": "list",
@@ -8455,14 +8940,24 @@
               "text": " binding."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/facets/OPC-UA-Facets-Observability-Export-Addendum.md",
+          "s": "1. The model",
+          "b": 1
+        }
       },
       {
         "t": "figure",
         "id": "fig-obs-facets",
         "caption": "Facet inheritance across the composition axes",
         "source": "mermaid",
-        "mermaid": "classDiagram\n  class DeviceType\n  class LocationAddInType\n  class IMaintenanceFacetType {\n    <<interface>>\n  }\n  class MachineType\n  DeviceType <|-- MachineType : HasSubtype\n  MachineType --> LocationAddInType : HasAddIn (Location)\n  MachineType ..|> IMaintenanceFacetType : HasInterface"
+        "mermaid": "classDiagram\n  class DeviceType\n  class LocationAddInType\n  class IMaintenanceFacetType {\n    <<interface>>\n  }\n  class MachineType\n  DeviceType <|-- MachineType : HasSubtype\n  MachineType --> LocationAddInType : HasAddIn (Location)\n  MachineType ..|> IMaintenanceFacetType : HasInterface",
+        "src": {
+          "f": "core-specs/observability-export/facets/OPC-UA-Facets-Observability-Export-Addendum.md",
+          "s": "1. The model",
+          "b": 2
+        }
       },
       {
         "t": "annex-clause",
@@ -8487,7 +8982,12 @@
             "r": "t",
             "text": ", on its own type:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/facets/OPC-UA-Facets-Observability-Export-Addendum.md",
+          "s": "2. Base facet bindings",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -8672,7 +9172,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/observability-export/facets/OPC-UA-Facets-Observability-Export-Addendum.md",
+          "s": "2. Base facet bindings",
+          "b": 1
+        }
       },
       {
         "t": "annex-clause",
@@ -8722,7 +9227,12 @@
             "r": "t",
             "text": " of each base."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/facets/OPC-UA-Facets-Observability-Export-Addendum.md",
+          "s": "3. Derived bindings — delta only",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -8859,7 +9369,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/observability-export/facets/OPC-UA-Facets-Observability-Export-Addendum.md",
+          "s": "3. Derived bindings — delta only",
+          "b": 1
+        }
       },
       {
         "t": "annex-clause",
@@ -8956,7 +9471,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/facets/OPC-UA-Facets-Observability-Export-Addendum.md",
+          "s": "4. What the bridge produces — the composed DataSets",
+          "b": 0
+        }
       },
       {
         "t": "annex-clause",
@@ -9264,7 +9784,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/observability-export/facets/OPC-UA-Facets-Observability-Export-Addendum.md",
+          "s": "4.1 `MachineObservability` — Metrics DataSet (8 fields, class `53dc8a49…`)",
+          "b": 0
+        }
       },
       {
         "t": "annex-clause",
@@ -9348,7 +9873,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/observability-export/facets/OPC-UA-Facets-Observability-Export-Addendum.md",
+          "s": "4.2 `MachineMaintenance` — Metrics DataSet (1 fields, class `53dc8a49…`)",
+          "b": 0
+        }
       },
       {
         "t": "annex-clause",
@@ -9405,7 +9935,12 @@
             "r": "t",
             "text": ":"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/facets/OPC-UA-Facets-Observability-Export-Addendum.md",
+          "s": "5. Facet-scoped subset recognition",
+          "b": 0
+        }
       },
       {
         "t": "list",
@@ -9528,7 +10063,12 @@
               "text": ") consumes all 8 fields."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/facets/OPC-UA-Facets-Observability-Export-Addendum.md",
+          "s": "5. Facet-scoped subset recognition",
+          "b": 1
+        }
       },
       {
         "t": "annex-clause",
@@ -9648,7 +10188,12 @@
             "r": "t",
             "text": ". NodeIds and the example namespace are provisional."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/facets/OPC-UA-Facets-Observability-Export-Addendum.md",
+          "s": "6. Where the binding nodes live",
+          "b": 0
+        }
       }
     ],
     "annex-g": [
@@ -9689,7 +10234,12 @@
             "r": "t",
             "text": " — 41 bound items across Metrics (Metrics), Logs (Logs), Traces (Traces). Pumps expose operational measurements, identity dimensions and events that map naturally to OTEL metrics, logs and traces."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/pumps/OPC-UA-Pumps-Observability-Export-Addendum.md",
+          "s": "1 Scope",
+          "b": 0
+        }
       },
       {
         "t": "annex-clause",
@@ -9793,7 +10343,12 @@
             "r": "t",
             "text": " registry."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/pumps/OPC-UA-Pumps-Observability-Export-Addendum.md",
+          "s": "3 How the bindings are applied",
+          "b": 0
+        }
       },
       {
         "t": "note",
@@ -9816,7 +10371,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/pumps/OPC-UA-Pumps-Observability-Export-Addendum.md",
+          "s": "3 How the bindings are applied",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -9826,7 +10386,12 @@
             "r": "t",
             "text": "Only the bound signals are materialised in the overlay; it is illustrative, not a full companion instance."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/pumps/OPC-UA-Pumps-Observability-Export-Addendum.md",
+          "s": "3 How the bindings are applied",
+          "b": 2
+        }
       },
       {
         "t": "annex-clause",
@@ -9899,7 +10464,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/pumps/OPC-UA-Pumps-Observability-Export-Addendum.md",
+          "s": "4 Observability export bindings for `PumpType`",
+          "b": 0
+        }
       },
       {
         "t": "annex-clause",
@@ -9946,7 +10516,12 @@
             "r": "t",
             "text": " one DataSet (bound root)"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/pumps/OPC-UA-Pumps-Observability-Export-Addendum.md",
+          "s": "Metrics — Metrics",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -11066,7 +11641,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/observability-export/pumps/OPC-UA-Pumps-Observability-Export-Addendum.md",
+          "s": "Metrics — Metrics",
+          "b": 1
+        }
       },
       {
         "t": "annex-clause",
@@ -11139,7 +11719,12 @@
             "r": "t",
             "text": " BaseEventType"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/pumps/OPC-UA-Pumps-Observability-Export-Addendum.md",
+          "s": "Logs — Logs",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -11317,7 +11902,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/observability-export/pumps/OPC-UA-Pumps-Observability-Export-Addendum.md",
+          "s": "Logs — Logs",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -11364,7 +11954,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/pumps/OPC-UA-Pumps-Observability-Export-Addendum.md",
+          "s": "Logs — Logs",
+          "b": 2
+        }
       },
       {
         "t": "annex-clause",
@@ -11437,7 +12032,12 @@
             "r": "t",
             "text": " BaseEventType"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/pumps/OPC-UA-Pumps-Observability-Export-Addendum.md",
+          "s": "Traces — Traces",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -11595,7 +12195,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/observability-export/pumps/OPC-UA-Pumps-Observability-Export-Addendum.md",
+          "s": "Traces — Traces",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -11650,7 +12255,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/pumps/OPC-UA-Pumps-Observability-Export-Addendum.md",
+          "s": "Traces — Traces",
+          "b": 2
+        }
       },
       {
         "t": "annex-clause",
@@ -11666,21 +12276,36 @@
             "r": "t",
             "text": "Overview of the observability bindings and their placement on the theoretical instance:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/pumps/OPC-UA-Pumps-Observability-Export-Addendum.md",
+          "s": "5 Where the bindings live",
+          "b": 0
+        }
       },
       {
         "t": "figure",
         "id": "fig-obs-pumps-tree",
         "caption": "Pump bindings in the address space",
         "source": "mermaid",
-        "mermaid": "graph LR\n  ROOT[\"ExamplePump : PumpType\"]\n  ROOT --> G[\"Pumps<br/>ObservabilityBindingGroup\"]\n  G -.CollectedBy.-> O[\"Observability registry i=60101\"]\n  G --> S0[\"Metrics<br/>Metrics\"]\n  S0 --> S0_0[\"Speed : Telemetry\"]\n  S0 --> S0_1[\"Throughput : Telemetry\"]\n  S0 --> S0_2[\"MassFlow : Telemetry\"]\n  S0 --> S0_3[\"ProcessPressure : Telemetry\"]\n  S0 --> S0_4[\"DifferentialPressure : Telemetry\"]\n  S0 --> S0_5[\"PumpTotalHead : Telemetry\"]\n  G --> S1[\"Logs<br/>Logs\"]\n  S1 --> S1_0[\"EventId : Event\"]\n  S1 --> S1_1[\"EventType : Event\"]\n  S1 --> S1_2[\"SourceName : Event\"]\n  S1 --> S1_3[\"Time : Event\"]\n  S1 --> S1_4[\"Severity : Event\"]\n  S1 --> S1_5[\"Message : Event\"]\n  G --> S2[\"Traces<br/>Traces\"]\n  S2 --> S2_0[\"EventId : Event\"]\n  S2 --> S2_1[\"SourceName : Event\"]\n  S2 --> S2_2[\"Time : Event\"]\n  S2 --> S2_3[\"Severity : Event\"]\n  S2 --> S2_4[\"Message : Event\"]\n  S2 --> S2_5[\"service.name : Dimension\"]"
+        "mermaid": "graph LR\n  ROOT[\"ExamplePump : PumpType\"]\n  ROOT --> G[\"Pumps<br/>ObservabilityBindingGroup\"]\n  G -.CollectedBy.-> O[\"Observability registry i=60101\"]\n  G --> S0[\"Metrics<br/>Metrics\"]\n  S0 --> S0_0[\"Speed : Telemetry\"]\n  S0 --> S0_1[\"Throughput : Telemetry\"]\n  S0 --> S0_2[\"MassFlow : Telemetry\"]\n  S0 --> S0_3[\"ProcessPressure : Telemetry\"]\n  S0 --> S0_4[\"DifferentialPressure : Telemetry\"]\n  S0 --> S0_5[\"PumpTotalHead : Telemetry\"]\n  G --> S1[\"Logs<br/>Logs\"]\n  S1 --> S1_0[\"EventId : Event\"]\n  S1 --> S1_1[\"EventType : Event\"]\n  S1 --> S1_2[\"SourceName : Event\"]\n  S1 --> S1_3[\"Time : Event\"]\n  S1 --> S1_4[\"Severity : Event\"]\n  S1 --> S1_5[\"Message : Event\"]\n  G --> S2[\"Traces<br/>Traces\"]\n  S2 --> S2_0[\"EventId : Event\"]\n  S2 --> S2_1[\"SourceName : Event\"]\n  S2 --> S2_2[\"Time : Event\"]\n  S2 --> S2_3[\"Severity : Event\"]\n  S2 --> S2_4[\"Message : Event\"]\n  S2 --> S2_5[\"service.name : Dimension\"]",
+        "src": {
+          "f": "core-specs/observability-export/pumps/OPC-UA-Pumps-Observability-Export-Addendum.md",
+          "s": "5 Where the bindings live",
+          "b": 1
+        }
       },
       {
         "t": "figure",
         "id": "fig-obs-pumps-dataset",
         "caption": "Pump DataSet composition",
         "source": "mermaid",
-        "mermaid": "graph TD\n  R[\"ExamplePump : PumpType\"]\n  R -->|HasInterface| I([IObservableType])\n  R -->|HasComponent| G[\"Pumps : ObservabilityBindingGroupType\"]\n  G -.CollectedBy.-> O[\"Observability : ObservabilityFolderType\"]\n  G -->|HasComponent| B0[\"Metrics : ObservabilityBindingType<br/>Metrics\"]\n  B0 -->|HasComponent| IT00[\"Speed : BoundVariableType\"]\n  IT00 -->|BindsToNode| N00[\"Operational/Measurements/Speed\"]\n  B0 -->|HasComponent| IT01[\"Throughput : BoundVariableType\"]\n  IT01 -->|BindsToNode| N01[\"Operational/Measurements/Throughput\"]\n  B0 -->|HasComponent| IT02[\"MassFlow : BoundVariableType\"]\n  IT02 -->|BindsToNode| N02[\"Operational/Measurements/MassFlow\"]\n  G -->|HasComponent| B1[\"Logs : ObservabilityBindingType<br/>Logs\"]\n  B1 -->|HasComponent| IT10[\"EventId : BoundEventFieldType\"]\n  IT10 -.event field.-> N10[\"BaseEventType/EventId\"]\n  B1 -->|HasComponent| IT11[\"EventType : BoundEventFieldType\"]\n  IT11 -.event field.-> N11[\"BaseEventType/EventType\"]\n  B1 -->|HasComponent| IT12[\"SourceName : BoundEventFieldType\"]\n  IT12 -.event field.-> N12[\"BaseEventType/SourceName\"]\n  G -->|HasComponent| B2[\"Traces : ObservabilityBindingType<br/>Traces\"]\n  B2 -->|HasComponent| IT20[\"EventId : BoundEventFieldType\"]\n  IT20 -.event field.-> N20[\"BaseEventType/EventId\"]\n  B2 -->|HasComponent| IT21[\"SourceName : BoundEventFieldType\"]\n  IT21 -.event field.-> N21[\"BaseEventType/SourceName\"]\n  B2 -->|HasComponent| IT22[\"Time : BoundEventFieldType\"]\n  IT22 -.event field.-> N22[\"BaseEventType/Time\"]"
+        "mermaid": "graph TD\n  R[\"ExamplePump : PumpType\"]\n  R -->|HasInterface| I([IObservableType])\n  R -->|HasComponent| G[\"Pumps : ObservabilityBindingGroupType\"]\n  G -.CollectedBy.-> O[\"Observability : ObservabilityFolderType\"]\n  G -->|HasComponent| B0[\"Metrics : ObservabilityBindingType<br/>Metrics\"]\n  B0 -->|HasComponent| IT00[\"Speed : BoundVariableType\"]\n  IT00 -->|BindsToNode| N00[\"Operational/Measurements/Speed\"]\n  B0 -->|HasComponent| IT01[\"Throughput : BoundVariableType\"]\n  IT01 -->|BindsToNode| N01[\"Operational/Measurements/Throughput\"]\n  B0 -->|HasComponent| IT02[\"MassFlow : BoundVariableType\"]\n  IT02 -->|BindsToNode| N02[\"Operational/Measurements/MassFlow\"]\n  G -->|HasComponent| B1[\"Logs : ObservabilityBindingType<br/>Logs\"]\n  B1 -->|HasComponent| IT10[\"EventId : BoundEventFieldType\"]\n  IT10 -.event field.-> N10[\"BaseEventType/EventId\"]\n  B1 -->|HasComponent| IT11[\"EventType : BoundEventFieldType\"]\n  IT11 -.event field.-> N11[\"BaseEventType/EventType\"]\n  B1 -->|HasComponent| IT12[\"SourceName : BoundEventFieldType\"]\n  IT12 -.event field.-> N12[\"BaseEventType/SourceName\"]\n  G -->|HasComponent| B2[\"Traces : ObservabilityBindingType<br/>Traces\"]\n  B2 -->|HasComponent| IT20[\"EventId : BoundEventFieldType\"]\n  IT20 -.event field.-> N20[\"BaseEventType/EventId\"]\n  B2 -->|HasComponent| IT21[\"SourceName : BoundEventFieldType\"]\n  IT21 -.event field.-> N21[\"BaseEventType/SourceName\"]\n  B2 -->|HasComponent| IT22[\"Time : BoundEventFieldType\"]\n  IT22 -.event field.-> N22[\"BaseEventType/Time\"]",
+        "src": {
+          "f": "core-specs/observability-export/pumps/OPC-UA-Pumps-Observability-Export-Addendum.md",
+          "s": "5 Where the bindings live",
+          "b": 2
+        }
       }
     ],
     "annex-h": [
@@ -11721,7 +12346,12 @@
             "r": "t",
             "text": " — 25 bound items across Metrics (Metrics), Logs (Logs), Traces (Traces). Robotics exposes motion-device, axis, motor, controller and safety state information for OTEL metrics, logs and traces."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
+          "s": "1 Scope",
+          "b": 0
+        }
       },
       {
         "t": "annex-clause",
@@ -11825,7 +12455,12 @@
             "r": "t",
             "text": " registry."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
+          "s": "3 How the bindings are applied",
+          "b": 0
+        }
       },
       {
         "t": "note",
@@ -11839,7 +12474,12 @@
             "r": "t",
             "text": " Robotics publishes no public instance example, so a compact theoretical MotionDeviceSystem is synthesised with one MotionDevice, one Axis, one PowerTrain/Motor, one Controller and one SafetyState. Placeholder path segments remain in type-level BrowsePaths."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
+          "s": "3 How the bindings are applied",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -11849,7 +12489,12 @@
             "r": "t",
             "text": "Only the bound signals are materialised in the overlay; it is illustrative, not a full companion instance."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
+          "s": "3 How the bindings are applied",
+          "b": 2
+        }
       },
       {
         "t": "annex-clause",
@@ -11922,7 +12567,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
+          "s": "4 Observability export bindings for `MotionDeviceSystemType`",
+          "b": 0
+        }
       },
       {
         "t": "annex-clause",
@@ -11969,7 +12619,12 @@
             "r": "t",
             "text": " one DataSet (bound root)"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
+          "s": "Metrics — Metrics",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -12481,7 +13136,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
+          "s": "Metrics — Metrics",
+          "b": 1
+        }
       },
       {
         "t": "annex-clause",
@@ -12554,7 +13214,12 @@
             "r": "t",
             "text": " AlarmConditionType"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
+          "s": "Logs — Logs",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -12732,7 +13397,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
+          "s": "Logs — Logs",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -12779,7 +13449,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
+          "s": "Logs — Logs",
+          "b": 2
+        }
       },
       {
         "t": "annex-clause",
@@ -12852,7 +13527,12 @@
             "r": "t",
             "text": " BaseEventType"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
+          "s": "Traces — Traces",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -13010,7 +13690,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
+          "s": "Traces — Traces",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -13065,7 +13750,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
+          "s": "Traces — Traces",
+          "b": 2
+        }
       },
       {
         "t": "annex-clause",
@@ -13081,21 +13771,36 @@
             "r": "t",
             "text": "Overview of the observability bindings and their placement on the theoretical instance:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
+          "s": "5 Where the bindings live",
+          "b": 0
+        }
       },
       {
         "t": "figure",
         "id": "fig-obs-robotics-tree",
         "caption": "Motion device bindings in the address space",
         "source": "mermaid",
-        "mermaid": "graph LR\n  ROOT[\"ExampleRobotSystem : MotionDeviceSystemType\"]\n  ROOT --> G[\"Robotics<br/>ObservabilityBindingGroup\"]\n  G -.CollectedBy.-> O[\"Observability registry i=60101\"]\n  G --> S0[\"Metrics<br/>Metrics\"]\n  S0 --> S0_0[\"AxisActualPosition : Telemetry\"]\n  S0 --> S0_1[\"MotorTemperature : Telemetry\"]\n  S0 --> S0_2[\"SpeedOverride : Status\"]\n  S0 --> S0_3[\"ControllerTemperature : Telemetry\"]\n  S0 --> S0_4[\"CabinetFanSpeed : Telemetry\"]\n  S0 --> S0_5[\"CPUFanSpeed : Telemetry\"]\n  G --> S1[\"Logs<br/>Logs\"]\n  S1 --> S1_0[\"EventId : Event\"]\n  S1 --> S1_1[\"EventType : Event\"]\n  S1 --> S1_2[\"SourceName : Event\"]\n  S1 --> S1_3[\"Time : Event\"]\n  S1 --> S1_4[\"Severity : Event\"]\n  S1 --> S1_5[\"Message : Event\"]\n  G --> S2[\"Traces<br/>Traces\"]\n  S2 --> S2_0[\"EventId : Event\"]\n  S2 --> S2_1[\"SourceName : Event\"]\n  S2 --> S2_2[\"Time : Event\"]\n  S2 --> S2_3[\"Severity : Event\"]\n  S2 --> S2_4[\"Message : Event\"]\n  S2 --> S2_5[\"service.name : Dimension\"]"
+        "mermaid": "graph LR\n  ROOT[\"ExampleRobotSystem : MotionDeviceSystemType\"]\n  ROOT --> G[\"Robotics<br/>ObservabilityBindingGroup\"]\n  G -.CollectedBy.-> O[\"Observability registry i=60101\"]\n  G --> S0[\"Metrics<br/>Metrics\"]\n  S0 --> S0_0[\"AxisActualPosition : Telemetry\"]\n  S0 --> S0_1[\"MotorTemperature : Telemetry\"]\n  S0 --> S0_2[\"SpeedOverride : Status\"]\n  S0 --> S0_3[\"ControllerTemperature : Telemetry\"]\n  S0 --> S0_4[\"CabinetFanSpeed : Telemetry\"]\n  S0 --> S0_5[\"CPUFanSpeed : Telemetry\"]\n  G --> S1[\"Logs<br/>Logs\"]\n  S1 --> S1_0[\"EventId : Event\"]\n  S1 --> S1_1[\"EventType : Event\"]\n  S1 --> S1_2[\"SourceName : Event\"]\n  S1 --> S1_3[\"Time : Event\"]\n  S1 --> S1_4[\"Severity : Event\"]\n  S1 --> S1_5[\"Message : Event\"]\n  G --> S2[\"Traces<br/>Traces\"]\n  S2 --> S2_0[\"EventId : Event\"]\n  S2 --> S2_1[\"SourceName : Event\"]\n  S2 --> S2_2[\"Time : Event\"]\n  S2 --> S2_3[\"Severity : Event\"]\n  S2 --> S2_4[\"Message : Event\"]\n  S2 --> S2_5[\"service.name : Dimension\"]",
+        "src": {
+          "f": "core-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
+          "s": "5 Where the bindings live",
+          "b": 1
+        }
       },
       {
         "t": "figure",
         "id": "fig-obs-robotics-dataset",
         "caption": "Motion device DataSet composition",
         "source": "mermaid",
-        "mermaid": "graph TD\n  R[\"ExampleRobotSystem : MotionDeviceSystemType\"]\n  R -->|HasInterface| I([IObservableType])\n  R -->|HasComponent| G[\"Robotics : ObservabilityBindingGroupType\"]\n  G -.CollectedBy.-> O[\"Observability : ObservabilityFolderType\"]\n  G -->|HasComponent| B0[\"Metrics : ObservabilityBindingType<br/>Metrics\"]\n  B0 -->|HasComponent| IT00[\"AxisActualPosition : BoundVariableType\"]\n  IT00 -->|BindsToNode| N00[\"MotionDevices/MotionDevice_1/Axes/Axis_1/ParameterSet/ActualPosition\"]\n  B0 -->|HasComponent| IT01[\"MotorTemperature : BoundVariableType\"]\n  IT01 -->|BindsToNode| N01[\"MotionDevices/MotionDevice_1/PowerTrains/PowerTrain_1/Motor_1/ParameterSet/MotorTemperature\"]\n  B0 -->|HasComponent| IT02[\"SpeedOverride : BoundVariableType\"]\n  IT02 -->|BindsToNode| N02[\"MotionDevices/MotionDevice_1/ParameterSet/SpeedOverride\"]\n  G -->|HasComponent| B1[\"Logs : ObservabilityBindingType<br/>Logs\"]\n  B1 -->|HasComponent| IT10[\"EventId : BoundEventFieldType\"]\n  IT10 -.event field.-> N10[\"AlarmConditionType/EventId\"]\n  B1 -->|HasComponent| IT11[\"EventType : BoundEventFieldType\"]\n  IT11 -.event field.-> N11[\"AlarmConditionType/EventType\"]\n  B1 -->|HasComponent| IT12[\"SourceName : BoundEventFieldType\"]\n  IT12 -.event field.-> N12[\"AlarmConditionType/SourceName\"]\n  G -->|HasComponent| B2[\"Traces : ObservabilityBindingType<br/>Traces\"]\n  B2 -->|HasComponent| IT20[\"EventId : BoundEventFieldType\"]\n  IT20 -.event field.-> N20[\"BaseEventType/EventId\"]\n  B2 -->|HasComponent| IT21[\"SourceName : BoundEventFieldType\"]\n  IT21 -.event field.-> N21[\"BaseEventType/SourceName\"]\n  B2 -->|HasComponent| IT22[\"Time : BoundEventFieldType\"]\n  IT22 -.event field.-> N22[\"BaseEventType/Time\"]"
+        "mermaid": "graph TD\n  R[\"ExampleRobotSystem : MotionDeviceSystemType\"]\n  R -->|HasInterface| I([IObservableType])\n  R -->|HasComponent| G[\"Robotics : ObservabilityBindingGroupType\"]\n  G -.CollectedBy.-> O[\"Observability : ObservabilityFolderType\"]\n  G -->|HasComponent| B0[\"Metrics : ObservabilityBindingType<br/>Metrics\"]\n  B0 -->|HasComponent| IT00[\"AxisActualPosition : BoundVariableType\"]\n  IT00 -->|BindsToNode| N00[\"MotionDevices/MotionDevice_1/Axes/Axis_1/ParameterSet/ActualPosition\"]\n  B0 -->|HasComponent| IT01[\"MotorTemperature : BoundVariableType\"]\n  IT01 -->|BindsToNode| N01[\"MotionDevices/MotionDevice_1/PowerTrains/PowerTrain_1/Motor_1/ParameterSet/MotorTemperature\"]\n  B0 -->|HasComponent| IT02[\"SpeedOverride : BoundVariableType\"]\n  IT02 -->|BindsToNode| N02[\"MotionDevices/MotionDevice_1/ParameterSet/SpeedOverride\"]\n  G -->|HasComponent| B1[\"Logs : ObservabilityBindingType<br/>Logs\"]\n  B1 -->|HasComponent| IT10[\"EventId : BoundEventFieldType\"]\n  IT10 -.event field.-> N10[\"AlarmConditionType/EventId\"]\n  B1 -->|HasComponent| IT11[\"EventType : BoundEventFieldType\"]\n  IT11 -.event field.-> N11[\"AlarmConditionType/EventType\"]\n  B1 -->|HasComponent| IT12[\"SourceName : BoundEventFieldType\"]\n  IT12 -.event field.-> N12[\"AlarmConditionType/SourceName\"]\n  G -->|HasComponent| B2[\"Traces : ObservabilityBindingType<br/>Traces\"]\n  B2 -->|HasComponent| IT20[\"EventId : BoundEventFieldType\"]\n  IT20 -.event field.-> N20[\"BaseEventType/EventId\"]\n  B2 -->|HasComponent| IT21[\"SourceName : BoundEventFieldType\"]\n  IT21 -.event field.-> N21[\"BaseEventType/SourceName\"]\n  B2 -->|HasComponent| IT22[\"Time : BoundEventFieldType\"]\n  IT22 -.event field.-> N22[\"BaseEventType/Time\"]",
+        "src": {
+          "f": "core-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
+          "s": "5 Where the bindings live",
+          "b": 2
+        }
       },
       {
         "t": "annex-clause",
@@ -13172,7 +13877,12 @@
             "r": "t",
             "text": ", of which there are many DataSetWriters. The same bindings resolve differently for different instance topologies:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
+          "s": "6 BrowsePath resolution — worked examples",
+          "b": 0
+        }
       },
       {
         "t": "annex-clause",
@@ -13202,7 +13912,12 @@
             "r": "t",
             "text": " Controller_1"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
+          "s": "Topology 1: Single 6-axis articulated robot",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -13316,7 +14031,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
+          "s": "Topology 1: Single 6-axis articulated robot",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -13335,7 +14055,12 @@
             "r": "t",
             "text": " produced by the bridge for this topology."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
+          "s": "Topology 1: Single 6-axis articulated robot",
+          "b": 2
+        }
       },
       {
         "t": "annex-clause",
@@ -13365,7 +14090,12 @@
             "r": "t",
             "text": " Controller_1"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
+          "s": "Topology 2: Single 4-axis SCARA",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -13479,7 +14209,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
+          "s": "Topology 2: Single 4-axis SCARA",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -13498,7 +14233,12 @@
             "r": "t",
             "text": " produced by the bridge for this topology."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
+          "s": "Topology 2: Single 4-axis SCARA",
+          "b": 2
+        }
       },
       {
         "t": "annex-clause",
@@ -13528,7 +14268,12 @@
             "r": "t",
             "text": " Controller_1"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
+          "s": "Topology 3: Two-robot cell (6+4 axes)",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -13642,7 +14387,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
+          "s": "Topology 3: Two-robot cell (6+4 axes)",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -13661,7 +14411,12 @@
             "r": "t",
             "text": " produced by the bridge for this topology."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
+          "s": "Topology 3: Two-robot cell (6+4 axes)",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -13679,7 +14434,12 @@
             "r": "t",
             "text": " per signal is unchanged — a subscriber recognizes each DataSet's class regardless of how many robots, axes or controllers a particular cell has; only the number of DataSets (writers) and the field counts differ."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
+          "s": "Topology 3: Two-robot cell (6+4 axes)",
+          "b": 3
+        }
       }
     ]
   },

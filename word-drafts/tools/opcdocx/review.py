@@ -1,0 +1,286 @@
+"""Read a reviewer's marked-up document: tracked changes and comments.
+
+A document that has been through Word carries the reviewer's intent in two places, and
+they are read differently.
+
+**Revisions.** Word does not overwrite text when tracking is on; it keeps both versions.
+An insertion is a run inside `w:ins`, a deletion is a run inside `w:del` whose text moved
+from `w:t` to `w:delText`, and a move is the same pair spelled `w:moveFrom`/`w:moveTo`.
+So a marked-up paragraph can be rendered twice — *rejected*, which must reproduce the
+text the build produced, and *accepted*, which is what the reviewer wants it to say.
+Having both is what makes the ingest checkable rather than merely plausible: the rejected
+rendering is compared against a fresh build, and a mismatch means the reviewer marked up
+a document built from different source text.
+
+**Comments.** These are anchored ranges, not edits. The anchor matters as much as the
+text — a comment on one word of a sentence is not a comment on the clause — so the
+anchored run text is captured along with the paragraph it sits in. Threading and the
+resolved flag live in a separate part, `commentsExtended.xml`, keyed by the paragraph id
+of the comment body rather than by the comment id.
+
+The template ships one comment of its own. It is excluded by identity, because reporting
+the template's 2019 note about a Visio object as review feedback would be a lie about
+who said it.
+"""
+
+import posixpath
+import zipfile
+
+from lxml import etree
+
+from .oxml import q
+
+W = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
+W14 = 'http://schemas.microsoft.com/office/word/2010/wordml'
+W15 = 'http://schemas.microsoft.com/office/word/2012/wordml'
+
+# Revision containers, and what each contributes to the two renderings.
+INSERTED = (q('w:ins'), '{%s}moveTo' % W)
+DELETED = (q('w:del'), '{%s}moveFrom' % W)
+
+# The comment the template itself ships, which is not review feedback.
+TEMPLATE_COMMENT = ('Randy Armstrong', '2019-08-15T16:29:00Z')
+
+
+class Revision:
+    """One tracked change, already attributed."""
+
+    def __init__(self, kind, author, date, text, para_id):
+        self.kind = kind          # 'insert' | 'delete' | 'format'
+        self.author = author
+        self.date = date
+        self.text = text
+        self.para_id = para_id
+
+    def __repr__(self):
+        return 'Revision(%s, %r, %r)' % (self.kind, self.author, self.text[:40])
+
+
+class Comment:
+    """One comment, with the text it is anchored to."""
+
+    def __init__(self, cid, author, date, body, *, anchor='', para_ids=(),
+                 parent=None, resolved=False):
+        self.id = cid
+        self.author = author
+        self.date = date
+        self.body = body
+        self.anchor = anchor
+        self.para_ids = list(para_ids)
+        self.parent = parent
+        self.resolved = resolved
+
+    @property
+    def para_id(self):
+        return self.para_ids[0] if self.para_ids else None
+
+    def __repr__(self):
+        return 'Comment(%s, %r, %r)' % (self.id, self.author, self.body[:40])
+
+
+class Paragraph:
+    """A body paragraph of a reviewed document, in both of its readings."""
+
+    def __init__(self, para_id, style, rejected, accepted, revisions):
+        self.para_id = para_id
+        self.style = style
+        self.rejected = rejected
+        self.accepted = accepted
+        self.revisions = revisions
+
+    @property
+    def changed(self):
+        return self.rejected != self.accepted
+
+    def __repr__(self):
+        return 'Paragraph(%s, changed=%s)' % (self.para_id, self.changed)
+
+
+class ReviewedDocument:
+    def __init__(self, path):
+        self.path = path
+        with zipfile.ZipFile(path) as z:
+            self.parts = {n: z.read(n) for n in z.namelist()}
+        self.document = etree.fromstring(self.parts['word/document.xml'])
+        self.properties = _custom_properties(self.parts.get('docProps/custom.xml'))
+        self.paragraphs = [_read_paragraph(p) for p in self.document.iter(q('w:p'))]
+        self.by_id = {p.para_id: p for p in self.paragraphs if p.para_id}
+        self.comments = self._read_comments()
+
+    # ------------------------------------------------------------------ revisions
+
+    @property
+    def revisions(self):
+        return [r for p in self.paragraphs for r in p.revisions]
+
+    def authors(self):
+        """Everyone who left a mark, in first-appearance order."""
+        seen = []
+        for name in ([r.author for r in self.revisions]
+                     + [c.author for c in self.comments]):
+            if name and name not in seen:
+                seen.append(name)
+        return seen
+
+    # ------------------------------------------------------------------ comments
+
+    def _read_comments(self):
+        raw = self.parts.get('word/comments.xml')
+        if not raw:
+            return []
+        root = etree.fromstring(raw)
+        anchors = self._comment_anchors()
+        extended = _comment_threads(self.parts.get('word/commentsExtended.xml'))
+
+        out = []
+        for el in root.iter(q('w:comment')):
+            author = el.get(q('w:author')) or ''
+            date = el.get(q('w:date')) or ''
+            if (author, date) == TEMPLATE_COMMENT:
+                continue
+            body = '\n'.join(_text_of(p) for p in el.iter(q('w:p'))).strip()
+            # Threading is keyed by the paraId of the comment's own last paragraph.
+            own = [p.get('{%s}paraId' % W14) for p in el.iter(q('w:p'))]
+            own = [x for x in own if x]
+            thread = extended.get(own[-1]) if own else None
+            cid = el.get(q('w:id'))
+            anchor, para_ids = anchors.get(cid, ('', []))
+            out.append(Comment(cid, author, date, body, anchor=anchor,
+                               para_ids=para_ids,
+                               parent=(thread or {}).get('parent'),
+                               resolved=bool((thread or {}).get('done'))))
+        self._resolve_parents(out, extended)
+        return out
+
+    def _resolve_parents(self, comments, extended):
+        """Rewrite the paraId-keyed parent links into comment ids."""
+        by_para = {}
+        raw = self.parts.get('word/comments.xml')
+        if raw:
+            for el in etree.fromstring(raw).iter(q('w:comment')):
+                for p in el.iter(q('w:p')):
+                    pid = p.get('{%s}paraId' % W14)
+                    if pid:
+                        by_para[pid] = el.get(q('w:id'))
+        for c in comments:
+            if c.parent:
+                c.parent = by_para.get(c.parent)
+
+    def _comment_anchors(self):
+        """`comment id -> (anchored text, paragraph ids the range covers)`.
+
+        A range can span paragraphs, and Word writes the marks as siblings of the runs
+        rather than as a wrapper, so the runs between start and end are collected by
+        walking the body in document order.
+        """
+        starts = {}
+        out = {}
+        for para in self.document.iter(q('w:p')):
+            pid = para.get('{%s}paraId' % W14)
+            open_here = set()
+            for el in para.iter():
+                if el.tag == q('w:commentRangeStart'):
+                    cid = el.get(q('w:id'))
+                    starts[cid] = ['', []]
+                    open_here.add(cid)
+                elif el.tag == q('w:commentRangeEnd'):
+                    cid = el.get(q('w:id'))
+                    if cid in starts:
+                        out[cid] = (starts[cid][0].strip(), starts[cid][1])
+                        del starts[cid]
+                    open_here.discard(cid)
+                elif el.tag in (q('w:t'), q('w:delText')):
+                    for cid in list(starts):
+                        starts[cid][0] += el.text or ''
+                        if pid and pid not in starts[cid][1]:
+                            starts[cid][1].append(pid)
+                elif el.tag == q('w:commentReference'):
+                    # A comment with no range anchors to the paragraph it sits in.
+                    cid = el.get(q('w:id'))
+                    out.setdefault(cid, ('', [pid] if pid else []))
+        for cid, (text, ids) in starts.items():
+            out[cid] = (text.strip(), ids)
+        return out
+
+
+# --------------------------------------------------------------------------- reading
+
+
+def _read_paragraph(p):
+    rejected, accepted, revisions = [], [], []
+    para_id = p.get('{%s}paraId' % W14)
+    for run in p.iter(q('w:r')):
+        state = _revision_state(run)
+        text = _run_text(run)
+        if state is None:
+            rejected.append(text)
+            accepted.append(text)
+        elif state[0] == 'insert':
+            accepted.append(text)
+            if text:
+                revisions.append(Revision('insert', state[1], state[2], text, para_id))
+        else:
+            rejected.append(text)
+            if text:
+                revisions.append(Revision('delete', state[1], state[2], text, para_id))
+    for change in p.iter(q('w:pPrChange'), q('w:rPrChange')):
+        revisions.append(Revision('format', change.get(q('w:author')) or '',
+                                  change.get(q('w:date')) or '', '', para_id))
+    style = p.find(q('w:pPr') + '/' + q('w:pStyle'))
+    return Paragraph(para_id, style.get(q('w:val')) if style is not None else None,
+                     ''.join(rejected), ''.join(accepted), revisions)
+
+
+def _revision_state(run):
+    """Whether a run is inserted, deleted, or neither — and who did it."""
+    node = run.getparent()
+    while node is not None:
+        if node.tag in INSERTED:
+            return ('insert', node.get(q('w:author')) or '', node.get(q('w:date')) or '')
+        if node.tag in DELETED:
+            return ('delete', node.get(q('w:author')) or '', node.get(q('w:date')) or '')
+        if node.tag == q('w:body'):
+            break
+        node = node.getparent()
+    return None
+
+
+def _run_text(run):
+    out = []
+    for el in run:
+        if el.tag in (q('w:t'), q('w:delText')):
+            out.append(el.text or '')
+        elif el.tag == q('w:tab'):
+            out.append('\t')
+        elif el.tag == q('w:br'):
+            out.append(' ')
+    return ''.join(out)
+
+
+def _text_of(p):
+    return ''.join(el.text or '' for el in p.iter(q('w:t'), q('w:delText')))
+
+
+def _comment_threads(raw):
+    """`comment paraId -> {parent paraId, done}` from `commentsExtended.xml`."""
+    if not raw:
+        return {}
+    out = {}
+    for el in etree.fromstring(raw).iter('{%s}commentEx' % W15):
+        out[el.get('{%s}paraId' % W15)] = {
+            'parent': el.get('{%s}paraIdParent' % W15),
+            'done': (el.get('{%s}done' % W15) or '0') in ('1', 'true'),
+        }
+    return out
+
+
+def _custom_properties(raw):
+    if not raw:
+        return {}
+    out = {}
+    for prop in etree.fromstring(raw):
+        name = prop.get('name')
+        value = ''.join(c.text or '' for c in prop)
+        if name:
+            out[name] = value
+    return out

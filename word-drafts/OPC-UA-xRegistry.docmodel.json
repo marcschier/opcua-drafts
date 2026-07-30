@@ -127,7 +127,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
+          "s": "1 Scope",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -198,7 +203,12 @@
             "r": "t",
             "text": " the registry:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
+          "s": "1 Scope",
+          "b": 1
+        }
       },
       {
         "t": "list",
@@ -438,7 +448,12 @@
               "text": " values."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
+          "s": "1 Scope",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -531,7 +546,12 @@
             "r": "t",
             "text": ". The same base is designed to carry a future WoT Thing-Description registry without change."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
+          "s": "1 Scope",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -550,7 +570,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
+          "s": "1 Scope",
+          "b": 4
+        }
       }
     ],
     "normative-references": [
@@ -1469,7 +1494,12 @@
             "r": "t",
             "text": "):"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
+          "s": "5.1 Reading a resource document (mandatory)",
+          "b": 0
+        }
       },
       {
         "t": "list",
@@ -1526,7 +1556,12 @@
               "text": "."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
+          "s": "5.1 Reading a resource document (mandatory)",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -1545,7 +1580,12 @@
             "r": "t",
             "text": " additionally offer a direct-addressing shortcut that returns the document in a single operation (for example reading a Value Attribute addressed by a content-derived Opaque NodeId); such shortcuts are defined by the domain specification and never replace the mandatory FileType read."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
+          "s": "5.1 Reading a resource document (mandatory)",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -1577,7 +1617,12 @@
             "r": "t",
             "text": " for a new group):"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
+          "s": "5.2 Registering a resource (optional)",
+          "b": 0
+        }
       },
       {
         "t": "list",
@@ -1722,7 +1767,12 @@
               "text": "."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
+          "s": "5.2 Registering a resource (optional)",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -1799,7 +1849,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
+          "s": "5.2 Registering a resource (optional)",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -1911,7 +1966,12 @@
             "r": "t",
             "text": ", and domain-specific Methods that change version selection, enablement or other registry state. Roles and Permissions remain independently applicable and may impose stricter authorization."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
+          "s": "5.3 SecureChannel requirements",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -1961,7 +2021,12 @@
             "r": "t",
             "text": " when its deployment policy permits this. A client using such an endpoint shall not infer authenticity, integrity or confidentiality for the returned registry metadata or document bytes."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
+          "s": "5.3 SecureChannel requirements",
+          "b": 1
+        }
       }
     ],
     "model-overview": [
@@ -2001,14 +2066,24 @@
             "r": "t",
             "text": " (a file with Methods to open, read, write and close its bytes, OPC 10000-20) for each resource/version document. The physical backing may be a real file-system directory, but the OPC UA types are a plain organizing folder and a file:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
+          "s": "4.1 The registry *is* folders of files",
+          "b": 0
+        }
       },
       {
         "t": "figure",
         "id": "fig-xreg-shape",
         "caption": "The registry is folders of files",
         "source": "mermaid",
-        "mermaid": "graph TD\n  REG[RegistryType : FolderType] -->|Organizes| G1[GroupType : FolderType]\n  REG -->|Organizes| G2[GroupType : FolderType]\n  G1 -->|Organizes| R1[ResourceType : FileType]\n  G1 -->|Organizes| R2[ResourceType : FileType]\n  G2 -->|Organizes| R3[ResourceType : FileType]\n  R1 -.Open/Read/Write.-> DOC[(document bytes)]"
+        "mermaid": "graph TD\n  REG[RegistryType : FolderType] -->|Organizes| G1[GroupType : FolderType]\n  REG -->|Organizes| G2[GroupType : FolderType]\n  G1 -->|Organizes| R1[ResourceType : FileType]\n  G1 -->|Organizes| R2[ResourceType : FileType]\n  G2 -->|Organizes| R3[ResourceType : FileType]\n  R1 -.Open/Read/Write.-> DOC[(document bytes)]",
+        "src": {
+          "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
+          "s": "4.1 The registry *is* folders of files",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -2051,7 +2126,12 @@
             "r": "t",
             "text": " a resource file to obtain its document."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
+          "s": "4.1 The registry *is* folders of files",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -2075,7 +2155,12 @@
             "r": "t",
             "text": ") defines three interchangeable representations of the same information; this model realizes two of them directly and preserves the third:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
+          "s": "4.2 The three representations",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -2286,7 +2371,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
+          "s": "4.2 The three representations",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -2313,7 +2403,12 @@
             "r": "t",
             "text": " and identity in every representation, so a resource registered through the API server is immediately visible as a file, and a document imported to bootstrap the AddressSpace is immediately serveable through the API."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
+          "s": "4.2 The three representations",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -2338,7 +2433,12 @@
             "r": "t",
             "text": " capability and grows from there:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
+          "s": "4.3 Minimal first — download is mandatory, everything else is optional",
+          "b": 0
+        }
       },
       {
         "t": "list",
@@ -2532,7 +2632,12 @@
               "text": ")."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
+          "s": "4.3 Minimal first — download is mandatory, everything else is optional",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -2551,7 +2656,12 @@
             "r": "t",
             "text": " support step 1; steps 2–4 are optional and independently adoptable."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
+          "s": "4.3 Minimal first — download is mandatory, everything else is optional",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -2659,7 +2769,12 @@
             "r": "t",
             "text": " relies on this for read-free collection filtering."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
+          "s": "6 Information model",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -2799,7 +2914,12 @@
             "r": "t",
             "text": " increments on every change so a client can detect a stale cache."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
+          "s": "6.4 Common xRegistry attributes",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -2834,7 +2954,12 @@
             "r": "t",
             "text": " materialize the surrounding xRegistry structure without requiring the client to build it explicitly:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
+          "s": "6.5 Auto-bootstrap",
+          "b": 0
+        }
       },
       {
         "t": "list",
@@ -2929,7 +3054,12 @@
               "text": "link the file under its group and the group under the registry so the entity is immediately visible as a file, through the API, and in a serialized document."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
+          "s": "6.5 Auto-bootstrap",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -3019,7 +3149,12 @@
             "r": "t",
             "text": " afterwards."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
+          "s": "6.5 Auto-bootstrap",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -3109,7 +3244,12 @@
             "r": "t",
             "text": "). A server that requires a deterministic domain order MAY add its own index Property to the entities, but the base model does not mandate one."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
+          "s": "6.8 Collection ordering",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -3143,7 +3283,12 @@
             "r": "t",
             "text": ", the OPC UA API binding of xRegistry. In summary:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
+          "s": "7 The xRegistry API over OPC UA",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -3369,7 +3514,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
+          "s": "7 The xRegistry API over OPC UA",
+          "b": 1
+        }
       },
       {
         "t": "clause",
@@ -3475,7 +3625,12 @@
             "r": "t",
             "text": " identify the entity independently of it."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
+          "s": "8 Federation",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -3565,7 +3720,12 @@
             "r": "t",
             "text": " endpoint and browsing/reading the referenced node, exactly as it would a local one. Annex B specifies the resolution algorithm."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
+          "s": "8 Federation",
+          "b": 1
+        }
       }
     ],
     "objecttypes": [
@@ -3802,7 +3962,12 @@
             "r": "t",
             "text": " to its own group type."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
+          "s": "6.1 RegistryType",
+          "b": 0
+        }
       },
       {
         "t": "nodetable",
@@ -4010,7 +4175,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
+          "s": "6.2 GroupType",
+          "b": 0
+        }
       },
       {
         "t": "nodetable",
@@ -4274,7 +4444,12 @@
             "r": "t",
             "text": ") to add its own metadata."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
+          "s": "6.3 ResourceType",
+          "b": 0
+        }
       },
       {
         "t": "nodetable",
@@ -4341,7 +4516,12 @@
             "r": "t",
             "text": ") has:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
+          "s": "6.6 AttributesType",
+          "b": 0
+        }
       },
       {
         "t": "list",
@@ -4440,7 +4620,12 @@
               "text": " disables the check."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
+          "s": "6.6 AttributesType",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -4508,7 +4693,12 @@
             "r": "t",
             "text": ") is a viable alternative for attaching the container; the component form is used here for simplicity."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
+          "s": "6.6 AttributesType",
+          "b": 2
+        }
       },
       {
         "t": "nodetable",
@@ -4745,7 +4935,12 @@
             "r": "t",
             "text": " file, which remains the authoritative document. The typed value is a convenience view of the standard fields."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
+          "s": "6.7 RegistryCapabilitiesDataType",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -4887,7 +5082,12 @@
             "r": "t",
             "text": "); each is optional and independently conformant."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
+          "s": "9 Conformance",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -4921,7 +5121,12 @@
             "r": "t",
             "text": " respectively and it does not weaken the mandatory read capability."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
+          "s": "9 Conformance",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -4939,7 +5144,12 @@
             "r": "t",
             "text": " prefix is the short name of this specification, so a unit identifier is unique across companion specifications."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
+          "s": "9 Conformance",
+          "b": 2
+        }
       },
       {
         "t": "table",
@@ -5323,7 +5533,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
+          "s": "9 Conformance",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -5353,7 +5568,12 @@
             "r": "t",
             "text": " together are the baseline; the rest are independently optional."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
+          "s": "9 Conformance",
+          "b": 4
+        }
       }
     ],
     "namespaces": [
@@ -5794,7 +6014,12 @@
             "r": "t",
             "text": "A client resolves a federated resource as follows:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
+          "s": "Annex B — Federation resolution via ExpandedNodeId (informative)",
+          "b": 0
+        }
       },
       {
         "t": "list",
@@ -5961,7 +6186,12 @@
               "text": " URL encodes the endpoint and a browse path to the resource file."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
+          "s": "Annex B — Federation resolution via ExpandedNodeId (informative)",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -6027,7 +6257,12 @@
             "r": "t",
             "text": " links."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
+          "s": "Annex B — Federation resolution via ExpandedNodeId (informative)",
+          "b": 2
+        }
       }
     ]
   },

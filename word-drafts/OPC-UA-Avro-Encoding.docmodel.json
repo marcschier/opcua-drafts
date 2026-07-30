@@ -42,7 +42,12 @@
             "r": "t",
             "text": " (a peer of the JSON message mapping of OPC 10000-14)."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "1 Scope",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -99,7 +104,12 @@
             "r": "t",
             "text": ", message header fields, the SchemaId handshake, configuration parameters and transport content-type metadata for MQTT, AMQP and Kafka."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "1 Scope",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -117,7 +127,12 @@
             "r": "t",
             "text": " for every value of the described DataType."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "1 Scope",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -183,7 +198,12 @@
             "r": "t",
             "text": ")."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "1 Scope",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -212,7 +232,12 @@
             "r": "t",
             "text": " are DataSetMessages carried over the PubSub message mapping, and they remain fully in scope."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "1 Scope",
+          "b": 4
+        }
       },
       {
         "t": "clause",
@@ -918,7 +943,12 @@
             "r": "t",
             "text": " — stream processors, data lakes, message-bus consumers and hot-path analytics pipelines. These systems increasingly ingest OPC UA telemetry, yet cannot decode UA Binary and gain little from the verbosity of JSON."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "4.1 Use cases and motivation",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -946,7 +976,12 @@
             "r": "t",
             "text": ": small messages, no per-message schema, and a wire format that Avro toolchains decode natively. Where a consumer needs full OPC UA interoperability it still uses UA Binary; Avro is the bridge for Avro-native systems that could otherwise not consume OPC UA data at all."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "4.1 Use cases and motivation",
+          "b": 1
+        }
       }
     ],
     "model-overview": [
@@ -1100,7 +1135,12 @@
             "r": "t",
             "text": "): it encodes DataSet and value payloads, while Service calls stay on the Binary DataEncoding."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "4.2 Where Avro fits",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -1153,7 +1193,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "4.2 Where Avro fits",
+          "b": 1
+        }
       },
       {
         "t": "clause",
@@ -1234,7 +1279,12 @@
             "r": "t",
             "text": ": null-vs-empty distinctions, unsigned integer bit patterns, NaN payloads and signed zero all round-trip."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "4.3 Schema identity and reversibility",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -1312,7 +1362,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "4.4 PubSub message model",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -1361,7 +1416,12 @@
             "r": "t",
             "text": " used for Guid preserves the 16 OPC UA Guid bytes verbatim, and the 8-byte CRC-64-AVRO SchemaId is little-endian (the same order used by Avro single-object encoding). Annex D illustrates these layouts byte by byte."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "4.5 Endianness",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -1407,7 +1467,12 @@
             "r": "t",
             "text": " schema documents are the canonical wire contract."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "5.1 General rules",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -1500,7 +1565,12 @@
             "r": "t",
             "text": ")."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "5.1 General rules",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -1529,7 +1599,12 @@
             "r": "t",
             "text": "). See Annex A for the generated reference schemas, example values and annotated bytes for each built-in and composite category."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "5.1 General rules",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -1555,7 +1630,12 @@
             "r": "t",
             "text": ". A null scalar, a null array, an empty array, a null array element and an absent optional structure field are distinct states and shall not be collapsed."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "5.1 General rules",
+          "b": 3
+        }
       },
       {
         "t": "clause",
@@ -2231,7 +2311,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "5.2 Built-in DataTypes",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -2299,7 +2384,12 @@
             "r": "t",
             "text": " value rather than a nested record."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "5.2.1 Textual NodeId and ExpandedNodeId form",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -2326,7 +2416,12 @@
             "r": "t",
             "text": " (the syntax used by the XML and JSON encodings):"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "5.2.1 Textual NodeId and ExpandedNodeId form",
+          "b": 1
+        }
       },
       {
         "t": "list",
@@ -2523,7 +2618,12 @@
               "text": ", which represents any NamespaceUri losslessly."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "5.2.1 Textual NodeId and ExpandedNodeId form",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -2549,7 +2649,12 @@
             "r": "t",
             "text": " union; a null value is distinct from the empty string. An encoder and decoder shall round-trip every identifier kind — numeric, String, Guid and opaque — and, for ExpandedNodeId, a value that carries a namespace index together with a NamespaceUri, without loss."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "5.2.1 Textual NodeId and ExpandedNodeId form",
+          "b": 3
+        }
       },
       {
         "t": "clause",
@@ -2589,7 +2694,12 @@
             "r": "t",
             "text": " according to its declared bit size, with each bit preserved. Symbolic Avro enum labels are useful for documentation but shall not replace the numeric value on the wire because OPC UA permits forward-compatible unknown values and bit combinations."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "5.3 Enumerations and OptionSets",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -2645,7 +2755,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "5.4 Arrays",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -2743,7 +2858,12 @@
             "r": "t",
             "text": " and is distinct from a present matrix record."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "5.5 Matrices",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -2791,7 +2911,12 @@
             "r": "t",
             "text": " itself is nullable. Mandatory fields whose type is nullable, such as String, still carry their own null union and shall be present in the record."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "5.6 Structures and optional fields",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -2847,7 +2972,12 @@
             "r": "t",
             "text": " field is an Avro union of null plus record-wrapped branches, one branch per union field. Each branch record contains exactly one field with the OPC UA field name and field type, including that type's null branch when the selected field type is nullable. The record wrapper is required so Avro union branch resolution is deterministic even when two union fields have the same Avro primitive type."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "5.7 Union DataTypes",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -2927,7 +3057,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "5.8 Variant",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -2970,7 +3105,12 @@
             "r": "t",
             "text": " field are both present so that decoders can disambiguate Avro unions and recover the exact OPC UA type."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "5.8 Variant",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -2998,7 +3138,12 @@
             "r": "t",
             "text": ")."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "5.8 Variant",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -3046,7 +3191,12 @@
             "r": "t",
             "text": " shall identify the concrete DataType or DataTypeEncoding NodeId."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "5.9 ExtensionObject and abstract or subtyped fields",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -3072,7 +3222,12 @@
             "r": "t",
             "text": " branch for an XML or textual body. In that case the receiver shall preserve the opaque value together with the TypeId. Fields declared as abstract structures, and fields that allow subtypes, shall use the same representation so that the concrete runtime type is carried inline."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "5.9 ExtensionObject and abstract or subtyped fields",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -3107,7 +3262,12 @@
             "r": "t",
             "text": ") shares the resulting schema with decoders, but is never consulted in order to encode."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "5.9 ExtensionObject and abstract or subtyped fields",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -3117,7 +3277,12 @@
             "r": "t",
             "text": "The opaque fallback branches are appended append-only alongside the known-struct branches when a value first requires them. A fallback may therefore occupy any branch index, and its index is fixed once appended. A fallback carries any body not represented by a known-struct branch."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "5.9 ExtensionObject and abstract or subtyped fields",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -3137,7 +3302,12 @@
             "r": "t",
             "text": ")."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "5.9 ExtensionObject and abstract or subtyped fields",
+          "b": 4
+        }
       },
       {
         "t": "clause",
@@ -3217,7 +3387,12 @@
             "r": "t",
             "text": " and retain the OPC UA UInt16 domain."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "5.10 DataValue",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -3297,7 +3472,12 @@
             "r": "t",
             "text": " is a recursive reference to DiagnosticInfo. Null means the corresponding mask bit is not present; zero is a present numeric value and shall not be treated as absent."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "5.11 DiagnosticInfo",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -3351,7 +3531,12 @@
             "r": "t",
             "text": ")."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "6 Deterministic schema generation and SchemaId",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -3452,7 +3637,12 @@
             "r": "t",
             "text": ")."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "6.1 Inputs",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -3468,7 +3658,12 @@
             "r": "t",
             "text": "The schema generator shall apply the following deterministic algorithm."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "6.2 Generation algorithm",
+          "b": 0
+        }
       },
       {
         "t": "list",
@@ -3687,7 +3882,12 @@
               "text": "Before computing a SchemaId or announcing a schema, make the schema self-contained: inline every referenced named type at its first occurrence, using the recursively resolved definitions from step 1; for recursive or repeated named types, use Avro named references after the first definition."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "6.2 Generation algorithm",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -3714,7 +3914,12 @@
             "r": "t",
             "text": " followed by the 8-byte little-endian Rabin fingerprint)."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "6.2 Generation algorithm",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -3730,7 +3935,12 @@
             "r": "t",
             "text": "A producer shall recompute the SchemaId from the self-contained canonical schema before writing a value or message. Two schemas with different field order, optional-field wrappers, union branch order, runtime Variant body type, matrix record shape, or referenced concrete structured DataType definition shall have different SchemaIds. A consumer shall treat the SchemaId as identifying the exact self-contained Avro Parsing Canonical Form, not merely a DataType NodeId or a PubSub ConfigurationVersion."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "6.3 SchemaId use",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -3792,7 +4002,12 @@
             "r": "t",
             "text": ", using the following procedure."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "6.4 Implementing schema evolution (growing unions)",
+          "b": 0
+        }
       },
       {
         "t": "list",
@@ -3925,7 +4140,12 @@
               "text": ")."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "6.4 Implementing schema evolution (growing unions)",
+          "b": 1
+        }
       },
       {
         "t": "list",
@@ -3952,7 +4172,12 @@
               "text": " the corresponding branch record to the end of the Avro union array and leave every existing branch at its current position. Because an Avro binary union is encoded as the zig-zag branch index followed by the branch value, appending never changes an existing branch index, so a message written under an earlier schema still selects the same branch under the grown schema. Do not reorder, remove or retype an existing branch; any such change is a MajorVersion reset, not an aggregation."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "6.4 Implementing schema evolution (growing unions)",
+          "b": 2
+        }
       },
       {
         "t": "list",
@@ -4019,7 +4244,12 @@
               "text": ". Because every branch is append-only, a fallback's index is fixed once appended, so an opaque body written under an earlier minor still decodes to the same fallback branch under a grown schema."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "6.4 Implementing schema evolution (growing unions)",
+          "b": 3
+        }
       },
       {
         "t": "list",
@@ -4095,7 +4325,12 @@
               "text": " — before sending a message that uses the appended branch."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "6.4 Implementing schema evolution (growing unions)",
+          "b": 4
+        }
       },
       {
         "t": "list",
@@ -4129,7 +4364,12 @@
               "text": "); it shall not compare the on-wire fingerprint against the later schema's canonical form."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "6.4 Implementing schema evolution (growing unions)",
+          "b": 5
+        }
       },
       {
         "t": "para",
@@ -4164,7 +4404,12 @@
             "r": "t",
             "text": " for the full model, including the data-driven-first (or schema-driven) initial basis and the lineage/SchemaId relationship."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "6.4 Implementing schema evolution (growing unions)",
+          "b": 6
+        }
       },
       {
         "t": "clause",
@@ -4188,7 +4433,12 @@
             "r": "t",
             "text": ". Types generated from any other OPC UA NamespaceUri — a companion specification or a vendor namespace — shall be placed in an Avro namespace derived from that NamespaceUri by the following deterministic function, so that an encoder and a decoder compute the same fully-qualified Avro names."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "6.5 NamespaceUri to Avro namespace mapping",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -4198,7 +4448,12 @@
             "r": "t",
             "text": "Given a NamespaceUri:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "6.5 NamespaceUri to Avro namespace mapping",
+          "b": 1
+        }
       },
       {
         "t": "list",
@@ -4396,7 +4651,12 @@
               "text": " namespace)."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "6.5 NamespaceUri to Avro namespace mapping",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -4459,7 +4719,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "6.5 NamespaceUri to Avro namespace mapping",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -4479,7 +4744,12 @@
             "r": "t",
             "text": ")."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "6.5 NamespaceUri to Avro namespace mapping",
+          "b": 4
+        }
       },
       {
         "t": "clause",
@@ -4533,7 +4803,12 @@
             "r": "t",
             "text": "). A schema generator shall choose, once per schema and as part of the SchemaId, between two ways of naming these growing records."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "6.6 Per-field specialization of Variant and ExtensionObject",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -4678,7 +4953,12 @@
             "r": "t",
             "text": " name, so specialization is limited to the records that actually grow."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "6.6 Per-field specialization of Variant and ExtensionObject",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -4734,7 +5014,12 @@
             "r": "t",
             "text": ") includes only observed types and therefore terminates naturally at the nesting depth observed; cycle-tying thus affects only bounded schema-driven unions."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "6.6 Per-field specialization of Variant and ExtensionObject",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -4775,7 +5060,12 @@
             "r": "t",
             "text": ", referenced by every occurrence. This is more compact and lets two publishers that bound a field the same way produce the same SchemaId, at the cost of coupling: appending a body type for any occurrence widens the one shared union for every occurrence. The shared form is the form used by the published reference schemas and Annex A; the per-field form is shown in Annex C."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "6.6 Per-field specialization of Variant and ExtensionObject",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -4813,7 +5103,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "6.6 Per-field specialization of Variant and ExtensionObject",
+          "b": 4
+        }
       },
       {
         "t": "clause",
@@ -4862,7 +5157,12 @@
             "r": "t",
             "text": " where no AddressSpace is available."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "6.7 Deriving a schema from DataSetMetaData",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -4891,7 +5191,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "6.7 Deriving a schema from DataSetMetaData",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -4901,7 +5206,12 @@
             "r": "t",
             "text": "Two scenarios motivate this path."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "6.7 Deriving a schema from DataSetMetaData",
+          "b": 2
+        }
       },
       {
         "t": "list",
@@ -4930,7 +5240,12 @@
               "text": " A deployment already publishing JSON verbose messages already produces DataSetMetaData. Adding Avro then requires no new access to the type model: the existing metadata is sufficient to generate the schema, announce its SchemaId and start publishing Avro alongside or instead of JSON. This is the simplest migration path for an existing Publisher."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "6.7 Deriving a schema from DataSetMetaData",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -4944,7 +5259,12 @@
             "r": "t",
             "text": " is self-contained for this purpose because it carries both the field list and the definitions of the DataTypes those fields use."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "6.7 Deriving a schema from DataSetMetaData",
+          "b": 4
+        }
       },
       {
         "t": "table",
@@ -5414,7 +5734,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "6.7 Deriving a schema from DataSetMetaData",
+          "b": 5
+        }
       },
       {
         "t": "para",
@@ -5477,7 +5802,12 @@
             "r": "t",
             "text": " make its DataType nullable, which is the same determination the AddressSpace path makes."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "6.7 Deriving a schema from DataSetMetaData",
+          "b": 6
+        }
       },
       {
         "t": "para",
@@ -5514,7 +5844,12 @@
             "r": "t",
             "text": ", and shall be applied after the per-field type mapping above."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "6.7 Deriving a schema from DataSetMetaData",
+          "b": 7
+        }
       },
       {
         "t": "para",
@@ -5562,7 +5897,12 @@
             "r": "t",
             "text": " would not hold."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "6.7 Deriving a schema from DataSetMetaData",
+          "b": 8
+        }
       },
       {
         "t": "para",
@@ -5572,7 +5912,12 @@
             "r": "t",
             "text": "The metadata is not always complete, and an implementation shall detect this rather than emit a schema that only appears correct."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "6.7 Deriving a schema from DataSetMetaData",
+          "b": 9
+        }
       },
       {
         "t": "list",
@@ -5668,7 +6013,12 @@
               "text": " as those concrete types are observed. It shall not be announced as a final schema for the DataSet if further body types remain possible."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "6.7 Deriving a schema from DataSetMetaData",
+          "b": 10
+        }
       },
       {
         "t": "clause",
@@ -5684,7 +6034,12 @@
             "r": "t",
             "text": "A decoder shall use one of the following schema resolution paths."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "7 Decoder schema resolution",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -5699,7 +6054,12 @@
             "r": "t",
             "text": " If the decoder already has a schema for the SchemaId, from a local cache, announcement, schema registry or configured catalog, it shall parse that schema and decode the Avro binary payload directly. If the payload uses Avro single-object encoding, the decoder shall verify the two magic bytes and the embedded little-endian Rabin fingerprint before decoding the body."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "7 Decoder schema resolution",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -5724,7 +6084,12 @@
             "r": "t",
             "text": ". For Variant and abstract/subtyped fields, it shall use the inline built-in type, dimensions and TypeId carried in the value to select the same concrete branch as the encoder. The re-derived self-contained Parsing Canonical Form shall produce the same SchemaId. When this check fails, the value shall not be decoded with the mismatched schema."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "7 Decoder schema resolution",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -5759,7 +6124,12 @@
             "r": "t",
             "text": " apply: where the metadata cannot fix a Variant or subtyped body branch, the derived schema is incomplete and the decoder shall obtain the announced schema by SchemaId instead. This path is secondary — a subscriber is normally served by the schema-driven path."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "7 Decoder schema resolution",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -5796,7 +6166,12 @@
             "r": "t",
             "text": " the same schema."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "7 Decoder schema resolution",
+          "b": 4
+        }
       },
       {
         "t": "para",
@@ -5845,7 +6220,12 @@
             "r": "t",
             "text": ", the decoder shall decode structurally. A decoder shall not infer the textual form from the value; it follows the field's declared Avro type."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "7 Decoder schema resolution",
+          "b": 5
+        }
       },
       {
         "t": "clause",
@@ -5933,7 +6313,12 @@
             "r": "t",
             "text": " and mirrors the OPC 10000-14 message mapping structure used by the JSON mapping."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "8 PubSub message mapping",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -6036,7 +6421,12 @@
             "r": "t",
             "text": " — and thus a fixed SchemaId — that never changes as DataSets are added, removed or evolved."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "8.1 NetworkMessage",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -6054,7 +6444,12 @@
             "r": "t",
             "text": " entries. When promoted fields are enabled, their values use Avro DataEncoding and preserve their configured DataTypes."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "8.1 NetworkMessage",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -6080,7 +6475,12 @@
             "r": "t",
             "text": ". Both are reproduced in Annex B."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "8.1 NetworkMessage",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -6116,7 +6516,12 @@
             "r": "t",
             "text": "). This makes the outer envelope a stable, published contract and confines schema evolution to the per-DataSet schemas."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "8.1 NetworkMessage",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -6191,7 +6596,12 @@
             "r": "t",
             "text": ", reproduced in Annex B."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "8.1 NetworkMessage",
+          "b": 4
+        }
       },
       {
         "t": "clause",
@@ -6223,7 +6633,12 @@
             "r": "t",
             "text": ") or, for an un-enveloped DataSetMessage, in the header, transport metadata, or single-object framing."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "8.2.1 Common header",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -6239,7 +6654,12 @@
             "r": "t",
             "text": "A data key frame shall contain all fields defined by the PublishedDataSet in FieldMetaData order. The Avro payload field is an array or record whose members correspond exactly to that order. A key frame is self-contained for the current ConfigurationVersion."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "8.2.2 Data key frame",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -6319,7 +6739,12 @@
             "r": "t",
             "text": " — no value for that key in this message — not as a present null value. Because the schema is identical whether a frame carries all keys or only a subset, the SchemaId does not change with sparsity, and no per-subset schema is generated."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "8.2.2 Data key frame",
+          "b": 1
+        }
       },
       {
         "t": "clause",
@@ -6343,7 +6768,12 @@
             "r": "t",
             "text": "; fieldIndex is the normative selector and fieldName is optional diagnostic metadata when configured."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "8.2.3 Data delta frame",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -6367,7 +6797,12 @@
             "r": "t",
             "text": " schema for the FieldMetaData DataType, including array dimensions, nullable element rules, and optional-field wrapper records. RawData shall not be used when the field DataType is not known to the receiver schema."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "8.2.4 Field representation and DataSetFieldContentMask",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -6420,7 +6855,12 @@
             "r": "t",
             "text": " so that the key can be omitted."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "8.2.4 Field representation and DataSetFieldContentMask",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -6526,7 +6966,12 @@
             "r": "t",
             "text": ". Because every field slot is nullable, a sparse key frame and a full key frame share one canonical schema and therefore one SchemaId."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "8.2.4 Field representation and DataSetFieldContentMask",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -6562,7 +7007,12 @@
             "r": "t",
             "text": ". This clause additionally defines the Avro Action and Discovery message envelopes, which parallel the JSON message mapping."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "8.3 Action and Discovery messages",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -6588,7 +7038,12 @@
             "r": "t",
             "text": " applies: Action request and response schemas are announced, cached and selected by SchemaId exactly like data-message schemas."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "8.3.1 Action messages",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -6606,7 +7061,12 @@
             "r": "t",
             "text": ":"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "8.3.1 Action messages",
+          "b": 1
+        }
       },
       {
         "t": "code",
@@ -6659,7 +7119,12 @@
           "  \"namespace\": \"org.opcfoundation.ua.avro\",",
           "  \"type\": \"record\"",
           "}"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "8.3.1 Action messages",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -6677,7 +7142,12 @@
             "r": "t",
             "text": ":"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "8.3.1 Action messages",
+          "b": 3
+        }
       },
       {
         "t": "code",
@@ -6721,7 +7191,12 @@
           "  \"namespace\": \"org.opcfoundation.ua.avro\",",
           "  \"type\": \"record\"",
           "}"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "8.3.1 Action messages",
+          "b": 4
+        }
       },
       {
         "t": "para",
@@ -6739,7 +7214,12 @@
             "r": "t",
             "text": ":"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "8.3.1 Action messages",
+          "b": 5
+        }
       },
       {
         "t": "code",
@@ -6792,7 +7272,12 @@
           "  \"namespace\": \"org.opcfoundation.ua.avro\",",
           "  \"type\": \"record\"",
           "}"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "8.3.1 Action messages",
+          "b": 6
+        }
       },
       {
         "t": "para",
@@ -6810,7 +7295,12 @@
             "r": "t",
             "text": ":"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "8.3.1 Action messages",
+          "b": 7
+        }
       },
       {
         "t": "code",
@@ -6868,7 +7358,12 @@
           "  \"namespace\": \"org.opcfoundation.ua.avro\",",
           "  \"type\": \"record\"",
           "}"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "8.3.1 Action messages",
+          "b": 8
+        }
       },
       {
         "t": "para",
@@ -6930,7 +7425,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "8.3.1 Action messages",
+          "b": 9
+        }
       },
       {
         "t": "clause",
@@ -6954,7 +7454,12 @@
             "r": "t",
             "text": " fallbacks:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "8.3.2 Discovery messages",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -7164,7 +7669,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "8.3.2 Discovery messages",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -7190,7 +7700,12 @@
             "r": "t",
             "text": " record carries the same cache entry when a Publisher re-announces active schemas, answers a schema request, or announces a schema that is not otherwise tied to a configuration announcement. Later data or Action messages can then refer only to the SchemaId until the schema changes or a receiver requests it again."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "8.3.2 Discovery messages",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -7220,7 +7735,12 @@
             "r": "t",
             "text": ", followed by the 8-byte little-endian Rabin fingerprint, followed by the Avro binary body. The fingerprint bytes are the SchemaId. PubSub DataSetMessages or NetworkMessages that do not use single-object encoding shall carry the same SchemaId in the DataSetMessage header, NetworkMessage header, or transport metadata agreed for the mapping."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "8.4.1 Framing",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -7304,7 +7824,12 @@
             "r": "t",
             "text": ", not per NetworkMessage."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "8.4.1 Framing",
+          "b": 1
+        }
       },
       {
         "t": "clause",
@@ -7320,7 +7845,12 @@
             "r": "t",
             "text": "The following carrier placement rules are normative. When more than one carrier is present for the same Avro payload, all present carriers shall contain the same SchemaId value; a receiver shall treat disagreement as a decoding error."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "8.4.2 SchemaId carrier placement",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -7516,7 +8046,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "8.4.2 SchemaId carrier placement",
+          "b": 1
+        }
       },
       {
         "t": "clause",
@@ -7532,7 +8067,12 @@
             "r": "t",
             "text": "A schema announcement frame shall contain the SchemaId bytes and the canonical Avro schema JSON, where the schema JSON is the self-contained Avro Parsing Canonical Form or a self-contained schema document that has exactly that Parsing Canonical Form. The announcement shall define every named type needed to parse the payload without external named-schema state. An encoder shall send the announcement once per SchemaId and destination, at stream start, on first use, after a schema change, or in response to a decoder request. The announcement is lightweight and independent of data frames."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "8.4.3 Schema announcement message",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -7550,7 +8090,12 @@
             "r": "t",
             "text": ":"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "8.4.3 Schema announcement message",
+          "b": 1
+        }
       },
       {
         "t": "code",
@@ -7578,7 +8123,12 @@
           "  \"namespace\": \"org.opcfoundation.ua.avro\",",
           "  \"type\": \"record\"",
           "}"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "8.4.3 Schema announcement message",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -7644,7 +8194,12 @@
             "r": "t",
             "text": " shall insert the parsed schema into the decoder cache keyed by SchemaId; a receiver shall reject the announcement if the recomputed SchemaId differs."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "8.4.3 Schema announcement message",
+          "b": 3
+        }
       },
       {
         "t": "clause",
@@ -7668,7 +8223,12 @@
             "r": "t",
             "text": " for each requested SchemaId that it knows; unknown SchemaIds may be ignored or reported by deployment-specific diagnostics, but shall not cause the Publisher to answer with a different schema."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "8.4.4 Schema request message",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -7686,7 +8246,12 @@
             "r": "t",
             "text": ":"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "8.4.4 Schema request message",
+          "b": 1
+        }
       },
       {
         "t": "code",
@@ -7713,7 +8278,12 @@
           "  \"namespace\": \"org.opcfoundation.ua.avro\",",
           "  \"type\": \"record\"",
           "}"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "8.4.4 Schema request message",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -7769,7 +8339,12 @@
             "r": "t",
             "text": " shall contain the raw 8-byte SchemaId values, not hexadecimal strings."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "8.4.4 Schema request message",
+          "b": 3
+        }
       },
       {
         "t": "clause",
@@ -7831,7 +8406,12 @@
             "r": "t",
             "text": " may be sent for operator correlation, but receivers shall not use it as the decoding key."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "8.4.5 Encoder change tracking",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -7855,7 +8435,12 @@
             "r": "t",
             "text": ". When a value or message references an unknown SchemaId, the decoder shall resolve the cache miss in this order until a schema is obtained and verified:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "8.4.6 Decoder behavior",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -7865,7 +8450,12 @@
             "r": "t",
             "text": "The decoder cache shall be keyed by SchemaId. SchemaId is content-derived and independent of PubSub ConfigurationVersion, writer group version numbers, sequence numbers and transport session state. Encoders should periodically re-announce active schemas on lossy transports or when late joiners are expected."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "8.4.6 Decoder behavior",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -7881,14 +8471,24 @@
             "r": "t",
             "text": "The announce-then-data happy path is:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "8.4.7 Sequence diagrams",
+          "b": 0
+        }
       },
       {
         "t": "figure",
         "id": "fig-avro-1",
         "caption": "Where the Avro encoding fits",
         "source": "mermaid",
-        "mermaid": "sequenceDiagram\n  participant P as Publisher\n  participant S as Subscriber\n  P->>S: Discovery AvroSchemaAnnouncement(SchemaId, SchemaJson, SchemaEpoch)\n  S->>S: Verify CRC-64-AVRO SchemaId and cache parsed schema\n  P->>S: Data NetworkMessage(SchemaId, Avro binary payload)\n  S->>S: Select schema from cache and decode payload"
+        "mermaid": "sequenceDiagram\n  participant P as Publisher\n  participant S as Subscriber\n  P->>S: Discovery AvroSchemaAnnouncement(SchemaId, SchemaJson, SchemaEpoch)\n  S->>S: Verify CRC-64-AVRO SchemaId and cache parsed schema\n  P->>S: Data NetworkMessage(SchemaId, Avro binary payload)\n  S->>S: Select schema from cache and decode payload",
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "8.4.7 Sequence diagrams",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -7898,14 +8498,24 @@
             "r": "t",
             "text": "The late-joiner cache-miss path is:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "8.4.7 Sequence diagrams",
+          "b": 2
+        }
       },
       {
         "t": "figure",
         "id": "fig-avro-2",
         "caption": "Deterministic schema generation",
         "source": "mermaid",
-        "mermaid": "sequenceDiagram\n  participant P as Publisher\n  participant S as Late-joining Subscriber\n  P->>S: Data NetworkMessage(SchemaId, Avro binary payload)\n  S->>S: Cache miss for SchemaId\n  S->>P: Discovery AvroSchemaRequest(RequesterId, [SchemaId])\n  P->>S: Discovery AvroSchemaAnnouncement(SchemaId, SchemaJson, SchemaEpoch)\n  S->>S: Verify and cache parsed schema\n  S->>S: Decode buffered or subsequent payload"
+        "mermaid": "sequenceDiagram\n  participant P as Publisher\n  participant S as Late-joining Subscriber\n  P->>S: Data NetworkMessage(SchemaId, Avro binary payload)\n  S->>S: Cache miss for SchemaId\n  S->>P: Discovery AvroSchemaRequest(RequesterId, [SchemaId])\n  P->>S: Discovery AvroSchemaAnnouncement(SchemaId, SchemaJson, SchemaEpoch)\n  S->>S: Verify and cache parsed schema\n  S->>S: Decode buffered or subsequent payload",
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "8.4.7 Sequence diagrams",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -7915,14 +8525,24 @@
             "r": "t",
             "text": "The schema-change path is:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "8.4.7 Sequence diagrams",
+          "b": 4
+        }
       },
       {
         "t": "figure",
         "id": "fig-avro-3",
         "caption": "Decoder schema resolution",
         "source": "mermaid",
-        "mermaid": "sequenceDiagram\n  participant P as Publisher\n  participant S as Subscriber\n  P->>P: DataType or DataSet shape changes\n  P->>P: Recompute new SchemaId from Parsing Canonical Form\n  P->>S: Discovery AvroSchemaAnnouncement(New SchemaId, New SchemaJson, SchemaEpoch)\n  P->>S: Data NetworkMessage(New SchemaId, Avro binary payload)\n  S->>S: Cache new schema and decode with New SchemaId"
+        "mermaid": "sequenceDiagram\n  participant P as Publisher\n  participant S as Subscriber\n  P->>P: DataType or DataSet shape changes\n  P->>P: Recompute new SchemaId from Parsing Canonical Form\n  P->>S: Discovery AvroSchemaAnnouncement(New SchemaId, New SchemaJson, SchemaEpoch)\n  P->>S: Data NetworkMessage(New SchemaId, Avro binary payload)\n  S->>S: Cache new schema and decode with New SchemaId",
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "8.4.7 Sequence diagrams",
+          "b": 5
+        }
       },
       {
         "t": "clause",
@@ -7956,7 +8576,12 @@
             "r": "t",
             "text": ". Decoders do not rely on ConfigurationVersion for decoding — they shall select the Avro decoder by SchemaId — and may use ConfigurationVersion for the existing PubSub metadata checks; a decoder shall still decode correctly by SchemaId even if a misbehaving publisher fails to advance ConfigurationVersion."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "8.4.8 Relationship to ConfigurationVersion",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -8017,7 +8642,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "8.4.8 Relationship to ConfigurationVersion",
+          "b": 1
+        }
       },
       {
         "t": "clause",
@@ -8051,7 +8681,12 @@
             "r": "t",
             "text": " DataTypes, together with the content masks and the Information Model extension."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "8.5 Configuration parameters",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -8181,7 +8816,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "8.5 Configuration parameters",
+          "b": 1
+        }
       },
       {
         "t": "clause",
@@ -8213,7 +8853,12 @@
             "r": "t",
             "text": ". For MQTT 3.1.1, the same string should be carried in configured metadata or topic documentation because the protocol has no ContentType property."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "8.6 Transport content types",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -8239,7 +8884,12 @@
             "r": "t",
             "text": " parameter when the transport profile elects to carry SchemaId in metadata."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "8.6 Transport content types",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -8306,7 +8956,12 @@
             "r": "t",
             "text": " with the raw 8-byte SchemaId value or its deployment-specified hexadecimal representation."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "8.6 Transport content types",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -8324,7 +8979,12 @@
             "r": "t",
             "text": " with the configured SchemaId."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "8.6 Transport content types",
+          "b": 3
+        }
       },
       {
         "t": "clause",
@@ -8340,7 +9000,12 @@
             "r": "t",
             "text": "This clause defines how the Avro message mapping is represented in the OPC 10000-14 PubSub configuration model, and the Information Model extension that carries it. It fixes the names used so that two implementations configure the mapping identically. NodeIds are assigned by the OPC Foundation; this document defines the BrowseNames, the type hierarchy and the field sets."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "9 Part 14 configuration model mapping and Information Model additions",
+          "b": 0
+        }
       },
       {
         "t": "clause",
@@ -8388,7 +9053,12 @@
             "r": "t",
             "text": " set."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "9.1 Where the mapping plugs in",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -8502,7 +9172,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "9.1 Where the mapping plugs in",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -8546,7 +9221,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "9.1 Where the mapping plugs in",
+          "b": 2
+        }
       },
       {
         "t": "clause",
@@ -8606,7 +9286,12 @@
             "r": "t",
             "text": ") are non-null. Fields not selected are present in the schema and null on the wire, so the envelope schema is stable."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "9.2 Content mask DataTypes",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -8616,7 +9301,12 @@
             "r": "code",
             "text": "AvroNetworkMessageContentMask"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "9.2 Content mask DataTypes",
+          "b": 1
+        }
       },
       {
         "t": "table",
@@ -8952,7 +9642,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "9.2 Content mask DataTypes",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -8962,7 +9657,12 @@
             "r": "code",
             "text": "AvroDataSetMessageContentMask"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "9.2 Content mask DataTypes",
+          "b": 3
+        }
       },
       {
         "t": "table",
@@ -9222,7 +9922,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "9.2 Content mask DataTypes",
+          "b": 4
+        }
       },
       {
         "t": "clause",
@@ -9248,7 +9953,12 @@
             "r": "t",
             "text": " are carried as fields of these DataTypes."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "9.3 MessageSettings DataTypes",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -9266,7 +9976,12 @@
             "r": "code",
             "text": "WriterGroupMessageDataType"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "9.3 MessageSettings DataTypes",
+          "b": 1
+        }
       },
       {
         "t": "table",
@@ -9374,7 +10089,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "9.3 MessageSettings DataTypes",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -9392,7 +10112,12 @@
             "r": "code",
             "text": "DataSetWriterMessageDataType"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "9.3 MessageSettings DataTypes",
+          "b": 3
+        }
       },
       {
         "t": "table",
@@ -9532,7 +10257,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "9.3 MessageSettings DataTypes",
+          "b": 4
+        }
       },
       {
         "t": "para",
@@ -9550,7 +10280,12 @@
             "r": "code",
             "text": "DataSetReaderMessageDataType"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "9.3 MessageSettings DataTypes",
+          "b": 5
+        }
       },
       {
         "t": "table",
@@ -9650,7 +10385,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "9.3 MessageSettings DataTypes",
+          "b": 6
+        }
       },
       {
         "t": "para",
@@ -9674,7 +10414,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "9.3 MessageSettings DataTypes",
+          "b": 7
+        }
       },
       {
         "t": "clause",
@@ -9700,7 +10445,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "9.4 ObjectTypes",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -9766,7 +10516,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "9.4 ObjectTypes",
+          "b": 1
+        }
       },
       {
         "t": "clause",
@@ -9782,7 +10537,12 @@
             "r": "t",
             "text": "These additions are shipped as an Information Model extension rather than as changes to the Part 14 NodeSet, so that they can be adopted independently."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "9.5 NodeSet",
+          "b": 0
+        }
       },
       {
         "t": "list",
@@ -9849,7 +10609,12 @@
               "prefix": "6.9.4"
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "9.5 NodeSet",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -9859,7 +10624,12 @@
             "r": "t",
             "text": "The NodeSet is generated from this clause by the repository tooling and is not authored by hand. NodeIds are assigned by the OPC Foundation when the namespace is registered; until then the NodeSet is a draft and its numeric identifiers are provisional."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "9.5 NodeSet",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -9904,7 +10674,12 @@
             "r": "t",
             "text": " references are added."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "9.5 NodeSet",
+          "b": 3
+        }
       }
     ],
     "profiles": [
@@ -10467,7 +11242,12 @@
             "r": "t",
             "text": "<!-- BEGIN GENERATED: type-reference -->"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Annex A Generated type reference",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -10493,7 +11273,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Annex A Generated type reference",
+          "b": 1
+        }
       },
       {
         "t": "annex-clause",
@@ -10518,7 +11303,12 @@
             "r": "code",
             "text": "64f7d4a478fc429f"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Boolean",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -10580,7 +11370,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Boolean",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -10591,14 +11386,24 @@
             "text": "Avro schema fragment",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Boolean",
+          "b": 2
+        }
       },
       {
         "t": "code",
         "lang": "json",
         "lines": [
           "\"boolean\""
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Boolean",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -10621,14 +11426,24 @@
             "r": "t",
             "text": ")"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Boolean",
+          "b": 4
+        }
       },
       {
         "t": "code",
         "lang": "json",
         "lines": [
           "true"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Boolean",
+          "b": 5
+        }
       },
       {
         "t": "para",
@@ -10643,14 +11458,24 @@
             "r": "t",
             "text": " (1 bytes)"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Boolean",
+          "b": 6
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "01"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Boolean",
+          "b": 7
+        }
       },
       {
         "t": "para",
@@ -10661,7 +11486,12 @@
             "text": "Annotated byte-level breakdown",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Boolean",
+          "b": 8
+        }
       },
       {
         "t": "table",
@@ -10723,7 +11553,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Boolean",
+          "b": 9
+        }
       },
       {
         "t": "annex-clause",
@@ -10748,7 +11583,12 @@
             "r": "code",
             "text": "8f5c393f1ad57572"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in SByte",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -10810,7 +11650,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in SByte",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -10821,14 +11666,24 @@
             "text": "Avro schema fragment",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in SByte",
+          "b": 2
+        }
       },
       {
         "t": "code",
         "lang": "json",
         "lines": [
           "\"int\""
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in SByte",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -10851,14 +11706,24 @@
             "r": "t",
             "text": ")"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in SByte",
+          "b": 4
+        }
       },
       {
         "t": "code",
         "lang": "json",
         "lines": [
           "-128"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in SByte",
+          "b": 5
+        }
       },
       {
         "t": "para",
@@ -10873,14 +11738,24 @@
             "r": "t",
             "text": " (2 bytes)"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in SByte",
+          "b": 6
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "ff01"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in SByte",
+          "b": 7
+        }
       },
       {
         "t": "para",
@@ -10891,7 +11766,12 @@
             "text": "Annotated byte-level breakdown",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in SByte",
+          "b": 8
+        }
       },
       {
         "t": "table",
@@ -10953,7 +11833,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in SByte",
+          "b": 9
+        }
       },
       {
         "t": "annex-clause",
@@ -10978,7 +11863,12 @@
             "r": "code",
             "text": "8f5c393f1ad57572"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Byte",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -11040,7 +11930,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Byte",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -11051,14 +11946,24 @@
             "text": "Avro schema fragment",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Byte",
+          "b": 2
+        }
       },
       {
         "t": "code",
         "lang": "json",
         "lines": [
           "\"int\""
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Byte",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -11081,14 +11986,24 @@
             "r": "t",
             "text": ")"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Byte",
+          "b": 4
+        }
       },
       {
         "t": "code",
         "lang": "json",
         "lines": [
           "255"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Byte",
+          "b": 5
+        }
       },
       {
         "t": "para",
@@ -11103,14 +12018,24 @@
             "r": "t",
             "text": " (2 bytes)"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Byte",
+          "b": 6
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "fe03"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Byte",
+          "b": 7
+        }
       },
       {
         "t": "para",
@@ -11121,7 +12046,12 @@
             "text": "Annotated byte-level breakdown",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Byte",
+          "b": 8
+        }
       },
       {
         "t": "table",
@@ -11183,7 +12113,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Byte",
+          "b": 9
+        }
       },
       {
         "t": "annex-clause",
@@ -11208,7 +12143,12 @@
             "r": "code",
             "text": "8f5c393f1ad57572"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Int16",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -11270,7 +12210,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Int16",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -11281,14 +12226,24 @@
             "text": "Avro schema fragment",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Int16",
+          "b": 2
+        }
       },
       {
         "t": "code",
         "lang": "json",
         "lines": [
           "\"int\""
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Int16",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -11311,14 +12266,24 @@
             "r": "t",
             "text": ")"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Int16",
+          "b": 4
+        }
       },
       {
         "t": "code",
         "lang": "json",
         "lines": [
           "-32768"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Int16",
+          "b": 5
+        }
       },
       {
         "t": "para",
@@ -11333,14 +12298,24 @@
             "r": "t",
             "text": " (3 bytes)"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Int16",
+          "b": 6
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "ffff03"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Int16",
+          "b": 7
+        }
       },
       {
         "t": "para",
@@ -11351,7 +12326,12 @@
             "text": "Annotated byte-level breakdown",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Int16",
+          "b": 8
+        }
       },
       {
         "t": "table",
@@ -11413,7 +12393,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Int16",
+          "b": 9
+        }
       },
       {
         "t": "annex-clause",
@@ -11438,7 +12423,12 @@
             "r": "code",
             "text": "8f5c393f1ad57572"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in UInt16",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -11500,7 +12490,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in UInt16",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -11511,14 +12506,24 @@
             "text": "Avro schema fragment",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in UInt16",
+          "b": 2
+        }
       },
       {
         "t": "code",
         "lang": "json",
         "lines": [
           "\"int\""
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in UInt16",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -11541,14 +12546,24 @@
             "r": "t",
             "text": ")"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in UInt16",
+          "b": 4
+        }
       },
       {
         "t": "code",
         "lang": "json",
         "lines": [
           "65535"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in UInt16",
+          "b": 5
+        }
       },
       {
         "t": "para",
@@ -11563,14 +12578,24 @@
             "r": "t",
             "text": " (3 bytes)"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in UInt16",
+          "b": 6
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "feff07"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in UInt16",
+          "b": 7
+        }
       },
       {
         "t": "para",
@@ -11581,7 +12606,12 @@
             "text": "Annotated byte-level breakdown",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in UInt16",
+          "b": 8
+        }
       },
       {
         "t": "table",
@@ -11643,7 +12673,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in UInt16",
+          "b": 9
+        }
       },
       {
         "t": "annex-clause",
@@ -11668,7 +12703,12 @@
             "r": "code",
             "text": "8f5c393f1ad57572"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Int32",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -11730,7 +12770,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Int32",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -11741,14 +12786,24 @@
             "text": "Avro schema fragment",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Int32",
+          "b": 2
+        }
       },
       {
         "t": "code",
         "lang": "json",
         "lines": [
           "\"int\""
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Int32",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -11771,14 +12826,24 @@
             "r": "t",
             "text": ")"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Int32",
+          "b": 4
+        }
       },
       {
         "t": "code",
         "lang": "json",
         "lines": [
           "-2147483648"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Int32",
+          "b": 5
+        }
       },
       {
         "t": "para",
@@ -11793,14 +12858,24 @@
             "r": "t",
             "text": " (5 bytes)"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Int32",
+          "b": 6
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "ffffffff0f"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Int32",
+          "b": 7
+        }
       },
       {
         "t": "para",
@@ -11811,7 +12886,12 @@
             "text": "Annotated byte-level breakdown",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Int32",
+          "b": 8
+        }
       },
       {
         "t": "table",
@@ -11873,7 +12953,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Int32",
+          "b": 9
+        }
       },
       {
         "t": "annex-clause",
@@ -11898,7 +12983,12 @@
             "r": "code",
             "text": "8f5c393f1ad57572"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in UInt32",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -11960,7 +13050,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in UInt32",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -11971,14 +13066,24 @@
             "text": "Avro schema fragment",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in UInt32",
+          "b": 2
+        }
       },
       {
         "t": "code",
         "lang": "json",
         "lines": [
           "\"int\""
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in UInt32",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -12001,14 +13106,24 @@
             "r": "t",
             "text": ")"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in UInt32",
+          "b": 4
+        }
       },
       {
         "t": "code",
         "lang": "json",
         "lines": [
           "4294967295"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in UInt32",
+          "b": 5
+        }
       },
       {
         "t": "para",
@@ -12023,14 +13138,24 @@
             "r": "t",
             "text": " (1 bytes)"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in UInt32",
+          "b": 6
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "01"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in UInt32",
+          "b": 7
+        }
       },
       {
         "t": "para",
@@ -12041,7 +13166,12 @@
             "text": "Annotated byte-level breakdown",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in UInt32",
+          "b": 8
+        }
       },
       {
         "t": "table",
@@ -12103,7 +13233,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in UInt32",
+          "b": 9
+        }
       },
       {
         "t": "annex-clause",
@@ -12128,7 +13263,12 @@
             "r": "code",
             "text": "b71df49344e154d0"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Int64",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -12190,7 +13330,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Int64",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -12201,14 +13346,24 @@
             "text": "Avro schema fragment",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Int64",
+          "b": 2
+        }
       },
       {
         "t": "code",
         "lang": "json",
         "lines": [
           "\"long\""
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Int64",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -12231,14 +13386,24 @@
             "r": "t",
             "text": ")"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Int64",
+          "b": 4
+        }
       },
       {
         "t": "code",
         "lang": "json",
         "lines": [
           "-9223372036854775808"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Int64",
+          "b": 5
+        }
       },
       {
         "t": "para",
@@ -12253,14 +13418,24 @@
             "r": "t",
             "text": " (10 bytes)"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Int64",
+          "b": 6
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "ffffffffffffffffff01"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Int64",
+          "b": 7
+        }
       },
       {
         "t": "para",
@@ -12271,7 +13446,12 @@
             "text": "Annotated byte-level breakdown",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Int64",
+          "b": 8
+        }
       },
       {
         "t": "table",
@@ -12333,7 +13513,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Int64",
+          "b": 9
+        }
       },
       {
         "t": "annex-clause",
@@ -12358,7 +13543,12 @@
             "r": "code",
             "text": "b71df49344e154d0"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in UInt64",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -12420,7 +13610,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in UInt64",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -12431,14 +13626,24 @@
             "text": "Avro schema fragment",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in UInt64",
+          "b": 2
+        }
       },
       {
         "t": "code",
         "lang": "json",
         "lines": [
           "\"long\""
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in UInt64",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -12461,14 +13666,24 @@
             "r": "t",
             "text": ")"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in UInt64",
+          "b": 4
+        }
       },
       {
         "t": "code",
         "lang": "json",
         "lines": [
           "18446744073709551615"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in UInt64",
+          "b": 5
+        }
       },
       {
         "t": "para",
@@ -12483,14 +13698,24 @@
             "r": "t",
             "text": " (1 bytes)"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in UInt64",
+          "b": 6
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "01"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in UInt64",
+          "b": 7
+        }
       },
       {
         "t": "para",
@@ -12501,7 +13726,12 @@
             "text": "Annotated byte-level breakdown",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in UInt64",
+          "b": 8
+        }
       },
       {
         "t": "table",
@@ -12563,7 +13793,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in UInt64",
+          "b": 9
+        }
       },
       {
         "t": "annex-clause",
@@ -12588,7 +13823,12 @@
             "r": "code",
             "text": "90d7a83ecb027c4d"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Float",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -12650,7 +13890,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Float",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -12661,14 +13906,24 @@
             "text": "Avro schema fragment",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Float",
+          "b": 2
+        }
       },
       {
         "t": "code",
         "lang": "json",
         "lines": [
           "\"float\""
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Float",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -12691,14 +13946,24 @@
             "r": "t",
             "text": ")"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Float",
+          "b": 4
+        }
       },
       {
         "t": "code",
         "lang": "json",
         "lines": [
           "1.5"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Float",
+          "b": 5
+        }
       },
       {
         "t": "para",
@@ -12713,14 +13978,24 @@
             "r": "t",
             "text": " (4 bytes)"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Float",
+          "b": 6
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "0000c03f"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Float",
+          "b": 7
+        }
       },
       {
         "t": "para",
@@ -12731,7 +14006,12 @@
             "text": "Annotated byte-level breakdown",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Float",
+          "b": 8
+        }
       },
       {
         "t": "table",
@@ -12793,7 +14073,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Float",
+          "b": 9
+        }
       },
       {
         "t": "annex-clause",
@@ -12818,7 +14103,12 @@
             "r": "code",
             "text": "7e95ab32c035758e"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Double",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -12880,7 +14170,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Double",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -12891,14 +14186,24 @@
             "text": "Avro schema fragment",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Double",
+          "b": 2
+        }
       },
       {
         "t": "code",
         "lang": "json",
         "lines": [
           "\"double\""
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Double",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -12921,14 +14226,24 @@
             "r": "t",
             "text": ")"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Double",
+          "b": 4
+        }
       },
       {
         "t": "code",
         "lang": "json",
         "lines": [
           "\"NaN\""
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Double",
+          "b": 5
+        }
       },
       {
         "t": "para",
@@ -12943,14 +14258,24 @@
             "r": "t",
             "text": " (8 bytes)"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Double",
+          "b": 6
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "000000000000f87f"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Double",
+          "b": 7
+        }
       },
       {
         "t": "para",
@@ -12961,7 +14286,12 @@
             "text": "Annotated byte-level breakdown",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Double",
+          "b": 8
+        }
       },
       {
         "t": "table",
@@ -13023,7 +14353,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Double",
+          "b": 9
+        }
       },
       {
         "t": "annex-clause",
@@ -13048,7 +14383,12 @@
             "r": "code",
             "text": "9dc47eb71ef24598"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in String",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -13110,7 +14450,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in String",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -13121,7 +14466,12 @@
             "text": "Avro schema fragment",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in String",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -13131,7 +14481,12 @@
           "  \"null\",",
           "  \"string\"",
           "]"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in String",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -13154,14 +14509,24 @@
             "r": "t",
             "text": ")"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in String",
+          "b": 4
+        }
       },
       {
         "t": "code",
         "lang": "json",
         "lines": [
           "\"grüße-中文-😀\""
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in String",
+          "b": 5
+        }
       },
       {
         "t": "para",
@@ -13176,14 +14541,24 @@
             "r": "t",
             "text": " (21 bytes)"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in String",
+          "b": 6
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "02266772c3bcc39f652de4b8ade696872df09f9880"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in String",
+          "b": 7
+        }
       },
       {
         "t": "para",
@@ -13194,7 +14569,12 @@
             "text": "Annotated byte-level breakdown",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in String",
+          "b": 8
+        }
       },
       {
         "t": "table",
@@ -13308,7 +14688,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in String",
+          "b": 9
+        }
       },
       {
         "t": "annex-clause",
@@ -13333,7 +14718,12 @@
             "r": "code",
             "text": "b71df49344e154d0"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in DateTime",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -13395,7 +14785,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in DateTime",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -13406,14 +14801,24 @@
             "text": "Avro schema fragment",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in DateTime",
+          "b": 2
+        }
       },
       {
         "t": "code",
         "lang": "json",
         "lines": [
           "\"long\""
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in DateTime",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -13436,14 +14841,24 @@
             "r": "t",
             "text": ")"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in DateTime",
+          "b": 4
+        }
       },
       {
         "t": "code",
         "lang": "json",
         "lines": [
           "{\"ticks\": 133000000000000000}"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in DateTime",
+          "b": 5
+        }
       },
       {
         "t": "para",
@@ -13458,14 +14873,24 @@
             "r": "t",
             "text": " (9 bytes)"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in DateTime",
+          "b": 6
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "808084b2f3b2c1d803"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in DateTime",
+          "b": 7
+        }
       },
       {
         "t": "para",
@@ -13476,7 +14901,12 @@
             "text": "Annotated byte-level breakdown",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in DateTime",
+          "b": 8
+        }
       },
       {
         "t": "table",
@@ -13538,7 +14968,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in DateTime",
+          "b": 9
+        }
       },
       {
         "t": "annex-clause",
@@ -13563,7 +14998,12 @@
             "r": "code",
             "text": "cde4c366633fdfe6"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Guid",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -13625,7 +15065,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Guid",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -13636,14 +15081,24 @@
             "text": "Avro schema fragment",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Guid",
+          "b": 2
+        }
       },
       {
         "t": "code",
         "lang": "json",
         "lines": [
           "\"org.opcfoundation.ua.avro.Guid\""
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Guid",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -13666,14 +15121,24 @@
             "r": "t",
             "text": ")"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Guid",
+          "b": 4
+        }
       },
       {
         "t": "code",
         "lang": "json",
         "lines": [
           "{\"bytes\": \"0x0102030405060708090a0b0c0d0e0f10\"}"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Guid",
+          "b": 5
+        }
       },
       {
         "t": "para",
@@ -13688,14 +15153,24 @@
             "r": "t",
             "text": " (16 bytes)"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Guid",
+          "b": 6
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "0102030405060708090a0b0c0d0e0f10"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Guid",
+          "b": 7
+        }
       },
       {
         "t": "para",
@@ -13706,7 +15181,12 @@
             "text": "Annotated byte-level breakdown",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Guid",
+          "b": 8
+        }
       },
       {
         "t": "table",
@@ -13768,7 +15248,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Guid",
+          "b": 9
+        }
       },
       {
         "t": "annex-clause",
@@ -13793,7 +15278,12 @@
             "r": "code",
             "text": "9d4c3eb5447b4848"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in ByteString",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -13855,7 +15345,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in ByteString",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -13866,7 +15361,12 @@
             "text": "Avro schema fragment",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in ByteString",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -13876,7 +15376,12 @@
           "  \"null\",",
           "  \"bytes\"",
           "]"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in ByteString",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -13899,14 +15404,24 @@
             "r": "t",
             "text": ")"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in ByteString",
+          "b": 4
+        }
       },
       {
         "t": "code",
         "lang": "json",
         "lines": [
           "\"0x0001020304050607\""
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in ByteString",
+          "b": 5
+        }
       },
       {
         "t": "para",
@@ -13921,14 +15436,24 @@
             "r": "t",
             "text": " (10 bytes)"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in ByteString",
+          "b": 6
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "02100001020304050607"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in ByteString",
+          "b": 7
+        }
       },
       {
         "t": "para",
@@ -13939,7 +15464,12 @@
             "text": "Annotated byte-level breakdown",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in ByteString",
+          "b": 8
+        }
       },
       {
         "t": "table",
@@ -14053,7 +15583,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in ByteString",
+          "b": 9
+        }
       },
       {
         "t": "annex-clause",
@@ -14078,7 +15613,12 @@
             "r": "code",
             "text": "9dc47eb71ef24598"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in XmlElement",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -14140,7 +15680,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in XmlElement",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -14151,7 +15696,12 @@
             "text": "Avro schema fragment",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in XmlElement",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -14161,7 +15711,12 @@
           "  \"null\",",
           "  \"string\"",
           "]"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in XmlElement",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -14184,14 +15739,24 @@
             "r": "t",
             "text": ")"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in XmlElement",
+          "b": 4
+        }
       },
       {
         "t": "code",
         "lang": "json",
         "lines": [
           "{\"value\": \"<a x='1'>t</a>\"}"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in XmlElement",
+          "b": 5
+        }
       },
       {
         "t": "para",
@@ -14206,14 +15771,24 @@
             "r": "t",
             "text": " (16 bytes)"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in XmlElement",
+          "b": 6
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "021c3c6120783d2731273e743c2f613e"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in XmlElement",
+          "b": 7
+        }
       },
       {
         "t": "para",
@@ -14224,7 +15799,12 @@
             "text": "Annotated byte-level breakdown",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in XmlElement",
+          "b": 8
+        }
       },
       {
         "t": "table",
@@ -14338,7 +15918,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in XmlElement",
+          "b": 9
+        }
       },
       {
         "t": "annex-clause",
@@ -14363,7 +15948,12 @@
             "r": "code",
             "text": "7a72f202d5e8e102"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in NodeId",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -14425,7 +16015,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in NodeId",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -14436,7 +16031,12 @@
             "text": "Avro schema fragment",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in NodeId",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -14495,7 +16095,12 @@
           "  \"namespace\": \"org.opcfoundation.ua.avro\",",
           "  \"type\": \"record\"",
           "}"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in NodeId",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -14518,14 +16123,24 @@
             "r": "t",
             "text": ")"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in NodeId",
+          "b": 4
+        }
       },
       {
         "t": "code",
         "lang": "json",
         "lines": [
           "{\"id_type\": 0, \"identifier\": 2258, \"namespace\": 0}"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in NodeId",
+          "b": 5
+        }
       },
       {
         "t": "para",
@@ -14540,14 +16155,24 @@
             "r": "t",
             "text": " (9 bytes)"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in NodeId",
+          "b": 6
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "02000002a423000000"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in NodeId",
+          "b": 7
+        }
       },
       {
         "t": "para",
@@ -14558,7 +16183,12 @@
             "text": "Annotated byte-level breakdown",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in NodeId",
+          "b": 8
+        }
       },
       {
         "t": "table",
@@ -14880,7 +16510,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in NodeId",
+          "b": 9
+        }
       },
       {
         "t": "annex-clause",
@@ -14905,7 +16540,12 @@
             "r": "code",
             "text": "eff6df8ff05db838"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in ExpandedNodeId",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -14967,7 +16607,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in ExpandedNodeId",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -14978,7 +16623,12 @@
             "text": "Avro schema fragment",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in ExpandedNodeId",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -15008,7 +16658,12 @@
           "  \"namespace\": \"org.opcfoundation.ua.avro\",",
           "  \"type\": \"record\"",
           "}"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in ExpandedNodeId",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -15031,14 +16686,24 @@
             "r": "t",
             "text": ")"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in ExpandedNodeId",
+          "b": 4
+        }
       },
       {
         "t": "code",
         "lang": "json",
         "lines": [
           "{\"namespace_uri\": \"http://example.org/UA/\", \"node_id\": {\"id_type\": 1, \"identifier\": \"X\", \"namespace\": 1}, \"server_index\": 5}"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in ExpandedNodeId",
+          "b": 5
+        }
       },
       {
         "t": "para",
@@ -15053,14 +16718,24 @@
             "r": "t",
             "text": " (34 bytes)"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in ExpandedNodeId",
+          "b": 6
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "020202000202580000022c687474703a2f2f6578616d706c652e6f72672f55412f0a"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in ExpandedNodeId",
+          "b": 7
+        }
       },
       {
         "t": "para",
@@ -15071,7 +16746,12 @@
             "text": "Annotated byte-level breakdown",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in ExpandedNodeId",
+          "b": 8
+        }
       },
       {
         "t": "table",
@@ -15523,7 +17203,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in ExpandedNodeId",
+          "b": 9
+        }
       },
       {
         "t": "annex-clause",
@@ -15548,7 +17233,12 @@
             "r": "code",
             "text": "8f5c393f1ad57572"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in StatusCode",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -15610,7 +17300,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in StatusCode",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -15621,14 +17316,24 @@
             "text": "Avro schema fragment",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in StatusCode",
+          "b": 2
+        }
       },
       {
         "t": "code",
         "lang": "json",
         "lines": [
           "\"int\""
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in StatusCode",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -15651,14 +17356,24 @@
             "r": "t",
             "text": ")"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in StatusCode",
+          "b": 4
+        }
       },
       {
         "t": "code",
         "lang": "json",
         "lines": [
           "{\"value\": 2158755840}"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in StatusCode",
+          "b": 5
+        }
       },
       {
         "t": "para",
@@ -15673,14 +17388,24 @@
             "r": "t",
             "text": " (5 bytes)"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in StatusCode",
+          "b": 6
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "ffff9ff50f"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in StatusCode",
+          "b": 7
+        }
       },
       {
         "t": "para",
@@ -15691,7 +17416,12 @@
             "text": "Annotated byte-level breakdown",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in StatusCode",
+          "b": 8
+        }
       },
       {
         "t": "table",
@@ -15753,7 +17483,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in StatusCode",
+          "b": 9
+        }
       },
       {
         "t": "annex-clause",
@@ -15778,7 +17513,12 @@
             "r": "code",
             "text": "5ea7a40e898d19ec"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in QualifiedName",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -15840,7 +17580,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in QualifiedName",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -15851,7 +17596,12 @@
             "text": "Avro schema fragment",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in QualifiedName",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -15876,7 +17626,12 @@
           "  \"namespace\": \"org.opcfoundation.ua.avro\",",
           "  \"type\": \"record\"",
           "}"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in QualifiedName",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -15899,14 +17654,24 @@
             "r": "t",
             "text": ")"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in QualifiedName",
+          "b": 4
+        }
       },
       {
         "t": "code",
         "lang": "json",
         "lines": [
           "{\"name\": \"Temp\", \"namespace\": 1}"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in QualifiedName",
+          "b": 5
+        }
       },
       {
         "t": "para",
@@ -15921,14 +17686,24 @@
             "r": "t",
             "text": " (8 bytes)"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in QualifiedName",
+          "b": 6
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "0202020854656d70"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in QualifiedName",
+          "b": 7
+        }
       },
       {
         "t": "para",
@@ -15939,7 +17714,12 @@
             "text": "Annotated byte-level breakdown",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in QualifiedName",
+          "b": 8
+        }
       },
       {
         "t": "table",
@@ -16105,7 +17885,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in QualifiedName",
+          "b": 9
+        }
       },
       {
         "t": "annex-clause",
@@ -16130,7 +17915,12 @@
             "r": "code",
             "text": "2d8ba35586039a65"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in LocalizedText",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -16192,7 +17982,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in LocalizedText",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -16203,7 +17998,12 @@
             "text": "Avro schema fragment",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in LocalizedText",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -16232,7 +18032,12 @@
           "  \"namespace\": \"org.opcfoundation.ua.avro\",",
           "  \"type\": \"record\"",
           "}"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in LocalizedText",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -16255,14 +18060,24 @@
             "r": "t",
             "text": ")"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in LocalizedText",
+          "b": 4
+        }
       },
       {
         "t": "code",
         "lang": "json",
         "lines": [
           "{\"locale\": \"en\", \"text\": \"Hello\"}"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in LocalizedText",
+          "b": 5
+        }
       },
       {
         "t": "para",
@@ -16277,14 +18092,24 @@
             "r": "t",
             "text": " (12 bytes)"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in LocalizedText",
+          "b": 6
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "020204656e020a48656c6c6f"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in LocalizedText",
+          "b": 7
+        }
       },
       {
         "t": "para",
@@ -16295,7 +18120,12 @@
             "text": "Annotated byte-level breakdown",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in LocalizedText",
+          "b": 8
+        }
       },
       {
         "t": "table",
@@ -16513,7 +18343,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in LocalizedText",
+          "b": 9
+        }
       },
       {
         "t": "annex-clause",
@@ -16538,7 +18373,12 @@
             "r": "code",
             "text": "f50df9bab1852efe"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in ExtensionObject",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -16640,7 +18480,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in ExtensionObject",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -16718,7 +18563,12 @@
             "r": "t",
             "text": " for an XML or textual body), appended append-only like any other branch."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in ExtensionObject",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -16741,14 +18591,24 @@
             "r": "t",
             "text": ")"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in ExtensionObject",
+          "b": 3
+        }
       },
       {
         "t": "code",
         "lang": "json",
         "lines": [
           "{\"body\": {\"fields\": {\"X\": 1.0, \"Y\": 1.0}, \"type_name\": \"Point\"}, \"type_id\": {\"id_type\": 0, \"identifier\": 3001, \"namespace\": 0}}"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in ExtensionObject",
+          "b": 4
+        }
       },
       {
         "t": "para",
@@ -16763,14 +18623,24 @@
             "r": "t",
             "text": " (26 bytes)"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in ExtensionObject",
+          "b": 5
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "02000002f22e00000002000000000000f03f000000000000f03f"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in ExtensionObject",
+          "b": 6
+        }
       },
       {
         "t": "para",
@@ -16785,7 +18655,12 @@
             "r": "t",
             "text": " (the body union index below is into the published aggregation schema)"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in ExtensionObject",
+          "b": 7
+        }
       },
       {
         "t": "table",
@@ -17185,7 +19060,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in ExtensionObject",
+          "b": 8
+        }
       },
       {
         "t": "annex-clause",
@@ -17210,7 +19090,12 @@
             "r": "code",
             "text": "2abf014fafc0cfa5"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in DataValue",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -17272,7 +19157,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in DataValue",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -17283,7 +19173,12 @@
             "text": "Avro schema fragment",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in DataValue",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -17344,7 +19239,12 @@
           "  \"namespace\": \"org.opcfoundation.ua.avro\",",
           "  \"type\": \"record\"",
           "}"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in DataValue",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -17367,14 +19267,24 @@
             "r": "t",
             "text": ")"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in DataValue",
+          "b": 4
+        }
       },
       {
         "t": "code",
         "lang": "json",
         "lines": [
           "{\"server_picoseconds\": 250, \"server_timestamp\": {\"ticks\": 2000}, \"source_picoseconds\": 500, \"source_timestamp\": {\"ticks\": 1000}, \"status\": {\"value\": 0}, \"value\": {\"dimensions\": null, \"value\": 42, \"vtype\": {\"id\": 6}}}"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in DataValue",
+          "b": 5
+        }
       },
       {
         "t": "para",
@@ -17389,14 +19299,24 @@
             "r": "t",
             "text": " (19 bytes)"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in DataValue",
+          "b": 6
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "020c002054020002d00f02e80702a01f02f403"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in DataValue",
+          "b": 7
+        }
       },
       {
         "t": "para",
@@ -17407,7 +19327,12 @@
             "text": "Annotated byte-level breakdown",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in DataValue",
+          "b": 8
+        }
       },
       {
         "t": "table",
@@ -17859,7 +19784,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in DataValue",
+          "b": 9
+        }
       },
       {
         "t": "annex-clause",
@@ -17884,7 +19814,12 @@
             "r": "code",
             "text": "e4991bff0397acd7"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Variant",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -18012,7 +19947,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Variant",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -18074,7 +20014,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Variant",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -18097,14 +20042,24 @@
             "r": "t",
             "text": ")"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Variant",
+          "b": 3
+        }
       },
       {
         "t": "code",
         "lang": "json",
         "lines": [
           "{\"dimensions\": [2, 2], \"value\": [1, 2, 3, 4], \"vtype\": {\"id\": 6}}"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Variant",
+          "b": 4
+        }
       },
       {
         "t": "para",
@@ -18119,14 +20074,24 @@
             "r": "t",
             "text": " (17 bytes)"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Variant",
+          "b": 5
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "0c02040404002404040400080204060800"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Variant",
+          "b": 6
+        }
       },
       {
         "t": "para",
@@ -18141,7 +20106,12 @@
             "r": "t",
             "text": " (the body union index below is into the published aggregation schema)"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Variant",
+          "b": 7
+        }
       },
       {
         "t": "table",
@@ -18619,7 +20589,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in Variant",
+          "b": 8
+        }
       },
       {
         "t": "annex-clause",
@@ -18644,7 +20619,12 @@
             "r": "code",
             "text": "1f23716837bba69d"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in DiagnosticInfo",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -18706,7 +20686,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in DiagnosticInfo",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -18717,7 +20702,12 @@
             "text": "Avro schema fragment",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in DiagnosticInfo",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -18786,7 +20776,12 @@
           "  \"namespace\": \"org.opcfoundation.ua.avro\",",
           "  \"type\": \"record\"",
           "}"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in DiagnosticInfo",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -18809,14 +20804,24 @@
             "r": "t",
             "text": ")"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in DiagnosticInfo",
+          "b": 4
+        }
       },
       {
         "t": "code",
         "lang": "json",
         "lines": [
           "{\"additional_info\": \"outer\", \"inner_diagnostic_info\": {\"additional_info\": \"inner\", \"inner_diagnostic_info\": null, \"inner_status_code\": null, \"locale\": 5, \"localized_text\": null, \"namespace_uri\": null, \"symbolic_id\": null}, \"inner_status_code\": {\"value\": 2158755840}, \"locale\": null, \"localized_text\": null, \"namespace_uri\": 2, \"symbolic_id\": 1}"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in DiagnosticInfo",
+          "b": 5
+        }
       },
       {
         "t": "para",
@@ -18831,14 +20836,24 @@
             "r": "t",
             "text": " (34 bytes)"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in DiagnosticInfo",
+          "b": 6
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "020202040000020a6f7574657202ffff9ff50f020000020a00020a696e6e65720000"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in DiagnosticInfo",
+          "b": 7
+        }
       },
       {
         "t": "para",
@@ -18849,7 +20864,12 @@
             "text": "Annotated byte-level breakdown",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in DiagnosticInfo",
+          "b": 8
+        }
       },
       {
         "t": "table",
@@ -19639,7 +21659,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Built-in DiagnosticInfo",
+          "b": 9
+        }
       },
       {
         "t": "annex-clause",
@@ -19664,7 +21689,12 @@
             "r": "code",
             "text": "fe961155c29ee867"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "One-dimensional array",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -19752,7 +21782,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "One-dimensional array",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -19763,7 +21798,12 @@
             "text": "Avro schema fragment",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "One-dimensional array",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -19779,7 +21819,12 @@
           "    \"type\": \"array\"",
           "  }",
           "]"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "One-dimensional array",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -19802,14 +21847,24 @@
             "r": "t",
             "text": ")"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "One-dimensional array",
+          "b": 4
+        }
       },
       {
         "t": "code",
         "lang": "json",
         "lines": [
           "[\"a\", null, \"\"]"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "One-dimensional array",
+          "b": 5
+        }
       },
       {
         "t": "para",
@@ -19824,14 +21879,24 @@
             "r": "t",
             "text": " (9 bytes)"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "One-dimensional array",
+          "b": 6
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "020602026100020000"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "One-dimensional array",
+          "b": 7
+        }
       },
       {
         "t": "para",
@@ -19842,7 +21907,12 @@
             "text": "Annotated byte-level breakdown",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "One-dimensional array",
+          "b": 8
+        }
       },
       {
         "t": "table",
@@ -20164,7 +22234,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "One-dimensional array",
+          "b": 9
+        }
       },
       {
         "t": "annex-clause",
@@ -20189,7 +22264,12 @@
             "r": "code",
             "text": "2ffc7ee0a94fbeb3"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Matrix",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -20277,7 +22357,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Matrix",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -20288,7 +22373,12 @@
             "text": "Avro schema fragment",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Matrix",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -20321,7 +22411,12 @@
           "    \"type\": \"record\"",
           "  }",
           "]"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Matrix",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -20344,14 +22439,24 @@
             "r": "t",
             "text": ")"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Matrix",
+          "b": 4
+        }
       },
       {
         "t": "code",
         "lang": "json",
         "lines": [
           "{\"dimensions\": [2, 2], \"values\": [1.0, \"NaN\", \"-Infinity\", -0.0]}"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Matrix",
+          "b": 5
+        }
       },
       {
         "t": "para",
@@ -20366,14 +22471,24 @@
             "r": "t",
             "text": " (43 bytes)"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Matrix",
+          "b": 6
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "02040404000802000000000000f03f02000000000000f87f02000000000000f0ff02000000000000008000"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Matrix",
+          "b": 7
+        }
       },
       {
         "t": "para",
@@ -20384,7 +22499,12 @@
             "text": "Annotated byte-level breakdown",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Matrix",
+          "b": 8
+        }
       },
       {
         "t": "table",
@@ -20810,7 +22930,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Matrix",
+          "b": 9
+        }
       },
       {
         "t": "annex-clause",
@@ -20835,7 +22960,12 @@
             "r": "code",
             "text": "088588111c53429d"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Structure",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -20923,7 +23053,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Structure",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -20934,7 +23069,12 @@
             "text": "Avro schema fragment",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Structure",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -20955,7 +23095,12 @@
           "  \"namespace\": \"org.opcfoundation.ua.avro\",",
           "  \"type\": \"record\"",
           "}"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Structure",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -20978,14 +23123,24 @@
             "r": "t",
             "text": ")"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Structure",
+          "b": 4
+        }
       },
       {
         "t": "code",
         "lang": "json",
         "lines": [
           "{\"fields\": {\"X\": 1.25, \"Y\": -3.5}, \"type_name\": \"Point\"}"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Structure",
+          "b": 5
+        }
       },
       {
         "t": "para",
@@ -21000,14 +23155,24 @@
             "r": "t",
             "text": " (16 bytes)"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Structure",
+          "b": 6
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "000000000000f43f0000000000000cc0"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Structure",
+          "b": 7
+        }
       },
       {
         "t": "para",
@@ -21018,7 +23183,12 @@
             "text": "Annotated byte-level breakdown",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Structure",
+          "b": 8
+        }
       },
       {
         "t": "table",
@@ -21106,7 +23276,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Structure",
+          "b": 9
+        }
       },
       {
         "t": "annex-clause",
@@ -21131,7 +23306,12 @@
             "r": "code",
             "text": "87352c988d4b795d"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Structure with optional fields",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -21271,7 +23451,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Structure with optional fields",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -21282,7 +23467,12 @@
             "text": "Avro schema fragment",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Structure with optional fields",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -21348,7 +23538,12 @@
           "  \"namespace\": \"org.opcfoundation.ua.avro\",",
           "  \"type\": \"record\"",
           "}"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Structure with optional fields",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -21371,14 +23566,24 @@
             "r": "t",
             "text": ")"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Structure with optional fields",
+          "b": 4
+        }
       },
       {
         "t": "code",
         "lang": "json",
         "lines": [
           "{\"fields\": {\"Age\": 9, \"Email\": null, \"Name\": \"Zed\"}, \"type_name\": \"Person\"}"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Structure with optional fields",
+          "b": 5
+        }
       },
       {
         "t": "para",
@@ -21393,14 +23598,24 @@
             "r": "t",
             "text": " (9 bytes)"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Structure with optional fields",
+          "b": 6
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "02065a656412020000"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Structure with optional fields",
+          "b": 7
+        }
       },
       {
         "t": "para",
@@ -21411,7 +23626,12 @@
             "text": "Annotated byte-level breakdown",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Structure with optional fields",
+          "b": 8
+        }
       },
       {
         "t": "table",
@@ -21681,7 +23901,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Structure with optional fields",
+          "b": 9
+        }
       },
       {
         "t": "annex-clause",
@@ -21706,7 +23931,12 @@
             "r": "code",
             "text": "f906a398dbbd6787"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Union",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -21794,7 +24024,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Union",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -21805,7 +24040,12 @@
             "text": "Avro schema fragment",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Union",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -21869,7 +24109,12 @@
           "  \"namespace\": \"org.opcfoundation.ua.avro\",",
           "  \"type\": \"record\"",
           "}"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Union",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -21892,14 +24137,24 @@
             "r": "t",
             "text": ")"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Union",
+          "b": 4
+        }
       },
       {
         "t": "code",
         "lang": "json",
         "lines": [
           "{\"field_name\": \"AsPoint\", \"value\": {\"fields\": {\"X\": 9.0, \"Y\": 8.0}, \"type_name\": \"Point\"}}"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Union",
+          "b": 5
+        }
       },
       {
         "t": "para",
@@ -21914,14 +24169,24 @@
             "r": "t",
             "text": " (26 bytes)"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Union",
+          "b": 6
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "020e4173506f696e740600000000000022400000000000002040"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Union",
+          "b": 7
+        }
       },
       {
         "t": "para",
@@ -21932,7 +24197,12 @@
             "text": "Annotated byte-level breakdown",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Union",
+          "b": 8
+        }
       },
       {
         "t": "table",
@@ -22124,7 +24394,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Union",
+          "b": 9
+        }
       },
       {
         "t": "annex-clause",
@@ -22149,7 +24424,12 @@
             "r": "code",
             "text": "d5b98856c5cee45e"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Worked structured DataType: Envelope",
+          "b": 0
+        }
       },
       {
         "t": "table",
@@ -22289,7 +24569,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Worked structured DataType: Envelope",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -22300,7 +24585,12 @@
             "text": "Avro schema fragment",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Worked structured DataType: Envelope",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -22341,7 +24631,12 @@
           "  \"namespace\": \"org.opcfoundation.ua.avro\",",
           "  \"type\": \"record\"",
           "}"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Worked structured DataType: Envelope",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -22364,14 +24659,24 @@
             "r": "t",
             "text": ")"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Worked structured DataType: Envelope",
+          "b": 4
+        }
       },
       {
         "t": "code",
         "lang": "json",
         "lines": [
           "{\"fields\": {\"Id\": \"E1\", \"Location\": {\"fields\": {\"X\": 0.0, \"Y\": 0.0}, \"type_name\": \"Point\"}, \"Payload\": {\"body\": {\"fields\": {\"X\": 2.0, \"Y\": 3.0}, \"type_name\": \"Point\"}, \"type_id\": {\"id_type\": 0, \"identifier\": 3001, \"namespace\": 0}}, \"Tags\": [\"x\", null, \"z\"]}, \"type_name\": \"Envelope\"}"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Worked structured DataType: Envelope",
+          "b": 5
+        }
       },
       {
         "t": "para",
@@ -22386,14 +24691,24 @@
             "r": "t",
             "text": " (55 bytes)"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Worked structured DataType: Envelope",
+          "b": 6
+        }
       },
       {
         "t": "code",
         "lang": "text",
         "lines": [
           "0204453100000000000000000000000000000000060202780002027a0002000002f22e0000000200000000000000400000000000000840"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Worked structured DataType: Envelope",
+          "b": 7
+        }
       },
       {
         "t": "para",
@@ -22404,7 +24719,12 @@
             "text": "Annotated byte-level breakdown",
             "b": true
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Worked structured DataType: Envelope",
+          "b": 8
+        }
       },
       {
         "t": "table",
@@ -23194,7 +25514,12 @@
           ]
         ],
         "widths": null,
-        "note": null
+        "note": null,
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Worked structured DataType: Envelope",
+          "b": 9
+        }
       },
       {
         "t": "para",
@@ -23204,7 +25529,12 @@
             "r": "t",
             "text": "<!-- END GENERATED: type-reference -->"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Worked structured DataType: Envelope",
+          "b": 10
+        }
       }
     ],
     "annex-b": [
@@ -23388,7 +25718,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Annex B PubSub Action and Discovery schema examples",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -23406,7 +25741,12 @@
             "r": "t",
             "text": "."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Annex B PubSub Action and Discovery schema examples",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -23424,7 +25764,12 @@
             "r": "t",
             "text": ":"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Annex B PubSub Action and Discovery schema examples",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -23492,7 +25837,12 @@
           "  \"namespace\": \"org.opcfoundation.ua.avro\",",
           "  \"type\": \"record\"",
           "}"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Annex B PubSub Action and Discovery schema examples",
+          "b": 3
+        }
       },
       {
         "t": "para",
@@ -23510,7 +25860,12 @@
             "r": "t",
             "text": ". Each entry carries an opaque DataSetMessage together with its per-DataSet SchemaId:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Annex B PubSub Action and Discovery schema examples",
+          "b": 4
+        }
       },
       {
         "t": "code",
@@ -23537,7 +25892,12 @@
           "  \"namespace\": \"org.opcfoundation.ua.avro\",",
           "  \"type\": \"record\"",
           "}"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Annex B PubSub Action and Discovery schema examples",
+          "b": 5
+        }
       },
       {
         "t": "para",
@@ -23555,7 +25915,12 @@
             "r": "t",
             "text": ". It is the same payload-entry array as the envelope, carried directly by the transport without a NetworkMessage wrapper:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Annex B PubSub Action and Discovery schema examples",
+          "b": 6
+        }
       },
       {
         "t": "code",
@@ -23578,7 +25943,12 @@
           "  \"namespace\": \"org.opcfoundation.ua.avro\",",
           "  \"type\": \"record\"",
           "}"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Annex B PubSub Action and Discovery schema examples",
+          "b": 7
+        }
       },
       {
         "t": "para",
@@ -23596,7 +25966,12 @@
             "r": "t",
             "text": ":"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Annex B PubSub Action and Discovery schema examples",
+          "b": 8
+        }
       },
       {
         "t": "code",
@@ -23640,7 +26015,12 @@
           "  \"namespace\": \"org.opcfoundation.ua.avro\",",
           "  \"type\": \"record\"",
           "}"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Annex B PubSub Action and Discovery schema examples",
+          "b": 9
+        }
       },
       {
         "t": "para",
@@ -23658,7 +26038,12 @@
             "r": "t",
             "text": ":"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Annex B PubSub Action and Discovery schema examples",
+          "b": 10
+        }
       },
       {
         "t": "code",
@@ -23711,7 +26096,12 @@
           "  \"namespace\": \"org.opcfoundation.ua.avro\",",
           "  \"type\": \"record\"",
           "}"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Annex B PubSub Action and Discovery schema examples",
+          "b": 11
+        }
       },
       {
         "t": "para",
@@ -23729,7 +26119,12 @@
             "r": "t",
             "text": ":"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Annex B PubSub Action and Discovery schema examples",
+          "b": 12
+        }
       },
       {
         "t": "code",
@@ -23787,7 +26182,12 @@
           "  \"namespace\": \"org.opcfoundation.ua.avro\",",
           "  \"type\": \"record\"",
           "}"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Annex B PubSub Action and Discovery schema examples",
+          "b": 13
+        }
       },
       {
         "t": "para",
@@ -23805,7 +26205,12 @@
             "r": "t",
             "text": ":"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Annex B PubSub Action and Discovery schema examples",
+          "b": 14
+        }
       },
       {
         "t": "code",
@@ -23858,7 +26263,12 @@
           "  \"namespace\": \"org.opcfoundation.ua.avro\",",
           "  \"type\": \"record\"",
           "}"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Annex B PubSub Action and Discovery schema examples",
+          "b": 15
+        }
       },
       {
         "t": "para",
@@ -23876,7 +26286,12 @@
             "r": "t",
             "text": ":"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Annex B PubSub Action and Discovery schema examples",
+          "b": 16
+        }
       },
       {
         "t": "code",
@@ -23926,7 +26341,12 @@
           "  \"namespace\": \"org.opcfoundation.ua.avro\",",
           "  \"type\": \"record\"",
           "}"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Annex B PubSub Action and Discovery schema examples",
+          "b": 17
+        }
       }
     ],
     "annex-c": [
@@ -23944,7 +26364,12 @@
             "r": "t",
             "text": "<!-- BEGIN GENERATED: evolution-annex -->"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Annex C Worked schema-evolution example (incremental growth)",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -23962,7 +26387,12 @@
             "r": "t",
             "text": "; do not edit it by hand."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Annex C Worked schema-evolution example (incremental growth)",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -24007,7 +26437,12 @@
             "r": "t",
             "text": " namespace."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Annex C Worked schema-evolution example (incremental growth)",
+          "b": 2
+        }
       },
       {
         "t": "para",
@@ -24103,7 +26538,12 @@
             "r": "t",
             "text": " ExtensionObject likewise has its own struct-type union. The initial schema is built data-driven from the first values, then grown append-only at whichever field changes."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Annex C Worked schema-evolution example (incremental growth)",
+          "b": 3
+        }
       },
       {
         "t": "annex-clause",
@@ -24159,7 +26599,12 @@
             "r": "t",
             "text": ")."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "MinorVersion 1.0",
+          "b": 0
+        }
       },
       {
         "t": "list",
@@ -24223,7 +26668,12 @@
               "text": "08f4e71eb59f973a"
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "MinorVersion 1.0",
+          "b": 1
+        }
       },
       {
         "t": "para",
@@ -24241,7 +26691,12 @@
             "r": "t",
             "text": " schema:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "MinorVersion 1.0",
+          "b": 2
+        }
       },
       {
         "t": "code",
@@ -24372,7 +26827,12 @@
           "  \"namespace\": \"org.opcfoundation.ua.avro\",",
           "  \"type\": \"record\"",
           "}"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "MinorVersion 1.0",
+          "b": 3
+        }
       },
       {
         "t": "annex-clause",
@@ -24416,7 +26876,12 @@
             "r": "t",
             "text": " and the ExtensionObject union are untouched."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "MinorVersion 1.1",
+          "b": 0
+        }
       },
       {
         "t": "list",
@@ -24480,7 +26945,12 @@
               "text": "2bdb850ff832697c"
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "MinorVersion 1.1",
+          "b": 1
+        }
       },
       {
         "t": "annex-clause",
@@ -24536,7 +27006,12 @@
             "r": "t",
             "text": " record."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "MinorVersion 1.2",
+          "b": 0
+        }
       },
       {
         "t": "list",
@@ -24600,7 +27075,12 @@
               "text": "c48908757c5263b6"
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "MinorVersion 1.2",
+          "b": 1
+        }
       },
       {
         "t": "annex-clause",
@@ -24636,7 +27116,12 @@
             "r": "t",
             "text": " body union. Both Variant records are unchanged."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "MinorVersion 1.3",
+          "b": 0
+        }
       },
       {
         "t": "list",
@@ -24700,7 +27185,12 @@
               "text": "18864ae3ca92df54"
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "MinorVersion 1.3",
+          "b": 1
+        }
       },
       {
         "t": "annex-clause",
@@ -24806,7 +27296,12 @@
             "r": "t",
             "text": " because they are separate records."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Backward compatibility",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -24816,7 +27311,12 @@
             "r": "t",
             "text": "<!-- END GENERATED: evolution-annex -->"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Backward compatibility",
+          "b": 1
+        }
       }
     ],
     "annex-d": [
@@ -24852,7 +27352,12 @@
             "r": "t",
             "text": " — the schema alone defines the layout — so these diagrams show the exact bytes a decoder consumes for a given schema. The byte values are taken from the shared conformance corpus and match the annotated breakdowns in Annex A; they are informative examples, not additional normative rules."
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Annex D Wire byte-layout examples (illustrative)",
+          "b": 0
+        }
       },
       {
         "t": "para",
@@ -24862,7 +27367,12 @@
             "r": "t",
             "text": "Recurring layout patterns:"
           }
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Annex D Wire byte-layout examples (illustrative)",
+          "b": 1
+        }
       },
       {
         "t": "list",
@@ -25142,7 +27652,12 @@
               "text": " count block."
             }
           ]
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "Annex D Wire byte-layout examples (illustrative)",
+          "b": 2
+        }
       },
       {
         "t": "annex-clause",
@@ -25159,7 +27674,12 @@
           "     +----+",
           "     | 01 |   0x00 = false, 0x01 = true",
           "     +----+"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "D.1 Boolean — `true`",
+          "b": 0
+        }
       },
       {
         "t": "annex-clause",
@@ -25179,7 +27699,12 @@
           "       ^    ^",
           "       |    +-- 0x01: high bit clear -> last varint byte",
           "       +------- 0xFF: high bit set   -> continues"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "D.2 SByte — `-128` (zig-zag varint)",
+          "b": 0
+        }
       },
       {
         "t": "annex-clause",
@@ -25197,7 +27722,12 @@
           "     | FF | FF | FF | FF | 0F |   zigzag(-2147483648)=4294967295",
           "     +----+----+----+----+----+",
           "      <-------- continues ------->  last byte 0x0F clears the high bit"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "D.3 Int32 — `-2147483648` (zig-zag varint)",
+          "b": 0
+        }
       },
       {
         "t": "annex-clause",
@@ -25215,7 +27745,12 @@
           "     | 00 | 00 | 00 | 00 | 00 | 00 | F0 | 3F |",
           "     +----+----+----+----+----+----+----+----+",
           "      LSB                                 MSB   (0x3FF0000000000000 = 1.0)"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "D.4 Double — `1.0` (IEEE-754 little-endian)",
+          "b": 0
+        }
       },
       {
         "t": "annex-clause",
@@ -25236,7 +27771,12 @@
           "       |    |    +-- UTF-8 code units (not normalized)",
           "       |    +------- length  = zigzag(19) = 38 = 0x26",
           "       +------------ branch  = zigzag(1)  = 2  -> \"string\" (non-null; 0 would be null)"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "D.5 String — `\"grüße-中文-😀\"` (union branch, varint length, UTF-8)",
+          "b": 0
+        }
       },
       {
         "t": "annex-clause",
@@ -25254,7 +27794,12 @@
           "     | 80 | 80 | 84 | B2 | F3 | B2 | C1 | D8 | 03 |",
           "     +----+----+----+----+----+----+----+----+----+",
           "      <----------------- continues ------------------->  final 0x03 ends the varint"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "D.6 DateTime — `133000000000000000` ticks (zig-zag varint long)",
+          "b": 0
+        }
       },
       {
         "t": "annex-clause",
@@ -25271,7 +27816,12 @@
           "     +----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+",
           "     | 01 | 02 | 03 | 04 | 05 | 06 | 07 | 08 | 09 | 0A | 0B | 0C | 0D | 0E | 0F | 10 |",
           "     +----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "D.7 Guid — `01020304-0506-0708-090a-0b0c0d0e0f10` (fixed 16, verbatim)",
+          "b": 0
+        }
       },
       {
         "t": "annex-clause",
@@ -25289,7 +27839,12 @@
           "     | 00 00 00 00 00 00 F4 3F | 00 00 00 00 00 00 0C C0 |",
           "     +-------------------------+-------------------------+",
           "       X: double LE (1.25)       Y: double LE (-3.5)"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "D.8 Structure — `Point { X: 1.25, Y: -3.5 }` (record = fields concatenated)",
+          "b": 0
+        }
       },
       {
         "t": "annex-clause",
@@ -25314,7 +27869,12 @@
           "       |    |                 +------------ dimensions: end-of-array 0-count block",
           "       |    +------------------------------ dimensions: block count = 2, then ints 2, 2",
           "       +----------------------------------- outer union branch = 1 (non-null matrix record)"
-        ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "D.9 Matrix — `2×2 double` (array block-count framing)",
+          "b": 0
+        }
       }
     ]
   },
