@@ -124,6 +124,7 @@ else computed afterwards is computed against the wrong repository. Compute the p
 first, hand them over, and let the publishing step know only about `git` and `gh`.
 
 ## Testing without Word
+
 The reader is tested against **synthetic WordprocessingML** so it runs in CI, and the
 shapes were taken from a document Word actually produced rather than invented.
 `make_review_fixture.ps1` drives Word to produce the real thing locally, taking
