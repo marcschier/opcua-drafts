@@ -113,12 +113,13 @@ def build_review(ingest, changed_lines, repo, head_sha):
     line in that set can be a real inline comment; anything else goes into the body with
     a permalink, because the alternative is a 422 or a lie about where it belongs.
     """
-    inline, elsewhere, foreign = [], [], []
+    inline, elsewhere = [], []
     for note in ingest.notes:
         comment = note.comment
         if note.owner != 'markdown' or not note.path or not note.line:
-            foreign.append(note)
-        elif note.line in changed_lines.get(note.path, set()):
+            # Already reported, with the artifact that owns the text, by the ingest.
+            continue
+        if note.line in changed_lines.get(note.path, set()):
             inline.append({'path': note.path, 'line': note.line, 'side': 'RIGHT',
                            'body': _comment_body(comment)})
         else:
@@ -129,9 +130,10 @@ def build_review(ingest, changed_lines, repo, head_sha):
         body += [
             '## Comments on unchanged lines',
             '',
-            'GitHub\u2019s API will not attach an inline comment to a line that is not '
-            'part of the diff, and inventing a change to host one would be worse than '
-            'saying so. Each link below opens the exact lines the comment is about.',
+            'These are listed above with their source line. They are repeated here with a '
+            'link because GitHub\u2019s API will not attach an inline comment to a line '
+            'that is not part of the diff, and inventing a change to host one would be '
+            'worse than saying so.',
             '',
         ]
         for note in elsewhere:
@@ -139,15 +141,7 @@ def build_review(ingest, changed_lines, repo, head_sha):
                 repo, head_sha, note.path, note.line)
             body += ['%s' % link, '', '> **%s**: %s' % (note.comment.author,
                                                         note.comment.body), '']
-    if foreign:
-        body += ['## Comments the markdown cannot answer', '']
-        for note in foreign:
-            body.append('- **%s** on %s: %s'
-                        % (note.comment.author,
-                           note.owner or 'an unidentified paragraph',
-                           _clip(note.comment.body, 160)))
-        body.append('')
-    return inline, '\n'.join(body).rstrip() + '\n'
+    return inline, '\n'.join(body).rstrip() + '\n', len(elsewhere)
 
 
 def _comment_body(comment):
@@ -198,9 +192,9 @@ def publish(ingest, *, repo_root, base='main', draft=False, dry_run=False):
         changed = {}
         for edit in ingest.edits:
             changed.setdefault(edit.path, set()).add(edit.line + 1)
-        inline, _body = build_review(ingest, changed, repo, 'HEAD')
+        inline, _body, linked = build_review(ingest, changed, repo, 'HEAD')
         plan['inlineComments'] = len(inline)
-        plan['linkedComments'] = len(ingest.notes) - len(inline)
+        plan['linkedComments'] = linked
         return plan
 
     if git(['status', '--porcelain', '--untracked-files=no'], repo_root=repo_root):
@@ -226,7 +220,7 @@ def publish(ingest, *, repo_root, base='main', draft=False, dry_run=False):
         git(['push', '--set-upstream', 'origin', branch], repo_root=repo_root)
         head_sha = git(['rev-parse', 'HEAD'], repo_root=repo_root)
         changed = changed_lines_of(repo_root, base, 'HEAD')
-        inline, body = build_review(ingest, changed, repo, head_sha)
+        inline, body, linked = build_review(ingest, changed, repo, head_sha)
 
         title = 'Review of %s from %s' % (ingest.spec_id,
                                           ', '.join(a for a in authors if a) or 'Word')
@@ -237,7 +231,7 @@ def publish(ingest, *, repo_root, base='main', draft=False, dry_run=False):
         post_review(repo, number, inline, repo_root=repo_root)
         post_replies(repo, number, ingest, repo_root=repo_root)
         plan.update({'url': url, 'inlineComments': len(inline),
-                     'linkedComments': len(ingest.notes) - len(inline)})
+                     'linkedComments': linked})
     finally:
         git(['checkout', start], repo_root=repo_root, check=False)
     return plan

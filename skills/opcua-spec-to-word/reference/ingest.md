@@ -117,8 +117,13 @@ words to whoever wrote them. Apply each reviewer's edits cumulatively — two pe
 marked up the same file, and the second commit must build on the first rather than revert
 it. A conflict then surfaces as *"edit no longer applies"*, which is the correct outcome.
 
-## Testing without Word
+**Work everything out before switching revisions.** Publishing checks out the commit the
+reviewed document was built from, and that commit may predate the ingest tool itself. A
+lazy `import` after the checkout looks for a file that does not exist yet, and anything
+else computed afterwards is computed against the wrong repository. Compute the patches
+first, hand them over, and let the publishing step know only about `git` and `gh`.
 
+## Testing without Word
 The reader is tested against **synthetic WordprocessingML** so it runs in CI, and the
 shapes were taken from a document Word actually produced rather than invented.
 `make_review_fixture.ps1` drives Word to produce the real thing locally, taking
