@@ -114,7 +114,7 @@ worked:
 | Generators | **RequiredModel BrowseNames**: a type borrowed from DI or Machinery is a bare NodeId in the NodeSet and there is nothing to resolve it against, so the names come from config; markdown that **links into the online reference** in body prose, which Guideline 5 forbids |
 | Data Channels | **a document that owns no namespace** — its Nodes are additions to the base namespace, so `namespaceIndexInDocument` is 0, `IsNamespaceSubset` is True, and base names must print unprefixed; a Terms clause read from a *sibling* document (`termsFrom`); a Use cases clause **written in config** because the document has no material shaped like one |
 | Avro and Arrow Encoding | **scale, and nothing else** — 121 and 106 clause-map entries, five heading levels deep. Both are the WoT Binding shape (`no-information-model`), and the only new mechanism either needed was a clause **authored in config**, because neither has a Use cases or a conformance clause of its own |
-| The seven folded annexes | **more than one markdown source per document** — `additionalMarkdown` plus `"in"` on a clause-map entry, with sections keyed per source so a folded "1 Scope" does not collide with the base document's; and the class-diagram relations `..|>` and `<|..`, which only a worked example drew |
+| The seven folded annexes | **more than one markdown source per document** — `additionalMarkdown` plus `"in"` on a clause-map entry, with sections keyed per source so a folded "1 Scope" does not collide with the base document's; and the class-diagram relations `..\|>` and `<\|..`, which only a worked example drew |
 
 **How much of this is really config.** Eleven specifications have now been onboarded, and each new
 *shape* cost a generalisation before its config worked.
