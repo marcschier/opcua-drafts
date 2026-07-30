@@ -179,11 +179,16 @@ truth exactly the way hand-editing a generated NodeSet does.
   cannot apply. Anchor a node-table mutation on the member's BrowseName **and** its printed
   DataType: the BrowseName alone also matches the template's own example tables, so the mutation
   lands somewhere the check never looks and proves nothing.
-- **Inline markup nested inside bold, italic or a link label leaks.** `**the `EngineType`
-  component**` and `` [`WoTRegistryType`](#type-X) `` are ordinary prose in these drafts. Emitting
-  the span as one plain run put literal backticks and `](url)` into *every* document built before
-  this was found — well formed, correctly styled, and wrong. Parse the content recursively and
-  carry the emphasis down onto the text runs.
+- **Inline markup nested inside bold, italic or a link label leaks.** A bolded span containing a
+  code span, and a link whose label is a code span, are ordinary prose in these drafts:
+
+  ```text
+  **the `EngineType` component**        [`WoTRegistryType`](#type-WoTRegistryType)
+  ```
+
+  Emitting the span as one plain run put literal backticks and link brackets into *every* document
+  built before this was found — well formed, correctly styled, and wrong. Parse the content
+  recursively and carry the emphasis down onto the text runs.
 - **A BrowseName the model cannot resolve is printed as a NodeId.** A type borrowed from a
   RequiredModel (`ns=2;i=15063`) or a base Node missing from the table of standard Nodes falls
   through to its numeric form, and the document still agrees with the NodeSet because both sides
