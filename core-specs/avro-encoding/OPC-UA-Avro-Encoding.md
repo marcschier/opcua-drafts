@@ -5,7 +5,7 @@
 **Namespace:** `http://opcfoundation.org/UA/` (base OPC UA namespace)
 **Version:** 0.1.0 · **Date:** 2026-07-22
 
-> **Status — working draft.** This is a **single, self-contained** companion specification for the OPC UA **Avro** DataEncoding and its PubSub message mapping. It combines the two errata-style drafts — `OPC-UA-Part6-Avro-DataEncoding.md` (DataEncoding) and `OPC-UA-Part14-Avro-MessageMapping.md` (PubSub message mapping) — into one document and folds in the base OPC UA context a standalone reader needs. The errata-style drafts remain the authoritative statement of the proposed insertions into OPC 10000-6 and OPC 10000-14; this document is an alternative, combined presentation of the same normative content. Annex A is a snapshot of the generated per-type reference; the authoritative generator is `../extras/avro-encoding/tools/gen_type_reference.py`, run against the errata Part 6 draft.
+> **Status — working draft.** Per review feedback, the material covering the end-to-end use cases is specified as a **stand-alone companion specification**, to be added in the OPC UA **core numbering range** or in the **Cloud Initiative numbering range**. This document is that companion specification for the OPC UA **Avro** DataEncoding and its PubSub message mapping, and folds in the base OPC UA context a standalone reader needs. Annex A is the generated per-type reference; the authoritative generator is `../extras/avro-encoding/tools/gen_type_reference.py`, run against this document.
 
 ---
 
@@ -16,6 +16,10 @@ This specification defines how the OPC UA data model is represented as **Apache 
 The DataEncoding part (§5–§7) covers all 25 Built-in DataTypes, Enumerations, OptionSets, Structures, Structures with optional fields, Union DataTypes, arrays, matrices, Variant, ExtensionObject, DataValue and DiagnosticInfo, and the deterministic schema generation, **SchemaId** fingerprint and decoder resolution that make the mapping reversible without carrying the schema in every payload. The message-mapping part (§8) covers data key and delta frames, Action invoke/response messages, Discovery messages, field representation according to `DataSetFieldContentMask`, message header fields, the SchemaId handshake, configuration parameters and transport content-type metadata for MQTT, AMQP and Kafka.
 
 This specification does not define a new OPC UA Service, transport or security protocol, and does not change PubSub security, writer-group semantics or DataSet metadata semantics. It defines one canonical Avro form per DataType and requires `decode(encode(x)) == x` for every value of the described DataType.
+
+The Avro DataEncoding is **not intended as a mapping for OPC UA Service request/response**. Service calls exchanged over an OPC UA SecureChannel — Read, Write, Browse, Call, the Subscription Services and every other Service of OPC 10000-4 — continue to use the Binary DataEncoding (or, where supported, the XML or JSON DataEncodings) with the transport mappings of OPC 10000-6. No profile has been defined that enables a Server to offer Avro as the DataEncoding of a Service request or response message, and this specification assigns no Avro encoding to the Service message structures. Avro applies to **DataSet and value payloads** — PubSub NetworkMessages and DataSetMessages (§8), and individual values encoded with the `Default Avro` DataTypeEncoding (§5–§7).
+
+This exclusion concerns the OPC UA Services. It is **not** about request/response over PubSub in the form of PubSub Actions: the Action invoke and response messages of §8.3 are DataSetMessages carried over the PubSub message mapping, and they remain fully in scope.
 
 ## 2 Normative references
 
@@ -29,7 +33,7 @@ This specification does not define a new OPC UA Service, transport or security p
 | Term | Definition |
 |---|---|
 | Avro binary encoding | The compact binary encoding defined by Apache Avro for a value written with a known Avro schema. |
-| Avro | The OPC UA DataTypeEncoding for this mapping; the analogue of Default Binary, Default XML and Default JSON. |
+| Default Avro | The OPC UA DataTypeEncoding for this mapping; the analogue of Default Binary, Default XML and Default JSON. There is no AddressSpace representation of `Default Avro`; it is named here only for symmetry with the other encodings. |
 | Canonical schema | The single Avro schema form generated for an OPC UA DataType by this specification. Equivalent alternative encodings are not allowed on the wire. |
 | Parsing Canonical Form | The Apache Avro canonical text form of a self-contained schema over which the SchemaId fingerprint is computed. |
 | SchemaId | The CRC-64-AVRO Rabin fingerprint of the Parsing Canonical Form of the self-contained schema; the 8 fingerprint bytes in little-endian order. It identifies the exact Avro schema needed to decode a payload and is independent of PubSub ConfigurationVersion. |
@@ -49,7 +53,7 @@ Avro lets a Publisher emit that telemetry in a compact binary form these consume
 
 ### 4.2 Where Avro fits
 
-OPC UA separates a **value's DataType** (its structure, from the DataTypeDefinition in the AddressSpace) from its **DataEncoding** (how that structure is serialized on the wire). OPC 10000-6 defines the Binary, XML and JSON DataEncodings; each is exposed as a **DataTypeEncoding** Object linked from the DataType with a `HasEncoding` reference. This specification adds **Avro** as a further DataTypeEncoding: a DataType that supports it shall gain a `Avro` encoding Object in the same pattern as `Default Binary`, `Default XML` and `Default JSON`. This draft describes that encoding; it does not assign or ship NodeIds for the encoding Objects.
+OPC UA separates a **value's DataType** (its structure, from the DataTypeDefinition in the AddressSpace) from its **DataEncoding** (how that structure is serialized on the wire). OPC 10000-6 defines the Binary, XML and JSON DataEncodings; each is exposed as a **DataTypeEncoding** Object linked from the DataType with a `HasEncoding` reference. This specification names **Default Avro** as the DataEncoding for this mapping, following the pattern of `Default Binary`, `Default XML` and `Default JSON`. It does **not** add a DataTypeEncoding Object to the AddressSpace: there is no AddressSpace representation of `Default Avro`, and the name is used only for symmetry with the other encodings. Consequently no NodeIds are assigned or shipped for it, and an Avro payload is identified by its SchemaId (§6.3) rather than by an encoding NodeId. Unlike `Default Binary`, the `Default Avro` DataEncoding is **not used for Service request/response** (§1): it encodes DataSet and value payloads, while Service calls stay on the Binary DataEncoding.
 
 Each OPC UA DataType maps to exactly **one** Avro schema (§5). Primitive built-ins use Avro primitives where the Avro type can carry the complete OPC UA domain; composite built-ins use Avro records; nullable OPC UA values use Avro unions with `"null"` as the first branch. The published `.avsc` schema documents are the canonical wire contract. The content type for a standalone Avro payload is `application/vnd.apache.avro`.
 
@@ -172,7 +176,7 @@ Schema generation is a deterministic function of the OPC UA type model. Encoding
 
 ### 6.1 Inputs
 
-The inputs to schema generation are the OPC UA DataTypeDefinition of the value's declared DataType and, for Variant values and for fields declared as abstract or allowing subtypes, the concrete runtime built-in type or concrete structured DataType of the value. When a schema is **grown** rather than created from scratch, the **previous schema of the lineage is also an input**: the generator appends the newly encountered Variant body form or ExtensionObject concrete type to that prior schema as an additional union branch (§6.4), leaving every existing branch at its index. When **no previous schema is supplied, generation starts a fresh lineage — a reset that begins a new MajorVersion** (§6.4, §8.4.8). An **encoder** produces the schema from these inputs as it encodes the value; it is not handed a foreign schema to encode against. A **decoder** that re-derives a schema uses the identical inputs: the DataTypeDefinition read from the AddressSpace and, where present, the inline Variant built-in type or ExtensionObject TypeId. Because both sides derive from one deterministic type model — and, for a grown lineage, the shared previous schema — they agree on every record, union branch and branch order.
+The inputs to schema generation are the OPC UA DataTypeDefinition of the value's declared DataType and, for Variant values and for fields declared as abstract or allowing subtypes, the concrete runtime built-in type or concrete structured DataType of the value. When a schema is **grown** rather than created from scratch, the **previous schema of the lineage is also an input**: the generator appends the newly encountered Variant body form or ExtensionObject concrete type to that prior schema as an additional union branch (§6.4), leaving every existing branch at its index. When **no previous schema is supplied, generation starts a fresh lineage — a reset that begins a new MajorVersion** (§6.4, §8.4.8). An **encoder** produces the schema from these inputs as it encodes the value; it is not handed a foreign schema to encode against. A **decoder** that re-derives a schema uses the identical inputs: the DataTypeDefinition read from the AddressSpace and, where present, the inline Variant built-in type or ExtensionObject TypeId. Because both sides derive from one deterministic type model — and, for a grown lineage, the shared previous schema — they agree on every record, union branch and branch order. Where the AddressSpace is not available, the equivalent inputs may instead be taken from a DataSetMetaData message (§6.7).
 
 ### 6.2 Generation algorithm
 
@@ -238,6 +242,47 @@ Because a Variant body may itself be an ExtensionObject whose Structure contains
 
 An encoder and decoder shall use the same choice; because it is fixed in the schema it participates in the SchemaId (§6.3). Both forms are reversible and both grow append-only (§6.4); they differ only in whether growth is per-field or shared. This mirrors the Arrow mapping, whose inline structural dense unions are per-field by construction. An executable per-field reference is `../extras/avro-encoding/tools/per_field_demo.py`.
 
+### 6.7 Deriving a schema from DataSetMetaData
+
+§6.1 takes its inputs from the AddressSpace. A `DataSetMetaDataType` value carries the same information for the fields of one DataSet, so it may be used as an **alternative input** to the generation algorithm of §6.2 where no AddressSpace is available.
+
+This path is intended primarily for a **Publisher**. A Publisher that already holds the configured DataSetMetaData for a DataSetWriter — for example one bridging or forwarding DataSetMessages, or one configured offline — can produce the schema and its SchemaId from that metadata alone, without reading DataTypeDefinitions. A Subscriber may use the same derivation when it receives the DataSetMetaData message but holds no type model, in which case it is a third resolution path in addition to those of §7.
+
+Two scenarios motivate this path.
+
+- **Transcoding in a translation bridge.** A bridge that receives UADP or JSON verbose NetworkMessages and re-publishes them as Avro has the DataSetMetaData for each DataSetWriter it forwards, but usually has no session with the originating Server and therefore no AddressSpace to read DataTypeDefinitions from. Deriving the schema from the metadata lets it transcode without one, and the SchemaId it computes is the same one the originating Publisher would have computed for the same DataSet.
+- **Avro-enabling an existing JSON verbose Publisher.** A deployment already publishing JSON verbose messages already produces DataSetMetaData. Adding Avro then requires no new access to the type model: the existing metadata is sufficient to generate the schema, announce its SchemaId and start publishing Avro alongside or instead of JSON. This is the simplest migration path for an existing Publisher.
+
+`DataSetMetaDataType` is self-contained for this purpose because it carries both the field list and the definitions of the DataTypes those fields use.
+
+| DataSetMetaData element | Use in the generation algorithm |
+|---|---|
+| `Name` | Name of the generated DataSet record, converted per §6.2 step 2. |
+| `Fields` (`FieldMetaData[]`) | One Avro record field per entry, emitted in `Fields` order. §6.2 step 3 applies unchanged: the generator shall not sort or omit fields. |
+| `Fields[].Name` | Avro field name, converted per §6.2 step 2. |
+| `Fields[].BuiltInType` | Selects the built-in mapping of §5.2 when the field is a built-in DataType. |
+| `Fields[].DataType` | NodeId of the field DataType. When it is not a built-in, it shall resolve to an entry in `StructureDataTypes`, `EnumDataTypes` or `SimpleDataTypes`. |
+| `Fields[].ValueRank`, `Fields[].ArrayDimensions` | Scalar (`ValueRank` = −1), array (§5.4) or matrix (§5.5) form, exactly as the DataTypeDefinition path derives it. |
+| `Fields[].MaxStringLength` | Informative only. It constrains values, not the Avro type, and shall not change the generated schema. |
+| `Fields[].DataSetFieldId`, `Fields[].Properties`, `Fields[].Description` | Not part of the value schema. They may be carried as Avro documentation but shall not alter the Parsing Canonical Form. |
+| `StructureDataTypes` (`StructureDescription[]`) | Supplies the `StructureDefinition` for each structured DataType. Its `StructureType` selects §5.6 (Structure, StructureWithOptionalFields) or §5.7 (Union). |
+| `EnumDataTypes` (`EnumDescription[]`) | Supplies the `EnumDefinition` used by §5.3. |
+| `SimpleDataTypes` (`SimpleTypeDescription[]`) | Supplies the built-in type each simple DataType derives from, mapped per §5.2. |
+| `Namespaces` | Maps NamespaceUris to Avro namespaces per §6.5. |
+| `ConfigurationVersion`, `DataSetClassId` | Not inputs to schema generation. They identify the DataSet configuration and follow the lifecycle of §8.4. |
+
+Nullability is **not** taken from `Fields[].FieldFlags`. `DataSetFieldFlags` defines only `PromotedField`, which selects promotion (§8.1) and has no effect on the value schema. A field is nullable exactly where the rules of §5 make its DataType nullable, which is the same determination the AddressSpace path makes.
+
+The framing of each field — RawData, Variant-wrapped, or DataValue-wrapped — is **not** part of the metadata. It follows the `DataSetFieldContentMask` of the DataSetWriter as defined in §8.2, and shall be applied after the per-field type mapping above.
+
+Where the metadata is complete, this path is a different **source of inputs**, not a different algorithm. It shall produce a schema **identical** to the one the AddressSpace path of §6.1 produces for the same DataSet, and therefore an identical SchemaId. If the two paths disagreed, the SchemaId would no longer identify one canonical schema and §6.3 would not hold.
+
+The metadata is not always complete, and an implementation shall detect this rather than emit a schema that only appears correct.
+
+- A `Fields[].DataType` that is neither a built-in nor present in `StructureDataTypes`, `EnumDataTypes` or `SimpleDataTypes` cannot be mapped. The generator shall fail rather than substitute an opaque or guessed type.
+- A field typed as Variant, or as an abstract DataType or one allowing subtypes, carries no concrete runtime type in the metadata. The metadata alone therefore cannot fix the body branch (§5.8, §5.9), and the schema is complete only once the concrete type is observed while encoding.
+- A schema derived from incomplete metadata shall be treated as the start of a lineage that **grows** append-only per §6.4 as those concrete types are observed. It shall not be announced as a final schema for the DataSet if further body types remain possible.
+
 ## 7 Decoder schema resolution
 
 A decoder shall use one of the following schema resolution paths.
@@ -245,6 +290,8 @@ A decoder shall use one of the following schema resolution paths.
 **Schema-driven path.** If the decoder already has a schema for the SchemaId, from a local cache, announcement, schema registry or configured catalog, it shall parse that schema and decode the Avro binary payload directly. If the payload uses Avro single-object encoding, the decoder shall verify the two magic bytes and the embedded little-endian Rabin fingerprint before decoding the body.
 
 **AddressSpace-driven path.** If the decoder does not have a schema body but can read the DataType from the server, it shall read the DataTypeDefinition and recursively referenced definitions from the AddressSpace and run the same schema-generation function defined in §6. For Variant and abstract/subtyped fields, it shall use the inline built-in type, dimensions and TypeId carried in the value to select the same concrete branch as the encoder. The re-derived self-contained Parsing Canonical Form shall produce the same SchemaId. When this check fails, the value shall not be decoded with the mismatched schema.
+
+**Metadata-driven path.** If the decoder has neither a schema body nor access to the AddressSpace, but does hold the DataSetMetaData for the DataSet, it may derive the schema from that metadata as defined in §6.7. The limits of §6.7 apply: where the metadata cannot fix a Variant or subtyped body branch, the derived schema is incomplete and the decoder shall obtain the announced schema by SchemaId instead. This path is secondary — a subscriber is normally served by the schema-driven path.
 
 The encoder writes bytes from the type model. In the **primary use case the decoder — a subscriber or downstream Avro consumer — likely does not have the OPC UA type model or DataTypeDefinitions at consumption time**; the type model may live elsewhere but is unavailable where the value is decoded, so the decoder cannot re-derive the schema and instead **obtains the shared schema by SchemaId** (from a registry, announcement or cache) and uses it to decode. Only where a decoder does hold the relevant DataTypeDefinitions — the AddressSpace-driven path above — may it re-derive the schema instead of receiving it; the SchemaId is then sufficient to verify that both sides **are using** the same schema.
 
@@ -671,7 +718,7 @@ Although SchemaId is not computed from ConfigurationVersion, the `{MajorVersion,
 
 ### 8.5 Configuration parameters
 
-The Avro mapping adds the following configuration parameters to the JSON mapping style configuration model in Part 14:
+The Avro mapping adds the following configuration parameters to the JSON mapping style configuration model in Part 14. §9 defines how they are carried as fields of the Part 14 `MessageSettings` DataTypes, together with the content masks and the Information Model extension.
 
 | Parameter | Type | Description |
 |---|---|---|
@@ -691,13 +738,114 @@ For Kafka, following the Kafka message mapping of *OPC 10000-14* Annex B.2 — w
 
 Kafka and AMQP deployments that use a schema registry should also carry `opcua-avro-schema-id` with the configured SchemaId.
 
-## 9 Information model additions
+## 9 Part 14 configuration model mapping and Information Model additions
 
-The PubSub configuration model shall add Avro message mapping ObjectTypes parallel to the JSON message mapping configuration ObjectTypes. The model shall describe Avro NetworkMessage mapping parameters, Avro DataSetMessage mapping parameters and the SchemaId/SchemaUri properties. This draft describes the ObjectTypes only; assigned NodeIds and a NodeSet are out of scope.
+This clause defines how the Avro message mapping is represented in the OPC 10000-14 PubSub configuration model, and the Information Model extension that carries it. It fixes the names used so that two implementations configure the mapping identically. NodeIds are assigned by the OPC Foundation; this document defines the BrowseNames, the type hierarchy and the field sets.
+
+### 9.1 Where the mapping plugs in
+
+OPC 10000-14 selects a message mapping through the `MessageSettings` of each configuration object, which is an ExtensionObject whose concrete DataType identifies the mapping. UADP uses the `Uadp*` DataTypes and JSON the `Json*` DataTypes. The Avro mapping adds a parallel `Avro*` set.
+
+| Configuration object | Field | Base DataType (OPC 10000-14) | Avro DataType |
+|---|---|---|---|
+| `WriterGroupDataType` | `MessageSettings` | `WriterGroupMessageDataType` | `AvroWriterGroupMessageDataType` |
+| `DataSetWriterDataType` | `MessageSettings` | `DataSetWriterMessageDataType` | `AvroDataSetWriterMessageDataType` |
+| `DataSetReaderDataType` | `MessageSettings` | `DataSetReaderMessageDataType` | `AvroDataSetReaderMessageDataType` |
+
+A WriterGroup uses the Avro message mapping if and only if its `MessageSettings` is an `AvroWriterGroupMessageDataType`. `TransportSettings` are unchanged; the Avro mapping is transport-independent and is identified on the wire by the content types of §8.6.
+
+### 9.2 Content mask DataTypes
+
+Two OptionSet DataTypes subtype `UInt32`, mirroring `JsonNetworkMessageContentMask` and `JsonDataSetMessageContentMask`. They select which fields of the fixed envelope (§8.1) and of the DataSetMessage header (§8.2) are non-null. Fields not selected are present in the schema and null on the wire, so the envelope schema is stable.
+
+**`AvroNetworkMessageContentMask`**
+
+| Bit | Name | Selects |
+|---:|---|---|
+| 0 | `NetworkMessageHeader` | The envelope header fields are populated. |
+| 1 | `DataSetMessageHeader` | Each payload entry carries its DataSetMessage header. |
+| 2 | `SingleDataSetMessage` | The payload carries exactly one DataSetMessage. |
+| 3 | `PublisherId` | `PublisherId`. |
+| 4 | `DataSetClassId` | `DataSetClassId`. |
+| 5 | `GroupHeader` | The GroupHeader group of fields. |
+| 6 | `WriterGroupId` | `WriterGroupId`. |
+| 7 | `GroupVersion` | `GroupVersion`. |
+| 8 | `NetworkMessageNumber` | `NetworkMessageNumber`. |
+| 9 | `SequenceNumber` | `SequenceNumber`. |
+| 10 | `Timestamp` | `Timestamp`. |
+| 11 | `PicoSeconds` | `PicoSeconds`. |
+| 12 | `PromotedFields` | `PromotedFields` (§8.1). |
+
+**`AvroDataSetMessageContentMask`**
+
+| Bit | Name | Selects |
+|---:|---|---|
+| 0 | `DataSetWriterId` | `DataSetWriterId`. Always required (§8.2). |
+| 1 | `MessageType` | The DataSetMessage type. Always required (§8.2). |
+| 2 | `MajorVersion` | ConfigurationVersion major part. |
+| 3 | `MinorVersion` | ConfigurationVersion minor part. |
+| 4 | `SequenceNumber` | `SequenceNumber`. |
+| 5 | `Timestamp` | `Timestamp`. |
+| 6 | `PicoSeconds` | `PicoSeconds`. |
+| 7 | `Status` | `Status`. |
+| 8 | `SchemaId` | The DataSet SchemaId in the DataSetMessage header (§8.4). |
+
+### 9.3 MessageSettings DataTypes
+
+The parameters of §8.5 are carried as fields of these DataTypes.
+
+**`AvroWriterGroupMessageDataType`** — subtype of `WriterGroupMessageDataType`
+
+| Field | DataType | Description |
+|---|---|---|
+| `NetworkMessageContentMask` | `AvroNetworkMessageContentMask` | Envelope fields to populate (§9.2). |
+| `AvroSchemaUri` | String | Optional URI of the schema registry or catalog serving this group's schemas (§8.4). |
+| `AvroUseObjectContainerFile` | Boolean | False for PubSub network payloads by default; true only for transports that explicitly carry Avro object container files. |
+
+**`AvroDataSetWriterMessageDataType`** — subtype of `DataSetWriterMessageDataType`
+
+| Field | DataType | Description |
+|---|---|---|
+| `DataSetMessageContentMask` | `AvroDataSetMessageContentMask` | DataSetMessage header fields to populate (§9.2). |
+| `AvroSchemaId` | String | The SchemaId of the DataSet schema currently published by this writer (§6.3), in little-endian hexadecimal. |
+| `AvroSchemaHash` | ByteString | Optional copy of the little-endian CRC-64-AVRO SchemaId bytes for mismatch detection. |
+| `AvroRawDataAllowed` | Boolean | Whether RawData fields may be emitted for this writer (§8.2). |
+
+**`AvroDataSetReaderMessageDataType`** — subtype of `DataSetReaderMessageDataType`
+
+| Field | DataType | Description |
+|---|---|---|
+| `NetworkMessageContentMask` | `AvroNetworkMessageContentMask` | Envelope fields the reader expects. |
+| `DataSetMessageContentMask` | `AvroDataSetMessageContentMask` | DataSetMessage header fields the reader expects. |
+| `AvroSchemaUri` | String | Optional URI from which the reader resolves schemas by SchemaId (§7). |
+
+`AvroSchemaId` identifies the schema; it does not replace the ConfigurationVersion. A publisher that grows a schema advances both, as defined in §8.4.
+
+### 9.4 ObjectTypes
+
+The Information Model representation mirrors the JSON message mapping ObjectTypes. Each has the Properties of the corresponding DataType in §9.3.
+
+| ObjectType | Subtype of (OPC 10000-14) |
+|---|---|
+| `AvroWriterGroupMessageType` | `WriterGroupMessageType` |
+| `AvroDataSetWriterMessageType` | `DataSetWriterMessageType` |
+| `AvroDataSetReaderMessageType` | `DataSetReaderMessageType` |
+
+### 9.5 NodeSet
+
+These additions are shipped as an Information Model extension rather than as changes to the Part 14 NodeSet, so that they can be adopted independently.
+
+- Namespace URI: `http://opcfoundation.org/UA/Avro/`
+- NodeSet: `Opc.Ua.Avro.NodeSet2.xml`, with the matching `Opc.Ua.Avro.NodeIds.csv`
+- Contents: the two OptionSet DataTypes of §9.2, the three MessageSettings DataTypes of §9.3, and the three ObjectTypes of §9.4
+
+The NodeSet is generated from this clause by the repository tooling and is not authored by hand. NodeIds are assigned by the OPC Foundation when the namespace is registered; until then the NodeSet is a draft and its numeric identifiers are provisional.
+
+Note that these additions concern only the **configuration** model. As stated in §4.2 there is no AddressSpace representation of the `Default Avro` DataTypeEncoding itself, so no DataTypeEncoding Objects or `HasEncoding` references are added.
 
 ## Annex A Generated type reference
 
-<!-- Snapshot of the generated per-type reference. Authoritative source: OPC-UA-Part6-Avro-DataEncoding.md (gen_type_reference.py). -->
+<!-- BEGIN GENERATED: type-reference -->
 The following reference material is generated from the published `.avsc` schemas and the shared conformance corpus. Do not edit it by hand; run `python ..\extras\avro-encoding\tools\gen_type_reference.py`.
 
 ### Built-in Boolean
@@ -2314,10 +2462,11 @@ The `body` member is the append-only **growing union** governed by §6.4 (see al
 | 38 | 1 | `02` | $.Payload: branch 1 (org.opcfoundation.ua.avro.ExtensionObject).body: union branch index = 1 |
 | 39 | 8 | `00 00 00 00 00 00 00 40` | $.Payload: branch 1 (org.opcfoundation.ua.avro.ExtensionObject).body: branch 1 (org.opcfoundation.ua.avro.Point).X: float64 little-endian |
 | 47 | 8 | `00 00 00 00 00 00 08 40` | $.Payload: branch 1 (org.opcfoundation.ua.avro.ExtensionObject).body: branch 1 (org.opcfoundation.ua.avro.Point).Y: float64 little-endian |
+<!-- END GENERATED: type-reference -->
 
 ## Annex B PubSub Action and Discovery schema examples
 
-The Part 14 Avro mapping publishes the fixed data NetworkMessage envelope (§8.1) and compact envelope schemas for Action and Discovery messages in `../extras/avro-encoding/schemas/`. The fixed data NetworkMessage envelope is `AvroNetworkMessage.avsc`, its opaque payload entry is `AvroDataSetPayloadEntry.avsc`, and the un-enveloped batch is `AvroDataSetMessageBatch.avsc`. The Action request/response envelopes are `AvroActionRequestNetworkMessage.avsc` and `AvroActionResponseNetworkMessage.avsc`, each containing an array of request/response DataSetMessages. Discovery examples include `AvroDataSetMetaData.avsc`, `AvroDataSetWriterConfigurationAnnouncement.avsc`, `AvroActionResponderConfigurationAnnouncement.avsc`, `AvroDiscoveryProbe.avsc` and `AvroPublisherEndpointsAnnouncement.avsc`. The generated schemas use the built-in `Variant`, `DataValue`, `NodeId`, `StatusCode`, `DiagnosticInfo` and `ExtensionObject` records from Annex A; reduced base-UA shapes and fallbacks are documented in the Part 14 draft.
+The PubSub message mapping of §8 publishes the fixed data NetworkMessage envelope (§8.1) and compact envelope schemas for Action and Discovery messages in `../extras/avro-encoding/schemas/`. The fixed data NetworkMessage envelope is `AvroNetworkMessage.avsc`, its opaque payload entry is `AvroDataSetPayloadEntry.avsc`, and the un-enveloped batch is `AvroDataSetMessageBatch.avsc`. The Action request/response envelopes are `AvroActionRequestNetworkMessage.avsc` and `AvroActionResponseNetworkMessage.avsc`, each containing an array of request/response DataSetMessages. Discovery examples include `AvroDataSetMetaData.avsc`, `AvroDataSetWriterConfigurationAnnouncement.avsc`, `AvroActionResponderConfigurationAnnouncement.avsc`, `AvroDiscoveryProbe.avsc` and `AvroPublisherEndpointsAnnouncement.avsc`. The generated schemas use the built-in `Variant`, `DataValue`, `NodeId`, `StatusCode`, `DiagnosticInfo` and `ExtensionObject` records from Annex A. Reduced base-UA shapes and fallbacks are documented in §8.3.
 
 Compact examples publish the exact generated schema files below. Do not edit these JSON blocks by hand; copy them from `..\extras\avro-encoding\schemas\*.avsc`.
 
@@ -2691,7 +2840,7 @@ The published DataSetWriter configuration announcement schema is `../extras/avro
 
 ## Annex C Worked schema-evolution example (incremental growth)
 
-<!-- Snapshot of the generated evolution annex. Authoritative source: OPC-UA-Part6-Avro-DataEncoding.md. -->
+<!-- BEGIN GENERATED: evolution-annex -->
 This annex is generated from real Avro schemas by `../extras/avro-encoding/tools/gen_evolution_annex.py`; do not edit it by hand.
 
 It shows one lineage of self-contained schemas built and adapted incrementally as values are observed, per the per-field growing-union model of §6.4 and *OPC UA — Schema Registry* §5.6. All record names below are in the `org.opcfoundation.ua.avro` namespace.
@@ -2867,6 +3016,7 @@ The nested `event.detail` Variant now carries a Float, so `VariantEventDetail_Fl
 ### Backward compatibility
 
 A `Sample` written under 1.0 — `signal` = Int32(42), `event` = SensorEvent{ detail = Boolean(true) } — encodes to `0c0002540c693d31303031020a6465762d3102000201` and decodes unchanged under the 1.3 schema. Each per-field record keeps its members' branch indices under growth (`VariantSignal_Int32Scalar`, `VariantEventDetail_BooleanScalar` and `SensorEvent` all stay at branch 1), because members are only ever appended, never reordered. Each minor is a distinct SchemaId in one lineage; a decoder holding the 1.3 schema decodes every earlier minor of that lineage, while the appended members stay unused for older values (§6.4). Note that between 1.1 and 1.2 the `VariantSignal` schema is byte-identical: growing `detail` cannot affect `signal` because they are separate records.
+<!-- END GENERATED: evolution-annex -->
 
 ## Annex D Wire byte-layout examples (illustrative)
 

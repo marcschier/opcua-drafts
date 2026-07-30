@@ -3,7 +3,7 @@
 **Working draft for submission to the OPC Foundation Working Group**
 **Proposed additions to:** OPC 10000-3 Address Space Model, OPC 10000-4 Services, OPC 10000-6 Mappings (v1.05.07), with instance declarations in OPC 10000-5 and Profiles in OPC 10000-7
 **Namespace:** `http://opcfoundation.org/UA/` (base OPC UA namespace)
-**Version:** 0.1.0 · **Date:** 2026-07-27
+**Version:** 0.1.1 · **Date:** 2026-07-29
 
 > **Status — working draft.** This is the **standalone combined read**. It merges the three insertion-ready errata documents — [Part 6 transport](OPC-UA-Part6-Data-Channel-Transport.md), [Part 4 Services](OPC-UA-Part4-Data-Channel-Services.md) and [Part 3 model](OPC-UA-Part3-Data-Channel-Model.md) — into one narrative, and adds the material a standalone reader needs: a worked audio/video example, a comparison against WebRTC, and guidance on when to use a data channel instead of FileTransfer, PubSub or a Subscription. **The three errata documents remain the authoritative, insertion-ready proposals**; where this document and one of them differ, the errata document is correct. Nothing here is normative or endorsed by the OPC Foundation.
 
@@ -410,9 +410,22 @@ The **control stream** keeps full UA-SC message security: `OpenSecureChannel` ru
 
 For that reason **`opc.quic` data channels shall not traverse an intermediary that terminates TLS**, and no profile is defined that would make them safe there: carrying full UA-SC security over QUIC is not available, because the Secure Conversation sequence number is one monotonic space per SecureChannel while QUIC spreads chunks across independently ordered streams and lossy datagrams. A deployment behind such an intermediary uses inline framing over `opc.tcp` or `opc.wss`, where the intermediary sees only ciphertext. **0-RTT shall not carry `OpenSecureChannel`, `OpenDataChannel` or any frame**: 0-RTT is replayable, and a replayed channel open is a replayed authorization.
 
+Because that binding ties several artifacts together, **replacing a certificate moves them all at once**, and a peer that moves them independently breaks the binding with no attacker present. One question decides what happens, and it is not whether the certificate changed but whether the **key** changed:
+
+- **Same key, re-issued certificate.** Nothing is disturbed. The binding is by `subjectPublicKeyInfo`, so a re-issue still satisfies it and every live connection stays valid. This is the common case for a scheduled renewal.
+- **Different key.** TLS 1.3 fixes the certificate at handshake and cannot renegotiate, so a running connection cannot be moved to the new key. Activating it closes the connections bound to the old one, using a QUIC `CONNECTION_CLOSE` carrying `Bad_SecurityChecksFailed` rather than per-stream resets, which are not guaranteed to survive the close.
+
+Two rules follow from not trusting the holder to police itself. A verifier closes a connection when it learns the bound certificate is revoked, untrusted or expired, whether that certificate is its peer's or its own. And because a resumed TLS session carries no certificate at all, a resumed connection inherits the identity of the handshake that issued its ticket — so tickets are invalidated when a key is activated, or resumption is disabled outright where the TLS stack cannot invalidate them.
+
+These rules are easy to violate silently. The natural implementation resolves the TLS certificate once when the listener starts, while the certificate registry rotates underneath it; the resulting mismatch looks to the verifying peer exactly like the relay attack the binding exists to prevent. Part 6 §7.6.2 states the rules normatively and gives two flow diagrams, one for the peer holding the certificate and one for the peer verifying it.
+
+Whether a *key* change may be staged, so long-lived media survives one, is left as an open question for the Working Group: granting it touches OPC 10000-12 and OPC 10000-4 rather than Part 6 alone.
+
 ### 9.6 Connection migration
 
-QUIC identifies a connection by its connection ID rather than by the four-tuple, so a Client whose address changes — a vehicle moving between access points, a handheld leaving Wi-Fi for cellular — keeps the same connection, SecureChannel, Session and every open channel. Over `opc.tcp` all of it is destroyed and must be rebuilt.
+TCP identifies a connection by its **four-tuple** — the source address, source port, destination address and destination port. Change any one of those four and it is a different connection, which is why a laptop moving from Wi-Fi to cellular loses everything built on it: the new source address makes a new four-tuple, and the old connection is simply gone.
+
+QUIC identifies a connection by a **connection ID** carried in the packets instead, so the addresses may change underneath it without the connection ending. A Client whose address changes — a vehicle moving between access points, a handheld leaving Wi-Fi for cellular — keeps the same connection, SecureChannel, Session and every open data channel. Over `opc.tcp` all of it is destroyed and must be rebuilt, which for a media stream means an interruption the user sees.
 
 A Server accepts migration under the RFC 9000 path-validation rules and does not abort on a validated path change, since the connection remains cryptographically bound to the same peer. It does, however, record the change in the audit trail and re-evaluate any authorization that depended on the peer's network location, aborting affected channels with `Bad_UserAccessDenied` — migration is precisely what lets an authenticated Client carry a live stream from an authorized segment onto an unauthorized one.
 

@@ -18,7 +18,7 @@ import build_schemas
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 STD = os.path.abspath(os.path.join(ROOT, "..", "..", "arrow-encoding"))
-DOC = os.path.join(STD, "OPC-UA-Part6-Arrow-DataEncoding.md")
+DOC = os.path.join(STD, "OPC-UA-Arrow-Encoding.md")
 BEGIN = "<!-- BEGIN GENERATED: type-reference -->"
 END = "<!-- END GENERATED: type-reference -->"
 
