@@ -146,11 +146,11 @@ jobs:
           # Generated artifacts are outputs. An agent that edits one has made a change that
           # the next build silently discards, so the edit is undone here and reported
           # rather than committed and quietly lost.
-          GENERATED='word-drafts/*.docx word-drafts/*.docmodel.json
-                     word-drafts/*.provenance.json word-drafts/figures'
-          touched=$(git status --porcelain -- $GENERATED || true)
+          set -- word-drafts/*.docx word-drafts/*.docmodel.json \
+                 word-drafts/*.provenance.json word-drafts/figures
+          touched=$(git status --porcelain -- "$@" || true)
           if [ -n "$touched" ]; then
-            git checkout -- $GENERATED 2>/dev/null || true
+            git checkout -- "$@" 2>/dev/null || true
             git clean -fd -- word-drafts/figures 2>/dev/null || true
             {
               echo 'reverted<<EOF'
@@ -191,12 +191,10 @@ jobs:
           fi
           echo 'changed=true' >> "$GITHUB_OUTPUT"
           {
-            echo "$TITLE"
-            echo
-            echo 'Written by the coding agent from a task in this repository.'
-            [ -n "$ISSUE" ] && { echo; echo "Refs #$ISSUE"; }
-            echo
-            echo 'Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>'
+            printf '%s\n\n' "$TITLE"
+            printf 'Written by the coding agent from a task in this repository.\n'
+            if [ -n "$ISSUE" ]; then printf '\nRefs #%s\n' "$ISSUE"; fi
+            printf '\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n'
           } > .commit-message
           git commit -F .commit-message
           rm -f .commit-message agent.log
@@ -216,34 +214,29 @@ jobs:
           REVERTED: ${{ steps.guard.outputs.reverted }}
           DRAFT: ${{ inputs.draft }}
         run: |
+          # shellcheck disable=SC2016  # the backticks below are markdown, not substitution
+          cat > pr-body.md <<'BODY'
+          Written by the coding agent. **Review it as you would any other change** — it is
+          a draft of an answer, not an answer.
+          BODY
+          if [ -n "$ISSUE" ]; then
+            printf '\nCloses #%s\n' "$ISSUE" >> pr-body.md
+          fi
           {
-            echo 'Written by the coding agent. **Review it as you would any other change** —'
-            echo 'it is a draft of an answer, not an answer.'
-            echo
-            [ -n "$ISSUE" ] && { echo "Closes #$ISSUE"; echo; }
-            echo '<details><summary>What it was asked to do</summary>'
-            echo
-            echo '```'
-            echo "$PROMPT"
-            echo '```'
-            echo
-            echo '</details>'
-            echo
-            echo '### Checks'
-            echo
-            echo "$CHECKS"
-            if [ -n "$REVERTED" ]; then
-              echo
-              echo '### Reverted'
-              echo
-              echo 'The agent edited generated artifacts. Those are build outputs, so the'
-              echo 'edits were undone — change the source and regenerate instead.'
-              echo
-              echo '```'
-              echo "$REVERTED"
-              echo '```'
-            fi
-          } > pr-body.md
+            printf '\n<details><summary>What it was asked to do</summary>\n\n'
+            # shellcheck disable=SC2016  # literal markdown fence, not a substitution
+            printf '```\n%s\n```\n\n' "$PROMPT"
+            printf '</details>\n\n### Checks\n\n%s\n' "$CHECKS"
+          } >> pr-body.md
+          if [ -n "$REVERTED" ]; then
+            {
+              printf '\n### Reverted\n\n'
+              printf 'The agent edited generated artifacts. Those are build outputs, so '
+              printf 'the edits were undone — change the source and regenerate instead.\n\n'
+              # shellcheck disable=SC2016  # literal markdown fence, not a substitution
+              printf '```\n%s\n```\n' "$REVERTED"
+            } >> pr-body.md
+          fi
 
           existing=$(gh pr list --head "$BRANCH" --base "$BASE" --state open \
                        --json number --jq '.[0].number // empty')

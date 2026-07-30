@@ -73,18 +73,18 @@ jobs:
           fi
           echo 'changed=true' >> "$GITHUB_OUTPUT"
           git diff --cached --name-only | sed 's/^/  /'
-          {
-            echo 'Regenerate the Word drafts'
-            echo
-            echo 'The specification sources changed, so the renderings did too. Rebuilt by'
-            echo "\`build_all.py\` from ${GITHUB_SHA:0:12}."
-            echo
-            echo 'These documents are **not finalised**: the build writes fields, not field'
-            echo 'results, and resolving them needs Microsoft Word. Run'
-            echo '`pwsh word-drafts/tools/finalize_all.ps1` before merging.'
-            echo
-            echo 'Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>'
-          } > .commit-message
+          cat > .commit-message <<EOF
+          Regenerate the Word drafts
+
+          The specification sources changed, so the renderings did too. Rebuilt by
+          build_all.py from ${GITHUB_SHA:0:12}.
+
+          These documents are not finalised: the build writes fields, not field results,
+          and resolving them needs Microsoft Word. Run
+          'pwsh word-drafts/tools/finalize_all.ps1' before merging.
+
+          Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
+          EOF
           git commit -F .commit-message
           rm -f .commit-message
           git push --force-with-lease --set-upstream origin "$BRANCH"
@@ -117,45 +117,56 @@ jobs:
           READY: ${{ steps.finalised.outputs.ready }}
           PENDING: ${{ steps.finalised.outputs.pending }}
         run: |
-          {
-            echo 'The Word drafts, rebuilt from the current specification sources.'
-            echo
-            echo 'This pull request stands open and is updated on every push to `main` that'
-            echo 'changes a specification. It is how the renderings are kept from drifting'
-            echo 'away from the markdown. When it is merged the branch goes away, and the'
-            echo 'next change opens a fresh one.'
-            echo
-            echo '**Review `*.docmodel.json`, not the `.docx`** — a ZIP diff is unreadable,'
-            echo 'and the docmodel is the intermediate representation each document was'
-            echo 'rendered from.'
-            echo
-            if [ "$READY" = 'true' ]; then
-              echo '### Finalised'
-              echo
-              echo 'Every document resolves its fields and opens with a populated contents'
-              echo 'page. Ready to merge.'
-            else
-              echo '### Not finalised yet'
-              echo
-              echo 'The build writes fields, not field *results*: these documents currently'
-              echo 'open with an empty contents page and blank cross-references. Resolving'
-              echo 'them needs Microsoft Word, which a hosted runner does not have.'
-              echo
-              echo 'Before merging, run this locally and push:'
-              echo
-              echo '```powershell'
-              echo 'git fetch origin && git checkout word-drafts/refresh'
-              echo 'pwsh word-drafts/tools/finalize_all.ps1'
-              echo 'git commit -am "Finalise the regenerated drafts" && git push'
-              echo '```'
-              echo
-              echo 'Waiting on:'
-              for spec in $PENDING; do echo "- \`$spec\`"; done
-              echo
-              echo 'This pull request is a draft until then, and becomes ready for review on'
-              echo 'the next run once the check passes.'
-            fi
-          } > pr-body.md
+          # shellcheck disable=SC2016  # the backticks below are markdown, not substitution
+          cat > pr-body.md <<'BODY'
+          The Word drafts, rebuilt from the current specification sources.
+
+          This pull request stands open and is updated on every push to `main` that
+          changes a specification. It is how the renderings are kept from drifting away
+          from the markdown. When it is merged the branch goes away, and the next change
+          opens a fresh one.
+
+          **Review `*.docmodel.json`, not the `.docx`** — a ZIP diff is unreadable, and the
+          docmodel is the intermediate representation each document was rendered from.
+          BODY
+
+          if [ "$READY" = 'true' ]; then
+            cat >> pr-body.md <<'BODY'
+
+          ### Finalised
+
+          Every document resolves its fields and opens with a populated contents page.
+          Ready to merge.
+          BODY
+          else
+            cat >> pr-body.md <<'BODY'
+
+          ### Not finalised yet
+
+          The build writes fields, not field *results*: these documents currently open with
+          an empty contents page and blank cross-references. Resolving them needs Microsoft
+          Word, which a hosted runner does not have.
+
+          Before merging, run this locally and push:
+
+          ```powershell
+          git fetch origin && git checkout word-drafts/refresh
+          pwsh word-drafts/tools/finalize_all.ps1
+          git commit -am "Finalise the regenerated drafts" && git push
+          ```
+
+          Waiting on:
+          BODY
+            for spec in $PENDING; do
+              # shellcheck disable=SC2016  # literal markdown ticks, not a substitution
+              printf -- '- `%s`\n' "$spec" >> pr-body.md
+            done
+            cat >> pr-body.md <<'BODY'
+
+          This pull request is a draft until then, and becomes ready for review on the next
+          run once the check passes.
+          BODY
+          fi
 
           existing=$(gh pr list --head "$BRANCH" --base main --state open \
                        --json number --jq '.[0].number // empty')
