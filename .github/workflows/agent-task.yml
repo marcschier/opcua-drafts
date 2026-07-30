@@ -1,16 +1,26 @@
-# Run the coding agent on a branch and turn what it did into a pull request.
+# Run the coding agent on a task, then publish what it produced.
 #
 # Called by the workflows that have something for an agent to do — a review that could not
-# be applied mechanically, an issue asking for a change. One place knows how to run the
-# agent safely, so the guardrails cannot drift apart across callers.
+# be applied mechanically, an issue asking for a change.
 #
-# Two properties make this safe to automate:
+# ## Why this is two jobs
 #
-#   * every caller is started by a *label*, and only a user with write access can apply
-#     one, so an untrusted party cannot start an agent run;
-#   * the agent writes to its own branch and only to source files. Generated artifacts are
-#     reverted before anything is committed, because the way to change a generated file is
-#     to change its source and regenerate.
+# The agent's input is untrusted. Every caller assembles its prompt from text that anyone
+# on the internet can write: an issue body, a comment thread, the author name inside a
+# `.docx`. A label decides *that* a run happens; it cannot decide what the run is asked to
+# do, because the content is fetched after the label is applied and can be edited before
+# and after it. Treating a label as consent to the content is the mistake this workflow is
+# built to avoid.
+#
+# So the job that runs the agent (`think`) holds **no credential worth stealing**:
+# read-only contents, no persisted git credential, and no ability to push, comment or open
+# anything. It produces a patch and stops.
+#
+# The job that can write (`publish`) never runs the agent and never reads the prompt. It
+# applies that patch through a path allowlist, so even a patch written by a fully hijacked
+# agent cannot touch `.github/`, the CI scripts, or anything else that would run on the
+# next event. Prompt injection then buys an attacker a pull request that a human has to
+# read — which is what every other contribution costs too.
 
 name: Agent task
 
@@ -31,9 +41,16 @@ on:
         required: true
         type: string
       prompt:
-        description: What the agent is being asked to do.
+        description: What the agent is being asked to do. Trusted text only.
         required: true
         type: string
+      untrusted:
+        description: >-
+          Attacker-controllable material — an issue thread, a review report. Written to a
+          file for the agent to read as data, never spliced into the instructions.
+        required: false
+        type: string
+        default: ''
       issue:
         description: Issue number to link and reply to, if any.
         required: false
@@ -49,29 +66,45 @@ on:
         required: false
         type: boolean
         default: false
+    secrets:
+      COPILOT_GITHUB_TOKEN:
+        description: >-
+          Optional PAT with the "Copilot Requests" permission, for when the built-in token
+          cannot be used. Reaches only the read-only job.
+        required: false
     outputs:
       url:
         description: The pull request, if one was opened or updated.
-        value: ${{ jobs.run.outputs.url }}
+        value: ${{ jobs.publish.outputs.url }}
       changed:
-        description: Whether the agent changed anything.
-        value: ${{ jobs.run.outputs.changed }}
+        description: Whether anything was published.
+        value: ${{ jobs.publish.outputs.changed }}
 
-permissions:
-  contents: write
-  pull-requests: write
-  issues: write
-  copilot-requests: write
+# Paths the agent is allowed to change. `.github/` is absent on purpose: a workflow or CI
+# script the agent wrote would run on the next event with more rights than the agent had,
+# which turns one bad prompt into a permanent foothold.
+env:
+  ALLOWED_PATHS: >-
+    core-specs
+    metaverse-specs
+    wot-specs
+    companion-specs
+    word-drafts/tools
 
 jobs:
-  run:
+  think:
     runs-on: ubuntu-latest
     concurrency:
       group: agent-${{ inputs.branch }}
       cancel-in-progress: false
+    permissions:
+      # Deliberately minimal. This job reads untrusted input and runs a model with tool
+      # access, so anything it can reach, a prompt injection can reach.
+      contents: read
+      copilot-requests: write
     outputs:
-      url: ${{ steps.pr.outputs.url }}
-      changed: ${{ steps.commit.outputs.changed }}
+      produced: ${{ steps.patch.outputs.produced }}
+      outside: ${{ steps.patch.outputs.outside }}
     steps:
       - name: Refuse a branch the agent has no business writing to
         env:
@@ -85,12 +118,12 @@ jobs:
 
       - uses: actions/checkout@v4
         with:
-          # The agent reads history to understand what changed and why, and the branch may
-          # already exist from an earlier run.
           fetch-depth: 0
           ref: ${{ inputs.base }}
+          # No credential is left in .git/config for a hijacked agent to read back out.
+          persist-credentials: false
 
-      - name: Put the branch in place
+      - name: Start from the right commit
         env:
           BRANCH: ${{ inputs.branch }}
           BASE: ${{ inputs.base }}
@@ -98,7 +131,7 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          if [ "$REUSE" = "true" ] && git ls-remote --exit-code --heads origin "$BRANCH" >/dev/null 2>&1; then
+          if [ "$REUSE" = 'true' ] && git ls-remote --exit-code --heads origin "$BRANCH" >/dev/null 2>&1; then
             git fetch origin "$BRANCH"
             git checkout -B "$BRANCH" "origin/$BRANCH"
           else
@@ -114,14 +147,20 @@ jobs:
       - name: Install Copilot CLI
         run: npm install -g @github/copilot
 
-      - name: Run the agent
-        id: agent
+      - name: Set the untrusted material aside
         env:
-          # The built-in token plus `copilot-requests: write` needs no stored secret.
-          # GitHub documents that path for organization-owned repositories, so on a
-          # user-owned one it may be refused — in which case setting a
-          # COPILOT_GITHUB_TOKEN secret (a PAT with "Copilot Requests") switches over with
-          # no change to any workflow.
+          UNTRUSTED: ${{ inputs.untrusted }}
+        run: |
+          # Out of the instruction stream and into a file. Text that arrives as data cannot
+          # be mistaken for an instruction by virtue of being indistinguishable from one.
+          printf '%s\n' "$UNTRUSTED" > task-input.md
+
+      - name: Run the agent
+        env:
+          # `copilot-requests: write` makes the built-in token enough, and in this job that
+          # token is contents:read — worth little if the agent is hijacked. A
+          # COPILOT_GITHUB_TOKEN secret is a real credential, so set one only if the
+          # built-in path is refused.
           GITHUB_TOKEN: ${{ github.token }}
           FALLBACK_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}
           PROMPT: ${{ inputs.prompt }}
@@ -132,7 +171,19 @@ jobs:
           else
             echo 'authenticating with the built-in token and copilot-requests: write'
           fi
-          if ! copilot --yolo -p "$PROMPT" 2>&1 | tee agent.log; then
+          # The transcript goes outside the workspace, where `git add` cannot reach it: it
+          # records every command the agent ran and its output.
+          #
+          # Not --yolo. The tools are named, so the agent cannot reach for a network fetch
+          # it was never meant to have. That narrows the blast radius; it is not what
+          # contains a hijack — what contains a hijack is this job holding nothing worth
+          # taking.
+          if ! copilot -p "$PROMPT" --no-ask-user \
+                 --allow-tool=write \
+                 --allow-tool='shell(git:*)' \
+                 --allow-tool='shell(python:*)' \
+                 --allow-tool='shell(python3:*)' \
+                 2>&1 | tee "$RUNNER_TEMP/agent.log"; then
             echo "::error::the agent did not run. If the log shows an authentication or \
               entitlement failure, this repository cannot use copilot-requests: write — \
               add a COPILOT_GITHUB_TOKEN secret (a fine-grained PAT with the \
@@ -140,53 +191,131 @@ jobs:
             exit 1
           fi
 
-      - name: Revert anything generated
-        id: guard
+      - name: Take only the changes the agent was allowed to make
+        id: patch
         run: |
-          # Generated artifacts are outputs. An agent that edits one has made a change that
-          # the next build silently discards, so the edit is undone here and reported
-          # rather than committed and quietly lost.
-          set -- word-drafts/*.docx word-drafts/*.docmodel.json \
-                 word-drafts/*.provenance.json word-drafts/figures
-          touched=$(git status --porcelain -- "$@" || true)
-          if [ -n "$touched" ]; then
-            git checkout -- "$@" 2>/dev/null || true
-            git clean -fd -- word-drafts/figures 2>/dev/null || true
+          rm -f task-input.md
+          # shellcheck disable=SC2086  # ALLOWED_PATHS is a deliberate word-split list
+          exclude=$(printf ':(exclude)%s/** ' $ALLOWED_PATHS)
+          present=''
+          for p in $ALLOWED_PATHS; do
+            [ -e "$p" ] && present="$present $p"
+          done
+          # shellcheck disable=SC2086  # both lists are deliberately word-split
+          outside=$(git status --porcelain -- . $exclude || true)
+          if [ -n "$outside" ]; then
+            echo "::warning::the agent changed files outside the allowlist; those are dropped"
             {
-              echo 'reverted<<EOF'
-              echo "$touched"
-              echo 'EOF'
+              echo 'outside<<PATCHEOF'
+              echo "$outside"
+              echo 'PATCHEOF'
             } >> "$GITHUB_OUTPUT"
-            echo "::warning::the agent edited generated artifacts; those edits were reverted"
           fi
+          # shellcheck disable=SC2086  # a deliberate word-split list of existing paths
+          git add -A -- $present
+          if git diff --cached --quiet; then
+            echo 'produced=false' >> "$GITHUB_OUTPUT"
+            echo 'the agent changed nothing inside the allowlist'
+            exit 0
+          fi
+          echo 'produced=true' >> "$GITHUB_OUTPUT"
+          git diff --cached --binary > "$RUNNER_TEMP/agent.patch"
+          git diff --cached --stat
+
+      - uses: actions/upload-artifact@v4
+        if: steps.patch.outputs.produced == 'true'
+        with:
+          name: agent-patch
+          path: ${{ runner.temp }}/agent.patch
+          retention-days: 1
+
+  publish:
+    needs: think
+    if: needs.think.outputs.produced == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+    outputs:
+      url: ${{ steps.pr.outputs.url }}
+      changed: ${{ steps.commit.outputs.changed }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ inputs.base }}
+
+      - name: Start from the right commit
+        env:
+          BRANCH: ${{ inputs.branch }}
+          BASE: ${{ inputs.base }}
+          REUSE: ${{ inputs.reuse-branch }}
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if [ "$REUSE" = 'true' ] && git ls-remote --exit-code --heads origin "$BRANCH" >/dev/null 2>&1; then
+            git fetch origin "$BRANCH"
+            git checkout -B "$BRANCH" "origin/$BRANCH"
+          else
+            git checkout -B "$BRANCH" "origin/$BASE"
+          fi
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: agent-patch
+          path: ${{ runner.temp }}
+
+      - name: Apply it, and check it stayed inside the allowlist
+        run: |
+          git apply --binary --whitespace=nowarn "$RUNNER_TEMP/agent.patch"
+          # shellcheck disable=SC2086  # ALLOWED_PATHS is a deliberate word-split list
+          exclude=$(printf ':(exclude)%s/** ' $ALLOWED_PATHS)
+          # Checked again here. The first check ran in a job that had read untrusted input;
+          # this one did not, so this is the one that decides.
+          # shellcheck disable=SC2086  # both lists are deliberately word-split
+          outside=$(git status --porcelain -- . $exclude || true)
+          if [ -n "$outside" ]; then
+            echo '::error::the patch touches paths outside the allowlist:'
+            echo "$outside"
+            exit 1
+          fi
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
 
       - name: Run the repository's own checks
         id: checks
         continue-on-error: true
         run: |
-          set +e
+          pip install -r word-drafts/tools/requirements.txt
           out=''
           for script in check_links check_section_refs check_yaml_json; do
             result=$(python ".github/scripts/$script.py" 2>&1 | tail -1)
             out="$out- \`$script\`: $result"$'\n'
           done
           {
-            echo 'summary<<EOF'
+            echo 'summary<<CHECKEOF'
             echo "$out"
-            echo 'EOF'
+            echo 'CHECKEOF'
           } >> "$GITHUB_OUTPUT"
 
-      - name: Commit what the agent changed
+      - name: Commit and push
         id: commit
         env:
           TITLE: ${{ inputs.title }}
           ISSUE: ${{ inputs.issue }}
           BRANCH: ${{ inputs.branch }}
         run: |
-          git add -A
+          present=''
+          for p in $ALLOWED_PATHS; do
+            [ -e "$p" ] && present="$present $p"
+          done
+          # shellcheck disable=SC2086  # a deliberate word-split list of existing paths
+          git add -A -- $present
           if git diff --cached --quiet; then
             echo 'changed=false' >> "$GITHUB_OUTPUT"
-            echo 'the agent changed nothing'
             exit 0
           fi
           echo 'changed=true' >> "$GITHUB_OUTPUT"
@@ -195,9 +324,8 @@ jobs:
             printf 'Written by the coding agent from a task in this repository.\n'
             if [ -n "$ISSUE" ]; then printf '\nRefs #%s\n' "$ISSUE"; fi
             printf '\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n'
-          } > .commit-message
-          git commit -F .commit-message
-          rm -f .commit-message agent.log
+          } > "$RUNNER_TEMP/commit-message"
+          git commit -F "$RUNNER_TEMP/commit-message"
           git push --force-with-lease --set-upstream origin "$BRANCH"
 
       - name: Open or update the pull request
@@ -209,47 +337,45 @@ jobs:
           BASE: ${{ inputs.base }}
           TITLE: ${{ inputs.title }}
           ISSUE: ${{ inputs.issue }}
-          PROMPT: ${{ inputs.prompt }}
           CHECKS: ${{ steps.checks.outputs.summary }}
-          REVERTED: ${{ steps.guard.outputs.reverted }}
+          OUTSIDE: ${{ needs.think.outputs.outside }}
           DRAFT: ${{ inputs.draft }}
         run: |
           # shellcheck disable=SC2016  # the backticks below are markdown, not substitution
-          cat > pr-body.md <<'BODY'
-          Written by the coding agent. **Review it as you would any other change** — it is
-          a draft of an answer, not an answer.
+          cat > "$RUNNER_TEMP/pr-body.md" <<'BODY'
+          Written by the coding agent from untrusted input — an issue thread, or a report
+          built from a reviewer's document. **Read it as you would a pull request from a
+          stranger**, because in the cases that matter that is what it is.
+
+          The agent held no write credential and could only propose changes under the
+          specification trees and `word-drafts/tools/`. Anything else it wrote was dropped
+          before this branch was built.
           BODY
           if [ -n "$ISSUE" ]; then
-            printf '\nCloses #%s\n' "$ISSUE" >> pr-body.md
+            printf '\nCloses #%s\n' "$ISSUE" >> "$RUNNER_TEMP/pr-body.md"
           fi
-          {
-            printf '\n<details><summary>What it was asked to do</summary>\n\n'
-            # shellcheck disable=SC2016  # literal markdown fence, not a substitution
-            printf '```\n%s\n```\n\n' "$PROMPT"
-            printf '</details>\n\n### Checks\n\n%s\n' "$CHECKS"
-          } >> pr-body.md
-          if [ -n "$REVERTED" ]; then
+          printf '\n### Checks\n\n%s\n' "$CHECKS" >> "$RUNNER_TEMP/pr-body.md"
+          if [ -n "$OUTSIDE" ]; then
             {
-              printf '\n### Reverted\n\n'
-              printf 'The agent edited generated artifacts. Those are build outputs, so '
-              printf 'the edits were undone — change the source and regenerate instead.\n\n'
+              printf '\n### Dropped\n\n'
+              printf 'The agent tried to change files it is not allowed to change. Those '
+              printf 'edits are not in this branch.\n\n'
               # shellcheck disable=SC2016  # literal markdown fence, not a substitution
-              printf '```\n%s\n```\n' "$REVERTED"
-            } >> pr-body.md
+              printf '```\n%s\n```\n' "$OUTSIDE"
+            } >> "$RUNNER_TEMP/pr-body.md"
           fi
 
           existing=$(gh pr list --head "$BRANCH" --base "$BASE" --state open \
                        --json number --jq '.[0].number // empty')
           if [ -n "$existing" ]; then
-            gh pr edit "$existing" --body-file pr-body.md
+            gh pr edit "$existing" --body-file "$RUNNER_TEMP/pr-body.md"
             url=$(gh pr view "$existing" --json url --jq .url)
           else
             args=''
-            [ "$DRAFT" = "true" ] && args='--draft'
+            [ "$DRAFT" = 'true' ] && args='--draft'
             url=$(gh pr create --base "$BASE" --head "$BRANCH" --title "$TITLE" \
-                    --body-file pr-body.md $args | tail -1)
+                    --body-file "$RUNNER_TEMP/pr-body.md" $args | tail -1)
           fi
-          rm -f pr-body.md
           echo "url=$url" >> "$GITHUB_OUTPUT"
 
       - name: Reply on the issue

@@ -107,10 +107,20 @@ jobs:
       # on it. This reads them instead: unknown keys, bad expressions, `needs` that point
       # at nothing, action inputs that do not exist.
       - name: Lint the workflows
+        env:
+          # Pinned to a release and verified. Fetching an installer from a mutable branch
+          # and piping it into a shell would put whoever controls that branch, at the
+          # moment CI happens to run, inside this job.
+          VERSION: 1.7.12
+          SHA256: 8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8
         run: |
+          archive="actionlint_${VERSION}_linux_amd64.tar.gz"
+          curl -sSLo "$archive" \
+            "https://github.com/rhysd/actionlint/releases/download/v${VERSION}/${archive}"
+          echo "$SHA256  $archive" | sha256sum --check --status
+          tar -xzf "$archive" actionlint
           # `copilot-requests` is documented by GitHub but is newer than actionlint's
           # built-in list of permission scopes, so it reports a false positive.
-          bash <(curl -sSL https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)
           ./actionlint -color -ignore 'unknown permission scope "copilot-requests"'
 
   spec-validate:

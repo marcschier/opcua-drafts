@@ -29,6 +29,7 @@ import argparse
 import difflib
 import json
 import os
+import re
 import subprocess
 import sys
 
@@ -47,8 +48,18 @@ class IngestError(Exception):
 # --------------------------------------------------------------------------- sources
 
 
+COMMIT_RE = re.compile(r'[0-9a-f]{7,40}')
+
+
 def git_show(commit, path):
-    """A file as it was at a commit, or None when it was not there."""
+    """A file as it was at a commit, or None when it was not there.
+
+    `git show <rev>:<path>` takes one object name, so there is no `--` to hide behind: a
+    value starting with a dash would be read as an option. The commit comes out of the
+    reviewed document's properties, so it is checked to be what it claims to be instead.
+    """
+    if not COMMIT_RE.fullmatch(commit or ''):
+        return None
     try:
         out = subprocess.run(['git', '-C', REPO, 'show', '%s:%s' % (commit, path)],
                              capture_output=True, check=True)
@@ -377,6 +388,11 @@ class Ingest:
                 'the document records no SpecId, so there is no way to tell which '
                 'specification it is. It was probably built before the pipeline started '
                 'stamping documents; rebuild and re-review.')
+        # The id comes out of the document, so it is a stranger's string, and it goes on to
+        # name a file and a branch. `os.path.join` honours an absolute path and `..`
+        # traverses, so it is checked here rather than left to the existence test below.
+        if not re.fullmatch(r'[a-z0-9][a-z0-9-]{0,39}', self.spec_id):
+            raise IngestError('%r is not a specification id' % self.spec_id)
         if props.get('PipelineVersion') not in (None, contract.PIPELINE_VERSION):
             raise IngestError(
                 'the document was built by pipeline version %s, this is version %s. '

@@ -134,11 +134,11 @@ class ReviewedDocument:
 
         out = []
         for el in root.iter(q('w:comment')):
-            author = el.get(q('w:author')) or ''
-            date = el.get(q('w:date')) or ''
+            author = _one_line(el.get(q('w:author')))
+            date = _one_line(el.get(q('w:date')), 40)
             if (author, date) == TEMPLATE_COMMENT:
                 continue
-            body = '\n'.join(_text_of(p) for p in el.iter(q('w:p'))).strip()
+            body = _prose('\n'.join(_text_of(p) for p in el.iter(q('w:p'))))
             # Threading is keyed by the paraId of the comment's own last paragraph.
             own = [p.get('{%s}paraId' % W14) for p in el.iter(q('w:p'))]
             own = [x for x in own if x]
@@ -186,7 +186,7 @@ class ReviewedDocument:
                 elif el.tag == q('w:commentRangeEnd'):
                     cid = el.get(q('w:id'))
                     if cid in starts:
-                        out[cid] = (starts[cid][0].strip(), starts[cid][1])
+                        out[cid] = (_one_line(starts[cid][0], 400), starts[cid][1])
                         del starts[cid]
                     open_here.discard(cid)
                 elif el.tag in (q('w:t'), q('w:delText')):
@@ -199,11 +199,33 @@ class ReviewedDocument:
                     cid = el.get(q('w:id'))
                     out.setdefault(cid, ('', [pid] if pid else []))
         for cid, (text, ids) in starts.items():
-            out[cid] = (text.strip(), ids)
+            out[cid] = (_one_line(text, 400), ids)
         return out
 
 
 # --------------------------------------------------------------------------- reading
+
+
+# Everything a reviewer's document says about itself is attacker-controlled: anyone can
+# set an author name, and XML attribute normalisation does not collapse `&#10;`, so a name
+# can carry newlines and arbitrary text. That text is reported, posted to an issue and put
+# in front of an agent, so it is bounded and flattened here — once, at the boundary, rather
+# than at each of the places that later print it.
+
+CONTROL = dict.fromkeys(range(32))
+CONTROL.pop(9, None)
+CONTROL.pop(10, None)
+
+
+def _one_line(value, limit=80):
+    """A single line of at most `limit` characters: for names, dates and other labels."""
+    return ' '.join((value or '').split())[:limit]
+
+
+def _prose(value, limit=4000):
+    """Text that may legitimately span lines, with control characters removed."""
+    text = (value or '').translate(CONTROL).strip()
+    return text[:limit]
 
 
 def _read_paragraph(p):
@@ -224,8 +246,8 @@ def _read_paragraph(p):
             if text:
                 revisions.append(Revision('delete', state[1], state[2], text, para_id))
     for change in p.iter(q('w:pPrChange'), q('w:rPrChange')):
-        revisions.append(Revision('format', change.get(q('w:author')) or '',
-                                  change.get(q('w:date')) or '', '', para_id))
+        revisions.append(Revision('format', _one_line(change.get(q('w:author'))),
+                                  _one_line(change.get(q('w:date')), 40), '', para_id))
     style = p.find(q('w:pPr') + '/' + q('w:pStyle'))
     return Paragraph(para_id, style.get(q('w:val')) if style is not None else None,
                      ''.join(rejected), ''.join(accepted), revisions)
@@ -236,9 +258,11 @@ def _revision_state(run):
     node = run.getparent()
     while node is not None:
         if node.tag in INSERTED:
-            return ('insert', node.get(q('w:author')) or '', node.get(q('w:date')) or '')
+            return ('insert', _one_line(node.get(q('w:author'))),
+                    _one_line(node.get(q('w:date')), 40))
         if node.tag in DELETED:
-            return ('delete', node.get(q('w:author')) or '', node.get(q('w:date')) or '')
+            return ('delete', _one_line(node.get(q('w:author'))),
+                    _one_line(node.get(q('w:date')), 40))
         if node.tag == q('w:body'):
             break
         node = node.getparent()

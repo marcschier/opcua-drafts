@@ -24,6 +24,8 @@ Two labels start an agent that does the work and opens the pull request for you.
 
 Everything an agent writes is a **draft of an answer, not an answer** — it goes through the same review as anyone else's pull request.
 
+The label decides *that* the agent runs. It cannot decide *what it is told*, because anyone can write an issue and anyone can comment on one, so the agent is built on the assumption that its input is hostile: it runs with no write credential, is handed the issue text as a file marked untrusted rather than as instructions, and can only propose changes under the specification trees. Whatever it produces is a patch that a person reads before it lands.
+
 The Word renderings under `word-drafts/` are regenerated automatically whenever a specification changes on `main`, and collected on one standing pull request. Do not edit them by hand.
 
 See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the full workflow, validation, and conventions, and [`.github/copilot-instructions.md`](.github/copilot-instructions.md) for the specification authoring style — voice and tense, normative language, and the model, example and validator conventions the drafts follow — together with the build and validation commands and a map of the repository.

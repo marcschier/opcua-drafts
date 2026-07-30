@@ -159,13 +159,46 @@ Mechanical where it is exact, agentic where it needs judgement, and never both o
 text.
 
 In GitHub Actions the agent runs as Copilot CLI — `npm install -g @github/copilot`, then
-`copilot --yolo -p "…"` — authenticated by the **built-in token** with
-`permissions: copilot-requests: write`. No stored secret. GitHub documents that path for
-organization-owned repositories, so on a user-owned one it may be refused; the workflow
-therefore uses a `COPILOT_GITHUB_TOKEN` secret when one exists and says which it used, so
-switching over is a secret rather than an edit. Note that `copilot-requests` is newer than
-actionlint's built-in scope list, so the linter reports it as unknown — that is a false
-positive, and CI ignores exactly that message and nothing else.
+`copilot -p "…" --no-ask-user` with a named tool allowlist — authenticated by the
+**built-in token** with `permissions: copilot-requests: write`. No stored secret. GitHub
+documents that path for organization-owned repositories, so on a user-owned one it may be
+refused; the workflow therefore uses a `COPILOT_GITHUB_TOKEN` secret when one exists and
+says which it used, so switching over is a secret rather than an edit. Note that
+`copilot-requests` is newer than actionlint's built-in scope list, so the linter reports it
+as unknown — that is a false positive, and CI ignores exactly that message and nothing else.
+
+## Assume the input is hostile
+
+Everything the agent is asked to do is assembled from text a stranger wrote: an issue body,
+a comment thread, the author name inside a `.docx`. A label decides *that* a run happens; it
+cannot decide what the run is told, because the content is fetched after the label is
+applied and can be edited before and after it. **A label is not consent to the content.**
+
+That single mistake is worth naming because it is easy to make and it is load-bearing. The
+controls that follow from getting it right:
+
+- **Split the run in two.** The job that runs the agent holds `contents: read`, no persisted
+  git credential and no ability to push, comment or open anything; it produces a patch and
+  stops. A separate job, which never runs the agent and never reads the prompt, applies that
+  patch and publishes it. A hijacked agent then has nothing worth stealing.
+- **Untrusted text is a file, not an instruction.** It is written to `task-input.md` and the
+  prompt says what it is and that directives inside it are to be ignored and reported. Text
+  spliced into the instruction stream is indistinguishable from an instruction, which is the
+  whole of prompt injection.
+- **A path allowlist, checked on the publishing side.** `.github/` is excluded on purpose: a
+  workflow or CI script the agent wrote would run on the next event with more rights than
+  the agent had, turning one bad prompt into a permanent foothold. `git add -A` is exactly
+  the wrong instinct here.
+- **Bound and flatten what the document says about itself.** A `w:author` attribute survives
+  XML normalisation with `&#10;` intact, so an author name can carry newlines and headings
+  and forge structure in a report. Names and dates are collapsed to one line and capped
+  where they are read, not where they are printed.
+- **The transcript lives outside the workspace.** A log recording every command the agent
+  ran is not something to let `git add` find.
+- **Do not announce the run before reading the thread.** An acknowledgement comment is a
+  starting gun: it tells an attacker exactly when to add a comment the next step will read.
+- **Pin what CI executes.** `bash <(curl …/main/…)` hands whoever controls that branch, at
+  the moment the job happens to run, a shell in it.
 
 Two things are worth enforcing in the workflow rather than asking for in the prompt: revert
 any edit to a generated artifact before committing, since the next build would discard it
