@@ -338,8 +338,9 @@ prop_var(65012, DCC, "MaxCreditPerChannel", UInt32,
          "own receive memory undefined.", rule=MR_Mandatory)
 prop_var(65012, DCC, "SupportsUnreliableDatagrams", Boolean,
          "True when the Server can carry Unreliable channels over a genuinely lossy path, which "
-         "requires a transport that provides one. False on a Server reachable only over opc.tcp "
-         "or opc.wss, where Unreliable degrades to sender-side discard.")
+         "requires a transport that provides one. False wherever the reachable transports are "
+         "reliable end to end, such as opc.tcp, opc.wss, or opc.wss3 without HTTP Datagrams, "
+         "where Unreliable degrades to sender-side discard.")
 prop_var(65012, DCC, "AllowInsecureDataChannels", Boolean,
          "True only where the Server permits a data channel to be opened on a SecureChannel whose "
          "SecurityMode is None. Absence shall be read as False. On such a channel a frame carries "
@@ -399,7 +400,8 @@ enum_type(65030, "DataChannelDirection",
 enum_type(65031, "DataChannelDeliveryMode",
           "The delivery guarantee requested for a data channel. What a mode can actually deliver "
           "depends on the transport: only a transport with a lossy path can genuinely drop data in "
-          "flight, so over opc.tcp and opc.wss the lossy modes degrade to sender-side discard.",
+          "flight, so over a reliable transport such as opc.tcp or opc.wss the lossy modes degrade "
+          "to sender-side discard.",
           [("ReliableOrdered", 0, "Every frame is delivered, in order. The default, and the only mode a purely reliable transport realizes exactly."),
            ("ReliableUnordered", 1, "Every frame is delivered, but the receiver may hand frames to the application as they arrive rather than buffering to restore order."),
            ("PartiallyReliable", 2, "A frame is retried until its deadline passes or MaxRetransmits is reached, then abandoned and reported in a gap notification."),
@@ -412,7 +414,7 @@ enum_type(65032, "DataChannelState",
           "maintained per direction.",
           [("Opening", 0, "OpenDataChannel has been accepted and the endpoint is being prepared; no frame may be sent for this ChannelId until the response has been handed to the transport."),
            ("Open", 1, "Payload may flow in the negotiated directions."),
-           ("Paused", 2, "The channel is open but the peer's flow control credit is exhausted in this direction, so no payload may be sent. Over opc.quic this is QUIC stream or connection blocking instead."),
+           ("Paused", 2, "The channel is open but the peer's flow control credit is exhausted in this direction, so no payload may be sent. Over an outer-protocol transport such as opc.quic or opc.wss3 this is transport stream or connection blocking instead."),
            ("Closing", 3, "This peer has decided to close a direction and is draining it. Closing is per direction, like Paused: receiving END marks only the peer's direction ended. No new payload may be enqueued in a Closing direction; frames already queued may still be sent, and END follows the last of them."),
            ("Closed", 4, "The channel is closed, either by END in every direction it carries or by a RESET carrying Good. Its ChannelId is not reassigned while the owning SecureChannel remains open."),
            ("Faulted", 5, "The channel was aborted by a RESET frame carrying a Bad StatusCode, by a timeout, or by loss of the SecureChannel, Session or authorizing user identity.")])
@@ -437,7 +439,7 @@ struct_type(65034, "DataChannelStatusDataType",
              ("SourceNodeId", NodeId_, None, "The endpoint the channel was opened on."),
              ("State", T(65032), None, "Current lifecycle state."),
              ("Parameters", T(65033), None, "The parameters in force, as revised by the Server."),
-             ("TransportChannelId", UInt64, None, "The underlying transport identifier: the QUIC stream id over opc.quic, 0 for inline framing."),
+             ("TransportChannelId", UInt64, None, "The underlying transport identifier: the QUIC stream id over opc.quic, the HTTP/3 stream id over opc.wss3, 0 for inline framing."),
              ("StartTime", UtcTime, None, "When the channel entered the Open state.")])
 
 struct_type(65035, "DataChannelOfferDataType",

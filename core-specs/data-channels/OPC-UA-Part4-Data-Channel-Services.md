@@ -70,7 +70,7 @@ This Service is not a Node operation and therefore takes no `NodesToRead`-style 
 | requestHeader | RequestHeader | Common request parameters (OPC 10000-4 §7.32). |
 | sourceNodeId | NodeId | The data channel source to open the channel on. It **shall** be a Node that implements `IDataChannelSourceType`, directly or through `HasDataChannel`. |
 | offerId | UInt32 | `0` for a Client-initiated open. Otherwise the `OfferId` of a `DataChannelOfferedEventType` Event being accepted, in which case `sourceNodeId` **shall** match the offer. |
-| transportChannelId | UInt64 | Over `opc.quic`, for a Client-initiated direction (`SinkToSource` or `Bidirectional`), the id of the QUIC stream the Client has already opened and will not write to until the response arrives. `0` otherwise, and always `0` over inline framing. See the Part 6 errata §7.4. |
+| transportChannelId | UInt64 | Over an outer-protocol transport, for a Client-initiated direction (`SinkToSource` or `Bidirectional`), the id of the transport stream the Client has already opened and will not write to until the response arrives — the QUIC stream id over `opc.quic`, the HTTP/3 stream id over `opc.wss3`. `0` otherwise, and always `0` over inline framing. See the Part 6 errata §7.4 and §8.4. |
 | requestedParameters | DataChannelParametersDataType | The parameters the Client asks for. Every member is a request, not a requirement; the Server returns what it will actually do. `0` in a numeric member means "no preference" (§5.1.1). |
 
 **Response**
@@ -80,7 +80,7 @@ This Service is not a Node operation and therefore takes no `NodesToRead`-style 
 | responseHeader | ResponseHeader | Common response parameters (OPC 10000-4 §7.33). |
 | channelId | UInt32 | The identifier of the new channel within the owning SecureChannel. Never `0`, which the Part 6 errata reserves for connection control. |
 | revisedParameters | DataChannelParametersDataType | The parameters actually in force. |
-| revisedTransportChannelId | UInt64 | The underlying transport identifier in force: the QUIC stream id over `opc.quic`, `0` for inline framing. For a Client-initiated direction this is the value supplied in the request, echoed unchanged. It is **not** named `transportChannelId`: OPC UA Service definitions do not reuse a parameter name across a request and its response, and the standard model compiler enforces that by validating both against one field-name table, so a Service carrying `transportChannelId` in both is rejected outright. |
+| revisedTransportChannelId | UInt64 | The underlying transport identifier in force: the QUIC stream id over `opc.quic`, the HTTP/3 stream id over `opc.wss3`, `0` for inline framing. For a Client-initiated direction this is the value supplied in the request, echoed unchanged. It is **not** named `transportChannelId`: OPC UA Service definitions do not reuse a parameter name across a request and its response, and the standard model compiler enforces that by validating both against one field-name table, so a Service carrying `transportChannelId` in both is rejected outright. |
 
 <a id="defaults-and-ranges"></a>
 

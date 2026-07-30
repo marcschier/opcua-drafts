@@ -5,7 +5,7 @@
 **Namespace:** `http://opcfoundation.org/UA/` (base OPC UA namespace)
 **Version:** 0.1.1 · **Date:** 2026-07-29
 
-> **Status — working draft.** This document proposes the transport layer for OPC UA **data channels**: logical, flow-controlled, bidirectional streams of opaque bytes multiplexed onto a SecureChannel that is already open. It defines an inline framing for the existing `opc.tcp` and `opc.wss` transports and a new `opc.quic` transport. The Services that open and close a data channel are in the companion [Part 4 errata](OPC-UA-Part4-Data-Channel-Services.md); the AddressSpace model that describes where one may be opened is in the [Part 3 errata](OPC-UA-Part3-Data-Channel-Model.md). Nothing here is normative or endorsed by the OPC Foundation.
+> **Status — working draft.** This document proposes the transport layer for OPC UA **data channels**: logical, flow-controlled, bidirectional streams of opaque bytes multiplexed onto a SecureChannel that is already open. It defines an inline framing for the existing `opc.tcp` and `opc.wss` transports and new `opc.quic` and `opc.wss3` transports. The Services that open and close a data channel are in the companion [Part 4 errata](OPC-UA-Part4-Data-Channel-Services.md); the AddressSpace model that describes where one may be opened is in the [Part 3 errata](OPC-UA-Part3-Data-Channel-Model.md). Nothing here is normative or endorsed by the OPC Foundation.
 
 ---
 
@@ -13,7 +13,7 @@
 
 This specification defines how a continuous stream of application bytes is carried over an OPC UA SecureChannel, alongside — not instead of — the Service request/response traffic already on it.
 
-It covers the frame layout, the multiplexing of many concurrent channels onto one connection, flow control, sender scheduling, delivery modes including partial reliability, gap notification, half-close, abort and round-trip measurement. It defines the mapping of that framing onto the existing OPC UA TCP and WebSocket transports, and it defines a new QUIC transport in which each data channel is a native QUIC stream and unreliable payload rides QUIC DATAGRAM frames.
+It covers the frame layout, the multiplexing of many concurrent channels onto one connection, flow control, sender scheduling, delivery modes including partial reliability, gap notification, half-close, abort and round-trip measurement. It defines the mapping of that framing onto the existing OPC UA TCP and WebSocket transports, it defines a new QUIC transport in which each data channel is a native QUIC stream and unreliable payload rides QUIC DATAGRAM frames, and it defines a WebSocket-over-HTTP/3 transport in which each data channel is a WebSocket carried on its own HTTP/3 stream.
 
 It does not define the Services that open, modify or close a data channel, the AddressSpace model that describes a channel endpoint, or any interpretation of the bytes a channel carries. A data channel is content-agnostic: the payload is opaque octets qualified by an IANA media type, and codecs, packetization and presentation timing are the concern of the application at each end.
 
@@ -30,14 +30,17 @@ It does not define the Services that open, modify or close a data channel, the A
 - [IETF RFC 9221](https://www.rfc-editor.org/rfc/rfc9221) — An Unreliable Datagram Extension to QUIC.
 - [IETF RFC 6455](https://www.rfc-editor.org/rfc/rfc6455) — The WebSocket Protocol.
 - [IETF RFC 7301](https://www.rfc-editor.org/rfc/rfc7301) — TLS Application-Layer Protocol Negotiation (ALPN).
+- [IETF RFC 8441](https://www.rfc-editor.org/rfc/rfc8441) — Bootstrapping WebSockets with HTTP/2.
+- [IETF RFC 9220](https://www.rfc-editor.org/rfc/rfc9220) — Bootstrapping WebSockets with HTTP/3.
+- [IETF RFC 9297](https://www.rfc-editor.org/rfc/rfc9297) — HTTP Datagrams and the Capsule Protocol.
 
 ## 3 Terms, definitions and abbreviations
 
 | Term | Definition |
 |---|---|
 | Data channel | A logical, independently flow-controlled, bidirectional stream of opaque bytes carried over one SecureChannel and identified within it by a ChannelId. |
-| Frame | One data channel protocol data unit. In inline framing a frame is exactly one Secure Conversation MessageChunk; in QUIC framing it is one length-delimited unit on a QUIC stream or one QUIC DATAGRAM. |
-| Inline framing | The framing of clause 5 as carried over `opc.tcp` and `opc.wss`, interleaved with `MSG` chunks on the same connection. |
+| Frame | One data channel protocol data unit. In inline framing a frame is exactly one Secure Conversation MessageChunk; in QUIC framing it is one length-delimited unit on a QUIC stream or one QUIC DATAGRAM; in WebSocket-over-HTTP/3 framing it is one WebSocket message or one HTTP Datagram. |
+| Inline framing | The framing of clause 5 as carried over `opc.tcp`, `opc.wss` and the fallback profile of `opc.wss3`, interleaved with `MSG` chunks on the same connection. |
 | ChannelId | The identifier of a data channel within its SecureChannel, assigned by the Server in `OpenDataChannel`. ChannelId 0 is reserved for connection-level control. |
 | Credit | The number of payload bytes a sender is permitted to transmit before the receiver grants more. Maintained per channel and per connection. |
 | Droppable frame | A frame the sender is permitted to discard, rather than transmit, once its deadline has passed. |
@@ -55,20 +58,20 @@ OPC UA moves data by asking for it. `Read` returns a value, `Publish` returns a 
 
 A camera does not work that way. Neither does a microphone, a log tail, a point cloud, a firmware image being pushed to a drive, or a remote console. These produce a continuous flow whose value decays with age, and the operations that suit them — start it, throttle it, prioritize it against other traffic, drop what is already too late to be useful, stop it — have no expression in OPC UA at all. In practice they are solved by running a second protocol beside the OPC UA endpoint, which means a second port, a second set of certificates, a second authorization model and a second hole in the firewall, for data that came from the same device and is governed by the same policy.
 
-### 4.2 Two realizations, one model
+### 4.2 Three realizations, one model
 
-A data channel closes that gap on the connection the client already has. Two transport realizations are defined, and the Services and AddressSpace model above them are identical on both:
+A data channel closes that gap on the connection the client already has. Three transport realizations are defined, and the Services and AddressSpace model above them are identical on all three:
 
-| | Inline framing (`opc.tcp`, `opc.wss`) | `opc.quic` |
-|---|---|---|
-| Deployment | Works on every deployed endpoint, no new port, no new certificate | New transport, new endpoint |
-| Multiplexing | Frames of different channels interleave on one byte stream | One QUIC stream per channel |
-| Head-of-line blocking | Between channels: none, because a frame is never chunked. Below the framing: TCP still orders the whole connection | None, QUIC orders each stream independently |
-| Flow control | Credit windows defined here | QUIC's own per-stream and per-connection windows |
-| Genuine loss | Impossible; lossy modes become sender-side discard | Real, over QUIC DATAGRAM |
-| Path change | Kills the connection | Survives, through QUIC connection migration |
+| | Inline framing (`opc.tcp`, `opc.wss`) | `opc.quic` | `opc.wss3` |
+|---|---|---|---|
+| Deployment | Works on every deployed endpoint, no new port, no new certificate | New transport, new endpoint | New endpoint for HTTP/3 paths and HTTP infrastructure |
+| Multiplexing | Frames of different channels interleave on one byte stream | One QUIC stream per channel | One WebSocket per channel, each on its own HTTP/3 stream |
+| Head-of-line blocking | Between channels: none, because a frame is never chunked. Below the framing: TCP still orders the whole connection | None, QUIC orders each stream independently | None between outer WebSockets; HTTP/3 maps each to a QUIC stream |
+| Flow control | Credit windows defined here | QUIC's own per-stream and per-connection windows | HTTP/3 and QUIC stream flow control |
+| Genuine loss | Impossible; lossy modes become sender-side discard | Real, over QUIC DATAGRAM | Real only where HTTP Datagrams are available |
+| Path change | Kills the connection | Survives, through QUIC connection migration | Survives as the HTTP/3 QUIC connection migrates |
 
-An implementation that supports only inline framing is a complete implementation of this specification. QUIC adds capability that TCP cannot express; it does not change the contract.
+An implementation that supports only inline framing is a complete implementation of this specification. QUIC and HTTP/3 add capability that TCP cannot express; they do not change the contract.
 
 ### 4.3 What is deliberately not changed
 
@@ -225,7 +228,7 @@ The total encoded size of a frame **shall not** exceed the `ReceiveBufferSize` t
 | Framing | Fixed overhead | Optional |
 |---|---|---|
 | Inline | 12 (message header) + 4 (security header) + 8 (sequence header) + 12 (stream header) = **36 bytes** | + 8 (`Deadline`) + frame type fields + the security policy's footer |
-| QUIC | 12 (message header) + 12 (stream header) = **24 bytes** | + 8 (`Deadline`) + frame type fields |
+| QUIC and WebSocket-over-HTTP/3 | 12 (message header) + 12 (stream header) = **24 bytes** | + 8 (`Deadline`) + frame type fields |
 
 A Server computes the resulting bound and returns it as `revisedParameters.MaxFrameSize` in the `OpenDataChannel` response, so an application never has to derive it. An application unit larger than one frame is segmented across frames using `MessageStart` and `MessageEnd`.
 
@@ -254,7 +257,7 @@ Every data channel has a **channel credit** and the connection has a **connectio
 
 **Credit is per-direction.** Channel credit and connection credit are maintained independently for each direction of transfer. On a `Bidirectional` channel there are therefore two channel windows and two connection windows, and each peer maintains the window describing what *it* may send. `InitialCredit` seeds the window in **both** directions of a `Bidirectional` channel.
 
-**Subclauses 5.8.1 and 5.8.2 apply to the inline framing of clause 6 only.** Over `opc.quic` both are replaced in their entirety by QUIC's own connection- and stream-level flow control (§7.4): no `CREDIT` frame is sent or expected, no peer withholds `DATA` pending one, and `Paused` is entered on QUIC stream or connection blocking instead. Scoping this at the head of the clause matters, because the "no `DATA` before a connection-level `CREDIT`" gate of §5.8.1 would otherwise block every QUIC channel forever against a frame §7.4 forbids anyone to send.
+**Subclauses 5.8.1 and 5.8.2 apply to the inline framing of clause 6 only.** Over `opc.quic` and the outer-protocol profile of `opc.wss3` both are replaced in their entirety by the transport's own connection- and stream-level flow control (§7.4, §8.4): no `CREDIT` frame is sent or expected, no peer withholds `DATA` pending one, and `Paused` is entered on QUIC, HTTP/3 or WebSocket stream or connection blocking instead. Scoping this at the head of the clause matters, because the "no `DATA` before a connection-level `CREDIT`" gate of §5.8.1 would otherwise block every QUIC or HTTP/3 channel forever against a frame §7.4 or §8.4 forbids anyone to send.
 
 #### 5.8.1 Bootstrap
 
@@ -288,20 +291,20 @@ A **Server shall** reject `OpenDataChannel` with `Bad_SecurityModeInsufficient` 
 
 `AccessRestrictions` **shall not** be used to express this permission. `AccessRestrictionType` (OPC 10000-3 §8.56) defines only restriction bits — `SigningRequired`, `EncryptionRequired`, `SessionRequired`, `ApplyRestrictionsToBrowse` — and no bit that grants anything, so a rule reading "unless `AccessRestrictions` permit it" would be satisfied by the default value `0` on essentially every Node, inverting the requirement into fail-open. An explicit, separately readable, default-false Property is the only encoding that makes both the rule and its exception decidable by a Client and by a test laboratory.
 
-This is a transport-independent, Server-enforced rule, and both properties are deliberate. It is stated here rather than in the QUIC clause because it binds under every framing, though for different reasons. Under inline framing over `opc.tcp` and `opc.wss` a SecurityMode `None` SecureChannel leaves a `STR` frame carrying neither signature nor encryption, so its payload, its `FrameSequenceNumber` and the SecureChannel's own `SequenceNumber` are all attacker-forgeable, and every protection in §5.2.1 and §5.12 rests on bytes anyone on the path can rewrite. Over `opc.quic` the TLS 1.3 record layer supplies confidentiality and integrity against a network attacker, so that particular failure does not arise — but the rule is if anything **more** necessary there, not less. TLS client authentication is optional under §7.6.1, so on a SecurityMode `None` SecureChannel over QUIC the `OpenSecureChannel` exchange is the *only* place the Client's Application Instance Certificate would have been checked, and dispensing with it leaves the Server streaming content continuously to a peer whose identity it has never established, over a connection that looks secure precisely because TLS made it so. The appearance of security without the authentication is the hazard, and it is why the rule is not relaxed for transport-secured protocols. And it is a Server obligation because a rule that only the attacker is asked to obey is not a rule: a Client-side prohibition is ignored by exactly the Client that matters.
+This is a transport-independent, Server-enforced rule, and both properties are deliberate. It is stated here rather than in the QUIC clause because it binds under every framing, though for different reasons. Under inline framing over `opc.tcp` and `opc.wss` a SecurityMode `None` SecureChannel leaves a `STR` frame carrying neither signature nor encryption, so its payload, its `FrameSequenceNumber` and the SecureChannel's own `SequenceNumber` are all attacker-forgeable, and every protection in §5.2.1 and §5.12 rests on bytes anyone on the path can rewrite. Over `opc.quic` and `opc.wss3` the TLS 1.3 record layer supplies confidentiality and integrity against a network attacker, so that particular failure does not arise — but the rule is if anything **more** necessary there, not less. TLS client authentication is optional unless §7.6.1 or §8.6 requires it, so on a SecurityMode `None` SecureChannel over QUIC the `OpenSecureChannel` exchange is the *only* place the Client's Application Instance Certificate would have been checked, and dispensing with it leaves the Server streaming content continuously to a peer whose identity it has never established, over a connection that looks secure precisely because TLS made it so. The appearance of security without the authentication is the hazard, and it is why the rule is not relaxed for transport-secured protocols. And it is a Server obligation because a rule that only the attacker is asked to obey is not a rule: a Client-side prohibition is ignored by exactly the Client that matters.
 
 ### 5.9 Delivery modes and partial reliability
 
 The delivery mode is negotiated per channel by `OpenDataChannel`. What it can actually deliver depends on the transport, and this specification states the difference rather than hiding it:
 
-| Mode | Inline framing over TCP | `opc.quic` |
-|---|---|---|
-| `ReliableOrdered` | Exact. TCP already provides it. | Exact. One QUIC stream provides it. |
-| `ReliableUnordered` | Every frame arrives; the receiver may deliver frames to the application without waiting to restore order. Over TCP this saves buffering, not latency. | Carried on the channel's QUIC stream. Delivery is ordered by the transport; the receiver is relieved of reassembly buffering but gains no latency. |
-| `PartiallyReliable` | Sender-side: a droppable frame still queued at its deadline is discarded. `MaxRetransmits` has no effect, because TCP owns retransmission. | Retransmission over DATAGRAM up to `MaxRetransmits` or the deadline, then abandoned. |
-| `Unreliable` | Sender-side discard only. Once a byte is written to the socket, TCP will deliver it. | Exact. A DATAGRAM is sent once and never retransmitted. |
+| Mode | Inline framing over TCP | `opc.quic` | `opc.wss3` outer profile |
+|---|---|---|---|
+| `ReliableOrdered` | Exact. TCP already provides it. | Exact. One QUIC stream provides it. | Exact. One WebSocket over one HTTP/3 stream provides it. |
+| `ReliableUnordered` | Every frame arrives; the receiver may deliver frames to the application without waiting to restore order. Over TCP this saves buffering, not latency. | Carried on the channel's QUIC stream. Delivery is ordered by the transport; the receiver is relieved of reassembly buffering but gains no latency. | Carried on the channel's WebSocket. Delivery is ordered by the transport; the receiver is relieved of reassembly buffering but gains no latency. |
+| `PartiallyReliable` | Sender-side: a droppable frame still queued at its deadline is discarded. `MaxRetransmits` has no effect, because TCP owns retransmission. | Retransmission over DATAGRAM up to `MaxRetransmits` or the deadline, then abandoned. | Retransmission over HTTP Datagrams where available; otherwise sender-side discard as for inline framing. |
+| `Unreliable` | Sender-side discard only. Once a byte is written to the socket, TCP will deliver it. | Exact. A DATAGRAM is sent once and never retransmitted. | Exact only where HTTP Datagrams are available; otherwise sender-side discard only. |
 
-The plain summary for inline framing is that **loss happens in the send queue, not on the wire**. That is a real and useful property — it bounds latency and discards stale media in favour of fresh media — and it is what a TCP-based media path can offer. A Server that needs genuine in-flight loss offers an `opc.quic` endpoint and says so through `SupportsUnreliableDatagrams`.
+The plain summary for inline framing is that **loss happens in the send queue, not on the wire**. That is a real and useful property — it bounds latency and discards stale media in favour of fresh media — and it is what a TCP-based media path can offer. A Server that needs genuine in-flight loss offers an `opc.quic` or `opc.wss3` endpoint and says so through `SupportsUnreliableDatagrams`.
 
 A sender **shall** apply deadline expiry only to frames carrying `Droppable`. A frame without that flag is transmitted however late it is.
 
@@ -378,7 +381,7 @@ The following are normative consequences:
 - The two entry paths into `Closing` differ deliberately. Entering through this peer's own `END` means the drain has already happened, so no `DATA` may follow. Entering through `CloseDataChannel` with `deleteQueued` `False` means the drain is the point, so queued `DATA` still flows until `END`.
 - `DrainTimeout` bounds a peer's own drain in a direction it has decided to close — the interval between that decision and its own `END` in that direction. It does **not** bound the wait for the peer's reverse `END`, which `PingTimeout` covers. A `Bidirectional` channel on which one end half-closes while the other is still legitimately sending a long upload must not be destroyed five seconds later; the uploader never entered `Closing` at all.
 - `CloseDataChannel` with `deleteQueued` `True` is realized as a `RESET` carrying `Good` and therefore reaches `Closed` by that row, on both peers.
-- Over `opc.quic` there are no `CREDIT` frames (§5.8, §7.4), so `Paused` is entered when the channel's QUIC stream or the QUIC connection is flow-control blocked, and left when it unblocks.
+- Over `opc.quic` and the outer-protocol profile of `opc.wss3` there are no `CREDIT` frames (§5.8, §7.4, §8.4), so `Paused` is entered when the channel's QUIC stream, HTTP/3 stream, WebSocket send path or connection is flow-control blocked, and left when it unblocks.
 - A `DataChannelStateChangeEventType` Event **shall** be raised for every transition **except** `Open` ⇄ `Paused`, which a Server **shall** report at no more than one Event per channel per second and which is otherwise observed through the `CreditStalls` counter of `DataChannelDiagnosticsDataType`. Without this ceiling a saturated media channel would generate an Event per credit stall — an Event storm at frame rate, on the very Subscription path §5.7 exists to protect.
 
 ### 5.14 Timeouts
@@ -446,7 +449,7 @@ else:
         max(half the last grant, MaxFrameSize):  emit CREDIT         # §5.8.2
 ```
 
-**Buffer sizing.** `InitialCredit` **should** be at least the bandwidth-delay product of the path — the channel's expected rate multiplied by the round trip measured by `PING`/`PONG` — because a window smaller than that caps throughput at `InitialCredit` / RTT regardless of available bandwidth. `MaxFrameSize` trades per-frame overhead against latency and loss granularity: the 36-byte inline and 24-byte QUIC overheads of §5.5 are amortized better by large frames, while a small frame lowers the time an urgent frame waits behind the one in front of it and reduces what a single loss destroys. For media over `opc.quic` the frame size **should** be chosen so that a whole frame fits one QUIC DATAGRAM without IP fragmentation, which is what fixes the 1200-byte figure used in the worked example of the combined specification.
+**Buffer sizing.** `InitialCredit` **should** be at least the bandwidth-delay product of the path — the channel's expected rate multiplied by the round trip measured by `PING`/`PONG` — because a window smaller than that caps throughput at `InitialCredit` / RTT regardless of available bandwidth. `MaxFrameSize` trades per-frame overhead against latency and loss granularity: the 36-byte inline and 24-byte QUIC or WebSocket-over-HTTP/3 overheads of §5.5 are amortized better by large frames, while a small frame lowers the time an urgent frame waits behind the one in front of it and reduces what a single loss destroys. For media over `opc.quic` or `opc.wss3` the frame size **should** be chosen so that a whole frame fits one QUIC DATAGRAM without IP fragmentation, which is what fixes the 1200-byte figure used in the worked example of the combined specification.
 
 ### 5.16 Interoperability with implementations that do not support data channels
 
@@ -476,11 +479,11 @@ Because a capable peer never speaks first, a capable and a legacy implementation
 
 ### 6.1 OPC UA TCP
 
-No change to OPC 10000-6 §7.2 is required. A `STR` frame is a MessageChunk and is written to the socket exactly as `MSG` chunks are. The URL scheme remains `opc.tcp` and the TransportProfileUri is unchanged. Reverse connect (§7.1.3) is likewise unchanged and fully supported: it alters only which peer opens the socket, and every rule in clause 5 is expressed in terms of the SecureChannel rather than of who dialled whom.
+No change to OPC 10000-6 §7.2 is required. A `STR` frame is a MessageChunk and is written to the socket exactly as `MSG` chunks are. The URL scheme remains `opc.tcp` and the TransportProfileUri is unchanged. Reverse connect (§7.1.3) is likewise unchanged and fully supported: it alters only which peer opens the socket, and every rule in clause 5 is expressed in terms of the SecureChannel rather than of who dialled whom. Every data channel opened on that SecureChannel rides the one socket the Server opened; no inbound Server port is required or opened for the data channels themselves.
 
 ### 6.2 WebSockets
 
-No change to OPC 10000-6 §7.5 is required. Under the `opcua+uacp` sub-protocol each WebSocket binary frame is one MessageChunk, and a `STR` frame is one MessageChunk, so it is one WebSocket binary frame. No new sub-protocol is registered, and reverse connect behaves as in §6.1.
+No change to OPC 10000-6 §7.5 is required. Under the `opcua+uacp` sub-protocol each WebSocket binary frame is one MessageChunk, and a `STR` frame is one MessageChunk, so it is one WebSocket binary frame. No new sub-protocol is registered, and reverse connect behaves as in §6.1: every data channel opened on that SecureChannel is multiplexed onto the one WebSocket connection the Server opened, with no inbound Server port opened for the data channels themselves.
 
 ### 6.3 HTTPS and SOAP/HTTP
 
@@ -689,9 +692,94 @@ The TLS obligations of §7.6.1 follow the TLS role, so under reverse connect it 
 
 Nothing else changes. Reverse connect is a property of how the connection is established, and every rule in clause 5 is expressed in terms of the SecureChannel and the data channel rather than of who dialled whom — including §5.16, whose "a capable peer never speaks first" rule is about `STR` frames and is untouched by the Server sending `RHE` first at the transport layer.
 
+Every data channel opened on that SecureChannel rides the one connection the Server opened. The Server does not listen on an inbound port for the SecureChannel, and it **shall not** open or require any inbound port for the data channels themselves; they are multiplexed onto the connection that already exists. That is the whole point of this transport restated in the topology where no alternative connection can exist at all: a deployment behind a one-way firewall or NAT can stream continuous media out of a Server that listens on nothing.
+
 A Server **shall not** require QUIC for any capability it also exposes over `opc.tcp`, and **shall** report through `SupportsUnreliableDatagrams` whether genuine loss is available, so a Client learns the difference by reading rather than by measuring.
 
-## 8 Conformance units
+## 8 WebSocket over HTTP/3
+
+### 8.1 Overview
+
+This clause defines `opc.wss3`, an OPC UA transport in which the control conversation and each data channel are carried by WebSockets bootstrapped over HTTP/3 with Extended CONNECT (RFC 9220). It is an **outer-protocol binding**, not the inline WebSocket binding of §6.2, because the carrier itself has streams: each WebSocket occupies one HTTP/3 stream, and each HTTP/3 stream is one QUIC stream underneath it. Using one WebSocket per data channel therefore preserves the same per-channel head-of-line freedom that §7 obtains directly from QUIC, while still looking like HTTP-originated traffic to the path.
+
+The value over `opc.quic` is deployment, not a different application model. A Client selects `opc.wss3` when the path permits only HTTP-originated traffic, when an enterprise requires HTTP/3 policy and observability points, or when existing HTTP infrastructure is the only approved way to reach the endpoint. That infrastructure is useful only while it does not terminate the TLS connection in violation of §8.6; an HTTP/3 reverse proxy that terminates TLS is an OPC UA security boundary, not a transparent router.
+
+### 8.2 URL scheme, ALPN and discovery
+
+| Item | Value |
+|---|---|
+| URL scheme | `opc.wss3` |
+| TransportProfileUri | `http://opcfoundation.org/UA-Profile/Transport/wss3-uasc-uabinary` |
+| ALPN protocol identifier | `h3` |
+| Default port | 443 (UDP, unless the EndpointUrl specifies another port) |
+| WebSocket sub-protocol | `opcua+uacp` |
+| Encoding | OPC UA Binary, as for `opc.tcp` |
+
+A Server that offers this transport **shall** return an `EndpointDescription` whose `EndpointUrl` uses the `opc.wss3` scheme and whose `TransportProfileUri` is the value above. A Client **shall** select that endpoint from `GetEndpoints` before connecting; it **shall not** discover `opc.wss3` by attempting an HTTP/3 or WebSocket handshake against an `opc.wss` or `opc.quic` endpoint. Separating the profile at discovery time is what lets a Client apply policy — including §8.6 and §8.8 — before it exposes credentials or channel state to the path.
+
+ALPN negotiation is HTTP/3's. A Client **shall** negotiate `h3` and **shall** abandon the connection if HTTP/3 is not selected, because the stream and datagram rules of this clause do not exist on HTTP/1.1 or HTTP/2. The HTTP/3 origin is the host and port of the `EndpointUrl`; the WebSocket path component, if present, identifies the OPC UA endpoint behind that origin and **shall** be preserved in every Extended CONNECT that belongs to the SecureChannel.
+
+### 8.3 Connection establishment and the control WebSocket
+
+The control WebSocket is established first, by an HTTP/3 Extended CONNECT request using RFC 9220. The request **shall** carry `:method = CONNECT`, `:protocol = websocket`, the authority and path of the selected `EndpointUrl`, and `sec-websocket-protocol = opcua+uacp`. The HTTP/3 peer **shall** support the RFC 8441 `SETTINGS_ENABLE_CONNECT_PROTOCOL` semantics as adapted by RFC 9220, and a peer that did not receive that permission **shall not** send Extended CONNECT. Without that explicit setting, a CONNECT stream could mean an ordinary tunnel rather than a WebSocket, and the receiver would not know which framing to apply.
+
+The `opcua+uacp` WebSocket carries the UACP and Secure Conversation conversation — `HEL`, `ACK`, `ERR`, `OPN`, `MSG`, `CLO` — byte for byte as it appears over `opc.wss`. The HTTP/3 connection is the TransportConnection; the SecureChannel is established on the control WebSocket by `OpenSecureChannel` exactly as today. `Hello` and `Acknowledge` are exchanged unchanged. Their `ReceiveBufferSize` and `SendBufferSize` continue to bound MessageChunks on the control WebSocket; a data channel frame is bounded by the smaller of `revisedParameters.MaxFrameSize` and the WebSocket, HTTP/3 stream or datagram limit that carries it.
+
+Losing the control WebSocket **shall** be treated as losing the SecureChannel: every data channel WebSocket and every data channel bound to the HTTP/3 connection is aborted. A data channel WebSocket **shall not** be accepted before the control WebSocket has completed `OpenSecureChannel`, because before that point there is no authenticated SecureChannel or Session that can authorize the channel.
+
+### 8.4 Stream mapping
+
+Each data channel in the outer profile is bound at open to one WebSocket, whose HTTP/3 stream identifier is carried in `transportChannelId`. Because RFC 9220 bootstraps a WebSocket by an HTTP request, the peer acting as the **HTTP/3 client** opens the data WebSocket for every `DataChannelDirection`; the data direction controls who writes payload, not who can issue Extended CONNECT:
+
+| Direction | WebSocket and HTTP/3 stream | Normal connection opener | Reverse-connect opener | Where `transportChannelId` is carried |
+|---|---|---|---|---|
+| `SourceToSink` | Data WebSocket on a bidirectional HTTP/3 request stream | OPC UA Client | OPC UA Server | Normal: request, echoed in response. Reverse connect: response. |
+| `SinkToSource` | Data WebSocket on a bidirectional HTTP/3 request stream | OPC UA Client | OPC UA Server | Normal: request, echoed in response. Reverse connect: response. |
+| `Bidirectional` | Data WebSocket on a bidirectional HTTP/3 request stream | OPC UA Client | OPC UA Server | Normal: request, echoed in response. Reverse connect: response. |
+
+The identifier space is the HTTP/3 stream id, not a WebSocket-local number. The HTTP/3 client **shall** open the data WebSocket with Extended CONNECT before the identifier is carried in `OpenDataChannel`, and neither peer **shall** write any data channel frame to it until the `OpenDataChannel` response carrying the ChannelId has been handed to the transport. On a normal connection a Server **shall** return `Bad_DataChannelLimitsExceeded` if a request over `opc.wss3` omits `transportChannelId`, and **shall** echo the validated value in `revisedTransportChannelId`. Under reverse connect the Server is the HTTP/3 client, so it **shall** open the WebSocket before responding and **shall** carry the validated HTTP/3 stream id in `revisedTransportChannelId`. The response parameter is therefore always the authoritative name of the WebSocket bound to the channel.
+
+A Server **shall** validate `transportChannelId` before it binds a channel, and **shall** reject the request with `Bad_DataChannelLimitsExceeded` unless the HTTP/3 stream is open on the connection carrying the control WebSocket, was opened by the OPC UA peer required by the table, carries a WebSocket negotiated with `sec-websocket-protocol = opcua+uacp`, is not the control WebSocket, and is not already bound to another data channel. A Server **shall not** rebind a stream identifier that has been bound and released while the SecureChannel is open. A receiver that observes an unexpected identifier, or a frame on a WebSocket whose stream identifier is already bound to another channel, **shall** treat it as a protocol error on that data channel and **shall not** deliver the frame to any channel named by the frame's `ChannelId`. This is the same safety rule as §7.4: the transport binding is authoritative because `ChannelId` is redundant and attacker-controlled once the wrong stream is accepted.
+
+A WebSocket message carries exactly one frame in QUIC framing: the Message header followed directly by the stream header, payload and nothing else. The symmetric security header, sequence header and message footer are omitted under the `TransportSecured` profile for the same reason as §7.4: HTTP/3 is QUIC, and QUIC's TLS 1.3 record layer authenticates and encrypts the bytes of every stream. Because HTTP/3 and QUIC apply their own stream and connection flow control, `CREDIT` frames **shall not** be sent over the outer profile of `opc.wss3`, and a receiver **shall** ignore one.
+
+A WebSocket close with normal closure **shall** be read as `END` for that WebSocket's sending direction, and an abnormal close whose application status carries a StatusCode **shall** be read as `RESET` with that StatusCode. Closing a data channel **shall** close its WebSocket; `RESET` **shall** be realized as an abortive WebSocket close where the WebSocket and HTTP/3 APIs expose one, or by closing the HTTP/3 stream with an application error code carrying the StatusCode where they do not. Where the whole SecureChannel is being torn down, the HTTP/3 connection **shall** be closed so that every stream ends together.
+
+### 8.5 Unreliable delivery
+
+Genuine in-flight loss over `opc.wss3` requires HTTP Datagrams (RFC 9297) associated with the data WebSocket's HTTP/3 stream. When the negotiated delivery mode is `Unreliable`, or `PartiallyReliable` and both ends have advertised and accepted HTTP Datagrams for that stream, `DATA` frames **shall** be sent as HTTP Datagrams rather than as WebSocket messages. Control frames always use the WebSocket, so `RESET` and `END` are never lost.
+
+A datagram carries exactly one frame in QUIC framing, and the frame **shall** fit the datagram size the HTTP/3 stack is willing to send for that stream. Fragmenting a frame across HTTP Datagrams is **not** permitted, for the same reason as §7.5: one lost fragment would destroy a frame that otherwise might have been useful.
+
+Where the HTTP/3 platform, intermediary policy or peer settings do not make HTTP Datagrams available, `SupportsUnreliableDatagrams` **shall** be `False` for `opc.wss3`. In that case a Server **shall not** claim genuine unreliable datagram support, and the lossy modes degrade to the inline semantics of §5.9: droppable frames may be discarded before they are written, `GAP` reports the sender-side discard, and bytes already written to the WebSocket are delivered reliably and in order. A Server **shall** reject a request that requires genuine in-flight loss with `Bad_DeliveryModeUnsupported` rather than silently promising loss that the platform cannot deliver.
+
+> **Implementation note — HTTP Datagram availability.** Some HTTP/3 and WebSocket APIs expose Extended CONNECT but not HTTP Datagrams associated with the WebSocket stream, and some managed HTTP infrastructures disable datagrams even when QUIC is available. Such a stack can still conform to the `opc.wss3` transport by advertising `SupportsUnreliableDatagrams` as `False` and using sender-side discard for lossy modes; it cannot conform to the unreliable datagram conformance unit until the platform exposes RFC 9297 on the stream.
+
+### 8.6 Security
+
+HTTP/3 is TLS 1.3 over QUIC, so the TLS-peer-to-OPC-UA-peer key binding of §7.6.1 applies unchanged to `opc.wss3`, including the mutual obligation and the exporter binding where the TLS stack exposes RFC 8446 §7.5. The exporter label remains `EXPORTER-opcua-quic`, because the exporter binds the same QUIC TLS connection to the same OPC UA SecureChannel; changing the label for an HTTP/3 carrier would make two otherwise identical bindings fail to interoperate without adding security. A peer that aborts for a key-equality failure **shall** generate `AuditSecurityEventType`, as §7.6.1 requires.
+
+The prohibition on TLS-terminating intermediaries in §7.6.1 applies here with more force, not less. An HTTP/3 deployment is exactly where a reverse proxy, CDN or policy gateway is likely to sit, and such an intermediary is precisely the party the key-equality check cannot admit: it presents its own TLS certificate on one side and talks to the OPC UA peer on the other, so it cannot make the TLS certificate, the selected `EndpointDescription` certificate and the `OpenSecureChannel` certificate carry one `subjectPublicKeyInfo`. An `opc.wss3` data channel **shall not** traverse an intermediary that terminates TLS. A deployment that requires TLS termination in HTTP infrastructure **shall** use inline framing over `opc.wss` or `opc.tcp` with end-to-end UA-SC message security, or another profile that explicitly secures the payload end to end; it **shall not** call the terminated HTTP/3 path conformant to this clause.
+
+Certificate rotation, revocation, ticket invalidation and resumed-connection identity follow §7.6.2. A peer **shall** apply those rules to the HTTP/3 TLS connection exactly as it applies them to `opc.quic`, because the binding is per TLS connection and every control and data WebSocket on that connection inherits it.
+
+### 8.7 Reverse connect
+
+Reverse connect over `opc.wss3` keeps the OPC UA rule of §7.10 and changes only the carrier. The **Server** opens the HTTP/3 connection to the Client's configured listener, negotiates `h3`, establishes the control WebSocket with Extended CONNECT, and sends `RHE` on that WebSocket. The Client replies `HEL` on the same WebSocket and §8.3 applies from there unchanged. Because the Server initiated the HTTP/3 connection, the TLS roles invert exactly as in §7.10: the Client is the TLS server, and §8.6 binds the Client's TLS certificate to the Client certificate in `OpenSecureChannel` while also requiring the reciprocal Server certificate check.
+
+The data-channel mapping follows the HTTP/3 role. In a normal connection the OPC UA Client is the HTTP/3 client and therefore opens the control WebSocket and every data WebSocket with Extended CONNECT. Under reverse connect the OPC UA Server is the HTTP/3 client and performs those Extended CONNECT requests instead. An implementation **shall** evaluate the table of §8.4 against the HTTP/3 role in force, because RFC 9220 gives only that role the mechanism that creates a WebSocket; the `DataChannelDirection` determines the permitted payload direction after the WebSocket exists.
+
+Every data channel opened on that SecureChannel rides the one HTTP/3 connection the Server opened. The Server does not listen on an inbound port for the SecureChannel, and it **shall not** open or require any inbound port for the data WebSockets themselves; they are multiplexed onto the HTTP/3 connection that already exists. A Server behind a one-way firewall or NAT can therefore stream continuous media out over `opc.wss3` while listening on nothing.
+
+### 8.8 Fallback and the inline profile
+
+A Client that cannot establish the outer `opc.wss3` profile — for example because HTTP/3 is blocked, Extended CONNECT is unavailable, or policy forbids multiple WebSockets — **may** fall back to an inline `opc.wss3` profile that carries the clause 5 framing inside the control WebSocket. In that profile the control WebSocket is the only WebSocket, every `STR` frame is one binary WebSocket message under `opcua+uacp`, `transportChannelId` is `0` in both directions, `CREDIT` frames are used exactly as in §6, and the semantics are those of inline framing. The profile exists so an HTTP/3-only path can still carry data channels when it cannot expose one HTTP/3 stream per channel.
+
+The inline profile is a fallback profile, not a silent reinterpretation of the same endpoint. A Server that supports it **shall** advertise a distinct TransportProfileUri, `http://opcfoundation.org/UA-Profile/Transport/wss3-inline-uasc-uabinary`, on the same `opc.wss3` URL scheme, and a Client **shall** select it from `GetEndpoints` before connecting. Without a distinct profile, a Client that required per-channel HTTP/3 streams would discover the downgrade only after it had already opened the SecureChannel.
+
+Fallback **shall not** silently reduce payload confidentiality. The rule of §7.9 applies unchanged: a Client **shall not** fall back from `opc.wss3` outer framing to inline framing, whether over `opc.wss3`, `opc.wss` or `opc.tcp`, unless the endpoint selected for fallback applies `SignAndEncrypt` to the data channel payload. HTTP/3 TLS protects every outer-profile frame regardless of SecureChannel `SecurityMode`; inline framing with `Sign` authenticates payload but leaves it visible to the path. Treating those as equivalent would make a blocked HTTP/3 feature a confidentiality downgrade.
+
+## 9 Conformance units
 
 | Conformance unit | Requires | Content |
 |---|---|---|
@@ -700,12 +788,14 @@ A Server **shall not** require QUIC for any capability it also exposes over `opc
 | Data Channel Partial Reliability | Data Channel Framing | The `Droppable` flag, `Deadline`, sender-side expiry and per-run `GAP` emission (§5.9, §5.10). |
 | Data Channel QUIC Transport | Data Channel Framing | Clause 7 except §7.5: `opc.quic`, ALPN, control stream, per-channel QUIC streams and their stream-id ownership, the response-ordering rule, the `TransportSecured` profile, migration. |
 | Data Channel Unreliable Datagram | Data Channel QUIC Transport, Data Channel Partial Reliability | §7.5: `DATA` over QUIC DATAGRAM with genuine in-flight loss. |
+| Data Channel WebSocket HTTP/3 Transport | Data Channel Framing | Clause 8 except §8.5: `opc.wss3`, ALPN `h3`, Extended CONNECT, one WebSocket per data channel, HTTP/3 stream-id ownership, the `TransportSecured` profile and the inline fallback profile. |
+| Data Channel WebSocket HTTP/3 Datagram | Data Channel WebSocket HTTP/3 Transport, Data Channel Partial Reliability | §8.5: `DATA` over HTTP Datagrams with genuine in-flight loss where the platform exposes them. |
 
 Data Channel Framing plus Data Channel Inline Transport is the minimum implementation. The Part 4 and Part 3 errata define the Service and Model conformance units that build on these.
 
-### 8.1 Test assertions
+### 9.1 Test assertions
 
-A conformance unit is only useful if a laboratory can derive test cases from it, so each is decomposed into individually checkable assertions. Every one below is a receiver- or sender-observable behaviour required by a **shall** in clause 5, 6 or 7.
+A conformance unit is only useful if a laboratory can derive test cases from it, so each is decomposed into individually checkable assertions. Every one below is a receiver- or sender-observable behaviour required by a **shall** in clause 5, 6, 7 or 8.
 
 **Data Channel Framing**
 
@@ -793,9 +883,23 @@ A conformance unit is only useful if a laboratory can derive test cases from it,
 | DCQ-028 | Fallback preserves payload confidentiality | Block UDP and offer only an `opc.tcp` endpoint whose SecurityMode is `Sign`, having required `opc.quic` with `Sign` | The Client reports failure rather than falling back, because inline `Sign` leaves payload in the clear where `opc.quic` encrypted it (§7.9) |
 | DCQ-029 | The transport binding cannot be silently declined | Request the binding, then answer without the `TransportBindingDataType` in the response | The Client aborts where it has previously observed the Server to support it, and records the unavailability otherwise (§7.6.1) |
 
+**Data Channel WebSocket HTTP/3 Transport**
+
+| Id | Assertion | Stimulus | Expected |
+|---|---|---|---|
+| DCW-001 | The scheme and profile are advertised distinctly | Call `GetEndpoints` on a Server that supports the transport | An `opc.wss3` `EndpointUrl` is returned with `http://opcfoundation.org/UA-Profile/Transport/wss3-uasc-uabinary`, distinct from `opc.wss` and `opc.quic` (§8.2) |
+| DCW-002 | Extended CONNECT bootstraps the control WebSocket | Attempt the transport without `h3`, without `SETTINGS_ENABLE_CONNECT_PROTOCOL` semantics, or without `sec-websocket-protocol = opcua+uacp` | The connection is abandoned before `HEL`/`ACK`; with all present, `HEL`/`ACK` are exchanged on the control WebSocket (§8.3) |
+| DCW-003 | One WebSocket is opened per data channel | Open one channel per direction | Each channel is bound to a distinct HTTP/3 stream id carried in `transportChannelId` or `revisedTransportChannelId` as §8.4 requires |
+| DCW-004 | A rebound stream identifier is rejected | Open a channel on a data WebSocket, then `OpenDataChannel` again naming the same HTTP/3 stream id | `Bad_DataChannelLimitsExceeded`, and the first channel is undisturbed (§8.4) |
+| DCW-005 | Datagram support is reported honestly | Run on a platform or path where HTTP Datagrams are unavailable | `SupportsUnreliableDatagrams` is `False`; lossy modes use sender-side discard or requests requiring genuine loss fail with `Bad_DeliveryModeUnsupported` (§8.5) |
+| DCW-006 | The TLS certificate is key-bound to the OPC UA identity | Present a valid TLS certificate from an accepted CA carrying the Server's `ApplicationUri` but a different key | Client aborts the SecureChannel: `subjectPublicKeyInfo` must match the `EndpointDescription` and `OpenSecureChannel` certificates (§8.6, mirroring DCQ-007) |
+| DCW-007 | A TLS-terminating intermediary is refused | Place a reverse proxy or CDN that terminates HTTP/3 TLS between the peers | The key-equality check fails and the SecureChannel is aborted; the deployment is not treated as conformant `opc.wss3` (§8.6) |
+| DCW-008 | Reverse connect uses the Server-opened HTTP/3 connection only | Establish by reverse connect and open data channels | Every data WebSocket is multiplexed on the HTTP/3 connection the Server opened; no inbound Server port is opened (§8.7) |
+| DCW-009 | Inline fallback is not a confidentiality downgrade | Block outer-profile data WebSockets and offer only an inline fallback endpoint whose SecurityMode is `Sign` | Client reports failure rather than falling back, because inline `Sign` leaves payload in the clear (§8.8) |
+
 DCF-015 and DCF-016 fail only under load, which is what makes them the assertions that most often distinguish a conforming implementation from one that merely interoperates in the laboratory. DCF-016 checks the anti-starvation `shall` of §5.7 obligation 2 rather than a particular bandwidth ratio, because the (`Priority` + 1) × `MaxFrameSize` quantum that would fix the ratio is a `should` and a laboratory cannot fail an implementation on a recommendation. `OpenTimeout` has no assertion of its own: §5.13 ends `Opening` when the Server hands its own response to the transport, so no external harness can stall it.
 
-## 9 Insertion into OPC 10000-6 v1.05.07
+## 10 Insertion into OPC 10000-6 v1.05.07
 
 | Draft clause | Target clause in OPC 10000-6 | Notes |
 |---|---|---|
@@ -809,15 +913,16 @@ DCF-015 and DCF-016 fail only under load, which is what makes them the assertion
 | §5.14 timeouts | New `6.7.12 Data channel timeouts` | The four named constants and their defaults. |
 | §5.15 algorithms | A new informative annex of OPC 10000-6 | Sender and receiver algorithms and buffer-sizing guidance; informative, and marked as such. |
 | §5.16 interoperability | New `6.7.13 Data channel interoperability`, cross-referenced from `6.7.2.2` | The rule that a capable peer never sends a `STR` frame before a successful `OpenDataChannel`, and the behaviour of both asymmetric pairings and of intermediaries. Belongs beside the `MessageType` table, because an unrecognized `MessageType` closing the SecureChannel is what makes it necessary. |
-| §6.1 | `7.2 OPC UA TCP` | No normative change; a note that `STR` chunks are carried like `MSG` chunks. |
-| §6.2 | `7.5 WebSockets` | No normative change; a note that a `STR` frame is one binary WebSocket frame under `opcua+uacp`. No new sub-protocol. |
+| §6.1 | `7.2 OPC UA TCP` | A note that `STR` chunks are carried like `MSG` chunks, plus the reverse-connect consequence that data channels ride the one Server-opened socket and require no inbound Server port. |
+| §6.2 | `7.5 WebSockets` | A note that a `STR` frame is one binary WebSocket frame under `opcua+uacp`, no new sub-protocol, plus the same single-connection reverse-connect consequence as §6.1. |
 | §6.3 | `7.4 OPC UA HTTPS` | A statement that data channels are not available over this transport. |
 | Clause 7 | New `7.7 OPC UA QUIC` | The complete new transport, parallel in structure to `7.2 OPC UA TCP` and `7.5 WebSockets`. It is appended after `7.6 Well known addresses`, which already occupies `7.6`; the editor may renumber. The QUIC well-known LDS address is added to Table 82 in `7.6`, and the TransportProfileUri is registered in OPC 10000-7. |
 | §7.6.2 certificate rotation | A subclause of the new QUIC clause | The per-connection binding, the closure obligation on activation, revocation binding the verifier as well as the holder, and the treatment of TLS session resumption. This clause interacts with certificate management outside OPC 10000-6: the staged-activation question it raises requires the editor to consult OPC 10000-12, whose apply-changes behaviour forces existing SecureChannels to move to a new certificate, and OPC 10000-4, which requires the certificate to be verified at each SecurityToken renewal. |
-| §7.10 reverse connect | `7.1.3 Reverse connect`, plus a subclause of the new QUIC clause | A note that reverse connect applies to `opc.quic`, and the statement that the OPC UA Server holds the QUIC client role there — which inverts the QUIC stream types of §7.4 without changing the OPC UA roles, and moves the TLS server certificate to the Client for §7.6.1. |
-| §8 conformance units | OPC 10000-7 | New conformance units and the Profiles that group them. |
+| §7.10 reverse connect | `7.1.3 Reverse connect`, plus a subclause of the new QUIC clause | A note that reverse connect applies to `opc.quic`, and the statement that the OPC UA Server holds the QUIC client role there — which inverts the QUIC stream types of §7.4 without changing the OPC UA roles, moves the TLS server certificate to the Client for §7.6.1, and states that all data channels ride the single Server-opened connection. |
+| Clause 8 | New `7.8 OPC UA WebSocket over HTTP/3` | The complete new `opc.wss3` transport: ALPN `h3`, RFC 9220 Extended CONNECT, one WebSocket per data channel on its own HTTP/3 stream, optional HTTP Datagrams, the inherited TLS peer binding, reverse connect and the inline fallback profile. The editor may choose the final clause number if the QUIC insertion is numbered differently. The TransportProfileUri values are registered in OPC 10000-7. |
+| §9 conformance units | OPC 10000-7 | New conformance units and the Profiles that group them, including `Data Channel WebSocket HTTP/3 Transport` and `Data Channel WebSocket HTTP/3 Datagram`. |
 
-The `STR` MessageType, the ALPN identifier and the frame type and flag values are the items an editor must confirm are free before adoption; all are chosen from currently unassigned space. The clause number for the new transport is **not** free — `7.6` is `Well known addresses` in v1.05.07 — so the transport is proposed as `7.7` and the editor assigns the final number.
+The `STR` MessageType, the `opc.quic` ALPN identifier, the `opc.wss3` TransportProfileUri values and the frame type and flag values are the items an editor must confirm are free before adoption; all are chosen from currently unassigned space. The clause number for the new transports is **not** free — `7.6` is `Well known addresses` in v1.05.07 — so the transports are proposed as `7.7` and `7.8` and the editor assigns the final numbers.
 
 ## Annex A — Rejected alternatives (informative)
 

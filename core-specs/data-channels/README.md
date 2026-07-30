@@ -22,16 +22,19 @@ It is written as an **errata package** against three core Parts. OPC UA today ha
 - `..\extras\data-channels\tools\validate_local.py` — wire tooling acceptance gate.
 - `..\extras\data-channels\examples\` — the generated `.hex.txt` wire vectors.
 
-## Two transports, one contract
+## Three transports, one contract
 
-| | Inline framing (`opc.tcp`, `opc.wss`) | `opc.quic` |
-|---|---|---|
-| Deployment | Every deployed endpoint, no new port | New transport |
-| Multiplexing | Interleaved frames, never chunked | One QUIC stream per channel |
-| Genuine loss | No — lossy modes become sender-side discard | Yes, over QUIC DATAGRAM |
-| Path change | Kills the connection | Survives, via connection migration |
+| | Inline framing (`opc.tcp`, `opc.wss`) | `opc.quic` | `opc.wss3` |
+|---|---|---|---|
+| Deployment | Every deployed endpoint, no new port | New transport | New transport, HTTP/3 carrier |
+| Multiplexing | Interleaved frames, never chunked | One QUIC stream per channel | One WebSocket per channel, each an HTTP/3 stream |
+| Genuine loss | No — lossy modes become sender-side discard | Yes, over QUIC DATAGRAM | Only where HTTP Datagrams are available |
+| Path change | Kills the connection | Survives, via connection migration | Survives, via connection migration |
+| Reaches through | Anything that permits the port | Anything that permits UDP | Anything that permits HTTP/3 |
 
-The Services and the information model are identical on both, so an application is written once and a Client that cannot use QUIC falls back without changing a line.
+The Services and the information model are identical on all three, so an application is written once and a Client that cannot use one transport falls back without changing a line.
+
+Measured throughput for the inline and QUIC transports is in [the throughput report](../extras/performance/OPC-UA-Data-Channel-Throughput.md).
 
 ## Regenerate and validate
 
