@@ -123,12 +123,12 @@ shape; a new shape is code.**
 OPC 20020 is the *UA Companion Specification Template*. Before writing a config, read what the
 document says it is. Three signals decide it, and the NodeSet settles the argument:
 
-* **`ModelUri`.** A companion specification owns a namespace. Data Channels declares
+- **`ModelUri`.** A companion specification owns a namespace. Data Channels declares
   `http://opcfoundation.org/UA/` — the *base* namespace — because it proposes additions to
   OPC 10000-3, -4 and -6. That is core errata wearing a specification's clothes.
-* **What the header claims.** "Proposed addition to OPC 10000-6" is not a companion
+- **What the header claims.** "Proposed addition to OPC 10000-6" is not a companion
   specification, however complete the document is.
-* **Whether an insertion clause exists.** A document ending in "Insertion into OPC 10000-4
+- **Whether an insertion clause exists.** A document ending in "Insertion into OPC 10000-4
   v1.05.07" is tracked-change text for an existing Part; it has no template shape at all and
   should not be converted.
 

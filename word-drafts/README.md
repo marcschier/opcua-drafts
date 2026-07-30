@@ -99,12 +99,12 @@ OPC 10000-3, -4 and -6, and its NodeSet declares `ModelUri = http://opcfoundatio
 Nodes live in the base namespace. It is rendered without a declared deviation — the NamespaceUri in
 Annex A genuinely *is* that — but only because three things were made true first:
 
-* `IsNamespaceSubset` is `True`, since the file holds this document's additions and not the whole
+- `IsNamespaceSubset` is `True`, since the file holds this document's additions and not the whole
   base namespace. It used to be hard-coded `False` with prose to match, which here would have been
   a plain untruth.
-* `StaticNumericNodeIdRange` is derived from the model (`65000:66038`) instead of the constant
+- `StaticNumericNodeIdRange` is derived from the model (`65000:66038`) instead of the constant
   `1001:9999`, which was wrong for six of the other eight documents too.
-* A base BrowseName prints unprefixed, because a document whose own namespace *is* namespace 0
+- A base BrowseName prints unprefixed, because a document whose own namespace *is* namespace 0
   would otherwise show the same namespace two ways in one table.
 
 The three insertion-ready errata beside it (`OPC-UA-Part3/4/6-*.md`) are tracked-change text against
