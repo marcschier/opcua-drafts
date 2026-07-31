@@ -701,14 +701,20 @@ def _source_commit(paths):
 
 
 def _source_digest(paths):
-    """A digest of the exact input bytes, so an edit since that commit is detectable."""
+    """A digest of the exact input content, so an edit since that commit is detectable.
+
+    Line endings are normalised first. Git stores LF and checks out whatever the platform
+    is configured for, so hashing raw bytes would make the digest say *this document was
+    built on a machine like mine* rather than *these are the sources it was built from* —
+    and every document would read as stale on any checkout with different line endings.
+    """
     h = hashlib.sha256()
     for path in sorted(paths):
         full = os.path.join(REPO, path)
         h.update(path.encode('utf-8'))
         try:
             with open(full, 'rb') as f:
-                h.update(f.read())
+                h.update(f.read().replace(b'\r\n', b'\n'))
         except OSError:
             h.update(b'\0missing')
     return h.hexdigest()[:16]

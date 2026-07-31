@@ -1,7 +1,7 @@
 {
   "specId": "arrow-encoding",
-  "sourceCommit": "d24b32b3bdf74e5a0d11145b06e8ad0cf8ad45e5",
-  "sourceDigest": "79588a096fe73eb5",
+  "sourceCommit": "711ab328705b248308f60bfc0def036324917c7b",
+  "sourceDigest": "571390c21060ad32",
   "pipelineVersion": "2",
   "sources": [
     "word-drafts/tools/specs/arrow-encoding.json",
@@ -175,6 +175,9 @@
     "007DD302": {
       "owner": "template"
     },
+    "00827706": {
+      "owner": "template"
+    },
     "0084552C": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -273,9 +276,6 @@
       "block": 3,
       "para": 372
     },
-    "00CF3F50": {
-      "owner": "template"
-    },
     "00D26E94": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -318,6 +318,9 @@
       "block": 1,
       "para": 33
     },
+    "00F5AB79": {
+      "owner": "template"
+    },
     "01032E4F": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -331,9 +334,6 @@
       "section": "Built-in Variant",
       "block": 1,
       "para": 420
-    },
-    "01170C77": {
-      "owner": "template"
     },
     "011DA4C9": {
       "owner": "template"
@@ -572,9 +572,6 @@
       "block": 1,
       "para": 46
     },
-    "01CA83DA": {
-      "owner": "template"
-    },
     "01CD75AE": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -650,9 +647,6 @@
       "section": "Built-in Variant",
       "block": 3,
       "para": 337
-    },
-    "01FEF6C3": {
-      "owner": "template"
     },
     "0202AA0B": {
       "owner": "markdown",
@@ -858,6 +852,9 @@
       "section": "Built-in DataValue",
       "block": 1,
       "para": 220
+    },
+    "02C4A9D7": {
+      "owner": "template"
     },
     "02CCF72D": {
       "owner": "markdown",
@@ -1108,6 +1105,9 @@
       "block": 3,
       "para": 398
     },
+    "03D26445": {
+      "owner": "template"
+    },
     "03E17671": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -1200,9 +1200,6 @@
       "section": "Built-in ExtensionObject",
       "block": 1,
       "para": 326
-    },
-    "04279E11": {
-      "owner": "template"
     },
     "042CD6B0": {
       "owner": "markdown",
@@ -1705,6 +1702,9 @@
       "block": 1,
       "para": 189
     },
+    "05FE923C": {
+      "owner": "template"
+    },
     "060ECD72": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -1920,6 +1920,9 @@
       "block": 1,
       "para": 1415
     },
+    "069F98D3": {
+      "owner": "template"
+    },
     "06A51077": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -2020,9 +2023,6 @@
       "block": 3,
       "para": 321
     },
-    "06E318A3": {
-      "owner": "template"
-    },
     "06EA0E71": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -2110,9 +2110,6 @@
       "block": 1,
       "para": 349
     },
-    "074EB79C": {
-      "owner": "template"
-    },
     "07674088": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -2196,9 +2193,6 @@
       "section": "Built-in Variant",
       "block": 1,
       "para": 1268
-    },
-    "07A99036": {
-      "owner": "template"
     },
     "07C51C07": {
       "owner": "markdown",
@@ -2544,9 +2538,6 @@
       "block": 1,
       "para": 86
     },
-    "08A0ECE7": {
-      "owner": "template"
-    },
     "08A4DE78": {
       "owner": "template"
     },
@@ -2702,6 +2693,9 @@
       "block": 1,
       "para": 525
     },
+    "093A0933": {
+      "owner": "template"
+    },
     "093C45BE": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -2722,9 +2716,6 @@
       "section": "Built-in ExtensionObject",
       "block": 1,
       "para": 39
-    },
-    "0948D727": {
-      "owner": "template"
     },
     "094D4BA2": {
       "owner": "generated",
@@ -2852,6 +2843,9 @@
       "block": 1,
       "para": 1102
     },
+    "09B85DDD": {
+      "owner": "template"
+    },
     "09C02AAF": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -2886,6 +2880,9 @@
       "section": "Built-in Variant",
       "block": 3,
       "para": 54
+    },
+    "09D43510": {
+      "owner": "template"
     },
     "09D60038": {
       "owner": "generated",
@@ -2974,9 +2971,6 @@
       "block": 1,
       "para": 1035
     },
-    "0A0F09DD": {
-      "owner": "template"
-    },
     "0A13AA61": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -3025,9 +3019,6 @@
       "block": 4,
       "para": 0
     },
-    "0A456A4D": {
-      "owner": "template"
-    },
     "0A4ABC26": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -3051,9 +3042,6 @@
       "section": "Built-in ExtensionObject",
       "block": 1,
       "para": 9
-    },
-    "0A65A4D9": {
-      "owner": "template"
     },
     "0A69DF73": {
       "owner": "markdown",
@@ -3117,6 +3105,9 @@
       "section": "Built-in DataValue",
       "block": 3,
       "para": 76
+    },
+    "0AA292A7": {
+      "owner": "template"
     },
     "0AA593F4": {
       "owner": "template"
@@ -3193,6 +3184,9 @@
       "section": "Built-in Variant",
       "block": 1,
       "para": 1012
+    },
+    "0AD15FF5": {
+      "owner": "template"
     },
     "0ADB7930": {
       "owner": "markdown",
@@ -3272,6 +3266,9 @@
       "section": "Built-in Int16",
       "block": 1,
       "para": 2
+    },
+    "0B1F57B9": {
+      "owner": "template"
     },
     "0B21DFFA": {
       "owner": "markdown",
@@ -3543,7 +3540,7 @@
       "block": 1,
       "para": 1308
     },
-    "0C13CE16": {
+    "0C15E66E": {
       "owner": "template"
     },
     "0C26E7AA": {
@@ -3653,9 +3650,6 @@
       "section": "Built-in DataValue",
       "block": 3,
       "para": 126
-    },
-    "0C9B619F": {
-      "owner": "template"
     },
     "0C9D277F": {
       "owner": "markdown",
@@ -3863,6 +3857,9 @@
       "block": 1,
       "para": 135
     },
+    "0D79AD05": {
+      "owner": "template"
+    },
     "0D7C68D6": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -3924,6 +3921,9 @@
       "section": "Composite StructureWithOptionalFields Person",
       "block": 1,
       "para": 13
+    },
+    "0DA32E86": {
+      "owner": "template"
     },
     "0DA3C8CF": {
       "owner": "markdown",
@@ -4196,6 +4196,9 @@
       "block": 1,
       "para": 1267
     },
+    "0E827244": {
+      "owner": "template"
+    },
     "0E896C78": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -4226,9 +4229,6 @@
       "section": "6.5 Part 14 configuration model mapping",
       "block": 2,
       "para": 2
-    },
-    "0E98D7CB": {
-      "owner": "template"
     },
     "0E9EECB9": {
       "owner": "markdown",
@@ -4393,9 +4393,6 @@
       "section": "Built-in ExtensionObject",
       "block": 1,
       "para": 32
-    },
-    "0F0E2E21": {
-      "owner": "template"
     },
     "0F11B236": {
       "owner": "markdown",
@@ -4685,6 +4682,9 @@
       "block": 1,
       "para": 9
     },
+    "0FEF46D3": {
+      "owner": "template"
+    },
     "0FF54A20": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -4893,9 +4893,6 @@
     "1081F186": {
       "owner": "template"
     },
-    "108AFD30": {
-      "owner": "template"
-    },
     "10974408": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -4930,9 +4927,6 @@
       "section": "Built-in Variant",
       "block": 1,
       "para": 270
-    },
-    "10A4000F": {
-      "owner": "template"
     },
     "10A8C2A8": {
       "owner": "markdown",
@@ -5320,6 +5314,9 @@
     "12312B1E": {
       "owner": "template"
     },
+    "123CC22B": {
+      "owner": "template"
+    },
     "12436F87": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -5369,9 +5366,6 @@
       "block": 1,
       "para": 709
     },
-    "127356E2": {
-      "owner": "template"
-    },
     "127B8EAA": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -5383,6 +5377,9 @@
       "owner": "template"
     },
     "127E3B0E": {
+      "owner": "template"
+    },
+    "127FABFE": {
       "owner": "template"
     },
     "128953B4": {
@@ -5426,12 +5423,6 @@
       "section": "Built-in Variant",
       "block": 1,
       "para": 551
-    },
-    "129CD0B2": {
-      "owner": "template"
-    },
-    "129D8760": {
-      "owner": "template"
     },
     "12A8E5CE": {
       "owner": "markdown",
@@ -5500,6 +5491,9 @@
       "para": 8
     },
     "12D3BED8": {
+      "owner": "template"
+    },
+    "12DD6DF4": {
       "owner": "template"
     },
     "12E2B33D": {
@@ -5622,6 +5616,9 @@
       "section": "Built-in Variant",
       "block": 3,
       "para": 266
+    },
+    "135EBE24": {
+      "owner": "template"
     },
     "136923D8": {
       "owner": "markdown",
@@ -5863,9 +5860,6 @@
       "section": "Built-in DataValue",
       "block": 1,
       "para": 181
-    },
-    "143BA652": {
-      "owner": "template"
     },
     "143D2DB3": {
       "owner": "markdown",
@@ -6203,9 +6197,6 @@
     "152CD608": {
       "owner": "template"
     },
-    "1532C738": {
-      "owner": "template"
-    },
     "15377098": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -6418,15 +6409,15 @@
       "block": 1,
       "para": 258
     },
+    "1638B0E4": {
+      "owner": "template"
+    },
     "16396F57": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
       "section": "Built-in Variant",
       "block": 1,
       "para": 80
-    },
-    "163BBBAC": {
-      "owner": "template"
     },
     "1643749D": {
       "owner": "markdown",
@@ -6881,12 +6872,18 @@
       "block": 0,
       "para": 0
     },
+    "17E6D4AD": {
+      "owner": "template"
+    },
     "17E78EDB": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
       "section": "Built-in Variant",
       "block": 1,
       "para": 1363
+    },
+    "17E9A03C": {
+      "owner": "template"
     },
     "17EA6BE3": {
       "owner": "markdown",
@@ -6901,9 +6898,6 @@
       "section": "Built-in Variant",
       "block": 1,
       "para": 1559
-    },
-    "17F00400": {
-      "owner": "template"
     },
     "17F09754": {
       "owner": "template"
@@ -7018,6 +7012,9 @@
       "section": "Built-in Variant",
       "block": 1,
       "para": 1701
+    },
+    "183C848D": {
+      "owner": "template"
     },
     "183C96CD": {
       "owner": "markdown",
@@ -7140,9 +7137,6 @@
     "189A56F8": {
       "owner": "template"
     },
-    "189B4C0F": {
-      "owner": "template"
-    },
     "189F4DE2": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -7170,9 +7164,6 @@
       "section": "Built-in Variant",
       "block": 3,
       "para": 375
-    },
-    "18C18F9A": {
-      "owner": "template"
     },
     "18C49D47": {
       "owner": "markdown",
@@ -7299,9 +7290,6 @@
       "section": "Built-in DiagnosticInfo",
       "block": 3,
       "para": 11
-    },
-    "1938C4F7": {
-      "owner": "template"
     },
     "193A572E": {
       "owner": "generated",
@@ -7441,9 +7429,6 @@
       "block": 1,
       "para": 1018
     },
-    "19B2B0EF": {
-      "owner": "template"
-    },
     "19B40CB3": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -7485,6 +7470,9 @@
       "section": "Built-in Variant",
       "block": 3,
       "para": 180
+    },
+    "19E0BB01": {
+      "owner": "template"
     },
     "19E26DC2": {
       "owner": "markdown",
@@ -7537,9 +7525,6 @@
       "section": "Built-in Variant",
       "block": 1,
       "para": 346
-    },
-    "1A11160A": {
-      "owner": "template"
     },
     "1A180FB7": {
       "owner": "markdown",
@@ -7683,9 +7668,6 @@
       "block": 1,
       "para": 209
     },
-    "1AABFC39": {
-      "owner": "template"
-    },
     "1AB216CC": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -7706,6 +7688,12 @@
       "section": "4.3 Schema identity and reversibility",
       "block": 0,
       "para": 0
+    },
+    "1AC0203D": {
+      "owner": "template"
+    },
+    "1AC07624": {
+      "owner": "template"
     },
     "1AC527D1": {
       "owner": "markdown",
@@ -7784,6 +7772,9 @@
       "block": 1,
       "para": 0
     },
+    "1B2A6844": {
+      "owner": "template"
+    },
     "1B3878DD": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -7859,9 +7850,6 @@
       "section": "Built-in ExtensionObject",
       "block": 1,
       "para": 279
-    },
-    "1B62BF22": {
-      "owner": "template"
     },
     "1B672EDF": {
       "owner": "markdown",
@@ -7943,9 +7931,6 @@
       "block": 1,
       "para": 287
     },
-    "1BB21A69": {
-      "owner": "template"
-    },
     "1BB2C170": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -8024,6 +8009,9 @@
       "para": 447
     },
     "1BFDEC71": {
+      "owner": "template"
+    },
+    "1C0B4EEB": {
       "owner": "template"
     },
     "1C0C5D66": {
@@ -8141,9 +8129,6 @@
       "block": 3,
       "para": 254
     },
-    "1C61E32E": {
-      "owner": "template"
-    },
     "1C718517": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -8157,6 +8142,9 @@
       "section": "Worked structured DataType Envelope",
       "block": 1,
       "para": 36
+    },
+    "1C794722": {
+      "owner": "template"
     },
     "1C7968AC": {
       "owner": "markdown",
@@ -8193,9 +8181,6 @@
       "block": 5,
       "para": 0
     },
-    "1C873528": {
-      "owner": "template"
-    },
     "1C8AE963": {
       "owner": "template"
     },
@@ -8212,9 +8197,6 @@
       "section": "Built-in DiagnosticInfo",
       "block": 1,
       "para": 30
-    },
-    "1C8EB17A": {
-      "owner": "template"
     },
     "1C97B0A6": {
       "owner": "markdown",
@@ -8323,12 +8305,18 @@
       "block": 3,
       "para": 52
     },
+    "1CE65B28": {
+      "owner": "template"
+    },
     "1CE6D940": {
       "owner": "generated",
       "region": "scope",
       "index": 7,
       "kind": "para",
       "para": 0
+    },
+    "1CEB36BC": {
+      "owner": "template"
     },
     "1CF09B4B": {
       "owner": "markdown",
@@ -8374,6 +8362,9 @@
       "section": "Composite plain Structure Point",
       "block": 0,
       "para": 0
+    },
+    "1D197968": {
+      "owner": "template"
     },
     "1D1B2840": {
       "owner": "markdown",
@@ -8441,6 +8432,9 @@
       "block": 1,
       "para": 15
     },
+    "1D5B00BD": {
+      "owner": "template"
+    },
     "1D5FD512": {
       "owner": "template"
     },
@@ -8478,9 +8472,6 @@
       "section": "Composite dense Union Measurement",
       "block": 3,
       "para": 10
-    },
-    "1D9620D1": {
-      "owner": "template"
     },
     "1D97E370": {
       "owner": "generated",
@@ -8650,9 +8641,6 @@
       "owner": "template"
     },
     "1E1FA44F": {
-      "owner": "template"
-    },
-    "1E249922": {
       "owner": "template"
     },
     "1E25957E": {
@@ -9306,6 +9294,9 @@
     "207494B6": {
       "owner": "template"
     },
+    "2079CBEF": {
+      "owner": "template"
+    },
     "207B1722": {
       "owner": "generated",
       "region": "model-overview",
@@ -9375,9 +9366,6 @@
       "section": "Composite Array<String>",
       "block": 1,
       "para": 13
-    },
-    "20AD13B1": {
-      "owner": "template"
     },
     "20B6E321": {
       "owner": "markdown",
@@ -10250,9 +10238,6 @@
       "block": 5,
       "para": 4
     },
-    "2375C4E0": {
-      "owner": "template"
-    },
     "237B19AC": {
       "owner": "generated",
       "region": "namespaces",
@@ -10381,9 +10366,6 @@
       "block": 3,
       "para": 436
     },
-    "240BBDA7": {
-      "owner": "template"
-    },
     "240D6AAC": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -10405,15 +10387,18 @@
       "block": 1,
       "para": 172
     },
-    "24281313": {
-      "owner": "template"
-    },
     "2428E94B": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
       "section": "Built-in DataValue",
       "block": 3,
       "para": 225
+    },
+    "2429A4CF": {
+      "owner": "template"
+    },
+    "24334ED5": {
+      "owner": "template"
     },
     "243C01C4": {
       "owner": "markdown",
@@ -10609,9 +10594,6 @@
       "section": "Built-in ExpandedNodeId",
       "block": 3,
       "para": 2
-    },
-    "24FEE56D": {
-      "owner": "template"
     },
     "2500412A": {
       "owner": "markdown",
@@ -10975,9 +10957,6 @@
       "block": 1,
       "para": 1646
     },
-    "2614DC01": {
-      "owner": "template"
-    },
     "261A266C": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -11319,6 +11298,9 @@
     "270C2DF7": {
       "owner": "template"
     },
+    "270E0C50": {
+      "owner": "template"
+    },
     "270F8A71": {
       "owner": "template"
     },
@@ -11592,6 +11574,9 @@
       "section": "Composite Array<String>",
       "block": 3,
       "para": 1
+    },
+    "281CC7B2": {
+      "owner": "template"
     },
     "281E0B26": {
       "owner": "markdown",
@@ -11920,9 +11905,6 @@
     "2930A690": {
       "owner": "template"
     },
-    "293B6160": {
-      "owner": "template"
-    },
     "293FC236": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -12073,6 +12055,9 @@
       "block": 1,
       "para": 132
     },
+    "299F014C": {
+      "owner": "template"
+    },
     "29A4326F": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -12107,9 +12092,6 @@
       "section": "Worked structured DataType Envelope",
       "block": 1,
       "para": 133
-    },
-    "29BC8A53": {
-      "owner": "template"
     },
     "29BFDA15": {
       "owner": "markdown",
@@ -12162,9 +12144,6 @@
       "section": "Built-in DataValue",
       "block": 1,
       "para": 71
-    },
-    "29FA2A6D": {
-      "owner": "template"
     },
     "2A02A899": {
       "owner": "markdown",
@@ -12269,12 +12248,18 @@
       "block": 1,
       "para": 4
     },
+    "2A46D701": {
+      "owner": "template"
+    },
     "2A4AB798": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
       "section": "Built-in DataValue",
       "block": 1,
       "para": 87
+    },
+    "2A5C79AB": {
+      "owner": "template"
     },
     "2A5CC5E4": {
       "owner": "markdown",
@@ -12409,9 +12394,6 @@
       "block": 1,
       "para": 293
     },
-    "2AAD9AF3": {
-      "owner": "template"
-    },
     "2AB4BD80": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -12438,9 +12420,6 @@
       "section": "Built-in Variant",
       "block": 1,
       "para": 1185
-    },
-    "2AD92280": {
-      "owner": "template"
     },
     "2ADE0B14": {
       "owner": "markdown",
@@ -12504,6 +12483,9 @@
       "block": 1,
       "para": 20
     },
+    "2B1E2036": {
+      "owner": "template"
+    },
     "2B20AF8C": {
       "owner": "generated",
       "region": "normative-references",
@@ -12538,6 +12520,9 @@
       "section": "Built-in DataValue",
       "block": 3,
       "para": 90
+    },
+    "2B4ED86C": {
+      "owner": "template"
     },
     "2B54BC03": {
       "owner": "markdown",
@@ -12758,6 +12743,9 @@
       "block": 1,
       "para": 678
     },
+    "2BECF7B2": {
+      "owner": "template"
+    },
     "2BEFB40F": {
       "owner": "template"
     },
@@ -12774,9 +12762,6 @@
       "section": "Built-in Variant",
       "block": 1,
       "para": 238
-    },
-    "2BFBFE07": {
-      "owner": "template"
     },
     "2C02F502": {
       "owner": "markdown",
@@ -12973,9 +12958,6 @@
       "block": 1,
       "para": 815
     },
-    "2C8E8762": {
-      "owner": "template"
-    },
     "2C97CDD2": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -13130,9 +13112,6 @@
       "block": 1,
       "para": 89
     },
-    "2CE970E5": {
-      "owner": "template"
-    },
     "2CEB6B5F": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -13189,6 +13168,9 @@
       "block": 1,
       "para": 1672
     },
+    "2D046109": {
+      "owner": "template"
+    },
     "2D06A1BB": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -13241,9 +13223,6 @@
       "block": 1,
       "para": 1461
     },
-    "2D2B0224": {
-      "owner": "template"
-    },
     "2D37EA4B": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -13278,9 +13257,6 @@
       "section": "Built-in DataValue",
       "block": 1,
       "para": 281
-    },
-    "2D4D51BC": {
-      "owner": "template"
     },
     "2D4DD091": {
       "owner": "markdown",
@@ -13497,9 +13473,6 @@
       "section": "Built-in Variant",
       "block": 1,
       "para": 1487
-    },
-    "2E0C588B": {
-      "owner": "template"
     },
     "2E2003F3": {
       "owner": "markdown",
@@ -13849,9 +13822,6 @@
       "block": 1,
       "para": 1027
     },
-    "2F38EB99": {
-      "owner": "template"
-    },
     "2F3D65C7": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -13932,6 +13902,9 @@
       "block": 2,
       "para": 0
     },
+    "2F982C2E": {
+      "owner": "template"
+    },
     "2F991E2B": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -13980,9 +13953,6 @@
       "section": "Composite Matrix<Double>",
       "block": 1,
       "para": 8
-    },
-    "2FC2DF17": {
-      "owner": "template"
     },
     "2FC660A9": {
       "owner": "markdown",
@@ -14150,9 +14120,6 @@
       "section": "Composite Matrix<Double>",
       "block": 1,
       "para": 17
-    },
-    "3070880F": {
-      "owner": "template"
     },
     "30795D4C": {
       "owner": "markdown",
@@ -14554,9 +14521,6 @@
       "block": 1,
       "para": 1334
     },
-    "31CDB1D3": {
-      "owner": "template"
-    },
     "31CFE310": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -14584,9 +14548,6 @@
       "section": "Built-in Variant",
       "block": 1,
       "para": 825
-    },
-    "31E8FB3E": {
-      "owner": "template"
     },
     "31EE5386": {
       "owner": "markdown",
@@ -14709,6 +14670,9 @@
       "section": "Built-in Variant",
       "block": 1,
       "para": 1343
+    },
+    "326E0F66": {
+      "owner": "template"
     },
     "32722ACD": {
       "owner": "markdown",
@@ -14874,9 +14838,6 @@
       "block": 1,
       "para": 1407
     },
-    "331BA15E": {
-      "owner": "template"
-    },
     "331FE7EC": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -15030,6 +14991,9 @@
       "block": 1,
       "para": 103
     },
+    "33B697EA": {
+      "owner": "template"
+    },
     "33BD0D2E": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -15135,9 +15099,6 @@
       "block": 1,
       "para": 111
     },
-    "34514759": {
-      "owner": "template"
-    },
     "3452F13C": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -15227,9 +15188,6 @@
       "block": 1,
       "para": 374
     },
-    "349B7BA7": {
-      "owner": "template"
-    },
     "349D5651": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -15258,9 +15216,6 @@
       "block": 3,
       "para": 10
     },
-    "34A6A61F": {
-      "owner": "template"
-    },
     "34ACEA39": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -15274,6 +15229,9 @@
       "section": "6.2 Arrow message mapping",
       "block": 2,
       "para": 19
+    },
+    "34B12CF1": {
+      "owner": "template"
     },
     "34B4B014": {
       "owner": "template"
@@ -15305,6 +15263,9 @@
       "section": "Built-in Variant",
       "block": 1,
       "para": 501
+    },
+    "34C13D15": {
+      "owner": "template"
     },
     "34DBDCE3": {
       "owner": "markdown",
@@ -15381,6 +15342,9 @@
       "section": "Built-in Variant",
       "block": 1,
       "para": 278
+    },
+    "35475C0D": {
+      "owner": "template"
     },
     "354B0B26": {
       "owner": "markdown",
@@ -15492,9 +15456,6 @@
       "section": "Built-in Variant",
       "block": 1,
       "para": 222
-    },
-    "35B31231": {
-      "owner": "template"
     },
     "35B829E3": {
       "owner": "markdown",
@@ -15705,15 +15666,15 @@
       "block": 1,
       "para": 1400
     },
-    "364B4E13": {
-      "owner": "template"
-    },
     "364C3439": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
       "section": "Built-in Variant",
       "block": 1,
       "para": 750
+    },
+    "364E52C7": {
+      "owner": "template"
     },
     "3659B117": {
       "owner": "markdown",
@@ -15780,9 +15741,6 @@
       "section": "Built-in ExtensionObject",
       "block": 1,
       "para": 95
-    },
-    "368E4123": {
-      "owner": "template"
     },
     "36950A67": {
       "owner": "markdown",
@@ -15901,6 +15859,9 @@
       "section": "Built-in Variant",
       "block": 1,
       "para": 643
+    },
+    "36D83BC5": {
+      "owner": "template"
     },
     "36D8D9A4": {
       "owner": "template"
@@ -16353,9 +16314,6 @@
       "block": 3,
       "para": 114
     },
-    "38AB2E04": {
-      "owner": "template"
-    },
     "38AC8776": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -16369,6 +16327,9 @@
       "section": "Built-in Variant",
       "block": 1,
       "para": 568
+    },
+    "38B45BA1": {
+      "owner": "template"
     },
     "38BFFCD9": {
       "owner": "markdown",
@@ -16495,6 +16456,9 @@
       "section": "Built-in Variant",
       "block": 1,
       "para": 219
+    },
+    "395D6AD5": {
+      "owner": "template"
     },
     "395F9169": {
       "owner": "markdown",
@@ -16988,9 +16952,6 @@
       "block": 1,
       "para": 19
     },
-    "3B2BC531": {
-      "owner": "template"
-    },
     "3B37FF76": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -17035,6 +16996,9 @@
       "section": "Built-in ExtensionObject",
       "block": 1,
       "para": 124
+    },
+    "3B624F0B": {
+      "owner": "template"
     },
     "3B637E28": {
       "owner": "markdown",
@@ -17110,6 +17074,9 @@
       "para": 58
     },
     "3BA2B334": {
+      "owner": "template"
+    },
+    "3BA532E8": {
       "owner": "template"
     },
     "3BA898A3": {
@@ -17346,7 +17313,7 @@
       "block": 1,
       "para": 1649
     },
-    "3C52A3BE": {
+    "3C5F504B": {
       "owner": "template"
     },
     "3C6314EF": {
@@ -17420,6 +17387,9 @@
       "para": 0
     },
     "3C8E7C39": {
+      "owner": "template"
+    },
+    "3C8EA4C0": {
       "owner": "template"
     },
     "3C8F809E": {
@@ -17529,6 +17499,9 @@
       "section": "Built-in Variant",
       "block": 1,
       "para": 567
+    },
+    "3CE71FB6": {
+      "owner": "template"
     },
     "3CE9E016": {
       "owner": "markdown",
@@ -17663,9 +17636,6 @@
       "block": 1,
       "para": 132
     },
-    "3D5C5CD9": {
-      "owner": "template"
-    },
     "3D63A0A3": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -17679,6 +17649,9 @@
       "section": "Built-in Variant",
       "block": 1,
       "para": 1137
+    },
+    "3D665B11": {
+      "owner": "template"
     },
     "3D6C93BB": {
       "owner": "markdown",
@@ -17785,9 +17758,6 @@
       "block": 3,
       "para": 281
     },
-    "3DA2F25F": {
-      "owner": "template"
-    },
     "3DAA15BF": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -17838,6 +17808,9 @@
       "para": 14
     },
     "3DC44C36": {
+      "owner": "template"
+    },
+    "3DC67D60": {
       "owner": "template"
     },
     "3DC6EA38": {
@@ -18251,9 +18224,6 @@
     "3F1F98D9": {
       "owner": "template"
     },
-    "3F1FCA18": {
-      "owner": "template"
-    },
     "3F2023B7": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -18267,6 +18237,9 @@
       "section": "Built-in Variant",
       "block": 3,
       "para": 446
+    },
+    "3F35CB60": {
+      "owner": "template"
     },
     "3F454799": {
       "owner": "markdown",
@@ -18429,6 +18402,9 @@
       "block": 1,
       "para": 77
     },
+    "3FC04499": {
+      "owner": "template"
+    },
     "3FC1AE50": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -18560,6 +18536,9 @@
       "block": 3,
       "para": 1
     },
+    "3FF1B234": {
+      "owner": "template"
+    },
     "3FF2EA35": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -18580,9 +18559,6 @@
       "section": "Built-in Variant",
       "block": 3,
       "para": 119
-    },
-    "3FFCC3B7": {
-      "owner": "template"
     },
     "400B4215": {
       "owner": "markdown",
@@ -18688,9 +18664,6 @@
       "block": 1,
       "para": 181
     },
-    "405F2BEA": {
-      "owner": "template"
-    },
     "40600584": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -18746,6 +18719,9 @@
       "section": "Built-in Variant",
       "block": 1,
       "para": 172
+    },
+    "409242A1": {
+      "owner": "template"
     },
     "40979E51": {
       "owner": "markdown",
@@ -18868,9 +18844,6 @@
       "section": "Built-in Variant",
       "block": 1,
       "para": 679
-    },
-    "40D4C554": {
-      "owner": "template"
     },
     "40D593DE": {
       "owner": "markdown",
@@ -19160,18 +19133,12 @@
       "block": 1,
       "para": 6
     },
-    "4196EADB": {
-      "owner": "template"
-    },
     "41985765": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
       "section": "1 Scope",
       "block": 3,
       "para": 0
-    },
-    "4198C247": {
-      "owner": "template"
     },
     "419EB338": {
       "owner": "markdown",
@@ -19339,12 +19306,18 @@
       "block": 1,
       "para": 555
     },
+    "42167CE5": {
+      "owner": "template"
+    },
     "4218E50B": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
       "section": "Built-in Double",
       "block": 1,
       "para": 6
+    },
+    "422D254E": {
+      "owner": "template"
     },
     "4232CFB3": {
       "owner": "markdown",
@@ -19390,9 +19363,6 @@
       "section": "Built-in DataValue",
       "block": 1,
       "para": 301
-    },
-    "4255B1C0": {
-      "owner": "template"
     },
     "4256C675": {
       "owner": "generated",
@@ -19455,6 +19425,9 @@
       "section": "6.5 Part 14 configuration model mapping",
       "block": 2,
       "para": 6
+    },
+    "42797B1D": {
+      "owner": "template"
     },
     "427A4890": {
       "owner": "markdown",
@@ -19623,9 +19596,6 @@
     "43014068": {
       "owner": "template"
     },
-    "43099869": {
-      "owner": "template"
-    },
     "430A4C6E": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -19710,6 +19680,12 @@
       "block": 1,
       "para": 208
     },
+    "434BDB3E": {
+      "owner": "template"
+    },
+    "43518ACE": {
+      "owner": "template"
+    },
     "435458D7": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -19772,6 +19748,9 @@
       "index": 100,
       "kind": "annex-clause",
       "para": 0
+    },
+    "4380B310": {
+      "owner": "template"
     },
     "438CBC95": {
       "owner": "markdown",
@@ -20003,9 +19982,6 @@
       "block": 1,
       "para": 338
     },
-    "4496B9BB": {
-      "owner": "template"
-    },
     "449A8C99": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -20099,6 +20075,9 @@
       "section": "Built-in Variant",
       "block": 1,
       "para": 1525
+    },
+    "44EEBF96": {
+      "owner": "template"
     },
     "44F27DFA": {
       "owner": "markdown",
@@ -20243,9 +20222,6 @@
       "block": 1,
       "para": 389
     },
-    "4559A8EB": {
-      "owner": "template"
-    },
     "455C6A0A": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -20273,6 +20249,9 @@
       "block": 1,
       "para": 978
     },
+    "45709560": {
+      "owner": "template"
+    },
     "4574C0A8": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -20294,7 +20273,7 @@
       "block": 3,
       "para": 234
     },
-    "457F1DE8": {
+    "457F37DB": {
       "owner": "template"
     },
     "45806EFC": {
@@ -20457,9 +20436,6 @@
       "block": 1,
       "para": 1168
     },
-    "45D9AA77": {
-      "owner": "template"
-    },
     "45EB55BC": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -20498,7 +20474,7 @@
       "block": 1,
       "para": 164
     },
-    "460A65CB": {
+    "4612EDBC": {
       "owner": "template"
     },
     "461838B2": {
@@ -20717,9 +20693,6 @@
       "block": 3,
       "para": 266
     },
-    "46C1C489": {
-      "owner": "template"
-    },
     "46D60AAD": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -20764,6 +20737,9 @@
       "section": "Built-in ExtensionObject",
       "block": 1,
       "para": 200
+    },
+    "46F5E72B": {
+      "owner": "template"
     },
     "46FB711E": {
       "owner": "markdown",
@@ -20848,12 +20824,18 @@
       "block": 1,
       "para": 544
     },
+    "4738181E": {
+      "owner": "template"
+    },
     "47482D48": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
       "section": "Built-in DataValue",
       "block": 3,
       "para": 384
+    },
+    "47532B92": {
+      "owner": "template"
     },
     "475C3559": {
       "owner": "markdown",
@@ -21129,6 +21111,9 @@
     "483BDBB6": {
       "owner": "template"
     },
+    "483C8F50": {
+      "owner": "template"
+    },
     "4842EFAE": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -21170,6 +21155,9 @@
       "section": "Built-in Variant",
       "block": 3,
       "para": 39
+    },
+    "485BEE5D": {
+      "owner": "template"
     },
     "486C8308": {
       "owner": "markdown",
@@ -21467,6 +21455,9 @@
       "block": 2,
       "para": 20
     },
+    "4974E2F3": {
+      "owner": "template"
+    },
     "4976D496": {
       "owner": "template"
     },
@@ -21758,18 +21749,12 @@
       "block": 0,
       "para": 0
     },
-    "4A6D6096": {
-      "owner": "template"
-    },
     "4A6EB5D1": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
       "section": "Built-in Variant",
       "block": 1,
       "para": 1565
-    },
-    "4A729CE7": {
-      "owner": "template"
     },
     "4A776CE5": {
       "owner": "markdown",
@@ -21938,9 +21923,6 @@
       "block": 3,
       "para": 139
     },
-    "4B31AC93": {
-      "owner": "template"
-    },
     "4B35C54D": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -22042,6 +22024,9 @@
     "4B9C5349": {
       "owner": "template"
     },
+    "4B9ED2E9": {
+      "owner": "template"
+    },
     "4B9FD89B": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -22069,9 +22054,6 @@
       "section": "Worked structured DataType Envelope",
       "block": 3,
       "para": 18
-    },
-    "4BB64EDB": {
-      "owner": "template"
     },
     "4BC2E1B2": {
       "owner": "markdown",
@@ -22138,9 +22120,6 @@
       "section": "Built-in Variant",
       "block": 1,
       "para": 9
-    },
-    "4BE3743C": {
-      "owner": "template"
     },
     "4BE7A7BA": {
       "owner": "markdown",
@@ -22254,7 +22233,7 @@
       "block": 3,
       "para": 14
     },
-    "4C4A1AB4": {
+    "4C43D6F6": {
       "owner": "template"
     },
     "4C5B4C1D": {
@@ -22305,6 +22284,9 @@
       "block": 1,
       "para": 1064
     },
+    "4C75117F": {
+      "owner": "template"
+    },
     "4C797C6E": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -22325,6 +22307,9 @@
       "section": "Built-in DataValue",
       "block": 3,
       "para": 24
+    },
+    "4CA254F8": {
+      "owner": "template"
     },
     "4CA3542A": {
       "owner": "markdown",
@@ -22438,6 +22423,9 @@
       "block": 1,
       "para": 39
     },
+    "4D0F2D9E": {
+      "owner": "template"
+    },
     "4D10C612": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -22531,9 +22519,6 @@
       "block": 1,
       "para": 310
     },
-    "4D6FF113": {
-      "owner": "template"
-    },
     "4D76427A": {
       "owner": "generated",
       "region": "normative-references",
@@ -22624,6 +22609,9 @@
       "block": 1,
       "para": 286
     },
+    "4DB4480A": {
+      "owner": "template"
+    },
     "4DBAF385": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -22707,7 +22695,7 @@
       "block": 3,
       "para": 76
     },
-    "4E0260D8": {
+    "4E021F59": {
       "owner": "template"
     },
     "4E04F93D": {
@@ -22723,6 +22711,9 @@
       "section": "Built-in DataValue",
       "block": 3,
       "para": 169
+    },
+    "4E14822A": {
+      "owner": "template"
     },
     "4E177C75": {
       "owner": "markdown",
@@ -22757,9 +22748,6 @@
       "section": "Built-in Variant",
       "block": 1,
       "para": 1385
-    },
-    "4E232D50": {
-      "owner": "template"
     },
     "4E2357CA": {
       "owner": "markdown",
@@ -23165,9 +23153,6 @@
       "block": 4,
       "para": 0
     },
-    "4F684EF0": {
-      "owner": "template"
-    },
     "4F6EAE39": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -23269,6 +23254,9 @@
       "block": 1,
       "para": 190
     },
+    "4FD836F5": {
+      "owner": "template"
+    },
     "4FE6198B": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -23327,6 +23315,9 @@
       "section": "Built-in Variant",
       "block": 1,
       "para": 1320
+    },
+    "5026B0D0": {
+      "owner": "template"
     },
     "50298924": {
       "owner": "markdown",
@@ -23438,9 +23429,6 @@
       "section": "Built-in DataValue",
       "block": 1,
       "para": 24
-    },
-    "509F76F9": {
-      "owner": "template"
     },
     "50A3B597": {
       "owner": "markdown",
@@ -23602,18 +23590,12 @@
       "block": 1,
       "para": 1341
     },
-    "5130FFA3": {
-      "owner": "template"
-    },
     "513375EF": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
       "section": "Built-in ExtensionObject",
       "block": 3,
       "para": 64
-    },
-    "5134D8B1": {
-      "owner": "template"
     },
     "513A7DFD": {
       "owner": "markdown",
@@ -23812,9 +23794,6 @@
       "block": 1,
       "para": 61
     },
-    "51EF5C3B": {
-      "owner": "template"
-    },
     "51F537D9": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -23838,9 +23817,6 @@
       "section": "Built-in Variant",
       "block": 3,
       "para": 314
-    },
-    "51FB4640": {
-      "owner": "template"
     },
     "51FB8590": {
       "owner": "markdown",
@@ -24238,9 +24214,6 @@
     "52F27C98": {
       "owner": "template"
     },
-    "52F7D486": {
-      "owner": "template"
-    },
     "52FC9C78": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -24345,9 +24318,6 @@
       "index": 4,
       "kind": "table",
       "para": 11
-    },
-    "53506443": {
-      "owner": "template"
     },
     "5350E110": {
       "owner": "template"
@@ -24527,6 +24497,9 @@
       "block": 1,
       "para": 812
     },
+    "53CFD52C": {
+      "owner": "template"
+    },
     "53DEFE4C": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -24554,6 +24527,9 @@
       "section": "Built-in Variant",
       "block": 1,
       "para": 974
+    },
+    "54018278": {
+      "owner": "template"
     },
     "54043E0E": {
       "owner": "markdown",
@@ -24782,7 +24758,7 @@
       "kind": "clause",
       "para": 0
     },
-    "54AECA9B": {
+    "54ABF99C": {
       "owner": "template"
     },
     "54BA4903": {
@@ -25112,9 +25088,6 @@
       "block": 1,
       "para": 1134
     },
-    "55BCBC75": {
-      "owner": "template"
-    },
     "55C0D6D9": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -25288,6 +25261,9 @@
       "section": "Built-in Variant",
       "block": 1,
       "para": 95
+    },
+    "5652D896": {
+      "owner": "template"
     },
     "5668929D": {
       "owner": "markdown",
@@ -25613,6 +25589,9 @@
       "block": 1,
       "para": 1078
     },
+    "57A192E9": {
+      "owner": "template"
+    },
     "57A51313": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -25696,9 +25675,6 @@
       "section": "Composite Array<String>",
       "block": 1,
       "para": 12
-    },
-    "58115B53": {
-      "owner": "template"
     },
     "58126747": {
       "owner": "markdown",
@@ -25912,12 +25888,18 @@
       "block": 0,
       "para": 0
     },
+    "58F728D5": {
+      "owner": "template"
+    },
     "58F83704": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
       "section": "Built-in Variant",
       "block": 1,
       "para": 1036
+    },
+    "58FCF7F4": {
+      "owner": "template"
     },
     "58FD87EC": {
       "owner": "markdown",
@@ -26052,9 +26034,6 @@
       "block": 1,
       "para": 245
     },
-    "596BB640": {
-      "owner": "template"
-    },
     "5974930B": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -26127,6 +26106,9 @@
       "section": "Built-in StatusCode",
       "block": 4,
       "para": 0
+    },
+    "59D0B5B8": {
+      "owner": "template"
     },
     "59D91C46": {
       "owner": "markdown",
@@ -26288,7 +26270,7 @@
       "block": 1,
       "para": 47
     },
-    "5A54C504": {
+    "5A55DEBD": {
       "owner": "template"
     },
     "5A588C9D": {
@@ -26339,9 +26321,6 @@
       "section": "Built-in Variant",
       "block": 1,
       "para": 1417
-    },
-    "5A8050D3": {
-      "owner": "template"
     },
     "5A82B71E": {
       "owner": "markdown",
@@ -26975,6 +26954,9 @@
       "block": 1,
       "para": 1
     },
+    "5CBB675D": {
+      "owner": "template"
+    },
     "5CBDA01C": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -27118,9 +27100,6 @@
       "block": 1,
       "para": 2
     },
-    "5D4473A1": {
-      "owner": "template"
-    },
     "5D498E5C": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -27178,6 +27157,9 @@
       "para": 313
     },
     "5D721A47": {
+      "owner": "template"
+    },
+    "5D72E0E4": {
       "owner": "template"
     },
     "5D77816F": {
@@ -27606,9 +27588,6 @@
       "block": 3,
       "para": 77
     },
-    "5EAF2FD2": {
-      "owner": "template"
-    },
     "5EB3717A": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -27644,9 +27623,6 @@
       "block": 3,
       "para": 252
     },
-    "5ED086C6": {
-      "owner": "template"
-    },
     "5EDBB517": {
       "owner": "generated",
       "region": "annex-a",
@@ -27674,9 +27650,6 @@
       "section": "Built-in ExtensionObject",
       "block": 1,
       "para": 173
-    },
-    "5EED0ABC": {
-      "owner": "template"
     },
     "5EF5CC66": {
       "owner": "markdown",
@@ -27769,6 +27742,9 @@
       "block": 1,
       "para": 1309
     },
+    "5F371791": {
+      "owner": "template"
+    },
     "5F386EB2": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -27827,6 +27803,9 @@
       "section": "Built-in Variant",
       "block": 1,
       "para": 1192
+    },
+    "5F6410F3": {
+      "owner": "template"
     },
     "5F6BC97D": {
       "owner": "markdown",
@@ -27890,6 +27869,9 @@
       "section": "Built-in Variant",
       "block": 3,
       "para": 21
+    },
+    "5F900072": {
+      "owner": "template"
     },
     "5F94D630": {
       "owner": "markdown",
@@ -27962,9 +27944,6 @@
       "section": "Built-in Variant",
       "block": 1,
       "para": 942
-    },
-    "5FCBE7F5": {
-      "owner": "template"
     },
     "5FCC9328": {
       "owner": "markdown",
@@ -28264,6 +28243,9 @@
       "block": 3,
       "para": 178
     },
+    "60FB2078": {
+      "owner": "template"
+    },
     "60FFC3CE": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -28301,12 +28283,6 @@
       "section": "Built-in ExtensionObject",
       "block": 1,
       "para": 251
-    },
-    "611E1692": {
-      "owner": "template"
-    },
-    "611F2DA9": {
-      "owner": "template"
     },
     "61201105": {
       "owner": "markdown",
@@ -28464,6 +28440,9 @@
       "block": 1,
       "para": 1019
     },
+    "619A7581": {
+      "owner": "template"
+    },
     "619DADB1": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -28484,9 +28463,6 @@
       "section": "Built-in Variant",
       "block": 1,
       "para": 25
-    },
-    "61B4593E": {
-      "owner": "template"
     },
     "61B4EB96": {
       "owner": "markdown",
@@ -28581,9 +28557,6 @@
     "61F21930": {
       "owner": "template"
     },
-    "61F54707": {
-      "owner": "template"
-    },
     "61F548E2": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -28663,9 +28636,6 @@
       "section": "Built-in Variant",
       "block": 1,
       "para": 150
-    },
-    "6228D3C0": {
-      "owner": "template"
     },
     "622BA0A7": {
       "owner": "markdown",
@@ -28801,6 +28771,9 @@
       "section": "Built-in Variant",
       "block": 1,
       "para": 163
+    },
+    "62B249CA": {
+      "owner": "template"
     },
     "62B24D50": {
       "owner": "markdown",
@@ -29402,12 +29375,18 @@
       "block": 1,
       "para": 1281
     },
+    "64810A2F": {
+      "owner": "template"
+    },
     "6481A3C6": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
       "section": "Built-in Variant",
       "block": 1,
       "para": 1047
+    },
+    "648263B1": {
+      "owner": "template"
     },
     "6484C765": {
       "owner": "markdown",
@@ -29422,6 +29401,9 @@
       "section": "Built-in String",
       "block": 1,
       "para": 6
+    },
+    "6493BD98": {
+      "owner": "template"
     },
     "64972498": {
       "owner": "markdown",
@@ -29457,6 +29439,9 @@
       "section": "Composite Matrix<Double>",
       "block": 1,
       "para": 13
+    },
+    "64B5C254": {
+      "owner": "template"
     },
     "64B7839F": {
       "owner": "markdown",
@@ -29663,9 +29648,6 @@
       "block": 1,
       "para": 1198
     },
-    "656023FB": {
-      "owner": "template"
-    },
     "657397AA": {
       "owner": "template"
     },
@@ -29819,9 +29801,6 @@
       "block": 1,
       "para": 168
     },
-    "65FDECA0": {
-      "owner": "template"
-    },
     "660053E1": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -29842,9 +29821,6 @@
       "section": "Worked structured DataType Envelope",
       "block": 1,
       "para": 2
-    },
-    "6613615C": {
-      "owner": "template"
     },
     "66198F52": {
       "owner": "markdown",
@@ -30078,9 +30054,6 @@
       "block": 1,
       "para": 8
     },
-    "66B23266": {
-      "owner": "template"
-    },
     "66B99706": {
       "owner": "template"
     },
@@ -30181,9 +30154,6 @@
       "kind": "para",
       "para": 0
     },
-    "670D60FD": {
-      "owner": "template"
-    },
     "670E8F91": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -30232,6 +30202,9 @@
       "section": "Built-in Variant",
       "block": 3,
       "para": 131
+    },
+    "6731E747": {
+      "owner": "template"
     },
     "673B1396": {
       "owner": "markdown",
@@ -30457,9 +30430,6 @@
       "section": "Built-in Variant",
       "block": 1,
       "para": 725
-    },
-    "68207E37": {
-      "owner": "template"
     },
     "6822EDB3": {
       "owner": "markdown",
@@ -30828,6 +30798,9 @@
       "index": 3,
       "kind": "para",
       "para": 0
+    },
+    "697CD45B": {
+      "owner": "template"
     },
     "69806A89": {
       "owner": "markdown",
@@ -31250,6 +31223,9 @@
       "block": 3,
       "para": 343
     },
+    "6AF47DFD": {
+      "owner": "template"
+    },
     "6AFA6118": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -31329,6 +31305,9 @@
       "section": "Built-in DataValue",
       "block": 3,
       "para": 229
+    },
+    "6B449BB6": {
+      "owner": "template"
     },
     "6B4A45F1": {
       "owner": "generated",
@@ -31507,6 +31486,9 @@
       "section": "Built-in DataValue",
       "block": 1,
       "para": 121
+    },
+    "6BBFFFAB": {
+      "owner": "template"
     },
     "6BC19F84": {
       "owner": "template"
@@ -31702,9 +31684,6 @@
       "block": 1,
       "para": 597
     },
-    "6C45D4D2": {
-      "owner": "template"
-    },
     "6C4647D7": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -31774,7 +31753,7 @@
       "kind": "annex-clause",
       "para": 0
     },
-    "6C90DA4E": {
+    "6C8DCACF": {
       "owner": "template"
     },
     "6C9C9D3A": {
@@ -31783,6 +31762,9 @@
       "section": "Built-in Variant",
       "block": 1,
       "para": 693
+    },
+    "6CA4718A": {
+      "owner": "template"
     },
     "6CA5D796": {
       "owner": "markdown",
@@ -31828,6 +31810,9 @@
       "section": "6.2 Arrow message mapping",
       "block": 2,
       "para": 13
+    },
+    "6CC5BD2C": {
+      "owner": "template"
     },
     "6CCAC650": {
       "owner": "markdown",
@@ -32028,6 +32013,9 @@
       "block": 1,
       "para": 320
     },
+    "6D70C846": {
+      "owner": "template"
+    },
     "6D7284D7": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -32139,12 +32127,6 @@
       "section": "Built-in Variant",
       "block": 1,
       "para": 962
-    },
-    "6DD63303": {
-      "owner": "template"
-    },
-    "6DD8D977": {
-      "owner": "template"
     },
     "6DE0E764": {
       "owner": "markdown",
@@ -32486,9 +32468,6 @@
       "block": 1,
       "para": 203
     },
-    "6ED5DD42": {
-      "owner": "template"
-    },
     "6ED6557C": {
       "owner": "generated",
       "region": "model-overview",
@@ -32694,9 +32673,6 @@
     "6FA55308": {
       "owner": "template"
     },
-    "6FA91B09": {
-      "owner": "template"
-    },
     "6FAAEB32": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -32783,9 +32759,6 @@
       "section": "Built-in Int32",
       "block": 3,
       "para": 2
-    },
-    "6FEEEEF8": {
-      "owner": "template"
     },
     "6FFCECEE": {
       "owner": "markdown",
@@ -32980,6 +32953,9 @@
       "block": 3,
       "para": 46
     },
+    "70CFC2CB": {
+      "owner": "template"
+    },
     "70D3434E": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -33132,9 +33108,6 @@
       "block": 1,
       "para": 704
     },
-    "7177738D": {
-      "owner": "template"
-    },
     "717A8365": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -33281,9 +33254,6 @@
       "block": 3,
       "para": 442
     },
-    "71E68C26": {
-      "owner": "template"
-    },
     "71E6F07D": {
       "owner": "generated",
       "region": "annex-a",
@@ -33377,9 +33347,6 @@
       "section": "Built-in ExtensionObject",
       "block": 1,
       "para": 263
-    },
-    "725516D4": {
-      "owner": "template"
     },
     "7256DC42": {
       "owner": "markdown",
@@ -33526,9 +33493,6 @@
       "block": 1,
       "para": 189
     },
-    "72EC8B39": {
-      "owner": "template"
-    },
     "72F42338": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -33591,6 +33555,9 @@
       "section": "Built-in Variant",
       "block": 1,
       "para": 1598
+    },
+    "7325B913": {
+      "owner": "template"
     },
     "7325F2CC": {
       "owner": "markdown",
@@ -33693,9 +33660,6 @@
       "block": 14,
       "para": 0
     },
-    "7369CFF8": {
-      "owner": "template"
-    },
     "737241CB": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -33745,6 +33709,9 @@
       "block": 3,
       "para": 103
     },
+    "73AAAFDA": {
+      "owner": "template"
+    },
     "73BD0A09": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -33758,6 +33725,9 @@
       "section": "Built-in ExtensionObject",
       "block": 3,
       "para": 8
+    },
+    "73C226B1": {
+      "owner": "template"
     },
     "73CC1702": {
       "owner": "markdown",
@@ -33883,6 +33853,9 @@
       "section": "Built-in Variant",
       "block": 1,
       "para": 651
+    },
+    "74510D91": {
+      "owner": "template"
     },
     "74535A06": {
       "owner": "generated",
@@ -34051,6 +34024,9 @@
       "block": 3,
       "para": 420
     },
+    "74D6FC0F": {
+      "owner": "template"
+    },
     "74DC7A1B": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -34071,6 +34047,9 @@
       "section": "Built-in Variant",
       "block": 3,
       "para": 9
+    },
+    "74EBA0BD": {
+      "owner": "template"
     },
     "74EE0630": {
       "owner": "markdown",
@@ -34201,6 +34180,9 @@
       "block": 1,
       "para": 746
     },
+    "75534E24": {
+      "owner": "template"
+    },
     "7556E1F6": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -34316,6 +34298,9 @@
     "75BB1218": {
       "owner": "template"
     },
+    "75CA669E": {
+      "owner": "template"
+    },
     "75CFCE49": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -34399,6 +34384,9 @@
       "section": "Built-in Variant",
       "block": 1,
       "para": 48
+    },
+    "7629297D": {
+      "owner": "template"
     },
     "762CB145": {
       "owner": "markdown",
@@ -34538,6 +34526,9 @@
       "section": "Built-in DataValue",
       "block": 3,
       "para": 277
+    },
+    "7690C68E": {
+      "owner": "template"
     },
     "76946BA5": {
       "owner": "markdown",
@@ -34768,9 +34759,6 @@
       "block": 3,
       "para": 272
     },
-    "773A8F0C": {
-      "owner": "template"
-    },
     "7743A2D9": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -34808,6 +34796,9 @@
       "section": "Built-in ExtensionObject",
       "block": 1,
       "para": 56
+    },
+    "775A0CDA": {
+      "owner": "template"
     },
     "775A8A9F": {
       "owner": "markdown",
@@ -34941,9 +34932,6 @@
       "block": 1,
       "para": 31
     },
-    "77A5F4A0": {
-      "owner": "template"
-    },
     "77BE98BB": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -35048,9 +35036,6 @@
       "block": 1,
       "para": 1513
     },
-    "780E7BC5": {
-      "owner": "template"
-    },
     "781729E3": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -35088,9 +35073,6 @@
       "section": "Built-in Variant",
       "block": 1,
       "para": 1463
-    },
-    "783FC0CF": {
-      "owner": "template"
     },
     "7844AC63": {
       "owner": "markdown",
@@ -35162,9 +35144,6 @@
       "block": 1,
       "para": 7
     },
-    "7871D718": {
-      "owner": "template"
-    },
     "787852D8": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -35209,6 +35188,9 @@
       "section": "Built-in Variant",
       "block": 3,
       "para": 413
+    },
+    "78B4D9A9": {
+      "owner": "template"
     },
     "78BBD2BE": {
       "owner": "markdown",
@@ -35273,6 +35255,9 @@
       "block": 1,
       "para": 52
     },
+    "78DF4D22": {
+      "owner": "template"
+    },
     "78E1A093": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -35317,6 +35302,9 @@
       "section": "Built-in DataValue",
       "block": 1,
       "para": 185
+    },
+    "78F7254F": {
+      "owner": "template"
     },
     "79025E65": {
       "owner": "markdown",
@@ -35407,6 +35395,9 @@
       "section": "Built-in LocalizedText",
       "block": 1,
       "para": 9
+    },
+    "79376C6B": {
+      "owner": "template"
     },
     "793B0429": {
       "owner": "markdown",
@@ -35671,6 +35662,9 @@
       "block": 1,
       "para": 266
     },
+    "7A2C0667": {
+      "owner": "template"
+    },
     "7A32AB0C": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -35698,6 +35692,9 @@
       "section": "Built-in Variant",
       "block": 1,
       "para": 593
+    },
+    "7A535BC5": {
+      "owner": "template"
     },
     "7A568AD2": {
       "owner": "markdown",
@@ -35792,6 +35789,9 @@
       "section": "Built-in Variant",
       "block": 1,
       "para": 1398
+    },
+    "7AB316DA": {
+      "owner": "template"
     },
     "7AB54F7B": {
       "owner": "markdown",
@@ -36008,6 +36008,9 @@
       "block": 1,
       "para": 1606
     },
+    "7B9161B8": {
+      "owner": "template"
+    },
     "7B934D98": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -36036,6 +36039,9 @@
       "block": 1,
       "para": 175
     },
+    "7BA49AE3": {
+      "owner": "template"
+    },
     "7BA962EB": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -36058,6 +36064,9 @@
       "para": 207
     },
     "7BB4ECD9": {
+      "owner": "template"
+    },
+    "7BC12494": {
       "owner": "template"
     },
     "7BC4F078": {
@@ -36110,6 +36119,9 @@
       "para": 0
     },
     "7BE15FFD": {
+      "owner": "template"
+    },
+    "7BE3BFDE": {
       "owner": "template"
     },
     "7BE7A49C": {
@@ -36513,9 +36525,6 @@
       "block": 3,
       "para": 246
     },
-    "7D3A6FA3": {
-      "owner": "template"
-    },
     "7D3CDE1D": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -36539,9 +36548,6 @@
       "section": "Built-in Variant",
       "block": 1,
       "para": 731
-    },
-    "7D4D1D8B": {
-      "owner": "template"
     },
     "7D5BA40A": {
       "owner": "markdown",
@@ -36586,6 +36592,9 @@
       "section": "7.4 Canonical result shape",
       "block": 1,
       "para": 14
+    },
+    "7D9AC368": {
+      "owner": "template"
     },
     "7D9D2497": {
       "owner": "markdown",
@@ -36694,9 +36703,6 @@
       "section": "Built-in Variant",
       "block": 3,
       "para": 211
-    },
-    "7DFA1DF3": {
-      "owner": "template"
     },
     "7E0389AB": {
       "owner": "markdown",
@@ -36897,9 +36903,6 @@
       "block": 1,
       "para": 46
     },
-    "7EA2EB81": {
-      "owner": "template"
-    },
     "7EAE8526": {
       "owner": "markdown",
       "file": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md",
@@ -36973,7 +36976,7 @@
     "7EE0A1A1": {
       "owner": "template"
     },
-    "7EE79457": {
+    "7EEECDDC": {
       "owner": "template"
     },
     "7EF7EEEA": {
@@ -37097,9 +37100,6 @@
       "section": "Worked structured DataType Envelope",
       "block": 3,
       "para": 25
-    },
-    "7F5BFC18": {
-      "owner": "template"
     },
     "7F601C74": {
       "owner": "markdown",
