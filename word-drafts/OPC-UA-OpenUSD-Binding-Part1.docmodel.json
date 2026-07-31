@@ -11056,7 +11056,7 @@
           },
           {
             "r": "t",
-            "text": " percent-decodes to its "
+            "text": " equals the symbolic identifier re-derived from its "
           },
           {
             "r": "code",
@@ -11064,7 +11064,33 @@
           },
           {
             "r": "t",
-            "text": ", that "
+            "text": " ("
+          },
+          {
+            "r": "xref",
+            "target": "c7-11-3",
+            "kind": "clause",
+            "prefix": "7.11.3"
+          },
+          {
+            "r": "t",
+            "text": ") and that its "
+          },
+          {
+            "r": "code",
+            "text": "Name"
+          },
+          {
+            "r": "t",
+            "text": " is that "
+          },
+          {
+            "r": "code",
+            "text": "AssetIdentifier"
+          },
+          {
+            "r": "t",
+            "text": " verbatim, that "
           },
           {
             "r": "code",

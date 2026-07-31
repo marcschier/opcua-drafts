@@ -254,9 +254,14 @@ def _check_asset_container(collection, gid, group, descriptors, all_xids) -> int
         err(f"{collection}/{gid}: usdassetgroupid mismatch")
     if not is_valid_xregistry_id(gid):
         err(f"{collection}/{gid}: group id is not a legal xRegistry <SINGULAR>id")
+    # §4.1: the group id IS the asset container identifier, and §4.3 requires name to
+    # be that identifier verbatim, so the two agree exactly for an already-legal id.
     if not group.get("name"):
         err(f"{collection}/{gid}: missing name (REQUIRED so a person browsing the registry "
             f"sees the asset container identifier)")
+    elif symbolic_id(group["name"]) != gid:
+        err(f"{collection}/{gid}: name {group['name']!r} is not the asset container "
+            f"identifier the group id is built from")
 
     desc = descriptors.get(gid)
     served_ids: list[str] = []

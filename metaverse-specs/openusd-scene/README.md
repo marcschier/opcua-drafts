@@ -1,6 +1,6 @@
 # OPC UA — OpenUSD Scene Materialization (Part 2)
 
-**Release 0.4.1 — Draft** · namespace `http://opcfoundation.org/UA/OpenUSD/Scene/`
+**Release 0.4.0 — Draft** · namespace `http://opcfoundation.org/UA/OpenUSD/Scene/`
 
 This folder contains the specification and generated NodeSet for **Part 2** of the *OPC UA — OpenUSD* work: a native OPC UA materialization of the **full OpenUSD data model**.
 

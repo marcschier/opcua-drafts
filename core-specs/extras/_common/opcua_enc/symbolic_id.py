@@ -61,8 +61,14 @@ def split_identity(source_identity: str) -> tuple[list[str], list[str]]:
         # 'urn' survives as the first label and a URN never aliases a bare path.
         return [], [p for p in text.split(":") if p]
 
-    parts = urllib.parse.urlsplit(text)
-    if parts.scheme and parts.netloc:
+    try:
+        parts = urllib.parse.urlsplit(text)
+    except ValueError:
+        # urlsplit rejects an unbalanced or non-IP bracket in the authority position.
+        # The construction is total, so such a string simply has no authority: it falls
+        # through to the "otherwise" branch of step 1 and is split on '/' like any path.
+        parts = None
+    if parts is not None and parts.scheme and parts.netloc:
         netloc = parts.netloc.rsplit("@", 1)[-1]          # discard userinfo
         host, port = netloc, ""
         if not netloc.endswith("]") and ":" in netloc:     # not an IPv6 literal
@@ -103,7 +109,9 @@ def symbolic_id(source_identity: str, existing: object = None) -> str:
     truncated = False
     if len(candidate) > MAX_LEN:
         truncated = True
-        while labels and len(".".join(labels)) > _TRIMMED_LEN:
+        # Keep the leading label: it carries the reverse-DNS root, which is the part a
+        # human reads. Dropping it too would reduce a long identity to the disambiguator.
+        while len(labels) > 1 and len(".".join(labels)) > _TRIMMED_LEN:
             labels.pop()
         candidate = ".".join(labels)
         if len(candidate) > _TRIMMED_LEN:
@@ -141,6 +149,9 @@ _SELF_TEST = [
     ("///", "_"),
     ("-leading.", "leading"),
     ("...", "_"),
+    # An authority position urlsplit rejects still has a defined result.
+    ("http://exa[mple.com/x", "http.exa-mple.com.x"),
+    ("//[abc", "abc"),
 ]
 
 
@@ -170,6 +181,13 @@ def _self_test() -> None:
     # A truncated identity is disambiguated even with no sibling to collide with,
     # because truncation itself destroys uniqueness.
     assert symbolic_id(long_id) == symbolic_id(long_id)
+
+    # Truncation keeps the readable head rather than collapsing to the disambiguator.
+    one_long_label = "a" * 130 + ".usda"
+    got = symbolic_id(one_long_label)
+    assert is_valid_xregistry_id(got) and len(got) <= MAX_LEN, (len(got), got)
+    assert got.startswith("a" * 100), got
+    assert got.endswith("." + disambiguator(one_long_label)), got
 
     print(f"symbolic_id OK - {len(_SELF_TEST)} vectors + collision, case, length checks")
 

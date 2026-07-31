@@ -1,8 +1,8 @@
 # OPC UA for OpenUSD — Part 2: OpenUSD Scene Materialization
 
-**Release 0.4.1 — Draft**
+**Release 0.4.0 — Draft**
 **Namespace:** `http://opcfoundation.org/UA/OpenUSD/Scene/`
-**Publication date:** 2026-07-31
+**Publication date:** 2026-07-29
 
 > Status: Working-group draft. This document, together with `Opc.Ua.OpenUsdScene.NodeSet2.xml` and `Opc.Ua.OpenUsdScene.NodeIds.csv`, defines an OPC UA information model that **natively materializes the OpenUSD (Universal Scene Description) data model** — Stage, Prim, Attribute, Relationship, Metadata, Composition arcs, VariantSets, and typed/API schemas — as OPC UA ObjectTypes, VariableTypes, and DataTypes, so that a composed USD scene *is* an OPC UA address space: browsable, subscribable, historizable, and vendor-extensible with native OPC UA semantics. It is **Part 2** of the *OPC UA — OpenUSD* work and **extends** the Part 1 *OPC UA — OpenUSD Bindings* model without changing it. Nothing here is normative, official, or endorsed by the OPC Foundation or the Alliance for OpenUSD; namespace URIs and NodeIds are **provisional** and for prototyping only.
 

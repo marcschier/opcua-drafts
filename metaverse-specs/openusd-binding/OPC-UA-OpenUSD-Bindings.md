@@ -599,7 +599,7 @@ Profiles:
 - **OpenUSD Composite Server** — the Live Rendering profile + OU-Composition (OU-DynamicComposition, OU-CrossServerComposition, OU-AssetDelivery, OU-ArtifactRegistry, OU-ArtifactFederation and OU-SchemaPluginDelivery optional); exposes the asset's component structure as composed USD prims.
 - **OpenUSD Artifact Server** — OU-Namespace, OU-Discovery, OU-Stage + OU-AssetDelivery and OU-ArtifactRegistry (OU-ArtifactFederation and OU-SchemaPluginDelivery optional). A server whose purpose is to *deliver* USD content: it hosts the artifact registry and is addressable as a USD resolver backend (§7.11.3), with or without live bindings.
 
-Each CU requires a conformance test (Browse the node, Read the properties, and — for bindings — resolve source/target and observe a converted value or, for OU-Command, an authorized write/`Call`; for OU-AssetDelivery, stream at least the root and one dependent asset, verify their digests, and open the cached composed stage; for OU-ArtifactRegistry, additionally confirm that each artifact's `ResourceId` percent-decodes to its `AssetIdentifier`, that `DependsOn` entries resolve to artifacts by asset identifier, and that a stage's `Assets` folder Organizes rather than duplicates the registry artifacts). See the Pumps addendum for a worked, testable instance.
+Each CU requires a conformance test (Browse the node, Read the properties, and — for bindings — resolve source/target and observe a converted value or, for OU-Command, an authorized write/`Call`; for OU-AssetDelivery, stream at least the root and one dependent asset, verify their digests, and open the cached composed stage; for OU-ArtifactRegistry, additionally confirm that each artifact's `ResourceId` equals the symbolic identifier re-derived from its `AssetIdentifier` (§7.11.3) and that its `Name` is that `AssetIdentifier` verbatim, that `DependsOn` entries resolve to artifacts by asset identifier, and that a stage's `Assets` folder Organizes rather than duplicates the registry artifacts). See the Pumps addendum for a worked, testable instance.
 
 ---
 
@@ -613,7 +613,7 @@ The namespace metadata provide standardized information about the elements of th
 |---|---|---|
 | NamespaceUri | String | `http://opcfoundation.org/UA/OpenUSD/` |
 | NamespaceVersion | String | 0.6.0 |
-| NamespacePublicationDate | DateTime | 2026-07-29 |
+| NamespacePublicationDate | DateTime | 2026-07-31 |
 | IsNamespaceSubset | Boolean | False |
 | StaticNodeIdTypes | IdType[] | 0 (Numeric) |
 | StaticNumericNodeIdRange | NumericRange[] | 1001:9999 |

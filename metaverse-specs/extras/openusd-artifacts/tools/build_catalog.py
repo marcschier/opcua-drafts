@@ -2,7 +2,7 @@
 """Build an xRegistry artifact-registry document for the OpenUSD binding domain.
 
 Emits the OpenUSD counterpart of ``core-specs/extras/xregistry-catalog`` per
-§5.15 of ``metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md``:
+§7.11 of ``metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md``:
 
   * ``usdassetgroups``        -> one ``OpenUsdAssetGroupType`` per asset container.
   * ``usdschemaplugingroups`` -> one ``OpenUsdSchemaPluginGroupType`` per codeless
@@ -10,7 +10,7 @@ Emits the OpenUSD counterpart of ``core-specs/extras/xregistry-catalog`` per
                                  ``generatedSchema.usda`` pair).
 
 The served-asset set, each artifact's ``AssetKind``, and the ``RootLayer`` come
-from the container's ``*.OpenUsdBinding.json`` descriptor (§5.15.2), NOT from
+from the container's ``*.OpenUsdBinding.json`` descriptor (§7.11.2), NOT from
 scanning: ``servedAssets.assets`` is authoritative, and ``componentAssetReference``
 edges are authored by a connector at runtime (§5.12/§5.13), so static ``@...@``
 scanning cannot see them. Static scanning is used only as a *supplement* to
@@ -20,13 +20,14 @@ it never decides the artifact set or the root. Anything not in ``servedAssets``
 is excluded. A container whose descriptor is missing is a hard error.
 
 Both group kinds hold ``OpenUsdAssetType`` resources under a ``usdassets``
-collection. Per §5.15.3 the authored asset identifier and the xRegistry ``Xid``
-are *inter-derivable*, not equal: ``openusd.assetidentifier`` is the authored USD
-asset identifier normalized relative to its container (leading ``./`` removed);
-``ResourceId`` is its URL-safe percent-encoding; and ``Xid`` is
+collection. Per §7.11.3 an artifact's ``ResourceId`` is the **symbolic identifier**
+of its authored asset identifier: ``openusd.assetidentifier`` is the authored USD
+asset identifier normalized relative to its container (leading ``./`` removed) and
+is the authority; ``ResourceId`` is ``symbolic_id()`` of it; and ``Xid`` is
 ``/<groups>/<AssetContainerId>/<resources>/<ResourceId>``. The build derives them
 one-directionally (identifier -> ResourceId -> Xid), so they cannot diverge, and
-the identifier is recoverable by percent-decoding the Xid's last segment.
+the construction is **not** inverted anywhere: a consumer that holds only an id
+reads ``assetidentifier`` rather than decoding the Xid's last segment.
 ``openusd.dependson`` lists the **authored asset identifiers** an artifact
 references (descriptor component-asset edges on the root, plus any in-layer
 ``@...@`` edges), so a resolver can match them straight against ``@...@``, and
@@ -89,14 +90,16 @@ _FORMAT_BY_EXT = {
     ".mtlx": "MaterialX/1.39",
 }
 
-# Asset containers to emit: (container id / group key, human name, source subdir).
+# Asset containers to emit: (container id / group key, source subdir).
+# The group id IS the asset container identifier (xRegistry-OpenUsd §4.1) and the
+# group's name is that identifier verbatim (§4.3), so the two are one value here.
 # The served-asset set and kinds come from each subdir's *.OpenUsdBinding.json.
 CONTAINERS = [
-    ("pumps", "pumps/Plant", "pumps"),
-    ("robotics", "robotics/Cell", "robotics"),
+    ("pumps", "pumps"),
+    ("robotics", "robotics"),
 ]
 
-# The two files of a codeless schema map to fixed AssetKinds (spec §5.15.1/§5.15.4).
+# The two files of a codeless schema map to fixed AssetKinds (spec §7.11.1/§7.11.4).
 # A generatedSchema.usda is syntactically a USD layer but is registered rather
 # than composed, so it carries its own format identifier (xRegistry spec §4.5.5).
 SCHEMA_FILE_KIND = {
@@ -125,7 +128,7 @@ def _sha256_hex(text: str) -> str:
 
 def _normalize_asset_id(ref: str) -> str:
     """Normalize an authored ``@...@`` reference to a container-relative asset
-    identifier (§5.15.3): trim, use forward slashes, drop a single leading
+    identifier (§7.11.3): trim, use forward slashes, drop a single leading
     ``./``. Sub-paths and package ``[...]`` selectors are preserved verbatim so
     the identifier still resolves the way the layer authored it."""
     ref = ref.strip().replace("\\", "/")
@@ -244,7 +247,7 @@ def _find_descriptor(src_dir: str) -> str:
     return os.path.join(src_dir, cands[0])
 
 
-def _build_container_group(collection, group_id, name, src_dir):
+def _build_container_group(collection, group_id, src_dir):
     descriptor = json.loads(_read_text(_find_descriptor(src_dir)))
     served = descriptor.get("servedAssets", {}).get("assets", [])
     if not served:
@@ -267,7 +270,7 @@ def _build_container_group(collection, group_id, name, src_dir):
         raise SystemExit(f"{src_dir}: expected exactly one RootLayer in servedAssets, found {roots}")
     root = roots[0]
 
-    # Cross-check the served root against the stage's rootLayerIdentifier (§5.15.2:
+    # Cross-check the served root against the stage's rootLayerIdentifier (§7.11.2:
     # the root is the artifact whose AssetIdentifier matches the stage root).
     stage_root = descriptor.get("stage", {}).get("rootLayerIdentifier", "")
     if stage_root and _asset_stem(stage_root) != _asset_stem(root):
@@ -298,9 +301,10 @@ def _build_container_group(collection, group_id, name, src_dir):
 
     group = {
         "usdassetgroupid": group_id,
-        "name": name,
-        # The group id IS the asset container identifier (xRegistry spec §4.1), so
-        # no separate attribute restates it. rootlayer is a real typed attribute.
+        # The group id IS the asset container identifier (xRegistry-OpenUsd §4.1), and
+        # name carries that identifier verbatim (§4.3); no separate attribute restates
+        # it. rootlayer is a real typed attribute.
+        "name": group_id,
         "rootlayer": root,
         f"{RESOURCES}count": len(resources),
         RESOURCES: resources,
@@ -333,11 +337,11 @@ def _build_schema_plugin_group(collection):
 
 def build(examples_dir: str) -> dict:
     asset_groups: dict[str, dict] = {}
-    for group_id, name, sub in CONTAINERS:
+    for group_id, sub in CONTAINERS:
         src_dir = os.path.join(examples_dir, sub)
         if not os.path.isdir(src_dir):
             raise SystemExit(f"missing container source directory: {src_dir}")
-        asset_groups[group_id] = _build_container_group(ASSET_GROUPS, group_id, name, src_dir)
+        asset_groups[group_id] = _build_container_group(ASSET_GROUPS, group_id, src_dir)
 
     plugin_group = _build_schema_plugin_group(PLUGIN_GROUPS)
     plugin_groups = {plugin_group["usdschemaplugingroupid"]: plugin_group}
@@ -349,8 +353,8 @@ def build(examples_dir: str) -> dict:
         "description": (
             "OpenUSD artifact registry (draft): artist-authored USD layers and a "
             "codeless schema plugin for the OPC UA <-> OpenUSD bindings, addressable "
-            "as a USD ArResolver backend (AssetIdentifier <-> ResourceId <-> Xid, "
-            "inter-derivable per §5.15.3)."
+            "as a USD ArResolver backend (AssetIdentifier -> ResourceId -> Xid, a "
+            "one-way construction per §7.11.3; the assetidentifier is the authority)."
         ),
         f"{ASSET_GROUPS}count": len(asset_groups),
         ASSET_GROUPS: asset_groups,

@@ -409,10 +409,8 @@ id, the `usdassetgroupid` MUST be its symbolic identifier
 ([Section 5.1.1](#511-the-symbolic-identifier-construction)).
 
 An Asset Container Group MUST set the core [`name`][xRegistry Core] attribute
-to a non-empty human-readable value. Where the `usdassetgroupid` is a symbolic
-identifier *derived from* the container identifier rather than the container
-identifier itself, `name` MUST be the container identifier verbatim, so the
-exact string is never lost. A registry is browsed by people, often through
+to the asset container identifier verbatim, so the exact string survives the
+normalization the id applies. A registry is browsed by people, often through
 generic third-party tooling that has only the id and the name to show.
 
 An Asset Container Group has one extension attribute:
@@ -661,8 +659,10 @@ and as a file name in the [file-system representation][xRegistry primer].
    Letter case is preserved.
 5. Join the surviving labels with `.`. If no label survives, the identifier is
    `_`.
-6. If the result is longer than 128 characters, drop trailing labels until it is
-   at most 119 characters long, then append the disambiguator of step 7.
+6. If the result is longer than 128 characters, drop trailing labels — never the
+   first — until it is at most 119 characters long; if that first label is itself
+   longer than 119 characters, truncate it to 119 and strip any trailing `-` or
+   `.`. Then append the disambiguator of step 7.
 7. Where step 6 truncated the result, or where the result would collide
    case-insensitively with an existing sibling in the same collection, append
    `.` followed by the first eight lower-case hexadecimal characters of the
@@ -756,8 +756,8 @@ Sections [5.1](#51-asset-identifiers-and-xids) through
 [5.3](#53-federation) together mean that a registry **is** an addressable asset
 resolver backend. A USD asset resolver plugin holding a container context
 resolves an authored `@...@` reference to a Resource by computation alone —
-normalize, percent-encode, append — and retrieves its bytes from the resulting
-URL, exactly as
+normalize, apply the symbolic identifier construction, append — and retrieves
+its bytes from the resulting URL, exactly as
 [Section 1.4](#14-document-store) describes. No lookup table, no index, and no
 xRegistry awareness in the authored scene are required.
 
