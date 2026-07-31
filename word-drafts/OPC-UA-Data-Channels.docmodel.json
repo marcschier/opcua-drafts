@@ -999,13 +999,52 @@
         "runs": [
           {
             "r": "t",
-            "text": "Data channels close that gap on the connection that is already open."
+            "text": "The sharpest case is reverse connect. A Server behind NAT or behind a one-way plant firewall may have no listening port at all: it reaches its supervisory Client by opening the transport connection itself, sending "
+          },
+          {
+            "r": "code",
+            "text": "RHE"
+          },
+          {
+            "r": "t",
+            "text": ", and letting the Client answer with "
+          },
+          {
+            "r": "code",
+            "text": "HEL"
+          },
+          {
+            "r": "t",
+            "text": " as OPC 10000-6 "
+          },
+          {
+            "r": "t",
+            "text": "§7.1.3"
+          },
+          {
+            "r": "t",
+            "text": " already permits. In that topology a second media port is not merely an inconvenience to be justified to a firewall administrator; it is unobtainable, because nothing on the Server is allowed to listen. The only workable place to carry the stream is therefore the connection the Server already opened, and a data channel does that without creating a single additional inbound media port in either direction."
           }
         ],
         "src": {
           "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
           "s": "2 The problem",
           "b": 5
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Data channels close that gap on the connection that is already open."
+          }
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "2 The problem",
+          "b": 6
         }
       },
       {
@@ -1150,6 +1189,24 @@
               },
               {
                 "r": "t",
+                "text": "), "
+              },
+              {
+                "r": "code",
+                "text": "opc.wt"
+              },
+              {
+                "r": "t",
+                "text": " ("
+              },
+              {
+                "r": "xref",
+                "target": "c6-11",
+                "kind": "clause",
+                "prefix": "6.11"
+              },
+              {
+                "r": "t",
                 "text": ")"
               }
             ]
@@ -1208,7 +1265,7 @@
             [
               {
                 "r": "t",
-                "text": "The transport; "
+                "text": "The transport for stream-carried payload, so "
               },
               {
                 "r": "code",
@@ -1216,7 +1273,7 @@
               },
               {
                 "r": "t",
-                "text": " frames are not sent"
+                "text": " frames are not sent; datagram-carried payload keeps the credit window, because datagrams are not flow-controlled"
               }
             ]
           ],
@@ -1236,7 +1293,7 @@
             [
               {
                 "r": "t",
-                "text": "The transport, genuinely, through QUIC DATAGRAM"
+                "text": "The transport, genuinely, through QUIC DATAGRAM or WebTransport datagrams"
               }
             ]
           ],
@@ -1263,6 +1320,16 @@
                 "target": "c6-10-5",
                 "kind": "clause",
                 "prefix": "6.10.5"
+              },
+              {
+                "r": "t",
+                "text": " and "
+              },
+              {
+                "r": "xref",
+                "target": "c6-11-6",
+                "kind": "clause",
+                "prefix": "6.11.6"
               }
             ]
           ],
@@ -1343,7 +1410,25 @@
           },
           {
             "r": "t",
-            "text": ", one MessageChunk per binary frame), and this specification changes nothing there. A future binding over HTTP/2 or HTTP/3 — where the WebSocket carrier itself has streams, and in the HTTP/3 case QUIC streams underneath — would be an outer-protocol binding and needs its own treatment: it is out of scope here and is noted so that a reader does not assume "
+            "text": ", one MessageChunk per binary frame), and this specification changes nothing there. HTTP/3 is the exception this specification now defines through WebTransport: "
+          },
+          {
+            "r": "code",
+            "text": "opc.wt"
+          },
+          {
+            "r": "t",
+            "text": " ("
+          },
+          {
+            "r": "xref",
+            "target": "c6-11",
+            "kind": "clause",
+            "prefix": "6.11"
+          },
+          {
+            "r": "t",
+            "text": ") uses a WebTransport session as an outer-protocol binding, with one WebTransport stream underneath each stream-carried data channel and WebTransport datagrams where genuine loss is requested. HTTP/2 is still deferred, and would need its own treatment for the same reason — the carrier has streams of its own — so a reader must not assume that "
           },
           {
             "r": "code",
@@ -1351,7 +1436,7 @@
           },
           {
             "r": "t",
-            "text": " remains inline under every future carrier."
+            "text": " remains inline under every future WebSocket or HTTP carrier."
           }
         ],
         "src": {
@@ -1527,15 +1612,24 @@
           },
           {
             "r": "t",
-            "text": " exactly as a "
+            "text": " and "
           },
           {
             "r": "code",
-            "text": "Read"
+            "text": "AccessRestrictions"
           },
           {
             "r": "t",
-            "text": " would be. Every Service in the set is scoped to "
+            "text": " exactly as the equivalent Service call would be — "
+          },
+          {
+            "r": "t",
+            "text": "per direction",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": ", since an outbound channel is a read but an inbound one writes Client-supplied content into the Server and needs the permission that governs writing it. Every Service in the set is scoped to "
           },
           {
             "r": "t",
@@ -1615,7 +1709,25 @@
           },
           {
             "r": "t",
-            "text": ") is the outer-protocol binding this specification defines. It adds exactly four things the inline model cannot express, and nothing else:"
+            "text": ") and "
+          },
+          {
+            "r": "code",
+            "text": "opc.wt"
+          },
+          {
+            "r": "t",
+            "text": " ("
+          },
+          {
+            "r": "xref",
+            "target": "c6-11",
+            "kind": "clause",
+            "prefix": "6.11"
+          },
+          {
+            "r": "t",
+            "text": ") are the outer-protocol bindings this specification defines. They add the transport's own multiplexing below OPC UA, and with it the properties the inline model cannot express by itself:"
           }
         ],
         "src": {
@@ -1669,6 +1781,14 @@
             },
             {
               "r": "t",
+              "text": ", "
+            },
+            {
+              "r": "code",
+              "text": "opc.wt"
+            },
+            {
+              "r": "t",
               "text": ")"
             }
           ]
@@ -1690,7 +1810,7 @@
             [
               {
                 "r": "t",
-                "text": "None; QUIC orders each stream independently"
+                "text": "None; QUIC or HTTP/3 orders each stream independently"
               }
             ]
           ],
@@ -1710,7 +1830,19 @@
             [
               {
                 "r": "t",
-                "text": "Real, over QUIC DATAGRAM"
+                "text": "Real when the carrier exposes datagrams: QUIC DATAGRAM for "
+              },
+              {
+                "r": "code",
+                "text": "opc.quic"
+              },
+              {
+                "r": "t",
+                "text": ", WebTransport datagrams for "
+              },
+              {
+                "r": "code",
+                "text": "opc.wt"
               }
             ]
           ],
@@ -1730,7 +1862,7 @@
             [
               {
                 "r": "t",
-                "text": "Survives, through connection migration"
+                "text": "Survives on a direct QUIC path; a terminating HTTP intermediary moves the endpoint to the proxy"
               }
             ]
           ],
@@ -1750,7 +1882,17 @@
             [
               {
                 "r": "t",
-                "text": "The transport's own"
+                "text": "The transport's own for streams; the "
+              },
+              {
+                "r": "xref",
+                "target": "c6-6-1",
+                "kind": "clause",
+                "prefix": "6.6.1"
+              },
+              {
+                "r": "t",
+                "text": " credit window remains for datagrams"
               }
             ]
           ]
@@ -1769,7 +1911,23 @@
         "runs": [
           {
             "r": "t",
-            "text": "An implementation that supports only the inline model is a complete implementation of this specification."
+            "text": "An implementation that supports only the inline model is a complete implementation of this specification. The two outer-protocol transports serve different deployments: "
+          },
+          {
+            "r": "code",
+            "text": "opc.quic"
+          },
+          {
+            "r": "t",
+            "text": " is the direct QUIC mapping, while "
+          },
+          {
+            "r": "code",
+            "text": "opc.wt"
+          },
+          {
+            "r": "t",
+            "text": " spends some purity to look like HTTP/3 where that is the only traffic a network will admit."
           }
         ],
         "src": {
@@ -2383,7 +2541,15 @@
           },
           {
             "r": "t",
-            "text": " the whole mechanism is replaced by QUIC's own flow control, no "
+            "text": ", and over "
+          },
+          {
+            "r": "code",
+            "text": "opc.wt"
+          },
+          {
+            "r": "t",
+            "text": " when payload is carried on streams, the mechanism is replaced by the transport's own flow control, no "
           },
           {
             "r": "code",
@@ -2399,7 +2565,17 @@
           },
           {
             "r": "t",
-            "text": " before a grant\" gate does not apply."
+            "text": " before a grant\" gate does not apply. Datagram-carried payload is the exception: datagrams are not flow-controlled, so the "
+          },
+          {
+            "r": "xref",
+            "target": "c6-6-1",
+            "kind": "clause",
+            "prefix": "6.6.1"
+          },
+          {
+            "r": "t",
+            "text": " credit window still bounds the receiver."
           }
         ],
         "src": {
@@ -2574,7 +2750,7 @@
           },
           {
             "r": "t",
-            "text": " gives the full transition table — which event causes which transition, which are legal, and what may be sent in each state — and "
+            "text": " gives the full transition table — which event causes which transition, which are legal, and what may be sent in each state — and the Part 6 errata "
           },
           {
             "r": "t",
@@ -2705,8 +2881,24 @@
           ],
           [
             {
+              "r": "t",
+              "text": "Outer-protocol datagram transport ("
+            },
+            {
               "r": "code",
               "text": "opc.quic"
+            },
+            {
+              "r": "t",
+              "text": ", "
+            },
+            {
+              "r": "code",
+              "text": "opc.wt"
+            },
+            {
+              "r": "t",
+              "text": ")"
             }
           ]
         ],
@@ -2727,7 +2919,7 @@
             [
               {
                 "r": "t",
-                "text": "Exact, on one QUIC stream."
+                "text": "Exact, on one transport stream."
               }
             ]
           ],
@@ -2747,7 +2939,7 @@
             [
               {
                 "r": "t",
-                "text": "Carried on the channel's QUIC stream; ordered by the transport, so the saving is buffering rather than latency."
+                "text": "Carried on the channel's transport stream; ordered by the transport, so the saving is buffering rather than latency."
               }
             ]
           ],
@@ -2775,7 +2967,7 @@
             [
               {
                 "r": "t",
-                "text": "Retransmission over DATAGRAM up to "
+                "text": "Retransmission over datagrams up to "
               },
               {
                 "r": "code",
@@ -2783,7 +2975,7 @@
               },
               {
                 "r": "t",
-                "text": " or the deadline."
+                "text": " or the deadline, when datagrams are available; otherwise sender-side discard."
               }
             ]
           ],
@@ -2803,7 +2995,7 @@
             [
               {
                 "r": "t",
-                "text": "Exact. Sent once, never retransmitted."
+                "text": "Exact when datagrams are available. Refused when they are not."
               }
             ]
           ]
@@ -2849,7 +3041,25 @@
           },
           {
             "r": "t",
-            "text": ") and advertises it through "
+            "text": ") or an "
+          },
+          {
+            "r": "code",
+            "text": "opc.wt"
+          },
+          {
+            "r": "t",
+            "text": " endpoint ("
+          },
+          {
+            "r": "xref",
+            "target": "c6-11",
+            "kind": "clause",
+            "prefix": "6.11"
+          },
+          {
+            "r": "t",
+            "text": ") with datagrams available, and advertises that capability through "
           },
           {
             "r": "code",
@@ -3235,7 +3445,7 @@
             [
               {
                 "r": "t",
-                "text": "Over "
+                "text": "Over an outer-protocol transport, the id of a carrier the Client has already opened. Over "
               },
               {
                 "r": "code",
@@ -3243,17 +3453,31 @@
               },
               {
                 "r": "t",
-                "text": ", for a Client-initiated direction, the id of the QUIC stream the Client has already opened ("
+                "text": " and "
               },
               {
-                "r": "xref",
-                "target": "c6-10-3",
-                "kind": "clause",
-                "prefix": "6.10.3"
+                "r": "code",
+                "text": "opc.wt"
               },
               {
                 "r": "t",
-                "text": "). "
+                "text": " this is present for Client-opened directions ("
+              },
+              {
+                "r": "code",
+                "text": "SinkToSource"
+              },
+              {
+                "r": "t",
+                "text": " and "
+              },
+              {
+                "r": "code",
+                "text": "Bidirectional"
+              },
+              {
+                "r": "t",
+                "text": "). Always "
               },
               {
                 "r": "code",
@@ -3261,15 +3485,7 @@
               },
               {
                 "r": "t",
-                "text": " otherwise and always "
-              },
-              {
-                "r": "code",
-                "text": "0"
-              },
-              {
-                "r": "t",
-                "text": " for inline framing."
+                "text": " for inline framing and for directions whose carrier is opened by the Server."
               }
             ]
           ],
@@ -3471,6 +3687,14 @@
               },
               {
                 "r": "t",
+                "text": ", the WebTransport stream id over "
+              },
+              {
+                "r": "code",
+                "text": "opc.wt"
+              },
+              {
+                "r": "t",
                 "text": ", "
               },
               {
@@ -3479,7 +3703,7 @@
               },
               {
                 "r": "t",
-                "text": " for inline framing. Echoed unchanged for a Client-initiated direction. It is not named "
+                "text": " for inline framing. It echoes a Client-supplied id after validation, or carries the Server-selected id when the Server opened the carrier. It is not named "
               },
               {
                 "r": "code",
@@ -3988,7 +4212,7 @@
               },
               {
                 "r": "t",
-                "text": " is not supported, or a datagram mode was requested where the QUIC DATAGRAM extension is unavailable."
+                "text": " is not supported, or a datagram mode was requested where the selected transport cannot provide datagrams."
               }
             ]
           ],
@@ -4046,7 +4270,7 @@
               },
               {
                 "r": "t",
-                "text": " is missing for a Client-initiated QUIC direction."
+                "text": " is missing where the selected outer-protocol mapping requires the Client to provide it."
               }
             ]
           ],
@@ -4513,15 +4737,7 @@
           },
           {
             "r": "t",
-            "text": " frame, so the revised parameters reach only the caller, and over "
-          },
-          {
-            "r": "code",
-            "text": "opc.quic"
-          },
-          {
-            "r": "t",
-            "text": " the response and the frames are not ordered relative to each other. A reduced "
+            "text": " frame, so the revised parameters reach only the caller, and over outer-protocol transports the response and the frames are not ordered relative to each other. A reduced "
           },
           {
             "r": "code",
@@ -7389,7 +7605,60 @@
         "runs": [
           {
             "r": "t",
-            "text": "This is the only place in the specification where payload is genuinely lost in transit, which is why "
+            "text": "QUIC DATAGRAM frames are congestion-controlled but consume no stream or connection flow-control credit, so the delegation of "
+          },
+          {
+            "r": "xref",
+            "target": "c6-2",
+            "kind": "clause",
+            "prefix": "6.2"
+          },
+          {
+            "r": "t",
+            "text": " does not extend to them: datagram-carried "
+          },
+          {
+            "r": "code",
+            "text": "DATA"
+          },
+          {
+            "r": "t",
+            "text": " keeps the credit window of "
+          },
+          {
+            "r": "xref",
+            "target": "c6-6-1",
+            "kind": "clause",
+            "prefix": "6.6.1"
+          },
+          {
+            "r": "t",
+            "text": ", which is what bounds a receiver's buffers when the transport is not doing it."
+          }
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "9.4 Unreliable datagrams",
+          "b": 2
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Together with WebTransport datagrams in "
+          },
+          {
+            "r": "xref",
+            "target": "c6-11-4",
+            "kind": "clause",
+            "prefix": "6.11.4"
+          },
+          {
+            "r": "t",
+            "text": ", this is where payload is genuinely lost in transit, which is why "
           },
           {
             "r": "code",
@@ -7411,7 +7680,7 @@
         "src": {
           "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
           "s": "9.4 Unreliable datagrams",
-          "b": 2
+          "b": 3
         }
       },
       {
@@ -7768,7 +8037,7 @@
         "runs": [
           {
             "r": "t",
-            "text": "These rules are easy to violate silently. The natural implementation resolves the TLS certificate once when the listener starts, while the certificate registry rotates underneath it; the resulting mismatch looks to the verifying peer exactly like the relay attack the binding exists to prevent. Part 6 "
+            "text": "These rules are easy to violate silently. The natural implementation resolves the TLS certificate once when the listener starts, while the certificate registry rotates underneath it; the resulting mismatch looks to the verifying peer exactly like the relay attack the binding exists to prevent. Part 6 errata "
           },
           {
             "r": "t",
@@ -7957,7 +8226,7 @@
       {
         "t": "clause",
         "id": "c6-10-8",
-        "title": "Choosing between the inline and outer-protocol models",
+        "title": "Choosing between transports",
         "level": 3
       },
       {
@@ -7966,19 +8235,19 @@
         "runs": [
           {
             "r": "t",
-            "text": "Both models present the same Services and the same model, so the choice is a deployment decision rather than an application one. It reduces to four questions."
+            "text": "All three transport families present the same Services and the same model, so the choice is a deployment decision rather than an application one. It reduces to what the network will admit, which transport property the stream actually needs, and whether the implementation can satisfy the certificate binding that makes transport-secured data frames safe."
           }
         ],
         "src": {
           "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-          "s": "9.8 Choosing between the inline and outer-protocol models",
+          "s": "9.8 Choosing between transports",
           "b": 0
         }
       },
       {
         "t": "table",
-        "id": "choosing-between-the-inline-and-outer-protocol-models-tab1",
-        "caption": "Choosing between the inline and outer-protocol models",
+        "id": "choosing-between-transports-tab1",
+        "caption": "Choosing between transports",
         "kind": "generic",
         "headers": [
           [
@@ -8046,28 +8315,120 @@
             [
               {
                 "r": "t",
-                "text": "Browser or strict-firewall reachability"
+                "text": "Native stacks on strict-firewall paths where HTTP-originated traffic is the only acceptable shape"
               }
             ],
             [
               {
-                "r": "t",
-                "text": "Inline",
-                "b": true
+                "r": "code",
+                "text": "opc.wt"
               },
               {
                 "r": "t",
-                "text": " over "
+                "text": ", or inline "
               },
               {
                 "r": "code",
                 "text": "opc.wss"
+              },
+              {
+                "r": "t",
+                "text": " when HTTP/3 or WebTransport is not available"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "opc.wt"
+              },
+              {
+                "r": "t",
+                "text": " buys the HTTP/3 deployment shape while still giving one carrier stream per data channel; inline "
+              },
+              {
+                "r": "code",
+                "text": "opc.wss"
+              },
+              {
+                "r": "t",
+                "text": " is the conservative fallback."
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "Browser-hosted Clients that only need HTTP/3 reachability"
               }
             ],
             [
               {
                 "r": "t",
-                "text": "Traverses what only allows HTTP-originated traffic."
+                "text": "Possibly ",
+                "b": true
+              },
+              {
+                "r": "code",
+                "text": "opc.wt"
+              },
+              {
+                "r": "t",
+                "text": ", but only with a platform binding that exposes the required security evidence",
+                "b": true
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "WebTransport itself is browser-reachable; the browser APIs usually do not expose the peer certificate or TLS exporter needed by "
+              },
+              {
+                "r": "xref",
+                "target": "c6-11-5",
+                "kind": "clause",
+                "prefix": "6.11.5"
+              },
+              {
+                "r": "t",
+                "text": ", so a browser cannot claim this profile unless the UA environment supplies that binding out of band."
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "Server behind NAT or a one-way firewall, no inbound port permitted"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Any data-channel transport reached by reverse connect",
+                "b": true
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Reverse connect is a property of who establishes the connection, not of the framing. Inline, "
+              },
+              {
+                "r": "code",
+                "text": "opc.quic"
+              },
+              {
+                "r": "t",
+                "text": " and "
+              },
+              {
+                "r": "code",
+                "text": "opc.wt"
+              },
+              {
+                "r": "t",
+                "text": " can all carry the channels once the Server has opened the single outbound connection."
               }
             ]
           ],
@@ -8080,21 +8441,20 @@
             ],
             [
               {
-                "r": "t",
-                "text": "Outer-protocol",
-                "b": true
-              },
-              {
-                "r": "t",
-                "text": " ("
-              },
-              {
                 "r": "code",
                 "text": "opc.quic"
               },
               {
                 "r": "t",
-                "text": ")"
+                "text": ", or "
+              },
+              {
+                "r": "code",
+                "text": "opc.wt"
+              },
+              {
+                "r": "t",
+                "text": " when WebTransport datagrams are available end to end"
               }
             ],
             [
@@ -8116,12 +8476,32 @@
                 "r": "t",
                 "text": "Outer-protocol",
                 "b": true
+              },
+              {
+                "r": "t",
+                "text": " ("
+              },
+              {
+                "r": "code",
+                "text": "opc.quic"
+              },
+              {
+                "r": "t",
+                "text": " or "
+              },
+              {
+                "r": "code",
+                "text": "opc.wt"
+              },
+              {
+                "r": "t",
+                "text": ")"
               }
             ],
             [
               {
                 "r": "t",
-                "text": "A large frame on one QUIC stream does not delay a small one on another; under TCP it does, below the framing layer."
+                "text": "A large frame on one transport stream does not delay a small one on another; under TCP it does, below the framing layer."
               }
             ]
           ],
@@ -8129,7 +8509,7 @@
             [
               {
                 "r": "t",
-                "text": "Mobile or roaming clients"
+                "text": "Mobile or roaming clients on a direct QUIC path"
               }
             ],
             [
@@ -8142,7 +8522,7 @@
             [
               {
                 "r": "t",
-                "text": "Connection migration keeps the SecureChannel, Session and channels across a path change."
+                "text": "Connection migration keeps the SecureChannel, Session and channels across a path change. If an HTTP/3 intermediary terminates TLS, the migration boundary is that intermediary."
               }
             ]
           ],
@@ -8187,13 +8567,39 @@
               },
               {
                 "r": "t",
-                "text": " gives such an intermediary the plaintext, and no QUIC profile avoids that ("
+                "text": " gives such an intermediary the plaintext, and neither "
+              },
+              {
+                "r": "code",
+                "text": "opc.quic"
+              },
+              {
+                "r": "t",
+                "text": " nor "
+              },
+              {
+                "r": "code",
+                "text": "opc.wt"
+              },
+              {
+                "r": "t",
+                "text": " has a profile that repairs that ("
               },
               {
                 "r": "xref",
                 "target": "c6-10-5",
                 "kind": "clause",
                 "prefix": "6.10.5"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "xref",
+                "target": "c6-11-5",
+                "kind": "clause",
+                "prefix": "6.11.5"
               },
               {
                 "r": "t",
@@ -8222,7 +8628,7 @@
             [
               {
                 "r": "t",
-                "text": "Service traffic outranks data channels in both models; "
+                "text": "Service traffic outranks data channels in every model; "
               },
               {
                 "r": "xref",
@@ -8274,7 +8680,7 @@
         "note": null,
         "src": {
           "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-          "s": "9.8 Choosing between the inline and outer-protocol models",
+          "s": "9.8 Choosing between transports",
           "b": 1
         }
       },
@@ -8293,7 +8699,7 @@
           },
           {
             "r": "t",
-            "text": " require QUIC for any capability it also exposes over "
+            "text": " require QUIC or WebTransport for any capability it also exposes over "
           },
           {
             "r": "code",
@@ -8309,13 +8715,54 @@
           },
           {
             "r": "t",
-            "text": " whether genuine loss is available — so a Client learns the difference by reading rather than by measuring."
+            "text": " whether genuine loss is available — so a Client learns the difference by reading rather than by measuring. The honest trade is that "
+          },
+          {
+            "r": "code",
+            "text": "opc.wt"
+          },
+          {
+            "r": "t",
+            "text": " reaches places that raw "
+          },
+          {
+            "r": "code",
+            "text": "opc.quic"
+          },
+          {
+            "r": "t",
+            "text": " may not, at the cost of choosing a carrier that HTTP infrastructure is accustomed to pooling, coalescing and terminating unless this profile forbids it."
           }
         ],
         "src": {
           "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-          "s": "9.8 Choosing between the inline and outer-protocol models",
+          "s": "9.8 Choosing between transports",
           "b": 2
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "A browser can create a WebTransport session, open streams and send datagrams. What the ordinary browser API does not expose is the peer certificate, the TLS exporter or enough connection identity to prove that the TLS peer and the OPC UA application peer are bound by the same key. Browser-hosted Clients therefore need an implementation-specific platform hook for "
+          },
+          {
+            "r": "xref",
+            "target": "c6-11-5",
+            "kind": "clause",
+            "prefix": "6.11.5"
+          },
+          {
+            "r": "t",
+            "text": "; without it they can reach the transport but cannot conform to this profile."
+          }
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "9.8 Choosing between transports",
+          "b": 3
         }
       },
       {
@@ -8330,15 +8777,7 @@
         "runs": [
           {
             "r": "t",
-            "text": "A Client that cannot reach an "
-          },
-          {
-            "r": "code",
-            "text": "opc.quic"
-          },
-          {
-            "r": "t",
-            "text": " endpoint — no implementation, blocked UDP, a middlebox that drops QUIC — "
+            "text": "A Client that cannot reach an outer-protocol endpoint — no implementation, blocked UDP, no HTTP/3 path, no WebTransport stack, or a middlebox that drops QUIC — "
           },
           {
             "r": "t",
@@ -8347,7 +8786,25 @@
           },
           {
             "r": "t",
-            "text": " fall back to "
+            "text": " fall back to another advertised endpoint. The Services, the model, the frame layout above the Message header and the application contract are identical; only the properties in "
+          },
+          {
+            "r": "xref",
+            "target": "c6-4",
+            "kind": "clause",
+            "prefix": "6.4"
+          },
+          {
+            "r": "t",
+            "text": " differ. There is no "
+          },
+          {
+            "r": "code",
+            "text": "opc.wt"
+          },
+          {
+            "r": "t",
+            "text": " inline fallback profile: a stack that can establish a WebTransport session already has streams, and a stack that cannot uses the existing cross-transport fallback to "
           },
           {
             "r": "code",
@@ -8363,17 +8820,7 @@
           },
           {
             "r": "t",
-            "text": " and use inline framing. The Services, the model, the frame layout above the Message header and the application contract are identical; only the properties in "
-          },
-          {
-            "r": "xref",
-            "target": "c6-4",
-            "kind": "clause",
-            "prefix": "6.4"
-          },
-          {
-            "r": "t",
-            "text": " differ."
+            "text": "."
           }
         ],
         "src": {
@@ -8397,7 +8844,31 @@
           },
           {
             "r": "t",
-            "text": " be a downgrade. A Client "
+            "text": " be a downgrade, and the comparison is of the protection actually applied to payload rather than only of the SecurityMode name. Over "
+          },
+          {
+            "r": "code",
+            "text": "opc.quic"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "opc.wt"
+          },
+          {
+            "r": "t",
+            "text": " every frame is encrypted by TLS whatever the SecurityMode; under inline framing a SecurityMode of "
+          },
+          {
+            "r": "code",
+            "text": "Sign"
+          },
+          {
+            "r": "t",
+            "text": " authenticates each frame but leaves its payload readable. So a Client "
           },
           {
             "r": "t",
@@ -8406,13 +8877,1435 @@
           },
           {
             "r": "t",
-            "text": " fall back to an endpoint whose SecurityMode or SecurityPolicy is weaker than the one it required of the QUIC endpoint, and reports the failure to the application instead. Making fallback unconditional would hand an off-path attacker a downgrade primitive: dropping UDP on port 4840 is a single firewall rule."
+            "text": " fall back to an endpoint whose SecurityMode or SecurityPolicy is weaker than the one it required of the outer-protocol endpoint, "
+          },
+          {
+            "r": "t",
+            "text": "and shall not",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " fall back from "
+          },
+          {
+            "r": "code",
+            "text": "TransportSecured"
+          },
+          {
+            "r": "t",
+            "text": " data frames to inline framing on anything other than "
+          },
+          {
+            "r": "code",
+            "text": "SignAndEncrypt"
+          },
+          {
+            "r": "t",
+            "text": " — otherwise dropping UDP, a single firewall rule, moves a \"non-downgrading\" Client onto a transport where its media is in the clear."
           }
         ],
         "src": {
           "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
           "s": "9.9 Fallback",
           "b": 1
+        }
+      },
+      {
+        "t": "clause",
+        "id": "c6-11",
+        "title": "The WebTransport over HTTP/3 transport",
+        "level": 2
+      },
+      {
+        "t": "clause",
+        "id": "c6-11-1",
+        "title": "Why an outer-protocol binding",
+        "level": 3
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "code",
+            "text": "opc.wt"
+          },
+          {
+            "r": "t",
+            "text": " is the WebTransport-over-HTTP/3 form of the outer-protocol channel model of "
+          },
+          {
+            "r": "xref",
+            "target": "c6-2",
+            "kind": "clause",
+            "prefix": "6.2"
+          },
+          {
+            "r": "t",
+            "text": ". The existing "
+          },
+          {
+            "r": "code",
+            "text": "opc.wss"
+          },
+          {
+            "r": "t",
+            "text": " transport treats WebSocket as a pipe: one binary WebSocket message is one UACP MessageChunk, and data channels are therefore inline. WebTransport changes the abstraction in the useful direction. One WebTransport session has bidirectional streams, unidirectional streams and datagrams, all carried by HTTP/3 over QUIC, so it gives this specification the same shape as "
+          },
+          {
+            "r": "xref",
+            "target": "c6-10",
+            "kind": "clause",
+            "prefix": "6.10"
+          },
+          {
+            "r": "t",
+            "text": " without assigning a new raw QUIC ALPN protocol."
+          }
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "10.1 Why an outer-protocol binding",
+          "b": 0
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The reason to define this separately from "
+          },
+          {
+            "r": "code",
+            "text": "opc.quic"
+          },
+          {
+            "r": "t",
+            "text": " is deployment rather than mechanics. Some networks will admit HTTP/3 traffic from a native OPC UA stack to a supervisory host where they will not admit a raw QUIC application protocol. "
+          },
+          {
+            "r": "code",
+            "text": "opc.wt"
+          },
+          {
+            "r": "t",
+            "text": " uses that shape without pretending it is the inline "
+          },
+          {
+            "r": "code",
+            "text": "opc.wss"
+          },
+          {
+            "r": "t",
+            "text": " binding. Browser reachability is also real: browser APIs can create WebTransport sessions, streams and datagrams. What those APIs do not normally expose is the certificate or exporter evidence needed by "
+          },
+          {
+            "r": "xref",
+            "target": "c6-11-5",
+            "kind": "clause",
+            "prefix": "6.11.5"
+          },
+          {
+            "r": "t",
+            "text": ", so browser reachability is not by itself conformance."
+          }
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "10.1 Why an outer-protocol binding",
+          "b": 1
+        }
+      },
+      {
+        "t": "note",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Note.",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " WebTransport over HTTP/3 is "
+          },
+          {
+            "r": "code",
+            "text": "draft-ietf-webtrans-http3-16"
+          },
+          {
+            "r": "t",
+            "text": " (July 2026), a Standards Track Internet-Draft and not an RFC. Every other transport named here rests on stable RFCs. A product implements "
+          },
+          {
+            "r": "code",
+            "text": "opc.wt"
+          },
+          {
+            "r": "t",
+            "text": " by accepting that draft dependency, and a certification profile pins the draft or waits for the RFC."
+          }
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "10.1 Why an outer-protocol binding",
+          "b": 2
+        }
+      },
+      {
+        "t": "clause",
+        "id": "c6-11-2",
+        "title": "URL scheme, ALPN and discovery",
+        "level": 3
+      },
+      {
+        "t": "table",
+        "id": "url-scheme--alpn-and-discovery-tab1",
+        "caption": "URL scheme, ALPN and discovery",
+        "kind": "generic",
+        "headers": [
+          [
+            {
+              "r": "t",
+              "text": "Item"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Value"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "r": "t",
+                "text": "URL scheme"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "opc.wt"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "TransportProfileUri"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "http://opcfoundation.org/UA-Profile/Transport/wt-uasc-uabinary"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "ALPN identifier"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "h3"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "WebTransport bootstrap"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "WebTransport over HTTP/3 ("
+              },
+              {
+                "r": "code",
+                "text": "draft-ietf-webtrans-http3-16"
+              },
+              {
+                "r": "t",
+                "text": ")"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "Default port"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "443 UDP, unless the EndpointUrl states another port"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "Encoding"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "OPC UA Binary, as for "
+              },
+              {
+                "r": "code",
+                "text": "opc.quic"
+              }
+            ]
+          ]
+        ],
+        "widths": null,
+        "note": null,
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "10.2 URL scheme, ALPN and discovery",
+          "b": 0
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "A Server offering "
+          },
+          {
+            "r": "code",
+            "text": "opc.wt"
+          },
+          {
+            "r": "t",
+            "text": " returns a distinct "
+          },
+          {
+            "r": "code",
+            "text": "EndpointDescription"
+          },
+          {
+            "r": "t",
+            "text": " from "
+          },
+          {
+            "r": "code",
+            "text": "GetEndpoints"
+          },
+          {
+            "r": "t",
+            "text": ", with the "
+          },
+          {
+            "r": "code",
+            "text": "opc.wt"
+          },
+          {
+            "r": "t",
+            "text": " URL and the WebTransport TransportProfileUri. That distinction matters: a Client selects the transport before connecting, so it knows whether stream-carried data frames will ride raw QUIC streams or WebTransport streams inside HTTP/3."
+          }
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "10.2 URL scheme, ALPN and discovery",
+          "b": 1
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "A single HTTP/3 connection carrying "
+          },
+          {
+            "r": "code",
+            "text": "opc.wt"
+          },
+          {
+            "r": "t",
+            "text": " is one OPC UA TransportConnection and contains exactly one WebTransport session for that endpoint. HTTP/3 connection pooling, origin coalescing and reuse for other origins or endpoints are prohibited. The prohibition is stricter here than it first looks, because multiple WebTransport sessions on one HTTP/3 connection are normal HTTP behavior; for OPC UA they would make the TLS-peer-to-application-peer binding and the SecureChannel lifetime ambiguous. A deployment that wants ordinary HTTP pooling uses a different origin and a different connection for non-OPC traffic."
+          }
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "10.2 URL scheme, ALPN and discovery",
+          "b": 2
+        }
+      },
+      {
+        "t": "clause",
+        "id": "c6-11-3",
+        "title": "Connection, control stream and channel streams",
+        "level": 3
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The WebTransport session is established by HTTP/3 Extended CONNECT, and the HTTP/3 connection below it is the TransportConnection. The first bidirectional WebTransport stream carries the UACP and Secure Conversation conversation — "
+          },
+          {
+            "r": "code",
+            "text": "HEL"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "ACK"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "ERR"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "OPN"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "MSG"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "CLO"
+          },
+          {
+            "r": "t",
+            "text": " — byte for byte as over "
+          },
+          {
+            "r": "code",
+            "text": "opc.tcp"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "opc.quic"
+          },
+          {
+            "r": "t",
+            "text": ". "
+          },
+          {
+            "r": "code",
+            "text": "OpenSecureChannel"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "CreateSession"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "ActivateSession"
+          },
+          {
+            "r": "t",
+            "text": " therefore remain ordinary OPC UA exchanges; HTTP authenticates no application identity and authorizes no user. Losing the WebTransport session or the control stream is losing the SecureChannel: every data channel is aborted."
+          }
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "10.3 Connection, control stream and channel streams",
+          "b": 0
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Each data channel is then bound to its own WebTransport stream, and the WebTransport stream id travels in "
+          },
+          {
+            "r": "code",
+            "text": "transportChannelId"
+          },
+          {
+            "r": "t",
+            "text": ":"
+          }
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "10.3 Connection, control stream and channel streams",
+          "b": 1
+        }
+      },
+      {
+        "t": "table",
+        "id": "connection--control-stream-and-channel-streams-tab1",
+        "caption": "Connection, control stream and channel streams",
+        "kind": "generic",
+        "headers": [
+          [
+            {
+              "r": "t",
+              "text": "Direction"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "WebTransport stream"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Initiator"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Where the id is carried"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "r": "code",
+                "text": "SourceToSink"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "server-initiated unidirectional"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Server"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "OpenDataChannel"
+              },
+              {
+                "r": "t",
+                "text": " "
+              },
+              {
+                "r": "t",
+                "text": "response",
+                "b": true
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "code",
+                "text": "SinkToSource"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "client-initiated unidirectional"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Client"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "OpenDataChannel"
+              },
+              {
+                "r": "t",
+                "text": " "
+              },
+              {
+                "r": "t",
+                "text": "request",
+                "b": true
+              },
+              {
+                "r": "t",
+                "text": ", echoed in the response"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "code",
+                "text": "Bidirectional"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "client-initiated bidirectional"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Client"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "OpenDataChannel"
+              },
+              {
+                "r": "t",
+                "text": " "
+              },
+              {
+                "r": "t",
+                "text": "request",
+                "b": true
+              },
+              {
+                "r": "t",
+                "text": ", echoed in the response"
+              }
+            ]
+          ]
+        ],
+        "widths": null,
+        "note": null,
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "10.3 Connection, control stream and channel streams",
+          "b": 2
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "This is the same rule as "
+          },
+          {
+            "r": "xref",
+            "target": "c6-10-3",
+            "kind": "clause",
+            "prefix": "6.10.3"
+          },
+          {
+            "r": "t",
+            "text": ", because WebTransport has server-initiated streams: the data direction decides which OPC UA peer opens the stream. "
+          },
+          {
+            "r": "code",
+            "text": "OpenDataChannel"
+          },
+          {
+            "r": "t",
+            "text": " is always Client-invoked, so for the two Client-initiated directions the Server cannot report an id it does not allocate. The Client opens the stream before calling, carries the id in the request, and writes nothing to it until the response arrives."
+          }
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "10.3 Connection, control stream and channel streams",
+          "b": 3
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Server-initiated streams are not related to reverse connect and do not substitute for it. A server-initiated stream is opened inside a WebTransport session that already exists, so it presupposes the connection; reverse connect ("
+          },
+          {
+            "r": "xref",
+            "target": "c6-11-6",
+            "kind": "clause",
+            "prefix": "6.11.6"
+          },
+          {
+            "r": "t",
+            "text": ") decides which peer "
+          },
+          {
+            "r": "t",
+            "text": "dials",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " that connection in the first place, which is a reachability question. A Server with no inbound port still needs reverse connect to obtain a session at all, and once it has one it opens "
+          },
+          {
+            "r": "code",
+            "text": "SourceToSink"
+          },
+          {
+            "r": "t",
+            "text": " streams exactly as it would on a Client-dialled connection."
+          }
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "10.3 Connection, control stream and channel streams",
+          "b": 4
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "A WebTransport stream carries frames in the same transport-secured framing used by "
+          },
+          {
+            "r": "code",
+            "text": "opc.quic"
+          },
+          {
+            "r": "t",
+            "text": ": Message header, stream header, payload, nothing else. The UA-SC security header, sequence header and footer are omitted under the "
+          },
+          {
+            "r": "code",
+            "text": "TransportSecured"
+          },
+          {
+            "r": "t",
+            "text": " profile because TLS 1.3 already authenticates and encrypts, and the stream already orders and deduplicates its bytes. "
+          },
+          {
+            "r": "code",
+            "text": "MessageSize"
+          },
+          {
+            "r": "t",
+            "text": " remains authoritative, so a stream is self-delimiting."
+          }
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "10.3 Connection, control stream and channel streams",
+          "b": 5
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Because HTTP/3 and QUIC apply their own flow control to streams, "
+          },
+          {
+            "r": "code",
+            "text": "CREDIT"
+          },
+          {
+            "r": "t",
+            "text": " frames "
+          },
+          {
+            "r": "t",
+            "text": "shall not",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " be sent for stream-carried payload over "
+          },
+          {
+            "r": "code",
+            "text": "opc.wt"
+          },
+          {
+            "r": "t",
+            "text": "; duplicating the window in two layers gains nothing and deadlocks when the two disagree. Orderly end of a WebTransport stream is the "
+          },
+          {
+            "r": "code",
+            "text": "END"
+          },
+          {
+            "r": "t",
+            "text": " half-close for that direction. Aborts use the WebTransport stream reset mechanism with the 32-bit OPC UA "
+          },
+          {
+            "r": "code",
+            "text": "StatusCode"
+          },
+          {
+            "r": "t",
+            "text": " carried in the 64-bit application error code, so reset and half-close keep the same independent-direction semantics as they do over "
+          },
+          {
+            "r": "code",
+            "text": "opc.quic"
+          },
+          {
+            "r": "t",
+            "text": " instead of inheriting WebSocket's close-both-directions behavior."
+          }
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "10.3 Connection, control stream and channel streams",
+          "b": 6
+        }
+      },
+      {
+        "t": "clause",
+        "id": "c6-11-4",
+        "title": "Unreliable datagrams",
+        "level": 3
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Where the negotiated mode is "
+          },
+          {
+            "r": "code",
+            "text": "Unreliable"
+          },
+          {
+            "r": "t",
+            "text": ", or "
+          },
+          {
+            "r": "code",
+            "text": "PartiallyReliable"
+          },
+          {
+            "r": "t",
+            "text": " with WebTransport datagrams available at both ends, "
+          },
+          {
+            "r": "code",
+            "text": "DATA"
+          },
+          {
+            "r": "t",
+            "text": " frames are sent as WebTransport datagrams rather than on the channel's stream. Control frames always use the stream, so a "
+          },
+          {
+            "r": "code",
+            "text": "RESET"
+          },
+          {
+            "r": "t",
+            "text": " or an "
+          },
+          {
+            "r": "code",
+            "text": "END"
+          },
+          {
+            "r": "t",
+            "text": " is never lost."
+          }
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "10.4 Unreliable datagrams",
+          "b": 0
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "WebTransport datagrams are part of WebTransport; this profile does not invent a per-request opt-in or a sub-protocol to make them exist. One datagram carries exactly one frame, which "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " fit the negotiated datagram size; fragmenting across datagrams is not permitted, because one lost fragment would destroy a frame the receiver could otherwise have used in part. Where the peer or the underlying QUIC connection does not make datagrams available, the Server reports "
+          },
+          {
+            "r": "code",
+            "text": "SupportsUnreliableDatagrams"
+          },
+          {
+            "r": "t",
+            "text": " "
+          },
+          {
+            "r": "code",
+            "text": "False"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " reject "
+          },
+          {
+            "r": "code",
+            "text": "Unreliable"
+          },
+          {
+            "r": "t",
+            "text": " with "
+          },
+          {
+            "r": "code",
+            "text": "Bad_DeliveryModeUnsupported"
+          },
+          {
+            "r": "t",
+            "text": " rather than silently carrying it reliably on the stream and delivering a guarantee the application did not budget latency for."
+          }
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "10.4 Unreliable datagrams",
+          "b": 1
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "WebTransport datagrams are congestion-controlled but consume no stream or connection flow-control credit, so the delegation of "
+          },
+          {
+            "r": "xref",
+            "target": "c6-2",
+            "kind": "clause",
+            "prefix": "6.2"
+          },
+          {
+            "r": "t",
+            "text": " does not extend to them: datagram-carried "
+          },
+          {
+            "r": "code",
+            "text": "DATA"
+          },
+          {
+            "r": "t",
+            "text": " keeps the credit window of "
+          },
+          {
+            "r": "xref",
+            "target": "c6-6-1",
+            "kind": "clause",
+            "prefix": "6.6.1"
+          },
+          {
+            "r": "t",
+            "text": ", which is what bounds a receiver's buffers when the transport is not doing it."
+          }
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "10.4 Unreliable datagrams",
+          "b": 2
+        }
+      },
+      {
+        "t": "clause",
+        "id": "c6-11-5",
+        "title": "Security and intermediaries",
+        "level": 3
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "HTTP/3 is TLS 1.3 over QUIC, so the key-binding obligations of "
+          },
+          {
+            "r": "xref",
+            "target": "c6-10-5",
+            "kind": "clause",
+            "prefix": "6.10.5"
+          },
+          {
+            "r": "t",
+            "text": " apply unchanged to "
+          },
+          {
+            "r": "code",
+            "text": "opc.wt"
+          },
+          {
+            "r": "t",
+            "text": ": the peer that verifies a TLS certificate binds its "
+          },
+          {
+            "r": "code",
+            "text": "subjectPublicKeyInfo"
+          },
+          {
+            "r": "t",
+            "text": " to the certificate the same application presents in "
+          },
+          {
+            "r": "code",
+            "text": "OpenSecureChannel"
+          },
+          {
+            "r": "t",
+            "text": ", and both peers perform their side of the mutual check. Data channel frames are transport-secured, not UA-SC-secured, so the binding is what prevents a TLS endpoint from becoming an unobserved media endpoint."
+          }
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "10.5 Security and intermediaries",
+          "b": 0
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The prohibition on TLS-terminating intermediaries applies with more force here than for "
+          },
+          {
+            "r": "code",
+            "text": "opc.quic"
+          },
+          {
+            "r": "t",
+            "text": ", not less. HTTP/3 is the shape most likely to attract a reverse proxy, load balancer or inspection gateway, and WebTransport makes multiple sessions on one HTTP/3 connection a normal optimization. Such a device is exactly the party that would see plaintext data channel frames after terminating TLS while forwarding the end-to-end-secured control stream. A deployment that requires that kind of intermediary uses inline framing over "
+          },
+          {
+            "r": "code",
+            "text": "opc.tcp"
+          },
+          {
+            "r": "t",
+            "text": " or "
+          },
+          {
+            "r": "code",
+            "text": "opc.wss"
+          },
+          {
+            "r": "t",
+            "text": " with "
+          },
+          {
+            "r": "code",
+            "text": "SignAndEncrypt"
+          },
+          {
+            "r": "t",
+            "text": ", so the intermediary never becomes the media peer."
+          }
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "10.5 Security and intermediaries",
+          "b": 1
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "0-RTT shall not carry ",
+            "b": true
+          },
+          {
+            "r": "code",
+            "text": "OpenSecureChannel"
+          },
+          {
+            "r": "t",
+            "text": ", ",
+            "b": true
+          },
+          {
+            "r": "code",
+            "text": "OpenDataChannel"
+          },
+          {
+            "r": "t",
+            "text": " or any frame",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": ". 0-RTT is replayable, and a replayed channel open is a replayed authorization. The same prohibition applies to the WebTransport session setup when it would make the OPC UA control stream or data streams available before the TLS handshake has fresh server authentication."
+          }
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "10.5 Security and intermediaries",
+          "b": 2
+        }
+      },
+      {
+        "t": "clause",
+        "id": "c6-11-6",
+        "title": "Reverse connect",
+        "level": 3
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Reverse connect works over "
+          },
+          {
+            "r": "code",
+            "text": "opc.wt"
+          },
+          {
+            "r": "t",
+            "text": " for the same reason it works over "
+          },
+          {
+            "r": "code",
+            "text": "opc.tcp"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "opc.wss"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "opc.quic"
+          },
+          {
+            "r": "t",
+            "text": ": it changes who dials, not the OPC UA roles above the transport. The Server opens the QUIC and HTTP/3 connection to the Client's configured listener, establishes the WebTransport session, sends "
+          },
+          {
+            "r": "code",
+            "text": "RHE"
+          },
+          {
+            "r": "t",
+            "text": " on the control stream, and the Client replies "
+          },
+          {
+            "r": "code",
+            "text": "HEL"
+          },
+          {
+            "r": "t",
+            "text": ". "
+          },
+          {
+            "r": "code",
+            "text": "OpenSecureChannel"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "CreateSession"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "ActivateSession"
+          },
+          {
+            "r": "t",
+            "text": " then proceed normally."
+          }
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "10.6 Reverse connect",
+          "b": 0
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The data-channel mapping follows the data direction. Under reverse connect the OPC UA Server holds the HTTP/3 and WebTransport client role, so the WebTransport stream "
+          },
+          {
+            "r": "t",
+            "text": "types",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " invert in the same way QUIC stream types invert in "
+          },
+          {
+            "r": "xref",
+            "target": "c6-10-3",
+            "kind": "clause",
+            "prefix": "6.10.3"
+          },
+          {
+            "r": "t",
+            "text": ": a "
+          },
+          {
+            "r": "code",
+            "text": "SourceToSink"
+          },
+          {
+            "r": "t",
+            "text": " stream opened by the OPC UA Server is WebTransport-client-initiated, and a "
+          },
+          {
+            "r": "code",
+            "text": "Bidirectional"
+          },
+          {
+            "r": "t",
+            "text": " stream opened by the OPC UA Client is WebTransport-server-initiated. The OPC UA initiator does not change, and the "
+          },
+          {
+            "r": "code",
+            "text": "transportChannelId"
+          },
+          {
+            "r": "t",
+            "text": " direction does not change."
+          }
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "10.6 Reverse connect",
+          "b": 1
+        }
+      },
+      {
+        "t": "clause",
+        "id": "c6-12",
+        "title": "What it costs",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The reference implementation has been measured, and two results are worth stating here because they bear on the choices above."
+          }
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "11 What it costs",
+          "b": 0
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The outer-protocol model is worth roughly a factor of two.",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " On one machine over loopback, the same application code and the same frames sustained about "
+          },
+          {
+            "r": "t",
+            "text": "390 Mbit/s",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " under inline framing over "
+          },
+          {
+            "r": "code",
+            "text": "opc.tcp"
+          },
+          {
+            "r": "t",
+            "text": " and about "
+          },
+          {
+            "r": "t",
+            "text": "768 Mbit/s",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " over "
+          },
+          {
+            "r": "code",
+            "text": "opc.quic"
+          },
+          {
+            "r": "t",
+            "text": ". That is the multiplexing and flow control moving out of this specification and into the transport, and it is the largest single effect measured."
+          }
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "11 What it costs",
+          "b": 1
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "A concurrent Subscription did not measurably cost the data channel anything",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": ", and the data channel did not cost the Subscription anything either. With 100 monitored items publishing at 10 ms, 100 ms and 1000 ms, every loaded case landed inside the unloaded case's own run-to-run spread on both transports, and the Subscription kept its idle notification rate while the channel was saturated. This is what the scheduling obligations of "
+          },
+          {
+            "r": "xref",
+            "target": "c6-6-2",
+            "kind": "clause",
+            "prefix": "6.6.2"
+          },
+          {
+            "r": "t",
+            "text": " are for, and it is the result they predict — but it should be read as \"not measurable at this load\" rather than \"proven to be free\", because a single Subscription cannot offer very much Service load: a Client keeps only a couple of Publish requests outstanding, so notifications arrive at a rate set by how often it asks rather than by the publishing interval."
+          }
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "11 What it costs",
+          "b": 2
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Figures, method and the full caveats are in the companion report, "
+          },
+          {
+            "r": "link",
+            "text": "OPC UA Data Channel Throughput",
+            "href": "../extras/performance/OPC-UA-Data-Channel-Throughput.md"
+          },
+          {
+            "r": "t",
+            "text": ". They are loopback measurements, bound by CPU and cryptography rather than by a network, and are useful for comparing the transports against each other rather than as a statement about any real link."
+          }
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "11 What it costs",
+          "b": 3
         }
       }
     ],
@@ -8617,7 +10510,7 @@
         "runs": [
           {
             "r": "t",
-            "text": "The delivery guarantee requested for a data channel. What a mode can actually deliver depends on the transport: only a transport with a lossy path can genuinely drop data in flight, so over opc.tcp and opc.wss the lossy modes degrade to sender-side discard."
+            "text": "The delivery guarantee requested for a data channel. What a mode can actually deliver depends on the transport: only a transport with a lossy path can genuinely drop data in flight, so over a reliable transport such as opc.tcp or opc.wss the lossy modes degrade to sender-side discard."
           }
         ]
       },
@@ -9013,6 +10906,62 @@
             [
               {
                 "r": "code",
+                "text": "DCH-WebTransport"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "DCH-Framing"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Part 6 errata clause 8 except "
+              },
+              {
+                "r": "t",
+                "text": "§8.5"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "code",
+                "text": "DCH-WebTransportDatagram"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "DCH-WebTransport"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "DCH-PartialReliability"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Part 6 errata "
+              },
+              {
+                "r": "t",
+                "text": "§8.5"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "code",
                 "text": "DCH-Services"
               }
             ],
@@ -9214,7 +11163,7 @@
         "note": null,
         "src": {
           "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-          "s": "10 Conformance units",
+          "s": "12 Conformance units",
           "b": 0
         }
       },
@@ -9229,7 +11178,7 @@
         ],
         "src": {
           "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-          "s": "10 Conformance units",
+          "s": "12 Conformance units",
           "b": 1
         }
       },
@@ -9375,8 +11324,39 @@
         "note": null,
         "src": {
           "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-          "s": "10 Conformance units",
+          "s": "12 Conformance units",
           "b": 2
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "A Server reachable over WebTransport rather than over bare QUIC substitutes "
+          },
+          {
+            "r": "code",
+            "text": "DCH-WebTransport"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "DCH-WebTransportDatagram"
+          },
+          {
+            "r": "t",
+            "text": " for their QUIC counterparts. The datagram units are separate rather than shared because the two transports negotiate and carry datagrams differently even though the delivery guarantee is the same; the Profile is otherwise identical, because everything above the transport is."
+          }
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "12 Conformance units",
+          "b": 3
         }
       },
       {
@@ -9398,8 +11378,8 @@
         ],
         "src": {
           "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-          "s": "10 Conformance units",
-          "b": 3
+          "s": "12 Conformance units",
+          "b": 4
         }
       },
       {
@@ -9417,15 +11397,15 @@
           },
           {
             "r": "t",
-            "text": " — 37 for framing, 4 for partial reliability, 10 for QUIC in the Part 6 errata "
+            "text": " — 38 for framing, 4 for partial reliability, 30 for QUIC and 18 for WebTransport in the Part 6 errata "
           },
           {
             "r": "t",
-            "text": "§8.1"
+            "text": "§9.1"
           },
           {
             "r": "t",
-            "text": ", and 22 for the Services in the Part 4 errata "
+            "text": ", and 25 for the Services in the Part 4 errata "
           },
           {
             "r": "t",
@@ -9438,8 +11418,8 @@
         ],
         "src": {
           "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-          "s": "10 Conformance units",
-          "b": 4
+          "s": "12 Conformance units",
+          "b": 5
         }
       },
       {
@@ -9453,8 +11433,8 @@
         ],
         "src": {
           "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-          "s": "10 Conformance units",
-          "b": 5
+          "s": "12 Conformance units",
+          "b": 6
         }
       },
       {
@@ -9468,8 +11448,8 @@
         ],
         "src": {
           "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-          "s": "10 Conformance units",
-          "b": 6
+          "s": "12 Conformance units",
+          "b": 7
         }
       }
     ],
@@ -19046,6 +21026,14 @@
               {
                 "r": "code",
                 "text": "opc.quic"
+              },
+              {
+                "r": "t",
+                "text": " or WebTransport streams over "
+              },
+              {
+                "r": "code",
+                "text": "opc.wt"
               }
             ]
           ],
@@ -19125,7 +21113,7 @@
               },
               {
                 "r": "t",
-                "text": " — exact over QUIC DATAGRAM, sender-side discard over TCP"
+                "text": " — exact over QUIC DATAGRAM or WebTransport datagrams, sender-side discard over reliable carriers"
               }
             ]
           ],
@@ -19825,6 +21813,970 @@
           "b": 4
         }
       }
+    ],
+    "annex-f": [
+      {
+        "t": "annex",
+        "id": "cF",
+        "title": "A worked reverse-connect session",
+        "normative": false
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "A plant camera sits on a network where devices are not allowed to listen. The supervisory Client is the only peer with a listening socket, and it accepts reverse connections from known Servers. This worked example uses "
+          },
+          {
+            "r": "code",
+            "text": "opc.quic"
+          },
+          {
+            "r": "t",
+            "text": ": the result is still an ordinary OPC UA Client talking to an ordinary OPC UA Server; only the QUIC dial direction has changed."
+          }
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+          "b": 0
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Topology.",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " The camera has no inbound rule at all. The Client has one reverse-connect listener, and no separate media listener."
+          }
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+          "b": 1
+        }
+      },
+      {
+        "t": "table",
+        "id": "a-worked-reverse-connect-session-tab1",
+        "caption": "A worked reverse-connect session",
+        "kind": "generic",
+        "headers": [
+          [
+            {
+              "r": "t",
+              "text": "Peer"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "OPC UA role"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Network position"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Listening ports"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Certificate key used below"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "r": "code",
+                "text": "Line3Camera"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Server"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Plant network, behind NAT and a one-way firewall"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "None"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "S-42"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "code",
+                "text": "SupervisorA"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Client"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Supervisory network"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "opc.quic"
+              },
+              {
+                "r": "t",
+                "text": " reverse-connect listener on UDP 4840"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "C-77"
+              }
+            ]
+          ]
+        ],
+        "widths": null,
+        "note": null,
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+          "b": 2
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Connection.",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " "
+          },
+          {
+            "r": "code",
+            "text": "Line3Camera"
+          },
+          {
+            "r": "t",
+            "text": " opens the QUIC connection to "
+          },
+          {
+            "r": "code",
+            "text": "SupervisorA:4840"
+          },
+          {
+            "r": "t",
+            "text": ". Because this is reverse connect, the camera is the QUIC and TLS client. It opens the first client-initiated bidirectional QUIC stream, stream "
+          },
+          {
+            "r": "code",
+            "text": "0"
+          },
+          {
+            "r": "t",
+            "text": ", and sends "
+          },
+          {
+            "r": "code",
+            "text": "RHE"
+          },
+          {
+            "r": "t",
+            "text": " on it. "
+          },
+          {
+            "r": "code",
+            "text": "SupervisorA"
+          },
+          {
+            "r": "t",
+            "text": " replies "
+          },
+          {
+            "r": "code",
+            "text": "HEL"
+          },
+          {
+            "r": "t",
+            "text": "; "
+          },
+          {
+            "r": "code",
+            "text": "ACK"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "OpenSecureChannel"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "CreateSession"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "ActivateSession"
+          },
+          {
+            "r": "t",
+            "text": " then proceed as they would on a Client-dialled connection."
+          }
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+          "b": 3
+        }
+      },
+      {
+        "t": "table",
+        "id": "a-worked-reverse-connect-session-tab2",
+        "caption": "A worked reverse-connect session (2)",
+        "kind": "generic",
+        "headers": [
+          [
+            {
+              "r": "t",
+              "text": "Step"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "On the wire"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Meaning"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "r": "t",
+                "text": "1"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Server dials "
+              },
+              {
+                "r": "code",
+                "text": "SupervisorA:4840"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "The only firewall permission used is outbound from the plant network."
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "2"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Server sends "
+              },
+              {
+                "r": "code",
+                "text": "RHE"
+              },
+              {
+                "r": "t",
+                "text": " on stream "
+              },
+              {
+                "r": "code",
+                "text": "0"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Reverse connect identifies the Server that is asking to be accepted."
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "3"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Client replies "
+              },
+              {
+                "r": "code",
+                "text": "HEL"
+              },
+              {
+                "r": "t",
+                "text": ", then receives "
+              },
+              {
+                "r": "code",
+                "text": "ACK"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "UACP begins on the same control stream."
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "4"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Client sends "
+              },
+              {
+                "r": "code",
+                "text": "OpenSecureChannel"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "The OPC UA Client still invokes the Service; roles above the transport are unchanged."
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "5"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Client sends "
+              },
+              {
+                "r": "code",
+                "text": "CreateSession"
+              },
+              {
+                "r": "t",
+                "text": " and "
+              },
+              {
+                "r": "code",
+                "text": "ActivateSession"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "User identity and authorization are exactly the normal OPC UA ones."
+              }
+            ]
+          ]
+        ],
+        "widths": null,
+        "note": null,
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+          "b": 4
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "TLS binding.",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " The TLS obligations follow the TLS role. Here "
+          },
+          {
+            "r": "code",
+            "text": "SupervisorA"
+          },
+          {
+            "r": "t",
+            "text": " is the TLS server, so it presents the TLS server certificate carrying key "
+          },
+          {
+            "r": "code",
+            "text": "C-77"
+          },
+          {
+            "r": "t",
+            "text": ", and "
+          },
+          {
+            "r": "code",
+            "text": "Line3Camera"
+          },
+          {
+            "r": "t",
+            "text": " verifies that key against the Client certificate in the "
+          },
+          {
+            "r": "code",
+            "text": "OpenSecureChannel"
+          },
+          {
+            "r": "t",
+            "text": " request. The mutual check inverts with it rather than lapsing: "
+          },
+          {
+            "r": "code",
+            "text": "SupervisorA"
+          },
+          {
+            "r": "t",
+            "text": ", as TLS server, requests a TLS client certificate from "
+          },
+          {
+            "r": "code",
+            "text": "Line3Camera"
+          },
+          {
+            "r": "t",
+            "text": ", sees key "
+          },
+          {
+            "r": "code",
+            "text": "S-42"
+          },
+          {
+            "r": "t",
+            "text": ", and compares it with the Server certificate returned in the "
+          },
+          {
+            "r": "code",
+            "text": "OpenSecureChannel"
+          },
+          {
+            "r": "t",
+            "text": " response. If either key comparison fails, the data channels are not opened."
+          }
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+          "b": 5
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Opening channels.",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " The Client browses the camera and opens one video channel and one control channel on the same SecureChannel, "
+          },
+          {
+            "r": "code",
+            "text": "SecureChannelId"
+          },
+          {
+            "r": "t",
+            "text": " "
+          },
+          {
+            "r": "code",
+            "text": "41340"
+          },
+          {
+            "r": "t",
+            "text": "."
+          }
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+          "b": 6
+        }
+      },
+      {
+        "t": "table",
+        "id": "a-worked-reverse-connect-session-tab3",
+        "caption": "A worked reverse-connect session (3)",
+        "kind": "generic",
+        "headers": [
+          [
+            {
+              "r": "t",
+              "text": "Channel"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Source"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Direction"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Delivery"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "QUIC stream in this reverse-connect session"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Where the id is carried"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "r": "t",
+                "text": "1"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "VideoMain"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "SourceToSink"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "Unreliable"
+              },
+              {
+                "r": "t",
+                "text": ", 1200-byte frames, 200 ms deadline"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "stream "
+              },
+              {
+                "r": "code",
+                "text": "2"
+              },
+              {
+                "r": "t",
+                "text": ", client-initiated unidirectional because the OPC UA Server is the QUIC client"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "OpenDataChannel"
+              },
+              {
+                "r": "t",
+                "text": " response as "
+              },
+              {
+                "r": "code",
+                "text": "revisedTransportChannelId=2"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "2"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "Control"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "Bidirectional"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "ReliableOrdered"
+              },
+              {
+                "r": "t",
+                "text": ", 4096-byte frames"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "stream "
+              },
+              {
+                "r": "code",
+                "text": "1"
+              },
+              {
+                "r": "t",
+                "text": ", server-initiated bidirectional because the OPC UA Client is the QUIC server"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "OpenDataChannel"
+              },
+              {
+                "r": "t",
+                "text": " request as "
+              },
+              {
+                "r": "code",
+                "text": "transportChannelId=1"
+              },
+              {
+                "r": "t",
+                "text": ", echoed as "
+              },
+              {
+                "r": "code",
+                "text": "revisedTransportChannelId=1"
+              }
+            ]
+          ]
+        ],
+        "widths": null,
+        "note": null,
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+          "b": 7
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "This is the inversion that trips implementations. Part 6 errata "
+          },
+          {
+            "r": "t",
+            "text": "§7.10"
+          },
+          {
+            "r": "t",
+            "text": " states the normative rule: under reverse connect, the OPC UA Server holds the QUIC client role, so the QUIC stream "
+          },
+          {
+            "r": "t",
+            "text": "types",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " invert. The OPC UA initiator does not. The "
+          },
+          {
+            "r": "code",
+            "text": "transportChannelId"
+          },
+          {
+            "r": "t",
+            "text": " direction does not. A "
+          },
+          {
+            "r": "code",
+            "text": "SourceToSink"
+          },
+          {
+            "r": "t",
+            "text": " stream is still opened by the OPC UA Server and reported in the response; it is merely a QUIC-client-initiated stream because the Server was the peer that dialled. A "
+          },
+          {
+            "r": "code",
+            "text": "Bidirectional"
+          },
+          {
+            "r": "t",
+            "text": " stream is still opened by the OPC UA Client and named in the request; it is merely QUIC-server-initiated in this connection."
+          }
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+          "b": 8
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Over "
+          },
+          {
+            "r": "code",
+            "text": "opc.wt"
+          },
+          {
+            "r": "t",
+            "text": " the same rule applies. WebTransport has server-initiated streams, so reverse connect inverts only the transport stream types exactly as "
+          },
+          {
+            "r": "code",
+            "text": "opc.quic"
+          },
+          {
+            "r": "t",
+            "text": " does: the OPC UA Server opens the "
+          },
+          {
+            "r": "code",
+            "text": "SourceToSink"
+          },
+          {
+            "r": "t",
+            "text": " carrier and reports it in the response, while the OPC UA Client opens the bidirectional control carrier and names it in the request."
+          }
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+          "b": 9
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Running.",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " Video frames flow from "
+          },
+          {
+            "r": "code",
+            "text": "Line3Camera"
+          },
+          {
+            "r": "t",
+            "text": " to "
+          },
+          {
+            "r": "code",
+            "text": "SupervisorA"
+          },
+          {
+            "r": "t",
+            "text": " on stream "
+          },
+          {
+            "r": "code",
+            "text": "2"
+          },
+          {
+            "r": "t",
+            "text": " or, when QUIC DATAGRAM is available, as datagrams associated with channel 1. PTZ commands and acknowledgements flow both ways on stream "
+          },
+          {
+            "r": "code",
+            "text": "1"
+          },
+          {
+            "r": "t",
+            "text": ". "
+          },
+          {
+            "r": "code",
+            "text": "Publish"
+          },
+          {
+            "r": "t",
+            "text": " responses for the same Session continue on the control stream and outrank both data channels under the scheduling rule, so a motion alarm is not queued behind video."
+          }
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+          "b": 10
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Closing.",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " The operator closes the view. The Client calls "
+          },
+          {
+            "r": "code",
+            "text": "CloseDataChannel"
+          },
+          {
+            "r": "t",
+            "text": " for channel 1 with "
+          },
+          {
+            "r": "code",
+            "text": "deleteQueued"
+          },
+          {
+            "r": "t",
+            "text": " "
+          },
+          {
+            "r": "code",
+            "text": "True"
+          },
+          {
+            "r": "t",
+            "text": "; the Server stops the video encoder, emits the orderly end for stream "
+          },
+          {
+            "r": "code",
+            "text": "2"
+          },
+          {
+            "r": "t",
+            "text": ", and leaves channel 2 open for control. Later the Client closes channel 2 and then the Session. The QUIC connection closes only when there is no more OPC UA work to do."
+          }
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+          "b": 11
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The payoff is the whole point of the feature: one outbound connection from the plant device, zero inbound ports on the Server, no second media port on the Client, and media and control both flowing under the same SecureChannel, certificates, Session and user authorization."
+          }
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+          "b": 12
+        }
+      }
     ]
   },
   "order": [
@@ -19845,6 +22797,7 @@
     "annex-b",
     "annex-c",
     "annex-d",
-    "annex-e"
+    "annex-e",
+    "annex-f"
   ]
 }

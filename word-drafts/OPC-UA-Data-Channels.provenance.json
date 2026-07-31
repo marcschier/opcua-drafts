@@ -1,7 +1,7 @@
 {
   "specId": "data-channels",
-  "sourceCommit": "bf10793d369d98eb488d33cc8f7987316c836ef8",
-  "sourceDigest": "a41dfe3203f48b6c",
+  "sourceCommit": "09141c40fde638bd82c9a6289509d771190c9a72",
+  "sourceDigest": "7eef92c9bbbb50f0",
   "pipelineVersion": "2",
   "sources": [
     "word-drafts/tools/specs/data-channels.json",
@@ -64,8 +64,12 @@
       "block": 2,
       "para": 48
     },
-    "009BC0C1": {
-      "owner": "template"
+    "008C4BCA": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 182,
+      "kind": "clause",
+      "para": 0
     },
     "00AEED57": {
       "owner": "generated",
@@ -144,15 +148,15 @@
       "block": 2,
       "para": 77
     },
+    "011CE52F": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "10.3 Connection, control stream and channel streams",
+      "block": 2,
+      "para": 17
+    },
     "011DA4C9": {
       "owner": "template"
-    },
-    "01324392": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 79,
-      "kind": "clause",
-      "para": 0
     },
     "0149848B": {
       "owner": "generated",
@@ -238,19 +242,19 @@
       "kind": "nodetable",
       "para": 6
     },
-    "018FBBB9": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "10 Conformance units",
-      "block": 0,
-      "para": 40
-    },
     "0191592E": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
       "section": "inline_pong",
       "block": 2,
       "para": 80
+    },
+    "01971BAE": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "9.8 Choosing between transports",
+      "block": 1,
+      "para": 4
     },
     "0197BAFD": {
       "owner": "template"
@@ -269,15 +273,19 @@
       "block": 2,
       "para": 79
     },
-    "01A1C80F": {
-      "owner": "template"
-    },
     "01AD91FB": {
       "owner": "generated",
       "region": "annex-a",
       "index": 0,
       "kind": "nodetable",
       "para": 203
+    },
+    "01B8FF71": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 2,
+      "para": 13
     },
     "01BCB250": {
       "owner": "markdown",
@@ -336,16 +344,6 @@
       "section": "inline_data_droppable",
       "block": 2,
       "para": 28
-    },
-    "023DBA11": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "10 Conformance units",
-      "block": 0,
-      "para": 12
-    },
-    "023E236B": {
-      "owner": "template"
     },
     "0242135A": {
       "owner": "markdown",
@@ -588,6 +586,13 @@
       "block": 2,
       "para": 9
     },
+    "0354A26F": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 4,
+      "para": 2
+    },
     "03651048": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -625,9 +630,6 @@
       "section": "3.3 What the outer-protocol model adds",
       "block": 1,
       "para": 16
-    },
-    "037FBCB1": {
-      "owner": "template"
     },
     "038EFDFF": {
       "owner": "markdown",
@@ -677,6 +679,13 @@
       "section": "inline_data_droppable",
       "block": 2,
       "para": 48
+    },
+    "03DFC56B": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 2,
+      "para": 6
     },
     "03EA3913": {
       "owner": "template"
@@ -757,9 +766,6 @@
       "block": 2,
       "para": 20
     },
-    "04429489": {
-      "owner": "template"
-    },
     "044E015B": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -787,13 +793,6 @@
       "section": "inline_credit_channel",
       "block": 2,
       "para": 74
-    },
-    "04573414": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "10 Conformance units",
-      "block": 6,
-      "para": 0
     },
     "0461ED1B": {
       "owner": "markdown",
@@ -844,15 +843,19 @@
       "block": 1,
       "para": 4
     },
+    "0496681F": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 175,
+      "kind": "clause",
+      "para": 0
+    },
     "049882C7": {
       "owner": "generated",
       "region": "datatypes",
       "index": 27,
       "kind": "enumtable",
       "para": 13
-    },
-    "049E87DF": {
-      "owner": "template"
     },
     "04A2972D": {
       "owner": "markdown",
@@ -971,13 +974,6 @@
       "block": 0,
       "para": 37
     },
-    "0551653A": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "9.8 Choosing between the inline and outer-protocol models",
-      "block": 1,
-      "para": 21
-    },
     "0557C140": {
       "owner": "generated",
       "region": "datatypes",
@@ -991,6 +987,13 @@
       "section": "quic_data_stream",
       "block": 2,
       "para": 24
+    },
+    "055E2665": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "11 What it costs",
+      "block": 1,
+      "para": 0
     },
     "056095BA": {
       "owner": "generated",
@@ -1012,6 +1015,13 @@
       "section": "inline_data_droppable",
       "block": 2,
       "para": 27
+    },
+    "057E8B1E": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "10.4 Unreliable datagrams",
+      "block": 1,
+      "para": 0
     },
     "05814965": {
       "owner": "markdown",
@@ -1040,9 +1050,6 @@
       "section": "inline_data_droppable",
       "block": 2,
       "para": 81
-    },
-    "059BED7D": {
-      "owner": "template"
     },
     "05A26EFC": {
       "owner": "generated",
@@ -1110,6 +1117,13 @@
       "block": 2,
       "para": 21
     },
+    "05DFE512": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "10.3 Connection, control stream and channel streams",
+      "block": 2,
+      "para": 2
+    },
     "05E28276": {
       "owner": "template"
     },
@@ -1120,8 +1134,12 @@
       "kind": "nodetable",
       "para": 20
     },
-    "0610EF1B": {
-      "owner": "template"
+    "06087E1F": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 4,
+      "para": 9
     },
     "0615D66A": {
       "owner": "markdown",
@@ -1225,6 +1243,13 @@
     "069A9492": {
       "owner": "template"
     },
+    "069CBB4B": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 80,
+      "kind": "clause",
+      "para": 0
+    },
     "069D8E2E": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -1251,6 +1276,13 @@
     "06CEAECD": {
       "owner": "template"
     },
+    "06EBD962": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "10.6 Reverse connect",
+      "block": 1,
+      "para": 0
+    },
     "06EC9BB9": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -1264,9 +1296,6 @@
       "index": 20,
       "kind": "nodetable",
       "para": 23
-    },
-    "070B6A0F": {
-      "owner": "template"
     },
     "071FC95E": {
       "owner": "generated",
@@ -1285,25 +1314,12 @@
     "073912CF": {
       "owner": "template"
     },
-    "073ECE53": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "10 Conformance units",
-      "block": 2,
-      "para": 6
-    },
-    "07587A24": {
-      "owner": "template"
-    },
     "07589B3E": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
       "section": "inline_pong",
       "block": 2,
       "para": 37
-    },
-    "076DC84C": {
-      "owner": "template"
     },
     "077108A4": {
       "owner": "markdown",
@@ -1319,12 +1335,12 @@
       "block": 6,
       "para": 0
     },
-    "0794EA7A": {
+    "078C3481": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "10 Conformance units",
+      "section": "12 Conformance units",
       "block": 0,
-      "para": 0
+      "para": 26
     },
     "07AE70C5": {
       "owner": "generated",
@@ -1382,15 +1398,15 @@
       "kind": "nodetable",
       "para": 67
     },
-    "07FDC1BF": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "10 Conformance units",
-      "block": 2,
-      "para": 8
-    },
     "080CB70E": {
       "owner": "template"
+    },
+    "0814510E": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 4,
+      "para": 5
     },
     "082AB6F4": {
       "owner": "markdown",
@@ -1426,6 +1442,13 @@
       "kind": "table",
       "para": 20
     },
+    "085C819E": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 7,
+      "para": 11
+    },
     "085CAD52": {
       "owner": "template"
     },
@@ -1459,6 +1482,13 @@
       "index": 3,
       "kind": "nodetable",
       "para": 19
+    },
+    "088D3DFF": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "12 Conformance units",
+      "block": 0,
+      "para": 30
     },
     "088F2AD2": {
       "owner": "markdown",
@@ -1500,9 +1530,6 @@
       "section": "inline_data_first",
       "block": 2,
       "para": 6
-    },
-    "08B6AE5F": {
-      "owner": "template"
     },
     "08BB3351": {
       "owner": "markdown",
@@ -1635,9 +1662,6 @@
       "kind": "nodetable",
       "para": 7
     },
-    "0948EC84": {
-      "owner": "template"
-    },
     "094D4BA2": {
       "owner": "generated",
       "region": "namespaces",
@@ -1652,26 +1676,12 @@
       "block": 2,
       "para": 54
     },
-    "095ACEA1": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "10 Conformance units",
-      "block": 0,
-      "para": 6
-    },
     "096D714C": {
       "owner": "generated",
       "region": "eventtypes",
       "index": 3,
       "kind": "nodetable",
       "para": 14
-    },
-    "097144C1": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "9.8 Choosing between the inline and outer-protocol models",
-      "block": 1,
-      "para": 23
     },
     "09776E9A": {
       "owner": "markdown",
@@ -1760,9 +1770,6 @@
       "block": 2,
       "para": 79
     },
-    "099B95D5": {
-      "owner": "template"
-    },
     "09A19483": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -1770,12 +1777,12 @@
       "block": 0,
       "para": 14
     },
-    "09D60038": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 87,
-      "kind": "clause",
-      "para": 0
+    "09D6EA80": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "12 Conformance units",
+      "block": 2,
+      "para": 9
     },
     "09DAE185": {
       "owner": "markdown",
@@ -1799,9 +1806,6 @@
       "para": 41
     },
     "09E306DA": {
-      "owner": "template"
-    },
-    "09ECB809": {
       "owner": "template"
     },
     "09F18E83": {
@@ -1859,13 +1863,6 @@
       "block": 2,
       "para": 74
     },
-    "0A38A9B7": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "10 Conformance units",
-      "block": 2,
-      "para": 9
-    },
     "0A54BBFF": {
       "owner": "generated",
       "region": "eventtypes",
@@ -1918,6 +1915,20 @@
       "block": 0,
       "para": 0
     },
+    "0A8F61FB": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "10.4 Unreliable datagrams",
+      "block": 2,
+      "para": 0
+    },
+    "0A9E8150": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "12 Conformance units",
+      "block": 0,
+      "para": 45
+    },
     "0AA593F4": {
       "owner": "template"
     },
@@ -1950,6 +1961,13 @@
     },
     "0AED441D": {
       "owner": "template"
+    },
+    "0AF0FB84": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 2,
+      "para": 3
     },
     "0B012609": {
       "owner": "markdown",
@@ -2006,6 +2024,13 @@
     "0B33ED02": {
       "owner": "template"
     },
+    "0B36A881": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "10.2 URL scheme, ALPN and discovery",
+      "block": 0,
+      "para": 2
+    },
     "0B48CDE0": {
       "owner": "template"
     },
@@ -2037,8 +2062,12 @@
       "block": 2,
       "para": 85
     },
-    "0B807E74": {
-      "owner": "template"
+    "0B856C28": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 2,
+      "para": 15
     },
     "0B879965": {
       "owner": "markdown",
@@ -2081,6 +2110,13 @@
       "index": 0,
       "kind": "nodetable",
       "para": 168
+    },
+    "0BB0EDEA": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 25,
+      "kind": "clause",
+      "para": 0
     },
     "0BB94B5D": {
       "owner": "template"
@@ -2126,9 +2162,6 @@
       "kind": "annex-clause",
       "para": 0
     },
-    "0BE5E1DC": {
-      "owner": "template"
-    },
     "0BE6CABE": {
       "owner": "template"
     },
@@ -2138,9 +2171,6 @@
       "section": "Annex E — When to use which mechanism (informative)",
       "block": 0,
       "para": 5
-    },
-    "0BFD9F8F": {
-      "owner": "template"
     },
     "0C0FDD67": {
       "owner": "markdown",
@@ -2163,15 +2193,19 @@
       "kind": "nodetable",
       "para": 34
     },
+    "0C1BC57C": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "9.8 Choosing between transports",
+      "block": 1,
+      "para": 29
+    },
     "0C22F0D8": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
       "section": "inline_data_signed",
       "block": 2,
       "para": 61
-    },
-    "0C2CCC51": {
-      "owner": "template"
     },
     "0C2EDFAB": {
       "owner": "generated",
@@ -2180,19 +2214,19 @@
       "kind": "clause",
       "para": 0
     },
+    "0C34CA63": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "12 Conformance units",
+      "block": 0,
+      "para": 10
+    },
     "0C39220A": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
       "section": "6.6 Defaults, ranges and the no-preference sentinel",
       "block": 1,
       "para": 26
-    },
-    "0C39C75E": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "10 Conformance units",
-      "block": 2,
-      "para": 2
     },
     "0C4A5729": {
       "owner": "markdown",
@@ -2281,6 +2315,13 @@
       "block": 2,
       "para": 16
     },
+    "0CB9C3F9": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 4,
+      "para": 4
+    },
     "0CCAEDDF": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -2316,9 +2357,6 @@
       "block": 2,
       "para": 7
     },
-    "0D167D62": {
-      "owner": "template"
-    },
     "0D1C4125": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -2333,19 +2371,19 @@
       "block": 2,
       "para": 83
     },
+    "0D2CE830": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 7,
+      "para": 5
+    },
     "0D30C1E6": {
       "owner": "generated",
       "region": "objecttypes",
       "index": 3,
       "kind": "nodetable",
       "para": 44
-    },
-    "0D31ECC3": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 83,
-      "kind": "clause",
-      "para": 0
     },
     "0D38E284": {
       "owner": "generated",
@@ -2381,12 +2419,12 @@
       "block": 2,
       "para": 40
     },
-    "0D713C53": {
+    "0D6A7D86": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "10 Conformance units",
-      "block": 0,
-      "para": 38
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 7,
+      "para": 16
     },
     "0D73B1E7": {
       "owner": "generated",
@@ -2436,9 +2474,6 @@
     "0D9E8008": {
       "owner": "template"
     },
-    "0DAC1E3D": {
-      "owner": "template"
-    },
     "0DB217A5": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -2453,13 +2488,6 @@
       "kind": "enumtable",
       "para": 27
     },
-    "0DBFA3C6": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 91,
-      "kind": "clause",
-      "para": 0
-    },
     "0DCBBA4B": {
       "owner": "template"
     },
@@ -2468,6 +2496,13 @@
     },
     "0DCEF140": {
       "owner": "template"
+    },
+    "0DD6644D": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "10.2 URL scheme, ALPN and discovery",
+      "block": 0,
+      "para": 14
     },
     "0DF0F137": {
       "owner": "markdown",
@@ -2517,6 +2552,13 @@
       "section": "inline_data_first",
       "block": 2,
       "para": 61
+    },
+    "0E3B6F61": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "9.8 Choosing between transports",
+      "block": 1,
+      "para": 31
     },
     "0E3D79A6": {
       "owner": "markdown",
@@ -2625,9 +2667,6 @@
       "block": 2,
       "para": 61
     },
-    "0EDA7E39": {
-      "owner": "template"
-    },
     "0EDD193F": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -2649,6 +2688,13 @@
       "kind": "nodetable",
       "para": 78
     },
+    "0EFE9E14": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "10.2 URL scheme, ALPN and discovery",
+      "block": 0,
+      "para": 13
+    },
     "0F024EE8": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -2663,8 +2709,19 @@
       "block": 0,
       "para": 31
     },
-    "0F2A18DD": {
-      "owner": "template"
+    "0F11660E": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 88,
+      "kind": "clause",
+      "para": 0
+    },
+    "0F2D8B20": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 7,
+      "para": 4
     },
     "0F2E4164": {
       "owner": "template"
@@ -2724,8 +2781,12 @@
       "block": 2,
       "para": 18
     },
-    "0F78457C": {
-      "owner": "template"
+    "0F758F89": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "10.3 Connection, control stream and channel streams",
+      "block": 2,
+      "para": 6
     },
     "0F7ACAAB": {
       "owner": "markdown",
@@ -2747,13 +2808,6 @@
       "index": 11,
       "kind": "enumtable",
       "para": 12
-    },
-    "0F99A21A": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "10 Conformance units",
-      "block": 0,
-      "para": 18
     },
     "0FAC5245": {
       "owner": "template"
@@ -2796,22 +2850,12 @@
       "block": 0,
       "para": 0
     },
-    "0FC61B50": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 70,
-      "kind": "clause",
-      "para": 0
-    },
     "0FE8FE20": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
       "section": "inline_data_droppable",
       "block": 2,
       "para": 86
-    },
-    "0FFD2F50": {
-      "owner": "template"
     },
     "100D9D95": {
       "owner": "markdown",
@@ -2972,6 +3016,13 @@
       "block": 3,
       "para": 6
     },
+    "10F99E5A": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "12 Conformance units",
+      "block": 0,
+      "para": 46
+    },
     "10FA1B1E": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -2995,13 +3046,6 @@
     },
     "11186A60": {
       "owner": "template"
-    },
-    "111CB210": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "10 Conformance units",
-      "block": 0,
-      "para": 3
     },
     "112E9587": {
       "owner": "markdown",
@@ -3190,9 +3234,6 @@
       "block": 5,
       "para": 19
     },
-    "1234D266": {
-      "owner": "template"
-    },
     "12373F9D": {
       "owner": "generated",
       "region": "datatypes",
@@ -3214,6 +3255,13 @@
       "kind": "nodetable",
       "para": 144
     },
+    "1247F905": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 4,
+      "para": 1
+    },
     "12557290": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -3227,13 +3275,6 @@
       "index": 3,
       "kind": "nodetable",
       "para": 7
-    },
-    "1263C226": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "10 Conformance units",
-      "block": 0,
-      "para": 5
     },
     "12733BED": {
       "owner": "markdown",
@@ -3254,9 +3295,6 @@
       "section": "inline_pong",
       "block": 1,
       "para": 0
-    },
-    "1290CBE4": {
-      "owner": "template"
     },
     "129B588E": {
       "owner": "markdown",
@@ -3371,6 +3409,13 @@
       "block": 2,
       "para": 48
     },
+    "132E6D83": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 110,
+      "kind": "clause",
+      "para": 0
+    },
     "132F722B": {
       "owner": "generated",
       "region": "objecttypes",
@@ -3399,15 +3444,19 @@
       "block": 0,
       "para": 7
     },
-    "133B057E": {
-      "owner": "template"
-    },
     "1340D4E9": {
       "owner": "generated",
       "region": "datatypes",
       "index": 19,
       "kind": "enumtable",
       "para": 22
+    },
+    "1349A26D": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 2,
+      "para": 8
     },
     "13500168": {
       "owner": "template"
@@ -3454,13 +3503,6 @@
       "kind": "nodetable",
       "para": 138
     },
-    "1376E5F6": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "10 Conformance units",
-      "block": 0,
-      "para": 29
-    },
     "13870709": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -3496,13 +3538,6 @@
       "block": 2,
       "para": 2
     },
-    "13A9F5F1": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "10 Conformance units",
-      "block": 0,
-      "para": 17
-    },
     "13B01D4E": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -3523,13 +3558,6 @@
       "index": 28,
       "kind": "nodetable",
       "para": 32
-    },
-    "13C7AF70": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "9.8 Choosing between the inline and outer-protocol models",
-      "block": 1,
-      "para": 12
     },
     "13CA6054": {
       "owner": "generated",
@@ -3559,9 +3587,6 @@
       "block": 2,
       "para": 19
     },
-    "1402B729": {
-      "owner": "template"
-    },
     "1402D8C7": {
       "owner": "generated",
       "region": "namespaces",
@@ -3575,9 +3600,6 @@
       "section": "inline_reset",
       "block": 2,
       "para": 83
-    },
-    "140E62E4": {
-      "owner": "template"
     },
     "14170CA2": {
       "owner": "markdown",
@@ -3645,6 +3667,13 @@
       "block": 9,
       "para": 24
     },
+    "145430CC": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "12 Conformance units",
+      "block": 0,
+      "para": 6
+    },
     "145CCB66": {
       "owner": "generated",
       "region": "eventtypes",
@@ -3675,13 +3704,6 @@
       "section": "inline_reset",
       "block": 2,
       "para": 43
-    },
-    "147900AB": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "10 Conformance units",
-      "block": 0,
-      "para": 4
     },
     "14796746": {
       "owner": "generated",
@@ -3882,9 +3904,6 @@
     "15A265CC": {
       "owner": "template"
     },
-    "15A32585": {
-      "owner": "template"
-    },
     "15A836E3": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -3937,9 +3956,6 @@
       "block": 0,
       "para": 0
     },
-    "15FD11CF": {
-      "owner": "template"
-    },
     "15FD6D8A": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -3963,6 +3979,13 @@
     },
     "1616A8CB": {
       "owner": "template"
+    },
+    "16186DE8": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 4,
+      "para": 17
     },
     "1622F10F": {
       "owner": "generated",
@@ -3999,9 +4022,6 @@
       "kind": "nodetable",
       "para": 52
     },
-    "16471195": {
-      "owner": "template"
-    },
     "164BD56C": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -4009,12 +4029,26 @@
       "block": 2,
       "para": 43
     },
+    "164CB4A0": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "9.8 Choosing between transports",
+      "block": 1,
+      "para": 14
+    },
     "164D66A1": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
       "section": "inline_data_signed",
       "block": 2,
       "para": 37
+    },
+    "165934CB": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "10.1 Why an outer-protocol binding",
+      "block": 0,
+      "para": 0
     },
     "165C63AB": {
       "owner": "markdown",
@@ -4050,9 +4084,6 @@
     "16A5897F": {
       "owner": "template"
     },
-    "16AE28B8": {
-      "owner": "template"
-    },
     "16C0C092": {
       "owner": "generated",
       "region": "objecttypes",
@@ -4083,11 +4114,25 @@
     "16E094CC": {
       "owner": "template"
     },
+    "16E28420": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "10.2 URL scheme, ALPN and discovery",
+      "block": 0,
+      "para": 12
+    },
     "16E36E33": {
       "owner": "template"
     },
     "16F8C7B1": {
       "owner": "template"
+    },
+    "16FDAF64": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "10.2 URL scheme, ALPN and discovery",
+      "block": 0,
+      "para": 15
     },
     "17022E1B": {
       "owner": "generated",
@@ -4126,13 +4171,6 @@
       "index": 3,
       "kind": "nodetable",
       "para": 37
-    },
-    "172FFDB9": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 45,
-      "kind": "clause",
-      "para": 0
     },
     "17345F3F": {
       "owner": "markdown",
@@ -4272,9 +4310,6 @@
       "kind": "nodetable",
       "para": 9
     },
-    "180E22CE": {
-      "owner": "template"
-    },
     "1818AB88": {
       "owner": "generated",
       "region": "annex-a",
@@ -4284,6 +4319,13 @@
     },
     "181AB87C": {
       "owner": "template"
+    },
+    "181BA9BD": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "12 Conformance units",
+      "block": 0,
+      "para": 48
     },
     "18231742": {
       "owner": "generated",
@@ -4479,6 +4521,13 @@
       "block": 2,
       "para": 26
     },
+    "18F62889": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "10.3 Connection, control stream and channel streams",
+      "block": 2,
+      "para": 5
+    },
     "18FF710A": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -4528,13 +4577,6 @@
       "block": 0,
       "para": 23
     },
-    "192D00BB": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "10 Conformance units",
-      "block": 0,
-      "para": 27
-    },
     "193A572E": {
       "owner": "generated",
       "region": "namespaces",
@@ -4575,6 +4617,13 @@
       "section": "inline_data_final",
       "block": 2,
       "para": 58
+    },
+    "195EC7AD": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "9.8 Choosing between transports",
+      "block": 1,
+      "para": 27
     },
     "196CFA4B": {
       "owner": "generated",
@@ -4630,12 +4679,6 @@
       "section": "6.1 OpenDataChannel",
       "block": 9,
       "para": 7
-    },
-    "19A240C7": {
-      "owner": "template"
-    },
-    "19A9D245": {
-      "owner": "template"
     },
     "19BDB3E8": {
       "owner": "markdown",
@@ -4727,6 +4770,13 @@
     "1A2FF31E": {
       "owner": "template"
     },
+    "1A31F89E": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 4,
+      "para": 8
+    },
     "1A328FBC": {
       "owner": "generated",
       "region": "annex-a",
@@ -4744,13 +4794,6 @@
       "block": 2,
       "para": 16
     },
-    "1A6DFCDF": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "10 Conformance units",
-      "block": 0,
-      "para": 19
-    },
     "1A74FCF1": {
       "owner": "generated",
       "region": "objecttypes",
@@ -4764,13 +4807,6 @@
       "section": "8 Interoperability with implementations that do not support data channels",
       "block": 5,
       "para": 0
-    },
-    "1A87A807": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "10 Conformance units",
-      "block": 0,
-      "para": 43
     },
     "1A8DCD77": {
       "owner": "generated",
@@ -4813,6 +4849,13 @@
       "kind": "nodetable",
       "para": 175
     },
+    "1AD36950": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "9.8 Choosing between transports",
+      "block": 1,
+      "para": 10
+    },
     "1AD6C658": {
       "owner": "generated",
       "region": "eventtypes",
@@ -4826,6 +4869,20 @@
       "section": "inline_data_signed",
       "block": 2,
       "para": 82
+    },
+    "1AE6AD5C": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "12 Conformance units",
+      "block": 2,
+      "para": 0
+    },
+    "1AED24FC": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "10.5 Security and intermediaries",
+      "block": 2,
+      "para": 0
     },
     "1AEF0995": {
       "owner": "generated",
@@ -4848,12 +4905,12 @@
       "block": 2,
       "para": 59
     },
-    "1B1FA40D": {
+    "1B1B4C03": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "9.8 Choosing between the inline and outer-protocol models",
-      "block": 1,
-      "para": 16
+      "section": "12 Conformance units",
+      "block": 0,
+      "para": 32
     },
     "1B42AD91": {
       "owner": "template"
@@ -4867,6 +4924,13 @@
       "index": 5,
       "kind": "para",
       "para": 0
+    },
+    "1B538195": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 7,
+      "para": 6
     },
     "1B5FDFA3": {
       "owner": "generated",
@@ -4892,22 +4956,12 @@
     "1B9E9216": {
       "owner": "template"
     },
-    "1BB0E16E": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 141,
-      "kind": "clause",
-      "para": 0
-    },
     "1BBCD5EC": {
       "owner": "generated",
       "region": "datatypes",
       "index": 8,
       "kind": "nodetable",
       "para": 1
-    },
-    "1BDEE9D3": {
-      "owner": "template"
     },
     "1BF2D1CC": {
       "owner": "markdown",
@@ -4942,6 +4996,20 @@
     },
     "1C14363F": {
       "owner": "template"
+    },
+    "1C1E4538": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "9.8 Choosing between transports",
+      "block": 1,
+      "para": 6
+    },
+    "1C20CEB1": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "12 Conformance units",
+      "block": 2,
+      "para": 1
     },
     "1C22A9F2": {
       "owner": "generated",
@@ -4985,9 +5053,6 @@
       "block": 2,
       "para": 42
     },
-    "1C735254": {
-      "owner": "template"
-    },
     "1C7B033D": {
       "owner": "generated",
       "region": "objecttypes",
@@ -5009,6 +5074,13 @@
       "kind": "nodetable",
       "para": 18
     },
+    "1C8272A5": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "12 Conformance units",
+      "block": 1,
+      "para": 0
+    },
     "1C8AE963": {
       "owner": "template"
     },
@@ -5028,9 +5100,6 @@
       "section": "inline_data_final",
       "block": 2,
       "para": 40
-    },
-    "1CABE5CC": {
-      "owner": "template"
     },
     "1CAC771F": {
       "owner": "template"
@@ -5083,8 +5152,12 @@
     "1CF8F167": {
       "owner": "template"
     },
-    "1D1F2170": {
-      "owner": "template"
+    "1CFA7638": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 4,
+      "para": 18
     },
     "1D1FB70D": {
       "owner": "markdown",
@@ -5092,6 +5165,13 @@
       "section": "inline_data_droppable",
       "block": 2,
       "para": 59
+    },
+    "1D241664": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "10.2 URL scheme, ALPN and discovery",
+      "block": 0,
+      "para": 3
     },
     "1D2BB5DF": {
       "owner": "markdown",
@@ -5117,13 +5197,6 @@
       "block": 2,
       "para": 42
     },
-    "1D44DEA3": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "9.8 Choosing between the inline and outer-protocol models",
-      "block": 1,
-      "para": 19
-    },
     "1D457025": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -5143,13 +5216,6 @@
       "region": "datatypes",
       "index": 28,
       "kind": "nodetable",
-      "para": 0
-    },
-    "1D5920F5": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 115,
-      "kind": "clause",
       "para": 0
     },
     "1D5E99C6": {
@@ -5182,6 +5248,20 @@
       "section": "inline_data_signed",
       "block": 0,
       "para": 0
+    },
+    "1D827E94": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "12 Conformance units",
+      "block": 0,
+      "para": 5
+    },
+    "1D843FCB": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 4,
+      "para": 15
     },
     "1D876D35": {
       "owner": "markdown",
@@ -5221,9 +5301,6 @@
       "block": 2,
       "para": 49
     },
-    "1DC2BC09": {
-      "owner": "template"
-    },
     "1DCE456A": {
       "owner": "generated",
       "region": "eventtypes",
@@ -5245,6 +5322,13 @@
       "kind": "nodetable",
       "para": 22
     },
+    "1DDA1F00": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "12 Conformance units",
+      "block": 0,
+      "para": 49
+    },
     "1DE0DCED": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -5258,13 +5342,6 @@
       "section": "quic_datagram_unreliable",
       "block": 2,
       "para": 67
-    },
-    "1E0194E1": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "9.8 Choosing between the inline and outer-protocol models",
-      "block": 1,
-      "para": 20
     },
     "1E0AA45C": {
       "owner": "template"
@@ -5358,9 +5435,6 @@
     "1E8E2FF3": {
       "owner": "template"
     },
-    "1E91D6F7": {
-      "owner": "template"
-    },
     "1E957270": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -5396,9 +5470,6 @@
       "kind": "nodetable",
       "para": 12
     },
-    "1EB740F6": {
-      "owner": "template"
-    },
     "1EC42301": {
       "owner": "generated",
       "region": "annex-a",
@@ -5419,9 +5490,6 @@
       "index": 3,
       "kind": "nodetable",
       "para": 28
-    },
-    "1ED51821": {
-      "owner": "template"
     },
     "1ED6C725": {
       "owner": "markdown",
@@ -5465,8 +5533,12 @@
       "block": 0,
       "para": 27
     },
-    "1F10C79B": {
-      "owner": "template"
+    "1F06A7FD": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "12 Conformance units",
+      "block": 0,
+      "para": 18
     },
     "1F1342BD": {
       "owner": "generated",
@@ -5495,13 +5567,6 @@
       "index": 6,
       "kind": "nodetable",
       "para": 28
-    },
-    "1F288EB3": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "10 Conformance units",
-      "block": 0,
-      "para": 25
     },
     "1F2ABA4A": {
       "owner": "generated",
@@ -5600,9 +5665,6 @@
     "1FBD28F8": {
       "owner": "template"
     },
-    "1FCC6116": {
-      "owner": "template"
-    },
     "1FD1F9EA": {
       "owner": "generated",
       "region": "objecttypes",
@@ -5627,6 +5689,13 @@
       "kind": "para",
       "para": 0
     },
+    "1FF396C0": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 2,
+      "para": 12
+    },
     "1FFB2741": {
       "owner": "template"
     },
@@ -5650,13 +5719,6 @@
       "index": 19,
       "kind": "enumtable",
       "para": 16
-    },
-    "200793C6": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "10 Conformance units",
-      "block": 0,
-      "para": 35
     },
     "200E576F": {
       "owner": "generated",
@@ -5713,13 +5775,6 @@
     "207494B6": {
       "owner": "template"
     },
-    "207B1722": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 23,
-      "kind": "clause",
-      "para": 0
-    },
     "2083F9D4": {
       "owner": "generated",
       "region": "namespaces",
@@ -5755,9 +5810,6 @@
       "kind": "nodetable",
       "para": 7
     },
-    "209AD818": {
-      "owner": "template"
-    },
     "20A503C4": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -5778,6 +5830,13 @@
       "index": 24,
       "kind": "nodetable",
       "para": 20
+    },
+    "20C6AFBF": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "10.3 Connection, control stream and channel streams",
+      "block": 6,
+      "para": 0
     },
     "20D34ECE": {
       "owner": "generated",
@@ -5863,19 +5922,19 @@
       "block": 0,
       "para": 0
     },
-    "21363C94": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "10 Conformance units",
-      "block": 0,
-      "para": 15
-    },
     "2137BEC6": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
       "section": "inline_end",
       "block": 2,
       "para": 75
+    },
+    "213C79FB": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "10.2 URL scheme, ALPN and discovery",
+      "block": 0,
+      "para": 10
     },
     "213F4230": {
       "owner": "template"
@@ -5911,6 +5970,13 @@
       "kind": "nodetable",
       "para": 26
     },
+    "217552E4": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 4,
+      "para": 3
+    },
     "217AED62": {
       "owner": "generated",
       "region": "use-cases",
@@ -5931,6 +5997,13 @@
       "section": "inline_data_final",
       "block": 2,
       "para": 44
+    },
+    "21A5D57E": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "12 Conformance units",
+      "block": 7,
+      "para": 0
     },
     "21C168EC": {
       "owner": "generated",
@@ -6154,16 +6227,6 @@
       "block": 2,
       "para": 66
     },
-    "22F45F8F": {
-      "owner": "template"
-    },
-    "22F58722": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 144,
-      "kind": "clause",
-      "para": 0
-    },
     "230073D9": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -6187,6 +6250,13 @@
     },
     "230DCC23": {
       "owner": "template"
+    },
+    "2311CCA6": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 11,
+      "para": 0
     },
     "2320E2FA": {
       "owner": "markdown",
@@ -6212,6 +6282,13 @@
       "block": 2,
       "para": 81
     },
+    "233B7A0F": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "9.8 Choosing between transports",
+      "block": 1,
+      "para": 16
+    },
     "2345909A": {
       "owner": "generated",
       "region": "eventtypes",
@@ -6232,6 +6309,13 @@
       "section": "Annex C — A worked media session (informative)",
       "block": 3,
       "para": 20
+    },
+    "235713BE": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "12 Conformance units",
+      "block": 0,
+      "para": 40
     },
     "23588DA1": {
       "owner": "markdown",
@@ -6322,13 +6406,6 @@
       "section": "6.1 OpenDataChannel",
       "block": 6,
       "para": 16
-    },
-    "23D17040": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "9.8 Choosing between the inline and outer-protocol models",
-      "block": 1,
-      "para": 11
     },
     "23D26B4E": {
       "owner": "markdown",
@@ -6490,9 +6567,6 @@
       "kind": "enumtable",
       "para": 17
     },
-    "24A6F203": {
-      "owner": "template"
-    },
     "24A9CEBD": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -6524,12 +6598,6 @@
       "kind": "annex",
       "para": 0
     },
-    "24D555E5": {
-      "owner": "template"
-    },
-    "24E17320": {
-      "owner": "template"
-    },
     "24EA6267": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -6557,9 +6625,6 @@
       "section": "inline_data_final",
       "block": 2,
       "para": 68
-    },
-    "250CEC6C": {
-      "owner": "template"
     },
     "250D1248": {
       "owner": "markdown",
@@ -6647,6 +6712,13 @@
     "2582E86B": {
       "owner": "template"
     },
+    "2584E370": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "10.3 Connection, control stream and channel streams",
+      "block": 2,
+      "para": 0
+    },
     "25870335": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -6668,6 +6740,20 @@
       "block": 2,
       "para": 73
     },
+    "2595BEE0": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 155,
+      "kind": "clause",
+      "para": 0
+    },
+    "25A43F88": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "12 Conformance units",
+      "block": 0,
+      "para": 4
+    },
     "25AC0C4C": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -6684,13 +6770,6 @@
     },
     "25DB5BA6": {
       "owner": "template"
-    },
-    "25E7181E": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 28,
-      "kind": "clause",
-      "para": 0
     },
     "25EC1FAB": {
       "owner": "markdown",
@@ -6713,13 +6792,6 @@
       "kind": "nodetable",
       "para": 7
     },
-    "25F64C2F": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 49,
-      "kind": "clause",
-      "para": 0
-    },
     "260FBE23": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -6727,8 +6799,12 @@
       "block": 2,
       "para": 30
     },
-    "260FD998": {
-      "owner": "template"
+    "261675B8": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 146,
+      "kind": "clause",
+      "para": 0
     },
     "261F86E6": {
       "owner": "template"
@@ -6746,6 +6822,13 @@
       "index": 0,
       "kind": "nodetable",
       "para": 133
+    },
+    "2636337F": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "9.4 Unreliable datagrams",
+      "block": 3,
+      "para": 0
     },
     "263BEFF2": {
       "owner": "generated",
@@ -6767,9 +6850,6 @@
       "section": "6.1 OpenDataChannel",
       "block": 9,
       "para": 27
-    },
-    "264E4B2E": {
-      "owner": "template"
     },
     "26502CD5": {
       "owner": "markdown",
@@ -6815,8 +6895,12 @@
       "kind": "nodetable",
       "para": 19
     },
-    "269DA459": {
-      "owner": "template"
+    "269543CB": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "10.3 Connection, control stream and channel streams",
+      "block": 0,
+      "para": 0
     },
     "26A3EA99": {
       "owner": "generated",
@@ -6874,11 +6958,12 @@
       "kind": "enumtable",
       "para": 4
     },
-    "26ED1FDC": {
-      "owner": "template"
-    },
-    "26F8179A": {
-      "owner": "template"
+    "26FA7D28": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "10.3 Connection, control stream and channel streams",
+      "block": 2,
+      "para": 16
     },
     "26FCC7C3": {
       "owner": "markdown",
@@ -6914,12 +6999,26 @@
       "kind": "nodetable",
       "para": 34
     },
+    "2710F001": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "9.8 Choosing between transports",
+      "block": 1,
+      "para": 7
+    },
     "27153970": {
       "owner": "generated",
       "region": "annex-a",
       "index": 0,
       "kind": "nodetable",
       "para": 205
+    },
+    "2720B4E0": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "9.8 Choosing between transports",
+      "block": 1,
+      "para": 32
     },
     "273A2B7E": {
       "owner": "markdown",
@@ -6936,9 +7035,6 @@
       "para": 116
     },
     "2748DE74": {
-      "owner": "template"
-    },
-    "274CE8F7": {
       "owner": "template"
     },
     "2751EE8E": {
@@ -6965,12 +7061,12 @@
       "block": 0,
       "para": 7
     },
-    "2775D203": {
+    "27727BCC": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "9.8 Choosing between the inline and outer-protocol models",
+      "section": "12 Conformance units",
       "block": 0,
-      "para": 0
+      "para": 15
     },
     "277B85E1": {
       "owner": "template"
@@ -7024,6 +7120,13 @@
       "block": 2,
       "para": 5
     },
+    "27BCCC1C": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 4,
+      "para": 13
+    },
     "27C58B91": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -7048,13 +7151,6 @@
     "27CC96E5": {
       "owner": "template"
     },
-    "27D15F70": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 127,
-      "kind": "clause",
-      "para": 0
-    },
     "27E383C3": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -7064,6 +7160,13 @@
     },
     "27E72254": {
       "owner": "template"
+    },
+    "27EFD875": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 7,
+      "para": 18
     },
     "27F54950": {
       "owner": "generated",
@@ -7103,6 +7206,13 @@
       "block": 4,
       "para": 0
     },
+    "28392575": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "9.8 Choosing between transports",
+      "block": 1,
+      "para": 15
+    },
     "2840DA46": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -7141,15 +7251,19 @@
       "kind": "nodetable",
       "para": 28
     },
-    "286A1D24": {
-      "owner": "template"
-    },
     "286B8BB6": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
       "section": "inline_reset",
       "block": 2,
       "para": 5
+    },
+    "287205B9": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 99,
+      "kind": "clause",
+      "para": 0
     },
     "2872A922": {
       "owner": "generated",
@@ -7164,6 +7278,13 @@
       "section": "9.2 URL scheme, ALPN and discovery",
       "block": 0,
       "para": 4
+    },
+    "2879D189": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "12 Conformance units",
+      "block": 2,
+      "para": 3
     },
     "287C496F": {
       "owner": "markdown",
@@ -7186,8 +7307,12 @@
       "block": 2,
       "para": 34
     },
-    "28A0F15E": {
-      "owner": "template"
+    "28A08BE9": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "12 Conformance units",
+      "block": 0,
+      "para": 29
     },
     "28AAC82D": {
       "owner": "template"
@@ -7254,6 +7379,13 @@
       "section": "inline_ping",
       "block": 2,
       "para": 30
+    },
+    "28EB8A37": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "9.8 Choosing between transports",
+      "block": 1,
+      "para": 11
     },
     "28ED5DE9": {
       "owner": "markdown",
@@ -7330,6 +7462,13 @@
     "2944340D": {
       "owner": "template"
     },
+    "294E7864": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "10.3 Connection, control stream and channel streams",
+      "block": 2,
+      "para": 12
+    },
     "294FE854": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -7382,6 +7521,13 @@
       "kind": "term",
       "para": 2
     },
+    "298F3F73": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "9.8 Choosing between transports",
+      "block": 1,
+      "para": 33
+    },
     "29AD991B": {
       "owner": "generated",
       "region": "objecttypes",
@@ -7417,6 +7563,13 @@
       "block": 0,
       "para": 24
     },
+    "29E1B465": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "12 Conformance units",
+      "block": 0,
+      "para": 1
+    },
     "29E2ECD2": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -7439,9 +7592,6 @@
       "para": 58
     },
     "29F59773": {
-      "owner": "template"
-    },
-    "2A00D1C8": {
       "owner": "template"
     },
     "2A04EB98": {
@@ -7490,13 +7640,6 @@
       "index": 7,
       "kind": "enumtable",
       "para": 14
-    },
-    "2A466EA6": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "10 Conformance units",
-      "block": 0,
-      "para": 24
     },
     "2A4694DB": {
       "owner": "markdown",
@@ -7547,6 +7690,13 @@
       "block": 2,
       "para": 84
     },
+    "2A9209A2": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "10.3 Connection, control stream and channel streams",
+      "block": 2,
+      "para": 15
+    },
     "2A9BC464": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -7560,6 +7710,13 @@
       "section": "quic_data_stream",
       "block": 2,
       "para": 46
+    },
+    "2AA47BCF": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "9.8 Choosing between transports",
+      "block": 1,
+      "para": 17
     },
     "2AA984BF": {
       "owner": "generated",
@@ -7616,6 +7773,13 @@
       "block": 2,
       "para": 66
     },
+    "2AE690AE": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "12 Conformance units",
+      "block": 0,
+      "para": 23
+    },
     "2AE881FF": {
       "owner": "generated",
       "region": "datatypes",
@@ -7646,6 +7810,13 @@
     },
     "2B09BE02": {
       "owner": "template"
+    },
+    "2B0F179A": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "10.3 Connection, control stream and channel streams",
+      "block": 4,
+      "para": 0
     },
     "2B18FCFA": {
       "owner": "generated",
@@ -7691,13 +7862,6 @@
       "section": "inline_data_first",
       "block": 2,
       "para": 4
-    },
-    "2B73E2D8": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "9.8 Choosing between the inline and outer-protocol models",
-      "block": 1,
-      "para": 8
     },
     "2B770064": {
       "owner": "markdown",
@@ -7837,6 +8001,13 @@
       "kind": "enumtable",
       "para": 10
     },
+    "2C2A1EF7": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 151,
+      "kind": "clause",
+      "para": 0
+    },
     "2C30CC07": {
       "owner": "generated",
       "region": "annex-a",
@@ -7880,9 +8051,6 @@
       "section": "inline_end",
       "block": 2,
       "para": 8
-    },
-    "2C9338D5": {
-      "owner": "template"
     },
     "2C96B0DA": {
       "owner": "markdown",
@@ -7954,6 +8122,13 @@
       "kind": "nodetable",
       "para": 7
     },
+    "2CF3E96A": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "12 Conformance units",
+      "block": 6,
+      "para": 0
+    },
     "2CFB09A8": {
       "owner": "generated",
       "region": "datatypes",
@@ -7968,22 +8143,12 @@
       "block": 2,
       "para": 73
     },
-    "2D0252E1": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "10 Conformance units",
-      "block": 5,
-      "para": 0
-    },
     "2D0AE05E": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
       "section": "inline_data_final",
       "block": 2,
       "para": 76
-    },
-    "2D0DC4C5": {
-      "owner": "template"
     },
     "2D19AF12": {
       "owner": "generated",
@@ -7994,6 +8159,13 @@
     },
     "2D1C4F1B": {
       "owner": "template"
+    },
+    "2D1E936E": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "12 Conformance units",
+      "block": 0,
+      "para": 7
     },
     "2D24C59D": {
       "owner": "generated",
@@ -8008,13 +8180,6 @@
       "section": "inline_reset",
       "block": 2,
       "para": 63
-    },
-    "2D326A30": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "10 Conformance units",
-      "block": 0,
-      "para": 7
     },
     "2D354DF2": {
       "owner": "markdown",
@@ -8092,11 +8257,19 @@
     "2D85298B": {
       "owner": "template"
     },
-    "2DA60E7D": {
-      "owner": "template"
+    "2D955DF3": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 2,
+      "para": 11
     },
-    "2DA6F2C1": {
-      "owner": "template"
+    "2DA2C58D": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 3,
+      "para": 0
     },
     "2DC06EB5": {
       "owner": "markdown",
@@ -8223,13 +8396,6 @@
       "kind": "nodetable",
       "para": 23
     },
-    "2E5206C1": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "10 Conformance units",
-      "block": 2,
-      "para": 5
-    },
     "2E696F40": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -8286,13 +8452,6 @@
       "block": 2,
       "para": 25
     },
-    "2E9DB26D": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 13,
-      "kind": "clause",
-      "para": 0
-    },
     "2EAC85E4": {
       "owner": "template"
     },
@@ -8327,8 +8486,12 @@
       "kind": "clause",
       "para": 0
     },
-    "2EE31292": {
-      "owner": "template"
+    "2EE5B0DC": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 7,
+      "para": 9
     },
     "2EF89FA3": {
       "owner": "template"
@@ -8354,9 +8517,6 @@
       "block": 2,
       "para": 16
     },
-    "2F03A833": {
-      "owner": "template"
-    },
     "2F080130": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -8377,6 +8537,13 @@
       "section": "5.3 State, and what \"unreliable\" means",
       "block": 1,
       "para": 7
+    },
+    "2F2CBB08": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 62,
+      "kind": "clause",
+      "para": 0
     },
     "2F2EE87C": {
       "owner": "markdown",
@@ -8581,16 +8748,6 @@
     "300CB483": {
       "owner": "template"
     },
-    "300DE30E": {
-      "owner": "template"
-    },
-    "3010625C": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "9.8 Choosing between the inline and outer-protocol models",
-      "block": 1,
-      "para": 27
-    },
     "30128275": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -8607,6 +8764,13 @@
     },
     "303B0651": {
       "owner": "template"
+    },
+    "303B5744": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 7,
+      "para": 17
     },
     "3044CC06": {
       "owner": "markdown",
@@ -8642,6 +8806,13 @@
       "kind": "nodetable",
       "para": 22
     },
+    "30571FBF": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 9,
+      "para": 0
+    },
     "30584803": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -8662,6 +8833,13 @@
       "index": 0,
       "kind": "nodetable",
       "para": 39
+    },
+    "3069A06F": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "9.8 Choosing between transports",
+      "block": 3,
+      "para": 0
     },
     "308F35FF": {
       "owner": "markdown",
@@ -8706,9 +8884,6 @@
       "para": 31
     },
     "30C36FBC": {
-      "owner": "template"
-    },
-    "30CFD43D": {
       "owner": "template"
     },
     "30D8FFAD": {
@@ -8756,6 +8931,13 @@
       "block": 3,
       "para": 0
     },
+    "3105175C": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "12 Conformance units",
+      "block": 3,
+      "para": 0
+    },
     "310AD9E6": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -8780,6 +8962,13 @@
       "block": 2,
       "para": 67
     },
+    "3129FB8C": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "10.3 Connection, control stream and channel streams",
+      "block": 1,
+      "para": 0
+    },
     "3135B3F0": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -8801,8 +8990,12 @@
       "block": 2,
       "para": 85
     },
-    "314013A3": {
-      "owner": "template"
+    "31488FAF": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "9.8 Choosing between transports",
+      "block": 1,
+      "para": 26
     },
     "315C92E6": {
       "owner": "markdown",
@@ -8995,13 +9188,6 @@
       "kind": "clause",
       "para": 0
     },
-    "32492F81": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "10 Conformance units",
-      "block": 0,
-      "para": 1
-    },
     "324AB138": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -9030,9 +9216,6 @@
       "kind": "nodetable",
       "para": 31
     },
-    "325CD00B": {
-      "owner": "template"
-    },
     "325EB9B8": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -9046,13 +9229,6 @@
       "index": 19,
       "kind": "enumtable",
       "para": 19
-    },
-    "3268762E": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "10 Conformance units",
-      "block": 0,
-      "para": 28
     },
     "3276629F": {
       "owner": "markdown",
@@ -9092,13 +9268,6 @@
       "block": 2,
       "para": 43
     },
-    "32B00E51": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 148,
-      "kind": "clause",
-      "para": 0
-    },
     "32B2BB40": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -9119,9 +9288,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 232
-    },
-    "32D4BE84": {
-      "owner": "template"
     },
     "32D52195": {
       "owner": "markdown",
@@ -9192,9 +9358,6 @@
       "kind": "nodetable",
       "para": 4
     },
-    "332EFF88": {
-      "owner": "template"
-    },
     "332F43B1": {
       "owner": "generated",
       "region": "datatypes",
@@ -9208,6 +9371,13 @@
       "section": "inline_end",
       "block": 2,
       "para": 51
+    },
+    "334575AA": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 41,
+      "kind": "clause",
+      "para": 0
     },
     "3346700D": {
       "owner": "markdown",
@@ -9285,6 +9455,13 @@
     "33828772": {
       "owner": "template"
     },
+    "33860F05": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 14,
+      "kind": "clause",
+      "para": 0
+    },
     "3386669E": {
       "owner": "generated",
       "region": "annex-a",
@@ -9309,12 +9486,6 @@
     "3393333E": {
       "owner": "template"
     },
-    "339F2FD0": {
-      "owner": "template"
-    },
-    "33B731C5": {
-      "owner": "template"
-    },
     "33C4259B": {
       "owner": "generated",
       "region": "objecttypes",
@@ -9328,6 +9499,13 @@
       "section": "3.1 Two channel models",
       "block": 1,
       "para": 6
+    },
+    "33D50438": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "10.5 Security and intermediaries",
+      "block": 0,
+      "para": 0
     },
     "33E08A6F": {
       "owner": "markdown",
@@ -9378,13 +9556,6 @@
       "block": 2,
       "para": 14
     },
-    "34236AF1": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 98,
-      "kind": "clause",
-      "para": 0
-    },
     "342806B1": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -9413,13 +9584,6 @@
       "block": 9,
       "para": 5
     },
-    "34472DCB": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "9.8 Choosing between the inline and outer-protocol models",
-      "block": 1,
-      "para": 9
-    },
     "344964BC": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -9433,6 +9597,13 @@
       "index": 0,
       "kind": "nodetable",
       "para": 217
+    },
+    "3450674B": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "2 The problem",
+      "block": 6,
+      "para": 0
     },
     "3450686A": {
       "owner": "markdown",
@@ -9502,12 +9673,12 @@
       "block": 1,
       "para": 4
     },
-    "34A7F487": {
+    "34AA3BC7": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "9.8 Choosing between the inline and outer-protocol models",
-      "block": 1,
-      "para": 6
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 2,
+      "para": 9
     },
     "34B0F00A": {
       "owner": "markdown",
@@ -9526,19 +9697,19 @@
     "34B4B014": {
       "owner": "template"
     },
-    "34C72204": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "10 Conformance units",
-      "block": 2,
-      "para": 7
-    },
     "34D0C2E3": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
       "section": "inline_ping",
       "block": 2,
       "para": 56
+    },
+    "34D16C65": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "12 Conformance units",
+      "block": 2,
+      "para": 7
     },
     "34DB3295": {
       "owner": "markdown",
@@ -9547,11 +9718,25 @@
       "block": 2,
       "para": 28
     },
+    "34DF581B": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "9.8 Choosing between transports",
+      "block": 1,
+      "para": 21
+    },
     "34E52732": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
       "section": "inline_credit_channel",
       "block": 2,
+      "para": 0
+    },
+    "34E8AEFB": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 92,
+      "kind": "clause",
       "para": 0
     },
     "34ED318F": {
@@ -9573,16 +9758,6 @@
     },
     "350B7F33": {
       "owner": "template"
-    },
-    "350FBF42": {
-      "owner": "template"
-    },
-    "35198E3D": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 38,
-      "kind": "clause",
-      "para": 0
     },
     "351F5487": {
       "owner": "generated",
@@ -9642,6 +9817,13 @@
       "index": 28,
       "kind": "nodetable",
       "para": 1
+    },
+    "355B26FC": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 7,
+      "para": 3
     },
     "35603A85": {
       "owner": "template"
@@ -9826,15 +10008,19 @@
       "block": 2,
       "para": 83
     },
-    "368489B1": {
-      "owner": "template"
-    },
     "36906034": {
       "owner": "generated",
       "region": "annex-a",
       "index": 0,
       "kind": "nodetable",
       "para": 107
+    },
+    "36943900": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 50,
+      "kind": "clause",
+      "para": 0
     },
     "369AF152": {
       "owner": "template"
@@ -9855,9 +10041,6 @@
       "section": "3.3 What the outer-protocol model adds",
       "block": 1,
       "para": 2
-    },
-    "36C994DC": {
-      "owner": "template"
     },
     "36CD0CDC": {
       "owner": "generated",
@@ -9944,6 +10127,13 @@
       "block": 2,
       "para": 3
     },
+    "372BB5AF": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "12 Conformance units",
+      "block": 2,
+      "para": 5
+    },
     "3739D210": {
       "owner": "template"
     },
@@ -9988,6 +10178,13 @@
       "block": 2,
       "para": 39
     },
+    "375720E3": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "12 Conformance units",
+      "block": 0,
+      "para": 34
+    },
     "3758AD8C": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -10015,6 +10212,13 @@
       "section": "inline_credit_channel",
       "block": 2,
       "para": 72
+    },
+    "375F0030": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 7,
+      "para": 0
     },
     "3773B4F1": {
       "owner": "markdown",
@@ -10105,6 +10309,13 @@
     "37F766D4": {
       "owner": "template"
     },
+    "37FD9279": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "12 Conformance units",
+      "block": 0,
+      "para": 47
+    },
     "38007818": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -10125,9 +10336,6 @@
       "section": "quic_data_stream",
       "block": 2,
       "para": 9
-    },
-    "38291F8B": {
-      "owner": "template"
     },
     "383020E9": {
       "owner": "template"
@@ -10259,6 +10467,13 @@
       "kind": "nodetable",
       "para": 47
     },
+    "38B5C0BD": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "12 Conformance units",
+      "block": 0,
+      "para": 24
+    },
     "38B9FE7B": {
       "owner": "generated",
       "region": "datatypes",
@@ -10287,9 +10502,6 @@
       "kind": "nodetable",
       "para": 30
     },
-    "38CA25F5": {
-      "owner": "template"
-    },
     "38CDEC3B": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -10310,6 +10522,13 @@
       "section": "inline_ping",
       "block": 2,
       "para": 42
+    },
+    "38E66360": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "10.1 Why an outer-protocol binding",
+      "block": 1,
+      "para": 0
     },
     "38E80156": {
       "owner": "generated",
@@ -10370,6 +10589,13 @@
       "block": 4,
       "para": 7
     },
+    "3945C80D": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 9,
+      "kind": "clause",
+      "para": 0
+    },
     "395158E1": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -10397,13 +10623,6 @@
       "index": 8,
       "kind": "table",
       "para": 3
-    },
-    "3980128F": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "10 Conformance units",
-      "block": 0,
-      "para": 41
     },
     "39838C16": {
       "owner": "markdown",
@@ -10445,13 +10664,6 @@
       "section": "inline_data_droppable",
       "block": 2,
       "para": 87
-    },
-    "399CC212": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "10 Conformance units",
-      "block": 0,
-      "para": 16
     },
     "39B91422": {
       "owner": "generated",
@@ -10560,6 +10772,13 @@
       "kind": "nodetable",
       "para": 26
     },
+    "3A14A57C": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 7,
+      "para": 12
+    },
     "3A21BEEC": {
       "owner": "generated",
       "region": "terms",
@@ -10605,8 +10824,12 @@
       "block": 2,
       "para": 13
     },
-    "3A586CBE": {
-      "owner": "template"
+    "3A590D16": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "10.2 URL scheme, ALPN and discovery",
+      "block": 0,
+      "para": 8
     },
     "3A636749": {
       "owner": "template"
@@ -10651,6 +10874,13 @@
     },
     "3AB6DF7F": {
       "owner": "template"
+    },
+    "3ABA7721": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "10.5 Security and intermediaries",
+      "block": 1,
+      "para": 0
     },
     "3ABC3999": {
       "owner": "markdown",
@@ -10703,12 +10933,33 @@
     "3AF21E35": {
       "owner": "template"
     },
+    "3AF74FF5": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "10.2 URL scheme, ALPN and discovery",
+      "block": 0,
+      "para": 7
+    },
+    "3B0EFF73": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "10.3 Connection, control stream and channel streams",
+      "block": 2,
+      "para": 10
+    },
     "3B15A4F2": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
       "section": "inline_gap",
       "block": 2,
       "para": 85
+    },
+    "3B1B5A70": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "12 Conformance units",
+      "block": 0,
+      "para": 21
     },
     "3B1E9039": {
       "owner": "markdown",
@@ -10807,19 +11058,19 @@
       "block": 2,
       "para": 47
     },
+    "3B78A4C3": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 12,
+      "para": 0
+    },
     "3B8E8E18": {
       "owner": "generated",
       "region": "datatypes",
       "index": 27,
       "kind": "enumtable",
       "para": 31
-    },
-    "3B9B550D": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 123,
-      "kind": "clause",
-      "para": 0
     },
     "3BA165ED": {
       "owner": "markdown",
@@ -11023,6 +11274,13 @@
       "kind": "para",
       "para": 0
     },
+    "3C7C1A1B": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "10.2 URL scheme, ALPN and discovery",
+      "block": 0,
+      "para": 9
+    },
     "3C7E0F31": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -11030,15 +11288,22 @@
       "block": 0,
       "para": 10
     },
-    "3C81E111": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "9.8 Choosing between the inline and outer-protocol models",
-      "block": 1,
-      "para": 5
-    },
     "3C8E7C39": {
       "owner": "template"
+    },
+    "3CA014B8": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "10.2 URL scheme, ALPN and discovery",
+      "block": 2,
+      "para": 0
+    },
+    "3CA7C6E1": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 20,
+      "kind": "clause",
+      "para": 0
     },
     "3CAD71CB": {
       "owner": "markdown",
@@ -11113,6 +11378,13 @@
       "kind": "nodetable",
       "para": 30
     },
+    "3D101CFF": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "12 Conformance units",
+      "block": 2,
+      "para": 2
+    },
     "3D170781": {
       "owner": "generated",
       "region": "normative-references",
@@ -11183,6 +11455,20 @@
       "kind": "nodetable",
       "para": 25
     },
+    "3DA3A677": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 4,
+      "para": 12
+    },
+    "3DA99DB6": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "9.8 Choosing between transports",
+      "block": 1,
+      "para": 1
+    },
     "3DAE35F2": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -11209,6 +11495,13 @@
       "index": 3,
       "kind": "nodetable",
       "para": 12
+    },
+    "3DE0559B": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "9.8 Choosing between transports",
+      "block": 1,
+      "para": 5
     },
     "3DE7BF43": {
       "owner": "markdown",
@@ -11275,9 +11568,6 @@
       "section": "6.1 OpenDataChannel",
       "block": 4,
       "para": 12
-    },
-    "3E1EF003": {
-      "owner": "template"
     },
     "3E29A700": {
       "owner": "markdown",
@@ -11365,9 +11655,6 @@
     "3E8D6FBB": {
       "owner": "template"
     },
-    "3E94AC16": {
-      "owner": "template"
-    },
     "3E9541F5": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -11375,8 +11662,12 @@
       "block": 3,
       "para": 1
     },
-    "3E97A6B2": {
-      "owner": "template"
+    "3EA445A9": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "12 Conformance units",
+      "block": 0,
+      "para": 36
     },
     "3EA46567": {
       "owner": "markdown",
@@ -11415,6 +11706,13 @@
       "section": "inline_ping",
       "block": 2,
       "para": 37
+    },
+    "3EF78CEC": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "10.2 URL scheme, ALPN and discovery",
+      "block": 0,
+      "para": 1
     },
     "3EF7BD1C": {
       "owner": "template"
@@ -11508,6 +11806,13 @@
       "block": 2,
       "para": 4
     },
+    "3F5E7433": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 2,
+      "para": 5
+    },
     "3F657DC6": {
       "owner": "generated",
       "region": "normative-references",
@@ -11528,9 +11833,6 @@
       "section": "inline_data_droppable",
       "block": 2,
       "para": 64
-    },
-    "3F7A3880": {
-      "owner": "template"
     },
     "3F8473C6": {
       "owner": "generated",
@@ -11580,9 +11882,6 @@
       "section": "3.1 Two channel models",
       "block": 1,
       "para": 19
-    },
-    "3FBD48F3": {
-      "owner": "template"
     },
     "3FBF88A6": {
       "owner": "markdown",
@@ -11638,13 +11937,6 @@
       "kind": "nodetable",
       "para": 40
     },
-    "3FF0D1D9": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "9.8 Choosing between the inline and outer-protocol models",
-      "block": 1,
-      "para": 22
-    },
     "3FF2FC7C": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -11659,12 +11951,26 @@
       "kind": "table",
       "para": 15
     },
+    "4026F8C9": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "12 Conformance units",
+      "block": 0,
+      "para": 28
+    },
     "402D5784": {
       "owner": "generated",
       "region": "instances",
       "index": 3,
       "kind": "nodetable",
       "para": 8
+    },
+    "402D86C3": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "10.1 Why an outer-protocol binding",
+      "block": 2,
+      "para": 0
     },
     "402F0B88": {
       "owner": "markdown",
@@ -11692,6 +11998,13 @@
     },
     "404587FB": {
       "owner": "template"
+    },
+    "405A3F18": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "12 Conformance units",
+      "block": 0,
+      "para": 13
     },
     "405BC129": {
       "owner": "markdown",
@@ -11731,6 +12044,13 @@
     "408123E9": {
       "owner": "template"
     },
+    "4082A1DB": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "9.8 Choosing between transports",
+      "block": 1,
+      "para": 8
+    },
     "4096BDC3": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -11740,6 +12060,13 @@
     },
     "409F4EDE": {
       "owner": "template"
+    },
+    "40A194B8": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "12 Conformance units",
+      "block": 0,
+      "para": 0
     },
     "40A6AD72": {
       "owner": "markdown",
@@ -11789,9 +12116,6 @@
       "section": "Annex C — A worked media session (informative)",
       "block": 5,
       "para": 13
-    },
-    "40D8BF9C": {
-      "owner": "template"
     },
     "40DE47FE": {
       "owner": "generated",
@@ -11861,9 +12185,6 @@
       "block": 2,
       "para": 48
     },
-    "41585B58": {
-      "owner": "template"
-    },
     "41598661": {
       "owner": "template"
     },
@@ -11908,6 +12229,13 @@
       "section": "inline_credit_connection",
       "block": 2,
       "para": 79
+    },
+    "41804396": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "9.8 Choosing between transports",
+      "block": 1,
+      "para": 13
     },
     "41841D70": {
       "owner": "generated",
@@ -11994,12 +12322,33 @@
     "42064A04": {
       "owner": "template"
     },
+    "4216E970": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 8,
+      "para": 0
+    },
+    "421A38C3": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "12 Conformance units",
+      "block": 4,
+      "para": 0
+    },
     "421AB606": {
       "owner": "generated",
       "region": "datatypes",
       "index": 3,
       "kind": "enumtable",
       "para": 3
+    },
+    "421E9B08": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "12 Conformance units",
+      "block": 0,
+      "para": 37
     },
     "42288F09": {
       "owner": "markdown",
@@ -12018,12 +12367,12 @@
       "block": 2,
       "para": 51
     },
-    "42421D4B": {
+    "423F2F18": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "10 Conformance units",
+      "section": "12 Conformance units",
       "block": 0,
-      "para": 39
+      "para": 42
     },
     "42454E80": {
       "owner": "markdown",
@@ -12215,6 +12564,13 @@
       "kind": "nodetable",
       "para": 13
     },
+    "4305B9E4": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "9.8 Choosing between transports",
+      "block": 1,
+      "para": 2
+    },
     "43074085": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -12238,6 +12594,13 @@
       "index": 0,
       "kind": "nodetable",
       "para": 110
+    },
+    "433090B8": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 2,
+      "para": 14
     },
     "433DAE0F": {
       "owner": "generated",
@@ -12295,13 +12658,6 @@
       "block": 0,
       "para": 2
     },
-    "4376AC34": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "10 Conformance units",
-      "block": 0,
-      "para": 31
-    },
     "439FAE69": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -12316,22 +12672,12 @@
       "block": 2,
       "para": 8
     },
-    "43BD28D3": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "10 Conformance units",
-      "block": 0,
-      "para": 33
-    },
     "43C365C3": {
       "owner": "generated",
       "region": "eventtypes",
       "index": 3,
       "kind": "nodetable",
       "para": 18
-    },
-    "43C3F77F": {
-      "owner": "template"
     },
     "43C69CCC": {
       "owner": "generated",
@@ -12367,16 +12713,6 @@
       "section": "quic_data_stream",
       "block": 2,
       "para": 61
-    },
-    "43E8E187": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "10 Conformance units",
-      "block": 0,
-      "para": 30
-    },
-    "43EA6BEC": {
-      "owner": "template"
     },
     "43EB576F": {
       "owner": "markdown",
@@ -12440,13 +12776,7 @@
       "block": 2,
       "para": 17
     },
-    "44763EEA": {
-      "owner": "template"
-    },
     "44999F2F": {
-      "owner": "template"
-    },
-    "4499FC12": {
       "owner": "template"
     },
     "44B00A57": {
@@ -12463,13 +12793,6 @@
       "kind": "nodetable",
       "para": 18
     },
-    "44BCF0A0": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "10 Conformance units",
-      "block": 0,
-      "para": 36
-    },
     "44BDCC0D": {
       "owner": "generated",
       "region": "annex-a",
@@ -12483,6 +12806,13 @@
       "index": 9,
       "kind": "nodetable",
       "para": 30
+    },
+    "44C85189": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 2,
+      "para": 16
     },
     "44CDEE29": {
       "owner": "markdown",
@@ -12593,9 +12923,6 @@
       "block": 5,
       "para": 9
     },
-    "45A61840": {
-      "owner": "template"
-    },
     "45ABA63C": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -12640,6 +12967,13 @@
       "index": 3,
       "kind": "nodetable",
       "para": 5
+    },
+    "45F8AE6B": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "12 Conformance units",
+      "block": 0,
+      "para": 8
     },
     "45FE08CD": {
       "owner": "generated",
@@ -12752,13 +13086,6 @@
     "467E907C": {
       "owner": "template"
     },
-    "4686CBFC": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "10 Conformance units",
-      "block": 0,
-      "para": 37
-    },
     "468FE586": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -12790,22 +13117,15 @@
       "kind": "enumtable",
       "para": 7
     },
-    "46D5686C": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "10 Conformance units",
-      "block": 0,
-      "para": 23
-    },
     "46DBE0D6": {
       "owner": "template"
     },
-    "46E263C6": {
+    "46E190F5": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "10 Conformance units",
-      "block": 2,
-      "para": 3
+      "section": "10.4 Unreliable datagrams",
+      "block": 0,
+      "para": 0
     },
     "46EFA9FC": {
       "owner": "markdown",
@@ -12841,6 +13161,13 @@
       "section": "6.1 OpenDataChannel",
       "block": 9,
       "para": 28
+    },
+    "47094216": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "12 Conformance units",
+      "block": 0,
+      "para": 35
     },
     "470B57E0": {
       "owner": "markdown",
@@ -12882,9 +13209,6 @@
       "section": "inline_ping",
       "block": 2,
       "para": 15
-    },
-    "47395AF0": {
-      "owner": "template"
     },
     "473E4AFA": {
       "owner": "generated",
@@ -12930,6 +13254,13 @@
     },
     "47772F2D": {
       "owner": "template"
+    },
+    "477E77C7": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "11 What it costs",
+      "block": 0,
+      "para": 0
     },
     "47857AE0": {
       "owner": "generated",
@@ -13063,16 +13394,6 @@
       "kind": "nodetable",
       "para": 59
     },
-    "481BC28C": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "10 Conformance units",
-      "block": 0,
-      "para": 42
-    },
-    "481C28BF": {
-      "owner": "template"
-    },
     "481E011A": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -13114,16 +13435,6 @@
       "kind": "enumtable",
       "para": 11
     },
-    "48619CDA": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "10 Conformance units",
-      "block": 0,
-      "para": 34
-    },
-    "486A2ED3": {
-      "owner": "template"
-    },
     "486F82F8": {
       "owner": "generated",
       "region": "objecttypes",
@@ -13151,13 +13462,6 @@
       "index": 4,
       "kind": "nodetable",
       "para": 10
-    },
-    "4896E05B": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "9.8 Choosing between the inline and outer-protocol models",
-      "block": 1,
-      "para": 3
     },
     "48B9129F": {
       "owner": "generated",
@@ -13197,6 +13501,13 @@
       "block": 2,
       "para": 69
     },
+    "48E86697": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "10.2 URL scheme, ALPN and discovery",
+      "block": 0,
+      "para": 6
+    },
     "48EE46DA": {
       "owner": "template"
     },
@@ -13214,15 +13525,19 @@
       "kind": "nodetable",
       "para": 17
     },
+    "490DB5DD": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 7,
+      "para": 19
+    },
     "491117C4": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
       "section": "inline_data_droppable",
       "block": 2,
       "para": 1
-    },
-    "491B564A": {
-      "owner": "template"
     },
     "4935913C": {
       "owner": "markdown",
@@ -13252,11 +13567,25 @@
       "kind": "nodetable",
       "para": 12
     },
+    "4946D272": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "12 Conformance units",
+      "block": 0,
+      "para": 22
+    },
     "4948051D": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
       "section": "6.5 Lifecycle",
       "block": 0,
+      "para": 0
+    },
+    "494DAE4D": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 154,
+      "kind": "clause",
       "para": 0
     },
     "4956D329": {
@@ -13282,6 +13611,13 @@
       "index": 3,
       "kind": "nodetable",
       "para": 32
+    },
+    "49628176": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "10.3 Connection, control stream and channel streams",
+      "block": 2,
+      "para": 1
     },
     "4976D496": {
       "owner": "template"
@@ -13314,11 +13650,11 @@
       "kind": "nodetable",
       "para": 50
     },
-    "49A25DBB": {
+    "49A49E0D": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "10 Conformance units",
-      "block": 1,
+      "section": "10.3 Connection, control stream and channel streams",
+      "block": 3,
       "para": 0
     },
     "49A4B630": {
@@ -13352,6 +13688,13 @@
       "kind": "nodetable",
       "para": 193
     },
+    "49D232E3": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "10.3 Connection, control stream and channel streams",
+      "block": 2,
+      "para": 11
+    },
     "49D9BF85": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -13373,9 +13716,6 @@
       "block": 2,
       "para": 76
     },
-    "49E26792": {
-      "owner": "template"
-    },
     "49E2AAEB": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -13396,9 +13736,6 @@
       "section": "inline_reset",
       "block": 2,
       "para": 46
-    },
-    "49F29898": {
-      "owner": "template"
     },
     "49F66916": {
       "owner": "generated",
@@ -13434,13 +13771,6 @@
       "section": "6.2 ModifyDataChannel",
       "block": 4,
       "para": 1
-    },
-    "4A1BCCB4": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 40,
-      "kind": "clause",
-      "para": 0
     },
     "4A1E56C2": {
       "owner": "markdown",
@@ -13488,9 +13818,6 @@
       "index": 7,
       "kind": "enumtable",
       "para": 16
-    },
-    "4A78109D": {
-      "owner": "template"
     },
     "4A78842B": {
       "owner": "generated",
@@ -13548,6 +13875,13 @@
       "block": 2,
       "para": 17
     },
+    "4ABA09EF": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "10.2 URL scheme, ALPN and discovery",
+      "block": 0,
+      "para": 11
+    },
     "4ABDAF92": {
       "owner": "generated",
       "region": "annex-a",
@@ -13592,12 +13926,26 @@
       "block": 2,
       "para": 56
     },
+    "4AF538FE": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 1,
+      "para": 0
+    },
     "4B02D49C": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
       "section": "6.1 OpenDataChannel",
       "block": 4,
       "para": 2
+    },
+    "4B0AA8BC": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 4,
+      "para": 6
     },
     "4B0F8FA0": {
       "owner": "generated",
@@ -13644,22 +13992,12 @@
       "block": 2,
       "para": 83
     },
-    "4B39512B": {
-      "owner": "template"
-    },
     "4B3EEE6D": {
       "owner": "generated",
       "region": "annex-a",
       "index": 0,
       "kind": "nodetable",
       "para": 87
-    },
-    "4B40FAAA": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 31,
-      "kind": "clause",
-      "para": 0
     },
     "4B4C46B5": {
       "owner": "markdown",
@@ -13675,12 +14013,26 @@
       "block": 2,
       "para": 16
     },
+    "4B56C0DF": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "10.3 Connection, control stream and channel streams",
+      "block": 2,
+      "para": 3
+    },
     "4B5EEF36": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
       "section": "inline_data_final",
       "block": 2,
       "para": 72
+    },
+    "4B63DA2A": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 5,
+      "para": 0
     },
     "4B666634": {
       "owner": "generated",
@@ -13709,12 +14061,6 @@
       "section": "Annex C — A worked media session (informative)",
       "block": 5,
       "para": 22
-    },
-    "4B864574": {
-      "owner": "template"
-    },
-    "4B8A69EA": {
-      "owner": "template"
     },
     "4B96D8F6": {
       "owner": "generated",
@@ -13801,6 +14147,13 @@
       "section": "quic_datagram_unreliable",
       "block": 2,
       "para": 6
+    },
+    "4BFEB9F8": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "12 Conformance units",
+      "block": 0,
+      "para": 19
     },
     "4C07055D": {
       "owner": "markdown",
@@ -13941,9 +14294,6 @@
       "kind": "nodetable",
       "para": 8
     },
-    "4C921D1A": {
-      "owner": "template"
-    },
     "4C9ACC5A": {
       "owner": "template"
     },
@@ -13960,13 +14310,6 @@
       "section": "6.1 OpenDataChannel",
       "block": 9,
       "para": 14
-    },
-    "4CB43AD6": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "10 Conformance units",
-      "block": 0,
-      "para": 21
     },
     "4CB60545": {
       "owner": "markdown",
@@ -14158,9 +14501,6 @@
       "block": 2,
       "para": 1
     },
-    "4DA645E4": {
-      "owner": "template"
-    },
     "4DB59116": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -14257,8 +14597,12 @@
       "block": 2,
       "para": 62
     },
-    "4E528C58": {
-      "owner": "template"
+    "4E57BD10": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 2,
+      "para": 0
     },
     "4E7035A9": {
       "owner": "markdown",
@@ -14360,9 +14704,6 @@
       "block": 2,
       "para": 29
     },
-    "4ED66941": {
-      "owner": "template"
-    },
     "4EDB4123": {
       "owner": "template"
     },
@@ -14415,6 +14756,13 @@
       "kind": "nodetable",
       "para": 26
     },
+    "4F2D110B": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "12 Conformance units",
+      "block": 0,
+      "para": 27
+    },
     "4F308B6A": {
       "owner": "template"
     },
@@ -14456,9 +14804,6 @@
       "kind": "nodetable",
       "para": 22
     },
-    "4FA357C0": {
-      "owner": "template"
-    },
     "4FB5DA95": {
       "owner": "generated",
       "region": "annex-a",
@@ -14466,15 +14811,19 @@
       "kind": "nodetable",
       "para": 186
     },
+    "4FB7BDDC": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "9.8 Choosing between transports",
+      "block": 1,
+      "para": 9
+    },
     "4FCAB04E": {
       "owner": "generated",
       "region": "objecttypes",
       "index": 3,
       "kind": "nodetable",
       "para": 56
-    },
-    "4FDEF0D2": {
-      "owner": "template"
     },
     "4FE7FA9A": {
       "owner": "generated",
@@ -14490,9 +14839,6 @@
       "block": 2,
       "para": 28
     },
-    "4FFAA691": {
-      "owner": "template"
-    },
     "5002DA90": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -14501,9 +14847,6 @@
       "para": 88
     },
     "50060862": {
-      "owner": "template"
-    },
-    "5009FB77": {
       "owner": "template"
     },
     "500DC013": {
@@ -14600,8 +14943,12 @@
       "block": 1,
       "para": 16
     },
-    "508CFB1D": {
-      "owner": "template"
+    "50877466": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "10.3 Connection, control stream and channel streams",
+      "block": 2,
+      "para": 14
     },
     "50908176": {
       "owner": "markdown",
@@ -14675,9 +15022,6 @@
       "block": 2,
       "para": 79
     },
-    "50CF1721": {
-      "owner": "template"
-    },
     "50F04097": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -14744,6 +15088,20 @@
       "block": 2,
       "para": 0
     },
+    "5139C69D": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 29,
+      "kind": "clause",
+      "para": 0
+    },
+    "513AC4F5": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 2,
+      "para": 1
+    },
     "5142F148": {
       "owner": "generated",
       "region": "datatypes",
@@ -14777,13 +15135,6 @@
       "region": "datatypes",
       "index": 11,
       "kind": "enumtable",
-      "para": 13
-    },
-    "515D59E7": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "9.8 Choosing between the inline and outer-protocol models",
-      "block": 1,
       "para": 13
     },
     "515F251B": {
@@ -14824,6 +15175,13 @@
       "block": 1,
       "para": 11
     },
+    "519B3FC3": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "9.8 Choosing between transports",
+      "block": 2,
+      "para": 0
+    },
     "51A196A3": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -14858,9 +15216,6 @@
       "section": "inline_data_first",
       "block": 3,
       "para": 0
-    },
-    "51BCF1F5": {
-      "owner": "template"
     },
     "51C20B5E": {
       "owner": "markdown",
@@ -15039,11 +15394,12 @@
     "52A86A61": {
       "owner": "template"
     },
-    "52B194AE": {
-      "owner": "template"
-    },
-    "52B4548C": {
-      "owner": "template"
+    "52CF894C": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "12 Conformance units",
+      "block": 0,
+      "para": 31
     },
     "52D0B4E3": {
       "owner": "markdown",
@@ -15099,6 +15455,13 @@
       "section": "inline_data_final",
       "block": 3,
       "para": 0
+    },
+    "530CA902": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 4,
+      "para": 10
     },
     "530E00A8": {
       "owner": "generated",
@@ -15191,15 +15554,19 @@
       "block": 9,
       "para": 20
     },
+    "53464094": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "9.8 Choosing between transports",
+      "block": 1,
+      "para": 34
+    },
     "5349F641": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
       "section": "inline_reset",
       "block": 1,
       "para": 0
-    },
-    "534A6854": {
-      "owner": "template"
     },
     "534F71EA": {
       "owner": "generated",
@@ -15221,6 +15588,20 @@
       "block": 2,
       "para": 80
     },
+    "537180D4": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "9.8 Choosing between transports",
+      "block": 1,
+      "para": 19
+    },
+    "53722C29": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "10.3 Connection, control stream and channel streams",
+      "block": 2,
+      "para": 8
+    },
     "538ECA46": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -15241,6 +15622,13 @@
       "index": 3,
       "kind": "nodetable",
       "para": 13
+    },
+    "53A41BD0": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "12 Conformance units",
+      "block": 0,
+      "para": 43
     },
     "53B6A1E0": {
       "owner": "markdown",
@@ -15270,15 +15658,19 @@
       "kind": "nodetable",
       "para": 6
     },
+    "53C6A92B": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 39,
+      "kind": "clause",
+      "para": 0
+    },
     "53DF41CD": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
       "section": "inline_data_signed",
       "block": 2,
       "para": 67
-    },
-    "53E804C2": {
-      "owner": "template"
     },
     "53FE2E88": {
       "owner": "generated",
@@ -15329,8 +15721,12 @@
       "block": 2,
       "para": 46
     },
-    "544712B9": {
-      "owner": "template"
+    "544124A1": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 32,
+      "kind": "clause",
+      "para": 0
     },
     "5449CEB7": {
       "owner": "generated",
@@ -15348,13 +15744,6 @@
     },
     "546EBE42": {
       "owner": "template"
-    },
-    "547498A5": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "9.8 Choosing between the inline and outer-protocol models",
-      "block": 1,
-      "para": 17
     },
     "547C963B": {
       "owner": "template"
@@ -15529,12 +15918,12 @@
       "kind": "nodetable",
       "para": 67
     },
-    "555DC8D6": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 19,
-      "kind": "clause",
-      "para": 0
+    "554C539F": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 7,
+      "para": 7
     },
     "55637C58": {
       "owner": "markdown",
@@ -15612,13 +16001,6 @@
       "kind": "enumtable",
       "para": 20
     },
-    "55A58F35": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "9.8 Choosing between the inline and outer-protocol models",
-      "block": 1,
-      "para": 7
-    },
     "55A9F01B": {
       "owner": "generated",
       "region": "eventtypes",
@@ -15681,15 +16063,19 @@
       "kind": "para",
       "para": 0
     },
+    "561B947C": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 7,
+      "para": 1
+    },
     "56366A96": {
       "owner": "generated",
       "region": "annex-a",
       "index": 0,
       "kind": "nodetable",
       "para": 185
-    },
-    "563BA980": {
-      "owner": "template"
     },
     "56558A3C": {
       "owner": "markdown",
@@ -15718,12 +16104,6 @@
       "index": 24,
       "kind": "nodetable",
       "para": 16
-    },
-    "56769729": {
-      "owner": "template"
-    },
-    "568698BE": {
-      "owner": "template"
     },
     "56881EC0": {
       "owner": "markdown",
@@ -15843,6 +16223,13 @@
       "kind": "nodetable",
       "para": 29
     },
+    "5777DEFD": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "12 Conformance units",
+      "block": 0,
+      "para": 33
+    },
     "5786394B": {
       "owner": "template"
     },
@@ -15859,6 +16246,13 @@
       "index": 27,
       "kind": "enumtable",
       "para": 21
+    },
+    "579DCEEA": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "9.8 Choosing between transports",
+      "block": 1,
+      "para": 24
     },
     "57A8E68C": {
       "owner": "markdown",
@@ -15895,9 +16289,6 @@
       "block": 2,
       "para": 35
     },
-    "57EAA52C": {
-      "owner": "template"
-    },
     "57F1B058": {
       "owner": "generated",
       "region": "namespaces",
@@ -15925,6 +16316,13 @@
       "index": 6,
       "kind": "nodetable",
       "para": 21
+    },
+    "5818A367": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "12 Conformance units",
+      "block": 0,
+      "para": 41
     },
     "581A5B02": {
       "owner": "markdown",
@@ -15974,9 +16372,6 @@
     "584AC32F": {
       "owner": "template"
     },
-    "584C27CE": {
-      "owner": "template"
-    },
     "58546A0C": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -16005,13 +16400,6 @@
       "kind": "nodetable",
       "para": 21
     },
-    "5859D1BF": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "9.8 Choosing between the inline and outer-protocol models",
-      "block": 1,
-      "para": 26
-    },
     "5862F67A": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -16026,19 +16414,19 @@
       "kind": "nodetable",
       "para": 64
     },
+    "5868EBFB": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 2,
+      "para": 2
+    },
     "586AB8A5": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
       "section": "inline_ping",
       "block": 2,
       "para": 36
-    },
-    "587906F5": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "9.8 Choosing between the inline and outer-protocol models",
-      "block": 1,
-      "para": 4
     },
     "5880342A": {
       "owner": "generated",
@@ -16075,15 +16463,19 @@
       "kind": "table",
       "para": 6
     },
-    "589B2795": {
-      "owner": "template"
-    },
     "58A0765F": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
       "section": "inline_credit_connection",
       "block": 2,
       "para": 87
+    },
+    "58AC5B85": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "12 Conformance units",
+      "block": 2,
+      "para": 8
     },
     "58B11B66": {
       "owner": "generated",
@@ -16101,9 +16493,6 @@
       "section": "inline_data_droppable",
       "block": 2,
       "para": 11
-    },
-    "58C85CF0": {
-      "owner": "template"
     },
     "58CF442A": {
       "owner": "markdown",
@@ -16174,6 +16563,13 @@
       "index": 0,
       "kind": "clause",
       "para": 0
+    },
+    "5943638C": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "9.8 Choosing between transports",
+      "block": 1,
+      "para": 22
     },
     "59582B56": {
       "owner": "markdown",
@@ -16300,6 +16696,13 @@
       "kind": "nodetable",
       "para": 1
     },
+    "59FC2E4B": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "12 Conformance units",
+      "block": 2,
+      "para": 4
+    },
     "5A091A22": {
       "owner": "generated",
       "region": "datatypes",
@@ -16316,20 +16719,6 @@
     },
     "5A0FB2B8": {
       "owner": "template"
-    },
-    "5A15D01D": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "9.8 Choosing between the inline and outer-protocol models",
-      "block": 1,
-      "para": 1
-    },
-    "5A1B6540": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "10 Conformance units",
-      "block": 0,
-      "para": 14
     },
     "5A1CC090": {
       "owner": "template"
@@ -16365,9 +16754,6 @@
       "block": 2,
       "para": 67
     },
-    "5A4E748F": {
-      "owner": "template"
-    },
     "5A652556": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -16399,19 +16785,19 @@
       "kind": "enumtable",
       "para": 9
     },
-    "5A8C4DF1": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "10 Conformance units",
-      "block": 0,
-      "para": 20
-    },
     "5A9B3B81": {
       "owner": "generated",
       "region": "annex-a",
       "index": 0,
       "kind": "nodetable",
       "para": 235
+    },
+    "5AA24CC9": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 2,
+      "para": 10
     },
     "5AA819CE": {
       "owner": "generated",
@@ -16451,16 +16837,6 @@
       "block": 2,
       "para": 57
     },
-    "5AE2D0FB": {
-      "owner": "template"
-    },
-    "5AF7C5C0": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 112,
-      "kind": "clause",
-      "para": 0
-    },
     "5AFDA560": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -16474,13 +16850,6 @@
       "section": "inline_reset",
       "block": 2,
       "para": 58
-    },
-    "5B03513A": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "10 Conformance units",
-      "block": 0,
-      "para": 10
     },
     "5B05139B": {
       "owner": "markdown",
@@ -16568,9 +16937,6 @@
     "5B74B1E1": {
       "owner": "template"
     },
-    "5B7FE103": {
-      "owner": "template"
-    },
     "5B851F1B": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -16592,8 +16958,12 @@
       "kind": "table",
       "para": 8
     },
-    "5BA4782E": {
-      "owner": "template"
+    "5BAC6796": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 7,
+      "para": 15
     },
     "5BAE7D9C": {
       "owner": "markdown",
@@ -16601,9 +16971,6 @@
       "section": "3.1 Two channel models",
       "block": 1,
       "para": 12
-    },
-    "5BB28EE0": {
-      "owner": "template"
     },
     "5BB67A54": {
       "owner": "template"
@@ -16635,6 +17002,13 @@
       "kind": "enumtable",
       "para": 2
     },
+    "5BE12E38": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 159,
+      "kind": "clause",
+      "para": 0
+    },
     "5BE3DF7C": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -16648,12 +17022,6 @@
       "section": "inline_data_droppable",
       "block": 2,
       "para": 61
-    },
-    "5BF077C1": {
-      "owner": "template"
-    },
-    "5BF08449": {
-      "owner": "template"
     },
     "5BF29B22": {
       "owner": "template"
@@ -16699,19 +17067,19 @@
     "5C17EB58": {
       "owner": "template"
     },
+    "5C294DA1": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "9.8 Choosing between transports",
+      "block": 1,
+      "para": 23
+    },
     "5C2C5BB8": {
       "owner": "generated",
       "region": "annex-a",
       "index": 0,
       "kind": "nodetable",
       "para": 206
-    },
-    "5C317CF5": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 33,
-      "kind": "clause",
-      "para": 0
     },
     "5C319365": {
       "owner": "generated",
@@ -16764,9 +17132,6 @@
       "index": 28,
       "kind": "nodetable",
       "para": 28
-    },
-    "5C4CB3D6": {
-      "owner": "template"
     },
     "5C4ED3DE": {
       "owner": "markdown",
@@ -16826,6 +17191,20 @@
       "section": "3.3 What the outer-protocol model adds",
       "block": 1,
       "para": 7
+    },
+    "5CA0860E": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "12 Conformance units",
+      "block": 0,
+      "para": 20
+    },
+    "5CA2F0D7": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "9.8 Choosing between transports",
+      "block": 1,
+      "para": 12
     },
     "5CA88F5F": {
       "owner": "generated",
@@ -16904,9 +17283,6 @@
       "block": 1,
       "para": 2
     },
-    "5D08A08A": {
-      "owner": "template"
-    },
     "5D10A1A1": {
       "owner": "generated",
       "region": "datatypes",
@@ -16920,6 +17296,13 @@
       "index": 24,
       "kind": "nodetable",
       "para": 22
+    },
+    "5D28ADA9": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "10.2 URL scheme, ALPN and discovery",
+      "block": 1,
+      "para": 0
     },
     "5D312D83": {
       "owner": "generated",
@@ -17018,6 +17401,13 @@
       "kind": "enumtable",
       "para": 7
     },
+    "5D74863D": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "9.8 Choosing between transports",
+      "block": 1,
+      "para": 18
+    },
     "5D88BAEE": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -17032,12 +17422,26 @@
       "block": 2,
       "para": 15
     },
+    "5D953562": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 71,
+      "kind": "clause",
+      "para": 0
+    },
     "5D9E6EB0": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
       "section": "quic_datagram_unreliable",
       "block": 2,
       "para": 32
+    },
+    "5DAD8C4C": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "10.3 Connection, control stream and channel streams",
+      "block": 2,
+      "para": 4
     },
     "5DB1CC38": {
       "owner": "generated",
@@ -17050,9 +17454,6 @@
       "owner": "template"
     },
     "5DCA731A": {
-      "owner": "template"
-    },
-    "5DD4E3F0": {
       "owner": "template"
     },
     "5DD7406B": {
@@ -17131,6 +17532,13 @@
     "5E1BE192": {
       "owner": "template"
     },
+    "5E25D91B": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 179,
+      "kind": "clause",
+      "para": 0
+    },
     "5E2610B6": {
       "owner": "generated",
       "region": "datatypes",
@@ -17167,6 +17575,13 @@
       "region": "frontmatter",
       "index": 0,
       "kind": "toc",
+      "para": 0
+    },
+    "5E6AAAC7": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 163,
+      "kind": "clause",
       "para": 0
     },
     "5E70C855": {
@@ -17229,6 +17644,13 @@
       "index": 3,
       "kind": "nodetable",
       "para": 3
+    },
+    "5EFDB514": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 7,
+      "para": 8
     },
     "5F047651": {
       "owner": "markdown",
@@ -17293,12 +17715,19 @@
       "kind": "nodetable",
       "para": 0
     },
-    "5F4C3324": {
+    "5F5BAEA9": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "10 Conformance units",
+      "section": "10.2 URL scheme, ALPN and discovery",
       "block": 0,
-      "para": 22
+      "para": 5
+    },
+    "5F5D10E6": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "12 Conformance units",
+      "block": 0,
+      "para": 44
     },
     "5F5D3BCA": {
       "owner": "template"
@@ -17333,13 +17762,6 @@
       "section": "4.2 Frame types",
       "block": 0,
       "para": 28
-    },
-    "5F9AF2B2": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "10 Conformance units",
-      "block": 0,
-      "para": 32
     },
     "5F9E0535": {
       "owner": "generated",
@@ -17406,9 +17828,6 @@
       "block": 0,
       "para": 7
     },
-    "5FCF5D6D": {
-      "owner": "template"
-    },
     "5FD08002": {
       "owner": "generated",
       "region": "annex-a",
@@ -17464,13 +17883,6 @@
     "6010B015": {
       "owner": "template"
     },
-    "601D7DF6": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 108,
-      "kind": "clause",
-      "para": 0
-    },
     "601DF792": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -17491,6 +17903,13 @@
       "index": 3,
       "kind": "nodetable",
       "para": 63
+    },
+    "602F05E4": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 0,
+      "para": 0
     },
     "602F6A69": {
       "owner": "markdown",
@@ -17609,13 +18028,6 @@
       "block": 2,
       "para": 78
     },
-    "60F7E6DF": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "10 Conformance units",
-      "block": 0,
-      "para": 9
-    },
     "60FFE21B": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -17654,15 +18066,19 @@
     "61117E2E": {
       "owner": "template"
     },
+    "611434D3": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 46,
+      "kind": "clause",
+      "para": 0
+    },
     "6117E7B8": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
       "section": "inline_data_droppable",
       "block": 2,
       "para": 80
-    },
-    "611EBB79": {
-      "owner": "template"
     },
     "61395AD0": {
       "owner": "generated",
@@ -17746,6 +18162,13 @@
       "block": 2,
       "para": 14
     },
+    "618D0688": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "12 Conformance units",
+      "block": 0,
+      "para": 12
+    },
     "619264E0": {
       "owner": "generated",
       "region": "eventtypes",
@@ -17769,9 +18192,6 @@
       "index": 26,
       "kind": "para",
       "para": 0
-    },
-    "61C636AF": {
-      "owner": "template"
     },
     "61C6BC17": {
       "owner": "markdown",
@@ -17814,6 +18234,13 @@
       "block": 2,
       "para": 9
     },
+    "62031CD1": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "12 Conformance units",
+      "block": 0,
+      "para": 25
+    },
     "6204D615": {
       "owner": "template"
     },
@@ -17850,9 +18277,6 @@
       "section": "inline_data_droppable",
       "block": 2,
       "para": 22
-    },
-    "6268262A": {
-      "owner": "template"
     },
     "6291D3DD": {
       "owner": "markdown",
@@ -17912,6 +18336,20 @@
       "block": 1,
       "para": 11
     },
+    "62ED6A37": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 10,
+      "para": 0
+    },
+    "62F5378F": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 116,
+      "kind": "clause",
+      "para": 0
+    },
     "62F9794F": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -17925,6 +18363,13 @@
       "index": 0,
       "kind": "nodetable",
       "para": 4
+    },
+    "63030AAD": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 4,
+      "para": 14
     },
     "63050EEE": {
       "owner": "generated",
@@ -17977,8 +18422,12 @@
       "block": 7,
       "para": 0
     },
-    "634C234A": {
-      "owner": "template"
+    "6349F121": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "12 Conformance units",
+      "block": 0,
+      "para": 9
     },
     "635D28DD": {
       "owner": "template"
@@ -18232,6 +18681,20 @@
       "kind": "clause",
       "para": 0
     },
+    "64D3A2A3": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "10.6 Reverse connect",
+      "block": 0,
+      "para": 0
+    },
+    "64D9DAB8": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 84,
+      "kind": "clause",
+      "para": 0
+    },
     "64DBC4DB": {
       "owner": "template"
     },
@@ -18311,6 +18774,13 @@
       "block": 3,
       "para": 0
     },
+    "6547DC25": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 4,
+      "para": 11
+    },
     "654BE208": {
       "owner": "generated",
       "region": "eventtypes",
@@ -18368,13 +18838,6 @@
       "section": "6.1 OpenDataChannel",
       "block": 2,
       "para": 11
-    },
-    "65E7EF34": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "10 Conformance units",
-      "block": 4,
-      "para": 0
     },
     "660E0C8E": {
       "owner": "markdown",
@@ -18578,13 +19041,6 @@
       "block": 2,
       "para": 67
     },
-    "672A8D0E": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "10 Conformance units",
-      "block": 0,
-      "para": 13
-    },
     "672AFA0E": {
       "owner": "generated",
       "region": "annex-a",
@@ -18627,13 +19083,6 @@
       "block": 2,
       "para": 11
     },
-    "6744EAD7": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 8,
-      "kind": "clause",
-      "para": 0
-    },
     "678A0477": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -18661,6 +19110,13 @@
       "section": "inline_data_first",
       "block": 2,
       "para": 16
+    },
+    "67ACFB80": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "10.3 Connection, control stream and channel streams",
+      "block": 5,
+      "para": 0
     },
     "67B808A1": {
       "owner": "template"
@@ -18702,6 +19158,13 @@
       "section": "inline_credit_channel",
       "block": 2,
       "para": 47
+    },
+    "67E55D43": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 6,
+      "para": 0
     },
     "67ED1D19": {
       "owner": "generated",
@@ -18761,6 +19224,13 @@
       "block": 4,
       "para": 5
     },
+    "68176B26": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "10.3 Connection, control stream and channel streams",
+      "block": 2,
+      "para": 13
+    },
     "682EB2A4": {
       "owner": "generated",
       "region": "datatypes",
@@ -18775,15 +19245,19 @@
       "block": 3,
       "para": 1
     },
+    "6846723B": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "9.8 Choosing between transports",
+      "block": 0,
+      "para": 0
+    },
     "684E0A2F": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
       "section": "inline_credit_channel",
       "block": 2,
       "para": 30
-    },
-    "68527677": {
-      "owner": "template"
     },
     "686399DC": {
       "owner": "generated",
@@ -18834,16 +19308,10 @@
       "kind": "annex",
       "para": 0
     },
-    "68913940": {
-      "owner": "template"
-    },
     "6892B871": {
       "owner": "template"
     },
     "68977955": {
-      "owner": "template"
-    },
-    "689A8C1A": {
       "owner": "template"
     },
     "689B04DF": {
@@ -18917,12 +19385,12 @@
       "block": 3,
       "para": 1
     },
-    "68F84567": {
+    "68F58A16": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "9.8 Choosing between the inline and outer-protocol models",
+      "section": "9.8 Choosing between transports",
       "block": 1,
-      "para": 14
+      "para": 0
     },
     "6901F703": {
       "owner": "template"
@@ -19049,6 +19517,13 @@
       "block": 2,
       "para": 32
     },
+    "697DBF58": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "12 Conformance units",
+      "block": 0,
+      "para": 16
+    },
     "6983CB49": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -19070,12 +19545,26 @@
       "block": 2,
       "para": 21
     },
+    "69ACC43F": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "9.8 Choosing between transports",
+      "block": 1,
+      "para": 3
+    },
     "69B6469F": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
       "section": "inline_reset",
       "block": 2,
       "para": 66
+    },
+    "69BEFA01": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 171,
+      "kind": "clause",
+      "para": 0
     },
     "69BFF3D0": {
       "owner": "markdown",
@@ -19090,6 +19579,13 @@
       "index": 0,
       "kind": "nodetable",
       "para": 105
+    },
+    "69D6A072": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "12 Conformance units",
+      "block": 2,
+      "para": 6
     },
     "69D7E3F1": {
       "owner": "template"
@@ -19108,15 +19604,19 @@
       "kind": "nodetable",
       "para": 0
     },
+    "69DFA986": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 2,
+      "para": 4
+    },
     "69E45991": {
       "owner": "generated",
       "region": "eventtypes",
       "index": 6,
       "kind": "nodetable",
       "para": 31
-    },
-    "69F07096": {
-      "owner": "template"
     },
     "69F979BE": {
       "owner": "generated",
@@ -19141,6 +19641,13 @@
       "section": "inline_data_first",
       "block": 2,
       "para": 53
+    },
+    "6A27596D": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 113,
+      "kind": "clause",
+      "para": 0
     },
     "6A308A24": {
       "owner": "generated",
@@ -19322,9 +19829,6 @@
     "6B0F5FC7": {
       "owner": "template"
     },
-    "6B1C704C": {
-      "owner": "template"
-    },
     "6B1DE242": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -19388,6 +19892,13 @@
       "kind": "clause",
       "para": 0
     },
+    "6B54B4CE": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "12 Conformance units",
+      "block": 0,
+      "para": 3
+    },
     "6B57AB9F": {
       "owner": "template"
     },
@@ -19425,6 +19936,13 @@
       "section": "inline_credit_channel",
       "block": 2,
       "para": 8
+    },
+    "6B98FDA1": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 4,
+      "para": 0
     },
     "6BA58D32": {
       "owner": "markdown",
@@ -19547,6 +20065,13 @@
     "6C0CB7E5": {
       "owner": "template"
     },
+    "6C129A95": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 35,
+      "kind": "clause",
+      "para": 0
+    },
     "6C15CFB5": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -19560,16 +20085,6 @@
       "section": "quic_data_stream",
       "block": 2,
       "para": 8
-    },
-    "6C1E3E3D": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "10 Conformance units",
-      "block": 0,
-      "para": 26
-    },
-    "6C200E66": {
-      "owner": "template"
     },
     "6C3E5E2B": {
       "owner": "template"
@@ -19653,19 +20168,19 @@
       "block": 2,
       "para": 0
     },
-    "6CF19D44": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "10 Conformance units",
-      "block": 2,
-      "para": 1
-    },
     "6CF89C20": {
       "owner": "generated",
       "region": "annex-a",
       "index": 0,
       "kind": "nodetable",
       "para": 96
+    },
+    "6CF8BE8B": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "9.8 Choosing between transports",
+      "block": 1,
+      "para": 28
     },
     "6CFFCBC8": {
       "owner": "generated",
@@ -19676,6 +20191,13 @@
     },
     "6D12B652": {
       "owner": "template"
+    },
+    "6D281604": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 4,
+      "para": 7
     },
     "6D2EFE75": {
       "owner": "template"
@@ -19694,9 +20216,6 @@
       "block": 5,
       "para": 3
     },
-    "6D50820C": {
-      "owner": "template"
-    },
     "6D53F723": {
       "owner": "generated",
       "region": "datatypes",
@@ -19710,6 +20229,13 @@
       "section": "inline_credit_connection",
       "block": 2,
       "para": 29
+    },
+    "6D64074B": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "9.8 Choosing between transports",
+      "block": 1,
+      "para": 20
     },
     "6D6CB645": {
       "owner": "generated",
@@ -19819,6 +20345,13 @@
       "kind": "nodetable",
       "para": 23
     },
+    "6E280CD9": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "12 Conformance units",
+      "block": 5,
+      "para": 0
+    },
     "6E340689": {
       "owner": "generated",
       "region": "datatypes",
@@ -19849,9 +20382,6 @@
       "section": "inline_data_final",
       "block": 2,
       "para": 23
-    },
-    "6E609D53": {
-      "owner": "template"
     },
     "6E6DE116": {
       "owner": "template"
@@ -19886,6 +20416,13 @@
     },
     "6E91F9C6": {
       "owner": "template"
+    },
+    "6E9347E8": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "10.3 Connection, control stream and channel streams",
+      "block": 2,
+      "para": 7
     },
     "6E95DA3D": {
       "owner": "template"
@@ -20027,9 +20564,6 @@
       "kind": "nodetable",
       "para": 167
     },
-    "6F29163D": {
-      "owner": "template"
-    },
     "6F2A9931": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -20059,16 +20593,6 @@
       "region": "datatypes",
       "index": 11,
       "kind": "enumtable",
-      "para": 0
-    },
-    "6F60E396": {
-      "owner": "template"
-    },
-    "6F6271F2": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "10 Conformance units",
-      "block": 3,
       "para": 0
     },
     "6F723004": {
@@ -20129,13 +20653,6 @@
       "section": "inline_ping",
       "block": 2,
       "para": 61
-    },
-    "6FC05B14": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "10 Conformance units",
-      "block": 0,
-      "para": 11
     },
     "6FCC20CD": {
       "owner": "template"
@@ -20210,9 +20727,6 @@
       "kind": "nodetable",
       "para": 39
     },
-    "700B7B22": {
-      "owner": "template"
-    },
     "70176A3A": {
       "owner": "template"
     },
@@ -20236,6 +20750,13 @@
       "section": "6.1 OpenDataChannel",
       "block": 6,
       "para": 5
+    },
+    "704B7D6C": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 7,
+      "para": 13
     },
     "70515431": {
       "owner": "generated",
@@ -20277,6 +20798,13 @@
     },
     "706F46D2": {
       "owner": "template"
+    },
+    "70767A22": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 129,
+      "kind": "clause",
+      "para": 0
     },
     "707B0523": {
       "owner": "markdown",
@@ -20353,13 +20881,6 @@
       "block": 2,
       "para": 87
     },
-    "70E83EE9": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 61,
-      "kind": "clause",
-      "para": 0
-    },
     "70EAC95C": {
       "owner": "generated",
       "region": "datatypes",
@@ -20367,8 +20888,12 @@
       "kind": "nodetable",
       "para": 16
     },
-    "70EBB66F": {
-      "owner": "template"
+    "70FBF403": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "9.8 Choosing between transports",
+      "block": 1,
+      "para": 25
     },
     "70FE7DFC": {
       "owner": "generated",
@@ -20377,15 +20902,15 @@
       "kind": "enumtable",
       "para": 0
     },
-    "7109A71E": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "9.8 Choosing between the inline and outer-protocol models",
-      "block": 2,
-      "para": 0
-    },
     "710B1B3E": {
       "owner": "template"
+    },
+    "71131451": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "10.3 Connection, control stream and channel streams",
+      "block": 2,
+      "para": 9
     },
     "71133EE1": {
       "owner": "markdown",
@@ -20444,9 +20969,6 @@
       "section": "inline_data_final",
       "block": 2,
       "para": 69
-    },
-    "715A08C8": {
-      "owner": "template"
     },
     "715BF5ED": {
       "owner": "generated",
@@ -20545,6 +21067,13 @@
       "kind": "nodetable",
       "para": 23
     },
+    "71E08F70": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "10.2 URL scheme, ALPN and discovery",
+      "block": 0,
+      "para": 0
+    },
     "71E565FC": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -20553,9 +21082,6 @@
       "para": 74
     },
     "71E5C5D5": {
-      "owner": "template"
-    },
-    "71EC01E0": {
       "owner": "template"
     },
     "71F23D85": {
@@ -20609,9 +21135,6 @@
       "index": 16,
       "kind": "nodetable",
       "para": 35
-    },
-    "723E50E6": {
-      "owner": "template"
     },
     "724EECCD": {
       "owner": "generated",
@@ -20671,6 +21194,13 @@
     "729A9E9A": {
       "owner": "template"
     },
+    "72A4A215": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 7,
+      "para": 2
+    },
     "72B42823": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -20709,18 +21239,12 @@
       "block": 2,
       "para": 33
     },
-    "7307EDA5": {
-      "owner": "template"
-    },
     "7309B0FC": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
       "section": "inline_end",
       "block": 2,
       "para": 66
-    },
-    "730AFBE0": {
-      "owner": "template"
     },
     "730D21D3": {
       "owner": "generated",
@@ -21046,13 +21570,6 @@
       "block": 2,
       "para": 59
     },
-    "748A6672": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 137,
-      "kind": "clause",
-      "para": 0
-    },
     "7495A28C": {
       "owner": "generated",
       "region": "annex-a",
@@ -21101,13 +21618,6 @@
       "block": 1,
       "para": 16
     },
-    "74D2AD28": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "9.8 Choosing between the inline and outer-protocol models",
-      "block": 1,
-      "para": 0
-    },
     "74DABFC1": {
       "owner": "generated",
       "region": "datatypes",
@@ -21128,6 +21638,13 @@
       "index": 23,
       "kind": "enumtable",
       "para": 0
+    },
+    "752549CD": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 2,
+      "para": 7
     },
     "7542E034": {
       "owner": "generated",
@@ -21198,6 +21715,13 @@
       "block": 2,
       "para": 79
     },
+    "759A4FF6": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 7,
+      "para": 14
+    },
     "759FC26A": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -21232,9 +21756,6 @@
       "section": "inline_gap",
       "block": 2,
       "para": 77
-    },
-    "75B521A5": {
-      "owner": "template"
     },
     "75B57973": {
       "owner": "markdown",
@@ -21280,6 +21801,13 @@
       "index": 0,
       "kind": "nodetable",
       "para": 182
+    },
+    "75EB1A17": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 143,
+      "kind": "clause",
+      "para": 0
     },
     "75EE1E0F": {
       "owner": "markdown",
@@ -21336,6 +21864,13 @@
       "index": 3,
       "kind": "enumtable",
       "para": 8
+    },
+    "763214B7": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "12 Conformance units",
+      "block": 0,
+      "para": 38
     },
     "763EB8B0": {
       "owner": "markdown",
@@ -21441,6 +21976,13 @@
       "kind": "table",
       "para": 5
     },
+    "76AC6EFA": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "11 What it costs",
+      "block": 3,
+      "para": 0
+    },
     "76B0F9E6": {
       "owner": "generated",
       "region": "model-overview",
@@ -21537,13 +22079,6 @@
       "kind": "para",
       "para": 0
     },
-    "771C644F": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "9.8 Choosing between the inline and outer-protocol models",
-      "block": 1,
-      "para": 10
-    },
     "7722B35E": {
       "owner": "generated",
       "region": "annex-a",
@@ -21558,6 +22093,13 @@
       "kind": "nodetable",
       "para": 220
     },
+    "77245AF5": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 4,
+      "para": 16
+    },
     "77435E73": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -21565,11 +22107,15 @@
       "block": 2,
       "para": 91
     },
-    "7743CD65": {
-      "owner": "template"
-    },
     "774827E3": {
       "owner": "template"
+    },
+    "774BB076": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 124,
+      "kind": "clause",
+      "para": 0
     },
     "775F745A": {
       "owner": "generated",
@@ -21611,9 +22157,6 @@
       "section": "inline_data_droppable",
       "block": 2,
       "para": 12
-    },
-    "77875043": {
-      "owner": "template"
     },
     "77A211CD": {
       "owner": "markdown",
@@ -21691,9 +22234,6 @@
       "block": 0,
       "para": 11
     },
-    "780A4F64": {
-      "owner": "template"
-    },
     "780A6877": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -21724,6 +22264,13 @@
     },
     "782104F0": {
       "owner": "template"
+    },
+    "7833C5B8": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "12 Conformance units",
+      "block": 0,
+      "para": 17
     },
     "78376A93": {
       "owner": "markdown",
@@ -21783,9 +22330,6 @@
       "section": "inline_gap",
       "block": 3,
       "para": 0
-    },
-    "78BB99D8": {
-      "owner": "template"
     },
     "78C1F46E": {
       "owner": "markdown",
@@ -21873,16 +22417,6 @@
     "79206A83": {
       "owner": "template"
     },
-    "79235A50": {
-      "owner": "template"
-    },
-    "79289088": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "10 Conformance units",
-      "block": 2,
-      "para": 4
-    },
     "7930BCDD": {
       "owner": "template"
     },
@@ -21892,13 +22426,6 @@
       "index": 12,
       "kind": "nodetable",
       "para": 19
-    },
-    "79336AAE": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "9.8 Choosing between the inline and outer-protocol models",
-      "block": 1,
-      "para": 2
     },
     "793D4714": {
       "owner": "markdown",
@@ -21948,6 +22475,13 @@
     "7992E8BF": {
       "owner": "template"
     },
+    "799312CB": {
+      "owner": "generated",
+      "region": "annex-f",
+      "index": 0,
+      "kind": "annex",
+      "para": 0
+    },
     "79A3F12E": {
       "owner": "template"
     },
@@ -21964,6 +22498,13 @@
       "index": 8,
       "kind": "nodetable",
       "para": 2
+    },
+    "79D34314": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 139,
+      "kind": "clause",
+      "para": 0
     },
     "79D7B349": {
       "owner": "generated",
@@ -21995,13 +22536,6 @@
     },
     "7A049651": {
       "owner": "template"
-    },
-    "7A09DE1F": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "9.8 Choosing between the inline and outer-protocol models",
-      "block": 1,
-      "para": 15
     },
     "7A156B1A": {
       "owner": "template"
@@ -22057,6 +22591,13 @@
       "index": 9,
       "kind": "nodetable",
       "para": 24
+    },
+    "7A591ECD": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "9.8 Choosing between transports",
+      "block": 1,
+      "para": 30
     },
     "7A5B57D1": {
       "owner": "generated",
@@ -22131,13 +22672,6 @@
       "block": 2,
       "para": 23
     },
-    "7A970D89": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "9.8 Choosing between the inline and outer-protocol models",
-      "block": 1,
-      "para": 25
-    },
     "7AAA0D0E": {
       "owner": "generated",
       "region": "datatypes",
@@ -22172,9 +22706,6 @@
     "7ACACB98": {
       "owner": "template"
     },
-    "7AD4E44B": {
-      "owner": "template"
-    },
     "7AD72403": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -22202,9 +22733,6 @@
       "index": 6,
       "kind": "nodetable",
       "para": 4
-    },
-    "7AF2B13C": {
-      "owner": "template"
     },
     "7B09D64D": {
       "owner": "template"
@@ -22237,9 +22765,6 @@
       "kind": "nodetable",
       "para": 5
     },
-    "7B22324B": {
-      "owner": "template"
-    },
     "7B242D0D": {
       "owner": "generated",
       "region": "objecttypes",
@@ -22268,13 +22793,17 @@
       "block": 2,
       "para": 15
     },
+    "7B3AC7C7": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "10.2 URL scheme, ALPN and discovery",
+      "block": 0,
+      "para": 4
+    },
     "7B40015F": {
       "owner": "template"
     },
     "7B468F3E": {
-      "owner": "template"
-    },
-    "7B5403B2": {
       "owner": "template"
     },
     "7B5E14B9": {
@@ -22371,9 +22900,6 @@
       "block": 2,
       "para": 38
     },
-    "7BD6B915": {
-      "owner": "template"
-    },
     "7BE0073B": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -22454,13 +22980,6 @@
       "block": 4,
       "para": 8
     },
-    "7C4D4BE9": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "10 Conformance units",
-      "block": 0,
-      "para": 8
-    },
     "7C50EB53": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -22474,13 +22993,6 @@
       "section": "inline_end",
       "block": 2,
       "para": 23
-    },
-    "7C62525C": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "10 Conformance units",
-      "block": 2,
-      "para": 0
     },
     "7C6BEB0F": {
       "owner": "generated",
@@ -22496,8 +23008,12 @@
       "kind": "table",
       "para": 16
     },
-    "7C7CBF6B": {
-      "owner": "template"
+    "7C849581": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "12 Conformance units",
+      "block": 0,
+      "para": 2
     },
     "7C84B3A4": {
       "owner": "generated",
@@ -22541,9 +23057,6 @@
       "kind": "nodetable",
       "para": 180
     },
-    "7C9FEF96": {
-      "owner": "template"
-    },
     "7CB9889C": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -22574,9 +23087,6 @@
       "index": 9,
       "kind": "nodetable",
       "para": 13
-    },
-    "7CFA066A": {
-      "owner": "template"
     },
     "7D1465DA": {
       "owner": "markdown",
@@ -22646,6 +23156,13 @@
     "7D5D0597": {
       "owner": "template"
     },
+    "7D5D160E": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 7,
+      "para": 10
+    },
     "7D604C32": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -22658,6 +23175,13 @@
     },
     "7D67AC10": {
       "owner": "template"
+    },
+    "7D750412": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "12 Conformance units",
+      "block": 0,
+      "para": 14
     },
     "7D75B5F2": {
       "owner": "generated",
@@ -22672,6 +23196,13 @@
       "index": 27,
       "kind": "enumtable",
       "para": 6
+    },
+    "7D7A189E": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "12 Conformance units",
+      "block": 0,
+      "para": 11
     },
     "7D7DDCDB": {
       "owner": "markdown",
@@ -22732,6 +23263,13 @@
     "7DC1C51F": {
       "owner": "template"
     },
+    "7DC22C74": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "11 What it costs",
+      "block": 2,
+      "para": 0
+    },
     "7DC5247D": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -22759,6 +23297,13 @@
       "index": 0,
       "kind": "nodetable",
       "para": 141
+    },
+    "7DE7DC34": {
+      "owner": "markdown",
+      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+      "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "block": 4,
+      "para": 19
     },
     "7DEEC16D": {
       "owner": "markdown",
@@ -22882,16 +23427,6 @@
       "block": 2,
       "para": 28
     },
-    "7E62881E": {
-      "owner": "template"
-    },
-    "7E68C051": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "9.8 Choosing between the inline and outer-protocol models",
-      "block": 1,
-      "para": 18
-    },
     "7E76F010": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -22941,9 +23476,6 @@
       "kind": "nodetable",
       "para": 12
     },
-    "7EB54A07": {
-      "owner": "template"
-    },
     "7EB649AA": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -22985,9 +23517,6 @@
       "section": "6.1 OpenDataChannel",
       "block": 6,
       "para": 14
-    },
-    "7ED40FAB": {
-      "owner": "template"
     },
     "7ED6B2FE": {
       "owner": "generated",
@@ -23034,9 +23563,6 @@
       "block": 2,
       "para": 54
     },
-    "7F0CBE4A": {
-      "owner": "template"
-    },
     "7F22BB19": {
       "owner": "generated",
       "region": "datatypes",
@@ -23044,22 +23570,12 @@
       "kind": "enumtable",
       "para": 12
     },
-    "7F2B8616": {
-      "owner": "template"
-    },
     "7F31878B": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
       "section": "inline_end",
       "block": 2,
       "para": 76
-    },
-    "7F335949": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "10 Conformance units",
-      "block": 0,
-      "para": 2
     },
     "7F44C188": {
       "owner": "generated",
@@ -23120,13 +23636,6 @@
       "kind": "enumtable",
       "para": 28
     },
-    "7F807801": {
-      "owner": "markdown",
-      "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "9.8 Choosing between the inline and outer-protocol models",
-      "block": 1,
-      "para": 24
-    },
     "7F880D21": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -23169,12 +23678,12 @@
       "block": 2,
       "para": 32
     },
-    "7FC71F08": {
+    "7FBCB1E6": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
-      "section": "9.8 Choosing between the inline and outer-protocol models",
-      "block": 1,
-      "para": 28
+      "section": "12 Conformance units",
+      "block": 0,
+      "para": 39
     },
     "7FC99BC1": {
       "owner": "markdown",
