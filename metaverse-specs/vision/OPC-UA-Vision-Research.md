@@ -49,9 +49,9 @@ That last quotation matters because it is not an oversight — it is a considere
 
 OPC 40100-2 (2024) models a vision system's physical bill of materials in real depth — and then stops exactly where imaging begins.
 
-- `ILensType` (§9.7) is genuinely rich: `FocalLength`, `Aperture`, `Resolution` (lp/mm), `ModulationTransferFunction`, `BackFocalLength`, `MinimumWorkingDistance`, `Magnification`, `WorkingDistance`, `OpticalFormat`, `MountType`, `LensType`.
-- `ILampType` (§9.12) provides `Wavelength`, `RelativeIntensity`, `Quality`, `LampType`.
-- **`VisionImageSensorType` (§9.14) implements only the generic `IVisionInfoType` and adds zero members.** `VisionFrameGrabberType` (§9.15) is identical.
+- `ILensType` (OPC 40100-2 §9.7) is genuinely rich: `FocalLength`, `Aperture`, `Resolution` (lp/mm), `ModulationTransferFunction`, `BackFocalLength`, `MinimumWorkingDistance`, `Magnification`, `WorkingDistance`, `OpticalFormat`, `MountType`, `LensType`.
+- `ILampType` (OPC 40100-2 §9.12) provides `Wavelength`, `RelativeIntensity`, `Quality`, `LampType`.
+- **`VisionImageSensorType` (OPC 40100-2 §9.14) implements only the generic `IVisionInfoType` and adds zero members.** `VisionFrameGrabberType` (OPC 40100-2 §9.15) is identical.
 
 There is no resolution, pixel format, bit depth, exposure, gain, binning, region of interest, frame rate or interface bandwidth modelled anywhere in OPC UA. The camera — the single most important component of a vision system — is reduced to a nameplate.
 
@@ -84,7 +84,7 @@ OPC 40010-1 v1.02 defines 25 ObjectTypes, 4 DataTypes and 7 ReferenceTypes. Ever
 | `TCP` / tool centre point | defined as a §3.2 *term*; **no TCP frame variable exists** |
 | `calibration` | not found; no transforms, no frames |
 
-The one extension point, `MotionDeviceType.AdditionalComponents`, is explicitly constrained by a §7.2.2 NOTE: *"From this specification, only instances of AuxiliaryComponentType and DriveType can be used in this container."*
+The one extension point, `MotionDeviceType.AdditionalComponents`, is explicitly constrained by an OPC 40010-1 §7.2.2 NOTE: *"From this specification, only instances of AuxiliaryComponentType and DriveType can be used in this container."*
 
 Neither OPC 40010-1 nor OPC 40100-1 appears in the other's normative references. There is no joint working group, integration profile or roadmap document connecting them. Vision-guided robotics — bin picking, visual servoing — is undefined at the OPC UA standards level, and system integrators build it bespoke each time.
 
@@ -187,9 +187,9 @@ The OPC UA bridge to the AAS, **OPC 30270 (I4AAS)**, maps to AAS **V2.0.1** and 
 
 ### 3.5 Regulatory pressure
 
-The **EU AI Act** (Regulation (EU) 2024/1689, in force 1 August 2024) makes an AI system automatically high-risk when it is a safety component of a product regulated under EU harmonisation legislation — which includes the Machinery Regulation (EU) 2023/1230 — and that product requires third-party conformity assessment. Deadlines: **2 December 2027** for Annex III standalone systems, **2 August 2028** for Annex I products. High-risk obligations include risk management, data governance, technical documentation, accuracy and robustness, human oversight, and **logging**. CEN/CENELEC JTC 21 is producing the harmonised standards, including prEN 18286.
+The **EU AI Act** (Regulation (EU) 2024/1689, in force 1 August 2024) makes an AI system automatically high-risk when it is a safety component of a product regulated under EU harmonisation legislation — which includes the Machinery Regulation (EU) 2023/1230 — and that product requires third-party conformity assessment. Deadlines: **2 December 2027** for Annex III standalone systems, **2 August 2028** for Regulation (EU) 2024/1689 Annex I products. High-risk obligations include risk management, data governance, technical documentation, accuracy and robustness, human oversight, and **logging**. CEN/CENELEC JTC 21 is producing the harmonised standards, including prEN 18286.
 
-Non-safety quality-inspection vision may fall outside Annex I; the classification is deployment-specific.
+Non-safety quality-inspection vision may fall outside the EU AI Act Annex I; the classification is deployment-specific.
 
 **Design consequence.** `VisionResultType` carries `ModelVersionUsed`, `Confidence` and `ExplanationUri`, and `AiModelType` carries `Digest` and `ProvenanceUri`, so that the "which model decided this, and on what basis" question is answerable from the address space rather than reconstructed from logs.
 

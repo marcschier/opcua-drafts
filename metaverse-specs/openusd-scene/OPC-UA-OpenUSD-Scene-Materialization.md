@@ -677,6 +677,6 @@ Export reproduces the `def Camera` prim and every attribute, so the camera round
 
 ### D.6 Relationship to the other parts
 
-- **Part 1 (Bindings)** drives *live* values onto this prim — see its Annex E for the binding-side Isaac Sim view.
+- **Part 1 (Bindings)** drives *live* values onto this prim — see *OPC UA — OpenUSD Binding (Part 1)* Annex G for the binding-side Isaac Sim view.
 - ***OPC UA — Vision*** describes the sensor, the AI that consumes its frames, and the results; its sensors bind to a `UsdGeomCameraType` instance by `PrimPath`. Its Annex B carries the full simulator mapping and the sim→train→deploy loop.
 - Because the same prim is materialized here and referenced there, a **simulated** and a **physical** camera present an identical contract to a client — which is the point of the split.
