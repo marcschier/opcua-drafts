@@ -1,7 +1,7 @@
 {
   "specId": "observability-export",
-  "sourceCommit": "d24b32b3bdf74e5a0d11145b06e8ad0cf8ad45e5",
-  "sourceDigest": "eeb62ff4f2d70d37",
+  "sourceCommit": "711ab328705b248308f60bfc0def036324917c7b",
+  "sourceDigest": "59208b3dd4976f94",
   "pipelineVersion": "2",
   "sources": [
     "word-drafts/tools/specs/observability-export.json",
@@ -111,9 +111,6 @@
       "kind": "table",
       "para": 4
     },
-    "00E874E7": {
-      "owner": "template"
-    },
     "00E9481F": {
       "owner": "generated",
       "region": "objecttypes",
@@ -121,18 +118,12 @@
       "kind": "nodetable",
       "para": 49
     },
-    "00FC262F": {
-      "owner": "template"
-    },
     "00FC2FE2": {
       "owner": "generated",
       "region": "annex-a",
       "index": 0,
       "kind": "nodetable",
       "para": 228
-    },
-    "01017E23": {
-      "owner": "template"
     },
     "0104222E": {
       "owner": "generated",
@@ -164,9 +155,6 @@
       "index": 12,
       "kind": "nodetable",
       "para": 7
-    },
-    "0143DB24": {
-      "owner": "template"
     },
     "014947CE": {
       "owner": "generated",
@@ -261,9 +249,6 @@
       "section": "3. Derived bindings — delta only",
       "block": 1,
       "para": 0
-    },
-    "01D62641": {
-      "owner": "template"
     },
     "01D7FBF0": {
       "owner": "generated",
@@ -437,9 +422,6 @@
       "kind": "nodetable",
       "para": 18
     },
-    "02DD51DF": {
-      "owner": "template"
-    },
     "02DE6729": {
       "owner": "template"
     },
@@ -473,9 +455,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 117
-    },
-    "0317E72E": {
-      "owner": "template"
     },
     "031AFF64": {
       "owner": "template"
@@ -638,9 +617,6 @@
       "kind": "nodetable",
       "para": 87
     },
-    "042E9FAC": {
-      "owner": "template"
-    },
     "0462B67E": {
       "owner": "generated",
       "region": "annex-a",
@@ -683,9 +659,6 @@
       "kind": "nodetable",
       "para": 145
     },
-    "04C60808": {
-      "owner": "template"
-    },
     "04CC8F0C": {
       "owner": "generated",
       "region": "objecttypes",
@@ -724,9 +697,6 @@
       "owner": "template"
     },
     "05364A09": {
-      "owner": "template"
-    },
-    "0541906B": {
       "owner": "template"
     },
     "05472EBF": {
@@ -771,9 +741,6 @@
       "block": 1,
       "para": 20
     },
-    "058F0ADD": {
-      "owner": "template"
-    },
     "05A26EFC": {
       "owner": "generated",
       "region": "annex-a",
@@ -801,9 +768,6 @@
       "section": "4.1 `MachineObservability` — Metrics DataSet (8 fields, class `53dc8a49…`)",
       "block": 0,
       "para": 18
-    },
-    "05C7567D": {
-      "owner": "template"
     },
     "05CAA116": {
       "owner": "template"
@@ -840,9 +804,6 @@
       "para": 8
     },
     "06328984": {
-      "owner": "template"
-    },
-    "0636980F": {
       "owner": "template"
     },
     "06369D2A": {
@@ -899,9 +860,6 @@
       "kind": "nodetable",
       "para": 176
     },
-    "06924CB2": {
-      "owner": "template"
-    },
     "069A9492": {
       "owner": "template"
     },
@@ -951,9 +909,6 @@
       "section": "Metrics — Metrics",
       "block": 1,
       "para": 8
-    },
-    "06F56F0B": {
-      "owner": "template"
     },
     "07052B80": {
       "owner": "generated",
@@ -1020,9 +975,6 @@
       "index": 8,
       "kind": "nodetable",
       "para": 114
-    },
-    "07944D3B": {
-      "owner": "template"
     },
     "07B778FC": {
       "owner": "markdown",
@@ -1243,9 +1195,6 @@
       "kind": "nodetable",
       "para": 9
     },
-    "0904C5A1": {
-      "owner": "template"
-    },
     "0905936B": {
       "owner": "markdown",
       "file": "cloud-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
@@ -1336,9 +1285,6 @@
       "block": 1,
       "para": 1
     },
-    "09C23711": {
-      "owner": "template"
-    },
     "09CD062F": {
       "owner": "markdown",
       "file": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
@@ -1397,9 +1343,6 @@
       "block": 1,
       "para": 10
     },
-    "0A5F46DF": {
-      "owner": "template"
-    },
     "0A6400C6": {
       "owner": "template"
     },
@@ -1416,9 +1359,6 @@
       "section": "Metrics — Metrics",
       "block": 1,
       "para": 6
-    },
-    "0A76060B": {
-      "owner": "template"
     },
     "0A797938": {
       "owner": "markdown",
@@ -1567,9 +1507,6 @@
       "kind": "nodetable",
       "para": 168
     },
-    "0BB047FA": {
-      "owner": "template"
-    },
     "0BB94B5D": {
       "owner": "template"
     },
@@ -1599,9 +1536,6 @@
       "index": 12,
       "kind": "nodetable",
       "para": 9
-    },
-    "0BD8B8C8": {
-      "owner": "template"
     },
     "0BE6CABE": {
       "owner": "template"
@@ -1699,9 +1633,6 @@
       "section": "Topology 2: Single 4-axis SCARA",
       "block": 1,
       "para": 5
-    },
-    "0C96371B": {
-      "owner": "template"
     },
     "0CA15BD9": {
       "owner": "markdown",
@@ -1814,9 +1745,6 @@
       "block": 1,
       "para": 10
     },
-    "0D761AF9": {
-      "owner": "template"
-    },
     "0D79F3E2": {
       "owner": "markdown",
       "file": "cloud-specs/observability-export/facets/OPC-UA-Facets-Observability-Export-Addendum.md",
@@ -1847,9 +1775,6 @@
       "index": 12,
       "kind": "nodetable",
       "para": 2
-    },
-    "0D94D864": {
-      "owner": "template"
     },
     "0D9E8008": {
       "owner": "template"
@@ -1933,9 +1858,6 @@
       "block": 4,
       "para": 2
     },
-    "0E3896B4": {
-      "owner": "template"
-    },
     "0E3E8152": {
       "owner": "generated",
       "region": "annex-h",
@@ -1994,9 +1916,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 214
-    },
-    "0E8A0B20": {
-      "owner": "template"
     },
     "0E93F72E": {
       "owner": "markdown",
@@ -2110,9 +2029,6 @@
       "section": "Metrics — Metrics",
       "block": 1,
       "para": 3
-    },
-    "0F8632CE": {
-      "owner": "template"
     },
     "0FA4E9CE": {
       "owner": "generated",
@@ -2296,9 +2212,6 @@
     "11186A60": {
       "owner": "template"
     },
-    "11226F87": {
-      "owner": "template"
-    },
     "11307F73": {
       "owner": "generated",
       "region": "datatypes",
@@ -2312,9 +2225,6 @@
       "index": 15,
       "kind": "nodetable",
       "para": 16
-    },
-    "11425AA2": {
-      "owner": "template"
     },
     "1148F598": {
       "owner": "markdown",
@@ -2567,9 +2477,6 @@
       "block": 1,
       "para": 13
     },
-    "12E88082": {
-      "owner": "template"
-    },
     "12FDA485": {
       "owner": "markdown",
       "file": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
@@ -2603,9 +2510,6 @@
       "index": 8,
       "kind": "nodetable",
       "para": 83
-    },
-    "1331D856": {
-      "owner": "template"
     },
     "133AEB9C": {
       "owner": "generated",
@@ -2765,12 +2669,6 @@
       "para": 1
     },
     "142F547D": {
-      "owner": "template"
-    },
-    "14357825": {
-      "owner": "template"
-    },
-    "143725E0": {
       "owner": "template"
     },
     "143766B9": {
@@ -3064,9 +2962,6 @@
       "index": 4,
       "kind": "table",
       "para": 23
-    },
-    "171E759A": {
-      "owner": "template"
     },
     "1725B18F": {
       "owner": "markdown",
@@ -3376,9 +3271,6 @@
     "197F6FBC": {
       "owner": "template"
     },
-    "1994C177": {
-      "owner": "template"
-    },
     "1994D1EF": {
       "owner": "markdown",
       "file": "cloud-specs/observability-export/di/OPC-UA-DI-Observability-Export-Addendum.md",
@@ -3424,12 +3316,6 @@
     "19E8EA61": {
       "owner": "template"
     },
-    "19EF0ECF": {
-      "owner": "template"
-    },
-    "19F136E6": {
-      "owner": "template"
-    },
     "19FEF64D": {
       "owner": "generated",
       "region": "namespaces",
@@ -3443,9 +3329,6 @@
       "section": "Topology 3: Two-robot cell (6+4 axes)",
       "block": 1,
       "para": 12
-    },
-    "1A0414A0": {
-      "owner": "template"
     },
     "1A0C49CD": {
       "owner": "generated",
@@ -3719,9 +3602,6 @@
       "kind": "nodetable",
       "para": 95
     },
-    "1C5EB2A5": {
-      "owner": "template"
-    },
     "1C819063": {
       "owner": "generated",
       "region": "objecttypes",
@@ -3804,9 +3684,6 @@
       "block": 1,
       "para": 1
     },
-    "1CE03436": {
-      "owner": "template"
-    },
     "1CF3F31A": {
       "owner": "generated",
       "region": "objecttypes",
@@ -3849,9 +3726,6 @@
       "para": 43
     },
     "1D5FD512": {
-      "owner": "template"
-    },
-    "1D62FD2C": {
       "owner": "template"
     },
     "1D773FDE": {
@@ -3919,9 +3793,6 @@
       "index": 18,
       "kind": "nodetable",
       "para": 10
-    },
-    "1DDF5F98": {
-      "owner": "template"
     },
     "1DE20FD6": {
       "owner": "markdown",
@@ -4016,9 +3887,6 @@
       "block": 1,
       "para": 101
     },
-    "1E660538": {
-      "owner": "template"
-    },
     "1E6714A6": {
       "owner": "template"
     },
@@ -4052,9 +3920,6 @@
       "section": "Metrics — Metrics",
       "block": 1,
       "para": 162
-    },
-    "1E9CA9F9": {
-      "owner": "template"
     },
     "1EA1AA03": {
       "owner": "generated",
@@ -4235,9 +4100,6 @@
       "index": 19,
       "kind": "enumtable",
       "para": 16
-    },
-    "2007D9BD": {
-      "owner": "template"
     },
     "200E576F": {
       "owner": "generated",
@@ -4466,9 +4328,6 @@
     "223374EF": {
       "owner": "template"
     },
-    "223E3E6F": {
-      "owner": "template"
-    },
     "224F132C": {
       "owner": "generated",
       "region": "annex-a",
@@ -4537,9 +4396,6 @@
       "kind": "clause",
       "para": 0
     },
-    "22B4B15B": {
-      "owner": "template"
-    },
     "22B500D4": {
       "owner": "markdown",
       "file": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
@@ -4555,9 +4411,6 @@
       "para": 74
     },
     "22BAC77F": {
-      "owner": "template"
-    },
-    "22BED174": {
       "owner": "template"
     },
     "22C5BC96": {
@@ -4586,9 +4439,6 @@
       "index": 16,
       "kind": "nodetable",
       "para": 13
-    },
-    "22E129DB": {
-      "owner": "template"
     },
     "22E265C5": {
       "owner": "generated",
@@ -4631,18 +4481,12 @@
       "block": 1,
       "para": 4
     },
-    "233AA87E": {
-      "owner": "template"
-    },
     "234664B5": {
       "owner": "generated",
       "region": "referencetypes",
       "index": 3,
       "kind": "nodetable",
       "para": 0
-    },
-    "23489607": {
-      "owner": "template"
     },
     "2371A6D0": {
       "owner": "generated",
@@ -4779,9 +4623,6 @@
       "kind": "nodetable",
       "para": 70
     },
-    "242536A8": {
-      "owner": "template"
-    },
     "242A22C6": {
       "owner": "generated",
       "region": "terms",
@@ -4816,9 +4657,6 @@
       "section": "Logs — Logs",
       "block": 1,
       "para": 17
-    },
-    "245FDC61": {
-      "owner": "template"
     },
     "246A29E0": {
       "owner": "template"
@@ -4902,12 +4740,6 @@
       "index": 0,
       "kind": "annex",
       "para": 0
-    },
-    "24E290FE": {
-      "owner": "template"
-    },
-    "24FBCA7E": {
-      "owner": "template"
     },
     "2511926E": {
       "owner": "markdown",
@@ -5329,9 +5161,6 @@
       "block": 1,
       "para": 2
     },
-    "27E099A4": {
-      "owner": "template"
-    },
     "27E72254": {
       "owner": "template"
     },
@@ -5417,9 +5246,6 @@
       "section": "6.1 Walkthrough",
       "block": 0,
       "para": 5
-    },
-    "28A0A25A": {
-      "owner": "template"
     },
     "28AAC82D": {
       "owner": "template"
@@ -5537,12 +5363,6 @@
       "kind": "nodetable",
       "para": 18
     },
-    "29980875": {
-      "owner": "template"
-    },
-    "299E2CEA": {
-      "owner": "template"
-    },
     "29BED0B2": {
       "owner": "generated",
       "region": "annex-a",
@@ -5583,9 +5403,6 @@
     "2A21DAD4": {
       "owner": "template"
     },
-    "2A2CF64A": {
-      "owner": "template"
-    },
     "2A2DE51A": {
       "owner": "generated",
       "region": "objecttypes",
@@ -5616,9 +5433,6 @@
       "index": 7,
       "kind": "enumtable",
       "para": 14
-    },
-    "2A57BC3E": {
-      "owner": "template"
     },
     "2A5DA1A6": {
       "owner": "generated",
@@ -5661,9 +5475,6 @@
       "index": 8,
       "kind": "nodetable",
       "para": 147
-    },
-    "2AAEDC33": {
-      "owner": "template"
     },
     "2AB007B2": {
       "owner": "generated",
@@ -5720,16 +5531,10 @@
       "kind": "nodetable",
       "para": 0
     },
-    "2B05FEAC": {
-      "owner": "template"
-    },
     "2B09BE02": {
       "owner": "template"
     },
     "2B19AB39": {
-      "owner": "template"
-    },
-    "2B1ECCA3": {
       "owner": "template"
     },
     "2B20AF8C": {
@@ -5780,9 +5585,6 @@
       "section": "7 Profiles and Conformance Units",
       "block": 1,
       "para": 8
-    },
-    "2B609AD3": {
-      "owner": "template"
     },
     "2B7EE57F": {
       "owner": "template"
@@ -5842,9 +5644,6 @@
       "kind": "nodetable",
       "para": 22
     },
-    "2B9F02BB": {
-      "owner": "template"
-    },
     "2BCA7956": {
       "owner": "generated",
       "region": "objecttypes",
@@ -5860,9 +5659,6 @@
       "para": 118
     },
     "2BEFB40F": {
-      "owner": "template"
-    },
-    "2BFA37E8": {
       "owner": "template"
     },
     "2BFB7ECA": {
@@ -6307,9 +6103,6 @@
       "block": 1,
       "para": 136
     },
-    "2F87F65C": {
-      "owner": "template"
-    },
     "2F8A9CAF": {
       "owner": "generated",
       "region": "annex-a",
@@ -6337,9 +6130,6 @@
       "section": "7 Profiles and Conformance Units",
       "block": 1,
       "para": 13
-    },
-    "2FC3AE46": {
-      "owner": "template"
     },
     "2FC8D2EB": {
       "owner": "generated",
@@ -6410,9 +6200,6 @@
       "kind": "nodetable",
       "para": 39
     },
-    "3068B971": {
-      "owner": "template"
-    },
     "30741B81": {
       "owner": "markdown",
       "file": "cloud-specs/observability-export/facets/OPC-UA-Facets-Observability-Export-Addendum.md",
@@ -6464,9 +6251,6 @@
     "31219329": {
       "owner": "template"
     },
-    "31255988": {
-      "owner": "template"
-    },
     "31259188": {
       "owner": "markdown",
       "file": "cloud-specs/observability-export/pumps/OPC-UA-Pumps-Observability-Export-Addendum.md",
@@ -6480,9 +6264,6 @@
       "section": "3. Derived bindings — delta only",
       "block": 1,
       "para": 16
-    },
-    "313A4E82": {
-      "owner": "template"
     },
     "313A65E5": {
       "owner": "generated",
@@ -6511,9 +6292,6 @@
       "section": "Traces — Traces",
       "block": 1,
       "para": 13
-    },
-    "3150BBDD": {
-      "owner": "template"
     },
     "31546638": {
       "owner": "generated",
@@ -6591,9 +6369,6 @@
       "block": 1,
       "para": 2
     },
-    "320DEC09": {
-      "owner": "template"
-    },
     "321382D8": {
       "owner": "template"
     },
@@ -6631,9 +6406,6 @@
       "index": 16,
       "kind": "term",
       "para": 2
-    },
-    "325A9DD4": {
-      "owner": "template"
     },
     "325B7212": {
       "owner": "markdown",
@@ -6673,18 +6445,12 @@
       "kind": "enumtable",
       "para": 28
     },
-    "3299F128": {
-      "owner": "template"
-    },
     "32A3A3D1": {
       "owner": "generated",
       "region": "annex-e",
       "index": 7,
       "kind": "annex-clause",
       "para": 0
-    },
-    "32B05732": {
-      "owner": "template"
     },
     "32C84555": {
       "owner": "generated",
@@ -6726,9 +6492,6 @@
       "index": 4,
       "kind": "table",
       "para": 8
-    },
-    "330F7846": {
-      "owner": "template"
     },
     "33206176": {
       "owner": "generated",
@@ -6907,21 +6670,12 @@
       "kind": "nodetable",
       "para": 126
     },
-    "34205882": {
-      "owner": "template"
-    },
     "3428802E": {
       "owner": "generated",
       "region": "annex-a",
       "index": 0,
       "kind": "nodetable",
       "para": 191
-    },
-    "342DCB46": {
-      "owner": "template"
-    },
-    "343AD874": {
-      "owner": "template"
     },
     "344DEDA6": {
       "owner": "generated",
@@ -6993,9 +6747,6 @@
       "section": "Logs — Logs",
       "block": 1,
       "para": 20
-    },
-    "34D67B65": {
-      "owner": "template"
     },
     "34ED318F": {
       "owner": "template"
@@ -7086,9 +6837,6 @@
       "kind": "nodetable",
       "para": 75
     },
-    "35812B71": {
-      "owner": "template"
-    },
     "3584650D": {
       "owner": "generated",
       "region": "annex-e",
@@ -7102,9 +6850,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 215
-    },
-    "35950189": {
-      "owner": "template"
     },
     "35956AED": {
       "owner": "generated",
@@ -7178,18 +6923,12 @@
       "block": 1,
       "para": 3
     },
-    "3634D6E7": {
-      "owner": "template"
-    },
     "363FC17A": {
       "owner": "generated",
       "region": "objecttypes",
       "index": 12,
       "kind": "nodetable",
       "para": 61
-    },
-    "3654C833": {
-      "owner": "template"
     },
     "3656124A": {
       "owner": "generated",
@@ -7237,9 +6976,6 @@
       "para": 0
     },
     "369AF152": {
-      "owner": "template"
-    },
-    "36A82DE1": {
       "owner": "template"
     },
     "36ACB4D3": {
@@ -7380,9 +7116,6 @@
       "section": "Metrics — Metrics",
       "block": 1,
       "para": 164
-    },
-    "376C523D": {
-      "owner": "template"
     },
     "3771782F": {
       "owner": "markdown",
@@ -7631,9 +7364,6 @@
       "block": 2,
       "para": 2
     },
-    "38F967E6": {
-      "owner": "template"
-    },
     "3900EC27": {
       "owner": "markdown",
       "file": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
@@ -7671,9 +7401,6 @@
       "index": 5,
       "kind": "clause",
       "para": 0
-    },
-    "393F81D1": {
-      "owner": "template"
     },
     "3943D2A9": {
       "owner": "generated",
@@ -7730,9 +7457,6 @@
     "398A594D": {
       "owner": "template"
     },
-    "399BC4FB": {
-      "owner": "template"
-    },
     "39A823F4": {
       "owner": "generated",
       "region": "objecttypes",
@@ -7762,9 +7486,6 @@
       "para": 11
     },
     "39D4C4CA": {
-      "owner": "template"
-    },
-    "39E5EA0C": {
       "owner": "template"
     },
     "39E66F2B": {
@@ -7981,9 +7702,6 @@
       "kind": "nodetable",
       "para": 21
     },
-    "3BBB4266": {
-      "owner": "template"
-    },
     "3BC1B8B8": {
       "owner": "template"
     },
@@ -8038,9 +7756,6 @@
     "3C18D9EF": {
       "owner": "template"
     },
-    "3C220A91": {
-      "owner": "template"
-    },
     "3C250236": {
       "owner": "generated",
       "region": "namespaces",
@@ -8052,9 +7767,6 @@
       "owner": "template"
     },
     "3C2A66ED": {
-      "owner": "template"
-    },
-    "3C2ED5F3": {
       "owner": "template"
     },
     "3C30294C": {
@@ -8117,12 +7829,6 @@
       "para": 20
     },
     "3C8E7C39": {
-      "owner": "template"
-    },
-    "3C9EE145": {
-      "owner": "template"
-    },
-    "3CB5F5AF": {
       "owner": "template"
     },
     "3CC4AD84": {
@@ -8211,9 +7917,6 @@
       "index": 24,
       "kind": "nodetable",
       "para": 4
-    },
-    "3DAF0C87": {
-      "owner": "template"
     },
     "3DC44C36": {
       "owner": "template"
@@ -8426,9 +8129,6 @@
       "kind": "nodetable",
       "para": 21
     },
-    "3F3CDC67": {
-      "owner": "template"
-    },
     "3F4761CF": {
       "owner": "generated",
       "region": "objecttypes",
@@ -8442,9 +8142,6 @@
       "index": 24,
       "kind": "nodetable",
       "para": 6
-    },
-    "3F4E126B": {
-      "owner": "template"
     },
     "3F6017FA": {
       "owner": "generated",
@@ -8617,9 +8314,6 @@
       "block": 1,
       "para": 159
     },
-    "40C6F2E2": {
-      "owner": "template"
-    },
     "40D94539": {
       "owner": "generated",
       "region": "objecttypes",
@@ -8691,18 +8385,12 @@
       "kind": "nodetable",
       "para": 42
     },
-    "4166BFF8": {
-      "owner": "template"
-    },
     "416F3789": {
       "owner": "generated",
       "region": "annex-a",
       "index": 0,
       "kind": "nodetable",
       "para": 106
-    },
-    "417F76AA": {
-      "owner": "template"
     },
     "4189C2A2": {
       "owner": "markdown",
@@ -8878,9 +8566,6 @@
       "block": 1,
       "para": 147
     },
-    "42AEA399": {
-      "owner": "template"
-    },
     "42B1F660": {
       "owner": "template"
     },
@@ -9046,9 +8731,6 @@
       "section": "5.3 BoundItemType and its subtypes",
       "block": 1,
       "para": 1
-    },
-    "44508F66": {
-      "owner": "template"
     },
     "445186F0": {
       "owner": "template"
@@ -9297,9 +8979,6 @@
       "block": 0,
       "para": 38
     },
-    "4666999C": {
-      "owner": "template"
-    },
     "467E907C": {
       "owner": "template"
     },
@@ -9330,9 +9009,6 @@
     "46DBE0D6": {
       "owner": "template"
     },
-    "470C8A3B": {
-      "owner": "template"
-    },
     "470D529A": {
       "owner": "template"
     },
@@ -9356,9 +9032,6 @@
       "index": 11,
       "kind": "enumtable",
       "para": 8
-    },
-    "471FCDF4": {
-      "owner": "template"
     },
     "4723306D": {
       "owner": "markdown",
@@ -9526,9 +9199,6 @@
       "kind": "nodetable",
       "para": 59
     },
-    "481C8DBA": {
-      "owner": "template"
-    },
     "4820B7A1": {
       "owner": "template"
     },
@@ -9584,12 +9254,6 @@
       "kind": "nodetable",
       "para": 10
     },
-    "488214DA": {
-      "owner": "template"
-    },
-    "48892B2C": {
-      "owner": "template"
-    },
     "4892EA9B": {
       "owner": "markdown",
       "file": "cloud-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
@@ -9634,12 +9298,6 @@
       "section": "Metrics — Metrics",
       "block": 1,
       "para": 0
-    },
-    "48E8416B": {
-      "owner": "template"
-    },
-    "48EDF473": {
-      "owner": "template"
     },
     "48EE46DA": {
       "owner": "template"
@@ -9835,9 +9493,6 @@
       "block": 1,
       "para": 99
     },
-    "4A197D11": {
-      "owner": "template"
-    },
     "4A1F7E7C": {
       "owner": "template"
     },
@@ -9930,9 +9585,6 @@
     "4AC1323A": {
       "owner": "template"
     },
-    "4AE30225": {
-      "owner": "template"
-    },
     "4AE8FBC8": {
       "owner": "template"
     },
@@ -9977,9 +9629,6 @@
       "kind": "nodetable",
       "para": 16
     },
-    "4B284BF3": {
-      "owner": "template"
-    },
     "4B3EEE6D": {
       "owner": "generated",
       "region": "annex-a",
@@ -10000,9 +9649,6 @@
       "section": "Metrics — Metrics",
       "block": 1,
       "para": 61
-    },
-    "4B4DA864": {
-      "owner": "template"
     },
     "4B4F2A59": {
       "owner": "generated",
@@ -10495,9 +10141,6 @@
     "4EDB4123": {
       "owner": "template"
     },
-    "4EDFDA54": {
-      "owner": "template"
-    },
     "4EF88CA5": {
       "owner": "markdown",
       "file": "cloud-specs/observability-export/facets/OPC-UA-Facets-Observability-Export-Addendum.md",
@@ -10672,9 +10315,6 @@
       "kind": "nodetable",
       "para": 212
     },
-    "4FF58BE1": {
-      "owner": "template"
-    },
     "50060862": {
       "owner": "template"
     },
@@ -10729,9 +10369,6 @@
       "index": 12,
       "kind": "nodetable",
       "para": 60
-    },
-    "508EBA33": {
-      "owner": "template"
     },
     "5091016E": {
       "owner": "generated",
@@ -10808,9 +10445,6 @@
       "block": 1,
       "para": 8
     },
-    "514A1970": {
-      "owner": "template"
-    },
     "514F6FA5": {
       "owner": "generated",
       "region": "datatypes",
@@ -10884,9 +10518,6 @@
       "kind": "nodetable",
       "para": 11
     },
-    "519BACE0": {
-      "owner": "template"
-    },
     "51B04579": {
       "owner": "generated",
       "region": "objecttypes",
@@ -10921,9 +10552,6 @@
       "para": 14
     },
     "51F818ED": {
-      "owner": "template"
-    },
-    "51F81E1D": {
       "owner": "template"
     },
     "51FCC10B": {
@@ -11101,9 +10729,6 @@
       "kind": "enumtable",
       "para": 5
     },
-    "5313ACBC": {
-      "owner": "template"
-    },
     "53165E11": {
       "owner": "generated",
       "region": "datatypes",
@@ -11242,9 +10867,6 @@
       "section": "3. Derived bindings — delta only",
       "block": 1,
       "para": 1
-    },
-    "54641427": {
-      "owner": "template"
     },
     "546EBE42": {
       "owner": "template"
@@ -11477,9 +11099,6 @@
       "block": 1,
       "para": 0
     },
-    "55D3CA01": {
-      "owner": "template"
-    },
     "55DB19E1": {
       "owner": "markdown",
       "file": "cloud-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
@@ -11633,9 +11252,6 @@
       "block": 1,
       "para": 15
     },
-    "56C56778": {
-      "owner": "template"
-    },
     "56E32E28": {
       "owner": "generated",
       "region": "objecttypes",
@@ -11708,9 +11324,6 @@
       "kind": "para",
       "para": 0
     },
-    "579D4994": {
-      "owner": "template"
-    },
     "579DD43B": {
       "owner": "generated",
       "region": "datatypes",
@@ -11731,9 +11344,6 @@
       "section": "Metrics — Metrics",
       "block": 1,
       "para": 115
-    },
-    "57F0547B": {
-      "owner": "template"
     },
     "57F1B058": {
       "owner": "generated",
@@ -11869,9 +11479,6 @@
       "index": 12,
       "kind": "nodetable",
       "para": 90
-    },
-    "59659FC3": {
-      "owner": "template"
     },
     "596EA7FE": {
       "owner": "generated",
@@ -12167,9 +11774,6 @@
       "kind": "nodetable",
       "para": 6
     },
-    "5B24EB10": {
-      "owner": "template"
-    },
     "5B336145": {
       "owner": "template"
     },
@@ -12221,9 +11825,6 @@
       "kind": "table",
       "para": 8
     },
-    "5BA07928": {
-      "owner": "template"
-    },
     "5BA3A881": {
       "owner": "generated",
       "region": "model-overview",
@@ -12252,9 +11853,6 @@
       "para": 40
     },
     "5BDB0008": {
-      "owner": "template"
-    },
-    "5BDC1418": {
       "owner": "template"
     },
     "5BDE55E9": {
@@ -12303,9 +11901,6 @@
       "index": 3,
       "kind": "enumtable",
       "para": 23
-    },
-    "5C43E87D": {
-      "owner": "template"
     },
     "5C62431B": {
       "owner": "generated",
@@ -12544,9 +12139,6 @@
     "5E78D9AD": {
       "owner": "template"
     },
-    "5E88573F": {
-      "owner": "template"
-    },
     "5E8B5726": {
       "owner": "generated",
       "region": "annex-a",
@@ -12702,9 +12294,6 @@
       "kind": "nodetable",
       "para": 18
     },
-    "5F63730D": {
-      "owner": "template"
-    },
     "5F6DF0C5": {
       "owner": "generated",
       "region": "referencetypes",
@@ -12839,9 +12428,6 @@
       "kind": "nodetable",
       "para": 112
     },
-    "603FB875": {
-      "owner": "template"
-    },
     "604D1432": {
       "owner": "template"
     },
@@ -12912,9 +12498,6 @@
       "owner": "template"
     },
     "60D71573": {
-      "owner": "template"
-    },
-    "60D980DF": {
       "owner": "template"
     },
     "60D999C6": {
@@ -12997,9 +12580,6 @@
       "index": 24,
       "kind": "nodetable",
       "para": 27
-    },
-    "619A0901": {
-      "owner": "template"
     },
     "61B64046": {
       "owner": "template"
@@ -13123,12 +12703,6 @@
       "section": "5.3 BoundItemType and its subtypes",
       "block": 1,
       "para": 0
-    },
-    "624EF2B7": {
-      "owner": "template"
-    },
-    "625110AA": {
-      "owner": "template"
     },
     "6259D5D4": {
       "owner": "markdown",
@@ -13307,9 +12881,6 @@
       "kind": "nodetable",
       "para": 249
     },
-    "63F693C0": {
-      "owner": "template"
-    },
     "63F8D7E1": {
       "owner": "markdown",
       "file": "cloud-specs/observability-export/di/OPC-UA-DI-Observability-Export-Addendum.md",
@@ -13347,9 +12918,6 @@
       "section": "3 How the bindings are applied",
       "block": 2,
       "para": 0
-    },
-    "645193D1": {
-      "owner": "template"
     },
     "645CEE86": {
       "owner": "template"
@@ -13533,9 +13101,6 @@
       "kind": "nodetable",
       "para": 46
     },
-    "65CEC5AB": {
-      "owner": "template"
-    },
     "65CF8C31": {
       "owner": "generated",
       "region": "objecttypes",
@@ -13566,9 +13131,6 @@
       "index": 12,
       "kind": "nodetable",
       "para": 38
-    },
-    "66171565": {
-      "owner": "template"
     },
     "661E8CA7": {
       "owner": "generated",
@@ -13822,9 +13384,6 @@
       "block": 1,
       "para": 3
     },
-    "6838E58C": {
-      "owner": "template"
-    },
     "684D9ABA": {
       "owner": "generated",
       "region": "datatypes",
@@ -13964,9 +13523,6 @@
     "691CC841": {
       "owner": "template"
     },
-    "691FD8A6": {
-      "owner": "template"
-    },
     "69394A66": {
       "owner": "generated",
       "region": "annex-a",
@@ -13980,9 +13536,6 @@
       "index": 12,
       "kind": "nodetable",
       "para": 21
-    },
-    "694CADA9": {
-      "owner": "template"
     },
     "695C5D99": {
       "owner": "markdown",
@@ -14025,9 +13578,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 105
-    },
-    "69CB2D68": {
-      "owner": "template"
     },
     "69D7E3F1": {
       "owner": "template"
@@ -14128,9 +13678,6 @@
       "section": "Metrics — Metrics",
       "block": 1,
       "para": 6
-    },
-    "6A93FB38": {
-      "owner": "template"
     },
     "6A9EF9EF": {
       "owner": "generated",
@@ -14246,9 +13793,6 @@
       "kind": "clause",
       "para": 0
     },
-    "6B4D8FDB": {
-      "owner": "template"
-    },
     "6B565DC7": {
       "owner": "markdown",
       "file": "cloud-specs/observability-export/di/OPC-UA-DI-Observability-Export-Addendum.md",
@@ -14318,18 +13862,12 @@
     "6BC19F84": {
       "owner": "template"
     },
-    "6BC7CE98": {
-      "owner": "template"
-    },
     "6BCA9AA9": {
       "owner": "generated",
       "region": "objecttypes",
       "index": 18,
       "kind": "nodetable",
       "para": 6
-    },
-    "6BD2AA36": {
-      "owner": "template"
     },
     "6BD4F1EA": {
       "owner": "generated",
@@ -14461,18 +13999,12 @@
       "block": 1,
       "para": 2
     },
-    "6CD295EE": {
-      "owner": "template"
-    },
     "6CEA5B06": {
       "owner": "generated",
       "region": "annex-a",
       "index": 0,
       "kind": "nodetable",
       "para": 272
-    },
-    "6CF4E76E": {
-      "owner": "template"
     },
     "6CF89C20": {
       "owner": "generated",
@@ -14529,9 +14061,6 @@
       "kind": "nodetable",
       "para": 89
     },
-    "6D585A1B": {
-      "owner": "template"
-    },
     "6D6CB645": {
       "owner": "generated",
       "region": "datatypes",
@@ -14566,9 +14095,6 @@
       "section": "Metrics — Metrics",
       "block": 1,
       "para": 72
-    },
-    "6D91301B": {
-      "owner": "template"
     },
     "6D987666": {
       "owner": "markdown",
@@ -14628,9 +14154,6 @@
       "section": "Traces — Traces",
       "block": 1,
       "para": 19
-    },
-    "6E1F3B8F": {
-      "owner": "template"
     },
     "6E2285EF": {
       "owner": "markdown",
@@ -14692,9 +14215,6 @@
       "para": 0
     },
     "6E6DE116": {
-      "owner": "template"
-    },
-    "6E72F4DA": {
       "owner": "template"
     },
     "6E903890": {
@@ -14964,9 +14484,6 @@
       "block": 1,
       "para": 158
     },
-    "70310A2A": {
-      "owner": "template"
-    },
     "703EEAF9": {
       "owner": "markdown",
       "file": "cloud-specs/observability-export/pumps/OPC-UA-Pumps-Observability-Export-Addendum.md",
@@ -15027,9 +14544,6 @@
       "kind": "nodetable",
       "para": 84
     },
-    "70D961C3": {
-      "owner": "template"
-    },
     "70EAC95C": {
       "owner": "generated",
       "region": "datatypes",
@@ -15052,9 +14566,6 @@
       "para": 0
     },
     "710B1B3E": {
-      "owner": "template"
-    },
-    "711D56B9": {
       "owner": "template"
     },
     "712800E9": {
@@ -15096,9 +14607,6 @@
       "section": "Metrics — Metrics",
       "block": 1,
       "para": 74
-    },
-    "7185A97A": {
-      "owner": "template"
     },
     "718766CD": {
       "owner": "generated",
@@ -15319,9 +14827,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 291
-    },
-    "7385D45E": {
-      "owner": "template"
     },
     "738EF3D0": {
       "owner": "markdown",
@@ -15645,9 +15150,6 @@
       "block": 1,
       "para": 119
     },
-    "75EF6501": {
-      "owner": "template"
-    },
     "75F9A9C0": {
       "owner": "generated",
       "region": "annex-a",
@@ -15857,9 +15359,6 @@
     "7771EFF9": {
       "owner": "template"
     },
-    "77743E1B": {
-      "owner": "template"
-    },
     "77922728": {
       "owner": "generated",
       "region": "normative-references",
@@ -15878,9 +15377,6 @@
       "owner": "template"
     },
     "77E223F5": {
-      "owner": "template"
-    },
-    "77F8287F": {
       "owner": "template"
     },
     "7801D9FB": {
@@ -16068,9 +15564,6 @@
       "block": 0,
       "para": 46
     },
-    "7997483D": {
-      "owner": "template"
-    },
     "79A3F12E": {
       "owner": "template"
     },
@@ -16094,9 +15587,6 @@
       "index": 9,
       "kind": "term",
       "para": 1
-    },
-    "79CCAD52": {
-      "owner": "template"
     },
     "79CD8879": {
       "owner": "generated",
@@ -16184,9 +15674,6 @@
       "kind": "nodetable",
       "para": 3
     },
-    "7A450F3D": {
-      "owner": "template"
-    },
     "7A5B57D1": {
       "owner": "generated",
       "region": "annex-a",
@@ -16235,13 +15722,7 @@
       "block": 1,
       "para": 6
     },
-    "7AC73FD1": {
-      "owner": "template"
-    },
     "7ACACB98": {
-      "owner": "template"
-    },
-    "7ACEC446": {
       "owner": "template"
     },
     "7AFE6498": {
@@ -16288,9 +15769,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 201
-    },
-    "7B31669B": {
-      "owner": "template"
     },
     "7B39ABC6": {
       "owner": "markdown",
@@ -16387,9 +15865,6 @@
       "section": "4.1 `MachineObservability` — Metrics DataSet (8 fields, class `53dc8a49…`)",
       "block": 0,
       "para": 7
-    },
-    "7C02D876": {
-      "owner": "template"
     },
     "7C142F60": {
       "owner": "generated",
@@ -16545,9 +16020,6 @@
       "block": 1,
       "para": 0
     },
-    "7C96B54B": {
-      "owner": "template"
-    },
     "7C975B32": {
       "owner": "generated",
       "region": "objecttypes",
@@ -16582,9 +16054,6 @@
       "section": "Metrics — Metrics",
       "block": 1,
       "para": 26
-    },
-    "7CC7AA98": {
-      "owner": "template"
     },
     "7CDC715F": {
       "owner": "template"
@@ -16623,9 +16092,6 @@
     "7D3811CA": {
       "owner": "template"
     },
-    "7D41D9E5": {
-      "owner": "template"
-    },
     "7D426E6A": {
       "owner": "template"
     },
@@ -16658,9 +16124,6 @@
       "index": 8,
       "kind": "nodetable",
       "para": 158
-    },
-    "7DB97CCC": {
-      "owner": "template"
     },
     "7DBFDD2F": {
       "owner": "generated",
@@ -16891,9 +16354,6 @@
       "kind": "nodetable",
       "para": 65
     },
-    "7F80729A": {
-      "owner": "template"
-    },
     "7F8EC490": {
       "owner": "generated",
       "region": "objecttypes",
@@ -16907,9 +16367,6 @@
       "section": "5.10 Locating bound items — BrowsePath resolution (normative)",
       "block": 4,
       "para": 5
-    },
-    "7F9A8617": {
-      "owner": "template"
     },
     "7F9D1D6C": {
       "owner": "generated",

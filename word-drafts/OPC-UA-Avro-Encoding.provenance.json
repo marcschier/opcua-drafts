@@ -1,7 +1,7 @@
 {
   "specId": "avro-encoding",
-  "sourceCommit": "d24b32b3bdf74e5a0d11145b06e8ad0cf8ad45e5",
-  "sourceDigest": "9804256ec96abd17",
+  "sourceCommit": "711ab328705b248308f60bfc0def036324917c7b",
+  "sourceDigest": "2aea8bb3c053abb4",
   "pipelineVersion": "2",
   "sources": [
     "word-drafts/tools/specs/avro-encoding.json",
@@ -49,9 +49,6 @@
       "section": "One-dimensional array",
       "block": 3,
       "para": 0
-    },
-    "001B9A75": {
-      "owner": "template"
     },
     "001FBB65": {
       "owner": "markdown",
@@ -150,9 +147,6 @@
       "block": 9,
       "para": 17
     },
-    "00ABC4A1": {
-      "owner": "template"
-    },
     "00B7958A": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -180,9 +174,6 @@
       "index": 4,
       "kind": "table",
       "para": 4
-    },
-    "00D7465F": {
-      "owner": "template"
     },
     "00E54A67": {
       "owner": "markdown",
@@ -406,9 +397,6 @@
       "block": 1,
       "para": 0
     },
-    "02001E70": {
-      "owner": "template"
-    },
     "02056CB7": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -429,9 +417,6 @@
       "section": "8.4.4 Schema request message",
       "block": 2,
       "para": 19
-    },
-    "0211D2F9": {
-      "owner": "template"
     },
     "0213B84A": {
       "owner": "markdown",
@@ -695,9 +680,6 @@
       "block": 3,
       "para": 31
     },
-    "03536B8A": {
-      "owner": "template"
-    },
     "035CAEAA": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -714,9 +696,6 @@
       "section": "Built-in UInt16",
       "block": 1,
       "para": 6
-    },
-    "03766395": {
-      "owner": "template"
     },
     "038070FC": {
       "owner": "markdown",
@@ -759,9 +738,6 @@
       "section": "Built-in Float",
       "block": 9,
       "para": 6
-    },
-    "03C8A092": {
-      "owner": "template"
     },
     "03D92102": {
       "owner": "markdown",
@@ -856,9 +832,6 @@
       "block": 3,
       "para": 42
     },
-    "046D3DAA": {
-      "owner": "template"
-    },
     "047312F1": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -922,9 +895,6 @@
       "block": 9,
       "para": 93
     },
-    "04F256DE": {
-      "owner": "template"
-    },
     "04F84C10": {
       "owner": "generated",
       "region": "annex-d",
@@ -965,9 +935,6 @@
       "section": "Worked structured DataType: Envelope",
       "block": 4,
       "para": 0
-    },
-    "05231289": {
-      "owner": "template"
     },
     "052A3926": {
       "owner": "template"
@@ -1087,9 +1054,6 @@
       "block": 4,
       "para": 0
     },
-    "05884D89": {
-      "owner": "template"
-    },
     "058B24BA": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -1139,9 +1103,6 @@
       "block": 1,
       "para": 2
     },
-    "05B633FE": {
-      "owner": "template"
-    },
     "05B825DE": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -1172,9 +1133,6 @@
       "section": "Built-in QualifiedName",
       "block": 9,
       "para": 4
-    },
-    "05DB50B0": {
-      "owner": "template"
     },
     "05E28276": {
       "owner": "template"
@@ -1282,9 +1240,6 @@
     "06654834": {
       "owner": "template"
     },
-    "06752313": {
-      "owner": "template"
-    },
     "06762939": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -1347,9 +1302,6 @@
       "section": "6.7 Deriving a schema from DataSetMetaData",
       "block": 5,
       "para": 28
-    },
-    "069F0F0A": {
-      "owner": "template"
     },
     "06B274D7": {
       "owner": "template"
@@ -1544,9 +1496,6 @@
       "section": "Matrix",
       "block": 9,
       "para": 2
-    },
-    "07EB5E59": {
-      "owner": "template"
     },
     "07F8DC6E": {
       "owner": "markdown",
@@ -1791,9 +1740,6 @@
       "section": "Annex B PubSub Action and Discovery schema examples",
       "block": 17,
       "para": 38
-    },
-    "08FA174C": {
-      "owner": "template"
     },
     "090491FA": {
       "owner": "generated",
@@ -2238,9 +2184,6 @@
     "0B08A996": {
       "owner": "template"
     },
-    "0B13C529": {
-      "owner": "template"
-    },
     "0B1EE0FA": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -2475,9 +2418,6 @@
       "section": "MinorVersion 1.0",
       "block": 3,
       "para": 87
-    },
-    "0BF34770": {
-      "owner": "template"
     },
     "0BFF0BDB": {
       "owner": "markdown",
@@ -2797,9 +2737,6 @@
       "block": 3,
       "para": 48
     },
-    "0D3A04EB": {
-      "owner": "template"
-    },
     "0D3F7F66": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -2851,9 +2788,6 @@
       "section": "Built-in DiagnosticInfo",
       "block": 9,
       "para": 61
-    },
-    "0D5AA307": {
-      "owner": "template"
     },
     "0D5CB10C": {
       "owner": "markdown",
@@ -2923,9 +2857,6 @@
       "section": "Built-in NodeId",
       "block": 9,
       "para": 39
-    },
-    "0DB99DCE": {
-      "owner": "template"
     },
     "0DBCF27D": {
       "owner": "markdown",
@@ -3187,9 +3118,6 @@
       "block": 5,
       "para": 7
     },
-    "0E9BC5A6": {
-      "owner": "template"
-    },
     "0EBF8F71": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -3248,9 +3176,6 @@
       "section": "Structure with optional fields",
       "block": 0,
       "para": 0
-    },
-    "0F083CE7": {
-      "owner": "template"
     },
     "0F109DDD": {
       "owner": "markdown",
@@ -3577,9 +3502,6 @@
       "block": 9,
       "para": 0
     },
-    "107F62DB": {
-      "owner": "template"
-    },
     "107F8515": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -3667,9 +3589,6 @@
       "block": 9,
       "para": 17
     },
-    "10E17947": {
-      "owner": "template"
-    },
     "10EF01F4": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -3697,9 +3616,6 @@
       "section": "8.3.1 Action messages",
       "block": 4,
       "para": 18
-    },
-    "1110C722": {
-      "owner": "template"
     },
     "11166DD8": {
       "owner": "markdown",
@@ -3798,9 +3714,6 @@
       "block": 3,
       "para": 42
     },
-    "1173420D": {
-      "owner": "template"
-    },
     "1175ECB7": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -3821,9 +3734,6 @@
       "section": "8.3.1 Action messages",
       "block": 2,
       "para": 11
-    },
-    "118D3424": {
-      "owner": "template"
     },
     "119205A8": {
       "owner": "markdown",
@@ -4083,9 +3993,6 @@
       "section": "Built-in ExpandedNodeId",
       "block": 9,
       "para": 58
-    },
-    "12E26018": {
-      "owner": "template"
     },
     "12EAF34F": {
       "owner": "markdown",
@@ -4432,9 +4339,6 @@
       "para": 50
     },
     "1485D49B": {
-      "owner": "template"
-    },
-    "1492FD02": {
       "owner": "template"
     },
     "149BEAC2": {
@@ -4943,9 +4847,6 @@
       "block": 6,
       "para": 44
     },
-    "16C26357": {
-      "owner": "template"
-    },
     "16C2BABD": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -5298,9 +5199,6 @@
       "block": 1,
       "para": 3
     },
-    "17F69F1C": {
-      "owner": "template"
-    },
     "17FA35A5": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -5342,9 +5240,6 @@
       "section": "8.5 Configuration parameters",
       "block": 1,
       "para": 1
-    },
-    "1819B188": {
-      "owner": "template"
     },
     "181AB87C": {
       "owner": "template"
@@ -5480,9 +5375,6 @@
       "block": 1,
       "para": 1
     },
-    "18E50C70": {
-      "owner": "template"
-    },
     "18ECAB53": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -5550,9 +5442,6 @@
       "owner": "template"
     },
     "19501552": {
-      "owner": "template"
-    },
-    "196059DD": {
       "owner": "template"
     },
     "19692CE8": {
@@ -5985,9 +5874,6 @@
     "1B43258F": {
       "owner": "template"
     },
-    "1B455E26": {
-      "owner": "template"
-    },
     "1B4A9286": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -6183,9 +6069,6 @@
       "block": 6,
       "para": 14
     },
-    "1C106856": {
-      "owner": "template"
-    },
     "1C14363F": {
       "owner": "template"
     },
@@ -6216,9 +6099,6 @@
       "section": "One-dimensional array",
       "block": 9,
       "para": 19
-    },
-    "1C34B01B": {
-      "owner": "template"
     },
     "1C3D0D27": {
       "owner": "markdown",
@@ -6289,9 +6169,6 @@
       "section": "Built-in Int64",
       "block": 1,
       "para": 7
-    },
-    "1C8557D3": {
-      "owner": "template"
     },
     "1C87C1BB": {
       "owner": "markdown",
@@ -6402,9 +6279,6 @@
     "1D3A5723": {
       "owner": "template"
     },
-    "1D4D7D70": {
-      "owner": "template"
-    },
     "1D536FE7": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -6413,9 +6287,6 @@
       "para": 8
     },
     "1D5FD512": {
-      "owner": "template"
-    },
-    "1D6B5F0B": {
       "owner": "template"
     },
     "1D79246B": {
@@ -6494,9 +6365,6 @@
       "section": "D.8 Structure — `Point { X: 1.25, Y: -3.5 }` (record = fields concatenated)",
       "block": 0,
       "para": 5
-    },
-    "1DCF28D4": {
-      "owner": "template"
     },
     "1DD0F772": {
       "owner": "markdown",
@@ -6744,9 +6612,6 @@
       "block": 9,
       "para": 41
     },
-    "1EE6F4E3": {
-      "owner": "template"
-    },
     "1EEB4723": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -6795,9 +6660,6 @@
       "section": "Built-in DiagnosticInfo",
       "block": 9,
       "para": 94
-    },
-    "1F10A6B6": {
-      "owner": "template"
     },
     "1F1CF360": {
       "owner": "markdown",
@@ -6871,9 +6733,6 @@
       "section": "9.2 Content mask DataTypes",
       "block": 2,
       "para": 22
-    },
-    "1F7E6ECE": {
-      "owner": "template"
     },
     "1F89545B": {
       "owner": "markdown",
@@ -7072,9 +6931,6 @@
       "section": "Built-in ExpandedNodeId",
       "block": 9,
       "para": 17
-    },
-    "20642D6F": {
-      "owner": "template"
     },
     "20643A77": {
       "owner": "markdown",
@@ -7664,9 +7520,6 @@
       "block": 1,
       "para": 7
     },
-    "22E7B0DC": {
-      "owner": "template"
-    },
     "22ED170E": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -7728,9 +7581,6 @@
       "section": "Structure",
       "block": 9,
       "para": 10
-    },
-    "2364FFBF": {
-      "owner": "template"
     },
     "236D8489": {
       "owner": "markdown",
@@ -7926,9 +7776,6 @@
       "block": 3,
       "para": 3
     },
-    "24742E1C": {
-      "owner": "template"
-    },
     "24826C69": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -7953,9 +7800,6 @@
       "block": 9,
       "para": 93
     },
-    "24B74689": {
-      "owner": "template"
-    },
     "24BE3454": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -7976,9 +7820,6 @@
       "section": "Annex B PubSub Action and Discovery schema examples",
       "block": 15,
       "para": 19
-    },
-    "24E79A57": {
-      "owner": "template"
     },
     "24F5A24A": {
       "owner": "markdown",
@@ -8007,12 +7848,6 @@
       "section": "Worked structured DataType: Envelope",
       "block": 3,
       "para": 23
-    },
-    "2524710D": {
-      "owner": "template"
-    },
-    "25291B09": {
-      "owner": "template"
     },
     "25330BD5": {
       "owner": "markdown",
@@ -8159,12 +7994,6 @@
       "block": 2,
       "para": 12
     },
-    "2619B9E2": {
-      "owner": "template"
-    },
-    "261AE0DB": {
-      "owner": "template"
-    },
     "261F86E6": {
       "owner": "template"
     },
@@ -8174,9 +8003,6 @@
       "section": "Built-in DataValue",
       "block": 3,
       "para": 33
-    },
-    "26355F2E": {
-      "owner": "template"
     },
     "26363425": {
       "owner": "markdown",
@@ -8219,9 +8045,6 @@
       "index": 7,
       "kind": "term",
       "para": 2
-    },
-    "2685C3D5": {
-      "owner": "template"
     },
     "268BBEA0": {
       "owner": "template"
@@ -8305,9 +8128,6 @@
       "section": "8.5 Configuration parameters",
       "block": 1,
       "para": 14
-    },
-    "26DDFBE8": {
-      "owner": "template"
     },
     "26DF95F9": {
       "owner": "markdown",
@@ -8471,9 +8291,6 @@
       "section": "5.2 Built-in DataTypes",
       "block": 0,
       "para": 25
-    },
-    "27B44E62": {
-      "owner": "template"
     },
     "27B6E6F3": {
       "owner": "markdown",
@@ -8943,9 +8760,6 @@
       "block": 9,
       "para": 3
     },
-    "29FBF387": {
-      "owner": "template"
-    },
     "2A05A556": {
       "owner": "template"
     },
@@ -9048,9 +8862,6 @@
       "section": "One-dimensional array",
       "block": 3,
       "para": 3
-    },
-    "2AA03185": {
-      "owner": "template"
     },
     "2AA6C0D9": {
       "owner": "markdown",
@@ -9374,9 +9185,6 @@
       "block": 3,
       "para": 45
     },
-    "2BE33860": {
-      "owner": "template"
-    },
     "2BE5269C": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -9484,9 +9292,6 @@
     "2C4EC229": {
       "owner": "template"
     },
-    "2C54C28B": {
-      "owner": "template"
-    },
     "2C6832D9": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -9564,9 +9369,6 @@
       "block": 9,
       "para": 22
     },
-    "2CBC5B37": {
-      "owner": "template"
-    },
     "2CC98D5D": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -9623,9 +9425,6 @@
       "block": 4,
       "para": 0
     },
-    "2D15BCA3": {
-      "owner": "template"
-    },
     "2D1C4F1B": {
       "owner": "template"
     },
@@ -9643,9 +9442,6 @@
       "block": 4,
       "para": 33
     },
-    "2D443F6F": {
-      "owner": "template"
-    },
     "2D50CACE": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -9661,9 +9457,6 @@
       "para": 8
     },
     "2D57250B": {
-      "owner": "template"
-    },
-    "2D61284A": {
       "owner": "template"
     },
     "2D61EF5A": {
@@ -9687,12 +9480,6 @@
       "block": 1,
       "para": 0
     },
-    "2D78A1FE": {
-      "owner": "template"
-    },
-    "2D7B48BD": {
-      "owner": "template"
-    },
     "2D7D96F6": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -9713,9 +9500,6 @@
       "section": "Built-in XmlElement",
       "block": 3,
       "para": 3
-    },
-    "2D8AB42A": {
-      "owner": "template"
     },
     "2D9181B6": {
       "owner": "markdown",
@@ -9751,9 +9535,6 @@
       "section": "Built-in NodeId",
       "block": 3,
       "para": 3
-    },
-    "2DA8DE9D": {
-      "owner": "template"
     },
     "2DAB2CEC": {
       "owner": "markdown",
@@ -9799,9 +9580,6 @@
       "section": "Built-in XmlElement",
       "block": 9,
       "para": 7
-    },
-    "2DD6A78F": {
-      "owner": "template"
     },
     "2DD850BF": {
       "owner": "markdown",
@@ -9904,9 +9682,6 @@
       "block": 3,
       "para": 42
     },
-    "2E4240E5": {
-      "owner": "template"
-    },
     "2E44C3D4": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -9934,9 +9709,6 @@
       "section": "Built-in UInt64",
       "block": 9,
       "para": 9
-    },
-    "2E6759F2": {
-      "owner": "template"
     },
     "2E6CA756": {
       "owner": "markdown",
@@ -10042,9 +9814,6 @@
       "block": 9,
       "para": 21
     },
-    "2EF3AE57": {
-      "owner": "template"
-    },
     "2EF89FA3": {
       "owner": "template"
     },
@@ -10106,12 +9875,6 @@
       "section": "Built-in LocalizedText",
       "block": 9,
       "para": 21
-    },
-    "2F549267": {
-      "owner": "template"
-    },
-    "2F5E1F5D": {
-      "owner": "template"
     },
     "2F672044": {
       "owner": "markdown",
@@ -10704,9 +10467,6 @@
       "block": 0,
       "para": 0
     },
-    "325139A4": {
-      "owner": "template"
-    },
     "3253A5D4": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -10947,9 +10707,6 @@
       "section": "Structure with optional fields",
       "block": 3,
       "para": 45
-    },
-    "332C5E6F": {
-      "owner": "template"
     },
     "332FEAA8": {
       "owner": "markdown",
@@ -11325,21 +11082,12 @@
       "block": 9,
       "para": 26
     },
-    "34F6624C": {
-      "owner": "template"
-    },
     "34FD68BF": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
       "section": "Annex C Worked schema-evolution example (incremental growth)",
       "block": 0,
       "para": 0
-    },
-    "34FEEF3A": {
-      "owner": "template"
-    },
-    "35007D45": {
-      "owner": "template"
     },
     "35038C35": {
       "owner": "markdown",
@@ -11494,9 +11242,6 @@
       "kind": "para",
       "para": 0
     },
-    "3598139E": {
-      "owner": "template"
-    },
     "35A49AAD": {
       "owner": "template"
     },
@@ -11565,9 +11310,6 @@
       "section": "Built-in DataValue",
       "block": 3,
       "para": 10
-    },
-    "35F28C63": {
-      "owner": "template"
     },
     "35FD9C7F": {
       "owner": "markdown",
@@ -11829,9 +11571,6 @@
     "3741515E": {
       "owner": "template"
     },
-    "3741680F": {
-      "owner": "template"
-    },
     "37454148": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -11929,9 +11668,6 @@
       "section": "Built-in ByteString",
       "block": 9,
       "para": 15
-    },
-    "3788103C": {
-      "owner": "template"
     },
     "37A5DA58": {
       "owner": "markdown",
@@ -12286,9 +12022,6 @@
       "block": 0,
       "para": 7
     },
-    "39B39F45": {
-      "owner": "template"
-    },
     "39BAC3C1": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -12346,9 +12079,6 @@
       "section": "Union",
       "block": 3,
       "para": 14
-    },
-    "39F542CF": {
-      "owner": "template"
     },
     "39F79D48": {
       "owner": "markdown",
@@ -12416,9 +12146,6 @@
     "3A532551": {
       "owner": "template"
     },
-    "3A5460C2": {
-      "owner": "template"
-    },
     "3A5B9CBB": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -12435,9 +12162,6 @@
       "section": "Built-in ExpandedNodeId",
       "block": 8,
       "para": 0
-    },
-    "3A69AF49": {
-      "owner": "template"
     },
     "3A71CBE8": {
       "owner": "markdown",
@@ -12553,9 +12277,6 @@
     "3AF0B2A6": {
       "owner": "template"
     },
-    "3AF1DF9A": {
-      "owner": "template"
-    },
     "3AF21E35": {
       "owner": "template"
     },
@@ -12580,9 +12301,6 @@
       "block": 0,
       "para": 1
     },
-    "3B24C055": {
-      "owner": "template"
-    },
     "3B25D34C": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -12596,9 +12314,6 @@
       "index": 2,
       "kind": "para",
       "para": 0
-    },
-    "3B29EEFB": {
-      "owner": "template"
     },
     "3B3D7800": {
       "owner": "markdown",
@@ -12640,9 +12355,6 @@
       "section": "MinorVersion 1.0",
       "block": 3,
       "para": 26
-    },
-    "3B87CE7C": {
-      "owner": "template"
     },
     "3B88AA29": {
       "owner": "markdown",
@@ -12909,9 +12621,6 @@
       "kind": "para",
       "para": 0
     },
-    "3C7F74AC": {
-      "owner": "template"
-    },
     "3C8E7C39": {
       "owner": "template"
     },
@@ -13016,9 +12725,6 @@
       "kind": "para",
       "para": 0
     },
-    "3D2E710C": {
-      "owner": "template"
-    },
     "3D370BE4": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -13053,9 +12759,6 @@
       "section": "One-dimensional array",
       "block": 9,
       "para": 48
-    },
-    "3D5B3F72": {
-      "owner": "template"
     },
     "3D609DD5": {
       "owner": "markdown",
@@ -13176,9 +12879,6 @@
       "block": 1,
       "para": 1
     },
-    "3DB57838": {
-      "owner": "template"
-    },
     "3DBA4401": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -13213,9 +12913,6 @@
     "3DC6EA38": {
       "owner": "template"
     },
-    "3DC9E72B": {
-      "owner": "template"
-    },
     "3DDF3EEE": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -13238,9 +12935,6 @@
       "para": 12
     },
     "3DF9A42E": {
-      "owner": "template"
-    },
-    "3E012823": {
       "owner": "template"
     },
     "3E0F7D6F": {
@@ -13270,9 +12964,6 @@
       "section": "Built-in DiagnosticInfo",
       "block": 9,
       "para": 117
-    },
-    "3E2FAD01": {
-      "owner": "template"
     },
     "3E303BF1": {
       "owner": "markdown",
@@ -13395,9 +13086,6 @@
       "block": 0,
       "para": 5
     },
-    "3EC0542D": {
-      "owner": "template"
-    },
     "3EC7AB60": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -13489,9 +13177,6 @@
       "section": "Union",
       "block": 9,
       "para": 10
-    },
-    "3F136784": {
-      "owner": "template"
     },
     "3F1F98D9": {
       "owner": "template"
@@ -13853,9 +13538,6 @@
       "block": 9,
       "para": 8
     },
-    "40D1E46A": {
-      "owner": "template"
-    },
     "40E33D54": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -13990,9 +13672,6 @@
       "block": 9,
       "para": 46
     },
-    "41BA5763": {
-      "owner": "template"
-    },
     "41BB6E56": {
       "owner": "template"
     },
@@ -14036,9 +13715,6 @@
       "section": "Built-in Int64",
       "block": 9,
       "para": 5
-    },
-    "41F38091": {
-      "owner": "template"
     },
     "41F4F2FD": {
       "owner": "markdown",
@@ -14091,18 +13767,12 @@
     "42599F46": {
       "owner": "template"
     },
-    "42624885": {
-      "owner": "template"
-    },
     "426733BE": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
       "section": "Union",
       "block": 3,
       "para": 20
-    },
-    "4270FDE2": {
-      "owner": "template"
     },
     "42711694": {
       "owner": "markdown",
@@ -14142,9 +13812,6 @@
       "block": 9,
       "para": 24
     },
-    "428707CD": {
-      "owner": "template"
-    },
     "4290CB36": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -14180,9 +13847,6 @@
       "block": 1,
       "para": 0
     },
-    "42B182CC": {
-      "owner": "template"
-    },
     "42B1F660": {
       "owner": "template"
     },
@@ -14206,9 +13870,6 @@
       "index": 51,
       "kind": "clause",
       "para": 0
-    },
-    "42C4AFDF": {
-      "owner": "template"
     },
     "42C95E1C": {
       "owner": "markdown",
@@ -14472,9 +14133,6 @@
       "block": 9,
       "para": 7
     },
-    "43FCCAD9": {
-      "owner": "template"
-    },
     "44130AB8": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -14627,9 +14285,6 @@
       "section": "8.5 Configuration parameters",
       "block": 1,
       "para": 15
-    },
-    "4499740C": {
-      "owner": "template"
     },
     "4499BC3B": {
       "owner": "markdown",
@@ -14957,9 +14612,6 @@
       "block": 8,
       "para": 18
     },
-    "45C089D9": {
-      "owner": "template"
-    },
     "45CAE650": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -15018,9 +14670,6 @@
       "index": 8,
       "kind": "table",
       "para": 6
-    },
-    "460CC340": {
-      "owner": "template"
     },
     "46191510": {
       "owner": "markdown",
@@ -15156,9 +14805,6 @@
       "section": "8.3.1 Action messages",
       "block": 9,
       "para": 0
-    },
-    "46F67625": {
-      "owner": "template"
     },
     "46F8F52D": {
       "owner": "markdown",
@@ -15353,9 +14999,6 @@
       "block": 0,
       "para": 6
     },
-    "482FA469": {
-      "owner": "template"
-    },
     "483195F4": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -15473,9 +15116,6 @@
       "section": "MinorVersion 1.0",
       "block": 3,
       "para": 43
-    },
-    "48E5FE2A": {
-      "owner": "template"
     },
     "48EDAB42": {
       "owner": "markdown",
@@ -15713,9 +15353,6 @@
       "block": 9,
       "para": 44
     },
-    "49B334F2": {
-      "owner": "template"
-    },
     "49B750CF": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -15771,9 +15408,6 @@
       "section": "Built-in LocalizedText",
       "block": 3,
       "para": 9
-    },
-    "4A1519A6": {
-      "owner": "template"
     },
     "4A1B9F39": {
       "owner": "markdown",
@@ -15878,9 +15512,6 @@
       "block": 13,
       "para": 43
     },
-    "4A8FD60E": {
-      "owner": "template"
-    },
     "4A93C2D2": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -15908,12 +15539,6 @@
       "section": "Built-in NodeId",
       "block": 3,
       "para": 34
-    },
-    "4AB4B06F": {
-      "owner": "template"
-    },
-    "4AB813F4": {
-      "owner": "template"
     },
     "4AC1B1A4": {
       "owner": "markdown",
@@ -15984,9 +15609,6 @@
       "block": 15,
       "para": 33
     },
-    "4B015581": {
-      "owner": "template"
-    },
     "4B07B833": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -16035,9 +15657,6 @@
       "index": 19,
       "kind": "para",
       "para": 0
-    },
-    "4B2FD45A": {
-      "owner": "template"
     },
     "4B34B999": {
       "owner": "markdown",
@@ -16154,9 +15773,6 @@
       "block": 4,
       "para": 37
     },
-    "4BB42537": {
-      "owner": "template"
-    },
     "4BB7CCB2": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -16170,9 +15786,6 @@
       "section": "Union",
       "block": 9,
       "para": 18
-    },
-    "4BC56A59": {
-      "owner": "template"
     },
     "4BC799D4": {
       "owner": "markdown",
@@ -16337,9 +15950,6 @@
       "block": 1,
       "para": 6
     },
-    "4C83357F": {
-      "owner": "template"
-    },
     "4C89A78C": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -16367,9 +15977,6 @@
       "section": "Worked structured DataType: Envelope",
       "block": 9,
       "para": 67
-    },
-    "4CA94398": {
-      "owner": "template"
     },
     "4CBF173C": {
       "owner": "markdown",
@@ -16471,9 +16078,6 @@
       "block": 3,
       "para": 7
     },
-    "4D6D91F2": {
-      "owner": "template"
-    },
     "4D7337EC": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -16574,9 +16178,6 @@
       "block": 9,
       "para": 26
     },
-    "4DF26364": {
-      "owner": "template"
-    },
     "4DF88A09": {
       "owner": "template"
     },
@@ -16586,9 +16187,6 @@
       "section": "Built-in Byte",
       "block": 1,
       "para": 8
-    },
-    "4E05C8B3": {
-      "owner": "template"
     },
     "4E0F16B3": {
       "owner": "markdown",
@@ -16829,18 +16427,12 @@
       "block": 9,
       "para": 19
     },
-    "4EF15AC9": {
-      "owner": "template"
-    },
     "4EF9A412": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
       "section": "5.2 Built-in DataTypes",
       "block": 0,
       "para": 58
-    },
-    "4EFBCF15": {
-      "owner": "template"
     },
     "4F005A6A": {
       "owner": "markdown",
@@ -16886,12 +16478,6 @@
       "section": "Worked structured DataType: Envelope",
       "block": 9,
       "para": 29
-    },
-    "4F348F39": {
-      "owner": "template"
-    },
-    "4F398E94": {
-      "owner": "template"
     },
     "4F3CB010": {
       "owner": "markdown",
@@ -16956,9 +16542,6 @@
       "block": 1,
       "para": 17
     },
-    "4F84FA6C": {
-      "owner": "template"
-    },
     "4F881200": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -16996,9 +16579,6 @@
       "section": "8.3.2 Discovery messages",
       "block": 1,
       "para": 20
-    },
-    "4FA5D39F": {
-      "owner": "template"
     },
     "4FA9F763": {
       "owner": "markdown",
@@ -17174,9 +16754,6 @@
       "block": 3,
       "para": 20
     },
-    "506D938D": {
-      "owner": "template"
-    },
     "506E9444": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -17309,9 +16886,6 @@
       "block": 9,
       "para": 6
     },
-    "51041848": {
-      "owner": "template"
-    },
     "5104E14F": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -17356,9 +16930,6 @@
       "index": 29,
       "kind": "clause",
       "para": 0
-    },
-    "51432E9F": {
-      "owner": "template"
     },
     "515D246F": {
       "owner": "markdown",
@@ -17493,9 +17064,6 @@
       "block": 1,
       "para": 11
     },
-    "5210C19A": {
-      "owner": "template"
-    },
     "5210DF35": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -17609,9 +17177,6 @@
       "section": "Built-in NodeId",
       "block": 3,
       "para": 16
-    },
-    "52C1DFAF": {
-      "owner": "template"
     },
     "52C1E891": {
       "owner": "markdown",
@@ -17965,9 +17530,6 @@
       "block": 9,
       "para": 13
     },
-    "53FEC611": {
-      "owner": "template"
-    },
     "53FF91CD": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -18037,9 +17599,6 @@
       "section": "Annex B PubSub Action and Discovery schema examples",
       "block": 13,
       "para": 25
-    },
-    "54341829": {
-      "owner": "template"
     },
     "54467542": {
       "owner": "markdown",
@@ -18365,9 +17924,6 @@
       "block": 9,
       "para": 38
     },
-    "55741E77": {
-      "owner": "template"
-    },
     "5574BFF1": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -18646,9 +18202,6 @@
       "block": 8,
       "para": 9
     },
-    "56B6CC56": {
-      "owner": "template"
-    },
     "56C3E8B7": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -18662,9 +18215,6 @@
       "section": "MinorVersion 1.0",
       "block": 3,
       "para": 18
-    },
-    "56CF5031": {
-      "owner": "template"
     },
     "56CFF6B6": {
       "owner": "markdown",
@@ -19115,9 +18665,6 @@
       "block": 9,
       "para": 4
     },
-    "58A2F54E": {
-      "owner": "template"
-    },
     "58A6EEF5": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -19184,9 +18731,6 @@
       "block": 3,
       "para": 31
     },
-    "59047BDB": {
-      "owner": "template"
-    },
     "59074F6B": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -19207,9 +18751,6 @@
       "index": 105,
       "kind": "clause",
       "para": 0
-    },
-    "59132CAD": {
-      "owner": "template"
     },
     "591CF4D1": {
       "owner": "markdown",
@@ -19294,9 +18835,6 @@
       "section": "MinorVersion 1.0",
       "block": 3,
       "para": 96
-    },
-    "599C6EFA": {
-      "owner": "template"
     },
     "59A81D81": {
       "owner": "markdown",
@@ -19489,9 +19027,6 @@
       "block": 1,
       "para": 4
     },
-    "5A814C83": {
-      "owner": "template"
-    },
     "5A857AB2": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -19599,9 +19134,6 @@
       "index": 6,
       "kind": "annex-clause",
       "para": 0
-    },
-    "5AF60164": {
-      "owner": "template"
     },
     "5AF7C5C0": {
       "owner": "generated",
@@ -20252,9 +19784,6 @@
       "block": 1,
       "para": 16
     },
-    "5DB3488F": {
-      "owner": "template"
-    },
     "5DB3A3C2": {
       "owner": "template"
     },
@@ -20396,9 +19925,6 @@
       "block": 9,
       "para": 72
     },
-    "5E757428": {
-      "owner": "template"
-    },
     "5E78D9AD": {
       "owner": "template"
     },
@@ -20420,9 +19946,6 @@
       "para": 40
     },
     "5E97D844": {
-      "owner": "template"
-    },
-    "5E988D23": {
       "owner": "template"
     },
     "5E9A755F": {
@@ -20483,9 +20006,6 @@
       "section": "8.5 Configuration parameters",
       "block": 1,
       "para": 5
-    },
-    "5F18A196": {
-      "owner": "template"
     },
     "5F1E1607": {
       "owner": "markdown",
@@ -20656,9 +20176,6 @@
       "block": 1,
       "para": 4
     },
-    "5FFB31C7": {
-      "owner": "template"
-    },
     "5FFBC55E": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -20749,9 +20266,6 @@
       "block": 6,
       "para": 5
     },
-    "608AA82A": {
-      "owner": "template"
-    },
     "6090D48A": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -20772,9 +20286,6 @@
       "section": "Built-in NodeId",
       "block": 3,
       "para": 5
-    },
-    "60A82539": {
-      "owner": "template"
     },
     "60B3749D": {
       "owner": "markdown",
@@ -20902,9 +20413,6 @@
       "section": "Built-in DataValue",
       "block": 3,
       "para": 53
-    },
-    "615A40D1": {
-      "owner": "template"
     },
     "615A6B4C": {
       "owner": "markdown",
@@ -21213,9 +20721,6 @@
       "block": 0,
       "para": 0
     },
-    "62C1936B": {
-      "owner": "template"
-    },
     "62D2DDE2": {
       "owner": "template"
     },
@@ -21300,9 +20805,6 @@
       "owner": "template"
     },
     "633C744F": {
-      "owner": "template"
-    },
-    "6341C869": {
       "owner": "template"
     },
     "63456E43": {
@@ -21488,9 +20990,6 @@
       "block": 1,
       "para": 6
     },
-    "64094F4D": {
-      "owner": "template"
-    },
     "640A231D": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -21518,9 +21017,6 @@
       "section": "8.4.6 Decoder behavior",
       "block": 1,
       "para": 3
-    },
-    "6418BF6A": {
-      "owner": "template"
     },
     "641B6ABC": {
       "owner": "template"
@@ -21868,9 +21364,6 @@
       "block": 3,
       "para": 91
     },
-    "6600E095": {
-      "owner": "template"
-    },
     "66097B2D": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -21978,9 +21471,6 @@
       "block": 3,
       "para": 7
     },
-    "66770C31": {
-      "owner": "template"
-    },
     "668087AC": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -22056,9 +21546,6 @@
       "block": 4,
       "para": 16
     },
-    "66C3330C": {
-      "owner": "template"
-    },
     "66D22063": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -22086,9 +21573,6 @@
       "section": "6.7 Deriving a schema from DataSetMetaData",
       "block": 5,
       "para": 22
-    },
-    "66DBE24B": {
-      "owner": "template"
     },
     "66EA0FD1": {
       "owner": "markdown",
@@ -22358,9 +21842,6 @@
       "block": 1,
       "para": 0
     },
-    "67E00397": {
-      "owner": "template"
-    },
     "67E009E9": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -22460,9 +21941,6 @@
       "section": "Built-in UInt16",
       "block": 1,
       "para": 5
-    },
-    "689125D3": {
-      "owner": "template"
     },
     "6892B871": {
       "owner": "template"
@@ -22573,9 +22051,6 @@
     "691CC841": {
       "owner": "template"
     },
-    "692CF1EC": {
-      "owner": "template"
-    },
     "692FAA9A": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -22645,9 +22120,6 @@
       "section": "Built-in Int32",
       "block": 9,
       "para": 0
-    },
-    "698A4A91": {
-      "owner": "template"
     },
     "699205D6": {
       "owner": "markdown",
@@ -22794,9 +22266,6 @@
       "section": "Built-in NodeId",
       "block": 3,
       "para": 30
-    },
-    "6A443BCB": {
-      "owner": "template"
     },
     "6A49FA56": {
       "owner": "markdown",
@@ -23020,9 +22489,6 @@
       "block": 1,
       "para": 0
     },
-    "6B25DEB7": {
-      "owner": "template"
-    },
     "6B283546": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -23036,9 +22502,6 @@
       "section": "Matrix",
       "block": 1,
       "para": 4
-    },
-    "6B42B42F": {
-      "owner": "template"
     },
     "6B4A45F1": {
       "owner": "generated",
@@ -23112,9 +22575,6 @@
       "section": "Built-in NodeId",
       "block": 3,
       "para": 50
-    },
-    "6B8F4456": {
-      "owner": "template"
     },
     "6B942886": {
       "owner": "markdown",
@@ -23215,9 +22675,6 @@
       "section": "Structure with optional fields",
       "block": 3,
       "para": 51
-    },
-    "6C1BDFFF": {
-      "owner": "template"
     },
     "6C3E5E2B": {
       "owner": "template"
@@ -23377,9 +22834,6 @@
       "section": "Structure with optional fields",
       "block": 9,
       "para": 3
-    },
-    "6CC6BE46": {
-      "owner": "template"
     },
     "6CD4B379": {
       "owner": "markdown",
@@ -23559,21 +23013,12 @@
       "block": 2,
       "para": 15
     },
-    "6D8FB8E7": {
-      "owner": "template"
-    },
     "6D90E5C4": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
       "section": "Worked structured DataType: Envelope",
       "block": 9,
       "para": 95
-    },
-    "6DA24E34": {
-      "owner": "template"
-    },
-    "6DB2507D": {
-      "owner": "template"
     },
     "6DBCD864": {
       "owner": "markdown",
@@ -23638,9 +23083,6 @@
       "block": 9,
       "para": 3
     },
-    "6DE35854": {
-      "owner": "template"
-    },
     "6DFC131A": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -23655,9 +23097,6 @@
       "block": 3,
       "para": 8
     },
-    "6E0002AB": {
-      "owner": "template"
-    },
     "6E1A21EC": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -23671,9 +23110,6 @@
       "section": "Built-in DiagnosticInfo",
       "block": 3,
       "para": 5
-    },
-    "6E1F9523": {
-      "owner": "template"
     },
     "6E2B9A48": {
       "owner": "markdown",
@@ -23817,9 +23253,6 @@
       "owner": "template"
     },
     "6EC66152": {
-      "owner": "template"
-    },
-    "6ED28898": {
       "owner": "template"
     },
     "6ED6557C": {
@@ -23968,9 +23401,6 @@
       "block": 9,
       "para": 66
     },
-    "6F8DB23E": {
-      "owner": "template"
-    },
     "6F9ECB56": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -24033,9 +23463,6 @@
       "block": 3,
       "para": 54
     },
-    "6FD6F95B": {
-      "owner": "template"
-    },
     "6FDDCE51": {
       "owner": "generated",
       "region": "terms",
@@ -24079,9 +23506,6 @@
       "para": 16
     },
     "70176A3A": {
-      "owner": "template"
-    },
-    "703105ED": {
       "owner": "template"
     },
     "7031FD41": {
@@ -24212,9 +23636,6 @@
     "709C03E8": {
       "owner": "template"
     },
-    "709DBA46": {
-      "owner": "template"
-    },
     "70A7AD76": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -24308,18 +23729,12 @@
     "710B1B3E": {
       "owner": "template"
     },
-    "7115FE20": {
-      "owner": "template"
-    },
     "7119D804": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
       "section": "Built-in Int16",
       "block": 9,
       "para": 3
-    },
-    "711D1E5F": {
-      "owner": "template"
     },
     "71225AC8": {
       "owner": "markdown",
@@ -24521,9 +23936,6 @@
       "block": 1,
       "para": 17
     },
-    "723D866F": {
-      "owner": "template"
-    },
     "723ED1A6": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -24623,12 +24035,6 @@
       "section": "Annex B PubSub Action and Discovery schema examples",
       "block": 11,
       "para": 27
-    },
-    "72AB3774": {
-      "owner": "template"
-    },
-    "72AF27DE": {
-      "owner": "template"
     },
     "72B4E9B2": {
       "owner": "markdown",
@@ -24769,9 +24175,6 @@
       "block": 9,
       "para": 96
     },
-    "736A2B05": {
-      "owner": "template"
-    },
     "736C4448": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -24799,9 +24202,6 @@
       "section": "Built-in DataValue",
       "block": 3,
       "para": 9
-    },
-    "73C3028A": {
-      "owner": "template"
     },
     "73CABB10": {
       "owner": "markdown",
@@ -25081,12 +24481,6 @@
       "block": 9,
       "para": 1
     },
-    "74B41208": {
-      "owner": "template"
-    },
-    "74B683A3": {
-      "owner": "template"
-    },
     "74B6BCE0": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -25309,9 +24703,6 @@
       "section": "Built-in DateTime",
       "block": 5,
       "para": 0
-    },
-    "75D1D162": {
-      "owner": "template"
     },
     "75E615CC": {
       "owner": "generated",
@@ -25752,9 +25143,6 @@
       "block": 3,
       "para": 15
     },
-    "781F36EA": {
-      "owner": "template"
-    },
     "782104F0": {
       "owner": "template"
     },
@@ -26037,9 +25425,6 @@
       "block": 5,
       "para": 0
     },
-    "7907660F": {
-      "owner": "template"
-    },
     "790A6E9C": {
       "owner": "template"
     },
@@ -26094,9 +25479,6 @@
       "section": "One-dimensional array",
       "block": 9,
       "para": 2
-    },
-    "795B9C80": {
-      "owner": "template"
     },
     "796000C2": {
       "owner": "markdown",
@@ -26239,9 +25621,6 @@
       "section": "Built-in QualifiedName",
       "block": 5,
       "para": 0
-    },
-    "79E3A8FB": {
-      "owner": "template"
     },
     "79ED6E2B": {
       "owner": "markdown",
@@ -26463,9 +25842,6 @@
       "section": "One-dimensional array",
       "block": 3,
       "para": 7
-    },
-    "7B030CEA": {
-      "owner": "template"
     },
     "7B09D64D": {
       "owner": "template"
@@ -26780,9 +26156,6 @@
       "block": 0,
       "para": 39
     },
-    "7C49D547": {
-      "owner": "template"
-    },
     "7C4CA3AD": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -26955,9 +26328,6 @@
       "section": "Built-in Int64",
       "block": 3,
       "para": 0
-    },
-    "7D5C759A": {
-      "owner": "template"
     },
     "7D5D0597": {
       "owner": "template"
@@ -27191,9 +26561,6 @@
       "block": 1,
       "para": 0
     },
-    "7EA9A09A": {
-      "owner": "template"
-    },
     "7EAF0900": {
       "owner": "markdown",
       "file": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
@@ -27339,9 +26706,6 @@
       "section": "One-dimensional array",
       "block": 0,
       "para": 0
-    },
-    "7F84C0DC": {
-      "owner": "template"
     },
     "7F86FCD4": {
       "owner": "markdown",
