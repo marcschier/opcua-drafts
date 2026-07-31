@@ -28,14 +28,6 @@
       "why": "an amendment to OPC 10000-6; see above."
     },
     {
-      "markdown": "core-specs/presentations/OPC-UA-Encoding-and-Registry-Overview.md",
-      "why": "a presentation, not a specification."
-    },
-    {
-      "markdown": "core-specs/presentations/OPC-UA-Observability-Export-Overview.md",
-      "why": "a presentation, not a specification."
-    },
-    {
       "markdown": "core-specs/extras/performance/OPC-UA-Encoding-Performance-Comparison.md",
       "why": "a measurement report, not a specification."
     },
