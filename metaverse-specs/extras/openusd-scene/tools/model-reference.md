@@ -132,3 +132,14 @@
 | ns=1;i=6076 | <UsdVariantSet> | Object | Variant sets available on this prim. |
 | ns=1;i=6077 | <Metadata> | Variable | Arbitrary metadata properties. |
 | ns=1;i=6078 | ConnectionPaths | Variable | Ordered SdfPath strings of the attribute's authored connections, the connection counterpart of UsdRelationshipType.TargetPaths: a connection whose target lies outside the materialized subtree has no browsable UsdConnection edge, and without this member it could not be exported. |
+| ns=1;i=1024 | UsdGeomCameraType | ObjectType | USD Camera prim: a transformable prim describing a view frustum. Materializes the UsdGeomCamera IsA schema. Its aperture and focal-length attributes are the surface from which camera intrinsics are derived (Annex C). OPC UA - Vision defines, in its own VIS-Interop-Scene facet, when a Vision sensor's PrimPath is required to resolve to an instance of this type; that requirement belongs to that specification and is not imposed here. |
+| ns=1;i=6079 | FocalLength | Variable | Perspective focal length, in tenths of a world unit (USD convention: mm). |
+| ns=1;i=6080 | HorizontalAperture | Variable | Horizontal aperture (sensor width), in tenths of a world unit. |
+| ns=1;i=6081 | VerticalAperture | Variable | Vertical aperture (sensor height), in tenths of a world unit. |
+| ns=1;i=6082 | HorizontalApertureOffset | Variable | Horizontal aperture offset from centre, in tenths of a world unit. |
+| ns=1;i=6083 | VerticalApertureOffset | Variable | Vertical aperture offset from centre, in tenths of a world unit. |
+| ns=1;i=6084 | ClippingRange | Variable | Near and far clipping distances as a two-element array (USD float2). |
+| ns=1;i=6085 | FStop | Variable | Lens aperture f-number; 0 disables depth of field. |
+| ns=1;i=6086 | FocusDistance | Variable | Distance from the camera to the focus plane, in world units. |
+| ns=1;i=6087 | Projection | Variable | Projection token: perspective or orthographic. |
+| ns=1;i=6088 | Exposure | Variable | Exposure adjustment in stops, applied as a scene-linear scale. |

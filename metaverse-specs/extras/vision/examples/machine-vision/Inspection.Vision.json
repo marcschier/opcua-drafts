@@ -1,0 +1,159 @@
+{
+  "domain": "Inspection",
+  "outputFolder": "machine-vision",
+  "annexLetter": "G",
+  "annexMarker": "annex-machine-vision",
+  "annexTitle": "machine vision, dimensional inspection",
+  "exampleNamespaceUri": "http://opcfoundation.org/UA/Vision/Examples/Inspection/",
+  "instanceName": "SealInspectionCamera",
+  "summary": "A worked example of machine-vision inspection: a fixed camera measures a sealing surface, on-server inference produces a verdict with QIF-shaped characteristics including measurement uncertainty, and each result carries a subscribable JPEG thumbnail through the optional size-gated inline delivery facet.",
+  "scope": "This worked example shows the case OPC 40100-1 orchestrates but does not describe: the *content* of an inspection result. A fixed area-scan camera inspects a sealing surface; the result is an `InspectionResultType` carrying an `Evaluation` and a set of `VisionCharacteristicDataType` entries with nominal, actual, deviation, tolerances and uncertainty. It also demonstrates the optional **VIS-Media-Inline** facet: a small JPEG thumbnail is published as `LatestClip` and can be subscribed to with a MonitoredItem, while the full-resolution image stays behind a URI.",
+  "references": [
+    "[OPC 40100-1](https://reference.opcfoundation.org/specs/OPC-40100-1/) — OPC UA for Machine Vision Part 1, whose `ResultContent` this example populates. Not a dependency of this model.",
+    "ISO 23952:2020 (QIF) — the shape `VisionCharacteristicDataType` mirrors.",
+    "ISO 14253 — the uncertainty semantics used by `Uncertainty` and `NotDecidable`."
+  ],
+  "sensor": {
+    "type": "ImageSensorType",
+    "description": "Fixed monochrome area-scan camera over the sealing-surface inspection station.",
+    "sensorId": "cam-insp-07",
+    "realityKind": "Physical",
+    "modality": "Area2D",
+    "manufacturer": "Example Vision GmbH",
+    "model": "EV-M-0520",
+    "serialNumber": "SN-9083-1174",
+    "deviceUri": "u3v://0x2A0B/0x0410/SN-9083-1174",
+    "frameId": "camera_insp_07",
+    "mountedOn": "station",
+    "width": 2592,
+    "height": 1944,
+    "pixelFormat": "Mono8",
+    "exposureTime": 1200.0,
+    "gain": 1.0,
+    "acquisitionFrameRate": 8.0,
+    "triggerMode": "On",
+    "triggerSource": "Line0"
+  },
+  "optics": {
+    "focalLength": 25.0,
+    "aperture": 5.6,
+    "workingDistance": 0.32,
+    "magnification": 0.14,
+    "opticalFormat": "1/1.8\"",
+    "mountType": "C",
+    "lensType": "Telecentric"
+  },
+  "frames": [
+    {
+      "name": "StationFrame",
+      "description": "Inspection station world frame.",
+      "frameId": "station",
+      "role": "World"
+    },
+    {
+      "name": "CameraFrame",
+      "description": "Optical frame of the fixed inspection camera.",
+      "frameId": "camera_insp_07",
+      "parentFrame": "station",
+      "role": "Camera"
+    }
+  ],
+  "calibrations": [
+    {
+      "name": "Intrinsics2592x1944",
+      "type": "IntrinsicCalibrationType",
+      "description": "Pinhole intrinsics at full resolution; a telecentric lens leaves very little residual distortion.",
+      "calibrationId": "intr-cam-insp-07",
+      "performedAt": "2026-05-02T07:55:00Z",
+      "valid": true,
+      "residualError": 0.08,
+      "method": "Zhang",
+      "fields": [
+        ["Fx", "8310.2", "px"],
+        ["Fy", "8309.6", "px"],
+        ["Cx", "1295.4", "px, corner-datum per 5.10"],
+        ["Cy", "971.2", "px, corner-datum per 5.10"],
+        ["Skew", "0.0", "px"],
+        ["DistortionModel", "BrownConrady", "5.10 ordering: k1, k2, p1, p2, k3"],
+        ["DistortionCoefficients", "[-0.0021, 0.0004, 0.0, 0.0, 0.0]", "dimensionless; a telecentric lens is close to distortion-free"],
+        ["Width", "2592", "px"],
+        ["Height", "1944", "px"]
+      ]
+    },
+    {
+      "name": "StationMounting",
+      "type": "ExtrinsicCalibrationType",
+      "description": "Transform from the camera frame to the station world frame. The camera is fixed, so there is no kinematic chain.",
+      "calibrationId": "extr-cam-insp-07",
+      "performedAt": "2026-05-02T08:20:00Z",
+      "valid": true,
+      "residualError": 0.00015,
+      "method": "TargetPlate",
+      "mount": "Fixed",
+      "sourceFrame": "camera_insp_07",
+      "targetFrame": "station",
+      "fields": [
+        ["FrameId", "station", "equals the TargetFrame's FrameId, per the 5.10 frame-precedence rule"],
+        ["Position", "(0.0, 0.0, 0.320)", "metres, ordered (x, y, z)"],
+        ["Orientation", "(1.0, 0.0, 0.0, 0.0)", "unit quaternion ordered (x, y, z, w); a 180 degree rotation about x, so the camera looks down at the station"],
+        ["Covariance", "empty array", "not reported, per the 5.10 sentinel"]
+      ]
+    }
+  ],
+  "stream": {
+    "name": "LiveRtsp",
+    "description": "Live MJPEG stream for operator setup and focus checking.",
+    "endpointId": "stream-rtsp-setup",
+    "endpointUri": "rtsp://192.0.2.77:554/setup",
+    "protocol": "Rtsp",
+    "state": "Ready",
+    "authentication": "Digest",
+    "codec": "Mjpeg",
+    "width": 1296,
+    "height": 972,
+    "frameRate": 8.0
+  },
+  "clip": {
+    "name": "PartFrames",
+    "description": "JPEG still per inspected part. Publishes a reduced-size thumbnail inline and the full image by URI.",
+    "endpointId": "clip-jpeg-part",
+    "endpointUri": "https://192.0.2.77/clips/{resultId}.jpg",
+    "format": "Jpeg",
+    "state": "Active",
+    "authentication": "Token",
+    "inlineDeliveryEnabled": true,
+    "maxInlineClipSize": 262144
+  },
+  "ai": {
+    "model": {
+      "name": "SealDefectNet",
+      "description": "Segmentation and measurement of sealing-surface defects.",
+      "modelId": "sealdefectnet",
+      "version": "1.4.1",
+      "framework": "PyTorch",
+      "format": "ONNX",
+      "taskKind": "Segmentation",
+      "artifactUri": "https://models.example.com/sealdefectnet/1.4.1.onnx",
+      "digest": "3f8a1c4e9b2d7f60a5c3e81d4f92b6a7c0d5e83f1a2b4c6d8e0f3a5b7c9d1e2f",
+      "digestAlgorithm": "SHA-256"
+    },
+    "deployment": {
+      "name": "OnServerDeployment",
+      "description": "Inference in the Server's own process, on the station industrial PC.",
+      "deploymentId": "deploy-onserver-01",
+      "inferenceLocation": "OnServer",
+      "acceleratorKind": "Npu",
+      "acceleratorName": "Example NPU 8-core"
+    },
+    "pipeline": {
+      "name": "SealInspectionPipeline",
+      "description": "One inference per part, triggered by the station PLC.",
+      "pipelineId": "pipe-seal-01",
+      "state": "Active",
+      "continuous": false
+    }
+  },
+  "inferenceNote": "Inference runs **on-server**: `InferenceLocation = OnServer`, on an NPU in the station industrial PC. A client consuming the results cannot distinguish this from the off-server robotics example except by reading that one property — which is the intent of base specification §8.2. Because the pipeline is not continuous, `RunInference` is called per part by the station PLC and returns the `ResultId` it produced.",
+  "resultsNote": "Each part produces an `InspectionResultType`. `Evaluation` uses the OPC 40001-101 value semantics, and the `Characteristics` array carries one `VisionCharacteristicDataType` per measured feature — for example a flatness with `Nominal = 0.0`, `Actual = 0.018`, `UpperTolerance = 0.020`, `Unit = mm` and `Uncertainty = 0.004`. That last field is the point: because the expanded uncertainty spans the tolerance limit, the Server reports `NotDecidable` rather than asserting `Ok` from the point estimate alone. A verdict recorded this way is reproducible by a third party, and a QIF document can be generated from it without inventing information.",
+  "feedbackNote": "When a quality engineer overrides a verdict at the review station, the HMI calls `SubmitCorrection` with `Purpose = GroundTruthLabel`, passing the corrected characteristics and a reason. Because this endpoint enables inline delivery, the corrected thumbnail may accompany the call as an inline `ByteString` provided it fits `MaxInlineFeedbackImageSize`; anything larger is rejected with `Bad_EncodingLimitsExceeded` and resubmitted through `SubmitImageReference`. Downstream leak-test results arrive through `SubmitInspectionResult`, which reconciles a downstream `Evaluation` and its characteristics against what the vision system originally reported — and the disagreements are precisely the samples the next `LearningJobType` collects."
+}
