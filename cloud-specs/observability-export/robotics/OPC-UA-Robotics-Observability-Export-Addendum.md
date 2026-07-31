@@ -186,4 +186,4 @@ Across all topologies the `DataSetClassId` per signal is unchanged — a subscri
 | [`Robotics.ObservabilityExport.json`](../../extras/observability-export/examples/robotics/Robotics.ObservabilityExport.json) | Machine-readable ObservabilityExport descriptor (single source). |
 | [`Opc.Ua.Robotics.ObservabilityExport.NodeSet2.xml`](Opc.Ua.Robotics.ObservabilityExport.NodeSet2.xml) | The binding instances on the theoretical `ExampleRobotSystem` instance. |
 
-Regenerate from [`core-specs/extras/observability-export/examples/`](../../extras/observability-export/examples/) with `python tools/build_bindings.py robotics/Robotics.ObservabilityExport.json tools/ref`.
+Regenerate from [`cloud-specs/extras/observability-export/examples/`](../../extras/observability-export/examples/) with `python tools/build_bindings.py robotics/Robotics.ObservabilityExport.json tools/ref`.

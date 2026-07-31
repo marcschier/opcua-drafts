@@ -20,12 +20,14 @@ not catch. The reason is given with each one; when a rule and a reason disagree,
 # one-time
 pip install -r core-specs/extras/requirements.txt
 
-# validate everything (two separate entrypoints — neither covers the other's tree)
+# validate everything (three separate entrypoints — none covers another's tree)
 python core-specs/extras/validate_all.py
+python cloud-specs/validate_all.py
 python metaverse-specs/validate_all.py
 
 # what CI runs — only the checks that need no untracked base data
 python core-specs/extras/validate_all.py --self-contained
+python cloud-specs/validate_all.py --self-contained
 python metaverse-specs/validate_all.py --self-contained
 
 # a single extension (the granular unit — there is no per-test runner)
@@ -62,11 +64,12 @@ and never blocks a merge — a red job is easy to miss, so read the checks tab a
 
 ## Architecture
 
-Four independent specification trees, plus `skills/` (agent instructions that operate on the drafts):
+Five independent specification trees, plus `skills/` (agent instructions that operate on the drafts):
 
 | Tree | Contains |
 |---|---|
-| `core-specs/` | Proposed extensions to the base OPC UA namespace (encodings, registries, data channels, observability) |
+| `core-specs/` | Proposed extensions to the base OPC UA namespace (encodings, registries, data channels) |
+| `cloud-specs/` | The cloud-facing surface: schema registry, observability export |
 | `metaverse-specs/` | OPC UA ⇄ OpenUSD (two parts: binding, scene materialization) |
 | `wot-specs/` | W3C Web of Things binding and connectivity |
 | `companion-specs/` | Domain companion specifications |
@@ -79,14 +82,22 @@ base artifacts; tooling, descriptors and examples live in a mirrored `extras/` t
 `metaverse-specs/extras/openusd-binding/tools/` (generator + validator) and `.../examples/`.
 
 **The split is not applied uniformly**, so locate the generator before assuming where it lives.
-Some sit under the spec folder (`core-specs/xregistry/tools/`, `core-specs/schema-registry/tools/`,
+Some sit under the spec folder (`core-specs/xregistry/tools/`, `cloud-specs/schema-registry/tools/`,
 `core-specs/data-channels/tools/`, `wot-specs/WoT-Connectivity/tools/`,
 `companion-specs/Generators/tools/`) and others under `extras/`
-(`core-specs/extras/observability-export/tools/`, all of `metaverse-specs/extras/*/tools/`).
+(`cloud-specs/extras/observability-export/tools/`, all of `metaverse-specs/extras/*/tools/`).
 
-**Validation is per-extension.** Each extension owns a `validate_local.py`; the two `validate_all.py`
-files just drive lists of them. `wot-specs/` and `companion-specs/` are in **neither** aggregate —
-run their validators directly.
+**Validation is per-extension.** Each extension owns a `validate_local.py`; the three `validate_all.py`
+files just drive lists of them. `wot-specs/` and `companion-specs/` are in **no** aggregate —
+run their validators directly. A tree drives only its own validators: `core-specs/extras/validate_all.py`
+stops at `core-specs/`, so a specification that moves trees takes its entry with it or silently
+stops being validated.
+
+**Trees cross-reference, so a move is not just a rename.** The Avro and Arrow generators map
+`cloud-specs/observability-export/Opc.Ua.ObservabilityExport.NodeSet2.xml` as their base model, and
+Schema Registry subtypes `core-specs/xregistry/`. A relative link between trees needs one more `..`
+than it looks like it should, and a path built from components (`os.path.join(HERE, "..", …)`) is
+invisible to a search for the path it produces.
 
 **Registry specs layer.** `core-specs/xregistry/` is an abstract base model (`RegistryType` /
 `GroupType` / `ResourceType`); `schema-registry`, the WoT connectivity registry and the OpenUSD

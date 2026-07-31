@@ -968,7 +968,7 @@ def emit_md():
 
     md = ['<a id="annex-a"></a>', "", "## Annex A \u2014 Information model\n",
           "This annex is the normative node reference. It is generated from "
-          "`core-specs/extras/observability-export/tools/build_model.py` and always matches `Opc.Ua.ObservabilityExport.NodeSet2.xml`. "
+          "`cloud-specs/extras/observability-export/tools/build_model.py` and always matches `Opc.Ua.ObservabilityExport.NodeSet2.xml`. "
           "All nodes are defined in this specification's own namespace "
           "`http://opcfoundation.org/UA/ObservabilityExport/` (namespace index 1 in the NodeSet, "
           "which requires the base OPC UA namespace); the NodeIds shown are the draft numeric "
@@ -1086,8 +1086,8 @@ def emit_md():
 
 if __name__ == "__main__":
     here = os.path.dirname(os.path.abspath(__file__))
-    # The standardized NodeSet/CSV live in core-specs/observability-export; this generator lives
-    # alongside the other specs' secondary tooling under core-specs/extras/observability-export.
+    # The standardized NodeSet/CSV live in cloud-specs/observability-export; this generator lives
+    # alongside the other specs' secondary tooling under cloud-specs/extras/observability-export.
     outdir = os.path.abspath(os.path.join(here, "..", "..", "..", "observability-export"))
     with open(os.path.join(outdir, "Opc.Ua.ObservabilityExport.NodeSet2.xml"), "w",
               encoding="utf-8") as f:

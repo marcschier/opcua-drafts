@@ -34,8 +34,8 @@ python core-specs\extras\avro-encoding\tools\roundtrip.py
 python core-specs\extras\avro-encoding\tools\validate_local.py
 ```
 
-`build_schemas.py` defaults to `core-specs\observability-export\Opc.Ua.ObservabilityExport.NodeSet2.xml` and writes the base schema to `core-specs\avro-encoding\schemas\` and deterministic non-base schemas to `core-specs\extras\avro-encoding\schemas\`, including the shared corpus structures/enumerations used by the examples. Pass another UANodeSet2 XML path to generate schemas for a different model. The source NodeSet is untracked base data, so when it is absent the generator exits with an error **before** touching the committed schema directory.
+`build_schemas.py` defaults to `cloud-specs\observability-export\Opc.Ua.ObservabilityExport.NodeSet2.xml` and writes the base schema to `core-specs\avro-encoding\schemas\` and deterministic non-base schemas to `core-specs\extras\avro-encoding\schemas\`, including the shared corpus structures/enumerations used by the examples. Pass another UANodeSet2 XML path to generate schemas for a different model. The source NodeSet is untracked base data, so when it is absent the generator exits with an error **before** touching the committed schema directory.
 
 `validate_local.py` verifies normal codec round-trips, an independent conformance gate that decodes every corpus payload and generated example from freshly loaded published `.avsc` schemas, `schemaids.json` drift, type-reference drift, byte annotation contiguity, self-contained composite SchemaId changes, the SchemaId handshake demo, and the Action/Discovery demo.
 
-The codec and tests use the read-only shared API in `core-specs\extras\_common\opcua_enc`. Central schema sharing and registry/catalog mechanics are specified separately in `core-specs\schema-registry\OPC-UA-Schema-Registry.md`.
+The codec and tests use the read-only shared API in `core-specs\extras\_common\opcua_enc`. Central schema sharing and registry/catalog mechanics are specified separately in `cloud-specs\schema-registry\OPC-UA-Schema-Registry.md`.

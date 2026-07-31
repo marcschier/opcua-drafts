@@ -40,23 +40,23 @@
       "why": "a measurement report, not a specification."
     },
     {
-      "markdown": "core-specs/observability-export/di/OPC-UA-DI-Pumps-Inheritance.md",
+      "markdown": "cloud-specs/observability-export/di/OPC-UA-DI-Pumps-Inheritance.md",
       "why": "an explanatory note about how two addenda compose, not a specification of its own."
     },
     {
-      "markdown": "core-specs/observability-export/di/OPC-UA-DI-Observability-Export-Addendum.md",
+      "markdown": "cloud-specs/observability-export/di/OPC-UA-DI-Observability-Export-Addendum.md",
       "why": "an implementer annex / worked example of a specification already converted, not a specification of its own: a provisional Examples namespace or an example URN, instances rather than types, and no conformance clause. Its prose is folded into Observability Export, Annex D, so it is published — as what it is."
     },
     {
-      "markdown": "core-specs/observability-export/facets/OPC-UA-Facets-Observability-Export-Addendum.md",
+      "markdown": "cloud-specs/observability-export/facets/OPC-UA-Facets-Observability-Export-Addendum.md",
       "why": "an implementer annex / worked example of a specification already converted, not a specification of its own: a provisional Examples namespace or an example URN, instances rather than types, and no conformance clause. Its prose is folded into Observability Export, Annex F, so it is published — as what it is."
     },
     {
-      "markdown": "core-specs/observability-export/pumps/OPC-UA-Pumps-Observability-Export-Addendum.md",
+      "markdown": "cloud-specs/observability-export/pumps/OPC-UA-Pumps-Observability-Export-Addendum.md",
       "why": "an implementer annex / worked example of a specification already converted, not a specification of its own: a provisional Examples namespace or an example URN, instances rather than types, and no conformance clause. Its prose is folded into Observability Export, Annex G, so it is published — as what it is."
     },
     {
-      "markdown": "core-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
+      "markdown": "cloud-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
       "why": "an implementer annex / worked example of a specification already converted, not a specification of its own: a provisional Examples namespace or an example URN, instances rather than types, and no conformance clause. Its prose is folded into Observability Export, Annex H, so it is published — as what it is."
     },
     {
@@ -68,7 +68,7 @@
       "why": "an implementer annex / worked example of a specification already converted, not a specification of its own: a provisional Examples namespace or an example URN, instances rather than types, and no conformance clause. Its prose is folded into OpenUSD Binding Part 1, Annex H, so it is published — as what it is."
     },
     {
-      "markdown": "core-specs/observability-export/di/OPC-UA-DIDeviceHealth-Observability-Export-Addendum.md",
+      "markdown": "cloud-specs/observability-export/di/OPC-UA-DIDeviceHealth-Observability-Export-Addendum.md",
       "why": "an implementer annex / worked example of a specification already converted, not a specification of its own: a provisional Examples namespace or an example URN, instances rather than types, and no conformance clause. Its prose is folded into Observability Export, Annex E, so it is published — as what it is."
     }
   ]

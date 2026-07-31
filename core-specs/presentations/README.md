@@ -56,9 +56,9 @@ Each deck summarizes and should stay consistent with its normative sources.
 
 - [Avro Encoding](../avro-encoding/OPC-UA-Avro-Encoding.md) — DataEncoding and PubSub message mapping
 - [xRegistry base](../xregistry/OPC-UA-xRegistry.md) and its [OPC UA API binding](../xregistry/xRegistry-OPC-UA-Api.md)
-- [Schema Registry](../schema-registry/OPC-UA-Schema-Registry.md)
+- [Schema Registry](../../cloud-specs/schema-registry/OPC-UA-Schema-Registry.md)
 - [Encoding performance comparison](../extras/performance/OPC-UA-Encoding-Performance-Comparison.md) (all performance numbers on the Avro slide are cited from this report)
 
 **`OPC-UA-Observability-Export-Overview.md`**
 
-- [Observability Export](../observability-export/OPC-UA-Observability-Export.md)
+- [Observability Export](../../cloud-specs/observability-export/OPC-UA-Observability-Export.md)
