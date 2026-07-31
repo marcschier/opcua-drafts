@@ -1310,7 +1310,7 @@
           },
           {
             "r": "code",
-            "text": "../schema-registry/OPC-UA-Schema-Registry.md"
+            "text": "../../cloud-specs/schema-registry/OPC-UA-Schema-Registry.md"
           },
           {
             "r": "t",
@@ -5618,7 +5618,7 @@
           },
           {
             "r": "code",
-            "text": "../schema-registry/OPC-UA-Schema-Registry.md"
+            "text": "../../cloud-specs/schema-registry/OPC-UA-Schema-Registry.md"
           },
           {
             "r": "t",
@@ -6595,7 +6595,7 @@
             },
             {
               "r": "code",
-              "text": "../schema-registry/OPC-UA-Schema-Registry.md"
+              "text": "../../cloud-specs/schema-registry/OPC-UA-Schema-Registry.md"
             },
             {
               "r": "t",
@@ -6617,7 +6617,7 @@
             },
             {
               "r": "code",
-              "text": "core-specs\\schema-registry\\"
+              "text": "cloud-specs\\schema-registry\\"
             },
             {
               "r": "t",

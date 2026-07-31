@@ -220,7 +220,7 @@ Speaker notes: This closes the loop with the Avro handshake: the SchemaId a publ
 - **Proof:** a **107-case reversibility corpus**, executable validators, and an informative **performance report**.
 - **We are asking reviewers to:** validate the type-model coverage & reversibility, sanity-check the registry model & federation, and help chart the **Working Group adoption path**.
 
-**Read next:** [Avro Encoding](../avro-encoding/OPC-UA-Avro-Encoding.md) · [Arrow Encoding](../arrow-encoding/OPC-UA-Arrow-Encoding.md) · [xRegistry](../xregistry/OPC-UA-xRegistry.md) · [Schema Registry](../schema-registry/OPC-UA-Schema-Registry.md) · [Performance report](../extras/performance/OPC-UA-Encoding-Performance-Comparison.md)
+**Read next:** [Avro Encoding](../avro-encoding/OPC-UA-Avro-Encoding.md) · [Arrow Encoding](../arrow-encoding/OPC-UA-Arrow-Encoding.md) · [xRegistry](../xregistry/OPC-UA-xRegistry.md) · [Schema Registry](../../cloud-specs/schema-registry/OPC-UA-Schema-Registry.md) · [Performance report](../extras/performance/OPC-UA-Encoding-Performance-Comparison.md)
 
 <!--
 Speaker notes: Everything is a working draft with running code and reproducible evidence, not a paper proposal. The three concrete asks: confirm we have the type model and reversibility right, pressure-test the registry and federation design, and agree how this enters the formal Working Group process. The footer links are the entry points into the normative drafts and the measurements.

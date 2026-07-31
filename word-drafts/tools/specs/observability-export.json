@@ -1,8 +1,8 @@
 {
   "id": "observability-export",
   "source": {
-    "markdown": "core-specs/observability-export/OPC-UA-Observability-Export.md",
-    "nodeset": "core-specs/observability-export/Opc.Ua.ObservabilityExport.NodeSet2.xml"
+    "markdown": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
+    "nodeset": "cloud-specs/observability-export/Opc.Ua.ObservabilityExport.NodeSet2.xml"
   },
   "output": {
     "docx": "word-drafts/OPC-UA-Observability-Export.docx",
@@ -714,6 +714,7 @@
   ],
   "dropParagraphsContaining": [
     "core-specs/",
+    "cloud-specs/",
     "build_model.py",
     "validate_local.py",
     "CHANGELOG.md"
@@ -839,10 +840,10 @@
   ],
   "_comment_additionalMarkdown": "Addenda folded in as informative annexes. They are worked examples and implementer annexes of this specification, not specifications of their own: provisional namespaces, instances rather than types, and no conformance clause. Only their prose is carried; their NodeSets are separate models and this document’s node tables stay derived from its own.",
   "additionalMarkdown": {
-    "di": "core-specs/observability-export/di/OPC-UA-DI-Observability-Export-Addendum.md",
-    "dihealth": "core-specs/observability-export/di/OPC-UA-DIDeviceHealth-Observability-Export-Addendum.md",
-    "facets": "core-specs/observability-export/facets/OPC-UA-Facets-Observability-Export-Addendum.md",
-    "pumps": "core-specs/observability-export/pumps/OPC-UA-Pumps-Observability-Export-Addendum.md",
-    "robotics": "core-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md"
+    "di": "cloud-specs/observability-export/di/OPC-UA-DI-Observability-Export-Addendum.md",
+    "dihealth": "cloud-specs/observability-export/di/OPC-UA-DIDeviceHealth-Observability-Export-Addendum.md",
+    "facets": "cloud-specs/observability-export/facets/OPC-UA-Facets-Observability-Export-Addendum.md",
+    "pumps": "cloud-specs/observability-export/pumps/OPC-UA-Pumps-Observability-Export-Addendum.md",
+    "robotics": "cloud-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md"
   }
 }

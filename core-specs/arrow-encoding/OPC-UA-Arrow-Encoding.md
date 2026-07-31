@@ -54,7 +54,7 @@ Arrow is a **columnar** format: values of one type are stored in a typed Array w
 
 ### 4.3 Schema identity and reversibility
 
-Because Arrow data is only interpretable with its schema, this mapping identifies each schema by a **SchemaId** — the first 8 bytes of SHA-256 over the serialized Arrow `Schema` bytes (§5) — so producers and consumers agree on the exact schema without carrying it in every bare-RecordBatch message. The mapping is **reversible**: null-vs-empty distinctions (validity bitmap vs zero-length), unsigned integer bit patterns, signed zero and the exact OPC UA runtime type of a Variant all round-trip. A receiver that must decode a bare RecordBatch before receiving the schema resolves the SchemaId from a cache, an announcement, or a schema registry such as the one in `../schema-registry/OPC-UA-Schema-Registry.md`.
+Because Arrow data is only interpretable with its schema, this mapping identifies each schema by a **SchemaId** — the first 8 bytes of SHA-256 over the serialized Arrow `Schema` bytes (§5) — so producers and consumers agree on the exact schema without carrying it in every bare-RecordBatch message. The mapping is **reversible**: null-vs-empty distinctions (validity bitmap vs zero-length), unsigned integer bit patterns, signed zero and the exact OPC UA runtime type of a Variant all round-trip. A receiver that must decode a bare RecordBatch before receiving the schema resolves the SchemaId from a cache, an announcement, or a schema registry such as the one in `../../cloud-specs/schema-registry/OPC-UA-Schema-Registry.md`.
 
 ## 5 OPC UA Arrow DataEncoding
 
@@ -287,7 +287,7 @@ The canonical envelope is an IPC stream with schema metadata for NetworkMessage-
 
 #### 6.9.1 Schema resolution
 
-Arrow is schema-based: the Arrow schema of the IPC stream is required to decode the batch. The reference schema is published to, and resolved from, a central catalog as defined by *OPC UA — Schema Registry* (`../schema-registry/OPC-UA-Schema-Registry.md`). While an Arrow IPC stream embeds its own schema in the stream header (so a message is self-contained once received), a subscriber that must decode before receiving the stream — or that validates against a governed schema — resolves it from the DataSet namespace, `<DataSetName>:arrow`, and the `ConfigurationVersion`, per §8 of that specification. The transport `content-type` (`application/vnd.apache.arrow.stream` or `application/vnd.apache.arrow.file`) selects the format.
+Arrow is schema-based: the Arrow schema of the IPC stream is required to decode the batch. The reference schema is published to, and resolved from, a central catalog as defined by *OPC UA — Schema Registry* (`../../cloud-specs/schema-registry/OPC-UA-Schema-Registry.md`). While an Arrow IPC stream embeds its own schema in the stream header (so a message is self-contained once received), a subscriber that must decode before receiving the stream — or that validates against a governed schema — resolves it from the DataSet namespace, `<DataSetName>:arrow`, and the `ConfigurationVersion`, per §8 of that specification. The transport `content-type` (`application/vnd.apache.arrow.stream` or `application/vnd.apache.arrow.file`) selects the format.
 
 #### 6.9.2 SchemaId handshake
 
@@ -360,8 +360,8 @@ A decoder shall maintain `cache: SchemaId -> schema`. Once cached, each received
 
 1. Await the Arrow IPC Schema message in the current stream or an `ArrowSchemaAnnouncement` on the configured announcement channel, then verify the recomputed 8-byte SchemaId and insert the schema into the cache.
 2. Send `ArrowSchemaRequest` listing the unknown SchemaId when the transport supports request/response or a control side channel, then process the returned IPC Schema message or `ArrowSchemaAnnouncement`.
-3. Resolve the schema from an external (federated) xRegistry that the local registry references, as defined by *OPC UA — Schema Registry* (`../schema-registry/OPC-UA-Schema-Registry.md`) §8.
-4. Read the in-server AddressSpace Schema Registry by a SchemaId-NodeId. The companion NodeSet authored in `core-specs\schema-registry\` uses namespace `http://opcfoundation.org/UA/SchemaRegistry/` and exposes each schema at an Opaque NodeId whose Identifier is the raw 8-byte SchemaId. A decoder may perform a single `Read` on that NodeId without browsing or recomputing candidate NodeIds. Servers may additionally expose `GetSchema(SchemaId)` for clients that prefer a Method call over direct NodeId construction.
+3. Resolve the schema from an external (federated) xRegistry that the local registry references, as defined by *OPC UA — Schema Registry* (`../../cloud-specs/schema-registry/OPC-UA-Schema-Registry.md`) §8.
+4. Read the in-server AddressSpace Schema Registry by a SchemaId-NodeId. The companion NodeSet authored in `cloud-specs\schema-registry\` uses namespace `http://opcfoundation.org/UA/SchemaRegistry/` and exposes each schema at an Opaque NodeId whose Identifier is the raw 8-byte SchemaId. A decoder may perform a single `Read` on that NodeId without browsing or recomputing candidate NodeIds. Servers may additionally expose `GetSchema(SchemaId)` for clients that prefer a Method call over direct NodeId construction.
 5. Re-derive the Arrow Schema from the AddressSpace DataTypeDefinition using the Part 6 Arrow schema-generation algorithm, compute the 8-byte SchemaId over the serialized Arrow Schema, and verify that it equals the referenced SchemaId.
 
 If all configured resolution paths fail, the decoder shall treat the payload as undecodable rather than guessing a schema. The cache key is SchemaId only and is independent of `ConfigurationVersion`, PublisherId, WriterGroupId and DataSetWriterId.

@@ -15,7 +15,7 @@ overwrites it, so an edit made here is lost and leaves no trace. Change the sour
 
 | To change | Edit |
 |---|---|
-| the words of a specification | its markdown under `core-specs/`, `companion-specs/`, `metaverse-specs/` or `wot-specs/` |
+| the words of a specification | its markdown under `core-specs/`, `cloud-specs/`, `companion-specs/`, `metaverse-specs/` or `wot-specs/` |
 | a type, a Property, a NodeId | that specification's `tools/build_model.py`, then regenerate its NodeSet |
 | the clause order, titles, identity, figures | that document's config in `tools/specs/` |
 | the shape of the rendering itself | `tools/opcdocx/` |
@@ -153,10 +153,10 @@ a new config file; a genuinely new shape needs a generalisation in `opcdocx/` fi
 | `OPC-UA-OpenUSD-Binding-Part1.docx` | `metaverse-specs/openusd-binding/` + `Opc.Ua.OpenUsd.NodeSet2.xml` — plus two folded annexes; see below |
 | `OPC-UA-OpenUSD-Scene-Part2.docx` | `metaverse-specs/openusd-scene/` + `Opc.Ua.OpenUsdScene.NodeSet2.xml` |
 | `OPC-UA-xRegistry.docx` | `core-specs/xregistry/` + `Opc.Ua.XRegistry.NodeSet2.xml` |
-| `OPC-UA-Observability-Export.docx` | `core-specs/observability-export/` + `Opc.Ua.ObservabilityExport.NodeSet2.xml` — plus five folded annexes; see below |
+| `OPC-UA-Observability-Export.docx` | `cloud-specs/observability-export/` + `Opc.Ua.ObservabilityExport.NodeSet2.xml` — plus five folded annexes; see below |
 | `OPC-UA-WoT-Connectivity.docx` | `wot-specs/WoT-Connectivity/` + `Opc.Ua.WoTCon.NodeSet2.xml` |
 | `OPC-UA-WoT-Binding.docx` | `wot-specs/WoT-Binding/` — **no NodeSet**; see below |
-| `OPC-UA-Schema-Registry.docx` | `core-specs/schema-registry/` + `Opc.Ua.SchemaRegistry.NodeSet2.xml` |
+| `OPC-UA-Schema-Registry.docx` | `cloud-specs/schema-registry/` + `Opc.Ua.SchemaRegistry.NodeSet2.xml` |
 | `OPC-UA-Generators.docx` | `companion-specs/Generators/` + `Opc.Ua.Generators.NodeSet2.xml` |
 | `OPC-UA-Data-Channels.docx` | `core-specs/data-channels/` + `Opc.Ua.DataChannels.NodeSet2.xml` — **base namespace**; see below |
 | `OPC-UA-Avro-Encoding.docx` | `core-specs/encodings/avro/` — **no NodeSet**; see below |

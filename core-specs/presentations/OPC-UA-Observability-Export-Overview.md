@@ -22,7 +22,7 @@ Rendered on GitHub (the mermaid diagrams render inline). To export slides:
 - Proposed Part **OPC 10000‑2xx** (number TBA) · Namespace `http://opcfoundation.org/UA/ObservabilityExport/`
 - Version 0.1.0 · 2026-07-15
 - A companion spec over the classic client/server (RPC) interface, optionally realized over PubSub (Part 14)
-- Full specification: [OPC-UA-Observability-Export.md](../observability-export/OPC-UA-Observability-Export.md)
+- Full specification: [OPC-UA-Observability-Export.md](../../cloud-specs/observability-export/OPC-UA-Observability-Export.md)
 
 ---
 
@@ -211,10 +211,10 @@ A read-only Client, with no domain knowledge, follows five steps:
 
 The bindings are exercised on concrete companion models — each with an instance-overlay NodeSet and an addendum:
 
-- **Pumps** — metrics on `PumpType`: [addendum](../observability-export/pumps/OPC-UA-Pumps-Observability-Export-Addendum.md).
-- **Robotics** — `MotionDeviceSystemType` with multi-device/axis cardinality expansion: [addendum](../observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md).
-- **DI** — `IVendorNameplateType` and **DeviceHealth** (`IDeviceHealthType`): [DI](../observability-export/di/OPC-UA-DI-Observability-Export-Addendum.md) · [DeviceHealth](../observability-export/di/OPC-UA-DIDeviceHealth-Observability-Export-Addendum.md).
-- **Facets** — binding inheritance and facet composition across subtype, interface and AddIn: [addendum](../observability-export/facets/OPC-UA-Facets-Observability-Export-Addendum.md).
+- **Pumps** — metrics on `PumpType`: [addendum](../../cloud-specs/observability-export/pumps/OPC-UA-Pumps-Observability-Export-Addendum.md).
+- **Robotics** — `MotionDeviceSystemType` with multi-device/axis cardinality expansion: [addendum](../../cloud-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md).
+- **DI** — `IVendorNameplateType` and **DeviceHealth** (`IDeviceHealthType`): [DI](../../cloud-specs/observability-export/di/OPC-UA-DI-Observability-Export-Addendum.md) · [DeviceHealth](../../cloud-specs/observability-export/di/OPC-UA-DIDeviceHealth-Observability-Export-Addendum.md).
+- **Facets** — binding inheritance and facet composition across subtype, interface and AddIn: [addendum](../../cloud-specs/observability-export/facets/OPC-UA-Facets-Observability-Export-Addendum.md).
 
 All NodeSets, CSV, Annex A and addenda are **generated deterministically** from a single source of truth (`build_model.py` / `build_bindings.py`).
 
@@ -228,8 +228,8 @@ All NodeSets, CSV, Annex A and addenda are **generated deterministically** from 
 - **Publisher Facet** — Part 14 realization plus PubSub metadata propagation.
 - **Bridge (Client) Facet** — browse, recognize, compose, realize (classic or PubSub), and emit the Metrics/Logs/Traces mapping.
 
-**Deliverables** — `Opc.Ua.ObservabilityExport.NodeSet2.xml` · `Opc.Ua.ObservabilityExport.NodeIds.csv` · Annex A (generated) · per-spec addenda · machine-readable descriptors and tooling under `core-specs/extras/observability-export/`.
+**Deliverables** — `Opc.Ua.ObservabilityExport.NodeSet2.xml` · `Opc.Ua.ObservabilityExport.NodeIds.csv` · Annex A (generated) · per-spec addenda · machine-readable descriptors and tooling under `cloud-specs/extras/observability-export/`.
 
 **Backend-agnostic** — OTEL is the normative target, but the same bindings drive Prometheus/Grafana, Splunk/Elastic, Jaeger/Tempo/Zipkin, Microsoft Fabric Real-Time Intelligence and an Apache Arrow lakehouse.
 
-**Status — working draft.** For Working Group discussion: scope, Part number and namespace, and the conformance model. Full specification → [OPC-UA-Observability-Export.md](../observability-export/OPC-UA-Observability-Export.md).
+**Status — working draft.** For Working Group discussion: scope, Part number and namespace, and the conformance model. Full specification → [OPC-UA-Observability-Export.md](../../cloud-specs/observability-export/OPC-UA-Observability-Export.md).

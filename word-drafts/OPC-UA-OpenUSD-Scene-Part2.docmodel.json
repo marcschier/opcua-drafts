@@ -2437,6 +2437,42 @@
             [
               {
                 "r": "t",
+                "text": "Camera prim ("
+              },
+              {
+                "r": "code",
+                "text": "UsdGeomCamera"
+              },
+              {
+                "r": "t",
+                "text": ")"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "UsdGeomCameraType"
+              },
+              {
+                "r": "t",
+                "text": " Object; aperture/focal-length attributes carry the intrinsics ("
+              },
+              {
+                "r": "xref",
+                "target": "c7-3",
+                "kind": "clause",
+                "prefix": "7.3"
+              },
+              {
+                "r": "t",
+                "text": ", Annex D)"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
                 "text": "Georeference / globe anchor (geodetic)"
               }
             ],
@@ -5170,6 +5206,9 @@
           " │             ├─ UsdGeomCubeType     (Size)",
           " │             ├─ UsdGeomConeType     (Height, Radius, Axis)",
           " │             └─ UsdGeomCapsuleType  (Height, Radius, Axis)",
+          " │        └─ UsdGeomCameraType   (FocalLength, HorizontalAperture, VerticalAperture,",
+          " │                                HorizontalApertureOffset, VerticalApertureOffset,",
+          " │                                ClippingRange, FStop, FocusDistance, Projection, Exposure)",
           " ├─ UsdShadeMaterialType",
           " └─ UsdShadeShaderType           (Info_Id)"
         ],
@@ -6512,6 +6551,29 @@
         "id": "c7-23-def",
         "caption": "UsdGlobeAnchorApiType definition",
         "browseName": "UsdGlobeAnchorApiType",
+        "kind": "type"
+      },
+      {
+        "t": "clause",
+        "id": "c7-24",
+        "title": "UsdGeomCameraType",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "USD Camera prim: a transformable prim describing a view frustum. Materializes the UsdGeomCamera IsA schema. Its aperture and focal-length attributes are the surface from which camera intrinsics are derived (Annex C). OPC UA - Vision defines, in its own VIS-Interop-Scene facet, when a Vision sensor's PrimPath is required to resolve to an instance of this type; that requirement belongs to that specification and is not imposed here."
+          }
+        ]
+      },
+      {
+        "t": "nodetable",
+        "id": "c7-24-def",
+        "caption": "UsdGeomCameraType definition",
+        "browseName": "UsdGeomCameraType",
         "kind": "type"
       }
     ],
@@ -7885,7 +7947,7 @@
             [
               {
                 "r": "t",
-                "text": "1001:6078"
+                "text": "1001:6088"
               }
             ]
           ],

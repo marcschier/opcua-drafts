@@ -8,7 +8,7 @@ description: >-
   RelativePaths, and produce (a) a machine-readable binding descriptor (JSON), (b) a
   human-readable observability addendum, and (c) an instance-overlay UANodeSet.
   Implements the "OPC UA — Observability Export" base-namespace specification
-  (core-specs/observability-export). WHEN: make a companion spec observable, export a
+  (cloud-specs/observability-export). WHEN: make a companion spec observable, export a
   model to OpenTelemetry / an observability system, generate metric/log/trace bindings,
   bridge OPC UA data to Prometheus/Grafana/Loki/Jaeger, expose a model as OTEL.
 ---
@@ -17,7 +17,7 @@ description: >-
 
 This skill makes any OPC UA Information Model **observable** by producing the bindings
 defined in the *OPC UA — Observability Export* specification
-(`core-specs/observability-export/OPC-UA-Observability-Export.md`). A binding declares how the
+(`cloud-specs/observability-export/OPC-UA-Observability-Export.md`). A binding declares how the
 model's data lands in an observability system as **OTEL metrics, logs and traces**; it is served
 over the classic client/server (RPC) interface by default, and PubSub is an optional realization.
 The skill does the *authoring* (semantic classification, which a human/LLM is good at); a
@@ -59,8 +59,8 @@ integration. It is **read-only**: it never invokes Methods, writes setpoints, or
 ## Outputs
 
 Per companion spec — descriptor sources and tooling live under
-`core-specs/extras/observability-export/examples/<spec>/`; the standardized addendum + overlay outputs
-land under `core-specs/observability-export/<spec>/`:
+`cloud-specs/extras/observability-export/examples/<spec>/`; the standardized addendum + overlay outputs
+land under `cloud-specs/observability-export/<spec>/`:
 
 - `<Domain>.ObservabilityExport.json` — the machine-readable **binding descriptor (JSON)**
   (single source of truth; the authoring DSL below).
@@ -73,14 +73,14 @@ land under `core-specs/observability-export/<spec>/`:
   per-signal annex tables, and diagrams showing where the bindings live on the theoretical instance.
 
 **Reference implementation (use it, don't reinvent):**
-`core-specs/extras/observability-export/examples/tools/build_bindings.py` (+ `nodeset_util.py`) is a
+`cloud-specs/extras/observability-export/examples/tools/build_bindings.py` (+ `nodeset_util.py`) is a
 deterministic generator that reads the descriptor, **resolves and validates every `BrowsePath`
 against the published companion NodeSet**, synthesises the instance overlay, and emits the addendum
-(annex tables + two mermaid diagrams) into `core-specs/observability-export/<spec>/`. Author the
-descriptor, then run it (from `core-specs/extras/observability-export/examples/`):
+(annex tables + two mermaid diagrams) into `cloud-specs/observability-export/<spec>/`. Author the
+descriptor, then run it (from `cloud-specs/extras/observability-export/examples/`):
 `python tools/build_bindings.py <domain>/<Domain>.ObservabilityExport.json tools/ref`. The base
 companion NodeSets live (gitignored) under
-`core-specs/extras/observability-export/examples/tools/ref/`. Worked example descriptors:
+`cloud-specs/extras/observability-export/examples/tools/ref/`. Worked example descriptors:
 `.../examples/pumps/` (from the official `Pumps/instanceexample.xml`) and `.../examples/robotics/`
 (synthesised `MotionDeviceSystem`).
 
@@ -435,7 +435,7 @@ Field notes:
   `contentKind` — those concepts are removed.
 - `appliesToType` is the plain BrowseName of the binding target: an `ObjectType`, Interface, or
   AddInType. The generator locates it in `baseNodeSets`.
-- `baseNodeSets` are filenames under `core-specs/extras/observability-export/examples/tools/ref/`
+- `baseNodeSets` are filenames under `cloud-specs/extras/observability-export/examples/tools/ref/`
   (gitignored); `requiredModels` are the namespace URIs emitted as `<RequiredModel>` (order sets the
   ns indices).
 - `fieldName` defaults to the last `browsePath` segment; make it unique within a binding.

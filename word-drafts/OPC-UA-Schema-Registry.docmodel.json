@@ -17,7 +17,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "1 Scope",
           "b": 0
         }
@@ -141,7 +141,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "1 Scope",
           "b": 1
         }
@@ -227,7 +227,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "1 Scope",
           "b": 2
         }
@@ -251,7 +251,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "1 Scope",
           "b": 3
         }
@@ -333,7 +333,7 @@
           ]
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "1 Scope",
           "b": 4
         }
@@ -348,7 +348,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "1 Scope",
           "b": 5
         }
@@ -400,7 +400,7 @@
           ]
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "1 Scope",
           "b": 6
         }
@@ -415,7 +415,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "1 Scope",
           "b": 7
         }
@@ -448,7 +448,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "1 Scope",
           "b": 8
         }
@@ -1372,7 +1372,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "5.1 Downloading a schema (mandatory)",
           "b": 0
         }
@@ -1453,7 +1453,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "5.1 Downloading a schema (mandatory)",
           "b": 1
         }
@@ -1523,7 +1523,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "5.1 Downloading a schema (mandatory)",
           "b": 2
         }
@@ -1552,7 +1552,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "5.2 Registering a schema (optional)",
           "b": 0
         }
@@ -1686,7 +1686,7 @@
           ]
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "5.2 Registering a schema (optional)",
           "b": 1
         }
@@ -1782,7 +1782,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "5.2 Registering a schema (optional)",
           "b": 2
         }
@@ -1831,7 +1831,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "4 Overview",
           "b": 0
         }
@@ -1843,7 +1843,7 @@
         "source": "mermaid",
         "mermaid": "graph TD\n  SVR[Server i=2253] -->|HasComponent| SR[SchemaRegistry : SchemaRegistryType : RegistryType]\n  PS[PublishSubscribe i=14443] -.optional reference.-> SR\n  SR -->|Organizes| G1[\"SchemaGroup (NamespaceUri = ...UA/) : SchemaGroupType : GroupType\"]\n  SR -->|Organizes| G2[\"SchemaGroup (NamespaceUri = ...UA/Pumps/) : SchemaGroupType : GroupType\"]\n  G2 -->|Organizes| S1[\"PumpDataType:avro : SchemaFileType : ResourceType\"]\n  G2 -->|Organizes| S2[\"PumpDataType:arrow : SchemaFileType : ResourceType\"]\n  S1 -.Open/Read.-> DOC[(.avsc document bytes)]\n  S1 -.Opaque SchemaId NodeId / GetSchema.-> DOC",
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "4 Overview",
           "b": 1
         }
@@ -1874,7 +1874,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "4 Overview",
           "b": 2
         }
@@ -1953,7 +1953,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "4 Overview",
           "b": 3
         }
@@ -2010,7 +2010,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "4.3 OPC UA as a first-class binding — federation and access parity with HTTP",
           "b": 0
         }
@@ -2194,7 +2194,7 @@
           ]
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "4.3 OPC UA as a first-class binding — federation and access parity with HTTP",
           "b": 1
         }
@@ -2209,7 +2209,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "4.3 OPC UA as a first-class binding — federation and access parity with HTTP",
           "b": 2
         }
@@ -2262,7 +2262,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "6 Schema-specific information model",
           "b": 0
         }
@@ -2484,7 +2484,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "6.1 SchemaRegistryType",
           "b": 0
         }
@@ -2573,7 +2573,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "6.2 SchemaGroupType",
           "b": 0
         }
@@ -2665,7 +2665,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "6.3 SchemaFileType",
           "b": 0
         }
@@ -3016,7 +3016,7 @@
           ]
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "6.3 SchemaFileType",
           "b": 1
         }
@@ -3073,7 +3073,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "6.3 SchemaFileType",
           "b": 2
         }
@@ -3103,7 +3103,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "6.4 SchemaId-NodeId fast access and GetSchema",
           "b": 0
         }
@@ -3117,7 +3117,7 @@
           "Identifier     = the exact raw on-wire SchemaId bytes"
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "6.4 SchemaId-NodeId fast access and GetSchema",
           "b": 1
         }
@@ -3164,7 +3164,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "6.4 SchemaId-NodeId fast access and GetSchema",
           "b": 2
         }
@@ -3199,7 +3199,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "6.4 SchemaId-NodeId fast access and GetSchema",
           "b": 3
         }
@@ -3344,7 +3344,7 @@
         "widths": null,
         "note": null,
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "6.5 Formats and content-types",
           "b": 0
         }
@@ -3503,7 +3503,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "6.5 Formats and content-types",
           "b": 1
         }
@@ -3567,7 +3567,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "6.6 Schema identity (`SchemaId`) and per-format fingerprints",
           "b": 0
         }
@@ -3644,7 +3644,7 @@
           ]
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "6.6 Schema identity (`SchemaId`) and per-format fingerprints",
           "b": 1
         }
@@ -3692,7 +3692,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "6.6 Schema identity (`SchemaId`) and per-format fingerprints",
           "b": 2
         }
@@ -3800,7 +3800,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "6.6 Schema identity (`SchemaId`) and per-format fingerprints",
           "b": 3
         }
@@ -3879,7 +3879,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "7 Schema versioning and compatibility",
           "b": 0
         }
@@ -4053,7 +4053,7 @@
           ]
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "7 Schema versioning and compatibility",
           "b": 1
         }
@@ -4101,7 +4101,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "7 Schema versioning and compatibility",
           "b": 2
         }
@@ -4131,7 +4131,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "8 Resolution flow",
           "b": 0
         }
@@ -4536,7 +4536,7 @@
           ]
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "8 Resolution flow",
           "b": 1
         }
@@ -4596,7 +4596,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "8 Resolution flow",
           "b": 2
         }
@@ -4633,7 +4633,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "9 TTL and mirror semantics",
           "b": 0
         }
@@ -4672,7 +4672,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "9 TTL and mirror semantics",
           "b": 1
         }
@@ -4861,7 +4861,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "10.1 Auto-bootstrap of the schema structure",
           "b": 0
         }
@@ -4899,7 +4899,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "10.2 Serving the xRegistry API and JSON projection",
           "b": 0
         }
@@ -5218,7 +5218,7 @@
         "widths": null,
         "note": null,
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "10.2 Serving the xRegistry API and JSON projection",
           "b": 1
         }
@@ -5265,7 +5265,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "10.2 Serving the xRegistry API and JSON projection",
           "b": 2
         }
@@ -5313,7 +5313,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "11 Optional PubSub integration",
           "b": 0
         }
@@ -5396,7 +5396,7 @@
           ]
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "11 Optional PubSub integration",
           "b": 1
         }
@@ -5435,7 +5435,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "11 Optional PubSub integration",
           "b": 2
         }
@@ -5665,7 +5665,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "12 Conformance",
           "b": 0
         }
@@ -5752,7 +5752,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "12 Conformance",
           "b": 1
         }
@@ -5784,7 +5784,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "12 Conformance",
           "b": 2
         }
@@ -6102,7 +6102,7 @@
         "widths": null,
         "note": null,
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "12 Conformance",
           "b": 3
         }
@@ -6213,7 +6213,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "12 Conformance",
           "b": 4
         }
@@ -6795,7 +6795,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "Annex B — Federation and OPC UA / HTTP resolution parity (informative)",
           "b": 0
         }
@@ -6873,7 +6873,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "Annex B — Federation and OPC UA / HTTP resolution parity (informative)",
           "b": 1
         }
@@ -7045,7 +7045,7 @@
           ]
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "Annex B — Federation and OPC UA / HTTP resolution parity (informative)",
           "b": 2
         }
@@ -7119,7 +7119,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "Annex C — PubSub DataSet schema profile (normative for the profile, optional)",
           "b": 0
         }
@@ -7165,7 +7165,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "C.1 ConfigurationVersion-keyed evolution",
           "b": 0
         }
@@ -7282,7 +7282,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "C.1 ConfigurationVersion-keyed evolution",
           "b": 1
         }
@@ -7376,7 +7376,7 @@
           ]
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "C.1 ConfigurationVersion-keyed evolution",
           "b": 2
         }
@@ -7450,7 +7450,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "C.2 Open unions subject to aggregation",
           "b": 0
         }
@@ -7538,7 +7538,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "C.2 Open unions subject to aggregation",
           "b": 1
         }
@@ -7678,7 +7678,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "C.2 Open unions subject to aggregation",
           "b": 2
         }
@@ -7788,7 +7788,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "C.3 Append-only rule (normative)",
           "b": 0
         }
@@ -7867,7 +7867,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "C.3 Append-only rule (normative)",
           "b": 1
         }
@@ -7899,7 +7899,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "C.3 Append-only rule (normative)",
           "b": 2
         }
@@ -7949,7 +7949,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "C.3 Append-only rule (normative)",
           "b": 3
         }
@@ -7986,7 +7986,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "C.3 Append-only rule (normative)",
           "b": 4
         }
@@ -8083,7 +8083,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "C.4 PubSub integration touch-points",
           "b": 0
         }
@@ -8279,19 +8279,11 @@
           },
           {
             "r": "t",
-            "text": " with an unrelated lineage. The same pattern applies to appending an ExtensionObject concrete-type branch; until the subscriber holds the newer minor, that body is still recoverable through the opaque-body fallback. An executable reference demonstration of append-only Variant and ExtensionObject growth — latest-minor-decodes-older, distinct per-minor SchemaIds, and opaque-body fallbacks appended append-only at a non-reserved ordinal — is provided at "
-          },
-          {
-            "r": "code",
-            "text": "../extras/avro-encoding/tools/evolution_demo.py"
-          },
-          {
-            "r": "t",
-            "text": ". A worked incremental-schema walkthrough with concrete Avro schemas — including an ExtensionObject whose struct contains a nested Variant — is in the Avro Part 6 DataEncoding Annex C."
+            "text": " with an unrelated lineage. The same pattern applies to appending an ExtensionObject concrete-type branch; until the subscriber holds the newer minor, that body is still recoverable through the opaque-body fallback. A worked incremental-schema walkthrough with concrete Avro schemas — including an ExtensionObject whose struct contains a nested Variant — is in the Avro Part 6 DataEncoding Annex C."
           }
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "C.5 Example (informative)",
           "b": 0
         }
@@ -8391,7 +8383,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "Annex D — HTTP binding correspondence (informative)",
           "b": 0
         }
@@ -8832,7 +8824,7 @@
         "widths": null,
         "note": null,
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "Annex D — HTTP binding correspondence (informative)",
           "b": 1
         }
@@ -8921,7 +8913,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
           "s": "Annex D — HTTP binding correspondence (informative)",
           "b": 2
         }
