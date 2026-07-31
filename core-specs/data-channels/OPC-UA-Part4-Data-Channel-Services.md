@@ -70,7 +70,7 @@ This Service is not a Node operation and therefore takes no `NodesToRead`-style 
 | requestHeader | RequestHeader | Common request parameters (OPC 10000-4 §7.32). |
 | sourceNodeId | NodeId | The data channel source to open the channel on. It **shall** be a Node that implements `IDataChannelSourceType`, directly or through `HasDataChannel`. |
 | offerId | UInt32 | `0` for a Client-initiated open. Otherwise the `OfferId` of a `DataChannelOfferedEventType` Event being accepted, in which case `sourceNodeId` **shall** match the offer. |
-| transportChannelId | UInt64 | Over `opc.quic`, for a Client-initiated direction (`SinkToSource` or `Bidirectional`), the id of the QUIC stream the Client has already opened and will not write to until the response arrives. `0` otherwise, and always `0` over inline framing. See the Part 6 errata §7.4. |
+| transportChannelId | UInt64 | Over an outer-protocol transport, the id of a transport carrier the Client has already opened and will not write to until the response arrives. Over `opc.quic` and `opc.wt` this is the QUIC or WebTransport stream id for a Client-opened direction (`SinkToSource` or `Bidirectional`) and `0` for `SourceToSink`. Always `0` over inline framing. See the Part 6 errata §7.4 and §8.4. |
 | requestedParameters | DataChannelParametersDataType | The parameters the Client asks for. Every member is a request, not a requirement; the Server returns what it will actually do. `0` in a numeric member means "no preference" (§5.1.1). |
 
 **Response**
@@ -80,7 +80,7 @@ This Service is not a Node operation and therefore takes no `NodesToRead`-style 
 | responseHeader | ResponseHeader | Common response parameters (OPC 10000-4 §7.33). |
 | channelId | UInt32 | The identifier of the new channel within the owning SecureChannel. Never `0`, which the Part 6 errata reserves for connection control. |
 | revisedParameters | DataChannelParametersDataType | The parameters actually in force. |
-| revisedTransportChannelId | UInt64 | The underlying transport identifier in force: the QUIC stream id over `opc.quic`, `0` for inline framing. For a Client-initiated direction this is the value supplied in the request, echoed unchanged. It is **not** named `transportChannelId`: OPC UA Service definitions do not reuse a parameter name across a request and its response, and the standard model compiler enforces that by validating both against one field-name table, so a Service carrying `transportChannelId` in both is rejected outright. |
+| revisedTransportChannelId | UInt64 | The underlying transport identifier in force: the QUIC stream id over `opc.quic`, the WebTransport stream id over `opc.wt`, `0` for inline framing. When the Client supplied the id in `transportChannelId`, this value is echoed unchanged after validation. When the Server opened the carrier for a `SourceToSink` direction, this value carries the Server-selected id. It is **not** named `transportChannelId`: OPC UA Service definitions do not reuse a parameter name across a request and its response, and the standard model compiler enforces that by validating both against one field-name table, so a Service carrying `transportChannelId` in both is rejected outright. |
 
 <a id="defaults-and-ranges"></a>
 
@@ -116,11 +116,11 @@ The Part 6 errata §5.4 states how a non-zero `FrameDeadline` becomes the on-wir
 | `Priority` | Revised down where the Server reserves the higher bands; `255` means no preference and selects the source's default, and any other value above `7` **shall** be revised to `7`. Never revised up beyond the requested value except when `255` was requested. |
 | `MaxRetransmits`, `FrameDeadline` | Revised to the Server's supported range. Both are ignored where the transport is already reliable, and the Server **shall** return them as `0` in that case so the Client can see they had no effect. |
 
-**Preconditions.** The Session **shall** be activated. The SecureChannel **shall** be one over which the transport supports data channels; `Bad_DataChannelTransportUnsupported` is returned otherwise. Opening the channel **shall not** take the count over `MaxDataChannels` for the connection or `MaxChannels` for the source. Over `opc.quic`, a request for a Client-initiated direction **shall** carry `transportChannelId`.
+**Preconditions.** The Session **shall** be activated. The SecureChannel **shall** be one over which the transport supports data channels; `Bad_DataChannelTransportUnsupported` is returned otherwise. Opening the channel **shall not** take the count over `MaxDataChannels` for the connection or `MaxChannels` for the source. Over `opc.quic` and `opc.wt`, a request for a Client-opened direction (`SinkToSource` or `Bidirectional`) **shall** carry `transportChannelId`, and a request for a Server-opened direction (`SourceToSink`) **shall** carry `0`. The peer that did not open the outer-protocol carrier **shall** validate the id before accepting the binding. Under reverse connect the OPC UA roles are unchanged; only the underlying stream types invert.
 
 **Effect.** On success the channel enters `Opening` and then `Open` per the state machine in the Part 6 errata §5.13, and an `AuditOpenDataChannelEventType` Event is generated. On failure an `AuditOpenDataChannelEventType` Event is still generated, carrying the requested parameters and no `ChannelId`: a refused attempt to start a media stream is exactly as interesting to an auditor as a successful one.
 
-A Server **shall not** transmit any frame for the assigned ChannelId before the response carrying that ChannelId has been handed to the transport, and a Client **shall** buffer rather than reject a frame naming a ChannelId whose `OpenDataChannel` is still outstanding. Over `opc.quic` the response and the frames travel on different QUIC streams, which are not ordered relative to each other, so without this rule the first `DATA` frame can legitimately overtake the response and be rejected as an unknown ChannelId. The Part 6 errata §7.4 states the transport-level form of the same obligation.
+A Server **shall not** transmit any frame for the assigned ChannelId before the response carrying that ChannelId has been handed to the transport, and a Client **shall** buffer rather than reject a frame naming a ChannelId whose `OpenDataChannel` is still outstanding. Over outer-protocol transports the response and the frames travel on different QUIC or WebTransport streams, which are not ordered relative to each other, so without this rule the first `DATA` frame can legitimately overtake the response and be rejected as an unknown ChannelId. The Part 6 errata §7.4 and §8.4 state the transport-level form of the same obligation.
 
 **Service result StatusCodes**
 
@@ -158,7 +158,7 @@ Changes the mutable parameters of an open channel without interrupting it. This 
 | responseHeader | ResponseHeader | Common response parameters. |
 | revisedParameters | DataChannelParametersDataType | The parameters now in force, revised by the same rules as `OpenDataChannel`. |
 
-A reduction of `MaxFrameSize` cannot take effect instantaneously at both ends, because `ModifyDataChannel` is a Service: the revised parameters reach only the caller, there is no `MODIFY` frame type, and over `opc.quic` the response and the frames are not ordered relative to each other. A Client that applied a smaller limit the moment the response arrived would see legitimately in-flight larger frames and, under the Part 6 errata §5.12, kill the channel. Therefore:
+A reduction of `MaxFrameSize` cannot take effect instantaneously at both ends, because `ModifyDataChannel` is a Service: the revised parameters reach only the caller, there is no `MODIFY` frame type, and over outer-protocol transports the response and frames on QUIC or WebTransport streams are not ordered relative to each other. A Client that applied a smaller limit the moment the response arrived would see legitimately in-flight larger frames and, under the Part 6 errata §5.12, kill the channel. Therefore:
 
 - A sender **shall** apply a reduced `MaxFrameSize` from the next logical message boundary, and **shall not** begin a logical message under the old limit after the `ModifyDataChannel` response has been sent.
 - A receiver **shall** continue to accept frames sized up to the previous `MaxFrameSize` until it has received one frame carrying `MessageStart` whose length does not exceed the revised value, and **shall** apply the revised limit from that frame onward.
@@ -222,6 +222,10 @@ sequenceDiagram
 
 An `OfferId` is single-use and scoped to the SecureChannel it was delivered on. A Server **shall not** hold resources for an unaccepted offer beyond its `ExpirationTime`, or an unsubscribed Client would leak them.
 
+**An offer shall be delivered to one authorized Session and no other.** An OPC UA Event propagates to every MonitoredItem whose filter matches and whose Session may receive it, which for an offer is the wrong distribution entirely: the offer names a `SourceNodeId`, its negotiated `Parameters` and a redeemable `OfferId`, so an unmodified Event broadcast tells every subscriber on a shared EventNotifier what another user is about to stream and from where. Before raising the Event a Server **shall** select exactly one activated recipient Session and **shall** authorize the offer against that Session's identity under §7.2, as though the recipient had asked for it. The Event **shall** carry the recipient's `SessionId`, and the Server **shall** apply that match itself — before any Client-supplied `EventFilter` is evaluated, so that filtering cannot widen it — and **shall not** deliver the Event to any other Session. A Server whose Event infrastructure cannot enforce a recipient match **shall** deliver offers by a Session-scoped mechanism instead rather than by ordinary Event propagation.
+
+The same obligation applies to `DataChannelStateChangeEventType`: a state change names a channel, and a Session that could not have opened that channel **shall not** be told about it.
+
 A Client that is not subscribed to the Event never learns of the offer, which is the correct outcome: a Server must not be able to push bytes at a Client that has not asked for them.
 
 ## 7 Lifecycle and authorization
@@ -241,7 +245,11 @@ A Client that must survive a reconnect reopens its channels after `ActivateSessi
 
 ### 7.2 Authorization
 
-`OpenDataChannel` **shall** be authorized against the source Node using the same rules as any other access to it: the Session's user identity, the `RolePermissions` and `UserRolePermissions` Attributes of the Node, and the `AccessRestrictions` in force. A Server **shall not** grant a data channel where it would refuse a `Read` of the same content.
+`OpenDataChannel` **shall** be authorized against the source Node using the same rules as any other access to it: the Session's user identity, the `RolePermissions` and `UserRolePermissions` Attributes of the Node, and the `AccessRestrictions` in force.
+
+**Authorization shall be evaluated per direction, because the directions are not the same operation.** A `SourceToSink` channel moves content out of the Server and is a read; a `SinkToSource` channel moves Client-supplied content *into* the Server and is a write; `Bidirectional` is both. A Server **shall not** grant the outbound direction where it would refuse a `Read` of the same content, and **shall not** grant the inbound direction where it would refuse a `Write`, a `Call`, or whatever operation the source's companion specification defines as the means of delivering that content by ordinary Services. `Browse`, `Read` and `ReceiveEvents` **shall not** be taken to imply the inbound permission.
+
+Stating only the read floor would be a serious under-specification rather than a conservative one, because it is the *inbound* direction that changes the Server's state: a user permitted to watch a drive but not to command it could otherwise open the `SinkToSource` channel that drive advertises and send it firmware, setpoints or console input, and a Server implementing this clause exactly as written would accept. The permission also has to apply to Objects, since a data channel source may be an Object and OPC UA's `Read` permission is defined for Variables — a Server **shall not** advertise an inbound direction on a source for which it cannot identify the governing permission.
 
 **Every Service in this set is scoped to both the SecureChannel and the authorizing Session.** OPC 10000-4 §5.7.2 permits multiple Sessions on one SecureChannel — an aggregating Server acting as agent for several users is the normal case — and those Sessions share one ChannelId space. Since ChannelIds are allocated monotonically from `1` and are therefore trivially guessable, scoping only to the SecureChannel would let one user enumerate and seize another's channels. Therefore:
 
@@ -330,6 +338,9 @@ A Server claiming *Data Channel Services* **shall** also claim at least one Part
 | DCS-020 | `Publish` is not delayed by data channel load | Saturate channels, keep a Subscription | No keep-alive missed (§8) |
 | DCS-021 | Another Session's channel cannot be modified or closed | Open as user A, then `CloseDataChannel`/`ModifyDataChannel` from a second Session on the same SecureChannel as user B | `Bad_DataChannelIdInvalid`, indistinguishable from an unassigned identifier (§7.2) |
 | DCS-022 | Revoked permissions terminate a live channel | Open a channel, then revoke the user's `RolePermissions` on the source Node | Channel aborted with `Bad_UserAccessDenied` within `AuthorizationRecheckInterval` (§7.2) |
+| DCS-023 | The inbound direction needs write authorization | As a user permitted to read the source but not to write it, open `SinkToSource`, then `Bidirectional` | `Bad_UserAccessDenied` in both cases; read permission alone does not grant an inbound channel (§7.2) |
+| DCS-024 | An offer reaches only its recipient | Subscribe two Sessions to the same EventNotifier and raise an offer for one of them | Only the recipient Session receives the Event; the other observes neither the `OfferId` nor the `SourceNodeId` (§6) |
+| DCS-025 | Diagnostics are projected per Session | Open channels from two Sessions, then read `Channels`, `Diagnostics` and `ActiveChannelCount` as each | Each Session sees only its own channels, and the count matches (Part 3 errata §5.2) |
 
 ## 11 Insertion into OPC 10000-4 v1.05.07
 

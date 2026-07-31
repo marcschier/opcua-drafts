@@ -7,7 +7,7 @@ It is written as an **errata package** against three core Parts. OPC UA today ha
 ## Contents
 
 - `OPC-UA-Data-Channels.md` — **standalone combined spec**: a self-contained read merging the three errata below, plus a worked H.264 + Opus + control-channel session, a WebRTC feature-parity comparison, and guidance on when to use a data channel instead of FileTransfer, PubSub or a Subscription. The three errata documents remain the authoritative, insertion-ready proposals.
-- `OPC-UA-Part6-Data-Channel-Transport.md` — Part 6 errata: the `STR` frame, flow control, scheduling, partial reliability, and the new `opc.quic` transport.
+- `OPC-UA-Part6-Data-Channel-Transport.md` — Part 6 errata: the `STR` frame, flow control, scheduling, partial reliability, and the new `opc.quic` and `opc.wt` transports.
 - `OPC-UA-Part4-Data-Channel-Services.md` — Part 4 errata: the DataChannel Service Set, server-initiated offers, lifecycle, authorization, auditing and StatusCodes.
 - `OPC-UA-Part3-Data-Channel-Model.md` — Part 3 errata: `IDataChannelSourceType`, `DataChannelSourceType`, `HasDataChannel`, the DataTypes, the Events and `ServerCapabilities.DataChannelCapabilities`.
 - `Opc.Ua.DataChannels.NodeSet2.xml` — generated NodeSet.
@@ -22,16 +22,19 @@ It is written as an **errata package** against three core Parts. OPC UA today ha
 - `..\extras\data-channels\tools\validate_local.py` — wire tooling acceptance gate.
 - `..\extras\data-channels\examples\` — the generated `.hex.txt` wire vectors.
 
-## Two transports, one contract
+## Three transports, one contract
 
-| | Inline framing (`opc.tcp`, `opc.wss`) | `opc.quic` |
-|---|---|---|
-| Deployment | Every deployed endpoint, no new port | New transport |
-| Multiplexing | Interleaved frames, never chunked | One QUIC stream per channel |
-| Genuine loss | No — lossy modes become sender-side discard | Yes, over QUIC DATAGRAM |
-| Path change | Kills the connection | Survives, via connection migration |
+| | Inline framing (`opc.tcp`, `opc.wss`) | `opc.quic` | `opc.wt` |
+|---|---|---|---|
+| Deployment | Every deployed endpoint, no new port | New transport | New transport, WebTransport over HTTP/3 carrier |
+| Multiplexing | Interleaved frames, never chunked | One QUIC stream per channel | One WebTransport stream per channel |
+| Genuine loss | No — lossy modes become sender-side discard | Yes, over QUIC DATAGRAM | Yes, over WebTransport datagrams |
+| Path change | Kills the connection | Survives, via connection migration | Survives, via connection migration |
+| Reaches through | Anything that permits the port | Anything that permits UDP | Anything that permits HTTP/3 and WebTransport |
 
-The Services and the information model are identical on both, so an application is written once and a Client that cannot use QUIC falls back without changing a line.
+The Services and the information model are identical on all three, so an application is written once and a Client that cannot use one transport falls back without changing a line.
+
+Measured throughput for the inline and QUIC transports is in [the throughput report](../extras/performance/OPC-UA-Data-Channel-Throughput.md).
 
 ## Regenerate and validate
 

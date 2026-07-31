@@ -95,7 +95,9 @@ It exists for placement 2 of §4.2 — a Server that needs a Node to hang an end
 
 The two Variables are the operator's view. `Diagnostics` in particular is what turns "the video is bad" into an answer: a rising `FramesDiscarded` says the source is producing faster than the link can carry, a rising `CreditStalls` says the consumer is not reading fast enough, and a rising `RoundTripTime` says the path is congesting. Those are three different faults with three different remedies, and without the counters they look identical.
 
-**`Channels`, `Diagnostics` and `ActiveChannelCount` are security-related.** They aggregate across every SecureChannel, Session and user, so an unrestricted reader learns, for every other user's channel, its `ChannelId`, `SourceNodeId`, `State`, full negotiated `Parameters`, transport stream id, `StartTime` and running byte and frame counters — enough to profile who is streaming from which device, when, at what rate and for how long. That is surveillance metadata about exactly the content the payload permissions were meant to protect, and OPC 10000-5 §6.3.4 already treats the equivalent `SessionSecurityDiagnosticsArray` the same way. A Server **shall** restrict these Variables to authorized users over an encrypted SecureChannel, **shall** apply `RolePermissions` and `UserRolePermissions` to them at least as restrictively as to the **most restrictive** source Node they report — they aggregate across Nodes whose permissions may differ, so the source Node's own permissions are not a well-defined bound — and **should** report to a given Session only the entries for channels that Session authorized.
+**`Channels`, `Diagnostics` and `ActiveChannelCount` are security-related.** They aggregate across every SecureChannel, Session and user, so an unrestricted reader learns, for every other user's channel, its `ChannelId`, `SourceNodeId`, `State`, full negotiated `Parameters`, transport stream id, `StartTime` and running byte and frame counters — enough to profile who is streaming from which device, when, at what rate and for how long. That is surveillance metadata about exactly the content the payload permissions were meant to protect, and OPC 10000-5 §6.3.4 already treats the equivalent `SessionSecurityDiagnosticsArray` the same way. A Server **shall** restrict these Variables to authorized users over an encrypted SecureChannel, and **shall** apply `RolePermissions` and `UserRolePermissions` to them at least as restrictively as to the **most restrictive** source Node they report — they aggregate across Nodes whose permissions may differ, so the source Node's own permissions are not a well-defined bound.
+
+**The per-Session projection is normative, not advisory.** To an ordinary Session a Server **shall** report only the entries for channels that Session authorized, and `ActiveChannelCount` **shall** count only those. Part 4 errata §7.2 already forbids one Session from reaching another's channel, and leaving the projection optional would concede through a Variable exactly what that clause denies through the Services. A Server that needs to expose the aggregate view for administration **shall** do so through a separate Node restricted to an administrative Role, and **shall not** widen these Variables to achieve it.
 
 ### 5.3 HasDataChannel
 
@@ -270,7 +272,7 @@ Server-wide data channel limits and capabilities, exposed as the DataChannelCapa
 | SupportedTransportProfileUris | Variable | String\[\] | Mandatory | DataChannelCapabilitiesType | The TransportProfileUris over which this Server carries data channels, for example the uatcp-uasc-uabinary and quic-uasc-uabinary profiles. |
 | MaxTotalBitrate | Variable | UInt32 | Optional | DataChannelCapabilitiesType | The aggregate rate, in bits per second, the Server will emit across all data channels of one SecureChannel. |
 | MaxCreditPerChannel | Variable | UInt32 | Mandatory | DataChannelCapabilitiesType | The largest flow control credit window, in bytes, the Server will grant to one channel. Mandatory because the connection-level credit bootstrap is bounded by this value multiplied by MaxDataChannels; a Server that omitted it would leave the bound on its own receive memory undefined. |
-| SupportsUnreliableDatagrams | Variable | Boolean | Optional | DataChannelCapabilitiesType | True when the Server can carry Unreliable channels over a genuinely lossy path, which requires a transport that provides one. False on a Server reachable only over opc.tcp or opc.wss, where Unreliable degrades to sender-side discard. |
+| SupportsUnreliableDatagrams | Variable | Boolean | Optional | DataChannelCapabilitiesType | True when the Server can carry Unreliable channels over a genuinely lossy path, which requires a transport that provides one. False wherever the reachable transports are reliable end to end, such as opc.tcp or opc.wss, where Unreliable degrades to sender-side discard. |
 | AllowInsecureDataChannels | Variable | Boolean | Optional | DataChannelCapabilitiesType | True only where the Server permits a data channel to be opened on a SecureChannel whose SecurityMode is None. Absence shall be read as False. On such a channel a frame carries neither signature nor encryption, so its payload and both sequence numbers are attacker-forgeable; the permission is therefore an explicit, separately readable, default-false opt-in rather than something inferred from AccessRestrictions, which defines only restriction bits and no bit that grants anything. |
 | ActiveChannelCount | Variable | UInt16 | Optional | DataChannelCapabilitiesType | The number of data channels currently open across the whole Server. |
 
@@ -338,7 +340,7 @@ The direction in which a data channel carries payload. Directions are named from
 
 *Subtype of:* [Enumeration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.14)
 
-The delivery guarantee requested for a data channel. What a mode can actually deliver depends on the transport: only a transport with a lossy path can genuinely drop data in flight, so over opc.tcp and opc.wss the lossy modes degrade to sender-side discard.
+The delivery guarantee requested for a data channel. What a mode can actually deliver depends on the transport: only a transport with a lossy path can genuinely drop data in flight, so over a reliable transport such as opc.tcp or opc.wss the lossy modes degrade to sender-side discard.
 
 | Name | Value | Description |
 |---|---|---|
@@ -359,7 +361,7 @@ The lifecycle state of a data channel. The normative state transition table - wh
 |---|---|---|
 | Opening | 0 | OpenDataChannel has been accepted and the endpoint is being prepared; no frame may be sent for this ChannelId until the response has been handed to the transport. |
 | Open | 1 | Payload may flow in the negotiated directions. |
-| Paused | 2 | The channel is open but the peer's flow control credit is exhausted in this direction, so no payload may be sent. Over opc.quic this is QUIC stream or connection blocking instead. |
+| Paused | 2 | The channel is open but the peer's flow control credit is exhausted in this direction, so no payload may be sent. Over an outer-protocol transport such as opc.quic or opc.wt this is transport stream or connection blocking instead. |
 | Closing | 3 | This peer has decided to close a direction and is draining it. Closing is per direction, like Paused: receiving END marks only the peer's direction ended. No new payload may be enqueued in a Closing direction; frames already queued may still be sent, and END follows the last of them. |
 | Closed | 4 | The channel is closed, either by END in every direction it carries or by a RESET carrying Good. Its ChannelId is not reassigned while the owning SecureChannel remains open. |
 | Faulted | 5 | The channel was aborted by a RESET frame carrying a Bad StatusCode, by a timeout, or by loss of the SecureChannel, Session or authorizing user identity. |
@@ -398,7 +400,7 @@ The runtime state of one open data channel, as published by its endpoint.
 | SourceNodeId | [NodeId](https://reference.opcfoundation.org/specs/OPC-10000-3/8.2) | The endpoint the channel was opened on. |
 | State | [DataChannelState](#type-DataChannelState) | Current lifecycle state. |
 | Parameters | [DataChannelParametersDataType](#type-DataChannelParametersDataType) | The parameters in force, as revised by the Server. |
-| TransportChannelId | UInt64 | The underlying transport identifier: the QUIC stream id over opc.quic, 0 for inline framing. |
+| TransportChannelId | UInt64 | The underlying transport identifier: the QUIC stream id over opc.quic, the WebTransport stream id over opc.wt, 0 for inline framing. |
 | StartTime | [UtcTime](https://reference.opcfoundation.org/specs/OPC-10000-3/8.37) | When the channel entered the Open state. |
 
 <a id="type-DataChannelOfferDataType"></a>

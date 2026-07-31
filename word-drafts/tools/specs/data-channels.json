@@ -9,7 +9,6 @@
     "docmodel": "word-drafts/OPC-UA-Data-Channels.docmodel.json",
     "figures": "word-drafts/figures"
   },
-
   "identity": {
     "docNumber": "OPC nnnnn-m",
     "partNumber": "Part 1",
@@ -36,7 +35,6 @@
     ],
     "draftBanner": "PROVISIONAL WORKING DRAFT — not normative, not endorsed by the OPC Foundation. The document number, the Mantis project identifier and every NodeId in this document are placeholders; the OPC Foundation assigns the real values."
   },
-
   "_comment_useCases": "The template requires a Use cases clause and this document has no material shaped like one: its worked session and its when-to-use-which guidance are Annexes C and E and stay there. This clause summarises them.",
   "useCases": [
     "A data channel is for content that is continuous, ordered within itself, and too large or too frequent to carry as a sequence of Service responses. Three families of use case motivate it.",
@@ -45,140 +43,590 @@
     "Loss-tolerant telemetry. A source whose value is only useful when it is fresh — a waveform, a position, a pose — is carried in a delivery mode that permits the Server to discard rather than to queue, so a slow consumer degrades instead of accumulating latency.",
     "A data channel is not a replacement for a Subscription, for file transfer or for PubSub, each of which remains the better answer to the problem it was designed for. Annex E sets out which mechanism suits which shape of problem."
   ],
-
   "_comment_termsFrom": "The combined document has no terms clause; its terms are defined in the Part 3 erratum it merges. Pointing at that file keeps one source of truth, where copying the definitions into this config would let them drift.",
   "termsFrom": {
     "markdown": "core-specs/data-channels/OPC-UA-Part3-Data-Channel-Model.md",
     "heading": "3 Terms, definitions and abbreviations"
   },
-
   "abbreviations": [
-    ["ALPN", "Application-Layer Protocol Negotiation"],
-    ["API", "Application Programming Interface"],
-    ["IANA", "Internet Assigned Numbers Authority"],
-    ["MTU", "Maximum Transmission Unit"],
-    ["QUIC", "Quick UDP Internet Connections"],
-    ["RPC", "Remote Procedure Call"],
-    ["RTT", "Round-Trip Time"],
-    ["TLS", "Transport Layer Security"],
-    ["UDP", "User Datagram Protocol"],
-    ["URI", "Uniform Resource Identifier"],
-    ["URL", "Uniform Resource Locator"]
+    [
+      "ALPN",
+      "Application-Layer Protocol Negotiation"
+    ],
+    [
+      "API",
+      "Application Programming Interface"
+    ],
+    [
+      "IANA",
+      "Internet Assigned Numbers Authority"
+    ],
+    [
+      "MTU",
+      "Maximum Transmission Unit"
+    ],
+    [
+      "QUIC",
+      "Quick UDP Internet Connections"
+    ],
+    [
+      "RPC",
+      "Remote Procedure Call"
+    ],
+    [
+      "RTT",
+      "Round-Trip Time"
+    ],
+    [
+      "TLS",
+      "Transport Layer Security"
+    ],
+    [
+      "UDP",
+      "User Datagram Protocol"
+    ],
+    [
+      "URI",
+      "Uniform Resource Identifier"
+    ],
+    [
+      "URL",
+      "Uniform Resource Locator"
+    ]
   ],
-
   "normativeReferences": [
-    {"id": "UAPart1", "label": "OPC 10000-1", "title": "OPC Unified Architecture - Part 1: Overview and Concepts", "url": "http://www.opcfoundation.org/documents/10000-1/"},
-    {"id": "UAPart2", "label": "OPC 10000-2", "title": "OPC Unified Architecture - Part 2: Security Model", "url": "http://www.opcfoundation.org/documents/10000-2/"},
-    {"id": "UAPart3", "label": "OPC 10000-3", "title": "OPC Unified Architecture - Part 3: Address Space Model, which this document proposes to extend with the data channel source types.", "url": "http://www.opcfoundation.org/documents/10000-3/"},
-    {"id": "UAPart4", "label": "OPC 10000-4", "title": "OPC Unified Architecture - Part 4: Services, which this document proposes to extend with the DataChannel Service Set.", "url": "http://www.opcfoundation.org/documents/10000-4/"},
-    {"id": "UAPart5", "label": "OPC 10000-5", "title": "OPC Unified Architecture - Part 5: Information Model", "url": "http://www.opcfoundation.org/documents/10000-5/"},
-    {"id": "UAPart6", "label": "OPC 10000-6", "title": "OPC Unified Architecture - Part 6: Mappings, which this document proposes to extend with the STR frame and the opc.quic transport.", "url": "http://www.opcfoundation.org/documents/10000-6/"},
-    {"id": "UAPart7", "label": "OPC 10000-7", "title": "OPC Unified Architecture - Part 7: Profiles", "url": "http://www.opcfoundation.org/documents/10000-7/"},
-    {"id": "UAPart12", "label": "OPC 10000-12", "title": "OPC Unified Architecture - Part 12: Discovery and Global Services", "url": "http://www.opcfoundation.org/documents/10000-12/"},
-    {"id": "UAPart14", "label": "OPC 10000-14", "title": "OPC Unified Architecture - Part 14: PubSub", "url": "http://www.opcfoundation.org/documents/10000-14/"},
-    {"id": "UAPart20", "label": "OPC 10000-20", "title": "OPC Unified Architecture - Part 20: File Transfer", "url": "http://www.opcfoundation.org/documents/10000-20/"},
-    {"id": "RFC9000", "label": "IETF RFC 9000", "title": "QUIC: A UDP-Based Multiplexed and Secure Transport", "url": "https://www.rfc-editor.org/rfc/rfc9000"},
-    {"id": "RFC9221", "label": "IETF RFC 9221", "title": "An Unreliable Datagram Extension to QUIC", "url": "https://www.rfc-editor.org/rfc/rfc9221"},
-    {"id": "RFC8446", "label": "IETF RFC 8446", "title": "The Transport Layer Security (TLS) Protocol Version 1.3", "url": "https://www.rfc-editor.org/rfc/rfc8446"}
+    {
+      "id": "UAPart1",
+      "label": "OPC 10000-1",
+      "title": "OPC Unified Architecture - Part 1: Overview and Concepts",
+      "url": "http://www.opcfoundation.org/documents/10000-1/"
+    },
+    {
+      "id": "UAPart2",
+      "label": "OPC 10000-2",
+      "title": "OPC Unified Architecture - Part 2: Security Model",
+      "url": "http://www.opcfoundation.org/documents/10000-2/"
+    },
+    {
+      "id": "UAPart3",
+      "label": "OPC 10000-3",
+      "title": "OPC Unified Architecture - Part 3: Address Space Model, which this document proposes to extend with the data channel source types.",
+      "url": "http://www.opcfoundation.org/documents/10000-3/"
+    },
+    {
+      "id": "UAPart4",
+      "label": "OPC 10000-4",
+      "title": "OPC Unified Architecture - Part 4: Services, which this document proposes to extend with the DataChannel Service Set.",
+      "url": "http://www.opcfoundation.org/documents/10000-4/"
+    },
+    {
+      "id": "UAPart5",
+      "label": "OPC 10000-5",
+      "title": "OPC Unified Architecture - Part 5: Information Model",
+      "url": "http://www.opcfoundation.org/documents/10000-5/"
+    },
+    {
+      "id": "UAPart6",
+      "label": "OPC 10000-6",
+      "title": "OPC Unified Architecture - Part 6: Mappings, which this document proposes to extend with the STR frame and the opc.quic transport.",
+      "url": "http://www.opcfoundation.org/documents/10000-6/"
+    },
+    {
+      "id": "UAPart7",
+      "label": "OPC 10000-7",
+      "title": "OPC Unified Architecture - Part 7: Profiles",
+      "url": "http://www.opcfoundation.org/documents/10000-7/"
+    },
+    {
+      "id": "UAPart12",
+      "label": "OPC 10000-12",
+      "title": "OPC Unified Architecture - Part 12: Discovery and Global Services",
+      "url": "http://www.opcfoundation.org/documents/10000-12/"
+    },
+    {
+      "id": "UAPart14",
+      "label": "OPC 10000-14",
+      "title": "OPC Unified Architecture - Part 14: PubSub",
+      "url": "http://www.opcfoundation.org/documents/10000-14/"
+    },
+    {
+      "id": "UAPart20",
+      "label": "OPC 10000-20",
+      "title": "OPC Unified Architecture - Part 20: File Transfer",
+      "url": "http://www.opcfoundation.org/documents/10000-20/"
+    },
+    {
+      "id": "RFC9000",
+      "label": "IETF RFC 9000",
+      "title": "QUIC: A UDP-Based Multiplexed and Secure Transport",
+      "url": "https://www.rfc-editor.org/rfc/rfc9000"
+    },
+    {
+      "id": "RFC9221",
+      "label": "IETF RFC 9221",
+      "title": "An Unreliable Datagram Extension to QUIC",
+      "url": "https://www.rfc-editor.org/rfc/rfc9221"
+    },
+    {
+      "id": "RFC8446",
+      "label": "IETF RFC 8446",
+      "title": "The Transport Layer Security (TLS) Protocol Version 1.3",
+      "url": "https://www.rfc-editor.org/rfc/rfc8446"
+    }
   ],
-
   "clauseMap": [
-    {"from": "1 Scope",                                        "number": "1",    "title": "Scope",                                       "region": "scope"},
-
-    {"from": null,                                             "number": "2",    "title": "Normative references",                        "region": "normative-references", "generated": "normative-references"},
-
-    {"from": null,                                             "number": "3",    "title": "Terms, abbreviated terms and conventions",     "region": "terms"},
-    {"from": null,                                             "number": "3.1",  "title": "Overview",                                     "generated": "terms-overview"},
-    {"from": null,                                             "number": "3.2",  "title": "Data channel terms",                           "generated": "terms"},
-    {"from": null,                                             "number": "3.3",  "title": "Abbreviated terms",                            "generated": "abbreviations"},
-    {"from": null,                                             "number": "3.4",  "title": "Conventions used in this document",             "slice": "conventions"},
-
-    {"from": null,                                             "number": "4",    "title": "General information to data channels and OPC UA", "region": "general"},
-    {"from": null,                                             "number": "4.1",  "title": "Introduction to data channels",                "generated": "subject-introduction"},
-    {"from": null,                                             "number": "4.2",  "title": "Introduction to OPC Unified Architecture",     "slice": "opcua-intro"},
-
-    {"from": null,                                             "number": "5",    "title": "Use cases",                                   "region": "use-cases", "generated": "use-cases"},
-
-    {"from": "3 Design overview",                              "number": "6",    "title": "Data channels information model overview",    "region": "model-overview"},
-    {"from": "2 The problem",                                  "number": "6.1",  "title": "The problem"},
-    {"from": "3.1 Two channel models",                         "number": "6.2",  "title": "Two channel models"},
-    {"from": "3.2 The design in one page",                     "number": "6.3",  "title": "The design in one page"},
-    {"from": "3.3 What the outer-protocol model adds",         "number": "6.4",  "title": "What the outer-protocol model adds"},
-
-    {"from": "4 The frame",                                    "number": "6.5",  "title": "The frame"},
-    {"from": "4.1 Layout",                                     "number": "6.5.1", "title": "Layout"},
-    {"from": "4.2 Frame types",                                "number": "6.5.2", "title": "Frame types"},
-    {"from": "4.3 The five flags",                             "number": "6.5.3", "title": "The five flags"},
-
-    {"from": "5 Flow control, scheduling and loss",            "number": "6.6",  "title": "Flow control, scheduling and loss"},
-    {"from": "5.1 Credit",                                     "number": "6.6.1", "title": "Credit"},
-    {"from": "5.2 Two scheduling obligations",                 "number": "6.6.2", "title": "Two scheduling obligations"},
-    {"from": "5.3 State, and what \"unreliable\" means",        "number": "6.6.3", "title": "State, and what unreliable means"},
-
-    {"from": "6 DataChannel service set",                      "number": "6.7",  "title": "The DataChannel Service Set"},
-    {"from": "6.1 OpenDataChannel",                            "number": "6.7.1", "title": "OpenDataChannel"},
-    {"from": "6.2 ModifyDataChannel",                          "number": "6.7.2", "title": "ModifyDataChannel"},
-    {"from": "6.3 CloseDataChannel",                           "number": "6.7.3", "title": "CloseDataChannel"},
-    {"from": "6.4 Server-initiated channels without inverting the model", "number": "6.7.4", "title": "Server-initiated channels"},
-    {"from": "6.5 Lifecycle",                                  "number": "6.7.5", "title": "Lifecycle"},
-    {"from": "6.6 Defaults, ranges and the no-preference sentinel", "number": "6.7.6", "title": "Defaults, ranges and the no-preference sentinel"},
-
-    {"from": "7 The model",                                    "number": "6.8",  "title": "Organisation of the model"},
-    {"from": "8 Interoperability with implementations that do not support data channels", "number": "6.9", "title": "Interoperability with implementations that do not support data channels"},
-
-    {"from": "9 The QUIC transport",                           "number": "6.10", "title": "The QUIC transport"},
-    {"from": "9.1 Why an outer-protocol binding",              "number": "6.10.1", "title": "Why an outer-protocol binding"},
-    {"from": "9.2 URL scheme, ALPN and discovery",             "number": "6.10.2", "title": "URL scheme, ALPN and discovery"},
-    {"from": "9.3 Connection, control stream and channel streams", "number": "6.10.3", "title": "Connection, control stream and channel streams"},
-    {"from": "9.4 Unreliable datagrams",                       "number": "6.10.4", "title": "Unreliable datagrams"},
-    {"from": "9.5 Security and the TLS binding",               "number": "6.10.5", "title": "Security and the TLS binding"},
-    {"from": "9.6 Connection migration",                       "number": "6.10.6", "title": "Connection migration"},
-    {"from": "9.7 Congestion control",                         "number": "6.10.7", "title": "Congestion control"},
-    {"from": "9.8 Choosing between the inline and outer-protocol models", "number": "6.10.8", "title": "Choosing between the inline and outer-protocol models"},
-    {"from": "9.9 Fallback",                                   "number": "6.10.9", "title": "Fallback"},
-
-    {"from": null,                                             "number": "7",    "title": "OPC UA ObjectTypes", "region": "objecttypes",
-     "generated": "types", "nodeClass": "UAObjectType", "select": {"notDescendsFrom": "BaseEventType"}},
-
-    {"from": null,                                             "number": "8",    "title": "OPC UA EventTypes",  "region": "eventtypes",
-     "generated": "types", "nodeClass": "UAObjectType", "select": {"descendsFrom": "BaseEventType"}},
-
-    {"from": null,                                             "number": "9",    "title": "OPC UA DataTypes",   "region": "datatypes", "generated": "datatypes"},
-
-    {"from": null,                                             "number": "10",   "title": "OPC UA ReferenceTypes", "region": "referencetypes",
-     "generated": "types", "nodeClass": "UAReferenceType"},
-
-    {"from": null,                                             "number": "11",   "title": "Instances",          "region": "instances",
-     "generated": "types", "nodeClass": "UAObject", "select": {"parentOutsideModel": true}},
-
-    {"from": "10 Conformance units",                           "number": "12",   "title": "Profiles and conformance units", "region": "profiles"},
-
-    {"from": null,                                             "number": "13",   "title": "Namespaces",         "region": "namespaces"},
-    {"from": null,                                             "number": "13.1", "title": "Namespace metadata", "generated": "namespace-metadata"},
-    {"from": null,                                             "number": "13.2", "title": "Handling of OPC UA namespaces", "generated": "namespace-handling"},
-
-    {"from": "Annex A — Information model",                    "number": "A",    "title": "Data channels namespace and mappings", "annex": true, "normative": true, "region": "annex-a", "slice": "annex-a"},
-
-    {"from": "Annex B — Annotated byte layouts",               "number": "B",    "title": "Annotated byte layouts", "annex": true, "normative": true, "region": "annex-b"},
-    {"from": "inline_data_first",                              "number": "B.1",  "title": "Inline data, first frame"},
-    {"from": "inline_data_final",                              "number": "B.2",  "title": "Inline data, final frame"},
-    {"from": "inline_data_droppable",                          "number": "B.3",  "title": "Inline data, droppable"},
-    {"from": "inline_credit_channel",                          "number": "B.4",  "title": "Inline credit, per channel"},
-    {"from": "inline_credit_connection",                       "number": "B.5",  "title": "Inline credit, per connection"},
-    {"from": "inline_gap",                                     "number": "B.6",  "title": "Inline gap"},
-    {"from": "inline_reset",                                   "number": "B.7",  "title": "Inline reset"},
-    {"from": "inline_end",                                     "number": "B.8",  "title": "Inline end"},
-    {"from": "inline_ping",                                    "number": "B.9",  "title": "Inline ping"},
-    {"from": "inline_pong",                                    "number": "B.10", "title": "Inline pong"},
-    {"from": "inline_data_signed",                             "number": "B.11", "title": "Inline data, signed"},
-    {"from": "quic_data_stream",                               "number": "B.12", "title": "QUIC data stream"},
-    {"from": "quic_datagram_unreliable",                       "number": "B.13", "title": "QUIC unreliable datagram"},
-
-    {"from": "Annex C — A worked media session (informative)", "number": "C",    "title": "A worked media session", "annex": true, "region": "annex-c"},
-    {"from": "Annex D — Comparison with WebRTC (informative)", "number": "D",    "title": "Comparison with WebRTC", "annex": true, "region": "annex-d"},
-    {"from": "Annex E — When to use which mechanism (informative)", "number": "E", "title": "When to use which mechanism", "annex": true, "region": "annex-e"}
+    {
+      "from": "1 Scope",
+      "number": "1",
+      "title": "Scope",
+      "region": "scope"
+    },
+    {
+      "from": null,
+      "number": "2",
+      "title": "Normative references",
+      "region": "normative-references",
+      "generated": "normative-references"
+    },
+    {
+      "from": null,
+      "number": "3",
+      "title": "Terms, abbreviated terms and conventions",
+      "region": "terms"
+    },
+    {
+      "from": null,
+      "number": "3.1",
+      "title": "Overview",
+      "generated": "terms-overview"
+    },
+    {
+      "from": null,
+      "number": "3.2",
+      "title": "Data channel terms",
+      "generated": "terms"
+    },
+    {
+      "from": null,
+      "number": "3.3",
+      "title": "Abbreviated terms",
+      "generated": "abbreviations"
+    },
+    {
+      "from": null,
+      "number": "3.4",
+      "title": "Conventions used in this document",
+      "slice": "conventions"
+    },
+    {
+      "from": null,
+      "number": "4",
+      "title": "General information to data channels and OPC UA",
+      "region": "general"
+    },
+    {
+      "from": null,
+      "number": "4.1",
+      "title": "Introduction to data channels",
+      "generated": "subject-introduction"
+    },
+    {
+      "from": null,
+      "number": "4.2",
+      "title": "Introduction to OPC Unified Architecture",
+      "slice": "opcua-intro"
+    },
+    {
+      "from": null,
+      "number": "5",
+      "title": "Use cases",
+      "region": "use-cases",
+      "generated": "use-cases"
+    },
+    {
+      "from": "3 Design overview",
+      "number": "6",
+      "title": "Data channels information model overview",
+      "region": "model-overview"
+    },
+    {
+      "from": "2 The problem",
+      "number": "6.1",
+      "title": "The problem"
+    },
+    {
+      "from": "3.1 Two channel models",
+      "number": "6.2",
+      "title": "Two channel models"
+    },
+    {
+      "from": "3.2 The design in one page",
+      "number": "6.3",
+      "title": "The design in one page"
+    },
+    {
+      "from": "3.3 What the outer-protocol model adds",
+      "number": "6.4",
+      "title": "What the outer-protocol model adds"
+    },
+    {
+      "from": "4 The frame",
+      "number": "6.5",
+      "title": "The frame"
+    },
+    {
+      "from": "4.1 Layout",
+      "number": "6.5.1",
+      "title": "Layout"
+    },
+    {
+      "from": "4.2 Frame types",
+      "number": "6.5.2",
+      "title": "Frame types"
+    },
+    {
+      "from": "4.3 The five flags",
+      "number": "6.5.3",
+      "title": "The five flags"
+    },
+    {
+      "from": "5 Flow control, scheduling and loss",
+      "number": "6.6",
+      "title": "Flow control, scheduling and loss"
+    },
+    {
+      "from": "5.1 Credit",
+      "number": "6.6.1",
+      "title": "Credit"
+    },
+    {
+      "from": "5.2 Two scheduling obligations",
+      "number": "6.6.2",
+      "title": "Two scheduling obligations"
+    },
+    {
+      "from": "5.3 State, and what \"unreliable\" means",
+      "number": "6.6.3",
+      "title": "State, and what unreliable means"
+    },
+    {
+      "from": "6 DataChannel service set",
+      "number": "6.7",
+      "title": "The DataChannel Service Set"
+    },
+    {
+      "from": "6.1 OpenDataChannel",
+      "number": "6.7.1",
+      "title": "OpenDataChannel"
+    },
+    {
+      "from": "6.2 ModifyDataChannel",
+      "number": "6.7.2",
+      "title": "ModifyDataChannel"
+    },
+    {
+      "from": "6.3 CloseDataChannel",
+      "number": "6.7.3",
+      "title": "CloseDataChannel"
+    },
+    {
+      "from": "6.4 Server-initiated channels without inverting the model",
+      "number": "6.7.4",
+      "title": "Server-initiated channels"
+    },
+    {
+      "from": "6.5 Lifecycle",
+      "number": "6.7.5",
+      "title": "Lifecycle"
+    },
+    {
+      "from": "6.6 Defaults, ranges and the no-preference sentinel",
+      "number": "6.7.6",
+      "title": "Defaults, ranges and the no-preference sentinel"
+    },
+    {
+      "from": "7 The model",
+      "number": "6.8",
+      "title": "Organisation of the model"
+    },
+    {
+      "from": "8 Interoperability with implementations that do not support data channels",
+      "number": "6.9",
+      "title": "Interoperability with implementations that do not support data channels"
+    },
+    {
+      "from": "9 The QUIC transport",
+      "number": "6.10",
+      "title": "The QUIC transport"
+    },
+    {
+      "from": "9.1 Why an outer-protocol binding",
+      "number": "6.10.1",
+      "title": "Why an outer-protocol binding"
+    },
+    {
+      "from": "9.2 URL scheme, ALPN and discovery",
+      "number": "6.10.2",
+      "title": "URL scheme, ALPN and discovery"
+    },
+    {
+      "from": "9.3 Connection, control stream and channel streams",
+      "number": "6.10.3",
+      "title": "Connection, control stream and channel streams"
+    },
+    {
+      "from": "9.4 Unreliable datagrams",
+      "number": "6.10.4",
+      "title": "Unreliable datagrams"
+    },
+    {
+      "from": "9.5 Security and the TLS binding",
+      "number": "6.10.5",
+      "title": "Security and the TLS binding"
+    },
+    {
+      "from": "9.6 Connection migration",
+      "number": "6.10.6",
+      "title": "Connection migration"
+    },
+    {
+      "from": "9.7 Congestion control",
+      "number": "6.10.7",
+      "title": "Congestion control"
+    },
+    {
+      "from": "9.8 Choosing between transports",
+      "number": "6.10.8",
+      "title": "Choosing between transports"
+    },
+    {
+      "from": "9.9 Fallback",
+      "number": "6.10.9",
+      "title": "Fallback"
+    },
+    {
+      "number": "6.11",
+      "title": "The WebTransport over HTTP/3 transport",
+      "from": "10 The WebTransport over HTTP/3 transport"
+    },
+    {
+      "number": "6.11.1",
+      "title": "Why an outer-protocol binding",
+      "from": "10.1 Why an outer-protocol binding"
+    },
+    {
+      "number": "6.11.2",
+      "title": "URL scheme, ALPN and discovery",
+      "from": "10.2 URL scheme, ALPN and discovery"
+    },
+    {
+      "number": "6.11.3",
+      "title": "Connection, control stream and channel streams",
+      "from": "10.3 Connection, control stream and channel streams"
+    },
+    {
+      "number": "6.11.4",
+      "title": "Unreliable datagrams",
+      "from": "10.4 Unreliable datagrams"
+    },
+    {
+      "number": "6.11.5",
+      "title": "Security and intermediaries",
+      "from": "10.5 Security and intermediaries"
+    },
+    {
+      "number": "6.11.6",
+      "title": "Reverse connect",
+      "from": "10.6 Reverse connect"
+    },
+    {
+      "number": "6.12",
+      "title": "What it costs",
+      "from": "11 What it costs"
+    },
+    {
+      "from": null,
+      "number": "7",
+      "title": "OPC UA ObjectTypes",
+      "region": "objecttypes",
+      "generated": "types",
+      "nodeClass": "UAObjectType",
+      "select": {
+        "notDescendsFrom": "BaseEventType"
+      }
+    },
+    {
+      "from": null,
+      "number": "8",
+      "title": "OPC UA EventTypes",
+      "region": "eventtypes",
+      "generated": "types",
+      "nodeClass": "UAObjectType",
+      "select": {
+        "descendsFrom": "BaseEventType"
+      }
+    },
+    {
+      "from": null,
+      "number": "9",
+      "title": "OPC UA DataTypes",
+      "region": "datatypes",
+      "generated": "datatypes"
+    },
+    {
+      "from": null,
+      "number": "10",
+      "title": "OPC UA ReferenceTypes",
+      "region": "referencetypes",
+      "generated": "types",
+      "nodeClass": "UAReferenceType"
+    },
+    {
+      "from": null,
+      "number": "11",
+      "title": "Instances",
+      "region": "instances",
+      "generated": "types",
+      "nodeClass": "UAObject",
+      "select": {
+        "parentOutsideModel": true
+      }
+    },
+    {
+      "from": "12 Conformance units",
+      "number": "12",
+      "title": "Profiles and conformance units",
+      "region": "profiles"
+    },
+    {
+      "from": null,
+      "number": "13",
+      "title": "Namespaces",
+      "region": "namespaces"
+    },
+    {
+      "from": null,
+      "number": "13.1",
+      "title": "Namespace metadata",
+      "generated": "namespace-metadata"
+    },
+    {
+      "from": null,
+      "number": "13.2",
+      "title": "Handling of OPC UA namespaces",
+      "generated": "namespace-handling"
+    },
+    {
+      "from": "Annex A — Information model",
+      "number": "A",
+      "title": "Data channels namespace and mappings",
+      "annex": true,
+      "normative": true,
+      "region": "annex-a",
+      "slice": "annex-a"
+    },
+    {
+      "from": "Annex B — Annotated byte layouts",
+      "number": "B",
+      "title": "Annotated byte layouts",
+      "annex": true,
+      "normative": true,
+      "region": "annex-b"
+    },
+    {
+      "from": "inline_data_first",
+      "number": "B.1",
+      "title": "Inline data, first frame"
+    },
+    {
+      "from": "inline_data_final",
+      "number": "B.2",
+      "title": "Inline data, final frame"
+    },
+    {
+      "from": "inline_data_droppable",
+      "number": "B.3",
+      "title": "Inline data, droppable"
+    },
+    {
+      "from": "inline_credit_channel",
+      "number": "B.4",
+      "title": "Inline credit, per channel"
+    },
+    {
+      "from": "inline_credit_connection",
+      "number": "B.5",
+      "title": "Inline credit, per connection"
+    },
+    {
+      "from": "inline_gap",
+      "number": "B.6",
+      "title": "Inline gap"
+    },
+    {
+      "from": "inline_reset",
+      "number": "B.7",
+      "title": "Inline reset"
+    },
+    {
+      "from": "inline_end",
+      "number": "B.8",
+      "title": "Inline end"
+    },
+    {
+      "from": "inline_ping",
+      "number": "B.9",
+      "title": "Inline ping"
+    },
+    {
+      "from": "inline_pong",
+      "number": "B.10",
+      "title": "Inline pong"
+    },
+    {
+      "from": "inline_data_signed",
+      "number": "B.11",
+      "title": "Inline data, signed"
+    },
+    {
+      "from": "quic_data_stream",
+      "number": "B.12",
+      "title": "QUIC data stream"
+    },
+    {
+      "from": "quic_datagram_unreliable",
+      "number": "B.13",
+      "title": "QUIC unreliable datagram"
+    },
+    {
+      "from": "Annex C — A worked media session (informative)",
+      "number": "C",
+      "title": "A worked media session",
+      "annex": true,
+      "region": "annex-c"
+    },
+    {
+      "from": "Annex D — Comparison with WebRTC (informative)",
+      "number": "D",
+      "title": "Comparison with WebRTC",
+      "annex": true,
+      "region": "annex-d"
+    },
+    {
+      "from": "Annex E — When to use which mechanism (informative)",
+      "number": "E",
+      "title": "When to use which mechanism",
+      "annex": true,
+      "region": "annex-e"
+    },
+    {
+      "number": "F",
+      "title": "A worked reverse-connect session",
+      "from": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
+      "annex": true,
+      "region": "annex-f"
+    }
   ],
-
   "_comment_dropped": "Annex A's subsections are regenerated from the NodeSet.",
   "dropped": [
     "Type overview",
@@ -188,7 +636,6 @@
     "Data types",
     "Well-known instances"
   ],
-
   "_comment_dropParagraphsContaining": "Paragraphs about the repository rather than the model. A submitted specification does not cite its own source tree.",
   "dropParagraphsContaining": [
     "core-specs/",
@@ -199,33 +646,76 @@
     "gen_wire_annex.py",
     "CHANGELOG.md"
   ],
-
   "_comment_citedAs": "How sibling documents name this one. A reference is rewritten only when anchored on one of these, so this document's clause map is never applied to a reference belonging elsewhere.",
-  "citedAs": ["Data Channels", "data channels spec"],
-
+  "citedAs": [
+    "Data Channels",
+    "data channels spec"
+  ],
   "unanchoredSiblings": [],
-
   "_comment_foreignAnchors": "Names this document uses for other documents. Clause 12's \"Defined in\" column cites all three errata, so those references must not be rewritten to clauses of this document.",
-  "foreignAnchors": ["Part 3 errata", "Part 4 errata", "Part 6 errata", "errata"],
-
-  "annexMap": {"A": "A", "B": "B", "C": "C", "D": "D", "E": "E"},
-
+  "foreignAnchors": [
+    "Part 3 errata",
+    "Part 4 errata",
+    "Part 6 errata",
+    "errata"
+  ],
+  "annexMap": {
+    "A": "A",
+    "B": "B",
+    "C": "C",
+    "D": "D",
+    "E": "E",
+    "F": "F"
+  },
   "xrefMap": {
     "1": "1",
     "2": "6.1",
-    "3": "6", "3.1": "6.2", "3.2": "6.3", "3.3": "6.4",
-    "4": "6.5", "4.1": "6.5.1", "4.2": "6.5.2", "4.3": "6.5.3",
-    "5": "6.6", "5.1": "6.6.1", "5.2": "6.6.2", "5.3": "6.6.3",
-    "6": "6.7", "6.1": "6.7.1", "6.2": "6.7.2", "6.3": "6.7.3", "6.4": "6.7.4",
-    "6.5": "6.7.5", "6.6": "6.7.6",
+    "3": "6",
+    "3.1": "6.2",
+    "3.2": "6.3",
+    "3.3": "6.4",
+    "4": "6.5",
+    "4.1": "6.5.1",
+    "4.2": "6.5.2",
+    "4.3": "6.5.3",
+    "5": "6.6",
+    "5.1": "6.6.1",
+    "5.2": "6.6.2",
+    "5.3": "6.6.3",
+    "6": "6.7",
+    "6.1": "6.7.1",
+    "6.2": "6.7.2",
+    "6.3": "6.7.3",
+    "6.4": "6.7.4",
+    "6.5": "6.7.5",
+    "6.6": "6.7.6",
     "7": "6.8",
     "8": "6.9",
-    "9": "6.10", "9.1": "6.10.1", "9.2": "6.10.2", "9.3": "6.10.3", "9.4": "6.10.4",
-    "9.5": "6.10.5", "9.6": "6.10.6", "9.7": "6.10.7", "9.8": "6.10.8", "9.9": "6.10.9",
-    "10": "12"
+    "9": "6.10",
+    "9.1": "6.10.1",
+    "9.2": "6.10.2",
+    "9.3": "6.10.3",
+    "9.4": "6.10.4",
+    "9.5": "6.10.5",
+    "9.6": "6.10.6",
+    "9.7": "6.10.7",
+    "9.8": "6.10.8",
+    "9.9": "6.10.9",
+    "10": "6.11",
+    "10.1": "6.11.1",
+    "10.2": "6.11.2",
+    "10.3": "6.11.3",
+    "10.4": "6.11.4",
+    "10.5": "6.11.5",
+    "10.6": "6.11.6",
+    "11": "6.12",
+    "12": "12"
   },
-
   "figures": [
-    {"id": "fig-dch-session", "caption": "Opening and using a data channel", "pptx": "DataChannels-Fig1-Session.pptx"}
+    {
+      "id": "fig-dch-session",
+      "caption": "Opening and using a data channel",
+      "pptx": "DataChannels-Fig1-Session.pptx"
+    }
   ]
 }
