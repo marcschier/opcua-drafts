@@ -1056,10 +1056,60 @@ prop_var(1015, SY, "RedundancyScheme", String,
          "Redundancy scheme, e.g. N, N+1, N+2, 2N, DistributedRedundant.")
 
 # ===========================================================================
+# =========================  CONFORMANCE UNITS  =============================
+# ===========================================================================
+# OPC 20020 requires each type's definition table to name the conformance units that
+# carry it, and a unit has to be an identifier token rather than a prose capability. The
+# CAT_* values above group nodes for generation only; they are not conformance units and
+# are never emitted as <Category>. The units below are the subsystems clause 9 already
+# treats as independently supportable.
+CU_GENERATOR_SET = "GEN-GeneratorSet"
+CU_COMPONENTS = "GEN-Components"
+CU_IDENTIFICATION = "GEN-Identification"
+CU_STATE_MACHINE = "GEN-StateMachine"
+CU_RATING = "GEN-Rating"
+CU_ALARMS = "GEN-Alarms"
+CU_CANBUS = "GEN-CANbus"
+CU_TRANSFER_SWITCH = "GEN-TransferSwitch"
+CU_PARALLELING = "GEN-Paralleling"
+CU_SYSTEM = "GEN-System"
+
+# Every unit, in the order the conformance clause lists them. The document and this table
+# have to agree, or the check that each emitted unit is named in the clause is circular.
+ALL_CONFORMANCE_UNITS = (
+    CU_GENERATOR_SET, CU_COMPONENTS, CU_IDENTIFICATION, CU_STATE_MACHINE, CU_RATING,
+    CU_ALARMS, CU_CANBUS, CU_TRANSFER_SWITCH, CU_PARALLELING, CU_SYSTEM,
+)
+
+UNITS_BY_CATEGORY = {
+    CAT_MAIN: (CU_GENERATOR_SET,),
+    CAT_COMP: (CU_COMPONENTS,),
+    CAT_ID: (CU_IDENTIFICATION,),
+    CAT_SM: (CU_STATE_MACHINE,),
+    CAT_RATE: (CU_RATING,),
+    CAT_AL: (CU_ALARMS,),
+    CAT_CAN: (CU_CANBUS,),
+    CAT_ATS: (CU_TRANSFER_SWITCH,),
+    CAT_PAR: (CU_PARALLELING,),
+    CAT_SYS: (CU_SYSTEM,),
+    # The enumerations and structures are the vocabulary the core generator-set types
+    # are written in, so they belong to the unit every conformant Server implements.
+    CAT_EN: (CU_GENERATOR_SET,),
+}
+
+
+def units_of(n):
+    """The conformance units a Node declares, as <Category> elements."""
+    if n.category:
+        return UNITS_BY_CATEGORY.get(n.category, ())
+    return ()
+
+
+# ===========================================================================
 # ==============================  EMISSION  =================================
 # ===========================================================================
 NAMESPACE = "http://opcfoundation.org/UA/Generators/"
-VERSION = "1.0.0"
+VERSION = "1.1.0"
 PUBDATE = "2026-07-01T00:00:00Z"
 
 ALIASES = [
@@ -1111,8 +1161,8 @@ def _emit_node(n):
     lines.append(f"    <DisplayName>{sx.escape(n.display)}</DisplayName>")
     if n.desc:
         lines.append(f"    <Description>{sx.escape(n.desc)}</Description>")
-    if n.category:
-        lines.append(f"    <Category>{sx.escape(n.category)}</Category>")
+    for unit in units_of(n):
+        lines.append(f"    <Category>{sx.escape(unit)}</Category>")
     lines.append("    <References>")
     for i in _sorted_refs(n.refs):
         rt, tgt, fwd = n.refs[i]

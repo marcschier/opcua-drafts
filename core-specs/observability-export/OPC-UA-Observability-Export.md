@@ -492,19 +492,19 @@ The following Conformance Units (CUs) are defined; Facets group them for Servers
 
 | Conformance Unit | Requirement |
 |---|---|
-| Observability Discovery | Expose a server-wide `Observability` registry of type [`ObservabilityFolderType`](#type-ObservabilityFolderType) as a component of the Server Object, referencing every `ObservabilityBindingGroup` through `Collects`. |
-| Binding Grouping | On each `IObservableType` instance, group bindings under one `ObservabilityBindingGroup` per `CompanionSpecificationUri`; make sibling groups unique by that identifier and BrowseName, have each group `CollectedBy` the registry, and expose `ModelNamespaceUris`. |
-| BrowsePath Resolution | Author bound items as type-level BrowsePaths and resolve them per instance under the rules of §5.10. |
-| DataSet Cardinality | Resolve `DataSetCardinalityPath` and create one DataSet instance per matched cardinality anchor while sharing the binding's `DataSetClassId`. |
-| DataSet Class Identity | Compute the deterministic `DataSetClassId` per §5.7 and propagate it to `DataSetMetaData.dataSetClassId` and `PublishedDataSet.DataSetClassId` wherever PubSub realization is configured. |
-| Binding Inheritance & Facet Composition | Compose the effective class by unioning bindings inherited via subtype, `HasInterface` and `HasAddIn` (override by `FieldName`), advertise base classes via `BaseDataSetClassIds`, and tag field provenance with `SourceBindingClassId` (§5.12). |
-| Metrics OTEL Mapping | For a Metrics binding, map bound Variables to OTEL metric instruments per `MetricInstrumentType` (or the Kind default), unit and temporality, and attach `Kind = Dimension` items as attributes/Resource (§5.13.1, §5.13.4). |
-| Logs OTEL Mapping | For a Logs binding, render event bindings to OTEL LogRecords via `LogTemplate`/`LogSeverityFieldName`/`LogBodyFieldName`/`LogTimestampFieldName`, carrying dimensions as attributes (§5.13.2). |
-| Traces OTEL Mapping | For a Traces binding, produce OTEL Spans from Program/audit/correlated events via the `Span*` members (name, identity, timing, correlation, status, kind), carrying dimensions as attributes (§5.13.3). |
-| Metric Realization *(optional)* | Realize a Metrics binding as one Part 14 `PublishedDataSet`/`DataSetWriter` per DataSet instance, with `PublishedDataItemsType`. Applicable only where the Server implements PubSub. |
-| Event DataSet Binding *(optional)* | Realize a Logs or Traces binding as one Part 14 `PublishedDataSet`/`DataSetWriter` per DataSet instance, with `PublishedEventsType`, mapping `BoundEventFieldType`/`EventFieldOperand` to `SelectedFields`, `EventSourcePath` to the notifier and `Filter` to the event filter. Applicable only where the Server implements PubSub. |
-| Semantic Cross-Reference | Populate the semantic fields on every exposed bound item (`SourceTypeDefinition`/`SourceBrowseName`/`ModelNamespaceUri`, per §5.4). Independent of PubSub. |
-| PubSub MetaData Propagation *(optional)* | Where a binding is realized over PubSub, propagate the semantic fields into `DataSetMetaData.FieldMetaData` per §5.4.1 and the DataSet-level fields per §5.5. |
+| **OBS-Discovery** | Expose a server-wide `Observability` registry of type [`ObservabilityFolderType`](#type-ObservabilityFolderType) as a component of the Server Object, referencing every `ObservabilityBindingGroup` through `Collects`. |
+| **OBS-BindingGrouping** | On each `IObservableType` instance, group bindings under one `ObservabilityBindingGroup` per `CompanionSpecificationUri`; make sibling groups unique by that identifier and BrowseName, have each group `CollectedBy` the registry, and expose `ModelNamespaceUris`. |
+| **OBS-BrowsePathResolution** | Author bound items as type-level BrowsePaths and resolve them per instance under the rules of §5.10. |
+| **OBS-DataSetCardinality** | Resolve `DataSetCardinalityPath` and create one DataSet instance per matched cardinality anchor while sharing the binding's `DataSetClassId`. |
+| **OBS-DataSetClassIdentity** | Compute the deterministic `DataSetClassId` per §5.7 and propagate it to `DataSetMetaData.dataSetClassId` and `PublishedDataSet.DataSetClassId` wherever PubSub realization is configured. |
+| **OBS-BindingInheritance** | Compose the effective class by unioning bindings inherited via subtype, `HasInterface` and `HasAddIn` (override by `FieldName`), advertise base classes via `BaseDataSetClassIds`, and tag field provenance with `SourceBindingClassId` (§5.12). |
+| **OBS-MetricsMapping** | For a Metrics binding, map bound Variables to OTEL metric instruments per `MetricInstrumentType` (or the Kind default), unit and temporality, and attach `Kind = Dimension` items as attributes/Resource (§5.13.1, §5.13.4). |
+| **OBS-LogsMapping** | For a Logs binding, render event bindings to OTEL LogRecords via `LogTemplate`/`LogSeverityFieldName`/`LogBodyFieldName`/`LogTimestampFieldName`, carrying dimensions as attributes (§5.13.2). |
+| **OBS-TracesMapping** | For a Traces binding, produce OTEL Spans from Program/audit/correlated events via the `Span*` members (name, identity, timing, correlation, status, kind), carrying dimensions as attributes (§5.13.3). |
+| **OBS-MetricRealization** *(optional)* | Realize a Metrics binding as one Part 14 `PublishedDataSet`/`DataSetWriter` per DataSet instance, with `PublishedDataItemsType`. Applicable only where the Server implements PubSub. |
+| **OBS-EventDataSetBinding** *(optional)* | Realize a Logs or Traces binding as one Part 14 `PublishedDataSet`/`DataSetWriter` per DataSet instance, with `PublishedEventsType`, mapping `BoundEventFieldType`/`EventFieldOperand` to `SelectedFields`, `EventSourcePath` to the notifier and `Filter` to the event filter. Applicable only where the Server implements PubSub. |
+| **OBS-SemanticCrossReference** | Populate the semantic fields on every exposed bound item (`SourceTypeDefinition`/`SourceBrowseName`/`ModelNamespaceUri`, per §5.4). Independent of PubSub. |
+| **OBS-PubSubMetaData** *(optional)* | Where a binding is realized over PubSub, propagate the semantic fields into `DataSetMetaData.FieldMetaData` per §5.4.1 and the DataSet-level fields per §5.5. |
 
 **Facets (informative grouping):**
 

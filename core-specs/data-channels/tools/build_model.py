@@ -112,6 +112,74 @@ CAT_EVENT = "Data Channels Event Types"
 CAT_DT = "Data Channels Data Types"
 CAT_INST = "Data Channels Instances"
 
+# ---------------------------------------------------------------------------
+# Conformance units
+# ---------------------------------------------------------------------------
+# OPC 20020 requires each type's definition table to name the conformance units that carry
+# it, and a unit has to be an identifier token rather than the prose name used in the
+# conformance clause. The CAT_* values above group nodes for generation only; they are not
+# conformance units and are never emitted as <Category>.
+#
+# Five of the thirteen units are transport or Service units defined in the Part 6 and Part 4
+# errata and carried by no Node of this model, so they appear in the conformance clause but
+# in no type table. That is expected: a unit describes a behaviour, not necessarily a Node.
+CU_FRAMING = "DCH-Framing"
+CU_INLINE_TRANSPORT = "DCH-InlineTransport"
+CU_PARTIAL_RELIABILITY = "DCH-PartialReliability"
+CU_QUIC_TRANSPORT = "DCH-QuicTransport"
+CU_UNRELIABLE_DATAGRAM = "DCH-UnreliableDatagram"
+CU_SERVICES = "DCH-Services"
+CU_MODIFY = "DCH-Modify"
+CU_OFFERS = "DCH-Offers"
+CU_AUDITING = "DCH-Auditing"
+CU_MODEL = "DCH-Model"
+CU_MODEL_DIAGNOSTICS = "DCH-ModelDiagnostics"
+CU_MODEL_EVENTS = "DCH-ModelEvents"
+CU_MODEL_AUDITING = "DCH-ModelAuditing"
+
+# Every unit, in the order the conformance clause lists them. The document and this table
+# have to agree, or the check that each emitted unit is named in the clause is circular.
+ALL_CONFORMANCE_UNITS = (
+    CU_FRAMING, CU_INLINE_TRANSPORT, CU_PARTIAL_RELIABILITY, CU_QUIC_TRANSPORT,
+    CU_UNRELIABLE_DATAGRAM, CU_SERVICES, CU_MODIFY, CU_OFFERS, CU_AUDITING,
+    CU_MODEL, CU_MODEL_DIAGNOSTICS, CU_MODEL_EVENTS, CU_MODEL_AUDITING,
+)
+
+UNITS_BY_NAME = {
+    "IDataChannelSourceType": (CU_MODEL,),
+    "DataChannelSourceType": (CU_MODEL,),
+    "DataChannelCapabilitiesType": (CU_MODEL, CU_MODEL_DIAGNOSTICS),
+
+    "DataChannelOfferedEventType": (CU_MODEL_EVENTS, CU_OFFERS),
+    "DataChannelStateChangeEventType": (CU_MODEL_EVENTS,),
+    "AuditOpenDataChannelEventType": (CU_MODEL_AUDITING, CU_AUDITING),
+
+    "DataChannelDirection": (CU_MODEL,),
+    "DataChannelDeliveryMode": (CU_MODEL, CU_PARTIAL_RELIABILITY),
+    "DataChannelState": (CU_MODEL,),
+    "DataChannelParametersDataType": (CU_MODEL, CU_SERVICES),
+    "DataChannelStatusDataType": (CU_MODEL, CU_SERVICES),
+    "DataChannelOfferDataType": (CU_OFFERS,),
+    "DataChannelDiagnosticsDataType": (CU_MODEL_DIAGNOSTICS,),
+
+    "HasDataChannel": (CU_MODEL,),
+    "DataChannelCapabilities": (CU_MODEL,),
+}
+
+UNITS_BY_CATEGORY = {
+    CAT_TYPE: (CU_MODEL,), CAT_EVENT: (CU_MODEL_EVENTS,), CAT_DT: (CU_MODEL,),
+    CAT_REF: (CU_MODEL,), CAT_INST: (CU_MODEL,),
+}
+
+
+def units_of(n):
+    """The conformance units a Node declares, as <Category> elements."""
+    if n.bname in UNITS_BY_NAME:
+        return UNITS_BY_NAME[n.bname]
+    if n.category:
+        return UNITS_BY_CATEGORY.get(n.category, ())
+    return ()
+
 
 def _mid():
     v = _next_member[0]
@@ -517,8 +585,8 @@ def _emit_node(n):
     lines.append(f"    <DisplayName>{sx.escape(n.display)}</DisplayName>")
     if n.desc:
         lines.append(f"    <Description>{sx.escape(n.desc)}</Description>")
-    if n.category:
-        lines.append(f"    <Category>{sx.escape(n.category)}</Category>")
+    for unit in units_of(n):
+        lines.append(f"    <Category>{sx.escape(unit)}</Category>")
     lines.append("    <References>")
     for i in _sorted_refs(n.refs):
         rt, tgt, fwd = n.refs[i]

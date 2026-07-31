@@ -1,0 +1,787 @@
+{
+  "id": "arrow-encoding",
+  "source": {
+    "markdown": "core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md"
+  },
+  "output": {
+    "docx": "word-drafts/OPC-UA-Arrow-Encoding.docx",
+    "docmodel": "word-drafts/OPC-UA-Arrow-Encoding.docmodel.json",
+    "figures": "word-drafts/figures"
+  },
+  "_comment_templateDeviations": "OPC 20020 admits no deviation. A relaxation is only legitimate when it is declared here, printed in the document, and matched by the validator.",
+  "templateDeviations": [
+    {
+      "id": "no-information-model",
+      "clause": "7 to 13, Annex A",
+      "statement": "This document defines a DataEncoding: a mapping of the OPC UA type model onto Apache Arrow, a PubSub batch mapping and a historian access surface. It defines no OPC UA information model of its own: it has no NodeSet, no ObjectTypes, no VariableTypes, no DataTypes, no ReferenceTypes and no Instances. The NodeClass clauses of OPC 20020 are therefore omitted rather than left empty, and Annex A states the generated per-type reference this document does define in place of a NodeSet."
+    }
+  ],
+  "identity": {
+    "docNumber": "OPC nnnnn-m",
+    "partNumber": "Part 1",
+    "partName": "Arrow Encoding",
+    "title": "Arrow Encoding",
+    "subjectTerm": "Arrow",
+    "mainTitle": "OPC UA FOR APACHE ARROW ENCODING",
+    "subTitle": "Part 1: Columnar DataEncoding, PubSub batches and historian access",
+    "shortName": "ARROW",
+    "capabilityIdentifier": "ARROW",
+    "namespaceUri": "http://opcfoundation.org/UA/",
+    "namespaceIndexInDocument": 0,
+    "annexASubject": "DataEncoding",
+    "version": "0.1.0",
+    "publicationDate": "2026-07-30",
+    "releaseType": "Draft",
+    "mantisProjectId": "<nnn>",
+    "otherOrganization": "Apache Software Foundation",
+    "introduction": [
+      "Apache Arrow is a columnar in-memory format: the values of one field are stored together rather than each record being stored whole. Analytical work reads a few fields of many records, and a columnar layout lets it touch only those fields, in a form a processor can scan without decoding value by value. The same layout is what Arrow puts on the wire, so a reader consumes it without parsing.",
+      "OPC UA moves data one record at a time, which suits control and does not suit analysis. A historian answering \"the last month of these forty signals\" returns a great many small structures, each carrying its own field identities, and every consumer then reshapes them into columns before it can do anything useful.",
+      "This document defines an Arrow DataEncoding for OPC UA, a PubSub mapping that publishes batches of DataSet messages as record batches, and an access surface that returns the result of a historian read as a stream of record batches rather than as individual values."
+    ],
+    "draftBanner": "PROVISIONAL WORKING DRAFT — not normative, not endorsed by the OPC Foundation. The document number and the Mantis project identifier in this document are placeholders; the OPC Foundation assigns the real values."
+  },
+  "_comment_prose": "Clauses the template requires that this document has no material shaped like.",
+  "prose": {
+    "useCases": [
+      "Arrow is for the work OPC UA record-at-a-time delivery serves badly: reading many values of a few signals, and handing them to something that analyses rather than controls.",
+      "Historian and analytics. A query for a month of a few dozen signals returns as a stream of record batches, in the layout an analytical engine already uses, so the consumer neither parses each value nor reshapes rows into columns before it can begin.",
+      "High-rate PubSub. A publisher that would otherwise emit a message per sample emits a batch covering an interval, which amortises the header and the framing over many samples and keeps the columnar layout intact end to end.",
+      "Interchange with the wider data ecosystem. The encoded form is consumed directly by tools that already speak Arrow, without an intermediate conversion that would have to be written, maintained and trusted.",
+      "Arrow is not a replacement for the OPC UA binary encoding in the request-response path, where a single value is wanted at once and a columnar layout has nothing to amortise over."
+    ]
+  },
+  "abbreviations": [
+    [
+      "ADBC",
+      "Arrow Database Connectivity"
+    ],
+    [
+      "API",
+      "Application Programming Interface"
+    ],
+    [
+      "CRC",
+      "Cyclic Redundancy Check"
+    ],
+    [
+      "IANA",
+      "Internet Assigned Numbers Authority"
+    ],
+    [
+      "IPC",
+      "Inter-Process Communication"
+    ],
+    [
+      "JSON",
+      "JavaScript Object Notation"
+    ],
+    [
+      "SQL",
+      "Structured Query Language"
+    ],
+    [
+      "UTC",
+      "Coordinated Universal Time"
+    ],
+    [
+      "UTF",
+      "Unicode Transformation Format"
+    ],
+    [
+      "XML",
+      "Extensible Markup Language"
+    ]
+  ],
+  "normativeReferences": [
+    {
+      "id": "UAPart1",
+      "label": "OPC 10000-1",
+      "title": "OPC Unified Architecture - Part 1: Overview and Concepts",
+      "url": "http://www.opcfoundation.org/documents/10000-1/"
+    },
+    {
+      "id": "UAPart2",
+      "label": "OPC 10000-2",
+      "title": "OPC Unified Architecture - Part 2: Security Model",
+      "url": "http://www.opcfoundation.org/documents/10000-2/"
+    },
+    {
+      "id": "UAPart3",
+      "label": "OPC 10000-3",
+      "title": "OPC Unified Architecture - Part 3: Address Space Model",
+      "url": "http://www.opcfoundation.org/documents/10000-3/"
+    },
+    {
+      "id": "UAPart4",
+      "label": "OPC 10000-4",
+      "title": "OPC Unified Architecture - Part 4: Services",
+      "url": "http://www.opcfoundation.org/documents/10000-4/"
+    },
+    {
+      "id": "UAPart5",
+      "label": "OPC 10000-5",
+      "title": "OPC Unified Architecture - Part 5: Information Model",
+      "url": "http://www.opcfoundation.org/documents/10000-5/"
+    },
+    {
+      "id": "UAPart6",
+      "label": "OPC 10000-6",
+      "title": "OPC Unified Architecture - Part 6: Mappings, which this document extends with a new DataEncoding.",
+      "url": "http://www.opcfoundation.org/documents/10000-6/"
+    },
+    {
+      "id": "UAPart7",
+      "label": "OPC 10000-7",
+      "title": "OPC Unified Architecture - Part 7: Profiles",
+      "url": "http://www.opcfoundation.org/documents/10000-7/"
+    },
+    {
+      "id": "UAPart11",
+      "label": "OPC 10000-11",
+      "title": "OPC Unified Architecture - Part 11: Historical Access",
+      "url": "http://www.opcfoundation.org/documents/10000-11/"
+    },
+    {
+      "id": "UAPart12",
+      "label": "OPC 10000-12",
+      "title": "OPC Unified Architecture - Part 12: Discovery and Global Services",
+      "url": "http://www.opcfoundation.org/documents/10000-12/"
+    },
+    {
+      "id": "UAPart14",
+      "label": "OPC 10000-14",
+      "title": "OPC Unified Architecture - Part 14: PubSub, whose NetworkMessage and DataSetMessage this document maps.",
+      "url": "http://www.opcfoundation.org/documents/10000-14/"
+    },
+    {
+      "id": "ARROWSPEC",
+      "label": "Apache Arrow specification",
+      "title": "The Arrow columnar format and its IPC framing, which this document maps onto.",
+      "url": "https://arrow.apache.org/docs/format/Columnar.html"
+    },
+    {
+      "id": "ADBC",
+      "label": "Apache Arrow ADBC",
+      "title": "Arrow Database Connectivity, the statement and result model the historian access surface follows.",
+      "url": "https://arrow.apache.org/adbc/"
+    },
+    {
+      "id": "SREG",
+      "label": "OPC UA for Schema Registry",
+      "title": "The in-server registry that resolves a SchemaId to the schema document that produced it.",
+      "url": ""
+    }
+  ],
+  "dropped": [],
+  "dropParagraphsContaining": [
+    "core-specs/",
+    "build_model.py",
+    "validate_local.py",
+    "CHANGELOG.md"
+  ],
+  "citedAs": [
+    "Arrow Encoding",
+    "Arrow Message Mapping",
+    "Apache Arrow DataEncoding"
+  ],
+  "unanchoredSiblings": [],
+  "_comment_foreignAnchors": "Names this document uses for other documents.",
+  "foreignAnchors": [
+    "Avro",
+    "Schema Registry",
+    "xRegistry",
+    "Apache Arrow specification",
+    "ADBC"
+  ],
+  "figures": [
+    {
+      "id": "fig-arrow-1",
+      "caption": "Where the Arrow encoding fits",
+      "pptx": "Arrow-Fig1-Fit.pptx"
+    },
+    {
+      "id": "fig-arrow-2",
+      "caption": "Batch publish and subscribe",
+      "pptx": "Arrow-Fig2-Batch.pptx"
+    },
+    {
+      "id": "fig-arrow-3",
+      "caption": "Historian access as record batches",
+      "pptx": "Arrow-Fig3-Historian.pptx"
+    }
+  ],
+  "clauseMap": [
+    {
+      "from": "1 Scope",
+      "number": "1",
+      "title": "Scope",
+      "region": "scope"
+    },
+    {
+      "from": null,
+      "number": "1.1",
+      "title": "Conformance to the OPC 20020 template",
+      "generated": "template-deviations"
+    },
+    {
+      "from": null,
+      "number": "2",
+      "title": "Normative references",
+      "region": "normative-references",
+      "generated": "normative-references"
+    },
+    {
+      "from": null,
+      "number": "3",
+      "title": "Terms, abbreviated terms and conventions",
+      "region": "terms"
+    },
+    {
+      "from": null,
+      "number": "3.1",
+      "title": "Overview",
+      "generated": "terms-overview"
+    },
+    {
+      "from": "3 Terms, definitions and abbreviations",
+      "number": "3.2",
+      "title": "Arrow encoding terms",
+      "generated": "terms"
+    },
+    {
+      "from": null,
+      "number": "3.3",
+      "title": "Abbreviated terms",
+      "generated": "abbreviations"
+    },
+    {
+      "from": null,
+      "number": "3.4",
+      "title": "Conventions used in this document",
+      "slice": "conventions"
+    },
+    {
+      "from": null,
+      "number": "4",
+      "title": "General information to Arrow encoding and OPC UA",
+      "region": "general"
+    },
+    {
+      "from": null,
+      "number": "4.1",
+      "title": "Introduction to Apache Arrow",
+      "generated": "subject-introduction"
+    },
+    {
+      "from": null,
+      "number": "4.2",
+      "title": "Introduction to OPC Unified Architecture",
+      "slice": "opcua-intro"
+    },
+    {
+      "from": null,
+      "number": "5",
+      "title": "Use cases",
+      "region": "use-cases",
+      "generated": "config-prose",
+      "prose": "useCases"
+    },
+    {
+      "from": "4 Overview",
+      "number": "6",
+      "title": "Arrow encoding overview",
+      "region": "model-overview"
+    },
+    {
+      "from": "4.1 Where Arrow fits",
+      "number": "6.1",
+      "title": "Where Arrow fits"
+    },
+    {
+      "from": "4.2 Columnar model, IPC framing and endianness",
+      "number": "6.2",
+      "title": "Columnar model, IPC framing and endianness"
+    },
+    {
+      "from": "4.3 Schema identity and reversibility",
+      "number": "6.3",
+      "title": "Schema identity and reversibility"
+    },
+    {
+      "from": "5 OPC UA Arrow DataEncoding",
+      "number": "6.4",
+      "title": "OPC UA Arrow DataEncoding"
+    },
+    {
+      "from": "5.6 OPC UA Arrow",
+      "number": "6.4.1",
+      "title": "OPC UA Arrow"
+    },
+    {
+      "from": "5.6.1 General rules",
+      "number": "6.4.1.1",
+      "title": "General rules"
+    },
+    {
+      "from": "5.6.2 Built-in DataTypes",
+      "number": "6.4.1.2",
+      "title": "Built-in DataTypes"
+    },
+    {
+      "from": "5.6.3 Enumerations and OptionSets",
+      "number": "6.4.1.3",
+      "title": "Enumerations and OptionSets"
+    },
+    {
+      "from": "5.6.4 Structures, optional fields and Unions",
+      "number": "6.4.1.4",
+      "title": "Structures, optional fields and Unions"
+    },
+    {
+      "from": "5.6.5 Arrays and Matrices",
+      "number": "6.4.1.5",
+      "title": "Arrays and Matrices"
+    },
+    {
+      "from": "5.6.6 Variant",
+      "number": "6.4.1.6",
+      "title": "Variant"
+    },
+    {
+      "from": "5.6.7 ExtensionObject and abstract/subtyped fields",
+      "number": "6.4.1.7",
+      "title": "ExtensionObject and abstract/subtyped fields"
+    },
+    {
+      "from": "5.6.8 Default Arrow DataTypeEncoding Node",
+      "number": "6.4.1.8",
+      "title": "Default Arrow DataTypeEncoding Node"
+    },
+    {
+      "from": "5.6.9 Schema-generation algorithm",
+      "number": "6.4.1.9",
+      "title": "Schema-generation algorithm"
+    },
+    {
+      "from": "5.6.10 Decoder algorithm",
+      "number": "6.4.1.10",
+      "title": "Decoder algorithm"
+    },
+    {
+      "from": "5.6.11 Conformance",
+      "number": "6.4.1.11",
+      "title": "Conformance"
+    },
+    {
+      "from": "5.6.12 Implementing schema evolution (growing unions)",
+      "number": "6.4.1.12",
+      "title": "Implementing schema evolution (growing unions)"
+    },
+    {
+      "from": "6 PubSub message mapping",
+      "number": "6.5",
+      "title": "PubSub message mapping"
+    },
+    {
+      "from": "6.1 Arrow mapping parameters",
+      "number": "6.5.1",
+      "title": "Arrow mapping parameters"
+    },
+    {
+      "from": "6.2 Arrow message mapping",
+      "number": "6.5.2",
+      "title": "Arrow message mapping"
+    },
+    {
+      "from": "6.3 Bare RecordBatch framing (`batch`)",
+      "number": "6.5.3",
+      "title": "Bare RecordBatch framing (batch)"
+    },
+    {
+      "from": "6.4 Content types",
+      "number": "6.5.4",
+      "title": "Content types"
+    },
+    {
+      "from": "6.5 Part 14 configuration model mapping",
+      "number": "6.5.5",
+      "title": "Part 14 configuration model mapping"
+    },
+    {
+      "from": "6.6 Header layouts",
+      "number": "6.5.6",
+      "title": "Header layouts"
+    },
+    {
+      "from": "6.7 Content-type registry entries",
+      "number": "6.5.7",
+      "title": "Content-type registry entries"
+    },
+    {
+      "from": "6.8 DataSet schema mapping",
+      "number": "6.5.8",
+      "title": "DataSet schema mapping"
+    },
+    {
+      "from": "6.9 NetworkMessage and DataSetMessage envelopes",
+      "number": "6.5.9",
+      "title": "NetworkMessage and DataSetMessage envelopes"
+    },
+    {
+      "from": "6.9.1 Schema resolution",
+      "number": "6.5.9.1",
+      "title": "Schema resolution"
+    },
+    {
+      "from": "6.9.2 SchemaId handshake",
+      "number": "6.5.9.2",
+      "title": "SchemaId handshake"
+    },
+    {
+      "from": "6.9.2.1 SchemaId and canonical schema bytes",
+      "number": "6.5.9.2.1",
+      "title": "SchemaId and canonical schema bytes"
+    },
+    {
+      "from": "6.9.2.2 Carrier placement",
+      "number": "6.5.9.2.2",
+      "title": "Carrier placement"
+    },
+    {
+      "from": "6.9.2.3 Schema announcements",
+      "number": "6.5.9.2.3",
+      "title": "Schema announcements"
+    },
+    {
+      "from": "6.9.2.4 SchemaRequest",
+      "number": "6.5.9.2.4",
+      "title": "SchemaRequest"
+    },
+    {
+      "from": "6.9.2.5 Encoder change tracking",
+      "number": "6.5.9.2.5",
+      "title": "Encoder change tracking"
+    },
+    {
+      "from": "6.9.2.6 Decoder cache-miss resolution",
+      "number": "6.5.9.2.6",
+      "title": "Decoder cache-miss resolution"
+    },
+    {
+      "from": "6.9.2.7 Relationship to ConfigurationVersion",
+      "number": "6.5.9.2.7",
+      "title": "Relationship to ConfigurationVersion"
+    },
+    {
+      "from": "6.9.2.8 Schema-exchange sequences",
+      "number": "6.5.9.2.8",
+      "title": "Schema-exchange sequences"
+    },
+    {
+      "from": "7 Historian and ADBC access",
+      "number": "6.6",
+      "title": "Historian and ADBC access"
+    },
+    {
+      "from": "7.1 Scope",
+      "number": "6.6.1",
+      "title": "Scope"
+    },
+    {
+      "from": "7.2 Access basis",
+      "number": "6.6.2",
+      "title": "Access basis"
+    },
+    {
+      "from": "7.3 ADBC-style statement model",
+      "number": "6.6.3",
+      "title": "ADBC-style statement model"
+    },
+    {
+      "from": "7.4 Canonical result shape",
+      "number": "6.6.4",
+      "title": "Canonical result shape"
+    },
+    {
+      "from": "7.5 Raw, modified, and at-time reads",
+      "number": "6.6.5",
+      "title": "Raw, modified, and at-time reads"
+    },
+    {
+      "from": "7.6 Processed aggregate reads",
+      "number": "6.6.6",
+      "title": "Processed aggregate reads"
+    },
+    {
+      "from": "7.7 Content types and transport",
+      "number": "6.6.7",
+      "title": "Content types and transport"
+    },
+    {
+      "from": "7.8 Relationship to Part 14 PubSub",
+      "number": "6.6.8",
+      "title": "Relationship to Part 14 PubSub"
+    },
+    {
+      "from": "7.9 Exclusions",
+      "number": "6.6.9",
+      "title": "Exclusions"
+    },
+    {
+      "from": "6.10 Conformance",
+      "number": "7",
+      "title": "Profiles and conformance units",
+      "region": "profiles"
+    },
+    {
+      "from": null,
+      "number": "8",
+      "title": "Namespaces",
+      "region": "namespaces"
+    },
+    {
+      "from": null,
+      "number": "8.1",
+      "title": "Namespace metadata",
+      "generated": "namespace-metadata"
+    },
+    {
+      "from": null,
+      "number": "8.2",
+      "title": "Handling of OPC UA namespaces",
+      "generated": "namespace-handling"
+    },
+    {
+      "from": null,
+      "number": "A",
+      "title": "Namespace and machine-readable artifacts",
+      "annex": true,
+      "normative": true,
+      "region": "annex-a"
+    },
+    {
+      "from": null,
+      "number": "A.1",
+      "title": "Namespace and capability identifier",
+      "generated": "annex-a-identity"
+    },
+    {
+      "from": "Annex A Generated per-type reference",
+      "number": "A.2",
+      "title": "Generated per-type reference"
+    },
+    {
+      "from": "Built-in Boolean",
+      "number": "A.2.1",
+      "title": "Built-in Boolean"
+    },
+    {
+      "from": "Built-in SByte",
+      "number": "A.2.2",
+      "title": "Built-in SByte"
+    },
+    {
+      "from": "Built-in Byte",
+      "number": "A.2.3",
+      "title": "Built-in Byte"
+    },
+    {
+      "from": "Built-in Int16",
+      "number": "A.2.4",
+      "title": "Built-in Int16"
+    },
+    {
+      "from": "Built-in UInt16",
+      "number": "A.2.5",
+      "title": "Built-in UInt16"
+    },
+    {
+      "from": "Built-in Int32",
+      "number": "A.2.6",
+      "title": "Built-in Int32"
+    },
+    {
+      "from": "Built-in UInt32",
+      "number": "A.2.7",
+      "title": "Built-in UInt32"
+    },
+    {
+      "from": "Built-in Int64",
+      "number": "A.2.8",
+      "title": "Built-in Int64"
+    },
+    {
+      "from": "Built-in UInt64",
+      "number": "A.2.9",
+      "title": "Built-in UInt64"
+    },
+    {
+      "from": "Built-in Float",
+      "number": "A.2.10",
+      "title": "Built-in Float"
+    },
+    {
+      "from": "Built-in Double",
+      "number": "A.2.11",
+      "title": "Built-in Double"
+    },
+    {
+      "from": "Built-in String",
+      "number": "A.2.12",
+      "title": "Built-in String"
+    },
+    {
+      "from": "Built-in DateTime",
+      "number": "A.2.13",
+      "title": "Built-in DateTime"
+    },
+    {
+      "from": "Built-in Guid",
+      "number": "A.2.14",
+      "title": "Built-in Guid"
+    },
+    {
+      "from": "Built-in ByteString",
+      "number": "A.2.15",
+      "title": "Built-in ByteString"
+    },
+    {
+      "from": "Built-in XmlElement",
+      "number": "A.2.16",
+      "title": "Built-in XmlElement"
+    },
+    {
+      "from": "Built-in NodeId",
+      "number": "A.2.17",
+      "title": "Built-in NodeId"
+    },
+    {
+      "from": "Built-in ExpandedNodeId",
+      "number": "A.2.18",
+      "title": "Built-in ExpandedNodeId"
+    },
+    {
+      "from": "Built-in StatusCode",
+      "number": "A.2.19",
+      "title": "Built-in StatusCode"
+    },
+    {
+      "from": "Built-in QualifiedName",
+      "number": "A.2.20",
+      "title": "Built-in QualifiedName"
+    },
+    {
+      "from": "Built-in LocalizedText",
+      "number": "A.2.21",
+      "title": "Built-in LocalizedText"
+    },
+    {
+      "from": "Built-in ExtensionObject",
+      "number": "A.2.22",
+      "title": "Built-in ExtensionObject"
+    },
+    {
+      "from": "Built-in DataValue",
+      "number": "A.2.23",
+      "title": "Built-in DataValue"
+    },
+    {
+      "from": "Built-in Variant",
+      "number": "A.2.24",
+      "title": "Built-in Variant"
+    },
+    {
+      "from": "Built-in DiagnosticInfo",
+      "number": "A.2.25",
+      "title": "Built-in DiagnosticInfo"
+    },
+    {
+      "from": "Composite Array<String>",
+      "number": "A.2.26",
+      "title": "Composite Array<String>"
+    },
+    {
+      "from": "Composite Matrix<Double>",
+      "number": "A.2.27",
+      "title": "Composite Matrix<Double>"
+    },
+    {
+      "from": "Composite plain Structure Point",
+      "number": "A.2.28",
+      "title": "Composite plain Structure Point"
+    },
+    {
+      "from": "Composite StructureWithOptionalFields Person",
+      "number": "A.2.29",
+      "title": "Composite StructureWithOptionalFields Person"
+    },
+    {
+      "from": "Composite dense Union Measurement",
+      "number": "A.2.30",
+      "title": "Composite dense Union Measurement"
+    },
+    {
+      "from": "Worked structured DataType Envelope",
+      "number": "A.2.31",
+      "title": "Worked structured DataType Envelope"
+    }
+  ],
+  "xrefMap": {
+    "4": "6",
+    "4.1": "6.1",
+    "4.2": "6.2",
+    "4.3": "6.3",
+    "5": "6.4",
+    "5.6": "6.4.1",
+    "5.6.1": "6.4.1.1",
+    "5.6.2": "6.4.1.2",
+    "5.6.3": "6.4.1.3",
+    "5.6.4": "6.4.1.4",
+    "5.6.5": "6.4.1.5",
+    "5.6.6": "6.4.1.6",
+    "5.6.7": "6.4.1.7",
+    "5.6.8": "6.4.1.8",
+    "5.6.9": "6.4.1.9",
+    "5.6.10": "6.4.1.10",
+    "5.6.11": "6.4.1.11",
+    "5.6.12": "6.4.1.12",
+    "6": "6.5",
+    "6.1": "6.5.1",
+    "6.2": "6.5.2",
+    "6.3": "6.5.3",
+    "6.4": "6.5.4",
+    "6.5": "6.5.5",
+    "6.6": "6.5.6",
+    "6.7": "6.5.7",
+    "6.8": "6.5.8",
+    "6.9": "6.5.9",
+    "6.9.1": "6.5.9.1",
+    "6.9.2": "6.5.9.2",
+    "6.9.2.1": "6.5.9.2.1",
+    "6.9.2.2": "6.5.9.2.2",
+    "6.9.2.3": "6.5.9.2.3",
+    "6.9.2.4": "6.5.9.2.4",
+    "6.9.2.5": "6.5.9.2.5",
+    "6.9.2.6": "6.5.9.2.6",
+    "6.9.2.7": "6.5.9.2.7",
+    "6.9.2.8": "6.5.9.2.8",
+    "7": "6.6",
+    "7.1": "6.6.1",
+    "7.2": "6.6.2",
+    "7.3": "6.6.3",
+    "7.4": "6.6.4",
+    "7.5": "6.6.5",
+    "7.6": "6.6.6",
+    "7.7": "6.6.7",
+    "7.8": "6.6.8",
+    "7.9": "6.6.9",
+    "1": "1",
+    "2": "2",
+    "3": "3",
+    "6.10": "7"
+  },
+  "annexMap": {
+    "A": "A"
+  }
+}

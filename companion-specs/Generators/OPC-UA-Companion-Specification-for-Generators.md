@@ -223,6 +223,23 @@ A server implementing this specification should implement the [`GeneratorSetType
 
 Mandatory children inherited from the chosen base types are **not** re‑declared in this NodeSet, but conforming instances must still expose them. In particular: the DI [`DeviceType`](https://reference.opcfoundation.org/specs/OPC-10000-100/4.7) nameplate (`Manufacturer`, `Model`, `SerialNumber`, `HardwareRevision`, `SoftwareRevision`, `DeviceRevision`, `DeviceManual`, `RevisionCounter`); the [`FiniteStateMachineType`](https://reference.opcfoundation.org/specs/OPC-10000-16/4.4.5) `CurrentState` on `OperatingState`; the [`AnalogUnitType`](https://reference.opcfoundation.org/specs/OPC-10000-8/5.3.2#5.3.2.4) `EngineeringUnits` on every measured value (this specification pre‑populates it with a default unit); and the [`OffNormalAlarmType`](https://reference.opcfoundation.org/specs/OPC-10000-9/5.8.24#5.8.24.2) / [`AcknowledgeableConditionType`](https://reference.opcfoundation.org/specs/OPC-10000-9/5.7.2) condition state (`EnabledState`, `ActiveState`, `AckedState`, `NormalState`). Optional but recommended children — such as the `FiniteStateMachineType` `LastTransition` and the `AnalogUnitType` `EURange` / `InstrumentRange` — should be provided where the information is available.
 
+Conformance is composed from independently implementable **conformance units (CUs)**, one per subsystem. Only `GEN-GeneratorSet` is mandatory; every other unit may be claimed on its own.
+
+| Conformance unit | Requires |
+|---|---|
+| `GEN-GeneratorSet` | **Mandatory.** `GeneratorSetType` with its mandatory content, and the enumerations and structures the model is written in. |
+| `GEN-Components` | The engine, alternator, alternator phase and support subsystems (fuel, cooling, lubrication, starting, aftertreatment). |
+| `GEN-Identification` | The generator-set nameplate beyond the inherited DI nameplate. |
+| `GEN-StateMachine` | `GeneratorStateMachineType`, its states and transitions, and the operating modes. |
+| `GEN-Rating` | `GeneratorRatingType` and the rating set of a generator set. |
+| `GEN-Alarms` | The protection and alarm conditions and their condition state. |
+| `GEN-CANbus` | The CAN bus / SAE J1939 interface of the engine. |
+| `GEN-TransferSwitch` | `AutomaticTransferSwitchType` and its transfer behaviour. |
+| `GEN-Paralleling` | `ParallelingControllerType` and the paralleling and load-sharing behaviour. |
+| `GEN-System` | `GeneratorSystemType`, the aggregate of several generator sets. |
+
+**Profiles.** *Generator Set Server* = `GEN-GeneratorSet` + `GEN-Components` + `GEN-Identification` + `GEN-StateMachine` + `GEN-Rating`. *Generator Set Server with alarms* adds `GEN-Alarms` and `GEN-CANbus`. *Generator Plant Server* adds `GEN-TransferSwitch`, `GEN-Paralleling` and `GEN-System`.
+
 ## 10 PubSub dataset bindings
 
 The information model is transport‑neutral: it can be exposed over OPC UA client/server and, at scale, over **OPC UA PubSub** ([OPC 10000‑14](https://reference.opcfoundation.org/specs/OPC-10000-14/)). This clause gives *non‑normative* recommendations for grouping the Variables of a generator set into **PublishedDataSets** (PDS) and **WriterGroups** so that a server can efficiently feed several classes of consumer. A server may publish any subset; the field paths below are BrowsePaths relative to a [`GeneratorSetType`](#type-GeneratorSetType) (or [`GeneratorSystemType`](#type-GeneratorSystemType)) instance.

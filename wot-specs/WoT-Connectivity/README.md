@@ -28,7 +28,7 @@ The published **OPC 10100-1 v1.02** WoT Connectivity model (namespace `http://op
 
 ## Namespace and NodeIds
 
-One NamespaceUri `http://opcfoundation.org/UA/WoT-Con/` at model version `1.1.0` (namespace index 2 in the NodeSet, after Core at 0 and the xRegistry base at 1). The incorporated 1.02 nodes keep their published NodeIds `1..172`; the additive registry nodes use a provisional **64000+** block (types) with members allocated append-only from **64500**. Final registry NodeIds are assigned by the OPC Foundation.
+One NamespaceUri `http://opcfoundation.org/UA/WoT-Con/` at model version `1.2.0` (namespace index 2 in the NodeSet, after Core at 0 and the xRegistry base at 1). The incorporated 1.02 nodes keep their published NodeIds `1..172`; the additive registry nodes use a provisional **64000+** block (types) with members allocated append-only from **64500**. Final registry NodeIds are assigned by the OPC Foundation.
 
 ## Regenerate and validate
 
@@ -41,4 +41,4 @@ python wot-specs\WoT-Connectivity\tools\build_model.py
 python wot-specs\WoT-Connectivity\tools\validate_local.py
 ```
 
-The validator checks XML/CSV consistency, that references resolve against the own namespace and the loaded xRegistry base `NodeIds.csv`, the Server→WoTRegistry notifier topology, that each type has a `HasSubtype` inverse and each Structure its encodings, and that the generated Annex A is embedded verbatim in the specification. It additionally **proves the 1.02 preservation**: the first 172 CSV rows match `legacy/WotConnection.csv` exactly, every concrete legacy id is present with its pinned NodeClass, the deprecated management surface carries `ReleaseStatus="Deprecated"`, the callable well-known `WoTAssetConnectionManagement` is present, and the combined NodeSet declares one namespace at model version 1.1.0. For full base-namespace NodeId resolution, place `UA.NodeIds.csv` in `tools/ref/` (this local validation aid is gitignored).
+The validator checks XML/CSV consistency, that references resolve against the own namespace and the loaded xRegistry base `NodeIds.csv`, the Server→WoTRegistry notifier topology, that each type has a `HasSubtype` inverse and each Structure its encodings, and that the generated Annex A is embedded verbatim in the specification. It additionally **proves the 1.02 preservation**: the first 172 CSV rows match `legacy/WotConnection.csv` exactly, every concrete legacy id is present with its pinned NodeClass, the deprecated management surface carries `ReleaseStatus="Deprecated"`, the callable well-known `WoTAssetConnectionManagement` is present, and the combined NodeSet declares one namespace at model version 1.2.0. For full base-namespace NodeId resolution, place `UA.NodeIds.csv` in `tools/ref/` (this local validation aid is gitignored).

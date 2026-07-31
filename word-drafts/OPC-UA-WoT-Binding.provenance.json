@@ -1,0 +1,7103 @@
+{
+  "specId": "wot-binding",
+  "sourceCommit": "ce5462058a4dc5bd027fb3616a0a00fc9f852224",
+  "sourceDigest": "08341eb4243eb4ee",
+  "pipelineVersion": "2",
+  "sources": [
+    "word-drafts/tools/specs/wot-binding.json",
+    "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md"
+  ],
+  "paragraphs": {
+    "0015EC7F": {
+      "owner": "generated",
+      "region": "terms",
+      "index": 7,
+      "kind": "term",
+      "para": 0
+    },
+    "00334BA5": {
+      "owner": "template"
+    },
+    "003A15AB": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "8 Thing Description and Thing Model mapping",
+      "block": 1,
+      "para": 0
+    },
+    "007DD302": {
+      "owner": "template"
+    },
+    "00A38BE5": {
+      "owner": "template"
+    },
+    "00CC719A": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "11 Conformance units and profiles",
+      "block": 1,
+      "para": 20
+    },
+    "00D45825": {
+      "owner": "generated",
+      "region": "namespaces",
+      "index": 4,
+      "kind": "table",
+      "para": 4
+    },
+    "00DDF7CB": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.2 Links and references",
+      "block": 3,
+      "para": 8
+    },
+    "01073006": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.3 Exceptional `uav:nodeSet` envelope",
+      "block": 1,
+      "para": 6
+    },
+    "011D3F0A": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.2 Exceptional structured `uav:nodes` projection",
+      "block": 1,
+      "para": 0
+    },
+    "011DA4C9": {
+      "owner": "template"
+    },
+    "0197BAFD": {
+      "owner": "template"
+    },
+    "01A8B8E5": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.4 Runtime Node and DataType mapping terms",
+      "block": 2,
+      "para": 2
+    },
+    "01E1851B": {
+      "owner": "generated",
+      "region": "general",
+      "index": 4,
+      "kind": "para",
+      "para": 0
+    },
+    "01E4D4EA": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.4 Type identity and naming",
+      "block": 2,
+      "para": 0
+    },
+    "01E95FC1": {
+      "owner": "template"
+    },
+    "01F18733": {
+      "owner": "template"
+    },
+    "020911B5": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "8 Thing Description and Thing Model mapping",
+      "block": 1,
+      "para": 4
+    },
+    "024F92C0": {
+      "owner": "template"
+    },
+    "027FD35E": {
+      "owner": "template"
+    },
+    "02A3E578": {
+      "owner": "template"
+    },
+    "02DE6729": {
+      "owner": "template"
+    },
+    "02F516ED": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.4 Runtime Node and DataType mapping terms",
+      "block": 1,
+      "para": 6
+    },
+    "030C27C4": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.2 Type-annotation terms",
+      "block": 1,
+      "para": 21
+    },
+    "030EB6D0": {
+      "owner": "template"
+    },
+    "031AFF64": {
+      "owner": "template"
+    },
+    "0334E2AD": {
+      "owner": "template"
+    },
+    "034FCA2F": {
+      "owner": "template"
+    },
+    "036F07DB": {
+      "owner": "template"
+    },
+    "039A0BC1": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.9 Address-space example",
+      "block": 0,
+      "para": 0
+    },
+    "03A10F3D": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.1 Native readable mapping",
+      "block": 0,
+      "para": 15
+    },
+    "03EA3913": {
+      "owner": "template"
+    },
+    "03FD6F81": {
+      "owner": "template"
+    },
+    "03FF336E": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 71
+    },
+    "041EB675": {
+      "owner": "generated",
+      "region": "scope",
+      "index": 5,
+      "kind": "clause",
+      "para": 0
+    },
+    "04209087": {
+      "owner": "template"
+    },
+    "04565FA8": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.4 Runtime Node and DataType mapping terms",
+      "block": 0,
+      "para": 0
+    },
+    "04D68051": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "8 Thing Description and Thing Model mapping",
+      "block": 0,
+      "para": 0
+    },
+    "04DA9362": {
+      "owner": "generated",
+      "region": "annex-a",
+      "index": 4,
+      "kind": "para",
+      "para": 0
+    },
+    "04FC9073": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.2 Links and references",
+      "block": 4,
+      "para": 0
+    },
+    "04FCFD07": {
+      "owner": "template"
+    },
+    "0505C3E8": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.2 Type-annotation terms",
+      "block": 1,
+      "para": 0
+    },
+    "051355FB": {
+      "owner": "template"
+    },
+    "052A3926": {
+      "owner": "template"
+    },
+    "052DA5FF": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.1 Native readable mapping",
+      "block": 0,
+      "para": 21
+    },
+    "05364A09": {
+      "owner": "template"
+    },
+    "053A459C": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 50
+    },
+    "054CEE14": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 17
+    },
+    "0558FD16": {
+      "owner": "generated",
+      "region": "normative-references",
+      "index": 29,
+      "kind": "para",
+      "para": 0
+    },
+    "0595523F": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 46
+    },
+    "05AC0A12": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.1.3 Portable QualifiedName",
+      "block": 8,
+      "para": 0
+    },
+    "05B8DC48": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.2 Links and references",
+      "block": 1,
+      "para": 0
+    },
+    "05BDABE7": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.5 URI, base, and href rules",
+      "block": 2,
+      "para": 0
+    },
+    "05CAA116": {
+      "owner": "template"
+    },
+    "05E28276": {
+      "owner": "template"
+    },
+    "05E79075": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.3 Exceptional `uav:nodeSet` envelope",
+      "block": 1,
+      "para": 20
+    },
+    "05E7BD11": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.9 Generic mapping terms and modelling rules",
+      "block": 1,
+      "para": 0
+    },
+    "061124E2": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.3 Exceptional `uav:nodeSet` envelope",
+      "block": 1,
+      "para": 15
+    },
+    "062ADCA7": {
+      "owner": "generated",
+      "region": "annex-a",
+      "index": 1,
+      "kind": "annex-clause",
+      "para": 0
+    },
+    "06328984": {
+      "owner": "template"
+    },
+    "064360FF": {
+      "owner": "template"
+    },
+    "064C61F5": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.4 Runtime Node and DataType mapping terms",
+      "block": 1,
+      "para": 16
+    },
+    "065247A9": {
+      "owner": "template"
+    },
+    "06654834": {
+      "owner": "template"
+    },
+    "06753FD8": {
+      "owner": "template"
+    },
+    "068C23C2": {
+      "owner": "template"
+    },
+    "069CBB4B": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 80,
+      "kind": "clause",
+      "para": 0
+    },
+    "069DBBE5": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "D.1 Forward: Thing Model → OPC UA types",
+      "block": 5,
+      "para": 0
+    },
+    "06AB9918": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.4 Type identity and naming",
+      "block": 1,
+      "para": 0
+    },
+    "06B274D7": {
+      "owner": "template"
+    },
+    "06BA4EEB": {
+      "owner": "template"
+    },
+    "06CEAECD": {
+      "owner": "template"
+    },
+    "07028894": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.5 Roundtrip invariants",
+      "block": 0,
+      "para": 0
+    },
+    "073912CF": {
+      "owner": "template"
+    },
+    "076FBEE7": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.1 Native readable mapping",
+      "block": 0,
+      "para": 43
+    },
+    "07C2CCF1": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 53
+    },
+    "07CA19F8": {
+      "owner": "generated",
+      "region": "namespaces",
+      "index": 4,
+      "kind": "table",
+      "para": 7
+    },
+    "08058EA7": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.3 Containment",
+      "block": 1,
+      "para": 0
+    },
+    "080784DD": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.1 `uav:nodes`",
+      "block": 1,
+      "para": 0
+    },
+    "080CB70E": {
+      "owner": "template"
+    },
+    "082DD2BC": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.10 Native projection and preservation terms",
+      "block": 1,
+      "para": 4
+    },
+    "082F89CA": {
+      "owner": "template"
+    },
+    "083214B5": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "8 Thing Description and Thing Model mapping",
+      "block": 1,
+      "para": 6
+    },
+    "08331574": {
+      "owner": "generated",
+      "region": "annex-a",
+      "index": 5,
+      "kind": "para",
+      "para": 0
+    },
+    "084C30A6": {
+      "owner": "generated",
+      "region": "namespaces",
+      "index": 4,
+      "kind": "table",
+      "para": 24
+    },
+    "084F70E1": {
+      "owner": "generated",
+      "region": "namespaces",
+      "index": 4,
+      "kind": "table",
+      "para": 20
+    },
+    "085CAD52": {
+      "owner": "template"
+    },
+    "0860FC3C": {
+      "owner": "template"
+    },
+    "088FC349": {
+      "owner": "template"
+    },
+    "08A4DE78": {
+      "owner": "template"
+    },
+    "08B7B6A7": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.6 Groups and membership",
+      "block": 2,
+      "para": 0
+    },
+    "08BC5CE4": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 30
+    },
+    "08C58180": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 5,
+      "kind": "clause",
+      "para": 0
+    },
+    "08C83EFD": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 20
+    },
+    "08D33785": {
+      "owner": "template"
+    },
+    "08DA7DD6": {
+      "owner": "template"
+    },
+    "08EBA581": {
+      "owner": "template"
+    },
+    "08F66FDA": {
+      "owner": "template"
+    },
+    "08FAAAC5": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "D.3 Reverse: OPC UA AddressSpace / NodeSet2 → Thing Model / Thing Description",
+      "block": 3,
+      "para": 1
+    },
+    "08FADA41": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.2 Links and references",
+      "block": 1,
+      "para": 4
+    },
+    "090491FA": {
+      "owner": "generated",
+      "region": "annex-a",
+      "index": 3,
+      "kind": "para",
+      "para": 0
+    },
+    "091ABE13": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.3 Component reference terms",
+      "block": 2,
+      "para": 7
+    },
+    "091C13B6": {
+      "owner": "template"
+    },
+    "094D4BA2": {
+      "owner": "generated",
+      "region": "namespaces",
+      "index": 4,
+      "kind": "table",
+      "para": 10
+    },
+    "0968298F": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.3 Component reference terms",
+      "block": 2,
+      "para": 11
+    },
+    "0986D861": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.4 Synthesis from an authored TD or TM",
+      "block": 0,
+      "para": 0
+    },
+    "09A68499": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 4,
+      "para": 6
+    },
+    "09D7B7E7": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.3 Component reference terms",
+      "block": 0,
+      "para": 2
+    },
+    "09E306DA": {
+      "owner": "template"
+    },
+    "09E50927": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.7 Metadata, semantics, and configuration",
+      "block": 1,
+      "para": 1
+    },
+    "09E78813": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.2 Exceptional structured `uav:nodes` projection",
+      "block": 1,
+      "para": 2
+    },
+    "09E864DA": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "Annex C — Validation (informative)",
+      "block": 0,
+      "para": 0
+    },
+    "0A014901": {
+      "owner": "generated",
+      "region": "namespaces",
+      "index": 8,
+      "kind": "table",
+      "para": 7
+    },
+    "0A140B14": {
+      "owner": "template"
+    },
+    "0A1D6897": {
+      "owner": "template"
+    },
+    "0A3A9404": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 54
+    },
+    "0A6400C6": {
+      "owner": "template"
+    },
+    "0A72E1B7": {
+      "owner": "template"
+    },
+    "0AA105A8": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.3 Component reference terms",
+      "block": 2,
+      "para": 8
+    },
+    "0AA593F4": {
+      "owner": "template"
+    },
+    "0AC4315C": {
+      "owner": "template"
+    },
+    "0AE44794": {
+      "owner": "template"
+    },
+    "0AED441D": {
+      "owner": "template"
+    },
+    "0B03AD31": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.3 Component reference terms",
+      "block": 2,
+      "para": 5
+    },
+    "0B08A996": {
+      "owner": "template"
+    },
+    "0B33ED02": {
+      "owner": "template"
+    },
+    "0B48CDE0": {
+      "owner": "template"
+    },
+    "0B8436A3": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.1 Native readable mapping",
+      "block": 0,
+      "para": 2
+    },
+    "0B88DDB8": {
+      "owner": "template"
+    },
+    "0BAB042B": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.3 Layered exceptional preservation policy",
+      "block": 1,
+      "para": 0
+    },
+    "0BB0EDEA": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 25,
+      "kind": "clause",
+      "para": 0
+    },
+    "0BB94B5D": {
+      "owner": "template"
+    },
+    "0BBE1606": {
+      "owner": "template"
+    },
+    "0BD1B04E": {
+      "owner": "template"
+    },
+    "0BE6CABE": {
+      "owner": "template"
+    },
+    "0C14E7A7": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.2 Links and references",
+      "block": 3,
+      "para": 1
+    },
+    "0C3B92A6": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "8 Thing Description and Thing Model mapping",
+      "block": 1,
+      "para": 2
+    },
+    "0C46F46E": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "11 Conformance units and profiles",
+      "block": 1,
+      "para": 13
+    },
+    "0C6AB65F": {
+      "owner": "generated",
+      "region": "namespaces",
+      "index": 4,
+      "kind": "table",
+      "para": 2
+    },
+    "0C7E7D3B": {
+      "owner": "template"
+    },
+    "0C805A9E": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 65
+    },
+    "0CB179A1": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.6 Groups and membership",
+      "block": 3,
+      "para": 0
+    },
+    "0CCAE105": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.2 Type-annotation terms",
+      "block": 1,
+      "para": 18
+    },
+    "0CE7AF89": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.2 Type-annotation terms",
+      "block": 1,
+      "para": 22
+    },
+    "0CF0D68E": {
+      "owner": "generated",
+      "region": "scope",
+      "index": 8,
+      "kind": "clause",
+      "para": 0
+    },
+    "0CF2E9E4": {
+      "owner": "generated",
+      "region": "annex-a",
+      "index": 6,
+      "kind": "annex-clause",
+      "para": 0
+    },
+    "0D162925": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.5 URI, base, and href rules",
+      "block": 0,
+      "para": 0
+    },
+    "0D21C77F": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.3 Exceptional `uav:nodeSet` envelope",
+      "block": 1,
+      "para": 12
+    },
+    "0D36A141": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.1 `uav:nodes`",
+      "block": 1,
+      "para": 23
+    },
+    "0D40E504": {
+      "owner": "template"
+    },
+    "0D805329": {
+      "owner": "template"
+    },
+    "0D8BFD1E": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.1 `uav:nodes`",
+      "block": 1,
+      "para": 14
+    },
+    "0D9E8008": {
+      "owner": "template"
+    },
+    "0D9E8942": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.1 Native readable mapping",
+      "block": 0,
+      "para": 36
+    },
+    "0DBAAFBA": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 59
+    },
+    "0DCAD545": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.1 Node and path terms",
+      "block": 0,
+      "para": 10
+    },
+    "0DCBBA4B": {
+      "owner": "template"
+    },
+    "0DCC7E00": {
+      "owner": "template"
+    },
+    "0DCEF140": {
+      "owner": "template"
+    },
+    "0DCF9C53": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "D.1 Forward: Thing Model → OPC UA types",
+      "block": 11,
+      "para": 0
+    },
+    "0DF77927": {
+      "owner": "generated",
+      "region": "normative-references",
+      "index": 7,
+      "kind": "para",
+      "para": 0
+    },
+    "0E437D06": {
+      "owner": "template"
+    },
+    "0E7ECF15": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.1 Native readable mapping",
+      "block": 0,
+      "para": 23
+    },
+    "0E8753C1": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 60
+    },
+    "0E9752BF": {
+      "owner": "template"
+    },
+    "0EBDFDC5": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.6 Service mappings (Read, Write, Observe, Call)",
+      "block": 1,
+      "para": 4
+    },
+    "0EC1431D": {
+      "owner": "generated",
+      "region": "annex-a",
+      "index": 0,
+      "kind": "annex",
+      "para": 0
+    },
+    "0EC2F737": {
+      "owner": "template"
+    },
+    "0EE3AEA1": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 103,
+      "kind": "clause",
+      "para": 0
+    },
+    "0EFF20F5": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.1 Node and path terms",
+      "block": 0,
+      "para": 2
+    },
+    "0F2E4164": {
+      "owner": "template"
+    },
+    "0F2FBC87": {
+      "owner": "template"
+    },
+    "0F60C0AE": {
+      "owner": "template"
+    },
+    "0F63B53D": {
+      "owner": "generated",
+      "region": "namespaces",
+      "index": 8,
+      "kind": "table",
+      "para": 13
+    },
+    "0F88E649": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.1 `uav:nodes`",
+      "block": 1,
+      "para": 5
+    },
+    "0FAC5245": {
+      "owner": "template"
+    },
+    "0FB9E9EB": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 4,
+      "para": 3
+    },
+    "0FC17205": {
+      "owner": "template"
+    },
+    "0FDAFDB9": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.3 Layered exceptional preservation policy",
+      "block": 1,
+      "para": 1
+    },
+    "0FF04EE0": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.6 Groups and membership",
+      "block": 0,
+      "para": 0
+    },
+    "0FF3D261": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.4 Runtime Node and DataType mapping terms",
+      "block": 1,
+      "para": 5
+    },
+    "0FF700A9": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.9 Generic mapping terms and modelling rules",
+      "block": 1,
+      "para": 1
+    },
+    "10211433": {
+      "owner": "template"
+    },
+    "102C7103": {
+      "owner": "template"
+    },
+    "103B5A5B": {
+      "owner": "template"
+    },
+    "105FC62A": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "11 Conformance units and profiles",
+      "block": 1,
+      "para": 0
+    },
+    "1081F186": {
+      "owner": "template"
+    },
+    "10CFF50A": {
+      "owner": "generated",
+      "region": "normative-references",
+      "index": 31,
+      "kind": "para",
+      "para": 0
+    },
+    "11186A60": {
+      "owner": "template"
+    },
+    "11202BE3": {
+      "owner": "template"
+    },
+    "1122B9BA": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "11 Conformance units and profiles",
+      "block": 1,
+      "para": 19
+    },
+    "115ACBB4": {
+      "owner": "template"
+    },
+    "11809735": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.4 Type identity and naming",
+      "block": 1,
+      "para": 2
+    },
+    "1189BF1A": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.1 Native readable mapping",
+      "block": 0,
+      "para": 19
+    },
+    "11BC1D6E": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.1 Node and path terms",
+      "block": 0,
+      "para": 12
+    },
+    "11CFF5CF": {
+      "owner": "template"
+    },
+    "11D18232": {
+      "owner": "template"
+    },
+    "11D1F723": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.2 Links and references",
+      "block": 3,
+      "para": 4
+    },
+    "122B9F2C": {
+      "owner": "template"
+    },
+    "12312B1E": {
+      "owner": "template"
+    },
+    "12562AB6": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "11 Conformance units and profiles",
+      "block": 1,
+      "para": 1
+    },
+    "1271DF48": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.2 Type-annotation terms",
+      "block": 1,
+      "para": 10
+    },
+    "12756780": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "11 Conformance units and profiles",
+      "block": 3,
+      "para": 2
+    },
+    "127C81B4": {
+      "owner": "template"
+    },
+    "127E3B0E": {
+      "owner": "template"
+    },
+    "12AB2B58": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 47
+    },
+    "12ADB54E": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.3 Component reference terms",
+      "block": 0,
+      "para": 9
+    },
+    "12CA7E9B": {
+      "owner": "template"
+    },
+    "12D0379C": {
+      "owner": "generated",
+      "region": "namespaces",
+      "index": 8,
+      "kind": "table",
+      "para": 8
+    },
+    "12D3BED8": {
+      "owner": "template"
+    },
+    "12DF5958": {
+      "owner": "template"
+    },
+    "12E0E3F7": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.1 Native readable mapping",
+      "block": 0,
+      "para": 16
+    },
+    "12FB9DE3": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.8 Inheritance and open content",
+      "block": 2,
+      "para": 0
+    },
+    "13030572": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.3 Component reference terms",
+      "block": 0,
+      "para": 1
+    },
+    "1310E9FD": {
+      "owner": "template"
+    },
+    "13143313": {
+      "owner": "template"
+    },
+    "1337B9AF": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.4 Runtime Node and DataType mapping terms",
+      "block": 1,
+      "para": 0
+    },
+    "133AEB9C": {
+      "owner": "generated",
+      "region": "normative-references",
+      "index": 32,
+      "kind": "para",
+      "para": 0
+    },
+    "134299BD": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.1.3 Portable QualifiedName",
+      "block": 1,
+      "para": 0
+    },
+    "13500168": {
+      "owner": "template"
+    },
+    "13CA4D8D": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.1 Native readable mapping",
+      "block": 0,
+      "para": 28
+    },
+    "1402D8C7": {
+      "owner": "generated",
+      "region": "namespaces",
+      "index": 8,
+      "kind": "table",
+      "para": 0
+    },
+    "142F547D": {
+      "owner": "template"
+    },
+    "143B17AC": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.7 Security schemes",
+      "block": 0,
+      "para": 0
+    },
+    "14436C49": {
+      "owner": "generated",
+      "region": "namespaces",
+      "index": 5,
+      "kind": "para",
+      "para": 0
+    },
+    "14613847": {
+      "owner": "template"
+    },
+    "14715173": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 40
+    },
+    "1476FC4B": {
+      "owner": "template"
+    },
+    "147F8348": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "11 Conformance units and profiles",
+      "block": 1,
+      "para": 5
+    },
+    "1485D49B": {
+      "owner": "template"
+    },
+    "14905C46": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "1.1 Differences from the published OPC 10101 v1.00",
+      "block": 1,
+      "para": 0
+    },
+    "14988A4C": {
+      "owner": "template"
+    },
+    "14A07D74": {
+      "owner": "template"
+    },
+    "14A26184": {
+      "owner": "template"
+    },
+    "151B97C7": {
+      "owner": "template"
+    },
+    "151E84D9": {
+      "owner": "template"
+    },
+    "152CD608": {
+      "owner": "template"
+    },
+    "15627D31": {
+      "owner": "generated",
+      "region": "namespaces",
+      "index": 4,
+      "kind": "table",
+      "para": 9
+    },
+    "1574DC6C": {
+      "owner": "template"
+    },
+    "15A265CC": {
+      "owner": "template"
+    },
+    "15C4A750": {
+      "owner": "generated",
+      "region": "normative-references",
+      "index": 15,
+      "kind": "para",
+      "para": 0
+    },
+    "15C50944": {
+      "owner": "template"
+    },
+    "15E08C7F": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.7 Metadata, semantics, and configuration",
+      "block": 0,
+      "para": 0
+    },
+    "160DFAA1": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.3 Exceptional `uav:nodeSet` envelope",
+      "block": 1,
+      "para": 18
+    },
+    "1619F1AD": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.3 Exceptional `uav:nodeSet` envelope",
+      "block": 1,
+      "para": 2
+    },
+    "161B5F1C": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "D.2 Forward: Thing Description → OPC UA instance",
+      "block": 3,
+      "para": 0
+    },
+    "163C0CD2": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "D.1 Forward: Thing Model → OPC UA types",
+      "block": 1,
+      "para": 1
+    },
+    "1645F6DD": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 43
+    },
+    "164A9018": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 4,
+      "para": 0
+    },
+    "165FAE10": {
+      "owner": "template"
+    },
+    "167C9651": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 4,
+      "kind": "clause",
+      "para": 0
+    },
+    "16A5897F": {
+      "owner": "template"
+    },
+    "16CBA155": {
+      "owner": "template"
+    },
+    "16D9EC73": {
+      "owner": "template"
+    },
+    "16DA3B36": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 6
+    },
+    "16E094CC": {
+      "owner": "template"
+    },
+    "16E36E33": {
+      "owner": "template"
+    },
+    "16EF097F": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.4 Runtime Node and DataType mapping terms",
+      "block": 1,
+      "para": 14
+    },
+    "16F8C7B1": {
+      "owner": "template"
+    },
+    "17066237": {
+      "owner": "generated",
+      "region": "namespaces",
+      "index": 4,
+      "kind": "table",
+      "para": 23
+    },
+    "171AED75": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 133,
+      "kind": "clause",
+      "para": 0
+    },
+    "172BDD6E": {
+      "owner": "template"
+    },
+    "17333478": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "11 Conformance units and profiles",
+      "block": 1,
+      "para": 7
+    },
+    "176A8C18": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "8 Thing Description and Thing Model mapping",
+      "block": 1,
+      "para": 3
+    },
+    "1774587E": {
+      "owner": "template"
+    },
+    "17B7D765": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.1.3 Portable QualifiedName",
+      "block": 6,
+      "para": 2
+    },
+    "17D15604": {
+      "owner": "template"
+    },
+    "17D52BF4": {
+      "owner": "template"
+    },
+    "17F09754": {
+      "owner": "template"
+    },
+    "17F46A1C": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.1 Node and path terms",
+      "block": 0,
+      "para": 3
+    },
+    "17F68755": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.1 Composition and events",
+      "block": 5,
+      "para": 0
+    },
+    "181AB87C": {
+      "owner": "template"
+    },
+    "18284838": {
+      "owner": "template"
+    },
+    "183675DD": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 4,
+      "para": 2
+    },
+    "183B92D7": {
+      "owner": "template"
+    },
+    "1849E80F": {
+      "owner": "template"
+    },
+    "1868437E": {
+      "owner": "template"
+    },
+    "186917D6": {
+      "owner": "generated",
+      "region": "namespaces",
+      "index": 10,
+      "kind": "table",
+      "para": 10
+    },
+    "18760A1F": {
+      "owner": "template"
+    },
+    "189A56F8": {
+      "owner": "template"
+    },
+    "18AB26FC": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 61
+    },
+    "18C764F4": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.3 Containment",
+      "block": 0,
+      "para": 0
+    },
+    "193131FA": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.3 Component reference terms",
+      "block": 0,
+      "para": 7
+    },
+    "193A572E": {
+      "owner": "generated",
+      "region": "namespaces",
+      "index": 10,
+      "kind": "table",
+      "para": 0
+    },
+    "194C1BC0": {
+      "owner": "template"
+    },
+    "19501552": {
+      "owner": "template"
+    },
+    "1966A254": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.2 Exceptional structured `uav:nodes` projection",
+      "block": 2,
+      "para": 0
+    },
+    "196CFA4B": {
+      "owner": "generated",
+      "region": "terms",
+      "index": 2,
+      "kind": "para",
+      "para": 0
+    },
+    "196E702B": {
+      "owner": "template"
+    },
+    "19709376": {
+      "owner": "generated",
+      "region": "normative-references",
+      "index": 22,
+      "kind": "para",
+      "para": 0
+    },
+    "197F6FBC": {
+      "owner": "template"
+    },
+    "198873FF": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.2 Links and references",
+      "block": 3,
+      "para": 2
+    },
+    "19C01F40": {
+      "owner": "generated",
+      "region": "namespaces",
+      "index": 8,
+      "kind": "table",
+      "para": 4
+    },
+    "19C87FDB": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.2 `WoTJsonResidue` NodeSet Extension",
+      "block": 1,
+      "para": 4
+    },
+    "19E8EA61": {
+      "owner": "template"
+    },
+    "19FEF64D": {
+      "owner": "generated",
+      "region": "namespaces",
+      "index": 4,
+      "kind": "table",
+      "para": 1
+    },
+    "1A09FCF1": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.3 Exceptional `uav:nodeSet` envelope",
+      "block": 0,
+      "para": 0
+    },
+    "1A1C8A53": {
+      "owner": "generated",
+      "region": "terms",
+      "index": 6,
+      "kind": "term",
+      "para": 0
+    },
+    "1A2996E6": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.3 Exceptional `uav:nodeSet` envelope",
+      "block": 1,
+      "para": 4
+    },
+    "1A2FF31E": {
+      "owner": "template"
+    },
+    "1A3EE2CD": {
+      "owner": "template"
+    },
+    "1A404B8E": {
+      "owner": "template"
+    },
+    "1A445E26": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.1 `uav:nodes`",
+      "block": 1,
+      "para": 26
+    },
+    "1A44E838": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.1 Native readable mapping",
+      "block": 0,
+      "para": 48
+    },
+    "1A4C1B6A": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "D.2 Forward: Thing Description → OPC UA instance",
+      "block": 6,
+      "para": 0
+    },
+    "1A6BB266": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "Annex C — Validation (informative)",
+      "block": 2,
+      "para": 0
+    },
+    "1A86E55E": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.4 Runtime Node and DataType mapping terms",
+      "block": 3,
+      "para": 0
+    },
+    "1A9D843F": {
+      "owner": "template"
+    },
+    "1AE85233": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 73,
+      "kind": "clause",
+      "para": 0
+    },
+    "1B0A98CF": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.6 Service mappings (Read, Write, Observe, Call)",
+      "block": 1,
+      "para": 5
+    },
+    "1B42AD91": {
+      "owner": "template"
+    },
+    "1B43258F": {
+      "owner": "template"
+    },
+    "1B78711C": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.4 Runtime Node and DataType mapping terms",
+      "block": 1,
+      "para": 3
+    },
+    "1B9E9216": {
+      "owner": "template"
+    },
+    "1BF4CB94": {
+      "owner": "generated",
+      "region": "namespaces",
+      "index": 7,
+      "kind": "para",
+      "para": 0
+    },
+    "1BFDEC71": {
+      "owner": "template"
+    },
+    "1C00D947": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.1.1 Portable identity (ExpandedNodeId)",
+      "block": 0,
+      "para": 0
+    },
+    "1C0387DF": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.1 `uav:nodes`",
+      "block": 1,
+      "para": 19
+    },
+    "1C14363F": {
+      "owner": "template"
+    },
+    "1C364090": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.2 Type-annotation terms",
+      "block": 1,
+      "para": 11
+    },
+    "1C76F056": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "D.1 Forward: Thing Model → OPC UA types",
+      "block": 13,
+      "para": 0
+    },
+    "1C8AE963": {
+      "owner": "template"
+    },
+    "1C9C778B": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.6 Service mappings (Read, Write, Observe, Call)",
+      "block": 1,
+      "para": 9
+    },
+    "1C9E1362": {
+      "owner": "template"
+    },
+    "1CAC771F": {
+      "owner": "template"
+    },
+    "1CAE977D": {
+      "owner": "template"
+    },
+    "1CB81C6B": {
+      "owner": "template"
+    },
+    "1CCC1234": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.1 `uav:nodes`",
+      "block": 1,
+      "para": 16
+    },
+    "1CD82EC3": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.1.2 NamespaceUri-qualified model names",
+      "block": 0,
+      "para": 0
+    },
+    "1CF8F167": {
+      "owner": "template"
+    },
+    "1CFD3708": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.1 Node and path terms",
+      "block": 0,
+      "para": 5
+    },
+    "1D180C40": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.2 Type-annotation terms",
+      "block": 1,
+      "para": 20
+    },
+    "1D3A5723": {
+      "owner": "template"
+    },
+    "1D3A731C": {
+      "owner": "template"
+    },
+    "1D4C7ED7": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.1 Composition and events",
+      "block": 1,
+      "para": 0
+    },
+    "1D5920F5": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 115,
+      "kind": "clause",
+      "para": 0
+    },
+    "1D5FD512": {
+      "owner": "template"
+    },
+    "1D60A06A": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "1 Scope",
+      "block": 2,
+      "para": 1
+    },
+    "1D73506D": {
+      "owner": "template"
+    },
+    "1D97E370": {
+      "owner": "generated",
+      "region": "namespaces",
+      "index": 4,
+      "kind": "table",
+      "para": 22
+    },
+    "1DA9C89A": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.2 Links and references",
+      "block": 0,
+      "para": 0
+    },
+    "1DDB2B24": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 5
+    },
+    "1DFC0184": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.2 `WoTJsonResidue` NodeSet Extension",
+      "block": 1,
+      "para": 0
+    },
+    "1E0AA45C": {
+      "owner": "template"
+    },
+    "1E109909": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.1 Native readable mapping",
+      "block": 0,
+      "para": 35
+    },
+    "1E1A67F2": {
+      "owner": "template"
+    },
+    "1E1FA44F": {
+      "owner": "template"
+    },
+    "1E5B2064": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.5 Roundtrip invariants",
+      "block": 0,
+      "para": 1
+    },
+    "1E6714A6": {
+      "owner": "template"
+    },
+    "1E8E2FF3": {
+      "owner": "template"
+    },
+    "1EA1AA03": {
+      "owner": "generated",
+      "region": "namespaces",
+      "index": 2,
+      "kind": "para",
+      "para": 0
+    },
+    "1ED0C266": {
+      "owner": "template"
+    },
+    "1F516BFD": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 3,
+      "para": 0
+    },
+    "1F62A62C": {
+      "owner": "template"
+    },
+    "1F635767": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.2 Type-annotation terms",
+      "block": 1,
+      "para": 15
+    },
+    "1FBD28F8": {
+      "owner": "template"
+    },
+    "1FC1E825": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.5 URI, base, and href rules",
+      "block": 3,
+      "para": 0
+    },
+    "1FE0A4C0": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.2 Type-annotation terms",
+      "block": 1,
+      "para": 19
+    },
+    "1FE99252": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.3 Exceptional `uav:nodeSet` envelope",
+      "block": 1,
+      "para": 3
+    },
+    "1FFAFFFB": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.4 Runtime Node and DataType mapping terms",
+      "block": 1,
+      "para": 9
+    },
+    "1FFB2741": {
+      "owner": "template"
+    },
+    "1FFCB1ED": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.2 `WoTJsonResidue` NodeSet Extension",
+      "block": 1,
+      "para": 3
+    },
+    "20251C27": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.10 Native projection and preservation terms",
+      "block": 3,
+      "para": 0
+    },
+    "20371107": {
+      "owner": "template"
+    },
+    "204241BF": {
+      "owner": "template"
+    },
+    "205729E2": {
+      "owner": "template"
+    },
+    "205D9A7E": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.1 Native readable mapping",
+      "block": 0,
+      "para": 42
+    },
+    "207494B6": {
+      "owner": "template"
+    },
+    "2083F9D4": {
+      "owner": "generated",
+      "region": "namespaces",
+      "index": 10,
+      "kind": "table",
+      "para": 3
+    },
+    "20EAE78D": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.6 Service mappings (Read, Write, Observe, Call)",
+      "block": 1,
+      "para": 2
+    },
+    "21129F7D": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.7 Metadata, semantics, and configuration",
+      "block": 1,
+      "para": 0
+    },
+    "2130958B": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "D.2 Forward: Thing Description → OPC UA instance",
+      "block": 2,
+      "para": 0
+    },
+    "213F4230": {
+      "owner": "template"
+    },
+    "2146F309": {
+      "owner": "template"
+    },
+    "216D3233": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.2 Type-annotation terms",
+      "block": 1,
+      "para": 3
+    },
+    "21CC5579": {
+      "owner": "template"
+    },
+    "2205FE8E": {
+      "owner": "template"
+    },
+    "2210B34B": {
+      "owner": "template"
+    },
+    "221C7A6F": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.1 Native readable mapping",
+      "block": 0,
+      "para": 10
+    },
+    "223374EF": {
+      "owner": "template"
+    },
+    "224FA464": {
+      "owner": "template"
+    },
+    "2252CC75": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.10 Native projection and preservation terms",
+      "block": 1,
+      "para": 2
+    },
+    "22679350": {
+      "owner": "template"
+    },
+    "228646F2": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 74
+    },
+    "2286F069": {
+      "owner": "template"
+    },
+    "228C6C3C": {
+      "owner": "generated",
+      "region": "normative-references",
+      "index": 25,
+      "kind": "para",
+      "para": 0
+    },
+    "22A7A523": {
+      "owner": "template"
+    },
+    "22ABE184": {
+      "owner": "template"
+    },
+    "22B61436": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.1 Native readable mapping",
+      "block": 0,
+      "para": 24
+    },
+    "22BAC77F": {
+      "owner": "template"
+    },
+    "22C5BC96": {
+      "owner": "template"
+    },
+    "22C838E6": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.1 `uav:nodes`",
+      "block": 1,
+      "para": 9
+    },
+    "22C875D0": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 122,
+      "kind": "clause",
+      "para": 0
+    },
+    "22CB6F04": {
+      "owner": "template"
+    },
+    "22DB46CD": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "D.1 Forward: Thing Model → OPC UA types",
+      "block": 12,
+      "para": 0
+    },
+    "22E9678F": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.3 Layered exceptional preservation policy",
+      "block": 2,
+      "para": 0
+    },
+    "22F58722": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 144,
+      "kind": "clause",
+      "para": 0
+    },
+    "230136E4": {
+      "owner": "template"
+    },
+    "230DCC23": {
+      "owner": "template"
+    },
+    "2312EEF5": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.2 Links and references",
+      "block": 3,
+      "para": 3
+    },
+    "232468F9": {
+      "owner": "template"
+    },
+    "2334D260": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "D.1 Forward: Thing Model → OPC UA types",
+      "block": 3,
+      "para": 0
+    },
+    "237B19AC": {
+      "owner": "generated",
+      "region": "namespaces",
+      "index": 4,
+      "kind": "table",
+      "para": 3
+    },
+    "238C72E7": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.3 Exceptional `uav:nodeSet` envelope",
+      "block": 1,
+      "para": 22
+    },
+    "23A474CF": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "D.3 Reverse: OPC UA AddressSpace / NodeSet2 → Thing Model / Thing Description",
+      "block": 1,
+      "para": 0
+    },
+    "23A594F1": {
+      "owner": "template"
+    },
+    "23A64C39": {
+      "owner": "template"
+    },
+    "23F9D660": {
+      "owner": "template"
+    },
+    "242AA1C5": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.2 Links and references",
+      "block": 1,
+      "para": 2
+    },
+    "246A29E0": {
+      "owner": "template"
+    },
+    "24AC70EF": {
+      "owner": "template"
+    },
+    "24AEE5D9": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "D.1 Forward: Thing Model → OPC UA types",
+      "block": 2,
+      "para": 0
+    },
+    "24B2185C": {
+      "owner": "template"
+    },
+    "25284B84": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 69
+    },
+    "25421E6E": {
+      "owner": "template"
+    },
+    "2552A508": {
+      "owner": "template"
+    },
+    "2582E86B": {
+      "owner": "template"
+    },
+    "258BB14D": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.3 Component reference terms",
+      "block": 2,
+      "para": 6
+    },
+    "2595BEE0": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 155,
+      "kind": "clause",
+      "para": 0
+    },
+    "25BB9071": {
+      "owner": "template"
+    },
+    "25DB5BA6": {
+      "owner": "template"
+    },
+    "25F64C2F": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 49,
+      "kind": "clause",
+      "para": 0
+    },
+    "261F86E6": {
+      "owner": "template"
+    },
+    "263C5B08": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "11 Conformance units and profiles",
+      "block": 1,
+      "para": 2
+    },
+    "2661E885": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 37
+    },
+    "267823F6": {
+      "owner": "generated",
+      "region": "terms",
+      "index": 7,
+      "kind": "term",
+      "para": 2
+    },
+    "2683BAFF": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.1 Native readable mapping",
+      "block": 0,
+      "para": 34
+    },
+    "268BBEA0": {
+      "owner": "template"
+    },
+    "268DAB85": {
+      "owner": "template"
+    },
+    "26A3EA99": {
+      "owner": "generated",
+      "region": "namespaces",
+      "index": 4,
+      "kind": "table",
+      "para": 13
+    },
+    "26B2B5E2": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.3 Containment",
+      "block": 1,
+      "para": 1
+    },
+    "26C78FFB": {
+      "owner": "template"
+    },
+    "270C2DF7": {
+      "owner": "template"
+    },
+    "270E9A43": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.1 Native readable mapping",
+      "block": 0,
+      "para": 39
+    },
+    "270F8A71": {
+      "owner": "template"
+    },
+    "2751018C": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "11 Conformance units and profiles",
+      "block": 1,
+      "para": 6
+    },
+    "2762F49E": {
+      "owner": "generated",
+      "region": "normative-references",
+      "index": 28,
+      "kind": "para",
+      "para": 0
+    },
+    "277B85E1": {
+      "owner": "template"
+    },
+    "27A108B5": {
+      "owner": "template"
+    },
+    "27ADC754": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "Annex B — Examples (informative)",
+      "block": 0,
+      "para": 1
+    },
+    "27B8D6C8": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.4 Runtime Node and DataType mapping terms",
+      "block": 1,
+      "para": 7
+    },
+    "27C13771": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.1 `uav:nodes`",
+      "block": 1,
+      "para": 7
+    },
+    "27CC96E5": {
+      "owner": "template"
+    },
+    "27E72254": {
+      "owner": "template"
+    },
+    "27F5E138": {
+      "owner": "template"
+    },
+    "2807FBAC": {
+      "owner": "template"
+    },
+    "280B3451": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 9
+    },
+    "28155FFF": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 11
+    },
+    "282E87DE": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.1 Node and path terms",
+      "block": 0,
+      "para": 14
+    },
+    "2850473E": {
+      "owner": "template"
+    },
+    "28685377": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "D.1 Forward: Thing Model → OPC UA types",
+      "block": 4,
+      "para": 1
+    },
+    "28C29330": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 39
+    },
+    "28F285F5": {
+      "owner": "template"
+    },
+    "2922D9AD": {
+      "owner": "generated",
+      "region": "namespaces",
+      "index": 8,
+      "kind": "table",
+      "para": 11
+    },
+    "29283343": {
+      "owner": "template"
+    },
+    "2930A690": {
+      "owner": "template"
+    },
+    "296B6383": {
+      "owner": "template"
+    },
+    "29849280": {
+      "owner": "generated",
+      "region": "terms",
+      "index": 6,
+      "kind": "term",
+      "para": 2
+    },
+    "29DC10C0": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 77
+    },
+    "29F59773": {
+      "owner": "template"
+    },
+    "2A01B74B": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.1 `uav:nodes`",
+      "block": 1,
+      "para": 21
+    },
+    "2A05A556": {
+      "owner": "template"
+    },
+    "2A05D067": {
+      "owner": "template"
+    },
+    "2A21DAD4": {
+      "owner": "template"
+    },
+    "2A316CA3": {
+      "owner": "template"
+    },
+    "2A5FAE80": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "D.1 Forward: Thing Model → OPC UA types",
+      "block": 0,
+      "para": 0
+    },
+    "2A6D2F7F": {
+      "owner": "generated",
+      "region": "use-cases",
+      "index": 2,
+      "kind": "clause",
+      "para": 0
+    },
+    "2A7E3826": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.8 Namespaces in the @context",
+      "block": 0,
+      "para": 0
+    },
+    "2A88B652": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.1 Native readable mapping",
+      "block": 0,
+      "para": 5
+    },
+    "2A9B0ADD": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.3 Layered exceptional preservation policy",
+      "block": 1,
+      "para": 3
+    },
+    "2AB5E3EA": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.1 `uav:nodes`",
+      "block": 1,
+      "para": 27
+    },
+    "2ABE89D0": {
+      "owner": "template"
+    },
+    "2AC9ED6A": {
+      "owner": "template"
+    },
+    "2AF3670A": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 42
+    },
+    "2B09BE02": {
+      "owner": "template"
+    },
+    "2B19AB39": {
+      "owner": "template"
+    },
+    "2B20AF8C": {
+      "owner": "generated",
+      "region": "normative-references",
+      "index": 13,
+      "kind": "para",
+      "para": 0
+    },
+    "2B6F8FFA": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 18
+    },
+    "2B7EE57F": {
+      "owner": "template"
+    },
+    "2B82680C": {
+      "owner": "template"
+    },
+    "2B83DDC7": {
+      "owner": "template"
+    },
+    "2B970E0C": {
+      "owner": "generated",
+      "region": "scope",
+      "index": 0,
+      "kind": "config",
+      "para": 0
+    },
+    "2BE0AECF": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "1.1 Differences from the published OPC 10101 v1.00",
+      "block": 1,
+      "para": 3
+    },
+    "2BEFB40F": {
+      "owner": "template"
+    },
+    "2BF57E6F": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.1 Node and path terms",
+      "block": 0,
+      "para": 6
+    },
+    "2BF95B98": {
+      "owner": "template"
+    },
+    "2C038027": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.1 Node and path terms",
+      "block": 0,
+      "para": 4
+    },
+    "2C2A1EF7": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 151,
+      "kind": "clause",
+      "para": 0
+    },
+    "2C476191": {
+      "owner": "template"
+    },
+    "2C4E3754": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 135,
+      "kind": "clause",
+      "para": 0
+    },
+    "2C4EC229": {
+      "owner": "template"
+    },
+    "2CCB0A81": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "D.3 Reverse: OPC UA AddressSpace / NodeSet2 → Thing Model / Thing Description",
+      "block": 6,
+      "para": 0
+    },
+    "2D1C4F1B": {
+      "owner": "template"
+    },
+    "2D4BA023": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.3 Component reference terms",
+      "block": 2,
+      "para": 4
+    },
+    "2D57250B": {
+      "owner": "template"
+    },
+    "2D5A0A8C": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "D.3 Reverse: OPC UA AddressSpace / NodeSet2 → Thing Model / Thing Description",
+      "block": 2,
+      "para": 0
+    },
+    "2D71A36E": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.6 Service mappings (Read, Write, Observe, Call)",
+      "block": 1,
+      "para": 8
+    },
+    "2D7B5B3E": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 4,
+      "para": 14
+    },
+    "2DC1B13B": {
+      "owner": "template"
+    },
+    "2DDAC79E": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.2 Type-annotation terms",
+      "block": 1,
+      "para": 13
+    },
+    "2DFEBA1F": {
+      "owner": "template"
+    },
+    "2E201E83": {
+      "owner": "template"
+    },
+    "2E233533": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.3 Containment",
+      "block": 2,
+      "para": 0
+    },
+    "2E6BECEB": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 67
+    },
+    "2E7301AC": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.1 Node and path terms",
+      "block": 0,
+      "para": 15
+    },
+    "2E8613A2": {
+      "owner": "template"
+    },
+    "2E90D501": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 27
+    },
+    "2EAC85E4": {
+      "owner": "template"
+    },
+    "2EBF0214": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 1
+    },
+    "2EC57924": {
+      "owner": "template"
+    },
+    "2EC9E38F": {
+      "owner": "template"
+    },
+    "2EE1EBC5": {
+      "owner": "generated",
+      "region": "namespaces",
+      "index": 6,
+      "kind": "clause",
+      "para": 0
+    },
+    "2EF89FA3": {
+      "owner": "template"
+    },
+    "2F38BCC0": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.1 Native readable mapping",
+      "block": 0,
+      "para": 14
+    },
+    "2F403199": {
+      "owner": "template"
+    },
+    "2F407565": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.2 Links and references",
+      "block": 3,
+      "para": 7
+    },
+    "2F74113A": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.1.2 NamespaceUri-qualified model names",
+      "block": 1,
+      "para": 0
+    },
+    "2F9F40E2": {
+      "owner": "template"
+    },
+    "2FCB1D35": {
+      "owner": "template"
+    },
+    "2FDA08CB": {
+      "owner": "template"
+    },
+    "2FE04665": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.2 Links and references",
+      "block": 1,
+      "para": 3
+    },
+    "2FE1EA70": {
+      "owner": "template"
+    },
+    "2FE45AE7": {
+      "owner": "template"
+    },
+    "2FF52600": {
+      "owner": "template"
+    },
+    "2FF8B12D": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.1.3 Portable QualifiedName",
+      "block": 3,
+      "para": 0
+    },
+    "2FFC8762": {
+      "owner": "template"
+    },
+    "300854BB": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 4,
+      "para": 13
+    },
+    "300C41E9": {
+      "owner": "template"
+    },
+    "300CB483": {
+      "owner": "template"
+    },
+    "30112ECA": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.2 `WoTJsonResidue` NodeSet Extension",
+      "block": 2,
+      "para": 0
+    },
+    "30285D9E": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.1 Native readable mapping",
+      "block": 0,
+      "para": 1
+    },
+    "303B0651": {
+      "owner": "template"
+    },
+    "30443B31": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 63
+    },
+    "3048A7DC": {
+      "owner": "template"
+    },
+    "304EB199": {
+      "owner": "template"
+    },
+    "3086912E": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.1 Native readable mapping",
+      "block": 0,
+      "para": 26
+    },
+    "30B0FC23": {
+      "owner": "generated",
+      "region": "terms",
+      "index": 5,
+      "kind": "term",
+      "para": 0
+    },
+    "30C36FBC": {
+      "owner": "template"
+    },
+    "30CDFD6F": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.1.1 Portable identity (ExpandedNodeId)",
+      "block": 2,
+      "para": 0
+    },
+    "30F903D6": {
+      "owner": "template"
+    },
+    "31219329": {
+      "owner": "template"
+    },
+    "312E4DD0": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 34
+    },
+    "3144C5AB": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.2 Exceptional structured `uav:nodes` projection",
+      "block": 0,
+      "para": 0
+    },
+    "315DD5C0": {
+      "owner": "generated",
+      "region": "use-cases",
+      "index": 26,
+      "kind": "clause",
+      "para": 0
+    },
+    "318F6F9D": {
+      "owner": "template"
+    },
+    "31A61335": {
+      "owner": "template"
+    },
+    "31A7E279": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 128,
+      "kind": "clause",
+      "para": 0
+    },
+    "31ACFF0C": {
+      "owner": "generated",
+      "region": "normative-references",
+      "index": 16,
+      "kind": "para",
+      "para": 0
+    },
+    "31C9DE3C": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.9 Generic mapping terms and modelling rules",
+      "block": 2,
+      "para": 0
+    },
+    "31EC7EA4": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "D.1 Forward: Thing Model → OPC UA types",
+      "block": 7,
+      "para": 0
+    },
+    "321382D8": {
+      "owner": "template"
+    },
+    "3266AD02": {
+      "owner": "template"
+    },
+    "32685630": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.3 Component reference terms",
+      "block": 2,
+      "para": 1
+    },
+    "3269F7B1": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.5 Units, quantity kinds, and scaling",
+      "block": 1,
+      "para": 1
+    },
+    "326C4465": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.1 Node and path terms",
+      "block": 0,
+      "para": 16
+    },
+    "32836849": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.10 Native projection and preservation terms",
+      "block": 1,
+      "para": 0
+    },
+    "32836BCC": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.1.2 NamespaceUri-qualified model names",
+      "block": 7,
+      "para": 2
+    },
+    "328BCC2D": {
+      "owner": "template"
+    },
+    "328C330B": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.1 Native readable mapping",
+      "block": 0,
+      "para": 4
+    },
+    "32AFC662": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.1.2 NamespaceUri-qualified model names",
+      "block": 4,
+      "para": 1
+    },
+    "32B00E51": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 148,
+      "kind": "clause",
+      "para": 0
+    },
+    "32CC2E65": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.1 Native readable mapping",
+      "block": 0,
+      "para": 20
+    },
+    "32E40B3A": {
+      "owner": "generated",
+      "region": "namespaces",
+      "index": 4,
+      "kind": "table",
+      "para": 25
+    },
+    "32F402A4": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.2 Type-annotation terms",
+      "block": 1,
+      "para": 17
+    },
+    "330996E9": {
+      "owner": "generated",
+      "region": "namespaces",
+      "index": 4,
+      "kind": "table",
+      "para": 8
+    },
+    "3319E34D": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 55
+    },
+    "331AE981": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 7
+    },
+    "333BCF2D": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.2 `WoTJsonResidue` NodeSet Extension",
+      "block": 1,
+      "para": 11
+    },
+    "333D6C2E": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.5 URI, base, and href rules",
+      "block": 4,
+      "para": 0
+    },
+    "333F9E2D": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "11 Conformance units and profiles",
+      "block": 1,
+      "para": 12
+    },
+    "3379DBB7": {
+      "owner": "template"
+    },
+    "33860F05": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 14,
+      "kind": "clause",
+      "para": 0
+    },
+    "3393333E": {
+      "owner": "template"
+    },
+    "33A5809D": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 44,
+      "kind": "clause",
+      "para": 0
+    },
+    "33A7CEF3": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "11 Conformance units and profiles",
+      "block": 1,
+      "para": 8
+    },
+    "33B99526": {
+      "owner": "template"
+    },
+    "33E465BD": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.3 Exceptional `uav:nodeSet` envelope",
+      "block": 1,
+      "para": 11
+    },
+    "34236AF1": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 98,
+      "kind": "clause",
+      "para": 0
+    },
+    "342580EA": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.8 Inheritance and open content",
+      "block": 0,
+      "para": 0
+    },
+    "343CECDA": {
+      "owner": "template"
+    },
+    "3454903D": {
+      "owner": "generated",
+      "region": "namespaces",
+      "index": 10,
+      "kind": "table",
+      "para": 9
+    },
+    "345F52E9": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 64,
+      "kind": "clause",
+      "para": 0
+    },
+    "346F5517": {
+      "owner": "template"
+    },
+    "347235E9": {
+      "owner": "template"
+    },
+    "34803C6D": {
+      "owner": "template"
+    },
+    "3483B7AE": {
+      "owner": "template"
+    },
+    "34A99B3E": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "D.2 Forward: Thing Description → OPC UA instance",
+      "block": 5,
+      "para": 0
+    },
+    "34B4B014": {
+      "owner": "template"
+    },
+    "34EADD88": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.1 Native readable mapping",
+      "block": 0,
+      "para": 49
+    },
+    "34ED318F": {
+      "owner": "template"
+    },
+    "350A6565": {
+      "owner": "template"
+    },
+    "350B7F33": {
+      "owner": "template"
+    },
+    "351E1BD5": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.10 Native projection and preservation terms",
+      "block": 4,
+      "para": 1
+    },
+    "35603A85": {
+      "owner": "template"
+    },
+    "3575FCE0": {
+      "owner": "template"
+    },
+    "35797093": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.1 Native readable mapping",
+      "block": 0,
+      "para": 18
+    },
+    "35956AED": {
+      "owner": "generated",
+      "region": "general",
+      "index": 3,
+      "kind": "para",
+      "para": 0
+    },
+    "35A49AAD": {
+      "owner": "template"
+    },
+    "35BF950E": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "D.1 Forward: Thing Model → OPC UA types",
+      "block": 1,
+      "para": 0
+    },
+    "35E11470": {
+      "owner": "template"
+    },
+    "35F9B437": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "D.1 Forward: Thing Model → OPC UA types",
+      "block": 8,
+      "para": 0
+    },
+    "36170D40": {
+      "owner": "template"
+    },
+    "361841A4": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.5 Roundtrip invariants",
+      "block": 0,
+      "para": 2
+    },
+    "362E0D47": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.1 `uav:nodes`",
+      "block": 1,
+      "para": 4
+    },
+    "365ED989": {
+      "owner": "template"
+    },
+    "366B0383": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.1 `uav:nodes`",
+      "block": 1,
+      "para": 11
+    },
+    "36948841": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "8 Thing Description and Thing Model mapping",
+      "block": 1,
+      "para": 1
+    },
+    "369AF152": {
+      "owner": "template"
+    },
+    "369DD552": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.7 Security schemes",
+      "block": 1,
+      "para": 3
+    },
+    "36ACB4D3": {
+      "owner": "template"
+    },
+    "36B887F5": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.3 Layered exceptional preservation policy",
+      "block": 0,
+      "para": 0
+    },
+    "36D29DA9": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.8 Namespaces in the @context",
+      "block": 1,
+      "para": 0
+    },
+    "36D8D9A4": {
+      "owner": "template"
+    },
+    "36D98677": {
+      "owner": "template"
+    },
+    "36DF84D8": {
+      "owner": "template"
+    },
+    "36F74192": {
+      "owner": "template"
+    },
+    "36F78CEE": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "D.2 Forward: Thing Description → OPC UA instance",
+      "block": 4,
+      "para": 1
+    },
+    "36F7C0B3": {
+      "owner": "template"
+    },
+    "371ECE2C": {
+      "owner": "template"
+    },
+    "3726CE69": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6 Model and platform vocabulary",
+      "block": 0,
+      "para": 0
+    },
+    "37332E02": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 33
+    },
+    "3739D210": {
+      "owner": "template"
+    },
+    "373CA309": {
+      "owner": "template"
+    },
+    "3741515E": {
+      "owner": "template"
+    },
+    "37584E38": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "D.2 Forward: Thing Description → OPC UA instance",
+      "block": 1,
+      "para": 2
+    },
+    "37B3D444": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.1 Native readable mapping",
+      "block": 0,
+      "para": 27
+    },
+    "37E82FCA": {
+      "owner": "template"
+    },
+    "37E9A70B": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.2 Type-annotation terms",
+      "block": 1,
+      "para": 16
+    },
+    "37F766D4": {
+      "owner": "template"
+    },
+    "37F819A7": {
+      "owner": "template"
+    },
+    "380D2AA7": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.10 Native projection and preservation terms",
+      "block": 1,
+      "para": 1
+    },
+    "383020E9": {
+      "owner": "template"
+    },
+    "38327004": {
+      "owner": "generated",
+      "region": "normative-references",
+      "index": 30,
+      "kind": "para",
+      "para": 0
+    },
+    "383AA163": {
+      "owner": "template"
+    },
+    "3847A9C4": {
+      "owner": "template"
+    },
+    "385564BD": {
+      "owner": "template"
+    },
+    "385DE944": {
+      "owner": "template"
+    },
+    "3866B2F9": {
+      "owner": "template"
+    },
+    "38731809": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.10 Native projection and preservation terms",
+      "block": 2,
+      "para": 0
+    },
+    "39135D67": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.1 Native readable mapping",
+      "block": 0,
+      "para": 33
+    },
+    "391E1B7F": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 13
+    },
+    "3945C80D": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 9,
+      "kind": "clause",
+      "para": 0
+    },
+    "397DE111": {
+      "owner": "generated",
+      "region": "namespaces",
+      "index": 8,
+      "kind": "table",
+      "para": 3
+    },
+    "398A594D": {
+      "owner": "template"
+    },
+    "398D0603": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.3 Component reference terms",
+      "block": 3,
+      "para": 0
+    },
+    "39C10FE2": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.7 Metadata, semantics, and configuration",
+      "block": 2,
+      "para": 0
+    },
+    "39D4C4CA": {
+      "owner": "template"
+    },
+    "39E66F2B": {
+      "owner": "template"
+    },
+    "39EA0E89": {
+      "owner": "template"
+    },
+    "3A1A7376": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9 NodeSet2 and WoT conversion",
+      "block": 0,
+      "para": 0
+    },
+    "3A21BEEC": {
+      "owner": "generated",
+      "region": "terms",
+      "index": 7,
+      "kind": "term",
+      "para": 1
+    },
+    "3A532551": {
+      "owner": "template"
+    },
+    "3A636749": {
+      "owner": "template"
+    },
+    "3AAEA05C": {
+      "owner": "template"
+    },
+    "3AB2A855": {
+      "owner": "template"
+    },
+    "3AB6DF7F": {
+      "owner": "template"
+    },
+    "3AC63934": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 86,
+      "kind": "clause",
+      "para": 0
+    },
+    "3AF0B2A6": {
+      "owner": "template"
+    },
+    "3AF21E35": {
+      "owner": "template"
+    },
+    "3AFE34D1": {
+      "owner": "template"
+    },
+    "3B4C8D23": {
+      "owner": "template"
+    },
+    "3B5A2718": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 4,
+      "para": 12
+    },
+    "3B68BD0B": {
+      "owner": "template"
+    },
+    "3BA2B334": {
+      "owner": "template"
+    },
+    "3BB55991": {
+      "owner": "template"
+    },
+    "3BC1B8B8": {
+      "owner": "template"
+    },
+    "3BC360A3": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.2 Type-annotation terms",
+      "block": 1,
+      "para": 8
+    },
+    "3BC431FB": {
+      "owner": "template"
+    },
+    "3BC52411": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 22
+    },
+    "3BD481D4": {
+      "owner": "generated",
+      "region": "namespaces",
+      "index": 8,
+      "kind": "table",
+      "para": 10
+    },
+    "3BE43E34": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.1 `uav:nodes`",
+      "block": 1,
+      "para": 1
+    },
+    "3BF75E9F": {
+      "owner": "template"
+    },
+    "3C18D9EF": {
+      "owner": "template"
+    },
+    "3C250236": {
+      "owner": "generated",
+      "region": "namespaces",
+      "index": 8,
+      "kind": "table",
+      "para": 5
+    },
+    "3C254E13": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "11 Conformance units and profiles",
+      "block": 0,
+      "para": 0
+    },
+    "3C2786B6": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "D.2 Forward: Thing Description → OPC UA instance",
+      "block": 0,
+      "para": 0
+    },
+    "3C29265D": {
+      "owner": "template"
+    },
+    "3C2A66ED": {
+      "owner": "template"
+    },
+    "3C513AF8": {
+      "owner": "template"
+    },
+    "3C78FFE5": {
+      "owner": "generated",
+      "region": "normative-references",
+      "index": 8,
+      "kind": "para",
+      "para": 0
+    },
+    "3C8E7C39": {
+      "owner": "template"
+    },
+    "3CAF6CFF": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "11 Conformance units and profiles",
+      "block": 2,
+      "para": 0
+    },
+    "3CAFE6D1": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 23
+    },
+    "3CC1FB29": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.2 Type-annotation terms",
+      "block": 1,
+      "para": 9
+    },
+    "3CCFE9F5": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.2 Exceptional structured `uav:nodes` projection",
+      "block": 1,
+      "para": 1
+    },
+    "3CD1E582": {
+      "owner": "template"
+    },
+    "3D1371BA": {
+      "owner": "template"
+    },
+    "3D170781": {
+      "owner": "generated",
+      "region": "normative-references",
+      "index": 6,
+      "kind": "para",
+      "para": 0
+    },
+    "3D3B4816": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 45
+    },
+    "3D46561C": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.1 Composition and events",
+      "block": 2,
+      "para": 0
+    },
+    "3D59A12E": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.6 Service mappings (Read, Write, Observe, Call)",
+      "block": 1,
+      "para": 7
+    },
+    "3D61E65B": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.3 Component reference terms",
+      "block": 2,
+      "para": 10
+    },
+    "3D63D4D8": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.8 Inheritance and open content",
+      "block": 1,
+      "para": 0
+    },
+    "3D7C3D12": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.2 `WoTJsonResidue` NodeSet Extension",
+      "block": 1,
+      "para": 8
+    },
+    "3DC44C36": {
+      "owner": "template"
+    },
+    "3DC6EA38": {
+      "owner": "template"
+    },
+    "3DF9A42E": {
+      "owner": "template"
+    },
+    "3E222234": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 35
+    },
+    "3E36FC46": {
+      "owner": "template"
+    },
+    "3E4BDB27": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.1 Composition and events",
+      "block": 3,
+      "para": 0
+    },
+    "3E51B5A4": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 44
+    },
+    "3E7BD4E4": {
+      "owner": "template"
+    },
+    "3E8D6FBB": {
+      "owner": "template"
+    },
+    "3E9A1BC5": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.1.2 NamespaceUri-qualified model names",
+      "block": 6,
+      "para": 0
+    },
+    "3EB46C81": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.1 Native readable mapping",
+      "block": 0,
+      "para": 44
+    },
+    "3EB543EC": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.10 Native projection and preservation terms",
+      "block": 5,
+      "para": 0
+    },
+    "3ED612A6": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.3 Component reference terms",
+      "block": 2,
+      "para": 2
+    },
+    "3EE66060": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 150,
+      "kind": "clause",
+      "para": 0
+    },
+    "3EED3760": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 4,
+      "para": 7
+    },
+    "3EEF2598": {
+      "owner": "template"
+    },
+    "3EF7BD1C": {
+      "owner": "template"
+    },
+    "3F013233": {
+      "owner": "template"
+    },
+    "3F02669E": {
+      "owner": "template"
+    },
+    "3F066B25": {
+      "owner": "template"
+    },
+    "3F1F98D9": {
+      "owner": "template"
+    },
+    "3F657DC6": {
+      "owner": "generated",
+      "region": "normative-references",
+      "index": 9,
+      "kind": "para",
+      "para": 0
+    },
+    "3F947831": {
+      "owner": "generated",
+      "region": "normative-references",
+      "index": 18,
+      "kind": "para",
+      "para": 0
+    },
+    "3F9582AC": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.1.3 Portable QualifiedName",
+      "block": 4,
+      "para": 0
+    },
+    "3FC95756": {
+      "owner": "generated",
+      "region": "namespaces",
+      "index": 8,
+      "kind": "table",
+      "para": 9
+    },
+    "3FCBD290": {
+      "owner": "template"
+    },
+    "3FDF0D65": {
+      "owner": "template"
+    },
+    "3FE236CB": {
+      "owner": "template"
+    },
+    "3FED12F4": {
+      "owner": "template"
+    },
+    "4003C63C": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.10 Native projection and preservation terms",
+      "block": 1,
+      "para": 3
+    },
+    "400D4470": {
+      "owner": "generated",
+      "region": "namespaces",
+      "index": 4,
+      "kind": "table",
+      "para": 15
+    },
+    "403C871B": {
+      "owner": "template"
+    },
+    "404587FB": {
+      "owner": "template"
+    },
+    "406BF398": {
+      "owner": "generated",
+      "region": "namespaces",
+      "index": 8,
+      "kind": "table",
+      "para": 12
+    },
+    "4079BF31": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "D.1 Forward: Thing Model → OPC UA types",
+      "block": 7,
+      "para": 2
+    },
+    "407C5AAB": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "D.3 Reverse: OPC UA AddressSpace / NodeSet2 → Thing Model / Thing Description",
+      "block": 3,
+      "para": 0
+    },
+    "407CF38F": {
+      "owner": "template"
+    },
+    "409F4EDE": {
+      "owner": "template"
+    },
+    "40A4CC73": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 4,
+      "para": 11
+    },
+    "40A70F11": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.2 Type-annotation terms",
+      "block": 1,
+      "para": 6
+    },
+    "40B5D3D4": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 67,
+      "kind": "clause",
+      "para": 0
+    },
+    "40C0DBF7": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 10
+    },
+    "40F7B99A": {
+      "owner": "template"
+    },
+    "40FB7929": {
+      "owner": "template"
+    },
+    "41045175": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 24
+    },
+    "41072280": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "11 Conformance units and profiles",
+      "block": 3,
+      "para": 0
+    },
+    "4150B080": {
+      "owner": "template"
+    },
+    "4150BC09": {
+      "owner": "template"
+    },
+    "41598661": {
+      "owner": "template"
+    },
+    "416A6201": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.1 `uav:nodes`",
+      "block": 1,
+      "para": 10
+    },
+    "416AFB85": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.5 Units, quantity kinds, and scaling",
+      "block": 0,
+      "para": 0
+    },
+    "416CBBC9": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "11 Conformance units and profiles",
+      "block": 1,
+      "para": 9
+    },
+    "41931406": {
+      "owner": "template"
+    },
+    "41BB6E56": {
+      "owner": "template"
+    },
+    "41BD8DF1": {
+      "owner": "template"
+    },
+    "41C6218D": {
+      "owner": "template"
+    },
+    "42064A04": {
+      "owner": "template"
+    },
+    "4206DA43": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 19
+    },
+    "4238B0A9": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.3 Exceptional `uav:nodeSet` envelope",
+      "block": 1,
+      "para": 21
+    },
+    "4246C806": {
+      "owner": "template"
+    },
+    "4256C675": {
+      "owner": "generated",
+      "region": "normative-references",
+      "index": 3,
+      "kind": "para",
+      "para": 0
+    },
+    "42599F46": {
+      "owner": "template"
+    },
+    "425F9C7A": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "4 Namespace and prefix",
+      "block": 2,
+      "para": 0
+    },
+    "4264FC69": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.1.2 NamespaceUri-qualified model names",
+      "block": 7,
+      "para": 0
+    },
+    "4274134E": {
+      "owner": "template"
+    },
+    "42B1F660": {
+      "owner": "template"
+    },
+    "42F58D92": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "11 Conformance units and profiles",
+      "block": 1,
+      "para": 14
+    },
+    "43014068": {
+      "owner": "template"
+    },
+    "433DAE0F": {
+      "owner": "generated",
+      "region": "namespaces",
+      "index": 4,
+      "kind": "table",
+      "para": 12
+    },
+    "43742999": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 4,
+      "para": 1
+    },
+    "437A61B5": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "Annex A — JSON-LD context and schema (informative)",
+      "block": 0,
+      "para": 0
+    },
+    "43FCE493": {
+      "owner": "template"
+    },
+    "4418E5CA": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "D.1 Forward: Thing Model → OPC UA types",
+      "block": 10,
+      "para": 1
+    },
+    "441BA7E9": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5 Preserved OPC 10101 vocabulary and service mappings",
+      "block": 0,
+      "para": 0
+    },
+    "444B922C": {
+      "owner": "template"
+    },
+    "445186F0": {
+      "owner": "template"
+    },
+    "44521747": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.3 Exceptional `uav:nodeSet` envelope",
+      "block": 1,
+      "para": 10
+    },
+    "446FDC72": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.4 Runtime Node and DataType mapping terms",
+      "block": 1,
+      "para": 12
+    },
+    "4479E83B": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 31
+    },
+    "44C2D4E9": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.2 Type-annotation terms",
+      "block": 1,
+      "para": 12
+    },
+    "44DE6F8C": {
+      "owner": "template"
+    },
+    "45217830": {
+      "owner": "template"
+    },
+    "453CFA09": {
+      "owner": "template"
+    },
+    "4554AF6D": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.1.2 NamespaceUri-qualified model names",
+      "block": 3,
+      "para": 0
+    },
+    "45646260": {
+      "owner": "template"
+    },
+    "456E2E72": {
+      "owner": "template"
+    },
+    "458EA50C": {
+      "owner": "template"
+    },
+    "459B4FD5": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.9 Generic mapping terms and modelling rules",
+      "block": 0,
+      "para": 0
+    },
+    "45AC6947": {
+      "owner": "template"
+    },
+    "45B2FA1A": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.9 Address-space example",
+      "block": 1,
+      "para": 1
+    },
+    "45C37697": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.3 Component reference terms",
+      "block": 0,
+      "para": 4
+    },
+    "45CAF8A0": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "1 Scope",
+      "block": 3,
+      "para": 0
+    },
+    "45D4B176": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.2 Type-annotation terms",
+      "block": 1,
+      "para": 2
+    },
+    "45DD7255": {
+      "owner": "template"
+    },
+    "46045E00": {
+      "owner": "template"
+    },
+    "46056183": {
+      "owner": "generated",
+      "region": "namespaces",
+      "index": 8,
+      "kind": "table",
+      "para": 6
+    },
+    "461D633B": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "8 Thing Description and Thing Model mapping",
+      "block": 1,
+      "para": 5
+    },
+    "465970B6": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.3 Exceptional `uav:nodeSet` envelope",
+      "block": 1,
+      "para": 0
+    },
+    "465E0A69": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.10 Native projection and preservation terms",
+      "block": 4,
+      "para": 0
+    },
+    "467306A9": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.2 Type-annotation terms",
+      "block": 1,
+      "para": 14
+    },
+    "467E907C": {
+      "owner": "template"
+    },
+    "46AB9790": {
+      "owner": "template"
+    },
+    "46D1D15B": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 38
+    },
+    "46DBE0D6": {
+      "owner": "template"
+    },
+    "46DC3FFB": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.2 Links and references",
+      "block": 2,
+      "para": 0
+    },
+    "46F34E58": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 48
+    },
+    "470D529A": {
+      "owner": "template"
+    },
+    "4733F900": {
+      "owner": "template"
+    },
+    "474806FE": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.1 Native readable mapping",
+      "block": 0,
+      "para": 37
+    },
+    "47550F3E": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.1.1 Portable identity (ExpandedNodeId)",
+      "block": 3,
+      "para": 0
+    },
+    "476B57B8": {
+      "owner": "template"
+    },
+    "47772F2D": {
+      "owner": "template"
+    },
+    "47932F91": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "1.1 Differences from the published OPC 10101 v1.00",
+      "block": 1,
+      "para": 1
+    },
+    "47ABC068": {
+      "owner": "template"
+    },
+    "47B1D1FD": {
+      "owner": "template"
+    },
+    "47CE7FB2": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.1.2 NamespaceUri-qualified model names",
+      "block": 9,
+      "para": 0
+    },
+    "47E1E2EF": {
+      "owner": "template"
+    },
+    "48022511": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.1 Native readable mapping",
+      "block": 0,
+      "para": 22
+    },
+    "4804266B": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "11 Conformance units and profiles",
+      "block": 1,
+      "para": 21
+    },
+    "4820B7A1": {
+      "owner": "template"
+    },
+    "48241EAE": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 15
+    },
+    "483BDBB6": {
+      "owner": "template"
+    },
+    "484DDE6F": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.1 `uav:nodes`",
+      "block": 1,
+      "para": 2
+    },
+    "48CBD829": {
+      "owner": "template"
+    },
+    "48CD9A9A": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 3
+    },
+    "48EE46DA": {
+      "owner": "template"
+    },
+    "493D4FA5": {
+      "owner": "generated",
+      "region": "namespaces",
+      "index": 4,
+      "kind": "table",
+      "para": 21
+    },
+    "493E0E00": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.1 Native readable mapping",
+      "block": 0,
+      "para": 32
+    },
+    "4944796E": {
+      "owner": "template"
+    },
+    "4956D329": {
+      "owner": "generated",
+      "region": "normative-references",
+      "index": 2,
+      "kind": "note",
+      "para": 0
+    },
+    "49579BA9": {
+      "owner": "template"
+    },
+    "495A1C2D": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.2 `WoTJsonResidue` NodeSet Extension",
+      "block": 1,
+      "para": 2
+    },
+    "4976D496": {
+      "owner": "template"
+    },
+    "49A4B630": {
+      "owner": "template"
+    },
+    "49AC45A8": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "D.3 Reverse: OPC UA AddressSpace / NodeSet2 → Thing Model / Thing Description",
+      "block": 0,
+      "para": 0
+    },
+    "49B324CF": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 21
+    },
+    "49BE90E8": {
+      "owner": "template"
+    },
+    "49E581B0": {
+      "owner": "generated",
+      "region": "namespaces",
+      "index": 1,
+      "kind": "clause",
+      "para": 0
+    },
+    "49F66916": {
+      "owner": "generated",
+      "region": "frontmatter",
+      "index": 2,
+      "kind": "toc",
+      "para": 0
+    },
+    "4A1F7E7C": {
+      "owner": "template"
+    },
+    "4A267FEB": {
+      "owner": "template"
+    },
+    "4A271BE8": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.9 Address-space example",
+      "block": 2,
+      "para": 0
+    },
+    "4A29D081": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.3 Component reference terms",
+      "block": 0,
+      "para": 0
+    },
+    "4A46C811": {
+      "owner": "template"
+    },
+    "4A4853A6": {
+      "owner": "template"
+    },
+    "4A5C67C9": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 82
+    },
+    "4A5E3B88": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 66
+    },
+    "4A646FAF": {
+      "owner": "template"
+    },
+    "4AAC7C40": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.1.3 Portable QualifiedName",
+      "block": 6,
+      "para": 1
+    },
+    "4AB01918": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.1 Native readable mapping",
+      "block": 0,
+      "para": 30
+    },
+    "4ACC94B4": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "D.2 Forward: Thing Description → OPC UA instance",
+      "block": 7,
+      "para": 0
+    },
+    "4AE8FBC8": {
+      "owner": "template"
+    },
+    "4AE9B555": {
+      "owner": "template"
+    },
+    "4AEE8FE7": {
+      "owner": "template"
+    },
+    "4B16D5ED": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.4 Runtime Node and DataType mapping terms",
+      "block": 1,
+      "para": 4
+    },
+    "4B1A03C5": {
+      "owner": "generated",
+      "region": "normative-references",
+      "index": 19,
+      "kind": "para",
+      "para": 0
+    },
+    "4B8C3BC3": {
+      "owner": "template"
+    },
+    "4B96D8F6": {
+      "owner": "generated",
+      "region": "namespaces",
+      "index": 4,
+      "kind": "table",
+      "para": 0
+    },
+    "4B9BD896": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.1.3 Portable QualifiedName",
+      "block": 5,
+      "para": 0
+    },
+    "4B9C5349": {
+      "owner": "template"
+    },
+    "4BD4A7EA": {
+      "owner": "template"
+    },
+    "4BFA4058": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "D.1 Forward: Thing Model → OPC UA types",
+      "block": 1,
+      "para": 2
+    },
+    "4C46297E": {
+      "owner": "template"
+    },
+    "4C5EC06B": {
+      "owner": "template"
+    },
+    "4C6776DC": {
+      "owner": "template"
+    },
+    "4C85562A": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.4 Runtime Node and DataType mapping terms",
+      "block": 1,
+      "para": 11
+    },
+    "4C9CC673": {
+      "owner": "template"
+    },
+    "4CA62578": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.7 Security schemes",
+      "block": 1,
+      "para": 1
+    },
+    "4CE8CDB8": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "1 Scope",
+      "block": 1,
+      "para": 0
+    },
+    "4D3D45BD": {
+      "owner": "template"
+    },
+    "4D3F643E": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.1 Node and path terms",
+      "block": 0,
+      "para": 11
+    },
+    "4D4462F2": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.9 Address-space example",
+      "block": 1,
+      "para": 0
+    },
+    "4D4D38A7": {
+      "owner": "template"
+    },
+    "4D5170F5": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.1.2 NamespaceUri-qualified model names",
+      "block": 4,
+      "para": 2
+    },
+    "4D532735": {
+      "owner": "template"
+    },
+    "4D6129DF": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "D.1 Forward: Thing Model → OPC UA types",
+      "block": 7,
+      "para": 1
+    },
+    "4D646B52": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.6 Service mappings (Read, Write, Observe, Call)",
+      "block": 1,
+      "para": 0
+    },
+    "4D76427A": {
+      "owner": "generated",
+      "region": "normative-references",
+      "index": 17,
+      "kind": "para",
+      "para": 0
+    },
+    "4D7E1684": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.1 Native readable mapping",
+      "block": 0,
+      "para": 7
+    },
+    "4D8891A9": {
+      "owner": "template"
+    },
+    "4D91E427": {
+      "owner": "template"
+    },
+    "4DE51120": {
+      "owner": "template"
+    },
+    "4DF88A09": {
+      "owner": "template"
+    },
+    "4DF94835": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.1 Native readable mapping",
+      "block": 0,
+      "para": 41
+    },
+    "4E0AE6D0": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 111,
+      "kind": "clause",
+      "para": 0
+    },
+    "4E1BCFC1": {
+      "owner": "template"
+    },
+    "4E1FF6D1": {
+      "owner": "template"
+    },
+    "4E2005A3": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "D.2 Forward: Thing Description → OPC UA instance",
+      "block": 1,
+      "para": 1
+    },
+    "4E84A3B8": {
+      "owner": "template"
+    },
+    "4E9A3938": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.6 Service mappings (Read, Write, Observe, Call)",
+      "block": 1,
+      "para": 6
+    },
+    "4E9B98D6": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 2
+    },
+    "4E9FFE4C": {
+      "owner": "template"
+    },
+    "4EB48B70": {
+      "owner": "template"
+    },
+    "4ECD16F5": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.5 URI, base, and href rules",
+      "block": 1,
+      "para": 0
+    },
+    "4EDB4123": {
+      "owner": "template"
+    },
+    "4EE77C4B": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.1 Native readable mapping",
+      "block": 0,
+      "para": 46
+    },
+    "4EFAEE66": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.2 `WoTJsonResidue` NodeSet Extension",
+      "block": 1,
+      "para": 7
+    },
+    "4F28ECD8": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 73
+    },
+    "4F308B6A": {
+      "owner": "template"
+    },
+    "4F3CC993": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.2 Type-annotation terms",
+      "block": 1,
+      "para": 7
+    },
+    "4F4F6DBF": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.4 Runtime Node and DataType mapping terms",
+      "block": 1,
+      "para": 10
+    },
+    "4F510961": {
+      "owner": "template"
+    },
+    "4F8FE53B": {
+      "owner": "template"
+    },
+    "4FD0C722": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 1,
+      "para": 0
+    },
+    "5000338D": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.1.2 NamespaceUri-qualified model names",
+      "block": 8,
+      "para": 0
+    },
+    "50060862": {
+      "owner": "template"
+    },
+    "503987E7": {
+      "owner": "template"
+    },
+    "5091811E": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.1 Composition and events",
+      "block": 4,
+      "para": 0
+    },
+    "50955F92": {
+      "owner": "template"
+    },
+    "50B4D4B8": {
+      "owner": "template"
+    },
+    "50DB4C99": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.1 `uav:nodes`",
+      "block": 1,
+      "para": 12
+    },
+    "50E02B36": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.1.2 NamespaceUri-qualified model names",
+      "block": 7,
+      "para": 1
+    },
+    "50E6629D": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "Annex B — Examples (informative)",
+      "block": 0,
+      "para": 0
+    },
+    "50EB51E5": {
+      "owner": "template"
+    },
+    "5101DD19": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 0
+    },
+    "5129F5F5": {
+      "owner": "template"
+    },
+    "514A8E2B": {
+      "owner": "template"
+    },
+    "5189B8D0": {
+      "owner": "template"
+    },
+    "51CBE88F": {
+      "owner": "template"
+    },
+    "51CDAA6B": {
+      "owner": "template"
+    },
+    "51D3DAA1": {
+      "owner": "template"
+    },
+    "51D63B40": {
+      "owner": "template"
+    },
+    "51DDE149": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.1.2 NamespaceUri-qualified model names",
+      "block": 2,
+      "para": 0
+    },
+    "51F818ED": {
+      "owner": "template"
+    },
+    "51F8653D": {
+      "owner": "template"
+    },
+    "52084AF0": {
+      "owner": "template"
+    },
+    "5213DA3F": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.2 `WoTJsonResidue` NodeSet Extension",
+      "block": 1,
+      "para": 1
+    },
+    "521678C7": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.3 Exceptional `uav:nodeSet` envelope",
+      "block": 1,
+      "para": 17
+    },
+    "52211934": {
+      "owner": "template"
+    },
+    "522E943D": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.1 Node and path terms",
+      "block": 0,
+      "para": 17
+    },
+    "52641583": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.5 Units, quantity kinds, and scaling",
+      "block": 1,
+      "para": 0
+    },
+    "52922F05": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.7 Security schemes",
+      "block": 1,
+      "para": 2
+    },
+    "52A262D8": {
+      "owner": "template"
+    },
+    "52A86A61": {
+      "owner": "template"
+    },
+    "52B2C950": {
+      "owner": "template"
+    },
+    "52D4503D": {
+      "owner": "template"
+    },
+    "52E6A91B": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.1 Native readable mapping",
+      "block": 0,
+      "para": 29
+    },
+    "52EF993D": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.3 Component reference terms",
+      "block": 2,
+      "para": 3
+    },
+    "52F27C98": {
+      "owner": "template"
+    },
+    "532CB950": {
+      "owner": "generated",
+      "region": "normative-references",
+      "index": 1,
+      "kind": "para",
+      "para": 0
+    },
+    "5338FF08": {
+      "owner": "template"
+    },
+    "5347B1F0": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 29
+    },
+    "534F71EA": {
+      "owner": "generated",
+      "region": "namespaces",
+      "index": 4,
+      "kind": "table",
+      "para": 11
+    },
+    "5350E110": {
+      "owner": "template"
+    },
+    "53BDE38A": {
+      "owner": "template"
+    },
+    "53BE9611": {
+      "owner": "generated",
+      "region": "terms",
+      "index": 6,
+      "kind": "term",
+      "para": 1
+    },
+    "53C6A92B": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 39,
+      "kind": "clause",
+      "para": 0
+    },
+    "53CDCFB1": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.2 `WoTJsonResidue` NodeSet Extension",
+      "block": 1,
+      "para": 6
+    },
+    "5413F9C3": {
+      "owner": "generated",
+      "region": "namespaces",
+      "index": 9,
+      "kind": "para",
+      "para": 0
+    },
+    "5426004A": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "1 Scope",
+      "block": 2,
+      "para": 0
+    },
+    "5431BAF9": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "11 Conformance units and profiles",
+      "block": 1,
+      "para": 17
+    },
+    "5465D2A1": {
+      "owner": "template"
+    },
+    "5471D5BB": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.3 Component reference terms",
+      "block": 0,
+      "para": 3
+    },
+    "5483CC10": {
+      "owner": "generated",
+      "region": "namespaces",
+      "index": 4,
+      "kind": "table",
+      "para": 14
+    },
+    "5486CEA7": {
+      "owner": "template"
+    },
+    "54A24774": {
+      "owner": "template"
+    },
+    "54A7D48E": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "11 Conformance units and profiles",
+      "block": 3,
+      "para": 1
+    },
+    "54BE3714": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.1.2 NamespaceUri-qualified model names",
+      "block": 4,
+      "para": 0
+    },
+    "54DD92F2": {
+      "owner": "template"
+    },
+    "55054818": {
+      "owner": "template"
+    },
+    "551C0B9A": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.3 Exceptional `uav:nodeSet` envelope",
+      "block": 1,
+      "para": 8
+    },
+    "5526A0AC": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "D.1 Forward: Thing Model → OPC UA types",
+      "block": 6,
+      "para": 0
+    },
+    "553C3AF3": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.3 Component reference terms",
+      "block": 2,
+      "para": 0
+    },
+    "554EB612": {
+      "owner": "template"
+    },
+    "5578F5ED": {
+      "owner": "generated",
+      "region": "namespaces",
+      "index": 4,
+      "kind": "table",
+      "para": 17
+    },
+    "557E6210": {
+      "owner": "template"
+    },
+    "558CFFB3": {
+      "owner": "template"
+    },
+    "55DB5FAF": {
+      "owner": "template"
+    },
+    "55F5C40B": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 80
+    },
+    "56000702": {
+      "owner": "template"
+    },
+    "5605D730": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "D.3 Reverse: OPC UA AddressSpace / NodeSet2 → Thing Model / Thing Description",
+      "block": 7,
+      "para": 0
+    },
+    "56132168": {
+      "owner": "generated",
+      "region": "normative-references",
+      "index": 24,
+      "kind": "para",
+      "para": 0
+    },
+    "5615BF10": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.1 Native readable mapping",
+      "block": 0,
+      "para": 6
+    },
+    "5616A2DB": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.1 Native readable mapping",
+      "block": 0,
+      "para": 40
+    },
+    "56426FD2": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "D.1 Forward: Thing Model → OPC UA types",
+      "block": 10,
+      "para": 0
+    },
+    "565D8F86": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.1 Composition and events",
+      "block": 4,
+      "para": 1
+    },
+    "56ADDEC5": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 28
+    },
+    "56BEDB8D": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 90,
+      "kind": "clause",
+      "para": 0
+    },
+    "56C8CFA0": {
+      "owner": "template"
+    },
+    "56D345F9": {
+      "owner": "generated",
+      "region": "scope",
+      "index": 9,
+      "kind": "para",
+      "para": 0
+    },
+    "56ECC59C": {
+      "owner": "template"
+    },
+    "5702E6E6": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "D.3 Reverse: OPC UA AddressSpace / NodeSet2 → Thing Model / Thing Description",
+      "block": 4,
+      "para": 0
+    },
+    "5709D70D": {
+      "owner": "template"
+    },
+    "57195F40": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "Annex B — Examples (informative)",
+      "block": 0,
+      "para": 3
+    },
+    "571C647E": {
+      "owner": "template"
+    },
+    "572855AD": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.1.2 NamespaceUri-qualified model names",
+      "block": 5,
+      "para": 0
+    },
+    "57328215": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 64
+    },
+    "574ECD75": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 81
+    },
+    "575458BC": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.3 Exceptional `uav:nodeSet` envelope",
+      "block": 1,
+      "para": 13
+    },
+    "5786394B": {
+      "owner": "template"
+    },
+    "57874050": {
+      "owner": "generated",
+      "region": "normative-references",
+      "index": 14,
+      "kind": "para",
+      "para": 0
+    },
+    "5790B069": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "D.2 Forward: Thing Description → OPC UA instance",
+      "block": 1,
+      "para": 0
+    },
+    "57C8CCC9": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.2 Links and references",
+      "block": 3,
+      "para": 0
+    },
+    "57D9AB20": {
+      "owner": "template"
+    },
+    "57F1B058": {
+      "owner": "generated",
+      "region": "namespaces",
+      "index": 4,
+      "kind": "table",
+      "para": 18
+    },
+    "57FEBDA3": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.6 Service mappings (Read, Write, Observe, Call)",
+      "block": 0,
+      "para": 0
+    },
+    "5815E175": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.1 Native readable mapping",
+      "block": 0,
+      "para": 25
+    },
+    "5843A8B9": {
+      "owner": "template"
+    },
+    "584AC32F": {
+      "owner": "template"
+    },
+    "58581BD6": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.1 Native readable mapping",
+      "block": 0,
+      "para": 31
+    },
+    "587AA771": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.1 Node and path terms",
+      "block": 0,
+      "para": 8
+    },
+    "5880342A": {
+      "owner": "generated",
+      "region": "terms",
+      "index": 5,
+      "kind": "term",
+      "para": 2
+    },
+    "58879836": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.3 Layered exceptional preservation policy",
+      "block": 1,
+      "para": 4
+    },
+    "58988B59": {
+      "owner": "generated",
+      "region": "namespaces",
+      "index": 4,
+      "kind": "table",
+      "para": 6
+    },
+    "58B11B66": {
+      "owner": "generated",
+      "region": "normative-references",
+      "index": 27,
+      "kind": "para",
+      "para": 0
+    },
+    "58B6E67B": {
+      "owner": "template"
+    },
+    "59826B35": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.2 Type-annotation terms",
+      "block": 1,
+      "para": 4
+    },
+    "59BC2737": {
+      "owner": "template"
+    },
+    "59BD7E05": {
+      "owner": "generated",
+      "region": "general",
+      "index": 2,
+      "kind": "para",
+      "para": 0
+    },
+    "59EF301A": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 7,
+      "kind": "clause",
+      "para": 0
+    },
+    "5A0FB2B8": {
+      "owner": "template"
+    },
+    "5A1CC090": {
+      "owner": "template"
+    },
+    "5A391740": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 72
+    },
+    "5A3B99CA": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 160,
+      "kind": "clause",
+      "para": 0
+    },
+    "5A55C1C5": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.1 Native readable mapping",
+      "block": 0,
+      "para": 3
+    },
+    "5A8319E1": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "11 Conformance units and profiles",
+      "block": 3,
+      "para": 3
+    },
+    "5A901C80": {
+      "owner": "template"
+    },
+    "5AD0BE39": {
+      "owner": "template"
+    },
+    "5ADCB2EC": {
+      "owner": "generated",
+      "region": "namespaces",
+      "index": 10,
+      "kind": "table",
+      "para": 2
+    },
+    "5AED1611": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.2 Type-annotation terms",
+      "block": 2,
+      "para": 0
+    },
+    "5B147468": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 52
+    },
+    "5B1EEBBA": {
+      "owner": "template"
+    },
+    "5B336145": {
+      "owner": "template"
+    },
+    "5B4BDFBD": {
+      "owner": "template"
+    },
+    "5B77F986": {
+      "owner": "template"
+    },
+    "5B78A3EB": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.2 `WoTJsonResidue` NodeSet Extension",
+      "block": 0,
+      "para": 0
+    },
+    "5B9282F8": {
+      "owner": "generated",
+      "region": "namespaces",
+      "index": 10,
+      "kind": "table",
+      "para": 8
+    },
+    "5BB67A54": {
+      "owner": "template"
+    },
+    "5BD24D9D": {
+      "owner": "template"
+    },
+    "5BF29B22": {
+      "owner": "template"
+    },
+    "5C1502E1": {
+      "owner": "template"
+    },
+    "5C17EB58": {
+      "owner": "template"
+    },
+    "5C377048": {
+      "owner": "template"
+    },
+    "5C5AEDC8": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 57
+    },
+    "5C674A3C": {
+      "owner": "template"
+    },
+    "5CC6CECD": {
+      "owner": "template"
+    },
+    "5D3001F6": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "Annex C — Validation (informative)",
+      "block": 1,
+      "para": 0
+    },
+    "5D3132BA": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.3 Component reference terms",
+      "block": 1,
+      "para": 0
+    },
+    "5D43B04A": {
+      "owner": "template"
+    },
+    "5D641381": {
+      "owner": "template"
+    },
+    "5D721A47": {
+      "owner": "template"
+    },
+    "5D847398": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.4 Synthesis from an authored TD or TM",
+      "block": 1,
+      "para": 0
+    },
+    "5D953562": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 71,
+      "kind": "clause",
+      "para": 0
+    },
+    "5DA933F3": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 75
+    },
+    "5DB3A3C2": {
+      "owner": "template"
+    },
+    "5DCA731A": {
+      "owner": "template"
+    },
+    "5DDD9349": {
+      "owner": "template"
+    },
+    "5DFCC714": {
+      "owner": "template"
+    },
+    "5E085662": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.1 `uav:nodes`",
+      "block": 1,
+      "para": 28
+    },
+    "5E1BE192": {
+      "owner": "template"
+    },
+    "5E4E1B10": {
+      "owner": "template"
+    },
+    "5E6394B4": {
+      "owner": "generated",
+      "region": "frontmatter",
+      "index": 0,
+      "kind": "toc",
+      "para": 0
+    },
+    "5E78D9AD": {
+      "owner": "template"
+    },
+    "5E7E0620": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.2 Type-annotation terms",
+      "block": 1,
+      "para": 1
+    },
+    "5E8CDFC9": {
+      "owner": "template"
+    },
+    "5E97D844": {
+      "owner": "template"
+    },
+    "5E9A755F": {
+      "owner": "template"
+    },
+    "5F0B535D": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.4 Runtime Node and DataType mapping terms",
+      "block": 2,
+      "para": 1
+    },
+    "5F2BBEC2": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.6 Groups and membership",
+      "block": 2,
+      "para": 1
+    },
+    "5F43079A": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "11 Conformance units and profiles",
+      "block": 1,
+      "para": 11
+    },
+    "5F5C467F": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.2 Type-annotation terms",
+      "block": 0,
+      "para": 0
+    },
+    "5F5D3BCA": {
+      "owner": "template"
+    },
+    "5F8D067D": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.1.3 Portable QualifiedName",
+      "block": 0,
+      "para": 0
+    },
+    "5F91C7DD": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.3 Component reference terms",
+      "block": 0,
+      "para": 10
+    },
+    "5FADA1C8": {
+      "owner": "template"
+    },
+    "5FB9634D": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.1 `uav:nodes`",
+      "block": 1,
+      "para": 3
+    },
+    "5FBAC17B": {
+      "owner": "template"
+    },
+    "5FC54217": {
+      "owner": "template"
+    },
+    "5FDB5E69": {
+      "owner": "template"
+    },
+    "6010B015": {
+      "owner": "template"
+    },
+    "604665F3": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 12
+    },
+    "604D1432": {
+      "owner": "template"
+    },
+    "605CE4D4": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.1 Node and path terms",
+      "block": 0,
+      "para": 7
+    },
+    "6066188B": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.3 Exceptional `uav:nodeSet` envelope",
+      "block": 2,
+      "para": 0
+    },
+    "609A705F": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 68
+    },
+    "60A1C123": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 49
+    },
+    "60CB01C3": {
+      "owner": "template"
+    },
+    "60D71573": {
+      "owner": "template"
+    },
+    "60DCCDCC": {
+      "owner": "template"
+    },
+    "60E7588C": {
+      "owner": "generated",
+      "region": "annex-a",
+      "index": 2,
+      "kind": "para",
+      "para": 0
+    },
+    "60E986C5": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "1 Scope",
+      "block": 0,
+      "para": 0
+    },
+    "61117E2E": {
+      "owner": "template"
+    },
+    "61496108": {
+      "owner": "template"
+    },
+    "614E45F9": {
+      "owner": "template"
+    },
+    "616723FE": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "D.3 Reverse: OPC UA AddressSpace / NodeSet2 → Thing Model / Thing Description",
+      "block": 8,
+      "para": 0
+    },
+    "617D9CC1": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 62
+    },
+    "617E3238": {
+      "owner": "template"
+    },
+    "6181A15B": {
+      "owner": "template"
+    },
+    "61A3A3CE": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 58
+    },
+    "61B64046": {
+      "owner": "template"
+    },
+    "61B7904C": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.1 `uav:nodes`",
+      "block": 1,
+      "para": 22
+    },
+    "61C386CB": {
+      "owner": "generated",
+      "region": "normative-references",
+      "index": 26,
+      "kind": "para",
+      "para": 0
+    },
+    "61ECBDF9": {
+      "owner": "template"
+    },
+    "61EE0BCB": {
+      "owner": "generated",
+      "region": "normative-references",
+      "index": 20,
+      "kind": "para",
+      "para": 0
+    },
+    "61F21930": {
+      "owner": "template"
+    },
+    "621816A7": {
+      "owner": "template"
+    },
+    "622D9CC6": {
+      "owner": "template"
+    },
+    "6245A5D2": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 16
+    },
+    "6293A16A": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.1 Native readable mapping",
+      "block": 0,
+      "para": 0
+    },
+    "62A410FC": {
+      "owner": "template"
+    },
+    "62A76FD5": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.7 Security schemes",
+      "block": 1,
+      "para": 0
+    },
+    "62AA1A1E": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.1.3 Portable QualifiedName",
+      "block": 7,
+      "para": 0
+    },
+    "62AF6C84": {
+      "owner": "template"
+    },
+    "62B67700": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.1.3 Portable QualifiedName",
+      "block": 2,
+      "para": 0
+    },
+    "62BA7A57": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 131,
+      "kind": "clause",
+      "para": 0
+    },
+    "62BF64E4": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.2 Links and references",
+      "block": 3,
+      "para": 6
+    },
+    "62D2DDE2": {
+      "owner": "template"
+    },
+    "62E1A4F4": {
+      "owner": "generated",
+      "region": "namespaces",
+      "index": 10,
+      "kind": "table",
+      "para": 1
+    },
+    "62F35464": {
+      "owner": "template"
+    },
+    "63310EAC": {
+      "owner": "template"
+    },
+    "633184DC": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.1 `uav:nodes`",
+      "block": 1,
+      "para": 6
+    },
+    "633C744F": {
+      "owner": "template"
+    },
+    "63456E43": {
+      "owner": "template"
+    },
+    "634D2C41": {
+      "owner": "template"
+    },
+    "635D28DD": {
+      "owner": "template"
+    },
+    "636BD5A9": {
+      "owner": "template"
+    },
+    "636DBB62": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "Annex B — Examples (informative)",
+      "block": 0,
+      "para": 2
+    },
+    "6370DA37": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.3 Exceptional `uav:nodeSet` envelope",
+      "block": 1,
+      "para": 5
+    },
+    "63885A8A": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 0,
+      "para": 0
+    },
+    "638EADC3": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "11 Conformance units and profiles",
+      "block": 1,
+      "para": 3
+    },
+    "6395D5A8": {
+      "owner": "template"
+    },
+    "63E1F481": {
+      "owner": "template"
+    },
+    "6401E931": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.3 Component reference terms",
+      "block": 2,
+      "para": 9
+    },
+    "64170C04": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.1.3 Portable QualifiedName",
+      "block": 6,
+      "para": 0
+    },
+    "641B6ABC": {
+      "owner": "template"
+    },
+    "645CEE86": {
+      "owner": "template"
+    },
+    "6472A13F": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.2 Exceptional structured `uav:nodes` projection",
+      "block": 1,
+      "para": 4
+    },
+    "647B6181": {
+      "owner": "template"
+    },
+    "64DBC4DB": {
+      "owner": "template"
+    },
+    "64DC1190": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.2 Exceptional structured `uav:nodes` projection",
+      "block": 3,
+      "para": 0
+    },
+    "64E541DA": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.10 Native projection and preservation terms",
+      "block": 0,
+      "para": 0
+    },
+    "6522B0AC": {
+      "owner": "template"
+    },
+    "6526C69E": {
+      "owner": "template"
+    },
+    "6527FD41": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 4,
+      "para": 8
+    },
+    "6548EA5D": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.1.1 Portable identity (ExpandedNodeId)",
+      "block": 1,
+      "para": 0
+    },
+    "654D5DDD": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.1 `uav:nodes`",
+      "block": 1,
+      "para": 8
+    },
+    "657397AA": {
+      "owner": "template"
+    },
+    "657A3D51": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.1 `uav:nodes`",
+      "block": 1,
+      "para": 17
+    },
+    "65985FB0": {
+      "owner": "template"
+    },
+    "65BF8714": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.6 Service mappings (Read, Write, Observe, Call)",
+      "block": 1,
+      "para": 11
+    },
+    "66237FD1": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 55,
+      "kind": "clause",
+      "para": 0
+    },
+    "663F08D8": {
+      "owner": "template"
+    },
+    "665E919E": {
+      "owner": "template"
+    },
+    "665EC560": {
+      "owner": "template"
+    },
+    "6671E4CD": {
+      "owner": "template"
+    },
+    "66788244": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "1 Scope",
+      "block": 2,
+      "para": 2
+    },
+    "667DC388": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.4 Runtime Node and DataType mapping terms",
+      "block": 1,
+      "para": 1
+    },
+    "6687F206": {
+      "owner": "template"
+    },
+    "6695B3AC": {
+      "owner": "template"
+    },
+    "66B99706": {
+      "owner": "template"
+    },
+    "66BFF43A": {
+      "owner": "template"
+    },
+    "66DE07E9": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.1 `uav:nodes`",
+      "block": 1,
+      "para": 18
+    },
+    "66EE034D": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.2 `WoTJsonResidue` NodeSet Extension",
+      "block": 1,
+      "para": 10
+    },
+    "66EF4946": {
+      "owner": "template"
+    },
+    "66F121E8": {
+      "owner": "generated",
+      "region": "use-cases",
+      "index": 17,
+      "kind": "clause",
+      "para": 0
+    },
+    "6700D0AA": {
+      "owner": "generated",
+      "region": "normative-references",
+      "index": 23,
+      "kind": "para",
+      "para": 0
+    },
+    "6727A321": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.5 Units, quantity kinds, and scaling",
+      "block": 2,
+      "para": 0
+    },
+    "6730A53D": {
+      "owner": "generated",
+      "region": "normative-references",
+      "index": 10,
+      "kind": "para",
+      "para": 0
+    },
+    "67718B06": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.2 `WoTJsonResidue` NodeSet Extension",
+      "block": 1,
+      "para": 9
+    },
+    "67B808A1": {
+      "owner": "template"
+    },
+    "67C0B75E": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.1 Native readable mapping",
+      "block": 0,
+      "para": 12
+    },
+    "67CA5D1E": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.1 Node and path terms",
+      "block": 0,
+      "para": 9
+    },
+    "67CEC68C": {
+      "owner": "template"
+    },
+    "67D7D06F": {
+      "owner": "template"
+    },
+    "67F8B0C5": {
+      "owner": "template"
+    },
+    "67F9E74E": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.2 `WoTJsonResidue` NodeSet Extension",
+      "block": 3,
+      "para": 0
+    },
+    "6803DE3E": {
+      "owner": "template"
+    },
+    "680958E8": {
+      "owner": "template"
+    },
+    "6818043F": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.1 Node and path terms",
+      "block": 0,
+      "para": 13
+    },
+    "68227591": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.1 Composition and events",
+      "block": 0,
+      "para": 0
+    },
+    "682712F5": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.4 Runtime Node and DataType mapping terms",
+      "block": 2,
+      "para": 0
+    },
+    "6849C5A1": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.6 Service mappings (Read, Write, Observe, Call)",
+      "block": 1,
+      "para": 3
+    },
+    "6885D573": {
+      "owner": "generated",
+      "region": "annex-b",
+      "index": 0,
+      "kind": "annex",
+      "para": 0
+    },
+    "688AF590": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.1 Native readable mapping",
+      "block": 0,
+      "para": 47
+    },
+    "6892B871": {
+      "owner": "template"
+    },
+    "68ABED9D": {
+      "owner": "template"
+    },
+    "68B4EC5D": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 4
+    },
+    "68BF4BE1": {
+      "owner": "template"
+    },
+    "68C51DBC": {
+      "owner": "template"
+    },
+    "68C9D3B9": {
+      "owner": "template"
+    },
+    "6901F703": {
+      "owner": "template"
+    },
+    "6913AE3B": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.6 Service mappings (Read, Write, Observe, Call)",
+      "block": 2,
+      "para": 0
+    },
+    "691CC841": {
+      "owner": "template"
+    },
+    "692F62CE": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.1 Native readable mapping",
+      "block": 0,
+      "para": 17
+    },
+    "6939CB2E": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 76
+    },
+    "69788417": {
+      "owner": "generated",
+      "region": "terms",
+      "index": 3,
+      "kind": "para",
+      "para": 0
+    },
+    "6989BB8B": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.6 Service mappings (Read, Write, Observe, Call)",
+      "block": 1,
+      "para": 10
+    },
+    "69D7E3F1": {
+      "owner": "template"
+    },
+    "69FA6C7F": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 32
+    },
+    "69FB7C57": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.1 `uav:nodes`",
+      "block": 1,
+      "para": 15
+    },
+    "6A08A781": {
+      "owner": "template"
+    },
+    "6A66E996": {
+      "owner": "template"
+    },
+    "6A968837": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 4,
+      "para": 9
+    },
+    "6ABF916F": {
+      "owner": "template"
+    },
+    "6AD2C4ED": {
+      "owner": "generated",
+      "region": "normative-references",
+      "index": 4,
+      "kind": "para",
+      "para": 0
+    },
+    "6AE0A6C9": {
+      "owner": "template"
+    },
+    "6AE74776": {
+      "owner": "generated",
+      "region": "namespaces",
+      "index": 8,
+      "kind": "table",
+      "para": 1
+    },
+    "6AEB7A4E": {
+      "owner": "template"
+    },
+    "6B0F5FC7": {
+      "owner": "template"
+    },
+    "6B1F1702": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "Annex D — Implementer walkthrough (informative)",
+      "block": 0,
+      "para": 0
+    },
+    "6B27E1BE": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "D.1 Forward: Thing Model → OPC UA types",
+      "block": 9,
+      "para": 0
+    },
+    "6B4A45F1": {
+      "owner": "generated",
+      "region": "namespaces",
+      "index": 0,
+      "kind": "clause",
+      "para": 0
+    },
+    "6B5105A3": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.10 Native projection and preservation terms",
+      "block": 1,
+      "para": 5
+    },
+    "6B57AB9F": {
+      "owner": "template"
+    },
+    "6B93D1AF": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "11 Conformance units and profiles",
+      "block": 1,
+      "para": 10
+    },
+    "6BAAA0D5": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.2 Links and references",
+      "block": 1,
+      "para": 5
+    },
+    "6BC19F84": {
+      "owner": "template"
+    },
+    "6BCEFBBF": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.7 Security schemes",
+      "block": 2,
+      "para": 0
+    },
+    "6BD99771": {
+      "owner": "generated",
+      "region": "normative-references",
+      "index": 12,
+      "kind": "para",
+      "para": 0
+    },
+    "6BE115B3": {
+      "owner": "template"
+    },
+    "6BF98608": {
+      "owner": "template"
+    },
+    "6C0CB7E5": {
+      "owner": "template"
+    },
+    "6C129A95": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 35,
+      "kind": "clause",
+      "para": 0
+    },
+    "6C13FBCE": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 4,
+      "para": 10
+    },
+    "6C1680E3": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.4 Type identity and naming",
+      "block": 0,
+      "para": 0
+    },
+    "6C3E5E2B": {
+      "owner": "template"
+    },
+    "6C587E0F": {
+      "owner": "template"
+    },
+    "6C589A0A": {
+      "owner": "template"
+    },
+    "6CA64AAD": {
+      "owner": "template"
+    },
+    "6CC02D51": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "4 Namespace and prefix",
+      "block": 1,
+      "para": 0
+    },
+    "6CD67008": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.3 Component reference terms",
+      "block": 0,
+      "para": 8
+    },
+    "6CEC7BE5": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.1 Native readable mapping",
+      "block": 0,
+      "para": 9
+    },
+    "6CFFCBC8": {
+      "owner": "generated",
+      "region": "normative-references",
+      "index": 11,
+      "kind": "para",
+      "para": 0
+    },
+    "6D12B652": {
+      "owner": "template"
+    },
+    "6D8AD17D": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.1 `uav:nodes`",
+      "block": 2,
+      "para": 0
+    },
+    "6DE65563": {
+      "owner": "template"
+    },
+    "6E6DE116": {
+      "owner": "template"
+    },
+    "6E91F9C6": {
+      "owner": "template"
+    },
+    "6EA979F9": {
+      "owner": "template"
+    },
+    "6EB1A37E": {
+      "owner": "template"
+    },
+    "6EC5A462": {
+      "owner": "template"
+    },
+    "6EC65DD5": {
+      "owner": "template"
+    },
+    "6EC66152": {
+      "owner": "template"
+    },
+    "6ED6557C": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 140,
+      "kind": "clause",
+      "para": 0
+    },
+    "6EDA2E07": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.1 Native readable mapping",
+      "block": 0,
+      "para": 11
+    },
+    "6EF1C03A": {
+      "owner": "generated",
+      "region": "terms",
+      "index": 5,
+      "kind": "term",
+      "para": 1
+    },
+    "6F0D6B4E": {
+      "owner": "template"
+    },
+    "6F1B1940": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 79
+    },
+    "6F28B28E": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.3 Component reference terms",
+      "block": 0,
+      "para": 6
+    },
+    "6F469DA7": {
+      "owner": "template"
+    },
+    "6F751F4B": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.3 Exceptional `uav:nodeSet` envelope",
+      "block": 1,
+      "para": 19
+    },
+    "6FA55308": {
+      "owner": "template"
+    },
+    "6FBA0BAB": {
+      "owner": "generated",
+      "region": "namespaces",
+      "index": 8,
+      "kind": "table",
+      "para": 2
+    },
+    "6FCC20CD": {
+      "owner": "template"
+    },
+    "6FD2527B": {
+      "owner": "generated",
+      "region": "normative-references",
+      "index": 5,
+      "kind": "para",
+      "para": 0
+    },
+    "6FF250F4": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.4 Runtime Node and DataType mapping terms",
+      "block": 1,
+      "para": 15
+    },
+    "70176A3A": {
+      "owner": "template"
+    },
+    "702929AA": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "D.3 Reverse: OPC UA AddressSpace / NodeSet2 → Thing Model / Thing Description",
+      "block": 5,
+      "para": 0
+    },
+    "702B1CF1": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.4 Type identity and naming",
+      "block": 1,
+      "para": 1
+    },
+    "70515431": {
+      "owner": "generated",
+      "region": "annex-c",
+      "index": 0,
+      "kind": "annex",
+      "para": 0
+    },
+    "7053041B": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "1.1 Differences from the published OPC 10101 v1.00",
+      "block": 0,
+      "para": 0
+    },
+    "705B8477": {
+      "owner": "template"
+    },
+    "706F46D2": {
+      "owner": "template"
+    },
+    "709106E4": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.6 Service mappings (Read, Write, Observe, Call)",
+      "block": 3,
+      "para": 0
+    },
+    "709C03E8": {
+      "owner": "template"
+    },
+    "70B5232F": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.1 `uav:nodes`",
+      "block": 1,
+      "para": 13
+    },
+    "70B8BC4E": {
+      "owner": "template"
+    },
+    "70BE33C3": {
+      "owner": "template"
+    },
+    "70D210DA": {
+      "owner": "template"
+    },
+    "70F6605D": {
+      "owner": "template"
+    },
+    "70FFB1AE": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.1 `uav:nodes`",
+      "block": 1,
+      "para": 20
+    },
+    "710B1B3E": {
+      "owner": "template"
+    },
+    "712800E9": {
+      "owner": "template"
+    },
+    "7128BAD1": {
+      "owner": "template"
+    },
+    "716EB714": {
+      "owner": "template"
+    },
+    "718766CD": {
+      "owner": "generated",
+      "region": "namespaces",
+      "index": 10,
+      "kind": "table",
+      "para": 4
+    },
+    "718DA69E": {
+      "owner": "generated",
+      "region": "frontmatter",
+      "index": 1,
+      "kind": "toc",
+      "para": 0
+    },
+    "719BACB7": {
+      "owner": "template"
+    },
+    "719C96C8": {
+      "owner": "template"
+    },
+    "71B8923E": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 4,
+      "para": 4
+    },
+    "71BE29F8": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.1 `uav:nodes`",
+      "block": 1,
+      "para": 25
+    },
+    "71E5C5D5": {
+      "owner": "template"
+    },
+    "7215D2D9": {
+      "owner": "template"
+    },
+    "723B7405": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 60,
+      "kind": "clause",
+      "para": 0
+    },
+    "7262113F": {
+      "owner": "template"
+    },
+    "72842122": {
+      "owner": "template"
+    },
+    "729A9E9A": {
+      "owner": "template"
+    },
+    "72D91F6B": {
+      "owner": "template"
+    },
+    "72E1AD78": {
+      "owner": "template"
+    },
+    "72F08B62": {
+      "owner": "template"
+    },
+    "72F208CB": {
+      "owner": "template"
+    },
+    "73514716": {
+      "owner": "template"
+    },
+    "73B76269": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.2 `WoTJsonResidue` NodeSet Extension",
+      "block": 1,
+      "para": 5
+    },
+    "73B824F3": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "11 Conformance units and profiles",
+      "block": 1,
+      "para": 16
+    },
+    "73E43EA2": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.2 Links and references",
+      "block": 3,
+      "para": 5
+    },
+    "7414A837": {
+      "owner": "template"
+    },
+    "741BAB1F": {
+      "owner": "template"
+    },
+    "7449CFC4": {
+      "owner": "template"
+    },
+    "74535A06": {
+      "owner": "generated",
+      "region": "namespaces",
+      "index": 10,
+      "kind": "table",
+      "para": 6
+    },
+    "749636ED": {
+      "owner": "template"
+    },
+    "749F4E52": {
+      "owner": "generated",
+      "region": "normative-references",
+      "index": 21,
+      "kind": "para",
+      "para": 0
+    },
+    "74AC7D25": {
+      "owner": "template"
+    },
+    "74ACA2E8": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 41
+    },
+    "75444632": {
+      "owner": "template"
+    },
+    "7567821C": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "4 Namespace and prefix",
+      "block": 0,
+      "para": 0
+    },
+    "75849675": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.1 Native readable mapping",
+      "block": 0,
+      "para": 38
+    },
+    "75869983": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "8 Thing Description and Thing Model mapping",
+      "block": 1,
+      "para": 7
+    },
+    "75900FD8": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 107,
+      "kind": "clause",
+      "para": 0
+    },
+    "75BB1218": {
+      "owner": "template"
+    },
+    "75C43FDA": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.4 Runtime Node and DataType mapping terms",
+      "block": 1,
+      "para": 2
+    },
+    "75E615CC": {
+      "owner": "generated",
+      "region": "namespaces",
+      "index": 10,
+      "kind": "table",
+      "para": 7
+    },
+    "76539C9F": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "Annex B — Examples (informative)",
+      "block": 0,
+      "para": 4
+    },
+    "76689D7C": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.3 Exceptional `uav:nodeSet` envelope",
+      "block": 1,
+      "para": 14
+    },
+    "7676FE05": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 78
+    },
+    "768467F7": {
+      "owner": "template"
+    },
+    "768F9847": {
+      "owner": "template"
+    },
+    "7696DF59": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "1.1 Differences from the published OPC 10101 v1.00",
+      "block": 1,
+      "para": 2
+    },
+    "769E9126": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 56
+    },
+    "76AA8E3A": {
+      "owner": "generated",
+      "region": "namespaces",
+      "index": 4,
+      "kind": "table",
+      "para": 5
+    },
+    "76B940C9": {
+      "owner": "template"
+    },
+    "76C8E8EB": {
+      "owner": "template"
+    },
+    "76E7AD87": {
+      "owner": "template"
+    },
+    "76F9D077": {
+      "owner": "template"
+    },
+    "77118488": {
+      "owner": "generated",
+      "region": "namespaces",
+      "index": 3,
+      "kind": "para",
+      "para": 0
+    },
+    "774827E3": {
+      "owner": "template"
+    },
+    "77646FE8": {
+      "owner": "template"
+    },
+    "7771EFF9": {
+      "owner": "template"
+    },
+    "77CA4C8E": {
+      "owner": "template"
+    },
+    "77DF5330": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.1 Native readable mapping",
+      "block": 0,
+      "para": 13
+    },
+    "77E223F5": {
+      "owner": "template"
+    },
+    "78206F6E": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.4 Runtime Node and DataType mapping terms",
+      "block": 1,
+      "para": 8
+    },
+    "782104F0": {
+      "owner": "template"
+    },
+    "7883959C": {
+      "owner": "template"
+    },
+    "78E3BBD6": {
+      "owner": "template"
+    },
+    "78F0B0E1": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.6 Groups and membership",
+      "block": 1,
+      "para": 0
+    },
+    "790A6E9C": {
+      "owner": "template"
+    },
+    "791F6CAE": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.1 Native readable mapping",
+      "block": 0,
+      "para": 8
+    },
+    "7928CFDC": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 8
+    },
+    "7930BCDD": {
+      "owner": "template"
+    },
+    "79468C0A": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "11 Conformance units and profiles",
+      "block": 1,
+      "para": 4
+    },
+    "7985528F": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.3 Exceptional `uav:nodeSet` envelope",
+      "block": 1,
+      "para": 7
+    },
+    "798F8C77": {
+      "owner": "template"
+    },
+    "7992E8BF": {
+      "owner": "template"
+    },
+    "79A3F12E": {
+      "owner": "template"
+    },
+    "7A049651": {
+      "owner": "template"
+    },
+    "7A156B1A": {
+      "owner": "template"
+    },
+    "7A1CE53B": {
+      "owner": "template"
+    },
+    "7A563363": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 26
+    },
+    "7A6B328B": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 25
+    },
+    "7A801AB2": {
+      "owner": "generated",
+      "region": "namespaces",
+      "index": 4,
+      "kind": "table",
+      "para": 19
+    },
+    "7A8B2BEA": {
+      "owner": "template"
+    },
+    "7A8F29CF": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.4 Runtime Node and DataType mapping terms",
+      "block": 1,
+      "para": 13
+    },
+    "7AACAC31": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.2 Links and references",
+      "block": 1,
+      "para": 6
+    },
+    "7AB8EA0A": {
+      "owner": "template"
+    },
+    "7ACACB98": {
+      "owner": "template"
+    },
+    "7AD3382E": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 70
+    },
+    "7B09D64D": {
+      "owner": "template"
+    },
+    "7B192028": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.1 Native readable mapping",
+      "block": 0,
+      "para": 45
+    },
+    "7B40015F": {
+      "owner": "template"
+    },
+    "7B854C54": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "D.2 Forward: Thing Description → OPC UA instance",
+      "block": 4,
+      "para": 0
+    },
+    "7B95043E": {
+      "owner": "template"
+    },
+    "7B9DD5D0": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.1 `uav:nodes`",
+      "block": 1,
+      "para": 24
+    },
+    "7BB4ECD9": {
+      "owner": "template"
+    },
+    "7BB6EEF6": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "D.1 Forward: Thing Model → OPC UA types",
+      "block": 4,
+      "para": 0
+    },
+    "7BE15FFD": {
+      "owner": "template"
+    },
+    "7BE1EB54": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 4,
+      "para": 5
+    },
+    "7BE4CCC7": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "11 Conformance units and profiles",
+      "block": 1,
+      "para": 18
+    },
+    "7BEDB81F": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 14
+    },
+    "7C10FA7E": {
+      "owner": "template"
+    },
+    "7C3DE77B": {
+      "owner": "template"
+    },
+    "7C681ABB": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "6.2 Links and references",
+      "block": 1,
+      "para": 1
+    },
+    "7C6DF597": {
+      "owner": "generated",
+      "region": "namespaces",
+      "index": 4,
+      "kind": "table",
+      "para": 16
+    },
+    "7C95B955": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "D.1 Forward: Thing Model → OPC UA types",
+      "block": 4,
+      "para": 2
+    },
+    "7CD0930B": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.1 Node and path terms",
+      "block": 0,
+      "para": 1
+    },
+    "7CDC715F": {
+      "owner": "template"
+    },
+    "7CED8940": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 36
+    },
+    "7D3764EF": {
+      "owner": "template"
+    },
+    "7D3811CA": {
+      "owner": "template"
+    },
+    "7D3A8006": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.3 Exceptional `uav:nodeSet` envelope",
+      "block": 1,
+      "para": 16
+    },
+    "7D3FCB25": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.3 Component reference terms",
+      "block": 0,
+      "para": 5
+    },
+    "7D426E6A": {
+      "owner": "template"
+    },
+    "7D5D0597": {
+      "owner": "template"
+    },
+    "7D670416": {
+      "owner": "template"
+    },
+    "7D67AC10": {
+      "owner": "template"
+    },
+    "7DC1C51F": {
+      "owner": "template"
+    },
+    "7DD68A69": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.1 Node and path terms",
+      "block": 0,
+      "para": 0
+    },
+    "7DE1B4EC": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "11 Conformance units and profiles",
+      "block": 1,
+      "para": 15
+    },
+    "7DE2AA43": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.2 Type-annotation terms",
+      "block": 1,
+      "para": 5
+    },
+    "7E116BAF": {
+      "owner": "template"
+    },
+    "7E2F8207": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "7 Validation rules",
+      "block": 2,
+      "para": 51
+    },
+    "7EA6C3BD": {
+      "owner": "generated",
+      "region": "scope",
+      "index": 10,
+      "kind": "para",
+      "para": 0
+    },
+    "7ECEE558": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.6 Service mappings (Read, Write, Observe, Call)",
+      "block": 1,
+      "para": 1
+    },
+    "7ED82C41": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.1.2 NamespaceUri-qualified model names",
+      "block": 4,
+      "para": 3
+    },
+    "7EE0A1A1": {
+      "owner": "template"
+    },
+    "7EFF41C3": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.3 Exceptional `uav:nodeSet` envelope",
+      "block": 1,
+      "para": 1
+    },
+    "7F492928": {
+      "owner": "generated",
+      "region": "namespaces",
+      "index": 10,
+      "kind": "table",
+      "para": 5
+    },
+    "7F4D2749": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.4 Synthesis from an authored TD or TM",
+      "block": 2,
+      "para": 0
+    },
+    "7F52A6EE": {
+      "owner": "template"
+    },
+    "7F561DA0": {
+      "owner": "template"
+    },
+    "7F630AE0": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.1 `uav:nodes`",
+      "block": 0,
+      "para": 0
+    },
+    "7F659E21": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "10.3 Exceptional `uav:nodeSet` envelope",
+      "block": 1,
+      "para": 9
+    },
+    "7F78CA65": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "5.1.2 NamespaceUri-qualified model names",
+      "block": 7,
+      "para": 3
+    },
+    "7F8668B7": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 94,
+      "kind": "clause",
+      "para": 0
+    },
+    "7FBD440D": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.3 Layered exceptional preservation policy",
+      "block": 1,
+      "para": 2
+    },
+    "7FCB2B9A": {
+      "owner": "markdown",
+      "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
+      "section": "9.2 Exceptional structured `uav:nodes` projection",
+      "block": 1,
+      "para": 3
+    }
+  }
+}

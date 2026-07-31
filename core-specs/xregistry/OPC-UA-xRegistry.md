@@ -196,6 +196,20 @@ An implementation conforms to this base model if it exposes a `RegistryType` roo
 
 A domain companion specification conforms if its registry, group and resource types are subtypes of `RegistryType`, `GroupType` and `ResourceType` respectively and it does not weaken the mandatory read capability.
 
+The conformance units below are testable against a Server. The `XREG` prefix is the short name of this specification, so a unit identifier is unique across companion specifications.
+
+| Conformance unit | Requirement |
+|---|---|
+| **XREG-Registry** (base) | Expose a `RegistryType` root that organizes its groups, with `SpecVersion` and the registry capabilities (§6.1). |
+| **XREG-Group** | Project each group as a `GroupType` folder organizing its resources, keyed by the group key (§6.2). |
+| **XREG-Resource** | Project each resource and version as a `ResourceType`, whose document **is** the file, read through the inherited `Open`/`Read`/`Close` (§5.1, §6.3). |
+| **XREG-Attributes** | Expose an entity's extensible attributes through `AttributesType`, added and removed with `AddAttribute`/`RemoveAttribute`, incrementing the owning entity's `Epoch` (§6.6). |
+| **XREG-Registration** | Create and delete groups, resources and versions through `CreateGroup`, `GetOrCreateGroup`, `CreateResource`, `GetOrCreateResource` and `Delete` (§5.2, §7). |
+| **XREG-Capabilities** | Populate `RegistryCapabilitiesDataType` so a Client can discover which optional capabilities the registry supports (§6.7). |
+| **XREG-Federation** | Resolve a resource the registry does not host through `ResourceUrl` / `ExternalReference` (§8). |
+
+`XREG-Registry`, `XREG-Group` and `XREG-Resource` together are the baseline; the rest are independently optional.
+
 ## 10 NodeSet validation
 
 The NodeSet, CSV and Annex A are generated from `tools/build_model.py`. The local validator (`tools/validate_local.py`) checks XML well-formedness, unique NodeIds, that each ObjectType has a `HasSubtype` back-reference to its base (`FolderType` / `FileType` / `BaseObjectType`), that members carry a `HasModellingRule` and a `HasTypeDefinition`, and that the CSV and NodeSet agree. Domain NodeSets that extend this base declare it as a `<RequiredModel>` and reference its types by namespace-qualified NodeId.

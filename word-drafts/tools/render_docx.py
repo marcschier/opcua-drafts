@@ -1,0 +1,555 @@
+"""Render a docmodel into a clone of the OPC 20020 template.
+
+The template body is edited bottom-up: the highest body index is replaced first, so
+every index located before the first edit remains valid. Regions that are not listed
+here are kept exactly as the template ships them.
+"""
+
+import os
+
+from opcdocx import contract, nodeset_tables, ole_embed
+from opcdocx.oxml import (BookmarkAllocator, bookmark_end, bookmark_start, paragraph,
+                          run, toc_field)
+from opcdocx.package import Package, substitute_tokens
+from opcdocx.writer import Writer
+
+# Marker paragraphs that delimit the template regions, located by text and style.
+MARKERS = [
+    ('main_title', 'MAIN TITLE IN CAPITAL LETTERS', 'MAIN-TITLE'),
+    ('scope', 'Scope', 'Heading1'),
+    ('normative_references', 'Normative references', 'Heading1'),
+    ('terms', 'Terms, abbreviated terms and conventions', 'Heading1'),
+    ('terms_overview', 'Overview', 'Heading2'),
+    ('terms_list', 'OPC UA for <title> terms', 'Heading2'),
+    ('abbreviations', 'Abbreviated terms', 'Heading2'),
+    ('conventions', 'Conventions used in this document', 'Heading2'),
+    ('editing_guidelines', 'EDITING Guidelines', 'Heading1'),
+    ('general', 'General information to <title> and OPC UA', 'Heading1'),
+    ('intro_title', 'Introduction to <title>', 'Heading2'),
+    ('intro_opcua', 'Introduction to OPC Unified Architecture', 'Heading2'),
+    ('use_cases', 'Use cases', 'Heading1'),
+    ('model_overview', '<title> Information Model overview', 'Heading1'),
+    ('objecttypes', 'OPC UA ObjectTypes', 'Heading1'),
+    ('profiles', 'Profiles and Conformance Units', 'Heading1'),
+    ('namespaces', 'Namespaces', 'Heading1'),
+    ('annex_a', '(normative)', 'ANNEXtitle'),
+    ('backmatter', '_____________', 'Normal'),
+]
+
+
+# Bookmarks the retained template slices point at. Their original targets live in the
+# clauses this build replaces, so the names are re-attached to the new equivalents —
+# otherwise Word renders "Error! Reference source not found" inside template text we
+# never touched.
+# Bookmarks the retained template slices point at, and the retained headings whose
+# generated counterpart (and therefore its bookmark) the surgery discards. The clause
+# ids are derived from the build config, because the clause a given template heading
+# becomes is a per-specification decision: Part 1's Profiles clause is 9, Part 2's is 11.
+TEMPLATE_HEADINGS = [
+    # (marker text, style, region, the `generated`/`slice` key that identifies the
+    #  subclause, extra template bookmark names to re-attach)
+    ('Scope', 'Heading1', 'scope', None, []),
+    ('Normative references', 'Heading1', 'normative-references', None, []),
+    ('Terms, abbreviated terms and conventions', 'Heading1', 'terms', None, []),
+    ('Overview', 'Heading2', 'terms', 'terms-overview', []),
+    ('terms', 'Heading2', 'terms', 'terms', []),
+    ('Abbreviated terms', 'Heading2', 'terms', 'abbreviations', []),
+    ('Conventions used in this document', 'Heading2', 'terms', 'conventions', []),
+    ('General information to', 'Heading1', 'general', None, []),
+    ('Introduction to ', 'Heading2', 'general', 'subject-introduction', []),
+    ('Introduction to OPC Unified Architecture', 'Heading2', 'general', 'opcua-intro', []),
+    ('Use cases', 'Heading1', 'use-cases', None, []),
+    ('information model overview', 'Heading1', 'model-overview', None, []),
+    ('Profiles and conformance units', 'Heading1', 'profiles', None, ['_Ref85018491']),
+]
+
+# Bookmarks in retained template text whose target the build regenerates.
+FIXED_ALIASES = [
+    ('Namespace metadata', 'Heading2', ['_Ref127248897']),
+    ('Handling of OPC UA namespaces', 'Heading2', ['_Ref55114991']),
+    ('Namespaces used in this document', 'TABLE-title', ['_Ref16577438']),
+    ('NamespaceMetadata Object for this document', 'TABLE-title', ['_Ref16863029']),
+]
+
+
+def _alias_plan(build):
+    """Which bookmark names to re-attach to which retained template heading."""
+    plan = []
+    for text, style, region, key, extra in TEMPLATE_HEADINGS:
+        names = list(extra)
+        entry = _entry_for(build, region, key)
+        if entry is not None:
+            names.append('_Clause_c' + str(entry['number']).replace('.', '-'))
+        if names:
+            plan.append((text, style, names))
+    plan.extend(FIXED_ALIASES)
+    if 'no-information-model' in build.deviation_ids:
+        # The template defines this bookmark on its own Annex A title, which a build
+        # without an information model replaces; clause 3.4 references it.
+        entry = _entry_for(build, 'annex-a', None)
+        if entry is not None:
+            plan.append((entry['title'], 'ANNEXtitle', ['_Ref37835123']))
+    return plan
+
+
+def _entry_for(build, region, key):
+    """The clause-map entry a retained template heading corresponds to."""
+    current = None
+    for entry in build.cfg['clauseMap']:
+        if entry.get('region'):
+            current = entry['region']
+        if current != region:
+            continue
+        if key is None:
+            if entry.get('region') == region:
+                return entry
+        elif entry.get('generated') == key or entry.get('slice') == key:
+            return entry
+    return None
+
+
+def _add_alias_bookmarks(pkg, bookmarks, writer, build):
+    from opcdocx.oxml import q
+    existing = {el.get(q('w:name')) for el in pkg.document.iter(q('w:bookmarkStart'))}
+    for text, style, names in _alias_plan(build):
+        wanted = [n for n in (_alias_name(writer, n) for n in names)
+                  if n not in existing]
+        if not wanted:
+            continue
+        try:
+            index = pkg.find_paragraph(text, style=style)
+        except LookupError:
+            index = _find_containing(pkg, text, style)
+            if index is None:
+                # A specification that omits an optional clause omits its heading too.
+                continue
+        p = pkg.children()[index]
+        for name in wanted:
+            bid = bookmarks.allocate(name)
+            insert_at = 1 if len(p) and p[0].tag == _ppr() else 0
+            p.insert(insert_at, bookmark_start(bid, name))
+            p.append(bookmark_end(bid))
+            existing.add(name)
+
+
+def _alias_name(writer, name):
+    """`_Clause_c3-1` -> the name the writer would have generated for clause id c3-1."""
+    for prefix in ('_Clause_', '_Annex_', '_Tab_', '_Fig_'):
+        if name.startswith(prefix):
+            return writer.bookmark_name(prefix.strip('_'), name[len(prefix):])
+    return name
+
+def _find_containing(pkg, text, style):
+    from opcdocx import oxml
+    for i, el in enumerate(pkg.children()):
+        if el.tag != _p() or (style and para_style_of(el) != style):
+            continue
+        if text in oxml.iter_text(el):
+            return i
+    return None
+
+
+def _p():
+    from opcdocx.oxml import q
+    return q('w:p')
+
+
+def _ppr():
+    from opcdocx.oxml import q
+    return q('w:pPr')
+
+
+def para_style_of(el):
+    from opcdocx.oxml import para_style
+    return para_style(el)
+
+
+def render(build, doc, template_path, out_path):
+    pkg = Package(template_path)
+    bookmarks = BookmarkAllocator(pkg.next_bookmark_id)
+    writer = Writer(bookmarks, model=build.model,
+                    doc_ns_index=build.doc_ns_index,
+                    reserved_ids=pkg.para_ids())
+    writer.prepare(doc)
+
+    # Render every region in document order first, so the cached SEQ numbers are in the
+    # order a reader sees them even before Word recalculates the fields.
+    rendered = {name: writer.blocks(doc.regions[name], region=name) for name in doc.order}
+
+    idx = {}
+    for key, text, style in MARKERS:
+        idx[key] = pkg.find_paragraph(text, style=style)
+
+    ident = build.identity
+    tokens = _token_map(ident, build.deviation_ids)
+
+    figures = _prepare_figures(build, writer)
+
+    # ---------------------------------------------------------------- bottom-up
+    _replace_annex_a(pkg, build, writer, rendered, doc, idx)
+    _insert_after_namespaces(pkg, rendered, doc, idx)
+    _replace_namespaces(pkg, rendered, idx)
+    _replace_profiles(pkg, rendered, idx)
+    _replace_types(pkg, build, rendered, doc, idx)
+    _replace_model_overview(pkg, rendered, idx, ident)
+    _replace_use_cases(pkg, rendered, idx)
+    _retitle(pkg, idx['intro_title'], 'Introduction to %s' % ident['title'])
+    _replace_intro_body(pkg, rendered, idx)
+    _retitle(pkg, idx['general'],
+             'General information to %s and OPC UA' % ident['title'])
+    pkg.delete_range(idx['editing_guidelines'], idx['general'])
+    _replace_terms(pkg, rendered, idx, ident)
+    _replace_normative_references(pkg, rendered, idx)
+    _replace_scope(pkg, rendered, idx, ident, writer)
+    _set_main_title(pkg, idx, ident)
+    _replace_toc(pkg, idx, writer)
+
+    substitute_tokens(pkg.body, tokens)
+    _add_alias_bookmarks(pkg, bookmarks, writer, build)
+    _attach_figures(pkg, figures)
+
+    pkg.set_custom_properties({
+        'Version': ident['version'],
+        'Published': ident['publicationDate'][:7],
+        'OPCVersion': ident['version'],
+        'OPCReleaseType': ident['releaseType'],
+        'Part Name': ident['partName'],
+        'Part Number': ident['partNumber'],
+        'HeaderLeft': '%s: %s' % (ident['docNumber'], ident['partName']),
+        'DocNumber': ident['docNumber'],
+        'HeaderRight': '%s %s' % (ident['releaseType'], ident['version']),
+        'Date completed': ident['publicationDate'],
+        # What this document was rendered from, so a copy coming back from a reviewer
+        # can be matched to its source instead of guessed at.
+        'SpecId': build.spec_id,
+        'SourceCommit': build.source_commit,
+        'SourceDigest': build.source_digest,
+        'PipelineVersion': contract.PIPELINE_VERSION,
+    })
+    pkg.set_core_properties(
+        title='OPC UA for %s' % ident['title'],
+        subject='Industrial Communication',
+        creator='OPC UA drafts working group',
+        description='Provisional working draft. Report or view errata: '
+                    'http://www.opcfoundation.org/errata',
+        keywords='OPC UA, OpenUSD, companion specification, draft')
+    pkg.force_field_update_on_open()
+    pkg.enable_track_changes()
+    pkg.save(out_path)
+    return _provenance(pkg, writer)
+
+
+def _provenance(pkg, writer):
+    """Map every paragraph in the *saved* document to what owns its text.
+
+    Built by walking the package rather than by trusting the writer's intent: blocks are
+    rendered for regions that are then not inserted, and the template contributes
+    paragraphs of its own. A sidecar that describes the document the reviewer will open
+    is the only one worth having.
+    """
+    from opcdocx.oxml import q
+    attr = q('w14:paraId')
+    out = {}
+    for p in pkg.document.iter(q('w:p')):
+        pid = p.get(attr)
+        if not pid:
+            continue
+        key = writer.para_ids.get(pid)
+        out[pid] = key if key is not None else 'template'
+    return out
+
+
+# --------------------------------------------------------------------------- regions
+
+
+def _token_map(ident, deviation_ids=()):
+    tokens = {
+        '<title>': ident['title'],
+        '<Title>': ident['title'],
+        '<short name>': ident['shortName'],
+        '<other organization>': ident['otherOrganization'],
+        '<OPC Foundation (if joint work)>': 'OPC Foundation',
+        '<OPC FOUNDATION (if joint work)>': 'OPC FOUNDATION',
+        '<Part Name>': ident['partName'],
+        'Part <mm>': ident['partNumber'],
+        '<mm>': ident['partNumber'].split()[-1],
+        '<NamespaceUri>': ident['namespaceUri'],
+        '<Version>': ident['version'],
+        'Namespace and mappings': 'namespace and mappings',
+        'Capability Identifier': 'Capability identifier',
+        'Revision x.y Highlights': 'Release %s highlights' % ident['version'],
+        'Draft 1.xy': '%s %s' % (ident['releaseType'], ident['version']),
+        'Draft 1.x': '%s %s' % (ident['releaseType'], ident['version']),
+    }
+    if 'no-information-model' in deviation_ids:
+        # Retained template text in clause 3.4 promises that Annex A defines this
+        # document's NodeIds. A document that defines no Nodes must not say so; the two
+        # halves are substituted separately because the cross-reference field to Annex A
+        # sits between them and has to survive.
+        tokens.update({
+            'The NodeIds of all Nodes described in this standard are only symbolic '
+            'names.': 'This document describes no Nodes and therefore allocates no '
+                      'NodeIds.',
+            ' defines the actual NodeIds.':
+                ' defines the machine-readable artifacts this document publishes '
+                'instead.',
+        })
+    return tokens
+
+
+def _retitle(pkg, index, text):
+    p = pkg.children()[index]
+    texts = p.findall('.//' + _t())
+    if not texts:
+        return
+    texts[0].text = text
+    for t in texts[1:]:
+        t.text = ''
+
+
+def _t():
+    from opcdocx.oxml import q
+    return q('w:t')
+
+
+def _set_main_title(pkg, idx, ident):
+    i = idx['main_title']
+    _retitle(pkg, i, ident['mainTitle'])
+    _retitle(pkg, i + 2, ident['subTitle'])
+
+
+def _replace_scope(pkg, rendered, idx, ident, writer):
+    # Keep the template's own "OPC Foundation" boilerplate that closes the clause.
+    start = idx['scope'] + 1
+    end = start + 2                      # the two instructional paragraphs
+    body = list(rendered['scope'][1:])   # drop the clause heading; the template has it
+    banner = writer.stamp_generated(
+        [paragraph('NOTE', [run('NOTE   ' + ident['draftBanner'])])], 'scope', 'config')
+    pkg.replace_range(start, end, body + banner)
+
+
+def _replace_normative_references(pkg, rendered, idx):
+    """The template's example reference list is replaced by the generated one."""
+    start = idx['normative_references'] + 1
+    end = idx['terms']
+    pkg.replace_range(start, end, rendered['normative-references'][1:])
+
+
+def _replace_terms(pkg, rendered, idx, ident):
+    blocks = rendered['terms']
+    marks = _split_on_headings(blocks)
+    # 3.3 Abbreviated terms
+    pkg.replace_range(idx['abbreviations'] + 1, idx['conventions'], marks['abbrev'])
+    # 3.2 <title> terms
+    pkg.replace_range(idx['terms_list'] + 1, idx['abbreviations'], marks['terms'])
+    _retitle(pkg, idx['terms_list'], '%s terms' % ident['title'])
+    # 3.1 Overview
+    pkg.replace_range(idx['terms_overview'] + 1, idx['terms_list'], marks['overview'])
+
+
+def _split_on_headings(elements):
+    """Split the rendered terms region at its Heading2 paragraphs."""
+    from opcdocx.oxml import para_style, q
+    groups = []
+    current = []
+    for el in elements:
+        if el.tag == q('w:p') and para_style(el) in ('Heading1', 'Heading2'):
+            groups.append(current)
+            current = []
+            continue
+        current.append(el)
+    groups.append(current)
+    # groups: [before clause 3][3.1 Overview][3.2 terms][3.3 abbreviations][3.4 conventions]
+    return {'overview': groups[1] if len(groups) > 1 else [],
+            'terms': groups[2] if len(groups) > 2 else [],
+            'abbrev': groups[3] if len(groups) > 3 else []}
+
+
+def _replace_intro_body(pkg, rendered, idx):
+    from opcdocx.oxml import para_style, q
+    body = [el for el in rendered['general']
+            if not (el.tag == q('w:p') and para_style(el) in ('Heading1', 'Heading2'))]
+    pkg.replace_range(idx['intro_title'] + 1, idx['intro_opcua'], body)
+
+
+def _replace_use_cases(pkg, rendered, idx):
+    pkg.replace_range(idx['use_cases'] + 1, idx['model_overview'],
+                      rendered['use-cases'][1:])
+
+
+def _replace_model_overview(pkg, rendered, idx, ident):
+    pkg.replace_range(idx['model_overview'] + 1, idx['objecttypes'],
+                      rendered['model-overview'][1:])
+    _retitle(pkg, idx['model_overview'],
+             '%s information model overview' % ident['title'])
+
+
+def _replace_types(pkg, build, rendered, doc, idx):
+    """Replace the template's ObjectTypes .. Well-Known BrowseNames block.
+
+    The template ships a clause per NodeClass. Which of them a specification needs is a
+    property of its model, so the block is replaced by whichever type regions the
+    docmodel actually produced, in document order; the rest are removed rather than
+    left empty, following the template's own Annex A instruction ("if not needed, this
+    Annex section shall be deleted").
+    """
+    elements = []
+    for name in doc.order:
+        if name in contract.TYPE_REGIONS and rendered.get(name):
+            elements.extend(rendered[name])
+    if not elements and 'no-information-model' not in build.deviation_ids:
+        raise ValueError('the model produced no type clauses at all')
+    pkg.replace_range(idx['objecttypes'], idx['profiles'], elements)
+
+
+def _replace_profiles(pkg, rendered, idx):
+    pkg.replace_range(idx['profiles'] + 1, idx['namespaces'], rendered['profiles'][1:])
+    _retitle(pkg, idx['profiles'], 'Profiles and conformance units')
+
+
+def _replace_namespaces(pkg, rendered, idx):
+    pkg.replace_range(idx['namespaces'], idx['annex_a'], rendered['namespaces'])
+
+
+def _insert_after_namespaces(pkg, rendered, doc, idx):
+    """Numbered clauses the specification adds after Namespaces, such as Security.
+
+    The template has no slot for them, so they are inserted before Annex A. A
+    specification that adds none simply inserts nothing.
+    """
+    try:
+        tail_start = doc.order.index('namespaces') + 1
+    except ValueError:
+        return
+    elements = []
+    for region in doc.order[tail_start:]:
+        if region.startswith('annex-'):
+            break
+        elements.extend(rendered[region])
+    if elements:
+        pkg.insert_at(idx['annex_a'], elements)
+
+
+def _replace_annex_a(pkg, build, writer, rendered, doc, idx):
+    """Annex A keeps the template's own structure; the node reference is appended."""
+    tail = []
+    for region in doc.order:
+        if region.startswith('annex-') and region != 'annex-a':
+            tail.extend(rendered[region])
+    if 'no-information-model' in build.deviation_ids:
+        # The template's Annex A states where to download this document's NodeSet. For a
+        # specification that has none that text is simply false, so the whole annex body
+        # is replaced by the annex the source document actually wrote — the machine-
+        # readable artifacts it does define. Retaining the boilerplate would publish a
+        # link to a NodeSet that will never exist.
+        pkg.replace_range(idx['annex_a'], idx['backmatter'],
+                          rendered['annex-a'] + tail)
+        return
+    node_rows = nodeset_tables.annex_node_table(build.model,
+                                                doc_ns_index=build.doc_ns_index)
+    pkg.insert_at(idx['backmatter'], _annex_node_table(writer, node_rows) + tail)
+
+
+def _annex_node_table(writer, rows):
+    from opcdocx.oxml import cell, cell_paragraph, row as trow, table
+    widths = [1500, 2600, 1400, 3426]
+    out = [paragraph('ANNEX-heading1', [run('Node reference')]),
+           paragraph('PARAGRAPH', [run(
+               'The following table lists every Node this document defines, with the '
+               'provisional NodeId assigned by the generator. It is generated from the '
+               'UANodeSet and is informative for navigation; the UANodeSet is '
+               'authoritative.')]),
+           writer.caption('annex-a-nodes', 'Nodes defined by this document')]
+    tbl = table(widths)
+    headers = ['NodeId', 'BrowseName', 'NodeClass', 'Description']
+    tbl.append(trow([cell(widths[i], [cell_paragraph(h, bold=True)], bottom='double')
+                     for i, h in enumerate(headers)], header=True))
+    for r in rows:
+        tbl.append(trow([
+            cell(widths[0], [cell_paragraph(r['nodeId'])]),
+            cell(widths[1], [cell_paragraph(r['browseName'])]),
+            cell(widths[2], [cell_paragraph(r['nodeClass'])]),
+            cell(widths[3], [cell_paragraph(r['description'])]),
+        ]))
+    out.append(tbl)
+    out.append(paragraph('spacer', []))
+    # Generated from the UANodeSet, so a reviewer's mark here belongs in the model, not
+    # in the template it happens to sit inside.
+    return writer.stamp_generated(out, 'annex-a', 'nodetable')
+
+
+def _replace_toc(pkg, idx, writer):
+    """Replace the template's cached tables of contents with live fields."""
+    from opcdocx.oxml import para_style, q
+    kids = pkg.children()
+    contents_i = next(i for i, el in enumerate(kids)
+                      if el.tag == q('w:p') and para_style(el) == 'TOC1')
+    # The tables of contents run up to the copyright block, which opens with MAIN-TITLE.
+    end = next(i for i in range(contents_i, len(kids))
+               if kids[i].tag == q('w:p') and para_style(kids[i]) == 'MAIN-TITLE')
+    figures_i = next(i for i in range(contents_i, end)
+                     if para_style(kids[i]) == 'HEADINGNonumber'
+                     and 'Figures' in _text(kids[i]))
+    tables_i = next(i for i in range(figures_i, end)
+                    if para_style(kids[i]) == 'HEADINGNonumber'
+                    and 'Tables' in _text(kids[i]))
+
+    tables_block = writer.stamp_generated(
+        [paragraph('TableofFigures', toc_field('TOC \\t "TABLE-title" \\c \\h'))],
+        'frontmatter', 'toc', 0)
+    figures_block = writer.stamp_generated(
+        [paragraph('TableofFigures', toc_field('TOC \\t "FIGURE-title" \\c \\h'))],
+        'frontmatter', 'toc', 1)
+    contents_block = writer.stamp_generated(
+        [paragraph('TOC1', toc_field('TOC \\o "1-3" \\h \\z \\u'))],
+        'frontmatter', 'toc', 2)
+    pkg.replace_range(tables_i + 1, end, tables_block)
+    pkg.replace_range(figures_i + 1, tables_i, figures_block)
+    pkg.replace_range(contents_i, figures_i, contents_block)
+
+
+def _text(el):
+    from opcdocx import oxml
+    return oxml.iter_text(el)
+
+
+# --------------------------------------------------------------------------- figures
+
+
+def _prepare_figures(build, writer):
+    """Render each Mermaid diagram to a .pptx plus a preview, ready to embed."""
+    from opcdocx import mermaid_pptx
+    out = []
+    fig_dir = os.path.join(build_repo(), build.cfg['output']['figures'])
+    os.makedirs(fig_dir, exist_ok=True)
+    for index, (holder, block) in enumerate(writer.pending_figures, start=1):
+        graph = mermaid_pptx.parse(block['mermaid'])
+        spec = next((f for f in build.cfg.get('figures', [])
+                     if f['id'] == block['id']), None)
+        name = spec['pptx'] if spec else 'figure%d.pptx' % index
+        pptx_path = os.path.join(fig_dir, name)
+        png_path = os.path.splitext(pptx_path)[0] + '.png'
+        w, h = mermaid_pptx.write_pptx(graph, pptx_path)
+        mermaid_pptx.write_preview(graph, png_path)
+        with open(pptx_path, 'rb') as f:
+            pptx_bytes = f.read()
+        with open(png_path, 'rb') as f:
+            png_bytes = f.read()
+        out.append({'holder': holder, 'pptx': pptx_bytes, 'png': png_bytes,
+                    'width': w, 'height': h, 'index': index})
+    return out
+
+
+def _attach_figures(pkg, figures):
+    include_shapetype = not ole_embed.document_defines_shapetype(pkg)
+    for fig in figures:
+        ole_embed.embed_powerpoint(
+            pkg, fig['holder'], pptx_bytes=fig['pptx'], preview_png=fig['png'],
+            width_px=fig['width'], height_px=fig['height'], index=fig['index'],
+            include_shapetype=include_shapetype)
+        include_shapetype = False
+
+
+def build_repo():
+    return os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                         '..', '..'))

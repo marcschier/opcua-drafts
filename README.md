@@ -13,6 +13,21 @@ Feedback on these drafts is welcome — and you don't have to write the specific
 3. Open a pull request against `main` and discuss.
 4. Maintainers apply the agreed changes with AI, regenerate, and validate (`python core-specs/extras/validate_all.py`).
 
+### You don't have to touch git at all
+
+Two labels start an agent that does the work and opens the pull request for you. **Only a maintainer can apply a label**, so a label is a deliberate decision to act on something — open the issue first and say what you want.
+
+| Label | What happens |
+|---|---|
+| `word-review` | Attach a marked-up `.docx` from [`word-drafts/`](word-drafts/) to the issue. Your tracked changes become the pull request's diff and your comments become a review on it; anything that needs judgement rather than a substitution is handed to the agent. See [*Sending a review back*](word-drafts/README.md#sending-a-review-back). |
+| `needs pr` | The agent reads the issue and every comment on it and opens a pull request implementing what it asks for. If the issue asks no concrete question of the text, it says so and opens nothing. |
+
+Everything an agent writes is a **draft of an answer, not an answer** — it goes through the same review as anyone else's pull request.
+
+The label decides *that* the agent runs. It cannot decide *what it is told*, because anyone can write an issue and anyone can comment on one, so the agent is built on the assumption that its input is hostile: it runs with no write credential, is handed the issue text as a file marked untrusted rather than as instructions, and can only propose changes under the specification trees. Whatever it produces is a patch that a person reads before it lands.
+
+The Word renderings under `word-drafts/` are regenerated automatically whenever a specification changes on `main`, and collected on one standing pull request. Do not edit them by hand.
+
 See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the full workflow, validation, and conventions, and [`.github/copilot-instructions.md`](.github/copilot-instructions.md) for the specification authoring style — voice and tense, normative language, and the model, example and validator conventions the drafts follow — together with the build and validation commands and a map of the repository.
 
 ## Layout

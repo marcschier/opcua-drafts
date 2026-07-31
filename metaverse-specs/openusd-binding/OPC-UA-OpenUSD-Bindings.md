@@ -1,10 +1,10 @@
-# OPC UA — OpenUSD Binding (Part 1)
+# OPC UA for OpenUSD — Part 1: OpenUSD Binding
 
-**Release 0.4.0 — Draft**
+**Release 0.5.0 — Draft**
 **Namespace:** `http://opcfoundation.org/UA/OpenUSD/`
-**Publication date:** 2026-07-27
+**Publication date:** 2026-07-29
 
-> Status: Working-group draft. This document, together with `Opc.Ua.OpenUsd.NodeSet2.xml` and `Opc.Ua.OpenUsd.NodeIds.csv`, defines an OPC UA information model that lets a Server declare **which OpenUSD (Universal Scene Description) prim represents a given OPC UA Object**, and **which live OPC UA Variable values drive which USD attributes** (and, where authorized, which USD-side intents command OPC UA back), so that a generic connector can render live industrial data in an OpenUSD renderer (for example NVIDIA Omniverse) without hard-coding the mapping. Nothing here is normative, official, or endorsed by the OPC Foundation or the Alliance for OpenUSD; namespace URIs and NodeIds are **provisional** and for prototyping only. The design rationale, prior art, and the corrections that shaped this draft are recorded in the companion research report (`research/openuds-and-omniverse-what-would-be-needed-to-supp.md`, §0).
+> Status: Working-group draft. This document, together with `Opc.Ua.OpenUsd.NodeSet2.xml` and `Opc.Ua.OpenUsd.NodeIds.csv`, defines an OPC UA information model that lets a Server declare **which OpenUSD (Universal Scene Description) prim represents a given OPC UA Object**, and **which live OPC UA Variable values drive which USD attributes** (and, where authorized, which USD-side intents command OPC UA back), so that a generic connector can render live industrial data in an OpenUSD renderer (for example NVIDIA Omniverse) without hard-coding the mapping. Nothing here is normative, official, or endorsed by the OPC Foundation or the Alliance for OpenUSD; namespace URIs and NodeIds are **provisional** and for prototyping only.
 
 ---
 
@@ -18,7 +18,7 @@ The model has five portable capability groups and one informative profile:
 - **Live property binding (telemetry).** A read-only mapping from a source OPC UA `Variable` `Value` — resolved by NodeId, RelativePath, or **semantic id** — to a target USD attribute, with conversion and with quality/timestamp/persistence **hints**. This binds **existing** domain Variables; it does not duplicate process data. Event/alarm state and historical playback are expressed as additional intent profiles on the same binding type.
 - **Command binding (control).** An **opt-in**, authorized, single-writer mapping from a USD-side intent to an OPC UA setpoint write or `Method` call, so an agent or operator can act on the plant through the same declared, discoverable model. The opt-in is a matter of connector configuration and server `RolePermissions` (not the `Enabled` flag): a Server declares a command binding only deliberately and a conformant connector actuates it only when explicitly enabled and authorized, so the default posture of the model remains read-only.
 - **Composition (aggregation).** A declarative mapping of an asset's **components** onto the USD prim hierarchy — 1:1 or 1..n, inline child prims or referenced/instanced sub-assets, static or **dynamic** (reconciled from model-change events), and even components hosted on **another server** — so the visual twin mirrors the asset's *is-composed-of* structure.
-- **Asset content delivery.** An optional address-space facility by which a server serves the artist-authored USD root layer and its dependency closure through OPC UA Part 5 `FileType`, with per-layer digests, so a generic connector can download, verify, cache, compose, and render without external asset-repository setup. The facility is an **xRegistry artifact registry** (§5.15): the served artifacts form a registry of groups, versions and labels rather than a per-stage folder of files, and an artifact's registry identifier is derived from its USD asset identifier by a closed-form encoding, which makes the server directly addressable as a USD `ArResolver` backend.
+- **Asset content delivery.** An optional address-space facility by which a server serves the artist-authored USD root layer and its dependency closure through OPC UA Part 5 `FileType`, with per-layer digests, so a generic connector can download, verify, cache, compose, and render without external asset-repository setup. The facility is an **xRegistry artifact registry** (§7.11): the served artifacts form a registry of groups, versions and labels rather than a per-stage folder of files, and an artifact's registry identifier is derived from its USD asset identifier by a closed-form encoding, which makes the server directly addressable as a USD `ArResolver` backend.
 - **Omniverse realization (informative).** How a connector realizes the model in NVIDIA Omniverse (Nucleus `.live` layers, USDRT, OmniGraph, frame coalescing). This is a separate, vendor-governed profile and is **not** part of the portable normative model.
 
 Out of scope (reserved for later work): Part 14 Actions, PubSub realization, a USD-side applied API schema mirror, persistent-UUID identity, and normative geometry/material/skeleton/physics profiles. Command, event/alarm, history, composition, and asset delivery are **normative but optional** capabilities a Server may choose not to implement.
@@ -29,14 +29,7 @@ Industrial "digital twin" visualization repeatedly re-implements the same brittl
 
 The result is an **N×M integration problem**: *N* servers (pumps, robots, machines, lines) each hand-crafted against *M* visualization tools (Omniverse, `usdview`, web viewers, HMIs) require up to *N×M* one-off bridges, none reusable. This specification collapses that to **N + M**: each server declares its mapping **once**, in its own address space, and each tool implements **one** generic connector. The mapping becomes a first-class, browsable, versioned, authoritative part of the OPC UA model instead of hidden connector code, so a **generic** connector can discover and apply it for any conforming server without prior knowledge of the domain.
 
-### 1.2 Motivating use cases
-
-- Render a live factory line: pump speed drives a rotating impeller, a bearing temperature drives an emissive glow, a running state drives visibility.
-- Render a live robot cell: OPC 40010 Axis `ActualPosition` values drive nested OpenUSD joint rotate ops for independently articulated robots, while safety and tool-mount state compose live.
-- Position assets in a scene: an RSL 3D frame drives a prim transform.
-- Bridge to Omniverse: a connector Browses `Server/OpenUSD`, subscribes to the bound Variables, and writes the mapped USD attributes into a Nucleus `.live` layer for RTX rendering.
-
-### 1.3 What it simplifies and what it enables
+### 1.2 What it simplifies and what it enables
 
 **Simplifies.**
 
@@ -52,17 +45,17 @@ The result is an **N×M integration problem**: *N* servers (pumps, robots, machi
 - **Vendor-neutral, auditable digital twins.** Because the mapping is authoritative, versioned, and part of the model, it can be reviewed, diffed, validated, and governed like any other engineering artifact.
 - **Toolable pipelines.** The mapping is machine-readable, so it can be generated from engineering data, checked in CI, and migrated across versions (override/tombstone matching via `BindingDefinitionId`).
 - **Incremental adoption and clean evolution.** Servers implement the representation core alone first, add value bindings when ready, and refine bindings over time without invalidating previously deployed connectors.
-- **An ecosystem division of labour.** Asset authors, machine OEMs, integrators, connector vendors, and visualization operators collaborate through the model as a shared contract rather than through private, point-to-point agreements (see **Annex B**).
+- **An ecosystem division of labour.** Asset authors, machine OEMs, integrators, connector vendors, and visualization operators collaborate through the model as a shared contract rather than through private, point-to-point agreements (see **Annex D**).
 
-### 1.4 Capabilities and conformance
+### 1.3 Capabilities and conformance
 
-Only the representation core — the `Server/OpenUSD` discovery facility, `OpenUsdStageType`, and the `OpenUsdRepresentation` AddIn — is mandatory. Every other capability in §1 is **normative but optional** and is gated by its own conformance unit (§7), so a Server implements exactly what it needs and a Client discovers what a Server offers rather than assuming it.
+Only the representation core — the `Server/OpenUSD` discovery facility, `OpenUsdStageType`, and the `OpenUsdRepresentation` AddIn — is mandatory. Every other capability in §1 is **normative but optional** and is gated by its own conformance unit (§9), so a Server implements exactly what it needs and a Client discovers what a Server offers rather than assuming it.
 
-The capabilities are independent of one another. A Server may publish identity alone, add live value bindings later, and never implement command, alarm, history, composition or asset delivery. Each conformance unit is separately testable, and the profiles of §7 group them into the combinations a real deployment tends to need.
+The capabilities are independent of one another. A Server may publish identity alone, add live value bindings later, and never implement command, alarm, history, composition or asset delivery. Each conformance unit is separately testable, and the profiles of §9 group them into the combinations a real deployment tends to need.
 
-**Live bindings are typed by intent.** `OpenUsdLiveBindingType` is abstract; a binding's intent is carried by its concrete subtype — `OpenUsdValueChangeBindingType` for read-only telemetry, `OpenUsdAlarmBindingType`, `OpenUsdHistoryBindingType` and `OpenUsdCommandBindingType` (§5.4). A connector therefore determines intent from `HasTypeDefinition` rather than from a discriminating enumeration value, and a Server that does not implement an intent simply never instantiates its subtype.
+**Live bindings are typed by intent.** `OpenUsdLiveBindingType` is abstract; a binding's intent is carried by its concrete subtype — `OpenUsdValueChangeBindingType` for read-only telemetry, `OpenUsdAlarmBindingType`, `OpenUsdHistoryBindingType` and `OpenUsdCommandBindingType` (§7.4). A connector therefore determines intent from `HasTypeDefinition` rather than from a discriminating enumeration value, and a Server that does not implement an intent simply never instantiates its subtype.
 
-**One dependency beyond base OPC UA.** Asset content delivery (§5.15) builds on [*OPC UA — xRegistry*](../../core-specs/xregistry/OPC-UA-xRegistry.md), which is a **`RequiredModel`** of this specification. This is the only place the model is not self-contained on base OPC UA, and the trade is deliberate: a plain folder of files cannot express versions, change detection, labels or federation, and duplicates artifacts across stages that share them. Because the xRegistry `ResourceType` is itself a Part 5 `FileType`, the dependency costs a consumer nothing structurally — an artifact node **is** the file, read with its own `Open`/`Read`/`Close`. A Server that does not serve artifacts is unaffected by it.
+**One dependency beyond base OPC UA.** Asset content delivery (§7.11) builds on [*OPC UA — xRegistry*](../../core-specs/xregistry/OPC-UA-xRegistry.md), which is a **`RequiredModel`** of this specification. This is the only place the model is not self-contained on base OPC UA, and the trade is deliberate: a plain folder of files cannot express versions, change detection, labels or federation, and duplicates artifacts across stages that share them. Because the xRegistry `ResourceType` is itself a Part 5 `FileType`, the dependency costs a consumer nothing structurally — an artifact node **is** the file, read with its own `Open`/`Read`/`Close`. A Server that does not serve artifacts is unaffected by it.
 
 **Companion — Part 2 (Scene Materialization).** This document (Part 1) binds OPC UA Objects to prims on an **external** USD stage. A companion draft, *OPC UA — OpenUSD Scene Materialization (Part 2)* (`../openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md`, namespace `http://opcfoundation.org/UA/OpenUSD/Scene/`), instead **materializes the composed USD scene graph natively as an OPC UA address space** (Stage/Prim/Attribute/Relationship/typed+API schemas), and is round-trippable to/from `.usd`. Part 2 is **self-contained**: it neither changes nor requires this model, and it does **not** take the xRegistry dependency — it reaches the artifact registry only indirectly, through this specification, when a Server implements both. The two interoperate — a Part 1 binding may target a Part 2 attribute Variable, and a materialized stage may be listed under `Server/OpenUSD/Stages`.
 
@@ -74,8 +67,8 @@ The release history of this specification is recorded in [`CHANGELOG.md`](CHANGE
 
 - [OPC 10000-1 … 10000-8](https://reference.opcfoundation.org/specs/OPC-10000-1/) — OPC Unified Architecture, Parts 1–8 (core), in particular Part 3 [AddIns §4.10.3](https://reference.opcfoundation.org/specs/OPC-10000-3/4.10.3), Part 4 [RelativePath §7.30](https://reference.opcfoundation.org/specs/OPC-10000-4/7.30) and [DataValue §7.11](https://reference.opcfoundation.org/specs/OPC-10000-4/7.11), Part 6 [DataValue encoding §5.2.2.17](https://reference.opcfoundation.org/specs/OPC-10000-6/5.2.2.17), and Part 8 [EUInformation §5.6.4](https://reference.opcfoundation.org/specs/OPC-10000-8/5.6.4).
 - [OPC 10000-7](https://reference.opcfoundation.org/specs/OPC-10000-7/4) — Profiles and Conformance Units.
-- [OPC 10000-20](https://reference.opcfoundation.org/specs/OPC-10000-20/) — File Transfer: `FileType` (§4.2) and its `Open` / `Read` / `Close` Methods, the streaming contract for a served artifact (§5.15).
-- [OPC UA — xRegistry](../../core-specs/xregistry/OPC-UA-xRegistry.md) — the abstract registry base model (`RegistryType` / `GroupType` / `ResourceType` / `AttributesType`, the common attributes, auto-bootstrap and federation) that the artifact registry of §5.15 extends. **A `RequiredModel` of this specification.**
+- [OPC 10000-20](https://reference.opcfoundation.org/specs/OPC-10000-20/) — File Transfer: `FileType` (§6.2) and its `Open` / `Read` / `Close` Methods, the streaming contract for a served artifact (§7.11).
+- [OPC UA — xRegistry](../../core-specs/xregistry/OPC-UA-xRegistry.md) — the abstract registry base model (`RegistryType` / `GroupType` / `ResourceType` / `AttributesType`, the common attributes, auto-bootstrap and federation) that the artifact registry of §7.11 extends. **A `RequiredModel` of this specification.**
 - [xRegistry Core specification, v1.0-rc3](https://github.com/xregistry/spec/blob/v1.0-rc3/core/spec.md) — the registry / group / resource / version / attribute model, `xid`, `epoch` and `labels` that the OPC UA base model realizes.
 - [OPC 11030](https://reference.opcfoundation.org/specs/OPC-11030/) — OPC UA Modelling Best Practices.
 - [AOUSD OpenUSD Core Specification 1.0.1](https://github.com/aousd/specifications-public/blob/2f9e746c4fbd7f48d6d2c9ac568133fe398bbfc0/core/1.0.1/core_spec.md) — normative for USD paths, composition, layers, and identity. **Note:** the Core Specification excludes domain schemas (UsdGeom, UsdShade, UsdLux, UsdSkel, UsdPhysics); the render-target semantics referenced by the transform profile therefore additionally pin a versioned OpenUSD schema release.
@@ -83,11 +76,19 @@ The release history of this specification is recorded in [`CHANGELOG.md`](CHANGE
 Referenced for the transform and geospatial profiles only (not a RequiredModel of the base NodeSet):
 
 - [OPC 10000-210 (RSL) / OPC 10000-5 Spatial Data](https://reference.opcfoundation.org/specs/OPC-10000-210) — the `CartesianFrameAngleOrientationType`, `3DFrame`, `3DCartesianCoordinates`, `3DOrientation` types and their RPY mathematics.
-- [OPC 10000-211 (GPOS)](https://reference.opcfoundation.org/specs/OPC-10000-211) — Global Positioning: `GlobalPositionType` (latitude/longitude/elevation, EPSG `CoordinateReferenceSystem`), `GlobalLocationType` (a subtype of RSL `SpatialLocationType`), and `GroundControlPointDataType` (local↔global tie points) — the geospatial anchor for the `Georeference` render target (§5.8, Annex D).
+- [OPC 10000-211 (GPOS)](https://reference.opcfoundation.org/specs/OPC-10000-211) — Global Positioning: `GlobalPositionType` (latitude/longitude/elevation, EPSG `CoordinateReferenceSystem`), `GlobalLocationType` (a subtype of RSL `SpatialLocationType`), and `GroundControlPointDataType` (local↔global tie points) — the geospatial anchor for the `Georeference` render target (§7.4.2, Annex F).
 
 ---
 
-## 3 Terms, definitions and abbreviations
+## 3 Terms, abbreviated terms and conventions
+
+### 3.1 Overview
+
+It is assumed that basic concepts of OPC UA information modelling and of OpenUSD are understood in this document. For the purposes of this document, the terms and definitions given in OPC 10000-1, OPC 10000-3, OPC 10000-4, OPC 10000-5 and OPC 10000-7, as well as the following, apply.
+
+OPC UA terms and terms defined in this document are italicized in the document.
+
+### 3.2 OpenUSD terms
 
 | Term | Meaning |
 |---|---|
@@ -101,15 +102,69 @@ Referenced for the transform and geospatial profiles only (not a RequiredModel o
 | Connector | The runtime component that Browses the model, subscribes to sources, and writes USD targets. |
 | Render target | The USD attribute a live value drives (transform, color, visibility, …). |
 
+### 3.3 Abbreviated terms
+
+| Abbreviation | Term |
+|---|---|
+| A&C | Alarms and Conditions |
+| AAS | Asset Administration Shell |
+| AGV | Automated Guided Vehicle |
+| AOUSD | Alliance for OpenUSD |
+| BOM | Bill of Materials |
+| CDD | Common Data Dictionary |
+| CRS | Coordinate Reference System |
+| ECEF | Earth-Centred, Earth-Fixed |
+| ENU | East-North-Up |
+| EPSG | European Petroleum Survey Group |
+| GPOS | Global Positioning |
+| HMI | Human Machine Interface |
+| IRDI | International Registration Data Identifier |
+| RSL | Relative Spatial Location |
+| RTX | Ray Tracing Texel eXtreme |
+| SdfPath | Scene Description Foundation path |
+| UNECE | United Nations Economic Commission for Europe |
+| URI | Uniform Resource Identifier |
+| USD | Universal Scene Description |
+| WGS84 | World Geodetic System 1984 |
+
+### 3.4 Conventions used in this document
+
+Node definitions in this document follow the table conventions of the OPC Foundation companion specification template: an Attribute/Value block, a References block giving the ReferenceType, NodeClass, BrowseName, DataType and TypeDefinition of each child Node, and the ConformanceUnits that require the Node in the AddressSpace. The Word rendering of this document carries that clause verbatim from the template.
+
+A BrowseName defined outside this document is prefixed with its namespace index; a BrowseName without a prefix belongs to this document’s namespace. Placeholder InstanceDeclarations are enclosed in angle brackets.
+
 ---
 
-## 4 Overview and concepts
+## 4 General information to OpenUSD and OPC UA
 
-### 4.1 Layered contract
+### 4.1 Introduction to OpenUSD
+
+OpenUSD (Universal Scene Description) is an open, extensible framework for describing, composing, simulating and collaborating on three-dimensional scenes. Its scene graph is assembled from layers that compose into a single stage, so several authors and tools contribute to one scene without rewriting it. A stage is a hierarchy of prims, each carrying typed attributes and relationships, addressed by a canonical prim path.
+
+OpenUSD is governed by the Alliance for OpenUSD (AOUSD), which publishes the OpenUSD Core Specification. The Core Specification covers paths, composition, layers and identity; the domain schemas that describe geometry, materials, lighting, skeletons and physics are versioned separately with the OpenUSD software releases.
+
+### 4.2 Introduction to OPC Unified Architecture
+
+The Word rendering of this document carries the standard OPC UA introduction from the OPC Foundation companion specification template, including its five figures. See OPC 10000-1 for the overview and OPC 10000-3 and OPC 10000-5 for the address space and information model.
+
+---
+
+## 5 Use cases
+
+- Render a live factory line: pump speed drives a rotating impeller, a bearing temperature drives an emissive glow, a running state drives visibility.
+- Render a live robot cell: OPC 40010 Axis `ActualPosition` values drive nested OpenUSD joint rotate ops for independently articulated robots, while safety and tool-mount state compose live.
+- Position assets in a scene: an RSL 3D frame drives a prim transform.
+- Bridge to Omniverse: a connector Browses `Server/OpenUSD`, subscribes to the bound Variables, and writes the mapped USD attributes into a Nucleus `.live` layer for RTX rendering.
+
+---
+
+## 6 OpenUSD information model overview
+
+### 6.1 Layered contract
 
 Representation (identity) and live binding (values) are separated so that identity can be stable while value mapping and transport evolve. A Server may implement the representation core alone (declare which prim represents each Object) and add value bindings later. OPC UA is the **single mapping authority**; the USD asset is not modified by this specification.
 
-### 4.2 Discovery (normative)
+### 6.2 Discovery
 
 A conforming Server **shall** expose exactly one well-known Object `OpenUSD` of type `OpenUsdRootType` as a component of the Server Object (`i=2253`), with BrowseName `1:OpenUSD`. It **shall** contain two Folders:
 
@@ -118,7 +173,7 @@ A conforming Server **shall** expose exactly one well-known Object `OpenUSD` of 
 
 A connector therefore starts at `Server/OpenUSD/Representations`, follows `Organizes` to each representation AddIn, reads the target stage and prim path, and (for Part 2) reads the representation's child bindings.
 
-### 4.3 Identity and the stage-open contract (normative)
+### 6.3 Identity and the stage-open contract
 
 The identity of a represented prim is the pair:
 
@@ -130,9 +185,9 @@ OpenUsdStageType instance  +  OpenUsdRepresentationType.PrimPath
 
 A stage's identity is more than its root layer. `OpenUsdStageType` therefore carries `RootLayerIdentifier` (mandatory, opaque), and, where they affect the composed result, `SessionLayerIdentifier` and `ResolverContext`. A connector opening the stage **shall** use the root layer, the session layer (if present), and the resolver context together; `ResolvedRootLayerUri` is informative only.
 
-The root layer may be obtained either by external resolution of `RootLayerIdentifier` under the connector's resolver policy, or, when the stage advertises `Assets` (§5.15), by streaming the served `OpenUsdAssetType` whose `AssetKind = RootLayer` through its Part 5 `FileType` and verifying it against its `Digest` before composition. In both cases `RootLayerIdentifier` remains the authored identity used by USD resolution; the delivery mechanism does not change the stage identity.
+The root layer may be obtained either by external resolution of `RootLayerIdentifier` under the connector's resolver policy, or, when the stage advertises `Assets` (§7.11), by streaming the served `OpenUsdAssetType` whose `AssetKind = RootLayer` through its Part 5 `FileType` and verifying it against its `Digest` before composition. In both cases `RootLayerIdentifier` remains the authored identity used by USD resolution; the delivery mechanism does not change the stage identity.
 
-### 4.4 Architecture
+### 6.4 Architecture
 
 ```mermaid
 flowchart TD
@@ -155,23 +210,25 @@ flowchart TD
   CONN --> USD["OpenUSD stage / Omniverse"]
 ```
 
+### 6.5 Organisation of the model
+
+All types are in the namespace `http://opcfoundation.org/UA/OpenUSD/` (index **2**; index 1 is the RequiredModel `http://opcfoundation.org/UA/xRegistry/`). Numeric NodeIds are **provisional**: ObjectTypes `1001–1099`, Interfaces `1010+`, DataTypes/Enumerations `3001+` (with EnumStrings at `datatype-id + 900`), and all remaining instance declarations sequentially from `6001`. The NodeSet has two RequiredModels — the base UA namespace and xRegistry (§7.11); a Server that adopts only the representation + telemetry core needs neither RSL nor DI. The full generated node table is Annex A.
+
 ---
 
-## 5 Information model
+## 7 OPC UA ObjectTypes
 
-All types are in the namespace `http://opcfoundation.org/UA/OpenUSD/` (index **2**; index 1 is the RequiredModel `http://opcfoundation.org/UA/xRegistry/`). Numeric NodeIds are **provisional**: ObjectTypes `1001–1099`, Interfaces `1010+`, DataTypes/Enumerations `3001+` (with EnumStrings at `datatype-id + 900`), and all remaining instance declarations sequentially from `6001`. The NodeSet has two RequiredModels — the base UA namespace and xRegistry (§5.15); a Server that adopts only the representation + telemetry core needs neither RSL nor DI. The full generated node table is Annex A.
-
-### 5.1 `OpenUsdRootType : BaseObjectType`
+### 7.1 OpenUsdRootType
 
 | Member | Reference / Type | Rule | Meaning |
 |---|---|---:|---|
 | `Stages` | HasComponent → FolderType | M | Registry of `OpenUsdStageType` instances. |
 | `Representations` | HasComponent → FolderType | M | Registry that Organizes every representation AddIn. |
-| `Artifacts` | HasComponent → `OpenUsdArtifactRegistryType` | O | The server's xRegistry artifact registry (§5.15). Present when the server delivers USD content; a stage's `Assets` view then Organizes artifacts from here. |
+| `Artifacts` | HasComponent → `OpenUsdArtifactRegistryType` | O | The server's xRegistry artifact registry (§7.11). Present when the server delivers USD content; a stage's `Assets` view then Organizes artifacts from here. |
 
-The well-known instance `Server/OpenUSD` is of this type (§4.2).
+The well-known instance `Server/OpenUSD` is of this type (§6.2).
 
-### 5.2 `OpenUsdStageType : BaseObjectType`
+### 7.2 OpenUsdStageType
 
 | Property | DataType | Rule | Meaning |
 |---|---|---:|---|
@@ -183,25 +240,25 @@ The well-known instance `Server/OpenUSD` is of this type (§4.2).
 | `RootLayerDigestAlgorithm` | OpenUsdDigestAlgorithmEnum | O | Digest algorithm for `RootLayerDigest` (default `Sha256`). |
 | `Signature` | ByteString | O | Optional detached signature over the digest / stage identity, for provenance. |
 | `ProvenanceUri` | String | O | Optional URI locating provenance / a signed Twin BOM manifest for the stage. |
-| `Assets` | Folder | O | Served USD asset/layer closure for optional Part 5 asset content delivery (§5.15). |
+| `Assets` | Folder | O | Served USD asset/layer closure for optional Part 5 asset content delivery (§7.11). |
 
-The Stage Object's own NodeId is its same-server identity; a `Representation` references it by NodeId. `RootLayerDigest` is computed over the **resolved root-layer content** (the layer bytes the resolver returns for `RootLayerIdentifier`), not over the identifier string. When it is present a connector **shall** obtain the resolved layer, verify it against the digest (using `RootLayerDigestAlgorithm`) before composing the stage, and **shall** refuse to open a layer whose digest does not match; this is the model's content-integrity anchor for the vision's signed *Twin BOM* (§8.2).
+The Stage Object's own NodeId is its same-server identity; a `Representation` references it by NodeId. `RootLayerDigest` is computed over the **resolved root-layer content** (the layer bytes the resolver returns for `RootLayerIdentifier`), not over the identifier string. When it is present a connector **shall** obtain the resolved layer, verify it against the digest (using `RootLayerDigestAlgorithm`) before composing the stage, and **shall** refuse to open a layer whose digest does not match; this is the model's content-integrity anchor for the vision's signed *Twin BOM* (§C.2).
 
-### 5.3 `OpenUsdRepresentationType : BaseObjectType` — the AddIn
+### 7.3 OpenUsdRepresentationType
 
 | Member | DataType / Type | Rule | Meaning |
 |---|---|---:|---|
 | `DefaultInstanceBrowseName` | QualifiedName | *(static, no ModellingRule)* | `1:OpenUsdRepresentation` — the AddIn default BrowseName. |
 | `Stage` | NodeId | M | NodeId of the `OpenUsdStageType` instance targeted. |
 | `PrimPath` | String | M | Canonical absolute composed prim path (instance-level). |
-| `<Binding>` | OpenUsdLiveBindingType (abstract) | OptionalPlaceholder | Zero or more live bindings whose source resolves relative to the represented Object; each instance is a concrete subtype selecting the intent (§5.4.1–§5.4.4). |
-| `<Component>` | OpenUsdComponentBindingType | OptionalPlaceholder | Zero or more component/aggregation bindings composing this Object's components into the USD prim tree (§5.12). |
+| `<Binding>` | OpenUsdLiveBindingType (abstract) | OptionalPlaceholder | Zero or more live bindings whose source resolves relative to the represented Object; each instance is a concrete subtype selecting the intent (§7.5–§7.8). |
+| `<Component>` | OpenUsdComponentBindingType | OptionalPlaceholder | Zero or more component/aggregation bindings composing this Object's components into the USD prim tree (§7.10). |
 
 A domain Object gains a representation by composing this AddIn with `HasAddIn` (Part 3 AddIn convention). The AddIn is `Organizes`-listed from `Server/OpenUSD/Representations`. The represented Object is the AddIn's `HasAddIn`-inverse parent; a connector computes the effective binding key as `(represented Object, BindingDefinitionId)`.
 
-### 5.4 `OpenUsdLiveBindingType : BaseObjectType` (abstract) and its intent subtypes
+### 7.4 OpenUsdLiveBindingType
 
-`OpenUsdLiveBindingType` is the **abstract** base for a read-only live binding that maps a source `Variable` `Value` to one target USD attribute. The binding **intent is expressed by the concrete subtype** (§5.4.1–§5.4.4) rather than by an enum discriminator, so each intent's members live only on its subtype. Declaration identity (`BindingDefinitionId`) is distinct from runtime identity (`(represented Object, BindingDefinitionId)`); a type-level declaration is therefore not wrongly shared across instances. The base carries the members common to every intent:
+`OpenUsdLiveBindingType` is the **abstract** base for a read-only live binding that maps a source `Variable` `Value` to one target USD attribute. The binding **intent is expressed by the concrete subtype** (§7.5–§7.8) rather than by an enum discriminator, so each intent's members live only on its subtype. Declaration identity (`BindingDefinitionId`) is distinct from runtime identity (`(represented Object, BindingDefinitionId)`); a type-level declaration is therefore not wrongly shared across instances. The base carries the members common to every intent:
 
 | Property | DataType | Rule | Meaning |
 |---|---|---:|---|
@@ -212,7 +269,7 @@ A domain Object gains a representation by composing this AddIn with `HasAddIn` (
 | `SourceBrowsePath` | RelativePath | O | RelativePath from the represented Object to the source Variable (instance-portable). |
 | `SourceSemanticId` | String | O | Semantic identifier (e.g. ECLASS / IEC CDD IRDI) of the source signal; resolved against the source's `HasDictionaryEntry` / semantic annotations for cross-vendor portability. |
 | `AttributeId` | UInt32 | O | Source attribute; default 13 (Value). Telemetry binds Value only. |
-| `TargetStage` | NodeId | M | The stage holding the target prim: an `OpenUsdStageType` instance, or a **materialized Part 2 `UsdStageType`** instance when the target is an in-server materialized scene (§10). |
+| `TargetStage` | NodeId | M | The stage holding the target prim: an `OpenUsdStageType` instance, or a **materialized Part 2 `UsdStageType`** instance when the target is an in-server materialized scene (Annex A). |
 | `TargetNodeId` | NodeId | O | Direct NodeId of the target when it is an **in-server materialized Variable** (a Part 2 `UsdAttributeType`). When present it takes precedence over `TargetPrimPath`/`TargetPropertyName`, which remain the portable descriptors and **shall** still be authored. |
 | `TargetPrimPath` | String | M | Target prim path: absolute, or relative to the representation `PrimPath`. |
 | `TargetPropertyName` | String | M | USD attribute name, e.g. `xformOp:rotateZ`, `primvars:displayColor`. |
@@ -226,65 +283,19 @@ A domain Object gains a representation by composing this AddIn with `HasAddIn` (
 | `State` | OpenUsdBindingStateEnum | O | Runtime lifecycle state (diagnostic, read-only). |
 | `LastError` | LocalizedText | O | Last operation error (diagnostic). |
 
-Exactly one of `SourceNodeId` / `SourceBrowsePath` / `SourceSemanticId` **shall** resolve to a single source Variable. `SourceBrowsePath` and `SourceSemanticId` are preferred over `SourceNodeId` because they are instance-portable and can be declared at type level; `SourceSemanticId` additionally makes a binding portable **across vendors and servers** that share the same semantic dictionary (ECLASS / IEC CDD), which is the anchor the wider asset-definition strategy relies on (§8.2).
+Exactly one of `SourceNodeId` / `SourceBrowsePath` / `SourceSemanticId` **shall** resolve to a single source Variable. `SourceBrowsePath` and `SourceSemanticId` are preferred over `SourceNodeId` because they are instance-portable and can be declared at type level; `SourceSemanticId` additionally makes a binding portable **across vendors and servers** that share the same semantic dictionary (ECLASS / IEC CDD), which is the anchor the wider asset-definition strategy relies on (§C.2).
 
-Because the intent is the type, a connector determines a binding's intent from its `HasTypeDefinition` (the concrete subtype), and a `<Binding>` placeholder (§5.3) whose declared TypeDefinition is the abstract base is materialized only by instances of a concrete subtype.
+Because the intent is the type, a connector determines a binding's intent from its `HasTypeDefinition` (the concrete subtype), and a `<Binding>` placeholder (§7.3) whose declared TypeDefinition is the abstract base is materialized only by instances of a concrete subtype.
 
-#### 5.4.1 `OpenUsdValueChangeBindingType : OpenUsdLiveBindingType`
-
-The read-only default: a source `Variable` `Value` drives a USD attribute. Adds **no** members beyond the base; it binds the source Value (`AttributeId` 13).
-
-#### 5.4.2 `OpenUsdAlarmBindingType : OpenUsdLiveBindingType`
-
-The source resolves to an OPC UA Alarms & Conditions instance (Part 9) or a plain Variable exposing the aspect value. Adds:
-
-| Property | DataType | Rule | Meaning |
-|---|---|---:|---|
-| `AlarmAspect` | OpenUsdAlarmAspectEnum | O | Which condition aspect drives the target (`ActiveState`, `Severity`, `AckedState`, `EnabledState`). |
-
-#### 5.4.3 `OpenUsdHistoryBindingType : OpenUsdLiveBindingType`
-
-Reads history (Part 11 `HistoryRead`) for the source and authors it on the target. Adds:
-
-| Property | DataType | Rule | Meaning |
-|---|---|---:|---|
-| `TimeSampled` | Boolean | O | Author values as USD time samples (playback) rather than the latest default. |
-
-#### 5.4.4 `OpenUsdCommandBindingType : OpenUsdLiveBindingType`
-
-The opt-in, authorized control direction (USD → UA; §5.10). Adds:
-
-| Property | DataType | Rule | Meaning |
-|---|---|---:|---|
-| `CommandTargetNodeId` | NodeId | M | The Variable to write, or the Object on which to `Call` `CommandMethodId`. |
-| `CommandMethodId` | NodeId | O | Optional Method to invoke instead of a Variable write. |
-| `CommandTriggerPropertyName` | String | M | The USD attribute whose change is interpreted as the command intent/value. |
-
-### 5.5 `IOpenUsdRepresentedType : BaseInterfaceType`
-
-An optional interface a domain ObjectType may apply (`HasInterface`) to advertise participation, with an `<OpenUsdRepresentation>` placeholder. It is informative for browsing; discovery does not depend on it (the mandatory registry in §4.2 is authoritative).
-
-### 5.6 DataTypes (Enumerations)
-
-- `OpenUsdRenderTargetKindEnum` — `Translation(0) Rotation(1) Scale(2) Transform(3) Visibility(4) DisplayColor(5) EmissiveColor(6) Opacity(7) Custom(8) Georeference(9)` (`Georeference` = a geodetic anchor coordinate target — latitude/longitude/height; see §5.8 and Annex D).
-- `OpenUsdBadQualityActionEnum` — `Skip(0) HoldLast(1) ClearOpinion(2) Fallback(3)`.
-- `OpenUsdBindingStateEnum` — `Disabled(0) Unresolved(1) Ready(2) Active(3) Degraded(4) Error(5)`.
-- `OpenUsdSignalRoleEnum` — `Observable(0) Controllable(1)`.
-- `OpenUsdAlarmAspectEnum` — `ActiveState(0) Severity(1) AckedState(2) EnabledState(3)`.
-- `OpenUsdDigestAlgorithmEnum` — `None(0) Sha256(1) Sha384(2) Sha512(3)` (SHA-256/384/512).
-- `OpenUsdAssetKindEnum` — `RootLayer(0) SubLayer(1) Reference(2) Payload(3) Texture(4) Package(5)` for served asset content (§5.15).
-- `OpenUsdCardinalityEnum` — `One(0) Many(1)` (a component binding is 1:1 or 1..n).
-- `OpenUsdCompositionArcEnum` — `Child(0) Reference(1) Payload(2) Instance(3)` (USD composition arc for the component prim; `Instance` = an instanceable reference for efficient 1..n aggregation).
-
-### 5.7 Source and target resolution (normative)
+#### 7.4.1 Source and target resolution
 
 **Source.** In precedence order: if `SourceNodeId` is present use it; else if `SourceSemanticId` is present resolve it against the represented Object's subtree by matching the source Variable's semantic annotation (`HasDictionaryEntry` target IRDI or equivalent); else resolve `SourceBrowsePath` from the represented Object. Zero matches → the binding is *unresolved* (no update). More than one match → `Bad_TooManyMatches`. The connector validates NodeClass = Variable and the Value attribute.
 
-**Target.** If `TargetNodeId` is present, the target is that Variable directly — the connector validates NodeClass = Variable and, when the Variable is a materialized Part 2 `UsdAttributeType`, that its `UsdTypeName` is compatible with `TargetUsdTypeName`; `TargetPrimPath`/`TargetPropertyName` remain authored as the portable descriptors and **shall** be consistent with the resolved node. Otherwise: resolve `TargetStage` (validate it is an `OpenUsdStageType`, or a Part 2 `UsdStageType` for a materialized scene; verify `RootLayerDigest` if present per §5.2). Resolve `TargetPrimPath`: absolute, or relative to the representation `PrimPath` — a relative path **shall** be joined to the representation `PrimPath`, never authored at the layer root. Append `TargetPropertyName` to obtain the target attribute. Validate the prim, the attribute, and `TargetUsdTypeName`. For an `xformOp`, the op **shall** be present in the prim's `xformOpOrder`. The connector **shall not** fall back by name, nearest prim, first match, or a compatible type, and **shall not** create a property unless an explicit authoring profile permits it.
+**Target.** If `TargetNodeId` is present, the target is that Variable directly — the connector validates NodeClass = Variable and, when the Variable is a materialized Part 2 `UsdAttributeType`, that its `UsdTypeName` is compatible with `TargetUsdTypeName`; `TargetPrimPath`/`TargetPropertyName` remain authored as the portable descriptors and **shall** be consistent with the resolved node. Otherwise: resolve `TargetStage` (validate it is an `OpenUsdStageType`, or a Part 2 `UsdStageType` for a materialized scene; verify `RootLayerDigest` if present per §7.2). Resolve `TargetPrimPath`: absolute, or relative to the representation `PrimPath` — a relative path **shall** be joined to the representation `PrimPath`, never authored at the layer root. Append `TargetPropertyName` to obtain the target attribute. Validate the prim, the attribute, and `TargetUsdTypeName`. For an `xformOp`, the op **shall** be present in the prim's `xformOpOrder`. The connector **shall not** fall back by name, nearest prim, first match, or a compatible type, and **shall not** create a property unless an explicit authoring profile permits it.
 
 For a **materialized (Part 2) stage** the prim path and property name resolve against the materialized address space by BrowseName path — `<stage>/<prim>/…/<attribute>` — which is the path-based equivalent of `TargetNodeId`. A Server materializing a scene **should** author both, so that a connector that resolves by NodeId and one that resolves by path reach the same Variable.
 
-### 5.8 Conversion (normative)
+#### 7.4.2 Conversion
 
 Conversion is applied in this fixed order: **(1)** engineering-unit conversion (when `Source/TargetEngineeringUnits` differ), **(2)** `Scale` then `Offset` (`out = in × Scale + Offset`), **(3)** the transform or geospatial profile below (only when the target is a transform op or a georeference), **(4)** clamp to the range representable by `TargetUsdTypeName`, **(5)** cast to the USD attribute's value type. Scalar bindings apply steps (1), (2), (4), (5) only.
 
@@ -295,46 +306,75 @@ Conversion is applied in this fixed order: **(1)** engineering-unit conversion (
 - **Units — rotation.** USD rotation ops are in **degrees**; convert an `AngleUnit` of radians with `× 180/π` (and any other `AngleUnit` via its UNECE factor). USD `upAxis` and `metersPerUnit` are not applied to angles.
 - **Rotation mapping.** Author the orientation as `xformOp:rotateXYZ = (A°, B°, C°)`: USD's `rotateXYZ` is defined so the first-named axis is most local, i.e. it is equivalent to the ordered ops `rotateZ`, `rotateY`, `rotateX` and yields `R = Rz(rz)·Ry(ry)·Rx(rx)`, which for `(rx, ry, rz) = (A, B, C)` reproduces the RSL matrix above exactly. If decomposed single-axis ops are used instead, they **shall** be `["…", "xformOp:rotateZ", "xformOp:rotateY", "xformOp:rotateX"]` (Z outermost, X innermost) to preserve that order. A `rotateXYZ` op **shall not** be substituted by a different Euler order (`rotateZYX`, …) without re-deriving the angles.
 - **Units — translation.** Position components are metres scaled by the RSL `LengthUnit`; author `xformOp:translate = (X, Y, Z)` as a `double3` in **stage units**. The stage `metersPerUnit` is **not** applied to a raw `xformOp:translate` (intervening `xformOp:scale` ops and referenced-asset unit corrections already affect the metric); a length conversion is applied only per this profile against a controlled xform stack whose `xformOpOrder` the connector authored.
-- **Op order.** The named op **shall** already be present in the prim's `xformOpOrder` (§5.7); the connector **shall not** create it or reorder the stack. For a local pose the conventional stack is `["xformOp:translate", "xformOp:rotateXYZ"]` (translate outermost, rotate innermost) so the prim is rotated about its own origin and then positioned.
+- **Op order.** The named op **shall** already be present in the prim's `xformOpOrder` (§7.4.1); the connector **shall not** create it or reorder the stack. For a local pose the conventional stack is `["xformOp:translate", "xformOp:rotateXYZ"]` (translate outermost, rotate innermost) so the prim is rotated about its own origin and then positioned.
 - **Matrix form.** When the target is `xformOp:transform` (`matrix4d`), the connector builds the 4×4 matrix in USD convention: **row‑major**, **row‑vector** pre‑multiplication (`v′ = v · M`), the upper‑left 3×3 being `R` (rows are the transformed basis vectors) and the **translation in the fourth row**; the matrix is right‑handed with no shear.
 - **Quaternion.** When the target is `xformOp:orient` (`quatf`/`quatd`), the quaternion **shall** be reordered from the OPC UA/RSL imaginary‑first `(x, y, z, w)` order to USD's real‑first `(w, x, y, z)` order, and normalised.
 - **Up‑axis.** A Z‑up source composed onto a Y‑up stage (`upAxis = "Y"`, or vice‑versa) **shall** be reconciled by an explicit correction frame declared in the profile (for Z‑up→Y‑up, a `−90°` rotation about X applied outermost); the connector **shall not** silently reinterpret axes.
 
-**Geospatial profile (`RenderTargetKind = Georeference`).** The source is an OPC UA/GPOS `GlobalPositionType` value (or its `Latitude`/`Longitude`/`Elevation` component Variables) with an EPSG `CoordinateReferenceSystem`; the target is a USD **georeference origin** (stage‑level) or a per‑prim **globe anchor** — the portable Part 2 `UsdGeoreferenceApiType`/`UsdGlobeAnchorApiType`, or the vendor schemas mapped in **Annex D** (Cesium `CesiumGeoreferencePrim`/`CesiumGlobeAnchorAPI`, NVIDIA `WGS84ReferencePositionAPI`/`WGS84LocalPositionAPI`). The following rules are mandatory:
+**Geospatial profile (`RenderTargetKind = Georeference`).** The source is an OPC UA/GPOS `GlobalPositionType` value (or its `Latitude`/`Longitude`/`Elevation` component Variables) with an EPSG `CoordinateReferenceSystem`; the target is a USD **georeference origin** (stage‑level) or a per‑prim **globe anchor** — the portable Part 2 `UsdGeoreferenceApiType`/`UsdGlobeAnchorApiType`, or the vendor schemas mapped in **Annex F** (Cesium `CesiumGeoreferencePrim`/`CesiumGlobeAnchorAPI`, NVIDIA `WGS84ReferencePositionAPI`/`WGS84LocalPositionAPI`). The following rules are mandatory:
 
 - **Coordinate reference system.** `Latitude`/`Longitude` are authored as **decimal degrees** and `Elevation`/height as **metres**. If `CoordinateReferenceSystem` is not WGS84/GPS (EPSG 4326) the connector **shall** reproject to the target schema's CRS (WGS84 for Cesium/NVIDIA) before authoring; an unmapped or unsupported CRS **shall** leave the target unresolved (no update) rather than author an unprojected value.
 - **Origin and tangent plane.** A georeference declares a single geodetic origin `(lat₀, lon₀, h₀)` and a local **East‑North‑Up (ENU)** tangent plane at that origin. Stage‑local metric coordinates relate to global coordinates through the ECEF→ENU transform anchored at the origin (with axis assignment per stage `upAxis`: for Z‑up, `+X` = East, `+Y` = North, `+Z` = Up). Where GPOS supplies `GroundControlPointDataType` (local‑Cartesian ↔ global‑geographic pairs), the connector **shall** use them to establish/refine that origin and tangent‑plane registration (one point fixes the origin; several refine it, e.g. by least‑squares).
 - **Per‑asset placement.** A moving asset's `GlobalPosition` is authored either directly onto the target globe‑anchor attributes (`Latitude`/`Longitude`/`Height`) — letting the georeference schema resolve the local transform — or, when driving a raw pose, converted to an ENU offset from the origin and authored as `xformOp:translate` (metres, per the transform profile). The connector **shall not** author a raw `xformOp` when the target is a georeference/anchor attribute.
 - **Elevation datum.** Elevation is interpreted per the GPOS `ElevationReference` (e.g. ellipsoidal height vs. mean‑sea‑level/geoid vs. floor‑relative) and authored in metres irrespective of stage `metersPerUnit`; a connector that cannot honour the stated datum **shall** treat the height as unresolved rather than mis‑place the asset.
 
-Because core OpenUSD defines no geodetic schema, the concrete georeference target is a portable Part 2 schema or a vendor/extension schema; the attribute‑level mapping to NVIDIA Omniverse and Cesium for Omniverse is given in **Annex D**.
+Because core OpenUSD defines no geodetic schema, the concrete georeference target is a portable Part 2 schema or a vendor/extension schema; the attribute‑level mapping to NVIDIA Omniverse and Cesium for Omniverse is given in **Annex F**.
 
-### 5.9 Quality, timestamp and persistence (hints, normative defaults)
+#### 7.4.3 Quality, timestamp and persistence
 
 **Quality.** An omitted (binary) source `StatusCode` means **Good**; a `Bad`/`Uncertain` StatusCode triggers `BadQualityAction` (default `Skip`). `ClearOpinion` removes the authored USD opinion (revealing a weaker layer) — it does **not** author a fabricated "bad" value.
 
-**Timestamp.** OPC UA source/server timestamps are wall-clock; USD time codes are stage-timeline ordinates. They relate only through an explicit epoch and `timeCodesPerSecond` when a recording profile is used; an `OpenUsdValueChangeBindingType` authors the latest value as the attribute default, while an `OpenUsdHistoryBindingType` authors time-sampled values (§5.11). Absent timestamps mean **unavailable**, not "now".
+**Timestamp.** OPC UA source/server timestamps are wall-clock; USD time codes are stage-timeline ordinates. They relate only through an explicit epoch and `timeCodesPerSecond` when a recording profile is used; an `OpenUsdValueChangeBindingType` authors the latest value as the attribute default, while an `OpenUsdHistoryBindingType` authors time-sampled values (§7.6). Absent timestamps mean **unavailable**, not "now".
 
 **Persistence and update.** `SamplingIntervalHint` and any deadband are **hints**; `PublishingInterval`, queue size, and the actual MonitoredItem parameters are per-client Subscription requests and are **not** part of the binding descriptor. Overflow and sequence gaps are observable loss (partly recoverable via `Republish`) and are not license to invent continuity.
 
-### 5.10 Command bindings (normative, optional, opt-in)
+### 7.5 OpenUsdValueChangeBindingType
+
+The read-only default: a source `Variable` `Value` drives a USD attribute. Adds **no** members beyond the base; it binds the source Value (`AttributeId` 13).
+
+### 7.6 OpenUsdAlarmBindingType
+
+The source resolves to an OPC UA Alarms & Conditions instance (Part 9) or a plain Variable exposing the aspect value. Adds:
+
+| Property | DataType | Rule | Meaning |
+|---|---|---:|---|
+| `AlarmAspect` | OpenUsdAlarmAspectEnum | O | Which condition aspect drives the target (`ActiveState`, `Severity`, `AckedState`, `EnabledState`). |
+
+`AlarmAspect` selects the condition aspect that drives the target USD attribute — `ActiveState`/`AckedState`/`EnabledState` (boolean → e.g. `visibility` or an emissive on/off) or `Severity` (numeric → e.g. a color ramp). Where a full A&C condition is not available, the aspect **may** instead be sourced from a plain Variable that exposes the aspect value (a Boolean active-state or numeric severity); the binding semantics are identical and the connector treats it as any monitored source. Quality and `BadQualityAction` apply as for telemetry; a returned-to-normal condition clears or resets the target per `BadQualityAction`.
+
+### 7.7 OpenUsdHistoryBindingType
+
+Reads history (Part 11 `HistoryRead`) for the source and authors it on the target. Adds:
+
+| Property | DataType | Rule | Meaning |
+|---|---|---:|---|
+| `TimeSampled` | Boolean | O | Author values as USD time samples (playback) rather than the latest default. |
+
+With `TimeSampled = true` the connector reads history for the source and authors the values as **USD time samples** on the target attribute, giving the stage a scrubbable timeline for playback and replay. The source **shall** be historizing (its `AccessLevel`/`UserAccessLevel` grants `HistoryRead` and the server retains history); if it is not, the connector authors no samples and the binding is inert — a documented degrade, not an error. The epoch and `timeCodesPerSecond` mapping is declared by a recording profile; absent that, samples are authored on a connector-defined uniform timeline and are informative.
+
+### 7.8 OpenUsdCommandBindingType
+
+The opt-in, authorized control direction (USD → UA). Adds:
+
+| Property | DataType | Rule | Meaning |
+|---|---|---:|---|
+| `CommandTargetNodeId` | NodeId | M | The Variable to write, or the Object on which to `Call` `CommandMethodId`. |
+| `CommandMethodId` | NodeId | O | Optional Method to invoke instead of a Variable write. |
+| `CommandTriggerPropertyName` | String | M | The USD attribute whose change is interpreted as the command intent/value. |
 
 A binding of type `OpenUsdCommandBindingType` maps a **USD-side intent** back to an OPC UA action, so an agent or operator acting in the visual twin can command the plant through the same declared, discoverable model. Command bindings are the control counterpart of the read-only telemetry binding. They are **opt-in**: the *default posture* of the model stays read-only because a Server declares a command binding only deliberately, and a conformant connector actuates one only when explicitly configured to **and** only when the target's authorization permits it. A command binding is otherwise a fully-declared binding — `Enabled = true` like any other, and `Enabled = false` retains its normal meaning as an inherited-binding tombstone (it does **not** encode the opt-in; see below).
 
-- **Trigger.** `CommandTriggerPropertyName` names the USD attribute whose authored change is interpreted as the intent; the connector observes that attribute (e.g. an operator/agent writes a setpoint on the prim) and converts it back through the inverse of §5.8 (`Offset`/`Scale`, units).
+- **Trigger.** `CommandTriggerPropertyName` names the USD attribute whose authored change is interpreted as the intent; the connector observes that attribute (e.g. an operator/agent writes a setpoint on the prim) and converts it back through the inverse of §7.4.2 (`Offset`/`Scale`, units).
 - **Action.** If `CommandMethodId` is present, the connector `Call`s that Method on `CommandTargetNodeId` with the converted argument(s); otherwise it `Write`s the converted value to the Variable `CommandTargetNodeId`.
 - **Role.** The bound signal **shall** carry `SignalRole = Controllable`; a connector **shall not** issue a command for an `Observable` signal.
 - **Authorization & safety (normative).** The opt-in is enforced at two layers, **not** through `Enabled` (whose `false` value is the inherited-binding tombstone and would merely suppress the binding): (1) a connector **shall not** actuate any command binding unless it has been explicitly enabled to do so by its operator/configuration; and (2) the connector **shall** hold the write/`Call` authorization the target requires (`RolePermissions`), which a Server withholds by default. The connector **shall** enforce a **single-writer** discipline per target, **shall** be **fail-closed** (on any resolution/authorization/quality doubt it performs no action), and **shall not** retry a command implicitly. The model carries no credentials.
 - **Boundary.** This model does **not** define the control logic, interlocks, or the operating envelope that governs whether a command is *allowed*; that is the responsibility of the server's control layer and of a declarative operating-envelope policy (e.g. SOP-as-Code) outside this specification. The command binding only declares *how* a USD-side intent reaches an authorized OPC UA action.
 
-### 5.11 Alarm and history bindings (normative, optional)
+### 7.9 IOpenUsdRepresentedType
 
-Two additional read-only binding subtypes extend `OpenUsdLiveBindingType`:
+An optional interface a domain ObjectType may apply (`HasInterface`) to advertise participation, with an `<OpenUsdRepresentation>` placeholder. It is informative for browsing; discovery does not depend on it (the mandatory registry in §6.2 is authoritative).
 
-- **`OpenUsdAlarmBindingType`.** The source resolves to an OPC UA Alarms & Conditions instance (Part 9). `AlarmAspect` selects the condition aspect that drives the target USD attribute — `ActiveState`/`AckedState`/`EnabledState` (boolean → e.g. `visibility` or an emissive on/off) or `Severity` (numeric → e.g. a color ramp). Where a full A&C condition is not available, the aspect **may** instead be sourced from a plain Variable that exposes the aspect value (a Boolean active-state or numeric severity); the binding semantics are identical and the connector treats it as any monitored source. Quality/`BadQualityAction` apply as for telemetry; a returned-to-normal condition clears or resets the target per `BadQualityAction`.
-- **`OpenUsdHistoryBindingType`.** With `TimeSampled = true` the connector reads history (Part 11 `HistoryRead`) for the source and authors the values as **USD time samples** on the target attribute, giving the stage a scrubbable timeline for playback/replay. The source **shall** be historizing (its `AccessLevel`/`UserAccessLevel` grants `HistoryRead` and the server retains history); if it is not, the connector authors no samples and the binding is inert — a documented degrade, not an error. The epoch and `timeCodesPerSecond` mapping is declared by a recording profile; absent that, samples are authored on a connector-defined uniform timeline and are informative.
-
-### 5.12 Composition and aggregation bindings (normative, optional)
+### 7.10 OpenUsdComponentBindingType
 
 An asset is usually **composed of components** (a pump has an impeller and a bearing; a line aggregates pumps). A representation declares this with `OpenUsdComponentBindingType` instances carried as `<Component>` children of the representation (mirroring `<Binding>`), so a connector assembles the matching USD prim structure. Each component binding maps an OPC UA component relationship to a USD composition arc.
 
@@ -350,11 +390,11 @@ An asset is usually **composed of components** (a pump has an impeller and a bea
 | `TargetPrimPath` | String | M | For `One`, the child prim; for `Many`, the parent scope prim — relative to the parent representation `PrimPath` (or absolute). |
 | `TargetPrimNameSource` | String | O | For `Many`, how to name each instance prim: `BrowseName` (default), a source-property RelativePath (e.g. an asset id), or a `{...}` template. |
 | `ComponentAssetReference` | String | O | For `Reference`/`Payload`/`Instance`: the external USD asset + default prim, e.g. `@pump.usda@</Pump>`. |
-| `ComponentAssetNode` | NodeId | O | NodeId of the `OpenUsdAssetType` that serves `ComponentAssetReference` through the stage's `Assets` folder (§5.15). |
+| `ComponentAssetNode` | NodeId | O | NodeId of the `OpenUsdAssetType` that serves `ComponentAssetReference` through the stage's `Assets` folder (§7.11). |
 | `ComponentRepresentation` | NodeId | O | NodeId of the component's own `OpenUsdRepresentation` AddIn, when it publishes one (its sub-bindings compose under the component prim). |
-| `Dynamic` | Boolean | O | The component set may change at runtime (§5.13); default `false`. |
+| `Dynamic` | Boolean | O | The component set may change at runtime (§7.10.1); default `false`. |
 | `ChangeEventSource` | NodeId | O | Node whose model-change events signal recomposition; default the Server Object (`i=2253`). |
-| `ComponentServerUri` | String | O | For a component on another server (§5.14): the remote Server's application/namespace URI. |
+| `ComponentServerUri` | String | O | For a component on another server (§7.10.2): the remote Server's application/namespace URI. |
 | `ComponentEndpointUrl` | String | O | For a component on another server: the remote endpoint URL (else discovered from `ComponentServerUri`). |
 | `State` | OpenUsdBindingStateEnum | O | Runtime lifecycle state (diagnostic). |
 | `LastError` | LocalizedText | O | Last operation error (diagnostic). |
@@ -364,38 +404,38 @@ An asset is usually **composed of components** (a pump has an impeller and a bea
 - `One` — resolve `ComponentBrowsePath` (constrained by `ComponentReferenceType` / `ComponentTypeDefinition`) to exactly one component Object; zero → *unresolved*; more than one → `Bad_TooManyMatches`. When `ComponentRepresentation` is present it names the component's representation directly, giving unambiguous 1:1 targeting without a browse.
 - `Many` — enumerate every component Object reached by `ComponentReferenceType` from the container that matches `ComponentTypeDefinition`; each yields one instance prim under the `TargetPrimPath` scope, named per `TargetPrimNameSource`.
 
-A connector reaches the represented Object of a representation by following the **aggregating** reference (`HasComponent`/`HasAddIn`), **not** any hierarchical reference — otherwise the `Organizes` link from the discovery registry (§4.2) would be mistaken for the parent. A connector **shall** also process **every** representation in the registry, since composition spans the aggregating representation and each component's own representation.
+A connector reaches the represented Object of a representation by following the **aggregating** reference (`HasComponent`/`HasAddIn`), **not** any hierarchical reference — otherwise the `Organizes` link from the discovery registry (§6.2) would be mistaken for the parent. A connector **shall** also process **every** representation in the registry, since composition spans the aggregating representation and each component's own representation.
 
 **USD arc.** `Child` authors an inline nested prim under the parent prim. `Reference` / `Payload` author a prim that `references` / `payload`s `ComponentAssetReference` (the component's own asset; `Payload` defers loading). `Instance` is a `Reference` authored `instanceable = true`, for efficient identical 1..n aggregation. A component's own live bindings (from its `ComponentRepresentation`) then drive attributes within the composed sub-tree.
 
 **Nesting.** Composition is recursive: a component's representation may itself carry `<Component>` bindings; a connector assembles the whole tree depth-first. The effective identity of each node remains `(represented Object, BindingDefinitionId)`.
 
-### 5.13 Dynamic composition (normative, optional)
+#### 7.10.1 Dynamic composition
 
 When `Dynamic = true`, the component set may change while the server runs. A conforming server that supports dynamic composition **shall** emit standard model-change events — `GeneralModelChangeEventType` (Part 3) for node/reference additions and deletions, and `SemanticChangeEventType` where a change alters meaning (e.g. a component's semantic id) — from `ChangeEventSource` (or the Server Object). Both derive from `BaseModelChangeEventType`, so a connector can subscribe to both with a single `OfType(BaseModelChangeEventType)` event filter.
 
-A connector supporting dynamic composition **shall** subscribe to those events for `ChangeEventSource`; on a relevant change it **shall** re-resolve the affected component binding (§5.12) and reconcile the USD prims it authored:
+A connector supporting dynamic composition **shall** subscribe to those events for `ChangeEventSource`; on a relevant change it **shall** re-resolve the affected component binding (§7.10) and reconcile the USD prims it authored:
 
 - a newly present component → author its instance prim (and recurse into its representation);
 - a removed component → author `active = false` on its instance prim (or remove the connector's own opinion).
 
 The connector **shall not** delete or deactivate prims it did not author, and **shall not** mutate the base asset — reconciliation happens only in the connector's live override layer. Recomposition is **fail-safe**: on any doubt (event gap, ambiguous resolution) the connector re-runs full discovery rather than applying a partial delta.
 
-### 5.14 Cross-server composition (normative, optional)
+#### 7.10.2 Cross-server composition
 
 A component may live on a **different OPC UA server** — e.g. an OEM sub-asset with its own server and USD asset. When `ComponentServerUri` (and optionally `ComponentEndpointUrl`) is present, the component binding is resolved by **federation**: the connector opens a session to the remote server, discovers the remote `OpenUsdRepresentation` for the component (via that server's `Server/OpenUSD/Representations`, matched by `ComponentTypeDefinition` / semantic id), and composes the component's sub-asset prim (typically a `Reference` / `Payload` to the OEM asset) under the parent prim. The remote representation's own bindings are driven from the remote session.
 
-Security (§9) applies per session: the connector **shall** establish an authenticated, integrity-protected channel to each server and honor each server's trust and authorization independently. Cross-server dynamic composition uses the remote server's model-change events on its own `ChangeEventSource`.
+Security (§11) applies per session: the connector **shall** establish an authenticated, integrity-protected channel to each server and honor each server's trust and authorization independently. Cross-server dynamic composition uses the remote server's model-change events on its own `ChangeEventSource`.
 
-### 5.15 Asset content delivery — the artifact registry (normative, optional)
+### 7.11 OpenUsdArtifactRegistryType
 
 A server may optionally serve the artist-authored USD content needed to open a stage directly through the OPC UA address space. The facility is an **xRegistry artifact registry**: the optional `OpenUsdRootType.Artifacts` component, an `OpenUsdArtifactRegistryType` (an xRegistry `RegistryType`, itself a `FolderType`). A server that does not expose `Artifacts` remains conformant; connectors then resolve `RootLayerIdentifier` and `ComponentAssetReference` externally.
 
-Why a registry rather than a folder: a per-stage folder of files cannot express **versions**, **change detection**, **labels** or **federation**, and it duplicates an artifact that several stages share. A registry gives all four, and — because its identifiers are USD asset identifiers (§5.15.3) — makes the server usable as a USD resolver backend rather than only as a download endpoint.
+Why a registry rather than a folder: a per-stage folder of files cannot express **versions**, **change detection**, **labels** or **federation**, and it duplicates an artifact that several stages share. A registry gives all four, and — because its identifiers are USD asset identifiers (§7.11.3) — makes the server usable as a USD resolver backend rather than only as a download endpoint.
 
-The same registry is defined independently of OPC UA, as an xRegistry **domain specification**, in [*OpenUSD Artifact Registry Service*](xRegistry-OpenUsd.md) (with its model in [`xRegistry-OpenUsd.model.json`](xRegistry-OpenUsd.model.json)). That document is the wire-format peer of this clause: it uses the same collection names (`usdassetgroups`, `usdschemaplugingroups`, `usdassets`), the same domain attributes, and the identifier rules of §5.15.3, so a client may move between an OPC UA server and a plain HTTP xRegistry server — or federate across both — without re-resolving anything. Implementing this clause does **not** require implementing that one; they are two projections of one model.
+The same registry is defined independently of OPC UA, as an xRegistry **domain specification**, in [*OpenUSD Artifact Registry Service*](xRegistry-OpenUsd.md) (with its model in [`xRegistry-OpenUsd.model.json`](xRegistry-OpenUsd.model.json)). That document is the wire-format peer of this clause: it uses the same collection names (`usdassetgroups`, `usdschemaplugingroups`, `usdassets`), the same domain attributes, and the identifier rules of §7.11.3, so a client may move between an OPC UA server and a plain HTTP xRegistry server — or federate across both — without re-resolving anything. Implementing this clause does **not** require implementing that one; they are two projections of one model.
 
-#### 5.15.1 Structure
+#### 7.11.1 Structure
 
 ```text
 Server/OpenUSD/Artifacts                 OpenUsdArtifactRegistryType : RegistryType
@@ -407,7 +447,7 @@ Server/OpenUSD/Artifacts                 OpenUsdArtifactRegistryType : RegistryT
         └─ generatedSchema.usda          OpenUsdAssetType (AssetKind = GeneratedSchema)
 ```
 
-A group is one **asset container** — a named, versioned USD asset in the AOUSD sense: its root layer together with the sublayers, references, payloads, textures, MaterialX documents and volumes it needs. `OpenUsdAssetGroupType.AssetContainerId` **is the group key**: its value is identical to the inherited `GroupId` and to the group's BrowseName (for example `pumps`). It is *not* an asset-identifier prefix — member `AssetIdentifier`s are already normalized relative to the container (§5.15.3).
+A group is one **asset container** — a named, versioned USD asset in the AOUSD sense: its root layer together with the sublayers, references, payloads, textures, MaterialX documents and volumes it needs. `OpenUsdAssetGroupType.AssetContainerId` **is the group key**: its value is identical to the inherited `GroupId` and to the group's BrowseName (for example `pumps`). It is *not* an asset-identifier prefix — member `AssetIdentifier`s are already normalized relative to the container (§7.11.3).
 
 Following xRegistry §6.1, the domain types constrain the inherited placeholders: `OpenUsdArtifactRegistryType` narrows `<Group>` to `<AssetContainer>` (`OpenUsdAssetGroupType`) and `<SchemaPlugin>` (`OpenUsdSchemaPluginGroupType`), and both group types narrow `<Resource>` to `OpenUsdAssetType`. A registry therefore holds only these two kinds of group, and a client can tell them apart by TypeDefinition rather than by convention.
 
@@ -419,18 +459,18 @@ Following xRegistry §6.1, the domain types constrain the inherited placeholders
 
 | Member | DataType / Type | Rule | Meaning |
 |---|---|---:|---|
-| `AssetIdentifier` | String | M | The authored USD asset identifier, normalized relative to its asset container — the string used in USD `@...@` references, and the relative path a connector caches the artifact at. The xRegistry `ResourceId` is its URL-safe encoding, so the two are inter-derivable (§5.15.3). |
+| `AssetIdentifier` | String | M | The authored USD asset identifier, normalized relative to its asset container — the string used in USD `@...@` references, and the relative path a connector caches the artifact at. The xRegistry `ResourceId` is its URL-safe encoding, so the two are inter-derivable (§7.11.3). |
 | `AssetKind` | `OpenUsdAssetKindEnum` | M | `RootLayer`, `SubLayer`, `Reference`, `Payload`, `Texture`, `Package`, `MaterialX`, `Volume`, `SchemaPlugin`, `GeneratedSchema`, or `Manifest`. |
 | `MediaType` | String | O | The USD media type of the artifact, e.g. `model/vnd.usda`, `model/vnd.usdz+zip`, `image/png`. This restates the inherited `ContentType`; when both are present they **shall** be identical, and `ContentType` is authoritative if a server violates that. |
 | `Digest` | ByteString | O | Digest of the exact bytes streamed by this node's `FileType` interface; required for the `OU-AssetDelivery` conformance unit. |
 | `DigestAlgorithm` | `OpenUsdDigestAlgorithmEnum` | O | Algorithm for `Digest`; required with `Digest` and defaulting by convention to `Sha256`. |
 | `DependsOn` | String[] | O | Ordered **asset identifiers** this artifact directly references, as authored — not `Xid`s, so a resolver matches them against `@...@` references directly. Makes the dependency closure explicit and queryable rather than only procedural. |
 
-#### 5.15.2 The stage view and the delivery contract
+#### 7.11.2 The stage view and the delivery contract
 
 `OpenUsdStageType.Assets` is a **view**: a Folder that `Organizes` the registry artifacts making up that stage's closure. `Organizes` does not imply ownership, so an artifact shared by several stages exists **once** in the registry and is organized by each stage that needs it. A server that exposes `Artifacts` **shall not** duplicate artifact nodes under `Assets`.
 
-The view is equally indifferent to *where the bytes live*. An artifact the registry **federates** rather than hosts — one carrying `ResourceUrl` and/or `ExternalReference` instead of content (§5.15.3) — is organized under `Assets` exactly like one the server stores, so a stage's closure may span registries without the stage view changing shape. A connector resolves each organized artifact by the same rule regardless, following the federation links when they are present.
+The view is equally indifferent to *where the bytes live*. An artifact the registry **federates** rather than hosts — one carrying `ResourceUrl` and/or `ExternalReference` instead of content (§7.11.3) — is organized under `Assets` exactly like one the server stores, so a stage's closure may span registries without the stage view changing shape. A connector resolves each organized artifact by the same rule regardless, following the federation links when they are present.
 
 Because the view does not own its targets, deletion is asymmetric and is fixed here: the inherited `GroupType.Delete` deletes the group together with the resources it contains, so a server **shall** remove the corresponding `Organizes` references from every stage's `Assets` view in the same operation — a stage **shall not** be left with dangling references into a deleted group. Conversely, removing an artifact from a stage's `Assets` view **shall not** delete the artifact from the registry. A server **should** refuse to delete a group whose artifacts are still organized by a stage it is currently serving.
 
@@ -450,7 +490,7 @@ All served artifact streams are read-only: a connector **shall not** require wri
 
 The facility remains additive. If `Artifacts` is absent, incomplete, unauthorized, or fails digest verification, a connector may fall back to its configured external resolver only when operator policy permits; it **shall not** silently mix unverified delivered bytes into the stage.
 
-#### 5.15.3 Resolver identity — the registry is addressable by asset identifier (normative)
+#### 7.11.3 Resolver identity
 
 xRegistry defines `Xid` as the **stable path of an entity within its registry, independent of the hosting endpoint** (`/<groups>/<groupId>/<resources>/<resourceId>`), and requires each entity's identifier to be a **URL-safe token**. A USD **asset identifier** is the stable, location-independent name an authored layer uses in an `@...@` reference, which a USD `ArResolver` maps to a **resolved path**. The two express the same idea but are *not* the same grammar: `@./live.usda@` is not a valid `Xid`, and an `Xid` is not what a layer authors.
 
@@ -471,39 +511,144 @@ Both directions are therefore closed-form, with no lookup table:
 
 A client selects a non-default version explicitly through the xRegistry API (`VersionId`); the authored layer never names one, because a layer that pinned a version would defeat the registry's ability to serve a corrected artifact.
 
-**Presence requirements.** `Xid`, `Epoch` and `Digest` are Optional on the base `ResourceType`, which would make this clause and the staleness rule of §5.15.2 untestable. A server claiming `OU-ArtifactRegistry` **shall** therefore expose `Xid`, `Epoch`, `Digest` and `DigestAlgorithm` on every artifact it hosts. (An artifact it merely federates carries the federation links instead of bytes, and consequently no `Digest`.)
+**Presence requirements.** `Xid`, `Epoch` and `Digest` are Optional on the base `ResourceType`, which would make this clause and the staleness rule of §7.11.2 untestable. A server claiming `OU-ArtifactRegistry` **shall** therefore expose `Xid`, `Epoch`, `Digest` and `DigestAlgorithm` on every artifact it hosts. (An artifact it merely federates carries the federation links instead of bytes, and consequently no `Digest`.)
 
 The consequence is that a server exposing `Artifacts` **is** an addressable resolver backend: a USD-side resolver plugin holding a container context resolves an authored `@...@` reference to an artifact node by computation alone, and reads its bytes with `Open`/`Read`/`Close`. Three corollaries:
 
-- **Cache placement.** A connector caches each artifact at the relative path given by `AssetIdentifier` (§5.15.2 step 4), so authored relative references such as `@./live.usda@` resolve locally. `Xid` governs the *registry* layout, `AssetIdentifier` the *asset* layout; conflating them would break relative resolution.
+- **Cache placement.** A connector caches each artifact at the relative path given by `AssetIdentifier` (§7.11.2 step 4), so authored relative references such as `@./live.usda@` resolve locally. `Xid` governs the *registry* layout, `AssetIdentifier` the *asset* layout; conflating them would break relative resolution.
 - **`DependsOn` carries asset identifiers, not `Xid`s**, for the same reason: it records what the layer authored, so a resolver can match it directly against an `@...@` reference.
 - **Federation is the resolver fallback chain.** An artifact this registry knows about but does not host carries the xRegistry federation links `ResourceUrl` and/or `ExternalReference` (an `ExpandedNodeId`) instead of bytes. A resolver follows them exactly as it would consult the next resolver in its chain, so a plant-level registry can delegate to a vendor's without copying content.
-- **Package-relative paths.** A package-relative identifier such as `pkg.usdz[textures/albedo.png]` is an `AssetIdentifier` like any other and encodes into a single `ResourceId` within the containing package's group. A server may serve the whole `Package` artifact, its members individually, or both. To keep the closure rule of §5.15.2 decidable:
+- **Package-relative paths.** A package-relative identifier such as `pkg.usdz[textures/albedo.png]` is an `AssetIdentifier` like any other and encodes into a single `ResourceId` within the containing package's group. A server may serve the whole `Package` artifact, its members individually, or both. To keep the closure rule of §7.11.2 decidable:
   - The **package is canonical**. Serving the `Package` artifact alone satisfies the closure for everything it contains; a connector **shall not** treat a package member that is absent as a missing entry, because it can extract it.
   - Individually served members are an **optimization**, letting a connector fetch one texture without the whole package. When a server serves both, a member's `Digest` is over the extracted member bytes, not the package, and the member's bytes **shall not** count a second time towards any `Size` the server reports for the package.
   - A member served *without* its package is a normal artifact and is subject to the ordinary closure rule.
 
-#### 5.15.4 Serving codeless schemas (normative, optional)
+### 7.12 OpenUsdAssetGroupType
 
-Part 2 §8 lets a vendor introduce new typed prims by subtyping `UsdTypedType` in OPC UA. A USD-side client has no way to interpret those prims unless it also has the corresponding **USD** schema. OpenUSD solves this with **codeless schemas**, which require exactly two files — a `plugInfo.json` manifest and a `generatedSchema.usda` — discovered through `PlugRegistry` and registered by `UsdSchemaRegistry` without any compiled code.
+### 7.13 OpenUsdSchemaPluginGroupType
+
+Part 2 §6.7 lets a vendor introduce new typed prims by subtyping `UsdTypedType` in OPC UA. A USD-side client has no way to interpret those prims unless it also has the corresponding **USD** schema. OpenUSD solves this with **codeless schemas**, which require exactly two files — a `plugInfo.json` manifest and a `generatedSchema.usda` — discovered through `PlugRegistry` and registered by `UsdSchemaRegistry` without any compiled code.
 
 A server that materializes vendor prim types **should** therefore serve the matching codeless schema as an `OpenUsdSchemaPluginGroupType` group whose `PluginName` is the plugin name from the manifest (`Plugins[].Name`), containing one `SchemaPlugin` artifact (the `plugInfo.json`) and one `GeneratedSchema` artifact (the `generatedSchema.usda`). A server claiming `OU-SchemaPluginDelivery` **shall** serve exactly that pair for every vendor prim type it materializes, so the capability is testable rather than advisory.
 
-This closes the loop between the two type systems: a client fetches the plugin from the same registry it fetches layers from, registers it, and can then read a Part 2 materialized scene — or a Part 1 bound external stage — with the vendor's prim types fully understood rather than degraded to the §8.4 fallback.
+This closes the loop between the two type systems: a client fetches the plugin from the same registry it fetches layers from, registers it, and can then read a Part 2 materialized scene — or a Part 1 bound external stage — with the vendor's prim types fully understood rather than degraded to the Part 2 unknown-type fallback.
+
+### 7.14 OpenUsdAssetType
 
 ---
 
-## 6 Using the model (informative)
+## 8 OPC UA DataTypes
+
+- `OpenUsdRenderTargetKindEnum` — `Translation(0) Rotation(1) Scale(2) Transform(3) Visibility(4) DisplayColor(5) EmissiveColor(6) Opacity(7) Custom(8) Georeference(9)` (`Georeference` = a geodetic anchor coordinate target — latitude/longitude/height; see §7.4.2 and Annex F).
+- `OpenUsdBadQualityActionEnum` — `Skip(0) HoldLast(1) ClearOpinion(2) Fallback(3)`.
+- `OpenUsdBindingStateEnum` — `Disabled(0) Unresolved(1) Ready(2) Active(3) Degraded(4) Error(5)`.
+- `OpenUsdSignalRoleEnum` — `Observable(0) Controllable(1)`.
+- `OpenUsdAlarmAspectEnum` — `ActiveState(0) Severity(1) AckedState(2) EnabledState(3)`.
+- `OpenUsdDigestAlgorithmEnum` — `None(0) Sha256(1) Sha384(2) Sha512(3)` (SHA-256/384/512).
+- `OpenUsdAssetKindEnum` — `RootLayer(0) SubLayer(1) Reference(2) Payload(3) Texture(4) Package(5)` for served asset content (§7.11).
+- `OpenUsdCardinalityEnum` — `One(0) Many(1)` (a component binding is 1:1 or 1..n).
+- `OpenUsdCompositionArcEnum` — `Child(0) Reference(1) Payload(2) Instance(3)` (USD composition arc for the component prim; `Instance` = an instanceable reference for efficient 1..n aggregation).
+
+---
+
+## 9 Profiles and conformance units
+
+Conformance Units (each a normative, testable requirement):
+
+- **OU-Namespace** — declares the OpenUSD namespace and RequiredModel.
+- **OU-Discovery** — exposes the mandatory `Server/OpenUSD` root with `Stages` and `Representations`.
+- **OU-Stage** — `OpenUsdStageType` with a valid `RootLayerIdentifier`.
+- **OU-Representation** — a valid `OpenUsdRepresentation` AddIn (Stage NodeId resolves; canonical absolute `PrimPath`).
+- **OU-RepresentationRegistry** — every representation is Organized from `Representations`.
+- **OU-Binding** — a concrete `OpenUsdLiveBindingType` subtype (the baseline `OpenUsdValueChangeBindingType`) with a resolvable source and target and a stable `BindingDefinitionId`.
+- **OU-Conversion-Scalar** — scalar unit/scale/offset conversion.
+- **OU-Conversion-Transform** — RSL transform profile (angles, units, up-axis).
+- **OU-Conversion-Geo** — geospatial/georeference target conversion: a binding whose `RenderTargetKind = Georeference` maps an OPC UA/GPOS `GlobalPosition` (latitude/longitude/elevation, EPSG CRS) to a USD georeference-origin or globe-anchor coordinate per §7.4.2 and Annex F.
+- **OU-Quality** — Good-default handling and `BadQualityAction`.
+- **OU-Diagnostics** — `State` / `LastError` populated at runtime.
+- **OU-SemanticSource** — a binding whose source resolves via `SourceSemanticId` (ECLASS / IEC CDD).
+- **OU-Alarm** — an `OpenUsdAlarmBindingType` binding driving a target from an A&C condition aspect.
+- **OU-History** — an `OpenUsdHistoryBindingType` binding authoring USD time samples from `HistoryRead`.
+- **OU-Command** — an opt-in, authorized, single-writer `OpenUsdCommandBindingType` binding (Controllable role; fail-closed).
+- **OU-Integrity** — `OpenUsdStageType` with a verified `RootLayerDigest`.
+- **OU-Composition** — an `OpenUsdComponentBindingType` composing a component Object into the parent prim (`One` and `Many`, with a valid `CompositionArc`).
+- **OU-DynamicComposition** — a `Dynamic` component binding reconciled on `GeneralModelChangeEventType` / `SemanticChangeEventType`.
+- **OU-CrossServerComposition** — a component binding resolved by federation to `ComponentServerUri` / `ComponentEndpointUrl`.
+- **OU-AssetDelivery** — a server serves the stage's complete USD asset closure as `OpenUsdAssetType` nodes with read-only Part 5 `FileType` streams and per-layer digests; a connector fetches, verifies, caches by `AssetIdentifier`, and composes a self-contained local stage.
+- **OU-ArtifactRegistry** — the served artifacts are exposed as the xRegistry artifact registry of §7.11: an `OpenUsdArtifactRegistryType` at `Server/OpenUSD/Artifacts`, artifacts grouped per asset container, each artifact's `ResourceId` the URL-safe encoding of its `AssetIdentifier` so the two are inter-derivable (§7.11.3), and a stage's `Assets` folder Organizing (not duplicating) them. Implies OU-AssetDelivery.
+- **OU-ArtifactFederation** — the registry resolves artifacts it does not host through the xRegistry federation links (`ResourceUrl` / `ExternalReference`), so a connector follows the chain to another registry (§7.11.3). Requires OU-ArtifactRegistry.
+- **OU-SchemaPluginDelivery** — the registry serves codeless USD schemas as `OpenUsdSchemaPluginGroupType` groups (a `plugInfo.json` plus a `generatedSchema.usda`), so a USD client can register a vendor schema and interpret vendor prim types rather than degrading them (§7.13). Requires OU-ArtifactRegistry.
+
+Profiles:
+
+- **OpenUSD Representation Server** — OU-Namespace, OU-Discovery, OU-Stage, OU-Representation, OU-RepresentationRegistry.
+- **OpenUSD Live Rendering Server** — the Representation profile + OU-Binding, OU-Conversion-Scalar, OU-Quality (OU-Conversion-Transform, OU-Conversion-Geo, OU-SemanticSource, OU-Integrity, and OU-Diagnostics optional).
+- **OpenUSD Interactive Server** — the Live Rendering profile + OU-Command (and typically OU-Alarm); adds the authorized, opt-in control path for agent/operator interaction. OU-History is optional.
+- **OpenUSD Composite Server** — the Live Rendering profile + OU-Composition (OU-DynamicComposition, OU-CrossServerComposition, OU-AssetDelivery, OU-ArtifactRegistry, OU-ArtifactFederation and OU-SchemaPluginDelivery optional); exposes the asset's component structure as composed USD prims.
+- **OpenUSD Artifact Server** — OU-Namespace, OU-Discovery, OU-Stage + OU-AssetDelivery and OU-ArtifactRegistry (OU-ArtifactFederation and OU-SchemaPluginDelivery optional). A server whose purpose is to *deliver* USD content: it hosts the artifact registry and is addressable as a USD resolver backend (§7.11.3), with or without live bindings.
+
+Each CU requires a conformance test (Browse the node, Read the properties, and — for bindings — resolve source/target and observe a converted value or, for OU-Command, an authorized write/`Call`; for OU-AssetDelivery, stream at least the root and one dependent asset, verify their digests, and open the cached composed stage; for OU-ArtifactRegistry, additionally confirm that each artifact's `ResourceId` percent-decodes to its `AssetIdentifier`, that `DependsOn` entries resolve to artifacts by asset identifier, and that a stage's `Assets` folder Organizes rather than duplicates the registry artifacts). See the Pumps addendum for a worked, testable instance.
+
+---
+
+## 10 Namespaces
+
+### 10.1 Namespace metadata
+
+The namespace metadata provide standardized information about the elements of this namespace, which an aggregating Server relies on. All Nodes defined by this document are static.
+
+| Property | DataType | Value |
+|---|---|---|
+| NamespaceUri | String | `http://opcfoundation.org/UA/OpenUSD/` |
+| NamespaceVersion | String | 0.5.0 |
+| NamespacePublicationDate | DateTime | 2026-07-29 |
+| IsNamespaceSubset | Boolean | False |
+| StaticNodeIdTypes | IdType[] | 0 (Numeric) |
+| StaticNumericNodeIdRange | NumericRange[] | 1001:9999 |
+| StaticStringNodeIdPattern | String | -- |
+
+### 10.2 Handling of OPC UA namespaces
+
+Namespaces are used by OPC UA to create unique identifiers across different naming authorities. The following namespaces are used for BrowseNames in this document; the default namespace is not listed, because every BrowseName without a prefix uses it.
+
+| NamespaceURI | Namespace index | Example |
+|---|---|---|
+| `http://opcfoundation.org/UA/` | 0 | `0:EngineeringUnits` |
+| `http://opcfoundation.org/UA/xRegistry/` | 1 | `1:ResourceType` |
+
+---
+
+## 11 Security
+
+- **Endpoint.** A connector **shall** use an authenticated, integrity-protected endpoint; the represented model itself carries no secrets. Server certificate trust is required.
+- **Authorization.** Read access to the representation/binding nodes and to the source Variables is governed by normal OPC UA `RolePermissions`/`AccessRestrictions`. Telemetry, alarm, and history bindings are read-only over process data and require no write authority. **Command bindings** (§7.8) require explicit write/`Call` authorization on the target Variable/Method, are disabled by default, and are subject to a single-writer discipline; a connector **shall** obtain and check the required Role before issuing any command.
+- **Resolver safety & content integrity.** `RootLayerIdentifier`/`ResolvedRootLayerUri` are server-provided and could point a connector at an arbitrary asset location (an SSRF-class risk). A connector **shall** apply a scheme/root **allowlist** and a trusted resolver-context policy, and **shall** impose resource limits on stage open/asset resolution. When `RootLayerDigest` is present, the connector **shall** verify the resolved layer against it before composing the stage and **shall** refuse a mismatch; when `Signature`/`ProvenanceUri` are present, provenance **should** be verified against a trusted policy (the Twin BOM anchor, §C.2).
+- **Served asset safety.** Asset delivery reads require the same authenticated and authorized OPC UA Session as the representation model; a server **shall** enforce `RolePermissions`/`AccessRestrictions` on `Assets` and the asset `FileType` nodes, bound total served size, and bound concurrent file handles per session. A connector **shall** treat every served `AssetIdentifier` as untrusted input: reject absolute paths, drive-qualified paths, parent traversal, empty segments, and platform-reserved names before writing to a local cache, and write only under a connector-controlled cache root.
+- **Writer ownership.** When authoring into a shared USD/Nucleus layer, a **single-writer** discipline is required; no secrets (keys, tokens, Nucleus/broker credentials) are stored in the NodeSet or in USD metadata.
+
+---
+
+## Annex A (normative) — OpenUSD namespace and mappings
+
+The OpenUSD Information Model is identified by the NamespaceUri `http://opcfoundation.org/UA/OpenUSD/`. Its NodeSet is `Opc.Ua.OpenUsd.NodeSet2.xml` and the NodeId assignments are `Opc.Ua.OpenUsd.NodeIds.csv`, both published beside this document.
+
+The full generated node table — NodeId, BrowseName, NodeClass and description for every Node in this namespace — is reproduced in the Word rendering of this document and is generated from the NodeSet by `build_model.py`.
+
+A ServerCapabilityIdentifier (OPC 10000-12) of `OUSD` is proposed for discovery.
+
+---
+
+## Annex B (informative) — Using the model
 
 A minimal connector:
 
 1. Connect and create a Session; Browse `Server/OpenUSD/Representations`.
 2. For each representation: read `Stage` → `OpenUsdStageType` (root/session/resolver context) and `PrimPath`; open (or attach to) the stage.
-3. Browse the representation's `<Binding>` children; for each enabled binding, resolve source and target (§5.7) and build the conversion (§5.8).
-4. Browse the representation's `<Component>` children; for each enabled component binding, resolve the component Object(s) and author the composed prim(s) per `CompositionArc` (§5.12) — enumerating for `Many`, recursing into each component's `ComponentRepresentation`, and federating to `ComponentServerUri` when the component is remote (§5.14).
+3. Browse the representation's `<Binding>` children; for each enabled binding, resolve source and target (§7.4.1) and build the conversion (§7.4.2).
+4. Browse the representation's `<Component>` children; for each enabled component binding, resolve the component Object(s) and author the composed prim(s) per `CompositionArc` (§7.10) — enumerating for `Many`, recursing into each component's `ComponentRepresentation`, and federating to `ComponentServerUri` when the component is remote (§7.10.2).
 5. Create a Subscription and MonitoredItems for the resolved sources.
 6. On each DataChange, apply quality/conversion and write the target USD attribute (frame-coalesced; see Part 3).
-7. If any component binding is `Dynamic`, subscribe to `GeneralModelChangeEventType` + `SemanticChangeEventType` on the relevant `ChangeEventSource` and reconcile the composed prims on change (§5.13).
+7. If any component binding is `Dynamic`, subscribe to `GeneralModelChangeEventType` + `SemanticChangeEventType` on the relevant `ChangeEventSource` and reconcile the composed prims on change (§7.10.1).
 
 ```mermaid
 sequenceDiagram
@@ -523,47 +668,7 @@ sequenceDiagram
 
 ---
 
-## 7 Profiles and Conformance Units
-
-Conformance Units (each a normative, testable requirement):
-
-- **OU-Namespace** — declares the OpenUSD namespace and RequiredModel.
-- **OU-Discovery** — exposes the mandatory `Server/OpenUSD` root with `Stages` and `Representations`.
-- **OU-Stage** — `OpenUsdStageType` with a valid `RootLayerIdentifier`.
-- **OU-Representation** — a valid `OpenUsdRepresentation` AddIn (Stage NodeId resolves; canonical absolute `PrimPath`).
-- **OU-RepresentationRegistry** — every representation is Organized from `Representations`.
-- **OU-Binding** — a concrete `OpenUsdLiveBindingType` subtype (the baseline `OpenUsdValueChangeBindingType`) with a resolvable source and target and a stable `BindingDefinitionId`.
-- **OU-Conversion-Scalar** — scalar unit/scale/offset conversion.
-- **OU-Conversion-Transform** — RSL transform profile (angles, units, up-axis).
-- **OU-Conversion-Geo** — geospatial/georeference target conversion: a binding whose `RenderTargetKind = Georeference` maps an OPC UA/GPOS `GlobalPosition` (latitude/longitude/elevation, EPSG CRS) to a USD georeference-origin or globe-anchor coordinate per §5.8 and Annex D.
-- **OU-Quality** — Good-default handling and `BadQualityAction`.
-- **OU-Diagnostics** — `State` / `LastError` populated at runtime.
-- **OU-SemanticSource** — a binding whose source resolves via `SourceSemanticId` (ECLASS / IEC CDD).
-- **OU-Alarm** — an `OpenUsdAlarmBindingType` binding driving a target from an A&C condition aspect.
-- **OU-History** — an `OpenUsdHistoryBindingType` binding authoring USD time samples from `HistoryRead`.
-- **OU-Command** — an opt-in, authorized, single-writer `OpenUsdCommandBindingType` binding (Controllable role; fail-closed).
-- **OU-Integrity** — `OpenUsdStageType` with a verified `RootLayerDigest`.
-- **OU-Composition** — an `OpenUsdComponentBindingType` composing a component Object into the parent prim (`One` and `Many`, with a valid `CompositionArc`).
-- **OU-DynamicComposition** — a `Dynamic` component binding reconciled on `GeneralModelChangeEventType` / `SemanticChangeEventType`.
-- **OU-CrossServerComposition** — a component binding resolved by federation to `ComponentServerUri` / `ComponentEndpointUrl`.
-- **OU-AssetDelivery** — a server serves the stage's complete USD asset closure as `OpenUsdAssetType` nodes with read-only Part 5 `FileType` streams and per-layer digests; a connector fetches, verifies, caches by `AssetIdentifier`, and composes a self-contained local stage.
-- **OU-ArtifactRegistry** — the served artifacts are exposed as the xRegistry artifact registry of §5.15: an `OpenUsdArtifactRegistryType` at `Server/OpenUSD/Artifacts`, artifacts grouped per asset container, each artifact's `ResourceId` the URL-safe encoding of its `AssetIdentifier` so the two are inter-derivable (§5.15.3), and a stage's `Assets` folder Organizing (not duplicating) them. Implies OU-AssetDelivery.
-- **OU-ArtifactFederation** — the registry resolves artifacts it does not host through the xRegistry federation links (`ResourceUrl` / `ExternalReference`), so a connector follows the chain to another registry (§5.15.3). Requires OU-ArtifactRegistry.
-- **OU-SchemaPluginDelivery** — the registry serves codeless USD schemas as `OpenUsdSchemaPluginGroupType` groups (a `plugInfo.json` plus a `generatedSchema.usda`), so a USD client can register a vendor schema and interpret vendor prim types rather than degrading them (§5.15.4). Requires OU-ArtifactRegistry.
-
-Profiles:
-
-- **OpenUSD Representation Server** — OU-Namespace, OU-Discovery, OU-Stage, OU-Representation, OU-RepresentationRegistry.
-- **OpenUSD Live Rendering Server** — the Representation profile + OU-Binding, OU-Conversion-Scalar, OU-Quality (OU-Conversion-Transform, OU-Conversion-Geo, OU-SemanticSource, OU-Integrity, and OU-Diagnostics optional).
-- **OpenUSD Interactive Server** — the Live Rendering profile + OU-Command (and typically OU-Alarm); adds the authorized, opt-in control path for agent/operator interaction. OU-History is optional.
-- **OpenUSD Composite Server** — the Live Rendering profile + OU-Composition (OU-DynamicComposition, OU-CrossServerComposition, OU-AssetDelivery, OU-ArtifactRegistry, OU-ArtifactFederation and OU-SchemaPluginDelivery optional); exposes the asset's component structure as composed USD prims.
-- **OpenUSD Artifact Server** — OU-Namespace, OU-Discovery, OU-Stage + OU-AssetDelivery and OU-ArtifactRegistry (OU-ArtifactFederation and OU-SchemaPluginDelivery optional). A server whose purpose is to *deliver* USD content: it hosts the artifact registry and is addressable as a USD resolver backend (§5.15.3), with or without live bindings.
-
-Each CU requires a conformance test (Browse the node, Read the properties, and — for bindings — resolve source/target and observe a converted value or, for OU-Command, an authorized write/`Call`; for OU-AssetDelivery, stream at least the root and one dependent asset, verify their digests, and open the cached composed stage; for OU-ArtifactRegistry, additionally confirm that each artifact's `ResourceId` percent-decodes to its `AssetIdentifier`, that `DependsOn` entries resolve to artifacts by asset identifier, and that a stage's `Assets` folder Organizes rather than duplicates the registry artifacts). See the Pumps addendum for a worked, testable instance.
-
----
-
-## 8 Interoperability — mapping to OpenUSD / Omniverse (informative)
+## Annex C (informative) — Interoperability with OpenUSD and Omniverse
 
 | OPC UA (this model) | OpenUSD |
 |---|---|
@@ -577,71 +682,31 @@ Each CU requires a conformance test (Browse the node, Read the properties, and �
 | transform profile (RSL 3D frame) | `xformOp:transform` (matrix4d) or decomposed translate + orient |
 | `OpenUsdComponentBindingType` (composition) | prim hierarchy: a `Child` nested prim, a `references`/`payload` to a sub-asset, or an `instanceable` reference (1..n) |
 
-### 8.1 Omniverse realization (informative, vendor-governed)
+### C.1 Omniverse realization
 
-In NVIDIA Omniverse a connector opens the stage on Nucleus, creates or joins a `.live` layer, and writes target attributes there (flushing with `omni.client.live_process()` on the main thread), or applies high-rate updates through a **runtime scene cache (USDRT)** and coalesces to the latest value **once per render frame** rather than persisting every sample. USD-side command intents (§5.10) map to an OmniGraph/Action Graph node that issues the authorized OPC UA write/`Method` call. These behaviors are a vendor profile and are not part of the portable model; the base model must not normatively require Kit, USDRT, Nucleus, `.live`, MDL, or PhysX.
+In NVIDIA Omniverse a connector opens the stage on Nucleus, creates or joins a `.live` layer, and writes target attributes there (flushing with `omni.client.live_process()` on the main thread), or applies high-rate updates through a **runtime scene cache (USDRT)** and coalesces to the latest value **once per render frame** rather than persisting every sample. USD-side command intents (§7.8) map to an OmniGraph/Action Graph node that issues the authorized OPC UA write/`Method` call. These behaviors are a vendor profile and are not part of the portable model; the base model must not normatively require Kit, USDRT, Nucleus, `.live`, MDL, or PhysX.
 
-### 8.2 Alignment with an asset-definition-centric strategy (informative)
+### C.2 Alignment with an asset-definition-centric strategy
 
 This model is the **visual-projection binding** of a broader "asset definition at the center" strategy, in which a single governed, standards-based asset definition drives multiple projections — meaning (ontology), appearance (this model → OpenUSD/Omniverse), place (geospatial, OPC UA Parts 210/211), and behavior (a declarative operating envelope). The design choices here serve that role:
 
 - **Declared, discoverable binding.** The signal → USD-prim binding lives in the OPC UA address space (browsable, versioned, discoverable), so visualization is a *projection* of the asset definition rather than a bespoke per-scene integration. This is exactly the "declared signal → USD-prim binding contract" the strategy needs on the spine.
-- **Semantic-id portability.** `SourceSemanticId` (ECLASS / IEC CDD) lets the same binding apply to assets from different vendors that share companion-spec types and semantic ids — the cross-vendor portability the strategy depends on — and is the natural bridge to an AAS submodel expression (Annex C).
+- **Semantic-id portability.** `SourceSemanticId` (ECLASS / IEC CDD) lets the same binding apply to assets from different vendors that share companion-spec types and semantic ids — the cross-vendor portability the strategy depends on — and is the natural bridge to an AAS submodel expression (Annex E).
 - **Signal role + command.** `SignalRole` mirrors the strategy's *observable vs controllable* signal tagging, and `OpenUsdCommandBindingType` provides the authorized, opt-in control path an agent needs to *act* on the plant (gated externally by the operating envelope).
 - **Twin BOM integrity.** `RootLayerDigest`/`Signature`/`ProvenanceUri` let the referenced USD asset be digest-pinned and verified, so the visual reference can be packaged into a signed *Twin BOM* alongside the definition, semantic ids, and provenance.
 - **Twin BOM payload delivery.** Optional `OpenUsdStageType.Assets` lets the machine ship the signed *Twin BOM* payload itself — root layer, component assets, packages, and textures — through OPC UA, enabling zero-setup remote rendering of the twin without a preconfigured external asset repository.
 - **Composition = the asset structure / BOM.** `OpenUsdComponentBindingType` projects the asset's *is-composed-of* structure (1:1 and 1..n, static or dynamic, even across vendor servers) onto the USD prim hierarchy, so the visual twin mirrors the same component breakdown the spine and the *Twin BOM* declare — assembled from referenced/instanced OEM sub-assets rather than re-modelled per scene.
-- **OpenUSD-native, not runtime-captive.** The normative model is AOUSD-native; Omniverse is an informative realization (§8.1), so the asset definition is not captive to one runtime.
+- **OpenUSD-native, not runtime-captive.** The normative model is AOUSD-native; Omniverse is an informative realization (§C.1), so the asset definition is not captive to one runtime.
 
 The intended standards path is a family of thin, composable binding contracts (this OpenUSD binding being one) advanced through the OPC Foundation and bridged to the AAS/IDTA on shared semantic ids, rather than a single monolithic profile.
 
 ---
 
-## 9 Security
-
-- **Endpoint.** A connector **shall** use an authenticated, integrity-protected endpoint; the represented model itself carries no secrets. Server certificate trust is required.
-- **Authorization.** Read access to the representation/binding nodes and to the source Variables is governed by normal OPC UA `RolePermissions`/`AccessRestrictions`. Telemetry, alarm, and history bindings are read-only over process data and require no write authority. **Command bindings** (§5.10) require explicit write/`Call` authorization on the target Variable/Method, are disabled by default, and are subject to a single-writer discipline; a connector **shall** obtain and check the required Role before issuing any command.
-- **Resolver safety & content integrity.** `RootLayerIdentifier`/`ResolvedRootLayerUri` are server-provided and could point a connector at an arbitrary asset location (an SSRF-class risk). A connector **shall** apply a scheme/root **allowlist** and a trusted resolver-context policy, and **shall** impose resource limits on stage open/asset resolution. When `RootLayerDigest` is present, the connector **shall** verify the resolved layer against it before composing the stage and **shall** refuse a mismatch; when `Signature`/`ProvenanceUri` are present, provenance **should** be verified against a trusted policy (the Twin BOM anchor, §8.2).
-- **Served asset safety.** Asset delivery reads require the same authenticated and authorized OPC UA Session as the representation model; a server **shall** enforce `RolePermissions`/`AccessRestrictions` on `Assets` and the asset `FileType` nodes, bound total served size, and bound concurrent file handles per session. A connector **shall** treat every served `AssetIdentifier` as untrusted input: reject absolute paths, drive-qualified paths, parent traversal, empty segments, and platform-reserved names before writing to a local cache, and write only under a connector-controlled cache root.
-- **Writer ownership.** When authoring into a shared USD/Nucleus layer, a **single-writer** discipline is required; no secrets (keys, tokens, Nucleus/broker credentials) are stored in the NodeSet or in USD metadata.
-
----
-
-## 10 Deliverables and reproducibility
-
-| Artifact | Path |
-|---|---|
-| This specification | `metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md` |
-| Base NodeSet | `metaverse-specs/openusd-binding/Opc.Ua.OpenUsd.NodeSet2.xml` |
-| NodeIds | `metaverse-specs/openusd-binding/Opc.Ua.OpenUsd.NodeIds.csv` |
-| Annex A (generated node table) | `metaverse-specs/extras/openusd-binding/tools/model-reference.md` |
-| Generator | `metaverse-specs/extras/openusd-binding/tools/build_model.py` |
-| Validator | `metaverse-specs/extras/openusd-binding/tools/validate_local.py` |
-| Pumps addendum (implementer Annex) | `metaverse-specs/openusd-binding/pumps/` |
-| Robotics addendum (implementer Annex) | `metaverse-specs/openusd-binding/robotics/` |
-
-The optional deliverables include semantic source, command, alarm/history, integrity, composition, cross-server composition, and asset delivery. Regenerate and validate:
-
-```powershell
-python metaverse-specs/extras/openusd-binding/tools/build_model.py
-python metaverse-specs/extras/openusd-binding/tools/validate_local.py
-```
-
-The NodeSet and NodeIds are generated and byte-deterministic; do not hand-edit them. The generated model passes the OPC UA modelling validator with 0 errors / 0 warnings.
-
----
-
-## Annex A — Information model (generated)
-
-See `metaverse-specs/extras/openusd-binding/tools/model-reference.md` for the full generated node table (BrowseName, NodeId, NodeClass, description for all nodes in this namespace).
-
----
-
-## Annex B — End-to-end collaboration flow (informative)
+## Annex D (informative) — End-to-end collaboration flow
 
 This annex walks a complete "live digital twin" scenario to show **who does what** and how the specification is the single contract that lets independent actors collaborate without private, point-to-point agreements. It is informative; nothing here adds normative requirements. The flow is generic; concrete pump and robotics passes are given at the end.
 
-### B.1 Actors and what each contributes
+### D.1 Actors and what each contributes
 
 | Actor | Provides | Leverages / consumes | Works at layer |
 |---|---|---|---|
@@ -656,7 +721,7 @@ This annex walks a complete "live digital twin" scenario to show **who does what
 
 The key property: each actor depends only on the **published contract** of the layer beneath it, never on another actor's internal choices. A connector vendor never learns "pump"; a machine OEM never learns which renderer will be used; an artist never learns which NodeIds carry the data.
 
-### B.2 The flow
+### D.2 The flow
 
 ```mermaid
 sequenceDiagram
@@ -682,14 +747,14 @@ sequenceDiagram
   VIZ->>VIZ: Render the live stage (RTX / Hydra)
 ```
 
-### B.3 Where the contract lives at each hand-off
+### D.3 Where the contract lives at each hand-off
 
 - **OEM → integrator:** the server's `Server/OpenUSD` graph *is* the interface. The integrator does not read OEM connector code; they browse the representation and bindings.
 - **Artist → OEM/integrator:** the USD **prim paths and attribute names** are the interface. As long as `PrimPath`, `TargetPrimPath`, and `TargetPropertyName` match the authored asset, either side can change independently.
 - **Connector vendor → everyone:** the connector consumes only this spec's model. The same binary serves a pump server, a robot server, and a line server.
 - **Integrator → visualization:** the composed stage plus the connector's live overrides are the interface; the operator swaps renderers freely.
 
-### B.4 Concrete pass — the pump example
+### D.4 Concrete pass: the pump example
 
 1. The **Pumps working group** publishes `PumpType` (OPC 40223). The **binding spec** (this document) publishes the representation/binding model.
 2. A **pump OEM** ships a server whose `Pump #1` carries an `OpenUsdRepresentation` (`PrimPath = /Plant/Pumps/P101`) and three bindings: `MassFlow → xformOp:rotateZ`, `BearingTemperature → primvars:displayColor`, `DifferentialPressure → emissive`.
@@ -700,7 +765,7 @@ sequenceDiagram
 
 A runnable realization of this pass (server, connector, base asset, and a step-by-step guide) is provided in `metaverse-specs/extras/openusd-binding/examples/pumps/` and the `PumpDeviceIntegrationServer` sample.
 
-### B.5 Concrete pass — the robotics example
+### D.5 Concrete pass: the robotics example
 
 1. The **Robotics working group** publishes the OPC 40010 `MotionDeviceSystem`, `MotionDevice`, and `Axis` model. The **binding spec** (this document) publishes the representation/binding model.
 2. A **robot-cell OEM** ships a server whose `RobotCell` carries an `OpenUsdRepresentation` (`PrimPath = /Cell`), component bindings for `MotionDevices` and `Axes`, and Axis bindings from `ActualPosition` to nested joint rotate ops.
@@ -713,7 +778,7 @@ A runnable realization of this pass (descriptor, USD assets, Python writer, fall
 
 ---
 
-## Annex C — Bridging to the Asset Administration Shell (informative)
+## Annex E (informative) — Bridging to the asset administration shell
 
 The wider asset-definition strategy is deliberately **plural**: the same enrichment should be expressible against either an OPC UA companion specification or an Asset Administration Shell (AAS, IEC 63278) submodel, reconciled through shared semantic ids (ECLASS / IEC CDD) rather than a single vendor schema. OPC 30270 already bridges OPC UA and AAS. This annex sketches how the OpenUSD binding maps to an AAS **submodel template** so a curator can carry it in an AASX package or a signed Twin BOM.
 
@@ -731,29 +796,29 @@ Because the **source is anchored on a semantic id**, a binding authored against 
 
 ---
 
-## Annex D — Geospatial rendering: mapping OPC UA spatial and geospatial data to NVIDIA Omniverse and Cesium (informative)
+## Annex F (informative) — Geospatial rendering
 
-This annex shows how a connector drives the **3D placement** — relative pose and absolute geolocation — of the prims it binds, using the OPC UA spatial companion specifications as the source of truth and the USD georeferencing schemas that exist today as the target. It complements the normative transform and geospatial rules of §5.8; the corresponding conformance unit is `OU-Conversion-Geo` (§7).
+This annex shows how a connector drives the **3D placement** — relative pose and absolute geolocation — of the prims it binds, using the OPC UA spatial companion specifications as the source of truth and the USD georeferencing schemas that exist today as the target. It complements the normative transform and geospatial rules of §7.4.2; the corresponding conformance unit is `OU-Conversion-Geo` (§9).
 
-### D.1 Why this is an annex (and not core USD)
+### F.1 Why this is an annex and not core USD
 
 OpenUSD's Core Specification defines no geodetic/geographic schema — there is no native latitude/longitude/CRS concept in USD. Georeferencing a stage is therefore done with **vendor/extension** schemas: NVIDIA's `omni.usd.schema.geospatial` and Cesium for Omniverse's `CesiumGeoreferencePrim` / `CesiumGlobeAnchorAPI`. The Alliance for OpenUSD (AOUSD) has an **in-progress geolocation proposal** ([AECO Interest Group → Geometry Working Group](https://aousd.org/news/alliance-for-openusd-announces-new-members-interest-groups-and-working-group-progress/), tracked in the [OpenUSD-proposals](https://github.com/PixarAnimationStudios/OpenUSD-proposals) repository) to add a native geospatial coordinate schema to USD, but as of this draft none is ratified. This mapping therefore targets the extension schemas that exist today and is expected to track a native AOUSD schema once it lands; the OPC UA side (RSL Part 210 relative pose, GPOS Part 211 global position) is already standardised and stable.
 
-### D.2 Relative pose (OPC 10000-210 RSL) → USD `xformOp` — fidelity reference
+### F.2 Relative pose to USD xformOp fidelity reference
 
-RSL conveys a 6-DoF pose as `CartesianFrameAngleOrientationType` = a `3DFrame` (a `3DCartesianCoordinates` X/Y/Z plus a `3DOrientation` roll/pitch/yaw). This table pins every conversion detail §5.8 references:
+RSL conveys a 6-DoF pose as `CartesianFrameAngleOrientationType` = a `3DFrame` (a `3DCartesianCoordinates` X/Y/Z plus a `3DOrientation` roll/pitch/yaw). This table pins every conversion detail §7.4.2 references:
 
 | RSL / OPC UA | USD target | Rule |
 |---|---|---|
-| `3DCartesianCoordinates` X/Y/Z (+ `LengthUnit`) | `xformOp:translate` (`double3`) | metric; honour stage `metersPerUnit` per the controlled xform stack (§5.8) |
+| `3DCartesianCoordinates` X/Y/Z (+ `LengthUnit`) | `xformOp:translate` (`double3`) | metric; honour stage `metersPerUnit` per the controlled xform stack (§7.4.2) |
 | `3DOrientation` A/B/C = roll/pitch/yaw (radians, ISO 9787, intrinsic z-y′-x″) | `xformOp:rotateXYZ` (`float3`, **degrees**) | roll→rx, pitch→ry, yaw→rz; `× 180/π`; USD `rotateXYZ` = intrinsic XYZ = extrinsic ZYX, matching RSL |
 | quaternion form (if used) | `xformOp:orient` (`quatf`/`quatd`) | reorder **USD `(w,x,y,z)` ← OPC UA `(x,y,z,w)`** |
 | frame chain (`SpatialLocationType.Base`) | prim parent-child nesting | each frame = one `UsdGeomXformable` prim |
 | `WorldFrame` (`Base = null`) | stage world / root prim | set `upAxis = "Z"`, `metersPerUnit = 1.0` for an OPC UA (Z-up, metric) source |
 
-USD is right-handed, row-major, with row-vector pre-multiplication and translation in the fourth matrix row; a Z-up source in a Y-up stage is reconciled by an explicit frame (e.g. a `-90°` X rotation) per §5.8.
+USD is right-handed, row-major, with row-vector pre-multiplication and translation in the fourth matrix row; a Z-up source in a Y-up stage is reconciled by an explicit frame (e.g. a `-90°` X rotation) per §7.4.2.
 
-### D.3 Global position (OPC 10000-211 GPOS) → USD georeference
+### F.3 Global position to USD georeference
 
 GPOS conveys an absolute position as `GlobalPositionType` (latitude, longitude, elevation, EPSG `CoordinateReferenceSystem`) and anchors a local frame to the globe with `GroundControlPointDataType` (a local-Cartesian ↔ global-geographic tie point). This maps onto the two georeference targets in use today.
 
@@ -775,7 +840,7 @@ GPOS conveys an absolute position as `GlobalPositionType` (latitude, longitude, 
 
 The EPSG `CoordinateReferenceSystem` enum (0 = local, 4326 = WGS84/GPS, 326xx = UTM) selects the projection; both target schemas assume WGS84, so a non-WGS84 CRS is reprojected by the connector before authoring.
 
-### D.4 A binding for `RenderTargetKind = Georeference`
+### F.4 A binding for the Georeference render target
 
 A representation binds a moving asset's live geographic position to its globe anchor:
 
@@ -795,4 +860,4 @@ def Xform "AGV_07" ( prepend apiSchemas = ["CesiumGlobeAnchorAPI"] ) {
 }
 ```
 
-The corresponding binding: `SourceSemanticId`/`SourceNodeId` → a GPOS `GlobalPosition` (or its `Latitude`/`Longitude`/`Elevation` components); `TargetPrimPath = /AGV_07`; `TargetPropertyName = cesium:anchor:latitude` (…`longitude`/`height`); `RenderTargetKind = Georeference`. The connector applies the §5.8 geospatial rule (degrees, metres, CRS/tangent-plane) rather than the raw `xformOp` transform profile. Where the deployment uses NVIDIA's schema instead of Cesium, only the target property names change (`omni:geospatial:wgs84:*`); the OPC UA source and the binding are identical — the model's **N + M** property holds for geolocation exactly as it does for telemetry.
+The corresponding binding: `SourceSemanticId`/`SourceNodeId` → a GPOS `GlobalPosition` (or its `Latitude`/`Longitude`/`Elevation` components); `TargetPrimPath = /AGV_07`; `TargetPropertyName = cesium:anchor:latitude` (…`longitude`/`height`); `RenderTargetKind = Georeference`. The connector applies the §7.4.2 geospatial rule (degrees, metres, CRS/tangent-plane) rather than the raw `xformOp` transform profile. Where the deployment uses NVIDIA's schema instead of Cesium, only the target property names change (`omni:geospatial:wgs84:*`); the OPC UA source and the binding are identical — the model's **N + M** property holds for geolocation exactly as it does for telemetry.
