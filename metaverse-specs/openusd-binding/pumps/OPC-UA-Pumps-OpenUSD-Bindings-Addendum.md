@@ -1,6 +1,6 @@
 # OPC UA Pumps — OpenUSD Bindings Addendum
 
-**Implementer Annex to *OPC UA — OpenUSD Binding* (Release 0.4.0 — Draft).**
+**Implementer Annex to *OPC UA — OpenUSD Binding* (Release 0.5.0 — Draft).**
 
 > This addendum is the **implementer (Pump) annex** for the generic *OPC UA — OpenUSD Bindings* companion model. All Pump-specific and end-to-end detail lives here; the base specification (`../OPC-UA-OpenUSD-Bindings.md`) remains domain-agnostic. It shows how a `PumpType` instance (OPC 40223 Pumps) is bound to an OpenUSD prim and how three live measurements drive the render. The machine-readable source of truth is `../../extras/openusd-binding/examples/pumps/Pumps.OpenUsdBinding.json`; a runnable USD writer is `../../extras/openusd-binding/examples/pumps/usd_writer.py`; the C# end-to-end validation lives in the `marcschier/UA-.NETStandard` `PumpDeviceIntegrationServer` sample.
 
@@ -71,7 +71,7 @@ Implementer findings from the source-generated OPC UA .NET model (generic, not P
 
 ## 4.2 Composition / aggregation (validated)
 
-The sample also exercises the composition model (base spec §5.12–5.14):
+The sample also exercises the composition model (base spec §7.10–§7.10.2):
 
 - **1:1 (Child).** The pump is composed of an `Impeller` and a `Bearing` component Object, each with its own representation, declared as `One` `<Component>` bindings (`CompositionArc = Child`) that compose the `…/Impeller` and `…/Bearing` child prims.
 - **1..n (Instance) + dynamic.** A `ProductionLine` Object aggregates 1..n pumps via a `Many` `<Component>` binding (`CompositionArc = Instance`, `Dynamic = true`), authoring an instanceable reference prim per pump under `/Plant/Line1/Pumps`. A pump is added and removed at runtime; with `ModelChangeEmissionEnabled` the server emits `GeneralModelChangeEvent`s and the connector reconciles the prims (new prim authored; removed prim set `active = false`).
@@ -87,7 +87,7 @@ Composition-specific implementer findings (generic):
 
 ## 4.3 Asset content delivery
 
-The reference server also demonstrates the optional `OU-AssetDelivery` capability from the base spec §5.15. `PlantStage` exposes an `Assets` folder whose `OpenUsdAssetType` children serve the `.usda` layers through read-only Part 5 `FileType` streams: `Plant.usda` (`RootLayer`), `pump.usda` (`Reference`), and `remote-pump.usda` (`Reference`). Each served layer carries a SHA-256 digest.
+The reference server also demonstrates the optional `OU-AssetDelivery` capability from the base spec §7.11. `PlantStage` exposes an `Assets` folder whose `OpenUsdAssetType` children serve the `.usda` layers through read-only Part 5 `FileType` streams: `Plant.usda` (`RootLayer`), `pump.usda` (`Reference`), and `remote-pump.usda` (`Reference`). Each served layer carries a SHA-256 digest.
 
 A generic connector can therefore browse `<Stage>.Assets`, download and verify the layers, cache them with the same relative `AssetIdentifier` paths, and compose the live layer over the local `Plant.usda`. The rendered pump twin is self-contained: no external asset repository or manual USD asset setup is required when the server advertises this capability.
 

@@ -1,6 +1,6 @@
 # OPC UA — WoT Connectivity
 
-**Release 1.1.0 — Draft (additive revision of OPC 10100-1 v1.02)**
+**Release 1.2.0 — Draft (additive revision of OPC 10100-1 v1.02)**
 **Namespace:** `http://opcfoundation.org/UA/WoT-Con/`
 **Publication date:** 2026-07-22
 
@@ -475,7 +475,7 @@ The entry point is the `WoTAssetConnectionManagement` object (an instance of `Wo
 | `WoTAssetFileType` | ObjectType (FileType) | `CloseAndUpdate([in] UInt32 FileHandle)` (Mandatory). |
 | `HasWoTComponent` | ReferenceType | Subtype of `HasComponent`; InverseName `WoTComponentOf`. |
 
-Every 1.02 scenario continues to work: create-from-existing-TD (`CreateAsset` + `WoTFile` upload + `CloseAndUpdate`), discovery (`DiscoverAssets` → `ConnectionTest` → `CreateAssetForEndpoint` with an auto-generated TD file), deletion (`DeleteAsset`), and the supported-bindings advertisement (`SupportedWoTBindings`). The incorporated `NamespaceMetadata` carries the new `1.1.0` version while its NodeIds stay stable, and the deprecation is machine-readable (`ReleaseStatus="Deprecated"`) so tools can steer new development to the registry surface.
+Every 1.02 scenario continues to work: create-from-existing-TD (`CreateAsset` + `WoTFile` upload + `CloseAndUpdate`), discovery (`DiscoverAssets` → `ConnectionTest` → `CreateAssetForEndpoint` with an auto-generated TD file), deletion (`DeleteAsset`), and the supported-bindings advertisement (`SupportedWoTBindings`). The incorporated `NamespaceMetadata` carries the new `1.2.0` version while its NodeIds stay stable, and the deprecation is machine-readable (`ReleaseStatus="Deprecated"`) so tools can steer new development to the registry surface.
 
 ### 13.2 Backing the deprecated surface with the registry (signatures unchanged)
 
@@ -495,28 +495,28 @@ Because the incorporation keeps the 1.02 namespace, types, node numbering and me
 
 Conformance is composed from independently implementable **conformance units (CUs)**, grouped into **profiles**.
 
-| CU | Requires |
+| Conformance unit | Requires |
 |---|---|
-| `WoT-Con Registry Discovery` | Well-known `WoTRegistry` under Server; browse registry/groups; read xRegistry + WoT metadata. |
-| `WoT-Con Document Read` | Read a stored TD/TM via the inherited FileType `Open`/`Read`/`Close`. |
-| `WoT-Con Document Write` | Create/write TD/TM resources via xRegistry `CreateResource` + FileType write. |
-| `WoT-Con TD Validation` | Format + compatibility validation of TDs; `ValidationOutcome`; validation-failure events. |
-| `WoT-Con TM Validation` | Format + compatibility validation of TMs. |
-| `WoT-Con Type Materialization` | Project a TM to a type (`DerivedTypeNodeId`). |
-| `WoT-Con Instance Materialization` | Project a TD to an instance with Variables/Methods/EventTypes. |
-| `WoT-Con Reference Materialization` | Project links to References / explicit link representation (including parent `uav:componentOf`). |
-| `WoT-Con Refresh` | `Refresh` Method with selection/options/expected-generation and detailed results. |
-| `WoT-Con Events` | Resource lifecycle + refresh-completed events with the Server→registry→group→resource notifier chain. |
-| `WoT-Con Model Change` | Model change events + NodeVersion correlation for committed generations. |
-| `WoT-Con Semantic Change` | Optional semantic change events per §7.10. |
-| `WoT-Con Version Lifecycle` | Desired/active version, version switch, unload, delete. |
-| `WoT-Con Federation` | Resolve/project federated documents via `ExternalReference`/`ResourceUrl`. |
-| `WoT-Con Binder Core` | Compile forms to binder plans; op→service mapping. |
-| `WoT-Con Binder <Protocol>` | A specific per-binding module (OPC UA, HTTP, Modbus, …) with capabilities + version pinning. |
-| `WoT-Con Atomicity Modes` | Per-resource / per-group / per-closure / per-registry atomicity with shadow switch and documented graceful or immediate retirement. |
-| `WoT-Con Legacy 1.02 Compatibility` | The incorporated OPC 10100-1 v1.02 model and scenarios, callable and preserved (§13). |
+| `WOTC-RegistryDiscovery` | Well-known `WoTRegistry` under Server; browse registry/groups; read xRegistry + WoT metadata. |
+| `WOTC-DocumentRead` | Read a stored TD/TM via the inherited FileType `Open`/`Read`/`Close`. |
+| `WOTC-DocumentWrite` | Create/write TD/TM resources via xRegistry `CreateResource` + FileType write. |
+| `WOTC-TDValidation` | Format + compatibility validation of TDs; `ValidationOutcome`; validation-failure events. |
+| `WOTC-TMValidation` | Format + compatibility validation of TMs. |
+| `WOTC-TypeMaterialization` | Project a TM to a type (`DerivedTypeNodeId`). |
+| `WOTC-InstanceMaterialization` | Project a TD to an instance with Variables/Methods/EventTypes. |
+| `WOTC-ReferenceMaterialization` | Project links to References / explicit link representation (including parent `uav:componentOf`). |
+| `WOTC-Refresh` | `Refresh` Method with selection/options/expected-generation and detailed results. |
+| `WOTC-Events` | Resource lifecycle + refresh-completed events with the Server→registry→group→resource notifier chain. |
+| `WOTC-ModelChange` | Model change events + NodeVersion correlation for committed generations. |
+| `WOTC-SemanticChange` | Optional semantic change events per §7.10. |
+| `WOTC-VersionLifecycle` | Desired/active version, version switch, unload, delete. |
+| `WOTC-Federation` | Resolve/project federated documents via `ExternalReference`/`ResourceUrl`. |
+| `WOTC-BinderCore` | Compile forms to binder plans; op→service mapping. |
+| `WOTC-BinderProtocol` | A specific per-binding module (OPC UA, HTTP, Modbus, …) with capabilities + version pinning. |
+| `WOTC-AtomicityModes` | Per-resource / per-group / per-closure / per-registry atomicity with shadow switch and documented graceful or immediate retirement. |
+| `WOTC-Legacy` | The incorporated OPC 10100-1 v1.02 model and scenarios, callable and preserved (§13). |
 
-**Profiles.** *WoT-Con Registry Server* = Registry Discovery + Document Read/Write + TD/TM Validation + Type/Instance/Reference Materialization + Refresh + Events + Version Lifecycle + Binder Core + at least one Binder module. *WoT-Con Full* adds Model/Semantic Change, Federation and Atomicity Modes. *WoT-Con Legacy 1.02 Compatibility* is the incorporated-and-deprecated 1.02 surface (§13), independently conformant so existing 1.02 clients are served without the registry profile.
+**Profiles.** *WoT-Con Registry Server* = `WOTC-RegistryDiscovery` + `WOTC-DocumentRead` + `WOTC-DocumentWrite` + `WOTC-TDValidation` + `WOTC-TMValidation` + `WOTC-TypeMaterialization` + `WOTC-InstanceMaterialization` + `WOTC-ReferenceMaterialization` + `WOTC-Refresh` + `WOTC-Events` + `WOTC-VersionLifecycle` + `WOTC-BinderCore` + at least one `WOTC-BinderProtocol` module. *WoT-Con Full* adds `WOTC-ModelChange`, `WOTC-SemanticChange`, `WOTC-Federation` and `WOTC-AtomicityModes`. *WoT-Con Legacy* (`WOTC-Legacy`) is the incorporated-and-deprecated 1.02 surface (§13), independently conformant so existing 1.02 clients are served without the registry profile.
 
 ## 15 Acceptance scenarios
 
@@ -535,7 +535,7 @@ Each scenario is an end-to-end acceptance test for the CUs it exercises.
 
 ## 16 NodeSet validation
 
-The NodeSet, CSV and Annex A are generated from `tools/build_model.py` (from the in-code registry model and the pinned `legacy/` sources); they shall not be hand-edited. `tools/validate_local.py` checks XML well-formedness, unique NodeIds (additive registry ids in the 64000+ block, incorporated 1.02 ids in the preserved 1..172 range), CSV↔NodeSet consistency, that every reference resolves against the own namespace, the loaded xRegistry base `NodeIds.csv` and (when the gitignored `tools/ref/UA.NodeIds.csv` aid is present) the base UA ids, that each type carries a `HasSubtype` inverse and each Structure its encodings, that the well-known `WoTRegistry` instance is a component and `HasNotifier` target of the `Server` object with `EventNotifier` set, and that the registry and document types generate the required events. It additionally **proves the 1.02 preservation**: the first 172 CSV rows match the pinned `legacy/WotConnection.csv` exactly (every NodeId and NodeClass), every concrete legacy id is present with its pinned NodeClass while reserved ids are not emitted, the required 1.02 symbols and the callable well-known `WoTAssetConnectionManagement` are present, the management/upload surface carries `ReleaseStatus="Deprecated"`, and the combined NodeSet declares the single `http://opcfoundation.org/UA/WoT-Con/` namespace at model version 1.1.0. Finally it confirms the generated Annex A is embedded verbatim in this document.
+The NodeSet, CSV and Annex A are generated from `tools/build_model.py` (from the in-code registry model and the pinned `legacy/` sources); they shall not be hand-edited. `tools/validate_local.py` checks XML well-formedness, unique NodeIds (additive registry ids in the 64000+ block, incorporated 1.02 ids in the preserved 1..172 range), CSV↔NodeSet consistency, that every reference resolves against the own namespace, the loaded xRegistry base `NodeIds.csv` and (when the gitignored `tools/ref/UA.NodeIds.csv` aid is present) the base UA ids, that each type carries a `HasSubtype` inverse and each Structure its encodings, that the well-known `WoTRegistry` instance is a component and `HasNotifier` target of the `Server` object with `EventNotifier` set, and that the registry and document types generate the required events. It additionally **proves the 1.02 preservation**: the first 172 CSV rows match the pinned `legacy/WotConnection.csv` exactly (every NodeId and NodeClass), every concrete legacy id is present with its pinned NodeClass while reserved ids are not emitted, the required 1.02 symbols and the callable well-known `WoTAssetConnectionManagement` are present, the management/upload surface carries `ReleaseStatus="Deprecated"`, and the combined NodeSet declares the single `http://opcfoundation.org/UA/WoT-Con/` namespace at model version 1.2.0. Finally it confirms the generated Annex A is embedded verbatim in this document.
 
 ---
 

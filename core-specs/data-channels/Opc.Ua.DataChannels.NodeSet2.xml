@@ -42,7 +42,7 @@
   <UAReferenceType NodeId="i=65000" BrowseName="HasDataChannel" Symmetric="false">
     <DisplayName>HasDataChannel</DisplayName>
     <Description>Links a functional Object or Variable to the DataChannelSource endpoint through which its content can be streamed. The source Node is the target of the reference, so a client that browses a camera, a drive or a log Object finds the data channel it can open without knowing where the server chose to place the endpoint.</Description>
-    <Category>Data Channels Reference Types</Category>
+    <Category>DCH-Model</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=32</Reference>
     </References>
@@ -51,7 +51,7 @@
   <UAObjectType NodeId="i=65010" BrowseName="IDataChannelSourceType" IsAbstract="true">
     <DisplayName>IDataChannelSourceType</DisplayName>
     <Description>Interface implemented by any Object or Variable that can act as one end of a data channel. Adding this Interface to an existing type through HasInterface is the only change a companion specification needs in order to become streamable: it does not alter the type's supertype and does not introduce a new Node Attribute.</Description>
-    <Category>Data Channels Types</Category>
+    <Category>DCH-Model</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=17602</Reference>
       <Reference ReferenceType="HasProperty">i=66000</Reference>
@@ -149,7 +149,7 @@
   <UAObjectType NodeId="i=65011" BrowseName="DataChannelSourceType">
     <DisplayName>DataChannelSourceType</DisplayName>
     <Description>The plain, concrete realization of IDataChannelSourceType: a stand-alone Object that exists only to be one end of a data channel. A server uses it where no domain Object is a natural home for the endpoint; where one is, that Object implements the Interface directly and points at nothing.</Description>
-    <Category>Data Channels Types</Category>
+    <Category>DCH-Model</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
       <Reference ReferenceType="HasInterface">i=65010</Reference>
@@ -178,7 +178,8 @@
   <UAObjectType NodeId="i=65012" BrowseName="DataChannelCapabilitiesType">
     <DisplayName>DataChannelCapabilitiesType</DisplayName>
     <Description>Server-wide data channel limits and capabilities, exposed as the DataChannelCapabilities component of ServerCapabilities. A client reads it once and knows, before it opens anything, whether the Server supports data channels at all, over which transports, in which delivery modes and within which limits.</Description>
-    <Category>Data Channels Types</Category>
+    <Category>DCH-Model</Category>
+    <Category>DCH-ModelDiagnostics</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
       <Reference ReferenceType="HasProperty">i=66011</Reference>
@@ -276,7 +277,8 @@
   <UAObjectType NodeId="i=65020" BrowseName="DataChannelOfferedEventType">
     <DisplayName>DataChannelOfferedEventType</DisplayName>
     <Description>Raised when the Server wants to open a data channel towards a Client. OPC UA Services are request/response, so the Server cannot call the Client; it offers instead, and the Client accepts by calling OpenDataChannel with the OfferId. This is what makes server-initiated media possible without inverting the Service model.</Description>
-    <Category>Data Channels Event Types</Category>
+    <Category>DCH-ModelEvents</Category>
+    <Category>DCH-Offers</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=2041</Reference>
       <Reference ReferenceType="HasProperty">i=66020</Reference>
@@ -294,7 +296,7 @@
   <UAObjectType NodeId="i=65021" BrowseName="DataChannelStateChangeEventType">
     <DisplayName>DataChannelStateChangeEventType</DisplayName>
     <Description>Raised whenever a data channel changes state, including the transition to Faulted that follows a transport level reset. A Client that missed the frame level RESET learns of the loss here.</Description>
-    <Category>Data Channels Event Types</Category>
+    <Category>DCH-ModelEvents</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=2041</Reference>
       <Reference ReferenceType="HasProperty">i=66021</Reference>
@@ -332,7 +334,8 @@
   <UAObjectType NodeId="i=65022" BrowseName="AuditOpenDataChannelEventType">
     <DisplayName>AuditOpenDataChannelEventType</DisplayName>
     <Description>Audit event for a successful or rejected OpenDataChannel. A data channel carries application payload out of the Server outside the Read/Subscribe path, so it is auditable in its own right rather than folded into the Session audit trail.</Description>
-    <Category>Data Channels Event Types</Category>
+    <Category>DCH-ModelAuditing</Category>
+    <Category>DCH-Auditing</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=2069</Reference>
       <Reference ReferenceType="HasProperty">i=66024</Reference>
@@ -370,7 +373,7 @@
   <UADataType NodeId="i=65030" BrowseName="DataChannelDirection">
     <DisplayName>DataChannelDirection</DisplayName>
     <Description>The direction in which a data channel carries payload. Directions are named from the point of view of the data channel source, which is normally the Server.</Description>
-    <Category>Data Channels Data Types</Category>
+    <Category>DCH-Model</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
       <Reference ReferenceType="HasProperty">i=65930</Reference>
@@ -388,7 +391,8 @@
   <UADataType NodeId="i=65031" BrowseName="DataChannelDeliveryMode">
     <DisplayName>DataChannelDeliveryMode</DisplayName>
     <Description>The delivery guarantee requested for a data channel. What a mode can actually deliver depends on the transport: only a transport with a lossy path can genuinely drop data in flight, so over opc.tcp and opc.wss the lossy modes degrade to sender-side discard.</Description>
-    <Category>Data Channels Data Types</Category>
+    <Category>DCH-Model</Category>
+    <Category>DCH-PartialReliability</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
       <Reference ReferenceType="HasProperty">i=65931</Reference>
@@ -406,7 +410,7 @@
   <UADataType NodeId="i=65032" BrowseName="DataChannelState">
     <DisplayName>DataChannelState</DisplayName>
     <Description>The lifecycle state of a data channel. The normative state transition table - which event causes which transition, which transitions are legal, and what may be sent in each state - is clause 5.13 of the Part 6 Data Channel Transport errata. Paused is maintained per direction.</Description>
-    <Category>Data Channels Data Types</Category>
+    <Category>DCH-Model</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
       <Reference ReferenceType="HasProperty">i=65932</Reference>
@@ -424,7 +428,8 @@
   <UADataType NodeId="i=65033" BrowseName="DataChannelParametersDataType">
     <DisplayName>DataChannelParametersDataType</DisplayName>
     <Description>The negotiated properties of one data channel. The same structure carries the client's request and the server's revision, so a client can compare what it asked for with what it got in one comparison.</Description>
-    <Category>Data Channels Data Types</Category>
+    <Category>DCH-Model</Category>
+    <Category>DCH-Services</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=22</Reference>
       <Reference ReferenceType="HasEncoding">i=66027</Reference>
@@ -457,7 +462,8 @@
   <UADataType NodeId="i=65034" BrowseName="DataChannelStatusDataType">
     <DisplayName>DataChannelStatusDataType</DisplayName>
     <Description>The runtime state of one open data channel, as published by its endpoint.</Description>
-    <Category>Data Channels Data Types</Category>
+    <Category>DCH-Model</Category>
+    <Category>DCH-Services</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=22</Reference>
       <Reference ReferenceType="HasEncoding">i=66030</Reference>
@@ -490,7 +496,7 @@
   <UADataType NodeId="i=65035" BrowseName="DataChannelOfferDataType">
     <DisplayName>DataChannelOfferDataType</DisplayName>
     <Description>A server-initiated offer to open a data channel, carried by DataChannelOfferedEventType and accepted by quoting its OfferId in OpenDataChannel.</Description>
-    <Category>Data Channels Data Types</Category>
+    <Category>DCH-Offers</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=22</Reference>
       <Reference ReferenceType="HasEncoding">i=66033</Reference>
@@ -523,7 +529,7 @@
   <UADataType NodeId="i=65036" BrowseName="DataChannelDiagnosticsDataType">
     <DisplayName>DataChannelDiagnosticsDataType</DisplayName>
     <Description>Per-channel counters. FramesDiscarded and CreditStalls are the two that matter in practice: the first says the stream is outrunning the link, the second says the consumer is outrun by the stream.</Description>
-    <Category>Data Channels Data Types</Category>
+    <Category>DCH-ModelDiagnostics</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=22</Reference>
       <Reference ReferenceType="HasEncoding">i=66036</Reference>
@@ -556,7 +562,7 @@
   <UAObject NodeId="i=65100" BrowseName="DataChannelCapabilities" ParentNodeId="i=2268">
     <DisplayName>DataChannelCapabilities</DisplayName>
     <Description>Server-wide data channel capabilities. Its absence is how a Server says it does not support data channels at all.</Description>
-    <Category>Data Channels Instances</Category>
+    <Category>DCH-Model</Category>
     <References>
       <Reference ReferenceType="HasTypeDefinition">i=65012</Reference>
       <Reference ReferenceType="HasComponent" IsForward="false">i=2268</Reference>

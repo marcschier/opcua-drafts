@@ -837,6 +837,106 @@ instance_var(64100, "WoTRegistry", "RefreshGeneration", UInt32,
 CAT_LEGACY = "WoT Connectivity 1.02 legacy (deprecated)"
 CAT_LEGACY_INST = "WoT Connectivity 1.02 Legacy Instances"
 
+# ---------------------------------------------------------------------------
+# Conformance units
+# ---------------------------------------------------------------------------
+# OPC 20020 requires each type's definition table to name the conformance units that
+# carry it, and a unit has to be an identifier token, not the prose name used in the
+# conformance clause. The CAT_* values above group nodes for generation only — they are
+# not conformance units and are never emitted as <Category>.
+CU_REGISTRY_DISCOVERY = "WOTC-RegistryDiscovery"
+CU_DOCUMENT_READ = "WOTC-DocumentRead"
+CU_DOCUMENT_WRITE = "WOTC-DocumentWrite"
+CU_TD_VALIDATION = "WOTC-TDValidation"
+CU_TM_VALIDATION = "WOTC-TMValidation"
+CU_TYPE_MATERIALIZATION = "WOTC-TypeMaterialization"
+CU_INSTANCE_MATERIALIZATION = "WOTC-InstanceMaterialization"
+CU_REFERENCE_MATERIALIZATION = "WOTC-ReferenceMaterialization"
+CU_REFRESH = "WOTC-Refresh"
+CU_EVENTS = "WOTC-Events"
+CU_MODEL_CHANGE = "WOTC-ModelChange"
+CU_SEMANTIC_CHANGE = "WOTC-SemanticChange"
+CU_VERSION_LIFECYCLE = "WOTC-VersionLifecycle"
+CU_FEDERATION = "WOTC-Federation"
+CU_BINDER_CORE = "WOTC-BinderCore"
+CU_BINDER_PROTOCOL = "WOTC-BinderProtocol"
+CU_ATOMICITY_MODES = "WOTC-AtomicityModes"
+CU_LEGACY = "WOTC-Legacy"
+
+# Every unit of clause 14, in the order the clause lists them. The document's conformance
+# clause and this table have to agree, so the check that every emitted unit is named in
+# the clause is meaningful rather than circular.
+ALL_CONFORMANCE_UNITS = (
+    CU_REGISTRY_DISCOVERY, CU_DOCUMENT_READ, CU_DOCUMENT_WRITE, CU_TD_VALIDATION,
+    CU_TM_VALIDATION, CU_TYPE_MATERIALIZATION, CU_INSTANCE_MATERIALIZATION,
+    CU_REFERENCE_MATERIALIZATION, CU_REFRESH, CU_EVENTS, CU_MODEL_CHANGE,
+    CU_SEMANTIC_CHANGE, CU_VERSION_LIFECYCLE, CU_FEDERATION, CU_BINDER_CORE,
+    CU_BINDER_PROTOCOL, CU_ATOMICITY_MODES, CU_LEGACY,
+)
+
+# BrowseName -> the units a type belongs to. A type not named here falls back to the unit
+# implied by its structural category.
+UNITS_BY_NAME = {
+    "WoTRegistryType": (CU_REGISTRY_DISCOVERY, CU_REFRESH),
+    "ThingDescriptionGroupType": (CU_REGISTRY_DISCOVERY,),
+    "ThingModelGroupType": (CU_REGISTRY_DISCOVERY,),
+    "WoTDocumentType": (CU_DOCUMENT_READ, CU_DOCUMENT_WRITE, CU_VERSION_LIFECYCLE),
+    "ThingDescriptionFileType": (CU_DOCUMENT_READ, CU_TD_VALIDATION,
+                                 CU_INSTANCE_MATERIALIZATION),
+    "ThingModelFileType": (CU_DOCUMENT_READ, CU_TM_VALIDATION, CU_TYPE_MATERIALIZATION),
+    "WoTBindingType": (CU_BINDER_CORE, CU_BINDER_PROTOCOL),
+
+    "WoTResourceEventType": (CU_EVENTS,),
+    "WoTValidationFailureEventType": (CU_EVENTS, CU_TD_VALIDATION, CU_TM_VALIDATION),
+    "WoTLoadFailureEventType": (CU_EVENTS,),
+    "WoTBindingFailureEventType": (CU_EVENTS, CU_BINDER_CORE),
+    "WoTRefreshCompletedEventType": (CU_EVENTS, CU_REFRESH, CU_MODEL_CHANGE),
+
+    "WoTDocumentKindEnum": (CU_REGISTRY_DISCOVERY,),
+    "WoTLoadStateEnum": (CU_VERSION_LIFECYCLE,),
+    "WoTRefreshModeEnum": (CU_REFRESH,),
+    "WoTAtomicityEnum": (CU_ATOMICITY_MODES,),
+    "WoTDeletePolicyEnum": (CU_VERSION_LIFECYCLE,),
+    "WoTOutcomeEnum": (CU_REFRESH,),
+    "WoTPhaseEnum": (CU_REFRESH,),
+    "WoTBindingCapabilityEnum": (CU_BINDER_CORE,),
+    "WoTValidationOutcomeDataType": (CU_TD_VALIDATION, CU_TM_VALIDATION),
+    "WoTBindingCapabilityDataType": (CU_BINDER_CORE,),
+    "WoTRefreshOptionsDataType": (CU_REFRESH, CU_ATOMICITY_MODES),
+    "WoTResourceSelectorDataType": (CU_REFRESH,),
+    "WoTResourceLoadResultDataType": (CU_REFRESH,),
+    "WoTRefreshSummaryDataType": (CU_REFRESH,),
+    "WoTDependencyDataType": (CU_FEDERATION,),
+
+    "HasWoTProjection": (CU_REFERENCE_MATERIALIZATION,),
+    "WoTRegistry": (CU_REGISTRY_DISCOVERY,),
+}
+
+UNITS_BY_CATEGORY = {
+    CAT: (CU_REGISTRY_DISCOVERY,),
+    CAT_EV: (CU_EVENTS,),
+    CAT_DT: (CU_REGISTRY_DISCOVERY,),
+    CAT_REF: (CU_REFERENCE_MATERIALIZATION,),
+    CAT_INST: (CU_REGISTRY_DISCOVERY,),
+    CAT_LEGACY: (CU_LEGACY,),
+    CAT_LEGACY_INST: (CU_LEGACY,),
+}
+
+
+def units_of(n):
+    """The conformance units a Node declares, as <Category> elements."""
+    if n.bname.startswith("http://"):
+        # The NamespaceMetadata Object is named after the namespace URI. It describes the
+        # namespace as a whole rather than any one unit of conformance, and it reaches
+        # this model through the legacy import, so without this it would claim to be part
+        # of the deprecated 1.02 surface.
+        return ()
+    if n.bname in UNITS_BY_NAME:
+        return UNITS_BY_NAME[n.bname]
+    if n.category:
+        return UNITS_BY_CATEGORY.get(n.category, ())
+    return ()
+
 _HERE = os.path.dirname(os.path.abspath(__file__))
 LEGACY_DIR = os.path.join(os.path.dirname(_HERE), "legacy")
 LEGACY_CSV = os.path.join(LEGACY_DIR, "WotConnection.csv")
@@ -1158,11 +1258,11 @@ def build_legacy():
 # the new 1.1 revision metadata while the stable NodeIds are preserved.
 _NS_META_VALUE = {
     "NamespaceUri": _scalar_value("String", LEGACY_NS),
-    "NamespaceVersion": _scalar_value("String", "1.1.0"),
+    "NamespaceVersion": _scalar_value("String", "1.2.0"),
     "NamespacePublicationDate": _scalar_value("DateTime", "2026-07-22T00:00:00Z"),
     "IsNamespaceSubset": _scalar_value("Boolean", "false"),
     "StaticStringNodeIdPattern": _scalar_value("String", ""),
-    "ModelVersion": _scalar_value("String", "1.1.0"),
+    "ModelVersion": _scalar_value("String", "1.2.0"),
 }
 
 build_legacy()
@@ -1171,7 +1271,7 @@ build_legacy()
 # Emission
 # ===========================================================================
 NAMESPACE = "http://opcfoundation.org/UA/WoT-Con/"
-VERSION = "1.1.0"
+VERSION = "1.2.0"
 PUBDATE = "2026-07-22T00:00:00Z"
 XR_NAMESPACE = "http://opcfoundation.org/UA/xRegistry/"
 XR_VERSION = "0.1.0"
@@ -1234,8 +1334,8 @@ def _emit_node(n):
         lines.append(f"    <Description>{sx.escape(n.desc)}</Description>")
     if n.inverse:
         lines.append(f"    <InverseName>{sx.escape(n.inverse)}</InverseName>")
-    if n.category:
-        lines.append(f"    <Category>{sx.escape(n.category)}</Category>")
+    for unit in units_of(n):
+        lines.append(f"    <Category>{sx.escape(unit)}</Category>")
     lines.append("    <References>")
     for i in _sorted_refs(n.refs):
         rt, tgt, fwd = n.refs[i]

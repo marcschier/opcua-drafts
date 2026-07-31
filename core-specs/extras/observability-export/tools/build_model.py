@@ -98,7 +98,7 @@ class Node:
         self.parent = parent
         self.attrs = attrs or {}
         self.refs = []
-        self.category = category
+        self.category = ((category,) if isinstance(category, str) else tuple(category or ()))
         self.definition = None
         self.value = None
         self.abstract = abstract
@@ -137,23 +137,23 @@ def ref(nid, reftype, target, forward=True):
 # ---------------------------------------------------------------------------
 # Builders
 # ---------------------------------------------------------------------------
-def object_type(nid, name, base, desc, category, abstract=False):
-    add(nid, "UAObjectType", name, name, desc=desc, category=category,
+def object_type(nid, name, base, desc, category=None, abstract=False):
+    add(nid, "UAObjectType", name, name, desc=desc, category=category or _cu(name),
         abstract=abstract)
     ref(nid, HasSubtype, base, forward=False)
     return nid
 
 
-def interface_type(nid, name, base, desc, category):
-    add(nid, "UAObjectType", name, name, desc=desc, category=category,
+def interface_type(nid, name, base, desc, category=None):
+    add(nid, "UAObjectType", name, name, desc=desc, category=category or _cu(name),
         abstract=True)
     ref(nid, HasSubtype, base, forward=False)
     return nid
 
 
-def reference_type(nid, name, base, inverse, desc, category, symmetric=False,
+def reference_type(nid, name, base, inverse, desc, category=None, symmetric=False,
                    abstract=False):
-    n = add(nid, "UAReferenceType", name, name, desc=desc, category=category,
+    n = add(nid, "UAReferenceType", name, name, desc=desc, category=category or _cu(name),
             abstract=abstract)
     n.inverse = inverse
     n.symmetric = symmetric
@@ -256,8 +256,8 @@ def placeholder_obj(owner, owner_sym, name, typedef, desc, rule=MR_OptionalPlace
     return nid
 
 
-def enum_type(nid, name, desc, category, fields):
-    add(nid, "UADataType", name, name, desc=desc, category=category)
+def enum_type(nid, name, desc, category=None, fields=None):
+    add(nid, "UADataType", name, name, desc=desc, category=category or _cu(name))
     ref(nid, HasSubtype, Enumeration, forward=False)
     dparts = [f'<Definition Name="{name}">']
     for (fname, val, fdesc) in fields:
@@ -284,8 +284,8 @@ def enum_type(nid, name, desc, category, fields):
     return nid
 
 
-def struct_type(nid, name, desc, category, fields):
-    add(nid, "UADataType", name, name, desc=desc, category=category)
+def struct_type(nid, name, desc, category=None, fields=None):
+    add(nid, "UADataType", name, name, desc=desc, category=category or _cu(name))
     ref(nid, HasSubtype, Structure, forward=False)
     dparts = [f'<Definition Name="{name}">']
     for (fname, dtype, vrank, fdesc) in fields:
@@ -332,13 +332,49 @@ def set_string(owner, owner_sym, name, value, datatype=String):
 CAT = "Observability Export"
 CAT_DT = "Observability Export DataTypes"
 
+# OPC 20020 3.4.1.1: every Type Node names the ConformanceUnits that require it in the
+# AddressSpace, as Category elements. These are the units of the specification's
+# conformance clause; the Word node tables are generated from them.
+CU_DISCOVERY = "OBS-Discovery"
+CU_GROUPING = "OBS-BindingGrouping"
+CU_BROWSEPATH = "OBS-BrowsePathResolution"
+CU_CARDINALITY = "OBS-DataSetCardinality"
+CU_CLASSID = "OBS-DataSetClassIdentity"
+CU_INHERITANCE = "OBS-BindingInheritance"
+CU_METRICS = "OBS-MetricsMapping"
+CU_LOGS = "OBS-LogsMapping"
+CU_TRACES = "OBS-TracesMapping"
+CU_SEMANTIC = "OBS-SemanticCrossReference"
+
+CU_BY_NAME = {
+    "ObservabilityFolderType": (CU_DISCOVERY,),
+    "ObservabilityBindingGroupType": (CU_GROUPING,),
+    "IObservableType": (CU_GROUPING,),
+    "ObservabilityBindingType": (CU_CARDINALITY, CU_CLASSID, CU_INHERITANCE),
+    "BoundItemType": (CU_BROWSEPATH, CU_SEMANTIC),
+    "BoundVariableType": (CU_METRICS,),
+    "BoundEventFieldType": (CU_LOGS, CU_TRACES),
+    "BindsToNode": (CU_BROWSEPATH,),
+    "ExportedBy": (CU_SEMANTIC,),
+    "HasBaseBinding": (CU_INHERITANCE,),
+    "Collects": (CU_DISCOVERY,),
+    "BoundItemKindEnum": (CU_BROWSEPATH,),
+    "MetricInstrumentTypeEnum": (CU_METRICS,),
+    "MetricTemporalityEnum": (CU_METRICS,),
+    "ObservabilitySignalKindEnum": (CU_DISCOVERY,),
+    "BoundItemDataType": (CU_SEMANTIC,),
+}
+
+
+def _cu(name):
+    return CU_BY_NAME.get(name, ())
+
 # --- ReferenceTypes --------------------------------------------------------
 reference_type(60001, "BindsToNode", NonHierarchicalReferences, "IsBoundBy",
                "Links a BoundItem to the companion-specification Variable, event source or "
                "Program in the AddressSpace that it exposes for observability export. The "
                "target is the authoritative semantic node; the BoundItem does not copy its "
-               "meaning.",
-               CAT)
+               "meaning.")
 reference_type(60002, "ExportedBy", NonHierarchicalReferences,
                "Exports",
                "Links an ObservabilityBinding to the optional OPC UA Part 14 PubSub node(s) that "
@@ -346,15 +382,13 @@ reference_type(60002, "ExportedBy", NonHierarchicalReferences,
                "exporter for the binding's signal. Forward 'ExportedBy' reads binding -> exporter; "
                "the inverse 'Exports' reads exporter -> binding. Absent (and never required) when "
                "the binding is not exported over PubSub - a Server may instead serve the binding "
-               "over the classic client/server (RPC) interface.",
-               CAT)
+               "over the classic client/server (RPC) interface.")
 reference_type(60003, "HasBaseBinding", NonHierarchicalReferences, "IsBaseBindingOf",
                "Links a derived or composing ObservabilityBinding to a base ObservabilityBinding "
                "whose fields it extends or composes (e.g. a Machine binding to the Device-facet "
                "binding it builds on). Optional browse convenience used where the base binding "
                "node is present in the same AddressSpace; the portable, cross-specification "
-               "lineage carrier is ObservabilityBinding.BaseDataSetClassIds.",
-               CAT)
+               "lineage carrier is ObservabilityBinding.BaseDataSetClassIds.")
 reference_type(60004, "Collects", NonHierarchicalReferences, "CollectedBy",
                "Links the server-wide Observability registry to the ObservabilityBindingGroups it "
                "collects. Forward 'Collects' reads registry -> group (the discovery path to every "
@@ -362,14 +396,13 @@ reference_type(60004, "Collects", NonHierarchicalReferences, "CollectedBy",
                "inverse 'CollectedBy' reads group -> registry. Non-hierarchical: a group's single "
                "hierarchical parent is the IObservableType object that contains it, so this "
                "cross-link never forms a hierarchy loop. Distinct from ExportedBy/Exports, which "
-               "links a binding to its optional Part 14 PubSub exporter.",
-               CAT)
+               "links a binding to its optional Part 14 PubSub exporter.")
 
 # --- Enumerations ----------------------------------------------------------
 enum_type(60051, "BoundItemKindEnum",
           "Generic role of a bound item for routing/bridging to an observability backend. It "
           "is intentionally domain-agnostic: a bridge maps each Kind to its target signal "
-          "without understanding the companion-specification semantics.", CAT_DT, [
+          "without understanding the companion-specification semantics.", fields=[
     ("Telemetry", 0, "A measured/process value that changes continuously (maps to a metric time series)."),
     ("Status", 1, "A discrete state/health/mode value (maps to a numeric-state gauge)."),
     ("Metric", 2, "An aggregated KPI or computed value."),
@@ -383,7 +416,7 @@ enum_type(60051, "BoundItemKindEnum",
 enum_type(60053, "MetricInstrumentTypeEnum",
           "The OpenTelemetry-style metric instrument a bound value maps to. Lets a bridge "
           "emit the correct instrument without domain knowledge; complements the coarser "
-          "BoundItemKindEnum.", CAT_DT, [
+          "BoundItemKindEnum.", fields=[
     ("Counter", 0, "Monotonically increasing synchronous sum (OTEL Counter)."),
     ("UpDownCounter", 1, "Non-monotonic synchronous sum (OTEL UpDownCounter)."),
     ("Histogram", 2, "Synchronous distribution of values (OTEL Histogram)."),
@@ -395,7 +428,7 @@ enum_type(60053, "MetricInstrumentTypeEnum",
 
 enum_type(60054, "MetricTemporalityEnum",
           "Aggregation temporality of a metric value, so a bridge accumulates or reports it "
-          "correctly.", CAT_DT, [
+          "correctly.", fields=[
     ("Cumulative", 0, "The value is a running total since a fixed start (OTEL cumulative)."),
     ("Delta", 1, "The value is the change since the previous report (OTEL delta)."),
 ])
@@ -404,7 +437,7 @@ enum_type(60052, "ObservabilitySignalKindEnum",
           "The OTEL signal an observability binding exposes: metrics (a Part 14 data DataSet, "
           "PublishedDataItems), logs (an event DataSet, PublishedEvents), or traces (spans "
           "produced from Program executions, audit events or correlated events). A binding is "
-          "exactly one signal kind.", CAT_DT, [
+          "exactly one signal kind.", fields=[
     ("Metrics", 0, "A metric set: grouped Variable values mapped to OTEL metric instruments (PublishedDataItemsType)."),
     ("Logs", 1, "A log stream: selected event fields from a notifier mapped to OTEL LogRecords (PublishedEventsType)."),
     ("Traces", 2, "A trace/span stream: Program executions, audit events or correlated events mapped to OTEL spans (PublishedEventsType)."),
@@ -416,7 +449,7 @@ struct_type(60060, "BoundItemDataType",
             "(BrowsePath relative to StartingNode, or an absolute SourceNodeId), its "
             "routing role (Kind) and the SEMANTIC cross-reference back to the companion "
             "model (TypeDefinition, BrowseName, ModelNamespaceUri, SemanticReferenceUri), "
-            "which is retained so it can be exported to a disconnected consumer.", CAT_DT, [
+            "which is retained so it can be exported to a disconnected consumer.", fields=[
     ("FieldName", String, None, "Stable logical field name; matches the PubSub DataSet field name."),
     ("Kind", T(60051), None, "Generic routing role of the item."),
     ("AttributeId", UInt32, None, "Attribute of the source node to expose (default 13 = Value)."),
@@ -449,7 +482,7 @@ struct_type(60060, "BoundItemDataType",
 object_type(60012, "BoundItemType", BaseObjectType,
             "A single item bound for observability export: it references the companion-spec node "
             "it exposes (BindsToNode and/or a BrowsePath) and carries the routing role "
-            "(Kind) and the semantic cross-reference retained for export.", CAT)
+            "(Kind) and the semantic cross-reference retained for export.")
 BI = "BoundItemType"
 prop_var(60012, BI, "FieldName", String, "Stable logical field name of the item.", rule=MR_Mandatory)
 prop_var(60012, BI, "Kind", T(60051), "Generic routing role of the item.", rule=MR_Mandatory)
@@ -474,7 +507,7 @@ prop_var(60012, BI, "DimensionConstantValue", String,
          "(which uses its BrowsePath).")
 
 object_type(60013, "BoundVariableType", T(60012),
-            "A bound Variable exposed as a PubSub DataSet field.", CAT)
+            "A bound Variable exposed as a PubSub DataSet field.")
 BV = "BoundVariableType"
 prop_var(60013, BV, "MetricInstrumentType", T(60053),
          "OTEL metric instrument this value maps to (Counter, UpDownCounter, Histogram, Gauge and "
@@ -497,7 +530,7 @@ object_type(60017, "BoundEventFieldType", T(60012),
             "A bound event field of a log or trace (event-sourced) binding, selected by a Part 14 "
             "SimpleAttributeOperand. Its BrowsePath is resolved relative to the event "
             "TypeDefinition (SourceTypeDefinition), not the AddressSpace instance; the "
-            "EventSourcePath on the ObservabilityBinding names the notifier it is selected from.", CAT)
+            "EventSourcePath on the ObservabilityBinding names the notifier it is selected from.")
 prop_var(60017, "BoundEventFieldType", "EventFieldOperand", SimpleAttributeOperand,
          "The Part 14 SimpleAttributeOperand that selects this field (TypeDefinitionId, "
          "BrowsePath, AttributeId); maps directly to a PublishedEvents SelectedFields entry.")
@@ -509,7 +542,7 @@ object_type(60011, "ObservabilityBindingType", BaseObjectType,
             "as a compact array), carries the OTEL mapping metadata, and may reference the Part 14 "
             "nodes that realize it. It lives in an ObservabilityBindingGroup contained by the "
             "bound instance; its stable DataSetClassId already encodes the bound type, the signal "
-            "kind and the major version.", CAT)
+            "kind and the major version.")
 SB = "ObservabilityBindingType"
 prop_var(60011, SB, "SignalKind", T(60052),
          "The OTEL signal this binding exposes: Metrics (a data DataSet), Logs (an event "
@@ -597,7 +630,7 @@ object_type(60018, "ObservabilityBindingGroupType", FolderType,
             "group carries the inverse CollectedBy reference). Identified by "
             "CompanionSpecificationUri (a stable spec-level identifier, distinct from a namespace "
             "URI, because a companion specification may define several namespace URIs), so groups "
-            "from different specifications on one object never collide by BrowseName.", CAT)
+            "from different specifications on one object never collide by BrowseName.")
 SG = "ObservabilityBindingGroupType"
 prop_var(60018, SG, "CompanionSpecificationUri", String,
          "Stable spec-level identifier of the companion specification this group anchors. Sibling "
@@ -616,7 +649,7 @@ object_type(60010, "ObservabilityFolderType", FolderType,
             "Server Object. It is the discovery entry point: it Collects every "
             "ObservabilityBindingGroup that exports observability data through non-hierarchical "
             "Collects references (the groups themselves stay contained by their bound instances). "
-            "Extensible - companion specifications contribute their instances' groups.", CAT)
+            "Extensible - companion specifications contribute their instances' groups.")
 SF = "ObservabilityFolderType"
 # No placeholder children and no query Method: the registry Collects the ObservabilityBindingGroups
 # (which live on the bound instances); a client browses those references, then each
@@ -629,7 +662,7 @@ interface_type(60016, "IObservableType", BaseInterfaceType,
                "advertise that it exports observability data, by containing its "
                "ObservabilityBindingGroup objects directly (one per companion specification it "
                "covers; typically one for a single-specification instance). Each contained group "
-               "is collected by the server-wide Observability registry (CollectedBy).", CAT)
+               "is collected by the server-wide Observability registry (CollectedBy).")
 placeholder_obj(60016, "IObservableType", "<ObservabilityBindingGroup>", T(60018),
                 "A group of this object's observability bindings for one companion specification, "
                 "contained here (HasComponent) and collected by the Observability registry (the "
@@ -646,7 +679,7 @@ well_known(60101, "Observability", T(60010), int(Server.split("=")[1]),
            "Server-wide registry of observability bindings, discoverable as a component of the "
            "Server object. It Collects every ObservabilityBindingGroup exposed by "
            "the Server's instances; its presence does not require any PubSub configuration.")
-NODES[60101].category = CAT_INST
+NODES[60101].category = (CU_DISCOVERY,)
 
 # ===========================================================================
 # ==============================  EMISSION  =================================
@@ -730,8 +763,8 @@ def _emit_node(n):
     lines.append(f"    <DisplayName>{sx.escape(n.display)}</DisplayName>")
     if n.desc:
         lines.append(f"    <Description>{sx.escape(n.desc)}</Description>")
-    if n.category:
-        lines.append(f"    <Category>{sx.escape(n.category)}</Category>")
+    for cat in n.category:
+        lines.append(f"    <Category>{sx.escape(cat)}</Category>")
     lines.append("    <References>")
     for i in _sorted_refs(n.refs):
         rt, tgt, fwd = n.refs[i]
@@ -1040,7 +1073,7 @@ def emit_md():
     md.append("|---|---|---|---|")
     for nid in ORDER:
         n = NODES[nid]
-        if n.category != "Observability Export Instances" or n.cls != "UAObject":
+        if CU_DISCOVERY not in n.category or n.cls != "UAObject":
             continue
         td = ""
         for rt, tgt, fwd in n.refs:

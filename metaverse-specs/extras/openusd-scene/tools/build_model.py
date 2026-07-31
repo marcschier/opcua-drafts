@@ -21,7 +21,7 @@ import os
 import xml.sax.saxutils as sx
 
 NAMESPACE = "http://opcfoundation.org/UA/OpenUSD/Scene/"
-VERSION = "0.3.0"
+VERSION = "0.4.0"
 PUBDATE = "2026-07-29T00:00:00Z"
 BASE_UA_VERSION = "1.05.04"
 BASE_UA_PUBDATE = "2023-12-15T00:00:00Z"
@@ -100,7 +100,10 @@ class Node:
         self.parent = parent
         self.attrs = attrs or {}
         self.refs = []
-        self.category = category
+        # OPC 20020 3.4.1.1: the ConformanceUnits that require the Node in the
+        # AddressSpace are carried as Category elements, one per unit.
+        self.category = ((category,) if isinstance(category, str)
+                         else tuple(category or ()))
         self.definition = None
         self.value = None
         self.abstract = abstract
@@ -138,19 +141,19 @@ def ref(nid, reftype, target, forward=True):
 
 # --- builders --------------------------------------------------------------
 def object_type(nid, name, base, desc, abstract=False):
-    add(nid, "UAObjectType", name, name, desc=desc, category=CAT, abstract=abstract)
+    add(nid, "UAObjectType", name, name, desc=desc, category=_cu(name), abstract=abstract)
     ref(nid, HasSubtype, base, forward=False)
     return nid
 
 
 def interface_type(nid, name, base, desc):
-    add(nid, "UAObjectType", name, name, desc=desc, category=CAT, abstract=True)
+    add(nid, "UAObjectType", name, name, desc=desc, category=_cu(name), abstract=True)
     ref(nid, HasSubtype, base, forward=False)
     return nid
 
 
 def variable_type(nid, name, base, datatype, valuerank, desc):
-    add(nid, "UAVariableType", name, name, desc=desc, category=CAT,
+    add(nid, "UAVariableType", name, name, desc=desc, category=_cu(name),
         attrs={"DataType": datatype, "ValueRank": str(valuerank)})
     ref(nid, HasSubtype, base, forward=False)
     return nid
@@ -221,7 +224,7 @@ def placeholder_obj(owner, owner_sym, name, typedef, desc,
 
 
 def enum_type(nid, name, desc, fields):
-    add(nid, "UADataType", name, name, desc=desc, category=CAT_DT)
+    add(nid, "UADataType", name, name, desc=desc, category=_cu(name))
     ref(nid, HasSubtype, Enumeration, forward=False)
     dparts = [f'<Definition Name="{name}">']
     for (fname, val, fdesc) in fields:
@@ -250,13 +253,13 @@ def enum_type(nid, name, desc, fields):
 
 
 def subtype_datatype(nid, name, base, desc):
-    add(nid, "UADataType", name, name, desc=desc, category=CAT_DT)
+    add(nid, "UADataType", name, name, desc=desc, category=_cu(name))
     ref(nid, HasSubtype, base, forward=False)
     return nid
 
 
 def struct_datatype(nid, name, desc, fields):
-    add(nid, "UADataType", name, name, desc=desc, category=CAT_DT)
+    add(nid, "UADataType", name, name, desc=desc, category=_cu(name))
     ref(nid, HasSubtype, Structure, forward=False)
     dparts = [f'<Definition Name="{name}">']
     for field_name, datatype, valuerank in fields:
@@ -268,7 +271,7 @@ def struct_datatype(nid, name, desc, fields):
 
 
 def reference_type(nid, name, base, inverse, desc, symmetric=False):
-    add(nid, "UAReferenceType", name, name, desc=desc, category=CAT_REF)
+    add(nid, "UAReferenceType", name, name, desc=desc, category=_cu(name))
     ref(nid, HasSubtype, base, forward=False)
     NODES[nid].inverse = inverse
     NODES[nid].symmetric = symmetric
@@ -293,9 +296,72 @@ def instance_folder(nid, name, parent_nid, desc, reftype=HasComponent):
 # ===========================================================================
 # ==============================  MODEL DEFINITION  =========================
 # ===========================================================================
-CAT = "OpenUSD Scene Materialization"
-CAT_DT = "OpenUSD Scene DataTypes"
-CAT_REF = "OpenUSD Scene ReferenceTypes"
+# OPC 20020 3.4.1.1: every Type Node names the ConformanceUnits that require it in
+# the AddressSpace, as Category elements. These are the units of the specification
+# clause "Profiles and conformance units"; the Word node tables are generated from
+# them, so a unit not named here cannot appear in the document.
+#
+# The mapping lives in one table rather than on 45 call sites: which unit a type
+# belongs to is a property of the model as a whole, and a table can be read against
+# the specification clause in one pass.
+CU_STRUCTURE = "OUS-SceneStructure"
+CU_COMPOSITION = "OUS-CompositionProvenance"
+CU_TYPED = "OUS-TypedSchemas"
+CU_APPLIED = "OUS-AppliedSchemas"
+CU_GEO = "OUS-Georeferencing"
+CU_LIVE = "OUS-LiveAttributes"
+CU_CONVERSION = "OUS-Conversion"
+CU_PART1 = "OUS-Part1Interop"
+
+CU_BY_TYPE = {
+    # The materialized scene graph itself.
+    "UsdStageType": (CU_STRUCTURE, CU_PART1),
+    "UsdPrimType": (CU_STRUCTURE,),
+    "UsdRelationshipType": (CU_STRUCTURE,),
+    "UsdAttributeType": (CU_STRUCTURE, CU_LIVE),
+    "UsdRelationshipTarget": (CU_STRUCTURE,),
+    "UsdConnection": (CU_STRUCTURE,),
+    # Typed (IsA) schemas.
+    "UsdTypedType": (CU_TYPED,),
+    "UsdGeomImageableType": (CU_TYPED,),
+    "UsdGeomXformableType": (CU_TYPED,),
+    "UsdGeomXformType": (CU_TYPED,),
+    "UsdGeomScopeType": (CU_TYPED,),
+    "UsdGeomGprimType": (CU_TYPED,),
+    "UsdGeomMeshType": (CU_TYPED,),
+    "UsdGeomCylinderType": (CU_TYPED,),
+    "UsdGeomSphereType": (CU_TYPED,),
+    "UsdGeomCubeType": (CU_TYPED,),
+    "UsdGeomConeType": (CU_TYPED,),
+    "UsdGeomCapsuleType": (CU_TYPED,),
+    "UsdShadeMaterialType": (CU_TYPED,),
+    "UsdShadeShaderType": (CU_TYPED,),
+    # Applied (API) schemas.
+    "UsdApiSchemaType": (CU_APPLIED,),
+    "UsdCollectionAPIType": (CU_APPLIED,),
+    "UsdGeoreferenceApiType": (CU_APPLIED, CU_GEO),
+    "UsdGlobeAnchorApiType": (CU_APPLIED, CU_GEO),
+    # Composition provenance.
+    "UsdVariantSetType": (CU_COMPOSITION,),
+    "UsdCompositionArcType": (CU_COMPOSITION,),
+    # DataTypes, grouped by the capability whose values they carry.
+    "UsdSpecifierEnum": (CU_STRUCTURE,),
+    "UsdVariabilityEnum": (CU_STRUCTURE,),
+    "UsdPrimKindEnum": (CU_STRUCTURE,),
+    "UsdListOpTypeEnum": (CU_COMPOSITION,),
+    "UsdArcKindEnum": (CU_COMPOSITION,),
+    "UsdLayerOffset": (CU_COMPOSITION,),
+    "UsdReferenceSpec": (CU_COMPOSITION,),
+    "UsdVariantSelection": (CU_COMPOSITION,),
+}
+
+# Every other DataType is a USD value type: the vocabulary the round-trip conversion
+# and the materialized attributes are expressed in.
+DEFAULT_CU = (CU_STRUCTURE, CU_CONVERSION)
+
+
+def _cu(name):
+    return CU_BY_TYPE.get(name, DEFAULT_CU)
 
 # ---- DataTypes -------------------------------------------------------------
 enum_type(3001, "UsdSpecifierEnum", "USD prim specifier kind.",
@@ -625,8 +691,8 @@ def _emit_node(n):
         lines.append(f"    <InverseName>{sx.escape(n.inverse)}</InverseName>")
     if n.desc:
         lines.append(f"    <Description>{sx.escape(n.desc)}</Description>")
-    if n.category:
-        lines.append(f"    <Category>{sx.escape(n.category)}</Category>")
+    for cat in n.category:
+        lines.append(f"    <Category>{sx.escape(cat)}</Category>")
     lines.append("    <References>")
     for i in _sorted_refs(n.refs):
         rt, tgt, fwd = n.refs[i]

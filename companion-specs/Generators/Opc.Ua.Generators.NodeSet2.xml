@@ -7,7 +7,7 @@
     <Uri>http://opcfoundation.org/UA/Machinery/</Uri>
   </NamespaceUris>
   <Models>
-    <Model ModelUri="http://opcfoundation.org/UA/Generators/" Version="1.0.0" PublicationDate="2026-07-01T00:00:00Z">
+    <Model ModelUri="http://opcfoundation.org/UA/Generators/" Version="1.1.0" PublicationDate="2026-07-01T00:00:00Z">
       <RequiredModel ModelUri="http://opcfoundation.org/UA/" Version="1.05.04" PublicationDate="2023-12-15T00:00:00Z" />
       <RequiredModel ModelUri="http://opcfoundation.org/UA/DI/" Version="1.04.0" PublicationDate="2022-11-03T00:00:00Z" />
       <RequiredModel ModelUri="http://opcfoundation.org/UA/Machinery/" Version="1.04.1" PublicationDate="2026-01-01T00:00:00Z" />
@@ -42,7 +42,7 @@
   <UADataType NodeId="ns=1;i=3001" BrowseName="1:GeneratorOperatingModeEnum">
     <DisplayName>GeneratorOperatingModeEnum</DisplayName>
     <Description>Selector mode of the generator set control panel.</Description>
-    <Category>Generators DataTypes</Category>
+    <Category>GEN-GeneratorSet</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=3901</Reference>
@@ -60,7 +60,7 @@
   <UADataType NodeId="ns=1;i=3002" BrowseName="1:FuelTypeEnum">
     <DisplayName>FuelTypeEnum</DisplayName>
     <Description>Primary fuel of the generator set.</Description>
-    <Category>Generators DataTypes</Category>
+    <Category>GEN-GeneratorSet</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=3902</Reference>
@@ -78,7 +78,7 @@
   <UADataType NodeId="ns=1;i=3003" BrowseName="1:GeneratorApplicationRatingEnum">
     <DisplayName>GeneratorApplicationRatingEnum</DisplayName>
     <Description>Application/duty rating per ISO 8528 plus the data-center-continuous rating.</Description>
-    <Category>Generators DataTypes</Category>
+    <Category>GEN-GeneratorSet</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=3903</Reference>
@@ -96,7 +96,7 @@
   <UADataType NodeId="ns=1;i=3004" BrowseName="1:ElectricalConnectionEnum">
     <DisplayName>ElectricalConnectionEnum</DisplayName>
     <Description>Winding/connection configuration of the alternator output.</Description>
-    <Category>Generators DataTypes</Category>
+    <Category>GEN-GeneratorSet</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=3904</Reference>
@@ -114,7 +114,7 @@
   <UADataType NodeId="ns=1;i=3005" BrowseName="1:ExcitationTypeEnum">
     <DisplayName>ExcitationTypeEnum</DisplayName>
     <Description>Excitation method of the alternator.</Description>
-    <Category>Generators DataTypes</Category>
+    <Category>GEN-GeneratorSet</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=3905</Reference>
@@ -132,7 +132,7 @@
   <UADataType NodeId="ns=1;i=3006" BrowseName="1:CoolingMethodEnum">
     <DisplayName>CoolingMethodEnum</DisplayName>
     <Description>Primary cooling method of the engine.</Description>
-    <Category>Generators DataTypes</Category>
+    <Category>GEN-GeneratorSet</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=3906</Reference>
@@ -150,7 +150,7 @@
   <UADataType NodeId="ns=1;i=3007" BrowseName="1:AspirationEnum">
     <DisplayName>AspirationEnum</DisplayName>
     <Description>Air induction method of the engine.</Description>
-    <Category>Generators DataTypes</Category>
+    <Category>GEN-GeneratorSet</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=3907</Reference>
@@ -168,7 +168,7 @@
   <UADataType NodeId="ns=1;i=3008" BrowseName="1:EmissionsStandardEnum">
     <DisplayName>EmissionsStandardEnum</DisplayName>
     <Description>Emissions certification standard of the engine.</Description>
-    <Category>Generators DataTypes</Category>
+    <Category>GEN-GeneratorSet</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=3908</Reference>
@@ -186,7 +186,7 @@
   <UADataType NodeId="ns=1;i=3009" BrowseName="1:CanBusStateEnum">
     <DisplayName>CanBusStateEnum</DisplayName>
     <Description>State of the engine CAN bus / SAE J1939 network interface.</Description>
-    <Category>Generators DataTypes</Category>
+    <Category>GEN-GeneratorSet</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=3909</Reference>
@@ -204,7 +204,7 @@
   <UADataType NodeId="ns=1;i=3010" BrowseName="1:TransferSwitchPositionEnum">
     <DisplayName>TransferSwitchPositionEnum</DisplayName>
     <Description>Contact position of an automatic transfer switch.</Description>
-    <Category>Generators DataTypes</Category>
+    <Category>GEN-GeneratorSet</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=3910</Reference>
@@ -222,7 +222,7 @@
   <UADataType NodeId="ns=1;i=3011" BrowseName="1:TransferTransitionTypeEnum">
     <DisplayName>TransferTransitionTypeEnum</DisplayName>
     <Description>Transition method of an automatic transfer switch.</Description>
-    <Category>Generators DataTypes</Category>
+    <Category>GEN-GeneratorSet</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=3911</Reference>
@@ -240,7 +240,7 @@
   <UADataType NodeId="ns=1;i=3012" BrowseName="1:AtsOperatingStateEnum">
     <DisplayName>AtsOperatingStateEnum</DisplayName>
     <Description>Operating state of an automatic transfer switch.</Description>
-    <Category>Generators DataTypes</Category>
+    <Category>GEN-GeneratorSet</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=3912</Reference>
@@ -258,7 +258,7 @@
   <UADataType NodeId="ns=1;i=3013" BrowseName="1:AlarmSeverityEnum">
     <DisplayName>AlarmSeverityEnum</DisplayName>
     <Description>Severity class of a generator protection event.</Description>
-    <Category>Generators DataTypes</Category>
+    <Category>GEN-GeneratorSet</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=3913</Reference>
@@ -276,7 +276,7 @@
   <UADataType NodeId="ns=1;i=3014" BrowseName="1:GeneratorProtectionFunctionEnum">
     <DisplayName>GeneratorProtectionFunctionEnum</DisplayName>
     <Description>Protection / fault function that raised a generator alarm.</Description>
-    <Category>Generators DataTypes</Category>
+    <Category>GEN-GeneratorSet</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=3914</Reference>
@@ -294,7 +294,7 @@
   <UADataType NodeId="ns=1;i=3015" BrowseName="1:ParallelingSystemStateEnum">
     <DisplayName>ParallelingSystemStateEnum</DisplayName>
     <Description>Operating state of a paralleling / switchgear system.</Description>
-    <Category>Generators DataTypes</Category>
+    <Category>GEN-GeneratorSet</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=3915</Reference>
@@ -312,7 +312,7 @@
   <UADataType NodeId="ns=1;i=3016" BrowseName="1:AftertreatmentStateEnum">
     <DisplayName>AftertreatmentStateEnum</DisplayName>
     <Description>State of the exhaust aftertreatment system.</Description>
-    <Category>Generators DataTypes</Category>
+    <Category>GEN-GeneratorSet</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=3916</Reference>
@@ -330,7 +330,7 @@
   <UADataType NodeId="ns=1;i=3017" BrowseName="1:J1939LampStatusEnum">
     <DisplayName>J1939LampStatusEnum</DisplayName>
     <Description>SAE J1939 DM1 diagnostic lamp status (lamp state plus flash rate).</Description>
-    <Category>Generators DataTypes</Category>
+    <Category>GEN-GeneratorSet</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=3917</Reference>
@@ -348,7 +348,7 @@
   <UADataType NodeId="ns=1;i=3050" BrowseName="1:DiagnosticTroubleCodeType">
     <DisplayName>DiagnosticTroubleCodeType</DisplayName>
     <Description>A SAE J1939 diagnostic trouble code (DTC) reported by an engine ECU.</Description>
-    <Category>Generators DataTypes</Category>
+    <Category>GEN-GeneratorSet</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=22</Reference>
       <Reference ReferenceType="HasEncoding">ns=1;i=6001</Reference>
@@ -373,7 +373,7 @@
   <UAObjectType NodeId="ns=1;i=1016" BrowseName="1:GeneratorIdentificationType">
     <DisplayName>GeneratorIdentificationType</DisplayName>
     <Description>Identification and nameplate of a generator set. Extends the Machinery MachineIdentificationType with generator-specific nameplate data.</Description>
-    <Category>Generators Identification</Category>
+    <Category>GEN-Identification</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=3;i=1012</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6003</Reference>
@@ -561,7 +561,7 @@
   <UAObjectType NodeId="ns=1;i=1011" BrowseName="1:GeneratorStateMachineType">
     <DisplayName>GeneratorStateMachineType</DisplayName>
     <Description>Finite state machine describing the operating state of a generator set: Off, Ready, Starting, Warmup, Running, Loaded, Synchronizing, Paralleled, Cooldown, Stopping, Fault and EmergencyStopped.</Description>
-    <Category>Generators StateMachine</Category>
+    <Category>GEN-StateMachine</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=2771</Reference>
       <Reference ReferenceType="HasComponent">ns=1;i=6021</Reference>
@@ -1280,7 +1280,7 @@
   <UAObjectType NodeId="ns=1;i=1010" BrowseName="1:J1939DiagnosticInterfaceType">
     <DisplayName>J1939DiagnosticInterfaceType</DisplayName>
     <Description>The engine CAN bus / SAE J1939 diagnostic interface. Surfaces the network connection parameters, J1939 lamp status and active/previously-active diagnostic trouble codes reported by the engine ECU.</Description>
-    <Category>Generators CANbus</Category>
+    <Category>GEN-CANbus</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6091</Reference>
@@ -1407,7 +1407,7 @@
   <UAObjectType NodeId="ns=1;i=1018" BrowseName="1:ExhaustAftertreatmentType">
     <DisplayName>ExhaustAftertreatmentType</DisplayName>
     <Description>Exhaust aftertreatment subsystem (DPF/SCR/DEF) for Tier 4 / Stage V engines.</Description>
-    <Category>Generators Components</Category>
+    <Category>GEN-Components</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=2;i=15063</Reference>
       <Reference ReferenceType="HasComponent">ns=1;i=6103</Reference>
@@ -1593,7 +1593,7 @@
   <UAObjectType NodeId="ns=1;i=1002" BrowseName="1:EngineType">
     <DisplayName>EngineType</DisplayName>
     <Description>The prime-mover engine of a generator set. Exposes engine telemetry, typically obtained over the CAN bus / SAE J1939 interface, and identification.</Description>
-    <Category>Generators Components</Category>
+    <Category>GEN-Components</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=2;i=15063</Reference>
       <Reference ReferenceType="HasComponent">ns=1;i=6121</Reference>
@@ -1971,7 +1971,7 @@
   <UAObjectType NodeId="ns=1;i=1004" BrowseName="1:AlternatorPhaseType">
     <DisplayName>AlternatorPhaseType</DisplayName>
     <Description>Per-phase electrical measurements of the alternator output.</Description>
-    <Category>Generators Components</Category>
+    <Category>GEN-Components</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
       <Reference ReferenceType="HasComponent">ns=1;i=6158</Reference>
@@ -2109,7 +2109,7 @@
   <UAObjectType NodeId="ns=1;i=1003" BrowseName="1:AlternatorType">
     <DisplayName>AlternatorType</DisplayName>
     <Description>The alternator (generator end) that converts mechanical power into AC electrical power. Exposes aggregate and per-phase electrical measurements.</Description>
-    <Category>Generators Components</Category>
+    <Category>GEN-Components</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=2;i=15063</Reference>
       <Reference ReferenceType="HasComponent">ns=1;i=6171</Reference>
@@ -2507,7 +2507,7 @@
   <UAObjectType NodeId="ns=1;i=1005" BrowseName="1:FuelSystemType">
     <DisplayName>FuelSystemType</DisplayName>
     <Description>The fuel storage and delivery subsystem of a generator set.</Description>
-    <Category>Generators Components</Category>
+    <Category>GEN-Components</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=2;i=15063</Reference>
       <Reference ReferenceType="HasComponent">ns=1;i=6210</Reference>
@@ -2695,7 +2695,7 @@
   <UAObjectType NodeId="ns=1;i=1006" BrowseName="1:CoolingSystemType">
     <DisplayName>CoolingSystemType</DisplayName>
     <Description>The engine cooling subsystem of a generator set.</Description>
-    <Category>Generators Components</Category>
+    <Category>GEN-Components</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=2;i=15063</Reference>
       <Reference ReferenceType="HasComponent">ns=1;i=6228</Reference>
@@ -2813,7 +2813,7 @@
   <UAObjectType NodeId="ns=1;i=1007" BrowseName="1:LubricationSystemType">
     <DisplayName>LubricationSystemType</DisplayName>
     <Description>The engine lubrication subsystem of a generator set.</Description>
-    <Category>Generators Components</Category>
+    <Category>GEN-Components</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=2;i=15063</Reference>
       <Reference ReferenceType="HasComponent">ns=1;i=6239</Reference>
@@ -2901,7 +2901,7 @@
   <UAObjectType NodeId="ns=1;i=1008" BrowseName="1:StartingSystemType">
     <DisplayName>StartingSystemType</DisplayName>
     <Description>The starting/battery subsystem of a generator set.</Description>
-    <Category>Generators Components</Category>
+    <Category>GEN-Components</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=2;i=15063</Reference>
       <Reference ReferenceType="HasComponent">ns=1;i=6247</Reference>
@@ -2969,7 +2969,7 @@
   <UAObjectType NodeId="ns=1;i=1009" BrowseName="1:GeneratorControllerType">
     <DisplayName>GeneratorControllerType</DisplayName>
     <Description>The generator set control panel. Provides controller identity, mode/state visibility and remote-monitoring status.</Description>
-    <Category>Generators Components</Category>
+    <Category>GEN-Components</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=2;i=15063</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6253</Reference>
@@ -3097,7 +3097,7 @@
   <UAObjectType NodeId="ns=1;i=1012" BrowseName="1:GeneratorRatingType">
     <DisplayName>GeneratorRatingType</DisplayName>
     <Description>A single nameplate power rating point of a generator set for a given application/duty (ISO 8528).</Description>
-    <Category>Generators Rating</Category>
+    <Category>GEN-Rating</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
       <Reference ReferenceType="HasComponent">ns=1;i=6265</Reference>
@@ -3305,7 +3305,7 @@
   <UAObjectType NodeId="ns=1;i=1017" BrowseName="1:GeneratorProtectionAlarmType">
     <DisplayName>GeneratorProtectionAlarmType</DisplayName>
     <Description>Alarm raised by a generator protection/shutdown function. Extends OffNormalAlarmType with the protection function, severity and J1939 origin.</Description>
-    <Category>Generators Alarms</Category>
+    <Category>GEN-Alarms</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=10637</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6285</Reference>
@@ -3373,7 +3373,7 @@
   <UAObjectType NodeId="ns=1;i=1001" BrowseName="1:GeneratorSetType">
     <DisplayName>GeneratorSetType</DisplayName>
     <Description>A generator set (GenSet): a complete electrical power generation asset composed of a prime-mover engine, an alternator, a fuel system, cooling, lubrication, starting and control subsystems. Applicable to the whole industry, from small home-standby units to house-sized multi-megawatt industrial sets.</Description>
-    <Category>Generators GeneratorSet</Category>
+    <Category>GEN-GeneratorSet</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=2;i=1002</Reference>
       <Reference ReferenceType="HasAddIn">ns=1;i=6291</Reference>
@@ -3686,7 +3686,7 @@
   <UAObjectType NodeId="ns=1;i=1019" BrowseName="1:TransferSwitchSourceType">
     <DisplayName>TransferSwitchSourceType</DisplayName>
     <Description>One power source (normal/utility or emergency/generator) of an automatic transfer switch, with its availability and measurements.</Description>
-    <Category>Generators TransferSwitch</Category>
+    <Category>GEN-TransferSwitch</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
       <Reference ReferenceType="HasComponent">ns=1;i=6322</Reference>
@@ -3764,7 +3764,7 @@
   <UAObjectType NodeId="ns=1;i=1013" BrowseName="1:AutomaticTransferSwitchType">
     <DisplayName>AutomaticTransferSwitchType</DisplayName>
     <Description>An automatic transfer switch (ATS) that transfers a load between a normal source (utility) and an emergency source (generator).</Description>
-    <Category>Generators TransferSwitch</Category>
+    <Category>GEN-TransferSwitch</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=2;i=1002</Reference>
       <Reference ReferenceType="HasAddIn">ns=1;i=6329</Reference>
@@ -4039,7 +4039,7 @@
   <UAObjectType NodeId="ns=1;i=1014" BrowseName="1:ParallelingControllerType">
     <DisplayName>ParallelingControllerType</DisplayName>
     <Description>A paralleling / switchgear controller that synchronizes and shares load among generator sets on a common bus, and optionally parallels with the utility.</Description>
-    <Category>Generators Paralleling</Category>
+    <Category>GEN-Paralleling</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=2;i=15063</Reference>
       <Reference ReferenceType="HasComponent">ns=1;i=6356</Reference>
@@ -4375,7 +4375,7 @@
   <UAObjectType NodeId="ns=1;i=1015" BrowseName="1:GeneratorSystemType">
     <DisplayName>GeneratorSystemType</DisplayName>
     <Description>A power-generation system aggregating one or more paralleled generator sets, an optional paralleling controller and transfer switches. Models integrated power systems such as data-center and healthcare plants.</Description>
-    <Category>Generators System</Category>
+    <Category>GEN-System</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
       <Reference ReferenceType="HasComponent">ns=1;i=6389</Reference>

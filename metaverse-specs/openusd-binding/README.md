@@ -1,6 +1,6 @@
 # OPC UA — OpenUSD Binding (Part 1)
 
-**Release 0.4.0 — Draft** · namespace `http://opcfoundation.org/UA/OpenUSD/`
+**Release 0.5.0 — Draft** · namespace `http://opcfoundation.org/UA/OpenUSD/`
 
 This folder contains the specification and generated NodeSet for **Part 1** of the *OPC UA — OpenUSD* work: a small, generic **representation and binding layer** between an OPC UA address space and an OpenUSD model.
 
@@ -15,7 +15,7 @@ The USD scene stays outside OPC UA. A connector browses the well-known `Server/O
 - **Commands (opt-in, authorized).** A fail-closed, single-writer path from a USD-side intent to an OPC UA write or `Method` call.
 - **Alarms and history.** The same binding type specialized for A&C condition aspects and for authoring USD time samples from `HistoryRead`.
 - **Composition.** Composing component Objects into the parent prim tree — nested, referenced, payloaded or `instanceable` — including **dynamic** reconciliation on model-change events and **cross-server** resolution by federation.
-- **Asset content delivery (§5.15).** A server can serve the artist-authored USD closure itself, so a connector needs no external asset repository.
+- **Asset content delivery (§7.11).** A server can serve the artist-authored USD closure itself, so a connector needs no external asset repository.
 
 ### 0.4.0 — the artifact registry
 
@@ -28,7 +28,7 @@ This is the one place the model is no longer self-contained on base OPC UA alone
 - `OPC-UA-OpenUSD-Bindings.md` — the specification.
 - `Opc.Ua.OpenUsd.NodeSet2.xml` — generated NodeSet.
 - `Opc.Ua.OpenUsd.NodeIds.csv` — generated NodeId assignments.
-- `xRegistry-OpenUsd.md` — *OpenUSD Artifact Registry Service*: the artifact registry of §5.15 defined as a standalone **xRegistry domain specification**, structured for submission to the [xRegistry](https://github.com/xregistry/spec) project. It is the wire-format peer of §5.15 — same collections, same attributes, same identifier rules — so the two projections federate. It does not depend on OPC UA.
+- `xRegistry-OpenUsd.md` — *OpenUSD Artifact Registry Service*: the artifact registry of §7.11 defined as a standalone **xRegistry domain specification**, structured for submission to the [xRegistry](https://github.com/xregistry/spec) project. It is the wire-format peer of §7.11 — same collections, same attributes, same identifier rules — so the two projections federate. It does not depend on OPC UA.
 - `xRegistry-OpenUsd.model.json` — the authoritative xRegistry model for that spec (becomes `model.json` on submission).
 - `pumps/` — implementer addendum + instance-overlay NodeSet for the pumps example.
 - `robotics/` — implementer addendum + instance-overlay NodeSet for the robotics example.

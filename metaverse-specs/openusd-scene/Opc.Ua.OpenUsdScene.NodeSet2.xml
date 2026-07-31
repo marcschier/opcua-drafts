@@ -5,7 +5,7 @@
     <Uri>http://opcfoundation.org/UA/OpenUSD/Scene/</Uri>
   </NamespaceUris>
   <Models>
-    <Model ModelUri="http://opcfoundation.org/UA/OpenUSD/Scene/" Version="0.3.0" PublicationDate="2026-07-29T00:00:00Z">
+    <Model ModelUri="http://opcfoundation.org/UA/OpenUSD/Scene/" Version="0.4.0" PublicationDate="2026-07-29T00:00:00Z">
       <RequiredModel ModelUri="http://opcfoundation.org/UA/" Version="1.05.04" PublicationDate="2023-12-15T00:00:00Z" />
     </Model>
   </Models>
@@ -41,7 +41,7 @@
   <UADataType NodeId="ns=1;i=3001" BrowseName="1:UsdSpecifierEnum">
     <DisplayName>UsdSpecifierEnum</DisplayName>
     <Description>USD prim specifier kind.</Description>
-    <Category>OpenUSD Scene DataTypes</Category>
+    <Category>OUS-SceneStructure</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=3901</Reference>
@@ -60,7 +60,7 @@
   <UADataType NodeId="ns=1;i=3002" BrowseName="1:UsdVariabilityEnum">
     <DisplayName>UsdVariabilityEnum</DisplayName>
     <Description>USD attribute variability.</Description>
-    <Category>OpenUSD Scene DataTypes</Category>
+    <Category>OUS-SceneStructure</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=3902</Reference>
@@ -79,7 +79,7 @@
   <UADataType NodeId="ns=1;i=3003" BrowseName="1:UsdPrimKindEnum">
     <DisplayName>UsdPrimKindEnum</DisplayName>
     <Description>USD model kind metadata.</Description>
-    <Category>OpenUSD Scene DataTypes</Category>
+    <Category>OUS-SceneStructure</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=3903</Reference>
@@ -98,7 +98,7 @@
   <UADataType NodeId="ns=1;i=3004" BrowseName="1:UsdListOpTypeEnum">
     <DisplayName>UsdListOpTypeEnum</DisplayName>
     <Description>USD list operation position/type.</Description>
-    <Category>OpenUSD Scene DataTypes</Category>
+    <Category>OUS-CompositionProvenance</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=3904</Reference>
@@ -117,7 +117,7 @@
   <UADataType NodeId="ns=1;i=3005" BrowseName="1:UsdArcKindEnum">
     <DisplayName>UsdArcKindEnum</DisplayName>
     <Description>USD composition arc kind.</Description>
-    <Category>OpenUSD Scene DataTypes</Category>
+    <Category>OUS-CompositionProvenance</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=3905</Reference>
@@ -136,7 +136,8 @@
   <UADataType NodeId="ns=1;i=3006" BrowseName="1:UsdToken">
     <DisplayName>UsdToken</DisplayName>
     <Description>USD token value represented as a UA String subtype.</Description>
-    <Category>OpenUSD Scene DataTypes</Category>
+    <Category>OUS-SceneStructure</Category>
+    <Category>OUS-Conversion</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=12</Reference>
     </References>
@@ -144,7 +145,8 @@
   <UADataType NodeId="ns=1;i=3007" BrowseName="1:UsdAssetPath">
     <DisplayName>UsdAssetPath</DisplayName>
     <Description>USD asset path represented as a UA String subtype.</Description>
-    <Category>OpenUSD Scene DataTypes</Category>
+    <Category>OUS-SceneStructure</Category>
+    <Category>OUS-Conversion</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=12</Reference>
     </References>
@@ -152,7 +154,8 @@
   <UADataType NodeId="ns=1;i=3008" BrowseName="1:UsdTimeCode">
     <DisplayName>UsdTimeCode</DisplayName>
     <Description>USD time code represented as a UA Double subtype.</Description>
-    <Category>OpenUSD Scene DataTypes</Category>
+    <Category>OUS-SceneStructure</Category>
+    <Category>OUS-Conversion</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=11</Reference>
     </References>
@@ -160,7 +163,8 @@
   <UADataType NodeId="ns=1;i=3013" BrowseName="1:UsdColor3f">
     <DisplayName>UsdColor3f</DisplayName>
     <Description>USD color3f value (RGB float triple); UA Float subtype carried as a 3-element Float array.</Description>
-    <Category>OpenUSD Scene DataTypes</Category>
+    <Category>OUS-SceneStructure</Category>
+    <Category>OUS-Conversion</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=10</Reference>
     </References>
@@ -168,7 +172,8 @@
   <UADataType NodeId="ns=1;i=3014" BrowseName="1:UsdNormal3f">
     <DisplayName>UsdNormal3f</DisplayName>
     <Description>USD normal3f value (float triple); UA Float subtype carried as a 3-element Float array.</Description>
-    <Category>OpenUSD Scene DataTypes</Category>
+    <Category>OUS-SceneStructure</Category>
+    <Category>OUS-Conversion</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=10</Reference>
     </References>
@@ -176,7 +181,8 @@
   <UADataType NodeId="ns=1;i=3015" BrowseName="1:UsdPoint3f">
     <DisplayName>UsdPoint3f</DisplayName>
     <Description>USD point3f value (float triple); UA Float subtype carried as a 3-element Float array.</Description>
-    <Category>OpenUSD Scene DataTypes</Category>
+    <Category>OUS-SceneStructure</Category>
+    <Category>OUS-Conversion</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=10</Reference>
     </References>
@@ -184,7 +190,8 @@
   <UADataType NodeId="ns=1;i=3016" BrowseName="1:UsdVector3f">
     <DisplayName>UsdVector3f</DisplayName>
     <Description>USD vector3f value (float triple); UA Float subtype carried as a 3-element Float array.</Description>
-    <Category>OpenUSD Scene DataTypes</Category>
+    <Category>OUS-SceneStructure</Category>
+    <Category>OUS-Conversion</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=10</Reference>
     </References>
@@ -192,7 +199,8 @@
   <UADataType NodeId="ns=1;i=3017" BrowseName="1:UsdTexCoord2f">
     <DisplayName>UsdTexCoord2f</DisplayName>
     <Description>USD texCoord2f value (float pair); UA Float subtype carried as a 2-element Float array.</Description>
-    <Category>OpenUSD Scene DataTypes</Category>
+    <Category>OUS-SceneStructure</Category>
+    <Category>OUS-Conversion</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=10</Reference>
     </References>
@@ -200,7 +208,8 @@
   <UADataType NodeId="ns=1;i=3018" BrowseName="1:UsdQuatf">
     <DisplayName>UsdQuatf</DisplayName>
     <Description>USD quatf value (float quaternion); UA Float subtype carried as a 4-element Float array.</Description>
-    <Category>OpenUSD Scene DataTypes</Category>
+    <Category>OUS-SceneStructure</Category>
+    <Category>OUS-Conversion</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=10</Reference>
     </References>
@@ -208,7 +217,8 @@
   <UADataType NodeId="ns=1;i=3019" BrowseName="1:UsdQuatd">
     <DisplayName>UsdQuatd</DisplayName>
     <Description>USD quatd value (double quaternion); UA Double subtype carried as a 4-element Double array.</Description>
-    <Category>OpenUSD Scene DataTypes</Category>
+    <Category>OUS-SceneStructure</Category>
+    <Category>OUS-Conversion</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=11</Reference>
     </References>
@@ -216,7 +226,8 @@
   <UADataType NodeId="ns=1;i=3020" BrowseName="1:UsdMatrix4d">
     <DisplayName>UsdMatrix4d</DisplayName>
     <Description>USD matrix4d value (row-major); UA Double subtype carried as a 16-element Double array.</Description>
-    <Category>OpenUSD Scene DataTypes</Category>
+    <Category>OUS-SceneStructure</Category>
+    <Category>OUS-Conversion</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=11</Reference>
     </References>
@@ -224,7 +235,7 @@
   <UADataType NodeId="ns=1;i=3010" BrowseName="1:UsdLayerOffset">
     <DisplayName>UsdLayerOffset</DisplayName>
     <Description>USD layer offset and scale.</Description>
-    <Category>OpenUSD Scene DataTypes</Category>
+    <Category>OUS-CompositionProvenance</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=22</Reference>
     </References>
@@ -233,7 +244,7 @@
   <UADataType NodeId="ns=1;i=3011" BrowseName="1:UsdReferenceSpec">
     <DisplayName>UsdReferenceSpec</DisplayName>
     <Description>USD reference specification.</Description>
-    <Category>OpenUSD Scene DataTypes</Category>
+    <Category>OUS-CompositionProvenance</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=22</Reference>
     </References>
@@ -242,7 +253,7 @@
   <UADataType NodeId="ns=1;i=3012" BrowseName="1:UsdVariantSelection">
     <DisplayName>UsdVariantSelection</DisplayName>
     <Description>USD variant set selection.</Description>
-    <Category>OpenUSD Scene DataTypes</Category>
+    <Category>OUS-CompositionProvenance</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=22</Reference>
     </References>
@@ -252,7 +263,7 @@
     <DisplayName>UsdRelationshipTarget</DisplayName>
     <InverseName>UsdRelationshipTargetOf</InverseName>
     <Description>Browsable relationship edge from a prim or relationship to its target prim.</Description>
-    <Category>OpenUSD Scene ReferenceTypes</Category>
+    <Category>OUS-SceneStructure</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=32</Reference>
     </References>
@@ -261,7 +272,7 @@
     <DisplayName>UsdConnection</DisplayName>
     <InverseName>UsdConnectionOf</InverseName>
     <Description>Browsable USD attribute-connection edge.</Description>
-    <Category>OpenUSD Scene ReferenceTypes</Category>
+    <Category>OUS-SceneStructure</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=32</Reference>
     </References>
@@ -269,7 +280,8 @@
   <UAVariableType NodeId="ns=1;i=2001" BrowseName="1:UsdAttributeType" DataType="BaseDataType" ValueRank="-2">
     <DisplayName>UsdAttributeType</DisplayName>
     <Description>USD attribute value variable. The runtime DataType and ValueRank reflect the composed Sdf value type.</Description>
-    <Category>OpenUSD Scene Materialization</Category>
+    <Category>OUS-SceneStructure</Category>
+    <Category>OUS-LiveAttributes</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=63</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6001</Reference>
@@ -328,7 +340,8 @@
   <UAObjectType NodeId="ns=1;i=1001" BrowseName="1:UsdStageType">
     <DisplayName>UsdStageType</DisplayName>
     <Description>A materialized composed OpenUSD stage.</Description>
-    <Category>OpenUSD Scene Materialization</Category>
+    <Category>OUS-SceneStructure</Category>
+    <Category>OUS-Part1Interop</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6006</Reference>
@@ -427,7 +440,7 @@
   <UAObjectType NodeId="ns=1;i=1002" BrowseName="1:UsdPrimType">
     <DisplayName>UsdPrimType</DisplayName>
     <Description>A materialized composed USD prim (untyped/over base).</Description>
-    <Category>OpenUSD Scene Materialization</Category>
+    <Category>OUS-SceneStructure</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6015</Reference>
@@ -578,7 +591,7 @@
   <UAObjectType NodeId="ns=1;i=1003" BrowseName="1:UsdTypedType" IsAbstract="true">
     <DisplayName>UsdTypedType</DisplayName>
     <Description>Typed (IsA-schema) prim base.</Description>
-    <Category>OpenUSD Scene Materialization</Category>
+    <Category>OUS-TypedSchemas</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=1002</Reference>
     </References>
@@ -586,7 +599,7 @@
   <UAObjectType NodeId="ns=1;i=1004" BrowseName="1:UsdGeomImageableType" IsAbstract="true">
     <DisplayName>UsdGeomImageableType</DisplayName>
     <Description>Abstract USD imageable prim base.</Description>
-    <Category>OpenUSD Scene Materialization</Category>
+    <Category>OUS-TypedSchemas</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=1003</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6029</Reference>
@@ -614,7 +627,7 @@
   <UAObjectType NodeId="ns=1;i=1005" BrowseName="1:UsdGeomXformableType" IsAbstract="true">
     <DisplayName>UsdGeomXformableType</DisplayName>
     <Description>Abstract USD xformable prim base.</Description>
-    <Category>OpenUSD Scene Materialization</Category>
+    <Category>OUS-TypedSchemas</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=1004</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6031</Reference>
@@ -632,7 +645,7 @@
   <UAObjectType NodeId="ns=1;i=1006" BrowseName="1:UsdGeomXformType">
     <DisplayName>UsdGeomXformType</DisplayName>
     <Description>USD Xform prim.</Description>
-    <Category>OpenUSD Scene Materialization</Category>
+    <Category>OUS-TypedSchemas</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=1005</Reference>
     </References>
@@ -640,7 +653,7 @@
   <UAObjectType NodeId="ns=1;i=1007" BrowseName="1:UsdGeomScopeType">
     <DisplayName>UsdGeomScopeType</DisplayName>
     <Description>USD Scope prim.</Description>
-    <Category>OpenUSD Scene Materialization</Category>
+    <Category>OUS-TypedSchemas</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=1004</Reference>
     </References>
@@ -648,7 +661,7 @@
   <UAObjectType NodeId="ns=1;i=1008" BrowseName="1:UsdGeomGprimType" IsAbstract="true">
     <DisplayName>UsdGeomGprimType</DisplayName>
     <Description>Abstract USD geometric prim base.</Description>
-    <Category>OpenUSD Scene Materialization</Category>
+    <Category>OUS-TypedSchemas</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=1005</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6032</Reference>
@@ -686,7 +699,7 @@
   <UAObjectType NodeId="ns=1;i=1009" BrowseName="1:UsdGeomMeshType">
     <DisplayName>UsdGeomMeshType</DisplayName>
     <Description>USD Mesh prim.</Description>
-    <Category>OpenUSD Scene Materialization</Category>
+    <Category>OUS-TypedSchemas</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=1008</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6035</Reference>
@@ -724,7 +737,7 @@
   <UAObjectType NodeId="ns=1;i=1010" BrowseName="1:UsdGeomCylinderType">
     <DisplayName>UsdGeomCylinderType</DisplayName>
     <Description>USD Cylinder prim.</Description>
-    <Category>OpenUSD Scene Materialization</Category>
+    <Category>OUS-TypedSchemas</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=1008</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6038</Reference>
@@ -762,7 +775,7 @@
   <UAObjectType NodeId="ns=1;i=1011" BrowseName="1:UsdGeomSphereType">
     <DisplayName>UsdGeomSphereType</DisplayName>
     <Description>USD Sphere prim.</Description>
-    <Category>OpenUSD Scene Materialization</Category>
+    <Category>OUS-TypedSchemas</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=1008</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6041</Reference>
@@ -780,7 +793,7 @@
   <UAObjectType NodeId="ns=1;i=1012" BrowseName="1:UsdGeomCubeType">
     <DisplayName>UsdGeomCubeType</DisplayName>
     <Description>USD Cube prim.</Description>
-    <Category>OpenUSD Scene Materialization</Category>
+    <Category>OUS-TypedSchemas</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=1008</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6042</Reference>
@@ -798,7 +811,7 @@
   <UAObjectType NodeId="ns=1;i=1013" BrowseName="1:UsdGeomConeType">
     <DisplayName>UsdGeomConeType</DisplayName>
     <Description>USD Cone prim.</Description>
-    <Category>OpenUSD Scene Materialization</Category>
+    <Category>OUS-TypedSchemas</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=1008</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6043</Reference>
@@ -836,7 +849,7 @@
   <UAObjectType NodeId="ns=1;i=1014" BrowseName="1:UsdGeomCapsuleType">
     <DisplayName>UsdGeomCapsuleType</DisplayName>
     <Description>USD Capsule prim.</Description>
-    <Category>OpenUSD Scene Materialization</Category>
+    <Category>OUS-TypedSchemas</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=1008</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6046</Reference>
@@ -874,7 +887,7 @@
   <UAObjectType NodeId="ns=1;i=1015" BrowseName="1:UsdShadeMaterialType">
     <DisplayName>UsdShadeMaterialType</DisplayName>
     <Description>USD Shade material prim hook.</Description>
-    <Category>OpenUSD Scene Materialization</Category>
+    <Category>OUS-TypedSchemas</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=1003</Reference>
     </References>
@@ -882,7 +895,7 @@
   <UAObjectType NodeId="ns=1;i=1016" BrowseName="1:UsdShadeShaderType">
     <DisplayName>UsdShadeShaderType</DisplayName>
     <Description>USD Shade shader prim hook.</Description>
-    <Category>OpenUSD Scene Materialization</Category>
+    <Category>OUS-TypedSchemas</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=1003</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6049</Reference>
@@ -900,7 +913,7 @@
   <UAObjectType NodeId="ns=1;i=1017" BrowseName="1:UsdRelationshipType">
     <DisplayName>UsdRelationshipType</DisplayName>
     <Description>USD relationship object.</Description>
-    <Category>OpenUSD Scene Materialization</Category>
+    <Category>OUS-SceneStructure</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6050</Reference>
@@ -938,7 +951,7 @@
   <UAObjectType NodeId="ns=1;i=1018" BrowseName="1:UsdVariantSetType">
     <DisplayName>UsdVariantSetType</DisplayName>
     <Description>USD variant set materialization.</Description>
-    <Category>OpenUSD Scene Materialization</Category>
+    <Category>OUS-CompositionProvenance</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6053</Reference>
@@ -976,7 +989,7 @@
   <UAObjectType NodeId="ns=1;i=1019" BrowseName="1:UsdCompositionArcType">
     <DisplayName>UsdCompositionArcType</DisplayName>
     <Description>USD composition arc materialization.</Description>
-    <Category>OpenUSD Scene Materialization</Category>
+    <Category>OUS-CompositionProvenance</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6056</Reference>
@@ -1044,7 +1057,7 @@
   <UAObjectType NodeId="ns=1;i=1020" BrowseName="1:UsdApiSchemaType">
     <DisplayName>UsdApiSchemaType</DisplayName>
     <Description>Base for applied USD API schema AddIns. Concrete, because §8.4 requires an unknown applied schema to degrade to a UsdApiSchemaType AddIn carrying its SchemaName rather than being dropped; vendors still subtype it (§8.2).</Description>
-    <Category>OpenUSD Scene Materialization</Category>
+    <Category>OUS-AppliedSchemas</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6062</Reference>
@@ -1062,7 +1075,7 @@
   <UAObjectType NodeId="ns=1;i=1021" BrowseName="1:UsdCollectionAPIType">
     <DisplayName>UsdCollectionAPIType</DisplayName>
     <Description>USD CollectionAPI applied API schema.</Description>
-    <Category>OpenUSD Scene Materialization</Category>
+    <Category>OUS-AppliedSchemas</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=1020</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6063</Reference>
@@ -1100,7 +1113,8 @@
   <UAObjectType NodeId="ns=1;i=1022" BrowseName="1:UsdGeoreferenceApiType">
     <DisplayName>UsdGeoreferenceApiType</DisplayName>
     <Description>Portable stage georeference applied API schema: the geodetic origin that anchors the stage's local Cartesian frame to the globe. Vendor-neutral materialization of Cesium CesiumGeoreferencePrim / NVIDIA WGS84ReferencePositionAPI; maps to OPC UA GPOS (OPC 10000-211) GlobalPosition + GroundControlPoints (Annex B).</Description>
-    <Category>OpenUSD Scene Materialization</Category>
+    <Category>OUS-AppliedSchemas</Category>
+    <Category>OUS-Georeferencing</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=1020</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6066</Reference>
@@ -1158,7 +1172,8 @@
   <UAObjectType NodeId="ns=1;i=1023" BrowseName="1:UsdGlobeAnchorApiType">
     <DisplayName>UsdGlobeAnchorApiType</DisplayName>
     <Description>Portable per-prim globe anchor applied API schema: the geodetic position of an individual prim, resolved against the stage UsdGeoreferenceApiType. Vendor-neutral materialization of Cesium CesiumGlobeAnchorAPI / NVIDIA WGS84LocalPositionAPI; maps to a per-asset OPC UA GPOS GlobalPosition.</Description>
-    <Category>OpenUSD Scene Materialization</Category>
+    <Category>OUS-AppliedSchemas</Category>
+    <Category>OUS-Georeferencing</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=1020</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6071</Reference>
@@ -1241,7 +1256,8 @@
   <UAObjectType NodeId="ns=1;i=1024" BrowseName="1:UsdGeomCameraType">
     <DisplayName>UsdGeomCameraType</DisplayName>
     <Description>USD Camera prim: a transformable prim describing a view frustum. Materializes the UsdGeomCamera IsA schema. Its aperture and focal-length attributes are the surface from which camera intrinsics are derived (Annex C). OPC UA - Vision defines, in its own VIS-Interop-Scene facet, when a Vision sensor's PrimPath is required to resolve to an instance of this type; that requirement belongs to that specification and is not imposed here.</Description>
-    <Category>OpenUSD Scene Materialization</Category>
+    <Category>OUS-SceneStructure</Category>
+    <Category>OUS-Conversion</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=1005</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6079</Reference>

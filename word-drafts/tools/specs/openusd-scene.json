@@ -1,0 +1,185 @@
+{
+  "id": "openusd-scene",
+  "source": {
+    "markdown": "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
+    "nodeset": "metaverse-specs/openusd-scene/Opc.Ua.OpenUsdScene.NodeSet2.xml",
+    "changelog": "metaverse-specs/openusd-scene/CHANGELOG.md"
+  },
+  "output": {
+    "docx": "word-drafts/OPC-UA-OpenUSD-Scene-Part2.docx",
+    "docmodel": "word-drafts/OPC-UA-OpenUSD-Scene-Part2.docmodel.json",
+    "figures": "word-drafts/figures"
+  },
+
+  "identity": {
+    "docNumber": "OPC nnnnn-m",
+    "partNumber": "Part 2",
+    "partName": "OpenUSD Scene Materialization",
+    "title": "OpenUSD",
+    "mainTitle": "OPC UA FOR OPENUSD",
+    "subTitle": "Part 2: Scene Materialization",
+    "shortName": "OUS",
+    "capabilityIdentifier": "OUS",
+    "namespaceUri": "http://opcfoundation.org/UA/OpenUSD/Scene/",
+    "namespaceIndexInDocument": 1,
+    "version": "0.4.0",
+    "publicationDate": "2026-07-29",
+    "releaseType": "Draft",
+    "mantisProjectId": "<nnn>",
+    "otherOrganization": "Alliance for OpenUSD",
+    "introduction": [
+      "OpenUSD (Universal Scene Description) is an open, extensible framework for describing, composing, simulating and collaborating on three-dimensional scenes. Its scene graph is assembled from layers that compose into a single stage, so several authors and tools contribute to one scene without rewriting it. A stage is a hierarchy of prims, each carrying typed attributes and relationships, addressed by a canonical prim path.",
+      "OpenUSD is governed by the Alliance for OpenUSD (AOUSD), which publishes the OpenUSD Core Specification. The Core Specification covers paths, composition, layers and identity; the domain schemas that describe geometry, materials, lighting, skeletons and physics are versioned separately with the OpenUSD software releases.",
+      "Industrial visualization pairs OpenUSD with live process data. This document defines how an OPC UA Server declares that pairing as part of its own address space, so that any conforming connector can apply it without prior knowledge of the domain model."
+    ],
+    "draftBanner": "PROVISIONAL WORKING DRAFT — not normative, not endorsed by the OPC Foundation or the Alliance for OpenUSD. The document number, the Mantis project identifier and every NodeId in this document are placeholders; the OPC Foundation assigns the real values."
+  },
+
+  "abbreviations": [
+    ["AECO", "Architecture, Engineering, Construction and Operations"],
+    ["AOUSD", "Alliance for OpenUSD"],
+    ["API", "Application Programming Interface"],
+    ["CRS", "Coordinate Reference System"],
+    ["ECEF", "Earth-Centred, Earth-Fixed"],
+    ["ENU", "East-North-Up"],
+    ["EPSG", "European Petroleum Survey Group"],
+    ["GPOS", "Global Positioning"],
+    ["IRDI", "International Registration Data Identifier"],
+    ["RSL", "Relative Spatial Location"],
+    ["Sdf", "Scene Description Foundation"],
+    ["URI", "Uniform Resource Identifier"],
+    ["USD", "Universal Scene Description"],
+    ["WGS84", "World Geodetic System 1984"]
+  ],
+
+  "normativeReferences": [
+    {"id": "UAPart1", "label": "OPC 10000-1", "title": "OPC Unified Architecture - Part 1: Overview and Concepts", "url": "http://www.opcfoundation.org/documents/10000-1/"},
+    {"id": "UAPart2", "label": "OPC 10000-2", "title": "OPC Unified Architecture - Part 2: Security Model", "url": "http://www.opcfoundation.org/documents/10000-2/"},
+    {"id": "UAPart3", "label": "OPC 10000-3", "title": "OPC Unified Architecture - Part 3: Address Space Model", "url": "http://www.opcfoundation.org/documents/10000-3/"},
+    {"id": "UAPart4", "label": "OPC 10000-4", "title": "OPC Unified Architecture - Part 4: Services", "url": "http://www.opcfoundation.org/documents/10000-4/"},
+    {"id": "UAPart5", "label": "OPC 10000-5", "title": "OPC Unified Architecture - Part 5: Information Model", "url": "http://www.opcfoundation.org/documents/10000-5/"},
+    {"id": "UAPart6", "label": "OPC 10000-6", "title": "OPC Unified Architecture - Part 6: Mappings", "url": "http://www.opcfoundation.org/documents/10000-6/"},
+    {"id": "UAPart7", "label": "OPC 10000-7", "title": "OPC Unified Architecture - Part 7: Profiles", "url": "http://www.opcfoundation.org/documents/10000-7/"},
+    {"id": "UAPart8", "label": "OPC 10000-8", "title": "OPC Unified Architecture - Part 8: Data Access", "url": "http://www.opcfoundation.org/documents/10000-8/"},
+    {"id": "UAPart11", "label": "OPC 10000-11", "title": "OPC Unified Architecture - Part 11: Historical Access", "url": "http://www.opcfoundation.org/documents/10000-11/"},
+    {"id": "UAPart12", "label": "OPC 10000-12", "title": "OPC Unified Architecture - Part 12: Discovery and Global Services", "url": "http://www.opcfoundation.org/documents/10000-12/"},
+    {"id": "UAPart19", "label": "OPC 10000-19", "title": "OPC Unified Architecture - Part 19: Dictionary References", "url": "http://www.opcfoundation.org/documents/10000-19/"},
+    {"id": "UAPart210", "label": "OPC 10000-210", "title": "OPC Unified Architecture - Part 210: Relative Spatial Location", "url": "http://www.opcfoundation.org/documents/10000-210/"},
+    {"id": "UAPart211", "label": "OPC 10000-211", "title": "OPC Unified Architecture - Part 211: Global Positioning", "url": "http://www.opcfoundation.org/documents/10000-211/"},
+    {"id": "UA11030", "label": "OPC 11030", "title": "OPC UA Modelling Best Practices", "url": "http://www.opcfoundation.org/documents/11030/"},
+    {"id": "OpenUsdBinding", "label": "OPC UA for OpenUSD - Part 1: OpenUSD Binding", "title": "The companion Part that binds OPC UA Objects to prims on an external USD stage. Not a RequiredModel of this document.", "url": null},
+    {"id": "AOUSD", "label": "AOUSD OpenUSD Core Specification 1.0.1", "title": "Alliance for OpenUSD - normative for USD paths, composition, layers and identity.", "url": "https://aousd.org/"}
+  ],
+
+  "_comment_clauseMap": "Part 2 declares 23 ObjectTypes, 1 VariableType, 19 DataTypes and 2 ReferenceTypes. Only the types whose clause carries authored prose are listed; the rest are emitted from the model by the `types` generator, which continues the numbering from `numberFrom`.",
+
+  "clauseMap": [
+    {"from": "1 Scope",                                        "number": "1",    "title": "Scope",                                     "region": "scope"},
+
+    {"from": "2 Normative references",                         "number": "2",    "title": "Normative references",                      "region": "normative-references", "generated": "normative-references"},
+
+    {"from": null,                                             "number": "3",    "title": "Terms, abbreviated terms and conventions",  "region": "terms"},
+    {"from": null,                                             "number": "3.1",  "title": "Overview",                                  "generated": "terms-overview"},
+    {"from": "3 Terms, definitions and abbreviations",         "number": "3.2",  "title": "OpenUSD scene terms",                       "generated": "terms"},
+    {"from": null,                                             "number": "3.3",  "title": "Abbreviated terms",                         "generated": "abbreviations"},
+    {"from": null,                                             "number": "3.4",  "title": "Conventions used in this document",         "slice": "conventions"},
+
+    {"from": null,                                             "number": "4",    "title": "General information to OpenUSD and OPC UA", "region": "general"},
+    {"from": null,                                             "number": "4.1",  "title": "Introduction to OpenUSD",                   "generated": "subject-introduction"},
+    {"from": null,                                             "number": "4.2",  "title": "Introduction to OPC Unified Architecture",  "slice": "opcua-intro"},
+
+    {"from": "11 Examples (informative)",                      "number": "5",    "title": "Use cases",                                 "region": "use-cases"},
+
+    {"from": "4 Overview and concepts",                        "number": "6",    "title": "OpenUSD scene information model overview",  "region": "model-overview"},
+    {"from": "4.1 The materialization",                        "number": "6.1",  "title": "The materialization"},
+    {"from": "4.2 Two complementary models",                   "number": "6.2",  "title": "Two complementary models"},
+    {"from": "4.3 Discovery",                                  "number": "6.3",  "title": "Discovery"},
+    {"from": "5 Information model",                            "number": "6.4",  "title": "Organisation of the model"},
+    {"from": "6 Mapping tables (normative)",                   "number": "6.5",  "title": "Mapping tables"},
+    {"from": "6.1 USD concept → OPC UA node",                  "number": "6.5.1", "title": "USD concept to OPC UA Node"},
+    {"from": "6.2 `SdfValueTypeName` → OPC UA DataType + ValueRank", "number": "6.5.2", "title": "SdfValueTypeName to OPC UA DataType and ValueRank"},
+    {"from": "6.3 Metadata",                                   "number": "6.5.3", "title": "Metadata"},
+    {"from": "7 Conversion (`.usd` ↔ address space) (normative)", "number": "6.6", "title": "Conversion between .usd and the address space"},
+    {"from": "7.1 `.usd` → address space (import / materialize)", "number": "6.6.1", "title": "Importing a .usd into the address space"},
+    {"from": "7.2 Address space → `.usd` (export)",            "number": "6.6.2", "title": "Exporting the address space to .usd"},
+    {"from": "7.3 Reference converter",                        "number": "6.6.3", "title": "Reference converter"},
+    {"from": "7.4 Round-trip contract",                        "number": "6.6.4", "title": "Round-trip contract"},
+    {"from": "8 Vendor extension (normative)",                 "number": "6.7",  "title": "Vendor extension"},
+    {"from": "8.1 Typed (IsA) schemas → ObjectType subtyping", "number": "6.7.1", "title": "Typed schemas as ObjectType subtyping"},
+    {"from": "8.2 Applied (API) schemas → AddIns / Interfaces", "number": "6.7.2", "title": "Applied schemas as AddIns and Interfaces"},
+    {"from": "8.3 New value types → DataType subtyping",       "number": "6.7.3", "title": "New value types as DataType subtyping"},
+    {"from": "8.4 Unknown-type fallback (normative)",          "number": "6.7.4", "title": "Unknown-type fallback"},
+    {"from": "9 Live-data mapping (normative, two modes)",     "number": "6.8",  "title": "Live-data mapping"},
+
+    {"from": null,                                             "number": "7",    "title": "OPC UA ObjectTypes",                        "region": "objecttypes"},
+    {"from": "5.1 `UsdStageType : BaseObjectType`",            "number": "7.1",  "title": "UsdStageType",            "nodetable": "UsdStageType"},
+    {"from": "5.2 `UsdPrimType : BaseObjectType`",             "number": "7.2",  "title": "UsdPrimType",             "nodetable": "UsdPrimType"},
+    {"from": "5.3 Typed prim hierarchy (IsA schemas)",         "number": "7.3",  "title": "UsdTypedType",            "nodetable": "UsdTypedType"},
+    {"from": "5.5 `UsdRelationshipType : BaseObjectType`",     "number": "7.4",  "title": "UsdRelationshipType",     "nodetable": "UsdRelationshipType"},
+    {"from": "5.6 Composition, variants, applied schemas",     "number": "7.5",  "title": "UsdCompositionArcType",   "nodetable": "UsdCompositionArcType"},
+    {"from": "5.8 Geospatial and georeferencing (normative)",  "number": "7.6",  "title": "UsdGeoreferenceApiType",  "nodetable": "UsdGeoreferenceApiType"},
+    {"from": null,                                             "number": "7",    "title": "OPC UA ObjectTypes",     "generated": "types", "nodeClass": "UAObjectType", "numberFrom": 7, "emitHeading": false},
+
+    {"from": "5.4 `UsdAttributeType : BaseDataVariableType` (VariableType)", "number": "8", "title": "OPC UA VariableTypes",   "region": "variabletypes", "generated": "types", "nodeClass": "UAVariableType"},
+
+    {"from": "5.7 DataTypes and ReferenceTypes",               "number": "9",    "title": "OPC UA DataTypes",       "region": "datatypes", "generated": "datatypes"},
+
+    {"from": null,                                             "number": "10",   "title": "OPC UA ReferenceTypes",  "region": "referencetypes", "generated": "types", "nodeClass": "UAReferenceType"},
+
+    {"from": "12 Profiles and conformance units",              "number": "11",   "title": "Profiles and conformance units",            "region": "profiles"},
+
+    {"from": null,                                             "number": "12",   "title": "Namespaces",                                "region": "namespaces"},
+    {"from": null,                                             "number": "12.1", "title": "Namespace metadata",                        "generated": "namespace-metadata"},
+    {"from": null,                                             "number": "12.2", "title": "Handling of OPC UA namespaces",             "generated": "namespace-handling"},
+
+    {"from": "Annex A — Information model (generated)",        "number": "A",    "title": "OpenUSD scene namespace and mappings",      "annex": true, "normative": true, "region": "annex-a", "slice": "annex-a"},
+    {"from": "10 Relationship to Part 1 (informative)",        "number": "B",    "title": "Relationship to Part 1",                    "annex": true, "region": "annex-b"},
+    {"from": "Annex B — Concrete Cesium for Omniverse georeference mapping (informative)", "number": "C", "title": "Concrete Cesium for Omniverse georeference mapping", "annex": true, "region": "annex-c"},
+    {"from": "B.1 `CesiumGeoreferencePrim` → `UsdTypedType` subtype", "number": "C.1", "title": "CesiumGeoreferencePrim as a UsdTypedType subtype"},
+    {"from": "B.2 `CesiumGlobeAnchorAPI` → `UsdApiSchemaType` AddIn", "number": "C.2", "title": "CesiumGlobeAnchorAPI as a UsdApiSchemaType AddIn"},
+    {"from": "B.3 Worked example — `.usd` ↔ address space",    "number": "C.3",  "title": "Worked example"},
+    {"from": "B.4 Round-trip",                                 "number": "C.4",  "title": "Round-trip"}
+  ],
+
+  "_comment_unanchoredSiblings": "Documents beside this specification whose bare § references mean it, because they cite it without naming it.",
+  "unanchoredSiblings": ["metaverse-specs/openusd-scene/README.md"],
+
+  "_comment_citedAs": "How sibling documents name this one. A reference is rewritten only when anchored on one of these, so this document's clause map is never applied to a reference belonging elsewhere.",
+  "citedAs": ["Part 2", "Scene Materialization", "Scene spec"],
+
+  "dropped": [],
+
+  "_comment_dropParagraphsContaining": "Paragraphs about the repository rather than the model. A submitted specification does not cite its own source tree.",
+  "dropParagraphsContaining": [
+    "CHANGELOG.md",
+    "metaverse-specs/",
+    "../extras/",
+    "build_model.py",
+    "validate_local.py"
+  ],
+
+  "_comment_annexMap": "Old annex letter -> new.",
+  "annexMap": {
+    "A": "A",
+    "B": "C"
+  },
+
+  "_comment_xrefMap": "Applied to every section reference in the restructured markdown and in every sibling document that cites this one. Longest key wins.",
+  "_comment_foreignAnchors": "Names this document uses for other documents. A section reference anchored on one of them belongs to that document and is left exactly as written.",
+  "foreignAnchors": ["Bindings spec", "Part 1"],
+
+  "xrefMap": {
+    "4.1": "6.1", "4.2": "6.2", "4.3": "6.3", "4": "6",
+    "5.1": "7.1", "5.2": "7.2", "5.3": "7.3", "5.4": "8.1", "5.5": "7.4",
+    "5.6": "7.5", "5.7": "9", "5.8": "7.6", "5": "6.4",
+    "6.1": "6.5.1", "6.2": "6.5.2", "6.3": "6.5.3", "6": "6.5",
+    "7.1": "6.6.1", "7.2": "6.6.2", "7.3": "6.6.3", "7.4": "6.6.4", "7": "6.6",
+    "8.1": "6.7.1", "8.2": "6.7.2", "8.3": "6.7.3", "8.4": "6.7.4", "8": "6.7",
+    "9": "6.8",
+    "10": "Annex B",
+    "11": "5",
+    "12": "11"
+  },
+
+  "figures": []
+}

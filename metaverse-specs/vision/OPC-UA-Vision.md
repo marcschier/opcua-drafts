@@ -245,7 +245,7 @@ graph TD
     SENSOR -.HasCalibration.-> ICAL
     SENSOR -.HasCalibration.-> ECAL
     SENSOR -.MountedOn.-> FRAME
-    SENSOR -.HasScenePrim.-> PRIM["UsdGeomCameraType<br/>(OpenUSD Part 2, Annex C)"]
+    SENSOR -.HasScenePrim.-> PRIM["UsdGeomCameraType<br/>(OpenUSD Part 2, Annex D)"]
     DEPL -.UsesModel exactly 1.-> MODEL
     RES -.ProducedBy.-> PIPE
 
@@ -1133,7 +1133,7 @@ The complete node reference is generated from `Opc.Ua.Vision.NodeSet2.xml` into 
 
 ## Annex B — Isaac Sim and Omniverse Replicator mapping (informative)
 
-This annex is the vision-side half of the sim/real contract. The scene-side half is Annex C of *OPC UA — OpenUSD Scene Materialization*, and the binding-side view is Annex E of *OPC UA — OpenUSD Bindings*.
+This annex is the vision-side half of the sim/real contract. The scene-side half is Annex D of *OPC UA — OpenUSD Scene Materialization*, and the binding-side view is Annex G of *OPC UA — OpenUSD Binding (Part 1)*.
 
 ### B.1 Why the mapping is anchored on UsdGeom
 

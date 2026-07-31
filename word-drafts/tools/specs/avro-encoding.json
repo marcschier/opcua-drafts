@@ -1,0 +1,912 @@
+{
+  "id": "avro-encoding",
+  "source": {
+    "markdown": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md"
+  },
+  "output": {
+    "docx": "word-drafts/OPC-UA-Avro-Encoding.docx",
+    "docmodel": "word-drafts/OPC-UA-Avro-Encoding.docmodel.json",
+    "figures": "word-drafts/figures"
+  },
+  "_comment_templateDeviations": "OPC 20020 admits no deviation. A relaxation is only legitimate when it is declared here, printed in the document, and matched by the validator.",
+  "templateDeviations": [
+    {
+      "id": "no-information-model",
+      "clause": "7 to 13, Annex A",
+      "statement": "This document defines a DataEncoding: a mapping of the OPC UA type model onto Apache Avro, and of the OPC UA PubSub messages onto Avro-encoded payloads. It defines no OPC UA information model of its own: it has no NodeSet, no ObjectTypes, no VariableTypes, no DataTypes, no ReferenceTypes and no Instances. The NodeClass clauses of OPC 20020 are therefore omitted rather than left empty, and Annex A states the generated type reference this document does define in place of a NodeSet."
+    }
+  ],
+  "identity": {
+    "docNumber": "OPC nnnnn-m",
+    "partNumber": "Part 1",
+    "partName": "Avro Encoding",
+    "title": "Avro Encoding",
+    "subjectTerm": "Avro",
+    "mainTitle": "OPC UA FOR APACHE AVRO ENCODING",
+    "subTitle": "Part 1: Binary DataEncoding and PubSub message mapping",
+    "shortName": "AVRO",
+    "capabilityIdentifier": "AVRO",
+    "namespaceUri": "http://opcfoundation.org/UA/",
+    "namespaceIndexInDocument": 0,
+    "annexASubject": "DataEncoding",
+    "version": "0.1.0",
+    "publicationDate": "2026-07-30",
+    "releaseType": "Draft",
+    "mantisProjectId": "<nnn>",
+    "otherOrganization": "Apache Software Foundation",
+    "introduction": [
+      "Apache Avro is a compact binary serialization format in which the data carries no type information of its own. A writer encodes values against a schema, and a reader can only decode them by holding that same schema, so a message is a small payload plus a way of naming the schema that produced it. Because nothing is repeated per value, the encoded form is a fraction of the size of a self-describing one.",
+      "That trade suits OPC UA. A Server publishing a DataSet many times a second repeats the same structure every time, and both the OPC UA binary and the JSON encoding carry that structure on the wire. Avro moves it out of the message and into a schema resolved once.",
+      "This document defines how the OPC UA type model maps onto Avro, how a schema is generated deterministically from a NodeSet or from DataSetMetaData so that two implementations produce the same schema and therefore the same identity for it, and how a PubSub NetworkMessage, DataSetMessage, Action and Discovery message are carried in Avro form."
+    ],
+    "draftBanner": "PROVISIONAL WORKING DRAFT — not normative, not endorsed by the OPC Foundation. The document number and the Mantis project identifier in this document are placeholders; the OPC Foundation assigns the real values."
+  },
+  "_comment_prose": "Clauses the template requires that this document has no material shaped like.",
+  "prose": {
+    "conformance": [
+      "Conformance is composed from independently implementable conformance units. An implementation claims AVRO-DataEncoding at minimum; the remaining units build on it and may be claimed separately.",
+      "AVRO-DataEncoding — the mapping of the OPC UA type model onto Avro, in both directions, including the reversibility requirement that decoding an encoded value yields the original value.",
+      "AVRO-SchemaGeneration — deterministic schema generation from a NodeSet or from DataSetMetaData, and the SchemaId that identifies the result. Two conforming implementations given the same input produce the same schema and the same SchemaId.",
+      "AVRO-SchemaResolution — decoder-side schema resolution, including cache-miss behaviour and the schema-evolution rules that let a writer add fields without breaking a deployed reader.",
+      "AVRO-PubSub — the NetworkMessage and DataSetMessage mapping, the SchemaId handshake, the configuration parameters and the transport content types.",
+      "AVRO-Actions — the Action invoke and response messages and the Discovery messages.",
+      "A Server that publishes Avro-encoded DataSets claims AVRO-DataEncoding, AVRO-SchemaGeneration and AVRO-PubSub. A Client that consumes them claims AVRO-DataEncoding and AVRO-SchemaResolution."
+    ]
+  },
+  "abbreviations": [
+    [
+      "ADBC",
+      "Arrow Database Connectivity"
+    ],
+    [
+      "API",
+      "Application Programming Interface"
+    ],
+    [
+      "CRC",
+      "Cyclic Redundancy Check"
+    ],
+    [
+      "IANA",
+      "Internet Assigned Numbers Authority"
+    ],
+    [
+      "IPC",
+      "Inter-Process Communication"
+    ],
+    [
+      "JSON",
+      "JavaScript Object Notation"
+    ],
+    [
+      "SQL",
+      "Structured Query Language"
+    ],
+    [
+      "UTC",
+      "Coordinated Universal Time"
+    ],
+    [
+      "UTF",
+      "Unicode Transformation Format"
+    ],
+    [
+      "XML",
+      "Extensible Markup Language"
+    ]
+  ],
+  "normativeReferences": [
+    {
+      "id": "UAPart1",
+      "label": "OPC 10000-1",
+      "title": "OPC Unified Architecture - Part 1: Overview and Concepts",
+      "url": "http://www.opcfoundation.org/documents/10000-1/"
+    },
+    {
+      "id": "UAPart2",
+      "label": "OPC 10000-2",
+      "title": "OPC Unified Architecture - Part 2: Security Model",
+      "url": "http://www.opcfoundation.org/documents/10000-2/"
+    },
+    {
+      "id": "UAPart3",
+      "label": "OPC 10000-3",
+      "title": "OPC Unified Architecture - Part 3: Address Space Model",
+      "url": "http://www.opcfoundation.org/documents/10000-3/"
+    },
+    {
+      "id": "UAPart4",
+      "label": "OPC 10000-4",
+      "title": "OPC Unified Architecture - Part 4: Services",
+      "url": "http://www.opcfoundation.org/documents/10000-4/"
+    },
+    {
+      "id": "UAPart5",
+      "label": "OPC 10000-5",
+      "title": "OPC Unified Architecture - Part 5: Information Model",
+      "url": "http://www.opcfoundation.org/documents/10000-5/"
+    },
+    {
+      "id": "UAPart6",
+      "label": "OPC 10000-6",
+      "title": "OPC Unified Architecture - Part 6: Mappings, which this document extends with a new DataEncoding.",
+      "url": "http://www.opcfoundation.org/documents/10000-6/"
+    },
+    {
+      "id": "UAPart7",
+      "label": "OPC 10000-7",
+      "title": "OPC Unified Architecture - Part 7: Profiles",
+      "url": "http://www.opcfoundation.org/documents/10000-7/"
+    },
+    {
+      "id": "UAPart11",
+      "label": "OPC 10000-11",
+      "title": "OPC Unified Architecture - Part 11: Historical Access",
+      "url": "http://www.opcfoundation.org/documents/10000-11/"
+    },
+    {
+      "id": "UAPart12",
+      "label": "OPC 10000-12",
+      "title": "OPC Unified Architecture - Part 12: Discovery and Global Services",
+      "url": "http://www.opcfoundation.org/documents/10000-12/"
+    },
+    {
+      "id": "UAPart14",
+      "label": "OPC 10000-14",
+      "title": "OPC Unified Architecture - Part 14: PubSub, whose NetworkMessage and DataSetMessage this document maps.",
+      "url": "http://www.opcfoundation.org/documents/10000-14/"
+    },
+    {
+      "id": "AVROSPEC",
+      "label": "Apache Avro specification",
+      "title": "The Avro binary encoding, schema language and schema-resolution rules this document maps onto.",
+      "url": "https://avro.apache.org/docs/"
+    },
+    {
+      "id": "SREG",
+      "label": "OPC UA for Schema Registry",
+      "title": "The in-server registry that resolves a SchemaId to the schema document that produced it.",
+      "url": ""
+    }
+  ],
+  "dropped": [],
+  "dropParagraphsContaining": [
+    "core-specs/",
+    "build_model.py",
+    "validate_local.py",
+    "CHANGELOG.md"
+  ],
+  "citedAs": [
+    "Avro Encoding",
+    "Avro Message Mapping",
+    "Apache Avro DataEncoding"
+  ],
+  "unanchoredSiblings": [],
+  "_comment_foreignAnchors": "Names this document uses for other documents.",
+  "foreignAnchors": [
+    "Arrow",
+    "Schema Registry",
+    "xRegistry",
+    "Apache Avro specification"
+  ],
+  "figures": [
+    {
+      "id": "fig-avro-1",
+      "caption": "Where the Avro encoding fits",
+      "pptx": "Avro-Fig1-Fit.pptx"
+    },
+    {
+      "id": "fig-avro-2",
+      "caption": "Deterministic schema generation",
+      "pptx": "Avro-Fig2-SchemaGeneration.pptx"
+    },
+    {
+      "id": "fig-avro-3",
+      "caption": "Decoder schema resolution",
+      "pptx": "Avro-Fig3-Resolution.pptx"
+    }
+  ],
+  "clauseMap": [
+    {
+      "from": "1 Scope",
+      "number": "1",
+      "title": "Scope",
+      "region": "scope"
+    },
+    {
+      "from": null,
+      "number": "1.1",
+      "title": "Conformance to the OPC 20020 template",
+      "generated": "template-deviations"
+    },
+    {
+      "from": null,
+      "number": "2",
+      "title": "Normative references",
+      "region": "normative-references",
+      "generated": "normative-references"
+    },
+    {
+      "from": null,
+      "number": "3",
+      "title": "Terms, abbreviated terms and conventions",
+      "region": "terms"
+    },
+    {
+      "from": null,
+      "number": "3.1",
+      "title": "Overview",
+      "generated": "terms-overview"
+    },
+    {
+      "from": "3 Terms, definitions and abbreviations",
+      "number": "3.2",
+      "title": "Avro encoding terms",
+      "generated": "terms"
+    },
+    {
+      "from": null,
+      "number": "3.3",
+      "title": "Abbreviated terms",
+      "generated": "abbreviations"
+    },
+    {
+      "from": null,
+      "number": "3.4",
+      "title": "Conventions used in this document",
+      "slice": "conventions"
+    },
+    {
+      "from": null,
+      "number": "4",
+      "title": "General information to Avro encoding and OPC UA",
+      "region": "general"
+    },
+    {
+      "from": null,
+      "number": "4.1",
+      "title": "Introduction to Apache Avro",
+      "generated": "subject-introduction"
+    },
+    {
+      "from": null,
+      "number": "4.2",
+      "title": "Introduction to OPC Unified Architecture",
+      "slice": "opcua-intro"
+    },
+    {
+      "from": "4.1 Use cases and motivation",
+      "number": "5",
+      "title": "Use cases",
+      "region": "use-cases"
+    },
+    {
+      "from": "4 Overview",
+      "number": "6",
+      "title": "Avro encoding overview",
+      "region": "model-overview"
+    },
+    {
+      "from": "4.2 Where Avro fits",
+      "number": "6.1",
+      "title": "Where Avro fits"
+    },
+    {
+      "from": "4.3 Schema identity and reversibility",
+      "number": "6.2",
+      "title": "Schema identity and reversibility"
+    },
+    {
+      "from": "4.4 PubSub message model",
+      "number": "6.3",
+      "title": "PubSub message model"
+    },
+    {
+      "from": "4.5 Endianness",
+      "number": "6.4",
+      "title": "Endianness"
+    },
+    {
+      "from": "5 Avro mapping",
+      "number": "6.5",
+      "title": "Avro mapping"
+    },
+    {
+      "from": "5.1 General rules",
+      "number": "6.5.1",
+      "title": "General rules"
+    },
+    {
+      "from": "5.2 Built-in DataTypes",
+      "number": "6.5.2",
+      "title": "Built-in DataTypes"
+    },
+    {
+      "from": "5.2.1 Textual NodeId and ExpandedNodeId form",
+      "number": "6.5.2.1",
+      "title": "Textual NodeId and ExpandedNodeId form"
+    },
+    {
+      "from": "5.3 Enumerations and OptionSets",
+      "number": "6.5.3",
+      "title": "Enumerations and OptionSets"
+    },
+    {
+      "from": "5.4 Arrays",
+      "number": "6.5.4",
+      "title": "Arrays"
+    },
+    {
+      "from": "5.5 Matrices",
+      "number": "6.5.5",
+      "title": "Matrices"
+    },
+    {
+      "from": "5.6 Structures and optional fields",
+      "number": "6.5.6",
+      "title": "Structures and optional fields"
+    },
+    {
+      "from": "5.7 Union DataTypes",
+      "number": "6.5.7",
+      "title": "Union DataTypes"
+    },
+    {
+      "from": "5.8 Variant",
+      "number": "6.5.8",
+      "title": "Variant"
+    },
+    {
+      "from": "5.9 ExtensionObject and abstract or subtyped fields",
+      "number": "6.5.9",
+      "title": "ExtensionObject and abstract or subtyped fields"
+    },
+    {
+      "from": "5.10 DataValue",
+      "number": "6.5.10",
+      "title": "DataValue"
+    },
+    {
+      "from": "5.11 DiagnosticInfo",
+      "number": "6.5.11",
+      "title": "DiagnosticInfo"
+    },
+    {
+      "from": "6 Deterministic schema generation and SchemaId",
+      "number": "6.6",
+      "title": "Deterministic schema generation and SchemaId"
+    },
+    {
+      "from": "6.1 Inputs",
+      "number": "6.6.1",
+      "title": "Inputs"
+    },
+    {
+      "from": "6.2 Generation algorithm",
+      "number": "6.6.2",
+      "title": "Generation algorithm"
+    },
+    {
+      "from": "6.3 SchemaId use",
+      "number": "6.6.3",
+      "title": "SchemaId use"
+    },
+    {
+      "from": "6.4 Implementing schema evolution (growing unions)",
+      "number": "6.6.4",
+      "title": "Implementing schema evolution (growing unions)"
+    },
+    {
+      "from": "6.5 NamespaceUri to Avro namespace mapping",
+      "number": "6.6.5",
+      "title": "NamespaceUri to Avro namespace mapping"
+    },
+    {
+      "from": "6.6 Per-field specialization of Variant and ExtensionObject",
+      "number": "6.6.6",
+      "title": "Per-field specialization of Variant and ExtensionObject"
+    },
+    {
+      "from": "6.7 Deriving a schema from DataSetMetaData",
+      "number": "6.6.7",
+      "title": "Deriving a schema from DataSetMetaData"
+    },
+    {
+      "from": "7 Decoder schema resolution",
+      "number": "6.7",
+      "title": "Decoder schema resolution"
+    },
+    {
+      "from": "8 PubSub message mapping",
+      "number": "6.8",
+      "title": "PubSub message mapping"
+    },
+    {
+      "from": "8.1 NetworkMessage",
+      "number": "6.8.1",
+      "title": "NetworkMessage"
+    },
+    {
+      "from": "8.2 DataSetMessage",
+      "number": "6.8.2",
+      "title": "DataSetMessage"
+    },
+    {
+      "from": "8.2.1 Common header",
+      "number": "6.8.2.1",
+      "title": "Common header"
+    },
+    {
+      "from": "8.2.2 Data key frame",
+      "number": "6.8.2.2",
+      "title": "Data key frame"
+    },
+    {
+      "from": "8.2.3 Data delta frame",
+      "number": "6.8.2.3",
+      "title": "Data delta frame"
+    },
+    {
+      "from": "8.2.4 Field representation and DataSetFieldContentMask",
+      "number": "6.8.2.4",
+      "title": "Field representation and DataSetFieldContentMask"
+    },
+    {
+      "from": "8.3 Action and Discovery messages",
+      "number": "6.8.3",
+      "title": "Action and Discovery messages"
+    },
+    {
+      "from": "8.3.1 Action messages",
+      "number": "6.8.3.1",
+      "title": "Action messages"
+    },
+    {
+      "from": "8.3.2 Discovery messages",
+      "number": "6.8.3.2",
+      "title": "Discovery messages"
+    },
+    {
+      "from": "8.4 SchemaId handshake",
+      "number": "6.8.4",
+      "title": "SchemaId handshake"
+    },
+    {
+      "from": "8.4.1 Framing",
+      "number": "6.8.4.1",
+      "title": "Framing"
+    },
+    {
+      "from": "8.4.2 SchemaId carrier placement",
+      "number": "6.8.4.2",
+      "title": "SchemaId carrier placement"
+    },
+    {
+      "from": "8.4.3 Schema announcement message",
+      "number": "6.8.4.3",
+      "title": "Schema announcement message"
+    },
+    {
+      "from": "8.4.4 Schema request message",
+      "number": "6.8.4.4",
+      "title": "Schema request message"
+    },
+    {
+      "from": "8.4.5 Encoder change tracking",
+      "number": "6.8.4.5",
+      "title": "Encoder change tracking"
+    },
+    {
+      "from": "8.4.6 Decoder behavior",
+      "number": "6.8.4.6",
+      "title": "Decoder behavior"
+    },
+    {
+      "from": "8.4.7 Sequence diagrams",
+      "number": "6.8.4.7",
+      "title": "Sequence diagrams"
+    },
+    {
+      "from": "8.4.8 Relationship to ConfigurationVersion",
+      "number": "6.8.4.8",
+      "title": "Relationship to ConfigurationVersion"
+    },
+    {
+      "from": "8.5 Configuration parameters",
+      "number": "6.8.5",
+      "title": "Configuration parameters"
+    },
+    {
+      "from": "8.6 Transport content types",
+      "number": "6.8.6",
+      "title": "Transport content types"
+    },
+    {
+      "from": "9 Part 14 configuration model mapping and Information Model additions",
+      "number": "6.9",
+      "title": "Part 14 configuration model mapping and Information Model additions"
+    },
+    {
+      "from": "9.1 Where the mapping plugs in",
+      "number": "6.9.1",
+      "title": "Where the mapping plugs in"
+    },
+    {
+      "from": "9.2 Content mask DataTypes",
+      "number": "6.9.2",
+      "title": "Content mask DataTypes"
+    },
+    {
+      "from": "9.3 MessageSettings DataTypes",
+      "number": "6.9.3",
+      "title": "MessageSettings DataTypes"
+    },
+    {
+      "from": "9.4 ObjectTypes",
+      "number": "6.9.4",
+      "title": "ObjectTypes"
+    },
+    {
+      "from": "9.5 NodeSet",
+      "number": "6.9.5",
+      "title": "NodeSet"
+    },
+    {
+      "from": null,
+      "number": "7",
+      "title": "Profiles and conformance units",
+      "region": "profiles",
+      "generated": "config-prose",
+      "prose": "conformance"
+    },
+    {
+      "from": null,
+      "number": "8",
+      "title": "Namespaces",
+      "region": "namespaces"
+    },
+    {
+      "from": null,
+      "number": "8.1",
+      "title": "Namespace metadata",
+      "generated": "namespace-metadata"
+    },
+    {
+      "from": null,
+      "number": "8.2",
+      "title": "Handling of OPC UA namespaces",
+      "generated": "namespace-handling"
+    },
+    {
+      "from": null,
+      "number": "A",
+      "title": "Namespace and machine-readable artifacts",
+      "annex": true,
+      "normative": true,
+      "region": "annex-a"
+    },
+    {
+      "from": null,
+      "number": "A.1",
+      "title": "Namespace and capability identifier",
+      "generated": "annex-a-identity"
+    },
+    {
+      "from": "Annex A Generated type reference",
+      "number": "A.2",
+      "title": "Generated type reference"
+    },
+    {
+      "from": "Built-in Boolean",
+      "number": "A.2.1",
+      "title": "Built-in Boolean"
+    },
+    {
+      "from": "Built-in SByte",
+      "number": "A.2.2",
+      "title": "Built-in SByte"
+    },
+    {
+      "from": "Built-in Byte",
+      "number": "A.2.3",
+      "title": "Built-in Byte"
+    },
+    {
+      "from": "Built-in Int16",
+      "number": "A.2.4",
+      "title": "Built-in Int16"
+    },
+    {
+      "from": "Built-in UInt16",
+      "number": "A.2.5",
+      "title": "Built-in UInt16"
+    },
+    {
+      "from": "Built-in Int32",
+      "number": "A.2.6",
+      "title": "Built-in Int32"
+    },
+    {
+      "from": "Built-in UInt32",
+      "number": "A.2.7",
+      "title": "Built-in UInt32"
+    },
+    {
+      "from": "Built-in Int64",
+      "number": "A.2.8",
+      "title": "Built-in Int64"
+    },
+    {
+      "from": "Built-in UInt64",
+      "number": "A.2.9",
+      "title": "Built-in UInt64"
+    },
+    {
+      "from": "Built-in Float",
+      "number": "A.2.10",
+      "title": "Built-in Float"
+    },
+    {
+      "from": "Built-in Double",
+      "number": "A.2.11",
+      "title": "Built-in Double"
+    },
+    {
+      "from": "Built-in String",
+      "number": "A.2.12",
+      "title": "Built-in String"
+    },
+    {
+      "from": "Built-in DateTime",
+      "number": "A.2.13",
+      "title": "Built-in DateTime"
+    },
+    {
+      "from": "Built-in Guid",
+      "number": "A.2.14",
+      "title": "Built-in Guid"
+    },
+    {
+      "from": "Built-in ByteString",
+      "number": "A.2.15",
+      "title": "Built-in ByteString"
+    },
+    {
+      "from": "Built-in XmlElement",
+      "number": "A.2.16",
+      "title": "Built-in XmlElement"
+    },
+    {
+      "from": "Built-in NodeId",
+      "number": "A.2.17",
+      "title": "Built-in NodeId"
+    },
+    {
+      "from": "Built-in ExpandedNodeId",
+      "number": "A.2.18",
+      "title": "Built-in ExpandedNodeId"
+    },
+    {
+      "from": "Built-in StatusCode",
+      "number": "A.2.19",
+      "title": "Built-in StatusCode"
+    },
+    {
+      "from": "Built-in QualifiedName",
+      "number": "A.2.20",
+      "title": "Built-in QualifiedName"
+    },
+    {
+      "from": "Built-in LocalizedText",
+      "number": "A.2.21",
+      "title": "Built-in LocalizedText"
+    },
+    {
+      "from": "Built-in ExtensionObject",
+      "number": "A.2.22",
+      "title": "Built-in ExtensionObject"
+    },
+    {
+      "from": "Built-in DataValue",
+      "number": "A.2.23",
+      "title": "Built-in DataValue"
+    },
+    {
+      "from": "Built-in Variant",
+      "number": "A.2.24",
+      "title": "Built-in Variant"
+    },
+    {
+      "from": "Built-in DiagnosticInfo",
+      "number": "A.2.25",
+      "title": "Built-in DiagnosticInfo"
+    },
+    {
+      "from": "One-dimensional array",
+      "number": "A.2.26",
+      "title": "One-dimensional array"
+    },
+    {
+      "from": "Matrix",
+      "number": "A.2.27",
+      "title": "Matrix"
+    },
+    {
+      "from": "Structure",
+      "number": "A.2.28",
+      "title": "Structure"
+    },
+    {
+      "from": "Structure with optional fields",
+      "number": "A.2.29",
+      "title": "Structure with optional fields"
+    },
+    {
+      "from": "Union",
+      "number": "A.2.30",
+      "title": "Union"
+    },
+    {
+      "from": "Worked structured DataType: Envelope",
+      "number": "A.2.31",
+      "title": "Worked structured DataType: Envelope"
+    },
+    {
+      "from": "Annex B PubSub Action and Discovery schema examples",
+      "number": "B",
+      "title": "PubSub Action and Discovery schema examples",
+      "annex": true,
+      "region": "annex-b"
+    },
+    {
+      "from": "Annex C Worked schema-evolution example (incremental growth)",
+      "number": "C",
+      "title": "Worked schema-evolution example (incremental growth)",
+      "annex": true,
+      "region": "annex-c"
+    },
+    {
+      "from": "MinorVersion 1.0",
+      "number": "C.1",
+      "title": "MinorVersion 1.0"
+    },
+    {
+      "from": "MinorVersion 1.1",
+      "number": "C.2",
+      "title": "MinorVersion 1.1"
+    },
+    {
+      "from": "MinorVersion 1.2",
+      "number": "C.3",
+      "title": "MinorVersion 1.2"
+    },
+    {
+      "from": "MinorVersion 1.3",
+      "number": "C.4",
+      "title": "MinorVersion 1.3"
+    },
+    {
+      "from": "Backward compatibility",
+      "number": "C.5",
+      "title": "Backward compatibility"
+    },
+    {
+      "from": "Annex D Wire byte-layout examples (illustrative)",
+      "number": "D",
+      "title": "Wire byte-layout examples (illustrative)",
+      "annex": true,
+      "region": "annex-d"
+    },
+    {
+      "from": "D.1 Boolean — `true`",
+      "number": "D.1",
+      "title": "Boolean — true"
+    },
+    {
+      "from": "D.2 SByte — `-128` (zig-zag varint)",
+      "number": "D.2",
+      "title": "SByte — -128 (zig-zag varint)"
+    },
+    {
+      "from": "D.3 Int32 — `-2147483648` (zig-zag varint)",
+      "number": "D.3",
+      "title": "Int32 — -2147483648 (zig-zag varint)"
+    },
+    {
+      "from": "D.4 Double — `1.0` (IEEE-754 little-endian)",
+      "number": "D.4",
+      "title": "Double — 1.0 (IEEE-754 little-endian)"
+    },
+    {
+      "from": "D.5 String — `\"grüße-中文-😀\"` (union branch, varint length, UTF-8)",
+      "number": "D.5",
+      "title": "String — \"grüße-中文-😀\" (union branch, varint length, UTF-8)"
+    },
+    {
+      "from": "D.6 DateTime — `133000000000000000` ticks (zig-zag varint long)",
+      "number": "D.6",
+      "title": "DateTime — 133000000000000000 ticks (zig-zag varint long)"
+    },
+    {
+      "from": "D.7 Guid — `01020304-0506-0708-090a-0b0c0d0e0f10` (fixed 16, verbatim)",
+      "number": "D.7",
+      "title": "Guid — 01020304-0506-0708-090a-0b0c0d0e0f10 (fixed 16, verbatim)"
+    },
+    {
+      "from": "D.8 Structure — `Point { X: 1.25, Y: -3.5 }` (record = fields concatenated)",
+      "number": "D.8",
+      "title": "Structure — Point { X: 1.25, Y: -3.5 } (record = fields concatenated)"
+    },
+    {
+      "from": "D.9 Matrix — `2×2 double` (array block-count framing)",
+      "number": "D.9",
+      "title": "Matrix — 2×2 double (array block-count framing)"
+    }
+  ],
+  "xrefMap": {
+    "4": "6",
+    "4.2": "6.1",
+    "4.3": "6.2",
+    "4.4": "6.3",
+    "4.5": "6.4",
+    "5": "6.5",
+    "5.1": "6.5.1",
+    "5.2": "6.5.2",
+    "5.2.1": "6.5.2.1",
+    "5.3": "6.5.3",
+    "5.4": "6.5.4",
+    "5.5": "6.5.5",
+    "5.6": "6.5.6",
+    "5.7": "6.5.7",
+    "5.8": "6.5.8",
+    "5.9": "6.5.9",
+    "5.10": "6.5.10",
+    "5.11": "6.5.11",
+    "6": "6.6",
+    "6.1": "6.6.1",
+    "6.2": "6.6.2",
+    "6.3": "6.6.3",
+    "6.4": "6.6.4",
+    "6.5": "6.6.5",
+    "6.6": "6.6.6",
+    "6.7": "6.6.7",
+    "7": "6.7",
+    "8": "6.8",
+    "8.1": "6.8.1",
+    "8.2": "6.8.2",
+    "8.2.1": "6.8.2.1",
+    "8.2.2": "6.8.2.2",
+    "8.2.3": "6.8.2.3",
+    "8.2.4": "6.8.2.4",
+    "8.3": "6.8.3",
+    "8.3.1": "6.8.3.1",
+    "8.3.2": "6.8.3.2",
+    "8.4": "6.8.4",
+    "8.4.1": "6.8.4.1",
+    "8.4.2": "6.8.4.2",
+    "8.4.3": "6.8.4.3",
+    "8.4.4": "6.8.4.4",
+    "8.4.5": "6.8.4.5",
+    "8.4.6": "6.8.4.6",
+    "8.4.7": "6.8.4.7",
+    "8.4.8": "6.8.4.8",
+    "8.5": "6.8.5",
+    "8.6": "6.8.6",
+    "9": "6.9",
+    "9.1": "6.9.1",
+    "9.2": "6.9.2",
+    "9.3": "6.9.3",
+    "9.4": "6.9.4",
+    "9.5": "6.9.5",
+    "1": "1",
+    "2": "2",
+    "3": "3",
+    "4.1": "5"
+  },
+  "annexMap": {
+    "A": "A",
+    "B": "B",
+    "C": "C",
+    "D": "D"
+  }
+}
