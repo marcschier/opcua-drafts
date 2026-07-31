@@ -25,7 +25,7 @@ Checks:
     the well-known WoTAssetConnectionManagement (i=31) is under Objects, typed and
     callable.
   * The combined NodeSet uses one NamespaceUri (http://opcfoundation.org/UA/
-    WoT-Con/) at model version 1.1.0.
+    WoT-Con/) at model version 1.2.0.
   * The well-known WoTRegistry instance is a component of the Server object
     (i=2253), is an EventNotifier and is a HasNotifier target of the Server
     (Server -> WoTRegistry notifier topology).
@@ -53,7 +53,7 @@ MODELREF = os.path.join(HERE, "model-reference.md")
 LEGACY_CSVF = os.path.join(GEN, "legacy", "WotConnection.csv")
 
 NAMESPACE = "http://opcfoundation.org/UA/WoT-Con/"
-MODEL_VERSION = "1.1.0"
+MODEL_VERSION = "1.2.0"
 
 XR_NS = 1          # required model: abstract xRegistry base
 OWN_NS = 2         # this specification's own namespace (WoT-Con)
@@ -320,7 +320,7 @@ if LEGACY_ROWS:
             if m not in method_children:
                 errors.append(f"legacy: WoTAssetConnectionManagement does not expose the callable {m} method")
 
-# --- Combined NodeSet declares one namespace at model version 1.1.0 -------------
+# --- Combined NodeSet declares one namespace at model version 1.2.0 -------------
 ns_uris = [u.text for u in root.iter(NS + "Uri")]
 if NAMESPACE not in ns_uris:
     errors.append(f"combined NodeSet does not declare the NamespaceUri {NAMESPACE}")

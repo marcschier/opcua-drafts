@@ -1,0 +1,5 @@
+# Python tooling for building OPC Foundation Word companion specifications.
+# Install with:  pip install -r word-drafts/tools/requirements.txt
+lxml>=5.0
+python-pptx>=0.6.23
+Pillow>=10.0

@@ -70,7 +70,9 @@ class Node:
         self.parent = parent
         self.attrs = attrs or {}
         self.refs = []
-        self.category = category
+        # OPC 20020 3.4.1.1: one Category per ConformanceUnit that requires the Node.
+        self.category = ((category,) if isinstance(category, str)
+                         else tuple(category or ()))
         self.definition = None
         self.value = None
         self.abstract = abstract
@@ -96,8 +98,9 @@ def ref(nid, reftype, target, forward=True):
     NODES[nid].refs.append((reftype, target, forward))
 
 # Builders
-def object_type(nid, name, base, desc, category, abstract=False):
-    add(nid, "UAObjectType", name, name, desc=desc, category=category, abstract=abstract)
+def object_type(nid, name, base, desc, category=None, abstract=False):
+    add(nid, "UAObjectType", name, name, desc=desc, category=category or _cu(name),
+        abstract=abstract)
     ref(nid, HasSubtype, base, forward=False)
     return nid
 
@@ -125,9 +128,11 @@ def obj_member(owner, owner_sym, name, typedef, desc, rule=MR_Optional, reftype=
 def placeholder_obj(owner, owner_sym, name, typedef, desc, rule=MR_OptionalPlaceholder, reftype=Organizes):
     return obj_member(owner, owner_sym, name, typedef, desc, rule, reftype)
 
-def method(owner, owner_sym, name, desc, rule=MR_Optional, inargs=None, outargs=None):
+def method(owner, owner_sym, name, desc, rule=MR_Optional, inargs=None, outargs=None,
+           category=None):
     nid = _mid()
-    add(nid, "UAMethod", name, f"{owner_sym}_{name}", desc=desc, parent=T(owner))
+    add(nid, "UAMethod", name, f"{owner_sym}_{name}", desc=desc, parent=T(owner),
+        category=category or _cu(name))
     ref(nid, HasModellingRule, rule)
     ref(nid, HasComponent, T(owner), forward=False)
     ref(owner, HasComponent, T(nid))
@@ -162,12 +167,12 @@ def _args(method_nid, method_sym, bname, args):
 
 DATATYPE_FIELDS = {}
 
-def data_type(nid, name, fields, desc, category, base=Structure, encodings=("Binary", "JSON")):
+def data_type(nid, name, fields, desc, category=None, base=Structure, encodings=("Binary", "JSON")):
     """Emit a Structure DataType with a StructureDefinition and DataTypeEncoding objects.
 
     fields: list of (FieldName, DataType, Description, valuerank) - valuerank optional (default -1 scalar).
     """
-    add(nid, "UADataType", name, name, desc=desc, category=category)
+    add(nid, "UADataType", name, name, desc=desc, category=category or _cu(name))
     ref(nid, HasSubtype, base, forward=False)
     DATATYPE_FIELDS[nid] = fields
     parts = [f'<Definition Name="{sx.escape(name)}">']
@@ -207,7 +212,39 @@ def common_attrs(nid, sym):
     prop_var(nid, sym, "ModifiedAt", DateTime, "UTC timestamp when the entity was last modified.")
 
 # Model
-CAT = "xRegistry"
+# OPC 20020 3.4.1.1: every Type Node and Method names the ConformanceUnits that
+# require it in the AddressSpace, as Category elements. This table is the executable
+# form of the conformance clause; a unit missing here cannot appear in the document.
+CU_REGISTRY = "XREG-Registry"
+CU_GROUP = "XREG-Group"
+CU_RESOURCE = "XREG-Resource"
+CU_ATTRIBUTES = "XREG-Attributes"
+CU_REGISTRATION = "XREG-Registration"
+CU_CAPABILITIES = "XREG-Capabilities"
+CU_FEDERATION = "XREG-Federation"
+
+CU_BY_NAME = {
+    "RegistryType": (CU_REGISTRY,),
+    "GroupType": (CU_GROUP,),
+    "ResourceType": (CU_RESOURCE, CU_FEDERATION),
+    "AttributesType": (CU_ATTRIBUTES,),
+    "RegistryCapabilitiesDataType": (CU_CAPABILITIES,),
+    "AddAttribute": (CU_ATTRIBUTES,),
+    "RemoveAttribute": (CU_ATTRIBUTES,),
+    "CreateGroup": (CU_REGISTRATION,),
+    "GetOrCreateGroup": (CU_REGISTRATION,),
+    "CreateResource": (CU_REGISTRATION,),
+    "GetOrCreateResource": (CU_REGISTRATION,),
+    "Delete": (CU_REGISTRATION,),
+}
+
+
+def _cu(name):
+    return CU_BY_NAME.get(name, ())
+
+
+# The builders resolve a Node's units from the table above when none is passed.
+CAT = None
 
 object_type(63000, "RegistryType", FolderType,
             "The abstract xRegistry root, expressed as a FolderType that organizes its Group objects. It creates groups "
@@ -354,8 +391,8 @@ method(63002, RS, "Delete",
 
 # Emission
 NAMESPACE = "http://opcfoundation.org/UA/xRegistry/"
-VERSION = "0.1.0"
-PUBDATE = "2026-07-16T00:00:00Z"
+VERSION = "0.2.0"
+PUBDATE = "2026-07-29T00:00:00Z"
 UA_REQUIRED_VERSION = "1.05.04"
 UA_REQUIRED_PUBDATE = "2024-05-01T00:00:00Z"
 ALIASES = [
@@ -398,8 +435,8 @@ def _emit_node(n):
     lines.append(f"    <DisplayName>{sx.escape(n.display)}</DisplayName>")
     if n.desc:
         lines.append(f"    <Description>{sx.escape(n.desc)}</Description>")
-    if n.category:
-        lines.append(f"    <Category>{sx.escape(n.category)}</Category>")
+    for cat in n.category:
+        lines.append(f"    <Category>{sx.escape(cat)}</Category>")
     lines.append("    <References>")
     for i in _sorted_refs(n.refs):
         rt, tgt, fwd = n.refs[i]

@@ -1,0 +1,106 @@
+"""Embed a PowerPoint file in the document as a real OLE object.
+
+OPC 20020 Guideline 1: *"Figures shall be embedded document objects (Powerpoint, Excel
+or Visio). Do not use inline Word drawing objects."* The markup below is the same shape
+Word itself produces and the same one the template uses for its own figures: a VML
+`v:shape` carrying the preview image, plus an `o:OLEObject` pointing at the embedded
+presentation part.
+"""
+
+from lxml import etree
+
+from .oxml import NSMAP, paragraph, q, wel
+
+OLE_REL = ('http://schemas.openxmlformats.org/officeDocument/2006/relationships/'
+           'oleObject')
+# An embedded OPC package (.pptx, .xlsx, .vsdx, .sldx) is wired with the `package`
+# relationship type, not `oleObject`. Get this wrong and Word silently discards the
+# embedded object on the next save, leaving only the preview picture behind — which is
+# exactly what Guideline 1 forbids. The template's own .sldx and .vsdx embeddings use
+# `package`; its .bin and .vsd compound-file embeddings use `oleObject`.
+PACKAGE_REL = ('http://schemas.openxmlformats.org/officeDocument/2006/relationships/'
+               'package')
+IMAGE_REL = ('http://schemas.openxmlformats.org/officeDocument/2006/relationships/'
+             'image')
+PPTX_CONTENT_TYPE = ('application/vnd.openxmlformats-officedocument.'
+                     'presentationml.presentation')
+
+# The standard VML picture shapetype. Word emits it once per story, before the first
+# v:shape that references it.
+SHAPETYPE_XML = (
+    '<v:shapetype xmlns:v="urn:schemas-microsoft-com:vml" '
+    'xmlns:o="urn:schemas-microsoft-com:office:office" '
+    'id="_x0000_t75" coordsize="21600,21600" o:spt="75" o:preferrelative="t" '
+    'path="m@4@5l@4@11@9@11@9@5xe" filled="f" stroked="f">'
+    '<v:stroke joinstyle="miter"/>'
+    '<v:formulas>'
+    '<v:f eqn="if lineDrawn pixelLineWidth 0"/><v:f eqn="sum @0 1 0"/>'
+    '<v:f eqn="sum 0 0 @1"/><v:f eqn="prod @2 1 2"/>'
+    '<v:f eqn="prod @3 21600 pixelWidth"/><v:f eqn="prod @3 21600 pixelHeight"/>'
+    '<v:f eqn="sum @0 0 1"/><v:f eqn="prod @6 1 2"/>'
+    '<v:f eqn="prod @7 21600 pixelWidth"/><v:f eqn="sum @8 21600 0"/>'
+    '<v:f eqn="prod @7 21600 pixelHeight"/><v:f eqn="sum @10 21600 0"/>'
+    '</v:formulas>'
+    '<v:path o:extrusionok="f" gradientshapeok="t" o:connecttype="rect"/>'
+    '<o:lock v:ext="edit" aspectratio="t"/>'
+    '</v:shapetype>')
+
+_shape_counter = [1024]
+_object_counter = [1900000000]
+
+
+def document_defines_shapetype(package):
+    for el in package.document.iter('{urn:schemas-microsoft-com:vml}shapetype'):
+        if el.get('id') == '_x0000_t75':
+            return True
+    return False
+
+
+def embed_powerpoint(package, holder_paragraph, *, pptx_bytes, preview_png,
+                     width_px, height_px, index, include_shapetype):
+    """Fill `holder_paragraph` with the OLE object markup and attach the parts."""
+    media_name = 'word/media/openusd_figure%d.png' % index
+    embed_name = 'word/embeddings/openusd_figure%d.pptx' % index
+    package.add_part(media_name, preview_png)
+    package.add_part(embed_name, pptx_bytes)
+    package.ensure_default_content_type('png', 'image/png')
+    package.ensure_override('/' + embed_name, PPTX_CONTENT_TYPE)
+    img_rid = package.add_relationship(IMAGE_REL, 'media/openusd_figure%d.png' % index)
+    ole_rid = package.add_relationship(PACKAGE_REL,
+                                       'embeddings/openusd_figure%d.pptx' % index)
+
+    _shape_counter[0] += 1
+    _object_counter[0] += 1
+    shape_id = '_x0000_i%d' % _shape_counter[0]
+
+    # Word measures the placeholder in points; the layout is in CSS pixels at 96 dpi.
+    width_pt = width_px * 72.0 / 96.0
+    height_pt = height_px * 72.0 / 96.0
+    max_width_pt = 430.0
+    if width_pt > max_width_pt:
+        height_pt *= max_width_pt / width_pt
+        width_pt = max_width_pt
+
+    r = wel('w:r')
+    obj = wel('w:object', {'w:dxaOrig': str(int(width_px * 15)),
+                           'w:dyaOrig': str(int(height_px * 15))})
+    if include_shapetype:
+        obj.append(etree.fromstring(SHAPETYPE_XML))
+    shape = etree.SubElement(obj, '{%s}shape' % NSMAP['v'])
+    shape.set('id', shape_id)
+    shape.set('type', '#_x0000_t75')
+    shape.set('style', 'width:%.2fpt;height:%.2fpt' % (width_pt, height_pt))
+    shape.set('{%s}ole' % NSMAP['o'], '')
+    imagedata = etree.SubElement(shape, '{%s}imagedata' % NSMAP['v'])
+    imagedata.set('{%s}id' % NSMAP['r'], img_rid)
+    imagedata.set('{%s}title' % NSMAP['o'], '')
+    ole = etree.SubElement(obj, '{%s}OLEObject' % NSMAP['o'])
+    ole.set('Type', 'Embed')
+    ole.set('ProgID', 'PowerPoint.Show.12')
+    ole.set('ShapeID', shape_id)
+    ole.set('DrawAspect', 'Content')
+    ole.set('ObjectID', '_%d' % _object_counter[0])
+    ole.set('{%s}id' % NSMAP['r'], ole_rid)
+    r.append(obj)
+    holder_paragraph.append(r)
+    return holder_paragraph

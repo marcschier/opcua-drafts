@@ -260,6 +260,21 @@ An implementation conforms if it exposes the in-server Schema Registry as a subt
 
 Registration (§5.2), structure materialization (§10.1), the xRegistry API/JSON projection (§10.2), TTL/mirror (§9), federation (Annex B) and the PubSub DataSet schema profile (Annex C) are optional and independently conformant. A conformant registry exposes ObjectTypes and Properties compatible with §6 and Annex A, including a per-format `SchemaId` (defined for every registered format — including JSON Schema through its injected fingerprint provider, §6.6) and SchemaId-based resolution by Opaque NodeId; `GetSchema` may additionally be exposed as the method form.
 
+Conformance is composed from independently implementable **conformance units (CUs)**. Only `SREG-SchemaDownload` is mandatory; every other unit may be claimed on its own.
+
+| Conformance unit | Requires |
+|---|---|
+| `SREG-SchemaDownload` | **Mandatory.** The well-known `SchemaRegistry` under the `Server` Object, browsing groups and files, reading a schema through the inherited FileType `Open`/`Read`/`Close`, SchemaId-based resolution by Opaque NodeId, and `GetSchema` (§5.1, §6.4). |
+| `SREG-SchemaRegistration` | Creating and writing schema resources through the inherited xRegistry create/write surface (§5.2). |
+| `SREG-SchemaVersioning` | `Compatibility`, `Ancestor`, `ModelVersion`, `ConfigurationVersion` and `IsDefault`, and the compatibility rules that govern them (§7). |
+| `SREG-TtlMirror` | `Ttl` and `ExpiryTime`, and the mirror and refresh semantics that use them (§9). |
+| `SREG-StructureMaterialization` | Auto-bootstrap of the group and file structure from the Server's own schemas (§10.1). |
+| `SREG-XRegistryApi` | Serving the xRegistry API and its JSON projection over the same registry (§10.2). |
+| `SREG-Federation` | Resolving a schema that another registry holds, with parity between the OPC UA and HTTP paths (Annex B). |
+| `SREG-PubSubProfile` | The PubSub DataSet schema profile: ConfigurationVersion-keyed evolution, open unions and the append-only rule (§11, Annex C). |
+
+**Profiles.** *Schema Registry Reader* = `SREG-SchemaDownload`. *Schema Registry Server* adds `SREG-SchemaRegistration`, `SREG-SchemaVersioning` and `SREG-StructureMaterialization`. *Schema Registry Full* adds `SREG-TtlMirror`, `SREG-XRegistryApi`, `SREG-Federation` and `SREG-PubSubProfile`.
+
 ## 13 NodeSet validation
 
 The NodeSet, CSV and Annex A are generated from `tools/build_model.py`. The local validator (`tools/validate_local.py`) checks XML well-formedness, unique NodeIds, CSV ↔ NodeSet consistency, that the well-known `SchemaRegistry` instance is attached to the `Server` object (`i=2253`), that each schema type has a `HasSubtype` back-reference to its xRegistry base type, and that base UA and xRegistry-base NodeId references resolve (the xRegistry base `NodeIds.csv` is loaded to resolve the `<RequiredModel>` cross-namespace references). Because the schema-registry NodeSet lists the xRegistry base namespace first (index 1) and its own namespace second (index 2), base-type references are `ns=1;i=63xxx` and own nodes are `ns=2;i=62xxx`.

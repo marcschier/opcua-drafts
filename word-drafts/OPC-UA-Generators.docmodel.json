@@ -1,0 +1,7612 @@
+{
+  "regions": {
+    "scope": [
+      {
+        "t": "clause",
+        "id": "c1",
+        "title": "Scope",
+        "level": 1
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "This specification defines the OPC UA ObjectTypes, VariableTypes, DataTypes, ReferenceTypes and their instances required to represent a generator set as an automation "
+          },
+          {
+            "r": "t",
+            "text": "asset",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " and, at the same time, as a machine that is "
+          },
+          {
+            "r": "t",
+            "text": "built around a prime‑mover engine",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " exposing a CAN bus / SAE J1939 interface."
+          }
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "1 Scope",
+          "b": 0
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The model covers:"
+          }
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "1 Scope",
+          "b": 1
+        }
+      },
+      {
+        "t": "list",
+        "ordered": false,
+        "level": 0,
+        "items": [
+          [
+            {
+              "r": "t",
+              "text": "The generator set as a whole (nameplate/identification, ratings, operating state and mode, health, control methods)."
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "The prime‑mover "
+            },
+            {
+              "r": "t",
+              "text": "engine",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": ", its telemetry (typically read over CAN/J1939) and its diagnostic trouble codes (DTCs)."
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "The "
+            },
+            {
+              "r": "t",
+              "text": "alternator",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": " (generator end), including per‑phase and aggregate electrical measurements."
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Supporting subsystems: "
+            },
+            {
+              "r": "t",
+              "text": "fuel",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": ", "
+            },
+            {
+              "r": "t",
+              "text": "cooling",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": ", "
+            },
+            {
+              "r": "t",
+              "text": "lubrication",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": ", "
+            },
+            {
+              "r": "t",
+              "text": "starting/battery",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": ", and "
+            },
+            {
+              "r": "t",
+              "text": "exhaust aftertreatment",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": "."
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "The "
+            },
+            {
+              "r": "t",
+              "text": "controller / control panel",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": " and its remote‑monitoring status."
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Protection and alarm",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": " functions (warnings, shutdowns, electrical trips, lockouts)."
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Automatic transfer switches (ATS)",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": " and "
+            },
+            {
+              "r": "t",
+              "text": "paralleling / switchgear",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": " for multi‑set power systems."
+            }
+          ]
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "1 Scope",
+          "b": 2
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The model deliberately reuses the OPC UA "
+          },
+          {
+            "r": "t",
+            "text": "Devices (DI)",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "t",
+            "text": "Machinery",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " companion specifications so that generator sets appear as first‑class members of the existing OPC UA machine/asset ecosystem."
+          }
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "1 Scope",
+          "b": 3
+        }
+      }
+    ],
+    "normative-references": [
+      {
+        "t": "clause",
+        "id": "c2",
+        "title": "Normative references",
+        "level": 1
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The following referenced documents are indispensable for the application of this document. For dated references, only the edition cited applies. For undated references, the latest edition of the referenced document (including any amendments and errata) applies."
+          }
+        ]
+      },
+      {
+        "t": "note",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The OPC UA core specifications are regularly published as IEC 62541."
+          }
+        ]
+      },
+      {
+        "t": "para",
+        "style": "ReferenceDocuments",
+        "runs": [
+          {
+            "r": "t",
+            "text": "OPC 10000-1, OPC Unified Architecture - Part 1: Overview and Concepts"
+          }
+        ],
+        "bookmark": "UAPart1"
+      },
+      {
+        "t": "para",
+        "style": "ReferenceDocuments",
+        "runs": [
+          {
+            "r": "t",
+            "text": "http://www.opcfoundation.org/documents/10000-1/"
+          }
+        ]
+      },
+      {
+        "t": "para",
+        "style": "ReferenceDocuments",
+        "runs": [
+          {
+            "r": "t",
+            "text": "OPC 10000-2, OPC Unified Architecture - Part 2: Security Model"
+          }
+        ],
+        "bookmark": "UAPart2"
+      },
+      {
+        "t": "para",
+        "style": "ReferenceDocuments",
+        "runs": [
+          {
+            "r": "t",
+            "text": "http://www.opcfoundation.org/documents/10000-2/"
+          }
+        ]
+      },
+      {
+        "t": "para",
+        "style": "ReferenceDocuments",
+        "runs": [
+          {
+            "r": "t",
+            "text": "OPC 10000-3, OPC Unified Architecture - Part 3: Address Space Model"
+          }
+        ],
+        "bookmark": "UAPart3"
+      },
+      {
+        "t": "para",
+        "style": "ReferenceDocuments",
+        "runs": [
+          {
+            "r": "t",
+            "text": "http://www.opcfoundation.org/documents/10000-3/"
+          }
+        ]
+      },
+      {
+        "t": "para",
+        "style": "ReferenceDocuments",
+        "runs": [
+          {
+            "r": "t",
+            "text": "OPC 10000-4, OPC Unified Architecture - Part 4: Services"
+          }
+        ],
+        "bookmark": "UAPart4"
+      },
+      {
+        "t": "para",
+        "style": "ReferenceDocuments",
+        "runs": [
+          {
+            "r": "t",
+            "text": "http://www.opcfoundation.org/documents/10000-4/"
+          }
+        ]
+      },
+      {
+        "t": "para",
+        "style": "ReferenceDocuments",
+        "runs": [
+          {
+            "r": "t",
+            "text": "OPC 10000-5, OPC Unified Architecture - Part 5: Information Model"
+          }
+        ],
+        "bookmark": "UAPart5"
+      },
+      {
+        "t": "para",
+        "style": "ReferenceDocuments",
+        "runs": [
+          {
+            "r": "t",
+            "text": "http://www.opcfoundation.org/documents/10000-5/"
+          }
+        ]
+      },
+      {
+        "t": "para",
+        "style": "ReferenceDocuments",
+        "runs": [
+          {
+            "r": "t",
+            "text": "OPC 10000-6, OPC Unified Architecture - Part 6: Mappings"
+          }
+        ],
+        "bookmark": "UAPart6"
+      },
+      {
+        "t": "para",
+        "style": "ReferenceDocuments",
+        "runs": [
+          {
+            "r": "t",
+            "text": "http://www.opcfoundation.org/documents/10000-6/"
+          }
+        ]
+      },
+      {
+        "t": "para",
+        "style": "ReferenceDocuments",
+        "runs": [
+          {
+            "r": "t",
+            "text": "OPC 10000-7, OPC Unified Architecture - Part 7: Profiles"
+          }
+        ],
+        "bookmark": "UAPart7"
+      },
+      {
+        "t": "para",
+        "style": "ReferenceDocuments",
+        "runs": [
+          {
+            "r": "t",
+            "text": "http://www.opcfoundation.org/documents/10000-7/"
+          }
+        ]
+      },
+      {
+        "t": "para",
+        "style": "ReferenceDocuments",
+        "runs": [
+          {
+            "r": "t",
+            "text": "OPC 10000-8, OPC Unified Architecture - Part 8: Data Access, which defines AnalogUnitType and the engineering-unit Properties every measured value carries."
+          }
+        ],
+        "bookmark": "UAPart8"
+      },
+      {
+        "t": "para",
+        "style": "ReferenceDocuments",
+        "runs": [
+          {
+            "r": "t",
+            "text": "http://www.opcfoundation.org/documents/10000-8/"
+          }
+        ]
+      },
+      {
+        "t": "para",
+        "style": "ReferenceDocuments",
+        "runs": [
+          {
+            "r": "t",
+            "text": "OPC 10000-9, OPC Unified Architecture - Part 9: Alarms and Conditions"
+          }
+        ],
+        "bookmark": "UAPart9"
+      },
+      {
+        "t": "para",
+        "style": "ReferenceDocuments",
+        "runs": [
+          {
+            "r": "t",
+            "text": "http://www.opcfoundation.org/documents/10000-9/"
+          }
+        ]
+      },
+      {
+        "t": "para",
+        "style": "ReferenceDocuments",
+        "runs": [
+          {
+            "r": "t",
+            "text": "OPC 10000-12, OPC Unified Architecture - Part 12: Discovery and Global Services"
+          }
+        ],
+        "bookmark": "UAPart12"
+      },
+      {
+        "t": "para",
+        "style": "ReferenceDocuments",
+        "runs": [
+          {
+            "r": "t",
+            "text": "http://www.opcfoundation.org/documents/10000-12/"
+          }
+        ]
+      },
+      {
+        "t": "para",
+        "style": "ReferenceDocuments",
+        "runs": [
+          {
+            "r": "t",
+            "text": "OPC 10000-14, OPC Unified Architecture - Part 14: PubSub"
+          }
+        ],
+        "bookmark": "UAPart14"
+      },
+      {
+        "t": "para",
+        "style": "ReferenceDocuments",
+        "runs": [
+          {
+            "r": "t",
+            "text": "http://www.opcfoundation.org/documents/10000-14/"
+          }
+        ]
+      },
+      {
+        "t": "para",
+        "style": "ReferenceDocuments",
+        "runs": [
+          {
+            "r": "t",
+            "text": "OPC 10000-16, OPC Unified Architecture - Part 16: State Machines"
+          }
+        ],
+        "bookmark": "UAPart16"
+      },
+      {
+        "t": "para",
+        "style": "ReferenceDocuments",
+        "runs": [
+          {
+            "r": "t",
+            "text": "http://www.opcfoundation.org/documents/10000-16/"
+          }
+        ]
+      },
+      {
+        "t": "para",
+        "style": "ReferenceDocuments",
+        "runs": [
+          {
+            "r": "t",
+            "text": "OPC 10000-100, OPC Unified Architecture - Part 100: Devices, the DI companion specification whose DeviceType and ComponentType this model derives from."
+          }
+        ],
+        "bookmark": "UAPart100"
+      },
+      {
+        "t": "para",
+        "style": "ReferenceDocuments",
+        "runs": [
+          {
+            "r": "t",
+            "text": "http://www.opcfoundation.org/documents/10000-100/"
+          }
+        ]
+      },
+      {
+        "t": "para",
+        "style": "ReferenceDocuments",
+        "runs": [
+          {
+            "r": "t",
+            "text": "OPC 40001-1, OPC UA for Machinery - Part 1: Basic Building Blocks, whose Machines folder makes a generator set discoverable."
+          }
+        ],
+        "bookmark": "UA40001"
+      },
+      {
+        "t": "para",
+        "style": "ReferenceDocuments",
+        "runs": [
+          {
+            "r": "t",
+            "text": "http://www.opcfoundation.org/documents/40001-1/"
+          }
+        ]
+      },
+      {
+        "t": "para",
+        "style": "ReferenceDocuments",
+        "runs": [
+          {
+            "r": "t",
+            "text": "SAE J1939, Serial control and communications heavy duty vehicle network, the CAN bus protocol the engine interface mirrors."
+          }
+        ],
+        "bookmark": "SAEJ1939"
+      },
+      {
+        "t": "para",
+        "style": "ReferenceDocuments",
+        "runs": [
+          {
+            "r": "t",
+            "text": "https://www.sae.org/standards/content/j1939/"
+          }
+        ]
+      }
+    ],
+    "terms": [
+      {
+        "t": "clause",
+        "id": "c3",
+        "title": "Terms, abbreviated terms and conventions",
+        "level": 1
+      },
+      {
+        "t": "clause",
+        "id": "c3-1",
+        "title": "Overview",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "It is assumed that basic concepts of OPC UA information modelling and of Generators are understood in this document. This document uses these concepts to describe the Generators Information Model. For the purposes of this document, the terms and definitions given in OPC 10000-1, OPC 10000-3, OPC 10000-4, OPC 10000-5 and OPC 10000-7, as well as the following, apply."
+          }
+        ]
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "OPC UA terms and terms defined in this document are italicized in the document."
+          }
+        ]
+      },
+      {
+        "t": "clause",
+        "id": "c3-2",
+        "title": "Generator terms",
+        "level": 2
+      },
+      {
+        "t": "term",
+        "term": "GenSet / Generator set",
+        "definition": [
+          {
+            "r": "t",
+            "text": "A complete power‑generation unit combining a prime‑mover engine and an alternator with control and support subsystems."
+          }
+        ],
+        "notes": [],
+        "examples": [],
+        "source": null
+      },
+      {
+        "t": "term",
+        "term": "Prime mover",
+        "definition": [
+          {
+            "r": "t",
+            "text": "The engine that drives the alternator (diesel, gas, etc.)."
+          }
+        ],
+        "notes": [],
+        "examples": [],
+        "source": null
+      },
+      {
+        "t": "term",
+        "term": "Alternator",
+        "definition": [
+          {
+            "r": "t",
+            "text": "The AC generator end that converts mechanical power into electrical power."
+          }
+        ],
+        "notes": [],
+        "examples": [],
+        "source": null
+      },
+      {
+        "t": "term",
+        "term": "ATS",
+        "definition": [
+          {
+            "r": "t",
+            "text": "Automatic Transfer Switch."
+          }
+        ],
+        "notes": [],
+        "examples": [],
+        "source": null
+      },
+      {
+        "t": "term",
+        "term": "AVR",
+        "definition": [
+          {
+            "r": "t",
+            "text": "Automatic Voltage Regulator."
+          }
+        ],
+        "notes": [],
+        "examples": [],
+        "source": null
+      },
+      {
+        "t": "term",
+        "term": "DTC",
+        "definition": [
+          {
+            "r": "t",
+            "text": "Diagnostic Trouble Code (SAE J1939 DM1/DM2)."
+          }
+        ],
+        "notes": [],
+        "examples": [],
+        "source": null
+      },
+      {
+        "t": "term",
+        "term": "SPN / FMI",
+        "definition": [
+          {
+            "r": "t",
+            "text": "Suspect Parameter Number / Failure Mode Identifier (SAE J1939)."
+          }
+        ],
+        "notes": [],
+        "examples": [],
+        "source": null
+      },
+      {
+        "t": "term",
+        "term": "ESP / PRP / COP / LTP",
+        "definition": [
+          {
+            "r": "t",
+            "text": "ISO 8528 ratings: Emergency Standby / Prime / Continuous / Limited‑Time Power."
+          }
+        ],
+        "notes": [],
+        "examples": [],
+        "source": null
+      },
+      {
+        "t": "term",
+        "term": "DCC",
+        "definition": [
+          {
+            "r": "t",
+            "text": "Data‑Center Continuous rating."
+          }
+        ],
+        "notes": [],
+        "examples": [],
+        "source": null
+      },
+      {
+        "t": "term",
+        "term": "PMG",
+        "definition": [
+          {
+            "r": "t",
+            "text": "Permanent Magnet Generator (excitation)."
+          }
+        ],
+        "notes": [],
+        "examples": [],
+        "source": null
+      },
+      {
+        "t": "clause",
+        "id": "c3-3",
+        "title": "Abbreviated terms",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPHCompressed",
+        "runs": [
+          {
+            "r": "t",
+            "text": "ATS"
+          },
+          {
+            "r": "tab"
+          },
+          {
+            "r": "t",
+            "text": "Automatic Transfer Switch"
+          }
+        ]
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPHCompressed",
+        "runs": [
+          {
+            "r": "t",
+            "text": "CAN"
+          },
+          {
+            "r": "tab"
+          },
+          {
+            "r": "t",
+            "text": "Controller Area Network"
+          }
+        ]
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPHCompressed",
+        "runs": [
+          {
+            "r": "t",
+            "text": "DI"
+          },
+          {
+            "r": "tab"
+          },
+          {
+            "r": "t",
+            "text": "Devices"
+          }
+        ]
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPHCompressed",
+        "runs": [
+          {
+            "r": "t",
+            "text": "DTC"
+          },
+          {
+            "r": "tab"
+          },
+          {
+            "r": "t",
+            "text": "Diagnostic Trouble Code"
+          }
+        ]
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPHCompressed",
+        "runs": [
+          {
+            "r": "t",
+            "text": "ECU"
+          },
+          {
+            "r": "tab"
+          },
+          {
+            "r": "t",
+            "text": "Electronic Control Unit"
+          }
+        ]
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPHCompressed",
+        "runs": [
+          {
+            "r": "t",
+            "text": "HTTP"
+          },
+          {
+            "r": "tab"
+          },
+          {
+            "r": "t",
+            "text": "Hypertext Transfer Protocol"
+          }
+        ]
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPHCompressed",
+        "runs": [
+          {
+            "r": "t",
+            "text": "JSON"
+          },
+          {
+            "r": "tab"
+          },
+          {
+            "r": "t",
+            "text": "JavaScript Object Notation"
+          }
+        ]
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPHCompressed",
+        "runs": [
+          {
+            "r": "t",
+            "text": "SAE"
+          },
+          {
+            "r": "tab"
+          },
+          {
+            "r": "t",
+            "text": "Society of Automotive Engineers"
+          }
+        ]
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPHCompressed",
+        "runs": [
+          {
+            "r": "t",
+            "text": "SPN"
+          },
+          {
+            "r": "tab"
+          },
+          {
+            "r": "t",
+            "text": "Suspect Parameter Number"
+          }
+        ]
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPHCompressed",
+        "runs": [
+          {
+            "r": "t",
+            "text": "URI"
+          },
+          {
+            "r": "tab"
+          },
+          {
+            "r": "t",
+            "text": "Uniform Resource Identifier"
+          }
+        ]
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPHCompressed",
+        "runs": [
+          {
+            "r": "t",
+            "text": "UTC"
+          },
+          {
+            "r": "tab"
+          },
+          {
+            "r": "t",
+            "text": "Coordinated Universal Time"
+          }
+        ]
+      },
+      {
+        "t": "clause",
+        "id": "c3-4",
+        "title": "Conventions used in this document",
+        "level": 2
+      }
+    ],
+    "general": [
+      {
+        "t": "clause",
+        "id": "c4",
+        "title": "General information to generators and OPC UA",
+        "level": 1
+      },
+      {
+        "t": "clause",
+        "id": "c4-1",
+        "title": "Introduction to generator sets",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "A generator set converts fuel into electrical power on site: an engine drives an alternator, a controller starts, loads and protects the pair, and the support subsystems — fuel, cooling, lubrication, starting and exhaust aftertreatment — keep the engine able to run. Several sets may be paralleled onto one bus, and a transfer switch decides whether a load is fed from the utility or from the set."
+          }
+        ]
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Every one of those parts already reports data. The engine speaks SAE J1939 over a CAN bus, the controller exposes its own protocol, the transfer switch another. What is missing is a common description: an integrator wanting engine load, alternator power and the operating state of a set has to learn one vendor's map, then the next vendor's, and again for every fleet."
+          }
+        ]
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "This document defines that common description as an OPC UA information model. It gives a generator set, its components, its ratings, its operating state machine and its protections a standard type, so that a Client reads the same BrowseNames, DataTypes and engineering units whatever equipment is behind them."
+          }
+        ]
+      },
+      {
+        "t": "clause",
+        "id": "c4-2",
+        "title": "Introduction to OPC Unified Architecture",
+        "level": 2
+      }
+    ],
+    "use-cases": [
+      {
+        "t": "clause",
+        "id": "c5",
+        "title": "Use cases",
+        "level": 1
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The information model is transport‑neutral: it can be exposed over OPC UA client/server and, at scale, over "
+          },
+          {
+            "r": "t",
+            "text": "OPC UA PubSub",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " ("
+          },
+          {
+            "r": "t",
+            "text": "OPC 10000‑14"
+          },
+          {
+            "r": "t",
+            "text": "). This clause gives "
+          },
+          {
+            "r": "t",
+            "text": "non‑normative",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " recommendations for grouping the Variables of a generator set into "
+          },
+          {
+            "r": "t",
+            "text": "PublishedDataSets",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " (PDS) and "
+          },
+          {
+            "r": "t",
+            "text": "WriterGroups",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " so that a server can efficiently feed several classes of consumer. A server may publish any subset; the field paths below are BrowsePaths relative to a "
+          },
+          {
+            "r": "code",
+            "text": "GeneratorSetType"
+          },
+          {
+            "r": "t",
+            "text": " (or "
+          },
+          {
+            "r": "code",
+            "text": "GeneratorSystemType"
+          },
+          {
+            "r": "t",
+            "text": ") instance."
+          }
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "10 PubSub dataset bindings",
+          "b": 0
+        }
+      },
+      {
+        "t": "clause",
+        "id": "c5-1",
+        "title": "General binding guidance",
+        "level": 2
+      },
+      {
+        "t": "list",
+        "ordered": false,
+        "level": 0,
+        "items": [
+          [
+            {
+              "r": "t",
+              "text": "A "
+            },
+            {
+              "r": "t",
+              "text": "PublishedDataSet",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": " is a named list of published fields, each field bound to a Variable of the model (for example "
+            },
+            {
+              "r": "code",
+              "text": "Alternator/TotalRealPower"
+            },
+            {
+              "r": "t",
+              "text": "). Group fields by "
+            },
+            {
+              "r": "t",
+              "text": "rate of change",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": " and "
+            },
+            {
+              "r": "t",
+              "text": "consumer",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": " so that fast telemetry, slow nameplate/configuration, and event data travel in separate datasets and writer groups."
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Use one "
+            },
+            {
+              "r": "t",
+              "text": "WriterGroup",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": " per publishing rate. Publish cyclic telemetry as "
+            },
+            {
+              "r": "t",
+              "text": "delta frames",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": " with a periodic "
+            },
+            {
+              "r": "t",
+              "text": "key frame",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": "; publish nameplate/configuration as low‑rate key frames or on change."
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Bind alarms and protection events to an "
+            },
+            {
+              "r": "t",
+              "text": "event DataSet",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": " (the Part 14 event message mapping) rather than to a cyclic dataset."
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Expose "
+            },
+            {
+              "r": "code",
+              "text": "DataSetMetaData"
+            },
+            {
+              "r": "t",
+              "text": " including its "
+            },
+            {
+              "r": "code",
+              "text": "ConfigurationVersion"
+            },
+            {
+              "r": "t",
+              "text": " so subscribers can detect structural changes, and carry "
+            },
+            {
+              "r": "code",
+              "text": "SourceTimestamp"
+            },
+            {
+              "r": "t",
+              "text": " and "
+            },
+            {
+              "r": "code",
+              "text": "StatusCode"
+            },
+            {
+              "r": "t",
+              "text": " per field so analytics can reason about data quality and gaps."
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "For multi‑set installations, a "
+            },
+            {
+              "r": "code",
+              "text": "GeneratorSystemType"
+            },
+            {
+              "r": "t",
+              "text": " writer publishes aggregated key indicators while each "
+            },
+            {
+              "r": "code",
+              "text": "GeneratorSetType"
+            },
+            {
+              "r": "t",
+              "text": " publishes its own detailed datasets."
+            }
+          ]
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "10.1 General binding guidance",
+          "b": 0
+        }
+      },
+      {
+        "t": "clause",
+        "id": "c5-2",
+        "title": "Operational observability",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Real‑time monitoring, SCADA/HMI and remote operations. Low latency, small payloads, cyclic."
+          }
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "10.2 Scenario — Operational observability",
+          "b": 0
+        }
+      },
+      {
+        "t": "table",
+        "id": "operational-observability-tab1",
+        "caption": "Operational observability",
+        "kind": "generic",
+        "headers": [
+          [
+            {
+              "r": "t",
+              "text": "PublishedDataSet"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Suggested fields"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Rate"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Frame"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "r": "code",
+                "text": "GenSet.Live"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "OperatingState/CurrentState"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "OperatingMode"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "Engine/Speed"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "Engine/CoolantTemperature"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "Engine/OilPressure"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "Alternator/Frequency"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "Alternator/TotalRealPower"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "Alternator/AverageLineToLineVoltage"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "Alternator/AverageCurrent"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "FuelSystem/FuelLevel"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "StartingSystem/BatteryVoltage"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "1 s"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "delta + 10 s key"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "code",
+                "text": "GenSet.Status"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "GeneratorBreakerClosed"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "AvailableToLoad"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "RunRequest"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "LoadInhibit"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "Controller/InAutoMode"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "DeviceHealth"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "on change"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "key"
+              }
+            ]
+          ]
+        ],
+        "widths": null,
+        "note": null,
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "10.2 Scenario — Operational observability",
+          "b": 1
+        }
+      },
+      {
+        "t": "clause",
+        "id": "c5-3",
+        "title": "Analytics for predictive maintenance",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Trending of wear‑ and condition‑related signals together with diagnostic codes and usage counters; historized. Moderate rate."
+          }
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "10.3 Scenario — Analytics: predictive maintenance",
+          "b": 0
+        }
+      },
+      {
+        "t": "table",
+        "id": "analytics-for-predictive-maintenance-tab1",
+        "caption": "Analytics for predictive maintenance",
+        "kind": "generic",
+        "headers": [
+          [
+            {
+              "r": "t",
+              "text": "PublishedDataSet"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Suggested fields"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Rate"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "r": "code",
+                "text": "GenSet.Condition"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "Engine/OilPressure"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "Engine/OilTemperature"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "Engine/CoolantTemperature"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "Engine/ExhaustGasTemperature"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "Engine/IntakeManifoldPressure"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "LubricationSystem/OilFilterDifferentialPressure"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "Alternator/WindingTemperature1..3"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "Alternator/BearingTemperatureDriveEnd"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "Alternator/BearingTemperatureNonDriveEnd"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "FuelSystem/FuelPressure"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "1–10 s"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "code",
+                "text": "GenSet.Usage"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "Engine/EngineHours"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "Engine/NumberOfStarts"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "StartingSystem/StartAttempts"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "Alternator/TotalRealEnergy"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "FuelSystem/TotalFuelConsumed"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "1 min / on change"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "code",
+                "text": "GenSet.Diagnostics"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "Engine/CanInterface/ActiveDiagnosticTroubleCodes"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "Engine/CanInterface/PreviouslyActiveDiagnosticTroubleCodes"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "Engine/CanInterface/AmberWarningLamp"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "Engine/CanInterface/RedStopLamp"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "on change"
+              }
+            ]
+          ]
+        ],
+        "widths": null,
+        "note": null,
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "10.3 Scenario — Analytics: predictive maintenance",
+          "b": 1
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Predictive models correlate the condition signals with usage counters and DTC history to forecast wear (bearings, injectors, cooling and lubrication systems) and to schedule service before failure."
+          }
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "10.3 Scenario — Analytics: predictive maintenance",
+          "b": 2
+        }
+      },
+      {
+        "t": "clause",
+        "id": "c5-4",
+        "title": "Analytics for anomaly detection",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "High‑resolution, correlated electrical and mechanical signals for baseline modelling and deviation/outlier detection (phase imbalance, load‑vs‑fuel drift, incipient faults)."
+          }
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "10.4 Scenario — Analytics: anomaly detection",
+          "b": 0
+        }
+      },
+      {
+        "t": "table",
+        "id": "analytics-for-anomaly-detection-tab1",
+        "caption": "Analytics for anomaly detection",
+        "kind": "generic",
+        "headers": [
+          [
+            {
+              "r": "t",
+              "text": "PublishedDataSet"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Suggested fields"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Rate"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "r": "code",
+                "text": "GenSet.HiRes"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "Engine/Speed"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "Engine/PercentLoad"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "Engine/FuelRate"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "Alternator/Frequency"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "Alternator/TotalRealPower"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "Alternator/TotalReactivePower"
+              },
+              {
+                "r": "t",
+                "text": ", and per‑phase "
+              },
+              {
+                "r": "code",
+                "text": "Alternator/L1..L3/Current"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": ".../LineToNeutralVoltage"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": ".../PowerFactor"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "100 ms – 1 s"
+              }
+            ]
+          ]
+        ],
+        "widths": null,
+        "note": null,
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "10.4 Scenario — Analytics: anomaly detection",
+          "b": 1
+        }
+      },
+      {
+        "t": "clause",
+        "id": "c5-5",
+        "title": "Energy and load management",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Load sharing, peak shaving, demand response and grid‑services coordination across a bus or fleet."
+          }
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "10.5 Scenario — Energy & load management and paralleling",
+          "b": 0
+        }
+      },
+      {
+        "t": "table",
+        "id": "energy-and-load-management-tab1",
+        "caption": "Energy and load management",
+        "kind": "generic",
+        "headers": [
+          [
+            {
+              "r": "t",
+              "text": "PublishedDataSet"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Suggested fields"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Rate"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "r": "code",
+                "text": "System.Load"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "ParallelingController/TotalBusRealPower"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": ".../TotalBusReactivePower"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": ".../BusFrequency"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": ".../BusVoltage"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": ".../LoadSharePercent"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": ".../AvailableCapacity"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": ".../SpinningReserve"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": ".../UtilityImportPower"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": ".../UtilityExportPower"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "200 ms – 1 s"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "code",
+                "text": "GenSet.Power"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "Alternator/TotalRealPower"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "Alternator/LoadPercent"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "Ratings/<Rating>/RatedRealPower"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "1 s"
+              }
+            ]
+          ]
+        ],
+        "widths": null,
+        "note": null,
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "10.5 Scenario — Energy & load management and paralleling",
+          "b": 1
+        }
+      },
+      {
+        "t": "clause",
+        "id": "c5-6",
+        "title": "Alarm and event distribution",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Protection and condition events for operators, CMMS/EAM systems and safety functions."
+          }
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "10.6 Scenario — Alarm & event distribution",
+          "b": 0
+        }
+      },
+      {
+        "t": "table",
+        "id": "alarm-and-event-distribution-tab1",
+        "caption": "Alarm and event distribution",
+        "kind": "generic",
+        "headers": [
+          [
+            {
+              "r": "t",
+              "text": "Event DataSet"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Source"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Delivery"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "r": "code",
+                "text": "GenSet.Events"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "GeneratorProtectionAlarmType"
+              },
+              {
+                "r": "t",
+                "text": " events ("
+              },
+              {
+                "r": "code",
+                "text": "ProtectionFunction"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "GeneratorAlarmSeverity"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "IsShutdown"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "Spn"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "Fmi"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "SubsystemName"
+              },
+              {
+                "r": "t",
+                "text": ") plus the standard "
+              },
+              {
+                "r": "code",
+                "text": "AcknowledgeableConditionType"
+              },
+              {
+                "r": "t",
+                "text": " fields"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "event‑driven, reliable, with keep‑alive"
+              }
+            ]
+          ]
+        ],
+        "widths": null,
+        "note": null,
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "10.6 Scenario — Alarm & event distribution",
+          "b": 1
+        }
+      },
+      {
+        "t": "clause",
+        "id": "c5-7",
+        "title": "Fleet monitoring and compliance",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Multi‑site supervision, contractual reporting and regulatory / emergency‑power compliance (for example NFPA 110 test records and emissions reporting)."
+          }
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "10.7 Scenario — Fleet monitoring & compliance",
+          "b": 0
+        }
+      },
+      {
+        "t": "table",
+        "id": "fleet-monitoring-and-compliance-tab1",
+        "caption": "Fleet monitoring and compliance",
+        "kind": "generic",
+        "headers": [
+          [
+            {
+              "r": "t",
+              "text": "PublishedDataSet"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Suggested fields"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Rate"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "r": "code",
+                "text": "GenSet.Nameplate"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "Identification/Manufacturer"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "Identification/Model"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "Identification/SerialNumber"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "Identification/EngineModel"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "Identification/AlternatorModel"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "Identification/RatedRealPower"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "Identification/EmissionsStandard"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "Application"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "Controller/FirmwareVersion"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "Controller/ConfigurationVersion"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "on change / daily key"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "code",
+                "text": "GenSet.Compliance"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "EmissionsStandard"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "Engine/Aftertreatment/AftertreatmentState"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "Engine/Aftertreatment/DefLevel"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "Engine/Aftertreatment/DpfSootLoad"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "Engine/EngineHours"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "FuelSystem/TotalFuelConsumed"
+              },
+              {
+                "r": "t",
+                "text": " (test runs are recorded via the "
+              },
+              {
+                "r": "code",
+                "text": "StartTest"
+              },
+              {
+                "r": "t",
+                "text": " method and protection/condition events)"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "periodic / event"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "code",
+                "text": "System.Fleet"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "per set "
+              },
+              {
+                "r": "code",
+                "text": "OperatingState/CurrentState"
+              },
+              {
+                "r": "t",
+                "text": " and "
+              },
+              {
+                "r": "code",
+                "text": "Alternator/TotalRealPower"
+              },
+              {
+                "r": "t",
+                "text": "; system "
+              },
+              {
+                "r": "code",
+                "text": "TotalSystemLoad"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "TotalSystemCapacity"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "NumberOfGeneratorSets"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "1–10 s"
+              }
+            ]
+          ]
+        ],
+        "widths": null,
+        "note": null,
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "10.7 Scenario — Fleet monitoring & compliance",
+          "b": 1
+        }
+      }
+    ],
+    "model-overview": [
+      {
+        "t": "clause",
+        "id": "c6",
+        "title": "Generators information model overview",
+        "level": 1
+      },
+      {
+        "t": "clause",
+        "id": "c6-1",
+        "title": "What is a generator set",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "A generator set is simultaneously two things: an "
+          },
+          {
+            "r": "t",
+            "text": "asset",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " with a nameplate, health and a life‑cycle; and a "
+          },
+          {
+            "r": "t",
+            "text": "machine",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " whose core is an internal‑combustion engine coupled to an alternator. Sizes span four orders of magnitude of power. A small residential unit may produce ~13 kW on natural gas; a large industrial set built on a ~95 L V16 high‑speed diesel engine can deliver "
+          },
+          {
+            "r": "t",
+            "text": "3.0–3.75 MW",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": ", is the size of a small house, and consumes on the order of "
+          },
+          {
+            "r": "t",
+            "text": "130–210 US gal/h",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " of diesel at full load. Between those extremes lie commercial standby, data‑center, healthcare, rental/mobile and marine products."
+          }
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "4.1 What is a generator set?",
+          "b": 0
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Whatever the size, every set exposes broadly the same information: identity, ratings, an operating state and mode, engine and alternator telemetry, fuel/cooling/lubrication/battery status, protections/alarms and start/stop control. This specification captures that common information once, so that a single client can monitor and (where permitted) control any conforming set."
+          }
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "4.1 What is a generator set?",
+          "b": 1
+        }
+      },
+      {
+        "t": "clause",
+        "id": "c6-2",
+        "title": "Relationship to other companion specifications",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "This model is layered on established OPC UA building blocks rather than reinventing them:"
+          }
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "4.2 Relationship to other companion specifications",
+          "b": 0
+        }
+      },
+      {
+        "t": "list",
+        "ordered": false,
+        "level": 0,
+        "items": [
+          [
+            {
+              "r": "t",
+              "text": "DI (Devices).",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": " "
+            },
+            {
+              "r": "code",
+              "text": "GeneratorSetType"
+            },
+            {
+              "r": "t",
+              "text": " derives from the DI "
+            },
+            {
+              "r": "code",
+              "text": "DeviceType"
+            },
+            {
+              "r": "t",
+              "text": ", inheriting a complete nameplate ("
+            },
+            {
+              "r": "code",
+              "text": "Manufacturer"
+            },
+            {
+              "r": "t",
+              "text": ", "
+            },
+            {
+              "r": "code",
+              "text": "Model"
+            },
+            {
+              "r": "t",
+              "text": ", "
+            },
+            {
+              "r": "code",
+              "text": "SerialNumber"
+            },
+            {
+              "r": "t",
+              "text": ", "
+            },
+            {
+              "r": "code",
+              "text": "HardwareRevision"
+            },
+            {
+              "r": "t",
+              "text": ", "
+            },
+            {
+              "r": "code",
+              "text": "SoftwareRevision"
+            },
+            {
+              "r": "t",
+              "text": ", "
+            },
+            {
+              "r": "code",
+              "text": "DeviceRevision"
+            },
+            {
+              "r": "t",
+              "text": ", "
+            },
+            {
+              "r": "code",
+              "text": "RevisionCounter"
+            },
+            {
+              "r": "t",
+              "text": ", …) and "
+            },
+            {
+              "r": "code",
+              "text": "DeviceHealth"
+            },
+            {
+              "r": "t",
+              "text": " ("
+            },
+            {
+              "r": "code",
+              "text": "NORMAL"
+            },
+            {
+              "r": "t",
+              "text": "/"
+            },
+            {
+              "r": "code",
+              "text": "FAILURE"
+            },
+            {
+              "r": "t",
+              "text": "/"
+            },
+            {
+              "r": "code",
+              "text": "CHECK_FUNCTION"
+            },
+            {
+              "r": "t",
+              "text": "/"
+            },
+            {
+              "r": "code",
+              "text": "OFF_SPEC"
+            },
+            {
+              "r": "t",
+              "text": "/"
+            },
+            {
+              "r": "code",
+              "text": "MAINTENANCE_REQUIRED"
+            },
+            {
+              "r": "t",
+              "text": "). Each subsystem (engine, alternator, fuel system, …) derives from the DI "
+            },
+            {
+              "r": "code",
+              "text": "ComponentType"
+            },
+            {
+              "r": "t",
+              "text": ", the standard base for an identifiable component of a device."
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Machinery.",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": " Every set carries the Machinery building blocks so that it is discoverable and interoperable alongside other machines: an "
+            },
+            {
+              "r": "code",
+              "text": "Identification"
+            },
+            {
+              "r": "t",
+              "text": " add‑in (a "
+            },
+            {
+              "r": "code",
+              "text": "GeneratorIdentificationType"
+            },
+            {
+              "r": "t",
+              "text": ", which specialises the Machinery "
+            },
+            {
+              "r": "code",
+              "text": "MachineIdentificationType"
+            },
+            {
+              "r": "t",
+              "text": ") and a "
+            },
+            {
+              "r": "code",
+              "text": "MachineryBuildingBlocks"
+            },
+            {
+              "r": "t",
+              "text": " folder holding the generic "
+            },
+            {
+              "r": "code",
+              "text": "MachineryItemState"
+            },
+            {
+              "r": "t",
+              "text": " and "
+            },
+            {
+              "r": "code",
+              "text": "MachineryOperationMode"
+            },
+            {
+              "r": "t",
+              "text": " state machines."
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Part 9 (Alarms & Conditions).",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": " Protection events are modelled by "
+            },
+            {
+              "r": "code",
+              "text": "GeneratorProtectionAlarmType"
+            },
+            {
+              "r": "t",
+              "text": ", a subtype of "
+            },
+            {
+              "r": "code",
+              "text": "OffNormalAlarmType"
+            },
+            {
+              "r": "t",
+              "text": "."
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Part 5 / Part 16 (State machines).",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": " The detailed run states of a set are modelled by "
+            },
+            {
+              "r": "code",
+              "text": "GeneratorStateMachineType"
+            },
+            {
+              "r": "t",
+              "text": ", a "
+            },
+            {
+              "r": "code",
+              "text": "FiniteStateMachineType"
+            },
+            {
+              "r": "t",
+              "text": "."
+            }
+          ]
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "4.2 Relationship to other companion specifications",
+          "b": 1
+        }
+      },
+      {
+        "t": "clause",
+        "id": "c6-3",
+        "title": "Namespaces used by the model",
+        "level": 2
+      },
+      {
+        "t": "table",
+        "id": "namespaces-used-by-the-model-tab1",
+        "caption": "Namespaces used by the model",
+        "kind": "generic",
+        "headers": [
+          [
+            {
+              "r": "t",
+              "text": "Index"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Namespace URI"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Role"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "r": "t",
+                "text": "0"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "http://opcfoundation.org/UA/"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "OPC UA core"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "1"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "http://opcfoundation.org/UA/Generators/"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "This specification"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "2"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "http://opcfoundation.org/UA/DI/"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Devices"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "3"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "http://opcfoundation.org/UA/Machinery/"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Machinery"
+              }
+            ]
+          ]
+        ],
+        "widths": null,
+        "note": null,
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "4.3 Namespaces",
+          "b": 0
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Numeric NodeIds in namespace 1 are allocated as follows: ObjectTypes "
+          },
+          {
+            "r": "code",
+            "text": "1001–1099"
+          },
+          {
+            "r": "t",
+            "text": ", DataTypes "
+          },
+          {
+            "r": "code",
+            "text": "3001–3099"
+          },
+          {
+            "r": "t",
+            "text": " (enumerations) and "
+          },
+          {
+            "r": "code",
+            "text": "3050+"
+          },
+          {
+            "r": "t",
+            "text": " (structures), EnumStrings properties "
+          },
+          {
+            "r": "code",
+            "text": "datatype‑id + 900"
+          },
+          {
+            "r": "t",
+            "text": ", and all remaining instance declarations (members, method arguments, state‑machine states and transitions) sequentially from "
+          },
+          {
+            "r": "code",
+            "text": "6001"
+          },
+          {
+            "r": "t",
+            "text": "."
+          }
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "4.3 Namespaces",
+          "b": 1
+        }
+      },
+      {
+        "t": "clause",
+        "id": "c6-4",
+        "title": "Information model architecture",
+        "level": 2
+      },
+      {
+        "t": "clause",
+        "id": "c6-5",
+        "title": "Composition of a generator set",
+        "level": 2
+      },
+      {
+        "t": "figure",
+        "id": "fig-gen-composition",
+        "caption": "Composition of a generator set",
+        "source": "mermaid",
+        "mermaid": "graph TD\n  GS[GeneratorSetType : DI.DeviceType]\n  GS -->|HasAddIn 2:Identification| ID[GeneratorIdentificationType]\n  GS -->|HasAddIn 3:MachineryBuildingBlocks| BB[Folder]\n  BB --> MIS[MachineryItemState]\n  BB --> MOM[MachineryOperationMode]\n  GS -->|OperatingState| SM[GeneratorStateMachineType]\n  GS -->|OperatingMode| OM[GeneratorOperatingModeEnum]\n  GS --> ENG[Engine : EngineType]\n  GS --> ALT[Alternator : AlternatorType]\n  GS --> CTRL[Controller : GeneratorControllerType]\n  GS --> FUEL[FuelSystem : FuelSystemType]\n  GS --> COOL[CoolingSystem : CoolingSystemType]\n  GS --> LUBE[LubricationSystem : LubricationSystemType]\n  GS --> BATT[StartingSystem : StartingSystemType]\n  GS --> RAT[Ratings folder → GeneratorRatingType]\n  ENG -->|CanInterface| CAN[J1939DiagnosticInterfaceType]\n  ENG -->|Aftertreatment| AT[ExhaustAftertreatmentType]\n  ALT --> L1[L1 : AlternatorPhaseType]\n  ALT --> L2[L2 : AlternatorPhaseType]\n  ALT --> L3[L3 : AlternatorPhaseType]\n  GS -.GeneratesEvent.-> AL[GeneratorProtectionAlarmType]",
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "5.1 Composition of a generator set",
+          "b": 0
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "A multi‑set installation (data‑center, healthcare, campus) is represented by "
+          },
+          {
+            "r": "code",
+            "text": "GeneratorSystemType"
+          },
+          {
+            "r": "t",
+            "text": ", which aggregates one or more "
+          },
+          {
+            "r": "code",
+            "text": "GeneratorSetType"
+          },
+          {
+            "r": "t",
+            "text": " instances, an optional "
+          },
+          {
+            "r": "code",
+            "text": "ParallelingControllerType"
+          },
+          {
+            "r": "t",
+            "text": " and one or more "
+          },
+          {
+            "r": "code",
+            "text": "AutomaticTransferSwitchType"
+          },
+          {
+            "r": "t",
+            "text": " instances."
+          }
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "5.1 Composition of a generator set",
+          "b": 1
+        }
+      },
+      {
+        "t": "clause",
+        "id": "c6-6",
+        "title": "Design rationale",
+        "level": 2
+      },
+      {
+        "t": "list",
+        "ordered": false,
+        "level": 0,
+        "items": [
+          [
+            {
+              "r": "t",
+              "text": "Asset + machine, not either/or.",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": " Deriving from "
+            },
+            {
+              "r": "code",
+              "text": "DeviceType"
+            },
+            {
+              "r": "t",
+              "text": " gives the set an asset identity and health; adding the Machinery building blocks makes it discoverable as a machine. The "
+            },
+            {
+              "r": "code",
+              "text": "Identification"
+            },
+            {
+              "r": "t",
+              "text": " add‑in intentionally mirrors a few nameplate fields already present on "
+            },
+            {
+              "r": "code",
+              "text": "DeviceType"
+            },
+            {
+              "r": "t",
+              "text": "; the add‑in is the cross‑vendor, Machinery‑standard location, whereas the inherited "
+            },
+            {
+              "r": "code",
+              "text": "DeviceType"
+            },
+            {
+              "r": "t",
+              "text": " fields are the DI‑native location. Servers may populate either or both, but where both are present the equivalent fields ("
+            },
+            {
+              "r": "code",
+              "text": "Manufacturer"
+            },
+            {
+              "r": "t",
+              "text": ", "
+            },
+            {
+              "r": "code",
+              "text": "Model"
+            },
+            {
+              "r": "t",
+              "text": ", "
+            },
+            {
+              "r": "code",
+              "text": "SerialNumber"
+            },
+            {
+              "r": "t",
+              "text": ", "
+            },
+            {
+              "r": "code",
+              "text": "ProductInstanceUri"
+            },
+            {
+              "r": "t",
+              "text": ") "
+            },
+            {
+              "r": "t",
+              "text": "shall",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": " carry the same value."
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Composition over deep inheritance",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": " ("
+            },
+            {
+              "r": "t",
+              "text": "OPC 11030 "
+            },
+            {
+              "r": "t",
+              "text": "§7.2.4"
+            },
+            {
+              "r": "t",
+              "text": "). Subsystems are separate "
+            },
+            {
+              "r": "code",
+              "text": "ComponentType"
+            },
+            {
+              "r": "t",
+              "text": " subtypes referenced by "
+            },
+            {
+              "r": "code",
+              "text": "HasComponent"
+            },
+            {
+              "r": "t",
+              "text": ", so a set can be assembled from exactly the components it has (a home‑standby air‑cooled unit omits the paralleling controller; a Tier 4 diesel adds "
+            },
+            {
+              "r": "code",
+              "text": "ExhaustAftertreatment"
+            },
+            {
+              "r": "t",
+              "text": ")."
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Physical quantities use ",
+              "b": true
+            },
+            {
+              "r": "code",
+              "text": "AnalogUnitType"
+            },
+            {
+              "r": "t",
+              "text": " with machine‑readable units.",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": " Every measured value is typed "
+            },
+            {
+              "r": "code",
+              "text": "AnalogUnitType"
+            },
+            {
+              "r": "t",
+              "text": " and carries an "
+            },
+            {
+              "r": "code",
+              "text": "EngineeringUnits"
+            },
+            {
+              "r": "t",
+              "text": " property whose value is a standard UNECE/CEFACT unit (e.g. "
+            },
+            {
+              "r": "code",
+              "text": "r/min"
+            },
+            {
+              "r": "t",
+              "text": ", "
+            },
+            {
+              "r": "code",
+              "text": "kPa"
+            },
+            {
+              "r": "t",
+              "text": ", "
+            },
+            {
+              "r": "code",
+              "text": "°C"
+            },
+            {
+              "r": "t",
+              "text": ", "
+            },
+            {
+              "r": "code",
+              "text": "kW"
+            },
+            {
+              "r": "t",
+              "text": ", "
+            },
+            {
+              "r": "code",
+              "text": "Hz"
+            },
+            {
+              "r": "t",
+              "text": "), so a client can discover the unit from the type model alone. A server "
+            },
+            {
+              "r": "t",
+              "text": "may",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": " override this default at instance level to reflect the unit it actually reports (e.g. "
+            },
+            {
+              "r": "code",
+              "text": "psi"
+            },
+            {
+              "r": "t",
+              "text": ", "
+            },
+            {
+              "r": "code",
+              "text": "gal/h"
+            },
+            {
+              "r": "t",
+              "text": ", "
+            },
+            {
+              "r": "code",
+              "text": "°F"
+            },
+            {
+              "r": "t",
+              "text": "); the value range ("
+            },
+            {
+              "r": "code",
+              "text": "EURange"
+            },
+            {
+              "r": "t",
+              "text": ") is left to the instance."
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "The engine's CAN/J1939 interface is explicit.",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": " Because a generator is \"part engine with a CAN bus interface\", the engine exposes a dedicated "
+            },
+            {
+              "r": "code",
+              "text": "J1939DiagnosticInterfaceType"
+            },
+            {
+              "r": "t",
+              "text": " add‑in carrying the network parameters, the J1939 lamp status and the active/previously‑active DTC arrays."
+            }
+          ]
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "5.2 Design rationale",
+          "b": 0
+        }
+      },
+      {
+        "t": "clause",
+        "id": "c6-7",
+        "title": "Organisation of the ObjectTypes",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The full member tables for every type are in "
+          },
+          {
+            "r": "link",
+            "text": "Annex A",
+            "href": "#annex-a"
+          },
+          {
+            "r": "t",
+            "text": ". This clause summarises the intent of each type."
+          }
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "6 ObjectTypes",
+          "b": 0
+        }
+      },
+      {
+        "t": "clause",
+        "id": "c6-8",
+        "title": "The generator set",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The central type. Mandatory content: "
+          },
+          {
+            "r": "code",
+            "text": "OperatingState"
+          },
+          {
+            "r": "t",
+            "text": " (a "
+          },
+          {
+            "r": "code",
+            "text": "GeneratorStateMachineType"
+          },
+          {
+            "r": "t",
+            "text": "), "
+          },
+          {
+            "r": "code",
+            "text": "OperatingMode"
+          },
+          {
+            "r": "t",
+            "text": ", the "
+          },
+          {
+            "r": "code",
+            "text": "Engine"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "Alternator"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "Controller"
+          },
+          {
+            "r": "t",
+            "text": " components, the "
+          },
+          {
+            "r": "code",
+            "text": "Identification"
+          },
+          {
+            "r": "t",
+            "text": " add‑in and a "
+          },
+          {
+            "r": "code",
+            "text": "Ratings"
+          },
+          {
+            "r": "t",
+            "text": " folder. Optional content: fuel/cooling/lubrication/starting subsystems, "
+          },
+          {
+            "r": "code",
+            "text": "EmissionsStandard"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "Application"
+          },
+          {
+            "r": "t",
+            "text": ", breaker and readiness signals ("
+          },
+          {
+            "r": "code",
+            "text": "GeneratorBreakerClosed"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "GeneratorBreakerAvailable"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "RemoteStartInput"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "RunRequest"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "LoadInhibit"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "AvailableToLoad"
+          },
+          {
+            "r": "t",
+            "text": "), and the Machinery building blocks. Methods: "
+          },
+          {
+            "r": "code",
+            "text": "Start"
+          },
+          {
+            "r": "t",
+            "text": " (no argument — starts in the current mode), "
+          },
+          {
+            "r": "code",
+            "text": "Stop"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "EmergencyStop"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "ResetFaults"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "SetOperatingMode"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "StartTest"
+          },
+          {
+            "r": "t",
+            "text": ". The type "
+          },
+          {
+            "r": "code",
+            "text": "GeneratesEvent"
+          },
+          {
+            "r": "t",
+            "text": " "
+          },
+          {
+            "r": "code",
+            "text": "GeneratorProtectionAlarmType"
+          },
+          {
+            "r": "t",
+            "text": "."
+          }
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "6.1 [GeneratorSetType](#type-GeneratorSetType)",
+          "b": 0
+        }
+      },
+      {
+        "t": "clause",
+        "id": "c6-9",
+        "title": "The engine and the CAN bus interface",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "code",
+            "text": "EngineType"
+          },
+          {
+            "r": "t",
+            "text": " exposes the classic engine telemetry — "
+          },
+          {
+            "r": "code",
+            "text": "Speed"
+          },
+          {
+            "r": "t",
+            "text": " (SPN 190), "
+          },
+          {
+            "r": "code",
+            "text": "OilPressure"
+          },
+          {
+            "r": "t",
+            "text": " (SPN 100), "
+          },
+          {
+            "r": "code",
+            "text": "CoolantTemperature"
+          },
+          {
+            "r": "t",
+            "text": " (SPN 110), "
+          },
+          {
+            "r": "code",
+            "text": "FuelRate"
+          },
+          {
+            "r": "t",
+            "text": " (SPN 183), "
+          },
+          {
+            "r": "code",
+            "text": "EngineHours"
+          },
+          {
+            "r": "t",
+            "text": " (SPN 247), boost, exhaust and intake temperatures, percent load/torque, etc. The referenced SPN for each variable is recorded in the variable description so that a gateway can map J1939 signals directly onto the model."
+          }
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "6.2 [EngineType](#type-EngineType) and the CAN bus / SAE J1939 interface",
+          "b": 0
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The engine's "
+          },
+          {
+            "r": "code",
+            "text": "CanInterface"
+          },
+          {
+            "r": "t",
+            "text": " (a "
+          },
+          {
+            "r": "code",
+            "text": "J1939DiagnosticInterfaceType"
+          },
+          {
+            "r": "t",
+            "text": ") models the network itself: "
+          },
+          {
+            "r": "code",
+            "text": "ProtocolName"
+          },
+          {
+            "r": "t",
+            "text": " (\"SAE J1939\"), "
+          },
+          {
+            "r": "code",
+            "text": "NetworkName"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "SourceAddress"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "Baudrate"
+          },
+          {
+            "r": "t",
+            "text": " (250 000 or 500 000 bit/s), "
+          },
+          {
+            "r": "code",
+            "text": "BusState"
+          },
+          {
+            "r": "t",
+            "text": ", the four J1939 DM1 lamp statuses ("
+          },
+          {
+            "r": "code",
+            "text": "AmberWarningLamp"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "RedStopLamp"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "MalfunctionIndicatorLamp"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "ProtectLamp"
+          },
+          {
+            "r": "t",
+            "text": ", each a "
+          },
+          {
+            "r": "code",
+            "text": "J1939LampStatusEnum"
+          },
+          {
+            "r": "t",
+            "text": " conveying Off / On / SlowFlash / FastFlash), and the "
+          },
+          {
+            "r": "code",
+            "text": "ActiveDiagnosticTroubleCodes"
+          },
+          {
+            "r": "t",
+            "text": " (DM1) and "
+          },
+          {
+            "r": "code",
+            "text": "PreviouslyActiveDiagnosticTroubleCodes"
+          },
+          {
+            "r": "t",
+            "text": " (DM2) arrays of "
+          },
+          {
+            "r": "code",
+            "text": "DiagnosticTroubleCodeType"
+          },
+          {
+            "r": "t",
+            "text": ". Each DTC carries "
+          },
+          {
+            "r": "code",
+            "text": "Spn"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "Fmi"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "OccurrenceCount"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "SourceAddress"
+          },
+          {
+            "r": "t",
+            "text": "/"
+          },
+          {
+            "r": "code",
+            "text": "SourceName"
+          },
+          {
+            "r": "t",
+            "text": " (so faults from multiple ECUs on the bus remain distinguishable) and a "
+          },
+          {
+            "r": "code",
+            "text": "Severity"
+          },
+          {
+            "r": "t",
+            "text": ". The method "
+          },
+          {
+            "r": "code",
+            "text": "ClearPreviouslyActiveDtcs"
+          },
+          {
+            "r": "t",
+            "text": " corresponds to J1939 DM3/DM11."
+          }
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "6.2 [EngineType](#type-EngineType) and the CAN bus / SAE J1939 interface",
+          "b": 1
+        }
+      },
+      {
+        "t": "clause",
+        "id": "c6-10",
+        "title": "The alternator and its phases",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "code",
+            "text": "AlternatorType"
+          },
+          {
+            "r": "t",
+            "text": " provides aggregate values — "
+          },
+          {
+            "r": "code",
+            "text": "Frequency"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "TotalRealPower"
+          },
+          {
+            "r": "t",
+            "text": "/"
+          },
+          {
+            "r": "code",
+            "text": "TotalReactivePower"
+          },
+          {
+            "r": "t",
+            "text": "/"
+          },
+          {
+            "r": "code",
+            "text": "TotalApparentPower"
+          },
+          {
+            "r": "t",
+            "text": ", average voltages and current, "
+          },
+          {
+            "r": "code",
+            "text": "AveragePowerFactor"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "TotalRealEnergy"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "LoadPercent"
+          },
+          {
+            "r": "t",
+            "text": ", winding and bearing temperatures, "
+          },
+          {
+            "r": "code",
+            "text": "Connection"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "ExcitationType"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "NumberOfPoles"
+          },
+          {
+            "r": "t",
+            "text": " — and three phase objects ("
+          },
+          {
+            "r": "code",
+            "text": "L1"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "L2"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "L3"
+          },
+          {
+            "r": "t",
+            "text": ", each an "
+          },
+          {
+            "r": "code",
+            "text": "AlternatorPhaseType"
+          },
+          {
+            "r": "t",
+            "text": ") carrying per‑phase voltage, current, power and power factor. Single‑phase sets populate only "
+          },
+          {
+            "r": "code",
+            "text": "L1"
+          },
+          {
+            "r": "t",
+            "text": " (mandatory); three‑phase sets populate all three."
+          }
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "6.3 [AlternatorType](#type-AlternatorType) and [AlternatorPhaseType](#type-AlternatorPhaseType)",
+          "b": 0
+        }
+      },
+      {
+        "t": "clause",
+        "id": "c6-11",
+        "title": "Support subsystems",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "code",
+            "text": "FuelSystemType"
+          },
+          {
+            "r": "t",
+            "text": " (fuel type/level/rate/pressure, gas supply pressure, runtime remaining, DEF for aftertreatment, water‑in‑fuel), "
+          },
+          {
+            "r": "code",
+            "text": "CoolingSystemType"
+          },
+          {
+            "r": "t",
+            "text": " (coolant temperature/level/pressure, cooling method, radiator fan and jacket‑water heater), "
+          },
+          {
+            "r": "code",
+            "text": "LubricationSystemType"
+          },
+          {
+            "r": "t",
+            "text": " (oil pressure/temperature/level, filter Δp) and "
+          },
+          {
+            "r": "code",
+            "text": "StartingSystemType"
+          },
+          {
+            "r": "t",
+            "text": " (battery voltage/charging current, charger status, start attempts) model the balance‑of‑plant. All are optional so the type fits both a bare air‑cooled residential set and a fully instrumented industrial set."
+          }
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "6.4 Support subsystems",
+          "b": 0
+        }
+      },
+      {
+        "t": "clause",
+        "id": "c6-12",
+        "title": "The controller",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Represents the control panel. Carries controller identity ("
+          },
+          {
+            "r": "code",
+            "text": "ControllerFamily"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "FirmwareVersion"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "ApplicationSoftwareVersion"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "ConfigurationVersion"
+          },
+          {
+            "r": "t",
+            "text": "), operating annunciation ("
+          },
+          {
+            "r": "code",
+            "text": "InAutoMode"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "NotInAuto"
+          },
+          {
+            "r": "t",
+            "text": "), remote enablement ("
+          },
+          {
+            "r": "code",
+            "text": "RemoteStartEnabled"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "RemoteControlEnabled"
+          },
+          {
+            "r": "t",
+            "text": ") and remote‑monitoring status ("
+          },
+          {
+            "r": "code",
+            "text": "CloudConnected"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "ModbusEnabled"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "SignalStrength"
+          },
+          {
+            "r": "t",
+            "text": ")."
+          }
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "6.5 [GeneratorControllerType](#type-GeneratorControllerType)",
+          "b": 0
+        }
+      },
+      {
+        "t": "clause",
+        "id": "c6-13",
+        "title": "Ratings",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Because a set is usually certified for several ISO 8528 duties, ratings are modelled as a placeholder list. The "
+          },
+          {
+            "r": "code",
+            "text": "Ratings"
+          },
+          {
+            "r": "t",
+            "text": " folder on "
+          },
+          {
+            "r": "code",
+            "text": "GeneratorSetType"
+          },
+          {
+            "r": "t",
+            "text": " contains zero or more "
+          },
+          {
+            "r": "code",
+            "text": "GeneratorRatingType"
+          },
+          {
+            "r": "t",
+            "text": " objects, each with an "
+          },
+          {
+            "r": "code",
+            "text": "ApplicationRating"
+          },
+          {
+            "r": "t",
+            "text": " (ESP/PRP/COP/LTP/DCC) and the rated power, voltage, current, frequency, speed, power factor, phase count and reference ambient/altitude."
+          }
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "6.6 [GeneratorRatingType](#type-GeneratorRatingType) and ratings",
+          "b": 0
+        }
+      },
+      {
+        "t": "clause",
+        "id": "c6-14",
+        "title": "The operating state machine",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "code",
+            "text": "OperatingState"
+          },
+          {
+            "r": "t",
+            "text": " is a finite state machine with twelve states and the transitions shown below. It is the detailed, generator‑specific complement to the generic Machinery "
+          },
+          {
+            "r": "code",
+            "text": "MachineryItemState"
+          },
+          {
+            "r": "t",
+            "text": "."
+          }
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "6.7 [GeneratorStateMachineType](#type-GeneratorStateMachineType)",
+          "b": 0
+        }
+      },
+      {
+        "t": "figure",
+        "id": "fig-gen-statemachine",
+        "caption": "The generator operating state machine",
+        "source": "mermaid",
+        "mermaid": "stateDiagram-v2\n  [*] --> Off\n  Off --> Ready\n  Ready --> Starting\n  Ready --> Off\n  Starting --> Warmup\n  Starting --> Fault\n  Warmup --> Running\n  Running --> Loaded\n  Running --> Synchronizing\n  Synchronizing --> Paralleled\n  Synchronizing --> Running\n  Paralleled --> Loaded\n  Loaded --> Cooldown\n  Running --> Cooldown\n  Cooldown --> Stopping\n  Stopping --> Off\n  Running --> Fault\n  Loaded --> Fault\n  Paralleled --> Fault\n  Fault --> Off\n  Running --> EmergencyStopped\n  Loaded --> EmergencyStopped\n  Paralleled --> EmergencyStopped\n  EmergencyStopped --> Off",
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "6.7 [GeneratorStateMachineType](#type-GeneratorStateMachineType)",
+          "b": 1
+        }
+      },
+      {
+        "t": "clause",
+        "id": "c6-15",
+        "title": "Operating modes",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "code",
+            "text": "OperatingMode"
+          },
+          {
+            "r": "t",
+            "text": " (a "
+          },
+          {
+            "r": "code",
+            "text": "GeneratorOperatingModeEnum"
+          },
+          {
+            "r": "t",
+            "text": " value) reflects the control‑panel selector: "
+          },
+          {
+            "r": "code",
+            "text": "Off"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "Manual"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "Auto"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "Test"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "Exercise"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "RemoteStart"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "Maintenance"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "Lockout"
+          },
+          {
+            "r": "t",
+            "text": ". For Machinery‑ecosystem interoperability the generic "
+          },
+          {
+            "r": "code",
+            "text": "MachineryOperationMode"
+          },
+          {
+            "r": "t",
+            "text": " state machine is also present under "
+          },
+          {
+            "r": "code",
+            "text": "MachineryBuildingBlocks"
+          },
+          {
+            "r": "t",
+            "text": "."
+          }
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "6.8 Operating modes",
+          "b": 0
+        }
+      },
+      {
+        "t": "clause",
+        "id": "c6-16",
+        "title": "Protections and alarms",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "code",
+            "text": "GeneratorProtectionAlarmType"
+          },
+          {
+            "r": "t",
+            "text": " (subtype of "
+          },
+          {
+            "r": "code",
+            "text": "OffNormalAlarmType"
+          },
+          {
+            "r": "t",
+            "text": ") reports any protection or shutdown condition. Its "
+          },
+          {
+            "r": "code",
+            "text": "ProtectionFunction"
+          },
+          {
+            "r": "t",
+            "text": " property (a "
+          },
+          {
+            "r": "code",
+            "text": "GeneratorProtectionFunctionEnum"
+          },
+          {
+            "r": "t",
+            "text": " with 64 values — low oil pressure, high coolant temperature, overspeed, overcrank, over/under voltage and frequency, overload, reverse power, ground fault, emergency stop, aftertreatment faults, ATS/breaker failures, …) identifies the condition; "
+          },
+          {
+            "r": "code",
+            "text": "GeneratorAlarmSeverity"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "IsShutdown"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "Spn"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "Fmi"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "SubsystemName"
+          },
+          {
+            "r": "t",
+            "text": " add context. Because the type is an "
+          },
+          {
+            "r": "code",
+            "text": "OffNormalAlarmType"
+          },
+          {
+            "r": "t",
+            "text": ", the "
+          },
+          {
+            "r": "t",
+            "text": "normal",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " state is \"healthy / not tripped\": on an instance, the inherited "
+          },
+          {
+            "r": "code",
+            "text": "NormalState"
+          },
+          {
+            "r": "t",
+            "text": " references the node representing the healthy value, "
+          },
+          {
+            "r": "code",
+            "text": "InputNode"
+          },
+          {
+            "r": "t",
+            "text": " references the supervised input (e.g. the shutdown latch or the measured variable), and "
+          },
+          {
+            "r": "code",
+            "text": "SourceNode"
+          },
+          {
+            "r": "t",
+            "text": " references the owning "
+          },
+          {
+            "r": "code",
+            "text": "GeneratorSetType"
+          },
+          {
+            "r": "t",
+            "text": " or subsystem so that clients can locate the origin. Analog limit conditions (e.g. over/under voltage) may additionally be surfaced with standard "
+          },
+          {
+            "r": "code",
+            "text": "ExclusiveLevelAlarmType"
+          },
+          {
+            "r": "t",
+            "text": " instances on the corresponding measured variables."
+          }
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "6.9 Protections and alarms",
+          "b": 0
+        }
+      },
+      {
+        "t": "clause",
+        "id": "c6-17",
+        "title": "Transfer switches and paralleling",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "code",
+            "text": "AutomaticTransferSwitchType"
+          },
+          {
+            "r": "t",
+            "text": " (a "
+          },
+          {
+            "r": "code",
+            "text": "DeviceType"
+          },
+          {
+            "r": "t",
+            "text": ") models an ATS: "
+          },
+          {
+            "r": "code",
+            "text": "Position"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "OperatingState"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "TransitionType"
+          },
+          {
+            "r": "t",
+            "text": ", two structured sources ("
+          },
+          {
+            "r": "code",
+            "text": "Source1"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "Source2"
+          },
+          {
+            "r": "t",
+            "text": ", each a "
+          },
+          {
+            "r": "code",
+            "text": "TransferSwitchSourceType"
+          },
+          {
+            "r": "t",
+            "text": " carrying "
+          },
+          {
+            "r": "code",
+            "text": "Available"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "Acceptable"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "Voltage"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "Frequency"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "PhaseRotation"
+          },
+          {
+            "r": "t",
+            "text": "), "
+          },
+          {
+            "r": "code",
+            "text": "PreferredSource"
+          },
+          {
+            "r": "t",
+            "text": ", source connection flags, "
+          },
+          {
+            "r": "code",
+            "text": "TransferInhibited"
+          },
+          {
+            "r": "t",
+            "text": "/"
+          },
+          {
+            "r": "code",
+            "text": "TransferInhibitReason"
+          },
+          {
+            "r": "t",
+            "text": ", ratings, load metering, transfer timers and counters, and the "
+          },
+          {
+            "r": "code",
+            "text": "Transfer"
+          },
+          {
+            "r": "t",
+            "text": "/"
+          },
+          {
+            "r": "code",
+            "text": "Retransfer"
+          },
+          {
+            "r": "t",
+            "text": "/"
+          },
+          {
+            "r": "code",
+            "text": "InhibitTransfer"
+          },
+          {
+            "r": "t",
+            "text": " methods. "
+          },
+          {
+            "r": "code",
+            "text": "ParallelingControllerType"
+          },
+          {
+            "r": "t",
+            "text": " models synchronising and load sharing across a common bus: "
+          },
+          {
+            "r": "code",
+            "text": "SystemState"
+          },
+          {
+            "r": "t",
+            "text": ", bus voltage/frequency/power, synchronising deltas ("
+          },
+          {
+            "r": "code",
+            "text": "SynchronizationAngle"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "SlipFrequency"
+          },
+          {
+            "r": "t",
+            "text": ", voltage/frequency difference, "
+          },
+          {
+            "r": "code",
+            "text": "SyncCheckPermissive"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "DeadBus"
+          },
+          {
+            "r": "t",
+            "text": "), load‑share and capacity values, breaker states, utility import/export, and the "
+          },
+          {
+            "r": "code",
+            "text": "ConnectToBus"
+          },
+          {
+            "r": "t",
+            "text": "/"
+          },
+          {
+            "r": "code",
+            "text": "DisconnectFromBus"
+          },
+          {
+            "r": "t",
+            "text": " methods."
+          }
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "6.10 Transfer switches and paralleling",
+          "b": 0
+        }
+      },
+      {
+        "t": "clause",
+        "id": "c6-18",
+        "title": "The generator system",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Aggregates a paralleled plant: a mandatory "
+          },
+          {
+            "r": "code",
+            "text": "GeneratorSets"
+          },
+          {
+            "r": "t",
+            "text": " folder of "
+          },
+          {
+            "r": "code",
+            "text": "GeneratorSetType"
+          },
+          {
+            "r": "t",
+            "text": " instances, an optional "
+          },
+          {
+            "r": "code",
+            "text": "ParallelingController"
+          },
+          {
+            "r": "t",
+            "text": ", an optional "
+          },
+          {
+            "r": "code",
+            "text": "TransferSwitches"
+          },
+          {
+            "r": "t",
+            "text": " folder, and system totals ("
+          },
+          {
+            "r": "code",
+            "text": "NumberOfGeneratorSets"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "TotalSystemCapacity"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "TotalSystemLoad"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "RedundancyScheme"
+          },
+          {
+            "r": "t",
+            "text": ")."
+          }
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "6.11 [GeneratorSystemType](#type-GeneratorSystemType)",
+          "b": 0
+        }
+      },
+      {
+        "t": "clause",
+        "id": "c6-19",
+        "title": "Organisation of the DataTypes",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Seventeen enumerations and one structure are defined; see "
+          },
+          {
+            "r": "link",
+            "text": "Annex A",
+            "href": "#annex-a"
+          },
+          {
+            "r": "t",
+            "text": " for the full value lists. The enumerations are extensible (each provides an "
+          },
+          {
+            "r": "code",
+            "text": "Other"
+          },
+          {
+            "r": "t",
+            "text": "/"
+          },
+          {
+            "r": "code",
+            "text": "Unknown"
+          },
+          {
+            "r": "t",
+            "text": " member where appropriate) and cover fuel types, application/duty ratings, electrical connection, excitation, cooling method, aspiration, emissions standard, CAN bus state, J1939 lamp status, transfer‑switch position/transition/state, alarm severity, the 64‑value protection‑function list, paralleling‑system state and aftertreatment state. The "
+          },
+          {
+            "r": "code",
+            "text": "DiagnosticTroubleCodeType"
+          },
+          {
+            "r": "t",
+            "text": " structure carries a single SAE J1939 DTC ("
+          },
+          {
+            "r": "code",
+            "text": "Spn"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "Fmi"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "OccurrenceCount"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "ConversionMethod"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "Active"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "SourceAddress"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "SourceName"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "Severity"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "Description"
+          },
+          {
+            "r": "t",
+            "text": ")."
+          }
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "7 DataTypes",
+          "b": 0
+        }
+      },
+      {
+        "t": "clause",
+        "id": "c6-20",
+        "title": "Coverage of the industry",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The model is vendor‑neutral. The following mapping shows how representative product tiers across the generator industry are expressed with the types defined here; products from any manufacturer map the same way."
+          }
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "8 Coverage of the industry",
+          "b": 0
+        }
+      },
+      {
+        "t": "table",
+        "id": "coverage-of-the-industry-tab1",
+        "caption": "Coverage of the industry",
+        "kind": "generic",
+        "headers": [
+          [
+            {
+              "r": "t",
+              "text": "Product tier"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Represented by"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "r": "t",
+                "text": "Residential / home standby (~10–60 kW, air‑ or liquid‑cooled, natural gas / LPG)"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "GeneratorSetType"
+              },
+              {
+                "r": "t",
+                "text": " with an air‑ or liquid‑cooled "
+              },
+              {
+                "r": "code",
+                "text": "CoolingSystem"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "FuelType"
+              },
+              {
+                "r": "t",
+                "text": " = NaturalGas/Propane, and a single‑phase alternator ("
+              },
+              {
+                "r": "code",
+                "text": "L1"
+              },
+              {
+                "r": "t",
+                "text": " only)"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "Commercial & industrial diesel (up to ~3.75 MW)"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "GeneratorSetType"
+              },
+              {
+                "r": "t",
+                "text": " with a high‑power "
+              },
+              {
+                "r": "code",
+                "text": "EngineType"
+              },
+              {
+                "r": "t",
+                "text": ", three‑phase "
+              },
+              {
+                "r": "code",
+                "text": "AlternatorType"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "ExhaustAftertreatment"
+              },
+              {
+                "r": "t",
+                "text": " (Tier 4 / Stage V), and multiple "
+              },
+              {
+                "r": "code",
+                "text": "GeneratorRatingType"
+              },
+              {
+                "r": "t",
+                "text": " (Standby / Prime)"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "Natural‑gas / lean‑burn (~55 kW–2 MW, CHP / continuous)"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "GeneratorSetType"
+              },
+              {
+                "r": "t",
+                "text": " with "
+              },
+              {
+                "r": "code",
+                "text": "FuelType"
+              },
+              {
+                "r": "t",
+                "text": " = NaturalGas/Biogas/LandfillGas, "
+              },
+              {
+                "r": "code",
+                "text": "FuelSystem.GasSupplyPressure"
+              },
+              {
+                "r": "t",
+                "text": ", and "
+              },
+              {
+                "r": "code",
+                "text": "ApplicationRating"
+              },
+              {
+                "r": "t",
+                "text": " = Continuous"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "Data‑center (multi‑MW, N+1 / 2N, medium‑voltage bus)"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "GeneratorSystemType"
+              },
+              {
+                "r": "t",
+                "text": " aggregating sets with "
+              },
+              {
+                "r": "code",
+                "text": "ApplicationRating"
+              },
+              {
+                "r": "t",
+                "text": " = DataCenterContinuous, a "
+              },
+              {
+                "r": "code",
+                "text": "ParallelingControllerType"
+              },
+              {
+                "r": "t",
+                "text": ", and a "
+              },
+              {
+                "r": "code",
+                "text": "RedundancyScheme"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "Healthcare / life‑safety (NFPA 110 Level 1)"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "GeneratorSetType"
+              },
+              {
+                "r": "t",
+                "text": " + "
+              },
+              {
+                "r": "code",
+                "text": "AutomaticTransferSwitchType"
+              },
+              {
+                "r": "t",
+                "text": "; readiness via "
+              },
+              {
+                "r": "code",
+                "text": "StartingSystem"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "FuelSystem.RuntimeRemaining"
+              },
+              {
+                "r": "t",
+                "text": " and "
+              },
+              {
+                "r": "code",
+                "text": "Controller.InAutoMode"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "Rental / mobile / towable (Tier 4 Final)"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "GeneratorSetType"
+              },
+              {
+                "r": "t",
+                "text": " with "
+              },
+              {
+                "r": "code",
+                "text": "ExhaustAftertreatment"
+              },
+              {
+                "r": "t",
+                "text": " (DEF / DPF / SCR) and "
+              },
+              {
+                "r": "code",
+                "text": "Application"
+              },
+              {
+                "r": "t",
+                "text": " = Rental"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "Control panels & cloud monitoring"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "GeneratorControllerType"
+              },
+              {
+                "r": "t",
+                "text": " ("
+              },
+              {
+                "r": "code",
+                "text": "ControllerFamily"
+              },
+              {
+                "r": "t",
+                "text": ", firmware/config versions, "
+              },
+              {
+                "r": "code",
+                "text": "CloudConnected"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "ModbusEnabled"
+              },
+              {
+                "r": "t",
+                "text": ")"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "Transfer switches (open / closed / soft‑load, bypass‑isolation)"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "AutomaticTransferSwitchType"
+              },
+              {
+                "r": "t",
+                "text": " ("
+              },
+              {
+                "r": "code",
+                "text": "TransitionType"
+              },
+              {
+                "r": "t",
+                "text": ", structured "
+              },
+              {
+                "r": "code",
+                "text": "Source1"
+              },
+              {
+                "r": "t",
+                "text": "/"
+              },
+              {
+                "r": "code",
+                "text": "Source2"
+              },
+              {
+                "r": "t",
+                "text": ")"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "Paralleling switchgear / master control"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "ParallelingControllerType"
+              },
+              {
+                "r": "t",
+                "text": " + "
+              },
+              {
+                "r": "code",
+                "text": "GeneratorSystemType"
+              }
+            ]
+          ]
+        ],
+        "widths": null,
+        "note": null,
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "8 Coverage of the industry",
+          "b": 1
+        }
+      }
+    ],
+    "objecttypes": [
+      {
+        "t": "clause",
+        "id": "c7",
+        "title": "OPC UA ObjectTypes",
+        "level": 1
+      },
+      {
+        "t": "clause",
+        "id": "c7-1",
+        "title": "GeneratorIdentificationType",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Identification and nameplate of a generator set. Extends the Machinery MachineIdentificationType with generator-specific nameplate data."
+          }
+        ]
+      },
+      {
+        "t": "nodetable",
+        "id": "c7-1-def",
+        "caption": "GeneratorIdentificationType definition",
+        "browseName": "GeneratorIdentificationType",
+        "kind": "type"
+      },
+      {
+        "t": "clause",
+        "id": "c7-2",
+        "title": "GeneratorStateMachineType",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Finite state machine describing the operating state of a generator set: Off, Ready, Starting, Warmup, Running, Loaded, Synchronizing, Paralleled, Cooldown, Stopping, Fault and EmergencyStopped."
+          }
+        ]
+      },
+      {
+        "t": "nodetable",
+        "id": "c7-2-def",
+        "caption": "GeneratorStateMachineType definition",
+        "browseName": "GeneratorStateMachineType",
+        "kind": "type"
+      },
+      {
+        "t": "clause",
+        "id": "c7-3",
+        "title": "J1939DiagnosticInterfaceType",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The engine CAN bus / SAE J1939 diagnostic interface. Surfaces the network connection parameters, J1939 lamp status and active/previously-active diagnostic trouble codes reported by the engine ECU."
+          }
+        ]
+      },
+      {
+        "t": "nodetable",
+        "id": "c7-3-def",
+        "caption": "J1939DiagnosticInterfaceType definition",
+        "browseName": "J1939DiagnosticInterfaceType",
+        "kind": "type"
+      },
+      {
+        "t": "clause",
+        "id": "c7-3-1",
+        "title": "ClearPreviouslyActiveDtcs",
+        "level": 3
+      },
+      {
+        "t": "methodtable",
+        "id": "c7-3-1-m",
+        "browseName": "ClearPreviouslyActiveDtcs",
+        "owner": "J1939DiagnosticInterfaceType"
+      },
+      {
+        "t": "clause",
+        "id": "c7-4",
+        "title": "ExhaustAftertreatmentType",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Exhaust aftertreatment subsystem (DPF/SCR/DEF) for Tier 4 / Stage V engines."
+          }
+        ]
+      },
+      {
+        "t": "nodetable",
+        "id": "c7-4-def",
+        "caption": "ExhaustAftertreatmentType definition",
+        "browseName": "ExhaustAftertreatmentType",
+        "kind": "type"
+      },
+      {
+        "t": "clause",
+        "id": "c7-4-1",
+        "title": "InitiateRegeneration",
+        "level": 3
+      },
+      {
+        "t": "methodtable",
+        "id": "c7-4-1-m",
+        "browseName": "InitiateRegeneration",
+        "owner": "ExhaustAftertreatmentType"
+      },
+      {
+        "t": "clause",
+        "id": "c7-4-2",
+        "title": "InhibitRegeneration",
+        "level": 3
+      },
+      {
+        "t": "methodtable",
+        "id": "c7-4-2-m",
+        "browseName": "InhibitRegeneration",
+        "owner": "ExhaustAftertreatmentType"
+      },
+      {
+        "t": "clause",
+        "id": "c7-5",
+        "title": "EngineType",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The prime-mover engine of a generator set. Exposes engine telemetry, typically obtained over the CAN bus / SAE J1939 interface, and identification."
+          }
+        ]
+      },
+      {
+        "t": "nodetable",
+        "id": "c7-5-def",
+        "caption": "EngineType definition",
+        "browseName": "EngineType",
+        "kind": "type"
+      },
+      {
+        "t": "clause",
+        "id": "c7-6",
+        "title": "AlternatorPhaseType",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Per-phase electrical measurements of the alternator output."
+          }
+        ]
+      },
+      {
+        "t": "nodetable",
+        "id": "c7-6-def",
+        "caption": "AlternatorPhaseType definition",
+        "browseName": "AlternatorPhaseType",
+        "kind": "type"
+      },
+      {
+        "t": "clause",
+        "id": "c7-7",
+        "title": "AlternatorType",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The alternator (generator end) that converts mechanical power into AC electrical power. Exposes aggregate and per-phase electrical measurements."
+          }
+        ]
+      },
+      {
+        "t": "nodetable",
+        "id": "c7-7-def",
+        "caption": "AlternatorType definition",
+        "browseName": "AlternatorType",
+        "kind": "type"
+      },
+      {
+        "t": "clause",
+        "id": "c7-8",
+        "title": "FuelSystemType",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The fuel storage and delivery subsystem of a generator set."
+          }
+        ]
+      },
+      {
+        "t": "nodetable",
+        "id": "c7-8-def",
+        "caption": "FuelSystemType definition",
+        "browseName": "FuelSystemType",
+        "kind": "type"
+      },
+      {
+        "t": "clause",
+        "id": "c7-9",
+        "title": "CoolingSystemType",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The engine cooling subsystem of a generator set."
+          }
+        ]
+      },
+      {
+        "t": "nodetable",
+        "id": "c7-9-def",
+        "caption": "CoolingSystemType definition",
+        "browseName": "CoolingSystemType",
+        "kind": "type"
+      },
+      {
+        "t": "clause",
+        "id": "c7-10",
+        "title": "LubricationSystemType",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The engine lubrication subsystem of a generator set."
+          }
+        ]
+      },
+      {
+        "t": "nodetable",
+        "id": "c7-10-def",
+        "caption": "LubricationSystemType definition",
+        "browseName": "LubricationSystemType",
+        "kind": "type"
+      },
+      {
+        "t": "clause",
+        "id": "c7-11",
+        "title": "StartingSystemType",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The starting/battery subsystem of a generator set."
+          }
+        ]
+      },
+      {
+        "t": "nodetable",
+        "id": "c7-11-def",
+        "caption": "StartingSystemType definition",
+        "browseName": "StartingSystemType",
+        "kind": "type"
+      },
+      {
+        "t": "clause",
+        "id": "c7-12",
+        "title": "GeneratorControllerType",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The generator set control panel. Provides controller identity, mode/state visibility and remote-monitoring status."
+          }
+        ]
+      },
+      {
+        "t": "nodetable",
+        "id": "c7-12-def",
+        "caption": "GeneratorControllerType definition",
+        "browseName": "GeneratorControllerType",
+        "kind": "type"
+      },
+      {
+        "t": "clause",
+        "id": "c7-13",
+        "title": "GeneratorRatingType",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "A single nameplate power rating point of a generator set for a given application/duty (ISO 8528)."
+          }
+        ]
+      },
+      {
+        "t": "nodetable",
+        "id": "c7-13-def",
+        "caption": "GeneratorRatingType definition",
+        "browseName": "GeneratorRatingType",
+        "kind": "type"
+      },
+      {
+        "t": "clause",
+        "id": "c7-14",
+        "title": "GeneratorSetType",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "A generator set (GenSet): a complete electrical power generation asset composed of a prime-mover engine, an alternator, a fuel system, cooling, lubrication, starting and control subsystems. Applicable to the whole industry, from small home-standby units to house-sized multi-megawatt industrial sets."
+          }
+        ]
+      },
+      {
+        "t": "nodetable",
+        "id": "c7-14-def",
+        "caption": "GeneratorSetType definition",
+        "browseName": "GeneratorSetType",
+        "kind": "type"
+      },
+      {
+        "t": "clause",
+        "id": "c7-14-1",
+        "title": "Start",
+        "level": 3
+      },
+      {
+        "t": "methodtable",
+        "id": "c7-14-1-m",
+        "browseName": "Start",
+        "owner": "GeneratorSetType"
+      },
+      {
+        "t": "clause",
+        "id": "c7-14-2",
+        "title": "Stop",
+        "level": 3
+      },
+      {
+        "t": "methodtable",
+        "id": "c7-14-2-m",
+        "browseName": "Stop",
+        "owner": "GeneratorSetType"
+      },
+      {
+        "t": "clause",
+        "id": "c7-14-3",
+        "title": "EmergencyStop",
+        "level": 3
+      },
+      {
+        "t": "methodtable",
+        "id": "c7-14-3-m",
+        "browseName": "EmergencyStop",
+        "owner": "GeneratorSetType"
+      },
+      {
+        "t": "clause",
+        "id": "c7-14-4",
+        "title": "ResetFaults",
+        "level": 3
+      },
+      {
+        "t": "methodtable",
+        "id": "c7-14-4-m",
+        "browseName": "ResetFaults",
+        "owner": "GeneratorSetType"
+      },
+      {
+        "t": "clause",
+        "id": "c7-14-5",
+        "title": "SetOperatingMode",
+        "level": 3
+      },
+      {
+        "t": "methodtable",
+        "id": "c7-14-5-m",
+        "browseName": "SetOperatingMode",
+        "owner": "GeneratorSetType"
+      },
+      {
+        "t": "clause",
+        "id": "c7-14-6",
+        "title": "StartTest",
+        "level": 3
+      },
+      {
+        "t": "methodtable",
+        "id": "c7-14-6-m",
+        "browseName": "StartTest",
+        "owner": "GeneratorSetType"
+      },
+      {
+        "t": "clause",
+        "id": "c7-15",
+        "title": "TransferSwitchSourceType",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "One power source (normal/utility or emergency/generator) of an automatic transfer switch, with its availability and measurements."
+          }
+        ]
+      },
+      {
+        "t": "nodetable",
+        "id": "c7-15-def",
+        "caption": "TransferSwitchSourceType definition",
+        "browseName": "TransferSwitchSourceType",
+        "kind": "type"
+      },
+      {
+        "t": "clause",
+        "id": "c7-16",
+        "title": "AutomaticTransferSwitchType",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "An automatic transfer switch (ATS) that transfers a load between a normal source (utility) and an emergency source (generator)."
+          }
+        ]
+      },
+      {
+        "t": "nodetable",
+        "id": "c7-16-def",
+        "caption": "AutomaticTransferSwitchType definition",
+        "browseName": "AutomaticTransferSwitchType",
+        "kind": "type"
+      },
+      {
+        "t": "clause",
+        "id": "c7-16-1",
+        "title": "Transfer",
+        "level": 3
+      },
+      {
+        "t": "methodtable",
+        "id": "c7-16-1-m",
+        "browseName": "Transfer",
+        "owner": "AutomaticTransferSwitchType"
+      },
+      {
+        "t": "clause",
+        "id": "c7-16-2",
+        "title": "Retransfer",
+        "level": 3
+      },
+      {
+        "t": "methodtable",
+        "id": "c7-16-2-m",
+        "browseName": "Retransfer",
+        "owner": "AutomaticTransferSwitchType"
+      },
+      {
+        "t": "clause",
+        "id": "c7-16-3",
+        "title": "InhibitTransfer",
+        "level": 3
+      },
+      {
+        "t": "methodtable",
+        "id": "c7-16-3-m",
+        "browseName": "InhibitTransfer",
+        "owner": "AutomaticTransferSwitchType"
+      },
+      {
+        "t": "clause",
+        "id": "c7-17",
+        "title": "ParallelingControllerType",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "A paralleling / switchgear controller that synchronizes and shares load among generator sets on a common bus, and optionally parallels with the utility."
+          }
+        ]
+      },
+      {
+        "t": "nodetable",
+        "id": "c7-17-def",
+        "caption": "ParallelingControllerType definition",
+        "browseName": "ParallelingControllerType",
+        "kind": "type"
+      },
+      {
+        "t": "clause",
+        "id": "c7-17-1",
+        "title": "ConnectToBus",
+        "level": 3
+      },
+      {
+        "t": "methodtable",
+        "id": "c7-17-1-m",
+        "browseName": "ConnectToBus",
+        "owner": "ParallelingControllerType"
+      },
+      {
+        "t": "clause",
+        "id": "c7-17-2",
+        "title": "DisconnectFromBus",
+        "level": 3
+      },
+      {
+        "t": "methodtable",
+        "id": "c7-17-2-m",
+        "browseName": "DisconnectFromBus",
+        "owner": "ParallelingControllerType"
+      },
+      {
+        "t": "clause",
+        "id": "c7-18",
+        "title": "GeneratorSystemType",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "A power-generation system aggregating one or more paralleled generator sets, an optional paralleling controller and transfer switches. Models integrated power systems such as data-center and healthcare plants."
+          }
+        ]
+      },
+      {
+        "t": "nodetable",
+        "id": "c7-18-def",
+        "caption": "GeneratorSystemType definition",
+        "browseName": "GeneratorSystemType",
+        "kind": "type"
+      }
+    ],
+    "eventtypes": [
+      {
+        "t": "clause",
+        "id": "c8",
+        "title": "OPC UA EventTypes",
+        "level": 1
+      },
+      {
+        "t": "clause",
+        "id": "c8-1",
+        "title": "GeneratorProtectionAlarmType",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Alarm raised by a generator protection/shutdown function. Extends OffNormalAlarmType with the protection function, severity and J1939 origin."
+          }
+        ]
+      },
+      {
+        "t": "nodetable",
+        "id": "c8-1-def",
+        "caption": "GeneratorProtectionAlarmType definition",
+        "browseName": "GeneratorProtectionAlarmType",
+        "kind": "type"
+      }
+    ],
+    "datatypes": [
+      {
+        "t": "clause",
+        "id": "c9",
+        "title": "OPC UA DataTypes",
+        "level": 1
+      },
+      {
+        "t": "clause",
+        "id": "c9-1",
+        "title": "GeneratorOperatingModeEnum",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Selector mode of the generator set control panel."
+          }
+        ]
+      },
+      {
+        "t": "enumtable",
+        "id": "c9-1-items",
+        "browseName": "GeneratorOperatingModeEnum"
+      },
+      {
+        "t": "nodetable",
+        "id": "c9-1-def",
+        "caption": "GeneratorOperatingModeEnum definition",
+        "browseName": "GeneratorOperatingModeEnum",
+        "kind": "type"
+      },
+      {
+        "t": "clause",
+        "id": "c9-2",
+        "title": "FuelTypeEnum",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Primary fuel of the generator set."
+          }
+        ]
+      },
+      {
+        "t": "enumtable",
+        "id": "c9-2-items",
+        "browseName": "FuelTypeEnum"
+      },
+      {
+        "t": "nodetable",
+        "id": "c9-2-def",
+        "caption": "FuelTypeEnum definition",
+        "browseName": "FuelTypeEnum",
+        "kind": "type"
+      },
+      {
+        "t": "clause",
+        "id": "c9-3",
+        "title": "GeneratorApplicationRatingEnum",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Application/duty rating per ISO 8528 plus the data-center-continuous rating."
+          }
+        ]
+      },
+      {
+        "t": "enumtable",
+        "id": "c9-3-items",
+        "browseName": "GeneratorApplicationRatingEnum"
+      },
+      {
+        "t": "nodetable",
+        "id": "c9-3-def",
+        "caption": "GeneratorApplicationRatingEnum definition",
+        "browseName": "GeneratorApplicationRatingEnum",
+        "kind": "type"
+      },
+      {
+        "t": "clause",
+        "id": "c9-4",
+        "title": "ElectricalConnectionEnum",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Winding/connection configuration of the alternator output."
+          }
+        ]
+      },
+      {
+        "t": "enumtable",
+        "id": "c9-4-items",
+        "browseName": "ElectricalConnectionEnum"
+      },
+      {
+        "t": "nodetable",
+        "id": "c9-4-def",
+        "caption": "ElectricalConnectionEnum definition",
+        "browseName": "ElectricalConnectionEnum",
+        "kind": "type"
+      },
+      {
+        "t": "clause",
+        "id": "c9-5",
+        "title": "ExcitationTypeEnum",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Excitation method of the alternator."
+          }
+        ]
+      },
+      {
+        "t": "enumtable",
+        "id": "c9-5-items",
+        "browseName": "ExcitationTypeEnum"
+      },
+      {
+        "t": "nodetable",
+        "id": "c9-5-def",
+        "caption": "ExcitationTypeEnum definition",
+        "browseName": "ExcitationTypeEnum",
+        "kind": "type"
+      },
+      {
+        "t": "clause",
+        "id": "c9-6",
+        "title": "CoolingMethodEnum",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Primary cooling method of the engine."
+          }
+        ]
+      },
+      {
+        "t": "enumtable",
+        "id": "c9-6-items",
+        "browseName": "CoolingMethodEnum"
+      },
+      {
+        "t": "nodetable",
+        "id": "c9-6-def",
+        "caption": "CoolingMethodEnum definition",
+        "browseName": "CoolingMethodEnum",
+        "kind": "type"
+      },
+      {
+        "t": "clause",
+        "id": "c9-7",
+        "title": "AspirationEnum",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Air induction method of the engine."
+          }
+        ]
+      },
+      {
+        "t": "enumtable",
+        "id": "c9-7-items",
+        "browseName": "AspirationEnum"
+      },
+      {
+        "t": "nodetable",
+        "id": "c9-7-def",
+        "caption": "AspirationEnum definition",
+        "browseName": "AspirationEnum",
+        "kind": "type"
+      },
+      {
+        "t": "clause",
+        "id": "c9-8",
+        "title": "EmissionsStandardEnum",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Emissions certification standard of the engine."
+          }
+        ]
+      },
+      {
+        "t": "enumtable",
+        "id": "c9-8-items",
+        "browseName": "EmissionsStandardEnum"
+      },
+      {
+        "t": "nodetable",
+        "id": "c9-8-def",
+        "caption": "EmissionsStandardEnum definition",
+        "browseName": "EmissionsStandardEnum",
+        "kind": "type"
+      },
+      {
+        "t": "clause",
+        "id": "c9-9",
+        "title": "CanBusStateEnum",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "State of the engine CAN bus / SAE J1939 network interface."
+          }
+        ]
+      },
+      {
+        "t": "enumtable",
+        "id": "c9-9-items",
+        "browseName": "CanBusStateEnum"
+      },
+      {
+        "t": "nodetable",
+        "id": "c9-9-def",
+        "caption": "CanBusStateEnum definition",
+        "browseName": "CanBusStateEnum",
+        "kind": "type"
+      },
+      {
+        "t": "clause",
+        "id": "c9-10",
+        "title": "TransferSwitchPositionEnum",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Contact position of an automatic transfer switch."
+          }
+        ]
+      },
+      {
+        "t": "enumtable",
+        "id": "c9-10-items",
+        "browseName": "TransferSwitchPositionEnum"
+      },
+      {
+        "t": "nodetable",
+        "id": "c9-10-def",
+        "caption": "TransferSwitchPositionEnum definition",
+        "browseName": "TransferSwitchPositionEnum",
+        "kind": "type"
+      },
+      {
+        "t": "clause",
+        "id": "c9-11",
+        "title": "TransferTransitionTypeEnum",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Transition method of an automatic transfer switch."
+          }
+        ]
+      },
+      {
+        "t": "enumtable",
+        "id": "c9-11-items",
+        "browseName": "TransferTransitionTypeEnum"
+      },
+      {
+        "t": "nodetable",
+        "id": "c9-11-def",
+        "caption": "TransferTransitionTypeEnum definition",
+        "browseName": "TransferTransitionTypeEnum",
+        "kind": "type"
+      },
+      {
+        "t": "clause",
+        "id": "c9-12",
+        "title": "AtsOperatingStateEnum",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Operating state of an automatic transfer switch."
+          }
+        ]
+      },
+      {
+        "t": "enumtable",
+        "id": "c9-12-items",
+        "browseName": "AtsOperatingStateEnum"
+      },
+      {
+        "t": "nodetable",
+        "id": "c9-12-def",
+        "caption": "AtsOperatingStateEnum definition",
+        "browseName": "AtsOperatingStateEnum",
+        "kind": "type"
+      },
+      {
+        "t": "clause",
+        "id": "c9-13",
+        "title": "AlarmSeverityEnum",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Severity class of a generator protection event."
+          }
+        ]
+      },
+      {
+        "t": "enumtable",
+        "id": "c9-13-items",
+        "browseName": "AlarmSeverityEnum"
+      },
+      {
+        "t": "nodetable",
+        "id": "c9-13-def",
+        "caption": "AlarmSeverityEnum definition",
+        "browseName": "AlarmSeverityEnum",
+        "kind": "type"
+      },
+      {
+        "t": "clause",
+        "id": "c9-14",
+        "title": "GeneratorProtectionFunctionEnum",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Protection / fault function that raised a generator alarm."
+          }
+        ]
+      },
+      {
+        "t": "enumtable",
+        "id": "c9-14-items",
+        "browseName": "GeneratorProtectionFunctionEnum"
+      },
+      {
+        "t": "nodetable",
+        "id": "c9-14-def",
+        "caption": "GeneratorProtectionFunctionEnum definition",
+        "browseName": "GeneratorProtectionFunctionEnum",
+        "kind": "type"
+      },
+      {
+        "t": "clause",
+        "id": "c9-15",
+        "title": "ParallelingSystemStateEnum",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Operating state of a paralleling / switchgear system."
+          }
+        ]
+      },
+      {
+        "t": "enumtable",
+        "id": "c9-15-items",
+        "browseName": "ParallelingSystemStateEnum"
+      },
+      {
+        "t": "nodetable",
+        "id": "c9-15-def",
+        "caption": "ParallelingSystemStateEnum definition",
+        "browseName": "ParallelingSystemStateEnum",
+        "kind": "type"
+      },
+      {
+        "t": "clause",
+        "id": "c9-16",
+        "title": "AftertreatmentStateEnum",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "State of the exhaust aftertreatment system."
+          }
+        ]
+      },
+      {
+        "t": "enumtable",
+        "id": "c9-16-items",
+        "browseName": "AftertreatmentStateEnum"
+      },
+      {
+        "t": "nodetable",
+        "id": "c9-16-def",
+        "caption": "AftertreatmentStateEnum definition",
+        "browseName": "AftertreatmentStateEnum",
+        "kind": "type"
+      },
+      {
+        "t": "clause",
+        "id": "c9-17",
+        "title": "J1939LampStatusEnum",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "SAE J1939 DM1 diagnostic lamp status (lamp state plus flash rate)."
+          }
+        ]
+      },
+      {
+        "t": "enumtable",
+        "id": "c9-17-items",
+        "browseName": "J1939LampStatusEnum"
+      },
+      {
+        "t": "nodetable",
+        "id": "c9-17-def",
+        "caption": "J1939LampStatusEnum definition",
+        "browseName": "J1939LampStatusEnum",
+        "kind": "type"
+      },
+      {
+        "t": "clause",
+        "id": "c9-18",
+        "title": "DiagnosticTroubleCodeType",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "A SAE J1939 diagnostic trouble code (DTC) reported by an engine ECU."
+          }
+        ]
+      },
+      {
+        "t": "enumtable",
+        "id": "c9-18-items",
+        "browseName": "DiagnosticTroubleCodeType"
+      },
+      {
+        "t": "nodetable",
+        "id": "c9-18-def",
+        "caption": "DiagnosticTroubleCodeType definition",
+        "browseName": "DiagnosticTroubleCodeType",
+        "kind": "type"
+      }
+    ],
+    "profiles": [
+      {
+        "t": "clause",
+        "id": "c10",
+        "title": "Profiles and conformance units",
+        "level": 1
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "A server implementing this specification should implement the "
+          },
+          {
+            "r": "code",
+            "text": "GeneratorSetType"
+          },
+          {
+            "r": "t",
+            "text": " and its mandatory content. Support for individual subsystems (fuel, cooling, lubrication, starting, aftertreatment), for "
+          },
+          {
+            "r": "code",
+            "text": "AutomaticTransferSwitchType"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "ParallelingControllerType"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "GeneratorSystemType"
+          },
+          {
+            "r": "t",
+            "text": ", and for the control methods is optional and should be advertised through appropriate profiles/facets. Instances of "
+          },
+          {
+            "r": "code",
+            "text": "GeneratorSetType"
+          },
+          {
+            "r": "t",
+            "text": " should be made discoverable by organising them under the Machinery "
+          },
+          {
+            "r": "code",
+            "text": "Machines"
+          },
+          {
+            "r": "t",
+            "text": " folder, as recommended by "
+          },
+          {
+            "r": "t",
+            "text": "OPC 40001‑1"
+          },
+          {
+            "r": "t",
+            "text": "."
+          }
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "9 Profiles and conformance",
+          "b": 0
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Mandatory children inherited from the chosen base types are "
+          },
+          {
+            "r": "t",
+            "text": "not",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " re‑declared in this NodeSet, but conforming instances must still expose them. In particular: the DI "
+          },
+          {
+            "r": "code",
+            "text": "DeviceType"
+          },
+          {
+            "r": "t",
+            "text": " nameplate ("
+          },
+          {
+            "r": "code",
+            "text": "Manufacturer"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "Model"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "SerialNumber"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "HardwareRevision"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "SoftwareRevision"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "DeviceRevision"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "DeviceManual"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "RevisionCounter"
+          },
+          {
+            "r": "t",
+            "text": "); the "
+          },
+          {
+            "r": "code",
+            "text": "FiniteStateMachineType"
+          },
+          {
+            "r": "t",
+            "text": " "
+          },
+          {
+            "r": "code",
+            "text": "CurrentState"
+          },
+          {
+            "r": "t",
+            "text": " on "
+          },
+          {
+            "r": "code",
+            "text": "OperatingState"
+          },
+          {
+            "r": "t",
+            "text": "; the "
+          },
+          {
+            "r": "code",
+            "text": "AnalogUnitType"
+          },
+          {
+            "r": "t",
+            "text": " "
+          },
+          {
+            "r": "code",
+            "text": "EngineeringUnits"
+          },
+          {
+            "r": "t",
+            "text": " on every measured value (this specification pre‑populates it with a default unit); and the "
+          },
+          {
+            "r": "code",
+            "text": "OffNormalAlarmType"
+          },
+          {
+            "r": "t",
+            "text": " / "
+          },
+          {
+            "r": "code",
+            "text": "AcknowledgeableConditionType"
+          },
+          {
+            "r": "t",
+            "text": " condition state ("
+          },
+          {
+            "r": "code",
+            "text": "EnabledState"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "ActiveState"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "AckedState"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "NormalState"
+          },
+          {
+            "r": "t",
+            "text": "). Optional but recommended children — such as the "
+          },
+          {
+            "r": "code",
+            "text": "FiniteStateMachineType"
+          },
+          {
+            "r": "t",
+            "text": " "
+          },
+          {
+            "r": "code",
+            "text": "LastTransition"
+          },
+          {
+            "r": "t",
+            "text": " and the "
+          },
+          {
+            "r": "code",
+            "text": "AnalogUnitType"
+          },
+          {
+            "r": "t",
+            "text": " "
+          },
+          {
+            "r": "code",
+            "text": "EURange"
+          },
+          {
+            "r": "t",
+            "text": " / "
+          },
+          {
+            "r": "code",
+            "text": "InstrumentRange"
+          },
+          {
+            "r": "t",
+            "text": " — should be provided where the information is available."
+          }
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "9 Profiles and conformance",
+          "b": 1
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Conformance is composed from independently implementable "
+          },
+          {
+            "r": "t",
+            "text": "conformance units (CUs)",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": ", one per subsystem. Only "
+          },
+          {
+            "r": "code",
+            "text": "GEN-GeneratorSet"
+          },
+          {
+            "r": "t",
+            "text": " is mandatory; every other unit may be claimed on its own."
+          }
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "9 Profiles and conformance",
+          "b": 2
+        }
+      },
+      {
+        "t": "table",
+        "id": "profiles-and-conformance-units-tab1",
+        "caption": "Profiles and conformance units",
+        "kind": "generic",
+        "headers": [
+          [
+            {
+              "r": "t",
+              "text": "Conformance unit"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Requires"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "r": "code",
+                "text": "GEN-GeneratorSet"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Mandatory.",
+                "b": true
+              },
+              {
+                "r": "t",
+                "text": " "
+              },
+              {
+                "r": "code",
+                "text": "GeneratorSetType"
+              },
+              {
+                "r": "t",
+                "text": " with its mandatory content, and the enumerations and structures the model is written in."
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "code",
+                "text": "GEN-Components"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "The engine, alternator, alternator phase and support subsystems (fuel, cooling, lubrication, starting, aftertreatment)."
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "code",
+                "text": "GEN-Identification"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "The generator-set nameplate beyond the inherited DI nameplate."
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "code",
+                "text": "GEN-StateMachine"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "GeneratorStateMachineType"
+              },
+              {
+                "r": "t",
+                "text": ", its states and transitions, and the operating modes."
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "code",
+                "text": "GEN-Rating"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "GeneratorRatingType"
+              },
+              {
+                "r": "t",
+                "text": " and the rating set of a generator set."
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "code",
+                "text": "GEN-Alarms"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "The protection and alarm conditions and their condition state."
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "code",
+                "text": "GEN-CANbus"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "The CAN bus / SAE J1939 interface of the engine."
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "code",
+                "text": "GEN-TransferSwitch"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "AutomaticTransferSwitchType"
+              },
+              {
+                "r": "t",
+                "text": " and its transfer behaviour."
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "code",
+                "text": "GEN-Paralleling"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "ParallelingControllerType"
+              },
+              {
+                "r": "t",
+                "text": " and the paralleling and load-sharing behaviour."
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "code",
+                "text": "GEN-System"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "GeneratorSystemType"
+              },
+              {
+                "r": "t",
+                "text": ", the aggregate of several generator sets."
+              }
+            ]
+          ]
+        ],
+        "widths": null,
+        "note": null,
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "9 Profiles and conformance",
+          "b": 3
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Profiles.",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " "
+          },
+          {
+            "r": "t",
+            "text": "Generator Set Server",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " = "
+          },
+          {
+            "r": "code",
+            "text": "GEN-GeneratorSet"
+          },
+          {
+            "r": "t",
+            "text": " + "
+          },
+          {
+            "r": "code",
+            "text": "GEN-Components"
+          },
+          {
+            "r": "t",
+            "text": " + "
+          },
+          {
+            "r": "code",
+            "text": "GEN-Identification"
+          },
+          {
+            "r": "t",
+            "text": " + "
+          },
+          {
+            "r": "code",
+            "text": "GEN-StateMachine"
+          },
+          {
+            "r": "t",
+            "text": " + "
+          },
+          {
+            "r": "code",
+            "text": "GEN-Rating"
+          },
+          {
+            "r": "t",
+            "text": ". "
+          },
+          {
+            "r": "t",
+            "text": "Generator Set Server with alarms",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " adds "
+          },
+          {
+            "r": "code",
+            "text": "GEN-Alarms"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "GEN-CANbus"
+          },
+          {
+            "r": "t",
+            "text": ". "
+          },
+          {
+            "r": "t",
+            "text": "Generator Plant Server",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " adds "
+          },
+          {
+            "r": "code",
+            "text": "GEN-TransferSwitch"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "GEN-Paralleling"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "GEN-System"
+          },
+          {
+            "r": "t",
+            "text": "."
+          }
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "9 Profiles and conformance",
+          "b": 4
+        }
+      }
+    ],
+    "namespaces": [
+      {
+        "t": "clause",
+        "id": "c11",
+        "title": "Namespaces",
+        "level": 1
+      },
+      {
+        "t": "clause",
+        "id": "c11-1",
+        "title": "Namespace metadata",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The namespace metadata provide standardized information about the elements of this namespace, which an aggregating Server relies on. All Nodes defined by this document are static: they are identical in every Server, including the Value Attribute."
+          }
+        ]
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The information is provided as an Object of type NamespaceMetadataType, a component of the Namespaces Object of the Server Object. The NamespaceMetadataType ObjectType and its Properties are defined in OPC 10000-5. The same version information is carried by the ModelTableEntry of the UANodeSet XML file."
+          }
+        ]
+      },
+      {
+        "t": "table",
+        "id": "namespace-metadata-tab1",
+        "caption": "NamespaceMetadata Object for this document",
+        "kind": "generic",
+        "headers": [
+          [
+            {
+              "r": "t",
+              "text": "Property"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "DataType"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Value"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "r": "t",
+                "text": "NamespaceUri"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "String"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "http://opcfoundation.org/UA/Generators/"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "NamespaceVersion"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "String"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "1.1.0"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "NamespacePublicationDate"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "DateTime"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "2026-07-01"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "IsNamespaceSubset"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Boolean"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "False"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "StaticNodeIdTypes"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "IdType[]"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "0 (Numeric)"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "StaticNumericNodeIdRange"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "NumericRange[]"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "1001:6399"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "StaticStringNodeIdPattern"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "String"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "--"
+              }
+            ]
+          ]
+        ],
+        "widths": [
+          2800,
+          2000,
+          4126
+        ],
+        "note": null
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The IsNamespaceSubset Property is False because the UANodeSet XML file contains the complete namespace. A Server exposing only a subset sets it to True."
+          }
+        ]
+      },
+      {
+        "t": "clause",
+        "id": "c11-2",
+        "title": "Handling of OPC UA namespaces",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Namespaces are used by OPC UA to create unique identifiers across different naming authorities. The NodeId and BrowseName Attributes are identifiers. A Node in the AddressSpace is unambiguously identified by its NodeId; a BrowseName is not unique and is used to build a browse path or to name a standard Property."
+          }
+        ]
+      },
+      {
+        "t": "table",
+        "id": "handling-of-opc-ua-namespaces-tab1",
+        "caption": "Namespaces used in an OpenUSD Server",
+        "kind": "generic",
+        "headers": [
+          [
+            {
+              "r": "t",
+              "text": "NamespaceURI"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Description"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "r": "t",
+                "text": "http://opcfoundation.org/UA/"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Namespace for NodeIds and BrowseNames defined in the OPC UA specification (OPC 10000-3, OPC 10000-5)."
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "Local Server URI"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Namespace for Nodes defined in the local Server. This namespace shall have index 1."
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "http://opcfoundation.org/UA/xRegistry/"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Namespace of the RequiredModel that carries the abstract registry base types this document extends."
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "http://opcfoundation.org/UA/Generators/"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Namespace for NodeIds and BrowseNames defined in this document."
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "Vendor specific types"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "A Server may provide vendor-specific types derived from the types defined in this document, in one or more additional namespaces."
+              }
+            ]
+          ]
+        ],
+        "widths": [
+          3400,
+          5526
+        ],
+        "note": null
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The following table lists the namespaces and their indexes used for BrowseNames in this document. The default namespace of this document is not listed, because every BrowseName without a prefix uses it."
+          }
+        ]
+      },
+      {
+        "t": "table",
+        "id": "handling-of-opc-ua-namespaces-tab2",
+        "caption": "Namespaces used in this document",
+        "kind": "generic",
+        "headers": [
+          [
+            {
+              "r": "t",
+              "text": "NamespaceURI"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Namespace Index"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Example"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "r": "t",
+                "text": "http://opcfoundation.org/UA/"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "0"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "0:EngineeringUnits"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "http://opcfoundation.org/UA/xRegistry/"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "1"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "1:ResourceType"
+              }
+            ]
+          ]
+        ],
+        "widths": [
+          3800,
+          1600,
+          3526
+        ],
+        "note": null
+      }
+    ],
+    "annex-a": [
+      {
+        "t": "annex",
+        "id": "cA",
+        "title": "Generators namespace and mappings",
+        "normative": true
+      }
+    ]
+  },
+  "order": [
+    "scope",
+    "normative-references",
+    "terms",
+    "general",
+    "use-cases",
+    "model-overview",
+    "objecttypes",
+    "eventtypes",
+    "datatypes",
+    "profiles",
+    "namespaces",
+    "annex-a"
+  ]
+}

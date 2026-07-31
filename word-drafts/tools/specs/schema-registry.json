@@ -1,0 +1,166 @@
+{
+  "id": "schema-registry",
+  "source": {
+    "markdown": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+    "nodeset": "core-specs/schema-registry/Opc.Ua.SchemaRegistry.NodeSet2.xml"
+  },
+  "output": {
+    "docx": "word-drafts/OPC-UA-Schema-Registry.docx",
+    "docmodel": "word-drafts/OPC-UA-Schema-Registry.docmodel.json",
+    "figures": "word-drafts/figures"
+  },
+
+  "identity": {
+    "docNumber": "OPC nnnnn-m",
+    "partNumber": "Part 1",
+    "partName": "Schema Registry",
+    "title": "Schema Registry",
+    "subjectTerm": "schema registry",
+    "mainTitle": "OPC UA FOR SCHEMA REGISTRY",
+    "subTitle": "Part 1: In-server registry of encoding schemas",
+    "shortName": "SREG",
+    "capabilityIdentifier": "SREG",
+    "namespaceUri": "http://opcfoundation.org/UA/SchemaRegistry/",
+    "namespaceIndexInDocument": 2,
+    "version": "0.2.0",
+    "publicationDate": "2026-07-30",
+    "releaseType": "Draft",
+    "mantisProjectId": "<nnn>",
+    "otherOrganization": "xRegistry project",
+    "introduction": [
+      "An encoding such as Avro or Apache Arrow does not carry its own type information on the wire. A message is a compact payload plus a fingerprint of the schema that produced it, and a decoder that does not already hold that schema cannot read the message at all. Something has to turn a fingerprint back into a schema document, and it has to do so for every producer a consumer might meet.",
+      "That something is a schema registry: a store of schema documents addressed by identity rather than by location, with the versioning and compatibility rules that let a producer evolve a schema without breaking the consumers already deployed against it. Registries of this shape are well established outside OPC UA, and the xRegistry specification gives them a common model and HTTP API.",
+      "This document defines the same registry inside an OPC UA Server. A Server exposes its schemas as part of its own address space, so a Client resolves a fingerprint with the Services it already uses — Browse, Read and Call — without a second protocol, a second endpoint or a second set of credentials."
+    ],
+    "draftBanner": "PROVISIONAL WORKING DRAFT — not normative, not endorsed by the OPC Foundation. The document number, the Mantis project identifier and every NodeId in this document are placeholders; the OPC Foundation assigns the real values."
+  },
+
+  "abbreviations": [
+    ["API", "Application Programming Interface"],
+    ["CRC", "Cyclic Redundancy Check"],
+    ["HTTP", "Hypertext Transfer Protocol"],
+    ["JSON", "JavaScript Object Notation"],
+    ["TTL", "Time To Live"],
+    ["URI", "Uniform Resource Identifier"],
+    ["URL", "Uniform Resource Locator"],
+    ["UTC", "Coordinated Universal Time"]
+  ],
+
+  "normativeReferences": [
+    {"id": "UAPart1", "label": "OPC 10000-1", "title": "OPC Unified Architecture - Part 1: Overview and Concepts", "url": "http://www.opcfoundation.org/documents/10000-1/"},
+    {"id": "UAPart2", "label": "OPC 10000-2", "title": "OPC Unified Architecture - Part 2: Security Model", "url": "http://www.opcfoundation.org/documents/10000-2/"},
+    {"id": "UAPart3", "label": "OPC 10000-3", "title": "OPC Unified Architecture - Part 3: Address Space Model", "url": "http://www.opcfoundation.org/documents/10000-3/"},
+    {"id": "UAPart4", "label": "OPC 10000-4", "title": "OPC Unified Architecture - Part 4: Services", "url": "http://www.opcfoundation.org/documents/10000-4/"},
+    {"id": "UAPart5", "label": "OPC 10000-5", "title": "OPC Unified Architecture - Part 5: Information Model", "url": "http://www.opcfoundation.org/documents/10000-5/"},
+    {"id": "UAPart6", "label": "OPC 10000-6", "title": "OPC Unified Architecture - Part 6: Mappings", "url": "http://www.opcfoundation.org/documents/10000-6/"},
+    {"id": "UAPart7", "label": "OPC 10000-7", "title": "OPC Unified Architecture - Part 7: Profiles", "url": "http://www.opcfoundation.org/documents/10000-7/"},
+    {"id": "UAPart12", "label": "OPC 10000-12", "title": "OPC Unified Architecture - Part 12: Discovery and Global Services", "url": "http://www.opcfoundation.org/documents/10000-12/"},
+    {"id": "UAPart14", "label": "OPC 10000-14", "title": "OPC Unified Architecture - Part 14: PubSub", "url": "http://www.opcfoundation.org/documents/10000-14/"},
+    {"id": "UAPart20", "label": "OPC 10000-20", "title": "OPC Unified Architecture - Part 20: File Transfer", "url": "http://www.opcfoundation.org/documents/10000-20/"},
+    {"id": "XREG", "label": "OPC UA for xRegistry", "title": "The abstract registry model of registries, groups and resources that this document extends; declared as a RequiredModel of its NodeSet.", "url": ""},
+    {"id": "XREGSCHEMA", "label": "xRegistry Schema Registry Service", "title": "The schemagroups, schemas and versions model this document mirrors in OPC UA.", "url": "https://github.com/xregistry/spec"},
+    {"id": "CLOUDEVENTS", "label": "CloudEvents", "title": "CloudEvents specification, whose dataschema attribute convention is reused for an optional on-wire schema reference.", "url": "https://github.com/cloudevents/spec"}
+  ],
+
+  "clauseMap": [
+    {"from": "1 Scope",                                        "number": "1",    "title": "Scope",                                       "region": "scope"},
+
+    {"from": null,                                             "number": "2",    "title": "Normative references",                        "region": "normative-references", "generated": "normative-references"},
+
+    {"from": null,                                             "number": "3",    "title": "Terms, abbreviated terms and conventions",     "region": "terms"},
+    {"from": null,                                             "number": "3.1",  "title": "Overview",                                     "generated": "terms-overview"},
+    {"from": "3 Terms, definitions and abbreviations",         "number": "3.2",  "title": "Schema registry terms",                         "generated": "terms"},
+    {"from": null,                                             "number": "3.3",  "title": "Abbreviated terms",                            "generated": "abbreviations"},
+    {"from": null,                                             "number": "3.4",  "title": "Conventions used in this document",             "slice": "conventions"},
+
+    {"from": null,                                             "number": "4",    "title": "General information to schema registry and OPC UA", "region": "general"},
+    {"from": null,                                             "number": "4.1",  "title": "Introduction to schema registries",             "generated": "subject-introduction"},
+    {"from": null,                                             "number": "4.2",  "title": "Introduction to OPC Unified Architecture",      "slice": "opcua-intro"},
+
+    {"from": "5 Minimal binding",                              "number": "5",    "title": "Use cases",                                    "region": "use-cases"},
+    {"from": "5.1 Downloading a schema (mandatory)",           "number": "5.1",  "title": "Downloading a schema"},
+    {"from": "5.2 Registering a schema (optional)",            "number": "5.2",  "title": "Registering a schema"},
+
+    {"from": "4 Overview",                                     "number": "6",    "title": "Schema registry information model overview",   "region": "model-overview"},
+    {"from": "4.3 OPC UA as a first-class binding — federation and access parity with HTTP", "number": "6.1", "title": "OPC UA as a first-class binding"},
+    {"from": "6 Schema-specific information model",            "number": "6.2",  "title": "Organisation of the model"},
+    {"from": "6.1 SchemaRegistryType",                         "number": "6.3",  "title": "Registry root"},
+    {"from": "6.2 SchemaGroupType",                            "number": "6.4",  "title": "Schema groups"},
+    {"from": "6.3 SchemaFileType",                             "number": "6.5",  "title": "Schema files"},
+    {"from": "6.4 SchemaId-NodeId fast access and GetSchema",  "number": "6.6",  "title": "SchemaId NodeId fast access"},
+    {"from": "6.5 Formats and content-types",                  "number": "6.7",  "title": "Formats and content types"},
+    {"from": "6.6 Schema identity (`SchemaId`) and per-format fingerprints", "number": "6.8", "title": "Schema identity and per-format fingerprints"},
+    {"from": "7 Schema versioning and compatibility",          "number": "6.9",  "title": "Schema versioning and compatibility"},
+    {"from": "8 Resolution flow",                              "number": "6.10", "title": "Resolution flow"},
+    {"from": "9 TTL and mirror semantics",                     "number": "6.11", "title": "TTL and mirror semantics"},
+    {"from": "10 Structure materialization and the xRegistry API", "number": "6.12", "title": "Structure materialization and the xRegistry API"},
+    {"from": "10.1 Auto-bootstrap of the schema structure",    "number": "6.12.1", "title": "Auto-bootstrap of the schema structure"},
+    {"from": "10.2 Serving the xRegistry API and JSON projection", "number": "6.12.2", "title": "Serving the xRegistry API and the JSON projection"},
+    {"from": "11 Optional PubSub integration",                 "number": "6.13", "title": "PubSub integration"},
+
+    {"from": null,                                             "number": "7",    "title": "OPC UA ObjectTypes", "region": "objecttypes",
+     "generated": "types", "nodeClass": "UAObjectType"},
+
+    {"from": null,                                             "number": "8",    "title": "Instances",          "region": "instances",
+     "generated": "types", "nodeClass": "UAObject", "select": {"parentOutsideModel": true}},
+
+    {"from": "12 Conformance",                                 "number": "9",    "title": "Profiles and conformance units", "region": "profiles"},
+
+    {"from": null,                                             "number": "10",   "title": "Namespaces",         "region": "namespaces"},
+    {"from": null,                                             "number": "10.1", "title": "Namespace metadata", "generated": "namespace-metadata"},
+    {"from": null,                                             "number": "10.2", "title": "Handling of OPC UA namespaces", "generated": "namespace-handling"},
+
+    {"from": "Annex A — Information model",                    "number": "A",    "title": "Schema registry namespace and mappings", "annex": true, "normative": true, "region": "annex-a", "slice": "annex-a"},
+    {"from": "Annex B — Federation and OPC UA / HTTP resolution parity (informative)", "number": "B", "title": "Federation and OPC UA to HTTP resolution parity", "annex": true, "region": "annex-b"},
+    {"from": "Annex C — PubSub DataSet schema profile (normative for the profile, optional)", "number": "C", "title": "PubSub DataSet schema profile", "annex": true, "normative": true, "region": "annex-c"},
+    {"from": "C.1 ConfigurationVersion-keyed evolution",       "number": "C.1",  "title": "ConfigurationVersion-keyed evolution"},
+    {"from": "C.2 Open unions subject to aggregation",         "number": "C.2",  "title": "Open unions subject to aggregation"},
+    {"from": "C.3 Append-only rule (normative)",               "number": "C.3",  "title": "Append-only rule"},
+    {"from": "C.4 PubSub integration touch-points",            "number": "C.4",  "title": "PubSub integration touch-points"},
+    {"from": "C.5 Example (informative)",                      "number": "C.5",  "title": "Example"},
+    {"from": "Annex D — HTTP binding correspondence (informative)", "number": "D", "title": "HTTP binding correspondence", "annex": true, "region": "annex-d"}
+  ],
+
+  "_comment_dropped": "The NodeSet validation clause describes this repository's tooling rather than the model, and Annex A's subsections are regenerated from the NodeSet.",
+  "dropped": [
+    "13 NodeSet validation",
+    "Type overview",
+    "Object types",
+    "Methods",
+    "Well-known instances"
+  ],
+
+  "_comment_dropParagraphsContaining": "Paragraphs about the repository rather than the model. A submitted specification does not cite its own source tree.",
+  "dropParagraphsContaining": [
+    "core-specs/",
+    "../xregistry/",
+    "build_model.py",
+    "validate_local.py",
+    "CHANGELOG.md"
+  ],
+
+  "_comment_citedAs": "How sibling documents name this one. A reference is rewritten only when anchored on one of these, so this document's clause map is never applied to a reference belonging elsewhere.",
+  "citedAs": ["Schema Registry", "schema registry spec"],
+
+  "unanchoredSiblings": ["core-specs/schema-registry/README.md"],
+
+  "_comment_foreignAnchors": "Names this document uses for other documents. A section reference anchored on one of them belongs to that document and is left exactly as written.",
+  "foreignAnchors": ["xRegistry", "Avro Message Mapping", "Arrow Message Mapping", "primer"],
+
+  "annexMap": {"A": "A", "B": "B", "C": "C", "D": "D"},
+
+  "xrefMap": {
+    "1": "1", "2": "2", "3": "3",
+    "4": "6", "4.3": "6.1",
+    "5": "5", "5.1": "5.1", "5.2": "5.2",
+    "6": "6.2", "6.1": "6.3", "6.2": "6.4", "6.3": "6.5", "6.4": "6.6",
+    "6.5": "6.7", "6.6": "6.8",
+    "7": "6.9", "8": "6.10", "9": "6.11",
+    "10": "6.12", "10.1": "6.12.1", "10.2": "6.12.2",
+    "11": "6.13", "12": "9", "13": "9"
+  },
+
+  "figures": [
+    {"id": "fig-sreg-shape", "caption": "The schema registry in the address space", "pptx": "SchemaRegistry-Fig1-Shape.pptx"}
+  ]
+}

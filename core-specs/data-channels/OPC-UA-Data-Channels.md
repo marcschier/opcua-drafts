@@ -547,33 +547,33 @@ Figures, method and the full caveats are in the companion report, [OPC UA Data C
 
 ## 12 Conformance units
 
-| Unit | Requires | Defined in |
+| Conformance unit | Requires | Defined in |
 |---|---|---|
-| Data Channel Framing | — | Part 6 errata clause 5 |
-| Data Channel Inline Transport | Data Channel Framing | Part 6 errata §6.1, §6.2 |
-| Data Channel Partial Reliability | Data Channel Framing | Part 6 errata §5.9, §5.10 |
-| Data Channel QUIC Transport | Data Channel Framing | Part 6 errata clause 7 except §7.5 |
-| Data Channel Unreliable Datagram | QUIC Transport + Partial Reliability | Part 6 errata §7.5 |
-| Data Channel WebTransport Transport | Data Channel Framing | Part 6 errata clause 8 except §8.5 |
-| Data Channel WebTransport Unreliable Datagram | WebTransport Transport + Partial Reliability | Part 6 errata §8.5 |
-| Data Channel Services | Data Channel Framing, Data Channel Model | Part 4 errata clause 5, §7 |
-| Data Channel Modify | Data Channel Services | Part 4 errata §5.2 |
-| Data Channel Offers | Data Channel Services, Data Channel Model Events | Part 4 errata clause 6 |
-| Data Channel Auditing | Data Channel Services, Data Channel Model Auditing | Part 4 errata §7.3 |
-| Data Channel Model | — | Part 3 errata clauses 5-7 |
-| Data Channel Model Diagnostics | Data Channel Model | Part 3 errata §5.2 |
-| Data Channel Model Events | Data Channel Model | Part 3 errata clause 8 |
-| Data Channel Model Auditing | Data Channel Model Events | Part 3 errata clause 8 |
+| `DCH-Framing` | — | Part 6 errata clause 5 |
+| `DCH-InlineTransport` | `DCH-Framing` | Part 6 errata §6.1, §6.2 |
+| `DCH-PartialReliability` | `DCH-Framing` | Part 6 errata §5.9, §5.10 |
+| `DCH-QuicTransport` | `DCH-Framing` | Part 6 errata clause 7 except §7.5 |
+| `DCH-UnreliableDatagram` | `DCH-QuicTransport`, `DCH-PartialReliability` | Part 6 errata §7.5 |
+| `DCH-WebTransport` | `DCH-Framing` | Part 6 errata clause 8 except §8.5 |
+| `DCH-WebTransportDatagram` | `DCH-WebTransport`, `DCH-PartialReliability` | Part 6 errata §8.5 |
+| `DCH-Services` | `DCH-Framing`, `DCH-Model` | Part 4 errata clause 5, §7 |
+| `DCH-Modify` | `DCH-Services` | Part 4 errata §5.2 |
+| `DCH-Offers` | `DCH-Services`, `DCH-ModelEvents` | Part 4 errata clause 6 |
+| `DCH-Auditing` | `DCH-Services`, `DCH-ModelAuditing` | Part 4 errata §7.3 |
+| `DCH-Model` | — | Part 3 errata clauses 5-7 |
+| `DCH-ModelDiagnostics` | `DCH-Model` | Part 3 errata §5.2 |
+| `DCH-ModelEvents` | `DCH-Model` | Part 3 errata clause 8 |
+| `DCH-ModelAuditing` | `DCH-ModelEvents` | Part 3 errata clause 8 |
 
 Three Profiles are proposed for OPC 10000-7:
 
 | Profile | Units |
 |---|---|
-| **Data Channel Server Facet** | Data Channel Framing, Data Channel Inline Transport, Data Channel Services, Data Channel Model, Data Channel Model Events |
-| **Data Channel Media Server Facet** | The above plus Data Channel Partial Reliability, Data Channel Modify, Data Channel Offers, Data Channel Model Diagnostics |
-| **Data Channel QUIC Server Facet** | Data Channel Media Server Facet plus Data Channel QUIC Transport and Data Channel Unreliable Datagram |
+| **Data Channel Server Facet** | `DCH-Framing`, `DCH-InlineTransport`, `DCH-Services`, `DCH-Model`, `DCH-ModelEvents` |
+| **Data Channel Media Server Facet** | The above plus `DCH-PartialReliability`, `DCH-Modify`, `DCH-Offers`, `DCH-ModelDiagnostics` |
+| **Data Channel QUIC Server Facet** | Data Channel Media Server Facet plus `DCH-QuicTransport` and `DCH-UnreliableDatagram` |
 
-A Server reachable over WebTransport rather than over bare QUIC substitutes `Data Channel WebTransport Transport` and `Data Channel WebTransport Unreliable Datagram` for their QUIC counterparts. The datagram units are separate rather than shared because the two transports negotiate and carry datagrams differently even though the delivery guarantee is the same; the Profile is otherwise identical, because everything above the transport is.
+A Server reachable over WebTransport rather than over bare QUIC substitutes `DCH-WebTransport` and `DCH-WebTransportDatagram` for their QUIC counterparts. The datagram units are separate rather than shared because the two transports negotiate and carry datagrams differently even though the delivery guarantee is the same; the Profile is otherwise identical, because everything above the transport is.
 
 The minimum useful implementation is the Data Channel Server Facet: inline framing over `opc.tcp`, the three Services, and the model. Everything else is additive.
 
