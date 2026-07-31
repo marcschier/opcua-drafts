@@ -216,3 +216,17 @@ a finalised document carries one cached `PAGEREF` per contents entry and a fresh
 carries none. So the regeneration pull request opens as a **draft**, and CI flips it to
 ready for review once `validate_docx.py --finalized` passes. The draft state *is* the
 message, and it cannot be forgotten the way a note in a pull request body can.
+
+**The same asymmetry breaks the obvious staleness test**, which is worth stating because it
+fails silently rather than loudly. "Rebuild and see what changed" cannot work: the committed
+document is post-finalise and a rebuild is pre-finalise, so the bytes never match for any
+document, whether or not its sources moved. A refresh built on that comparison is
+permanently dirty — it proposed replacing all eleven finalised documents with unfinalised
+ones on a push that touched no specification at all.
+
+Ask the *sources* instead. Each build already stamps a digest of exactly the inputs a
+document was rendered from into its package and its provenance sidecar; a document is stale
+when today's digest of those inputs differs from the recorded one. That never looks at the
+output, so the finalisation difference cannot confuse it. The general rule: **when a
+pipeline post-processes its own output, the output stops being a valid record of what
+produced it.**

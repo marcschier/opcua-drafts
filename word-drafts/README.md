@@ -96,6 +96,9 @@ pwsh word-drafts/tools/finalize_all.ps1
 # check the committed documents without opening Word
 pwsh word-drafts/tools/finalize_all.ps1 -VerifyOnly
 
+# which renderings have fallen behind their sources
+python word-drafts/tools/stale_specs.py --verbose
+
 # a reviewed document -> a report, a branch, a pull request and a review
 python word-drafts/tools/ingest_docx.py reviewed.docx
 python word-drafts/tools/ingest_docx.py reviewed.docx --pr --dry-run
@@ -286,11 +289,23 @@ text.
 
 ### Regenerating on `main`
 
-`.github/workflows/word-drafts-refresh.yml` rebuilds every document on each push to `main`
-and collects the result on one standing pull request, from the branch `word-drafts/refresh`.
-The build is byte-reproducible, so a document whose sources did not change comes out
-identical and simply does not appear in the diff — nothing has to work out which documents
-to rebuild.
+`.github/workflows/word-drafts-refresh.yml` keeps the renderings in step with the markdown,
+collecting the result on one standing pull request from the branch `word-drafts/refresh`.
+
+**Staleness is decided from the sources, not from the output**, and the reason is worth
+knowing because the obvious approach fails silently. Rebuilding and diffing does not work:
+the committed `.docx` is the *post-finalise* file, written by Word once it resolved the
+fields, while a rebuild produces the *pre-finalise* one. Word recompresses the package and
+assigns its own paragraph ids, so the two never match — for any document, whether or not a
+character of the specification changed. A refresh driven by "did the bytes change?" is
+therefore permanently dirty, and proposes replacing every finalised document with an
+unfinalised one on every push, including pushes that touch no specification at all.
+
+So `stale_specs.py` compares the digest of each document's *inputs* — its config, markdown,
+NodeSet and any folded-in annexes — against the digest stamped into its provenance sidecar
+when it was rendered. Only genuinely stale documents are rebuilt, and when nothing is stale
+the workflow stops without committing. Run it yourself with
+`python word-drafts/tools/stale_specs.py --verbose`.
 
 It opens as a **draft** and stays one until the documents are finalised. CI cannot finalise
 them — that needs Word — but it can *check* it, so the pull request flips to ready for

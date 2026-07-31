@@ -4,14 +4,22 @@
 # specification changed and its rendering did not, so the two could drift apart silently
 # for as long as nobody happened to rebuild.
 #
-# This rebuilds them on every push to `main` and collects the result on one standing pull
-# request. The build is byte-reproducible, so a document whose sources did not change comes
-# out identical and simply does not appear in the diff — no path filtering needed to work
-# out what to regenerate.
+# **Staleness is decided from the sources, not from the output.** The obvious test — rebuild
+# and see what changed — does not work here, and the reason is not obvious: the committed
+# `.docx` is the *post-finalise* file, written by Word once it resolved the fields, while a
+# rebuild produces the *pre-finalise* one. Word recompresses the package and assigns its own
+# paragraph ids, so the two never match, for any document, whether or not a character of the
+# specification changed. Driving this workflow from "did the bytes change?" made it always
+# dirty: it proposed replacing all eleven finalised documents with unfinalised ones on every
+# push, including pushes that touched no specification at all.
 #
-# **It cannot finish them.** Resolving the table of contents and every cross-reference
-# needs Microsoft Word, which a GitHub-hosted runner does not have, so the pull request
-# opens as a *draft* and stays one until a maintainer has run
+# So `stale_specs.py` compares the digest of each document's *inputs* against the digest
+# recorded when it was rendered, and only genuinely stale documents are rebuilt. When
+# nothing is stale the workflow stops without committing.
+#
+# **It cannot finish a document it rebuilds.** Resolving the table of contents and every
+# cross-reference needs Microsoft Word, which a GitHub-hosted runner does not have, so the
+# pull request opens as a *draft* and stays one until a maintainer has run
 # `pwsh word-drafts/tools/finalize_all.ps1` locally and pushed. Verifying that they were
 # finalised needs no Word, so this workflow does that itself and flips the pull request to
 # ready for review when it passes.
@@ -55,38 +63,63 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git checkout -B "$BRANCH" origin/main
 
-      - name: Rebuild every document
+      - name: Which documents have fallen behind their sources
+        id: stale
+        run: |
+          python word-drafts/tools/stale_specs.py --verbose > stale.txt
+          {
+            echo 'ids<<STALEEOF'
+            cat stale.txt
+            echo 'STALEEOF'
+          } >> "$GITHUB_OUTPUT"
+          if [ -s stale.txt ]; then
+            echo 'any=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'any=false' >> "$GITHUB_OUTPUT"
+            echo 'every document is in step with its sources; nothing to do'
+          fi
+          rm -f stale.txt
+
+      - name: Rebuild the stale documents
         id: build
+        if: steps.stale.outputs.any == 'true'
+        env:
+          IDS: ${{ steps.stale.outputs.ids }}
         run: |
           set -o pipefail
-          python word-drafts/tools/build_all.py 2>&1 | tee build.log | tail -20
-          rm -f build.log
+          # Only the stale ones. Rebuilding a document that is in step would replace a
+          # finalised file with an unfinalised one for no reason.
+          for spec in $IDS; do
+            echo "=== $spec"
+            python word-drafts/tools/build_docx.py "word-drafts/tools/specs/$spec.json"
+            python word-drafts/tools/validate_docx.py "word-drafts/tools/specs/$spec.json"
+          done
 
-      - name: Commit only what actually changed
+      - name: Commit what was rebuilt
         id: commit
+        if: steps.stale.outputs.any == 'true'
+        env:
+          IDS: ${{ steps.stale.outputs.ids }}
         run: |
           git add -A -- word-drafts
           if git diff --cached --quiet; then
             echo 'changed=false' >> "$GITHUB_OUTPUT"
-            echo 'every document is already in step with its sources'
+            echo 'nothing to commit'
             exit 0
           fi
           echo 'changed=true' >> "$GITHUB_OUTPUT"
           git diff --cached --name-only | sed 's/^/  /'
-          cat > .commit-message <<EOF
-          Regenerate the Word drafts
-
-          The specification sources changed, so the renderings did too. Rebuilt by
-          build_all.py from ${GITHUB_SHA:0:12}.
-
-          These documents are not finalised: the build writes fields, not field results,
-          and resolving them needs Microsoft Word. Run
-          'pwsh word-drafts/tools/finalize_all.ps1' before merging.
-
-          Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
-          EOF
-          git commit -F .commit-message
-          rm -f .commit-message
+          {
+            printf 'Regenerate the Word drafts\n\n'
+            printf 'These specifications changed, so their renderings were stale:\n\n'
+            for spec in $IDS; do printf -- '- %s\n' "$spec"; done
+            printf '\nRebuilt from %s.\n\n' "${GITHUB_SHA:0:12}"
+            printf 'They are not finalised: the build writes fields, not field results, and\n'
+            printf 'resolving them needs Microsoft Word. Run\n'
+            printf 'pwsh word-drafts/tools/finalize_all.ps1 before merging.\n\n'
+            printf 'Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n'
+          } > "$RUNNER_TEMP/commit-message"
+          git commit -F "$RUNNER_TEMP/commit-message"
           git push --force-with-lease --set-upstream origin "$BRANCH"
 
       - name: Are they finalised?
