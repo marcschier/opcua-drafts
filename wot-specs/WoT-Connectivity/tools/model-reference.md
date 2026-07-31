@@ -83,6 +83,7 @@ An xRegistry GroupType that collects related ThingDescriptionFileType resources 
 | ValidateCompatibility | Variable | Boolean | Optional | ThingDescriptionGroupType | Group-level policy: validate version compatibility on ingest. |
 | ConsistentFormat | Variable | Boolean | Optional | ThingDescriptionGroupType | Group-level policy: require all versions of a resource to share one format. |
 | <ThingDescription> | Object |  | OptionalPlaceholder | ThingDescriptionGroupType | A Thing Description resource held by this group (constrained to the ThingDescriptionFileType subtype). |
+| CatalogUri | Variable | String | Mandatory | ThingDescriptionGroupType | The URI of the catalogue this group collects - a site, a vendor catalogue or another publishing authority. It is the group's source identity: the inherited GroupId is the symbolic identifier constructed from it, and the inherited Name is this URI verbatim. |
 
 <a id="type-ThingModelGroupType"></a>
 
@@ -98,6 +99,7 @@ An xRegistry GroupType that collects related ThingModelFileType resources (a Thi
 | ValidateCompatibility | Variable | Boolean | Optional | ThingModelGroupType | Group-level policy: validate version compatibility on ingest. |
 | ConsistentFormat | Variable | Boolean | Optional | ThingModelGroupType | Group-level policy: require all versions of a resource to share one format. |
 | <ThingModel> | Object |  | OptionalPlaceholder | ThingModelGroupType | A Thing Model resource held by this group (constrained to the ThingModelFileType subtype). |
+| CatalogUri | Variable | String | Mandatory | ThingModelGroupType | The URI of the catalogue this group collects - a site, a vendor catalogue or another publishing authority. It is the group's source identity: the inherited GroupId is the symbolic identifier constructed from it, and the inherited Name is this URI verbatim. |
 
 <a id="type-WoTDocumentType"></a>
 
@@ -141,7 +143,7 @@ A concrete WoTDocumentType whose content is a W3C WoT Thing Description (WoT-TD/
 
 | BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
 |---|---|---|---|---|---|
-| ThingId | Variable | String | Optional | ThingDescriptionFileType | The Thing Description id (a URI/URN identifying the concrete Thing instance). |
+| ThingId | Variable | String | Mandatory | ThingDescriptionFileType | The Thing Description id (a URI/URN identifying the concrete Thing instance). It is the resource's source identity: the inherited ResourceId is the symbolic identifier constructed from it, and it is invariant across the document's versions. |
 | ThingTitle | Variable | String | Optional | ThingDescriptionFileType | The Thing Description human-readable title. |
 | BaseUri | Variable | String | Optional | ThingDescriptionFileType | The Thing Description base URI used to resolve relative form hrefs. |
 | ModelReference | Variable | String | Optional | ThingDescriptionFileType | The xid or href of the Thing Model this Thing Description derives from (links rel=type), when present. |
@@ -159,6 +161,7 @@ A concrete WoTDocumentType whose content is a W3C WoT Thing Model (WoT-TM/1.1, a
 | ModelTitle | Variable | String | Optional | ThingModelFileType | The Thing Model human-readable title. |
 | ModelVersion | Variable | String | Optional | ThingModelFileType | The Thing Model version (WoT version.model), when present. |
 | DerivedTypeNodeId | Variable | [NodeId](https://reference.opcfoundation.org/specs/OPC-10000-3/8.2.1) | Optional | ThingModelFileType | The ObjectType or VariableType materialized from this Thing Model. |
+| ModelId | Variable | String | Mandatory | ThingModelFileType | The Thing Model id (the WoT @id, a URI identifying the model). It is the resource's source identity: the inherited ResourceId is the symbolic identifier constructed from it, and it is invariant across the document's versions. |
 
 <a id="type-WoTBindingType"></a>
 

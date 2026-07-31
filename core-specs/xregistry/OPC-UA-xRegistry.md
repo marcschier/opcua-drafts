@@ -3,7 +3,7 @@
 **Working draft for submission to the OPC Foundation Working Group**
 **Proposed Part: OPC 10000-2xx (number to be assigned)**
 **Companion namespace:** `http://opcfoundation.org/UA/xRegistry/`
-**Version:** 0.1.0 · **Date:** 2026-07-16
+**Version:** 0.3.0 · **Date:** 2026-07-31
 **Target:** OPC Foundation standardization — the reusable base for domain-specific registries (Schema, Asset, Semantic, WoT Thing-Description, …).
 
 > **Status — working draft.** This document defines an abstract OPC UA companion information model that projects a [xRegistry](https://github.com/xregistry/spec) registry onto the OPC UA AddressSpace. A registry and its groups are folders (`FolderType`); a resource/version document *is* a file (`FileType`). The model is **domain-neutral**: concrete registries — an OPC UA Schema registry, an Asset registry, a Semantic registry, a WoT Thing-Description registry, or any other xRegistry-shaped catalogue — subtype these base types. Nothing here is normative or endorsed by the OPC Foundation.
@@ -47,6 +47,8 @@ It is explicitly out of scope to re-specify the xRegistry core model or its HTTP
 | Attribute / Property | A named metadata value on a registry, group or resource. Projected as an OPC UA Property. Equivalent to an xRegistry attribute. |
 | Label | An extensible name/value string pair on any entity (`labels`), materialized as a browsable `PropertyType` Variable inside the entity's `Labels` (`AttributesType`) container and configured with `AddAttribute` / `RemoveAttribute`. |
 | xid | An xRegistry *relative identifier*: the stable path of an entity within its registry (for example `/schemagroups/g1/schemas/s1`), independent of the hosting endpoint. |
+| Source identity | The domain-defined string that names what a group or resource *is* — an OPC UA namespace URI, an authored asset identifier, a W3C Thing identifier. It is the authoritative name of the entity and is invariant across the entity's versions (§6.9). |
+| Symbolic identifier | A `GroupId` or `ResourceId` constructed from a source identity by the reverse-authority construction of §6.9, so it is human-readable, safe in a URL, on a command line and as a file name, and unambiguous within its collection. |
 | epoch | An xRegistry change counter that increments on every modification of an entity. |
 | Representation | One of the three interchangeable xRegistry forms: the directory of **files**, the **static file server**, or the **API server** (primer §7). This model realizes the file/static-file-server form as the AddressSpace and the API-server form as OPC UA services. |
 | Federation | The xRegistry mechanism (primer §8) by which a registry references resources hosted by another registry. Realized here by an `ExternalReference` (`ExpandedNodeId`) and/or `ResourceUrl`. |
@@ -104,7 +106,7 @@ A resource document is the content of a `ResourceType` (a `FileType`). A consume
 2. one or more `Read(fileHandle, length)` calls → the document bytes (the `Size` Property bounds the total).
 3. `Close(fileHandle)`.
 
-No registry-specific Method is required. A domain registry **may** additionally offer a direct-addressing shortcut that returns the document in a single operation (for example reading a Value Attribute addressed by a content-derived Opaque NodeId); such shortcuts are defined by the domain specification and never replace the mandatory FileType read.
+No registry-specific Method is required. A domain registry **may** additionally offer a direct-addressing shortcut that returns the document in a single operation (for example reading a Value Attribute addressed by an Opaque NodeId built from a content fingerprint); such shortcuts are defined by the domain specification and never replace the mandatory FileType read. Such a NodeId addresses *bytes* and is legitimately content-derived; it is not an entity identifier, and an entity's `GroupId` or `ResourceId` is never derived from a document (§6.9).
 
 ### 5.2 Registering a resource (optional)
 
@@ -124,7 +126,7 @@ Registry reads should use a secured channel. An implementation may expose read-o
 
 ## 6 Information model
 
-The abstract base namespace is `http://opcfoundation.org/UA/xRegistry/`. Draft numeric NodeIds use the provisional `63000+` block; final NodeIds are assigned by the OPC Foundation. The four base ObjectTypes and their members are the normative node reference in Annex A. This clause describes their intent. Every Variable in the model has an explicit TypeDefinition: fixed attributes are `PropertyType` Variables, and each dynamic label is a `PropertyType` Variable under an `AttributesType` container (§6.6). A server **shall** set each group's, resource's and version's BrowseName to its identifier (`GroupId` / `ResourceId` / `VersionId`, a URL-safe token) so a client selects and filters entities directly from Browse results without a Read per candidate; the [*xRegistry — OPC UA API*](xRegistry-OPC-UA-Api.md) relies on this for read-free collection filtering.
+The abstract base namespace is `http://opcfoundation.org/UA/xRegistry/`. Draft numeric NodeIds use the provisional `63000+` block; final NodeIds are assigned by the OPC Foundation. The four base ObjectTypes and their members are the normative node reference in Annex A. This clause describes their intent. Every Variable in the model has an explicit TypeDefinition: fixed attributes are `PropertyType` Variables, and each dynamic label is a `PropertyType` Variable under an `AttributesType` container (§6.6). A server **shall** set each group's, resource's and version's BrowseName to its identifier (`GroupId` / `ResourceId` / `VersionId`) so a client selects and filters entities directly from Browse results without a Read per candidate; the [*xRegistry — OPC UA API*](xRegistry-OPC-UA-Api.md) relies on this for read-free collection filtering. §6.9 defines how a `GroupId` and a `ResourceId` are constructed and requires a human-readable `Name` beside each.
 
 ### 6.1 RegistryType
 
@@ -132,22 +134,22 @@ The abstract base namespace is `http://opcfoundation.org/UA/xRegistry/`. Draft n
 
 ### 6.2 GroupType
 
-`GroupType` is a subtype of `FolderType` and is a group folder — an entry of an xRegistry `GROUPS` collection. It carries the Mandatory `GroupId` and the common attributes of §6.4, and its `<Resource>` OptionalPlaceholder declares that its members are `ResourceType` files, created through its `CreateResource` Method (or the idempotent `GetOrCreateResource`); a new version of an existing resource is created as a new sibling file keyed by `(ResourceId, VersionId)` through the same Method. The group is removed by its own `Delete(ExpectedEpoch: UInt32)` Method, which deletes the group together with the resources it contains; `ExpectedEpoch` provides the same optimistic-concurrency check as in §6.6 (non-zero and unequal to the group's `Epoch` → `Bad_InvalidState`, no change; `0` disables it). A domain group subtypes `GroupType` to add the **group key**: for example `SchemaGroupType` adds a Mandatory `NamespaceUri`.
+`GroupType` is a subtype of `FolderType` and is a group folder — an entry of an xRegistry `GROUPS` collection. It carries the Mandatory `GroupId` and `Name` and the common attributes of §6.4, and its `<Resource>` OptionalPlaceholder declares that its members are `ResourceType` files, created through its `CreateResource` Method (or the idempotent `GetOrCreateResource`); a new version of an existing resource is created as a new sibling file keyed by `(ResourceId, VersionId)` through the same Method. The group is removed by its own `Delete(ExpectedEpoch: UInt32)` Method, which deletes the group together with the resources it contains; `ExpectedEpoch` provides the same optimistic-concurrency check as in §6.6 (non-zero and unequal to the group's `Epoch` → `Bad_InvalidState`, no change; `0` disables it). A domain group subtypes `GroupType` to add the **group key** — the group's source identity (§6.9), from which its `GroupId` is constructed: for example `SchemaGroupType` adds a Mandatory `NamespaceUri`.
 
 ### 6.3 ResourceType
 
-`ResourceType` is a subtype of `FileType`: the resource/version **document is the file**, read and written through the inherited `Open` / `Read` / `Write` / `Close` Methods. It carries the resource-level xRegistry attributes: the Mandatory `ResourceId`, the `VersionId`, the `Format` (the xRegistry format string) and `ContentType` (the document media type), the federation links `ExternalReference` and `ResourceUrl` (§8), and the common attributes of §6.4 (including its `Labels` container, §6.6). It is removed by its own `Delete(ExpectedEpoch: UInt32)` Method, symmetric with `GroupType.Delete` — a resource is a file, and deleting it removes its versions and `Labels`; `ExpectedEpoch` applies the same optimistic-concurrency check (non-zero and unequal to the resource's `Epoch` → `Bad_InvalidState`, no change; `0` disables it). A domain resource subtypes `ResourceType` (for example `SchemaFileType`) to add its own metadata.
+`ResourceType` is a subtype of `FileType`: the resource/version **document is the file**, read and written through the inherited `Open` / `Read` / `Write` / `Close` Methods. It carries the resource-level xRegistry attributes: the Mandatory `ResourceId` and `Name`, the `VersionId`, the `Format` (the xRegistry format string) and `ContentType` (the document media type), the federation links `ExternalReference` and `ResourceUrl` (§8), and the common attributes of §6.4 (including its `Labels` container, §6.6). It is removed by its own `Delete(ExpectedEpoch: UInt32)` Method, symmetric with `GroupType.Delete` — a resource is a file, and deleting it removes its versions and `Labels`; `ExpectedEpoch` applies the same optimistic-concurrency check (non-zero and unequal to the resource's `Epoch` → `Bad_InvalidState`, no change; `0` disables it). A domain resource subtypes `ResourceType` (for example `SchemaFileType`) to add its own metadata, including the Mandatory Property that carries its source identity (§6.9).
 
 ### 6.4 Common xRegistry attributes
 
-Every registry, group and resource carries the common xRegistry attributes as Properties: `Xid` (the relative identifier), `Epoch` (the change counter), `Name`, `Description`, `Documentation`, `CreatedAt` and `ModifiedAt` — each an explicit `PropertyType` Variable — plus an optional **`Labels`** Object of type `AttributesType` (§6.6) that holds the entity's extensible xRegistry `labels`. `Xid` is stable across representations and across registries (§8): it identifies the entity independently of the endpoint that currently serves it. `Epoch` increments on every change so a client can detect a stale cache.
+Every registry, group and resource carries the common xRegistry attributes as Properties: `Xid` (the relative identifier), `Epoch` (the change counter), `Name`, `Description`, `Documentation`, `CreatedAt` and `ModifiedAt` — each an explicit `PropertyType` Variable — plus an optional **`Labels`** Object of type `AttributesType` (§6.6) that holds the entity's extensible xRegistry `labels`. `Name` is Mandatory on `GroupType` and `ResourceType`, because a group and a resource are what a human browses and a generic tool has only the identifier and the name to display (§6.9); it is Optional on `RegistryType`, whose `RegistryId` is chosen rather than derived. `Xid` is stable across representations and across registries (§8): it identifies the entity independently of the endpoint that currently serves it. `Epoch` increments on every change so a client can detect a stale cache.
 
 ### 6.5 Auto-bootstrap
 
 When a resource is created by writing a file (§5.2), the server **shall** materialize the surrounding xRegistry structure without requiring the client to build it explicitly:
 
 - create the group folder if it does not yet exist (a domain registry derives the group key — for example the OPC UA namespace URI — from the document or the create arguments);
-- assign the resource its `ResourceId` and initial `VersionId`, and set `Format` / `ContentType` from the create context or by inspecting the document;
+- assign the resource its `ResourceId`, constructed from its source identity per §6.9, its initial `VersionId` and a non-empty `Name`, and set `Format` / `ContentType` from the create context or by inspecting the document;
 - assign `Xid`, `Epoch = 1`, and `CreatedAt` = `ModifiedAt` = now;
 - link the file under its group and the group under the registry so the entity is immediately visible as a file, through the API, and in a serialized document.
 
@@ -169,6 +171,41 @@ This follows the established OPC UA extensible-container pattern (a container Ob
 ### 6.8 Collection ordering
 
 xRegistry `GROUPS`, resource and version collections are **unordered maps keyed by id**; the registry does not prescribe a stored order for their entries, and version order is conveyed by attributes (`ancestor`, `createdat`, `defaultversionid`), not by position. OPC UA correspondingly defines no ordered-collection interface, so this model uses none: the order in which a Browse returns a folder's members is server-defined and **not** significant. A client that needs a specific presentation order applies the xRegistry `?sort` hint itself, ordering the Browse results client-side by an attribute it reads (for example `VersionId` or `CreatedAt`). A server that requires a deterministic domain order MAY add its own index Property to the entities, but the base model does not mandate one.
+
+### 6.9 Entity identifiers and names
+
+**Source identity.** Every group and every resource has a **source identity**: the domain-defined string that names *what* the entity is — an OPC UA namespace URI, an authored asset identifier, a W3C Thing identifier, a DataType BrowseName. A domain companion specification **shall** name exactly one source identity for each of its group types and resource types and **shall** expose it verbatim as a Mandatory Property of that type. The source identity is the authoritative name of the entity; `GroupId` and `ResourceId` are the **symbolic identifiers** derived from it.
+
+**An identifier is never derived from a document.** `GroupId` and `ResourceId` **shall not** be derived from a resource document, or from any digest, fingerprint or hash of one. A resource is a stable umbrella over its versions, so its identifier is invariant while its document changes from version to version. A content fingerprint — the Schema Registry `SchemaId`, an artifact digest — is **version-level** metadata that identifies bytes, and is never an entity identifier.
+
+**Construction.** A `GroupId` or `ResourceId` **shall** be constructed from the entity's source identity as follows. The result is a dot-separated token that reads like a reverse-DNS symbol, for example `org.contoso.assets.pump`.
+
+1. Split the source identity into an *authority* and a *path*. For an absolute URI with an authority component the authority is the host, together with the port when one is present, and the path is the URI path; the scheme, userinfo, query and fragment are discarded. For a URN the authority is empty and the path is the URN split on `:`, so the leading `urn` survives as the first label and a URN never aliases a bare path. Otherwise the authority is empty and the path is the source identity split on `/`.
+2. Reverse the authority's `.`-separated labels — `contoso.org` becomes `org`, `contoso` — appending the port, where present, as a further label.
+3. Percent-decode each path segment and discard the empty ones.
+4. Normalize each label: replace every run of characters outside `A-Z a-z 0-9 _ . -` with a single `-`; collapse runs of `-` and runs of `.`; strip leading and trailing `-` and `.`; discard a label that becomes empty. Letter case is preserved.
+5. Join the surviving labels with `.`.
+6. If no label survives, the identifier is `_`. Step 4 guarantees that every surviving label begins with a letter, a digit or `_`, so the result always satisfies the xRegistry start-character rule.
+7. If the result is longer than 128 characters, drop trailing labels until it is at most 119 characters long, then append the disambiguator of step 8.
+8. Where step 7 truncated the result, or where the result would collide case-insensitively with an existing sibling in the same collection, append `.` followed by the first eight lower-case hexadecimal characters of the SHA-256 of the UTF-8 encoding of the **exact source identity**. The disambiguator is a function of the identity, not of any document, so it does not change when a new version is written.
+
+The output alphabet is `A-Z a-z 0-9 _ . -`, a strict subset of the characters xRegistry permits in a `<SINGULAR>id`, chosen so that one identifier is simultaneously safe in a URL, on a command line, and as a file name in the static-file-server representation (§4.2). `VersionId` is outside this construction: version identifiers follow the xRegistry version-id rules and are assigned by the registry.
+
+**Resolution is one-way.** The construction is lossy — distinct source identities can normalize to the same token, which is what step 8 resolves. A consumer that holds a source identity computes the identifier in closed form and confirms it by reading the entity's source-identity Property. A consumer that holds only an identifier resolves the entity by matching that Property within the collection. An implementation **shall not** attempt to recover a source identity by inverting the construction.
+
+**Name and DisplayName.** Every group and every resource **shall** expose a non-empty `Name`; where the source identity is itself readable, `Name` **shall** be the exact, unnormalized source identity. A server **shall** set each group's and resource's BrowseName to its identifier and its DisplayName to its `Name`, so a client that browses the registry with a generic OPC UA tool sees the symbolic identifier and the human-readable name without reading a single Property.
+
+Worked examples, using the source identities of the domain registries built on this base:
+
+| Source identity | Symbolic identifier | `Name` |
+|---|---|---|
+| `http://contoso.org/UA/Pumps/` | `org.contoso.UA.Pumps` | `http://contoso.org/UA/Pumps/` |
+| `http://opcfoundation.org/UA/` | `org.opcfoundation.UA` | `http://opcfoundation.org/UA/` |
+| `pump.usda` | `pump.usda` | `pump.usda` |
+| `textures/albedo.png` | `textures.albedo.png` | `textures/albedo.png` |
+| `pkg.usdz[tex/a.png]` | `pkg.usdz-tex.a.png` | `pkg.usdz[tex/a.png]` |
+| `urn:dev:ops:32473-pump-01` | `urn.dev.ops.32473-pump-01` | `Pump 01` |
+| `https://contoso.org/things/pump-01` | `org.contoso.things.pump-01` | `Pump 01` |
 
 ## 7 The xRegistry API over OPC UA
 
@@ -203,12 +240,13 @@ The conformance units below are testable against a Server. The `XREG` prefix is 
 | **XREG-Registry** (base) | Expose a `RegistryType` root that organizes its groups, with `SpecVersion` and the registry capabilities (§6.1). |
 | **XREG-Group** | Project each group as a `GroupType` folder organizing its resources, keyed by the group key (§6.2). |
 | **XREG-Resource** | Project each resource and version as a `ResourceType`, whose document **is** the file, read through the inherited `Open`/`Read`/`Close` (§5.1, §6.3). |
+| **XREG-Identity** | Give every group and resource a symbolic `GroupId` / `ResourceId` built from its source identity by the construction of §6.9, a non-empty `Name`, a BrowseName equal to the identifier and a DisplayName equal to the `Name`, and expose the source identity itself as a Mandatory Property. |
 | **XREG-Attributes** | Expose an entity's extensible attributes through `AttributesType`, added and removed with `AddAttribute`/`RemoveAttribute`, incrementing the owning entity's `Epoch` (§6.6). |
 | **XREG-Registration** | Create and delete groups, resources and versions through `CreateGroup`, `GetOrCreateGroup`, `CreateResource`, `GetOrCreateResource` and `Delete` (§5.2, §7). |
 | **XREG-Capabilities** | Populate `RegistryCapabilitiesDataType` so a Client can discover which optional capabilities the registry supports (§6.7). |
 | **XREG-Federation** | Resolve a resource the registry does not host through `ResourceUrl` / `ExternalReference` (§8). |
 
-`XREG-Registry`, `XREG-Group` and `XREG-Resource` together are the baseline; the rest are independently optional.
+`XREG-Registry`, `XREG-Group`, `XREG-Resource` and `XREG-Identity` together are the baseline; the rest are independently optional.
 
 ## 10 NodeSet validation
 
@@ -251,7 +289,7 @@ The abstract xRegistry root, expressed as a FolderType that organizes its Group 
 | CapabilitiesInfo | Variable | [RegistryCapabilitiesDataType](#type-RegistryCapabilitiesDataType) | Optional | RegistryType | The typed form of the registry capabilities (RegistryCapabilitiesDataType), read as a single Variant value, in addition to the raw JSON of the Capabilities FileType. |
 | Xid | Variable | String | Optional | RegistryType | xRegistry relative identifier (xid): the entity's stable path within the registry, independent of the hosting endpoint. |
 | Epoch | Variable | UInt32 | Optional | RegistryType | xRegistry epoch: a counter that increments on every change to the entity. |
-| Name | Variable | String | Optional | RegistryType | Human-readable name of the entity. |
+| Name | Variable | String | Optional | RegistryType | Human-readable name of the entity, and the source of its DisplayName. Where the entity's source identity is itself readable - a namespace URI, an authored asset identifier - Name is that identity verbatim, so a Client that shows only an identifier and a name still shows something a human recognizes. |
 | Description | Variable | String | Optional | RegistryType | Human-readable description of the entity. |
 | Documentation | Variable | String | Optional | RegistryType | URL to human-readable documentation for the entity. |
 | Labels | Object |  | Optional | RegistryType | The entity's extensible xRegistry labels/attributes, exposed as an AttributesType container: each label is a browsable PropertyType Variable, added and removed with the container's AddAttribute/RemoveAttribute Methods. Deleted together with the entity. |
@@ -271,10 +309,10 @@ An abstract xRegistry group, expressed as a FolderType that organizes its resour
 
 | BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
 |---|---|---|---|---|---|
-| GroupId | Variable | String | Mandatory | GroupType | xRegistry groupid: the stable identifier of this group. Group identifiers are globally unique for federation. |
+| GroupId | Variable | String | Mandatory | GroupType | xRegistry groupid: the symbolic identifier of this group, constructed from the group's source identity (the group key) by the reverse-authority construction of the specification. Group identifiers are globally unique for federation. |
 | Xid | Variable | String | Optional | GroupType | xRegistry relative identifier (xid): the entity's stable path within the registry, independent of the hosting endpoint. |
 | Epoch | Variable | UInt32 | Optional | GroupType | xRegistry epoch: a counter that increments on every change to the entity. |
-| Name | Variable | String | Optional | GroupType | Human-readable name of the entity. |
+| Name | Variable | String | Mandatory | GroupType | Human-readable name of the entity, and the source of its DisplayName. Where the entity's source identity is itself readable - a namespace URI, an authored asset identifier - Name is that identity verbatim, so a Client that shows only an identifier and a name still shows something a human recognizes. |
 | Description | Variable | String | Optional | GroupType | Human-readable description of the entity. |
 | Documentation | Variable | String | Optional | GroupType | URL to human-readable documentation for the entity. |
 | Labels | Object |  | Optional | GroupType | The entity's extensible xRegistry labels/attributes, exposed as an AttributesType container: each label is a browsable PropertyType Variable, added and removed with the container's AddAttribute/RemoveAttribute Methods. Deleted together with the entity. |
@@ -295,7 +333,7 @@ An abstract xRegistry resource/version whose document IS the file: the content i
 
 | BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
 |---|---|---|---|---|---|
-| ResourceId | Variable | String | Mandatory | ResourceType | xRegistry resourceid: the stable identifier of the resource within its group. |
+| ResourceId | Variable | String | Mandatory | ResourceType | xRegistry resourceid: the symbolic identifier of the resource within its group, constructed from the resource's source identity by the reverse-authority construction of the specification. It is never derived from the resource document or from a digest of it, so it is invariant across the resource's versions. |
 | VersionId | Variable | String | Optional | ResourceType | xRegistry versionid: the identifier of the version this file represents. |
 | Format | Variable | String | Optional | ResourceType | xRegistry format string identifying the document's schema language/shape. |
 | ContentType | Variable | String | Optional | ResourceType | Media type (content-type) of the document bytes. |
@@ -303,7 +341,7 @@ An abstract xRegistry resource/version whose document IS the file: the content i
 | ResourceUrl | Variable | String | Optional | ResourceType | Federation link (string form): the URL from which the document can be obtained (xRegistry <RESOURCE>url), for example an opc.tcp endpoint plus browse path, or an HTTP URL. |
 | Xid | Variable | String | Optional | ResourceType | xRegistry relative identifier (xid): the entity's stable path within the registry, independent of the hosting endpoint. |
 | Epoch | Variable | UInt32 | Optional | ResourceType | xRegistry epoch: a counter that increments on every change to the entity. |
-| Name | Variable | String | Optional | ResourceType | Human-readable name of the entity. |
+| Name | Variable | String | Mandatory | ResourceType | Human-readable name of the entity, and the source of its DisplayName. Where the entity's source identity is itself readable - a namespace URI, an authored asset identifier - Name is that identity verbatim, so a Client that shows only an identifier and a name still shows something a human recognizes. |
 | Description | Variable | String | Optional | ResourceType | Human-readable description of the entity. |
 | Documentation | Variable | String | Optional | ResourceType | URL to human-readable documentation for the entity. |
 | Labels | Object |  | Optional | ResourceType | The entity's extensible xRegistry labels/attributes, exposed as an AttributesType container: each label is a browsable PropertyType Variable, added and removed with the container's AddAttribute/RemoveAttribute Methods. Deleted together with the entity. |

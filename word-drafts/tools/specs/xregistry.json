@@ -21,8 +21,8 @@
     "capabilityIdentifier": "XREG",
     "namespaceUri": "http://opcfoundation.org/UA/xRegistry/",
     "namespaceIndexInDocument": 1,
-    "version": "0.2.0",
-    "publicationDate": "2026-07-29",
+    "version": "0.3.0",
+    "publicationDate": "2026-07-31",
     "releaseType": "Draft",
     "mantisProjectId": "<nnn>",
     "otherOrganization": "xRegistry project",
@@ -85,10 +85,11 @@
     {"from": "4.3 Minimal first — download is mandatory, everything else is optional", "number": "6.3", "title": "Minimal first"},
     {"from": "6 Information model",                      "number": "6.4",  "title": "Organisation of the model"},
     {"from": "6.4 Common xRegistry attributes",          "number": "6.5",  "title": "Common xRegistry attributes"},
-    {"from": "6.5 Auto-bootstrap",                       "number": "6.6",  "title": "Auto-bootstrap"},
-    {"from": "6.8 Collection ordering",                  "number": "6.7",  "title": "Collection ordering"},
-    {"from": "7 The xRegistry API over OPC UA",          "number": "6.8",  "title": "The xRegistry API over OPC UA"},
-    {"from": "8 Federation",                             "number": "6.9",  "title": "Federation"},
+    {"from": "6.9 Entity identifiers and names",         "number": "6.6",  "title": "Entity identifiers and names"},
+    {"from": "6.5 Auto-bootstrap",                       "number": "6.7",  "title": "Auto-bootstrap"},
+    {"from": "6.8 Collection ordering",                  "number": "6.8",  "title": "Collection ordering"},
+    {"from": "7 The xRegistry API over OPC UA",          "number": "6.9",  "title": "The xRegistry API over OPC UA"},
+    {"from": "8 Federation",                             "number": "6.10", "title": "Federation"},
 
     {"from": null,                                       "number": "7",    "title": "OPC UA ObjectTypes",                       "region": "objecttypes"},
     {"from": "6.1 RegistryType",                         "number": "7.1",  "title": "RegistryType",     "nodetable": "RegistryType"},
@@ -133,8 +134,8 @@
     "4.1": "6.1", "4.2": "6.2", "4.3": "6.3", "4": "6",
     "5.1": "5.1", "5.2": "5.2", "5.3": "5.3", "5": "5",
     "6.1": "7.1", "6.2": "7.2", "6.3": "7.3", "6.4": "6.5",
-    "6.5": "6.6", "6.6": "7.4", "6.7": "8", "6.8": "6.7", "6": "6.4",
-    "7": "6.8", "8": "6.9", "9": "9", "10": "A"
+    "6.5": "6.7", "6.6": "7.4", "6.7": "8", "6.8": "6.8", "6.9": "6.6", "6": "6.4",
+    "7": "6.9", "8": "6.10", "9": "9", "10": "A"
   },
 
   "figures": [

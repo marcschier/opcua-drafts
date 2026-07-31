@@ -50,27 +50,32 @@ Two attributes deliberately do **not** exist:
 of the model file, so the emitted document, the validator and the spec cannot
 drift apart.
 
-## Asset identifier &harr; `xid` (inter-derivable, §7.11.3)
+## Asset identifier &harr; `xid` (one-way construction, §7.11.3)
 
-The authored USD asset identifier and the xRegistry `xid` are **inter-derivable,
-not equal** — equating them would lose the authored `@...@` string a resolver
-needs:
+The authored USD asset identifier and the xRegistry `xid` are **derived one from
+the other, not equal** — equating them would lose the authored `@...@` string a
+resolver needs, and percent-encoding them would produce ids xRegistry forbids
+(a `<SINGULAR>id` admits only RFC 3986 *unreserved* characters plus `:` and `@`,
+so `textures%2Falbedo.png` is illegal):
 
 - `assetidentifier` = the **authored** asset identifier, normalized relative to
   its container (a leading `./` is stripped; sub-paths and package `[...]`
   selectors are kept). A `componentAssetReference` of `@pump.usda@</Pump>`
-  yields the identifier `pump.usda`.
-- `ResourceId` (the resource key, `usdassetid`) = the URL-safe **percent-encoding**
-  of the identifier — `pump.usda` stays `pump.usda`, while `textures/albedo.png`
-  would become `textures%2Falbedo.png`.
-- `xid` = `/<collection>/<usdassetgroupid>/usdassets/<ResourceId>`; the identifier
-  is recovered by percent-decoding the xid's last segment.
+  yields the identifier `pump.usda`. It is REQUIRED and it is the **authority**.
+- `ResourceId` (the resource key, `usdassetid`) = the **symbolic identifier** of
+  that identifier — `pump.usda` stays `pump.usda`, `textures/albedo.png` becomes
+  `textures.albedo.png`, and `pkg.usdz[tex/a.png]` becomes `pkg.usdz-tex.a.png`.
+- `name` = the `assetidentifier` verbatim, REQUIRED, so a person browsing the
+  registry with generic third-party tooling sees the string a layer authors.
+- `xid` = `/<collection>/<usdassetgroupid>/usdassets/<ResourceId>`.
 
 The build derives them **one-directionally** (identifier → ResourceId → xid), so
-they cannot diverge, and `validate_local.py` checks the round-trip
-(`unquote(ResourceId) == assetidentifier`) rather than equality. Emitting the
-*authored* identifier — not the xid — is what lets a connector cache each artifact
-at its authored relative path so USD `@...@` references resolve locally.
+they cannot diverge, and `validate_local.py` **re-derives** the ResourceId from
+`assetidentifier` through the same normative construction
+(`core-specs/extras/_common/opcua_enc/symbolic_id.py`) rather than inverting
+anything — the construction is lossy on purpose. Emitting the *authored*
+identifier — not the xid — is what lets a connector cache each artifact at its
+authored relative path so USD `@...@` references resolve locally.
 
 ## What is emitted
 
@@ -141,7 +146,8 @@ optionally uses `pxr` for the schema-registration check). Output is deterministi
 set, `AssetKind`, and `RootLayer` from the descriptors, and it re-scans each
 embedded document for `@...@` (rather than trusting `openusd.dependson`), so it
 catches an emitter that models the wrong closure — e.g. serving `live.usda`, or an
-authored reference missing from `dependson`. It also checks the identifier↔xid
-round-trip, `contenttype` vs `openusd.mediatype`, every `*count` field, recomputes
-each SHA-256 digest, and confirms `openusd.pluginname` equals the embedded
-manifest's `Plugins[0].Name`.
+authored reference missing from `dependson`. It also re-derives each `ResourceId`
+from the Resource's `assetidentifier` and asserts the xRegistry id grammar and a
+non-empty `name`, checks `contenttype` vs `openusd.mediatype`, every `*count`
+field, recomputes each SHA-256 digest, and confirms `openusd.pluginname` equals
+the embedded manifest's `Plugins[0].Name`.

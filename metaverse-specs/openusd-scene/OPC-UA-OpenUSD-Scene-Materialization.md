@@ -1,8 +1,8 @@
 # OPC UA for OpenUSD — Part 2: OpenUSD Scene Materialization
 
-**Release 0.4.0 — Draft**
+**Release 0.4.1 — Draft**
 **Namespace:** `http://opcfoundation.org/UA/OpenUSD/Scene/`
-**Publication date:** 2026-07-29
+**Publication date:** 2026-07-31
 
 > Status: Working-group draft. This document, together with `Opc.Ua.OpenUsdScene.NodeSet2.xml` and `Opc.Ua.OpenUsdScene.NodeIds.csv`, defines an OPC UA information model that **natively materializes the OpenUSD (Universal Scene Description) data model** — Stage, Prim, Attribute, Relationship, Metadata, Composition arcs, VariantSets, and typed/API schemas — as OPC UA ObjectTypes, VariableTypes, and DataTypes, so that a composed USD scene *is* an OPC UA address space: browsable, subscribable, historizable, and vendor-extensible with native OPC UA semantics. It is **Part 2** of the *OPC UA — OpenUSD* work and **extends** the Part 1 *OPC UA — OpenUSD Bindings* model without changing it. Nothing here is normative, official, or endorsed by the OPC Foundation or the Alliance for OpenUSD; namespace URIs and NodeIds are **provisional** and for prototyping only.
 
@@ -500,7 +500,7 @@ Part 2 is additive and self-contained, but designed to interoperate with Part 1:
 - **Binding source.** A Part 2 attribute may be the **source** a Part 1 binding reads (e.g. to mirror the materialized scene onto an external stage).
 - **Discovery.** A materialized `UsdStageType` may be organized under Part 1's `Server/OpenUSD/Stages`, so one connector discovers both the external-stage bindings and the in-server materialized stages.
 - **Identity.** A Part 1 `OpenUsdRepresentation.PrimPath` and a Part 2 prim node identify the same prim on the same stage, so a client can pivot from an OPC UA domain Object (Pump, Robot axis) to its materialized prim and back.
-- **Artifacts.** Part 1 serves USD content from an **xRegistry artifact registry** at `Server/OpenUSD/Artifacts` (Part 1 §7.11). Part 2 does **not** take that dependency: it is base-UA-only and reaches the registry only *indirectly*, when a Server implements both. Where it does, a materialized stage's `RootLayerIdentifier` (§7.1) is the asset identifier of the registry artifact whose `AssetKind` is `RootLayer` — and because Part 1 makes an artifact's registry `ResourceId` the URL-safe encoding of that identifier (Part 1 §7.11.3), the stage's authored bytes are located by computation rather than by search. A Part 2 Server with no Part 1 registry treats `RootLayerIdentifier` as an opaque provenance string.
+- **Artifacts.** Part 1 serves USD content from an **xRegistry artifact registry** at `Server/OpenUSD/Artifacts` (Part 1 §7.11). Part 2 does **not** take that dependency: it is base-UA-only and reaches the registry only *indirectly*, when a Server implements both. Where it does, a materialized stage's `RootLayerIdentifier` (§7.1) is the asset identifier of the registry artifact whose `AssetKind` is `RootLayer` — and because Part 1 builds an artifact's registry `ResourceId` from that identifier by a deterministic, closed-form construction (Part 1 §7.11.3), the stage's authored bytes are located by computation rather than by search. The construction is one-way, so a client confirms the artifact it reached by reading its `AssetIdentifier`. A Part 2 Server with no Part 1 registry treats `RootLayerIdentifier` as an opaque provenance string.
 - **Who drives Mode A.** A Part 1 *connector* authors into a USD sink and cannot write an in-server Variable; driving a materialized attribute's `Value` (§6.8 Mode A) is therefore a **Server-side** responsibility — a Part 1 binding declares the mapping, the Server (or a server-hosted connector) applies it.
 
 Neither model requires the other; a Server may implement either alone.

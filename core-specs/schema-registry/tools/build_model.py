@@ -193,6 +193,7 @@ CAT_INST = "Schema Registry Instances"
 # are never emitted as <Category>. The units below are the capabilities clause 12 of the
 # specification already distinguishes.
 CU_DOWNLOAD = "SREG-SchemaDownload"
+CU_IDENTITY = "SREG-Identity"
 CU_REGISTRATION = "SREG-SchemaRegistration"
 CU_VERSIONING = "SREG-SchemaVersioning"
 CU_TTL_MIRROR = "SREG-TtlMirror"
@@ -204,14 +205,14 @@ CU_PUBSUB = "SREG-PubSubProfile"
 # Every unit, in the order the conformance clause lists them. The document and this table
 # have to agree, or the check that each emitted unit is named in the clause is circular.
 ALL_CONFORMANCE_UNITS = (
-    CU_DOWNLOAD, CU_REGISTRATION, CU_VERSIONING, CU_TTL_MIRROR, CU_MATERIALIZATION,
-    CU_XREGISTRY_API, CU_FEDERATION, CU_PUBSUB,
+    CU_DOWNLOAD, CU_IDENTITY, CU_REGISTRATION, CU_VERSIONING, CU_TTL_MIRROR,
+    CU_MATERIALIZATION, CU_XREGISTRY_API, CU_FEDERATION, CU_PUBSUB,
 )
 
 UNITS_BY_NAME = {
     "SchemaRegistryType": (CU_DOWNLOAD, CU_MATERIALIZATION, CU_XREGISTRY_API),
-    "SchemaGroupType": (CU_DOWNLOAD, CU_MATERIALIZATION),
-    "SchemaFileType": (CU_DOWNLOAD, CU_VERSIONING, CU_TTL_MIRROR),
+    "SchemaGroupType": (CU_DOWNLOAD, CU_IDENTITY, CU_MATERIALIZATION),
+    "SchemaFileType": (CU_DOWNLOAD, CU_IDENTITY, CU_VERSIONING, CU_TTL_MIRROR),
     "SchemaRegistry": (CU_DOWNLOAD,),
 }
 
@@ -248,7 +249,7 @@ gs_type = method(62000, SR, "GetSchema",
        outargs=[("Document", ByteString, "Schema document bytes."), ("Format", String, "xRegistry format string."), ("ContentType", String, "Schema document media type.")])
 
 SG = "SchemaGroupType"
-prop_var(62001, SG, "NamespaceUri", String, "The OPC UA namespace URI represented by this schema group (the xRegistry group key).", rule=MR_Mandatory)
+prop_var(62001, SG, "NamespaceUri", String, "The OPC UA namespace URI represented by this schema group (the xRegistry group key). It is the group's source identity: the GroupId is the symbolic identifier constructed from it, and Name is this URI verbatim.", rule=MR_Mandatory)
 placeholder_obj(62001, SG, "<Schema>", T(62002), "A schema file (one DataType/DataSet in one format) held by this group.")
 
 SF = "SchemaFileType"
@@ -275,10 +276,20 @@ instance_method(62100, "SchemaRegistry", "GetSchema", gs_type,
        inargs=[("SchemaId", ByteString, "Raw on-wire SchemaId fingerprint bytes.")],
        outargs=[("Document", ByteString, "Schema document bytes."), ("Format", String, "xRegistry format string."), ("ContentType", String, "Schema document media type.")])
 
+# Appended members take the next free member id at the end of the declaration order, so
+# adding one never renumbers an existing node. SchemaName belongs to SchemaFileType and is
+# rendered with that type's members in Annex A regardless of where it is declared here.
+prop_var(62002, SF, "SchemaName", String,
+         "The name of the subject this schema describes - the DataType BrowseName for a reference DataType schema, "
+         "or the DataSetName for a PubSub DataSet schema. Together with Format it is the schema's source identity: "
+         "the ResourceId is the symbolic identifier constructed from the pair, and it is invariant across the "
+         "schema's versions. It is not the SchemaId, which fingerprints one version's document bytes.",
+         rule=MR_Mandatory)
+
 # Emission
 NAMESPACE = "http://opcfoundation.org/UA/SchemaRegistry/"
-VERSION = "0.2.0"
-PUBDATE = "2026-07-16T00:00:00Z"
+VERSION = "0.3.0"
+PUBDATE = "2026-07-31T00:00:00Z"
 ALIASES = [
     ("Boolean", Boolean), ("UInt32", UInt32), ("String", String), ("DateTime", DateTime),
     ("ByteString", ByteString), ("Duration", Duration), ("Argument", Argument),
@@ -337,7 +348,7 @@ def emit():
            '  <NamespaceUris>', '    <Uri>http://opcfoundation.org/UA/xRegistry/</Uri>', f'    <Uri>{NAMESPACE}</Uri>', '  </NamespaceUris>',
            '  <Models>', f'    <Model ModelUri="{NAMESPACE}" Version="{VERSION}" PublicationDate="{PUBDATE}">',
            '      <RequiredModel ModelUri="http://opcfoundation.org/UA/" Version="1.05.04" PublicationDate="2024-05-01T00:00:00Z" />',
-           '      <RequiredModel ModelUri="http://opcfoundation.org/UA/xRegistry/" Version="0.1.0" PublicationDate="2026-07-16T00:00:00Z" />',
+           '      <RequiredModel ModelUri="http://opcfoundation.org/UA/xRegistry/" Version="0.3.0" PublicationDate="2026-07-31T00:00:00Z" />',
            '    </Model>', '  </Models>', '  <Aliases>']
     for name, val in ALIASES:
         out.append(f'    <Alias Alias="{name}">{val}</Alias>')
@@ -487,6 +498,26 @@ def emit_md():
     md.append('')
     return "\n".join(md) + "\n"
 
+
+def inject(path, rendered):
+    """Replace the embedded Annex A in a specification document.
+
+    The annex runs from the ``annex-a`` anchor to the next ``## Annex`` heading, so the
+    document cannot drift from the model: it is the same text ``model-reference.md``
+    holds, and `validate_local.py` checks the two are equal.
+    """
+    with open(path, encoding="utf-8") as f:
+        text = f.read()
+    start = text.index('<a id="annex-a"></a>')
+    finish = text.index("\n## Annex ", text.index("## Annex A")) + 1
+    new_text = text[:start] + rendered.rstrip("\n") + "\n\n" + text[finish:]
+    if new_text != text:
+        with open(path, "w", encoding="utf-8", newline="\n") as f:
+            f.write(new_text)
+        return True
+    return False
+
+
 if __name__ == "__main__":
     here = os.path.dirname(os.path.abspath(__file__))
     outdir = os.path.dirname(here)
@@ -494,8 +525,11 @@ if __name__ == "__main__":
         f.write(emit())
     with open(os.path.join(outdir, "Opc.Ua.SchemaRegistry.NodeIds.csv"), "w", encoding="utf-8") as f:
         f.write(emit_csv())
+    annex = emit_md()
     with open(os.path.join(here, "model-reference.md"), "w", encoding="utf-8") as f:
-        f.write(emit_md())
+        f.write(annex)
+    if inject(os.path.join(outdir, "OPC-UA-Schema-Registry.md"), annex):
+        print("Injected Annex A into OPC-UA-Schema-Registry.md")
     nt = sum(1 for k in NODES if NODES[k].cls in ("UAObjectType", "UADataType", "UAReferenceType"))
     print(f"Nodes: {len(NODES)}  (types: {nt})")
     print(f"Member id range: 62500..{_next_member[0] - 1}")

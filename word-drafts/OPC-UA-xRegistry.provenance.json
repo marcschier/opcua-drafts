@@ -1,7 +1,7 @@
 {
   "specId": "xregistry",
-  "sourceCommit": "ce5462058a4dc5bd027fb3616a0a00fc9f852224",
-  "sourceDigest": "ee4739b6224502c7",
+  "sourceCommit": "beeaf348ffeb8e67387dc5c60ca427ba7bea1973",
+  "sourceDigest": "a4716fc2679e89b5",
   "pipelineVersion": "2",
   "sources": [
     "word-drafts/tools/specs/xregistry.json",
@@ -102,15 +102,15 @@
     "011DA4C9": {
       "owner": "template"
     },
-    "01331C1B": {
-      "owner": "template"
-    },
     "0136A114": {
       "owner": "generated",
       "region": "objecttypes",
       "index": 10,
       "kind": "nodetable",
       "para": 21
+    },
+    "01426869": {
+      "owner": "template"
     },
     "0149848B": {
       "owner": "generated",
@@ -140,6 +140,9 @@
       "kind": "methodtable",
       "para": 13
     },
+    "01644391": {
+      "owner": "template"
+    },
     "016FF612": {
       "owner": "generated",
       "region": "objecttypes",
@@ -163,9 +166,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 203
-    },
-    "01B22933": {
-      "owner": "template"
     },
     "01BE6437": {
       "owner": "generated",
@@ -221,6 +221,9 @@
       "index": 3,
       "kind": "nodetable",
       "para": 100
+    },
+    "020958DB": {
+      "owner": "template"
     },
     "02182C9B": {
       "owner": "generated",
@@ -297,11 +300,15 @@
       "kind": "nodetable",
       "para": 261
     },
-    "02CA770A": {
-      "owner": "template"
-    },
     "02DE6729": {
       "owner": "template"
+    },
+    "02FC67B9": {
+      "owner": "markdown",
+      "file": "core-specs/xregistry/OPC-UA-xRegistry.md",
+      "section": "9 Conformance",
+      "block": 3,
+      "para": 18
     },
     "02FEE766": {
       "owner": "markdown",
@@ -408,9 +415,6 @@
       "kind": "nodetable",
       "para": 12
     },
-    "041C10C9": {
-      "owner": "template"
-    },
     "04209087": {
       "owner": "template"
     },
@@ -442,15 +446,19 @@
       "kind": "nodetable",
       "para": 2
     },
-    "046B999C": {
-      "owner": "template"
-    },
     "0480611E": {
       "owner": "generated",
       "region": "objecttypes",
       "index": 3,
       "kind": "nodetable",
       "para": 110
+    },
+    "048BD11C": {
+      "owner": "markdown",
+      "file": "core-specs/xregistry/OPC-UA-xRegistry.md",
+      "section": "6.9 Entity identifiers and names",
+      "block": 8,
+      "para": 23
     },
     "04927833": {
       "owner": "generated",
@@ -479,6 +487,9 @@
       "index": 5,
       "kind": "nodetable",
       "para": 21
+    },
+    "04E60DA3": {
+      "owner": "template"
     },
     "04F2E4A4": {
       "owner": "generated",
@@ -574,6 +585,13 @@
       "index": 14,
       "kind": "methodtable",
       "para": 15
+    },
+    "05EE78EC": {
+      "owner": "markdown",
+      "file": "core-specs/xregistry/OPC-UA-xRegistry.md",
+      "section": "6.9 Entity identifiers and names",
+      "block": 3,
+      "para": 2
     },
     "05F19A8B": {
       "owner": "generated",
@@ -713,6 +731,16 @@
     "073912CF": {
       "owner": "template"
     },
+    "0762603D": {
+      "owner": "template"
+    },
+    "076E6824": {
+      "owner": "generated",
+      "region": "terms",
+      "index": 17,
+      "kind": "term",
+      "para": 1
+    },
     "077D6A62": {
       "owner": "generated",
       "region": "objecttypes",
@@ -765,9 +793,6 @@
     "080CB70E": {
       "owner": "template"
     },
-    "080F8E35": {
-      "owner": "template"
-    },
     "082E62E3": {
       "owner": "template"
     },
@@ -795,9 +820,6 @@
       "kind": "methodtable",
       "para": 48
     },
-    "0852D10A": {
-      "owner": "template"
-    },
     "085CAD52": {
       "owner": "template"
     },
@@ -822,6 +844,9 @@
       "owner": "template"
     },
     "08A4DE78": {
+      "owner": "template"
+    },
+    "08A5CA2F": {
       "owner": "template"
     },
     "08AB408A": {
@@ -892,9 +917,6 @@
       "block": 2,
       "para": 1
     },
-    "0942A7EE": {
-      "owner": "template"
-    },
     "0945DF10": {
       "owner": "generated",
       "region": "objecttypes",
@@ -916,9 +938,6 @@
       "kind": "nodetable",
       "para": 75
     },
-    "097C3096": {
-      "owner": "template"
-    },
     "097E96E7": {
       "owner": "template"
     },
@@ -929,8 +948,12 @@
       "kind": "nodetable",
       "para": 55
     },
-    "09B65581": {
-      "owner": "template"
+    "09CD1067": {
+      "owner": "markdown",
+      "file": "core-specs/xregistry/OPC-UA-xRegistry.md",
+      "section": "6.9 Entity identifiers and names",
+      "block": 8,
+      "para": 13
     },
     "09E306DA": {
       "owner": "template"
@@ -1035,6 +1058,9 @@
       "kind": "nodetable",
       "para": 87
     },
+    "0AA0EFCA": {
+      "owner": "template"
+    },
     "0AA593F4": {
       "owner": "template"
     },
@@ -1047,9 +1073,6 @@
       "index": 12,
       "kind": "methodtable",
       "para": 36
-    },
-    "0ADA0CB6": {
-      "owner": "template"
     },
     "0AE44794": {
       "owner": "template"
@@ -1183,15 +1206,15 @@
       "block": 1,
       "para": 8
     },
+    "0C43CA17": {
+      "owner": "template"
+    },
     "0C4DECE8": {
       "owner": "generated",
       "region": "objecttypes",
       "index": 14,
       "kind": "methodtable",
       "para": 18
-    },
-    "0C51E345": {
-      "owner": "template"
     },
     "0C5DAF59": {
       "owner": "generated",
@@ -1223,6 +1246,13 @@
       "index": 0,
       "kind": "nodetable",
       "para": 258
+    },
+    "0D28731A": {
+      "owner": "markdown",
+      "file": "core-specs/xregistry/OPC-UA-xRegistry.md",
+      "section": "6.9 Entity identifiers and names",
+      "block": 8,
+      "para": 4
     },
     "0D30C1E6": {
       "owner": "generated",
@@ -1301,9 +1331,6 @@
       "kind": "methodtable",
       "para": 25
     },
-    "0DD8B19B": {
-      "owner": "template"
-    },
     "0DDEA788": {
       "owner": "generated",
       "region": "objecttypes",
@@ -1363,9 +1390,6 @@
       "kind": "nodetable",
       "para": 214
     },
-    "0E84A62E": {
-      "owner": "template"
-    },
     "0E9752BF": {
       "owner": "template"
     },
@@ -1413,9 +1437,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 262
-    },
-    "0F248D71": {
-      "owner": "template"
     },
     "0F2E4164": {
       "owner": "template"
@@ -1584,6 +1605,9 @@
       "block": 0,
       "para": 0
     },
+    "110C87C4": {
+      "owner": "template"
+    },
     "11174498": {
       "owner": "generated",
       "region": "annex-a",
@@ -1680,9 +1704,6 @@
       "kind": "nodetable",
       "para": 62
     },
-    "11E7EB82": {
-      "owner": "template"
-    },
     "11ECBF11": {
       "owner": "markdown",
       "file": "core-specs/xregistry/OPC-UA-xRegistry.md",
@@ -1734,9 +1755,6 @@
     "127E3B0E": {
       "owner": "template"
     },
-    "128D5889": {
-      "owner": "template"
-    },
     "12B3EDF4": {
       "owner": "generated",
       "region": "annex-a",
@@ -1786,6 +1804,9 @@
       "owner": "template"
     },
     "12E0A160": {
+      "owner": "template"
+    },
+    "12FED112": {
       "owner": "template"
     },
     "1310E9FD": {
@@ -1952,9 +1973,6 @@
       "block": 3,
       "para": 17
     },
-    "14C8EA84": {
-      "owner": "template"
-    },
     "14CC40EE": {
       "owner": "generated",
       "region": "objecttypes",
@@ -1968,6 +1986,9 @@
       "index": 0,
       "kind": "nodetable",
       "para": 183
+    },
+    "14F1A757": {
+      "owner": "template"
     },
     "151B97C7": {
       "owner": "template"
@@ -2005,6 +2026,13 @@
       "index": 16,
       "kind": "methodtable",
       "para": 25
+    },
+    "155504CB": {
+      "owner": "generated",
+      "region": "terms",
+      "index": 16,
+      "kind": "term",
+      "para": 0
     },
     "15627D31": {
       "owner": "generated",
@@ -2060,6 +2088,9 @@
       "index": 12,
       "kind": "methodtable",
       "para": 9
+    },
+    "15AD7A37": {
+      "owner": "template"
     },
     "15BC39F8": {
       "owner": "markdown",
@@ -2147,18 +2178,15 @@
       "kind": "nodetable",
       "para": 24
     },
+    "167A84C6": {
+      "owner": "template"
+    },
     "168017D6": {
       "owner": "markdown",
       "file": "core-specs/xregistry/OPC-UA-xRegistry.md",
       "section": "9 Conformance",
       "block": 3,
       "para": 1
-    },
-    "16A360E5": {
-      "owner": "template"
-    },
-    "16A3D20E": {
-      "owner": "template"
     },
     "16A5897F": {
       "owner": "template"
@@ -2183,6 +2211,9 @@
       "index": 16,
       "kind": "methodtable",
       "para": 3
+    },
+    "16BE69CE": {
+      "owner": "template"
     },
     "16CBA155": {
       "owner": "template"
@@ -2367,6 +2398,13 @@
       "block": 3,
       "para": 10
     },
+    "18345735": {
+      "owner": "markdown",
+      "file": "core-specs/xregistry/OPC-UA-xRegistry.md",
+      "section": "6.9 Entity identifiers and names",
+      "block": 8,
+      "para": 11
+    },
     "1840B42A": {
       "owner": "generated",
       "region": "objecttypes",
@@ -2383,9 +2421,6 @@
       "index": 3,
       "kind": "nodetable",
       "para": 27
-    },
-    "18562AAE": {
-      "owner": "template"
     },
     "186917D6": {
       "owner": "generated",
@@ -2463,9 +2498,6 @@
       "kind": "methodtable",
       "para": 7
     },
-    "1914A978": {
-      "owner": "template"
-    },
     "192F0C54": {
       "owner": "generated",
       "region": "objecttypes",
@@ -2499,6 +2531,13 @@
       "section": "6.5 Auto-bootstrap",
       "block": 1,
       "para": 3
+    },
+    "1966D974": {
+      "owner": "generated",
+      "region": "objecttypes",
+      "index": 19,
+      "kind": "nodetable",
+      "para": 108
     },
     "196CFA4B": {
       "owner": "generated",
@@ -2540,6 +2579,9 @@
       "index": 7,
       "kind": "methodtable",
       "para": 6
+    },
+    "198EFB47": {
+      "owner": "template"
     },
     "19C01F40": {
       "owner": "generated",
@@ -2599,6 +2641,20 @@
     "1A3EE2CD": {
       "owner": "template"
     },
+    "1A5A6E97": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 27,
+      "kind": "clause",
+      "para": 0
+    },
+    "1A5A9257": {
+      "owner": "markdown",
+      "file": "core-specs/xregistry/OPC-UA-xRegistry.md",
+      "section": "6.9 Entity identifiers and names",
+      "block": 8,
+      "para": 1
+    },
     "1A616F0C": {
       "owner": "generated",
       "region": "objecttypes",
@@ -2626,6 +2682,13 @@
     "1A9D843F": {
       "owner": "template"
     },
+    "1AB86CB4": {
+      "owner": "markdown",
+      "file": "core-specs/xregistry/OPC-UA-xRegistry.md",
+      "section": "6.9 Entity identifiers and names",
+      "block": 8,
+      "para": 6
+    },
     "1AB99EF8": {
       "owner": "generated",
       "region": "objecttypes",
@@ -2646,6 +2709,9 @@
       "index": 0,
       "kind": "nodetable",
       "para": 175
+    },
+    "1AC6C046": {
+      "owner": "template"
     },
     "1ADD5413": {
       "owner": "generated",
@@ -2672,6 +2738,9 @@
       "owner": "template"
     },
     "1B43258F": {
+      "owner": "template"
+    },
+    "1B525B7A": {
       "owner": "template"
     },
     "1B7273AA": {
@@ -2742,6 +2811,9 @@
     "1C8AE963": {
       "owner": "template"
     },
+    "1C9C176C": {
+      "owner": "template"
+    },
     "1C9E1362": {
       "owner": "template"
     },
@@ -2785,6 +2857,9 @@
     "1D3A5723": {
       "owner": "template"
     },
+    "1D4AA1FF": {
+      "owner": "template"
+    },
     "1D4B3B69": {
       "owner": "generated",
       "region": "objecttypes",
@@ -2825,6 +2900,13 @@
     },
     "1DA69E48": {
       "owner": "template"
+    },
+    "1DB15011": {
+      "owner": "markdown",
+      "file": "core-specs/xregistry/OPC-UA-xRegistry.md",
+      "section": "6.9 Entity identifiers and names",
+      "block": 8,
+      "para": 5
     },
     "1E00EB1E": {
       "owner": "generated",
@@ -2887,16 +2969,6 @@
     "1E6714A6": {
       "owner": "template"
     },
-    "1E680A0C": {
-      "owner": "template"
-    },
-    "1E73E261": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 26,
-      "kind": "clause",
-      "para": 0
-    },
     "1E8E2FF3": {
       "owner": "template"
     },
@@ -2942,6 +3014,13 @@
       "kind": "nodetable",
       "para": 28
     },
+    "1ED589ED": {
+      "owner": "markdown",
+      "file": "core-specs/xregistry/OPC-UA-xRegistry.md",
+      "section": "6.9 Entity identifiers and names",
+      "block": 3,
+      "para": 0
+    },
     "1EFA182E": {
       "owner": "generated",
       "region": "objecttypes",
@@ -2970,9 +3049,6 @@
       "kind": "nodetable",
       "para": 234
     },
-    "1F4034B8": {
-      "owner": "template"
-    },
     "1F484298": {
       "owner": "generated",
       "region": "objecttypes",
@@ -2987,6 +3063,9 @@
       "kind": "nodetable",
       "para": 34
     },
+    "1F537D15": {
+      "owner": "template"
+    },
     "1F547E0D": {
       "owner": "generated",
       "region": "objecttypes",
@@ -2997,7 +3076,7 @@
     "1F62A62C": {
       "owner": "template"
     },
-    "1F9C4DC2": {
+    "1FAC9D90": {
       "owner": "template"
     },
     "1FAD921F": {
@@ -3012,6 +3091,13 @@
     },
     "1FD7F26C": {
       "owner": "template"
+    },
+    "1FDCE21E": {
+      "owner": "markdown",
+      "file": "core-specs/xregistry/OPC-UA-xRegistry.md",
+      "section": "6.9 Entity identifiers and names",
+      "block": 8,
+      "para": 14
     },
     "1FEE625D": {
       "owner": "generated",
@@ -3044,21 +3130,11 @@
       "block": 1,
       "para": 1
     },
-    "20203457": {
-      "owner": "template"
-    },
     "204241BF": {
       "owner": "template"
     },
     "207494B6": {
       "owner": "template"
-    },
-    "207B1722": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 23,
-      "kind": "clause",
-      "para": 0
     },
     "2083F9D4": {
       "owner": "generated",
@@ -3081,9 +3157,6 @@
       "block": 3,
       "para": 12
     },
-    "20C9E6B7": {
-      "owner": "template"
-    },
     "20D34ECE": {
       "owner": "generated",
       "region": "objecttypes",
@@ -3097,6 +3170,13 @@
       "index": 7,
       "kind": "methodtable",
       "para": 11
+    },
+    "20E8F66D": {
+      "owner": "markdown",
+      "file": "core-specs/xregistry/OPC-UA-xRegistry.md",
+      "section": "6.9 Entity identifiers and names",
+      "block": 0,
+      "para": 0
     },
     "21025AEF": {
       "owner": "generated",
@@ -3118,6 +3198,12 @@
       "kind": "methodtable",
       "para": 37
     },
+    "21A7A245": {
+      "owner": "template"
+    },
+    "21AAEA16": {
+      "owner": "template"
+    },
     "21C7A4D8": {
       "owner": "markdown",
       "file": "core-specs/xregistry/OPC-UA-xRegistry.md",
@@ -3135,6 +3221,9 @@
       "kind": "nodetable",
       "para": 9
     },
+    "21EDB7FD": {
+      "owner": "template"
+    },
     "2205FE8E": {
       "owner": "template"
     },
@@ -3143,6 +3232,13 @@
     },
     "223374EF": {
       "owner": "template"
+    },
+    "224335C7": {
+      "owner": "markdown",
+      "file": "core-specs/xregistry/OPC-UA-xRegistry.md",
+      "section": "6.9 Entity identifiers and names",
+      "block": 8,
+      "para": 25
     },
     "224F132C": {
       "owner": "generated",
@@ -3224,6 +3320,9 @@
     "230DCC23": {
       "owner": "template"
     },
+    "23232621": {
+      "owner": "template"
+    },
     "232468F9": {
       "owner": "template"
     },
@@ -3234,8 +3333,12 @@
       "block": 1,
       "para": 3
     },
-    "235E6316": {
-      "owner": "template"
+    "2344AB98": {
+      "owner": "markdown",
+      "file": "core-specs/xregistry/OPC-UA-xRegistry.md",
+      "section": "6.9 Entity identifiers and names",
+      "block": 3,
+      "para": 6
     },
     "23644D95": {
       "owner": "generated",
@@ -3250,6 +3353,9 @@
       "index": 4,
       "kind": "table",
       "para": 3
+    },
+    "239013F3": {
+      "owner": "template"
     },
     "23A594F1": {
       "owner": "template"
@@ -3322,9 +3428,6 @@
       "index": 10,
       "kind": "nodetable",
       "para": 17
-    },
-    "2439A681": {
-      "owner": "template"
     },
     "2446B637": {
       "owner": "generated",
@@ -3436,9 +3539,6 @@
       "kind": "nodetable",
       "para": 97
     },
-    "2566378E": {
-      "owner": "template"
-    },
     "257366B6": {
       "owner": "generated",
       "region": "objecttypes",
@@ -3463,12 +3563,6 @@
     "2582E86B": {
       "owner": "template"
     },
-    "258399D0": {
-      "owner": "template"
-    },
-    "25BE1EF5": {
-      "owner": "template"
-    },
     "25DB5BA6": {
       "owner": "template"
     },
@@ -3478,6 +3572,9 @@
       "index": 0,
       "kind": "nodetable",
       "para": 93
+    },
+    "25F6968A": {
+      "owner": "template"
     },
     "260E8A88": {
       "owner": "generated",
@@ -3502,6 +3599,13 @@
       "index": 0,
       "kind": "nodetable",
       "para": 133
+    },
+    "2633A7AC": {
+      "owner": "markdown",
+      "file": "core-specs/xregistry/OPC-UA-xRegistry.md",
+      "section": "6.9 Entity identifiers and names",
+      "block": 8,
+      "para": 18
     },
     "2645C4A6": {
       "owner": "generated",
@@ -3703,6 +3807,9 @@
     "28AAC82D": {
       "owner": "template"
     },
+    "28C13296": {
+      "owner": "template"
+    },
     "28C7200B": {
       "owner": "generated",
       "region": "objecttypes",
@@ -3716,6 +3823,13 @@
       "index": 12,
       "kind": "methodtable",
       "para": 4
+    },
+    "28EF7F54": {
+      "owner": "markdown",
+      "file": "core-specs/xregistry/OPC-UA-xRegistry.md",
+      "section": "6.9 Entity identifiers and names",
+      "block": 8,
+      "para": 15
     },
     "28F285F5": {
       "owner": "template"
@@ -3742,9 +3856,6 @@
       "para": 11
     },
     "29283343": {
-      "owner": "template"
-    },
-    "292CAC2E": {
       "owner": "template"
     },
     "2930A690": {
@@ -3798,6 +3909,16 @@
       "kind": "methodtable",
       "para": 2
     },
+    "29AFE66B": {
+      "owner": "markdown",
+      "file": "core-specs/xregistry/OPC-UA-xRegistry.md",
+      "section": "6.9 Entity identifiers and names",
+      "block": 6,
+      "para": 0
+    },
+    "29B7D3C4": {
+      "owner": "template"
+    },
     "29BED0B2": {
       "owner": "generated",
       "region": "annex-a",
@@ -3812,6 +3933,9 @@
       "owner": "template"
     },
     "2A05D067": {
+      "owner": "template"
+    },
+    "2A0740F3": {
       "owner": "template"
     },
     "2A15895C": {
@@ -3889,9 +4013,6 @@
       "kind": "methodtable",
       "para": 2
     },
-    "2AE33BCE": {
-      "owner": "template"
-    },
     "2AF4A066": {
       "owner": "generated",
       "region": "objecttypes",
@@ -3947,6 +4068,9 @@
       "kind": "nodetable",
       "para": 109
     },
+    "2B3B3E03": {
+      "owner": "template"
+    },
     "2B414E6B": {
       "owner": "generated",
       "region": "annex-a",
@@ -3960,6 +4084,9 @@
       "index": 0,
       "kind": "nodetable",
       "para": 134
+    },
+    "2B4CB7C6": {
+      "owner": "template"
     },
     "2B7EE57F": {
       "owner": "template"
@@ -3998,6 +4125,9 @@
       "kind": "methodtable",
       "para": 38
     },
+    "2BA721FD": {
+      "owner": "template"
+    },
     "2BB0FE31": {
       "owner": "generated",
       "region": "objecttypes",
@@ -4035,9 +4165,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 174
-    },
-    "2C457F58": {
-      "owner": "template"
     },
     "2C473754": {
       "owner": "template"
@@ -4118,6 +4245,9 @@
       "kind": "methodtable",
       "para": 27
     },
+    "2CFB7C23": {
+      "owner": "template"
+    },
     "2D1C4F1B": {
       "owner": "template"
     },
@@ -4152,6 +4282,9 @@
       "kind": "nodetable",
       "para": 8
     },
+    "2D7FA535": {
+      "owner": "template"
+    },
     "2D85298B": {
       "owner": "template"
     },
@@ -4164,6 +4297,9 @@
       "index": 0,
       "kind": "nodetable",
       "para": 100
+    },
+    "2DD2CA20": {
+      "owner": "template"
     },
     "2E201E83": {
       "owner": "template"
@@ -4244,7 +4380,7 @@
       "kind": "clause",
       "para": 0
     },
-    "2EF0BAD5": {
+    "2EF194CB": {
       "owner": "template"
     },
     "2EF6D072": {
@@ -4255,6 +4391,9 @@
       "para": 33
     },
     "2EF89FA3": {
+      "owner": "template"
+    },
+    "2EF943B4": {
       "owner": "template"
     },
     "2F11300E": {
@@ -4342,13 +4481,13 @@
       "kind": "nodetable",
       "para": 70
     },
-    "3003B3C7": {
-      "owner": "template"
-    },
     "300C41E9": {
       "owner": "template"
     },
     "300CB483": {
+      "owner": "template"
+    },
+    "300DDFE7": {
       "owner": "template"
     },
     "302680DD": {
@@ -4415,10 +4554,14 @@
       "kind": "nodetable",
       "para": 45
     },
-    "31219329": {
-      "owner": "template"
+    "31112A1D": {
+      "owner": "markdown",
+      "file": "core-specs/xregistry/OPC-UA-xRegistry.md",
+      "section": "6.9 Entity identifiers and names",
+      "block": 2,
+      "para": 0
     },
-    "313870E9": {
+    "31219329": {
       "owner": "template"
     },
     "31546638": {
@@ -4441,6 +4584,13 @@
       "index": 16,
       "kind": "methodtable",
       "para": 1
+    },
+    "31792B29": {
+      "owner": "markdown",
+      "file": "core-specs/xregistry/OPC-UA-xRegistry.md",
+      "section": "6.9 Entity identifiers and names",
+      "block": 8,
+      "para": 0
     },
     "318F6F9D": {
       "owner": "template"
@@ -4469,9 +4619,6 @@
       "kind": "para",
       "para": 0
     },
-    "31D620ED": {
-      "owner": "template"
-    },
     "31EFE170": {
       "owner": "generated",
       "region": "objecttypes",
@@ -4479,8 +4626,21 @@
       "kind": "nodetable",
       "para": 44
     },
+    "3203DE53": {
+      "owner": "template"
+    },
+    "320AC2BA": {
+      "owner": "template"
+    },
     "321382D8": {
       "owner": "template"
+    },
+    "325A34C5": {
+      "owner": "generated",
+      "region": "terms",
+      "index": 16,
+      "kind": "term",
+      "para": 2
     },
     "32716840": {
       "owner": "generated",
@@ -4491,6 +4651,16 @@
     },
     "328BCC2D": {
       "owner": "template"
+    },
+    "32B3AD43": {
+      "owner": "template"
+    },
+    "32BBBB7A": {
+      "owner": "markdown",
+      "file": "core-specs/xregistry/OPC-UA-xRegistry.md",
+      "section": "9 Conformance",
+      "block": 3,
+      "para": 19
     },
     "32C84555": {
       "owner": "generated",
@@ -4518,9 +4688,6 @@
       "index": 4,
       "kind": "table",
       "para": 25
-    },
-    "32FAE7B1": {
-      "owner": "template"
     },
     "3308F690": {
       "owner": "generated",
@@ -4550,8 +4717,12 @@
       "kind": "nodetable",
       "para": 263
     },
-    "337596DE": {
-      "owner": "template"
+    "335C909A": {
+      "owner": "markdown",
+      "file": "core-specs/xregistry/OPC-UA-xRegistry.md",
+      "section": "6.9 Entity identifiers and names",
+      "block": 8,
+      "para": 20
     },
     "3376F0B5": {
       "owner": "generated",
@@ -4576,7 +4747,7 @@
     "3393333E": {
       "owner": "template"
     },
-    "339CE767": {
+    "33C2B476": {
       "owner": "template"
     },
     "33ED88D7": {
@@ -4585,6 +4756,9 @@
       "index": 0,
       "kind": "nodetable",
       "para": 79
+    },
+    "340E5C45": {
+      "owner": "template"
     },
     "34259B3F": {
       "owner": "generated",
@@ -4669,6 +4843,12 @@
       "para": 95
     },
     "34B4B014": {
+      "owner": "template"
+    },
+    "34BADAA2": {
+      "owner": "template"
+    },
+    "34E319D2": {
       "owner": "template"
     },
     "34ED318F": {
@@ -4756,9 +4936,6 @@
     "35A49AAD": {
       "owner": "template"
     },
-    "35CF9E07": {
-      "owner": "template"
-    },
     "35E11470": {
       "owner": "template"
     },
@@ -4770,9 +4947,6 @@
       "para": 32
     },
     "36170D40": {
-      "owner": "template"
-    },
-    "36462A44": {
       "owner": "template"
     },
     "36474DAD": {
@@ -4790,6 +4964,9 @@
       "para": 18
     },
     "365ED989": {
+      "owner": "template"
+    },
+    "36756F8A": {
       "owner": "template"
     },
     "367F35EE": {
@@ -4873,6 +5050,9 @@
       "kind": "nodetable",
       "para": 11
     },
+    "3708EE22": {
+      "owner": "template"
+    },
     "370C9AEA": {
       "owner": "markdown",
       "file": "core-specs/xregistry/OPC-UA-xRegistry.md",
@@ -4906,9 +5086,6 @@
       "kind": "methodtable",
       "para": 24
     },
-    "37ABB2E3": {
-      "owner": "template"
-    },
     "37AF2D23": {
       "owner": "generated",
       "region": "objecttypes",
@@ -4922,6 +5099,9 @@
       "index": 0,
       "kind": "nodetable",
       "para": 103
+    },
+    "37B82892": {
+      "owner": "template"
     },
     "37C645BC": {
       "owner": "generated",
@@ -4952,6 +5132,13 @@
     "383020E9": {
       "owner": "template"
     },
+    "3837E7A0": {
+      "owner": "markdown",
+      "file": "core-specs/xregistry/OPC-UA-xRegistry.md",
+      "section": "6.9 Entity identifiers and names",
+      "block": 8,
+      "para": 10
+    },
     "383AA163": {
       "owner": "template"
     },
@@ -4970,6 +5157,9 @@
       "index": 19,
       "kind": "nodetable",
       "para": 38
+    },
+    "38713497": {
+      "owner": "template"
     },
     "3874D575": {
       "owner": "template"
@@ -5022,6 +5212,9 @@
       "index": 5,
       "kind": "methodtable",
       "para": 6
+    },
+    "3932F0BC": {
+      "owner": "template"
     },
     "393C8160": {
       "owner": "template"
@@ -5081,9 +5274,6 @@
     "398A594D": {
       "owner": "template"
     },
-    "39B8DDA7": {
-      "owner": "template"
-    },
     "39C86932": {
       "owner": "generated",
       "region": "objecttypes",
@@ -5099,6 +5289,9 @@
       "para": 23
     },
     "39D4C4CA": {
+      "owner": "template"
+    },
+    "39D4D34C": {
       "owner": "template"
     },
     "39E66F2B": {
@@ -5205,6 +5398,9 @@
       "kind": "nodetable",
       "para": 30
     },
+    "3B366001": {
+      "owner": "template"
+    },
     "3B4C8D23": {
       "owner": "template"
     },
@@ -5217,6 +5413,9 @@
       "section": "9 Conformance",
       "block": 3,
       "para": 8
+    },
+    "3BA26F40": {
+      "owner": "template"
     },
     "3BA2B334": {
       "owner": "template"
@@ -5257,6 +5456,9 @@
       "kind": "table",
       "para": 5
     },
+    "3C25628C": {
+      "owner": "template"
+    },
     "3C29265D": {
       "owner": "template"
     },
@@ -5273,16 +5475,7 @@
       "kind": "para",
       "para": 0
     },
-    "3C8889A3": {
-      "owner": "template"
-    },
     "3C8E7C39": {
-      "owner": "template"
-    },
-    "3CB01127": {
-      "owner": "template"
-    },
-    "3CD05456": {
       "owner": "template"
     },
     "3CD1E582": {
@@ -5323,6 +5516,9 @@
       "kind": "nodetable",
       "para": 24
     },
+    "3D280C81": {
+      "owner": "template"
+    },
     "3D4CC887": {
       "owner": "generated",
       "region": "objecttypes",
@@ -5350,6 +5546,9 @@
       "index": 28,
       "kind": "methodtable",
       "para": 5
+    },
+    "3D8BD4D8": {
+      "owner": "template"
     },
     "3DC44C36": {
       "owner": "template"
@@ -5419,12 +5618,6 @@
       "kind": "nodetable",
       "para": 14
     },
-    "3E6427F9": {
-      "owner": "template"
-    },
-    "3E739B4E": {
-      "owner": "template"
-    },
     "3E7536C3": {
       "owner": "generated",
       "region": "objecttypes",
@@ -5490,9 +5683,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 21
-    },
-    "3F4478EF": {
-      "owner": "template"
     },
     "3F6017FA": {
       "owner": "generated",
@@ -5647,9 +5837,6 @@
     "40DEA1BE": {
       "owner": "template"
     },
-    "40E04716": {
-      "owner": "template"
-    },
     "40E30EEA": {
       "owner": "generated",
       "region": "objecttypes",
@@ -5671,13 +5858,13 @@
       "kind": "nodetable",
       "para": 22
     },
+    "40F60970": {
+      "owner": "template"
+    },
     "40F7B99A": {
       "owner": "template"
     },
     "40FB7929": {
-      "owner": "template"
-    },
-    "412992BF": {
       "owner": "template"
     },
     "4139B4BB": {
@@ -5742,6 +5929,9 @@
       "kind": "methodtable",
       "para": 32
     },
+    "418C17AF": {
+      "owner": "template"
+    },
     "418F18E4": {
       "owner": "generated",
       "region": "annex-a",
@@ -5751,6 +5941,13 @@
     },
     "41931406": {
       "owner": "template"
+    },
+    "4198C169": {
+      "owner": "markdown",
+      "file": "core-specs/xregistry/OPC-UA-xRegistry.md",
+      "section": "6.9 Entity identifiers and names",
+      "block": 3,
+      "para": 1
     },
     "419A73AA": {
       "owner": "generated",
@@ -5767,6 +5964,13 @@
     },
     "41C6218D": {
       "owner": "template"
+    },
+    "41D86503": {
+      "owner": "markdown",
+      "file": "core-specs/xregistry/OPC-UA-xRegistry.md",
+      "section": "6.9 Entity identifiers and names",
+      "block": 8,
+      "para": 2
     },
     "42064A04": {
       "owner": "template"
@@ -5846,8 +6050,12 @@
       "kind": "nodetable",
       "para": 25
     },
-    "429FDA08": {
-      "owner": "template"
+    "429D3E6A": {
+      "owner": "generated",
+      "region": "objecttypes",
+      "index": 10,
+      "kind": "nodetable",
+      "para": 95
     },
     "42A60528": {
       "owner": "generated",
@@ -5857,6 +6065,9 @@
       "para": 15
     },
     "42B1F660": {
+      "owner": "template"
+    },
+    "42B8F598": {
       "owner": "template"
     },
     "42CB456B": {
@@ -5882,9 +6093,6 @@
       "index": 5,
       "kind": "methodtable",
       "para": 9
-    },
-    "431EC97D": {
-      "owner": "template"
     },
     "432268CF": {
       "owner": "template"
@@ -5938,18 +6146,12 @@
       "kind": "methodtable",
       "para": 9
     },
-    "43BC9C93": {
-      "owner": "template"
-    },
     "43C7B3AB": {
       "owner": "generated",
       "region": "objecttypes",
       "index": 10,
       "kind": "nodetable",
       "para": 59
-    },
-    "43CA4DFD": {
-      "owner": "template"
     },
     "444B922C": {
       "owner": "template"
@@ -5971,6 +6173,9 @@
       "kind": "clause",
       "para": 0
     },
+    "447484B5": {
+      "owner": "template"
+    },
     "4491C49A": {
       "owner": "generated",
       "region": "objecttypes",
@@ -5988,9 +6193,6 @@
       "block": 4,
       "para": 0
     },
-    "44B08AD1": {
-      "owner": "template"
-    },
     "44BDCC0D": {
       "owner": "generated",
       "region": "annex-a",
@@ -5999,6 +6201,9 @@
       "para": 136
     },
     "44DE6F8C": {
+      "owner": "template"
+    },
+    "4513F769": {
       "owner": "template"
     },
     "45217830": {
@@ -6040,6 +6245,9 @@
     "45AC6947": {
       "owner": "template"
     },
+    "45CFB955": {
+      "owner": "template"
+    },
     "46045E00": {
       "owner": "template"
     },
@@ -6056,6 +6264,9 @@
       "index": 19,
       "kind": "nodetable",
       "para": 69
+    },
+    "4629DF9A": {
+      "owner": "template"
     },
     "4631CDA8": {
       "owner": "generated",
@@ -6084,7 +6295,13 @@
     "46AB9790": {
       "owner": "template"
     },
+    "46D60C21": {
+      "owner": "template"
+    },
     "46DBE0D6": {
+      "owner": "template"
+    },
+    "46E3867B": {
       "owner": "template"
     },
     "46E3C74B": {
@@ -6107,9 +6324,6 @@
       "index": 7,
       "kind": "methodtable",
       "para": 32
-    },
-    "470BF004": {
-      "owner": "template"
     },
     "470D529A": {
       "owner": "template"
@@ -6192,6 +6406,13 @@
     "4820B7A1": {
       "owner": "template"
     },
+    "4821A522": {
+      "owner": "markdown",
+      "file": "core-specs/xregistry/OPC-UA-xRegistry.md",
+      "section": "6.9 Entity identifiers and names",
+      "block": 8,
+      "para": 12
+    },
     "483BDBB6": {
       "owner": "template"
     },
@@ -6222,9 +6443,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 169
-    },
-    "488537C2": {
-      "owner": "template"
     },
     "489394D1": {
       "owner": "generated",
@@ -6315,9 +6533,6 @@
     "4976D496": {
       "owner": "template"
     },
-    "498EEAFF": {
-      "owner": "template"
-    },
     "49A15C1E": {
       "owner": "generated",
       "region": "annex-a",
@@ -6385,9 +6600,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 102
-    },
-    "4A5FDE6C": {
-      "owner": "template"
     },
     "4A646FAF": {
       "owner": "template"
@@ -6494,6 +6706,13 @@
       "index": 0,
       "kind": "nodetable",
       "para": 87
+    },
+    "4B40FAAA": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 31,
+      "kind": "clause",
+      "para": 0
     },
     "4B610E9B": {
       "owner": "generated",
@@ -6616,6 +6835,13 @@
       "kind": "methodtable",
       "para": 0
     },
+    "4C3AAB83": {
+      "owner": "generated",
+      "region": "terms",
+      "index": 17,
+      "kind": "term",
+      "para": 0
+    },
     "4C3B4235": {
       "owner": "generated",
       "region": "annex-a",
@@ -6646,6 +6872,9 @@
     "4C9ACC5A": {
       "owner": "template"
     },
+    "4CB2ADF9": {
+      "owner": "template"
+    },
     "4CD55DEB": {
       "owner": "generated",
       "region": "datatypes",
@@ -6667,15 +6896,15 @@
       "kind": "nodetable",
       "para": 44
     },
+    "4D05C43A": {
+      "owner": "template"
+    },
     "4D075F01": {
       "owner": "generated",
       "region": "annex-a",
       "index": 0,
       "kind": "nodetable",
       "para": 219
-    },
-    "4D222F18": {
-      "owner": "template"
     },
     "4D3D45BD": {
       "owner": "template"
@@ -6800,6 +7029,13 @@
       "kind": "nodetable",
       "para": 14
     },
+    "4F02CDB3": {
+      "owner": "markdown",
+      "file": "core-specs/xregistry/OPC-UA-xRegistry.md",
+      "section": "6.9 Entity identifiers and names",
+      "block": 8,
+      "para": 19
+    },
     "4F044614": {
       "owner": "generated",
       "region": "objecttypes",
@@ -6873,7 +7109,13 @@
       "kind": "methodtable",
       "para": 8
     },
+    "4F73F7AD": {
+      "owner": "template"
+    },
     "4F8FE53B": {
+      "owner": "template"
+    },
+    "4F91E6B6": {
       "owner": "template"
     },
     "4FA9EE0D": {
@@ -6935,9 +7177,6 @@
       "kind": "nodetable",
       "para": 62
     },
-    "5030CDE6": {
-      "owner": "template"
-    },
     "503987E7": {
       "owner": "template"
     },
@@ -6970,9 +7209,6 @@
       "index": 10,
       "kind": "nodetable",
       "para": 60
-    },
-    "50FA8827": {
-      "owner": "template"
     },
     "511E7776": {
       "owner": "generated",
@@ -7083,15 +7319,11 @@
     "51D63B40": {
       "owner": "template"
     },
-    "51F818ED": {
+    "51D9605B": {
       "owner": "template"
     },
-    "51FFE77E": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 21,
-      "kind": "clause",
-      "para": 0
+    "51F818ED": {
+      "owner": "template"
     },
     "52084AF0": {
       "owner": "template"
@@ -7126,6 +7358,16 @@
       "index": 14,
       "kind": "methodtable",
       "para": 0
+    },
+    "5244C83D": {
+      "owner": "template"
+    },
+    "524CA38C": {
+      "owner": "markdown",
+      "file": "core-specs/xregistry/OPC-UA-xRegistry.md",
+      "section": "6.9 Entity identifiers and names",
+      "block": 8,
+      "para": 16
     },
     "524D9D01": {
       "owner": "template"
@@ -7178,7 +7420,7 @@
       "kind": "nodetable",
       "para": 102
     },
-    "52B57702": {
+    "52D3590F": {
       "owner": "template"
     },
     "52D4503D": {
@@ -7215,6 +7457,9 @@
       "kind": "nodetable",
       "para": 10
     },
+    "533566E3": {
+      "owner": "template"
+    },
     "534F71EA": {
       "owner": "generated",
       "region": "namespaces",
@@ -7242,15 +7487,19 @@
       "kind": "nodetable",
       "para": 5
     },
-    "538A2B87": {
-      "owner": "template"
-    },
     "538ED104": {
       "owner": "generated",
       "region": "objecttypes",
       "index": 3,
       "kind": "nodetable",
       "para": 35
+    },
+    "538F67EC": {
+      "owner": "generated",
+      "region": "terms",
+      "index": 16,
+      "kind": "term",
+      "para": 1
     },
     "53BE9611": {
       "owner": "generated",
@@ -7352,6 +7601,9 @@
     "54A24774": {
       "owner": "template"
     },
+    "54A75FAD": {
+      "owner": "template"
+    },
     "54C4CDA1": {
       "owner": "markdown",
       "file": "core-specs/xregistry/OPC-UA-xRegistry.md",
@@ -7399,6 +7651,13 @@
       "index": 16,
       "kind": "methodtable",
       "para": 6
+    },
+    "552B1B00": {
+      "owner": "markdown",
+      "file": "core-specs/xregistry/OPC-UA-xRegistry.md",
+      "section": "6.9 Entity identifiers and names",
+      "block": 7,
+      "para": 0
     },
     "5548804A": {
       "owner": "generated",
@@ -7469,6 +7728,9 @@
       "kind": "nodetable",
       "para": 5
     },
+    "55CB0655": {
+      "owner": "template"
+    },
     "55DB5FAF": {
       "owner": "template"
     },
@@ -7524,15 +7786,15 @@
       "kind": "methodtable",
       "para": 19
     },
+    "56A48EDB": {
+      "owner": "template"
+    },
     "56C5DB52": {
       "owner": "generated",
       "region": "datatypes",
       "index": 4,
       "kind": "enumtable",
       "para": 15
-    },
-    "56C6A9AC": {
-      "owner": "template"
     },
     "56D70013": {
       "owner": "generated",
@@ -7620,9 +7882,6 @@
       "kind": "nodetable",
       "para": 200
     },
-    "57CF3136": {
-      "owner": "template"
-    },
     "57F1B058": {
       "owner": "generated",
       "region": "namespaces",
@@ -7677,6 +7936,13 @@
       "index": 5,
       "kind": "term",
       "para": 2
+    },
+    "5890BFC1": {
+      "owner": "markdown",
+      "file": "core-specs/xregistry/OPC-UA-xRegistry.md",
+      "section": "6.9 Entity identifiers and names",
+      "block": 8,
+      "para": 8
     },
     "58988B59": {
       "owner": "generated",
@@ -7839,9 +8105,6 @@
     "5A7506EC": {
       "owner": "template"
     },
-    "5A894715": {
-      "owner": "template"
-    },
     "5A9B3B81": {
       "owner": "generated",
       "region": "annex-a",
@@ -7880,9 +8143,6 @@
       "kind": "methodtable",
       "para": 20
     },
-    "5AE4B1FF": {
-      "owner": "template"
-    },
     "5AFF3C03": {
       "owner": "generated",
       "region": "objecttypes",
@@ -7911,6 +8171,9 @@
       "kind": "nodetable",
       "para": 43
     },
+    "5B1BDAC5": {
+      "owner": "template"
+    },
     "5B336145": {
       "owner": "template"
     },
@@ -7920,6 +8183,9 @@
       "section": "1 Scope",
       "block": 2,
       "para": 0
+    },
+    "5B4A27BE": {
+      "owner": "template"
     },
     "5B4BDFBD": {
       "owner": "template"
@@ -8015,6 +8281,13 @@
       "kind": "nodetable",
       "para": 206
     },
+    "5C317CF5": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 33,
+      "kind": "clause",
+      "para": 0
+    },
     "5C377048": {
       "owner": "template"
     },
@@ -8070,12 +8343,6 @@
       "kind": "methodtable",
       "para": 17
     },
-    "5D14F533": {
-      "owner": "template"
-    },
-    "5D3116CC": {
-      "owner": "template"
-    },
     "5D43B04A": {
       "owner": "template"
     },
@@ -8086,18 +8353,12 @@
       "block": 0,
       "para": 0
     },
-    "5D5059BC": {
-      "owner": "template"
-    },
     "5D5922C0": {
       "owner": "generated",
       "region": "objecttypes",
       "index": 19,
       "kind": "nodetable",
       "para": 26
-    },
-    "5D6E13F5": {
-      "owner": "template"
     },
     "5D710857": {
       "owner": "generated",
@@ -8107,6 +8368,9 @@
       "para": 247
     },
     "5D721A47": {
+      "owner": "template"
+    },
+    "5D8A9D0D": {
       "owner": "template"
     },
     "5DB3A3C2": {
@@ -8187,6 +8451,13 @@
       "kind": "toc",
       "para": 0
     },
+    "5E640DE7": {
+      "owner": "markdown",
+      "file": "core-specs/xregistry/OPC-UA-xRegistry.md",
+      "section": "6.9 Entity identifiers and names",
+      "block": 8,
+      "para": 3
+    },
     "5E67DD2E": {
       "owner": "generated",
       "region": "objecttypes",
@@ -8205,9 +8476,6 @@
       "para": 254
     },
     "5E8CDFC9": {
-      "owner": "template"
-    },
-    "5E97431F": {
       "owner": "template"
     },
     "5E97D844": {
@@ -8271,15 +8539,19 @@
     "5F61AAB4": {
       "owner": "template"
     },
-    "5F78C85E": {
-      "owner": "template"
-    },
     "5F7D922A": {
       "owner": "generated",
       "region": "annex-a",
       "index": 0,
       "kind": "nodetable",
       "para": 266
+    },
+    "5F84190B": {
+      "owner": "markdown",
+      "file": "core-specs/xregistry/OPC-UA-xRegistry.md",
+      "section": "6.9 Entity identifiers and names",
+      "block": 5,
+      "para": 0
     },
     "5FADA1C8": {
       "owner": "template"
@@ -8406,6 +8678,16 @@
       "kind": "methodtable",
       "para": 10
     },
+    "60F25223": {
+      "owner": "template"
+    },
+    "61029449": {
+      "owner": "markdown",
+      "file": "core-specs/xregistry/OPC-UA-xRegistry.md",
+      "section": "6.9 Entity identifiers and names",
+      "block": 8,
+      "para": 24
+    },
     "61117E2E": {
       "owner": "template"
     },
@@ -8429,6 +8711,13 @@
       "kind": "nodetable",
       "para": 24
     },
+    "61663411": {
+      "owner": "markdown",
+      "file": "core-specs/xregistry/OPC-UA-xRegistry.md",
+      "section": "6.9 Entity identifiers and names",
+      "block": 3,
+      "para": 3
+    },
     "617E3238": {
       "owner": "template"
     },
@@ -8442,7 +8731,13 @@
       "kind": "enumtable",
       "para": 9
     },
+    "6192ABBD": {
+      "owner": "template"
+    },
     "61B64046": {
+      "owner": "template"
+    },
+    "61DD15D0": {
       "owner": "template"
     },
     "61ECBDF9": {
@@ -8511,15 +8806,19 @@
       "kind": "nodetable",
       "para": 4
     },
-    "630081E2": {
-      "owner": "template"
-    },
     "6325E0F0": {
       "owner": "generated",
       "region": "terms",
       "index": 12,
       "kind": "term",
       "para": 0
+    },
+    "6330D60E": {
+      "owner": "markdown",
+      "file": "core-specs/xregistry/OPC-UA-xRegistry.md",
+      "section": "6.9 Entity identifiers and names",
+      "block": 8,
+      "para": 7
     },
     "63310EAC": {
       "owner": "template"
@@ -8612,6 +8911,9 @@
       "kind": "methodtable",
       "para": 5
     },
+    "6412BA8E": {
+      "owner": "template"
+    },
     "641B6ABC": {
       "owner": "template"
     },
@@ -8621,9 +8923,6 @@
       "index": 10,
       "kind": "nodetable",
       "para": 23
-    },
-    "643C49F4": {
-      "owner": "template"
     },
     "643CBA7F": {
       "owner": "generated",
@@ -8672,6 +8971,9 @@
       "section": "9 Conformance",
       "block": 3,
       "para": 0
+    },
+    "649F6458": {
+      "owner": "template"
     },
     "64A8DE4B": {
       "owner": "generated",
@@ -8755,13 +9057,13 @@
       "kind": "methodtable",
       "para": 14
     },
+    "6584AA21": {
+      "owner": "template"
+    },
     "65985FB0": {
       "owner": "template"
     },
     "65D28AF5": {
-      "owner": "template"
-    },
-    "65EFE00F": {
       "owner": "template"
     },
     "6615C814": {
@@ -8770,6 +9072,13 @@
       "index": 10,
       "kind": "nodetable",
       "para": 10
+    },
+    "6618B634": {
+      "owner": "markdown",
+      "file": "core-specs/xregistry/OPC-UA-xRegistry.md",
+      "section": "6.9 Entity identifiers and names",
+      "block": 4,
+      "para": 0
     },
     "661A11D4": {
       "owner": "markdown",
@@ -8930,6 +9239,13 @@
       "block": 1,
       "para": 3
     },
+    "67EA8C50": {
+      "owner": "markdown",
+      "file": "core-specs/xregistry/OPC-UA-xRegistry.md",
+      "section": "6.9 Entity identifiers and names",
+      "block": 8,
+      "para": 22
+    },
     "67ED1D19": {
       "owner": "generated",
       "region": "objecttypes",
@@ -8951,6 +9267,9 @@
       "owner": "template"
     },
     "680958E8": {
+      "owner": "template"
+    },
+    "680F0441": {
       "owner": "template"
     },
     "6829E5FE": {
@@ -9011,15 +9330,15 @@
       "kind": "methodtable",
       "para": 2
     },
-    "68A7A74F": {
-      "owner": "template"
-    },
     "68B1851B": {
       "owner": "generated",
       "region": "objecttypes",
       "index": 30,
       "kind": "methodtable",
       "para": 22
+    },
+    "68BEE0F7": {
+      "owner": "template"
     },
     "68BF4BE1": {
       "owner": "template"
@@ -9074,6 +9393,9 @@
       "kind": "nodetable",
       "para": 101
     },
+    "695A1C21": {
+      "owner": "template"
+    },
     "69788417": {
       "owner": "generated",
       "region": "terms",
@@ -9098,6 +9420,9 @@
       "kind": "nodetable",
       "para": 99
     },
+    "69FB61B0": {
+      "owner": "template"
+    },
     "6A08A781": {
       "owner": "template"
     },
@@ -9108,13 +9433,7 @@
       "kind": "term",
       "para": 2
     },
-    "6A264DF3": {
-      "owner": "template"
-    },
     "6A66E996": {
-      "owner": "template"
-    },
-    "6A7A231B": {
       "owner": "template"
     },
     "6A80A199": {
@@ -9124,18 +9443,12 @@
       "kind": "enumtable",
       "para": 24
     },
-    "6A89EE3B": {
-      "owner": "template"
-    },
     "6A9EF9EF": {
       "owner": "generated",
       "region": "annex-a",
       "index": 0,
       "kind": "nodetable",
       "para": 58
-    },
-    "6AA1A869": {
-      "owner": "template"
     },
     "6AAE7635": {
       "owner": "generated",
@@ -9240,6 +9553,9 @@
       "block": 1,
       "para": 16
     },
+    "6BAC258F": {
+      "owner": "template"
+    },
     "6BAD61A0": {
       "owner": "generated",
       "region": "objecttypes",
@@ -9299,15 +9615,15 @@
       "kind": "nodetable",
       "para": 33
     },
+    "6BDF9F29": {
+      "owner": "template"
+    },
     "6BF4A086": {
       "owner": "generated",
       "region": "objecttypes",
       "index": 5,
       "kind": "methodtable",
       "para": 17
-    },
-    "6BF6E396": {
-      "owner": "template"
     },
     "6BF98608": {
       "owner": "template"
@@ -9329,15 +9645,19 @@
       "kind": "nodetable",
       "para": 92
     },
-    "6C2A2DD1": {
-      "owner": "template"
-    },
     "6C301E08": {
       "owner": "markdown",
       "file": "core-specs/xregistry/OPC-UA-xRegistry.md",
       "section": "9 Conformance",
       "block": 3,
       "para": 6
+    },
+    "6C351224": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 36,
+      "kind": "clause",
+      "para": 0
     },
     "6C3E5E2B": {
       "owner": "template"
@@ -9382,6 +9702,9 @@
       "index": 14,
       "kind": "methodtable",
       "para": 32
+    },
+    "6CA4699D": {
+      "owner": "template"
     },
     "6CA64AAD": {
       "owner": "template"
@@ -9548,9 +9871,6 @@
     "6E6DE116": {
       "owner": "template"
     },
-    "6E8F58E3": {
-      "owner": "template"
-    },
     "6E903890": {
       "owner": "generated",
       "region": "annex-a",
@@ -9566,6 +9886,13 @@
     },
     "6EA979F9": {
       "owner": "template"
+    },
+    "6EB73108": {
+      "owner": "markdown",
+      "file": "core-specs/xregistry/OPC-UA-xRegistry.md",
+      "section": "6.9 Entity identifiers and names",
+      "block": 3,
+      "para": 4
     },
     "6EBF92D3": {
       "owner": "generated",
@@ -9672,6 +9999,13 @@
       "kind": "table",
       "para": 2
     },
+    "6FC3B7C1": {
+      "owner": "generated",
+      "region": "terms",
+      "index": 17,
+      "kind": "term",
+      "para": 2
+    },
     "6FCC20CD": {
       "owner": "template"
     },
@@ -9681,6 +10015,13 @@
       "index": 0,
       "kind": "nodetable",
       "para": 218
+    },
+    "6FCF1E28": {
+      "owner": "markdown",
+      "file": "core-specs/xregistry/OPC-UA-xRegistry.md",
+      "section": "6.9 Entity identifiers and names",
+      "block": 8,
+      "para": 9
     },
     "6FD2527B": {
       "owner": "generated",
@@ -9841,6 +10182,9 @@
     "7140D3FF": {
       "owner": "template"
     },
+    "7145B072": {
+      "owner": "template"
+    },
     "7145EB89": {
       "owner": "generated",
       "region": "objecttypes",
@@ -9909,6 +10253,9 @@
       "kind": "nodetable",
       "para": 24
     },
+    "724A32E9": {
+      "owner": "template"
+    },
     "7250AC2C": {
       "owner": "generated",
       "region": "annex-a",
@@ -9956,9 +10303,6 @@
       "kind": "enumtable",
       "para": 3
     },
-    "72EF89E4": {
-      "owner": "template"
-    },
     "72F3E3D6": {
       "owner": "generated",
       "region": "objecttypes",
@@ -9973,7 +10317,17 @@
       "kind": "nodetable",
       "para": 98
     },
+    "733F259A": {
+      "owner": "markdown",
+      "file": "core-specs/xregistry/OPC-UA-xRegistry.md",
+      "section": "6.9 Entity identifiers and names",
+      "block": 8,
+      "para": 21
+    },
     "73514716": {
+      "owner": "template"
+    },
+    "735380E4": {
       "owner": "template"
     },
     "7355E61E": {
@@ -9982,9 +10336,6 @@
       "index": 30,
       "kind": "methodtable",
       "para": 24
-    },
-    "738EC441": {
-      "owner": "template"
     },
     "7395BE4A": {
       "owner": "generated",
@@ -10022,9 +10373,6 @@
       "para": 68
     },
     "7414A837": {
-      "owner": "template"
-    },
-    "7419E2D6": {
       "owner": "template"
     },
     "741BAB1F": {
@@ -10100,6 +10448,9 @@
       "para": 22
     },
     "75444632": {
+      "owner": "template"
+    },
+    "75447006": {
       "owner": "template"
     },
     "7568F3A8": {
@@ -10205,9 +10556,6 @@
       "kind": "clause",
       "para": 0
     },
-    "76B4B6E0": {
-      "owner": "template"
-    },
     "76B940C9": {
       "owner": "template"
     },
@@ -10240,9 +10588,6 @@
       "index": 3,
       "kind": "para",
       "para": 0
-    },
-    "7713DDCC": {
-      "owner": "template"
     },
     "7722B35E": {
       "owner": "generated",
@@ -10281,6 +10626,13 @@
     "7771EFF9": {
       "owner": "template"
     },
+    "77842E60": {
+      "owner": "markdown",
+      "file": "core-specs/xregistry/OPC-UA-xRegistry.md",
+      "section": "6.9 Entity identifiers and names",
+      "block": 3,
+      "para": 5
+    },
     "7785C2B4": {
       "owner": "generated",
       "region": "objecttypes",
@@ -10306,9 +10658,6 @@
       "para": 76
     },
     "77E223F5": {
-      "owner": "template"
-    },
-    "77EE07E7": {
       "owner": "template"
     },
     "78017245": {
@@ -10390,8 +10739,12 @@
     "78E3BBD6": {
       "owner": "template"
     },
-    "78EE3839": {
-      "owner": "template"
+    "78EA8B2D": {
+      "owner": "markdown",
+      "file": "core-specs/xregistry/OPC-UA-xRegistry.md",
+      "section": "6.9 Entity identifiers and names",
+      "block": 1,
+      "para": 0
     },
     "78EECA10": {
       "owner": "generated",
@@ -10444,13 +10797,13 @@
       "kind": "nodetable",
       "para": 98
     },
-    "7985DDD6": {
-      "owner": "template"
-    },
     "798F8C77": {
       "owner": "template"
     },
     "7992E8BF": {
+      "owner": "template"
+    },
+    "799AA7E6": {
       "owner": "template"
     },
     "79A3F12E": {
@@ -10469,6 +10822,9 @@
       "index": 5,
       "kind": "methodtable",
       "para": 8
+    },
+    "79FFA27D": {
+      "owner": "template"
     },
     "7A049651": {
       "owner": "template"
@@ -10528,6 +10884,9 @@
       "kind": "nodetable",
       "para": 199
     },
+    "7A748F03": {
+      "owner": "template"
+    },
     "7A801AB2": {
       "owner": "generated",
       "region": "namespaces",
@@ -10572,9 +10931,6 @@
     "7ACACB98": {
       "owner": "template"
     },
-    "7AD97BB4": {
-      "owner": "template"
-    },
     "7ADA765D": {
       "owner": "generated",
       "region": "objecttypes",
@@ -10584,6 +10940,13 @@
     },
     "7B09D64D": {
       "owner": "template"
+    },
+    "7B131CF9": {
+      "owner": "markdown",
+      "file": "core-specs/xregistry/OPC-UA-xRegistry.md",
+      "section": "6.9 Entity identifiers and names",
+      "block": 3,
+      "para": 7
     },
     "7B242D0D": {
       "owner": "generated",
@@ -10633,9 +10996,6 @@
       "kind": "methodtable",
       "para": 35
     },
-    "7B57D4E1": {
-      "owner": "template"
-    },
     "7B5F3912": {
       "owner": "generated",
       "region": "annex-a",
@@ -10669,9 +11029,6 @@
       "index": 11,
       "kind": "term",
       "para": 1
-    },
-    "7C60AF7F": {
-      "owner": "template"
     },
     "7C6DF597": {
       "owner": "generated",
@@ -10715,9 +11072,6 @@
       "kind": "nodetable",
       "para": 180
     },
-    "7CA4C914": {
-      "owner": "template"
-    },
     "7CBDF32C": {
       "owner": "generated",
       "region": "objecttypes",
@@ -10742,6 +11096,9 @@
     "7CDC715F": {
       "owner": "template"
     },
+    "7CE9DC41": {
+      "owner": "template"
+    },
     "7D01D505": {
       "owner": "markdown",
       "file": "core-specs/xregistry/OPC-UA-xRegistry.md",
@@ -10763,9 +11120,6 @@
       "kind": "nodetable",
       "para": 28
     },
-    "7D3349A3": {
-      "owner": "template"
-    },
     "7D3764EF": {
       "owner": "template"
     },
@@ -10780,9 +11134,6 @@
       "para": 0
     },
     "7D426E6A": {
-      "owner": "template"
-    },
-    "7D43370C": {
       "owner": "template"
     },
     "7D5D0597": {
@@ -10853,6 +11204,12 @@
     "7DC1C51F": {
       "owner": "template"
     },
+    "7DC8F68E": {
+      "owner": "template"
+    },
+    "7DC947C2": {
+      "owner": "template"
+    },
     "7DE17D83": {
       "owner": "generated",
       "region": "annex-a",
@@ -10905,15 +11262,15 @@
       "block": 1,
       "para": 1
     },
+    "7E80C466": {
+      "owner": "template"
+    },
     "7E93F9A7": {
       "owner": "generated",
       "region": "objecttypes",
       "index": 3,
       "kind": "nodetable",
       "para": 72
-    },
-    "7EB9F11F": {
-      "owner": "template"
     },
     "7EBA1FD3": {
       "owner": "generated",
@@ -10977,6 +11334,9 @@
     "7F52A6EE": {
       "owner": "template"
     },
+    "7F625263": {
+      "owner": "template"
+    },
     "7F6BE573": {
       "owner": "generated",
       "region": "terms",
@@ -11012,12 +11372,22 @@
       "kind": "methodtable",
       "para": 39
     },
+    "7FB2BE99": {
+      "owner": "markdown",
+      "file": "core-specs/xregistry/OPC-UA-xRegistry.md",
+      "section": "6.9 Entity identifiers and names",
+      "block": 8,
+      "para": 17
+    },
     "7FC9B22D": {
       "owner": "generated",
       "region": "objecttypes",
       "index": 10,
       "kind": "nodetable",
       "para": 90
+    },
+    "7FF9ECF1": {
+      "owner": "template"
     },
     "7FFCF3AF": {
       "owner": "generated",

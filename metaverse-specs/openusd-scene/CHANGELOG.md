@@ -7,6 +7,17 @@ current model; this file records how it got there.
 NodeId assignment is **append-only**: new members take the next free id, so every
 previously published NodeId is stable across all releases below.
 
+## 0.4.1 — 2026-07-31
+
+**Cross-reference correction.**
+
+- The Part 1 relationship clause described an artifact's registry `ResourceId` as the
+  URL-safe encoding of its asset identifier. Part 1 0.6.0 replaces that construction with
+  the symbolic-identifier construction of *OPC UA — xRegistry* §6.9, which is deterministic
+  and closed-form in the forward direction but not invertible, so a client confirms the
+  artifact it reached by reading its `AssetIdentifier`. Nothing else in Part 2 depends on
+  Part 1's identifiers, and the Part 2 model is unchanged.
+
 ## 0.4.0 — 2026-07-29
 
 **Conformance units in the model, and a Word rendering.**

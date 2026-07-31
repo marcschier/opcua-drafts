@@ -1,8 +1,8 @@
 # OPC UA — WoT Connectivity
 
-**Release 1.2.0 — Draft (additive revision of OPC 10100-1 v1.02)**
+**Release 1.3.0 — Draft (additive revision of OPC 10100-1 v1.02)**
 **Namespace:** `http://opcfoundation.org/UA/WoT-Con/`
-**Publication date:** 2026-07-22
+**Publication date:** 2026-07-31
 
 > Status: Working-group draft, intended for submission to the **OPC Foundation Web of Things (WoT) Working Group**. This document, together with the generated `Opc.Ua.WoTCon.NodeSet2.xml` and `Opc.Ua.WoTCon.NodeIds.csv`, defines an **additive revision 1.1** of the OPC UA companion specification for W3C Web of Things (WoT) connectivity. It is **registry-first**: it layers a W3C Thing Model / Thing Description **document registry** over the abstract [OPC UA — xRegistry](../../core-specs/xregistry/OPC-UA-xRegistry.md) base model and treats the stored documents and their versions as the single source of truth from which the OPC UA AddressSpace and any code-behind are **derived**. Revision 1.1 keeps the published `http://opcfoundation.org/UA/WoT-Con/` namespace and **incorporates the full OPC 10100-1 v1.02 model into one combined NodeSet**, preserving every published NodeId, type and method signature and marking the superseded 1.02 management surface `Deprecated`. It can be read on its own. Nothing here is official or endorsed by the OPC Foundation or the W3C; the numeric NodeIds of the additive `64000+` registry block are provisional and final identifiers are assigned by the OPC Foundation.
 
@@ -124,7 +124,7 @@ Instances appear directly under the registry, one group per related set of docum
 
 Groups are the unit of organisation, access control and policy: read access to a group is the authorisation boundary for discovering the Things it contains (§7.11).
 
-Each group carries the group-level validation policy (`ValidateFormat`, `ValidateCompatibility`, `ConsistentFormat`) and a constrained `<ThingDescription>` / `<ThingModel>` placeholder that limits its members to the matching document subtype. A Thing Description group holds only Thing Descriptions; a Thing Model group holds only Thing Models.
+Each group carries the group-level validation policy (`ValidateFormat`, `ValidateCompatibility`, `ConsistentFormat`), the Mandatory `CatalogUri` that names the catalogue it collects, and a constrained `<ThingDescription>` / `<ThingModel>` placeholder that limits its members to the matching document subtype. A Thing Description group holds only Thing Descriptions; a Thing Model group holds only Thing Models. `CatalogUri` is the group's **source identity**: its `GroupId` is derived from it and its `Name` repeats it (§7.12).
 
 ### 6.3 Documents — `WoTDocumentType`, `ThingDescriptionFileType`, `ThingModelFileType`
 
@@ -134,7 +134,7 @@ Document instances are the members of the groups.
 
 The document *is* the canonical source of truth; everything a client browses in the projection is derived from these bytes and their versions.
 
-Because `ResourceType` is a `FileType`, the JSON-LD document bytes are read and written with the inherited `Open`/`Read`/`Write`/`Close` Methods, so a client fetches the exact stored TD/TM. `WoTDocumentType` adds the derived-projection metadata (`DocumentKind`, `Enabled`, `LoadState`, `DesiredVersionId`, `ActiveVersionId`, `IsDefault`, `Ancestor`, `Compatibility`, `AutoRefresh`, `RefreshGeneration`, `LastRefreshTime`, `ContentDigest`, `ValidationOutcome`, `MaterializedNodeCount`, `RootNodeId`, `SelectedBindings`) and the `Validate` / `SetEnabled` / `SetDefaultVersion` Methods. `ThingDescriptionFileType` adds the TD instance identity (`ThingId`, `ThingTitle`, `BaseUri`, `ModelReference`); `ThingModelFileType` adds the TM type identity (`ModelTitle`, `ModelVersion`, `DerivedTypeNodeId`). For example, after a Thing Model is projected, a client reads `ThingModelFileType.DerivedTypeNodeId` to find the ObjectType it produced.
+Because `ResourceType` is a `FileType`, the JSON-LD document bytes are read and written with the inherited `Open`/`Read`/`Write`/`Close` Methods, so a client fetches the exact stored TD/TM. `WoTDocumentType` adds the derived-projection metadata (`DocumentKind`, `Enabled`, `LoadState`, `DesiredVersionId`, `ActiveVersionId`, `IsDefault`, `Ancestor`, `Compatibility`, `AutoRefresh`, `RefreshGeneration`, `LastRefreshTime`, `ContentDigest`, `ValidationOutcome`, `MaterializedNodeCount`, `RootNodeId`, `SelectedBindings`) and the `Validate` / `SetEnabled` / `SetDefaultVersion` Methods. `ThingDescriptionFileType` adds the TD instance identity (Mandatory `ThingId`, `ThingTitle`, `BaseUri`, `ModelReference`); `ThingModelFileType` adds the TM type identity (Mandatory `ModelId`, `ModelTitle`, `ModelVersion`, `DerivedTypeNodeId`). `ThingId` and `ModelId` are the documents' **source identities**, from which their `ResourceId`s are derived (§7.12); `ContentDigest` fingerprints one version's bytes and is never an identifier. For example, after a Thing Model is projected, a client reads `ThingModelFileType.DerivedTypeNodeId` to find the ObjectType it produced.
 
 ### 6.4 Bindings — `WoTBindingType`
 
@@ -282,6 +282,32 @@ Management Methods (`Refresh`, `Validate`, `SetEnabled`, `SetDefaultVersion`, an
 
 Read access to a group MAY be restricted to authorise discovery of the Things it contains. TD form endpoints and security declarations are informative to protocol clients and may be consumed by an explicitly enabled binder. They do not configure or secure the registry, authorize document resolution, or override the server's endpoint allowlist, trust store, credential provider or SecureChannel policy.
 
+### 7.12 Document identifiers and names
+
+The registry is browsed by people, frequently through generic third-party xRegistry or OPC UA tooling that shows only an entity's identifier and its name. This clause fixes how both are formed, applying the symbolic-identifier construction of [*OPC UA — xRegistry*](../../core-specs/xregistry/OPC-UA-xRegistry.md) §6.9.
+
+Each entity has a **source identity** — a stable string that names *what* the entity is, exposed verbatim as a Mandatory Property and invariant across the entity's versions:
+
+| Entity | Source identity | Example |
+|---|---|---|
+| `ThingDescriptionGroupType` / `ThingModelGroupType` | `CatalogUri` | `https://contoso.org/plant-01/things/` |
+| `ThingDescriptionFileType` | `ThingId` (the TD `@id`) | `urn:dev:ops:32473-pump-01` |
+| `ThingModelFileType` | `ModelId` (the TM `@id`) | `https://contoso.org/models/Pump/1.0.0` |
+
+A server **shall** set `GroupId` and `ResourceId` to the symbolic identifier constructed from the corresponding source identity, and **shall not** derive either from a document or from a digest of one. `ContentDigest` fingerprints the bytes of one version; a resource identifier that changed with the bytes would start a new resource on every revision, which contradicts a resource being the umbrella over its versions.
+
+A server **shall** set every group's and document's `Name` to a non-empty human-readable value: for a group, the `CatalogUri` verbatim; for a Thing Description, its `ThingTitle` where present and otherwise its `ThingId`; for a Thing Model, its `ModelTitle` where present and otherwise its `ModelId`. A server **shall** set each node's DisplayName from its `Name`, so a client browsing `Server → WoTRegistry` reads a symbolic identifier and a title without a Read per candidate.
+
+Worked examples:
+
+| Source identity | Identifier | `Name` |
+|---|---|---|
+| `https://contoso.org/plant-01/things/` | `org.contoso.plant-01.things` | `https://contoso.org/plant-01/things/` |
+| `urn:dev:ops:32473-pump-01` | `urn.dev.ops.32473-pump-01` | `Pump 01` |
+| `https://contoso.org/models/Pump/1.0.0` | `org.contoso.models.Pump.1.0.0` | `Pump Model` |
+
+The construction is **one-way**. A client that holds a `ThingId` computes the `ResourceId` in closed form and confirms it by reading `ThingId`; a client that holds only a `ResourceId` reads `ThingId` rather than attempting to invert the construction. `ModelReference` (§6.3) and the `TargetUri` of a `WoTDependencyDataType` (§7.4) carry an `@id` or an `xid`, never a reconstructed identity.
+
 ## 8 Protocol binder (normative)
 
 The **binder** turns a form into an executable plan. It has a protocol-independent **core** and a set of **per-binding** modules.
@@ -394,6 +420,7 @@ The Thing Model is a class template; its `@type` `uav:objectType` makes a refres
 
 ```jsonc
 "@type": ["tm:ThingModel", "uav:objectType"],
+"id": "https://fabrikam.com/catalog/pumps/PumpType",
 "title": "PumpType",
 "uav:browseName": "1:PumpType",
 "properties": {
@@ -406,7 +433,7 @@ The Thing Model is a class template; its `@type` `uav:objectType` makes a refres
 "actions": { "reset": { "@type": "uav:method", "uav:modellingRule": "Optional" } }
 ```
 
-Here `PumpType` projects to an ObjectType whose `PumpSpeed` is a Mandatory Variable (scaled `engineering = raw × 0.1`, two decimals) and whose `reset` is an Optional Method. The resulting type NodeId is published back on `ThingModelFileType.DerivedTypeNodeId`.
+Here `PumpType` projects to an ObjectType whose `PumpSpeed` is a Mandatory Variable (scaled `engineering = raw × 0.1`, two decimals) and whose `reset` is an Optional Method. The resulting type NodeId is published back on `ThingModelFileType.DerivedTypeNodeId`, and the `id` is the model's source identity, from which its `ResourceId` `com.fabrikam.catalog.pumps.PumpType` is built (§7.12).
 
 ### 12.2 Thing Description → Object instance (`examples/02-thing-description-pump.td.jsonld`)
 
@@ -445,14 +472,16 @@ The `Refresh` output over the three documents pairs a `WoTRefreshSummaryDataType
 "summary": { "Generation": 7, "Outcome": "Success", "Atomicity": "PerClosure",
              "Total": 3, "Succeeded": 2, "Failed": 1, "Retired": 1 },
 "results": [
-  { "ResourceId": "pumptype",   "Outcome": "Success", "Phase": "Activation",
-    "LoadState": "Active", "MaterializedNodeCount": 12 },
-  { "ResourceId": "pump-01",    "Outcome": "Success", "Phase": "Activation", "LoadState": "Active" },
-  { "ResourceId": "pump-broken","Outcome": "Failed",  "Phase": "FormatValidation", "LoadState": "Failed" }
+  { "ResourceId": "com.fabrikam.catalog.pumps.PumpType", "Outcome": "Success",
+    "Phase": "Activation", "LoadState": "Active", "MaterializedNodeCount": 12 },
+  { "ResourceId": "urn.dev.opcua.pump-01",     "Outcome": "Success", "Phase": "Activation",
+    "LoadState": "Active" },
+  { "ResourceId": "urn.dev.opcua.pump-broken", "Outcome": "Failed",
+    "Phase": "FormatValidation", "LoadState": "Failed" }
 ]
 ```
 
-The summary reports two successes and one failure in generation 7, with one superseded generation retired under the configured policy (§7.6); the failed `pump-broken` is isolated because its closure never activated, exactly as §7.4 requires.
+Each `ResourceId` is the symbolic identifier of the document's source identity (§7.12): `https://fabrikam.com/catalog/pumps/PumpType` for the Thing Model, `urn:dev:opcua:pump-01` and `urn:dev:opcua:pump-broken` for the two Thing Descriptions; the groups are keyed the same way from their `CatalogUri`. The summary reports two successes and one failure in generation 7, with one superseded generation retired under the configured policy (§7.6); the failed Thing Description is isolated because its closure never activated, exactly as §7.4 requires.
 
 ## 13 Incorporated OPC 10100-1 v1.02 model (normative)
 
@@ -475,7 +504,7 @@ The entry point is the `WoTAssetConnectionManagement` object (an instance of `Wo
 | `WoTAssetFileType` | ObjectType (FileType) | `CloseAndUpdate([in] UInt32 FileHandle)` (Mandatory). |
 | `HasWoTComponent` | ReferenceType | Subtype of `HasComponent`; InverseName `WoTComponentOf`. |
 
-Every 1.02 scenario continues to work: create-from-existing-TD (`CreateAsset` + `WoTFile` upload + `CloseAndUpdate`), discovery (`DiscoverAssets` → `ConnectionTest` → `CreateAssetForEndpoint` with an auto-generated TD file), deletion (`DeleteAsset`), and the supported-bindings advertisement (`SupportedWoTBindings`). The incorporated `NamespaceMetadata` carries the new `1.2.0` version while its NodeIds stay stable, and the deprecation is machine-readable (`ReleaseStatus="Deprecated"`) so tools can steer new development to the registry surface.
+Every 1.02 scenario continues to work: create-from-existing-TD (`CreateAsset` + `WoTFile` upload + `CloseAndUpdate`), discovery (`DiscoverAssets` → `ConnectionTest` → `CreateAssetForEndpoint` with an auto-generated TD file), deletion (`DeleteAsset`), and the supported-bindings advertisement (`SupportedWoTBindings`). The incorporated `NamespaceMetadata` carries the `1.3.0` version while its NodeIds stay stable, and the deprecation is machine-readable (`ReleaseStatus="Deprecated"`) so tools can steer new development to the registry surface.
 
 ### 13.2 Backing the deprecated surface with the registry (signatures unchanged)
 
@@ -498,6 +527,7 @@ Conformance is composed from independently implementable **conformance units (CU
 | Conformance unit | Requires |
 |---|---|
 | `WOTC-RegistryDiscovery` | Well-known `WoTRegistry` under Server; browse registry/groups; read xRegistry + WoT metadata. |
+| `WOTC-Identity` | `CatalogUri` on every group, `ThingId` on every TD, `ModelId` on every TM; a `GroupId`/`ResourceId` built from that source identity by the §7.12 construction and never from a document; a non-empty `Name` and a DisplayName set from it. |
 | `WOTC-DocumentRead` | Read a stored TD/TM via the inherited FileType `Open`/`Read`/`Close`. |
 | `WOTC-DocumentWrite` | Create/write TD/TM resources via xRegistry `CreateResource` + FileType write. |
 | `WOTC-TDValidation` | Format + compatibility validation of TDs; `ValidationOutcome`; validation-failure events. |
@@ -516,7 +546,7 @@ Conformance is composed from independently implementable **conformance units (CU
 | `WOTC-AtomicityModes` | Per-resource / per-group / per-closure / per-registry atomicity with shadow switch and documented graceful or immediate retirement. |
 | `WOTC-Legacy` | The incorporated OPC 10100-1 v1.02 model and scenarios, callable and preserved (§13). |
 
-**Profiles.** *WoT-Con Registry Server* = `WOTC-RegistryDiscovery` + `WOTC-DocumentRead` + `WOTC-DocumentWrite` + `WOTC-TDValidation` + `WOTC-TMValidation` + `WOTC-TypeMaterialization` + `WOTC-InstanceMaterialization` + `WOTC-ReferenceMaterialization` + `WOTC-Refresh` + `WOTC-Events` + `WOTC-VersionLifecycle` + `WOTC-BinderCore` + at least one `WOTC-BinderProtocol` module. *WoT-Con Full* adds `WOTC-ModelChange`, `WOTC-SemanticChange`, `WOTC-Federation` and `WOTC-AtomicityModes`. *WoT-Con Legacy* (`WOTC-Legacy`) is the incorporated-and-deprecated 1.02 surface (§13), independently conformant so existing 1.02 clients are served without the registry profile.
+**Profiles.** *WoT-Con Registry Server* = `WOTC-RegistryDiscovery` + `WOTC-Identity` + `WOTC-DocumentRead` + `WOTC-DocumentWrite` + `WOTC-TDValidation` + `WOTC-TMValidation` + `WOTC-TypeMaterialization` + `WOTC-InstanceMaterialization` + `WOTC-ReferenceMaterialization` + `WOTC-Refresh` + `WOTC-Events` + `WOTC-VersionLifecycle` + `WOTC-BinderCore` + at least one `WOTC-BinderProtocol` module. *WoT-Con Full* adds `WOTC-ModelChange`, `WOTC-SemanticChange`, `WOTC-Federation` and `WOTC-AtomicityModes`. *WoT-Con Legacy* (`WOTC-Legacy`) is the incorporated-and-deprecated 1.02 surface (§13), independently conformant so existing 1.02 clients are served without the registry profile.
 
 ## 15 Acceptance scenarios
 
@@ -535,7 +565,7 @@ Each scenario is an end-to-end acceptance test for the CUs it exercises.
 
 ## 16 NodeSet validation
 
-The NodeSet, CSV and Annex A are generated from `tools/build_model.py` (from the in-code registry model and the pinned `legacy/` sources); they shall not be hand-edited. `tools/validate_local.py` checks XML well-formedness, unique NodeIds (additive registry ids in the 64000+ block, incorporated 1.02 ids in the preserved 1..172 range), CSV↔NodeSet consistency, that every reference resolves against the own namespace, the loaded xRegistry base `NodeIds.csv` and (when the gitignored `tools/ref/UA.NodeIds.csv` aid is present) the base UA ids, that each type carries a `HasSubtype` inverse and each Structure its encodings, that the well-known `WoTRegistry` instance is a component and `HasNotifier` target of the `Server` object with `EventNotifier` set, and that the registry and document types generate the required events. It additionally **proves the 1.02 preservation**: the first 172 CSV rows match the pinned `legacy/WotConnection.csv` exactly (every NodeId and NodeClass), every concrete legacy id is present with its pinned NodeClass while reserved ids are not emitted, the required 1.02 symbols and the callable well-known `WoTAssetConnectionManagement` are present, the management/upload surface carries `ReleaseStatus="Deprecated"`, and the combined NodeSet declares the single `http://opcfoundation.org/UA/WoT-Con/` namespace at model version 1.2.0. Finally it confirms the generated Annex A is embedded verbatim in this document.
+The NodeSet, CSV and Annex A are generated from `tools/build_model.py` (from the in-code registry model and the pinned `legacy/` sources); they shall not be hand-edited. `tools/validate_local.py` checks XML well-formedness, unique NodeIds (additive registry ids in the 64000+ block, incorporated 1.02 ids in the preserved 1..172 range), CSV↔NodeSet consistency, that every reference resolves against the own namespace, the loaded xRegistry base `NodeIds.csv` and (when the gitignored `tools/ref/UA.NodeIds.csv` aid is present) the base UA ids, that each type carries a `HasSubtype` inverse and each Structure its encodings, that the well-known `WoTRegistry` instance is a component and `HasNotifier` target of the `Server` object with `EventNotifier` set, and that the registry and document types generate the required events. It additionally **proves the 1.02 preservation**: the first 172 CSV rows match the pinned `legacy/WotConnection.csv` exactly (every NodeId and NodeClass), every concrete legacy id is present with its pinned NodeClass while reserved ids are not emitted, the required 1.02 symbols and the callable well-known `WoTAssetConnectionManagement` are present, the management/upload surface carries `ReleaseStatus="Deprecated"`, and the combined NodeSet declares the single `http://opcfoundation.org/UA/WoT-Con/` namespace at model version 1.3.0. Finally it confirms the generated Annex A is embedded verbatim in this document.
 
 ---
 
@@ -624,6 +654,7 @@ An xRegistry GroupType that collects related ThingDescriptionFileType resources 
 | ValidateCompatibility | Variable | Boolean | Optional | ThingDescriptionGroupType | Group-level policy: validate version compatibility on ingest. |
 | ConsistentFormat | Variable | Boolean | Optional | ThingDescriptionGroupType | Group-level policy: require all versions of a resource to share one format. |
 | <ThingDescription> | Object |  | OptionalPlaceholder | ThingDescriptionGroupType | A Thing Description resource held by this group (constrained to the ThingDescriptionFileType subtype). |
+| CatalogUri | Variable | String | Mandatory | ThingDescriptionGroupType | The URI of the catalogue this group collects - a site, a vendor catalogue or another publishing authority. It is the group's source identity: the inherited GroupId is the symbolic identifier constructed from it, and the inherited Name is this URI verbatim. |
 
 <a id="type-ThingModelGroupType"></a>
 
@@ -639,6 +670,7 @@ An xRegistry GroupType that collects related ThingModelFileType resources (a Thi
 | ValidateCompatibility | Variable | Boolean | Optional | ThingModelGroupType | Group-level policy: validate version compatibility on ingest. |
 | ConsistentFormat | Variable | Boolean | Optional | ThingModelGroupType | Group-level policy: require all versions of a resource to share one format. |
 | <ThingModel> | Object |  | OptionalPlaceholder | ThingModelGroupType | A Thing Model resource held by this group (constrained to the ThingModelFileType subtype). |
+| CatalogUri | Variable | String | Mandatory | ThingModelGroupType | The URI of the catalogue this group collects - a site, a vendor catalogue or another publishing authority. It is the group's source identity: the inherited GroupId is the symbolic identifier constructed from it, and the inherited Name is this URI verbatim. |
 
 <a id="type-WoTDocumentType"></a>
 
@@ -682,7 +714,7 @@ A concrete WoTDocumentType whose content is a W3C WoT Thing Description (WoT-TD/
 
 | BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
 |---|---|---|---|---|---|
-| ThingId | Variable | String | Optional | ThingDescriptionFileType | The Thing Description id (a URI/URN identifying the concrete Thing instance). |
+| ThingId | Variable | String | Mandatory | ThingDescriptionFileType | The Thing Description id (a URI/URN identifying the concrete Thing instance). It is the resource's source identity: the inherited ResourceId is the symbolic identifier constructed from it, and it is invariant across the document's versions. |
 | ThingTitle | Variable | String | Optional | ThingDescriptionFileType | The Thing Description human-readable title. |
 | BaseUri | Variable | String | Optional | ThingDescriptionFileType | The Thing Description base URI used to resolve relative form hrefs. |
 | ModelReference | Variable | String | Optional | ThingDescriptionFileType | The xid or href of the Thing Model this Thing Description derives from (links rel=type), when present. |
@@ -700,6 +732,7 @@ A concrete WoTDocumentType whose content is a W3C WoT Thing Model (WoT-TM/1.1, a
 | ModelTitle | Variable | String | Optional | ThingModelFileType | The Thing Model human-readable title. |
 | ModelVersion | Variable | String | Optional | ThingModelFileType | The Thing Model version (WoT version.model), when present. |
 | DerivedTypeNodeId | Variable | [NodeId](https://reference.opcfoundation.org/specs/OPC-10000-3/8.2.1) | Optional | ThingModelFileType | The ObjectType or VariableType materialized from this Thing Model. |
+| ModelId | Variable | String | Mandatory | ThingModelFileType | The Thing Model id (the WoT @id, a URI identifying the model). It is the resource's source identity: the inherited ResourceId is the symbolic identifier constructed from it, and it is invariant across the document's versions. |
 
 <a id="type-WoTBindingType"></a>
 

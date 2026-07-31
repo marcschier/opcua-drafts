@@ -8,6 +8,7 @@
     "../../WoT-Binding/opc-ua-wot-binding.context.jsonld"
   ],
   "@type": ["tm:ThingModel", "uav:objectType"],
+  "id": "https://fabrikam.com/catalog/pumps/PumpType",
   "title": "PumpType",
   "description": "A WoT-TM/1.1 Thing Model stored as a thingmodel resource in a WoT Connectivity 1.1 registry. A Refresh projects it to an OPC UA ObjectType (uav:objectType) whose members carry the modelling rules and units declared here. This document is canonical; the ObjectType it produces is derived code-behind.",
   "version": { "model": "1.2.0" },

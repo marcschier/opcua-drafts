@@ -50,9 +50,15 @@ import json
 import os
 import re
 import sys
-import urllib.parse
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+# The symbolic-identifier construction is normative (OPC UA - xRegistry §6.9 /
+# xRegistry-OpenUsd §5.1.1) and shared with the schema catalog, so the two domains cannot
+# drift into different identifier grammars.
+sys.path.insert(0, os.path.abspath(os.path.join(
+    HERE, "..", "..", "..", "..", "core-specs", "extras", "_common")))
+from opcua_enc.symbolic_id import symbolic_id  # noqa: E402
+
 ART_ROOT = os.path.abspath(os.path.join(HERE, ".."))
 DEFAULT_EXAMPLES = os.path.abspath(os.path.join(HERE, "..", "..", "openusd-binding", "examples"))
 SCHEMA_DIR = os.path.join(ART_ROOT, "schemas", "opcUaOpenUsdGeoDemo")
@@ -129,12 +135,17 @@ def _normalize_asset_id(ref: str) -> str:
 
 
 def _resource_id(asset_id: str) -> str:
-    """URL-safe percent-encoding of an asset identifier (§5.15.3 ResourceId).
+    """The symbolic identifier of an asset identifier (xRegistry-OpenUsd §5.1.1).
 
-    Nothing that is URL-safe is escaped, so a plain ``live.usda`` is unchanged
-    while ``textures/albedo.png`` becomes ``textures%2Falbedo.png``. The inverse
-    is ``urllib.parse.unquote``; the validator asserts the round-trip."""
-    return urllib.parse.quote(asset_id, safe="")
+    A plain ``pump.usda`` is unchanged while ``textures/albedo.png`` becomes
+    ``textures.albedo.png`` and ``pkg.usdz[tex/a.png]`` becomes ``pkg.usdz-tex.a.png``.
+    Percent-encoding cannot be used here: an xRegistry ``<SINGULAR>id`` admits only RFC
+    3986 *unreserved* characters plus ``:`` and ``@``, and ``%`` is in none of them.
+
+    The construction is one-way. The authored identifier is carried verbatim by the
+    ``assetidentifier`` attribute, which is the authority; the validator re-derives this
+    id from that attribute rather than inverting anything."""
+    return symbolic_id(asset_id)
 
 
 def _scan_dependencies(text: str) -> list[str]:
@@ -212,9 +223,10 @@ def _resource(collection, group_id, asset_id, text, kind, fmt_tuple, depends_ids
         "format": fmt,
         "contenttype": contenttype,
         "usdasset": text,
-        # The authored, container-relative asset identifier (§5.1). The ResourceId
-        # in the xid is quote(assetidentifier); the identifier is recoverable by
-        # unquoting the xid's last segment.
+        # The authored, container-relative asset identifier (§5.1) and the authority for
+        # this Resource's identity. The ResourceId in the xid is the symbolic identifier
+        # built from it; the construction is one-way, so the identifier is read here, not
+        # decoded out of the xid.
         "assetidentifier": asset_id,
         "assetkind": kind,
         # authored asset identifiers, so a resolver matches them vs @...@.
@@ -300,17 +312,19 @@ def _build_schema_plugin_group(collection):
     manifest_text = _read_text(os.path.join(SCHEMA_DIR, "plugInfo.json"))
     # The plugin name is authoritative from the manifest, not the directory name.
     plugin_name = json.loads(manifest_text)["Plugins"][0]["Name"]
+    group_id = symbolic_id(plugin_name)
 
     resources: dict[str, dict] = {}
     for filename, (kind, fmt_tuple) in SCHEMA_FILE_KIND.items():
         text = _read_text(os.path.join(SCHEMA_DIR, filename))
-        res = _resource(collection, plugin_name, filename, text, kind, fmt_tuple, [])
+        res = _resource(collection, group_id, filename, text, kind, fmt_tuple, [])
         resources[res["usdassetid"]] = res  # keyed by ResourceId
 
     group = {
-        "usdschemaplugingroupid": plugin_name,
+        "usdschemaplugingroupid": group_id,
+        # The group id is the symbolic identifier of the plugin name (xRegistry spec
+        # §4.3) and name carries the plugin name verbatim; no label restates either.
         "name": plugin_name,
-        # The group id IS the plugin name (xRegistry spec §4.3); no label restates it.
         f"{RESOURCES}count": len(resources),
         RESOURCES: resources,
     }

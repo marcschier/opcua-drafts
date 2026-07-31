@@ -1044,6 +1044,7 @@
         "lang": "jsonc",
         "lines": [
           "\"@type\": [\"tm:ThingModel\", \"uav:objectType\"],",
+          "\"id\": \"https://fabrikam.com/catalog/pumps/PumpType\",",
           "\"title\": \"PumpType\",",
           "\"uav:browseName\": \"1:PumpType\",",
           "\"properties\": {",
@@ -1107,7 +1108,41 @@
           },
           {
             "r": "t",
-            "text": "."
+            "text": ", and the "
+          },
+          {
+            "r": "code",
+            "text": "id"
+          },
+          {
+            "r": "t",
+            "text": " is the model's source identity, from which its "
+          },
+          {
+            "r": "code",
+            "text": "ResourceId"
+          },
+          {
+            "r": "t",
+            "text": " "
+          },
+          {
+            "r": "code",
+            "text": "com.fabrikam.catalog.pumps.PumpType"
+          },
+          {
+            "r": "t",
+            "text": " is built ("
+          },
+          {
+            "r": "xref",
+            "target": "c6-11-12",
+            "kind": "clause",
+            "prefix": "6.11.12"
+          },
+          {
+            "r": "t",
+            "text": ")."
           }
         ],
         "src": {
@@ -1449,10 +1484,12 @@
           "\"summary\": { \"Generation\": 7, \"Outcome\": \"Success\", \"Atomicity\": \"PerClosure\",",
           "             \"Total\": 3, \"Succeeded\": 2, \"Failed\": 1, \"Retired\": 1 },",
           "\"results\": [",
-          "  { \"ResourceId\": \"pumptype\",   \"Outcome\": \"Success\", \"Phase\": \"Activation\",",
-          "    \"LoadState\": \"Active\", \"MaterializedNodeCount\": 12 },",
-          "  { \"ResourceId\": \"pump-01\",    \"Outcome\": \"Success\", \"Phase\": \"Activation\", \"LoadState\": \"Active\" },",
-          "  { \"ResourceId\": \"pump-broken\",\"Outcome\": \"Failed\",  \"Phase\": \"FormatValidation\", \"LoadState\": \"Failed\" }",
+          "  { \"ResourceId\": \"com.fabrikam.catalog.pumps.PumpType\", \"Outcome\": \"Success\",",
+          "    \"Phase\": \"Activation\", \"LoadState\": \"Active\", \"MaterializedNodeCount\": 12 },",
+          "  { \"ResourceId\": \"urn.dev.opcua.pump-01\",     \"Outcome\": \"Success\", \"Phase\": \"Activation\",",
+          "    \"LoadState\": \"Active\" },",
+          "  { \"ResourceId\": \"urn.dev.opcua.pump-broken\", \"Outcome\": \"Failed\",",
+          "    \"Phase\": \"FormatValidation\", \"LoadState\": \"Failed\" }",
           "]"
         ],
         "src": {
@@ -1467,7 +1504,57 @@
         "runs": [
           {
             "r": "t",
-            "text": "The summary reports two successes and one failure in generation 7, with one superseded generation retired under the configured policy ("
+            "text": "Each "
+          },
+          {
+            "r": "code",
+            "text": "ResourceId"
+          },
+          {
+            "r": "t",
+            "text": " is the symbolic identifier of the document's source identity ("
+          },
+          {
+            "r": "xref",
+            "target": "c6-11-12",
+            "kind": "clause",
+            "prefix": "6.11.12"
+          },
+          {
+            "r": "t",
+            "text": "): "
+          },
+          {
+            "r": "code",
+            "text": "https://fabrikam.com/catalog/pumps/PumpType"
+          },
+          {
+            "r": "t",
+            "text": " for the Thing Model, "
+          },
+          {
+            "r": "code",
+            "text": "urn:dev:opcua:pump-01"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "urn:dev:opcua:pump-broken"
+          },
+          {
+            "r": "t",
+            "text": " for the two Thing Descriptions; the groups are keyed the same way from their "
+          },
+          {
+            "r": "code",
+            "text": "CatalogUri"
+          },
+          {
+            "r": "t",
+            "text": ". The summary reports two successes and one failure in generation 7, with one superseded generation retired under the configured policy ("
           },
           {
             "r": "xref",
@@ -1477,15 +1564,7 @@
           },
           {
             "r": "t",
-            "text": "); the failed "
-          },
-          {
-            "r": "code",
-            "text": "pump-broken"
-          },
-          {
-            "r": "t",
-            "text": " is isolated because its closure never activated, exactly as "
+            "text": "); the failed Thing Description is isolated because its closure never activated, exactly as "
           },
           {
             "r": "xref",
@@ -2241,7 +2320,15 @@
           },
           {
             "r": "t",
-            "text": ") and a constrained "
+            "text": "), the Mandatory "
+          },
+          {
+            "r": "code",
+            "text": "CatalogUri"
+          },
+          {
+            "r": "t",
+            "text": " that names the catalogue it collects, and a constrained "
           },
           {
             "r": "code",
@@ -2257,7 +2344,50 @@
           },
           {
             "r": "t",
-            "text": " placeholder that limits its members to the matching document subtype. A Thing Description group holds only Thing Descriptions; a Thing Model group holds only Thing Models."
+            "text": " placeholder that limits its members to the matching document subtype. A Thing Description group holds only Thing Descriptions; a Thing Model group holds only Thing Models. "
+          },
+          {
+            "r": "code",
+            "text": "CatalogUri"
+          },
+          {
+            "r": "t",
+            "text": " is the group's "
+          },
+          {
+            "r": "t",
+            "text": "source identity",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": ": its "
+          },
+          {
+            "r": "code",
+            "text": "GroupId"
+          },
+          {
+            "r": "t",
+            "text": " is derived from it and its "
+          },
+          {
+            "r": "code",
+            "text": "Name"
+          },
+          {
+            "r": "t",
+            "text": " repeats it ("
+          },
+          {
+            "r": "xref",
+            "target": "c6-11-12",
+            "kind": "clause",
+            "prefix": "6.11.12"
+          },
+          {
+            "r": "t",
+            "text": ")."
           }
         ],
         "src": {
@@ -2609,7 +2739,7 @@
           },
           {
             "r": "t",
-            "text": " adds the TD instance identity ("
+            "text": " adds the TD instance identity (Mandatory "
           },
           {
             "r": "code",
@@ -2649,7 +2779,15 @@
           },
           {
             "r": "t",
-            "text": " adds the TM type identity ("
+            "text": " adds the TM type identity (Mandatory "
+          },
+          {
+            "r": "code",
+            "text": "ModelId"
+          },
+          {
+            "r": "t",
+            "text": ", "
           },
           {
             "r": "code",
@@ -2673,7 +2811,58 @@
           },
           {
             "r": "t",
-            "text": "). For example, after a Thing Model is projected, a client reads "
+            "text": "). "
+          },
+          {
+            "r": "code",
+            "text": "ThingId"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "ModelId"
+          },
+          {
+            "r": "t",
+            "text": " are the documents' "
+          },
+          {
+            "r": "t",
+            "text": "source identities",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": ", from which their "
+          },
+          {
+            "r": "code",
+            "text": "ResourceId"
+          },
+          {
+            "r": "t",
+            "text": "s are derived ("
+          },
+          {
+            "r": "xref",
+            "target": "c6-11-12",
+            "kind": "clause",
+            "prefix": "6.11.12"
+          },
+          {
+            "r": "t",
+            "text": "); "
+          },
+          {
+            "r": "code",
+            "text": "ContentDigest"
+          },
+          {
+            "r": "t",
+            "text": " fingerprints one version's bytes and is never an identifier. For example, after a Thing Model is projected, a client reads "
           },
           {
             "r": "code",
@@ -6137,6 +6326,592 @@
       },
       {
         "t": "clause",
+        "id": "c6-11-12",
+        "title": "Document identifiers and names",
+        "level": 3
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The registry is browsed by people, frequently through generic third-party xRegistry or OPC UA tooling that shows only an entity's identifier and its name. This clause fixes how both are formed, applying the symbolic-identifier construction of "
+          },
+          {
+            "r": "t",
+            "text": "OPC UA — xRegistry",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " "
+          },
+          {
+            "r": "t",
+            "text": "§6.9"
+          },
+          {
+            "r": "t",
+            "text": "."
+          }
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "7.12 Document identifiers and names",
+          "b": 0
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Each entity has a "
+          },
+          {
+            "r": "t",
+            "text": "source identity",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " — a stable string that names "
+          },
+          {
+            "r": "t",
+            "text": "what",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " the entity is, exposed verbatim as a Mandatory Property and invariant across the entity's versions:"
+          }
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "7.12 Document identifiers and names",
+          "b": 1
+        }
+      },
+      {
+        "t": "table",
+        "id": "document-identifiers-and-names-tab1",
+        "caption": "Document identifiers and names",
+        "kind": "generic",
+        "headers": [
+          [
+            {
+              "r": "t",
+              "text": "Entity"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Source identity"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Example"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "r": "code",
+                "text": "ThingDescriptionGroupType"
+              },
+              {
+                "r": "t",
+                "text": " / "
+              },
+              {
+                "r": "code",
+                "text": "ThingModelGroupType"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "CatalogUri"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "https://contoso.org/plant-01/things/"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "code",
+                "text": "ThingDescriptionFileType"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "ThingId"
+              },
+              {
+                "r": "t",
+                "text": " (the TD "
+              },
+              {
+                "r": "code",
+                "text": "@id"
+              },
+              {
+                "r": "t",
+                "text": ")"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "urn:dev:ops:32473-pump-01"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "code",
+                "text": "ThingModelFileType"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "ModelId"
+              },
+              {
+                "r": "t",
+                "text": " (the TM "
+              },
+              {
+                "r": "code",
+                "text": "@id"
+              },
+              {
+                "r": "t",
+                "text": ")"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "https://contoso.org/models/Pump/1.0.0"
+              }
+            ]
+          ]
+        ],
+        "widths": null,
+        "note": null,
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "7.12 Document identifiers and names",
+          "b": 2
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "A server "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " set "
+          },
+          {
+            "r": "code",
+            "text": "GroupId"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "ResourceId"
+          },
+          {
+            "r": "t",
+            "text": " to the symbolic identifier constructed from the corresponding source identity, and "
+          },
+          {
+            "r": "t",
+            "text": "shall not",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " derive either from a document or from a digest of one. "
+          },
+          {
+            "r": "code",
+            "text": "ContentDigest"
+          },
+          {
+            "r": "t",
+            "text": " fingerprints the bytes of one version; a resource identifier that changed with the bytes would start a new resource on every revision, which contradicts a resource being the umbrella over its versions."
+          }
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "7.12 Document identifiers and names",
+          "b": 3
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "A server "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " set every group's and document's "
+          },
+          {
+            "r": "code",
+            "text": "Name"
+          },
+          {
+            "r": "t",
+            "text": " to a non-empty human-readable value: for a group, the "
+          },
+          {
+            "r": "code",
+            "text": "CatalogUri"
+          },
+          {
+            "r": "t",
+            "text": " verbatim; for a Thing Description, its "
+          },
+          {
+            "r": "code",
+            "text": "ThingTitle"
+          },
+          {
+            "r": "t",
+            "text": " where present and otherwise its "
+          },
+          {
+            "r": "code",
+            "text": "ThingId"
+          },
+          {
+            "r": "t",
+            "text": "; for a Thing Model, its "
+          },
+          {
+            "r": "code",
+            "text": "ModelTitle"
+          },
+          {
+            "r": "t",
+            "text": " where present and otherwise its "
+          },
+          {
+            "r": "code",
+            "text": "ModelId"
+          },
+          {
+            "r": "t",
+            "text": ". A server "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " set each node's DisplayName from its "
+          },
+          {
+            "r": "code",
+            "text": "Name"
+          },
+          {
+            "r": "t",
+            "text": ", so a client browsing "
+          },
+          {
+            "r": "code",
+            "text": "Server → WoTRegistry"
+          },
+          {
+            "r": "t",
+            "text": " reads a symbolic identifier and a title without a Read per candidate."
+          }
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "7.12 Document identifiers and names",
+          "b": 4
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Worked examples:"
+          }
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "7.12 Document identifiers and names",
+          "b": 5
+        }
+      },
+      {
+        "t": "table",
+        "id": "document-identifiers-and-names-tab2",
+        "caption": "Document identifiers and names (2)",
+        "kind": "generic",
+        "headers": [
+          [
+            {
+              "r": "t",
+              "text": "Source identity"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Identifier"
+            }
+          ],
+          [
+            {
+              "r": "code",
+              "text": "Name"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "r": "code",
+                "text": "https://contoso.org/plant-01/things/"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "org.contoso.plant-01.things"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "https://contoso.org/plant-01/things/"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "code",
+                "text": "urn:dev:ops:32473-pump-01"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "urn.dev.ops.32473-pump-01"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "Pump 01"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "code",
+                "text": "https://contoso.org/models/Pump/1.0.0"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "org.contoso.models.Pump.1.0.0"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "Pump Model"
+              }
+            ]
+          ]
+        ],
+        "widths": null,
+        "note": null,
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "7.12 Document identifiers and names",
+          "b": 6
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The construction is "
+          },
+          {
+            "r": "t",
+            "text": "one-way",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": ". A client that holds a "
+          },
+          {
+            "r": "code",
+            "text": "ThingId"
+          },
+          {
+            "r": "t",
+            "text": " computes the "
+          },
+          {
+            "r": "code",
+            "text": "ResourceId"
+          },
+          {
+            "r": "t",
+            "text": " in closed form and confirms it by reading "
+          },
+          {
+            "r": "code",
+            "text": "ThingId"
+          },
+          {
+            "r": "t",
+            "text": "; a client that holds only a "
+          },
+          {
+            "r": "code",
+            "text": "ResourceId"
+          },
+          {
+            "r": "t",
+            "text": " reads "
+          },
+          {
+            "r": "code",
+            "text": "ThingId"
+          },
+          {
+            "r": "t",
+            "text": " rather than attempting to invert the construction. "
+          },
+          {
+            "r": "code",
+            "text": "ModelReference"
+          },
+          {
+            "r": "t",
+            "text": " ("
+          },
+          {
+            "r": "xref",
+            "target": "c6-5",
+            "kind": "clause",
+            "prefix": "6.5"
+          },
+          {
+            "r": "t",
+            "text": ") and the "
+          },
+          {
+            "r": "code",
+            "text": "TargetUri"
+          },
+          {
+            "r": "t",
+            "text": " of a "
+          },
+          {
+            "r": "code",
+            "text": "WoTDependencyDataType"
+          },
+          {
+            "r": "t",
+            "text": " ("
+          },
+          {
+            "r": "xref",
+            "target": "c6-11-4",
+            "kind": "clause",
+            "prefix": "6.11.4"
+          },
+          {
+            "r": "t",
+            "text": ") carry an "
+          },
+          {
+            "r": "code",
+            "text": "@id"
+          },
+          {
+            "r": "t",
+            "text": " or an "
+          },
+          {
+            "r": "code",
+            "text": "xid"
+          },
+          {
+            "r": "t",
+            "text": ", never a reconstructed identity."
+          }
+        ],
+        "src": {
+          "f": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
+          "s": "7.12 Document identifiers and names",
+          "b": 7
+        }
+      },
+      {
+        "t": "clause",
         "id": "c6-12",
         "title": "Protocol binder",
         "level": 2
@@ -8212,11 +8987,11 @@
           },
           {
             "r": "t",
-            "text": " carries the new "
+            "text": " carries the "
           },
           {
             "r": "code",
-            "text": "1.2.0"
+            "text": "1.3.0"
           },
           {
             "r": "t",
@@ -9784,6 +10559,74 @@
             [
               {
                 "r": "code",
+                "text": "WOTC-Identity"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "CatalogUri"
+              },
+              {
+                "r": "t",
+                "text": " on every group, "
+              },
+              {
+                "r": "code",
+                "text": "ThingId"
+              },
+              {
+                "r": "t",
+                "text": " on every TD, "
+              },
+              {
+                "r": "code",
+                "text": "ModelId"
+              },
+              {
+                "r": "t",
+                "text": " on every TM; a "
+              },
+              {
+                "r": "code",
+                "text": "GroupId"
+              },
+              {
+                "r": "t",
+                "text": "/"
+              },
+              {
+                "r": "code",
+                "text": "ResourceId"
+              },
+              {
+                "r": "t",
+                "text": " built from that source identity by the "
+              },
+              {
+                "r": "xref",
+                "target": "c6-11-12",
+                "kind": "clause",
+                "prefix": "6.11.12"
+              },
+              {
+                "r": "t",
+                "text": " construction and never from a document; a non-empty "
+              },
+              {
+                "r": "code",
+                "text": "Name"
+              },
+              {
+                "r": "t",
+                "text": " and a DisplayName set from it."
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "code",
                 "text": "WOTC-DocumentRead"
               }
             ],
@@ -10153,6 +10996,14 @@
           },
           {
             "r": "code",
+            "text": "WOTC-Identity"
+          },
+          {
+            "r": "t",
+            "text": " + "
+          },
+          {
+            "r": "code",
             "text": "WOTC-DocumentRead"
           },
           {
@@ -10418,7 +11269,7 @@
             [
               {
                 "r": "t",
-                "text": "1.2.0"
+                "text": "1.3.0"
               }
             ]
           ],
@@ -10438,7 +11289,7 @@
             [
               {
                 "r": "t",
-                "text": "2026-07-22"
+                "text": "2026-07-31"
               }
             ]
           ],
@@ -10498,7 +11349,7 @@
             [
               {
                 "r": "t",
-                "text": "1:64605"
+                "text": "1:64608"
               }
             ]
           ],

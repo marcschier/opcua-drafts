@@ -12,6 +12,7 @@ sys.path.insert(0, HERE)
 
 from opcua_enc import json_control as jc  # noqa: E402
 from opcua_enc import values as v  # noqa: E402
+from opcua_enc import symbolic_id as sid  # noqa: E402
 from opcua_enc.corpus import CORPUS  # noqa: E402
 
 
@@ -27,6 +28,11 @@ def main() -> int:
             print(f"ERROR {case.name}: {exc}")
             fails += 1
     print(f"corpus: {len(CORPUS)} cases, {fails} failure(s)")
+    try:
+        sid._self_test()
+    except AssertionError as exc:
+        print(f"FAIL symbolic_id: {exc}")
+        fails += 1
     return 1 if fails else 0
 
 

@@ -8,6 +8,36 @@ NodeId assignment is **append-only**: new members take the next free id, so ever
 previously published NodeId is stable across all releases below, and a namespace
 index change does not affect per-namespace NodeId numbers.
 
+## 0.6.0 — 2026-07-31
+
+**Symbolic, human-readable registry identifiers, and a Mandatory `Name`.**
+
+- An artifact's `ResourceId` is now the **symbolic identifier** of its `AssetIdentifier`
+  (§7.11.3) rather than the URL-safe percent-encoding of it. Percent-encoding produced
+  identifiers xRegistry does not permit: an xRegistry `<SINGULAR>id` is restricted to RFC
+  3986 *unreserved* characters plus `:` and `@`, and `%` is in none of those sets, so an
+  identifier such as `textures/albedo.png` encoded to `textures%2Falbedo.png` was
+  illegal — and unreadable. It is now `textures.albedo.png`.
+- The construction is defined once, normatively, in *OPC UA — xRegistry* §6.9 and applied
+  here. It is **one-way**: the reverse direction, which percent-encoding made closed-form,
+  is now a Read of the Mandatory `AssetIdentifier` Property. Losing the closed-form inverse
+  is the price of an identifier a person can read; the forward direction is unchanged, so a
+  resolver still locates an artifact by computation rather than by search.
+- `Name` is Mandatory on every group and artifact, carrying the container identifier or the
+  `AssetIdentifier` verbatim, and a server sets DisplayName from it. A core xRegistry review
+  observed that people browse registries with generic third-party tooling that has only the
+  identifier and the name to show, and that an identifier is used as the display name when a
+  name is absent.
+- The specification now states explicitly that a `ResourceId` is never derived from a
+  document or a digest of one. The same review read the `SchemaId`/`digest` fingerprints as
+  though they were resource keys and asked, reasonably, how such a key could survive the
+  document being versioned. It could not; no model in this repository did that, but nothing
+  said so.
+- The `<RequiredModel>` pin on `http://opcfoundation.org/UA/xRegistry/` moves to 0.3.0, the
+  version that introduces the construction and the Mandatory `Name`. The pin had been left
+  at 0.1.0 while the base model advanced to 0.2.0.
+- No NodeId changed.
+
 ## 0.5.0 — 2026-07-29
 
 **Conformance units in the model, and a Word rendering.**

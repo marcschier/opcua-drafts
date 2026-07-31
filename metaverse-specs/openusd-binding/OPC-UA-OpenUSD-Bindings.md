@@ -1,8 +1,8 @@
 # OPC UA for OpenUSD — Part 1: OpenUSD Binding
 
-**Release 0.5.0 — Draft**
+**Release 0.6.0 — Draft**
 **Namespace:** `http://opcfoundation.org/UA/OpenUSD/`
-**Publication date:** 2026-07-29
+**Publication date:** 2026-07-31
 
 > Status: Working-group draft. This document, together with `Opc.Ua.OpenUsd.NodeSet2.xml` and `Opc.Ua.OpenUsd.NodeIds.csv`, defines an OPC UA information model that lets a Server declare **which OpenUSD (Universal Scene Description) prim represents a given OPC UA Object**, and **which live OPC UA Variable values drive which USD attributes** (and, where authorized, which USD-side intents command OPC UA back), so that a generic connector can render live industrial data in an OpenUSD renderer (for example NVIDIA Omniverse) without hard-coding the mapping. Nothing here is normative, official, or endorsed by the OPC Foundation or the Alliance for OpenUSD; namespace URIs and NodeIds are **provisional** and for prototyping only.
 
@@ -459,7 +459,7 @@ Following xRegistry §6.1, the domain types constrain the inherited placeholders
 
 | Member | DataType / Type | Rule | Meaning |
 |---|---|---:|---|
-| `AssetIdentifier` | String | M | The authored USD asset identifier, normalized relative to its asset container — the string used in USD `@...@` references, and the relative path a connector caches the artifact at. The xRegistry `ResourceId` is its URL-safe encoding, so the two are inter-derivable (§7.11.3). |
+| `AssetIdentifier` | String | M | The authored USD asset identifier, normalized relative to its asset container — the string used in USD `@...@` references, and the relative path a connector caches the artifact at. The xRegistry `ResourceId` is the symbolic identifier constructed from it, a one-way construction that is never inverted (§7.11.3). |
 | `AssetKind` | `OpenUsdAssetKindEnum` | M | `RootLayer`, `SubLayer`, `Reference`, `Payload`, `Texture`, `Package`, `MaterialX`, `Volume`, `SchemaPlugin`, `GeneratedSchema`, or `Manifest`. |
 | `MediaType` | String | O | The USD media type of the artifact, e.g. `model/vnd.usda`, `model/vnd.usdz+zip`, `image/png`. This restates the inherited `ContentType`; when both are present they **shall** be identical, and `ContentType` is authoritative if a server violates that. |
 | `Digest` | ByteString | O | Digest of the exact bytes streamed by this node's `FileType` interface; required for the `OU-AssetDelivery` conformance unit. |
@@ -492,22 +492,34 @@ The facility remains additive. If `Artifacts` is absent, incomplete, unauthorize
 
 #### 7.11.3 Resolver identity
 
-xRegistry defines `Xid` as the **stable path of an entity within its registry, independent of the hosting endpoint** (`/<groups>/<groupId>/<resources>/<resourceId>`), and requires each entity's identifier to be a **URL-safe token**. A USD **asset identifier** is the stable, location-independent name an authored layer uses in an `@...@` reference, which a USD `ArResolver` maps to a **resolved path**. The two express the same idea but are *not* the same grammar: `@./live.usda@` is not a valid `Xid`, and an `Xid` is not what a layer authors.
+xRegistry defines `Xid` as the **stable path of an entity within its registry, independent of the hosting endpoint** (`/<groups>/<groupId>/<resources>/<resourceId>`), and constrains each entity's identifier to a restricted character set — RFC 3986 `unreserved` plus `:` and `@`, at most 128 characters, unique case-insensitively within its parent. A USD **asset identifier** is the stable, location-independent name an authored layer uses in an `@...@` reference, which a USD `ArResolver` maps to a **resolved path**. The two express the same idea but are *not* the same grammar: `@./live.usda@` is not a valid `Xid`, an `Xid` is not what a layer authors, and an identifier such as `textures/albedo.png` cannot appear in an identifier segment at all.
 
-This specification therefore does not equate them; it makes them **deterministically inter-derivable**, which is what a resolver actually needs:
+This specification therefore does not equate them; it derives one from the other by the **symbolic identifier construction** of [*OPC UA — xRegistry*](../../core-specs/xregistry/OPC-UA-xRegistry.md) §6.9, and keeps the authored identifier as the authority:
 
-> An artifact's `AssetIdentifier` **shall** be its authored USD asset identifier, normalized relative to its asset container (a leading `./` removed). Its xRegistry `ResourceId` **shall** be the URL-safe percent-encoding of that `AssetIdentifier`. Its `Xid` is consequently `/<groups>/<AssetContainerId>/<resources>/<ResourceId>`, and the asset identifier **shall** be recoverable from the `Xid` by percent-decoding its last segment.
+> An artifact's `AssetIdentifier` **shall** be its authored USD asset identifier, normalized relative to its asset container (a leading `./` removed). Its xRegistry `ResourceId` **shall** be the symbolic identifier constructed from that `AssetIdentifier`. Its `Xid` is consequently `/<groups>/<AssetContainerId>/<resources>/<ResourceId>`. `AssetIdentifier` is Mandatory and is the authority: a client **shall not** attempt to recover it by inverting the construction.
 
-Both directions are therefore closed-form, with no lookup table:
+The forward direction is closed-form, so a resolver needs no lookup table; the reverse direction is a Read, because the construction is deliberately lossy:
 
 | Direction | Operation |
 |---|---|
-| authored `@X@` in a layer of container `C` → registry location | normalize `X` against `C`, percent-encode, append to `/<groups>/C/<resources>/` |
-| `Xid` → authored identifier | percent-decode the last segment |
+| authored `@X@` in a layer of container `C` → registry location | normalize `X` against `C`, apply the xRegistry §6.9 construction, append to `/<groups>/C/<resources>/` |
+| `Xid` → authored identifier | Read the artifact's `AssetIdentifier` Property |
+
+For example, in container `fabrikam.plant-01`:
+
+| Authored | `AssetIdentifier` | `ResourceId` | `Name` |
+|---|---|---|---|
+| `@./pump.usda@` | `pump.usda` | `pump.usda` | `pump.usda` |
+| `@textures/albedo.png@` | `textures/albedo.png` | `textures.albedo.png` | `textures/albedo.png` |
+| `@pkg.usdz[tex/a.png]@` | `pkg.usdz[tex/a.png]` | `pkg.usdz-tex.a.png` | `pkg.usdz[tex/a.png]` |
+
+`Name` is Mandatory on every group and artifact and **shall** be the `AssetIdentifier` verbatim for an artifact and the asset container identifier verbatim for a group, so an operator browsing `Artifacts` with a generic OPC UA client sees the string a layer actually authors. A server **shall** set each node's DisplayName from its `Name`.
 
 **Which entity level the identifier binds to.** The base model keys resources by `(ResourceId, VersionId)` and may materialize versions as sibling files. An asset identifier must stay stable across revisions of the same layer — that is what makes an authored `@...@` reference durable — so:
 
 > `AssetIdentifier` binds to the **resource**, not the version. All versions of one artifact share one `AssetIdentifier` and one `ResourceId`; they differ only in `VersionId`. A resolver that does not select a version **shall** receive the resource's default version, and an `Xid` that addresses a specific version **shall not** be used as an asset identifier.
+
+A `ResourceId` is therefore never derived from the artifact's bytes: an identifier computed from a document would change on every revision and split one logical artifact into a new resource each time. The content hash of a version is its `Digest`, which is version-level metadata.
 
 A client selects a non-default version explicitly through the xRegistry API (`VersionId`); the authored layer never names one, because a layer that pinned a version would defeat the registry's ability to serve a corrected artifact.
 
@@ -575,7 +587,7 @@ Conformance Units (each a normative, testable requirement):
 - **OU-DynamicComposition** — a `Dynamic` component binding reconciled on `GeneralModelChangeEventType` / `SemanticChangeEventType`.
 - **OU-CrossServerComposition** — a component binding resolved by federation to `ComponentServerUri` / `ComponentEndpointUrl`.
 - **OU-AssetDelivery** — a server serves the stage's complete USD asset closure as `OpenUsdAssetType` nodes with read-only Part 5 `FileType` streams and per-layer digests; a connector fetches, verifies, caches by `AssetIdentifier`, and composes a self-contained local stage.
-- **OU-ArtifactRegistry** — the served artifacts are exposed as the xRegistry artifact registry of §7.11: an `OpenUsdArtifactRegistryType` at `Server/OpenUSD/Artifacts`, artifacts grouped per asset container, each artifact's `ResourceId` the URL-safe encoding of its `AssetIdentifier` so the two are inter-derivable (§7.11.3), and a stage's `Assets` folder Organizing (not duplicating) them. Implies OU-AssetDelivery.
+- **OU-ArtifactRegistry** — the served artifacts are exposed as the xRegistry artifact registry of §7.11: an `OpenUsdArtifactRegistryType` at `Server/OpenUSD/Artifacts`, artifacts grouped per asset container, each artifact's `ResourceId` the symbolic identifier of its `AssetIdentifier` and each artifact's and group's `Name` the corresponding identifier verbatim (§7.11.3), and a stage's `Assets` folder Organizing (not duplicating) them. Implies OU-AssetDelivery.
 - **OU-ArtifactFederation** — the registry resolves artifacts it does not host through the xRegistry federation links (`ResourceUrl` / `ExternalReference`), so a connector follows the chain to another registry (§7.11.3). Requires OU-ArtifactRegistry.
 - **OU-SchemaPluginDelivery** — the registry serves codeless USD schemas as `OpenUsdSchemaPluginGroupType` groups (a `plugInfo.json` plus a `generatedSchema.usda`), so a USD client can register a vendor schema and interpret vendor prim types rather than degrading them (§7.13). Requires OU-ArtifactRegistry.
 
@@ -600,7 +612,7 @@ The namespace metadata provide standardized information about the elements of th
 | Property | DataType | Value |
 |---|---|---|
 | NamespaceUri | String | `http://opcfoundation.org/UA/OpenUSD/` |
-| NamespaceVersion | String | 0.5.0 |
+| NamespaceVersion | String | 0.6.0 |
 | NamespacePublicationDate | DateTime | 2026-07-29 |
 | IsNamespaceSubset | Boolean | False |
 | StaticNodeIdTypes | IdType[] | 0 (Numeric) |

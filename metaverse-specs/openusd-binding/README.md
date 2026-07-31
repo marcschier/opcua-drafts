@@ -1,6 +1,6 @@
 # OPC UA — OpenUSD Binding (Part 1)
 
-**Release 0.5.0 — Draft** · namespace `http://opcfoundation.org/UA/OpenUSD/`
+**Release 0.6.0 — Draft** · namespace `http://opcfoundation.org/UA/OpenUSD/`
 
 This folder contains the specification and generated NodeSet for **Part 1** of the *OPC UA — OpenUSD* work: a small, generic **representation and binding layer** between an OPC UA address space and an OpenUSD model.
 
