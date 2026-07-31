@@ -11,7 +11,7 @@ Feedback on these drafts is welcome — and you don't have to write the specific
 1. Fork `marcschier/opcua-drafts` and check out a topic branch.
 2. Make your changes or annotations — for generated specs, edit the source (a descriptor or `tools/build_model.py`), not the generated NodeSet / CSV, and regenerate.
 3. Open a pull request against `main` and discuss.
-4. Maintainers apply the agreed changes with AI, regenerate, and validate (`python core-specs/extras/validate_all.py`).
+4. Maintainers apply the agreed changes with AI, regenerate, and validate (`python core-specs/extras/validate_all.py`, and the equivalent for the tree the change lands in).
 
 ### You don't have to touch git at all
 
