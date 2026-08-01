@@ -1146,6 +1146,77 @@
       },
       {
         "t": "term",
+        "term": "Source identity",
+        "definition": [
+          {
+            "r": "t",
+            "text": "The domain-defined string that names what a group or resource "
+          },
+          {
+            "r": "t",
+            "text": "is",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " — an OPC UA namespace URI, an authored asset identifier, a W3C Thing identifier. It is the authoritative name of the entity and is invariant across the entity's versions ("
+          },
+          {
+            "r": "xref",
+            "target": "c6-6",
+            "kind": "clause",
+            "prefix": "6.6"
+          },
+          {
+            "r": "t",
+            "text": ")."
+          }
+        ],
+        "notes": [],
+        "examples": [],
+        "source": null
+      },
+      {
+        "t": "term",
+        "term": "Symbolic identifier",
+        "definition": [
+          {
+            "r": "t",
+            "text": "A "
+          },
+          {
+            "r": "code",
+            "text": "GroupId"
+          },
+          {
+            "r": "t",
+            "text": " or "
+          },
+          {
+            "r": "code",
+            "text": "ResourceId"
+          },
+          {
+            "r": "t",
+            "text": " constructed from a source identity by the reverse-authority construction of "
+          },
+          {
+            "r": "xref",
+            "target": "c6-6",
+            "kind": "clause",
+            "prefix": "6.6"
+          },
+          {
+            "r": "t",
+            "text": ", so it is human-readable, safe in a URL, on a command line and as a file name, and unambiguous within its collection."
+          }
+        ],
+        "notes": [],
+        "examples": [],
+        "source": null
+      },
+      {
+        "t": "term",
         "term": "epoch",
         "definition": [
           {
@@ -1578,7 +1649,42 @@
           },
           {
             "r": "t",
-            "text": " additionally offer a direct-addressing shortcut that returns the document in a single operation (for example reading a Value Attribute addressed by a content-derived Opaque NodeId); such shortcuts are defined by the domain specification and never replace the mandatory FileType read."
+            "text": " additionally offer a direct-addressing shortcut that returns the document in a single operation (for example reading a Value Attribute addressed by an Opaque NodeId built from a content fingerprint); such shortcuts are defined by the domain specification and never replace the mandatory FileType read. Such a NodeId addresses "
+          },
+          {
+            "r": "t",
+            "text": "bytes",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " and is legitimately content-derived; it is not an entity identifier, and an entity's "
+          },
+          {
+            "r": "code",
+            "text": "GroupId"
+          },
+          {
+            "r": "t",
+            "text": " or "
+          },
+          {
+            "r": "code",
+            "text": "ResourceId"
+          },
+          {
+            "r": "t",
+            "text": " is never derived from a document ("
+          },
+          {
+            "r": "xref",
+            "target": "c6-6",
+            "kind": "clause",
+            "prefix": "6.6"
+          },
+          {
+            "r": "t",
+            "text": ")."
           }
         ],
         "src": {
@@ -1801,9 +1907,9 @@
           },
           {
             "r": "xref",
-            "target": "c6-6",
+            "target": "c6-7",
             "kind": "clause",
-            "prefix": "6.6"
+            "prefix": "6.7"
           },
           {
             "r": "t",
@@ -2543,9 +2649,9 @@
             },
             {
               "r": "xref",
-              "target": "c6-6",
+              "target": "c6-7",
               "kind": "clause",
-              "prefix": "6.6"
+              "prefix": "6.7"
             },
             {
               "r": "t",
@@ -2758,7 +2864,7 @@
           },
           {
             "r": "t",
-            "text": ", a URL-safe token) so a client selects and filters entities directly from Browse results without a Read per candidate; the "
+            "text": ") so a client selects and filters entities directly from Browse results without a Read per candidate; the "
           },
           {
             "r": "t",
@@ -2767,7 +2873,41 @@
           },
           {
             "r": "t",
-            "text": " relies on this for read-free collection filtering."
+            "text": " relies on this for read-free collection filtering. "
+          },
+          {
+            "r": "xref",
+            "target": "c6-6",
+            "kind": "clause",
+            "prefix": "6.6"
+          },
+          {
+            "r": "t",
+            "text": " defines how a "
+          },
+          {
+            "r": "code",
+            "text": "GroupId"
+          },
+          {
+            "r": "t",
+            "text": " and a "
+          },
+          {
+            "r": "code",
+            "text": "ResourceId"
+          },
+          {
+            "r": "t",
+            "text": " are constructed and requires a human-readable "
+          },
+          {
+            "r": "code",
+            "text": "Name"
+          },
+          {
+            "r": "t",
+            "text": " beside each."
           }
         ],
         "src": {
@@ -2890,6 +3030,56 @@
           },
           {
             "r": "code",
+            "text": "Name"
+          },
+          {
+            "r": "t",
+            "text": " is Mandatory on "
+          },
+          {
+            "r": "code",
+            "text": "GroupType"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "ResourceType"
+          },
+          {
+            "r": "t",
+            "text": ", because a group and a resource are what a human browses and a generic tool has only the identifier and the name to display ("
+          },
+          {
+            "r": "xref",
+            "target": "c6-6",
+            "kind": "clause",
+            "prefix": "6.6"
+          },
+          {
+            "r": "t",
+            "text": "); it is Optional on "
+          },
+          {
+            "r": "code",
+            "text": "RegistryType"
+          },
+          {
+            "r": "t",
+            "text": ", whose "
+          },
+          {
+            "r": "code",
+            "text": "RegistryId"
+          },
+          {
+            "r": "t",
+            "text": " is chosen rather than derived. "
+          },
+          {
+            "r": "code",
             "text": "Xid"
           },
           {
@@ -2898,9 +3088,9 @@
           },
           {
             "r": "xref",
-            "target": "c6-9",
+            "target": "c6-10",
             "kind": "clause",
-            "prefix": "6.9"
+            "prefix": "6.10"
           },
           {
             "r": "t",
@@ -2924,6 +3114,784 @@
       {
         "t": "clause",
         "id": "c6-6",
+        "title": "Entity identifiers and names",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Source identity.",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " Every group and every resource has a "
+          },
+          {
+            "r": "t",
+            "text": "source identity",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": ": the domain-defined string that names "
+          },
+          {
+            "r": "t",
+            "text": "what",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " the entity is — an OPC UA namespace URI, an authored asset identifier, a W3C Thing identifier, a DataType BrowseName. A domain companion specification "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " name exactly one source identity for each of its group types and resource types and "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " expose it verbatim as a Mandatory Property of that type. The source identity is the authoritative name of the entity; "
+          },
+          {
+            "r": "code",
+            "text": "GroupId"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "ResourceId"
+          },
+          {
+            "r": "t",
+            "text": " are the "
+          },
+          {
+            "r": "t",
+            "text": "symbolic identifiers",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " derived from it."
+          }
+        ],
+        "src": {
+          "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
+          "s": "6.9 Entity identifiers and names",
+          "b": 0
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "An identifier is never derived from a document.",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " "
+          },
+          {
+            "r": "code",
+            "text": "GroupId"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "ResourceId"
+          },
+          {
+            "r": "t",
+            "text": " "
+          },
+          {
+            "r": "t",
+            "text": "shall not",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " be derived from a resource document, or from any digest, fingerprint or hash of one. A resource is a stable umbrella over its versions, so its identifier is invariant while its document changes from version to version. A content fingerprint — the Schema Registry "
+          },
+          {
+            "r": "code",
+            "text": "SchemaId"
+          },
+          {
+            "r": "t",
+            "text": ", an artifact digest — is "
+          },
+          {
+            "r": "t",
+            "text": "version-level",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " metadata that identifies bytes, and is never an entity identifier."
+          }
+        ],
+        "src": {
+          "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
+          "s": "6.9 Entity identifiers and names",
+          "b": 1
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Construction.",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " A "
+          },
+          {
+            "r": "code",
+            "text": "GroupId"
+          },
+          {
+            "r": "t",
+            "text": " or "
+          },
+          {
+            "r": "code",
+            "text": "ResourceId"
+          },
+          {
+            "r": "t",
+            "text": " "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " be constructed from the entity's source identity as follows. The result is a dot-separated token that reads like a reverse-DNS symbol, for example "
+          },
+          {
+            "r": "code",
+            "text": "org.contoso.assets.pump"
+          },
+          {
+            "r": "t",
+            "text": "."
+          }
+        ],
+        "src": {
+          "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
+          "s": "6.9 Entity identifiers and names",
+          "b": 2
+        }
+      },
+      {
+        "t": "list",
+        "ordered": true,
+        "level": 0,
+        "items": [
+          [
+            {
+              "r": "t",
+              "text": "Split the source identity into an "
+            },
+            {
+              "r": "t",
+              "text": "authority",
+              "i": true
+            },
+            {
+              "r": "t",
+              "text": " and a "
+            },
+            {
+              "r": "t",
+              "text": "path",
+              "i": true
+            },
+            {
+              "r": "t",
+              "text": ". For an absolute URI with an authority component the authority is the host, together with the port when one is present, and the path is the URI path; the scheme, userinfo, query and fragment are discarded. For a URN the authority is empty and the path is the URN split on "
+            },
+            {
+              "r": "code",
+              "text": ":"
+            },
+            {
+              "r": "t",
+              "text": ", so the leading "
+            },
+            {
+              "r": "code",
+              "text": "urn"
+            },
+            {
+              "r": "t",
+              "text": " survives as the first label and a URN never aliases a bare path. Otherwise the authority is empty and the path is the source identity split on "
+            },
+            {
+              "r": "code",
+              "text": "/"
+            },
+            {
+              "r": "t",
+              "text": "."
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Reverse the authority's "
+            },
+            {
+              "r": "code",
+              "text": "."
+            },
+            {
+              "r": "t",
+              "text": "-separated labels — "
+            },
+            {
+              "r": "code",
+              "text": "contoso.org"
+            },
+            {
+              "r": "t",
+              "text": " becomes "
+            },
+            {
+              "r": "code",
+              "text": "org"
+            },
+            {
+              "r": "t",
+              "text": ", "
+            },
+            {
+              "r": "code",
+              "text": "contoso"
+            },
+            {
+              "r": "t",
+              "text": " — appending the port, where present, as a further label."
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Percent-decode each path segment and discard the empty ones."
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Normalize each label: replace every run of characters outside "
+            },
+            {
+              "r": "code",
+              "text": "A-Z a-z 0-9 _ . -"
+            },
+            {
+              "r": "t",
+              "text": " with a single "
+            },
+            {
+              "r": "code",
+              "text": "-"
+            },
+            {
+              "r": "t",
+              "text": "; collapse runs of "
+            },
+            {
+              "r": "code",
+              "text": "-"
+            },
+            {
+              "r": "t",
+              "text": " and runs of "
+            },
+            {
+              "r": "code",
+              "text": "."
+            },
+            {
+              "r": "t",
+              "text": "; strip leading and trailing "
+            },
+            {
+              "r": "code",
+              "text": "-"
+            },
+            {
+              "r": "t",
+              "text": " and "
+            },
+            {
+              "r": "code",
+              "text": "."
+            },
+            {
+              "r": "t",
+              "text": "; discard a label that becomes empty. Letter case is preserved."
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Join the surviving labels with "
+            },
+            {
+              "r": "code",
+              "text": "."
+            },
+            {
+              "r": "t",
+              "text": "."
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "If no label survives, the identifier is "
+            },
+            {
+              "r": "code",
+              "text": "_"
+            },
+            {
+              "r": "t",
+              "text": ". Step 4 guarantees that every surviving label begins with a letter, a digit or "
+            },
+            {
+              "r": "code",
+              "text": "_"
+            },
+            {
+              "r": "t",
+              "text": ", so the result always satisfies the xRegistry start-character rule."
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "If the result is longer than 128 characters, drop trailing labels — never the first — until it is at most 119 characters long; if that first label is itself longer than 119 characters, truncate it to 119 and strip any trailing "
+            },
+            {
+              "r": "code",
+              "text": "-"
+            },
+            {
+              "r": "t",
+              "text": " or "
+            },
+            {
+              "r": "code",
+              "text": "."
+            },
+            {
+              "r": "t",
+              "text": ". Then append the disambiguator of step 8. The first label is kept because it carries the reverse-DNS root, which is the part a reader recognizes; dropping it would reduce a long identity to little more than its disambiguator."
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Where step 7 truncated the result, or where the result would collide case-insensitively with an existing sibling in the same collection, append "
+            },
+            {
+              "r": "code",
+              "text": "."
+            },
+            {
+              "r": "t",
+              "text": " followed by the first eight lower-case hexadecimal characters of the SHA-256 of the UTF-8 encoding of the "
+            },
+            {
+              "r": "t",
+              "text": "exact source identity",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": ". The disambiguator is a function of the identity, not of any document, so it does not change when a new version is written."
+            }
+          ]
+        ],
+        "src": {
+          "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
+          "s": "6.9 Entity identifiers and names",
+          "b": 3
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The output alphabet is "
+          },
+          {
+            "r": "code",
+            "text": "A-Z a-z 0-9 _ . -"
+          },
+          {
+            "r": "t",
+            "text": ", a strict subset of the characters xRegistry permits in a "
+          },
+          {
+            "r": "code",
+            "text": "<SINGULAR>id"
+          },
+          {
+            "r": "t",
+            "text": ", chosen so that one identifier is simultaneously safe in a URL, on a command line, and as a file name in the static-file-server representation ("
+          },
+          {
+            "r": "t",
+            "text": "§4.2"
+          },
+          {
+            "r": "t",
+            "text": "). "
+          },
+          {
+            "r": "code",
+            "text": "VersionId"
+          },
+          {
+            "r": "t",
+            "text": " is outside this construction: version identifiers follow the xRegistry version-id rules and are assigned by the registry."
+          }
+        ],
+        "src": {
+          "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
+          "s": "6.9 Entity identifiers and names",
+          "b": 4
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Resolution is one-way.",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " The construction is lossy — distinct source identities can normalize to the same token, which is what step 8 resolves. A consumer that holds a source identity computes the identifier in closed form and confirms it by reading the entity's source-identity Property. A consumer that holds only an identifier resolves the entity by matching that Property within the collection. An implementation "
+          },
+          {
+            "r": "t",
+            "text": "shall not",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " attempt to recover a source identity by inverting the construction."
+          }
+        ],
+        "src": {
+          "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
+          "s": "6.9 Entity identifiers and names",
+          "b": 5
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Name and DisplayName.",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " Every group and every resource "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " expose a non-empty "
+          },
+          {
+            "r": "code",
+            "text": "Name"
+          },
+          {
+            "r": "t",
+            "text": "; where the source identity is itself readable, "
+          },
+          {
+            "r": "code",
+            "text": "Name"
+          },
+          {
+            "r": "t",
+            "text": " "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " be the exact, unnormalized source identity. A server "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " set each group's and resource's BrowseName to its identifier and its DisplayName to its "
+          },
+          {
+            "r": "code",
+            "text": "Name"
+          },
+          {
+            "r": "t",
+            "text": ", so a client that browses the registry with a generic OPC UA tool sees the symbolic identifier and the human-readable name without reading a single Property."
+          }
+        ],
+        "src": {
+          "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
+          "s": "6.9 Entity identifiers and names",
+          "b": 6
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Worked examples, using the source identities of the domain registries built on this base:"
+          }
+        ],
+        "src": {
+          "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
+          "s": "6.9 Entity identifiers and names",
+          "b": 7
+        }
+      },
+      {
+        "t": "table",
+        "id": "entity-identifiers-and-names-tab1",
+        "caption": "Entity identifiers and names",
+        "kind": "generic",
+        "headers": [
+          [
+            {
+              "r": "t",
+              "text": "Source identity"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Symbolic identifier"
+            }
+          ],
+          [
+            {
+              "r": "code",
+              "text": "Name"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "r": "code",
+                "text": "http://contoso.org/UA/Pumps/"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "org.contoso.UA.Pumps"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "http://contoso.org/UA/Pumps/"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "code",
+                "text": "http://opcfoundation.org/UA/"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "org.opcfoundation.UA"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "http://opcfoundation.org/UA/"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "code",
+                "text": "pump.usda"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "pump.usda"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "pump.usda"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "code",
+                "text": "textures/albedo.png"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "textures.albedo.png"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "textures/albedo.png"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "code",
+                "text": "pkg.usdz[tex/a.png]"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "pkg.usdz-tex.a.png"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "pkg.usdz[tex/a.png]"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "code",
+                "text": "urn:dev:ops:32473-pump-01"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "urn.dev.ops.32473-pump-01"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "Pump 01"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "code",
+                "text": "https://contoso.org/things/pump-01"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "org.contoso.things.pump-01"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "Pump 01"
+              }
+            ]
+          ]
+        ],
+        "widths": null,
+        "note": null,
+        "src": {
+          "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
+          "s": "6.9 Entity identifiers and names",
+          "b": 8
+        }
+      },
+      {
+        "t": "clause",
+        "id": "c6-7",
         "title": "Auto-bootstrap",
         "level": 2
       },
@@ -2983,11 +3951,29 @@
             },
             {
               "r": "t",
-              "text": " and initial "
+              "text": ", constructed from its source identity per "
+            },
+            {
+              "r": "xref",
+              "target": "c6-6",
+              "kind": "clause",
+              "prefix": "6.6"
+            },
+            {
+              "r": "t",
+              "text": ", its initial "
             },
             {
               "r": "code",
               "text": "VersionId"
+            },
+            {
+              "r": "t",
+              "text": " and a non-empty "
+            },
+            {
+              "r": "code",
+              "text": "Name"
             },
             {
               "r": "t",
@@ -3158,7 +4144,7 @@
       },
       {
         "t": "clause",
-        "id": "c6-7",
+        "id": "c6-8",
         "title": "Collection ordering",
         "level": 2
       },
@@ -3253,7 +4239,7 @@
       },
       {
         "t": "clause",
-        "id": "c6-8",
+        "id": "c6-9",
         "title": "The xRegistry API over OPC UA",
         "level": 2
       },
@@ -3523,7 +4509,7 @@
       },
       {
         "t": "clause",
-        "id": "c6-9",
+        "id": "c6-10",
         "title": "Federation",
         "level": 2
       },
@@ -4040,6 +5026,14 @@
           },
           {
             "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "Name"
+          },
+          {
+            "r": "t",
             "text": " and the common attributes of "
           },
           {
@@ -4157,7 +5151,25 @@
           },
           {
             "r": "t",
-            "text": ": for example "
+            "text": " — the group's source identity ("
+          },
+          {
+            "r": "xref",
+            "target": "c6-6",
+            "kind": "clause",
+            "prefix": "6.6"
+          },
+          {
+            "r": "t",
+            "text": "), from which its "
+          },
+          {
+            "r": "code",
+            "text": "GroupId"
+          },
+          {
+            "r": "t",
+            "text": " is constructed: for example "
           },
           {
             "r": "code",
@@ -4295,6 +5307,14 @@
           {
             "r": "code",
             "text": "ResourceId"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "Name"
           },
           {
             "r": "t",
@@ -4442,7 +5462,17 @@
           },
           {
             "r": "t",
-            "text": ") to add its own metadata."
+            "text": ") to add its own metadata, including the Mandatory Property that carries its source identity ("
+          },
+          {
+            "r": "xref",
+            "target": "c6-6",
+            "kind": "clause",
+            "prefix": "6.6"
+          },
+          {
+            "r": "t",
+            "text": ")."
           }
         ],
         "src": {
@@ -5329,6 +6359,63 @@
             [
               {
                 "r": "t",
+                "text": "XREG-Identity",
+                "b": true
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Give every group and resource a symbolic "
+              },
+              {
+                "r": "code",
+                "text": "GroupId"
+              },
+              {
+                "r": "t",
+                "text": " / "
+              },
+              {
+                "r": "code",
+                "text": "ResourceId"
+              },
+              {
+                "r": "t",
+                "text": " built from its source identity by the construction of "
+              },
+              {
+                "r": "xref",
+                "target": "c6-6",
+                "kind": "clause",
+                "prefix": "6.6"
+              },
+              {
+                "r": "t",
+                "text": ", a non-empty "
+              },
+              {
+                "r": "code",
+                "text": "Name"
+              },
+              {
+                "r": "t",
+                "text": ", a BrowseName equal to the identifier and a DisplayName equal to the "
+              },
+              {
+                "r": "code",
+                "text": "Name"
+              },
+              {
+                "r": "t",
+                "text": ", and expose the source identity itself as a Mandatory Property."
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
                 "text": "XREG-Attributes",
                 "b": true
               }
@@ -5447,9 +6534,9 @@
               },
               {
                 "r": "xref",
-                "target": "c6-8",
+                "target": "c6-9",
                 "kind": "clause",
-                "prefix": "6.8"
+                "prefix": "6.9"
               },
               {
                 "r": "t",
@@ -5521,9 +6608,9 @@
               },
               {
                 "r": "xref",
-                "target": "c6-9",
+                "target": "c6-10",
                 "kind": "clause",
-                "prefix": "6.9"
+                "prefix": "6.10"
               },
               {
                 "r": "t",
@@ -5558,11 +6645,19 @@
           },
           {
             "r": "t",
-            "text": " and "
+            "text": ", "
           },
           {
             "r": "code",
             "text": "XREG-Resource"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "XREG-Identity"
           },
           {
             "r": "t",
@@ -5671,7 +6766,7 @@
             [
               {
                 "r": "t",
-                "text": "0.2.0"
+                "text": "0.3.0"
               }
             ]
           ],
@@ -5691,7 +6786,7 @@
             [
               {
                 "r": "t",
-                "text": "2026-07-29"
+                "text": "2026-07-31"
               }
             ]
           ],

@@ -2,7 +2,7 @@
 """Build an xRegistry Schema Registry catalog document from an OPC UA NodeSet.
 
 Maps namespaces -> schemagroups and DataTypes -> schema Resources per §5 of
-core-specs/schema-registry/OPC-UA-Schema-Registry.md. The JSON Schema documents are generated
+cloud-specs/schema-registry/OPC-UA-Schema-Registry.md. The JSON Schema documents are generated
 here (jsonschema_gen); the Avro/Arrow documents are embedded from the
 sibling encoding folders' ``schemas/`` when present, otherwise referenced by
 ``schemaurl``.
@@ -24,32 +24,30 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..",
 from opcua_enc import nodeset  # noqa: E402
 from opcua_enc import types as t  # noqa: E402
 from opcua_enc import fingerprint  # noqa: E402
+from opcua_enc.symbolic_id import symbolic_id  # noqa: E402
 
 import jsonschema_gen as jsg  # noqa: E402
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 # After the reorg this tool lives under core-specs/extras/xregistry-catalog/tools,
 # so this resolves to core-specs/extras (where the sibling encodings' generated
-# schemas live). The source NodeSet lives one level up in core-specs.
+# schemas live). The source NodeSet is a cloud-specs specification, so it is
+# addressed from the repository root rather than counted out from here.
 EXTRAS = os.path.abspath(os.path.join(HERE, "..", ".."))
 CORE_SPECS = EXTRAS
+REPO = os.path.abspath(os.path.join(HERE, "..", "..", "..", ".."))
 DEFAULT_NODESET = os.path.join(
-    EXTRAS, "..", "observability-export", "Opc.Ua.ObservabilityExport.NodeSet2.xml")
+    REPO, "cloud-specs", "observability-export", "Opc.Ua.ObservabilityExport.NodeSet2.xml")
 OUT = os.path.abspath(os.path.join(HERE, "..", "examples", "opcua-catalog.xregistry.json"))
 BASE_UA = "http://opcfoundation.org/UA/"
 _UA_NS = "{http://opcfoundation.org/UA/2011/03/UANodeSet.xsd}"
 
 FORMATS = {
-    "avro": ("Avro/1.11", "application/vnd.apache.avro+json", "avsc"),
-    "arrow": ("ApacheArrow/1.0", "application/vnd.apache.arrow.schema+json", "json"),
-    "jsonschema": ("JsonSchema/2020-12", "application/schema+json", "json"),
+    "avro": ("Avro/1.11", "application/vnd.apache.avro+json", "avsc", "Avro"),
+    "arrow": ("ApacheArrow/1.0", "application/vnd.apache.arrow.schema+json", "json", "Apache Arrow"),
+    "jsonschema": ("JsonSchema/2020-12", "application/schema+json", "json", "JSON Schema"),
 }
 SIBLING_DIR = {"avro": "avro-encoding", "arrow": "arrow-encoding"}
-
-
-def _slug(uri: str) -> str:
-    body = re.sub(r"^https?://", "", uri).strip("/")
-    return re.sub(r"[^a-zA-Z0-9]+", ".", body).strip(".").lower()
 
 
 def _namespace_and_version(path: str) -> tuple[str, str]:
@@ -127,18 +125,23 @@ def _wire_schemaid(fmt_key: str, name: str, doc: object, ids: dict[str, dict]) -
 
 
 def _schema_resource(schemaid, name, fmt_key, doc, url, nodeid, ns_uri, model_ver, wire_id, wire_alg):
-    fmt, ctype, _ = FORMATS[fmt_key]
+    fmt, ctype, _, fmt_title = FORMATS[fmt_key]
     labels = {
         "opcua.browsename": name,
         "opcua.nodeid": nodeid or "",
         "opcua.format": fmt_key,
         "opcua.namespaceuri": ns_uri,
-        "opcua.schemaid": wire_id,
-        "opcua.schemaid.alg": wire_alg,
+        "opcua.schemaname": name,
+        # The content fingerprint of this version's bytes - deliberately NOT the
+        # resource key, which is the symbolic id built from (SchemaName, Format).
+        "opcua.schemafingerprint": wire_id,
+        "opcua.schemafingerprint.alg": wire_alg,
     }
+    display = f"{name} ({fmt_title})"
     version = {
         "schemaid": schemaid,
         "versionid": "1",
+        "name": display,
         "isdefault": True,
         "format": fmt,
         "contenttype": ctype,
@@ -151,7 +154,6 @@ def _schema_resource(schemaid, name, fmt_key, doc, url, nodeid, ns_uri, model_ve
     resource = {
         "schemaid": schemaid,
         "versionid": "1",
-        "name": name,
         **{k: v for k, v in version.items() if k not in ("schemaid", "versionid")},
         "versionscount": 1,
         "versions": {"1": version},
@@ -169,7 +171,9 @@ def build(nodeset_path: str) -> dict:
     schemaid_maps = {fk: _load_schemaids(fk) for fk in ("avro", "arrow")}
     for name, nid in sorted(named):
         for fmt_key in ("avro", "arrow", "jsonschema"):
-            schemaid = f"{name}:{fmt_key}"
+            # Schema Registry §6.7: the resource key is the symbolic identifier of the
+            # source identity (SchemaName, Format) - never of the document.
+            schemaid = symbolic_id(f"{name}/{fmt_key}", existing=schemas)
             if fmt_key == "jsonschema":
                 doc, url = jsg.schema_for(name, list(loaded.structs), list(loaded.enums)), None
             else:
@@ -179,7 +183,8 @@ def build(nodeset_path: str) -> dict:
                 schemaid, name, fmt_key, doc, url, nid, ns_uri, model_ver, wire_id, wire_alg
             )
 
-    slug = _slug(ns_uri)
+    # The group's source identity is its namespace URI; its key is the symbolic id of it.
+    slug = symbolic_id(ns_uri)
     catalog = {
         "specversion": "1.0-rc3",
         "registryid": "opcua-schema-catalog",

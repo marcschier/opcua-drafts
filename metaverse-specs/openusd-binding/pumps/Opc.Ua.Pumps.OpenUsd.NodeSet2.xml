@@ -13,7 +13,7 @@
   </NamespaceUris>
   <Models>
     <Model ModelUri="urn:example:plant" Version="0.1.0" PublicationDate="2026-07-12T00:00:00Z">
-      <RequiredModel ModelUri="http://opcfoundation.org/UA/OpenUSD/" Version="0.5.0" PublicationDate="2026-07-29T00:00:00Z" />
+      <RequiredModel ModelUri="http://opcfoundation.org/UA/OpenUSD/" Version="0.6.0" PublicationDate="2026-07-31T00:00:00Z" />
       <RequiredModel ModelUri="http://opcfoundation.org/UA/Pumps/" Version="1.00.0" PublicationDate="2021-09-01T00:00:00Z" />
     </Model>
   </Models>

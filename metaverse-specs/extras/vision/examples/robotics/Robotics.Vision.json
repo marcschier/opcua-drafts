@@ -1,0 +1,244 @@
+{
+  "domain": "Robotics",
+  "outputFolder": "robotics",
+  "annexLetter": "F",
+  "annexMarker": "annex-robotics",
+  "annexTitle": "robotics vision, eye-in-hand picking",
+  "exampleNamespaceUri": "http://opcfoundation.org/UA/Vision/Examples/Robotics/",
+  "instanceName": "BinPickingCamera",
+  "summary": "A worked example of vision-guided robotics: an eye-in-hand 3D camera on a robot flange detects parts in a bin and publishes 6-DoF pick poses, with inference running off-server on an edge GPU and a simulated twin sensor rendering the same cell in NVIDIA Isaac Sim.",
+  "scope": "This worked example binds one eye-in-hand camera to a robot flange frame and shows the full perception path: a hand-eye `ExtrinsicCalibrationType` that makes poses actionable, a `DetectionResultType` carrying 6-DoF grasp poses in a named frame, an off-server GPU deployment, and an RTSP stream with detection overlay feedback. It is the case OPC UA has no coverage for today: OPC 40010-1 Robotics contains no vision, camera, perception or calibration types at all, and neither it nor OPC 40100 references the other.",
+  "references": [
+    "[OPC 40010-1](https://reference.opcfoundation.org/specs/OPC-40010-1/) — OPC UA for Robotics, whose `MotionDeviceSystemType` describes the robot this camera is mounted on. Not a dependency of this model.",
+    "ISO 9787:2013 — coordinate systems, the source of the frame roles used here.",
+    "ROS 2 `vision_msgs` — the convention `VisionDetectionDataType` field naming follows."
+  ],
+  "sensor": {
+    "type": "ImageSensorType",
+    "description": "Eye-in-hand colour camera on the robot flange, used for bin picking.",
+    "sensorId": "cam-eih-01",
+    "realityKind": "Physical",
+    "modality": "Area2D",
+    "manufacturer": "Example Vision GmbH",
+    "model": "EV-3D-2400",
+    "serialNumber": "SN-4417-2291",
+    "deviceUri": "gev://192.0.2.41/0",
+    "frameId": "camera_eih",
+    "mountedOn": "flange",
+    "width": 2448,
+    "height": 2048,
+    "pixelFormat": "BayerRG8",
+    "exposureTime": 4000.0,
+    "gain": 2.5,
+    "acquisitionFrameRate": 15.0,
+    "triggerMode": "On",
+    "triggerSource": "Line1"
+  },
+  "optics": {
+    "focalLength": 12.0,
+    "aperture": 4.0,
+    "workingDistance": 0.85,
+    "opticalFormat": "2/3\"",
+    "mountType": "C",
+    "lensType": "Entocentric"
+  },
+  "frames": [
+    {
+      "name": "WorldFrame",
+      "description": "Cell world frame; the root of the frame tree.",
+      "frameId": "world",
+      "role": "World"
+    },
+    {
+      "name": "RobotBaseFrame",
+      "description": "Robot base frame, fixed in the cell.",
+      "frameId": "robot_base",
+      "parentFrame": "world",
+      "role": "Base"
+    },
+    {
+      "name": "FlangeFrame",
+      "description": "Robot flange / tool centre point frame; the camera moves with it.",
+      "frameId": "flange",
+      "parentFrame": "robot_base",
+      "role": "Tool"
+    },
+    {
+      "name": "CameraFrame",
+      "description": "Optical frame of the eye-in-hand camera; detection poses are expressed here.",
+      "frameId": "camera_eih",
+      "parentFrame": "flange",
+      "role": "Camera"
+    }
+  ],
+  "calibrations": [
+    {
+      "name": "Intrinsics2448x2048",
+      "type": "IntrinsicCalibrationType",
+      "description": "Pinhole intrinsics with Brown-Conrady distortion at full resolution.",
+      "calibrationId": "intr-cam-eih-01-2448",
+      "performedAt": "2026-06-14T09:12:00Z",
+      "valid": true,
+      "residualError": 0.21,
+      "method": "Zhang",
+      "fields": [
+        ["Fx", "2140.5", "px"],
+        ["Fy", "2139.8", "px"],
+        ["Cx", "1223.1", "px, corner-datum per 5.10"],
+        ["Cy", "1021.7", "px, corner-datum per 5.10"],
+        ["Skew", "0.0", "px"],
+        ["DistortionModel", "BrownConrady", "5.10 ordering: k1, k2, p1, p2, k3"],
+        ["DistortionCoefficients", "[-0.1721, 0.0934, 0.0002, -0.0001, -0.0188]", "dimensionless"],
+        ["Width", "2448", "px"],
+        ["Height", "2048", "px"]
+      ]
+    },
+    {
+      "name": "HandEye",
+      "type": "ExtrinsicCalibrationType",
+      "description": "Transform from the camera frame to the robot flange frame. Eye-in-hand: the camera moves with the tool.",
+      "calibrationId": "hand-eye-cam-eih-01",
+      "performedAt": "2026-06-14T10:40:00Z",
+      "valid": true,
+      "residualError": 0.0008,
+      "method": "Daniilidis",
+      "mount": "EyeInHand",
+      "sourceFrame": "camera_eih",
+      "targetFrame": "flange",
+      "fields": [
+        ["FrameId", "flange", "equals the TargetFrame's FrameId, per the 5.10 frame-precedence rule"],
+        ["Position", "(0.062, -0.031, 0.115)", "metres, ordered (x, y, z)"],
+        ["Orientation", "(0.0, 0.0, 0.7071, 0.7071)", "unit quaternion ordered (x, y, z, w)"],
+        ["Covariance", "empty array", "not reported, per the 5.10 sentinel"]
+      ]
+    }
+  ],
+  "stream": {
+    "name": "LiveRtsp",
+    "description": "Live H.264 stream, used by the cell HMI and for overlay of detections.",
+    "endpointId": "stream-rtsp-main",
+    "endpointUri": "rtsp://192.0.2.41:554/main",
+    "protocol": "Rtsp",
+    "state": "Active",
+    "authentication": "Digest",
+    "codec": "H264",
+    "width": 1224,
+    "height": 1024,
+    "frameRate": 15.0,
+    "dataChannel": {
+      "sourceName": "H264DataChannelSource",
+      "contentType": "video/H264"
+    }
+  },
+  "clip": {
+    "name": "PickFrames",
+    "description": "JPEG still for the frame each pick decision was computed from.",
+    "endpointId": "clip-jpeg-pick",
+    "endpointUri": "https://192.0.2.41/clips/{resultId}.jpg",
+    "format": "Jpeg",
+    "state": "Ready",
+    "authentication": "Token",
+    "inlineDeliveryEnabled": false,
+    "dataChannel": {
+      "sourceName": "JpegDataChannelSource",
+      "contentType": "image/jpeg"
+    }
+  },
+  "simulation": {
+    "simulatorUri": "isaacsim://cell-sim-01",
+    "stageIdentifier": "omniverse://plant/Cell_A/stage.usda",
+    "primPath": "/Cell/Robots/R1/Flange/Camera",
+    "groundTruthAvailable": true
+  },
+  "twin": {
+    "instanceName": "BinPickingCameraTwin",
+    "note": "The same cell is rendered in NVIDIA Isaac Sim, and the synthetic sensor is modelled here alongside the physical one. Note what is *not* different: same type, same members, same units, same mandatory RTSP and JPEG endpoints. A client written against `VisionSensorType` consumes either without modification, and can tell them apart only by reading `RealityKind`. That is the sim/real symmetry of base specification §4.3, and it is what lets a model be trained on synthetic data and then deployed against the physical camera unchanged.",
+    "sensor": {
+      "type": "ImageSensorType",
+      "description": "Synthetic twin of the eye-in-hand camera, rendered by Isaac Sim from the cell stage.",
+      "sensorId": "cam-eih-01-sim",
+      "realityKind": "Simulated",
+      "modality": "Area2D",
+      "frameId": "camera_eih_sim",
+      "width": 2448,
+      "height": 2048,
+      "pixelFormat": "BayerRG8",
+      "exposureTime": 4000.0,
+      "gain": 2.5,
+      "acquisitionFrameRate": 15.0,
+      "triggerMode": "On"
+    },
+    "simulation": {
+      "simulatorUri": "isaacsim://cell-sim-01",
+      "stageIdentifier": "omniverse://plant/Cell_A/stage.usda",
+      "primPath": "/Cell/Robots/R1/Flange/Camera",
+      "groundTruthAvailable": true,
+      "randomizationSeed": 20260726
+    },
+    "stream": {
+      "name": "LiveRtsp",
+      "description": "RTSP stream of the render product, so the twin is viewable exactly like the physical camera.",
+      "endpointId": "stream-rtsp-sim",
+      "endpointUri": "rtsp://192.0.2.90:554/sim/cell-a/r1-flange",
+      "protocol": "Rtsp",
+      "state": "Active",
+      "authentication": "Token",
+      "codec": "H264",
+      "width": 1224,
+      "height": 1024,
+      "frameRate": 15.0
+    },
+    "clip": {
+      "name": "SyntheticFrames",
+      "description": "JPEG stills of rendered frames, paired with Replicator ground truth.",
+      "endpointId": "clip-jpeg-sim",
+      "endpointUri": "https://192.0.2.90/sim/clips/{resultId}.jpg",
+      "format": "Jpeg",
+      "state": "Active",
+      "authentication": "Token",
+      "inlineDeliveryEnabled": false
+    },
+    "learningJob": {
+      "name": "GraspRetrainJob",
+      "description": "Accumulates synthetic samples from the twin and corrections from the line, then retrains GraspPoseNet.",
+      "jobId": "job-grasp-retrain-01",
+      "state": "Collecting",
+      "datasetName": "SyntheticGraspSet",
+      "datasetId": "ds-grasp-synth-01",
+      "sourceKind": "Synthetic"
+    }
+  },
+  "ai": {
+    "model": {
+      "name": "GraspPoseNet",
+      "description": "6-DoF grasp pose estimation over a bin of mixed parts.",
+      "modelId": "graspposenet",
+      "version": "3.2.0",
+      "framework": "PyTorch",
+      "format": "TensorRT",
+      "taskKind": "PoseEstimation",
+      "artifactUri": "https://models.example.com/graspposenet/3.2.0.plan",
+      "digest": "a1b2c3d4e5f60718293a4b5c6d7e8f90123456789abcdef0fedcba9876543210",
+      "digestAlgorithm": "SHA-256"
+    },
+    "deployment": {
+      "name": "EdgeGpuDeployment",
+      "description": "Inference on a cell-side GPU appliance, off the OPC UA Server.",
+      "deploymentId": "deploy-edge-gpu-01",
+      "inferenceLocation": "EdgeOffServer",
+      "acceleratorKind": "Gpu",
+      "acceleratorName": "Example RTX A2000",
+      "endpointUri": "grpcs://192.0.2.60:8001/graspposenet"
+    },
+    "pipeline": {
+      "name": "BinPickingPipeline",
+      "description": "Runs on every acquired frame while the cell is picking.",
+      "pipelineId": "pipe-binpick-01",
+      "state": "Active",
+      "continuous": true
+    }
+  },
+  "inferenceNote": "Inference runs **off-server** on a cell-side GPU appliance. The Server publishes results it did not compute. Nothing else in the model changes: a client reads `DetectionResultType` exactly as it would if `InferenceLocation` were `OnServer`, and consults that property only if it cares about the latency or trust boundary. Because the deployment is remote, base specification §12.6 applies: the channel to the inference service is authenticated and integrity-protected, and `AiModelType.Digest` lets a consumer confirm which artefact produced a result.",
+  "resultsNote": "Each cycle produces a `DetectionResultType` whose `Detections` carry `ClassLabel`, `Confidence`, a `BoundingBox2D`, a `BoundingBox3D` and — the member that makes the result actionable — a 6-DoF `Pose`. Every pose names its `FrameId` (`camera_eih`), which is only meaningful because the `HandEye` calibration above relates that frame to the flange. A consumer composes camera → flange → base through the `CoordinateFrameType` tree to obtain a pose the robot controller can execute. `ResidualError` on the calibration is what tells the consumer how much to trust it.",
+  "feedbackNote": "Two feedback paths are exercised. During commissioning, the HMI calls `SubmitDetections` with `Purpose = Overlay` so the operator sees candidate grasps drawn on the RTSP stream. In production, a failed pick calls `SubmitCorrection` with `Purpose = GroundTruthLabel`, and the corrected pose is retained by the `LearningJobType` as a labelled sample — so the cases the model gets wrong are exactly the cases the next dataset contains. Feedback images are passed by reference through `SubmitImageReference`; this example does not enable inline feedback images."
+}

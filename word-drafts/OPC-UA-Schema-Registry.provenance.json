@@ -1,12 +1,12 @@
 {
   "specId": "schema-registry",
-  "sourceCommit": "8afb808120c8ee185cc0766771712765097d8181",
-  "sourceDigest": "74cbd36c2b9a2c00",
+  "sourceCommit": "786adf2da39f64c59b30c1e29eb727e6a5c3865d",
+  "sourceDigest": "6cbf9d5978975caf",
   "pipelineVersion": "2",
   "sources": [
     "word-drafts/tools/specs/schema-registry.json",
-    "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-    "core-specs/schema-registry/Opc.Ua.SchemaRegistry.NodeSet2.xml"
+    "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+    "cloud-specs/schema-registry/Opc.Ua.SchemaRegistry.NodeSet2.xml"
   ],
   "paragraphs": {
     "000A486B": {
@@ -33,15 +33,32 @@
     "00334BA5": {
       "owner": "template"
     },
+    "004159AA": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "8 Resolution flow",
+      "block": 1,
+      "para": 3
+    },
+    "00571DF6": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "Annex D — HTTP binding correspondence (informative)",
+      "block": 1,
+      "para": 20
+    },
+    "00575069": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.3 SchemaFileType",
+      "block": 1,
+      "para": 4
+    },
     "007DD302": {
       "owner": "template"
     },
-    "008B7178": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "1 Scope",
-      "block": 4,
-      "para": 2
+    "00973D44": {
+      "owner": "template"
     },
     "00AEED57": {
       "owner": "generated",
@@ -57,15 +74,15 @@
       "kind": "table",
       "para": 4
     },
+    "00E27E81": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "12 Conformance",
+      "block": 3,
+      "para": 20
+    },
     "011DA4C9": {
       "owner": "template"
-    },
-    "016570FD": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "5.2 Registering a schema (optional)",
-      "block": 1,
-      "para": 2
     },
     "0170FB74": {
       "owner": "generated",
@@ -98,13 +115,17 @@
       "kind": "para",
       "para": 0
     },
+    "01E3E390": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "12 Conformance",
+      "block": 2,
+      "para": 0
+    },
     "01E95FC1": {
       "owner": "template"
     },
     "01F18733": {
-      "owner": "template"
-    },
-    "01FF4201": {
       "owner": "template"
     },
     "021D9251": {
@@ -112,6 +133,13 @@
     },
     "024F92C0": {
       "owner": "template"
+    },
+    "0254CD72": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.5 Formats and content-types",
+      "block": 0,
+      "para": 4
     },
     "0258EAEC": {
       "owner": "generated",
@@ -126,6 +154,13 @@
       "index": 0,
       "kind": "nodetable",
       "para": 53
+    },
+    "0277A814": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 52,
+      "kind": "clause",
+      "para": 0
     },
     "027FD35E": {
       "owner": "template"
@@ -147,17 +182,55 @@
       "kind": "nodetable",
       "para": 6
     },
+    "02D21B8A": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "4 Overview",
+      "block": 3,
+      "para": 0
+    },
     "02DE6729": {
+      "owner": "template"
+    },
+    "02EDC8E9": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "Annex D — HTTP binding correspondence (informative)",
+      "block": 1,
+      "para": 12
+    },
+    "02EF22AD": {
+      "owner": "generated",
+      "region": "objecttypes",
+      "index": 11,
+      "kind": "nodetable",
+      "para": 85
+    },
+    "0301DFBB": {
       "owner": "template"
     },
     "030EB6D0": {
       "owner": "template"
+    },
+    "0311E2FC": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 4,
+      "para": 16
     },
     "031AFF64": {
       "owner": "template"
     },
     "0334E2AD": {
       "owner": "template"
+    },
+    "034B5183": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "10.2 Serving the xRegistry API and JSON projection",
+      "block": 1,
+      "para": 17
     },
     "034FCA2F": {
       "owner": "template"
@@ -171,6 +244,13 @@
       "index": 0,
       "kind": "nodetable",
       "para": 63
+    },
+    "03D8F396": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "Annex D — HTTP binding correspondence (informative)",
+      "block": 1,
+      "para": 16
     },
     "03EA3913": {
       "owner": "template"
@@ -202,8 +282,12 @@
     "04209087": {
       "owner": "template"
     },
-    "043EE4CF": {
-      "owner": "template"
+    "0434C5B9": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "12 Conformance",
+      "block": 3,
+      "para": 7
     },
     "0462B67E": {
       "owner": "generated",
@@ -213,6 +297,9 @@
       "para": 61
     },
     "04FCFD07": {
+      "owner": "template"
+    },
+    "050DD9AE": {
       "owner": "template"
     },
     "051355FB": {
@@ -238,6 +325,20 @@
       "kind": "nodetable",
       "para": 14
     },
+    "05804952": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "4 Overview",
+      "block": 1,
+      "para": 0
+    },
+    "05A54A67": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "Annex D — HTTP binding correspondence (informative)",
+      "block": 1,
+      "para": 11
+    },
     "05CAA116": {
       "owner": "template"
     },
@@ -251,13 +352,6 @@
       "kind": "nodetable",
       "para": 20
     },
-    "05FE11AC": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "Annex D — HTTP binding correspondence (informative)",
-      "block": 1,
-      "para": 11
-    },
     "05FFD65B": {
       "owner": "generated",
       "region": "objecttypes",
@@ -268,25 +362,11 @@
     "06328984": {
       "owner": "template"
     },
-    "0638E621": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "6.5 Formats and content-types",
-      "block": 0,
-      "para": 5
-    },
     "064360FF": {
       "owner": "template"
     },
     "065247A9": {
       "owner": "template"
-    },
-    "065EE40D": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "6.5 Formats and content-types",
-      "block": 0,
-      "para": 7
     },
     "06654834": {
       "owner": "template"
@@ -323,13 +403,6 @@
     "06CEAECD": {
       "owner": "template"
     },
-    "06DA19BB": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "12 Conformance",
-      "block": 3,
-      "para": 4
-    },
     "06E08D01": {
       "owner": "generated",
       "region": "objecttypes",
@@ -344,9 +417,6 @@
       "kind": "clause",
       "para": 0
     },
-    "0712C750": {
-      "owner": "template"
-    },
     "0721E1CE": {
       "owner": "generated",
       "region": "objecttypes",
@@ -360,6 +430,20 @@
       "index": 8,
       "kind": "nodetable",
       "para": 18
+    },
+    "0731E997": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "Annex B — Federation and OPC UA / HTTP resolution parity (informative)",
+      "block": 2,
+      "para": 1
+    },
+    "0732FD8E": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "12 Conformance",
+      "block": 3,
+      "para": 8
     },
     "073912CF": {
       "owner": "template"
@@ -378,12 +462,12 @@
       "kind": "methodtable",
       "para": 36
     },
-    "077C3CC4": {
+    "078F2EB1": {
       "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "8 Resolution flow",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "Annex D — HTTP binding correspondence (informative)",
       "block": 1,
-      "para": 5
+      "para": 24
     },
     "07ACE5C7": {
       "owner": "generated",
@@ -399,12 +483,8 @@
       "kind": "table",
       "para": 7
     },
-    "07E45BA8": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "6.4 SchemaId-NodeId fast access and GetSchema",
-      "block": 1,
-      "para": 1
+    "07D9CC31": {
+      "owner": "template"
     },
     "07EDD06B": {
       "owner": "generated",
@@ -449,7 +529,27 @@
     "0860FC3C": {
       "owner": "template"
     },
+    "08782AC7": {
+      "owner": "template"
+    },
+    "087BB548": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "Annex D — HTTP binding correspondence (informative)",
+      "block": 1,
+      "para": 8
+    },
     "088FC349": {
+      "owner": "template"
+    },
+    "089ACD08": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "10.2 Serving the xRegistry API and JSON projection",
+      "block": 1,
+      "para": 4
+    },
+    "089C994F": {
       "owner": "template"
     },
     "08A4DE78": {
@@ -475,6 +575,13 @@
     "08DA7DD6": {
       "owner": "template"
     },
+    "08DBD3AB": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "12 Conformance",
+      "block": 3,
+      "para": 1
+    },
     "08F66FDA": {
       "owner": "template"
     },
@@ -484,9 +591,6 @@
       "index": 8,
       "kind": "nodetable",
       "para": 9
-    },
-    "0914CBDD": {
-      "owner": "template"
     },
     "0917A8AB": {
       "owner": "generated",
@@ -512,19 +616,19 @@
       "kind": "nodetable",
       "para": 7
     },
-    "0948004C": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "C.4 PubSub integration touch-points",
-      "block": 0,
-      "para": 0
-    },
     "094D4BA2": {
       "owner": "generated",
       "region": "namespaces",
       "index": 4,
       "kind": "table",
       "para": 10
+    },
+    "09740C71": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "5.2 Registering a schema (optional)",
+      "block": 1,
+      "para": 1
     },
     "097B266A": {
       "owner": "generated",
@@ -536,12 +640,12 @@
     "097E96E7": {
       "owner": "template"
     },
-    "09B530B2": {
+    "099BD7D3": {
       "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "6.5 Formats and content-types",
-      "block": 0,
-      "para": 9
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "Annex D — HTTP binding correspondence (informative)",
+      "block": 1,
+      "para": 14
     },
     "09B53FE6": {
       "owner": "generated",
@@ -550,12 +654,12 @@
       "kind": "para",
       "para": 0
     },
-    "09C0CD86": {
+    "09CAAD54": {
       "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "C.1 ConfigurationVersion-keyed evolution",
-      "block": 2,
-      "para": 1
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "1 Scope",
+      "block": 0,
+      "para": 0
     },
     "09DB9563": {
       "owner": "generated",
@@ -574,18 +678,28 @@
       "kind": "table",
       "para": 7
     },
+    "0A09E11C": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "10.2 Serving the xRegistry API and JSON projection",
+      "block": 1,
+      "para": 33
+    },
     "0A140B14": {
       "owner": "template"
+    },
+    "0A16E9A9": {
+      "owner": "generated",
+      "region": "objecttypes",
+      "index": 11,
+      "kind": "nodetable",
+      "para": 84
     },
     "0A1D6897": {
       "owner": "template"
     },
-    "0A2F2E79": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "10.2 Serving the xRegistry API and JSON projection",
-      "block": 1,
-      "para": 11
+    "0A33FF67": {
+      "owner": "template"
     },
     "0A6400C6": {
       "owner": "template"
@@ -596,15 +710,15 @@
     "0AC4315C": {
       "owner": "template"
     },
+    "0AC88856": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "1 Scope",
+      "block": 6,
+      "para": 0
+    },
     "0AE44794": {
       "owner": "template"
-    },
-    "0AEC244A": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "12 Conformance",
-      "block": 3,
-      "para": 6
     },
     "0AED441D": {
       "owner": "template"
@@ -616,22 +730,8 @@
       "kind": "methodtable",
       "para": 22
     },
-    "0B0889F0": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "4.3 OPC UA as a first-class binding — federation and access parity with HTTP",
-      "block": 0,
-      "para": 0
-    },
     "0B08A996": {
       "owner": "template"
-    },
-    "0B0BAABE": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "Annex D — HTTP binding correspondence (informative)",
-      "block": 1,
-      "para": 25
     },
     "0B14576D": {
       "owner": "generated",
@@ -646,34 +746,37 @@
     "0B48CDE0": {
       "owner": "template"
     },
+    "0B63DF83": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "10.2 Serving the xRegistry API and JSON projection",
+      "block": 1,
+      "para": 19
+    },
+    "0B740577": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.3 SchemaFileType",
+      "block": 2,
+      "para": 0
+    },
     "0BB94B5D": {
       "owner": "template"
     },
     "0BBE1606": {
       "owner": "template"
     },
-    "0BC3FACA": {
-      "owner": "template"
-    },
     "0BD1B04E": {
       "owner": "template"
-    },
-    "0BDE0725": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "10.2 Serving the xRegistry API and JSON projection",
-      "block": 1,
-      "para": 3
     },
     "0BE6CABE": {
       "owner": "template"
     },
-    "0C1DBBC1": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "6.3 SchemaFileType",
-      "block": 1,
-      "para": 3
+    "0BEA39B4": {
+      "owner": "template"
+    },
+    "0C0B71FB": {
+      "owner": "template"
     },
     "0C5DAF59": {
       "owner": "generated",
@@ -706,20 +809,6 @@
     "0C7E7D3B": {
       "owner": "template"
     },
-    "0C9EE4C8": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "Annex D — HTTP binding correspondence (informative)",
-      "block": 1,
-      "para": 30
-    },
-    "0D3930BF": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "C.3 Append-only rule (normative)",
-      "block": 2,
-      "para": 0
-    },
     "0D3974F6": {
       "owner": "template"
     },
@@ -735,20 +824,6 @@
     },
     "0D805329": {
       "owner": "template"
-    },
-    "0D85EC24": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "Annex D — HTTP binding correspondence (informative)",
-      "block": 1,
-      "para": 17
-    },
-    "0D8F731C": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "10.2 Serving the xRegistry API and JSON projection",
-      "block": 1,
-      "para": 30
     },
     "0D9E8008": {
       "owner": "template"
@@ -769,13 +844,6 @@
       "kind": "para",
       "para": 0
     },
-    "0E21B56F": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "11 Optional PubSub integration",
-      "block": 2,
-      "para": 0
-    },
     "0E2FE0BE": {
       "owner": "generated",
       "region": "objecttypes",
@@ -783,15 +851,18 @@
       "kind": "nodetable",
       "para": 25
     },
+    "0E310907": {
+      "owner": "template"
+    },
     "0E437D06": {
       "owner": "template"
     },
-    "0E71CD65": {
+    "0E44F242": {
       "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "1 Scope",
-      "block": 7,
-      "para": 0
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.6 Schema identity (`SchemaId`) and per-format fingerprints",
+      "block": 1,
+      "para": 1
     },
     "0E9752BF": {
       "owner": "template"
@@ -806,12 +877,12 @@
       "kind": "nodetable",
       "para": 21
     },
-    "0EF2A67A": {
+    "0EEE2BF6": {
       "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "6.5 Formats and content-types",
-      "block": 0,
-      "para": 14
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "10.2 Serving the xRegistry API and JSON projection",
+      "block": 1,
+      "para": 10
     },
     "0EF44E3A": {
       "owner": "generated",
@@ -827,20 +898,17 @@
       "kind": "methodtable",
       "para": 41
     },
+    "0F2C7787": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "10.2 Serving the xRegistry API and JSON projection",
+      "block": 1,
+      "para": 18
+    },
     "0F2E4164": {
       "owner": "template"
     },
     "0F2FBC87": {
-      "owner": "template"
-    },
-    "0F4F2F23": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "1 Scope",
-      "block": 6,
-      "para": 0
-    },
-    "0F544DC8": {
       "owner": "template"
     },
     "0F60C0AE": {
@@ -853,16 +921,6 @@
       "kind": "table",
       "para": 13
     },
-    "0F933E60": {
-      "owner": "template"
-    },
-    "0FAAF33D": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "6.3 SchemaFileType",
-      "block": 1,
-      "para": 8
-    },
     "0FAC5245": {
       "owner": "template"
     },
@@ -873,9 +931,6 @@
       "kind": "nodetable",
       "para": 34
     },
-    "0FBCC753": {
-      "owner": "template"
-    },
     "0FC17205": {
       "owner": "template"
     },
@@ -884,13 +939,6 @@
       "region": "use-cases",
       "index": 1,
       "kind": "clause",
-      "para": 0
-    },
-    "0FF70940": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "1 Scope",
-      "block": 3,
       "para": 0
     },
     "10211433": {
@@ -912,16 +960,6 @@
       "kind": "methodtable",
       "para": 39
     },
-    "10C476BC": {
-      "owner": "template"
-    },
-    "10F1F768": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "6.5 Formats and content-types",
-      "block": 0,
-      "para": 12
-    },
     "10F3EA77": {
       "owner": "generated",
       "region": "objecttypes",
@@ -932,26 +970,12 @@
     "11186A60": {
       "owner": "template"
     },
-    "111F8A61": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "C.3 Append-only rule (normative)",
-      "block": 3,
-      "para": 0
-    },
     "1133646D": {
       "owner": "generated",
       "region": "instances",
       "index": 5,
       "kind": "methodtable",
       "para": 43
-    },
-    "113CB7BA": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "10.2 Serving the xRegistry API and JSON projection",
-      "block": 1,
-      "para": 8
     },
     "115ACBB4": {
       "owner": "template"
@@ -970,19 +994,19 @@
       "kind": "methodtable",
       "para": 34
     },
-    "11B871DA": {
+    "11B4BE6A": {
       "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "6.5 Formats and content-types",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.4 SchemaId-NodeId fast access and GetSchema",
       "block": 0,
-      "para": 3
+      "para": 0
     },
-    "11CE1490": {
+    "11C93348": {
       "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "6.3 SchemaFileType",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "Annex D — HTTP binding correspondence (informative)",
       "block": 1,
-      "para": 7
+      "para": 5
     },
     "11CFF5CF": {
       "owner": "template"
@@ -997,8 +1021,36 @@
       "kind": "methodtable",
       "para": 37
     },
+    "11E8A8E0": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.3 SchemaFileType",
+      "block": 1,
+      "para": 5
+    },
+    "121B9223": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.5 Formats and content-types",
+      "block": 0,
+      "para": 9
+    },
+    "122E856F": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "Annex D — HTTP binding correspondence (informative)",
+      "block": 1,
+      "para": 18
+    },
     "12312B1E": {
       "owner": "template"
+    },
+    "1257CC79": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "5.1 Downloading a schema (mandatory)",
+      "block": 2,
+      "para": 0
     },
     "1260DC87": {
       "owner": "generated",
@@ -1007,25 +1059,11 @@
       "kind": "nodetable",
       "para": 7
     },
-    "12779DEE": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "C.1 ConfigurationVersion-keyed evolution",
-      "block": 1,
-      "para": 0
-    },
     "127C81B4": {
       "owner": "template"
     },
     "127E3B0E": {
       "owner": "template"
-    },
-    "1288316B": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "4 Overview",
-      "block": 0,
-      "para": 0
     },
     "12B3EDF4": {
       "owner": "generated",
@@ -1047,28 +1085,21 @@
     "12D3BED8": {
       "owner": "template"
     },
+    "12D50CFB": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "12 Conformance",
+      "block": 3,
+      "para": 18
+    },
     "12E0A160": {
       "owner": "template"
-    },
-    "130502A2": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "Annex D — HTTP binding correspondence (informative)",
-      "block": 1,
-      "para": 24
     },
     "1310E9FD": {
       "owner": "template"
     },
     "13143313": {
       "owner": "template"
-    },
-    "1332C5F1": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "12 Conformance",
-      "block": 3,
-      "para": 2
     },
     "1337655E": {
       "owner": "generated",
@@ -1077,18 +1108,22 @@
       "kind": "nodetable",
       "para": 16
     },
+    "133A8BEF": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 3,
+      "para": 0
+    },
     "13500168": {
       "owner": "template"
     },
-    "13A80974": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "1 Scope",
-      "block": 6,
-      "para": 3
-    },
-    "13F418D1": {
-      "owner": "template"
+    "13F9004A": {
+      "owner": "generated",
+      "region": "objecttypes",
+      "index": 11,
+      "kind": "nodetable",
+      "para": 82
     },
     "1402D8C7": {
       "owner": "generated",
@@ -1096,13 +1131,6 @@
       "index": 8,
       "kind": "table",
       "para": 0
-    },
-    "14291BFE": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "6.5 Formats and content-types",
-      "block": 0,
-      "para": 4
     },
     "142F547D": {
       "owner": "template"
@@ -1116,13 +1144,6 @@
     },
     "14613847": {
       "owner": "template"
-    },
-    "146DC501": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "5.2 Registering a schema (optional)",
-      "block": 2,
-      "para": 0
     },
     "1471B71B": {
       "owner": "generated",
@@ -1163,13 +1184,6 @@
     "152CD608": {
       "owner": "template"
     },
-    "152F8EDE": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "10.2 Serving the xRegistry API and JSON projection",
-      "block": 1,
-      "para": 19
-    },
     "15627D31": {
       "owner": "generated",
       "region": "namespaces",
@@ -1180,13 +1194,6 @@
     "1574DC6C": {
       "owner": "template"
     },
-    "159595EF": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "10.2 Serving the xRegistry API and JSON projection",
-      "block": 1,
-      "para": 32
-    },
     "15A265CC": {
       "owner": "template"
     },
@@ -1196,6 +1203,13 @@
       "index": 5,
       "kind": "methodtable",
       "para": 3
+    },
+    "15B75FB2": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "Annex D — HTTP binding correspondence (informative)",
+      "block": 1,
+      "para": 17
     },
     "15C4A750": {
       "owner": "generated",
@@ -1214,15 +1228,18 @@
       "kind": "methodtable",
       "para": 0
     },
+    "16044E79": {
+      "owner": "template"
+    },
     "1616A8CB": {
       "owner": "template"
     },
-    "161F6028": {
+    "1616B5D6": {
       "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "6.4 SchemaId-NodeId fast access and GetSchema",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.5 Formats and content-types",
       "block": 0,
-      "para": 0
+      "para": 7
     },
     "1622F10F": {
       "owner": "generated",
@@ -1231,13 +1248,6 @@
       "kind": "nodetable",
       "para": 11
     },
-    "164024E6": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "Annex B — Federation and OPC UA / HTTP resolution parity (informative)",
-      "block": 2,
-      "para": 0
-    },
     "1645D0CC": {
       "owner": "generated",
       "region": "annex-a",
@@ -1245,18 +1255,22 @@
       "kind": "nodetable",
       "para": 52
     },
-    "165BBA97": {
+    "164F462C": {
       "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "Annex D — HTTP binding correspondence (informative)",
-      "block": 1,
-      "para": 29
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "12 Conformance",
+      "block": 3,
+      "para": 2
     },
     "165FAE10": {
       "owner": "template"
     },
-    "1668BCCE": {
-      "owner": "template"
+    "16A0FD3A": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "10.2 Serving the xRegistry API and JSON projection",
+      "block": 1,
+      "para": 16
     },
     "16A5897F": {
       "owner": "template"
@@ -1290,12 +1304,12 @@
     "16F8C7B1": {
       "owner": "template"
     },
-    "17019580": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "12 Conformance",
-      "block": 3,
-      "para": 18
+    "16FFCAC9": {
+      "owner": "generated",
+      "region": "objecttypes",
+      "index": 11,
+      "kind": "nodetable",
+      "para": 83
     },
     "17066237": {
       "owner": "generated",
@@ -1304,8 +1318,28 @@
       "kind": "table",
       "para": 23
     },
+    "170A00E4": {
+      "owner": "template"
+    },
+    "1716BB62": {
+      "owner": "template"
+    },
     "172BDD6E": {
       "owner": "template"
+    },
+    "172FFDB9": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 45,
+      "kind": "clause",
+      "para": 0
+    },
+    "17598360": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "C.3 Append-only rule (normative)",
+      "block": 3,
+      "para": 0
     },
     "17623011": {
       "owner": "generated",
@@ -1329,9 +1363,6 @@
       "para": 28
     },
     "1774587E": {
-      "owner": "template"
-    },
-    "17D115F1": {
       "owner": "template"
     },
     "17D15604": {
@@ -1397,22 +1428,18 @@
     "18760A1F": {
       "owner": "template"
     },
-    "188BFE12": {
+    "188D3C30": {
+      "owner": "template"
+    },
+    "188ED62B": {
       "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "10.2 Serving the xRegistry API and JSON projection",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "Annex D — HTTP binding correspondence (informative)",
       "block": 1,
-      "para": 18
+      "para": 31
     },
     "189A56F8": {
       "owner": "template"
-    },
-    "189FBA3D": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "Annex D — HTTP binding correspondence (informative)",
-      "block": 1,
-      "para": 21
     },
     "18B47AA1": {
       "owner": "generated",
@@ -1469,13 +1496,6 @@
       "kind": "nodetable",
       "para": 12
     },
-    "19616CD3": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "10.2 Serving the xRegistry API and JSON projection",
-      "block": 1,
-      "para": 33
-    },
     "196CFA4B": {
       "owner": "generated",
       "region": "terms",
@@ -1493,10 +1513,10 @@
       "kind": "para",
       "para": 0
     },
-    "197F6FBC": {
+    "197622D8": {
       "owner": "template"
     },
-    "19B351C2": {
+    "197F6FBC": {
       "owner": "template"
     },
     "19C01F40": {
@@ -1505,9 +1525,6 @@
       "index": 8,
       "kind": "table",
       "para": 4
-    },
-    "19D05745": {
-      "owner": "template"
     },
     "19E8EA61": {
       "owner": "template"
@@ -1518,6 +1535,13 @@
       "index": 4,
       "kind": "table",
       "para": 1
+    },
+    "1A07C9C5": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "Annex D — HTTP binding correspondence (informative)",
+      "block": 1,
+      "para": 19
     },
     "1A1C8A53": {
       "owner": "generated",
@@ -1566,26 +1590,12 @@
       "kind": "methodtable",
       "para": 16
     },
-    "1ACAD780": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "12 Conformance",
-      "block": 3,
-      "para": 8
-    },
     "1AEF1331": {
       "owner": "generated",
       "region": "instances",
       "index": 5,
       "kind": "methodtable",
       "para": 35
-    },
-    "1B098F26": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "C.2 Open unions subject to aggregation",
-      "block": 0,
-      "para": 0
     },
     "1B42AD91": {
       "owner": "template"
@@ -1600,6 +1610,13 @@
       "kind": "nodetable",
       "para": 70
     },
+    "1B9938A0": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.5 Formats and content-types",
+      "block": 0,
+      "para": 15
+    },
     "1B9E9216": {
       "owner": "template"
     },
@@ -1609,6 +1626,20 @@
       "index": 8,
       "kind": "nodetable",
       "para": 7
+    },
+    "1BC97AA1": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 2,
+      "para": 10
+    },
+    "1BD23172": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "12 Conformance",
+      "block": 3,
+      "para": 9
     },
     "1BF4CB94": {
       "owner": "generated",
@@ -1620,12 +1651,12 @@
     "1BFDEC71": {
       "owner": "template"
     },
-    "1C078D20": {
+    "1BFF41F5": {
       "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "8 Resolution flow",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "Annex D — HTTP binding correspondence (informative)",
       "block": 1,
-      "para": 0
+      "para": 32
     },
     "1C14363F": {
       "owner": "template"
@@ -1637,8 +1668,12 @@
       "kind": "nodetable",
       "para": 16
     },
-    "1C3DD93F": {
-      "owner": "template"
+    "1C38D3AB": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "Annex D — HTTP binding correspondence (informative)",
+      "block": 1,
+      "para": 6
     },
     "1C4C18F1": {
       "owner": "generated",
@@ -1676,11 +1711,11 @@
     "1CF8F167": {
       "owner": "template"
     },
-    "1D072AE1": {
+    "1CFF92BB": {
       "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "12 Conformance",
-      "block": 4,
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "9 TTL and mirror semantics",
+      "block": 1,
       "para": 0
     },
     "1D13C254": {
@@ -1703,29 +1738,11 @@
       "kind": "table",
       "para": 22
     },
-    "1DA69E48": {
+    "1DA1D91E": {
       "owner": "template"
     },
-    "1DAF5FCB": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "10.2 Serving the xRegistry API and JSON projection",
-      "block": 1,
-      "para": 5
-    },
-    "1DCB86C8": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "Annex D — HTTP binding correspondence (informative)",
-      "block": 1,
-      "para": 20
-    },
-    "1DD33BC3": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "8 Resolution flow",
-      "block": 0,
-      "para": 0
+    "1DA69E48": {
+      "owner": "template"
     },
     "1E0AA45C": {
       "owner": "template"
@@ -1736,13 +1753,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 41
-    },
-    "1E11C10B": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "6.6 Schema identity (`SchemaId`) and per-format fingerprints",
-      "block": 3,
-      "para": 0
     },
     "1E1A67F2": {
       "owner": "template"
@@ -1757,9 +1767,6 @@
       "kind": "nodetable",
       "para": 10
     },
-    "1E553A04": {
-      "owner": "template"
-    },
     "1E6714A6": {
       "owner": "template"
     },
@@ -1773,9 +1780,6 @@
       "kind": "para",
       "para": 0
     },
-    "1ECCA98A": {
-      "owner": "template"
-    },
     "1ECCD897": {
       "owner": "generated",
       "region": "objecttypes",
@@ -1783,12 +1787,19 @@
       "kind": "nodetable",
       "para": 28
     },
-    "1F022999": {
+    "1EDA4C3F": {
       "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "11 Optional PubSub integration",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "10.2 Serving the xRegistry API and JSON projection",
       "block": 1,
-      "para": 1
+      "para": 31
+    },
+    "1F000E50": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "Annex D — HTTP binding correspondence (informative)",
+      "block": 1,
+      "para": 3
     },
     "1F484298": {
       "owner": "generated",
@@ -1799,6 +1810,16 @@
     },
     "1F62A62C": {
       "owner": "template"
+    },
+    "1F7722C8": {
+      "owner": "template"
+    },
+    "1FA5A0DD": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.4 SchemaId-NodeId fast access and GetSchema",
+      "block": 2,
+      "para": 0
     },
     "1FBD28F8": {
       "owner": "template"
@@ -1823,25 +1844,14 @@
       "kind": "term",
       "para": 1
     },
-    "203855F2": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "11 Optional PubSub integration",
-      "block": 0,
-      "para": 0
-    },
     "204241BF": {
+      "owner": "template"
+    },
+    "20513CC7": {
       "owner": "template"
     },
     "207494B6": {
       "owner": "template"
-    },
-    "2079A812": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "9 TTL and mirror semantics",
-      "block": 1,
-      "para": 0
     },
     "2083F9D4": {
       "owner": "generated",
@@ -1871,25 +1881,25 @@
       "kind": "nodetable",
       "para": 17
     },
+    "20F9CC7F": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "10.2 Serving the xRegistry API and JSON projection",
+      "block": 1,
+      "para": 29
+    },
+    "21125AC4": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "1 Scope",
+      "block": 6,
+      "para": 1
+    },
     "213F4230": {
       "owner": "template"
     },
     "2146F309": {
       "owner": "template"
-    },
-    "2164383E": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "5.1 Downloading a schema (mandatory)",
-      "block": 2,
-      "para": 0
-    },
-    "216D0DDF": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "1 Scope",
-      "block": 6,
-      "para": 1
     },
     "217B08A0": {
       "owner": "generated",
@@ -1898,15 +1908,15 @@
       "kind": "nodetable",
       "para": 77
     },
-    "217CACC9": {
+    "2186CB09": {
       "owner": "template"
     },
-    "21BBCBFA": {
+    "21BFF98F": {
       "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "Annex D — HTTP binding correspondence (informative)",
-      "block": 1,
-      "para": 22
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "12 Conformance",
+      "block": 3,
+      "para": 19
     },
     "21CC5579": {
       "owner": "template"
@@ -1918,14 +1928,39 @@
       "kind": "nodetable",
       "para": 9
     },
+    "21E6CAF3": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "10.2 Serving the xRegistry API and JSON projection",
+      "block": 1,
+      "para": 27
+    },
+    "21EEF845": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.3 SchemaFileType",
+      "block": 1,
+      "para": 8
+    },
     "2205FE8E": {
       "owner": "template"
     },
-    "220711B4": {
-      "owner": "template"
+    "2206BF70": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 1,
+      "para": 0
     },
     "2210B34B": {
       "owner": "template"
+    },
+    "221EFCC3": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "10.2 Serving the xRegistry API and JSON projection",
+      "block": 1,
+      "para": 8
     },
     "223374EF": {
       "owner": "template"
@@ -1933,20 +1968,10 @@
     "224FA464": {
       "owner": "template"
     },
-    "22554E59": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "6.5 Formats and content-types",
-      "block": 0,
-      "para": 16
-    },
     "22679350": {
       "owner": "template"
     },
     "2286F069": {
-      "owner": "template"
-    },
-    "228BFE9F": {
       "owner": "template"
     },
     "228C6C3C": {
@@ -1957,16 +1982,6 @@
       "para": 0
     },
     "22ABE184": {
-      "owner": "template"
-    },
-    "22B09223": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "12 Conformance",
-      "block": 3,
-      "para": 13
-    },
-    "22B2DD77": {
       "owner": "template"
     },
     "22B47099": {
@@ -2009,8 +2024,25 @@
       "kind": "nodetable",
       "para": 45
     },
+    "23188267": {
+      "owner": "template"
+    },
     "232468F9": {
       "owner": "template"
+    },
+    "23674F75": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.4 SchemaId-NodeId fast access and GetSchema",
+      "block": 1,
+      "para": 2
+    },
+    "2371DB50": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "7 Schema versioning and compatibility",
+      "block": 1,
+      "para": 2
     },
     "237B19AC": {
       "owner": "generated",
@@ -2019,19 +2051,12 @@
       "kind": "table",
       "para": 3
     },
-    "238B3408": {
+    "2399F570": {
       "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "10.2 Serving the xRegistry API and JSON projection",
-      "block": 1,
-      "para": 13
-    },
-    "239DFE66": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "4 Overview",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
       "block": 2,
-      "para": 0
+      "para": 8
     },
     "23A594F1": {
       "owner": "template"
@@ -2046,12 +2071,26 @@
       "kind": "methodtable",
       "para": 31
     },
+    "23BC5993": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.4 SchemaId-NodeId fast access and GetSchema",
+      "block": 1,
+      "para": 0
+    },
     "23F46C2D": {
       "owner": "generated",
       "region": "terms",
       "index": 8,
       "kind": "term",
       "para": 2
+    },
+    "23F4EC1D": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "11 Optional PubSub integration",
+      "block": 1,
+      "para": 0
     },
     "23F9D660": {
       "owner": "template"
@@ -2069,13 +2108,6 @@
       "index": 15,
       "kind": "term",
       "para": 1
-    },
-    "243D4528": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "1 Scope",
-      "block": 8,
-      "para": 0
     },
     "2458110F": {
       "owner": "generated",
@@ -2111,8 +2143,19 @@
     "24B2185C": {
       "owner": "template"
     },
-    "24B74AA3": {
-      "owner": "template"
+    "24BB89B2": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "10.2 Serving the xRegistry API and JSON projection",
+      "block": 1,
+      "para": 15
+    },
+    "24C73D10": {
+      "owner": "generated",
+      "region": "objecttypes",
+      "index": 8,
+      "kind": "nodetable",
+      "para": 30
     },
     "24C98CDA": {
       "owner": "generated",
@@ -2120,9 +2163,6 @@
       "index": 0,
       "kind": "annex",
       "para": 0
-    },
-    "24F7BD0C": {
-      "owner": "template"
     },
     "25421E6E": {
       "owner": "template"
@@ -2133,12 +2173,18 @@
     "2582E86B": {
       "owner": "template"
     },
-    "25D4B7F7": {
+    "25A0C0FD": {
+      "owner": "template"
+    },
+    "25B7293A": {
       "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "7 Schema versioning and compatibility",
-      "block": 0,
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "1 Scope",
+      "block": 1,
       "para": 0
+    },
+    "25D27CC9": {
+      "owner": "template"
     },
     "25DB5BA6": {
       "owner": "template"
@@ -2157,15 +2203,29 @@
       "kind": "nodetable",
       "para": 93
     },
-    "2611BD32": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "Annex D — HTTP binding correspondence (informative)",
-      "block": 1,
-      "para": 12
+    "25F64C2F": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 49,
+      "kind": "clause",
+      "para": 0
     },
     "261F86E6": {
       "owner": "template"
+    },
+    "262A8E00": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "10.2 Serving the xRegistry API and JSON projection",
+      "block": 1,
+      "para": 26
+    },
+    "2636033A": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "10.2 Serving the xRegistry API and JSON projection",
+      "block": 1,
+      "para": 7
     },
     "263F2EDA": {
       "owner": "generated",
@@ -2204,22 +2264,22 @@
     "268DAB85": {
       "owner": "template"
     },
+    "26907D94": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.6 Schema identity (`SchemaId`) and per-format fingerprints",
+      "block": 2,
+      "para": 0
+    },
+    "269B9936": {
+      "owner": "template"
+    },
     "26A3EA99": {
       "owner": "generated",
       "region": "namespaces",
       "index": 4,
       "kind": "table",
       "para": 13
-    },
-    "26A8EF23": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "6.6 Schema identity (`SchemaId`) and per-format fingerprints",
-      "block": 2,
-      "para": 0
-    },
-    "26B71354": {
-      "owner": "template"
     },
     "26BCF03E": {
       "owner": "generated",
@@ -2235,38 +2295,32 @@
       "kind": "term",
       "para": 1
     },
-    "2700A16D": {
-      "owner": "template"
-    },
-    "2702FB41": {
+    "2701C1CE": {
       "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "10.2 Serving the xRegistry API and JSON projection",
-      "block": 1,
-      "para": 21
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "5.2 Registering a schema (optional)",
+      "block": 2,
+      "para": 0
     },
     "270C2DF7": {
       "owner": "template"
     },
+    "270F6C2B": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "Annex D — HTTP binding correspondence (informative)",
+      "block": 1,
+      "para": 10
+    },
     "270F8A71": {
       "owner": "template"
     },
-    "271F555C": {
+    "270FEEB1": {
       "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "6.3 SchemaFileType",
-      "block": 1,
-      "para": 6
-    },
-    "2728139A": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "1 Scope",
-      "block": 4,
-      "para": 1
-    },
-    "273ADA2F": {
-      "owner": "template"
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "Annex B — Federation and OPC UA / HTTP resolution parity (informative)",
+      "block": 2,
+      "para": 2
     },
     "2748DE74": {
       "owner": "template"
@@ -2274,22 +2328,8 @@
     "2751EE8E": {
       "owner": "template"
     },
-    "2766C000": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "11 Optional PubSub integration",
-      "block": 1,
-      "para": 0
-    },
     "277B85E1": {
       "owner": "template"
-    },
-    "2786EF43": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "6.5 Formats and content-types",
-      "block": 0,
-      "para": 1
     },
     "278AED53": {
       "owner": "generated",
@@ -2298,19 +2338,12 @@
       "kind": "nodetable",
       "para": 68
     },
-    "27996190": {
+    "27A7B202": {
       "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "1 Scope",
-      "block": 5,
-      "para": 0
-    },
-    "27AE9DB2": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "5.1 Downloading a schema (mandatory)",
-      "block": 0,
-      "para": 0
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "10.2 Serving the xRegistry API and JSON projection",
+      "block": 1,
+      "para": 14
     },
     "27CC96E5": {
       "owner": "template"
@@ -2321,12 +2354,12 @@
     "27F5E138": {
       "owner": "template"
     },
-    "27F8C831": {
+    "28031DC1": {
       "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "Annex D — HTTP binding correspondence (informative)",
-      "block": 1,
-      "para": 16
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "11 Optional PubSub integration",
+      "block": 0,
+      "para": 0
     },
     "2812F774": {
       "owner": "generated",
@@ -2335,12 +2368,11 @@
       "kind": "methodtable",
       "para": 10
     },
-    "28185682": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "Annex C — PubSub DataSet schema profile (normative for the profile, optional)",
-      "block": 0,
-      "para": 0
+    "2837174C": {
+      "owner": "template"
+    },
+    "28378D00": {
+      "owner": "template"
     },
     "283CE6A9": {
       "owner": "generated",
@@ -2352,6 +2384,13 @@
     "2850473E": {
       "owner": "template"
     },
+    "2877E7DF": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "Annex D — HTTP binding correspondence (informative)",
+      "block": 1,
+      "para": 15
+    },
     "288037B6": {
       "owner": "generated",
       "region": "terms",
@@ -2359,31 +2398,10 @@
       "kind": "term",
       "para": 2
     },
-    "289118B9": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "Annex D — HTTP binding correspondence (informative)",
-      "block": 1,
-      "para": 1
-    },
     "28AAC82D": {
       "owner": "template"
     },
-    "28BB480F": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "12 Conformance",
-      "block": 3,
-      "para": 9
-    },
-    "28BDA5B8": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "Annex B — Federation and OPC UA / HTTP resolution parity (informative)",
-      "block": 0,
-      "para": 0
-    },
-    "28C533EA": {
+    "28B1DF80": {
       "owner": "template"
     },
     "28CA0C45": {
@@ -2402,6 +2420,9 @@
       "index": 0,
       "kind": "nodetable",
       "para": 66
+    },
+    "291A8B57": {
+      "owner": "template"
     },
     "2922D9AD": {
       "owner": "generated",
@@ -2443,13 +2464,6 @@
       "kind": "term",
       "para": 2
     },
-    "2999B677": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "Annex B — Federation and OPC UA / HTTP resolution parity (informative)",
-      "block": 1,
-      "para": 0
-    },
     "29BA713D": {
       "owner": "generated",
       "region": "objecttypes",
@@ -2467,6 +2481,13 @@
     "29F59773": {
       "owner": "template"
     },
+    "2A0214A3": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "C.5 Example (informative)",
+      "block": 0,
+      "para": 0
+    },
     "2A05A556": {
       "owner": "template"
     },
@@ -2479,18 +2500,18 @@
     "2A316CA3": {
       "owner": "template"
     },
-    "2A74E217": {
+    "2A3DCAF3": {
       "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
       "section": "12 Conformance",
       "block": 3,
-      "para": 11
+      "para": 0
     },
-    "2A87E784": {
+    "2AA9CBBA": {
       "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "7 Schema versioning and compatibility",
-      "block": 1,
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "C.1 ConfigurationVersion-keyed evolution",
+      "block": 2,
       "para": 1
     },
     "2ABE89D0": {
@@ -2513,13 +2534,6 @@
       "kind": "nodetable",
       "para": 0
     },
-    "2AFFBE56": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "8 Resolution flow",
-      "block": 1,
-      "para": 3
-    },
     "2B09BE02": {
       "owner": "template"
     },
@@ -2532,6 +2546,9 @@
       "index": 13,
       "kind": "para",
       "para": 0
+    },
+    "2B21EAE9": {
+      "owner": "template"
     },
     "2B7EE57F": {
       "owner": "template"
@@ -2549,6 +2566,9 @@
     "2B83DDC7": {
       "owner": "template"
     },
+    "2B8B42C5": {
+      "owner": "template"
+    },
     "2B970E0C": {
       "owner": "generated",
       "region": "scope",
@@ -2556,22 +2576,22 @@
       "kind": "config",
       "para": 0
     },
-    "2BA2EC7F": {
+    "2BC499CC": {
       "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "10.2 Serving the xRegistry API and JSON projection",
-      "block": 1,
-      "para": 2
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "12 Conformance",
+      "block": 3,
+      "para": 4
     },
     "2BEFB40F": {
       "owner": "template"
     },
-    "2BF30D5C": {
+    "2C24C0BA": {
       "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "10.1 Auto-bootstrap of the schema structure",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.5 Formats and content-types",
       "block": 0,
-      "para": 0
+      "para": 6
     },
     "2C2F4A32": {
       "owner": "generated",
@@ -2589,6 +2609,13 @@
     "2C4EC229": {
       "owner": "template"
     },
+    "2C69BB15": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.6 Schema identity (`SchemaId`) and per-format fingerprints",
+      "block": 0,
+      "para": 0
+    },
     "2C7EDA88": {
       "owner": "generated",
       "region": "objecttypes",
@@ -2596,13 +2623,24 @@
       "kind": "nodetable",
       "para": 69
     },
-    "2C90E39B": {
+    "2C96B557": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.5 Formats and content-types",
+      "block": 0,
+      "para": 2
+    },
+    "2CB4EFAE": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 2,
+      "para": 1
+    },
+    "2D0053AF": {
       "owner": "template"
     },
     "2D1C4F1B": {
-      "owner": "template"
-    },
-    "2D35B0D9": {
       "owner": "template"
     },
     "2D57250B": {
@@ -2611,10 +2649,23 @@
     "2D85298B": {
       "owner": "template"
     },
+    "2D9E2D28": {
+      "owner": "template"
+    },
     "2DC1B13B": {
       "owner": "template"
     },
+    "2DD18438": {
+      "owner": "generated",
+      "region": "annex-a",
+      "index": 0,
+      "kind": "nodetable",
+      "para": 100
+    },
     "2E201E83": {
+      "owner": "template"
+    },
+    "2E206CF2": {
       "owner": "template"
     },
     "2E3B9734": {
@@ -2623,13 +2674,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 35
-    },
-    "2E5B56DA": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "5.2 Registering a schema (optional)",
-      "block": 1,
-      "para": 0
     },
     "2E8260BE": {
       "owner": "generated",
@@ -2647,13 +2691,6 @@
     },
     "2EAC85E4": {
       "owner": "template"
-    },
-    "2EC2ACF8": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "Annex D — HTTP binding correspondence (informative)",
-      "block": 1,
-      "para": 33
     },
     "2EC57924": {
       "owner": "template"
@@ -2685,13 +2722,6 @@
       "kind": "nodetable",
       "para": 56
     },
-    "2F59C84B": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "6.4 SchemaId-NodeId fast access and GetSchema",
-      "block": 3,
-      "para": 0
-    },
     "2F95C6A0": {
       "owner": "generated",
       "region": "objecttypes",
@@ -2699,19 +2729,15 @@
       "kind": "nodetable",
       "para": 17
     },
+    "2FBF3C2E": {
+      "owner": "template"
+    },
     "2FC79531": {
       "owner": "generated",
       "region": "annex-c",
       "index": 16,
       "kind": "annex-clause",
       "para": 0
-    },
-    "2FC7F20D": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "Annex D — HTTP binding correspondence (informative)",
-      "block": 1,
-      "para": 6
     },
     "2FCB1D35": {
       "owner": "template"
@@ -2738,16 +2764,6 @@
     "300CB483": {
       "owner": "template"
     },
-    "301A8C05": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "5.2 Registering a schema (optional)",
-      "block": 0,
-      "para": 0
-    },
-    "30389E04": {
-      "owner": "template"
-    },
     "303B0651": {
       "owner": "template"
     },
@@ -2757,16 +2773,6 @@
     "304EB199": {
       "owner": "template"
     },
-    "30575F1F": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "6.6 Schema identity (`SchemaId`) and per-format fingerprints",
-      "block": 1,
-      "para": 1
-    },
-    "30657179": {
-      "owner": "template"
-    },
     "30685D8D": {
       "owner": "generated",
       "region": "annex-a",
@@ -2774,15 +2780,19 @@
       "kind": "nodetable",
       "para": 39
     },
-    "308378C5": {
+    "30727C4B": {
       "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "Annex D — HTTP binding correspondence (informative)",
-      "block": 1,
-      "para": 34
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 4,
+      "para": 17
     },
-    "309C55BC": {
-      "owner": "template"
+    "3090A968": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 4,
+      "para": 12
     },
     "30B0FC23": {
       "owner": "generated",
@@ -2791,18 +2801,8 @@
       "kind": "term",
       "para": 0
     },
-    "30B9821F": {
-      "owner": "template"
-    },
     "30C36FBC": {
       "owner": "template"
-    },
-    "30DA9CC2": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "6.5 Formats and content-types",
-      "block": 0,
-      "para": 10
     },
     "30F903D6": {
       "owner": "template"
@@ -2824,15 +2824,29 @@
     "31219329": {
       "owner": "template"
     },
-    "315D7D9B": {
+    "31460FCA": {
       "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "4.3 OPC UA as a first-class binding — federation and access parity with HTTP",
-      "block": 1,
-      "para": 1
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 2,
+      "para": 5
+    },
+    "316A90DC": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "C.3 Append-only rule (normative)",
+      "block": 4,
+      "para": 0
     },
     "318F6F9D": {
       "owner": "template"
+    },
+    "319219AE": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "5.1 Downloading a schema (mandatory)",
+      "block": 1,
+      "para": 0
     },
     "319F9836": {
       "owner": "generated",
@@ -2844,13 +2858,6 @@
     "31A61335": {
       "owner": "template"
     },
-    "31AA45E6": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "4 Overview",
-      "block": 1,
-      "para": 0
-    },
     "31ACFF0C": {
       "owner": "generated",
       "region": "normative-references",
@@ -2858,10 +2865,51 @@
       "kind": "para",
       "para": 0
     },
+    "31BEEF3C": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 2,
+      "para": 4
+    },
+    "31F9FDED": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "Annex D — HTTP binding correspondence (informative)",
+      "block": 1,
+      "para": 2
+    },
     "321382D8": {
       "owner": "template"
     },
+    "3227CBCA": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "12 Conformance",
+      "block": 1,
+      "para": 0
+    },
+    "3287CEB4": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "Annex C — PubSub DataSet schema profile (normative for the profile, optional)",
+      "block": 0,
+      "para": 0
+    },
     "328BCC2D": {
+      "owner": "template"
+    },
+    "32A3EC68": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "12 Conformance",
+      "block": 3,
+      "para": 21
+    },
+    "32A599A6": {
+      "owner": "template"
+    },
+    "32C648E9": {
       "owner": "template"
     },
     "32DE79C6": {
@@ -2884,15 +2932,33 @@
       "kind": "table",
       "para": 8
     },
-    "3322EE60": {
-      "owner": "template"
-    },
     "33378E0E": {
       "owner": "generated",
       "region": "terms",
       "index": 14,
       "kind": "term",
       "para": 1
+    },
+    "334575AA": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 41,
+      "kind": "clause",
+      "para": 0
+    },
+    "33462F6D": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "Annex B — Federation and OPC UA / HTTP resolution parity (informative)",
+      "block": 2,
+      "para": 3
+    },
+    "336EEF6E": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 4,
+      "para": 5
     },
     "3379DBB7": {
       "owner": "template"
@@ -2903,19 +2969,8 @@
     "3393333E": {
       "owner": "template"
     },
-    "339F3D67": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "6.5 Formats and content-types",
-      "block": 0,
-      "para": 17
-    },
-    "33A5809D": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 44,
-      "kind": "clause",
-      "para": 0
+    "33B46B75": {
+      "owner": "template"
     },
     "33ED88D7": {
       "owner": "generated",
@@ -2931,12 +2986,19 @@
       "kind": "nodetable",
       "para": 15
     },
-    "341E283C": {
+    "3410BE46": {
       "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "12 Conformance",
-      "block": 2,
-      "para": 0
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "Annex D — HTTP binding correspondence (informative)",
+      "block": 1,
+      "para": 9
+    },
+    "34373C17": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.4 SchemaId-NodeId fast access and GetSchema",
+      "block": 1,
+      "para": 1
     },
     "34536081": {
       "owner": "generated",
@@ -2952,6 +3014,13 @@
       "kind": "table",
       "para": 9
     },
+    "346C0A3B": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 4,
+      "para": 2
+    },
     "346F5517": {
       "owner": "template"
     },
@@ -2964,12 +3033,12 @@
     "3483B7AE": {
       "owner": "template"
     },
-    "348D177E": {
+    "34A3F2EA": {
       "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "12 Conformance",
-      "block": 3,
-      "para": 3
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "10.2 Serving the xRegistry API and JSON projection",
+      "block": 2,
+      "para": 0
     },
     "34B4B014": {
       "owner": "template"
@@ -2990,15 +3059,29 @@
     "354B854D": {
       "owner": "template"
     },
+    "354DFD0A": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "7 Schema versioning and compatibility",
+      "block": 0,
+      "para": 0
+    },
     "35603A85": {
       "owner": "template"
     },
-    "357C16DE": {
+    "357F9D59": {
       "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.5 Formats and content-types",
+      "block": 0,
+      "para": 1
+    },
+    "358CB772": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
       "section": "Annex D — HTTP binding correspondence (informative)",
       "block": 1,
-      "para": 13
+      "para": 1
     },
     "35913A86": {
       "owner": "generated",
@@ -3017,39 +3100,40 @@
     "35A49AAD": {
       "owner": "template"
     },
-    "35D07975": {
-      "owner": "template"
+    "35C5F283": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "1 Scope",
+      "block": 4,
+      "para": 2
+    },
+    "35D2C315": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "10.2 Serving the xRegistry API and JSON projection",
+      "block": 1,
+      "para": 13
     },
     "35E11470": {
       "owner": "template"
     },
+    "35F96F34": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.6 Schema identity (`SchemaId`) and per-format fingerprints",
+      "block": 3,
+      "para": 0
+    },
     "36170D40": {
       "owner": "template"
     },
-    "3620E23E": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "12 Conformance",
-      "block": 3,
-      "para": 15
-    },
     "365ED989": {
       "owner": "template"
-    },
-    "36943900": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 50,
-      "kind": "clause",
-      "para": 0
     },
     "369AF152": {
       "owner": "template"
     },
     "36ACB4D3": {
-      "owner": "template"
-    },
-    "36BFA941": {
       "owner": "template"
     },
     "36CD0CDC": {
@@ -3059,18 +3143,25 @@
       "kind": "nodetable",
       "para": 12
     },
+    "36D81E50": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "1 Scope",
+      "block": 5,
+      "para": 0
+    },
     "36D8D9A4": {
       "owner": "template"
     },
     "36D98677": {
       "owner": "template"
     },
-    "36DD7B44": {
+    "36DB9B74": {
       "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "6.3 SchemaFileType",
-      "block": 1,
-      "para": 0
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 4,
+      "para": 1
     },
     "36EAC005": {
       "owner": "generated",
@@ -3085,10 +3176,14 @@
     "36F7C0B3": {
       "owner": "template"
     },
-    "371ECE2C": {
-      "owner": "template"
+    "370F2886": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 2,
+      "para": 6
     },
-    "3722F448": {
+    "371ECE2C": {
       "owner": "template"
     },
     "3739D210": {
@@ -3100,19 +3195,19 @@
     "3741515E": {
       "owner": "template"
     },
-    "37845D21": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "1 Scope",
-      "block": 1,
-      "para": 0
-    },
     "37AAD1F2": {
       "owner": "generated",
       "region": "objecttypes",
       "index": 5,
       "kind": "methodtable",
       "para": 24
+    },
+    "37B5F8F6": {
+      "owner": "generated",
+      "region": "annex-a",
+      "index": 0,
+      "kind": "nodetable",
+      "para": 103
     },
     "37CC0C4C": {
       "owner": "template"
@@ -3126,12 +3221,12 @@
     "37F766D4": {
       "owner": "template"
     },
-    "3824BF11": {
+    "3820E987": {
       "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "6.5 Formats and content-types",
-      "block": 0,
-      "para": 11
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "Annex B — Federation and OPC UA / HTTP resolution parity (informative)",
+      "block": 1,
+      "para": 0
     },
     "383020E9": {
       "owner": "template"
@@ -3142,8 +3237,22 @@
     "3847A9C4": {
       "owner": "template"
     },
+    "384D6C6C": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "5.1 Downloading a schema (mandatory)",
+      "block": 0,
+      "para": 0
+    },
     "385564BD": {
       "owner": "template"
+    },
+    "3856BA80": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 2,
+      "para": 0
     },
     "385DE944": {
       "owner": "template"
@@ -3151,7 +3260,7 @@
     "3874D575": {
       "owner": "template"
     },
-    "3893E17A": {
+    "387E1784": {
       "owner": "template"
     },
     "38A32619": {
@@ -3168,18 +3277,18 @@
       "kind": "nodetable",
       "para": 97
     },
-    "38D33C08": {
+    "38BE8FC2": {
       "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
       "section": "10.2 Serving the xRegistry API and JSON projection",
       "block": 1,
-      "para": 12
+      "para": 0
     },
-    "39137CC6": {
+    "38C54AE6": {
       "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "5.1 Downloading a schema (mandatory)",
-      "block": 1,
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6 Schema-specific information model",
+      "block": 0,
       "para": 0
     },
     "391FB18A": {
@@ -3188,6 +3297,13 @@
       "index": 5,
       "kind": "methodtable",
       "para": 6
+    },
+    "39246853": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "4.3 OPC UA as a first-class binding — federation and access parity with HTTP",
+      "block": 0,
+      "para": 0
     },
     "393C8160": {
       "owner": "template"
@@ -3206,22 +3322,12 @@
       "kind": "clause",
       "para": 0
     },
-    "39506E46": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "Annex D — HTTP binding correspondence (informative)",
-      "block": 1,
-      "para": 28
-    },
     "396F0880": {
       "owner": "generated",
       "region": "annex-a",
       "index": 0,
       "kind": "nodetable",
       "para": 43
-    },
-    "39749F55": {
-      "owner": "template"
     },
     "397DE111": {
       "owner": "generated",
@@ -3243,6 +3349,9 @@
     "398A594D": {
       "owner": "template"
     },
+    "39902AA3": {
+      "owner": "template"
+    },
     "39C2371C": {
       "owner": "generated",
       "region": "objecttypes",
@@ -3259,6 +3368,13 @@
     "39EA0E89": {
       "owner": "template"
     },
+    "39EEC7CF": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 4,
+      "para": 15
+    },
     "39FBA275": {
       "owner": "generated",
       "region": "annex-a",
@@ -3273,11 +3389,21 @@
       "kind": "term",
       "para": 1
     },
+    "3A517BE4": {
+      "owner": "template"
+    },
     "3A532551": {
       "owner": "template"
     },
     "3A636749": {
       "owner": "template"
+    },
+    "3A89C939": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.6 Schema identity (`SchemaId`) and per-format fingerprints",
+      "block": 4,
+      "para": 0
     },
     "3A9480FF": {
       "owner": "generated",
@@ -3315,13 +3441,6 @@
       "kind": "nodetable",
       "para": 30
     },
-    "3B2592FE": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "Annex D — HTTP binding correspondence (informative)",
-      "block": 1,
-      "para": 31
-    },
     "3B354320": {
       "owner": "generated",
       "region": "objecttypes",
@@ -3332,20 +3451,6 @@
     "3B4C8D23": {
       "owner": "template"
     },
-    "3B502BF5": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "1 Scope",
-      "block": 4,
-      "para": 0
-    },
-    "3B5172A1": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "10.2 Serving the xRegistry API and JSON projection",
-      "block": 1,
-      "para": 20
-    },
     "3B518B0B": {
       "owner": "generated",
       "region": "instances",
@@ -3353,21 +3458,25 @@
       "kind": "methodtable",
       "para": 22
     },
-    "3B606884": {
-      "owner": "template"
-    },
     "3B68BD0B": {
       "owner": "template"
     },
-    "3BA2B334": {
-      "owner": "template"
-    },
-    "3BB16B57": {
+    "3B8DC23F": {
       "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
       "section": "10.2 Serving the xRegistry API and JSON projection",
       "block": 1,
-      "para": 17
+      "para": 22
+    },
+    "3B9C31F1": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 4,
+      "para": 9
+    },
+    "3BA2B334": {
+      "owner": "template"
     },
     "3BB55991": {
       "owner": "template"
@@ -3377,13 +3486,6 @@
     },
     "3BC431FB": {
       "owner": "template"
-    },
-    "3BCE0454": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "6.5 Formats and content-types",
-      "block": 0,
-      "para": 2
     },
     "3BD481D4": {
       "owner": "generated",
@@ -3397,6 +3499,13 @@
     },
     "3C18D9EF": {
       "owner": "template"
+    },
+    "3C1ADE57": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.5 Formats and content-types",
+      "block": 0,
+      "para": 3
     },
     "3C250236": {
       "owner": "generated",
@@ -3424,6 +3533,13 @@
       "index": 11,
       "kind": "nodetable",
       "para": 7
+    },
+    "3C4B7462": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.6 Schema identity (`SchemaId`) and per-format fingerprints",
+      "block": 1,
+      "para": 0
     },
     "3C513AF8": {
       "owner": "template"
@@ -3469,11 +3585,42 @@
       "kind": "para",
       "para": 0
     },
-    "3D4D30D8": {
+    "3D3F5F18": {
       "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "12 Conformance",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "5.2 Registering a schema (optional)",
       "block": 1,
+      "para": 2
+    },
+    "3D534DED": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "12 Conformance",
+      "block": 3,
+      "para": 15
+    },
+    "3D911307": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "C.4 PubSub integration touch-points",
+      "block": 0,
+      "para": 0
+    },
+    "3D94D9CA": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "8 Resolution flow",
+      "block": 1,
+      "para": 8
+    },
+    "3D94F8BA": {
+      "owner": "template"
+    },
+    "3DB93604": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "1 Scope",
+      "block": 7,
       "para": 0
     },
     "3DC44C36": {
@@ -3499,14 +3646,17 @@
       "kind": "nodetable",
       "para": 3
     },
-    "3E0BFB1E": {
+    "3E2AA701": {
       "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "Annex D — HTTP binding correspondence (informative)",
-      "block": 1,
-      "para": 23
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "C.2 Open unions subject to aggregation",
+      "block": 0,
+      "para": 0
     },
     "3E36FC46": {
+      "owner": "template"
+    },
+    "3E433147": {
       "owner": "template"
     },
     "3E579942": {
@@ -3516,28 +3666,18 @@
       "kind": "nodetable",
       "para": 14
     },
-    "3E5C16B0": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "Annex D — HTTP binding correspondence (informative)",
-      "block": 1,
-      "para": 5
-    },
     "3E7BD4E4": {
       "owner": "template"
     },
     "3E8D6FBB": {
       "owner": "template"
     },
-    "3EBF0427": {
-      "owner": "template"
-    },
-    "3ED3E4AE": {
+    "3E9A1554": {
       "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "Annex D — HTTP binding correspondence (informative)",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "10.2 Serving the xRegistry API and JSON projection",
       "block": 1,
-      "para": 19
+      "para": 20
     },
     "3EEF2598": {
       "owner": "template"
@@ -3553,6 +3693,13 @@
     },
     "3F066B25": {
       "owner": "template"
+    },
+    "3F1D527D": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "12 Conformance",
+      "block": 3,
+      "para": 10
     },
     "3F1F98D9": {
       "owner": "template"
@@ -3578,13 +3725,6 @@
       "kind": "para",
       "para": 0
     },
-    "3F6DF1E5": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "12 Conformance",
-      "block": 3,
-      "para": 0
-    },
     "3F947831": {
       "owner": "generated",
       "region": "normative-references",
@@ -3599,6 +3739,9 @@
       "kind": "nodetable",
       "para": 18
     },
+    "3FB29927": {
+      "owner": "template"
+    },
     "3FB7AF15": {
       "owner": "generated",
       "region": "objecttypes",
@@ -3612,6 +3755,13 @@
       "index": 8,
       "kind": "table",
       "para": 9
+    },
+    "3FC9E37A": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.1 SchemaRegistryType",
+      "block": 0,
+      "para": 0
     },
     "3FCBD290": {
       "owner": "template"
@@ -3646,19 +3796,19 @@
       "kind": "table",
       "para": 15
     },
-    "4025F7FC": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "6.4 SchemaId-NodeId fast access and GetSchema",
-      "block": 1,
-      "para": 0
-    },
     "402D5784": {
       "owner": "generated",
       "region": "instances",
       "index": 3,
       "kind": "nodetable",
       "para": 8
+    },
+    "4036A32E": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "7 Schema versioning and compatibility",
+      "block": 1,
+      "para": 1
     },
     "403C871B": {
       "owner": "template"
@@ -3680,12 +3830,26 @@
       "kind": "methodtable",
       "para": 19
     },
+    "40658CB8": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 4,
+      "para": 8
+    },
     "406BF398": {
       "owner": "generated",
       "region": "namespaces",
       "index": 8,
       "kind": "table",
       "para": 12
+    },
+    "406CA9EF": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "1 Scope",
+      "block": 2,
+      "para": 0
     },
     "407F7E31": {
       "owner": "generated",
@@ -3721,6 +3885,13 @@
       "kind": "nodetable",
       "para": 21
     },
+    "40D91F77": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "1 Scope",
+      "block": 8,
+      "para": 0
+    },
     "40DEA1BE": {
       "owner": "template"
     },
@@ -3743,16 +3914,6 @@
     },
     "40FB7929": {
       "owner": "template"
-    },
-    "410F13CD": {
-      "owner": "template"
-    },
-    "413185FA": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "12 Conformance",
-      "block": 3,
-      "para": 10
     },
     "4150B080": {
       "owner": "template"
@@ -3781,15 +3942,25 @@
       "kind": "nodetable",
       "para": 71
     },
+    "41772829": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "10.2 Serving the xRegistry API and JSON projection",
+      "block": 1,
+      "para": 23
+    },
     "41931406": {
       "owner": "template"
     },
-    "4193A027": {
+    "41AA33C0": {
+      "owner": "template"
+    },
+    "41AD672A": {
       "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "4 Overview",
-      "block": 3,
-      "para": 0
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "10.2 Serving the xRegistry API and JSON projection",
+      "block": 1,
+      "para": 11
     },
     "41BB6E56": {
       "owner": "template"
@@ -3809,6 +3980,13 @@
     },
     "42064A04": {
       "owner": "template"
+    },
+    "4207CDD7": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 2,
+      "para": 7
     },
     "4228AD17": {
       "owner": "template"
@@ -3847,6 +4025,9 @@
       "kind": "methodtable",
       "para": 11
     },
+    "426B44B4": {
+      "owner": "template"
+    },
     "4274134E": {
       "owner": "template"
     },
@@ -3867,8 +4048,12 @@
       "kind": "nodetable",
       "para": 31
     },
-    "42E6D993": {
-      "owner": "template"
+    "42D64607": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "10.2 Serving the xRegistry API and JSON projection",
+      "block": 1,
+      "para": 6
     },
     "43014068": {
       "owner": "template"
@@ -3911,6 +4096,13 @@
       "kind": "nodetable",
       "para": 22
     },
+    "43726C8B": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "Annex D — HTTP binding correspondence (informative)",
+      "block": 1,
+      "para": 29
+    },
     "43A34474": {
       "owner": "generated",
       "region": "objecttypes",
@@ -3918,15 +4110,12 @@
       "kind": "methodtable",
       "para": 5
     },
-    "43C294FB": {
+    "443F78F0": {
       "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "1 Scope",
-      "block": 2,
-      "para": 0
-    },
-    "43D021F0": {
-      "owner": "template"
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.5 Formats and content-types",
+      "block": 0,
+      "para": 13
     },
     "444B922C": {
       "owner": "template"
@@ -3944,29 +4133,19 @@
     "44999F2F": {
       "owner": "template"
     },
-    "449B2768": {
+    "44A01F71": {
       "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "Annex D — HTTP binding correspondence (informative)",
-      "block": 0,
-      "para": 0
-    },
-    "449BA102": {
-      "owner": "template"
-    },
-    "44A94311": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "12 Conformance",
-      "block": 3,
-      "para": 14
-    },
-    "44ABCBA4": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "8 Resolution flow",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "11 Optional PubSub integration",
       "block": 2,
       "para": 0
+    },
+    "44C5E930": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "Annex D — HTTP binding correspondence (informative)",
+      "block": 1,
+      "para": 13
     },
     "44D2520E": {
       "owner": "generated",
@@ -3975,7 +4154,20 @@
       "kind": "methodtable",
       "para": 15
     },
+    "44DCC220": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 4,
+      "para": 6
+    },
     "44DE6F8C": {
+      "owner": "template"
+    },
+    "45160144": {
+      "owner": "template"
+    },
+    "451F2E16": {
       "owner": "template"
     },
     "45217830": {
@@ -3984,12 +4176,12 @@
     "453C9667": {
       "owner": "template"
     },
-    "453EA470": {
+    "4558E7A4": {
       "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
       "section": "10.2 Serving the xRegistry API and JSON projection",
       "block": 1,
-      "para": 23
+      "para": 24
     },
     "45646260": {
       "owner": "template"
@@ -4004,13 +4196,6 @@
       "kind": "methodtable",
       "para": 11
     },
-    "458C5CAD": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "Annex D — HTTP binding correspondence (informative)",
-      "block": 1,
-      "para": 15
-    },
     "458EA50C": {
       "owner": "template"
     },
@@ -4020,6 +4205,20 @@
       "index": 0,
       "kind": "nodetable",
       "para": 20
+    },
+    "4598235E": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.5 Formats and content-types",
+      "block": 1,
+      "para": 0
+    },
+    "459905F2": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "8 Resolution flow",
+      "block": 1,
+      "para": 9
     },
     "45AC6947": {
       "owner": "template"
@@ -4034,13 +4233,6 @@
       "kind": "table",
       "para": 6
     },
-    "46191913": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "Annex D — HTTP binding correspondence (informative)",
-      "block": 1,
-      "para": 9
-    },
     "4631CDA8": {
       "owner": "generated",
       "region": "objecttypes",
@@ -4051,15 +4243,19 @@
     "467E907C": {
       "owner": "template"
     },
-    "469F7DB9": {
-      "owner": "template"
-    },
     "469FEF8E": {
       "owner": "generated",
       "region": "objecttypes",
       "index": 11,
       "kind": "nodetable",
       "para": 33
+    },
+    "46A07ED3": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "12 Conformance",
+      "block": 3,
+      "para": 5
     },
     "46AB9790": {
       "owner": "template"
@@ -4074,15 +4270,12 @@
     "46DBE0D6": {
       "owner": "template"
     },
-    "46F1E769": {
+    "4703DADC": {
       "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "10.2 Serving the xRegistry API and JSON projection",
-      "block": 1,
-      "para": 7
-    },
-    "46FD5371": {
-      "owner": "template"
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 4,
+      "para": 11
     },
     "470D529A": {
       "owner": "template"
@@ -4096,13 +4289,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 32
-    },
-    "4756B2C5": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "Annex D — HTTP binding correspondence (informative)",
-      "block": 1,
-      "para": 7
     },
     "4769FB72": {
       "owner": "generated",
@@ -4121,15 +4307,29 @@
       "kind": "clause",
       "para": 0
     },
-    "4785A95D": {
+    "47ABDE17": {
       "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "6.3 SchemaFileType",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "10.2 Serving the xRegistry API and JSON projection",
       "block": 1,
-      "para": 5
+      "para": 32
     },
     "47B1D1FD": {
       "owner": "template"
+    },
+    "47B6D26E": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.3 SchemaFileType",
+      "block": 1,
+      "para": 9
+    },
+    "47CEE5F8": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "8 Resolution flow",
+      "block": 0,
+      "para": 0
     },
     "47E1E2EF": {
       "owner": "template"
@@ -4140,13 +4340,6 @@
       "index": 11,
       "kind": "nodetable",
       "para": 20
-    },
-    "4804734A": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "10.2 Serving the xRegistry API and JSON projection",
-      "block": 1,
-      "para": 24
     },
     "480B4110": {
       "owner": "generated",
@@ -4165,6 +4358,13 @@
     "4820B7A1": {
       "owner": "template"
     },
+    "4820D9E5": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "Annex D — HTTP binding correspondence (informative)",
+      "block": 1,
+      "para": 21
+    },
     "483BDBB6": {
       "owner": "template"
     },
@@ -4174,6 +4374,9 @@
       "index": 3,
       "kind": "nodetable",
       "para": 1
+    },
+    "48A54C97": {
+      "owner": "template"
     },
     "48CBD829": {
       "owner": "template"
@@ -4212,14 +4415,10 @@
     "49579BA9": {
       "owner": "template"
     },
-    "496A1521": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "4 Overview",
-      "block": 1,
-      "para": 1
-    },
     "4976D496": {
+      "owner": "template"
+    },
+    "497B2900": {
       "owner": "template"
     },
     "49A15C1E": {
@@ -4232,19 +4431,19 @@
     "49A4B630": {
       "owner": "template"
     },
-    "49A5FF2D": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "6.5 Formats and content-types",
-      "block": 0,
-      "para": 6
-    },
     "49ADF5C4": {
       "owner": "generated",
       "region": "objecttypes",
       "index": 11,
       "kind": "nodetable",
       "para": 61
+    },
+    "49D10CB3": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 2,
+      "para": 3
     },
     "49E581B0": {
       "owner": "generated",
@@ -4260,34 +4459,21 @@
       "kind": "toc",
       "para": 0
     },
-    "4A114796": {
-      "owner": "template"
-    },
-    "4A18D0A3": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "10.2 Serving the xRegistry API and JSON projection",
-      "block": 2,
-      "para": 0
-    },
-    "4A1BCCB4": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 40,
-      "kind": "clause",
-      "para": 0
-    },
     "4A1F7E7C": {
       "owner": "template"
     },
     "4A267FEB": {
       "owner": "template"
     },
-    "4A341E53": {
-      "owner": "template"
-    },
     "4A46C811": {
       "owner": "template"
+    },
+    "4A4914E9": {
+      "owner": "generated",
+      "region": "annex-a",
+      "index": 0,
+      "kind": "nodetable",
+      "para": 102
     },
     "4A646FAF": {
       "owner": "template"
@@ -4320,6 +4506,9 @@
       "kind": "nodetable",
       "para": 63
     },
+    "4AAE8FE1": {
+      "owner": "template"
+    },
     "4ABDAF92": {
       "owner": "generated",
       "region": "annex-a",
@@ -4329,6 +4518,16 @@
     },
     "4AC1323A": {
       "owner": "template"
+    },
+    "4AD7FF0D": {
+      "owner": "template"
+    },
+    "4AE64614": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 53,
+      "kind": "clause",
+      "para": 0
     },
     "4AE8FBC8": {
       "owner": "template"
@@ -4353,7 +4552,7 @@
       "kind": "nodetable",
       "para": 16
     },
-    "4B1FEB20": {
+    "4B27D5A3": {
       "owner": "template"
     },
     "4B3954E3": {
@@ -4369,9 +4568,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 87
-    },
-    "4B43825C": {
-      "owner": "template"
     },
     "4B666634": {
       "owner": "generated",
@@ -4403,12 +4599,19 @@
     "4BD4A7EA": {
       "owner": "template"
     },
-    "4BF8AB4A": {
+    "4BDECAF7": {
       "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "Annex D — HTTP binding correspondence (informative)",
+      "block": 2,
+      "para": 0
+    },
+    "4C02E74A": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
       "section": "Annex D — HTTP binding correspondence (informative)",
       "block": 1,
-      "para": 3
+      "para": 34
     },
     "4C0D238C": {
       "owner": "generated",
@@ -4416,6 +4619,20 @@
       "index": 3,
       "kind": "nodetable",
       "para": 19
+    },
+    "4C3A0194": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.4 SchemaId-NodeId fast access and GetSchema",
+      "block": 3,
+      "para": 0
+    },
+    "4C3C62F8": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 2,
+      "para": 2
     },
     "4C5EA14D": {
       "owner": "generated",
@@ -4437,11 +4654,15 @@
       "kind": "nodetable",
       "para": 9
     },
-    "4C7C3456": {
-      "owner": "template"
-    },
     "4C9ACC5A": {
       "owner": "template"
+    },
+    "4CAB5449": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "7 Schema versioning and compatibility",
+      "block": 1,
+      "para": 0
     },
     "4CC4B97A": {
       "owner": "generated",
@@ -4457,6 +4678,13 @@
       "kind": "nodetable",
       "para": 44
     },
+    "4CF63432": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "10.2 Serving the xRegistry API and JSON projection",
+      "block": 1,
+      "para": 9
+    },
     "4D129F66": {
       "owner": "generated",
       "region": "objecttypes",
@@ -4467,17 +4695,24 @@
     "4D3D45BD": {
       "owner": "template"
     },
+    "4D4A49DD": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "12 Conformance",
+      "block": 3,
+      "para": 14
+    },
     "4D4D38A7": {
       "owner": "template"
     },
     "4D532735": {
       "owner": "template"
     },
-    "4D5883A5": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 43,
-      "kind": "clause",
+    "4D6CC0A1": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 0,
       "para": 0
     },
     "4D76427A": {
@@ -4486,9 +4721,6 @@
       "index": 17,
       "kind": "para",
       "para": 0
-    },
-    "4D788E4B": {
-      "owner": "template"
     },
     "4D8891A9": {
       "owner": "template"
@@ -4515,18 +4747,12 @@
     "4E1FF6D1": {
       "owner": "template"
     },
-    "4E22B645": {
-      "owner": "template"
-    },
     "4E598F95": {
       "owner": "generated",
       "region": "objecttypes",
       "index": 8,
       "kind": "nodetable",
       "para": 8
-    },
-    "4E69DBD1": {
-      "owner": "template"
     },
     "4E84A3B8": {
       "owner": "template"
@@ -4536,6 +4762,13 @@
     },
     "4E9FFE4C": {
       "owner": "template"
+    },
+    "4EC62F42": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "C.2 Open unions subject to aggregation",
+      "block": 2,
+      "para": 0
     },
     "4EDB4123": {
       "owner": "template"
@@ -4547,9 +4780,6 @@
       "kind": "annex-clause",
       "para": 0
     },
-    "4F1C3B1E": {
-      "owner": "template"
-    },
     "4F2CC5EA": {
       "owner": "generated",
       "region": "objecttypes",
@@ -4560,7 +4790,16 @@
     "4F308B6A": {
       "owner": "template"
     },
+    "4F3DBAB8": {
+      "owner": "template"
+    },
+    "4F531C23": {
+      "owner": "template"
+    },
     "4F8FE53B": {
+      "owner": "template"
+    },
+    "4F9A9CCD": {
       "owner": "template"
     },
     "4FBF41EC": {
@@ -4570,12 +4809,26 @@
       "kind": "nodetable",
       "para": 59
     },
+    "4FBFBA46": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "C.3 Append-only rule (normative)",
+      "block": 1,
+      "para": 0
+    },
     "4FF34743": {
       "owner": "generated",
       "region": "objecttypes",
       "index": 11,
       "kind": "nodetable",
       "para": 25
+    },
+    "4FFE8E07": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "12 Conformance",
+      "block": 4,
+      "para": 0
     },
     "50060862": {
       "owner": "template"
@@ -4587,15 +4840,15 @@
       "kind": "nodetable",
       "para": 62
     },
-    "50381E38": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "10.2 Serving the xRegistry API and JSON projection",
-      "block": 1,
-      "para": 6
-    },
     "503987E7": {
       "owner": "template"
+    },
+    "507B84F1": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "12 Conformance",
+      "block": 0,
+      "para": 0
     },
     "508CFAF3": {
       "owner": "generated",
@@ -4620,12 +4873,12 @@
     "50B4D4B8": {
       "owner": "template"
     },
-    "510ED082": {
+    "50F6E58A": {
       "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
       "section": "6.5 Formats and content-types",
       "block": 0,
-      "para": 13
+      "para": 17
     },
     "5129F5F5": {
       "owner": "template"
@@ -4637,8 +4890,22 @@
       "kind": "clause",
       "para": 0
     },
+    "51825EA1": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 6,
+      "para": 0
+    },
     "5189B8D0": {
       "owner": "template"
+    },
+    "51B10194": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.6 Schema identity (`SchemaId`) and per-format fingerprints",
+      "block": 1,
+      "para": 2
     },
     "51B28E57": {
       "owner": "generated",
@@ -4710,6 +4977,9 @@
       "kind": "nodetable",
       "para": 39
     },
+    "523B9EFD": {
+      "owner": "template"
+    },
     "524D9D01": {
       "owner": "template"
     },
@@ -4719,16 +4989,6 @@
       "index": 3,
       "kind": "nodetable",
       "para": 18
-    },
-    "526E7F0A": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "12 Conformance",
-      "block": 3,
-      "para": 7
-    },
-    "52705B03": {
-      "owner": "template"
     },
     "529A6F38": {
       "owner": "generated",
@@ -4753,11 +5013,25 @@
     "52D4503D": {
       "owner": "template"
     },
+    "52DAB36B": {
+      "owner": "template"
+    },
     "52F27C98": {
       "owner": "template"
     },
-    "530248E5": {
-      "owner": "template"
+    "52F32087": {
+      "owner": "generated",
+      "region": "objecttypes",
+      "index": 11,
+      "kind": "nodetable",
+      "para": 79
+    },
+    "53084737": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "C.1 ConfigurationVersion-keyed evolution",
+      "block": 0,
+      "para": 0
     },
     "532CB950": {
       "owner": "generated",
@@ -4772,9 +5046,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 10
-    },
-    "533ABEF6": {
-      "owner": "template"
     },
     "534C067A": {
       "owner": "generated",
@@ -4817,13 +5088,6 @@
       "kind": "nodetable",
       "para": 13
     },
-    "539E74C9": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "12 Conformance",
-      "block": 3,
-      "para": 16
-    },
     "53BE9611": {
       "owner": "generated",
       "region": "terms",
@@ -4831,15 +5095,12 @@
       "kind": "term",
       "para": 1
     },
-    "53F0AD72": {
-      "owner": "template"
-    },
-    "5407C054": {
+    "53E37A20": {
       "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
       "section": "6.3 SchemaFileType",
       "block": 1,
-      "para": 1
+      "para": 7
     },
     "5413F9C3": {
       "owner": "generated",
@@ -4848,33 +5109,15 @@
       "kind": "para",
       "para": 0
     },
-    "5420BF58": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "C.1 ConfigurationVersion-keyed evolution",
-      "block": 2,
-      "para": 0
-    },
-    "543CED06": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "12 Conformance",
-      "block": 3,
-      "para": 1
-    },
-    "544124A1": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 32,
-      "kind": "clause",
-      "para": 0
-    },
     "5449CEB7": {
       "owner": "generated",
       "region": "annex-a",
       "index": 0,
       "kind": "nodetable",
       "para": 48
+    },
+    "544F2268": {
+      "owner": "template"
     },
     "546EBE42": {
       "owner": "template"
@@ -4895,6 +5138,13 @@
       "index": 4,
       "kind": "table",
       "para": 14
+    },
+    "5494BA76": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "4 Overview",
+      "block": 1,
+      "para": 1
     },
     "54A24774": {
       "owner": "template"
@@ -4918,13 +5168,6 @@
       "index": 3,
       "kind": "nodetable",
       "para": 4
-    },
-    "553F035C": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "6.6 Schema identity (`SchemaId`) and per-format fingerprints",
-      "block": 1,
-      "para": 2
     },
     "555DC8D6": {
       "owner": "generated",
@@ -4957,21 +5200,25 @@
       "kind": "nodetable",
       "para": 36
     },
+    "5580351D": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "5.2 Registering a schema (optional)",
+      "block": 0,
+      "para": 0
+    },
     "558CFFB3": {
       "owner": "template"
     },
-    "55B60AFB": {
-      "owner": "template"
+    "559D3EB6": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.3 SchemaFileType",
+      "block": 1,
+      "para": 3
     },
     "55DB5FAF": {
       "owner": "template"
-    },
-    "55E69369": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "9 TTL and mirror semantics",
-      "block": 0,
-      "para": 0
     },
     "56000702": {
       "owner": "template"
@@ -4990,15 +5237,25 @@
       "kind": "methodtable",
       "para": 27
     },
-    "5709D70D": {
+    "564B578D": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "8 Resolution flow",
+      "block": 1,
+      "para": 5
+    },
+    "5674865A": {
       "owner": "template"
     },
-    "57117914": {
+    "56D7075A": {
       "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
       "section": "6.3 SchemaFileType",
       "block": 1,
-      "para": 2
+      "para": 0
+    },
+    "5709D70D": {
+      "owner": "template"
     },
     "571C647E": {
       "owner": "template"
@@ -5010,16 +5267,6 @@
       "kind": "nodetable",
       "para": 40
     },
-    "57276B89": {
-      "owner": "template"
-    },
-    "572DB426": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "8 Resolution flow",
-      "block": 1,
-      "para": 4
-    },
     "5786394B": {
       "owner": "template"
     },
@@ -5030,18 +5277,19 @@
       "kind": "para",
       "para": 0
     },
-    "5792CD07": {
-      "owner": "template"
-    },
-    "57C19B6E": {
-      "owner": "template"
-    },
     "57F1B058": {
       "owner": "generated",
       "region": "namespaces",
       "index": 4,
       "kind": "table",
       "para": 18
+    },
+    "57FD8769": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.5 Formats and content-types",
+      "block": 0,
+      "para": 8
     },
     "58031C56": {
       "owner": "generated",
@@ -5050,7 +5298,7 @@
       "kind": "nodetable",
       "para": 72
     },
-    "58377A77": {
+    "5837D875": {
       "owner": "template"
     },
     "583D5FBE": {
@@ -5073,6 +5321,9 @@
       "kind": "nodetable",
       "para": 21
     },
+    "5858FA05": {
+      "owner": "template"
+    },
     "586766B6": {
       "owner": "generated",
       "region": "annex-a",
@@ -5080,8 +5331,12 @@
       "kind": "nodetable",
       "para": 64
     },
-    "586D3543": {
-      "owner": "template"
+    "58796B8B": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "Annex D — HTTP binding correspondence (informative)",
+      "block": 1,
+      "para": 28
     },
     "5880342A": {
       "owner": "generated",
@@ -5089,6 +5344,20 @@
       "index": 5,
       "kind": "term",
       "para": 2
+    },
+    "588BFFEE": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "11 Optional PubSub integration",
+      "block": 1,
+      "para": 1
+    },
+    "588E4F46": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "10.2 Serving the xRegistry API and JSON projection",
+      "block": 1,
+      "para": 25
     },
     "58988B59": {
       "owner": "generated",
@@ -5107,9 +5376,6 @@
     "58B6E67B": {
       "owner": "template"
     },
-    "58D0E637": {
-      "owner": "template"
-    },
     "58E1449F": {
       "owner": "generated",
       "region": "objecttypes",
@@ -5117,12 +5383,8 @@
       "kind": "nodetable",
       "para": 5
     },
-    "5933B31C": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "6.5 Formats and content-types",
-      "block": 0,
-      "para": 0
+    "59203F09": {
+      "owner": "template"
     },
     "59BC2737": {
       "owner": "template"
@@ -5136,6 +5398,20 @@
       "index": 2,
       "kind": "para",
       "para": 0
+    },
+    "59CD5890": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "12 Conformance",
+      "block": 3,
+      "para": 13
+    },
+    "59DA75BE": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "10.2 Serving the xRegistry API and JSON projection",
+      "block": 1,
+      "para": 34
     },
     "5A0FB2B8": {
       "owner": "template"
@@ -5156,13 +5432,6 @@
       "kind": "nodetable",
       "para": 67
     },
-    "5A91B0B3": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "12 Conformance",
-      "block": 3,
-      "para": 17
-    },
     "5ABA4B96": {
       "owner": "generated",
       "region": "objecttypes",
@@ -5180,13 +5449,6 @@
       "kind": "table",
       "para": 2
     },
-    "5AF32B7C": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "10.2 Serving the xRegistry API and JSON projection",
-      "block": 1,
-      "para": 22
-    },
     "5B08F3E9": {
       "owner": "generated",
       "region": "objecttypes",
@@ -5194,10 +5456,10 @@
       "kind": "nodetable",
       "para": 6
     },
-    "5B32266D": {
+    "5B1FCB95": {
       "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "4.3 OPC UA as a first-class binding — federation and access parity with HTTP",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "C.1 ConfigurationVersion-keyed evolution",
       "block": 2,
       "para": 0
     },
@@ -5205,6 +5467,9 @@
       "owner": "template"
     },
     "5B4BDFBD": {
+      "owner": "template"
+    },
+    "5B606F7C": {
       "owner": "template"
     },
     "5B74B1E1": {
@@ -5217,15 +5482,15 @@
       "kind": "table",
       "para": 8
     },
-    "5B9FA9DE": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "10.2 Serving the xRegistry API and JSON projection",
-      "block": 1,
-      "para": 0
-    },
     "5BB67A54": {
       "owner": "template"
+    },
+    "5BBB184C": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "Annex D — HTTP binding correspondence (informative)",
+      "block": 1,
+      "para": 22
     },
     "5BD24D9D": {
       "owner": "template"
@@ -5233,11 +5498,22 @@
     "5BDB0008": {
       "owner": "template"
     },
+    "5BE07BFF": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "Annex D — HTTP binding correspondence (informative)",
+      "block": 1,
+      "para": 26
+    },
     "5BF29B22": {
       "owner": "template"
     },
-    "5C0BC291": {
-      "owner": "template"
+    "5BF89283": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "Annex D — HTTP binding correspondence (informative)",
+      "block": 1,
+      "para": 4
     },
     "5C1502E1": {
       "owner": "template"
@@ -5245,18 +5521,32 @@
     "5C17EB58": {
       "owner": "template"
     },
+    "5C317CF5": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 33,
+      "kind": "clause",
+      "para": 0
+    },
     "5C377048": {
       "owner": "template"
     },
+    "5C4C89CE": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.5 Formats and content-types",
+      "block": 0,
+      "para": 0
+    },
+    "5C63A0A0": {
+      "owner": "generated",
+      "region": "objecttypes",
+      "index": 11,
+      "kind": "nodetable",
+      "para": 81
+    },
     "5C674A3C": {
       "owner": "template"
-    },
-    "5C752B59": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "4.3 OPC UA as a first-class binding — federation and access parity with HTTP",
-      "block": 1,
-      "para": 0
     },
     "5C7AC23A": {
       "owner": "generated",
@@ -5264,6 +5554,13 @@
       "index": 11,
       "kind": "nodetable",
       "para": 49
+    },
+    "5C951D8F": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 4,
+      "para": 4
     },
     "5CA88F5F": {
       "owner": "generated",
@@ -5286,15 +5583,18 @@
       "kind": "nodetable",
       "para": 12
     },
-    "5D3AD7FC": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "10.2 Serving the xRegistry API and JSON projection",
-      "block": 1,
-      "para": 14
+    "5D321228": {
+      "owner": "template"
     },
     "5D43B04A": {
       "owner": "template"
+    },
+    "5D48119F": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "10.2 Serving the xRegistry API and JSON projection",
+      "block": 1,
+      "para": 2
     },
     "5D61022F": {
       "owner": "generated",
@@ -5313,6 +5613,13 @@
     "5D721A47": {
       "owner": "template"
     },
+    "5D74C5A3": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 59,
+      "kind": "clause",
+      "para": 0
+    },
     "5D8166B5": {
       "owner": "generated",
       "region": "objecttypes",
@@ -5326,12 +5633,12 @@
     "5DCA731A": {
       "owner": "template"
     },
-    "5DDA3CF8": {
+    "5DDAB711": {
       "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "C.1 ConfigurationVersion-keyed evolution",
-      "block": 0,
-      "para": 0
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "8 Resolution flow",
+      "block": 1,
+      "para": 1
     },
     "5DEBDEEE": {
       "owner": "generated",
@@ -5360,10 +5667,7 @@
     "5E1BE192": {
       "owner": "template"
     },
-    "5E1F9963": {
-      "owner": "template"
-    },
-    "5E3DAC49": {
+    "5E1F60D6": {
       "owner": "template"
     },
     "5E4E1B10": {
@@ -5388,6 +5692,27 @@
     "5E9A755F": {
       "owner": "template"
     },
+    "5EB02E74": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "8 Resolution flow",
+      "block": 1,
+      "para": 6
+    },
+    "5EBDE072": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "4.3 OPC UA as a first-class binding — federation and access parity with HTTP",
+      "block": 1,
+      "para": 1
+    },
+    "5EBEE837": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "12 Conformance",
+      "block": 3,
+      "para": 12
+    },
     "5EC7260C": {
       "owner": "generated",
       "region": "objecttypes",
@@ -5401,13 +5726,6 @@
       "index": 11,
       "kind": "nodetable",
       "para": 19
-    },
-    "5EF0557F": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "Annex D — HTTP binding correspondence (informative)",
-      "block": 1,
-      "para": 27
     },
     "5EFB5384": {
       "owner": "generated",
@@ -5430,31 +5748,14 @@
       "kind": "nodetable",
       "para": 38
     },
-    "5F46AF13": {
-      "owner": "template"
-    },
     "5F5D3BCA": {
       "owner": "template"
     },
     "5F61AAB4": {
       "owner": "template"
     },
-    "5F6A6150": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "Annex D — HTTP binding correspondence (informative)",
-      "block": 1,
-      "para": 32
-    },
     "5FADA1C8": {
       "owner": "template"
-    },
-    "5FB32F81": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "5.2 Registering a schema (optional)",
-      "block": 1,
-      "para": 1
     },
     "5FBAC17B": {
       "owner": "template"
@@ -5469,35 +5770,35 @@
       "kind": "nodetable",
       "para": 74
     },
+    "5FD8E02B": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "4.3 OPC UA as a first-class binding — federation and access parity with HTTP",
+      "block": 1,
+      "para": 0
+    },
     "5FDB5E69": {
       "owner": "template"
-    },
-    "5FE5AE0D": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "10.2 Serving the xRegistry API and JSON projection",
-      "block": 1,
-      "para": 29
     },
     "6010B015": {
       "owner": "template"
     },
-    "60339668": {
+    "603FDD20": {
       "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "Annex D — HTTP binding correspondence (informative)",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.2 SchemaGroupType",
+      "block": 0,
+      "para": 0
+    },
+    "6044585C": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "10.2 Serving the xRegistry API and JSON projection",
       "block": 1,
-      "para": 4
+      "para": 3
     },
     "604D1432": {
       "owner": "template"
-    },
-    "60B8BF80": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "8 Resolution flow",
-      "block": 1,
-      "para": 2
     },
     "60CB01C3": {
       "owner": "template"
@@ -5508,26 +5809,23 @@
     "60DCCDCC": {
       "owner": "template"
     },
+    "61050711": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "C.3 Append-only rule (normative)",
+      "block": 0,
+      "para": 0
+    },
     "61117E2E": {
       "owner": "template"
     },
-    "611434D3": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 46,
-      "kind": "clause",
-      "para": 0
-    },
-    "611CAA9D": {
+    "61166174": {
       "owner": "template"
     },
     "61468186": {
       "owner": "template"
     },
     "61496108": {
-      "owner": "template"
-    },
-    "6156B04B": {
       "owner": "template"
     },
     "617E3238": {
@@ -5546,13 +5844,6 @@
       "kind": "para",
       "para": 0
     },
-    "61C9FEF9": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "C.2 Open unions subject to aggregation",
-      "block": 2,
-      "para": 0
-    },
     "61ECBDF9": {
       "owner": "template"
     },
@@ -5565,6 +5856,13 @@
     },
     "61F21930": {
       "owner": "template"
+    },
+    "61FACFF3": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "8 Resolution flow",
+      "block": 1,
+      "para": 0
     },
     "6204D615": {
       "owner": "template"
@@ -5605,6 +5903,9 @@
       "kind": "nodetable",
       "para": 4
     },
+    "630ABA69": {
+      "owner": "template"
+    },
     "6325E0F0": {
       "owner": "generated",
       "region": "terms",
@@ -5618,16 +5919,20 @@
     "633C744F": {
       "owner": "template"
     },
+    "6343112A": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 5,
+      "para": 0
+    },
     "63456E43": {
       "owner": "template"
     },
+    "63457A83": {
+      "owner": "template"
+    },
     "635D28DD": {
-      "owner": "template"
-    },
-    "636213BA": {
-      "owner": "template"
-    },
-    "6364A5D5": {
       "owner": "template"
     },
     "636BD5A9": {
@@ -5636,28 +5941,35 @@
     "6395D5A8": {
       "owner": "template"
     },
+    "63D2E587": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "Annex D — HTTP binding correspondence (informative)",
+      "block": 1,
+      "para": 0
+    },
     "63E1F481": {
       "owner": "template"
     },
-    "63ED7C44": {
-      "owner": "template"
+    "63F73552": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.3 SchemaFileType",
+      "block": 1,
+      "para": 6
     },
     "641B6ABC": {
       "owner": "template"
     },
-    "641F0123": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "12 Conformance",
-      "block": 3,
-      "para": 5
+    "6423698B": {
+      "owner": "template"
     },
-    "643003DF": {
+    "6431D8DE": {
       "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "Annex D — HTTP binding correspondence (informative)",
-      "block": 1,
-      "para": 8
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 4,
+      "para": 10
     },
     "6437E1A7": {
       "owner": "generated",
@@ -5672,19 +5984,8 @@
     "647B6181": {
       "owner": "template"
     },
-    "64950829": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "C.2 Open unions subject to aggregation",
-      "block": 1,
-      "para": 0
-    },
-    "64A7FC07": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "6.4 SchemaId-NodeId fast access and GetSchema",
-      "block": 2,
-      "para": 0
+    "64858830": {
+      "owner": "template"
     },
     "64A8DE4B": {
       "owner": "generated",
@@ -5703,12 +6004,11 @@
     "64DBC4DB": {
       "owner": "template"
     },
-    "64FB1AA9": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "6.2 SchemaGroupType",
-      "block": 0,
-      "para": 0
+    "64EF68F6": {
+      "owner": "template"
+    },
+    "65130B0B": {
+      "owner": "template"
     },
     "6522B0AC": {
       "owner": "template"
@@ -5716,12 +6016,12 @@
     "6526C69E": {
       "owner": "template"
     },
-    "653A678E": {
+    "65536004": {
       "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "Annex B — Federation and OPC UA / HTTP resolution parity (informative)",
-      "block": 2,
-      "para": 1
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.5 Formats and content-types",
+      "block": 0,
+      "para": 10
     },
     "657397AA": {
       "owner": "template"
@@ -5733,25 +6033,25 @@
       "kind": "nodetable",
       "para": 81
     },
+    "65823E39": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "8 Resolution flow",
+      "block": 1,
+      "para": 4
+    },
     "65985FB0": {
       "owner": "template"
-    },
-    "65A161CA": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "7 Schema versioning and compatibility",
-      "block": 1,
-      "para": 2
     },
     "65D28AF5": {
       "owner": "template"
     },
-    "6608814B": {
+    "661F49E3": {
       "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "8 Resolution flow",
-      "block": 1,
-      "para": 7
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.3 SchemaFileType",
+      "block": 0,
+      "para": 0
     },
     "6620F47B": {
       "owner": "generated",
@@ -5759,6 +6059,13 @@
       "index": 11,
       "kind": "nodetable",
       "para": 51
+    },
+    "66237FD1": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 55,
+      "kind": "clause",
+      "para": 0
     },
     "663A08E9": {
       "owner": "template"
@@ -5778,6 +6085,13 @@
     "6695B3AC": {
       "owner": "template"
     },
+    "669A4CBA": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.5 Formats and content-types",
+      "block": 0,
+      "para": 11
+    },
     "66AD54A9": {
       "owner": "generated",
       "region": "annex-a",
@@ -5785,16 +6099,23 @@
       "kind": "nodetable",
       "para": 16
     },
+    "66AF66A3": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "10.2 Serving the xRegistry API and JSON projection",
+      "block": 1,
+      "para": 30
+    },
     "66B99706": {
       "owner": "template"
     },
     "66BFF43A": {
       "owner": "template"
     },
-    "66EA5C4A": {
+    "66D83600": {
       "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "C.3 Append-only rule (normative)",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "5.2 Registering a schema (optional)",
       "block": 1,
       "para": 0
     },
@@ -5822,22 +6143,28 @@
       "kind": "para",
       "para": 0
     },
-    "674CD622": {
+    "674D3EE9": {
       "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "6.3 SchemaFileType",
-      "block": 0,
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "Annex B — Federation and OPC UA / HTTP resolution parity (informative)",
+      "block": 2,
       "para": 0
     },
-    "67B75838": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "Annex D — HTTP binding correspondence (informative)",
-      "block": 1,
-      "para": 2
+    "676363E4": {
+      "owner": "template"
+    },
+    "6795658C": {
+      "owner": "template"
     },
     "67B808A1": {
       "owner": "template"
+    },
+    "67B9A63C": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "4 Overview",
+      "block": 2,
+      "para": 0
     },
     "67CEC68C": {
       "owner": "template"
@@ -5862,29 +6189,8 @@
     "6803DE3E": {
       "owner": "template"
     },
-    "6806F05E": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "8 Resolution flow",
-      "block": 1,
-      "para": 9
-    },
     "680958E8": {
       "owner": "template"
-    },
-    "680C8ABE": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "10.2 Serving the xRegistry API and JSON projection",
-      "block": 0,
-      "para": 0
-    },
-    "680DB4CA": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "10.2 Serving the xRegistry API and JSON projection",
-      "block": 1,
-      "para": 1
     },
     "68336285": {
       "owner": "generated",
@@ -5907,12 +6213,22 @@
       "kind": "methodtable",
       "para": 14
     },
+    "687C6E33": {
+      "owner": "template"
+    },
     "6885D573": {
       "owner": "generated",
       "region": "annex-b",
       "index": 0,
       "kind": "annex",
       "para": 0
+    },
+    "6890E8C2": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "12 Conformance",
+      "block": 3,
+      "para": 16
     },
     "6892B871": {
       "owner": "template"
@@ -5921,16 +6237,6 @@
       "owner": "template"
     },
     "689E909A": {
-      "owner": "template"
-    },
-    "68A398A9": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "10.2 Serving the xRegistry API and JSON projection",
-      "block": 1,
-      "para": 26
-    },
-    "68B0BCC5": {
       "owner": "template"
     },
     "68BF4BE1": {
@@ -5958,12 +6264,29 @@
     "691CC841": {
       "owner": "template"
     },
+    "69394A66": {
+      "owner": "generated",
+      "region": "annex-a",
+      "index": 0,
+      "kind": "nodetable",
+      "para": 101
+    },
     "693A5C74": {
       "owner": "generated",
       "region": "instances",
       "index": 5,
       "kind": "methodtable",
       "para": 28
+    },
+    "694AF2DB": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.5 Formats and content-types",
+      "block": 0,
+      "para": 16
+    },
+    "6965A218": {
+      "owner": "template"
     },
     "69788417": {
       "owner": "generated",
@@ -5975,6 +6298,9 @@
     "69D7E3F1": {
       "owner": "template"
     },
+    "69D8DD67": {
+      "owner": "template"
+    },
     "69D94436": {
       "owner": "generated",
       "region": "annex-a",
@@ -5982,15 +6308,15 @@
       "kind": "nodetable",
       "para": 99
     },
-    "69F67880": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "Annex D — HTTP binding correspondence (informative)",
-      "block": 1,
-      "para": 0
-    },
     "6A08A781": {
       "owner": "template"
+    },
+    "6A1DC5ED": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "Annex D — HTTP binding correspondence (informative)",
+      "block": 0,
+      "para": 0
     },
     "6A2564BD": {
       "owner": "generated",
@@ -5999,8 +6325,22 @@
       "kind": "term",
       "para": 2
     },
+    "6A410034": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "1 Scope",
+      "block": 3,
+      "para": 0
+    },
     "6A66E996": {
       "owner": "template"
+    },
+    "6A9E08AC": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "Annex D — HTTP binding correspondence (informative)",
+      "block": 1,
+      "para": 25
     },
     "6A9EF9EF": {
       "owner": "generated",
@@ -6010,6 +6350,9 @@
       "para": 58
     },
     "6ABF916F": {
+      "owner": "template"
+    },
+    "6AC0798B": {
       "owner": "template"
     },
     "6AD2C4ED": {
@@ -6029,6 +6372,9 @@
     "6AEB7A4E": {
       "owner": "template"
     },
+    "6AFC11D8": {
+      "owner": "template"
+    },
     "6B0F5FC7": {
       "owner": "template"
     },
@@ -6039,7 +6385,14 @@
       "kind": "methodtable",
       "para": 24
     },
-    "6B22C995": {
+    "6B1F5E73": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.5 Formats and content-types",
+      "block": 0,
+      "para": 5
+    },
+    "6B3207A1": {
       "owner": "template"
     },
     "6B4A45F1": {
@@ -6052,13 +6405,6 @@
     "6B57AB9F": {
       "owner": "template"
     },
-    "6B64876F": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "Annex B — Federation and OPC UA / HTTP resolution parity (informative)",
-      "block": 2,
-      "para": 2
-    },
     "6BA0271B": {
       "owner": "generated",
       "region": "objecttypes",
@@ -6066,12 +6412,12 @@
       "kind": "clause",
       "para": 0
     },
-    "6BA7AD6B": {
+    "6BA3E330": {
       "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "6.5 Formats and content-types",
-      "block": 0,
-      "para": 15
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "C.1 ConfigurationVersion-keyed evolution",
+      "block": 1,
+      "para": 0
     },
     "6BADC514": {
       "owner": "generated",
@@ -6110,13 +6456,6 @@
     "6C0CB7E5": {
       "owner": "template"
     },
-    "6C351224": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 36,
-      "kind": "clause",
-      "para": 0
-    },
     "6C3E5E2B": {
       "owner": "template"
     },
@@ -6126,22 +6465,22 @@
     "6C589A0A": {
       "owner": "template"
     },
-    "6CA4886D": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "1 Scope",
-      "block": 6,
-      "para": 2
-    },
     "6CA64AAD": {
       "owner": "template"
     },
-    "6CE9267B": {
+    "6CB731CE": {
       "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "6.6 Schema identity (`SchemaId`) and per-format fingerprints",
-      "block": 0,
-      "para": 0
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "10.2 Serving the xRegistry API and JSON projection",
+      "block": 1,
+      "para": 35
+    },
+    "6CBCCE10": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "12 Conformance",
+      "block": 3,
+      "para": 11
     },
     "6CF89C20": {
       "owner": "generated",
@@ -6162,13 +6501,6 @@
     },
     "6D2EFE75": {
       "owner": "template"
-    },
-    "6D6DE92A": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "10.2 Serving the xRegistry API and JSON projection",
-      "block": 1,
-      "para": 27
     },
     "6D741545": {
       "owner": "generated",
@@ -6218,15 +6550,15 @@
     "6E364413": {
       "owner": "template"
     },
-    "6E4E3325": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "C.3 Append-only rule (normative)",
-      "block": 4,
-      "para": 0
-    },
     "6E6DE116": {
       "owner": "template"
+    },
+    "6E8B8300": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 4,
+      "para": 7
     },
     "6E91F9C6": {
       "owner": "template"
@@ -6256,7 +6588,24 @@
       "kind": "term",
       "para": 1
     },
+    "6EFEBE15": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "10.2 Serving the xRegistry API and JSON projection",
+      "block": 0,
+      "para": 0
+    },
     "6F0D6B4E": {
+      "owner": "template"
+    },
+    "6F1E702D": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "8 Resolution flow",
+      "block": 2,
+      "para": 0
+    },
+    "6F245D26": {
       "owner": "template"
     },
     "6F425160": {
@@ -6286,18 +6635,12 @@
     "6FA55308": {
       "owner": "template"
     },
-    "6FA70CFA": {
-      "owner": "template"
-    },
-    "6FB3E4FD": {
-      "owner": "template"
-    },
-    "6FB5E83F": {
+    "6FADAEB3": {
       "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "1 Scope",
-      "block": 0,
-      "para": 0
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.3 SchemaFileType",
+      "block": 1,
+      "para": 1
     },
     "6FBA0BAB": {
       "owner": "generated",
@@ -6305,6 +6648,13 @@
       "index": 8,
       "kind": "table",
       "para": 2
+    },
+    "6FCC202C": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "C.2 Open unions subject to aggregation",
+      "block": 1,
+      "para": 0
     },
     "6FCC20CD": {
       "owner": "template"
@@ -6315,6 +6665,13 @@
       "index": 5,
       "kind": "para",
       "para": 0
+    },
+    "6FD31B02": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.5 Formats and content-types",
+      "block": 0,
+      "para": 14
     },
     "6FD77217": {
       "owner": "generated",
@@ -6343,27 +6700,6 @@
     "705B8477": {
       "owner": "template"
     },
-    "706523CF": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "10.2 Serving the xRegistry API and JSON projection",
-      "block": 1,
-      "para": 25
-    },
-    "706B7D53": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "8 Resolution flow",
-      "block": 1,
-      "para": 8
-    },
-    "706E7308": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "Annex D — HTTP binding correspondence (informative)",
-      "block": 1,
-      "para": 26
-    },
     "706F46D2": {
       "owner": "template"
     },
@@ -6375,9 +6711,6 @@
       "para": 40
     },
     "709C03E8": {
-      "owner": "template"
-    },
-    "70A12A92": {
       "owner": "template"
     },
     "70B0B150": {
@@ -6396,6 +6729,13 @@
       "kind": "nodetable",
       "para": 84
     },
+    "71081859": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "Annex D — HTTP binding correspondence (informative)",
+      "block": 1,
+      "para": 7
+    },
     "710B1B3E": {
       "owner": "template"
     },
@@ -6412,13 +6752,6 @@
       "kind": "methodtable",
       "para": 18
     },
-    "71336CE0": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "10.2 Serving the xRegistry API and JSON projection",
-      "block": 1,
-      "para": 4
-    },
     "7140D3FF": {
       "owner": "template"
     },
@@ -6429,8 +6762,25 @@
       "kind": "nodetable",
       "para": 10
     },
+    "7168B111": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "12 Conformance",
+      "block": 3,
+      "para": 3
+    },
     "716EB714": {
       "owner": "template"
+    },
+    "7177F1DE": {
+      "owner": "template"
+    },
+    "71787BF1": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "1 Scope",
+      "block": 6,
+      "para": 3
     },
     "718766CD": {
       "owner": "generated",
@@ -6449,19 +6799,19 @@
     "719C96C8": {
       "owner": "template"
     },
+    "71B1D376": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "1 Scope",
+      "block": 6,
+      "para": 2
+    },
     "71B3C4A9": {
       "owner": "generated",
       "region": "annex-a",
       "index": 0,
       "kind": "nodetable",
       "para": 60
-    },
-    "71B597AA": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "8 Resolution flow",
-      "block": 1,
-      "para": 1
     },
     "71C3E30C": {
       "owner": "generated",
@@ -6470,20 +6820,24 @@
       "kind": "nodetable",
       "para": 2
     },
-    "71CD0571": {
+    "71C68183": {
       "owner": "template"
     },
-    "71E5C5D5": {
-      "owner": "template"
-    },
-    "71E687F7": {
+    "71D5D2DF": {
       "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "7 Schema versioning and compatibility",
-      "block": 1,
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "C.3 Append-only rule (normative)",
+      "block": 2,
       "para": 0
     },
-    "71EB1E12": {
+    "71DB4CE6": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 2,
+      "para": 9
+    },
+    "71E5C5D5": {
       "owner": "template"
     },
     "71EEFCD1": {
@@ -6495,6 +6849,13 @@
     },
     "7215D2D9": {
       "owner": "template"
+    },
+    "721FD088": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 4,
+      "para": 0
     },
     "72285F82": {
       "owner": "generated",
@@ -6512,6 +6873,16 @@
     },
     "7262113F": {
       "owner": "template"
+    },
+    "726F37DE": {
+      "owner": "template"
+    },
+    "727DE954": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "9 TTL and mirror semantics",
+      "block": 0,
+      "para": 0
     },
     "72842122": {
       "owner": "template"
@@ -6581,13 +6952,6 @@
       "kind": "nodetable",
       "para": 89
     },
-    "739A2361": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "Annex D — HTTP binding correspondence (informative)",
-      "block": 1,
-      "para": 18
-    },
     "739E7BB2": {
       "owner": "generated",
       "region": "annex-c",
@@ -6595,12 +6959,12 @@
       "kind": "annex-clause",
       "para": 0
     },
-    "73EC7B6C": {
+    "73D30E58": {
       "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "6.3 SchemaFileType",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "10.2 Serving the xRegistry API and JSON projection",
       "block": 1,
-      "para": 4
+      "para": 5
     },
     "7414A837": {
       "owner": "template"
@@ -6615,12 +6979,12 @@
       "kind": "table",
       "para": 6
     },
-    "745AF89C": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "7 Schema versioning and compatibility",
-      "block": 2,
-      "para": 0
+    "74789445": {
+      "owner": "generated",
+      "region": "objecttypes",
+      "index": 11,
+      "kind": "nodetable",
+      "para": 80
     },
     "748673AB": {
       "owner": "generated",
@@ -6642,19 +7006,11 @@
     "74AC7D25": {
       "owner": "template"
     },
-    "74BF999C": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "10.2 Serving the xRegistry API and JSON projection",
-      "block": 1,
-      "para": 15
+    "74D2E175": {
+      "owner": "template"
     },
-    "74FC9614": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "6.5 Formats and content-types",
-      "block": 0,
-      "para": 8
+    "7503AA86": {
+      "owner": "template"
     },
     "75444632": {
       "owner": "template"
@@ -6662,12 +7018,33 @@
     "7568F3A8": {
       "owner": "template"
     },
+    "7571AB2E": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "10.2 Serving the xRegistry API and JSON projection",
+      "block": 1,
+      "para": 12
+    },
     "757FAFE1": {
       "owner": "generated",
       "region": "annex-a",
       "index": 0,
       "kind": "nodetable",
       "para": 95
+    },
+    "759F692F": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 4,
+      "para": 13
+    },
+    "75BAF418": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "Annex B — Federation and OPC UA / HTTP resolution parity (informative)",
+      "block": 0,
+      "para": 0
     },
     "75BB1218": {
       "owner": "template"
@@ -6679,12 +7056,8 @@
       "kind": "methodtable",
       "para": 23
     },
-    "75D3DA10": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "Annex D — HTTP binding correspondence (informative)",
-      "block": 2,
-      "para": 0
+    "75D0E472": {
+      "owner": "template"
     },
     "75D63B83": {
       "owner": "generated",
@@ -6700,35 +7073,7 @@
       "kind": "table",
       "para": 7
     },
-    "7605E62C": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "12 Conformance",
-      "block": 3,
-      "para": 12
-    },
-    "765A8EF9": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "Annex B — Federation and OPC UA / HTTP resolution parity (informative)",
-      "block": 2,
-      "para": 3
-    },
-    "76695C66": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "10.2 Serving the xRegistry API and JSON projection",
-      "block": 1,
-      "para": 10
-    },
-    "766E790D": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "6.5 Formats and content-types",
-      "block": 1,
-      "para": 0
-    },
-    "767502F4": {
+    "76290A25": {
       "owner": "template"
     },
     "768467F7": {
@@ -6744,29 +7089,12 @@
       "kind": "nodetable",
       "para": 24
     },
-    "76A2BCA8": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "C.5 Example (informative)",
-      "block": 0,
-      "para": 0
-    },
-    "76A9CCCD": {
-      "owner": "template"
-    },
     "76AA8E3A": {
       "owner": "generated",
       "region": "namespaces",
       "index": 4,
       "kind": "table",
       "para": 5
-    },
-    "76B1E85C": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "6.1 SchemaRegistryType",
-      "block": 0,
-      "para": 0
     },
     "76B940C9": {
       "owner": "template"
@@ -6797,32 +7125,32 @@
     "774827E3": {
       "owner": "template"
     },
+    "774E876E": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "8 Resolution flow",
+      "block": 1,
+      "para": 7
+    },
+    "77529765": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "Annex D — HTTP binding correspondence (informative)",
+      "block": 1,
+      "para": 27
+    },
     "77646FE8": {
       "owner": "template"
     },
     "7771EFF9": {
       "owner": "template"
     },
-    "77857487": {
+    "77A7BE80": {
       "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "6.6 Schema identity (`SchemaId`) and per-format fingerprints",
-      "block": 1,
-      "para": 0
-    },
-    "778BB5EA": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
       "section": "10.2 Serving the xRegistry API and JSON projection",
       "block": 1,
-      "para": 16
-    },
-    "7793FAEB": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "10.2 Serving the xRegistry API and JSON projection",
-      "block": 1,
-      "para": 9
+      "para": 21
     },
     "77AC9022": {
       "owner": "generated",
@@ -6844,9 +7172,6 @@
       "kind": "nodetable",
       "para": 76
     },
-    "77ECEC05": {
-      "owner": "template"
-    },
     "7801DF6D": {
       "owner": "generated",
       "region": "instances",
@@ -6855,6 +7180,9 @@
       "para": 18
     },
     "782104F0": {
+      "owner": "template"
+    },
+    "783B63F2": {
       "owner": "template"
     },
     "783CFDE2": {
@@ -6871,9 +7199,6 @@
       "kind": "methodtable",
       "para": 19
     },
-    "7878D3FF": {
-      "owner": "template"
-    },
     "78833732": {
       "owner": "generated",
       "region": "terms",
@@ -6884,6 +7209,20 @@
     "7883959C": {
       "owner": "template"
     },
+    "78864AE5": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 4,
+      "para": 3
+    },
+    "788CA28F": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "8 Resolution flow",
+      "block": 1,
+      "para": 2
+    },
     "788F7F54": {
       "owner": "generated",
       "region": "objecttypes",
@@ -6891,15 +7230,33 @@
       "kind": "methodtable",
       "para": 1
     },
-    "7891E9D5": {
-      "owner": "template"
-    },
     "789ECCA3": {
       "owner": "generated",
       "region": "instances",
       "index": 5,
       "kind": "methodtable",
       "para": 6
+    },
+    "78BFF77A": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "Annex D — HTTP binding correspondence (informative)",
+      "block": 1,
+      "para": 30
+    },
+    "78C8A078": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.5 Formats and content-types",
+      "block": 0,
+      "para": 12
+    },
+    "78D0974B": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "1 Scope",
+      "block": 4,
+      "para": 0
     },
     "78E3BBD6": {
       "owner": "template"
@@ -6911,14 +7268,35 @@
       "kind": "nodetable",
       "para": 17
     },
+    "790152DD": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "10.2 Serving the xRegistry API and JSON projection",
+      "block": 1,
+      "para": 28
+    },
     "790A6E9C": {
       "owner": "template"
     },
     "79206A83": {
       "owner": "template"
     },
+    "79262F16": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "7 Schema versioning and compatibility",
+      "block": 2,
+      "para": 0
+    },
     "7930BCDD": {
       "owner": "template"
+    },
+    "794E96CA": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "4 Overview",
+      "block": 0,
+      "para": 0
     },
     "79590445": {
       "owner": "generated",
@@ -6927,6 +7305,9 @@
       "kind": "nodetable",
       "para": 1
     },
+    "795B9D4D": {
+      "owner": "template"
+    },
     "7971F051": {
       "owner": "generated",
       "region": "annex-a",
@@ -6934,15 +7315,11 @@
       "kind": "nodetable",
       "para": 98
     },
-    "798F8C77": {
+    "797E52D7": {
       "owner": "template"
     },
-    "7991DF38": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "6 Schema-specific information model",
-      "block": 0,
-      "para": 0
+    "798F8C77": {
+      "owner": "template"
     },
     "7992E8BF": {
       "owner": "template"
@@ -6964,6 +7341,16 @@
       "kind": "methodtable",
       "para": 8
     },
+    "79F0CACB": {
+      "owner": "template"
+    },
+    "79F4A4E8": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "10.1 Auto-bootstrap of the schema structure",
+      "block": 0,
+      "para": 0
+    },
     "7A049651": {
       "owner": "template"
     },
@@ -6973,7 +7360,14 @@
     "7A1CE53B": {
       "owner": "template"
     },
-    "7A776BD2": {
+    "7A407262": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "10.2 Serving the xRegistry API and JSON projection",
+      "block": 1,
+      "para": 1
+    },
+    "7A60588D": {
       "owner": "template"
     },
     "7A801AB2": {
@@ -6993,12 +7387,8 @@
       "kind": "methodtable",
       "para": 25
     },
-    "7A9F918F": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "Annex D — HTTP binding correspondence (informative)",
-      "block": 1,
-      "para": 14
+    "7AB22C0F": {
+      "owner": "template"
     },
     "7AB8EA0A": {
       "owner": "template"
@@ -7020,6 +7410,12 @@
       "kind": "methodtable",
       "para": 10
     },
+    "7AE7C918": {
+      "owner": "template"
+    },
+    "7B0864AE": {
+      "owner": "template"
+    },
     "7B09D64D": {
       "owner": "template"
     },
@@ -7036,12 +7432,15 @@
       "kind": "methodtable",
       "para": 44
     },
-    "7B8C9673": {
+    "7B766206": {
       "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "C.3 Append-only rule (normative)",
-      "block": 0,
-      "para": 0
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "12 Conformance",
+      "block": 3,
+      "para": 17
+    },
+    "7B79D4EB": {
+      "owner": "template"
     },
     "7BB0DC2B": {
       "owner": "generated",
@@ -7053,8 +7452,12 @@
     "7BB4ECD9": {
       "owner": "template"
     },
-    "7BDC986F": {
-      "owner": "template"
+    "7BD6BC10": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "Annex D — HTTP binding correspondence (informative)",
+      "block": 1,
+      "para": 33
     },
     "7BE15FFD": {
       "owner": "template"
@@ -7066,19 +7469,19 @@
       "kind": "term",
       "para": 1
     },
+    "7C425CA0": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "1 Scope",
+      "block": 4,
+      "para": 1
+    },
     "7C6DF597": {
       "owner": "generated",
       "region": "namespaces",
       "index": 4,
       "kind": "table",
       "para": 16
-    },
-    "7C846E9E": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "10.2 Serving the xRegistry API and JSON projection",
-      "block": 1,
-      "para": 28
     },
     "7C8BADB6": {
       "owner": "generated",
@@ -7087,15 +7490,26 @@
       "kind": "nodetable",
       "para": 92
     },
-    "7C967567": {
-      "owner": "template"
-    },
     "7C975B32": {
       "owner": "generated",
       "region": "objecttypes",
       "index": 3,
       "kind": "nodetable",
       "para": 15
+    },
+    "7CA0FDC0": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.3 SchemaFileType",
+      "block": 1,
+      "para": 2
+    },
+    "7CA95D0C": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 4,
+      "para": 14
     },
     "7CDC715F": {
       "owner": "template"
@@ -7106,13 +7520,6 @@
       "index": 11,
       "kind": "nodetable",
       "para": 14
-    },
-    "7D2650B7": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "6.4 SchemaId-NodeId fast access and GetSchema",
-      "block": 1,
-      "para": 2
     },
     "7D2F380C": {
       "owner": "generated",
@@ -7137,6 +7544,13 @@
     "7D426E6A": {
       "owner": "template"
     },
+    "7D4834D8": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "12 Conformance",
+      "block": 3,
+      "para": 6
+    },
     "7D5D0597": {
       "owner": "template"
     },
@@ -7160,13 +7574,6 @@
       "kind": "nodetable",
       "para": 94
     },
-    "7D994BDA": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "12 Conformance",
-      "block": 3,
-      "para": 19
-    },
     "7DC1B5B6": {
       "owner": "generated",
       "region": "annex-a",
@@ -7184,31 +7591,10 @@
       "kind": "nodetable",
       "para": 72
     },
-    "7DDD8837": {
+    "7E116BAF": {
       "owner": "template"
     },
-    "7DE7E071": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "10.2 Serving the xRegistry API and JSON projection",
-      "block": 1,
-      "para": 31
-    },
-    "7DEA6309": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "8 Resolution flow",
-      "block": 1,
-      "para": 6
-    },
-    "7E077B76": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "6.3 SchemaFileType",
-      "block": 2,
-      "para": 0
-    },
-    "7E116BAF": {
+    "7E3CF14C": {
       "owner": "template"
     },
     "7E47AA93": {
@@ -7217,6 +7603,16 @@
       "index": 5,
       "kind": "methodtable",
       "para": 39
+    },
+    "7E4F70BF": {
+      "owner": "template"
+    },
+    "7E7A46E6": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "4.3 OPC UA as a first-class binding — federation and access parity with HTTP",
+      "block": 2,
+      "para": 0
     },
     "7ED6B2FE": {
       "owner": "generated",
@@ -7235,9 +7631,6 @@
       "kind": "nodetable",
       "para": 23
     },
-    "7F07569D": {
-      "owner": "template"
-    },
     "7F492928": {
       "owner": "generated",
       "region": "namespaces",
@@ -7255,6 +7648,16 @@
     "7F52A6EE": {
       "owner": "template"
     },
+    "7F58EEBA": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "Annex D — HTTP binding correspondence (informative)",
+      "block": 1,
+      "para": 23
+    },
+    "7F64A353": {
+      "owner": "template"
+    },
     "7F6BE573": {
       "owner": "generated",
       "region": "terms",
@@ -7269,9 +7672,6 @@
       "kind": "nodetable",
       "para": 44
     },
-    "7F76E745": {
-      "owner": "template"
-    },
     "7F8EC490": {
       "owner": "generated",
       "region": "objecttypes",
@@ -7279,31 +7679,11 @@
       "kind": "nodetable",
       "para": 10
     },
-    "7FA96EA8": {
-      "owner": "template"
-    },
     "7FAD8EDB": {
       "owner": "generated",
       "region": "objecttypes",
       "index": 11,
       "kind": "nodetable",
-      "para": 0
-    },
-    "7FC92B80": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "Annex D — HTTP binding correspondence (informative)",
-      "block": 1,
-      "para": 10
-    },
-    "7FCE4381": {
-      "owner": "template"
-    },
-    "7FD7ECEA": {
-      "owner": "markdown",
-      "file": "core-specs/schema-registry/OPC-UA-Schema-Registry.md",
-      "section": "12 Conformance",
-      "block": 0,
       "para": 0
     }
   }

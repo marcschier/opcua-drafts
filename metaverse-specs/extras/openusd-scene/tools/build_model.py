@@ -160,9 +160,11 @@ def variable_type(nid, name, base, datatype, valuerank, desc):
 
 
 def _member_var(owner, owner_sym, name, datatype, typedef, rule, reftype, desc,
-                valuerank="-1"):
+                valuerank="-1", arraydims=None):
     nid = _mid()
     attrs = {"DataType": datatype, "ValueRank": str(valuerank)}
+    if arraydims is not None:
+        attrs["ArrayDimensions"] = str(arraydims)
     add(nid, "UAVariable", name, f"{owner_sym}_{name.strip('<>')}", desc=desc, parent=T(owner),
         attrs=attrs)
     ref(nid, HasModellingRule, rule)
@@ -172,9 +174,10 @@ def _member_var(owner, owner_sym, name, datatype, typedef, rule, reftype, desc,
     return nid
 
 
-def prop_var(owner, owner_sym, name, datatype, desc, rule=MR_Optional, valuerank="-1"):
+def prop_var(owner, owner_sym, name, datatype, desc, rule=MR_Optional, valuerank="-1",
+             arraydims=None):
     return _member_var(owner, owner_sym, name, datatype, PropertyType, rule,
-                       HasProperty, desc, valuerank)
+                       HasProperty, desc, valuerank, arraydims)
 
 
 def component_var(owner, owner_sym, name, datatype, typedef, desc,
@@ -609,6 +612,49 @@ prop_var(A, "UsdAttributeType", "ConnectionPaths", String,
          "counterpart of UsdRelationshipType.TargetPaths: a connection whose target lies "
          "outside the materialized subtree has no browsable UsdConnection edge, and without "
          "this member it could not be exported.", valuerank="1")
+
+# --- UsdGeomCamera -----------------------------------------------------------
+# Appended (ObjectType 1024, members after the existing highest member id) rather than
+# inserted next to the other UsdGeom prims, so that no existing NodeId shifts: the
+# pumps/ and robotics/ scene overlays reference type ids 1001..1021 directly. The
+# georeference API types (1022/1023) were appended the same way.
+#
+# Declared AFTER UsdAttributeType.ConnectionPaths above, because that member is already
+# published on main and must keep its id; these camera members are new on this branch,
+# so they take the ids after it.
+#
+# This is the OpenUSD <-> vision intersection: a camera prim is both a scene object
+# (materialized here) and an imaging sensor (OPC UA - Vision, VisionSensorType). Its
+# attributes are also the intrinsics surface used by NVIDIA Isaac Sim (Annex C).
+object_type(1024, "UsdGeomCameraType", T(XFORMABLE),
+            "USD Camera prim: a transformable prim describing a view frustum. Materializes "
+            "the UsdGeomCamera IsA schema. Its aperture and focal-length attributes are the "
+            "surface from which camera intrinsics are derived (Annex C). OPC UA - Vision "
+            "defines, in its own VIS-Interop-Scene facet, when a Vision sensor's PrimPath is "
+            "required to resolve to an instance of this type; that requirement belongs to "
+            "that specification and is not imposed here.")
+CAMERA = 1024
+prop_var(CAMERA, "UsdGeomCameraType", "FocalLength", Float,
+         "Perspective focal length, in tenths of a world unit (USD convention: mm).")
+prop_var(CAMERA, "UsdGeomCameraType", "HorizontalAperture", Float,
+         "Horizontal aperture (sensor width), in tenths of a world unit.")
+prop_var(CAMERA, "UsdGeomCameraType", "VerticalAperture", Float,
+         "Vertical aperture (sensor height), in tenths of a world unit.")
+prop_var(CAMERA, "UsdGeomCameraType", "HorizontalApertureOffset", Float,
+         "Horizontal aperture offset from centre, in tenths of a world unit.")
+prop_var(CAMERA, "UsdGeomCameraType", "VerticalApertureOffset", Float,
+         "Vertical aperture offset from centre, in tenths of a world unit.")
+prop_var(CAMERA, "UsdGeomCameraType", "ClippingRange", Float,
+         "Near and far clipping distances as a two-element array (USD float2).",
+         valuerank="1", arraydims=2)
+prop_var(CAMERA, "UsdGeomCameraType", "FStop", Float,
+         "Lens aperture f-number; 0 disables depth of field.")
+prop_var(CAMERA, "UsdGeomCameraType", "FocusDistance", Float,
+         "Distance from the camera to the focus plane, in world units.")
+prop_var(CAMERA, "UsdGeomCameraType", "Projection", UsdToken,
+         "Projection token: perspective or orthographic.")
+prop_var(CAMERA, "UsdGeomCameraType", "Exposure", Float,
+         "Exposure adjustment in stops, applied as a scene-linear scale.")
 
 # ===========================================================================
 # ==================================  EMIT  =================================

@@ -9,6 +9,12 @@
       "description": "Asset containers. Each Group is one named USD asset container - a root layer together with the sublayers, references, payloads, textures, MaterialX documents and volumes it needs. The Group id is the asset container identifier.",
 
       "attributes": {
+        "name": {
+          "name": "name",
+          "type": "string",
+          "required": true,
+          "description": "The asset container identifier verbatim. REQUIRED because a registry is browsed by people, often through generic tooling that has only the id and the name to show, and the id is a normalized form of this string"
+        },
         "rootlayer": {
           "name": "rootlayer",
           "type": "string",
@@ -48,11 +54,17 @@
               "strict": false,
               "description": "The document format of this artifact. Orthogonal to assetkind, which records the artifact's role in the closure"
             },
+            "name": {
+              "name": "name",
+              "type": "string",
+              "required": true,
+              "description": "The assetidentifier verbatim. REQUIRED because a registry is browsed by people, often through generic tooling that has only the id and the name to show, and the id is a normalized form of this string"
+            },
             "assetidentifier": {
               "name": "assetidentifier",
               "type": "string",
               "required": true,
-              "description": "The authored USD asset identifier, normalized relative to its asset container - the string a layer writes between @...@. The usdassetid is its URL-safe percent-encoding, so the two are inter-derivable"
+              "description": "The authored USD asset identifier, normalized relative to its asset container - the string a layer writes between @...@. It is the Resource source identity and the authority: the usdassetid is the symbolic identifier constructed from it, a one-way construction that is never inverted"
             },
             "assetkind": {
               "name": "assetkind",
@@ -115,6 +127,12 @@
       "description": "USD schema plugins. Each Group is one codeless USD schema plugin, and the Group id is the plugin name as declared in the plugin manifest. A codeless schema needs exactly two files, so a Group holds a SchemaPlugin usdasset and a GeneratedSchema usdasset",
 
       "attributes": {
+        "name": {
+          "name": "name",
+          "type": "string",
+          "required": true,
+          "description": "The plugin name as declared in the plugin manifest, verbatim. REQUIRED because a registry is browsed by people, often through generic tooling that has only the id and the name to show, and the id is a normalized form of this string"
+        },
         "*": {
           "name": "*",
           "type": "any"
@@ -149,11 +167,17 @@
               "strict": false,
               "description": "The document format of this artifact. Orthogonal to assetkind, which records the artifact's role in the closure"
             },
+            "name": {
+              "name": "name",
+              "type": "string",
+              "required": true,
+              "description": "The assetidentifier verbatim. REQUIRED because a registry is browsed by people, often through generic tooling that has only the id and the name to show, and the id is a normalized form of this string"
+            },
             "assetidentifier": {
               "name": "assetidentifier",
               "type": "string",
               "required": true,
-              "description": "The authored USD asset identifier, normalized relative to its group - the string a layer writes between @...@. The usdassetid is its URL-safe percent-encoding, so the two are inter-derivable"
+              "description": "The authored USD asset identifier, normalized relative to its asset container - the string a layer writes between @...@. It is the Resource source identity and the authority: the usdassetid is the symbolic identifier constructed from it, a one-way construction that is never inverted"
             },
             "assetkind": {
               "name": "assetkind",

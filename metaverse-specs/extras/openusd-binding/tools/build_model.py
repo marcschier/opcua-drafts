@@ -28,8 +28,8 @@ import os
 import xml.sax.saxutils as sx
 
 NAMESPACE = "http://opcfoundation.org/UA/OpenUSD/"
-VERSION = "0.5.0"
-PUBDATE = "2026-07-29T00:00:00Z"
+VERSION = "0.6.0"
+PUBDATE = "2026-07-31T00:00:00Z"
 BASE_UA_VERSION = "1.05.04"
 BASE_UA_PUBDATE = "2023-12-15T00:00:00Z"
 
@@ -39,8 +39,8 @@ BASE_UA_PUBDATE = "2023-12-15T00:00:00Z"
 # instead of a per-stage folder of files. xRegistry takes namespace index 1 and
 # this model moves to index 2; the per-namespace NodeId numbers are unchanged.
 XREG_NAMESPACE = "http://opcfoundation.org/UA/xRegistry/"
-XREG_VERSION = "0.1.0"
-XREG_PUBDATE = "2026-07-16T00:00:00Z"
+XREG_VERSION = "0.3.0"
+XREG_PUBDATE = "2026-07-31T00:00:00Z"
 
 # --- base UA NodeIds (namespace 0) -----------------------------------------
 HasComponent = "i=47"
@@ -683,14 +683,17 @@ object_type(1006, "OpenUsdAssetType", XRegistry_ResourceType,
             "Part 5 FileType, so the artifact's bytes are streamed directly through the node's "
             "own Open/Read/Close while the node also carries the xRegistry entity attributes. "
             "AssetIdentifier is the authored USD resolver identifier, normalized relative to its "
-            "asset container; the inherited xRegistry ResourceId is its URL-safe encoding, so the "
-            "two are inter-derivable and the registry is addressable as an ArResolver backend "
+            "asset container, and is the artifact's source identity; the inherited xRegistry "
+            "ResourceId is the symbolic identifier constructed from it, a one-way construction "
+            "that is never inverted, so the registry is addressable as an ArResolver backend "
             "without conflating the two identifier grammars.",
             cu=(CU_ASSET_DELIVERY, CU_ARTIFACT_REGISTRY, CU_ARTIFACT_FEDERATION))
 A = 1006
 prop_var(A, "OpenUsdAssetType", "AssetIdentifier", String,
          "Resolver identifier / relative path of this asset, matching the stage RootLayerIdentifier "
-         "or a ComponentAssetReference asset path; used for @...@ resolution and cache placement.",
+         "or a ComponentAssetReference asset path; used for @...@ resolution and cache placement. "
+         "It is the artifact's source identity: the inherited ResourceId is the symbolic identifier "
+         "constructed from it, and the inherited Name is this string verbatim.",
          MR_Mandatory)
 prop_var(A, "OpenUsdAssetType", "AssetKind", OpenUsdAssetKindEnum,
          "Role of this asset within the stage's served layer closure.", MR_Mandatory)
@@ -743,7 +746,7 @@ object_type(1012, "OpenUsdArtifactRegistryType", XRegistry_RegistryType,
             "holding every USD artifact the server serves: layers, packages, textures, MaterialX "
             "documents, volumes, schema plugins and manifests. Exposed as the Artifacts component "
             "of OpenUsdRootType, it is the single backbone all stages resolve against, replacing "
-            "per-stage duplication. Each artifact's ResourceId is the URL-safe encoding of its USD asset identifier, so the "
+            "per-stage duplication. Each artifact's ResourceId is the symbolic identifier of its USD asset identifier, so the "
             "registry is directly addressable as an ArResolver backend and xRegistry federation "
             "(ResourceUrl / ExternalReference) is the resolver fallback chain.",
             cu=(CU_ARTIFACT_REGISTRY, CU_ARTIFACT_FEDERATION))
@@ -806,7 +809,7 @@ placeholder_obj(1012, "OpenUsdArtifactRegistryType", "<SchemaPlugin>", T(1014),
                 reftype=Organizes)
 placeholder_obj(1013, "OpenUsdAssetGroupType", "<Asset>", T(1006),
                 "Constrains the inherited <Resource> placeholder: an artifact of this asset "
-                "container, addressed by the URL-safe encoding of its AssetIdentifier.",
+                "container, addressed by the symbolic identifier of its AssetIdentifier.",
                 reftype=Organizes)
 placeholder_obj(1014, "OpenUsdSchemaPluginGroupType", "<Asset>", T(1006),
                 "Constrains the inherited <Resource> placeholder: a file of this schema "

@@ -63,7 +63,7 @@ Because Avro binary data is only interpretable with its schema, this mapping mak
 
 ### 4.4 PubSub message model
 
-For PubSub (§8), the Avro mapping represents the OPC 10000-14 message model — a **NetworkMessage** carrying one or more **DataSetMessage** records — as canonical Avro records rather than JSON objects. A DataSetMessage is a **key frame** (all DataSet fields, in FieldMetaData order) or a **delta frame** (only changed fields). Field representation follows `DataSetFieldContentMask` exactly as for the JSON mapping (Variant, DataValue or RawData). A receiver shall know the writer configuration and SchemaId before decoding, from configured PubSub metadata, a schema announcement, or a schema registry such as the one in `../schema-registry/OPC-UA-Schema-Registry.md`.
+For PubSub (§8), the Avro mapping represents the OPC 10000-14 message model — a **NetworkMessage** carrying one or more **DataSetMessage** records — as canonical Avro records rather than JSON objects. A DataSetMessage is a **key frame** (all DataSet fields, in FieldMetaData order) or a **delta frame** (only changed fields). Field representation follows `DataSetFieldContentMask` exactly as for the JSON mapping (Variant, DataValue or RawData). A receiver shall know the writer configuration and SchemaId before decoding, from configured PubSub metadata, a schema announcement, or a schema registry such as the one in `../../cloud-specs/schema-registry/OPC-UA-Schema-Registry.md`.
 
 ### 4.5 Endianness
 
@@ -663,8 +663,8 @@ A decoder shall maintain `cache: SchemaId -> parsed Avro schema`. When a value o
 
 1. Await an `AvroSchemaAnnouncement` on the relevant Discovery announcement channel.
 2. Send an `AvroSchemaRequest` on the relevant Discovery request channel containing the unknown SchemaId and await one `AvroSchemaAnnouncement` per known requested SchemaId.
-3. Resolve the schema from an external (federated) xRegistry that the local registry references, per *OPC UA — Schema Registry* (`core-specs/schema-registry/OPC-UA-Schema-Registry.md`) §8.
-4. Read the in-server AddressSpace Schema Registry by a SchemaId-NodeId. A companion NodeSet in `core-specs/schema-registry/`, namespace `http://opcfoundation.org/UA/SchemaRegistry/`, exposes each schema at an Opaque NodeId whose Identifier is the raw SchemaId bytes, so a single Read returns the schema with no browse or recomputation. The same registry also exposes a `GetSchema(SchemaId)` Method for clients that prefer a Method call.
+3. Resolve the schema from an external (federated) xRegistry that the local registry references, per *OPC UA — Schema Registry* (`cloud-specs/schema-registry/OPC-UA-Schema-Registry.md`) §8.
+4. Read the in-server AddressSpace Schema Registry by a SchemaId-NodeId. A companion NodeSet in `cloud-specs/schema-registry/`, namespace `http://opcfoundation.org/UA/SchemaRegistry/`, exposes each schema at an Opaque NodeId whose Identifier is the raw SchemaId bytes, so a single Read returns the schema with no browse or recomputation. The same registry also exposes a `GetSchema(SchemaId)` Method for clients that prefer a Method call.
 5. Re-derive the schema from the AddressSpace DataType and verify that the recomputed SchemaId is equal to the referenced SchemaId.
 
 The decoder cache shall be keyed by SchemaId. SchemaId is content-derived and independent of PubSub ConfigurationVersion, writer group version numbers, sequence numbers and transport session state. Encoders should periodically re-announce active schemas on lossy transports or when late joiners are expected.

@@ -1,6 +1,6 @@
 # OPC UA Robotics — OpenUSD Bindings Addendum
 
-**Implementer Annex to *OPC UA — OpenUSD Binding* (Release 0.5.0 — Draft).**
+**Implementer Annex to *OPC UA — OpenUSD Binding* (Release 0.6.0 — Draft).**
 
 > This addendum is the **implementer (Robotics) annex** for the generic *OPC UA — OpenUSD Bindings* companion model. All Robotics-specific and end-to-end detail lives here; the base specification (`../OPC-UA-OpenUSD-Bindings.md`) remains domain-agnostic. It shows how an OPC 40010 `MotionDeviceSystem` instance representing a robot cell is bound to an OpenUSD prim, how two 6-axis `MotionDevice` robots are recursively composed, and how each Axis' `ActualPosition` drives one USD joint rotate op. The machine-readable source of truth is `../../extras/openusd-binding/examples/robotics/Robotics.OpenUsdBinding.json`; a runnable USD writer is `../../extras/openusd-binding/examples/robotics/usd_writer.py`; the C# end-to-end validation lives in the `RoboticsDeviceIntegrationServer` sample and `RobotOpenUsdE2eTests`.
 

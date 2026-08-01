@@ -1,0 +1,90 @@
+#!/usr/bin/env python3
+"""Which rendered documents have fallen behind their sources.
+
+    python word-drafts/tools/stale_specs.py            # print the stale spec ids
+    python word-drafts/tools/stale_specs.py --verbose  # and show every document's digests
+
+The obvious way to answer this is to rebuild and see what changed. **That does not work
+here**, and the reason is worth stating because it is not obvious: the committed `.docx` is
+the *post-finalise* file, written by Word after it resolved the fields, and a rebuild
+produces the *pre-finalise* one. Word recompresses the package and assigns its own
+paragraph ids, so the two never match — for any document, ever, whether or not a single
+character of the specification changed. A refresh driven by "did the bytes change?" is
+therefore always dirty, and proposes replacing every finalised document with an unfinalised
+one on every push.
+
+So the question is asked of the *sources* instead. Each build stamps a digest of exactly
+the inputs that document was rendered from — its config, its markdown, its NodeSet, any
+folded-in annexes — into the package and into the provenance sidecar beside it. A document
+is stale when the digest of its sources today differs from the digest recorded when it was
+rendered. That is immune to the finalisation difference because it never looks at the
+output at all.
+
+Exit code is 0 whether or not anything is stale; read stdout. It is non-zero only when a
+document cannot be examined, which is a real problem and should stop a caller.
+"""
+
+import argparse
+import io
+import json
+import os
+import sys
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
+import build_docx  # noqa: E402
+
+REPO = build_docx.REPO
+SPECS = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'specs')
+
+
+def provenance_path(cfg):
+    base = os.path.join(REPO, cfg['output']['docmodel'])
+    return os.path.splitext(base)[0].replace('.docmodel', '') + '.provenance.json'
+
+
+def status(spec_id):
+    """`(stale, recorded digest, current digest)` for one specification."""
+    build = build_docx.Build(os.path.join(SPECS, spec_id + '.json'))
+    path = provenance_path(build.cfg)
+    if not os.path.exists(path):
+        # No sidecar means nothing is known about what this document was rendered from,
+        # so it cannot be shown to be in step and is rebuilt.
+        return True, None, build.source_digest
+    recorded = json.load(io.open(path, encoding='utf-8')).get('sourceDigest')
+    return recorded != build.source_digest, recorded, build.source_digest
+
+
+def main(argv=None):
+    ap = argparse.ArgumentParser(description=__doc__.split('\n')[0])
+    ap.add_argument('--verbose', action='store_true',
+                    help='report every document, not only the stale ones')
+    args = ap.parse_args(argv)
+
+    with io.open(os.path.join(SPECS, 'batch.json'), encoding='utf-8') as f:
+        converted = json.load(f)['converted']
+
+    stale = []
+    for spec_id in converted:
+        try:
+            is_stale, recorded, current = status(spec_id)
+        except Exception as exc:  # noqa: BLE001 - a caller needs the id, not a traceback
+            print('%s: cannot examine (%s)' % (spec_id, exc), file=sys.stderr)
+            return 2
+        if is_stale:
+            stale.append(spec_id)
+        if args.verbose:
+            print('%-22s %-18s %-18s %s'
+                  % (spec_id, recorded or '(none)', current,
+                     'STALE' if is_stale else 'in step'),
+                  file=sys.stderr)
+
+    for spec_id in stale:
+        print(spec_id)
+    if args.verbose:
+        print('\n%d of %d document(s) stale' % (len(stale), len(converted)), file=sys.stderr)
+    return 0
+
+
+if __name__ == '__main__':
+    raise SystemExit(main())

@@ -1253,4 +1253,113 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=2001</Reference>
     </References>
   </UAVariable>
+  <UAObjectType NodeId="ns=1;i=1024" BrowseName="1:UsdGeomCameraType">
+    <DisplayName>UsdGeomCameraType</DisplayName>
+    <Description>USD Camera prim: a transformable prim describing a view frustum. Materializes the UsdGeomCamera IsA schema. Its aperture and focal-length attributes are the surface from which camera intrinsics are derived (Annex C). OPC UA - Vision defines, in its own VIS-Interop-Scene facet, when a Vision sensor's PrimPath is required to resolve to an instance of this type; that requirement belongs to that specification and is not imposed here.</Description>
+    <Category>OUS-SceneStructure</Category>
+    <Category>OUS-Conversion</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=1005</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6079</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6080</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6081</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6082</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6083</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6084</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6085</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6086</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6087</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6088</Reference>
+    </References>
+  </UAObjectType>
+  <UAVariable NodeId="ns=1;i=6079" BrowseName="1:FocalLength" ParentNodeId="ns=1;i=1024" DataType="Float" ValueRank="-1">
+    <DisplayName>FocalLength</DisplayName>
+    <Description>Perspective focal length, in tenths of a world unit (USD convention: mm).</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1024</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6080" BrowseName="1:HorizontalAperture" ParentNodeId="ns=1;i=1024" DataType="Float" ValueRank="-1">
+    <DisplayName>HorizontalAperture</DisplayName>
+    <Description>Horizontal aperture (sensor width), in tenths of a world unit.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1024</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6081" BrowseName="1:VerticalAperture" ParentNodeId="ns=1;i=1024" DataType="Float" ValueRank="-1">
+    <DisplayName>VerticalAperture</DisplayName>
+    <Description>Vertical aperture (sensor height), in tenths of a world unit.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1024</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6082" BrowseName="1:HorizontalApertureOffset" ParentNodeId="ns=1;i=1024" DataType="Float" ValueRank="-1">
+    <DisplayName>HorizontalApertureOffset</DisplayName>
+    <Description>Horizontal aperture offset from centre, in tenths of a world unit.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1024</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6083" BrowseName="1:VerticalApertureOffset" ParentNodeId="ns=1;i=1024" DataType="Float" ValueRank="-1">
+    <DisplayName>VerticalApertureOffset</DisplayName>
+    <Description>Vertical aperture offset from centre, in tenths of a world unit.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1024</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6084" BrowseName="1:ClippingRange" ParentNodeId="ns=1;i=1024" DataType="Float" ValueRank="1" ArrayDimensions="2">
+    <DisplayName>ClippingRange</DisplayName>
+    <Description>Near and far clipping distances as a two-element array (USD float2).</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1024</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6085" BrowseName="1:FStop" ParentNodeId="ns=1;i=1024" DataType="Float" ValueRank="-1">
+    <DisplayName>FStop</DisplayName>
+    <Description>Lens aperture f-number; 0 disables depth of field.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1024</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6086" BrowseName="1:FocusDistance" ParentNodeId="ns=1;i=1024" DataType="Float" ValueRank="-1">
+    <DisplayName>FocusDistance</DisplayName>
+    <Description>Distance from the camera to the focus plane, in world units.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1024</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6087" BrowseName="1:Projection" ParentNodeId="ns=1;i=1024" DataType="ns=1;i=3006" ValueRank="-1">
+    <DisplayName>Projection</DisplayName>
+    <Description>Projection token: perspective or orthographic.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1024</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6088" BrowseName="1:Exposure" ParentNodeId="ns=1;i=1024" DataType="Float" ValueRank="-1">
+    <DisplayName>Exposure</DisplayName>
+    <Description>Exposure adjustment in stops, applied as a scene-linear scale.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1024</Reference>
+    </References>
+  </UAVariable>
 </UANodeSet>

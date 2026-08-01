@@ -52,6 +52,7 @@ consumer needs in order to compose and render a USD stage.
       - [4.5.6. Opaque](#456-opaque)
   - [5. Relationships and Cross-References](#5-relationships-and-cross-references)
     - [5.1. Asset Identifiers and `xid`s](#51-asset-identifiers-and-xids)
+      - [5.1.1. The Symbolic Identifier Construction](#511-the-symbolic-identifier-construction)
     - [5.2. The Dependency Closure](#52-the-dependency-closure)
     - [5.3. Federation](#53-federation)
     - [5.4. Asset Resolution](#54-asset-resolution)
@@ -145,6 +146,13 @@ reference durable: a layer that pinned a particular revision would defeat the
 registry's ability to serve a corrected artifact, and a consumer that resolved
 an identifier to a Version would re-resolve to a different artifact whenever a
 new revision was published.
+
+For the same reason a `usdassetid` MUST NOT be derived from the artifact's
+bytes. A Resource is the umbrella over its Versions, so an id computed from a
+document would change on every revision and split one logical artifact into a
+new Resource each time. The content hash of a Version is the `digest`
+([Section 4.2](#42-usd-asset-resources)), which is Version-level metadata; the
+id is derived only from the `assetidentifier`, which is Version-invariant.
 
 A Consumer that does not select a Version explicitly MUST receive the
 Resource's default Version. An `xid` that addresses a specific Version MUST NOT
@@ -283,7 +291,7 @@ adheres to this form:
       "self": "<URL>",
       "xid": "<XID>",
       "epoch": <UINTEGER>,
-      "name": "<STRING>", ?
+      "name": "<STRING>",
       "description": "<STRING>", ?
       "documentation": "<URL>", ?
       "labels": { "<STRING>": "<STRING>" * }, ?
@@ -304,7 +312,7 @@ adheres to this form:
 
           #  Start of default Version's attributes
           "epoch": <UINTEGER>,
-          "name": "<STRING>", ?
+          "name": "<STRING>",
           "description": "<STRING>", ?
           "documentation": "<URL>", ?
           "labels": { "<STRING>": "<STRING>" * }, ?
@@ -396,7 +404,14 @@ The `usdassetgroupid` **is** the asset container identifier. This
 specification does not define a separate attribute for it, and an
 implementation MUST NOT treat the Group id as a prefix of its members'
 `assetidentifier` values — member identifiers are already normalized relative
-to the Group.
+to the Group. Where the container identifier is not already a legal xRegistry
+id, the `usdassetgroupid` MUST be its symbolic identifier
+([Section 5.1.1](#511-the-symbolic-identifier-construction)).
+
+An Asset Container Group MUST set the core [`name`][xRegistry Core] attribute
+to the asset container identifier verbatim, so the exact string survives the
+normalization the id applies. A registry is browsed by people, often through
+generic third-party tooling that has only the id and the name to show.
 
 An Asset Container Group has one extension attribute:
 
@@ -435,8 +450,17 @@ The Resource (`<RESOURCE>`) inside of Asset Container Groups is named
 `usdasset` is a container for one or more `versions`, each of which holds one
 concrete artifact document.
 
-The `usdassetid` MUST be the URL-safe percent-encoding of the Resource's
-`assetidentifier`; see [Section 5.1](#51-asset-identifiers-and-xids).
+The `usdassetid` MUST be the symbolic identifier of the Resource's
+`assetidentifier`; see [Section 5.1](#51-asset-identifiers-and-xids). The
+`assetidentifier`, not the id, is the authority: it is REQUIRED, it is what a
+layer authors, and it is what a Consumer matches an authored `@...@` reference
+against.
+
+A `usdasset` MUST set the core [`name`][xRegistry Core] attribute to its
+`assetidentifier` verbatim, so that a person browsing the registry — including
+through generic third-party tooling that has only the id and the name to show —
+sees the string a layer actually authors, unchanged by the normalization the
+id applies.
 
 A `usdasset` has the following extension attributes:
 
@@ -492,9 +516,13 @@ The Group name for schema plugins is `usdschemaplugingroup` (singular), with
 collection name `usdschemaplugingroups`. The Schema Plugin Group does not have
 any specific extension attributes.
 
-The `usdschemaplugingroupid` **is** the plugin name, as declared in the plugin
-manifest. An implementation MUST reject a Group whose id does not match the
-plugin name declared by the `SchemaPlugin` document it contains.
+The `usdschemaplugingroupid` **is** the plugin name, normalized: it MUST be the
+symbolic identifier of the plugin name declared by the `SchemaPlugin` document
+the Group contains ([Section 5.1.1](#511-the-symbolic-identifier-construction)),
+and an implementation MUST reject a Group whose id does not match.
+
+A Schema Plugin Group MUST set the core [`name`][xRegistry Core] attribute to
+the plugin name verbatim, which is non-empty by construction.
 
 A Schema Plugin Group SHOULD contain exactly two `usdasset` Resources: one
 whose `assetkind` is `SchemaPlugin` and one whose `assetkind` is
@@ -562,8 +590,10 @@ for any document that is not conformant with the corresponding specification.
 
 - Format identifier: `USD-PlugInfo/1.0`
 - Document: a USD `plugInfo.json` plugin manifest.
-- The manifest's `Plugins[0].Name` MUST equal the containing Group's
-  `usdschemaplugingroupid`.
+- The containing Group's `usdschemaplugingroupid` MUST be the symbolic
+  identifier of the manifest's `Plugins[0].Name`
+  ([Section 5.1.1](#511-the-symbolic-identifier-construction)), and the Group's
+  `name` MUST be that plugin name verbatim.
 
 #### 4.5.5. USD Generated Schema
 
@@ -586,41 +616,81 @@ for any document that is not conformant with the corresponding specification.
 ### 5.1. Asset Identifiers and `xid`s
 
 xRegistry defines an [`xid`][xRegistry Core] as the stable path of an entity
-within its registry, independent of the hosting endpoint, and requires each
-entity id to be a URL-safe token. A USD asset identifier is the stable,
+within its registry, independent of the hosting endpoint, and constrains each
+entity id to [RFC 3986][RFC3986] `unreserved` characters plus `:` and `@`,
+starting with a letter, a digit or `_`, at most 128 characters long, and unique
+case-insensitively within its parent. A USD asset identifier is the stable,
 location-independent name a layer authors. The two express the same idea but
-are **not the same grammar**: `@./pump.usda@` is not a valid `xid`, and an
-`xid` is not what a layer authors.
+are **not the same grammar**: `@./pump.usda@` is not a valid `xid`, an `xid` is
+not what a layer authors, and an identifier such as `textures/albedo.png`
+cannot appear in an id at all.
 
-This specification therefore does not equate them. It makes them
-**deterministically inter-derivable**, which is what a resolver actually needs:
+This specification therefore does not equate them. It derives one from the
+other by a **closed-form, one-way construction**, and keeps the authored
+identifier as the authority:
 
 > A `usdasset`'s `assetidentifier` MUST be its authored USD asset identifier,
-> normalized relative to its Group. Its `usdassetid` MUST be the URL-safe
-> percent-encoding of that `assetidentifier`. Its `xid` is consequently
-> `/usdassetgroups/<usdassetgroupid>/usdassets/<usdassetid>`, and the asset
-> identifier MUST be recoverable from the `xid` by percent-decoding its last
-> segment.
+> normalized relative to its Group. Its `usdassetid` MUST be the **symbolic
+> identifier** of that `assetidentifier` (Section 5.1.1). Its `xid` is
+> consequently `/usdassetgroups/<usdassetgroupid>/usdassets/<usdassetid>`.
+> The `assetidentifier` attribute is REQUIRED on every `usdasset` and is the
+> authority: an implementation MUST NOT recover an asset identifier by
+> attempting to invert the construction.
 
-Both directions are closed-form, with no lookup table:
+#### 5.1.1. The Symbolic Identifier Construction
+
+A symbolic identifier is built from a source string as follows. The result is a
+dot-separated token in the alphabet `A-Z a-z 0-9 _ . -`, a strict subset of what
+xRegistry permits, so that it is simultaneously safe in a URL, on a command line
+and as a file name in the [file-system representation][xRegistry primer].
+
+1. Split the source into an *authority* and a *path*. For an absolute URI with
+   an authority component the authority is the host together with its port when
+   present, and the path is the URI path; the scheme, userinfo, query and
+   fragment are discarded. For a URN the authority is empty and the path is the
+   URN split on `:`. Otherwise — the usual case for an asset identifier — the
+   authority is empty and the path is the source split on `/`.
+2. Reverse the authority's `.`-separated labels (`contoso.org` becomes `org`,
+   `contoso`), appending the port, where present, as a further label.
+3. Percent-decode each path segment and discard the empty ones.
+4. Normalize each label: replace every run of characters outside
+   `A-Z a-z 0-9 _ . -` with a single `-`; collapse runs of `-` and runs of `.`;
+   strip leading and trailing `-` and `.`; discard a label that becomes empty.
+   Letter case is preserved.
+5. Join the surviving labels with `.`. If no label survives, the identifier is
+   `_`.
+6. If the result is longer than 128 characters, drop trailing labels — never the
+   first — until it is at most 119 characters long; if that first label is itself
+   longer than 119 characters, truncate it to 119 and strip any trailing `-` or
+   `.`. Then append the disambiguator of step 7.
+7. Where step 6 truncated the result, or where the result would collide
+   case-insensitively with an existing sibling in the same collection, append
+   `.` followed by the first eight lower-case hexadecimal characters of the
+   SHA-256 of the UTF-8 encoding of the **exact source string**. The
+   disambiguator is a function of the identifier, not of any document, so it
+   does not change when a new Version is written.
+
+The construction is deterministic, so a Producer and a Consumer agree without a
+lookup table; it is lossy, so only the forward direction is defined:
 
 | Direction | Operation |
 |---|---|
-| authored `@X@` in a layer of container `C` → registry location | normalize `X` against `C`, percent-encode, append to `/usdassetgroups/C/usdassets/` |
-| `xid` → authored identifier | percent-decode the last segment |
+| authored `@X@` in a layer of container `C` → registry location | normalize `X` against `C`, apply the construction, append to `/usdassetgroups/C/usdassets/` |
+| `usdassetid` → authored identifier | read the Resource's `assetidentifier` attribute |
 
 For example, in container `fabrikam.plant-01`:
 
-| Authored | `assetidentifier` | `usdassetid` |
-|---|---|---|
-| `@./pump.usda@` | `pump.usda` | `pump.usda` |
-| `@textures/albedo.png@` | `textures/albedo.png` | `textures%2Falbedo.png` |
-| `@pkg.usdz[tex/a.png]@` | `pkg.usdz[tex/a.png]` | `pkg.usdz%5Btex%2Fa.png%5D` |
+| Authored | `assetidentifier` | `usdassetid` | `name` |
+|---|---|---|---|
+| `@./pump.usda@` | `pump.usda` | `pump.usda` | `pump.usda` |
+| `@textures/albedo.png@` | `textures/albedo.png` | `textures.albedo.png` | `textures/albedo.png` |
+| `@pkg.usdz[tex/a.png]@` | `pkg.usdz[tex/a.png]` | `pkg.usdz-tex.a.png` | `pkg.usdz[tex/a.png]` |
 
-Conflating the two would break relative resolution. A Consumer that caches
-artifacts locally places each one at the relative path given by its
-`assetidentifier`, which is precisely what makes an authored reference such as
-`@./pump.usda@` resolve from its sibling layer. Caching by `xid` would not.
+Conflating the identifier with the id would break relative resolution. A
+Consumer that caches artifacts locally places each one at the relative path
+given by its `assetidentifier`, which is precisely what makes an authored
+reference such as `@./pump.usda@` resolve from its sibling layer. Caching by
+`usdassetid` would not.
 
 ### 5.2. The Dependency Closure
 
@@ -686,8 +756,8 @@ Sections [5.1](#51-asset-identifiers-and-xids) through
 [5.3](#53-federation) together mean that a registry **is** an addressable asset
 resolver backend. A USD asset resolver plugin holding a container context
 resolves an authored `@...@` reference to a Resource by computation alone —
-normalize, percent-encode, append — and retrieves its bytes from the resulting
-URL, exactly as
+normalize, apply the symbolic identifier construction, append — and retrieves
+its bytes from the resulting URL, exactly as
 [Section 1.4](#14-document-store) describes. No lookup table, no index, and no
 xRegistry awareness in the authored scene are required.
 
@@ -764,6 +834,8 @@ Operators SHOULD be aware of three domain-specific considerations:
 [USDZ]: https://openusd.org/release/spec_usdz.html
 [MaterialX]: https://materialx.org/
 [xRegistry Core]: https://xregistry.io/xreg/xregistryspecs/core-v1/docs/spec.html
+[xRegistry primer]: https://xregistry.io/xreg/xregistryspecs/core-v1/docs/primer.html
+[RFC3986]: https://datatracker.ietf.org/doc/html/rfc3986#section-2.3
 [xRegistry Endpoint]: https://xregistry.io/xreg/xregistryspecs/endpoint-v1/docs/spec.html
 [xRegistry Message]: https://xregistry.io/xreg/xregistryspecs/message-v1/docs/spec.html
 [xRegistry Schema]: https://xregistry.io/xreg/xregistryspecs/schema-v1/docs/spec.html

@@ -44,6 +44,7 @@ LINK_WINDOW = 130
 
 EXTERNAL_BEFORE = re.compile(
     r'(OPC\s*1\d{4}|OPC\s*\d{5}|IEC\s*\d+|AOUSD|RFC\s*\d+|W3C'
+    r'|Regulation\s*\(EU\)|EU AI Act|Machinery Regulation'
     r'|Core Specification|core spec'
     r'|\bthat specification\b'
     r'|\bbase\s*$'

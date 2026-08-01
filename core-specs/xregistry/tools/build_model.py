@@ -197,11 +197,15 @@ def data_type(nid, name, fields, desc, category=None, base=Structure, encodings=
         ref(nid, HasEncoding, T(enc_nid))
     return nid
 
-def common_attrs(nid, sym):
+def common_attrs(nid, sym, name_rule=MR_Optional):
     """The xRegistry attributes common to a registry, group and resource entity."""
     prop_var(nid, sym, "Xid", String, "xRegistry relative identifier (xid): the entity's stable path within the registry, independent of the hosting endpoint.")
     prop_var(nid, sym, "Epoch", UInt32, "xRegistry epoch: a counter that increments on every change to the entity.")
-    prop_var(nid, sym, "Name", String, "Human-readable name of the entity.")
+    prop_var(nid, sym, "Name", String,
+             "Human-readable name of the entity, and the source of its DisplayName. Where the entity's source "
+             "identity is itself readable - a namespace URI, an authored asset identifier - Name is that identity "
+             "verbatim, so a Client that shows only an identifier and a name still shows something a human "
+             "recognizes.", rule=name_rule)
     prop_var(nid, sym, "Description", String, "Human-readable description of the entity.")
     prop_var(nid, sym, "Documentation", String, "URL to human-readable documentation for the entity.")
     obj_member(nid, sym, "Labels", T(63003),
@@ -222,11 +226,12 @@ CU_ATTRIBUTES = "XREG-Attributes"
 CU_REGISTRATION = "XREG-Registration"
 CU_CAPABILITIES = "XREG-Capabilities"
 CU_FEDERATION = "XREG-Federation"
+CU_IDENTITY = "XREG-Identity"
 
 CU_BY_NAME = {
     "RegistryType": (CU_REGISTRY,),
-    "GroupType": (CU_GROUP,),
-    "ResourceType": (CU_RESOURCE, CU_FEDERATION),
+    "GroupType": (CU_GROUP, CU_IDENTITY),
+    "ResourceType": (CU_RESOURCE, CU_IDENTITY, CU_FEDERATION),
     "AttributesType": (CU_ATTRIBUTES,),
     "RegistryCapabilitiesDataType": (CU_CAPABILITIES,),
     "AddAttribute": (CU_ATTRIBUTES,),
@@ -333,8 +338,8 @@ method(63000, RG, "GetOrCreateGroup",
                 ("Created", Boolean, "True if the group was created, false if it already existed.")])
 
 GP = "GroupType"
-prop_var(63001, GP, "GroupId", String, "xRegistry groupid: the stable identifier of this group. Group identifiers are globally unique for federation.", rule=MR_Mandatory)
-common_attrs(63001, GP)
+prop_var(63001, GP, "GroupId", String, "xRegistry groupid: the symbolic identifier of this group, constructed from the group's source identity (the group key) by the reverse-authority construction of the specification. Group identifiers are globally unique for federation.", rule=MR_Mandatory)
+common_attrs(63001, GP, name_rule=MR_Mandatory)
 placeholder_obj(63001, GP, "<Resource>", T(63002), "A resource file held by this group.")
 method(63001, GP, "CreateResource",
        "Create a resource, or a new version of an existing resource, as a ResourceType file in this group, optionally "
@@ -370,7 +375,7 @@ method(63001, GP, "Delete",
        inargs=[("ExpectedEpoch", UInt32, "Expected current Epoch of the group for optimistic concurrency; 0 disables the check.")])
 
 RS = "ResourceType"
-prop_var(63002, RS, "ResourceId", String, "xRegistry resourceid: the stable identifier of the resource within its group.", rule=MR_Mandatory)
+prop_var(63002, RS, "ResourceId", String, "xRegistry resourceid: the symbolic identifier of the resource within its group, constructed from the resource's source identity by the reverse-authority construction of the specification. It is never derived from the resource document or from a digest of it, so it is invariant across the resource's versions.", rule=MR_Mandatory)
 prop_var(63002, RS, "VersionId", String, "xRegistry versionid: the identifier of the version this file represents.")
 prop_var(63002, RS, "Format", String, "xRegistry format string identifying the document's schema language/shape.")
 prop_var(63002, RS, "ContentType", String, "Media type (content-type) of the document bytes.")
@@ -381,7 +386,7 @@ prop_var(63002, RS, "ExternalReference", ExpandedNodeId,
 prop_var(63002, RS, "ResourceUrl", String,
          "Federation link (string form): the URL from which the document can be obtained (xRegistry <RESOURCE>url), "
          "for example an opc.tcp endpoint plus browse path, or an HTTP URL.")
-common_attrs(63002, RS)
+common_attrs(63002, RS, name_rule=MR_Mandatory)
 method(63002, RS, "Delete",
        "Delete this resource file and everything it contains (its versions and labels). The xRegistry-semantic "
        "deletion Method, symmetric with the group's Delete and consistent with the resource being a FileType. If "
@@ -391,8 +396,8 @@ method(63002, RS, "Delete",
 
 # Emission
 NAMESPACE = "http://opcfoundation.org/UA/xRegistry/"
-VERSION = "0.2.0"
-PUBDATE = "2026-07-29T00:00:00Z"
+VERSION = "0.3.0"
+PUBDATE = "2026-07-31T00:00:00Z"
 UA_REQUIRED_VERSION = "1.05.04"
 UA_REQUIRED_PUBDATE = "2024-05-01T00:00:00Z"
 ALIASES = [
@@ -610,6 +615,26 @@ def emit_md():
     md.append('')
     return "\n".join(md) + "\n"
 
+
+def inject(path, rendered):
+    """Replace the embedded Annex A in a specification document.
+
+    The annex runs from the ``annex-a`` anchor to the next ``## Annex`` heading, so the
+    document cannot drift from the model: it is the same text ``model-reference.md``
+    holds, and `validate_local.py` checks the two are equal.
+    """
+    with open(path, encoding="utf-8") as f:
+        text = f.read()
+    start = text.index('<a id="annex-a"></a>')
+    finish = text.index("\n## Annex ", text.index("## Annex A")) + 1
+    new_text = text[:start] + rendered.rstrip("\n") + "\n\n" + text[finish:]
+    if new_text != text:
+        with open(path, "w", encoding="utf-8", newline="\n") as f:
+            f.write(new_text)
+        return True
+    return False
+
+
 if __name__ == "__main__":
     here = os.path.dirname(os.path.abspath(__file__))
     outdir = os.path.abspath(os.path.join(here, ".."))
@@ -617,7 +642,10 @@ if __name__ == "__main__":
         f.write(emit())
     with open(os.path.join(outdir, "Opc.Ua.XRegistry.NodeIds.csv"), "w", encoding="utf-8") as f:
         f.write(emit_csv())
+    annex = emit_md()
     with open(os.path.join(here, "model-reference.md"), "w", encoding="utf-8") as f:
-        f.write(emit_md())
+        f.write(annex)
+    if inject(os.path.join(outdir, "OPC-UA-xRegistry.md"), annex):
+        print("Injected Annex A into OPC-UA-xRegistry.md")
     nt = sum(1 for k in NODES if NODES[k].cls in ("UAObjectType", "UADataType", "UAReferenceType"))
     print(f"Nodes: {len(NODES)}  (types: {nt})  member range: 63500..{_next_member[0]-1}")

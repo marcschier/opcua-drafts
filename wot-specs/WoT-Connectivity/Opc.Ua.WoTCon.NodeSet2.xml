@@ -6,9 +6,9 @@
     <Uri>http://opcfoundation.org/UA/WoT-Con/</Uri>
   </NamespaceUris>
   <Models>
-    <Model ModelUri="http://opcfoundation.org/UA/WoT-Con/" Version="1.2.0" PublicationDate="2026-07-22T00:00:00Z">
+    <Model ModelUri="http://opcfoundation.org/UA/WoT-Con/" Version="1.3.0" PublicationDate="2026-07-31T00:00:00Z">
       <RequiredModel ModelUri="http://opcfoundation.org/UA/" Version="1.05.04" PublicationDate="2024-05-01T00:00:00Z" />
-      <RequiredModel ModelUri="http://opcfoundation.org/UA/xRegistry/" Version="0.1.0" PublicationDate="2026-07-16T00:00:00Z" />
+      <RequiredModel ModelUri="http://opcfoundation.org/UA/xRegistry/" Version="0.3.0" PublicationDate="2026-07-31T00:00:00Z" />
     </Model>
   </Models>
   <Aliases>
@@ -404,24 +404,28 @@
     <DisplayName>ThingDescriptionGroupType</DisplayName>
     <Description>An xRegistry GroupType that collects related ThingDescriptionFileType resources (a Thing Description Group per the WoT xRegistry model). Adds the group-level format/compatibility validation policy. Its &lt;ThingDescription&gt; placeholder constrains members to the Thing Description subtype.</Description>
     <Category>WOTC-RegistryDiscovery</Category>
+    <Category>WOTC-Identity</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=63001</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=64541</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=64542</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=64543</Reference>
       <Reference ReferenceType="Organizes">ns=2;i=64544</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=64606</Reference>
     </References>
   </UAObjectType>
   <UAObjectType NodeId="ns=2;i=64002" BrowseName="2:ThingModelGroupType">
     <DisplayName>ThingModelGroupType</DisplayName>
     <Description>An xRegistry GroupType that collects related ThingModelFileType resources (a Thing Model Group per the WoT xRegistry model). Adds the group-level format/compatibility validation policy. Its &lt;ThingModel&gt; placeholder constrains members to the Thing Model subtype.</Description>
     <Category>WOTC-RegistryDiscovery</Category>
+    <Category>WOTC-Identity</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=63001</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=64545</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=64546</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=64547</Reference>
       <Reference ReferenceType="Organizes">ns=2;i=64548</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=64607</Reference>
     </References>
   </UAObjectType>
   <UAObjectType NodeId="ns=2;i=64003" BrowseName="2:WoTDocumentType" IsAbstract="true">
@@ -460,6 +464,7 @@
     <DisplayName>ThingDescriptionFileType</DisplayName>
     <Description>A concrete WoTDocumentType whose content is a W3C WoT Thing Description (WoT-TD/1.1, application/td+json). Projects to OPC UA instances: affordances become Variables, Methods and event sources; forms become binder plans. Adds the Thing instance identity (ThingId, base URI) and the link to the Thing Model it derives from.</Description>
     <Category>WOTC-DocumentRead</Category>
+    <Category>WOTC-Identity</Category>
     <Category>WOTC-TDValidation</Category>
     <Category>WOTC-InstanceMaterialization</Category>
     <References>
@@ -474,6 +479,7 @@
     <DisplayName>ThingModelFileType</DisplayName>
     <Description>A concrete WoTDocumentType whose content is a W3C WoT Thing Model (WoT-TM/1.1, application/tm+json). Projects to OPC UA types: it materializes an ObjectType or VariableType and the affordance member declarations and modelling rules. Adds the derived type NodeId and model version.</Description>
     <Category>WOTC-DocumentRead</Category>
+    <Category>WOTC-Identity</Category>
     <Category>WOTC-TMValidation</Category>
     <Category>WOTC-TypeMaterialization</Category>
     <References>
@@ -481,6 +487,7 @@
       <Reference ReferenceType="HasProperty">ns=2;i=64575</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=64576</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=64577</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=64608</Reference>
     </References>
   </UAObjectType>
   <UAObjectType NodeId="ns=2;i=64006" BrowseName="2:WoTBindingType">
@@ -1013,9 +1020,9 @@
   </UAVariable>
   <UAVariable NodeId="ns=2;i=64571" BrowseName="2:ThingId" ParentNodeId="ns=2;i=64004" DataType="String" ValueRank="-1">
     <DisplayName>ThingId</DisplayName>
-    <Description>The Thing Description id (a URI/URN identifying the concrete Thing instance).</Description>
+    <Description>The Thing Description id (a URI/URN identifying the concrete Thing instance). It is the resource's source identity: the inherited ResourceId is the symbolic identifier constructed from it, and it is invariant across the document's versions.</Description>
     <References>
-      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=64004</Reference>
     </References>
@@ -1341,6 +1348,33 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=64100</Reference>
     </References>
     <Value><uax:UInt32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">0</uax:UInt32></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=2;i=64606" BrowseName="2:CatalogUri" ParentNodeId="ns=2;i=64001" DataType="String" ValueRank="-1">
+    <DisplayName>CatalogUri</DisplayName>
+    <Description>The URI of the catalogue this group collects - a site, a vendor catalogue or another publishing authority. It is the group's source identity: the inherited GroupId is the symbolic identifier constructed from it, and the inherited Name is this URI verbatim.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=64001</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=2;i=64607" BrowseName="2:CatalogUri" ParentNodeId="ns=2;i=64002" DataType="String" ValueRank="-1">
+    <DisplayName>CatalogUri</DisplayName>
+    <Description>The URI of the catalogue this group collects - a site, a vendor catalogue or another publishing authority. It is the group's source identity: the inherited GroupId is the symbolic identifier constructed from it, and the inherited Name is this URI verbatim.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=64002</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=2;i=64608" BrowseName="2:ModelId" ParentNodeId="ns=2;i=64005" DataType="String" ValueRank="-1">
+    <DisplayName>ModelId</DisplayName>
+    <Description>The Thing Model id (the WoT @id, a URI identifying the model). It is the resource's source identity: the inherited ResourceId is the symbolic identifier constructed from it, and it is invariant across the document's versions.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=64005</Reference>
+    </References>
   </UAVariable>
   <UAObjectType NodeId="ns=2;i=1" BrowseName="2:WoTAssetConnectionManagementType" ReleaseStatus="Deprecated">
     <DisplayName>WoTAssetConnectionManagementType</DisplayName>
