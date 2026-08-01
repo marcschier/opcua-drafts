@@ -42,12 +42,13 @@
       ]
     },
     "observability-export": {
-      "$comment": "Shared sample/base NodeSet for the Avro (and Arrow) schema generators, not an independently releasable OPC Foundation review submission. Avro's build_schemas.py opens only cloud-specs/observability-export/Opc.Ua.ObservabilityExport.NodeSet2.xml from this tree; the normative folder and Word clause map are vendored so private review builds can render the copied document if needed. cloud-specs/extras/observability-export is not vendored because Avro does not execute those tools.",
+      "$comment": "Shared sample/base NodeSet for the Avro (and Arrow) schema generators, not an independently releasable OPC Foundation review submission. Avro's build_schemas.py opens only cloud-specs/observability-export/Opc.Ua.ObservabilityExport.NodeSet2.xml from this tree, but the whole normative folder and its extras mirror are vendored so the copied documents' relative links still resolve on the private side; vendoring the prose without its examples left the private repository with broken links.",
       "title": "OPC UA — Observability Export",
       "submitted": false,
       "state": "public",
       "move": [
         "cloud-specs/observability-export",
+        "cloud-specs/extras/observability-export",
         "word-drafts/tools/specs/observability-export.json"
       ],
       "keepPublic": [],
