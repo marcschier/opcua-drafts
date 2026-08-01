@@ -10,7 +10,7 @@
       "$comment": "Releasable. Tooling imports shared _common and validate_local.py invokes build_schemas.py with no arguments, so the default Observability Export NodeSet is a private-side runtime dependency. Observability Export is vendored, not closed over: it is copied to the private export but remains public.",
       "title": "OPC UA — Apache Avro DataEncoding",
       "submitted": true,
-      "state": "public",
+      "state": "released",
       "move": [
         "core-specs/avro-encoding",
         "core-specs/extras/avro-encoding",

@@ -10,7 +10,6 @@
     "schema-registry",
     "generators",
     "data-channels",
-    "avro-encoding",
     "arrow-encoding"
   ],
   "ready": [],
