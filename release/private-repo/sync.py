@@ -38,6 +38,18 @@ def _bytes(text: str) -> bytes:
     return text.encode('utf-8')
 
 
+# Suffixes whose bytes are stored verbatim. Everything else is normalised to LF so the
+# bundle and its digests are identical whether sync.py runs on Windows or Linux, and so
+# the materialised private repository does not end up with mixed line endings.
+BINARY_SUFFIXES = {'.docx', '.pptx', '.png', '.jpg', '.jpeg', '.gif', '.ico', '.pdf', '.zip'}
+
+
+def _normalise(rel: str, data: bytes) -> bytes:
+    if Path(rel).suffix.lower() in BINARY_SUFFIXES:
+        return data
+    return data.replace(b'\r\n', b'\n')
+
+
 def transform_agent_task(text: str) -> str:
     text = text.replace("""# Paths the agent is allowed to change. `.github/` is absent on purpose: a workflow or CI
 # script the agent wrote would run on the next event with more rights than the agent had,
@@ -277,6 +289,19 @@ PRIVATE_BATCH = b'''{
 '''
 
 
+def transform_gitignore(text: str) -> str:
+    """Drop the release-workflow scratch rule, which has no private-side meaning.
+
+    The public repository ignores ``node_modules/`` because the release workflow stages
+    the private checkout there. The private repository never stages anything, so carrying
+    the rule would only invite someone to wonder what it protects.
+    """
+    marker = '# Scratch area used by the specification release workflow.'
+    if marker in text:
+        text = text[: text.index(marker)].rstrip() + '\n'
+    return text
+
+
 def desired_files() -> dict[Path, bytes]:
     out: dict[Path, bytes] = {}
 
@@ -285,9 +310,10 @@ def desired_files() -> dict[Path, bytes]:
             data = (REPO / rel).read_bytes()
         if isinstance(data, str):
             data = _bytes(data)
-        out[Path(rel)] = data
+        out[Path(rel)] = _normalise(rel, data)
 
     add('.markdownlint-cli2.yaml')
+    add('.gitignore', transform_gitignore(_read('.gitignore')))
     add('.github/puppeteer-config.json')
     add('.github/ISSUE_TEMPLATE/spec-feedback.yml')
     add('.github/pull_request_template.md', transform_pr_template(_read('.github/pull_request_template.md')))
