@@ -1,0 +1,7 @@
+# Bundle payloads for the private review repository are opaque byte-for-byte
+# copies whose SHA-256 digests are recorded in release/private-repo/manifest.json
+# and verified by expand_bundle.py and validate_bundle.py. Git must never
+# normalize their line endings: on a fresh clone with core.autocrlf=true every
+# digest would otherwise fail, and the destination files are consumed by Linux
+# Actions runners that require LF.
+release/private-repo/files/** -text

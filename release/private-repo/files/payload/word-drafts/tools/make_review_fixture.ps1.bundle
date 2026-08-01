@@ -1,0 +1,93 @@
+<#
+.SYNOPSIS
+    Produce a marked-up copy of a generated document, using Microsoft Word.
+
+.DESCRIPTION
+    The ingest direction has to be tested against markup Word actually writes, not against
+    markup we think Word writes. This script takes a generated document, opens it in Word
+    with change tracking on, makes a few edits and leaves a few comments, and saves the
+    result somewhere harmless.
+
+    It doubles as the proof that `w14:paraId` survives a real edit-and-save round trip,
+    which the whole reverse map rests on: run it, then compare the ids in the copy against
+    the ids in the original.
+
+    Requires Microsoft Word, so it is a local-only tool.
+
+.EXAMPLE
+    pwsh word-drafts/tools/make_review_fixture.ps1 `
+        -Path word-drafts/OPC-UA-Schema-Registry.docx -Out $env:TEMP/reviewed.docx `
+        -Edits 'stand-alone server capability=>standalone Server capability' `
+        -Comments 'JSON Schema is a first-class=>Is this still true for v1.1?'
+#>
+[CmdletBinding()]
+param(
+    [Parameter(Mandatory = $true)][string]$Path,
+    [Parameter(Mandatory = $true)][string]$Out,
+    [string]$Reviewer = 'Test Reviewer',
+
+    # Each entry is "find text=>replacement". An empty replacement deletes the text.
+    [string[]]$Edits = @(),
+
+    # Each entry is "find text=>comment body".
+    [string[]]$Comments = @()
+)
+
+$ErrorActionPreference = 'Stop'
+
+function Split-Instruction($s) {
+    $i = $s.IndexOf('=>')
+    if ($i -lt 0) { throw "instruction has no '=>': $s" }
+    return @($s.Substring(0, $i), $s.Substring($i + 2))
+}
+
+$src = (Resolve-Path -LiteralPath $Path).Path
+$dst = [System.IO.Path]::GetFullPath($Out)
+Copy-Item -LiteralPath $src -Destination $dst -Force
+
+$word = $null
+$doc = $null
+$originalUser = $null
+try {
+    $word = New-Object -ComObject Word.Application
+    $word.Visible = $false
+    $word.DisplayAlerts = 0
+    $originalUser = $word.UserName
+    $word.UserName = $Reviewer
+
+    $doc = $word.Documents.Open($dst, [ref]$false, [ref]$false)
+    $doc.TrackRevisions = $true
+
+    foreach ($e in $Edits) {
+        $parts = Split-Instruction $e
+        $find = $doc.Content.Find
+        $find.ClearFormatting()
+        $find.Replacement.ClearFormatting()
+        $ok = $find.Execute($parts[0], $true, $false, $false, $false, $false,
+                            $true, 1, $false, $parts[1], 1)
+        if (-not $ok) { throw "edit text not found: $($parts[0])" }
+    }
+
+    foreach ($c in $Comments) {
+        $parts = Split-Instruction $c
+        $find = $doc.Content.Find
+        $find.ClearFormatting()
+        $found = $find.Execute($parts[0], $true, $false, $false, $false, $false,
+                               $true, 1, $false)
+        if (-not $found) { throw "comment anchor not found: $($parts[0])" }
+        $null = $doc.Comments.Add($find.Parent, $parts[1])
+    }
+
+    $doc.Save()
+    Write-Host ("marked up {0}: {1} revision(s), {2} comment(s)" -f
+                [System.IO.Path]::GetFileName($dst), $doc.Revisions.Count,
+                $doc.Comments.Count)
+}
+finally {
+    if ($doc) { $doc.Close([ref]$false) | Out-Null }
+    if ($word) {
+        if ($originalUser) { $word.UserName = $originalUser }
+        $word.Quit()
+        [void][Runtime.InteropServices.Marshal]::ReleaseComObject($word)
+    }
+}

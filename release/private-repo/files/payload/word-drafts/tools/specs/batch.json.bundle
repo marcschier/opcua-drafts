@@ -1,0 +1,6 @@
+{
+  "_comment": "Private repository conversion batch. Add one <spec-id>.json per submitted specification and list converted ids here once the committed Word rendering exists.",
+  "converted": [],
+  "ready": [],
+  "notAFit": []
+}

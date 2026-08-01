@@ -1,0 +1,40 @@
+# markdownlint-cli2 configuration for the OPC UA specification drafts.
+# Docs: https://github.com/DavidAnson/markdownlint-cli2
+# Rules are tuned to this repo's conventions; run locally with:  npx markdownlint-cli2 "**/*.md"
+
+config:
+  default: true
+
+  # Prose is wrapped at logical/paragraph boundaries (one line per paragraph), not a fixed column.
+  MD013: false
+
+  # Specs use inline HTML: <a id="..."> anchors, <br> in tables/diagrams, and <!-- --> annotations.
+  MD033: false
+
+  # The drafts use a "**Lead-in.**" bold sentence style that is intentionally not a heading.
+  MD036: false
+
+  # Table pipes in the generated node tables are not column-aligned; GFM does not require it.
+  MD060: false
+
+  # Generated annex/addendum sections legitimately repeat headings (e.g. per-scenario tables);
+  # only forbid duplicates among sibling headings.
+  MD024:
+    siblings_only: true
+
+  # Allow both "*" and "-" bullet styles across the drafts and generated docs.
+  MD004:
+    style: consistent
+
+  # First line need not be a top-level heading (some generated fragments start with an anchor).
+  MD041: false
+
+globs:
+  - "**/*.md"
+
+ignores:
+  - "node_modules"
+  - "**/node_modules/**"
+  - "**/tools/ref/**"
+  # Pure-generated node-reference tables (emitted by build_model.py); fix at the generator, not here.
+  - "**/tools/model-reference.md"

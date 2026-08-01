@@ -1,0 +1,956 @@
+#!/usr/bin/env python3
+"""Move draft specifications between the public and private review repositories.
+
+The manifest is the source of truth for which files belong to a specification.
+This tool only repairs repository structure around that move: aggregate
+validators, Markdown links, Word conversion batches, and agent allow-lists.
+"""
+
+from __future__ import annotations
+
+import argparse
+import base64
+import json
+import os
+import re
+import shutil
+import sys
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Iterable
+
+HERE = Path(__file__).resolve().parent
+REPO = HERE.parent.parent
+
+sys.path.insert(0, str(HERE))
+try:
+    from manifest import load as load_manifest  # type: ignore
+except ImportError as exc:  # pragma: no cover - exercised when the parallel task has not landed.
+    raise SystemExit(
+        "release/tools/manifest.py is required. "
+        "It is owned by the manifest task and was not found."
+    ) from exc
+
+
+VALIDATOR_MARKER = "release-spec-validator"
+MD_MARKER = "release-spec-link"
+AGGREGATE_VALIDATORS = (
+    "core-specs/extras/validate_all.py",
+    "cloud-specs/validate_all.py",
+    "metaverse-specs/validate_all.py",
+)
+WORD_BATCH = "word-drafts/tools/specs/batch.json"
+AGENT_TASK = ".github/workflows/agent-task.yml"
+CANONICAL_ALLOWED_PATHS = [
+    "core-specs",
+    "cloud-specs",
+    "metaverse-specs",
+    "wot-specs",
+    "companion-specs",
+    "word-drafts/tools",
+]
+CANONICAL_WORD_ORDER = [
+    "openusd-binding",
+    "openusd-scene",
+    "xregistry",
+    "observability-export",
+    "wot-connectivity",
+    "wot-binding",
+    "schema-registry",
+    "generators",
+    "data-channels",
+    "avro-encoding",
+    "arrow-encoding",
+]
+
+
+def rel(path: Path) -> str:
+    return path.resolve().relative_to(REPO).as_posix()
+
+
+def repo_path(repo_rel: str) -> Path:
+    return REPO / Path(*repo_rel.split("/"))
+
+
+def norm(repo_rel: str) -> str:
+    return repo_rel.replace("\\", "/").strip("/")
+
+
+def b64(text: str) -> str:
+    return base64.b64encode(text.encode("utf-8")).decode("ascii")
+
+
+def unb64(text: str) -> str:
+    return base64.b64decode(text.encode("ascii")).decode("utf-8")
+
+
+def read_text(path: Path) -> str:
+    with path.open("r", encoding="utf-8", newline="") as handle:
+        return handle.read()
+
+
+def write_text(path: Path, text: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", encoding="utf-8", newline="") as handle:
+        handle.write(text)
+
+
+def split_line_ending(line: str) -> tuple[str, str]:
+    if line.endswith("\r\n"):
+        return line[:-2], "\r\n"
+    if line.endswith("\n"):
+        return line[:-1], "\n"
+    if line.endswith("\r"):
+        return line[:-1], "\r"
+    return line, ""
+
+
+def match_eol(text: str, template: str) -> str:
+    if "\r\n" in template:
+        return text.replace("\n", "\r\n")
+    return text
+
+
+def is_probably_text(path: Path) -> bool:
+    return path.suffix.lower() in {
+        ".md",
+        ".py",
+        ".json",
+        ".yml",
+        ".yaml",
+        ".txt",
+        ".ps1",
+        ".toml",
+        ".csv",
+    }
+
+
+def iter_repo_files() -> Iterable[Path]:
+    ignored_dirs = {".git", ".release-spec-work"}
+    for root, dirs, files in os.walk(REPO):
+        dirs[:] = [d for d in dirs if d not in ignored_dirs]
+        for name in files:
+            yield Path(root) / name
+
+
+@dataclass
+class TextChange:
+    path: str
+    old: str
+    new: str
+    summary: str
+
+
+@dataclass
+class Plan:
+    action: str
+    spec_id: str
+    closure: list[str]
+    files: list[str]
+    export_files: list[str]
+    vendor_files: list[str]
+    text_changes: list[TextChange]
+    manual_steps: list[str]
+    export_dir: Path | None = None
+    import_dir: Path | None = None
+
+
+def moving_specs(manifest, spec_id: str) -> list[str]:
+    ids = [norm(s) for s in manifest.closure(spec_id)]
+    if spec_id not in ids:
+        ids.insert(0, spec_id)
+    return ids
+
+
+def _own_file_set_from_dir(base: Path, spec: dict) -> set[str]:
+    keep_public = [norm(path) for path in spec.get("keepPublic", [])]
+    files: set[str] = set()
+    for move in spec.get("move", []):
+        move = norm(move)
+        root = base / Path(*move.split("/"))
+        if root.is_file():
+            candidates = [move]
+        elif root.exists():
+            candidates = [
+                norm((Path(move) / path.relative_to(root)).as_posix())
+                for path in root.rglob("*")
+                if path.is_file()
+            ]
+        else:
+            candidates = []
+        for candidate in candidates:
+            if not any(belongs_to(candidate, {keep}, []) for keep in keep_public):
+                files.add(candidate)
+    return files
+
+
+def spec_file_set(manifest, spec_id: str, import_dir: Path | None = None) -> list[str]:
+    files = sorted(norm(p) for p in manifest.file_set(spec_id))
+    if files or import_dir is None:
+        return files
+    restored: set[str] = set()
+    for sid in moving_specs(manifest, spec_id):
+        restored.update(_own_file_set_from_dir(import_dir, manifest.spec(sid)))
+    return sorted(restored)
+
+
+def spec_export_set(manifest, spec_id: str) -> list[str]:
+    export_set = getattr(manifest, "export_set", None)
+    if export_set is None:
+        raise RuntimeError("release/tools/manifest.py must expose export_set(spec_id)")
+    return sorted(norm(p) for p in export_set(spec_id))
+
+
+def submitted(manifest, spec_id: str) -> bool:
+    return bool(manifest.spec(spec_id).get("submitted", True))
+
+
+def public_state(manifest, spec_id: str) -> bool:
+    return manifest.spec(spec_id).get("state", "public") == "public"
+
+
+def vendor_specs(manifest, spec_id: str) -> list[str]:
+    vendors: list[str] = []
+    seen: set[str] = set()
+
+    def visit_vendor(vendor_id: str) -> None:
+        vendor_id = norm(vendor_id)
+        if vendor_id in seen:
+            return
+        seen.add(vendor_id)
+        vendors.append(vendor_id)
+        for child in manifest.spec(vendor_id).get("vendor", []):
+            visit_vendor(child)
+
+    for moving_id in moving_specs(manifest, spec_id):
+        for vendor_id in manifest.spec(moving_id).get("vendor", []):
+            visit_vendor(vendor_id)
+    return vendors
+
+
+def dependent_specs(manifest, spec_id: str) -> list[str]:
+    dependents = getattr(manifest, "dependents", None)
+    if dependents is None:
+        raise RuntimeError("release/tools/manifest.py must expose dependents(spec_id)")
+    return sorted(norm(sid) for sid in dependents(spec_id) if norm(sid) != spec_id)
+
+
+def public_dependency_blockers(manifest, spec_id: str) -> list[str]:
+    return [
+        sid
+        for sid in dependent_specs(manifest, spec_id)
+        if submitted(manifest, sid) and public_state(manifest, sid)
+    ]
+
+
+def moved_roots(manifest, closure: Iterable[str]) -> list[str]:
+    roots: list[str] = []
+    for sid in closure:
+        spec = manifest.spec(sid)
+        for value in spec.get("move", []):
+            roots.append(norm(value))
+    return sorted(set(roots), key=lambda p: (p.count("/"), p))
+
+
+def belongs_to(path: str, files: set[str], roots: Iterable[str]) -> bool:
+    path = norm(path)
+    if path in files:
+        return True
+    for root in roots:
+        root = norm(root)
+        if path == root or path.startswith(root + "/"):
+            return True
+    return False
+
+
+def resolve_link(markdown_file: str, target: str) -> str | None:
+    target = target.strip()
+    if not target or target.startswith("#"):
+        return None
+    lower = target.lower()
+    if re.match(r"^[a-z][a-z0-9+.-]*:", lower):
+        return None
+    if target.startswith("<") and ">" in target:
+        target = target[1 : target.index(">")]
+    else:
+        target = target.split()[0].strip("'\"")
+    target = target.split("#", 1)[0]
+    if not target:
+        return None
+    base = Path(markdown_file).parent
+    return norm((base / Path(*target.replace("\\", "/").split("/"))).as_posix())
+
+
+def inline_link_destination(body: str) -> str:
+    stripped = body.strip()
+    if stripped.startswith("<") and ">" in stripped:
+        return stripped[1 : stripped.index(">")]
+    return stripped.split()[0].strip("'\"") if stripped else ""
+
+
+def repair_markdown_release(text: str, path: str, files: set[str], roots: list[str]) -> tuple[str, int]:
+    if f"<!-- {MD_MARKER}:" in text:
+        return text, 0
+    count = 0
+
+    def replace_ref(match: re.Match[str]) -> str:
+        nonlocal count
+        original = match.group(0)
+        target = match.group("target")
+        resolved = resolve_link(path, target)
+        if resolved and belongs_to(resolved, files, roots):
+            count += 1
+            return f"<!-- {MD_MARKER}:{b64(original)} --><!-- /{MD_MARKER} -->"
+        return original
+
+    ref_re = re.compile(
+        r"^(?P<indent>[ \t]{0,3})\[(?P<label>[^\]\n]+)\]:[ \t]*(?P<target>\S.*)$",
+        re.MULTILINE,
+    )
+    text = ref_re.sub(replace_ref, text)
+
+    inline_re = re.compile(r"(?P<bang>!?)\[(?P<label>[^\]\n]+)\]\((?P<body>[^)\n]+)\)")
+
+    def replace_inline(match: re.Match[str]) -> str:
+        nonlocal count
+        original = match.group(0)
+        target = inline_link_destination(match.group("body"))
+        resolved = resolve_link(path, target)
+        if resolved and belongs_to(resolved, files, roots):
+            count += 1
+            visible = "" if match.group("bang") else match.group("label")
+            return f"<!-- {MD_MARKER}:{b64(original)} -->{visible}<!-- /{MD_MARKER} -->"
+        return original
+
+    text = inline_re.sub(replace_inline, text)
+    return text, count
+
+
+def repair_markdown_return(text: str) -> tuple[str, int]:
+    pattern = re.compile(
+        rf"<!-- {re.escape(MD_MARKER)}:([A-Za-z0-9+/=]+) -->.*?<!-- /{re.escape(MD_MARKER)} -->",
+        re.DOTALL,
+    )
+    count = 0
+
+    def restore(match: re.Match[str]) -> str:
+        nonlocal count
+        count += 1
+        return unb64(match.group(1))
+
+    return pattern.sub(restore, text), count
+
+
+def repair_markdown_reverse_lines_release(text: str, moved_dirs: set[str]) -> tuple[str, int]:
+    if not moved_dirs:
+        return text, 0
+    count = 0
+    out: list[str] = []
+    moved_dir_tokens = {token.strip("/").lower() + "/" for token in moved_dirs if token}
+    note = "*Under OPC Foundation review; temporarily maintained outside this repository.*"
+    for line in text.splitlines(keepends=True):
+        if f"<!-- {MD_MARKER}:" in line:
+            out.append(line)
+            continue
+        raw, newline = split_line_ending(line)
+        stripped = raw.lstrip()
+        haystack = raw.lower()
+        is_list_item = stripped.startswith(("- ", "* "))
+        has_markdown_link = "](" in raw
+        names_moved_dir = any(
+            f"`{token}`" in haystack or f"`{token.rstrip('/')}`" in haystack
+            for token in moved_dir_tokens
+        )
+        if is_list_item and names_moved_dir and not has_markdown_link:
+            count += 1
+            out.append(f"<!-- {MD_MARKER}:{b64(raw)} -->{note}<!-- /{MD_MARKER} -->{newline}")
+        else:
+            out.append(line)
+    return "".join(out), count
+
+
+def validator_base(path: str) -> Path:
+    # All repository aggregate validators build their child paths from HERE,
+    # where HERE is the directory containing validate_all.py.
+    return repo_path(path).parent
+
+
+def resolved_validator_path(aggregate: str, validator_rel: str) -> str:
+    return norm((Path(aggregate).parent / Path(*validator_rel.split("/"))).as_posix())
+
+
+def repair_validator_release(text: str, aggregate: str, files: set[str], roots: list[str]) -> tuple[str, int]:
+    count = 0
+    out: list[str] = []
+    line_re = re.compile(r"^(\s*)([\"'])([^\"']*validate_[^\"']*\.py)\2(,.*)$")
+    for line in text.splitlines(keepends=True):
+        raw, newline = split_line_ending(line)
+        match = line_re.match(raw)
+        if match:
+            target = resolved_validator_path(aggregate, match.group(3))
+            if belongs_to(target, files, roots):
+                out.append(f"{match.group(1)}# {VALIDATOR_MARKER}:{b64(raw)}{newline}")
+                count += 1
+                continue
+        out.append(line)
+    return "".join(out), count
+
+
+def repair_validator_return(text: str) -> tuple[str, int]:
+    count = 0
+    out: list[str] = []
+    marker_re = re.compile(rf"^(\s*)# {re.escape(VALIDATOR_MARKER)}:([A-Za-z0-9+/=]+)$")
+    for line in text.splitlines(keepends=True):
+        raw, newline = split_line_ending(line)
+        match = marker_re.match(raw)
+        if match:
+            out.append(unb64(match.group(2)) + newline)
+            count += 1
+        else:
+            out.append(line)
+    return "".join(out), count
+
+
+def word_spec_ids(manifest, spec_ids: Iterable[str]) -> list[str]:
+    ids: list[str] = []
+    for sid in spec_ids:
+        for path in manifest.spec(sid).get("wordSpecs", []):
+            ids.append(Path(path).stem)
+    return ids
+
+
+def reverse_reference_tokens(manifest, spec_ids: Iterable[str], roots: Iterable[str]) -> set[str]:
+    tokens = {norm(sid) for sid in spec_ids}
+    tokens.update(Path(root).name for root in roots)
+    for sid in spec_ids:
+        spec = manifest.spec(sid)
+        title = spec.get("title")
+        if isinstance(title, str):
+            tokens.add(title)
+            if "—" in title:
+                tokens.add(title.split("—", 1)[1].strip())
+        for word_spec in spec.get("wordSpecs", []):
+            path = repo_path(norm(word_spec))
+            if not path.exists():
+                continue
+            try:
+                data = json.loads(read_text(path))
+            except (OSError, json.JSONDecodeError):
+                continue
+            identity = data.get("identity", {})
+            if isinstance(identity, dict):
+                for key in ("partNumber", "partName", "subTitle"):
+                    value = identity.get(key)
+                    if isinstance(value, str) and value:
+                        tokens.add(value)
+            for value in data.get("citedAs", []):
+                if isinstance(value, str) and value:
+                    tokens.add(value)
+    return tokens
+
+
+def all_manifest_word_order(manifest) -> list[str]:
+    order: list[str] = []
+
+    def extend_unique(values: Iterable[str]) -> None:
+        for value in values:
+            if value not in order:
+                order.append(value)
+
+    private_batch = REPO / "release" / "private-repo" / "files" / "word-drafts" / "tools" / "specs" / "batch.json"
+    if private_batch.exists():
+        try:
+            converted = json.loads(read_text(private_batch)).get("converted", [])
+            if isinstance(converted, list):
+                extend_unique(str(item) for item in converted)
+        except (OSError, json.JSONDecodeError):
+            pass
+    extend_unique(CANONICAL_WORD_ORDER)
+    for sid in manifest.spec_ids():
+        extend_unique(word_spec_ids(manifest, [sid]))
+    return order
+
+
+def dump_json_like_repo(data) -> str:
+    return json.dumps(data, indent=2, ensure_ascii=False) + "\n"
+
+
+def repair_word_batch_release(text: str, departing_word_ids: set[str]) -> tuple[str, int]:
+    data = json.loads(text)
+    converted = data.get("converted", [])
+    new_converted = [item for item in converted if item not in departing_word_ids]
+    if new_converted == converted:
+        return text, 0
+    data["converted"] = new_converted
+    return match_eol(dump_json_like_repo(data), text), len(converted) - len(new_converted)
+
+
+def repair_word_batch_return(text: str, manifest, returning_spec_ids: list[str]) -> tuple[str, int]:
+    data = json.loads(text)
+    converted = list(data.get("converted", []))
+    additions = [item for item in word_spec_ids(manifest, returning_spec_ids) if item not in converted]
+    present = set(converted) | set(additions)
+    desired = all_manifest_word_order(manifest)
+    ordered = [item for item in desired if item in present]
+    ordered.extend(item for item in converted if item in present and item not in ordered)
+    ordered.extend(item for item in additions if item not in ordered)
+    if ordered == converted and not additions:
+        return text, 0
+    data["converted"] = ordered
+    return match_eol(dump_json_like_repo(data), text), len(additions)
+
+
+def parse_allowed_paths(text: str) -> list[str]:
+    match = re.search(r"(?m)^  ALLOWED_PATHS: >-\n(?P<body>(?:    .+\n)+)", text)
+    if not match:
+        return []
+    return [line.strip() for line in match.group("body").splitlines() if line.strip()]
+
+
+def replace_allowed_paths(text: str, values: list[str]) -> str:
+    body = "".join(f"    {value}\n" for value in values)
+    replaced = re.sub(r"(?m)^  ALLOWED_PATHS: >-\n(?:    .+\n)+", f"  ALLOWED_PATHS: >-\n{body}", text)
+    return match_eol(replaced, text)
+
+
+def tree_has_files(tree: str, moving: set[str], extra_present: set[str] | None = None) -> bool:
+    prefix = norm(tree) + "/"
+    extra_present = extra_present or set()
+    for path in extra_present:
+        if path == tree or path.startswith(prefix):
+            return True
+    root = repo_path(tree)
+    if not root.exists():
+        return False
+    for file in root.rglob("*"):
+        if file.is_file():
+            r = rel(file)
+            if r not in moving:
+                return True
+    return False
+
+
+def repair_agent_task_release(text: str, moving: set[str]) -> tuple[str, int]:
+    current = parse_allowed_paths(text)
+    if not current:
+        return text, 0
+    kept = [item for item in current if tree_has_files(item, moving)]
+    if kept == current:
+        return text, 0
+    return replace_allowed_paths(text, kept), len(current) - len(kept)
+
+
+def repair_agent_task_return(text: str, import_files: set[str]) -> tuple[str, int]:
+    current = parse_allowed_paths(text)
+    if not current:
+        return text, 0
+    present = set(current)
+    for item in CANONICAL_ALLOWED_PATHS:
+        if item not in present and tree_has_files(item, set(), import_files):
+            present.add(item)
+    ordered = [item for item in CANONICAL_ALLOWED_PATHS if item in present]
+    ordered.extend(item for item in current if item not in ordered)
+    if ordered == current:
+        return text, 0
+    return replace_allowed_paths(text, ordered), len(ordered) - len(current)
+
+
+def add_change(changes: list[TextChange], path: str, old: str, new: str, summary: str) -> None:
+    if old != new:
+        changes.append(TextChange(path, old, new, summary))
+
+
+def planned_text(path: str, changes: list[TextChange]) -> str:
+    for change in reversed(changes):
+        if change.path == path:
+            return change.new
+    return read_text(repo_path(path))
+
+
+def text_repairs_release(manifest, closure: list[str], files: list[str], roots: list[str]) -> list[TextChange]:
+    moving = set(files)
+    changes: list[TextChange] = []
+    markdown_reverse_refs = {
+        norm(path)
+        for sid in closure
+        for path in manifest.spec(sid).get("reverseRefs", [])
+        if norm(path).endswith(".md")
+    }
+    moving_spec_ids = {sid.lower() for sid in closure}
+    moved_dirs = {
+        Path(root).name
+        for root in roots
+        if Path(root).name.lower() in moving_spec_ids
+        and any(path == root or path.startswith(root.rstrip("/") + "/") for path in moving)
+    }
+
+    for aggregate in AGGREGATE_VALIDATORS:
+        path = repo_path(aggregate)
+        if not path.exists() or aggregate in moving:
+            continue
+        old = read_text(path)
+        new, count = repair_validator_release(old, aggregate, moving, roots)
+        add_change(changes, aggregate, old, new, f"comment out {count} departed validator(s)")
+
+    batch = repo_path(WORD_BATCH)
+    if batch.exists() and WORD_BATCH not in moving:
+        old = read_text(batch)
+        departing = set(word_spec_ids(manifest, closure))
+        new, count = repair_word_batch_release(old, departing)
+        add_change(changes, WORD_BATCH, old, new, f"remove {count} Word conversion batch entrie(s)")
+
+    for path in iter_repo_files():
+        r = rel(path)
+        if r in moving or path.suffix.lower() != ".md":
+            continue
+        old = planned_text(r, changes) if any(c.path == r for c in changes) else read_text(path)
+        new, count = repair_markdown_release(old, r, moving, roots)
+        line_count = 0
+        if r in markdown_reverse_refs:
+            new, line_count = repair_markdown_reverse_lines_release(new, moved_dirs)
+        total = count + line_count
+        add_change(
+            changes,
+            r,
+            old,
+            new,
+            f"neutralize {count} Markdown link(s) and {line_count} reverse-reference line(s) into private specs",
+        )
+
+    workflow = repo_path(AGENT_TASK)
+    if workflow.exists() and AGENT_TASK not in moving:
+        old = planned_text(AGENT_TASK, changes) if any(c.path == AGENT_TASK for c in changes) else read_text(workflow)
+        new, count = repair_agent_task_release(old, moving)
+        add_change(changes, AGENT_TASK, old, new, f"remove {count} empty ALLOWED_PATHS entrie(s)")
+
+    return changes
+
+
+def text_repairs_return(manifest, closure: list[str], files: list[str], import_dir: Path | None) -> list[TextChange]:
+    changes: list[TextChange] = []
+    import_files = set(files)
+
+    for aggregate in AGGREGATE_VALIDATORS:
+        path = repo_path(aggregate)
+        if not path.exists():
+            continue
+        old = read_text(path)
+        new, count = repair_validator_return(old)
+        add_change(changes, aggregate, old, new, f"restore {count} validator entrie(s)")
+
+    batch = repo_path(WORD_BATCH)
+    if batch.exists():
+        old = read_text(batch)
+        new, count = repair_word_batch_return(old, manifest, closure)
+        add_change(changes, WORD_BATCH, old, new, f"restore {count} Word conversion batch entrie(s)")
+
+    for path in iter_repo_files():
+        if path.suffix.lower() != ".md":
+            continue
+        r = rel(path)
+        old = planned_text(r, changes) if any(c.path == r for c in changes) else read_text(path)
+        new, count = repair_markdown_return(old)
+        add_change(changes, r, old, new, f"restore {count} Markdown link(s)")
+
+    workflow = repo_path(AGENT_TASK)
+    if workflow.exists():
+        old = planned_text(AGENT_TASK, changes) if any(c.path == AGENT_TASK for c in changes) else read_text(workflow)
+        new, count = repair_agent_task_return(old, import_files)
+        add_change(changes, AGENT_TASK, old, new, f"restore {count} ALLOWED_PATHS entrie(s)")
+
+    return changes
+
+
+def manual_steps_release(manifest, closure: list[str], changes: list[TextChange], moving: set[str]) -> list[str]:
+    changed = {change.path for change in changes}
+    manual: list[str] = []
+    automatically_handled = set(AGGREGATE_VALIDATORS) | {WORD_BATCH, AGENT_TASK}
+    for sid in closure:
+        for path in manifest.spec(sid).get("reverseRefs", []):
+            path = norm(path)
+            if path.endswith(".md"):
+                continue
+            if path in moving or path in changed or path in automatically_handled:
+                continue
+            p = repo_path(path)
+            if p.exists():
+                manual.append(
+                    f"{path}: reverse reference to {sid} is outside the automated Markdown, "
+                    "validator, Word batch, and ALLOWED_PATHS repairs"
+                )
+    return sorted(set(manual))
+
+
+def manual_steps_return_vendors(vendor_files: list[str], import_dir: Path | None, changes: list[TextChange]) -> list[str]:
+    if import_dir is None:
+        return []
+    planned = {change.path: change.new.encode("utf-8") for change in changes}
+    manual: list[str] = []
+    for path in vendor_files:
+        public = repo_path(path)
+        private = import_dir / Path(*path.split("/"))
+        if not private.exists():
+            manual.append(f"{path}: vendored file is missing from the private import; cannot compare it")
+            continue
+        if path in planned:
+            public_bytes = planned[path]
+        elif public.exists():
+            public_bytes = public.read_bytes()
+        else:
+            manual.append(f"{path}: vendored file is missing from the public tree; cannot compare it")
+            continue
+        if public_bytes != private.read_bytes():
+            manual.append(
+                f"{path}: vendored dependency differs between private import and public tree; "
+                "review manually rather than overwriting the public copy"
+            )
+    return manual
+
+
+def relevant_manifest_problems(action: str, problems: list[str], files: list[str], roots: list[str]) -> list[str]:
+    if action != "return":
+        return problems
+    expected_missing = set(files)
+    filtered: list[str] = []
+    for problem in problems:
+        match = re.search(r"path does not exist: (.+)$", problem)
+        if match and belongs_to(match.group(1), expected_missing, roots):
+            continue
+        filtered.append(problem)
+    return filtered
+
+
+def build_plan(manifest, action: str, spec_id: str, export_dir: str | None, import_dir: str | None) -> Plan:
+    closure = moving_specs(manifest, spec_id)
+    import_path = Path(import_dir).resolve() if import_dir else None
+    files = spec_file_set(manifest, spec_id, import_path if action == "return" else None)
+    export_files = spec_export_set(manifest, spec_id)
+    vendor_files = sorted(set(export_files) - set(files))
+    roots = moved_roots(manifest, closure)
+    if action == "release":
+        changes = text_repairs_release(manifest, closure, files, roots)
+        manual = manual_steps_release(manifest, closure, changes, set(files))
+        if not submitted(manifest, spec_id):
+            manual.insert(
+                0,
+                f"{spec_id}: submitted is false; this is a shared dependency that is vendored rather than released",
+            )
+        return Plan(
+            action,
+            spec_id,
+            closure,
+            files,
+            export_files,
+            vendor_files,
+            changes,
+            manual,
+            Path(export_dir).resolve() if export_dir else None,
+        )
+    changes = text_repairs_return(manifest, closure, files, import_path)
+    manual = manual_steps_return_vendors(vendor_files, import_path, changes)
+    return Plan(action, spec_id, closure, files, export_files, vendor_files, changes, manual, None, import_path)
+
+
+def print_status(manifest) -> int:
+    problems = manifest.validate()
+    for spec_id in manifest.spec_ids():
+        spec = manifest.spec(spec_id)
+        try:
+            move_count = len(spec_file_set(manifest, spec_id))
+            vendor_count = len(set(spec_export_set(manifest, spec_id)) - set(spec_file_set(manifest, spec_id)))
+            dependents = ", ".join(dependent_specs(manifest, spec_id)) or "-"
+        except RuntimeError as exc:
+            print(str(exc), file=sys.stderr)
+            return 2
+        vendors = ", ".join(vendor_specs(manifest, spec_id)) or "-"
+        print(
+            f"{spec_id}\t{spec.get('state', '(unknown)')}\t"
+            f"submitted={submitted(manifest, spec_id)}\t"
+            f"moves={move_count}\tvendors={vendor_count} ({vendors})\t"
+            f"dependents={dependents}"
+        )
+    if problems:
+        print("Manifest is invalid:", file=sys.stderr)
+        for problem in problems:
+            print(f"  - {problem}", file=sys.stderr)
+        return 2
+    return 0
+
+
+def print_plan(plan: Plan, dry_run: bool) -> None:
+    prefix = "Would" if dry_run else "Will"
+    print(f"{prefix} {plan.action} {plan.spec_id}")
+    if plan.closure != [plan.spec_id]:
+        print("Closure:")
+        for sid in plan.closure:
+            print(f"  {sid}")
+    if plan.action == "release":
+        if plan.export_dir:
+            print(f"{prefix} export {len(plan.export_files)} file(s) to {plan.export_dir}")
+        else:
+            print("No export directory supplied")
+        if plan.vendor_files:
+            print(f"{prefix} vendor {len(plan.vendor_files)} file(s) into the private export:")
+            for path in plan.vendor_files:
+                print(f"  {path}")
+        print(f"{prefix} remove {len(plan.files)} file(s) from the public tree:")
+    else:
+        if plan.import_dir:
+            print(f"{prefix} import {len(plan.files)} file(s) from {plan.import_dir}")
+        else:
+            print("No import directory supplied")
+        print(f"{prefix} restore {len(plan.files)} file(s) to the public tree:")
+    for path in plan.files:
+        print(f"  {path}")
+    if plan.text_changes:
+        print(f"{prefix} modify {len(plan.text_changes)} support file(s):")
+        for change in plan.text_changes:
+            print(f"  {change.path}: {change.summary}")
+    if plan.manual_steps:
+        print("Required manual steps:")
+        for step in plan.manual_steps:
+            print(f"  - {step}")
+
+
+def copy_to_export(files: list[str], export_dir: Path) -> None:
+    for path in files:
+        src = repo_path(path)
+        if not src.exists():
+            raise FileNotFoundError(f"cannot export missing file: {path}")
+    for path in files:
+        src = repo_path(path)
+        dest = export_dir / Path(*path.split("/"))
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(src, dest)
+
+
+def copy_from_import(files: list[str], import_dir: Path) -> None:
+    missing = [path for path in files if not (import_dir / Path(*path.split("/"))).exists()]
+    if missing:
+        raise FileNotFoundError("import directory is missing: " + ", ".join(missing))
+    for path in files:
+        src = import_dir / Path(*path.split("/"))
+        dest = repo_path(path)
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(src, dest)
+
+
+def prune_empty_dirs(start: Path) -> None:
+    current = start
+    while current != REPO and current.exists():
+        try:
+            current.rmdir()
+        except OSError:
+            break
+        current = current.parent
+
+
+def delete_public_files(files: list[str]) -> None:
+    for path in sorted(files, key=lambda p: p.count("/"), reverse=True):
+        p = repo_path(path)
+        if p.exists():
+            p.unlink()
+            prune_empty_dirs(p.parent)
+
+
+def apply_text_changes(changes: list[TextChange]) -> dict[str, str]:
+    backups: dict[str, str] = {}
+    for change in changes:
+        backups[change.path] = change.old
+        write_text(repo_path(change.path), change.new)
+    return backups
+
+
+def restore_text_backups(backups: dict[str, str]) -> None:
+    for path, content in backups.items():
+        write_text(repo_path(path), content)
+
+
+def apply_plan(plan: Plan) -> int:
+    if plan.manual_steps:
+        print_plan(plan, dry_run=False)
+        print("Aborting because manual steps are required.", file=sys.stderr)
+        return 3
+    if plan.action == "release" and not plan.export_dir:
+        print("Refusing a real release without --export; otherwise deleted files would not be staged.", file=sys.stderr)
+        return 2
+    if plan.action == "return" and not plan.import_dir:
+        print("Refusing a real return without --import; missing files cannot be restored safely.", file=sys.stderr)
+        return 2
+
+    backups: dict[str, str] = {}
+    try:
+        if plan.action == "release":
+            assert plan.export_dir is not None
+            copy_to_export(plan.export_files, plan.export_dir)
+            backups = apply_text_changes(plan.text_changes)
+            delete_public_files(plan.files)
+        else:
+            assert plan.import_dir is not None
+            copy_from_import(plan.files, plan.import_dir)
+            backups = apply_text_changes(plan.text_changes)
+    except Exception as exc:  # noqa: BLE001 - rollback must catch filesystem failures.
+        restore_text_backups(backups)
+        print(f"Failed; restored edited support files: {exc}", file=sys.stderr)
+        return 1
+    return 0
+
+
+def print_dependency_blockers(manifest, spec_id: str, blockers: list[str]) -> None:
+    for blocker in blockers:
+        print(
+            f"Refusing to release {spec_id}: submitted public spec {blocker} closes over it. "
+            f"Run 'python release/tools/release_spec.py release {blocker}' to move both.",
+            file=sys.stderr,
+        )
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    sub = parser.add_subparsers(dest="command", required=True)
+    sub.add_parser("status")
+    for name in ("release", "return"):
+        p = sub.add_parser(name)
+        p.add_argument("spec_id")
+        p.add_argument("--dry-run", action="store_true")
+        if name == "release":
+            p.add_argument("--export")
+        else:
+            p.add_argument("--import", dest="import_dir")
+    args = parser.parse_args(argv)
+
+    manifest = load_manifest()
+    if args.command == "status":
+        return print_status(manifest)
+
+    problems = manifest.validate()
+
+    try:
+        if args.command == "release":
+            blockers = public_dependency_blockers(manifest, args.spec_id)
+            if blockers:
+                print_dependency_blockers(manifest, args.spec_id, blockers)
+                return 4
+        if args.command == "release":
+            plan = build_plan(manifest, "release", args.spec_id, args.export, None)
+        else:
+            plan = build_plan(manifest, "return", args.spec_id, None, args.import_dir)
+    except KeyError as exc:
+        print(f"unknown spec id: {args.spec_id}", file=sys.stderr)
+        return 2
+    except RuntimeError as exc:
+        print(str(exc), file=sys.stderr)
+        return 2
+
+    roots = moved_roots(manifest, plan.closure)
+    problems = relevant_manifest_problems(args.command, problems, plan.files, roots)
+    plan.manual_steps[:0] = [f"manifest validation: {problem}" for problem in problems]
+
+    if args.dry_run:
+        print_plan(plan, dry_run=True)
+        return 3 if plan.manual_steps else 0
+    return apply_plan(plan)
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

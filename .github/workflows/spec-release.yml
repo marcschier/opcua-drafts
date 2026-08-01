@@ -1,0 +1,359 @@
+# Move a submitted specification between the public drafts repository and the private
+# OPC Foundation review repository.
+#
+# The built-in GITHUB_TOKEN is intentionally scoped to this repository. It can open the
+# public pull request, but it cannot read or write OPCF-Members/spec-drafts. Create a
+# repository secret named SPEC_DRAFTS_TOKEN in marcschier/opcua-drafts. Use a
+# fine-grained PAT or GitHub App installation token with access only to
+# OPCF-Members/spec-drafts and these repository permissions: Contents read/write and
+# Pull requests read/write. Metadata read is implicit.
+#
+# Unlike the normal PR validation workflow, the checks in this workflow are blocking.
+# PR validation is advisory because draft authors should see findings without blocking
+# ordinary review. This workflow coordinates two repositories; publishing one side after
+# a failed repair is the dangerous case, so a failed mover or YAML/JSON check stops the
+# run before either pull request is opened.
+
+name: Release submitted specification
+
+on:
+  workflow_dispatch:
+    inputs:
+      spec-id:
+        description: Specification id from release/manifest.json.
+        required: true
+        type: string
+      direction:
+        description: Move to private review, or return from it.
+        required: true
+        type: choice
+        options:
+          - release
+          - return
+      dry-run:
+        description: Plan the move without pushing branches or opening pull requests.
+        required: true
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: spec-release-${{ inputs.spec-id }}
+  cancel-in-progress: false
+
+env:
+  PUBLIC_REPO: marcschier/opcua-drafts
+  PRIVATE_REPO: OPCF-Members/spec-drafts
+  # The repository YAML/JSON checker walks the whole workspace and skips node_modules.
+  # Put scratch checkouts there so the private repository's bootstrap files are not
+  # mistaken for files that belong to this public repository.
+  WORK_DIR: node_modules/spec-release-work
+
+jobs:
+  move:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Validate the request
+        id: request
+        env:
+          SPEC_ID: ${{ inputs.spec-id }}
+          DIRECTION: ${{ inputs.direction }}
+        run: |
+          set -euo pipefail
+          if [[ ! "$SPEC_ID" =~ ^[A-Za-z0-9._-]+$ ]]; then
+            echo "::error::spec-id must contain only letters, digits, dot, underscore and hyphen"
+            exit 1
+          fi
+          case "$DIRECTION" in
+            release|return) ;;
+            *) echo "::error::unknown direction '$DIRECTION'"; exit 1 ;;
+          esac
+          branch="spec-release/$DIRECTION/$SPEC_ID"
+          {
+            echo "public-branch=$branch"
+            echo "private-branch=$branch"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Show manifest status
+        run: python release/tools/release_spec.py status
+
+      - name: Dry run
+        id: dry_run
+        if: ${{ inputs.dry-run }}
+        env:
+          SPEC_ID: ${{ inputs.spec-id }}
+          DIRECTION: ${{ inputs.direction }}
+        run: python release/tools/release_spec.py "$DIRECTION" "$SPEC_ID" --dry-run
+
+      - name: Require the private repository token
+        if: ${{ ! inputs.dry-run }}
+        env:
+          SPEC_DRAFTS_TOKEN: ${{ secrets.SPEC_DRAFTS_TOKEN }}
+        run: |
+          if [ -z "$SPEC_DRAFTS_TOKEN" ]; then
+            echo "::error::Create SPEC_DRAFTS_TOKEN as a repository secret in $PUBLIC_REPO."
+            echo "::error::It must be limited to $PRIVATE_REPO with Contents read/write and Pull requests read/write."
+            exit 1
+          fi
+
+      - name: Start the public branch
+        if: ${{ ! inputs.dry-run }}
+        env:
+          PUBLIC_BRANCH: ${{ steps.request.outputs.public-branch }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B "$PUBLIC_BRANCH"
+          rm -rf "$WORK_DIR"
+          mkdir -p "$WORK_DIR"
+
+      - name: Check out the private repository
+        if: ${{ ! inputs.dry-run }}
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.PRIVATE_REPO }}
+          token: ${{ secrets.SPEC_DRAFTS_TOKEN }}
+          fetch-depth: 0
+          path: ${{ env.WORK_DIR }}/private
+
+      - name: Prepare release from public to private
+        id: prepare_release
+        if: ${{ ! inputs.dry-run && inputs.direction == 'release' }}
+        env:
+          SPEC_ID: ${{ inputs.spec-id }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$WORK_DIR/export"
+          python release/tools/release_spec.py release "$SPEC_ID" --export "$WORK_DIR/export"
+          python .github/scripts/check_yaml_json.py
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          exported = [p for p in Path(os.environ["WORK_DIR"], "export").rglob("*") if p.is_file()]
+          if not exported:
+              raise SystemExit("release export is empty; refusing to open only the public-side removal")
+          PY
+
+      - name: Prepare return from private to public
+        id: prepare_return
+        if: ${{ ! inputs.dry-run && inputs.direction == 'return' }}
+        env:
+          SPEC_ID: ${{ inputs.spec-id }}
+        run: |
+          set -euo pipefail
+          python release/tools/release_spec.py return "$SPEC_ID" --import "$WORK_DIR/private"
+          python .github/scripts/check_yaml_json.py
+
+      - name: Verify repaired public tree
+        id: verify_repairs
+        if: ${{ ! inputs.dry-run }}
+        run: |
+          set -euo pipefail
+          python .github/scripts/check_links.py
+          python .github/scripts/check_section_refs.py
+          python .github/scripts/check_yaml_json.py
+          python - <<'PY'
+          import os
+          import subprocess
+          import sys
+          from pathlib import Path
+
+          skip = {".git", "node_modules", "__pycache__"}
+          validators = []
+          for path in sorted(Path(".").rglob("validate_all.py")):
+              if skip.intersection(path.parts):
+                  continue
+              validators.append(path)
+          for path in validators:
+              print(f"=== {path} --self-contained")
+              subprocess.run([sys.executable, str(path), "--self-contained"], check=True)
+          if not validators:
+              raise SystemExit("no aggregate validate_all.py scripts found")
+          PY
+
+      - name: Publish the private release pull request first
+        id: private_release_pr
+        if: ${{ ! inputs.dry-run && inputs.direction == 'release' }}
+        env:
+          GH_TOKEN: ${{ secrets.SPEC_DRAFTS_TOKEN }}
+          PRIVATE_BRANCH: ${{ steps.request.outputs.private-branch }}
+          SPEC_ID: ${{ inputs.spec-id }}
+        run: |
+          set -euo pipefail
+          cd "$WORK_DIR/private"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git remote set-head origin --auto
+          base=$(git symbolic-ref --short refs/remotes/origin/HEAD | sed 's#^origin/##')
+          git checkout -B "$PRIVATE_BRANCH" "origin/$base"
+          cp -a ../export/. .
+          python - <<'PY'
+          from pathlib import Path
+          missing = []
+          for source in Path("../export").rglob("*"):
+              if source.is_file():
+                  rel = source.relative_to("../export")
+                  if not Path(rel).is_file():
+                      missing.append(str(rel))
+          if missing:
+              raise SystemExit("exported files missing from private checkout: " + ", ".join(missing))
+          PY
+          git add -A
+          if git diff --cached --quiet; then
+            echo "::error::the private repository already contains the exported file set"
+            exit 1
+          fi
+          {
+            printf 'Release %s for OPC Foundation review\n\n' "$SPEC_ID"
+            printf 'Imported from %s by the specification release workflow.\n\n' "$PUBLIC_REPO"
+            printf 'Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n'
+          } > commit-message.txt
+          git commit -F commit-message.txt
+          rm -f commit-message.txt
+          git push --force-with-lease --set-upstream origin "$PRIVATE_BRANCH"
+          body="This pull request receives \`$SPEC_ID\` for OPC Foundation review. Merge it before merging the public removal PR."
+          existing=$(gh pr list --repo "$PRIVATE_REPO" --head "$PRIVATE_BRANCH" --base "$base" --state open --json number --jq '.[0].number // empty')
+          if [ -n "$existing" ]; then
+            gh pr edit "$existing" --repo "$PRIVATE_REPO" --title "Release $SPEC_ID for review" --body "$body"
+            url=$(gh pr view "$existing" --repo "$PRIVATE_REPO" --json url --jq .url)
+          else
+            url=$(gh pr create --repo "$PRIVATE_REPO" --base "$base" --head "$PRIVATE_BRANCH" --title "Release $SPEC_ID for review" --body "$body")
+          fi
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+
+      - name: Publish the public pull request
+        id: public_pr
+        if: ${{ ! inputs.dry-run }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PUBLIC_BRANCH: ${{ steps.request.outputs.public-branch }}
+          SPEC_ID: ${{ inputs.spec-id }}
+          DIRECTION: ${{ inputs.direction }}
+          PRIVATE_RELEASE_URL: ${{ steps.private_release_pr.outputs.url }}
+        run: |
+          set -euo pipefail
+          if [ "$DIRECTION" = "release" ]; then
+            rm -rf "$WORK_DIR"
+          fi
+          git add -A -- . ":(exclude)$WORK_DIR/**"
+          if git diff --cached --quiet; then
+            echo "::error::the public repository has no changes to publish"
+            exit 1
+          fi
+          {
+            if [ "$DIRECTION" = "release" ]; then
+              printf 'Release %s for OPC Foundation review\n\n' "$SPEC_ID"
+              printf 'Removes the submitted specification from the public draft tree after exporting it to %s.\n' "$PRIVATE_REPO"
+              printf '\nPrivate review PR: %s\n' "$PRIVATE_RELEASE_URL"
+            else
+              printf 'Return %s from OPC Foundation review\n\n' "$SPEC_ID"
+              printf 'Restores the reviewed specification from %s.\n' "$PRIVATE_REPO"
+            fi
+            printf '\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n'
+          } > "$WORK_DIR-commit-message.txt"
+          git commit -F "$WORK_DIR-commit-message.txt"
+          rm -f "$WORK_DIR-commit-message.txt"
+          git push --force-with-lease --set-upstream origin "$PUBLIC_BRANCH"
+          if [ "$DIRECTION" = "release" ]; then
+            title="Release $SPEC_ID for OPC Foundation review"
+            body="Exports \`$SPEC_ID\` to \`$PRIVATE_REPO\` and removes the public copy while review is in progress."
+            body="$body"$'\n\n'"Merge the private PR first: $PRIVATE_RELEASE_URL"
+          else
+            title="Return $SPEC_ID from OPC Foundation review"
+            body="Restores \`$SPEC_ID\` from \`$PRIVATE_REPO\`. After this PR exists, the workflow opens the private cleanup PR."
+          fi
+          existing=$(gh pr list --head "$PUBLIC_BRANCH" --base main --state open --json number --jq '.[0].number // empty')
+          if [ -n "$existing" ]; then
+            gh pr edit "$existing" --title "$title" --body "$body"
+            url=$(gh pr view "$existing" --json url --jq .url)
+          else
+            url=$(gh pr create --base main --head "$PUBLIC_BRANCH" --title "$title" --body "$body")
+          fi
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+
+      - name: Publish the private cleanup pull request after public return
+        id: private_return_pr
+        if: ${{ ! inputs.dry-run && inputs.direction == 'return' }}
+        env:
+          GH_TOKEN: ${{ secrets.SPEC_DRAFTS_TOKEN }}
+          PRIVATE_BRANCH: ${{ steps.request.outputs.private-branch }}
+          SPEC_ID: ${{ inputs.spec-id }}
+          PUBLIC_RETURN_URL: ${{ steps.public_pr.outputs.url }}
+        run: |
+          set -euo pipefail
+          cd "$WORK_DIR/private"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git remote set-head origin --auto
+          base=$(git symbolic-ref --short refs/remotes/origin/HEAD | sed 's#^origin/##')
+          git checkout -B "$PRIVATE_BRANCH" "origin/$base"
+          cd "$GITHUB_WORKSPACE"
+          python release/tools/private_cleanup.py "$SPEC_ID" --root "$WORK_DIR/private"
+          cd "$WORK_DIR/private"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "::error::the private repository has no returned files to remove"
+            exit 1
+          fi
+          {
+            printf 'Return %s to the public drafts repository\n\n' "$SPEC_ID"
+            printf 'Removes the private review copy after the public return PR was opened.\n'
+            printf '\nPublic return PR: %s\n\n' "$PUBLIC_RETURN_URL"
+            printf 'Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n'
+          } > commit-message.txt
+          git commit -F commit-message.txt
+          rm -f commit-message.txt
+          git push --force-with-lease --set-upstream origin "$PRIVATE_BRANCH"
+          body="This pull request removes the private review copy of \`$SPEC_ID\`. Merge it after the public return PR: $PUBLIC_RETURN_URL"
+          existing=$(gh pr list --repo "$PRIVATE_REPO" --head "$PRIVATE_BRANCH" --base "$base" --state open --json number --jq '.[0].number // empty')
+          if [ -n "$existing" ]; then
+            gh pr edit "$existing" --repo "$PRIVATE_REPO" --title "Return $SPEC_ID to public drafts" --body "$body"
+            url=$(gh pr view "$existing" --repo "$PRIVATE_REPO" --json url --jq .url)
+          else
+            url=$(gh pr create --repo "$PRIVATE_REPO" --base "$base" --head "$PRIVATE_BRANCH" --title "Return $SPEC_ID to public drafts" --body "$body")
+          fi
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+
+      - name: Summarize
+        if: ${{ always() && ! inputs.dry-run }}
+        env:
+          PUBLIC_URL: ${{ steps.public_pr.outputs.url }}
+          PRIVATE_RELEASE_URL: ${{ steps.private_release_pr.outputs.url }}
+          PRIVATE_RETURN_URL: ${{ steps.private_return_pr.outputs.url }}
+          PREPARE_RELEASE: ${{ steps.prepare_release.outcome }}
+          PREPARE_RETURN: ${{ steps.prepare_return.outcome }}
+          VERIFY_REPAIRS: ${{ steps.verify_repairs.outcome }}
+          PRIVATE_RELEASE: ${{ steps.private_release_pr.outcome }}
+          PUBLIC_PR: ${{ steps.public_pr.outcome }}
+          PRIVATE_RETURN: ${{ steps.private_return_pr.outcome }}
+        run: |
+          {
+            echo "### Specification release workflow"
+            echo
+            echo "#### Step outcomes"
+            echo
+            echo "- Prepare release: ${PREPARE_RELEASE:-skipped}"
+            echo "- Prepare return: ${PREPARE_RETURN:-skipped}"
+            echo "- Verify repairs: ${VERIFY_REPAIRS:-skipped}"
+            echo "- Private release PR: ${PRIVATE_RELEASE:-skipped}"
+            echo "- Public PR: ${PUBLIC_PR:-skipped}"
+            echo "- Private cleanup PR: ${PRIVATE_RETURN:-skipped}"
+            echo
+            echo "#### Pull requests"
+            echo
+            echo "- Public PR: $PUBLIC_URL"
+            if [ -n "$PRIVATE_RELEASE_URL" ]; then echo "- Private release PR: $PRIVATE_RELEASE_URL"; fi
+            if [ -n "$PRIVATE_RETURN_URL" ]; then echo "- Private cleanup PR: $PRIVATE_RETURN_URL"; fi
+          } >> "$GITHUB_STEP_SUMMARY"

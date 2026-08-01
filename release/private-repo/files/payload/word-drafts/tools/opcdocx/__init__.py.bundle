@@ -1,0 +1,17 @@
+"""OPC UA specification -> OPC Foundation Word companion-specification template.
+
+The package performs *template surgery*: it opens the official template package, replaces
+only the body ranges it owns, and repackages. Everything it does not touch — styles,
+numbering, headers, footers, theme, embedded figures — survives byte-for-byte.
+"""
+
+__all__ = [
+    'contract',
+    'oxml',
+    'docmodel',
+    'md_parse',
+    'nodeset_tables',
+    'surgery',
+    'mermaid_pptx',
+    'ole_embed',
+]

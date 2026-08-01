@@ -1,0 +1,419 @@
+#!/usr/bin/env python3
+"""Report or apply drift between shared tooling and the private-repo bundle.
+
+Default mode is report-only:
+
+    python release/private-repo/sync.py
+
+Apply missing or changed bundled files explicitly:
+
+    python release/private-repo/sync.py --apply
+
+The script is stdlib-only and has no network dependency. It intentionally does not delete
+extra files from the bundle; extras are reported so a human can decide whether they are
+private-only support files or stale leftovers.
+"""
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import os
+import sys
+from pathlib import Path
+
+REPO = Path(__file__).resolve().parents[2]
+BASE = Path(__file__).resolve().parent
+BUNDLE = BASE / 'files'
+MANIFEST = BASE / 'manifest.json'
+IGNORE_DIRS = {'__pycache__', '.pytest_cache'}
+IGNORE_SUFFIXES = {'.pyc', '.pyo'}
+
+
+def _read(rel: str) -> str:
+    return (REPO / rel).read_text(encoding='utf-8')
+
+
+def _bytes(text: str) -> bytes:
+    return text.encode('utf-8')
+
+
+def transform_agent_task(text: str) -> str:
+    text = text.replace("""# Paths the agent is allowed to change. `.github/` is absent on purpose: a workflow or CI
+# script the agent wrote would run on the next event with more rights than the agent had,
+# which turns one bad prompt into a permanent foothold.
+env:
+  ALLOWED_PATHS: >-
+    core-specs
+    cloud-specs
+    metaverse-specs
+    wot-specs
+    companion-specs
+    word-drafts/tools
+""", """# Paths the agent is allowed to change. `.github/` is absent on purpose: a workflow or CI
+# script the agent wrote would run on the next event with more rights than the agent had,
+# which turns one bad prompt into a permanent foothold.
+#
+# Private repositories do not necessarily use the public draft repository's tree layout.
+# Set the AGENT_ALLOWED_PATHS repository variable to the exact space-separated source
+# roots for this private repository, plus `word-drafts/tools` if the agent may adjust the
+# Word pipeline. The default is intentionally narrow and safe.
+env:
+  ALLOWED_PATHS: ${{ vars.AGENT_ALLOWED_PATHS || 'word-drafts/tools' }}
+""")
+    text = text.replace('the specification trees and `word-drafts/tools/`', 'the paths listed in `AGENT_ALLOWED_PATHS`')
+    return text
+
+
+def transform_pr_validation(text: str) -> str:
+    text = text.replace("""# Only checks that run on a clean checkout are wired here. Full spec validation and the determinism
+# gate additionally need untracked base data (companion NodeSets under **/tools/ref/ and the base
+# PubSubBinding NodeSet), so they run their self-contained subset / skip cleanly in CI and remain a
+# local gate (see CONTRIBUTING.md).
+""", """# Only checks that run on a clean checkout are wired here. Full spec validation and the determinism
+# gate additionally need untracked base data for some specifications, so CI runs discovered
+# self-contained aggregate validators and lets determinism checks skip cleanly when their inputs are
+# not present. Repository variables name any private-repo-specific roots and requirements.
+""")
+    text = text.replace("""      - run: python .github/scripts/check_section_refs.py
+""", """      - run: python .github/scripts/check_section_refs.py
+        env:
+          SECTION_REF_STRICT_PREFIXES: ${{ vars.SECTION_REF_STRICT_PREFIXES }}
+""")
+    text = text.replace("""      - run: pip install -r core-specs/extras/requirements.txt
+      - run: python core-specs/extras/validate_all.py --self-contained
+      - run: python cloud-specs/validate_all.py --self-contained
+      - run: python metaverse-specs/validate_all.py --self-contained
+""", """      - name: Install validation requirements if present
+        env:
+          VALIDATION_REQUIREMENTS: ${{ vars.VALIDATION_REQUIREMENTS || '' }}
+        run: |
+          for req in $VALIDATION_REQUIREMENTS; do
+            if [ -f "$req" ]; then
+              pip install -r "$req"
+            else
+              echo "validation requirements not present: $req"
+            fi
+          done
+      - run: python .github/scripts/run_self_contained_validators.py
+""")
+    text = text.replace("""      - run: pip install -r core-specs/extras/requirements.txt
+      - run: python .github/scripts/check_determinism.py
+""", """      - name: Install determinism requirements if present
+        env:
+          VALIDATION_REQUIREMENTS: ${{ vars.VALIDATION_REQUIREMENTS || '' }}
+        run: |
+          for req in $VALIDATION_REQUIREMENTS; do
+            if [ -f "$req" ]; then
+              pip install -r "$req"
+            else
+              echo "determinism requirements not present: $req"
+            fi
+          done
+      - run: python .github/scripts/check_determinism.py
+""")
+    return text
+
+
+def transform_needs_pr(text: str) -> str:
+    text = text.replace('You are working in the opcua-drafts repository.', 'You are working in the private OPC UA specification drafts repository.')
+    text = text.replace("""- Change the markdown specification and, where the ask is about the information
+            model, the generator that produces the NodeSet — never the generated NodeSet,
+            CSV or reference tables directly, and never anything under `word-drafts/`
+            except `word-drafts/tools/`. Those are build outputs.""", """- Change the markdown specification and, where the ask is about the information
+            model, the generator that produces the NodeSet — never the generated NodeSet,
+            CSV or reference tables directly, and never anything under `word-drafts/`
+            except `word-drafts/tools/`. Those are build outputs. Stay inside the
+            private repository's `AGENT_ALLOWED_PATHS` allowlist.""")
+    return text
+
+
+def transform_word_review(text: str) -> str:
+    text = text.replace('You are working in the opcua-drafts repository.', 'You are working in the private OPC UA specification drafts repository.')
+    text = text.replace('run: curl -sSL -o reviewed.docx "$URL"', 'run: |\n          curl -sSL -H "Authorization: Bearer ${{ github.token }}" -o reviewed.docx "$URL"')
+    text = text.replace("""- Change the markdown specification, and the *generator* where the ask is about
+            the information model. Never edit a generated NodeSet, CSV, `.docx`,
+            `.docmodel.json` or `.provenance.json` — they are build outputs.""", """- Change the markdown specification, and the *generator* where the ask is about
+            the information model. Never edit a generated NodeSet, CSV, `.docx`,
+            `.docmodel.json` or `.provenance.json` — they are build outputs. Stay inside
+            the private repository's `AGENT_ALLOWED_PATHS` allowlist.""")
+    return text
+
+
+def transform_pr_template(text: str) -> str:
+    return text.replace('the `validate_all.py` for that tree — `core-specs/extras/`, `cloud-specs/` or `metaverse-specs/` — and/or the extension\'s `validate_local.py`', 'the discovered self-contained validators with `.github/scripts/run_self_contained_validators.py` and/or the extension\'s `validate_local.py`')
+
+
+def transform_check_section_refs(text: str) -> str:
+    text = text.replace("""# Trees where an unresolved reference fails the check. Elsewhere findings are printed
+# as advisory notes: a reference whose qualifier sits far from it ("No change to
+# OPC 10000-6 §7.2 is required. … Reverse connect (§7.1.3) …") cannot be classified from
+# a bounded window, and widening the window is what makes the check miss real defects.
+# Opting a tree in is a deliberate act by whoever has verified its references.
+STRICT_PREFIXES = ('metaverse-specs/',)
+""", """# Trees where an unresolved reference fails the check. Elsewhere findings are printed
+# as advisory notes: a reference whose qualifier sits far from it ("No change to
+# OPC 10000-6 §7.2 is required. … Reverse connect (§7.1.3) …") cannot be classified from
+# a bounded window, and widening the window is what makes the check miss real defects.
+# Opting a tree in is a deliberate act by whoever has verified its references. The private
+# repository's spec roots differ from the public draft repository, so set the
+# SECTION_REF_STRICT_PREFIXES repository variable to a space-separated list of roots that
+# should fail the check. If unset, every unresolved reference is advisory.
+_env_strict = os.environ.get('SECTION_REF_STRICT_PREFIXES', '').split()
+STRICT_PREFIXES = tuple(p.strip().rstrip('/').replace('\\\\', '/') + '/'
+                        for p in _env_strict if p.strip())
+""")
+    return text
+
+
+def private_copilot_instructions() -> str:
+    source = _read('.github/copilot-instructions.md')
+    tail = source[source.index('## Voice and tense'):]
+    head = """# Copilot instructions — private OPC UA specification drafts
+
+This private repository carries specifications that have already been submitted for OPC Foundation review. It uses the same contribution model as the public draft repository, but it may not use the same top-level specification trees. Do not assume `core-specs/`, `cloud-specs/` or `metaverse-specs/` exist unless they are present in this repository.
+
+Most specifications are generated from a single source of truth, so the prose, the NodeSet, the NodeId CSV and the Annex tables cannot drift apart. The most common way to break this repository is to hand-edit a generated file.
+
+## Commands
+
+```powershell
+# one-time Word-tooling setup
+pip install -r word-drafts/tools/requirements.txt
+
+# advisory checks used by PR validation
+npx markdownlint-cli2 "**/*.md"
+python .github/scripts/check_links.py
+python .github/scripts/check_section_refs.py
+python .github/scripts/check_yaml_json.py
+python .github/scripts/run_self_contained_validators.py
+python .github/scripts/check_determinism.py
+
+# Word rendering: replace <spec-id> with a config in word-drafts/tools/specs/
+python word-drafts/tools/build_docx.py word-drafts/tools/specs/<spec-id>.json
+python word-drafts/tools/validate_docx.py word-drafts/tools/specs/<spec-id>.json
+python word-drafts/tools/test_validate_docx.py word-drafts/tools/specs/<spec-id>.json
+pwsh word-drafts/tools/finalize_word.ps1 -Path word-drafts/<document>.docx
+```
+
+`run_self_contained_validators.py` discovers aggregate `validate_all.py` entrypoints and runs them with `--self-contained`. If a submitted specification has only a per-extension `validate_local.py`, run that directly. Full validation may require untracked base data; keep those local gates documented next to the specification that needs them.
+
+## Architecture
+
+The active specification roots are a repository-specific allowlist. Keep these in step:
+
+- the `AGENT_ALLOWED_PATHS` repository variable used by `.github/workflows/agent-task.yml`;
+- the `SECTION_REF_STRICT_PREFIXES` repository variable used by section-reference validation;
+- the `VALIDATION_REQUIREMENTS` repository variable if validators need requirements outside `word-drafts/tools/requirements.txt`;
+- the `word-drafts/tools/specs/*.json` Word configs and `word-drafts/tools/specs/batch.json` inventory.
+
+`word-drafts/` holds submission-ready Word documents built into the official OPC Foundation companion specification template. `templates/` holds the template cloned by the Word build. `skills/` holds agent instructions that operate on the drafts.
+
+**Normative / tooling split.** A spec folder holds only the normative documents and generated base artifacts; tooling, descriptors and examples live either beside the spec or in a mirrored `extras/` tree. Locate the generator before assuming where it lives.
+
+**Validation is per-extension.** Each extension owns a validator. Aggregate `validate_all.py` files are convenience entrypoints and must not be assumed to cover other trees.
+
+"""
+    return head + tail
+
+
+RUN_VALIDATORS = r'''#!/usr/bin/env python3
+"""Discover and run self-contained aggregate validators.
+
+The private review repository can hold a different set of specification trees than the
+public draft repository. This script avoids hard-coding that set: it walks the repository
+for aggregate ``validate_all.py`` entrypoints and runs each with ``--self-contained``.
+Per-extension ``validate_local.py`` checks remain local, targeted commands.
+"""
+import os
+import subprocess
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[2]
+SKIP_DIRS = {'.git', 'node_modules', '__pycache__', 'word-drafts', 'templates', 'skills'}
+
+
+def validators():
+    found = []
+    for dirpath, dirnames, filenames in os.walk(ROOT):
+        rel_dir = Path(dirpath).relative_to(ROOT)
+        dirnames[:] = [d for d in dirnames if d not in SKIP_DIRS]
+        if 'validate_all.py' in filenames:
+            found.append(rel_dir / 'validate_all.py')
+    return sorted(found, key=lambda p: p.as_posix())
+
+
+def main():
+    found = validators()
+    if not found:
+        print('run_self_contained_validators: SKIP - no validate_all.py entrypoints found')
+        return 0
+    failed = []
+    for rel in found:
+        print(f'=== {rel.as_posix()} --self-contained ===')
+        code = subprocess.call([sys.executable, str(ROOT / rel), '--self-contained'], cwd=ROOT)
+        if code:
+            failed.append((rel, code))
+    if failed:
+        print('run_self_contained_validators: failures:')
+        for rel, code in failed:
+            print(f'  {rel.as_posix()}: exit {code}')
+        return 1
+    print(f'run_self_contained_validators: OK ({len(found)} aggregate validator(s))')
+    return 0
+
+
+if __name__ == '__main__':
+    raise SystemExit(main())
+'''
+
+PRIVATE_BATCH = b'''{
+  "_comment": "Private repository conversion batch. Add one <spec-id>.json per submitted specification and list converted ids here once the committed Word rendering exists.",
+  "converted": [],
+  "ready": [],
+  "notAFit": []
+}
+'''
+
+
+def desired_files() -> dict[Path, bytes]:
+    out: dict[Path, bytes] = {}
+
+    def add(rel: str, data: bytes | str | None = None) -> None:
+        if data is None:
+            data = (REPO / rel).read_bytes()
+        if isinstance(data, str):
+            data = _bytes(data)
+        out[Path(rel)] = data
+
+    add('.markdownlint-cli2.yaml')
+    add('.github/puppeteer-config.json')
+    add('.github/ISSUE_TEMPLATE/spec-feedback.yml')
+    add('.github/pull_request_template.md', transform_pr_template(_read('.github/pull_request_template.md')))
+    add('.github/copilot-instructions.md', private_copilot_instructions())
+    add('.github/workflows/agent-task.yml', transform_agent_task(_read('.github/workflows/agent-task.yml')))
+    add('.github/workflows/pr-validation.yml', transform_pr_validation(_read('.github/workflows/pr-validation.yml')))
+    add('.github/workflows/needs-pr.yml', transform_needs_pr(_read('.github/workflows/needs-pr.yml')))
+    add('.github/workflows/word-review.yml', transform_word_review(_read('.github/workflows/word-review.yml')))
+    add('.github/workflows/word-drafts-refresh.yml')
+
+    for script in sorted((REPO / '.github' / 'scripts').glob('*.py')):
+        rel = script.relative_to(REPO)
+        key = rel.as_posix()
+        if key == '.github/scripts/check_section_refs.py':
+            add(key, transform_check_section_refs(_read(key)))
+        else:
+            add(key)
+    add('.github/scripts/run_self_contained_validators.py', RUN_VALIDATORS)
+
+    for base in ('skills', 'templates', 'word-drafts/tools'):
+        for p in sorted((REPO / base).rglob('*')):
+            rel = p.relative_to(REPO)
+            if p.is_dir() or any(part in IGNORE_DIRS for part in rel.parts) or p.suffix in IGNORE_SUFFIXES:
+                continue
+            if base == 'word-drafts/tools' and len(rel.parts) >= 4 and rel.parts[:3] == ('word-drafts', 'tools', 'specs'):
+                continue
+            add(rel.as_posix())
+    out[Path('word-drafts/tools/specs/batch.json')] = PRIVATE_BATCH
+    return out
+
+
+def stored_for(destination: Path) -> Path:
+    parts = [('dot-' + part[1:]) if part.startswith('.') else part
+             for part in destination.parts]
+    return Path('payload').joinpath(*parts).with_name(parts[-1] + '.bundle')
+
+
+def desired_manifest(desired: dict[Path, bytes]) -> dict:
+    files = []
+    for destination, data in sorted(desired.items(), key=lambda item: item[0].as_posix()):
+        stored = stored_for(destination)
+        files.append({
+            'stored': stored.as_posix(),
+            'destination': destination.as_posix(),
+            'sha256': hashlib.sha256(data).hexdigest(),
+        })
+    return {'version': 1, 'files': files}
+
+
+def existing_files() -> set[Path]:
+    if not BUNDLE.exists():
+        return set()
+    found = set()
+    for p in BUNDLE.rglob('*'):
+        rel = p.relative_to(BUNDLE)
+        if p.is_dir() or any(part in IGNORE_DIRS for part in rel.parts):
+            continue
+        found.add(rel)
+    return found
+
+
+def write_file(rel: Path, data: bytes) -> None:
+    dest = BUNDLE / rel
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    dest.write_bytes(data)
+
+
+def write_manifest(manifest: dict) -> None:
+    MANIFEST.write_text(json.dumps(manifest, indent=2) + '\n', encoding='utf-8')
+
+
+def manifest_matches(manifest: dict) -> bool:
+    if not MANIFEST.exists():
+        return False
+    try:
+        current = json.loads(MANIFEST.read_text(encoding='utf-8'))
+    except json.JSONDecodeError:
+        return False
+    return current == manifest
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--apply', action='store_true', help='write missing and changed bundle files and manifest')
+    args = parser.parse_args(argv)
+
+    desired = desired_files()
+    manifest = desired_manifest(desired)
+    existing = existing_files()
+    desired_stored = {stored_for(dest): (dest, data) for dest, data in desired.items()}
+    statuses = []
+
+    for stored, (destination, data) in sorted(desired_stored.items(), key=lambda item: item[0].as_posix()):
+        path = BUNDLE / stored
+        label = f'{stored.as_posix()} -> {destination.as_posix()}'
+        if not path.exists():
+            statuses.append(('MISSING', label))
+            if args.apply:
+                write_file(stored, data)
+        elif path.read_bytes() != data:
+            statuses.append(('DIFF', label))
+            if args.apply:
+                write_file(stored, data)
+        else:
+            statuses.append(('OK', label))
+
+    for rel in sorted(existing - set(desired_stored), key=lambda p: p.as_posix()):
+        statuses.append(('EXTRA', rel.as_posix()))
+
+    if not manifest_matches(manifest):
+        statuses.append(('DIFF', 'manifest.json'))
+        if args.apply:
+            write_manifest(manifest)
+
+    drift = [s for s in statuses if s[0] != 'OK']
+    for status, label in statuses:
+        if status != 'OK' or not drift:
+            print(f'{status:7} {label}')
+    if args.apply:
+        print(f'Applied bundle updates; extras are not removed.')
+    elif drift:
+        print('\nRun with --apply to update missing/different files. Review EXTRA files manually.')
+    else:
+        print(f'Bundle is in sync ({len(statuses)} item(s), including manifest).')
+    return 1 if drift and not args.apply else 0
+
+
+if __name__ == '__main__':
+    raise SystemExit(main())
