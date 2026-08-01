@@ -42,14 +42,12 @@
       ]
     },
     "observability-export": {
-      "$comment": "Shared sample/base NodeSet for the Avro (and Arrow) schema generators, not an independently releasable OPC Foundation review submission. Avro's build_schemas.py opens only cloud-specs/observability-export/Opc.Ua.ObservabilityExport.NodeSet2.xml from this tree, but the whole normative folder and its extras mirror are vendored so the copied documents' relative links still resolve on the private side; vendoring the prose without its examples left the private repository with broken links.",
+      "$comment": "Shared sample/base NodeSet for the Avro (and Arrow) schema generators, not an independently releasable OPC Foundation review submission. Only the NodeSet is vendored, because that is the single file Avro's build_schemas.py opens and nothing that moves reads the prose. Vendoring the folder instead copied documents whose relative links pointed at examples that were never exported, so the private repository failed its own link check on arrival.",
       "title": "OPC UA — Observability Export",
       "submitted": false,
       "state": "public",
       "move": [
-        "cloud-specs/observability-export",
-        "cloud-specs/extras/observability-export",
-        "word-drafts/tools/specs/observability-export.json"
+        "cloud-specs/observability-export/Opc.Ua.ObservabilityExport.NodeSet2.xml"
       ],
       "keepPublic": [],
       "closure": [],
@@ -203,22 +201,20 @@
       ]
     },
     "xregistry": {
-      "$comment": "Shared base model, not an independently releasable OPC Foundation submission. It is vendored into private exports that require it, but it stays public because Schema Registry and other public specs subtype it and xRegistry-OPC-UA-Api.md targets xregistry.org.",
+      "$comment": "Shared base model, not an independently releasable OPC Foundation submission. It stays public because Schema Registry and other public specs subtype it and xRegistry-OPC-UA-Api.md targets xregistry.org. Vendored as a closed set: the two generated artifacts so a released NodeSet's RequiredModel on http://opcfoundation.org/UA/xRegistry/ resolves, plus the two specification documents, which released documents link to and which link only to each other and to external URLs. README.md is deliberately excluded because it links onward to Schema Registry and WoT Connectivity, which stay public, and vendoring it would drag an unbounded set of public prose into the private repository.",
       "title": "OPC UA — xRegistry",
       "submitted": false,
       "state": "public",
       "move": [
-        "core-specs/xregistry",
-        "word-drafts/tools/specs/xregistry.json"
-      ],
-      "keepPublic": [
+        "core-specs/xregistry/Opc.Ua.XRegistry.NodeSet2.xml",
+        "core-specs/xregistry/Opc.Ua.XRegistry.NodeIds.csv",
+        "core-specs/xregistry/OPC-UA-xRegistry.md",
         "core-specs/xregistry/xRegistry-OPC-UA-Api.md"
       ],
+      "keepPublic": [],
       "closure": [],
       "vendor": [],
-      "wordSpecs": [
-        "word-drafts/tools/specs/xregistry.json"
-      ],
+      "wordSpecs": [],
       "validateAll": null,
       "reverseRefs": [
         "README.md",
