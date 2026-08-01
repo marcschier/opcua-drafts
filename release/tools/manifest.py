@@ -135,6 +135,12 @@ class Manifest:
             files.update(self._own_export_set(current))
         for current in self.vendor(spec_id):
             files.update(self._own_export_set(current))
+        # Shared tooling is duplicated into the private repository rather than moved: the
+        # public side still needs it for specifications that are not under review, and the
+        # private side needs it because released tooling imports it. Without this the export
+        # carries generators whose `sys.path` insert resolves to nothing.
+        for shared in self.sharedTooling:
+            files.update(_walk_files(shared))
         return sorted(files)
 
     def dependents(self, spec_id: str) -> list[str]:

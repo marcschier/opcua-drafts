@@ -12,6 +12,7 @@ import argparse
 import base64
 import json
 import os
+import posixpath
 import re
 import shutil
 import sys
@@ -278,7 +279,13 @@ def resolve_link(markdown_file: str, target: str) -> str | None:
     if not target:
         return None
     base = Path(markdown_file).parent
-    return norm((base / Path(*target.replace("\\", "/").split("/"))).as_posix())
+    joined = (base / Path(*target.replace("\\", "/").split("/"))).as_posix()
+    # pathlib does not collapse "..", so a cross-tree link such as
+    # ../../wot-specs/WoT-Connectivity/ would otherwise never match a moved path.
+    collapsed = posixpath.normpath(joined)
+    if collapsed == ".." or collapsed.startswith("../"):
+        return None
+    return norm(collapsed)
 
 
 def inline_link_destination(body: str) -> str:
@@ -449,6 +456,41 @@ def reverse_reference_tokens(manifest, spec_ids: Iterable[str], roots: Iterable[
     return tokens
 
 
+def private_batch_path() -> Path | None:
+    """Resolve the bundled private ``batch.json`` through the bundle manifest.
+
+    The bundle stores payload files under neutral paths with an inert suffix so
+    this repository cannot mistake them for its own configuration, so the stored
+    location is not derivable from the destination. ``release/private-repo/manifest.json``
+    is the only source of truth for that mapping; resolving through it means a
+    future restructure of the bundle cannot silently strip the ordering hint.
+    """
+    bundle_manifest = REPO / "release" / "private-repo" / "manifest.json"
+    if not bundle_manifest.exists():
+        return None
+    try:
+        entries = json.loads(read_text(bundle_manifest)).get("files", [])
+    except (OSError, json.JSONDecodeError) as exc:
+        print(f"warning: cannot read the private bundle manifest: {exc}", file=sys.stderr)
+        return None
+    for entry in entries:
+        if entry.get("destination") == "word-drafts/tools/specs/batch.json":
+            stored = REPO / "release" / "private-repo" / "files" / Path(entry["stored"])
+            if stored.exists():
+                return stored
+            print(
+                f"warning: the private bundle manifest points at {entry['stored']}, which is missing",
+                file=sys.stderr,
+            )
+            return None
+    print(
+        "warning: the private bundle no longer carries word-drafts/tools/specs/batch.json; "
+        "Word batch ordering falls back to the canonical order",
+        file=sys.stderr,
+    )
+    return None
+
+
 def all_manifest_word_order(manifest) -> list[str]:
     order: list[str] = []
 
@@ -457,14 +499,14 @@ def all_manifest_word_order(manifest) -> list[str]:
             if value not in order:
                 order.append(value)
 
-    private_batch = REPO / "release" / "private-repo" / "files" / "word-drafts" / "tools" / "specs" / "batch.json"
-    if private_batch.exists():
+    private_batch = private_batch_path()
+    if private_batch is not None:
         try:
             converted = json.loads(read_text(private_batch)).get("converted", [])
             if isinstance(converted, list):
                 extend_unique(str(item) for item in converted)
-        except (OSError, json.JSONDecodeError):
-            pass
+        except (OSError, json.JSONDecodeError) as exc:
+            print(f"warning: cannot parse the bundled private batch.json: {exc}", file=sys.stderr)
     extend_unique(CANONICAL_WORD_ORDER)
     for sid in manifest.spec_ids():
         extend_unique(word_spec_ids(manifest, [sid]))
