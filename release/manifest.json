@@ -138,7 +138,7 @@
       "$comment": "Releasable WoT vocabulary/binding specification. It has no NodeSet RequiredModel and its validator is local to wot-specs/WoT-Binding. wot-specs/extras/WoT-Binding holds the informative crosswalk that supports this draft and links into it, so it travels with the specification like every other extras mirror.",
       "title": "OPC UA — Web of Things Binding",
       "submitted": true,
-      "state": "public",
+      "state": "released",
       "move": [
         "wot-specs/WoT-Binding",
         "wot-specs/extras/WoT-Binding",
@@ -167,7 +167,7 @@
       "$comment": "Releasable WoT Connectivity revision. WoT Binding is in closure because it is part of the OPC Foundation WoT submission. xRegistry is vendored, not closed over: the private export needs the base NodeSet/CSV and word spec so RequiredModel and validators resolve, but xRegistry stays public because it is a shared base for other public specs and has a public xregistry.org proposal.",
       "title": "OPC UA — WoT Connectivity",
       "submitted": true,
-      "state": "public",
+      "state": "released",
       "move": [
         "wot-specs/WoT-Connectivity",
         "word-drafts/tools/specs/wot-connectivity.json",

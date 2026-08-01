@@ -3,8 +3,6 @@
   "converted": [
     "xregistry",
     "observability-export",
-    "wot-connectivity",
-    "wot-binding",
     "schema-registry",
     "generators",
     "data-channels",
