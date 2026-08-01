@@ -1,0 +1,218 @@
+# Keep the Word drafts in step with the markdown.
+#
+# Every `.docx` under `word-drafts/` is a build output. Until now nothing noticed when a
+# specification changed and its rendering did not, so the two could drift apart silently
+# for as long as nobody happened to rebuild.
+#
+# **Staleness is decided from the sources, not from the output.** The obvious test — rebuild
+# and see what changed — does not work here, and the reason is not obvious: the committed
+# `.docx` is the *post-finalise* file, written by Word once it resolved the fields, while a
+# rebuild produces the *pre-finalise* one. Word recompresses the package and assigns its own
+# paragraph ids, so the two never match, for any document, whether or not a character of the
+# specification changed. Driving this workflow from "did the bytes change?" made it always
+# dirty: it proposed replacing all eleven finalised documents with unfinalised ones on every
+# push, including pushes that touched no specification at all.
+#
+# So `stale_specs.py` compares the digest of each document's *inputs* against the digest
+# recorded when it was rendered, and only genuinely stale documents are rebuilt. When
+# nothing is stale the workflow stops without committing.
+#
+# **It cannot finish a document it rebuilds.** Resolving the table of contents and every
+# cross-reference needs Microsoft Word, which a GitHub-hosted runner does not have, so the
+# pull request opens as a *draft* and stays one until a maintainer has run
+# `pwsh word-drafts/tools/finalize_all.ps1` locally and pushed. Verifying that they were
+# finalised needs no Word, so this workflow does that itself and flips the pull request to
+# ready for review when it passes.
+
+name: Refresh Word drafts
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: word-drafts-refresh
+  cancel-in-progress: false
+
+env:
+  BRANCH: word-drafts/refresh
+
+jobs:
+  refresh:
+    # A push made by this workflow must not start it again.
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r word-drafts/tools/requirements.txt
+
+      - name: Start from main
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B "$BRANCH" origin/main
+
+      - name: Which documents have fallen behind their sources
+        id: stale
+        run: |
+          python word-drafts/tools/stale_specs.py --verbose > stale.txt
+          {
+            echo 'ids<<STALEEOF'
+            cat stale.txt
+            echo 'STALEEOF'
+          } >> "$GITHUB_OUTPUT"
+          if [ -s stale.txt ]; then
+            echo 'any=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'any=false' >> "$GITHUB_OUTPUT"
+            echo 'every document is in step with its sources; nothing to do'
+          fi
+          rm -f stale.txt
+
+      - name: Rebuild the stale documents
+        id: build
+        if: steps.stale.outputs.any == 'true'
+        env:
+          IDS: ${{ steps.stale.outputs.ids }}
+        run: |
+          set -o pipefail
+          # Only the stale ones. Rebuilding a document that is in step would replace a
+          # finalised file with an unfinalised one for no reason.
+          for spec in $IDS; do
+            echo "=== $spec"
+            python word-drafts/tools/build_docx.py "word-drafts/tools/specs/$spec.json"
+            python word-drafts/tools/validate_docx.py "word-drafts/tools/specs/$spec.json"
+          done
+
+      - name: Commit what was rebuilt
+        id: commit
+        if: steps.stale.outputs.any == 'true'
+        env:
+          IDS: ${{ steps.stale.outputs.ids }}
+        run: |
+          git add -A -- word-drafts
+          if git diff --cached --quiet; then
+            echo 'changed=false' >> "$GITHUB_OUTPUT"
+            echo 'nothing to commit'
+            exit 0
+          fi
+          echo 'changed=true' >> "$GITHUB_OUTPUT"
+          git diff --cached --name-only | sed 's/^/  /'
+          {
+            printf 'Regenerate the Word drafts\n\n'
+            printf 'These specifications changed, so their renderings were stale:\n\n'
+            for spec in $IDS; do printf -- '- %s\n' "$spec"; done
+            printf '\nRebuilt from %s.\n\n' "${GITHUB_SHA:0:12}"
+            printf 'They are not finalised: the build writes fields, not field results, and\n'
+            printf 'resolving them needs Microsoft Word. Run\n'
+            printf 'pwsh word-drafts/tools/finalize_all.ps1 before merging.\n\n'
+            printf 'Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n'
+          } > "$RUNNER_TEMP/commit-message"
+          git commit -F "$RUNNER_TEMP/commit-message"
+          git push --force-with-lease --set-upstream origin "$BRANCH"
+
+      - name: Are they finalised?
+        id: finalised
+        if: steps.commit.outputs.changed == 'true'
+        run: |
+          # Needs no Word: a finalised document carries one cached PAGEREF per contents
+          # entry, and a freshly built one carries none.
+          set +e
+          pending=''
+          for config in word-drafts/tools/specs/*.json; do
+            case "$config" in *batch.json) continue ;; esac
+            if ! python word-drafts/tools/validate_docx.py "$config" --finalized >/dev/null 2>&1; then
+              pending="$pending $(basename "$config" .json)"
+            fi
+          done
+          if [ -n "$pending" ]; then
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "pending=$pending" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Open or update the standing pull request
+        if: steps.commit.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          READY: ${{ steps.finalised.outputs.ready }}
+          PENDING: ${{ steps.finalised.outputs.pending }}
+        run: |
+          # shellcheck disable=SC2016  # the backticks below are markdown, not substitution
+          cat > pr-body.md <<'BODY'
+          The Word drafts, rebuilt from the current specification sources.
+
+          This pull request stands open and is updated on every push to `main` that
+          changes a specification. It is how the renderings are kept from drifting away
+          from the markdown. When it is merged the branch goes away, and the next change
+          opens a fresh one.
+
+          **Review `*.docmodel.json`, not the `.docx`** — a ZIP diff is unreadable, and the
+          docmodel is the intermediate representation each document was rendered from.
+          BODY
+
+          if [ "$READY" = 'true' ]; then
+            cat >> pr-body.md <<'BODY'
+
+          ### Finalised
+
+          Every document resolves its fields and opens with a populated contents page.
+          Ready to merge.
+          BODY
+          else
+            cat >> pr-body.md <<'BODY'
+
+          ### Not finalised yet
+
+          The build writes fields, not field *results*: these documents currently open with
+          an empty contents page and blank cross-references. Resolving them needs Microsoft
+          Word, which a hosted runner does not have.
+
+          Before merging, run this locally and push:
+
+          ```powershell
+          git fetch origin && git checkout word-drafts/refresh
+          pwsh word-drafts/tools/finalize_all.ps1
+          git commit -am "Finalise the regenerated drafts" && git push
+          ```
+
+          Waiting on:
+          BODY
+            for spec in $PENDING; do
+              # shellcheck disable=SC2016  # literal markdown ticks, not a substitution
+              printf -- '- `%s`\n' "$spec" >> pr-body.md
+            done
+            cat >> pr-body.md <<'BODY'
+
+          This pull request is a draft until then, and becomes ready for review on the next
+          run once the check passes.
+          BODY
+          fi
+
+          existing=$(gh pr list --head "$BRANCH" --base main --state open \
+                       --json number --jq '.[0].number // empty')
+          if [ -z "$existing" ]; then
+            gh pr create --base main --head "$BRANCH" --draft \
+              --title 'Regenerate the Word drafts' --body-file pr-body.md
+            existing=$(gh pr list --head "$BRANCH" --base main --state open \
+                         --json number --jq '.[0].number // empty')
+          else
+            gh pr edit "$existing" --body-file pr-body.md
+          fi
+          rm -f pr-body.md
+
+          if [ "$READY" = 'true' ]; then
+            gh pr ready "$existing" || true
+          fi
