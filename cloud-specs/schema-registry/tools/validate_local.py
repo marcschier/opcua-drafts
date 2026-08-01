@@ -139,6 +139,20 @@ if registry is None:
 elif registry.get("ParentNodeId") != "i=2253":
     errors.append("SchemaRegistry well-known instance is not parented by the Server object i=2253")
 
+# The generated Annex A is embedded verbatim in the specification, so a regeneration that
+# is not carried into the document is caught here rather than by a reader.
+_annex = os.path.join(HERE, "model-reference.md")
+_spec = os.path.join(GEN, "OPC-UA-Schema-Registry.md")
+if os.path.exists(_annex) and os.path.exists(_spec):
+    with open(_annex, encoding="utf-8") as f:
+        rendered = f.read()
+    with open(_spec, encoding="utf-8") as f:
+        spec_text = f.read()
+    if '<a id="annex-a"></a>' not in spec_text:
+        errors.append('spec is missing the <a id="annex-a"></a> Annex A marker')
+    elif rendered.strip() not in spec_text.replace("\r\n", "\n"):
+        errors.append("generated Annex A (tools/model-reference.md) is not embedded verbatim in the spec")
+
 print(f"XML nodes: {len(defined)}   CSV rows: {len(rows)}   base ids: {len(UA) if UA is not None else 'skipped (no local base table)'}   xRegistry base ids: {len(XR) if XR is not None else 'skipped'}")
 print(f"ERRORS: {len(errors)}")
 for e in errors[:50]: print("  ERR", e)

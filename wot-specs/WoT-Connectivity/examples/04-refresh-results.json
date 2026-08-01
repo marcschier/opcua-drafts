@@ -17,9 +17,9 @@
   },
   "results": [
     {
-      "Xid": "/thingmodelgroups/fabrikam.pumps/thingmodels/pumptype/versions/1.2.0",
-      "GroupId": "fabrikam.pumps",
-      "ResourceId": "pumptype",
+      "Xid": "/thingmodelgroups/com.fabrikam.catalog.pumps/thingmodels/com.fabrikam.catalog.pumps.PumpType/versions/1.2.0",
+      "GroupId": "com.fabrikam.catalog.pumps",
+      "ResourceId": "com.fabrikam.catalog.pumps.PumpType",
       "VersionId": "1.2.0",
       "Kind": "ThingModel",
       "Outcome": "Success",
@@ -32,9 +32,9 @@
       "Message": "Projected Thing Model to ObjectType PumpType (1 mandatory Variable, 1 optional Method, 1 EventType)."
     },
     {
-      "Xid": "/thingdescriptiongroups/fabrikam.factory-floor-01/thingdescriptions/pump-01/versions/1.0.0",
-      "GroupId": "fabrikam.factory-floor-01",
-      "ResourceId": "pump-01",
+      "Xid": "/thingdescriptiongroups/com.fabrikam.sites.factory-floor-01/thingdescriptions/urn.dev.opcua.pump-01/versions/1.0.0",
+      "GroupId": "com.fabrikam.sites.factory-floor-01",
+      "ResourceId": "urn.dev.opcua.pump-01",
       "VersionId": "1.0.0",
       "Kind": "ThingDescription",
       "Outcome": "Success",
@@ -47,9 +47,9 @@
       "Message": "Projected Thing Description to Object Pump; 3 forms bound to the OPC UA binding."
     },
     {
-      "Xid": "/thingdescriptiongroups/fabrikam.factory-floor-01/thingdescriptions/pump-broken/versions/1.0.0",
-      "GroupId": "fabrikam.factory-floor-01",
-      "ResourceId": "pump-broken",
+      "Xid": "/thingdescriptiongroups/com.fabrikam.sites.factory-floor-01/thingdescriptions/urn.dev.opcua.pump-broken/versions/1.0.0",
+      "GroupId": "com.fabrikam.sites.factory-floor-01",
+      "ResourceId": "urn.dev.opcua.pump-broken",
       "VersionId": "1.0.0",
       "Kind": "ThingDescription",
       "Outcome": "Failed",
@@ -63,7 +63,7 @@
     }
   ],
   "validationOutcomes": {
-    "pump-broken": {
+    "urn.dev.opcua.pump-broken": {
       "FormatValidated": true,
       "FormatOutcome": "Failed",
       "FormatReason": "missing 'title'; 'security' names undefined scheme 'missing_sc'; invalid form op 'frobnicate'",
@@ -77,14 +77,14 @@
   },
   "dependencies": [
     {
-      "SourceXid": "/thingdescriptiongroups/fabrikam.factory-floor-01/thingdescriptions/pump-01/versions/1.0.0",
-      "TargetXid": "/thingmodelgroups/fabrikam.pumps/thingmodels/pumptype/versions/1.2.0",
+      "SourceXid": "/thingdescriptiongroups/com.fabrikam.sites.factory-floor-01/thingdescriptions/urn.dev.opcua.pump-01/versions/1.0.0",
+      "TargetXid": "/thingmodelgroups/com.fabrikam.catalog.pumps/thingmodels/com.fabrikam.catalog.pumps.PumpType/versions/1.2.0",
       "TargetUri": "../01-thing-model-pump.tm.jsonld",
       "RefType": "links.rel=type",
       "Resolved": true
     },
     {
-      "SourceXid": "/thingdescriptiongroups/fabrikam.factory-floor-01/thingdescriptions/pump-broken/versions/1.0.0",
+      "SourceXid": "/thingdescriptiongroups/com.fabrikam.sites.factory-floor-01/thingdescriptions/urn.dev.opcua.pump-broken/versions/1.0.0",
       "TargetXid": "",
       "TargetUri": "../thingmodels/does-not-exist.tm.jsonld",
       "RefType": "links.rel=type",

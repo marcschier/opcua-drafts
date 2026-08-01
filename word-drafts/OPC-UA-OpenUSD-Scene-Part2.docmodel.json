@@ -8458,7 +8458,7 @@
             },
             {
               "r": "t",
-              "text": " — and because Part 1 makes an artifact's registry "
+              "text": " — and because Part 1 builds an artifact's registry "
             },
             {
               "r": "code",
@@ -8466,7 +8466,7 @@
             },
             {
               "r": "t",
-              "text": " the URL-safe encoding of that identifier (Part 1 "
+              "text": " from that identifier by a deterministic, closed-form construction (Part 1 "
             },
             {
               "r": "t",
@@ -8474,7 +8474,15 @@
             },
             {
               "r": "t",
-              "text": "), the stage's authored bytes are located by computation rather than by search. A Part 2 Server with no Part 1 registry treats "
+              "text": "), the stage's authored bytes are located by computation rather than by search. The construction is one-way, so a client confirms the artifact it reached by reading its "
+            },
+            {
+              "r": "code",
+              "text": "AssetIdentifier"
+            },
+            {
+              "r": "t",
+              "text": ". A Part 2 Server with no Part 1 registry treats "
             },
             {
               "r": "code",

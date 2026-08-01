@@ -1,6 +1,6 @@
 # OPC UA Pumps — OpenUSD Bindings Addendum
 
-**Implementer Annex to *OPC UA — OpenUSD Binding* (Release 0.5.0 — Draft).**
+**Implementer Annex to *OPC UA — OpenUSD Binding* (Release 0.6.0 — Draft).**
 
 > This addendum is the **implementer (Pump) annex** for the generic *OPC UA — OpenUSD Bindings* companion model. All Pump-specific and end-to-end detail lives here; the base specification (`../OPC-UA-OpenUSD-Bindings.md`) remains domain-agnostic. It shows how a `PumpType` instance (OPC 40223 Pumps) is bound to an OpenUSD prim and how three live measurements drive the render. The machine-readable source of truth is `../../extras/openusd-binding/examples/pumps/Pumps.OpenUsdBinding.json`; a runnable USD writer is `../../extras/openusd-binding/examples/pumps/usd_writer.py`; the C# end-to-end validation lives in the `marcschier/UA-.NETStandard` `PumpDeviceIntegrationServer` sample.
 

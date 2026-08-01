@@ -5,7 +5,7 @@
     <Uri>http://opcfoundation.org/UA/xRegistry/</Uri>
   </NamespaceUris>
   <Models>
-    <Model ModelUri="http://opcfoundation.org/UA/xRegistry/" Version="0.2.0" PublicationDate="2026-07-29T00:00:00Z">
+    <Model ModelUri="http://opcfoundation.org/UA/xRegistry/" Version="0.3.0" PublicationDate="2026-07-31T00:00:00Z">
       <RequiredModel ModelUri="http://opcfoundation.org/UA/" Version="1.05.04" PublicationDate="2024-05-01T00:00:00Z" />
     </Model>
   </Models>
@@ -56,6 +56,7 @@
     <DisplayName>GroupType</DisplayName>
     <Description>An abstract xRegistry group, expressed as a FolderType that organizes its resource files. It creates resources and versions through the CreateResource Method and is removed with its own Delete Method. Domain group types subtype this and add the group key (e.g. a namespace URI).</Description>
     <Category>XREG-Group</Category>
+    <Category>XREG-Identity</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=61</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=63527</Reference>
@@ -77,6 +78,7 @@
     <DisplayName>ResourceType</DisplayName>
     <Description>An abstract xRegistry resource/version whose document IS the file: the content is read and written through the inherited FileType methods (Open/Read/Write/Close). Carries the xRegistry attributes and an optional ExternalReference for federation. Domain resource types subtype this.</Description>
     <Category>XREG-Resource</Category>
+    <Category>XREG-Identity</Category>
     <Category>XREG-Federation</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=11575</Reference>
@@ -245,7 +247,7 @@
   </UAVariable>
   <UAVariable NodeId="ns=1;i=63514" BrowseName="1:Name" ParentNodeId="ns=1;i=63000" DataType="String" ValueRank="-1">
     <DisplayName>Name</DisplayName>
-    <Description>Human-readable name of the entity.</Description>
+    <Description>Human-readable name of the entity, and the source of its DisplayName. Where the entity's source identity is itself readable - a namespace URI, an authored asset identifier - Name is that identity verbatim, so a Client that shows only an identifier and a name still shows something a human recognizes.</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=80</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
@@ -366,7 +368,7 @@
   </UAVariable>
   <UAVariable NodeId="ns=1;i=63527" BrowseName="1:GroupId" ParentNodeId="ns=1;i=63001" DataType="String" ValueRank="-1">
     <DisplayName>GroupId</DisplayName>
-    <Description>xRegistry groupid: the stable identifier of this group. Group identifiers are globally unique for federation.</Description>
+    <Description>xRegistry groupid: the symbolic identifier of this group, constructed from the group's source identity (the group key) by the reverse-authority construction of the specification. Group identifiers are globally unique for federation.</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=78</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
@@ -393,9 +395,9 @@
   </UAVariable>
   <UAVariable NodeId="ns=1;i=63530" BrowseName="1:Name" ParentNodeId="ns=1;i=63001" DataType="String" ValueRank="-1">
     <DisplayName>Name</DisplayName>
-    <Description>Human-readable name of the entity.</Description>
+    <Description>Human-readable name of the entity, and the source of its DisplayName. Where the entity's source identity is itself readable - a namespace URI, an authored asset identifier - Name is that identity verbatim, so a Client that shows only an identifier and a name still shows something a human recognizes.</Description>
     <References>
-      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=63001</Reference>
     </References>
@@ -533,7 +535,7 @@
   </UAVariable>
   <UAVariable NodeId="ns=1;i=63545" BrowseName="1:ResourceId" ParentNodeId="ns=1;i=63002" DataType="String" ValueRank="-1">
     <DisplayName>ResourceId</DisplayName>
-    <Description>xRegistry resourceid: the stable identifier of the resource within its group.</Description>
+    <Description>xRegistry resourceid: the symbolic identifier of the resource within its group, constructed from the resource's source identity by the reverse-authority construction of the specification. It is never derived from the resource document or from a digest of it, so it is invariant across the resource's versions.</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=78</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
@@ -605,9 +607,9 @@
   </UAVariable>
   <UAVariable NodeId="ns=1;i=63553" BrowseName="1:Name" ParentNodeId="ns=1;i=63002" DataType="String" ValueRank="-1">
     <DisplayName>Name</DisplayName>
-    <Description>Human-readable name of the entity.</Description>
+    <Description>Human-readable name of the entity, and the source of its DisplayName. Where the entity's source identity is itself readable - a namespace URI, an authored asset identifier - Name is that identity verbatim, so a Client that shows only an identifier and a name still shows something a human recognizes.</Description>
     <References>
-      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=63002</Reference>
     </References>

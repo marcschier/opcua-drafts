@@ -21,8 +21,8 @@
     "capabilityIdentifier": "SREG",
     "namespaceUri": "http://opcfoundation.org/UA/SchemaRegistry/",
     "namespaceIndexInDocument": 2,
-    "version": "0.2.0",
-    "publicationDate": "2026-07-30",
+    "version": "0.3.0",
+    "publicationDate": "2026-07-31",
     "releaseType": "Draft",
     "mantisProjectId": "<nnn>",
     "otherOrganization": "xRegistry project",
@@ -272,38 +272,43 @@
       "title": "Schema identity and per-format fingerprints"
     },
     {
-      "from": "7 Schema versioning and compatibility",
+      "from": "6.7 Group and schema identifiers",
       "number": "6.9",
+      "title": "Group and schema identifiers"
+    },
+    {
+      "from": "7 Schema versioning and compatibility",
+      "number": "6.10",
       "title": "Schema versioning and compatibility"
     },
     {
       "from": "8 Resolution flow",
-      "number": "6.10",
+      "number": "6.11",
       "title": "Resolution flow"
     },
     {
       "from": "9 TTL and mirror semantics",
-      "number": "6.11",
+      "number": "6.12",
       "title": "TTL and mirror semantics"
     },
     {
       "from": "10 Structure materialization and the xRegistry API",
-      "number": "6.12",
+      "number": "6.13",
       "title": "Structure materialization and the xRegistry API"
     },
     {
       "from": "10.1 Auto-bootstrap of the schema structure",
-      "number": "6.12.1",
+      "number": "6.13.1",
       "title": "Auto-bootstrap of the schema structure"
     },
     {
       "from": "10.2 Serving the xRegistry API and JSON projection",
-      "number": "6.12.2",
+      "number": "6.13.2",
       "title": "Serving the xRegistry API and the JSON projection"
     },
     {
       "from": "11 Optional PubSub integration",
-      "number": "6.13",
+      "number": "6.14",
       "title": "PubSub integration"
     },
     {
@@ -459,15 +464,16 @@
     "6.4": "6.6",
     "6.5": "6.7",
     "6.6": "6.8",
-    "7": "6.9",
-    "8": "6.10",
-    "9": "6.11",
-    "10": "6.12",
-    "10.1": "6.12.1",
-    "10.2": "6.12.2",
-    "11": "6.13",
+    "7": "6.10",
+    "8": "6.11",
+    "9": "6.12",
+    "10": "6.13",
+    "10.1": "6.13.1",
+    "10.2": "6.13.2",
+    "11": "6.14",
     "12": "9",
-    "13": "9"
+    "13": "9",
+    "6.7": "6.9"
   },
   "figures": [
     {

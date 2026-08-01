@@ -1,7 +1,7 @@
 {
   "specId": "schema-registry",
-  "sourceCommit": "711ab328705b248308f60bfc0def036324917c7b",
-  "sourceDigest": "faf385bdcaede8e3",
+  "sourceCommit": "786adf2da39f64c59b30c1e29eb727e6a5c3865d",
+  "sourceDigest": "6cbf9d5978975caf",
   "pipelineVersion": "2",
   "sources": [
     "word-drafts/tools/specs/schema-registry.json",
@@ -57,6 +57,9 @@
     "007DD302": {
       "owner": "template"
     },
+    "00973D44": {
+      "owner": "template"
+    },
     "00AEED57": {
       "owner": "generated",
       "region": "instances",
@@ -71,13 +74,14 @@
       "kind": "table",
       "para": 4
     },
+    "00E27E81": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "12 Conformance",
+      "block": 3,
+      "para": 20
+    },
     "011DA4C9": {
-      "owner": "template"
-    },
-    "01351F11": {
-      "owner": "template"
-    },
-    "013BEEEE": {
       "owner": "template"
     },
     "0170FB74": {
@@ -151,6 +155,13 @@
       "kind": "nodetable",
       "para": 53
     },
+    "0277A814": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 52,
+      "kind": "clause",
+      "para": 0
+    },
     "027FD35E": {
       "owner": "template"
     },
@@ -171,9 +182,6 @@
       "kind": "nodetable",
       "para": 6
     },
-    "02C31E81": {
-      "owner": "template"
-    },
     "02D21B8A": {
       "owner": "markdown",
       "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
@@ -191,11 +199,25 @@
       "block": 1,
       "para": 12
     },
-    "02EE4179": {
+    "02EF22AD": {
+      "owner": "generated",
+      "region": "objecttypes",
+      "index": 11,
+      "kind": "nodetable",
+      "para": 85
+    },
+    "0301DFBB": {
       "owner": "template"
     },
     "030EB6D0": {
       "owner": "template"
+    },
+    "0311E2FC": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 4,
+      "para": 16
     },
     "031AFF64": {
       "owner": "template"
@@ -211,9 +233,6 @@
       "para": 17
     },
     "034FCA2F": {
-      "owner": "template"
-    },
-    "0367DD3A": {
       "owner": "template"
     },
     "036F07DB": {
@@ -277,10 +296,10 @@
       "kind": "nodetable",
       "para": 61
     },
-    "04C1D273": {
+    "04FCFD07": {
       "owner": "template"
     },
-    "04FCFD07": {
+    "050DD9AE": {
       "owner": "template"
     },
     "051355FB": {
@@ -443,9 +462,6 @@
       "kind": "methodtable",
       "para": 36
     },
-    "0776E2D1": {
-      "owner": "template"
-    },
     "078F2EB1": {
       "owner": "markdown",
       "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
@@ -466,6 +482,9 @@
       "index": 4,
       "kind": "table",
       "para": 7
+    },
+    "07D9CC31": {
+      "owner": "template"
     },
     "07EDD06B": {
       "owner": "generated",
@@ -510,6 +529,9 @@
     "0860FC3C": {
       "owner": "template"
     },
+    "08782AC7": {
+      "owner": "template"
+    },
     "087BB548": {
       "owner": "markdown",
       "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
@@ -527,6 +549,9 @@
       "block": 1,
       "para": 4
     },
+    "089C994F": {
+      "owner": "template"
+    },
     "08A4DE78": {
       "owner": "template"
     },
@@ -543,9 +568,6 @@
       "index": 5,
       "kind": "clause",
       "para": 0
-    },
-    "08D174DB": {
-      "owner": "template"
     },
     "08D33785": {
       "owner": "template"
@@ -600,9 +622,6 @@
       "index": 4,
       "kind": "table",
       "para": 10
-    },
-    "09526912": {
-      "owner": "template"
     },
     "09740C71": {
       "owner": "markdown",
@@ -669,7 +688,17 @@
     "0A140B14": {
       "owner": "template"
     },
+    "0A16E9A9": {
+      "owner": "generated",
+      "region": "objecttypes",
+      "index": 11,
+      "kind": "nodetable",
+      "para": 84
+    },
     "0A1D6897": {
+      "owner": "template"
+    },
+    "0A33FF67": {
       "owner": "template"
     },
     "0A6400C6": {
@@ -731,22 +760,22 @@
       "block": 2,
       "para": 0
     },
-    "0B9FB438": {
-      "owner": "template"
-    },
     "0BB94B5D": {
       "owner": "template"
     },
     "0BBE1606": {
       "owner": "template"
     },
-    "0BCF8020": {
-      "owner": "template"
-    },
     "0BD1B04E": {
       "owner": "template"
     },
     "0BE6CABE": {
+      "owner": "template"
+    },
+    "0BEA39B4": {
+      "owner": "template"
+    },
+    "0C0B71FB": {
       "owner": "template"
     },
     "0C5DAF59": {
@@ -821,6 +850,9 @@
       "index": 8,
       "kind": "nodetable",
       "para": 25
+    },
+    "0E310907": {
+      "owner": "template"
     },
     "0E437D06": {
       "owner": "template"
@@ -918,9 +950,6 @@
     "103B5A5B": {
       "owner": "template"
     },
-    "105047E3": {
-      "owner": "template"
-    },
     "1081F186": {
       "owner": "template"
     },
@@ -939,9 +968,6 @@
       "para": 47
     },
     "11186A60": {
-      "owner": "template"
-    },
-    "111AF34E": {
       "owner": "template"
     },
     "1133646D": {
@@ -1033,9 +1059,6 @@
       "kind": "nodetable",
       "para": 7
     },
-    "1275F95B": {
-      "owner": "template"
-    },
     "127C81B4": {
       "owner": "template"
     },
@@ -1078,9 +1101,6 @@
     "13143313": {
       "owner": "template"
     },
-    "13269449": {
-      "owner": "template"
-    },
     "1337655E": {
       "owner": "generated",
       "region": "objecttypes",
@@ -1088,8 +1108,22 @@
       "kind": "nodetable",
       "para": 16
     },
+    "133A8BEF": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 3,
+      "para": 0
+    },
     "13500168": {
       "owner": "template"
+    },
+    "13F9004A": {
+      "owner": "generated",
+      "region": "objecttypes",
+      "index": 11,
+      "kind": "nodetable",
+      "para": 82
     },
     "1402D8C7": {
       "owner": "generated",
@@ -1194,7 +1228,7 @@
       "kind": "methodtable",
       "para": 0
     },
-    "16101B26": {
+    "16044E79": {
       "owner": "template"
     },
     "1616A8CB": {
@@ -1213,12 +1247,6 @@
       "index": 3,
       "kind": "nodetable",
       "para": 11
-    },
-    "1625325A": {
-      "owner": "template"
-    },
-    "163A3714": {
-      "owner": "template"
     },
     "1645D0CC": {
       "owner": "generated",
@@ -1276,6 +1304,13 @@
     "16F8C7B1": {
       "owner": "template"
     },
+    "16FFCAC9": {
+      "owner": "generated",
+      "region": "objecttypes",
+      "index": 11,
+      "kind": "nodetable",
+      "para": 83
+    },
     "17066237": {
       "owner": "generated",
       "region": "namespaces",
@@ -1283,8 +1318,21 @@
       "kind": "table",
       "para": 23
     },
+    "170A00E4": {
+      "owner": "template"
+    },
+    "1716BB62": {
+      "owner": "template"
+    },
     "172BDD6E": {
       "owner": "template"
+    },
+    "172FFDB9": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 45,
+      "kind": "clause",
+      "para": 0
     },
     "17598360": {
       "owner": "markdown",
@@ -1380,6 +1428,9 @@
     "18760A1F": {
       "owner": "template"
     },
+    "188D3C30": {
+      "owner": "template"
+    },
     "188ED62B": {
       "owner": "markdown",
       "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
@@ -1388,9 +1439,6 @@
       "para": 31
     },
     "189A56F8": {
-      "owner": "template"
-    },
-    "18B0D380": {
       "owner": "template"
     },
     "18B47AA1": {
@@ -1465,6 +1513,9 @@
       "kind": "para",
       "para": 0
     },
+    "197622D8": {
+      "owner": "template"
+    },
     "197F6FBC": {
       "owner": "template"
     },
@@ -1499,9 +1550,6 @@
       "kind": "term",
       "para": 0
     },
-    "1A2ED12A": {
-      "owner": "template"
-    },
     "1A2FF31E": {
       "owner": "template"
     },
@@ -1533,9 +1581,6 @@
       "owner": "template"
     },
     "1A9D843F": {
-      "owner": "template"
-    },
-    "1AB3361C": {
       "owner": "template"
     },
     "1AB99EF8": {
@@ -1581,6 +1626,13 @@
       "index": 8,
       "kind": "nodetable",
       "para": 7
+    },
+    "1BC97AA1": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 2,
+      "para": 10
     },
     "1BD23172": {
       "owner": "markdown",
@@ -1686,6 +1738,9 @@
       "kind": "table",
       "para": 22
     },
+    "1DA1D91E": {
+      "owner": "template"
+    },
     "1DA69E48": {
       "owner": "template"
     },
@@ -1712,9 +1767,6 @@
       "kind": "nodetable",
       "para": 10
     },
-    "1E4837FB": {
-      "owner": "template"
-    },
     "1E6714A6": {
       "owner": "template"
     },
@@ -1727,9 +1779,6 @@
       "index": 2,
       "kind": "para",
       "para": 0
-    },
-    "1EC01EC4": {
-      "owner": "template"
     },
     "1ECCD897": {
       "owner": "generated",
@@ -1760,6 +1809,9 @@
       "para": 14
     },
     "1F62A62C": {
+      "owner": "template"
+    },
+    "1F7722C8": {
       "owner": "template"
     },
     "1FA5A0DD": {
@@ -1795,10 +1847,10 @@
     "204241BF": {
       "owner": "template"
     },
-    "207494B6": {
+    "20513CC7": {
       "owner": "template"
     },
-    "207C0494": {
+    "207494B6": {
       "owner": "template"
     },
     "2083F9D4": {
@@ -1814,9 +1866,6 @@
       "index": 11,
       "kind": "nodetable",
       "para": 75
-    },
-    "20B53039": {
-      "owner": "template"
     },
     "20D34ECE": {
       "owner": "generated",
@@ -1859,6 +1908,9 @@
       "kind": "nodetable",
       "para": 77
     },
+    "2186CB09": {
+      "owner": "template"
+    },
     "21BFF98F": {
       "owner": "markdown",
       "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
@@ -1890,11 +1942,15 @@
       "block": 1,
       "para": 8
     },
-    "21FCFAFA": {
-      "owner": "template"
-    },
     "2205FE8E": {
       "owner": "template"
+    },
+    "2206BF70": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 1,
+      "para": 0
     },
     "2210B34B": {
       "owner": "template"
@@ -1968,6 +2024,9 @@
       "kind": "nodetable",
       "para": 45
     },
+    "23188267": {
+      "owner": "template"
+    },
     "232468F9": {
       "owner": "template"
     },
@@ -1991,6 +2050,13 @@
       "index": 4,
       "kind": "table",
       "para": 3
+    },
+    "2399F570": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 2,
+      "para": 8
     },
     "23A594F1": {
       "owner": "template"
@@ -2084,6 +2150,13 @@
       "block": 1,
       "para": 15
     },
+    "24C73D10": {
+      "owner": "generated",
+      "region": "objecttypes",
+      "index": 8,
+      "kind": "nodetable",
+      "para": 30
+    },
     "24C98CDA": {
       "owner": "generated",
       "region": "annex-d",
@@ -2097,10 +2170,10 @@
     "2552A508": {
       "owner": "template"
     },
-    "2562A63B": {
+    "2582E86B": {
       "owner": "template"
     },
-    "2582E86B": {
+    "25A0C0FD": {
       "owner": "template"
     },
     "25B7293A": {
@@ -2109,6 +2182,9 @@
       "section": "1 Scope",
       "block": 1,
       "para": 0
+    },
+    "25D27CC9": {
+      "owner": "template"
     },
     "25DB5BA6": {
       "owner": "template"
@@ -2126,6 +2202,13 @@
       "index": 0,
       "kind": "nodetable",
       "para": 93
+    },
+    "25F64C2F": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 49,
+      "kind": "clause",
+      "para": 0
     },
     "261F86E6": {
       "owner": "template"
@@ -2188,6 +2271,9 @@
       "block": 2,
       "para": 0
     },
+    "269B9936": {
+      "owner": "template"
+    },
     "26A3EA99": {
       "owner": "generated",
       "region": "namespaces",
@@ -2242,9 +2328,6 @@
     "2751EE8E": {
       "owner": "template"
     },
-    "27593C15": {
-      "owner": "template"
-    },
     "277B85E1": {
       "owner": "template"
     },
@@ -2285,6 +2368,12 @@
       "kind": "methodtable",
       "para": 10
     },
+    "2837174C": {
+      "owner": "template"
+    },
+    "28378D00": {
+      "owner": "template"
+    },
     "283CE6A9": {
       "owner": "generated",
       "region": "objecttypes",
@@ -2309,10 +2398,10 @@
       "kind": "term",
       "para": 2
     },
-    "289AB2AD": {
+    "28AAC82D": {
       "owner": "template"
     },
-    "28AAC82D": {
+    "28B1DF80": {
       "owner": "template"
     },
     "28CA0C45": {
@@ -2331,6 +2420,9 @@
       "index": 0,
       "kind": "nodetable",
       "para": 66
+    },
+    "291A8B57": {
+      "owner": "template"
     },
     "2922D9AD": {
       "owner": "generated",
@@ -2415,9 +2507,6 @@
       "block": 3,
       "para": 0
     },
-    "2A5798E1": {
-      "owner": "template"
-    },
     "2AA9CBBA": {
       "owner": "markdown",
       "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
@@ -2458,6 +2547,9 @@
       "kind": "para",
       "para": 0
     },
+    "2B21EAE9": {
+      "owner": "template"
+    },
     "2B7EE57F": {
       "owner": "template"
     },
@@ -2472,6 +2564,9 @@
       "para": 5
     },
     "2B83DDC7": {
+      "owner": "template"
+    },
+    "2B8B42C5": {
       "owner": "template"
     },
     "2B970E0C": {
@@ -2489,9 +2584,6 @@
       "para": 4
     },
     "2BEFB40F": {
-      "owner": "template"
-    },
-    "2C096496": {
       "owner": "template"
     },
     "2C24C0BA": {
@@ -2538,28 +2630,42 @@
       "block": 0,
       "para": 2
     },
+    "2CB4EFAE": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 2,
+      "para": 1
+    },
+    "2D0053AF": {
+      "owner": "template"
+    },
     "2D1C4F1B": {
       "owner": "template"
     },
     "2D57250B": {
       "owner": "template"
     },
-    "2D81EAA5": {
+    "2D85298B": {
       "owner": "template"
     },
-    "2D85298B": {
+    "2D9E2D28": {
       "owner": "template"
     },
     "2DC1B13B": {
       "owner": "template"
     },
-    "2DC2543E": {
-      "owner": "template"
-    },
-    "2DFCDFEF": {
-      "owner": "template"
+    "2DD18438": {
+      "owner": "generated",
+      "region": "annex-a",
+      "index": 0,
+      "kind": "nodetable",
+      "para": 100
     },
     "2E201E83": {
+      "owner": "template"
+    },
+    "2E206CF2": {
       "owner": "template"
     },
     "2E3B9734": {
@@ -2623,6 +2729,9 @@
       "kind": "nodetable",
       "para": 17
     },
+    "2FBF3C2E": {
+      "owner": "template"
+    },
     "2FC79531": {
       "owner": "generated",
       "region": "annex-c",
@@ -2671,8 +2780,19 @@
       "kind": "nodetable",
       "para": 39
     },
-    "3072526F": {
-      "owner": "template"
+    "30727C4B": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 4,
+      "para": 17
+    },
+    "3090A968": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 4,
+      "para": 12
     },
     "30B0FC23": {
       "owner": "generated",
@@ -2703,6 +2823,13 @@
     },
     "31219329": {
       "owner": "template"
+    },
+    "31460FCA": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 2,
+      "para": 5
     },
     "316A90DC": {
       "owner": "markdown",
@@ -2738,6 +2865,13 @@
       "kind": "para",
       "para": 0
     },
+    "31BEEF3C": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 2,
+      "para": 4
+    },
     "31F9FDED": {
       "owner": "markdown",
       "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
@@ -2755,12 +2889,6 @@
       "block": 1,
       "para": 0
     },
-    "323C765C": {
-      "owner": "template"
-    },
-    "3272F164": {
-      "owner": "template"
-    },
     "3287CEB4": {
       "owner": "markdown",
       "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
@@ -2769,6 +2897,19 @@
       "para": 0
     },
     "328BCC2D": {
+      "owner": "template"
+    },
+    "32A3EC68": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "12 Conformance",
+      "block": 3,
+      "para": 21
+    },
+    "32A599A6": {
+      "owner": "template"
+    },
+    "32C648E9": {
       "owner": "template"
     },
     "32DE79C6": {
@@ -2798,12 +2939,26 @@
       "kind": "term",
       "para": 1
     },
+    "334575AA": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 41,
+      "kind": "clause",
+      "para": 0
+    },
     "33462F6D": {
       "owner": "markdown",
       "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
       "section": "Annex B — Federation and OPC UA / HTTP resolution parity (informative)",
       "block": 2,
       "para": 3
+    },
+    "336EEF6E": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 4,
+      "para": 5
     },
     "3379DBB7": {
       "owner": "template"
@@ -2814,12 +2969,8 @@
     "3393333E": {
       "owner": "template"
     },
-    "33A5809D": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 44,
-      "kind": "clause",
-      "para": 0
+    "33B46B75": {
+      "owner": "template"
     },
     "33ED88D7": {
       "owner": "generated",
@@ -2863,6 +3014,13 @@
       "kind": "table",
       "para": 9
     },
+    "346C0A3B": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 4,
+      "para": 2
+    },
     "346F5517": {
       "owner": "template"
     },
@@ -2883,9 +3041,6 @@
       "para": 0
     },
     "34B4B014": {
-      "owner": "template"
-    },
-    "34D36B26": {
       "owner": "template"
     },
     "34ED318F": {
@@ -2975,13 +3130,6 @@
     "365ED989": {
       "owner": "template"
     },
-    "36943900": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 50,
-      "kind": "clause",
-      "para": 0
-    },
     "369AF152": {
       "owner": "template"
     },
@@ -3008,6 +3156,13 @@
     "36D98677": {
       "owner": "template"
     },
+    "36DB9B74": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 4,
+      "para": 1
+    },
     "36EAC005": {
       "owner": "generated",
       "region": "annex-a",
@@ -3020,6 +3175,13 @@
     },
     "36F7C0B3": {
       "owner": "template"
+    },
+    "370F2886": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 2,
+      "para": 6
     },
     "371ECE2C": {
       "owner": "template"
@@ -3040,6 +3202,13 @@
       "kind": "methodtable",
       "para": 24
     },
+    "37B5F8F6": {
+      "owner": "generated",
+      "region": "annex-a",
+      "index": 0,
+      "kind": "nodetable",
+      "para": 103
+    },
     "37CC0C4C": {
       "owner": "template"
     },
@@ -3058,9 +3227,6 @@
       "section": "Annex B — Federation and OPC UA / HTTP resolution parity (informative)",
       "block": 1,
       "para": 0
-    },
-    "3825D424": {
-      "owner": "template"
     },
     "383020E9": {
       "owner": "template"
@@ -3081,10 +3247,20 @@
     "385564BD": {
       "owner": "template"
     },
+    "3856BA80": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 2,
+      "para": 0
+    },
     "385DE944": {
       "owner": "template"
     },
     "3874D575": {
+      "owner": "template"
+    },
+    "387E1784": {
       "owner": "template"
     },
     "38A32619": {
@@ -3153,9 +3329,6 @@
       "kind": "nodetable",
       "para": 43
     },
-    "397BBBB0": {
-      "owner": "template"
-    },
     "397DE111": {
       "owner": "generated",
       "region": "namespaces",
@@ -3176,7 +3349,7 @@
     "398A594D": {
       "owner": "template"
     },
-    "39958E2A": {
+    "39902AA3": {
       "owner": "template"
     },
     "39C2371C": {
@@ -3195,6 +3368,13 @@
     "39EA0E89": {
       "owner": "template"
     },
+    "39EEC7CF": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 4,
+      "para": 15
+    },
     "39FBA275": {
       "owner": "generated",
       "region": "annex-a",
@@ -3209,11 +3389,21 @@
       "kind": "term",
       "para": 1
     },
+    "3A517BE4": {
+      "owner": "template"
+    },
     "3A532551": {
       "owner": "template"
     },
     "3A636749": {
       "owner": "template"
+    },
+    "3A89C939": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.6 Schema identity (`SchemaId`) and per-format fingerprints",
+      "block": 4,
+      "para": 0
     },
     "3A9480FF": {
       "owner": "generated",
@@ -3277,6 +3467,13 @@
       "section": "10.2 Serving the xRegistry API and JSON projection",
       "block": 1,
       "para": 22
+    },
+    "3B9C31F1": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 4,
+      "para": 9
     },
     "3BA2B334": {
       "owner": "template"
@@ -3374,18 +3571,12 @@
       "kind": "nodetable",
       "para": 4
     },
-    "3CF2142D": {
-      "owner": "template"
-    },
     "3D0CF341": {
       "owner": "generated",
       "region": "annex-a",
       "index": 0,
       "kind": "nodetable",
       "para": 30
-    },
-    "3D0DEB33": {
-      "owner": "template"
     },
     "3D170781": {
       "owner": "generated",
@@ -3422,15 +3613,15 @@
       "block": 1,
       "para": 8
     },
+    "3D94F8BA": {
+      "owner": "template"
+    },
     "3DB93604": {
       "owner": "markdown",
       "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
       "section": "1 Scope",
       "block": 7,
       "para": 0
-    },
-    "3DBACF1D": {
-      "owner": "template"
     },
     "3DC44C36": {
       "owner": "template"
@@ -3465,7 +3656,7 @@
     "3E36FC46": {
       "owner": "template"
     },
-    "3E46F2C8": {
+    "3E433147": {
       "owner": "template"
     },
     "3E579942": {
@@ -3547,6 +3738,9 @@
       "index": 3,
       "kind": "nodetable",
       "para": 18
+    },
+    "3FB29927": {
+      "owner": "template"
     },
     "3FB7AF15": {
       "owner": "generated",
@@ -3635,6 +3829,13 @@
       "index": 5,
       "kind": "methodtable",
       "para": 19
+    },
+    "40658CB8": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 4,
+      "para": 8
     },
     "406BF398": {
       "owner": "generated",
@@ -3751,6 +3952,9 @@
     "41931406": {
       "owner": "template"
     },
+    "41AA33C0": {
+      "owner": "template"
+    },
     "41AD672A": {
       "owner": "markdown",
       "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
@@ -3776,6 +3980,13 @@
     },
     "42064A04": {
       "owner": "template"
+    },
+    "4207CDD7": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 2,
+      "para": 7
     },
     "4228AD17": {
       "owner": "template"
@@ -3814,6 +4025,9 @@
       "kind": "methodtable",
       "para": 11
     },
+    "426B44B4": {
+      "owner": "template"
+    },
     "4274134E": {
       "owner": "template"
     },
@@ -3823,12 +4037,6 @@
       "index": 3,
       "kind": "nodetable",
       "para": 25
-    },
-    "429EB018": {
-      "owner": "template"
-    },
-    "42A86167": {
-      "owner": "template"
     },
     "42B1F660": {
       "owner": "template"
@@ -3846,9 +4054,6 @@
       "section": "10.2 Serving the xRegistry API and JSON projection",
       "block": 1,
       "para": 6
-    },
-    "42DCC3FD": {
-      "owner": "template"
     },
     "43014068": {
       "owner": "template"
@@ -3905,9 +4110,6 @@
       "kind": "methodtable",
       "para": 5
     },
-    "440EECD0": {
-      "owner": "template"
-    },
     "443F78F0": {
       "owner": "markdown",
       "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
@@ -3952,7 +4154,20 @@
       "kind": "methodtable",
       "para": 15
     },
+    "44DCC220": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 4,
+      "para": 6
+    },
     "44DE6F8C": {
+      "owner": "template"
+    },
+    "45160144": {
+      "owner": "template"
+    },
+    "451F2E16": {
       "owner": "template"
     },
     "45217830": {
@@ -4005,9 +4220,6 @@
       "block": 1,
       "para": 9
     },
-    "45AB13BC": {
-      "owner": "template"
-    },
     "45AC6947": {
       "owner": "template"
     },
@@ -4058,8 +4270,12 @@
     "46DBE0D6": {
       "owner": "template"
     },
-    "46FDA5D4": {
-      "owner": "template"
+    "4703DADC": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 4,
+      "para": 11
     },
     "470D529A": {
       "owner": "template"
@@ -4100,6 +4316,13 @@
     },
     "47B1D1FD": {
       "owner": "template"
+    },
+    "47B6D26E": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.3 SchemaFileType",
+      "block": 1,
+      "para": 9
     },
     "47CEE5F8": {
       "owner": "markdown",
@@ -4152,7 +4375,7 @@
       "kind": "nodetable",
       "para": 1
     },
-    "48993227": {
+    "48A54C97": {
       "owner": "template"
     },
     "48CBD829": {
@@ -4195,6 +4418,9 @@
     "4976D496": {
       "owner": "template"
     },
+    "497B2900": {
+      "owner": "template"
+    },
     "49A15C1E": {
       "owner": "generated",
       "region": "annex-a",
@@ -4212,6 +4438,13 @@
       "kind": "nodetable",
       "para": 61
     },
+    "49D10CB3": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 2,
+      "para": 3
+    },
     "49E581B0": {
       "owner": "generated",
       "region": "namespaces",
@@ -4226,27 +4459,21 @@
       "kind": "toc",
       "para": 0
     },
-    "4A136C1E": {
-      "owner": "template"
-    },
-    "4A1BCCB4": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 40,
-      "kind": "clause",
-      "para": 0
-    },
     "4A1F7E7C": {
       "owner": "template"
     },
     "4A267FEB": {
       "owner": "template"
     },
-    "4A2C5671": {
-      "owner": "template"
-    },
     "4A46C811": {
       "owner": "template"
+    },
+    "4A4914E9": {
+      "owner": "generated",
+      "region": "annex-a",
+      "index": 0,
+      "kind": "nodetable",
+      "para": 102
     },
     "4A646FAF": {
       "owner": "template"
@@ -4279,6 +4506,9 @@
       "kind": "nodetable",
       "para": 63
     },
+    "4AAE8FE1": {
+      "owner": "template"
+    },
     "4ABDAF92": {
       "owner": "generated",
       "region": "annex-a",
@@ -4288,6 +4518,16 @@
     },
     "4AC1323A": {
       "owner": "template"
+    },
+    "4AD7FF0D": {
+      "owner": "template"
+    },
+    "4AE64614": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 53,
+      "kind": "clause",
+      "para": 0
     },
     "4AE8FBC8": {
       "owner": "template"
@@ -4312,6 +4552,9 @@
       "kind": "nodetable",
       "para": 16
     },
+    "4B27D5A3": {
+      "owner": "template"
+    },
     "4B3954E3": {
       "owner": "generated",
       "region": "instances",
@@ -4332,12 +4575,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 6
-    },
-    "4B6910A8": {
-      "owner": "template"
-    },
-    "4B7D1F83": {
-      "owner": "template"
     },
     "4B96D8F6": {
       "owner": "generated",
@@ -4389,6 +4626,13 @@
       "section": "6.4 SchemaId-NodeId fast access and GetSchema",
       "block": 3,
       "para": 0
+    },
+    "4C3C62F8": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 2,
+      "para": 2
     },
     "4C5EA14D": {
       "owner": "generated",
@@ -4448,9 +4692,6 @@
       "kind": "nodetable",
       "para": 13
     },
-    "4D2F0A91": {
-      "owner": "template"
-    },
     "4D3D45BD": {
       "owner": "template"
     },
@@ -4467,11 +4708,11 @@
     "4D532735": {
       "owner": "template"
     },
-    "4D5883A5": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 43,
-      "kind": "clause",
+    "4D6CC0A1": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 0,
       "para": 0
     },
     "4D76427A": {
@@ -4539,9 +4780,6 @@
       "kind": "annex-clause",
       "para": 0
     },
-    "4F20EC16": {
-      "owner": "template"
-    },
     "4F2CC5EA": {
       "owner": "generated",
       "region": "objecttypes",
@@ -4552,7 +4790,16 @@
     "4F308B6A": {
       "owner": "template"
     },
+    "4F3DBAB8": {
+      "owner": "template"
+    },
+    "4F531C23": {
+      "owner": "template"
+    },
     "4F8FE53B": {
+      "owner": "template"
+    },
+    "4F9A9CCD": {
       "owner": "template"
     },
     "4FBF41EC": {
@@ -4568,9 +4815,6 @@
       "section": "C.3 Append-only rule (normative)",
       "block": 1,
       "para": 0
-    },
-    "4FC700F1": {
-      "owner": "template"
     },
     "4FF34743": {
       "owner": "generated",
@@ -4626,13 +4870,7 @@
     "50AC870D": {
       "owner": "template"
     },
-    "50AD8C67": {
-      "owner": "template"
-    },
     "50B4D4B8": {
-      "owner": "template"
-    },
-    "50C8723D": {
       "owner": "template"
     },
     "50F6E58A": {
@@ -4650,6 +4888,13 @@
       "region": "instances",
       "index": 0,
       "kind": "clause",
+      "para": 0
+    },
+    "51825EA1": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 6,
       "para": 0
     },
     "5189B8D0": {
@@ -4675,9 +4920,6 @@
       "index": 5,
       "kind": "methodtable",
       "para": 26
-    },
-    "51C57256": {
-      "owner": "template"
     },
     "51CBE88F": {
       "owner": "template"
@@ -4735,6 +4977,9 @@
       "kind": "nodetable",
       "para": 39
     },
+    "523B9EFD": {
+      "owner": "template"
+    },
     "524D9D01": {
       "owner": "template"
     },
@@ -4744,9 +4989,6 @@
       "index": 3,
       "kind": "nodetable",
       "para": 18
-    },
-    "525FB6BB": {
-      "owner": "template"
     },
     "529A6F38": {
       "owner": "generated",
@@ -4768,17 +5010,21 @@
     "52A86A61": {
       "owner": "template"
     },
-    "52AEA081": {
-      "owner": "template"
-    },
     "52D4503D": {
       "owner": "template"
     },
-    "52EBDE45": {
+    "52DAB36B": {
       "owner": "template"
     },
     "52F27C98": {
       "owner": "template"
+    },
+    "52F32087": {
+      "owner": "generated",
+      "region": "objecttypes",
+      "index": 11,
+      "kind": "nodetable",
+      "para": 79
     },
     "53084737": {
       "owner": "markdown",
@@ -4842,18 +5088,12 @@
       "kind": "nodetable",
       "para": 13
     },
-    "539855EC": {
-      "owner": "template"
-    },
     "53BE9611": {
       "owner": "generated",
       "region": "terms",
       "index": 6,
       "kind": "term",
       "para": 1
-    },
-    "53CE5439": {
-      "owner": "template"
     },
     "53E37A20": {
       "owner": "markdown",
@@ -4869,19 +5109,15 @@
       "kind": "para",
       "para": 0
     },
-    "544124A1": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 32,
-      "kind": "clause",
-      "para": 0
-    },
     "5449CEB7": {
       "owner": "generated",
       "region": "annex-a",
       "index": 0,
       "kind": "nodetable",
       "para": 48
+    },
+    "544F2268": {
+      "owner": "template"
     },
     "546EBE42": {
       "owner": "template"
@@ -4903,18 +5139,12 @@
       "kind": "table",
       "para": 14
     },
-    "548FEC8A": {
-      "owner": "template"
-    },
     "5494BA76": {
       "owner": "markdown",
       "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
       "section": "4 Overview",
       "block": 1,
       "para": 1
-    },
-    "54956C48": {
-      "owner": "template"
     },
     "54A24774": {
       "owner": "template"
@@ -5014,7 +5244,7 @@
       "block": 1,
       "para": 5
     },
-    "56D256ED": {
+    "5674865A": {
       "owner": "template"
     },
     "56D7075A": {
@@ -5068,6 +5298,9 @@
       "kind": "nodetable",
       "para": 72
     },
+    "5837D875": {
+      "owner": "template"
+    },
     "583D5FBE": {
       "owner": "generated",
       "region": "instances",
@@ -5087,6 +5320,9 @@
       "index": 3,
       "kind": "nodetable",
       "para": 21
+    },
+    "5858FA05": {
+      "owner": "template"
     },
     "586766B6": {
       "owner": "generated",
@@ -5147,7 +5383,7 @@
       "kind": "nodetable",
       "para": 5
     },
-    "5927A8A4": {
+    "59203F09": {
       "owner": "template"
     },
     "59BC2737": {
@@ -5170,8 +5406,12 @@
       "block": 3,
       "para": 13
     },
-    "5A04C9E2": {
-      "owner": "template"
+    "59DA75BE": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "10.2 Serving the xRegistry API and JSON projection",
+      "block": 1,
+      "para": 34
     },
     "5A0FB2B8": {
       "owner": "template"
@@ -5183,9 +5423,6 @@
       "owner": "template"
     },
     "5A7506EC": {
-      "owner": "template"
-    },
-    "5A85584C": {
       "owner": "template"
     },
     "5A90D011": {
@@ -5203,9 +5440,6 @@
       "para": 0
     },
     "5AD0BE39": {
-      "owner": "template"
-    },
-    "5ADC22B5": {
       "owner": "template"
     },
     "5ADCB2EC": {
@@ -5235,6 +5469,9 @@
     "5B4BDFBD": {
       "owner": "template"
     },
+    "5B606F7C": {
+      "owner": "template"
+    },
     "5B74B1E1": {
       "owner": "template"
     },
@@ -5256,9 +5493,6 @@
       "para": 22
     },
     "5BD24D9D": {
-      "owner": "template"
-    },
-    "5BD742FD": {
       "owner": "template"
     },
     "5BDB0008": {
@@ -5287,6 +5521,13 @@
     "5C17EB58": {
       "owner": "template"
     },
+    "5C317CF5": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 33,
+      "kind": "clause",
+      "para": 0
+    },
     "5C377048": {
       "owner": "template"
     },
@@ -5297,6 +5538,13 @@
       "block": 0,
       "para": 0
     },
+    "5C63A0A0": {
+      "owner": "generated",
+      "region": "objecttypes",
+      "index": 11,
+      "kind": "nodetable",
+      "para": 81
+    },
     "5C674A3C": {
       "owner": "template"
     },
@@ -5306,6 +5554,13 @@
       "index": 11,
       "kind": "nodetable",
       "para": 49
+    },
+    "5C951D8F": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 4,
+      "para": 4
     },
     "5CA88F5F": {
       "owner": "generated",
@@ -5328,7 +5583,7 @@
       "kind": "nodetable",
       "para": 12
     },
-    "5CD66122": {
+    "5D321228": {
       "owner": "template"
     },
     "5D43B04A": {
@@ -5357,6 +5612,13 @@
     },
     "5D721A47": {
       "owner": "template"
+    },
+    "5D74C5A3": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 59,
+      "kind": "clause",
+      "para": 0
     },
     "5D8166B5": {
       "owner": "generated",
@@ -5405,10 +5667,10 @@
     "5E1BE192": {
       "owner": "template"
     },
-    "5E4E1B10": {
+    "5E1F60D6": {
       "owner": "template"
     },
-    "5E5D93D8": {
+    "5E4E1B10": {
       "owner": "template"
     },
     "5E6394B4": {
@@ -5436,9 +5698,6 @@
       "section": "8 Resolution flow",
       "block": 1,
       "para": 6
-    },
-    "5EBD0FB2": {
-      "owner": "template"
     },
     "5EBDE072": {
       "owner": "markdown",
@@ -5560,20 +5819,13 @@
     "61117E2E": {
       "owner": "template"
     },
-    "611434D3": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 46,
-      "kind": "clause",
-      "para": 0
+    "61166174": {
+      "owner": "template"
     },
     "61468186": {
       "owner": "template"
     },
     "61496108": {
-      "owner": "template"
-    },
-    "617D8D18": {
       "owner": "template"
     },
     "617E3238": {
@@ -5615,9 +5867,6 @@
     "6204D615": {
       "owner": "template"
     },
-    "6207C27D": {
-      "owner": "template"
-    },
     "621816A7": {
       "owner": "template"
     },
@@ -5654,6 +5903,9 @@
       "kind": "nodetable",
       "para": 4
     },
+    "630ABA69": {
+      "owner": "template"
+    },
     "6325E0F0": {
       "owner": "generated",
       "region": "terms",
@@ -5667,7 +5919,17 @@
     "633C744F": {
       "owner": "template"
     },
+    "6343112A": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 5,
+      "para": 0
+    },
     "63456E43": {
+      "owner": "template"
+    },
+    "63457A83": {
       "owner": "template"
     },
     "635D28DD": {
@@ -5699,6 +5961,16 @@
     "641B6ABC": {
       "owner": "template"
     },
+    "6423698B": {
+      "owner": "template"
+    },
+    "6431D8DE": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 4,
+      "para": 10
+    },
     "6437E1A7": {
       "owner": "generated",
       "region": "objecttypes",
@@ -5710,6 +5982,9 @@
       "owner": "template"
     },
     "647B6181": {
+      "owner": "template"
+    },
+    "64858830": {
       "owner": "template"
     },
     "64A8DE4B": {
@@ -5727,6 +6002,12 @@
       "para": 36
     },
     "64DBC4DB": {
+      "owner": "template"
+    },
+    "64EF68F6": {
+      "owner": "template"
+    },
+    "65130B0B": {
       "owner": "template"
     },
     "6522B0AC": {
@@ -5779,8 +6060,12 @@
       "kind": "nodetable",
       "para": 51
     },
-    "66278C32": {
-      "owner": "template"
+    "66237FD1": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 55,
+      "kind": "clause",
+      "para": 0
     },
     "663A08E9": {
       "owner": "template"
@@ -5792,9 +6077,6 @@
       "owner": "template"
     },
     "6671E4CD": {
-      "owner": "template"
-    },
-    "667CA4FC": {
       "owner": "template"
     },
     "6687F206": {
@@ -5868,6 +6150,12 @@
       "block": 2,
       "para": 0
     },
+    "676363E4": {
+      "owner": "template"
+    },
+    "6795658C": {
+      "owner": "template"
+    },
     "67B808A1": {
       "owner": "template"
     },
@@ -5904,9 +6192,6 @@
     "680958E8": {
       "owner": "template"
     },
-    "682F89B7": {
-      "owner": "template"
-    },
     "68336285": {
       "owner": "generated",
       "region": "instances",
@@ -5927,6 +6212,9 @@
       "index": 5,
       "kind": "methodtable",
       "para": 14
+    },
+    "687C6E33": {
+      "owner": "template"
     },
     "6885D573": {
       "owner": "generated",
@@ -5976,6 +6264,13 @@
     "691CC841": {
       "owner": "template"
     },
+    "69394A66": {
+      "owner": "generated",
+      "region": "annex-a",
+      "index": 0,
+      "kind": "nodetable",
+      "para": 101
+    },
     "693A5C74": {
       "owner": "generated",
       "region": "instances",
@@ -5990,6 +6285,9 @@
       "block": 0,
       "para": 16
     },
+    "6965A218": {
+      "owner": "template"
+    },
     "69788417": {
       "owner": "generated",
       "region": "terms",
@@ -5998,6 +6296,9 @@
       "para": 0
     },
     "69D7E3F1": {
+      "owner": "template"
+    },
+    "69D8DD67": {
       "owner": "template"
     },
     "69D94436": {
@@ -6051,6 +6352,9 @@
     "6ABF916F": {
       "owner": "template"
     },
+    "6AC0798B": {
+      "owner": "template"
+    },
     "6AD2C4ED": {
       "owner": "generated",
       "region": "normative-references",
@@ -6066,6 +6370,9 @@
       "para": 1
     },
     "6AEB7A4E": {
+      "owner": "template"
+    },
+    "6AFC11D8": {
       "owner": "template"
     },
     "6B0F5FC7": {
@@ -6084,6 +6391,9 @@
       "section": "6.5 Formats and content-types",
       "block": 0,
       "para": 5
+    },
+    "6B3207A1": {
+      "owner": "template"
     },
     "6B4A45F1": {
       "owner": "generated",
@@ -6146,19 +6456,6 @@
     "6C0CB7E5": {
       "owner": "template"
     },
-    "6C1390E8": {
-      "owner": "template"
-    },
-    "6C31CA69": {
-      "owner": "template"
-    },
-    "6C351224": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 36,
-      "kind": "clause",
-      "para": 0
-    },
     "6C3E5E2B": {
       "owner": "template"
     },
@@ -6170,6 +6467,13 @@
     },
     "6CA64AAD": {
       "owner": "template"
+    },
+    "6CB731CE": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "10.2 Serving the xRegistry API and JSON projection",
+      "block": 1,
+      "para": 35
     },
     "6CBCCE10": {
       "owner": "markdown",
@@ -6212,9 +6516,6 @@
       "kind": "nodetable",
       "para": 82
     },
-    "6DF58546": {
-      "owner": "template"
-    },
     "6E00949B": {
       "owner": "template"
     },
@@ -6251,6 +6552,13 @@
     },
     "6E6DE116": {
       "owner": "template"
+    },
+    "6E8B8300": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 4,
+      "para": 7
     },
     "6E91F9C6": {
       "owner": "template"
@@ -6296,6 +6604,9 @@
       "section": "8 Resolution flow",
       "block": 2,
       "para": 0
+    },
+    "6F245D26": {
+      "owner": "template"
     },
     "6F425160": {
       "owner": "generated",
@@ -6461,6 +6772,9 @@
     "716EB714": {
       "owner": "template"
     },
+    "7177F1DE": {
+      "owner": "template"
+    },
     "71787BF1": {
       "owner": "markdown",
       "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
@@ -6506,12 +6820,22 @@
       "kind": "nodetable",
       "para": 2
     },
+    "71C68183": {
+      "owner": "template"
+    },
     "71D5D2DF": {
       "owner": "markdown",
       "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
       "section": "C.3 Append-only rule (normative)",
       "block": 2,
       "para": 0
+    },
+    "71DB4CE6": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 2,
+      "para": 9
     },
     "71E5C5D5": {
       "owner": "template"
@@ -6525,6 +6849,13 @@
     },
     "7215D2D9": {
       "owner": "template"
+    },
+    "721FD088": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 4,
+      "para": 0
     },
     "72285F82": {
       "owner": "generated",
@@ -6541,6 +6872,9 @@
       "para": 24
     },
     "7262113F": {
+      "owner": "template"
+    },
+    "726F37DE": {
       "owner": "template"
     },
     "727DE954": {
@@ -6587,9 +6921,6 @@
     "72D91F6B": {
       "owner": "template"
     },
-    "72E28CD4": {
-      "owner": "template"
-    },
     "7306FEDC": {
       "owner": "generated",
       "region": "instances",
@@ -6603,9 +6934,6 @@
       "index": 11,
       "kind": "nodetable",
       "para": 74
-    },
-    "7349E1DF": {
-      "owner": "template"
     },
     "73514716": {
       "owner": "template"
@@ -6651,8 +6979,12 @@
       "kind": "table",
       "para": 6
     },
-    "746B17CE": {
-      "owner": "template"
+    "74789445": {
+      "owner": "generated",
+      "region": "objecttypes",
+      "index": 11,
+      "kind": "nodetable",
+      "para": 80
     },
     "748673AB": {
       "owner": "generated",
@@ -6672,6 +7004,12 @@
       "para": 0
     },
     "74AC7D25": {
+      "owner": "template"
+    },
+    "74D2E175": {
+      "owner": "template"
+    },
+    "7503AA86": {
       "owner": "template"
     },
     "75444632": {
@@ -6694,6 +7032,13 @@
       "kind": "nodetable",
       "para": 95
     },
+    "759F692F": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 4,
+      "para": 13
+    },
     "75BAF418": {
       "owner": "markdown",
       "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
@@ -6711,6 +7056,9 @@
       "kind": "methodtable",
       "para": 23
     },
+    "75D0E472": {
+      "owner": "template"
+    },
     "75D63B83": {
       "owner": "generated",
       "region": "objecttypes",
@@ -6724,6 +7072,9 @@
       "index": 10,
       "kind": "table",
       "para": 7
+    },
+    "76290A25": {
+      "owner": "template"
     },
     "768467F7": {
       "owner": "template"
@@ -6752,9 +7103,6 @@
       "owner": "template"
     },
     "76E7AD87": {
-      "owner": "template"
-    },
-    "76E82CE3": {
       "owner": "template"
     },
     "76F9D077": {
@@ -6834,18 +7182,15 @@
     "782104F0": {
       "owner": "template"
     },
+    "783B63F2": {
+      "owner": "template"
+    },
     "783CFDE2": {
       "owner": "generated",
       "region": "instances",
       "index": 5,
       "kind": "methodtable",
       "para": 13
-    },
-    "78419826": {
-      "owner": "template"
-    },
-    "784A26FF": {
-      "owner": "template"
     },
     "786C2F65": {
       "owner": "generated",
@@ -6863,6 +7208,13 @@
     },
     "7883959C": {
       "owner": "template"
+    },
+    "78864AE5": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 4,
+      "para": 3
     },
     "788CA28F": {
       "owner": "markdown",
@@ -6953,12 +7305,18 @@
       "kind": "nodetable",
       "para": 1
     },
+    "795B9D4D": {
+      "owner": "template"
+    },
     "7971F051": {
       "owner": "generated",
       "region": "annex-a",
       "index": 0,
       "kind": "nodetable",
       "para": 98
+    },
+    "797E52D7": {
+      "owner": "template"
     },
     "798F8C77": {
       "owner": "template"
@@ -6983,6 +7341,9 @@
       "kind": "methodtable",
       "para": 8
     },
+    "79F0CACB": {
+      "owner": "template"
+    },
     "79F4A4E8": {
       "owner": "markdown",
       "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
@@ -7006,6 +7367,9 @@
       "block": 1,
       "para": 1
     },
+    "7A60588D": {
+      "owner": "template"
+    },
     "7A801AB2": {
       "owner": "generated",
       "region": "namespaces",
@@ -7022,6 +7386,9 @@
       "index": 5,
       "kind": "methodtable",
       "para": 25
+    },
+    "7AB22C0F": {
+      "owner": "template"
     },
     "7AB8EA0A": {
       "owner": "template"
@@ -7042,6 +7409,12 @@
       "index": 5,
       "kind": "methodtable",
       "para": 10
+    },
+    "7AE7C918": {
+      "owner": "template"
+    },
+    "7B0864AE": {
+      "owner": "template"
     },
     "7B09D64D": {
       "owner": "template"
@@ -7065,6 +7438,9 @@
       "section": "12 Conformance",
       "block": 3,
       "para": 17
+    },
+    "7B79D4EB": {
+      "owner": "template"
     },
     "7BB0DC2B": {
       "owner": "generated",
@@ -7127,6 +7503,13 @@
       "section": "6.3 SchemaFileType",
       "block": 1,
       "para": 2
+    },
+    "7CA95D0C": {
+      "owner": "markdown",
+      "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+      "section": "6.7 Group and schema identifiers",
+      "block": 4,
+      "para": 14
     },
     "7CDC715F": {
       "owner": "template"
@@ -7191,9 +7574,6 @@
       "kind": "nodetable",
       "para": 94
     },
-    "7D90ACA7": {
-      "owner": "template"
-    },
     "7DC1B5B6": {
       "owner": "generated",
       "region": "annex-a",
@@ -7214,6 +7594,9 @@
     "7E116BAF": {
       "owner": "template"
     },
+    "7E3CF14C": {
+      "owner": "template"
+    },
     "7E47AA93": {
       "owner": "generated",
       "region": "instances",
@@ -7221,15 +7604,15 @@
       "kind": "methodtable",
       "para": 39
     },
+    "7E4F70BF": {
+      "owner": "template"
+    },
     "7E7A46E6": {
       "owner": "markdown",
       "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
       "section": "4.3 OPC UA as a first-class binding — federation and access parity with HTTP",
       "block": 2,
       "para": 0
-    },
-    "7EA351C8": {
-      "owner": "template"
     },
     "7ED6B2FE": {
       "owner": "generated",
@@ -7247,9 +7630,6 @@
       "index": 11,
       "kind": "nodetable",
       "para": 23
-    },
-    "7F06ADD0": {
-      "owner": "template"
     },
     "7F492928": {
       "owner": "generated",
@@ -7275,7 +7655,7 @@
       "block": 1,
       "para": 23
     },
-    "7F64A9AD": {
+    "7F64A353": {
       "owner": "template"
     },
     "7F6BE573": {

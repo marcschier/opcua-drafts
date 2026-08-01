@@ -12,8 +12,10 @@ emitter that models the wrong closure (e.g. serving the connector's own
 Structural + §5.15.3 checks against ``examples/openusd-artifacts.xregistry.json``:
 
   * required top-level / group / resource attributes and id<->key agreement;
-  * identifier<->id<->xid round-trip: every ``ResourceId`` percent-decodes to its
-    ``openusd.assetidentifier`` and is recoverable from the ``xid``'s last segment;
+  * identifier -> id -> xid re-derivation: every ``ResourceId`` is re-derived from the
+    Resource's ``assetidentifier`` through the normative symbolic-identifier construction
+    (never by inverting it), is a legal xRegistry ``<SINGULAR>id``, and matches the xid's
+    last segment; every group and resource carries a non-empty ``name``;
   * xids are globally unique and structurally ``/<coll>/<group>/usdassets/<id>``;
   * ``contenttype`` agrees with ``openusd.mediatype``; every ``*count`` field
     equals the actual collection size;
@@ -35,8 +37,9 @@ Asset-container groups (cross-checked against the descriptor):
 Schema-plugin groups:
 
   * exactly one ``SchemaPlugin`` and one ``GeneratedSchema``; ``plugInfo.json``
-    parses as JSON; ``openusd.pluginname`` equals the embedded manifest's
-    ``Plugins[0].Name`` (re-read from the document, not a directory name).
+    parses as JSON; the group key is the symbolic identifier of the embedded
+    manifest's ``Plugins[0].Name`` and the group ``name`` is that name verbatim
+    (both re-read from the document, not from a directory name).
 
 If the USD Python bindings (``pxr``) are installed, each embedded codeless schema
 pair is additionally registered through ``PlugRegistry`` / ``UsdSchemaRegistry``
@@ -52,9 +55,16 @@ import json
 import os
 import re
 import shutil
-import urllib.parse
+import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+# The normative symbolic-identifier construction, shared with the emitter and with the
+# schema catalog. Re-deriving an id through it is independent of what the emitter wrote,
+# because the input is the Resource's own authored identifier.
+sys.path.insert(0, os.path.abspath(os.path.join(
+    HERE, "..", "..", "..", "..", "core-specs", "extras", "_common")))
+from opcua_enc.symbolic_id import is_valid_xregistry_id, symbolic_id  # noqa: E402
+
 ART_ROOT = os.path.abspath(os.path.join(HERE, ".."))
 EXAMPLE = os.path.join(ART_ROOT, "examples", "openusd-artifacts.xregistry.json")
 EXAMPLES_DIR = os.path.abspath(os.path.join(ART_ROOT, "..", "openusd-binding", "examples"))
@@ -166,16 +176,25 @@ def _check_resource(collection, gid, rid, res, all_xids):
     xid = res.get("xid")
     aid = res.get("assetidentifier")
 
-    # §5.1 round-trip: ResourceId percent-decodes to the authored identifier,
-    # and the identifier is recoverable from the xid's last segment.
+    # §5.1: the ResourceId is the symbolic identifier of the authored identifier. It is
+    # re-derived here through the normative construction rather than decoded back out of
+    # the id, because the construction is one-way and the attribute is the authority.
     if aid is None:
         err(f"{rid}: missing assetidentifier")
     else:
-        if urllib.parse.unquote(rid) != aid:
-            err(f"{rid}: ResourceId does not percent-decode to assetidentifier {aid!r}")
+        if symbolic_id(aid) != rid:
+            err(f"{rid}: ResourceId is not the symbolic identifier of assetidentifier {aid!r} "
+                f"(expected {symbolic_id(aid)!r})")
         last = xid.rsplit("/", 1)[-1] if isinstance(xid, str) else ""
-        if urllib.parse.unquote(last) != aid:
-            err(f"{rid}: xid last segment {last!r} does not percent-decode to assetidentifier {aid!r}")
+        if last != rid:
+            err(f"{rid}: xid last segment {last!r} is not the ResourceId")
+    if not is_valid_xregistry_id(rid):
+        err(f"{rid}: ResourceId is not a legal xRegistry <SINGULAR>id")
+    if not res.get("name"):
+        err(f"{rid}: missing name (REQUIRED so a person browsing the registry sees the "
+            f"authored identifier)")
+    elif aid is not None and res.get("name") != aid:
+        err(f"{rid}: name {res.get('name')!r} is not the assetidentifier {aid!r} verbatim")
 
     expected = f"/{collection}/{gid}/{RESOURCES}/{rid}"
     if xid != expected:
@@ -233,6 +252,16 @@ def _check_dependencies(collection, gid, aid, text, declared, ids_in_group, unit
 def _check_asset_container(collection, gid, group, descriptors, all_xids) -> int:
     if group.get("usdassetgroupid") != gid:
         err(f"{collection}/{gid}: usdassetgroupid mismatch")
+    if not is_valid_xregistry_id(gid):
+        err(f"{collection}/{gid}: group id is not a legal xRegistry <SINGULAR>id")
+    # §4.1: the group id IS the asset container identifier, and §4.3 requires name to
+    # be that identifier verbatim, so the two agree exactly for an already-legal id.
+    if not group.get("name"):
+        err(f"{collection}/{gid}: missing name (REQUIRED so a person browsing the registry "
+            f"sees the asset container identifier)")
+    elif symbolic_id(group["name"]) != gid:
+        err(f"{collection}/{gid}: name {group['name']!r} is not the asset container "
+            f"identifier the group id is built from")
 
     desc = descriptors.get(gid)
     served_ids: list[str] = []
@@ -306,6 +335,11 @@ def _check_asset_container(collection, gid, group, descriptors, all_xids) -> int
 def _check_plugin_group(collection, gid, group, all_xids) -> int:
     if group.get("usdschemaplugingroupid") != gid:
         err(f"{collection}/{gid}: usdschemaplugingroupid mismatch")
+    if not is_valid_xregistry_id(gid):
+        err(f"{collection}/{gid}: group id is not a legal xRegistry <SINGULAR>id")
+    if not group.get("name"):
+        err(f"{collection}/{gid}: missing name (REQUIRED so a person browsing the registry "
+            f"sees the plugin name)")
     resources = group.get(RESOURCES, {})
     if group.get(f"{RESOURCES}count") != len(resources):
         err(f"{collection}/{gid}: {RESOURCES}count {group.get(f'{RESOURCES}count')!r} != {len(resources)}")
@@ -332,15 +366,20 @@ def _check_plugin_group(collection, gid, group, all_xids) -> int:
     if kinds.count("SchemaPlugin") != 1 or kinds.count("GeneratedSchema") != 1:
         err(f"{collection}/{gid}: need exactly one SchemaPlugin and one GeneratedSchema, got {sorted(kinds)}")
 
-    # The group id IS the plugin name (xRegistry spec §4.3), checked against the
-    # embedded manifest's Plugins[0].Name re-read from the document itself.
+    # The group id is the symbolic identifier of the plugin name (xRegistry spec §4.3),
+    # re-derived from the embedded manifest's Plugins[0].Name read from the document
+    # itself, and the group's name carries that plugin name verbatim.
     if "labels" in group:
         err(f"{collection}/{gid}: group metadata must be typed attributes, not labels")
     if manifest_name is None:
         err(f"{collection}/{gid}: no parseable plugInfo manifest Name in the document")
     else:
-        if gid != manifest_name:
-            err(f"{collection}/{gid}: group key != manifest Name {manifest_name!r}")
+        if gid != symbolic_id(manifest_name):
+            err(f"{collection}/{gid}: group key is not the symbolic identifier of manifest "
+                f"Name {manifest_name!r} (expected {symbolic_id(manifest_name)!r})")
+        if group.get("name") and group.get("name") != manifest_name:
+            err(f"{collection}/{gid}: name {group.get('name')!r} is not the manifest "
+                f"Name {manifest_name!r} verbatim")
 
     for aid, text in text_by_aid.items():
         _check_dependencies(collection, gid, aid, text, deps_by_aid[aid], ids_in_group, "group")
@@ -368,11 +407,14 @@ def _verify_schema_plugin_with_usd(doc):
                 with open(os.path.join(verify_dir, rid), "w", encoding="utf-8", newline="") as fh:
                     fh.write(res.get("usdasset", ""))
             plugs = Plug.Registry().RegisterPlugins(verify_dir)
-            if gid not in [p.name for p in plugs]:
-                err(f"schema plugin '{gid}' did not register through PlugRegistry")
+            manifest = json.loads(group[RESOURCES]["plugInfo.json"]["usdasset"])
+            # PlugRegistry reports the plugin's own name, which the group id is the
+            # symbolic identifier of rather than a copy of.
+            plugin_name = manifest["Plugins"][0]["Name"]
+            if plugin_name not in [p.name for p in plugs]:
+                err(f"schema plugin '{plugin_name}' did not register through PlugRegistry")
                 continue
             reg = Usd.SchemaRegistry()
-            manifest = json.loads(group[RESOURCES]["plugInfo.json"]["usdasset"])
             for tname, tinfo in manifest["Plugins"][0]["Info"]["Types"].items():
                 got = str(reg.GetSchemaKind(tname))
                 want = tinfo["schemaKind"]

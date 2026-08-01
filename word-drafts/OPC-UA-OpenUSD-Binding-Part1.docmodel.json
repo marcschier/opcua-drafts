@@ -7378,7 +7378,7 @@
               },
               {
                 "r": "t",
-                "text": " is its URL-safe encoding, so the two are inter-derivable ("
+                "text": " is the symbolic identifier constructed from it, a one-way construction that is never inverted ("
               },
               {
                 "r": "t",
@@ -8504,16 +8504,31 @@
           },
           {
             "r": "t",
-            "text": "), and requires each entity's identifier to be a "
+            "text": "), and constrains each entity's identifier to a restricted character set — RFC 3986 "
+          },
+          {
+            "r": "code",
+            "text": "unreserved"
           },
           {
             "r": "t",
-            "text": "URL-safe token",
-            "b": true
+            "text": " plus "
+          },
+          {
+            "r": "code",
+            "text": ":"
           },
           {
             "r": "t",
-            "text": ". A USD "
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "@"
+          },
+          {
+            "r": "t",
+            "text": ", at most 128 characters, unique case-insensitively within its parent. A USD "
           },
           {
             "r": "t",
@@ -8572,7 +8587,7 @@
           },
           {
             "r": "t",
-            "text": ", and an "
+            "text": ", an "
           },
           {
             "r": "code",
@@ -8580,7 +8595,15 @@
           },
           {
             "r": "t",
-            "text": " is not what a layer authors."
+            "text": " is not what a layer authors, and an identifier such as "
+          },
+          {
+            "r": "code",
+            "text": "textures/albedo.png"
+          },
+          {
+            "r": "t",
+            "text": " cannot appear in an identifier segment at all."
           }
         ],
         "src": {
@@ -8595,16 +8618,33 @@
         "runs": [
           {
             "r": "t",
-            "text": "This specification therefore does not equate them; it makes them "
+            "text": "This specification therefore does not equate them; it derives one from the other by the "
           },
           {
             "r": "t",
-            "text": "deterministically inter-derivable",
+            "text": "symbolic identifier construction",
             "b": true
           },
           {
             "r": "t",
-            "text": ", which is what a resolver actually needs:"
+            "text": " of "
+          },
+          {
+            "r": "t",
+            "text": "OPC UA — xRegistry",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " "
+          },
+          {
+            "r": "t",
+            "text": "§6.9"
+          },
+          {
+            "r": "t",
+            "text": ", and keeps the authored identifier as the authority:"
           }
         ],
         "src": {
@@ -8660,7 +8700,7 @@
           },
           {
             "r": "t",
-            "text": " be the URL-safe percent-encoding of that "
+            "text": " be the symbolic identifier constructed from that "
           },
           {
             "r": "code",
@@ -8684,24 +8724,24 @@
           },
           {
             "r": "t",
-            "text": ", and the asset identifier "
+            "text": ". "
+          },
+          {
+            "r": "code",
+            "text": "AssetIdentifier"
           },
           {
             "r": "t",
-            "text": "shall",
+            "text": " is Mandatory and is the authority: a client "
+          },
+          {
+            "r": "t",
+            "text": "shall not",
             "b": true
           },
           {
             "r": "t",
-            "text": " be recoverable from the "
-          },
-          {
-            "r": "code",
-            "text": "Xid"
-          },
-          {
-            "r": "t",
-            "text": " by percent-decoding its last segment."
+            "text": " attempt to recover it by inverting the construction."
           }
         ],
         "src": {
@@ -8716,7 +8756,7 @@
         "runs": [
           {
             "r": "t",
-            "text": "Both directions are therefore closed-form, with no lookup table:"
+            "text": "The forward direction is closed-form, so a resolver needs no lookup table; the reverse direction is a Read, because the construction is deliberately lossy:"
           }
         ],
         "src": {
@@ -8787,7 +8827,15 @@
               },
               {
                 "r": "t",
-                "text": ", percent-encode, append to "
+                "text": ", apply the xRegistry "
+              },
+              {
+                "r": "t",
+                "text": "§6.9"
+              },
+              {
+                "r": "t",
+                "text": " construction, append to "
               },
               {
                 "r": "code",
@@ -8809,7 +8857,15 @@
             [
               {
                 "r": "t",
-                "text": "percent-decode the last segment"
+                "text": "Read the artifact's "
+              },
+              {
+                "r": "code",
+                "text": "AssetIdentifier"
+              },
+              {
+                "r": "t",
+                "text": " Property"
               }
             ]
           ]
@@ -8820,6 +8876,209 @@
           "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
           "s": "7.11.3 Resolver identity",
           "b": 4
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "For example, in container "
+          },
+          {
+            "r": "code",
+            "text": "fabrikam.plant-01"
+          },
+          {
+            "r": "t",
+            "text": ":"
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.11.3 Resolver identity",
+          "b": 5
+        }
+      },
+      {
+        "t": "table",
+        "id": "resolver-identity-tab2",
+        "caption": "Resolver identity (2)",
+        "kind": "generic",
+        "headers": [
+          [
+            {
+              "r": "t",
+              "text": "Authored"
+            }
+          ],
+          [
+            {
+              "r": "code",
+              "text": "AssetIdentifier"
+            }
+          ],
+          [
+            {
+              "r": "code",
+              "text": "ResourceId"
+            }
+          ],
+          [
+            {
+              "r": "code",
+              "text": "Name"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "r": "code",
+                "text": "@./pump.usda@"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "pump.usda"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "pump.usda"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "pump.usda"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "code",
+                "text": "@textures/albedo.png@"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "textures/albedo.png"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "textures.albedo.png"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "textures/albedo.png"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "code",
+                "text": "@pkg.usdz[tex/a.png]@"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "pkg.usdz[tex/a.png]"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "pkg.usdz-tex.a.png"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "pkg.usdz[tex/a.png]"
+              }
+            ]
+          ]
+        ],
+        "widths": null,
+        "note": null,
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.11.3 Resolver identity",
+          "b": 6
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "code",
+            "text": "Name"
+          },
+          {
+            "r": "t",
+            "text": " is Mandatory on every group and artifact and "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " be the "
+          },
+          {
+            "r": "code",
+            "text": "AssetIdentifier"
+          },
+          {
+            "r": "t",
+            "text": " verbatim for an artifact and the asset container identifier verbatim for a group, so an operator browsing "
+          },
+          {
+            "r": "code",
+            "text": "Artifacts"
+          },
+          {
+            "r": "t",
+            "text": " with a generic OPC UA client sees the string a layer actually authors. A server "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " set each node's DisplayName from its "
+          },
+          {
+            "r": "code",
+            "text": "Name"
+          },
+          {
+            "r": "t",
+            "text": "."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.11.3 Resolver identity",
+          "b": 7
         }
       },
       {
@@ -8855,7 +9114,7 @@
         "src": {
           "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
           "s": "7.11.3 Resolver identity",
-          "b": 5
+          "b": 8
         }
       },
       {
@@ -8932,7 +9191,38 @@
         "src": {
           "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
           "s": "7.11.3 Resolver identity",
-          "b": 6
+          "b": 9
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "A "
+          },
+          {
+            "r": "code",
+            "text": "ResourceId"
+          },
+          {
+            "r": "t",
+            "text": " is therefore never derived from the artifact's bytes: an identifier computed from a document would change on every revision and split one logical artifact into a new resource each time. The content hash of a version is its "
+          },
+          {
+            "r": "code",
+            "text": "Digest"
+          },
+          {
+            "r": "t",
+            "text": ", which is version-level metadata."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+          "s": "7.11.3 Resolver identity",
+          "b": 10
         }
       },
       {
@@ -8955,7 +9245,7 @@
         "src": {
           "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
           "s": "7.11.3 Resolver identity",
-          "b": 7
+          "b": 11
         }
       },
       {
@@ -9072,7 +9362,7 @@
         "src": {
           "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
           "s": "7.11.3 Resolver identity",
-          "b": 8
+          "b": 12
         }
       },
       {
@@ -9136,7 +9426,7 @@
         "src": {
           "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
           "s": "7.11.3 Resolver identity",
-          "b": 9
+          "b": 13
         }
       },
       {
@@ -9426,7 +9716,7 @@
         "src": {
           "f": "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
           "s": "7.11.3 Resolver identity",
-          "b": 10
+          "b": 14
         }
       },
       {
@@ -9670,7 +9960,7 @@
         "runs": [
           {
             "r": "t",
-            "text": "One served USD artifact: authored content the server delivers through the address space so a connector can fetch it and compose the stage locally, with no external resolver. OpenUsdAssetType subtypes the xRegistry ResourceType, which is itself a Part 5 FileType, so the artifact's bytes are streamed directly through the node's own Open/Read/Close while the node also carries the xRegistry entity attributes. AssetIdentifier is the authored USD resolver identifier, normalized relative to its asset container; the inherited xRegistry ResourceId is its URL-safe encoding, so the two are inter-derivable and the registry is addressable as an ArResolver backend without conflating the two identifier grammars."
+            "text": "One served USD artifact: authored content the server delivers through the address space so a connector can fetch it and compose the stage locally, with no external resolver. OpenUsdAssetType subtypes the xRegistry ResourceType, which is itself a Part 5 FileType, so the artifact's bytes are streamed directly through the node's own Open/Read/Close while the node also carries the xRegistry entity attributes. AssetIdentifier is the authored USD resolver identifier, normalized relative to its asset container, and is the artifact's source identity; the inherited xRegistry ResourceId is the symbolic identifier constructed from it, a one-way construction that is never inverted, so the registry is addressable as an ArResolver backend without conflating the two identifier grammars."
           }
         ]
       },
@@ -10519,7 +10809,7 @@
             },
             {
               "r": "t",
-              "text": " the URL-safe encoding of its "
+              "text": " the symbolic identifier of its "
             },
             {
               "r": "code",
@@ -10527,11 +10817,21 @@
             },
             {
               "r": "t",
-              "text": " so the two are inter-derivable ("
+              "text": " and each artifact's and group's "
+            },
+            {
+              "r": "code",
+              "text": "Name"
             },
             {
               "r": "t",
-              "text": "§7.11.3"
+              "text": " the corresponding identifier verbatim ("
+            },
+            {
+              "r": "xref",
+              "target": "c7-11-3",
+              "kind": "clause",
+              "prefix": "7.11.3"
             },
             {
               "r": "t",
@@ -10756,7 +11056,7 @@
           },
           {
             "r": "t",
-            "text": " percent-decodes to its "
+            "text": " equals the symbolic identifier re-derived from its "
           },
           {
             "r": "code",
@@ -10764,7 +11064,33 @@
           },
           {
             "r": "t",
-            "text": ", that "
+            "text": " ("
+          },
+          {
+            "r": "xref",
+            "target": "c7-11-3",
+            "kind": "clause",
+            "prefix": "7.11.3"
+          },
+          {
+            "r": "t",
+            "text": ") and that its "
+          },
+          {
+            "r": "code",
+            "text": "Name"
+          },
+          {
+            "r": "t",
+            "text": " is that "
+          },
+          {
+            "r": "code",
+            "text": "AssetIdentifier"
+          },
+          {
+            "r": "t",
+            "text": " verbatim, that "
           },
           {
             "r": "code",
@@ -10885,7 +11211,7 @@
             [
               {
                 "r": "t",
-                "text": "0.5.0"
+                "text": "0.6.0"
               }
             ]
           ],
@@ -10905,7 +11231,7 @@
             [
               {
                 "r": "t",
-                "text": "2026-07-29"
+                "text": "2026-07-31"
               }
             ]
           ],

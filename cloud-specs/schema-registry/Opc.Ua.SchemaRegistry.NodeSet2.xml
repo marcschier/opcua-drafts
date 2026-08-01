@@ -6,9 +6,9 @@
     <Uri>http://opcfoundation.org/UA/SchemaRegistry/</Uri>
   </NamespaceUris>
   <Models>
-    <Model ModelUri="http://opcfoundation.org/UA/SchemaRegistry/" Version="0.2.0" PublicationDate="2026-07-16T00:00:00Z">
+    <Model ModelUri="http://opcfoundation.org/UA/SchemaRegistry/" Version="0.3.0" PublicationDate="2026-07-31T00:00:00Z">
       <RequiredModel ModelUri="http://opcfoundation.org/UA/" Version="1.05.04" PublicationDate="2024-05-01T00:00:00Z" />
-      <RequiredModel ModelUri="http://opcfoundation.org/UA/xRegistry/" Version="0.1.0" PublicationDate="2026-07-16T00:00:00Z" />
+      <RequiredModel ModelUri="http://opcfoundation.org/UA/xRegistry/" Version="0.3.0" PublicationDate="2026-07-31T00:00:00Z" />
     </Model>
   </Models>
   <Aliases>
@@ -42,6 +42,7 @@
     <DisplayName>SchemaGroupType</DisplayName>
     <Description>An xRegistry GroupType keyed by an OPC UA namespace URI; a folder of schema files for the DataTypes and PublishedDataSets of that namespace.</Description>
     <Category>SREG-SchemaDownload</Category>
+    <Category>SREG-Identity</Category>
     <Category>SREG-StructureMaterialization</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=63001</Reference>
@@ -53,6 +54,7 @@
     <DisplayName>SchemaFileType</DisplayName>
     <Description>An xRegistry ResourceType whose file content is one concrete schema document (Avro, Apache Arrow or JSON Schema). Adds the OPC UA schema-decoding metadata (SchemaId and per-encoding fields) used by a consumer that must resolve a schema from an on-wire fingerprint.</Description>
     <Category>SREG-SchemaDownload</Category>
+    <Category>SREG-Identity</Category>
     <Category>SREG-SchemaVersioning</Category>
     <Category>SREG-TtlMirror</Category>
     <References>
@@ -67,6 +69,7 @@
       <Reference ReferenceType="HasProperty">ns=2;i=62513</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=62514</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=62515</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=62519</Reference>
     </References>
   </UAObjectType>
   <UAObject NodeId="ns=2;i=62500" BrowseName="2:&lt;SchemaGroup&gt;" ParentNodeId="ns=2;i=62000">
@@ -108,7 +111,7 @@
   </UAVariable>
   <UAVariable NodeId="ns=2;i=62504" BrowseName="2:NamespaceUri" ParentNodeId="ns=2;i=62001" DataType="String" ValueRank="-1">
     <DisplayName>NamespaceUri</DisplayName>
-    <Description>The OPC UA namespace URI represented by this schema group (the xRegistry group key).</Description>
+    <Description>The OPC UA namespace URI represented by this schema group (the xRegistry group key). It is the group's source identity: the GroupId is the symbolic identifier constructed from it, and Name is this URI verbatim.</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=78</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
@@ -251,5 +254,14 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=62516</Reference>
     </References>
     <Value><ListOfExtensionObject xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd"><ExtensionObject><TypeId><Identifier>i=297</Identifier></TypeId><Body><Argument><Name>Document</Name><DataType><Identifier>i=15</Identifier></DataType><ValueRank>-1</ValueRank><ArrayDimensions/><Description><Text>Schema document bytes.</Text></Description></Argument></Body></ExtensionObject><ExtensionObject><TypeId><Identifier>i=297</Identifier></TypeId><Body><Argument><Name>Format</Name><DataType><Identifier>i=12</Identifier></DataType><ValueRank>-1</ValueRank><ArrayDimensions/><Description><Text>xRegistry format string.</Text></Description></Argument></Body></ExtensionObject><ExtensionObject><TypeId><Identifier>i=297</Identifier></TypeId><Body><Argument><Name>ContentType</Name><DataType><Identifier>i=12</Identifier></DataType><ValueRank>-1</ValueRank><ArrayDimensions/><Description><Text>Schema document media type.</Text></Description></Argument></Body></ExtensionObject></ListOfExtensionObject></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=2;i=62519" BrowseName="2:SchemaName" ParentNodeId="ns=2;i=62002" DataType="String" ValueRank="-1">
+    <DisplayName>SchemaName</DisplayName>
+    <Description>The name of the subject this schema describes - the DataType BrowseName for a reference DataType schema, or the DataSetName for a PubSub DataSet schema. Together with Format it is the schema's source identity: the ResourceId is the symbolic identifier constructed from the pair, and it is invariant across the schema's versions. It is not the SchemaId, which fingerprints one version's document bytes.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=62002</Reference>
+    </References>
   </UAVariable>
 </UANodeSet>

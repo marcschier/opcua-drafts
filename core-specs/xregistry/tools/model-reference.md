@@ -33,7 +33,7 @@ The abstract xRegistry root, expressed as a FolderType that organizes its Group 
 | CapabilitiesInfo | Variable | [RegistryCapabilitiesDataType](#type-RegistryCapabilitiesDataType) | Optional | RegistryType | The typed form of the registry capabilities (RegistryCapabilitiesDataType), read as a single Variant value, in addition to the raw JSON of the Capabilities FileType. |
 | Xid | Variable | String | Optional | RegistryType | xRegistry relative identifier (xid): the entity's stable path within the registry, independent of the hosting endpoint. |
 | Epoch | Variable | UInt32 | Optional | RegistryType | xRegistry epoch: a counter that increments on every change to the entity. |
-| Name | Variable | String | Optional | RegistryType | Human-readable name of the entity. |
+| Name | Variable | String | Optional | RegistryType | Human-readable name of the entity, and the source of its DisplayName. Where the entity's source identity is itself readable - a namespace URI, an authored asset identifier - Name is that identity verbatim, so a Client that shows only an identifier and a name still shows something a human recognizes. |
 | Description | Variable | String | Optional | RegistryType | Human-readable description of the entity. |
 | Documentation | Variable | String | Optional | RegistryType | URL to human-readable documentation for the entity. |
 | Labels | Object |  | Optional | RegistryType | The entity's extensible xRegistry labels/attributes, exposed as an AttributesType container: each label is a browsable PropertyType Variable, added and removed with the container's AddAttribute/RemoveAttribute Methods. Deleted together with the entity. |
@@ -53,10 +53,10 @@ An abstract xRegistry group, expressed as a FolderType that organizes its resour
 
 | BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
 |---|---|---|---|---|---|
-| GroupId | Variable | String | Mandatory | GroupType | xRegistry groupid: the stable identifier of this group. Group identifiers are globally unique for federation. |
+| GroupId | Variable | String | Mandatory | GroupType | xRegistry groupid: the symbolic identifier of this group, constructed from the group's source identity (the group key) by the reverse-authority construction of the specification. Group identifiers are globally unique for federation. |
 | Xid | Variable | String | Optional | GroupType | xRegistry relative identifier (xid): the entity's stable path within the registry, independent of the hosting endpoint. |
 | Epoch | Variable | UInt32 | Optional | GroupType | xRegistry epoch: a counter that increments on every change to the entity. |
-| Name | Variable | String | Optional | GroupType | Human-readable name of the entity. |
+| Name | Variable | String | Mandatory | GroupType | Human-readable name of the entity, and the source of its DisplayName. Where the entity's source identity is itself readable - a namespace URI, an authored asset identifier - Name is that identity verbatim, so a Client that shows only an identifier and a name still shows something a human recognizes. |
 | Description | Variable | String | Optional | GroupType | Human-readable description of the entity. |
 | Documentation | Variable | String | Optional | GroupType | URL to human-readable documentation for the entity. |
 | Labels | Object |  | Optional | GroupType | The entity's extensible xRegistry labels/attributes, exposed as an AttributesType container: each label is a browsable PropertyType Variable, added and removed with the container's AddAttribute/RemoveAttribute Methods. Deleted together with the entity. |
@@ -77,7 +77,7 @@ An abstract xRegistry resource/version whose document IS the file: the content i
 
 | BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
 |---|---|---|---|---|---|
-| ResourceId | Variable | String | Mandatory | ResourceType | xRegistry resourceid: the stable identifier of the resource within its group. |
+| ResourceId | Variable | String | Mandatory | ResourceType | xRegistry resourceid: the symbolic identifier of the resource within its group, constructed from the resource's source identity by the reverse-authority construction of the specification. It is never derived from the resource document or from a digest of it, so it is invariant across the resource's versions. |
 | VersionId | Variable | String | Optional | ResourceType | xRegistry versionid: the identifier of the version this file represents. |
 | Format | Variable | String | Optional | ResourceType | xRegistry format string identifying the document's schema language/shape. |
 | ContentType | Variable | String | Optional | ResourceType | Media type (content-type) of the document bytes. |
@@ -85,7 +85,7 @@ An abstract xRegistry resource/version whose document IS the file: the content i
 | ResourceUrl | Variable | String | Optional | ResourceType | Federation link (string form): the URL from which the document can be obtained (xRegistry <RESOURCE>url), for example an opc.tcp endpoint plus browse path, or an HTTP URL. |
 | Xid | Variable | String | Optional | ResourceType | xRegistry relative identifier (xid): the entity's stable path within the registry, independent of the hosting endpoint. |
 | Epoch | Variable | UInt32 | Optional | ResourceType | xRegistry epoch: a counter that increments on every change to the entity. |
-| Name | Variable | String | Optional | ResourceType | Human-readable name of the entity. |
+| Name | Variable | String | Mandatory | ResourceType | Human-readable name of the entity, and the source of its DisplayName. Where the entity's source identity is itself readable - a namespace URI, an authored asset identifier - Name is that identity verbatim, so a Client that shows only an identifier and a name still shows something a human recognizes. |
 | Description | Variable | String | Optional | ResourceType | Human-readable description of the entity. |
 | Documentation | Variable | String | Optional | ResourceType | URL to human-readable documentation for the entity. |
 | Labels | Object |  | Optional | ResourceType | The entity's extensible xRegistry labels/attributes, exposed as an AttributesType container: each label is a browsable PropertyType Variable, added and removed with the container's AddAttribute/RemoveAttribute Methods. Deleted together with the entity. |

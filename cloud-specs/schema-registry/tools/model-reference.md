@@ -37,7 +37,7 @@ An xRegistry GroupType keyed by an OPC UA namespace URI; a folder of schema file
 
 | BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
 |---|---|---|---|---|---|
-| NamespaceUri | Variable | String | Mandatory | SchemaGroupType | The OPC UA namespace URI represented by this schema group (the xRegistry group key). |
+| NamespaceUri | Variable | String | Mandatory | SchemaGroupType | The OPC UA namespace URI represented by this schema group (the xRegistry group key). It is the group's source identity: the GroupId is the symbolic identifier constructed from it, and Name is this URI verbatim. |
 | <Schema> | Object |  | OptionalPlaceholder | SchemaGroupType | A schema file (one DataType/DataSet in one format) held by this group. |
 
 <a id="type-SchemaFileType"></a>
@@ -60,6 +60,7 @@ An xRegistry ResourceType whose file content is one concrete schema document (Av
 | ConfigurationVersion | Variable | [ConfigurationVersionDataType](https://reference.opcfoundation.org/specs/OPC-10000-14/6.2.3#6.2.3.2.6) | Optional | SchemaFileType | PubSub DataSet schema profile only: the Part 14 ConfigurationVersion (opcua.configurationversion) when the schema describes a DataSet. Omitted for a non-PubSub schema registry. |
 | ExpiryTime | Variable | DateTime | Optional | SchemaFileType | Optional UTC expiry time for mirror/cache mode. |
 | Ttl | Variable | Duration | Optional | SchemaFileType | Optional time-to-live for mirror/cache mode. |
+| SchemaName | Variable | String | Mandatory | SchemaFileType | The name of the subject this schema describes - the DataType BrowseName for a reference DataType schema, or the DataSetName for a PubSub DataSet schema. Together with Format it is the schema's source identity: the ResourceId is the symbolic identifier constructed from the pair, and it is invariant across the schema's versions. It is not the SchemaId, which fingerprints one version's document bytes. |
 
 ### Methods
 

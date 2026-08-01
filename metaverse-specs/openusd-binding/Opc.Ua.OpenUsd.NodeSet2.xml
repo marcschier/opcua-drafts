@@ -6,9 +6,9 @@
     <Uri>http://opcfoundation.org/UA/OpenUSD/</Uri>
   </NamespaceUris>
   <Models>
-    <Model ModelUri="http://opcfoundation.org/UA/OpenUSD/" Version="0.5.0" PublicationDate="2026-07-29T00:00:00Z">
+    <Model ModelUri="http://opcfoundation.org/UA/OpenUSD/" Version="0.6.0" PublicationDate="2026-07-31T00:00:00Z">
       <RequiredModel ModelUri="http://opcfoundation.org/UA/" Version="1.05.04" PublicationDate="2023-12-15T00:00:00Z" />
-      <RequiredModel ModelUri="http://opcfoundation.org/UA/xRegistry/" Version="0.1.0" PublicationDate="2026-07-16T00:00:00Z" />
+      <RequiredModel ModelUri="http://opcfoundation.org/UA/xRegistry/" Version="0.3.0" PublicationDate="2026-07-31T00:00:00Z" />
     </Model>
   </Models>
   <Aliases>
@@ -890,7 +890,7 @@
   </UAVariable>
   <UAObjectType NodeId="ns=2;i=1006" BrowseName="2:OpenUsdAssetType">
     <DisplayName>OpenUsdAssetType</DisplayName>
-    <Description>One served USD artifact: authored content the server delivers through the address space so a connector can fetch it and compose the stage locally, with no external resolver. OpenUsdAssetType subtypes the xRegistry ResourceType, which is itself a Part 5 FileType, so the artifact's bytes are streamed directly through the node's own Open/Read/Close while the node also carries the xRegistry entity attributes. AssetIdentifier is the authored USD resolver identifier, normalized relative to its asset container; the inherited xRegistry ResourceId is its URL-safe encoding, so the two are inter-derivable and the registry is addressable as an ArResolver backend without conflating the two identifier grammars.</Description>
+    <Description>One served USD artifact: authored content the server delivers through the address space so a connector can fetch it and compose the stage locally, with no external resolver. OpenUsdAssetType subtypes the xRegistry ResourceType, which is itself a Part 5 FileType, so the artifact's bytes are streamed directly through the node's own Open/Read/Close while the node also carries the xRegistry entity attributes. AssetIdentifier is the authored USD resolver identifier, normalized relative to its asset container, and is the artifact's source identity; the inherited xRegistry ResourceId is the symbolic identifier constructed from it, a one-way construction that is never inverted, so the registry is addressable as an ArResolver backend without conflating the two identifier grammars.</Description>
     <Category>OU-AssetDelivery</Category>
     <Category>OU-ArtifactRegistry</Category>
     <Category>OU-ArtifactFederation</Category>
@@ -906,7 +906,7 @@
   </UAObjectType>
   <UAVariable NodeId="ns=2;i=6060" BrowseName="2:AssetIdentifier" ParentNodeId="ns=2;i=1006" DataType="String" ValueRank="-1">
     <DisplayName>AssetIdentifier</DisplayName>
-    <Description>Resolver identifier / relative path of this asset, matching the stage RootLayerIdentifier or a ComponentAssetReference asset path; used for @...@ resolution and cache placement.</Description>
+    <Description>Resolver identifier / relative path of this asset, matching the stage RootLayerIdentifier or a ComponentAssetReference asset path; used for @...@ resolution and cache placement. It is the artifact's source identity: the inherited ResourceId is the symbolic identifier constructed from it, and the inherited Name is this string verbatim.</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=78</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
@@ -978,7 +978,7 @@
   </UAVariable>
   <UAObjectType NodeId="ns=2;i=1012" BrowseName="2:OpenUsdArtifactRegistryType">
     <DisplayName>OpenUsdArtifactRegistryType</DisplayName>
-    <Description>The server's OpenUSD artifact registry - an xRegistry RegistryType (a FolderType) holding every USD artifact the server serves: layers, packages, textures, MaterialX documents, volumes, schema plugins and manifests. Exposed as the Artifacts component of OpenUsdRootType, it is the single backbone all stages resolve against, replacing per-stage duplication. Each artifact's ResourceId is the URL-safe encoding of its USD asset identifier, so the registry is directly addressable as an ArResolver backend and xRegistry federation (ResourceUrl / ExternalReference) is the resolver fallback chain.</Description>
+    <Description>The server's OpenUSD artifact registry - an xRegistry RegistryType (a FolderType) holding every USD artifact the server serves: layers, packages, textures, MaterialX documents, volumes, schema plugins and manifests. Exposed as the Artifacts component of OpenUsdRootType, it is the single backbone all stages resolve against, replacing per-stage duplication. Each artifact's ResourceId is the symbolic identifier of its USD asset identifier, so the registry is directly addressable as an ArResolver backend and xRegistry federation (ResourceUrl / ExternalReference) is the resolver fallback chain.</Description>
     <Category>OU-ArtifactRegistry</Category>
     <Category>OU-ArtifactFederation</Category>
     <References>
@@ -1063,7 +1063,7 @@
   </UAObject>
   <UAObject NodeId="ns=2;i=6074" BrowseName="2:&lt;Asset&gt;" ParentNodeId="ns=2;i=1013">
     <DisplayName>&lt;Asset&gt;</DisplayName>
-    <Description>Constrains the inherited &lt;Resource&gt; placeholder: an artifact of this asset container, addressed by the URL-safe encoding of its AssetIdentifier.</Description>
+    <Description>Constrains the inherited &lt;Resource&gt; placeholder: an artifact of this asset container, addressed by the symbolic identifier of its AssetIdentifier.</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=11508</Reference>
       <Reference ReferenceType="HasTypeDefinition">ns=2;i=1006</Reference>

@@ -1,11 +1,11 @@
 {
-  "description": "OpenUSD artifact registry (draft): artist-authored USD layers and a codeless schema plugin for the OPC UA <-> OpenUSD bindings, addressable as a USD ArResolver backend (AssetIdentifier <-> ResourceId <-> Xid, inter-derivable per §5.15.3).",
+  "description": "OpenUSD artifact registry (draft): artist-authored USD layers and a codeless schema plugin for the OPC UA <-> OpenUSD bindings, addressable as a USD ArResolver backend (AssetIdentifier -> ResourceId -> Xid, a one-way construction per §7.11.3; the assetidentifier is the authority).",
   "registryid": "openusd-artifact-registry",
   "self": "https://registry.example.com/",
   "specversion": "1.0-rc3",
   "usdassetgroups": {
     "pumps": {
-      "name": "pumps/Plant",
+      "name": "pumps",
       "rootlayer": "Plant.usda",
       "usdassetgroupid": "pumps",
       "usdassets": {
@@ -64,7 +64,7 @@
       "usdassetscount": 3
     },
     "robotics": {
-      "name": "robotics/Cell",
+      "name": "robotics",
       "rootlayer": "Cell.usda",
       "usdassetgroupid": "robotics",
       "usdassets": {

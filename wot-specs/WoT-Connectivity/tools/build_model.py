@@ -740,7 +740,11 @@ generates_event(64003, 64013)
 
 # ---- ThingDescriptionFileType members -------------------------------------
 TD = "ThingDescriptionFileType"
-prop_var(64004, TD, "ThingId", String, "The Thing Description id (a URI/URN identifying the concrete Thing instance).")
+prop_var(64004, TD, "ThingId", String,
+         "The Thing Description id (a URI/URN identifying the concrete Thing instance). It is the "
+         "resource's source identity: the inherited ResourceId is the symbolic identifier "
+         "constructed from it, and it is invariant across the document's versions.",
+         rule=MR_Mandatory)
 prop_var(64004, TD, "ThingTitle", String, "The Thing Description human-readable title.")
 prop_var(64004, TD, "BaseUri", String, "The Thing Description base URI used to resolve relative form hrefs.")
 prop_var(64004, TD, "ModelReference", String,
@@ -820,6 +824,26 @@ instance_var(64100, "WoTRegistry", "RefreshGeneration", UInt32,
     "(Mandatory). Materialized as 0 at load time, before any Refresh has committed.",
     _scalar_value("UInt32", 0))
 
+# Appended members take the next free member id at the end of the declaration order, so
+# adding one never renumbers an existing node. Each belongs to the type named in its first
+# argument and is rendered with that type's members in Annex A regardless of where it is
+# declared here.
+prop_var(64001, DG, "CatalogUri", String,
+         "The URI of the catalogue this group collects - a site, a vendor catalogue or another "
+         "publishing authority. It is the group's source identity: the inherited GroupId is the "
+         "symbolic identifier constructed from it, and the inherited Name is this URI verbatim.",
+         rule=MR_Mandatory)
+prop_var(64002, MG, "CatalogUri", String,
+         "The URI of the catalogue this group collects - a site, a vendor catalogue or another "
+         "publishing authority. It is the group's source identity: the inherited GroupId is the "
+         "symbolic identifier constructed from it, and the inherited Name is this URI verbatim.",
+         rule=MR_Mandatory)
+prop_var(64005, TM, "ModelId", String,
+         "The Thing Model id (the WoT @id, a URI identifying the model). It is the resource's "
+         "source identity: the inherited ResourceId is the symbolic identifier constructed from "
+         "it, and it is invariant across the document's versions.",
+         rule=MR_Mandatory)
+
 # ===========================================================================
 # ==============  LEGACY OPC 10100-1 v1.02 MODEL (incorporated)  ============
 # ===========================================================================
@@ -845,6 +869,7 @@ CAT_LEGACY_INST = "WoT Connectivity 1.02 Legacy Instances"
 # conformance clause. The CAT_* values above group nodes for generation only — they are
 # not conformance units and are never emitted as <Category>.
 CU_REGISTRY_DISCOVERY = "WOTC-RegistryDiscovery"
+CU_IDENTITY = "WOTC-Identity"
 CU_DOCUMENT_READ = "WOTC-DocumentRead"
 CU_DOCUMENT_WRITE = "WOTC-DocumentWrite"
 CU_TD_VALIDATION = "WOTC-TDValidation"
@@ -867,8 +892,8 @@ CU_LEGACY = "WOTC-Legacy"
 # clause and this table have to agree, so the check that every emitted unit is named in
 # the clause is meaningful rather than circular.
 ALL_CONFORMANCE_UNITS = (
-    CU_REGISTRY_DISCOVERY, CU_DOCUMENT_READ, CU_DOCUMENT_WRITE, CU_TD_VALIDATION,
-    CU_TM_VALIDATION, CU_TYPE_MATERIALIZATION, CU_INSTANCE_MATERIALIZATION,
+    CU_REGISTRY_DISCOVERY, CU_IDENTITY, CU_DOCUMENT_READ, CU_DOCUMENT_WRITE,
+    CU_TD_VALIDATION, CU_TM_VALIDATION, CU_TYPE_MATERIALIZATION, CU_INSTANCE_MATERIALIZATION,
     CU_REFERENCE_MATERIALIZATION, CU_REFRESH, CU_EVENTS, CU_MODEL_CHANGE,
     CU_SEMANTIC_CHANGE, CU_VERSION_LIFECYCLE, CU_FEDERATION, CU_BINDER_CORE,
     CU_BINDER_PROTOCOL, CU_ATOMICITY_MODES, CU_LEGACY,
@@ -878,12 +903,13 @@ ALL_CONFORMANCE_UNITS = (
 # implied by its structural category.
 UNITS_BY_NAME = {
     "WoTRegistryType": (CU_REGISTRY_DISCOVERY, CU_REFRESH),
-    "ThingDescriptionGroupType": (CU_REGISTRY_DISCOVERY,),
-    "ThingModelGroupType": (CU_REGISTRY_DISCOVERY,),
+    "ThingDescriptionGroupType": (CU_REGISTRY_DISCOVERY, CU_IDENTITY),
+    "ThingModelGroupType": (CU_REGISTRY_DISCOVERY, CU_IDENTITY),
     "WoTDocumentType": (CU_DOCUMENT_READ, CU_DOCUMENT_WRITE, CU_VERSION_LIFECYCLE),
-    "ThingDescriptionFileType": (CU_DOCUMENT_READ, CU_TD_VALIDATION,
+    "ThingDescriptionFileType": (CU_DOCUMENT_READ, CU_IDENTITY, CU_TD_VALIDATION,
                                  CU_INSTANCE_MATERIALIZATION),
-    "ThingModelFileType": (CU_DOCUMENT_READ, CU_TM_VALIDATION, CU_TYPE_MATERIALIZATION),
+    "ThingModelFileType": (CU_DOCUMENT_READ, CU_IDENTITY, CU_TM_VALIDATION,
+                           CU_TYPE_MATERIALIZATION),
     "WoTBindingType": (CU_BINDER_CORE, CU_BINDER_PROTOCOL),
 
     "WoTResourceEventType": (CU_EVENTS,),
@@ -1271,11 +1297,11 @@ build_legacy()
 # Emission
 # ===========================================================================
 NAMESPACE = "http://opcfoundation.org/UA/WoT-Con/"
-VERSION = "1.2.0"
-PUBDATE = "2026-07-22T00:00:00Z"
+VERSION = "1.3.0"
+PUBDATE = "2026-07-31T00:00:00Z"
 XR_NAMESPACE = "http://opcfoundation.org/UA/xRegistry/"
-XR_VERSION = "0.1.0"
-XR_PUBDATE = "2026-07-16T00:00:00Z"
+XR_VERSION = "0.3.0"
+XR_PUBDATE = "2026-07-31T00:00:00Z"
 UA_REQUIRED_VERSION = "1.05.04"
 UA_REQUIRED_PUBDATE = "2024-05-01T00:00:00Z"
 
@@ -1682,6 +1708,28 @@ def emit_md():
     return "\n".join(md).rstrip("\n") + "\n"
 
 
+def inject(path, rendered):
+    """Replace the embedded Annex A in the specification document.
+
+    The annex runs from the ``annex-a`` anchor to the next ``## Annex`` heading, or to the
+    end of the document when there is none, so the document cannot drift from the model:
+    it is the same text ``model-reference.md`` holds, and `validate_local.py` checks the
+    two are equal.
+    """
+    with open(path, encoding="utf-8") as f:
+        text = f.read()
+    start = text.index('<a id="annex-a"></a>')
+    after_a = text.index("## Annex A")
+    nxt = text.find("\n## Annex ", after_a)
+    finish = len(text) if nxt < 0 else nxt + 1
+    new_text = text[:start] + rendered + text[finish:]
+    if new_text != text:
+        with open(path, "w", encoding="utf-8", newline="\n") as f:
+            f.write(new_text)
+        return True
+    return False
+
+
 if __name__ == "__main__":
     here = os.path.dirname(os.path.abspath(__file__))
     outdir = os.path.dirname(here)
@@ -1689,8 +1737,11 @@ if __name__ == "__main__":
         f.write(emit())
     with open(os.path.join(outdir, "Opc.Ua.WoTCon.NodeIds.csv"), "w", encoding="utf-8") as f:
         f.write(emit_csv())
+    annex = emit_md()
     with open(os.path.join(here, "model-reference.md"), "w", encoding="utf-8") as f:
-        f.write(emit_md())
+        f.write(annex)
+    if inject(os.path.join(outdir, "OPC-UA-WoT-Connectivity.md"), annex):
+        print("Injected Annex A into OPC-UA-WoT-Connectivity.md")
     nt = sum(1 for k in NODES if NODES[k].cls in ("UAObjectType", "UADataType", "UAReferenceType"))
     print(f"Nodes: {len(NODES)}  (types: {nt})")
     print(f"Member id range: 64500..{_next_member[0] - 1}")

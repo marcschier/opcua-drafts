@@ -4,7 +4,7 @@
 **Proposed Part: OPC 10000-2xx (number to be assigned)**
 **Companion namespace:** `http://opcfoundation.org/UA/SchemaRegistry/`
 **Extends:** [*OPC UA — xRegistry*](../../core-specs/xregistry/OPC-UA-xRegistry.md) (base companion namespace `http://opcfoundation.org/UA/xRegistry/`)
-**Version:** 0.4.0 · **Date:** 2026-07-17
+**Version:** 0.5.0 · **Date:** 2026-07-31
 
 > **Status — working draft.** This document defines an in-server OPC UA **Schema Registry** as a **domain extension of the abstract [OPC UA — xRegistry](../../core-specs/xregistry/OPC-UA-xRegistry.md) companion model**, and therefore as a **first-class OPC UA binding of the xRegistry Schema Registry** — a peer of the xRegistry HTTP binding, not a derivation from it. The registry, its schema groups and its schema documents are OPC UA **FileTransfer** directories and files: browsing the AddressSpace lists the groups and schemas, and reading a schema file returns the schema document. It is a **stand-alone server capability**: it is a well-known object under the **Server** object and a server does **not** have to support PubSub to be a schema registry. On top of the base it adds the schema-specific metadata and the on-wire **SchemaId** fast path a decoder needs. Nothing here is normative or endorsed by the OPC Foundation.
 
@@ -127,12 +127,13 @@ The companion namespace is `http://opcfoundation.org/UA/SchemaRegistry/`. Draft 
 
 ### 6.2 SchemaGroupType
 
-`SchemaGroupType` is a subtype of the base `GroupType`. Each instance is a folder of schema files for one OPC UA namespace, keyed by that namespace URI: its Mandatory `NamespaceUri` Property is the group key (the xRegistry `groupid` may be a server-chosen URL-safe slug of it, retained verbatim in `NamespaceUri`). Keying a schema group by an OPC UA namespace URI is a domain convention of this profile; the generic xRegistry schema group imposes no key or format constraint on its members. Its `<Schema>` OptionalPlaceholder constrains the base `<Resource>` to `SchemaFileType`. Under the PubSub DataSet schema profile (Annex C) the PubSub envelope schemas (NetworkMessage / DataSetMessage) live in the base-namespace group `http://opcfoundation.org/UA/`.
+`SchemaGroupType` is a subtype of the base `GroupType`. Each instance is a folder of schema files for one OPC UA namespace, keyed by that namespace URI: its Mandatory `NamespaceUri` Property is the group key and the group's **source identity**, and the xRegistry `groupid` is the symbolic identifier constructed from it (§6.7), with `NamespaceUri` retained verbatim and repeated as the group's `Name`. Keying a schema group by an OPC UA namespace URI is a domain convention of this profile; the generic xRegistry schema group imposes no key or format constraint on its members. Its `<Schema>` OptionalPlaceholder constrains the base `<Resource>` to `SchemaFileType`. Under the PubSub DataSet schema profile (Annex C) the PubSub envelope schemas (NetworkMessage / DataSetMessage) live in the base-namespace group `http://opcfoundation.org/UA/`.
 
 ### 6.3 SchemaFileType
 
 `SchemaFileType` is a subtype of the base `ResourceType` (itself a `FileType`): the schema document *is* the file. It represents one `(DataType or PublishedDataSet) × format` pair — the three encodings of one DataType are three sibling schema files in the same group. It inherits `Format` and `ContentType` (§6.5) and `VersionId` from the base, and adds the xRegistry version attributes and the OPC UA schema-decoding metadata:
 
+- `SchemaName` (Mandatory, String) — the name of the subject the schema describes: the DataType BrowseName for a reference DataType schema, or the `DataSetName` for a PubSub DataSet schema. Together with `Format` it is the schema's **source identity**, from which the xRegistry `resourceid` is constructed (§6.7). It is invariant across the schema's versions, and it is not the `SchemaId`.
 - `SchemaId` (Mandatory, ByteString) — the raw on-wire SchemaId fingerprint bytes; the file is additionally addressable by the Opaque NodeId built from these bytes (§6.4). Every registered schema has a SchemaId, computed by its format's fingerprint provider (§6.6) — including JSON Schema.
 - `SchemaIdAlg` (Mandatory, String) — the SchemaId algorithm name identifying the `(canonicalization, hash)` used, such as `CRC-64-AVRO` (Avro), `SHA-256/ApacheArrow` (Arrow) or `SHA-256/JCS` (JSON Schema).
 - `Compatibility` (String) — the xRegistry `compatibility` mode the schema's versions adhere to, such as `NONE`, `BACKWARD`, `FORWARD` or `FULL`. This is **Resource-level** metadata — identical across all versions of one schema — so in the flat projection every version file of the same schema carries the same value; a change that would break it starts a **new** schema (a new `SchemaFileType` with a fresh lineage), not a new version. A registry that enforces compatibility advertises it through the base `RegistryCapabilitiesDataType.EnforceCompatibility` capability.
@@ -181,6 +182,31 @@ A format this specification does not enumerate contributes its own provider and 
 
 A consumer holding only a message's SchemaId resolves the schema by matching `SchemaId` — directly through the Opaque SchemaId NodeId or `GetSchema` (§6.4), or by matching within the format's schema group — and confirms the resolved document's `SchemaIdAlg` / `Format` are the ones it expects (§6.4). This resolution is **independent of any OPC UA version** because the SchemaId derives solely from the schema; the compatibility relationship between the SchemaIds of successive Versions of a DataSet is defined in §7 and the PubSub DataSet profile (Annex C). For provenance a schema file also records `ModelVersion`; under the PubSub DataSet profile it additionally records `ConfigurationVersion` (Annex C), while a reference DataType schema carries only `ModelVersion`.
 
+**`SchemaId` is not the xRegistry `schemaid`.** The two are different things that the naming makes easy to conflate. The OPC UA `SchemaId` fingerprints the **bytes of one version's document**: it changes whenever the document changes, and it is what a message puts on the wire. The xRegistry `schemaid` is the schema Resource's `<SINGULAR>id` — the entity identifier — which is constructed from the schema's source identity (§6.7), is **invariant across the schema's versions**, and is never derived from a document. In the JSON projection the fingerprint therefore appears as `labels["opcua.schemafingerprint"]`, not as the resource key (§10.2). An implementation that used a fingerprint as a resource key would create a new Resource on every content change, which contradicts a Resource being the umbrella over its Versions.
+
+### 6.7 Group and schema identifiers
+
+Base §6.9 requires every group and resource to name one **source identity** — a stable string, independent of any document — and to derive its xRegistry identifier from it by the symbolic construction defined there. This clause names the two source identities of a schema registry.
+
+**A schema group's source identity is its `NamespaceUri`.** The `groupid` **shall** be the symbolic identifier constructed from that URI, and the group's `Name` **shall** be the URI verbatim, so a human browsing the registry sees the namespace it names:
+
+| `NamespaceUri` | `groupid` | `Name` |
+|---|---|---|
+| `http://opcfoundation.org/UA/` | `org.opcfoundation.UA` | `http://opcfoundation.org/UA/` |
+| `http://contoso.org/UA/Pumps/` | `org.contoso.UA.Pumps` | `http://contoso.org/UA/Pumps/` |
+
+**A schema's source identity is `(SchemaName, Format)`.** A schema Resource is one subject in one format, so both are needed to identify it and neither alone is unique within a group. The `schemaid` **shall** be the symbolic identifier constructed from `SchemaName` and the format's short token joined by `/` — that is, the construction of base §6.9 applied to `<SchemaName>/<format-token>` — and the schema's `Name` **shall** be a human-readable rendering of the same pair:
+
+| `SchemaName` | `Format` | `schemaid` | `Name` |
+|---|---|---|---|
+| `BoundItemDataType` | `Avro/1.11` | `BoundItemDataType.avro` | `BoundItemDataType (Avro)` |
+| `BoundItemDataType` | `ApacheArrow/1.0` | `BoundItemDataType.arrow` | `BoundItemDataType (Apache Arrow)` |
+| `BoundItemDataType` | `JsonSchema/2020-12` | `BoundItemDataType.jsonschema` | `BoundItemDataType (JSON Schema)` |
+
+The format tokens are `avro`, `arrow` and `jsonschema` for the three formats of §6.5; a format this specification does not enumerate contributes its own token together with its fingerprint provider. The separator is `.`, not `:`, because a `:` cannot appear in a file name on every platform and the xRegistry static-file-server representation writes a resource identifier as one (base §4.2).
+
+Because the construction is one-way, a consumer that holds a subject name and a format computes the `schemaid` directly and confirms it by reading `SchemaName` and `Format`; a consumer that holds only a `schemaid` reads those two Properties rather than parsing the identifier.
+
 ## 7 Schema versioning and compatibility
 
 A schema is an xRegistry *schema Resource*: a semantic umbrella over one or more concrete *versions*, each a `SchemaFileType` document. Versioning follows the base xRegistry model (base §6.3 `ResourceType`/`VersionId` and §6.8 collection ordering):
@@ -203,8 +229,8 @@ Given a received schema-based message, a consumer **shall** resolve its schema a
 1. Determine the **format** from the transport **content-type**: for example Avro PubSub `application/vnd.apache.avro`, JSON PubSub `application/json`, or Arrow `application/vnd.apache.arrow.stream` carried in MQTT `ContentType`, AMQP/Kafka `content-type`, or the corresponding OPC UA message mapping.
 2. If the message header carries an explicit **schema reference** (a schema file's `self`/URL, carried in the Part 14 message header extension or the transport header, modelled on CloudEvents `dataschema`), read it and decode. Otherwise, continue.
 3. Resolve the **schema group** from the namespace, then the **schema file** and **Version**:
-   - against a reference **DataType** registry: by `<BrowseName>:<fmt>` (the DataType BrowseName) and the `ModelVersion` metadata;
-   - against a live **PubSub** registry that registers per-DataSet schemas (PubSub DataSet profile, Annex C): by `<DataSetName>:<fmt>` and `ConfigurationVersion` = the message `DataSetMessage` header `ConfigurationVersion`. This name+`ConfigurationVersion` lookup is unambiguous only when schema generation is **deterministic** (schema-driven, Annex C.2) or the DataSet has a single writer; under publisher-local data-driven growth several distinct schemas may share one `ConfigurationVersion`, so the lookup MAY return multiple candidates that the consumer disambiguates by the on-wire **`SchemaId`** (step 0), which remains the authoritative key.
+   - against a reference **DataType** registry: by the `schemaid` computed from `(SchemaName, Format)` per §6.7 — `SchemaName` being the DataType BrowseName — and the `ModelVersion` metadata;
+   - against a live **PubSub** registry that registers per-DataSet schemas (PubSub DataSet profile, Annex C): by the `schemaid` computed from `(SchemaName, Format)` — `SchemaName` being the `DataSetName` — and `ConfigurationVersion` = the message `DataSetMessage` header `ConfigurationVersion`. This name+`ConfigurationVersion` lookup is unambiguous only when schema generation is **deterministic** (schema-driven, Annex C.2) or the DataSet has a single writer; under publisher-local data-driven growth several distinct schemas may share one `ConfigurationVersion`, so the lookup MAY return multiple candidates that the consumer disambiguates by the on-wire **`SchemaId`** (step 0), which remains the authoritative key.
 4. `Open`/`Read` the resolved schema file and decode the payload per the corresponding Part 6 or Part 14 addition.
 
 The `ConfigurationVersion` correlation (step 3, PubSub DataSet profile) is the same mechanism the OPC UA JSON/UADP mappings already use to detect DataSet layout change; a mismatch **shall** cause the consumer to re-resolve the schema. A PubSub decoder follows the Avro §9 or Arrow §5.2 cache-miss flow: if the message carries a SchemaId and the decoder cache does not contain it, it first attempts the Opaque NodeId Read or `GetSchema`; if neither succeeds, it may fall back to an announcement frame, a federated registry lookup, or AddressSpace schema regeneration as defined by the encoding mapping.
@@ -228,9 +254,10 @@ The AddressSpace subtree rooted at `SchemaRegistry` is simultaneously the xRegis
 | OPC UA node | xRegistry JSON member |
 |---|---|
 | `SchemaRegistry` | registry document root |
-| `SchemaGroupType` children | `schemagroups` map |
-| `SchemaGroupType.NamespaceUri` | group key / `labels["opcua.namespaceuri"]` |
+| `SchemaGroupType` | `schemagroups` map |
+| `SchemaGroupType.NamespaceUri` | group source identity; `schemagroupid` is the symbolic identifier built from it (§6.7), `name` is the URI verbatim, and it is repeated as `labels["opcua.namespaceuri"]` |
 | `SchemaFileType` children | group `schemas` map |
+| `SchemaFileType.SchemaName` | schema source identity with `Format`; `schemaid` is the symbolic identifier built from the pair (§6.7), and it is repeated as `labels["opcua.schemaname"]` |
 | `SchemaFileType` file content | inline `schema` bytes or `schemabase64`, by content type |
 | `SchemaFileType.Format` | schema `format` |
 | `SchemaFileType.ContentType` | version `contenttype` |
@@ -238,8 +265,8 @@ The AddressSpace subtree rooted at `SchemaRegistry` is simultaneously the xRegis
 | `SchemaFileType.IsDefault` | version `isdefault` |
 | `SchemaFileType.Ancestor` | version `ancestor` |
 | `SchemaFileType.DataTypeEncoding` | `labels["opcua.datatypeencoding"]` |
-| `SchemaFileType.SchemaId` | `labels["opcua.schemaid"]` as lower-case hex |
-| `SchemaFileType.SchemaIdAlg` | `labels["opcua.schemaid.alg"]` |
+| `SchemaFileType.SchemaId` | `labels["opcua.schemafingerprint"]` as lower-case hex — the version's content fingerprint, never the resource key (§6.6) |
+| `SchemaFileType.SchemaIdAlg` | `labels["opcua.schemafingerprint.alg"]` |
 | `SchemaFileType.ModelVersion` | `labels["opcua.modelversion"]` |
 | `SchemaFileType.ConfigurationVersion` | `labels["opcua.configurationversion"]` as `major.minor` (PubSub DataSet profile, Annex C) |
 
@@ -260,11 +287,12 @@ An implementation conforms if it exposes the in-server Schema Registry as a subt
 
 Registration (§5.2), structure materialization (§10.1), the xRegistry API/JSON projection (§10.2), TTL/mirror (§9), federation (Annex B) and the PubSub DataSet schema profile (Annex C) are optional and independently conformant. A conformant registry exposes ObjectTypes and Properties compatible with §6 and Annex A, including a per-format `SchemaId` (defined for every registered format — including JSON Schema through its injected fingerprint provider, §6.6) and SchemaId-based resolution by Opaque NodeId; `GetSchema` may additionally be exposed as the method form.
 
-Conformance is composed from independently implementable **conformance units (CUs)**. Only `SREG-SchemaDownload` is mandatory; every other unit may be claimed on its own.
+Conformance is composed from independently implementable **conformance units (CUs)**. `SREG-SchemaDownload` and `SREG-Identity` are mandatory; every other unit may be claimed on its own.
 
 | Conformance unit | Requires |
 |---|---|
 | `SREG-SchemaDownload` | **Mandatory.** The well-known `SchemaRegistry` under the `Server` Object, browsing groups and files, reading a schema through the inherited FileType `Open`/`Read`/`Close`, SchemaId-based resolution by Opaque NodeId, and `GetSchema` (§5.1, §6.4). |
+| `SREG-Identity` | **Mandatory.** Every group carries `NamespaceUri`, a `groupid` built from it and a non-empty `Name`; every schema carries `SchemaName`, `Format`, a `schemaid` built from that pair and a non-empty `Name`; and no identifier is derived from a document (§6.7, base `XREG-Identity`). |
 | `SREG-SchemaRegistration` | Creating and writing schema resources through the inherited xRegistry create/write surface (§5.2). |
 | `SREG-SchemaVersioning` | `Compatibility`, `Ancestor`, `ModelVersion`, `ConfigurationVersion` and `IsDefault`, and the compatibility rules that govern them (§7). |
 | `SREG-TtlMirror` | `Ttl` and `ExpiryTime`, and the mirror and refresh semantics that use them (§9). |
@@ -273,7 +301,7 @@ Conformance is composed from independently implementable **conformance units (CU
 | `SREG-Federation` | Resolving a schema that another registry holds, with parity between the OPC UA and HTTP paths (Annex B). |
 | `SREG-PubSubProfile` | The PubSub DataSet schema profile: ConfigurationVersion-keyed evolution, open unions and the append-only rule (§11, Annex C). |
 
-**Profiles.** *Schema Registry Reader* = `SREG-SchemaDownload`. *Schema Registry Server* adds `SREG-SchemaRegistration`, `SREG-SchemaVersioning` and `SREG-StructureMaterialization`. *Schema Registry Full* adds `SREG-TtlMirror`, `SREG-XRegistryApi`, `SREG-Federation` and `SREG-PubSubProfile`.
+**Profiles.** *Schema Registry Reader* = `SREG-SchemaDownload` + `SREG-Identity`. *Schema Registry Server* adds `SREG-SchemaRegistration`, `SREG-SchemaVersioning` and `SREG-StructureMaterialization`. *Schema Registry Full* adds `SREG-TtlMirror`, `SREG-XRegistryApi`, `SREG-Federation` and `SREG-PubSubProfile`.
 
 ## 13 NodeSet validation
 
@@ -320,7 +348,7 @@ An xRegistry GroupType keyed by an OPC UA namespace URI; a folder of schema file
 
 | BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
 |---|---|---|---|---|---|
-| NamespaceUri | Variable | String | Mandatory | SchemaGroupType | The OPC UA namespace URI represented by this schema group (the xRegistry group key). |
+| NamespaceUri | Variable | String | Mandatory | SchemaGroupType | The OPC UA namespace URI represented by this schema group (the xRegistry group key). It is the group's source identity: the GroupId is the symbolic identifier constructed from it, and Name is this URI verbatim. |
 | <Schema> | Object |  | OptionalPlaceholder | SchemaGroupType | A schema file (one DataType/DataSet in one format) held by this group. |
 
 <a id="type-SchemaFileType"></a>
@@ -343,6 +371,7 @@ An xRegistry ResourceType whose file content is one concrete schema document (Av
 | ConfigurationVersion | Variable | [ConfigurationVersionDataType](https://reference.opcfoundation.org/specs/OPC-10000-14/6.2.3#6.2.3.2.6) | Optional | SchemaFileType | PubSub DataSet schema profile only: the Part 14 ConfigurationVersion (opcua.configurationversion) when the schema describes a DataSet. Omitted for a non-PubSub schema registry. |
 | ExpiryTime | Variable | DateTime | Optional | SchemaFileType | Optional UTC expiry time for mirror/cache mode. |
 | Ttl | Variable | Duration | Optional | SchemaFileType | Optional time-to-live for mirror/cache mode. |
+| SchemaName | Variable | String | Mandatory | SchemaFileType | The name of the subject this schema describes - the DataType BrowseName for a reference DataType schema, or the DataSetName for a PubSub DataSet schema. Together with Format it is the schema's source identity: the ResourceId is the symbolic identifier constructed from the pair, and it is invariant across the schema's versions. It is not the SchemaId, which fingerprints one version's document bytes. |
 
 ### Methods
 
