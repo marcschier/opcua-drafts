@@ -195,12 +195,14 @@ def check_provenance(doc, cfg, docx_path, res):
 
 
 def _digest_of(paths):
+    # Must agree with build_docx._source_digest, including the line-ending normalisation
+    # that keeps the digest about content rather than about the checkout it was built on.
     h = hashlib.sha256()
     for path in sorted(paths):
         h.update(path.encode('utf-8'))
         try:
             with open(os.path.join(REPO, path), 'rb') as f:
-                h.update(f.read())
+                h.update(f.read().replace(b'\r\n', b'\n'))
         except OSError:
             h.update(b'\0missing')
     return h.hexdigest()[:16]

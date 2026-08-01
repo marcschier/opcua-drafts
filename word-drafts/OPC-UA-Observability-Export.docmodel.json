@@ -35,7 +35,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "1 Scope",
           "b": 0
         }
@@ -50,7 +50,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "1 Scope",
           "b": 1
         }
@@ -230,7 +230,7 @@
           ]
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "1 Scope",
           "b": 2
         }
@@ -264,7 +264,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "1 Scope",
           "b": 3
         }
@@ -355,7 +355,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "1 Scope",
           "b": 4
         }
@@ -394,7 +394,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "1.1 Motivation",
           "b": 0
         }
@@ -445,7 +445,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "1.1 Motivation",
           "b": 1
         }
@@ -1385,7 +1385,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "1.2 Motivating use cases",
           "b": 0
         }
@@ -1397,7 +1397,7 @@
         "source": "mermaid",
         "mermaid": "flowchart LR\n  subgraph Servers[OPC UA Servers with Observability Export]\n    S1[Pumps]\n    S2[Robotics]\n    S3[Generators]\n  end\n  B[\"Generic bridge<br/>discovers Server/Observability<br/>Subscriptions/Reads or PubSub\"]\n  OT[OTEL Collector]\n  M[\"Metrics backend<br/>Prometheus · Grafana · Fabric RTI\"]\n  L[\"Logs backend<br/>Loki · Splunk · Elastic\"]\n  TR[\"Traces backend<br/>Jaeger · Tempo · Zipkin\"]\n  S1 --> B\n  S2 --> B\n  S3 --> B\n  B -->|OTLP metrics| OT --> M\n  B -->|OTLP logs| OT --> L\n  B -->|OTLP traces| OT --> TR",
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "1.2 Motivating use cases",
           "b": 1
         }
@@ -1417,7 +1417,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "1.2 Motivating use cases",
           "b": 2
         }
@@ -1437,7 +1437,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "1.2 Motivating use cases",
           "b": 3
         }
@@ -1457,7 +1457,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "1.2 Motivating use cases",
           "b": 4
         }
@@ -1495,7 +1495,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "1.2 Motivating use cases",
           "b": 5
         }
@@ -1524,7 +1524,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "4.1 The two‑layer contract",
           "b": 0
         }
@@ -1667,7 +1667,7 @@
           ]
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "4.1 The two‑layer contract",
           "b": 1
         }
@@ -1682,7 +1682,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "4.1 The two‑layer contract",
           "b": 2
         }
@@ -1776,7 +1776,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "4.2 Discovery",
           "b": 0
         }
@@ -1847,7 +1847,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "4.2 Discovery",
           "b": 1
         }
@@ -1870,7 +1870,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "4.2 Discovery",
           "b": 2
         }
@@ -1900,7 +1900,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "4.3 Realization (hybrid)",
           "b": 0
         }
@@ -1998,7 +1998,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "4.3 Realization (hybrid)",
           "b": 1
         }
@@ -2054,7 +2054,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "4.3 Realization (hybrid)",
           "b": 2
         }
@@ -2072,7 +2072,7 @@
         "source": "mermaid",
         "mermaid": "flowchart TB\n  subgraph Server[OPC UA Server]\n    SO[Server Object i=2253]\n    OB[\"Observability<br/>(ObservabilityFolderType)\"]\n    subgraph Inst[\"Bound instance (IObservableType)\"]\n      G[\"ObservabilityBindingGroup<br/>CompanionSpecificationUri<br/>ModelNamespaceUris\"]\n      M[\"ObservabilityBinding · Metrics<br/>DataSetClassId, BoundItems\"]\n      L[\"ObservabilityBinding · Logs\"]\n      T[\"ObservabilityBinding · Traces\"]\n    end\n    PDS[\"(optional) PublishedDataSet<br/>DataSetWriter\"]\n  end\n  Bridge[\"Bridge (read-only Client)\"]\n  Coll[OTEL Collector]\n  SO -->|HasComponent| OB\n  OB -.->|Collects| G\n  G -->|HasComponent| M\n  G --> L\n  G --> T\n  M -.->|ExportedBy opt.| PDS\n  Bridge -->|Browse Server/Observability| OB\n  Bridge -->|Subscriptions/Reads or DataSetReader| Server\n  Bridge -->|OTLP metrics/logs/traces| Coll",
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "4.4 Architecture",
           "b": 0
         }
@@ -2110,7 +2110,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "5 Information model",
           "b": 0
         }
@@ -2189,7 +2189,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "5 Information model",
           "b": 1
         }
@@ -2219,7 +2219,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "5.4 Semantic cross-reference (normative)",
           "b": 0
         }
@@ -2324,7 +2324,7 @@
           ]
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "5.4 Semantic cross-reference (normative)",
           "b": 1
         }
@@ -2357,7 +2357,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "5.4 Semantic cross-reference (normative)",
           "b": 2
         }
@@ -2474,7 +2474,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "5.4 Semantic cross-reference (normative)",
           "b": 3
         }
@@ -2504,7 +2504,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "5.5 Propagation to Part 14 configuration (normative)",
           "b": 0
         }
@@ -2762,7 +2762,7 @@
           ]
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "5.5 Propagation to Part 14 configuration (normative)",
           "b": 1
         }
@@ -2777,7 +2777,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "5.5 Propagation to Part 14 configuration (normative)",
           "b": 2
         }
@@ -2866,7 +2866,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "5.6 Signal kind and granularity (normative)",
           "b": 0
         }
@@ -2913,7 +2913,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "5.6 Signal kind and granularity (normative)",
           "b": 1
         }
@@ -3020,7 +3020,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "5.6 Signal kind and granularity (normative)",
           "b": 2
         }
@@ -3054,7 +3054,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "5.7 DataSetClassId (normative)",
           "b": 0
         }
@@ -3066,7 +3066,7 @@
           "ObservabilityExport|<AppliesToType>|<SignalKind>|<MajorVersion>"
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "5.7 DataSetClassId (normative)",
           "b": 1
         }
@@ -3106,7 +3106,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "5.7 DataSetClassId (normative)",
           "b": 2
         }
@@ -3307,7 +3307,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "5.7 DataSetClassId (normative)",
           "b": 3
         }
@@ -3389,7 +3389,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "5.7 DataSetClassId (normative)",
           "b": 4
         }
@@ -3487,7 +3487,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "5.7 DataSetClassId (normative)",
           "b": 5
         }
@@ -3526,7 +3526,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "5.7 DataSetClassId (normative)",
           "b": 6
         }
@@ -3621,7 +3621,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "5.8 DataSetMetaData exposure",
           "b": 0
         }
@@ -3642,7 +3642,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "5.10 Locating bound items — BrowsePath resolution (normative)",
           "b": 0
         }
@@ -3783,7 +3783,7 @@
           ]
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "5.10 Locating bound items — BrowsePath resolution (normative)",
           "b": 1
         }
@@ -3843,7 +3843,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "5.10 Locating bound items — BrowsePath resolution (normative)",
           "b": 2
         }
@@ -3867,7 +3867,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "5.10 Locating bound items — BrowsePath resolution (normative)",
           "b": 3
         }
@@ -4029,7 +4029,7 @@
           ]
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "5.10 Locating bound items — BrowsePath resolution (normative)",
           "b": 4
         }
@@ -4114,7 +4114,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "5.11 Registry and adoption",
           "b": 0
         }
@@ -4219,7 +4219,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "5.12 Binding inheritance and facet composition (normative)",
           "b": 0
         }
@@ -4234,7 +4234,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "5.12 Binding inheritance and facet composition (normative)",
           "b": 1
         }
@@ -4318,7 +4318,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "5.12 Binding inheritance and facet composition (normative)",
           "b": 2
         }
@@ -4342,7 +4342,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "5.12 Binding inheritance and facet composition (normative)",
           "b": 3
         }
@@ -4699,7 +4699,7 @@
           ]
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "5.12 Binding inheritance and facet composition (normative)",
           "b": 4
         }
@@ -4793,7 +4793,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "5.12 Binding inheritance and facet composition (normative)",
           "b": 5
         }
@@ -4824,7 +4824,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "5.12 Binding inheritance and facet composition (normative)",
           "b": 6
         }
@@ -4839,7 +4839,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "5.12 Binding inheritance and facet composition (normative)",
           "b": 7
         }
@@ -4878,7 +4878,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "5.13 OTEL mapping (normative)",
           "b": 0
         }
@@ -4956,7 +4956,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "5.1 ObservabilityFolderType",
           "b": 0
         }
@@ -5082,7 +5082,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "5.2 ObservabilityBindingType",
           "b": 0
         }
@@ -5148,7 +5148,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "5.2 ObservabilityBindingType",
           "b": 1
         }
@@ -5249,7 +5249,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "5.2 ObservabilityBindingType",
           "b": 2
         }
@@ -5434,7 +5434,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "5.3 BoundItemType and its subtypes",
           "b": 0
         }
@@ -5446,7 +5446,7 @@
         "source": "mermaid",
         "mermaid": "classDiagram\n  direction LR\n  class BoundItemType {\n    +FieldName\n    +Kind\n    +BrowsePath\n    +DimensionConstantValue\n    +SourceTypeDefinition\n    +SourceBrowseName\n    +ModelNamespaceUri\n    +SemanticReferenceUri\n  }\n  class BoundVariableType {\n    +MetricInstrumentType\n    +Unit\n    +ExplicitBucketBoundaries\n    +MetricTemporality\n    +Monotonic\n  }\n  class BoundEventFieldType {\n    +EventFieldOperand\n  }\n  class BoundItemKindEnum {\n    <<enumeration>>\n    Telemetry = 0\n    Status = 1\n    Metric = 2\n    Counter = 3\n    Event = 4\n    Dimension = 5\n    Identification = 6\n    Other = 7\n  }\n  BoundVariableType --|> BoundItemType\n  BoundEventFieldType --|> BoundItemType\n  BoundItemType --> BoundItemKindEnum : Kind",
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "5.3 BoundItemType and its subtypes",
           "b": 1
         }
@@ -5533,7 +5533,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "5.9 IObservableType",
           "b": 0
         }
@@ -5880,7 +5880,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "7 Profiles and Conformance Units",
           "b": 0
         }
@@ -6559,7 +6559,7 @@
         "widths": null,
         "note": null,
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "7 Profiles and Conformance Units",
           "b": 1
         }
@@ -6575,7 +6575,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "7 Profiles and Conformance Units",
           "b": 2
         }
@@ -6662,7 +6662,7 @@
           ]
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "7 Profiles and Conformance Units",
           "b": 3
         }
@@ -7127,7 +7127,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "6 Using the model (informative)",
           "b": 0
         }
@@ -7492,7 +7492,7 @@
           ]
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "6.1 Walkthrough",
           "b": 0
         }
@@ -7510,7 +7510,7 @@
         "source": "mermaid",
         "mermaid": "sequenceDiagram\n  participant S as Server (no PubSub surface)\n  participant B as Bridge (Client)\n  participant C as OTEL Collector\n  B->>S: Browse Server/Observability\n  S-->>B: ObservabilityBindingGroup { CompanionSpecificationUri, ModelNamespaceUris }\n  B->>S: Browse selected group children\n  S-->>B: ObservabilityBinding { SignalKind, DataSetClassId, DataSetCardinalityPath, BoundItems... }\n  B->>B: Compose effective class via §5.12 union\n  B->>S: Resolve DataSetCardinalityPath (default bound root)\n  alt Metrics\n    loop per BoundVariable\n      B->>S: TranslateBrowsePathsToNodeIds (BrowsePath)\n      B->>S: CreateSubscription + CreateMonitoredItems (AttributeId, SamplingIntervalHint)\n    end\n  else Logs or Traces\n    B->>S: Resolve EventSourcePath (default: cardinality anchor)\n    B->>S: Subscribe to Events (SelectedFields + Filter)\n  end\n  loop runtime\n    S-->>B: DataChange or Event notification\n    B->>C: OTLP metric / LogRecord / Span (+ dimensions + semantic cross-ref)\n  end",
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "6.2 Sequence — classic server (the default)",
           "b": 0
         }
@@ -7528,7 +7528,7 @@
         "source": "mermaid",
         "mermaid": "sequenceDiagram\n  participant S as Server (PubSub configured)\n  participant B as Bridge (Client)\n  participant C as OTEL Collector\n  B->>S: Browse Server/Observability\n  S-->>B: ObservabilityBindingGroup { CompanionSpecificationUri, ModelNamespaceUris }\n  B->>S: Browse selected group children\n  S-->>B: ObservabilityBinding + realization (PublishedDataSet Exports binding)\n  B->>S: Read DataSetMetaData + WriterGroup/PubSubConnection\n  B->>B: Match or cache DataSetClassId\n  B->>B: Create DataSetReader (subscriber)\n  loop runtime\n    S-->>B: PubSub DataSetMessage\n    B->>C: OTLP metric / LogRecord / Span (+ dimensions + semantic cross-ref)\n  end",
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "6.3 Sequence — PubSub-capable server (less common)",
           "b": 0
         }
@@ -7569,7 +7569,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "8 Other observability backends (informative)",
           "b": 0
         }
@@ -7686,7 +7686,7 @@
           ]
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "8 Other observability backends (informative)",
           "b": 1
         }
@@ -7701,7 +7701,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/OPC-UA-Observability-Export.md",
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
           "s": "8 Other observability backends (informative)",
           "b": 2
         }
@@ -7747,7 +7747,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/di/OPC-UA-DI-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/di/OPC-UA-DI-Observability-Export-Addendum.md",
           "s": "1 Scope",
           "b": 0
         }
@@ -7856,7 +7856,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/di/OPC-UA-DI-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/di/OPC-UA-DI-Observability-Export-Addendum.md",
           "s": "3 How the bindings are applied",
           "b": 0
         }
@@ -7875,7 +7875,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/di/OPC-UA-DI-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/di/OPC-UA-DI-Observability-Export-Addendum.md",
           "s": "3 How the bindings are applied",
           "b": 1
         }
@@ -7890,7 +7890,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/di/OPC-UA-DI-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/di/OPC-UA-DI-Observability-Export-Addendum.md",
           "s": "3 How the bindings are applied",
           "b": 2
         }
@@ -7968,7 +7968,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/di/OPC-UA-DI-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/di/OPC-UA-DI-Observability-Export-Addendum.md",
           "s": "4 Observability export bindings for `IVendorNameplateType`",
           "b": 0
         }
@@ -8020,7 +8020,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/di/OPC-UA-DI-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/di/OPC-UA-DI-Observability-Export-Addendum.md",
           "s": "Metrics — Metrics",
           "b": 0
         }
@@ -8225,7 +8225,7 @@
         "widths": null,
         "note": null,
         "src": {
-          "f": "core-specs/observability-export/di/OPC-UA-DI-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/di/OPC-UA-DI-Observability-Export-Addendum.md",
           "s": "Metrics — Metrics",
           "b": 1
         }
@@ -8246,7 +8246,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/di/OPC-UA-DI-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/di/OPC-UA-DI-Observability-Export-Addendum.md",
           "s": "5 Where the bindings live",
           "b": 0
         }
@@ -8258,7 +8258,7 @@
         "source": "mermaid",
         "mermaid": "graph LR\n  ROOT[\"ExampleDeviceNameplate : IVendorNameplateType\"]\n  ROOT --> G[\"DI<br/>ObservabilityBindingGroup\"]\n  G -.CollectedBy.-> O[\"Observability registry i=60101\"]\n  G --> S0[\"Metrics<br/>Metrics\"]\n  S0 --> S0_0[\"Manufacturer : Identification\"]\n  S0 --> S0_1[\"Model : Identification\"]\n  S0 --> S0_2[\"SerialNumber : Identification\"]\n  S0 --> S0_3[\"ProductInstanceUri : Identification\"]",
         "src": {
-          "f": "core-specs/observability-export/di/OPC-UA-DI-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/di/OPC-UA-DI-Observability-Export-Addendum.md",
           "s": "5 Where the bindings live",
           "b": 1
         }
@@ -8270,7 +8270,7 @@
         "source": "mermaid",
         "mermaid": "graph TD\n  R[\"ExampleDeviceNameplate : IVendorNameplateType\"]\n  R -->|HasInterface| I([IObservableType])\n  R -->|HasComponent| G[\"DI : ObservabilityBindingGroupType\"]\n  G -.CollectedBy.-> O[\"Observability : ObservabilityFolderType\"]\n  G -->|HasComponent| B0[\"Metrics : ObservabilityBindingType<br/>Metrics\"]\n  B0 -->|HasComponent| IT00[\"Manufacturer : BoundVariableType\"]\n  IT00 -->|BindsToNode| N00[\"Manufacturer\"]\n  B0 -->|HasComponent| IT01[\"Model : BoundVariableType\"]\n  IT01 -->|BindsToNode| N01[\"Model\"]\n  B0 -->|HasComponent| IT02[\"SerialNumber : BoundVariableType\"]\n  IT02 -->|BindsToNode| N02[\"SerialNumber\"]",
         "src": {
-          "f": "core-specs/observability-export/di/OPC-UA-DI-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/di/OPC-UA-DI-Observability-Export-Addendum.md",
           "s": "5 Where the bindings live",
           "b": 2
         }
@@ -8316,7 +8316,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/di/OPC-UA-DIDeviceHealth-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/di/OPC-UA-DIDeviceHealth-Observability-Export-Addendum.md",
           "s": "1 Scope",
           "b": 0
         }
@@ -8425,7 +8425,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/di/OPC-UA-DIDeviceHealth-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/di/OPC-UA-DIDeviceHealth-Observability-Export-Addendum.md",
           "s": "3 How the bindings are applied",
           "b": 0
         }
@@ -8444,7 +8444,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/di/OPC-UA-DIDeviceHealth-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/di/OPC-UA-DIDeviceHealth-Observability-Export-Addendum.md",
           "s": "3 How the bindings are applied",
           "b": 1
         }
@@ -8459,7 +8459,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/di/OPC-UA-DIDeviceHealth-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/di/OPC-UA-DIDeviceHealth-Observability-Export-Addendum.md",
           "s": "3 How the bindings are applied",
           "b": 2
         }
@@ -8537,7 +8537,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/di/OPC-UA-DIDeviceHealth-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/di/OPC-UA-DIDeviceHealth-Observability-Export-Addendum.md",
           "s": "4 Observability export bindings for `IDeviceHealthType`",
           "b": 0
         }
@@ -8589,7 +8589,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/di/OPC-UA-DIDeviceHealth-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/di/OPC-UA-DIDeviceHealth-Observability-Export-Addendum.md",
           "s": "Metrics — Metrics",
           "b": 0
         }
@@ -8680,7 +8680,7 @@
         "widths": null,
         "note": null,
         "src": {
-          "f": "core-specs/observability-export/di/OPC-UA-DIDeviceHealth-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/di/OPC-UA-DIDeviceHealth-Observability-Export-Addendum.md",
           "s": "Metrics — Metrics",
           "b": 1
         }
@@ -8701,7 +8701,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/di/OPC-UA-DIDeviceHealth-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/di/OPC-UA-DIDeviceHealth-Observability-Export-Addendum.md",
           "s": "5 Where the bindings live",
           "b": 0
         }
@@ -8713,7 +8713,7 @@
         "source": "mermaid",
         "mermaid": "graph LR\n  ROOT[\"ExampleDeviceHealth : IDeviceHealthType\"]\n  ROOT --> G[\"DIDeviceHealth<br/>ObservabilityBindingGroup\"]\n  G -.CollectedBy.-> O[\"Observability registry i=60101\"]\n  G --> S0[\"Metrics<br/>Metrics\"]\n  S0 --> S0_0[\"DeviceHealth : Status\"]",
         "src": {
-          "f": "core-specs/observability-export/di/OPC-UA-DIDeviceHealth-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/di/OPC-UA-DIDeviceHealth-Observability-Export-Addendum.md",
           "s": "5 Where the bindings live",
           "b": 1
         }
@@ -8725,7 +8725,7 @@
         "source": "mermaid",
         "mermaid": "graph TD\n  R[\"ExampleDeviceHealth : IDeviceHealthType\"]\n  R -->|HasInterface| I([IObservableType])\n  R -->|HasComponent| G[\"DIDeviceHealth : ObservabilityBindingGroupType\"]\n  G -.CollectedBy.-> O[\"Observability : ObservabilityFolderType\"]\n  G -->|HasComponent| B0[\"Metrics : ObservabilityBindingType<br/>Metrics\"]\n  B0 -->|HasComponent| IT00[\"DeviceHealth : BoundVariableType\"]\n  IT00 -->|BindsToNode| N00[\"DeviceHealth\"]",
         "src": {
-          "f": "core-specs/observability-export/di/OPC-UA-DIDeviceHealth-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/di/OPC-UA-DIDeviceHealth-Observability-Export-Addendum.md",
           "s": "5 Where the bindings live",
           "b": 2
         }
@@ -8771,7 +8771,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/facets/OPC-UA-Facets-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/facets/OPC-UA-Facets-Observability-Export-Addendum.md",
           "s": "1. The model",
           "b": 0
         }
@@ -8942,7 +8942,7 @@
           ]
         ],
         "src": {
-          "f": "core-specs/observability-export/facets/OPC-UA-Facets-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/facets/OPC-UA-Facets-Observability-Export-Addendum.md",
           "s": "1. The model",
           "b": 1
         }
@@ -8954,7 +8954,7 @@
         "source": "mermaid",
         "mermaid": "classDiagram\n  class DeviceType\n  class LocationAddInType\n  class IMaintenanceFacetType {\n    <<interface>>\n  }\n  class MachineType\n  DeviceType <|-- MachineType : HasSubtype\n  MachineType --> LocationAddInType : HasAddIn (Location)\n  MachineType ..|> IMaintenanceFacetType : HasInterface",
         "src": {
-          "f": "core-specs/observability-export/facets/OPC-UA-Facets-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/facets/OPC-UA-Facets-Observability-Export-Addendum.md",
           "s": "1. The model",
           "b": 2
         }
@@ -8984,7 +8984,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/facets/OPC-UA-Facets-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/facets/OPC-UA-Facets-Observability-Export-Addendum.md",
           "s": "2. Base facet bindings",
           "b": 0
         }
@@ -9174,7 +9174,7 @@
         "widths": null,
         "note": null,
         "src": {
-          "f": "core-specs/observability-export/facets/OPC-UA-Facets-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/facets/OPC-UA-Facets-Observability-Export-Addendum.md",
           "s": "2. Base facet bindings",
           "b": 1
         }
@@ -9229,7 +9229,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/facets/OPC-UA-Facets-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/facets/OPC-UA-Facets-Observability-Export-Addendum.md",
           "s": "3. Derived bindings — delta only",
           "b": 0
         }
@@ -9371,7 +9371,7 @@
         "widths": null,
         "note": null,
         "src": {
-          "f": "core-specs/observability-export/facets/OPC-UA-Facets-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/facets/OPC-UA-Facets-Observability-Export-Addendum.md",
           "s": "3. Derived bindings — delta only",
           "b": 1
         }
@@ -9473,7 +9473,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/facets/OPC-UA-Facets-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/facets/OPC-UA-Facets-Observability-Export-Addendum.md",
           "s": "4. What the bridge produces — the composed DataSets",
           "b": 0
         }
@@ -9786,7 +9786,7 @@
         "widths": null,
         "note": null,
         "src": {
-          "f": "core-specs/observability-export/facets/OPC-UA-Facets-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/facets/OPC-UA-Facets-Observability-Export-Addendum.md",
           "s": "4.1 `MachineObservability` — Metrics DataSet (8 fields, class `53dc8a49…`)",
           "b": 0
         }
@@ -9875,7 +9875,7 @@
         "widths": null,
         "note": null,
         "src": {
-          "f": "core-specs/observability-export/facets/OPC-UA-Facets-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/facets/OPC-UA-Facets-Observability-Export-Addendum.md",
           "s": "4.2 `MachineMaintenance` — Metrics DataSet (1 fields, class `53dc8a49…`)",
           "b": 0
         }
@@ -9937,7 +9937,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/facets/OPC-UA-Facets-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/facets/OPC-UA-Facets-Observability-Export-Addendum.md",
           "s": "5. Facet-scoped subset recognition",
           "b": 0
         }
@@ -10065,7 +10065,7 @@
           ]
         ],
         "src": {
-          "f": "core-specs/observability-export/facets/OPC-UA-Facets-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/facets/OPC-UA-Facets-Observability-Export-Addendum.md",
           "s": "5. Facet-scoped subset recognition",
           "b": 1
         }
@@ -10190,7 +10190,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/facets/OPC-UA-Facets-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/facets/OPC-UA-Facets-Observability-Export-Addendum.md",
           "s": "6. Where the binding nodes live",
           "b": 0
         }
@@ -10236,7 +10236,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/pumps/OPC-UA-Pumps-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/pumps/OPC-UA-Pumps-Observability-Export-Addendum.md",
           "s": "1 Scope",
           "b": 0
         }
@@ -10345,7 +10345,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/pumps/OPC-UA-Pumps-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/pumps/OPC-UA-Pumps-Observability-Export-Addendum.md",
           "s": "3 How the bindings are applied",
           "b": 0
         }
@@ -10373,7 +10373,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/pumps/OPC-UA-Pumps-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/pumps/OPC-UA-Pumps-Observability-Export-Addendum.md",
           "s": "3 How the bindings are applied",
           "b": 1
         }
@@ -10388,7 +10388,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/pumps/OPC-UA-Pumps-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/pumps/OPC-UA-Pumps-Observability-Export-Addendum.md",
           "s": "3 How the bindings are applied",
           "b": 2
         }
@@ -10466,7 +10466,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/pumps/OPC-UA-Pumps-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/pumps/OPC-UA-Pumps-Observability-Export-Addendum.md",
           "s": "4 Observability export bindings for `PumpType`",
           "b": 0
         }
@@ -10518,7 +10518,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/pumps/OPC-UA-Pumps-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/pumps/OPC-UA-Pumps-Observability-Export-Addendum.md",
           "s": "Metrics — Metrics",
           "b": 0
         }
@@ -11643,7 +11643,7 @@
         "widths": null,
         "note": null,
         "src": {
-          "f": "core-specs/observability-export/pumps/OPC-UA-Pumps-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/pumps/OPC-UA-Pumps-Observability-Export-Addendum.md",
           "s": "Metrics — Metrics",
           "b": 1
         }
@@ -11721,7 +11721,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/pumps/OPC-UA-Pumps-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/pumps/OPC-UA-Pumps-Observability-Export-Addendum.md",
           "s": "Logs — Logs",
           "b": 0
         }
@@ -11904,7 +11904,7 @@
         "widths": null,
         "note": null,
         "src": {
-          "f": "core-specs/observability-export/pumps/OPC-UA-Pumps-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/pumps/OPC-UA-Pumps-Observability-Export-Addendum.md",
           "s": "Logs — Logs",
           "b": 1
         }
@@ -11956,7 +11956,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/pumps/OPC-UA-Pumps-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/pumps/OPC-UA-Pumps-Observability-Export-Addendum.md",
           "s": "Logs — Logs",
           "b": 2
         }
@@ -12034,7 +12034,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/pumps/OPC-UA-Pumps-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/pumps/OPC-UA-Pumps-Observability-Export-Addendum.md",
           "s": "Traces — Traces",
           "b": 0
         }
@@ -12197,7 +12197,7 @@
         "widths": null,
         "note": null,
         "src": {
-          "f": "core-specs/observability-export/pumps/OPC-UA-Pumps-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/pumps/OPC-UA-Pumps-Observability-Export-Addendum.md",
           "s": "Traces — Traces",
           "b": 1
         }
@@ -12257,7 +12257,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/pumps/OPC-UA-Pumps-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/pumps/OPC-UA-Pumps-Observability-Export-Addendum.md",
           "s": "Traces — Traces",
           "b": 2
         }
@@ -12278,7 +12278,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/pumps/OPC-UA-Pumps-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/pumps/OPC-UA-Pumps-Observability-Export-Addendum.md",
           "s": "5 Where the bindings live",
           "b": 0
         }
@@ -12290,7 +12290,7 @@
         "source": "mermaid",
         "mermaid": "graph LR\n  ROOT[\"ExamplePump : PumpType\"]\n  ROOT --> G[\"Pumps<br/>ObservabilityBindingGroup\"]\n  G -.CollectedBy.-> O[\"Observability registry i=60101\"]\n  G --> S0[\"Metrics<br/>Metrics\"]\n  S0 --> S0_0[\"Speed : Telemetry\"]\n  S0 --> S0_1[\"Throughput : Telemetry\"]\n  S0 --> S0_2[\"MassFlow : Telemetry\"]\n  S0 --> S0_3[\"ProcessPressure : Telemetry\"]\n  S0 --> S0_4[\"DifferentialPressure : Telemetry\"]\n  S0 --> S0_5[\"PumpTotalHead : Telemetry\"]\n  G --> S1[\"Logs<br/>Logs\"]\n  S1 --> S1_0[\"EventId : Event\"]\n  S1 --> S1_1[\"EventType : Event\"]\n  S1 --> S1_2[\"SourceName : Event\"]\n  S1 --> S1_3[\"Time : Event\"]\n  S1 --> S1_4[\"Severity : Event\"]\n  S1 --> S1_5[\"Message : Event\"]\n  G --> S2[\"Traces<br/>Traces\"]\n  S2 --> S2_0[\"EventId : Event\"]\n  S2 --> S2_1[\"SourceName : Event\"]\n  S2 --> S2_2[\"Time : Event\"]\n  S2 --> S2_3[\"Severity : Event\"]\n  S2 --> S2_4[\"Message : Event\"]\n  S2 --> S2_5[\"service.name : Dimension\"]",
         "src": {
-          "f": "core-specs/observability-export/pumps/OPC-UA-Pumps-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/pumps/OPC-UA-Pumps-Observability-Export-Addendum.md",
           "s": "5 Where the bindings live",
           "b": 1
         }
@@ -12302,7 +12302,7 @@
         "source": "mermaid",
         "mermaid": "graph TD\n  R[\"ExamplePump : PumpType\"]\n  R -->|HasInterface| I([IObservableType])\n  R -->|HasComponent| G[\"Pumps : ObservabilityBindingGroupType\"]\n  G -.CollectedBy.-> O[\"Observability : ObservabilityFolderType\"]\n  G -->|HasComponent| B0[\"Metrics : ObservabilityBindingType<br/>Metrics\"]\n  B0 -->|HasComponent| IT00[\"Speed : BoundVariableType\"]\n  IT00 -->|BindsToNode| N00[\"Operational/Measurements/Speed\"]\n  B0 -->|HasComponent| IT01[\"Throughput : BoundVariableType\"]\n  IT01 -->|BindsToNode| N01[\"Operational/Measurements/Throughput\"]\n  B0 -->|HasComponent| IT02[\"MassFlow : BoundVariableType\"]\n  IT02 -->|BindsToNode| N02[\"Operational/Measurements/MassFlow\"]\n  G -->|HasComponent| B1[\"Logs : ObservabilityBindingType<br/>Logs\"]\n  B1 -->|HasComponent| IT10[\"EventId : BoundEventFieldType\"]\n  IT10 -.event field.-> N10[\"BaseEventType/EventId\"]\n  B1 -->|HasComponent| IT11[\"EventType : BoundEventFieldType\"]\n  IT11 -.event field.-> N11[\"BaseEventType/EventType\"]\n  B1 -->|HasComponent| IT12[\"SourceName : BoundEventFieldType\"]\n  IT12 -.event field.-> N12[\"BaseEventType/SourceName\"]\n  G -->|HasComponent| B2[\"Traces : ObservabilityBindingType<br/>Traces\"]\n  B2 -->|HasComponent| IT20[\"EventId : BoundEventFieldType\"]\n  IT20 -.event field.-> N20[\"BaseEventType/EventId\"]\n  B2 -->|HasComponent| IT21[\"SourceName : BoundEventFieldType\"]\n  IT21 -.event field.-> N21[\"BaseEventType/SourceName\"]\n  B2 -->|HasComponent| IT22[\"Time : BoundEventFieldType\"]\n  IT22 -.event field.-> N22[\"BaseEventType/Time\"]",
         "src": {
-          "f": "core-specs/observability-export/pumps/OPC-UA-Pumps-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/pumps/OPC-UA-Pumps-Observability-Export-Addendum.md",
           "s": "5 Where the bindings live",
           "b": 2
         }
@@ -12348,7 +12348,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
           "s": "1 Scope",
           "b": 0
         }
@@ -12457,7 +12457,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
           "s": "3 How the bindings are applied",
           "b": 0
         }
@@ -12476,7 +12476,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
           "s": "3 How the bindings are applied",
           "b": 1
         }
@@ -12491,7 +12491,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
           "s": "3 How the bindings are applied",
           "b": 2
         }
@@ -12569,7 +12569,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
           "s": "4 Observability export bindings for `MotionDeviceSystemType`",
           "b": 0
         }
@@ -12621,7 +12621,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
           "s": "Metrics — Metrics",
           "b": 0
         }
@@ -13138,7 +13138,7 @@
         "widths": null,
         "note": null,
         "src": {
-          "f": "core-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
           "s": "Metrics — Metrics",
           "b": 1
         }
@@ -13216,7 +13216,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
           "s": "Logs — Logs",
           "b": 0
         }
@@ -13399,7 +13399,7 @@
         "widths": null,
         "note": null,
         "src": {
-          "f": "core-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
           "s": "Logs — Logs",
           "b": 1
         }
@@ -13451,7 +13451,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
           "s": "Logs — Logs",
           "b": 2
         }
@@ -13529,7 +13529,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
           "s": "Traces — Traces",
           "b": 0
         }
@@ -13692,7 +13692,7 @@
         "widths": null,
         "note": null,
         "src": {
-          "f": "core-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
           "s": "Traces — Traces",
           "b": 1
         }
@@ -13752,7 +13752,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
           "s": "Traces — Traces",
           "b": 2
         }
@@ -13773,7 +13773,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
           "s": "5 Where the bindings live",
           "b": 0
         }
@@ -13785,7 +13785,7 @@
         "source": "mermaid",
         "mermaid": "graph LR\n  ROOT[\"ExampleRobotSystem : MotionDeviceSystemType\"]\n  ROOT --> G[\"Robotics<br/>ObservabilityBindingGroup\"]\n  G -.CollectedBy.-> O[\"Observability registry i=60101\"]\n  G --> S0[\"Metrics<br/>Metrics\"]\n  S0 --> S0_0[\"AxisActualPosition : Telemetry\"]\n  S0 --> S0_1[\"MotorTemperature : Telemetry\"]\n  S0 --> S0_2[\"SpeedOverride : Status\"]\n  S0 --> S0_3[\"ControllerTemperature : Telemetry\"]\n  S0 --> S0_4[\"CabinetFanSpeed : Telemetry\"]\n  S0 --> S0_5[\"CPUFanSpeed : Telemetry\"]\n  G --> S1[\"Logs<br/>Logs\"]\n  S1 --> S1_0[\"EventId : Event\"]\n  S1 --> S1_1[\"EventType : Event\"]\n  S1 --> S1_2[\"SourceName : Event\"]\n  S1 --> S1_3[\"Time : Event\"]\n  S1 --> S1_4[\"Severity : Event\"]\n  S1 --> S1_5[\"Message : Event\"]\n  G --> S2[\"Traces<br/>Traces\"]\n  S2 --> S2_0[\"EventId : Event\"]\n  S2 --> S2_1[\"SourceName : Event\"]\n  S2 --> S2_2[\"Time : Event\"]\n  S2 --> S2_3[\"Severity : Event\"]\n  S2 --> S2_4[\"Message : Event\"]\n  S2 --> S2_5[\"service.name : Dimension\"]",
         "src": {
-          "f": "core-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
           "s": "5 Where the bindings live",
           "b": 1
         }
@@ -13797,7 +13797,7 @@
         "source": "mermaid",
         "mermaid": "graph TD\n  R[\"ExampleRobotSystem : MotionDeviceSystemType\"]\n  R -->|HasInterface| I([IObservableType])\n  R -->|HasComponent| G[\"Robotics : ObservabilityBindingGroupType\"]\n  G -.CollectedBy.-> O[\"Observability : ObservabilityFolderType\"]\n  G -->|HasComponent| B0[\"Metrics : ObservabilityBindingType<br/>Metrics\"]\n  B0 -->|HasComponent| IT00[\"AxisActualPosition : BoundVariableType\"]\n  IT00 -->|BindsToNode| N00[\"MotionDevices/MotionDevice_1/Axes/Axis_1/ParameterSet/ActualPosition\"]\n  B0 -->|HasComponent| IT01[\"MotorTemperature : BoundVariableType\"]\n  IT01 -->|BindsToNode| N01[\"MotionDevices/MotionDevice_1/PowerTrains/PowerTrain_1/Motor_1/ParameterSet/MotorTemperature\"]\n  B0 -->|HasComponent| IT02[\"SpeedOverride : BoundVariableType\"]\n  IT02 -->|BindsToNode| N02[\"MotionDevices/MotionDevice_1/ParameterSet/SpeedOverride\"]\n  G -->|HasComponent| B1[\"Logs : ObservabilityBindingType<br/>Logs\"]\n  B1 -->|HasComponent| IT10[\"EventId : BoundEventFieldType\"]\n  IT10 -.event field.-> N10[\"AlarmConditionType/EventId\"]\n  B1 -->|HasComponent| IT11[\"EventType : BoundEventFieldType\"]\n  IT11 -.event field.-> N11[\"AlarmConditionType/EventType\"]\n  B1 -->|HasComponent| IT12[\"SourceName : BoundEventFieldType\"]\n  IT12 -.event field.-> N12[\"AlarmConditionType/SourceName\"]\n  G -->|HasComponent| B2[\"Traces : ObservabilityBindingType<br/>Traces\"]\n  B2 -->|HasComponent| IT20[\"EventId : BoundEventFieldType\"]\n  IT20 -.event field.-> N20[\"BaseEventType/EventId\"]\n  B2 -->|HasComponent| IT21[\"SourceName : BoundEventFieldType\"]\n  IT21 -.event field.-> N21[\"BaseEventType/SourceName\"]\n  B2 -->|HasComponent| IT22[\"Time : BoundEventFieldType\"]\n  IT22 -.event field.-> N22[\"BaseEventType/Time\"]",
         "src": {
-          "f": "core-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
           "s": "5 Where the bindings live",
           "b": 2
         }
@@ -13879,7 +13879,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
           "s": "6 BrowsePath resolution — worked examples",
           "b": 0
         }
@@ -13914,7 +13914,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
           "s": "Topology 1: Single 6-axis articulated robot",
           "b": 0
         }
@@ -14033,7 +14033,7 @@
         "widths": null,
         "note": null,
         "src": {
-          "f": "core-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
           "s": "Topology 1: Single 6-axis articulated robot",
           "b": 1
         }
@@ -14057,7 +14057,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
           "s": "Topology 1: Single 6-axis articulated robot",
           "b": 2
         }
@@ -14092,7 +14092,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
           "s": "Topology 2: Single 4-axis SCARA",
           "b": 0
         }
@@ -14211,7 +14211,7 @@
         "widths": null,
         "note": null,
         "src": {
-          "f": "core-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
           "s": "Topology 2: Single 4-axis SCARA",
           "b": 1
         }
@@ -14235,7 +14235,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
           "s": "Topology 2: Single 4-axis SCARA",
           "b": 2
         }
@@ -14270,7 +14270,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
           "s": "Topology 3: Two-robot cell (6+4 axes)",
           "b": 0
         }
@@ -14389,7 +14389,7 @@
         "widths": null,
         "note": null,
         "src": {
-          "f": "core-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
           "s": "Topology 3: Two-robot cell (6+4 axes)",
           "b": 1
         }
@@ -14413,7 +14413,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
           "s": "Topology 3: Two-robot cell (6+4 axes)",
           "b": 2
         }
@@ -14436,7 +14436,7 @@
           }
         ],
         "src": {
-          "f": "core-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
+          "f": "cloud-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
           "s": "Topology 3: Two-robot cell (6+4 axes)",
           "b": 3
         }

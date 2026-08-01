@@ -30,7 +30,7 @@ OUT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "schemas
 STD_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..", "avro-encoding"))
 STD_SCHEMAS = os.path.join(STD_DIR, "schemas")
 BUILTINS_SCHEMA = os.path.join(STD_SCHEMAS, "opcua.builtins.avsc")
-DEFAULT_NODESET = repo_path("core-specs", "observability-export", "Opc.Ua.ObservabilityExport.NodeSet2.xml")
+DEFAULT_NODESET = repo_path("cloud-specs", "observability-export", "Opc.Ua.ObservabilityExport.NodeSet2.xml")
 
 
 def _struct_dependencies(ty: t.Type) -> set[str]:

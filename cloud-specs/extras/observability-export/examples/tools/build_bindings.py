@@ -776,7 +776,7 @@ def emit_addendum(descriptor, db, base_names, spec_folder, desc_base):
     A(f"| [`{desc_base}`]({desc_rel}) | Machine-readable ObservabilityExport descriptor (single source). |")
     A(f"| [`Opc.Ua.{d['domain']}.ObservabilityExport.NodeSet2.xml`](Opc.Ua.{d['domain']}.ObservabilityExport.NodeSet2.xml) | The binding instances on the theoretical `{d['instanceName']}` instance. |")
     A("")
-    A(f"Regenerate from [`core-specs/extras/observability-export/examples/`](../../extras/observability-export/examples/) with `python tools/build_bindings.py {spec_folder}/{desc_base} tools/ref`.")
+    A(f"Regenerate from [`cloud-specs/extras/observability-export/examples/`](../../extras/observability-export/examples/) with `python tools/build_bindings.py {spec_folder}/{desc_base} tools/ref`.")
     A("")
     return "\n".join(L).rstrip() + "\n"
 
@@ -922,8 +922,8 @@ def emit_diagrams(descriptor):
 def main():
     descriptor_path = sys.argv[1]
     ref_dir = sys.argv[2] if len(sys.argv) > 2 else os.path.join(HERE, "ref")
-    # The descriptor is a secondary source under core-specs/extras/observability-export/examples/<spec>/;
-    # the standardized outputs (overlay + addendum) land in core-specs/observability-export/<spec>/.
+    # The descriptor is a secondary source under cloud-specs/extras/observability-export/examples/<spec>/;
+    # the standardized outputs (overlay + addendum) land in cloud-specs/observability-export/<spec>/.
     desc_dir = os.path.dirname(os.path.abspath(descriptor_path))
     spec_folder = os.path.basename(desc_dir)
     desc_base = os.path.basename(os.path.abspath(descriptor_path))

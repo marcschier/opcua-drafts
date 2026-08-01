@@ -1,7 +1,7 @@
 {
   "specId": "wot-connectivity",
-  "sourceCommit": "beeaf348ffeb8e67387dc5c60ca427ba7bea1973",
-  "sourceDigest": "996d4c4c2645b84f",
+  "sourceCommit": "786adf2da39f64c59b30c1e29eb727e6a5c3865d",
+  "sourceDigest": "b954808666eb7a07",
   "pipelineVersion": "2",
   "sources": [
     "word-drafts/tools/specs/wot-connectivity.json",
@@ -83,6 +83,9 @@
       "para": 25
     },
     "007DD302": {
+      "owner": "template"
+    },
+    "007E28EA": {
       "owner": "template"
     },
     "008BF757": {
@@ -189,9 +192,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 228
-    },
-    "0103DBB9": {
-      "owner": "template"
     },
     "0114F66C": {
       "owner": "markdown",
@@ -388,9 +388,6 @@
       "kind": "nodetable",
       "para": 256
     },
-    "01D88E1F": {
-      "owner": "template"
-    },
     "01E1851B": {
       "owner": "generated",
       "region": "general",
@@ -424,6 +421,9 @@
       "index": 18,
       "kind": "methodtable",
       "para": 3
+    },
+    "0204F3C2": {
+      "owner": "template"
     },
     "0215041D": {
       "owner": "generated",
@@ -493,9 +493,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 775
-    },
-    "026D4607": {
-      "owner": "template"
     },
     "027749B7": {
       "owner": "generated",
@@ -639,12 +636,18 @@
       "kind": "nodetable",
       "para": 995
     },
+    "02EA047B": {
+      "owner": "template"
+    },
     "02F1DD5C": {
       "owner": "generated",
       "region": "datatypes",
       "index": 11,
       "kind": "enumtable",
       "para": 6
+    },
+    "02F44632": {
+      "owner": "template"
     },
     "02F52459": {
       "owner": "generated",
@@ -871,9 +874,6 @@
       "kind": "nodetable",
       "para": 438
     },
-    "0389564A": {
-      "owner": "template"
-    },
     "0389FD8A": {
       "owner": "generated",
       "region": "eventtypes",
@@ -902,9 +902,6 @@
       "kind": "nodetable",
       "para": 24
     },
-    "03960D2F": {
-      "owner": "template"
-    },
     "039954E0": {
       "owner": "generated",
       "region": "annex-a",
@@ -932,6 +929,9 @@
       "index": 56,
       "kind": "nodetable",
       "para": 11
+    },
+    "03D925FF": {
+      "owner": "template"
     },
     "03EA3913": {
       "owner": "template"
@@ -973,6 +973,9 @@
       "index": 14,
       "kind": "nodetable",
       "para": 120
+    },
+    "04203118": {
+      "owner": "template"
     },
     "04209087": {
       "owner": "template"
@@ -1046,6 +1049,9 @@
       "index": 0,
       "kind": "nodetable",
       "para": 61
+    },
+    "0463A083": {
+      "owner": "template"
     },
     "0468CD1C": {
       "owner": "generated",
@@ -1159,6 +1165,9 @@
       "kind": "nodetable",
       "para": 300
     },
+    "04DF8468": {
+      "owner": "template"
+    },
     "04E1E8FD": {
       "owner": "generated",
       "region": "objecttypes",
@@ -1179,6 +1188,9 @@
       "index": 0,
       "kind": "nodetable",
       "para": 596
+    },
+    "04F1E540": {
+      "owner": "template"
     },
     "04F2E4A4": {
       "owner": "generated",
@@ -1332,9 +1344,6 @@
       "kind": "nodetable",
       "para": 66
     },
-    "055ED4E0": {
-      "owner": "template"
-    },
     "056095BA": {
       "owner": "generated",
       "region": "annex-a",
@@ -1404,9 +1413,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 148
-    },
-    "05B55944": {
-      "owner": "template"
     },
     "05B72C2C": {
       "owner": "generated",
@@ -1505,9 +1511,6 @@
       "kind": "methodtable",
       "para": 27
     },
-    "061B7225": {
-      "owner": "template"
-    },
     "061E90B9": {
       "owner": "generated",
       "region": "objecttypes",
@@ -1521,9 +1524,6 @@
       "index": 37,
       "kind": "clause",
       "para": 0
-    },
-    "0625F6C9": {
-      "owner": "template"
     },
     "062E7123": {
       "owner": "generated",
@@ -1562,6 +1562,9 @@
       "block": 1,
       "para": 2
     },
+    "065EEE56": {
+      "owner": "template"
+    },
     "0660BEA9": {
       "owner": "generated",
       "region": "instances",
@@ -1578,9 +1581,6 @@
       "index": 3,
       "kind": "nodetable",
       "para": 10
-    },
-    "067535FA": {
-      "owner": "template"
     },
     "06766C76": {
       "owner": "generated",
@@ -1602,9 +1602,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 677
-    },
-    "06871FC3": {
-      "owner": "template"
     },
     "068D1A4A": {
       "owner": "template"
@@ -1648,9 +1645,6 @@
       "para": 4
     },
     "06B274D7": {
-      "owner": "template"
-    },
-    "06B66D0E": {
       "owner": "template"
     },
     "06B85AF1": {
@@ -1710,9 +1704,6 @@
       "index": 11,
       "kind": "nodetable",
       "para": 15
-    },
-    "06E223B5": {
-      "owner": "template"
     },
     "06E3FC20": {
       "owner": "generated",
@@ -1864,6 +1855,9 @@
       "kind": "nodetable",
       "para": 843
     },
+    "07855EED": {
+      "owner": "template"
+    },
     "0788A546": {
       "owner": "generated",
       "region": "annex-a",
@@ -1877,6 +1871,9 @@
       "index": 38,
       "kind": "methodtable",
       "para": 1
+    },
+    "07966E2D": {
+      "owner": "template"
     },
     "07AA91A9": {
       "owner": "generated",
@@ -1912,9 +1909,6 @@
       "index": 14,
       "kind": "nodetable",
       "para": 99
-    },
-    "07B16B64": {
-      "owner": "template"
     },
     "07C9989A": {
       "owner": "generated",
@@ -1957,6 +1951,9 @@
       "index": 0,
       "kind": "nodetable",
       "para": 407
+    },
+    "07E0FC20": {
+      "owner": "template"
     },
     "07E5433E": {
       "owner": "generated",
@@ -2006,9 +2003,6 @@
       "index": 14,
       "kind": "nodetable",
       "para": 145
-    },
-    "080BE32D": {
-      "owner": "template"
     },
     "080CB70E": {
       "owner": "template"
@@ -2080,6 +2074,9 @@
       "index": 12,
       "kind": "nodetable",
       "para": 14
+    },
+    "087BCE8F": {
+      "owner": "template"
     },
     "087EE191": {
       "owner": "generated",
@@ -2209,9 +2206,6 @@
     "08D33785": {
       "owner": "template"
     },
-    "08DA3444": {
-      "owner": "template"
-    },
     "08DA7DD6": {
       "owner": "template"
     },
@@ -2276,6 +2270,9 @@
       "index": 0,
       "kind": "nodetable",
       "para": 359
+    },
+    "0930F705": {
+      "owner": "template"
     },
     "093B262D": {
       "owner": "generated",
@@ -2378,6 +2375,9 @@
       "kind": "nodetable",
       "para": 55
     },
+    "099791E8": {
+      "owner": "template"
+    },
     "09A3E774": {
       "owner": "generated",
       "region": "instances",
@@ -2434,9 +2434,6 @@
       "kind": "enumtable",
       "para": 19
     },
-    "09D898A1": {
-      "owner": "template"
-    },
     "09D92B1A": {
       "owner": "generated",
       "region": "objecttypes",
@@ -2450,6 +2447,9 @@
       "index": 2,
       "kind": "para",
       "para": 0
+    },
+    "09DCA6A1": {
+      "owner": "template"
     },
     "09E306DA": {
       "owner": "template"
@@ -2535,9 +2535,6 @@
       "para": 912
     },
     "0A1D6897": {
-      "owner": "template"
-    },
-    "0A1F1580": {
       "owner": "template"
     },
     "0A30BEA3": {
@@ -2823,6 +2820,9 @@
       "kind": "nodetable",
       "para": 1079
     },
+    "0B9C9B59": {
+      "owner": "template"
+    },
     "0BACDCB1": {
       "owner": "generated",
       "region": "annex-a",
@@ -2898,15 +2898,15 @@
       "kind": "enumtable",
       "para": 0
     },
-    "0C10E894": {
-      "owner": "template"
-    },
     "0C2EDFAB": {
       "owner": "generated",
       "region": "eventtypes",
       "index": 0,
       "kind": "clause",
       "para": 0
+    },
+    "0C3839E3": {
+      "owner": "template"
     },
     "0C387D62": {
       "owner": "markdown",
@@ -2928,6 +2928,9 @@
       "index": 14,
       "kind": "nodetable",
       "para": 132
+    },
+    "0C52721C": {
+      "owner": "template"
     },
     "0C546C91": {
       "owner": "generated",
@@ -3071,6 +3074,9 @@
       "index": 52,
       "kind": "nodetable",
       "para": 5
+    },
+    "0CCE6F8F": {
+      "owner": "template"
     },
     "0CFE0F3B": {
       "owner": "generated",
@@ -3275,6 +3281,9 @@
     "0DCEF140": {
       "owner": "template"
     },
+    "0DE749C6": {
+      "owner": "template"
+    },
     "0DF77927": {
       "owner": "generated",
       "region": "normative-references",
@@ -3303,12 +3312,18 @@
       "kind": "nodetable",
       "para": 73
     },
+    "0E1CCD84": {
+      "owner": "template"
+    },
     "0E2C1841": {
       "owner": "generated",
       "region": "datatypes",
       "index": 60,
       "kind": "nodetable",
       "para": 23
+    },
+    "0E2DCCF7": {
+      "owner": "template"
     },
     "0E2FE0BE": {
       "owner": "generated",
@@ -3397,9 +3412,6 @@
       "kind": "nodetable",
       "para": 214
     },
-    "0E86FA0B": {
-      "owner": "template"
-    },
     "0E89419A": {
       "owner": "generated",
       "region": "datatypes",
@@ -3454,6 +3466,9 @@
       "index": 8,
       "kind": "nodetable",
       "para": 21
+    },
+    "0EDB9E10": {
+      "owner": "template"
     },
     "0EDD56FB": {
       "owner": "generated",
@@ -3566,6 +3581,9 @@
       "kind": "nodetable",
       "para": 745
     },
+    "0F47CBCB": {
+      "owner": "template"
+    },
     "0F4D8798": {
       "owner": "generated",
       "region": "datatypes",
@@ -3610,6 +3628,9 @@
       "index": 11,
       "kind": "enumtable",
       "para": 12
+    },
+    "0F994F56": {
+      "owner": "template"
     },
     "0FAC5245": {
       "owner": "template"
@@ -3780,9 +3801,6 @@
       "kind": "clause",
       "para": 0
     },
-    "107A4A46": {
-      "owner": "template"
-    },
     "1081F186": {
       "owner": "template"
     },
@@ -3827,6 +3845,9 @@
       "index": 5,
       "kind": "methodtable",
       "para": 39
+    },
+    "10AFFBA0": {
+      "owner": "template"
     },
     "10BAE9D7": {
       "owner": "generated",
@@ -3912,6 +3933,12 @@
       "kind": "methodtable",
       "para": 38
     },
+    "110C4501": {
+      "owner": "template"
+    },
+    "110D88CA": {
+      "owner": "template"
+    },
     "11174498": {
       "owner": "generated",
       "region": "annex-a",
@@ -3988,18 +4015,12 @@
     "115ACBB4": {
       "owner": "template"
     },
-    "115C4F50": {
-      "owner": "template"
-    },
     "116D85AF": {
       "owner": "generated",
       "region": "datatypes",
       "index": 27,
       "kind": "enumtable",
       "para": 4
-    },
-    "116EDBE8": {
-      "owner": "template"
     },
     "1179DB01": {
       "owner": "generated",
@@ -4126,9 +4147,6 @@
       "kind": "nodetable",
       "para": 62
     },
-    "11E298CB": {
-      "owner": "template"
-    },
     "11E743AE": {
       "owner": "generated",
       "region": "annex-a",
@@ -4149,6 +4167,9 @@
       "index": 30,
       "kind": "para",
       "para": 0
+    },
+    "12004AE0": {
+      "owner": "template"
     },
     "12024372": {
       "owner": "generated",
@@ -4385,6 +4406,12 @@
       "kind": "nodetable",
       "para": 10
     },
+    "12ED9B87": {
+      "owner": "template"
+    },
+    "130812CD": {
+      "owner": "template"
+    },
     "1310E9FD": {
       "owner": "template"
     },
@@ -4447,9 +4474,6 @@
       "kind": "nodetable",
       "para": 16
     },
-    "133A2450": {
-      "owner": "template"
-    },
     "13500168": {
       "owner": "template"
     },
@@ -4487,6 +4511,9 @@
       "index": 34,
       "kind": "methodtable",
       "para": 15
+    },
+    "137455A3": {
+      "owner": "template"
     },
     "13750A78": {
       "owner": "generated",
@@ -4544,9 +4571,6 @@
       "kind": "nodetable",
       "para": 47
     },
-    "139A01EA": {
-      "owner": "template"
-    },
     "139C582E": {
       "owner": "generated",
       "region": "annex-a",
@@ -4574,9 +4598,6 @@
       "index": 14,
       "kind": "nodetable",
       "para": 18
-    },
-    "13BBD0A7": {
-      "owner": "template"
     },
     "13BD3C6C": {
       "owner": "generated",
@@ -4662,7 +4683,7 @@
       "kind": "clause",
       "para": 0
     },
-    "14165A17": {
+    "1413CC82": {
       "owner": "template"
     },
     "142160A0": {
@@ -4855,6 +4876,9 @@
       "kind": "nodetable",
       "para": 1091
     },
+    "14F917B6": {
+      "owner": "template"
+    },
     "1508C566": {
       "owner": "generated",
       "region": "datatypes",
@@ -4896,6 +4920,9 @@
     "151E84D9": {
       "owner": "template"
     },
+    "1528E954": {
+      "owner": "template"
+    },
     "152B07C7": {
       "owner": "generated",
       "region": "objecttypes",
@@ -4919,6 +4946,9 @@
       "index": 0,
       "kind": "nodetable",
       "para": 601
+    },
+    "153E1425": {
+      "owner": "template"
     },
     "15494C75": {
       "owner": "generated",
@@ -5142,9 +5172,6 @@
       "kind": "enumtable",
       "para": 43
     },
-    "161D2C14": {
-      "owner": "template"
-    },
     "1622F10F": {
       "owner": "generated",
       "region": "instances",
@@ -5179,9 +5206,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 52
-    },
-    "164832DF": {
-      "owner": "template"
     },
     "1652710D": {
       "owner": "generated",
@@ -5287,10 +5311,10 @@
       "kind": "methodtable",
       "para": 19
     },
-    "16CBA155": {
+    "16C5292E": {
       "owner": "template"
     },
-    "16CCE419": {
+    "16CBA155": {
       "owner": "template"
     },
     "16CE9EFB": {
@@ -5378,18 +5402,12 @@
     "172BDD6E": {
       "owner": "template"
     },
-    "172CA36C": {
-      "owner": "template"
-    },
     "172FED11": {
       "owner": "generated",
       "region": "objecttypes",
       "index": 3,
       "kind": "nodetable",
       "para": 37
-    },
-    "17300D63": {
-      "owner": "template"
     },
     "17344EF4": {
       "owner": "generated",
@@ -5449,6 +5467,9 @@
       "index": 36,
       "kind": "nodetable",
       "para": 25
+    },
+    "1788C603": {
+      "owner": "template"
     },
     "178DCECC": {
       "owner": "generated",
@@ -5609,6 +5630,9 @@
       "kind": "enumtable",
       "para": 3
     },
+    "1820606E": {
+      "owner": "template"
+    },
     "1822A233": {
       "owner": "generated",
       "region": "annex-a",
@@ -5737,6 +5761,9 @@
       "kind": "methodtable",
       "para": 0
     },
+    "18868B16": {
+      "owner": "template"
+    },
     "18916336": {
       "owner": "generated",
       "region": "objecttypes",
@@ -5764,9 +5791,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 662
-    },
-    "18977C45": {
-      "owner": "template"
     },
     "189A56F8": {
       "owner": "template"
@@ -5855,18 +5879,12 @@
       "kind": "methodtable",
       "para": 16
     },
-    "1922ABBB": {
-      "owner": "template"
-    },
     "19236069": {
       "owner": "generated",
       "region": "annex-a",
       "index": 0,
       "kind": "nodetable",
       "para": 640
-    },
-    "192E32D0": {
-      "owner": "template"
     },
     "19322106": {
       "owner": "generated",
@@ -6072,9 +6090,6 @@
     "19E8EA61": {
       "owner": "template"
     },
-    "19E9EAF2": {
-      "owner": "template"
-    },
     "19F4EA99": {
       "owner": "generated",
       "region": "annex-a",
@@ -6110,9 +6125,6 @@
       "kind": "nodetable",
       "para": 31
     },
-    "1A1A2377": {
-      "owner": "template"
-    },
     "1A1C8A53": {
       "owner": "generated",
       "region": "terms",
@@ -6134,6 +6146,9 @@
       "kind": "nodetable",
       "para": 3
     },
+    "1A23FF05": {
+      "owner": "template"
+    },
     "1A26850D": {
       "owner": "generated",
       "region": "instances",
@@ -6150,6 +6165,9 @@
       "index": 0,
       "kind": "nodetable",
       "para": 26
+    },
+    "1A35CA8B": {
+      "owner": "template"
     },
     "1A3657B2": {
       "owner": "generated",
@@ -6168,15 +6186,15 @@
       "kind": "nodetable",
       "para": 368
     },
+    "1A4B941F": {
+      "owner": "template"
+    },
     "1A4EB077": {
       "owner": "generated",
       "region": "objecttypes",
       "index": 29,
       "kind": "nodetable",
       "para": 56
-    },
-    "1A520E50": {
-      "owner": "template"
     },
     "1A65370E": {
       "owner": "markdown",
@@ -6206,7 +6224,7 @@
       "kind": "methodtable",
       "para": 17
     },
-    "1A7BDC2B": {
+    "1A7691A2": {
       "owner": "template"
     },
     "1A7E6700": {
@@ -6278,9 +6296,6 @@
       "kind": "nodetable",
       "para": 0
     },
-    "1AC094C6": {
-      "owner": "template"
-    },
     "1AC39791": {
       "owner": "generated",
       "region": "annex-a",
@@ -6301,9 +6316,6 @@
       "index": 48,
       "kind": "nodetable",
       "para": 19
-    },
-    "1AD15603": {
-      "owner": "template"
     },
     "1AD6C658": {
       "owner": "generated",
@@ -6346,9 +6358,6 @@
       "index": 12,
       "kind": "nodetable",
       "para": 12
-    },
-    "1AFC6F6A": {
-      "owner": "template"
     },
     "1B07648B": {
       "owner": "generated",
@@ -6426,9 +6435,6 @@
       "kind": "enumtable",
       "para": 10
     },
-    "1B841E32": {
-      "owner": "template"
-    },
     "1B8FEF39": {
       "owner": "generated",
       "region": "annex-a",
@@ -6436,18 +6442,12 @@
       "kind": "nodetable",
       "para": 433
     },
-    "1B91E9AF": {
-      "owner": "template"
-    },
     "1B98D982": {
       "owner": "generated",
       "region": "objecttypes",
       "index": 3,
       "kind": "nodetable",
       "para": 91
-    },
-    "1B9902DD": {
-      "owner": "template"
     },
     "1B9E9216": {
       "owner": "template"
@@ -6458,6 +6458,9 @@
       "index": 8,
       "kind": "nodetable",
       "para": 7
+    },
+    "1BAA4C61": {
+      "owner": "template"
     },
     "1BBCD5EC": {
       "owner": "generated",
@@ -6633,9 +6636,6 @@
       "kind": "nodetable",
       "para": 389
     },
-    "1C601661": {
-      "owner": "template"
-    },
     "1C633248": {
       "owner": "generated",
       "region": "objecttypes",
@@ -6688,6 +6688,9 @@
       "kind": "enumtable",
       "para": 1
     },
+    "1C9D012A": {
+      "owner": "template"
+    },
     "1C9E1362": {
       "owner": "template"
     },
@@ -6704,6 +6707,9 @@
       "index": 0,
       "kind": "nodetable",
       "para": 972
+    },
+    "1CA7F00B": {
+      "owner": "template"
     },
     "1CA85A5B": {
       "owner": "generated",
@@ -6737,9 +6743,6 @@
       "para": 12
     },
     "1CB81C6B": {
-      "owner": "template"
-    },
-    "1CBA239B": {
       "owner": "template"
     },
     "1CBB1E82": {
@@ -6783,9 +6786,6 @@
       "index": 55,
       "kind": "enumtable",
       "para": 2
-    },
-    "1CD71D91": {
-      "owner": "template"
     },
     "1CDD8ADC": {
       "owner": "generated",
@@ -6895,7 +6895,7 @@
       "kind": "methodtable",
       "para": 8
     },
-    "1D2090C7": {
+    "1D315044": {
       "owner": "template"
     },
     "1D3756D6": {
@@ -6942,9 +6942,6 @@
       "index": 43,
       "kind": "enumtable",
       "para": 5
-    },
-    "1D5B7466": {
-      "owner": "template"
     },
     "1D5FD512": {
       "owner": "template"
@@ -7085,6 +7082,9 @@
       "block": 1,
       "para": 5
     },
+    "1E02E160": {
+      "owner": "template"
+    },
     "1E065C99": {
       "owner": "generated",
       "region": "datatypes",
@@ -7157,6 +7157,9 @@
       "kind": "enumtable",
       "para": 30
     },
+    "1E5049EE": {
+      "owner": "template"
+    },
     "1E53EC04": {
       "owner": "generated",
       "region": "objecttypes",
@@ -7172,6 +7175,9 @@
       "para": 362
     },
     "1E6714A6": {
+      "owner": "template"
+    },
+    "1E79CD99": {
       "owner": "template"
     },
     "1E7B97C0": {
@@ -7261,6 +7267,9 @@
       "kind": "nodetable",
       "para": 43
     },
+    "1EBFF183": {
+      "owner": "template"
+    },
     "1EC1AC7F": {
       "owner": "generated",
       "region": "objecttypes",
@@ -7303,9 +7312,6 @@
       "kind": "nodetable",
       "para": 305
     },
-    "1EE1380B": {
-      "owner": "template"
-    },
     "1EE3E04D": {
       "owner": "generated",
       "region": "objecttypes",
@@ -7340,6 +7346,9 @@
       "index": 0,
       "kind": "nodetable",
       "para": 577
+    },
+    "1F06BD3B": {
+      "owner": "template"
     },
     "1F08860C": {
       "owner": "generated",
@@ -7435,15 +7444,15 @@
       "block": 0,
       "para": 0
     },
+    "1F769786": {
+      "owner": "template"
+    },
     "1F7872E8": {
       "owner": "generated",
       "region": "instances",
       "index": 12,
       "kind": "methodtable",
       "para": 22
-    },
-    "1F8269E9": {
-      "owner": "template"
     },
     "1F827D34": {
       "owner": "markdown",
@@ -7493,9 +7502,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 644
-    },
-    "1FA66666": {
-      "owner": "template"
     },
     "1FA6F365": {
       "owner": "generated",
@@ -7625,9 +7631,6 @@
       "kind": "nodetable",
       "para": 15
     },
-    "202158DC": {
-      "owner": "template"
-    },
     "20250076": {
       "owner": "generated",
       "region": "referencetypes",
@@ -7701,9 +7704,6 @@
       "kind": "methodtable",
       "para": 0
     },
-    "2074758C": {
-      "owner": "template"
-    },
     "207494B6": {
       "owner": "template"
     },
@@ -7720,9 +7720,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 636
-    },
-    "20813D8A": {
-      "owner": "template"
     },
     "2083F9D4": {
       "owner": "generated",
@@ -7923,6 +7920,9 @@
       "kind": "nodetable",
       "para": 26
     },
+    "2143047B": {
+      "owner": "template"
+    },
     "21451B5B": {
       "owner": "generated",
       "region": "annex-a",
@@ -7939,9 +7939,6 @@
       "index": 10,
       "kind": "methodtable",
       "para": 22
-    },
-    "214B1D06": {
-      "owner": "template"
     },
     "214E8E58": {
       "owner": "generated",
@@ -7964,9 +7961,6 @@
       "kind": "enumtable",
       "para": 16
     },
-    "2153A844": {
-      "owner": "template"
-    },
     "21560EB6": {
       "owner": "generated",
       "region": "objecttypes",
@@ -7980,6 +7974,9 @@
       "index": 0,
       "kind": "nodetable",
       "para": 314
+    },
+    "21645D06": {
+      "owner": "template"
     },
     "21659B2A": {
       "owner": "markdown",
@@ -7995,9 +7992,6 @@
       "kind": "nodetable",
       "para": 57
     },
-    "216AFCE4": {
-      "owner": "template"
-    },
     "2181C398": {
       "owner": "generated",
       "region": "annex-a",
@@ -8011,6 +8005,9 @@
       "index": 18,
       "kind": "methodtable",
       "para": 25
+    },
+    "2189480C": {
+      "owner": "template"
     },
     "2198258C": {
       "owner": "markdown",
@@ -8077,9 +8074,6 @@
     "2210B34B": {
       "owner": "template"
     },
-    "221939CB": {
-      "owner": "template"
-    },
     "221B160F": {
       "owner": "generated",
       "region": "eventtypes",
@@ -8125,6 +8119,9 @@
       "kind": "nodetable",
       "para": 58
     },
+    "2240794A": {
+      "owner": "template"
+    },
     "224F132C": {
       "owner": "generated",
       "region": "annex-a",
@@ -8133,6 +8130,9 @@
       "para": 156
     },
     "224FA464": {
+      "owner": "template"
+    },
+    "22517756": {
       "owner": "template"
     },
     "22679350": {
@@ -8154,6 +8154,9 @@
       "index": 25,
       "kind": "para",
       "para": 0
+    },
+    "229764EB": {
+      "owner": "template"
     },
     "229BC906": {
       "owner": "generated",
@@ -8331,6 +8334,9 @@
       "kind": "nodetable",
       "para": 45
     },
+    "230FA91E": {
+      "owner": "template"
+    },
     "2310AE02": {
       "owner": "generated",
       "region": "annex-a",
@@ -8467,6 +8473,9 @@
       "kind": "methodtable",
       "para": 2
     },
+    "239FB60A": {
+      "owner": "template"
+    },
     "23A594F1": {
       "owner": "template"
     },
@@ -8545,9 +8554,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 655
-    },
-    "24055F00": {
-      "owner": "template"
     },
     "24128676": {
       "owner": "generated",
@@ -8664,9 +8670,6 @@
       "kind": "nodetable",
       "para": 469
     },
-    "2484ECC4": {
-      "owner": "template"
-    },
     "2487205B": {
       "owner": "generated",
       "region": "model-overview",
@@ -8733,12 +8736,18 @@
       "kind": "nodetable",
       "para": 30
     },
+    "24C99085": {
+      "owner": "template"
+    },
     "24CB06D4": {
       "owner": "generated",
       "region": "datatypes",
       "index": 44,
       "kind": "nodetable",
       "para": 7
+    },
+    "24D3349B": {
+      "owner": "template"
     },
     "24E1DD3F": {
       "owner": "generated",
@@ -8789,12 +8798,18 @@
       "kind": "enumtable",
       "para": 11
     },
+    "250175B4": {
+      "owner": "template"
+    },
     "25046D4F": {
       "owner": "generated",
       "region": "datatypes",
       "index": 55,
       "kind": "enumtable",
       "para": 14
+    },
+    "25075567": {
+      "owner": "template"
     },
     "2516B1EF": {
       "owner": "generated",
@@ -8893,6 +8908,12 @@
       "kind": "nodetable",
       "para": 153
     },
+    "255FF405": {
+      "owner": "template"
+    },
+    "25641594": {
+      "owner": "template"
+    },
     "256559DD": {
       "owner": "generated",
       "region": "objecttypes",
@@ -8952,6 +8973,9 @@
       "block": 0,
       "para": 0
     },
+    "25A1CA16": {
+      "owner": "template"
+    },
     "25A1FAC3": {
       "owner": "generated",
       "region": "annex-a",
@@ -8959,15 +8983,15 @@
       "kind": "nodetable",
       "para": 984
     },
+    "25A34D77": {
+      "owner": "template"
+    },
     "25A7366C": {
       "owner": "generated",
       "region": "objecttypes",
       "index": 14,
       "kind": "nodetable",
       "para": 77
-    },
-    "25A7EAB0": {
-      "owner": "template"
     },
     "25A98DBF": {
       "owner": "generated",
@@ -8991,12 +9015,6 @@
       "para": 31
     },
     "25DB5BA6": {
-      "owner": "template"
-    },
-    "25DFEB49": {
-      "owner": "template"
-    },
-    "25E96931": {
       "owner": "template"
     },
     "25F51AF8": {
@@ -9072,6 +9090,15 @@
       "kind": "para",
       "para": 0
     },
+    "262BB1BF": {
+      "owner": "template"
+    },
+    "26306498": {
+      "owner": "template"
+    },
+    "2638A021": {
+      "owner": "template"
+    },
     "263CEE33": {
       "owner": "generated",
       "region": "objecttypes",
@@ -9093,7 +9120,7 @@
       "kind": "nodetable",
       "para": 34
     },
-    "2647AFAA": {
+    "264AE03D": {
       "owner": "template"
     },
     "264C2F23": {
@@ -9155,9 +9182,6 @@
       "kind": "nodetable",
       "para": 825
     },
-    "268626C0": {
-      "owner": "template"
-    },
     "268BBEA0": {
       "owner": "template"
     },
@@ -9170,9 +9194,6 @@
       "index": 16,
       "kind": "nodetable",
       "para": 19
-    },
-    "268EC37A": {
-      "owner": "template"
     },
     "268FA841": {
       "owner": "generated",
@@ -9201,6 +9222,9 @@
       "index": 3,
       "kind": "enumtable",
       "para": 4
+    },
+    "26C68AA5": {
+      "owner": "template"
     },
     "26C7321B": {
       "owner": "generated",
@@ -9292,9 +9316,6 @@
       "kind": "nodetable",
       "para": 32
     },
-    "2726BA0A": {
-      "owner": "template"
-    },
     "2729CDE3": {
       "owner": "generated",
       "region": "objecttypes",
@@ -9309,7 +9330,7 @@
       "kind": "nodetable",
       "para": 6
     },
-    "272AD66A": {
+    "272F9E14": {
       "owner": "template"
     },
     "2733BDCA": {
@@ -9325,9 +9346,6 @@
       "index": 39,
       "kind": "enumtable",
       "para": 16
-    },
-    "274040EE": {
-      "owner": "template"
     },
     "2741F9A1": {
       "owner": "generated",
@@ -9436,6 +9454,9 @@
       "kind": "enumtable",
       "para": 6
     },
+    "27BFCE8C": {
+      "owner": "template"
+    },
     "27C4E2CC": {
       "owner": "markdown",
       "file": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
@@ -9501,6 +9522,9 @@
       "kind": "enumtable",
       "para": 12
     },
+    "2821ABD9": {
+      "owner": "template"
+    },
     "283647CD": {
       "owner": "generated",
       "region": "datatypes",
@@ -9535,6 +9559,9 @@
       "index": 19,
       "kind": "enumtable",
       "para": 4
+    },
+    "2845EA11": {
+      "owner": "template"
     },
     "2850473E": {
       "owner": "template"
@@ -9685,9 +9712,6 @@
       "kind": "nodetable",
       "para": 10
     },
-    "2908AD99": {
-      "owner": "template"
-    },
     "290A76D1": {
       "owner": "generated",
       "region": "annex-a",
@@ -9716,6 +9740,9 @@
       "kind": "nodetable",
       "para": 36
     },
+    "2917E0B2": {
+      "owner": "template"
+    },
     "2922D9AD": {
       "owner": "generated",
       "region": "namespaces",
@@ -9724,6 +9751,9 @@
       "para": 11
     },
     "29283343": {
+      "owner": "template"
+    },
+    "292C86C1": {
       "owner": "template"
     },
     "2930A690": {
@@ -9791,9 +9821,6 @@
       "kind": "nodetable",
       "para": 25
     },
-    "297E3F85": {
-      "owner": "template"
-    },
     "29810913": {
       "owner": "markdown",
       "file": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
@@ -9807,6 +9834,9 @@
       "index": 6,
       "kind": "term",
       "para": 2
+    },
+    "298FDEE1": {
+      "owner": "template"
     },
     "29960A64": {
       "owner": "generated",
@@ -9842,6 +9872,12 @@
       "index": 0,
       "kind": "nodetable",
       "para": 90
+    },
+    "29C19FE7": {
+      "owner": "template"
+    },
+    "29CADC1F": {
+      "owner": "template"
     },
     "29D33E03": {
       "owner": "generated",
@@ -9935,6 +9971,9 @@
       "kind": "nodetable",
       "para": 1138
     },
+    "2A5BF503": {
+      "owner": "template"
+    },
     "2A6D2F7F": {
       "owner": "generated",
       "region": "use-cases",
@@ -9970,6 +10009,9 @@
       "kind": "nodetable",
       "para": 117
     },
+    "2A9DBD91": {
+      "owner": "template"
+    },
     "2AA984BF": {
       "owner": "generated",
       "region": "datatypes",
@@ -10003,6 +10045,9 @@
       "index": 5,
       "kind": "methodtable",
       "para": 2
+    },
+    "2AD7B3D9": {
+      "owner": "template"
     },
     "2AE881FF": {
       "owner": "generated",
@@ -10136,9 +10181,6 @@
       "kind": "nodetable",
       "para": 109
     },
-    "2B39E87E": {
-      "owner": "template"
-    },
     "2B414E6B": {
       "owner": "generated",
       "region": "annex-a",
@@ -10159,9 +10201,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 961
-    },
-    "2B492205": {
-      "owner": "template"
     },
     "2B4AEE20": {
       "owner": "generated",
@@ -10256,6 +10295,9 @@
       "kind": "config",
       "para": 0
     },
+    "2B97CCB7": {
+      "owner": "template"
+    },
     "2B9BCBE2": {
       "owner": "generated",
       "region": "datatypes",
@@ -10322,18 +10364,12 @@
       "kind": "methodtable",
       "para": 1
     },
-    "2BF4BDD0": {
-      "owner": "template"
-    },
     "2BFC08C8": {
       "owner": "generated",
       "region": "datatypes",
       "index": 23,
       "kind": "enumtable",
       "para": 16
-    },
-    "2C02015A": {
-      "owner": "template"
     },
     "2C0D473F": {
       "owner": "generated",
@@ -10363,12 +10399,18 @@
       "kind": "nodetable",
       "para": 174
     },
+    "2C3A5F46": {
+      "owner": "template"
+    },
     "2C3E12C8": {
       "owner": "generated",
       "region": "eventtypes",
       "index": 3,
       "kind": "nodetable",
       "para": 53
+    },
+    "2C44CA5D": {
+      "owner": "template"
     },
     "2C473754": {
       "owner": "template"
@@ -10400,15 +10442,15 @@
       "kind": "nodetable",
       "para": 13
     },
+    "2C7C5B1F": {
+      "owner": "template"
+    },
     "2C7D8C86": {
       "owner": "generated",
       "region": "annex-a",
       "index": 0,
       "kind": "nodetable",
       "para": 1064
-    },
-    "2C808210": {
-      "owner": "template"
     },
     "2C8EFD28": {
       "owner": "generated",
@@ -10459,9 +10501,6 @@
       "kind": "methodtable",
       "para": 9
     },
-    "2CD23460": {
-      "owner": "template"
-    },
     "2CDB22E4": {
       "owner": "generated",
       "region": "annex-a",
@@ -10475,9 +10514,6 @@
       "index": 23,
       "kind": "enumtable",
       "para": 3
-    },
-    "2CE71244": {
-      "owner": "template"
     },
     "2CEEB61F": {
       "owner": "generated",
@@ -10514,6 +10550,9 @@
       "kind": "nodetable",
       "para": 1093
     },
+    "2CFDC8A2": {
+      "owner": "template"
+    },
     "2D07FC15": {
       "owner": "generated",
       "region": "annex-a",
@@ -10536,6 +10575,9 @@
       "para": 548
     },
     "2D1C4F1B": {
+      "owner": "template"
+    },
+    "2D2024DE": {
       "owner": "template"
     },
     "2D20695A": {
@@ -10586,9 +10628,6 @@
       "section": "7.12 Document identifiers and names",
       "block": 1,
       "para": 0
-    },
-    "2D473F49": {
-      "owner": "template"
     },
     "2D5345A3": {
       "owner": "generated",
@@ -10673,6 +10712,9 @@
       "kind": "nodetable",
       "para": 589
     },
+    "2D987948": {
+      "owner": "template"
+    },
     "2DA383F2": {
       "owner": "generated",
       "region": "referencetypes",
@@ -10717,9 +10759,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 914
-    },
-    "2DCD3B6C": {
-      "owner": "template"
     },
     "2DD18438": {
       "owner": "generated",
@@ -10913,9 +10952,6 @@
       "kind": "nodetable",
       "para": 71
     },
-    "2E847ED2": {
-      "owner": "template"
-    },
     "2E866D27": {
       "owner": "generated",
       "region": "datatypes",
@@ -10936,9 +10972,6 @@
       "section": "12.4 Refresh results (`examples/04-refresh-results.json`)",
       "block": 1,
       "para": 3
-    },
-    "2EA8CD42": {
-      "owner": "template"
     },
     "2EAC85E4": {
       "owner": "template"
@@ -10974,10 +11007,7 @@
       "kind": "nodetable",
       "para": 1090
     },
-    "2ECE309C": {
-      "owner": "template"
-    },
-    "2ED1160D": {
+    "2ECA6924": {
       "owner": "template"
     },
     "2EE16D67": {
@@ -11140,15 +11170,15 @@
       "kind": "nodetable",
       "para": 17
     },
+    "2FA19B58": {
+      "owner": "template"
+    },
     "2FAA3105": {
       "owner": "generated",
       "region": "objecttypes",
       "index": 3,
       "kind": "nodetable",
       "para": 101
-    },
-    "2FAAE977": {
-      "owner": "template"
     },
     "2FB43D92": {
       "owner": "generated",
@@ -11238,6 +11268,9 @@
       "kind": "methodtable",
       "para": 21
     },
+    "301B5E68": {
+      "owner": "template"
+    },
     "302A658D": {
       "owner": "generated",
       "region": "objecttypes",
@@ -11268,6 +11301,9 @@
       "section": "7.7 Automatic and explicit refresh; idempotence",
       "block": 0,
       "para": 0
+    },
+    "304526ED": {
+      "owner": "template"
     },
     "3048A7DC": {
       "owner": "template"
@@ -11477,6 +11513,9 @@
       "kind": "nodetable",
       "para": 30
     },
+    "310D6ECB": {
+      "owner": "template"
+    },
     "3110A5AA": {
       "owner": "generated",
       "region": "eventtypes",
@@ -11492,6 +11531,9 @@
       "para": 15
     },
     "31219329": {
+      "owner": "template"
+    },
+    "312D0905": {
       "owner": "template"
     },
     "3144F9D4": {
@@ -11529,9 +11571,6 @@
       "kind": "nodetable",
       "para": 1
     },
-    "31706931": {
-      "owner": "template"
-    },
     "31742F50": {
       "owner": "generated",
       "region": "objecttypes",
@@ -11555,6 +11594,9 @@
       "index": 32,
       "kind": "nodetable",
       "para": 32
+    },
+    "319F12FA": {
+      "owner": "template"
     },
     "319F9836": {
       "owner": "generated",
@@ -11593,6 +11635,9 @@
       "index": 16,
       "kind": "para",
       "para": 0
+    },
+    "31ADD11D": {
+      "owner": "template"
     },
     "31BD0D36": {
       "owner": "generated",
@@ -11709,9 +11754,6 @@
       "kind": "enumtable",
       "para": 7
     },
-    "327FE3B1": {
-      "owner": "template"
-    },
     "3280346A": {
       "owner": "generated",
       "region": "datatypes",
@@ -11757,9 +11799,6 @@
       "kind": "nodetable",
       "para": 107
     },
-    "32D7BFE8": {
-      "owner": "template"
-    },
     "32DE79C6": {
       "owner": "template"
     },
@@ -11779,6 +11818,9 @@
       "index": 8,
       "kind": "nodetable",
       "para": 13
+    },
+    "32ED77F9": {
+      "owner": "template"
     },
     "32F2F67F": {
       "owner": "generated",
@@ -11807,6 +11849,9 @@
       "index": 4,
       "kind": "table",
       "para": 8
+    },
+    "330F50B3": {
+      "owner": "template"
     },
     "33122714": {
       "owner": "generated",
@@ -11898,12 +11943,6 @@
       "index": 43,
       "kind": "enumtable",
       "para": 12
-    },
-    "335F8877": {
-      "owner": "template"
-    },
-    "3367EDA9": {
-      "owner": "template"
     },
     "336CB938": {
       "owner": "markdown",
@@ -12194,6 +12233,9 @@
       "kind": "clause",
       "para": 0
     },
+    "34637456": {
+      "owner": "template"
+    },
     "34651FFD": {
       "owner": "generated",
       "region": "annex-a",
@@ -12306,18 +12348,12 @@
       "kind": "nodetable",
       "para": 128
     },
-    "35153680": {
-      "owner": "template"
-    },
     "351F5487": {
       "owner": "generated",
       "region": "datatypes",
       "index": 4,
       "kind": "nodetable",
       "para": 11
-    },
-    "35242C85": {
-      "owner": "template"
     },
     "352747AC": {
       "owner": "generated",
@@ -12388,12 +12424,6 @@
     "35603A85": {
       "owner": "template"
     },
-    "35677B2C": {
-      "owner": "template"
-    },
-    "356D5F6C": {
-      "owner": "template"
-    },
     "3578B262": {
       "owner": "generated",
       "region": "annex-a",
@@ -12407,6 +12437,9 @@
       "index": 0,
       "kind": "nodetable",
       "para": 208
+    },
+    "3580986D": {
+      "owner": "template"
     },
     "35820FCA": {
       "owner": "generated",
@@ -12491,9 +12524,6 @@
     "35E11470": {
       "owner": "template"
     },
-    "35E32573": {
-      "owner": "template"
-    },
     "35E440FA": {
       "owner": "generated",
       "region": "datatypes",
@@ -12542,9 +12572,6 @@
       "index": 45,
       "kind": "nodetable",
       "para": 2
-    },
-    "3613BF90": {
-      "owner": "template"
     },
     "36170D40": {
       "owner": "template"
@@ -12615,15 +12642,15 @@
       "kind": "enumtable",
       "para": 14
     },
+    "36814033": {
+      "owner": "template"
+    },
     "368609E5": {
       "owner": "generated",
       "region": "datatypes",
       "index": 7,
       "kind": "enumtable",
       "para": 28
-    },
-    "36872846": {
-      "owner": "template"
     },
     "36875B0D": {
       "owner": "markdown",
@@ -12721,9 +12748,6 @@
       "block": 2,
       "para": 0
     },
-    "36E569D7": {
-      "owner": "template"
-    },
     "36EAC005": {
       "owner": "generated",
       "region": "annex-a",
@@ -12788,9 +12812,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 798
-    },
-    "372BA5B7": {
-      "owner": "template"
     },
     "372E4FC2": {
       "owner": "markdown",
@@ -12864,6 +12885,9 @@
       "kind": "nodetable",
       "para": 568
     },
+    "37507F2D": {
+      "owner": "template"
+    },
     "375A1243": {
       "owner": "generated",
       "region": "objecttypes",
@@ -12920,9 +12944,6 @@
       "block": 2,
       "para": 0
     },
-    "378A7AEB": {
-      "owner": "template"
-    },
     "378E1EA3": {
       "owner": "generated",
       "region": "objecttypes",
@@ -12965,9 +12986,6 @@
       "block": 1,
       "para": 1
     },
-    "37B4943E": {
-      "owner": "template"
-    },
     "37B5C6E9": {
       "owner": "generated",
       "region": "datatypes",
@@ -12982,15 +13000,15 @@
       "kind": "nodetable",
       "para": 103
     },
-    "37BC7B87": {
-      "owner": "template"
-    },
     "37BC9CF4": {
       "owner": "generated",
       "region": "objecttypes",
       "index": 42,
       "kind": "methodtable",
       "para": 5
+    },
+    "37C5F43A": {
+      "owner": "template"
     },
     "37C645BC": {
       "owner": "generated",
@@ -13102,9 +13120,6 @@
       "block": 1,
       "para": 14
     },
-    "381A87EA": {
-      "owner": "template"
-    },
     "3827325A": {
       "owner": "generated",
       "region": "instances",
@@ -13186,18 +13201,12 @@
     "3874D575": {
       "owner": "template"
     },
-    "388AECD0": {
-      "owner": "template"
-    },
     "388BB62B": {
       "owner": "generated",
       "region": "datatypes",
       "index": 6,
       "kind": "para",
       "para": 0
-    },
-    "388FDF10": {
-      "owner": "template"
     },
     "3895E350": {
       "owner": "generated",
@@ -13248,6 +13257,9 @@
       "kind": "nodetable",
       "para": 97
     },
+    "38C27EC8": {
+      "owner": "template"
+    },
     "38CF4598": {
       "owner": "generated",
       "region": "datatypes",
@@ -13282,9 +13294,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 618
-    },
-    "38EFBD30": {
-      "owner": "template"
     },
     "38F7BBAC": {
       "owner": "generated",
@@ -13400,6 +13409,12 @@
       "index": 36,
       "kind": "methodtable",
       "para": 2
+    },
+    "396301DA": {
+      "owner": "template"
+    },
+    "396CB3AD": {
+      "owner": "template"
     },
     "396F0880": {
       "owner": "generated",
@@ -13519,6 +13534,9 @@
       "kind": "methodtable",
       "para": 12
     },
+    "39C08569": {
+      "owner": "template"
+    },
     "39C2371C": {
       "owner": "generated",
       "region": "objecttypes",
@@ -13532,6 +13550,9 @@
       "index": 3,
       "kind": "nodetable",
       "para": 14
+    },
+    "39C86BBA": {
+      "owner": "template"
     },
     "39C951BC": {
       "owner": "generated",
@@ -13684,9 +13705,6 @@
       "index": 14,
       "kind": "nodetable",
       "para": 138
-    },
-    "3A5ABBD3": {
-      "owner": "template"
     },
     "3A5B6597": {
       "owner": "markdown",
@@ -13867,15 +13885,15 @@
       "kind": "nodetable",
       "para": 102
     },
+    "3B04BC68": {
+      "owner": "template"
+    },
     "3B205952": {
       "owner": "generated",
       "region": "objecttypes",
       "index": 3,
       "kind": "nodetable",
       "para": 30
-    },
-    "3B268677": {
-      "owner": "template"
     },
     "3B297FE1": {
       "owner": "generated",
@@ -14008,6 +14026,9 @@
       "index": 51,
       "kind": "nodetable",
       "para": 20
+    },
+    "3B94064D": {
+      "owner": "template"
     },
     "3B994BDE": {
       "owner": "generated",
@@ -14239,7 +14260,7 @@
       "block": 6,
       "para": 13
     },
-    "3C719E17": {
+    "3C6C0C4B": {
       "owner": "template"
     },
     "3C721CCF": {
@@ -14285,6 +14306,9 @@
       "para": 364
     },
     "3C8E7C39": {
+      "owner": "template"
+    },
+    "3C93575E": {
       "owner": "template"
     },
     "3CB68112": {
@@ -14343,9 +14367,6 @@
       "kind": "nodetable",
       "para": 42
     },
-    "3CCADEDD": {
-      "owner": "template"
-    },
     "3CD1E582": {
       "owner": "template"
     },
@@ -14370,9 +14391,6 @@
       "kind": "nodetable",
       "para": 1047
     },
-    "3CDFE5ED": {
-      "owner": "template"
-    },
     "3CE1E6FF": {
       "owner": "generated",
       "region": "annex-a",
@@ -14387,9 +14405,6 @@
       "kind": "nodetable",
       "para": 4
     },
-    "3CEBA7A0": {
-      "owner": "template"
-    },
     "3CFD4F92": {
       "owner": "generated",
       "region": "objecttypes",
@@ -14397,15 +14412,15 @@
       "kind": "methodtable",
       "para": 8
     },
+    "3D032BCC": {
+      "owner": "template"
+    },
     "3D0998DB": {
       "owner": "generated",
       "region": "datatypes",
       "index": 52,
       "kind": "nodetable",
       "para": 11
-    },
-    "3D0C68E8": {
-      "owner": "template"
     },
     "3D0CF341": {
       "owner": "generated",
@@ -14512,6 +14527,9 @@
       "kind": "methodtable",
       "para": 4
     },
+    "3DB3F392": {
+      "owner": "template"
+    },
     "3DBEEA0C": {
       "owner": "generated",
       "region": "eventtypes",
@@ -14545,12 +14563,6 @@
       "index": 3,
       "kind": "nodetable",
       "para": 12
-    },
-    "3DE64E28": {
-      "owner": "template"
-    },
-    "3DE6FA37": {
-      "owner": "template"
     },
     "3DECD200": {
       "owner": "markdown",
@@ -14792,9 +14804,6 @@
     "3E7BD4E4": {
       "owner": "template"
     },
-    "3E80154E": {
-      "owner": "template"
-    },
     "3E84042C": {
       "owner": "generated",
       "region": "eventtypes",
@@ -14833,6 +14842,9 @@
       "kind": "methodtable",
       "para": 52
     },
+    "3EA7C335": {
+      "owner": "template"
+    },
     "3EA9D975": {
       "owner": "generated",
       "region": "objecttypes",
@@ -14853,6 +14865,9 @@
       "index": 48,
       "kind": "nodetable",
       "para": 28
+    },
+    "3ECDFA96": {
+      "owner": "template"
     },
     "3ED835DB": {
       "owner": "generated",
@@ -15145,6 +15160,9 @@
       "kind": "para",
       "para": 0
     },
+    "3F9B11C0": {
+      "owner": "template"
+    },
     "3F9B6BD6": {
       "owner": "generated",
       "region": "objecttypes",
@@ -15186,6 +15204,9 @@
       "section": "14 Conformance units and profiles",
       "block": 1,
       "para": 35
+    },
+    "3FBCAA76": {
+      "owner": "template"
     },
     "3FC18DA0": {
       "owner": "generated",
@@ -15234,12 +15255,6 @@
     "3FED12F4": {
       "owner": "template"
     },
-    "3FF28D1F": {
-      "owner": "template"
-    },
-    "3FF7F0DC": {
-      "owner": "template"
-    },
     "4001213F": {
       "owner": "generated",
       "region": "objecttypes",
@@ -15268,6 +15283,9 @@
       "block": 1,
       "para": 29
     },
+    "401CA6D2": {
+      "owner": "template"
+    },
     "4023F93D": {
       "owner": "generated",
       "region": "annex-a",
@@ -15295,6 +15313,9 @@
       "index": 12,
       "kind": "nodetable",
       "para": 8
+    },
+    "403736ED": {
+      "owner": "template"
     },
     "403C871B": {
       "owner": "template"
@@ -15365,6 +15386,9 @@
       "kind": "table",
       "para": 12
     },
+    "40745832": {
+      "owner": "template"
+    },
     "407D20FC": {
       "owner": "generated",
       "region": "objecttypes",
@@ -15385,9 +15409,6 @@
       "index": 5,
       "kind": "methodtable",
       "para": 31
-    },
-    "4080379F": {
-      "owner": "template"
     },
     "408123E9": {
       "owner": "template"
@@ -15558,7 +15579,7 @@
       "kind": "nodetable",
       "para": 774
     },
-    "412FCAF3": {
+    "4117669D": {
       "owner": "template"
     },
     "4136D2B0": {
@@ -15567,6 +15588,9 @@
       "index": 55,
       "kind": "enumtable",
       "para": 13
+    },
+    "4138A78D": {
+      "owner": "template"
     },
     "4139B4BB": {
       "owner": "generated",
@@ -15726,15 +15750,15 @@
       "kind": "nodetable",
       "para": 0
     },
+    "41D12586": {
+      "owner": "template"
+    },
     "41D874B8": {
       "owner": "generated",
       "region": "datatypes",
       "index": 8,
       "kind": "nodetable",
       "para": 10
-    },
-    "41E206D3": {
-      "owner": "template"
     },
     "41F28C9F": {
       "owner": "generated",
@@ -15818,9 +15842,6 @@
       "section": "1 Scope",
       "block": 4,
       "para": 0
-    },
-    "4231AC93": {
-      "owner": "template"
     },
     "4232A81C": {
       "owner": "generated",
@@ -16197,9 +16218,6 @@
       "kind": "nodetable",
       "para": 96
     },
-    "4390C5E9": {
-      "owner": "template"
-    },
     "43A34474": {
       "owner": "generated",
       "region": "objecttypes",
@@ -16242,6 +16260,9 @@
       "kind": "nodetable",
       "para": 334
     },
+    "43E4520D": {
+      "owner": "template"
+    },
     "4403CF4D": {
       "owner": "generated",
       "region": "annex-a",
@@ -16256,12 +16277,18 @@
       "kind": "nodetable",
       "para": 358
     },
+    "440D3D87": {
+      "owner": "template"
+    },
     "44165F59": {
       "owner": "generated",
       "region": "datatypes",
       "index": 48,
       "kind": "nodetable",
       "para": 28
+    },
+    "4421A3C9": {
+      "owner": "template"
     },
     "44308288": {
       "owner": "generated",
@@ -16356,7 +16383,7 @@
       "kind": "clause",
       "para": 0
     },
-    "44ABB3D7": {
+    "44A0E044": {
       "owner": "template"
     },
     "44BB4313": {
@@ -16425,6 +16452,9 @@
       "kind": "nodetable",
       "para": 47
     },
+    "44F89F8C": {
+      "owner": "template"
+    },
     "44FD62A3": {
       "owner": "generated",
       "region": "referencetypes",
@@ -16455,6 +16485,9 @@
       "index": 29,
       "kind": "nodetable",
       "para": 32
+    },
+    "4533285F": {
+      "owner": "template"
     },
     "45384955": {
       "owner": "generated",
@@ -16583,9 +16616,6 @@
       "kind": "nodetable",
       "para": 1130
     },
-    "45CCA24E": {
-      "owner": "template"
-    },
     "45CD3D27": {
       "owner": "generated",
       "region": "eventtypes",
@@ -16599,9 +16629,6 @@
       "section": "4 Overview and architecture",
       "block": 2,
       "para": 0
-    },
-    "45E46791": {
-      "owner": "template"
     },
     "45EA32C4": {
       "owner": "generated",
@@ -16767,9 +16794,6 @@
       "kind": "nodetable",
       "para": 19
     },
-    "467998A7": {
-      "owner": "template"
-    },
     "467E907C": {
       "owner": "template"
     },
@@ -16817,9 +16841,6 @@
       "index": 23,
       "kind": "enumtable",
       "para": 7
-    },
-    "46C013BF": {
-      "owner": "template"
     },
     "46C3372A": {
       "owner": "generated",
@@ -16956,18 +16977,12 @@
       "kind": "nodetable",
       "para": 32
     },
-    "474732A6": {
-      "owner": "template"
-    },
     "474DC9A9": {
       "owner": "generated",
       "region": "instances",
       "index": 10,
       "kind": "methodtable",
       "para": 31
-    },
-    "475121B5": {
-      "owner": "template"
     },
     "4757ED08": {
       "owner": "generated",
@@ -17059,21 +17074,12 @@
       "kind": "nodetable",
       "para": 16
     },
-    "47BEAC33": {
-      "owner": "template"
-    },
     "47C1BBE6": {
       "owner": "generated",
       "region": "objecttypes",
       "index": 53,
       "kind": "methodtable",
       "para": 14
-    },
-    "47C6FE67": {
-      "owner": "template"
-    },
-    "47CCCA14": {
-      "owner": "template"
     },
     "47CD7EE9": {
       "owner": "generated",
@@ -17112,6 +17118,9 @@
       "index": 5,
       "kind": "methodtable",
       "para": 34
+    },
+    "4814929C": {
+      "owner": "template"
     },
     "4815D887": {
       "owner": "generated",
@@ -17439,6 +17448,9 @@
       "kind": "nodetable",
       "para": 1077
     },
+    "499C50A4": {
+      "owner": "template"
+    },
     "499C5FF5": {
       "owner": "markdown",
       "file": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
@@ -17554,6 +17566,9 @@
       "block": 1,
       "para": 13
     },
+    "4A031CCA": {
+      "owner": "template"
+    },
     "4A136E02": {
       "owner": "generated",
       "region": "datatypes",
@@ -17612,7 +17627,7 @@
       "kind": "methodtable",
       "para": 22
     },
-    "4A4ED133": {
+    "4A54DB07": {
       "owner": "template"
     },
     "4A55D102": {
@@ -17623,6 +17638,9 @@
       "para": 414
     },
     "4A646FAF": {
+      "owner": "template"
+    },
+    "4A683AF3": {
       "owner": "template"
     },
     "4A6EB1BD": {
@@ -17709,9 +17727,6 @@
       "kind": "nodetable",
       "para": 23
     },
-    "4AB4E3E4": {
-      "owner": "template"
-    },
     "4ABDAF92": {
       "owner": "generated",
       "region": "annex-a",
@@ -17729,7 +17744,7 @@
       "kind": "nodetable",
       "para": 785
     },
-    "4ACB574B": {
+    "4AD271A7": {
       "owner": "template"
     },
     "4ADAC1F4": {
@@ -17773,6 +17788,9 @@
       "kind": "methodtable",
       "para": 7
     },
+    "4AFE344A": {
+      "owner": "template"
+    },
     "4B0146C2": {
       "owner": "generated",
       "region": "datatypes",
@@ -17786,9 +17804,6 @@
       "index": 27,
       "kind": "enumtable",
       "para": 0
-    },
-    "4B16F4A9": {
-      "owner": "template"
     },
     "4B1A03C5": {
       "owner": "generated",
@@ -17998,6 +18013,9 @@
       "kind": "nodetable",
       "para": 53
     },
+    "4BF5A06A": {
+      "owner": "template"
+    },
     "4C05E26C": {
       "owner": "generated",
       "region": "objecttypes",
@@ -18189,9 +18207,6 @@
       "kind": "nodetable",
       "para": 971
     },
-    "4CBF3EA5": {
-      "owner": "template"
-    },
     "4CD17221": {
       "owner": "generated",
       "region": "datatypes",
@@ -18254,9 +18269,6 @@
       "index": 47,
       "kind": "enumtable",
       "para": 8
-    },
-    "4CF889F1": {
-      "owner": "template"
     },
     "4D075F01": {
       "owner": "generated",
@@ -18344,9 +18356,6 @@
       "kind": "nodetable",
       "para": 1068
     },
-    "4D573F5D": {
-      "owner": "template"
-    },
     "4D5883A5": {
       "owner": "generated",
       "region": "model-overview",
@@ -18367,6 +18376,9 @@
       "index": 20,
       "kind": "methodtable",
       "para": 27
+    },
+    "4D7199BE": {
+      "owner": "template"
     },
     "4D730690": {
       "owner": "generated",
@@ -18402,9 +18414,6 @@
       "kind": "nodetable",
       "para": 694
     },
-    "4DB3268E": {
-      "owner": "template"
-    },
     "4DC7ADF0": {
       "owner": "generated",
       "region": "annex-a",
@@ -18419,9 +18428,6 @@
       "kind": "nodetable",
       "para": 1
     },
-    "4DD48E04": {
-      "owner": "template"
-    },
     "4DDE1C44": {
       "owner": "generated",
       "region": "annex-a",
@@ -18430,9 +18436,6 @@
       "para": 627
     },
     "4DE51120": {
-      "owner": "template"
-    },
-    "4DEDE993": {
       "owner": "template"
     },
     "4DF86181": {
@@ -18499,6 +18502,9 @@
       "index": 34,
       "kind": "methodtable",
       "para": 35
+    },
+    "4E4259EF": {
+      "owner": "template"
     },
     "4E427D09": {
       "owner": "generated",
@@ -18666,6 +18672,9 @@
       "kind": "nodetable",
       "para": 14
     },
+    "4EF480AC": {
+      "owner": "template"
+    },
     "4EF61E56": {
       "owner": "generated",
       "region": "datatypes",
@@ -18746,9 +18755,6 @@
     "4F308B6A": {
       "owner": "template"
     },
-    "4F389F94": {
-      "owner": "template"
-    },
     "4F395B97": {
       "owner": "generated",
       "region": "annex-a",
@@ -18762,6 +18768,9 @@
       "index": 10,
       "kind": "methodtable",
       "para": 2
+    },
+    "4F45796F": {
+      "owner": "template"
     },
     "4F471A84": {
       "owner": "generated",
@@ -18804,6 +18813,9 @@
       "index": 0,
       "kind": "nodetable",
       "para": 691
+    },
+    "4F7F7F1D": {
+      "owner": "template"
     },
     "4F821B58": {
       "owner": "generated",
@@ -18892,15 +18904,15 @@
       "kind": "nodetable",
       "para": 212
     },
+    "4FEF5E34": {
+      "owner": "template"
+    },
     "4FF34743": {
       "owner": "generated",
       "region": "objecttypes",
       "index": 11,
       "kind": "nodetable",
       "para": 25
-    },
-    "500169CF": {
-      "owner": "template"
     },
     "50060862": {
       "owner": "template"
@@ -18978,6 +18990,9 @@
       "kind": "methodtable",
       "para": 31
     },
+    "5061EC28": {
+      "owner": "template"
+    },
     "5064B178": {
       "owner": "generated",
       "region": "annex-a",
@@ -18998,6 +19013,9 @@
       "index": 9,
       "kind": "nodetable",
       "para": 0
+    },
+    "506F3D19": {
+      "owner": "template"
     },
     "5090AC49": {
       "owner": "generated",
@@ -19242,6 +19260,9 @@
       "kind": "nodetable",
       "para": 88
     },
+    "518572EA": {
+      "owner": "template"
+    },
     "5188B61D": {
       "owner": "generated",
       "region": "datatypes",
@@ -19280,15 +19301,15 @@
       "kind": "nodetable",
       "para": 2
     },
+    "51BDA767": {
+      "owner": "template"
+    },
     "51BEEE2F": {
       "owner": "generated",
       "region": "objecttypes",
       "index": 5,
       "kind": "methodtable",
       "para": 26
-    },
-    "51C26F6F": {
-      "owner": "template"
     },
     "51C89FD9": {
       "owner": "generated",
@@ -19315,6 +19336,9 @@
       "index": 8,
       "kind": "nodetable",
       "para": 32
+    },
+    "51F06168": {
+      "owner": "template"
     },
     "51F818ED": {
       "owner": "template"
@@ -19405,9 +19429,6 @@
       "kind": "methodtable",
       "para": 8
     },
-    "5270FE90": {
-      "owner": "template"
-    },
     "5279C9E1": {
       "owner": "generated",
       "region": "objecttypes",
@@ -19469,9 +19490,6 @@
       "index": 34,
       "kind": "methodtable",
       "para": 6
-    },
-    "52BE1BD0": {
-      "owner": "template"
     },
     "52C6F4C4": {
       "owner": "generated",
@@ -19751,9 +19769,6 @@
       "kind": "nodetable",
       "para": 35
     },
-    "538EEB56": {
-      "owner": "template"
-    },
     "538F8996": {
       "owner": "generated",
       "region": "instances",
@@ -19816,9 +19831,6 @@
       "index": 14,
       "kind": "nodetable",
       "para": 73
-    },
-    "53E2C682": {
-      "owner": "template"
     },
     "53ECC47E": {
       "owner": "markdown",
@@ -20234,9 +20246,6 @@
       "kind": "clause",
       "para": 0
     },
-    "556420F1": {
-      "owner": "template"
-    },
     "556CF606": {
       "owner": "generated",
       "region": "instances",
@@ -20298,6 +20307,9 @@
       "index": 0,
       "kind": "nodetable",
       "para": 907
+    },
+    "5595E0D8": {
+      "owner": "template"
     },
     "55990B07": {
       "owner": "generated",
@@ -20501,6 +20513,9 @@
       "kind": "enumtable",
       "para": 17
     },
+    "5665CD01": {
+      "owner": "template"
+    },
     "566ABE44": {
       "owner": "generated",
       "region": "instances",
@@ -20515,15 +20530,18 @@
       "kind": "nodetable",
       "para": 16
     },
-    "567B68AB": {
-      "owner": "template"
-    },
     "567E78CE": {
       "owner": "generated",
       "region": "objecttypes",
       "index": 16,
       "kind": "methodtable",
       "para": 19
+    },
+    "5687CDC2": {
+      "owner": "template"
+    },
+    "56994169": {
+      "owner": "template"
     },
     "569A50A9": {
       "owner": "generated",
@@ -20532,7 +20550,7 @@
       "kind": "nodetable",
       "para": 492
     },
-    "569A6263": {
+    "56A0A88A": {
       "owner": "template"
     },
     "56A3BA2F": {
@@ -20646,15 +20664,15 @@
     "571C647E": {
       "owner": "template"
     },
-    "571CC4C3": {
-      "owner": "template"
-    },
     "572632A8": {
       "owner": "generated",
       "region": "annex-a",
       "index": 0,
       "kind": "nodetable",
       "para": 40
+    },
+    "57341366": {
+      "owner": "template"
     },
     "573C9B7D": {
       "owner": "markdown",
@@ -20705,18 +20723,12 @@
       "kind": "nodetable",
       "para": 29
     },
-    "576B5C42": {
-      "owner": "template"
-    },
     "577C4D8E": {
       "owner": "markdown",
       "file": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
       "section": "12.1 Thing Model → ObjectType (`examples/01-thing-model-pump.tm.jsonld`)",
       "block": 1,
       "para": 3
-    },
-    "577CB0DB": {
-      "owner": "template"
     },
     "5786394B": {
       "owner": "template"
@@ -20748,6 +20760,9 @@
       "index": 0,
       "kind": "nodetable",
       "para": 888
+    },
+    "57ADAA53": {
+      "owner": "template"
     },
     "57BF22DB": {
       "owner": "generated",
@@ -20854,9 +20869,6 @@
       "kind": "nodetable",
       "para": 21
     },
-    "580F980C": {
-      "owner": "template"
-    },
     "58119E2C": {
       "owner": "generated",
       "region": "objecttypes",
@@ -20891,9 +20903,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 617
-    },
-    "58230483": {
-      "owner": "template"
     },
     "5823B9BE": {
       "owner": "generated",
@@ -20931,6 +20940,9 @@
       "para": 33
     },
     "5843A8B9": {
+      "owner": "template"
+    },
+    "584939B8": {
       "owner": "template"
     },
     "584AC32F": {
@@ -20991,9 +21003,6 @@
       "index": 5,
       "kind": "term",
       "para": 2
-    },
-    "588D39B5": {
-      "owner": "template"
     },
     "588EB1D6": {
       "owner": "generated",
@@ -21061,6 +21070,9 @@
       "block": 0,
       "para": 0
     },
+    "58D99E7A": {
+      "owner": "template"
+    },
     "58DA78E4": {
       "owner": "generated",
       "region": "objecttypes",
@@ -21082,9 +21094,6 @@
       "kind": "enumtable",
       "para": 9
     },
-    "58FBCEC7": {
-      "owner": "template"
-    },
     "59034BC4": {
       "owner": "generated",
       "region": "eventtypes",
@@ -21098,9 +21107,6 @@
       "index": 40,
       "kind": "nodetable",
       "para": 26
-    },
-    "590A7933": {
-      "owner": "template"
     },
     "5912F64C": {
       "owner": "generated",
@@ -21242,6 +21248,9 @@
       "kind": "methodtable",
       "para": 27
     },
+    "5995243E": {
+      "owner": "template"
+    },
     "5995ECC1": {
       "owner": "generated",
       "region": "annex-a",
@@ -21255,12 +21264,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 280
-    },
-    "59A45BA3": {
-      "owner": "template"
-    },
-    "59A53E9A": {
-      "owner": "template"
     },
     "59A56DA1": {
       "owner": "generated",
@@ -21588,9 +21591,6 @@
       "kind": "nodetable",
       "para": 1125
     },
-    "5AC6045E": {
-      "owner": "template"
-    },
     "5AD0BE39": {
       "owner": "template"
     },
@@ -21712,6 +21712,9 @@
       "index": 12,
       "kind": "nodetable",
       "para": 0
+    },
+    "5B2065E5": {
+      "owner": "template"
     },
     "5B2A3B0D": {
       "owner": "generated",
@@ -21860,6 +21863,9 @@
       "index": 15,
       "kind": "enumtable",
       "para": 15
+    },
+    "5BD94659": {
+      "owner": "template"
     },
     "5BDB0008": {
       "owner": "template"
@@ -22089,9 +22095,6 @@
       "kind": "nodetable",
       "para": 51
     },
-    "5CA40143": {
-      "owner": "template"
-    },
     "5CA88F5F": {
       "owner": "generated",
       "region": "instances",
@@ -22267,6 +22270,9 @@
       "kind": "nodetable",
       "para": 21
     },
+    "5D350CAC": {
+      "owner": "template"
+    },
     "5D35937E": {
       "owner": "generated",
       "region": "instances",
@@ -22364,6 +22370,9 @@
       "kind": "nodetable",
       "para": 30
     },
+    "5D8C0B50": {
+      "owner": "template"
+    },
     "5D90C69D": {
       "owner": "generated",
       "region": "instances",
@@ -22433,9 +22442,6 @@
       "kind": "enumtable",
       "para": 11
     },
-    "5DD9A10A": {
-      "owner": "template"
-    },
     "5DDE29ED": {
       "owner": "generated",
       "region": "annex-a",
@@ -22449,9 +22455,6 @@
       "index": 5,
       "kind": "methodtable",
       "para": 36
-    },
-    "5DED1F40": {
-      "owner": "template"
     },
     "5DED5468": {
       "owner": "generated",
@@ -22916,9 +22919,6 @@
       "kind": "methodtable",
       "para": 16
     },
-    "5FD324A5": {
-      "owner": "template"
-    },
     "5FDB5E69": {
       "owner": "template"
     },
@@ -23016,9 +23016,6 @@
       "kind": "nodetable",
       "para": 112
     },
-    "6039ACC8": {
-      "owner": "template"
-    },
     "604AB4CB": {
       "owner": "generated",
       "region": "datatypes",
@@ -23064,6 +23061,9 @@
       "block": 1,
       "para": 33
     },
+    "607E279A": {
+      "owner": "template"
+    },
     "6081C9D7": {
       "owner": "generated",
       "region": "objecttypes",
@@ -23099,12 +23099,18 @@
       "kind": "enumtable",
       "para": 22
     },
+    "609633C2": {
+      "owner": "template"
+    },
     "6096C3A4": {
       "owner": "generated",
       "region": "objecttypes",
       "index": 29,
       "kind": "nodetable",
       "para": 2
+    },
+    "609AE70F": {
+      "owner": "template"
     },
     "60AE3B36": {
       "owner": "generated",
@@ -23181,9 +23187,6 @@
       "kind": "methodtable",
       "para": 11
     },
-    "6119E193": {
-      "owner": "template"
-    },
     "61393D90": {
       "owner": "generated",
       "region": "objecttypes",
@@ -23219,9 +23222,6 @@
       "kind": "nodetable",
       "para": 7
     },
-    "6144F739": {
-      "owner": "template"
-    },
     "61468186": {
       "owner": "template"
     },
@@ -23233,9 +23233,6 @@
       "para": 2
     },
     "61496108": {
-      "owner": "template"
-    },
-    "614B0574": {
       "owner": "template"
     },
     "614B2EAF": {
@@ -23291,9 +23288,6 @@
       "para": 842
     },
     "6181A15B": {
-      "owner": "template"
-    },
-    "618994A8": {
       "owner": "template"
     },
     "618C4FBF": {
@@ -23448,6 +23442,9 @@
     "6204D615": {
       "owner": "template"
     },
+    "620826D4": {
+      "owner": "template"
+    },
     "620E45BB": {
       "owner": "generated",
       "region": "annex-a",
@@ -23486,9 +23483,6 @@
       "kind": "nodetable",
       "para": 12
     },
-    "6222DB2E": {
-      "owner": "template"
-    },
     "62287612": {
       "owner": "generated",
       "region": "objecttypes",
@@ -23512,9 +23506,6 @@
       "index": 14,
       "kind": "methodtable",
       "para": 3
-    },
-    "623DE988": {
-      "owner": "template"
     },
     "62411D59": {
       "owner": "markdown",
@@ -23572,6 +23563,9 @@
       "kind": "enumtable",
       "para": 25
     },
+    "62811012": {
+      "owner": "template"
+    },
     "62915848": {
       "owner": "generated",
       "region": "objecttypes",
@@ -23619,6 +23613,9 @@
       "index": 12,
       "kind": "nodetable",
       "para": 25
+    },
+    "62C21D94": {
+      "owner": "template"
     },
     "62C9BB8F": {
       "owner": "generated",
@@ -23837,6 +23834,9 @@
       "kind": "nodetable",
       "para": 111
     },
+    "63BA0ABE": {
+      "owner": "template"
+    },
     "63C867C4": {
       "owner": "generated",
       "region": "annex-a",
@@ -23910,15 +23910,15 @@
       "kind": "nodetable",
       "para": 938
     },
-    "63FAA2F9": {
-      "owner": "template"
-    },
     "64032580": {
       "owner": "markdown",
       "file": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
       "section": "13.1 Preserved 1.02 model (unchanged)",
       "block": 1,
       "para": 27
+    },
+    "6403505F": {
+      "owner": "template"
     },
     "640821F3": {
       "owner": "generated",
@@ -23934,6 +23934,9 @@
       "kind": "nodetable",
       "para": 8
     },
+    "64117E79": {
+      "owner": "template"
+    },
     "6413C7F4": {
       "owner": "generated",
       "region": "datatypes",
@@ -23942,6 +23945,9 @@
       "para": 0
     },
     "641B6ABC": {
+      "owner": "template"
+    },
+    "64217B6F": {
       "owner": "template"
     },
     "642E3B4E": {
@@ -24142,9 +24148,6 @@
       "kind": "enumtable",
       "para": 25
     },
-    "64F6FF56": {
-      "owner": "template"
-    },
     "65095966": {
       "owner": "generated",
       "region": "objecttypes",
@@ -24201,9 +24204,6 @@
       "block": 2,
       "para": 0
     },
-    "651F3B60": {
-      "owner": "template"
-    },
     "6522B0AC": {
       "owner": "template"
     },
@@ -24230,6 +24230,9 @@
       "index": 6,
       "kind": "nodetable",
       "para": 12
+    },
+    "6563E3A8": {
+      "owner": "template"
     },
     "656A8112": {
       "owner": "generated",
@@ -24262,16 +24265,7 @@
       "kind": "nodetable",
       "para": 22
     },
-    "65889388": {
-      "owner": "template"
-    },
-    "658A2678": {
-      "owner": "template"
-    },
     "65985FB0": {
-      "owner": "template"
-    },
-    "6599AD01": {
       "owner": "template"
     },
     "659C83A4": {
@@ -24287,6 +24281,9 @@
       "index": 8,
       "kind": "nodetable",
       "para": 46
+    },
+    "65D13D75": {
+      "owner": "template"
     },
     "65D23560": {
       "owner": "generated",
@@ -24319,9 +24316,6 @@
       "kind": "nodetable",
       "para": 56
     },
-    "65F6967C": {
-      "owner": "template"
-    },
     "65FDA236": {
       "owner": "generated",
       "region": "objecttypes",
@@ -24350,6 +24344,9 @@
       "kind": "nodetable",
       "para": 536
     },
+    "6614233B": {
+      "owner": "template"
+    },
     "661A3F2C": {
       "owner": "generated",
       "region": "annex-a",
@@ -24363,9 +24360,6 @@
       "section": "6.3 Documents — `WoTDocumentType`, `ThingDescriptionFileType`, `ThingModelFileType`",
       "block": 2,
       "para": 0
-    },
-    "66207980": {
-      "owner": "template"
     },
     "6627B371": {
       "owner": "generated",
@@ -24425,7 +24419,7 @@
       "kind": "nodetable",
       "para": 28
     },
-    "6665FE50": {
+    "666B55F8": {
       "owner": "template"
     },
     "666C7692": {
@@ -24436,6 +24430,9 @@
       "para": 1128
     },
     "6671E4CD": {
+      "owner": "template"
+    },
+    "6672C415": {
       "owner": "template"
     },
     "667401A4": {
@@ -24470,6 +24467,9 @@
       "para": 13
     },
     "6695B3AC": {
+      "owner": "template"
+    },
+    "669A7B77": {
       "owner": "template"
     },
     "66A3D6B8": {
@@ -24510,6 +24510,9 @@
     "66B99706": {
       "owner": "template"
     },
+    "66BA8EBD": {
+      "owner": "template"
+    },
     "66BB30FF": {
       "owner": "generated",
       "region": "datatypes",
@@ -24526,6 +24529,9 @@
       "index": 0,
       "kind": "nodetable",
       "para": 530
+    },
+    "66CA736F": {
+      "owner": "template"
     },
     "66D63B55": {
       "owner": "generated",
@@ -24547,6 +24553,9 @@
       "index": 34,
       "kind": "methodtable",
       "para": 20
+    },
+    "66E1164D": {
+      "owner": "template"
     },
     "66E1C51F": {
       "owner": "generated",
@@ -24600,9 +24609,6 @@
       "kind": "nodetable",
       "para": 15
     },
-    "6707AF05": {
-      "owner": "template"
-    },
     "670892DF": {
       "owner": "generated",
       "region": "objecttypes",
@@ -24616,9 +24622,6 @@
       "section": "14 Conformance units and profiles",
       "block": 1,
       "para": 22
-    },
-    "6722997F": {
-      "owner": "template"
     },
     "67294073": {
       "owner": "generated",
@@ -24647,9 +24650,6 @@
       "index": 10,
       "kind": "para",
       "para": 0
-    },
-    "673F6581": {
-      "owner": "template"
     },
     "6742BCC7": {
       "owner": "generated",
@@ -24727,9 +24727,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 997
-    },
-    "6798E437": {
-      "owner": "template"
     },
     "67A91AF8": {
       "owner": "generated",
@@ -24821,6 +24818,9 @@
       "kind": "nodetable",
       "para": 59
     },
+    "67F32ABC": {
+      "owner": "template"
+    },
     "67F8B0C5": {
       "owner": "template"
     },
@@ -24832,9 +24832,6 @@
       "para": 25
     },
     "6803DE3E": {
-      "owner": "template"
-    },
-    "6804CF4F": {
       "owner": "template"
     },
     "680958E8": {
@@ -25012,6 +25009,9 @@
       "kind": "nodetable",
       "para": 0
     },
+    "68D0204F": {
+      "owner": "template"
+    },
     "68DB78AA": {
       "owner": "generated",
       "region": "objecttypes",
@@ -25046,13 +25046,7 @@
       "kind": "nodetable",
       "para": 21
     },
-    "691821E8": {
-      "owner": "template"
-    },
     "691CC841": {
-      "owner": "template"
-    },
-    "6925CF7B": {
       "owner": "template"
     },
     "692B2EEB": {
@@ -25097,6 +25091,9 @@
       "kind": "methodtable",
       "para": 28
     },
+    "693C512D": {
+      "owner": "template"
+    },
     "693E4410": {
       "owner": "generated",
       "region": "annex-a",
@@ -25117,9 +25114,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 449
-    },
-    "6948F44D": {
-      "owner": "template"
     },
     "6949DF6A": {
       "owner": "generated",
@@ -25162,6 +25156,9 @@
       "index": 3,
       "kind": "para",
       "para": 0
+    },
+    "6984D756": {
+      "owner": "template"
     },
     "69884542": {
       "owner": "generated",
@@ -25319,12 +25316,6 @@
       "kind": "enumtable",
       "para": 11
     },
-    "6A86FBF4": {
-      "owner": "template"
-    },
-    "6A959898": {
-      "owner": "template"
-    },
     "6A9846C4": {
       "owner": "generated",
       "region": "datatypes",
@@ -25356,6 +25347,9 @@
     "6ABF916F": {
       "owner": "template"
     },
+    "6AC87AF3": {
+      "owner": "template"
+    },
     "6ACB89ED": {
       "owner": "generated",
       "region": "annex-a",
@@ -25369,9 +25363,6 @@
       "index": 4,
       "kind": "para",
       "para": 0
-    },
-    "6AD445B6": {
-      "owner": "template"
     },
     "6AD5588A": {
       "owner": "generated",
@@ -25460,9 +25451,6 @@
       "kind": "nodetable",
       "para": 119
     },
-    "6AFA2DEC": {
-      "owner": "template"
-    },
     "6AFAA63C": {
       "owner": "generated",
       "region": "objecttypes",
@@ -25515,9 +25503,6 @@
       "block": 1,
       "para": 3
     },
-    "6B3330F0": {
-      "owner": "template"
-    },
     "6B426695": {
       "owner": "markdown",
       "file": "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
@@ -25546,9 +25531,6 @@
       "kind": "clause",
       "para": 0
     },
-    "6B579FC4": {
-      "owner": "template"
-    },
     "6B57AB9F": {
       "owner": "template"
     },
@@ -25558,6 +25540,12 @@
       "index": 18,
       "kind": "methodtable",
       "para": 19
+    },
+    "6B602F4B": {
+      "owner": "template"
+    },
+    "6B6794AA": {
+      "owner": "template"
     },
     "6B6C7092": {
       "owner": "generated",
@@ -25688,9 +25676,6 @@
       "kind": "nodetable",
       "para": 494
     },
-    "6BD0E0A6": {
-      "owner": "template"
-    },
     "6BD68118": {
       "owner": "generated",
       "region": "objecttypes",
@@ -25725,9 +25710,6 @@
       "index": 40,
       "kind": "nodetable",
       "para": 25
-    },
-    "6BDD6F6E": {
-      "owner": "template"
     },
     "6BDEF664": {
       "owner": "generated",
@@ -25819,6 +25801,9 @@
       "kind": "methodtable",
       "para": 8
     },
+    "6C356379": {
+      "owner": "template"
+    },
     "6C3B41EA": {
       "owner": "generated",
       "region": "annex-a",
@@ -25856,6 +25841,9 @@
       "block": 1,
       "para": 4
     },
+    "6C6EA2C7": {
+      "owner": "template"
+    },
     "6C73EE4F": {
       "owner": "generated",
       "region": "datatypes",
@@ -25876,9 +25864,6 @@
       "index": 30,
       "kind": "clause",
       "para": 0
-    },
-    "6C8359DD": {
-      "owner": "template"
     },
     "6C8C9372": {
       "owner": "generated",
@@ -25939,9 +25924,6 @@
       "kind": "nodetable",
       "para": 17
     },
-    "6CD4B30A": {
-      "owner": "template"
-    },
     "6CD52C5C": {
       "owner": "generated",
       "region": "instances",
@@ -25955,12 +25937,6 @@
       "index": 6,
       "kind": "nodetable",
       "para": 13
-    },
-    "6CDAE4B5": {
-      "owner": "template"
-    },
-    "6CDCF552": {
-      "owner": "template"
     },
     "6CEA5B06": {
       "owner": "generated",
@@ -26012,6 +25988,9 @@
       "para": 931
     },
     "6D12B652": {
+      "owner": "template"
+    },
+    "6D212992": {
       "owner": "template"
     },
     "6D249628": {
@@ -26073,6 +26052,9 @@
       "kind": "nodetable",
       "para": 495
     },
+    "6D6CADE7": {
+      "owner": "template"
+    },
     "6D6CB645": {
       "owner": "generated",
       "region": "datatypes",
@@ -26129,6 +26111,9 @@
       "kind": "methodtable",
       "para": 15
     },
+    "6D97A39D": {
+      "owner": "template"
+    },
     "6D980E0D": {
       "owner": "generated",
       "region": "objecttypes",
@@ -26171,7 +26156,7 @@
       "kind": "nodetable",
       "para": 15
     },
-    "6DCAAC1F": {
+    "6DC68D4C": {
       "owner": "template"
     },
     "6DCC9D93": {
@@ -26275,10 +26260,10 @@
       "kind": "methodtable",
       "para": 16
     },
-    "6E364413": {
+    "6E2F3DBA": {
       "owner": "template"
     },
-    "6E3F6107": {
+    "6E364413": {
       "owner": "template"
     },
     "6E50F342": {
@@ -26294,9 +26279,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 750
-    },
-    "6E58FF19": {
-      "owner": "template"
     },
     "6E5E7CE1": {
       "owner": "generated",
@@ -26549,6 +26531,9 @@
       "kind": "enumtable",
       "para": 23
     },
+    "6F40DF61": {
+      "owner": "template"
+    },
     "6F425160": {
       "owner": "generated",
       "region": "objecttypes",
@@ -26557,9 +26542,6 @@
       "para": 40
     },
     "6F469DA7": {
-      "owner": "template"
-    },
-    "6F4ECB73": {
       "owner": "template"
     },
     "6F56D6C0": {
@@ -26582,9 +26564,6 @@
       "index": 3,
       "kind": "nodetable",
       "para": 29
-    },
-    "6F7805E4": {
-      "owner": "template"
     },
     "6F7EA619": {
       "owner": "markdown",
@@ -26613,6 +26592,9 @@
       "index": 8,
       "kind": "nodetable",
       "para": 8
+    },
+    "6F8CDBE4": {
+      "owner": "template"
     },
     "6F9621E4": {
       "owner": "generated",
@@ -26777,6 +26759,9 @@
       "kind": "nodetable",
       "para": 57
     },
+    "70358D95": {
+      "owner": "template"
+    },
     "70412F47": {
       "owner": "generated",
       "region": "objecttypes",
@@ -26935,6 +26920,9 @@
       "kind": "nodetable",
       "para": 16
     },
+    "70F11812": {
+      "owner": "template"
+    },
     "70F12559": {
       "owner": "generated",
       "region": "objecttypes",
@@ -26970,6 +26958,9 @@
       "kind": "nodetable",
       "para": 248
     },
+    "70FB4BB4": {
+      "owner": "template"
+    },
     "70FE7DFC": {
       "owner": "generated",
       "region": "datatypes",
@@ -27004,6 +26995,9 @@
       "index": 32,
       "kind": "nodetable",
       "para": 3
+    },
+    "71060702": {
+      "owner": "template"
     },
     "710B1B3E": {
       "owner": "template"
@@ -27205,6 +27199,9 @@
       "block": 6,
       "para": 0
     },
+    "71B09CA7": {
+      "owner": "template"
+    },
     "71B108B1": {
       "owner": "generated",
       "region": "objecttypes",
@@ -27247,7 +27244,7 @@
       "kind": "methodtable",
       "para": 26
     },
-    "71DA3EB1": {
+    "71DFA3B2": {
       "owner": "template"
     },
     "71E5C5D5": {
@@ -27266,6 +27263,9 @@
       "index": 11,
       "kind": "nodetable",
       "para": 11
+    },
+    "71FB12FE": {
+      "owner": "template"
     },
     "720BEE8F": {
       "owner": "generated",
@@ -27325,6 +27325,9 @@
       "index": 0,
       "kind": "nodetable",
       "para": 758
+    },
+    "72385BB7": {
+      "owner": "template"
     },
     "72397D17": {
       "owner": "generated",
@@ -27482,9 +27485,6 @@
       "kind": "nodetable",
       "para": 1019
     },
-    "72AE7EF3": {
-      "owner": "template"
-    },
     "72AFAB48": {
       "owner": "generated",
       "region": "annex-a",
@@ -27544,9 +27544,6 @@
       "block": 2,
       "para": 7
     },
-    "730313FF": {
-      "owner": "template"
-    },
     "73046095": {
       "owner": "generated",
       "region": "annex-a",
@@ -27595,6 +27592,9 @@
       "index": 10,
       "kind": "methodtable",
       "para": 16
+    },
+    "733AFF5A": {
+      "owner": "template"
     },
     "7344FEF8": {
       "owner": "generated",
@@ -27690,6 +27690,12 @@
       "kind": "nodetable",
       "para": 538
     },
+    "73894E01": {
+      "owner": "template"
+    },
+    "73942436": {
+      "owner": "template"
+    },
     "7395BE4A": {
       "owner": "generated",
       "region": "annex-a",
@@ -27753,9 +27759,6 @@
       "block": 1,
       "para": 8
     },
-    "73BC3868": {
-      "owner": "template"
-    },
     "73BE5238": {
       "owner": "generated",
       "region": "objecttypes",
@@ -27776,6 +27779,9 @@
       "index": 0,
       "kind": "nodetable",
       "para": 905
+    },
+    "73CBF30E": {
+      "owner": "template"
     },
     "73CC8A49": {
       "owner": "generated",
@@ -27895,6 +27901,9 @@
       "kind": "nodetable",
       "para": 411
     },
+    "743C011A": {
+      "owner": "template"
+    },
     "74417B2E": {
       "owner": "generated",
       "region": "objecttypes",
@@ -27930,15 +27939,15 @@
       "kind": "methodtable",
       "para": 13
     },
+    "74744B5E": {
+      "owner": "template"
+    },
     "7477ACD6": {
       "owner": "generated",
       "region": "datatypes",
       "index": 31,
       "kind": "enumtable",
       "para": 1
-    },
-    "74848558": {
-      "owner": "template"
     },
     "74870A46": {
       "owner": "generated",
@@ -28079,6 +28088,12 @@
       "kind": "nodetable",
       "para": 53
     },
+    "752120A0": {
+      "owner": "template"
+    },
+    "7527873B": {
+      "owner": "template"
+    },
     "75284FCE": {
       "owner": "generated",
       "region": "annex-a",
@@ -28138,6 +28153,9 @@
       "kind": "nodetable",
       "para": 10
     },
+    "754EC267": {
+      "owner": "template"
+    },
     "755A411C": {
       "owner": "generated",
       "region": "datatypes",
@@ -28175,6 +28193,9 @@
       "index": 0,
       "kind": "nodetable",
       "para": 594
+    },
+    "75825FCA": {
+      "owner": "template"
     },
     "758D500A": {
       "owner": "generated",
@@ -28270,9 +28291,6 @@
       "kind": "methodtable",
       "para": 7
     },
-    "75D0C7B3": {
-      "owner": "template"
-    },
     "75D61875": {
       "owner": "generated",
       "region": "eventtypes",
@@ -28286,9 +28304,6 @@
       "index": 11,
       "kind": "nodetable",
       "para": 29
-    },
-    "75E0A2A6": {
-      "owner": "template"
     },
     "75E615CC": {
       "owner": "generated",
@@ -28331,9 +28346,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 656
-    },
-    "7618DCB3": {
-      "owner": "template"
     },
     "762635C4": {
       "owner": "generated",
@@ -28446,9 +28458,6 @@
     "768F9847": {
       "owner": "template"
     },
-    "7693BF58": {
-      "owner": "template"
-    },
     "7696874C": {
       "owner": "generated",
       "region": "objecttypes",
@@ -28513,6 +28522,9 @@
       "para": 31
     },
     "76B940C9": {
+      "owner": "template"
+    },
+    "76BB69ED": {
       "owner": "template"
     },
     "76C8E8EB": {
@@ -28593,6 +28605,9 @@
       "index": 0,
       "kind": "nodetable",
       "para": 220
+    },
+    "77237097": {
+      "owner": "template"
     },
     "772FC7C8": {
       "owner": "generated",
@@ -28746,9 +28761,6 @@
       "kind": "nodetable",
       "para": 4
     },
-    "77CF5535": {
-      "owner": "template"
-    },
     "77D8A889": {
       "owner": "generated",
       "region": "eventtypes",
@@ -28859,9 +28871,6 @@
       "index": 8,
       "kind": "nodetable",
       "para": 34
-    },
-    "7830B52F": {
-      "owner": "template"
     },
     "783772A5": {
       "owner": "generated",
@@ -29033,9 +29042,6 @@
       "index": 28,
       "kind": "nodetable",
       "para": 6
-    },
-    "78E10142": {
-      "owner": "template"
     },
     "78E1D949": {
       "owner": "generated",
@@ -29224,9 +29230,6 @@
       "kind": "nodetable",
       "para": 98
     },
-    "7979263A": {
-      "owner": "template"
-    },
     "798DD41D": {
       "owner": "generated",
       "region": "datatypes",
@@ -29238,6 +29241,9 @@
       "owner": "template"
     },
     "7992E8BF": {
+      "owner": "template"
+    },
+    "7995556E": {
       "owner": "template"
     },
     "79965724": {
@@ -29268,9 +29274,6 @@
       "kind": "nodetable",
       "para": 506
     },
-    "79A25EE4": {
-      "owner": "template"
-    },
     "79A2E085": {
       "owner": "generated",
       "region": "datatypes",
@@ -29287,9 +29290,6 @@
       "index": 32,
       "kind": "nodetable",
       "para": 8
-    },
-    "79BE497E": {
-      "owner": "template"
     },
     "79CD8879": {
       "owner": "generated",
@@ -29377,9 +29377,6 @@
     "7A1CE53B": {
       "owner": "template"
     },
-    "7A20E389": {
-      "owner": "template"
-    },
     "7A2A4E44": {
       "owner": "generated",
       "region": "annex-a",
@@ -29421,9 +29418,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 549
-    },
-    "7A35B71A": {
-      "owner": "template"
     },
     "7A4715E8": {
       "owner": "generated",
@@ -29730,6 +29724,9 @@
       "kind": "nodetable",
       "para": 197
     },
+    "7B608008": {
+      "owner": "template"
+    },
     "7B62C6D2": {
       "owner": "generated",
       "region": "datatypes",
@@ -29757,6 +29754,9 @@
       "index": 45,
       "kind": "nodetable",
       "para": 32
+    },
+    "7B8B7FAC": {
+      "owner": "template"
     },
     "7B95610D": {
       "owner": "generated",
@@ -29787,9 +29787,6 @@
       "para": 43
     },
     "7BB4ECD9": {
-      "owner": "template"
-    },
-    "7BBD41B5": {
       "owner": "template"
     },
     "7BC2075E": {
@@ -29893,9 +29890,6 @@
       "kind": "methodtable",
       "para": 33
     },
-    "7C34E09E": {
-      "owner": "template"
-    },
     "7C35B8A6": {
       "owner": "generated",
       "region": "datatypes",
@@ -29973,6 +29967,9 @@
       "kind": "nodetable",
       "para": 92
     },
+    "7C9288F4": {
+      "owner": "template"
+    },
     "7C975B32": {
       "owner": "generated",
       "region": "objecttypes",
@@ -30039,15 +30036,18 @@
       "kind": "nodetable",
       "para": 14
     },
+    "7D05E90C": {
+      "owner": "template"
+    },
+    "7D117849": {
+      "owner": "template"
+    },
     "7D19BAA7": {
       "owner": "generated",
       "region": "annex-a",
       "index": 0,
       "kind": "nodetable",
       "para": 952
-    },
-    "7D1A574A": {
-      "owner": "template"
     },
     "7D1E0276": {
       "owner": "generated",
@@ -30100,6 +30100,9 @@
       "kind": "methodtable",
       "para": 15
     },
+    "7D4C8392": {
+      "owner": "template"
+    },
     "7D4EAF32": {
       "owner": "generated",
       "region": "datatypes",
@@ -30107,15 +30110,15 @@
       "kind": "enumtable",
       "para": 8
     },
-    "7D50B030": {
-      "owner": "template"
-    },
     "7D51D6C9": {
       "owner": "generated",
       "region": "datatypes",
       "index": 23,
       "kind": "enumtable",
       "para": 15
+    },
+    "7D585819": {
+      "owner": "template"
     },
     "7D5D0597": {
       "owner": "template"
@@ -30541,6 +30544,9 @@
       "kind": "nodetable",
       "para": 751
     },
+    "7F13311E": {
+      "owner": "template"
+    },
     "7F21EC04": {
       "owner": "generated",
       "region": "annex-a",
@@ -30599,9 +30605,6 @@
       "index": 32,
       "kind": "nodetable",
       "para": 11
-    },
-    "7F5672D2": {
-      "owner": "template"
     },
     "7F5FB41B": {
       "owner": "generated",
@@ -30701,9 +30704,6 @@
       "kind": "enumtable",
       "para": 13
     },
-    "7FA3B592": {
-      "owner": "template"
-    },
     "7FAD1B9A": {
       "owner": "generated",
       "region": "referencetypes",
@@ -30718,7 +30718,10 @@
       "kind": "nodetable",
       "para": 0
     },
-    "7FB73B39": {
+    "7FBB4FBF": {
+      "owner": "template"
+    },
+    "7FBF3F01": {
       "owner": "template"
     },
     "7FCB7578": {
@@ -30734,9 +30737,6 @@
       "index": 3,
       "kind": "nodetable",
       "para": 3
-    },
-    "7FF2C0F3": {
-      "owner": "template"
     },
     "7FF57DFF": {
       "owner": "generated",

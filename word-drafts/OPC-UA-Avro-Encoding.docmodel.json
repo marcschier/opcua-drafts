@@ -1356,7 +1356,7 @@
           },
           {
             "r": "code",
-            "text": "../schema-registry/OPC-UA-Schema-Registry.md"
+            "text": "../../cloud-specs/schema-registry/OPC-UA-Schema-Registry.md"
           },
           {
             "r": "t",
@@ -8440,6 +8440,121 @@
           "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
           "s": "8.4.6 Decoder behavior",
           "b": 0
+        }
+      },
+      {
+        "t": "list",
+        "ordered": true,
+        "level": 0,
+        "items": [
+          [
+            {
+              "r": "t",
+              "text": "Await an "
+            },
+            {
+              "r": "code",
+              "text": "AvroSchemaAnnouncement"
+            },
+            {
+              "r": "t",
+              "text": " on the relevant Discovery announcement channel."
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Send an "
+            },
+            {
+              "r": "code",
+              "text": "AvroSchemaRequest"
+            },
+            {
+              "r": "t",
+              "text": " on the relevant Discovery request channel containing the unknown SchemaId and await one "
+            },
+            {
+              "r": "code",
+              "text": "AvroSchemaAnnouncement"
+            },
+            {
+              "r": "t",
+              "text": " per known requested SchemaId."
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Resolve the schema from an external (federated) xRegistry that the local registry references, per "
+            },
+            {
+              "r": "t",
+              "text": "OPC UA — Schema Registry",
+              "i": true
+            },
+            {
+              "r": "t",
+              "text": " ("
+            },
+            {
+              "r": "code",
+              "text": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md"
+            },
+            {
+              "r": "t",
+              "text": ") "
+            },
+            {
+              "r": "t",
+              "text": "§8"
+            },
+            {
+              "r": "t",
+              "text": "."
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Read the in-server AddressSpace Schema Registry by a SchemaId-NodeId. A companion NodeSet in "
+            },
+            {
+              "r": "code",
+              "text": "cloud-specs/schema-registry/"
+            },
+            {
+              "r": "t",
+              "text": ", namespace "
+            },
+            {
+              "r": "code",
+              "text": "http://opcfoundation.org/UA/SchemaRegistry/"
+            },
+            {
+              "r": "t",
+              "text": ", exposes each schema at an Opaque NodeId whose Identifier is the raw SchemaId bytes, so a single Read returns the schema with no browse or recomputation. The same registry also exposes a "
+            },
+            {
+              "r": "code",
+              "text": "GetSchema(SchemaId)"
+            },
+            {
+              "r": "t",
+              "text": " Method for clients that prefer a Method call."
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Re-derive the schema from the AddressSpace DataType and verify that the recomputed SchemaId is equal to the referenced SchemaId."
+            }
+          ]
+        ],
+        "src": {
+          "f": "core-specs/avro-encoding/OPC-UA-Avro-Encoding.md",
+          "s": "8.4.6 Decoder behavior",
+          "b": 1
         }
       },
       {

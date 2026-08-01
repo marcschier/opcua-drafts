@@ -27,15 +27,17 @@ SELF_CONTAINED = [
 ]
 
 # Validators that additionally need untracked base data — a base NodeSet (e.g.
-# core-specs/observability-export/Opc.Ua.ObservabilityExport.NodeSet2.xml, which the encoding
+# cloud-specs/observability-export/Opc.Ua.ObservabilityExport.NodeSet2.xml, which the encoding
 # generators map) or the gitignored **/tools/ref/ tables — so they only run where that data is
 # present (locally, not on a clean CI checkout).
+#
+# The observability-export and schema-registry validators used to live here. They moved with
+# their specifications to cloud-specs/, and are driven by cloud-specs/validate_all.py — the
+# encodings below still map the observability-export NodeSet, but the specification is no
+# longer this tree's to validate.
 NEEDS_BASE_DATA = [
     "avro-encoding/tools/validate_local.py",
     "arrow-encoding/tools/validate_local.py",
-    "../schema-registry/tools/validate_local.py",
-    "observability-export/tools/validate_local.py",
-    "observability-export/examples/tools/validate_examples.py",
 ]
 
 

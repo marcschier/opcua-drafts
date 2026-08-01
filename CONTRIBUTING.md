@@ -39,7 +39,7 @@ You are welcome to stop after step 5 — or after just filing an issue. Turning 
 Most specifications here are **generated from a single source of truth**, so that the prose, the NodeSet, the NodeId CSV, and the Annex tables can never drift apart. For those:
 
 - **Do not hand-edit** generated files (`*.NodeSet2.xml`, `*.NodeIds.csv`, generated Annex tables, per-spec addenda). Edit the **source** — the specification document, the JSON descriptor, or the `tools/build_model.py` / `build_*.py` generator — and **regenerate**.
-- Each `core-specs/<extension>/` folder holds only the normative documents and the base schema; its tooling, descriptors, and examples live under the mirrored `core-specs/extras/<extension>/` tree. The OpenUSD specifications follow the same split under the top-level `metaverse-specs/` tree (`metaverse-specs/<extension>/` normative + `metaverse-specs/extras/<extension>/` tooling), validated by `python metaverse-specs/validate_all.py`.
+- Each `core-specs/<extension>/` folder holds only the normative documents and the base schema; its tooling, descriptors, and examples live under the mirrored `core-specs/extras/<extension>/` tree. The cloud-facing specifications follow the same idea under the top-level `cloud-specs/` tree, validated by `python cloud-specs/validate_all.py`, and the OpenUSD specifications under `metaverse-specs/` (`metaverse-specs/<extension>/` normative + `metaverse-specs/extras/<extension>/` tooling), validated by `python metaverse-specs/validate_all.py`. **Each tree drives only its own validators**, so a specification that moves trees takes its entry with it.
 - Generators are **deterministic** — regenerating without a source change produces byte-identical output, so a clean diff confirms your change is exactly what you intended.
 
 If you are unsure which file is the source, say so in the issue or PR and a maintainer (or the AI agent) will find it — this is precisely the kind of thing the assisted flow handles.
@@ -52,8 +52,10 @@ Install the prerequisites once, then run the validation gate from the repository
 # one-time
 pip install -r core-specs/extras/requirements.txt
 
-# validate every extension
+# validate every extension (each tree drives only its own)
 python core-specs/extras/validate_all.py
+python cloud-specs/validate_all.py
+python metaverse-specs/validate_all.py
 
 # or a single extension
 python core-specs/extras/<extension>/tools/validate_local.py
@@ -61,7 +63,7 @@ python core-specs/extras/<extension>/tools/validate_local.py
 
 A green run (`ALL EXTENSIONS VALIDATED OK`) is the acceptance gate; please include it in the PR for model or tooling changes. Feedback-only and annotation-only pull requests do not need to pass validation.
 
-The full `validate_all.py` (and the determinism check below) also regenerate from base NodeSets that are not distributed with the repository, so they are a **local** gate. On a clean checkout use `python core-specs/extras/validate_all.py --self-contained`, which runs only the extensions that need no base data — this is what CI runs.
+The full `validate_all.py` (and the determinism check below) also regenerate from base NodeSets that are not distributed with the repository, so they are a **local** gate. On a clean checkout add `--self-contained`, which runs only the extensions that need no base data — this is what CI runs.
 
 ## Automated checks
 
@@ -78,6 +80,8 @@ python .github/scripts/check_yaml_json.py   # needs PyYAML: pip install pyyaml
 
 # spec validation (self-contained subset) and determinism (skips without base data)
 python core-specs/extras/validate_all.py --self-contained
+python cloud-specs/validate_all.py --self-contained
+python metaverse-specs/validate_all.py --self-contained
 python .github/scripts/check_determinism.py
 ```
 

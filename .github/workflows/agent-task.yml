@@ -86,6 +86,7 @@ on:
 env:
   ALLOWED_PATHS: >-
     core-specs
+    cloud-specs
     metaverse-specs
     wot-specs
     companion-specs

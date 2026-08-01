@@ -1,7 +1,7 @@
 {
   "specId": "wot-binding",
-  "sourceCommit": "ce5462058a4dc5bd027fb3616a0a00fc9f852224",
-  "sourceDigest": "08341eb4243eb4ee",
+  "sourceCommit": "beeaf348ffeb8e67387dc5c60ca427ba7bea1973",
+  "sourceDigest": "229015e0ea90b0ff",
   "pipelineVersion": "2",
   "sources": [
     "word-drafts/tools/specs/wot-binding.json",
@@ -26,9 +26,6 @@
       "para": 0
     },
     "007DD302": {
-      "owner": "template"
-    },
-    "00A38BE5": {
       "owner": "template"
     },
     "00CC719A": {
@@ -69,6 +66,9 @@
     "011DA4C9": {
       "owner": "template"
     },
+    "011EE133": {
+      "owner": "template"
+    },
     "0197BAFD": {
       "owner": "template"
     },
@@ -106,6 +106,12 @@
       "block": 1,
       "para": 4
     },
+    "020DA25A": {
+      "owner": "template"
+    },
+    "024228EA": {
+      "owner": "template"
+    },
     "024F92C0": {
       "owner": "template"
     },
@@ -139,6 +145,9 @@
       "owner": "template"
     },
     "0334E2AD": {
+      "owner": "template"
+    },
+    "0342EABA": {
       "owner": "template"
     },
     "034FCA2F": {
@@ -190,6 +199,9 @@
       "section": "5.4 Runtime Node and DataType mapping terms",
       "block": 0,
       "para": 0
+    },
+    "04693F93": {
+      "owner": "template"
     },
     "04D68051": {
       "owner": "markdown",
@@ -340,12 +352,6 @@
     "06654834": {
       "owner": "template"
     },
-    "06753FD8": {
-      "owner": "template"
-    },
-    "068C23C2": {
-      "owner": "template"
-    },
     "069CBB4B": {
       "owner": "generated",
       "region": "model-overview",
@@ -448,6 +454,9 @@
       "kind": "para",
       "para": 0
     },
+    "084A3FE1": {
+      "owner": "template"
+    },
     "084C30A6": {
       "owner": "generated",
       "region": "namespaces",
@@ -506,9 +515,6 @@
       "owner": "template"
     },
     "08DA7DD6": {
-      "owner": "template"
-    },
-    "08EBA581": {
       "owner": "template"
     },
     "08F66FDA": {
@@ -624,10 +630,10 @@
       "block": 2,
       "para": 54
     },
-    "0A6400C6": {
+    "0A4F8A79": {
       "owner": "template"
     },
-    "0A72E1B7": {
+    "0A6400C6": {
       "owner": "template"
     },
     "0AA105A8": {
@@ -671,9 +677,6 @@
       "section": "9.1 Native readable mapping",
       "block": 0,
       "para": 2
-    },
-    "0B88DDB8": {
-      "owner": "template"
     },
     "0BAB042B": {
       "owner": "markdown",
@@ -759,6 +762,9 @@
       "section": "5.2 Type-annotation terms",
       "block": 1,
       "para": 22
+    },
+    "0CEC47E3": {
+      "owner": "template"
     },
     "0CF0D68E": {
       "owner": "generated",
@@ -929,6 +935,9 @@
       "block": 1,
       "para": 5
     },
+    "0F95BCC3": {
+      "owner": "template"
+    },
     "0FAC5245": {
       "owner": "template"
     },
@@ -999,9 +1008,6 @@
     "11186A60": {
       "owner": "template"
     },
-    "11202BE3": {
-      "owner": "template"
-    },
     "1122B9BA": {
       "owner": "markdown",
       "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
@@ -1045,9 +1051,6 @@
       "section": "6.2 Links and references",
       "block": 3,
       "para": 4
-    },
-    "122B9F2C": {
-      "owner": "template"
     },
     "12312B1E": {
       "owner": "template"
@@ -1106,9 +1109,6 @@
     "12D3BED8": {
       "owner": "template"
     },
-    "12DF5958": {
-      "owner": "template"
-    },
     "12E0E3F7": {
       "owner": "markdown",
       "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
@@ -1160,6 +1160,12 @@
     "13500168": {
       "owner": "template"
     },
+    "13584E1A": {
+      "owner": "template"
+    },
+    "136BC1FF": {
+      "owner": "template"
+    },
     "13CA4D8D": {
       "owner": "markdown",
       "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
@@ -1167,12 +1173,21 @@
       "block": 0,
       "para": 28
     },
+    "13CD68E9": {
+      "owner": "template"
+    },
+    "13F7DD1B": {
+      "owner": "template"
+    },
     "1402D8C7": {
       "owner": "generated",
       "region": "namespaces",
       "index": 8,
       "kind": "table",
       "para": 0
+    },
+    "14224F25": {
+      "owner": "template"
     },
     "142F547D": {
       "owner": "template"
@@ -1201,9 +1216,6 @@
       "block": 2,
       "para": 40
     },
-    "1476FC4B": {
-      "owner": "template"
-    },
     "147F8348": {
       "owner": "markdown",
       "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
@@ -1220,9 +1232,6 @@
       "section": "1.1 Differences from the published OPC 10101 v1.00",
       "block": 1,
       "para": 0
-    },
-    "14988A4C": {
-      "owner": "template"
     },
     "14A07D74": {
       "owner": "template"
@@ -1430,13 +1439,7 @@
       "block": 4,
       "para": 2
     },
-    "183B92D7": {
-      "owner": "template"
-    },
     "1849E80F": {
-      "owner": "template"
-    },
-    "1868437E": {
       "owner": "template"
     },
     "186917D6": {
@@ -1459,12 +1462,18 @@
       "block": 2,
       "para": 61
     },
+    "18B20F9C": {
+      "owner": "template"
+    },
     "18C764F4": {
       "owner": "markdown",
       "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
       "section": "6.3 Containment",
       "block": 0,
       "para": 0
+    },
+    "18E59FC3": {
+      "owner": "template"
     },
     "193131FA": {
       "owner": "markdown",
@@ -1520,6 +1529,9 @@
       "block": 3,
       "para": 2
     },
+    "199C65F0": {
+      "owner": "template"
+    },
     "19C01F40": {
       "owner": "generated",
       "region": "namespaces",
@@ -1571,9 +1583,6 @@
     "1A3EE2CD": {
       "owner": "template"
     },
-    "1A404B8E": {
-      "owner": "template"
-    },
     "1A445E26": {
       "owner": "markdown",
       "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
@@ -1601,6 +1610,9 @@
       "section": "Annex C — Validation (informative)",
       "block": 2,
       "para": 0
+    },
+    "1A760D74": {
+      "owner": "template"
     },
     "1A86E55E": {
       "owner": "markdown",
@@ -1699,9 +1711,6 @@
     "1CAC771F": {
       "owner": "template"
     },
-    "1CAE977D": {
-      "owner": "template"
-    },
     "1CB81C6B": {
       "owner": "template"
     },
@@ -1718,6 +1727,9 @@
       "section": "5.1.2 NamespaceUri-qualified model names",
       "block": 0,
       "para": 0
+    },
+    "1CE88BA5": {
+      "owner": "template"
     },
     "1CF8F167": {
       "owner": "template"
@@ -1737,9 +1749,6 @@
       "para": 20
     },
     "1D3A5723": {
-      "owner": "template"
-    },
-    "1D3A731C": {
       "owner": "template"
     },
     "1D4C7ED7": {
@@ -1765,9 +1774,6 @@
       "section": "1 Scope",
       "block": 2,
       "para": 1
-    },
-    "1D73506D": {
-      "owner": "template"
     },
     "1D97E370": {
       "owner": "generated",
@@ -1833,9 +1839,6 @@
       "kind": "para",
       "para": 0
     },
-    "1ED0C266": {
-      "owner": "template"
-    },
     "1F516BFD": {
       "owner": "markdown",
       "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
@@ -1894,6 +1897,9 @@
       "block": 1,
       "para": 3
     },
+    "1FFF54FF": {
+      "owner": "template"
+    },
     "20251C27": {
       "owner": "markdown",
       "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
@@ -1901,13 +1907,13 @@
       "block": 3,
       "para": 0
     },
-    "20371107": {
+    "2042096B": {
       "owner": "template"
     },
     "204241BF": {
       "owner": "template"
     },
-    "205729E2": {
+    "204DF925": {
       "owner": "template"
     },
     "205D9A7E": {
@@ -1916,6 +1922,9 @@
       "section": "9.1 Native readable mapping",
       "block": 0,
       "para": 42
+    },
+    "2070047F": {
+      "owner": "template"
     },
     "207494B6": {
       "owner": "template"
@@ -1954,6 +1963,9 @@
     "2146F309": {
       "owner": "template"
     },
+    "216C85F1": {
+      "owner": "template"
+    },
     "216D3233": {
       "owner": "markdown",
       "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
@@ -1962,6 +1974,9 @@
       "para": 3
     },
     "21CC5579": {
+      "owner": "template"
+    },
+    "21EAE78B": {
       "owner": "template"
     },
     "2205FE8E": {
@@ -2009,9 +2024,6 @@
       "index": 25,
       "kind": "para",
       "para": 0
-    },
-    "22A7A523": {
-      "owner": "template"
     },
     "22ABE184": {
       "owner": "template"
@@ -2067,9 +2079,6 @@
       "kind": "clause",
       "para": 0
     },
-    "230136E4": {
-      "owner": "template"
-    },
     "230DCC23": {
       "owner": "template"
     },
@@ -2097,12 +2106,18 @@
       "kind": "table",
       "para": 3
     },
+    "238156D5": {
+      "owner": "template"
+    },
     "238C72E7": {
       "owner": "markdown",
       "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
       "section": "10.3 Exceptional `uav:nodeSet` envelope",
       "block": 1,
       "para": 22
+    },
+    "239A832E": {
+      "owner": "template"
     },
     "23A474CF": {
       "owner": "markdown",
@@ -2115,6 +2130,9 @@
       "owner": "template"
     },
     "23A64C39": {
+      "owner": "template"
+    },
+    "23AA8F26": {
       "owner": "template"
     },
     "23F9D660": {
@@ -2130,9 +2148,6 @@
     "246A29E0": {
       "owner": "template"
     },
-    "24AC70EF": {
-      "owner": "template"
-    },
     "24AEE5D9": {
       "owner": "markdown",
       "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
@@ -2141,6 +2156,9 @@
       "para": 0
     },
     "24B2185C": {
+      "owner": "template"
+    },
+    "24C4227C": {
       "owner": "template"
     },
     "25284B84": {
@@ -2172,9 +2190,6 @@
       "index": 155,
       "kind": "clause",
       "para": 0
-    },
-    "25BB9071": {
-      "owner": "template"
     },
     "25DB5BA6": {
       "owner": "template"
@@ -2237,7 +2252,7 @@
       "block": 1,
       "para": 1
     },
-    "26C78FFB": {
+    "26EA0178": {
       "owner": "template"
     },
     "270C2DF7": {
@@ -2270,9 +2285,6 @@
     "277B85E1": {
       "owner": "template"
     },
-    "27A108B5": {
-      "owner": "template"
-    },
     "27ADC754": {
       "owner": "markdown",
       "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
@@ -2303,7 +2315,10 @@
     "27F5E138": {
       "owner": "template"
     },
-    "2807FBAC": {
+    "27FE0A09": {
+      "owner": "template"
+    },
+    "28024D8B": {
       "owner": "template"
     },
     "280B3451": {
@@ -2327,6 +2342,9 @@
       "block": 0,
       "para": 14
     },
+    "283597D7": {
+      "owner": "template"
+    },
     "2850473E": {
       "owner": "template"
     },
@@ -2337,12 +2355,18 @@
       "block": 4,
       "para": 1
     },
+    "2880006D": {
+      "owner": "template"
+    },
     "28C29330": {
       "owner": "markdown",
       "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
       "section": "7 Validation rules",
       "block": 2,
       "para": 39
+    },
+    "28D37B4C": {
+      "owner": "template"
     },
     "28F285F5": {
       "owner": "template"
@@ -2358,6 +2382,9 @@
       "owner": "template"
     },
     "2930A690": {
+      "owner": "template"
+    },
+    "294D6342": {
       "owner": "template"
     },
     "296B6383": {
@@ -2427,6 +2454,9 @@
       "block": 0,
       "para": 5
     },
+    "2A90E6ED": {
+      "owner": "template"
+    },
     "2A9B0ADD": {
       "owner": "markdown",
       "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
@@ -2455,6 +2485,9 @@
       "para": 42
     },
     "2B09BE02": {
+      "owner": "template"
+    },
+    "2B0EE813": {
       "owner": "template"
     },
     "2B19AB39": {
@@ -2507,15 +2540,15 @@
       "block": 0,
       "para": 6
     },
-    "2BF95B98": {
-      "owner": "template"
-    },
     "2C038027": {
       "owner": "markdown",
       "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
       "section": "5.1 Node and path terms",
       "block": 0,
       "para": 4
+    },
+    "2C285DFD": {
+      "owner": "template"
     },
     "2C2A1EF7": {
       "owner": "generated",
@@ -2588,9 +2621,6 @@
       "block": 1,
       "para": 13
     },
-    "2DFEBA1F": {
-      "owner": "template"
-    },
     "2E201E83": {
       "owner": "template"
     },
@@ -2615,9 +2645,6 @@
       "block": 0,
       "para": 15
     },
-    "2E8613A2": {
-      "owner": "template"
-    },
     "2E90D501": {
       "owner": "markdown",
       "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
@@ -2636,9 +2663,6 @@
       "para": 1
     },
     "2EC57924": {
-      "owner": "template"
-    },
-    "2EC9E38F": {
       "owner": "template"
     },
     "2EE1EBC5": {
@@ -2675,13 +2699,7 @@
       "block": 1,
       "para": 0
     },
-    "2F9F40E2": {
-      "owner": "template"
-    },
     "2FCB1D35": {
-      "owner": "template"
-    },
-    "2FDA08CB": {
       "owner": "template"
     },
     "2FE04665": {
@@ -2690,9 +2708,6 @@
       "section": "6.2 Links and references",
       "block": 1,
       "para": 3
-    },
-    "2FE1EA70": {
-      "owner": "template"
     },
     "2FE45AE7": {
       "owner": "template"
@@ -2841,7 +2856,7 @@
     "321382D8": {
       "owner": "template"
     },
-    "3266AD02": {
+    "324201D7": {
       "owner": "template"
     },
     "32685630": {
@@ -2864,6 +2879,9 @@
       "section": "5.1 Node and path terms",
       "block": 0,
       "para": 16
+    },
+    "32785018": {
+      "owner": "template"
     },
     "32836849": {
       "owner": "markdown",
@@ -2993,7 +3011,7 @@
       "block": 1,
       "para": 8
     },
-    "33B99526": {
+    "33B09DA4": {
       "owner": "template"
     },
     "33E465BD": {
@@ -3002,6 +3020,9 @@
       "section": "10.3 Exceptional `uav:nodeSet` envelope",
       "block": 1,
       "para": 11
+    },
+    "33ECF6C8": {
+      "owner": "template"
     },
     "34236AF1": {
       "owner": "generated",
@@ -3016,9 +3037,6 @@
       "section": "6.8 Inheritance and open content",
       "block": 0,
       "para": 0
-    },
-    "343CECDA": {
-      "owner": "template"
     },
     "3454903D": {
       "owner": "generated",
@@ -3066,9 +3084,6 @@
     "34ED318F": {
       "owner": "template"
     },
-    "350A6565": {
-      "owner": "template"
-    },
     "350B7F33": {
       "owner": "template"
     },
@@ -3080,9 +3095,6 @@
       "para": 1
     },
     "35603A85": {
-      "owner": "template"
-    },
-    "3575FCE0": {
       "owner": "template"
     },
     "35797093": {
@@ -3118,6 +3130,9 @@
       "section": "D.1 Forward: Thing Model → OPC UA types",
       "block": 8,
       "para": 0
+    },
+    "36153AB9": {
+      "owner": "template"
     },
     "36170D40": {
       "owner": "template"
@@ -3186,9 +3201,6 @@
     "36D98677": {
       "owner": "template"
     },
-    "36DF84D8": {
-      "owner": "template"
-    },
     "36F74192": {
       "owner": "template"
     },
@@ -3255,9 +3267,6 @@
     "37F766D4": {
       "owner": "template"
     },
-    "37F819A7": {
-      "owner": "template"
-    },
     "380D2AA7": {
       "owner": "markdown",
       "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
@@ -3287,9 +3296,6 @@
     "385DE944": {
       "owner": "template"
     },
-    "3866B2F9": {
-      "owner": "template"
-    },
     "38731809": {
       "owner": "markdown",
       "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
@@ -3310,6 +3316,9 @@
       "section": "7 Validation rules",
       "block": 2,
       "para": 13
+    },
+    "3933A275": {
+      "owner": "template"
     },
     "3945C80D": {
       "owner": "generated",
@@ -3374,9 +3383,6 @@
     "3AAEA05C": {
       "owner": "template"
     },
-    "3AB2A855": {
-      "owner": "template"
-    },
     "3AB6DF7F": {
       "owner": "template"
     },
@@ -3393,9 +3399,6 @@
     "3AF21E35": {
       "owner": "template"
     },
-    "3AFE34D1": {
-      "owner": "template"
-    },
     "3B4C8D23": {
       "owner": "template"
     },
@@ -3407,6 +3410,9 @@
       "para": 12
     },
     "3B68BD0B": {
+      "owner": "template"
+    },
+    "3B7296F0": {
       "owner": "template"
     },
     "3BA2B334": {
@@ -3482,6 +3488,9 @@
     "3C2A66ED": {
       "owner": "template"
     },
+    "3C2ECBF0": {
+      "owner": "template"
+    },
     "3C513AF8": {
       "owner": "template"
     },
@@ -3524,9 +3533,6 @@
       "para": 1
     },
     "3CD1E582": {
-      "owner": "template"
-    },
-    "3D1371BA": {
       "owner": "template"
     },
     "3D170781": {
@@ -3578,10 +3584,16 @@
       "block": 1,
       "para": 8
     },
+    "3DB90A32": {
+      "owner": "template"
+    },
     "3DC44C36": {
       "owner": "template"
     },
     "3DC6EA38": {
+      "owner": "template"
+    },
+    "3DEEDCB4": {
       "owner": "template"
     },
     "3DF9A42E": {
@@ -3677,6 +3689,9 @@
     "3F1F98D9": {
       "owner": "template"
     },
+    "3F284E22": {
+      "owner": "template"
+    },
     "3F657DC6": {
       "owner": "generated",
       "region": "normative-references",
@@ -3758,9 +3773,6 @@
       "block": 3,
       "para": 0
     },
-    "407CF38F": {
-      "owner": "template"
-    },
     "409F4EDE": {
       "owner": "template"
     },
@@ -3815,9 +3827,6 @@
     "4150B080": {
       "owner": "template"
     },
-    "4150BC09": {
-      "owner": "template"
-    },
     "41598661": {
       "owner": "template"
     },
@@ -3841,6 +3850,9 @@
       "section": "11 Conformance units and profiles",
       "block": 1,
       "para": 9
+    },
+    "416DC0F9": {
+      "owner": "template"
     },
     "41931406": {
       "owner": "template"
@@ -3935,9 +3947,6 @@
       "block": 0,
       "para": 0
     },
-    "43FCE493": {
-      "owner": "template"
-    },
     "4418E5CA": {
       "owner": "markdown",
       "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
@@ -3990,9 +3999,6 @@
       "owner": "template"
     },
     "45217830": {
-      "owner": "template"
-    },
-    "453CFA09": {
       "owner": "template"
     },
     "4554AF6D": {
@@ -4049,9 +4055,6 @@
       "block": 1,
       "para": 2
     },
-    "45DD7255": {
-      "owner": "template"
-    },
     "46045E00": {
       "owner": "template"
     },
@@ -4068,6 +4071,9 @@
       "section": "8 Thing Description and Thing Model mapping",
       "block": 1,
       "para": 5
+    },
+    "462AC271": {
+      "owner": "template"
     },
     "465970B6": {
       "owner": "markdown",
@@ -4113,6 +4119,9 @@
       "block": 2,
       "para": 0
     },
+    "46EA5D18": {
+      "owner": "template"
+    },
     "46F34E58": {
       "owner": "markdown",
       "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
@@ -4140,9 +4149,6 @@
       "block": 3,
       "para": 0
     },
-    "476B57B8": {
-      "owner": "template"
-    },
     "47772F2D": {
       "owner": "template"
     },
@@ -4152,9 +4158,6 @@
       "section": "1.1 Differences from the published OPC 10101 v1.00",
       "block": 1,
       "para": 1
-    },
-    "47ABC068": {
-      "owner": "template"
     },
     "47B1D1FD": {
       "owner": "template"
@@ -4230,9 +4233,6 @@
       "block": 0,
       "para": 32
     },
-    "4944796E": {
-      "owner": "template"
-    },
     "4956D329": {
       "owner": "generated",
       "region": "normative-references",
@@ -4270,9 +4270,6 @@
       "block": 2,
       "para": 21
     },
-    "49BE90E8": {
-      "owner": "template"
-    },
     "49E581B0": {
       "owner": "generated",
       "region": "namespaces",
@@ -4307,10 +4304,10 @@
       "block": 0,
       "para": 0
     },
-    "4A46C811": {
+    "4A3E611A": {
       "owner": "template"
     },
-    "4A4853A6": {
+    "4A46C811": {
       "owner": "template"
     },
     "4A5C67C9": {
@@ -4357,9 +4354,6 @@
     "4AE9B555": {
       "owner": "template"
     },
-    "4AEE8FE7": {
-      "owner": "template"
-    },
     "4B16D5ED": {
       "owner": "markdown",
       "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
@@ -4373,9 +4367,6 @@
       "index": 19,
       "kind": "para",
       "para": 0
-    },
-    "4B8C3BC3": {
-      "owner": "template"
     },
     "4B96D8F6": {
       "owner": "generated",
@@ -4394,6 +4385,9 @@
     "4B9C5349": {
       "owner": "template"
     },
+    "4BC1749F": {
+      "owner": "template"
+    },
     "4BD4A7EA": {
       "owner": "template"
     },
@@ -4404,7 +4398,7 @@
       "block": 1,
       "para": 2
     },
-    "4C46297E": {
+    "4C4AF2DB": {
       "owner": "template"
     },
     "4C5EC06B": {
@@ -4420,7 +4414,7 @@
       "block": 1,
       "para": 11
     },
-    "4C9CC673": {
+    "4CA56BA1": {
       "owner": "template"
     },
     "4CA62578": {
@@ -4430,12 +4424,21 @@
       "block": 1,
       "para": 1
     },
+    "4CB40C20": {
+      "owner": "template"
+    },
     "4CE8CDB8": {
       "owner": "markdown",
       "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
       "section": "1 Scope",
       "block": 1,
       "para": 0
+    },
+    "4D2EF136": {
+      "owner": "template"
+    },
+    "4D393F13": {
+      "owner": "template"
     },
     "4D3D45BD": {
       "owner": "template"
@@ -4554,9 +4557,6 @@
     "4E9FFE4C": {
       "owner": "template"
     },
-    "4EB48B70": {
-      "owner": "template"
-    },
     "4ECD16F5": {
       "owner": "markdown",
       "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
@@ -4605,9 +4605,6 @@
       "block": 1,
       "para": 10
     },
-    "4F510961": {
-      "owner": "template"
-    },
     "4F8FE53B": {
       "owner": "template"
     },
@@ -4626,6 +4623,9 @@
       "para": 0
     },
     "50060862": {
+      "owner": "template"
+    },
+    "501366B7": {
       "owner": "template"
     },
     "503987E7": {
@@ -4665,9 +4665,6 @@
       "block": 0,
       "para": 0
     },
-    "50EB51E5": {
-      "owner": "template"
-    },
     "5101DD19": {
       "owner": "markdown",
       "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
@@ -4678,10 +4675,10 @@
     "5129F5F5": {
       "owner": "template"
     },
-    "514A8E2B": {
+    "5189B8D0": {
       "owner": "template"
     },
-    "5189B8D0": {
+    "519D1F7A": {
       "owner": "template"
     },
     "51CBE88F": {
@@ -4704,9 +4701,6 @@
       "para": 0
     },
     "51F818ED": {
-      "owner": "template"
-    },
-    "51F8653D": {
       "owner": "template"
     },
     "52084AF0": {
@@ -4756,9 +4750,6 @@
     "52A86A61": {
       "owner": "template"
     },
-    "52B2C950": {
-      "owner": "template"
-    },
     "52D4503D": {
       "owner": "template"
     },
@@ -4786,9 +4777,6 @@
       "kind": "para",
       "para": 0
     },
-    "5338FF08": {
-      "owner": "template"
-    },
     "5347B1F0": {
       "owner": "markdown",
       "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
@@ -4804,9 +4792,6 @@
       "para": 11
     },
     "5350E110": {
-      "owner": "template"
-    },
-    "53BDE38A": {
       "owner": "template"
     },
     "53BE9611": {
@@ -4844,15 +4829,15 @@
       "block": 2,
       "para": 0
     },
+    "542DD2E6": {
+      "owner": "template"
+    },
     "5431BAF9": {
       "owner": "markdown",
       "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
       "section": "11 Conformance units and profiles",
       "block": 1,
       "para": 17
-    },
-    "5465D2A1": {
-      "owner": "template"
     },
     "5471D5BB": {
       "owner": "markdown",
@@ -4868,9 +4853,6 @@
       "kind": "table",
       "para": 14
     },
-    "5486CEA7": {
-      "owner": "template"
-    },
     "54A24774": {
       "owner": "template"
     },
@@ -4880,6 +4862,9 @@
       "section": "11 Conformance units and profiles",
       "block": 3,
       "para": 1
+    },
+    "54B8B029": {
+      "owner": "template"
     },
     "54BE3714": {
       "owner": "markdown",
@@ -4915,7 +4900,7 @@
       "block": 2,
       "para": 0
     },
-    "554EB612": {
+    "555CF3E0": {
       "owner": "template"
     },
     "5578F5ED": {
@@ -4972,6 +4957,9 @@
       "block": 0,
       "para": 40
     },
+    "561FED99": {
+      "owner": "template"
+    },
     "56426FD2": {
       "owner": "markdown",
       "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
@@ -5000,18 +4988,12 @@
       "kind": "clause",
       "para": 0
     },
-    "56C8CFA0": {
-      "owner": "template"
-    },
     "56D345F9": {
       "owner": "generated",
       "region": "scope",
       "index": 9,
       "kind": "para",
       "para": 0
-    },
-    "56ECC59C": {
-      "owner": "template"
     },
     "5702E6E6": {
       "owner": "markdown",
@@ -5078,6 +5060,9 @@
       "block": 1,
       "para": 0
     },
+    "57A3C948": {
+      "owner": "template"
+    },
     "57C8CCC9": {
       "owner": "markdown",
       "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
@@ -5085,7 +5070,7 @@
       "block": 3,
       "para": 0
     },
-    "57D9AB20": {
+    "57D3D02A": {
       "owner": "template"
     },
     "57F1B058": {
@@ -5218,7 +5203,7 @@
       "block": 3,
       "para": 3
     },
-    "5A901C80": {
+    "5AAA94B3": {
       "owner": "template"
     },
     "5AD0BE39": {
@@ -5245,16 +5230,13 @@
       "block": 2,
       "para": 52
     },
-    "5B1EEBBA": {
-      "owner": "template"
-    },
     "5B336145": {
       "owner": "template"
     },
     "5B4BDFBD": {
       "owner": "template"
     },
-    "5B77F986": {
+    "5B5B3714": {
       "owner": "template"
     },
     "5B78A3EB": {
@@ -5299,7 +5281,7 @@
     "5C674A3C": {
       "owner": "template"
     },
-    "5CC6CECD": {
+    "5D176B52": {
       "owner": "template"
     },
     "5D3001F6": {
@@ -5317,9 +5299,6 @@
       "para": 0
     },
     "5D43B04A": {
-      "owner": "template"
-    },
-    "5D641381": {
       "owner": "template"
     },
     "5D721A47": {
@@ -5350,9 +5329,6 @@
       "owner": "template"
     },
     "5DCA731A": {
-      "owner": "template"
-    },
-    "5DDD9349": {
       "owner": "template"
     },
     "5DFCC714": {
@@ -5395,6 +5371,9 @@
       "owner": "template"
     },
     "5E9A755F": {
+      "owner": "template"
+    },
+    "5EB5C500": {
       "owner": "template"
     },
     "5F0B535D": {
@@ -5464,6 +5443,9 @@
     "6010B015": {
       "owner": "template"
     },
+    "601A0B08": {
+      "owner": "template"
+    },
     "604665F3": {
       "owner": "markdown",
       "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
@@ -5528,10 +5510,10 @@
     "61117E2E": {
       "owner": "template"
     },
-    "61496108": {
+    "61426F48": {
       "owner": "template"
     },
-    "614E45F9": {
+    "61496108": {
       "owner": "template"
     },
     "616723FE": {
@@ -5592,6 +5574,9 @@
       "owner": "template"
     },
     "621816A7": {
+      "owner": "template"
+    },
+    "62261A2B": {
       "owner": "template"
     },
     "622D9CC6": {
@@ -5662,7 +5647,7 @@
       "kind": "table",
       "para": 1
     },
-    "62F35464": {
+    "630B16B2": {
       "owner": "template"
     },
     "63310EAC": {
@@ -5679,9 +5664,6 @@
       "owner": "template"
     },
     "63456E43": {
-      "owner": "template"
-    },
-    "634D2C41": {
       "owner": "template"
     },
     "635D28DD": {
@@ -5818,6 +5800,9 @@
       "block": 1,
       "para": 11
     },
+    "65FD9AF7": {
+      "owner": "template"
+    },
     "66237FD1": {
       "owner": "generated",
       "region": "model-overview",
@@ -5831,9 +5816,6 @@
     "665E919E": {
       "owner": "template"
     },
-    "665EC560": {
-      "owner": "template"
-    },
     "6671E4CD": {
       "owner": "template"
     },
@@ -5843,6 +5825,9 @@
       "section": "1 Scope",
       "block": 2,
       "para": 2
+    },
+    "667D0FE3": {
+      "owner": "template"
     },
     "667DC388": {
       "owner": "markdown",
@@ -5861,6 +5846,9 @@
       "owner": "template"
     },
     "66BFF43A": {
+      "owner": "template"
+    },
+    "66D77544": {
       "owner": "template"
     },
     "66DE07E9": {
@@ -5915,6 +5903,9 @@
       "block": 1,
       "para": 9
     },
+    "677A9443": {
+      "owner": "template"
+    },
     "67B808A1": {
       "owner": "template"
     },
@@ -5933,9 +5924,6 @@
       "para": 9
     },
     "67CEC68C": {
-      "owner": "template"
-    },
-    "67D7D06F": {
       "owner": "template"
     },
     "67F8B0C5": {
@@ -5997,9 +5985,6 @@
       "para": 47
     },
     "6892B871": {
-      "owner": "template"
-    },
-    "68ABED9D": {
       "owner": "template"
     },
     "68B4EC5D": {
@@ -6076,7 +6061,22 @@
       "block": 1,
       "para": 15
     },
+    "6A04AAA5": {
+      "owner": "template"
+    },
     "6A08A781": {
+      "owner": "template"
+    },
+    "6A447127": {
+      "owner": "template"
+    },
+    "6A472386": {
+      "owner": "template"
+    },
+    "6A5296B1": {
+      "owner": "template"
+    },
+    "6A5BB138": {
       "owner": "template"
     },
     "6A66E996": {
@@ -6092,15 +6092,15 @@
     "6ABF916F": {
       "owner": "template"
     },
+    "6AC6DE20": {
+      "owner": "template"
+    },
     "6AD2C4ED": {
       "owner": "generated",
       "region": "normative-references",
       "index": 4,
       "kind": "para",
       "para": 0
-    },
-    "6AE0A6C9": {
-      "owner": "template"
     },
     "6AE74776": {
       "owner": "generated",
@@ -6176,9 +6176,6 @@
       "index": 12,
       "kind": "para",
       "para": 0
-    },
-    "6BE115B3": {
-      "owner": "template"
     },
     "6BF98608": {
       "owner": "template"
@@ -6257,9 +6254,6 @@
       "block": 2,
       "para": 0
     },
-    "6DE65563": {
-      "owner": "template"
-    },
     "6E6DE116": {
       "owner": "template"
     },
@@ -6267,9 +6261,6 @@
       "owner": "template"
     },
     "6EA979F9": {
-      "owner": "template"
-    },
-    "6EB1A37E": {
       "owner": "template"
     },
     "6EC5A462": {
@@ -6416,12 +6407,6 @@
     "70BE33C3": {
       "owner": "template"
     },
-    "70D210DA": {
-      "owner": "template"
-    },
-    "70F6605D": {
-      "owner": "template"
-    },
     "70FFB1AE": {
       "owner": "markdown",
       "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
@@ -6441,6 +6426,9 @@
     "716EB714": {
       "owner": "template"
     },
+    "71723F11": {
+      "owner": "template"
+    },
     "718766CD": {
       "owner": "generated",
       "region": "namespaces",
@@ -6454,9 +6442,6 @@
       "index": 1,
       "kind": "toc",
       "para": 0
-    },
-    "719BACB7": {
-      "owner": "template"
     },
     "719C96C8": {
       "owner": "template"
@@ -6488,6 +6473,9 @@
       "kind": "clause",
       "para": 0
     },
+    "72538CDA": {
+      "owner": "template"
+    },
     "7262113F": {
       "owner": "template"
     },
@@ -6497,16 +6485,10 @@
     "729A9E9A": {
       "owner": "template"
     },
+    "72BAB0EE": {
+      "owner": "template"
+    },
     "72D91F6B": {
-      "owner": "template"
-    },
-    "72E1AD78": {
-      "owner": "template"
-    },
-    "72F08B62": {
-      "owner": "template"
-    },
-    "72F208CB": {
       "owner": "template"
     },
     "73514716": {
@@ -6533,13 +6515,13 @@
       "block": 3,
       "para": 5
     },
+    "73E5AD60": {
+      "owner": "template"
+    },
     "7414A837": {
       "owner": "template"
     },
     "741BAB1F": {
-      "owner": "template"
-    },
-    "7449CFC4": {
       "owner": "template"
     },
     "74535A06": {
@@ -6616,6 +6598,9 @@
       "index": 10,
       "kind": "table",
       "para": 7
+    },
+    "75E9F9FD": {
+      "owner": "template"
     },
     "76539C9F": {
       "owner": "markdown",
@@ -6772,6 +6757,9 @@
     "79A3F12E": {
       "owner": "template"
     },
+    "79A73FF8": {
+      "owner": "template"
+    },
     "7A049651": {
       "owner": "template"
     },
@@ -6779,6 +6767,9 @@
       "owner": "template"
     },
     "7A1CE53B": {
+      "owner": "template"
+    },
+    "7A4715F5": {
       "owner": "template"
     },
     "7A563363": {
@@ -6845,15 +6836,15 @@
     "7B40015F": {
       "owner": "template"
     },
+    "7B658F94": {
+      "owner": "template"
+    },
     "7B854C54": {
       "owner": "markdown",
       "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
       "section": "D.2 Forward: Thing Description → OPC UA instance",
       "block": 4,
       "para": 0
-    },
-    "7B95043E": {
-      "owner": "template"
     },
     "7B9DD5D0": {
       "owner": "markdown",
@@ -6896,12 +6887,6 @@
       "block": 2,
       "para": 14
     },
-    "7C10FA7E": {
-      "owner": "template"
-    },
-    "7C3DE77B": {
-      "owner": "template"
-    },
     "7C681ABB": {
       "owner": "markdown",
       "file": "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
@@ -6940,6 +6925,9 @@
       "block": 2,
       "para": 36
     },
+    "7D00958C": {
+      "owner": "template"
+    },
     "7D3764EF": {
       "owner": "template"
     },
@@ -6970,6 +6958,9 @@
       "owner": "template"
     },
     "7D67AC10": {
+      "owner": "template"
+    },
+    "7D6C02B4": {
       "owner": "template"
     },
     "7DC1C51F": {
@@ -7006,12 +6997,21 @@
       "block": 2,
       "para": 51
     },
+    "7E53770D": {
+      "owner": "template"
+    },
+    "7E9EF05E": {
+      "owner": "template"
+    },
     "7EA6C3BD": {
       "owner": "generated",
       "region": "scope",
       "index": 10,
       "kind": "para",
       "para": 0
+    },
+    "7EC8F654": {
+      "owner": "template"
     },
     "7ECEE558": {
       "owner": "markdown",
@@ -7037,6 +7037,9 @@
       "block": 1,
       "para": 1
     },
+    "7F2284A1": {
+      "owner": "template"
+    },
     "7F492928": {
       "owner": "generated",
       "region": "namespaces",
@@ -7052,9 +7055,6 @@
       "para": 0
     },
     "7F52A6EE": {
-      "owner": "template"
-    },
-    "7F561DA0": {
       "owner": "template"
     },
     "7F630AE0": {

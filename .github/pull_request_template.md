@@ -23,7 +23,7 @@
 ## Checklist
 
 - [ ] I edited the **source** (spec document, descriptor, or generator) — not generated NodeSets / CSV / Annex tables by hand
-- [ ] For a generated-spec change, I regenerated and ran validation (`python core-specs/extras/validate_all.py` and/or the extension's `validate_local.py`)
+- [ ] For a generated-spec change, I regenerated and ran validation (the `validate_all.py` for that tree — `core-specs/extras/`, `cloud-specs/` or `metaverse-specs/` — and/or the extension's `validate_local.py`)
 - [ ] I opened this from a topic branch and am ready to discuss
 
 <!-- Feedback- and annotation-only PRs don't need to pass validation. -->

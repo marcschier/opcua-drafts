@@ -15,7 +15,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 EX = os.path.dirname(HERE)
 REF = os.path.join(HERE, "ref")
 # The base spec NodeSet and the per-spec example overlays are standardized artifacts under
-# core-specs/observability-export/; the descriptors + this validator are secondary here under core-specs/extras.
+# cloud-specs/observability-export/; the descriptors + this validator are secondary here under cloud-specs/extras.
 CORE = os.path.abspath(os.path.join(HERE, "..", "..", "..", "..", "observability-export"))
 BIND = os.path.join(CORE, "Opc.Ua.ObservabilityExport.NodeSet2.xml")
 NS = "{http://opcfoundation.org/UA/2011/03/UANodeSet.xsd}"

@@ -30,8 +30,11 @@ from opcua_enc import nodeset  # noqa: E402
 from opcua_enc.symbolic_id import is_valid_xregistry_id, symbolic_id  # noqa: E402
 
 EXAMPLE = os.path.abspath(os.path.join(HERE, "..", "examples", "opcua-catalog.xregistry.json"))
-SOURCE_NODESET = os.path.abspath(os.path.join(
-    HERE, "..", "..", "..", "observability-export", "Opc.Ua.ObservabilityExport.NodeSet2.xml"))
+# The source NodeSet is a cloud-specs specification, so it is addressed from the
+# repository root, matching build_catalog.py's DEFAULT_NODESET.
+REPO = os.path.abspath(os.path.join(HERE, "..", "..", "..", ".."))
+SOURCE_NODESET = os.path.join(
+    REPO, "cloud-specs", "observability-export", "Opc.Ua.ObservabilityExport.NodeSet2.xml")
 ALLOWED_FORMATS = {"Avro/1.11", "ApacheArrow/1.0", "JsonSchema/2020-12"}
 FORMAT_KEYS = ("avro", "arrow", "jsonschema")
 _UA_NS = "{http://opcfoundation.org/UA/2011/03/UANodeSet.xsd}"

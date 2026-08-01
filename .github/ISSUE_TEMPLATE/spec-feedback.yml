@@ -15,7 +15,7 @@ body:
     attributes:
       label: Which spec / file
       description: Path or name of the draft this is about.
-      placeholder: core-specs/observability-export/OPC-UA-Observability-Export.md
+      placeholder: cloud-specs/observability-export/OPC-UA-Observability-Export.md
     validations:
       required: true
   - type: input

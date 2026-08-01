@@ -160,4 +160,4 @@ graph TD
 | [`Pumps.ObservabilityExport.json`](../../extras/observability-export/examples/pumps/Pumps.ObservabilityExport.json) | Machine-readable ObservabilityExport descriptor (single source). |
 | [`Opc.Ua.Pumps.ObservabilityExport.NodeSet2.xml`](Opc.Ua.Pumps.ObservabilityExport.NodeSet2.xml) | The binding instances on the theoretical `ExamplePump` instance. |
 
-Regenerate from [`core-specs/extras/observability-export/examples/`](../../extras/observability-export/examples/) with `python tools/build_bindings.py pumps/Pumps.ObservabilityExport.json tools/ref`.
+Regenerate from [`cloud-specs/extras/observability-export/examples/`](../../extras/observability-export/examples/) with `python tools/build_bindings.py pumps/Pumps.ObservabilityExport.json tools/ref`.
