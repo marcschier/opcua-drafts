@@ -167,6 +167,10 @@ Set `submitted` to `false` only for a shared dependency that appears in the mani
 An unsubmitted dependency can be copied into the private repository, but it cannot be the target of a release.
 
 List every path that moves in `move`.
+Include the specification folder, its `extras/` mirror if it has one, the clause map, **and the committed Word rendering** — the `.docx`, its `.docmodel.json` and `.provenance.json`, and each figure declared by the clause map's `figures` array, both the `.pptx` source and the generated `.png`.
+Word is the review format, so the `.docx` is the artifact under review; leaving it behind would keep the reviewed document publicly downloadable while only its markdown source went private.
+Take the figure list from the clause map rather than from a filename prefix: the clause map is the declared source of truth, and a prefix is a guess that silently drags a sibling specification's figures along with it.
+A vendored specification contributes no Word rendering, because it is not under review.
 List public holdbacks in `keepPublic`, especially documents that are targeted at xregistry.org even though they sit inside a folder that moves.
 List every submitted specification that must travel with this one in `closure`; include only specification ids from the same manifest.
 Use `closure` when the dependency was itself submitted for Foundation review and must become private at the same time.
