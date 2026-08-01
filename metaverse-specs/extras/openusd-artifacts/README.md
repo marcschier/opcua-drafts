@@ -16,8 +16,9 @@ server serves through `Server/OpenUSD/Artifacts` — per §7.11 of
 The collection names and the domain attributes are **normatively defined** by
 [`xRegistry-OpenUsd.md`](../../openusd-binding/xRegistry-OpenUsd.md) and its
 model, [`xRegistry-OpenUsd.model.json`](../../openusd-binding/xRegistry-OpenUsd.model.json)
-— the submittable xRegistry domain specification. This folder emits a conformant
-instance of it.
+— the submittable xRegistry domain specification, **submitted** as
+[xregistry/spec#510](https://github.com/xregistry/spec/pull/510). This folder
+emits a conformant instance of it.
 
 | xRegistry role | Collection | Group / resource id | OPC UA type (Part 1 §7.11) |
 |---|---|---|---|

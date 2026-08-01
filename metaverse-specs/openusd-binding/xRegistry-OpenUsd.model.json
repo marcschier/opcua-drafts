@@ -9,12 +9,6 @@
       "description": "Asset containers. Each Group is one named USD asset container - a root layer together with the sublayers, references, payloads, textures, MaterialX documents and volumes it needs. The Group id is the asset container identifier.",
 
       "attributes": {
-        "name": {
-          "name": "name",
-          "type": "string",
-          "required": true,
-          "description": "The asset container identifier verbatim. REQUIRED because a registry is browsed by people, often through generic tooling that has only the id and the name to show, and the id is a normalized form of this string"
-        },
         "rootlayer": {
           "name": "rootlayer",
           "type": "string",
@@ -35,7 +29,6 @@
           "validateformat": true,
           "validatecompatibility": true,
           "strictvalidation": false,
-          "consistentformat": false,
           "description": "A single USD artifact - a layer, package, texture, MaterialX document, volume or manifest - served as a document",
 
           "attributes": {
@@ -53,12 +46,6 @@
               ],
               "strict": false,
               "description": "The document format of this artifact. Orthogonal to assetkind, which records the artifact's role in the closure"
-            },
-            "name": {
-              "name": "name",
-              "type": "string",
-              "required": true,
-              "description": "The assetidentifier verbatim. REQUIRED because a registry is browsed by people, often through generic tooling that has only the id and the name to show, and the id is a normalized form of this string"
             },
             "assetidentifier": {
               "name": "assetidentifier",
@@ -108,7 +95,6 @@
                 "Sha512"
               ],
               "strict": true,
-              "default": "Sha256",
               "description": "The algorithm used to compute digest. REQUIRED when digest is present"
             },
             "*": {
@@ -127,12 +113,6 @@
       "description": "USD schema plugins. Each Group is one codeless USD schema plugin, and the Group id is the plugin name as declared in the plugin manifest. A codeless schema needs exactly two files, so a Group holds a SchemaPlugin usdasset and a GeneratedSchema usdasset",
 
       "attributes": {
-        "name": {
-          "name": "name",
-          "type": "string",
-          "required": true,
-          "description": "The plugin name as declared in the plugin manifest, verbatim. REQUIRED because a registry is browsed by people, often through generic tooling that has only the id and the name to show, and the id is a normalized form of this string"
-        },
         "*": {
           "name": "*",
           "type": "any"
@@ -148,7 +128,6 @@
           "validateformat": true,
           "validatecompatibility": true,
           "strictvalidation": false,
-          "consistentformat": false,
           "description": "A single file of this schema plugin - its plugin manifest or its generated schema - served as a document",
 
           "attributes": {
@@ -166,12 +145,6 @@
               ],
               "strict": false,
               "description": "The document format of this artifact. Orthogonal to assetkind, which records the artifact's role in the closure"
-            },
-            "name": {
-              "name": "name",
-              "type": "string",
-              "required": true,
-              "description": "The assetidentifier verbatim. REQUIRED because a registry is browsed by people, often through generic tooling that has only the id and the name to show, and the id is a normalized form of this string"
             },
             "assetidentifier": {
               "name": "assetidentifier",
@@ -221,7 +194,6 @@
                 "Sha512"
               ],
               "strict": true,
-              "default": "Sha256",
               "description": "The algorithm used to compute digest. REQUIRED when digest is present"
             },
             "*": {
