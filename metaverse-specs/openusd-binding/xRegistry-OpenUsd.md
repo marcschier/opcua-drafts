@@ -258,7 +258,7 @@ a plugin name out of a scene can address the Group directly.
 ## 3. OpenUSD Registry Model
 
 The authoritative xRegistry extension model of the OpenUSD Artifact Registry
-resides in the [xRegistry-OpenUsd.model.json](xRegistry-OpenUsd.model.json)
+resides in the <!-- release-spec-link:W3hSZWdpc3RyeS1PcGVuVXNkLm1vZGVsLmpzb25dKHhSZWdpc3RyeS1PcGVuVXNkLm1vZGVsLmpzb24p -->xRegistry-OpenUsd.model.json<!-- /release-spec-link -->
 file. On submission to the xRegistry specification repository this file is
 named `model.json` in the domain's directory.
 

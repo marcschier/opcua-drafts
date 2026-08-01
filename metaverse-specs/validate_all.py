@@ -16,11 +16,11 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 
 # Structural validators that run on a clean checkout (stdlib only, validate committed NodeSets).
 SELF_CONTAINED = [
-    "extras/openusd-binding/tools/validate_local.py",
-    "extras/openusd-scene/tools/validate_local.py",
-    "extras/openusd-scene/tools/validate_examples.py",
-    "extras/openusd-artifacts/tools/validate_local.py",
-    "extras/openusd-artifacts/tools/validate_spec.py",
+    # release-spec-validator:ICAgICJleHRyYXMvb3BlbnVzZC1iaW5kaW5nL3Rvb2xzL3ZhbGlkYXRlX2xvY2FsLnB5Iiw=
+    # release-spec-validator:ICAgICJleHRyYXMvb3BlbnVzZC1zY2VuZS90b29scy92YWxpZGF0ZV9sb2NhbC5weSIs
+    # release-spec-validator:ICAgICJleHRyYXMvb3BlbnVzZC1zY2VuZS90b29scy92YWxpZGF0ZV9leGFtcGxlcy5weSIs
+    # release-spec-validator:ICAgICJleHRyYXMvb3BlbnVzZC1hcnRpZmFjdHMvdG9vbHMvdmFsaWRhdGVfbG9jYWwucHkiLA==
+    # release-spec-validator:ICAgICJleHRyYXMvb3BlbnVzZC1hcnRpZmFjdHMvdG9vbHMvdmFsaWRhdGVfc3BlYy5weSIs
     "extras/vision/tools/validate_local.py",
     # openusd-scene added in the Scene Materialization (Part 2) work.
     # openusd-artifacts added with the xRegistry artifact registry (Bindings 0.4.0).

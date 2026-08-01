@@ -8,7 +8,7 @@ Nothing here is normative, official, or endorsed by the OPC Foundation or the Al
 
 The two specifications approach the same problem from opposite ends and are deliberately independent:
 
-| | [`openusd-binding/`](openusd-binding/) — **Part 1** | [`openusd-scene/`](openusd-scene/) — **Part 2** |
+| | <!-- release-spec-link:W2BvcGVudXNkLWJpbmRpbmcvYF0ob3BlbnVzZC1iaW5kaW5nLyk= -->`openusd-binding/`<!-- /release-spec-link --> — **Part 1** | <!-- release-spec-link:W2BvcGVudXNkLXNjZW5lL2BdKG9wZW51c2Qtc2NlbmUvKQ== -->`openusd-scene/`<!-- /release-spec-link --> — **Part 2** |
 |---|---|---|
 | Question | *Which USD prim represents this OPC UA Object, and which Variables drive its attributes?* | *What if the USD scene graph simply **were** an OPC UA address space?* |
 | The scene lives | outside OPC UA, in `.usd` files a connector renders | inside OPC UA, as first-class browsable nodes |
@@ -22,8 +22,8 @@ Pick Part 1 when you already have an artist-authored USD asset and want to drive
 
 ## Layout
 
-- `openusd-binding/` — Part 1 specification, NodeSet, CSV, implementer addenda for `pumps/` and `robotics/`, and the standalone **xRegistry domain specification** for the artifact registry (`xRegistry-OpenUsd.md`), which defines the same registry independently of OPC UA so the two projections federate.
-- `openusd-scene/` — Part 2 specification, NodeSet, CSV, and materialized example overlays.
+- <!-- release-spec-link:YG9wZW51c2QtYmluZGluZy9gIOKAlCBQYXJ0IDEgc3BlY2lmaWNhdGlvbiwgTm9kZVNldCwgQ1NWLCBpbXBsZW1lbnRlciBhZGRlbmRhIGZvciBgcHVtcHMvYCBhbmQgYHJvYm90aWNzL2AsIGFuZCB0aGUgc3RhbmRhbG9uZSAqKnhSZWdpc3RyeSBkb21haW4gc3BlY2lmaWNhdGlvbioqIGZvciB0aGUgYXJ0aWZhY3QgcmVnaXN0cnkgKGB4UmVnaXN0cnktT3BlblVzZC5tZGApLCB3aGljaCBkZWZpbmVzIHRoZSBzYW1lIHJlZ2lzdHJ5IGluZGVwZW5kZW50bHkgb2YgT1BDIFVBIHNvIHRoZSB0d28gcHJvamVjdGlvbnMgZmVkZXJhdGUu -->*Under OPC Foundation review; temporarily maintained outside this repository.*<!-- /release-spec-link -->
+- <!-- release-spec-link:YG9wZW51c2Qtc2NlbmUvYCDigJQgUGFydCAyIHNwZWNpZmljYXRpb24sIE5vZGVTZXQsIENTViwgYW5kIG1hdGVyaWFsaXplZCBleGFtcGxlIG92ZXJsYXlzLg== -->*Under OPC Foundation review; temporarily maintained outside this repository.*<!-- /release-spec-link -->
 - `extras/` — everything secondary to standardization, mirroring the two folders above:
   - `openusd-binding/tools/` — the model generator and validator; `examples/` — the pumps and robotics USD assets, binding descriptors, writers, renderers and end-to-end guides.
   - `openusd-scene/tools/` — the model generator, the `.usd` ↔ NodeSet converters, and the round-trip checker.

@@ -66,7 +66,7 @@
       "$comment": "Releasable OpenUSD Part 1. xRegistry is vendored, not closed over: the private export needs the base NodeSet/CSV and word spec so RequiredModel and validators resolve, but xRegistry stays public because it is a shared base for other public specs and has a public xregistry.org proposal. The xregistry.org OpenUSD domain document/model stay public. metaverse-specs/extras/openusd-artifacts is split at file granularity: build_catalog.py, validate_local.py, examples, schemas and README move because they read private Part 1 example descriptors, while tools/validate_spec.py stays public because it validates only the kept xregistry.org domain document/model.",
       "title": "OPC UA for OpenUSD — Part 1: OpenUSD Binding",
       "submitted": true,
-      "state": "public",
+      "state": "released",
       "move": [
         "metaverse-specs/openusd-binding",
         "metaverse-specs/extras/openusd-binding",
@@ -107,7 +107,7 @@
       "$comment": "Releasable OpenUSD Part 2. Its NodeSet is self-contained on base OPC UA, but its example regeneration and round-trip tooling read Part 1 example USDA assets, so Part 1 is in the release closure.",
       "title": "OPC UA for OpenUSD — Part 2: Scene Materialization",
       "submitted": true,
-      "state": "public",
+      "state": "released",
       "move": [
         "metaverse-specs/openusd-scene",
         "metaverse-specs/extras/openusd-scene",
