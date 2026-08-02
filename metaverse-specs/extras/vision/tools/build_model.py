@@ -337,7 +337,8 @@ def struct_type(nid, name, desc, fields):
     _next_encoding[0] += 1
     ref(nid, HasEncoding, T(enc))
     add(enc, "UAObject", "Default Binary", f"{name}_Encoding_DefaultBinary",
-        desc="Default Binary encoding of the structure.")
+        desc="Default Binary encoding of the structure.",
+        attrs={"BrowseNameNamespace": 0, "SymbolicName": "DefaultBinary"})
     ref(enc, HasTypeDefinition, DataTypeEncodingType)
     ref(enc, HasEncoding, T(nid), forward=False)
     return nid
@@ -1370,7 +1371,14 @@ def _fmt_reftype(t):
 
 def _emit_node(n):
     tag = n.cls
-    a = [f'{tag} NodeId="{T(n.nid)}"', f'BrowseName="1:{sx.escape(n.bname)}"']
+    # A DataTypeEncoding browses as "Default Binary" in namespace 0: the BrowseName is
+    # standard, not model-defined. Emitting it as 1:Default Binary is what every real
+    # companion NodeSet avoids, and tooling that resolves encodings by BrowseName - the
+    # UA-.NETStandard model source generator among it - cannot find it.
+    prefix = "" if n.attrs.get("BrowseNameNamespace") == 0 else "1:"
+    a = [f'{tag} NodeId="{T(n.nid)}"', f'BrowseName="{prefix}{sx.escape(n.bname)}"']
+    if "SymbolicName" in n.attrs:
+        a.append(f'SymbolicName="{sx.escape(n.attrs["SymbolicName"])}"')
     if n.parent is not None:
         a.append(f'ParentNodeId="{n.parent}"')
     for k in ("DataType", "ValueRank", "ArrayDimensions"):

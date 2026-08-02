@@ -372,7 +372,7 @@
     </References>
     <Definition Name="VisionPose3DDataType"><Field Name="FrameId" DataType="i=12"><Description>FrameId of the CoordinateFrame this pose is expressed in.</Description></Field><Field Name="Position" DataType="i=11" ValueRank="1" ArrayDimensions="3"><Description>Translation (x, y, z) in metres.</Description></Field><Field Name="Orientation" DataType="i=11" ValueRank="1" ArrayDimensions="4"><Description>Unit quaternion (x, y, z, w).</Description></Field><Field Name="Covariance" DataType="i=11" ValueRank="1" ArrayDimensions="36"><Description>Row-major 6x6 covariance, or empty.</Description></Field></Definition>
   </UADataType>
-  <UAObject NodeId="ns=1;i=5001" BrowseName="1:Default Binary">
+  <UAObject NodeId="ns=1;i=5001" BrowseName="Default Binary" SymbolicName="DefaultBinary">
     <DisplayName>Default Binary</DisplayName>
     <Description>Default Binary encoding of the structure.</Description>
     <References>
@@ -390,7 +390,7 @@
     </References>
     <Definition Name="VisionBoundingBox2DDataType"><Field Name="CenterX" DataType="i=11"><Description>Box centre x, in pixels.</Description></Field><Field Name="CenterY" DataType="i=11"><Description>Box centre y, in pixels.</Description></Field><Field Name="Width" DataType="i=11"><Description>Box width, in pixels.</Description></Field><Field Name="Height" DataType="i=11"><Description>Box height, in pixels.</Description></Field><Field Name="Rotation" DataType="i=11"><Description>Rotation about the centre, in degrees.</Description></Field></Definition>
   </UADataType>
-  <UAObject NodeId="ns=1;i=5002" BrowseName="1:Default Binary">
+  <UAObject NodeId="ns=1;i=5002" BrowseName="Default Binary" SymbolicName="DefaultBinary">
     <DisplayName>Default Binary</DisplayName>
     <Description>Default Binary encoding of the structure.</Description>
     <References>
@@ -408,7 +408,7 @@
     </References>
     <Definition Name="VisionBoundingBox3DDataType"><Field Name="Center" DataType="ns=1;i=3050"><Description>Centre pose of the box.</Description></Field><Field Name="Size" DataType="i=11" ValueRank="1" ArrayDimensions="3"><Description>Extent (x, y, z) in metres.</Description></Field></Definition>
   </UADataType>
-  <UAObject NodeId="ns=1;i=5003" BrowseName="1:Default Binary">
+  <UAObject NodeId="ns=1;i=5003" BrowseName="Default Binary" SymbolicName="DefaultBinary">
     <DisplayName>Default Binary</DisplayName>
     <Description>Default Binary encoding of the structure.</Description>
     <References>
@@ -426,7 +426,7 @@
     </References>
     <Definition Name="VisionImageReferenceDataType"><Field Name="Uri" DataType="i=12"><Description>Location of the encoded image.</Description></Field><Field Name="Digest" DataType="i=15"><Description>Cryptographic digest of the referenced bytes.</Description></Field><Field Name="DigestAlgorithm" DataType="i=12"><Description>Digest algorithm; default SHA-256.</Description></Field><Field Name="Format" DataType="ns=1;i=3003"><Description>Container or encoding of the image.</Description></Field><Field Name="PixelFormat" DataType="i=12"><Description>Pixel format using GenICam PFNC naming, for example Mono8, BayerRG12 or RGB8.</Description></Field><Field Name="Width" DataType="i=7"><Description>Image width in pixels.</Description></Field><Field Name="Height" DataType="i=7"><Description>Image height in pixels.</Description></Field><Field Name="SizeBytes" DataType="i=7"><Description>Encoded size, so a client can decide whether to fetch.</Description></Field><Field Name="Timestamp" DataType="i=294"><Description>Acquisition time of the frame.</Description></Field></Definition>
   </UADataType>
-  <UAObject NodeId="ns=1;i=5004" BrowseName="1:Default Binary">
+  <UAObject NodeId="ns=1;i=5004" BrowseName="Default Binary" SymbolicName="DefaultBinary">
     <DisplayName>Default Binary</DisplayName>
     <Description>Default Binary encoding of the structure.</Description>
     <References>
@@ -444,7 +444,7 @@
     </References>
     <Definition Name="VisionIntrinsicsDataType"><Field Name="Fx" DataType="i=11"><Description>Focal length in pixels, x.</Description></Field><Field Name="Fy" DataType="i=11"><Description>Focal length in pixels, y.</Description></Field><Field Name="Cx" DataType="i=11"><Description>Principal point x, in pixels.</Description></Field><Field Name="Cy" DataType="i=11"><Description>Principal point y, in pixels.</Description></Field><Field Name="Skew" DataType="i=11"><Description>Axis skew; 0 for square pixels.</Description></Field><Field Name="DistortionModel" DataType="ns=1;i=3014"><Description>Model the coefficients belong to.</Description></Field><Field Name="DistortionCoefficients" DataType="i=11" ValueRank="1"><Description>Coefficients, model-ordered.</Description></Field><Field Name="Width" DataType="i=7"><Description>Image width these intrinsics are valid for.</Description></Field><Field Name="Height" DataType="i=7"><Description>Image height these intrinsics are valid for.</Description></Field></Definition>
   </UADataType>
-  <UAObject NodeId="ns=1;i=5005" BrowseName="1:Default Binary">
+  <UAObject NodeId="ns=1;i=5005" BrowseName="Default Binary" SymbolicName="DefaultBinary">
     <DisplayName>Default Binary</DisplayName>
     <Description>Default Binary encoding of the structure.</Description>
     <References>
@@ -462,7 +462,7 @@
     </References>
     <Definition Name="VisionDetectionDataType"><Field Name="DetectionId" DataType="i=12"><Description>Identifier unique within the result.</Description></Field><Field Name="ClassLabel" DataType="i=12"><Description>Human-readable class name.</Description></Field><Field Name="ClassId" DataType="i=7"><Description>Numeric class identifier within the model label set.</Description></Field><Field Name="Confidence" DataType="i=11"><Description>Score in the range 0.0 to 1.0.</Description></Field><Field Name="HasBoundingBox2D" DataType="i=1"><Description>True when BoundingBox2D is meaningful.</Description></Field><Field Name="BoundingBox2D" DataType="ns=1;i=3051"><Description>Image-space box.</Description></Field><Field Name="HasBoundingBox3D" DataType="i=1"><Description>True when BoundingBox3D is meaningful.</Description></Field><Field Name="BoundingBox3D" DataType="ns=1;i=3052"><Description>Object-space box.</Description></Field><Field Name="HasPose" DataType="i=1"><Description>True when Pose is meaningful.</Description></Field><Field Name="Pose" DataType="ns=1;i=3050"><Description>6-DoF pose, for example a grasp pose.</Description></Field><Field Name="TrackId" DataType="i=12"><Description>Stable identity across frames, when tracking is done.</Description></Field></Definition>
   </UADataType>
-  <UAObject NodeId="ns=1;i=5006" BrowseName="1:Default Binary">
+  <UAObject NodeId="ns=1;i=5006" BrowseName="Default Binary" SymbolicName="DefaultBinary">
     <DisplayName>Default Binary</DisplayName>
     <Description>Default Binary encoding of the structure.</Description>
     <References>
@@ -480,7 +480,7 @@
     </References>
     <Definition Name="VisionCharacteristicDataType"><Field Name="CharacteristicId" DataType="i=12"><Description>Identifier of the characteristic measured.</Description></Field><Field Name="Name" DataType="i=12"><Description>Human-readable characteristic name.</Description></Field><Field Name="Nominal" DataType="i=11"><Description>Design or target value.</Description></Field><Field Name="Actual" DataType="i=11"><Description>Measured value.</Description></Field><Field Name="Deviation" DataType="i=11"><Description>Actual minus Nominal.</Description></Field><Field Name="LowerTolerance" DataType="i=11"><Description>Lower tolerance limit, relative to Nominal.</Description></Field><Field Name="UpperTolerance" DataType="i=11"><Description>Upper tolerance limit, relative to Nominal.</Description></Field><Field Name="Uncertainty" DataType="i=11"><Description>Expanded measurement uncertainty (ISO 14253), in the same unit as Actual. 0 means not reported.</Description></Field><Field Name="Unit" DataType="i=887"><Description>Engineering unit of Nominal, Actual and Deviation.</Description></Field><Field Name="Status" DataType="ns=1;i=3010"><Description>Per-characteristic outcome.</Description></Field></Definition>
   </UADataType>
-  <UAObject NodeId="ns=1;i=5007" BrowseName="1:Default Binary">
+  <UAObject NodeId="ns=1;i=5007" BrowseName="Default Binary" SymbolicName="DefaultBinary">
     <DisplayName>Default Binary</DisplayName>
     <Description>Default Binary encoding of the structure.</Description>
     <References>
@@ -498,7 +498,7 @@
     </References>
     <Definition Name="VisionStreamSessionDataType"><Field Name="SessionToken" DataType="i=15"><Description>Opaque token identifying the lease.</Description></Field><Field Name="Uri" DataType="i=12"><Description>Media URI to open.</Description></Field><Field Name="Protocol" DataType="ns=1;i=3002"><Description>Protocol of the returned URI.</Description></Field><Field Name="ExpiresAt" DataType="i=294"><Description>Expiry after which the Uri is no longer valid.</Description></Field></Definition>
   </UADataType>
-  <UAObject NodeId="ns=1;i=5008" BrowseName="1:Default Binary">
+  <UAObject NodeId="ns=1;i=5008" BrowseName="Default Binary" SymbolicName="DefaultBinary">
     <DisplayName>Default Binary</DisplayName>
     <Description>Default Binary encoding of the structure.</Description>
     <References>
@@ -516,7 +516,7 @@
     </References>
     <Definition Name="VisionTensorSignatureDataType"><Field Name="Name" DataType="i=12"><Description>Tensor name as declared by the model.</Description></Field><Field Name="ElementType" DataType="i=12"><Description>Element type, for example float32, uint8 or int64.</Description></Field><Field Name="Shape" DataType="i=6" ValueRank="1"><Description>Dimensions; -1 marks a dynamic axis.</Description></Field><Field Name="Layout" DataType="i=12"><Description>Optional axis layout hint, for example NCHW or NHWC.</Description></Field></Definition>
   </UADataType>
-  <UAObject NodeId="ns=1;i=5009" BrowseName="1:Default Binary">
+  <UAObject NodeId="ns=1;i=5009" BrowseName="Default Binary" SymbolicName="DefaultBinary">
     <DisplayName>Default Binary</DisplayName>
     <Description>Default Binary encoding of the structure.</Description>
     <References>

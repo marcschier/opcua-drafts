@@ -278,7 +278,7 @@
     </References>
     <Definition Name="Pose3DDataType"><Field Name="FrameId" DataType="i=12"><Description>FrameId of the CoordinateFrame this pose is expressed in; empty for the default work frame.</Description></Field><Field Name="Position" DataType="i=11" ValueRank="1" ArrayDimensions="3"><Description>Translation (x, y, z) in metres.</Description></Field><Field Name="Orientation" DataType="i=11" ValueRank="1" ArrayDimensions="4"><Description>Unit quaternion (x, y, z, w).</Description></Field></Definition>
   </UADataType>
-  <UAObject NodeId="ns=1;i=5001" BrowseName="1:Default Binary">
+  <UAObject NodeId="ns=1;i=5001" BrowseName="Default Binary" SymbolicName="DefaultBinary">
     <DisplayName>Default Binary</DisplayName>
     <Description>Default Binary encoding of the structure.</Description>
     <References>
@@ -296,7 +296,7 @@
     </References>
     <Definition Name="MotionConstraintsDataType"><Field Name="SpeedFraction" DataType="i=11"><Description>Fraction of the configured maximum speed, in the range 0 to 1. This is the portable speed control: every vendor supports it.</Description></Field><Field Name="CartesianSpeed" DataType="i=11"><Description>Tool centre point speed in metres per second. Ignored by joint moves.</Description></Field><Field Name="CartesianAcceleration" DataType="i=11"><Description>Tool centre point acceleration in metres per second squared.</Description></Field><Field Name="Jerk" DataType="i=11"><Description>Rate of change of acceleration in metres per second cubed.</Description></Field></Definition>
   </UADataType>
-  <UAObject NodeId="ns=1;i=5002" BrowseName="1:Default Binary">
+  <UAObject NodeId="ns=1;i=5002" BrowseName="Default Binary" SymbolicName="DefaultBinary">
     <DisplayName>Default Binary</DisplayName>
     <Description>Default Binary encoding of the structure.</Description>
     <References>
@@ -314,7 +314,7 @@
     </References>
     <Definition Name="BlendDataType"><Field Name="Termination" DataType="ns=1;i=3004"><Description>Exact stop, or blend into the next motion.</Description></Field><Field Name="Radius" DataType="i=11"><Description>Blend radius in metres, measured from the target. Zero or less means the Server chooses.</Description></Field></Definition>
   </UADataType>
-  <UAObject NodeId="ns=1;i=5003" BrowseName="1:Default Binary">
+  <UAObject NodeId="ns=1;i=5003" BrowseName="Default Binary" SymbolicName="DefaultBinary">
     <DisplayName>Default Binary</DisplayName>
     <Description>Default Binary encoding of the structure.</Description>
     <References>
@@ -350,7 +350,7 @@
     </References>
     <Definition Name="JointMoveIntentDataType"><Field Name="HasJointTargets" DataType="i=1"><Description>True when JointTargets is meaningful; False when TargetPose is.</Description></Field><Field Name="JointTargets" DataType="i=11" ValueRank="1"><Description>One value per axis, in the order the axes are declared under the controller: radians for a Revolute axis, metres for a Prismatic one.</Description></Field><Field Name="TargetPose" DataType="ns=1;i=3050"><Description>Pose to reach, used when HasJointTargets is False.</Description></Field></Definition>
   </UADataType>
-  <UAObject NodeId="ns=1;i=5004" BrowseName="1:Default Binary">
+  <UAObject NodeId="ns=1;i=5004" BrowseName="Default Binary" SymbolicName="DefaultBinary">
     <DisplayName>Default Binary</DisplayName>
     <Description>Default Binary encoding of the structure.</Description>
     <References>
@@ -368,7 +368,7 @@
     </References>
     <Definition Name="LinearMoveIntentDataType"><Field Name="Target" DataType="ns=1;i=3050"><Description>Pose to reach.</Description></Field></Definition>
   </UADataType>
-  <UAObject NodeId="ns=1;i=5005" BrowseName="1:Default Binary">
+  <UAObject NodeId="ns=1;i=5005" BrowseName="Default Binary" SymbolicName="DefaultBinary">
     <DisplayName>Default Binary</DisplayName>
     <Description>Default Binary encoding of the structure.</Description>
     <References>
@@ -386,7 +386,7 @@
     </References>
     <Definition Name="CircularMoveIntentDataType"><Field Name="ViaPoint" DataType="ns=1;i=3050"><Description>A pose on the arc between the start and the target. Only its position is used.</Description></Field><Field Name="Target" DataType="ns=1;i=3050"><Description>Pose to reach.</Description></Field></Definition>
   </UADataType>
-  <UAObject NodeId="ns=1;i=5006" BrowseName="1:Default Binary">
+  <UAObject NodeId="ns=1;i=5006" BrowseName="Default Binary" SymbolicName="DefaultBinary">
     <DisplayName>Default Binary</DisplayName>
     <Description>Default Binary encoding of the structure.</Description>
     <References>
@@ -404,7 +404,7 @@
     </References>
     <Definition Name="GraspIntentDataType"><Field Name="Tool" DataType="i=17"><Description>The Tool to actuate. Null means the tool currently fitted.</Description></Field><Field Name="Force" DataType="i=11"><Description>Grasp force in newtons. Zero or less means the Server chooses.</Description></Field><Field Name="Width" DataType="i=11"><Description>Opening at which to close, in metres. Zero or less means the Server chooses.</Description></Field><Field Name="Approach" DataType="ns=1;i=3006"><Description>Direction of approach.</Description></Field></Definition>
   </UADataType>
-  <UAObject NodeId="ns=1;i=5007" BrowseName="1:Default Binary">
+  <UAObject NodeId="ns=1;i=5007" BrowseName="Default Binary" SymbolicName="DefaultBinary">
     <DisplayName>Default Binary</DisplayName>
     <Description>Default Binary encoding of the structure.</Description>
     <References>
@@ -422,7 +422,7 @@
     </References>
     <Definition Name="ReleaseIntentDataType"><Field Name="Tool" DataType="i=17"><Description>The Tool to actuate. Null means the tool currently fitted.</Description></Field><Field Name="Mode" DataType="ns=1;i=3005"><Description>How the object is given up.</Description></Field><Field Name="HasTarget" DataType="i=1"><Description>True when Target is meaningful.</Description></Field><Field Name="Target" DataType="ns=1;i=3050"><Description>Where to place the object, when Mode is Place.</Description></Field></Definition>
   </UADataType>
-  <UAObject NodeId="ns=1;i=5008" BrowseName="1:Default Binary">
+  <UAObject NodeId="ns=1;i=5008" BrowseName="Default Binary" SymbolicName="DefaultBinary">
     <DisplayName>Default Binary</DisplayName>
     <Description>Default Binary encoding of the structure.</Description>
     <References>
@@ -440,7 +440,7 @@
     </References>
     <Definition Name="PickIntentDataType"><Field Name="Source" DataType="i=17"><Description>The Location to pick from.</Description></Field><Field Name="Tool" DataType="i=17"><Description>The Tool to use. Null means the tool currently fitted.</Description></Field><Field Name="ObjectClass" DataType="i=12"><Description>What to pick, when the location can hold more than one kind. Empty means whatever is there.</Description></Field><Field Name="Force" DataType="i=11"><Description>Grasp force in newtons. Zero or less means the Server chooses.</Description></Field><Field Name="Approach" DataType="ns=1;i=3006"><Description>Direction of approach.</Description></Field><Field Name="Attributes" DataType="i=14533" ValueRank="1"><Description>Further named parameters the Server declares in its capabilities.</Description></Field></Definition>
   </UADataType>
-  <UAObject NodeId="ns=1;i=5009" BrowseName="1:Default Binary">
+  <UAObject NodeId="ns=1;i=5009" BrowseName="Default Binary" SymbolicName="DefaultBinary">
     <DisplayName>Default Binary</DisplayName>
     <Description>Default Binary encoding of the structure.</Description>
     <References>
@@ -458,7 +458,7 @@
     </References>
     <Definition Name="PlaceIntentDataType"><Field Name="Destination" DataType="i=17"><Description>The Location to place at.</Description></Field><Field Name="Tool" DataType="i=17"><Description>The Tool to use. Null means the tool currently fitted.</Description></Field><Field Name="Approach" DataType="ns=1;i=3006"><Description>Direction of approach.</Description></Field><Field Name="Attributes" DataType="i=14533" ValueRank="1"><Description>Further named parameters the Server declares in its capabilities.</Description></Field></Definition>
   </UADataType>
-  <UAObject NodeId="ns=1;i=5010" BrowseName="1:Default Binary">
+  <UAObject NodeId="ns=1;i=5010" BrowseName="Default Binary" SymbolicName="DefaultBinary">
     <DisplayName>Default Binary</DisplayName>
     <Description>Default Binary encoding of the structure.</Description>
     <References>
@@ -476,7 +476,7 @@
     </References>
     <Definition Name="ToolChangeIntentDataType"><Field Name="Tool" DataType="i=17"><Description>The Tool to fit. Null means release the fitted tool and fit nothing.</Description></Field><Field Name="DockStation" DataType="i=17"><Description>The Location of the tool changer. Null lets the Server choose.</Description></Field></Definition>
   </UADataType>
-  <UAObject NodeId="ns=1;i=5011" BrowseName="1:Default Binary">
+  <UAObject NodeId="ns=1;i=5011" BrowseName="Default Binary" SymbolicName="DefaultBinary">
     <DisplayName>Default Binary</DisplayName>
     <Description>Default Binary encoding of the structure.</Description>
     <References>
@@ -494,7 +494,7 @@
     </References>
     <Definition Name="SetOutputIntentDataType"><Field Name="Output" DataType="i=17"><Description>The OutputSignal to write.</Description></Field><Field Name="Value" DataType="i=24"><Description>Value to write, of the signal's own DataType.</Description></Field></Definition>
   </UADataType>
-  <UAObject NodeId="ns=1;i=5012" BrowseName="1:Default Binary">
+  <UAObject NodeId="ns=1;i=5012" BrowseName="Default Binary" SymbolicName="DefaultBinary">
     <DisplayName>Default Binary</DisplayName>
     <Description>Default Binary encoding of the structure.</Description>
     <References>
@@ -512,7 +512,7 @@
     </References>
     <Definition Name="CallProgramIntentDataType"><Field Name="Program" DataType="i=17"><Description>The Program to run.</Description></Field><Field Name="Arguments" DataType="i=14533" ValueRank="1"><Description>Named arguments for the program.</Description></Field></Definition>
   </UADataType>
-  <UAObject NodeId="ns=1;i=5013" BrowseName="1:Default Binary">
+  <UAObject NodeId="ns=1;i=5013" BrowseName="Default Binary" SymbolicName="DefaultBinary">
     <DisplayName>Default Binary</DisplayName>
     <Description>Default Binary encoding of the structure.</Description>
     <References>
@@ -530,7 +530,7 @@
     </References>
     <Definition Name="WaitIntentDataType"><Field Name="Duration" DataType="i=290"><Description>How long to wait, in milliseconds. Zero or less waits until Signal is released.</Description></Field><Field Name="Signal" DataType="i=17"><Description>An OutputSignal or other node whose becoming true ends the wait. Null waits only for Duration.</Description></Field></Definition>
   </UADataType>
-  <UAObject NodeId="ns=1;i=5014" BrowseName="1:Default Binary">
+  <UAObject NodeId="ns=1;i=5014" BrowseName="Default Binary" SymbolicName="DefaultBinary">
     <DisplayName>Default Binary</DisplayName>
     <Description>Default Binary encoding of the structure.</Description>
     <References>
@@ -548,7 +548,7 @@
     </References>
     <Definition Name="IntentResultDataType"><Field Name="IntentId" DataType="i=12"><Description>The intent this describes.</Description></Field><Field Name="State" DataType="ns=1;i=3001"><Description>Terminal state reached.</Description></Field><Field Name="Failure" DataType="ns=1;i=3009"><Description>Reason, or None on success.</Description></Field><Field Name="Message" DataType="i=21"><Description>Human-readable detail. Never parsed.</Description></Field><Field Name="HasAchievedPose" DataType="i=1"><Description>True when AchievedPose is meaningful.</Description></Field><Field Name="AchievedPose" DataType="ns=1;i=3050"><Description>Where the tool centre point came to rest, or was when blending began.</Description></Field><Field Name="StartTime" DataType="i=294"><Description>When execution began.</Description></Field><Field Name="EndTime" DataType="i=294"><Description>When the terminal state was reached.</Description></Field><Field Name="Outputs" DataType="i=14533" ValueRank="1"><Description>Named results the intent produced, for example the identity of a picked object.</Description></Field></Definition>
   </UADataType>
-  <UAObject NodeId="ns=1;i=5015" BrowseName="1:Default Binary">
+  <UAObject NodeId="ns=1;i=5015" BrowseName="Default Binary" SymbolicName="DefaultBinary">
     <DisplayName>Default Binary</DisplayName>
     <Description>Default Binary encoding of the structure.</Description>
     <References>
@@ -566,7 +566,7 @@
     </References>
     <Definition Name="MissionStepDataType"><Field Name="StepId" DataType="i=12"><Description>Identifier unique within the mission.</Description></Field><Field Name="SequenceId" DataType="i=7"><Description>Execution order within the mission, ascending.</Description></Field><Field Name="Released" DataType="i=1"><Description>True for a base step, which is committed and immutable. False for a horizon step, which an update may replace or remove.</Description></Field><Field Name="Intent" DataType="ns=1;i=3053" AllowSubTypes="true"><Description>The intent this step executes.</Description></Field><Field Name="Status" DataType="ns=1;i=3001"><Description>Reported status. Where Operation is not null its state machine is authoritative and this reflects it.</Description></Field><Field Name="Operation" DataType="i=17"><Description>The IntentOperation executing this step, or null while the step has not begun.</Description></Field></Definition>
   </UADataType>
-  <UAObject NodeId="ns=1;i=5016" BrowseName="1:Default Binary">
+  <UAObject NodeId="ns=1;i=5016" BrowseName="Default Binary" SymbolicName="DefaultBinary">
     <DisplayName>Default Binary</DisplayName>
     <Description>Default Binary encoding of the structure.</Description>
     <References>
@@ -584,7 +584,7 @@
     </References>
     <Definition Name="MissionDataType"><Field Name="MissionId" DataType="i=12"><Description>Client-assigned identifier. Empty asks the Server to assign one, which it returns.</Description></Field><Field Name="MissionUpdateId" DataType="i=7"><Description>Revision of this mission, increasing. The first submission is 0.</Description></Field><Field Name="Label" DataType="i=21"><Description>Human-readable description. Never interpreted.</Description></Field><Field Name="Steps" DataType="ns=1;i=3067" ValueRank="1"><Description>The steps, in ascending SequenceId order.</Description></Field></Definition>
   </UADataType>
-  <UAObject NodeId="ns=1;i=5017" BrowseName="1:Default Binary">
+  <UAObject NodeId="ns=1;i=5017" BrowseName="Default Binary" SymbolicName="DefaultBinary">
     <DisplayName>Default Binary</DisplayName>
     <Description>Default Binary encoding of the structure.</Description>
     <References>
@@ -602,7 +602,7 @@
     </References>
     <Definition Name="IntentCapabilityDataType"><Field Name="IntentType" DataType="i=17"><Description>The DataType of the intent, a subtype of IntentDataType.</Description></Field><Field Name="Description" DataType="i=21"><Description>What this Server does with it.</Description></Field><Field Name="CancelSupported" DataType="i=1"><Description>True when Cancel is honoured for it. A Server may still refuse a particular cancel; see clause 6.5.</Description></Field><Field Name="PauseSupported" DataType="i=1"><Description>True when Pause and Resume are honoured.</Description></Field><Field Name="RetrySupported" DataType="i=1"><Description>True when it can terminate Retriable and be re-attempted.</Description></Field><Field Name="SupportedBufferModes" DataType="ns=1;i=3002" ValueRank="1"><Description>Buffer modes accepted for it. Aborting is always accepted and always listed.</Description></Field><Field Name="SupportedBlockingModes" DataType="ns=1;i=3003" ValueRank="1"><Description>Blocking modes accepted for it.</Description></Field><Field Name="Attributes" DataType="i=14533" ValueRank="1"><Description>Named parameters this Server recognises in the intent's Attributes field.</Description></Field></Definition>
   </UADataType>
-  <UAObject NodeId="ns=1;i=5018" BrowseName="1:Default Binary">
+  <UAObject NodeId="ns=1;i=5018" BrowseName="Default Binary" SymbolicName="DefaultBinary">
     <DisplayName>Default Binary</DisplayName>
     <Description>Default Binary encoding of the structure.</Description>
     <References>
