@@ -22,11 +22,14 @@ SELF_CONTAINED = [
     # release-spec-validator:ICAgICJleHRyYXMvb3BlbnVzZC1hcnRpZmFjdHMvdG9vbHMvdmFsaWRhdGVfbG9jYWwucHkiLA==
     # release-spec-validator:ICAgICJleHRyYXMvb3BlbnVzZC1hcnRpZmFjdHMvdG9vbHMvdmFsaWRhdGVfc3BlYy5weSIs
     "extras/vision/tools/validate_local.py",
+    "extras/robot-intent/tools/validate_local.py",
     # openusd-scene added in the Scene Materialization (Part 2) work.
     # openusd-artifacts added with the xRegistry artifact registry (Bindings 0.4.0).
     # validate_spec added with the submittable xRegistry domain spec; it keeps
     # xRegistry-OpenUsd.md and xRegistry-OpenUsd.model.json from drifting apart.
     # vision added in the OPC UA - Vision work.
+    # robot-intent added in the OPC UA - Robot Intent work; it also cross-checks the
+    # specification against the model in both directions.
 ]
 
 # Validators that additionally need untracked base data (none yet).
