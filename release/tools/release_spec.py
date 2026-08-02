@@ -296,8 +296,6 @@ def inline_link_destination(body: str) -> str:
 
 
 def repair_markdown_release(text: str, path: str, files: set[str], roots: list[str]) -> tuple[str, int]:
-    if f"<!-- {MD_MARKER}:" in text:
-        return text, 0
     count = 0
 
     def replace_ref(match: re.Match[str]) -> str:
@@ -314,7 +312,6 @@ def repair_markdown_release(text: str, path: str, files: set[str], roots: list[s
         r"^(?P<indent>[ \t]{0,3})\[(?P<label>[^\]\n]+)\]:[ \t]*(?P<target>\S.*)$",
         re.MULTILINE,
     )
-    text = ref_re.sub(replace_ref, text)
 
     inline_re = re.compile(r"(?P<bang>!?)\[(?P<label>[^\]\n]+)\]\((?P<body>[^)\n]+)\)")
 
@@ -329,11 +326,27 @@ def repair_markdown_release(text: str, path: str, files: set[str], roots: list[s
             return f"<!-- {MD_MARKER}:{b64(original)} -->{visible}<!-- /{MD_MARKER} -->"
         return original
 
-    text = inline_re.sub(replace_inline, text)
-    return text, count
+    def repair(segment: str) -> str:
+        return inline_re.sub(replace_inline, ref_re.sub(replace_ref, segment))
+
+    # Releases accumulate: a file repaired by an earlier release still has to be repairable by
+    # the next one. Rewrite only the text outside existing capsules, so their encoded originals
+    # are never re-encoded and a second release can still fix its own references.
+    capsule_re = re.compile(
+        rf"<!-- {re.escape(MD_MARKER)}:[A-Za-z0-9+/=]+ -->.*?<!-- /{re.escape(MD_MARKER)} -->",
+        re.DOTALL,
+    )
+    out: list[str] = []
+    index = 0
+    for capsule in capsule_re.finditer(text):
+        out.append(repair(text[index : capsule.start()]))
+        out.append(capsule.group(0))
+        index = capsule.end()
+    out.append(repair(text[index:]))
+    return "".join(out), count
 
 
-def repair_markdown_return(text: str) -> tuple[str, int]:
+def repair_markdown_return(text: str, path: str, files: set[str], roots: list[str]) -> tuple[str, int]:
     pattern = re.compile(
         rf"<!-- {re.escape(MD_MARKER)}:([A-Za-z0-9+/=]+) -->.*?<!-- /{re.escape(MD_MARKER)} -->",
         re.DOTALL,
@@ -342,13 +355,18 @@ def repair_markdown_return(text: str) -> tuple[str, int]:
 
     def restore(match: re.Match[str]) -> str:
         nonlocal count
+        original = unb64(match.group(1))
+        if not capsule_belongs_to(original, path, files, roots):
+            return match.group(0)
         count += 1
-        return unb64(match.group(1))
+        return original
 
     return pattern.sub(restore, text), count
 
 
-def repair_markdown_reverse_lines_release(text: str, moved_dirs: set[str]) -> tuple[str, int]:
+def repair_markdown_reverse_lines_release(
+    text: str, moved_dirs: set[str], path: str, files: set[str], roots: list[str]
+) -> tuple[str, int]:
     if not moved_dirs:
         return text, 0
     count = 0
@@ -362,15 +380,29 @@ def repair_markdown_reverse_lines_release(text: str, moved_dirs: set[str]) -> tu
         raw, newline = split_line_ending(line)
         stripped = raw.lstrip()
         haystack = raw.lower()
+        item = re.match(r"^(?P<prefix>[ \t]*[-*][ \t]+)(?P<content>.*)$", raw)
         is_list_item = stripped.startswith(("- ", "* "))
-        has_markdown_link = "](" in raw
+        # Only a link that points at something being moved exempts the line, because the
+        # link-level repair will handle that one. A link to a target that stays public leaves
+        # the line describing a specification that is no longer here.
+        has_link_into_moved = False
+        for match in re.finditer(r"\]\((?P<body>[^)\n]+)\)", raw):
+            resolved = resolve_link(path, inline_link_destination(match.group("body")))
+            if resolved and belongs_to(resolved, files, roots):
+                has_link_into_moved = True
+                break
         names_moved_dir = any(
             f"`{token}`" in haystack or f"`{token.rstrip('/')}`" in haystack
             for token in moved_dir_tokens
         )
-        if is_list_item and names_moved_dir and not has_markdown_link:
+        if is_list_item and item and names_moved_dir and not has_link_into_moved:
             count += 1
-            out.append(f"<!-- {MD_MARKER}:{b64(raw)} -->{note}<!-- /{MD_MARKER} -->{newline}")
+            # Keep the bullet and its indentation outside the capsule, so the list structure
+            # survives. Replacing the whole line leaves the surrounding items looking
+            # unindented and unseparated, which markdownlint rejects.
+            prefix = item.group("prefix")
+            content = item.group("content")
+            out.append(f"{prefix}<!-- {MD_MARKER}:{b64(content)} -->{note}<!-- /{MD_MARKER} -->{newline}")
         else:
             out.append(line)
     return "".join(out), count
@@ -403,15 +435,53 @@ def repair_validator_release(text: str, aggregate: str, files: set[str], roots: 
     return "".join(out), count
 
 
-def repair_validator_return(text: str) -> tuple[str, int]:
+def capsule_belongs_to(original: str, source: str, files: set[str], roots: list[str]) -> bool:
+    """Whether an encoded original refers to the file set currently being returned.
+
+    Releases accumulate, so one file can hold capsules written by several releases. A return
+    must undo only its own, or restoring one specification would silently re-enable another
+    that is still private — re-enabling a validator whose files are absent, for instance.
+    """
+    for match in re.finditer(r"\]\((?P<body>[^)\n]+)\)", original):
+        resolved = resolve_link(source, inline_link_destination(match.group("body")))
+        if resolved and belongs_to(resolved, files, roots):
+            return True
+    match = re.match(r"^[ \t]{0,3}\[[^\]\n]+\]:[ \t]*(?P<target>\S.*)$", original)
+    if match:
+        resolved = resolve_link(source, match.group("target"))
+        if resolved and belongs_to(resolved, files, roots):
+            return True
+    # Whole-line capsules carry a prose bullet that names a moved directory in backticks and
+    # holds no link, so there is nothing to resolve; match them the same way the release did.
+    haystack = original.lower()
+    for root in roots:
+        token = norm(root).strip("/").lower()
+        if not token:
+            continue
+        if f"`{token}/`" in haystack or f"`{token}`" in haystack:
+            return True
+        leaf = token.rsplit("/", 1)[-1]
+        if f"`{leaf}/`" in haystack or f"`{leaf}`" in haystack:
+            return True
+    return False
+
+
+def repair_validator_return(text: str, aggregate: str, files: set[str], roots: list[str]) -> tuple[str, int]:
     count = 0
     out: list[str] = []
+    base = posixpath.dirname(aggregate)
     marker_re = re.compile(rf"^(\s*)# {re.escape(VALIDATOR_MARKER)}:([A-Za-z0-9+/=]+)$")
     for line in text.splitlines(keepends=True):
         raw, newline = split_line_ending(line)
         match = marker_re.match(raw)
-        if match:
-            out.append(unb64(match.group(2)) + newline)
+        if not match:
+            out.append(line)
+            continue
+        original = unb64(match.group(2))
+        entry = re.search(r"[\"'](?P<target>[^\"']+)[\"']", original)
+        target = norm(posixpath.join(base, entry.group("target"))) if entry else None
+        if target is None or belongs_to(target, files, roots):
+            out.append(original + newline)
             count += 1
         else:
             out.append(line)
@@ -649,7 +719,7 @@ def text_repairs_release(manifest, closure: list[str], files: list[str], roots: 
         new, count = repair_markdown_release(old, r, moving, roots)
         line_count = 0
         if r in markdown_reverse_refs:
-            new, line_count = repair_markdown_reverse_lines_release(new, moved_dirs)
+            new, line_count = repair_markdown_reverse_lines_release(new, moved_dirs, r, moving, roots)
         total = count + line_count
         add_change(
             changes,
@@ -668,7 +738,7 @@ def text_repairs_release(manifest, closure: list[str], files: list[str], roots: 
     return changes
 
 
-def text_repairs_return(manifest, closure: list[str], files: list[str], import_dir: Path | None) -> list[TextChange]:
+def text_repairs_return(manifest, closure: list[str], files: list[str], import_dir: Path | None, roots: list[str]) -> list[TextChange]:
     changes: list[TextChange] = []
     import_files = set(files)
 
@@ -677,7 +747,7 @@ def text_repairs_return(manifest, closure: list[str], files: list[str], import_d
         if not path.exists():
             continue
         old = read_text(path)
-        new, count = repair_validator_return(old)
+        new, count = repair_validator_return(old, aggregate, import_files, roots)
         add_change(changes, aggregate, old, new, f"restore {count} validator entrie(s)")
 
     batch = repo_path(WORD_BATCH)
@@ -691,7 +761,7 @@ def text_repairs_return(manifest, closure: list[str], files: list[str], import_d
             continue
         r = rel(path)
         old = planned_text(r, changes) if any(c.path == r for c in changes) else read_text(path)
-        new, count = repair_markdown_return(old)
+        new, count = repair_markdown_return(old, r, import_files, roots)
         add_change(changes, r, old, new, f"restore {count} Markdown link(s)")
 
     workflow = repo_path(AGENT_TASK)
@@ -788,7 +858,7 @@ def build_plan(manifest, action: str, spec_id: str, export_dir: str | None, impo
             manual,
             Path(export_dir).resolve() if export_dir else None,
         )
-    changes = text_repairs_return(manifest, closure, files, import_path)
+    changes = text_repairs_return(manifest, closure, files, import_path, roots)
     manual = manual_steps_return_vendors(vendor_files, import_path, changes)
     return Plan(action, spec_id, closure, files, export_files, vendor_files, changes, manual, None, import_path)
 
@@ -908,6 +978,25 @@ def restore_text_backups(backups: dict[str, str]) -> None:
         write_text(repo_path(path), content)
 
 
+def set_spec_states(spec_ids: Iterable[str], state: str) -> None:
+    """Record in the manifest which specifications currently live in the private repository.
+
+    Without this the manifest keeps claiming a released specification is ``public``, so its
+    absent paths fail validation and the first release blocks every later one.
+    """
+    path = REPO / "release" / "manifest.json"
+    text = read_text(path)
+    data = json.loads(text)
+    changed = False
+    for spec_id in spec_ids:
+        spec = data["specs"].get(spec_id)
+        if spec is not None and spec.get("state") != state:
+            spec["state"] = state
+            changed = True
+    if changed:
+        write_text(path, match_eol(dump_json_like_repo(data), text))
+
+
 def apply_plan(plan: Plan) -> int:
     if plan.manual_steps:
         print_plan(plan, dry_run=False)
@@ -927,10 +1016,12 @@ def apply_plan(plan: Plan) -> int:
             copy_to_export(plan.export_files, plan.export_dir)
             backups = apply_text_changes(plan.text_changes)
             delete_public_files(plan.files)
+            set_spec_states(plan.closure, "released")
         else:
             assert plan.import_dir is not None
             copy_from_import(plan.files, plan.import_dir)
             backups = apply_text_changes(plan.text_changes)
+            set_spec_states(plan.closure, "public")
     except Exception as exc:  # noqa: BLE001 - rollback must catch filesystem failures.
         restore_text_backups(backups)
         print(f"Failed; restored edited support files: {exc}", file=sys.stderr)

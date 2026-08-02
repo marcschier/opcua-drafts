@@ -42,15 +42,26 @@ def _path_exists(path: str) -> bool:
     return _abs(path).exists()
 
 
+# Build artefacts that live inside specification trees but are never tracked. The walk is a
+# filesystem walk, not a git walk, so without this an export depends on whether the author
+# happened to run Python locally: .pyc files would be copied into the private repository and
+# counted in the file set the public side is asked to delete.
+_IGNORE_DIRS = {"__pycache__", ".pytest_cache", ".mypy_cache", ".ruff_cache"}
+_IGNORE_SUFFIXES = {".pyc", ".pyo"}
+
+
 def _walk_files(path: str) -> list[str]:
     root = _abs(path)
     if root.is_file():
-        return [_norm(path)]
+        return [] if root.suffix in _IGNORE_SUFFIXES else [_norm(path)]
     if not root.exists():
         return []
     files: list[str] = []
-    for dirpath, _, filenames in os.walk(root):
+    for dirpath, dirnames, filenames in os.walk(root):
+        dirnames[:] = [d for d in dirnames if d not in _IGNORE_DIRS]
         for name in filenames:
+            if Path(name).suffix in _IGNORE_SUFFIXES:
+                continue
             files.append(_rel(Path(dirpath) / name))
     return files
 
@@ -235,12 +246,29 @@ class Manifest:
             if not _path_exists(path):
                 problems.append(f"sharedTooling path does not exist: {path}")
 
+        # Entries declared by a released specification, which lives in the private repository.
+        # A public specification may legitimately reverse-reference one of them.
+        released_roots = [
+            move
+            for spec_id in self.spec_ids()
+            if self.spec(spec_id).get("state") != "public"
+            for move in self.spec(spec_id).get("move", [])
+        ]
+
         for spec_id in self.spec_ids():
             spec = self.spec(spec_id)
+            # A released specification lives in the private repository, so its paths are
+            # absent here by design. Requiring them would make the first release block every
+            # later one, and would make the manifest permanently invalid while review runs.
+            if spec.get("state") != "public":
+                continue
             for key in ("move", "keepPublic", "wordSpecs", "reverseRefs"):
                 for path in spec.get(key, []):
-                    if not _path_exists(path):
-                        problems.append(f"{spec_id}: {key} path does not exist: {_norm(path)}")
+                    if _path_exists(path):
+                        continue
+                    if key == "reverseRefs" and any(_is_under(path, root) for root in released_roots):
+                        continue
+                    problems.append(f"{spec_id}: {key} path does not exist: {_norm(path)}")
             validate_all = spec.get("validateAll")
             if validate_all is not None and not _path_exists(validate_all):
                 problems.append(f"{spec_id}: validateAll path does not exist: {_norm(validate_all)}")
