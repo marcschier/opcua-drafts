@@ -27,7 +27,10 @@ CLOSE_RE = re.compile(r"^\s*```\s*$")
 
 def md_files():
     for dirpath, dirnames, filenames in os.walk(ROOT):
-        dirnames[:] = [d for d in dirnames if d not in SKIP_DIRS]
+        dirnames[:] = [
+            d for d in dirnames
+            if d not in SKIP_DIRS and not os.path.exists(os.path.join(dirpath, d, ".git"))
+        ]
         for name in filenames:
             if name.lower().endswith(".md"):
                 yield os.path.join(dirpath, name)

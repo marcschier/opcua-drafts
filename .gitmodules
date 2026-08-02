@@ -1,0 +1,3 @@
+[submodule "spec-drafts"]
+	path = spec-drafts
+	url = https://github.com/OPCF-Members/spec-drafts.git
