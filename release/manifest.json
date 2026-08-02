@@ -66,7 +66,7 @@
       "$comment": "Releasable OpenUSD Part 1. xRegistry is vendored, not closed over: the private export needs the base NodeSet/CSV and word spec so RequiredModel and validators resolve, but xRegistry stays public because it is a shared base for other public specs and has a public xregistry.org proposal. The xregistry.org OpenUSD domain document/model stay public. metaverse-specs/extras/openusd-artifacts is split at file granularity: build_catalog.py, validate_local.py, examples, schemas and README move because they read private Part 1 example descriptors, while tools/validate_spec.py stays public because it validates only the kept xregistry.org domain document/model.",
       "title": "OPC UA for OpenUSD — Part 1: OpenUSD Binding",
       "submitted": true,
-      "state": "public",
+      "state": "released",
       "move": [
         "metaverse-specs/openusd-binding",
         "metaverse-specs/extras/openusd-binding",
@@ -107,7 +107,7 @@
       "$comment": "Releasable OpenUSD Part 2. Its NodeSet is self-contained on base OPC UA, but its example regeneration and round-trip tooling read Part 1 example USDA assets, so Part 1 is in the release closure.",
       "title": "OPC UA for OpenUSD — Part 2: Scene Materialization",
       "submitted": true,
-      "state": "public",
+      "state": "released",
       "move": [
         "metaverse-specs/openusd-scene",
         "metaverse-specs/extras/openusd-scene",
@@ -138,7 +138,7 @@
       "$comment": "Releasable WoT vocabulary/binding specification. It has no NodeSet RequiredModel and its validator is local to wot-specs/WoT-Binding. wot-specs/extras/WoT-Binding holds the informative crosswalk that supports this draft and links into it, so it travels with the specification like every other extras mirror.",
       "title": "OPC UA — Web of Things Binding",
       "submitted": true,
-      "state": "public",
+      "state": "released",
       "move": [
         "wot-specs/WoT-Binding",
         "wot-specs/extras/WoT-Binding",
@@ -167,7 +167,7 @@
       "$comment": "Releasable WoT Connectivity revision. WoT Binding is in closure because it is part of the OPC Foundation WoT submission. xRegistry is vendored, not closed over: the private export needs the base NodeSet/CSV and word spec so RequiredModel and validators resolve, but xRegistry stays public because it is a shared base for other public specs and has a public xregistry.org proposal.",
       "title": "OPC UA — WoT Connectivity",
       "submitted": true,
-      "state": "public",
+      "state": "released",
       "move": [
         "wot-specs/WoT-Connectivity",
         "word-drafts/tools/specs/wot-connectivity.json",
