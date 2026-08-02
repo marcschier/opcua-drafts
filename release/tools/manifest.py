@@ -87,6 +87,7 @@ class Manifest:
         self._path = path
         self.publicRepo = data.get("publicRepo", "")
         self.privateRepo = data.get("privateRepo", "")
+        self.accessInfo = data.get("accessInfo", "")
         self.sharedTooling = [_norm(p) for p in data.get("sharedTooling", [])]
         self._specs: dict[str, dict[str, Any]] = data.get("specs", {})
 

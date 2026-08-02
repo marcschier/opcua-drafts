@@ -1,0 +1,105 @@
+# Word drafts
+
+The submission-ready Word renderings of the specifications under OPC Foundation review, built
+into the official OPC Foundation companion specification template.
+
+**Word is the review format.** These are the documents to review, and reviewing one is a
+complete contribution — you never have to touch git or markdown.
+
+## These files are generated — please do not edit them
+
+Every `.docx` here is built from the specification markdown and its UANodeSet by
+`tools/build_docx.py`. The build is pure Python and byte-reproducible, so a rebuild of
+unchanged sources produces an identical file. Editing a committed document is pointless: the
+next build discards it silently. To change what a document says, change the markdown or the
+model and regenerate.
+
+Marking up a **downloaded copy** is a different thing entirely, and is exactly the intended
+workflow.
+
+Beside each document are two committed artifacts:
+
+| File | What it is |
+|---|---|
+| `*.docmodel.json` | The intermediate representation the document was rendered from. Committed **because a `.docx` diff is unreadable** — review this instead. |
+| `*.provenance.json` | What each paragraph was rendered from. This is what lets a marked-up copy be turned back into a change to the source. |
+
+`figures/*.pptx` is the editable PowerPoint behind each figure, embedded in the document as an
+OLE object; `figures/*.png` is the preview image Word displays for it.
+
+## Sending a review back
+
+Download the document, turn on track changes, and mark it up — edits as tracked changes,
+questions and objections as comments. Then open an issue, attach the marked-up file, and ask a
+maintainer to add the `word-review` label.
+
+Your tracked changes become the diff of a pull request against the specification source, and
+your comments become a review on that pull request, anchored to the text they were written
+against.
+
+**Every paragraph knows where it came from.** The build stamps a deterministic `w14:paraId` on
+each paragraph and `*.provenance.json` maps those ids to source addresses, so a mark is traced
+to the markdown that produced it rather than matched by text or guessed at by position. A
+paragraph with an unknown id is one you created.
+
+**Not every mark belongs in the markdown.** Each is routed to its real owner:
+
+| Marked content | Owner | What happens |
+|---|---|---|
+| Prose rendered from markdown | that `.md` | applied |
+| Node tables | the UANodeSet / `build_model.py` | reported as a model change request |
+| Clause 4.1, use cases, Annex A identity | `tools/specs/<spec>.json` | reported |
+| Clause and caption numbers, cross-references | Word fields | reported — numbering is not authored |
+| Retained template regions | the OPC 20020 template | reported, and flagged as a deviation |
+
+**A change that cannot be placed exactly is refused.** What you see is not the markdown —
+inline markup is gone, cross-references have become numbers, BrowseNames have been resolved —
+so an edit is applied only where the text it replaces occurs exactly once in that paragraph's
+own source lines. Ambiguity is reported, never guessed at.
+
+**And then it is checked.** The markdown is patched, the document is rebuilt, and every applied
+edit must read the way you wrote it. One that does not is reported as unapplied and blocks the
+pull request.
+
+What the ingest refuses is not a failure but a different kind of work — a comment that states a
+problem rather than supplying text, a mark that belongs in the information model, an edit made
+unplaceable because the prose around it was rewritten. That remainder goes to the coding agent,
+on the branch the ingest already built, and it is given the **report, not the document**, so it
+cannot revert or re-apply your exact edits. It is told that changing nothing is a valid outcome,
+because the branch already carries your marks and a guessed interpretation is worse than none.
+
+Mechanical where it is exact, agentic where it needs judgement, and never both on the same text.
+
+## Commands
+
+```powershell
+# one-time
+pip install -r word-drafts/tools/requirements.txt
+
+# markdown + NodeSet -> .docx  (pure Python, cross-platform, byte-reproducible)
+python word-drafts/tools/build_docx.py word-drafts/tools/specs/<spec-id>.json
+python word-drafts/tools/validate_docx.py word-drafts/tools/specs/<spec-id>.json
+python word-drafts/tools/test_validate_docx.py word-drafts/tools/specs/<spec-id>.json
+
+# the whole batch: build, validate and mutation-test every converted specification
+python word-drafts/tools/build_all.py
+
+# which renderings have fallen behind their sources
+python word-drafts/tools/stale_specs.py
+
+# update the table of contents, the table of figures and every cross-reference, so the
+# committed file opens fully paginated  (needs Word; Windows only)
+pwsh word-drafts/tools/finalize_word.ps1 -Path word-drafts/<document>.docx
+```
+
+`.github/workflows/word-drafts-refresh.yml` keeps the renderings in step with the markdown on
+`main`, collecting the result on one standing pull request.
+
+## The clause map
+
+`tools/specs/<spec-id>.json` drives **both** the Word build and the markdown restructure, so the
+document and its source cannot drift into different structures. The node tables are generated
+from the UANodeSet, so the document cannot drift from the model either.
+
+Add one config per specification, and list it in `tools/specs/batch.json` once its rendering is
+committed.

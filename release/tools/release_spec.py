@@ -364,15 +364,31 @@ def repair_markdown_return(text: str, path: str, files: set[str], roots: list[st
     return pattern.sub(restore, text), count
 
 
+def review_note(manifest) -> str:
+    """The visible text left where a released specification used to be described.
+
+    A reader of the public repository should be able to find the document rather than
+    conclude it was withdrawn, so the note names the private repository and how a member
+    obtains access. It sits outside the capsule's encoded original, so changing it does not
+    affect what a return restores.
+    """
+    private = getattr(manifest, "privateRepo", None) or "OPCF-Members/spec-drafts"
+    access = getattr(manifest, "accessInfo", None) or "https://github.com/OPCF-Members/Help"
+    return (
+        f"*Under OPC Foundation review — moved to "
+        f"[{private}](https://github.com/{private}); "
+        f"OPC Foundation members can [request access]({access}).*"
+    )
+
+
 def repair_markdown_reverse_lines_release(
-    text: str, moved_dirs: set[str], path: str, files: set[str], roots: list[str]
+    text: str, moved_dirs: set[str], path: str, files: set[str], roots: list[str], note: str
 ) -> tuple[str, int]:
     if not moved_dirs:
         return text, 0
     count = 0
     out: list[str] = []
     moved_dir_tokens = {token.strip("/").lower() + "/" for token in moved_dirs if token}
-    note = "*Under OPC Foundation review; temporarily maintained outside this repository.*"
     for line in text.splitlines(keepends=True):
         if f"<!-- {MD_MARKER}:" in line:
             out.append(line)
@@ -719,7 +735,7 @@ def text_repairs_release(manifest, closure: list[str], files: list[str], roots: 
         new, count = repair_markdown_release(old, r, moving, roots)
         line_count = 0
         if r in markdown_reverse_refs:
-            new, line_count = repair_markdown_reverse_lines_release(new, moved_dirs, r, moving, roots)
+            new, line_count = repair_markdown_reverse_lines_release(new, moved_dirs, r, moving, roots, review_note(manifest))
         total = count + line_count
         add_change(
             changes,
