@@ -51,22 +51,19 @@ turn the discussion into concrete changes to the source and regenerate everythin
 
 | Artifact | What it is |
 |---|---|
-| `OPC-UA-OpenUSD-Binding-Part1.docx` | OpenUSD Binding, Part 1. |
-| `OPC-UA-OpenUSD-Scene-Part2.docx` | OpenUSD Scene Materialization, Part 2. |
 | `OPC-UA-xRegistry.docx` | xRegistry, the abstract registry base model. |
 | `OPC-UA-Schema-Registry.docx` | Schema Registry, a domain registry on that base. |
 | `OPC-UA-Observability-Export.docx` | Observability Export. |
-| `OPC-UA-WoT-Connectivity.docx` | WoT Connectivity. |
-| `OPC-UA-WoT-Binding.docx` | WoT Binding — declares a template deviation; see below. |
 | `OPC-UA-Generators.docx` | Generators (generator sets). |
 | `OPC-UA-Data-Channels.docx` | Data Channels — extends the base namespace; see below. |
-| `OPC-UA-Avro-Encoding.docx` | Apache Avro DataEncoding — declares a template deviation; see below. |
 | `OPC-UA-Arrow-Encoding.docx` | Apache Arrow DataEncoding — declares a template deviation; see below. |
 | `*.docmodel.json` | The intermediate representation each document was rendered from. Committed **because a `.docx` diff is unreadable** — review this instead. |
 | `*.provenance.json` | What each paragraph of the document was rendered from. This is what lets a marked-up copy be turned back into a change to the source. |
 | `figures/*.pptx` | The editable PowerPoint behind each figure, embedded in the document as an OLE object. |
 | `figures/*.png` | The preview image Word displays for each embedded object. |
 | `tools/` | The build, the validator, its mutation test, the batch runner and the ingest. |
+
+Five renderings are **not here** while their specifications are under OPC Foundation review — `OPC-UA-Avro-Encoding.docx`, `OPC-UA-OpenUSD-Binding-Part1.docx`, `OPC-UA-OpenUSD-Scene-Part2.docx`, `OPC-UA-WoT-Binding.docx` and `OPC-UA-WoT-Connectivity.docx`. They are built and reviewed the same way in [`OPCF-Members/spec-drafts`](https://github.com/OPCF-Members/spec-drafts), which carries this same tooling; OPC Foundation members can [request access](https://github.com/OPCF-Members/Help). See [*Specifications under OPC Foundation review*](../README.md#specifications-under-opc-foundation-review).
 
 ## Commands
 

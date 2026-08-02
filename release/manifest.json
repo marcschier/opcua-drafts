@@ -2,6 +2,7 @@
   "$comment": "Release manifest for moving OPC Foundation review drafts from marcschier/opcua-drafts to OPCF-Members/spec-drafts. Dependency closure is derived from RequiredModel declarations, validator/tool path reads, cross-tree markdown links, aggregate validators, and Word clause-map sources. Avro tooling maps cloud-specs/observability-export/Opc.Ua.ObservabilityExport.NodeSet2.xml as a sample base model; observability-export is listed with submitted false so it can be vendored into private exports while remaining public. A submitted spec moves its committed Word rendering and the figures its clause map declares, because Word is the review format and the .docx is the artifact under review; vendored specs do not, because they are not reviewed.",
   "publicRepo": "marcschier/opcua-drafts",
   "privateRepo": "OPCF-Members/spec-drafts",
+  "accessInfo": "https://github.com/OPCF-Members/Help",
   "sharedTooling": [
     "core-specs/extras/_common"
   ],
