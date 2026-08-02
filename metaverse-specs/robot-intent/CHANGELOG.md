@@ -30,6 +30,16 @@ OPC 40010-1 defines robot topology and no motion verbs. The gap was filled unila
 
 - **The NodeSet is standalone.** The only `RequiredModel` is the base UA namespace; OPC 40010-1 interop is an optional profile carried by `HasIntentController`. This follows the precedent set by *OPC UA — Vision* in this repository.
 
+- **Real-time is a division of labour, not an exclusion.** Trajectory *execution* is expressible over request/response — the whole path is handed over once and the robot's own motion kernel runs it, which is what `FollowJointTrajectory` and the PLCopen buffered path blocks do. Streaming *control* is not, so the model **brokers** a channel instead: it describes and leases RTDE, EGM, FRI, RSI, MotoROS2 or OPC UA FX, and the samples never traverse OPC UA. This is the same shape as the Vision model brokering a media endpoint rather than carrying pixels.
+
+- **Safety is awareness plus a refusal duty, and explicitly not a rating.** OPC 10000-15 carries cyclic safety data from a provider to a consumer, and the consumer's request holds an identifier, a monitoring number and one octet of explicitly non-safety flags — so a caller cannot supply safety-rated arguments, and no Method in any companion specification can be a safety function. Every safety fieldbus expresses a safety command as a continuously asserted cyclic signal, because the integrity argument rests on the fail-safe state that follows when assertion stops; a Method call has no behaviour when it stops being called. The model therefore *reports* what the safety system enforces and *refuses* work that would exceed it, and says plainly that neither makes anything safe.
+
+- **The kinematic chain is additive, not a second account.** OPC 40010-1 describes a robot's topology and axes in detail and defines no kinematic chain an IK solver could use, and no tool centre point. Annex B fixes which side decides where both are present.
+
+- **Fastening is thin on purpose.** OPC 40450 and OPC 40451 already define joining and tightening in full, so `FastenIntentDataType.Joint` references a joint there rather than restating torque strategies — the same rule that made `Pick` take a `Location` node instead of a station string.
+
+- **Mission branching follows IEC 61131-3, not a behaviour tree.** Steps and transitions with alternative and parallel divergence are the notation the controller audience already knows and has an IEC serialization; a behaviour tree needs a tick runtime controller vendors do not provide, and its serialization belongs to a library rather than a standard. Transition conditions reuse the base UA `ContentFilter` so that no implementer has to write a parser for an invented expression language. An empty transition array leaves the mission the flat sequence it was.
+
 ### Not in this release
 
-Conditional and branching missions; a portable process model for inspection, welding or dispensing; any real-time or servo-level facility, which §4.3 excludes as a normative limit rather than a deferral.
+Any real-time or servo-level facility carried *through* this interface, which §4.3 excludes as a normative limit; and any claim of functional safety, which clause 10.1 explains cannot be made.

@@ -10,10 +10,13 @@ OPC 40010-1 *Robotics* describes robot **topology** in detail and defines **no m
 
 This model supplies the verbs, and nothing else, so the two compose rather than compete. It sits **above** the vendor motion language and **beside and beneath nothing** in the safety system:
 
-- task-level intents — joint, linear and circular moves, grasp, release, pick, place, tool change, output, program call, wait;
+- task-level intents — joint, linear and circular moves, trajectories, Cartesian paths, force-controlled moves, grasp, release, pick, place, tool change, output, program call, wait, and six application processes;
 - a lifecycle built on the Part 10 program model, because an OPC UA `Call` cannot stay open for the length of a real motion;
 - PLCopen buffer modes for queueing and blending, and VDA 5050 blocking modes for concurrency;
-- missions with an immutable committed base and a revisable horizon;
+- missions with an immutable committed base, a revisable horizon, and an IEC 61131-3 step graph with per-step error policies;
+- **safety awareness** — what the safety system is enforcing, and a duty to refuse work that would exceed it;
+- **real-time channel brokerage** — describe and lease RTDE, EGM, FRI, RSI, MotoROS2 or OPC UA FX, without carrying a single sample;
+- the robot's kinematic chain, reach and payload, which OPC 40010-1 does not define;
 - a machine-readable capability declaration, so a client reads what a robot accepts instead of probing for it.
 
 ## Layout

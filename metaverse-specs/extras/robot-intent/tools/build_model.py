@@ -526,7 +526,10 @@ enum_type(3009, "IntentFailureEnum",
                                  "controller."),
            ("SafetyStop", 17, "A safety function acted. The safety system, not this "
                               "interface, decided this."),
-           ("Other", 18, "A reason none of the above describes; see Message.")])
+           ("Other", 18, "A reason none of the above describes; see Message."),
+           ("SafetyLimitExceeded", 19,
+            "Refused because the request would exceed a limit the safety system is "
+            "enforcing. See clause 10.3.")])
 IntentFailureEnum = T(3009)
 
 enum_type(3010, "StopModeEnum",
@@ -793,7 +796,15 @@ struct_type(3067, "MissionStepDataType",
                                             "null its state machine is authoritative "
                                             "and this reflects it."),
              ("Operation", NodeId_, "The IntentOperation executing this step, or null "
-                                    "while the step has not begun.")])
+                                    "while the step has not begun."),
+             # ErrorPolicyEnum and MissionTransitionDataType are appended further
+             # down, so they are referenced by id here. A field DataType is emitted as
+             # a NodeId string; the node it names only has to exist in the finished
+             # NodeSet, which the validator checks.
+             ("ErrorPolicy", T(3016), "What the mission does when this step "
+                                              "does not succeed."),
+             ("FallbackStepId", String, "The step to continue at, when ErrorPolicy is "
+                                        "Fallback or Compensate.")])
 MissionStepDataType = T(3067)
 
 struct_type(3068, "MissionDataType",
@@ -807,7 +818,10 @@ struct_type(3068, "MissionDataType",
                                          "first submission is 0."),
              ("Label", LocalizedText, "Human-readable description. Never interpreted."),
              ("Steps", MissionStepDataType, "The steps, in ascending SequenceId "
-                                            "order.", 1, 0)])
+                                            "order.", 1, 0),
+             ("Transitions", T(3083),
+              "The step graph. An empty array means the steps run in order, which is "
+              "the flat sequence a mission without branching has always been.", 1, 0)])
 MissionDataType = T(3068)
 
 struct_type(3069, "IntentCapabilityDataType",
@@ -1166,6 +1180,447 @@ data_var(PG, "ProgramType", "Parameters", KeyValuePair,
 well_known(7001, "RobotIntent", T(1001), Server,
            "Entry point for robot intent on this Server. A client browses "
            "Server/RobotIntent/Controllers to find every robot it can command.")
+
+
+
+# ===========================================================================
+# ===  APPENDED MEMBERS  ====================================================
+# ===========================================================================
+# Everything below APPENDS. New enumerations take 3013+, structures 3070+,
+# encodings continue from 5019, ObjectTypes 1012+, and every instance
+# declaration takes the next free member id, so no previously assigned NodeId
+# moves. Members of types declared earlier are added here rather than beside
+# their siblings for exactly that reason.
+
+ContentFilter = "i=586"
+
+# ---------------------------------------------------------------------------
+# Enumerations (3013+)
+# ---------------------------------------------------------------------------
+enum_type(3013, "SafeMotionFunctionEnum",
+          "The safe motion function a safety system is enforcing, as defined by "
+          "IEC 61800-5-2. This is a REPORT. The safety system enforces these "
+          "independently of this interface, and a client reading them has not thereby "
+          "obtained any safety function - see clause 10.",
+          [("None", 0, "No safe motion function is active."),
+           ("Sto", 1, "Safe Torque Off: torque is removed."),
+           ("Ss1", 2, "Safe Stop 1: a controlled ramp to standstill, then Safe Torque "
+                      "Off."),
+           ("Ss2", 3, "Safe Stop 2: a controlled ramp to standstill, which is then "
+                      "held under power."),
+           ("Sos", 4, "Safe Operating Stop: standstill is monitored while the drive "
+                      "remains energised."),
+           ("Sls", 5, "Safely Limited Speed: speed is monitored against a limit."),
+           ("Slp", 6, "Safely Limited Position: position is monitored against a "
+                      "limit."),
+           ("Sdi", 7, "Safe Direction: motion is permitted in one direction only."),
+           ("Sbc", 8, "Safe Brake Control: a brake is commanded safely.")])
+SafeMotionFunctionEnum = T(3013)
+
+enum_type(3014, "RealTimeTransportEnum",
+          "The transport of a brokered real-time channel. This specification defines "
+          "none of these: it describes them so a client can find and open one, and the "
+          "samples never traverse this interface.",
+          [("Rtde", 0, "Universal Robots Real-Time Data Exchange."),
+           ("Egm", 1, "ABB Externally Guided Motion."),
+           ("Fri", 2, "KUKA Fast Research Interface."),
+           ("Rsi", 3, "KUKA Robot Sensor Interface."),
+           ("MotoRos2", 4, "Yaskawa MotoROS2."),
+           ("OpcUaFx", 5, "OPC UA FX (OPC 10000-80 to -84). The open path, and the "
+                          "only one in this list that is an OPC Foundation "
+                          "specification."),
+           ("Other", 6, "A transport identified by the channel's own descriptor.")])
+RealTimeTransportEnum = T(3014)
+
+enum_type(3015, "ChannelInitiatorEnum",
+          "Which end opens the transport connection of a brokered channel. Getting "
+          "this wrong is the usual reason a first connection attempt fails, so it is "
+          "stated rather than left to the reader.",
+          [("Server", 0, "The Server connects to an endpoint the client is listening "
+                         "on."),
+           ("Client", 1, "The client connects to the endpoint the Server publishes.")])
+ChannelInitiatorEnum = T(3015)
+
+enum_type(3016, "ErrorPolicyEnum",
+          "What a mission does when one of its steps does not succeed. Without this a "
+          "mission can only abort, which forces every recovery out into the client.",
+          [("Abort", 0, "End the mission. This is the default and the behaviour of a "
+                        "mission that declares no policy."),
+           ("Retry", 1, "Re-attempt the step. A Server bounds the attempts and reports "
+                        "Failed when they are exhausted."),
+           ("Skip", 2, "Record the failure and continue with the next step."),
+           ("Fallback", 3, "Continue at FallbackStepId instead."),
+           ("Compensate", 4, "Run the fallback step to undo the work already done, "
+                             "then end the mission.")])
+ErrorPolicyEnum = T(3016)
+
+enum_type(3017, "DivergenceKindEnum",
+          "How the transitions leaving one step relate to each other, following the "
+          "divergence of an IEC 61131-3 sequential function chart.",
+          [("Alternative", 0, "Exactly one transition is taken - the first whose "
+                              "condition holds. An OR divergence."),
+           ("Parallel", 1, "Every transition is taken and the branches run "
+                           "concurrently. An AND divergence.")])
+DivergenceKindEnum = T(3017)
+
+enum_type(3018, "WeaveShapeEnum",
+          "The oscillation applied across an arc weld seam.",
+          [("None", 0, "No weave."),
+           ("Sine", 1, "Sinusoidal oscillation."),
+           ("Zigzag", 2, "Triangular oscillation."),
+           ("Trapezoid", 3, "Trapezoidal oscillation, with a dwell at each edge.")])
+WeaveShapeEnum = T(3018)
+
+# ---------------------------------------------------------------------------
+# Structured DataTypes (3070+)
+# ---------------------------------------------------------------------------
+struct_type(3070, "TrajectoryPointDataType",
+            "One point of a time-parameterised path. Positions are per axis in the "
+            "order the axes are declared, in radians or metres by AxisKind. "
+            "TimeFromStart is measured from the start of the trajectory, which is what "
+            "makes the path a trajectory rather than a list of waypoints. Velocities "
+            "and Accelerations are optional and may be empty.",
+            [("TimeFromStart", Duration, "Milliseconds from the start of the "
+                                         "trajectory."),
+             ("Positions", Double, "One value per axis.", 1, 0),
+             ("Velocities", Double, "One value per axis, or empty.", 1, 0),
+             ("Accelerations", Double, "One value per axis, or empty.", 1, 0)])
+TrajectoryPointDataType = T(3070)
+
+struct_type(3071, "MotionToleranceDataType",
+            "How far execution may deviate before it is a failure. A tolerance of zero "
+            "or less means the Server applies its own.",
+            [("Position", Double, "Positional tolerance in metres."),
+             ("Orientation", Double, "Orientation tolerance in radians."),
+             ("Time", Duration, "Timing tolerance in milliseconds.")])
+MotionToleranceDataType = T(3071)
+
+struct_type(3072, "TrajectoryIntentDataType",
+            "Execute a time-parameterised path. The Server's own motion kernel runs "
+            "it; this interface hands the whole trajectory over in one submission and "
+            "does not stream it. That is what makes trajectory execution expressible "
+            "here when real-time control is not - see clause 4.3.",
+            [("Points", TrajectoryPointDataType, "The trajectory, in ascending "
+                                                 "TimeFromStart order.", 1, 0),
+             ("PathTolerance", MotionToleranceDataType, "Permitted deviation while "
+                                                        "following the path."),
+             ("GoalTolerance", MotionToleranceDataType, "Permitted deviation at the "
+                                                        "final point."),
+             ("GoalTimeTolerance", Duration, "How much later than the final point's "
+                                             "TimeFromStart completion may be, in "
+                                             "milliseconds.")],
+            base=MotionIntentDataType)
+TrajectoryIntentDataType = T(3072)
+
+struct_type(3073, "PathWaypointDataType",
+            "One waypoint of a Cartesian path, with the blend that applies at it. "
+            "Per-waypoint blending is what distinguishes a path from a sequence of "
+            "separate linear moves: the robot need not stop between them.",
+            [("Pose", Pose3DDataType, "Where the tool centre point passes."),
+             ("Blend", BlendDataType, "How this waypoint is left.")])
+PathWaypointDataType = T(3073)
+
+struct_type(3074, "CartesianPathIntentDataType",
+            "Follow a list of Cartesian waypoints. This is the portable form of a "
+            "taught path, and unlike a trajectory it carries no timing: the Server "
+            "paces it from the motion constraints.",
+            [("Waypoints", PathWaypointDataType, "The path, in order.", 1, 0)],
+            base=MotionIntentDataType)
+CartesianPathIntentDataType = T(3074)
+
+struct_type(3075, "ForceIntentDataType",
+            "Move until contact. The portable subset of the force-controlled moves "
+            "every vendor offers: travel along a direction until a contact force is "
+            "reached or a distance is exhausted, whichever comes first. Reaching the "
+            "distance without contact is a failure, because the intent was to touch "
+            "something.",
+            [("Direction", Double, "Unit direction of travel (x, y, z) in the frame of "
+                                   "the target.", 1, 3),
+             ("FrameId", String, "The CoordinateFrame Direction is expressed in; empty "
+                                 "for the default work frame."),
+             ("ContactForce", Double, "The force in newtons at which contact is "
+                                      "declared."),
+             ("MaxDistance", Double, "How far to travel before giving up, in metres."),
+             ("HoldForce", Boolean, "True to keep pressing at ContactForce after "
+                                    "contact rather than stopping.")],
+            base=MotionIntentDataType)
+ForceIntentDataType = T(3075)
+
+struct_type(3076, "ProcessIntentDataType",
+            "Abstract base of the intents that run an application process along a "
+            "path. Every process needs the same two things beyond its own parameters: "
+            "a reference to the process program or procedure the equipment holds, and "
+            "room for the parameters this specification has not standardised.",
+            [("ProcessProgram", NodeId_, "The Program or equipment-side procedure to "
+                                         "run, or null when the parameters here are "
+                                         "sufficient."),
+             ("Attributes", KeyValuePair, "Further named parameters the Server "
+                                          "declares in its capabilities.", 1, 0)],
+            base=MotionIntentDataType, abstract=True)
+ProcessIntentDataType = T(3076)
+
+struct_type(3077, "ArcWeldIntentDataType",
+            "Lay an arc weld along the path. The parameters are the subset ABB "
+            "seamdata/welddata/weavedata, FANUC weld schedules and KUKA ArcTech all "
+            "carry. WeldProcedureRef points at a welding procedure specification "
+            "(ISO 15609) where the installation works to one; this specification does "
+            "not restate its content.",
+            [("Voltage", Double, "Arc voltage in volts."),
+             ("WireFeedSpeed", Double, "Wire feed speed in metres per minute."),
+             ("TravelSpeed", Double, "Tool centre point speed in metres per second."),
+             ("GasPreflowTime", Duration, "Shielding gas pre-flow, in milliseconds."),
+             ("GasPostflowTime", Duration, "Shielding gas post-flow, in milliseconds."),
+             ("ArcStartDelay", Duration, "Delay before travel begins, in milliseconds."),
+             ("CraterFillTime", Duration, "Crater fill at the end of the seam, in "
+                                          "milliseconds."),
+             ("WeaveShape", WeaveShapeEnum, "Oscillation across the seam."),
+             ("WeaveAmplitude", Double, "Peak-to-peak weave width in metres."),
+             ("WeaveFrequency", Double, "Weave frequency in hertz."),
+             ("SeamTrackingEnabled", Boolean, "True to enable seam tracking where the "
+                                              "equipment provides it."),
+             ("WeldProcedureRef", String, "Identifier of the welding procedure "
+                                          "specification this weld works to.")],
+            base=ProcessIntentDataType)
+ArcWeldIntentDataType = T(3077)
+
+struct_type(3078, "SpotWeldIntentDataType",
+            "Make a resistance spot weld at the target. WeldSchedule selects the weld "
+            "controller's own program: current and time are the weld controller's "
+            "business, and are carried here only where the installation drives them "
+            "from the robot.",
+            [("WeldSchedule", UInt32, "The weld controller program to run."),
+             ("GunForce", Double, "Electrode force in newtons."),
+             ("ApproachDistance", Double, "Gun open distance before the weld, in "
+                                          "metres."),
+             ("RetractDistance", Double, "Gun open distance after the weld, in "
+                                         "metres."),
+             ("MaterialThickness", Double, "Total stack thickness in metres, where the "
+                                           "schedule is chosen adaptively."),
+             ("TipDressRequested", Boolean, "True to dress the tips after this weld.")],
+            base=ProcessIntentDataType)
+SpotWeldIntentDataType = T(3078)
+
+struct_type(3079, "DispenseIntentDataType",
+            "Lay a bead of adhesive, sealant or paint along the path. The trigger "
+            "distances exist because material does not start and stop instantly: a "
+            "Server begins dispensing before the path and stops before its end.",
+            [("FlowRate", Double, "Nominal flow in millilitres per minute."),
+             ("TriggerOnDistance", Double, "Distance before the path start at which "
+                                           "dispensing begins, in metres."),
+             ("TriggerOffDistance", Double, "Distance before the path end at which "
+                                            "dispensing stops, in metres."),
+             ("BeadWidth", Double, "Target bead width in metres."),
+             ("MaterialTemperature", Double, "Material temperature in degrees Celsius, "
+                                             "for hot-melt work."),
+             ("PurgeCycles", UInt32, "Nozzle purge cycles before starting.")],
+            base=ProcessIntentDataType)
+DispenseIntentDataType = T(3079)
+
+struct_type(3080, "FastenIntentDataType",
+            "Drive a fastener at the target. This intent is deliberately THIN: "
+            "OPC 40450 and OPC 40451 already define joining and tightening in full, "
+            "so Joint references the joint in that model and the result belongs there. "
+            "Restating those parameters here would create a second definition of the "
+            "same fact.",
+            [("Joint", NodeId_, "The joint being fastened, in an OPC UA joining or "
+                                "tightening model where one is implemented."),
+             ("ProgramNumber", UInt32, "The tightening program the tool is to run."),
+             ("TargetTorque", Double, "Target torque in newton metres, where the robot "
+                                      "supplies it rather than the tool."),
+             ("TargetAngle", Double, "Target angle in radians, for angle-controlled "
+                                     "strategies."),
+             ("SnugTorque", Double, "Torque at which angle counting begins, in newton "
+                                    "metres.")],
+            base=ProcessIntentDataType)
+FastenIntentDataType = T(3080)
+
+struct_type(3081, "PalletiseIntentDataType",
+            "Place an item into a pattern. The pattern itself is a Location, so its "
+            "geometry has one definition that a client can read rather than being "
+            "recomputed from indices on both sides.",
+            [("Pattern", NodeId_, "The Location describing the pallet or pattern."),
+             ("Layer", UInt32, "Layer index, counting from zero."),
+             ("Row", UInt32, "Row index within the layer, counting from zero."),
+             ("Column", UInt32, "Column index within the row, counting from zero."),
+             ("ItemOrientation", Double, "Rotation of the item about the pattern "
+                                         "normal, in radians.")],
+            base=ProcessIntentDataType)
+PalletiseIntentDataType = T(3081)
+
+struct_type(3082, "SurfaceFinishIntentDataType",
+            "Follow the path pressing into the surface - grinding, polishing, "
+            "deburring or sanding. ContactForce is what distinguishes it from a plain "
+            "path: the robot yields normal to the surface to hold that force.",
+            [("ContactForce", Double, "Force normal to the surface, in newtons."),
+             ("FeedRate", Double, "Travel speed along the surface, in metres per "
+                                  "second."),
+             ("ToolSpeed", Double, "Rotational speed of the tool, in revolutions per "
+                                   "minute."),
+             ("StepOver", Double, "Lateral offset between adjacent passes, in "
+                                  "metres.")],
+            base=ProcessIntentDataType)
+SurfaceFinishIntentDataType = T(3082)
+
+struct_type(3083, "MissionTransitionDataType",
+            "One edge of a mission's step graph, following the step-and-transition "
+            "form of an IEC 61131-3 sequential function chart. Condition is an OPC UA "
+            "ContentFilter - the base specification's own filter grammar, reused so "
+            "that this specification does not invent an expression language for "
+            "implementers to write a parser for.",
+            [("FromStepId", String, "The step this transition leaves."),
+             ("ToStepId", String, "The step this transition enters."),
+             ("Condition", ContentFilter, "The condition under which it is taken. An "
+                                          "empty filter is always true."),
+             ("DivergenceKind", DivergenceKindEnum, "How this transition relates to "
+                                                    "the others leaving the same "
+                                                    "step.")])
+MissionTransitionDataType = T(3083)
+
+struct_type(3084, "KinematicJointDataType",
+            "One joint of the kinematic chain: where it sits relative to its "
+            "predecessor and which way it acts. OPC 40010-1 describes a robot's "
+            "topology and its axes but defines no kinematic chain, so this is additive "
+            "rather than a second account of the same thing.",
+            [("AxisId", String, "The AxisType this joint corresponds to."),
+             ("Kind", AxisKindEnum, "Whether it rotates or translates."),
+             ("OriginTransform", Pose3DDataType, "Pose of this joint's frame within "
+                                                 "its predecessor's, at zero "
+                                                 "position."),
+             ("AxisVector", Double, "Unit vector (x, y, z) the joint rotates about or "
+                                    "translates along, in its own frame.", 1, 3)])
+KinematicJointDataType = T(3084)
+
+# ---------------------------------------------------------------------------
+# ObjectTypes (1012+)
+# ---------------------------------------------------------------------------
+object_type(1012, "SafetyStateType", BaseObjectType,
+            "What the robot's safety system is doing, reported so a client can act "
+            "sensibly around it. Every member is READ-ONLY and every one is a report: "
+            "the safety system enforces these independently, remains effective when "
+            "this interface is unreachable, and is not commanded from here. Clause 10 "
+            "states the boundary and this type does not cross it.")
+SS = 1012
+prop_var(SS, "SafetyStateType", "ActiveFunction", SafeMotionFunctionEnum,
+         "The safe motion function currently enforced, per IEC 61800-5-2.",
+         MR_Mandatory)
+prop_var(SS, "SafetyStateType", "EmergencyStopActive", Boolean,
+         "True while an emergency stop is asserted.", MR_Mandatory)
+prop_var(SS, "SafetyStateType", "ProtectiveStopActive", Boolean,
+         "True while a protective stop is asserted.", MR_Mandatory)
+prop_var(SS, "SafetyStateType", "SafeSpeedLimitActive", Boolean,
+         "True while a safely limited speed is being enforced.", MR_Mandatory)
+prop_var(SS, "SafetyStateType", "SafeSpeedLimit", Double,
+         "The tool centre point speed limit being enforced, in metres per second. "
+         "Meaningful only while SafeSpeedLimitActive. Clause 10.3 requires a Server to "
+         "refuse an intent that asks to exceed it.", MR_Mandatory)
+prop_var(SS, "SafetyStateType", "SafetyControllerOk", Boolean,
+         "False when the safety system reports its own fault. A Server accepts no "
+         "intent while it is false.", MR_Mandatory)
+prop_var(SS, "SafetyStateType", "LastStopReason", LocalizedText,
+         "Why the last stop occurred, for a human. Never parsed.")
+
+object_type(1013, "RealTimeChannelType", BaseObjectType,
+            "A high-rate channel this Server can offer, described so a client can open "
+            "it. The samples never traverse OPC UA: this brokers the endpoint and "
+            "nothing more, in the same way the Vision model brokers a media endpoint "
+            "rather than carrying pixels. Clause 4.3 explains why the alternative is "
+            "not available.")
+RC = 1013
+prop_var(RC, "RealTimeChannelType", "ChannelId", String,
+         "Identifier unique within the controller.", MR_Mandatory)
+prop_var(RC, "RealTimeChannelType", "Transport", RealTimeTransportEnum,
+         "The transport this channel speaks.", MR_Mandatory)
+prop_var(RC, "RealTimeChannelType", "EndpointUrl", String,
+         "Where the channel is reached. Its scheme and form are the transport's, not "
+         "this specification's.", MR_Mandatory)
+prop_var(RC, "RealTimeChannelType", "Initiator", ChannelInitiatorEnum,
+         "Which end opens the connection.", MR_Mandatory)
+prop_var(RC, "RealTimeChannelType", "NominalRate", Double,
+         "The rate the channel runs at, in hertz.", MR_Mandatory)
+prop_var(RC, "RealTimeChannelType", "PayloadDescriptor", String,
+         "The recipe, signal list or configuration the transport requires, in the "
+         "transport's own form.")
+prop_var(RC, "RealTimeChannelType", "RequiredMode", OperationalModeEnum,
+         "The operational mode the robot must be in before the channel will carry "
+         "motion.", MR_Mandatory)
+prop_var(RC, "RealTimeChannelType", "Available", Boolean,
+         "True when the channel can be opened now.", MR_Mandatory)
+prop_var(RC, "RealTimeChannelType", "LeaseHolder", NodeId_,
+         "SessionId of the client currently holding the channel, or null.",
+         MR_Mandatory)
+prop_var(RC, "RealTimeChannelType", "LeaseExpiry", UtcTime,
+         "When the current lease lapses. A lease that is not renewed frees the "
+         "channel, so a client that dies does not hold it for good.")
+
+object_type(1014, "RobotDescriptionType", BaseObjectType,
+            "Enough of the robot's construction for a client to plan against it "
+            "without a second specification: the kinematic chain, the space it can "
+            "reach, and what it can carry. OPC 40010-1 describes topology and axes and "
+            "defines no kinematic chain and no tool centre point, so this adds rather "
+            "than restates - Annex B says which side decides where both are present.")
+RD = 1014
+prop_var(RD, "RobotDescriptionType", "Manufacturer", LocalizedText,
+         "Who made the robot.")
+prop_var(RD, "RobotDescriptionType", "Model", String, "The robot's model designation.")
+data_var(RD, "RobotDescriptionType", "KinematicChain", KinematicJointDataType,
+         "The joints from the base outwards, in order.", MR_Mandatory, valuerank="1")
+data_var(RD, "RobotDescriptionType", "MountingPose", Pose3DDataType,
+         "Pose of the robot base within the world frame.")
+prop_var(RD, "RobotDescriptionType", "ReachRadius", Double,
+         "Radius of the reachable workspace from the base, in metres.", MR_Mandatory)
+prop_var(RD, "RobotDescriptionType", "PayloadLimit", Double,
+         "Largest payload at the mechanical interface, in kilograms.", MR_Mandatory)
+prop_var(RD, "RobotDescriptionType", "MaxCartesianSpeed", Double,
+         "Largest tool centre point speed the robot will produce, in metres per "
+         "second.", MR_Mandatory)
+prop_var(RD, "RobotDescriptionType", "MaxCartesianAcceleration", Double,
+         "Largest tool centre point acceleration, in metres per second squared.")
+
+# ---------------------------------------------------------------------------
+# Members appended to types declared earlier
+# ---------------------------------------------------------------------------
+obj_member(IC, "IntentControllerType", "SafetyState", T(1012),
+           "What the safety system is doing. A client reads this before it plans, and "
+           "subscribes to it so that it learns of a stop rather than inferring one "
+           "from a refusal.", MR_Mandatory)
+obj_member(IC, "IntentControllerType", "Description", T(1014),
+           "The robot's kinematics and limits.")
+folder_member(IC, "IntentControllerType", "RealTimeChannels",
+              "The high-rate channels this Server can broker.", MR_Optional)
+
+method(IC, "IntentControllerType", "OpenRealTimeChannel",
+       "Take a lease on a brokered real-time channel. The Server prepares the "
+       "transport and returns what the client needs in order to connect; it does not "
+       "carry the samples. A lease that is not renewed lapses, which is what stops a "
+       "dead client from holding the channel.", MR_Optional,
+       inargs=[("ChannelId", String, "The channel to open."),
+               ("RequestedLease", Duration, "How long the lease is wanted for, in "
+                                            "milliseconds.")],
+       outargs=[("Granted", Boolean, "True when the lease was taken."),
+                ("EndpointUrl", String, "Where to connect."),
+                ("PayloadDescriptor", String, "The transport's own configuration."),
+                ("LeaseExpiry", UtcTime, "When the lease lapses.")])
+method(IC, "IntentControllerType", "CloseRealTimeChannel",
+       "Give up a lease on a brokered channel.", MR_Optional,
+       inargs=[("ChannelId", String, "The channel to release.")],
+       outargs=[("Released", Boolean, "True when the lease was held and is now "
+                                      "released.")])
+
+prop_var(CP, "IntentCapabilitiesType", "TrajectorySupported", Boolean,
+         "True when trajectory and Cartesian path intents are accepted.", MR_Mandatory)
+prop_var(CP, "IntentCapabilitiesType", "ForceControlSupported", Boolean,
+         "True when force intents are accepted and the robot can actually regulate "
+         "force. A Server that would ignore the force reports false rather than "
+         "accepting an intent it cannot honour.", MR_Mandatory)
+prop_var(CP, "IntentCapabilitiesType", "RealTimeChannelsSupported", Boolean,
+         "True when the Server brokers real-time channels.", MR_Mandatory)
+prop_var(CP, "IntentCapabilitiesType", "MissionBranchingSupported", Boolean,
+         "True when mission transitions are evaluated. A Server that reports false "
+         "executes the steps in order and ignores any transitions supplied.",
+         MR_Mandatory)
+prop_var(CP, "IntentCapabilitiesType", "MaxTrajectoryPoints", UInt32,
+         "Largest number of points accepted in one trajectory. Zero means the Server "
+         "states no limit.")
 
 
 # ===========================================================================

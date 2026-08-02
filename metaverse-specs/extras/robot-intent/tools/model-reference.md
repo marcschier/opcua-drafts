@@ -21,6 +21,9 @@ This annex is the authoritative node reference for the specification: it carries
 | ns=1;i=1009 | AxisType | ObjectType | BaseObjectType |
 | ns=1;i=1010 | OutputSignalType | ObjectType | BaseObjectType |
 | ns=1;i=1011 | ProgramType | ObjectType | BaseObjectType |
+| ns=1;i=1012 | SafetyStateType | ObjectType | BaseObjectType |
+| ns=1;i=1013 | RealTimeChannelType | ObjectType | BaseObjectType |
+| ns=1;i=1014 | RobotDescriptionType | ObjectType | BaseObjectType |
 | ns=1;i=3001 | ExecutionStateEnum | DataType | Enumeration |
 | ns=1;i=3002 | BufferModeEnum | DataType | Enumeration |
 | ns=1;i=3003 | BlockingModeEnum | DataType | Enumeration |
@@ -53,6 +56,27 @@ This annex is the authoritative node reference for the specification: it carries
 | ns=1;i=3067 | MissionStepDataType | DataType | Structure |
 | ns=1;i=3068 | MissionDataType | DataType | Structure |
 | ns=1;i=3069 | IntentCapabilityDataType | DataType | Structure |
+| ns=1;i=3013 | SafeMotionFunctionEnum | DataType | Enumeration |
+| ns=1;i=3014 | RealTimeTransportEnum | DataType | Enumeration |
+| ns=1;i=3015 | ChannelInitiatorEnum | DataType | Enumeration |
+| ns=1;i=3016 | ErrorPolicyEnum | DataType | Enumeration |
+| ns=1;i=3017 | DivergenceKindEnum | DataType | Enumeration |
+| ns=1;i=3018 | WeaveShapeEnum | DataType | Enumeration |
+| ns=1;i=3070 | TrajectoryPointDataType | DataType | Structure |
+| ns=1;i=3071 | MotionToleranceDataType | DataType | Structure |
+| ns=1;i=3072 | TrajectoryIntentDataType | DataType | MotionIntentDataType |
+| ns=1;i=3073 | PathWaypointDataType | DataType | Structure |
+| ns=1;i=3074 | CartesianPathIntentDataType | DataType | MotionIntentDataType |
+| ns=1;i=3075 | ForceIntentDataType | DataType | MotionIntentDataType |
+| ns=1;i=3076 | ProcessIntentDataType | DataType | MotionIntentDataType |
+| ns=1;i=3077 | ArcWeldIntentDataType | DataType | ProcessIntentDataType |
+| ns=1;i=3078 | SpotWeldIntentDataType | DataType | ProcessIntentDataType |
+| ns=1;i=3079 | DispenseIntentDataType | DataType | ProcessIntentDataType |
+| ns=1;i=3080 | FastenIntentDataType | DataType | ProcessIntentDataType |
+| ns=1;i=3081 | PalletiseIntentDataType | DataType | ProcessIntentDataType |
+| ns=1;i=3082 | SurfaceFinishIntentDataType | DataType | ProcessIntentDataType |
+| ns=1;i=3083 | MissionTransitionDataType | DataType | Structure |
+| ns=1;i=3084 | KinematicJointDataType | DataType | Structure |
 
 ## A.2 ReferenceTypes
 
@@ -97,6 +121,9 @@ The intent surface for one robot: what it can be asked to do, the frames and obj
 | Programs | Object |  |  | Optional | The controller programs CallProgram can run. |
 | Intents | Object |  |  | Mandatory | Outstanding and recently completed intents, one Object each. |
 | Missions | Object |  |  | Optional | Outstanding and recently completed missions, one Object each. |
+| SafetyState | Object |  |  | Mandatory | What the safety system is doing. A client reads this before it plans, and subscribes to it so that it learns of a stop rather than inferring one from a refusal. |
+| Description | Object |  |  | Optional | The robot's kinematics and limits. |
+| RealTimeChannels | Object |  |  | Optional | The high-rate channels this Server can broker. |
 
 **Method `RequestControl`** (Mandatory) — Take command authority. A Server grants it only when no other Session holds it, or when the holder's Session has closed. Holding authority is a precondition for submitting, and exists so that two clients cannot interleave motion; it is NOT the single point of control that ISO 10218-2 requires, which is enforced by safety-rated means outside this interface.
 
@@ -198,6 +225,30 @@ Takes no arguments and returns none.
 |---|---|---|---|
 | Accepted | Boolean | Scalar | True when the Server will act on it. |
 
+**Method `OpenRealTimeChannel`** (Optional) — Take a lease on a brokered real-time channel. The Server prepares the transport and returns what the client needs in order to connect; it does not carry the samples. A lease that is not renewed lapses, which is what stops a dead client from holding the channel.
+
+| In | DataType | ValueRank | Meaning |
+|---|---|---|---|
+| ChannelId | String | Scalar | The channel to open. |
+| RequestedLease | Duration | Scalar | How long the lease is wanted for, in milliseconds. |
+
+| Out | DataType | ValueRank | Meaning |
+|---|---|---|---|
+| Granted | Boolean | Scalar | True when the lease was taken. |
+| EndpointUrl | String | Scalar | Where to connect. |
+| PayloadDescriptor | String | Scalar | The transport's own configuration. |
+| LeaseExpiry | UtcTime | Scalar | When the lease lapses. |
+
+**Method `CloseRealTimeChannel`** (Optional) — Give up a lease on a brokered channel.
+
+| In | DataType | ValueRank | Meaning |
+|---|---|---|---|
+| ChannelId | String | Scalar | The channel to release. |
+
+| Out | DataType | ValueRank | Meaning |
+|---|---|---|---|
+| Released | Boolean | Scalar | True when the lease was held and is now released. |
+
 ### IntentOperationType — `ns=1;i=1003`
 
 *Subtype of:* `ProgramStateMachineType`
@@ -244,6 +295,11 @@ What one robot will accept. A client reads this once, before it submits anything
 | BlendingSupported | Variable | Boolean | Scalar | Mandatory | True when the blending buffer modes actually blend. A Server that treats them as Buffered reports False, so a client is not misled about the path. |
 | MaxBlendRadius | Variable | Double | Scalar | Optional | Largest blend radius the robot will honour, in metres. Zero or less means it is not bounded here. |
 | AxisCount | Variable | UInt32 | Scalar | Mandatory | How many axes JointMoveIntentDataType.JointTargets must carry. |
+| TrajectorySupported | Variable | Boolean | Scalar | Mandatory | True when trajectory and Cartesian path intents are accepted. |
+| ForceControlSupported | Variable | Boolean | Scalar | Mandatory | True when force intents are accepted and the robot can actually regulate force. A Server that would ignore the force reports false rather than accepting an intent it cannot honour. |
+| RealTimeChannelsSupported | Variable | Boolean | Scalar | Mandatory | True when the Server brokers real-time channels. |
+| MissionBranchingSupported | Variable | Boolean | Scalar | Mandatory | True when mission transitions are evaluated. A Server that reports false executes the steps in order and ignores any transitions supplied. |
+| MaxTrajectoryPoints | Variable | UInt32 | Scalar | Optional | Largest number of points accepted in one trajectory. Zero means the Server states no limit. |
 
 ### CoordinateFrameType — `ns=1;i=1006`
 
@@ -330,6 +386,58 @@ A program held on the controller that CallProgram can run. This is the bridge to
 | Name | Variable | LocalizedText | Scalar | Mandatory | Human-readable name. |
 | Description | Variable | LocalizedText | Scalar | Optional | What the program does. |
 | Parameters | Variable | KeyValuePair | Array | Optional | Named parameters it accepts, with their default values. |
+
+### SafetyStateType — `ns=1;i=1012`
+
+*Subtype of:* `BaseObjectType`
+
+What the robot's safety system is doing, reported so a client can act sensibly around it. Every member is READ-ONLY and every one is a report: the safety system enforces these independently, remains effective when this interface is unreachable, and is not commanded from here. Clause 10 states the boundary and this type does not cross it.
+
+| BrowseName | NodeClass | DataType | ValueRank | ModellingRule | Description |
+|---|---|---|---|---|---|
+| ActiveFunction | Variable | SafeMotionFunctionEnum | Scalar | Mandatory | The safe motion function currently enforced, per IEC 61800-5-2. |
+| EmergencyStopActive | Variable | Boolean | Scalar | Mandatory | True while an emergency stop is asserted. |
+| ProtectiveStopActive | Variable | Boolean | Scalar | Mandatory | True while a protective stop is asserted. |
+| SafeSpeedLimitActive | Variable | Boolean | Scalar | Mandatory | True while a safely limited speed is being enforced. |
+| SafeSpeedLimit | Variable | Double | Scalar | Mandatory | The tool centre point speed limit being enforced, in metres per second. Meaningful only while SafeSpeedLimitActive. Clause 10.3 requires a Server to refuse an intent that asks to exceed it. |
+| SafetyControllerOk | Variable | Boolean | Scalar | Mandatory | False when the safety system reports its own fault. A Server accepts no intent while it is false. |
+| LastStopReason | Variable | LocalizedText | Scalar | Optional | Why the last stop occurred, for a human. Never parsed. |
+
+### RealTimeChannelType — `ns=1;i=1013`
+
+*Subtype of:* `BaseObjectType`
+
+A high-rate channel this Server can offer, described so a client can open it. The samples never traverse OPC UA: this brokers the endpoint and nothing more, in the same way the Vision model brokers a media endpoint rather than carrying pixels. Clause 4.3 explains why the alternative is not available.
+
+| BrowseName | NodeClass | DataType | ValueRank | ModellingRule | Description |
+|---|---|---|---|---|---|
+| ChannelId | Variable | String | Scalar | Mandatory | Identifier unique within the controller. |
+| Transport | Variable | RealTimeTransportEnum | Scalar | Mandatory | The transport this channel speaks. |
+| EndpointUrl | Variable | String | Scalar | Mandatory | Where the channel is reached. Its scheme and form are the transport's, not this specification's. |
+| Initiator | Variable | ChannelInitiatorEnum | Scalar | Mandatory | Which end opens the connection. |
+| NominalRate | Variable | Double | Scalar | Mandatory | The rate the channel runs at, in hertz. |
+| PayloadDescriptor | Variable | String | Scalar | Optional | The recipe, signal list or configuration the transport requires, in the transport's own form. |
+| RequiredMode | Variable | OperationalModeEnum | Scalar | Mandatory | The operational mode the robot must be in before the channel will carry motion. |
+| Available | Variable | Boolean | Scalar | Mandatory | True when the channel can be opened now. |
+| LeaseHolder | Variable | NodeId | Scalar | Mandatory | SessionId of the client currently holding the channel, or null. |
+| LeaseExpiry | Variable | UtcTime | Scalar | Optional | When the current lease lapses. A lease that is not renewed frees the channel, so a client that dies does not hold it for good. |
+
+### RobotDescriptionType — `ns=1;i=1014`
+
+*Subtype of:* `BaseObjectType`
+
+Enough of the robot's construction for a client to plan against it without a second specification: the kinematic chain, the space it can reach, and what it can carry. OPC 40010-1 describes topology and axes and defines no kinematic chain and no tool centre point, so this adds rather than restates - Annex B says which side decides where both are present.
+
+| BrowseName | NodeClass | DataType | ValueRank | ModellingRule | Description |
+|---|---|---|---|---|---|
+| Manufacturer | Variable | LocalizedText | Scalar | Optional | Who made the robot. |
+| Model | Variable | String | Scalar | Optional | The robot's model designation. |
+| KinematicChain | Variable | KinematicJointDataType | Array | Mandatory | The joints from the base outwards, in order. |
+| MountingPose | Variable | Pose3DDataType | Scalar | Optional | Pose of the robot base within the world frame. |
+| ReachRadius | Variable | Double | Scalar | Mandatory | Radius of the reachable workspace from the base, in metres. |
+| PayloadLimit | Variable | Double | Scalar | Mandatory | Largest payload at the mechanical interface, in kilograms. |
+| MaxCartesianSpeed | Variable | Double | Scalar | Mandatory | Largest tool centre point speed the robot will produce, in metres per second. |
+| MaxCartesianAcceleration | Variable | Double | Scalar | Optional | Largest tool centre point acceleration, in metres per second squared. |
 
 ## A.4 DataTypes
 
@@ -471,6 +579,7 @@ Why an intent did not succeed. The set is deliberately small and diagnosable: a 
 | HardwareFault | 16 | A fault in the robot, the end effector or the controller. |
 | SafetyStop | 17 | A safety function acted. The safety system, not this interface, decided this. |
 | Other | 18 | A reason none of the above describes; see Message. |
+| SafetyLimitExceeded | 19 | Refused because the request would exceed a limit the safety system is enforcing. See clause 10.3. |
 
 ### StopModeEnum — `ns=1;i=3010`
 
@@ -735,6 +844,8 @@ One step of a mission. Released is what splits a mission into its immutable base
 | Intent | IntentDataType | Scalar |  | The intent this step executes. |
 | Status | ExecutionStateEnum | Scalar |  | Reported status. Where Operation is not null its state machine is authoritative and this reflects it. |
 | Operation | NodeId | Scalar |  | The IntentOperation executing this step, or null while the step has not begun. |
+| ErrorPolicy | ErrorPolicyEnum | Scalar |  | What the mission does when this step does not succeed. |
+| FallbackStepId | String | Scalar |  | The step to continue at, when ErrorPolicy is Fallback or Compensate. |
 
 ### MissionDataType — `ns=1;i=3068`
 
@@ -748,6 +859,7 @@ An ordered sequence of intents submitted and tracked as a unit. MissionUpdateId 
 | MissionUpdateId | UInt32 | Scalar |  | Revision of this mission, increasing. The first submission is 0. |
 | Label | LocalizedText | Scalar |  | Human-readable description. Never interpreted. |
 | Steps | MissionStepDataType | Array |  | The steps, in ascending SequenceId order. |
+| Transitions | MissionTransitionDataType | Array |  | The step graph. An empty array means the steps run in order, which is the flat sequence a mission without branching has always been. |
 
 ### IntentCapabilityDataType — `ns=1;i=3069`
 
@@ -765,3 +877,288 @@ What the Server will accept for one intent type. This is the machine-readable de
 | SupportedBufferModes | BufferModeEnum | Array |  | Buffer modes accepted for it. Aborting is always accepted and always listed. |
 | SupportedBlockingModes | BlockingModeEnum | Array |  | Blocking modes accepted for it. |
 | Attributes | KeyValuePair | Array |  | Named parameters this Server recognises in the intent's Attributes field. |
+
+### SafeMotionFunctionEnum — `ns=1;i=3013`
+
+*Subtype of:* `Enumeration`
+
+The safe motion function a safety system is enforcing, as defined by IEC 61800-5-2. This is a REPORT. The safety system enforces these independently of this interface, and a client reading them has not thereby obtained any safety function - see clause 10.
+
+| Name | Value | Description |
+|---|---|---|
+| None | 0 | No safe motion function is active. |
+| Sto | 1 | Safe Torque Off: torque is removed. |
+| Ss1 | 2 | Safe Stop 1: a controlled ramp to standstill, then Safe Torque Off. |
+| Ss2 | 3 | Safe Stop 2: a controlled ramp to standstill, which is then held under power. |
+| Sos | 4 | Safe Operating Stop: standstill is monitored while the drive remains energised. |
+| Sls | 5 | Safely Limited Speed: speed is monitored against a limit. |
+| Slp | 6 | Safely Limited Position: position is monitored against a limit. |
+| Sdi | 7 | Safe Direction: motion is permitted in one direction only. |
+| Sbc | 8 | Safe Brake Control: a brake is commanded safely. |
+
+### RealTimeTransportEnum — `ns=1;i=3014`
+
+*Subtype of:* `Enumeration`
+
+The transport of a brokered real-time channel. This specification defines none of these: it describes them so a client can find and open one, and the samples never traverse this interface.
+
+| Name | Value | Description |
+|---|---|---|
+| Rtde | 0 | Universal Robots Real-Time Data Exchange. |
+| Egm | 1 | ABB Externally Guided Motion. |
+| Fri | 2 | KUKA Fast Research Interface. |
+| Rsi | 3 | KUKA Robot Sensor Interface. |
+| MotoRos2 | 4 | Yaskawa MotoROS2. |
+| OpcUaFx | 5 | OPC UA FX (OPC 10000-80 to -84). The open path, and the only one in this list that is an OPC Foundation specification. |
+| Other | 6 | A transport identified by the channel's own descriptor. |
+
+### ChannelInitiatorEnum — `ns=1;i=3015`
+
+*Subtype of:* `Enumeration`
+
+Which end opens the transport connection of a brokered channel. Getting this wrong is the usual reason a first connection attempt fails, so it is stated rather than left to the reader.
+
+| Name | Value | Description |
+|---|---|---|
+| Server | 0 | The Server connects to an endpoint the client is listening on. |
+| Client | 1 | The client connects to the endpoint the Server publishes. |
+
+### ErrorPolicyEnum — `ns=1;i=3016`
+
+*Subtype of:* `Enumeration`
+
+What a mission does when one of its steps does not succeed. Without this a mission can only abort, which forces every recovery out into the client.
+
+| Name | Value | Description |
+|---|---|---|
+| Abort | 0 | End the mission. This is the default and the behaviour of a mission that declares no policy. |
+| Retry | 1 | Re-attempt the step. A Server bounds the attempts and reports Failed when they are exhausted. |
+| Skip | 2 | Record the failure and continue with the next step. |
+| Fallback | 3 | Continue at FallbackStepId instead. |
+| Compensate | 4 | Run the fallback step to undo the work already done, then end the mission. |
+
+### DivergenceKindEnum — `ns=1;i=3017`
+
+*Subtype of:* `Enumeration`
+
+How the transitions leaving one step relate to each other, following the divergence of an IEC 61131-3 sequential function chart.
+
+| Name | Value | Description |
+|---|---|---|
+| Alternative | 0 | Exactly one transition is taken - the first whose condition holds. An OR divergence. |
+| Parallel | 1 | Every transition is taken and the branches run concurrently. An AND divergence. |
+
+### WeaveShapeEnum — `ns=1;i=3018`
+
+*Subtype of:* `Enumeration`
+
+The oscillation applied across an arc weld seam.
+
+| Name | Value | Description |
+|---|---|---|
+| None | 0 | No weave. |
+| Sine | 1 | Sinusoidal oscillation. |
+| Zigzag | 2 | Triangular oscillation. |
+| Trapezoid | 3 | Trapezoidal oscillation, with a dwell at each edge. |
+
+### TrajectoryPointDataType — `ns=1;i=3070`
+
+*Subtype of:* `Structure`
+
+One point of a time-parameterised path. Positions are per axis in the order the axes are declared, in radians or metres by AxisKind. TimeFromStart is measured from the start of the trajectory, which is what makes the path a trajectory rather than a list of waypoints. Velocities and Accelerations are optional and may be empty.
+
+| Field | DataType | ValueRank | ArrayDimensions | Description |
+|---|---|---|---|---|
+| TimeFromStart | Duration | Scalar |  | Milliseconds from the start of the trajectory. |
+| Positions | Double | Array |  | One value per axis. |
+| Velocities | Double | Array |  | One value per axis, or empty. |
+| Accelerations | Double | Array |  | One value per axis, or empty. |
+
+### MotionToleranceDataType — `ns=1;i=3071`
+
+*Subtype of:* `Structure`
+
+How far execution may deviate before it is a failure. A tolerance of zero or less means the Server applies its own.
+
+| Field | DataType | ValueRank | ArrayDimensions | Description |
+|---|---|---|---|---|
+| Position | Double | Scalar |  | Positional tolerance in metres. |
+| Orientation | Double | Scalar |  | Orientation tolerance in radians. |
+| Time | Duration | Scalar |  | Timing tolerance in milliseconds. |
+
+### TrajectoryIntentDataType — `ns=1;i=3072`
+
+*Subtype of:* `MotionIntentDataType`
+
+Execute a time-parameterised path. The Server's own motion kernel runs it; this interface hands the whole trajectory over in one submission and does not stream it. That is what makes trajectory execution expressible here when real-time control is not - see clause 4.3.
+
+| Field | DataType | ValueRank | ArrayDimensions | Description |
+|---|---|---|---|---|
+| Points | TrajectoryPointDataType | Array |  | The trajectory, in ascending TimeFromStart order. |
+| PathTolerance | MotionToleranceDataType | Scalar |  | Permitted deviation while following the path. |
+| GoalTolerance | MotionToleranceDataType | Scalar |  | Permitted deviation at the final point. |
+| GoalTimeTolerance | Duration | Scalar |  | How much later than the final point's TimeFromStart completion may be, in milliseconds. |
+
+### PathWaypointDataType — `ns=1;i=3073`
+
+*Subtype of:* `Structure`
+
+One waypoint of a Cartesian path, with the blend that applies at it. Per-waypoint blending is what distinguishes a path from a sequence of separate linear moves: the robot need not stop between them.
+
+| Field | DataType | ValueRank | ArrayDimensions | Description |
+|---|---|---|---|---|
+| Pose | Pose3DDataType | Scalar |  | Where the tool centre point passes. |
+| Blend | BlendDataType | Scalar |  | How this waypoint is left. |
+
+### CartesianPathIntentDataType — `ns=1;i=3074`
+
+*Subtype of:* `MotionIntentDataType`
+
+Follow a list of Cartesian waypoints. This is the portable form of a taught path, and unlike a trajectory it carries no timing: the Server paces it from the motion constraints.
+
+| Field | DataType | ValueRank | ArrayDimensions | Description |
+|---|---|---|---|---|
+| Waypoints | PathWaypointDataType | Array |  | The path, in order. |
+
+### ForceIntentDataType — `ns=1;i=3075`
+
+*Subtype of:* `MotionIntentDataType`
+
+Move until contact. The portable subset of the force-controlled moves every vendor offers: travel along a direction until a contact force is reached or a distance is exhausted, whichever comes first. Reaching the distance without contact is a failure, because the intent was to touch something.
+
+| Field | DataType | ValueRank | ArrayDimensions | Description |
+|---|---|---|---|---|
+| Direction | Double | Array | 3 | Unit direction of travel (x, y, z) in the frame of the target. |
+| FrameId | String | Scalar |  | The CoordinateFrame Direction is expressed in; empty for the default work frame. |
+| ContactForce | Double | Scalar |  | The force in newtons at which contact is declared. |
+| MaxDistance | Double | Scalar |  | How far to travel before giving up, in metres. |
+| HoldForce | Boolean | Scalar |  | True to keep pressing at ContactForce after contact rather than stopping. |
+
+### ProcessIntentDataType — `ns=1;i=3076`
+
+*Subtype of:* `MotionIntentDataType`
+
+Abstract base of the intents that run an application process along a path. Every process needs the same two things beyond its own parameters: a reference to the process program or procedure the equipment holds, and room for the parameters this specification has not standardised.
+
+| Field | DataType | ValueRank | ArrayDimensions | Description |
+|---|---|---|---|---|
+| ProcessProgram | NodeId | Scalar |  | The Program or equipment-side procedure to run, or null when the parameters here are sufficient. |
+| Attributes | KeyValuePair | Array |  | Further named parameters the Server declares in its capabilities. |
+
+### ArcWeldIntentDataType — `ns=1;i=3077`
+
+*Subtype of:* `ProcessIntentDataType`
+
+Lay an arc weld along the path. The parameters are the subset ABB seamdata/welddata/weavedata, FANUC weld schedules and KUKA ArcTech all carry. WeldProcedureRef points at a welding procedure specification (ISO 15609) where the installation works to one; this specification does not restate its content.
+
+| Field | DataType | ValueRank | ArrayDimensions | Description |
+|---|---|---|---|---|
+| Voltage | Double | Scalar |  | Arc voltage in volts. |
+| WireFeedSpeed | Double | Scalar |  | Wire feed speed in metres per minute. |
+| TravelSpeed | Double | Scalar |  | Tool centre point speed in metres per second. |
+| GasPreflowTime | Duration | Scalar |  | Shielding gas pre-flow, in milliseconds. |
+| GasPostflowTime | Duration | Scalar |  | Shielding gas post-flow, in milliseconds. |
+| ArcStartDelay | Duration | Scalar |  | Delay before travel begins, in milliseconds. |
+| CraterFillTime | Duration | Scalar |  | Crater fill at the end of the seam, in milliseconds. |
+| WeaveShape | WeaveShapeEnum | Scalar |  | Oscillation across the seam. |
+| WeaveAmplitude | Double | Scalar |  | Peak-to-peak weave width in metres. |
+| WeaveFrequency | Double | Scalar |  | Weave frequency in hertz. |
+| SeamTrackingEnabled | Boolean | Scalar |  | True to enable seam tracking where the equipment provides it. |
+| WeldProcedureRef | String | Scalar |  | Identifier of the welding procedure specification this weld works to. |
+
+### SpotWeldIntentDataType — `ns=1;i=3078`
+
+*Subtype of:* `ProcessIntentDataType`
+
+Make a resistance spot weld at the target. WeldSchedule selects the weld controller's own program: current and time are the weld controller's business, and are carried here only where the installation drives them from the robot.
+
+| Field | DataType | ValueRank | ArrayDimensions | Description |
+|---|---|---|---|---|
+| WeldSchedule | UInt32 | Scalar |  | The weld controller program to run. |
+| GunForce | Double | Scalar |  | Electrode force in newtons. |
+| ApproachDistance | Double | Scalar |  | Gun open distance before the weld, in metres. |
+| RetractDistance | Double | Scalar |  | Gun open distance after the weld, in metres. |
+| MaterialThickness | Double | Scalar |  | Total stack thickness in metres, where the schedule is chosen adaptively. |
+| TipDressRequested | Boolean | Scalar |  | True to dress the tips after this weld. |
+
+### DispenseIntentDataType — `ns=1;i=3079`
+
+*Subtype of:* `ProcessIntentDataType`
+
+Lay a bead of adhesive, sealant or paint along the path. The trigger distances exist because material does not start and stop instantly: a Server begins dispensing before the path and stops before its end.
+
+| Field | DataType | ValueRank | ArrayDimensions | Description |
+|---|---|---|---|---|
+| FlowRate | Double | Scalar |  | Nominal flow in millilitres per minute. |
+| TriggerOnDistance | Double | Scalar |  | Distance before the path start at which dispensing begins, in metres. |
+| TriggerOffDistance | Double | Scalar |  | Distance before the path end at which dispensing stops, in metres. |
+| BeadWidth | Double | Scalar |  | Target bead width in metres. |
+| MaterialTemperature | Double | Scalar |  | Material temperature in degrees Celsius, for hot-melt work. |
+| PurgeCycles | UInt32 | Scalar |  | Nozzle purge cycles before starting. |
+
+### FastenIntentDataType — `ns=1;i=3080`
+
+*Subtype of:* `ProcessIntentDataType`
+
+Drive a fastener at the target. This intent is deliberately THIN: OPC 40450 and OPC 40451 already define joining and tightening in full, so Joint references the joint in that model and the result belongs there. Restating those parameters here would create a second definition of the same fact.
+
+| Field | DataType | ValueRank | ArrayDimensions | Description |
+|---|---|---|---|---|
+| Joint | NodeId | Scalar |  | The joint being fastened, in an OPC UA joining or tightening model where one is implemented. |
+| ProgramNumber | UInt32 | Scalar |  | The tightening program the tool is to run. |
+| TargetTorque | Double | Scalar |  | Target torque in newton metres, where the robot supplies it rather than the tool. |
+| TargetAngle | Double | Scalar |  | Target angle in radians, for angle-controlled strategies. |
+| SnugTorque | Double | Scalar |  | Torque at which angle counting begins, in newton metres. |
+
+### PalletiseIntentDataType — `ns=1;i=3081`
+
+*Subtype of:* `ProcessIntentDataType`
+
+Place an item into a pattern. The pattern itself is a Location, so its geometry has one definition that a client can read rather than being recomputed from indices on both sides.
+
+| Field | DataType | ValueRank | ArrayDimensions | Description |
+|---|---|---|---|---|
+| Pattern | NodeId | Scalar |  | The Location describing the pallet or pattern. |
+| Layer | UInt32 | Scalar |  | Layer index, counting from zero. |
+| Row | UInt32 | Scalar |  | Row index within the layer, counting from zero. |
+| Column | UInt32 | Scalar |  | Column index within the row, counting from zero. |
+| ItemOrientation | Double | Scalar |  | Rotation of the item about the pattern normal, in radians. |
+
+### SurfaceFinishIntentDataType — `ns=1;i=3082`
+
+*Subtype of:* `ProcessIntentDataType`
+
+Follow the path pressing into the surface - grinding, polishing, deburring or sanding. ContactForce is what distinguishes it from a plain path: the robot yields normal to the surface to hold that force.
+
+| Field | DataType | ValueRank | ArrayDimensions | Description |
+|---|---|---|---|---|
+| ContactForce | Double | Scalar |  | Force normal to the surface, in newtons. |
+| FeedRate | Double | Scalar |  | Travel speed along the surface, in metres per second. |
+| ToolSpeed | Double | Scalar |  | Rotational speed of the tool, in revolutions per minute. |
+| StepOver | Double | Scalar |  | Lateral offset between adjacent passes, in metres. |
+
+### MissionTransitionDataType — `ns=1;i=3083`
+
+*Subtype of:* `Structure`
+
+One edge of a mission's step graph, following the step-and-transition form of an IEC 61131-3 sequential function chart. Condition is an OPC UA ContentFilter - the base specification's own filter grammar, reused so that this specification does not invent an expression language for implementers to write a parser for.
+
+| Field | DataType | ValueRank | ArrayDimensions | Description |
+|---|---|---|---|---|
+| FromStepId | String | Scalar |  | The step this transition leaves. |
+| ToStepId | String | Scalar |  | The step this transition enters. |
+| Condition | i=586 | Scalar |  | The condition under which it is taken. An empty filter is always true. |
+| DivergenceKind | DivergenceKindEnum | Scalar |  | How this transition relates to the others leaving the same step. |
+
+### KinematicJointDataType — `ns=1;i=3084`
+
+*Subtype of:* `Structure`
+
+One joint of the kinematic chain: where it sits relative to its predecessor and which way it acts. OPC 40010-1 describes a robot's topology and its axes but defines no kinematic chain, so this is additive rather than a second account of the same thing.
+
+| Field | DataType | ValueRank | ArrayDimensions | Description |
+|---|---|---|---|---|
+| AxisId | String | Scalar |  | The AxisType this joint corresponds to. |
+| Kind | AxisKindEnum | Scalar |  | Whether it rotates or translates. |
+| OriginTransform | Pose3DDataType | Scalar |  | Pose of this joint's frame within its predecessor's, at zero position. |
+| AxisVector | Double | Array | 3 | Unit vector (x, y, z) the joint rotates about or translates along, in its own frame. |

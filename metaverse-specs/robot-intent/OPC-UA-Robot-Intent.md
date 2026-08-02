@@ -36,24 +36,18 @@ There is a second gap, and it is the harder one. A motion takes seconds; a pick 
 
 ### 1.3 What this specification does not do
 
-Three of these are permanent boundaries, and two are deferrals this working group may revisit.
+Two of these are permanent boundaries. Neither is a deferral.
 
-**Out of scope by design:**
+- It is **not** a real-time control channel. Trajectory *execution* is in scope — a client hands over a whole time-parameterised path and the robot's own motion kernel runs it (§6.8) — and where a high-rate channel is genuinely needed, this specification **brokers** it (§6.9). What it does not do is carry the samples: it defines no transport, closes no control loop, and runs at OPC UA rates. §4.3 draws that line as a normative limit rather than a caution.
+- It is **not** a safety function, and it is **not** safety-rated. This is not a scoping preference; it is what the technology permits. OPC 10000-15 carries cyclic safety data from a provider to a consumer, and a client calling a Method has no way to supply safety-rated arguments — so no Method in this or any other companion specification can be a safety function. What **is** in scope is *awareness*: the model reports what the safety system is enforcing, and a Server **shall** refuse work that would exceed it. Clause 10 states both halves precisely.
 
-- It is **not** a real-time motion interface. It does not stream trajectories, close force loops, track conveyors or replace `servoj`, EGM, FRI or RSI. Those run at 250 Hz to 1 kHz on dedicated channels; this interface runs at OPC UA rates and is measured in whole motions, not in cycles. §4.3 states this as a normative limit rather than a caution.
-- It is **not** a safety function, and it is **not** safety-rated. Clause 10 says exactly what that means and what it does not permit a client to assume.
-- It does **not** define the robot's construction. Axes appear here only in the detail an intent needs — order, kind, limits — because a joint target is meaningless without them. OPC 40010-1 describes the machine, and Annex B binds the two.
-
-**Not addressed yet:**
-
-- It does **not yet** define a portable inspection, welding or dispensing process model. Such work is reachable through `CallProgramIntentDataType` and is a candidate for a later part.
-- It does **not yet** define conditional or branching missions. A mission is an ordered sequence; branching, loops and error-handling policies are deferred, because a sequence with a revisable horizon covers the supervised cases without committing the model to an execution language.
-
-Neither list is a statement that the omitted capability is unimportant — only that Release 0.1.0 does not define it, and that a Server is conformant without it.
+Neither statement is about the importance of the omitted capability. The first is a division of labour with the layer beneath; the second is the boundary of what an OPC UA Method can be.
 
 ### 1.4 Capabilities and versioning
 
-Release 0.1.0 covers the intent vocabulary, the execution lifecycle, queueing and blending, cancellation, missions with a committed base and a revisable horizon, command authority, and capability declaration. The NodeSet declares exactly one `RequiredModel` — the base OPC UA namespace — so a Server can adopt it without pulling in any companion model.
+Release 0.1.0 covers the intent vocabulary — joint, linear and circular moves, trajectories, Cartesian paths, force-controlled moves, grasping, picking and placing, tool change, output, program call, waiting, and six application processes — together with the execution lifecycle, queueing and blending, cancellation, missions with a committed base, a revisable horizon and a step graph, command authority, safety awareness, the robot's kinematic description, real-time channel brokerage, and capability declaration.
+
+The NodeSet declares exactly one `RequiredModel` — the base OPC UA namespace — so a Server can adopt it without pulling in any companion model. A Server implements the facets it can honour and declares the rest false; only **RI-Base** is mandatory (§12.2).
 
 ---
 
@@ -66,8 +60,15 @@ Release 0.1.0 covers the intent vocabulary, the execution lifecycle, queueing an
 - **ISO 9787:2013** — *Robots and robotic devices — Coordinate systems and motion nomenclatures*. Source of the frame roles in `FrameRoleEnum`, and of the roll-pitch-yaw convention used by the conversion in Annex C.
 - **ISO 10218-1** and **ISO 10218-2** — *Robotics — Safety requirements*. Source of the operational modes in `OperationalModeEnum` and of the single-point-of-control requirement discussed in clause 10.
 - **IEC 60204-1** — *Safety of machinery — Electrical equipment of machines*. Source of the stop categories that clause 10 states this interface does **not** select.
+- **IEC 61800-5-2** — *Adjustable speed electrical power drive systems — Safety requirements: Functional*. Source of the safe motion functions named by `SafeMotionFunctionEnum` (§5.7.2).
+- **IEC 61131-3** — *Programmable controllers — Programming languages*. Source of the step-and-transition divergence model the mission graph follows (§7.4).
 
-Informative alignments — PLCopen Motion Control, VDA 5050, ROS 2 actions, MoveIt, the vendor motion languages, and the Capability–Skill–Service model — are listed in Annex D. They are **not** normative references and impose no dependency, notwithstanding that `BufferModeEnum` and `BlockingModeEnum` adopt their vocabularies deliberately and unchanged.
+Informative alignments — PLCopen Motion Control, VDA 5050, ROS 2 actions, MoveIt, the vendor motion languages, the Capability–Skill–Service model, OPC UA FX, and the OPC UA joining and tightening specifications — are listed in Annex D. They are **not** normative references and impose no dependency, notwithstanding that `BufferModeEnum` and `BlockingModeEnum` adopt their vocabularies deliberately and unchanged.
+
+Two are worth naming here because a Server may resolve references into them, and neither is a `RequiredModel`:
+
+- **OPC 40450** and **OPC 40451** — *OPC UA for Industrial Joining Technologies*, base and tightening systems. `FastenIntentDataType.Joint` references a joint in that model where one is implemented (§5.4.2). Where it is not, the intent's own parameters stand alone.
+- **OPC 10000-80 to -84** — *OPC UA FX*. The open transport a real-time channel may name (§6.9). This specification defines none of its content.
 
 ---
 
@@ -124,16 +125,19 @@ This is what makes the model portable. Every vendor already solves those problem
 
 The same reasoning applies to blending. `BlendDataType.Radius` is a request in metres because that is the only unit two vendors share; controllers that expose a unitless blend scale map it as best they can, and a Server that cannot honour the exact radius **shall** still succeed. A client that needs the exact path uses `Exact` termination, which every vendor implements identically.
 
-### 4.3 What this interface is not for
+### 4.3 What this interface carries, and what it brokers
 
-A Server **shall not** present this interface as a real-time control channel, and a client **shall not** use it as one.
+OPC UA method invocation is not deterministic and, in the deployments this model is written for, completes in tens of milliseconds. Vendor real-time channels run two to four orders of magnitude faster on dedicated transports. That difference is not something a specification can argue away, so this model divides the work rather than pretending the gap is not there.
 
-OPC UA method invocation is not deterministic and, in the deployments this model is written for, completes in tens of milliseconds. Vendor real-time channels run two to four orders of magnitude faster on dedicated transports. The following are therefore outside what the model can express, and a Server **shall not** claim conformance for them:
+**Carried here — one submission, executed by the robot.** A trajectory, a Cartesian path or a force-controlled move is handed over *whole* and run by the robot's own motion kernel (§6.8). The round trip happens once, at submission, so the transport's latency bounds how quickly work can be *started* and never how accurately it is *executed*. This is the same shape as `FollowJointTrajectory` in ROS and the buffered path function blocks of PLCopen, and it is why trajectory execution belongs here while trajectory streaming does not.
 
-- servo-level or joint-cyclic control;
-- closed force or impedance loops that require a bounded control period;
-- conveyor tracking, seam tracking or any other motion slaved to an external signal at rate;
-- trajectory streaming, whether as a dense waypoint list or as a time-parameterised path.
+**Brokered — described, leased, and left alone.** Where a client genuinely needs a high-rate channel — visual servoing, force tracking, conveyor following — the Server describes one and leases it (§6.9). The samples travel on that channel and never through this interface.
+
+A Server **shall not** present this interface as a real-time control channel, and a client **shall not** use it as one. In particular:
+
+- servo-level or joint-cyclic control **shall not** be attempted through repeated submission;
+- a closed force or impedance loop requiring a bounded control period **shall** use a brokered channel, not `ForceIntentDataType`, which commands a *move until contact* and not a continuous loop;
+- conveyor tracking, seam tracking and any other motion slaved to an external signal at rate **shall** use a brokered channel or the robot's own facility.
 
 `IntentOperationType.CurrentPose` exists so a client can *watch* a motion. It is a status report delivered at whatever rate the client's Subscription asks for, and using it to close a control loop is outside this specification.
 
@@ -171,6 +175,9 @@ A client browses `Server/RobotIntent/Controllers` to find every robot it may com
 | `AxisType` | `ns=1;i=1009` | `BaseObjectType` |
 | `OutputSignalType` | `ns=1;i=1010` | `BaseObjectType` |
 | `ProgramType` | `ns=1;i=1011` | `BaseObjectType` |
+| `SafetyStateType` | `ns=1;i=1012` | `BaseObjectType` |
+| `RealTimeChannelType` | `ns=1;i=1013` | `BaseObjectType` |
+| `RobotDescriptionType` | `ns=1;i=1014` | `BaseObjectType` |
 
 Annex A is the authoritative node reference and carries every member with its DataType, ValueRank and ModellingRule.
 
@@ -195,13 +202,24 @@ Intents are a **DataType hierarchy**, not one Method per verb.
 flowchart TB
     I["IntentDataType (abstract)"]
     M["MotionIntentDataType (abstract)"]
+    P["ProcessIntentDataType (abstract)"]
     I --> M
     M --> JM["JointMoveIntentDataType"]
     M --> LM["LinearMoveIntentDataType"]
     M --> CM["CircularMoveIntentDataType"]
+    M --> TJ["TrajectoryIntentDataType"]
+    M --> CP2["CartesianPathIntentDataType"]
+    M --> FI["ForceIntentDataType"]
+    M --> P
+    P --> AW["ArcWeldIntentDataType"]
+    P --> SW["SpotWeldIntentDataType"]
+    P --> DI["DispenseIntentDataType"]
+    P --> FA["FastenIntentDataType"]
+    P --> PA["PalletiseIntentDataType"]
+    P --> SF["SurfaceFinishIntentDataType"]
     I --> G["GraspIntentDataType"]
     I --> R["ReleaseIntentDataType"]
-    I --> P["PickIntentDataType"]
+    I --> PK["PickIntentDataType"]
     I --> PL["PlaceIntentDataType"]
     I --> T["ToolChangeIntentDataType"]
     I --> O["SetOutputIntentDataType"]
@@ -235,6 +253,45 @@ The three correspond to the instructions every vendor already has, which is why 
 | `LinearMoveIntentDataType` | `movel` | `MoveL` | `LIN` | `L` | `MOVL` |
 | `CircularMoveIntentDataType` | `movec` | `MoveC` | `CIRC` | `C` | `MOVC` |
 
+### 5.4.1 Paths, trajectories and contact
+
+Three further motion intents cover the work that a single target pose cannot express.
+
+`CartesianPathIntentDataType` (`ns=1;i=3074`) carries a list of `PathWaypointDataType` (`ns=1;i=3073`), each a pose with the blend that applies at it. It carries **no timing**: the Server paces it from `Constraints`. This is the portable form of a taught path, and per-waypoint blending is exactly what distinguishes it from a sequence of separate linear moves — the robot need not stop between waypoints.
+
+`TrajectoryIntentDataType` (`ns=1;i=3072`) carries `TrajectoryPointDataType` (`ns=1;i=3070`) points, each with `TimeFromStart` and per-axis positions, optionally velocities and accelerations. Timing is what makes it a trajectory rather than a path. It also carries a `PathTolerance`, a `GoalTolerance` and a `GoalTimeTolerance`, all `MotionToleranceDataType` (`ns=1;i=3071`), so that "did it work?" has an answer the client set rather than one the Server chose.
+
+A Server **shall** reject a trajectory whose points are not in ascending `TimeFromStart` order, or whose `Positions` length differs from `AxisCount`, with `ParameterInvalid`. Where `MaxTrajectoryPoints` is non-zero, it **shall** reject a longer trajectory with `ParameterInvalid`.
+
+The whole trajectory is submitted in one call and executed by the robot's own motion kernel. That is the point: the transport is on the critical path once, at submission, and never during execution (§4.3).
+
+`ForceIntentDataType` (`ns=1;i=3075`) travels along `Direction` until `ContactForce` is reached or `MaxDistance` is exhausted. Exhausting the distance without contact **shall** be reported as `Failed` with `ObjectNotFound` — the intent was to touch something, and not touching it is not success. `HoldForce` keeps the robot pressing after contact instead of stopping.
+
+A Server **shall** report `ForceControlSupported` false unless the robot genuinely regulates force. Accepting a force intent and ignoring the force would tell a client its part was pressed when it was only approached.
+
+### 5.4.2 Process intents
+
+`ProcessIntentDataType` (`ns=1;i=3076`) is the abstract base of the intents that run an application process along a path. Beyond each process's own parameters it carries two things every process needs: `ProcessProgram`, referencing the procedure the equipment already holds, and `Attributes` for what this specification has not standardised.
+
+| Intent | NodeId | Covers |
+|---|---|---|
+| `ArcWeldIntentDataType` | `ns=1;i=3077` | voltage, wire feed and travel speed, gas pre- and post-flow, arc start delay, crater fill, weave, seam tracking |
+| `SpotWeldIntentDataType` | `ns=1;i=3078` | weld schedule, gun force, approach and retract distance, stack thickness, tip dress |
+| `DispenseIntentDataType` | `ns=1;i=3079` | flow rate, trigger-on and trigger-off distance, bead width, material temperature, purge |
+| `FastenIntentDataType` | `ns=1;i=3080` | joint reference, program number, torque, angle, snug torque |
+| `PalletiseIntentDataType` | `ns=1;i=3081` | pattern, layer, row, column, item orientation |
+| `SurfaceFinishIntentDataType` | `ns=1;i=3082` | contact force, feed rate, tool speed, step-over |
+
+Each parameter set is the subset the vendor languages agree on — ABB `seamdata`/`welddata`/`weavedata`, FANUC weld schedules and KUKA ArcTech for arc welding, and their equivalents elsewhere. Where an installation works to a welding procedure specification, `WeldProcedureRef` names it and this specification does not restate its content.
+
+Two of these deserve their reasoning stated.
+
+**Fastening is deliberately thin.** OPC 40450 and OPC 40451 already define industrial joining and tightening in full, including step-wise results and traces. `FastenIntentDataType.Joint` therefore references the joint in that model and the result belongs there. Restating torque strategies here would create a second definition of a fact that specification already owns — the same reason `PickIntentDataType.Source` references a `Location` node instead of naming a station in a string.
+
+**Palletising references a pattern, not a computed pose.** `Pattern` is a `LocationType`, so the geometry has one definition a client can read and subscribe to, rather than being recomputed from indices independently on both sides and disagreeing.
+
+`WeaveShapeEnum` (`ns=1;i=3018`) gives the oscillation across an arc weld seam: `None`, `Sine`, `Zigzag`, `Trapezoid`.
+
 ### 5.5 Manipulation intents
 
 `GraspIntentDataType` and `ReleaseIntentDataType` actuate an end effector. `Force` and `Width` are requests: an end effector that cannot regulate force **shall** ignore `Force` and still succeed, because refusing would make the intent unusable on the majority of grippers that are open or closed and nothing else.
@@ -258,6 +315,32 @@ The three correspond to the instructions every vendor already has, which is why 
 `ToolType.TcpFrame` **shall** reference a `CoordinateFrameType` whose `Role` is `Tool`. At most one `ToolType` instance under a controller **shall** have `Fitted` true at any time.
 
 `AxisType.Index` fixes the position of that axis in `JointMoveIntentDataType.JointTargets`, and `Kind` fixes the unit of that entry. The indices of the axes under one controller **shall** be the contiguous range `0` to `AxisCount − 1`.
+
+### 5.7.1 `RobotDescriptionType`
+
+`RobotDescriptionType` (`ns=1;i=1014`) carries enough of the robot's construction for a client to plan against it without a second specification: a `KinematicChain` of `KinematicJointDataType` (`ns=1;i=3084`) from the base outwards, a `MountingPose`, a `ReachRadius`, a `PayloadLimit`, and ceilings on tool centre point speed and acceleration.
+
+Each `KinematicJointDataType` names the `AxisType` it corresponds to, its `Kind`, the `OriginTransform` of its frame within its predecessor's at zero position, and the unit `AxisVector` it rotates about or translates along.
+
+This is **additive, not duplicative**. OPC 40010-1 describes a robot's topology and its axes in detail and defines no kinematic chain an inverse-kinematics solver could use, and no tool centre point at all. Where OPC 40010-1 is also implemented, its axis description is the fuller one and Annex B fixes which side decides.
+
+### 5.7.2 `SafetyStateType`
+
+`SafetyStateType` (`ns=1;i=1012`) reports what the robot's safety system is doing: `ActiveFunction`, `EmergencyStopActive`, `ProtectiveStopActive`, `SafeSpeedLimitActive`, `SafeSpeedLimit`, `SafetyControllerOk` and a human-readable `LastStopReason`.
+
+`SafeMotionFunctionEnum` (`ns=1;i=3013`) names the function being enforced, using the vocabulary of IEC 61800-5-2: `None`, `Sto`, `Ss1`, `Ss2`, `Sos`, `Sls`, `Slp`, `Sdi`, `Sbc`.
+
+Every member is **read-only and a report**. The safety system enforces these independently of this interface and remains effective when the Server is unreachable. Clause 10 states what a Server must do with them and what a client may not conclude from them.
+
+### 5.7.3 `RealTimeChannelType`
+
+`RealTimeChannelType` (`ns=1;i=1013`) describes a high-rate channel the Server can offer, so a client can find and open one: `Transport`, `EndpointUrl`, `Initiator`, `NominalRate`, `PayloadDescriptor`, `RequiredMode`, `Available`, and the current `LeaseHolder` and `LeaseExpiry`.
+
+`RealTimeTransportEnum` (`ns=1;i=3014`) names the transport: `Rtde`, `Egm`, `Fri`, `Rsi`, `MotoRos2`, `OpcUaFx`, `Other`. Of these only `OpcUaFx` — OPC UA FX, OPC 10000-80 to -84 — is an OPC Foundation specification; the rest are vendor channels this model describes without defining.
+
+`ChannelInitiatorEnum` (`ns=1;i=3015`) says which end opens the connection: `Server` or `Client`. It is stated rather than left to the reader because getting it wrong is the usual reason a first connection attempt fails.
+
+§6.9 defines the lease.
 
 ### 5.8 Enumerations
 
@@ -324,6 +407,11 @@ The values below are normative. Where a value is cited as interoperable with ano
 | `HardwareFault` | 16 | A fault in the robot, the end effector or the controller. |
 | `SafetyStop` | 17 | A safety function acted. The safety system decided this, not this interface. |
 | `Other` | 18 | A reason none of the above describes; see `Message`. |
+| `SafetyLimitExceeded` | 19 | Refused; the request would exceed a limit the safety system is enforcing (§10.3). |
+
+**`ErrorPolicyEnum`** (`ns=1;i=3016`) — what a mission does when a step does not succeed (§7.4): `Abort` 0 (the default), `Retry` 1, `Skip` 2, `Fallback` 3, `Compensate` 4.
+
+**`DivergenceKindEnum`** (`ns=1;i=3017`) — how the transitions leaving one step relate, following the divergence of an IEC 61131-3 sequential function chart: `Alternative` 0 (exactly one is taken — an OR divergence), `Parallel` 1 (all are taken and the branches run concurrently — an AND divergence).
 
 ---
 
@@ -436,6 +524,33 @@ When an operation reaches a terminal state its `Result` **shall** be complete an
 
 A Server **shall** retain a terminated operation for long enough that a client which was disconnected at the moment of completion can still read its result on reconnection. It **may** then delete it; `AutoDelete` and `RecycleCount`, inherited from Part 10, describe what it does.
 
+### 6.8 Trajectory execution (normative)
+
+A trajectory is submitted like any other intent and tracked by the same lifecycle. Two things are particular to it.
+
+**It is handed over whole.** A Server **shall** accept the entire trajectory at submission and execute it without further exchange. It **shall not** require a client to feed points during execution, because a transport that cannot guarantee the next point arrives in time cannot be part of the control loop (§4.3).
+
+**Tolerance decides success.** While executing, a Server **shall** report `Failed` with `Kinematics` if deviation exceeds `PathTolerance`. At the end it **shall** report `Failed` with `Kinematics` if the final deviation exceeds `GoalTolerance`, and `Failed` with `Timeout` if completion is later than the final point's `TimeFromStart` by more than `GoalTimeTolerance`. A tolerance of zero or less means the Server applies its own, and a Server that applies its own **should** publish it in `Result.Outputs` so the client can learn what was actually enforced.
+
+`Progress` is meaningful for a trajectory in a way it is not for a single move: a Server **should** report the fraction of `TimeFromStart` elapsed.
+
+### 6.9 Brokering a real-time channel (normative)
+
+Where a client needs a rate this interface cannot carry, the Server describes a channel and leases it. The samples travel on that channel; this specification defines no transport and inspects no payload.
+
+`OpenRealTimeChannel` takes a lease. A Server **shall** refuse it — returning `Granted` false — when the channel is not `Available`, when another Session holds the lease, when `OperationalMode` is not the channel's `RequiredMode`, or when the caller does not hold command authority. On success it returns the `EndpointUrl`, the `PayloadDescriptor` and a `LeaseExpiry`.
+
+A lease **shall** lapse at `LeaseExpiry` unless renewed by a further `OpenRealTimeChannel` from the holding Session, and **shall** be released when that Session closes. This is the same reasoning as command authority in clause 8: a client that dies must not hold a resource for good.
+
+`CloseRealTimeChannel` releases the lease explicitly.
+
+Two rules keep the division of labour honest:
+
+- While a channel lease is held, a Server **shall** refuse motion intents with `CapabilityNotSupported` unless it can genuinely arbitrate between the two sources. Two things commanding one robot with no arbitration is the failure this rule exists to prevent.
+- A Server **shall not** represent a brokered channel as being under this interface's control. Its behaviour, its guarantees and its failure modes are the transport's.
+
+Of the transports named, only `OpcUaFx` — OPC UA FX, OPC 10000-80 to -84 — is an OPC Foundation specification. It is the open path, and a Server that offers it gives a client something it can implement from published documents rather than from a vendor SDK.
+
 ---
 
 ## 7 Missions (normative)
@@ -478,9 +593,40 @@ A mission executes its steps in ascending `SequenceId`. Each step, when it begin
 
 `MissionStepDataType.Status` is a **hint**. Where `Operation` is not null, that operation's state machine **decides**, and `Status` **shall** reflect it. Two members can report the state of one step; this sentence says which one is right.
 
-A step that terminates `Failed` **shall** cause the mission to terminate `Failed` without beginning any later step. Release 0.1.0 defines no error-handling policy beyond this; a client that wants one submits the recovery itself.
+A step that terminates `Failed` **shall** cause the mission to terminate `Failed` without beginning any later step, **unless** the step declares an error policy that says otherwise (§7.4).
 
 `CancelMission` cancels the mission and every intent belonging to it, subject to the same right of refusal as `CancelIntent`.
+
+### 7.4 The step graph (normative)
+
+A mission may carry `Transitions`, an array of `MissionTransitionDataType` (`ns=1;i=3083`). Where it is **empty**, the mission is the ordered sequence §7.3 describes and nothing else applies — which is what makes the graph an addition rather than a replacement.
+
+The model is the step-and-transition form of an IEC 61131-3 sequential function chart, chosen over a behaviour tree because it is the notation the audience implementing this already knows, it has an IEC serialization, and it needs no tick loop.
+
+Each transition carries `FromStepId`, `ToStepId`, a `Condition` and a `DivergenceKind`.
+
+`Condition` is an OPC UA `ContentFilter` — the base specification's own filter grammar, reused rather than invented. A specification that defined its own expression language would oblige every implementer to write a parser for it, and would then have to say what happens when two parsers disagree. An empty filter is always true.
+
+`DivergenceKind` says how the transitions leaving one step relate:
+
+- `Alternative` — exactly one is taken, the first whose `Condition` holds, in `Transitions` order. A Server **shall** evaluate them in that order so that two clients reading the same mission predict the same branch.
+- `Parallel` — all are taken, and the branches execute concurrently. A Server **shall** report `MissionBranchingSupported` false if it cannot run branches concurrently, rather than silently serialising them.
+
+A Server **shall** refuse a mission whose transitions name a `FromStepId` or `ToStepId` that is not a step of that mission, and one that mixes `Alternative` and `Parallel` on transitions leaving the same step.
+
+**Error policies.** `MissionStepDataType.ErrorPolicy` says what happens when the step does not succeed:
+
+| Policy | Behaviour |
+|---|---|
+| `Abort` | End the mission. The default, and what a mission without policies does. |
+| `Retry` | Re-attempt the step. The Server bounds the attempts and reports `Failed` when they are exhausted. |
+| `Skip` | Record the failure and continue with the next step. |
+| `Fallback` | Continue at `FallbackStepId`. |
+| `Compensate` | Run `FallbackStepId` to undo what has been done, then end the mission. |
+
+A Server **shall** refuse a mission where `ErrorPolicy` is `Fallback` or `Compensate` and `FallbackStepId` does not name a step of that mission. `Compensate` differs from `Fallback` in what happens afterwards, and only in that: both run the fallback step, but `Compensate` then ends the mission rather than continuing.
+
+Where a step's policy is honoured, the *mission* does not terminate `Failed` even though the *step* did — which is the whole reason the policies exist, and why §7.3's rule is stated as a default rather than an invariant.
 
 ---
 
@@ -510,6 +656,10 @@ Three rules keep the declaration honest, and each is checkable against a running
 
 `AxisCount` states how many entries `JointMoveIntentDataType.JointTargets` must carry, and **shall** equal the number of `AxisType` instances under the controller.
 
+Five further declarations cover the capability added beyond single moves. `TrajectorySupported` and `ForceControlSupported` say whether trajectories and force-controlled moves are accepted; `RealTimeChannelsSupported` whether channels are brokered; `MissionBranchingSupported` whether `Transitions` are evaluated at all; and `MaxTrajectoryPoints` bounds a trajectory, zero meaning the Server states no limit.
+
+Each follows the same rule as `BlendingSupported`: a Server declares false rather than accepting work it will not actually perform. A Server that reports `MissionBranchingSupported` false executes the steps in order and ignores any transitions supplied, and a client reading that declaration knows not to express a branch it needs.
+
 ---
 
 ## 10 Safety (normative)
@@ -521,6 +671,10 @@ Three rules keep the declaration honest, and each is checkable against a running
 The safety functions of the robot system — emergency stop, protective stop, speed and separation monitoring, force limiting, and enabling device control — are implemented in safety-rated hardware and firmware independent of this interface, and **shall** remain effective regardless of its state, including when the Server is unreachable, the Session has closed, or a client is submitting intents as fast as the Server will accept them.
 
 A Server **shall not** claim, and a client **shall not** assume, any safety integrity level or performance level for any part of this model.
+
+This is a property of the technology, not a choice this working group made. OPC 10000-15 carries cyclic safety data from a SafetyProvider to a SafetyConsumer; the consumer's request carries an identifier, a monitoring number and one octet of explicitly **non-safety** flags, so a caller has no channel through which to supply safety-rated arguments. Every safety fieldbus — PROFIsafe, CIP Safety, FSoE, openSAFETY — expresses a safety command as a **continuously asserted cyclic signal**, because the integrity argument rests on the fail-safe state that follows when assertion stops. A Method call has no defined behaviour when it stops being called, and therefore cannot be a safety function however it is labelled.
+
+A specification that ignored this would not be merely wrong; it would encourage an integrator to rely on something that fails silently. §10.4 says what can honestly be done instead.
 
 ### 10.2 Operational mode gates submission
 
@@ -536,7 +690,29 @@ Where a person may be within the safeguarded space, the applicable safety standa
 
 A client that requires a category-rated stop **shall** obtain it from the safety system. It cannot be obtained here.
 
-### 10.4 Refusal is a normal outcome
+### 10.4 Safety awareness, and its limits
+
+What this specification *can* do is see what the safety system is enforcing and refuse work that would contradict it. `SafetyStateType` (§5.7.2) reports it, and the following are normative.
+
+A Server **shall** refuse `SubmitIntent` and `SubmitMission`:
+
+- with `SafetyLimitExceeded`, when `SafeSpeedLimitActive` is true and the intent's `Constraints.CartesianSpeed` exceeds `SafeSpeedLimit`;
+- with `NotPermittedInMode`, when `EmergencyStopActive` or `ProtectiveStopActive` is true;
+- with `NotPermittedInMode`, when `SafetyControllerOk` is false.
+
+A Server **shall** publish `ActiveFunction`, `EmergencyStopActive`, `ProtectiveStopActive`, `SafeSpeedLimitActive`, `SafeSpeedLimit` and `SafetyControllerOk` as the safety system reports them, and **shall not** publish a value the safety system has not asserted.
+
+Each of these is observable against a running Server: assert a protective stop and a conformant Server refuses; lower `SafeSpeedLimit` below a submitted speed and it refuses.
+
+**What none of this makes true.** These refusals are an application-layer courtesy performed by non-safety-rated software. They reduce the number of requests the safety system has to reject; they are not a protective measure and nothing may be assumed from their presence. In particular:
+
+- a client **shall not** treat a Server's acceptance of an intent as evidence that the motion is safe;
+- a client **shall not** treat `SafeSpeedLimit` as a limit *this interface* enforces — the safety system enforces it, and would enforce it identically if this model did not exist;
+- a Server **shall not** offer any Method that commands a safe motion function, changes an operational mode, or clears a stop. Those are safety functions, and clause 10.1 says why no Method here can be one.
+
+The asymmetry is deliberate: this model may **observe** the safety system and **refuse** on what it sees, and may never **instruct** it.
+
+### 10.5 Refusal is a normal outcome
 
 Every rule above produces a refusal rather than a degraded execution, and each is observable against a running Server: a conformant Server can be seen to refuse a submission outside Automatic mode, and to refuse one from a Session that does not hold authority. A client **shall** treat refusal as an expected outcome and not as an error condition to be retried blindly.
 
@@ -580,6 +756,18 @@ A Server declares conformance by exposing `RobotIntentRootType` under the Server
 | **RI-Motion-Joint** | `JointMoveIntentDataType`, with `AxisType` instances covering `0` to `AxisCount − 1`. |
 | **RI-Motion-Linear** | `LinearMoveIntentDataType`. |
 | **RI-Motion-Circular** | `CircularMoveIntentDataType`. |
+| **RI-Trajectory** | `TrajectoryIntentDataType`, `TrajectorySupported` true, and the tolerance rules of §6.8. |
+| **RI-Path** | `CartesianPathIntentDataType` and `TrajectorySupported` true. |
+| **RI-Force** | `ForceIntentDataType` and `ForceControlSupported` true — the robot genuinely regulates force. |
+| **RI-RealTimeChannel** | `RealTimeChannelsSupported` true; the `RealTimeChannels` folder with at least one `RealTimeChannelType`; `OpenRealTimeChannel` and `CloseRealTimeChannel` with the lease rules of §6.9. |
+| **RI-Safety** | `SafetyState` populated from the safety system, and the refusals of §10.4. |
+| **RI-Description** | `Description` with a `KinematicChain` covering every axis, `ReachRadius`, `PayloadLimit` and `MaxCartesianSpeed`. |
+| **RI-Process-ArcWeld** | `ArcWeldIntentDataType`. |
+| **RI-Process-SpotWeld** | `SpotWeldIntentDataType`. |
+| **RI-Process-Dispense** | `DispenseIntentDataType`. |
+| **RI-Process-Fasten** | `FastenIntentDataType`. Where an OPC UA joining or tightening model is implemented, `Joint` resolves into it. |
+| **RI-Process-Palletise** | `PalletiseIntentDataType` and at least one `LocationType` describing a pattern. |
+| **RI-Process-SurfaceFinish** | `SurfaceFinishIntentDataType` and **RI-Force**. |
 | **RI-Grasp** | `GraspIntentDataType` and `ReleaseIntentDataType`, and at least one `ToolType` with a `TcpFrame`. |
 | **RI-PickPlace** | `PickIntentDataType`, `PlaceIntentDataType`, and at least one `LocationType`. |
 | **RI-ToolChange** | `ToolChangeIntentDataType`, and more than one `ToolType`. |
@@ -592,6 +780,7 @@ A Server declares conformance by exposing `RobotIntentRootType` under the Server
 | **RI-Retry** | `Retry`, and `Retriable` reachable. |
 | **RI-Mission** | `MissionsSupported` true; `SubmitMission`, `CancelMission`; `MissionType` instances. |
 | **RI-Mission-Horizon** | **RI-Mission**, plus `MissionHorizonSupported` true, `UpdateMission`, and the base immutability rules of §7.2. |
+| **RI-Mission-Branching** | **RI-Mission**, plus `MissionBranchingSupported` true, `Transitions` evaluated per §7.4, and the error policies honoured. |
 | **RI-Interop-40010** | Annex B. |
 
 A facet other than **RI-Base** is claimed only where every intent type it names appears in `SupportedIntents`.
@@ -636,9 +825,11 @@ A Server claiming **RI-Interop-40010** **shall**:
 3. Publish, as `ProgramType` instances under the controller's `Programs` folder, exactly those programs the OPC 40010-1 task control can load, so that `CallProgramIntentDataType` and the OPC 40010-1 task control name the same things.
 4. Express the poses it publishes in frames whose transforms are consistent with the mounting and geometry the OPC 40010-1 model describes.
 
-A Server **shall not** duplicate OPC 40010-1's topology in this model. `AxisType` exists here only to fix the order, kind and limits that a joint target needs; where OPC 40010-1 is also implemented, its axis description is the fuller one and this model's `AxisType` instances **shall** agree with it.
+A Server **shall not** duplicate OPC 40010-1's topology in this model. `AxisType` exists here only to fix the order, kind and limits that a joint target needs; where OPC 40010-1 is also implemented, its axis description is the fuller one and this model's `AxisType` instances **shall** agree with it. The same rule governs `RobotDescriptionType`: its `KinematicChain` is additive — OPC 40010-1 defines no kinematic chain — but where the two describe the same axis, **OPC 40010-1 decides** and this model reflects it.
 
 Note that OPC 40010-1 defines no tool centre point. `ToolType.TcpFrame` supplies the concept, and there is nothing in OPC 40010-1 for it to contradict.
+
+A Server claiming **RI-Interop-40010** together with **RI-Safety** **shall** report `SafetyStateType` consistently with the OPC 40010-1 safety state of the same motion device system. Where they would disagree, the OPC 40010-1 value is the robot's own report and decides — and neither is safety-rated, as both specifications say of themselves.
 
 ---
 
@@ -693,5 +884,10 @@ These are **not** normative references and impose no dependency. They are record
 - **MoveIt** — `MotionSequenceItem.blend_radius` is the same abstraction as `BlendDataType.Radius`.
 - **OPC 10031-4 job control** — the separation of cancelling work that has not started from aborting work that has.
 - **Capability–Skill–Service** (Plattform Industrie 4.0) — in that vocabulary this model is the **service** layer over a robot's **skills**, discovered by **capability**. `IntentCapabilitiesType` is the capability declaration.
-- **Vendor motion languages** — URScript, RAPID, KRL, TP, INFORM and AS. The three motion intents are their common denominator, and `BlendDataType` is the portable form of `r`, `zonedata`, `$APO`, `CNT` and `PL`.
+- **Vendor motion languages** — URScript, RAPID, KRL, TP, INFORM and AS. The three motion intents are their common denominator, and `BlendDataType` is the portable form of `r`, `zonedata`, `$APO`, `CNT` and `PL`. The process intents are drawn the same way: `ArcWeldIntentDataType` from ABB `seamdata`/`welddata`/`weavedata`, FANUC weld schedules and KUKA ArcTech; `SpotWeldIntentDataType` from ABB `SpotL` and FANUC SpotTool; `DispenseIntentDataType` from ABB `DispL`.
+- **ROS `control_msgs/FollowJointTrajectory`** — the shape of `TrajectoryIntentDataType`, including the separation of path, goal and goal-time tolerance. Every ROS robot driver already accepts it, which is the point.
+- **OPC UA FX** (OPC 10000-80 to -84) — the open transport a brokered channel may name, and the only one in `RealTimeTransportEnum` that is an OPC Foundation specification.
+- **OPC 40450 / OPC 40451** (Industrial Joining Technologies) — where fastening results and joint definitions belong. `FastenIntentDataType` references them rather than restating them.
+- **IEC 61131-3 sequential function charts** — the step, transition and divergence model of §7.4. Behaviour trees were considered and not adopted: their tick semantics need a runtime that controller vendors do not provide, and their serialization is a library's rather than a standard's.
+- **ISO 15609** — welding procedure specifications, named by `ArcWeldIntentDataType.WeldProcedureRef` and not restated here.
 - **The OPC UA robot skill model** developed in the VDMA SOArc working group (`http://opcfoundation.org/UA/Skills/`) is prior art in this area. This specification uses a different namespace and does not extend it.

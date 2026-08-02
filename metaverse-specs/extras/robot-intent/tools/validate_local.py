@@ -46,7 +46,14 @@ Specification invariants (the reason this file is not generic):
   * Pose3DDataType MUST carry Position[3] and Orientation[4] - clause 5.2 fixes the
     quaternion form.
   * IntentControllerType MUST declare SubmitIntent, CancelIntent, CancelAll,
-    RequestControl and ReleaseControl as Mandatory: they are the RI-Base facet.
+    RequestControl and ReleaseControl as Mandatory: they are the RI-Base facet, and
+    SafetyState as Mandatory, because clause 10.4 drives refusals from it.
+  * ProcessIntentDataType MUST be abstract and all six process intents MUST descend
+    from it, so a client that understands the base can carry one it has never seen.
+  * MissionTransitionDataType.Condition MUST be the base UA ContentFilter. Replacing it
+    with a bespoke expression would oblige every implementer to write a parser.
+  * SafetyStateType's reported members MUST be Mandatory: a refusal rule cannot depend
+    on a member a conformant Server is allowed to omit.
 
 Specification/model cross-checks, in BOTH directions:
   * Every ObjectType, DataType and ReferenceType the model declares is named in
@@ -72,6 +79,7 @@ NS = {"u": "http://opcfoundation.org/UA/2011/03/UANodeSet.xsd"}
 UAX = {"uax": "http://opcfoundation.org/UA/2008/02/Types.xsd"}
 UA_NAMESPACE = "http://opcfoundation.org/UA/"
 PROGRAM_STATE_MACHINE = "i=2391"
+CONTENT_FILTER = "i=586"
 
 # Reference types that make a node a child of its ParentNodeId.
 HIERARCHICAL = {"HasComponent", "HasProperty", "Organizes", "HasSubtype",
@@ -430,6 +438,10 @@ def check_spec_invariants(m: Model) -> None:
                          "QuickStop": 4, "EndOfInstruction": 5},
         "AxisKindEnum": {"Revolute": 0, "Prismatic": 1},
         "TerminationModeEnum": {"Exact": 0, "Blend": 1},
+        # Abort is what a mission without a declared policy gets, so it must be zero.
+        "ErrorPolicyEnum": {"Abort": 0},
+        "DivergenceKindEnum": {"Alternative": 0, "Parallel": 1},
+        "SafeMotionFunctionEnum": {"None": 0},
     }
     for ename, wanted in expect_values.items():
         nid = dt(ename)
@@ -468,6 +480,49 @@ def check_spec_invariants(m: Model) -> None:
             elif m.modelling_rule(mm) != "Mandatory":
                 err(f"IntentControllerType.{name} must be Mandatory for RI-Base; "
                     f"found {m.modelling_rule(mm)!r}")
+        # Clause 10.4 requires a Server to refuse on what the safety system reports,
+        # which it cannot do if the state is not there to read.
+        safety = m.member_named(ctl, "SafetyState")
+        if not safety:
+            err("IntentControllerType must declare SafetyState: clause 10.4 requires "
+                "refusals to be driven from it")
+        elif m.modelling_rule(safety) != "Mandatory":
+            err("IntentControllerType.SafetyState must be Mandatory")
+
+    # Every process intent descends from ProcessIntentDataType, so a client that
+    # understands the base can carry one it has never seen.
+    process_base = m.by_name("ProcessIntentDataType")
+    if process_base:
+        if m.nodes[process_base].get("IsAbstract") != "true":
+            err("ProcessIntentDataType must be abstract")
+        for name in ("ArcWeldIntentDataType", "SpotWeldIntentDataType",
+                     "DispenseIntentDataType", "FastenIntentDataType",
+                     "PalletiseIntentDataType", "SurfaceFinishIntentDataType"):
+            nid = m.by_name(name)
+            if not nid:
+                err(f"required process intent {name} is missing from the model")
+            elif m.supertype(nid) != process_base:
+                err(f"{name} must subtype ProcessIntentDataType")
+
+    # The transition condition reuses the base UA ContentFilter rather than inventing
+    # an expression language; a change here would oblige implementers to write a parser.
+    transition = m.by_name("MissionTransitionDataType")
+    if transition:
+        fields = {f.get("Name"): f.get("DataType") for f in m.struct_fields(transition)}
+        if fields.get("Condition") != CONTENT_FILTER:
+            err("MissionTransitionDataType.Condition must be the base UA ContentFilter "
+                f"({CONTENT_FILTER}); found {fields.get('Condition')!r}")
+
+    safety_state = m.by_name("SafetyStateType")
+    if safety_state:
+        for name in ("ActiveFunction", "EmergencyStopActive", "ProtectiveStopActive",
+                     "SafeSpeedLimitActive", "SafeSpeedLimit", "SafetyControllerOk"):
+            mm = m.member_named(safety_state, name)
+            if not mm:
+                err(f"SafetyStateType must declare {name} (clause 10.4)")
+            elif m.modelling_rule(mm) != "Mandatory":
+                err(f"SafetyStateType.{name} must be Mandatory: a refusal rule cannot "
+                    "depend on an optional member")
 
 
 def check_spec_crossref(m: Model) -> None:
