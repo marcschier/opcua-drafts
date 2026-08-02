@@ -25,7 +25,10 @@ except Exception:
 
 def walk(exts):
     for dirpath, dirnames, filenames in os.walk(ROOT):
-        dirnames[:] = [d for d in dirnames if d not in SKIP_DIRS]
+        dirnames[:] = [
+            d for d in dirnames
+            if d not in SKIP_DIRS and not os.path.exists(os.path.join(dirpath, d, ".git"))
+        ]
         for name in filenames:
             if os.path.splitext(name)[1].lower() in exts:
                 yield os.path.join(dirpath, name)

@@ -139,6 +139,15 @@ The mover command is equivalent to:
 python release/tools/release_spec.py return <spec-id> --import node_modules\spec-release-work\private
 ```
 
+Locally, the `spec-drafts/` submodule is already a checkout of the private repository, so it can be the import source directly — update it first so it is not importing a stale commit:
+
+```powershell
+git submodule update --remote spec-drafts
+python release/tools/release_spec.py return <spec-id> --import spec-drafts --dry-run
+```
+
+The mover skips any directory carrying its own `.git`, so the submodule is never scanned for references to repair and a release can never rewrite files inside it.
+
 The public return pull request is opened first, because it restores the reviewed text to the public repository.
 After that pull request exists, the workflow opens a private cleanup pull request that removes the returned specification's manifest file set from `OPCF-Members/spec-drafts`:
 

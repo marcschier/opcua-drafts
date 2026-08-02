@@ -29,22 +29,22 @@
     {
       "stored": "payload/dot-github/scripts/check_links.py.bundle",
       "destination": ".github/scripts/check_links.py",
-      "sha256": "5e4b4f90fc6f1158fd478f4d360a80a74f34766b04cfc8c61c3755e1a7494668"
+      "sha256": "6e235053c0fbcac2a7ec4f508910d5a63d7d95cd1c868f6bcb48fa287524363f"
     },
     {
       "stored": "payload/dot-github/scripts/check_mermaid.py.bundle",
       "destination": ".github/scripts/check_mermaid.py",
-      "sha256": "f89b8c710458161c28985c4d8f190dd86c964c18aacc703c3a0118c52186a684"
+      "sha256": "ca0f34e92064ca8e7506a86d0d575da9bfd0bb9de551bd1e036a8ae605fb1eb8"
     },
     {
       "stored": "payload/dot-github/scripts/check_section_refs.py.bundle",
       "destination": ".github/scripts/check_section_refs.py",
-      "sha256": "120302d1699605b326fe85d9fc4846292ab34e0a7db5da9a79e13540feaf8506"
+      "sha256": "50b51ed0da582421216f2048d9ccf3890bbcb9bf75f2aafda267e4a21b22ca37"
     },
     {
       "stored": "payload/dot-github/scripts/check_yaml_json.py.bundle",
       "destination": ".github/scripts/check_yaml_json.py",
-      "sha256": "f7ceb76347a546fe4010cea6c10047e1a7d3c5832fb48954c80ea3e79777e978"
+      "sha256": "be8e900438c10bde2d93027b699dd8b3d7037bdcd854ea83c246eccb1a164b7d"
     },
     {
       "stored": "payload/dot-github/scripts/run_self_contained_validators.py.bundle",
