@@ -39,7 +39,12 @@ def _is_under(path: str, parent: str) -> bool:
 
 
 def _path_exists(path: str) -> bool:
-    return _abs(path).exists()
+    try:
+        return _abs(path).exists()
+    except OSError:
+        # A candidate longer than the platform limit, or otherwise unrepresentable, cannot
+        # name a file in this repository. Windows answers False here; Linux raises ENAMETOOLONG.
+        return False
 
 
 # Build artefacts that live inside specification trees but are never tracked. The walk is a
@@ -66,6 +71,20 @@ def _walk_files(path: str) -> list[str]:
     return files
 
 
+def _looks_like_path(value: str) -> bool:
+    """Cheap filter before touching the filesystem.
+
+    Word clause maps carry prose, and a whole paragraph is not a path candidate. Testing one
+    against the filesystem is wasted work on Windows and raises ENAMETOOLONG on Linux, which
+    made the mover fail in CI while passing locally.
+    """
+    if not value or len(value) > 200:
+        return False
+    if any(ch in value for ch in "\n\r\t"):
+        return False
+    return "/" in value or "." in value
+
+
 def _json_paths(value: Any) -> list[str]:
     found: list[str] = []
     if isinstance(value, dict):
@@ -76,7 +95,7 @@ def _json_paths(value: Any) -> list[str]:
             found.extend(_json_paths(item))
     elif isinstance(value, str):
         candidate = _norm(value)
-        if candidate and _path_exists(candidate):
+        if _looks_like_path(candidate) and _path_exists(candidate):
             found.append(candidate)
     return found
 
