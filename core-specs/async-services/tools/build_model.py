@@ -312,10 +312,12 @@ prop_var(70000, ASC, "MaxDeferralTime", Duration,
          "request is parked, not when the response becomes ready, so a Client can compute the "
          "deadline from the moment it receives Bad_RequestNotComplete.")
 prop_var(70000, ASC, "DefaultRetryAfter", Duration,
-         "The interval a Client waits before its first Continue when it cannot read the "
-         "DeferralResponseHeaderDataType carried in ResponseHeader.additionalHeader. Every "
-         "Client can read this Property, so the retry contract does not depend on a header that "
-         "a stack may discard with the fault that carries it.")
+         "The interval a Client waits before each Continue when it cannot read the "
+         "DeferralResponseHeaderDataType carried in ResponseHeader.additionalHeader. It is "
+         "never below MinRetryAfter, so a Client that can read nothing else is never throttled "
+         "for obeying the only value available to it. Every Client can read this Property, so "
+         "the retry contract does not depend on a header that a stack may discard with the "
+         "fault that carries it.")
 prop_var(70000, ASC, "MinRetryAfter", Duration,
          "The shortest interval the Server accepts between two Continue calls for the same "
          "parked request. A Client that calls more often is refused with Bad_ServerTooBusy. "
@@ -419,9 +421,9 @@ enum_type(70030, "DeferredRequestState",
           "can be collected again.",
           [("Executing", 0, "The Server is still working on the request. Continue returns Bad_RequestNotComplete."),
            ("Ready", 1, "The response is complete and parked. The next Continue returns it."),
-           ("Expired", 2, "The retention deadline passed before the response was collected and the Server discarded it. Continue returns Bad_DeferredRequestExpired."),
+           ("Expired", 2, "The response deadline passed before the response was collected and the Server discarded it. Continue returns Bad_DeferredRequestExpired."),
            ("Cancelled", 3, "The Client abandoned the response with Cancel. Continue returns Bad_RequestCancelledByRequest."),
-           ("Delivered", 4, "The response was collected and is retained for replay until the retention deadline. A Continue returns the same response again, so a Client that lost it to a broken connection is not left with an effect whose outcome it can never learn.")])
+           ("Delivered", 4, "The response was collected and is retained for replay until the response deadline. A Continue returns the same response again, so a Client that lost it to a broken connection is not left with an effect whose outcome it can never learn.")])
 
 enum_type(70031, "DeferredRequestTransition",
           "The transitions of a parked request, as reported by AuditDeferredRequestEventType. "
@@ -433,9 +435,9 @@ enum_type(70031, "DeferredRequestTransition",
            ("Delivered", 2, "A Client of the issuing Session collected the parked response, or collected it again by replay."),
            ("Reclaimed", 3, "A Session other than the one that issued the request collected the parked response. It replaces Delivered for that collection rather than accompanying it, so one collection is one transition."),
            ("Cancelled", 4, "A Client abandoned the parked response with Cancel."),
-           ("Expired", 5, "The Server discarded the parked response because the retention deadline passed."),
-           ("Completed", 6, "The work finished and its outcome became known. It is raised even when no response is held any longer, which is the only way the outcome of a request that outlived its retention deadline reaches the audit trail."),
-           ("Discarded", 7, "The Server discarded the parked response before its retention deadline because the issuing Session closed, its user identity changed, or the Server shut down.")])
+           ("Expired", 5, "The Server discarded the parked response because the response deadline passed."),
+           ("Completed", 6, "The work finished and its outcome became known. It is raised even when no response is held any longer, which is the only way the outcome of a request that outlived its response deadline reaches the audit trail."),
+           ("Discarded", 7, "The Server discarded the parked response before its response deadline because the issuing Session closed, its user identity changed, or the Server shut down.")])
 
 struct_type(70032, "DeferralRequestHeaderDataType",
             "Carried in RequestHeader.additionalHeader. It expresses a preference and never a "

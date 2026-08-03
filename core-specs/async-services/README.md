@@ -9,7 +9,7 @@ It answers [Mantis 10606](https://mantis.opcfoundation.org/view.php?id=10606), w
 ## Contents
 
 - `OPC-UA-Async-Services.md` — **standalone combined spec**: a self-contained read merging the two errata below, plus a worked GDS-to-gateway deployment, the five field scenarios and which of them a deferral actually solves, and a comparison with the mechanisms OPC UA already has. The two errata documents remain the authoritative, insertion-ready proposals.
-- `OPC-UA-Part4-Async-Service-Execution.md` — Part 4 errata: the `Continue` Service, the deferral and retry rules, the lifecycle, durable deferral, auditing, five StatusCodes and thirty-eight test assertions.
+- `OPC-UA-Part4-Async-Service-Execution.md` — Part 4 errata: the `Continue` Service, the deferral and retry rules, the lifecycle, durable deferral, auditing, five StatusCodes and thirty-nine test assertions.
 - `OPC-UA-Part5-Async-Service-Model.md` — Part 5 errata: `AsyncServiceCapabilitiesType`, `AsyncServiceDiagnosticsType`, the DataTypes and the two EventTypes.
 - `Opc.Ua.AsyncServices.NodeSet2.xml` — generated NodeSet.
 - `Opc.Ua.AsyncServices.NodeIds.csv` — generated NodeIds.

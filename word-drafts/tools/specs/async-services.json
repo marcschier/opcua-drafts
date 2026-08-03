@@ -263,9 +263,9 @@
       "title": "Lifecycle"
     },
     {
-      "from": "7.1 States and the retention deadline",
+      "from": "7.1 States and the two deadlines",
       "number": "6.7.1",
-      "title": "States and the retention deadline"
+      "title": "States and the two deadlines"
     },
     {
       "from": "7.2 An effect happens once; a response may be replayed",

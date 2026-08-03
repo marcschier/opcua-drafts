@@ -113,7 +113,7 @@ The middle case is why `ContinueResponse` exists and is not the empty placeholde
 | `Bad_DeferralNotSupported` | The Server implements `Continue` but defers no Service. A Server that does not implement the Service at all returns `Bad_ServiceUnsupported`, as it does for any Service it has not implemented. |
 | `Bad_ServerTooBusy` | The call arrived sooner than `MinRetryAfter` after the previous one while the request was still `Executing` (§6.3). |
 
-`Bad_DeferredRequestExpired` and `Bad_RequestCancelledByRequest` are distinguished from `Bad_DeferredRequestUnknown` for as long as the Server keeps a record of the request, which §7.1 bounds from below. Once the required retention has elapsed a Server **may** discard the record and answer `Bad_DeferredRequestUnknown` instead; a Client **shall** treat all three as *there is nothing to collect and there never will be*.
+`Bad_DeferredRequestExpired` and `Bad_RequestCancelledByRequest` are distinguished from `Bad_DeferredRequestUnknown` for as long as the Server keeps a record of the request, which the record floor of §7.1 bounds from below. Past that floor a Server **may** discard the record and answer `Bad_DeferredRequestUnknown` instead; a Client **shall** treat all three as *there is nothing to collect and there never will be*.
 
 ### 5.2 Why the response is polymorphic
 
@@ -157,9 +157,9 @@ Both structures are defined in Annex A and described in §9.3.
 
 `RetryAfter` in the response header tells the Client how long to wait before its next `Continue`. It is a hint the Server computes from what it knows — a gateway distributing to five hundred devices knows more about how long that takes than any Client does — and a Client **should** honour it.
 
-Because a Bad `serviceResult` travels as a `ServiceFault`, and an implementation may surface a fault as an exception that discards the header it arrived on, **the retry contract shall not depend on the header alone**. A Server **shall** publish `DefaultRetryAfter` and `MinRetryAfter` in `AsyncServiceCapabilities`, both readable by any Client with a `Read`. A Client that cannot read `additionalHeader` **shall** use `DefaultRetryAfter`.
+Because a Bad `serviceResult` travels as a `ServiceFault`, and an implementation may surface a fault as an exception that discards the header it arrived on, **the retry contract shall not depend on the header alone**. A Server **shall** publish `DefaultRetryAfter` and `MinRetryAfter` in `AsyncServiceCapabilities`, both readable by any Client with a `Read`. A Client that cannot read `additionalHeader` **shall** use `DefaultRetryAfter` before every `Continue`, not only the first.
 
-`MinRetryAfter` is the floor, and it is normative in both directions. A Server **shall not** return a `RetryAfter` below it, and **shall** refuse a `Continue` that arrives sooner than `MinRetryAfter` after the previous `Continue` for the same parked request with `Bad_ServerTooBusy`. Without an enforced floor, a Client that ignores the hint converts a deferral into a poll loop against a Server that deferred because it was already busy.
+`MinRetryAfter` is the floor, and it is normative in three directions. A Server **shall not** return a `RetryAfter` below it; **shall not** publish a `DefaultRetryAfter` below it, since otherwise the very Clients this clause protects would be throttled for obeying the only value they can read; and **shall** refuse a `Continue` that arrives sooner than `MinRetryAfter` after the previous `Continue` for the same parked request with `Bad_ServerTooBusy`. Without an enforced floor, a Client that ignores the hint converts a deferral into a poll loop against a Server that deferred because it was already busy.
 
 The floor applies **only while the parked request is `Executing`**. A `Continue` for a request that is `Ready`, `Delivered`, `Cancelled` or `Expired` is answered immediately, however soon it arrives. Throttling a Client that has something to collect would be perverse in general, and specifically incompatible with `DeferredRequestCompletedEventType`, which exists to tell a Client to call `Continue` the moment the response is ready: a floor that outranked readiness would make the Server refuse the call it had just asked for.
 
@@ -194,37 +194,43 @@ This does not make deferral safe for every legacy Client: a Client that generate
 
 ## 7 Lifecycle
 
-### 7.1 States and the retention deadline
+### 7.1 States and the two deadlines
 
 A parked request is `Executing`, then `Ready`, and then terminal: `Delivered`, `Cancelled` or `Expired`. `DeferredRequestState` in Annex A is the normative enumeration.
 
 `Executing` and `Ready` are the states of a live parked request. The three terminal states are records of one that is not, kept so that `Continue` can say *why* there is nothing new to collect — and, for `Delivered`, so that it can hand over the same answer again (§7.2).
 
-**One deadline governs retention**, and a Server **shall** compute it as
+**Two deadlines govern a parked request**, and conflating them is what would make an implementation ambiguous.
 
-> `RetentionDeadline` = `ParkedAt` + min(`MaxDeferralTime`, `RequestedDeferralTime` if non-zero)
+The **response deadline** is when the Server discards the response itself:
 
-extended, while the record is terminal, to at least the greater of `MinRetryAfter` and the last `RetryAfter` the Server issued for that request. That extension is what the Client can plan against: it was told when to come back, so the record is still there when it does.
+> `ResponseDeadline` = `ParkedAt` + min(`MaxDeferralTime`, `RequestedDeferralTime` where that is non-zero)
 
-For a durable parked request whose issuing Session has closed, the deadline is additionally capped at `SessionClosedAt` + `MaxDurableDeferralTime`, and the **earlier** of the two applies. `ExpiryTime` in the response header **shall** state the deadline in force at the moment the header is written; a Server that later shortens it — only ever by the durable cap — **shall** report the new value in the next header it writes.
+For a durable parked request whose issuing Session has closed, it is additionally capped at `SessionClosedAt` + `MaxDurableDeferralTime`, and the **earlier** of the two applies. `ExpiryTime` in the response header **shall** state the response deadline in force at the moment the header is written; a Server that later shortens it — only ever by the durable cap — **shall** report the new value in the next header it writes. §7.3 discards the response at this deadline.
 
-`RetentionDeadline` bounds retention from above and the extension bounds it from below. It does **not** bound it from below against the events of §7.5: a Session that closes, a user identity that changes and a Server that shuts down all discard parked responses before their deadline, and are audited as `Discarded` so that the difference is visible.
+The **record floor** is how long the terminal record outlives the response, so that a Client following the retry contract is told *why* there is nothing to collect rather than being told there never was anything. A Server **shall** keep the record until at least
+
+> `RecordFloor` = the later of `LastDeferralResponseAt` + the `RetryAfter` it last issued for that request, and `ParkedAt` + `MinRetryAfter`
+
+The Client was told when to come back, so the record is still there when it does. Past that floor a Server **may** discard the record and answer `Bad_DeferredRequestUnknown` instead (§5.1).
+
+Neither value bounds retention from below against the events of §7.5: a Session that closes holding a parked response that is not durable, a user identity that changes, and a Server that shuts down all discard a parked response before its response deadline, and are audited as `Discarded` so that the difference is visible.
 
 ### 7.2 An effect happens once; a response may be replayed
 
-A parked response is handed over on `Continue`, and the parked request becomes `Delivered`. It is **not** discarded. Until its retention deadline the Server **shall** answer a further `Continue` for the same handle with the same response.
+A parked response is handed over on `Continue`, and the parked request becomes `Delivered`. It is **not** discarded. Until its response deadline the Server **shall** answer a further `Continue` for the same handle with the same response.
 
 This is deliberate, and it is the difference between a mechanism that solves the problem and one that moves it. A Server cannot know whether a response it transmitted arrived: if the connection fails between transmission and receipt — which is precisely the condition that makes long operations hard — a delete-on-delivery rule leaves the Client with an effect it caused and an outcome it can never learn. That is the failure this specification exists to remove, and reintroducing it at the last step would be a poor joke.
 
 What happens once is the **effect**. A Server **shall not** execute a parked request a second time under any circumstances, and a replayed response is byte-equivalent to the first, not a re-execution.
 
-After the retention deadline a further `Continue` returns `Bad_DeferredRequestExpired`, or `Bad_DeferredRequestUnknown` once the Server has discarded the record. A Server **shall not** answer `Bad_DeferredRequestExpired` while the response is still retained and collectable.
+After the response deadline a further `Continue` returns `Bad_DeferredRequestExpired`, or `Bad_DeferredRequestUnknown` once the record floor has passed and the Server has discarded the record. A Server **shall not** answer `Bad_DeferredRequestExpired` while the response is still retained and collectable.
 
 ### 7.3 Expiry
 
-A Server **shall** discard a parked response at its retention deadline (§7.1), whether or not the work has finished and whether or not the response was collected, and **shall** answer a subsequent `Continue` with `Bad_DeferredRequestExpired` for as long as it keeps the record.
+A Server **shall** discard a parked response at its response deadline (§7.1), whether or not the work has finished and whether or not the response was collected, and **shall** answer a subsequent `Continue` with `Bad_DeferredRequestExpired` for as long as it keeps the record.
 
-The deadline runs from the moment the request is parked, not from the moment the response becomes ready, so a Client can compute it the instant it receives `Bad_RequestNotComplete` — before it knows anything else about how long the work will take. `ExpiryTime` states the same deadline as an absolute time, so a Client with a skewed clock and a Client with a slow link agree on it.
+The response deadline runs from the moment the request is parked, not from the moment the response becomes ready, so a Client can compute it the instant it receives `Bad_RequestNotComplete` — before it knows anything else about how long the work will take. `ExpiryTime` states the same deadline as an absolute time, so a Client with a skewed clock and a Client with a slow link agree on it.
 
 Expiry discards the **answer**. It does not stop the work, and it **shall not** be read as an undo (§7.6). Where the work later finishes, its outcome still reaches the audit trail as a `Completed` transition (§7.7).
 
@@ -236,7 +242,7 @@ Expiry discards the **answer**. It does not stop the work, and it **shall not** 
 
 ### 7.5 The Session, the principal, and durable deferral
 
-A parked request belongs to its issuing Session. A Server **shall** discard every parked response of a Session when that Session closes or is abandoned, **shall** discard them when the Session's user identity changes through a subsequent `ActivateSession`, and **shall** answer a `Continue` from any other Session with `Bad_DeferredRequestUnknown` — not with `Bad_UserAccessDenied`, which would confirm that the handle exists.
+A parked request belongs to its issuing Session. A Server **shall** discard a parked response that is not durable when its issuing Session closes or is abandoned, **shall** discard a parked response — durable or not — when that Session's user identity changes through a subsequent `ActivateSession`, and **shall** answer with `Bad_DeferredRequestUnknown` a `Continue` from any Session the entitlement predicate below does not admit — not with `Bad_UserAccessDenied`, which would confirm that the handle exists.
 
 A parked request **shall not** be treated as Session activity for the purpose of the Session timeout. Work the Server is doing on its own is not evidence that the Client is still there, and a Session that stayed alive because of it would keep a user identity unexamined for as long as the work ran.
 
@@ -246,9 +252,9 @@ A Server **shall not** make a request durable when the Session's identity token 
 
 **One entitlement predicate.** A Session is entitled to a parked request when it is the issuing Session, or when the request is durable, its issuing Session has ended, and the Session's principal identifier equals the issuing principal. That single predicate **shall** govern `Continue` (§5.1), the delivery of `DeferredRequestCompletedEventType`, and the per-Session projection of `DeferredRequests` alike. Three mechanisms expose the same fact, and a Server that used three different rules would leak through whichever was loosest.
 
-**Durable deferral** is an exception to the first of those discard rules only — it survives Session *closure*, and never an identity change — and it is what makes the mechanism usable for work that outlives a connection. A Server that supports it — `DurableDeferralSupported` is TRUE — **shall**, for a parked request whose `DeferralRequestHeaderDataType` set `RequestDurable`:
+**Durable deferral** is the exception to the first of those rules — a durable response survives Session *closure*, and never an identity change — and it is what makes the mechanism usable for work that outlives a connection. A Server that supports it — `DurableDeferralSupported` is TRUE — **shall**, for a parked request whose `DeferralRequestHeaderDataType` set `RequestDurable`:
 
-- hold the parked response after the issuing Session closes, until the retention deadline of §7.1;
+- hold the parked response after the issuing Session closes, until the response deadline of §7.1;
 - deliver it only to a Session the entitlement predicate admits;
 - re-evaluate the authorization the deferred Service requires against that Session's Roles at the moment of delivery, not at the moment of parking, and answer `Bad_UserAccessDenied` where it now fails — **without** discarding the parked response, so a Client whose Roles were momentarily wrong is not punished with the loss of an outcome;
 - reserve the `requestHandle` across the principal for as long as the record exists (§6.4);
@@ -278,7 +284,7 @@ A Server that supports auditing **shall** generate an `AuditDeferredRequestEvent
 | `Delivered` | A Session collected the response, including a replay (§7.2). | The `serviceResult` of the response. |
 | `Reclaimed` | A Session other than the issuing one collected it. It **replaces** `Delivered` for that collection rather than accompanying it, so one collection raises one Event. | The `serviceResult` of the response. |
 | `Cancelled` | A Client abandoned the response with `Cancel`. | The `serviceResult` where the work had finished, `Good_CompletesAsynchronously` where it had not. |
-| `Expired` | The retention deadline passed. | As `Cancelled`. |
+| `Expired` | The response deadline passed. | As `Cancelled`. |
 | `Discarded` | The response was discarded before its deadline because the issuing Session closed, its identity changed, or the Server shut down. | As `Cancelled`. |
 
 This is deliberately stricter than the auditing of an ordinary request. A deferral separates the moment an effect is authorized from the moment its outcome is known, and permits the Client that authorized it to walk away in between, so the audit trail is the only record that spans both.
@@ -311,7 +317,7 @@ This costs some parallelism — one slow device holds up the answers about ninet
 
 **Subscriptions.** Unaffected. A Client that would rather be told than ask subscribes to `DeferredRequestCompletedEventType` on the Server Object (§9.4) and calls `Continue` once, when there is something to collect. The Event is an optimization of the retry contract and never a replacement: a Server **shall** honour a `Continue` that arrives without one, and a Client that receives no Event **shall** fall back on `RetryAfter`.
 
-**Server shutdown.** A Server that is shutting down **shall** discard its parked responses, **shall** audit each as `Discarded`, and **should** answer any `Continue` that arrives with `Bad_Shutdown`. Parked responses are not required to survive a restart; the retention deadline is the only guarantee a Client has, and it is bounded.
+**Server shutdown.** A Server that is shutting down **shall** discard its parked responses, **shall** audit each as `Discarded`, and **should** answer any `Continue` that arrives with `Bad_Shutdown`. Parked responses are not required to survive a restart; the response deadline is the only guarantee a Client has, and it is bounded.
 
 ## 9 The information model
 
@@ -381,7 +387,7 @@ Five StatusCodes are new. The most important one is not.
 | `Bad_DeferredRequestUnknown` | No parked request with that `requestHandle` is known to the calling Session. |
 | `Bad_DeferredRequestExpired` | A parked request with that `requestHandle` existed and the Server discarded it. |
 | `Bad_TooManyDeferredRequests` | A parking limit would be exceeded, and the Server could not answer synchronously. |
-| `Bad_RequestHandleInUse` | A new request carries a `requestHandle` that already identifies a parked request on the same Session. |
+| `Bad_RequestHandleInUse` | A new request carries a `requestHandle` that already identifies a parked request within the scope §6.4 reserves it against — the issuing Session, or any Session of the same principal where the parked request is durable. |
 
 Numeric values are **provisional**; final assignments are made by the OPC Foundation alongside the existing StatusCode registry.
 
@@ -463,7 +469,7 @@ Server-wide deferral limits and capabilities, exposed as the AsyncServiceCapabil
 | MaxDeferredRequests | Variable | UInt32 | Mandatory | AsyncServiceCapabilitiesType | The greatest number of parked responses the Server holds at one time, across every Session. A request that would take the Server past this number is answered synchronously or refused with Bad_TooManyDeferredRequests; it is never silently dropped. |
 | MaxDeferredRequestsPerSession | Variable | UInt32 | Mandatory | AsyncServiceCapabilitiesType | The greatest number of parked responses the Server holds for one Session. It bounds what a single Client can reserve, so one Client polling slowly cannot exhaust MaxDeferredRequests for every other Client. |
 | MaxDeferralTime | Variable | [Duration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.13) | Mandatory | AsyncServiceCapabilitiesType | The longest a Server holds a parked response before discarding it. It starts when the request is parked, not when the response becomes ready, so a Client can compute the deadline from the moment it receives Bad_RequestNotComplete. |
-| DefaultRetryAfter | Variable | [Duration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.13) | Mandatory | AsyncServiceCapabilitiesType | The interval a Client waits before its first Continue when it cannot read the DeferralResponseHeaderDataType carried in ResponseHeader.additionalHeader. Every Client can read this Property, so the retry contract does not depend on a header that a stack may discard with the fault that carries it. |
+| DefaultRetryAfter | Variable | [Duration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.13) | Mandatory | AsyncServiceCapabilitiesType | The interval a Client waits before each Continue when it cannot read the DeferralResponseHeaderDataType carried in ResponseHeader.additionalHeader. It is never below MinRetryAfter, so a Client that can read nothing else is never throttled for obeying the only value available to it. Every Client can read this Property, so the retry contract does not depend on a header that a stack may discard with the fault that carries it. |
 | MinRetryAfter | Variable | [Duration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.13) | Mandatory | AsyncServiceCapabilitiesType | The shortest interval the Server accepts between two Continue calls for the same parked request. A Client that calls more often is refused with Bad_ServerTooBusy. Without a published floor, a Client that ignores RetryAfter turns a deferral into a poll loop against the very Server that deferred because it was busy. |
 | DeferrableServices | Variable | [NodeId](https://reference.opcfoundation.org/specs/OPC-10000-3/8.2)\[\] | Mandatory | AsyncServiceCapabilitiesType | The DataType NodeIds of the request messages this Server may defer, listed exhaustively. A Service absent from the list is never deferred, so a Client knows before it calls whether an answer can arrive late. |
 | DurableDeferralSupported | Variable | Boolean | Mandatory | AsyncServiceCapabilitiesType | TRUE when the Server can hold a parked response beyond the Session that issued the request, for reclaim by a later Session of the same user identity. |
@@ -536,9 +542,9 @@ The state of a parked request. Delivered, Expired and Cancelled are terminal rec
 |---|---|---|
 | Executing | 0 | The Server is still working on the request. Continue returns Bad_RequestNotComplete. |
 | Ready | 1 | The response is complete and parked. The next Continue returns it. |
-| Expired | 2 | The retention deadline passed before the response was collected and the Server discarded it. Continue returns Bad_DeferredRequestExpired. |
+| Expired | 2 | The response deadline passed before the response was collected and the Server discarded it. Continue returns Bad_DeferredRequestExpired. |
 | Cancelled | 3 | The Client abandoned the response with Cancel. Continue returns Bad_RequestCancelledByRequest. |
-| Delivered | 4 | The response was collected and is retained for replay until the retention deadline. A Continue returns the same response again, so a Client that lost it to a broken connection is not left with an effect whose outcome it can never learn. |
+| Delivered | 4 | The response was collected and is retained for replay until the response deadline. A Continue returns the same response again, so a Client that lost it to a broken connection is not left with an effect whose outcome it can never learn. |
 
 <a id="type-DeferredRequestTransition"></a>
 
@@ -555,9 +561,9 @@ The transitions of a parked request, as reported by AuditDeferredRequestEventTyp
 | Delivered | 2 | A Client of the issuing Session collected the parked response, or collected it again by replay. |
 | Reclaimed | 3 | A Session other than the one that issued the request collected the parked response. It replaces Delivered for that collection rather than accompanying it, so one collection is one transition. |
 | Cancelled | 4 | A Client abandoned the parked response with Cancel. |
-| Expired | 5 | The Server discarded the parked response because the retention deadline passed. |
-| Completed | 6 | The work finished and its outcome became known. It is raised even when no response is held any longer, which is the only way the outcome of a request that outlived its retention deadline reaches the audit trail. |
-| Discarded | 7 | The Server discarded the parked response before its retention deadline because the issuing Session closed, its user identity changed, or the Server shut down. |
+| Expired | 5 | The Server discarded the parked response because the response deadline passed. |
+| Completed | 6 | The work finished and its outcome became known. It is raised even when no response is held any longer, which is the only way the outcome of a request that outlived its response deadline reaches the audit trail. |
+| Discarded | 7 | The Server discarded the parked response before its response deadline because the issuing Session closed, its user identity changed, or the Server shut down. |
 
 <a id="type-DeferralRequestHeaderDataType"></a>
 
@@ -663,7 +669,7 @@ A GDS pushes a new TrustList to a Server that is a gateway for 500 field devices
 | 6 | `CreateSession` / `ActivateSession` as the same user, `Continue(42)` | The parked `CallResponse` for `ApplyChanges`. A `Reclaimed` audit transition records that a different Session collected it. |
 | 7 | The connection drops as the response is transmitted; `Continue(42)` again | The **same** `CallResponse`, replayed from the `Delivered` record. The distribution is not repeated (§7.2). |
 
-Had step 6 never happened, the gateway would still have raised a `Completed` transition carrying the outcome the moment the last device answered, and an `Expired` transition when the retention deadline passed — so the deployment is recorded even though nobody ever asked for it.
+Had step 6 never happened, the gateway would still have raised a `Completed` transition carrying the outcome the moment the last device answered, and an `Expired` transition when the response deadline passed — so the deployment is recorded even though nobody ever asked for it.
 
 ### B.2 The five outcomes, and which of them this specification addresses
 
