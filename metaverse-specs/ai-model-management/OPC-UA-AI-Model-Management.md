@@ -1,6 +1,6 @@
-# OPC UA — AI Deployment and Learning
+# OPC UA — AI Model Management and Inference
 
-> Status: Working-group draft (Release 0.2.0). This document, together with `Opc.Ua.AiDeployment.NodeSet2.xml` and `Opc.Ua.AiDeployment.NodeIds.csv`, defines an OPC UA information model for **the AI models an installation runs**: what a model is, what it was trained on, where it executes, and how a better one replaces it.
+> Status: Working-group draft (Release 0.2.0). This document, together with `Opc.Ua.AiModelManagement.NodeSet2.xml` and `Opc.Ua.AiModelManagement.NodeIds.csv`, defines an OPC UA information model for **the AI models an installation runs**: what a model is, what it was trained on, where it executes, and how a better one replaces it.
 >
 > It is deliberately **domain-neutral**. Nothing here names a camera, a sensor, an image or a robot: a model is trained on a dataset, deployed somewhere, and superseded — and that story is the same whether the input is a photograph, a vibration spectrum or a process trace.
 >
@@ -828,25 +828,25 @@ The split matters more here than in a smaller model, because the plausible Serve
 
 | Artifact | Path |
 |---|---|
-| This specification | `metaverse-specs/ai-deployment/OPC-UA-AI-Deployment.md` |
-| Information model | `metaverse-specs/ai-deployment/Opc.Ua.AiDeployment.NodeSet2.xml` |
-| NodeId assignments | `metaverse-specs/ai-deployment/Opc.Ua.AiDeployment.NodeIds.csv` |
-| Generator | `metaverse-specs/extras/ai-deployment/tools/build_model.py` |
-| Validator | `metaverse-specs/extras/ai-deployment/tools/validate_local.py` |
-| Annex A (generated) | `metaverse-specs/extras/ai-deployment/tools/model-reference.md` |
+| This specification | `metaverse-specs/ai-model-management/OPC-UA-AI-Model-Management.md` |
+| Information model | `metaverse-specs/ai-model-management/Opc.Ua.AiModelManagement.NodeSet2.xml` |
+| NodeId assignments | `metaverse-specs/ai-model-management/Opc.Ua.AiModelManagement.NodeIds.csv` |
+| Generator | `metaverse-specs/extras/ai-model-management/tools/build_model.py` |
+| Validator | `metaverse-specs/extras/ai-model-management/tools/validate_local.py` |
+| Annex A (generated) | `metaverse-specs/extras/ai-model-management/tools/model-reference.md` |
 
 The NodeSet, the CSV and Annex A are generated from a single in-code source of truth and are **deterministic**. The generator is edited; the generated files are not.
 
 ```powershell
-python metaverse-specs\extras\ai-deployment\tools\build_model.py
-python metaverse-specs\extras\ai-deployment\tools\validate_local.py
+python metaverse-specs\extras\ai-model-management\tools\build_model.py
+python metaverse-specs\extras\ai-model-management\tools\validate_local.py
 ```
 
 ---
 
 ## Annex A — Information model (generated)
 
-Annex A is generated from the NodeSet and is authoritative for identifiers, DataTypes, ValueRanks, ModellingRules, structure fields, enumeration values and Method signatures. See [`../extras/ai-deployment/tools/model-reference.md`](../extras/ai-deployment/tools/model-reference.md).
+Annex A is generated from the NodeSet and is authoritative for identifiers, DataTypes, ValueRanks, ModellingRules, structure fields, enumeration values and Method signatures. See [`../extras/ai-model-management/tools/model-reference.md`](../extras/ai-model-management/tools/model-reference.md).
 
 ## Annex B — Informative alignments
 
@@ -854,7 +854,7 @@ Not normative references, and no dependency. Recorded because this model borrowe
 
 - **IDTA 02060** *AI Model Nameplate* — the member set of `ModelType`. Currently the only standardised description of an industrial AI model.
 - **IDTA 02058** *AI Dataset* — the member set of `DatasetType`.
-- **IDTA 02059** *AI Deployment* — the member set of `DeploymentType`, including the inference-location concept.
+- **IDTA 02059** *AI Model Management* — the member set of `DeploymentType`, including the inference-location concept.
 - **OPC 30270** — the OPC UA ⇄ Asset Administration Shell bridge, over which the alignments above become a populated AAS.
 - **xRegistry** — [the CNCF specification](https://github.com/xregistry/spec) the OPC UA projection in this repository follows. Its `groups` / `resources` / `versions` structure is what clause 9 extends, and public proxies over model hubs already present exactly the arrangement adopted here: publisher as group, models and datasets as sibling resource types, versions immutable and identified by content, mutable branch and tag names as pointers rather than versions.
 - **OPC UA — Vision** in this repository is the first consuming specification. Its `InferencePipelineType.Deployment` is a `NodeId` Property naming a `DeploymentType` here, per §4.2, and neither NodeSet requires the other.

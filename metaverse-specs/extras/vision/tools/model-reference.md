@@ -450,7 +450,7 @@ Binds a sensor to a deployment and publishes the results. The same type serves o
 |---|---|---|---|---|---|
 | PipelineId | Variable | String | Scalar | Mandatory | Identifier of the pipeline. |
 | Sensor | Variable | NodeId | Scalar | Mandatory | Sensor supplying frames. |
-| Deployment | Variable | NodeId | Scalar | Mandatory | The deployment executing inference. This is a NodeId, not a reference, and the node it names is NOT defined by this specification - see clause 8.2. Where the Server also implements OPC UA - AI Deployment and Learning it names a DeploymentType instance there, which is what clause 8's provenance argument assumes; a Server that describes its deployment some other way names that node instead. Nothing in this NodeSet references the other model's identifiers, so adopting or ignoring it changes nothing about loading this one. |
+| Deployment | Variable | NodeId | Scalar | Mandatory | The deployment executing inference. This is a NodeId, not a reference, and the node it names is NOT defined by this specification - see clause 8.2. Where the Server also implements OPC UA - AI Model Management and Inference it names a DeploymentType instance there, which is what clause 8's provenance argument assumes; a Server that describes its deployment some other way names that node instead. Nothing in this NodeSet references the other model's identifiers, so adopting or ignoring it changes nothing about loading this one. |
 | State | Variable | VisionEndpointStateEnum | Scalar | Mandatory | Runtime state of the pipeline. |
 | Continuous | Variable | Boolean | Scalar | Optional | True while the pipeline runs on every frame. |
 | Results | Object |  |  | Optional | Recent VisionResultType instances produced by this pipeline. |

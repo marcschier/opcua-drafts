@@ -205,4 +205,4 @@ DeploymentType_GetCapabilities,6142,Method
 DeploymentType_GetCapabilities_OutputArguments,6143,Variable
 ModelRegistryType_Group,6144,Object
 ModelPublisherType_Resource,6145,Object
-AiDeployment,7001,Object
+AiModelManagement,7001,Object

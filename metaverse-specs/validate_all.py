@@ -23,7 +23,7 @@ SELF_CONTAINED = [
     # release-spec-validator:ICAgICJleHRyYXMvb3BlbnVzZC1hcnRpZmFjdHMvdG9vbHMvdmFsaWRhdGVfc3BlYy5weSIs
     "extras/vision/tools/validate_local.py",
     "extras/robot-intent/tools/validate_local.py",
-    "extras/ai-deployment/tools/validate_local.py",
+    "extras/ai-model-management/tools/validate_local.py",
     # openusd-scene added in the Scene Materialization (Part 2) work.
     # openusd-artifacts added with the xRegistry artifact registry (Bindings 0.4.0).
     # validate_spec added with the submittable xRegistry domain spec; it keeps
@@ -31,7 +31,7 @@ SELF_CONTAINED = [
     # vision added in the OPC UA - Vision work.
     # robot-intent added in the OPC UA - Robot Intent work; it also cross-checks the
     # specification against the model in both directions.
-    # ai-deployment was factored OUT of vision, so vision's validator now also reads
+    # ai-model-management is a separate specification, so vision's validator also reads
     # that NodeSet to resolve the overlay references that cross between them.
 ]
 

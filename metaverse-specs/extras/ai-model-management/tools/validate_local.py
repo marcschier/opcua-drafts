@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """
-Local structural + modelling-rule validator for the OPC UA - AI Deployment and Learning NodeSet.
+Local structural + modelling-rule validator for the OPC UA - AI Model Management and Inference NodeSet.
 
 Reproducible in-repo gate (mirrors the vision and openusd-binding validate_local.py
 convention). Everything is re-derived from the committed artifacts with the standard
 library alone; nothing here imports the generator, because a checker that asks the
 emitter what it emitted validates nothing.
 
-Structural checks, against Opc.Ua.AiDeployment.NodeSet2.xml:
+Structural checks, against Opc.Ua.AiModelManagement.NodeSet2.xml:
   * XML well-formedness and a single <Model> whose ONLY <RequiredModel> is the base UA
     namespace - this model is deliberately standalone.
   * Unique NodeIds; every reference target resolves (own ns=1 node or a base-UA id).
@@ -26,7 +26,7 @@ Structural checks, against Opc.Ua.AiDeployment.NodeSet2.xml:
     self-describing rather than leaving a reader to notice the DataType is abstract.
   * Every Method's InputArguments/OutputArguments ArrayDimensions matches the number of
     encoded Argument entries.
-  * Opc.Ua.AiDeployment.NodeIds.csv and the NodeSet agree exactly - same id set in both
+  * Opc.Ua.AiModelManagement.NodeIds.csv and the NodeSet agree exactly - same id set in both
     directions, same NodeClass, and the CSV name resolves to the NodeSet BrowseName.
 
 Specification invariants (the reason this file is not generic):
@@ -47,7 +47,7 @@ Specification invariants (the reason this file is not generic):
 
 Specification/model cross-checks, in BOTH directions:
   * Every ObjectType, DataType and ReferenceType the model declares is named in
-    OPC-UA-AI-Deployment.md, and every enumeration literal it declares appears there.
+    OPC-UA-AI-Model-Management.md, and every enumeration literal it declares appears there.
   * Every `ns=1;i=<n>` the specification cites exists in the NodeSet.
 
 Exit code 0 and "OK" on success; non-zero with an ERRORS list otherwise.
@@ -60,10 +60,10 @@ import sys
 import xml.etree.ElementTree as ET
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-STD = os.path.normpath(os.path.join(HERE, "..", "..", "..", "ai-deployment"))
-NODESET = os.path.join(STD, "Opc.Ua.AiDeployment.NodeSet2.xml")
-CSVFILE = os.path.join(STD, "Opc.Ua.AiDeployment.NodeIds.csv")
-SPEC = os.path.join(STD, "OPC-UA-AI-Deployment.md")
+STD = os.path.normpath(os.path.join(HERE, "..", "..", "..", "ai-model-management"))
+NODESET = os.path.join(STD, "Opc.Ua.AiModelManagement.NodeSet2.xml")
+CSVFILE = os.path.join(STD, "Opc.Ua.AiModelManagement.NodeIds.csv")
+SPEC = os.path.join(STD, "OPC-UA-AI-Model-Management.md")
 
 NS = {"u": "http://opcfoundation.org/UA/2011/03/UANodeSet.xsd"}
 UAX = {"uax": "http://opcfoundation.org/UA/2008/02/Types.xsd"}
@@ -712,7 +712,7 @@ def main() -> int:
         return 1
     n_types = sum(1 for nid in m.order
                   if m.cls(nid) in ("UAObjectType", "UADataType", "UAReferenceType"))
-    print(f"OK - ai-deployment: {len(m.order)} nodes, {n_types} types, "
+    print(f"OK - ai-model-management: {len(m.order)} nodes, {n_types} types, "
           "NodeSet/CSV/specification consistent")
     return 0
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- OPC UA - AI Deployment and Learning companion model. PROVISIONAL NodeIds and namespace (final IDs assigned by the OPC Foundation / working group). -->
+<!-- OPC UA - AI Model Management and Inference companion model. PROVISIONAL NodeIds and namespace (final IDs assigned by the OPC Foundation / working group). -->
 <UANodeSet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd" xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd">
   <NamespaceUris>
     <Uri>http://opcfoundation.org/UA/xRegistry/</Uri>
@@ -48,7 +48,7 @@
   <UADataType NodeId="ns=2;i=3001" BrowseName="2:InferenceLocationEnum">
     <DisplayName>InferenceLocationEnum</DisplayName>
     <Description>Where inference executes. The result contract is identical in every case; this property exists so a client can reason about latency, availability and the trust boundary without changing how it reads results.</Description>
-    <Category>AiDeployment DataTypes</Category>
+    <Category>AiModelManagement DataTypes</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=3901</Reference>
@@ -67,7 +67,7 @@
   <UADataType NodeId="ns=2;i=3002" BrowseName="2:AcceleratorKindEnum">
     <DisplayName>AcceleratorKindEnum</DisplayName>
     <Description>Compute device executing the model.</Description>
-    <Category>AiDeployment DataTypes</Category>
+    <Category>AiModelManagement DataTypes</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=3902</Reference>
@@ -86,7 +86,7 @@
   <UADataType NodeId="ns=2;i=3003" BrowseName="2:DeploymentStateEnum">
     <DisplayName>DeploymentStateEnum</DisplayName>
     <Description>Runtime lifecycle state of a deployment.</Description>
-    <Category>AiDeployment DataTypes</Category>
+    <Category>AiModelManagement DataTypes</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=3903</Reference>
@@ -105,7 +105,7 @@
   <UADataType NodeId="ns=2;i=3004" BrowseName="2:DatasetSourceEnum">
     <DisplayName>DatasetSourceEnum</DisplayName>
     <Description>Provenance of the samples in a dataset.</Description>
-    <Category>AiDeployment DataTypes</Category>
+    <Category>AiModelManagement DataTypes</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=3904</Reference>
@@ -124,7 +124,7 @@
   <UADataType NodeId="ns=2;i=3005" BrowseName="2:LearningJobStateEnum">
     <DisplayName>LearningJobStateEnum</DisplayName>
     <Description>State of a dataset-capture, retraining and promotion cycle.</Description>
-    <Category>AiDeployment DataTypes</Category>
+    <Category>AiModelManagement DataTypes</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=3905</Reference>
@@ -143,7 +143,7 @@
   <UADataType NodeId="ns=2;i=3006" BrowseName="2:FinishReasonEnum">
     <DisplayName>FinishReasonEnum</DisplayName>
     <Description>Why an inference call stopped producing output. A client that treats every non-error response as complete will silently accept a truncated one, which is why this is Mandatory on a response rather than a diagnostic.</Description>
-    <Category>AiDeployment DataTypes</Category>
+    <Category>AiModelManagement DataTypes</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=3906</Reference>
@@ -162,7 +162,7 @@
   <UADataType NodeId="ns=2;i=3007" BrowseName="2:ApiDialectEnum">
     <DisplayName>ApiDialectEnum</DisplayName>
     <Description>Wire contract a remote inference endpoint speaks. A Server needs this to call an endpoint it did not deploy; without it EndpointUri is a string nobody can act on. It describes the REMOTE endpoint and never affects how an OPC UA client calls this Server.</Description>
-    <Category>AiDeployment DataTypes</Category>
+    <Category>AiModelManagement DataTypes</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=3907</Reference>
@@ -181,7 +181,7 @@
   <UADataType NodeId="ns=2;i=3008" BrowseName="2:AuthenticationKindEnum">
     <DisplayName>AuthenticationKindEnum</DisplayName>
     <Description>How the Server authenticates ITSELF to a remote inference endpoint. This is not how a client authenticates to this Server, which is the ordinary OPC UA Session security and is unaffected.</Description>
-    <Category>AiDeployment DataTypes</Category>
+    <Category>AiModelManagement DataTypes</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=3908</Reference>
@@ -200,7 +200,7 @@
   <UADataType NodeId="ns=2;i=3009" BrowseName="2:FallbackPolicyEnum">
     <DisplayName>FallbackPolicyEnum</DisplayName>
     <Description>What the Server does when a deployment cannot serve. This is the question a plant asks that no cloud inference API answers, because a cloud API assumes the caller can simply wait.</Description>
-    <Category>AiDeployment DataTypes</Category>
+    <Category>AiModelManagement DataTypes</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=3909</Reference>
@@ -219,7 +219,7 @@
   <UADataType NodeId="ns=2;i=3010" BrowseName="2:VersionBindingEnum">
     <DisplayName>VersionBindingEnum</DisplayName>
     <Description>Whether a deployment is bound to one immutable model version or follows a moving pointer. Stated structurally rather than as an upgrade policy, because what a client needs to know is whether the artefact can change under it, not what schedule someone intends to change it on.</Description>
-    <Category>AiDeployment DataTypes</Category>
+    <Category>AiModelManagement DataTypes</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=3910</Reference>
@@ -238,7 +238,7 @@
   <UADataType NodeId="ns=2;i=3011" BrowseName="2:ImportModeEnum">
     <DisplayName>ImportModeEnum</DisplayName>
     <Description>Whether an import job brings the model's description or its bytes.</Description>
-    <Category>AiDeployment DataTypes</Category>
+    <Category>AiModelManagement DataTypes</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=3911</Reference>
@@ -257,7 +257,7 @@
   <UADataType NodeId="ns=2;i=3012" BrowseName="2:SafetySeverityEnum">
     <DisplayName>SafetySeverityEnum</DisplayName>
     <Description>Severity of one safety finding. The scale is the convergent industry one; what each level means for a given category is the policy's business, not this specification's.</Description>
-    <Category>AiDeployment DataTypes</Category>
+    <Category>AiModelManagement DataTypes</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=3912</Reference>
@@ -276,7 +276,7 @@
   <UADataType NodeId="ns=2;i=3013" BrowseName="2:ReachabilityEnum">
     <DisplayName>ReachabilityEnum</DisplayName>
     <Description>Whether the Server can currently reach a deployment's execution site.</Description>
-    <Category>AiDeployment DataTypes</Category>
+    <Category>AiModelManagement DataTypes</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=3913</Reference>
@@ -295,7 +295,7 @@
   <UADataType NodeId="ns=2;i=3050" BrowseName="2:TensorSignatureDataType">
     <DisplayName>TensorSignatureDataType</DisplayName>
     <Description>Shape and element type of one model input or output tensor. This is what lets a client check that what it intends to send matches what the model expects, before it sends it.</Description>
-    <Category>AiDeployment DataTypes</Category>
+    <Category>AiModelManagement DataTypes</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=22</Reference>
       <Reference ReferenceType="HasEncoding">ns=2;i=5001</Reference>
@@ -313,7 +313,7 @@
   <UADataType NodeId="ns=2;i=3051" BrowseName="2:ModelReferenceDataType">
     <DisplayName>ModelReferenceDataType</DisplayName>
     <Description>Identity of a model as a publisher, name and version triple. Every model catalogue in practice identifies a model this way, which is why an import job takes this rather than a URL: a URL says where a copy is today, the triple says which artefact is meant.</Description>
-    <Category>AiDeployment DataTypes</Category>
+    <Category>AiModelManagement DataTypes</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=22</Reference>
       <Reference ReferenceType="HasEncoding">ns=2;i=5002</Reference>
@@ -331,7 +331,7 @@
   <UADataType NodeId="ns=2;i=3052" BrowseName="2:UsageDataType">
     <DisplayName>UsageDataType</DisplayName>
     <Description>What one inference call consumed. Deliberately NOT named in tokens: a token is one accounting unit among several, and a model that consumes images, samples or seconds of audio needs the same accounting. UnitKind says which unit the counts are in.</Description>
-    <Category>AiDeployment DataTypes</Category>
+    <Category>AiModelManagement DataTypes</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=22</Reference>
       <Reference ReferenceType="HasEncoding">ns=2;i=5003</Reference>
@@ -349,7 +349,7 @@
   <UADataType NodeId="ns=2;i=3053" BrowseName="2:CapabilityDataType">
     <DisplayName>CapabilityDataType</DisplayName>
     <Description>One capability a deployment does or does not have. An open list rather than an enumeration because the set of things a model can do is not closed, and a client that cannot recognise a capability name is no worse off than one that cannot recognise an enumeration value it has never seen.</Description>
-    <Category>AiDeployment DataTypes</Category>
+    <Category>AiModelManagement DataTypes</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=22</Reference>
       <Reference ReferenceType="HasEncoding">ns=2;i=5004</Reference>
@@ -367,7 +367,7 @@
   <UADataType NodeId="ns=2;i=3054" BrowseName="2:SafetyAssessmentDataType">
     <DisplayName>SafetyAssessmentDataType</DisplayName>
     <Description>One finding from a safety policy applied to an inference call. Category is a String and not an enumeration because harm categories are set by the policy an installation adopts, and an industrial taxonomy looks nothing like a consumer one.</Description>
-    <Category>AiDeployment DataTypes</Category>
+    <Category>AiModelManagement DataTypes</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=22</Reference>
       <Reference ReferenceType="HasEncoding">ns=2;i=5005</Reference>
@@ -385,7 +385,7 @@
   <UADataType NodeId="ns=2;i=3055" BrowseName="2:EvaluationMetricDataType">
     <DisplayName>EvaluationMetricDataType</DisplayName>
     <Description>One measured metric from an evaluation run, with the threshold it was judged against. The threshold travels with the metric because a metric without its acceptance criterion cannot be acted on, and a reviewer reading it a year later has no way to recover what 'good' meant.</Description>
-    <Category>AiDeployment DataTypes</Category>
+    <Category>AiModelManagement DataTypes</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=22</Reference>
       <Reference ReferenceType="HasEncoding">ns=2;i=5006</Reference>
@@ -403,7 +403,7 @@
   <UADataType NodeId="ns=2;i=3056" BrowseName="2:RateLimitDataType">
     <DisplayName>RateLimitDataType</DisplayName>
     <Description>Capacity a remote endpoint is currently granting. Surfaced so a client can distinguish 'the model said no' from 'the quota said no', which are different faults with different remedies.</Description>
-    <Category>AiDeployment DataTypes</Category>
+    <Category>AiModelManagement DataTypes</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=22</Reference>
       <Reference ReferenceType="HasEncoding">ns=2;i=5007</Reference>
@@ -421,7 +421,7 @@
   <UAReferenceType NodeId="ns=2;i=4001" BrowseName="2:UsesModel">
     <DisplayName>UsesModel</DisplayName>
     <Description>Links a Deployment to the Model it executes. Clause 5.5 requires exactly one such reference per deployment; it is the only defined path from a result to the model artefact and its Digest, on which the provenance requirement of clause 11 depends.</Description>
-    <Category>AiDeployment ReferenceTypes</Category>
+    <Category>AiModelManagement ReferenceTypes</Category>
     <InverseName>IsUsedByDeployment</InverseName>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=32</Reference>
@@ -430,7 +430,7 @@
   <UAReferenceType NodeId="ns=2;i=4002" BrowseName="2:TrainedOn">
     <DisplayName>TrainedOn</DisplayName>
     <Description>Links a Model to a Dataset it was trained or validated on. A model whose training data cannot be named is a model whose behaviour cannot be explained, which is why this reference exists rather than a string.</Description>
-    <Category>AiDeployment ReferenceTypes</Category>
+    <Category>AiModelManagement ReferenceTypes</Category>
     <InverseName>IsTrainingDataFor</InverseName>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=32</Reference>
@@ -439,7 +439,7 @@
   <UAReferenceType NodeId="ns=2;i=4003" BrowseName="2:DerivedFrom">
     <DisplayName>DerivedFrom</DisplayName>
     <Description>Links a Model to the Model it was fine-tuned, distilled or quantized from. Lineage is a chain, not a field: a model three derivations from its base is answerable for all three, and a string naming the immediate parent cannot be walked.</Description>
-    <Category>AiDeployment ReferenceTypes</Category>
+    <Category>AiModelManagement ReferenceTypes</Category>
     <InverseName>IsBaseOfModel</InverseName>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=32</Reference>
@@ -448,7 +448,7 @@
   <UAReferenceType NodeId="ns=2;i=4004" BrowseName="2:FallsBackTo">
     <DisplayName>FallsBackTo</DisplayName>
     <Description>Links a Deployment to the Deployment that serves in its place when it cannot. Clause 8 forbids a cycle, and requires the response to say which deployment actually answered.</Description>
-    <Category>AiDeployment ReferenceTypes</Category>
+    <Category>AiModelManagement ReferenceTypes</Category>
     <InverseName>IsFallbackFor</InverseName>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=32</Reference>
@@ -457,7 +457,7 @@
   <UAReferenceType NodeId="ns=2;i=4005" BrowseName="2:ImportedFrom">
     <DisplayName>ImportedFrom</DisplayName>
     <Description>Links a Model to the catalogue resource an import job materialized it from. This is what makes 'where did this model come from' answerable after the fact, rather than only at the moment of import.</Description>
-    <Category>AiDeployment ReferenceTypes</Category>
+    <Category>AiModelManagement ReferenceTypes</Category>
     <InverseName>WasImportedAs</InverseName>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=32</Reference>
@@ -466,7 +466,7 @@
   <UAReferenceType NodeId="ns=2;i=4006" BrowseName="2:EvaluatedBy">
     <DisplayName>EvaluatedBy</DisplayName>
     <Description>Links a Model to an EvaluationRun that measured it. Optional and repeating: a model may be evaluated many times, and the run that gated its promotion is not necessarily the last one.</Description>
-    <Category>AiDeployment ReferenceTypes</Category>
+    <Category>AiModelManagement ReferenceTypes</Category>
     <InverseName>Evaluates</InverseName>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=32</Reference>
@@ -475,7 +475,7 @@
   <UAObjectType NodeId="ns=2;i=1001" BrowseName="2:AiRootType">
     <DisplayName>AiRootType</DisplayName>
     <Description>Server-level entry point. A client that has just connected browses here to find every model, dataset, deployment and learning job the Server describes, without knowing its layout.</Description>
-    <Category>AiDeployment</Category>
+    <Category>AiModelManagement</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
       <Reference ReferenceType="HasComponent">ns=2;i=6001</Reference>
@@ -537,7 +537,7 @@
   <UAObjectType NodeId="ns=2;i=1002" BrowseName="2:ModelType">
     <DisplayName>ModelType</DisplayName>
     <Description>Nameplate of a trained model. The member set is deliberately aligned with the IDTA 02060 AI Model Nameplate submodel template, which is currently the only standardised description of an industrial AI model, so an Asset Administration Shell can be populated from this node without loss.</Description>
-    <Category>AiDeployment</Category>
+    <Category>AiModelManagement</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=6006</Reference>
@@ -680,7 +680,7 @@
   <UAObjectType NodeId="ns=2;i=1003" BrowseName="2:DatasetType">
     <DisplayName>DatasetType</DisplayName>
     <Description>A dataset used to train or validate a model. Aligned with the IDTA 02058 AI Dataset submodel template. SourceKind distinguishes real capture from simulator output, which is the provenance a reviewer needs when synthetic data is involved.</Description>
-    <Category>AiDeployment</Category>
+    <Category>AiModelManagement</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=6019</Reference>
@@ -778,7 +778,7 @@
   <UAObjectType NodeId="ns=2;i=1004" BrowseName="2:DeploymentType">
     <DisplayName>DeploymentType</DisplayName>
     <Description>A model made executable somewhere. Aligned with the IDTA 02059 AI Deployment submodel template. InferenceLocation is the on-server versus off-server switch: it changes where the computation happens and therefore the trust boundary, and it changes nothing else.</Description>
-    <Category>AiDeployment</Category>
+    <Category>AiModelManagement</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=6028</Reference>
@@ -882,7 +882,7 @@
   <UAObjectType NodeId="ns=2;i=1005" BrowseName="2:LearningJobType">
     <DisplayName>LearningJobType</DisplayName>
     <Description>One turn of the capture, label, train and promote loop. It exists so that corrections arriving from a consuming application have somewhere to accumulate and a defined path into a new model version. A Server may implement only the capture stages and leave training to an external MLOps system - the state machine is the same either way.</Description>
-    <Category>AiDeployment</Category>
+    <Category>AiModelManagement</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=2;i=1006</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=6036</Reference>
@@ -1006,7 +1006,7 @@
   <UAObjectType NodeId="ns=2;i=1006" BrowseName="2:AiJobType" IsAbstract="true">
     <DisplayName>AiJobType</DisplayName>
     <Description>Abstract base of every long-running AI operation: learning, model import and asynchronous inference. It derives from the OPC 10000-10 ProgramStateMachineType, so the lifecycle - Ready, Running, Suspended, Halted - its transition events and its Start/Suspend/Resume/Halt Methods are inherited rather than reinvented, and every job in this model is auditable the same way.</Description>
-    <Category>AiDeployment</Category>
+    <Category>AiModelManagement</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=2391</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=6048</Reference>
@@ -1074,7 +1074,7 @@
   <UAObjectType NodeId="ns=2;i=1007" BrowseName="2:ModelImportJobType">
     <DisplayName>ModelImportJobType</DisplayName>
     <Description>Brings a model from a catalogue into this Server. It federates by default - materializing the catalogue entry as a ModelType whose artefact stays where it is - and stages the artefact when the target deployment could not otherwise reach it. Staging is the moment a substituted artefact would enter, which is why clause 9 requires the Digest to be verified there and nowhere else.</Description>
-    <Category>AiDeployment</Category>
+    <Category>AiModelManagement</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=2;i=1006</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=6054</Reference>
@@ -1161,7 +1161,7 @@
   <UAObjectType NodeId="ns=2;i=1008" BrowseName="2:InferenceJobType">
     <DisplayName>InferenceJobType</DisplayName>
     <Description>One asynchronous inference request. It exists because not every inference returns while the caller waits: a batch scored overnight and a long analysis over recorded data are ordinary industrial cases, and modelling them as a Method that blocks for hours is not.</Description>
-    <Category>AiDeployment</Category>
+    <Category>AiModelManagement</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=2;i=1006</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=6062</Reference>
@@ -1259,7 +1259,7 @@
   <UAObjectType NodeId="ns=2;i=1009" BrowseName="2:ModelSourceType">
     <DisplayName>ModelSourceType</DisplayName>
     <Description>An externally hosted inference or catalogue endpoint this Server can reach. It carries everything needed to actually call something the Server did not deploy - the wire contract, how to authenticate, what the endpoint can do and whether it is answering - because a URI on its own is a string nobody can act on.</Description>
-    <Category>AiDeployment</Category>
+    <Category>AiModelManagement</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=6071</Reference>
@@ -1435,7 +1435,7 @@
   <UAObjectType NodeId="ns=2;i=1014" BrowseName="2:EvaluationRunType">
     <DisplayName>EvaluationRunType</DisplayName>
     <Description>One measurement of a model against a dataset. It is a first-class object and not a field on the model because the same model is evaluated many times, and because the run that gated a promotion has to remain readable afterwards to answer why the promotion was allowed.</Description>
-    <Category>AiDeployment</Category>
+    <Category>AiModelManagement</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=6088</Reference>
@@ -1513,7 +1513,7 @@
   <UAObjectType NodeId="ns=2;i=1015" BrowseName="2:ModelCardType">
     <DisplayName>ModelCardType</DisplayName>
     <Description>What a human needs to decide whether a model may be used here: what it is for, where it stops working, and under what terms. Separate from the nameplate because a nameplate answers 'which artefact is this' and a card answers 'should this be running on my line'.</Description>
-    <Category>AiDeployment</Category>
+    <Category>AiModelManagement</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=6095</Reference>
@@ -1591,7 +1591,7 @@
   <UAObjectType NodeId="ns=2;i=1010" BrowseName="2:ModelRegistryType">
     <DisplayName>ModelRegistryType</DisplayName>
     <Description>A catalogue of models and the datasets they were trained on. It narrows the abstract registry's group placeholder to model publishers, so that a client browsing it knows what it will find rather than discovering it.</Description>
-    <Category>AiDeployment</Category>
+    <Category>AiModelManagement</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=63000</Reference>
       <Reference ReferenceType="Organizes">ns=2;i=6144</Reference>
@@ -1600,7 +1600,7 @@
   <UAObjectType NodeId="ns=2;i=1011" BrowseName="2:ModelPublisherType">
     <DisplayName>ModelPublisherType</DisplayName>
     <Description>One publisher's namespace within a model registry: the organisation or project that released the models it contains. Publisher is the first element of the publisher/name/version triple by which every catalogue in practice identifies a model.</Description>
-    <Category>AiDeployment</Category>
+    <Category>AiModelManagement</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=63001</Reference>
       <Reference ReferenceType="Organizes">ns=2;i=6145</Reference>
@@ -1609,7 +1609,7 @@
   <UAObjectType NodeId="ns=2;i=1016" BrowseName="2:AiResourceType" IsAbstract="true">
     <DisplayName>AiResourceType</DisplayName>
     <Description>Abstract base of everything a model registry holds. It exists so that the inherited &lt;Resource&gt; placeholder can be narrowed ONCE to something that admits models and datasets and nothing else - a publisher holds both, and a placeholder can be overridden only by one declaration.</Description>
-    <Category>AiDeployment</Category>
+    <Category>AiModelManagement</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=63002</Reference>
     </References>
@@ -1617,7 +1617,7 @@
   <UAObjectType NodeId="ns=2;i=1012" BrowseName="2:ModelResourceType">
     <DisplayName>ModelResourceType</DisplayName>
     <Description>One model in a catalogue. Its versions are immutable and identified by content, so a version that has been seen cannot change meaning; mutable names such as a branch or a release channel are pointers AT versions, never versions themselves. Because the base type is a FileType, a Server that holds the artefact serves it through the inherited Open, Read and Close; one that only describes it leaves those unimplemented and points at the artefact instead.</Description>
-    <Category>AiDeployment</Category>
+    <Category>AiModelManagement</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=2;i=1016</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=6102</Reference>
@@ -1695,7 +1695,7 @@
   <UAObjectType NodeId="ns=2;i=1013" BrowseName="2:DatasetResourceType">
     <DisplayName>DatasetResourceType</DisplayName>
     <Description>One dataset in a catalogue, a sibling of ModelResourceType rather than something beneath it: a dataset outlives the models trained on it and is cited by several.</Description>
-    <Category>AiDeployment</Category>
+    <Category>AiModelManagement</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=2;i=1016</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=6109</Reference>
@@ -2042,9 +2042,9 @@ The signature does not change with InferenceLocation. A deployment served from t
       <Reference ReferenceType="Organizes" IsForward="false">ns=2;i=1011</Reference>
     </References>
   </UAObject>
-  <UAObject NodeId="ns=2;i=7001" BrowseName="2:AiDeployment" ParentNodeId="i=2253">
-    <DisplayName>AiDeployment</DisplayName>
-    <Description>Entry point for AI deployment and learning on this Server. A client browses Server/AiDeployment/Models to find what this Server describes.</Description>
+  <UAObject NodeId="ns=2;i=7001" BrowseName="2:AiModelManagement" ParentNodeId="i=2253">
+    <DisplayName>AiModelManagement</DisplayName>
+    <Description>Entry point for the AI models this Server runs. A client browses Server/AiModelManagement/Models to find what this Server describes.</Description>
     <References>
       <Reference ReferenceType="HasTypeDefinition">ns=2;i=1001</Reference>
       <Reference ReferenceType="HasComponent" IsForward="false">i=2253</Reference>

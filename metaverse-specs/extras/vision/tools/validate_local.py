@@ -44,17 +44,17 @@ import xml.etree.ElementTree as ET
 
 NS = "{http://opcfoundation.org/UA/2011/03/UANodeSet.xsd}"
 
-# The AI Deployment model is a separate specification. This validator reads its
+# The AI Model Management model is a separate specification. This validator reads its
 # NodeSet rather than importing its generator, for the same reason it reads Vision's:
 # a checker that asks the emitter what it emitted validates nothing.
 AI_NS = "http://opcfoundation.org/UA/AI/"
 _HERE = os.path.dirname(os.path.abspath(__file__))
 AI_NODESET = os.path.normpath(os.path.join(
-    _HERE, "..", "..", "..", "ai-deployment", "Opc.Ua.AiDeployment.NodeSet2.xml"))
+    _HERE, "..", "..", "..", "ai-model-management", "Opc.Ua.AiModelManagement.NodeSet2.xml"))
 
 
 def _ai_prefix():
-    """The NodeId prefix the AI Deployment model uses for its OWN namespace.
+    """The NodeId prefix the AI Model Management model uses for its OWN namespace.
 
     Not necessarily ns=1: a NodeSet lists its RequiredModel namespaces in
     NamespaceUris too, so adding a dependency shifts the model's own index. Reading
@@ -74,7 +74,7 @@ AI_PREFIX = _ai_prefix()
 
 
 def _load_ai_types():
-    """BrowseName -> numeric id for every type the AI Deployment model declares."""
+    """BrowseName -> numeric id for every type the AI Model Management model declares."""
     out = {}
     if not os.path.exists(AI_NODESET) or not AI_PREFIX:
         return out
@@ -92,7 +92,7 @@ AI_TYPE_ID = _load_ai_types()
 
 
 def _load_ai_ids():
-    """Every numeric NodeId the AI Deployment model declares, for reference checking."""
+    """Every numeric NodeId the AI Model Management model declares, for reference checking."""
     out = set()
     if not os.path.exists(AI_NODESET) or not AI_PREFIX:
         return out
@@ -509,7 +509,7 @@ def main():
             for f_el in n.findall(f"{NS}Definition/{NS}Field"):
                 member_of.add((owner, f_el.get("Name") or ""))
         declared = {simple_name(n) for n in nodes}
-        # AI_TYPE_ID holds every type the AI Deployment model declares. Between the two
+        # AI_TYPE_ID holds every type the AI Model Management model declares. Between the two
         # sets, a `SomeType.Member` whose owner appears in NEITHER names a type that
         # exists nowhere - which is how a reference to a renamed or retired type
         # survives. Skipping it, as the check first did, made exactly that invisible.
@@ -531,7 +531,7 @@ def main():
                         "does not declare")
             elif owner not in known_elsewhere:
                 err(f"OPC-UA-Vision.md names {owner}.{member}, but neither this model "
-                    f"nor the AI Deployment model declares {owner} - a type that "
+                    f"nor the AI Model Management model declares {owner} - a type that "
                     "exists nowhere resolves to nothing")
 
     # ---- example overlays --------------------------------------------------
@@ -616,14 +616,14 @@ def main():
         # deployment, so they instantiate types from BOTH models. The base Vision
         # NodeSet still requires only base UA; it is the example overlay that composes.
         if len(uris) < 3 or uris[2] != AI_NS:
-            err(f"{label}: expected the AI Deployment namespace at NamespaceUris "
+            err(f"{label}: expected the AI Model Management namespace at NamespaceUris "
                 f"index 3 (ns=3); found {uris}")
         req = [r.get("ModelUri")
                for r in ov_root.findall(f"{NS}Models/{NS}Model/{NS}RequiredModel")]
         if "http://opcfoundation.org/UA/Vision/" not in req:
             err(f"{label}: missing <RequiredModel> for the Vision namespace")
         if AI_NS not in req:
-            err(f"{label}: missing <RequiredModel> for the AI Deployment namespace")
+            err(f"{label}: missing <RequiredModel> for the AI Model Management namespace")
         ov_nodes = [e for e in ov_root
                     if e.tag.startswith(NS) and e.tag[len(NS):].startswith("UA")]
         total_overlay_nodes += len(ov_nodes)
@@ -643,7 +643,7 @@ def main():
                 elif tgt.startswith("ns=3;i="):
                     if int(tgt.split("i=")[1]) not in AI_IDS:
                         err(f"{label}: {e.get('NodeId')} references {tgt}, which the "
-                            "AI Deployment model does not define")
+                            "AI Model Management model does not define")
                 elif not tgt.startswith("i="):
                     err(f"{label}: {e.get('NodeId')} has malformed reference {tgt}")
             if e.tag[len(NS):] in ("UAObject", "UAVariable"):
@@ -711,7 +711,7 @@ def main():
             return f"ns=2;i={tid}" if tid else None
 
         # The deployment-to-model rule moved with the types it constrains, into the
-        # AI Deployment specification. The overlays are still checked against it there,
+        # AI Model Management specification. The overlays are still checked against it there,
         # because they instantiate those types; what this validator keeps is the Vision
         # side of the seam - that the pipeline names a deployment at all.
         def ai_type_named(name):
@@ -730,7 +730,7 @@ def main():
                        and r.get("IsForward", "true") != "false"]
             if len(targets) != 1:
                 err(f"{label}: {e.get('NodeId')} is a DeploymentType with "
-                    f"{len(targets)} UsesModel references; the AI Deployment "
+                    f"{len(targets)} UsesModel references; the AI Model Management "
                     "specification requires exactly one, and its provenance rule "
                     "depends on it")
             for t in targets:

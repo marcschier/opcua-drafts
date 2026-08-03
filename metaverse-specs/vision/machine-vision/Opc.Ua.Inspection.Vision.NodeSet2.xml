@@ -69,9 +69,9 @@
       <Reference ReferenceType="Organizes">ns=1;i=5068</Reference>
     </References>
   </UAObject>
-  <UAObject NodeId="ns=1;i=5005" BrowseName="3:AiDeployment" ParentNodeId="i=2253">
-    <DisplayName>AiDeployment</DisplayName>
-    <Description>Well-known AI Deployment entry point for this example.</Description>
+  <UAObject NodeId="ns=1;i=5005" BrowseName="3:AiModelManagement" ParentNodeId="i=2253">
+    <DisplayName>AiModelManagement</DisplayName>
+    <Description>Well-known AI Model Management entry point for this example.</Description>
     <References>
       <Reference ReferenceType="HasTypeDefinition">ns=3;i=1001</Reference>
       <Reference ReferenceType="HasComponent" IsForward="false">i=2253</Reference>
@@ -84,7 +84,7 @@
   </UAObject>
   <UAVariable NodeId="ns=1;i=5006" BrowseName="3:SpecificationVersion" ParentNodeId="ns=1;i=5005" DataType="String">
     <DisplayName>SpecificationVersion</DisplayName>
-    <Description>Release of the AI Deployment specification this example is built against.</Description>
+    <Description>Release of the AI Model Management specification this example is built against.</Description>
     <References>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5005</Reference>

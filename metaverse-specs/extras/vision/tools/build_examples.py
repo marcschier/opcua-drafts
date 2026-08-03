@@ -29,12 +29,12 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import build_model as vm  # noqa: E402  (path set above)
 
-# The AI Deployment model is a separate specification in a sibling extras tree. It is
+# The AI Model Management model is a separate specification in a sibling extras tree. It is
 # loaded by path rather than imported as a package so that neither generator depends on
 # the other's location, and so a reader can see exactly which file is being read.
 import importlib.util as _ilu  # noqa: E402
 _AI_GEN = os.path.normpath(
-    os.path.join(HERE, "..", "..", "ai-deployment", "tools", "build_model.py"))
+    os.path.join(HERE, "..", "..", "ai-model-management", "tools", "build_model.py"))
 _spec = _ilu.spec_from_file_location("ai_build_model", _AI_GEN)
 am = _ilu.module_from_spec(_spec)
 _spec.loader.exec_module(am)
@@ -106,21 +106,21 @@ HasCalibration = "HasCalibration"
 MountedOn = "MountedOn"
 UsesModel = "UsesModel"
 
-# Type BrowseName -> NodeId in the AI Deployment namespace, taken from that model.
+# Type BrowseName -> NodeId in the AI Model Management namespace, taken from that model.
 AI_TYPE_ID = {n.bname: n.nid for n in am.NODES.values()
               if n.cls in ("UAObjectType", "UADataType", "UAReferenceType")}
 ALIASES.append((UsesModel, f"ns=3;i={AI_TYPE_ID[UsesModel]}"))
 
 
 def aitype(name):
-    """Type NodeId in the AI Deployment namespace (index 3)."""
+    """Type NodeId in the AI Model Management namespace (index 3)."""
     if name not in AI_TYPE_ID:
         raise SystemExit(f"unknown AI type '{name}' - check ai build_model.py")
     return f"ns=3;i={AI_TYPE_ID[name]}"
 
 
 def put_enum_ai(ov, parent, name, enum_name, literal, desc=None):
-    """An enum Property whose DataType is declared by the AI Deployment model."""
+    """An enum Property whose DataType is declared by the AI Model Management model."""
     val = am_enum_value(enum_name, literal)
     return ov.prop(name, aitype(enum_name), v_int32(val), parent, desc)
 
@@ -535,16 +535,16 @@ def build_overlay(d):
     f_pipelines = ov.folder("Pipelines", root)
     f_frames = ov.folder("Frames", root)
 
-    # Models, datasets, deployments and learning jobs belong to OPC UA - AI Deployment
+    # Models, datasets, deployments and learning jobs belong to OPC UA - AI Model Management
     # and Learning, whose own well-known object sits BESIDE the Vision one under the
     # Server Object. Hanging them under the Vision root would put them in folders
     # VisionRootType does not declare, and would leave the example unable to satisfy
     # the AI-Base facet that the VIS-Inference-* and VIS-Learning facets require.
-    airoot = ov.obj("AiDeployment", aitype("AiRootType"), external_parent=SERVER_OBJECT,
+    airoot = ov.obj("AiModelManagement", aitype("AiRootType"), external_parent=SERVER_OBJECT,
                     browse_ns=3,
-                    desc="Well-known AI Deployment entry point for this example.")
+                    desc="Well-known AI Model Management entry point for this example.")
     ov.prop("SpecificationVersion", "String", v_string(am.VERSION), airoot,
-            "Release of the AI Deployment specification this example is built against.",
+            "Release of the AI Model Management specification this example is built against.",
             browse_ns=3)
     f_models = ov.folder("Models", airoot, browse_ns=3)
     f_datasets = ov.folder("Datasets", airoot, browse_ns=3)
@@ -962,7 +962,7 @@ def emit_addendum(d, annex=None):
     A(d["inferenceNote"])
     A("")
     A("The deployment carries exactly one `UsesModel` reference to the model above, as "
-      "*OPC UA — AI Deployment and Learning* requires. That reference is the only defined "
+      "*OPC UA — AI Model Management and Inference* requires. That reference is the only defined "
       "path from a result to the model artefact and its `Digest`, so it is what makes the "
       "base specification's §12.6 provenance check possible.")
     A("")

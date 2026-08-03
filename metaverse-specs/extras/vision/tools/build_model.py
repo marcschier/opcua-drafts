@@ -159,7 +159,7 @@ def _reserve_encoding_through(last):
 def _reserve_through(last):
     """Burn member ids up to and including `last`, so no surviving member moves.
 
-    The AI cluster was factored out into OPC UA - AI Deployment and Learning. Its
+    The AI cluster was factored out into OPC UA - AI Model Management and Inference. Its
     member ids are NOT reclaimed: reusing them would renumber every member declared
     after them, which is exactly the churn the append-only rule exists to prevent.
     A hole in the id space costs nothing and keeps the CSV diff at zero moved.
@@ -633,7 +633,7 @@ struct_type(3057, "VisionStreamSessionDataType",
 VisionStreamSessionDataType = T(3057)
 
 # Retired: encoding 5009 belonged to VisionTensorSignatureDataType, which moved to
-# OPC UA - AI Deployment and Learning. Not reclaimed, for the same reason member
+# OPC UA - AI Model Management and Inference. Not reclaimed, for the same reason member
 # ids are not.
 _reserve_encoding_through(5009)
 
@@ -1034,7 +1034,7 @@ object_type(1020, "VisionResultType", BaseObjectType,
             abstract=True)
 VR = 1020
 # Retired: 6107..6136 held AiModelType, AiDatasetType and AiDeploymentType before they
-# moved to OPC UA - AI Deployment and Learning. See _reserve_through.
+# moved to OPC UA - AI Model Management and Inference. See _reserve_through.
 _reserve_through(6136)
 
 prop_var(VR, "VisionResultType", "ResultId", String,
@@ -1163,7 +1163,7 @@ prop_var(IP, "InferencePipelineType", "Sensor", NodeId_,
 prop_var(IP, "InferencePipelineType", "Deployment", NodeId_,
          "The deployment executing inference. This is a NodeId, not a reference, and "
          "the node it names is NOT defined by this specification - see clause 8.2. "
-         "Where the Server also implements OPC UA - AI Deployment and Learning it names "
+         "Where the Server also implements OPC UA - AI Model Management and Inference it names "
          "a DeploymentType instance there, which is what clause 8's provenance argument "
          "assumes; a Server that describes its deployment some other way names that "
          "node instead. Nothing in this NodeSet references the other model's "
