@@ -217,3 +217,4 @@ VisionRootType_Frames,6194,Object
 Vision,7001,Object
 MediaEndpointType_DataChannelSource,6196,Variable
 MediaEndpointType_DataChannelContentType,6197,Variable
+InferencePipelineType_LearningJob,6198,Variable

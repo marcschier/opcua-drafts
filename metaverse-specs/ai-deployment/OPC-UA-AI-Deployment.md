@@ -73,12 +73,12 @@ Informative alignments — IDTA 02058, IDTA 02059, IDTA 02060, and the OPC UA �
 
 ```mermaid
 flowchart LR
-    D["DatasetType"] -->|TrainedOn| M["ModelType"]
-    M -->|UsesModel| P["DeploymentType"]
+    M["ModelType"] -->|TrainedOn| D["DatasetType"]
+    P["DeploymentType"] -->|UsesModel| M
     J["LearningJobType"] -.->|BaseModel| M
     J -.->|CandidateModel| M2["ModelType (candidate)"]
     J -.->|Dataset| D
-    M2 -.->|PromoteModel| P
+    J -.->|PromoteModel updates| P
 ```
 
 A dataset trains a model; a deployment executes one. A learning job accumulates a new dataset, produces a candidate, and promotes it — at which point the deployment executes a different model and the cycle repeats.
@@ -164,13 +164,15 @@ stateDiagram-v2
     [*] --> Idle
     Idle --> Collecting: StartCollection
     Collecting --> Labelling: StopCollection
+    Collecting --> Training: TriggerTraining
     Labelling --> Training: TriggerTraining
     Training --> Validating
     Validating --> Ready
-    Ready --> Promoted: PromoteModel
-    Training --> Failed
     Validating --> Failed
-    Failed --> Idle
+    Ready --> Promoted: PromoteModel
+    Promoted --> Collecting: StartCollection
+    Training --> Failed
+    Failed --> Collecting: StartCollection
 ```
 
 `LearningJobStateEnum` (`ns=1;i=3005`) carries exactly these eight states.

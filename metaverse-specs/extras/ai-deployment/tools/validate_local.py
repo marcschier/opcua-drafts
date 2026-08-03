@@ -498,8 +498,18 @@ def check_spec_crossref(m: Model) -> None:
         for rt, tgt, fwd in m.refs(nid):
             if fwd and rt in ("i=46", "i=47") and tgt in m.nodes:
                 members.add((owner, m.bname(tgt)))
+        # A structure's fields are Definition/Field, not references, but the prose
+        # writes them with the same `Type.Field` notation.
+        d = m.definition(nid)
+        if d is not None:
+            for f in d:
+                if local(f.tag) == "Field" and f.get("Name"):
+                    members.add((owner, f.get("Name")))
     for owner, member in set(re.findall(r"`([A-Z][A-Za-z0-9]*Type)\.([A-Za-z][A-Za-z0-9]*)`",
                                         text)):
+        # An owner this model does not declare belongs to a consuming specification -
+        # 4.2 names one deliberately. Only a validator that loads BOTH models can tell
+        # an outside type from a nonexistent one, so that check lives in Vision's.
         if owner not in declared:
             continue
         if (owner, member) not in members:

@@ -1953,7 +1953,7 @@
   </UAVariable>
   <UAObjectType NodeId="ns=1;i=1018" BrowseName="1:InferencePipelineType">
     <DisplayName>InferencePipelineType</DisplayName>
-    <Description>Binds a sensor to a deployment and publishes the results. The same type serves on-server and off-server inference: when the deployment is remote the Server publishes results it did not compute, and the only observable difference is AiDeployment.InferenceLocation.</Description>
+    <Description>Binds a sensor to a deployment and publishes the results. The same type serves on-server and off-server inference: when the deployment is remote the Server publishes results it did not compute, and the only observable difference is DeploymentType.InferenceLocation.</Description>
     <Category>Vision</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
@@ -1967,6 +1967,7 @@
       <Reference ReferenceType="HasComponent">ns=1;i=6172</Reference>
       <Reference ReferenceType="HasComponent">ns=1;i=6175</Reference>
       <Reference ReferenceType="HasComponent">ns=1;i=6176</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6198</Reference>
     </References>
   </UAObjectType>
   <UAVariable NodeId="ns=1;i=6165" BrowseName="1:PipelineId" ParentNodeId="ns=1;i=1018" DataType="String" ValueRank="-1">
@@ -2138,6 +2139,15 @@
       <Reference ReferenceType="HasModellingRule">i=80</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1007</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6198" BrowseName="1:LearningJob" ParentNodeId="ns=1;i=1018" DataType="NodeId" ValueRank="-1">
+    <DisplayName>LearningJob</DisplayName>
+    <Description>LearningJobType instance that consumes GroundTruthLabel corrections submitted through this pipeline's Feedback object, or null where the Server retains none. A NodeId and not a reference, for the same reason Deployment is: this model takes no dependency on the model that defines the job. Section 9.5.1 requires this to be non-null wherever such a correction is retained - without it a client cannot establish whether its label reached a learning loop at all.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1018</Reference>
     </References>
   </UAVariable>
 </UANodeSet>
