@@ -416,6 +416,78 @@ def check_csv(m: Model) -> None:
             err(f"NodeSet node {m.bname(nid)} ({nid}) is missing from NodeIds.csv")
 
 
+def _arg_names(m, method_nid, which):
+    """Argument names declared in a Method's InputArguments/OutputArguments node."""
+    for mem in m.members_of(method_nid):
+        if m.bname(mem) == which:
+            return [(el.text or "").strip() for el in m.nodes[mem].iter()
+                    if local(el.tag) == "Name" and (el.text or "").strip()]
+    return []
+
+
+def _check_new_invariants(m, dt) -> None:
+    """Invariants for the 0.2.0 additions. Separate so each stays readable."""
+
+    # Clause 8 is only enforceable if the members it turns on are Mandatory. A rule
+    # resting on an Optional member is a rule a conformant Server can silently not
+    # satisfy, which is the failure this whole file exists to prevent.
+    dep_t = dt("DeploymentType")
+    if dep_t:
+        for name in ("VersionBinding", "FallbackPolicy", "DataJurisdiction",
+                     "EgressPermitted"):
+            mm = m.member_named(dep_t, name)
+            if not mm:
+                err(f"DeploymentType must declare {name}")
+            elif m.modelling_rule(mm) != "Mandatory":
+                err(f"DeploymentType.{name} must be Mandatory: clause 8 depends on "
+                    "it, and a rule resting on an Optional member can be silently "
+                    "not satisfied")
+
+        # Clause 7.2 - the outputs that make a response auditable and interpretable.
+        inv = m.member_named(dep_t, "Invoke")
+        if inv:
+            got = set(_arg_names(m, inv, "OutputArguments"))
+            for need in ("ModelUsed", "Usage", "FinishReason"):
+                if need not in got:
+                    err(f"DeploymentType.Invoke must return {need}; without it a "
+                        "caller cannot tell what answered, what it cost, or whether "
+                        "the answer is complete")
+
+    # Clause 8.2 forbids credential material in the address space. A member NAMED like
+    # a secret is how that prohibition gets violated by accident - and the address
+    # space is browsable, subscribable and historisable, so a secret placed here is
+    # not merely readable, it is archived.
+    secretish = re.compile(r"Secret|Password|PrivateKey|ApiKeyValue|AccessToken"
+                           r"|SharedKey|Passphrase")
+    for nid in m.order:
+        bn = m.bname(nid)
+        if secretish.search(bn):
+            err(f"{bn} ({nid}) is named like credential material. Clause 8.2 forbids "
+                "exposing it: CredentialReference names a credential, it never "
+                "carries one")
+
+    # Clause 9.1 - a domain extension that inherits the placeholders unchanged adds
+    # metadata while restricting nothing, and a client cannot then tell one kind of
+    # registry from another except by convention.
+    for owner, wanted in (("ModelRegistryType", {"ModelPublisherType"}),
+                          ("ModelPublisherType", {"ModelResourceType",
+                                                  "DatasetResourceType"})):
+        nid = dt(owner)
+        if not nid:
+            continue
+        narrowed = set()
+        for mem in m.members_of(nid):
+            if not m.bname(mem).startswith("<"):
+                continue
+            for rt, tgt, fwd in m.refs(mem):
+                if rt in ("i=40", "HasTypeDefinition") and fwd and tgt in m.nodes:
+                    narrowed.add(m.bname(tgt))
+        missing = wanted - narrowed
+        if missing:
+            err(f"{owner} must narrow its inherited placeholder to {sorted(missing)}; "
+                "a subtype that leaves it open restricts nothing")
+
+
 def check_spec_invariants(m: Model) -> None:
     def dt(name: str) -> str:
         nid = m.by_name(name)
@@ -423,6 +495,7 @@ def check_spec_invariants(m: Model) -> None:
             err(f"required type {name} is missing from the model")
         return nid
 
+    _check_new_invariants(m, dt)
     # The provenance chain is the reason this model is worth reading, and an Optional
     # digest breaks it without any Server appearing to be non-conformant.
     model_t = dt("ModelType")

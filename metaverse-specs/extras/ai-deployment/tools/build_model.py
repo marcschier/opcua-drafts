@@ -487,9 +487,10 @@ enum_type(3007, "ApiDialectEnum",
           "an OPC UA client calls this Server.",
           [("OpcUaInference", 0, "Another OPC UA Server implementing this "
                                  "specification's Invoke Method."),
-           ("OpenAiCompatible", 1, "The de-facto chat/embeddings REST contract that "
-                                   "most serving runtimes, including on-device ones, "
-                                   "expose."),
+           ("RestChatCompletions", 1, "The de-facto REST contract for chat and "
+                                      "embeddings that most serving runtimes expose, "
+                                      "including ones that run on a single "
+                                      "workstation."),
            ("OpenInferenceProtocol", 2, "The Open Inference Protocol (KServe v2) "
                                         "predict contract."),
            ("TensorRemoteProcedure", 3, "A tensor-oriented RPC contract such as those "

@@ -334,9 +334,9 @@ A deployment whose `InferenceLocation` is not `OnServer` executes somewhere the 
 
 ### 8.2 The wire contract, and the credential that is never a secret
 
-`ApiDialect` (`ApiDialectEnum`, `ns=2;i=3007`) is `OpcUaInference`, `OpenAiCompatible`, `OpenInferenceProtocol`, `TensorRemoteProcedure`, `EmbeddedRuntime` or `Proprietary`.
+`ApiDialect` (`ApiDialectEnum`, `ns=2;i=3007`) is `OpcUaInference`, `RestChatCompletions`, `OpenInferenceProtocol`, `TensorRemoteProcedure`, `EmbeddedRuntime` or `Proprietary`.
 
-These name **the contract the remote endpoint speaks**. They never affect how an OPC UA client calls this Server, which is always §7. `OpcUaInference` is another Server implementing this specification; `OpenAiCompatible` is the de-facto chat and embeddings contract that most serving runtimes expose, including ones that run on a single workstation; `OpenInferenceProtocol` is the KServe-derived predict contract; `TensorRemoteProcedure` covers the tensor-oriented RPC contracts of dedicated inference servers; `EmbeddedRuntime` is an in-process runtime reached through a library rather than a socket. `Proprietary` is an honest admission, and a Server using it **should** populate `EndpointDescriptionUri` — otherwise nothing in the address space says how the endpoint is called.
+These name **the contract the remote endpoint speaks**. They never affect how an OPC UA client calls this Server, which is always §7. `OpcUaInference` is another Server implementing this specification; `RestChatCompletions` is the de-facto REST contract for chat and embeddings that most serving runtimes expose, including ones that run on a single workstation — named here for what it does rather than for whoever published it first, because a literal in a standard should not be an advertisement; `OpenInferenceProtocol` is the KServe-derived predict contract; `TensorRemoteProcedure` covers the tensor-oriented RPC contracts of dedicated inference servers; `EmbeddedRuntime` is an in-process runtime reached through a library rather than a socket. `Proprietary` is an honest admission, and a Server using it **should** populate `EndpointDescriptionUri` — otherwise nothing in the address space says how the endpoint is called.
 
 `AuthenticationKind` (`AuthenticationKindEnum`, `ns=2;i=3008`) is `Anonymous`, `ApiKey`, `BearerToken`, `WorkloadIdentity` or `MutualTls`. `WorkloadIdentity` is preferred wherever the hosting platform offers it, because it is the only one of the five under which no secret is stored anywhere for an attacker to read.
 
@@ -546,8 +546,6 @@ python metaverse-specs\extras\ai-deployment\tools\validate_local.py
 
 Annex A is generated from the NodeSet and is authoritative for identifiers, DataTypes, ValueRanks, ModellingRules, structure fields, enumeration values and Method signatures. See [`../extras/ai-deployment/tools/model-reference.md`](../extras/ai-deployment/tools/model-reference.md).
 
----
-
 ## Annex B — Informative alignments
 
 Not normative references, and no dependency. Recorded because this model borrowed from them deliberately.
@@ -556,4 +554,70 @@ Not normative references, and no dependency. Recorded because this model borrowe
 - **IDTA 02058** *AI Dataset* — the member set of `DatasetType`.
 - **IDTA 02059** *AI Deployment* — the member set of `DeploymentType`, including the inference-location concept.
 - **OPC 30270** — the OPC UA ⇄ Asset Administration Shell bridge, over which the alignments above become a populated AAS.
+- **xRegistry** — [the CNCF specification](https://github.com/xregistry/spec) the OPC UA projection in this repository follows. Its `groups` / `resources` / `versions` structure is what clause 9 extends, and public proxies over model hubs already present exactly the arrangement adopted here: publisher as group, models and datasets as sibling resource types, versions immutable and identified by content, mutable branch and tag names as pointers rather than versions.
 - **OPC UA — Vision** in this repository is the first consuming specification. Its `InferencePipelineType.Deployment` is a `NodeId` Property naming a `DeploymentType` here, per §4.2, and neither NodeSet requires the other.
+
+---
+
+## Annex C — A worked arrangement (informative)
+
+This annex is **informative**. It shows one arrangement that satisfies clauses 7 to 10, to make the interaction between them concrete. No member here is introduced by this annex; every one is defined in Annex A.
+
+### C.1 The situation
+
+A plant runs a surface-inspection model on a finishing line. The model is published in a corporate catalogue. Two things are true at once and pull in opposite directions: the good model is large and runs on a GPU appliance nobody wants to put on every line, and the line must keep running when the network to that appliance does not.
+
+So the plant deploys twice. A **primary** deployment calls the appliance. A **secondary** deployment runs a smaller quantized model on the line controller itself. The primary falls back to the secondary.
+
+### C.2 Getting the models here
+
+Both start as one `ModelImportJobType` each, against a `ModelSourceType` naming the corporate catalogue.
+
+| | Primary | Secondary |
+|---|---|---|
+| `ModelReference` | `Publisher` = `plant-quality`, `Name` = `surface-defect`, `Version` = `4.2.0` | same publisher and name, `Version` = `4.2.0-int8` |
+| `Mode` | `Federate` | `Stage` |
+| Result | a `ModelType` describing an artefact that stays in the catalogue | a `ModelType` whose artefact is now on the controller |
+
+The second job fetches bytes, so `BytesTransferred` climbs and `DigestVerified` is the gate: the job compares what it fetched against the `Digest` the `ModelResourceType` declared, and refuses to deploy on mismatch (§9.4). The first job moves nothing, so `BytesTransferred` stays zero.
+
+Both resulting models carry `ImportedFrom` back to the catalogue resource, which is what makes the question *where did this come from* answerable next year rather than only today.
+
+The quantized model additionally carries `DerivedFrom` to the full-precision one and states `Quantization` = `int8`. That is not bookkeeping: it is the reason a reviewer knows the two will not agree on every part, and the reason the secondary needs its own `EvaluationRunType` rather than inheriting the primary's.
+
+### C.3 The two deployments
+
+| | Primary | Secondary |
+|---|---|---|
+| `InferenceLocation` | `EdgeOffServer` | `OnServer` |
+| `Source` | the appliance's `ModelSourceType` | null |
+| `VersionBinding` | `Pinned` | `Pinned` |
+| `FallbackPolicy` | `FallBackTo` | `Fail` |
+| `FallsBackTo` | the secondary | — |
+| `DataJurisdiction` | `plant-north` | `plant-north` |
+| `EgressPermitted` | `false` | `false` |
+| `RetainsInput` | `false` | `false` |
+
+The appliance is on the plant network, so nothing leaves the site and `EgressPermitted` is false for both. Had the plant chosen a hosted service instead, §8.5 would have required it to be `true` — and, if the operator could not establish what the provider did with the images, `RetainsInput` `true` as well.
+
+Both are `Pinned`. A `FollowsRef` primary would have been convenient and would have meant the artefact could change without anything else changing, which §8.3 treats as a promotion in disguise.
+
+### C.4 A normal call, and a bad afternoon
+
+A client calls `Invoke` on the primary with an image as `Payload` and its media type as `ContentType`. The response carries `ModelUsed` naming the full-precision model, `Usage` with `UnitKind` `images` and `InputUnits` 1, and `FinishReason` `Stop`.
+
+Then the switch feeding the appliance fails.
+
+The Server's next attempt does not answer. `Reachability` on the primary goes `Unreachable` and `ConsecutiveFailures` climbs; `LastSuccessAt` stops advancing. Because `FallbackPolicy` is `FallBackTo`, the call is served by the secondary, and this is the part that matters: **the response says so.** `ModelUsed` now names the quantized model, not the one the primary still points at.
+
+A client that logged only the deployment would record that the full-precision model made every judgement that afternoon. A client that reads `ModelUsed` — as §7.2.1 requires — records what actually happened, which is what an audit a month later needs.
+
+Note what did **not** change: the client called the same Method with the same arguments throughout, and never learned that inference moved from an appliance to the local controller except by reading the outputs it was going to read anyway.
+
+### C.5 What a throttle would have done instead
+
+Had the appliance been saturated rather than unreachable, `Reachability` would have read `Throttled` and `RateLimit.RetryAfter` would have carried a wait.
+
+The distinction is the point of separating the two values. Failing over a throttled endpoint moves load onto the weaker model for no reason; the endpoint will serve again shortly. Failing over an unreachable one is exactly right. From the outside the two look identical, which is why the Server states which it is rather than leaving a client to infer it from a timeout.
+
+---

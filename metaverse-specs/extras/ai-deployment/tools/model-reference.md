@@ -505,7 +505,7 @@ Wire contract a remote inference endpoint speaks. A Server needs this to call an
 | Name | Value | Description |
 |---|---|---|
 | OpcUaInference | 0 | Another OPC UA Server implementing this specification's Invoke Method. |
-| OpenAiCompatible | 1 | The de-facto chat/embeddings REST contract that most serving runtimes, including on-device ones, expose. |
+| RestChatCompletions | 1 | The de-facto REST contract for chat and embeddings that most serving runtimes expose, including ones that run on a single workstation. |
 | OpenInferenceProtocol | 2 | The Open Inference Protocol (KServe v2) predict contract. |
 | TensorRemoteProcedure | 3 | A tensor-oriented RPC contract such as those used by dedicated inference servers. |
 | EmbeddedRuntime | 4 | An in-process runtime reached through a local library rather than a network protocol. |
