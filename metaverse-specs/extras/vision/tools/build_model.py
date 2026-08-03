@@ -144,6 +144,18 @@ def _mid():
     return v
 
 
+def _reserve_encoding_through(last):
+    """Same append-only rule as _reserve_through, for the encoding id counter.
+
+    Encoding ids are auto-assigned inside struct_type(), so deleting a structure
+    silently frees its id for the next structure added - a renumbering that is harder
+    to notice than a member one because no CSV row names the encoding directly.
+    """
+    assert _next_encoding[0] <= last + 1, (
+        f"encoding reservation {last} already passed at {_next_encoding[0]}")
+    _next_encoding[0] = last + 1
+
+
 def _reserve_through(last):
     """Burn member ids up to and including `last`, so no surviving member moves.
 
@@ -619,6 +631,11 @@ struct_type(3057, "VisionStreamSessionDataType",
              ("Protocol", VisionStreamProtocolEnum, "Protocol of the returned URI."),
              ("ExpiresAt", UtcTime, "Expiry after which the Uri is no longer valid.")])
 VisionStreamSessionDataType = T(3057)
+
+# Retired: encoding 5009 belonged to VisionTensorSignatureDataType, which moved to
+# OPC UA - AI Deployment and Learning. Not reclaimed, for the same reason member
+# ids are not.
+_reserve_encoding_through(5009)
 
 # ---------------------------------------------------------------------------
 # ReferenceTypes (4001+)
@@ -1137,7 +1154,7 @@ object_type(1018, "InferencePipelineType", BaseObjectType,
             "Binds a sensor to a deployment and publishes the results. The same type "
             "serves on-server and off-server inference: when the deployment is remote "
             "the Server publishes results it did not compute, and the only observable "
-            "difference is AiDeployment.InferenceLocation.")
+            "difference is DeploymentType.InferenceLocation.")
 IP = 1018
 prop_var(IP, "InferencePipelineType", "PipelineId", String,
          "Identifier of the pipeline.", MR_Mandatory)
@@ -1225,6 +1242,18 @@ prop_var(ME, "MediaEndpointType", "DataChannelContentType", String,
          "image/jpeg. Mirrors IDataChannelSourceType.ContentType so a client can learn "
          "the payload type from this model alone, without the Data Channels model being "
          "present. Meaningful only where DataChannelSource is non-null.")
+
+# Appended in the AI split. It belongs to InferencePipelineType, but its id is
+# allocated HERE because member ids are append-only: declaring it beside its type
+# renumbered InferencePipelineType.Stop.
+prop_var(IP, "InferencePipelineType", "LearningJob", NodeId_,
+         "LearningJobType instance that consumes GroundTruthLabel corrections "
+         "submitted through this pipeline's Feedback object, or null where the Server "
+         "retains none. A NodeId and not a reference, for the same reason Deployment "
+         "is: this model takes no dependency on the model that defines the job. "
+         "Section 9.5.1 requires this to be non-null wherever such a correction is "
+         "retained - without it a client cannot establish whether its label reached a "
+         "learning loop at all.")
 
 
 # ===========================================================================

@@ -8,8 +8,9 @@ Emits, from a single in-code source of truth:
   * model-reference.md                                      - the generated Annex A
 
 The model is a COMPANION specification in its OWN namespace
-(http://opcfoundation.org/UA/AI/, namespace index 1). Nodes therefore use
-`ns=1;i=<n>` NodeIds; references to base UA types use plain `i=<n>`.
+(http://opcfoundation.org/UA/AI/). Its namespace index is DERIVED from NAMESPACE_URIS
+and is not 1: the xRegistry RequiredModel occupies index 1. Nodes use ns={OWN_NS} for
+both NodeIds and BrowseNames; references to base UA types use plain `i=<n>`.
 
 It is deliberately STANDALONE and deliberately DOMAIN-NEUTRAL: the only
 <RequiredModel> is the base UA namespace, and nothing here mentions a camera, a robot
@@ -1065,8 +1066,11 @@ object_type(1010, "ModelRegistryType", XRegistry_RegistryType,
             "the abstract registry's group placeholder to model publishers, so that a "
             "client browsing it knows what it will find rather than discovering it.")
 MR_ = 1010
-obj_member(MR_, "ModelRegistryType", "<ModelPublisher>", T(1011),
-           "A publisher namespace held by this registry.", MR_OptionalPlaceholder)
+# An InstanceDeclaration is overridden only by one with the SAME BrowseName, so the
+# narrowing has to reuse the inherited <Group> and <Resource> names and the inherited
+# Organizes. Declaring new placeholder names would leave the inherited ones fully open
+# - the subtype would look narrowed while still admitting any GroupType at all.
+_reserve(1, "6104 held a <ModelPublisher> placeholder that narrowed nothing.")
 
 object_type(1011, "ModelPublisherType", XRegistry_GroupType,
             "One publisher's namespace within a model registry: the organisation or "
@@ -1074,12 +1078,16 @@ object_type(1011, "ModelPublisherType", XRegistry_GroupType,
             "element of the publisher/name/version triple by which every catalogue in "
             "practice identifies a model.")
 MP = 1011
-obj_member(MP, "ModelPublisherType", "<Model>", T(1012),
-           "A model published in this namespace.", MR_OptionalPlaceholder)
-obj_member(MP, "ModelPublisherType", "<Dataset>", T(1013),
-           "A dataset published in this namespace.", MR_OptionalPlaceholder)
+_reserve(2, "6105..6106 held <Model> and <Dataset> placeholders that narrowed nothing.")
 
-object_type(1012, "ModelResourceType", XRegistry_ResourceType,
+object_type(1016, "AiResourceType", XRegistry_ResourceType,
+            "Abstract base of everything a model registry holds. It exists so that the "
+            "inherited <Resource> placeholder can be narrowed ONCE to something that "
+            "admits models and datasets and nothing else - a publisher holds both, and "
+            "a placeholder can be overridden only by one declaration.",
+            abstract=True)
+
+object_type(1012, "ModelResourceType", T(1016),
             "One model in a catalogue. Its versions are immutable and identified by "
             "content, so a version that has been seen cannot change meaning; mutable "
             "names such as a branch or a release channel are pointers AT versions, "
@@ -1113,7 +1121,7 @@ prop_var(MRS, "ModelResourceType", "MutableRefs", String,
          "a deployment may follow instead of pinning. Naming them is what makes "
          "VersionBinding FollowsRef checkable.", valuerank="1")
 
-object_type(1013, "DatasetResourceType", XRegistry_ResourceType,
+object_type(1013, "DatasetResourceType", T(1016),
             "One dataset in a catalogue, a sibling of ModelResourceType rather than "
             "something beneath it: a dataset outlives the models trained on it and is "
             "cited by several.")
@@ -1265,6 +1273,19 @@ method(AY, "DeploymentType", "GetCapabilities",
        "without anything in this address space changing.", MR_Optional,
        outargs=[("Capabilities", CapabilityDataType, "Current capabilities.", 1)])
 
+# The actual narrowing. Same BrowseNames and same Organizes as the inherited
+# declarations, so these OVERRIDE them rather than sitting alongside; typed to this
+# model's own types, so a client browsing a model registry knows what it will find.
+# Allocated here because member ids are append-only.
+obj_member(MR_, "ModelRegistryType", "<Group>", T(1011),
+           "A publisher namespace held by this registry. Narrows the inherited "
+           "placeholder so a model registry admits ModelPublisherType and nothing "
+           "else.", MR_OptionalPlaceholder, reftype=Organizes)
+obj_member(MP, "ModelPublisherType", "<Resource>", T(1016),
+           "A model or dataset published in this namespace. Narrows the inherited "
+           "placeholder to this model's own resource types.", MR_OptionalPlaceholder,
+           reftype=Organizes)
+
 # ---------------------------------------------------------------------------
 # Well-known instance (7001+)
 # ---------------------------------------------------------------------------
@@ -1293,7 +1314,7 @@ def _emit_node(n):
     # standard, not model-defined. Emitting it as 1:Default Binary is what every real
     # companion NodeSet avoids, and tooling that resolves encodings by BrowseName
     # cannot find it.
-    prefix = "" if n.attrs.get("BrowseNameNamespace") == 0 else "1:"
+    prefix = "" if n.attrs.get("BrowseNameNamespace") == 0 else f"{OWN_NS}:"
     a = [f'{tag} NodeId="{T(n.nid)}"', f'BrowseName="{prefix}{sx.escape(n.bname)}"']
     if "SymbolicName" in n.attrs:
         a.append(f'SymbolicName="{sx.escape(n.attrs["SymbolicName"])}"')
@@ -1399,7 +1420,7 @@ def _dt_name(dt):
         return BASE_TYPE_NAMES[dt]
     if dt in DATATYPE_ALIAS:
         return DATATYPE_ALIAS[dt]
-    if dt.startswith("ns=1;i="):
+    if dt.startswith(f"ns={OWN_NS};i="):
         n = NODES.get(int(dt.split("=")[-1]))
         if n is not None:
             return n.bname
@@ -1455,7 +1476,7 @@ def emit_md():
     L = ["# OPC UA — AI Deployment and Learning — Annex A: Information model (generated)",
          "",
          "> Generated by `build_model.py`. Do not edit by hand. Namespace "
-         f"`{NAMESPACE}` (index 1). NodeIds are provisional.",
+         f"`{NAMESPACE}` (index {OWN_NS}). NodeIds are provisional.",
          "",
          "This annex is the authoritative node reference for the specification: it "
          "carries the DataType, ValueRank and ModellingRule of every member, the field "
@@ -1467,7 +1488,7 @@ def emit_md():
           "| NodeId | BrowseName | NodeClass | Subtype of |", "|---|---|---|---|"]
     for nid in ref_types + obj_types + data_types:
         n = NODES[nid]
-        L.append(f"| ns=1;i={nid} | {n.bname} | {n.cls[2:]} | "
+        L.append(f"| {T(nid)} | {n.bname} | {n.cls[2:]} | "
                  f"{_dt_name(_supertype(nid))} |")
     L.append("")
 
@@ -1476,7 +1497,7 @@ def emit_md():
           "|---|---|---|---|---|"]
     for nid in ref_types:
         n = NODES[nid]
-        L.append(f"| ns=1;i={nid} | {n.bname} | {n.inverse} | "
+        L.append(f"| {T(nid)} | {n.bname} | {n.inverse} | "
                  f"{_dt_name(_supertype(nid))} | {_esc(n.desc)} |")
     L.append("")
 
@@ -1484,7 +1505,7 @@ def emit_md():
     for nid in obj_types:
         n = NODES[nid]
         abstract = " (abstract)" if n.abstract else ""
-        L.append(f"### {n.bname}{abstract} — `ns=1;i={nid}`")
+        L.append(f"### {n.bname}{abstract} — `{T(nid)}`")
         L.append("")
         L.append(f"*Subtype of:* `{_dt_name(_supertype(nid))}`")
         L.append("")
@@ -1529,7 +1550,7 @@ def emit_md():
         n = NODES[nid]
         defn = n.definition or ""
         is_enum = 'Value="' in defn
-        L.append(f"### {n.bname} — `ns=1;i={nid}`")
+        L.append(f"### {n.bname} — `{T(nid)}`")
         L.append("")
         L.append(f"*Subtype of:* `{_dt_name(_supertype(nid))}`")
         L.append("")

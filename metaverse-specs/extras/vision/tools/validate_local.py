@@ -509,11 +509,30 @@ def main():
             for f_el in n.findall(f"{NS}Definition/{NS}Field"):
                 member_of.add((owner, f_el.get("Name") or ""))
         declared = {simple_name(n) for n in nodes}
+        # AI_TYPE_ID holds every type the AI Deployment model declares. Between the two
+        # sets, a `SomeType.Member` whose owner appears in NEITHER names a type that
+        # exists nowhere - which is how a reference to a renamed or retired type
+        # survives. Skipping it, as the check first did, made exactly that invisible.
+        # Types defined by companion specifications this document cites but does not
+        # load. Listed explicitly rather than pattern-matched, so that adding a
+        # dependency on an outside type is a deliberate edit rather than a silent one.
+        EXTERNAL_TYPES = {
+            "ResultDataType",        # OPC 40100-1
+            "UsdGeomCameraType",     # OPC UA - OpenUSD Scene Materialization
+            "UsdApiSchemaType",      # OPC UA - OpenUSD Scene Materialization
+            "DataChannelSourceType",  # OPC UA - Data Channels (draft)
+        }
+        known_elsewhere = set(AI_TYPE_ID) | EXTERNAL_TYPES
         for owner, member in set(re.findall(
                 r"`([A-Z][A-Za-z0-9]*Type)\.([A-Za-z][A-Za-z0-9]*)`", spec_text)):
-            if owner in declared and (owner, member) not in member_of:
-                err(f"OPC-UA-Vision.md names {owner}.{member}, which the model does "
-                    "not declare")
+            if owner in declared:
+                if (owner, member) not in member_of:
+                    err(f"OPC-UA-Vision.md names {owner}.{member}, which the model "
+                        "does not declare")
+            elif owner not in known_elsewhere:
+                err(f"OPC-UA-Vision.md names {owner}.{member}, but neither this model "
+                    f"nor the AI Deployment model declares {owner} - a type that "
+                    "exists nowhere resolves to nothing")
 
     # ---- example overlays --------------------------------------------------
     # Each overlay instantiates the base model. Verify it is well-formed, declares the

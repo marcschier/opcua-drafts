@@ -157,10 +157,8 @@ ModelCardType_TrainingDataCutoff,6101,Variable
 ModelCardType_EthicalConsiderations,6102,Variable
 ModelCardType_ContactUri,6103,Variable
 ModelRegistryType,1010,ObjectType
-ModelRegistryType_ModelPublisher,6104,Object
 ModelPublisherType,1011,ObjectType
-ModelPublisherType_Model,6105,Object
-ModelPublisherType_Dataset,6106,Object
+AiResourceType,1016,ObjectType
 ModelResourceType,1012,ObjectType
 ModelResourceType_TaskKind,6107,Variable
 ModelResourceType_Framework,6108,Variable
@@ -205,4 +203,6 @@ DeploymentType_InvokeAsync_InputArguments,6145,Variable
 DeploymentType_InvokeAsync_OutputArguments,6146,Variable
 DeploymentType_GetCapabilities,6147,Method
 DeploymentType_GetCapabilities_OutputArguments,6148,Variable
+ModelRegistryType_Group,6149,Object
+ModelPublisherType_Resource,6150,Object
 AiDeployment,7001,Object

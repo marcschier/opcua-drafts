@@ -151,7 +151,7 @@ The twin additionally implements `IVisionSimulatedType`:
 | `AcceleratorKind` | `Gpu` |
 | `EndpointUri` | `grpcs://192.0.2.60:8001/graspposenet` |
 
-Inference runs **off-server** on a cell-side GPU appliance. The Server publishes results it did not compute. Nothing else in the model changes: a client reads `DetectionResultType` exactly as it would if `InferenceLocation` were `OnServer`, and consults that property only if it cares about the latency or trust boundary. Because the deployment is remote, base specification §12.6 applies: the channel to the inference service is authenticated and integrity-protected, and `AiModelType.Digest` lets a consumer confirm which artefact produced a result.
+Inference runs **off-server** on a cell-side GPU appliance. The Server publishes results it did not compute. Nothing else in the model changes: a client reads `DetectionResultType` exactly as it would if `InferenceLocation` were `OnServer`, and consults that property only if it cares about the latency or trust boundary. Because the deployment is remote, base specification §12.6 applies: the channel to the inference service is authenticated and integrity-protected, and `ModelType.Digest` lets a consumer confirm which artefact produced a result.
 
 The deployment carries exactly one `UsesModel` reference to the model above, as *OPC UA — AI Deployment and Learning* requires. That reference is the only defined path from a result to the model artefact and its `Digest`, so it is what makes the base specification's §12.6 provenance check possible.
 

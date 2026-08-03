@@ -444,7 +444,7 @@ The return path into the vision system. It serves three purposes at once: drawin
 
 *Subtype of:* `BaseObjectType`
 
-Binds a sensor to a deployment and publishes the results. The same type serves on-server and off-server inference: when the deployment is remote the Server publishes results it did not compute, and the only observable difference is AiDeployment.InferenceLocation.
+Binds a sensor to a deployment and publishes the results. The same type serves on-server and off-server inference: when the deployment is remote the Server publishes results it did not compute, and the only observable difference is DeploymentType.InferenceLocation.
 
 | BrowseName | NodeClass | DataType | ValueRank | ModellingRule | Description |
 |---|---|---|---|---|---|
@@ -455,6 +455,7 @@ Binds a sensor to a deployment and publishes the results. The same type serves o
 | Continuous | Variable | Boolean | Scalar | Optional | True while the pipeline runs on every frame. |
 | Results | Object |  |  | Optional | Recent VisionResultType instances produced by this pipeline. |
 | Feedback | Object |  |  | Optional | Feedback surface for pushing results back into the vision system. |
+| LearningJob | Variable | NodeId | Scalar | Optional | LearningJobType instance that consumes GroundTruthLabel corrections submitted through this pipeline's Feedback object, or null where the Server retains none. A NodeId and not a reference, for the same reason Deployment is: this model takes no dependency on the model that defines the job. Section 9.5.1 requires this to be non-null wherever such a correction is retained - without it a client cannot establish whether its label reached a learning loop at all. |
 
 **Method `RunInference`** (Optional) — Run inference once, on the current or a specified frame, and return the identifier of the result that was produced.
 

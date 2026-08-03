@@ -49,7 +49,7 @@ Neither list is a statement that the omitted capability is unimportant — only 
 
 ### 1.4 Capabilities and versioning
 
-Release 0.1.0 covers sensors, media endpoints, frames and calibration, AI model/dataset/deployment/pipeline, results, feedback, and the learning loop. The NodeSet declares exactly one `RequiredModel` — the base OPC UA namespace — so a Server can adopt it without pulling in any companion model.
+Release 0.1.0 covers sensors, the media they emit, coordinate frames and calibration, inference pipelines, results, and the feedback path back in. The AI models those pipelines run are described by *OPC UA — AI Deployment and Learning* (§8.1). The NodeSet declares exactly one `RequiredModel` — the base OPC UA namespace — so a Server can adopt it without pulling in any companion model.
 
 ---
 
@@ -129,7 +129,9 @@ A Server implementing this model almost always uses GenICam internally to talk t
 A conforming Server **shall** expose exactly one well-known Object `Vision` of type `VisionRootType` as a component of the Server Object (`i=2253`), with BrowseName `Vision` qualified by the namespace `http://opcfoundation.org/UA/Vision/`. A client **shall** resolve that namespace's index from `Server.NamespaceArray` rather than assuming a fixed index. It contains:
 
 - `Sensors` (Mandatory) — every `VisionSensorType` instance;
-- `Pipelines`, `Models`, `Frames`, `LearningJobs` (Optional).
+- `Pipelines` and `Frames` (Optional).
+
+Models, deployments and learning jobs are **not** here. They are reached through `AiRootType` in *OPC UA — AI Deployment and Learning*, whose own well-known object sits beside this one under the Server object. A client looking for what AI a Server runs browses there, not here.
 
 A client therefore starts at `Server/Vision/Sensors` and follows references outward. This mirrors the discovery pattern of *OPC UA — OpenUSD Bindings*.
 
@@ -173,7 +175,7 @@ graph TD
 
 ## 5 Information model
 
-The model has **25 ObjectTypes**, and they exist in five groups, each answering one question a vision integration has to answer:
+The model has **21 ObjectTypes**, and they exist in five groups, each answering one question a vision integration has to answer:
 
 | Group | Question it answers | Types | Clause |
 |---|---|---|---|
@@ -220,11 +222,12 @@ This is the shape of a populated address space. Solid arrows are hierarchical (`
 ```mermaid
 graph TD
     ROOT["Vision : VisionRootType"]
+    AIROOT["AiDeployment : AiRootType<br/><i>AI Deployment spec, beside this one<br/>under the Server object</i>"]
+    AIROOT --> FM["Models"]
+    AIROOT --> FJ["LearningJobs"]
     ROOT --> FS["Sensors"]
     ROOT --> FP["Pipelines"]
-    ROOT --> FM["Models"]
     ROOT --> FF["Frames"]
-    ROOT --> FJ["LearningJobs"]
 
     FS --> SENSOR["ImageSensorType<br/>SensorId, RealityKind, Modality<br/>Width, Height, PixelFormat"]
     SENSOR --> MEDIA["Media : VisionMediaManagementType<br/>GetStreamEndpoint, GetClip"]
@@ -273,11 +276,11 @@ The three chains worth tracing are:
 
 ### 5.3 `VisionRootType : BaseObjectType`
 
-The single entry point (§4.2). Holds the five folders and nothing else.
+The single entry point (§4.2). Holds the three folders and nothing else.
 
 This type exists because discovery has to be deterministic. Without a well-known root a client would have to search the address space for anything that looks like a camera, and two Servers would place them differently. A Server instantiates exactly one, as a component of the Server Object.
 
-`Sensors` is Mandatory; `Pipelines`, `Models`, `Frames` and `LearningJobs` are Optional, and their absence is meaningful — a Server with no `Models` folder is not doing AI, and a client can determine that in one Browse rather than by inference.
+`Sensors` is Mandatory; `Pipelines` and `Frames` are Optional, and their absence is meaningful — a Server with no `Models` folder is not doing AI, and a client can determine that in one Browse rather than by inference.
 
 ### 5.4 `VisionSensorType : BaseObjectType` (abstract)
 
@@ -400,7 +403,7 @@ Full field-level detail — DataType, ValueRank, ModellingRule, structure fields
 
 ### 5.11 ReferenceTypes
 
-Each ReferenceType subtypes `NonHierarchicalReferences`. They exist alongside the hierarchy because the hierarchy answers *what is part of this sensor*, whereas these answer *what does this node depend on*, and the two are not the same shape. A calibration is listed under its sensor, but a frame is not part of any one sensor and a model is not part of any one pipeline — both are shared and live in their own folders. A NodeId Property could express such a link, but a reference is browsable in **both** directions, which is what lets a client ask the reverse question — *which deployments use this model?* — the question that is asked the moment a model is found to be defective.
+Each ReferenceType subtypes `NonHierarchicalReferences`. They exist alongside the hierarchy because the hierarchy answers *what is part of this sensor*, whereas these answer *what does this node depend on*, and the two are not the same shape. A calibration is listed under its sensor, but a frame is not part of any one sensor — it is shared and lives in its own folder. A NodeId Property could express such a link, but a reference is browsable in **both** directions, which is what lets a client ask the reverse question — *which sensors does this calibration affect?* — the question that is asked the moment a calibration is found to be wrong.
 
 The following constraints are **normative**; a Server **shall not** use these ReferenceTypes with other SourceNode or TargetNode types.
 
@@ -414,12 +417,12 @@ The following constraints are **normative**; a Server **shall not** use these Re
 - **`HasCalibration`** links a sensor to a calibration that applies to it. Following it forward answers *how do I interpret this sensor's output*; following `IsCalibrationOf` back answers *which sensors does this calibration affect*, which is what a maintenance client asks after re-calibrating. The cardinality allows a history of superseded calibrations to remain browsable, so long as only one per kind is `Valid`.
 - **`MountedOn`** links a sensor to the coordinate frame it is physically attached to — a frame of role `MechanicalInterface` for an eye-in-hand camera, a station frame for a fixed one. It is the structural statement of what the extrinsic calibration measures numerically, and it lets a client find the mounting frame without parsing a calibration.
 - **`HasScenePrim`** links a sensor to the camera prim it corresponds to in a materialized OpenUSD stage. It exists so a client can navigate from sensor to scene without resolving `PrimPath` as a string. Required only where the Server claims *VIS-Interop-Scene* (Annex C).
-- **`UsesModel`** links a deployment to the single model artefact it executes. This is the only defined path from a published result to the artefact and its `Digest`, so the §12.6 provenance check depends on it entirely — which is why the cardinality is exactly one rather than 0..1. `IsUsedByDeployment` is how an operator finds every deployment affected by a recalled model.
 - **`ProducedBy`** links a result to the pipeline that computed it. It duplicates the `Pipeline` Property deliberately: the Property is convenient to read with the result, the reference is browsable in reverse so a client can enumerate everything one pipeline produced.
+
+The deployment-to-model link is **not** here. `UsesModel` is defined by *OPC UA — AI Deployment and Learning*, which also states its exactly-one cardinality; §12.6's provenance check walks it, and the **VIS-Inference-\*** facets require that specification for exactly that reason (§11.2).
 
 The following are **normative**:
 
-- An `DeploymentType` instance **shall** have exactly one `UsesModel` reference to an `ModelType` instance. This is the only defined path from a result to the model artefact and its `Digest`, and §12.6 depends on it.
 - A `VisionResultType` instance **shall** identify its producer either by the `Pipeline` Property or by a `ProducedBy` reference. Where both are present they **shall** designate the same `InferencePipelineType` instance; a client **shall** treat the `ProducedBy` reference as authoritative.
 - Where a sensor is calibrated, it **shall** carry a `HasCalibration` reference to each applicable calibration in addition to listing it under `Calibrations`.
 
@@ -878,7 +881,7 @@ Any `Uri` in a submitted `VisionImageReferenceDataType` is a location the Server
 
 ### 9.4 Closing the loop
 
-`LearningJobType` is where corrections accumulate and become a new model version. Its `State` moves through `Idle`, `Collecting`, `Labelling`, `Training`, `Validating`, `Ready`, `Promoted` or `Failed`, and it links a `Dataset`, a `BaseModel` and a `CandidateModel`.
+`LearningJobType` is where corrections accumulate and become a new model version. Its state model, its Methods and its StatusCodes are defined by *OPC UA — AI Deployment and Learning* and are not restated here (§9.5.1).
 
 ```mermaid
 graph LR
@@ -928,7 +931,7 @@ A Server that accepts a correction with `Purpose = GroundTruthLabel` **shall** e
 
 What *is* stated here is the part that is specific to vision — the join between a correction submitted through `VisionFeedbackType` and the job that consumes it:
 
-1. A Server that retains a `GroundTruthLabel` correction **shall** make the job that will consume it reachable from the pipeline that produced the corrected result, so a client can determine whether its label reached a learning loop at all.
+1. A Server that retains a `GroundTruthLabel` correction **shall** populate `InferencePipelineType.LearningJob` with the job that will consume it, so a client can determine whether its label reached a learning loop at all. A Server that retains nothing leaves it null, which is the honest answer and a different one from an unpopulated Optional member on a Server that does retain.
 2. A Server **shall not** report a job as `Collecting` on the strength of corrections it discarded. Where a correction was accepted with `Good` and retained, `SamplesCollected` **shall** account for it; the two statements are the same fact and a client that trusts one is entitled to the other.
 3. Promotion changes what every downstream verdict means. §12.5 requires its authorization to be distinct from the authorization for any `VisionFeedbackType` Method, and that requirement is stated in both documents deliberately — it is the one rule where a reader of either specification alone would otherwise reach the wrong conclusion.
 
@@ -1041,7 +1044,7 @@ Inline delivery amplifies payload size by orders of magnitude relative to ordina
 
 Every `VisionFeedbackType` Method mutates state: overlays change what operators see, reconciliation changes the record, and corrections change what the next model learns. A Server **shall** require explicit authorization for each.
 
-`LearningJobType.PromoteModel` changes what the system *decides*, on every deployment fed by the job (§9.5). A Server **shall** require an authorization for `PromoteModel` that is **distinct from, and not implied by**, the authorization required for any `VisionFeedbackType` Method or for `StartCollection`, `StopCollection` or `TriggerTraining`. A principal able to submit corrections **shall not** thereby be able to promote a model. This is the requirement §8.1.1 consequence 3 refers to, and clause 11 makes it a condition of *VIS-Learning* so that it is testable.
+`LearningJobType.PromoteModel` changes what the system *decides*, on every deployment fed by the job. A Server **shall** require an authorization for `PromoteModel` that is **distinct from, and not implied by**, the authorization required for any `VisionFeedbackType` Method or for `StartCollection`, `StopCollection` or `TriggerTraining`. A principal able to submit corrections **shall not** thereby be able to promote a model. This is the requirement §8.1.1 consequence 2 refers to, and clause 11 makes it a condition of *VIS-Learning* so that it is testable.
 
 A Server **shall** retain an audit record of every correction and promotion, including the authenticated caller identity and the timestamp, and **shall not** include a credential-bearing URI in it (§12.2). Where the deployment falls under a high-risk regulatory regime, this record and the §7.1 trust members are what make the decision chain reconstructible.
 
@@ -1461,7 +1464,7 @@ The twin additionally implements `IVisionSimulatedType`:
 | `AcceleratorKind` | `Gpu` |
 | `EndpointUri` | `grpcs://192.0.2.60:8001/graspposenet` |
 
-Inference runs **off-server** on a cell-side GPU appliance. The Server publishes results it did not compute. Nothing else in the model changes: a client reads `DetectionResultType` exactly as it would if `InferenceLocation` were `OnServer`, and consults that property only if it cares about the latency or trust boundary. Because the deployment is remote, base specification §12.6 applies: the channel to the inference service is authenticated and integrity-protected, and `AiModelType.Digest` lets a consumer confirm which artefact produced a result.
+Inference runs **off-server** on a cell-side GPU appliance. The Server publishes results it did not compute. Nothing else in the model changes: a client reads `DetectionResultType` exactly as it would if `InferenceLocation` were `OnServer`, and consults that property only if it cares about the latency or trust boundary. Because the deployment is remote, base specification §12.6 applies: the channel to the inference service is authenticated and integrity-protected, and `ModelType.Digest` lets a consumer confirm which artefact produced a result.
 
 The deployment carries exactly one `UsesModel` reference to the model above, as *OPC UA — AI Deployment and Learning* requires. That reference is the only defined path from a result to the model artefact and its `Digest`, so it is what makes the base specification's §12.6 provenance check possible.
 

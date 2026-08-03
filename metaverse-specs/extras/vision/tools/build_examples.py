@@ -224,17 +224,17 @@ class Overlay:
                                refs=refs, attrs={"DataType": datatype}, value=None))
         return nid
 
-    def folder(self, browse, parent, desc=None):
-        return self.obj(browse, FolderType, parent, desc=desc)
+    def folder(self, browse, parent, desc=None, browse_ns=1):
+        return self.obj(browse, FolderType, parent, desc=desc, browse_ns=browse_ns)
 
     def prop(self, browse, datatype, value, parent, desc=None,
-             typedef=PropertyType, reftype=HasProperty):
+             typedef=PropertyType, reftype=HasProperty, browse_ns=1):
         nid = self._nid()
         refs = [(HasTypeDefinition, typedef, True),
                 (reftype, f"ns=1;i={parent}", False)]
         self._add_forward(parent, reftype, nid)
         self.nodes.append(dict(cls="UAVariable", nid=nid, browse=browse, desc=desc,
-                               parent=f"ns=1;i={parent}",
+                               parent=f"ns=1;i={parent}", browse_ns=browse_ns,
                                refs=refs, attrs={"DataType": datatype},
                                value=value))
         return nid
@@ -533,10 +533,25 @@ def build_overlay(d):
                   desc="Well-known Vision entry point for this example (§4.2).")
     f_sensors = ov.folder("Sensors", root)
     f_pipelines = ov.folder("Pipelines", root)
-    f_models = ov.folder("Models", root)
     f_frames = ov.folder("Frames", root)
-    f_jobs = ov.folder("LearningJobs", root)
+
+    # Models, datasets, deployments and learning jobs belong to OPC UA - AI Deployment
+    # and Learning, whose own well-known object sits BESIDE the Vision one under the
+    # Server Object. Hanging them under the Vision root would put them in folders
+    # VisionRootType does not declare, and would leave the example unable to satisfy
+    # the AI-Base facet that the VIS-Inference-* and VIS-Learning facets require.
+    airoot = ov.obj("AiDeployment", aitype("AiRootType"), external_parent=SERVER_OBJECT,
+                    browse_ns=3,
+                    desc="Well-known AI Deployment entry point for this example.")
+    ov.prop("SpecificationVersion", "String", v_string(am.VERSION), airoot,
+            "Release of the AI Deployment specification this example is built against.",
+            browse_ns=3)
+    f_models = ov.folder("Models", airoot, browse_ns=3)
+    f_datasets = ov.folder("Datasets", airoot, browse_ns=3)
+    f_deployments = ov.folder("Deployments", airoot, browse_ns=3)
+    f_jobs = ov.folder("LearningJobs", airoot, browse_ns=3)
     ov.roots = dict(sensors=f_sensors, pipelines=f_pipelines, models=f_models,
+                    datasets=f_datasets, deployments=f_deployments,
                     frames=f_frames, jobs=f_jobs)
 
     sim = d.get("simulation") if s.get("realityKind") in ("Simulated", "Hybrid") else None

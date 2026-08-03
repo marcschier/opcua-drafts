@@ -428,6 +428,24 @@ def _arg_names(m, method_nid, which):
 def _check_new_invariants(m, dt) -> None:
     """Invariants for the 0.2.0 additions. Separate so each stays readable."""
 
+    # A BrowseName is namespace-qualified, and its index is INDEPENDENT of the NodeId's.
+    # Migrating one and not the other leaves every node named in a namespace it does not
+    # belong to - browse paths resolve against the wrong model and the names collide
+    # with whatever that model defines. Nothing else in this file would notice.
+    own_idx = m.own[3:-1]
+    for nid in m.order:
+        raw = m.nodes[nid].get("BrowseName", "")
+        idx = raw.split(":", 1)[0] if ":" in raw else "0"
+        if not idx.isdigit():
+            err(f"{raw!r} ({nid}) has a malformed BrowseName")
+            continue
+        if idx == "0":
+            continue  # deliberate: base-UA names such as the encoding objects
+        if idx != own_idx:
+            err(f"{raw!r} ({nid}) is named in namespace index {idx} but its NodeId is "
+                f"in {m.own[:-1]}. A BrowseName index is not derived from the NodeId, "
+                "so a namespace change has to move both")
+
     # Clause 8 is only enforceable if the members it turns on are Mandatory. A rule
     # resting on an Optional member is a rule a conformant Server can silently not
     # satisfy, which is the failure this whole file exists to prevent.
@@ -469,23 +487,30 @@ def _check_new_invariants(m, dt) -> None:
     # Clause 9.1 - a domain extension that inherits the placeholders unchanged adds
     # metadata while restricting nothing, and a client cannot then tell one kind of
     # registry from another except by convention.
-    for owner, wanted in (("ModelRegistryType", {"ModelPublisherType"}),
-                          ("ModelPublisherType", {"ModelResourceType",
-                                                  "DatasetResourceType"})):
+    # The BrowseName is the whole mechanism: an InstanceDeclaration is overridden only
+    # by one with the SAME BrowseName. A subtype that invents a new placeholder name
+    # looks narrowed and is not - the inherited declaration stays fully open beside it.
+    for owner, placeholder, wanted in (
+            ("ModelRegistryType", "<Group>", "ModelPublisherType"),
+            ("ModelPublisherType", "<Resource>", "AiResourceType")):
         nid = dt(owner)
         if not nid:
             continue
-        narrowed = set()
-        for mem in m.members_of(nid):
-            if not m.bname(mem).startswith("<"):
-                continue
-            for rt, tgt, fwd in m.refs(mem):
-                if rt in ("i=40", "HasTypeDefinition") and fwd and tgt in m.nodes:
-                    narrowed.add(m.bname(tgt))
-        missing = wanted - narrowed
-        if missing:
-            err(f"{owner} must narrow its inherited placeholder to {sorted(missing)}; "
-                "a subtype that leaves it open restricts nothing")
+        mem = m.member_named(nid, placeholder)
+        if not mem:
+            err(f"{owner} must override the inherited {placeholder} placeholder. It "
+                f"declares {sorted(m.bname(x) for x in m.members_of(nid) if m.bname(x).startswith('<'))} "
+                "instead, which narrows nothing: a placeholder is overridden only by "
+                "one with the same BrowseName")
+            continue
+        td = [tgt for rt, tgt, fwd in m.refs(mem)
+              if fwd and rt in ("i=40", "HasTypeDefinition")]
+        got = m.bname(td[0]) if td and td[0] in m.nodes else (td[0] if td else "?")
+        if got != wanted:
+            err(f"{owner}.{placeholder} must be typed {wanted}, found {got}")
+        if not any(rt in ("i=35", "Organizes") for rt, _, fwd in m.refs(mem) if not fwd):
+            err(f"{owner}.{placeholder} must keep the inherited Organizes reference; "
+                "changing it means the declaration does not override")
 
 
 def check_spec_invariants(m: Model) -> None:
@@ -621,8 +646,18 @@ def check_spec_crossref(m: Model) -> None:
         for rt, tgt, fwd in m.refs(nid):
             if fwd and rt in ("i=46", "i=47") and tgt in m.nodes:
                 members.add((owner, m.bname(tgt)))
+        # A structure's fields are Definition/Field, not references, but the prose
+        # writes them with the same `Type.Field` notation.
+        d = m.definition(nid)
+        if d is not None:
+            for f in d:
+                if local(f.tag) == "Field" and f.get("Name"):
+                    members.add((owner, f.get("Name")))
     for owner, member in set(re.findall(r"`([A-Z][A-Za-z0-9]*Type)\.([A-Za-z][A-Za-z0-9]*)`",
                                         text)):
+        # An owner this model does not declare belongs to a consuming specification -
+        # 4.2 names one deliberately. Only a validator that loads BOTH models can tell
+        # an outside type from a nonexistent one, so that check lives in Vision's.
         if owner not in declared:
             continue
         if (owner, member) not in members:

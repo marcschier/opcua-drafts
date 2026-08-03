@@ -56,7 +56,7 @@ It is worth being precise about what that dependency does **not** reach. A consu
 ## 2 Normative references
 
 - **OPC 10000-3, -4, -5** — Address Space Model, Services, Information Model.
-- **OPC 10000-6** — Mappings. Structure encoding of the DataTypes in §5.10.
+- **OPC 10000-6** — Mappings. Structure encoding of the DataTypes listed in Annex A.
 - **OPC 10000-10** — Programs. `ProgramStateMachineType` is the base type of `AiJobType` (§5.6) and supplies the lifecycle, the transition events and the `Start`/`Suspend`/`Resume`/`Halt` Methods that every long-running job here inherits rather than reinvents.
 - **OPC 10000-5** — `FileType`, reached through xRegistry's `ResourceType`. It is what lets a staged model artefact be read over OPC UA with `Open`/`Read`/`Close` (§9.3).
 - **OPC UA — xRegistry** — [`../../core-specs/xregistry/OPC-UA-xRegistry.md`](../../core-specs/xregistry/OPC-UA-xRegistry.md). A **working draft in this repository**, and the one **normative dependency** this model takes beyond base OPC UA. `ModelRegistryType`, `ModelPublisherType`, `ModelResourceType` and `DatasetResourceType` are domain extensions of its `RegistryType`, `GroupType` and `ResourceType` (clause 9). Because it is a draft, its NodeIds are provisional and so, transitively, is this model's dependency on them.
@@ -86,13 +86,14 @@ Informative alignments — IDTA 02058, IDTA 02059, IDTA 02060, and the OPC UA �
 ```mermaid
 flowchart LR
     CAT["ModelRegistryType<br/><i>catalogue</i>"] -->|ModelImportJobType| M
-    D["DatasetType"] -->|TrainedOn| M["ModelType"]
-    M -->|UsesModel| P["DeploymentType"]
+    M["ModelType"] -->|TrainedOn| D["DatasetType"]
+    P["DeploymentType"] -->|UsesModel| M
     P -->|Source| S["ModelSourceType<br/><i>somewhere else</i>"]
     P -.->|FallsBackTo| P2["DeploymentType<br/><i>fallback</i>"]
     C["Client"] -->|Invoke| P
     J["LearningJobType"] -.->|CandidateModel| M
     J -.->|Dataset| D
+    J -.->|PromoteModel updates| P
 ```
 
 A dataset trains a model; a deployment executes one; a client calls the deployment. Where the model runs somewhere this Server does not control, the deployment names a **source** that says how to reach it and what to do when it cannot. Where a model comes from a catalogue, an **import job** brings it — as a description, or as bytes. A learning job accumulates a new dataset, produces a candidate, and promotes it, at which point the deployment executes a different model and the cycle repeats.
@@ -262,16 +263,49 @@ stateDiagram-v2
     [*] --> Idle
     Idle --> Collecting: StartCollection
     Collecting --> Labelling: StopCollection
+    Collecting --> Training: TriggerTraining
     Labelling --> Training: TriggerTraining
     Training --> Validating
     Validating --> Ready
-    Ready --> Promoted: PromoteModel
-    Training --> Failed
     Validating --> Failed
-    Failed --> Idle
+    Ready --> Promoted: PromoteModel
+    Promoted --> Collecting: StartCollection
+    Training --> Failed
+    Failed --> Collecting: StartCollection
 ```
 
 `LearningJobStateEnum` (`ns=2;i=3005`) carries exactly these eight states.
+
+| From | Trigger | To |
+|---|---|---|
+| `Idle` | `StartCollection` | `Collecting` |
+| `Collecting` | `StopCollection` | `Labelling` |
+| `Collecting`, `Labelling` | `TriggerTraining` accepted | `Training` |
+| `Training` | Server: training finished | `Validating` |
+| `Validating` | Server: candidate met acceptance criteria | `Ready` |
+| `Validating` | Server: candidate rejected | `Failed` |
+| `Ready` | `PromoteModel` | `Promoted` |
+| `Promoted`, `Failed` | `StartCollection` | `Collecting` |
+| `Training`, `Validating` | Server: error | `Failed` |
+
+Transitions marked *Server* are driven by the Server or its training backend; the rest are Method-driven. A Server **shall not** perform a transition that is not in this table, **shall** populate `LastError` on entry to `Failed`, and **shall** have `CandidateModel` non-null on entry to `Ready` — a `Ready` job with nothing to promote cannot be acted on.
+
+`Promoted` and `Failed` both return to `Collecting`, which is what makes this a loop rather than a one-shot. A job that promoted a model last month is the same job that starts gathering evidence for the next one.
+
+### 6.1 Method behaviour and StatusCodes (normative)
+
+`StartCollection` and `StopCollection` are **idempotent**: calling either in the state it would move to is `Good` and changes nothing. Retrying after a lost response is otherwise indistinguishable from a second request.
+
+`TriggerTraining` returns `Accepted`. It returns `Accepted = false` **with `Good`** where the request was valid but the Server queued nothing — an external training system declined it, for instance — and `LastError` **shall** then carry the reason. This is not an error: the request was understood and refused, and a Bad StatusCode would tell a caller to retry something that will be refused again.
+
+`PromoteModel` takes a `Deployment` or null. **Null means every deployment fed by this job**, and a Server **shall** promote to all of them or to none. `PromotedModel` returns the model now in use, which is the same node in either case because it identifies the model rather than the deployment; a caller needing to know which deployments changed browses their `UsesModel` references afterwards.
+
+| StatusCode | Condition |
+|---|---|
+| `Bad_InvalidState` | `StartCollection` when `State` is not `Idle`, `Collecting`, `Promoted` or `Failed`; `TriggerTraining` when `State` is not `Collecting` or `Labelling`; `PromoteModel` when `State` is not `Ready` |
+| `Bad_NothingToDo` | `TriggerTraining` when `SamplesCollected` is 0 |
+| `Bad_NotFound` | `PromoteModel` when `Deployment` is non-null and does not resolve, or when `CandidateModel` is null |
+| `Bad_UserAccessDenied` | The caller is not authorized; `PromoteModel` requires the distinct authorization of §11.3 |
 
 **A Server may implement only part of this.** A Server that captures corrections and leaves training to an external MLOps system implements `StartCollection` and `StopCollection`, drives the state to `Labelling`, and stops. The state machine is the same either way, and a client reads `State` to learn how far this Server goes rather than inferring it from which Methods exist.
 
@@ -281,7 +315,7 @@ stateDiagram-v2
 
 A null `Deployment` argument means *every* deployment fed by this job. A Server **shall** promote to all of them or to none: a partial promotion leaves two lines judging the same parts by different models, which is a fault that shows up as an inexplicable disagreement between stations rather than as an error anywhere.
 
-### 6.1 Where the loop meets the rest of the model
+### 6.2 Where the loop meets the rest of the model
 
 The loop is the **producing** half of this specification; clauses 7 to 9 are the consuming half, and three joins connect them.
 
@@ -291,7 +325,7 @@ Promotion **should** be gated on an `EvaluationRunType` (§10.2) whose `Passed` 
 
 Where the promoted model backs a deployment whose `VersionBinding` is `FollowsRef` (§8.3), promotion and repointing are two routes to the same outcome. §11.3.1 requires both to be authorized alike.
 
-### 6.2 A Server may implement very little of this
+### 6.3 A Server may implement very little of this
 
 The state machine describes the whole loop; almost no Server implements the whole loop.
 
@@ -464,7 +498,11 @@ Two consequences fall out of the base type rather than being designed here, and 
 1. `ResourceType` **is** a `FileType`, so a model artefact a Server holds is readable with the inherited `Open`, `Read` and `Close`. Staging (§9.3) needs no new transport.
 2. `ResourceType` already carries `ExternalReference` and `ResourceUrl`, so a catalogue entry whose bytes live elsewhere is expressible without pretending to hold them.
 
-Each type **narrows** what its base left open, as a domain extension must: a `ModelRegistryType` holds `ModelPublisherType` groups and nothing else, and a `ModelPublisherType` holds `ModelResourceType` and `DatasetResourceType` resources and nothing else. A subtype that inherited the placeholders unchanged would add metadata while restricting nothing, and a client could not tell one kind of registry from another except by convention.
+Each type **narrows** what its base left open, as a domain extension must. `ModelRegistryType` overrides the inherited `<Group>` placeholder so it admits `ModelPublisherType` and nothing else; `ModelPublisherType` overrides `<Resource>` so it admits `AiResourceType` and nothing else.
+
+The narrowing reuses the **inherited BrowseNames**, and that detail is the whole mechanism rather than a formality. An InstanceDeclaration is overridden only by one with the same BrowseName, so a subtype that invents its own placeholder name leaves the inherited one fully open beside it — a registry that looks narrowed and still admits any group at all. Clause 12's conformance depends on the narrowing being real, so the validator checks the BrowseName rather than merely checking that some placeholder exists.
+
+`AiResourceType` (`ns=2;i=1016`) is an **abstract** base of `ModelResourceType` and `DatasetResourceType`. It exists because a publisher holds both models and datasets while `<Resource>` can be overridden only once: narrowing to a common base admits exactly the two and nothing else. It adds no members of its own — its whole purpose is to be the type that the single override names.
 
 `ModelResourceType` adds `TaskKind`, `Framework`, `Digest`, `DigestAlgorithm`, `SizeBytes`, `Gated` and `MutableRefs`. `SizeBytes` lets a staging import decide whether it has room before it starts rather than after it fails; `Gated` says the artefact needs an entitlement beyond ordinary authentication, which is otherwise discovered part-way through a transfer; `MutableRefs` names the branches and channels a deployment may follow, which is what makes §8.3's `FollowsRef` checkable rather than a claim. `DatasetResourceType` is a **sibling** of it, not something beneath it, because a dataset outlives the models trained on it and is cited by several.
 
