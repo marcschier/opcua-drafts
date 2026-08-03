@@ -376,7 +376,7 @@ The enumerations are closed: each is contiguous from 0, and the repository valid
 | `VisionToleranceStatusEnum` | Per-characteristic outcome, including `Indeterminate` when uncertainty crosses a tolerance limit (§7.2). |
 | `VisionFeedbackPurposeEnum` | Why a client is submitting feedback — to draw an overlay, to reconcile a record, or to supply a ground-truth label (§9). |
 | `VisionCalibrationMountEnum` | The camera-to-robot arrangement a hand-eye calibration applies to: `EyeInHand`, `EyeToHand` or `Fixed`. |
-| `VisionFrameRoleEnum` | The role a coordinate frame plays, from the ISO 9787 vocabulary — world, base, tool, camera. |
+| `VisionFrameRoleEnum` | The role a coordinate frame plays, from the ISO 9787 vocabulary — world, base, mechanical interface, tool, object — plus `Camera`, which ISO 9787 does not define. The mechanical interface and the tool are separate roles: an eye-in-hand calibration resolves to the flange, while a grasp is executed at the tool centre point. |
 | `VisionDistortionModelEnum` | Which lens-distortion model the coefficients follow; §5.12 fixes their ordering per model. |
 | `VisionLearningJobStateEnum` | Where a learning job is in its lifecycle (§9.6). |
 | `VisionDatasetSourceEnum` | Whether a dataset is `Real`, `Synthetic` or `Mixed` — the provenance a reviewer needs when synthetic data is involved. |
@@ -412,7 +412,7 @@ The following constraints are **normative**; a Server **shall not** use these Re
 | `ProducedBy` | `Produces` | `VisionResultType` | `InferencePipelineType` | 0..1 |
 
 - **`HasCalibration`** links a sensor to a calibration that applies to it. Following it forward answers *how do I interpret this sensor's output*; following `IsCalibrationOf` back answers *which sensors does this calibration affect*, which is what a maintenance client asks after re-calibrating. The cardinality allows a history of superseded calibrations to remain browsable, so long as only one per kind is `Valid`.
-- **`MountedOn`** links a sensor to the coordinate frame it is physically attached to — a robot flange for an eye-in-hand camera, a station frame for a fixed one. It is the structural statement of what the extrinsic calibration measures numerically, and it lets a client find the mounting frame without parsing a calibration.
+- **`MountedOn`** links a sensor to the coordinate frame it is physically attached to — a frame of role `MechanicalInterface` for an eye-in-hand camera, a station frame for a fixed one. It is the structural statement of what the extrinsic calibration measures numerically, and it lets a client find the mounting frame without parsing a calibration.
 - **`HasScenePrim`** links a sensor to the camera prim it corresponds to in a materialized OpenUSD stage. It exists so a client can navigate from sensor to scene without resolving `PrimPath` as a string. Required only where the Server claims *VIS-Interop-Scene* (Annex C).
 - **`UsesModel`** links a deployment to the single model artefact it executes. This is the only defined path from a published result to the artefact and its `Digest`, so the §12.6 provenance check depends on it entirely — which is why the cardinality is exactly one rather than 0..1. `IsUsedByDeployment` is how an operator finds every deployment affected by a recalled model.
 - **`ProducedBy`** links a result to the pipeline that computed it. It duplicates the `Pipeline` Property deliberately: the Property is convenient to read with the result, the reference is browsable in reverse so a client can enumerate everything one pipeline produced.
@@ -451,6 +451,14 @@ Every physical quantity in this model is fixed here. A Server **shall** use thes
 | `DigestAlgorithm` | an IANA hash-function name with **at least 256-bit output and no known collision weakness**; the default is `SHA-256`. `MD5`, `SHA-1` and truncated variants **shall not** be used — see §12.6 |
 
 **Measurement uncertainty.** `VisionCharacteristicDataType.Uncertainty` is the **expanded** uncertainty at **coverage factor k = 2** (approximately 95 %), per ISO 14253-1, expressed in the same unit as `Actual`. A value of `0` means uncertainty is not reported, and a Server that does not evaluate uncertainty **shall** report `0` rather than a guess. Without a fixed coverage factor the §7.2 `NotDecidable` rule would not be reproducible between Servers, so a Server **shall not** report uncertainty at another coverage factor.
+
+**Frame and pose conventions.** Three further rules make a pose unambiguous, and a Server **shall** satisfy all of them.
+
+1. Every frame in this model is **right-handed**. The table above fixes the units of a pose; handedness is what fixes its meaning, and neither the base OPC UA specification nor ISO 9787 states it for you.
+2. `VisionPose3DDataType.Orientation` **shall** be normalised. A Server publishing a quaternion whose norm differs from 1 by more than 1e-6 is not describing a rotation, and a client **shall** treat such a pose as invalid rather than renormalising it silently — the error is more likely to be a wrong field order than a rounding artefact.
+3. `FrameId` **shall** be non-empty wherever a pose is published (§7.3). This model defines **no** default frame: a pose whose frame is not named is not actionable, and §5.8 explains what happens when the two ends disagree about what the numbers were relative to.
+
+> Rule 3 differs deliberately from specifications that treat an empty `FrameId` as a default working frame. Where poses are exchanged with such a model, the boundary **shall** substitute the named frame explicitly rather than passing the empty value through, because the same empty field means opposite things on either side.
 
 **Distortion coefficient ordering.** `VisionIntrinsicsDataType.DistortionCoefficients` **shall** be ordered per `DistortionModel`:
 
@@ -1006,6 +1014,7 @@ Where a facet's row names members, a Server claiming it **shall** instantiate ev
 | **VIS-Learning** | `LearningJobType`, `SubmitCorrection`, the §9.6 state model, every Method that drives a transition in it — `StartCollection`, `StopCollection`, `TriggerTraining`, `PromoteModel` — and the **distinct `PromoteModel` authorization** of §12.5 |
 | **VIS-Interop-Scene** | The numbered requirements of Annex C, which are normative for a Server claiming this facet |
 | **VIS-Interop-40100** | The numbered requirements of Annex D, which are normative for a Server claiming this facet |
+| **VIS-Interop-RobotIntent** | The numbered requirements of Annex I, which are normative for a Server claiming this facet |
 
 Facets are independent and additive except where a row states a dependency. Two dependencies exist: *VIS-Base* requires *VIS-Media-Rtsp* and *VIS-Media-Jpeg*, and *VIS-Simulation* is required — not merely permitted — of any Server that reports `RealityKind` as `Simulated` or `Hybrid`. A facet is claimed only when every member and rule it lists is satisfied.
 
@@ -1330,7 +1339,7 @@ There is no IDTA submodel template for machine vision, so `VisionSensorType` and
 
 | This specification | Standard |
 |---|---|
-| `VisionFrameRoleEnum` | ISO 9787:2013 coordinate systems, including the tool centre point |
+| `VisionFrameRoleEnum` | ISO 9787:2013 coordinate systems, distinguishing the mechanical interface from the tool centre point |
 | `VisionCharacteristicDataType.Uncertainty` | ISO 14253 |
 | `ExtrinsicCalibrationType` | no standard defines the hand-eye procedure; only the result is portable |
 | Terminology | ISO 8373:2021 robotics vocabulary |
@@ -1401,7 +1410,8 @@ The frame tree. `ParentFrame` is what makes it composable: a client walks from t
 |---|---|---|---|
 | `WorldFrame` | `world` | `World` | none (tree root) |
 | `RobotBaseFrame` | `robot_base` | `Base` | `world` |
-| `FlangeFrame` | `flange` | `Tool` | `robot_base` |
+| `FlangeFrame` | `flange` | `MechanicalInterface` | `robot_base` |
+| `GripperTcpFrame` | `gripper_tcp` | `Tool` | `flange` |
 | `CameraFrame` | `camera_eih` | `Camera` | `flange` |
 
 **`Intrinsics2448x2048`** (`IntrinsicCalibrationType`) — Pinhole intrinsics with Brown-Conrady distortion at full resolution.
@@ -1420,15 +1430,15 @@ The frame tree. `ParentFrame` is what makes it composable: a client walks from t
 |---|---|---|
 | `Fx` | `2140.5` | px |
 | `Fy` | `2139.8` | px |
-| `Cx` | `1223.1` | px, corner-datum per 5.10 |
-| `Cy` | `1021.7` | px, corner-datum per 5.10 |
+| `Cx` | `1223.1` | px, corner-datum per §5.12 |
+| `Cy` | `1021.7` | px, corner-datum per §5.12 |
 | `Skew` | `0.0` | px |
-| `DistortionModel` | `BrownConrady` | 5.10 ordering: k1, k2, p1, p2, k3 |
+| `DistortionModel` | `BrownConrady` | §5.12 ordering: k1, k2, p1, p2, k3 |
 | `DistortionCoefficients` | `[-0.1721, 0.0934, 0.0002, -0.0001, -0.0188]` | dimensionless |
 | `Width` | `2448` | px |
 | `Height` | `2048` | px |
 
-**`HandEye`** (`ExtrinsicCalibrationType`) — Transform from the camera frame to the robot flange frame. Eye-in-hand: the camera moves with the tool.
+**`HandEye`** (`ExtrinsicCalibrationType`) — Transform from the camera frame to the robot mechanical interface. Eye-in-hand: the camera moves with the flange, so a pick pose is obtained by composing camera → flange → tool centre point.
 
 | Member | Value |
 |---|---|
@@ -1445,10 +1455,10 @@ The frame tree. `ParentFrame` is what makes it composable: a client walks from t
 
 | Field | Value | Unit / convention |
 |---|---|---|
-| `FrameId` | `flange` | equals the TargetFrame's FrameId, per the 5.10 frame-precedence rule |
+| `FrameId` | `flange` | equals the TargetFrame's FrameId, per the §5.12 frame-precedence rule |
 | `Position` | `(0.062, -0.031, 0.115)` | metres, ordered (x, y, z) |
 | `Orientation` | `(0.0, 0.0, 0.7071, 0.7071)` | unit quaternion ordered (x, y, z, w) |
-| `Covariance` | `empty array` | not reported, per the 5.10 sentinel |
+| `Covariance` | `empty array` | not reported, per the §5.12 sentinel |
 
 Each calibration is reachable from the sensor by a `HasCalibration` reference, as base specification §5.11 requires.
 
@@ -1492,7 +1502,7 @@ The deployment carries exactly one `UsesModel` reference to the model above, as 
 
 ### F.8 Results
 
-Each cycle produces a `DetectionResultType` whose `Detections` carry `ClassLabel`, `Confidence`, a `BoundingBox2D`, a `BoundingBox3D` and — the member that makes the result actionable — a 6-DoF `Pose`. Every pose names its `FrameId` (`camera_eih`), which is only meaningful because the `HandEye` calibration above relates that frame to the flange. A consumer composes camera → flange → base through the `CoordinateFrameType` tree to obtain a pose the robot controller can execute. `ResidualError` on the calibration is what tells the consumer how much to trust it.
+Each cycle produces a `DetectionResultType` whose `Detections` carry `ClassLabel`, `Confidence`, a `BoundingBox2D`, a `BoundingBox3D` and — the member that makes the result actionable — a 6-DoF `Pose`. Every pose names its `FrameId` (`camera_eih`), which is only meaningful because the `HandEye` calibration above relates that frame to the flange. A consumer composes camera → flange → base through the `CoordinateFrameType` tree to obtain the pose in robot coordinates, and camera → flange → `gripper_tcp` to obtain what the gripper must actually reach. The two are distinct: the calibration resolves to the mechanical interface, while a grasp is executed at the tool centre point, and the frame tree carries the offset between them rather than leaving it to be assumed. `ResidualError` on the calibration is what tells the consumer how much to trust it.
 
 ### F.9 Feedback
 
@@ -1582,10 +1592,10 @@ The frame tree. `ParentFrame` is what makes it composable: a client walks from t
 |---|---|---|
 | `Fx` | `8310.2` | px |
 | `Fy` | `8309.6` | px |
-| `Cx` | `1295.4` | px, corner-datum per 5.10 |
-| `Cy` | `971.2` | px, corner-datum per 5.10 |
+| `Cx` | `1295.4` | px, corner-datum per §5.12 |
+| `Cy` | `971.2` | px, corner-datum per §5.12 |
 | `Skew` | `0.0` | px |
-| `DistortionModel` | `BrownConrady` | 5.10 ordering: k1, k2, p1, p2, k3 |
+| `DistortionModel` | `BrownConrady` | §5.12 ordering: k1, k2, p1, p2, k3 |
 | `DistortionCoefficients` | `[-0.0021, 0.0004, 0.0, 0.0, 0.0]` | dimensionless; a telecentric lens is close to distortion-free |
 | `Width` | `2592` | px |
 | `Height` | `1944` | px |
@@ -1607,10 +1617,10 @@ The frame tree. `ParentFrame` is what makes it composable: a client walks from t
 
 | Field | Value | Unit / convention |
 |---|---|---|
-| `FrameId` | `station` | equals the TargetFrame's FrameId, per the 5.10 frame-precedence rule |
+| `FrameId` | `station` | equals the TargetFrame's FrameId, per the §5.12 frame-precedence rule |
 | `Position` | `(0.0, 0.0, 0.320)` | metres, ordered (x, y, z) |
 | `Orientation` | `(1.0, 0.0, 0.0, 0.0)` | unit quaternion ordered (x, y, z, w); a 180 degree rotation about x, so the camera looks down at the station |
-| `Covariance` | `empty array` | not reported, per the 5.10 sentinel |
+| `Covariance` | `empty array` | not reported, per the §5.12 sentinel |
 
 Each calibration is reachable from the sensor by a `HasCalibration` reference, as base specification §5.11 requires.
 
@@ -1715,3 +1725,32 @@ A client that does not recognise a `PixelFormat` **shall not** guess: it obtains
 - **Writing features.** Nothing in this model configures a camera through GenICam. `ConfigureStreamEndpoint` (§6.5) configures the *encoder* of a media endpoint, not the sensor.
 
 There is no published GenICam-to-OPC-UA mapping specification. This annex is a binding for this model only, and does not claim to be one.
+
+---
+
+## Annex I — Robot Intent interop profile (normative for *VIS-Interop-RobotIntent*)
+
+A camera that guides a robot and an interface that commands one are deployed on the same cell, and each defines its own `CoordinateFrameType`. Without a rule the flange is described twice, in two namespaces, with two `FrameId` strings and two `Transform` values that can disagree — the failure §5.8 warns about, arrived at by integration rather than by miscalibration.
+
+This annex fixes the correspondence. It imposes **no** NodeSet dependency in either direction: both models keep the base OPC UA namespace as their only `RequiredModel`, and a Server implementing one of them is unaffected by the other.
+
+**I.1 One frame tree is authoritative.** Where a Server implements both models for the same physical robot, the commanding model's frame tree **shall** decide. It owns the tool centre point, and a pose that disagrees with the frame the robot actually moves to is wrong however carefully it was measured. This model's frames **shall** then describe the same physical frames with the same transforms.
+
+**I.2 `FrameId` corresponds by value.** A frame present in both models **shall** carry the **same** `FrameId` string in each. That string, not the NodeId, is what a pose names, so it is the only correspondence a pose can carry.
+
+**I.3 Roles correspond by name.** The two role vocabularies agree on `World`, `Base`, `MechanicalInterface`, `Tool`, `Object` and `Other`; a frame present in both **shall** carry the same role. `Camera` exists only here, and a camera frame published to the commanding model **shall** be given the role `Other` there, because that model defines no camera role and misusing `Tool` would put a grasp at the lens.
+
+> The numeric values of the two enumerations are **not** interchangeable across models: each is decoded against the DataType of the Variable that carries it. A gateway **shall** map by literal name and **shall not** cast the integer.
+
+**I.4 Poses transcode explicitly.** The two pose structures are not wire-compatible — this model's carries a fourth field, `Covariance`. A boundary **shall** transcode rather than pass through:
+
+| From | To | Rule |
+|---|---|---|
+| `VisionPose3DDataType` | commanding pose | drop `Covariance`; `FrameId`, `Position` and `Orientation` transfer unchanged |
+| commanding pose | `VisionPose3DDataType` | set `Covariance` to an **empty array**, which §5.12 defines as *not reported* — a Server **shall not** fabricate one |
+
+Both use metres and a unit quaternion ordered (x, y, z, w) in a right-handed frame, so the numbers themselves need no conversion.
+
+**I.5 An empty `FrameId` is never passed through.** §5.12 rule 3 requires a named frame here, while a commanding model may read an empty `FrameId` as its default working frame. A boundary **shall** substitute the named frame explicitly in that direction, and **shall** reject a pose it cannot name rather than guessing.
+
+**I.6 A grasp pose reaches the tool centre point.** A pose published for a robot to act on **shall** be resolvable, through the frame tree, to a frame of role `Tool`. Resolving only to `MechanicalInterface` is not sufficient: the offset between the flange and the tool centre point is exactly what a hand-eye calibration does not measure, and Annex F carries it as a distinct frame for this reason.

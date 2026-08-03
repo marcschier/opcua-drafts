@@ -782,6 +782,7 @@ A Server declares conformance by exposing `RobotIntentRootType` under the Server
 | **RI-Mission-Horizon** | **RI-Mission**, plus `MissionHorizonSupported` true, `UpdateMission`, and the base immutability rules of §7.2. |
 | **RI-Mission-Branching** | **RI-Mission**, plus `MissionBranchingSupported` true, `Transitions` evaluated per §7.4, and the error policies honoured. |
 | **RI-Interop-40010** | Annex B. |
+| **RI-Interop-Vision** | Annex E. |
 
 A facet other than **RI-Base** is claimed only where every intent type it names appears in `SupportedIntents`.
 
@@ -891,3 +892,23 @@ These are **not** normative references and impose no dependency. They are record
 - **IEC 61131-3 sequential function charts** — the step, transition and divergence model of §7.4. Behaviour trees were considered and not adopted: their tick semantics need a runtime that controller vendors do not provide, and their serialization is a library's rather than a standard's.
 - **ISO 15609** — welding procedure specifications, named by `ArcWeldIntentDataType.WeldProcedureRef` and not restated here.
 - **The OPC UA robot skill model** developed in the VDMA SOArc working group (`http://opcfoundation.org/UA/Skills/`) is prior art in this area. This specification uses a different namespace and does not extend it.
+
+---
+
+## Annex E — Vision interop profile (normative for RI-Interop-Vision)
+
+A vision model that publishes a grasp pose and this model that executes it are deployed on the same cell, and each defines its own `CoordinateFrameType`. Without a rule the flange is described twice, with two `FrameId` strings and two transforms that can disagree.
+
+This annex imposes **no** NodeSet dependency in either direction. Both models keep the base OPC UA namespace as their only `RequiredModel`, and a Server implementing only this one is unaffected.
+
+**E.1 This model's frame tree decides.** Where a Server implements both for the same robot, the frames here are authoritative. This model owns `ToolType.TcpFrame` and is what the robot actually moves to; a pose that disagrees with it is wrong however carefully it was measured.
+
+**E.2 `FrameId` corresponds by value.** A frame present in both models **shall** carry the same `FrameId` string in each. That string, not the NodeId, is what `Pose3DDataType` names.
+
+**E.3 Roles correspond by name, never by number.** The two vocabularies agree on `World`, `Base`, `MechanicalInterface`, `Tool`, `Object` and `Other`. A vision model may additionally define a camera role, which this model does not; such a frame **shall** appear here as `Other`. A gateway **shall** map by literal name and **shall not** cast the integer between the two enumerations, because each is decoded against the DataType of the Variable carrying it.
+
+**E.4 Poses transcode explicitly.** A vision pose may carry a covariance field this model's `Pose3DDataType` does not. A boundary **shall** drop it inbound and **shall not** fabricate one outbound. Both sides use metres and a unit quaternion ordered (x, y, z, w) in a right-handed frame, so no numeric conversion is required — but §5.2 rule 3 still applies, and an inbound pose whose quaternion is not normalised **shall** be rejected with `ParameterInvalid` rather than renormalised.
+
+**E.5 An empty `FrameId` is not passed outward.** §5.2 rule 4 reads an empty `FrameId` as this Server's default work frame. A vision model may forbid an empty value entirely, so a boundary publishing a pose outward **shall** substitute the named frame explicitly.
+
+**E.6 A grasp pose is resolved to the tool centre point.** A pose received for execution **shall** be resolved, through the frame tree, to the `Tool` frame named by the intent's `ToolFrame`. A hand-eye calibration resolves to the mechanical interface, and the offset from there to the tool centre point is exactly what it does not measure — so a Server **shall not** execute a pose that resolves only to `MechanicalInterface`, and **shall** refuse it with `ParameterInvalid`.

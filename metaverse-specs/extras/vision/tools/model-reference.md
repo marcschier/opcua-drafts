@@ -770,16 +770,17 @@ Physical relationship between a camera and the kinematic chain it is calibrated 
 
 *Subtype of:* `Enumeration`
 
-Role of a coordinate frame, following the ISO 9787 frame vocabulary.
+Role of a coordinate frame, following the ISO 9787 frame vocabulary. The mechanical interface and the tool are DISTINCT roles: a camera on a robot flange is calibrated to the mechanical interface, while a pick pose has to reach the tool centre point, and a model that cannot tell them apart cannot express the offset between them.
 
 | Name | Value | Description |
 |---|---|---|
 | World | 0 |  |
 | Base | 1 |  |
-| Tool | 2 | Tool / tool centre point (TCP) frame. |
-| Camera | 3 |  |
+| MechanicalInterface | 2 | The flange at the end of the last link, to which an end effector is fitted. This is what an eye-in-hand extrinsic calibration resolves to. |
+| Tool | 3 | A tool frame, whose origin is a tool centre point. |
 | Object | 4 |  |
 | Other | 5 |  |
+| Camera | 6 | A camera frame. Numbered after the ISO 9787 roles because it is not one of them. |
 
 ### VisionDistortionModelEnum — `ns=1;i=3014`
 

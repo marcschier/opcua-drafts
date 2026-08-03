@@ -269,22 +269,22 @@
   </UAVariable>
   <UADataType NodeId="ns=1;i=3013" BrowseName="1:VisionFrameRoleEnum">
     <DisplayName>VisionFrameRoleEnum</DisplayName>
-    <Description>Role of a coordinate frame, following the ISO 9787 frame vocabulary.</Description>
+    <Description>Role of a coordinate frame, following the ISO 9787 frame vocabulary. The mechanical interface and the tool are DISTINCT roles: a camera on a robot flange is calibrated to the mechanical interface, while a pick pose has to reach the tool centre point, and a model that cannot tell them apart cannot express the offset between them.</Description>
     <Category>Vision DataTypes</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=3913</Reference>
     </References>
-    <Definition Name="VisionFrameRoleEnum"><Field Name="World" Value="0"/><Field Name="Base" Value="1"/><Field Name="Tool" Value="2"><Description>Tool / tool centre point (TCP) frame.</Description></Field><Field Name="Camera" Value="3"/><Field Name="Object" Value="4"/><Field Name="Other" Value="5"/></Definition>
+    <Definition Name="VisionFrameRoleEnum"><Field Name="World" Value="0"/><Field Name="Base" Value="1"/><Field Name="MechanicalInterface" Value="2"><Description>The flange at the end of the last link, to which an end effector is fitted. This is what an eye-in-hand extrinsic calibration resolves to.</Description></Field><Field Name="Tool" Value="3"><Description>A tool frame, whose origin is a tool centre point.</Description></Field><Field Name="Object" Value="4"/><Field Name="Other" Value="5"/><Field Name="Camera" Value="6"><Description>A camera frame. Numbered after the ISO 9787 roles because it is not one of them.</Description></Field></Definition>
   </UADataType>
-  <UAVariable NodeId="ns=1;i=3913" BrowseName="1:EnumStrings" ParentNodeId="ns=1;i=3013" DataType="LocalizedText" ValueRank="1" ArrayDimensions="6">
+  <UAVariable NodeId="ns=1;i=3913" BrowseName="1:EnumStrings" ParentNodeId="ns=1;i=3013" DataType="LocalizedText" ValueRank="1" ArrayDimensions="7">
     <DisplayName>EnumStrings</DisplayName>
     <References>
       <Reference ReferenceType="HasModellingRule">i=78</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=3013</Reference>
     </References>
-    <Value><uax:ListOfLocalizedText xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:LocalizedText><uax:Text>World</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Base</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Tool</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Camera</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Object</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Other</uax:Text></uax:LocalizedText></uax:ListOfLocalizedText></Value>
+    <Value><uax:ListOfLocalizedText xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:LocalizedText><uax:Text>World</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Base</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>MechanicalInterface</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Tool</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Object</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Other</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Camera</uax:Text></uax:LocalizedText></uax:ListOfLocalizedText></Value>
   </UAVariable>
   <UADataType NodeId="ns=1;i=3014" BrowseName="1:VisionDistortionModelEnum">
     <DisplayName>VisionDistortionModelEnum</DisplayName>

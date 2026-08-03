@@ -469,10 +469,19 @@ enum_type(3012, "VisionCalibrationMountEnum",
            ("Unknown", 3, None)])
 
 enum_type(3013, "VisionFrameRoleEnum",
-          "Role of a coordinate frame, following the ISO 9787 frame vocabulary.",
+          "Role of a coordinate frame, following the ISO 9787 frame vocabulary. The "
+          "mechanical interface and the tool are DISTINCT roles: a camera on a robot "
+          "flange is calibrated to the mechanical interface, while a pick pose has to "
+          "reach the tool centre point, and a model that cannot tell them apart cannot "
+          "express the offset between them.",
           [("World", 0, None), ("Base", 1, None),
-           ("Tool", 2, "Tool / tool centre point (TCP) frame."),
-           ("Camera", 3, None), ("Object", 4, None), ("Other", 5, None)])
+           ("MechanicalInterface", 2,
+            "The flange at the end of the last link, to which an end effector is "
+            "fitted. This is what an eye-in-hand extrinsic calibration resolves to."),
+           ("Tool", 3, "A tool frame, whose origin is a tool centre point."),
+           ("Object", 4, None), ("Other", 5, None),
+           ("Camera", 6, "A camera frame. Numbered after the ISO 9787 roles because "
+                         "it is not one of them.")])
 
 enum_type(3014, "VisionDistortionModelEnum",
           "Lens distortion model the coefficients belong to.",
