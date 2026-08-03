@@ -68,6 +68,9 @@ SPEC = os.path.join(STD, "OPC-UA-AI-Deployment.md")
 NS = {"u": "http://opcfoundation.org/UA/2011/03/UANodeSet.xsd"}
 UAX = {"uax": "http://opcfoundation.org/UA/2008/02/Types.xsd"}
 UA_NAMESPACE = "http://opcfoundation.org/UA/"
+NAMESPACE = "http://opcfoundation.org/UA/AI/"
+XREG_NS = "http://opcfoundation.org/UA/xRegistry/"
+PROGRAM_STATE_MACHINE = "i=2391"
 
 
 # Reference types that make a node a child of its ParentNodeId.
@@ -136,11 +139,34 @@ class Model:
                 return tgt
         return ""
 
+    @property
+    def own(self) -> str:
+        """NodeId prefix of this model's OWN namespace.
+
+        Derived from NamespaceUris, never assumed: a RequiredModel puts its namespace
+        in that list too, so the own index moves when a dependency is added. A
+        validator that assumed ns=1 would resolve nothing and report success.
+        """
+        uris = [(u.text or "").strip()
+                for u in self.root.findall("u:NamespaceUris/u:Uri", NS)]
+        return "ns=%d;" % (uris.index(NAMESPACE) + 1) if NAMESPACE in uris else "ns=1;"
+
+    @property
+    def xreg(self) -> str:
+        """NodeId prefix of the xRegistry namespace this model extends."""
+        uris = [(u.text or "").strip()
+                for u in self.root.findall("u:NamespaceUris/u:Uri", NS)]
+        return "ns=%d;" % (uris.index(XREG_NS) + 1) if XREG_NS in uris else ""
+
     def resolves(self, target: str) -> bool:
-        """Own-namespace targets must exist here; base-UA ids are taken on trust."""
+        """Own-namespace targets must exist here; imported ids are taken on trust."""
         if target in self.nodes:
             return True
-        if target.startswith("ns=1;"):
+        if self.xreg and target.startswith(self.xreg):
+            # Declared by the xRegistry model, which this one requires. Resolving it
+            # would mean parsing that NodeSet; the RequiredModel is the contract.
+            return True
+        if target.startswith(self.own):
             return False
         return bool(re.fullmatch(r"i=\d+", target)) or target in self.aliases
 
@@ -151,7 +177,8 @@ class Model:
         return None
 
     def members_of(self, nid: str) -> list[str]:
-        want = f"ns=1;i={nid.split('=')[-1]}" if not nid.startswith("ns=1;") else nid
+        want = (nid if nid.startswith(self.own)
+                else f"{self.own}i={nid.split('=')[-1]}")
         return [m for m in self.order if self.nodes[m].get("ParentNodeId") == want]
 
     def member_named(self, owner: str, name: str) -> str:
@@ -200,15 +227,18 @@ def check_model_header(m: Model) -> None:
         return
     req = models[0].findall("u:RequiredModel", NS)
     uris = [r.get("ModelUri") for r in req]
-    if uris != [UA_NAMESPACE]:
-        err("this model is standalone: the only RequiredModel must be "
-            f"{UA_NAMESPACE}, found {uris}")
+    if uris != [UA_NAMESPACE, XREG_NS]:
+        err("RequiredModel must be exactly the base UA namespace and "
+            f"{XREG_NS}, in that order, found {uris}")
     uris_declared = [(u.text or "").strip()
                      for u in m.root.findall("u:NamespaceUris/u:Uri", NS)]
-    if len(uris_declared) != 1:
-        err(f"expected exactly one NamespaceUri, found {uris_declared}")
-    elif uris_declared[0] != models[0].get("ModelUri"):
-        err("NamespaceUris entry and Model ModelUri disagree")
+    # Order is load-bearing: it fixes every namespace index in the file. Required
+    # namespaces first, own namespace last, matching the Schema Registry precedent.
+    if uris_declared != [XREG_NS, NAMESPACE]:
+        err(f"NamespaceUris must be exactly [{XREG_NS}, {NAMESPACE}] in that order, "
+            f"found {uris_declared}")
+    elif uris_declared[-1] != models[0].get("ModelUri"):
+        err("the last NamespaceUris entry and Model ModelUri must be this model")
 
 
 def check_references(m: Model) -> None:
@@ -377,7 +407,8 @@ def check_csv(m: Model) -> None:
             elif not m.by_name(owner):
                 err(f"NodeIds.csv {name!r} ({sid}) names an encoding of {owner!r}, "
                     "which is not a type in the NodeSet")
-        elif name != bn and not name.endswith("_" + bn):
+        elif (name != bn and not name.endswith("_" + bn)
+              and name != bn.strip("<>") and not name.endswith("_" + bn.strip("<>"))):
             err(f"NodeIds.csv name {name!r} ({sid}) does not resolve to NodeSet "
                 f"BrowseName {bn!r}")
     for sid, nid in ns_ids.items():
@@ -414,12 +445,25 @@ def check_spec_invariants(m: Model) -> None:
             elif m.modelling_rule(mm) != "Mandatory":
                 err(f"DeploymentType.{name} must be Mandatory")
 
+    base_t = dt("AiJobType")
+    if base_t:
+        mm = m.member_named(base_t, "JobId")
+        if not mm or m.modelling_rule(mm) != "Mandatory":
+            err("AiJobType.JobId must be declared Mandatory")
+        if m.supertype(base_t) != PROGRAM_STATE_MACHINE:
+            err("AiJobType must derive from the Part 10 ProgramStateMachineType "
+                f"({PROGRAM_STATE_MACHINE}); a hand-rolled lifecycle would have to "
+                "reinvent its transition events")
+    for sub in ("LearningJobType", "ModelImportJobType", "InferenceJobType"):
+        st = dt(sub)
+        if st and m.supertype(st) != m.by_name("AiJobType"):
+            err(f"{sub} must derive from AiJobType so that every long-running "
+                "operation in this model is observed the same way")
     job_t = dt("LearningJobType")
     if job_t:
-        for name in ("JobId", "State"):
-            mm = m.member_named(job_t, name)
-            if not mm or m.modelling_rule(mm) != "Mandatory":
-                err(f"LearningJobType.{name} must be declared Mandatory")
+        mm = m.member_named(job_t, "State")
+        if not mm or m.modelling_rule(mm) != "Mandatory":
+            err("LearningJobType.State must be declared Mandatory")
 
     if not m.by_name("UsesModel"):
         err("UsesModel must exist: it is the only defined path from a deployment to "
@@ -483,9 +527,15 @@ def check_spec_crossref(m: Model) -> None:
                     err(f"model declares {name}.{field} but the specification never "
                         "names it")
 
-    for cited in set(re.findall(r"ns=1;i=(\d+)", text)):
-        if f"ns=1;i={cited}" not in m.nodes:
-            err(f"specification cites ns=1;i={cited}, which is not in the NodeSet")
+    own = m.own
+    for cited in set(re.findall(r"ns=\d+;i=(\d+)", text)):
+        if f"{own}i={cited}" not in m.nodes:
+            err(f"specification cites {own}i={cited}, which is not in the NodeSet")
+    stale = sorted(set(re.findall(r"ns=(\d+);i=\d+", text)) - {own[3:-1]})
+    if stale:
+        err(f"specification writes NodeIds in namespace index {stale}; this model's "
+            f"own namespace is {own[:-1]} and a stale index does not merely go "
+            "stale, it points into a different model")
 
     # The other direction. Every `SomeType.SomeMember` the prose writes must exist,
     # otherwise the document describes a member no Server can implement. Only

@@ -10,7 +10,7 @@
     <Model ModelUri="http://opcfoundation.org/UA/Vision/Examples/Robotics/" Version="0.1.0" PublicationDate="2026-08-02T00:00:00Z">
       <RequiredModel ModelUri="http://opcfoundation.org/UA/" Version="1.05.04" PublicationDate="2023-12-15T00:00:00Z" />
       <RequiredModel ModelUri="http://opcfoundation.org/UA/Vision/" Version="0.1.0" PublicationDate="2026-08-02T00:00:00Z" />
-      <RequiredModel ModelUri="http://opcfoundation.org/UA/AI/" Version="0.1.0" PublicationDate="2026-08-02T00:00:00Z" />
+      <RequiredModel ModelUri="http://opcfoundation.org/UA/AI/" Version="0.2.0" PublicationDate="2026-08-03T00:00:00Z" />
     </Model>
   </Models>
   <Aliases>
