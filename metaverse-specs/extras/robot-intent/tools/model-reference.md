@@ -265,6 +265,8 @@ One submitted intent, tracked to completion. It is a Part 10 program instance, s
 | Result | Variable | IntentResultDataType | Scalar | Mandatory | Outcome, meaningful once ExecutionState is terminal. The same value is placed under FinalResultData so a Part 10 client finds it where Part 10 says it will be. |
 | MissionId | Variable | String | Scalar | Optional | The mission this intent belongs to, or empty when it was submitted alone. |
 | QueuePosition | Variable | UInt32 | Scalar | Optional | Place in the queue while ExecutionState is Queued, 1 being next. Zero once it is no longer queued. |
+| FinalResultData | Object |  |  | Mandatory | Part 10 result container. Carries the same IntentResultDataType value as Result, so a Part 10 client finds the outcome where Part 10 says it will be. Mandatory here because clause 6.7 requires it and an Optional member cannot carry a SHALL. |
+| ProgramDiagnostic | Variable | i=24033 | Scalar | Mandatory | Part 10 invocation diagnostics: which Session invoked the program, when, with what arguments and to what outcome. Mandatory here because the auditable-commanding property of clause 1.2 is exactly this member, and a capability the specification advertises cannot rest on one a Server may omit. |
 
 ### MissionType — `ns=1;i=1004`
 

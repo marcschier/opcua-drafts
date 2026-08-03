@@ -64,6 +64,9 @@ MR_OptionalPlaceholder = "i=11508"
 MR_MandatoryPlaceholder = "i=11510"
 
 BaseObjectType = "i=58"
+# Part 10 types used by the promotions at the end of the model.
+ProgramDiagnostic2DataType = "i=24033"
+ProgramDiagnostic2Type = "i=15383"
 FolderType = "i=61"
 PropertyType = "i=68"
 BaseDataVariableType = "i=63"
@@ -1622,6 +1625,24 @@ prop_var(CP, "IntentCapabilitiesType", "MaxTrajectoryPoints", UInt32,
          "Largest number of points accepted in one trajectory. Zero means the Server "
          "states no limit.")
 
+# Promotions of inherited Part 10 members.
+#
+# Clause 6.7 requires the result to be reachable under FinalResultData, and clauses 1.2
+# and 6.1 claim that every intent records which Session commanded it and with what
+# arguments. Both members are OPTIONAL in ProgramStateMachineType, so until they are
+# promoted here a fully conformant Server provides neither and the claims are false
+# against a legal implementation. Allocated at the end because member ids append.
+obj_member(IO, "IntentOperationType", "FinalResultData", BaseObjectType,
+           "Part 10 result container. Carries the same IntentResultDataType value as "
+           "Result, so a Part 10 client finds the outcome where Part 10 says it will "
+           "be. Mandatory here because clause 6.7 requires it and an Optional member "
+           "cannot carry a SHALL.", MR_Mandatory)
+prop_var(IO, "IntentOperationType", "ProgramDiagnostic", ProgramDiagnostic2DataType,
+         "Part 10 invocation diagnostics: which Session invoked the program, when, "
+         "with what arguments and to what outcome. Mandatory here because the "
+         "auditable-commanding property of clause 1.2 is exactly this member, and a "
+         "capability the specification advertises cannot rest on one a Server may "
+         "omit.", MR_Mandatory)
 
 # ===========================================================================
 # ==================================  EMIT  =================================
