@@ -635,6 +635,27 @@ def check_spec_crossref(m: Model) -> None:
             f"own namespace is {own[:-1]} and a stale index does not merely go "
             "stale, it points into a different model")
 
+    # Forward, at member granularity. Checking only type NAMES lets a whole Method or
+    # a Mandatory member ship undocumented - a Server is obliged to implement it and a
+    # client has nothing to read about it. Optional members are not required to be
+    # named: many are self-evident and demanding prose for each would produce padding.
+    for nid in m.order:
+        if m.cls(nid) not in ("UAObjectType",):
+            continue
+        owner = m.bname(nid)
+        for mem in m.members_of(nid):
+            name = m.bname(mem)
+            if name.startswith("<") or name in ("InputArguments", "OutputArguments"):
+                continue
+            is_method = m.cls(mem) == "UAMethod"
+            if not (is_method or m.modelling_rule(mem) == "Mandatory"):
+                continue
+            if not re.search(rf"`{re.escape(name)}`", text):
+                kind = "Method" if is_method else "Mandatory member"
+                err(f"{owner}.{name} is a {kind} the specification never names. A "
+                    "Server is obliged to implement it and a client has nothing to "
+                    "read about it")
+
     # The other direction. Every `SomeType.SomeMember` the prose writes must exist,
     # otherwise the document describes a member no Server can implement. Only
     # qualified names are checked, because a bare backticked word is as likely to be
