@@ -150,6 +150,91 @@ The consequence for a reader: every member of `ModelType` is about *this* artefa
 
 `LearningJobType` keeps NodeId `1005` although it now sits below `1006`. NodeIds here are **append-only**: a type that acquires a base type does not move, because renumbering to make the file read tidily would break every client that cached an identifier.
 
+### 5.2 `ModelType`
+
+Identity, provenance and interface of a trained model. Aligned with IDTA 02060.
+
+`ModelId`, `Name`, `Version`, `Digest` and `DigestAlgorithm` are **Mandatory**. The first three because a model that cannot be named cannot be discussed; the last two because clause 11 depends on them, and a rule that depends on an Optional member is a rule a conformant Server can silently not satisfy.
+
+`TaskKind` is a **String**, not an enumeration. The set of things models do is not closed, and an enumeration would date faster than the models it describes.
+
+`LabelClasses` is an ordered array whose **index** is the contract. A consuming specification's class identifier refers to a position in it, so a Server **shall not** reorder it in place: a model whose class 3 silently becomes class 4 produces results that are wrong in a way nothing detects.
+
+`Inputs` and `Outputs` carry `TensorSignatureDataType` (`ns=2;i=3050`) — name, element type, shape with `-1` for a dynamic axis, and an optional layout hint. This is what lets a client check that what it intends to send matches what the model expects, before it sends it.
+
+Clause 7 leaves the invocation payload opaque, so these signatures are the **only** machine-readable description of what a deployment will accept. A client that ignores them discovers a shape mismatch as a rejected call at run time; one that reads them discovers it at configuration time, which is the difference between a commissioning problem and a production one.
+
+#### 5.2.1 Identity beyond the artefact
+
+`Publisher` completes the `Publisher`, `Name`, `Version` triple by which every catalogue in practice identifies a model (§9.2). It is what makes the same model recognisable across two installations that fetched it from different mirrors — the digests will match, but only if someone already suspected the two were the same artefact, and the triple is what raises that suspicion.
+
+`ProvenanceUri` is the hand-off point to whatever system governs approval. This model records *what is deployed and where it came from*; who signed it off, against which release criteria, under what retention policy, is the business of the organisation's governance system and deliberately not modelled here.
+
+#### 5.2.2 What it costs, and at what precision
+
+`ParameterCount` is a crude proxy for what a model will cost to run, and is the one such figure that is universally published.
+
+`Quantization` names the numeric precision the artefact is stored in — `fp32`, `int8`, `fp8`. This is **not** a packaging detail. A quantized model is a different artefact that produces different answers, and treating it as a variant of the original is how a model evaluated at full precision ends up deployed at reduced precision without anyone re-measuring it. §10.3 requires the derivation to be stated as well.
+
+`SafetyPolicyUri` names the policy applied to this model's output, where one is. Like every URI here it is untrusted input (§11.2).
+
+`Card` reaches the `ModelCardType` of §10.1. The split is deliberate: the nameplate answers *which artefact is this*, the card answers *should this be running on my line*, and those are asked by different people at different times.
+
+### 5.3 `DatasetType`
+
+What a model was trained or validated on. Aligned with IDTA 02058.
+
+`SourceKind` (`DatasetSourceEnum`, `ns=2;i=3004`) is `Real` 0, `Synthetic` 1 or `Mixed` 2, and is **Mandatory**. It is the provenance a reviewer needs when synthetic data is involved, and the one question about a dataset that cannot be answered by looking at it. `Mixed` is not a hedge — synthetic pre-training followed by real fine-tuning is the common industrial arrangement, and forcing it into either neighbouring value would misdescribe it.
+
+`SampleCount`, `CreatedAt` and `LabelClasses` describe the contents; `ArtifactUri` and `Digest` describe where the data is and how to know it is the data meant.
+
+`LabelClasses` carries the same index-is-the-contract rule as `ModelType`. A dataset whose class list disagrees in **order** with the model trained on it is not detectably wrong anywhere — every identifier resolves, every count is plausible, and every label is off by one.
+
+A dataset is a **sibling** of the model rather than a part of it. It outlives the models trained on it and is cited by several, which is why `TrainedOn` (§5.5) is a repeating reference and why the catalogue gives datasets their own resource type (§9.1).
+
+### 5.4 `DeploymentType`
+
+A model made executable. Aligned with IDTA 02059.
+
+`InferenceLocation` (`InferenceLocationEnum`, `ns=2;i=3001`) is `OnServer` 0, `EdgeOffServer` 1, `Cloud` 2 or `InSimulator` 3, and is **Mandatory**.
+
+> This property changes **where the computation happens and therefore the trust boundary**. It changes nothing else — not the result contract, not the model's identity, not what a client does with the output. A client that branches on it for any reason other than latency, availability or trust has misread it.
+
+`AcceleratorKind` (`AcceleratorKindEnum`, `ns=2;i=3002`) is `Cpu`, `Gpu`, `Npu`, `Fpga`, `Tpu` or `Other`. `State` (`DeploymentStateEnum`, `ns=2;i=3003`) is `Inactive` 0, `Ready` 1, `Active` 2, `Degraded` 3 or `Faulted` 4, and is **Mandatory** because §6 and any consuming specification's availability logic depend on it.
+
+`AcceleratorName` is free text for the specific part, because the enumeration deliberately does not attempt to name every accelerator ever shipped.
+
+`LatencyBudget` states the latency the deployment is expected to meet. It exists so a client can **detect** regression rather than merely experience it: without a declared expectation, a deployment that has become three times slower looks exactly like one that was always slow.
+
+`BatchSize` is the configured inference batch size, which a client needs to interpret latency — a large batch trades per-item latency for throughput, and a budget breach on a batched deployment may mean nothing is wrong.
+
+#### 5.4.1 The members that make it callable
+
+`EndpointUri` is meaningful when `InferenceLocation` is not `OnServer`. It is **untrusted input** and subject to §11.2. On its own it is not enough to call anything, which is what `Source` and clause 8 are for.
+
+Everything a client needs in order to *use* a deployment is added by later clauses, and it is worth seeing the whole set in one place:
+
+| Members | Clause | The question |
+|---|---|---|
+| `Invoke`, `InvokeAsync`, `GetCapabilities`, `Capabilities` | 7 | How do I call it, and what can it do? |
+| `Source`, `VersionBinding`, `BoundRef` | 8.2, 8.3 | Where does it execute, and can the artefact move under me? |
+| `FallbackPolicy`, `Reachability`, `ConsecutiveFailures`, `LastSuccessAt`, `RateLimit` | 8.4 | Is it answering, and what happens when it is not? |
+| `DataJurisdiction`, `EgressPermitted`, `RetainsInput`, `EgressPolicyUri` | 8.5 | Does calling it send my data off site? |
+
+#### 5.4.2 `State` and `Reachability` answer different questions
+
+`State` is about the deployment as this Server configured it; `Reachability` is about whether the far end is currently answering. They are independent, and the combinations are meaningful rather than redundant.
+
+A deployment can be `Ready` and `Unreachable` — correctly configured, network down — which is the case §8.4's fallback exists for. It can be `Faulted` and `Reachable` — the endpoint answers, but rejects everything this Server sends, which points at credentials or a contract mismatch rather than at the network. Collapsing the two into one value would lose exactly the distinction a commissioning engineer needs.
+
+### 5.5 `UsesModel` and `TrainedOn`
+
+A `DeploymentType` instance **shall** have **exactly one** `UsesModel` reference, and its target **shall** be a `ModelType` instance.
+
+This is the only defined path from a running deployment to the artefact its results depend on, and §11.1's provenance argument is a walk along it. Zero references breaks the chain; more than one makes "which model produced this?" unanswerable, which is the question the chain exists to answer.
+
+`TrainedOn` links a model to a dataset it was trained or validated on. It is optional and may repeat: a model whose training data cannot be named is a model whose behaviour cannot be explained, but not every installation holds that information.
+
 ### 5.6 `AiJobType` and the three jobs
 
 Every long-running operation in this model — learning, importing a model, inference that does not return while the caller waits — derives from `AiJobType`, which derives from the OPC 10000-10 `ProgramStateMachineType`.
@@ -165,44 +250,6 @@ That base supplies the lifecycle (`Ready`, `Running`, `Suspended`, `Halted`), th
 **The lifecycle and the phase are different questions.** `LearningJobType.State` says what stage the loop is in; the inherited `CurrentState` says whether the program is running. A Server **shall** keep them consistent: a job whose `State` is `Failed` **shall not** report a `CurrentState` of `Running`.
 
 Annex A is the authoritative node reference and carries every member with its DataType, ValueRank and ModellingRule.
-
-### 5.2 `ModelType`
-
-Identity, provenance and interface of a trained model. Aligned with IDTA 02060.
-
-`ModelId`, `Name`, `Version`, `Digest` and `DigestAlgorithm` are **Mandatory**. The first three because a model that cannot be named cannot be discussed; the last two because clause 11 depends on them, and a rule that depends on an Optional member is a rule a conformant Server can silently not satisfy.
-
-`TaskKind` is a **String**, not an enumeration. The set of things models do is not closed, and an enumeration would date faster than the models it describes.
-
-`LabelClasses` is an ordered array whose **index** is the contract. A consuming specification's class identifier refers to a position in it, so a Server **shall not** reorder it in place: a model whose class 3 silently becomes class 4 produces results that are wrong in a way nothing detects.
-
-`Inputs` and `Outputs` carry `TensorSignatureDataType` (`ns=2;i=3050`) — name, element type, shape with `-1` for a dynamic axis, and an optional layout hint. This is what lets a client check that what it intends to send matches what the model expects, before it sends it.
-
-### 5.3 `DatasetType`
-
-What a model was trained or validated on. Aligned with IDTA 02058.
-
-`SourceKind` (`DatasetSourceEnum`, `ns=2;i=3004`) is `Real` 0, `Synthetic` 1 or `Mixed` 2, and is **Mandatory**. It is the provenance a reviewer needs when synthetic data is involved, and the one question about a dataset that cannot be answered by looking at it.
-
-### 5.4 `DeploymentType`
-
-A model made executable. Aligned with IDTA 02059.
-
-`InferenceLocation` (`InferenceLocationEnum`, `ns=2;i=3001`) is `OnServer` 0, `EdgeOffServer` 1, `Cloud` 2 or `InSimulator` 3, and is **Mandatory**.
-
-> This property changes **where the computation happens and therefore the trust boundary**. It changes nothing else — not the result contract, not the model's identity, not what a client does with the output. A client that branches on it for any reason other than latency, availability or trust has misread it.
-
-`AcceleratorKind` (`AcceleratorKindEnum`, `ns=2;i=3002`) is `Cpu`, `Gpu`, `Npu`, `Fpga`, `Tpu` or `Other`. `State` (`DeploymentStateEnum`, `ns=2;i=3003`) is `Inactive` 0, `Ready` 1, `Active` 2, `Degraded` 3 or `Faulted` 4, and is **Mandatory** because §6 and any consuming specification's availability logic depend on it.
-
-`EndpointUri` is meaningful when `InferenceLocation` is not `OnServer`. It is **untrusted input** and subject to §11.2.
-
-### 5.5 `UsesModel` and `TrainedOn`
-
-A `DeploymentType` instance **shall** have **exactly one** `UsesModel` reference, and its target **shall** be a `ModelType` instance.
-
-This is the only defined path from a running deployment to the artefact its results depend on, and §11.1's provenance argument is a walk along it. Zero references breaks the chain; more than one makes "which model produced this?" unanswerable, which is the question the chain exists to answer.
-
-`TrainedOn` links a model to a dataset it was trained or validated on. It is optional and may repeat: a model whose training data cannot be named is a model whose behaviour cannot be explained, but not every installation holds that information.
 
 ---
 
@@ -231,6 +278,26 @@ stateDiagram-v2
 `SamplesCollected` counts what has accumulated, including corrections fed back. `LastError` is the diagnostic for `Failed`, is for a human, and **shall not** be parsed.
 
 **Promotion is the operation that matters.** `PromoteModel` makes the candidate the model deployments use — it changes what the equipment does without changing anything a reader of the address space would notice, which is exactly the change that needs a separate permission (§11.3).
+
+A null `Deployment` argument means *every* deployment fed by this job. A Server **shall** promote to all of them or to none: a partial promotion leaves two lines judging the same parts by different models, which is a fault that shows up as an inexplicable disagreement between stations rather than as an error anywhere.
+
+### 6.1 Where the loop meets the rest of the model
+
+The loop is the **producing** half of this specification; clauses 7 to 9 are the consuming half, and three joins connect them.
+
+`BaseModel` and `CandidateModel` are `ModelType` instances like any other, so a candidate carries the same `Digest`, the same `Card` and the same lineage obligations as a model that arrived from a catalogue. A model that a Server trained is not privileged over one it imported — §10.3 requires the candidate to state `DerivedFrom` the base it started from, for the same reason a quantized model must.
+
+Promotion **should** be gated on an `EvaluationRunType` (§10.2) whose `Passed` is true. This specification does not require it, because a Server that captures corrections and hands training to an external system may legitimately never see an evaluation — but a Server that promotes without one has no recorded answer to *why was this allowed*, and the question is asked after failures rather than before them.
+
+Where the promoted model backs a deployment whose `VersionBinding` is `FollowsRef` (§8.3), promotion and repointing are two routes to the same outcome. §11.3.1 requires both to be authorized alike.
+
+### 6.2 A Server may implement very little of this
+
+The state machine describes the whole loop; almost no Server implements the whole loop.
+
+A Server that only captures corrections implements `StartCollection` and `StopCollection`, drives `State` to `Labelling`, and stops. One that also promotes but trains elsewhere implements `PromoteModel` and lets `Training` and `Validating` be driven by its MLOps backend. Both are conformant to **AI-Learning** provided the transitions they *do* perform are the ones in §6.
+
+This is why `State` is read rather than inferred from which Methods exist. A client that probed for Methods would learn what a Server can be asked to do; reading `State` tells it how far this job actually got, which is the question it has.
 
 ---
 
@@ -479,11 +546,32 @@ Every link is required for the chain to hold, which is why `UsesModel` is exactl
 
 `DigestAlgorithm` **shall** name a hash function with **at least 256-bit output and no known collision weakness**; `SHA-256` is the default and is always acceptable. It **shall not** be `MD5`, `SHA-1` or a truncated variant — chosen-prefix collisions against those are practical, so a substituted artefact would pass verification, and a verification that can be passed by the wrong artefact is worse than none because it is believed.
 
+#### 11.1.1 The chain has more links than it used to
+
+The walk is now: result → deployment → `ModelUsed` → `ModelType` → `Digest`, and — where the model was imported — `ImportedFrom` → the catalogue resource it came from.
+
+Two of those links can be broken by a Server that is otherwise behaving correctly:
+
+- Reading the **deployment's current model** instead of `ModelUsed` gives the wrong answer whenever a fallback served the call or a followed reference moved (§7.2.1). It is wrong silently and plausibly, which is the worst combination.
+- Trusting a **staged artefact whose digest was never checked** breaks it at the point where an artefact enters the system. §9.4 is where that check is required, and it is the only place in this model where a Server **shall** verify a digest rather than merely publish one.
+
 ### 11.2 URIs are untrusted input
 
 `ArtifactUri`, `ProvenanceUri` and `EndpointUri` are values a client may have written and a Server may resolve. A Server **shall** validate them against a configured policy before resolving, and **shall not** follow one to a scheme or host the policy does not permit.
 
 Where `InferenceLocation` is not `OnServer`, `EndpointUri` **shall** name a scheme that is authenticated and confidential. Inference off the Server means the input data leaves it, and the result comes back from something the Server did not compute — both directions need the channel to be trustworthy.
+
+The set of resolvable URIs grew with clauses 8 to 10, and every addition is a value some client may have written: `ModelSourceType.EndpointUri` and `EndpointDescriptionUri`, `ModelCardType.ContactUri`, `EvaluationRunType.ReportUri`, `ModelType.SafetyPolicyUri`, `EgressPolicyUri`, and the catalogue's inherited `ResourceUrl`. The same policy governs all of them. A Server that validates the ones it remembers and resolves the rest has a policy in name only.
+
+A staging import (§9.3) is the sharpest case, because it fetches bytes that will subsequently produce decisions. A Server **shall** apply the resolver policy to the artefact location **before** transferring, not after — a policy checked on the way out is not a control, and `SizeBytes` exists partly so that the decision can be made without starting.
+
+#### 11.2.1 Credential material is not addressable
+
+A Server **shall not** expose credential material through any Attribute of any node in this model. `CredentialReference` names a credential in whatever store the Server uses; it never carries one, and `TokenAudience` states what a token is requested *for*, not what it is.
+
+This is stated as a prohibition rather than left to implementers' good sense because the address space is not merely readable. It is browsable by anything with a Session, subscribable so that a value is pushed as it changes, and historisable so that a value read once is retained. A secret placed there is not exposed once — it is published, distributed and archived.
+
+`WorkloadIdentity` is preferred wherever the platform offers it, for the reason that it is the only authentication kind under which there is no secret anywhere to be exposed by a future mistake.
 
 ### 11.3 Promotion needs its own authorization
 
@@ -491,9 +579,32 @@ A Server **shall** require an authorization for `PromoteModel` distinct from the
 
 Promotion changes behaviour without changing structure. Nothing in the address space looks different afterwards except a version string, so the usual defence — that a significant change is visible — does not apply here.
 
+#### 11.3.1 Promotion has a second door
+
+`PromoteModel` is not the only way the model behind a deployment changes. A `FollowsRef` binding (§8.3) moves whenever whoever controls the reference repoints it, and nothing in this address space changes when they do.
+
+A Server **shall** treat repointing a followed reference as the same class of act as calling `PromoteModel`, and **shall** subject it to the same distinct authorization. A control that guards the front door while the side door stands open is not a weaker control — it is a misleading one, because the audit trail shows every promotion having been authorized.
+
+For the same reason `AiJobType.RequestedBy` records who started a job. An authorization check that leaves no record answers *was this allowed* but not *who did it*, and only the second question can be asked after the fact.
+
+#### 11.3.2 Fallback changes what answers, not who may ask
+
+`FallBackTo` (§8.4) routes a call to a different deployment, and therefore a different model, without the caller asking for it.
+
+That is not a privilege escalation — the caller was already entitled to an answer — but it **is** a change in what produced the answer, and §7.2.1 requires it to be visible in `ModelUsed`. A Server **shall not** configure a fallback to a deployment whose `EgressPermitted` or `DataJurisdiction` is more permissive than the deployment falling back to it. Otherwise a network fault silently sends plant data somewhere policy forbids, which is precisely the moment nobody is watching.
+
 ### 11.4 A digest is not a signature
 
 `Digest` establishes that an artefact is the one described. It does **not** establish who produced it or that they were entitled to. A Server **shall not** present digest verification as authorization, and an installation that needs provenance of authorship needs a signature, which this model does not define.
+
+The distinction sharpens once models arrive through a bridge (§9.2). A staging import verifies that the bytes it fetched match the digest the catalogue declared — so it detects corruption in transfer, and substitution by anyone who could not also edit the catalogue entry. It detects nothing at all about an attacker who could edit both, and the catalogue is the more attractive target precisely because it is the one that many machines read.
+
+So what `DigestVerified` means is narrow and worth stating plainly: **the artefact is the one this catalogue entry described**. Whether that entry described the right artefact is a question about the catalogue, answered by the catalogue's own access control and by whatever signing the publisher applies — neither of which this model can see.
+
+Two practical consequences:
+
+- A Server **shall not** treat `DigestVerified` as evidence that a model is approved for use. §10.1's card and §10.2's evaluation are what an installation reads for that, and `ProvenanceUri` is the hand-off to the system that actually decides.
+- An installation whose threat model includes a compromised catalogue **should** verify a publisher signature over the artefact out of band before promotion. This specification records where the artefact came from and what it hashes to, which is what makes such a check possible; it does not perform it.
 
 ---
 
@@ -502,6 +613,12 @@ Promotion changes behaviour without changing structure. Nothing in the address s
 ### 12.1 Declaring conformance
 
 A Server declares conformance by exposing `AiRootType` under the Server object with `SpecificationVersion` set to the release it implements.
+
+Facets are **additive and independent** except where a row states otherwise, and only one dependency exists: **AI-Import** requires **AI-Catalogue**, because an import job with nothing to import from is not implementable.
+
+The split matters more here than in a smaller model, because the plausible Servers differ enormously. A device that runs one fixed model and describes it claims **AI-Base** and stops. A gateway that calls a hosted model claims **AI-Base**, **AI-Invoke** and **AI-Federation**. A plant MLOps node that mirrors a corporate catalogue and stages models onto controllers claims **AI-Catalogue** and **AI-Import** and may never call `Invoke` at all. None of these is a partial implementation of the others, and a single monolithic conformance claim would have made two of the three unclaimable.
+
+**AI-Residency** is deliberately separate from **AI-Federation**. A Server can be perfectly capable of calling a remote model while being unable to state where the data goes, and an operator who needs the second guarantee needs to be able to ask for it by name rather than infer it from the first.
 
 ### 12.2 Facets
 
