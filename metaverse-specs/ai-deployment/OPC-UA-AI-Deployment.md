@@ -6,6 +6,78 @@
 >
 > Nothing here is normative, official, or endorsed by the OPC Foundation or IDTA; namespace URIs and NodeIds are **provisional** and for prototyping only.
 
+## Contents
+
+- [1 Scope](#1-scope)
+  - [1.1 Motivation](#11-motivation)
+  - [1.2 What this specification does not do](#12-what-this-specification-does-not-do)
+  - [1.3 Capabilities and versioning](#13-capabilities-and-versioning)
+- [2 Normative references](#2-normative-references)
+- [3 Terms, definitions and abbreviations](#3-terms-definitions-and-abbreviations)
+- [4 Overview and concepts](#4-overview-and-concepts)
+  - [4.1 The objects and what joins them](#41-the-objects-and-what-joins-them)
+  - [4.2 How a consuming specification binds to this one](#42-how-a-consuming-specification-binds-to-this-one)
+  - [4.3 A model is a business artefact, not device firmware](#43-a-model-is-a-business-artefact-not-device-firmware)
+- [5 Information model](#5-information-model)
+  - [5.1 Type hierarchy](#51-type-hierarchy)
+  - [5.2 `ModelType`](#52-modeltype)
+  - [5.3 `DatasetType`](#53-datasettype)
+  - [5.4 `DeploymentType`](#54-deploymenttype)
+  - [5.5 `UsesModel` and `TrainedOn`](#55-usesmodel-and-trainedon)
+  - [5.6 `AiJobType` and the three jobs](#56-aijobtype-and-the-three-jobs)
+- [6 The learning loop (normative)](#6-the-learning-loop-normative)
+  - [6.1 Method behaviour and StatusCodes (normative)](#61-method-behaviour-and-statuscodes-normative)
+  - [6.2 Where the loop meets the rest of the model](#62-where-the-loop-meets-the-rest-of-the-model)
+  - [6.3 A Server may implement very little of this](#63-a-server-may-implement-very-little-of-this)
+- [7 Inference (normative)](#7-inference-normative)
+  - [7.1 One call, wherever the model runs](#71-one-call-wherever-the-model-runs)
+  - [7.2 The payload is opaque, the envelope is not](#72-the-payload-is-opaque-the-envelope-is-not)
+  - [7.3 Parameters, and why an ignored one is worse than a rejected one](#73-parameters-and-why-an-ignored-one-is-worse-than-a-rejected-one)
+  - [7.4 Capabilities are asked, not assumed](#74-capabilities-are-asked-not-assumed)
+  - [7.5 Incremental results](#75-incremental-results)
+  - [7.6 Work that does not finish while the caller waits](#76-work-that-does-not-finish-while-the-caller-waits)
+- [8 Consuming a model hosted elsewhere (normative)](#8-consuming-a-model-hosted-elsewhere-normative)
+  - [8.1 What a URI does not tell you](#81-what-a-uri-does-not-tell-you)
+  - [8.2 The wire contract, and the credential that is never a secret](#82-the-wire-contract-and-the-credential-that-is-never-a-secret)
+  - [8.3 Pinned, or following something that moves](#83-pinned-or-following-something-that-moves)
+  - [8.4 When the far end stops answering](#84-when-the-far-end-stops-answering)
+  - [8.5 Where the data goes](#85-where-the-data-goes)
+- [9 The catalogue and the bridge (normative)](#9-the-catalogue-and-the-bridge-normative)
+  - [9.1 A model catalogue is a registry](#91-a-model-catalogue-is-a-registry)
+  - [9.2 The bridge](#92-the-bridge)
+  - [9.3 Federate or stage](#93-federate-or-stage)
+  - [9.4 Staging is where the digest matters](#94-staging-is-where-the-digest-matters)
+- [10 Governance and provenance (normative)](#10-governance-and-provenance-normative)
+  - [10.1 The nameplate does not say whether it may be used](#101-the-nameplate-does-not-say-whether-it-may-be-used)
+  - [10.2 A metric without its threshold cannot be acted on](#102-a-metric-without-its-threshold-cannot-be-acted-on)
+  - [10.3 Lineage is a chain](#103-lineage-is-a-chain)
+  - [10.4 Safety findings](#104-safety-findings)
+- [11 Security](#11-security)
+  - [11.1 Provenance is the point of the digest](#111-provenance-is-the-point-of-the-digest)
+  - [11.2 URIs are untrusted input](#112-uris-are-untrusted-input)
+  - [11.3 Promotion needs its own authorization](#113-promotion-needs-its-own-authorization)
+  - [11.4 A digest is not a signature](#114-a-digest-is-not-a-signature)
+- [12 Profiles and conformance units](#12-profiles-and-conformance-units)
+  - [12.1 Declaring conformance](#121-declaring-conformance)
+  - [12.2 Facets](#122-facets)
+- [13 Deliverables and reproducibility](#13-deliverables-and-reproducibility)
+- [Annex A — Information model (generated)](#annex-a--information-model-generated)
+- [Annex B — Informative alignments](#annex-b--informative-alignments)
+- [Annex C — A worked arrangement (informative)](#annex-c--a-worked-arrangement-informative)
+  - [C.1 The situation](#c1-the-situation)
+  - [C.2 Getting the models here](#c2-getting-the-models-here)
+  - [C.3 The two deployments](#c3-the-two-deployments)
+  - [C.4 A normal call, and a bad afternoon](#c4-a-normal-call-and-a-bad-afternoon)
+  - [C.5 What a throttle would have done instead](#c5-what-a-throttle-would-have-done-instead)
+- [Annex D — Deploying a classical model (informative)](#annex-d--deploying-a-classical-model-informative)
+  - [D.1 The model](#d1-the-model)
+  - [D.2 In the catalogue](#d2-in-the-catalogue)
+  - [D.3 Getting it onto the controller](#d3-getting-it-onto-the-controller)
+  - [D.4 The shape contract](#d4-the-shape-contract)
+  - [D.5 The deployment](#d5-the-deployment)
+  - [D.6 Calling it](#d6-calling-it)
+  - [D.7 Capabilities, and an absence that means nothing](#d7-capabilities-and-an-absence-that-means-nothing)
+
 ---
 
 ## 1 Scope
@@ -27,25 +99,18 @@ An industrial AI model is not device firmware. It is an artefact the operator or
 
 Three IDTA submodel templates describe the pieces — **IDTA 02060** for a model nameplate, **IDTA 02058** for a dataset, **IDTA 02059** for a deployment — but they are Asset Administration Shell templates, not an OPC UA address space. This model aligns with them member-for-member so that an AAS can be populated from these nodes without loss, while remaining browsable, subscribable and callable in its own right.
 
-### 1.2 Why this is a separate specification
+**Nothing here is specific to any one kind of input.** `TaskKind` is a String. `SourceKind` distinguishes real capture from simulator output. The learning loop runs `Idle → Collecting → Labelling → Training → Validating → Ready → Promoted`. A vibration-analysis model, a process soft sensor and a quality classifier all need exactly this, and none of them need a lens — which is why the model is domain-neutral by construction rather than by convention, and why its validator fails the build if a type name acquires a domain term.
 
-Nothing in this model is specific to any one kind of input. `TaskKind` is a string. `SourceKind` distinguishes real capture from simulator output. The learning loop is `Idle → Collecting → Labelling → Training → Validating → Ready → Promoted`. A vibration-analysis model, a process soft sensor and a quality classifier all need exactly this, and none of them need a lens.
-
-Putting it inside any one domain's specification would oblige every other domain either to take a dependency on that domain — a process-monitoring Server declaring a camera model as a `RequiredModel` — or to define the whole thing again, at which point two installations describe the same model artefact with two incompatible vocabularies and the provenance question stops having one answer.
-
-Consuming specifications join to this one through a plain `NodeId`, not a `RequiredModel`, so the dependency is a **facet precondition** rather than a namespace obligation: a Server implements this model when it has something to say about an AI model, and is fully conformant to its domain specification when it does not.
-
-### 1.3 What this specification does not do
+### 1.2 What this specification does not do
 
 - It does **not** carry model artefacts or training data. `ArtifactUri` says where the bytes are; the bytes travel by whatever means already moves large files, and `Digest` is what makes the retrieval verifiable.
 - It does **not** define what an inference payload *contains*. Clause 7 defines the envelope — routing, parameters, accounting, why output stopped, which model answered — and leaves the payload opaque, because what you pass to a model and what comes back is domain vocabulary: an image and a set of detections, a spectrum and a fault class. An envelope that tried to type that would need extending for every domain that ever adopted it.
-- It does **not** define a training algorithm, a scheduler or an MLOps platform. `TriggerTraining` requests training; clause 6 is explicit that a Server may implement only the capture stages.
-- It does **not** define model training. `TriggerTraining` requests it; where the training happens is out of scope, and clause 6 is explicit that a Server may implement only the capture stages.
+- It does **not** define a training algorithm, a scheduler or an MLOps platform. `TriggerTraining` requests training and `LearningJobType` observes it; where the training runs is out of scope, and clause 6 is explicit that a Server may implement only the capture stages.
 - It is **not** a governance or compliance framework. It records what is needed to answer provenance questions; whether an installation is permitted to run a given model is decided elsewhere.
 
-### 1.4 Capabilities and versioning
+### 1.3 Capabilities and versioning
 
-Release 0.2.0 covers the model, the dataset, the deployment, the learning loop, the invocation surface, consumption of externally hosted models, the catalogue and the import bridge.
+This specification covers the model, the dataset, the deployment, the learning loop, the invocation surface, consumption of externally hosted models, the catalogue and the import bridge.
 
 The NodeSet declares **two** `RequiredModel` entries: the base OPC UA namespace, and *OPC UA — xRegistry*, because the catalogue of clause 9 is a domain extension of that abstract registry rather than a private invention. That is a real cost and it is taken deliberately — a model catalogue **is** a registry, and defining a second one here would leave two incompatible ways to describe the same artefact.
 
@@ -361,6 +426,20 @@ What this specification *does* fix is everything around the payload, because non
 | `SafetyAssessment` | Whether anything was withheld |
 | `RetryAfter` | Whether, and when, to try again |
 
+```mermaid
+sequenceDiagram
+    autonumber
+    participant C as Client
+    participant D as DeploymentType
+    participant M as ModelType
+    C->>D: Invoke(Payload, ContentType, Parameters, Timeout)
+    D->>D: reject any unsupported Parameter (7.3)
+    D-->>C: ResponsePayload + ResponseContentType
+    D-->>C: ModelUsed, Usage, FinishReason
+    D-->>C: SafetyAssessment, RetryAfter
+    C->>M: browse ModelUsed for Digest (11.1)
+```
+
 #### 7.2.1 `ModelUsed` is the one a client must read
 
 A Server **shall** return the model that actually produced the response, which is **not** necessarily the one the deployment names at the time the client looks.
@@ -412,6 +491,21 @@ Where the payload is large or the rate is high enough that Subscription overhead
 `InvokeAsync` submits a request and returns immediately with the `InferenceJobType` (`ns=2;i=1008`) instance that will carry the result. The client subscribes to that job rather than polling it.
 
 This is not a convenience. A batch scored overnight and an analysis over months of recorded data are ordinary industrial requests, and modelling them as a Method that blocks for hours would hold a Session open for the duration and lose the work if it dropped. `InferenceJobType` derives from `AiJobType` (§5.6), so it is observed exactly like every other long-running operation here.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant C as Client
+    participant D as DeploymentType
+    participant J as InferenceJobType
+    C->>D: InvokeAsync(Payload, ContentType, Parameters)
+    D-->>C: Job (NodeId)
+    C->>J: Subscribe
+    J-->>C: CurrentState Running, Progress
+    Note over J: the Part 10 lifecycle, not a poll loop
+    J-->>C: CurrentState Halted, FinishReason
+    C->>J: read ResponsePayload, ModelUsed, Usage
+```
 
 `InferenceJobType` carries `RequestPayload` and `RequestContentType`, `ResponsePayload` and `ResponseContentType`, and the same `ModelUsed`, `Usage`, `FinishReason` and `SafetyAssessment` that `Invoke` returns — the asynchronous path answers the same questions as the synchronous one, which is what makes it a path and not a different feature.
 
@@ -466,6 +560,28 @@ This is the question a plant asks that an inference API does not answer, because
 - **`Fail`** — report the failure and produce nothing. This is the safe default: a caller told that nothing happened can decide for itself, and deciding is often its job.
 - **`HoldLast`** — keep reporting the most recent successful result. Legitimate only where a stale answer is safe, and the caller **shall** be able to establish the staleness, for which `LastSuccessAt` is sufficient. A Server **shall not** present a held result as fresh.
 - **`FallBackTo`** — route to the deployment named by the `FallsBackTo` reference. The answer then comes from a **different model**, and `Invoke` **shall** report that model in `ModelUsed`. A fallback that answered without saying so would break the provenance chain precisely when it matters most.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant C as Client
+    participant P as Primary DeploymentType
+    participant S as Fallback DeploymentType
+    C->>P: Invoke
+    P--xP: execution site does not answer
+    P->>P: Reachability Unreachable, ConsecutiveFailures++
+    alt FallbackPolicy = FallBackTo
+        P->>S: route the call
+        S-->>P: result from a DIFFERENT model
+        P-->>C: response, ModelUsed = the fallback's model
+    else FallbackPolicy = Fail
+        P-->>C: failure, nothing produced
+    else FallbackPolicy = HoldLast
+        P-->>C: last successful result, LastSuccessAt shows its age
+    end
+```
+
+The `FallBackTo` branch is the one that needs care: the caller asked nothing different and got an answer from another model, so `ModelUsed` is the only thing that says so.
 
 `FallsBackTo` **shall not** form a cycle. A Server **shall** reject a configuration that closes one rather than discovering it at the moment of failure, which is the worst possible moment.
 
@@ -527,6 +643,21 @@ It takes a `Source`, a `ModelReference` and a `Mode`, and produces `ImportedMode
 **`Stage`** fetches the artefact, verifies it, and makes it locally available so inference can run without the source. `BytesTransferred` tracks progress, which is zero throughout a federating import because a federating import moves none.
 
 **`Auto`** federates, then stages if the target deployment's `InferenceLocation` is `OnServer` or `EdgeOffServer` — because those cannot reach the source at inference time, which makes the choice determined rather than a preference.
+
+```mermaid
+flowchart TD
+    A["ModelImportJobType<br/>Source, ModelReference, Mode"] --> B{Mode}
+    B -->|Federate| F["materialize ModelType<br/>artefact stays at the source"]
+    B -->|Auto| G{"target InferenceLocation<br/>OnServer or EdgeOffServer?"}
+    G -->|no| F
+    G -->|yes| S
+    B -->|Stage| S["fetch artefact<br/>BytesTransferred climbs"]
+    S --> V{"computed Digest ==<br/>catalogue Digest?"}
+    V -->|yes| OK["DigestVerified true<br/>artefact deployable"]
+    V -->|no| NO["DigestVerified false<br/>Halted, LastError set<br/>SHALL NOT deploy"]
+    F --> R["ImportedModel<br/>ImportedFrom the catalogue resource"]
+    OK --> R
+```
 
 ### 9.4 Staging is where the digest matters
 
@@ -590,9 +721,19 @@ Every link is required for the chain to hold, which is why `UsesModel` is exactl
 
 `DigestAlgorithm` **shall** name a hash function with **at least 256-bit output and no known collision weakness**; `SHA-256` is the default and is always acceptable. It **shall not** be `MD5`, `SHA-1` or a truncated variant — chosen-prefix collisions against those are practical, so a substituted artefact would pass verification, and a verification that can be passed by the wrong artefact is worse than none because it is believed.
 
-#### 11.1.1 The chain has more links than it used to
+```mermaid
+flowchart LR
+    R["a published result"] --> D["DeploymentType"]
+    D -->|"ModelUsed<br/><b>not</b> UsesModel"| M["ModelType"]
+    M -->|Digest + DigestAlgorithm| A["the artefact bytes"]
+    M -->|ImportedFrom| CR["catalogue resource<br/>where it came from"]
+    M -->|DerivedFrom| B["the model it came from"]
+    M -->|TrainedOn| DS["DatasetType"]
+```
 
-The walk is now: result → deployment → `ModelUsed` → `ModelType` → `Digest`, and — where the model was imported — `ImportedFrom` → the catalogue resource it came from.
+#### 11.1.1 Where the chain breaks
+
+The walk is: result → deployment → `ModelUsed` → `ModelType` → `Digest`, and — where the model was imported — `ImportedFrom` → the catalogue resource it came from.
 
 Two of those links can be broken by a Server that is otherwise behaving correctly:
 
@@ -782,3 +923,100 @@ Had the appliance been saturated rather than unreachable, `Reachability` would h
 The distinction is the point of separating the two values. Failing over a throttled endpoint moves load onto the weaker model for no reason; the endpoint will serve again shortly. Failing over an unreachable one is exactly right. From the outside the two look identical, which is why the Server states which it is rather than leaving a client to infer it from a timeout.
 
 ---
+
+---
+
+## Annex D — Deploying a classical model (informative)
+
+This annex is **informative**. Clause 7 is written around an envelope, and some of its vocabulary — capability names like `chat`, accounting in units that are often tokens — comes from the kind of model that made those terms familiar. Most industrial deployments run something else entirely: a fixed-shape tensor model, exported once, executed in-process, answering in microseconds.
+
+This annex works that case end to end to show that the same envelope carries it with nothing bent. Every member named here is defined in Annex A.
+
+### D.1 The model
+
+A gearbox condition classifier. Exported to **ONNX**, 4.8 MB, takes a window of vibration samples and returns a class distribution over four fault states. It runs on the line controller because a 20 ms budget does not survive a network hop, and because the plant does not permit raw vibration to leave the site.
+
+Nothing about that description needs a member this specification does not already have.
+
+### D.2 In the catalogue
+
+| Member | Value |
+|---|---|
+| `ModelResourceType` id | `gearbox-fault` under publisher `plant-reliability` |
+| `TaskKind` | `classification` |
+| `Framework` | `onnxruntime` |
+| `Digest` / `DigestAlgorithm` | SHA-256 of the `.onnx` file |
+| `SizeBytes` | `5033164` |
+| `Gated` | `false` |
+
+`TaskKind` is a String, and `classification` is not drawn from any list this specification publishes. That is the point of it being a String: a catalogue that also holds `regression`, `anomaly-detection` and `remaining-useful-life` needs no amendment here to say so.
+
+`SizeBytes` earns its place in this example. 4.8 MB is nothing; the same catalogue holds a vision model of 340 MB, and a controller with 64 MB of free storage needs to refuse **before** transferring rather than after.
+
+### D.3 Getting it onto the controller
+
+A `ModelImportJobType` with `Mode` = `Stage`, because `InferenceLocation` will be `OnServer` and an on-server deployment cannot reach the catalogue at inference time.
+
+The job fetches, computes SHA-256 over what arrived, compares it with the `Digest` the catalogue declared, and sets `DigestVerified`. This is the whole of the integrity story for a model that will now decide whether a gearbox is failing, and §9.4 is why it is a **shall** here and nowhere else.
+
+The resulting `ModelType` carries `ImportedFrom` back to the catalogue resource, so a year later *where did this come from* has an answer that does not depend on anyone having written it down.
+
+### D.4 The shape contract
+
+`Inputs` and `Outputs` carry `TensorSignatureDataType`, and for a classical model they are the **entire** interface description:
+
+| | `Name` | `ElementType` | `Shape` | `Layout` |
+|---|---|---|---|---|
+| Input | `window` | `float32` | `-1, 2048, 3` | `NWC` |
+| Output | `probabilities` | `float32` | `-1, 4` | |
+
+The leading `-1` is the batch axis, dynamic as ONNX exports usually leave it. `2048` is the window length and `3` the axis count, and both are fixed by the export — send 1024 samples and the runtime rejects the call.
+
+This is why §5.2 insists the signatures are the only machine-readable description of what a deployment accepts. A client that reads them establishes at configuration time that its window length matches; a client that does not discovers it as a rejected call at 3 a.m. And `LabelClasses` — `["healthy", "bearing-wear", "tooth-crack", "misalignment"]` — is what makes `probabilities[2]` mean something, which is exactly why §5.2 forbids reordering it in place.
+
+### D.5 The deployment
+
+| Member | Value |
+|---|---|
+| `InferenceLocation` | `OnServer` |
+| `Source` | null — nothing to reach |
+| `ApiDialect` | not applicable; where a source is named for a local runtime it is `EmbeddedRuntime` |
+| `AcceleratorKind` | `Cpu` |
+| `VersionBinding` | `Pinned` |
+| `FallbackPolicy` | `Fail` |
+| `DataJurisdiction` | `plant-north` |
+| `EgressPermitted` | `false` |
+| `RetainsInput` | `false` |
+| `LatencyBudget` | 20 ms |
+
+`FallbackPolicy` is `Fail` deliberately. There is no second model, and a condition classifier that quietly returns a stale verdict is worse than one that says it could not answer — the whole value of the reading is that it is current.
+
+`EgressPermitted` is `false` and means it: the bytes never leave the controller, let alone the site.
+
+### D.6 Calling it
+
+`Invoke` takes the tensor as `Payload` with a `ContentType` that says how it is encoded — for example `application/octet-stream` for a raw little-endian `float32` buffer in the declared layout, or a media type the deployment publishes for a framed encoding.
+
+**This specification does not standardise a tensor wire format, and that is deliberate.** The candidates — raw buffers, protobuf tensors, Arrow, npy — are each right in some deployment and wrong in others, and a Server that already speaks one to its runtime should not have to transcode into a format chosen here. `ContentType` names which one is in use, which is what a client actually needs, and the shape contract of §D.4 tells it what must be inside whichever it is.
+
+The response comes back through the same envelope:
+
+| Output | Value here |
+|---|---|
+| `ResponsePayload` | four `float32` probabilities |
+| `ModelUsed` | the staged `ModelType` |
+| `Usage` | `UnitKind` = `samples`, `InputUnits` = `2048`, `OutputUnits` = `4`, `TotalUnits` = `2048` |
+| `FinishReason` | `Stop` |
+| `SafetyAssessment` | empty — no policy applies |
+
+`Usage` is the member that would have been mis-modelled had the accounting been named in tokens. This model consumes samples. A field called `InputTokens` here would be either empty or a lie, and §7.2.3 is why it is not called that.
+
+`FinishReason` is `Stop` on every successful call, and a reader may reasonably ask what it is for on a model that cannot truncate. It is for the client, which does not know which kind of model is behind the deployment and should not have to — that is the same-envelope property doing its job.
+
+### D.7 Capabilities, and an absence that means nothing
+
+`Capabilities` on this deployment names `tensor-inference` supported and nothing else. It does not name `chat`, `streaming` or `tool-call`.
+
+That is not a deficiency and does not make the deployment a partial implementation of anything. `Capabilities` is an **open list** (§7.4) precisely so that a deployment describes what it does rather than scoring itself against a menu — and a client that needs a chat capability finds it absent and looks elsewhere, which is the correct outcome and required no negotiation.
+
+The Server claims **AI-Base**, **AI-Invoke**, **AI-Signatures**, **AI-Residency**, **AI-Catalogue** and **AI-Import**. It claims neither **AI-Federation** — there is nothing remote — nor **AI-Learning**, because this model is retrained offline by the reliability team and promoted by a fresh import. Both absences are ordinary.
