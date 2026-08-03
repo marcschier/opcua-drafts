@@ -6,7 +6,8 @@
     "schema-registry",
     "generators",
     "data-channels",
-    "arrow-encoding"
+    "arrow-encoding",
+    "async-services"
   ],
   "ready": [],
   "notAFit": [

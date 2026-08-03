@@ -1,0 +1,552 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- OPC UA Asynchronous Service Execution - an ERRATA OVERLAY on the base OPC UA
+     namespace (http://opcfoundation.org/UA/). Every node below is a proposed ADDITION
+     to the base namespace, so it carries an unqualified BrowseName and an i=<n> NodeId
+     and the NodeSet declares no additional NamespaceUri. Merge this overlay into the
+     base UA NodeSet; it is not a stand-alone model. PROVISIONAL NodeIds from the
+     70000+ block - final identifiers are assigned by the OPC Foundation. -->
+<UANodeSet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd" xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd">
+  <NamespaceUris />
+  <Models>
+    <!-- An overlay on the base namespace has no RequiredModel: naming its own
+         ModelUri would be a cycle in the model dependency graph, and a loader that
+         topologically sorts by RequiredModel before import would not resolve it. -->
+    <Model ModelUri="http://opcfoundation.org/UA/" Version="1.05.05-draft" PublicationDate="2026-08-03T00:00:00Z" />
+  </Models>
+  <Aliases>
+    <Alias Alias="Boolean">i=1</Alias>
+    <Alias Alias="UInt32">i=7</Alias>
+    <Alias Alias="String">i=12</Alias>
+    <Alias Alias="NodeId">i=17</Alias>
+    <Alias Alias="StatusCode">i=19</Alias>
+    <Alias Alias="LocalizedText">i=21</Alias>
+    <Alias Alias="Structure">i=22</Alias>
+    <Alias Alias="DiagnosticInfo">i=25</Alias>
+    <Alias Alias="Enumeration">i=29</Alias>
+    <Alias Alias="IntegerId">i=288</Alias>
+    <Alias Alias="Counter">i=289</Alias>
+    <Alias Alias="Duration">i=290</Alias>
+    <Alias Alias="UtcTime">i=294</Alias>
+    <Alias Alias="RequestHeader">i=389</Alias>
+    <Alias Alias="ResponseHeader">i=392</Alias>
+    <Alias Alias="Organizes">i=35</Alias>
+    <Alias Alias="HasModellingRule">i=37</Alias>
+    <Alias Alias="HasEncoding">i=38</Alias>
+    <Alias Alias="HasTypeDefinition">i=40</Alias>
+    <Alias Alias="HasSubtype">i=45</Alias>
+    <Alias Alias="HasProperty">i=46</Alias>
+    <Alias Alias="HasComponent">i=47</Alias>
+  </Aliases>
+  <UAObjectType NodeId="i=70000" BrowseName="AsyncServiceCapabilitiesType">
+    <DisplayName>AsyncServiceCapabilitiesType</DisplayName>
+    <Description>Server-wide deferral limits and capabilities, exposed as the AsyncServiceCapabilities component of ServerCapabilities. Its absence is how a Server says it never defers a request, so a Client learns that from one Browse rather than from a Bad_RequestNotComplete it did not expect.</Description>
+    <Category>ASE-Model</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
+      <Reference ReferenceType="HasProperty">i=71000</Reference>
+      <Reference ReferenceType="HasProperty">i=71001</Reference>
+      <Reference ReferenceType="HasProperty">i=71002</Reference>
+      <Reference ReferenceType="HasProperty">i=71003</Reference>
+      <Reference ReferenceType="HasProperty">i=71004</Reference>
+      <Reference ReferenceType="HasProperty">i=71005</Reference>
+      <Reference ReferenceType="HasProperty">i=71006</Reference>
+      <Reference ReferenceType="HasProperty">i=71007</Reference>
+    </References>
+  </UAObjectType>
+  <UAVariable NodeId="i=71000" BrowseName="MaxDeferredRequests" ParentNodeId="i=70000" DataType="UInt32" ValueRank="-1">
+    <DisplayName>MaxDeferredRequests</DisplayName>
+    <Description>The greatest number of parked responses the Server holds at one time, across every Session. A request that would take the Server past this number is answered synchronously or refused with Bad_TooManyDeferredRequests; it is never silently dropped.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">i=70000</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="i=71001" BrowseName="MaxDeferredRequestsPerSession" ParentNodeId="i=70000" DataType="UInt32" ValueRank="-1">
+    <DisplayName>MaxDeferredRequestsPerSession</DisplayName>
+    <Description>The greatest number of parked responses the Server holds for one Session. It bounds what a single Client can reserve, so one Client polling slowly cannot exhaust MaxDeferredRequests for every other Client.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">i=70000</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="i=71002" BrowseName="MaxDeferralTime" ParentNodeId="i=70000" DataType="Duration" ValueRank="-1">
+    <DisplayName>MaxDeferralTime</DisplayName>
+    <Description>The longest a Server holds a parked response before discarding it. It starts when the request is parked, not when the response becomes ready, so a Client can compute the deadline from the moment it receives Bad_RequestNotComplete.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">i=70000</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="i=71003" BrowseName="DefaultRetryAfter" ParentNodeId="i=70000" DataType="Duration" ValueRank="-1">
+    <DisplayName>DefaultRetryAfter</DisplayName>
+    <Description>The interval a Client waits before its first Continue when it cannot read the DeferralResponseHeaderDataType carried in ResponseHeader.additionalHeader. Every Client can read this Property, so the retry contract does not depend on a header that a stack may discard with the fault that carries it.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">i=70000</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="i=71004" BrowseName="MinRetryAfter" ParentNodeId="i=70000" DataType="Duration" ValueRank="-1">
+    <DisplayName>MinRetryAfter</DisplayName>
+    <Description>The shortest interval the Server accepts between two Continue calls for the same parked request. A Client that calls more often is refused with Bad_ServerTooBusy. Without a published floor, a Client that ignores RetryAfter turns a deferral into a poll loop against the very Server that deferred because it was busy.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">i=70000</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="i=71005" BrowseName="DeferrableServices" ParentNodeId="i=70000" DataType="NodeId" ValueRank="1" ArrayDimensions="0">
+    <DisplayName>DeferrableServices</DisplayName>
+    <Description>The DataType NodeIds of the request messages this Server may defer, listed exhaustively. A Service absent from the list is never deferred, so a Client knows before it calls whether an answer can arrive late.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">i=70000</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="i=71006" BrowseName="DurableDeferralSupported" ParentNodeId="i=70000" DataType="Boolean" ValueRank="-1">
+    <DisplayName>DurableDeferralSupported</DisplayName>
+    <Description>TRUE when the Server can hold a parked response beyond the Session that issued the request, for reclaim by a later Session of the same user identity.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">i=70000</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="i=71007" BrowseName="MaxDurableDeferralTime" ParentNodeId="i=70000" DataType="Duration" ValueRank="-1">
+    <DisplayName>MaxDurableDeferralTime</DisplayName>
+    <Description>The longest a Server holds a durable parked response, measured from the moment the issuing Session closed. It is 0 exactly when DurableDeferralSupported is FALSE, so the pair is readable and testable together rather than one being present and the other absent.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">i=70000</Reference>
+    </References>
+  </UAVariable>
+  <UAObjectType NodeId="i=70001" BrowseName="AsyncServiceDiagnosticsType">
+    <DisplayName>AsyncServiceDiagnosticsType</DisplayName>
+    <Description>Counters and per-request records for deferred requests, exposed as the AsyncServiceDiagnostics component of ServerDiagnostics. It is what an operator reads to tell a Server that is slow from a Server whose Clients never collect what they asked for.</Description>
+    <Category>ASE-Diagnostics</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
+      <Reference ReferenceType="HasComponent">i=71008</Reference>
+      <Reference ReferenceType="HasComponent">i=71009</Reference>
+      <Reference ReferenceType="HasComponent">i=71010</Reference>
+      <Reference ReferenceType="HasComponent">i=71011</Reference>
+      <Reference ReferenceType="HasComponent">i=71012</Reference>
+      <Reference ReferenceType="HasComponent">i=71013</Reference>
+      <Reference ReferenceType="HasComponent">i=71014</Reference>
+      <Reference ReferenceType="HasComponent">i=71015</Reference>
+    </References>
+  </UAObjectType>
+  <UAVariable NodeId="i=71008" BrowseName="DeferredRequestCount" ParentNodeId="i=70001" DataType="UInt32" ValueRank="-1">
+    <DisplayName>DeferredRequestCount</DisplayName>
+    <Description>The number of parked responses the Server currently holds, in any state.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">i=70001</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="i=71009" BrowseName="TotalDeferredCount" ParentNodeId="i=70001" DataType="Counter" ValueRank="-1">
+    <DisplayName>TotalDeferredCount</DisplayName>
+    <Description>The number of requests the Server has parked since it started.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">i=70001</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="i=71010" BrowseName="CompletedCount" ParentNodeId="i=70001" DataType="Counter" ValueRank="-1">
+    <DisplayName>CompletedCount</DisplayName>
+    <Description>The number of parked responses collected by a Continue since the Server started.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">i=70001</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="i=71011" BrowseName="ExpiredCount" ParentNodeId="i=70001" DataType="Counter" ValueRank="-1">
+    <DisplayName>ExpiredCount</DisplayName>
+    <Description>The number of parked responses discarded because MaxDeferralTime elapsed before they were collected. A rising count is the signature of Clients that defer and never return.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">i=70001</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="i=71012" BrowseName="CancelledCount" ParentNodeId="i=70001" DataType="Counter" ValueRank="-1">
+    <DisplayName>CancelledCount</DisplayName>
+    <Description>The number of parked responses abandoned with Cancel since the Server started.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">i=70001</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="i=71013" BrowseName="ReclaimedCount" ParentNodeId="i=70001" DataType="Counter" ValueRank="-1">
+    <DisplayName>ReclaimedCount</DisplayName>
+    <Description>The number of parked responses collected by a Session other than the one that issued the request. It is 0 on a Server whose DurableDeferralSupported is FALSE.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">i=70001</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="i=71014" BrowseName="RejectedCount" ParentNodeId="i=70001" DataType="Counter" ValueRank="-1">
+    <DisplayName>RejectedCount</DisplayName>
+    <Description>The number of requests refused with Bad_TooManyDeferredRequests because a parking limit would have been exceeded.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">i=70001</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="i=71015" BrowseName="DeferredRequests" ParentNodeId="i=70001" DataType="i=70034" ValueRank="1" ArrayDimensions="0">
+    <DisplayName>DeferredRequests</DisplayName>
+    <Description>One record per parked response the reading Session is entitled to see. Empty when it holds none.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">i=70001</Reference>
+    </References>
+  </UAVariable>
+  <UAObjectType NodeId="i=70010" BrowseName="DeferredRequestCompletedEventType">
+    <DisplayName>DeferredRequestCompletedEventType</DisplayName>
+    <Description>Raised when a parked response becomes ready to collect. A Client that subscribes to it calls Continue once, when there is something to collect, instead of polling until there is; a Client that cannot subscribe is unaffected, because RetryAfter remains the contract.</Description>
+    <Category>ASE-CompletionEvents</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=2041</Reference>
+      <Reference ReferenceType="HasProperty">i=71016</Reference>
+      <Reference ReferenceType="HasProperty">i=71017</Reference>
+      <Reference ReferenceType="HasProperty">i=71018</Reference>
+      <Reference ReferenceType="HasProperty">i=71019</Reference>
+      <Reference ReferenceType="HasProperty">i=71020</Reference>
+    </References>
+  </UAObjectType>
+  <UAVariable NodeId="i=71016" BrowseName="RequestHandle" ParentNodeId="i=70010" DataType="IntegerId" ValueRank="-1">
+    <DisplayName>RequestHandle</DisplayName>
+    <Description>The requestHandle of the parked request, as the Client sent it in the RequestHeader. It is the only identifier the mechanism uses, so a Client keys the Event to its own outstanding work without holding a Server-assigned ticket.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">i=70010</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="i=71017" BrowseName="ServiceId" ParentNodeId="i=70010" DataType="NodeId" ValueRank="-1">
+    <DisplayName>ServiceId</DisplayName>
+    <Description>The DataType NodeId of the parked request message, so a Client that deferred several different Services can tell which one completed.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">i=70010</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="i=71018" BrowseName="ServiceResult" ParentNodeId="i=70010" DataType="StatusCode" ValueRank="-1">
+    <DisplayName>ServiceResult</DisplayName>
+    <Description>The serviceResult the parked response carries. It lets a Client that only needs to know whether the work succeeded skip the Continue entirely.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">i=70010</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="i=71019" BrowseName="CompletionTime" ParentNodeId="i=70010" DataType="UtcTime" ValueRank="-1">
+    <DisplayName>CompletionTime</DisplayName>
+    <Description>When the response became ready.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">i=70010</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="i=71020" BrowseName="ExpiryTime" ParentNodeId="i=70010" DataType="UtcTime" ValueRank="-1">
+    <DisplayName>ExpiryTime</DisplayName>
+    <Description>When the Server discards the parked response. A Client has until this time to call Continue.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">i=70010</Reference>
+    </References>
+  </UAVariable>
+  <UAObjectType NodeId="i=70011" BrowseName="AuditDeferredRequestEventType">
+    <DisplayName>AuditDeferredRequestEventType</DisplayName>
+    <Description>Audit event for every transition of a parked request. A deferred request separates the moment an effect is authorized from the moment its outcome is known, and the Client that authorized it may never collect the answer, so the audit trail is the only record that spans both. It follows AuditCancelEventType, which is likewise an AuditSessionEventType carrying a requestHandle.</Description>
+    <Category>ASE-Auditing</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=2069</Reference>
+      <Reference ReferenceType="HasProperty">i=71021</Reference>
+      <Reference ReferenceType="HasProperty">i=71022</Reference>
+      <Reference ReferenceType="HasProperty">i=71023</Reference>
+      <Reference ReferenceType="HasProperty">i=71024</Reference>
+      <Reference ReferenceType="HasProperty">i=71025</Reference>
+    </References>
+  </UAObjectType>
+  <UAVariable NodeId="i=71021" BrowseName="RequestHandle" ParentNodeId="i=70011" DataType="IntegerId" ValueRank="-1">
+    <DisplayName>RequestHandle</DisplayName>
+    <Description>The requestHandle of the request this transition belongs to.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">i=70011</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="i=71022" BrowseName="ServiceId" ParentNodeId="i=70011" DataType="NodeId" ValueRank="-1">
+    <DisplayName>ServiceId</DisplayName>
+    <Description>The DataType NodeId of the deferred request message.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">i=70011</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="i=71023" BrowseName="Transition" ParentNodeId="i=70011" DataType="i=70031" ValueRank="-1">
+    <DisplayName>Transition</DisplayName>
+    <Description>The transition being reported.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">i=70011</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="i=71024" BrowseName="Outcome" ParentNodeId="i=70011" DataType="StatusCode" ValueRank="-1">
+    <DisplayName>Outcome</DisplayName>
+    <Description>The serviceResult of the parked response for a Delivered or Reclaimed transition, and for an Expired transition whose work had finished. It is Good_CompletesAsynchronously wherever the outcome is not yet known: a Deferred transition, and an Expired transition for a request whose work had not finished. It is the service result, not the audit result: the inherited Status Property says whether the audited action succeeded, which is a different question from what the deferred Service returned.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">i=70011</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="i=71025" BrowseName="Durable" ParentNodeId="i=70011" DataType="Boolean" ValueRank="-1">
+    <DisplayName>Durable</DisplayName>
+    <Description>TRUE when the parked response survives the Session that issued the request.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">i=70011</Reference>
+    </References>
+  </UAVariable>
+  <UADataType NodeId="i=70030" BrowseName="DeferredRequestState">
+    <DisplayName>DeferredRequestState</DisplayName>
+    <Description>The state of a parked request. Delivered, Expired and Cancelled are terminal records rather than live requests: a Server keeps them so that Continue can say why there is nothing new to collect, and so that a response lost on the network can be collected again.</Description>
+    <Category>ASE-Execution</Category>
+    <Category>ASE-Diagnostics</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
+      <Reference ReferenceType="HasProperty">i=70930</Reference>
+    </References>
+    <Definition Name="DeferredRequestState"><Field Name="Executing" Value="0"><Description>The Server is still working on the request. Continue returns Bad_RequestNotComplete.</Description></Field><Field Name="Ready" Value="1"><Description>The response is complete and parked. The next Continue returns it.</Description></Field><Field Name="Expired" Value="2"><Description>The retention deadline passed before the response was collected and the Server discarded it. Continue returns Bad_DeferredRequestExpired.</Description></Field><Field Name="Cancelled" Value="3"><Description>The Client abandoned the response with Cancel. Continue returns Bad_RequestCancelledByRequest.</Description></Field><Field Name="Delivered" Value="4"><Description>The response was collected and is retained for replay until the retention deadline. A Continue returns the same response again, so a Client that lost it to a broken connection is not left with an effect whose outcome it can never learn.</Description></Field></Definition>
+  </UADataType>
+  <UAVariable NodeId="i=70930" BrowseName="EnumStrings" ParentNodeId="i=70030" DataType="LocalizedText" ValueRank="1" ArrayDimensions="5">
+    <DisplayName>EnumStrings</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">i=70030</Reference>
+    </References>
+    <Value><ListOfLocalizedText xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd"><LocalizedText><Text>Executing</Text></LocalizedText><LocalizedText><Text>Ready</Text></LocalizedText><LocalizedText><Text>Expired</Text></LocalizedText><LocalizedText><Text>Cancelled</Text></LocalizedText><LocalizedText><Text>Delivered</Text></LocalizedText></ListOfLocalizedText></Value>
+  </UAVariable>
+  <UADataType NodeId="i=70031" BrowseName="DeferredRequestTransition">
+    <DisplayName>DeferredRequestTransition</DisplayName>
+    <Description>The transitions of a parked request, as reported by AuditDeferredRequestEventType. They are transitions rather than states because Continued is an action that leaves the state unchanged, and an audit trail that recorded only states would not show that a Client asked.</Description>
+    <Category>ASE-Auditing</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
+      <Reference ReferenceType="HasProperty">i=70931</Reference>
+    </References>
+    <Definition Name="DeferredRequestTransition"><Field Name="Deferred" Value="0"><Description>The Server parked the request and answered Bad_RequestNotComplete.</Description></Field><Field Name="Continued" Value="1"><Description>A Client called Continue and the response was not yet ready.</Description></Field><Field Name="Delivered" Value="2"><Description>A Client of the issuing Session collected the parked response, or collected it again by replay.</Description></Field><Field Name="Reclaimed" Value="3"><Description>A Session other than the one that issued the request collected the parked response. It replaces Delivered for that collection rather than accompanying it, so one collection is one transition.</Description></Field><Field Name="Cancelled" Value="4"><Description>A Client abandoned the parked response with Cancel.</Description></Field><Field Name="Expired" Value="5"><Description>The Server discarded the parked response because the retention deadline passed.</Description></Field><Field Name="Completed" Value="6"><Description>The work finished and its outcome became known. It is raised even when no response is held any longer, which is the only way the outcome of a request that outlived its retention deadline reaches the audit trail.</Description></Field><Field Name="Discarded" Value="7"><Description>The Server discarded the parked response before its retention deadline because the issuing Session closed, its user identity changed, or the Server shut down.</Description></Field></Definition>
+  </UADataType>
+  <UAVariable NodeId="i=70931" BrowseName="EnumStrings" ParentNodeId="i=70031" DataType="LocalizedText" ValueRank="1" ArrayDimensions="8">
+    <DisplayName>EnumStrings</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">i=70031</Reference>
+    </References>
+    <Value><ListOfLocalizedText xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd"><LocalizedText><Text>Deferred</Text></LocalizedText><LocalizedText><Text>Continued</Text></LocalizedText><LocalizedText><Text>Delivered</Text></LocalizedText><LocalizedText><Text>Reclaimed</Text></LocalizedText><LocalizedText><Text>Cancelled</Text></LocalizedText><LocalizedText><Text>Expired</Text></LocalizedText><LocalizedText><Text>Completed</Text></LocalizedText><LocalizedText><Text>Discarded</Text></LocalizedText></ListOfLocalizedText></Value>
+  </UAVariable>
+  <UADataType NodeId="i=70032" BrowseName="DeferralRequestHeaderDataType">
+    <DisplayName>DeferralRequestHeaderDataType</DisplayName>
+    <Description>Carried in RequestHeader.additionalHeader. It expresses a preference and never a precondition: the Server decides whether to defer, so a request that carries this structure may still be answered synchronously and a request that omits it may still be deferred.</Description>
+    <Category>ASE-Execution</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=22</Reference>
+      <Reference ReferenceType="HasEncoding">i=71026</Reference>
+      <Reference ReferenceType="HasEncoding">i=71027</Reference>
+      <Reference ReferenceType="HasEncoding">i=71028</Reference>
+    </References>
+    <Definition Name="DeferralRequestHeaderDataType"><Field Name="RequestedDeferralTime" DataType="i=290"><Description>How long the Client would like the response held. The Server revises it down to MaxDeferralTime and never up. 0 means no preference and selects MaxDeferralTime.</Description></Field><Field Name="RequestDurable" DataType="i=1"><Description>TRUE asks the Server to make the parked response reclaimable by a later Session of the same user identity. A Server whose DurableDeferralSupported is FALSE ignores it and reports Durable as FALSE in the response header.</Description></Field></Definition>
+  </UADataType>
+  <UAObject NodeId="i=71026" BrowseName="Default Binary" ParentNodeId="i=70032">
+    <DisplayName>Default Binary</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=76</Reference>
+      <Reference ReferenceType="HasEncoding" IsForward="false">i=70032</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="i=71027" BrowseName="Default XML" ParentNodeId="i=70032">
+    <DisplayName>Default XML</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=76</Reference>
+      <Reference ReferenceType="HasEncoding" IsForward="false">i=70032</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="i=71028" BrowseName="Default JSON" ParentNodeId="i=70032">
+    <DisplayName>Default JSON</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=76</Reference>
+      <Reference ReferenceType="HasEncoding" IsForward="false">i=70032</Reference>
+    </References>
+  </UAObject>
+  <UADataType NodeId="i=70033" BrowseName="DeferralResponseHeaderDataType">
+    <DisplayName>DeferralResponseHeaderDataType</DisplayName>
+    <Description>Carried in ResponseHeader.additionalHeader of every response that reports a request as parked. Because a Bad serviceResult travels as a ServiceFault, this structure is the only place a per-request hint can ride; the Client that cannot read it falls back on DefaultRetryAfter, which every Client can read.</Description>
+    <Category>ASE-Execution</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=22</Reference>
+      <Reference ReferenceType="HasEncoding">i=71029</Reference>
+      <Reference ReferenceType="HasEncoding">i=71030</Reference>
+      <Reference ReferenceType="HasEncoding">i=71031</Reference>
+    </References>
+    <Definition Name="DeferralResponseHeaderDataType"><Field Name="RequestHandle" DataType="i=288"><Description>Echo of the requestHandle that identifies the parked request. It is echoed rather than assumed so that a Client whose stack does not surface the RequestHeader it sent can still key the parked request.</Description></Field><Field Name="RetryAfter" DataType="i=290"><Description>How long to wait before the next Continue. Never below MinRetryAfter.</Description></Field><Field Name="ExpiryTime" DataType="i=294"><Description>When the Server discards the parked response.</Description></Field><Field Name="EstimatedCompletionTime" DataType="i=294"><Description>The Server's estimate of when the response will be ready, or a null DateTime when it cannot estimate. It is a forecast and never a commitment; ExpiryTime is the only deadline that binds.</Description></Field><Field Name="Durable" DataType="i=1"><Description>TRUE when the parked response survives the Session that issued the request.</Description></Field></Definition>
+  </UADataType>
+  <UAObject NodeId="i=71029" BrowseName="Default Binary" ParentNodeId="i=70033">
+    <DisplayName>Default Binary</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=76</Reference>
+      <Reference ReferenceType="HasEncoding" IsForward="false">i=70033</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="i=71030" BrowseName="Default XML" ParentNodeId="i=70033">
+    <DisplayName>Default XML</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=76</Reference>
+      <Reference ReferenceType="HasEncoding" IsForward="false">i=70033</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="i=71031" BrowseName="Default JSON" ParentNodeId="i=70033">
+    <DisplayName>Default JSON</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=76</Reference>
+      <Reference ReferenceType="HasEncoding" IsForward="false">i=70033</Reference>
+    </References>
+  </UAObject>
+  <UADataType NodeId="i=70034" BrowseName="DeferredRequestDiagnosticsDataType">
+    <DisplayName>DeferredRequestDiagnosticsDataType</DisplayName>
+    <Description>One parked request, as reported by AsyncServiceDiagnostics. ContinueCount and StartTime are the two that matter in practice: together they separate a Client that is waiting patiently from one that is polling a Server it was asked not to.</Description>
+    <Category>ASE-Diagnostics</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=22</Reference>
+      <Reference ReferenceType="HasEncoding">i=71032</Reference>
+      <Reference ReferenceType="HasEncoding">i=71033</Reference>
+      <Reference ReferenceType="HasEncoding">i=71034</Reference>
+    </References>
+    <Definition Name="DeferredRequestDiagnosticsDataType"><Field Name="SessionId" DataType="i=17"><Description>The Session that issued the request.</Description></Field><Field Name="RequestHandle" DataType="i=288"><Description>The requestHandle that identifies the parked request within that Session.</Description></Field><Field Name="ServiceId" DataType="i=17"><Description>The DataType NodeId of the parked request message.</Description></Field><Field Name="State" DataType="i=70030"><Description>The state of the parked request.</Description></Field><Field Name="StartTime" DataType="i=294"><Description>When the Server parked the request.</Description></Field><Field Name="ExpiryTime" DataType="i=294"><Description>When the Server discards the parked response.</Description></Field><Field Name="ContinueCount" DataType="i=7"><Description>How many times a Client has called Continue for this request. A call refused with Bad_ServerTooBusy is not counted, because it never examined the request.</Description></Field><Field Name="Durable" DataType="i=1"><Description>TRUE when the parked response survives the Session that issued the request.</Description></Field></Definition>
+  </UADataType>
+  <UAObject NodeId="i=71032" BrowseName="Default Binary" ParentNodeId="i=70034">
+    <DisplayName>Default Binary</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=76</Reference>
+      <Reference ReferenceType="HasEncoding" IsForward="false">i=70034</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="i=71033" BrowseName="Default XML" ParentNodeId="i=70034">
+    <DisplayName>Default XML</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=76</Reference>
+      <Reference ReferenceType="HasEncoding" IsForward="false">i=70034</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="i=71034" BrowseName="Default JSON" ParentNodeId="i=70034">
+    <DisplayName>Default JSON</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=76</Reference>
+      <Reference ReferenceType="HasEncoding" IsForward="false">i=70034</Reference>
+    </References>
+  </UAObject>
+  <UADataType NodeId="i=70035" BrowseName="ContinueRequest">
+    <DisplayName>ContinueRequest</DisplayName>
+    <Description>The Continue Service request. Its DataType NodeId is what AsyncServiceCapabilities.DeferrableServices uses to name a Service, and Continue itself is never deferrable.</Description>
+    <Category>ASE-Execution</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=22</Reference>
+      <Reference ReferenceType="HasEncoding">i=71035</Reference>
+      <Reference ReferenceType="HasEncoding">i=71036</Reference>
+      <Reference ReferenceType="HasEncoding">i=71037</Reference>
+    </References>
+    <Definition Name="ContinueRequest"><Field Name="RequestHeader" DataType="i=389"><Description>Common request parameters.</Description></Field><Field Name="RequestHandle" DataType="i=288"><Description>The requestHandle of the parked request, as it appeared in the RequestHeader of the deferred request.</Description></Field></Definition>
+  </UADataType>
+  <UAObject NodeId="i=71035" BrowseName="Default Binary" ParentNodeId="i=70035">
+    <DisplayName>Default Binary</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=76</Reference>
+      <Reference ReferenceType="HasEncoding" IsForward="false">i=70035</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="i=71036" BrowseName="Default XML" ParentNodeId="i=70035">
+    <DisplayName>Default XML</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=76</Reference>
+      <Reference ReferenceType="HasEncoding" IsForward="false">i=70035</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="i=71037" BrowseName="Default JSON" ParentNodeId="i=70035">
+    <DisplayName>Default JSON</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=76</Reference>
+      <Reference ReferenceType="HasEncoding" IsForward="false">i=70035</Reference>
+    </References>
+  </UAObject>
+  <UADataType NodeId="i=70036" BrowseName="ContinueResponse">
+    <DisplayName>ContinueResponse</DisplayName>
+    <Description>The Continue Service response, returned when the parked response is itself a failure. A successful Continue for a parked request that succeeded is answered with the parked Service's own response message instead; a Continue that fails on its own account travels as a ServiceFault. This message is what keeps those two apart, which a bare ServiceFault could not: a parked ApplyChanges that failed and a Continue that arrived too soon would otherwise be the same message.</Description>
+    <Category>ASE-Execution</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=22</Reference>
+      <Reference ReferenceType="HasEncoding">i=71038</Reference>
+      <Reference ReferenceType="HasEncoding">i=71039</Reference>
+      <Reference ReferenceType="HasEncoding">i=71040</Reference>
+    </References>
+    <Definition Name="ContinueResponse"><Field Name="ResponseHeader" DataType="i=392"><Description>Common response parameters. Its serviceResult is Good: the Continue succeeded, whatever the parked Service returned.</Description></Field><Field Name="DeferredServiceResult" DataType="i=19"><Description>The serviceResult of the parked response. Always a Bad StatusCode; a parked response with a Good serviceResult is returned as the parked Service's own response message.</Description></Field><Field Name="DeferredDiagnosticInfo" DataType="i=25"><Description>The serviceDiagnostics the parked response carried, whose string table is the ResponseHeader's.</Description></Field></Definition>
+  </UADataType>
+  <UAObject NodeId="i=71038" BrowseName="Default Binary" ParentNodeId="i=70036">
+    <DisplayName>Default Binary</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=76</Reference>
+      <Reference ReferenceType="HasEncoding" IsForward="false">i=70036</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="i=71039" BrowseName="Default XML" ParentNodeId="i=70036">
+    <DisplayName>Default XML</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=76</Reference>
+      <Reference ReferenceType="HasEncoding" IsForward="false">i=70036</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="i=71040" BrowseName="Default JSON" ParentNodeId="i=70036">
+    <DisplayName>Default JSON</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=76</Reference>
+      <Reference ReferenceType="HasEncoding" IsForward="false">i=70036</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="i=70100" BrowseName="AsyncServiceCapabilities" ParentNodeId="i=2268">
+    <DisplayName>AsyncServiceCapabilities</DisplayName>
+    <Description>Server-wide deferral capabilities. Its absence is how a Server says it never defers a request.</Description>
+    <Category>ASE-Model</Category>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=70000</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">i=2268</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="i=70101" BrowseName="AsyncServiceDiagnostics" ParentNodeId="i=2274">
+    <DisplayName>AsyncServiceDiagnostics</DisplayName>
+    <Description>Deferred request counters and the per-request records the reading Session is entitled to see.</Description>
+    <Category>ASE-Diagnostics</Category>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=70001</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">i=2274</Reference>
+    </References>
+  </UAObject>
+</UANodeSet>
