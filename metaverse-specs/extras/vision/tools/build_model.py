@@ -41,7 +41,7 @@ import xml.sax.saxutils as sx
 
 NAMESPACE = "http://opcfoundation.org/UA/Vision/"
 VERSION = "0.1.0"
-PUBDATE = "2026-07-26T00:00:00Z"
+PUBDATE = "2026-08-02T00:00:00Z"
 BASE_UA_VERSION = "1.05.04"
 BASE_UA_PUBDATE = "2023-12-15T00:00:00Z"
 
@@ -142,6 +142,19 @@ def _mid():
     v = _next_member[0]
     _next_member[0] += 1
     return v
+
+
+def _reserve_through(last):
+    """Burn member ids up to and including `last`, so no surviving member moves.
+
+    The AI cluster was factored out into OPC UA - AI Deployment and Learning. Its
+    member ids are NOT reclaimed: reusing them would renumber every member declared
+    after them, which is exactly the churn the append-only rule exists to prevent.
+    A hole in the id space costs nothing and keeps the CSV diff at zero moved.
+    """
+    assert _next_member[0] <= last + 1, (
+        f"reservation {last} already passed at {_next_member[0]}")
+    _next_member[0] = last + 1
 
 
 def T(nid):
@@ -424,20 +437,6 @@ enum_type(3006, "VisionEndpointAuthenticationEnum",
                         "GetStreamEndpoint or GetClip."),
            ("MutualTls", 4, "Client certificate.")])
 
-enum_type(3007, "VisionInferenceLocationEnum",
-          "Where inference executes. The result contract is identical in every case; this "
-          "property exists so a client can reason about latency, availability and trust "
-          "boundary without changing how it reads results.",
-          [("OnServer", 0, "In the OPC UA Server process or on its host."),
-           ("EdgeOffServer", 1, "On a separate edge node reached over the network."),
-           ("Cloud", 2, "In a remote or cloud service."),
-           ("InSimulator", 3, "Inside the simulator that also renders the sensor.")])
-
-enum_type(3008, "VisionAcceleratorKindEnum",
-          "Compute device executing the model.",
-          [("Cpu", 0, None), ("Gpu", 1, None), ("Npu", 2, None), ("Fpga", 3, None),
-           ("Tpu", 4, None), ("Other", 5, None)])
-
 enum_type(3009, "VisionResultEvaluationEnum",
           "Overall verdict of a result. Value semantics are aligned with the "
           "ResultEvaluationEnum of OPC 40001-101 so that a client already consuming "
@@ -498,27 +497,12 @@ enum_type(3015, "VisionSensorModalityEnum",
            ("Thermal", 3, None), ("Multispectral", 4, None),
            ("Event", 5, "Event / neuromorphic camera."), ("Other", 6, None)])
 
-enum_type(3016, "VisionLearningJobStateEnum",
-          "State of a dataset-capture, retraining and promotion cycle.",
-          [("Idle", 0, None), ("Collecting", 1, None), ("Labelling", 2, None),
-           ("Training", 3, None), ("Validating", 4, None),
-           ("Ready", 5, "A candidate model is available for promotion."),
-           ("Promoted", 6, None), ("Failed", 7, None)])
-
-enum_type(3017, "VisionDatasetSourceEnum",
-          "Provenance of the samples in a dataset.",
-          [("Real", 0, "Captured from physical sensors."),
-           ("Synthetic", 1, "Rendered by a simulator."),
-           ("Mixed", 2, "Both, e.g. synthetic pre-training with real fine-tuning.")])
-
 VisionRealityKindEnum = T(3001)
 VisionStreamProtocolEnum = T(3002)
 VisionClipFormatEnum = T(3003)
 VisionVideoCodecEnum = T(3004)
 VisionEndpointStateEnum = T(3005)
 VisionEndpointAuthenticationEnum = T(3006)
-VisionInferenceLocationEnum = T(3007)
-VisionAcceleratorKindEnum = T(3008)
 VisionResultEvaluationEnum = T(3009)
 VisionToleranceStatusEnum = T(3010)
 VisionFeedbackPurposeEnum = T(3011)
@@ -526,8 +510,6 @@ VisionCalibrationMountEnum = T(3012)
 VisionFrameRoleEnum = T(3013)
 VisionDistortionModelEnum = T(3014)
 VisionSensorModalityEnum = T(3015)
-VisionLearningJobStateEnum = T(3016)
-VisionDatasetSourceEnum = T(3017)
 
 # ---------------------------------------------------------------------------
 # Structured DataTypes (3050+)
@@ -638,14 +620,6 @@ struct_type(3057, "VisionStreamSessionDataType",
              ("ExpiresAt", UtcTime, "Expiry after which the Uri is no longer valid.")])
 VisionStreamSessionDataType = T(3057)
 
-struct_type(3058, "VisionTensorSignatureDataType",
-            "Shape and element type of one model input or output tensor.",
-            [("Name", String, "Tensor name as declared by the model."),
-             ("ElementType", String, "Element type, for example float32, uint8 or int64."),
-             ("Shape", Int32, "Dimensions; -1 marks a dynamic axis.", 1),
-             ("Layout", String, "Optional axis layout hint, for example NCHW or NHWC.")])
-VisionTensorSignatureDataType = T(3058)
-
 # ---------------------------------------------------------------------------
 # ReferenceTypes (4001+)
 # ---------------------------------------------------------------------------
@@ -659,11 +633,6 @@ reference_type(4003, "HasScenePrim", "IsScenePrimOf",
                "Server also implements OPC UA - OpenUSD Scene Materialization. The target "
                "is expected to be a UsdGeomCameraType instance. Optional: PrimPath remains "
                "the portable descriptor.")
-reference_type(4004, "UsesModel", "IsUsedByDeployment",
-               "Links an AiDeploymentType instance to the AiModelType instance it "
-               "executes. Clause 5.11 requires exactly one such reference per deployment; "
-               "it is the only defined path from a result to the model artefact and its "
-               "Digest, on which clause 12.6 depends.")
 reference_type(4005, "ProducedBy", "Produces",
                "Links a result to the inference pipeline that produced it.")
 
@@ -1038,92 +1007,6 @@ prop_var(SIM, "IVisionSimulatedType", "RandomizationSeed", UInt64,
          "Seed of the active domain-randomization run, so a dataset can be reproduced.")
 
 # ---- AI: model, dataset, deployment ----------------------------------------
-object_type(1015, "AiModelType", BaseObjectType,
-            "Nameplate of a trained model. The member set is deliberately aligned with "
-            "the IDTA 02060 AI Model Nameplate submodel template, which is currently the "
-            "only standardised description of an industrial AI model, so an Asset "
-            "Administration Shell can be populated from this node without loss.")
-AM = 1015
-prop_var(AM, "AiModelType", "ModelId", String, "Identifier of the model.", MR_Mandatory)
-prop_var(AM, "AiModelType", "Name", LocalizedText, "Human-readable model name.",
-         MR_Mandatory)
-prop_var(AM, "AiModelType", "Version", String, "Model version.", MR_Mandatory)
-prop_var(AM, "AiModelType", "Framework", String,
-         "Producing framework, for example PyTorch, TensorFlow or scikit-learn.")
-prop_var(AM, "AiModelType", "Format", String,
-         "Serialization format, for example ONNX, TensorRT or OpenVINO IR.")
-prop_var(AM, "AiModelType", "TaskKind", String,
-         "What the model does, for example Detection2D, Detection3D, Classification, "
-         "Segmentation, PoseEstimation or AnomalyDetection.")
-prop_var(AM, "AiModelType", "Digest", ByteString,
-         "Cryptographic digest of the model artefact, for provenance and integrity. "
-         "Mandatory: clause 12.6 requires it for every model whose artefact is "
-         "obtainable through ArtifactUri, and it is the terminus of the provenance "
-         "chain that UsesModel keeps intact.",
-         MR_Mandatory)
-prop_var(AM, "AiModelType", "DigestAlgorithm", String,
-         "Hash function used for Digest. SHALL name a function with at least 256-bit "
-         "output and no known collision weakness; SHA-256 is the default and is always "
-         "acceptable. SHALL NOT be MD5, SHA-1 or a truncated variant - chosen-prefix "
-         "collisions against those are practical, so a substituted artefact would pass "
-         "verification. SHALL be non-empty where Digest is non-empty. See clause 12.6.",
-         MR_Mandatory)
-prop_var(AM, "AiModelType", "ArtifactUri", String,
-         "Where the model artefact can be obtained. Treated as untrusted input.")
-prop_var(AM, "AiModelType", "ProvenanceUri", String,
-         "Training provenance or model card location.")
-prop_var(AM, "AiModelType", "LabelClasses", String,
-         "Ordered class label set; the index corresponds to "
-         "VisionDetectionDataType.ClassId.", MR_Optional, valuerank="1")
-data_var(AM, "AiModelType", "Inputs", VisionTensorSignatureDataType,
-         "Input tensor signatures.", MR_Optional, valuerank="1")
-data_var(AM, "AiModelType", "Outputs", VisionTensorSignatureDataType,
-         "Output tensor signatures.", MR_Optional, valuerank="1")
-
-object_type(1016, "AiDatasetType", BaseObjectType,
-            "A dataset used to train or validate a model. Aligned with the IDTA 02058 AI "
-            "Dataset submodel template. SourceKind distinguishes real capture from "
-            "simulator output, which is the provenance a reviewer needs when synthetic "
-            "data is involved.")
-AD = 1016
-prop_var(AD, "AiDatasetType", "DatasetId", String, "Identifier of the dataset.",
-         MR_Mandatory)
-prop_var(AD, "AiDatasetType", "Name", LocalizedText, "Human-readable dataset name.")
-prop_var(AD, "AiDatasetType", "Version", String, "Dataset version.")
-prop_var(AD, "AiDatasetType", "SourceKind", VisionDatasetSourceEnum,
-         "Whether samples are real, synthetic or mixed.", MR_Mandatory)
-prop_var(AD, "AiDatasetType", "SampleCount", UInt64, "Number of samples.")
-prop_var(AD, "AiDatasetType", "LabelClasses", String, "Class labels present.",
-         MR_Optional, valuerank="1")
-prop_var(AD, "AiDatasetType", "CreatedAt", UtcTime, "Creation time.")
-prop_var(AD, "AiDatasetType", "ArtifactUri", String,
-         "Where the dataset can be obtained.")
-prop_var(AD, "AiDatasetType", "Digest", ByteString, "Digest of the dataset artefact.")
-
-object_type(1017, "AiDeploymentType", BaseObjectType,
-            "A model made executable somewhere. Aligned with the IDTA 02059 AI Deployment "
-            "submodel template. InferenceLocation is the on-server versus off-server "
-            "switch: it changes where the computation happens and therefore the trust "
-            "boundary, but it does NOT change the result contract.")
-AY = 1017
-prop_var(AY, "AiDeploymentType", "DeploymentId", String,
-         "Identifier of the deployment.", MR_Mandatory)
-prop_var(AY, "AiDeploymentType", "InferenceLocation", VisionInferenceLocationEnum,
-         "Where inference executes.", MR_Mandatory)
-prop_var(AY, "AiDeploymentType", "AcceleratorKind", VisionAcceleratorKindEnum,
-         "Compute device executing the model.")
-prop_var(AY, "AiDeploymentType", "AcceleratorName", String,
-         "Free-text accelerator identification, for example an NPU or GPU part name.")
-prop_var(AY, "AiDeploymentType", "EndpointUri", String,
-         "Inference endpoint when InferenceLocation is not OnServer. Treated as "
-         "untrusted input and subject to the resolver policy of the security clause.")
-prop_var(AY, "AiDeploymentType", "LatencyBudget", Duration,
-         "Latency the deployment is expected to meet, so a client can detect regression.")
-prop_var(AY, "AiDeploymentType", "BatchSize", UInt32,
-         "Configured inference batch size.")
-prop_var(AY, "AiDeploymentType", "State", VisionEndpointStateEnum,
-         "Runtime state of the deployment.")
-
 # ---- Results ---------------------------------------------------------------
 object_type(1020, "VisionResultType", BaseObjectType,
             "Abstract base for a vision result. Unlike OPC 40100-1, whose ResultContent "
@@ -1133,6 +1016,10 @@ object_type(1020, "VisionResultType", BaseObjectType,
             "explanation lives.",
             abstract=True)
 VR = 1020
+# Retired: 6107..6136 held AiModelType, AiDatasetType and AiDeploymentType before they
+# moved to OPC UA - AI Deployment and Learning. See _reserve_through.
+_reserve_through(6136)
+
 prop_var(VR, "VisionResultType", "ResultId", String,
          "Identifier of the result, unique within the Server.", MR_Mandatory)
 prop_var(VR, "VisionResultType", "CreationTime", UtcTime,
@@ -1257,7 +1144,14 @@ prop_var(IP, "InferencePipelineType", "PipelineId", String,
 prop_var(IP, "InferencePipelineType", "Sensor", NodeId_,
          "Sensor supplying frames.", MR_Mandatory)
 prop_var(IP, "InferencePipelineType", "Deployment", NodeId_,
-         "Deployment executing inference.", MR_Mandatory)
+         "The deployment executing inference. This is a NodeId, not a reference, and "
+         "the node it names is NOT defined by this specification - see clause 8.2. "
+         "Where the Server also implements OPC UA - AI Deployment and Learning it names "
+         "a DeploymentType instance there, which is what clause 8's provenance argument "
+         "assumes; a Server that describes its deployment some other way names that "
+         "node instead. Nothing in this NodeSet references the other model's "
+         "identifiers, so adopting or ignoring it changes nothing about loading this "
+         "one.", MR_Mandatory)
 prop_var(IP, "InferencePipelineType", "State", VisionEndpointStateEnum,
          "Runtime state of the pipeline.", MR_Mandatory)
 prop_var(IP, "InferencePipelineType", "Continuous", Boolean,
@@ -1279,56 +1173,23 @@ method(IP, "InferencePipelineType", "Stop",
        "Stop continuous inference.", MR_Optional)
 
 # ---- Learning --------------------------------------------------------------
-object_type(1019, "LearningJobType", BaseObjectType,
-            "One turn of the capture, label, train and promote loop. It exists so that "
-            "corrections arriving through VisionFeedbackType have somewhere to accumulate "
-            "and a defined path into a new model version. A Server may implement only the "
-            "capture stages and leave training to an external MLOps system - the state "
-            "machine is the same either way.")
-LJ = 1019
-prop_var(LJ, "LearningJobType", "JobId", String, "Identifier of the job.", MR_Mandatory)
-prop_var(LJ, "LearningJobType", "State", VisionLearningJobStateEnum,
-         "Current stage of the loop.", MR_Mandatory)
-prop_var(LJ, "LearningJobType", "Dataset", NodeId_,
-         "Dataset being accumulated or used.")
-prop_var(LJ, "LearningJobType", "BaseModel", NodeId_, "Model the job starts from.")
-prop_var(LJ, "LearningJobType", "CandidateModel", NodeId_,
-         "Model produced by the job, awaiting promotion.")
-prop_var(LJ, "LearningJobType", "SamplesCollected", UInt64,
-         "Samples accumulated so far, including corrections fed back.")
-prop_var(LJ, "LearningJobType", "LastError", LocalizedText,
-         "Diagnostic for the Failed state.")
-method(LJ, "LearningJobType", "StartCollection",
-       "Begin accumulating samples and corrections into the dataset.", MR_Optional)
-method(LJ, "LearningJobType", "StopCollection",
-       "Stop accumulating samples.", MR_Optional)
-method(LJ, "LearningJobType", "TriggerTraining",
-       "Request that a candidate model be trained from the collected dataset.",
-       MR_Optional,
-       outargs=[("Accepted", Boolean, "True when the request was queued.")])
-method(LJ, "LearningJobType", "PromoteModel",
-       "Promote the candidate model so that deployments begin using it. A Server SHOULD "
-       "require a distinct authorization for this Method.",
-       MR_Optional,
-       inargs=[("Deployment", NodeId_, "Deployment to update, or null for all.")],
-       outargs=[("PromotedModel", NodeId_, "The model now in use.")])
-
 # ---- Root ------------------------------------------------------------------
 object_type(1001, "VisionRootType", BaseObjectType,
             "The single well-known entry point for everything in this model. A client "
             "starts here, enumerates Sensors, and follows references outward. Mirrors "
             "the discovery pattern of OPC UA - OpenUSD Bindings.")
 VRT = 1001
+# Retired: 6177..6190 held LearningJobType.
+_reserve_through(6190)
+
 folder_member(VRT, "VisionRootType", "Sensors",
               "VisionSensorType instances known to this Server.", MR_Mandatory)
 folder_member(VRT, "VisionRootType", "Pipelines",
               "InferencePipelineType instances.", MR_Optional)
-folder_member(VRT, "VisionRootType", "Models",
-              "AiModelType, AiDatasetType and AiDeploymentType instances.", MR_Optional)
+# Retired: 6193 held VisionRootType.Models.
+_reserve_through(6193)
 folder_member(VRT, "VisionRootType", "Frames",
               "CoordinateFrameType instances.", MR_Optional)
-folder_member(VRT, "VisionRootType", "LearningJobs",
-              "LearningJobType instances.", MR_Optional)
 
 # ---- Well-known instance ----------------------------------------------------
 well_known(7001, "Vision", T(VRT), Server,
@@ -1348,6 +1209,8 @@ well_known(7001, "Vision", T(VRT), Server,
 # proposal, and this model deliberately takes NO dependency on it: nothing here
 # references its provisional NodeIds, so the Vision NodeSet loads unchanged on a Server
 # that has never heard of it.
+# Retired: 6195 held VisionRootType.LearningJobs.
+_reserve_through(6195)
 prop_var(ME, "MediaEndpointType", "DataChannelSource", NodeId_,
          "NodeId of the Object through which this endpoint's bytes can also be obtained "
          "on an OPC UA data channel, per the OPC UA - Data Channels errata proposal. "

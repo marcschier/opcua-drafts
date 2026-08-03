@@ -1,0 +1,708 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- OPC UA - AI Deployment and Learning companion model. PROVISIONAL NodeIds and namespace (final IDs assigned by the OPC Foundation / working group). -->
+<UANodeSet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd" xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd">
+  <NamespaceUris>
+    <Uri>http://opcfoundation.org/UA/AI/</Uri>
+  </NamespaceUris>
+  <Models>
+    <Model ModelUri="http://opcfoundation.org/UA/AI/" Version="0.1.0" PublicationDate="2026-08-02T00:00:00Z">
+      <RequiredModel ModelUri="http://opcfoundation.org/UA/" Version="1.05.04" PublicationDate="2023-12-15T00:00:00Z" />
+    </Model>
+  </Models>
+  <Aliases>
+    <Alias Alias="Boolean">i=1</Alias>
+    <Alias Alias="Int32">i=6</Alias>
+    <Alias Alias="UInt32">i=7</Alias>
+    <Alias Alias="UInt64">i=9</Alias>
+    <Alias Alias="Double">i=11</Alias>
+    <Alias Alias="String">i=12</Alias>
+    <Alias Alias="Guid">i=14</Alias>
+    <Alias Alias="ByteString">i=15</Alias>
+    <Alias Alias="NodeId">i=17</Alias>
+    <Alias Alias="QualifiedName">i=20</Alias>
+    <Alias Alias="LocalizedText">i=21</Alias>
+    <Alias Alias="UtcTime">i=294</Alias>
+    <Alias Alias="Duration">i=290</Alias>
+    <Alias Alias="Argument">i=296</Alias>
+    <Alias Alias="EUInformation">i=887</Alias>
+    <Alias Alias="KeyValuePair">i=14533</Alias>
+    <Alias Alias="BaseDataType">i=24</Alias>
+    <Alias Alias="HasComponent">i=47</Alias>
+    <Alias Alias="HasProperty">i=46</Alias>
+    <Alias Alias="HasSubtype">i=45</Alias>
+    <Alias Alias="Organizes">i=35</Alias>
+    <Alias Alias="HasTypeDefinition">i=40</Alias>
+    <Alias Alias="HasModellingRule">i=37</Alias>
+    <Alias Alias="HasInterface">i=17603</Alias>
+    <Alias Alias="HasEncoding">i=38</Alias>
+    <Alias Alias="Mandatory">i=78</Alias>
+    <Alias Alias="Optional">i=80</Alias>
+    <Alias Alias="OptionalPlaceholder">i=11508</Alias>
+    <Alias Alias="MandatoryPlaceholder">i=11510</Alias>
+  </Aliases>
+  <UADataType NodeId="ns=1;i=3001" BrowseName="1:InferenceLocationEnum">
+    <DisplayName>InferenceLocationEnum</DisplayName>
+    <Description>Where inference executes. The result contract is identical in every case; this property exists so a client can reason about latency, availability and the trust boundary without changing how it reads results.</Description>
+    <Category>AiDeployment DataTypes</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=3901</Reference>
+    </References>
+    <Definition Name="InferenceLocationEnum"><Field Name="OnServer" Value="0"><Description>In the OPC UA Server process or on its host.</Description></Field><Field Name="EdgeOffServer" Value="1"><Description>On a separate edge node reached over the network.</Description></Field><Field Name="Cloud" Value="2"><Description>In a remote or cloud service.</Description></Field><Field Name="InSimulator" Value="3"><Description>Inside a simulator that also produces the input.</Description></Field></Definition>
+  </UADataType>
+  <UAVariable NodeId="ns=1;i=3901" BrowseName="1:EnumStrings" ParentNodeId="ns=1;i=3001" DataType="LocalizedText" ValueRank="1" ArrayDimensions="4">
+    <DisplayName>EnumStrings</DisplayName>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=3001</Reference>
+    </References>
+    <Value><uax:ListOfLocalizedText xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:LocalizedText><uax:Text>OnServer</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>EdgeOffServer</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Cloud</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>InSimulator</uax:Text></uax:LocalizedText></uax:ListOfLocalizedText></Value>
+  </UAVariable>
+  <UADataType NodeId="ns=1;i=3002" BrowseName="1:AcceleratorKindEnum">
+    <DisplayName>AcceleratorKindEnum</DisplayName>
+    <Description>Compute device executing the model.</Description>
+    <Category>AiDeployment DataTypes</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=3902</Reference>
+    </References>
+    <Definition Name="AcceleratorKindEnum"><Field Name="Cpu" Value="0"/><Field Name="Gpu" Value="1"/><Field Name="Npu" Value="2"/><Field Name="Fpga" Value="3"/><Field Name="Tpu" Value="4"/><Field Name="Other" Value="5"/></Definition>
+  </UADataType>
+  <UAVariable NodeId="ns=1;i=3902" BrowseName="1:EnumStrings" ParentNodeId="ns=1;i=3002" DataType="LocalizedText" ValueRank="1" ArrayDimensions="6">
+    <DisplayName>EnumStrings</DisplayName>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=3002</Reference>
+    </References>
+    <Value><uax:ListOfLocalizedText xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:LocalizedText><uax:Text>Cpu</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Gpu</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Npu</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Fpga</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Tpu</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Other</uax:Text></uax:LocalizedText></uax:ListOfLocalizedText></Value>
+  </UAVariable>
+  <UADataType NodeId="ns=1;i=3003" BrowseName="1:DeploymentStateEnum">
+    <DisplayName>DeploymentStateEnum</DisplayName>
+    <Description>Runtime lifecycle state of a deployment.</Description>
+    <Category>AiDeployment DataTypes</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=3903</Reference>
+    </References>
+    <Definition Name="DeploymentStateEnum"><Field Name="Inactive" Value="0"><Description>Declared but not serving.</Description></Field><Field Name="Ready" Value="1"><Description>Able to serve; no work in progress.</Description></Field><Field Name="Active" Value="2"><Description>Serving at least one request.</Description></Field><Field Name="Degraded" Value="3"><Description>Serving below configured quality.</Description></Field><Field Name="Faulted" Value="4"><Description>Unable to serve.</Description></Field></Definition>
+  </UADataType>
+  <UAVariable NodeId="ns=1;i=3903" BrowseName="1:EnumStrings" ParentNodeId="ns=1;i=3003" DataType="LocalizedText" ValueRank="1" ArrayDimensions="5">
+    <DisplayName>EnumStrings</DisplayName>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=3003</Reference>
+    </References>
+    <Value><uax:ListOfLocalizedText xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:LocalizedText><uax:Text>Inactive</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Ready</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Active</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Degraded</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Faulted</uax:Text></uax:LocalizedText></uax:ListOfLocalizedText></Value>
+  </UAVariable>
+  <UADataType NodeId="ns=1;i=3004" BrowseName="1:DatasetSourceEnum">
+    <DisplayName>DatasetSourceEnum</DisplayName>
+    <Description>Provenance of the samples in a dataset.</Description>
+    <Category>AiDeployment DataTypes</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=3904</Reference>
+    </References>
+    <Definition Name="DatasetSourceEnum"><Field Name="Real" Value="0"><Description>Captured from physical equipment.</Description></Field><Field Name="Synthetic" Value="1"><Description>Generated or rendered by a simulator.</Description></Field><Field Name="Mixed" Value="2"><Description>Both, for example synthetic pre-training with real fine-tuning.</Description></Field></Definition>
+  </UADataType>
+  <UAVariable NodeId="ns=1;i=3904" BrowseName="1:EnumStrings" ParentNodeId="ns=1;i=3004" DataType="LocalizedText" ValueRank="1" ArrayDimensions="3">
+    <DisplayName>EnumStrings</DisplayName>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=3004</Reference>
+    </References>
+    <Value><uax:ListOfLocalizedText xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:LocalizedText><uax:Text>Real</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Synthetic</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Mixed</uax:Text></uax:LocalizedText></uax:ListOfLocalizedText></Value>
+  </UAVariable>
+  <UADataType NodeId="ns=1;i=3005" BrowseName="1:LearningJobStateEnum">
+    <DisplayName>LearningJobStateEnum</DisplayName>
+    <Description>State of a dataset-capture, retraining and promotion cycle.</Description>
+    <Category>AiDeployment DataTypes</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=3905</Reference>
+    </References>
+    <Definition Name="LearningJobStateEnum"><Field Name="Idle" Value="0"/><Field Name="Collecting" Value="1"/><Field Name="Labelling" Value="2"/><Field Name="Training" Value="3"/><Field Name="Validating" Value="4"/><Field Name="Ready" Value="5"><Description>A candidate model is available for promotion.</Description></Field><Field Name="Promoted" Value="6"/><Field Name="Failed" Value="7"/></Definition>
+  </UADataType>
+  <UAVariable NodeId="ns=1;i=3905" BrowseName="1:EnumStrings" ParentNodeId="ns=1;i=3005" DataType="LocalizedText" ValueRank="1" ArrayDimensions="8">
+    <DisplayName>EnumStrings</DisplayName>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=3005</Reference>
+    </References>
+    <Value><uax:ListOfLocalizedText xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:LocalizedText><uax:Text>Idle</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Collecting</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Labelling</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Training</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Validating</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Ready</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Promoted</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Failed</uax:Text></uax:LocalizedText></uax:ListOfLocalizedText></Value>
+  </UAVariable>
+  <UADataType NodeId="ns=1;i=3050" BrowseName="1:TensorSignatureDataType">
+    <DisplayName>TensorSignatureDataType</DisplayName>
+    <Description>Shape and element type of one model input or output tensor. This is what lets a client check that what it intends to send matches what the model expects, before it sends it.</Description>
+    <Category>AiDeployment DataTypes</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=22</Reference>
+      <Reference ReferenceType="HasEncoding">ns=1;i=5001</Reference>
+    </References>
+    <Definition Name="TensorSignatureDataType"><Field Name="Name" DataType="i=12"><Description>Tensor name as declared by the model.</Description></Field><Field Name="ElementType" DataType="i=12"><Description>Element type, for example float32, uint8 or int64.</Description></Field><Field Name="Shape" DataType="i=6" ValueRank="1"><Description>Dimensions; -1 marks a dynamic axis.</Description></Field><Field Name="Layout" DataType="i=12"><Description>Optional axis layout hint, for example NCHW or NHWC.</Description></Field></Definition>
+  </UADataType>
+  <UAObject NodeId="ns=1;i=5001" BrowseName="Default Binary" SymbolicName="DefaultBinary">
+    <DisplayName>Default Binary</DisplayName>
+    <Description>Default Binary encoding of the structure.</Description>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=76</Reference>
+      <Reference ReferenceType="HasEncoding" IsForward="false">ns=1;i=3050</Reference>
+    </References>
+  </UAObject>
+  <UAReferenceType NodeId="ns=1;i=4001" BrowseName="1:UsesModel">
+    <DisplayName>UsesModel</DisplayName>
+    <Description>Links a Deployment to the Model it executes. Clause 5.5 requires exactly one such reference per deployment; it is the only defined path from a result to the model artefact and its Digest, on which the provenance requirement of clause 7 depends.</Description>
+    <Category>AiDeployment ReferenceTypes</Category>
+    <InverseName>IsUsedByDeployment</InverseName>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=32</Reference>
+    </References>
+  </UAReferenceType>
+  <UAReferenceType NodeId="ns=1;i=4002" BrowseName="1:TrainedOn">
+    <DisplayName>TrainedOn</DisplayName>
+    <Description>Links a Model to a Dataset it was trained or validated on. A model whose training data cannot be named is a model whose behaviour cannot be explained, which is why this reference exists rather than a string.</Description>
+    <Category>AiDeployment ReferenceTypes</Category>
+    <InverseName>IsTrainingDataFor</InverseName>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=32</Reference>
+    </References>
+  </UAReferenceType>
+  <UAObjectType NodeId="ns=1;i=1001" BrowseName="1:AiRootType">
+    <DisplayName>AiRootType</DisplayName>
+    <Description>Server-level entry point. A client that has just connected browses here to find every model, dataset, deployment and learning job the Server describes, without knowing its layout.</Description>
+    <Category>AiDeployment</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=6001</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=6002</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=6003</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=6004</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6005</Reference>
+    </References>
+  </UAObjectType>
+  <UAObject NodeId="ns=1;i=6001" BrowseName="1:Models" ParentNodeId="ns=1;i=1001">
+    <DisplayName>Models</DisplayName>
+    <Description>ModelType instances.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=61</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=1001</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="ns=1;i=6002" BrowseName="1:Datasets" ParentNodeId="ns=1;i=1001">
+    <DisplayName>Datasets</DisplayName>
+    <Description>DatasetType instances.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=61</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=1001</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="ns=1;i=6003" BrowseName="1:Deployments" ParentNodeId="ns=1;i=1001">
+    <DisplayName>Deployments</DisplayName>
+    <Description>DeploymentType instances.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=61</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=1001</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="ns=1;i=6004" BrowseName="1:LearningJobs" ParentNodeId="ns=1;i=1001">
+    <DisplayName>LearningJobs</DisplayName>
+    <Description>LearningJobType instances.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=61</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=1001</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=6005" BrowseName="1:SpecificationVersion" ParentNodeId="ns=1;i=1001" DataType="String" ValueRank="-1">
+    <DisplayName>SpecificationVersion</DisplayName>
+    <Description>Release of this specification the Server implements, for example '0.1.0'.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1001</Reference>
+    </References>
+  </UAVariable>
+  <UAObjectType NodeId="ns=1;i=1002" BrowseName="1:ModelType">
+    <DisplayName>ModelType</DisplayName>
+    <Description>Nameplate of a trained model. The member set is deliberately aligned with the IDTA 02060 AI Model Nameplate submodel template, which is currently the only standardised description of an industrial AI model, so an Asset Administration Shell can be populated from this node without loss.</Description>
+    <Category>AiDeployment</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6006</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6007</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6008</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6009</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6010</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6011</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6012</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6013</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6014</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6015</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6016</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=6017</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=6018</Reference>
+    </References>
+  </UAObjectType>
+  <UAVariable NodeId="ns=1;i=6006" BrowseName="1:ModelId" ParentNodeId="ns=1;i=1002" DataType="String" ValueRank="-1">
+    <DisplayName>ModelId</DisplayName>
+    <Description>Identifier of the model.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1002</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6007" BrowseName="1:Name" ParentNodeId="ns=1;i=1002" DataType="LocalizedText" ValueRank="-1">
+    <DisplayName>Name</DisplayName>
+    <Description>Human-readable model name.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1002</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6008" BrowseName="1:Version" ParentNodeId="ns=1;i=1002" DataType="String" ValueRank="-1">
+    <DisplayName>Version</DisplayName>
+    <Description>Model version.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1002</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6009" BrowseName="1:Framework" ParentNodeId="ns=1;i=1002" DataType="String" ValueRank="-1">
+    <DisplayName>Framework</DisplayName>
+    <Description>Producing framework, for example PyTorch, TensorFlow or scikit-learn.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1002</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6010" BrowseName="1:Format" ParentNodeId="ns=1;i=1002" DataType="String" ValueRank="-1">
+    <DisplayName>Format</DisplayName>
+    <Description>Serialization format, for example ONNX, TensorRT or OpenVINO IR.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1002</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6011" BrowseName="1:TaskKind" ParentNodeId="ns=1;i=1002" DataType="String" ValueRank="-1">
+    <DisplayName>TaskKind</DisplayName>
+    <Description>What the model does, for example Detection2D, Classification, Segmentation, Forecasting or AnomalyDetection. Free text because the set of tasks is not closed and a closed enumeration would date faster than the model does.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1002</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6012" BrowseName="1:Digest" ParentNodeId="ns=1;i=1002" DataType="ByteString" ValueRank="-1">
+    <DisplayName>Digest</DisplayName>
+    <Description>Cryptographic digest of the model artefact, for provenance and integrity. Mandatory: clause 7 requires it for every model whose artefact is obtainable through ArtifactUri, and it is the terminus of the provenance chain that UsesModel keeps intact.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1002</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6013" BrowseName="1:DigestAlgorithm" ParentNodeId="ns=1;i=1002" DataType="String" ValueRank="-1">
+    <DisplayName>DigestAlgorithm</DisplayName>
+    <Description>Hash function used for Digest. SHALL name a function with at least 256-bit output and no known collision weakness; SHA-256 is the default and is always acceptable. SHALL NOT be MD5, SHA-1 or a truncated variant - chosen-prefix collisions against those are practical, so a substituted artefact would pass verification. SHALL be non-empty where Digest is non-empty. See clause 7.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1002</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6014" BrowseName="1:ArtifactUri" ParentNodeId="ns=1;i=1002" DataType="String" ValueRank="-1">
+    <DisplayName>ArtifactUri</DisplayName>
+    <Description>Where the model artefact can be obtained. Treated as untrusted input.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1002</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6015" BrowseName="1:ProvenanceUri" ParentNodeId="ns=1;i=1002" DataType="String" ValueRank="-1">
+    <DisplayName>ProvenanceUri</DisplayName>
+    <Description>Training provenance or model card location.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1002</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6016" BrowseName="1:LabelClasses" ParentNodeId="ns=1;i=1002" DataType="String" ValueRank="1">
+    <DisplayName>LabelClasses</DisplayName>
+    <Description>Ordered class label set, where the model produces classified output. The INDEX is what a consuming specification's class identifier refers to, so the order is part of the contract and a Server SHALL NOT reorder it in place.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1002</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6017" BrowseName="1:Inputs" ParentNodeId="ns=1;i=1002" DataType="ns=1;i=3050" ValueRank="1">
+    <DisplayName>Inputs</DisplayName>
+    <Description>Input tensor signatures.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=1002</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6018" BrowseName="1:Outputs" ParentNodeId="ns=1;i=1002" DataType="ns=1;i=3050" ValueRank="1">
+    <DisplayName>Outputs</DisplayName>
+    <Description>Output tensor signatures.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=1002</Reference>
+    </References>
+  </UAVariable>
+  <UAObjectType NodeId="ns=1;i=1003" BrowseName="1:DatasetType">
+    <DisplayName>DatasetType</DisplayName>
+    <Description>A dataset used to train or validate a model. Aligned with the IDTA 02058 AI Dataset submodel template. SourceKind distinguishes real capture from simulator output, which is the provenance a reviewer needs when synthetic data is involved.</Description>
+    <Category>AiDeployment</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6019</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6020</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6021</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6022</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6023</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6024</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6025</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6026</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6027</Reference>
+    </References>
+  </UAObjectType>
+  <UAVariable NodeId="ns=1;i=6019" BrowseName="1:DatasetId" ParentNodeId="ns=1;i=1003" DataType="String" ValueRank="-1">
+    <DisplayName>DatasetId</DisplayName>
+    <Description>Identifier of the dataset.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1003</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6020" BrowseName="1:Name" ParentNodeId="ns=1;i=1003" DataType="LocalizedText" ValueRank="-1">
+    <DisplayName>Name</DisplayName>
+    <Description>Human-readable dataset name.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1003</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6021" BrowseName="1:Version" ParentNodeId="ns=1;i=1003" DataType="String" ValueRank="-1">
+    <DisplayName>Version</DisplayName>
+    <Description>Dataset version.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1003</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6022" BrowseName="1:SourceKind" ParentNodeId="ns=1;i=1003" DataType="ns=1;i=3004" ValueRank="-1">
+    <DisplayName>SourceKind</DisplayName>
+    <Description>Whether samples are real, synthetic or mixed.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1003</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6023" BrowseName="1:SampleCount" ParentNodeId="ns=1;i=1003" DataType="UInt64" ValueRank="-1">
+    <DisplayName>SampleCount</DisplayName>
+    <Description>Number of samples.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1003</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6024" BrowseName="1:LabelClasses" ParentNodeId="ns=1;i=1003" DataType="String" ValueRank="1">
+    <DisplayName>LabelClasses</DisplayName>
+    <Description>Class labels present.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1003</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6025" BrowseName="1:CreatedAt" ParentNodeId="ns=1;i=1003" DataType="UtcTime" ValueRank="-1">
+    <DisplayName>CreatedAt</DisplayName>
+    <Description>Creation time.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1003</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6026" BrowseName="1:ArtifactUri" ParentNodeId="ns=1;i=1003" DataType="String" ValueRank="-1">
+    <DisplayName>ArtifactUri</DisplayName>
+    <Description>Where the dataset can be obtained. Treated as untrusted input.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1003</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6027" BrowseName="1:Digest" ParentNodeId="ns=1;i=1003" DataType="ByteString" ValueRank="-1">
+    <DisplayName>Digest</DisplayName>
+    <Description>Digest of the dataset artefact.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1003</Reference>
+    </References>
+  </UAVariable>
+  <UAObjectType NodeId="ns=1;i=1004" BrowseName="1:DeploymentType">
+    <DisplayName>DeploymentType</DisplayName>
+    <Description>A model made executable somewhere. Aligned with the IDTA 02059 AI Deployment submodel template. InferenceLocation is the on-server versus off-server switch: it changes where the computation happens and therefore the trust boundary, and it changes nothing else.</Description>
+    <Category>AiDeployment</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6028</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6029</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6030</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6031</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6032</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6033</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6034</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6035</Reference>
+    </References>
+  </UAObjectType>
+  <UAVariable NodeId="ns=1;i=6028" BrowseName="1:DeploymentId" ParentNodeId="ns=1;i=1004" DataType="String" ValueRank="-1">
+    <DisplayName>DeploymentId</DisplayName>
+    <Description>Identifier of the deployment.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1004</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6029" BrowseName="1:InferenceLocation" ParentNodeId="ns=1;i=1004" DataType="ns=1;i=3001" ValueRank="-1">
+    <DisplayName>InferenceLocation</DisplayName>
+    <Description>Where inference executes.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1004</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6030" BrowseName="1:AcceleratorKind" ParentNodeId="ns=1;i=1004" DataType="ns=1;i=3002" ValueRank="-1">
+    <DisplayName>AcceleratorKind</DisplayName>
+    <Description>Compute device executing the model.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1004</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6031" BrowseName="1:AcceleratorName" ParentNodeId="ns=1;i=1004" DataType="String" ValueRank="-1">
+    <DisplayName>AcceleratorName</DisplayName>
+    <Description>Free-text accelerator identification, for example an NPU or GPU part name.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1004</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6032" BrowseName="1:EndpointUri" ParentNodeId="ns=1;i=1004" DataType="String" ValueRank="-1">
+    <DisplayName>EndpointUri</DisplayName>
+    <Description>Inference endpoint when InferenceLocation is not OnServer. Treated as untrusted input and subject to the resolver policy of clause 7.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1004</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6033" BrowseName="1:LatencyBudget" ParentNodeId="ns=1;i=1004" DataType="Duration" ValueRank="-1">
+    <DisplayName>LatencyBudget</DisplayName>
+    <Description>Latency the deployment is expected to meet, so a client can detect regression.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1004</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6034" BrowseName="1:BatchSize" ParentNodeId="ns=1;i=1004" DataType="UInt32" ValueRank="-1">
+    <DisplayName>BatchSize</DisplayName>
+    <Description>Configured inference batch size.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1004</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6035" BrowseName="1:State" ParentNodeId="ns=1;i=1004" DataType="ns=1;i=3003" ValueRank="-1">
+    <DisplayName>State</DisplayName>
+    <Description>Runtime state of the deployment.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1004</Reference>
+    </References>
+  </UAVariable>
+  <UAObjectType NodeId="ns=1;i=1005" BrowseName="1:LearningJobType">
+    <DisplayName>LearningJobType</DisplayName>
+    <Description>One turn of the capture, label, train and promote loop. It exists so that corrections arriving from a consuming application have somewhere to accumulate and a defined path into a new model version. A Server may implement only the capture stages and leave training to an external MLOps system - the state machine is the same either way.</Description>
+    <Category>AiDeployment</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6036</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6037</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6038</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6039</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6040</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6041</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6042</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=6043</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=6044</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=6045</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=6047</Reference>
+    </References>
+  </UAObjectType>
+  <UAVariable NodeId="ns=1;i=6036" BrowseName="1:JobId" ParentNodeId="ns=1;i=1005" DataType="String" ValueRank="-1">
+    <DisplayName>JobId</DisplayName>
+    <Description>Identifier of the job.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1005</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6037" BrowseName="1:State" ParentNodeId="ns=1;i=1005" DataType="ns=1;i=3005" ValueRank="-1">
+    <DisplayName>State</DisplayName>
+    <Description>Current stage of the loop.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1005</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6038" BrowseName="1:Dataset" ParentNodeId="ns=1;i=1005" DataType="NodeId" ValueRank="-1">
+    <DisplayName>Dataset</DisplayName>
+    <Description>Dataset being accumulated or used.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1005</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6039" BrowseName="1:BaseModel" ParentNodeId="ns=1;i=1005" DataType="NodeId" ValueRank="-1">
+    <DisplayName>BaseModel</DisplayName>
+    <Description>Model the job starts from.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1005</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6040" BrowseName="1:CandidateModel" ParentNodeId="ns=1;i=1005" DataType="NodeId" ValueRank="-1">
+    <DisplayName>CandidateModel</DisplayName>
+    <Description>Model produced by the job, awaiting promotion.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1005</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6041" BrowseName="1:SamplesCollected" ParentNodeId="ns=1;i=1005" DataType="UInt64" ValueRank="-1">
+    <DisplayName>SamplesCollected</DisplayName>
+    <Description>Samples accumulated so far, including corrections fed back.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1005</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6042" BrowseName="1:LastError" ParentNodeId="ns=1;i=1005" DataType="LocalizedText" ValueRank="-1">
+    <DisplayName>LastError</DisplayName>
+    <Description>Diagnostic for the Failed state.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1005</Reference>
+    </References>
+  </UAVariable>
+  <UAMethod NodeId="ns=1;i=6043" BrowseName="1:StartCollection" ParentNodeId="ns=1;i=1005">
+    <DisplayName>StartCollection</DisplayName>
+    <Description>Begin accumulating samples and corrections into the dataset.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=1005</Reference>
+    </References>
+  </UAMethod>
+  <UAMethod NodeId="ns=1;i=6044" BrowseName="1:StopCollection" ParentNodeId="ns=1;i=1005">
+    <DisplayName>StopCollection</DisplayName>
+    <Description>Stop accumulating samples.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=1005</Reference>
+    </References>
+  </UAMethod>
+  <UAMethod NodeId="ns=1;i=6045" BrowseName="1:TriggerTraining" ParentNodeId="ns=1;i=1005">
+    <DisplayName>TriggerTraining</DisplayName>
+    <Description>Request that a candidate model be trained from the collected dataset.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=1005</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6046</Reference>
+    </References>
+  </UAMethod>
+  <UAVariable NodeId="ns=1;i=6046" BrowseName="1:OutputArguments" ParentNodeId="ns=1;i=6045" DataType="Argument" ValueRank="1" ArrayDimensions="1">
+    <DisplayName>OutputArguments</DisplayName>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=6045</Reference>
+    </References>
+    <Value><uax:ListOfExtensionObject xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:ExtensionObject><uax:TypeId><uax:Identifier>i=297</uax:Identifier></uax:TypeId><uax:Body><uax:Argument><uax:Name>Accepted</uax:Name><uax:DataType><uax:Identifier>i=1</uax:Identifier></uax:DataType><uax:ValueRank>-1</uax:ValueRank><uax:ArrayDimensions/><uax:Description><uax:Text>True when the request was queued.</uax:Text></uax:Description></uax:Argument></uax:Body></uax:ExtensionObject></uax:ListOfExtensionObject></Value>
+  </UAVariable>
+  <UAMethod NodeId="ns=1;i=6047" BrowseName="1:PromoteModel" ParentNodeId="ns=1;i=1005">
+    <DisplayName>PromoteModel</DisplayName>
+    <Description>Promote the candidate model so that deployments begin using it. A Server SHALL require a distinct authorization for this Method: it changes what the equipment does without changing anything a reader of the address space would notice, which is precisely the change that needs a separate permission.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=1005</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6048</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6049</Reference>
+    </References>
+  </UAMethod>
+  <UAVariable NodeId="ns=1;i=6048" BrowseName="1:InputArguments" ParentNodeId="ns=1;i=6047" DataType="Argument" ValueRank="1" ArrayDimensions="1">
+    <DisplayName>InputArguments</DisplayName>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=6047</Reference>
+    </References>
+    <Value><uax:ListOfExtensionObject xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:ExtensionObject><uax:TypeId><uax:Identifier>i=297</uax:Identifier></uax:TypeId><uax:Body><uax:Argument><uax:Name>Deployment</uax:Name><uax:DataType><uax:Identifier>i=17</uax:Identifier></uax:DataType><uax:ValueRank>-1</uax:ValueRank><uax:ArrayDimensions/><uax:Description><uax:Text>Deployment to update, or null for all.</uax:Text></uax:Description></uax:Argument></uax:Body></uax:ExtensionObject></uax:ListOfExtensionObject></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6049" BrowseName="1:OutputArguments" ParentNodeId="ns=1;i=6047" DataType="Argument" ValueRank="1" ArrayDimensions="1">
+    <DisplayName>OutputArguments</DisplayName>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=6047</Reference>
+    </References>
+    <Value><uax:ListOfExtensionObject xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:ExtensionObject><uax:TypeId><uax:Identifier>i=297</uax:Identifier></uax:TypeId><uax:Body><uax:Argument><uax:Name>PromotedModel</uax:Name><uax:DataType><uax:Identifier>i=17</uax:Identifier></uax:DataType><uax:ValueRank>-1</uax:ValueRank><uax:ArrayDimensions/><uax:Description><uax:Text>The model now in use.</uax:Text></uax:Description></uax:Argument></uax:Body></uax:ExtensionObject></uax:ListOfExtensionObject></Value>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=7001" BrowseName="1:AiDeployment" ParentNodeId="i=2253">
+    <DisplayName>AiDeployment</DisplayName>
+    <Description>Entry point for AI deployment and learning on this Server. A client browses Server/AiDeployment/Models to find what this Server describes.</Description>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">ns=1;i=1001</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">i=2253</Reference>
+    </References>
+  </UAObject>
+</UANodeSet>

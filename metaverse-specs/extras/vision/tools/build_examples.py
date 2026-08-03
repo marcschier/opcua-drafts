@@ -29,7 +29,18 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import build_model as vm  # noqa: E402  (path set above)
 
+# The AI Deployment model is a separate specification in a sibling extras tree. It is
+# loaded by path rather than imported as a package so that neither generator depends on
+# the other's location, and so a reader can see exactly which file is being read.
+import importlib.util as _ilu  # noqa: E402
+_AI_GEN = os.path.normpath(
+    os.path.join(HERE, "..", "..", "ai-deployment", "tools", "build_model.py"))
+_spec = _ilu.spec_from_file_location("ai_build_model", _AI_GEN)
+am = _ilu.module_from_spec(_spec)
+_spec.loader.exec_module(am)
+
 VISION_NS = vm.NAMESPACE
+AI_NS = am.NAMESPACE
 
 # Base-UA NodeIds used by the overlays. Emitted through an <Aliases> block, as the
 # base NodeSets in this repository do, so the XML stays readable.
@@ -89,11 +100,38 @@ TYPE_ID = {n.bname: n.nid for n in vm.NODES.values()
            if n.cls in ("UAObjectType", "UADataType", "UAReferenceType")}
 
 # The Vision ReferenceTypes the overlays use, aliased so the XML stays readable.
-for _rt in ("HasCalibration", "MountedOn", "UsesModel"):
+for _rt in ("HasCalibration", "MountedOn"):
     ALIASES.append((_rt, f"ns=2;i={TYPE_ID[_rt]}"))
 HasCalibration = "HasCalibration"
 MountedOn = "MountedOn"
 UsesModel = "UsesModel"
+
+# Type BrowseName -> NodeId in the AI Deployment namespace, taken from that model.
+AI_TYPE_ID = {n.bname: n.nid for n in am.NODES.values()
+              if n.cls in ("UAObjectType", "UADataType", "UAReferenceType")}
+ALIASES.append((UsesModel, f"ns=3;i={AI_TYPE_ID[UsesModel]}"))
+
+
+def aitype(name):
+    """Type NodeId in the AI Deployment namespace (index 3)."""
+    if name not in AI_TYPE_ID:
+        raise SystemExit(f"unknown AI type '{name}' - check ai build_model.py")
+    return f"ns=3;i={AI_TYPE_ID[name]}"
+
+
+def put_enum_ai(ov, parent, name, enum_name, literal, desc=None):
+    """An enum Property whose DataType is declared by the AI Deployment model."""
+    val = am_enum_value(enum_name, literal)
+    return ov.prop(name, aitype(enum_name), v_int32(val), parent, desc)
+
+
+def am_enum_value(enum_name, literal):
+    for n in am.NODES.values():
+        if n.bname == enum_name and n.definition:
+            m = re.search(rf'<Field Name="{literal}" Value="(\d+)"', n.definition)
+            if m:
+                return int(m.group(1))
+    raise SystemExit(f"unknown AI enum literal {enum_name}.{literal}")
 
 
 def vtype(name):
@@ -223,6 +261,7 @@ class Overlay:
                '  <NamespaceUris>',
                f'    <Uri>{sx.escape(self.example_uri)}</Uri>',
                f'    <Uri>{sx.escape(VISION_NS)}</Uri>',
+               f'    <Uri>{sx.escape(AI_NS)}</Uri>',
                '  </NamespaceUris>',
                '  <Models>',
                f'    <Model ModelUri={sx.quoteattr(self.example_uri)} '
@@ -234,6 +273,9 @@ class Overlay:
                f'      <RequiredModel ModelUri={sx.quoteattr(VISION_NS)} '
                f'Version="{vm.VERSION}" '
                f'PublicationDate="{vm.PUBDATE}" />',
+               f'      <RequiredModel ModelUri={sx.quoteattr(AI_NS)} '
+               f'Version="{am.VERSION}" '
+               f'PublicationDate="{am.PUBDATE}" />',
                '    </Model>',
                '  </Models>',
                '  <Aliases>']
@@ -568,7 +610,7 @@ def build_overlay(d):
 
     # --- AI -----------------------------------------------------------------
     ai = d["ai"]
-    model = ov.obj(ai["model"]["name"], vtype("AiModelType"), ov.roots["models"],
+    model = ov.obj(ai["model"]["name"], aitype("ModelType"), ov.roots["models"],
                    reftype=Organizes, desc=ai["model"].get("description"))
     m = ai["model"]
     put(ov, model, "ModelId", "String", m["modelId"])
@@ -580,23 +622,23 @@ def build_overlay(d):
             put(ov, model, name, "String", m[key])
     # §12.6 requires both for any model reachable through ArtifactUri.
     put(ov, model, "Digest", "ByteString", m["digest"],
-        desc="SHA-256 of the model artefact at ArtifactUri (base specification §12.6).")
+        desc="SHA-256 of the model artefact at ArtifactUri.")
     put(ov, model, "DigestAlgorithm", "String", m.get("digestAlgorithm", "SHA-256"))
 
     dep = ai["deployment"]
-    deployment = ov.obj(dep["name"], vtype("AiDeploymentType"), ov.roots["models"],
+    deployment = ov.obj(dep["name"], aitype("DeploymentType"), ov.roots["models"],
                         reftype=Organizes, desc=dep.get("description"))
     put(ov, deployment, "DeploymentId", "String", dep["deploymentId"])
-    put_enum(ov, deployment, "InferenceLocation", "VisionInferenceLocationEnum",
+    put_enum_ai(ov, deployment, "InferenceLocation", "InferenceLocationEnum",
              dep["inferenceLocation"])
     if "acceleratorKind" in dep:
-        put_enum(ov, deployment, "AcceleratorKind", "VisionAcceleratorKindEnum",
+        put_enum_ai(ov, deployment, "AcceleratorKind", "AcceleratorKindEnum",
                  dep["acceleratorKind"])
     if "acceleratorName" in dep:
         put(ov, deployment, "AcceleratorName", "String", dep["acceleratorName"])
     if "endpointUri" in dep:
         put(ov, deployment, "EndpointUri", "String", dep["endpointUri"])
-    # §5.11 requires exactly one UsesModel per deployment. It is the only path from a
+    # The AI specification requires exactly one UsesModel per deployment. It is the only path from a
     # result to the model artefact and its Digest, which §12.6 depends on.
     ov.ref(deployment, UsesModel, f"ns=1;i={model}")
 
@@ -623,16 +665,16 @@ def build_overlay(d):
         build_media(ov, twin, tw["stream"], tw["clip"])
         if "learningJob" in tw:
             lj = tw["learningJob"]
-            dataset = ov.obj(lj["datasetName"], vtype("AiDatasetType"),
+            dataset = ov.obj(lj["datasetName"], aitype("DatasetType"),
                              ov.roots["models"], reftype=Organizes,
                              desc="Synthetic dataset produced from the twin.")
             put(ov, dataset, "DatasetId", "String", lj["datasetId"])
-            put_enum(ov, dataset, "SourceKind", "VisionDatasetSourceEnum",
+            put_enum_ai(ov, dataset, "SourceKind", "DatasetSourceEnum",
                      lj.get("sourceKind", "Synthetic"))
-            job = ov.obj(lj["name"], vtype("LearningJobType"), ov.roots["jobs"],
+            job = ov.obj(lj["name"], aitype("LearningJobType"), ov.roots["jobs"],
                          reftype=Organizes, desc=lj.get("description"))
             put(ov, job, "JobId", "String", lj["jobId"])
-            put_enum(ov, job, "State", "VisionLearningJobStateEnum",
+            put_enum_ai(ov, job, "State", "LearningJobStateEnum",
                      lj.get("state", "Collecting"))
 
     return ov
@@ -905,9 +947,9 @@ def emit_addendum(d, annex=None):
     A(d["inferenceNote"])
     A("")
     A("The deployment carries exactly one `UsesModel` reference to the model above, as "
-      "base specification §5.11 requires. That reference is the only defined path from a "
-      "result to the model artefact and its `Digest`, so it is what makes the §12.6 "
-      "provenance check possible.")
+      "*OPC UA — AI Deployment and Learning* requires. That reference is the only defined "
+      "path from a result to the model artefact and its `Digest`, so it is what makes the "
+      "base specification's §12.6 provenance check possible.")
     A("")
     head("Results")
     A("")

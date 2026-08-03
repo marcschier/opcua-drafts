@@ -22,16 +22,18 @@ The two specifications approach the same problem from opposite ends and are deli
 
 Pick Part 1 when you already have an artist-authored USD asset and want to drive it. Pick Part 2 when the scene itself should be the address space — browsable, subscribable, historizable.
 
-## The two standalone models
+## The three standalone models
 
-| | [`vision/`](vision/) | [`robot-intent/`](robot-intent/) |
-|---|---|---|
-| Question | *What does this camera see, what AI reads it, and what did it conclude?* | *How do I tell this robot what to do?* |
-| The gap | OPC 40100-1 leaves result content undefined; OPC 40010-1 has no vision types at all | OPC 40010-1 describes robot topology and defines **no motion verbs** |
-| Namespace | `http://opcfoundation.org/UA/Vision/` | `http://opcfoundation.org/UA/RobotIntent/` |
-| Release | 0.1.0 | 0.1.0 |
+| | [`vision/`](vision/) | [`robot-intent/`](robot-intent/) | [`ai-deployment/`](ai-deployment/) |
+|---|---|---|---|
+| Question | *What does this camera see, and what did it conclude?* | *How do I tell this robot what to do?* | *Which model produced this answer, and can I audit it?* |
+| The gap | OPC 40100-1 leaves result content undefined; OPC 40010-1 has no vision types at all | OPC 40010-1 describes robot topology and defines **no motion verbs** | OPC UA has no way to say what an AI model *is*, where it runs, or what it was trained on |
+| Namespace | `http://opcfoundation.org/UA/Vision/` | `http://opcfoundation.org/UA/RobotIntent/` | `http://opcfoundation.org/UA/AI/` |
+| Release | 0.1.0 | 0.1.0 | 0.1.0 |
 
-Both are self-contained on base OPC UA — neither takes a companion specification as a `RequiredModel` — and both express interop with OPC 40010-1 as an optional annex rather than a dependency.
+All three are self-contained on base OPC UA — none takes a companion specification as a `RequiredModel`.
+
+**They compose without coupling.** Vision's `InferencePipelineType.Deployment` is a plain `NodeId`, so a Server can publish cameras and verdicts with no AI model at all; where it does describe one, the chain *result → deployment → model → digest* is available end to end. Vision and Robot Intent share a frame vocabulary with identical literals and numbering. In every case the join is a **facet precondition**, never a `RequiredModel` — which is what lets a domain adopt one model without inheriting the others.
 
 ## Layout
 
@@ -39,12 +41,14 @@ Both are self-contained on base OPC UA — neither takes a companion specificati
 - <!-- release-spec-link:YG9wZW51c2Qtc2NlbmUvYCDigJQgUGFydCAyIHNwZWNpZmljYXRpb24sIE5vZGVTZXQsIENTViwgYW5kIG1hdGVyaWFsaXplZCBleGFtcGxlIG92ZXJsYXlzLg== -->*Under OPC Foundation review — moved to [OPCF-Members/spec-drafts](https://github.com/OPCF-Members/spec-drafts); OPC Foundation members can [request access](https://github.com/OPCF-Members/Help).*<!-- /release-spec-link -->
 - `vision/` — **OPC UA — Vision**: sensors, the media they emit, the AI that interprets them, the results they produce, and the feedback path back in. Standalone on base OPC UA, with worked addenda for `robotics/` and `machine-vision/`.
 - `robot-intent/` — **OPC UA — Robot Intent**: task-level verbs for commanding a robot, with a Part 10 lifecycle. OPC 40010-1 describes robot topology and defines no motion verbs; this supplies the verbs and nothing else. Standalone on base OPC UA.
+- `ai-deployment/` — **OPC UA — AI Deployment and Learning**: the model nameplate, the dataset it was trained on, the deployment that executes it and the learning job that produces the next version. Deliberately **domain-neutral** — it names no camera, no robot and no sensor — so any domain can build on it. Aligned member-for-member with IDTA 02058/02059/02060.
 - `extras/` — everything secondary to standardization, mirroring the folders above:
   - `openusd-binding/tools/` — the model generator and validator; `examples/` — the pumps and robotics USD assets, binding descriptors, writers, renderers and end-to-end guides.
   - `openusd-scene/tools/` — the model generator, the `.usd` ↔ NodeSet converters, and the round-trip checker.
   - `openusd-artifacts/` — the emitted xRegistry **artifact registry** for the examples (see Part 1 §7.11).
   - `vision/tools/` — the model generator, the example builder and the validator.
   - `robot-intent/tools/` — the model generator and the validator.
+  - `ai-deployment/tools/` — the model generator and the validator, including the domain-neutrality check that fails the build if a type name acquires a domain term.
 - `validate_all.py` — validates every extension in this tree.
 
 ## Validate

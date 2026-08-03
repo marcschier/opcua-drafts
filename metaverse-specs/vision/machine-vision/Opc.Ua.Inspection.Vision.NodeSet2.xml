@@ -4,11 +4,13 @@
   <NamespaceUris>
     <Uri>http://opcfoundation.org/UA/Vision/Examples/Inspection/</Uri>
     <Uri>http://opcfoundation.org/UA/Vision/</Uri>
+    <Uri>http://opcfoundation.org/UA/AI/</Uri>
   </NamespaceUris>
   <Models>
-    <Model ModelUri="http://opcfoundation.org/UA/Vision/Examples/Inspection/" Version="0.1.0" PublicationDate="2026-07-26T00:00:00Z">
+    <Model ModelUri="http://opcfoundation.org/UA/Vision/Examples/Inspection/" Version="0.1.0" PublicationDate="2026-08-02T00:00:00Z">
       <RequiredModel ModelUri="http://opcfoundation.org/UA/" Version="1.05.04" PublicationDate="2023-12-15T00:00:00Z" />
-      <RequiredModel ModelUri="http://opcfoundation.org/UA/Vision/" Version="0.1.0" PublicationDate="2026-07-26T00:00:00Z" />
+      <RequiredModel ModelUri="http://opcfoundation.org/UA/Vision/" Version="0.1.0" PublicationDate="2026-08-02T00:00:00Z" />
+      <RequiredModel ModelUri="http://opcfoundation.org/UA/AI/" Version="0.1.0" PublicationDate="2026-08-02T00:00:00Z" />
     </Model>
   </Models>
   <Aliases>
@@ -29,7 +31,7 @@
     <Alias Alias="ByteString">i=15</Alias>
     <Alias Alias="HasCalibration">ns=2;i=4001</Alias>
     <Alias Alias="MountedOn">ns=2;i=4002</Alias>
-    <Alias Alias="UsesModel">ns=2;i=4004</Alias>
+    <Alias Alias="UsesModel">ns=3;i=4001</Alias>
   </Aliases>
   <UAObject NodeId="ns=1;i=5001" BrowseName="2:Vision" ParentNodeId="i=2253">
     <DisplayName>Vision</DisplayName>
@@ -819,7 +821,7 @@
     <DisplayName>SealDefectNet</DisplayName>
     <Description>Segmentation and measurement of sealing-surface defects.</Description>
     <References>
-      <Reference ReferenceType="HasTypeDefinition">ns=2;i=1015</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=3;i=1002</Reference>
       <Reference ReferenceType="Organizes" IsForward="false">ns=1;i=5004</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=5088</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=5089</Reference>
@@ -891,7 +893,7 @@
   </UAVariable>
   <UAVariable NodeId="ns=1;i=5095" BrowseName="1:Digest" ParentNodeId="ns=1;i=5087" DataType="ByteString">
     <DisplayName>Digest</DisplayName>
-    <Description>SHA-256 of the model artefact at ArtifactUri (base specification §12.6).</Description>
+    <Description>SHA-256 of the model artefact at ArtifactUri.</Description>
     <References>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5087</Reference>
@@ -910,7 +912,7 @@
     <DisplayName>OnServerDeployment</DisplayName>
     <Description>Inference in the Server's own process, on the station industrial PC.</Description>
     <References>
-      <Reference ReferenceType="HasTypeDefinition">ns=2;i=1017</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=3;i=1004</Reference>
       <Reference ReferenceType="Organizes" IsForward="false">ns=1;i=5004</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=5098</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=5099</Reference>
@@ -927,18 +929,16 @@
     </References>
     <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">deploy-onserver-01</uax:String></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=5099" BrowseName="1:InferenceLocation" ParentNodeId="ns=1;i=5097" DataType="ns=2;i=3007">
+  <UAVariable NodeId="ns=1;i=5099" BrowseName="1:InferenceLocation" ParentNodeId="ns=1;i=5097" DataType="ns=3;i=3001">
     <DisplayName>InferenceLocation</DisplayName>
-    <Description>VisionInferenceLocationEnum.OnServer</Description>
     <References>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5097</Reference>
     </References>
     <Value><uax:Int32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">0</uax:Int32></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=5100" BrowseName="1:AcceleratorKind" ParentNodeId="ns=1;i=5097" DataType="ns=2;i=3008">
+  <UAVariable NodeId="ns=1;i=5100" BrowseName="1:AcceleratorKind" ParentNodeId="ns=1;i=5097" DataType="ns=3;i=3002">
     <DisplayName>AcceleratorKind</DisplayName>
-    <Description>VisionAcceleratorKindEnum.Npu</Description>
     <References>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5097</Reference>

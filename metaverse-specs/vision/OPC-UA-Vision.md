@@ -64,11 +64,17 @@ Release 0.1.0 covers sensors, media endpoints, frames and calibration, AI model/
 
 Informative alignments — GenICam SFNC and PFNC, QIF (ISO 23952), ROS 2 `vision_msgs`, IDTA 02058/02059/02060 — are listed in Annex E. They are **not** normative references and impose no dependency.
 
-One further informative reference is called out here rather than in Annex E, because §6.7 defines an optional facet against it:
+- **OPC UA — AI Deployment and Learning** — [`../ai-deployment/OPC-UA-AI-Deployment.md`](../ai-deployment/OPC-UA-AI-Deployment.md). A **working draft in this repository**. It defines the model nameplate, the dataset, the deployment and the learning job that clauses 8 and 9 use. It is a **conditional** reference: this NodeSet declares no `RequiredModel` on it, `InferencePipelineType.Deployment` is a plain `NodeId`, and a Server claiming only **VIS-Base** need not implement it. The **VIS-Inference-\*** and **VIS-Learning** facets do require it (clause 11), because without it there is no auditable path from a verdict to the artefact that produced it.
+
+Two further informative references are called out here rather than in Annex E, because §6.7 defines an optional facet against the first:
 
 - **OPC UA — Data Channels** — [`../../core-specs/data-channels/OPC-UA-Data-Channels.md`](../../core-specs/data-channels/OPC-UA-Data-Channels.md). A **working draft in this repository**, written as an errata package against OPC 10000-3, -4 and -6. It is **not a released OPC UA specification**: its NodeIds (`65000+`), its `STR` MessageType, its ALPN identifier and its StatusCodes are all provisional, and it may change or be abandoned. It is **informative and non-normative here, and imposes no dependency** — §6.7 defines an entirely optional facet against it, this model references none of its identifiers, and a Server that has never heard of it is fully conformant to this specification.
 
 ---
+
+### 2.1 Names taken from other specifications
+
+`ModelType`, `DatasetType`, `DeploymentType`, `LearningJobType`, `TensorSignatureDataType`, `InferenceLocationEnum`, `AcceleratorKindEnum`, `DatasetSourceEnum`, `LearningJobStateEnum` and the `UsesModel` and `TrainedOn` ReferenceTypes are defined by *OPC UA — AI Deployment and Learning* and are used here unqualified. They are **not** in this specification's namespace, and a Server conforming to **VIS-Base** need not implement any of them — see §8.1 and clause 11.
 
 ## 3 Terms, definitions and abbreviations
 
@@ -83,7 +89,7 @@ One further informative reference is called out here rather than in Annex E, bec
 | **Characteristic** | One measured property of an inspected part, with nominal, actual, tolerance and uncertainty. |
 | **Detection** | One detected instance, with a class, a score, and geometry. |
 | **Deployment** | A model made executable at a stated location. |
-| **On-server / off-server inference** | Whether the computation happens in the Server's process or elsewhere. Distinguished by `VisionInferenceLocationEnum`, and by nothing else. |
+| **On-server / off-server inference** | Whether the computation happens in the Server's process or elsewhere. Distinguished by `InferenceLocationEnum`, and by nothing else. |
 | **Sim/real symmetry** | The property that a physical and a simulated sensor expose the same members with the same meaning, so a client works against either without change (§4.3). |
 | **Point cloud** | An unordered set of 3-D points, each at least an (x, y, z) coordinate in a named frame and optionally carrying intensity, colour or a normal. It is the native output of a depth or laser-triangulation sensor. A single frame is routinely megabytes, so this specification obtains one through a media endpoint and never as an OPC UA array (§5.6). |
 | **6-DoF pose** | A rigid-body placement with **six degrees of freedom** — three of position (x, y, z) and three of orientation — expressed relative to a named frame. It is what a robot controller needs in order to move to an object: position alone cannot say how to approach or grip it. Carried by `VisionPose3DDataType`, whose orientation is a unit quaternion ordered (x, y, z, w) per §5.12. |
@@ -153,12 +159,12 @@ graph TD
     CAM --> CAL["Calibrations"]
 
     PIPES --> PIPE["InferencePipelineType"]
-    PIPE --> DEPLOY["AiDeploymentType"]
-    DEPLOY --> MODEL["AiModelType"]
+    PIPE -.NodeId.-> DEPLOY["DeploymentType<br/><i>AI Deployment spec</i>"]
+    DEPLOY --> MODEL["ModelType<br/><i>AI Deployment spec</i>"]
     PIPE --> RESULT["InspectionResultType / DetectionResultType"]
     PIPE --> FB["Feedback : VisionFeedbackType"]
-    FB --> LEARN["LearningJobType"]
-    LEARN --> DATASET["AiDatasetType"]
+    FB --> LEARN["LearningJobType<br/><i>AI Deployment spec</i>"]
+    LEARN --> DATASET["DatasetType<br/><i>AI Deployment spec</i>"]
 
     CAM -.HasScenePrim.-> PRIM["UsdGeomCameraType (Part 2)"]
 ```
@@ -174,7 +180,7 @@ The model has **25 ObjectTypes**, and they exist in five groups, each answering 
 | **Sensing** | What is the device, and what did it see it with? | `VisionSensorType`, `ImageSensorType`, `Depth3DSensorType`, `OpticsType`, `IlluminationType` | §5.4–5.5 |
 | **Media** | How do I get the imagery, without putting it in OPC UA? | `VisionMediaManagementType`, `MediaEndpointType`, `StreamEndpointType`, `ClipEndpointType` | §6 |
 | **Spatial** | Where is the sensor, and what is a pose *relative to*? | `CoordinateFrameType`, `VisionCalibrationType`, `IntrinsicCalibrationType`, `ExtrinsicCalibrationType` | §5.8 |
-| **AI** | What computed the answer, and can I audit it? | `AiModelType`, `AiDatasetType`, `AiDeploymentType`, `InferencePipelineType`, `LearningJobType` | §8, §9 |
+| **AI** | What computed the answer, and can I audit it? | `InferencePipelineType` here; `ModelType`, `DatasetType`, `DeploymentType` and `LearningJobType` in *OPC UA — AI Deployment and Learning* | §8, §9 |
 | **Outcome** | What is the answer, and how do I correct it? | `VisionResultType`, `InspectionResultType`, `DetectionResultType`, `SegmentationResultType`, `VisionFeedbackType` | §7, §9 |
 
 Plus two structural types: `VisionRootType`, the entry point (§4.2), and `IVisionSimulatedType`, the interface that makes a synthetic sensor addressable (§5.9).
@@ -232,15 +238,15 @@ graph TD
 
     FF --> FRAME["CoordinateFrameType<br/>FrameId, Role"]
 
-    FM --> MODEL["AiModelType<br/>ModelId, Version, Digest"]
-    FM --> DSET["AiDatasetType<br/>SourceKind"]
-    FM --> DEPL["AiDeploymentType<br/>InferenceLocation, EndpointUri"]
+    FM --> MODEL["ModelType<br/>ModelId, Version, Digest<br/><i>AI Deployment spec</i>"]
+    FM --> DSET["DatasetType<br/>SourceKind<br/><i>AI Deployment spec</i>"]
+    FM --> DEPL["DeploymentType<br/>InferenceLocation, EndpointUri<br/><i>AI Deployment spec</i>"]
 
     FP --> PIPE["InferencePipelineType<br/>State, Continuous"]
     PIPE --> RES["Results/<br/>InspectionResultType | DetectionResultType"]
     PIPE --> FB["Feedback : VisionFeedbackType<br/>SubmitCorrection"]
 
-    FJ --> JOB["LearningJobType<br/>State, SamplesCollected"]
+    FJ --> JOB["LearningJobType<br/>State, SamplesCollected<br/><i>AI Deployment spec</i>"]
 
     SENSOR -.HasCalibration.-> ICAL
     SENSOR -.HasCalibration.-> ECAL
@@ -364,36 +370,31 @@ The enumerations are closed: each is contiguous from 0, and the repository valid
 | Enumeration | What it states |
 |---|---|
 | `VisionRealityKindEnum` | Whether a sensor is `Physical`, `Simulated` or `Hybrid` (§4.3). |
-| `VisionSensorModalityEnum` | What the sensor senses — `Area2D`, `Line2D`, `Depth3D`, `Thermal` and so on. |
+| `VisionSensorModalityEnum` | What the sensor senses — `Area2D`, `Line2D`, `Depth3D`, `Thermal`, `Multispectral`, `Event`, `Other`. |
 | `VisionStreamProtocolEnum` | Wire protocol of a continuous stream. `Rtsp` is value 0 and the mandatory default (§6.2); `DataChannel` is the optional in-band path of §6.7. |
 | `VisionClipFormatEnum` | Encoding of a single still. `Jpeg` is value 0 and the mandatory default. |
-| `VisionVideoCodecEnum` | Codec carried by a stream endpoint, for example H.264. |
+| `VisionVideoCodecEnum` | Codec carried by a stream endpoint — `H264`, `H265`, `Mjpeg`, `Av1`, `Raw`, `Other`. |
 | `VisionEndpointStateEnum` | Lifecycle state shared by media endpoints, deployments and pipelines (§6.6). |
-| `VisionEndpointAuthenticationEnum` | How the media plane authenticates, independently of the OPC UA session (§12.1). |
-| `VisionInferenceLocationEnum` | Where inference runs — `OnServer`, `EdgeOffServer`, `Cloud`, `InSimulator`. Changes the trust boundary and nothing else (§8.2). |
-| `VisionAcceleratorKindEnum` | Class of hardware executing the model, for example GPU or NPU. |
+| `VisionEndpointAuthenticationEnum` | How the media plane authenticates, independently of the OPC UA session — `None`, `Basic`, `Digest`, `Token`, `MutualTls` (§12.1). |
 | `VisionResultEvaluationEnum` | Overall inspection verdict — `Undefined`, `Ok`, `NotOk`, `NotDecidable`. Value semantics reused from OPC 40001-101. |
-| `VisionToleranceStatusEnum` | Per-characteristic outcome, including `Indeterminate` when uncertainty crosses a tolerance limit (§7.2). |
+| `VisionToleranceStatusEnum` | Per-characteristic outcome — `InTolerance`, `OutOfTolerance`, `Indeterminate`, the last when uncertainty crosses a tolerance limit (§7.2). |
 | `VisionFeedbackPurposeEnum` | Why a client is submitting feedback — to draw an overlay, to reconcile a record, or to supply a ground-truth label (§9). |
-| `VisionCalibrationMountEnum` | The camera-to-robot arrangement a hand-eye calibration applies to: `EyeInHand`, `EyeToHand` or `Fixed`. |
+| `VisionCalibrationMountEnum` | The camera-to-robot arrangement a hand-eye calibration applies to — `EyeInHand`, `EyeToHand`, `Fixed`, or `Unknown` where the Server cannot tell. |
 | `VisionFrameRoleEnum` | The role a coordinate frame plays, from the ISO 9787 vocabulary — world, base, mechanical interface, tool, object — plus `Camera`, which ISO 9787 does not define. The mechanical interface and the tool are separate roles: an eye-in-hand calibration resolves to the flange, while a grasp is executed at the tool centre point. |
 | `VisionDistortionModelEnum` | Which lens-distortion model the coefficients follow; §5.12 fixes their ordering per model. |
-| `VisionLearningJobStateEnum` | Where a learning job is in its lifecycle (§9.6). |
-| `VisionDatasetSourceEnum` | Whether a dataset is `Real`, `Synthetic` or `Mixed` — the provenance a reviewer needs when synthetic data is involved. |
 
 The structures are structures, not folders of Variables, because each is read as a unit or not at all. Splitting `VisionPose3DDataType` into seven Variables would let a client read a position from one acquisition and an orientation from the next, and would multiply the MonitoredItem count on a busy line by an order of magnitude. It also makes the array cases — `Detections`, `Characteristics` — a single value change rather than a variable-length subtree that has to be re-browsed whenever the part changes.
 
 | Structure | What it carries |
 |---|---|
 | `VisionPose3DDataType` | A 6-DoF pose (§3): position in metres, orientation as a unit quaternion, the `FrameId` it is relative to, and an optional covariance. |
-| `VisionBoundingBox2DDataType` | An axis-aligned or rotated box in pixel coordinates, for a detection in the image plane. |
-| `VisionBoundingBox3DDataType` | An oriented box in metres, for a detection localised in space. |
+| `VisionBoundingBox2DDataType` | An axis-aligned or rotated box in pixel coordinates, for a detection in the image plane: `CenterX`, `CenterY`, `Width`, `Height`, `Rotation`. |
+| `VisionBoundingBox3DDataType` | An oriented box in metres, for a detection localised in space: `Center` and `Size`. |
 | `VisionImageReferenceDataType` | A descriptor for an image the client fetches elsewhere: `Uri`, `Timestamp`, `Digest` and format. The correlation key of §6.4 rule 4. |
 | `VisionIntrinsicsDataType` | Camera intrinsics — focal lengths, principal point, skew, distortion model and coefficients, and the resolution they were computed at. |
-| `VisionDetectionDataType` | One detected instance: class label and id, confidence, optional 2-D and 3-D geometry, optional pose, optional track id. Shaped on ROS 2 `vision_msgs`. |
-| `VisionCharacteristicDataType` | One measured property of a part: nominal, actual, deviation, tolerances, unit, **uncertainty** and status. Shaped on QIF (ISO 23952) Results. |
+| `VisionDetectionDataType` | One detected instance: `DetectionId`, `ClassLabel`, `ClassId`, `Confidence`, optional 2-D and 3-D geometry, optional pose, optional `TrackId`. Shaped on ROS 2 `vision_msgs`. |
+| `VisionCharacteristicDataType` | One measured property of a part: `CharacteristicId`, `Name`, nominal, actual, deviation, tolerances, unit, **uncertainty** and status. Shaped on QIF (ISO 23952) Results. |
 | `VisionStreamSessionDataType` | A granted media lease: the `Uri`, its expiry, and the protocol actually served. Returned by `GetStreamEndpoint`, never published as a Variable (§12.2). |
-| `VisionTensorSignatureDataType` | The shape, element type and layout of one model input or output, so a client can tell whether it can feed the model. |
 
 Full field-level detail — DataType, ValueRank, ModellingRule, structure fields, enumeration values and Method signatures — is in the generated Annex A. Units and orderings for every quantity are fixed normatively in §5.12.
 
@@ -408,7 +409,6 @@ The following constraints are **normative**; a Server **shall not** use these Re
 | `HasCalibration` | `IsCalibrationOf` | `VisionSensorType` | `VisionCalibrationType` | 0..n, at most one *valid* per calibration kind |
 | `MountedOn` | `HasMounted` | `VisionSensorType` | `CoordinateFrameType` | 0..1 |
 | `HasScenePrim` | `IsScenePrimOf` | `VisionSensorType` | a materialized camera prim (Annex C) | 0..1 |
-| `UsesModel` | `IsUsedByDeployment` | `AiDeploymentType` | `AiModelType` | **exactly 1** |
 | `ProducedBy` | `Produces` | `VisionResultType` | `InferencePipelineType` | 0..1 |
 
 - **`HasCalibration`** links a sensor to a calibration that applies to it. Following it forward answers *how do I interpret this sensor's output*; following `IsCalibrationOf` back answers *which sensors does this calibration affect*, which is what a maintenance client asks after re-calibrating. The cardinality allows a history of superseded calibrations to remain browsable, so long as only one per kind is `Valid`.
@@ -419,7 +419,7 @@ The following constraints are **normative**; a Server **shall not** use these Re
 
 The following are **normative**:
 
-- An `AiDeploymentType` instance **shall** have exactly one `UsesModel` reference to an `AiModelType` instance. This is the only defined path from a result to the model artefact and its `Digest`, and §12.6 depends on it.
+- An `DeploymentType` instance **shall** have exactly one `UsesModel` reference to an `ModelType` instance. This is the only defined path from a result to the model artefact and its `Digest`, and §12.6 depends on it.
 - A `VisionResultType` instance **shall** identify its producer either by the `Pipeline` Property or by a `ProducedBy` reference. Where both are present they **shall** designate the same `InferencePipelineType` instance; a client **shall** treat the `ProducedBy` reference as authoritative.
 - Where a sensor is calibrated, it **shall** carry a `HasCalibration` reference to each applicable calibration in addition to listing it under `Calibrations`.
 
@@ -594,7 +594,7 @@ Where the selected endpoint is a data-channel endpoint (§6.7), `Session.Uri` **
 
 ### 6.6 Endpoint state model (normative)
 
-`VisionEndpointStateEnum` is used by `MediaEndpointType`, `AiDeploymentType` and `InferencePipelineType`. All transitions are **Server-driven**; no Method sets `State` directly.
+`VisionEndpointStateEnum` is used by `MediaEndpointType` and `InferencePipelineType`. *OPC UA — AI Deployment and Learning* defines its own `DeploymentStateEnum` with the same five literals and the same transitions, so a client can apply one rule to both without this specification imposing a dependency. All transitions are **Server-driven**; no Method sets `State` directly.
 
 ```mermaid
 stateDiagram-v2
@@ -689,29 +689,28 @@ Mandatory `Mask`, a `VisionImageReferenceDataType`. Masks are images and follow 
 
 ## 8 AI integration (normative)
 
-### 8.1 Model, dataset, deployment
+### 8.1 The model this pipeline runs
 
-`AiModelType` is a model nameplate: identity, version, framework, format, task kind, digest, provenance, label classes, and input/output tensor signatures. `AiDatasetType` describes training or validation data, including `SourceKind` — `Real`, `Synthetic` or `Mixed` — which is the provenance a reviewer needs when synthetic data is involved. `AiDeploymentType` makes a model executable somewhere.
+The model itself, the data it was trained on and the deployment that executes it are **not** defined here. They are defined by *OPC UA — AI Deployment and Learning*, which is domain-neutral: nothing about a model nameplate, a dataset's provenance or an inference endpoint is specific to a camera, and a specification that defined them here would oblige every other domain either to depend on a vision model or to define them again.
 
-All three align member-for-member with the IDTA submodel templates **02060** (AI Model Nameplate), **02058** (AI Dataset) and **02059** (AI Deployment), which are currently the only standardised description of an industrial AI model. An Asset Administration Shell can therefore be populated from these nodes without loss (Annex E).
+`InferencePipelineType.Deployment` is a **`NodeId` Property** naming that deployment. It is a NodeId and not a reference precisely so that this NodeSet takes no dependency: a Server implementing this specification alone is fully conformant, and a Server that describes its deployment some other way names that node instead.
+
+Where the Server implements both, the deployment is a `DeploymentType` instance and the chain in §12.6 — result → deployment → model → digest — is available end to end. Where it does not, §12.6's provenance guarantee is unavailable, which is why the **VIS-Inference-\*** facets require it (§11.2).
 
 #### 8.1.1 A model is a business artefact, not device firmware
 
-This is the assumption the whole clause rests on, and it is why the model is separated from the sensor that uses it.
+This assumption is why the model is separated from the sensor that uses it, and it is what makes the separation of specifications the right shape rather than merely a tidy one.
 
-An AI model is **supplied and governed by the end-user**, not baked into the device by its manufacturer. In practice it is trained, approved and released by the operator, a system integrator, or a model vendor, against that organisation's own quality, safety and regulatory obligations. The same physical camera runs different models over its life; the same model runs on many cameras and on off-server hardware the camera vendor never sees. A device-embedded model would be indistinguishable from firmware and would need none of `AiModelType`.
+An AI model is **supplied and governed by the end-user**, not baked into the device by its manufacturer. The same physical camera runs different models over its life; the same model runs on many cameras and on off-server hardware the camera vendor never sees.
 
-Three consequences are normative:
+Two consequences are normative here, and the rest belong to the specification that owns the model:
 
-1. **Lifecycles are independent.** A Server **shall not** require a device firmware change to change the deployed model, and **shall not** tie `AiModelType.Version` to any device or firmware version. Replacing a model **shall** be observable as a change to the `UsesModel` reference of an `AiDeploymentType`, or to that model's `Version` and `Digest` — not as a change to the sensor.
-2. **The Server describes; it does not govern.** This model carries *what is deployed and where it came from* — `ModelId`, `Version`, `Digest`, `ProvenanceUri`, `TrainedOn` — so that a business process can audit it. Approval workflow, release criteria, sign-off and retention policy are **out of scope**: they belong to the organisation's governance system, and a Server **shall not** be assumed to enforce them. `ProvenanceUri` is the defined hand-off point to that system.
-3. **Authority to change a model is separate from authority to operate the device.** A client authorized to browse a sensor, view its stream or trigger inference is **not** thereby authorized to promote or replace a model. §12.5 requires that authorization to be distinct, because substituting a model silently changes every verdict the line produces.
-
-Where a vendor *does* ship a fixed model with a device, that is expressible — a single `AiModelType` whose `ProvenanceUri` names the vendor — but it is one case of the general arrangement, not the assumption behind it.
+1. **Lifecycles are independent.** A Server **shall not** require a device firmware change to change the deployed model, and **shall not** tie a model's version to any device or firmware version. Replacing a model **shall** be observable as a change to the deployment, not as a change to the sensor.
+2. **Authority to change a model is separate from authority to operate the device.** A client authorized to browse a sensor, view its stream or trigger inference is **not** thereby authorized to promote or replace a model — see §12.5.
 
 ### 8.2 On-server and off-server inference
 
-`AiDeploymentType.InferenceLocation` is mandatory and takes one of `OnServer`, `EdgeOffServer`, `Cloud`, `InSimulator`.
+The deployment's inference location is mandatory in the model that defines it and takes one of `OnServer`, `EdgeOffServer`, `Cloud`, `InSimulator`. It is restated here because it is what a vision client reasons about when it decides whether to trust a latency budget.
 
 **This property changes where computation happens and therefore the trust boundary. It changes nothing else.** A Server **shall** publish results through the same types, with the same members and the same meaning, regardless of its value. When inference is off-server the Server publishes results it did not compute; a client that does not care where inference ran does not have to look.
 
@@ -739,7 +738,7 @@ sequenceDiagram
     C->>S: Read Results/<ResultId>
     S-->>C: InspectionResultType / DetectionResultType
     C->>S: Browse result -> ProducedBy -> Deployment -> UsesModel
-    S-->>C: AiModelType (Version, Digest)
+    S-->>C: ModelType (Version, Digest)
 ```
 
 **`OnServer`** — the Server computes the result itself, so the only failure mode is its own:
@@ -884,12 +883,12 @@ Any `Uri` in a submitted `VisionImageReferenceDataType` is a location the Server
 graph LR
     R["Result published"] --> OP["Operator or downstream<br/>disagrees"]
     OP --> C["SubmitCorrection<br/>Purpose = GroundTruthLabel"]
-    C --> D["AiDatasetType<br/>SamplesCollected++"]
+    C --> D["DatasetType<br/>SamplesCollected++"]
     D --> T["TriggerTraining"]
     T --> CM["CandidateModel"]
     CM --> V["Validating"]
     V --> P["PromoteModel"]
-    P --> DEP["AiDeploymentType<br/>now serving new version"]
+    P --> DEP["DeploymentType<br/>now serving new version"]
     DEP --> R
 ```
 
@@ -933,7 +932,7 @@ A Server that accepts a correction with `Purpose = GroundTruthLabel` **shall** e
 
 `StartCollection` and `StopCollection` are idempotent. `TriggerTraining` returns `Accepted = false`, with `Good`, when the Server queued nothing but the request was otherwise valid — for example because an external MLOps system declined it; `LastError` **shall** then carry the reason.
 
-`PromoteModel` moves `CandidateModel` into service. A null `Deployment` means *every* deployment fed by this job: the Server **shall** promote the candidate to all of them, or to none, and **shall not** promote a subset. `PromotedModel` returns the NodeId of the `AiModelType` instance that was promoted, which is the same node in either case — it identifies the model, not the deployment — so a caller that needs to know which deployments changed browses their `UsesModel` references afterwards.
+`PromoteModel` moves `CandidateModel` into service. A null `Deployment` means *every* deployment fed by this job: the Server **shall** promote the candidate to all of them, or to none, and **shall not** promote a subset. `PromotedModel` returns the NodeId of the `ModelType` instance that was promoted, which is the same node in either case — it identifies the model, not the deployment — so a caller that needs to know which deployments changed browses their `UsesModel` references afterwards.
 
 ### 9.6 Learning job state model (normative)
 
@@ -1008,7 +1007,7 @@ Where a facet's row names members, a Server claiming it **shall** instantiate ev
 | **VIS-Result-Inspection** | `InspectionResultType` with `Evaluation` and `Characteristics`, and the §7.2 uncertainty rule including its uniform-reporting requirement |
 | **VIS-Result-Detection** | `DetectionResultType` with `Detections`, the §5.12 pose conventions, and the §7.3 `FrameId` rule |
 | **VIS-Feedback** | `VisionFeedbackType` with at least `SubmitImageReference`, the §9.3 and §9.5 rules, the §12.3 inbound-URI validation, and the §12.7 feedback-integrity rules |
-| **VIS-Inference-OnServer** | `InferencePipelineType` with a deployment whose `InferenceLocation` is `OnServer`, and the §5.11 `UsesModel` constraint. Where `RunInference` is implemented, `Results` (§8.4). `AiModelType.Digest` and `DigestAlgorithm` per §12.6 |
+| **VIS-Inference-OnServer** | `InferencePipelineType` with a deployment whose `InferenceLocation` is `OnServer`, and the `UsesModel` constraint. Where `RunInference` is implemented, `Results` (§8.4). `ModelType.Digest` and `DigestAlgorithm` per §12.6 |
 | **VIS-Inference-OffServer** | As above with any other `InferenceLocation`, plus `EndpointUri` naming an authenticated, confidential scheme (§12.6) |
 | **VIS-Simulation** | `IVisionSimulatedType` on every sensor whose `RealityKind` is `Simulated` or `Hybrid` (§4.3, §10). **Required** of any Server that reports either value. |
 | **VIS-Learning** | `LearningJobType`, `SubmitCorrection`, the §9.6 state model, every Method that drives a transition in it — `StartCollection`, `StopCollection`, `TriggerTraining`, `PromoteModel` — and the **distinct `PromoteModel` authorization** of §12.5 |
@@ -1017,6 +1016,8 @@ Where a facet's row names members, a Server claiming it **shall** instantiate ev
 | **VIS-Interop-RobotIntent** | The numbered requirements of Annex I, which are normative for a Server claiming this facet |
 
 Facets are independent and additive except where a row states a dependency. Two dependencies exist: *VIS-Base* requires *VIS-Media-Rtsp* and *VIS-Media-Jpeg*, and *VIS-Simulation* is required — not merely permitted — of any Server that reports `RealityKind` as `Simulated` or `Hybrid`. A facet is claimed only when every member and rule it lists is satisfied.
+
+**Three facets require a second specification.** *VIS-Inference-OnServer*, *VIS-Inference-OffServer* and *VIS-Learning* each name a type defined by *OPC UA — AI Deployment and Learning* — `DeploymentType`, `ModelType`, `LearningJobType` — so a Server claiming any of them **shall** also implement that specification's **AI-Base** facet, and **AI-Learning** for *VIS-Learning*. This is the only place either specification depends on the other, and it is stated as a facet precondition rather than a `RequiredModel` deliberately: a Server that publishes cameras, calibration and results and never mentions a model is fully conformant to **VIS-Base** with this NodeSet alone.
 
 *VIS-Media-DataChannel* is the only facet defined against a document that is not a released specification. It is marked as such in its row and in §6.7, and it is deliberately structured so that its withdrawal would cost nothing: the two members it uses become permanently null, the enumeration literal goes unused, and every other facet is unaffected.
 
@@ -1082,20 +1083,20 @@ A Server **shall** retain an audit record of every correction and promotion, inc
 
 ### 12.6 Off-server inference crosses a trust boundary
 
-When `InferenceLocation` is not `OnServer`, results were computed by a system the OPC UA client cannot inspect. A Server **shall** establish an authenticated, integrity-protected channel to that service. `AiDeploymentType.EndpointUri` **shall** name a scheme that provides authentication and confidentiality — for example `https` or `grpcs`, not their plaintext counterparts — and a Server **shall not** publish a plaintext scheme for a deployment it claims conformance for.
+When `InferenceLocation` is not `OnServer`, results were computed by a system the OPC UA client cannot inspect. A Server **shall** establish an authenticated, integrity-protected channel to that service. `DeploymentType.EndpointUri` **shall** name a scheme that provides authentication and confidentiality — for example `https` or `grpcs`, not their plaintext counterparts — and a Server **shall not** publish a plaintext scheme for a deployment it claims conformance for.
 
-**Artefact integrity.** A Server **shall** publish `AiModelType.Digest` together with `AiModelType.DigestAlgorithm` for every model whose artefact is obtainable through `ArtifactUri`; both are Mandatory for this reason, and clause 11 makes the pair a condition of the inference facets. `DigestAlgorithm` **shall** name a hash function with at least 256-bit output and no known collision weakness — SHA-256 is the default and is always acceptable. A Server **shall not** publish `MD5`, `SHA-1`, or a truncated variant of any function; chosen-prefix collisions against those are practical, so a digest computed with them would let a substituted artefact pass verification. A client **shall** refuse a digest whose algorithm it does not recognise, or that does not meet this bar, rather than skipping verification and reporting success. Where `Digest` is non-empty, `DigestAlgorithm` **shall** be non-empty.
+**Artefact integrity.** A model artefact fetched out of band is bytes this Server did not serve, so the only thing that ties it to the answer is the digest. *OPC UA — AI Deployment and Learning* makes the model's `Digest` and `DigestAlgorithm` Mandatory, bars weak and truncated hash functions, and requires a client to refuse an algorithm it does not recognise rather than skip verification and report success. This specification does not restate those rules — it makes them a **condition of the inference facets** (clause 11): a Server claiming **VIS-Inference-OffServer** without a verifiable digest has published an unauditable verdict, which is the whole failure this clause exists to prevent.
 
-Digest verification is the only integrity control this specification defines for bytes fetched out of band, and it is the terminus of the provenance chain that §5.11 requires `UsesModel` to keep intact.
+Digest verification is the terminus of the provenance chain, and `UsesModel` is what keeps that chain intact.
 
 ### 12.7 Feedback is untrusted training data
 
-§12.5 governs *permission to call* a feedback Method. This clause governs what may then be *believed*, which is a separate question: §9.4 routes a submitted `GroundTruthLabel` into `AiDatasetType`, then into a training run, a `CandidateModel` and — after promotion — into every verdict the line produces. A single misused credential on the feedback surface is therefore a path to influencing safety-relevant decisions, and authorization alone does not bound it.
+§12.5 governs *permission to call* a feedback Method. This clause governs what may then be *believed*, which is a separate question: §9.4 routes a submitted `GroundTruthLabel` into `DatasetType`, then into a training run, a `CandidateModel` and — after promotion — into every verdict the line produces. A single misused credential on the feedback surface is therefore a path to influencing safety-relevant decisions, and authorization alone does not bound it.
 
 A Server **shall**:
 
 1. record the authenticated caller identity with every retained sample whose `Purpose` is `GroundTruthLabel`, and make it available to the `LearningJobType` that consumes the dataset — an unattributable label set cannot be reviewed or retracted;
-2. distinguish, within `AiDatasetType`, samples originating from client feedback from samples originating from capture, so that a reviewer can weigh them differently; and
+2. distinguish, within `DatasetType`, samples originating from client feedback from samples originating from capture, so that a reviewer can weigh them differently; and
 3. require a distinct authorization or an explicit approval step before client-submitted labels are admitted to a training run, mirroring the `PromoteModel` gate of §12.5.
 
 A Server **should** bound the proportion of any dataset contributed by a single principal, and **should** support retracting all samples attributed to one identity.
@@ -1189,7 +1190,7 @@ Replicator attaches annotators to a render product. These are simulation outputs
 | `pointcloud` | `Depth3DSensorType` output, via a media endpoint |
 | `normals`, `motion_vectors` | auxiliary channels, out of scope |
 
-Class labels come from the `Semantics` applied API schema on prims, which Part 2 materializes as a `UsdApiSchemaType` AddIn. A client can therefore read a stage's label set over OPC UA and know which classes a generated dataset will contain **before** running the simulation — and those labels are the same strings that appear in `AiModelType.LabelClasses` and `VisionDetectionDataType.ClassLabel`.
+Class labels come from the `Semantics` applied API schema on prims, which Part 2 materializes as a `UsdApiSchemaType` AddIn. A client can therefore read a stage's label set over OPC UA and know which classes a generated dataset will contain **before** running the simulation — and those labels are the same strings that appear in `ModelType.LabelClasses` and `VisionDetectionDataType.ClassLabel`.
 
 Because these are ground truth rather than prediction, §10 requires a Server to make them distinguishable from inference output.
 
@@ -1197,11 +1198,11 @@ Because these are ground truth rather than prediction, §10 requires a Server to
 
 | This specification | Isaac Sim |
 |---|---|
-| `AiDatasetType` with `SourceKind = Synthetic` | Replicator writer output (BasicWriter, COCO, KITTI) |
-| `AiDatasetType.SampleCount` | frames written |
+| `DatasetType` with `SourceKind = Synthetic` | Replicator writer output (BasicWriter, COCO, KITTI) |
+| `DatasetType.SampleCount` | frames written |
 | `IVisionSimulatedType.RandomizationSeed` | domain randomization seed |
 | `LearningJobType` states `Collecting` → `Training` | a randomization run, then Isaac Lab or an external trainer |
-| `AiDeploymentType` with `InferenceLocation = InSimulator` | inference inside the simulator, for closed-loop evaluation |
+| `DeploymentType` with `InferenceLocation = InSimulator` | inference inside the simulator, for closed-loop evaluation |
 
 ### B.5 Streaming from a simulator
 
@@ -1212,7 +1213,7 @@ A simulated sensor still needs a `StreamEndpointType` with `StreamProtocol = Rts
 1. Part 2 materializes the cell — geometry, semantic labels, and one or more `UsdGeomCameraType` prims.
 2. Part 1 bindings drive live plant state into the stage, so the simulated cell tracks the real one.
 3. A `VisionSensorType` with `RealityKind = Simulated` points at the camera prim through `PrimPath` and `HasScenePrim`.
-4. Replicator renders and emits annotators; the Server publishes them as results and accumulates an `AiDatasetType` with `SourceKind = Synthetic`.
+4. Replicator renders and emits annotators; the Server publishes them as results and accumulates a `DatasetType` with `SourceKind = Synthetic`.
 5. `LearningJobType` trains a `CandidateModel` and promotes it.
 6. The promoted model is deployed against the **physical** sensor — same types, same members, `RealityKind = Physical`.
 7. Operator corrections from the line arrive through `SubmitCorrection` and seed the next dataset, now `Mixed`.
@@ -1266,7 +1267,7 @@ The alignment table below records the correspondence the requirements above rest
 | OPC 40100-2 `ILensType` | `OpticsType`, member names already aligned |
 | OPC 40100-2 `ILampType`, `ILightingControllerType` | `IlluminationType`, member names already aligned |
 | OPC 40100-2 `VisionImageSensorType` (no members) | `ImageSensorType` supplies the imaging parameters it lacks |
-| OPC 40100-2 `SoftwareComponents` | `AiModelType` for the model specifically |
+| OPC 40100-2 `SoftwareComponents` | `ModelType` for the model specifically |
 
 The intended division is that OPC 40100 answers *"what job is the system running"* and this specification answers *"what did it see, how, and with what model"*. Neither requires the other, and a Server is fully conformant to this specification without this facet.
 
@@ -1329,9 +1330,9 @@ The `CameraInfo` mapping is **not** a copy. Two adjustments are required, both f
 
 | This specification | IDTA template |
 |---|---|
-| `AiModelType` | **IDTA 02060** AI Model Nameplate |
-| `AiDatasetType` | **IDTA 02058** AI Dataset |
-| `AiDeploymentType` | **IDTA 02059** AI Deployment |
+| `ModelType` | **IDTA 02060** AI Model Nameplate |
+| `DatasetType` | **IDTA 02058** AI Dataset |
+| `DeploymentType` | **IDTA 02059** AI Deployment |
 
 There is no IDTA submodel template for machine vision, so `VisionSensorType` and the result types have no counterpart. The OPC UA bridge to the AAS, OPC 30270, currently maps AAS V2.0.1 and is slated for replacement; this model therefore aligns by field name rather than depending on that bridge.
 
@@ -1498,7 +1499,7 @@ The twin additionally implements `IVisionSimulatedType`:
 
 Inference runs **off-server** on a cell-side GPU appliance. The Server publishes results it did not compute. Nothing else in the model changes: a client reads `DetectionResultType` exactly as it would if `InferenceLocation` were `OnServer`, and consults that property only if it cares about the latency or trust boundary. Because the deployment is remote, base specification §12.6 applies: the channel to the inference service is authenticated and integrity-protected, and `AiModelType.Digest` lets a consumer confirm which artefact produced a result.
 
-The deployment carries exactly one `UsesModel` reference to the model above, as base specification §5.11 requires. That reference is the only defined path from a result to the model artefact and its `Digest`, so it is what makes the §12.6 provenance check possible.
+The deployment carries exactly one `UsesModel` reference to the model above, as *OPC UA — AI Deployment and Learning* requires. That reference is the only defined path from a result to the model artefact and its `Digest`, so it is what makes the base specification's §12.6 provenance check possible.
 
 ### F.8 Results
 
@@ -1635,7 +1636,7 @@ Each calibration is reachable from the sensor by a `HasCalibration` reference, a
 
 Inference runs **on-server**: `InferenceLocation = OnServer`, on an NPU in the station industrial PC. A client consuming the results cannot distinguish this from the off-server robotics example except by reading that one property — which is the intent of base specification §8.2. Because the pipeline is not continuous, `RunInference` is called per part by the station PLC and returns the `ResultId` it produced.
 
-The deployment carries exactly one `UsesModel` reference to the model above, as base specification §5.11 requires. That reference is the only defined path from a result to the model artefact and its `Digest`, so it is what makes the §12.6 provenance check possible.
+The deployment carries exactly one `UsesModel` reference to the model above, as *OPC UA — AI Deployment and Learning* requires. That reference is the only defined path from a result to the model artefact and its `Digest`, so it is what makes the base specification's §12.6 provenance check possible.
 
 ### G.7 Results
 

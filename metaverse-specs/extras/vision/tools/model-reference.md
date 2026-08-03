@@ -11,7 +11,6 @@ This annex is the authoritative node reference for the specification: it carries
 | ns=1;i=4001 | HasCalibration | ReferenceType | NonHierarchicalReferences |
 | ns=1;i=4002 | MountedOn | ReferenceType | NonHierarchicalReferences |
 | ns=1;i=4003 | HasScenePrim | ReferenceType | NonHierarchicalReferences |
-| ns=1;i=4004 | UsesModel | ReferenceType | NonHierarchicalReferences |
 | ns=1;i=4005 | ProducedBy | ReferenceType | NonHierarchicalReferences |
 | ns=1;i=1005 | OpticsType | ObjectType | BaseObjectType |
 | ns=1;i=1006 | IlluminationType | ObjectType | BaseObjectType |
@@ -27,16 +26,12 @@ This annex is the authoritative node reference for the specification: it carries
 | ns=1;i=1003 | ImageSensorType | ObjectType | VisionSensorType |
 | ns=1;i=1004 | Depth3DSensorType | ObjectType | VisionSensorType |
 | ns=1;i=1030 | IVisionSimulatedType | ObjectType | BaseInterfaceType |
-| ns=1;i=1015 | AiModelType | ObjectType | BaseObjectType |
-| ns=1;i=1016 | AiDatasetType | ObjectType | BaseObjectType |
-| ns=1;i=1017 | AiDeploymentType | ObjectType | BaseObjectType |
 | ns=1;i=1020 | VisionResultType | ObjectType | BaseObjectType |
 | ns=1;i=1021 | InspectionResultType | ObjectType | VisionResultType |
 | ns=1;i=1022 | DetectionResultType | ObjectType | VisionResultType |
 | ns=1;i=1023 | SegmentationResultType | ObjectType | VisionResultType |
 | ns=1;i=1024 | VisionFeedbackType | ObjectType | BaseObjectType |
 | ns=1;i=1018 | InferencePipelineType | ObjectType | BaseObjectType |
-| ns=1;i=1019 | LearningJobType | ObjectType | BaseObjectType |
 | ns=1;i=1001 | VisionRootType | ObjectType | BaseObjectType |
 | ns=1;i=3001 | VisionRealityKindEnum | DataType | Enumeration |
 | ns=1;i=3002 | VisionStreamProtocolEnum | DataType | Enumeration |
@@ -44,8 +39,6 @@ This annex is the authoritative node reference for the specification: it carries
 | ns=1;i=3004 | VisionVideoCodecEnum | DataType | Enumeration |
 | ns=1;i=3005 | VisionEndpointStateEnum | DataType | Enumeration |
 | ns=1;i=3006 | VisionEndpointAuthenticationEnum | DataType | Enumeration |
-| ns=1;i=3007 | VisionInferenceLocationEnum | DataType | Enumeration |
-| ns=1;i=3008 | VisionAcceleratorKindEnum | DataType | Enumeration |
 | ns=1;i=3009 | VisionResultEvaluationEnum | DataType | Enumeration |
 | ns=1;i=3010 | VisionToleranceStatusEnum | DataType | Enumeration |
 | ns=1;i=3011 | VisionFeedbackPurposeEnum | DataType | Enumeration |
@@ -53,8 +46,6 @@ This annex is the authoritative node reference for the specification: it carries
 | ns=1;i=3013 | VisionFrameRoleEnum | DataType | Enumeration |
 | ns=1;i=3014 | VisionDistortionModelEnum | DataType | Enumeration |
 | ns=1;i=3015 | VisionSensorModalityEnum | DataType | Enumeration |
-| ns=1;i=3016 | VisionLearningJobStateEnum | DataType | Enumeration |
-| ns=1;i=3017 | VisionDatasetSourceEnum | DataType | Enumeration |
 | ns=1;i=3050 | VisionPose3DDataType | DataType | Structure |
 | ns=1;i=3051 | VisionBoundingBox2DDataType | DataType | Structure |
 | ns=1;i=3052 | VisionBoundingBox3DDataType | DataType | Structure |
@@ -63,7 +54,6 @@ This annex is the authoritative node reference for the specification: it carries
 | ns=1;i=3055 | VisionDetectionDataType | DataType | Structure |
 | ns=1;i=3056 | VisionCharacteristicDataType | DataType | Structure |
 | ns=1;i=3057 | VisionStreamSessionDataType | DataType | Structure |
-| ns=1;i=3058 | VisionTensorSignatureDataType | DataType | Structure |
 
 ## A.2 ReferenceTypes
 
@@ -72,7 +62,6 @@ This annex is the authoritative node reference for the specification: it carries
 | ns=1;i=4001 | HasCalibration | IsCalibrationOf | NonHierarchicalReferences | Links a sensor to a calibration currently valid for it. |
 | ns=1;i=4002 | MountedOn | HasMounted | NonHierarchicalReferences | Links a sensor to the CoordinateFrame it is rigidly mounted on, for example a robot flange frame for an eye-in-hand camera. |
 | ns=1;i=4003 | HasScenePrim | IsScenePrimOf | NonHierarchicalReferences | Links a sensor to the materialized USD prim representing it, when the Server also implements OPC UA - OpenUSD Scene Materialization. The target is expected to be a UsdGeomCameraType instance. Optional: PrimPath remains the portable descriptor. |
-| ns=1;i=4004 | UsesModel | IsUsedByDeployment | NonHierarchicalReferences | Links an AiDeploymentType instance to the AiModelType instance it executes. Clause 5.11 requires exactly one such reference per deployment; it is the only defined path from a result to the model artefact and its Digest, on which clause 12.6 depends. |
 | ns=1;i=4005 | ProducedBy | Produces | NonHierarchicalReferences | Links a result to the inference pipeline that produced it. |
 
 ## A.3 ObjectTypes
@@ -350,63 +339,6 @@ Applied to a sensor whose RealityKind is Simulated or Hybrid. It names the simul
 | GroundTruthAvailable | Variable | Boolean | Scalar | Optional | True when the simulator can emit annotator ground truth alongside imagery. |
 | RandomizationSeed | Variable | UInt64 | Scalar | Optional | Seed of the active domain-randomization run, so a dataset can be reproduced. |
 
-### AiModelType — `ns=1;i=1015`
-
-*Subtype of:* `BaseObjectType`
-
-Nameplate of a trained model. The member set is deliberately aligned with the IDTA 02060 AI Model Nameplate submodel template, which is currently the only standardised description of an industrial AI model, so an Asset Administration Shell can be populated from this node without loss.
-
-| BrowseName | NodeClass | DataType | ValueRank | ModellingRule | Description |
-|---|---|---|---|---|---|
-| ModelId | Variable | String | Scalar | Mandatory | Identifier of the model. |
-| Name | Variable | LocalizedText | Scalar | Mandatory | Human-readable model name. |
-| Version | Variable | String | Scalar | Mandatory | Model version. |
-| Framework | Variable | String | Scalar | Optional | Producing framework, for example PyTorch, TensorFlow or scikit-learn. |
-| Format | Variable | String | Scalar | Optional | Serialization format, for example ONNX, TensorRT or OpenVINO IR. |
-| TaskKind | Variable | String | Scalar | Optional | What the model does, for example Detection2D, Detection3D, Classification, Segmentation, PoseEstimation or AnomalyDetection. |
-| Digest | Variable | ByteString | Scalar | Mandatory | Cryptographic digest of the model artefact, for provenance and integrity. Mandatory: clause 12.6 requires it for every model whose artefact is obtainable through ArtifactUri, and it is the terminus of the provenance chain that UsesModel keeps intact. |
-| DigestAlgorithm | Variable | String | Scalar | Mandatory | Hash function used for Digest. SHALL name a function with at least 256-bit output and no known collision weakness; SHA-256 is the default and is always acceptable. SHALL NOT be MD5, SHA-1 or a truncated variant - chosen-prefix collisions against those are practical, so a substituted artefact would pass verification. SHALL be non-empty where Digest is non-empty. See clause 12.6. |
-| ArtifactUri | Variable | String | Scalar | Optional | Where the model artefact can be obtained. Treated as untrusted input. |
-| ProvenanceUri | Variable | String | Scalar | Optional | Training provenance or model card location. |
-| LabelClasses | Variable | String | Array | Optional | Ordered class label set; the index corresponds to VisionDetectionDataType.ClassId. |
-| Inputs | Variable | VisionTensorSignatureDataType | Array | Optional | Input tensor signatures. |
-| Outputs | Variable | VisionTensorSignatureDataType | Array | Optional | Output tensor signatures. |
-
-### AiDatasetType — `ns=1;i=1016`
-
-*Subtype of:* `BaseObjectType`
-
-A dataset used to train or validate a model. Aligned with the IDTA 02058 AI Dataset submodel template. SourceKind distinguishes real capture from simulator output, which is the provenance a reviewer needs when synthetic data is involved.
-
-| BrowseName | NodeClass | DataType | ValueRank | ModellingRule | Description |
-|---|---|---|---|---|---|
-| DatasetId | Variable | String | Scalar | Mandatory | Identifier of the dataset. |
-| Name | Variable | LocalizedText | Scalar | Optional | Human-readable dataset name. |
-| Version | Variable | String | Scalar | Optional | Dataset version. |
-| SourceKind | Variable | VisionDatasetSourceEnum | Scalar | Mandatory | Whether samples are real, synthetic or mixed. |
-| SampleCount | Variable | UInt64 | Scalar | Optional | Number of samples. |
-| LabelClasses | Variable | String | Array | Optional | Class labels present. |
-| CreatedAt | Variable | UtcTime | Scalar | Optional | Creation time. |
-| ArtifactUri | Variable | String | Scalar | Optional | Where the dataset can be obtained. |
-| Digest | Variable | ByteString | Scalar | Optional | Digest of the dataset artefact. |
-
-### AiDeploymentType — `ns=1;i=1017`
-
-*Subtype of:* `BaseObjectType`
-
-A model made executable somewhere. Aligned with the IDTA 02059 AI Deployment submodel template. InferenceLocation is the on-server versus off-server switch: it changes where the computation happens and therefore the trust boundary, but it does NOT change the result contract.
-
-| BrowseName | NodeClass | DataType | ValueRank | ModellingRule | Description |
-|---|---|---|---|---|---|
-| DeploymentId | Variable | String | Scalar | Mandatory | Identifier of the deployment. |
-| InferenceLocation | Variable | VisionInferenceLocationEnum | Scalar | Mandatory | Where inference executes. |
-| AcceleratorKind | Variable | VisionAcceleratorKindEnum | Scalar | Optional | Compute device executing the model. |
-| AcceleratorName | Variable | String | Scalar | Optional | Free-text accelerator identification, for example an NPU or GPU part name. |
-| EndpointUri | Variable | String | Scalar | Optional | Inference endpoint when InferenceLocation is not OnServer. Treated as untrusted input and subject to the resolver policy of the security clause. |
-| LatencyBudget | Variable | Duration | Scalar | Optional | Latency the deployment is expected to meet, so a client can detect regression. |
-| BatchSize | Variable | UInt32 | Scalar | Optional | Configured inference batch size. |
-| State | Variable | VisionEndpointStateEnum | Scalar | Optional | Runtime state of the deployment. |
-
 ### VisionResultType (abstract) — `ns=1;i=1020`
 
 *Subtype of:* `BaseObjectType`
@@ -518,7 +450,7 @@ Binds a sensor to a deployment and publishes the results. The same type serves o
 |---|---|---|---|---|---|
 | PipelineId | Variable | String | Scalar | Mandatory | Identifier of the pipeline. |
 | Sensor | Variable | NodeId | Scalar | Mandatory | Sensor supplying frames. |
-| Deployment | Variable | NodeId | Scalar | Mandatory | Deployment executing inference. |
+| Deployment | Variable | NodeId | Scalar | Mandatory | The deployment executing inference. This is a NodeId, not a reference, and the node it names is NOT defined by this specification - see clause 8.2. Where the Server also implements OPC UA - AI Deployment and Learning it names a DeploymentType instance there, which is what clause 8's provenance argument assumes; a Server that describes its deployment some other way names that node instead. Nothing in this NodeSet references the other model's identifiers, so adopting or ignoring it changes nothing about loading this one. |
 | State | Variable | VisionEndpointStateEnum | Scalar | Mandatory | Runtime state of the pipeline. |
 | Continuous | Variable | Boolean | Scalar | Optional | True while the pipeline runs on every frame. |
 | Results | Object |  |  | Optional | Recent VisionResultType instances produced by this pipeline. |
@@ -542,46 +474,6 @@ Takes no arguments and returns none.
 
 Takes no arguments and returns none.
 
-### LearningJobType — `ns=1;i=1019`
-
-*Subtype of:* `BaseObjectType`
-
-One turn of the capture, label, train and promote loop. It exists so that corrections arriving through VisionFeedbackType have somewhere to accumulate and a defined path into a new model version. A Server may implement only the capture stages and leave training to an external MLOps system - the state machine is the same either way.
-
-| BrowseName | NodeClass | DataType | ValueRank | ModellingRule | Description |
-|---|---|---|---|---|---|
-| JobId | Variable | String | Scalar | Mandatory | Identifier of the job. |
-| State | Variable | VisionLearningJobStateEnum | Scalar | Mandatory | Current stage of the loop. |
-| Dataset | Variable | NodeId | Scalar | Optional | Dataset being accumulated or used. |
-| BaseModel | Variable | NodeId | Scalar | Optional | Model the job starts from. |
-| CandidateModel | Variable | NodeId | Scalar | Optional | Model produced by the job, awaiting promotion. |
-| SamplesCollected | Variable | UInt64 | Scalar | Optional | Samples accumulated so far, including corrections fed back. |
-| LastError | Variable | LocalizedText | Scalar | Optional | Diagnostic for the Failed state. |
-
-**Method `StartCollection`** (Optional) — Begin accumulating samples and corrections into the dataset.
-
-Takes no arguments and returns none.
-
-**Method `StopCollection`** (Optional) — Stop accumulating samples.
-
-Takes no arguments and returns none.
-
-**Method `TriggerTraining`** (Optional) — Request that a candidate model be trained from the collected dataset.
-
-| Out | DataType | ValueRank | Meaning |
-|---|---|---|---|
-| Accepted | Boolean | Scalar | True when the request was queued. |
-
-**Method `PromoteModel`** (Optional) — Promote the candidate model so that deployments begin using it. A Server SHOULD require a distinct authorization for this Method.
-
-| In | DataType | ValueRank | Meaning |
-|---|---|---|---|
-| Deployment | NodeId | Scalar | Deployment to update, or null for all. |
-
-| Out | DataType | ValueRank | Meaning |
-|---|---|---|---|
-| PromotedModel | NodeId | Scalar | The model now in use. |
-
 ### VisionRootType — `ns=1;i=1001`
 
 *Subtype of:* `BaseObjectType`
@@ -592,9 +484,7 @@ The single well-known entry point for everything in this model. A client starts 
 |---|---|---|---|---|---|
 | Sensors | Object |  |  | Mandatory | VisionSensorType instances known to this Server. |
 | Pipelines | Object |  |  | Optional | InferencePipelineType instances. |
-| Models | Object |  |  | Optional | AiModelType, AiDatasetType and AiDeploymentType instances. |
 | Frames | Object |  |  | Optional | CoordinateFrameType instances. |
-| LearningJobs | Object |  |  | Optional | LearningJobType instances. |
 
 ## A.4 DataTypes
 
@@ -686,34 +576,6 @@ Authentication a client must present to the media endpoint. This is the media-pl
 | Digest | 2 | HTTP/RTSP Digest. |
 | Token | 3 | Bearer token, typically the time-limited token returned by GetStreamEndpoint or GetClip. |
 | MutualTls | 4 | Client certificate. |
-
-### VisionInferenceLocationEnum — `ns=1;i=3007`
-
-*Subtype of:* `Enumeration`
-
-Where inference executes. The result contract is identical in every case; this property exists so a client can reason about latency, availability and trust boundary without changing how it reads results.
-
-| Name | Value | Description |
-|---|---|---|
-| OnServer | 0 | In the OPC UA Server process or on its host. |
-| EdgeOffServer | 1 | On a separate edge node reached over the network. |
-| Cloud | 2 | In a remote or cloud service. |
-| InSimulator | 3 | Inside the simulator that also renders the sensor. |
-
-### VisionAcceleratorKindEnum — `ns=1;i=3008`
-
-*Subtype of:* `Enumeration`
-
-Compute device executing the model.
-
-| Name | Value | Description |
-|---|---|---|
-| Cpu | 0 |  |
-| Gpu | 1 |  |
-| Npu | 2 |  |
-| Fpga | 3 |  |
-| Tpu | 4 |  |
-| Other | 5 |  |
 
 ### VisionResultEvaluationEnum — `ns=1;i=3009`
 
@@ -811,35 +673,6 @@ What the sensor measures.
 | Multispectral | 4 |  |
 | Event | 5 | Event / neuromorphic camera. |
 | Other | 6 |  |
-
-### VisionLearningJobStateEnum — `ns=1;i=3016`
-
-*Subtype of:* `Enumeration`
-
-State of a dataset-capture, retraining and promotion cycle.
-
-| Name | Value | Description |
-|---|---|---|
-| Idle | 0 |  |
-| Collecting | 1 |  |
-| Labelling | 2 |  |
-| Training | 3 |  |
-| Validating | 4 |  |
-| Ready | 5 | A candidate model is available for promotion. |
-| Promoted | 6 |  |
-| Failed | 7 |  |
-
-### VisionDatasetSourceEnum — `ns=1;i=3017`
-
-*Subtype of:* `Enumeration`
-
-Provenance of the samples in a dataset.
-
-| Name | Value | Description |
-|---|---|---|
-| Real | 0 | Captured from physical sensors. |
-| Synthetic | 1 | Rendered by a simulator. |
-| Mixed | 2 | Both, e.g. synthetic pre-training with real fine-tuning. |
 
 ### VisionPose3DDataType — `ns=1;i=3050`
 
@@ -966,16 +799,3 @@ A leased media session. The Uri may embed a single-use or time-limited credentia
 | Uri | String | Scalar |  | Media URI to open. |
 | Protocol | VisionStreamProtocolEnum | Scalar |  | Protocol of the returned URI. |
 | ExpiresAt | UtcTime | Scalar |  | Expiry after which the Uri is no longer valid. |
-
-### VisionTensorSignatureDataType — `ns=1;i=3058`
-
-*Subtype of:* `Structure`
-
-Shape and element type of one model input or output tensor.
-
-| Field | DataType | ValueRank | ArrayDimensions | Description |
-|---|---|---|---|---|
-| Name | String | Scalar |  | Tensor name as declared by the model. |
-| ElementType | String | Scalar |  | Element type, for example float32, uint8 or int64. |
-| Shape | Int32 | Array |  | Dimensions; -1 marks a dynamic axis. |
-| Layout | String | Scalar |  | Optional axis layout hint, for example NCHW or NHWC. |
