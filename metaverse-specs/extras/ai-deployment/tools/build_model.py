@@ -8,8 +8,9 @@ Emits, from a single in-code source of truth:
   * model-reference.md                                      - the generated Annex A
 
 The model is a COMPANION specification in its OWN namespace
-(http://opcfoundation.org/UA/AI/, namespace index 1). Nodes therefore use
-`ns=1;i=<n>` NodeIds; references to base UA types use plain `i=<n>`.
+(http://opcfoundation.org/UA/AI/). Its namespace index is DERIVED from NAMESPACE_URIS
+and is not 1: the xRegistry RequiredModel occupies index 1. Nodes use ns={OWN_NS} for
+both NodeIds and BrowseNames; references to base UA types use plain `i=<n>`.
 
 It is deliberately STANDALONE and deliberately DOMAIN-NEUTRAL: the only
 <RequiredModel> is the base UA namespace, and nothing here mentions a camera, a robot
@@ -40,10 +41,25 @@ import re
 import xml.sax.saxutils as sx
 
 NAMESPACE = "http://opcfoundation.org/UA/AI/"
-VERSION = "0.1.0"
-PUBDATE = "2026-08-02T00:00:00Z"
+VERSION = "0.2.0"
+PUBDATE = "2026-08-03T00:00:00Z"
 BASE_UA_VERSION = "1.05.04"
 BASE_UA_PUBDATE = "2023-12-15T00:00:00Z"
+
+# The model catalogue is a domain extension of OPC UA - xRegistry, so that a model
+# registry is the same shape as every other registry in this repository rather than a
+# private invention. See clause 9.
+XREG_NS = "http://opcfoundation.org/UA/xRegistry/"
+XREG_VERSION = "0.3.0"
+XREG_PUBDATE = "2026-07-31T00:00:00Z"
+
+# NamespaceUris order fixes the namespace indices for the whole file. Required-model
+# namespaces come first and the own namespace last, matching the Schema Registry
+# precedent. Both indices are DERIVED from this list - a hardcoded ns=N would not merely
+# go stale when a dependency is added, it would start pointing into a different model.
+NAMESPACE_URIS = [XREG_NS, NAMESPACE]
+OWN_NS = NAMESPACE_URIS.index(NAMESPACE) + 1
+XREG_IDX = NAMESPACE_URIS.index(XREG_NS) + 1
 
 # --- base UA NodeIds (namespace 0) -----------------------------------------
 HasComponent = "i=47"
@@ -90,9 +106,19 @@ KeyValuePair = "i=14533"
 
 Server = "i=2253"
 
+# OPC 10000-10 Programs. A long-running AI job is a program instance, which is how
+# Robot Intent models its intents; the transition events and the auditability that a
+# hand-rolled state variable would have to reinvent come with the base type.
+ProgramStateMachineType = "i=2391"
+
+Float = "i=10"
+Int64 = "i=8"
+DateTime = "i=13"
+
 ALIASES = [
     ("Boolean", Boolean), ("Int32", Int32), ("UInt32", UInt32), ("UInt64", UInt64),
     ("Double", Double), ("String", String), ("Guid", Guid), ("ByteString", ByteString),
+    ("Float", Float), ("Int64", Int64), ("DateTime", DateTime),
     ("NodeId", NodeId_), ("QualifiedName", QualifiedName), ("LocalizedText", LocalizedText),
     ("UtcTime", UtcTime), ("Duration", Duration), ("Argument", Argument),
     ("EUInformation", EUInformation), ("KeyValuePair", KeyValuePair),
@@ -146,9 +172,24 @@ def _mid():
     return v
 
 
+def _reserve(count, why):
+    """Burn `count` member ids without declaring anything.
+
+    Used where a member moved to a base type. Its id is NOT reclaimed: reusing it
+    would renumber every member declared after it, which is exactly the churn the
+    append-only rule exists to prevent. A hole costs nothing.
+    """
+    _next_member[0] += count
+
+
 def T(nid):
-    """Own-namespace NodeId (ns=1)."""
-    return f"ns=1;i={nid}"
+    """Own-namespace NodeId. The index is derived, never assumed."""
+    return f"ns={OWN_NS};i={nid}"
+
+
+def X(nid):
+    """A NodeId in the xRegistry namespace this model extends."""
+    return f"ns={XREG_IDX};i={nid}"
 
 
 def add(nid, cls, bname, symbolic, display=None, desc=None, parent=None,
@@ -425,6 +466,115 @@ enum_type(3005, "LearningJobStateEnum",
            ("Promoted", 6, None), ("Failed", 7, None)])
 LearningJobStateEnum = T(3005)
 
+enum_type(3006, "FinishReasonEnum",
+          "Why an inference call stopped producing output. A client that treats every "
+          "non-error response as complete will silently accept a truncated one, which "
+          "is why this is Mandatory on a response rather than a diagnostic.",
+          [("Stop", 0, "The model finished normally."),
+           ("Length", 1, "Output was truncated by a length or budget limit. The "
+                         "result is incomplete and SHALL NOT be treated as final."),
+           ("ToolCall", 2, "The model requested a tool or function call and is "
+                           "waiting for its result."),
+           ("Filtered", 3, "Output was withheld by a safety policy; see the "
+                           "SafetyAssessment."),
+           ("Cancelled", 4, "The caller or the Server cancelled the call."),
+           ("Error", 5, "The call failed; the StatusCode carries the reason.")])
+FinishReasonEnum = T(3006)
+
+enum_type(3007, "ApiDialectEnum",
+          "Wire contract a remote inference endpoint speaks. A Server needs this to "
+          "call an endpoint it did not deploy; without it EndpointUri is a string "
+          "nobody can act on. It describes the REMOTE endpoint and never affects how "
+          "an OPC UA client calls this Server.",
+          [("OpcUaInference", 0, "Another OPC UA Server implementing this "
+                                 "specification's Invoke Method."),
+           ("RestChatCompletions", 1, "The de-facto REST contract for chat and "
+                                      "embeddings that most serving runtimes expose, "
+                                      "including ones that run on a single "
+                                      "workstation."),
+           ("OpenInferenceProtocol", 2, "The Open Inference Protocol (KServe v2) "
+                                        "predict contract."),
+           ("TensorRemoteProcedure", 3, "A tensor-oriented RPC contract such as those "
+                                        "used by dedicated inference servers."),
+           ("EmbeddedRuntime", 4, "An in-process runtime reached through a local "
+                                  "library rather than a network protocol."),
+           ("Proprietary", 5, "A contract this specification does not name. "
+                              "EndpointDescriptionUri SHOULD then say where it is "
+                              "documented.")])
+ApiDialectEnum = T(3007)
+
+enum_type(3008, "AuthenticationKindEnum",
+          "How the Server authenticates ITSELF to a remote inference endpoint. This is "
+          "not how a client authenticates to this Server, which is the ordinary OPC UA "
+          "Session security and is unaffected.",
+          [("Anonymous", 0, "No credential. Permitted only where the endpoint is "
+                            "reachable solely from a trusted network segment."),
+           ("ApiKey", 1, "A shared secret presented as a key."),
+           ("BearerToken", 2, "A token obtained from an authorization service."),
+           ("WorkloadIdentity", 3, "An identity the hosting platform assigns to the "
+                                   "Server, so no secret is stored at all. Preferred "
+                                   "where the platform offers it."),
+           ("MutualTls", 4, "Both ends present certificates.")])
+AuthenticationKindEnum = T(3008)
+
+enum_type(3009, "FallbackPolicyEnum",
+          "What the Server does when a deployment cannot serve. This is the question a "
+          "plant asks that no cloud inference API answers, because a cloud API assumes "
+          "the caller can simply wait.",
+          [("Fail", 0, "Report the failure to the caller and produce nothing. The "
+                       "safe default: a caller that is told nothing happened can "
+                       "decide for itself."),
+           ("HoldLast", 1, "Continue reporting the most recent successful result, "
+                           "marked stale. Legitimate only where a stale answer is "
+                           "safe, and the caller SHALL be able to see the staleness."),
+           ("FallBackTo", 2, "Route to the deployment named by the FallsBackTo "
+                             "reference. The answer comes from a different model and "
+                             "the response SHALL say so.")])
+FallbackPolicyEnum = T(3009)
+
+enum_type(3010, "VersionBindingEnum",
+          "Whether a deployment is bound to one immutable model version or follows a "
+          "moving pointer. Stated structurally rather than as an upgrade policy, "
+          "because what a client needs to know is whether the artefact can change "
+          "under it, not what schedule someone intends to change it on.",
+          [("Pinned", 0, "Bound to one immutable version. The artefact behind this "
+                         "deployment cannot change without an observable change to "
+                         "the deployment."),
+           ("FollowsRef", 1, "Bound to a mutable pointer such as a branch or channel. "
+                             "The artefact CAN change without any other change, which "
+                             "is why clause 11 requires the resulting promotion to be "
+                             "as authorized as an explicit one.")])
+VersionBindingEnum = T(3010)
+
+enum_type(3011, "ImportModeEnum",
+          "Whether an import job brings the model's description or its bytes.",
+          [("Federate", 0, "Materialize the catalogue entry as a ModelType and leave "
+                           "the artefact where it is. Nothing is downloaded and "
+                           "inference runs at the source."),
+           ("Stage", 1, "Fetch the artefact, verify its Digest, and make it locally "
+                        "available so inference can run without the source."),
+           ("Auto", 2, "Federate, then stage if the target deployment's "
+                       "InferenceLocation is OnServer or EdgeOffServer - because "
+                       "those cannot reach the source at inference time.")])
+ImportModeEnum = T(3011)
+
+enum_type(3012, "SafetySeverityEnum",
+          "Severity of one safety finding. The scale is the convergent industry one; "
+          "what each level means for a given category is the policy's business, not "
+          "this specification's.",
+          [("None", 0, None), ("Low", 1, None), ("Medium", 2, None),
+           ("High", 3, None)])
+SafetySeverityEnum = T(3012)
+
+enum_type(3013, "ReachabilityEnum",
+          "Whether the Server can currently reach a deployment's execution site.",
+          [("Unknown", 0, "Never attempted, or the Server does not probe."),
+           ("Reachable", 1, "The most recent attempt succeeded."),
+           ("Unreachable", 2, "The most recent attempt failed."),
+           ("Throttled", 3, "Reachable, but the endpoint is refusing work for "
+                            "capacity reasons. RetryAfter SHOULD be populated.")])
+ReachabilityEnum = T(3013)
+
 # ---------------------------------------------------------------------------
 # Structured DataTypes (3050+)
 # ---------------------------------------------------------------------------
@@ -440,6 +590,89 @@ struct_type(3050, "TensorSignatureDataType",
                                 "NHWC.")])
 TensorSignatureDataType = T(3050)
 
+struct_type(3051, "ModelReferenceDataType",
+            "Identity of a model as a publisher, name and version triple. Every model "
+            "catalogue in practice identifies a model this way, which is why an import "
+            "job takes this rather than a URL: a URL says where a copy is today, the "
+            "triple says which artefact is meant.",
+            [("Publisher", String, "Organisation or namespace that published the "
+                                   "model."),
+             ("Name", String, "Model name within that publisher."),
+             ("Version", String, "Immutable version identifier, or a mutable pointer "
+                                 "such as a branch or channel name. Which one it is "
+                                 "is stated by VersionBinding, not guessable from the "
+                                 "string.")])
+ModelReferenceDataType = T(3051)
+
+struct_type(3052, "UsageDataType",
+            "What one inference call consumed. Deliberately NOT named in tokens: a "
+            "token is one accounting unit among several, and a model that consumes "
+            "images, samples or seconds of audio needs the same accounting. UnitKind "
+            "says which unit the counts are in.",
+            [("UnitKind", String, "Unit the counts are expressed in, for example "
+                                  "'tokens', 'images', 'samples' or 'seconds'."),
+             ("InputUnits", UInt64, "Units consumed by the input."),
+             ("OutputUnits", UInt64, "Units produced as output."),
+             ("TotalUnits", UInt64, "Total units billed or metered for the call, "
+                                    "which is not always the sum: cached or "
+                                    "deduplicated input may be counted once.")])
+UsageDataType = T(3052)
+
+struct_type(3053, "CapabilityDataType",
+            "One capability a deployment does or does not have. An open list rather "
+            "than an enumeration because the set of things a model can do is not "
+            "closed, and a client that cannot recognise a capability name is no worse "
+            "off than one that cannot recognise an enumeration value it has never "
+            "seen.",
+            [("Name", String, "Capability name, for example 'chat', 'embeddings', "
+                              "'streaming', 'tool-call' or 'structured-output'."),
+             ("Supported", Boolean, "Whether this deployment supports it.")])
+CapabilityDataType = T(3053)
+
+struct_type(3054, "SafetyAssessmentDataType",
+            "One finding from a safety policy applied to an inference call. Category "
+            "is a String and not an enumeration because harm categories are set by the "
+            "policy an installation adopts, and an industrial taxonomy looks nothing "
+            "like a consumer one.",
+            [("Category", String, "Category the policy assessed, for example "
+                                  "'out-of-distribution-input' or a policy-defined "
+                                  "name."),
+             ("Severity", SafetySeverityEnum, "Severity of the finding."),
+             ("Filtered", Boolean, "True when the content was withheld or altered "
+                                   "rather than merely flagged."),
+             ("Detail", String, "Human-readable explanation. For a human; SHALL NOT "
+                                "be parsed.")])
+SafetyAssessmentDataType = T(3054)
+
+struct_type(3055, "EvaluationMetricDataType",
+            "One measured metric from an evaluation run, with the threshold it was "
+            "judged against. The threshold travels with the metric because a metric "
+            "without its acceptance criterion cannot be acted on, and a reviewer "
+            "reading it a year later has no way to recover what 'good' meant.",
+            [("Name", String, "Metric name, for example 'accuracy' or "
+                              "'false-negative-rate'."),
+             ("Value", Double, "Measured value."),
+             ("Unit", String, "Unit of the value, or empty when dimensionless."),
+             ("Threshold", Double, "Acceptance threshold applied."),
+             ("Comparison", String, "How Value was compared with Threshold: one of "
+                                    "'>=', '<=', '>', '<' or '=='."),
+             ("Passed", Boolean, "Outcome of that comparison.")])
+EvaluationMetricDataType = T(3055)
+
+struct_type(3056, "RateLimitDataType",
+            "Capacity a remote endpoint is currently granting. Surfaced so a client "
+            "can distinguish 'the model said no' from 'the quota said no', which are "
+            "different faults with different remedies.",
+            [("UnitKind", String, "Unit the limit is expressed in, matching "
+                                  "UsageDataType.UnitKind, or 'requests'."),
+             ("Limit", UInt64, "Units permitted per interval, or 0 when not "
+                               "published."),
+             ("Remaining", UInt64, "Units still available in the current interval."),
+             ("Interval", Duration, "Length of the interval the limit applies to."),
+             ("RetryAfter", Duration, "How long to wait before retrying. Zero when "
+                                      "the endpoint gave no guidance.")])
+RateLimitDataType = T(3056)
+
 # ---------------------------------------------------------------------------
 # ReferenceTypes (4001+)
 # ---------------------------------------------------------------------------
@@ -447,7 +680,7 @@ reference_type(4001, "UsesModel", "IsUsedByDeployment",
                "Links a Deployment to the Model it executes. Clause 5.5 requires "
                "exactly one such reference per deployment; it is the only defined path "
                "from a result to the model artefact and its Digest, on which the "
-               "provenance requirement of clause 7 depends.")
+               "provenance requirement of clause 11 depends.")
 UsesModel = T(4001)
 
 reference_type(4002, "TrainedOn", "IsTrainingDataFor",
@@ -455,6 +688,31 @@ reference_type(4002, "TrainedOn", "IsTrainingDataFor",
                "whose training data cannot be named is a model whose behaviour cannot "
                "be explained, which is why this reference exists rather than a string.")
 TrainedOn = T(4002)
+
+reference_type(4003, "DerivedFrom", "IsBaseOfModel",
+               "Links a Model to the Model it was fine-tuned, distilled or quantized "
+               "from. Lineage is a chain, not a field: a model three derivations from "
+               "its base is answerable for all three, and a string naming the "
+               "immediate parent cannot be walked.")
+DerivedFrom = T(4003)
+
+reference_type(4004, "FallsBackTo", "IsFallbackFor",
+               "Links a Deployment to the Deployment that serves in its place when it "
+               "cannot. Clause 8 forbids a cycle, and requires the response to say "
+               "which deployment actually answered.")
+FallsBackTo = T(4004)
+
+reference_type(4005, "ImportedFrom", "WasImportedAs",
+               "Links a Model to the catalogue resource an import job materialized it "
+               "from. This is what makes 'where did this model come from' answerable "
+               "after the fact, rather than only at the moment of import.")
+ImportedFrom = T(4005)
+
+reference_type(4006, "EvaluatedBy", "Evaluates",
+               "Links a Model to an EvaluationRun that measured it. Optional and "
+               "repeating: a model may be evaluated many times, and the run that "
+               "gated its promotion is not necessarily the last one.")
+EvaluatedBy = T(4006)
 
 # ---------------------------------------------------------------------------
 # ObjectTypes (1001+)
@@ -493,7 +751,7 @@ prop_var(AM, "ModelType", "TaskKind", String,
          "closed and a closed enumeration would date faster than the model does.")
 prop_var(AM, "ModelType", "Digest", ByteString,
          "Cryptographic digest of the model artefact, for provenance and integrity. "
-         "Mandatory: clause 7 requires it for every model whose artefact is obtainable "
+         "Mandatory: clause 11 requires it for every model whose artefact is obtainable "
          "through ArtifactUri, and it is the terminus of the provenance chain that "
          "UsesModel keeps intact.",
          MR_Mandatory)
@@ -502,7 +760,7 @@ prop_var(AM, "ModelType", "DigestAlgorithm", String,
          "output and no known collision weakness; SHA-256 is the default and is always "
          "acceptable. SHALL NOT be MD5, SHA-1 or a truncated variant - chosen-prefix "
          "collisions against those are practical, so a substituted artefact would pass "
-         "verification. SHALL be non-empty where Digest is non-empty. See clause 7.",
+         "verification. SHALL be non-empty where Digest is non-empty. See clause 11.",
          MR_Mandatory)
 prop_var(AM, "ModelType", "ArtifactUri", String,
          "Where the model artefact can be obtained. Treated as untrusted input.")
@@ -554,7 +812,7 @@ prop_var(AY, "DeploymentType", "AcceleratorName", String,
          "Free-text accelerator identification, for example an NPU or GPU part name.")
 prop_var(AY, "DeploymentType", "EndpointUri", String,
          "Inference endpoint when InferenceLocation is not OnServer. Treated as "
-         "untrusted input and subject to the resolver policy of clause 7.")
+         "untrusted input and subject to the resolver policy of clause 11.")
 prop_var(AY, "DeploymentType", "LatencyBudget", Duration,
          "Latency the deployment is expected to meet, so a client can detect "
          "regression.")
@@ -563,16 +821,18 @@ prop_var(AY, "DeploymentType", "BatchSize", UInt32,
 prop_var(AY, "DeploymentType", "State", DeploymentStateEnum,
          "Runtime state of the deployment.", MR_Mandatory)
 
-object_type(1005, "LearningJobType", BaseObjectType,
+object_type(1005, "LearningJobType", T(1006),
             "One turn of the capture, label, train and promote loop. It exists so that "
             "corrections arriving from a consuming application have somewhere to "
             "accumulate and a defined path into a new model version. A Server may "
             "implement only the capture stages and leave training to an external MLOps "
             "system - the state machine is the same either way.")
 LJ = 1005
-prop_var(LJ, "LearningJobType", "JobId", String, "Identifier of the job.", MR_Mandatory)
+_reserve(1, "6036 held JobId, now inherited from AiJobType.")
 prop_var(LJ, "LearningJobType", "State", LearningJobStateEnum,
-         "Current stage of the loop.", MR_Mandatory)
+         "Current stage of the loop. This is the PHASE, not the program lifecycle: "
+         "the inherited CurrentState says whether the job is running, this says what "
+         "it is doing. Clause 6 requires the two to agree.", MR_Mandatory)
 prop_var(LJ, "LearningJobType", "Dataset", NodeId_,
          "Dataset being accumulated or used.")
 prop_var(LJ, "LearningJobType", "BaseModel", NodeId_, "Model the job starts from.")
@@ -580,8 +840,7 @@ prop_var(LJ, "LearningJobType", "CandidateModel", NodeId_,
          "Model produced by the job, awaiting promotion.")
 prop_var(LJ, "LearningJobType", "SamplesCollected", UInt64,
          "Samples accumulated so far, including corrections fed back.")
-prop_var(LJ, "LearningJobType", "LastError", LocalizedText,
-         "Diagnostic for the Failed state.")
+_reserve(1, "6042 held LastError, now inherited from AiJobType.")
 method(LJ, "LearningJobType", "StartCollection",
        "Begin accumulating samples and corrections into the dataset.", MR_Optional)
 method(LJ, "LearningJobType", "StopCollection",
@@ -598,6 +857,434 @@ method(LJ, "LearningJobType", "PromoteModel",
        MR_Optional,
        inargs=[("Deployment", NodeId_, "Deployment to update, or null for all.")],
        outargs=[("PromotedModel", NodeId_, "The model now in use.")])
+
+# ---------------------------------------------------------------------------
+# ObjectTypes added in 0.2.0.
+#
+# Their MEMBERS necessarily sit at the end of the member id space even where the type
+# is conceptually a base of an earlier one: member ids are assigned in declaration
+# order and are append-only, so declaring AiJobType's members where the type "belongs"
+# would renumber everything after it.
+# ---------------------------------------------------------------------------
+object_type(1006, "AiJobType", ProgramStateMachineType,
+            "Abstract base of every long-running AI operation: learning, model import "
+            "and asynchronous inference. It derives from the OPC 10000-10 "
+            "ProgramStateMachineType, so the lifecycle - Ready, Running, Suspended, "
+            "Halted - its transition events and its Start/Suspend/Resume/Halt Methods "
+            "are inherited rather than reinvented, and every job in this model is "
+            "auditable the same way.",
+            abstract=True)
+AJ = 1006
+prop_var(AJ, "AiJobType", "JobId", String,
+         "Identifier of the job, unique within the Server.", MR_Mandatory)
+prop_var(AJ, "AiJobType", "LastError", LocalizedText,
+         "Diagnostic for the most recent failure. For a human; SHALL NOT be parsed.")
+prop_var(AJ, "AiJobType", "StartedAt", UtcTime, "When the job last entered Running.")
+prop_var(AJ, "AiJobType", "FinishedAt", UtcTime,
+         "When the job last left Running, or null while it is running.")
+prop_var(AJ, "AiJobType", "Progress", Double,
+         "Fraction complete, 0.0 to 1.0, or null where the job cannot estimate it. A "
+         "Server SHALL NOT report a value it is guessing: null is informative, a "
+         "fabricated 0.5 is not.")
+prop_var(AJ, "AiJobType", "RequestedBy", String,
+         "Identity that requested the job, recorded at the moment it started. Clause 11 "
+         "requires this for any job that can promote a model.")
+
+object_type(1007, "ModelImportJobType", T(1006),
+            "Brings a model from a catalogue into this Server. It federates by default "
+            "- materializing the catalogue entry as a ModelType whose artefact stays "
+            "where it is - and stages the artefact when the target deployment could "
+            "not otherwise reach it. Staging is the moment a substituted artefact "
+            "would enter, which is why clause 9 requires the Digest to be verified "
+            "there and nowhere else.")
+MI = 1007
+prop_var(MI, "ModelImportJobType", "Source", NodeId_,
+         "ModelSourceType instance the model is pulled from.", MR_Mandatory)
+prop_var(MI, "ModelImportJobType", "ModelReference", ModelReferenceDataType,
+         "Publisher, name and version being imported.", MR_Mandatory)
+prop_var(MI, "ModelImportJobType", "Mode", ImportModeEnum,
+         "Whether to federate, stage, or decide from the target's InferenceLocation.",
+         MR_Mandatory)
+prop_var(MI, "ModelImportJobType", "TargetDeployment", NodeId_,
+         "Deployment to create or update on success, or null to import the model "
+         "without deploying it.")
+prop_var(MI, "ModelImportJobType", "ImportedModel", NodeId_,
+         "ModelType instance the job produced. Null until the job succeeds.")
+prop_var(MI, "ModelImportJobType", "BytesTransferred", UInt64,
+         "Artefact bytes fetched so far. Zero for a federating import, which moves "
+         "none.")
+prop_var(MI, "ModelImportJobType", "DigestVerified", Boolean,
+         "Whether the staged artefact's computed digest matched the one the catalogue "
+         "declared. False on a staging import means the artefact SHALL NOT be "
+         "deployed.")
+method(MI, "ModelImportJobType", "Cancel",
+       "Abandon the import. A partially staged artefact SHALL be discarded rather "
+       "than left where a later deployment could pick it up.", MR_Optional)
+
+object_type(1008, "InferenceJobType", T(1006),
+            "One asynchronous inference request. It exists because not every inference "
+            "returns while the caller waits: a batch scored overnight and a long "
+            "analysis over recorded data are ordinary industrial cases, and modelling "
+            "them as a Method that blocks for hours is not.")
+IJ = 1008
+prop_var(IJ, "InferenceJobType", "Deployment", NodeId_,
+         "Deployment executing the request.", MR_Mandatory)
+prop_var(IJ, "InferenceJobType", "RequestPayload", ByteString,
+         "Request body, encoded as RequestContentType states.")
+prop_var(IJ, "InferenceJobType", "RequestContentType", String,
+         "Media type of RequestPayload.")
+prop_var(IJ, "InferenceJobType", "ResponsePayload", ByteString,
+         "Response body once the job succeeds.")
+prop_var(IJ, "InferenceJobType", "ResponseContentType", String,
+         "Media type of ResponsePayload.")
+prop_var(IJ, "InferenceJobType", "ModelUsed", NodeId_,
+         "Model that ACTUALLY executed the request, which is not always the one the "
+         "deployment named when the job was submitted - a fallback or a followed "
+         "reference can change it in between. The provenance chain of clause 11 walks "
+         "this, not the deployment's current model.")
+prop_var(IJ, "InferenceJobType", "Usage", UsageDataType,
+         "What the call consumed.")
+prop_var(IJ, "InferenceJobType", "FinishReason", FinishReasonEnum,
+         "Why the call stopped producing output.")
+prop_var(IJ, "InferenceJobType", "SafetyAssessment", SafetyAssessmentDataType,
+         "Findings from the safety policy, if any were applied.", valuerank="1")
+
+object_type(1009, "ModelSourceType", BaseObjectType,
+            "An externally hosted inference or catalogue endpoint this Server can "
+            "reach. It carries everything needed to actually call something the Server "
+            "did not deploy - the wire contract, how to authenticate, what the endpoint "
+            "can do and whether it is answering - because a URI on its own is a string "
+            "nobody can act on.")
+MS = 1009
+prop_var(MS, "ModelSourceType", "SourceId", String,
+         "Identifier of the source.", MR_Mandatory)
+prop_var(MS, "ModelSourceType", "EndpointUri", String,
+         "Base URI of the endpoint. Untrusted input, subject to the resolver policy of "
+         "clause 11.", MR_Mandatory)
+prop_var(MS, "ModelSourceType", "ApiDialect", ApiDialectEnum,
+         "Wire contract the endpoint speaks.", MR_Mandatory)
+prop_var(MS, "ModelSourceType", "EndpointDescriptionUri", String,
+         "Where the contract is documented. SHOULD be populated when ApiDialect is "
+         "Proprietary, because otherwise nothing in the address space says how to call "
+         "it.")
+prop_var(MS, "ModelSourceType", "AuthenticationKind", AuthenticationKindEnum,
+         "How the Server authenticates itself to the endpoint.", MR_Mandatory)
+prop_var(MS, "ModelSourceType", "CredentialReference", String,
+         "Opaque handle naming the credential in whatever store the Server uses. It is "
+         "a NAME, never a secret: clause 11 forbids a Server from exposing credential "
+         "material through any Attribute of this model, and a client that can read this "
+         "value learns only which credential is used, not what it is.")
+prop_var(MS, "ModelSourceType", "TokenAudience", String,
+         "Audience or scope a bearer token is requested for, where "
+         "AuthenticationKind is BearerToken.")
+prop_var(MS, "ModelSourceType", "Reachability", ReachabilityEnum,
+         "Whether the Server can currently reach the endpoint.", MR_Mandatory)
+prop_var(MS, "ModelSourceType", "LastSuccessAt", UtcTime,
+         "When the endpoint last answered successfully.")
+prop_var(MS, "ModelSourceType", "ConsecutiveFailures", UInt32,
+         "Failures since the last success. Reset to zero on success.")
+prop_var(MS, "ModelSourceType", "RateLimit", RateLimitDataType,
+         "Capacity the endpoint is currently granting.")
+prop_var(MS, "ModelSourceType", "Capabilities", CapabilityDataType,
+         "What the endpoint reports it can do.", valuerank="1")
+method(MS, "ModelSourceType", "TestConnection",
+       "Probe the endpoint and update Reachability. Defined so that a commissioning "
+       "engineer can establish that credentials and network policy are right BEFORE a "
+       "deployment depends on them, rather than discovering it from a failed "
+       "inference.", MR_Optional,
+       outargs=[("Reachable", Boolean, "Whether the probe succeeded."),
+                ("Detail", LocalizedText, "Diagnostic. For a human.")])
+method(MS, "ModelSourceType", "ListModels",
+       "Enumerate the models the source offers.", MR_Optional,
+       inargs=[("Filter", String, "Optional substring or expression; empty for all."),
+               ("MaxResults", UInt32, "Upper bound on returned entries.")],
+       outargs=[("Models", ModelReferenceDataType,
+                 "Publisher, name and version of each model offered.", 1)])
+
+object_type(1014, "EvaluationRunType", BaseObjectType,
+            "One measurement of a model against a dataset. It is a first-class object "
+            "and not a field on the model because the same model is evaluated many "
+            "times, and because the run that gated a promotion has to remain readable "
+            "afterwards to answer why the promotion was allowed.")
+ER = 1014
+prop_var(ER, "EvaluationRunType", "RunId", String, "Identifier of the run.",
+         MR_Mandatory)
+prop_var(ER, "EvaluationRunType", "EvaluatedModel", NodeId_,
+         "Model that was measured.", MR_Mandatory)
+prop_var(ER, "EvaluationRunType", "Dataset", NodeId_,
+         "Dataset the model was measured against.")
+prop_var(ER, "EvaluationRunType", "CompletedAt", UtcTime, "When the run finished.")
+prop_var(ER, "EvaluationRunType", "Metrics", EvaluationMetricDataType,
+         "Measured metrics, each with the threshold it was judged against.",
+         MR_Mandatory, valuerank="1")
+prop_var(ER, "EvaluationRunType", "Passed", Boolean,
+         "Whether every metric met its threshold. A Server SHALL NOT report true while "
+         "any entry in Metrics has Passed false - a summary that disagrees with its "
+         "own detail is worse than no summary.", MR_Mandatory)
+prop_var(ER, "EvaluationRunType", "ReportUri", String,
+         "Where the full report lives. Untrusted input, subject to clause 11.")
+
+object_type(1015, "ModelCardType", BaseObjectType,
+            "What a human needs to decide whether a model may be used here: what it is "
+            "for, where it stops working, and under what terms. Separate from the "
+            "nameplate because a nameplate answers 'which artefact is this' and a card "
+            "answers 'should this be running on my line'.")
+MC = 1015
+prop_var(MC, "ModelCardType", "IntendedUse", LocalizedText,
+         "What the model is for.", MR_Mandatory)
+prop_var(MC, "ModelCardType", "Limitations", LocalizedText,
+         "Where it is known not to work. Mandatory because a card that lists only "
+         "capabilities is marketing, and the failure modes are the half a commissioning "
+         "engineer needs.", MR_Mandatory)
+prop_var(MC, "ModelCardType", "OutOfScopeUse", LocalizedText,
+         "Uses the supplier explicitly excludes.")
+prop_var(MC, "ModelCardType", "License", String,
+         "Licence identifier or URI governing use of the artefact.")
+prop_var(MC, "ModelCardType", "TrainingDataCutoff", UtcTime,
+         "Latest date represented in the training data. A model cannot know about "
+         "anything after this, which is often the explanation for a field failure.")
+prop_var(MC, "ModelCardType", "EthicalConsiderations", LocalizedText,
+         "Risks the supplier records.")
+prop_var(MC, "ModelCardType", "ContactUri", String,
+         "Where to report a problem with the model.")
+
+# ---------------------------------------------------------------------------
+# The catalogue, as a domain extension of OPC UA - xRegistry (clause 9).
+#
+# A model catalogue IS a registry: publishers own namespaces, models and datasets are
+# resources within them, and versions are immutable. Subtyping the abstract registry
+# gets that structure, its browse and lifecycle behaviour, and - because ResourceType
+# is itself a Part 5 FileType - artefact streaming through the inherited Open/Read/
+# Close, which is what a staging import needs.
+# ---------------------------------------------------------------------------
+XRegistry_RegistryType = X(63000)
+XRegistry_GroupType = X(63001)
+XRegistry_ResourceType = X(63002)
+
+object_type(1010, "ModelRegistryType", XRegistry_RegistryType,
+            "A catalogue of models and the datasets they were trained on. It narrows "
+            "the abstract registry's group placeholder to model publishers, so that a "
+            "client browsing it knows what it will find rather than discovering it.")
+MR_ = 1010
+# An InstanceDeclaration is overridden only by one with the SAME BrowseName, so the
+# narrowing has to reuse the inherited <Group> and <Resource> names and the inherited
+# Organizes. Declaring new placeholder names would leave the inherited ones fully open
+# - the subtype would look narrowed while still admitting any GroupType at all.
+_reserve(1, "6104 held a <ModelPublisher> placeholder that narrowed nothing.")
+
+object_type(1011, "ModelPublisherType", XRegistry_GroupType,
+            "One publisher's namespace within a model registry: the organisation or "
+            "project that released the models it contains. Publisher is the first "
+            "element of the publisher/name/version triple by which every catalogue in "
+            "practice identifies a model.")
+MP = 1011
+_reserve(2, "6105..6106 held <Model> and <Dataset> placeholders that narrowed nothing.")
+
+object_type(1016, "AiResourceType", XRegistry_ResourceType,
+            "Abstract base of everything a model registry holds. It exists so that the "
+            "inherited <Resource> placeholder can be narrowed ONCE to something that "
+            "admits models and datasets and nothing else - a publisher holds both, and "
+            "a placeholder can be overridden only by one declaration.",
+            abstract=True)
+
+object_type(1012, "ModelResourceType", T(1016),
+            "One model in a catalogue. Its versions are immutable and identified by "
+            "content, so a version that has been seen cannot change meaning; mutable "
+            "names such as a branch or a release channel are pointers AT versions, "
+            "never versions themselves. Because the base type is a FileType, a Server "
+            "that holds the artefact serves it through the inherited Open, Read and "
+            "Close; one that only describes it leaves those unimplemented and points "
+            "at the artefact instead.")
+MRS = 1012
+prop_var(MRS, "ModelResourceType", "TaskKind", String,
+         "What the model does, for example 'object-detection' or "
+         "'anomaly-detection'. A String and not an enumeration, for the same reason it "
+         "is one on ModelType: the set is not closed, and every catalogue in practice "
+         "uses a free tag here.")
+prop_var(MRS, "ModelResourceType", "Framework", String,
+         "Runtime or library the artefact targets.")
+prop_var(MRS, "ModelResourceType", "Digest", ByteString,
+         "Digest of the artefact this version names, as the catalogue declares it. A "
+         "staging import compares its own computed digest with this and refuses on "
+         "mismatch.")
+prop_var(MRS, "ModelResourceType", "DigestAlgorithm", String,
+         "Algorithm of Digest. Subject to the strength requirement of clause 11.")
+prop_var(MRS, "ModelResourceType", "SizeBytes", UInt64,
+         "Artefact size, so a staging import can decide whether it has room before "
+         "it starts rather than after it fails.")
+prop_var(MRS, "ModelResourceType", "Gated", Boolean,
+         "Whether obtaining the artefact requires an acceptance or entitlement beyond "
+         "ordinary authentication. A client that ignores this discovers it as a "
+         "failure part-way through a staging import.")
+prop_var(MRS, "ModelResourceType", "MutableRefs", String,
+         "Mutable pointers this resource publishes - branches, tags or channels - that "
+         "a deployment may follow instead of pinning. Naming them is what makes "
+         "VersionBinding FollowsRef checkable.", valuerank="1")
+
+object_type(1013, "DatasetResourceType", T(1016),
+            "One dataset in a catalogue, a sibling of ModelResourceType rather than "
+            "something beneath it: a dataset outlives the models trained on it and is "
+            "cited by several.")
+DRS = 1013
+prop_var(DRS, "DatasetResourceType", "SourceKind", DatasetSourceEnum,
+         "Whether the samples are real, synthetic or mixed.")
+prop_var(DRS, "DatasetResourceType", "SampleCount", UInt64, "Samples in the dataset.")
+prop_var(DRS, "DatasetResourceType", "Digest", ByteString,
+         "Digest of the dataset artefact as the catalogue declares it.")
+prop_var(DRS, "DatasetResourceType", "DigestAlgorithm", String,
+         "Algorithm of Digest.")
+prop_var(DRS, "DatasetResourceType", "SizeBytes", UInt64, "Dataset size.")
+
+# ---------------------------------------------------------------------------
+# Members appended to types declared in 0.1.0. All append; nothing renumbers.
+# ---------------------------------------------------------------------------
+
+# --- AiRootType: the new collections ---------------------------------------
+folder_member(RT_, "AiRootType", "Sources",
+              "ModelSourceType instances - the externally hosted endpoints and "
+              "catalogues this Server can reach.", MR_Optional)
+folder_member(RT_, "AiRootType", "Registries",
+              "ModelRegistryType instances this Server serves or mirrors.",
+              MR_Optional)
+folder_member(RT_, "AiRootType", "Evaluations",
+              "EvaluationRunType instances.", MR_Optional)
+folder_member(RT_, "AiRootType", "Jobs",
+              "Import and asynchronous inference jobs. Learning jobs remain under "
+              "LearningJobs.", MR_Optional)
+
+# --- ModelType: provenance, card and lineage -------------------------------
+obj_member(AM, "ModelType", "Card", T(1015),
+           "What a human needs to decide whether this model may run here.", MR_Optional)
+prop_var(AM, "ModelType", "Publisher", String,
+         "Organisation or namespace that published the model. With Name and Version "
+         "this is the triple every catalogue identifies a model by, and it is what "
+         "makes the same model recognisable across two installations that fetched it "
+         "from different mirrors.")
+prop_var(AM, "ModelType", "ParameterCount", UInt64,
+         "Parameters in the model, or 0 where not published. A crude but universally "
+         "available proxy for what it will cost to run.")
+prop_var(AM, "ModelType", "Quantization", String,
+         "Numeric precision the artefact is stored in, for example 'fp32', 'int8' or "
+         "'fp8'. A quantized model is a DIFFERENT artefact with different behaviour, "
+         "not a packaging detail, which is why it is stated rather than left to the "
+         "format string.")
+prop_var(AM, "ModelType", "SafetyPolicyUri", String,
+         "Safety or content policy applied to this model's output, where one is. "
+         "Untrusted input, subject to clause 11.")
+
+# --- DeploymentType: federation --------------------------------------------
+prop_var(AY, "DeploymentType", "Source", NodeId_,
+         "ModelSourceType instance this deployment executes through, where inference "
+         "is not local. Null when InferenceLocation is OnServer.")
+prop_var(AY, "DeploymentType", "VersionBinding", VersionBindingEnum,
+         "Whether the deployment is pinned to an immutable model version or follows a "
+         "mutable pointer.", MR_Mandatory)
+prop_var(AY, "DeploymentType", "BoundRef", String,
+         "The mutable pointer being followed, where VersionBinding is FollowsRef. "
+         "Empty when Pinned.")
+prop_var(AY, "DeploymentType", "FallbackPolicy", FallbackPolicyEnum,
+         "What the Server does when this deployment cannot serve.", MR_Mandatory)
+prop_var(AY, "DeploymentType", "Reachability", ReachabilityEnum,
+         "Whether the execution site is currently reachable. Always Reachable for an "
+         "OnServer deployment that is not Faulted.")
+prop_var(AY, "DeploymentType", "ConsecutiveFailures", UInt32,
+         "Failed calls since the last success.")
+prop_var(AY, "DeploymentType", "LastSuccessAt", UtcTime,
+         "When this deployment last answered successfully. With FallbackPolicy "
+         "HoldLast this is how a caller judges whether the held answer is still worth "
+         "having.")
+prop_var(AY, "DeploymentType", "RateLimit", RateLimitDataType,
+         "Capacity the execution site is currently granting.")
+prop_var(AY, "DeploymentType", "Capabilities", CapabilityDataType,
+         "What this deployment can do. A client checks here before calling a typed "
+         "profile rather than discovering the answer from a rejection.", valuerank="1")
+
+# --- DeploymentType: data residency and egress -----------------------------
+prop_var(AY, "DeploymentType", "DataJurisdiction", String,
+         "Where input data is processed, named in whatever scheme the operator uses - "
+         "a site, a legal jurisdiction, or a named zone. This is the question a plant "
+         "actually asks, and no amount of latency or accuracy data answers it.",
+         MR_Mandatory)
+prop_var(AY, "DeploymentType", "EgressPermitted", Boolean,
+         "Whether calling this deployment sends input data outside the operator's "
+         "boundary. A Server SHALL set this true for every deployment whose "
+         "InferenceLocation is Cloud, and SHALL NOT set it false merely because the "
+         "channel is encrypted - the question is where the data goes, not who can "
+         "read it in flight.", MR_Mandatory)
+prop_var(AY, "DeploymentType", "RetainsInput", Boolean,
+         "Whether the execution site retains input beyond serving the request, for "
+         "example for provider-side logging or training. Unknown is not a value: a "
+         "Server that cannot establish this SHALL report true, because the safe "
+         "assumption is the one that keeps data in.")
+prop_var(AY, "DeploymentType", "EgressPolicyUri", String,
+         "Where the governing data policy is documented.")
+
+# --- DeploymentType: the invocation surface --------------------------------
+method(AY, "DeploymentType", "Invoke",
+       "Run inference and return the result. The payload is opaque here: what goes in "
+       "and comes out is the consuming specification's vocabulary, and an envelope "
+       "that tried to type it would have to be extended for every domain. What this "
+       "Method fixes is everything AROUND the payload - routing, parameters, "
+       "accounting, why it stopped, and which model actually ran.\n\n"
+       "The signature does not change with InferenceLocation. A deployment served from "
+       "the Server's own process and one served from a remote service are called "
+       "identically; the location changes the trust boundary and the latency, and "
+       "nothing else.", MR_Optional,
+       inargs=[("Payload", ByteString, "Request body."),
+               ("ContentType", String, "Media type of Payload."),
+               ("Parameters", KeyValuePair,
+                "Call parameters such as a sampling temperature or an output length "
+                "bound. A Server SHALL reject a parameter it does not support rather "
+                "than ignore it: a caller whose parameter was silently dropped "
+                "believes it took effect.", 1),
+               ("Timeout", Duration,
+                "How long the caller will wait. Zero means the Server's default.")],
+       outargs=[("ResponsePayload", ByteString, "Response body."),
+                ("ResponseContentType", String, "Media type of ResponsePayload."),
+                ("ModelUsed", NodeId_,
+                 "The model that ACTUALLY produced this response. Not necessarily the "
+                 "one the deployment names now: a fallback answered from a different "
+                 "deployment, and a FollowsRef binding may have moved. The provenance "
+                 "chain of clause 11 walks this."),
+                ("Usage", UsageDataType, "What the call consumed."),
+                ("FinishReason", FinishReasonEnum,
+                 "Why output stopped. A caller that ignores this will accept a "
+                 "truncated answer as a complete one."),
+                ("SafetyAssessment", SafetyAssessmentDataType,
+                 "Findings from the safety policy, if any applied.", 1),
+                ("RetryAfter", Duration,
+                 "How long to wait before retrying, where the failure was a capacity "
+                 "one. Zero when retrying immediately is as good as waiting, and "
+                 "meaningless when the failure was not retryable.")])
+method(AY, "DeploymentType", "InvokeAsync",
+       "Submit inference to be completed later, returning immediately with the job "
+       "that will carry the result. For work that does not finish while a caller "
+       "waits - a batch scored overnight, an analysis over recorded data.",
+       MR_Optional,
+       inargs=[("Payload", ByteString, "Request body."),
+               ("ContentType", String, "Media type of Payload."),
+               ("Parameters", KeyValuePair, "Call parameters.", 1)],
+       outargs=[("Job", NodeId_,
+                 "InferenceJobType instance tracking the request. The caller "
+                 "subscribes to it rather than polling.")])
+method(AY, "DeploymentType", "GetCapabilities",
+       "Report what this deployment can do, refreshed from the execution site rather "
+       "than from cache. Defined because a remote endpoint's capabilities change "
+       "without anything in this address space changing.", MR_Optional,
+       outargs=[("Capabilities", CapabilityDataType, "Current capabilities.", 1)])
+
+# The actual narrowing. Same BrowseNames and same Organizes as the inherited
+# declarations, so these OVERRIDE them rather than sitting alongside; typed to this
+# model's own types, so a client browsing a model registry knows what it will find.
+# Allocated here because member ids are append-only.
+obj_member(MR_, "ModelRegistryType", "<Group>", T(1011),
+           "A publisher namespace held by this registry. Narrows the inherited "
+           "placeholder so a model registry admits ModelPublisherType and nothing "
+           "else.", MR_OptionalPlaceholder, reftype=Organizes)
+obj_member(MP, "ModelPublisherType", "<Resource>", T(1016),
+           "A model or dataset published in this namespace. Narrows the inherited "
+           "placeholder to this model's own resource types.", MR_OptionalPlaceholder,
+           reftype=Organizes)
 
 # ---------------------------------------------------------------------------
 # Well-known instance (7001+)
@@ -627,7 +1314,7 @@ def _emit_node(n):
     # standard, not model-defined. Emitting it as 1:Default Binary is what every real
     # companion NodeSet avoids, and tooling that resolves encodings by BrowseName
     # cannot find it.
-    prefix = "" if n.attrs.get("BrowseNameNamespace") == 0 else "1:"
+    prefix = "" if n.attrs.get("BrowseNameNamespace") == 0 else f"{OWN_NS}:"
     a = [f'{tag} NodeId="{T(n.nid)}"', f'BrowseName="{prefix}{sx.escape(n.bname)}"']
     if "SymbolicName" in n.attrs:
         a.append(f'SymbolicName="{sx.escape(n.attrs["SymbolicName"])}"')
@@ -672,14 +1359,16 @@ def emit():
            'xmlns:xsd="http://www.w3.org/2001/XMLSchema" '
            'xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd" '
            'xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd">',
-           '  <NamespaceUris>',
-           f'    <Uri>{NAMESPACE}</Uri>',
-           '  </NamespaceUris>',
+           '  <NamespaceUris>']
+    out += [f'    <Uri>{u}</Uri>' for u in NAMESPACE_URIS]
+    out += ['  </NamespaceUris>',
            '  <Models>',
            f'    <Model ModelUri="{NAMESPACE}" Version="{VERSION}" '
            f'PublicationDate="{PUBDATE}">',
            f'      <RequiredModel ModelUri="http://opcfoundation.org/UA/" '
            f'Version="{BASE_UA_VERSION}" PublicationDate="{BASE_UA_PUBDATE}" />',
+           f'      <RequiredModel ModelUri="{XREG_NS}" '
+           f'Version="{XREG_VERSION}" PublicationDate="{XREG_PUBDATE}" />',
            '    </Model>',
            '  </Models>',
            '  <Aliases>']
@@ -731,7 +1420,7 @@ def _dt_name(dt):
         return BASE_TYPE_NAMES[dt]
     if dt in DATATYPE_ALIAS:
         return DATATYPE_ALIAS[dt]
-    if dt.startswith("ns=1;i="):
+    if dt.startswith(f"ns={OWN_NS};i="):
         n = NODES.get(int(dt.split("=")[-1]))
         if n is not None:
             return n.bname
@@ -787,7 +1476,7 @@ def emit_md():
     L = ["# OPC UA — AI Deployment and Learning — Annex A: Information model (generated)",
          "",
          "> Generated by `build_model.py`. Do not edit by hand. Namespace "
-         f"`{NAMESPACE}` (index 1). NodeIds are provisional.",
+         f"`{NAMESPACE}` (index {OWN_NS}). NodeIds are provisional.",
          "",
          "This annex is the authoritative node reference for the specification: it "
          "carries the DataType, ValueRank and ModellingRule of every member, the field "
@@ -799,7 +1488,7 @@ def emit_md():
           "| NodeId | BrowseName | NodeClass | Subtype of |", "|---|---|---|---|"]
     for nid in ref_types + obj_types + data_types:
         n = NODES[nid]
-        L.append(f"| ns=1;i={nid} | {n.bname} | {n.cls[2:]} | "
+        L.append(f"| {T(nid)} | {n.bname} | {n.cls[2:]} | "
                  f"{_dt_name(_supertype(nid))} |")
     L.append("")
 
@@ -808,7 +1497,7 @@ def emit_md():
           "|---|---|---|---|---|"]
     for nid in ref_types:
         n = NODES[nid]
-        L.append(f"| ns=1;i={nid} | {n.bname} | {n.inverse} | "
+        L.append(f"| {T(nid)} | {n.bname} | {n.inverse} | "
                  f"{_dt_name(_supertype(nid))} | {_esc(n.desc)} |")
     L.append("")
 
@@ -816,7 +1505,7 @@ def emit_md():
     for nid in obj_types:
         n = NODES[nid]
         abstract = " (abstract)" if n.abstract else ""
-        L.append(f"### {n.bname}{abstract} — `ns=1;i={nid}`")
+        L.append(f"### {n.bname}{abstract} — `{T(nid)}`")
         L.append("")
         L.append(f"*Subtype of:* `{_dt_name(_supertype(nid))}`")
         L.append("")
@@ -861,7 +1550,7 @@ def emit_md():
         n = NODES[nid]
         defn = n.definition or ""
         is_enum = 'Value="' in defn
-        L.append(f"### {n.bname} — `ns=1;i={nid}`")
+        L.append(f"### {n.bname} — `{T(nid)}`")
         L.append("")
         L.append(f"*Subtype of:* `{_dt_name(_supertype(nid))}`")
         L.append("")

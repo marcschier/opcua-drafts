@@ -53,17 +53,37 @@ AI_NODESET = os.path.normpath(os.path.join(
     _HERE, "..", "..", "..", "ai-deployment", "Opc.Ua.AiDeployment.NodeSet2.xml"))
 
 
+def _ai_prefix():
+    """The NodeId prefix the AI Deployment model uses for its OWN namespace.
+
+    Not necessarily ns=1: a NodeSet lists its RequiredModel namespaces in
+    NamespaceUris too, so adding a dependency shifts the model's own index. Reading
+    it from the file rather than assuming is the difference between this validator
+    noticing a change and silently resolving nothing, which would pass.
+    """
+    if not os.path.exists(AI_NODESET):
+        return None
+    root = ET.parse(AI_NODESET).getroot()
+    uris = [u.text for u in root.findall(f"{NS}NamespaceUris/{NS}Uri")]
+    if AI_NS not in uris:
+        return None
+    return "ns=%d;i=" % (uris.index(AI_NS) + 1)
+
+
+AI_PREFIX = _ai_prefix()
+
+
 def _load_ai_types():
     """BrowseName -> numeric id for every type the AI Deployment model declares."""
     out = {}
-    if not os.path.exists(AI_NODESET):
+    if not os.path.exists(AI_NODESET) or not AI_PREFIX:
         return out
     for el in ET.parse(AI_NODESET).getroot():
         tag = el.tag[len(NS):] if el.tag.startswith(NS) else ""
         if tag in ("UAObjectType", "UADataType", "UAReferenceType"):
             bn = (el.get("BrowseName") or "").split(":", 1)[-1]
             nid = el.get("NodeId", "")
-            if bn and nid.startswith("ns=1;i="):
+            if bn and nid.startswith(AI_PREFIX):
                 out[bn] = int(nid.split("i=")[1])
     return out
 
@@ -74,11 +94,11 @@ AI_TYPE_ID = _load_ai_types()
 def _load_ai_ids():
     """Every numeric NodeId the AI Deployment model declares, for reference checking."""
     out = set()
-    if not os.path.exists(AI_NODESET):
+    if not os.path.exists(AI_NODESET) or not AI_PREFIX:
         return out
     for el in ET.parse(AI_NODESET).getroot():
         nid = el.get("NodeId", "") if el.tag.startswith(NS) else ""
-        if nid.startswith("ns=1;i="):
+        if nid.startswith(AI_PREFIX):
             out.add(int(nid.split("i=")[1]))
     return out
 

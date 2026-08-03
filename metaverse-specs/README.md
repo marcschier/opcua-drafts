@@ -29,9 +29,9 @@ Pick Part 1 when you already have an artist-authored USD asset and want to drive
 | Question | *What does this camera see, and what did it conclude?* | *How do I tell this robot what to do?* | *Which model produced this answer, and can I audit it?* |
 | The gap | OPC 40100-1 leaves result content undefined; OPC 40010-1 has no vision types at all | OPC 40010-1 describes robot topology and defines **no motion verbs** | OPC UA has no way to say what an AI model *is*, where it runs, or what it was trained on |
 | Namespace | `http://opcfoundation.org/UA/Vision/` | `http://opcfoundation.org/UA/RobotIntent/` | `http://opcfoundation.org/UA/AI/` |
-| Release | 0.1.0 | 0.1.0 | 0.1.0 |
+| Release | 0.1.0 | 0.1.0 | 0.2.0 |
 
-All three are self-contained on base OPC UA — none takes a companion specification as a `RequiredModel`.
+Vision and Robot Intent are self-contained on base OPC UA. AI Deployment additionally requires *OPC UA — xRegistry*, because its model catalogue is a domain extension of that abstract registry rather than a private invention — a model catalogue **is** a registry, and defining a second one would leave two incompatible ways to describe the same artefact.
 
 **They compose without coupling.** Vision's `InferencePipelineType.Deployment` is a plain `NodeId`, so a Server can publish cameras and verdicts with no AI model at all; where it does describe one, the chain *result → deployment → model → digest* is available end to end. Vision and Robot Intent share a frame vocabulary with identical literals and numbering. In every case the join is a **facet precondition**, never a `RequiredModel` — which is what lets a domain adopt one model without inheriting the others.
 
@@ -41,7 +41,7 @@ All three are self-contained on base OPC UA — none takes a companion specifica
 - <!-- release-spec-link:YG9wZW51c2Qtc2NlbmUvYCDigJQgUGFydCAyIHNwZWNpZmljYXRpb24sIE5vZGVTZXQsIENTViwgYW5kIG1hdGVyaWFsaXplZCBleGFtcGxlIG92ZXJsYXlzLg== -->*Under OPC Foundation review — moved to [OPCF-Members/spec-drafts](https://github.com/OPCF-Members/spec-drafts); OPC Foundation members can [request access](https://github.com/OPCF-Members/Help).*<!-- /release-spec-link -->
 - `vision/` — **OPC UA — Vision**: sensors, the media they emit, the AI that interprets them, the results they produce, and the feedback path back in. Standalone on base OPC UA, with worked addenda for `robotics/` and `machine-vision/`.
 - `robot-intent/` — **OPC UA — Robot Intent**: task-level verbs for commanding a robot, with a Part 10 lifecycle. OPC 40010-1 describes robot topology and defines no motion verbs; this supplies the verbs and nothing else. Standalone on base OPC UA.
-- `ai-deployment/` — **OPC UA — AI Deployment and Learning**: the model nameplate, the dataset it was trained on, the deployment that executes it and the learning job that produces the next version. Deliberately **domain-neutral** — it names no camera, no robot and no sensor — so any domain can build on it. Aligned member-for-member with IDTA 02058/02059/02060.
+- `ai-deployment/` — **OPC UA — AI Deployment and Learning**: what a model is, how to call it, how to call one hosted somewhere else, and how to get one from a catalogue onto the machine. Deliberately **domain-neutral** — it names no camera, no robot and no sensor — so any domain can build on it. The invocation surface does not change with where inference runs; what changes is the trust boundary, and clauses 8 and 10 are about saying so out loud: what happens when the link drops, and whether calling a model sends plant data off site.
 - `extras/` — everything secondary to standardization, mirroring the folders above:
   - `openusd-binding/tools/` — the model generator and validator; `examples/` — the pumps and robotics USD assets, binding descriptors, writers, renderers and end-to-end guides.
   - `openusd-scene/tools/` — the model generator, the `.usd` ↔ NodeSet converters, and the round-trip checker.
