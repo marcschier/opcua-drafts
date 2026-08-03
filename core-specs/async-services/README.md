@@ -2,14 +2,14 @@
 
 This folder contains the working draft for **OPC UA — Asynchronous Service Execution**: a way for a Server to answer a request later than the Client asked for it, without a ticket, a cookie or a per-specification poll Method.
 
-A Server that cannot produce a response within the time its Client will wait **parks** the request, answers `Bad_RequestNotComplete` with a retry hint, and hands the response to the first `Continue` that arrives once the work has finished. `Continue` is a new Service beside `Cancel` and uses the same key — `RequestHeader.requestHandle` — so the two Services that act on an outstanding request are symmetric: `Cancel` gives it up, `Continue` asks for it.
+A Server that cannot produce a response within the time its Client will wait **parks** the request, answers `Bad_RequestNotComplete` with a retry hint, and hands the response to the first `Complete` that arrives once the work has finished. `Complete` is a new Service beside `Cancel` and uses the same key — `RequestHeader.requestHandle` — so the two Services that act on an outstanding request are symmetric: `Cancel` gives it up, `Complete` asks for it.
 
 It answers [Mantis 10606](https://mantis.opcfoundation.org/view.php?id=10606), which asks for *"an async solution for synchronizing such calls in one general matter"* after observing that a Server acting as a gateway cannot answer the certificate push Methods of OPC 10000-12 while the devices behind it are still being reached.
 
 ## Contents
 
 - `OPC-UA-Async-Services.md` — **standalone combined spec**: a self-contained read merging the two errata below, plus a worked GDS-to-gateway deployment, the five field scenarios and which of them a deferral actually solves, and a comparison with the mechanisms OPC UA already has. The two errata documents remain the authoritative, insertion-ready proposals.
-- `OPC-UA-Part4-Async-Service-Execution.md` — Part 4 errata: the `Continue` Service, the deferral and retry rules, the lifecycle, durable deferral, auditing, five StatusCodes and thirty-nine test assertions.
+- `OPC-UA-Part4-Async-Service-Execution.md` — Part 4 errata: the `Complete` Service, the deferral and retry rules, the lifecycle, auditing, five StatusCodes and thirty-nine test assertions.
 - `OPC-UA-Part5-Async-Service-Model.md` — Part 5 errata: `AsyncServiceCapabilitiesType`, `AsyncServiceDiagnosticsType`, the DataTypes and the two EventTypes.
 - `Opc.Ua.AsyncServices.NodeSet2.xml` — generated NodeSet.
 - `Opc.Ua.AsyncServices.NodeIds.csv` — generated NodeIds.
@@ -21,14 +21,15 @@ It answers [Mantis 10606](https://mantis.opcfoundation.org/view.php?id=10606), w
 
 | | What it is |
 |---|---|
-| The Service | `Continue(requestHandle)`, in the Session Service Set beside `Cancel`. |
+| The Service | `Complete(requestHandle)`, in the Session Service Set beside `Cancel`. |
 | The answer | The parked Service's own response — a `CallResponse`, a `WriteResponse` — or `Bad_RequestNotComplete` again. |
+| Opting in | The presence of a `DeferralRequestHeaderDataType` in `RequestHeader.additionalHeader`. A Server defers nothing for a Client that did not ask, so nothing it does can surprise one. |
 | The key | `RequestHeader.requestHandle`. No ticket comes back from the Server. |
 | The hint | `RetryAfter` in `ResponseHeader.additionalHeader`, with `DefaultRetryAfter` and `MinRetryAfter` readable from the AddressSpace for Clients whose stack drops the header. |
 | Giving up | `Cancel(requestHandle)`, which discards the answer and never implies the effect was undone. |
-| Being told instead of asking | `DeferredRequestCompletedEventType` on the Server Object, delivered only to the Sessions entitled to collect. |
-| Outliving a connection | Optional durable deferral: a later Session of the same user identity collects the response. |
-| A Client that knows none of this | Sees a Bad service result, exactly as it sees `Bad_Timeout` today. |
+| Being told instead of asking | `DeferredRequestCompletedEventType` on the Server Object, delivered only to the Session that parked the request. |
+| Surviving a broken connection | The Session outlives the SecureChannel, so a Client reconnects and collects. A parked response never leaves its Session. |
+| A Client that knows none of this | Never opts in, so it is never deferred and sees exactly today's behaviour. |
 
 ## Regenerate and validate
 

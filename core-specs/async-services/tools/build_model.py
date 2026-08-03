@@ -114,13 +114,7 @@ CAT_INST = "Async Service Instances"
 # it, and a unit has to be an identifier token rather than the prose name used in the
 # conformance clause. The CAT_* values above group nodes for generation only; they are not
 # conformance units and are never emitted as <Category>.
-#
-# ASE-Durable is a Service behaviour defined in the Part 4 errata and carried by no Node of
-# its own: durable deferral is expressed through members of AsyncServiceCapabilitiesType and
-# AsyncServiceDiagnosticsType that the base units already carry, so the unit appears in the
-# conformance clause but in no type table.
 CU_EXECUTION = "ASE-Execution"
-CU_DURABLE = "ASE-Durable"
 CU_MODEL = "ASE-Model"
 CU_DIAGNOSTICS = "ASE-Diagnostics"
 CU_EVENTS = "ASE-CompletionEvents"
@@ -129,7 +123,7 @@ CU_AUDITING = "ASE-Auditing"
 # Every unit, in the order the conformance clause lists them. The documents and this table
 # have to agree, or the check that each emitted unit is named in the clause is circular.
 ALL_CONFORMANCE_UNITS = (
-    CU_EXECUTION, CU_DURABLE, CU_MODEL, CU_DIAGNOSTICS, CU_EVENTS, CU_AUDITING,
+    CU_EXECUTION, CU_MODEL, CU_DIAGNOSTICS, CU_EVENTS, CU_AUDITING,
 )
 
 UNITS_BY_NAME = {
@@ -144,8 +138,8 @@ UNITS_BY_NAME = {
     "DeferralRequestHeaderDataType": (CU_EXECUTION,),
     "DeferralResponseHeaderDataType": (CU_EXECUTION,),
     "DeferredRequestDiagnosticsDataType": (CU_DIAGNOSTICS,),
-    "ContinueRequest": (CU_EXECUTION,),
-    "ContinueResponse": (CU_EXECUTION,),
+    "CompleteRequest": (CU_EXECUTION,),
+    "CompleteResponse": (CU_EXECUTION,),
 
     "AsyncServiceCapabilities": (CU_MODEL,),
     "AsyncServiceDiagnostics": (CU_DIAGNOSTICS,),
@@ -204,11 +198,13 @@ def event_type(nid, name, base, desc):
 
 
 def _member_var(owner, owner_sym, name, datatype, typedef, rule, reftype, desc,
-                valuerank="-1"):
+                valuerank="-1", access_restrictions=None):
     nid = _mid()
     attrs = {"DataType": datatype, "ValueRank": valuerank}
     if valuerank == "1":
         attrs["ArrayDimensions"] = "0"
+    if access_restrictions is not None:
+        attrs["AccessRestrictions"] = access_restrictions
     add(nid, "UAVariable", name, f"{owner_sym}_{name}", desc=desc, parent=T(owner),
         attrs=attrs)
     ref(nid, HasModellingRule, rule)
@@ -218,14 +214,16 @@ def _member_var(owner, owner_sym, name, datatype, typedef, rule, reftype, desc,
     return nid
 
 
-def prop_var(owner, owner_sym, name, datatype, desc, rule=MR_Mandatory, valuerank="-1"):
+def prop_var(owner, owner_sym, name, datatype, desc, rule=MR_Mandatory, valuerank="-1",
+             access_restrictions=None):
     return _member_var(owner, owner_sym, name, datatype, PropertyType, rule,
-                       HasProperty, desc, valuerank)
+                       HasProperty, desc, valuerank, access_restrictions)
 
 
-def comp_var(owner, owner_sym, name, datatype, desc, rule=MR_Mandatory, valuerank="-1"):
+def comp_var(owner, owner_sym, name, datatype, desc, rule=MR_Mandatory, valuerank="-1",
+             access_restrictions=None):
     return _member_var(owner, owner_sym, name, datatype, BaseDataVariableType, rule,
-                       HasComponent, desc, valuerank)
+                       HasComponent, desc, valuerank, access_restrictions)
 
 
 def enum_type(nid, name, desc, fields):
@@ -305,21 +303,22 @@ prop_var(70000, ASC, "MaxDeferredRequests", UInt32,
          "dropped.")
 prop_var(70000, ASC, "MaxDeferredRequestsPerSession", UInt32,
          "The greatest number of parked responses the Server holds for one Session. It bounds "
-         "what a single Client can reserve, so one Client polling slowly cannot exhaust "
-         "MaxDeferredRequests for every other Client.")
+         "one Session and nothing wider: a Client may open as many Sessions as MaxSessions "
+         "allows, so this Property is not by itself a bound on what one user can reserve, and "
+         "isolating users from one another is a Server matter this model does not describe.")
 prop_var(70000, ASC, "MaxDeferralTime", Duration,
          "The longest a Server holds a parked response before discarding it. It starts when the "
          "request is parked, not when the response becomes ready, so a Client can compute the "
          "deadline from the moment it receives Bad_RequestNotComplete.")
 prop_var(70000, ASC, "DefaultRetryAfter", Duration,
-         "The interval a Client waits before each Continue when it cannot read the "
+         "The interval a Client waits before each Complete when it cannot read the "
          "DeferralResponseHeaderDataType carried in ResponseHeader.additionalHeader. It is "
          "never below MinRetryAfter, so a Client that can read nothing else is never throttled "
          "for obeying the only value available to it. Every Client can read this Property, so "
          "the retry contract does not depend on a header that a stack may discard with the "
          "fault that carries it.")
 prop_var(70000, ASC, "MinRetryAfter", Duration,
-         "The shortest interval the Server accepts between two Continue calls for the same "
+         "The shortest interval the Server accepts between two Complete calls for the same "
          "parked request. A Client that calls more often is refused with Bad_ServerTooBusy. "
          "Without a published floor, a Client that ignores RetryAfter turns a deferral into a "
          "poll loop against the very Server that deferred because it was busy.")
@@ -327,14 +326,6 @@ prop_var(70000, ASC, "DeferrableServices", NodeId_,
          "The DataType NodeIds of the request messages this Server may defer, listed "
          "exhaustively. A Service absent from the list is never deferred, so a Client knows "
          "before it calls whether an answer can arrive late.", valuerank="1")
-prop_var(70000, ASC, "DurableDeferralSupported", Boolean,
-         "TRUE when the Server can hold a parked response beyond the Session that issued the "
-         "request, for reclaim by a later Session of the same user identity.")
-prop_var(70000, ASC, "MaxDurableDeferralTime", Duration,
-         "The longest a Server holds a durable parked response, measured from the moment the "
-         "issuing Session closed. It is 0 exactly when DurableDeferralSupported is FALSE, so the "
-         "pair is readable and testable together rather than one being present and the other "
-         "absent.")
 
 ASD = "AsyncServiceDiagnosticsType"
 object_type(
@@ -347,29 +338,28 @@ comp_var(70001, ASD, "DeferredRequestCount", UInt32,
 comp_var(70001, ASD, "TotalDeferredCount", Counter,
          "The number of requests the Server has parked since it started.")
 comp_var(70001, ASD, "CompletedCount", Counter,
-         "The number of parked responses collected by a Continue since the Server started.")
+         "The number of parked responses collected by a Complete since the Server started.")
 comp_var(70001, ASD, "ExpiredCount", Counter,
          "The number of parked responses discarded because MaxDeferralTime elapsed before they "
          "were collected. A rising count is the signature of Clients that defer and never "
          "return.")
 comp_var(70001, ASD, "CancelledCount", Counter,
          "The number of parked responses abandoned with Cancel since the Server started.")
-comp_var(70001, ASD, "ReclaimedCount", Counter,
-         "The number of parked responses collected by a Session other than the one that issued "
-         "the request. It is 0 on a Server whose DurableDeferralSupported is FALSE.")
 comp_var(70001, ASD, "RejectedCount", Counter,
          "The number of requests refused with Bad_TooManyDeferredRequests because a parking "
          "limit would have been exceeded.")
 comp_var(70001, ASD, "DeferredRequests", T(70034),
-         "One record per parked response the reading Session is entitled to see. Empty when it "
-         "holds none.", valuerank="1")
+         "One record per parked response the reading Session issued. Empty when it holds none. "
+         "It names who is running what long operation and when, so it carries the "
+         "EncryptionRequired AccessRestriction and is projected per Session.",
+         valuerank="1", access_restrictions="2")
 
 # --- Event types -----------------------------------------------------------
 DRC = "DeferredRequestCompletedEventType"
 event_type(
     70010, DRC, BaseEventType,
     "Raised when a parked response becomes ready to collect. A Client that subscribes to it "
-    "calls Continue once, when there is something to collect, instead of polling until there "
+    "calls Complete once, when there is something to collect, instead of polling until there "
     "is; a Client that cannot subscribe is unaffected, because RetryAfter remains the "
     "contract.")
 prop_var(70010, DRC, "RequestHandle", IntegerId,
@@ -380,13 +370,14 @@ prop_var(70010, DRC, "ServiceId", NodeId_,
          "The DataType NodeId of the parked request message, so a Client that deferred several "
          "different Services can tell which one completed.")
 prop_var(70010, DRC, "ServiceResult", StatusCode,
-         "The serviceResult the parked response carries. It lets a Client that only needs to "
-         "know whether the work succeeded skip the Continue entirely.")
+         "The service-level serviceResult the parked response carries. For a Service whose "
+         "response holds per-operation results it says the request was processed, not that "
+         "every operation in it succeeded.")
 prop_var(70010, DRC, "CompletionTime", UtcTime,
          "When the response became ready.")
 prop_var(70010, DRC, "ExpiryTime", UtcTime,
          "When the Server discards the parked response. A Client has until this time to call "
-         "Continue.")
+         "Complete.")
 
 ADR = "AuditDeferredRequestEventType"
 event_type(
@@ -395,7 +386,8 @@ event_type(
     "moment an effect is authorized from the moment its outcome is known, and the Client that "
     "authorized it may never collect the answer, so the audit trail is the only record that "
     "spans both. It follows AuditCancelEventType, which is likewise an AuditSessionEventType "
-    "carrying a requestHandle.")
+    "carrying a requestHandle. It names the Session and the user behind every parked request, "
+    "so it is delivered only to Sessions authorized to audit.")
 prop_var(70011, ADR, "RequestHandle", IntegerId,
          "The requestHandle of the request this transition belongs to.")
 prop_var(70011, ADR, "ServiceId", NodeId_,
@@ -403,49 +395,47 @@ prop_var(70011, ADR, "ServiceId", NodeId_,
 prop_var(70011, ADR, "Transition", T(70031),
          "The transition being reported.")
 prop_var(70011, ADR, "Outcome", StatusCode,
-         "The serviceResult of the parked response for a Delivered or Reclaimed transition, "
-         "and for an Expired transition whose work had finished. It is "
-         "Good_CompletesAsynchronously wherever the outcome is not yet known: a Deferred "
-         "transition, and an Expired transition for a request whose work had not finished. It "
-         "is the service result, not the audit result: the inherited Status Property says "
-         "whether the audited action succeeded, which is a different question from what the "
-         "deferred Service returned.")
-prop_var(70011, ADR, "Durable", Boolean,
-         "TRUE when the parked response survives the Session that issued the request.")
+         "The serviceResult of the parked response for a Delivered transition, and for an "
+         "Expired transition whose work had finished. It is the refusing StatusCode for a "
+         "Denied transition, and Good_CompletesAsynchronously wherever the outcome is not yet "
+         "known: a Deferred transition, and an Expired transition for a request whose work had "
+         "not finished. It is the service result, not the audit result: the inherited Status "
+         "Property says whether the audited action succeeded, which is a different question "
+         "from what the deferred Service returned.")
 
 # --- Data types ------------------------------------------------------------
 enum_type(70030, "DeferredRequestState",
           "The state of a parked request. Delivered, Expired and Cancelled are terminal "
-          "records rather than live requests: a Server keeps them so that Continue can say "
+          "records rather than live requests: a Server keeps them so that Complete can say "
           "why there is nothing new to collect, and so that a response lost on the network "
           "can be collected again.",
-          [("Executing", 0, "The Server is still working on the request. Continue returns Bad_RequestNotComplete."),
-           ("Ready", 1, "The response is complete and parked. The next Continue returns it."),
-           ("Expired", 2, "The response deadline passed before the response was collected and the Server discarded it. Continue returns Bad_DeferredRequestExpired."),
-           ("Cancelled", 3, "The Client abandoned the response with Cancel. Continue returns Bad_RequestCancelledByRequest."),
-           ("Delivered", 4, "The response was collected and is retained for replay until the response deadline. A Continue returns the same response again, so a Client that lost it to a broken connection is not left with an effect whose outcome it can never learn.")])
+          [("Executing", 0, "The Server is still working on the request. Complete returns Bad_RequestNotComplete."),
+           ("Ready", 1, "The response is complete and parked. The next Complete returns it."),
+           ("Expired", 2, "The response deadline passed before the response was collected and the Server discarded it. Complete returns Bad_DeferredRequestExpired."),
+           ("Cancelled", 3, "The Client abandoned the response with Cancel. Complete returns Bad_RequestCancelledByRequest."),
+           ("Delivered", 4, "The response was collected and is retained for replay until the response deadline. A Complete returns the same response again, so a Client that lost it to a broken connection is not left with an effect whose outcome it can never learn.")])
 
 enum_type(70031, "DeferredRequestTransition",
           "The transitions of a parked request, as reported by AuditDeferredRequestEventType. "
-          "They are transitions rather than states because Continued is an action that leaves "
-          "the state unchanged, and an audit trail that recorded only states would not show "
-          "that a Client asked.",
+          "They are transitions rather than states because Continued and Denied are actions "
+          "that leave the state unchanged, and an audit trail that recorded only states would "
+          "not show that a Client asked, or that one was turned away.",
           [("Deferred", 0, "The Server parked the request and answered Bad_RequestNotComplete."),
-           ("Continued", 1, "A Client called Continue and the response was not yet ready."),
-           ("Delivered", 2, "A Client of the issuing Session collected the parked response, or collected it again by replay."),
-           ("Reclaimed", 3, "A Session other than the one that issued the request collected the parked response. It replaces Delivered for that collection rather than accompanying it, so one collection is one transition."),
+           ("Continued", 1, "A Client called Complete and the response was not yet ready."),
+           ("Delivered", 2, "A Client collected the parked response, or collected it again by replay."),
+           ("Denied", 3, "A Complete was refused because the calling Session was not the one that parked the request, or because the SecureChannel was too weak to carry the response. It is what makes a campaign of handle probing visible; a call refused by the retry floor is not a Denied transition, because it never examined the request."),
            ("Cancelled", 4, "A Client abandoned the parked response with Cancel."),
            ("Expired", 5, "The Server discarded the parked response because the response deadline passed."),
            ("Completed", 6, "The work finished and its outcome became known. It is raised even when no response is held any longer, which is the only way the outcome of a request that outlived its response deadline reaches the audit trail."),
            ("Discarded", 7, "The Server discarded the parked response before its response deadline because the issuing Session closed, its user identity changed, or the Server shut down.")])
 
 struct_type(70032, "DeferralRequestHeaderDataType",
-            "Carried in RequestHeader.additionalHeader. It expresses a preference and never a "
-            "precondition: the Server decides whether to defer, so a request that carries this "
-            "structure may still be answered synchronously and a request that omits it may "
-            "still be deferred.",
-            [("RequestedDeferralTime", Duration, None, "How long the Client would like the response held. The Server revises it down to MaxDeferralTime and never up. 0 means no preference and selects MaxDeferralTime."),
-             ("RequestDurable", Boolean, None, "TRUE asks the Server to make the parked response reclaimable by a later Session of the same user identity. A Server whose DurableDeferralSupported is FALSE ignores it and reports Durable as FALSE in the response header.")])
+            "Carried in RequestHeader.additionalHeader, where its presence is how a Client "
+            "says it understands deferral. A Server defers only a request that carries it, so "
+            "a Client that has never heard of this specification is answered exactly as it is "
+            "answered today. Its members are preferences and never preconditions: a request "
+            "that carries the structure may still be answered synchronously.",
+            [("RequestedDeferralTime", Duration, None, "How long the Client would like the response held. The Server revises it down to MaxDeferralTime and never up. 0 means no preference and selects MaxDeferralTime.")])
 
 struct_type(70033, "DeferralResponseHeaderDataType",
             "Carried in ResponseHeader.additionalHeader of every response that reports a "
@@ -453,13 +443,12 @@ struct_type(70033, "DeferralResponseHeaderDataType",
             "structure is the only place a per-request hint can ride; the Client that cannot "
             "read it falls back on DefaultRetryAfter, which every Client can read.",
             [("RequestHandle", IntegerId, None, "Echo of the requestHandle that identifies the parked request. It is echoed rather than assumed so that a Client whose stack does not surface the RequestHeader it sent can still key the parked request."),
-             ("RetryAfter", Duration, None, "How long to wait before the next Continue. Never below MinRetryAfter."),
+             ("RetryAfter", Duration, None, "How long to wait before the next Complete. Never below MinRetryAfter."),
              ("ExpiryTime", UtcTime, None, "When the Server discards the parked response."),
-             ("EstimatedCompletionTime", UtcTime, None, "The Server's estimate of when the response will be ready, or a null DateTime when it cannot estimate. It is a forecast and never a commitment; ExpiryTime is the only deadline that binds."),
-             ("Durable", Boolean, None, "TRUE when the parked response survives the Session that issued the request.")])
+             ("EstimatedCompletionTime", UtcTime, None, "The Server's estimate of when the response will be ready, or a null DateTime when it cannot estimate. It is a forecast and never a commitment; ExpiryTime is the only deadline that binds.")])
 
 struct_type(70034, "DeferredRequestDiagnosticsDataType",
-            "One parked request, as reported by AsyncServiceDiagnostics. ContinueCount and "
+            "One parked request, as reported by AsyncServiceDiagnostics. CompleteCount and "
             "StartTime are the two that matter in practice: together they separate a Client "
             "that is waiting patiently from one that is polling a Server it was asked not to.",
             [("SessionId", NodeId_, None, "The Session that issued the request."),
@@ -468,27 +457,26 @@ struct_type(70034, "DeferredRequestDiagnosticsDataType",
              ("State", T(70030), None, "The state of the parked request."),
              ("StartTime", UtcTime, None, "When the Server parked the request."),
              ("ExpiryTime", UtcTime, None, "When the Server discards the parked response."),
-             ("ContinueCount", UInt32, None, "How many times a Client has called Continue for this request. A call refused with Bad_ServerTooBusy is not counted, because it never examined the request."),
-             ("Durable", Boolean, None, "TRUE when the parked response survives the Session that issued the request.")])
+             ("CompleteCount", UInt32, None, "How many times a Client has called Complete for this request. A call refused with Bad_ServerTooBusy is not counted, because it never examined the request.")])
 
 # The Service message types. OPC UA models every Service request and response as a
 # Structure with the three encodings, so a Service that is not in the model cannot be
 # named by DeferrableServices, which identifies a Service by its request message NodeId.
-struct_type(70035, "ContinueRequest",
-            "The Continue Service request. Its DataType NodeId is what "
-            "AsyncServiceCapabilities.DeferrableServices uses to name a Service, and Continue "
+struct_type(70035, "CompleteRequest",
+            "The Complete Service request. Its DataType NodeId is what "
+            "AsyncServiceCapabilities.DeferrableServices uses to name a Service, and Complete "
             "itself is never deferrable.",
             [("RequestHeader", T(389), None, "Common request parameters."),
              ("RequestHandle", IntegerId, None, "The requestHandle of the parked request, as it appeared in the RequestHeader of the deferred request.")])
 
-struct_type(70036, "ContinueResponse",
-            "The Continue Service response, returned when the parked response is itself a "
-            "failure. A successful Continue for a parked request that succeeded is answered "
-            "with the parked Service's own response message instead; a Continue that fails on "
+struct_type(70036, "CompleteResponse",
+            "The Complete Service response, returned when the parked response is itself a "
+            "failure. A successful Complete for a parked request that succeeded is answered "
+            "with the parked Service's own response message instead; a Complete that fails on "
             "its own account travels as a ServiceFault. This message is what keeps those two "
             "apart, which a bare ServiceFault could not: a parked ApplyChanges that failed and "
-            "a Continue that arrived too soon would otherwise be the same message.",
-            [("ResponseHeader", T(392), None, "Common response parameters. Its serviceResult is Good: the Continue succeeded, whatever the parked Service returned."),
+            "a Complete that arrived too soon would otherwise be the same message.",
+            [("ResponseHeader", T(392), None, "Common response parameters. Its serviceResult is Good: the Complete succeeded, whatever the parked Service returned."),
              ("DeferredServiceResult", StatusCode, None, "The serviceResult of the parked response. Always a Bad StatusCode; a parked response with a Good serviceResult is returned as the parked Service's own response message."),
              ("DeferredDiagnosticInfo", T(25), None, "The serviceDiagnostics the parked response carried, whose string table is the ResponseHeader's.")])
 
@@ -497,8 +485,7 @@ well_known(70100, "AsyncServiceCapabilities", T(70000), ServerCapabilities,
            "Server-wide deferral capabilities. Its absence is how a Server says it never "
            "defers a request.")
 well_known(70101, "AsyncServiceDiagnostics", T(70001), ServerDiagnostics,
-           "Deferred request counters and the per-request records the reading Session is "
-           "entitled to see.")
+           "Deferred request counters and the per-request records of the reading Session.")
 
 # ===========================================================================
 # ==============================  EMISSION  =================================
@@ -536,7 +523,7 @@ def _emit_node(n):
     a = [f'{n.cls} NodeId="{T(n.nid)}"', f'BrowseName="{sx.escape(n.bname)}"']
     if n.parent is not None:
         a.append(f'ParentNodeId="{n.parent}"')
-    for k in ("DataType", "ValueRank", "ArrayDimensions"):
+    for k in ("DataType", "ValueRank", "ArrayDimensions", "AccessRestrictions"):
         if k in n.attrs:
             v = n.attrs[k]
             if k == "DataType":

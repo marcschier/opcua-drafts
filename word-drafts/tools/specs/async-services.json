@@ -213,14 +213,14 @@
       "title": "Deferral in one paragraph"
     },
     {
-      "from": "5 The Continue Service",
+      "from": "5 The Complete Service",
       "number": "6.5",
-      "title": "The Continue Service"
+      "title": "The Complete Service"
     },
     {
-      "from": "5.1 Continue",
+      "from": "5.1 Complete",
       "number": "6.5.1",
-      "title": "Continue"
+      "title": "Complete"
     },
     {
       "from": "5.2 Why the response is polymorphic",
@@ -253,11 +253,6 @@
       "title": "Request handle uniqueness"
     },
     {
-      "from": "6.5 Duplicate suppression",
-      "number": "6.6.5",
-      "title": "Duplicate suppression"
-    },
-    {
       "from": "7 Lifecycle",
       "number": "6.7",
       "title": "Lifecycle"
@@ -283,9 +278,9 @@
       "title": "Cancel"
     },
     {
-      "from": "7.5 The Session, the principal, and durable deferral",
+      "from": "7.5 The Session",
       "number": "6.7.5",
-      "title": "The Session, the principal, and durable deferral"
+      "title": "The Session"
     },
     {
       "from": "7.6 Authorization, and what a deferral does not do",
@@ -489,7 +484,6 @@
     "6.2": "6.6.2",
     "6.3": "6.6.3",
     "6.4": "6.6.4",
-    "6.5": "6.6.5",
     "7": "6.7",
     "7.1": "6.7.1",
     "7.2": "6.7.2",

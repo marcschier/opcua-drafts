@@ -239,9 +239,8 @@ for tag, el in elems:
 # --- Every declared member is Mandatory -------------------------------------
 # A conformance unit has to be executable against a legal Server, and every member of this
 # model is named by one. An Optional member would make the unit that tests it unverifiable:
-# a Server could omit the member and still conform. Optionality here is expressed in values
-# instead - MaxDurableDeferralTime is 0 when durable deferral is unsupported - so the pair
-# stays readable together.
+# a Server could omit the member and still conform. Where a capability is genuinely absent
+# the model expresses it as a value - 0, FALSE, an empty array - which a Client can read.
 for tag, el in elems:
     if tag != "UAVariable" or (el.get("BrowseName") or "") == "EnumStrings":
         continue
@@ -432,9 +431,9 @@ for name, text in docs.items():
 # normative paragraph of one has to be a normative paragraph of the other, character for
 # character. Checking only that both exist would let a `shall` be tightened in one and not
 # the other, which is the failure mode a merged read invites.
-p4_services = _slice(annex_free.get(PART4, ""), "\n## 5 The Continue Service",
+p4_services = _slice(annex_free.get(PART4, ""), "\n## 5 The Complete Service",
                      "\n## 9 StatusCodes")
-combined_services = _slice(annex_free.get(COMBINED, ""), "\n## 5 The Continue Service",
+combined_services = _slice(annex_free.get(COMBINED, ""), "\n## 5 The Complete Service",
                            "\n## 9 The information model")
 if p4_services and combined_services:
     for para in p4_services.split("\n"):
@@ -451,6 +450,24 @@ if p4_services and combined_services:
 else:
     errors.append("could not locate clauses 5-8 in both the Part 4 errata and the combined "
                   "specification; the drift check did not run")
+
+# --- The security control the prose defines is in the model too --------------
+# Part 5 clause 6 requires the encryption restriction on DeferredRequests to be expressed
+# through the AccessRestrictions Attribute, "so a Client can discover it by reading rather
+# than by failing". A code generator consuming the NodeSet is the normal path for an OPC UA
+# stack, so a NodeSet without the Attribute produces a Server the prose forbids.
+ENCRYPTION_REQUIRED = 2
+_dr = next((el for _t, el in elems if (el.get("BrowseName") or "") == "DeferredRequests"),
+           None)
+if _dr is None:
+    errors.append("the DeferredRequests Variable is missing from the model")
+else:
+    _ar = _dr.get("AccessRestrictions")
+    if _ar is None or not _ar.isdigit() or not int(_ar) & ENCRYPTION_REQUIRED:
+        errors.append("DeferredRequests carries AccessRestrictions "
+                      f"{_ar!r}, which does not set the EncryptionRequired bit "
+                      f"({ENCRYPTION_REQUIRED}); the Part 5 errata clause 6 requires the "
+                      "model to state the restriction its prose defines")
 
 # --- Report -----------------------------------------------------------------
 base_note = f"{len(UA)} ids" if UA is not None else "skipped (no local base table)"
