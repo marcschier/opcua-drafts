@@ -391,7 +391,6 @@ The following are existing StatusCodes, reused:
 
 `ASE-Model` and `ASE-Execution` **require each other**, and are two units rather than one because the model and the Services land in different Parts. Neither is claimable alone: a Server that published `AsyncServiceCapabilities` without implementing `Complete` would be advertising limits on something it does not do, and a Server that deferred without publishing the Object would contradict §9.1, which makes the Object's absence the statement that a Server never defers.
 
-
 The full test assertion table is in the [Part 4 errata](OPC-UA-Part4-Async-Service-Execution.md) §10.1.
 
 ## 12 Relationship to other specifications
