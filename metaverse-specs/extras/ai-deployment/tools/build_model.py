@@ -25,10 +25,8 @@ Structures 3050+, ReferenceTypes 4001+, DataType encodings 5001+, well-known ins
 be APPENDED so that previously published member NodeIds stay stable.
 
 Design notes:
-  * This model was factored OUT of OPC UA - Vision, where it had accumulated because
-    vision happened to be the first specification in this repository that needed it.
-    Nothing in it was vision-specific except one sentence about class indices, which is
-    now stated as a general contract on LabelClasses.
+  * The model is domain-neutral by construction: nothing here names a camera, a robot
+    or a sensor, and validate_local.py fails the build if a type name acquires one.
   * A consuming specification binds to this one through a NodeId Property, not a
     reference and not a RequiredModel, so a Server can implement either alone.
   * Digest and DigestAlgorithm are Mandatory because the provenance chain from a
@@ -170,16 +168,6 @@ def _mid():
     v = _next_member[0]
     _next_member[0] += 1
     return v
-
-
-def _reserve(count, why):
-    """Burn `count` member ids without declaring anything.
-
-    Used where a member moved to a base type. Its id is NOT reclaimed: reusing it
-    would renumber every member declared after it, which is exactly the churn the
-    append-only rule exists to prevent. A hole costs nothing.
-    """
-    _next_member[0] += count
 
 
 def T(nid):
@@ -828,7 +816,6 @@ object_type(1005, "LearningJobType", T(1006),
             "implement only the capture stages and leave training to an external MLOps "
             "system - the state machine is the same either way.")
 LJ = 1005
-_reserve(1, "6036 held JobId, now inherited from AiJobType.")
 prop_var(LJ, "LearningJobType", "State", LearningJobStateEnum,
          "Current stage of the loop. This is the PHASE, not the program lifecycle: "
          "the inherited CurrentState says whether the job is running, this says what "
@@ -840,7 +827,6 @@ prop_var(LJ, "LearningJobType", "CandidateModel", NodeId_,
          "Model produced by the job, awaiting promotion.")
 prop_var(LJ, "LearningJobType", "SamplesCollected", UInt64,
          "Samples accumulated so far, including corrections fed back.")
-_reserve(1, "6042 held LastError, now inherited from AiJobType.")
 method(LJ, "LearningJobType", "StartCollection",
        "Begin accumulating samples and corrections into the dataset.", MR_Optional)
 method(LJ, "LearningJobType", "StopCollection",
@@ -1070,7 +1056,6 @@ MR_ = 1010
 # narrowing has to reuse the inherited <Group> and <Resource> names and the inherited
 # Organizes. Declaring new placeholder names would leave the inherited ones fully open
 # - the subtype would look narrowed while still admitting any GroupType at all.
-_reserve(1, "6104 held a <ModelPublisher> placeholder that narrowed nothing.")
 
 object_type(1011, "ModelPublisherType", XRegistry_GroupType,
             "One publisher's namespace within a model registry: the organisation or "
@@ -1078,7 +1063,6 @@ object_type(1011, "ModelPublisherType", XRegistry_GroupType,
             "element of the publisher/name/version triple by which every catalogue in "
             "practice identifies a model.")
 MP = 1011
-_reserve(2, "6105..6106 held <Model> and <Dataset> placeholders that narrowed nothing.")
 
 object_type(1016, "AiResourceType", XRegistry_ResourceType,
             "Abstract base of everything a model registry holds. It exists so that the "
