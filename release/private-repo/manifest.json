@@ -1,0 +1,265 @@
+{
+  "version": 1,
+  "files": [
+    {
+      "stored": "payload/dot-github/ISSUE_TEMPLATE/spec-feedback.yml.bundle",
+      "destination": ".github/ISSUE_TEMPLATE/spec-feedback.yml",
+      "sha256": "4f98cd13b88a6f0af83a31a582a5669ba3fabdeb74d71101dd52cc2f04e88cfd"
+    },
+    {
+      "stored": "payload/dot-github/copilot-instructions.md.bundle",
+      "destination": ".github/copilot-instructions.md",
+      "sha256": "0c38dea0b858a05f260fc52f3a5384a93f30338f55eb4289df4cd65073ff2e52"
+    },
+    {
+      "stored": "payload/dot-github/pull_request_template.md.bundle",
+      "destination": ".github/pull_request_template.md",
+      "sha256": "adfded114d43ec73f1a871e7439b3a4d566a47a048d8c6524a41d0a1ee1c6df4"
+    },
+    {
+      "stored": "payload/dot-github/puppeteer-config.json.bundle",
+      "destination": ".github/puppeteer-config.json",
+      "sha256": "478cc926c5bcf1a8750c7c365489dce18703f56f8c255f3106083a2bfc56858f"
+    },
+    {
+      "stored": "payload/dot-github/scripts/check_determinism.py.bundle",
+      "destination": ".github/scripts/check_determinism.py",
+      "sha256": "5fecdf5e58ca1ffa99da53133724a28f209dcdffe1dfff1c942fa370f744e777"
+    },
+    {
+      "stored": "payload/dot-github/scripts/check_links.py.bundle",
+      "destination": ".github/scripts/check_links.py",
+      "sha256": "6e235053c0fbcac2a7ec4f508910d5a63d7d95cd1c868f6bcb48fa287524363f"
+    },
+    {
+      "stored": "payload/dot-github/scripts/check_mermaid.py.bundle",
+      "destination": ".github/scripts/check_mermaid.py",
+      "sha256": "ca0f34e92064ca8e7506a86d0d575da9bfd0bb9de551bd1e036a8ae605fb1eb8"
+    },
+    {
+      "stored": "payload/dot-github/scripts/check_section_refs.py.bundle",
+      "destination": ".github/scripts/check_section_refs.py",
+      "sha256": "50b51ed0da582421216f2048d9ccf3890bbcb9bf75f2aafda267e4a21b22ca37"
+    },
+    {
+      "stored": "payload/dot-github/scripts/check_yaml_json.py.bundle",
+      "destination": ".github/scripts/check_yaml_json.py",
+      "sha256": "be8e900438c10bde2d93027b699dd8b3d7037bdcd854ea83c246eccb1a164b7d"
+    },
+    {
+      "stored": "payload/dot-github/scripts/run_self_contained_validators.py.bundle",
+      "destination": ".github/scripts/run_self_contained_validators.py",
+      "sha256": "01834ba395fd9b2b46374ac6f0e4431365d7a1337b095361e6e03d7b1db63b82"
+    },
+    {
+      "stored": "payload/dot-github/workflows/agent-task.yml.bundle",
+      "destination": ".github/workflows/agent-task.yml",
+      "sha256": "ae2150f39f4d347220d4990ee316a4e9b8f84bbbd1cf902ae7e768efedb1458d"
+    },
+    {
+      "stored": "payload/dot-github/workflows/needs-pr.yml.bundle",
+      "destination": ".github/workflows/needs-pr.yml",
+      "sha256": "05ebf7c9fd8ca954fb7d55cdcfafc2c9d3bb78c6e76854e07da0ca947b069550"
+    },
+    {
+      "stored": "payload/dot-github/workflows/pr-validation.yml.bundle",
+      "destination": ".github/workflows/pr-validation.yml",
+      "sha256": "ed4e81a4203bfc5c9032c3238319a9b57298dc5a379b40c188368334249019a6"
+    },
+    {
+      "stored": "payload/dot-github/workflows/word-drafts-refresh.yml.bundle",
+      "destination": ".github/workflows/word-drafts-refresh.yml",
+      "sha256": "4ec6e298a0bc28c7ada6f0be5631d32df3bc0e208c19e564f8a05a57103d0934"
+    },
+    {
+      "stored": "payload/dot-github/workflows/word-review.yml.bundle",
+      "destination": ".github/workflows/word-review.yml",
+      "sha256": "615fcfe1bd903bef615c4ba21dcecdc8d5d52f464fd7c03769a6b076097f9ed0"
+    },
+    {
+      "stored": "payload/dot-gitignore.bundle",
+      "destination": ".gitignore",
+      "sha256": "651497298a287df9e511d48383f41f08e43584d3718d304f3a172c5bbac85611"
+    },
+    {
+      "stored": "payload/dot-markdownlint-cli2.yaml.bundle",
+      "destination": ".markdownlint-cli2.yaml",
+      "sha256": "7cba3164421f3119fda027246b8e8c1f5ba784f3684dee8367f979dbef385d2f"
+    },
+    {
+      "stored": "payload/skills/opcua-observability-export/SKILL.md.bundle",
+      "destination": "skills/opcua-observability-export/SKILL.md",
+      "sha256": "2350ca505e54e71f763179d8479d1ebae9843469aad43bdfd6a0c820c87761b3"
+    },
+    {
+      "stored": "payload/skills/opcua-spec-to-word/SKILL.md.bundle",
+      "destination": "skills/opcua-spec-to-word/SKILL.md",
+      "sha256": "a65246650f035a76a0be223a8e37937ba9d040d5fffc33d4c0b802e805d1d9a8"
+    },
+    {
+      "stored": "payload/skills/opcua-spec-to-word/reference/ingest.md.bundle",
+      "destination": "skills/opcua-spec-to-word/reference/ingest.md",
+      "sha256": "14b40ce863e858010cb9fc68c338a666743c1ae0e863ee05e331c5b25d3f88cc"
+    },
+    {
+      "stored": "payload/skills/opcua-spec-to-word/reference/pipeline.md.bundle",
+      "destination": "skills/opcua-spec-to-word/reference/pipeline.md",
+      "sha256": "34df99c14794c6c83cb9e76c147248e4ce803fb5f0213d7ac35b2ffbed3667d5"
+    },
+    {
+      "stored": "payload/skills/opcua-spec-to-word/reference/template-contract.md.bundle",
+      "destination": "skills/opcua-spec-to-word/reference/template-contract.md",
+      "sha256": "247b09d35bf1c1f623ada1e19206cdecab22d83a80e063b4a389fcc1785404be"
+    },
+    {
+      "stored": "payload/templates/OPC 20020 - UA Companion Specification Template v1.01.19.docx.bundle",
+      "destination": "templates/OPC 20020 - UA Companion Specification Template v1.01.19.docx",
+      "sha256": "08e6ec2fd62db577b19e5ea23a0458a76d4487793e05146abec57226cef63a52"
+    },
+    {
+      "stored": "payload/word-drafts/README.md.bundle",
+      "destination": "word-drafts/README.md",
+      "sha256": "7938d89b635ac79c49bcb3baa2845650638444d0022dee8c6e5ace1ba07d4d29"
+    },
+    {
+      "stored": "payload/word-drafts/tools/arm_track_changes.py.bundle",
+      "destination": "word-drafts/tools/arm_track_changes.py",
+      "sha256": "77148cf1d44a4fd9f2b3bddaa25ce2f0d95e75e398b9a1310575905087d76790"
+    },
+    {
+      "stored": "payload/word-drafts/tools/build_all.py.bundle",
+      "destination": "word-drafts/tools/build_all.py",
+      "sha256": "fc335e91bdf63dafa823744ca6bf1cfb7eb697d9adb98db5a57589f9e965451e"
+    },
+    {
+      "stored": "payload/word-drafts/tools/build_docx.py.bundle",
+      "destination": "word-drafts/tools/build_docx.py",
+      "sha256": "3b29eaa9da91e1b4e72a11225271c4395b289ad4b9cc8b7f8f788794eb8b70cc"
+    },
+    {
+      "stored": "payload/word-drafts/tools/finalize_all.ps1.bundle",
+      "destination": "word-drafts/tools/finalize_all.ps1",
+      "sha256": "6106ce5781b89ace0778522a7ca82bce11b022bac47ce13dab5e6ae43744c215"
+    },
+    {
+      "stored": "payload/word-drafts/tools/finalize_word.ps1.bundle",
+      "destination": "word-drafts/tools/finalize_word.ps1",
+      "sha256": "efd88b7553318dacccd9f0aea9f710817833d2a678f393e857a873696d7b9ae8"
+    },
+    {
+      "stored": "payload/word-drafts/tools/ingest_docx.py.bundle",
+      "destination": "word-drafts/tools/ingest_docx.py",
+      "sha256": "d55a6f01992a86ed65e0463b831a038d5e184264295ad16b8049365db829cab3"
+    },
+    {
+      "stored": "payload/word-drafts/tools/make_review_fixture.ps1.bundle",
+      "destination": "word-drafts/tools/make_review_fixture.ps1",
+      "sha256": "8ea699e02756e694a3bc18f916b9091a9f2558255d473156797cd73d1e5e1a52"
+    },
+    {
+      "stored": "payload/word-drafts/tools/opcdocx/__init__.py.bundle",
+      "destination": "word-drafts/tools/opcdocx/__init__.py",
+      "sha256": "1f2a16cf88045f71e09d7f1e6782f754115269ff37487b34cd189ca0cd148366"
+    },
+    {
+      "stored": "payload/word-drafts/tools/opcdocx/contract.py.bundle",
+      "destination": "word-drafts/tools/opcdocx/contract.py",
+      "sha256": "b84db5316c0b89b4e94966b6d294aab7e4dc570a6d970360a3826327a025a72f"
+    },
+    {
+      "stored": "payload/word-drafts/tools/opcdocx/docmodel.py.bundle",
+      "destination": "word-drafts/tools/opcdocx/docmodel.py",
+      "sha256": "e281a54ffccbb31faac9cb23df37dacb15c0fd10a62f0d8d1e4fffef1404ff6f"
+    },
+    {
+      "stored": "payload/word-drafts/tools/opcdocx/github_review.py.bundle",
+      "destination": "word-drafts/tools/opcdocx/github_review.py",
+      "sha256": "757e4b5a8ff930af51d350be73b3fe4967f5da9d96c1107ec93550ad1555f3cd"
+    },
+    {
+      "stored": "payload/word-drafts/tools/opcdocx/md_parse.py.bundle",
+      "destination": "word-drafts/tools/opcdocx/md_parse.py",
+      "sha256": "d5668f076bf379601adcb29d798270a11b3a2e20b0109c0dfe49d639865b8345"
+    },
+    {
+      "stored": "payload/word-drafts/tools/opcdocx/mermaid_pptx.py.bundle",
+      "destination": "word-drafts/tools/opcdocx/mermaid_pptx.py",
+      "sha256": "025d5dd161bbbe823100ce22441c3491398fb291364c140ea6d7e39c51d061e8"
+    },
+    {
+      "stored": "payload/word-drafts/tools/opcdocx/nodeset_tables.py.bundle",
+      "destination": "word-drafts/tools/opcdocx/nodeset_tables.py",
+      "sha256": "0603d2df8aaf319611e2963c062bc68a4b19d4bdd64c3d6a2906b3c3eb44ac36"
+    },
+    {
+      "stored": "payload/word-drafts/tools/opcdocx/ole_embed.py.bundle",
+      "destination": "word-drafts/tools/opcdocx/ole_embed.py",
+      "sha256": "aaf006d80c816eab9356309d30db034d2239c54ff18daaff0b2ac831c4d9c3b7"
+    },
+    {
+      "stored": "payload/word-drafts/tools/opcdocx/oxml.py.bundle",
+      "destination": "word-drafts/tools/opcdocx/oxml.py",
+      "sha256": "d2989397551bb4d2acf0caf35b16b47bc16410131a3848d42c16d474fe601982"
+    },
+    {
+      "stored": "payload/word-drafts/tools/opcdocx/package.py.bundle",
+      "destination": "word-drafts/tools/opcdocx/package.py",
+      "sha256": "552f48422df48034541c44187afd524dfa795f014464981148dc5647c7f0b796"
+    },
+    {
+      "stored": "payload/word-drafts/tools/opcdocx/review.py.bundle",
+      "destination": "word-drafts/tools/opcdocx/review.py",
+      "sha256": "967b47bd79176ceab551d7a6010fcf291c8255ae285e6d5282e8645dd8dbd5f0"
+    },
+    {
+      "stored": "payload/word-drafts/tools/opcdocx/writer.py.bundle",
+      "destination": "word-drafts/tools/opcdocx/writer.py",
+      "sha256": "b79af2ec5ad7978ac91037237211d224d6c0fee1d243a5c21c78d817d0ed41a0"
+    },
+    {
+      "stored": "payload/word-drafts/tools/render_docx.py.bundle",
+      "destination": "word-drafts/tools/render_docx.py",
+      "sha256": "e04623591dc2f0a930bc3ae7bbf9d35fd9562f9aeb1f020831966f6f0c8a01d3"
+    },
+    {
+      "stored": "payload/word-drafts/tools/requirements.txt.bundle",
+      "destination": "word-drafts/tools/requirements.txt",
+      "sha256": "45a53f55a82665b16357f244492eb3b561636c31f64839fbab14049e33984eb9"
+    },
+    {
+      "stored": "payload/word-drafts/tools/restructure_markdown.py.bundle",
+      "destination": "word-drafts/tools/restructure_markdown.py",
+      "sha256": "9f335366984079b006c6afa2a298ef3c045dc4fb09867d5ecb3fb9afe7a7e72c"
+    },
+    {
+      "stored": "payload/word-drafts/tools/specs/batch.json.bundle",
+      "destination": "word-drafts/tools/specs/batch.json",
+      "sha256": "6431cdd9a0baf51ae0b91aefcf11c8478c40d32741f8e6debb23ce199417e11a"
+    },
+    {
+      "stored": "payload/word-drafts/tools/stale_specs.py.bundle",
+      "destination": "word-drafts/tools/stale_specs.py",
+      "sha256": "b3059163f378384dde279a62048382a3421810230d69bca61d3fd0b8e21fb676"
+    },
+    {
+      "stored": "payload/word-drafts/tools/sync_provenance.py.bundle",
+      "destination": "word-drafts/tools/sync_provenance.py",
+      "sha256": "3bdca3da7f061cb652672df7ae238cd167e7b04119923217d856968455614459"
+    },
+    {
+      "stored": "payload/word-drafts/tools/test_ingest.py.bundle",
+      "destination": "word-drafts/tools/test_ingest.py",
+      "sha256": "791d82a104d0e317d6b3759ad2e7fb3bc22356d4a459775f92d9cad5a226b1a2"
+    },
+    {
+      "stored": "payload/word-drafts/tools/test_validate_docx.py.bundle",
+      "destination": "word-drafts/tools/test_validate_docx.py",
+      "sha256": "22c786fbad66c4fa5ccf8b3673f84d932dd23c0d0cc9dff70ec8c7f36e0fd024"
+    },
+    {
+      "stored": "payload/word-drafts/tools/validate_docx.py.bundle",
+      "destination": "word-drafts/tools/validate_docx.py",
+      "sha256": "ee9833ec7d4de5dee6205cd378acec61c0fd5c74a83c8c8fa6348529d624673f"
+    }
+  ]
+}

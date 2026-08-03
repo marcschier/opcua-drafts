@@ -1,0 +1,170 @@
+# Advisory PR validation for the OPC UA specification drafts.
+#
+# Every job is report-only: `continue-on-error: true` means a finding is surfaced in the checks tab
+# and logs but never blocks a merge. To make a check required later: remove its `continue-on-error`
+# and mark that check as a required status in the branch protection ruleset.
+#
+# Only checks that run on a clean checkout are wired here. Full spec validation and the determinism
+# gate additionally need untracked base data for some specifications, so CI runs discovered
+# self-contained aggregate validators and lets determinism checks skip cleanly when their inputs are
+# not present. Repository variables name any private-repo-specific roots and requirements.
+name: PR validation
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  markdown-lint:
+    name: Markdown lint (advisory)
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: markdownlint-cli2
+        run: npx --yes markdownlint-cli2 "**/*.md"
+
+  links:
+    name: Internal links (advisory)
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python .github/scripts/check_links.py
+
+  section-refs:
+    name: Section cross-references (advisory)
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python .github/scripts/check_section_refs.py
+        env:
+          SECTION_REF_STRICT_PREFIXES: ${{ vars.SECTION_REF_STRICT_PREFIXES }}
+
+  word-draft:
+    name: Word rendering (advisory)
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r word-drafts/tools/requirements.txt
+      # The build is pure Python; only finalize_word.ps1 needs Word, so it stays local.
+      - run: python word-drafts/tools/build_all.py
+      # The ingest direction: reading a review, routing it and applying it. Exercised
+      # against synthetic WordprocessingML, so it needs no Word either.
+      - run: python word-drafts/tools/test_ingest.py
+
+  mermaid:
+    name: Mermaid diagrams (advisory)
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install Mermaid CLI
+        run: npm install -g @mermaid-js/mermaid-cli
+      - run: python .github/scripts/check_mermaid.py
+
+  yaml-json:
+    name: YAML / JSON well-formedness (advisory)
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install pyyaml
+      - run: python .github/scripts/check_yaml_json.py
+
+  workflows:
+    name: Workflow syntax (advisory)
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      # The agent workflows are triggered by labels and pushes to main, so a pull request
+      # never runs them — a typo in one would only surface the first time somebody relied
+      # on it. This reads them instead: unknown keys, bad expressions, `needs` that point
+      # at nothing, action inputs that do not exist.
+      - name: Lint the workflows
+        env:
+          # Pinned to a release and verified. Fetching an installer from a mutable branch
+          # and piping it into a shell would put whoever controls that branch, at the
+          # moment CI happens to run, inside this job.
+          VERSION: 1.7.12
+          SHA256: 8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8
+        run: |
+          archive="actionlint_${VERSION}_linux_amd64.tar.gz"
+          curl -sSLo "$archive" \
+            "https://github.com/rhysd/actionlint/releases/download/v${VERSION}/${archive}"
+          echo "$SHA256  $archive" | sha256sum --check --status
+          tar -xzf "$archive" actionlint
+          # `copilot-requests` is documented by GitHub but is newer than actionlint's
+          # built-in list of permission scopes, so it reports a false positive.
+          ./actionlint -color -ignore 'unknown permission scope "copilot-requests"'
+
+  spec-validate:
+    name: Spec validation, self-contained (advisory)
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install validation requirements if present
+        env:
+          VALIDATION_REQUIREMENTS: ${{ vars.VALIDATION_REQUIREMENTS || '' }}
+        run: |
+          for req in $VALIDATION_REQUIREMENTS; do
+            if [ -f "$req" ]; then
+              pip install -r "$req"
+            else
+              echo "validation requirements not present: $req"
+            fi
+          done
+      - run: python .github/scripts/run_self_contained_validators.py
+
+  determinism:
+    name: Determinism / generated files (advisory)
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install determinism requirements if present
+        env:
+          VALIDATION_REQUIREMENTS: ${{ vars.VALIDATION_REQUIREMENTS || '' }}
+        run: |
+          for req in $VALIDATION_REQUIREMENTS; do
+            if [ -f "$req" ]; then
+              pip install -r "$req"
+            else
+              echo "determinism requirements not present: $req"
+            fi
+          done
+      - run: python .github/scripts/check_determinism.py

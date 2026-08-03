@@ -8,3 +8,9 @@ Thumbs.db
 
 # Local validation aids (base NodeId tables, not distributed)
 **/tools/ref/
+
+# Scratch area used by the specification release workflow. The private-repository
+# checkout is staged here; the workflow also excludes it by pathspec when staging
+# the public commit, and this rule is the second, independent barrier against
+# committing a private checkout into this public repository.
+node_modules/

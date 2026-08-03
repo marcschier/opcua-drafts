@@ -184,7 +184,10 @@ def _names_sibling(qualifier):
 
 def markdown_files():
     for base, dirs, files in os.walk(ROOT):
-        dirs[:] = [d for d in dirs if d not in SKIP_DIRS]
+        dirs[:] = [
+            d for d in dirs
+            if d not in SKIP_DIRS and not os.path.exists(os.path.join(base, d, '.git'))
+        ]
         for name in files:
             if name.endswith('.md') and name not in SKIP_FILES:
                 yield os.path.join(base, name)

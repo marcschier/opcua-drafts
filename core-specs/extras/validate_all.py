@@ -36,7 +36,7 @@ SELF_CONTAINED = [
 # encodings below still map the observability-export NodeSet, but the specification is no
 # longer this tree's to validate.
 NEEDS_BASE_DATA = [
-    "avro-encoding/tools/validate_local.py",
+    # release-spec-validator:ICAgICJhdnJvLWVuY29kaW5nL3Rvb2xzL3ZhbGlkYXRlX2xvY2FsLnB5Iiw=
     "arrow-encoding/tools/validate_local.py",
 ]
 
