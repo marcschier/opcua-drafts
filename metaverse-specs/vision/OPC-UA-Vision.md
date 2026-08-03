@@ -378,7 +378,7 @@ The enumerations are closed: each is contiguous from 0, and the repository valid
 | `VisionEndpointAuthenticationEnum` | How the media plane authenticates, independently of the OPC UA session — `None`, `Basic`, `Digest`, `Token`, `MutualTls` (§12.1). |
 | `VisionResultEvaluationEnum` | Overall inspection verdict — `Undefined`, `Ok`, `NotOk`, `NotDecidable`. Value semantics reused from OPC 40001-101. |
 | `VisionToleranceStatusEnum` | Per-characteristic outcome — `InTolerance`, `OutOfTolerance`, `Indeterminate`, the last when uncertainty crosses a tolerance limit (§7.2). |
-| `VisionFeedbackPurposeEnum` | Why a client is submitting feedback — to draw an overlay, to reconcile a record, or to supply a ground-truth label (§9). |
+| `VisionFeedbackPurposeEnum` | Why a client is submitting feedback — `Overlay`, `Reconciliation`, `GroundTruthLabel` or `Trigger` (§9.2). |
 | `VisionCalibrationMountEnum` | The camera-to-robot arrangement a hand-eye calibration applies to — `EyeInHand`, `EyeToHand`, `Fixed`, or `Unknown` where the Server cannot tell. |
 | `VisionFrameRoleEnum` | The role a coordinate frame plays, from the ISO 9787 vocabulary — world, base, mechanical interface, tool, object — plus `Camera`, which ISO 9787 does not define. The mechanical interface and the tool are separate roles: an eye-in-hand calibration resolves to the flange, while a grasp is executed at the tool centre point. |
 | `VisionDistortionModelEnum` | Which lens-distortion model the coefficients follow; §5.12 fixes their ordering per model. |
@@ -859,15 +859,16 @@ sequenceDiagram
     S-->>C: Good, or Bad_NotSupported if it will not retain it
 ```
 
-### 9.2 The three purposes
+### 9.2 The four purposes
 
-`VisionFeedbackType` serves three purposes with one surface:
+`VisionFeedbackType` serves four purposes with one surface. `VisionFeedbackPurposeEnum` states which applies:
 
-- **Overlay** — submitted geometry is drawn onto the outgoing stream, governed by `OverlayEnabled`, `OverlayStyle` and `OverlayTtl`. Used during commissioning and for operator confidence; it changes what a human sees and nothing else.
-- **Reconciliation** — a downstream verdict is recorded against a result, so what the line concluded can be compared with what the vision system reported. It changes the record, not the model.
-- **Ground-truth labelling** — a correction is retained as labelled training data. It is the only one of the three that can change what the system decides in future, which is why §12.7 gates it.
+- **`Overlay`** — submitted geometry is drawn onto the outgoing stream, governed by `OverlayEnabled`, `OverlayStyle` and `OverlayTtl`. Used during commissioning and for operator confidence; it changes what a human sees and nothing else.
+- **`Reconciliation`** — a downstream verdict is recorded against a result, so what the line concluded can be compared with what the vision system reported. It changes the record, not the model.
+- **`GroundTruthLabel`** — a correction is retained as labelled training data. It is the only one of the four that can change what the system decides in future, which is why §12.7 gates it.
+- **`Trigger`** — the submitted payload is an acquisition or processing request rather than a report: a client that already knows where to look tells the sensor to look there. It changes neither the record nor the model, and a Server that does not accept externally triggered acquisition returns `Bad_NotSupported`.
 
-`VisionFeedbackPurposeEnum` states which applies. The Methods are `SubmitDetections`, `SubmitInspectionResult`, `SubmitCorrection` and `SubmitImageReference`.
+The Methods are `SubmitDetections`, `SubmitInspectionResult`, `SubmitCorrection` and `SubmitImageReference`.
 
 ### 9.3 Feedback images
 
@@ -921,52 +922,15 @@ Any `Uri` inside a submitted `VisionImageReferenceDataType` is a client-supplied
 
 A Server that accepts a correction with `Purpose = GroundTruthLabel` **shall** either retain it for the associated `LearningJobType` or return `Bad_NotSupported`; it **shall not** return `Good` and discard it, because a client has no other way to learn that its label was dropped. Retention is not acceptance as truth — §12.7 states what a Server **shall** record alongside the sample and what **shall** gate its admission to a training run.
 
-**`StartCollection()`**, **`StopCollection()`**, **`TriggerTraining() → (Accepted)`**, **`PromoteModel(Deployment) → (PromotedModel)`**
+#### 9.5.1 The learning Methods are not defined here
 
-| StatusCode | Condition |
-|---|---|
-| `Bad_InvalidState` | `StartCollection` when `State` is not `Idle` or `Collecting`; `TriggerTraining` when `State` is not `Collecting` or `Labelling`; `PromoteModel` when `State` is not `Ready` |
-| `Bad_NothingToDo` | `TriggerTraining` when `SamplesCollected` is 0 |
-| `Bad_NotFound` | `PromoteModel` when `Deployment` is non-null and does not resolve, or `CandidateModel` is null |
-| `Bad_UserAccessDenied` | the caller is not authorized; `PromoteModel` requires the distinct authorization of §12.5 |
+`StartCollection`, `StopCollection`, `TriggerTraining` and `PromoteModel` belong to `LearningJobType`, which *OPC UA — AI Deployment and Learning* defines together with its state model, its StatusCodes and the requirement that `PromoteModel` carry an authorization distinct from every other Method on the job. This specification does not restate them: two documents stating the same transition table is two places for it to be wrong, and the one that is wrong is discovered by an implementer, not by a validator.
 
-`StartCollection` and `StopCollection` are idempotent. `TriggerTraining` returns `Accepted = false`, with `Good`, when the Server queued nothing but the request was otherwise valid — for example because an external MLOps system declined it; `LastError` **shall** then carry the reason.
+What *is* stated here is the part that is specific to vision — the join between a correction submitted through `VisionFeedbackType` and the job that consumes it:
 
-`PromoteModel` moves `CandidateModel` into service. A null `Deployment` means *every* deployment fed by this job: the Server **shall** promote the candidate to all of them, or to none, and **shall not** promote a subset. `PromotedModel` returns the NodeId of the `ModelType` instance that was promoted, which is the same node in either case — it identifies the model, not the deployment — so a caller that needs to know which deployments changed browses their `UsesModel` references afterwards.
-
-### 9.6 Learning job state model (normative)
-
-```mermaid
-stateDiagram-v2
-    [*] --> Idle
-    Idle --> Collecting: StartCollection
-    Collecting --> Labelling: StopCollection
-    Collecting --> Training: TriggerTraining (accepted)
-    Labelling --> Training: TriggerTraining (accepted)
-    Training --> Validating: Server, training finished
-    Validating --> Ready: Server, candidate accepted
-    Validating --> Failed: Server, candidate rejected
-    Ready --> Promoted: PromoteModel
-    Promoted --> Collecting: StartCollection
-    Training --> Failed: Server, error
-    Validating --> Failed: Server, error
-    Failed --> Collecting: StartCollection
-```
-
-| From | Trigger | To |
-|---|---|---|
-| `Idle` | `StartCollection` | `Collecting` |
-| `Collecting` | `StopCollection` | `Labelling` |
-| `Collecting`, `Labelling` | `TriggerTraining` (accepted) | `Training` |
-| `Training` | Server: training finished | `Validating` |
-| `Validating` | Server: candidate met acceptance criteria | `Ready` |
-| `Validating` | Server: candidate rejected | `Failed` |
-| `Ready` | `PromoteModel` | `Promoted` |
-| `Promoted` | `StartCollection` | `Collecting` |
-| `Training`, `Validating` | Server: error | `Failed` |
-| `Failed` | `StartCollection` | `Collecting` |
-
-Transitions marked *Server* are driven by the Server or its MLOps backend; the rest are Method-driven. A Server **shall not** perform a transition not in this table, and **shall** populate `LastError` on entry to `Failed`. `CandidateModel` **shall** be non-null on entry to `Ready`.
+1. A Server that retains a `GroundTruthLabel` correction **shall** make the job that will consume it reachable from the pipeline that produced the corrected result, so a client can determine whether its label reached a learning loop at all.
+2. A Server **shall not** report a job as `Collecting` on the strength of corrections it discarded. Where a correction was accepted with `Good` and retained, `SamplesCollected` **shall** account for it; the two statements are the same fact and a client that trusts one is entitled to the other.
+3. Promotion changes what every downstream verdict means. §12.5 requires its authorization to be distinct from the authorization for any `VisionFeedbackType` Method, and that requirement is stated in both documents deliberately — it is the one rule where a reader of either specification alone would otherwise reach the wrong conclusion.
 
 ---
 
@@ -1010,7 +974,7 @@ Where a facet's row names members, a Server claiming it **shall** instantiate ev
 | **VIS-Inference-OnServer** | `InferencePipelineType` with a deployment whose `InferenceLocation` is `OnServer`, and the `UsesModel` constraint. Where `RunInference` is implemented, `Results` (§8.4). `ModelType.Digest` and `DigestAlgorithm` per §12.6 |
 | **VIS-Inference-OffServer** | As above with any other `InferenceLocation`, plus `EndpointUri` naming an authenticated, confidential scheme (§12.6) |
 | **VIS-Simulation** | `IVisionSimulatedType` on every sensor whose `RealityKind` is `Simulated` or `Hybrid` (§4.3, §10). **Required** of any Server that reports either value. |
-| **VIS-Learning** | `LearningJobType`, `SubmitCorrection`, the §9.6 state model, every Method that drives a transition in it — `StartCollection`, `StopCollection`, `TriggerTraining`, `PromoteModel` — and the **distinct `PromoteModel` authorization** of §12.5 |
+| **VIS-Learning** | `VisionFeedbackType.SubmitCorrection` accepting `GroundTruthLabel`, the §9.5.1 join rules, and the **AI-Learning** facet of *OPC UA — AI Deployment and Learning*, which carries `LearningJobType`, its state model and the **distinct `PromoteModel` authorization** this specification also requires in §12.5 |
 | **VIS-Interop-Scene** | The numbered requirements of Annex C, which are normative for a Server claiming this facet |
 | **VIS-Interop-40100** | The numbered requirements of Annex D, which are normative for a Server claiming this facet |
 | **VIS-Interop-RobotIntent** | The numbered requirements of Annex I, which are normative for a Server claiming this facet |
