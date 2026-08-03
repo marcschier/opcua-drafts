@@ -32,7 +32,7 @@ There is a second gap, and it is the harder one. A motion takes seconds; a pick 
 - **Planner and agent integration.** A planner — symbolic, learned, or a language model — emits intents against a declared vocabulary, and receives structured failures it can re-plan against rather than a vendor error string.
 - **Mixed-fleet work cells.** Two robots from different manufacturers execute the same mission definition, because the mission is expressed in intents and each Server translates into its own controller's language.
 - **Long-running supervised operation.** A supervisory system submits a mission, watches it progress, revises the part that has not yet been committed, and cancels it cleanly when the upstream process changes.
-- **Auditable commanding.** Every intent records which Session commanded it, when, with what arguments and to what outcome, because the Part 10 program model already carries that.
+- **Auditable commanding.** Every intent records which Session commanded it, when, with what arguments and to what outcome. Part 10 carries that in `ProgramDiagnostic`, which it leaves Optional; §6.1 promotes it to Mandatory here, because a capability a specification advertises cannot rest on a member a conformant Server may omit.
 
 ### 1.3 What this specification does not do
 
@@ -259,7 +259,7 @@ Three further motion intents cover the work that a single target pose cannot exp
 
 `CartesianPathIntentDataType` (`ns=1;i=3074`) carries a list of `PathWaypointDataType` (`ns=1;i=3073`), each a pose with the blend that applies at it. It carries **no timing**: the Server paces it from `Constraints`. This is the portable form of a taught path, and per-waypoint blending is exactly what distinguishes it from a sequence of separate linear moves — the robot need not stop between waypoints.
 
-`TrajectoryIntentDataType` (`ns=1;i=3072`) carries `TrajectoryPointDataType` (`ns=1;i=3070`) points, each with `TimeFromStart` and per-axis positions, optionally velocities and accelerations. Timing is what makes it a trajectory rather than a path. It also carries a `PathTolerance`, a `GoalTolerance` and a `GoalTimeTolerance`, all `MotionToleranceDataType` (`ns=1;i=3071`), so that "did it work?" has an answer the client set rather than one the Server chose.
+`TrajectoryIntentDataType` (`ns=1;i=3072`) carries `TrajectoryPointDataType` (`ns=1;i=3070`) points, each with `TimeFromStart` and per-axis positions, optionally velocities and accelerations. Timing is what makes it a trajectory rather than a path. It also carries a `PathTolerance` and a `GoalTolerance`, both `MotionToleranceDataType` (`ns=1;i=3071`), and a `GoalTimeTolerance`, which is a `Duration` — lateness is one number, not a pose deviation. Between them, "did it work?" has an answer the client set rather than one the Server chose.
 
 A Server **shall** reject a trajectory whose points are not in ascending `TimeFromStart` order, or whose `Positions` length differs from `AxisCount`, with `ParameterInvalid`. Where `MaxTrajectoryPoints` is non-zero, it **shall** reject a longer trajectory with `ParameterInvalid`.
 
@@ -425,6 +425,10 @@ A `Call` cannot outlive the Session that made it, and OPC 10000-4 §5.12.2 state
 
 Building on `ProgramStateMachineType` rather than defining a fresh state machine buys four things this specification then does not have to invent: transition events, a terminal result object that survives the operation, invocation diagnostics recording which Session commanded what, and a lifetime model for the instance itself.
 
+**Two of those are Optional in Part 10, and this specification promotes both.** `IntentOperationType` declares `FinalResultData` and `ProgramDiagnostic` **Mandatory**.
+
+Inheriting them would not have been enough. §6.7 requires the result to be reachable under `FinalResultData`, and §1.2 advertises auditable commanding, which *is* `ProgramDiagnostic` and nothing else. Both would have rested on members a fully conformant Server could omit — so a Server could pass every conformance test while providing neither, and the two claims would be false against a legal implementation. Promoting them is what makes the claims testable rather than aspirational.
+
 ### 6.2 Submission
 
 On `SubmitIntent` a Server **shall**, in this order:
@@ -472,7 +476,7 @@ stateDiagram-v2
     Executing --> Succeeded
     Executing --> Failed
     Executing --> Retriable
-    Retriable --> Queued
+    Retriable --> [*]
     Succeeded --> [*]
     Failed --> [*]
     Cancelled --> [*]
@@ -516,7 +520,7 @@ Where a cancel is accepted, the operation enters `Cancelling` and then `Cancelle
 
 ### 6.7 Results
 
-When an operation reaches a terminal state its `Result` **shall** be complete and **shall not** change thereafter. The same `IntentResultDataType` value **shall** also be reachable under the inherited `FinalResultData` object, so that a client written against Part 10 finds the result where Part 10 says it will be.
+When an operation reaches a terminal state its `Result` **shall** be complete and **shall not** change thereafter. The same `IntentResultDataType` value **shall** also be reachable under the `FinalResultData` object, which this specification promotes to **Mandatory** on `IntentOperationType` for exactly this reason — Part 10 leaves it Optional, and a **shall** that rests on a member a conformant Server may omit is not a requirement, so that a client written against Part 10 finds the result where Part 10 says it will be.
 
 `Result.AchievedPose` records where the driven tool centre point came to rest, or was when blending began. It is what lets a client audit a placement and distinguish a blended corner from an exact stop.
 
