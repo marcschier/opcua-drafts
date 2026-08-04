@@ -30,6 +30,7 @@ This annex is the authoritative node reference for the specification: it carries
 | ns=2;i=1016 | AiResourceType | ObjectType | ns=1;i=63002 |
 | ns=2;i=1012 | ModelResourceType | ObjectType | AiResourceType |
 | ns=2;i=1013 | DatasetResourceType | ObjectType | AiResourceType |
+| ns=2;i=1017 | InferenceTransferType | ObjectType | BaseObjectType |
 | ns=2;i=3001 | InferenceLocationEnum | DataType | Enumeration |
 | ns=2;i=3002 | AcceleratorKindEnum | DataType | Enumeration |
 | ns=2;i=3003 | DeploymentStateEnum | DataType | Enumeration |
@@ -43,6 +44,7 @@ This annex is the authoritative node reference for the specification: it carries
 | ns=2;i=3011 | ImportModeEnum | DataType | Enumeration |
 | ns=2;i=3012 | SafetySeverityEnum | DataType | Enumeration |
 | ns=2;i=3013 | ReachabilityEnum | DataType | Enumeration |
+| ns=2;i=3014 | TransferStateEnum | DataType | Enumeration |
 | ns=2;i=3050 | TensorSignatureDataType | DataType | Structure |
 | ns=2;i=3051 | ModelReferenceDataType | DataType | Structure |
 | ns=2;i=3052 | UsageDataType | DataType | Structure |
@@ -55,10 +57,10 @@ This annex is the authoritative node reference for the specification: it carries
 
 | NodeId | BrowseName | InverseName | Subtype of | Description |
 |---|---|---|---|---|
-| ns=2;i=4001 | UsesModel | IsUsedByDeployment | NonHierarchicalReferences | Links a Deployment to the Model it executes. Clause 5.5 requires exactly one such reference per deployment; it is the only defined path from a result to the model artefact and its Digest, on which the provenance requirement of clause 11 depends. |
+| ns=2;i=4001 | UsesModel | IsUsedByDeployment | NonHierarchicalReferences | Links a Deployment to the Model it executes. Clause 6.5 requires exactly one such reference per deployment; it is the only defined path from a result to the model artefact and its Digest, on which the provenance requirement of clause 12 depends. |
 | ns=2;i=4002 | TrainedOn | IsTrainingDataFor | NonHierarchicalReferences | Links a Model to a Dataset it was trained or validated on. A model whose training data cannot be named is a model whose behaviour cannot be explained, which is why this reference exists rather than a string. |
 | ns=2;i=4003 | DerivedFrom | IsBaseOfModel | NonHierarchicalReferences | Links a Model to the Model it was fine-tuned, distilled or quantized from. Lineage is a chain, not a field: a model three derivations from its base is answerable for all three, and a string naming the immediate parent cannot be walked. |
-| ns=2;i=4004 | FallsBackTo | IsFallbackFor | NonHierarchicalReferences | Links a Deployment to the Deployment that serves in its place when it cannot. Clause 8 forbids a cycle, and requires the response to say which deployment actually answered. |
+| ns=2;i=4004 | FallsBackTo | IsFallbackFor | NonHierarchicalReferences | Links a Deployment to the Deployment that serves in its place when it cannot. Clause 9 forbids a cycle, and requires the response to say which deployment actually answered. |
 | ns=2;i=4005 | ImportedFrom | WasImportedAs | NonHierarchicalReferences | Links a Model to the catalogue resource an import job materialized it from. This is what makes 'where did this model come from' answerable after the fact, rather than only at the moment of import. |
 | ns=2;i=4006 | EvaluatedBy | Evaluates | NonHierarchicalReferences | Links a Model to an EvaluationRun that measured it. Optional and repeating: a model may be evaluated many times, and the run that gated its promotion is not necessarily the last one. |
 
@@ -96,8 +98,8 @@ Nameplate of a trained model. The member set is deliberately aligned with the ID
 | Framework | Variable | String | Scalar | Optional | Producing framework, for example PyTorch, TensorFlow or scikit-learn. |
 | Format | Variable | String | Scalar | Optional | Serialization format, for example ONNX, TensorRT or OpenVINO IR. |
 | TaskKind | Variable | String | Scalar | Optional | What the model does, for example Detection2D, Classification, Segmentation, Forecasting or AnomalyDetection. Free text because the set of tasks is not closed and a closed enumeration would date faster than the model does. |
-| Digest | Variable | ByteString | Scalar | Mandatory | Cryptographic digest of the model artefact, for provenance and integrity. Mandatory: clause 11 requires it for every model whose artefact is obtainable through ArtifactUri, and it is the terminus of the provenance chain that UsesModel keeps intact. |
-| DigestAlgorithm | Variable | String | Scalar | Mandatory | Hash function used for Digest. SHALL name a function with at least 256-bit output and no known collision weakness; SHA-256 is the default and is always acceptable. SHALL NOT be MD5, SHA-1 or a truncated variant - chosen-prefix collisions against those are practical, so a substituted artefact would pass verification. SHALL be non-empty where Digest is non-empty. See clause 11. |
+| Digest | Variable | ByteString | Scalar | Mandatory | Cryptographic digest of the model artefact, for provenance and integrity. Mandatory: clause 12 requires it for every model whose artefact is obtainable through ArtifactUri, and it is the terminus of the provenance chain that UsesModel keeps intact. |
+| DigestAlgorithm | Variable | String | Scalar | Mandatory | Hash function used for Digest. SHALL name a function with at least 256-bit output and no known collision weakness; SHA-256 is the default and is always acceptable. SHALL NOT be MD5, SHA-1 or a truncated variant - chosen-prefix collisions against those are practical, so a substituted artefact would pass verification. SHALL be non-empty where Digest is non-empty. See clause 12. |
 | ArtifactUri | Variable | String | Scalar | Optional | Where the model artefact can be obtained. Treated as untrusted input. |
 | ProvenanceUri | Variable | String | Scalar | Optional | Training provenance or model card location. |
 | LabelClasses | Variable | String | Array | Optional | Ordered class label set, where the model produces classified output. The INDEX is what a consuming specification's class identifier refers to, so the order is part of the contract and a Server SHALL NOT reorder it in place. |
@@ -107,7 +109,7 @@ Nameplate of a trained model. The member set is deliberately aligned with the ID
 | Publisher | Variable | String | Scalar | Optional | Organisation or namespace that published the model. With Name and Version this is the triple every catalogue identifies a model by, and it is what makes the same model recognisable across two installations that fetched it from different mirrors. |
 | ParameterCount | Variable | UInt64 | Scalar | Optional | Parameters in the model, or 0 where not published. A crude but universally available proxy for what it will cost to run. |
 | Quantization | Variable | String | Scalar | Optional | Numeric precision the artefact is stored in, for example 'fp32', 'int8' or 'fp8'. A quantized model is a DIFFERENT artefact with different behaviour, not a packaging detail, which is why it is stated rather than left to the format string. |
-| SafetyPolicyUri | Variable | String | Scalar | Optional | Safety or content policy applied to this model's output, where one is. Untrusted input, subject to clause 11. |
+| SafetyPolicyUri | Variable | String | Scalar | Optional | Safety or content policy applied to this model's output, where one is. Untrusted input, subject to clause 12. |
 
 ### DatasetType — `ns=2;i=1003`
 
@@ -139,7 +141,7 @@ A model made executable somewhere. Aligned with the IDTA 02059 AI Deployment sub
 | InferenceLocation | Variable | InferenceLocationEnum | Scalar | Mandatory | Where inference executes. |
 | AcceleratorKind | Variable | AcceleratorKindEnum | Scalar | Optional | Compute device executing the model. |
 | AcceleratorName | Variable | String | Scalar | Optional | Free-text accelerator identification, for example an NPU or GPU part name. |
-| EndpointUri | Variable | String | Scalar | Optional | Inference endpoint when InferenceLocation is not OnServer. Treated as untrusted input and subject to the resolver policy of clause 11. |
+| EndpointUri | Variable | String | Scalar | Optional | Inference endpoint when InferenceLocation is not OnServer. Treated as untrusted input and subject to the resolver policy of clause 12. |
 | LatencyBudget | Variable | Duration | Scalar | Optional | Latency the deployment is expected to meet, so a client can detect regression. |
 | BatchSize | Variable | UInt32 | Scalar | Optional | Configured inference batch size. |
 | State | Variable | DeploymentStateEnum | Scalar | Mandatory | Runtime state of the deployment. |
@@ -156,6 +158,9 @@ A model made executable somewhere. Aligned with the IDTA 02059 AI Deployment sub
 | EgressPermitted | Variable | Boolean | Scalar | Mandatory | Whether calling this deployment sends input data outside the operator's boundary. A Server SHALL set this true for every deployment whose InferenceLocation is Cloud, and SHALL NOT set it false merely because the channel is encrypted - the question is where the data goes, not who can read it in flight. |
 | RetainsInput | Variable | Boolean | Scalar | Optional | Whether the execution site retains input beyond serving the request, for example for provider-side logging or training. Unknown is not a value: a Server that cannot establish this SHALL report true, because the safe assumption is the one that keeps data in. |
 | EgressPolicyUri | Variable | String | Scalar | Optional | Where the governing data policy is documented. |
+| MaxInlinePayloadSize | Variable | UInt32 | Scalar | Mandatory | Largest request or response this deployment will carry inline through Invoke, in bytes. Zero means the deployment accepts no inline payload at all and BeginTransfer is the only way in.
+
+A client reads this BEFORE calling rather than discovering the bound from a rejection, and a Server SHALL NOT publish a value larger than its own MaxByteStringLength, the negotiated MaxMessageSize or the Session's MaxResponseMessageSize permit - the smallest of those is the real limit and a client cannot see all of them. |
 
 **Method `Invoke`** (Optional) — Run inference and return the result. The payload is opaque here: what goes in and comes out is the consuming specification's vocabulary, and an envelope that tried to type it would have to be extended for every domain. What this Method fixes is everything AROUND the payload - routing, parameters, accounting, why it stopped, and which model actually ran.
 
@@ -172,11 +177,13 @@ The signature does not change with InferenceLocation. A deployment served from t
 |---|---|---|---|
 | ResponsePayload | ByteString | Scalar | Response body. |
 | ResponseContentType | String | Scalar | Media type of ResponsePayload. |
-| ModelUsed | NodeId | Scalar | The model that ACTUALLY produced this response. Not necessarily the one the deployment names now: a fallback answered from a different deployment, and a FollowsRef binding may have moved. The provenance chain of clause 11 walks this. |
+| ModelUsed | NodeId | Scalar | The model that ACTUALLY produced this response. Not necessarily the one the deployment names now: a fallback answered from a different deployment, and a FollowsRef binding may have moved. The provenance chain of clause 12 walks this. |
 | Usage | UsageDataType | Scalar | What the call consumed. |
 | FinishReason | FinishReasonEnum | Scalar | Why output stopped. A caller that ignores this will accept a truncated answer as a complete one. |
 | SafetyAssessment | SafetyAssessmentDataType | Array | Findings from the safety policy, if any applied. |
 | RetryAfter | Duration | Scalar | How long to wait before retrying, where the failure was a capacity one. Zero when retrying immediately is as good as waiting, and meaningless when the failure was not retryable. |
+| TransferRequired | Boolean | Scalar | True when the deployment produced a response too large to return inline. ResponsePayload is then empty and the work is NOT lost - Transfer names where to read it. A client that ignores this reads an empty payload and concludes the model returned nothing. |
+| Transfer | NodeId | Scalar | InferenceTransferType instance holding the response, where TransferRequired is true. Null otherwise. |
 
 **Method `InvokeAsync`** (Optional) — Submit inference to be completed later, returning immediately with the job that will carry the result. For work that does not finish while a caller waits - a batch scored overnight, an analysis over recorded data.
 
@@ -196,6 +203,18 @@ The signature does not change with InferenceLocation. A deployment served from t
 |---|---|---|---|
 | Capabilities | CapabilityDataType | Array | Current capabilities. |
 
+**Method `BeginTransfer`** (Optional) — Opens a chunked exchange for a payload that will not fit inline, returning the InferenceTransferType instance to write into. This is the general path: Invoke is the shortcut that happens to work when everything is small.
+
+| In | DataType | ValueRank | Meaning |
+|---|---|---|---|
+| ContentType | String | Scalar | Media type of the request body. |
+| RequestSize | UInt64 | Scalar | Expected request size in bytes, or 0 when not known in advance. A Server that cannot accommodate the stated size refuses here rather than after the client has uploaded it. |
+
+| Out | DataType | ValueRank | Meaning |
+|---|---|---|---|
+| Transfer | NodeId | Scalar | InferenceTransferType instance to write the request into. |
+| Accepted | Boolean | Scalar | False when the Server declined to open the exchange. |
+
 ### LearningJobType — `ns=2;i=1005`
 
 *Subtype of:* `AiJobType`
@@ -204,7 +223,7 @@ One turn of the capture, label, train and promote loop. It exists so that correc
 
 | BrowseName | NodeClass | DataType | ValueRank | ModellingRule | Description |
 |---|---|---|---|---|---|
-| State | Variable | LearningJobStateEnum | Scalar | Mandatory | Current stage of the loop. This is the PHASE, not the program lifecycle: the inherited CurrentState says whether the job is running, this says what it is doing. Clause 6 requires the two to agree. |
+| State | Variable | LearningJobStateEnum | Scalar | Mandatory | Current stage of the loop. This is the PHASE, not the program lifecycle: the inherited CurrentState says whether the job is running, this says what it is doing. Clause 7 requires the two to agree. |
 | Dataset | Variable | NodeId | Scalar | Optional | Dataset being accumulated or used. |
 | BaseModel | Variable | NodeId | Scalar | Optional | Model the job starts from. |
 | CandidateModel | Variable | NodeId | Scalar | Optional | Model produced by the job, awaiting promotion. |
@@ -247,13 +266,13 @@ Abstract base of every long-running AI operation: learning, model import and asy
 | StartedAt | Variable | UtcTime | Scalar | Optional | When the job last entered Running. |
 | FinishedAt | Variable | UtcTime | Scalar | Optional | When the job last left Running, or null while it is running. |
 | Progress | Variable | Double | Scalar | Optional | Fraction complete, 0.0 to 1.0, or null where the job cannot estimate it. A Server SHALL NOT report a value it is guessing: null is informative, a fabricated 0.5 is not. |
-| RequestedBy | Variable | String | Scalar | Optional | Identity that requested the job, recorded at the moment it started. Clause 11 requires this for any job that can promote a model. |
+| RequestedBy | Variable | String | Scalar | Optional | Identity that requested the job, recorded at the moment it started. Clause 12 requires this for any job that can promote a model. |
 
 ### ModelImportJobType — `ns=2;i=1007`
 
 *Subtype of:* `AiJobType`
 
-Brings a model from a catalogue into this Server. It federates by default - materializing the catalogue entry as a ModelType whose artefact stays where it is - and stages the artefact when the target deployment could not otherwise reach it. Staging is the moment a substituted artefact would enter, which is why clause 9 requires the Digest to be verified there and nowhere else.
+Brings a model from a catalogue into this Server. It federates by default - materializing the catalogue entry as a ModelType whose artefact stays where it is - and stages the artefact when the target deployment could not otherwise reach it. Staging is the moment a substituted artefact would enter, which is why clause 10 requires the Digest to be verified there and nowhere else.
 
 | BrowseName | NodeClass | DataType | ValueRank | ModellingRule | Description |
 |---|---|---|---|---|---|
@@ -282,7 +301,7 @@ One asynchronous inference request. It exists because not every inference return
 | RequestContentType | Variable | String | Scalar | Optional | Media type of RequestPayload. |
 | ResponsePayload | Variable | ByteString | Scalar | Optional | Response body once the job succeeds. |
 | ResponseContentType | Variable | String | Scalar | Optional | Media type of ResponsePayload. |
-| ModelUsed | Variable | NodeId | Scalar | Optional | Model that ACTUALLY executed the request, which is not always the one the deployment named when the job was submitted - a fallback or a followed reference can change it in between. The provenance chain of clause 11 walks this, not the deployment's current model. |
+| ModelUsed | Variable | NodeId | Scalar | Optional | Model that ACTUALLY executed the request, which is not always the one the deployment named when the job was submitted - a fallback or a followed reference can change it in between. The provenance chain of clause 12 walks this, not the deployment's current model. |
 | Usage | Variable | UsageDataType | Scalar | Optional | What the call consumed. |
 | FinishReason | Variable | FinishReasonEnum | Scalar | Optional | Why the call stopped producing output. |
 | SafetyAssessment | Variable | SafetyAssessmentDataType | Array | Optional | Findings from the safety policy, if any were applied. |
@@ -296,11 +315,11 @@ An externally hosted inference or catalogue endpoint this Server can reach. It c
 | BrowseName | NodeClass | DataType | ValueRank | ModellingRule | Description |
 |---|---|---|---|---|---|
 | SourceId | Variable | String | Scalar | Mandatory | Identifier of the source. |
-| EndpointUri | Variable | String | Scalar | Mandatory | Base URI of the endpoint. Untrusted input, subject to the resolver policy of clause 11. |
+| EndpointUri | Variable | String | Scalar | Mandatory | Base URI of the endpoint. Untrusted input, subject to the resolver policy of clause 12. |
 | ApiDialect | Variable | ApiDialectEnum | Scalar | Mandatory | Wire contract the endpoint speaks. |
 | EndpointDescriptionUri | Variable | String | Scalar | Optional | Where the contract is documented. SHOULD be populated when ApiDialect is Proprietary, because otherwise nothing in the address space says how to call it. |
 | AuthenticationKind | Variable | AuthenticationKindEnum | Scalar | Mandatory | How the Server authenticates itself to the endpoint. |
-| CredentialReference | Variable | String | Scalar | Optional | Opaque handle naming the credential in whatever store the Server uses. It is a NAME, never a secret: clause 11 forbids a Server from exposing credential material through any Attribute of this model, and a client that can read this value learns only which credential is used, not what it is. |
+| CredentialReference | Variable | String | Scalar | Optional | Opaque handle naming the credential in whatever store the Server uses. It is a NAME, never a secret: clause 12 forbids a Server from exposing credential material through any Attribute of this model, and a client that can read this value learns only which credential is used, not what it is. |
 | TokenAudience | Variable | String | Scalar | Optional | Audience or scope a bearer token is requested for, where AuthenticationKind is BearerToken. |
 | Reachability | Variable | ReachabilityEnum | Scalar | Mandatory | Whether the Server can currently reach the endpoint. |
 | LastSuccessAt | Variable | UtcTime | Scalar | Optional | When the endpoint last answered successfully. |
@@ -340,7 +359,7 @@ One measurement of a model against a dataset. It is a first-class object and not
 | CompletedAt | Variable | UtcTime | Scalar | Optional | When the run finished. |
 | Metrics | Variable | EvaluationMetricDataType | Array | Mandatory | Measured metrics, each with the threshold it was judged against. |
 | Passed | Variable | Boolean | Scalar | Mandatory | Whether every metric met its threshold. A Server SHALL NOT report true while any entry in Metrics has Passed false - a summary that disagrees with its own detail is worse than no summary. |
-| ReportUri | Variable | String | Scalar | Optional | Where the full report lives. Untrusted input, subject to clause 11. |
+| ReportUri | Variable | String | Scalar | Optional | Where the full report lives. Untrusted input, subject to clause 12. |
 
 ### ModelCardType — `ns=2;i=1015`
 
@@ -395,7 +414,7 @@ One model in a catalogue. Its versions are immutable and identified by content, 
 | TaskKind | Variable | String | Scalar | Optional | What the model does, for example 'object-detection' or 'anomaly-detection'. A String and not an enumeration, for the same reason it is one on ModelType: the set is not closed, and every catalogue in practice uses a free tag here. |
 | Framework | Variable | String | Scalar | Optional | Runtime or library the artefact targets. |
 | Digest | Variable | ByteString | Scalar | Optional | Digest of the artefact this version names, as the catalogue declares it. A staging import compares its own computed digest with this and refuses on mismatch. |
-| DigestAlgorithm | Variable | String | Scalar | Optional | Algorithm of Digest. Subject to the strength requirement of clause 11. |
+| DigestAlgorithm | Variable | String | Scalar | Optional | Algorithm of Digest. Subject to the strength requirement of clause 12. |
 | SizeBytes | Variable | UInt64 | Scalar | Optional | Artefact size, so a staging import can decide whether it has room before it starts rather than after it fails. |
 | Gated | Variable | Boolean | Scalar | Optional | Whether obtaining the artefact requires an acceptance or entitlement beyond ordinary authentication. A client that ignores this discovers it as a failure part-way through a staging import. |
 | MutableRefs | Variable | String | Array | Optional | Mutable pointers this resource publishes - branches, tags or channels - that a deployment may follow instead of pinning. Naming them is what makes VersionBinding FollowsRef checkable. |
@@ -413,6 +432,39 @@ One dataset in a catalogue, a sibling of ModelResourceType rather than something
 | Digest | Variable | ByteString | Scalar | Optional | Digest of the dataset artefact as the catalogue declares it. |
 | DigestAlgorithm | Variable | String | Scalar | Optional | Algorithm of Digest. |
 | SizeBytes | Variable | UInt64 | Scalar | Optional | Dataset size. |
+
+### InferenceTransferType — `ns=2;i=1017`
+
+*Subtype of:* `BaseObjectType`
+
+One chunked inference exchange. It exists because Invoke carries its payload as a ByteString, and a ByteString is bounded by MaxByteStringLength, the negotiated MaxMessageSize and the Session's MaxResponseMessageSize - none of which the model gets to choose. An image, a point cloud or a window of high-rate samples exceeds those routinely, and a call that cannot carry the input is not a call.
+
+Request and Response are Part 5 FileType objects: the client opens the request, writes it in chunks it selects, and closes it; after Execute the response is read the same way. Nothing here invents a transfer protocol, because OPC UA already has one and every client already implements it.
+
+| BrowseName | NodeClass | DataType | ValueRank | ModellingRule | Description |
+|---|---|---|---|---|---|
+| TransferId | Variable | String | Scalar | Mandatory | Identifier of this exchange. |
+| State | Variable | TransferStateEnum | Scalar | Mandatory | Stage the exchange has reached. |
+| Request | Object |  |  | Mandatory | The request body, written by the client in chunks of its own choosing. Inference does not begin until Execute is called, so a partially written request is never acted on. |
+| Response | Object |  |  | Mandatory | The response body, readable once State is Completed. Empty before that. |
+| ContentType | Variable | String | Scalar | Mandatory | Media type of the request body. |
+| ResponseContentType | Variable | String | Scalar | Optional | Media type of the response body. |
+| ModelUsed | Variable | NodeId | Scalar | Optional | The model that ACTUALLY produced the response, on the same terms as Invoke: a fallback or a followed reference can change it between the call and the read. |
+| Usage | Variable | UsageDataType | Scalar | Optional | What the call consumed. |
+| FinishReason | Variable | FinishReasonEnum | Scalar | Optional | Why output stopped. |
+| SafetyAssessment | Variable | SafetyAssessmentDataType | Array | Optional | Findings from the safety policy, if any applied. |
+| LastError | Variable | LocalizedText | Scalar | Optional | Diagnostic for the Failed state. For a human; SHALL NOT be parsed. |
+| ExpiresAt | Variable | UtcTime | Scalar | Optional | When the Server may reclaim this transfer if it has not completed. A client that abandons an exchange would otherwise hold Server resources until the Session ends, and a Server that never reclaimed them would be one denial of service away from unusable. |
+
+**Method `Execute`** (Mandatory) — Runs inference over the written request. The Method returns as soon as the request is accepted; State and the envelope members carry the outcome, which is what lets one exchange span a payload too large to have been a single call in the first place.
+
+| Out | DataType | ValueRank | Meaning |
+|---|---|---|---|
+| Accepted | Boolean | Scalar | False when the request was incomplete or already executed. |
+
+**Method `Abort`** (Optional) — Abandons the exchange and releases what it holds. A client that has stopped caring about a response SHOULD say so rather than leaving the Server to wait out ExpiresAt.
+
+Takes no arguments and returns none.
 
 ## A.4 DataTypes
 
@@ -552,7 +604,7 @@ Whether a deployment is bound to one immutable model version or follows a moving
 | Name | Value | Description |
 |---|---|---|
 | Pinned | 0 | Bound to one immutable version. The artefact behind this deployment cannot change without an observable change to the deployment. |
-| FollowsRef | 1 | Bound to a mutable pointer such as a branch or channel. The artefact CAN change without any other change, which is why clause 11 requires the resulting promotion to be as authorized as an explicit one. |
+| FollowsRef | 1 | Bound to a mutable pointer such as a branch or channel. The artefact CAN change without any other change, which is why clause 12 requires the resulting promotion to be as authorized as an explicit one. |
 
 ### ImportModeEnum — `ns=2;i=3011`
 
@@ -591,6 +643,21 @@ Whether the Server can currently reach a deployment's execution site.
 | Reachable | 1 | The most recent attempt succeeded. |
 | Unreachable | 2 | The most recent attempt failed. |
 | Throttled | 3 | Reachable, but the endpoint is refusing work for capacity reasons. RetryAfter SHOULD be populated. |
+
+### TransferStateEnum — `ns=2;i=3014`
+
+*Subtype of:* `Enumeration`
+
+Stage of a chunked inference exchange. A client reads this rather than inferring progress from which Methods have succeeded, because a transfer that failed mid-write and one that has not started look alike from outside.
+
+| Name | Value | Description |
+|---|---|---|
+| Building | 0 | The request is being written and is not yet complete. |
+| Ready | 1 | The request is complete and inference has not started. |
+| Executing | 2 | Inference is running. |
+| Completed | 3 | The response is readable. |
+| Failed | 4 | The exchange failed; LastError carries the reason. |
+| Expired | 5 | The Server reclaimed the transfer before it completed. |
 
 ### TensorSignatureDataType — `ns=2;i=3050`
 

@@ -46,7 +46,7 @@ BASE_UA_PUBDATE = "2023-12-15T00:00:00Z"
 
 # The model catalogue is a domain extension of OPC UA - xRegistry, so that a model
 # registry is the same shape as every other registry in this repository rather than a
-# private invention. See clause 9.
+# private invention. See clause 10.
 XREG_NS = "http://opcfoundation.org/UA/xRegistry/"
 XREG_VERSION = "0.3.0"
 XREG_PUBDATE = "2026-07-31T00:00:00Z"
@@ -108,6 +108,10 @@ Server = "i=2253"
 # Robot Intent models its intents; the transition events and the auditability that a
 # hand-rolled state variable would have to reinvent come with the base type.
 ProgramStateMachineType = "i=2391"
+
+# OPC 10000-5 FileType. A large inference payload is a file in every respect that
+# matters - it is opened, written or read in bounded chunks, and closed.
+FileType = "i=11575"
 
 Float = "i=10"
 Int64 = "i=8"
@@ -530,7 +534,7 @@ enum_type(3010, "VersionBindingEnum",
                          "the deployment."),
            ("FollowsRef", 1, "Bound to a mutable pointer such as a branch or channel. "
                              "The artefact CAN change without any other change, which "
-                             "is why clause 11 requires the resulting promotion to be "
+                             "is why clause 12 requires the resulting promotion to be "
                              "as authorized as an explicit one.")])
 VersionBindingEnum = T(3010)
 
@@ -562,6 +566,19 @@ enum_type(3013, "ReachabilityEnum",
            ("Throttled", 3, "Reachable, but the endpoint is refusing work for "
                             "capacity reasons. RetryAfter SHOULD be populated.")])
 ReachabilityEnum = T(3013)
+
+enum_type(3014, "TransferStateEnum",
+          "Stage of a chunked inference exchange. A client reads this rather than "
+          "inferring progress from which Methods have succeeded, because a transfer "
+          "that failed mid-write and one that has not started look alike from "
+          "outside.",
+          [("Building", 0, "The request is being written and is not yet complete."),
+           ("Ready", 1, "The request is complete and inference has not started."),
+           ("Executing", 2, "Inference is running."),
+           ("Completed", 3, "The response is readable."),
+           ("Failed", 4, "The exchange failed; LastError carries the reason."),
+           ("Expired", 5, "The Server reclaimed the transfer before it completed.")])
+TransferStateEnum = T(3014)
 
 # ---------------------------------------------------------------------------
 # Structured DataTypes (3050+)
@@ -665,10 +682,10 @@ RateLimitDataType = T(3056)
 # ReferenceTypes (4001+)
 # ---------------------------------------------------------------------------
 reference_type(4001, "UsesModel", "IsUsedByDeployment",
-               "Links a Deployment to the Model it executes. Clause 5.5 requires "
+               "Links a Deployment to the Model it executes. Clause 6.5 requires "
                "exactly one such reference per deployment; it is the only defined path "
                "from a result to the model artefact and its Digest, on which the "
-               "provenance requirement of clause 11 depends.")
+               "provenance requirement of clause 12 depends.")
 UsesModel = T(4001)
 
 reference_type(4002, "TrainedOn", "IsTrainingDataFor",
@@ -686,7 +703,7 @@ DerivedFrom = T(4003)
 
 reference_type(4004, "FallsBackTo", "IsFallbackFor",
                "Links a Deployment to the Deployment that serves in its place when it "
-               "cannot. Clause 8 forbids a cycle, and requires the response to say "
+               "cannot. Clause 9 forbids a cycle, and requires the response to say "
                "which deployment actually answered.")
 FallsBackTo = T(4004)
 
@@ -739,7 +756,7 @@ prop_var(AM, "ModelType", "TaskKind", String,
          "closed and a closed enumeration would date faster than the model does.")
 prop_var(AM, "ModelType", "Digest", ByteString,
          "Cryptographic digest of the model artefact, for provenance and integrity. "
-         "Mandatory: clause 11 requires it for every model whose artefact is obtainable "
+         "Mandatory: clause 12 requires it for every model whose artefact is obtainable "
          "through ArtifactUri, and it is the terminus of the provenance chain that "
          "UsesModel keeps intact.",
          MR_Mandatory)
@@ -748,7 +765,7 @@ prop_var(AM, "ModelType", "DigestAlgorithm", String,
          "output and no known collision weakness; SHA-256 is the default and is always "
          "acceptable. SHALL NOT be MD5, SHA-1 or a truncated variant - chosen-prefix "
          "collisions against those are practical, so a substituted artefact would pass "
-         "verification. SHALL be non-empty where Digest is non-empty. See clause 11.",
+         "verification. SHALL be non-empty where Digest is non-empty. See clause 12.",
          MR_Mandatory)
 prop_var(AM, "ModelType", "ArtifactUri", String,
          "Where the model artefact can be obtained. Treated as untrusted input.")
@@ -800,7 +817,7 @@ prop_var(AY, "DeploymentType", "AcceleratorName", String,
          "Free-text accelerator identification, for example an NPU or GPU part name.")
 prop_var(AY, "DeploymentType", "EndpointUri", String,
          "Inference endpoint when InferenceLocation is not OnServer. Treated as "
-         "untrusted input and subject to the resolver policy of clause 11.")
+         "untrusted input and subject to the resolver policy of clause 12.")
 prop_var(AY, "DeploymentType", "LatencyBudget", Duration,
          "Latency the deployment is expected to meet, so a client can detect "
          "regression.")
@@ -819,7 +836,7 @@ LJ = 1005
 prop_var(LJ, "LearningJobType", "State", LearningJobStateEnum,
          "Current stage of the loop. This is the PHASE, not the program lifecycle: "
          "the inherited CurrentState says whether the job is running, this says what "
-         "it is doing. Clause 6 requires the two to agree.", MR_Mandatory)
+         "it is doing. Clause 7 requires the two to agree.", MR_Mandatory)
 prop_var(LJ, "LearningJobType", "Dataset", NodeId_,
          "Dataset being accumulated or used.")
 prop_var(LJ, "LearningJobType", "BaseModel", NodeId_, "Model the job starts from.")
@@ -873,7 +890,7 @@ prop_var(AJ, "AiJobType", "Progress", Double,
          "Server SHALL NOT report a value it is guessing: null is informative, a "
          "fabricated 0.5 is not.")
 prop_var(AJ, "AiJobType", "RequestedBy", String,
-         "Identity that requested the job, recorded at the moment it started. Clause 11 "
+         "Identity that requested the job, recorded at the moment it started. Clause 12 "
          "requires this for any job that can promote a model.")
 
 object_type(1007, "ModelImportJobType", T(1006),
@@ -881,7 +898,7 @@ object_type(1007, "ModelImportJobType", T(1006),
             "- materializing the catalogue entry as a ModelType whose artefact stays "
             "where it is - and stages the artefact when the target deployment could "
             "not otherwise reach it. Staging is the moment a substituted artefact "
-            "would enter, which is why clause 9 requires the Digest to be verified "
+            "would enter, which is why clause 10 requires the Digest to be verified "
             "there and nowhere else.")
 MI = 1007
 prop_var(MI, "ModelImportJobType", "Source", NodeId_,
@@ -926,7 +943,7 @@ prop_var(IJ, "InferenceJobType", "ResponseContentType", String,
 prop_var(IJ, "InferenceJobType", "ModelUsed", NodeId_,
          "Model that ACTUALLY executed the request, which is not always the one the "
          "deployment named when the job was submitted - a fallback or a followed "
-         "reference can change it in between. The provenance chain of clause 11 walks "
+         "reference can change it in between. The provenance chain of clause 12 walks "
          "this, not the deployment's current model.")
 prop_var(IJ, "InferenceJobType", "Usage", UsageDataType,
          "What the call consumed.")
@@ -946,7 +963,7 @@ prop_var(MS, "ModelSourceType", "SourceId", String,
          "Identifier of the source.", MR_Mandatory)
 prop_var(MS, "ModelSourceType", "EndpointUri", String,
          "Base URI of the endpoint. Untrusted input, subject to the resolver policy of "
-         "clause 11.", MR_Mandatory)
+         "clause 12.", MR_Mandatory)
 prop_var(MS, "ModelSourceType", "ApiDialect", ApiDialectEnum,
          "Wire contract the endpoint speaks.", MR_Mandatory)
 prop_var(MS, "ModelSourceType", "EndpointDescriptionUri", String,
@@ -957,7 +974,7 @@ prop_var(MS, "ModelSourceType", "AuthenticationKind", AuthenticationKindEnum,
          "How the Server authenticates itself to the endpoint.", MR_Mandatory)
 prop_var(MS, "ModelSourceType", "CredentialReference", String,
          "Opaque handle naming the credential in whatever store the Server uses. It is "
-         "a NAME, never a secret: clause 11 forbids a Server from exposing credential "
+         "a NAME, never a secret: clause 12 forbids a Server from exposing credential "
          "material through any Attribute of this model, and a client that can read this "
          "value learns only which credential is used, not what it is.")
 prop_var(MS, "ModelSourceType", "TokenAudience", String,
@@ -1008,7 +1025,7 @@ prop_var(ER, "EvaluationRunType", "Passed", Boolean,
          "any entry in Metrics has Passed false - a summary that disagrees with its "
          "own detail is worse than no summary.", MR_Mandatory)
 prop_var(ER, "EvaluationRunType", "ReportUri", String,
-         "Where the full report lives. Untrusted input, subject to clause 11.")
+         "Where the full report lives. Untrusted input, subject to clause 12.")
 
 object_type(1015, "ModelCardType", BaseObjectType,
             "What a human needs to decide whether a model may be used here: what it is "
@@ -1035,7 +1052,7 @@ prop_var(MC, "ModelCardType", "ContactUri", String,
          "Where to report a problem with the model.")
 
 # ---------------------------------------------------------------------------
-# The catalogue, as a domain extension of OPC UA - xRegistry (clause 9).
+# The catalogue, as a domain extension of OPC UA - xRegistry (clause 10).
 #
 # A model catalogue IS a registry: publishers own namespaces, models and datasets are
 # resources within them, and versions are immutable. Subtyping the abstract registry
@@ -1092,7 +1109,7 @@ prop_var(MRS, "ModelResourceType", "Digest", ByteString,
          "staging import compares its own computed digest with this and refuses on "
          "mismatch.")
 prop_var(MRS, "ModelResourceType", "DigestAlgorithm", String,
-         "Algorithm of Digest. Subject to the strength requirement of clause 11.")
+         "Algorithm of Digest. Subject to the strength requirement of clause 12.")
 prop_var(MRS, "ModelResourceType", "SizeBytes", UInt64,
          "Artefact size, so a staging import can decide whether it has room before "
          "it starts rather than after it fails.")
@@ -1154,7 +1171,7 @@ prop_var(AM, "ModelType", "Quantization", String,
          "format string.")
 prop_var(AM, "ModelType", "SafetyPolicyUri", String,
          "Safety or content policy applied to this model's output, where one is. "
-         "Untrusted input, subject to clause 11.")
+         "Untrusted input, subject to clause 12.")
 
 # --- DeploymentType: federation --------------------------------------------
 prop_var(AY, "DeploymentType", "Source", NodeId_,
@@ -1229,7 +1246,7 @@ method(AY, "DeploymentType", "Invoke",
                  "The model that ACTUALLY produced this response. Not necessarily the "
                  "one the deployment names now: a fallback answered from a different "
                  "deployment, and a FollowsRef binding may have moved. The provenance "
-                 "chain of clause 11 walks this."),
+                 "chain of clause 12 walks this."),
                 ("Usage", UsageDataType, "What the call consumed."),
                 ("FinishReason", FinishReasonEnum,
                  "Why output stopped. A caller that ignores this will accept a "
@@ -1239,7 +1256,15 @@ method(AY, "DeploymentType", "Invoke",
                 ("RetryAfter", Duration,
                  "How long to wait before retrying, where the failure was a capacity "
                  "one. Zero when retrying immediately is as good as waiting, and "
-                 "meaningless when the failure was not retryable.")])
+                 "meaningless when the failure was not retryable."),
+                ("TransferRequired", Boolean,
+                 "True when the deployment produced a response too large to return "
+                 "inline. ResponsePayload is then empty and the work is NOT lost - "
+                 "Transfer names where to read it. A client that ignores this reads "
+                 "an empty payload and concludes the model returned nothing."),
+                ("Transfer", NodeId_,
+                 "InferenceTransferType instance holding the response, where "
+                 "TransferRequired is true. Null otherwise.")])
 method(AY, "DeploymentType", "InvokeAsync",
        "Submit inference to be completed later, returning immediately with the job "
        "that will carry the result. For work that does not finish while a caller "
@@ -1257,10 +1282,6 @@ method(AY, "DeploymentType", "GetCapabilities",
        "without anything in this address space changing.", MR_Optional,
        outargs=[("Capabilities", CapabilityDataType, "Current capabilities.", 1)])
 
-# The actual narrowing. Same BrowseNames and same Organizes as the inherited
-# declarations, so these OVERRIDE them rather than sitting alongside; typed to this
-# model's own types, so a client browsing a model registry knows what it will find.
-# Allocated here because member ids are append-only.
 obj_member(MR_, "ModelRegistryType", "<Group>", T(1011),
            "A publisher namespace held by this registry. Narrows the inherited "
            "placeholder so a model registry admits ModelPublisherType and nothing "
@@ -1270,12 +1291,97 @@ obj_member(MP, "ModelPublisherType", "<Resource>", T(1016),
            "placeholder to this model's own resource types.", MR_OptionalPlaceholder,
            reftype=Organizes)
 
+prop_var(AY, "DeploymentType", "MaxInlinePayloadSize", UInt32,
+         "Largest request or response this deployment will carry inline through "
+         "Invoke, in bytes. Zero means the deployment accepts no inline payload at "
+         "all and BeginTransfer is the only way in.\n\n"
+         "A client reads this BEFORE calling rather than discovering the bound from "
+         "a rejection, and a Server SHALL NOT publish a value larger than its own "
+         "MaxByteStringLength, the negotiated MaxMessageSize or the Session's "
+         "MaxResponseMessageSize permit - the smallest of those is the real limit "
+         "and a client cannot see all of them.", MR_Mandatory)
+method(AY, "DeploymentType", "BeginTransfer",
+       "Opens a chunked exchange for a payload that will not fit inline, returning "
+       "the InferenceTransferType instance to write into. This is the general path: "
+       "Invoke is the shortcut that happens to work when everything is small.",
+       MR_Optional,
+       inargs=[("ContentType", String, "Media type of the request body."),
+               ("RequestSize", UInt64,
+                "Expected request size in bytes, or 0 when not known in advance. A "
+                "Server that cannot accommodate the stated size refuses here rather "
+                "than after the client has uploaded it.")],
+       outargs=[("Transfer", NodeId_,
+                 "InferenceTransferType instance to write the request into."),
+                ("Accepted", Boolean,
+                 "False when the Server declined to open the exchange.")])
 # ---------------------------------------------------------------------------
 # Well-known instance (7001+)
 # ---------------------------------------------------------------------------
 well_known(7001, "AiModelManagement", T(1001), Server,
            "Entry point for the AI models this Server runs. A client browses "
            "Server/AiModelManagement/Models to find what this Server describes.")
+
+object_type(1017, "InferenceTransferType", BaseObjectType,
+            "One chunked inference exchange. It exists because Invoke carries its "
+            "payload as a ByteString, and a ByteString is bounded by "
+            "MaxByteStringLength, the negotiated MaxMessageSize and the Session's "
+            "MaxResponseMessageSize - none of which the model gets to choose. An "
+            "image, a point cloud or a window of high-rate samples exceeds those "
+            "routinely, and a call that cannot carry the input is not a call.\n\n"
+            "Request and Response are Part 5 FileType objects: the client opens the "
+            "request, writes it in chunks it selects, and closes it; after Execute "
+            "the response is read the same way. Nothing here invents a transfer "
+            "protocol, because OPC UA already has one and every client already "
+            "implements it.")
+TR = 1017
+prop_var(TR, "InferenceTransferType", "TransferId", String,
+         "Identifier of this exchange.", MR_Mandatory)
+prop_var(TR, "InferenceTransferType", "State", TransferStateEnum,
+         "Stage the exchange has reached.", MR_Mandatory)
+obj_member(TR, "InferenceTransferType", "Request", FileType,
+           "The request body, written by the client in chunks of its own choosing. "
+           "Inference does not begin until Execute is called, so a partially written "
+           "request is never acted on.", MR_Mandatory)
+obj_member(TR, "InferenceTransferType", "Response", FileType,
+           "The response body, readable once State is Completed. Empty before that.",
+           MR_Mandatory)
+prop_var(TR, "InferenceTransferType", "ContentType", String,
+         "Media type of the request body.", MR_Mandatory)
+prop_var(TR, "InferenceTransferType", "ResponseContentType", String,
+         "Media type of the response body.")
+prop_var(TR, "InferenceTransferType", "ModelUsed", NodeId_,
+         "The model that ACTUALLY produced the response, on the same terms as "
+         "Invoke: a fallback or a followed reference can change it between the call "
+         "and the read.")
+prop_var(TR, "InferenceTransferType", "Usage", UsageDataType,
+         "What the call consumed.")
+prop_var(TR, "InferenceTransferType", "FinishReason", FinishReasonEnum,
+         "Why output stopped.")
+prop_var(TR, "InferenceTransferType", "SafetyAssessment", SafetyAssessmentDataType,
+         "Findings from the safety policy, if any applied.", valuerank="1")
+prop_var(TR, "InferenceTransferType", "LastError", LocalizedText,
+         "Diagnostic for the Failed state. For a human; SHALL NOT be parsed.")
+prop_var(TR, "InferenceTransferType", "ExpiresAt", UtcTime,
+         "When the Server may reclaim this transfer if it has not completed. A "
+         "client that abandons an exchange would otherwise hold Server resources "
+         "until the Session ends, and a Server that never reclaimed them would be "
+         "one denial of service away from unusable.")
+method(TR, "InferenceTransferType", "Execute",
+       "Runs inference over the written request. The Method returns as soon as the "
+       "request is accepted; State and the envelope members carry the outcome, which "
+       "is what lets one exchange span a payload too large to have been a single "
+       "call in the first place.", MR_Mandatory,
+       outargs=[("Accepted", Boolean,
+                 "False when the request was incomplete or already executed.")])
+method(TR, "InferenceTransferType", "Abort",
+       "Abandons the exchange and releases what it holds. A client that has stopped "
+       "caring about a response SHOULD say so rather than leaving the Server to wait "
+       "out ExpiresAt.", MR_Optional)
+
+# The actual narrowing. Same BrowseNames and same Organizes as the inherited
+# declarations, so these OVERRIDE them rather than sitting alongside; typed to this
+# model's own types, so a client browsing a model registry knows what it will find.
+# Allocated here because member ids are append-only.
 
 
 # ===========================================================================
