@@ -509,6 +509,8 @@ The distinction between `Accepted` and `Queued` is the one PLCopen draws between
 
 `Aborting` is the default and **shall** be accepted by every Server. It terminates the executing intent as `Cancelled` — with `Result.Failure` set to `Superseded` — and begins the new one.
 
+A supersede carries no client-chosen `StopMode`, because the submission that caused it names none. The Server chooses, and **should** choose the most urgent stop the cell tolerates, since the successor is about to command motion of its own and the two must not overlap. A Server **should** document which mode a superseded intent is stopped with, so the behaviour is predictable rather than discovered.
+
 `Buffered` queues the intent; it begins when its predecessor reaches `Succeeded`.
 
 The four blending modes queue the intent and additionally ask that the robot not decelerate to a stop at the boundary. Where blending occurs, the predecessor reaches `Succeeded` **when blending begins**, not when its target is exactly attained, and its `Result.AchievedPose` **shall** record where the tool centre point was at that moment. This is the behaviour PLCopen defines, and reporting it any other way would tell a client the robot stopped somewhere it never was.
@@ -530,6 +532,8 @@ A Server **may refuse** a cancel, and reports that in the `Accepted` output. Som
 Where a cancel is accepted, the operation enters `Cancelling` and then `Cancelled`. `Cancelling` is not terminal: a client that treats the acceptance of a cancel as the end of motion will act too early.
 
 `StopMode` says how urgently to stop. It carries the values of `PossibleStopModes` in OPC 40010-1 so that a Server implementing both reports one vocabulary. It selects **no** IEC 60204-1 stop category; clause 10 explains why it cannot.
+
+A Server **shall** either honour the requested `StopMode` or treat every value as its single stop behaviour; it **shall not** vary silently between the two. Where it cannot differentiate, it **should** say so — the capability declaration is the natural place — because a client that asks for `OnPath` and silently receives a `QuickStop` has been told something untrue about how the cell came to rest. A Server that does differentiate **should** make the difference observable in `Result.AchievedPose`, which records where the tool centre point actually stopped.
 
 ### 6.6 Pause, resume and retry
 
@@ -680,6 +684,18 @@ Three rules keep the declaration honest, and each is checkable against a running
 1. A Server **shall** refuse an intent whose DataType is not listed, with `CapabilityNotSupported`.
 2. Every entry's `SupportedBufferModes` **shall** include `Aborting`.
 3. `BlendingSupported` **shall** be false unless the blending buffer modes actually blend.
+
+A fourth rule applies the same honesty to the **Method surface**, because a declaration a client cannot act on is worse than no declaration. Where a Server declares a capability, the Methods that make it usable **shall** be present on the controller and callable:
+
+| Declaration | Methods that **shall** be present |
+|---|---|
+| `MissionsSupported` true | `SubmitMission`, `CancelMission` |
+| `MissionHorizonSupported` true | `UpdateMission` |
+| `RealTimeChannelsSupported` true | `OpenRealTimeChannel`, `CloseRealTimeChannel` |
+| a capability entry with `PauseSupported` true | `Pause`, `Resume` |
+| a capability entry with `RetrySupported` true | `Retry` |
+
+These Methods are Optional on `IntentControllerType`, which is what makes the rule necessary: a Server can otherwise advertise missions while omitting `SubmitMission` entirely, and a client discovers the contradiction only by calling something that is not there. Like the other three, this is observable against a running Server — browse the controller and compare what it offers with what it claims.
 
 `AxisCount` states how many entries `JointMoveIntentDataType.JointTargets` must carry, and **shall** equal the number of `AxisType` instances under the controller.
 

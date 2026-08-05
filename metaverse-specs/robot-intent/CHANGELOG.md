@@ -37,6 +37,24 @@ makes an existing claim true; none adds capability, and no previously assigned N
 - **§6.9 bounds `RequestedLease`.** The lease rules never said what limits a request, so a client could
   ask for a lease of any length and the Server's answer was unspecified.
 
+- **§9 applies its honesty rule to the Method surface.** Three rules already kept the capability
+  declaration honest, but nothing said that a declared capability must come with the Methods that make it
+  usable — and `SubmitMission`, `UpdateMission`, `CancelMission` and the two channel Methods are all
+  *Optional* on `IntentControllerType`. A Server could therefore advertise `MissionsSupported` true and
+  omit `SubmitMission` entirely, which is precisely what the first implementation did, and a client
+  discovered the contradiction only by calling something that was not there. A fourth rule and a table now
+  fix which Methods each declaration implies.
+
+- **§6.5 says what a Server that cannot differentiate `StopMode` must do.** The text gave `StopMode` the
+  `PossibleStopModes` vocabulary of OPC 40010-1 and then said nothing about a Server that treats every
+  value alike — so accepting the argument and discarding it looked conformant. A Server must now either
+  honour it or treat every value as its single stop behaviour, and should say which; a client that asks for
+  `OnPath` and silently gets a `QuickStop` has been told something untrue about how the cell stopped.
+
+- **§6.4 says which stop a superseded intent gets.** An `Aborting` submission carries no `StopMode`, so the
+  mode a superseded intent is stopped with was undefined. The Server chooses, should choose the most urgent
+  stop the cell tolerates since the successor is about to command motion, and should document it.
+
 ## 0.1.0 — 2026-08-02
 
 Initial working-group draft.
