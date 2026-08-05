@@ -35,10 +35,9 @@ store. It is not a place to copy the token, and §9.2 is explicit that credentia
 exposed through the address space.
 
 The OpenAI documentation also describes workload identity federation for obtaining
-short-lived tokens. If a Server implements that arrangement without storing a secret, the
-deployment can be modelled as `WorkloadIdentity`; do not use that value merely because the
-HTTP handshake ultimately carries a bearer token. `AuthenticationKind` classifies what is
-stored.
+short-lived tokens. Apply §9.2: if a Server implements that arrangement without storing a
+secret, the deployment is `WorkloadIdentity`; if it stores a bearer credential, it is
+`BearerToken`.
 
 ## Identity
 
@@ -48,34 +47,51 @@ the full `ModelType` identity.
 
 | Member | From | Note |
 |---|---|---|
-| `Publisher` | `owned_by` | usually `openai`, or an organization owner |
+| `Publisher` | empty unless independent provenance identifies the producer | `owned_by` reports the serving host or account, not the model producer |
 | `Name` | `id`, with the trailing date removed | only where the name follows that convention |
 | `Version` | the date suffix of `id`, where there is one | `gpt-4o-2024-08-06` yields `2024-08-06` |
-| `ModelId` | the whole `id` | keep it verbatim; it is what you send back |
+| `ModelId` | the whole `id` | keep it verbatim under §6.2; it is what you send back |
+| `PublishedAt` | `created` | Unix timestamp from the source, not the Server's acquisition time |
 | `Framework`, `Format` | not exposed | leave empty |
 | `Digest`, `DigestAlgorithm` | **not exposed** | see the `system_fingerprint` warning below |
+| `DigestProvenance` | `NotAvailable` | no artefact digest is exposed; `system_fingerprint` is not one |
+
+The `owned_by` field reports the serving host or account. §6.2 says `Publisher` names the
+organisation that produced the model and is left empty where only the serving organisation
+is known. The full `id` still goes verbatim in `ModelId`, so two Servers can compare the
+source system's own identifier even when the `Publisher`, `Name`, `Version` triple is
+incomplete.
+
+The `created` timestamp belongs in `PublishedAt`. §6.2.3 uses the source's publication
+time to order opaque model identifiers and forbids substituting the Server's acquisition
+time.
 
 Pinned model ids such as `gpt-4o-2024-08-06` are immutable by OpenAI policy, not by content
 addressing. A `Pinned` deployment is pinned to a name whose behaviour the provider promises
 to hold stable. It is not pinned to a digest the Server can verify.
 
 The `system_fingerprint` field in chat-completions responses is the trap in this mapping.
-It looks like it might be a model identity hash, especially because it changes when the
-serving system changes, but it is a backend configuration fingerprint. It is not a hash of
-the model weights, not a digest of an artefact, and not a value that can be compared with a
-catalogue resource.
-
-So `system_fingerprint` **must not** be published as `Digest`. `Digest` in this
-specification is an artefact digest used for provenance and import verification (§10.4 and
-§12.4). Filling it from `system_fingerprint` creates a worse-than-empty value: it will be
-compared against a real artefact digest and appear to disagree, even though the two values
-never described the same thing.
+It is a real backend configuration fingerprint and is useful for repeatability
+investigations, but it is not an artefact digest under §12.1.1. It therefore populates
+`RuntimeIdentity`, not `Digest`: §9.3.1 treats a change to `RuntimeIdentity` as an
+observable change to the deployment, which is the assurance a `Pinned` deployment can give
+when no digest is available.
 
 ## `Invoke`
 
 The request body goes through as the caller supplied it. §8.2 makes the payload opaque to
 the Server, and the OpenAI chat-completions request is exactly the kind of vendor-shaped
 JSON that rule exists to preserve.
+
+| Deployment member | From |
+|---|---|
+| `ApiDialect` | `RestChatCompletions` |
+| `RuntimeIdentity` | `system_fingerprint`, where the response carries one |
+
+The deployment's `ApiDialect` is the same as the source's in the ordinary pass-through
+arrangement. §6.4.2 makes that duplication intentional: the source value tells this Server
+what to send outward, and the deployment value tells an OPC UA client what to put in
+`Payload`.
 
 | Output | From |
 |---|---|
@@ -108,9 +124,16 @@ JSONL file, returns a batch `id`, runs against endpoints including `/v1/chat/com
 and uses a fixed `24h` completion window. Results are retrieved through the Files API by
 the returned output file id.
 
-That gives `InvokeAsync` something native to map onto. The OpenAI batch `id` goes in
-`JobId`, and the OPC UA job follows the Part 10 program lifecycle required by §8.6 while
-the Server polls or observes the OpenAI batch status. OpenAI statuses such as `validating`,
+That gives `InvokeAsync` something native to map onto.
+
+| Member | From |
+|---|---|
+| `JobId` | the OpenAI batch `id` |
+| `RequestUri` | the batch `input_file_id` |
+| `ResponseUri` | the output file id whose content the Files API returns |
+
+The OPC UA job follows the Part 10 program lifecycle required by §8.6 while the Server
+polls or observes the OpenAI batch status. OpenAI statuses such as `validating`,
 `in_progress`, `finalizing`, `completed`, `failed`, `expired`, `cancelling` and
 `cancelled` are endpoint details behind that lifecycle, not new OPC UA states.
 
@@ -123,20 +146,29 @@ OpenAI batch service.
 OpenAI has a Files API: `POST /v1/files` uploads a file and returns a `file_id`. The batch
 API uses such a file as its input, and other OpenAI features can refer to files by id.
 
-That is a way of *keeping* a file on the OpenAI platform so a later request can name it. It
-is not a way of transferring one oversized OPC UA request in pieces, so it does not map
-onto `BeginTransfer`.
+That is a by-reference payload, not a chunked transfer. A client that wants the Server to
+submit an already uploaded file names the `file_id` through `PayloadUri`; the corresponding
+`InferenceJobType.RequestUri` records the batch `input_file_id`, and `ResponseUri` records
+the returned output file id.
+
+| Member | From |
+|---|---|
+| `PayloadUri` | the `file_id` named by the request |
+| `RequestUri` | the batch `input_file_id` actually submitted |
+| `ResponseUri` | the returned output file id whose content the Files API serves |
 
 `BeginTransfer` and `InferenceTransferType` are the Server's own, over Part 5 `FileType` as
-§8.2 defines. The Server reassembles the request and then issues one ordinary OpenAI
-request, or creates one ordinary batch input file, depending on which operation the client
-started.
+§8.2 defines, for a payload too large to carry through the OPC UA call. §8.6.1 separates
+that case from data that already lives elsewhere. A `PayloadUri`, `RequestUri` or
+`ResponseUri` is untrusted input under §12.2, and it is also an egress decision under §9.5:
+a deployment whose `EgressPermitted` is false **shall not** accept a `PayloadUri` naming
+somewhere outside the operator's boundary.
 
 ## The catalogue
 
 `GET /v1/models` is a useful source for `ListModels` on the `ModelSourceType`: it answers
 which model ids the endpoint exposes, and it returns the `id`, `object`, `created` and
-`owned_by` fields needed for the thin identity in the table above.
+`owned_by` fields that the identity mapping above draws on.
 
 It is not a catalogue in the §10 sense. It has no content-addressed artefact, no digest, no
 resource that can be staged and verified, and no model card or provenance document that the
@@ -172,11 +204,11 @@ plant-level retention answer. The Server has to publish the operator's assertion
 ## What this system does not tell you
 
 - **Which weights answered.** No digest, anywhere, on any call. `Digest` and
-  `DigestAlgorithm` stay empty, and §11 is written so that this is permitted rather than
-  papered over. Do not hash the model name, and do not use `system_fingerprint`.
+  `DigestAlgorithm` stay empty, and `DigestProvenance` is `NotAvailable` under
+  §12.1.1. Do not hash the model name, and do not use `system_fingerprint` as a digest.
 - **What `system_fingerprint` means for provenance.** It is a backend configuration
-  fingerprint. It is useful for troubleshooting repeatability, but it is not a model
-  artefact identity.
+  fingerprint. It belongs in `RuntimeIdentity`, where §9.3.1 makes changes observable on
+  the deployment, but it is not a model artefact identity.
 - **What the model was trained on.** Nothing maps to `TrainedOn` or `DatasetType`. If
   lineage matters, it comes from documentation or the supplier, by hand.
 - **Whether the model behind an unpinned name changed.** A `Pinned` deployment can bind to a
@@ -186,6 +218,10 @@ plant-level retention answer. The Server has to publish the operator's assertion
   operator assertions in `DataJurisdiction`, `EgressPermitted` and `RetainsInput`.
 
 ## Conformance units
+
+This arrangement is an **AI Inference Gateway Server**: it reaches the
+**AI-Base**, **AI-Invoke**, **AI-OffServer**, **AI-Federation** and
+**AI-Residency** facets that §13.3 bundles for a hosted inference Server.
 
 Reachable against the OpenAI platform API: **AI-Base**, **AI-Invoke**,
 **AI-InvokeAsync**, **AI-Transfer**, **AI-OffServer**, **AI-Federation**,

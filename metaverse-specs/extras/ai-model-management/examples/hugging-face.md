@@ -24,7 +24,7 @@ listing rather than `Invoke`.
 |---|---|
 | `SourceId` | your name for this Hub catalogue source |
 | `EndpointUri` | `https://huggingface.co/api/` |
-| `ApiDialect` | `Proprietary` — see below |
+| `ApiDialect` | `Proprietary` |
 | `EndpointDescriptionUri` | `https://huggingface.co/.well-known/openapi.json` |
 | `AuthenticationKind` | `Anonymous` for public repositories, `BearerToken` where private or gated repositories are accessed |
 | `CredentialReference` | names the Hugging Face token — never the value |
@@ -34,19 +34,30 @@ listing rather than `Invoke`.
 | `TestConnection` | a Hub API probe |
 | `ListModels` | backed by `GET /api/models` and filtered by the Server |
 
-`ApiDialect` is Mandatory, so it cannot be left empty even though the Hub speaks no
-inference contract at all. `Proprietary` is the honest value, and §9.2's *should* clause
-then does real work: `EndpointDescriptionUri` points at the Hub's own OpenAPI document,
-which is the only thing that tells a client what this endpoint actually is.
+§9.2 states the catalogue-only case directly: because the Hub speaks no inference
+contract, `ApiDialect` is `Proprietary` and `EndpointDescriptionUri` points at the Hub's
+own OpenAPI document. That is the accurate answer for this source, not an apology for a
+missing inference literal.
 
-There is a cleaner arrangement, and it is the one to prefer. The Hub is a catalogue, so
-model it as a `ModelRegistryType` under §10 and let a `ModelSourceType` exist only for
-whatever actually serves inference — Inference Endpoints, or a runtime you deployed the
-weights to. A `ModelSourceType` whose every serving member is empty is a shape being bent
-to fit; §10's registry types are the shape that fits.
+The Hub's content still belongs in a `ModelRegistryType` under §10. Let a separate
+`ModelSourceType` describe whatever actually serves inference — Inference Endpoints, or a
+runtime you deployed the weights to.
+
+Keep the two dialect answers separate. The Hub catalogue source is `Proprietary`, because
+it is not an inference contract. A deployment created from an imported Hub model publishes
+the `ApiDialect` of the runtime that serves it: `RestChatCompletions` for a compatible
+chat endpoint, `EmbeddedRuntime` for an in-process runtime, `OpenInferenceProtocol` for an
+OIP server, or another value when that is the contract the OPC UA caller must send.
 
 The table above is for the case where a Server does want `ListModels` and `TestConnection`
 against the Hub itself, which is a reasonable thing to want and is why it is written out.
+
+`ListModels` pages naturally over the Hub listing. The Hub API takes `limit` and `skip`;
+§9.4 gives the OPC UA Method an opaque `ContinuationPoint` so a catalogue this size is not
+truncated by `MaxResults`. A Server can encode the next Hub offset, the filter it belongs
+to and any source-side cursor state into that opaque value. The first call supplies an
+empty `ContinuationPoint`, each following call returns the value supplied by the previous
+one, and an empty returned value means the enumeration is complete.
 
 `AuthenticationKind` is `BearerToken` only when the Server stores a Hugging Face token in
 its credential store. A public anonymous projection is `Anonymous`, and the public xrproxy
@@ -72,7 +83,9 @@ an owner, a name and immutable commits.
 | `TaskKind` | `pipeline_tag` | where the field is present |
 | `Framework` | `library_name` | where the field is present |
 | `Card` | `cardData` and the model card | structured metadata plus the human card |
+| `LastModifiedAt` | `lastModified` | ISO timestamp from the Hub listing |
 | `Digest`, `DigestAlgorithm` | per-file LFS `sha256` from the tree API | artefact-level digest, not the commit SHA |
+| `DigestProvenance` | `DeclaredBySource`; `VerifiedOnStage` after staging | the Hub declares the LFS digest; §10.4 verifies fetched bytes |
 | `ArtifactUri` | the selected file URL or Hub resource URL | choose the artefact being imported |
 | `ProvenanceUri` | the Hub repository or xRegistry resource URL | points back to the catalogue entry |
 
@@ -90,6 +103,11 @@ Branches and tags are mutable pointers to commits. A deployment pinned to a comm
 set to that ref. §9.3 is exactly about this case, and §12.3 makes the consequence plain:
 repointing the followed ref changes what the equipment runs and must be treated as an
 authorization-bearing act, not as harmless configuration.
+
+The Hub listing's `lastModified` is the source-side timestamp for `LastModifiedAt`. It is
+especially important when a deployment follows a branch or tag, because §6.2.3 requires a
+Server following a mutable reference to populate `LastModifiedAt` rather than substituting
+its own acquisition time.
 
 ## `Invoke`
 
@@ -156,6 +174,8 @@ LFS-stored artefacts, the per-file SHA-256 that the Server can recompute after s
 
 The import rule is precise:
 
+- populate the import job's `Registry` with the `ModelRegistryType` NodeId and leave
+  `Source` null, per §10.2;
 - use the commit SHA as the version identity;
 - use the selected LFS file's `sha256` as `Digest`;
 - set `DigestAlgorithm` to SHA-256;
@@ -188,7 +208,9 @@ artefact was obtained.
   catalogue gives file digests; the Server or import policy must choose which file is the
   deployable artefact.
 - **A single repository-wide artefact digest.** The commit SHA identifies a revision. The
-  LFS `sha256` identifies one file. Do not publish the commit SHA as the artefact `Digest`.
+  LFS `sha256` identifies one file. §12.1.1 forbids publishing the commit SHA as the
+  artefact `Digest`; `DigestProvenance` is `DeclaredBySource` unless §10.4 staging makes it
+  `VerifiedOnStage`.
 - **Structured training lineage.** Model cards and `cardData` can describe training data,
   but the research did not verify a structured API field that populates `TrainedOn` or a
   `DatasetType` without human or policy interpretation.
@@ -200,9 +222,19 @@ artefact was obtained.
 
 ## Conformance units
 
+This arrangement is an **AI Model Catalogue Server**: the Hub projection reaches
+**AI-Base**, **AI-Catalogue** and **AI-Import** without requiring the Server to
+call `Invoke`, which is the catalogue shape described in §13.3.
+
 Reachable against a Hugging Face catalogue projection: **AI-Base**, **AI-Catalogue** and
 **AI-Import**. **AI-Residency** is reachable for deployments the Server creates from the
 imported model, because the operator can state the invocation boundary.
+
+**AI-Base** is worth a sentence here because this is the shape §13.1 has in mind when it
+describes a plant node that "may never call `Invoke` at all". Its deployment requirements
+apply to each deployment a Server exposes, so a Server that exposes none satisfies them
+vacuously and claims **AI-Base** on its `AiRootType`, `SpecificationVersion` and
+`ModelType` obligations — which is what a catalogue Server actually has.
 
 Reachable only with a separate runtime: **AI-Invoke**, **AI-InvokeAsync**, **AI-Transfer**,
 **AI-OffServer**, **AI-Federation** and **AI-Signatures** depend on how the model is served

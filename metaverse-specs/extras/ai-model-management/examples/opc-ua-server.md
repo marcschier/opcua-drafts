@@ -47,16 +47,39 @@ downstream Server browses them.
 |---|---|
 | `Publisher`, `Name`, `Version` | the upstream `ModelType`, read directly |
 | `ModelId` | the upstream `ModelId` |
+| `PublishedAt`, `LastModifiedAt` | the upstream members of the same names |
+| `DeprecatedFrom`, `SupportedUntil` | the upstream `ModelCardType`, read directly |
 | `Digest`, `DigestAlgorithm` | **whatever the upstream Server has** |
+| `DigestProvenance` | read upstream, but publish no stronger value |
 | `Framework`, `Format`, `TaskKind` | the upstream members of the same names |
 | `Inputs`, `Outputs` | the upstream signature, so **AI-Signatures** carries through |
 
 The important word is *whatever*. A digest does not appear because the link is OPC UA; it
 appears if the upstream Server had one. An upstream Server that is itself federating to a
 hosted endpoint has an empty `Digest`, and the downstream Server's `Digest` is empty for
-the same reason. Nothing along the chain may fill it in — §11 forbids inventing a value,
-and a Server that manufactured one at the second hop would be laundering the absence of
-provenance into the appearance of it.
+the same reason. Nothing along the chain may fill it in — §12.1.1 forbids inventing a
+value, and a Server that manufactured one at the second hop would be laundering the
+absence of provenance into the appearance of it.
+
+The date members compose the same way. `PublishedAt`, `LastModifiedAt`, `DeprecatedFrom`
+and `SupportedUntil` are read from the upstream Server and forwarded rather than invented.
+`LastModifiedAt` is load-bearing in this guide: §6.2.3 requires a Server whose deployment
+follows a mutable reference to populate it, because a reference moving at the source
+produces no job and §12.3.1's audit trail cannot otherwise be built. In a federation the
+source is another Server, so that is exactly the case.
+
+`DigestProvenance` composes the same way §9.5 composes residency, and §12.1.1 states the
+rule: the downstream Server reads the upstream value and shall not publish a stronger one.
+Forwarding an upstream digest without staging and hashing the bytes is `DeclaredBySource`
+from the downstream Server's point of view, even if the upstream Server's own value was
+`VerifiedOnStage`. Publishing that upstream `VerifiedOnStage` as this Server's verification
+would claim a check this Server did not perform.
+
+`RuntimeIdentity` follows the same boundary. The upstream value describes the upstream
+Server's serving configuration. The downstream Server's deployment has its own serving
+configuration and shall not republish the upstream `RuntimeIdentity` as its own, for the
+same reason §12.1.1 forbids republishing an upstream `DigestProvenance` value that claims a
+check this Server did not perform.
 
 What does travel is the `ImportedFrom` reference. Follow it upstream and the chain
 terminates wherever the artefact actually came from, however many Servers back that is.
@@ -67,6 +90,13 @@ That is the whole point of §11 being a walk rather than a field.
 The downstream Server calls the upstream `Invoke` and returns what comes back. Every output
 maps to itself: `ResponsePayload`, `ResponseContentType`, `Usage`, `FinishReason`,
 `SafetyAssessment`, `RetryAfter`.
+
+The downstream deployment's `ApiDialect` is `OpcUaInference`, because the OPC UA caller
+sends the §8 Method contract to this Server. `EndpointDescriptionUri` is not required for
+that deployment; the dialect names this specification exactly. Availability members are
+also read from the upstream deployment where they describe the same execution path, and a
+latency-based `Degraded` state carries `ObservedLatency` under §6.4.3 rather than a bare
+assertion.
 
 `ModelUsed` needs care, and it is the one genuinely interesting mapping in this guide.
 
@@ -112,6 +142,18 @@ learn what happened.
 
 `BeginTransfer` maps to the upstream `BeginTransfer`, both over Part 5 `FileType`.
 
+`PayloadUri` is an egress path. A URI the downstream Server passes to the upstream Server
+is a location the upstream execution site may read, and §8.6.1 classifies that as the same
+§9.5 question as an inline payload. The composition rule already stated for residency
+therefore applies: the downstream Server cannot know whether the upstream Server will fetch
+that URI from somewhere further out, so it shall not publish a more permissive egress answer
+than the upstream deployment supports.
+
+For `InvokeAsync`, the downstream job mirrors the same large-payload members. `RequestUri`
+records the URI submitted, `ResponseUri` records a result location returned by the upstream
+execution path, and `TransferRequired` with `Transfer` is represented by a transfer object
+in the downstream address space rather than by passing through an upstream NodeId.
+
 Read `MaxInlinePayloadSize` from the upstream deployment and publish a value **no larger**
 downstream. Publishing a larger one produces a call that the downstream Server accepts and
 the upstream Server refuses, which turns a bound that §8.2.4 exists to make visible in
@@ -128,6 +170,13 @@ downstream Server can present the upstream registry, or federate against it with
 `Mode` of `Federate` — the mode that moves no bytes and leaves the artefact where it
 is (§10.3).
 
+`ListModels` carries its `ContinuationPoint` through the same composition. The downstream
+Server passes the client's opaque value to the upstream Server when it represents upstream
+state, returns the upstream continuation value in its own response, and returns an empty
+value when the upstream enumeration is complete. If it multiplexes several upstream
+catalogues, its continuation value is still opaque to the client and records whichever
+upstream cursor or local merge state is needed.
+
 `Stage` also works and means what it says: the downstream Server fetches the artefact and
 holds it. That is the arrangement worth choosing when the link is the thing you do not
 trust, because after it the downstream Server can serve with the link down — and it can
@@ -142,19 +191,28 @@ verify the digest itself, having the bytes to verify it against.
 | `DataJurisdiction` | the upstream Server's, which you have to read from it and record |
 | `RetainsInput` | whatever the upstream Server declares, propagated |
 
-These do not compose automatically and that is the trap in this guide.
+These do not compose automatically, and §9.5 is where the rule for that lives.
 
-The downstream Server's `EgressPermitted` must account for what the upstream Server does
-with the payload, not merely for the hop between them. A cell Server calling a site Server
-over the plant network looks like `EgressPermitted` `false` — one local hop, no internet.
-If that site Server is itself federating to a hosted endpoint, the payload leaves the site,
-and the cell Server publishing `false` is publishing something untrue about the only thing
-a caller wanted to know.
+The members are end-to-end rather than next-hop: `EgressPermitted` states whether calling
+this deployment sends input outside the operator's boundary **by any path**. A cell Server
+calling a site Server over the plant network looks like `EgressPermitted` `false` — one
+local hop, no internet. If that site Server is itself federating to a hosted endpoint, the
+payload leaves the site, and `false` would be untrue about the only thing a caller wanted
+to know.
 
-So: read the upstream deployment's `EgressPermitted`, `DataJurisdiction` and `RetainsInput`,
-and let them raise your own. Nothing enforces this. It is an operator assertion like all
-the others, with the difference that here the information you need is machine-readable one
-hop away, and there is no excuse for guessing it.
+So §9.5 obliges a Server whose `Source` names another Server implementing this
+specification to **read** `DataJurisdiction`, `EgressPermitted` and `RetainsInput` from the
+upstream deployment, and forbids publishing values more permissive than the ones it read.
+A Server that cannot read them publishes `EgressPermitted` and `RetainsInput` true, because
+the assumption that keeps data in is the one that is safe to be wrong about.
+
+This is the same rule §12.3.2 states for the `FallsBackTo` edge. A payload leaves a
+deployment along exactly two modelled edges, and both are guarded.
+
+What it does not do is verify anything. An upstream Server that declares something false
+makes its downstream neighbours wrong too, and no protocol fixes that. What it fixes is the
+case where every Server along the chain is honest and the answer still comes out wrong
+because nobody was obliged to look up.
 
 ## What this system does not tell you
 
@@ -162,8 +220,8 @@ Very little, and the exceptions are worth naming precisely because they are so f
 
 - **Whether the upstream Server is telling the truth.** Every residency and provenance
   member is an assertion at every hop. Federation propagates assertions; it does not
-  verify them. The one thing that can be verified is a digest, and only when a `Stage`
-  import gave you the bytes to check it against.
+  verify them. `DigestProvenance` is `DeclaredBySource` for a forwarded upstream digest,
+  and `VerifiedOnStage` only when a `Stage` import gave this Server the bytes to check.
 - **How deep the chain goes.** There is no hop count. Following `ImportedFrom` and
   `Source` walks it, and a cycle is possible if two Servers are configured to federate to
   each other — worth checking for at commissioning, because nothing in the model prevents
@@ -177,6 +235,11 @@ thing: the model is not losing information at this hop. It is carrying forward e
 much as was there to begin with.
 
 ## Conformance units
+
+Where this Server proxies the upstream inference Method and publishes the local
+residency declarations described below, the federating arrangement is an
+**AI Inference Gateway Server**. The upstream peer may claim any profile; that
+claim is not inherited by this Server.
 
 A conformance unit describes what **this** Server exposes, not what it can reach. A link to
 a capable upstream Server does not make that Server's facets local, and this is the trap

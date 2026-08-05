@@ -35,13 +35,14 @@ only thing that can tell a client what the endpoint expects.
 
 A common SageMaker deployment is a container serving an OpenAI-compatible surface, such as
 TGI or vLLM. Where that is what you deployed, `RestChatCompletions` is the honest dialect
-rather than `Proprietary`. The dialect describes the contract the endpoint speaks and not
-who is hosting it.
+rather than `Proprietary`. The dialect describes the contract this Server speaks to the
+endpoint and not who is hosting it.
 
-SageMaker uses AWS Signature Version 4, with the same modelling gap as Bedrock. Use
-`WorkloadIdentity` for SigV4 signing through an attached IAM role and `ApiKey` for SigV4
-signing through stored access keys, because the member classifies what is stored rather
-than which handshake is performed. See the full reasoning in the [Bedrock guide](aws-bedrock.md).
+SageMaker uses AWS Signature Version 4. Apply §9.2 the same way as in the
+[Bedrock guide](aws-bedrock.md): SigV4 signing through an attached IAM role is
+`WorkloadIdentity`, SigV4 signing through stored access keys is `ApiKey`, and
+`EndpointDescriptionUri` records the actual signing arrangement when a client needs that
+handshake detail.
 
 ## Identity
 
@@ -58,14 +59,16 @@ that is not the same thing as a `/v1/models` response.
 | `Framework`, `Format` | control-plane or operator metadata | not returned by invocation |
 | `ArtifactUri` | S3 model artefact URI such as `s3://bucket/model.tar.gz` | available from the model configuration |
 | `Digest`, `DigestAlgorithm` | **not exposed by the inference plane** | see the S3 ETag warning below |
+| `DigestProvenance` | `NotAvailable` from the inference plane | `Stage` hashing can reach `ComputedByServer`; an S3 ETag is not an independent digest |
 
 SageMaker often gives the operator the artefact URI and control of the object behind it.
 `ArtifactUri` can therefore be filled from the S3 model artefact location.
 
 That still does not fill `Digest`. An S3 ETag is a de facto hash in common cases, but it is
-not surfaced in any inference-plane response and it is not the model digest that §10.4 uses
-for verification. Publish `ArtifactUri` when you have it; leave `Digest` empty unless the
-Server computed or obtained a real artefact digest.
+not surfaced in any inference-plane response and it is not an artefact digest under
+§12.1.1. Publish `ArtifactUri` when you have it; use `ComputedByServer` only if the Server
+hashes the artefact during import, and `VerifiedOnStage` only if an independent declared
+digest matched under §10.4.
 
 ## `Invoke`
 
@@ -73,25 +76,37 @@ Server computed or obtained a real artefact digest.
 media types, and SageMaker passes headers such as custom attributes, target model, target
 variant, inference component and session id to the container.
 
+| Deployment member | From |
+|---|---|
+| `ApiDialect` | `Proprietary`, or `RestChatCompletions` for an OpenAI-compatible container |
+| `EndpointDescriptionUri` | the container contract documentation |
+
+The deployment's `ApiDialect` is usually the same as the source's because the Server passes
+the payload through to the container. §6.4.2 makes that value the contract an OPC UA client
+must satisfy when it fills `Payload`. `EndpointDescriptionUri` is the place to publish the
+container contract when the dialect is `Proprietary`.
+
 | Output | From |
 |---|---|
 | `ResponsePayload` | the container response body, verbatim |
 | `ResponseContentType` | the response media type the container returns |
 | `ModelUsed` | the `ModelType` NodeId this deployment resolved to — not merely the endpoint name |
-| `Usage.UnitKind` | container-defined |
-| `Usage.InputUnits` | container-defined |
-| `Usage.OutputUnits` | container-defined |
-| `Usage.TotalUnits` | container-defined |
+| `Usage.UnitKind` | container-defined; empty when the container response is not metered, per §8.2.3 |
+| `Usage.InputUnits` | container-defined; `0` when `UnitKind` is empty |
+| `Usage.OutputUnits` | container-defined; `0` when `UnitKind` is empty |
+| `Usage.TotalUnits` | container-defined; `0` when `UnitKind` is empty |
 | `FinishReason` | container-defined |
 | `SafetyAssessment` | container-defined |
 | `RetryAfter` | the `Retry-After` header, where the response carries one |
 
 For a plain container-defined endpoint, the Server cannot infer token counts or finish
 reasons from the SageMaker envelope. CloudWatch can record latency and throughput, but that
-is operational telemetry outside the response body. If the container emits OpenAI-compatible
-chat-completions JSON, use the `RestChatCompletions` mapping from the OpenAI-compatible
-guides: `usage.prompt_tokens`, `usage.completion_tokens`, `usage.total_tokens` and
-`choices[0].finish_reason` carry the values.
+is operational telemetry outside the response body. When the container response does not
+meter the call, `Usage` is returned with empty `UnitKind` and zero counts; §8.2.3 defines
+that as "not metered" rather than as a measurement. If the container emits
+OpenAI-compatible chat-completions JSON, use the `RestChatCompletions` mapping from the
+OpenAI-compatible guides: `usage.prompt_tokens`, `usage.completion_tokens`,
+`usage.total_tokens` and `choices[0].finish_reason` carry the values.
 
 `ModelUsed` still matters when SageMaker routes by target model, target variant or inference
 component. A caller needs the `ModelType` NodeId that actually answered, especially where a
@@ -106,9 +121,15 @@ by `X-Amzn-SageMaker-InputLocation` as an S3 URI. The service returns 202 with a
 SNS notification.
 
 That is a genuine `InvokeAsync` mapping. `InferenceId` goes in `JobId`, `OutputLocation`
-becomes the result reference, and the OPC UA job follows the Part 10 program lifecycle
-required by §8.6 while the Server observes the asynchronous invocation and exposes the
-container response through the `InferenceJobType` instance.
+becomes `ResponseUri`, and the OPC UA job follows the Part 10 program lifecycle required
+by §8.6 while the Server observes the asynchronous invocation and exposes the container
+response through the `InferenceJobType` instance.
+
+| Member | From |
+|---|---|
+| `JobId` | `InferenceId` |
+| `RequestUri` | `X-Amzn-SageMaker-InputLocation`, where the request names S3 input |
+| `ResponseUri` | `OutputLocation` |
 
 Batch Transform is also a SageMaker batch mechanism, but it is a separate job API for
 offline inference over S3 datasets. Map it only if the Server intentionally exposes that
@@ -120,9 +141,21 @@ For asynchronous endpoints, `X-Amzn-SageMaker-InputLocation` can point at an S3 
 containing the payload. That is a native way to avoid the inline request limit for the async
 path.
 
-It is still not an OPC UA chunked transfer. `BeginTransfer` and `InferenceTransferType` are
-the Server's own Part 5 `FileType` path as §8.2.4 defines. The Server may write the assembled
-request to S3 and call `InvokeEndpointAsync`, or issue one ordinary real-time
+That is a by-reference payload, not an OPC UA chunked transfer.
+
+| Member | From |
+|---|---|
+| `PayloadUri` | the S3 URI in `X-Amzn-SageMaker-InputLocation` |
+| `RequestUri` | the S3 input location actually submitted |
+| `ResponseUri` | the `OutputLocation` returned by `InvokeEndpointAsync` |
+
+`BeginTransfer` and `InferenceTransferType` are the Server's own Part 5 `FileType` path as
+§8.2 defines, for a payload too large to carry through the OPC UA call. §8.6.1 separates
+that case from data that already lives in S3. A `PayloadUri`, `RequestUri` or `ResponseUri`
+is untrusted input under §12.2, and it is also an egress decision under §9.5: a deployment
+whose `EgressPermitted` is false **shall not** accept a `PayloadUri` naming somewhere
+outside the operator's boundary. The Server may still write an assembled transfer to S3 and
+call `InvokeEndpointAsync` where that egress is permitted, or issue one ordinary real-time
 `InvokeEndpoint` request when the payload fits.
 
 ## The catalogue
@@ -168,20 +201,30 @@ should say that.
   container contract is not documented through `EndpointDescriptionUri`, a client cannot
   know what to send.
 - **Usage and finish reason in a standard envelope.** Token counts and `FinishReason` are
-  available only if the container chooses to return them.
+  available only if the container chooses to return them. Otherwise `UsageDataType` uses
+  the §8.2.3 not-metered sentinel.
 - **A digest from the inference plane.** `ArtifactUri` can be filled from the S3 model
   artefact URI, but `Digest` cannot be filled from `InvokeEndpoint` or
-  `InvokeEndpointAsync`. Compute one during `Stage` import if you need it.
-- **That an S3 ETag is a model digest.** It may be a useful storage hint, but it is not the
-  digest this model uses for provenance and import verification.
+  `InvokeEndpointAsync`. `DigestProvenance` is `NotAvailable` for that surface under
+  §12.1.1.
+- **That an S3 ETag is a model digest.** It may be a useful storage hint, but §12.1.1
+  treats storage entity tags as non-content identifiers. It is not the independent source
+  declaration needed for `VerifiedOnStage`.
 - **Where your data went, or whether it was kept.** Region, egress and retention depend on
   the endpoint deployment, container logging and operator policy.
 
 ## Conformance units
 
+This arrangement is an **AI Inference Gateway Server**: it reaches the
+**AI-Base**, **AI-Invoke**, **AI-OffServer**, **AI-Federation** and
+**AI-Residency** facets that §13.3 bundles for a hosted inference Server.
+
 Reachable against Amazon SageMaker endpoints: **AI-Base**, **AI-Invoke**,
 **AI-InvokeAsync**, **AI-Transfer**, **AI-OffServer**, **AI-Federation**,
 **AI-Residency**.
+
+For a container that does not meter, **AI-Invoke** is satisfied by returning `Usage`
+with empty `UnitKind` and zero counts; §13.2 accommodates that.
 
 Out of reach without something else: **AI-Catalogue** needs a registry projection with real
 resources, and **AI-Import** requires **AI-Catalogue** (§13) — an import job with nothing to

@@ -43,11 +43,10 @@ this Server actually speaks, not every contract the provider could have served.
 
 The arrangement to reach for is `WorkloadIdentity`: Google service accounts, Workload
 Identity Federation, GKE workload identity and Cloud Run managed identity all let the
-Server obtain short-lived access tokens without storing a secret. If a Server stores a
-bearer token directly, the stored thing is a credential and the mapping is `BearerToken`.
-The research verifies OAuth and Application Default Credentials but does not state the
-literal OAuth scope; put the configured Google OAuth scope in `TokenAudience`, following
-the same pattern the Foundry guide uses for Azure.
+Server obtain short-lived access tokens without storing a secret. Under §9.2, a directly
+stored bearer token is `BearerToken`. The research verifies OAuth and Application Default
+Credentials but does not state the literal OAuth scope; put the configured Google OAuth
+scope in `TokenAudience`, following the same pattern the Foundry guide uses for Azure.
 
 ## Identity
 
@@ -64,8 +63,11 @@ directly, and the `locations/{location}` segment gives the deployment's
 | `Name` | `displayName`, or the final `models/{model}` segment where no display name is used | keep the resource path separately in `ModelId` |
 | `Version` | the `version` field for publisher models, `versionId` for custom models, or `modelVersion` in a Gemini response | do not invent one where none is present |
 | `ModelId` | the full Vertex AI resource `name` | keep it verbatim; it is what identifies the hosted model |
+| `PublishedAt` | `createTime` | source publication or registry creation time under §6.2.3 |
+| `LastModifiedAt` | `updateTime` | source modification time under §6.2.3 |
 | `Framework`, `Format` | not exposed for hosted Gemini publisher models | leave empty |
 | `Digest`, `DigestAlgorithm` | **not exposed** | `artifactUri` is not a digest |
+| `DigestProvenance` | `NotAvailable` | no artefact digest is exposed; `artifactUri` is not one |
 
 This resource name carries provenance and residency fields the Server already has to use. A
 deployment pointed at
@@ -79,11 +81,24 @@ Custom models are less uniform. The Model Registry lists
 `versionId`, `artifactUri` and `metadataSchemaUri`. The location remains structured, but
 there is no `publishers/{publisher}` segment in that resource path.
 
+The listing timestamps have direct homes. `createTime` populates `PublishedAt` and
+`updateTime` populates `LastModifiedAt`; §6.2.3 distinguishes those source times from the
+Server's own read timestamp.
+
 ## `Invoke`
 
 For native Gemini `:generateContent`, the request body goes through as the caller supplied
 it. §8.2 makes the payload opaque to the Server, and this is the kind of vendor-shaped JSON
 that rule exists to preserve.
+
+| Deployment member | Native Vertex AI | OpenAI-compatible Vertex AI |
+|---|---|---|
+| `ApiDialect` | `Proprietary` | `RestChatCompletions` |
+| `EndpointDescriptionUri` | the documentation for `:generateContent`, `:streamGenerateContent` or `:predict` | not required; the dialect names the contract |
+
+The deployment's `ApiDialect` is the same as the source's when the Server passes the
+payload through. §6.4.2 says the deployment value answers the client's question — what
+shape to put in `Payload` — while the source value answers what this Server speaks onward.
 
 | Output | From |
 |---|---|
@@ -124,20 +139,39 @@ Vertex AI has native Batch Prediction jobs. The research verifies
 Google Cloud Storage or BigQuery, a returned job resource and status, and JSONL on GCS for
 Gemini batch input.
 
-That gives `InvokeAsync` a real remote job to map onto. The Vertex AI batch prediction job
-name goes in `JobId`, and the OPC UA job follows the Part 10 program lifecycle required by
-§8.6 while the Server observes the Vertex AI job and exposes the result or failure through
-the `InferenceJobType` instance.
+That gives `InvokeAsync` a real remote job to map onto.
+
+| Member | From |
+|---|---|
+| `JobId` | the Vertex AI batch prediction job name |
+| `RequestUri` | the GCS or BigQuery input URI |
+| `ResponseUri` | the GCS or BigQuery output URI |
+
+The OPC UA job follows the Part 10 program lifecycle required by §8.6 while the Server
+observes the Vertex AI job and exposes the result or failure through the `InferenceJobType`
+instance.
 
 ## Large payloads
 
 For large media, the Vertex AI pattern is to put the object in Google Cloud Storage and
 refer to it from the request as `fileUri` in a `fileData` part. That is useful for native
-Gemini requests, but it is not a chunked upload path for one OPC UA call.
+Gemini requests, and it is a by-reference payload rather than a chunked upload path for one
+OPC UA call.
 
-So `BeginTransfer` is the Server's own Part 5 `FileType` transfer path as §8.2.4 defines.
-The Server reassembles the payload and then issues one ordinary Vertex AI request, or
-writes one ordinary batch input object, depending on which operation the client started.
+| Member | From |
+|---|---|
+| `PayloadUri` | the `fileUri` in a `fileData` part, or the GCS or BigQuery batch input URI |
+| `RequestUri` | the input URI actually submitted |
+| `ResponseUri` | the output URI returned or configured for a batch prediction job |
+
+`BeginTransfer` is the Server's own Part 5 `FileType` transfer path as §8.2 defines, for
+a payload too large to carry through the OPC UA call. §8.6.1 separates that case from data
+that already lives in Cloud Storage or BigQuery. A `PayloadUri`, `RequestUri` or
+`ResponseUri` is untrusted input under §12.2, and it is also an egress decision under §9.5:
+a deployment whose `EgressPermitted` is false **shall not** accept a `PayloadUri` naming
+somewhere outside the operator's boundary. The Server may still reassemble an OPC UA
+transfer and then issue one ordinary Vertex AI request or write one ordinary batch input
+object where that egress is permitted.
 
 ## The catalogue
 
@@ -184,8 +218,8 @@ operator's assertion.
 ## What this system does not tell you
 
 - **Which weights answered.** No digest is returned for hosted Gemini models, publisher
-  model listings or custom model registry entries. `artifactUri` is a storage location, not
-  a content hash.
+  model listings or custom model registry entries. `DigestProvenance` is `NotAvailable`
+  under §12.1.1. `artifactUri` is a storage location, not a content hash.
 - **What the model was trained on.** Nothing maps to a dataset lineage in the information
   model. If lineage matters, it comes from a model card or supplier documentation outside
   the inference response.
@@ -201,6 +235,10 @@ operator's assertion.
   `RetainsInput`.
 
 ## Conformance units
+
+This arrangement is an **AI Inference Gateway Server**: it reaches the
+**AI-Base**, **AI-Invoke**, **AI-OffServer**, **AI-Federation** and
+**AI-Residency** facets that §13.3 bundles for a hosted inference Server.
 
 Reachable against Google Vertex AI: **AI-Base**, **AI-Invoke**, **AI-InvokeAsync**,
 **AI-Transfer**, **AI-OffServer**, **AI-Federation**, **AI-Residency**.

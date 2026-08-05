@@ -89,6 +89,9 @@ Two are worth naming here because a Server may resolve references into them, and
 | **Blocking mode** | Whether an intent tolerates motion and other intents alongside it. `BlockingModeEnum`. |
 | **Command authority** | The exclusive right, held by at most one Session, to submit intents to one controller (clause 8). It is an arbitration mechanism between clients and **not** the single point of control that ISO 10218-2 requires. |
 | **Terminal state** | An `ExecutionStateEnum` value from which execution does not resume: `Succeeded`, `Failed`, `Cancelled`, or `Retriable`. |
+| **Conformance unit** | The smallest individually testable requirement of this specification. Grouped into facets rather than claimed one by one. |
+| **Facet** | A named, individually claimable set of conformance units — a building block, not a complete claim. Clause 12.2 defines them. |
+| **Profile** | A named set of facets describing one plausible robot Server, claimed by publishing its URI in `Server/ServerCapabilities/ServerProfileArray`. Clause 12.3 defines them. |
 
 ---
 
@@ -789,6 +792,42 @@ A Server declares conformance by exposing `RobotIntentRootType` under the Server
 | **RI-Interop-Vision** | Annex E. |
 
 A facet other than **RI-Base** is claimed only where every intent type it names appears in `SupportedIntents`.
+
+A Server **shall** publish the URI of every facet and profile it claims in `Server/ServerCapabilities/ServerProfileArray`, which is where a client discovers what it supports without submitting an intent to find out.
+
+### 12.3 Profiles
+
+A facet is a building block. A **profile** is a complete claim: a named set of facets describing one plausible robot Server, which is what an integrator specifies and what two manufacturers implementing the same shape agree they have built. §1.2's use cases are written about profiles even though they do not use the word — a mixed-fleet cell works only because two robots claim the same one.
+
+Four are defined. Each includes the **Robot Motion Server** set, and a Server **may** claim more than one: a robot that both follows paths and executes missions claims two.
+
+| Profile | Facets | The Server it describes |
+|---|---|---|
+| **Robot Motion Server** | RI-Base, RI-Motion-Joint, RI-Motion-Linear, RI-Description, RI-Safety | The baseline. A robot that can be commanded to a joint configuration or a Cartesian pose, that describes its own kinematics and limits, and that reports what its safety system is enforcing. |
+| **Robot Handling Server** | Motion, plus RI-Motion-Circular, RI-Grasp, RI-PickPlace, RI-ToolChange, RI-Output, RI-Queue | Material handling. Picking, placing, changing tools and driving the discrete outputs a gripper needs, with a queue so a cell controller can stay ahead of the robot. |
+| **Robot Path Server** | Motion, plus RI-Trajectory, RI-Path, RI-Blending | Continuous-path work. A whole path is handed over once and the robot's own motion kernel runs it, blending between segments rather than stopping at each. |
+| **Robot Mission Server** | Motion, plus RI-Mission, RI-Program, RI-Wait, RI-Pause, RI-Retry | Long-running supervised operation. A mission is submitted, watched, paused, retried and cancelled, which is §1.2's fourth use case stated as a claim. |
+
+**RI-Safety is in the baseline rather than optional to it.** Clause 10 is explicit that this specification is not safety-rated and that no Method here is a safety function. What it does require is a duty: the Server *reports* what the safety system enforces and *refuses* work that would exceed it. Every profiled Server owes that duty, because an integrator specifying a profile is entitled to assume a robot will decline an intent its safety configuration forbids rather than attempt it. A robot that cannot read its safety system claims facets individually and not a profile.
+
+The process facets — **RI-Process-ArcWeld** and its siblings — are deliberately in no profile. A welding robot is a **Robot Path Server** that additionally claims **RI-Process-ArcWeld**, and bundling the process into a profile would have produced one profile per process and no way to say that the underlying motion is the same. The same reasoning keeps **RI-Force**, **RI-RealTimeChannel** and the two interop facets outside all four.
+
+### 12.4 Profile and facet URIs
+
+A profile name is for a human. `ServerProfileArray` holds URIs, and unless this specification states them two Servers implementing the same profile publish different strings and no client can match either.
+
+Profiles are published under `http://opcfoundation.org/UA-Profile/RobotIntent/Server/`:
+
+| Profile | URI suffix |
+|---|---|
+| Robot Motion Server | `Motion` |
+| Robot Handling Server | `Handling` |
+| Robot Path Server | `Path` |
+| Robot Mission Server | `Mission` |
+
+Facets are published under `http://opcfoundation.org/UA-Profile/RobotIntent/Facet/`, with the suffix being the facet name after the `RI-` prefix: **RI-Base** is `Base`, **RI-Motion-Joint** is `Motion-Joint`, **RI-Process-ArcWeld** is `Process-ArcWeld`, and so on for every row of §12.2.
+
+These URIs are **provisional**, on the same terms as the namespace URI and the NodeIds: this is a working-group draft, and the OPC Foundation assigns the final values.
 
 ---
 

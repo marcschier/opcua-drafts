@@ -45,6 +45,12 @@ describe the product, the file format or the vendor. A Server that calls libllam
 and a Server that calls `llama-server` can execute the same `.gguf` file and still publish
 different `ApiDialect` values, because they speak different contracts.
 
+The deployment publishes the same caller-facing distinction. An in-process ONNX Runtime or
+libllama deployment whose payload is interpreted by the Server's wrapper is
+`EmbeddedRuntime`. A loopback `llama-server` deployment whose caller supplies the
+OpenAI-compatible request body is `RestChatCompletions`. §6.4.2 makes that a property of
+what the OPC UA caller sends, not of the file on disk.
+
 ## Identity
 
 The local file is the identity anchor, not a provider-side deployment name.
@@ -57,14 +63,34 @@ The local file is the identity anchor, not a provider-side deployment name.
 | `ModelId` | stable local identifier, often the file path plus digest | stable local identifier, often the file path plus digest |
 | `Framework` | ONNX / ONNX Runtime, where the file metadata supports it | llama.cpp |
 | `Format` | ONNX | GGUF |
+| `PublishedAt` | from a catalogue, or empty | from a catalogue, or empty |
+| `LastModifiedAt` | filesystem modification time for this file copy | filesystem modification time for this file copy |
 | `Digest`, `DigestAlgorithm` | hash of the `.onnx` artefact | hash of the `.gguf` artefact |
+| `DigestProvenance` | `ComputedByServer`; `VerifiedOnStage` after catalogue staging | `ComputedByServer`; `VerifiedOnStage` after catalogue staging |
 | `ArtifactUri` | local file URI | local file URI |
+| `RuntimeIdentity` | ONNX Runtime build version or container image digest | llama.cpp build version or container image digest |
 | `ParameterCount`, `Quantization` | fill where the operator has verified these facts for the artefact | fill where the operator has verified these facts for the artefact |
 
 `Digest` and `DigestAlgorithm` can be a genuine artefact hash, and `ArtifactUri` can point
 at the file the Server actually opens. A `Pinned` deployment is pinned to bytes only where
 the operator controls the immutability of the file behind the local path; otherwise the path
 can still name mutable bytes.
+
+An in-process runtime is the case where a real digest costs nothing: the Server already
+holds the local file. That is the opposite of hosted APIs that only name a model. Where the
+file was staged from a catalogue that declared a digest, the §10.4 match raises
+`DigestProvenance` to `VerifiedOnStage`.
+
+The same local evidence can populate `LastModifiedAt`. A filesystem modification time says
+when this copy of the artefact was written, so it is honest as a last-modified timestamp
+for the file the Server opens. It is not a substitute for `PublishedAt`: §6.2.3 forbids
+using the Server's acquisition time as the source publication time, and a file mtime has
+exactly that local-copy character unless a catalogue supplies the source date.
+
+`RuntimeIdentity` is genuinely available in this arrangement. A Server can record the ONNX
+Runtime or llama.cpp build version, or the container image digest when the runtime is
+containerised. §9.3.1 treats that value as opaque and compared only for equality, which is
+enough to show that the serving stack changed while the model bytes stayed the same.
 
 The research for this guide establishes ONNX Runtime in-process loading and inference, not a
 portable metadata or tensor-signature inspection contract. Publish `Inputs` and `Outputs`
@@ -90,15 +116,16 @@ uses, usually `/v1/chat/completions`, `/v1/completions` or `/v1/embeddings`.
 | response payload | wrapper-defined bytes or JSON | HTTP response body, verbatim |
 | response content type | wrapper-defined | `application/json` |
 | model used | the `ModelType` NodeId for the local file | the `ModelType` NodeId for the served file |
-| `Usage.UnitKind` | empty unless the wrapper meters it | `tokens` |
-| `Usage.InputUnits` | empty unless the wrapper meters it | prompt token count |
-| `Usage.OutputUnits` | empty unless the wrapper meters it | completion token count |
-| `Usage.TotalUnits` | empty unless the wrapper meters it | total token count |
+| `Usage.UnitKind` | empty when the wrapper does not meter; otherwise the wrapper's unit, per §8.2.3 | `tokens` |
+| `Usage.InputUnits` | `0` when `UnitKind` is empty; otherwise the measured input count | prompt token count |
+| `Usage.OutputUnits` | `0` when `UnitKind` is empty; otherwise the measured output count | completion token count |
+| `Usage.TotalUnits` | `0` when `UnitKind` is empty; otherwise the measured total count | total token count |
 
 Usage accounting is precise by case. `llama-server` uses an OpenAI-compatible response and
 returns token counts, so `UsageDataType` can be populated with `tokens`. ONNX Runtime
-in-process has no usage telemetry field in the research, so the Server should leave usage
-empty unless its own wrapper has a metering rule it is prepared to document.
+in-process has no usage telemetry field in the research, so the Server returns `Usage`
+with empty `UnitKind` and zero counts unless its own wrapper has a metering rule it is
+prepared to document. That is the §8.2.3 not-metered sentinel, not a zero measurement.
 
 Finish reasons are also case-specific. The OpenAI-compatible llama.cpp surface includes a
 finish-reason field; ordinary values map the same way as the other chat-completions guides:
@@ -168,8 +195,10 @@ asks a deployment to answer.
 
 ## What this system does not tell you
 
-- **Who approved the file.** A digest says which bytes are present, not that they are safe to
-  run. `ProvenanceUri`, `Card` and the governance material of §11 still have to come from the
+- **Who approved the file.** `DigestProvenance` is `ComputedByServer` when the Server hashes
+  the local file, and `VerifiedOnStage` only where a catalogue digest matched during §10.4
+  staging. A digest says which bytes are present, not that they are safe to run.
+  `ProvenanceUri`, `Card` and the governance material of §11 still have to come from the
   operator's process or catalogue.
 - **What the model was trained on.** Neither ONNX Runtime nor llama.cpp exposes training
   lineage. If lineage matters, it comes from a model card, a registry or manual governance.
@@ -183,10 +212,18 @@ asks a deployment to answer.
 
 ## Conformance units
 
+This arrangement is an **AI Inference Device Server**: the model runs in the
+Server's own process, and the guide reaches the **AI-Base** and **AI-Invoke**
+facets that §13.3 bundles for an in-process inference Server.
+
 Reachable against embedded runtimes: **AI-Base**, **AI-Invoke**, **AI-InvokeAsync**,
 **AI-Transfer**, **AI-Residency**, **AI-Catalogue** and **AI-Import**. **AI-Signatures** is
 not established by this guide for ONNX Runtime or llama.cpp; claim it only where the Server
 has a verified way to publish tensor signatures.
+
+For in-process runtimes that do not meter, **AI-Invoke** is satisfied by returning
+`Usage` with empty `UnitKind` and zero counts; §13.2 accommodates that. `llama-server`
+responses are metered when they carry the OpenAI-compatible token counts shown above.
 
 Out of reach without something else: **AI-Learning** needs a training loop; **AI-OffServer**
 does not describe an `OnServer` deployment; **AI-Stream** needs a subscription or data-channel

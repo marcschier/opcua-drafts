@@ -35,25 +35,20 @@ should populate `EndpointDescriptionUri`, and Bedrock is the concrete reason. Wi
 URI, nothing in the address space tells a client whether the Server expects the Converse
 shape or a family-specific InvokeModel body.
 
-AWS authenticates Bedrock calls with Signature Version 4. `AuthenticationKindEnum` has
-`Anonymous`, `ApiKey`, `BearerToken`, `WorkloadIdentity` and `MutualTls`; none says
-"SigV4". That is a real gap in the model, and a guide should not hide it.
-
-The best mapping is still answerable if the member is read as classifying **what is
-stored**, not which handshake is performed. SigV4 driven by an IAM role attached to the
-pod, task or instance is `WorkloadIdentity`, because no secret is stored anywhere. That is
-the same property that makes §9.2 prefer it. SigV4 driven by static access keys is
-`ApiKey`, because a secret is stored and must be rotated. Neither value is a perfect fit:
-SigV4 is not an API-key protocol and not a generic workload-identity protocol. If a reader
-needs the handshake recorded exactly, set `EndpointDescriptionUri` to documentation for the
-actual AWS SigV4 arrangement in use.
+AWS authenticates Bedrock calls with Signature Version 4. SigV4 is not one of the
+five `AuthenticationKindEnum` literals because §9.2 classifies the credential the Server
+stores, not the handshake it performs. SigV4 driven by an IAM role attached to the pod,
+task or instance is `WorkloadIdentity`, because no secret is stored anywhere. SigV4 driven
+by static access keys is `ApiKey`, because a secret is stored and must be rotated. If a
+reader needs the handshake recorded exactly, set `EndpointDescriptionUri` to documentation
+for the actual AWS SigV4 arrangement in use.
 
 ## Identity
 
 `ListFoundationModels` returns `modelId`, `modelArn`, `modelName`, `providerName` and
-`modelLifecycle`, among other capability fields. `providerName` is the model publisher —
-Anthropic, Meta, Amazon and similar names — rather than merely the host written into an
-`owned_by` field.
+`modelLifecycle`, among other capability fields. `providerName` is the model producer that
+§6.2 says belongs in `Publisher` — Anthropic, Meta, Amazon and similar names — rather than
+merely the host written into an `owned_by` field.
 
 | Member | From | Note |
 |---|---|---|
@@ -61,18 +56,42 @@ Anthropic, Meta, Amazon and similar names — rather than merely the host writte
 | `Name` | `modelName` | display name from the Bedrock catalogue |
 | `Version` | parsed from `modelId` or `modelArn`, where the provider encodes one | a version identifier, not a digest |
 | `ModelId` | `modelId` | keep it verbatim; it is what you send back |
+| `PublishedAt` | `modelLifecycle.startOfLifeTime` | source publication time under §6.2.3 |
+| `DeprecatedFrom` | `modelLifecycle.legacyTime` | the date the source stops treating the model as current |
+| `SupportedUntil` | `modelLifecycle.endOfLifeTime` | the date the source stops serving the model |
 | `Framework`, `Format` | not exposed | leave empty |
 | `Digest`, `DigestAlgorithm` | **not exposed** | `modelArn` is not a weight hash |
+| `DigestProvenance` | `NotAvailable` | no artefact digest is exposed; `modelArn` is not one |
 
 `modelArn` is useful because it carries the AWS resource identity and includes a versioned
-model identifier. It still does not identify the bytes by content. Do not publish it as
-`Digest`, and do not infer a digest from the string embedded in it.
+model identifier. It still does not identify the bytes by content under §12.1.1, so it
+cannot populate `Digest`.
+
+The lifecycle dates are the strongest Bedrock-specific identity mapping. `startOfLifeTime`
+is the source's publication time for `PublishedAt`; `legacyTime` and `endOfLifeTime` belong
+on the model card as `DeprecatedFrom` and `SupportedUntil`. §11.1 is the reason to carry
+the retirement date: at `SupportedUntil` the deployment stops being served, and fallback
+can route production to a model outside the qualified configuration.
 
 ## `Invoke`
 
 For Converse, the request body goes through as the caller supplied it. The Server is not
 required to understand the model family, which is exactly why Converse is preferable here:
 one body shape lets §8.2 remain true across families.
+
+| Deployment member | From |
+|---|---|
+| `ApiDialect` | `Proprietary` |
+| `EndpointDescriptionUri` | the documentation for Converse, or the family-specific InvokeModel contract |
+| `ObservedLatency` | `metrics.latencyMs` from Converse |
+
+The deployment's `ApiDialect` is the same as the source's when the Server passes the
+Bedrock payload through. §6.4.2 says to publish that value twice because the source value
+describes this Server's outward call and the deployment value tells an OPC UA client what
+shape its `Payload` must have. `EndpointDescriptionUri` is especially important for
+InvokeModel, where `Proprietary` covers a family-specific body. `metrics.latencyMs` is the
+measurement for `ObservedLatency`; under §6.4.3 a Server reporting `Degraded` on latency
+grounds must publish the measurement that makes the state checkable.
 
 | Output | From |
 |---|---|
@@ -97,8 +116,11 @@ as anything other than `Error`.
 InvokeModel is the escape hatch for model-specific bodies. It still maps to `Invoke`
 because §8.2 makes the payload opaque, but the Server cannot give a general mapping for
 usage or finish reason unless the selected family's response schema carries them. If you
-use InvokeModel, make `EndpointDescriptionUri` point to the family-specific contract and
-leave `Usage` fields empty where the response does not define them.
+use InvokeModel, make `EndpointDescriptionUri` point to the family-specific contract. Where
+the response does not define usage counts, return `Usage` with empty `UnitKind` and zero
+counts; §8.2.3 defines that as "not metered" rather than as a measurement. A Server that
+does report a non-empty `UnitKind` must have obtained the corresponding counts from the
+execution site.
 
 ## Asynchronous inference
 
@@ -107,25 +129,46 @@ input, a `modelId`, an execution `roleArn` and S3 output configuration, returns 
 and can use either InvokeModel or Converse invocation types. The documented timeout range
 is 24 to 168 hours.
 
-That is a genuine `InvokeAsync` mapping. The Bedrock `jobArn` goes in `JobId`, and the OPC
-UA job follows the Part 10 program lifecycle required by §8.6 while the Server observes the
-Bedrock job and exposes the result or failure through the `InferenceJobType` instance.
+That is a genuine `InvokeAsync` mapping.
+
+| Member | From |
+|---|---|
+| `JobId` | the Bedrock `jobArn` |
+| `RequestUri` | the S3 input location |
+| `ResponseUri` | the S3 output location |
+
+The OPC UA job follows the Part 10 program lifecycle required by §8.6 while the Server
+observes the Bedrock job and exposes the result or failure through the `InferenceJobType`
+instance.
 
 ## Large payloads
 
 The real-time Bedrock runtime takes the request body inline; the research notes an inline
 limit of about 4 MB. Bedrock batch inference uses S3 input and output locations, but that
-is the batch service's storage contract, not a chunked upload path for one synchronous call.
+is a by-reference payload contract, not a chunked upload path for one synchronous call.
 
-So `BeginTransfer` is the Server's own Part 5 `FileType` transfer path as §8.2.4 defines. The
-Server reassembles the request and then issues one Bedrock Converse, InvokeModel or batch
-request, depending on which operation the client started.
+| Member | From |
+|---|---|
+| `PayloadUri` | the S3 input location supplied for the batch request |
+| `RequestUri` | the S3 input location actually submitted |
+| `ResponseUri` | the S3 output location returned or configured for the job |
+
+`BeginTransfer` is the Server's own Part 5 `FileType` transfer path as §8.2 defines, for
+a payload too large to carry through the OPC UA call. §8.6.1 separates that case from data
+that already lives in S3. A `PayloadUri`, `RequestUri` or `ResponseUri` is untrusted input
+under §12.2, and it is also an egress decision under §9.5: a deployment whose
+`EgressPermitted` is false **shall not** accept a `PayloadUri` naming somewhere outside the
+operator's boundary.
 
 ## The catalogue
 
 `ListFoundationModels` is the right source for `ListModels` on the `ModelSourceType`: it
 answers which foundation models Bedrock exposes in the region and provides `modelId`,
 `modelArn`, `modelName`, `providerName` and `modelLifecycle`.
+
+Within `modelLifecycle`, `status` is not a substitute for observing deployment state, and
+the research does not establish how `publicExtendedAccessTime` changes the card dates. The
+dates mapped above are the ones carried by the information model.
 
 It is not a catalogue in the §10.1 sense. The API lists hosted models, not content-addressed
 artefacts that a Server can fetch, hash and stage. `providerName` gives a useful publisher,
@@ -156,12 +199,13 @@ not whether the payload left the site.
 
 ## What this system does not tell you
 
-- **The exact authentication kind.** SigV4 is not in `AuthenticationKindEnum`. Use
-  `WorkloadIdentity` for role-based signing and `ApiKey` for static access keys because
-  those values describe what is stored, and point `EndpointDescriptionUri` at the SigV4
-  handshake you actually use.
+- **The exact handshake.** SigV4 is not in `AuthenticationKindEnum` because §9.2
+  classifies what is stored. Use `WorkloadIdentity` for role-based signing and `ApiKey`
+  for static access keys, and point `EndpointDescriptionUri` at the SigV4 handshake you
+  actually use.
 - **Which weights answered.** No digest is returned by Converse, InvokeModel or
-  `ListFoundationModels`. `modelArn` carries a version identifier, not a weight hash.
+  `ListFoundationModels`. `DigestProvenance` is `NotAvailable` under §12.1.1.
+  `modelArn` carries a version identifier, not a weight hash.
 - **A universal request body.** Converse gives one Bedrock body shape; InvokeModel gives a
   raw body whose schema depends on the provider family.
 - **What the model was trained on.** Nothing maps to `TrainedOn` or `DatasetType`. If
@@ -172,8 +216,17 @@ not whether the payload left the site.
 
 ## Conformance units
 
+This arrangement is an **AI Inference Gateway Server**: it reaches the
+**AI-Base**, **AI-Invoke**, **AI-OffServer**, **AI-Federation** and
+**AI-Residency** facets that §13.3 bundles for a hosted inference Server.
+
 Reachable against Amazon Bedrock: **AI-Base**, **AI-Invoke**, **AI-InvokeAsync**,
 **AI-Transfer**, **AI-OffServer**, **AI-Federation**, **AI-Residency**.
+
+Converse is metered through `usage.inputTokens`, `usage.outputTokens` and
+`usage.totalTokens`. InvokeModel responses that do not carry counts satisfy
+**AI-Invoke** by returning `Usage` with empty `UnitKind` and zero counts; §13.2
+accommodates that.
 
 Out of reach without something else: **AI-Catalogue** and **AI-Import** need a
 content-addressed registry; **AI-Signatures** needs tensor shapes this contract does not

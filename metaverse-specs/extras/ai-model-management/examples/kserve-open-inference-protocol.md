@@ -30,7 +30,7 @@ see [the NVIDIA Triton guide](nvidia-triton.md) when the implementation is Trito
 | `TestConnection` | maps to the OIP health and model-readiness probes |
 | `ListModels` | not defined by base OIP; implementation-specific if present |
 
-The protocol does not define authentication. §9.2 still needs the Server to say what it
+The protocol does not define authentication. Apply §9.2 to the credential the Server
 stores: no credential is `Anonymous`, a stored bearer credential is `BearerToken`, platform
 identity with no stored secret is `WorkloadIdentity`, and mutual TLS credentials are
 `MutualTls`.
@@ -38,6 +38,11 @@ identity with no stored secret is `WorkloadIdentity`, and mutual TLS credentials
 `ApiDialect` is the important member here. It names the wire contract rather than KServe as
 a product, so a Server can move from one OIP implementation to another without changing the
 OPC UA-facing deployment description.
+
+A deployment that accepts the OIP request body from an OPC UA caller publishes
+`DeploymentType.ApiDialect` as `OpenInferenceProtocol`. This is the clean case for
+§6.4.2: the payload contract genuinely is the OIP body, so the source dialect and the
+deployment dialect are the same when the Server passes that body through.
 
 The health endpoints make `TestConnection` real rather than a disguised inference call:
 server liveness, server readiness and model readiness distinguish a dead process, a server
@@ -59,11 +64,18 @@ It does not carry a content digest.
 | `Framework` | `platform` | examples include serving platforms such as TensorRT plan |
 | `Inputs` | metadata `inputs` | names, datatypes and shapes |
 | `Outputs` | metadata `outputs` | names, datatypes and shapes |
+| `PublishedAt`, `LastModifiedAt` | not exposed | leave empty unless another catalogue supplies them |
 | `Digest`, `DigestAlgorithm` | not exposed | leave empty unless another catalogue supplies them |
+| `DigestProvenance` | `NotAvailable` | base OIP returns no artefact digest |
 
 `GET /v2/models/{name}[/versions/{version}]` returns model metadata: `name`, optional
 `versions`, `platform`, and `inputs` and `outputs` with tensor names, datatypes and shapes.
 Those `inputs` and `outputs` map directly onto `Inputs` and `Outputs` on `ModelType`.
+
+Base OIP exposes no source publication or modification timestamp. `PublishedAt` and
+`LastModifiedAt` therefore stay empty on the same terms as `Digest`: an implementation may
+populate them from another catalogue, but the OIP metadata response does not establish
+them.
 
 That makes **AI-Signatures** reachable. §6.2 says these tensor signatures are the
 machine-readable description of what a deployment accepts, and OIP is one of the few
@@ -90,10 +102,10 @@ shape with output tensors.
 | `ResponsePayload` | the OIP response body, verbatim |
 | `ResponseContentType` | `application/json` for the HTTP/REST binding |
 | `ModelUsed` | the `ModelType` NodeId for the resolved model and version |
-| `Usage.UnitKind` | empty unless an implementation extension supplies metering |
-| `Usage.InputUnits` | empty unless an implementation extension supplies metering |
-| `Usage.OutputUnits` | empty unless an implementation extension supplies metering |
-| `Usage.TotalUnits` | empty unless an implementation extension supplies metering |
+| `Usage.UnitKind` | empty for an unmetered OIP response; otherwise the implementation extension's unit, per §8.2.3 |
+| `Usage.InputUnits` | `0` when `UnitKind` is empty; otherwise the measured input count |
+| `Usage.OutputUnits` | `0` when `UnitKind` is empty; otherwise the measured output count |
+| `Usage.TotalUnits` | `0` when `UnitKind` is empty; otherwise the measured total count |
 | `FinishReason` | normally `Stop` for success, `Error` for failed or invalid responses |
 | `SafetyAssessment` | not defined by OIP |
 | `RetryAfter` | only from implementation-specific throttling headers |
@@ -101,6 +113,8 @@ shape with output tensors.
 This is a tensor protocol, not a chat protocol. It has no standard token accounting, no
 choice list and no text-generation finish reason. That is not a defect; it is exactly what
 a reader mapping a vision model, a vibration model or a classical tensor model will meet.
+§8.2.3 gives that absence an encoding: `Usage` is returned, with an empty `UnitKind` and
+zero counts, and clients treat those zeros as "not metered" rather than as measurements.
 
 The OIP datatypes verified in the research include `BOOL`, unsigned and signed integer
 widths, `FP16`, `FP32`, `FP64`, `BYTES` and `STRING`. The Server maps those into the tensor
@@ -163,10 +177,11 @@ the operator boundary.
 - **Who published the model.** OIP has `name` and optional `version`, not a publisher
   namespace. `Publisher` is supplied by the operator or by an external catalogue.
 - **Which bytes are running.** No content digest is returned. `Digest` and
-  `DigestAlgorithm` need another source, and §10.4 cannot verify an import from OIP alone.
+  `DigestAlgorithm` need another source, `DigestProvenance` is `NotAvailable`, and §10.4
+  cannot verify an import from OIP alone.
 - **Usage accounting.** There are no standard token, image, sample or byte counts in the
-  OIP response envelope. `UsageDataType` is empty unless an implementation extension
-  provides metering.
+  OIP response envelope. Without an implementation extension, `UsageDataType` uses the
+  §8.2.3 not-metered sentinel: empty `UnitKind` and zero counts.
 - **Chat finish semantics.** There is no standard equivalent of `length`, `tool_calls` or
   `content_filter`. `FinishReasonEnum` has little to say beyond `Stop` and `Error`.
 - **Asynchronous jobs or large-object transfer.** Base OIP defines synchronous tensor
@@ -177,11 +192,23 @@ the operator boundary.
 
 ## Conformance units
 
+Where the OIP endpoint is off-server and the operator states the residency boundary,
+this arrangement is an **AI Inference Gateway Server**: it reaches the
+**AI-Base**, **AI-Invoke**, **AI-OffServer**, **AI-Federation** and
+**AI-Residency** facets that §13.3 bundles for a gateway.
+
 Reachable against a conforming OIP endpoint: **AI-Base**, **AI-Invoke**,
-**AI-Federation** and **AI-Signatures**. **AI-OffServer** is reachable only where the
-off-Server endpoint is reached over an authenticated, confidential scheme; a base URL that
-exposes `/v2` over plain HTTP is not enough. **AI-Residency** is reachable where the
-operator can state the deployment boundary required by §9.5.
+**AI-Federation** and **AI-Signatures**. **AI-OffServer** is reachable for a deployment
+whose `InferenceLocation` is not `OnServer`, which is what §13.2 asks for. What that
+deployment must additionally satisfy is §12.2, and it is not optional: where
+`InferenceLocation` is not `OnServer`, `EndpointUri` **shall** name an authenticated,
+confidential scheme. A bare `/v2` base URL over plain HTTP does not, so an OIP endpoint
+reached across a network is fronted with TLS and authentication before this facet is
+claimed. **AI-Residency** is reachable where the operator can state the deployment
+boundary required by §9.5.
+
+The absence of OIP usage counts does not weaken **AI-Invoke**: the Server returns `Usage`
+with empty `UnitKind` and zero counts for an unmetered call, and §13.2 accommodates that.
 
 Reachable through the OPC UA Server rather than the OIP protocol itself: **AI-InvokeAsync**
 and **AI-Transfer**. Out of reach without another system: **AI-Catalogue** and **AI-Import**
