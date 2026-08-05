@@ -154,3 +154,33 @@ jobs:
       untrusted: ${{ needs.read.outputs.untrusted }}
       issue: ${{ needs.read.outputs.issue }}
       reuse-branch: true
+
+  # The acknowledgement promises a pull request "or an explanation of why not". The publish job
+  # carries exactly that reply, including its "no pull request" branch — but it is skipped when
+  # the agent produces no patch, so a refused run and a deliberate decision to change nothing
+  # both reached the issue as silence. This job answers only in the cases publish never ran, so
+  # it adds a voice where there was none rather than a second one.
+  report:
+    needs: [read, write]
+    if: >
+      always() && needs.read.result == 'success' &&
+      (needs.write.result != 'success' || needs.write.outputs.produced != 'true')
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Say what happened
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          ISSUE: ${{ needs.read.outputs.issue }}
+          RUN: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          RESULT: ${{ needs.write.result }}
+        run: |
+          set -euo pipefail
+          if [ "$RESULT" = "success" ]; then
+            body="I did not open a pull request. The agent changed nothing inside the paths it is allowed to write, which is a valid outcome: an issue may be a question, or may ask for something the specification text cannot answer. The [run]($RUN) log says what it considered."
+          else
+            body="I could not finish — the run ended as \`$RESULT\` and nothing was changed. The [run]($RUN) log has the reason; an authentication or entitlement error there means the account owning this repository has not enabled Copilot CLI in its Copilot policies."
+          fi
+          gh issue comment "$ISSUE" --repo "$REPO" --body "$body"

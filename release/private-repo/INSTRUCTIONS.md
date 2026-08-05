@@ -64,6 +64,7 @@ In GitHub UI or with `gh`, set:
 - **Visibility**: private (already true).
 - **Default branch**: `main` after the first commit creates it.
 - **Actions**: enabled. Allow GitHub-owned actions (`actions/checkout`, `actions/setup-python`, `actions/setup-node`, `actions/upload-artifact`, `actions/download-artifact`) and outbound installs used by the workflows (`pip`, `npm`, `curl` for pinned actionlint). If the org restricts Actions, explicitly allow these.
+- **Copilot CLI policy for the organization**: enable it under the organization's Copilot policies. This is what lets `copilot-requests: write` on the built-in token succeed, and it is what keeps Copilot spend with the organization rather than an individual — see *Secrets and tokens* below. Nothing in the repository can substitute for it.
 - **Workflow permissions**: `Read and write permissions`; allow GitHub Actions to create pull requests if the organization has that switch. The workflows still request least-privilege job permissions individually.
 - **Fork pull-request approval**: require approval before workflows run for fork PRs. Private repositories often have no public forks, but do not relax this if private forks are enabled.
 - **Branch protection for `main`**: require PRs, at least one approval, conversation resolution, and no direct pushes except by maintainers/release automation the admin explicitly trusts. Initially do not require the advisory checks until they have run once in the private repo; then optionally require selected checks by exact name.
@@ -82,9 +83,15 @@ gh variable set VALIDATION_REQUIREMENTS --repo OPCF-Members/spec-drafts --body "
 
 No permanent secret is required if GitHub accepts `GITHUB_TOKEN` with `permissions: copilot-requests: write`.
 
+**Who pays.** Copilot usage on the built-in token is billed to the account that owns the repository, so in `OPCF-Members/spec-drafts` it is billed to the OPC Foundation. Usage on a personal access token is billed to whoever owns that token. The built-in path is therefore not merely the simpler one — it is the one that keeps the cost with the organization, and the setting that makes it work is an organization policy, not a repository secret.
+
+Before reaching for a token, check that `OPCF-Members` has **Copilot CLI** enabled in its Copilot policies. An authentication or entitlement failure almost always means that policy is off, and adding a personal PAT "fixes" it by quietly moving the bill to one person. Organization-level billing requires Copilot Business or Enterprise.
+
 Optional fallback secret:
 
-- `COPILOT_GITHUB_TOKEN`: only for `agent-task.yml`'s read-only `think` job if the Copilot CLI reports authentication or entitlement failure with the built-in token. Use a fine-grained PAT owned by a service account or admin, restricted to `OPCF-Members/spec-drafts`, with the minimum available **Copilot Requests** permission. Do not grant contents write, pull-request write, or issue write to this PAT; publishing is done by the job-scoped `GITHUB_TOKEN` in a separate job that never reads the prompt.
+- `COPILOT_GITHUB_TOKEN`: only for `agent-task.yml`'s read-only `think` job, and only once the organization policy above has been confirmed on. Use a fine-grained PAT owned by a **service account that holds an organization-assigned Copilot seat** — never a maintainer's personal account, because the requests are billed to the account that owns the token. Restrict it to `OPCF-Members/spec-drafts` with the minimum available **Copilot Requests** permission. Do not grant contents write, pull-request write, or issue write to this PAT; publishing is done by the job-scoped `GITHUB_TOKEN` in a separate job that never reads the prompt.
+
+After the first agent run, confirm the usage appears under the organization at **Settings → Billing → Copilot**. That is the only direct evidence that attribution is what you intended.
 
 Built-in `GITHUB_TOKEN` job permissions used by workflows:
 

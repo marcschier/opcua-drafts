@@ -760,8 +760,12 @@ struct_type(3065, "WaitIntentDataType",
             "it a client has to hold the queue open from outside.",
             [("Duration", Duration, "How long to wait, in milliseconds. Zero or less "
                                     "waits until Signal is released."),
-             ("Signal", NodeId_, "An OutputSignal or other node whose becoming true "
-                                 "ends the wait. Null waits only for Duration.")],
+             ("Signal", NodeId_, "An OutputSignal under this controller, or another "
+                                 "Variable of DataType Boolean, whose becoming true "
+                                 "ends the wait. Null waits only for Duration. Clause "
+                                 "11.3 requires the Server to check that it resolves "
+                                 "to one of those two, under the controller being "
+                                 "commanded, and to refuse it otherwise.")],
             base=IntentDataType)
 WaitIntentDataType = T(3065)
 
@@ -945,9 +949,19 @@ method(IC, "IntentControllerType", "SubmitIntent",
        "UA Call cannot stay open for the duration of a motion.",
        MR_Mandatory,
        inargs=[("Intent", IntentDataType, "The intent to execute.")],
-       outargs=[("IntentId", String, "Identifier of the intent, assigned by the "
-                                     "Server when the request left it empty."),
-                ("Operation", NodeId_, "The IntentOperation that tracks it.")])
+       outargs=[("Accepted", Boolean, "True when the intent was admitted. False is a "
+                                      "refusal, which clause 10.5 makes an ordinary "
+                                      "outcome rather than an error."),
+                ("IntentId", String, "Identifier of the intent, assigned by the "
+                                     "Server when the request left it empty. Empty on "
+                                     "a refusal."),
+                ("Operation", NodeId_, "The IntentOperation that tracks it. Null on a "
+                                       "refusal, because a refusal creates no "
+                                       "operation instance."),
+                ("Failure", IntentFailureEnum, "Why the intent was refused, or None "
+                                               "when it was admitted."),
+                ("Message", LocalizedText, "Human-readable detail on a refusal. For a "
+                                           "human; never parsed.")])
 method(IC, "IntentControllerType", "CancelIntent",
        "Ask the Server to end an intent early. The Server MAY refuse, and says so in "
        "Accepted, because some motions cannot be abandoned safely part-way. This is "
@@ -970,16 +984,26 @@ method(IC, "IntentControllerType", "Resume",
 method(IC, "IntentControllerType", "Retry",
        "Re-attempt an intent that terminated Retriable.", MR_Optional,
        inargs=[("IntentId", String, "The intent to re-attempt.")],
-       outargs=[("Operation", NodeId_, "The IntentOperation that tracks the new "
-                                       "attempt.")])
+       outargs=[("Accepted", Boolean, "True when a new attempt was admitted."),
+                ("Operation", NodeId_, "The IntentOperation that tracks the new "
+                                       "attempt. Null on a refusal."),
+                ("Failure", IntentFailureEnum, "Why the re-attempt was refused, or "
+                                               "None when it was admitted."),
+                ("Message", LocalizedText, "Human-readable detail on a refusal.")])
 method(IC, "IntentControllerType", "SubmitMission",
        "Submit an ordered sequence of intents as one unit. Steps marked Released form "
        "the base and are committed; the rest form the horizon and may still be "
        "revised by UpdateMission.", MR_Optional,
        inargs=[("Mission", MissionDataType, "The mission to execute.")],
-       outargs=[("MissionId", String, "Identifier of the mission, assigned by the "
-                                      "Server when the request left it empty."),
-                ("Operation", NodeId_, "The Mission that tracks it.")])
+       outargs=[("Accepted", Boolean, "True when the mission was admitted."),
+                ("MissionId", String, "Identifier of the mission, assigned by the "
+                                      "Server when the request left it empty. Empty "
+                                      "on a refusal."),
+                ("Operation", NodeId_, "The Mission that tracks it. Null on a "
+                                       "refusal."),
+                ("Failure", IntentFailureEnum, "Why the mission was refused, or None "
+                                               "when it was admitted."),
+                ("Message", LocalizedText, "Human-readable detail on a refusal.")])
 method(IC, "IntentControllerType", "UpdateMission",
        "Replace the horizon of a mission already submitted. The base is untouchable: "
        "it has been committed and may already have executed, so an update that would "
@@ -1602,7 +1626,9 @@ method(IC, "IntentControllerType", "OpenRealTimeChannel",
        outargs=[("Granted", Boolean, "True when the lease was taken."),
                 ("EndpointUrl", String, "Where to connect."),
                 ("PayloadDescriptor", String, "The transport's own configuration."),
-                ("LeaseExpiry", UtcTime, "When the lease lapses.")])
+                ("LeaseExpiry", UtcTime, "When the lease lapses."),
+                ("Message", LocalizedText, "Human-readable detail on a refusal. For a "
+                                           "human; never parsed.")])
 method(IC, "IntentControllerType", "CloseRealTimeChannel",
        "Give up a lease on a brokered channel.", MR_Optional,
        inargs=[("ChannelId", String, "The channel to release.")],
@@ -1637,12 +1663,17 @@ obj_member(IO, "IntentOperationType", "FinalResultData", BaseObjectType,
            "Result, so a Part 10 client finds the outcome where Part 10 says it will "
            "be. Mandatory here because clause 6.7 requires it and an Optional member "
            "cannot carry a SHALL.", MR_Mandatory)
-prop_var(IO, "IntentOperationType", "ProgramDiagnostic", ProgramDiagnostic2DataType,
-         "Part 10 invocation diagnostics: which Session invoked the program, when, "
-         "with what arguments and to what outcome. Mandatory here because the "
-         "auditable-commanding property of clause 1.2 is exactly this member, and a "
-         "capability the specification advertises cannot rest on one a Server may "
-         "omit.", MR_Mandatory)
+_member_var(IO, "IntentOperationType", "ProgramDiagnostic",
+            ProgramDiagnostic2DataType, ProgramDiagnostic2Type, MR_Mandatory,
+            HasComponent,
+            "Part 10 invocation diagnostics: which Session invoked the program, when, "
+            "with what arguments and to what outcome. Mandatory here because the "
+            "auditable-commanding property of clause 1.2 is exactly this member, and a "
+            "capability the specification advertises cannot rest on one a Server may "
+            "omit. Declared exactly as OPC 10000-10 declares it - a Variable of "
+            "ProgramDiagnostic2Type reached by HasComponent - because a promotion that "
+            "altered the inherited member's TypeDefinition or reference type would "
+            "declare a second member rather than promote the inherited one.")
 
 # ===========================================================================
 # ==================================  EMIT  =================================

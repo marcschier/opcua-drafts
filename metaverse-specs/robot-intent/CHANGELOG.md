@@ -4,9 +4,62 @@ All notable changes to this specification and its information model.
 
 ## Unreleased
 
+### Implementation defects
+
+Defects found by implementing the specification in the OPC UA .NET Standard stack. Every change here
+makes an existing claim true; none adds capability, and no previously assigned NodeId moves.
+
+- **A refusal is now observable.** `SubmitIntent`, `SubmitMission` and `Retry` gained `Accepted`,
+  `Failure` (`IntentFailureEnum`) and `Message` output arguments, and §6.2 now states that a Server
+  returns `Good` and reports the refusal in those outputs rather than substituting a Bad `StatusCode`.
+  Before this, §6.2 ordered six distinct refusals and §5.8 called the failure set "small and
+  diagnosable on purpose" — and a client could observe neither, because the only outputs were
+  `IntentId` and `Operation`. A specification cannot require an ordering of refusals a conformant
+  client has no way to see. `OpenRealTimeChannel` gained a `Message` for the same reason: §6.9 lists
+  four grounds for refusal behind a single `Granted` boolean.
+
+- **The Part 10 promotions are now legal promotions.** `IntentOperationType.ProgramDiagnostic` was
+  declared as a Property of `PropertyType` reached by `HasProperty`. OPC 10000-10 declares that member
+  as a Variable of `ProgramDiagnostic2Type` reached by `HasComponent`, so the declaration added a
+  second member beside the inherited one instead of promoting it — which is what stopped a Part 10
+  client, and the first stack that tried to generate the model, from finding it. A promotion changes
+  the ModellingRule and nothing else, and §6.1 now says so.
+
+- **`WaitIntentDataType.Signal` is bounded.** It read "an OutputSignal **or other node**", which §11.3
+  cannot check: an unvalidated NodeId is precisely the surface §11.3 exists to close. It now resolves
+  to an `OutputSignalType` under the controller or to a Variable of DataType `Boolean` under it.
+
+- **§11.3 names the expected type of every NodeId-valued member.** "A node of the expected type" was
+  an instruction to guess. A table now fixes it for `Source`, `Destination`, `Pattern`, `ToolFrame`,
+  `FrameId`, `Tool`, `Output`, `Program`, `ProcessProgram`, `Signal` and `Joint`.
+
+- **§5.7.0 gives `Ready`, `ActiveIntent`, `ActiveMission` and `ControlOwner` normative meaning.** They
+  were in the model and in no clause, so what a Server had to publish in them was unstated.
+
+- **§6.9 bounds `RequestedLease`.** The lease rules never said what limits a request, so a client could
+  ask for a lease of any length and the Server's answer was unspecified.
+
+- **§9 applies its honesty rule to the Method surface.** Three rules already kept the capability
+  declaration honest, but nothing said that a declared capability must come with the Methods that make it
+  usable — and `SubmitMission`, `UpdateMission`, `CancelMission` and the two channel Methods are all
+  *Optional* on `IntentControllerType`. A Server could therefore advertise `MissionsSupported` true and
+  omit `SubmitMission` entirely, which is precisely what the first implementation did, and a client
+  discovered the contradiction only by calling something that was not there. A fourth rule and a table now
+  fix which Methods each declaration implies.
+
+- **§6.5 says what a Server that cannot differentiate `StopMode` must do.** The text gave `StopMode` the
+  `PossibleStopModes` vocabulary of OPC 40010-1 and then said nothing about a Server that treats every
+  value alike — so accepting the argument and discarding it looked conformant. A Server must now either
+  honour it or treat every value as its single stop behaviour, and should say which; a client that asks for
+  `OnPath` and silently gets a `QuickStop` has been told something untrue about how the cell stopped.
+
+- **§6.4 says which stop a superseded intent gets.** An `Aborting` submission carries no `StopMode`, so the
+  mode a superseded intent is stopped with was undefined. The Server chooses, should choose the most urgent
+  stop the cell tolerates since the successor is about to command motion, and should document it.
+
 ### Profiles
 
-Clause 12 has been titled *Profiles and conformance units* since 0.1.0 and defined only facets. §12.3 defines four profiles and §12.4 gives their URIs. The information model does not change, so the release version does not move: profiles are published through the base-UA `Server/ServerCapabilities/ServerProfileArray` and need no member.
+Clause 12 has been titled *Profiles and conformance units* since 0.1.0 and defined only facets. §12.3 defines four profiles and §12.4 gives their URIs. The information model does not change for this, so the release version does not move on its account: profiles are published through the base-UA `Server/ServerCapabilities/ServerProfileArray` and need no member.
 
 | Profile | Facets |
 |---|---|
@@ -15,7 +68,7 @@ Clause 12 has been titled *Profiles and conformance units* since 0.1.0 and defin
 | Robot Path Server | Motion, plus RI-Trajectory, RI-Path, RI-Blending |
 | Robot Mission Server | Motion, plus RI-Mission, RI-Program, RI-Wait, RI-Pause, RI-Retry |
 
-§1.2's use cases were already written about profiles without using the word. A mixed-fleet work cell — two robots from different manufacturers executing one mission definition — works only if both claim the same shape, and until now there was no name for the shape to claim.
+§1.2's use cases were already written about profiles without using the word. A mixed-fleet work cell — two robots from different manufacturers executing one mission definition — works only if both claim the same shape, and there was no name for the shape to claim.
 
 `RI-Safety` is in the baseline rather than optional to it, and that is the decision in this change most worth arguing about. Clause 10 is explicit that this specification is not safety-rated and that no Method here is a safety function. What it does impose is a duty: report what the safety system enforces, and refuse work that would exceed it. An integrator specifying a profile is entitled to assume a robot declines an intent its safety configuration forbids rather than attempting it, and a robot that cannot read its safety system claims facets individually instead.
 

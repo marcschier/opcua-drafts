@@ -20,6 +20,25 @@ Five drafts have been submitted to the OPC Foundation and are being reviewed und
 
 Access is for OPC Foundation members. Request it through the [member portal](https://memberportal.opcfoundation.org/api/access-request); see [`OPCF-Members/Help`](https://github.com/OPCF-Members/Help) for what the members organization holds and who to contact (`github@opcfoundation.org`). If you are not a member, the OPC Foundation's own review and comment process is the route in.
 
+### Getting it all in one checkout
+
+Members can have both repositories side by side: `spec-drafts/` is registered as a submodule pointing at the private repository.
+
+```powershell
+# clone everything at once
+git clone --recurse-submodules https://github.com/marcschier/opcua-drafts.git
+
+# or populate it in a checkout you already have
+git submodule update --init spec-drafts
+
+# move it forward to the current private main
+git submodule update --remote spec-drafts
+```
+
+**If you are not a member, nothing changes for you.** A plain `git clone` leaves `spec-drafts/` empty and everything else works exactly as before; only the submodule fetch fails, and only if you ask for it. Continuous integration never checks it out, and the repository's own checks skip any directory that carries its own `.git`, so a member running them locally gets the same result as CI rather than also validating the private tree.
+
+The submodule is a pinned commit like any other, so `git status` showing it behind is normal — it moves when someone commits a new pointer.
+
 Two documents that were part of the OpenUSD work stay here, because they are proposed to [xregistry.org](https://github.com/xregistry/spec) rather than to the OPC Foundation: [`xRegistry-OpenUsd.md`](metaverse-specs/openusd-binding/xRegistry-OpenUsd.md) and its model. The [`xregistry/`](core-specs/xregistry/) base model they build on also stays, because the specifications that subtype it are still public.
 
 Each specification returns here once its review completes.
