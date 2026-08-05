@@ -129,7 +129,13 @@ def is_probably_text(path: Path) -> bool:
 def iter_repo_files() -> Iterable[Path]:
     ignored_dirs = {".git", ".release-spec-work"}
     for root, dirs, files in os.walk(REPO):
-        dirs[:] = [d for d in dirs if d not in ignored_dirs]
+        # A directory carrying its own .git is a submodule or nested clone. The private review
+        # repository is available to members as one, and rewriting references inside it would
+        # edit another repository's working tree while releasing a specification from this one.
+        dirs[:] = [
+            d for d in dirs
+            if d not in ignored_dirs and not (Path(root) / d / ".git").exists()
+        ]
         for name in files:
             yield Path(root) / name
 

@@ -15,6 +15,18 @@ import sys
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 SKIP_DIRS = {".git", "node_modules", "__pycache__"}
+
+
+def is_nested_repo(path):
+    """A directory carrying its own .git is a submodule or nested clone, not part of this tree.
+
+    The private review repository is available to OPC Foundation members as a submodule, and
+    its contents belong to its own checks. Scanning it here would make a member's local run
+    disagree with CI, which never checks a submodule out.
+    """
+    return os.path.exists(os.path.join(path, ".git"))
+
+
 LINK_RE = re.compile(r"(?<!\\)\[[^\]]*\]\(([^)]+)\)")
 HEADING_RE = re.compile(r"^(#{1,6})\s+(.*?)\s*#*\s*$")
 EXPLICIT_ID_RE = re.compile(r'<[a-zA-Z][^>]*?\b(?:id|name)\s*=\s*"([^"]+)"')
@@ -23,7 +35,10 @@ FENCE_RE = re.compile(r"^\s*(```|~~~)")
 
 def md_files():
     for dirpath, dirnames, filenames in os.walk(ROOT):
-        dirnames[:] = [d for d in dirnames if d not in SKIP_DIRS]
+        dirnames[:] = [
+            d for d in dirnames
+            if d not in SKIP_DIRS and not is_nested_repo(os.path.join(dirpath, d))
+        ]
         for name in filenames:
             if name.lower().endswith(".md"):
                 yield os.path.join(dirpath, name)
