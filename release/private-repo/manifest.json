@@ -54,7 +54,7 @@
     {
       "stored": "payload/dot-github/workflows/agent-task.yml.bundle",
       "destination": ".github/workflows/agent-task.yml",
-      "sha256": "ae2150f39f4d347220d4990ee316a4e9b8f84bbbd1cf902ae7e768efedb1458d"
+      "sha256": "18e4ea436c588b8d74ffcef5869f798af48d36403934a635a68bd6bfc65de0bc"
     },
     {
       "stored": "payload/dot-github/workflows/needs-pr.yml.bundle",
