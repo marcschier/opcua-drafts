@@ -39,6 +39,11 @@ identity with no stored secret is `WorkloadIdentity`, and mutual TLS credentials
 a product, so a Server can move from one OIP implementation to another without changing the
 OPC UA-facing deployment description.
 
+A deployment that accepts the OIP request body from an OPC UA caller publishes
+`DeploymentType.ApiDialect` as `OpenInferenceProtocol`. This is the clean case for
+§6.4.2: the payload contract genuinely is the OIP body, so the source dialect and the
+deployment dialect are the same when the Server passes that body through.
+
 The health endpoints make `TestConnection` real rather than a disguised inference call:
 server liveness, server readiness and model readiness distinguish a dead process, a server
 that is not ready to serve, and one model that is not ready. Those results are the natural
@@ -59,12 +64,18 @@ It does not carry a content digest.
 | `Framework` | `platform` | examples include serving platforms such as TensorRT plan |
 | `Inputs` | metadata `inputs` | names, datatypes and shapes |
 | `Outputs` | metadata `outputs` | names, datatypes and shapes |
+| `PublishedAt`, `LastModifiedAt` | not exposed | leave empty unless another catalogue supplies them |
 | `Digest`, `DigestAlgorithm` | not exposed | leave empty unless another catalogue supplies them |
 | `DigestProvenance` | `NotAvailable` | base OIP returns no artefact digest |
 
 `GET /v2/models/{name}[/versions/{version}]` returns model metadata: `name`, optional
 `versions`, `platform`, and `inputs` and `outputs` with tensor names, datatypes and shapes.
 Those `inputs` and `outputs` map directly onto `Inputs` and `Outputs` on `ModelType`.
+
+Base OIP exposes no source publication or modification timestamp. `PublishedAt` and
+`LastModifiedAt` therefore stay empty on the same terms as `Digest`: an implementation may
+populate them from another catalogue, but the OIP metadata response does not establish
+them.
 
 That makes **AI-Signatures** reachable. §6.2 says these tensor signatures are the
 machine-readable description of what a deployment accepts, and OIP is one of the few

@@ -6,9 +6,9 @@
     <Uri>http://opcfoundation.org/UA/AI/</Uri>
   </NamespaceUris>
   <Models>
-    <Model ModelUri="http://opcfoundation.org/UA/AI/" Version="0.3.0" PublicationDate="2026-08-05T00:00:00Z">
+    <Model ModelUri="http://opcfoundation.org/UA/AI/" Version="0.4.0" PublicationDate="2026-08-06T00:00:00Z">
       <RequiredModel ModelUri="http://opcfoundation.org/UA/" Version="1.05.04" PublicationDate="2023-12-15T00:00:00Z" />
-      <RequiredModel ModelUri="http://opcfoundation.org/UA/xRegistry/" Version="0.3.0" PublicationDate="2026-07-31T00:00:00Z" />
+      <RequiredModel ModelUri="http://opcfoundation.org/UA/xRegistry/" Version="0.4.0" PublicationDate="2026-07-31T00:00:00Z" />
     </Model>
   </Models>
   <Aliases>
@@ -597,6 +597,8 @@
       <Reference ReferenceType="HasProperty">ns=2;i=6121</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=6122</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=6165</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=6168</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=6169</Reference>
     </References>
   </UAObjectType>
   <UAVariable NodeId="ns=2;i=6006" BrowseName="2:ModelId" ParentNodeId="ns=2;i=1002" DataType="String" ValueRank="-1">
@@ -846,6 +848,10 @@
       <Reference ReferenceType="HasComponent">ns=2;i=6142</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=6146</Reference>
       <Reference ReferenceType="HasComponent">ns=2;i=6147</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=6172</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=6173</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=6174</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=6175</Reference>
     </References>
   </UAObjectType>
   <UAVariable NodeId="ns=2;i=6028" BrowseName="2:DeploymentId" ParentNodeId="ns=2;i=1004" DataType="String" ValueRank="-1">
@@ -895,7 +901,7 @@
   </UAVariable>
   <UAVariable NodeId="ns=2;i=6033" BrowseName="2:LatencyBudget" ParentNodeId="ns=2;i=1004" DataType="Duration" ValueRank="-1">
     <DisplayName>LatencyBudget</DisplayName>
-    <Description>Latency the deployment is expected to meet, so a client can detect regression.</Description>
+    <Description>Latency the deployment is expected to meet. Set by whoever commissioned the deployment; ObservedLatency is what it actually achieved, and clause 6.4.3 compares the two.</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=80</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
@@ -1215,6 +1221,10 @@
       <Reference ReferenceType="HasProperty">ns=2;i=6068</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=6069</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=6070</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=6176</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=6177</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=6178</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=6179</Reference>
     </References>
   </UAObjectType>
   <UAVariable NodeId="ns=2;i=6062" BrowseName="2:Deployment" ParentNodeId="ns=2;i=1008" DataType="NodeId" ValueRank="-1">
@@ -1456,23 +1466,23 @@
       <Reference ReferenceType="HasProperty">ns=2;i=6087</Reference>
     </References>
   </UAMethod>
-  <UAVariable NodeId="ns=2;i=6086" BrowseName="2:InputArguments" ParentNodeId="ns=2;i=6085" DataType="Argument" ValueRank="1" ArrayDimensions="2">
+  <UAVariable NodeId="ns=2;i=6086" BrowseName="2:InputArguments" ParentNodeId="ns=2;i=6085" DataType="Argument" ValueRank="1" ArrayDimensions="3">
     <DisplayName>InputArguments</DisplayName>
     <References>
       <Reference ReferenceType="HasModellingRule">i=78</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=6085</Reference>
     </References>
-    <Value><uax:ListOfExtensionObject xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:ExtensionObject><uax:TypeId><uax:Identifier>i=297</uax:Identifier></uax:TypeId><uax:Body><uax:Argument><uax:Name>Filter</uax:Name><uax:DataType><uax:Identifier>i=12</uax:Identifier></uax:DataType><uax:ValueRank>-1</uax:ValueRank><uax:ArrayDimensions/><uax:Description><uax:Text>Optional substring or expression; empty for all.</uax:Text></uax:Description></uax:Argument></uax:Body></uax:ExtensionObject><uax:ExtensionObject><uax:TypeId><uax:Identifier>i=297</uax:Identifier></uax:TypeId><uax:Body><uax:Argument><uax:Name>MaxResults</uax:Name><uax:DataType><uax:Identifier>i=7</uax:Identifier></uax:DataType><uax:ValueRank>-1</uax:ValueRank><uax:ArrayDimensions/><uax:Description><uax:Text>Upper bound on returned entries.</uax:Text></uax:Description></uax:Argument></uax:Body></uax:ExtensionObject></uax:ListOfExtensionObject></Value>
+    <Value><uax:ListOfExtensionObject xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:ExtensionObject><uax:TypeId><uax:Identifier>i=297</uax:Identifier></uax:TypeId><uax:Body><uax:Argument><uax:Name>Filter</uax:Name><uax:DataType><uax:Identifier>i=12</uax:Identifier></uax:DataType><uax:ValueRank>-1</uax:ValueRank><uax:ArrayDimensions/><uax:Description><uax:Text>Optional substring or expression; empty for all.</uax:Text></uax:Description></uax:Argument></uax:Body></uax:ExtensionObject><uax:ExtensionObject><uax:TypeId><uax:Identifier>i=297</uax:Identifier></uax:TypeId><uax:Body><uax:Argument><uax:Name>MaxResults</uax:Name><uax:DataType><uax:Identifier>i=7</uax:Identifier></uax:DataType><uax:ValueRank>-1</uax:ValueRank><uax:ArrayDimensions/><uax:Description><uax:Text>Upper bound on returned entries.</uax:Text></uax:Description></uax:Argument></uax:Body></uax:ExtensionObject><uax:ExtensionObject><uax:TypeId><uax:Identifier>i=297</uax:Identifier></uax:TypeId><uax:Body><uax:Argument><uax:Name>ContinuationPoint</uax:Name><uax:DataType><uax:Identifier>i=15</uax:Identifier></uax:DataType><uax:ValueRank>-1</uax:ValueRank><uax:ArrayDimensions/><uax:Description><uax:Text>Empty on the first call; otherwise the value the previous call returned. A cap without a cursor bounds the response and puts every entry past it out of reach, which against a public catalogue means most of them.</uax:Text></uax:Description></uax:Argument></uax:Body></uax:ExtensionObject></uax:ListOfExtensionObject></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=6087" BrowseName="2:OutputArguments" ParentNodeId="ns=2;i=6085" DataType="Argument" ValueRank="1" ArrayDimensions="1">
+  <UAVariable NodeId="ns=2;i=6087" BrowseName="2:OutputArguments" ParentNodeId="ns=2;i=6085" DataType="Argument" ValueRank="1" ArrayDimensions="2">
     <DisplayName>OutputArguments</DisplayName>
     <References>
       <Reference ReferenceType="HasModellingRule">i=78</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=6085</Reference>
     </References>
-    <Value><uax:ListOfExtensionObject xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:ExtensionObject><uax:TypeId><uax:Identifier>i=297</uax:Identifier></uax:TypeId><uax:Body><uax:Argument><uax:Name>Models</uax:Name><uax:DataType><uax:Identifier>ns=2;i=3051</uax:Identifier></uax:DataType><uax:ValueRank>1</uax:ValueRank><uax:ArrayDimensions><uax:UInt32>0</uax:UInt32></uax:ArrayDimensions><uax:Description><uax:Text>Publisher, name and version of each model offered.</uax:Text></uax:Description></uax:Argument></uax:Body></uax:ExtensionObject></uax:ListOfExtensionObject></Value>
+    <Value><uax:ListOfExtensionObject xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:ExtensionObject><uax:TypeId><uax:Identifier>i=297</uax:Identifier></uax:TypeId><uax:Body><uax:Argument><uax:Name>Models</uax:Name><uax:DataType><uax:Identifier>ns=2;i=3051</uax:Identifier></uax:DataType><uax:ValueRank>1</uax:ValueRank><uax:ArrayDimensions><uax:UInt32>0</uax:UInt32></uax:ArrayDimensions><uax:Description><uax:Text>Publisher, name and version of each model offered.</uax:Text></uax:Description></uax:Argument></uax:Body></uax:ExtensionObject><uax:ExtensionObject><uax:TypeId><uax:Identifier>i=297</uax:Identifier></uax:TypeId><uax:Body><uax:Argument><uax:Name>ContinuationPoint</uax:Name><uax:DataType><uax:Identifier>i=15</uax:Identifier></uax:DataType><uax:ValueRank>-1</uax:ValueRank><uax:ArrayDimensions/><uax:Description><uax:Text>Pass to the next call to continue. Empty when the enumeration is complete, which is how a client knows to stop rather than by comparing counts.</uax:Text></uax:Description></uax:Argument></uax:Body></uax:ExtensionObject></uax:ListOfExtensionObject></Value>
   </UAVariable>
   <UAObjectType NodeId="ns=2;i=1014" BrowseName="2:EvaluationRunType">
     <DisplayName>EvaluationRunType</DisplayName>
@@ -1565,6 +1575,8 @@
       <Reference ReferenceType="HasProperty">ns=2;i=6099</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=6100</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=6101</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=6170</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=6171</Reference>
     </References>
   </UAObjectType>
   <UAVariable NodeId="ns=2;i=6095" BrowseName="2:IntendedUse" ParentNodeId="ns=2;i=1015" DataType="LocalizedText" ValueRank="-1">
@@ -2003,14 +2015,14 @@ The signature does not change with InferenceLocation. A deployment served from t
       <Reference ReferenceType="HasProperty">ns=2;i=6138</Reference>
     </References>
   </UAMethod>
-  <UAVariable NodeId="ns=2;i=6137" BrowseName="2:InputArguments" ParentNodeId="ns=2;i=6136" DataType="Argument" ValueRank="1" ArrayDimensions="4">
+  <UAVariable NodeId="ns=2;i=6137" BrowseName="2:InputArguments" ParentNodeId="ns=2;i=6136" DataType="Argument" ValueRank="1" ArrayDimensions="5">
     <DisplayName>InputArguments</DisplayName>
     <References>
       <Reference ReferenceType="HasModellingRule">i=78</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=6136</Reference>
     </References>
-    <Value><uax:ListOfExtensionObject xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:ExtensionObject><uax:TypeId><uax:Identifier>i=297</uax:Identifier></uax:TypeId><uax:Body><uax:Argument><uax:Name>Payload</uax:Name><uax:DataType><uax:Identifier>i=15</uax:Identifier></uax:DataType><uax:ValueRank>-1</uax:ValueRank><uax:ArrayDimensions/><uax:Description><uax:Text>Request body.</uax:Text></uax:Description></uax:Argument></uax:Body></uax:ExtensionObject><uax:ExtensionObject><uax:TypeId><uax:Identifier>i=297</uax:Identifier></uax:TypeId><uax:Body><uax:Argument><uax:Name>ContentType</uax:Name><uax:DataType><uax:Identifier>i=12</uax:Identifier></uax:DataType><uax:ValueRank>-1</uax:ValueRank><uax:ArrayDimensions/><uax:Description><uax:Text>Media type of Payload.</uax:Text></uax:Description></uax:Argument></uax:Body></uax:ExtensionObject><uax:ExtensionObject><uax:TypeId><uax:Identifier>i=297</uax:Identifier></uax:TypeId><uax:Body><uax:Argument><uax:Name>Parameters</uax:Name><uax:DataType><uax:Identifier>i=14533</uax:Identifier></uax:DataType><uax:ValueRank>1</uax:ValueRank><uax:ArrayDimensions><uax:UInt32>0</uax:UInt32></uax:ArrayDimensions><uax:Description><uax:Text>Call parameters such as a sampling temperature or an output length bound. A Server SHALL reject a parameter it does not support rather than ignore it: a caller whose parameter was silently dropped believes it took effect.</uax:Text></uax:Description></uax:Argument></uax:Body></uax:ExtensionObject><uax:ExtensionObject><uax:TypeId><uax:Identifier>i=297</uax:Identifier></uax:TypeId><uax:Body><uax:Argument><uax:Name>Timeout</uax:Name><uax:DataType><uax:Identifier>i=290</uax:Identifier></uax:DataType><uax:ValueRank>-1</uax:ValueRank><uax:ArrayDimensions/><uax:Description><uax:Text>How long the caller will wait. Zero means the Server's default.</uax:Text></uax:Description></uax:Argument></uax:Body></uax:ExtensionObject></uax:ListOfExtensionObject></Value>
+    <Value><uax:ListOfExtensionObject xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:ExtensionObject><uax:TypeId><uax:Identifier>i=297</uax:Identifier></uax:TypeId><uax:Body><uax:Argument><uax:Name>Payload</uax:Name><uax:DataType><uax:Identifier>i=15</uax:Identifier></uax:DataType><uax:ValueRank>-1</uax:ValueRank><uax:ArrayDimensions/><uax:Description><uax:Text>Request body.</uax:Text></uax:Description></uax:Argument></uax:Body></uax:ExtensionObject><uax:ExtensionObject><uax:TypeId><uax:Identifier>i=297</uax:Identifier></uax:TypeId><uax:Body><uax:Argument><uax:Name>PayloadUri</uax:Name><uax:DataType><uax:Identifier>i=12</uax:Identifier></uax:DataType><uax:ValueRank>-1</uax:ValueRank><uax:ArrayDimensions/><uax:Description><uax:Text>Location the request body is read from, where it is supplied by reference rather than carried. A Server SHALL accept exactly one of Payload and PayloadUri and SHALL reject a call supplying both or neither. Untrusted input subject to clause 12.2, and named data the execution site will read, so clause 9.5 applies to it.</uax:Text></uax:Description></uax:Argument></uax:Body></uax:ExtensionObject><uax:ExtensionObject><uax:TypeId><uax:Identifier>i=297</uax:Identifier></uax:TypeId><uax:Body><uax:Argument><uax:Name>ContentType</uax:Name><uax:DataType><uax:Identifier>i=12</uax:Identifier></uax:DataType><uax:ValueRank>-1</uax:ValueRank><uax:ArrayDimensions/><uax:Description><uax:Text>Media type of Payload.</uax:Text></uax:Description></uax:Argument></uax:Body></uax:ExtensionObject><uax:ExtensionObject><uax:TypeId><uax:Identifier>i=297</uax:Identifier></uax:TypeId><uax:Body><uax:Argument><uax:Name>Parameters</uax:Name><uax:DataType><uax:Identifier>i=14533</uax:Identifier></uax:DataType><uax:ValueRank>1</uax:ValueRank><uax:ArrayDimensions><uax:UInt32>0</uax:UInt32></uax:ArrayDimensions><uax:Description><uax:Text>Call parameters such as a sampling temperature or an output length bound. A Server SHALL reject a parameter it does not support rather than ignore it: a caller whose parameter was silently dropped believes it took effect.</uax:Text></uax:Description></uax:Argument></uax:Body></uax:ExtensionObject><uax:ExtensionObject><uax:TypeId><uax:Identifier>i=297</uax:Identifier></uax:TypeId><uax:Body><uax:Argument><uax:Name>Timeout</uax:Name><uax:DataType><uax:Identifier>i=290</uax:Identifier></uax:DataType><uax:ValueRank>-1</uax:ValueRank><uax:ArrayDimensions/><uax:Description><uax:Text>How long the caller will wait. Zero means the Server's default.</uax:Text></uax:Description></uax:Argument></uax:Body></uax:ExtensionObject></uax:ListOfExtensionObject></Value>
   </UAVariable>
   <UAVariable NodeId="ns=2;i=6138" BrowseName="2:OutputArguments" ParentNodeId="ns=2;i=6136" DataType="Argument" ValueRank="1" ArrayDimensions="9">
     <DisplayName>OutputArguments</DisplayName>
@@ -2031,14 +2043,14 @@ The signature does not change with InferenceLocation. A deployment served from t
       <Reference ReferenceType="HasProperty">ns=2;i=6141</Reference>
     </References>
   </UAMethod>
-  <UAVariable NodeId="ns=2;i=6140" BrowseName="2:InputArguments" ParentNodeId="ns=2;i=6139" DataType="Argument" ValueRank="1" ArrayDimensions="3">
+  <UAVariable NodeId="ns=2;i=6140" BrowseName="2:InputArguments" ParentNodeId="ns=2;i=6139" DataType="Argument" ValueRank="1" ArrayDimensions="4">
     <DisplayName>InputArguments</DisplayName>
     <References>
       <Reference ReferenceType="HasModellingRule">i=78</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=6139</Reference>
     </References>
-    <Value><uax:ListOfExtensionObject xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:ExtensionObject><uax:TypeId><uax:Identifier>i=297</uax:Identifier></uax:TypeId><uax:Body><uax:Argument><uax:Name>Payload</uax:Name><uax:DataType><uax:Identifier>i=15</uax:Identifier></uax:DataType><uax:ValueRank>-1</uax:ValueRank><uax:ArrayDimensions/><uax:Description><uax:Text>Request body.</uax:Text></uax:Description></uax:Argument></uax:Body></uax:ExtensionObject><uax:ExtensionObject><uax:TypeId><uax:Identifier>i=297</uax:Identifier></uax:TypeId><uax:Body><uax:Argument><uax:Name>ContentType</uax:Name><uax:DataType><uax:Identifier>i=12</uax:Identifier></uax:DataType><uax:ValueRank>-1</uax:ValueRank><uax:ArrayDimensions/><uax:Description><uax:Text>Media type of Payload.</uax:Text></uax:Description></uax:Argument></uax:Body></uax:ExtensionObject><uax:ExtensionObject><uax:TypeId><uax:Identifier>i=297</uax:Identifier></uax:TypeId><uax:Body><uax:Argument><uax:Name>Parameters</uax:Name><uax:DataType><uax:Identifier>i=14533</uax:Identifier></uax:DataType><uax:ValueRank>1</uax:ValueRank><uax:ArrayDimensions><uax:UInt32>0</uax:UInt32></uax:ArrayDimensions><uax:Description><uax:Text>Call parameters.</uax:Text></uax:Description></uax:Argument></uax:Body></uax:ExtensionObject></uax:ListOfExtensionObject></Value>
+    <Value><uax:ListOfExtensionObject xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:ExtensionObject><uax:TypeId><uax:Identifier>i=297</uax:Identifier></uax:TypeId><uax:Body><uax:Argument><uax:Name>Payload</uax:Name><uax:DataType><uax:Identifier>i=15</uax:Identifier></uax:DataType><uax:ValueRank>-1</uax:ValueRank><uax:ArrayDimensions/><uax:Description><uax:Text>Request body.</uax:Text></uax:Description></uax:Argument></uax:Body></uax:ExtensionObject><uax:ExtensionObject><uax:TypeId><uax:Identifier>i=297</uax:Identifier></uax:TypeId><uax:Body><uax:Argument><uax:Name>PayloadUri</uax:Name><uax:DataType><uax:Identifier>i=12</uax:Identifier></uax:DataType><uax:ValueRank>-1</uax:ValueRank><uax:ArrayDimensions/><uax:Description><uax:Text>Location the request body is read from, where it is supplied by reference rather than carried. Exactly one of Payload and PayloadUri on the same terms as Invoke. This is the argument that lets a batch already sitting in the plant's object store be scored without being copied through the Session first.</uax:Text></uax:Description></uax:Argument></uax:Body></uax:ExtensionObject><uax:ExtensionObject><uax:TypeId><uax:Identifier>i=297</uax:Identifier></uax:TypeId><uax:Body><uax:Argument><uax:Name>ContentType</uax:Name><uax:DataType><uax:Identifier>i=12</uax:Identifier></uax:DataType><uax:ValueRank>-1</uax:ValueRank><uax:ArrayDimensions/><uax:Description><uax:Text>Media type of Payload.</uax:Text></uax:Description></uax:Argument></uax:Body></uax:ExtensionObject><uax:ExtensionObject><uax:TypeId><uax:Identifier>i=297</uax:Identifier></uax:TypeId><uax:Body><uax:Argument><uax:Name>Parameters</uax:Name><uax:DataType><uax:Identifier>i=14533</uax:Identifier></uax:DataType><uax:ValueRank>1</uax:ValueRank><uax:ArrayDimensions><uax:UInt32>0</uax:UInt32></uax:ArrayDimensions><uax:Description><uax:Text>Call parameters.</uax:Text></uax:Description></uax:Argument></uax:Body></uax:ExtensionObject></uax:ListOfExtensionObject></Value>
   </UAVariable>
   <UAVariable NodeId="ns=2;i=6141" BrowseName="2:OutputArguments" ParentNodeId="ns=2;i=6139" DataType="Argument" ValueRank="1" ArrayDimensions="1">
     <DisplayName>OutputArguments</DisplayName>
@@ -2319,6 +2331,128 @@ A Server SHALL populate exactly one of Source and Registry, and SHALL leave the 
       <Reference ReferenceType="HasModellingRule">i=80</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1007</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=2;i=6168" BrowseName="2:PublishedAt" ParentNodeId="ns=2;i=1002" DataType="UtcTime" ValueRank="-1">
+    <DisplayName>PublishedAt</DisplayName>
+    <Description>When the source first published this model, where the source states it. The same question DatasetType.CreatedAt answers for a dataset, and the same reason: a model trained before a process change may no longer represent the line it runs on, and Version is a vendor string that often cannot be ordered.
+
+This is the source's date, not when this Server learned of it - a Server SHALL NOT substitute its own acquisition time, which would make every model appear to date from the last restart.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1002</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=2;i=6169" BrowseName="2:LastModifiedAt" ParentNodeId="ns=2;i=1002" DataType="UtcTime" ValueRank="-1">
+    <DisplayName>LastModifiedAt</DisplayName>
+    <Description>When the artefact behind this model last changed at the source.
+
+It exists for the FollowsRef case of clause 9.3, where the artefact can change with nothing else changing. Clause 12.3.1 requires repointing to be treated as an authorization-bearing act and points at AiJobType.RequestedBy for the record - but a reference that moves AT THE SOURCE produces no job, so without this member the audit trail that clause demands cannot be constructed on the one path it exists to cover. A Server that follows a mutable reference SHALL populate it.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1002</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=2;i=6170" BrowseName="2:DeprecatedFrom" ParentNodeId="ns=2;i=1015" DataType="UtcTime" ValueRank="-1">
+    <DisplayName>DeprecatedFrom</DisplayName>
+    <Description>When the source stops treating this model as current while continuing to serve it. The date that starts a requalification, not the one that ends production.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1015</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=2;i=6171" BrowseName="2:SupportedUntil" ParentNodeId="ns=2;i=1015" DataType="UtcTime" ValueRank="-1">
+    <DisplayName>SupportedUntil</DisplayName>
+    <Description>When the source stops serving this model altogether.
+
+Its consequence is not degradation. On this date the deployment stops, Reachability goes Unreachable, and FallbackPolicy decides what happens next - which, where it is FallBackTo, means the line keeps producing and something outside the qualified configuration is answering. A date that was knowable a year in advance therefore becomes an unplanned change of model, and it is published by the serving system in machine-readable form.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1015</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=2;i=6172" BrowseName="2:ApiDialect" ParentNodeId="ns=2;i=1004" DataType="ns=2;i=3007" ValueRank="-1">
+    <DisplayName>ApiDialect</DisplayName>
+    <Description>The contract a client's Payload must satisfy when calling Invoke on this deployment. RestChatCompletions means the Payload is a chat-completions request body; OpenInferenceProtocol means it is an OIP inference body; EmbeddedRuntime and TensorRemoteProcedure name the tensor contracts described by Inputs and Outputs; Proprietary means the contract is named only by EndpointDescriptionUri.
+
+This does not type the payload - clause 8.2 keeps it opaque and that is unchanged. It names WHICH contract the opaque bytes are expected to satisfy, which is what a client browsing an unfamiliar deployment needs before it can send anything at all.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1004</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=2;i=6173" BrowseName="2:EndpointDescriptionUri" ParentNodeId="ns=2;i=1004" DataType="String" ValueRank="-1">
+    <DisplayName>EndpointDescriptionUri</DisplayName>
+    <Description>Where the request and response contract for this deployment is documented. Untrusted input, subject to clause 12.2. Required in practice wherever ApiDialect is Proprietary, because nothing else then says what to send.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1004</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=2;i=6174" BrowseName="2:RuntimeIdentity" ParentNodeId="ns=2;i=1004" DataType="String" ValueRank="-1">
+    <DisplayName>RuntimeIdentity</DisplayName>
+    <Description>Opaque identifier of the serving configuration currently behind this deployment - a serving-stack fingerprint, an engine profile, a container image digest. Compared for equality and never parsed, on the same terms as Digest.
+
+It is not the model. The same artefact served by two runtime builds can produce different numbers, and where the execution site publishes such an identity it is the only thing that records the difference. A change to it under a Pinned binding IS the observable change to the deployment that clause 9.3 says a pinned artefact cannot move without.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1004</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=2;i=6175" BrowseName="2:ObservedLatency" ParentNodeId="ns=2;i=1004" DataType="Duration" ValueRank="-1">
+    <DisplayName>ObservedLatency</DisplayName>
+    <Description>Most recent inference latency this Server measured for this deployment.
+
+LatencyBudget states what the deployment is expected to meet, and clause 6.4.3 makes Degraded the state of a deployment that is answering but missing it. Without a measurement the comparison has no published input, so the state transition could not be checked against a Server that claimed it. A Server that reports Degraded on latency grounds SHALL populate this.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1004</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=2;i=6176" BrowseName="2:RequestUri" ParentNodeId="ns=2;i=1008" DataType="String" ValueRank="-1">
+    <DisplayName>RequestUri</DisplayName>
+    <Description>Where the request body was read from, where it was supplied by reference rather than carried. Untrusted input under clause 12.2, and an egress path under clause 9.5.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1008</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=2;i=6177" BrowseName="2:ResponseUri" ParentNodeId="ns=2;i=1008" DataType="String" ValueRank="-1">
+    <DisplayName>ResponseUri</DisplayName>
+    <Description>Where the result was written, where the execution site returns a location rather than bytes. Empty when the response is carried inline or through Transfer.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1008</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=2;i=6178" BrowseName="2:TransferRequired" ParentNodeId="ns=2;i=1008" DataType="Boolean" ValueRank="-1">
+    <DisplayName>TransferRequired</DisplayName>
+    <Description>True when the job produced a response too large to carry inline. ResponsePayload is then empty and the work is NOT lost - Transfer names where to read it.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1008</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=2;i=6179" BrowseName="2:Transfer" ParentNodeId="ns=2;i=1008" DataType="NodeId" ValueRank="-1">
+    <DisplayName>Transfer</DisplayName>
+    <Description>InferenceTransferType instance holding the response, where TransferRequired is true. Null otherwise.
+
+Invoke carries the same pair, and the asymmetry would otherwise leave the jobs most likely to produce a large result - a batch scored overnight, an analysis over recorded data - bounded by exactly the three limits clause 8.2.4 says this model does not get to choose.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1008</Reference>
     </References>
   </UAVariable>
 </UANodeSet>

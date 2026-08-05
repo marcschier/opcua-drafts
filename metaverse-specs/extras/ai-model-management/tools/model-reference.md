@@ -111,9 +111,9 @@ Nameplate of a trained model. The member set is deliberately aligned with the ID
 | ParameterCount | Variable | UInt64 | Scalar | Optional | Parameters in the model, or 0 where not published. A crude but universally available proxy for what it will cost to run. |
 | Quantization | Variable | String | Scalar | Optional | Numeric precision the artefact is stored in, for example 'fp32', 'int8' or 'fp8'. A quantized model is a DIFFERENT artefact with different behaviour, not a packaging detail, which is why it is stated rather than left to the format string. |
 | SafetyPolicyUri | Variable | String | Scalar | Optional | Safety or content policy applied to this model's output, where one is. Untrusted input, subject to clause 12. |
-| DigestProvenance | Variable | DigestProvenanceEnum | Scalar | Mandatory | Where Digest came from, or why there is none. NotAvailable is the only value permitted with an empty Digest, and it SHALL be used rather than leaving a client to guess whether the source publishes no digest or this Server declined to carry one.
-
-A Server SHALL NOT put a non-content identifier in Digest to avoid saying NotAvailable. A response fingerprint, a resource name, a storage entity tag and a repository commit identifier are none of them digests of the artefact that ran, and a client that verified against one would believe it had checked something it had not. Where such an identifier is worth publishing it belongs in ArtifactUri or ProvenanceUri, which promise nothing about content. |
+| DigestProvenance | Variable | DigestProvenanceEnum | Scalar | Mandatory | Where Digest came from, or why there is none. NotAvailable is the only value permitted with an empty Digest, and it SHALL be used rather than leaving a client to guess whether the source publishes no digest or this Server declined to carry one.<br><br>A Server SHALL NOT put a non-content identifier in Digest to avoid saying NotAvailable. A response fingerprint, a resource name, a storage entity tag and a repository commit identifier are none of them digests of the artefact that ran, and a client that verified against one would believe it had checked something it had not. Where such an identifier is worth publishing it belongs in ArtifactUri or ProvenanceUri, which promise nothing about content. |
+| PublishedAt | Variable | UtcTime | Scalar | Optional | When the source first published this model, where the source states it. The same question DatasetType.CreatedAt answers for a dataset, and the same reason: a model trained before a process change may no longer represent the line it runs on, and Version is a vendor string that often cannot be ordered.<br><br>This is the source's date, not when this Server learned of it - a Server SHALL NOT substitute its own acquisition time, which would make every model appear to date from the last restart. |
+| LastModifiedAt | Variable | UtcTime | Scalar | Optional | When the artefact behind this model last changed at the source.<br><br>It exists for the FollowsRef case of clause 9.3, where the artefact can change with nothing else changing. Clause 12.3.1 requires repointing to be treated as an authorization-bearing act and points at AiJobType.RequestedBy for the record - but a reference that moves AT THE SOURCE produces no job, so without this member the audit trail that clause demands cannot be constructed on the one path it exists to cover. A Server that follows a mutable reference SHALL populate it. |
 
 ### DatasetType — `ns=2;i=1003`
 
@@ -146,7 +146,7 @@ A model made executable somewhere. Aligned with the IDTA 02059 AI Deployment sub
 | AcceleratorKind | Variable | AcceleratorKindEnum | Scalar | Optional | Compute device executing the model. |
 | AcceleratorName | Variable | String | Scalar | Optional | Free-text accelerator identification, for example an NPU or GPU part name. |
 | EndpointUri | Variable | String | Scalar | Optional | Inference endpoint when InferenceLocation is not OnServer. Treated as untrusted input and subject to the resolver policy of clause 12. |
-| LatencyBudget | Variable | Duration | Scalar | Optional | Latency the deployment is expected to meet, so a client can detect regression. |
+| LatencyBudget | Variable | Duration | Scalar | Optional | Latency the deployment is expected to meet. Set by whoever commissioned the deployment; ObservedLatency is what it actually achieved, and clause 6.4.3 compares the two. |
 | BatchSize | Variable | UInt32 | Scalar | Optional | Configured inference batch size. |
 | State | Variable | DeploymentStateEnum | Scalar | Mandatory | Runtime state of the deployment. |
 | Source | Variable | NodeId | Scalar | Optional | ModelSourceType instance this deployment executes through, where inference is not local. Null when InferenceLocation is OnServer. |
@@ -162,9 +162,11 @@ A model made executable somewhere. Aligned with the IDTA 02059 AI Deployment sub
 | EgressPermitted | Variable | Boolean | Scalar | Mandatory | Whether calling this deployment sends input data outside the operator's boundary. A Server SHALL set this true for every deployment whose InferenceLocation is Cloud, and SHALL NOT set it false merely because the channel is encrypted - the question is where the data goes, not who can read it in flight. |
 | RetainsInput | Variable | Boolean | Scalar | Optional | Whether the execution site retains input beyond serving the request, for example for provider-side logging or training. Unknown is not a value: a Server that cannot establish this SHALL report true, because the safe assumption is the one that keeps data in. |
 | EgressPolicyUri | Variable | String | Scalar | Optional | Where the governing data policy is documented. |
-| MaxInlinePayloadSize | Variable | UInt32 | Scalar | Mandatory | Largest request or response this deployment will carry inline through Invoke, in bytes. Zero means the deployment accepts no inline payload at all and BeginTransfer is the only way in.
-
-A client reads this BEFORE calling rather than discovering the bound from a rejection, and a Server SHALL NOT publish a value larger than its own MaxByteStringLength, the negotiated MaxMessageSize or the Session's MaxResponseMessageSize permit - the smallest of those is the real limit and a client cannot see all of them. |
+| MaxInlinePayloadSize | Variable | UInt32 | Scalar | Mandatory | Largest request or response this deployment will carry inline through Invoke, in bytes. Zero means the deployment accepts no inline payload at all and BeginTransfer is the only way in.<br><br>A client reads this BEFORE calling rather than discovering the bound from a rejection, and a Server SHALL NOT publish a value larger than its own MaxByteStringLength, the negotiated MaxMessageSize or the Session's MaxResponseMessageSize permit - the smallest of those is the real limit and a client cannot see all of them. |
+| ApiDialect | Variable | ApiDialectEnum | Scalar | Optional | The contract a client's Payload must satisfy when calling Invoke on this deployment. RestChatCompletions means the Payload is a chat-completions request body; OpenInferenceProtocol means it is an OIP inference body; EmbeddedRuntime and TensorRemoteProcedure name the tensor contracts described by Inputs and Outputs; Proprietary means the contract is named only by EndpointDescriptionUri.<br><br>This does not type the payload - clause 8.2 keeps it opaque and that is unchanged. It names WHICH contract the opaque bytes are expected to satisfy, which is what a client browsing an unfamiliar deployment needs before it can send anything at all. |
+| EndpointDescriptionUri | Variable | String | Scalar | Optional | Where the request and response contract for this deployment is documented. Untrusted input, subject to clause 12.2. Required in practice wherever ApiDialect is Proprietary, because nothing else then says what to send. |
+| RuntimeIdentity | Variable | String | Scalar | Optional | Opaque identifier of the serving configuration currently behind this deployment - a serving-stack fingerprint, an engine profile, a container image digest. Compared for equality and never parsed, on the same terms as Digest.<br><br>It is not the model. The same artefact served by two runtime builds can produce different numbers, and where the execution site publishes such an identity it is the only thing that records the difference. A change to it under a Pinned binding IS the observable change to the deployment that clause 9.3 says a pinned artefact cannot move without. |
+| ObservedLatency | Variable | Duration | Scalar | Optional | Most recent inference latency this Server measured for this deployment.<br><br>LatencyBudget states what the deployment is expected to meet, and clause 6.4.3 makes Degraded the state of a deployment that is answering but missing it. Without a measurement the comparison has no published input, so the state transition could not be checked against a Server that claimed it. A Server that reports Degraded on latency grounds SHALL populate this. |
 
 **Method `Invoke`** (Optional) — Run inference and return the result. The payload is opaque here: what goes in and comes out is the consuming specification's vocabulary, and an envelope that tried to type it would have to be extended for every domain. What this Method fixes is everything AROUND the payload - routing, parameters, accounting, why it stopped, and which model actually ran.
 
@@ -173,6 +175,7 @@ The signature does not change with InferenceLocation. A deployment served from t
 | In | DataType | ValueRank | Meaning |
 |---|---|---|---|
 | Payload | ByteString | Scalar | Request body. |
+| PayloadUri | String | Scalar | Location the request body is read from, where it is supplied by reference rather than carried. A Server SHALL accept exactly one of Payload and PayloadUri and SHALL reject a call supplying both or neither. Untrusted input subject to clause 12.2, and named data the execution site will read, so clause 9.5 applies to it. |
 | ContentType | String | Scalar | Media type of Payload. |
 | Parameters | KeyValuePair | Array | Call parameters such as a sampling temperature or an output length bound. A Server SHALL reject a parameter it does not support rather than ignore it: a caller whose parameter was silently dropped believes it took effect. |
 | Timeout | Duration | Scalar | How long the caller will wait. Zero means the Server's default. |
@@ -194,6 +197,7 @@ The signature does not change with InferenceLocation. A deployment served from t
 | In | DataType | ValueRank | Meaning |
 |---|---|---|---|
 | Payload | ByteString | Scalar | Request body. |
+| PayloadUri | String | Scalar | Location the request body is read from, where it is supplied by reference rather than carried. Exactly one of Payload and PayloadUri on the same terms as Invoke. This is the argument that lets a batch already sitting in the plant's object store be scored without being copied through the Session first. |
 | ContentType | String | Scalar | Media type of Payload. |
 | Parameters | KeyValuePair | Array | Call parameters. |
 
@@ -287,9 +291,7 @@ Brings a model from a catalogue into this Server. It federates by default - mate
 | ImportedModel | Variable | NodeId | Scalar | Optional | ModelType instance the job produced. Null until the job succeeds. |
 | BytesTransferred | Variable | UInt64 | Scalar | Optional | Artefact bytes fetched so far. Zero for a federating import, which moves none. |
 | DigestVerified | Variable | Boolean | Scalar | Optional | Whether the staged artefact's computed digest matched the one the catalogue declared. False on a staging import means the artefact SHALL NOT be deployed. |
-| Registry | Variable | NodeId | Scalar | Optional | ModelRegistryType instance the model is imported from, where the import reads a catalogue rather than calling an endpoint. Null otherwise.
-
-A Server SHALL populate exactly one of Source and Registry, and SHALL leave the other null. The two name the two things an import can read from, and a job that named both would not say which one produced the artefact whose digest clause 10.4 verifies. |
+| Registry | Variable | NodeId | Scalar | Optional | ModelRegistryType instance the model is imported from, where the import reads a catalogue rather than calling an endpoint. Null otherwise.<br><br>A Server SHALL populate exactly one of Source and Registry, and SHALL leave the other null. The two name the two things an import can read from, and a job that named both would not say which one produced the artefact whose digest clause 10.4 verifies. |
 
 **Method `Cancel`** (Optional) — Abandon the import. A partially staged artefact SHALL be discarded rather than left where a later deployment could pick it up.
 
@@ -312,6 +314,10 @@ One asynchronous inference request. It exists because not every inference return
 | Usage | Variable | UsageDataType | Scalar | Optional | What the call consumed. |
 | FinishReason | Variable | FinishReasonEnum | Scalar | Optional | Why the call stopped producing output. |
 | SafetyAssessment | Variable | SafetyAssessmentDataType | Array | Optional | Findings from the safety policy, if any were applied. |
+| RequestUri | Variable | String | Scalar | Optional | Where the request body was read from, where it was supplied by reference rather than carried. Untrusted input under clause 12.2, and an egress path under clause 9.5. |
+| ResponseUri | Variable | String | Scalar | Optional | Where the result was written, where the execution site returns a location rather than bytes. Empty when the response is carried inline or through Transfer. |
+| TransferRequired | Variable | Boolean | Scalar | Optional | True when the job produced a response too large to carry inline. ResponsePayload is then empty and the work is NOT lost - Transfer names where to read it. |
+| Transfer | Variable | NodeId | Scalar | Optional | InferenceTransferType instance holding the response, where TransferRequired is true. Null otherwise.<br><br>Invoke carries the same pair, and the asymmetry would otherwise leave the jobs most likely to produce a large result - a batch scored overnight, an analysis over recorded data - bounded by exactly the three limits clause 8.2.4 says this model does not get to choose. |
 
 ### ModelSourceType — `ns=2;i=1009`
 
@@ -347,10 +353,12 @@ An externally hosted inference or catalogue endpoint this Server can reach. It c
 |---|---|---|---|
 | Filter | String | Scalar | Optional substring or expression; empty for all. |
 | MaxResults | UInt32 | Scalar | Upper bound on returned entries. |
+| ContinuationPoint | ByteString | Scalar | Empty on the first call; otherwise the value the previous call returned. A cap without a cursor bounds the response and puts every entry past it out of reach, which against a public catalogue means most of them. |
 
 | Out | DataType | ValueRank | Meaning |
 |---|---|---|---|
 | Models | ModelReferenceDataType | Array | Publisher, name and version of each model offered. |
+| ContinuationPoint | ByteString | Scalar | Pass to the next call to continue. Empty when the enumeration is complete, which is how a client knows to stop rather than by comparing counts. |
 
 ### EvaluationRunType — `ns=2;i=1014`
 
@@ -383,6 +391,8 @@ What a human needs to decide whether a model may be used here: what it is for, w
 | TrainingDataCutoff | Variable | UtcTime | Scalar | Optional | Latest date represented in the training data. A model cannot know about anything after this, which is often the explanation for a field failure. |
 | EthicalConsiderations | Variable | LocalizedText | Scalar | Optional | Risks the supplier records. |
 | ContactUri | Variable | String | Scalar | Optional | Where to report a problem with the model. |
+| DeprecatedFrom | Variable | UtcTime | Scalar | Optional | When the source stops treating this model as current while continuing to serve it. The date that starts a requalification, not the one that ends production. |
+| SupportedUntil | Variable | UtcTime | Scalar | Optional | When the source stops serving this model altogether.<br><br>Its consequence is not degradation. On this date the deployment stops, Reachability goes Unreachable, and FallbackPolicy decides what happens next - which, where it is FallBackTo, means the line keeps producing and something outside the qualified configuration is answering. A date that was knowable a year in advance therefore becomes an unplanned change of model, and it is published by the serving system in machine-readable form. |
 
 ### ModelRegistryType — `ns=2;i=1010`
 

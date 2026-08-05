@@ -50,6 +50,7 @@ INDEX = os.path.join(EXAMPLES, "index.md")
 KNOWN_TERMS = os.path.join(HERE, "known-terms.txt")
 
 UA = "{http://opcfoundation.org/UA/2011/03/UANodeSet.xsd}"
+UAX = "{http://opcfoundation.org/UA/2008/02/Types.xsd}"
 
 ERRORS: list[str] = []
 
@@ -59,7 +60,13 @@ def err(msg: str) -> None:
 
 
 def load_nodeset_names() -> set[str]:
-    """Every BrowseName, enumeration literal and structure field the model declares."""
+    """Every BrowseName, enumeration literal, structure field and Method argument.
+
+    Method argument names live in the Value of an InputArguments or OutputArguments
+    Variable rather than in a BrowseName, so a guide naming `PayloadUri` is naming
+    something the model genuinely declares. Reading them here keeps the check honest
+    in both directions: a guide may cite an argument, and a typo in one still fails.
+    """
     root = ET.parse(NODESET).getroot()
     names: set[str] = set()
 
@@ -74,6 +81,11 @@ def load_nodeset_names() -> set[str]:
                 field_name = field.get("Name")
                 if field_name:
                     names.add(field_name)
+
+        if browse and browse.split(":", 1)[-1] in ("InputArguments", "OutputArguments"):
+            for arg_name in node.iter(f"{UAX}Name"):
+                if arg_name.text:
+                    names.add(arg_name.text)
 
     if not names:
         err("the NodeSet yielded no names; the parse is wrong, not the guides")

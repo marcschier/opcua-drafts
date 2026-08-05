@@ -130,6 +130,39 @@ permissive. [The federation guide](opc-ua-server.md) works it through. It propag
 honesty rather than establishing it — but it closes the case where every Server in a chain
 is truthful and the answer still comes out wrong because nobody was obliged to look up.
 
+**A model's age, and how long it has left.** These split the set in a way none of the other
+questions do, and the split runs the opposite way to the digest one.
+
+Six of the eleven publish a vintage — `created` on OpenAI, Azure and NIM, `createTime` and
+`updateTime` on Vertex AI, `lastModified` on Hugging Face, `startOfLifeTime` on Bedrock —
+so `PublishedAt` and `LastModifiedAt` (§6.2.3) are answerable more often than `Digest` is.
+`LastModifiedAt` matters more than it looks: a deployment with `VersionBinding` `FollowsRef`
+can have the artefact change beneath it with nothing else changing, and §12.3.1's audit
+trail points at a job record that a source-side move never produces. This is the member
+that makes the move visible at all.
+
+Exactly one system says when a model **stops**. Bedrock's `modelLifecycle` carries
+`legacyTime` and `endOfLifeTime`, and nothing else in the set has an equivalent. One vendor
+out of eleven is a thin basis for a member and it is in the model anyway, because on that
+date the deployment does not degrade — it stops, `FallbackPolicy` fires, and where that is
+`FallBackTo` the line keeps producing while something outside the qualified configuration
+answers. §11.1 sets out the reasoning. Every other availability facility here is a way of
+coping after the fact; `SupportedUntil` is the only one whose value is a date in the future.
+
+**Where the large data actually lives.** Every hosted platform in the set takes a storage
+URI in and out — OpenAI and Azure `file_id`, Bedrock's S3 input and output configuration,
+SageMaker's `InputLocation` header, Vertex's `fileUri` — and none of the self-hosted four
+does. That is not a coincidence: a hosted platform is on the far side of a network from
+your data, and a self-hosted runtime is not.
+
+The distinction §8.6.1 draws is worth carrying into every mapping. *A payload too large to
+carry* is a transport problem and `BeginTransfer` solves it. *Data that never needed to
+move* is not a transport problem at all, and chunking a batch that already sits in the
+plant's object store copies it twice for no benefit. `PayloadUri` is for the second, and it
+comes with an obligation these guides state repeatedly: a URI the execution site reads is a
+path the input data takes, so §9.5's `EgressPermitted` governs it exactly as it governs the
+endpoint.
+
 ## Reading the mappings
 
 `AuthenticationKind` classifies **what is stored**, not which handshake is performed —

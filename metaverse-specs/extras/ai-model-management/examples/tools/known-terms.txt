@@ -33,6 +33,9 @@ ListEndpoints
 ListFoundationModels
 OutputLocation
 
+# --- Amazon SageMaker -------------------------------------------------------
+InputLocation
+
 # --- Google Cloud -----------------------------------------------------------
 GenerateContentResponse
 

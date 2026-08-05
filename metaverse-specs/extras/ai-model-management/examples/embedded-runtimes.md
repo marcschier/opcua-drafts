@@ -45,6 +45,12 @@ describe the product, the file format or the vendor. A Server that calls libllam
 and a Server that calls `llama-server` can execute the same `.gguf` file and still publish
 different `ApiDialect` values, because they speak different contracts.
 
+The deployment publishes the same caller-facing distinction. An in-process ONNX Runtime or
+libllama deployment whose payload is interpreted by the Server's wrapper is
+`EmbeddedRuntime`. A loopback `llama-server` deployment whose caller supplies the
+OpenAI-compatible request body is `RestChatCompletions`. §6.4.2 makes that a property of
+what the OPC UA caller sends, not of the file on disk.
+
 ## Identity
 
 The local file is the identity anchor, not a provider-side deployment name.
@@ -57,9 +63,12 @@ The local file is the identity anchor, not a provider-side deployment name.
 | `ModelId` | stable local identifier, often the file path plus digest | stable local identifier, often the file path plus digest |
 | `Framework` | ONNX / ONNX Runtime, where the file metadata supports it | llama.cpp |
 | `Format` | ONNX | GGUF |
+| `PublishedAt` | from a catalogue, or empty | from a catalogue, or empty |
+| `LastModifiedAt` | filesystem modification time for this file copy | filesystem modification time for this file copy |
 | `Digest`, `DigestAlgorithm` | hash of the `.onnx` artefact | hash of the `.gguf` artefact |
 | `DigestProvenance` | `ComputedByServer`; `VerifiedOnStage` after catalogue staging | `ComputedByServer`; `VerifiedOnStage` after catalogue staging |
 | `ArtifactUri` | local file URI | local file URI |
+| `RuntimeIdentity` | ONNX Runtime build version or container image digest | llama.cpp build version or container image digest |
 | `ParameterCount`, `Quantization` | fill where the operator has verified these facts for the artefact | fill where the operator has verified these facts for the artefact |
 
 `Digest` and `DigestAlgorithm` can be a genuine artefact hash, and `ArtifactUri` can point
@@ -71,6 +80,17 @@ An in-process runtime is the case where a real digest costs nothing: the Server 
 holds the local file. That is the opposite of hosted APIs that only name a model. Where the
 file was staged from a catalogue that declared a digest, the §10.4 match raises
 `DigestProvenance` to `VerifiedOnStage`.
+
+The same local evidence can populate `LastModifiedAt`. A filesystem modification time says
+when this copy of the artefact was written, so it is honest as a last-modified timestamp
+for the file the Server opens. It is not a substitute for `PublishedAt`: §6.2.3 forbids
+using the Server's acquisition time as the source publication time, and a file mtime has
+exactly that local-copy character unless a catalogue supplies the source date.
+
+`RuntimeIdentity` is genuinely available in this arrangement. A Server can record the ONNX
+Runtime or llama.cpp build version, or the container image digest when the runtime is
+containerised. §9.3.1 treats that value as opaque and compared only for equality, which is
+enough to show that the serving stack changed while the model bytes stayed the same.
 
 The research for this guide establishes ONNX Runtime in-process loading and inference, not a
 portable metadata or tensor-signature inspection contract. Publish `Inputs` and `Outputs`

@@ -57,6 +57,7 @@ structured provenance, and neither decomposes into the triple `ModelType` asks f
 | `Name` | `id`, with the trailing date removed | on a deployed model this is the *deployment* name, which is yours |
 | `Version` | the date suffix of `id`, where there is one | `gpt-4o-2024-08-06` yields `2024-08-06` |
 | `ModelId` | the whole `id` | keep it verbatim under §6.2; it is what you must send back |
+| `PublishedAt` | `created` | Unix timestamp from the source, not the Server's acquisition time |
 | `Framework`, `Format` | not exposed | leave empty |
 | `Digest`, `DigestAlgorithm` | **not exposed** | see below |
 | `DigestProvenance` | `NotAvailable` | no artefact digest is exposed; the model name is not one |
@@ -79,12 +80,25 @@ The date suffix is a **convention, not a field**. Splitting `gpt-4o-2024-08-06` 
 hyphen group works today and is not something the API promises. A model named without one
 leaves `Version` empty, which is honest, rather than being given a fabricated `1.0.0`.
 
+The `created` timestamp is the value for `PublishedAt`. §6.2.3 requires the source's
+publication time rather than the time this Server first saw the model, because the source
+time is what lets opaque identifiers be ordered.
+
 ## `Invoke`
 
 The request body goes through as the caller supplied it. §8.2 makes the payload opaque to
 the Server, and the reason shows here: the `extra-parameters: pass-through` header exists so
 that model-specific fields can reach the model without the API version moving, and a Server
 that parsed and re-serialised the body would defeat it.
+
+| Deployment member | Cloud | Foundry Local |
+|---|---|---|
+| `ApiDialect` | `RestChatCompletions` | `RestChatCompletions`, or `EmbeddedRuntime` through the SDK |
+
+The deployment's `ApiDialect` is usually the same as the source's because the payload
+passes through unchanged. §6.4.2 says that is the honest answer given twice: the source
+value tells this Server what it speaks outward, and the deployment value tells a client
+what to put in `Payload`.
 
 | Output | From |
 |---|---|
@@ -126,12 +140,24 @@ Where you do wire it to the batch API, the mapping is direct: the batch identifi
 ## Large payloads
 
 `POST /files` yields a `file_id` referenced from a later request, on the Azure OpenAI plane.
-It is a way of *keeping* a file, not of transferring one request in pieces, so it does not
-map onto `BeginTransfer`.
+It is a by-reference payload, not a chunked transfer.
+
+| Member | From |
+|---|---|
+| `PayloadUri` | the `file_id` named by the later request |
+| `RequestUri` | the file id actually submitted by the Server |
+
+A later Azure OpenAI request that names the uploaded file supplies that id through
+`PayloadUri`, and the job records what was submitted in `InferenceJobType.RequestUri`
+where asynchronous processing is used.
 
 `BeginTransfer` and `InferenceTransferType` are the Server's own, over Part 5 `FileType` as
-§8.2 defines. Nothing needs to be arranged with Azure for it: the Server reassembles the
-payload and issues one ordinary request.
+§8.2 defines, for a payload too large to carry through the OPC UA call. §8.6.1 separates
+that case from data that already lives elsewhere. A `PayloadUri` or `RequestUri` is
+untrusted input under §12.2, and it is also an egress decision under §9.5: a cloud
+deployment may accept an Azure file reference only where the operator has permitted that
+egress, and a deployment whose `EgressPermitted` is false **shall not** accept a
+`PayloadUri` naming somewhere outside the operator's boundary.
 
 ## The catalogue
 

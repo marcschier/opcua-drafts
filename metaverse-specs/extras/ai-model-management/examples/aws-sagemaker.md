@@ -76,6 +76,16 @@ digest matched under §10.4.
 media types, and SageMaker passes headers such as custom attributes, target model, target
 variant, inference component and session id to the container.
 
+| Deployment member | From |
+|---|---|
+| `ApiDialect` | `Proprietary`, or `RestChatCompletions` for an OpenAI-compatible container |
+| `EndpointDescriptionUri` | the container contract documentation |
+
+The deployment's `ApiDialect` is usually the same as the source's because the Server passes
+the payload through to the container. §6.4.2 makes that value the contract an OPC UA client
+must satisfy when it fills `Payload`. `EndpointDescriptionUri` is the place to publish the
+container contract when the dialect is `Proprietary`.
+
 | Output | From |
 |---|---|
 | `ResponsePayload` | the container response body, verbatim |
@@ -111,9 +121,15 @@ by `X-Amzn-SageMaker-InputLocation` as an S3 URI. The service returns 202 with a
 SNS notification.
 
 That is a genuine `InvokeAsync` mapping. `InferenceId` goes in `JobId`, `OutputLocation`
-becomes the result reference, and the OPC UA job follows the Part 10 program lifecycle
-required by §8.6 while the Server observes the asynchronous invocation and exposes the
-container response through the `InferenceJobType` instance.
+becomes `ResponseUri`, and the OPC UA job follows the Part 10 program lifecycle required
+by §8.6 while the Server observes the asynchronous invocation and exposes the container
+response through the `InferenceJobType` instance.
+
+| Member | From |
+|---|---|
+| `JobId` | `InferenceId` |
+| `RequestUri` | `X-Amzn-SageMaker-InputLocation`, where the request names S3 input |
+| `ResponseUri` | `OutputLocation` |
 
 Batch Transform is also a SageMaker batch mechanism, but it is a separate job API for
 offline inference over S3 datasets. Map it only if the Server intentionally exposes that
@@ -125,9 +141,21 @@ For asynchronous endpoints, `X-Amzn-SageMaker-InputLocation` can point at an S3 
 containing the payload. That is a native way to avoid the inline request limit for the async
 path.
 
-It is still not an OPC UA chunked transfer. `BeginTransfer` and `InferenceTransferType` are
-the Server's own Part 5 `FileType` path as §8.2.4 defines. The Server may write the assembled
-request to S3 and call `InvokeEndpointAsync`, or issue one ordinary real-time
+That is a by-reference payload, not an OPC UA chunked transfer.
+
+| Member | From |
+|---|---|
+| `PayloadUri` | the S3 URI in `X-Amzn-SageMaker-InputLocation` |
+| `RequestUri` | the S3 input location actually submitted |
+| `ResponseUri` | the `OutputLocation` returned by `InvokeEndpointAsync` |
+
+`BeginTransfer` and `InferenceTransferType` are the Server's own Part 5 `FileType` path as
+§8.2 defines, for a payload too large to carry through the OPC UA call. §8.6.1 separates
+that case from data that already lives in S3. A `PayloadUri`, `RequestUri` or `ResponseUri`
+is untrusted input under §12.2, and it is also an egress decision under §9.5: a deployment
+whose `EgressPermitted` is false **shall not** accept a `PayloadUri` naming somewhere
+outside the operator's boundary. The Server may still write an assembled transfer to S3 and
+call `InvokeEndpointAsync` where that egress is permitted, or issue one ordinary real-time
 `InvokeEndpoint` request when the payload fits.
 
 ## The catalogue

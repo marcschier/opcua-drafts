@@ -43,8 +43,21 @@ The Hub's content still belongs in a `ModelRegistryType` under §10. Let a separ
 `ModelSourceType` describe whatever actually serves inference — Inference Endpoints, or a
 runtime you deployed the weights to.
 
+Keep the two dialect answers separate. The Hub catalogue source is `Proprietary`, because
+it is not an inference contract. A deployment created from an imported Hub model publishes
+the `ApiDialect` of the runtime that serves it: `RestChatCompletions` for a compatible
+chat endpoint, `EmbeddedRuntime` for an in-process runtime, `OpenInferenceProtocol` for an
+OIP server, or another value when that is the contract the OPC UA caller must send.
+
 The table above is for the case where a Server does want `ListModels` and `TestConnection`
 against the Hub itself, which is a reasonable thing to want and is why it is written out.
+
+`ListModels` pages naturally over the Hub listing. The Hub API takes `limit` and `skip`;
+§9.4 gives the OPC UA Method an opaque `ContinuationPoint` so a catalogue this size is not
+truncated by `MaxResults`. A Server can encode the next Hub offset, the filter it belongs
+to and any source-side cursor state into that opaque value. The first call supplies an
+empty `ContinuationPoint`, each following call returns the value supplied by the previous
+one, and an empty returned value means the enumeration is complete.
 
 `AuthenticationKind` is `BearerToken` only when the Server stores a Hugging Face token in
 its credential store. A public anonymous projection is `Anonymous`, and the public xrproxy
@@ -70,6 +83,7 @@ an owner, a name and immutable commits.
 | `TaskKind` | `pipeline_tag` | where the field is present |
 | `Framework` | `library_name` | where the field is present |
 | `Card` | `cardData` and the model card | structured metadata plus the human card |
+| `LastModifiedAt` | `lastModified` | ISO timestamp from the Hub listing |
 | `Digest`, `DigestAlgorithm` | per-file LFS `sha256` from the tree API | artefact-level digest, not the commit SHA |
 | `DigestProvenance` | `DeclaredBySource`; `VerifiedOnStage` after staging | the Hub declares the LFS digest; §10.4 verifies fetched bytes |
 | `ArtifactUri` | the selected file URL or Hub resource URL | choose the artefact being imported |
@@ -89,6 +103,11 @@ Branches and tags are mutable pointers to commits. A deployment pinned to a comm
 set to that ref. §9.3 is exactly about this case, and §12.3 makes the consequence plain:
 repointing the followed ref changes what the equipment runs and must be treated as an
 authorization-bearing act, not as harmless configuration.
+
+The Hub listing's `lastModified` is the source-side timestamp for `LastModifiedAt`. It is
+especially important when a deployment follows a branch or tag, because §6.2.3 requires a
+Server following a mutable reference to populate `LastModifiedAt` rather than substituting
+its own acquisition time.
 
 ## `Invoke`
 

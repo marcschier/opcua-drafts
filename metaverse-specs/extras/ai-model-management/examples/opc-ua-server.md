@@ -47,6 +47,8 @@ downstream Server browses them.
 |---|---|
 | `Publisher`, `Name`, `Version` | the upstream `ModelType`, read directly |
 | `ModelId` | the upstream `ModelId` |
+| `PublishedAt`, `LastModifiedAt` | the upstream members of the same names |
+| `DeprecatedFrom`, `SupportedUntil` | the upstream `ModelCardType`, read directly |
 | `Digest`, `DigestAlgorithm` | **whatever the upstream Server has** |
 | `DigestProvenance` | read upstream, but publish no stronger value |
 | `Framework`, `Format`, `TaskKind` | the upstream members of the same names |
@@ -59,12 +61,25 @@ the same reason. Nothing along the chain may fill it in — §12.1.1 forbids inv
 value, and a Server that manufactured one at the second hop would be laundering the
 absence of provenance into the appearance of it.
 
+The date members compose the same way. `PublishedAt`, `LastModifiedAt`, `DeprecatedFrom`
+and `SupportedUntil` are read from the upstream Server and forwarded rather than invented.
+`LastModifiedAt` is load-bearing in this guide: §6.2.3 requires a Server whose deployment
+follows a mutable reference to populate it, because a reference moving at the source
+produces no job and §12.3.1's audit trail cannot otherwise be built. In a federation the
+source is another Server, so that is exactly the case.
+
 `DigestProvenance` composes the same way §9.5 composes residency, and §12.1.1 states the
 rule: the downstream Server reads the upstream value and shall not publish a stronger one.
 Forwarding an upstream digest without staging and hashing the bytes is `DeclaredBySource`
 from the downstream Server's point of view, even if the upstream Server's own value was
 `VerifiedOnStage`. Publishing that upstream `VerifiedOnStage` as this Server's verification
 would claim a check this Server did not perform.
+
+`RuntimeIdentity` follows the same boundary. The upstream value describes the upstream
+Server's serving configuration. The downstream Server's deployment has its own serving
+configuration and shall not republish the upstream `RuntimeIdentity` as its own, for the
+same reason §12.1.1 forbids republishing an upstream `DigestProvenance` value that claims a
+check this Server did not perform.
 
 What does travel is the `ImportedFrom` reference. Follow it upstream and the chain
 terminates wherever the artefact actually came from, however many Servers back that is.
@@ -75,6 +90,13 @@ That is the whole point of §11 being a walk rather than a field.
 The downstream Server calls the upstream `Invoke` and returns what comes back. Every output
 maps to itself: `ResponsePayload`, `ResponseContentType`, `Usage`, `FinishReason`,
 `SafetyAssessment`, `RetryAfter`.
+
+The downstream deployment's `ApiDialect` is `OpcUaInference`, because the OPC UA caller
+sends the §8 Method contract to this Server. `EndpointDescriptionUri` is not required for
+that deployment; the dialect names this specification exactly. Availability members are
+also read from the upstream deployment where they describe the same execution path, and a
+latency-based `Degraded` state carries `ObservedLatency` under §6.4.3 rather than a bare
+assertion.
 
 `ModelUsed` needs care, and it is the one genuinely interesting mapping in this guide.
 
@@ -120,6 +142,18 @@ learn what happened.
 
 `BeginTransfer` maps to the upstream `BeginTransfer`, both over Part 5 `FileType`.
 
+`PayloadUri` is an egress path. A URI the downstream Server passes to the upstream Server
+is a location the upstream execution site may read, and §8.6.1 classifies that as the same
+§9.5 question as an inline payload. The composition rule already stated for residency
+therefore applies: the downstream Server cannot know whether the upstream Server will fetch
+that URI from somewhere further out, so it shall not publish a more permissive egress answer
+than the upstream deployment supports.
+
+For `InvokeAsync`, the downstream job mirrors the same large-payload members. `RequestUri`
+records the URI submitted, `ResponseUri` records a result location returned by the upstream
+execution path, and `TransferRequired` with `Transfer` is represented by a transfer object
+in the downstream address space rather than by passing through an upstream NodeId.
+
 Read `MaxInlinePayloadSize` from the upstream deployment and publish a value **no larger**
 downstream. Publishing a larger one produces a call that the downstream Server accepts and
 the upstream Server refuses, which turns a bound that §8.2.4 exists to make visible in
@@ -135,6 +169,13 @@ An upstream `ModelRegistryType` is browsable directly, so §10 needs nothing bui
 downstream Server can present the upstream registry, or federate against it with a
 `Mode` of `Federate` — the mode that moves no bytes and leaves the artefact where it
 is (§10.3).
+
+`ListModels` carries its `ContinuationPoint` through the same composition. The downstream
+Server passes the client's opaque value to the upstream Server when it represents upstream
+state, returns the upstream continuation value in its own response, and returns an empty
+value when the upstream enumeration is complete. If it multiplexes several upstream
+catalogues, its continuation value is still opaque to the client and records whichever
+upstream cursor or local merge state is needed.
 
 `Stage` also works and means what it says: the downstream Server fetches the artefact and
 holds it. That is the arrangement worth choosing when the link is the thing you do not

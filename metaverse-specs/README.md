@@ -29,7 +29,7 @@ Pick Part 1 when you already have an artist-authored USD asset and want to drive
 | Question | *What does this camera see, and what did it conclude?* | *How do I tell this robot what to do?* | *Which model produced this answer, and can I audit it?* |
 | The gap | OPC 40100-1 leaves result content undefined; OPC 40010-1 has no vision types at all | OPC 40010-1 describes robot topology and defines **no motion verbs** | OPC UA has no way to say what an AI model *is*, where it runs, or what it was trained on |
 | Namespace | `http://opcfoundation.org/UA/Vision/` | `http://opcfoundation.org/UA/RobotIntent/` | `http://opcfoundation.org/UA/AI/` |
-| Release | 0.1.0 | 0.1.0 | 0.3.0 |
+| Release | 0.1.0 | 0.1.0 | 0.4.0 |
 
 Vision and Robot Intent are self-contained on base OPC UA. AI Model Management additionally requires *OPC UA — xRegistry*, because its model catalogue is a domain extension of that abstract registry rather than a private invention — a model catalogue **is** a registry, and defining a second one would leave two incompatible ways to describe the same artefact.
 

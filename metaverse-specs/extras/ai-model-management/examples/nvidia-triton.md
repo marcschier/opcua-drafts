@@ -33,6 +33,12 @@ whether that is HTTP `POST /v2/models/{name}/infer` or the gRPC `ModelInfer` RPC
 such as a dedicated inference server speaking its own predict RPC. The literal names the
 contract this Server calls, not the transport.
 
+The same distinction applies on the deployment side. A deployment that expects an OPC UA
+caller to send an OIP body publishes `DeploymentType.ApiDialect` as
+`OpenInferenceProtocol`, whether this Server forwards that body over HTTP or over gRPC.
+The dialect tells the caller what payload contract it must satisfy; the transport is a
+separate integration choice.
+
 Triton does not include authentication in its core protocol. If an operator adds nginx,
 Envoy or another gateway, §9.2 says `AuthenticationKind` describes the credential this
 Server stores for that gateway.
@@ -50,6 +56,7 @@ Server stores for that gateway.
 | `ModelId` | `name` plus version when pinned | keep enough to reconstruct the endpoint path |
 | `Framework` | `platform` | examples include backend platform strings |
 | `Format` | operator assertion | not a separate OIP field |
+| `PublishedAt`, `LastModifiedAt` | empty | OIP metadata exposes no model vintage timestamp |
 | `Digest`, `DigestAlgorithm` | **not exposed by OIP v2** | see catalogue and import below |
 | `DigestProvenance` | `NotAvailable` | OIP v2 returns no artefact digest |
 
@@ -62,6 +69,12 @@ the repository policy serves is a candidate for `FollowsRef`.
 The trap is that an explicit version is still not a digest. It tells the Server which
 repository version it addressed; it does not prove which bytes the repository mounted for
 that version.
+
+The research establishes Triton metadata fields for name, versions, platform and tensor
+signatures. It does not establish a protocol field for the source publication time or for
+the time the repository loaded the model, so `PublishedAt` and `LastModifiedAt` stay empty
+unless a separate catalogue supplies them. §6.2.3 forbids using the Server's own discovery
+or acquisition time as `PublishedAt`.
 
 ## `Invoke`
 
@@ -151,6 +164,12 @@ approximation many hosted systems need. `GET /v2/health/ready` tests server read
 `GET /v2/models/{name}/ready` or the versioned form tests model readiness. These are
 natural inputs to `TestConnection`, `Reachability`, `LastSuccessAt` and
 `ConsecutiveFailures`.
+
+The cited research establishes Triton's metrics surface, but not a specific protocol field
+that maps a per-deployment latency value into this model. A Server that needs
+`ObservedLatency` therefore measures the call itself, which §6.4.3 permits; if it reports
+`Degraded` on latency grounds, it publishes that measured value so the state can be
+checked.
 
 ## What this system does not tell you
 
