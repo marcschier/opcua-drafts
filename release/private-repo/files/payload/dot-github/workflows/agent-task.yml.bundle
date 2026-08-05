@@ -70,7 +70,10 @@ on:
       COPILOT_GITHUB_TOKEN:
         description: >-
           Optional PAT with the "Copilot Requests" permission, for when the built-in token
-          cannot be used. Reaches only the read-only job.
+          cannot be used. Reaches only the read-only job. Note that Copilot usage is billed
+          to whoever owns this PAT, whereas the built-in token bills the account that owns
+          the repository — so in an organisation, setting this moves the cost from the
+          organisation to one person.
         required: false
     outputs:
       url:
@@ -161,6 +164,11 @@ jobs:
           # token is contents:read — worth little if the agent is hijacked. A
           # COPILOT_GITHUB_TOKEN secret is a real credential, so set one only if the
           # built-in path is refused.
+          #
+          # It also decides who pays. Copilot usage on the built-in token is billed to the
+          # account that owns the repository; usage on a PAT is billed to whoever owns the
+          # PAT. In an organisation-owned repository the built-in path is therefore the one
+          # that keeps the cost with the organisation.
           GITHUB_TOKEN: ${{ github.token }}
           FALLBACK_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}
           PROMPT: ${{ inputs.prompt }}
@@ -185,9 +193,13 @@ jobs:
                  --allow-tool='shell(python3:*)' \
                  2>&1 | tee "$RUNNER_TEMP/agent.log"; then
             echo "::error::the agent did not run. If the log shows an authentication or \
-              entitlement failure, this repository cannot use copilot-requests: write — \
-              add a COPILOT_GITHUB_TOKEN secret (a fine-grained PAT with the \
-              'Copilot Requests' permission) and re-run."
+              entitlement failure, check first that the account owning this repository has \
+              Copilot CLI enabled in its Copilot policies — that is what the built-in token \
+              needs, and it keeps the cost with that account. Only if the built-in path is \
+              genuinely refused, add a COPILOT_GITHUB_TOKEN secret (a fine-grained PAT with \
+              the 'Copilot Requests' permission); in an organisation use a service account \
+              that holds an organisation-assigned Copilot seat, because a personal PAT bills \
+              the person who owns it."
             exit 1
           fi
 
