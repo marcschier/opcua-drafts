@@ -90,15 +90,16 @@ uses, usually `/v1/chat/completions`, `/v1/completions` or `/v1/embeddings`.
 | response payload | wrapper-defined bytes or JSON | HTTP response body, verbatim |
 | response content type | wrapper-defined | `application/json` |
 | model used | the `ModelType` NodeId for the local file | the `ModelType` NodeId for the served file |
-| `Usage.UnitKind` | empty unless the wrapper meters it | `tokens` |
-| `Usage.InputUnits` | empty unless the wrapper meters it | prompt token count |
-| `Usage.OutputUnits` | empty unless the wrapper meters it | completion token count |
-| `Usage.TotalUnits` | empty unless the wrapper meters it | total token count |
+| `Usage.UnitKind` | empty when the wrapper does not meter; otherwise the wrapper's unit, per §8.2.3 | `tokens` |
+| `Usage.InputUnits` | `0` when `UnitKind` is empty; otherwise the measured input count | prompt token count |
+| `Usage.OutputUnits` | `0` when `UnitKind` is empty; otherwise the measured output count | completion token count |
+| `Usage.TotalUnits` | `0` when `UnitKind` is empty; otherwise the measured total count | total token count |
 
 Usage accounting is precise by case. `llama-server` uses an OpenAI-compatible response and
 returns token counts, so `UsageDataType` can be populated with `tokens`. ONNX Runtime
-in-process has no usage telemetry field in the research, so the Server should leave usage
-empty unless its own wrapper has a metering rule it is prepared to document.
+in-process has no usage telemetry field in the research, so the Server returns `Usage`
+with empty `UnitKind` and zero counts unless its own wrapper has a metering rule it is
+prepared to document. That is the §8.2.3 not-metered sentinel, not a zero measurement.
 
 Finish reasons are also case-specific. The OpenAI-compatible llama.cpp surface includes a
 finish-reason field; ordinary values map the same way as the other chat-completions guides:
@@ -187,6 +188,10 @@ Reachable against embedded runtimes: **AI-Base**, **AI-Invoke**, **AI-InvokeAsyn
 **AI-Transfer**, **AI-Residency**, **AI-Catalogue** and **AI-Import**. **AI-Signatures** is
 not established by this guide for ONNX Runtime or llama.cpp; claim it only where the Server
 has a verified way to publish tensor signatures.
+
+For in-process runtimes that do not meter, **AI-Invoke** is satisfied by returning
+`Usage` with empty `UnitKind` and zero counts; §13.2 accommodates that. `llama-server`
+responses are metered when they carry the OpenAI-compatible token counts shown above.
 
 Out of reach without something else: **AI-Learning** needs a training loop; **AI-OffServer**
 does not describe an `OnServer` deployment; **AI-Stream** needs a subscription or data-channel

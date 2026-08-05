@@ -35,25 +35,20 @@ should populate `EndpointDescriptionUri`, and Bedrock is the concrete reason. Wi
 URI, nothing in the address space tells a client whether the Server expects the Converse
 shape or a family-specific InvokeModel body.
 
-AWS authenticates Bedrock calls with Signature Version 4. `AuthenticationKindEnum` has
-`Anonymous`, `ApiKey`, `BearerToken`, `WorkloadIdentity` and `MutualTls`; none says
-"SigV4". That is a real gap in the model, and a guide should not hide it.
-
-The best mapping is still answerable if the member is read as classifying **what is
-stored**, not which handshake is performed. SigV4 driven by an IAM role attached to the
-pod, task or instance is `WorkloadIdentity`, because no secret is stored anywhere. That is
-the same property that makes §9.2 prefer it. SigV4 driven by static access keys is
-`ApiKey`, because a secret is stored and must be rotated. Neither value is a perfect fit:
-SigV4 is not an API-key protocol and not a generic workload-identity protocol. If a reader
-needs the handshake recorded exactly, set `EndpointDescriptionUri` to documentation for the
-actual AWS SigV4 arrangement in use.
+AWS authenticates Bedrock calls with Signature Version 4. SigV4 is not one of the
+five `AuthenticationKindEnum` literals because §9.2 classifies the credential the Server
+stores, not the handshake it performs. SigV4 driven by an IAM role attached to the pod,
+task or instance is `WorkloadIdentity`, because no secret is stored anywhere. SigV4 driven
+by static access keys is `ApiKey`, because a secret is stored and must be rotated. If a
+reader needs the handshake recorded exactly, set `EndpointDescriptionUri` to documentation
+for the actual AWS SigV4 arrangement in use.
 
 ## Identity
 
 `ListFoundationModels` returns `modelId`, `modelArn`, `modelName`, `providerName` and
-`modelLifecycle`, among other capability fields. `providerName` is the model publisher —
-Anthropic, Meta, Amazon and similar names — rather than merely the host written into an
-`owned_by` field.
+`modelLifecycle`, among other capability fields. `providerName` is the model producer that
+§6.2 says belongs in `Publisher` — Anthropic, Meta, Amazon and similar names — rather than
+merely the host written into an `owned_by` field.
 
 | Member | From | Note |
 |---|---|---|
@@ -97,8 +92,11 @@ as anything other than `Error`.
 InvokeModel is the escape hatch for model-specific bodies. It still maps to `Invoke`
 because §8.2 makes the payload opaque, but the Server cannot give a general mapping for
 usage or finish reason unless the selected family's response schema carries them. If you
-use InvokeModel, make `EndpointDescriptionUri` point to the family-specific contract and
-leave `Usage` fields empty where the response does not define them.
+use InvokeModel, make `EndpointDescriptionUri` point to the family-specific contract. Where
+the response does not define usage counts, return `Usage` with empty `UnitKind` and zero
+counts; §8.2.3 defines that as "not metered" rather than as a measurement. A Server that
+does report a non-empty `UnitKind` must have obtained the corresponding counts from the
+execution site.
 
 ## Asynchronous inference
 
@@ -156,10 +154,10 @@ not whether the payload left the site.
 
 ## What this system does not tell you
 
-- **The exact authentication kind.** SigV4 is not in `AuthenticationKindEnum`. Use
-  `WorkloadIdentity` for role-based signing and `ApiKey` for static access keys because
-  those values describe what is stored, and point `EndpointDescriptionUri` at the SigV4
-  handshake you actually use.
+- **The exact handshake.** SigV4 is not in `AuthenticationKindEnum` because §9.2
+  classifies what is stored. Use `WorkloadIdentity` for role-based signing and `ApiKey`
+  for static access keys, and point `EndpointDescriptionUri` at the SigV4 handshake you
+  actually use.
 - **Which weights answered.** No digest is returned by Converse, InvokeModel or
   `ListFoundationModels`. `modelArn` carries a version identifier, not a weight hash.
 - **A universal request body.** Converse gives one Bedrock body shape; InvokeModel gives a
@@ -174,6 +172,11 @@ not whether the payload left the site.
 
 Reachable against Amazon Bedrock: **AI-Base**, **AI-Invoke**, **AI-InvokeAsync**,
 **AI-Transfer**, **AI-OffServer**, **AI-Federation**, **AI-Residency**.
+
+Converse is metered through `usage.inputTokens`, `usage.outputTokens` and
+`usage.totalTokens`. InvokeModel responses that do not carry counts satisfy
+**AI-Invoke** by returning `Usage` with empty `UnitKind` and zero counts; §13.2
+accommodates that.
 
 Out of reach without something else: **AI-Catalogue** and **AI-Import** need a
 content-addressed registry; **AI-Signatures** needs tensor shapes this contract does not

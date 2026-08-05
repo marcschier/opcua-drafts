@@ -35,10 +35,9 @@ store. It is not a place to copy the token, and §9.2 is explicit that credentia
 exposed through the address space.
 
 The OpenAI documentation also describes workload identity federation for obtaining
-short-lived tokens. If a Server implements that arrangement without storing a secret, the
-deployment can be modelled as `WorkloadIdentity`; do not use that value merely because the
-HTTP handshake ultimately carries a bearer token. `AuthenticationKind` classifies what is
-stored.
+short-lived tokens. Apply §9.2: if a Server implements that arrangement without storing a
+secret, the deployment is `WorkloadIdentity`; if it stores a bearer credential, it is
+`BearerToken`.
 
 ## Identity
 
@@ -48,12 +47,18 @@ the full `ModelType` identity.
 
 | Member | From | Note |
 |---|---|---|
-| `Publisher` | `owned_by` | usually `openai`, or an organization owner |
+| `Publisher` | empty unless independent provenance identifies the producer | `owned_by` reports the serving host or account, not the model producer |
 | `Name` | `id`, with the trailing date removed | only where the name follows that convention |
 | `Version` | the date suffix of `id`, where there is one | `gpt-4o-2024-08-06` yields `2024-08-06` |
-| `ModelId` | the whole `id` | keep it verbatim; it is what you send back |
+| `ModelId` | the whole `id` | keep it verbatim under §6.2; it is what you send back |
 | `Framework`, `Format` | not exposed | leave empty |
 | `Digest`, `DigestAlgorithm` | **not exposed** | see the `system_fingerprint` warning below |
+
+The `owned_by` field reports the serving host or account. §6.2 says `Publisher` names the
+organisation that produced the model and is left empty where only the serving organisation
+is known. The full `id` still goes verbatim in `ModelId`, so two Servers can compare the
+source system's own identifier even when the `Publisher`, `Name`, `Version` triple is
+incomplete.
 
 Pinned model ids such as `gpt-4o-2024-08-06` are immutable by OpenAI policy, not by content
 addressing. A `Pinned` deployment is pinned to a name whose behaviour the provider promises
@@ -136,7 +141,7 @@ started.
 
 `GET /v1/models` is a useful source for `ListModels` on the `ModelSourceType`: it answers
 which model ids the endpoint exposes, and it returns the `id`, `object`, `created` and
-`owned_by` fields needed for the thin identity in the table above.
+`owned_by` fields that the identity mapping above draws on.
 
 It is not a catalogue in the §10 sense. It has no content-addressed artefact, no digest, no
 resource that can be staged and verified, and no model card or provenance document that the

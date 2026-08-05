@@ -100,17 +100,32 @@ can do here.
 That these are assertions rather than measurements is not a weakness of the model. It is
 the situation, stated.
 
+There is one exception, and it is the case where an assertion can be checked against
+another: where a deployment federates to another Server implementing this specification,
+§9.5 obliges it to read that Server's declarations and forbids publishing anything more
+permissive. [The federation guide](opc-ua-server.md) works it through. It propagates
+honesty rather than establishing it — but it closes the case where every Server in a chain
+is truthful and the answer still comes out wrong because nobody was obliged to look up.
+
 ## Reading the mappings
 
-`AuthenticationKind` classifies **what is stored**, not which handshake is performed. That
-is what makes it answerable across systems whose handshakes have nothing in common, and it
-is why §9.2 prefers `WorkloadIdentity`: it is the one value under which no secret exists
-anywhere for an attacker to read.
+`AuthenticationKind` classifies **what is stored**, not which handshake is performed —
+§9.2 states the rule, and it is what makes the member answerable across systems whose
+handshakes have nothing in common. It is also why §9.2 prefers `WorkloadIdentity`: it is
+the one value under which no secret exists anywhere for an attacker to read.
 
-AWS is the case that tests it. SigV4 is not one of the five literals, and the two AWS
-guides map it by what it stores: an IAM role attached to the pod or instance is
-`WorkloadIdentity`, because nothing is stored; static access keys are `ApiKey`. The
-reasoning is spelled out in [the Bedrock guide](aws-bedrock.md).
+AWS is the case that shows the rule working. SigV4 is not one of the five literals and does
+not need to be: signed by an assigned IAM role it is `WorkloadIdentity`, because nothing is
+stored; signed by static access keys it is `ApiKey`, because something is. One scheme, two
+values, decided by what an attacker could steal. [The Bedrock guide](aws-bedrock.md) works
+it through, and points `EndpointDescriptionUri` at the handshake for a reader who needs it
+recorded exactly.
+
+`ApiDialect` is read the same way — it names the contract *this Server speaks to that
+endpoint*, not everything the endpoint could offer. The same runtime is `EmbeddedRuntime`
+in process and `RestChatCompletions` over its own loopback server; the same host is
+`Proprietary` through its native API and `RestChatCompletions` through its
+OpenAI-compatible one.
 
 ## Throttling, on every one of them
 

@@ -24,7 +24,7 @@ listing rather than `Invoke`.
 |---|---|
 | `SourceId` | your name for this Hub catalogue source |
 | `EndpointUri` | `https://huggingface.co/api/` |
-| `ApiDialect` | `Proprietary` — see below |
+| `ApiDialect` | `Proprietary` |
 | `EndpointDescriptionUri` | `https://huggingface.co/.well-known/openapi.json` |
 | `AuthenticationKind` | `Anonymous` for public repositories, `BearerToken` where private or gated repositories are accessed |
 | `CredentialReference` | names the Hugging Face token — never the value |
@@ -34,16 +34,14 @@ listing rather than `Invoke`.
 | `TestConnection` | a Hub API probe |
 | `ListModels` | backed by `GET /api/models` and filtered by the Server |
 
-`ApiDialect` is Mandatory, so it cannot be left empty even though the Hub speaks no
-inference contract at all. `Proprietary` is the honest value, and §9.2's *should* clause
-then does real work: `EndpointDescriptionUri` points at the Hub's own OpenAPI document,
-which is the only thing that tells a client what this endpoint actually is.
+§9.2 states the catalogue-only case directly: because the Hub speaks no inference
+contract, `ApiDialect` is `Proprietary` and `EndpointDescriptionUri` points at the Hub's
+own OpenAPI document. That is the accurate answer for this source, not an apology for a
+missing inference literal.
 
-There is a cleaner arrangement, and it is the one to prefer. The Hub is a catalogue, so
-model it as a `ModelRegistryType` under §10 and let a `ModelSourceType` exist only for
-whatever actually serves inference — Inference Endpoints, or a runtime you deployed the
-weights to. A `ModelSourceType` whose every serving member is empty is a shape being bent
-to fit; §10's registry types are the shape that fits.
+The Hub's content still belongs in a `ModelRegistryType` under §10. Let a separate
+`ModelSourceType` describe whatever actually serves inference — Inference Endpoints, or a
+runtime you deployed the weights to.
 
 The table above is for the case where a Server does want `ListModels` and `TestConnection`
 against the Hub itself, which is a reasonable thing to want and is why it is written out.
@@ -203,6 +201,12 @@ artefact was obtained.
 Reachable against a Hugging Face catalogue projection: **AI-Base**, **AI-Catalogue** and
 **AI-Import**. **AI-Residency** is reachable for deployments the Server creates from the
 imported model, because the operator can state the invocation boundary.
+
+**AI-Base** is worth a sentence here because this is the shape §13.1 has in mind when it
+describes a plant node that "may never call `Invoke` at all". Its deployment requirements
+apply to each deployment a Server exposes, so a Server that exposes none satisfies them
+vacuously and claims **AI-Base** on its `AiRootType`, `SpecificationVersion` and
+`ModelType` obligations — which is what a catalogue Server actually has.
 
 Reachable only with a separate runtime: **AI-Invoke**, **AI-InvokeAsync**, **AI-Transfer**,
 **AI-OffServer**, **AI-Federation** and **AI-Signatures** depend on how the model is served

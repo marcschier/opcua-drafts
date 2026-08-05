@@ -389,6 +389,12 @@ An instance is created when a model becomes known to the Server — whether it w
 
 `ModelId`, `Name`, `Version`, `Digest` and `DigestAlgorithm` are **Mandatory**. The first three because a model that cannot be named cannot be discussed; the last two because clause 12 depends on them, and a rule that depends on an Optional member is a rule a conformant Server can silently not satisfy.
 
+**`ModelId` carries the source system's own identifier, verbatim.** Where a model came from a catalogue or a remote endpoint, it is the string that system uses — the string a client would send back to reach the same model there. It is not derived from the other members and it is not reformatted, because its value is that two Servers integrating the same source produce the same one. Where the triple below cannot be recovered, `ModelId` is what remains comparable.
+
+**`Publisher` names the organisation that produced the model**, not the one serving it. A hosted endpoint that reports its own operator as the owner has answered a different question, and a Server **shall not** publish the serving organisation there: a `Publisher` of `azure` or `aws` for a model somebody else trained defeats the purpose §6.2.1 gives it, which is recognising the same artefact across two installations that fetched it from different places. Where only the serving organisation is known, `Publisher` is left empty.
+
+Leaving it empty is the right answer more often than it looks. `Publisher` and `Version` are best-effort against a source that publishes one opaque identifier and nothing else, and a decomposition guessed from the shape of that identifier is worth less than an honest gap — it is a convention of the vendor's naming, not a field they promised, and it changes without notice. `ModelId` is the member that always holds.
+
 `TaskKind` is a **String**, not an enumeration. The set of things models do is not closed, and an enumeration would date faster than the models it describes.
 
 `LabelClasses` is an ordered array whose **index** is the contract. A consuming specification's class identifier refers to a position in it, so a Server **shall not** reorder it in place: a model whose class 3 silently becomes class 4 produces results that are wrong in a way nothing detects.
@@ -640,6 +646,12 @@ The counts are deliberately **not** named tokens. A token is one accounting unit
 
 `TotalUnits` is **not** required to be the sum of the other two. Caching, deduplication and shared prefixes mean the metered total legitimately differs from the arithmetic one, and a client that recomputes it will disagree with the bill.
 
+**Not every execution site meters at all.** A tensor predict contract returns output tensors and nothing that could be counted, and an in-process runtime returns what the library returns. A Server that supplied a count on such a site's behalf would be publishing a measurement it did not take.
+
+An **empty `UnitKind` means the call was not metered**. Where `UnitKind` is empty a Server **shall** set `InputUnits`, `OutputUnits` and `TotalUnits` to zero, and a client **shall not** read those zeros as measured quantities. A Server **shall not** report a non-empty `UnitKind` alongside counts it did not obtain from the execution site.
+
+The sentinel is the empty unit rather than a zero count because the counts cannot carry it: they are `UInt64`, so a Server with nothing to report and one that metered nothing would otherwise encode identically. Naming the unit is what makes the difference between *no measurement* and *a measurement of none* legible, and that difference is the whole of what a client reading `Usage` is entitled to know.
+
 #### 8.2.4 Payload size, and why `Invoke` is not the general case
 
 `Payload` is a `ByteString`, and a `ByteString` is bounded three times over: by the Server's `MaxByteStringLength`, by the channel's negotiated `MaxMessageSize`, and by the Session's `MaxResponseMessageSize`. **This model does not get to choose any of them.** An image, a point cloud or a window of high-rate samples exceeds them routinely, and a call that cannot carry its input is not a call.
@@ -769,7 +781,15 @@ A deployment whose `InferenceLocation` is not `OnServer` executes somewhere the 
 
 These name **the contract the remote endpoint speaks**. They never affect how an OPC UA client calls this Server, which is always §8. `OpcUaInference` is another Server implementing this specification; `RestChatCompletions` is the de-facto REST contract for chat and embeddings that most serving runtimes expose, including ones that run on a single workstation — named here for what it does rather than for whoever published it first, because a literal in a standard should not be an advertisement; `OpenInferenceProtocol` is the KServe-derived predict contract; `TensorRemoteProcedure` covers the tensor-oriented RPC contracts of dedicated inference servers; `EmbeddedRuntime` is an in-process runtime reached through a library rather than a socket. `Proprietary` is an honest admission, and a Server using it **should** populate `EndpointDescriptionUri` — otherwise nothing in the address space says how the endpoint is called.
 
+The literals classify the contract **this Server speaks to that endpoint**, not everything the endpoint could offer. A runtime reached in-process is `EmbeddedRuntime` and the same runtime reached over its own loopback HTTP server is `RestChatCompletions`; a hosted endpoint reached through its OpenAI-compatible surface is `RestChatCompletions` and the same host reached through its native API is `Proprietary`. The value describes the integration, so it is answerable, and a Server that changes how it calls an endpoint changes it.
+
+Where a source serves **only as a catalogue** — §10's import reads from it and nothing calls `Invoke` through it — `ApiDialect` is `Proprietary` and `EndpointDescriptionUri` is populated. The member's value domain is inference contracts, a catalogue speaks none of them, and `Proprietary` is the accurate answer rather than a shortcoming: it says there is no inference contract here to recognise, and the description URI says what there is instead.
+
 `AuthenticationKind` (`AuthenticationKindEnum`, `ns=2;i=3008`) is `Anonymous`, `ApiKey`, `BearerToken`, `WorkloadIdentity` or `MutualTls`. `WorkloadIdentity` is preferred wherever the hosting platform offers it, because it is the only one of the five under which no secret is stored anywhere for an attacker to read.
+
+**It classifies the credential the Server stores, not the handshake it performs.** That is what makes it answerable against endpoints whose handshakes have nothing in common. Where a handshake is driven by an identity the platform assigns and no secret is stored, it is `WorkloadIdentity` whatever token the wire ultimately carries; where a secret is stored, it is `ApiKey` or `BearerToken` according to what the stored thing is. A request-signing scheme is therefore `WorkloadIdentity` when an assigned role signs it and `ApiKey` when a stored key does — one scheme, two values, because the question is what an attacker could steal.
+
+Read as a handshake classifier the member would be unanswerable for most real endpoints, and the five literals are deliberately not a taxonomy of handshakes. A source whose handshake a client genuinely needs described names it through `EndpointDescriptionUri`.
 
 **`CredentialReference` is a name, never a secret.** It identifies the credential in whatever store the Server uses. A Server **shall not** expose credential material through any Attribute of any node in this model, and a client that reads `CredentialReference` learns which credential is in use and nothing about what it is. This is stated as a prohibition rather than left implicit because the address space is a browsable, subscribable, historisable surface, and a secret placed in it is not merely readable — it is archived.
 
@@ -838,6 +858,16 @@ Three members on `DeploymentType` answer it, and all three are about the deploym
 - **`RetainsInput`** states whether the far end keeps input after serving the request — for provider-side logging, for evaluation, for training. **Unknown is not a value.** A Server that cannot establish the answer **shall** report `true`, because the assumption that keeps data in is the one that is safe to be wrong about.
 
 `EgressPolicyUri` names the governing policy for a human.
+
+These three members are **end-to-end, not next-hop**. `DataJurisdiction` names where input is ultimately processed; `EgressPermitted` states whether calling this deployment sends input outside the operator's boundary **by any path**; `RetainsInput` covers retention anywhere along that path. A hop that is itself local does not make the answer local.
+
+That distinction is invisible until a deployment federates. A cell Server calling a site Server over the plant network is one local hop with no internet in sight, and if that site Server is itself calling a hosted endpoint the payload leaves the site anyway. The cell Server publishing `EgressPermitted` false is then publishing something untrue about the only thing its caller wanted to know, while satisfying every rule above — because the rule on `EgressPermitted` binds on `InferenceLocation` being `Cloud`, and the cell Server's is `EdgeOffServer`.
+
+So where a deployment's `Source` names another Server implementing this specification, that Server's declarations are part of the answer. A Server **shall** read `DataJurisdiction`, `EgressPermitted` and `RetainsInput` from the upstream deployment it calls, and **shall not** publish values more permissive than the ones it read. A Server that cannot read them **shall** publish `EgressPermitted` and `RetainsInput` true, for the reason already given: the assumption that keeps data in is the one that is safe to be wrong about.
+
+This propagates assertions; it does not verify them. An upstream Server that declares something false makes its downstream neighbours wrong too, and no protocol can fix that. What it does fix is the case where every Server along a chain is honest and the answer still comes out wrong because nobody was obliged to look up.
+
+§12.3.2 states the same rule for the `FallsBackTo` edge. A payload leaves a deployment along exactly two modelled edges, and the rule is the same on both.
 
 ---
 
@@ -1075,12 +1105,12 @@ The split matters more here than in a smaller model, because the plausible Serve
 
 | Facet | Requires |
 |---|---|
-| **AI-Base** (mandatory) | `AiRootType` with `Models` and `Deployments`; at least one `ModelType` with `ModelId`, `Name`, `Version`, `Digest` and `DigestAlgorithm`; at least one `DeploymentType` with `DeploymentId`, `InferenceLocation` and `State`; the exactly-one `UsesModel` rule of §6.5; the digest rules of §12.1 |
+| **AI-Base** (mandatory) | `AiRootType` with `Models` and `Deployments`; at least one `ModelType` with `ModelId`, `Name`, `Version`, `Digest` and `DigestAlgorithm`; where the Server exposes any deployment, each carries `DeploymentId`, `InferenceLocation` and `State` and satisfies the exactly-one `UsesModel` rule of §6.5; the digest rules of §12.1 |
 | **AI-Dataset** | `DatasetType` instances with `DatasetId` and `SourceKind`, and `TrainedOn` from at least one model |
-| **AI-OffServer** | A deployment whose `InferenceLocation` is not `OnServer`, with `EndpointUri` naming an authenticated, confidential scheme (§12.2) |
+| **AI-OffServer** | A deployment whose `InferenceLocation` is not `OnServer`, and §12.2's requirement that its `EndpointUri` name an authenticated, confidential scheme |
 | **AI-Signatures** | `Inputs` and `Outputs` populated on every model |
 | **AI-Learning** | `LearningJobType`, the §7 state model, every Method that drives a transition in it, and the distinct `PromoteModel` authorization of §12.3 |
-| **AI-Invoke** | `DeploymentType.Invoke` with `ModelUsed`, `Usage` and `FinishReason` populated on every response, and the §8.3 rule that an unsupported parameter is rejected rather than ignored |
+| **AI-Invoke** | `DeploymentType.Invoke` with `ModelUsed` and `FinishReason` populated on every response, and `Usage` returned on every response — its `UnitKind` empty where the execution site does not meter, per §8.2.3; and the §8.3 rule that an unsupported parameter is rejected rather than ignored |
 | **AI-InvokeAsync** | `InvokeAsync` and `InferenceJobType`, answering the same questions as `Invoke` (§8.6) |
 | **AI-Transfer** | `BeginTransfer` and `InferenceTransferType`, `MaxInlinePayloadSize` on every deployment, and the §8.2.4 rule that `Invoke` reports `TransferRequired` rather than failing a call whose response outgrew the inline bound |
 | **AI-Stream** | Incremental results published over a data channel (§8.5). Entirely optional; a Server that answers only through `Invoke` is conformant without it |

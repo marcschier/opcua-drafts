@@ -35,13 +35,14 @@ only thing that can tell a client what the endpoint expects.
 
 A common SageMaker deployment is a container serving an OpenAI-compatible surface, such as
 TGI or vLLM. Where that is what you deployed, `RestChatCompletions` is the honest dialect
-rather than `Proprietary`. The dialect describes the contract the endpoint speaks and not
-who is hosting it.
+rather than `Proprietary`. The dialect describes the contract this Server speaks to the
+endpoint and not who is hosting it.
 
-SageMaker uses AWS Signature Version 4, with the same modelling gap as Bedrock. Use
-`WorkloadIdentity` for SigV4 signing through an attached IAM role and `ApiKey` for SigV4
-signing through stored access keys, because the member classifies what is stored rather
-than which handshake is performed. See the full reasoning in the [Bedrock guide](aws-bedrock.md).
+SageMaker uses AWS Signature Version 4. Apply §9.2 the same way as in the
+[Bedrock guide](aws-bedrock.md): SigV4 signing through an attached IAM role is
+`WorkloadIdentity`, SigV4 signing through stored access keys is `ApiKey`, and
+`EndpointDescriptionUri` records the actual signing arrangement when a client needs that
+handshake detail.
 
 ## Identity
 
@@ -78,20 +79,22 @@ variant, inference component and session id to the container.
 | `ResponsePayload` | the container response body, verbatim |
 | `ResponseContentType` | the response media type the container returns |
 | `ModelUsed` | the `ModelType` NodeId this deployment resolved to — not merely the endpoint name |
-| `Usage.UnitKind` | container-defined |
-| `Usage.InputUnits` | container-defined |
-| `Usage.OutputUnits` | container-defined |
-| `Usage.TotalUnits` | container-defined |
+| `Usage.UnitKind` | container-defined; empty when the container response is not metered, per §8.2.3 |
+| `Usage.InputUnits` | container-defined; `0` when `UnitKind` is empty |
+| `Usage.OutputUnits` | container-defined; `0` when `UnitKind` is empty |
+| `Usage.TotalUnits` | container-defined; `0` when `UnitKind` is empty |
 | `FinishReason` | container-defined |
 | `SafetyAssessment` | container-defined |
 | `RetryAfter` | the `Retry-After` header, where the response carries one |
 
 For a plain container-defined endpoint, the Server cannot infer token counts or finish
 reasons from the SageMaker envelope. CloudWatch can record latency and throughput, but that
-is operational telemetry outside the response body. If the container emits OpenAI-compatible
-chat-completions JSON, use the `RestChatCompletions` mapping from the OpenAI-compatible
-guides: `usage.prompt_tokens`, `usage.completion_tokens`, `usage.total_tokens` and
-`choices[0].finish_reason` carry the values.
+is operational telemetry outside the response body. When the container response does not
+meter the call, `Usage` is returned with empty `UnitKind` and zero counts; §8.2.3 defines
+that as "not metered" rather than as a measurement. If the container emits
+OpenAI-compatible chat-completions JSON, use the `RestChatCompletions` mapping from the
+OpenAI-compatible guides: `usage.prompt_tokens`, `usage.completion_tokens`,
+`usage.total_tokens` and `choices[0].finish_reason` carry the values.
 
 `ModelUsed` still matters when SageMaker routes by target model, target variant or inference
 component. A caller needs the `ModelType` NodeId that actually answered, especially where a
@@ -168,7 +171,8 @@ should say that.
   container contract is not documented through `EndpointDescriptionUri`, a client cannot
   know what to send.
 - **Usage and finish reason in a standard envelope.** Token counts and `FinishReason` are
-  available only if the container chooses to return them.
+  available only if the container chooses to return them. Otherwise `UsageDataType` uses
+  the §8.2.3 not-metered sentinel.
 - **A digest from the inference plane.** `ArtifactUri` can be filled from the S3 model
   artefact URI, but `Digest` cannot be filled from `InvokeEndpoint` or
   `InvokeEndpointAsync`. Compute one during `Stage` import if you need it.
@@ -182,6 +186,9 @@ should say that.
 Reachable against Amazon SageMaker endpoints: **AI-Base**, **AI-Invoke**,
 **AI-InvokeAsync**, **AI-Transfer**, **AI-OffServer**, **AI-Federation**,
 **AI-Residency**.
+
+For a container that does not meter, **AI-Invoke** is satisfied by returning `Usage`
+with empty `UnitKind` and zero counts; §13.2 accommodates that.
 
 Out of reach without something else: **AI-Catalogue** needs a registry projection with real
 resources, and **AI-Import** requires **AI-Catalogue** (§13) — an import job with nothing to

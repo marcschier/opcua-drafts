@@ -34,8 +34,8 @@ such as a dedicated inference server speaking its own predict RPC. The literal n
 contract this Server calls, not the transport.
 
 Triton does not include authentication in its core protocol. If an operator adds nginx,
-Envoy or another gateway, `AuthenticationKind` describes the credential this Server stores
-for that gateway.
+Envoy or another gateway, §9.2 says `AuthenticationKind` describes the credential this
+Server stores for that gateway.
 
 ## Identity
 
@@ -72,10 +72,10 @@ For REST, `Invoke` maps to `POST /v2/models/{name}/infer` or
 | `ResponsePayload` | the OIP response body or encoded gRPC response |
 | `ResponseContentType` | `application/json` for REST, an implementation media type for gRPC |
 | `ModelUsed` | the `ModelType` NodeId this deployment resolved to |
-| `Usage.UnitKind` | empty unless the model exposes an accounting output |
-| `Usage.InputUnits` | empty unless the model exposes an accounting output |
-| `Usage.OutputUnits` | empty unless the model exposes an accounting output |
-| `Usage.TotalUnits` | empty unless the model exposes an accounting output |
+| `Usage.UnitKind` | empty when the model exposes no accounting output; otherwise the declared unit, per §8.2.3 |
+| `Usage.InputUnits` | `0` when `UnitKind` is empty; otherwise the measured input count |
+| `Usage.OutputUnits` | `0` when `UnitKind` is empty; otherwise the measured output count |
+| `Usage.TotalUnits` | `0` when `UnitKind` is empty; otherwise the measured total count |
 | `FinishReason` | `Stop` for a complete successful tensor response, or `Error` |
 | `SafetyAssessment` | not provided by the protocol |
 | `RetryAfter` | empty unless a wrapper supplies it |
@@ -84,6 +84,9 @@ OIP v2 returns named output tensors. It does not define token counts, a usage en
 standard finish reason. If a model backend exposes counts or stop reasons as output
 tensors, a Server may map them, but that is a model contract rather than a Triton protocol
 feature.
+
+Where it does not expose counts, §8.2.3 supplies the representation: `Usage` is returned
+with an empty `UnitKind` and zero counts, and those zeros are not measurements.
 
 The payload is still opaque to the OPC UA caller under §8.2. A Server may validate it
 against `Inputs` before forwarding, which is exactly why the signatures are valuable, but
@@ -155,7 +158,8 @@ natural inputs to `TestConnection`, `Reachability`, `LastSuccessAt` and
 - **A publisher.** The model repository names models; it does not state who published them.
   `Publisher` is an operator namespace unless a separate catalogue supplies one.
 - **Usage accounting.** Token counts and finish reasons are not protocol fields. Treat them
-  as model outputs only where the model explicitly declares them.
+  as model outputs only where the model explicitly declares them; otherwise `UsageDataType`
+  uses the §8.2.3 not-metered sentinel.
 - **Training lineage.** Nothing in the Triton protocol maps to `TrainedOn` or `DatasetType`.
 - **Residency or retention.** Self-hosting gives the operator control of the answer; the
   answer still has to be recorded explicitly.
@@ -164,8 +168,15 @@ natural inputs to `TestConnection`, `Reachability`, `LastSuccessAt` and
 
 Reachable against Triton: **AI-Base**, **AI-Invoke**, **AI-InvokeAsync**, **AI-Transfer**,
 **AI-Federation**, **AI-Residency** and **AI-Signatures**. **AI-OffServer** is reachable
-only where the off-Server endpoint is reached over an authenticated, confidential scheme;
-the default plain-HTTP listener is not enough.
+for a deployment whose `InferenceLocation` is not `OnServer`, which is what §13.2 asks for.
+What that deployment must additionally satisfy is §12.2, and it is not optional: where
+`InferenceLocation` is not `OnServer`, `EndpointUri` **shall** name an authenticated,
+confidential scheme. Triton's default `http://{host}:8000/v2/` listener does not, so a
+Triton reached across the plant network is fronted with TLS and authentication before this
+facet is claimed. Triton on the same host is `OnServer`, where the question does not arise.
+
+The unmetered case satisfies **AI-Invoke**: the Server returns `Usage` with empty
+`UnitKind` and zero counts, and §13.2 accommodates that.
 
 Out of reach from Triton alone: **AI-Catalogue** and **AI-Import**, because they need a
 separate conforming registry projection with catalogue resources and declared digests, and

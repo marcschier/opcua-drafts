@@ -29,9 +29,9 @@ change how it is called. What it changes is `InferenceLocation`, `EgressPermitte
 | `Reachability` | maintained from `TestConnection` and from call outcomes | as cloud |
 
 `AuthenticationKind` is `WorkloadIdentity` when the Server holds a Microsoft Entra managed
-identity and obtains tokens through it, which is the arrangement §9.2 prefers and the one
-to reach for: no secret is stored anywhere, so there is nothing to leak, rotate or archive.
-`ApiKey` is the fallback where a managed identity is not available.
+identity and obtains tokens through it. That applies §9.2's storage rule: no secret is
+stored anywhere, so there is nothing to leak, rotate or archive. `ApiKey` is the fallback
+where a managed identity is not available.
 
 Foundry Local is `Anonymous` because it listens on loopback and there is nothing to
 authenticate to. That is a statement about the deployment, not a relaxation: an endpoint
@@ -53,14 +53,20 @@ structured provenance, and neither decomposes into the triple `ModelType` asks f
 
 | Member | From | Note |
 |---|---|---|
-| `Publisher` | `owned_by` | often `azure` rather than the model's originator |
+| `Publisher` | empty unless independent provenance identifies the producer | `owned_by` reports the serving host or account, not the model producer |
 | `Name` | `id`, with the trailing date removed | on a deployed model this is the *deployment* name, which is yours |
 | `Version` | the date suffix of `id`, where there is one | `gpt-4o-2024-08-06` yields `2024-08-06` |
-| `ModelId` | the whole `id` | keep it verbatim; it is what you must send back |
+| `ModelId` | the whole `id` | keep it verbatim under §6.2; it is what you must send back |
 | `Framework`, `Format` | not exposed | leave empty |
 | `Digest`, `DigestAlgorithm` | **not exposed** | see below |
 
 Two traps here.
+
+The `owned_by` field reports the serving host or account. §6.2 says `Publisher` names the
+organisation that produced the model and is left empty where only the serving organisation
+is known. The full `id` still goes verbatim in `ModelId`, so two Servers can compare the
+source system's own identifier even when the `Publisher`, `Name`, `Version` triple is
+incomplete.
 
 The `id` on a cloud deployment is a **deployment name you chose**, not the model's identity.
 Two Servers in the same plant can call the same underlying model different things, and

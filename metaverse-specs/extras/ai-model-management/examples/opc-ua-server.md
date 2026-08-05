@@ -142,19 +142,28 @@ verify the digest itself, having the bytes to verify it against.
 | `DataJurisdiction` | the upstream Server's, which you have to read from it and record |
 | `RetainsInput` | whatever the upstream Server declares, propagated |
 
-These do not compose automatically and that is the trap in this guide.
+These do not compose automatically, and §9.5 is where the rule for that lives.
 
-The downstream Server's `EgressPermitted` must account for what the upstream Server does
-with the payload, not merely for the hop between them. A cell Server calling a site Server
-over the plant network looks like `EgressPermitted` `false` — one local hop, no internet.
-If that site Server is itself federating to a hosted endpoint, the payload leaves the site,
-and the cell Server publishing `false` is publishing something untrue about the only thing
-a caller wanted to know.
+The members are end-to-end rather than next-hop: `EgressPermitted` states whether calling
+this deployment sends input outside the operator's boundary **by any path**. A cell Server
+calling a site Server over the plant network looks like `EgressPermitted` `false` — one
+local hop, no internet. If that site Server is itself federating to a hosted endpoint, the
+payload leaves the site, and `false` would be untrue about the only thing a caller wanted
+to know.
 
-So: read the upstream deployment's `EgressPermitted`, `DataJurisdiction` and `RetainsInput`,
-and let them raise your own. Nothing enforces this. It is an operator assertion like all
-the others, with the difference that here the information you need is machine-readable one
-hop away, and there is no excuse for guessing it.
+So §9.5 obliges a Server whose `Source` names another Server implementing this
+specification to **read** `DataJurisdiction`, `EgressPermitted` and `RetainsInput` from the
+upstream deployment, and forbids publishing values more permissive than the ones it read.
+A Server that cannot read them publishes `EgressPermitted` and `RetainsInput` true, because
+the assumption that keeps data in is the one that is safe to be wrong about.
+
+This is the same rule §12.3.2 states for the `FallsBackTo` edge. A payload leaves a
+deployment along exactly two modelled edges, and both are guarded.
+
+What it does not do is verify anything. An upstream Server that declares something false
+makes its downstream neighbours wrong too, and no protocol fixes that. What it fixes is the
+case where every Server along the chain is honest and the answer still comes out wrong
+because nobody was obliged to look up.
 
 ## What this system does not tell you
 

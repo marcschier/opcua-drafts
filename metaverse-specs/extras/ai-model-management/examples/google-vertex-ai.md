@@ -43,11 +43,10 @@ this Server actually speaks, not every contract the provider could have served.
 
 The arrangement to reach for is `WorkloadIdentity`: Google service accounts, Workload
 Identity Federation, GKE workload identity and Cloud Run managed identity all let the
-Server obtain short-lived access tokens without storing a secret. If a Server stores a
-bearer token directly, the stored thing is a credential and the mapping is `BearerToken`.
-The research verifies OAuth and Application Default Credentials but does not state the
-literal OAuth scope; put the configured Google OAuth scope in `TokenAudience`, following
-the same pattern the Foundry guide uses for Azure.
+Server obtain short-lived access tokens without storing a secret. Under §9.2, a directly
+stored bearer token is `BearerToken`. The research verifies OAuth and Application Default
+Credentials but does not state the literal OAuth scope; put the configured Google OAuth
+scope in `TokenAudience`, following the same pattern the Foundry guide uses for Azure.
 
 ## Identity
 
