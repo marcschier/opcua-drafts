@@ -66,23 +66,29 @@ set is a name string, sometimes carrying a date — `gpt-4o-2024-08-06`,
 `meta/llama-3.1-8b-instruct`. None of them returns a cryptographic hash of the weights that
 answered.
 
-Hugging Face is the exception, and it is not an inference platform: as a catalogue it is
-content-addressed, with an immutable commit SHA per version and a `sha256` per LFS-stored
-file.
+Two entries are exceptions, and neither is a hosted platform. Hugging Face is
+content-addressed as a catalogue, with an immutable commit SHA per revision and a `sha256`
+per LFS-stored file. An [embedded runtime](embedded-runtimes.md) holds the artefact on the
+machine, so the Server can hash the file itself — which is the only arrangement in the set
+where a digest is something this Server computed rather than something it was told.
 
 Three consequences worth taking seriously:
 
-- `Digest` and `DigestAlgorithm` are left empty against a hosted endpoint. §11 permits this,
-  and a Server **shall not** invent a value — hashing the model's name produces something
-  that looks like an artefact digest, is not one, and will eventually be compared against a
-  real one.
+- `Digest` and `DigestAlgorithm` are Mandatory members (§6.2) and stay empty against a
+  hosted endpoint. §12.1 requires a Server to populate `Digest` for every model **whose
+  artefact is obtainable through `ArtifactUri`**, and a hosted model's is not, so the
+  obligation does not bite. What would defeat §12.1 entirely is filling them with something
+  derived from the model's name: it looks like an artefact digest, is not one, and will
+  eventually be compared against a real one.
 - A `Pinned` deployment against a hosted endpoint is pinned to a **name**. The binding says
   the artefact behind it cannot change without an observable change to the deployment, and
   what actually enforces that is the provider's policy rather than anything the Server can
-  verify. That is a materially weaker guarantee than the same word carries against a staged
-  artefact, and an audit process designed around it should know which one it has.
+  verify. That is a materially weaker guarantee than the same word carries against an
+  artefact the Server holds, and an audit process designed around it should know which one
+  it has.
 - The `Stage` import mode of §10.3 is the only path in this set that ends with a digest the
-  Server computed itself, because it is the only one where the Server holds the bytes.
+  Server computed from bytes it fetched, and §10.4's verification — refusing to deploy on a
+  mismatch — is a real gate only there and on an embedded runtime.
 
 **Training lineage, data residency, and whether your input is retained.** No inference API
 in this set states any of them in a response. `TrainedOn`, `DataJurisdiction`,
@@ -119,7 +125,7 @@ because it is HTTP rather than anyone's API:
 | Model | From |
 |---|---|
 | `Reachability` = `Throttled` | HTTP 429, or a documented capacity refusal |
-| `RateLimit.RetryAfter` | the `Retry-After` response header |
+| `RateLimit.RetryAfter` | a Duration, parsed from the `Retry-After` header — which carries either seconds or an HTTP date, so it is converted rather than copied |
 | `RateLimit.Limit`, `RateLimit.Remaining`, `RateLimit.Interval` | rate-limit response headers, where the platform returns them |
 | `RateLimit.UnitKind` | `requests` or `tokens`, depending on which quota bound |
 

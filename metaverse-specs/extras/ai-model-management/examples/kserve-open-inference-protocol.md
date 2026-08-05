@@ -177,9 +177,11 @@ the operator boundary.
 
 ## Conformance units
 
-Reachable against a conforming OIP endpoint: **AI-Base**, **AI-Invoke**, **AI-OffServer**,
-**AI-Federation** and **AI-Signatures**. **AI-Residency** is reachable where the operator can
-state the deployment boundary required by §9.5.
+Reachable against a conforming OIP endpoint: **AI-Base**, **AI-Invoke**,
+**AI-Federation** and **AI-Signatures**. **AI-OffServer** is reachable only where the
+off-Server endpoint is reached over an authenticated, confidential scheme; a base URL that
+exposes `/v2` over plain HTTP is not enough. **AI-Residency** is reachable where the
+operator can state the deployment boundary required by §9.5.
 
 Reachable through the OPC UA Server rather than the OIP protocol itself: **AI-InvokeAsync**
 and **AI-Transfer**. Out of reach without another system: **AI-Catalogue** and **AI-Import**

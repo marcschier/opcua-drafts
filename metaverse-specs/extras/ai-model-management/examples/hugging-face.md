@@ -24,7 +24,7 @@ listing rather than `Invoke`.
 |---|---|
 | `SourceId` | your name for this Hub catalogue source |
 | `EndpointUri` | `https://huggingface.co/api/` |
-| `ApiDialect` | empty; this is not an inference wire contract |
+| `ApiDialect` | `Proprietary` — see below |
 | `EndpointDescriptionUri` | `https://huggingface.co/.well-known/openapi.json` |
 | `AuthenticationKind` | `Anonymous` for public repositories, `BearerToken` where private or gated repositories are accessed |
 | `CredentialReference` | names the Hugging Face token — never the value |
@@ -33,6 +33,20 @@ listing rather than `Invoke`.
 | `Capabilities` | catalogue capabilities, not inference capabilities |
 | `TestConnection` | a Hub API probe |
 | `ListModels` | backed by `GET /api/models` and filtered by the Server |
+
+`ApiDialect` is Mandatory, so it cannot be left empty even though the Hub speaks no
+inference contract at all. `Proprietary` is the honest value, and §9.2's *should* clause
+then does real work: `EndpointDescriptionUri` points at the Hub's own OpenAPI document,
+which is the only thing that tells a client what this endpoint actually is.
+
+There is a cleaner arrangement, and it is the one to prefer. The Hub is a catalogue, so
+model it as a `ModelRegistryType` under §10 and let a `ModelSourceType` exist only for
+whatever actually serves inference — Inference Endpoints, or a runtime you deployed the
+weights to. A `ModelSourceType` whose every serving member is empty is a shape being bent
+to fit; §10's registry types are the shape that fits.
+
+The table above is for the case where a Server does want `ListModels` and `TestConnection`
+against the Hub itself, which is a reasonable thing to want and is why it is written out.
 
 `AuthenticationKind` is `BearerToken` only when the Server stores a Hugging Face token in
 its credential store. A public anonymous projection is `Anonymous`, and the public xrproxy

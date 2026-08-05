@@ -16,6 +16,7 @@ ByteString
 FileType
 LocalizedText
 MessageSecurityMode
+SignAndEncrypt
 NodeId
 SecurityMode
 

@@ -47,8 +47,9 @@ unreachable, the other can only be absent.
 
 ## Identity
 
-The listing endpoint returns `id`, `object`, `created` and `owned_by`. That is all there is,
-and it does not decompose into the triple `ModelType` asks for.
+The listing endpoint returns `id`, `object`, `created` and `owned_by`. A per-model
+`GET /model-info` adds a name, a type and capabilities. Neither carries a digest or
+structured provenance, and neither decomposes into the triple `ModelType` asks for.
 
 | Member | From | Note |
 |---|---|---|
@@ -89,7 +90,7 @@ that parsed and re-serialised the body would defeat it.
 | `Usage.TotalUnits` | `usage.total_tokens` |
 | `FinishReason` | `choices[0].finish_reason`, mapped below |
 | `SafetyAssessment` | populated when the content filter fired |
-| `RetryAfter` | the `Retry-After` header on a 429 |
+| `RetryAfter` | the `Retry-After` header, where the response carries one |
 
 `FinishReason` maps: `stop` to `Stop`, `length` to `Length`, `tool_calls` to `ToolCall`,
 `content_filter` to `Filtered`. There is no `Cancelled` on this contract — a cancelled call
@@ -99,7 +100,7 @@ but could not be understood.
 `ModelUsed` is a NodeId in this Server's address space, not the `model` string the endpoint
 echoed back. A caller can already see the string in the payload. What it cannot otherwise
 find out is *which of the models this Server publishes* answered, and that is the question
-`ModelUsed` exists to settle — see §8.5, and the fallback case in §9.4 where the two differ.
+`ModelUsed` exists to settle — see §8.2.1, and the fallback case in §9.4 where the two differ.
 
 ## Asynchronous inference
 
@@ -160,11 +161,15 @@ the point and it is worth repeating because it is the mistake people make: TLS a
 can read the payload in flight, not whether it left the site. A client refusing to send
 process data off-premises needs the second answer, and needs it before it calls.
 
-`RetainsInput` is `false` on the standard Azure contract, which states that customer data is
-not used to train foundation models. That is a **contractual** statement, not a field in a
-response, and it is the operator who is asserting it here. Abuse-monitoring retention is a
-separate arrangement; if your resource has it configured differently, this member is where
-that shows.
+`RetainsInput` asks whether the far end **keeps** the input after serving it, which is a
+wider question than whether it trains on it. Azure's contract states that customer data is
+not used to train foundation models; that is a contractual statement rather than a field in
+a response, and it does not by itself answer logging, abuse monitoring or evaluation.
+
+So publish `false` only where the operator has established that none of those retain input
+for this resource, and `true` where any of them does. It is the operator asserting it
+either way — there is no response field to read — and the member is worth nothing if it is
+filled in from the first sentence of a marketing page rather than from the configuration.
 
 ## What this system does not tell you
 

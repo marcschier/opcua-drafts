@@ -51,9 +51,9 @@ actual AWS SigV4 arrangement in use.
 ## Identity
 
 `ListFoundationModels` returns `modelId`, `modelArn`, `modelName`, `providerName` and
-`modelLifecycle`, among other capability fields. That is a better identity surface than
-most hosted systems in this set because `providerName` is the real publisher — Anthropic,
-Meta, Amazon and similar names — rather than the host written into an `owned_by` field.
+`modelLifecycle`, among other capability fields. `providerName` is the model publisher —
+Anthropic, Meta, Amazon and similar names — rather than merely the host written into an
+`owned_by` field.
 
 | Member | From | Note |
 |---|---|---|
@@ -85,7 +85,7 @@ one body shape lets §8.2 remain true across families.
 | `Usage.TotalUnits` | `usage.totalTokens` |
 | `FinishReason` | `stopReason`, mapped below |
 | `SafetyAssessment` | populated when guardrails or filtering intervened |
-| `RetryAfter` | the retry header on throttling, where AWS returns one |
+| `RetryAfter` | the `Retry-After` header, where the response carries one |
 
 `FinishReason` maps directly where Converse reports one: `end_turn` and `stop_sequence` to
 `Stop`, `max_tokens` to `Length`, `tool_use` to `ToolCall`, and `guardrail_intervened` or
@@ -117,7 +117,7 @@ The real-time Bedrock runtime takes the request body inline; the research notes 
 limit of about 4 MB. Bedrock batch inference uses S3 input and output locations, but that
 is the batch service's storage contract, not a chunked upload path for one synchronous call.
 
-So `BeginTransfer` is the Server's own Part 5 `FileType` transfer path as §8.2 defines. The
+So `BeginTransfer` is the Server's own Part 5 `FileType` transfer path as §8.2.4 defines. The
 Server reassembles the request and then issues one Bedrock Converse, InvokeModel or batch
 request, depending on which operation the client started.
 

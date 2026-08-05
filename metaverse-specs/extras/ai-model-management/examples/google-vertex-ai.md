@@ -51,8 +51,8 @@ the same pattern the Foundry guide uses for Azure.
 
 ## Identity
 
-Vertex AI's standout feature in this set is the structure of its model resource names.
-For publisher models the name is a path such as
+Vertex AI publisher model resource names are structured. For publisher models the name is a
+path such as
 `projects/{project}/locations/{location}/publishers/{publisher}/models/{model}`. That is
 much richer than a bare model id: the `publishers/{publisher}` segment gives `Publisher`
 directly, and the `locations/{location}` segment gives the deployment's
@@ -67,8 +67,8 @@ directly, and the `locations/{location}` segment gives the deployment's
 | `Framework`, `Format` | not exposed for hosted Gemini publisher models | leave empty |
 | `Digest`, `DigestAlgorithm` | **not exposed** | `artifactUri` is not a digest |
 
-This is the provenance point Vertex AI answers better than the other hosted systems in
-this guide set. A deployment pointed at
+This resource name carries provenance and residency fields the Server already has to use. A
+deployment pointed at
 `projects/p/locations/europe-west4/publishers/google/models/gemini-...` carries its
 publisher and region in the identifier the Server already has to call. A Server still
 needs to publish the OPC UA `DataJurisdiction` on the deployment, but it is not forced to
@@ -96,7 +96,7 @@ that rule exists to preserve.
 | `Usage.TotalUnits` | `usageMetadata.totalTokenCount` |
 | `FinishReason` | `candidates[0].finishReason`, mapped below |
 | `SafetyAssessment` | populated from `safetyRatings` when filtering or safety policy intervened |
-| `RetryAfter` | the retry header on throttling, where Google returns one |
+| `RetryAfter` | the `Retry-After` header, where the response carries one |
 
 The usage field names are not the OpenAI names. A Server that reads
 `usage.prompt_tokens` from a native Vertex AI response will publish empty usage even when
@@ -135,7 +135,7 @@ For large media, the Vertex AI pattern is to put the object in Google Cloud Stor
 refer to it from the request as `fileUri` in a `fileData` part. That is useful for native
 Gemini requests, but it is not a chunked upload path for one OPC UA call.
 
-So `BeginTransfer` is the Server's own Part 5 `FileType` transfer path as §8.2 defines.
+So `BeginTransfer` is the Server's own Part 5 `FileType` transfer path as §8.2.4 defines.
 The Server reassembles the payload and then issues one ordinary Vertex AI request, or
 writes one ordinary batch input object, depending on which operation the client started.
 

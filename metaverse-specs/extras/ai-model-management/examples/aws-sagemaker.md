@@ -59,9 +59,8 @@ that is not the same thing as a `/v1/models` response.
 | `ArtifactUri` | S3 model artefact URI such as `s3://bucket/model.tar.gz` | available from the model configuration |
 | `Digest`, `DigestAlgorithm` | **not exposed by the inference plane** | see the S3 ETag warning below |
 
-SageMaker is better than many hosted systems because the operator often has the artefact URI
-and controls the object behind it. `ArtifactUri` can therefore be filled from the S3 model
-artefact location, which is more than most inference services allow.
+SageMaker often gives the operator the artefact URI and control of the object behind it.
+`ArtifactUri` can therefore be filled from the S3 model artefact location.
 
 That still does not fill `Digest`. An S3 ETag is a de facto hash in common cases, but it is
 not surfaced in any inference-plane response and it is not the model digest that §10.4 uses
@@ -85,7 +84,7 @@ variant, inference component and session id to the container.
 | `Usage.TotalUnits` | container-defined |
 | `FinishReason` | container-defined |
 | `SafetyAssessment` | container-defined |
-| `RetryAfter` | the retry header on throttling, where AWS returns one |
+| `RetryAfter` | the `Retry-After` header, where the response carries one |
 
 For a plain container-defined endpoint, the Server cannot infer token counts or finish
 reasons from the SageMaker envelope. CloudWatch can record latency and throughput, but that
@@ -122,7 +121,7 @@ containing the payload. That is a native way to avoid the inline request limit f
 path.
 
 It is still not an OPC UA chunked transfer. `BeginTransfer` and `InferenceTransferType` are
-the Server's own Part 5 `FileType` path as §8.2 defines. The Server may write the assembled
+the Server's own Part 5 `FileType` path as §8.2.4 defines. The Server may write the assembled
 request to S3 and call `InvokeEndpointAsync`, or issue one ordinary real-time
 `InvokeEndpoint` request when the payload fits.
 
@@ -182,10 +181,14 @@ should say that.
 
 Reachable against Amazon SageMaker endpoints: **AI-Base**, **AI-Invoke**,
 **AI-InvokeAsync**, **AI-Transfer**, **AI-OffServer**, **AI-Federation**,
-**AI-Residency**, and **AI-Import** where the Server stages an artefact it can digest.
+**AI-Residency**.
 
 Out of reach without something else: **AI-Catalogue** needs a registry projection with real
-resources; **AI-Signatures** needs tensor shapes or schema metadata from the container;
+resources, and **AI-Import** requires **AI-Catalogue** (§13) — an import job with nothing to
+import from is not implementable, so a Server staging artefacts from S3 URIs alone claims
+neither. Pair SageMaker with a content-addressed registry that declares a digest and both
+become reachable together; [the Hugging Face guide](hugging-face.md) is the worked case.
+**AI-Signatures** needs tensor shapes or schema metadata from the container;
 **AI-Learning** needs training, which is not what invocation is.
 
 ## Sources

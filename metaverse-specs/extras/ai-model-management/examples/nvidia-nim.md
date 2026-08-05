@@ -50,9 +50,11 @@ apart.
 | `Framework`, `Format` | not exposed by the listing | leave empty unless configured out of band |
 | `Digest`, `DigestAlgorithm` | **not exposed** | the manifest is not a weight hash |
 
-The publisher split is a real advantage over many hosted systems. A Server can populate
-`Publisher` with something better than a provider string when the id is
-`meta/llama-3.1-8b-instruct`, because `meta` is part of the model id itself.
+The publisher split is worth noticing. An id such as `meta/llama-3.1-8b-instruct` carries
+the originator in the id itself, so `Publisher` can be `meta` — the organisation that
+trained the model — rather than the organisation hosting it, which is what a bare
+`owned_by` usually gives you. `Publisher` answering "who made this" rather than "who is
+serving it" is what §11's lineage questions need it to answer.
 
 NIM also exposes `GET /v1/manifest`, which returns model profile metadata. Precision maps
 to `Quantization`. GPU compatibility belongs on the deployment through `AcceleratorKind`
@@ -76,7 +78,7 @@ OpenAI-compatible chat, completions or embeddings request.
 | `Usage.TotalUnits` | `usage.total_tokens` |
 | `FinishReason` | `choices[0].finish_reason`, mapped below |
 | `SafetyAssessment` | populated when filtering is reported |
-| `RetryAfter` | the `Retry-After` header on a throttled response, where present |
+| `RetryAfter` | the `Retry-After` header, where the response carries one |
 
 `FinishReason` maps: `stop` to `Stop`, `length` to `Length`, `tool_calls` to `ToolCall`,
 `content_filter` to `Filtered`. `Cancelled` is produced by this Server when it cancels the
@@ -159,7 +161,9 @@ network path to the appliance can fail independently.
 ## Conformance units
 
 Reachable against self-hosted NIM: **AI-Base**, **AI-Invoke**, **AI-InvokeAsync**,
-**AI-Transfer**, **AI-OffServer**, **AI-Federation** and **AI-Residency**.
+**AI-Transfer**, **AI-Federation** and **AI-Residency**. **AI-OffServer** is reachable only
+where the off-Server endpoint is reached over an authenticated, confidential scheme; the
+self-hosted default plain-HTTP listener is not enough.
 
 Out of reach from NIM alone: **AI-Catalogue** and **AI-Import** need a separate catalogue
 with digests; **AI-Signatures** needs tensor signatures the OpenAI-compatible contract does

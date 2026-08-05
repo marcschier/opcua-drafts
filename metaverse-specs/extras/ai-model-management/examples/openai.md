@@ -88,7 +88,7 @@ JSON that rule exists to preserve.
 | `Usage.TotalUnits` | `usage.total_tokens` |
 | `FinishReason` | `choices[0].finish_reason`, mapped below |
 | `SafetyAssessment` | populated when the content filter fired |
-| `RetryAfter` | the `Retry-After` header on a 429 |
+| `RetryAfter` | the `Retry-After` header, where the response carries one |
 
 `FinishReason` maps: `stop` to `Stop`, `length` to `Length`, `tool_calls` to `ToolCall`,
 `content_filter` to `Filtered`. The deprecated `function_call` value is an older form of a
@@ -99,7 +99,7 @@ the endpoint — and `Error` covers a response that arrived but could not be und
 `ModelUsed` is a NodeId in this Server's address space, not the `model` string the endpoint
 echoed back. A caller can already see the string in the payload. What it cannot otherwise
 find out is *which of the models this Server publishes* answered, and that is the question
-`ModelUsed` exists to settle — see §8.5, and the fallback case in §9.4 where the two differ.
+`ModelUsed` exists to settle — see §8.2.1, and the fallback case in §9.4 where the two differ.
 
 ## Asynchronous inference
 

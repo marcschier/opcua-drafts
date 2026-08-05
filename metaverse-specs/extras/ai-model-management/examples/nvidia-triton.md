@@ -5,8 +5,8 @@ Informative. Every member named here is defined in
 introduces none. Vendor facts verified 2026-08-05 against the documentation linked at the
 end.
 
-NVIDIA Triton Inference Server is a self-hosted inference runtime for models in an
-operator-controlled repository. It serves the KServe v2 Open Inference Protocol over HTTP
+NVIDIA Triton Inference Server is a self-hosted inference runtime for configured models.
+It serves the KServe v2 Open Inference Protocol over HTTP
 and gRPC, with readiness and metadata endpoints beside inference.
 
 Triton is the guide in this set where tensor signatures matter. Its metadata endpoint
@@ -19,18 +19,19 @@ returns input and output names, datatypes and shapes, which map directly onto `I
 |---|---|---|
 | `SourceId` | your name for the Triton server | as REST |
 | `EndpointUri` | `http://{host}:8000/v2/` by default | `{host}:8001` by default |
-| `ApiDialect` | `OpenInferenceProtocol` | `TensorRemoteProcedure` |
+| `ApiDialect` | `OpenInferenceProtocol` | `OpenInferenceProtocol` |
 | `EndpointDescriptionUri` | the KServe v2 protocol documentation, if published | the Triton gRPC service definition, if published |
 | `AuthenticationKind` | `Anonymous`, unless the operator adds a wrapper | as REST |
 | `CredentialReference` | empty, or the name of the wrapper credential — never the value | as REST |
 | `TokenAudience` | empty unless the wrapper requires one | as REST |
 | `Reachability` | maintained from readiness endpoints and call outcomes | as REST |
 
-Triton is the one system here with two natural dialects. Use `OpenInferenceProtocol` when
-this Server reaches Triton through HTTP `POST /v2/models/{name}/infer`. Use
-`TensorRemoteProcedure` when this Server reaches the `ModelInfer` gRPC RPC. The literal is
-a property of how this Server reaches this endpoint, not of what Triton supports in
-general.
+Triton is the one system here where the same contract naturally appears over two
+transports. Use `OpenInferenceProtocol` when this Server reaches Triton's OIP binding,
+whether that is HTTP `POST /v2/models/{name}/infer` or the gRPC `ModelInfer` RPC.
+`TensorRemoteProcedure` is reserved for a tensor-oriented RPC contract that is not OIP,
+such as a dedicated inference server speaking its own predict RPC. The literal names the
+contract this Server calls, not the transport.
 
 Triton does not include authentication in its core protocol. If an operator adds nginx,
 Envoy or another gateway, `AuthenticationKind` describes the credential this Server stores
@@ -110,10 +111,9 @@ the Server then calls Triton by its chosen REST or gRPC route.
 
 ## The catalogue
 
-Triton's repository is a local filesystem, S3 path or GCS path the operator controls. The
-runtime can list and serve models from it, and the repository management extension can load
-and unload models, but OIP metadata is not a §10 catalogue entry and does not carry a
-digest.
+Triton serves configured models, but OIP metadata is not a §10 catalogue entry and does
+not carry a digest. Repository configuration is outside what OIP exposes; read Triton's
+own documentation for how a deployment configures and manages the model repository.
 
 The valuable metadata is the shape contract. `GET /v2/models/{name}` returns `inputs` and
 `outputs` with tensor names, datatypes and shapes. Those map directly to `Inputs` and
@@ -125,10 +125,9 @@ the tensors it intends to send match what the model declares, instead of discove
 shape mismatch as a failed production call. Most hosted chat-style systems in this set do
 not expose enough information to do that.
 
-A `Stage` import under §10.3 is also achievable when the Server is given access to the
-operator-controlled repository. The Server can fetch the model artefact, compute its own
-digest and record it on the imported `ModelType`. That digest is Server-computed; it is not
-something Triton's OIP metadata supplied.
+`Stage` import under §10.3 needs a separate catalogue projection alongside Triton. That
+projection supplies the `ModelRegistryType`, `ModelPublisherType`, `ModelResourceType` and
+declared digest that §10.4 verifies; Triton alone does not expose them.
 
 ## Residency, egress and retention
 
@@ -139,7 +138,7 @@ policy rather than from the protocol.
 |---|---|
 | `InferenceLocation` | `OnServer` or `EdgeOffServer` |
 | `EgressPermitted` | `false` when Triton is inside the operator boundary |
-| `DataJurisdiction` | the site, zone or storage jurisdiction of the server and repository |
+| `DataJurisdiction` | the site, zone or storage jurisdiction of the serving deployment |
 | `RetainsInput` | `false` unless logging or tracing stores request tensors |
 | `EgressPolicyUri` | your plant or platform policy |
 
@@ -164,11 +163,13 @@ natural inputs to `TestConnection`, `Reachability`, `LastSuccessAt` and
 ## Conformance units
 
 Reachable against Triton: **AI-Base**, **AI-Invoke**, **AI-InvokeAsync**, **AI-Transfer**,
-**AI-OffServer**, **AI-Federation**, **AI-Residency** and **AI-Signatures**.
+**AI-Federation**, **AI-Residency** and **AI-Signatures**. **AI-OffServer** is reachable
+only where the off-Server endpoint is reached over an authenticated, confidential scheme;
+the default plain-HTTP listener is not enough.
 
-Reachable with an operator-controlled repository and Server-computed digests:
-**AI-Catalogue** and **AI-Import**. Out of reach from Triton alone: **AI-Learning**, because
-training and promotion lifecycle support are outside OIP v2.
+Out of reach from Triton alone: **AI-Catalogue** and **AI-Import**, because they need a
+separate conforming registry projection with catalogue resources and declared digests, and
+**AI-Learning**, because training and promotion lifecycle support are outside OIP v2.
 
 ## Sources
 

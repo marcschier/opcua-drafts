@@ -11,9 +11,10 @@ ships `llama-server`, an HTTP server with an OpenAI-compatible surface; that cas
 separately because the dialect follows the contract the Server speaks, not the software behind
 it.
 
-This is the happy path for §10.4. The operator holds the `.onnx` or `.gguf` file, so the
-Server can hash the bytes it is about to run. Hosted endpoints in this guide set cannot offer
-that: they name a model, but they do not expose a digest of the weights that answered.
+With a local artefact, the Server can compute a real `Digest` over the `.onnx` or `.gguf`
+file it holds. The §10.4 verification gate applies when staging an import against a digest
+declared by a catalogue. Hosted endpoints in this guide set name a model, but they do not
+expose a digest of the weights that answered.
 
 ## The `ModelSourceType`
 
@@ -50,33 +51,30 @@ The local file is the identity anchor, not a provider-side deployment name.
 
 | Member | ONNX Runtime | llama.cpp |
 |---|---|---|
-| `Publisher` | operator, model producer metadata, or configured catalogue owner | operator, model family owner, or configured catalogue owner |
-| `Name` | configured name or metadata-derived model name | configured name or filename-derived model name |
-| `Version` | model version metadata where present | configured revision or file/catalogue revision |
+| `Publisher` | operator or configured catalogue owner | operator, model family owner, or configured catalogue owner |
+| `Name` | configured name | configured name or filename-derived model name |
+| `Version` | configured version or catalogue revision | configured revision or file/catalogue revision |
 | `ModelId` | stable local identifier, often the file path plus digest | stable local identifier, often the file path plus digest |
 | `Framework` | ONNX / ONNX Runtime, where the file metadata supports it | llama.cpp |
 | `Format` | ONNX | GGUF |
 | `Digest`, `DigestAlgorithm` | hash of the `.onnx` artefact | hash of the `.gguf` artefact |
 | `ArtifactUri` | local file URI | local file URI |
-| `ParameterCount`, `Quantization` | fill where the artefact metadata provides them | fill from GGUF metadata where available |
+| `ParameterCount`, `Quantization` | fill where the operator has verified these facts for the artefact | fill where the operator has verified these facts for the artefact |
 
-The digest is the standout difference from hosted systems. `Digest` and `DigestAlgorithm`
-can be a genuine artefact hash, and `ArtifactUri` can point at the file the Server actually
-opens. A `Pinned` deployment is then pinned to bytes, not to a string that a provider
-promises to keep stable. That is what the word pinned ought to mean, and this arrangement is
-where the model can say it without pretending.
+`Digest` and `DigestAlgorithm` can be a genuine artefact hash, and `ArtifactUri` can point
+at the file the Server actually opens. A `Pinned` deployment is pinned to bytes only where
+the operator controls the immutability of the file behind the local path; otherwise the path
+can still name mutable bytes.
 
-ONNX model files can carry metadata such as producer, domain, model version and custom
-metadata, and the loaded session exposes the input and output tensor names, element types and
-shapes. Map those to `Framework`, `Format`, `Version`, `Inputs` and `Outputs` where the file
-actually carries them. That makes **AI-Signatures** reachable for tensor models: a client can
-read the shape contract from `ModelType` instead of discovering it from a failed run, which is
-the distinction §6.2 exists to preserve.
+The research for this guide establishes ONNX Runtime in-process loading and inference, not a
+portable metadata or tensor-signature inspection contract. Publish `Inputs` and `Outputs`
+only where the runtime binding and model-format documentation you rely on supports reading
+them; otherwise this guide cannot establish **AI-Signatures** for ONNX models.
 
-GGUF metadata can carry architecture, quantization and parameter-count information. Where the
-Server reads it from the header, `Quantization` and `ParameterCount` are not operator notes;
-they are properties of the artefact. Hosted inference surfaces in the set do not give the
-Server that view of the weights.
+The research for this guide does not establish GGUF header contents. Where the operator knows
+the quantization and parameter count of the file it deployed, `Quantization` and
+`ParameterCount` are theirs to populate; do not claim the file format surfaced those facts
+unless the implementation documentation you rely on says so.
 
 ## `Invoke`
 
@@ -125,7 +123,7 @@ Neither runtime provides a native file-upload or chunked-request facility that m
 `BeginTransfer`. For embedded runtimes that is not a limitation of the execution site: the
 Server already owns the bytes once the OPC UA transfer completes.
 
-`BeginTransfer` is therefore the Server's own Part 5 file exchange described in §8.2. The
+`BeginTransfer` is therefore the Server's own Part 5 file exchange described in §8.2.4. The
 client writes the request in chunks, the Server reassembles it, runs the local runtime, and
 exposes the response through the same transfer object if it is too large for the inline
 result. No ONNX Runtime or llama.cpp feature has to be arranged for that to work.
@@ -139,9 +137,10 @@ list loaded or loadable models, but that is an execution listing rather than a �
 The Server can nevertheless satisfy §10 with local artefacts because it holds the files. A
 configured directory, an internal registry or a staging area can be projected as catalogue
 entries whose `ArtifactUri`, `Digest` and `DigestAlgorithm` are computed from the local file.
-This is the one guide where §10.4 digest verification is a real gate rather than a missing
-provider feature: staging computes the digest over the bytes received and refuses to deploy a
-mismatch.
+For staged imports, §10.4 is the digest-verification gate: where a catalogue declared a
+digest, staging computes the digest over the bytes received and refuses to deploy a mismatch.
+For a file the Server already holds, the computed `Digest` still identifies real bytes, but
+`Pinned` means pinned to bytes only where the operator makes the file immutable.
 
 That buys something concrete. A hosted deployment can tell a client which name answered; a
 local staged deployment can tell it which bytes answered. The cost is equally concrete:
@@ -176,9 +175,9 @@ asks a deployment to answer.
   lineage. If lineage matters, it comes from a model card, a registry or manual governance.
 - **A remote health signal for embedded runtimes.** There is no endpoint to ask. The only
   useful probe is loading the file and, where appropriate, running a small local check.
-- **Provider-managed scale.** Running on the Server gives excellent provenance and residency,
-  but someone owns the disk layout, accelerator drivers, model updates and rollback plan on
-  every machine.
+- **Provider-managed scale.** Running on the Server keeps residency local and lets the Server
+  publish file-derived provenance, but someone owns the disk layout, accelerator drivers,
+  model updates and rollback plan on every machine.
 - **Native jobs or native transfers.** `InvokeAsync` and `BeginTransfer` are Server features
   here. That is acceptable, but it means their lifecycle, expiry and cleanup are your design.
 
@@ -186,8 +185,8 @@ asks a deployment to answer.
 
 Reachable against embedded runtimes: **AI-Base**, **AI-Invoke**, **AI-InvokeAsync**,
 **AI-Transfer**, **AI-Residency**, **AI-Catalogue** and **AI-Import**. **AI-Signatures** is
-reachable for ONNX models where the Server publishes the tensor signatures it reads from the
-loaded model.
+not established by this guide for ONNX Runtime or llama.cpp; claim it only where the Server
+has a verified way to publish tensor signatures.
 
 Out of reach without something else: **AI-Learning** needs a training loop; **AI-OffServer**
 does not describe an `OnServer` deployment; **AI-Stream** needs a subscription or data-channel

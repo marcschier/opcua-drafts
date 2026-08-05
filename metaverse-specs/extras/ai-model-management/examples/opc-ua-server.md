@@ -81,11 +81,20 @@ Server fell back — its `FallbackPolicy` being `FallBackTo`, and it substituted
 NodeId it returned is not the model the downstream Server asked for, and the downstream
 Server must resolve *that* one or admit it cannot.
 
-A downstream Server that cannot resolve the returned NodeId to a local `ModelType` has two
-honest options: publish a `ModelType` for the substitute, or return a null `ModelUsed` so a
-caller sees that the question was not answered. Returning the model that was *requested* is
-the one thing it must not do. It converts a visible substitution into an invisible one, and
-does so at exactly the point where a reader is furthest from the evidence.
+A downstream Server that cannot resolve the returned NodeId to a local `ModelType` has one
+correct move and one tempting wrong one. **AI-Invoke** requires `ModelUsed` populated on
+every response (§13), so a null is not an available answer for a call that succeeded: the
+downstream Server publishes a `ModelType` for the substitute and returns that, or it fails
+the call.
+
+Returning the model that was *requested* is the tempting wrong one. It converts a visible
+substitution into an invisible one, at exactly the point where a reader is furthest from
+the evidence. A Server that cannot keep up with what its upstream is doing should say so by
+failing, not by answering plausibly.
+
+Which means the practical arrangement is to mirror the upstream's models — including its
+fallbacks — rather than only the ones this Server expects to use. A fallback that has never
+been exercised is precisely the one whose `ModelType` will be missing on the day it is.
 
 ## Asynchronous inference
 
@@ -105,7 +114,7 @@ learn what happened.
 
 Read `MaxInlinePayloadSize` from the upstream deployment and publish a value **no larger**
 downstream. Publishing a larger one produces a call that the downstream Server accepts and
-the upstream Server refuses, which turns a bound that §8.2 exists to make visible in
+the upstream Server refuses, which turns a bound that §8.2.4 exists to make visible in
 advance into one discovered from a rejection — the exact failure the member was added to
 prevent.
 
@@ -168,15 +177,27 @@ much as was there to begin with.
 
 ## Conformance units
 
-Every conformance unit the upstream Server implements is reachable through the link:
-**AI-Base**, **AI-Invoke**, **AI-InvokeAsync**, **AI-Transfer**, **AI-Stream**,
-**AI-Signatures**, **AI-Catalogue**, **AI-Import**, **AI-Dataset**, **AI-Learning**,
-**AI-Residency**.
+A conformance unit describes what **this** Server exposes, not what it can reach. A link to
+a capable upstream Server does not make that Server's facets local, and this is the trap
+worth stating plainly: federating to a Server with a catalogue does not give this Server
+**AI-Catalogue**. Mirroring the upstream registry into this address space does.
 
-Plus **AI-Federation** and **AI-OffServer** for the link itself, which is what makes this
-Server a federating Server rather than a serving one.
+Reachable from the link itself: **AI-Federation** and **AI-OffServer**, the second where
+the Session is secured — §13 requires `EndpointUri` to name an authenticated, confidential
+scheme, which an ordinary `opc.tcp` Session with `SignAndEncrypt` and mutual certificate
+validation satisfies and an unsecured one does not.
 
-This is the only guide in the set with no second list.
+Reachable where this Server proxies the upstream Method and publishes the required outputs
+locally: **AI-Base**, **AI-Invoke**, **AI-InvokeAsync**, **AI-Transfer**.
+
+Reachable only where this Server mirrors the upstream nodes rather than pointing at them:
+**AI-Catalogue**, **AI-Import**, **AI-Dataset**, **AI-Signatures**, **AI-Stream**,
+**AI-Learning**, **AI-Residency**. Each needs nodes in this address space that a client can
+browse, read and subscribe to without a Session on the upstream Server — which is what
+mirroring means and why it is work rather than configuration.
+
+This is the only guide in the set whose limits come from what this Server chose to build
+rather than from what the far end withholds.
 
 ## Sources
 
