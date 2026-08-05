@@ -132,6 +132,7 @@ is (§10.3).
 holds it. That is the arrangement worth choosing when the link is the thing you do not
 trust, because after it the downstream Server can serve with the link down — and it can
 verify the digest itself, having the bytes to verify it against.
+
 ## Residency, egress and retention
 
 | Member | Value |
