@@ -82,6 +82,12 @@ on:
       changed:
         description: Whether anything was published.
         value: ${{ jobs.publish.outputs.changed }}
+      produced:
+        description: >-
+          Whether the agent produced a patch inside the allowlist. False means the publish job
+          was skipped, so nothing it would have said — including its own "no pull request"
+          reply — was said. A caller that promised the issue an answer must supply one.
+        value: ${{ jobs.think.outputs.produced }}
 
 # Paths the agent is allowed to change. `.github/` is absent on purpose: a workflow or CI
 # script the agent wrote would run on the next event with more rights than the agent had,
@@ -173,6 +179,11 @@ jobs:
           FALLBACK_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}
           PROMPT: ${{ inputs.prompt }}
         run: |
+          # Without pipefail the status of `copilot ... | tee` is tee's, which is always 0,
+          # so the check below could never fire: a denied or crashed agent looked like a
+          # successful run that simply changed nothing. That is exactly how a policy refusal
+          # reached an issue as silence.
+          set -o pipefail
           if [ -n "$FALLBACK_TOKEN" ]; then
             export COPILOT_GITHUB_TOKEN="$FALLBACK_TOKEN"
             echo 'authenticating with the COPILOT_GITHUB_TOKEN secret'
@@ -186,12 +197,19 @@ jobs:
           # it was never meant to have. That narrows the blast radius; it is not what
           # contains a hijack — what contains a hijack is this job holding nothing worth
           # taking.
-          if ! copilot -p "$PROMPT" --no-ask-user \
+          status=0
+          copilot -p "$PROMPT" --no-ask-user \
                  --allow-tool=write \
                  --allow-tool='shell(git:*)' \
                  --allow-tool='shell(python:*)' \
                  --allow-tool='shell(python3:*)' \
-                 2>&1 | tee "$RUNNER_TEMP/agent.log"; then
+                 2>&1 | tee "$RUNNER_TEMP/agent.log" || status=$?
+          # A refusal is reported in the output and not always in the exit status, so the
+          # transcript is evidence too. Without this the agent "succeeds" having done nothing.
+          if grep -qiE 'Access denied by policy|not entitled|quota exceeded' "$RUNNER_TEMP/agent.log"; then
+            status=1
+          fi
+          if [ "$status" -ne 0 ]; then
             echo "::error::the agent did not run. If the log shows an authentication or \
               entitlement failure, check first that the account owning this repository has \
               Copilot CLI enabled in its Copilot policies — that is what the built-in token \
