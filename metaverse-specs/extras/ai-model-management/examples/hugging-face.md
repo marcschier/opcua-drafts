@@ -71,6 +71,7 @@ an owner, a name and immutable commits.
 | `Framework` | `library_name` | where the field is present |
 | `Card` | `cardData` and the model card | structured metadata plus the human card |
 | `Digest`, `DigestAlgorithm` | per-file LFS `sha256` from the tree API | artefact-level digest, not the commit SHA |
+| `DigestProvenance` | `DeclaredBySource`; `VerifiedOnStage` after staging | the Hub declares the LFS digest; §10.4 verifies fetched bytes |
 | `ArtifactUri` | the selected file URL or Hub resource URL | choose the artefact being imported |
 | `ProvenanceUri` | the Hub repository or xRegistry resource URL | points back to the catalogue entry |
 
@@ -154,6 +155,8 @@ LFS-stored artefacts, the per-file SHA-256 that the Server can recompute after s
 
 The import rule is precise:
 
+- populate the import job's `Registry` with the `ModelRegistryType` NodeId and leave
+  `Source` null, per §10.2;
 - use the commit SHA as the version identity;
 - use the selected LFS file's `sha256` as `Digest`;
 - set `DigestAlgorithm` to SHA-256;
@@ -186,7 +189,9 @@ artefact was obtained.
   catalogue gives file digests; the Server or import policy must choose which file is the
   deployable artefact.
 - **A single repository-wide artefact digest.** The commit SHA identifies a revision. The
-  LFS `sha256` identifies one file. Do not publish the commit SHA as the artefact `Digest`.
+  LFS `sha256` identifies one file. §12.1.1 forbids publishing the commit SHA as the
+  artefact `Digest`; `DigestProvenance` is `DeclaredBySource` unless §10.4 staging makes it
+  `VerifiedOnStage`.
 - **Structured training lineage.** Model cards and `cardData` can describe training data,
   but the research did not verify a structured API field that populates `TrainedOn` or a
   `DatasetType` without human or policy interpretation.

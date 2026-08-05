@@ -77,9 +77,15 @@ Three consequences worth taking seriously:
 - `Digest` and `DigestAlgorithm` are Mandatory members (§6.2) and stay empty against a
   hosted endpoint. §12.1 requires a Server to populate `Digest` for every model **whose
   artefact is obtainable through `ArtifactUri`**, and a hosted model's is not, so the
-  obligation does not bite. What would defeat §12.1 entirely is filling them with something
-  derived from the model's name: it looks like an artefact digest, is not one, and will
-  eventually be compared against a real one.
+  obligation does not bite. What the Server states instead is `DigestProvenance`
+  `NotAvailable`, which is Mandatory and always answerable: the absence is recorded rather
+  than merely left, and a client can tell a source that publishes no digest from a Server
+  that declined to carry one.
+- Filling `Digest` with something derived from the model's name is what would defeat §12.1
+  entirely. Every guide in this set met a different tempting value — a response
+  fingerprint, a resource name, a storage entity tag, a repository commit identifier — and
+  §12.1.1 prohibits all of them in one rule, because each looks like an artefact digest,
+  is not one, and will eventually be compared against a real one.
 - A `Pinned` deployment against a hosted endpoint is pinned to a **name**. The binding says
   the artefact behind it cannot change without an observable change to the deployment, and
   what actually enforces that is the provider's policy rather than anything the Server can
@@ -88,7 +94,24 @@ Three consequences worth taking seriously:
   it has.
 - The `Stage` import mode of §10.3 is the only path in this set that ends with a digest the
   Server computed from bytes it fetched, and §10.4's verification — refusing to deploy on a
-  mismatch — is a real gate only there and on an embedded runtime.
+  mismatch — is a real gate only there and on an embedded runtime. Those are also the only
+  two arrangements that reach `DigestProvenance` `VerifiedOnStage`.
+
+`DigestProvenance` is worth reading as the axis this whole set varies along, because it
+grades the evidence rather than merely recording its presence:
+
+| Value | Where it is reachable in this set |
+|---|---|
+| `NotAvailable` | Every hosted inference API: Foundry, OpenAI, Bedrock, SageMaker's inference plane, Vertex AI, NIM, Triton, base OIP |
+| `DeclaredBySource` | Hugging Face, whose tree API declares a per-file `sha256` the Server can forward without hashing anything; and a federated peer Server, whose digest is an assertion received |
+| `ComputedByServer` | An [embedded runtime](embedded-runtimes.md), where the artefact is a local file and hashing it costs nothing |
+| `VerifiedOnStage` | A `Stage` import from a catalogue that declared a digest — in practice Hugging Face, or a peer registry |
+
+Read down that column and the pattern is that **evidence tracks custody**. A Server can say
+something strong about an artefact exactly to the degree it has held the bytes, and no
+amount of vendor cooperation short of publishing a content hash changes that. It is also
+why the embedded case is not the poor relation it looks like: it is the only arrangement
+here where a Server can produce evidence entirely on its own.
 
 **Training lineage, data residency, and whether your input is retained.** No inference API
 in this set states any of them in a response. `TrainedOn`, `DataJurisdiction`,

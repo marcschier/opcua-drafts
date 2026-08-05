@@ -45,6 +45,7 @@ This annex is the authoritative node reference for the specification: it carries
 | ns=2;i=3012 | SafetySeverityEnum | DataType | Enumeration |
 | ns=2;i=3013 | ReachabilityEnum | DataType | Enumeration |
 | ns=2;i=3014 | TransferStateEnum | DataType | Enumeration |
+| ns=2;i=3015 | DigestProvenanceEnum | DataType | Enumeration |
 | ns=2;i=3050 | TensorSignatureDataType | DataType | Structure |
 | ns=2;i=3051 | ModelReferenceDataType | DataType | Structure |
 | ns=2;i=3052 | UsageDataType | DataType | Structure |
@@ -93,7 +94,7 @@ Nameplate of a trained model. The member set is deliberately aligned with the ID
 | BrowseName | NodeClass | DataType | ValueRank | ModellingRule | Description |
 |---|---|---|---|---|---|
 | ModelId | Variable | String | Scalar | Mandatory | Identifier of the model. |
-| Name | Variable | LocalizedText | Scalar | Mandatory | Human-readable model name. |
+| Name | Variable | LocalizedText | Scalar | Mandatory | Human-readable model name. Its Text SHALL be the name the source system uses for the model, carried across unchanged. A LocalizedText because the base model types names that way and retyping it would break every implementation, but the localizable part is the presentation: a Server MAY add a translation for display and SHALL NOT translate, reformat or prettify the Text itself. Two Servers that fetched one model from two mirrors are meant to produce the same string, and a name adjusted for house style is a name that no longer matches. |
 | Version | Variable | String | Scalar | Mandatory | Model version. |
 | Framework | Variable | String | Scalar | Optional | Producing framework, for example PyTorch, TensorFlow or scikit-learn. |
 | Format | Variable | String | Scalar | Optional | Serialization format, for example ONNX, TensorRT or OpenVINO IR. |
@@ -110,6 +111,9 @@ Nameplate of a trained model. The member set is deliberately aligned with the ID
 | ParameterCount | Variable | UInt64 | Scalar | Optional | Parameters in the model, or 0 where not published. A crude but universally available proxy for what it will cost to run. |
 | Quantization | Variable | String | Scalar | Optional | Numeric precision the artefact is stored in, for example 'fp32', 'int8' or 'fp8'. A quantized model is a DIFFERENT artefact with different behaviour, not a packaging detail, which is why it is stated rather than left to the format string. |
 | SafetyPolicyUri | Variable | String | Scalar | Optional | Safety or content policy applied to this model's output, where one is. Untrusted input, subject to clause 12. |
+| DigestProvenance | Variable | DigestProvenanceEnum | Scalar | Mandatory | Where Digest came from, or why there is none. NotAvailable is the only value permitted with an empty Digest, and it SHALL be used rather than leaving a client to guess whether the source publishes no digest or this Server declined to carry one.
+
+A Server SHALL NOT put a non-content identifier in Digest to avoid saying NotAvailable. A response fingerprint, a resource name, a storage entity tag and a repository commit identifier are none of them digests of the artefact that ran, and a client that verified against one would believe it had checked something it had not. Where such an identifier is worth publishing it belongs in ArtifactUri or ProvenanceUri, which promise nothing about content. |
 
 ### DatasetType — `ns=2;i=1003`
 
@@ -276,13 +280,16 @@ Brings a model from a catalogue into this Server. It federates by default - mate
 
 | BrowseName | NodeClass | DataType | ValueRank | ModellingRule | Description |
 |---|---|---|---|---|---|
-| Source | Variable | NodeId | Scalar | Mandatory | ModelSourceType instance the model is pulled from. |
+| Source | Variable | NodeId | Scalar | Mandatory | ModelSourceType instance the model is pulled from, where the import calls an endpoint. Null where the import reads a catalogue instead, in which case Registry names it. Exactly one of the two is non-null. |
 | ModelReference | Variable | ModelReferenceDataType | Scalar | Mandatory | Publisher, name and version being imported. |
 | Mode | Variable | ImportModeEnum | Scalar | Mandatory | Whether to federate, stage, or decide from the target's InferenceLocation. |
 | TargetDeployment | Variable | NodeId | Scalar | Optional | Deployment to create or update on success, or null to import the model without deploying it. |
 | ImportedModel | Variable | NodeId | Scalar | Optional | ModelType instance the job produced. Null until the job succeeds. |
 | BytesTransferred | Variable | UInt64 | Scalar | Optional | Artefact bytes fetched so far. Zero for a federating import, which moves none. |
 | DigestVerified | Variable | Boolean | Scalar | Optional | Whether the staged artefact's computed digest matched the one the catalogue declared. False on a staging import means the artefact SHALL NOT be deployed. |
+| Registry | Variable | NodeId | Scalar | Optional | ModelRegistryType instance the model is imported from, where the import reads a catalogue rather than calling an endpoint. Null otherwise.
+
+A Server SHALL populate exactly one of Source and Registry, and SHALL leave the other null. The two name the two things an import can read from, and a job that named both would not say which one produced the artefact whose digest clause 10.4 verifies. |
 
 **Method `Cancel`** (Optional) — Abandon the import. A partially staged artefact SHALL be discarded rather than left where a later deployment could pick it up.
 
@@ -418,6 +425,7 @@ One model in a catalogue. Its versions are immutable and identified by content, 
 | SizeBytes | Variable | UInt64 | Scalar | Optional | Artefact size, so a staging import can decide whether it has room before it starts rather than after it fails. |
 | Gated | Variable | Boolean | Scalar | Optional | Whether obtaining the artefact requires an acceptance or entitlement beyond ordinary authentication. A client that ignores this discovers it as a failure part-way through a staging import. |
 | MutableRefs | Variable | String | Array | Optional | Mutable pointers this resource publishes - branches, tags or channels - that a deployment may follow instead of pinning. Naming them is what makes VersionBinding FollowsRef checkable. |
+| DigestProvenance | Variable | DigestProvenanceEnum | Scalar | Optional | Where this resource's Digest came from, on the same terms as ModelType. A catalogue that declares a digest it did not compute is DeclaredBySource; one serving the artefact through the inherited Open, Read and Close can reach ComputedByServer. |
 
 ### DatasetResourceType — `ns=2;i=1013`
 
@@ -658,6 +666,19 @@ Stage of a chunked inference exchange. A client reads this rather than inferring
 | Completed | 3 | The response is readable. |
 | Failed | 4 | The exchange failed; LastError carries the reason. |
 | Expired | 5 | The Server reclaimed the transfer before it completed. |
+
+### DigestProvenanceEnum — `ns=2;i=3015`
+
+*Subtype of:* `Enumeration`
+
+Where a Digest came from, or why there is none. Digest is Mandatory so that its absence is uniform and browsable rather than indistinguishable from a Server that does not implement digests - but 'empty' then carries two different meanings, and a client that must decide whether to trust an artefact needs them apart. This member is what tells them apart, and it does the same job for a digest that IS present: a value the source asserted and a value this Server computed over bytes are not the same evidence, and only one of them survives a substituted artefact.
+
+| Name | Value | Description |
+|---|---|---|
+| NotAvailable | 0 | There is no digest and the source does not publish one. Digest is empty. This is the honest answer for an endpoint that names models but never their content, and it is what most hosted inference APIs require. |
+| DeclaredBySource | 1 | Digest carries what the source declared. No party this Server can speak for has hashed the artefact, so the value is an assertion forwarded rather than evidence held. |
+| ComputedByServer | 2 | This Server hashed the artefact it holds. The value is evidence, but nothing independent agrees with it - a substitution that happened before the Server obtained the bytes is not detected. |
+| VerifiedOnStage | 3 | This Server hashed the artefact during a staging import (clause 10.4) and it matched what the source declared. Two independent parties agree, which is the strongest statement this model can carry. |
 
 ### TensorSignatureDataType — `ns=2;i=3050`
 

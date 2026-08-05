@@ -65,6 +65,7 @@ directly, and the `locations/{location}` segment gives the deployment's
 | `ModelId` | the full Vertex AI resource `name` | keep it verbatim; it is what identifies the hosted model |
 | `Framework`, `Format` | not exposed for hosted Gemini publisher models | leave empty |
 | `Digest`, `DigestAlgorithm` | **not exposed** | `artifactUri` is not a digest |
+| `DigestProvenance` | `NotAvailable` | no artefact digest is exposed; `artifactUri` is not one |
 
 This resource name carries provenance and residency fields the Server already has to use. A
 deployment pointed at
@@ -183,8 +184,8 @@ operator's assertion.
 ## What this system does not tell you
 
 - **Which weights answered.** No digest is returned for hosted Gemini models, publisher
-  model listings or custom model registry entries. `artifactUri` is a storage location, not
-  a content hash.
+  model listings or custom model registry entries. `DigestProvenance` is `NotAvailable`
+  under §12.1.1. `artifactUri` is a storage location, not a content hash.
 - **What the model was trained on.** Nothing maps to a dataset lineage in the information
   model. If lineage matters, it comes from a model card or supplier documentation outside
   the inference response.

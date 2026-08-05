@@ -60,6 +60,7 @@ It does not carry a content digest.
 | `Inputs` | metadata `inputs` | names, datatypes and shapes |
 | `Outputs` | metadata `outputs` | names, datatypes and shapes |
 | `Digest`, `DigestAlgorithm` | not exposed | leave empty unless another catalogue supplies them |
+| `DigestProvenance` | `NotAvailable` | base OIP returns no artefact digest |
 
 `GET /v2/models/{name}[/versions/{version}]` returns model metadata: `name`, optional
 `versions`, `platform`, and `inputs` and `outputs` with tensor names, datatypes and shapes.
@@ -165,7 +166,8 @@ the operator boundary.
 - **Who published the model.** OIP has `name` and optional `version`, not a publisher
   namespace. `Publisher` is supplied by the operator or by an external catalogue.
 - **Which bytes are running.** No content digest is returned. `Digest` and
-  `DigestAlgorithm` need another source, and §10.4 cannot verify an import from OIP alone.
+  `DigestAlgorithm` need another source, `DigestProvenance` is `NotAvailable`, and §10.4
+  cannot verify an import from OIP alone.
 - **Usage accounting.** There are no standard token, image, sample or byte counts in the
   OIP response envelope. Without an implementation extension, `UsageDataType` uses the
   §8.2.3 not-metered sentinel: empty `UnitKind` and zero counts.

@@ -59,14 +59,16 @@ that is not the same thing as a `/v1/models` response.
 | `Framework`, `Format` | control-plane or operator metadata | not returned by invocation |
 | `ArtifactUri` | S3 model artefact URI such as `s3://bucket/model.tar.gz` | available from the model configuration |
 | `Digest`, `DigestAlgorithm` | **not exposed by the inference plane** | see the S3 ETag warning below |
+| `DigestProvenance` | `NotAvailable` from the inference plane | `Stage` hashing can reach `ComputedByServer`; an S3 ETag is not an independent digest |
 
 SageMaker often gives the operator the artefact URI and control of the object behind it.
 `ArtifactUri` can therefore be filled from the S3 model artefact location.
 
 That still does not fill `Digest`. An S3 ETag is a de facto hash in common cases, but it is
-not surfaced in any inference-plane response and it is not the model digest that §10.4 uses
-for verification. Publish `ArtifactUri` when you have it; leave `Digest` empty unless the
-Server computed or obtained a real artefact digest.
+not surfaced in any inference-plane response and it is not an artefact digest under
+§12.1.1. Publish `ArtifactUri` when you have it; use `ComputedByServer` only if the Server
+hashes the artefact during import, and `VerifiedOnStage` only if an independent declared
+digest matched under §10.4.
 
 ## `Invoke`
 
@@ -175,9 +177,11 @@ should say that.
   the §8.2.3 not-metered sentinel.
 - **A digest from the inference plane.** `ArtifactUri` can be filled from the S3 model
   artefact URI, but `Digest` cannot be filled from `InvokeEndpoint` or
-  `InvokeEndpointAsync`. Compute one during `Stage` import if you need it.
-- **That an S3 ETag is a model digest.** It may be a useful storage hint, but it is not the
-  digest this model uses for provenance and import verification.
+  `InvokeEndpointAsync`. `DigestProvenance` is `NotAvailable` for that surface under
+  §12.1.1.
+- **That an S3 ETag is a model digest.** It may be a useful storage hint, but §12.1.1
+  treats storage entity tags as non-content identifiers. It is not the independent source
+  declaration needed for `VerifiedOnStage`.
 - **Where your data went, or whether it was kept.** Region, egress and retention depend on
   the endpoint deployment, container logging and operator policy.
 

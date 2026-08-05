@@ -58,10 +58,11 @@ merely the host written into an `owned_by` field.
 | `ModelId` | `modelId` | keep it verbatim; it is what you send back |
 | `Framework`, `Format` | not exposed | leave empty |
 | `Digest`, `DigestAlgorithm` | **not exposed** | `modelArn` is not a weight hash |
+| `DigestProvenance` | `NotAvailable` | no artefact digest is exposed; `modelArn` is not one |
 
 `modelArn` is useful because it carries the AWS resource identity and includes a versioned
-model identifier. It still does not identify the bytes by content. Do not publish it as
-`Digest`, and do not infer a digest from the string embedded in it.
+model identifier. It still does not identify the bytes by content under §12.1.1, so it
+cannot populate `Digest`.
 
 ## `Invoke`
 
@@ -159,7 +160,8 @@ not whether the payload left the site.
   for static access keys, and point `EndpointDescriptionUri` at the SigV4 handshake you
   actually use.
 - **Which weights answered.** No digest is returned by Converse, InvokeModel or
-  `ListFoundationModels`. `modelArn` carries a version identifier, not a weight hash.
+  `ListFoundationModels`. `DigestProvenance` is `NotAvailable` under §12.1.1.
+  `modelArn` carries a version identifier, not a weight hash.
 - **A universal request body.** Converse gives one Bedrock body shape; InvokeModel gives a
   raw body whose schema depends on the provider family.
 - **What the model was trained on.** Nothing maps to `TrainedOn` or `DatasetType`. If

@@ -50,6 +50,7 @@ apart.
 | `ModelId` | the whole `id` | this is what the endpoint expects |
 | `Framework`, `Format` | not exposed by the listing | leave empty unless configured out of band |
 | `Digest`, `DigestAlgorithm` | **not exposed** | the manifest is not a weight hash |
+| `DigestProvenance` | `NotAvailable` | no artefact digest is exposed; manifest profile metadata is not one |
 
 The publisher split is worth noticing. An id such as `meta/llama-3.1-8b-instruct` carries
 the originator in the id itself, so `Publisher` can be `meta` — the organisation that
@@ -60,7 +61,7 @@ not "who is serving it".
 NIM also exposes `GET /v1/manifest`, which returns model profile metadata. Precision maps
 to `Quantization`. GPU compatibility belongs on the deployment through `AcceleratorKind`
 and `AcceleratorName`, because it says what this instance can run on. The manifest does not
-provide a cryptographic digest of the weights, so it cannot populate `Digest`.
+provide an artefact digest under §12.1.1, so it cannot populate `Digest`.
 
 ## `Invoke`
 
@@ -147,8 +148,8 @@ network path to the appliance can fail independently.
 ## What this system does not tell you
 
 - **A weight digest.** The manifest describes profiles and compatibility, not a
-  cryptographic hash. Leave `Digest` and `DigestAlgorithm` empty unless an external
-  catalogue supplies them.
+  cryptographic hash. `Digest` and `DigestAlgorithm` stay empty, and `DigestProvenance` is
+  `NotAvailable` under §12.1.1 unless an external catalogue supplies a digest.
 - **Training lineage.** Nothing in the NIM API maps to `TrainedOn` or `DatasetType`.
 - **A structured version.** The served `id` is the operational identifier. If it contains a
   version-like substring, that is still part of the name unless another source defines it.

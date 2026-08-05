@@ -6,7 +6,7 @@
     <Uri>http://opcfoundation.org/UA/AI/</Uri>
   </NamespaceUris>
   <Models>
-    <Model ModelUri="http://opcfoundation.org/UA/AI/" Version="0.2.0" PublicationDate="2026-08-03T00:00:00Z">
+    <Model ModelUri="http://opcfoundation.org/UA/AI/" Version="0.3.0" PublicationDate="2026-08-05T00:00:00Z">
       <RequiredModel ModelUri="http://opcfoundation.org/UA/" Version="1.05.04" PublicationDate="2023-12-15T00:00:00Z" />
       <RequiredModel ModelUri="http://opcfoundation.org/UA/xRegistry/" Version="0.3.0" PublicationDate="2026-07-31T00:00:00Z" />
     </Model>
@@ -311,6 +311,25 @@
     </References>
     <Value><uax:ListOfLocalizedText xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:LocalizedText><uax:Text>Building</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Ready</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Executing</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Completed</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Failed</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Expired</uax:Text></uax:LocalizedText></uax:ListOfLocalizedText></Value>
   </UAVariable>
+  <UADataType NodeId="ns=2;i=3015" BrowseName="2:DigestProvenanceEnum">
+    <DisplayName>DigestProvenanceEnum</DisplayName>
+    <Description>Where a Digest came from, or why there is none. Digest is Mandatory so that its absence is uniform and browsable rather than indistinguishable from a Server that does not implement digests - but 'empty' then carries two different meanings, and a client that must decide whether to trust an artefact needs them apart. This member is what tells them apart, and it does the same job for a digest that IS present: a value the source asserted and a value this Server computed over bytes are not the same evidence, and only one of them survives a substituted artefact.</Description>
+    <Category>AiModelManagement DataTypes</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=3915</Reference>
+    </References>
+    <Definition Name="DigestProvenanceEnum"><Field Name="NotAvailable" Value="0"><Description>There is no digest and the source does not publish one. Digest is empty. This is the honest answer for an endpoint that names models but never their content, and it is what most hosted inference APIs require.</Description></Field><Field Name="DeclaredBySource" Value="1"><Description>Digest carries what the source declared. No party this Server can speak for has hashed the artefact, so the value is an assertion forwarded rather than evidence held.</Description></Field><Field Name="ComputedByServer" Value="2"><Description>This Server hashed the artefact it holds. The value is evidence, but nothing independent agrees with it - a substitution that happened before the Server obtained the bytes is not detected.</Description></Field><Field Name="VerifiedOnStage" Value="3"><Description>This Server hashed the artefact during a staging import (clause 10.4) and it matched what the source declared. Two independent parties agree, which is the strongest statement this model can carry.</Description></Field></Definition>
+  </UADataType>
+  <UAVariable NodeId="ns=2;i=3915" BrowseName="2:EnumStrings" ParentNodeId="ns=2;i=3015" DataType="LocalizedText" ValueRank="1" ArrayDimensions="4">
+    <DisplayName>EnumStrings</DisplayName>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=3015</Reference>
+    </References>
+    <Value><uax:ListOfLocalizedText xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:LocalizedText><uax:Text>NotAvailable</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>DeclaredBySource</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>ComputedByServer</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>VerifiedOnStage</uax:Text></uax:LocalizedText></uax:ListOfLocalizedText></Value>
+  </UAVariable>
   <UADataType NodeId="ns=2;i=3050" BrowseName="2:TensorSignatureDataType">
     <DisplayName>TensorSignatureDataType</DisplayName>
     <Description>Shape and element type of one model input or output tensor. This is what lets a client check that what it intends to send matches what the model expects, before it sends it.</Description>
@@ -577,6 +596,7 @@
       <Reference ReferenceType="HasProperty">ns=2;i=6120</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=6121</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=6122</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=6165</Reference>
     </References>
   </UAObjectType>
   <UAVariable NodeId="ns=2;i=6006" BrowseName="2:ModelId" ParentNodeId="ns=2;i=1002" DataType="String" ValueRank="-1">
@@ -590,7 +610,7 @@
   </UAVariable>
   <UAVariable NodeId="ns=2;i=6007" BrowseName="2:Name" ParentNodeId="ns=2;i=1002" DataType="LocalizedText" ValueRank="-1">
     <DisplayName>Name</DisplayName>
-    <Description>Human-readable model name.</Description>
+    <Description>Human-readable model name. Its Text SHALL be the name the source system uses for the model, carried across unchanged. A LocalizedText because the base model types names that way and retyping it would break every implementation, but the localizable part is the presentation: a Server MAY add a translation for display and SHALL NOT translate, reformat or prettify the Text itself. Two Servers that fetched one model from two mirrors are meant to produce the same string, and a name adjusted for house style is a name that no longer matches.</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=78</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
@@ -1106,11 +1126,12 @@
       <Reference ReferenceType="HasProperty">ns=2;i=6059</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=6060</Reference>
       <Reference ReferenceType="HasComponent">ns=2;i=6061</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=6167</Reference>
     </References>
   </UAObjectType>
   <UAVariable NodeId="ns=2;i=6054" BrowseName="2:Source" ParentNodeId="ns=2;i=1007" DataType="NodeId" ValueRank="-1">
     <DisplayName>Source</DisplayName>
-    <Description>ModelSourceType instance the model is pulled from.</Description>
+    <Description>ModelSourceType instance the model is pulled from, where the import calls an endpoint. Null where the import reads a catalogue instead, in which case Registry names it. Exactly one of the two is non-null.</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=78</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
@@ -1648,6 +1669,7 @@
       <Reference ReferenceType="HasProperty">ns=2;i=6106</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=6107</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=6108</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=6166</Reference>
     </References>
   </UAObjectType>
   <UAVariable NodeId="ns=2;i=6102" BrowseName="2:TaskKind" ParentNodeId="ns=2;i=1012" DataType="String" ValueRank="-1">
@@ -2268,4 +2290,35 @@ Request and Response are Part 5 FileType objects: the client opens the request, 
       <Reference ReferenceType="HasComponent" IsForward="false">ns=2;i=1017</Reference>
     </References>
   </UAMethod>
+  <UAVariable NodeId="ns=2;i=6165" BrowseName="2:DigestProvenance" ParentNodeId="ns=2;i=1002" DataType="ns=2;i=3015" ValueRank="-1">
+    <DisplayName>DigestProvenance</DisplayName>
+    <Description>Where Digest came from, or why there is none. NotAvailable is the only value permitted with an empty Digest, and it SHALL be used rather than leaving a client to guess whether the source publishes no digest or this Server declined to carry one.
+
+A Server SHALL NOT put a non-content identifier in Digest to avoid saying NotAvailable. A response fingerprint, a resource name, a storage entity tag and a repository commit identifier are none of them digests of the artefact that ran, and a client that verified against one would believe it had checked something it had not. Where such an identifier is worth publishing it belongs in ArtifactUri or ProvenanceUri, which promise nothing about content.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1002</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=2;i=6166" BrowseName="2:DigestProvenance" ParentNodeId="ns=2;i=1012" DataType="ns=2;i=3015" ValueRank="-1">
+    <DisplayName>DigestProvenance</DisplayName>
+    <Description>Where this resource's Digest came from, on the same terms as ModelType. A catalogue that declares a digest it did not compute is DeclaredBySource; one serving the artefact through the inherited Open, Read and Close can reach ComputedByServer.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1012</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=2;i=6167" BrowseName="2:Registry" ParentNodeId="ns=2;i=1007" DataType="NodeId" ValueRank="-1">
+    <DisplayName>Registry</DisplayName>
+    <Description>ModelRegistryType instance the model is imported from, where the import reads a catalogue rather than calling an endpoint. Null otherwise.
+
+A Server SHALL populate exactly one of Source and Registry, and SHALL leave the other null. The two name the two things an import can read from, and a job that named both would not say which one produced the artefact whose digest clause 10.4 verifies.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1007</Reference>
+    </References>
+  </UAVariable>
 </UANodeSet>

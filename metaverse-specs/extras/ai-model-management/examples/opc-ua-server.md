@@ -48,15 +48,23 @@ downstream Server browses them.
 | `Publisher`, `Name`, `Version` | the upstream `ModelType`, read directly |
 | `ModelId` | the upstream `ModelId` |
 | `Digest`, `DigestAlgorithm` | **whatever the upstream Server has** |
+| `DigestProvenance` | read upstream, but publish no stronger value |
 | `Framework`, `Format`, `TaskKind` | the upstream members of the same names |
 | `Inputs`, `Outputs` | the upstream signature, so **AI-Signatures** carries through |
 
 The important word is *whatever*. A digest does not appear because the link is OPC UA; it
 appears if the upstream Server had one. An upstream Server that is itself federating to a
 hosted endpoint has an empty `Digest`, and the downstream Server's `Digest` is empty for
-the same reason. Nothing along the chain may fill it in — §11 forbids inventing a value,
-and a Server that manufactured one at the second hop would be laundering the absence of
-provenance into the appearance of it.
+the same reason. Nothing along the chain may fill it in — §12.1.1 forbids inventing a
+value, and a Server that manufactured one at the second hop would be laundering the
+absence of provenance into the appearance of it.
+
+`DigestProvenance` composes the same way §9.5 composes residency, and §12.1.1 states the
+rule: the downstream Server reads the upstream value and shall not publish a stronger one.
+Forwarding an upstream digest without staging and hashing the bytes is `DeclaredBySource`
+from the downstream Server's point of view, even if the upstream Server's own value was
+`VerifiedOnStage`. Publishing that upstream `VerifiedOnStage` as this Server's verification
+would claim a check this Server did not perform.
 
 What does travel is the `ImportedFrom` reference. Follow it upstream and the chain
 terminates wherever the artefact actually came from, however many Servers back that is.
@@ -171,8 +179,8 @@ Very little, and the exceptions are worth naming precisely because they are so f
 
 - **Whether the upstream Server is telling the truth.** Every residency and provenance
   member is an assertion at every hop. Federation propagates assertions; it does not
-  verify them. The one thing that can be verified is a digest, and only when a `Stage`
-  import gave you the bytes to check it against.
+  verify them. `DigestProvenance` is `DeclaredBySource` for a forwarded upstream digest,
+  and `VerifiedOnStage` only when a `Stage` import gave this Server the bytes to check.
 - **How deep the chain goes.** There is no hop count. Following `ImportedFrom` and
   `Source` walks it, and a cycle is possible if two Servers are configured to federate to
   each other — worth checking for at commissioning, because nothing in the model prevents

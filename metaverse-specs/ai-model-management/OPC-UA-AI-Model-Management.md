@@ -1,6 +1,6 @@
 # OPC UA — AI Model Management and Inference
 
-> Status: Working-group draft (Release 0.2.0). This document, together with `Opc.Ua.AiModelManagement.NodeSet2.xml` and `Opc.Ua.AiModelManagement.NodeIds.csv`, defines an OPC UA information model for **the AI models an installation runs**: what a model is, what it was trained on, where it executes, and how a better one replaces it.
+> Status: Working-group draft (Release 0.3.0). This document, together with `Opc.Ua.AiModelManagement.NodeSet2.xml` and `Opc.Ua.AiModelManagement.NodeIds.csv`, defines an OPC UA information model for **the AI models an installation runs**: what a model is, what it was trained on, where it executes, and how a better one replaces it.
 >
 > It is deliberately **domain-neutral**. Nothing here names a camera, a sensor, an image or a robot: a model is trained on a dataset, deployed somewhere, and superseded — and that story is the same whether the input is a photograph, a vibration spectrum or a process trace.
 >
@@ -222,7 +222,7 @@ How a model gets onto a machine at all, whether by federating its description or
 
 ```mermaid
 flowchart LR
-    CAT["ModelRegistryType<br/>publisher / name / version"] --> J["ModelImportJobType"]
+    CAT["ModelRegistryType<br/>publisher / name / version"] -->|Registry| J["ModelImportJobType"]
     J -->|Federate| FD["ModelType<br/>artefact stays at source"]
     J -->|Stage| ST["fetch + verify Digest"]
     ST --> LD["ModelType<br/>artefact local"]
@@ -390,6 +390,8 @@ An instance is created when a model becomes known to the Server — whether it w
 `ModelId`, `Name`, `Version`, `Digest` and `DigestAlgorithm` are **Mandatory**. The first three because a model that cannot be named cannot be discussed; the last two because clause 12 depends on them, and a rule that depends on an Optional member is a rule a conformant Server can silently not satisfy.
 
 **`ModelId` carries the source system's own identifier, verbatim.** Where a model came from a catalogue or a remote endpoint, it is the string that system uses — the string a client would send back to reach the same model there. It is not derived from the other members and it is not reformatted, because its value is that two Servers integrating the same source produce the same one. Where the triple below cannot be recovered, `ModelId` is what remains comparable.
+
+**`Name` is a `LocalizedText` whose `Text` is the source's name for the model, carried across unchanged.** A Server **may** add a translation for display and **shall not** translate, reformat or prettify the `Text` itself. The type is `LocalizedText` because that is how this model types names and retyping it would break every implementation; what is localizable is the presentation, not the identity. Two Servers that fetched one model from two mirrors are meant to produce the same string, and a name adjusted for house style is a name that no longer matches.
 
 **`Publisher` names the organisation that produced the model**, not the one serving it. A hosted endpoint that reports its own operator as the owner has answered a different question, and a Server **shall not** publish the serving organisation there: a `Publisher` of `azure` or `aws` for a model somebody else trained defeats the purpose §6.2.1 gives it, which is recognising the same artefact across two installations that fetched it from different places. Where only the serving organisation is known, `Publisher` is left empty.
 
@@ -906,6 +908,10 @@ This clause covers the second: a Server obtains a model from a catalogue so that
 
 It takes a `Source`, a `ModelReference` and a `Mode`, and produces `ImportedModel` — a `ModelType` instance in this Server's address space, carrying an `ImportedFrom` reference back to the catalogue resource it came from. That reference is what makes *"where did this model come from"* answerable later, rather than only at the moment of import when someone happened to be watching.
 
+An import reads from one of **two** things, and the job says which. `Source` names a `ModelSourceType` — a live endpoint the Server calls. `Registry` (`NodeId`, Optional) names a `ModelRegistryType` — a catalogue the Server browses, which is the path §4.4 and §5.1 draw and the one a plant MLOps node actually uses. A Server **shall** populate exactly one of them and **shall** leave the other null. A job that named both would not say which of the two produced the artefact whose digest §10.4 verifies, and that is the one question the job exists to make answerable.
+
+A Server that imports only from endpoints omits `Registry` altogether; `Source` is Mandatory and remains the only path for it. `Registry` is Optional because the registry types of this clause are themselves optional to implement — a Server obliged to expose a member it can never populate learns nothing and teaches a client nothing. A Server claiming **AI-Import** does implement them, because that facet requires **AI-Catalogue** (§13.2), so there the member is present and the exactly-one rule has both of its alternatives available.
+
 `ModelReferenceDataType` (`ns=2;i=3051`) is the `Publisher`, `Name`, `Version` triple. An import takes the triple rather than a URL because a URL says where a copy is today and the triple says which artefact is meant — and the two diverge the moment anyone mirrors anything.
 
 ### 10.3 Import modes
@@ -920,7 +926,7 @@ It takes a `Source`, a `ModelReference` and a `Mode`, and produces `ImportedMode
 
 ```mermaid
 flowchart TD
-    A["ModelImportJobType<br/>Source, ModelReference, Mode"] --> B{Mode}
+    A["ModelImportJobType<br/>Source or Registry, ModelReference, Mode"] --> B{Mode}
     B -->|Federate| F["materialize ModelType<br/>artefact stays at the source"]
     B -->|Auto| G{"target InferenceLocation<br/>OnServer or EdgeOffServer?"}
     G -->|no| F
@@ -1017,7 +1023,28 @@ flowchart LR
     M -->|TrainedOn| DS["DatasetType"]
 ```
 
-#### 12.1.1 Broken links
+#### 12.1.1 What a digest is worth, and why an empty one is not a failure
+
+`Digest` is Mandatory so that its absence is uniform and browsable: a client finds the member on every model and reads an empty value, rather than not finding the member and being unable to tell a model without a digest from a Server that does not implement digests. That is the right trade, and it is worth stating plainly that **most sources cannot fill it**. An endpoint that names models but never their content — which is what a hosted inference API generally is — has no digest to give, and a Server integrating one is behaving correctly when it publishes none.
+
+But "empty" then carries two meanings, and a present value carries three. `DigestProvenance` (`DigestProvenanceEnum`, `ns=2;i=3015`) is **Mandatory** on `ModelType` and separates them:
+
+| Value | `Digest` | What a client may conclude |
+|---|---|---|
+| `NotAvailable` | empty | The source publishes no digest. There is nothing to obtain and nothing was withheld. |
+| `DeclaredBySource` | present | An assertion forwarded. No party the Server can speak for has hashed the artefact. |
+| `ComputedByServer` | present | Evidence the Server holds. Nothing independent agrees with it, so a substitution that preceded the Server obtaining the bytes is undetected. |
+| `VerifiedOnStage` | present | The Server computed it during a staging import and it matched what the source declared (§10.4). Two independent parties agree, which is the strongest statement this model carries. |
+
+It is Mandatory for the reason `Digest` itself is, stated in §6.2: clause 12 depends on it, and a rule that depends on an Optional member is one a conformant Server can silently not satisfy. A client deciding whether to run a model on a line needs to distinguish *nobody checked* from *two parties agree*, and an Optional member would let a Server decline to answer exactly where the answer matters.
+
+`ModelResourceType` carries the same member as **Optional**, mirroring the `Digest` it qualifies, which is Optional there. A catalogue declaring a digest it did not compute is `DeclaredBySource`; one serving the artefact through the inherited `Open`, `Read` and `Close` can reach `ComputedByServer`.
+
+**A Server shall not put a non-content identifier in `Digest`.** A response fingerprint, a resource name, a storage entity tag and a repository commit identifier are all tempting, all stable, and none of them a digest of the artefact that ran. A client that verified against one would believe it had checked something it had not, which is the failure mode `DigestAlgorithm`'s strength rule exists to prevent — arrived at by a different route. `NotAvailable` is the answer, and where such an identifier is worth publishing it belongs in `ArtifactUri` or `ProvenanceUri`, which promise nothing about content.
+
+**Provenance does not strengthen by being forwarded.** Where a deployment's `Source` names another Server implementing this specification, that Server publishes a `Digest` and a `DigestProvenance` of its own, and both are readable. A Server **shall not** publish a `DigestProvenance` stronger than the one it read upstream, where the ordering is `NotAvailable` < `DeclaredBySource` < `ComputedByServer` < `VerifiedOnStage`. A digest received across a federation hop and not checked against bytes this Server holds is `DeclaredBySource` however the upstream Server obtained it: republishing its `VerifiedOnStage` would claim a verification this Server did not perform, and the claim would be indistinguishable from one it had. This is the composition rule §9.5 states for residency, applied to the other thing a federated deployment forwards.
+
+#### 12.1.2 Broken links
 
 The walk is: result → deployment → `ModelUsed` → `ModelType` → `Digest`, and — where the model was imported — `ImportedFrom` → the catalogue resource it came from.
 
@@ -1105,7 +1132,7 @@ The split matters more here than in a smaller model, because the plausible Serve
 
 | Facet | Requires |
 |---|---|
-| **AI-Base** (mandatory) | `AiRootType` with `Models` and `Deployments`; at least one `ModelType` with `ModelId`, `Name`, `Version`, `Digest` and `DigestAlgorithm`; where the Server exposes any deployment, each carries `DeploymentId`, `InferenceLocation` and `State` and satisfies the exactly-one `UsesModel` rule of §6.5; the digest rules of §12.1 |
+| **AI-Base** (mandatory) | `AiRootType` with `Models` and `Deployments`; at least one `ModelType` with `ModelId`, `Name`, `Version`, `Digest`, `DigestAlgorithm` and `DigestProvenance`; where the Server exposes any deployment, each carries `DeploymentId`, `InferenceLocation` and `State` and satisfies the exactly-one `UsesModel` rule of §6.5; the digest rules of §12.1 |
 | **AI-Dataset** | `DatasetType` instances with `DatasetId` and `SourceKind`, and `TrainedOn` from at least one model |
 | **AI-OffServer** | A deployment whose `InferenceLocation` is not `OnServer`, and §12.2's requirement that its `EndpointUri` name an authenticated, confidential scheme |
 | **AI-Signatures** | `Inputs` and `Outputs` populated on every model |
@@ -1114,10 +1141,10 @@ The split matters more here than in a smaller model, because the plausible Serve
 | **AI-InvokeAsync** | `InvokeAsync` and `InferenceJobType`, answering the same questions as `Invoke` (§8.6) |
 | **AI-Transfer** | `BeginTransfer` and `InferenceTransferType`, `MaxInlinePayloadSize` on every deployment, and the §8.2.4 rule that `Invoke` reports `TransferRequired` rather than failing a call whose response outgrew the inline bound |
 | **AI-Stream** | Incremental results published over a data channel (§8.5). Entirely optional; a Server that answers only through `Invoke` is conformant without it |
-| **AI-Federation** | `ModelSourceType` with `ApiDialect`, `AuthenticationKind` and `Reachability`; the credential-secrecy prohibition of §9.2; `FallbackPolicy` on every deployment and the acyclicity rule of §9.4 |
+| **AI-Federation** | `ModelSourceType` with `ApiDialect`, `AuthenticationKind` and `Reachability`; the credential-secrecy prohibition of §9.2; `FallbackPolicy` on every deployment and the acyclicity rule of §9.4; the composition rules of §9.5 and §12.1.1, which forbid a Server publishing residency or digest provenance stronger than what it read upstream |
 | **AI-Residency** | `DataJurisdiction`, `EgressPermitted` and `RetainsInput` on every deployment, with the §9.5 rules including the requirement to report `RetainsInput` true when it cannot be established |
 | **AI-Catalogue** | `ModelRegistryType`, `ModelPublisherType` and `ModelResourceType`, with the placeholders narrowed as §10.1 requires |
-| **AI-Import** | `ModelImportJobType`, the federate/stage/auto modes of §10.3, and the digest verification of §10.4. Requires **AI-Catalogue** |
+| **AI-Import** | `ModelImportJobType`, the federate/stage/auto modes of §10.3, the exactly-one `Source`/`Registry` rule of §10.2, and the digest verification of §10.4. Requires **AI-Catalogue** |
 
 ---
 

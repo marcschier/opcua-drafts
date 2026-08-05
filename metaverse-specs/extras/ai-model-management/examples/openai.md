@@ -53,6 +53,7 @@ the full `ModelType` identity.
 | `ModelId` | the whole `id` | keep it verbatim under §6.2; it is what you send back |
 | `Framework`, `Format` | not exposed | leave empty |
 | `Digest`, `DigestAlgorithm` | **not exposed** | see the `system_fingerprint` warning below |
+| `DigestProvenance` | `NotAvailable` | no artefact digest is exposed; `system_fingerprint` is not one |
 
 The `owned_by` field reports the serving host or account. §6.2 says `Publisher` names the
 organisation that produced the model and is left empty where only the serving organisation
@@ -66,15 +67,8 @@ to hold stable. It is not pinned to a digest the Server can verify.
 
 The `system_fingerprint` field in chat-completions responses is the trap in this mapping.
 It looks like it might be a model identity hash, especially because it changes when the
-serving system changes, but it is a backend configuration fingerprint. It is not a hash of
-the model weights, not a digest of an artefact, and not a value that can be compared with a
-catalogue resource.
-
-So `system_fingerprint` **must not** be published as `Digest`. `Digest` in this
-specification is an artefact digest used for provenance and import verification (§10.4 and
-§12.4). Filling it from `system_fingerprint` creates a worse-than-empty value: it will be
-compared against a real artefact digest and appear to disagree, even though the two values
-never described the same thing.
+serving system changes, but it is a backend configuration fingerprint. It is not an
+artefact digest under §12.1.1, so it cannot populate `Digest`.
 
 ## `Invoke`
 
@@ -177,8 +171,8 @@ plant-level retention answer. The Server has to publish the operator's assertion
 ## What this system does not tell you
 
 - **Which weights answered.** No digest, anywhere, on any call. `Digest` and
-  `DigestAlgorithm` stay empty, and §11 is written so that this is permitted rather than
-  papered over. Do not hash the model name, and do not use `system_fingerprint`.
+  `DigestAlgorithm` stay empty, and `DigestProvenance` is `NotAvailable` under
+  §12.1.1. Do not hash the model name, and do not use `system_fingerprint`.
 - **What `system_fingerprint` means for provenance.** It is a backend configuration
   fingerprint. It is useful for troubleshooting repeatability, but it is not a model
   artefact identity.

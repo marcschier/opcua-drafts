@@ -59,6 +59,7 @@ structured provenance, and neither decomposes into the triple `ModelType` asks f
 | `ModelId` | the whole `id` | keep it verbatim under §6.2; it is what you must send back |
 | `Framework`, `Format` | not exposed | leave empty |
 | `Digest`, `DigestAlgorithm` | **not exposed** | see below |
+| `DigestProvenance` | `NotAvailable` | no artefact digest is exposed; the model name is not one |
 
 Two traps here.
 
@@ -180,8 +181,8 @@ filled in from the first sentence of a marketing page rather than from the confi
 ## What this system does not tell you
 
 - **Which weights answered.** No digest, anywhere, on any call. `Digest` and
-  `DigestAlgorithm` stay empty, and §11 is written so that this is permitted rather than
-  papered over. Do not hash the model name to fill them.
+  `DigestAlgorithm` stay empty, and `DigestProvenance` is `NotAvailable` under
+  §12.1.1. Do not hash the model name to fill them.
 - **What the model was trained on.** Nothing maps to `TrainedOn` or `DatasetType`. If
   lineage matters, it comes from the model card or the supplier, by hand.
 - **Whether the model behind a name changed.** A `Pinned` deployment here is pinned to a

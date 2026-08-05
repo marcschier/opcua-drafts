@@ -10,7 +10,7 @@
     <Model ModelUri="http://opcfoundation.org/UA/Vision/Examples/Inspection/" Version="0.1.0" PublicationDate="2026-08-02T00:00:00Z">
       <RequiredModel ModelUri="http://opcfoundation.org/UA/" Version="1.05.04" PublicationDate="2023-12-15T00:00:00Z" />
       <RequiredModel ModelUri="http://opcfoundation.org/UA/Vision/" Version="0.1.0" PublicationDate="2026-08-02T00:00:00Z" />
-      <RequiredModel ModelUri="http://opcfoundation.org/UA/AI/" Version="0.2.0" PublicationDate="2026-08-03T00:00:00Z" />
+      <RequiredModel ModelUri="http://opcfoundation.org/UA/AI/" Version="0.3.0" PublicationDate="2026-08-05T00:00:00Z" />
     </Model>
   </Models>
   <Aliases>
@@ -89,7 +89,7 @@
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5005</Reference>
     </References>
-    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">0.2.0</uax:String></Value>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">0.3.0</uax:String></Value>
   </UAVariable>
   <UAObject NodeId="ns=1;i=5007" BrowseName="3:Models" ParentNodeId="ns=1;i=5005">
     <DisplayName>Models</DisplayName>

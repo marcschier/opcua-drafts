@@ -39,8 +39,8 @@ import re
 import xml.sax.saxutils as sx
 
 NAMESPACE = "http://opcfoundation.org/UA/AI/"
-VERSION = "0.2.0"
-PUBDATE = "2026-08-03T00:00:00Z"
+VERSION = "0.3.0"
+PUBDATE = "2026-08-05T00:00:00Z"
 BASE_UA_VERSION = "1.05.04"
 BASE_UA_PUBDATE = "2023-12-15T00:00:00Z"
 
@@ -580,6 +580,34 @@ enum_type(3014, "TransferStateEnum",
            ("Expired", 5, "The Server reclaimed the transfer before it completed.")])
 TransferStateEnum = T(3014)
 
+enum_type(3015, "DigestProvenanceEnum",
+          "Where a Digest came from, or why there is none. Digest is Mandatory so "
+          "that its absence is uniform and browsable rather than indistinguishable "
+          "from a Server that does not implement digests - but 'empty' then carries "
+          "two different meanings, and a client that must decide whether to trust an "
+          "artefact needs them apart. This member is what tells them apart, and it "
+          "does the same job for a digest that IS present: a value the source "
+          "asserted and a value this Server computed over bytes are not the same "
+          "evidence, and only one of them survives a substituted artefact.",
+          [("NotAvailable", 0,
+            "There is no digest and the source does not publish one. Digest is "
+            "empty. This is the honest answer for an endpoint that names models but "
+            "never their content, and it is what most hosted inference APIs "
+            "require."),
+           ("DeclaredBySource", 1,
+            "Digest carries what the source declared. No party this Server can "
+            "speak for has hashed the artefact, so the value is an assertion "
+            "forwarded rather than evidence held."),
+           ("ComputedByServer", 2,
+            "This Server hashed the artefact it holds. The value is evidence, but "
+            "nothing independent agrees with it - a substitution that happened "
+            "before the Server obtained the bytes is not detected."),
+           ("VerifiedOnStage", 3,
+            "This Server hashed the artefact during a staging import (clause 10.4) "
+            "and it matched what the source declared. Two independent parties agree, "
+            "which is the strongest statement this model can carry.")])
+DigestProvenanceEnum = T(3015)
+
 # ---------------------------------------------------------------------------
 # Structured DataTypes (3050+)
 # ---------------------------------------------------------------------------
@@ -743,7 +771,15 @@ object_type(1002, "ModelType", BaseObjectType,
             "Administration Shell can be populated from this node without loss.")
 AM = 1002
 prop_var(AM, "ModelType", "ModelId", String, "Identifier of the model.", MR_Mandatory)
-prop_var(AM, "ModelType", "Name", LocalizedText, "Human-readable model name.",
+prop_var(AM, "ModelType", "Name", LocalizedText,
+         "Human-readable model name. Its Text SHALL be the name the source system "
+         "uses for the model, carried across unchanged. A LocalizedText because the "
+         "base model types names that way and retyping it would break every "
+         "implementation, but the localizable part is the presentation: a Server MAY "
+         "add a translation for display and SHALL NOT translate, reformat or "
+         "prettify the Text itself. Two Servers that fetched one model from two "
+         "mirrors are meant to produce the same string, and a name adjusted for "
+         "house style is a name that no longer matches.",
          MR_Mandatory)
 prop_var(AM, "ModelType", "Version", String, "Model version.", MR_Mandatory)
 prop_var(AM, "ModelType", "Framework", String,
@@ -902,7 +938,9 @@ object_type(1007, "ModelImportJobType", T(1006),
             "there and nowhere else.")
 MI = 1007
 prop_var(MI, "ModelImportJobType", "Source", NodeId_,
-         "ModelSourceType instance the model is pulled from.", MR_Mandatory)
+         "ModelSourceType instance the model is pulled from, where the import calls "
+         "an endpoint. Null where the import reads a catalogue instead, in which "
+         "case Registry names it. Exactly one of the two is non-null.", MR_Mandatory)
 prop_var(MI, "ModelImportJobType", "ModelReference", ModelReferenceDataType,
          "Publisher, name and version being imported.", MR_Mandatory)
 prop_var(MI, "ModelImportJobType", "Mode", ImportModeEnum,
@@ -1378,11 +1416,42 @@ method(TR, "InferenceTransferType", "Abort",
        "caring about a response SHOULD say so rather than leaving the Server to wait "
        "out ExpiresAt.", MR_Optional)
 
-# The actual narrowing. Same BrowseNames and same Organizes as the inherited
-# declarations, so these OVERRIDE them rather than sitting alongside; typed to this
-# model's own types, so a client browsing a model registry knows what it will find.
-# Allocated here because member ids are append-only.
+# ---------------------------------------------------------------------------
+# Members appended in 0.3.0. All append; nothing renumbers.
+# ---------------------------------------------------------------------------
 
+# --- Why a Digest is what it is --------------------------------------------
+# Mandatory on ModelType for the reason Digest itself is: clause 12 depends on
+# it, and a rule that depends on an Optional member is one a conformant Server
+# can silently not satisfy. Optional on ModelResourceType, mirroring the Digest
+# it qualifies, which is Optional there.
+prop_var(1002, "ModelType", "DigestProvenance", DigestProvenanceEnum,
+         "Where Digest came from, or why there is none. NotAvailable is the only "
+         "value permitted with an empty Digest, and it SHALL be used rather than "
+         "leaving a client to guess whether the source publishes no digest or this "
+         "Server declined to carry one.\n\n"
+         "A Server SHALL NOT put a non-content identifier in Digest to avoid saying "
+         "NotAvailable. A response fingerprint, a resource name, a storage entity tag "
+         "and a repository commit identifier are none of them digests of the artefact "
+         "that ran, and a client that verified against one would believe it had "
+         "checked something it had not. Where such an identifier is worth publishing "
+         "it belongs in ArtifactUri or ProvenanceUri, which promise nothing about "
+         "content.",
+         MR_Mandatory)
+prop_var(1012, "ModelResourceType", "DigestProvenance", DigestProvenanceEnum,
+         "Where this resource's Digest came from, on the same terms as ModelType. A "
+         "catalogue that declares a digest it did not compute is DeclaredBySource; "
+         "one serving the artefact through the inherited Open, Read and Close can "
+         "reach ComputedByServer.")
+
+# --- The registry an import job read from ----------------------------------
+prop_var(1007, "ModelImportJobType", "Registry", NodeId_,
+         "ModelRegistryType instance the model is imported from, where the import "
+         "reads a catalogue rather than calling an endpoint. Null otherwise.\n\n"
+         "A Server SHALL populate exactly one of Source and Registry, and SHALL "
+         "leave the other null. The two name the two things an import can read from, "
+         "and a job that named both would not say which one produced the artefact "
+         "whose digest clause 10.4 verifies.")
 
 # ===========================================================================
 # ==================================  EMIT  =================================

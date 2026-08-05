@@ -51,6 +51,7 @@ Server stores for that gateway.
 | `Framework` | `platform` | examples include backend platform strings |
 | `Format` | operator assertion | not a separate OIP field |
 | `Digest`, `DigestAlgorithm` | **not exposed by OIP v2** | see catalogue and import below |
+| `DigestProvenance` | `NotAvailable` | OIP v2 returns no artefact digest |
 
 Triton model versions are explicit: inference can target
 `/v2/models/{name}/versions/{version}/infer`. That is a real version dimension, unlike
@@ -154,7 +155,8 @@ natural inputs to `TestConnection`, `Reachability`, `LastSuccessAt` and
 ## What this system does not tell you
 
 - **A content digest.** The cited OIP metadata exposes name, versions, platform and tensor
-  signatures, not a hash of repository contents.
+  signatures, not a hash of repository contents. `DigestProvenance` is `NotAvailable` for
+  that projection; any digest comes from a separate catalogue.
 - **A publisher.** The model repository names models; it does not state who published them.
   `Publisher` is an operator namespace unless a separate catalogue supplies one.
 - **Usage accounting.** Token counts and finish reasons are not protocol fields. Treat them

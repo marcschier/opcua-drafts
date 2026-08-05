@@ -58,6 +58,7 @@ The local file is the identity anchor, not a provider-side deployment name.
 | `Framework` | ONNX / ONNX Runtime, where the file metadata supports it | llama.cpp |
 | `Format` | ONNX | GGUF |
 | `Digest`, `DigestAlgorithm` | hash of the `.onnx` artefact | hash of the `.gguf` artefact |
+| `DigestProvenance` | `ComputedByServer`; `VerifiedOnStage` after catalogue staging | `ComputedByServer`; `VerifiedOnStage` after catalogue staging |
 | `ArtifactUri` | local file URI | local file URI |
 | `ParameterCount`, `Quantization` | fill where the operator has verified these facts for the artefact | fill where the operator has verified these facts for the artefact |
 
@@ -65,6 +66,11 @@ The local file is the identity anchor, not a provider-side deployment name.
 at the file the Server actually opens. A `Pinned` deployment is pinned to bytes only where
 the operator controls the immutability of the file behind the local path; otherwise the path
 can still name mutable bytes.
+
+An in-process runtime is the case where a real digest costs nothing: the Server already
+holds the local file. That is the opposite of hosted APIs that only name a model. Where the
+file was staged from a catalogue that declared a digest, the §10.4 match raises
+`DigestProvenance` to `VerifiedOnStage`.
 
 The research for this guide establishes ONNX Runtime in-process loading and inference, not a
 portable metadata or tensor-signature inspection contract. Publish `Inputs` and `Outputs`
@@ -169,8 +175,10 @@ asks a deployment to answer.
 
 ## What this system does not tell you
 
-- **Who approved the file.** A digest says which bytes are present, not that they are safe to
-  run. `ProvenanceUri`, `Card` and the governance material of §11 still have to come from the
+- **Who approved the file.** `DigestProvenance` is `ComputedByServer` when the Server hashes
+  the local file, and `VerifiedOnStage` only where a catalogue digest matched during §10.4
+  staging. A digest says which bytes are present, not that they are safe to run.
+  `ProvenanceUri`, `Card` and the governance material of §11 still have to come from the
   operator's process or catalogue.
 - **What the model was trained on.** Neither ONNX Runtime nor llama.cpp exposes training
   lineage. If lineage matters, it comes from a model card, a registry or manual governance.
