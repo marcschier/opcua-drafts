@@ -1221,6 +1221,7 @@ The split matters more here than in a smaller model, because the plausible Serve
 | **AI-Residency** | `DataJurisdiction`, `EgressPermitted` and `RetainsInput` on every deployment, with the §9.5 rules including the requirement to report `RetainsInput` true when it cannot be established |
 | **AI-Catalogue** | `ModelRegistryType`, `ModelPublisherType` and `ModelResourceType`, with the placeholders narrowed as §10.1 requires |
 | **AI-Import** | `ModelImportJobType`, the federate/stage/auto modes of §10.3, the exactly-one `Source`/`Registry` rule of §10.2, and the digest verification of §10.4. Requires **AI-Catalogue** |
+
 A Server **shall** publish the URI of every facet and profile it claims in `Server/ServerCapabilities/ServerProfileArray`, which is where a client discovers what it supports without browsing for members and guessing.
 
 ### 13.3 Profiles
