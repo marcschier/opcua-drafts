@@ -236,6 +236,11 @@ much as was there to begin with.
 
 ## Conformance units
 
+Where this Server proxies the upstream inference Method and publishes the local
+residency declarations described below, the federating arrangement is an
+**AI Inference Gateway Server**. The upstream peer may claim any profile; that
+claim is not inherited by this Server.
+
 A conformance unit describes what **this** Server exposes, not what it can reach. A link to
 a capable upstream Server does not make that Server's facets local, and this is the trap
 worth stating plainly: federating to a Server with a catalogue does not give this Server

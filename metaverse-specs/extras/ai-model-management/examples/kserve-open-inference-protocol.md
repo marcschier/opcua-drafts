@@ -192,6 +192,11 @@ the operator boundary.
 
 ## Conformance units
 
+Where the OIP endpoint is off-server and the operator states the residency boundary,
+this arrangement is an **AI Inference Gateway Server**: it reaches the
+**AI-Base**, **AI-Invoke**, **AI-OffServer**, **AI-Federation** and
+**AI-Residency** facets that §13.3 bundles for a gateway.
+
 Reachable against a conforming OIP endpoint: **AI-Base**, **AI-Invoke**,
 **AI-Federation** and **AI-Signatures**. **AI-OffServer** is reachable for a deployment
 whose `InferenceLocation` is not `OnServer`, which is what §13.2 asks for. What that

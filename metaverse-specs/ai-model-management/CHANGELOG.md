@@ -2,6 +2,33 @@
 
 All notable changes to this specification and its information model.
 
+## Unreleased
+
+### Profiles
+
+Clause 13 has been titled *Profiles and conformance units* since 0.1.0 and defined only facets. §13.3 defines four profiles and §13.4 gives their URIs. The information model does not change, so the release version does not move: profiles are published through the base-UA `Server/ServerCapabilities/ServerProfileArray` and need no member.
+
+A facet is a building block; a profile is a complete claim. The distinction matters commercially rather than technically — a plant writes a profile name into a purchase order, and enumerating nine facets correctly is not something a procurement document does reliably.
+
+| Profile | Facets |
+|---|---|
+| AI Inference Device Server | AI-Base, AI-Invoke |
+| AI Inference Gateway Server | AI-Base, AI-Invoke, AI-OffServer, AI-Federation, AI-Residency |
+| AI Model Catalogue Server | AI-Base, AI-Catalogue, AI-Import |
+| AI Model Lifecycle Server | AI-Base, AI-Dataset, AI-Learning, AI-Catalogue, AI-Import |
+
+The first three were already in §13.1 as prose examples — "a device that runs one fixed model", "a gateway that calls a hosted model", "a plant MLOps node". Naming them cost nothing but a name. §13.1 now points at §13.3 rather than restating them, so the shapes have one definition.
+
+`AI-Residency` is **inside** the gateway profile rather than optional to it. Once inference leaves the Server, *where does my data go* has an answer, and a gateway that cannot state it is the arrangement §9.5 exists to prevent. A Server that federates and cannot answer claims the facets individually.
+
+The **Lifecycle** profile is witnessed by none of the eleven mapped systems, and is defined anyway. All eleven are inference or catalogue systems; none is a plant that trains, which is what clause 7 was written for. Its absence was also why `AI-Learning`, `AI-Dataset` and `AI-Stream` looked orphaned — they belonged to a Server shape the document described nowhere.
+
+`AI-Stream` remains in no profile, deliberately. §13.2 already says a Server answering only through `Invoke` is conformant without it, and a facet that is genuinely optional to every shape should not be bundled into one.
+
+§3 gains definitions for *conformance unit*, *facet* and *profile*. The document used "facet" throughout and defined it nowhere, and "profile" collides with the *typed profile* of a consuming specification (§6.4.1), which is a payload vocabulary and has nothing to do with conformance.
+
+`validate_examples.py` checks every `**… Server**` token in the guides against the profile table, so a guide claiming a shape the specification does not define fails the same way a misspelled facet does.
+
 ## 0.4.0 — 2026-08-06
 
 The eleven mappings published under `extras/ai-model-management/examples/` were re-read with a different question: not *which rules are wrong* — that was 0.3.0 — but *what do these systems do that this model cannot represent at all*. The answer had a consistent signature. A guide would **name** a vendor field and then never map it, because there was no member to map it to, and the omission was invisible because nothing was missing from the guide's own tables. Five gaps were found that way, and three further defects were found by checking the specification against itself.

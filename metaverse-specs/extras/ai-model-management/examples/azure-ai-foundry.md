@@ -223,6 +223,12 @@ filled in from the first sentence of a marketing page rather than from the confi
 
 ## Conformance units
 
+The cloud arrangement is an **AI Inference Gateway Server**: it reaches the
+**AI-Base**, **AI-Invoke**, **AI-OffServer**, **AI-Federation** and
+**AI-Residency** facets that §13.3 bundles for a hosted inference Server.
+Foundry Local is the same call shape on the same host, so that arrangement is an
+**AI Inference Device Server** instead.
+
 Reachable against Azure AI Foundry: **AI-Base**, **AI-Invoke**, **AI-InvokeAsync**,
 **AI-Transfer**, **AI-OffServer**, **AI-Federation**, **AI-Residency**.
 

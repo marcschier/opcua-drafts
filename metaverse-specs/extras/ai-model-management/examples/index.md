@@ -60,6 +60,12 @@ to source from somewhere else, or decide to live without.
 
 ## What none of them gives you
 
+Across the set, eight of the eleven arrangements reach the **AI Inference Gateway Server**
+profile, two reach **AI Inference Device Server**, one reaches **AI Model Catalogue
+Server**, and none reaches **AI Model Lifecycle Server**. That last is not a shortcoming of
+the profile: these eleven are inference and catalogue systems, and none of them is a plant
+that trains, which is the shape clause 7 was written for.
+
 **An artefact digest.** Not Azure AI Foundry, not OpenAI, not Bedrock, not SageMaker, not
 NIM, not Triton, not Vertex AI. Model identity on every hosted inference platform in this
 set is a name string, sometimes carrying a date — `gpt-4o-2024-08-06`,

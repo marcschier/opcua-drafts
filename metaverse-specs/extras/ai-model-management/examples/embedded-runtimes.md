@@ -212,6 +212,10 @@ asks a deployment to answer.
 
 ## Conformance units
 
+This arrangement is an **AI Inference Device Server**: the model runs in the
+Server's own process, and the guide reaches the **AI-Base** and **AI-Invoke**
+facets that §13.3 bundles for an in-process inference Server.
+
 Reachable against embedded runtimes: **AI-Base**, **AI-Invoke**, **AI-InvokeAsync**,
 **AI-Transfer**, **AI-Residency**, **AI-Catalogue** and **AI-Import**. **AI-Signatures** is
 not established by this guide for ONNX Runtime or llama.cpp; claim it only where the Server

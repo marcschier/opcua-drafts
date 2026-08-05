@@ -180,6 +180,11 @@ network path to the appliance can fail independently.
 
 ## Conformance units
 
+A NIM on a GPU appliance elsewhere is an **AI Inference Gateway Server** where
+the secure off-server endpoint and residency assertions below are present. NIM on
+the same host as the OPC UA Server is an **AI Inference Device Server** instead,
+because its `InferenceLocation` is `OnServer`.
+
 Reachable against self-hosted NIM: **AI-Base**, **AI-Invoke**, **AI-InvokeAsync**,
 **AI-Transfer**, **AI-Federation** and **AI-Residency**. **AI-OffServer** is reachable for
 a deployment whose `InferenceLocation` is not `OnServer`, which is what §13.2 asks for.

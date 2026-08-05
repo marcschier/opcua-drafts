@@ -222,6 +222,10 @@ artefact was obtained.
 
 ## Conformance units
 
+This arrangement is an **AI Model Catalogue Server**: the Hub projection reaches
+**AI-Base**, **AI-Catalogue** and **AI-Import** without requiring the Server to
+call `Invoke`, which is the catalogue shape described in §13.3.
+
 Reachable against a Hugging Face catalogue projection: **AI-Base**, **AI-Catalogue** and
 **AI-Import**. **AI-Residency** is reachable for deployments the Server creates from the
 imported model, because the operator can state the invocation boundary.

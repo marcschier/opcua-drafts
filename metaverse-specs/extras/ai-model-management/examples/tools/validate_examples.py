@@ -116,6 +116,39 @@ def load_conformance_units() -> set[str]:
     return set(re.findall(r"\*\*(AI-[A-Za-z]+)\*\*", text))
 
 
+def load_profiles() -> set[str]:
+    """Every profile the specification's profile table declares.
+
+    Read from the leading column of the clause 13.3 table rather than from prose, so a
+    profile a guide claims is checked against the one place that defines it. A guide that
+    names a Server shape the specification does not define is claiming something no test
+    lab can assess, which is the same failure a misspelled facet would be.
+    """
+    with open(SPEC, encoding="utf-8") as handle:
+        text = handle.read()
+    return set(re.findall(r"^\|\s*\*\*((?:AI|Robot) [^*|]*Server)\*\*\s*\|", text, re.M))
+
+
+def check_profiles(text_by_guide: dict[str, str]) -> None:
+    """A guide may name a profile only if the specification defines it.
+
+    This checks the NAME, not the claim. Whether a guide's reachable facets actually
+    cover the profile it names is a judgement over prose, and a checker that guessed at
+    it would fail on wording rather than on substance. What this does catch is the
+    failure that matters mechanically: a profile that does not exist, whether from a
+    typo or from an author inventing a Server shape the specification never defined.
+    """
+    declared = load_profiles()
+    if not declared:
+        err("no profiles parsed from the specification; the parse is wrong, not the guides")
+        return
+
+    for rel, text in text_by_guide.items():
+        for claimed in re.findall(r"\*\*((?:AI|Robot) [^*]*Server)\*\*", strip_fences(text)):
+            if claimed not in declared:
+                err(f"{rel}: `{claimed}` is not a profile the specification defines")
+
+
 def load_known_terms() -> set[str]:
     """Backticked PascalCase tokens the guides may cite that this model does not declare."""
     if not os.path.exists(KNOWN_TERMS):
@@ -284,6 +317,7 @@ def main() -> int:
     check_identifiers(names, known)
     check_enum_coverage(text_by_guide)
     check_conformance_units(text_by_guide)
+    check_profiles(text_by_guide)
     check_spec_link(text_by_guide)
     check_index(text_by_guide)
 

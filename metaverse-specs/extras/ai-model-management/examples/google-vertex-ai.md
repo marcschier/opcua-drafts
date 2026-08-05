@@ -236,6 +236,10 @@ operator's assertion.
 
 ## Conformance units
 
+This arrangement is an **AI Inference Gateway Server**: it reaches the
+**AI-Base**, **AI-Invoke**, **AI-OffServer**, **AI-Federation** and
+**AI-Residency** facets that §13.3 bundles for a hosted inference Server.
+
 Reachable against Google Vertex AI: **AI-Base**, **AI-Invoke**, **AI-InvokeAsync**,
 **AI-Transfer**, **AI-OffServer**, **AI-Federation**, **AI-Residency**.
 

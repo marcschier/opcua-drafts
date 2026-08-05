@@ -187,6 +187,11 @@ checked.
 
 ## Conformance units
 
+A Triton reached across the plant network is an **AI Inference Gateway Server**
+where the secure off-server endpoint and residency assertions below are present.
+Triton on the same host as the OPC UA Server is an **AI Inference Device Server**
+instead, because its `InferenceLocation` is `OnServer`.
+
 Reachable against Triton: **AI-Base**, **AI-Invoke**, **AI-InvokeAsync**, **AI-Transfer**,
 **AI-Federation**, **AI-Residency** and **AI-Signatures**. **AI-OffServer** is reachable
 for a deployment whose `InferenceLocation` is not `OnServer`, which is what §13.2 asks for.

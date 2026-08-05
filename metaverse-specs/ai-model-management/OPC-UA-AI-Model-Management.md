@@ -69,7 +69,8 @@
 - [13 Profiles and conformance units](#13-profiles-and-conformance-units)
   - [13.1 Declaring conformance](#131-declaring-conformance)
   - [13.2 Facets](#132-facets)
-- [14 Deliverables and reproducibility](#14-deliverables-and-reproducibility)
+  - [13.3 Profiles](#133-profiles)
+  - [13.4 Profile and facet URIs](#134-profile-and-facet-uris)
 - [Annex A — Information model (generated)](#annex-a--information-model-generated)
 - [Annex B — Informative alignments](#annex-b--informative-alignments)
 - [Annex C — A worked arrangement (informative)](#annex-c--a-worked-arrangement-informative)
@@ -150,6 +151,9 @@ Informative alignments — IDTA 02058, IDTA 02059, IDTA 02060, and the OPC UA �
 | **Learning job** | One turn of the capture, label, train and promote loop. Modelled as `LearningJobType`. |
 | **Promotion** | Making a candidate model the one deployments use. The one operation here that changes what the equipment does. |
 | **Digest** | A cryptographic hash of an artefact, which is what makes a retrieved artefact verifiable as the one described. |
+| **Conformance unit** | The smallest individually testable requirement of this specification. Grouped into facets rather than claimed one by one. |
+| **Facet** | A named, individually claimable set of conformance units — a building block, not a complete claim. Clause 13.2 defines them. |
+| **Profile** | A named set of facets describing one plausible Server, claimed by publishing its URI in `Server/ServerCapabilities/ServerProfileArray`. Clause 13.3 defines them. Not to be confused with a *typed profile* (§6.4.1), which is a consuming specification's payload vocabulary and has nothing to do with conformance. |
 
 ---
 
@@ -1196,7 +1200,7 @@ A Server declares conformance by exposing `AiRootType` under the Server object w
 
 Facets are **additive and independent** except where a row states otherwise, and only one dependency exists: **AI-Import** requires **AI-Catalogue**, because an import job with nothing to import from is not implementable.
 
-The split matters more here than in a smaller model, because the plausible Servers differ enormously. A device that runs one fixed model and describes it claims **AI-Base** and stops. A gateway that calls a hosted model claims **AI-Base**, **AI-Invoke** and **AI-Federation**. A plant MLOps node that mirrors a corporate catalogue and stages models onto controllers claims **AI-Catalogue** and **AI-Import** and may never call `Invoke` at all. None of these is a partial implementation of the others, and a single monolithic conformance claim would have made two of the three unclaimable.
+The split matters more here than in a smaller model, because the plausible Servers differ enormously — a device running one fixed model, a gateway calling a hosted one, and a plant MLOps node that may never call `Invoke` at all are three different products rather than three degrees of completeness of one. §13.3 names them as profiles. A single monolithic conformance claim would have made two of the three unclaimable.
 
 **AI-Residency** is deliberately separate from **AI-Federation**. A Server can be perfectly capable of calling a remote model while being unable to state where the data goes, and an operator who needs the second guarantee needs to be able to ask for it by name rather than infer it from the first.
 
@@ -1217,10 +1221,47 @@ The split matters more here than in a smaller model, because the plausible Serve
 | **AI-Residency** | `DataJurisdiction`, `EgressPermitted` and `RetainsInput` on every deployment, with the §9.5 rules including the requirement to report `RetainsInput` true when it cannot be established |
 | **AI-Catalogue** | `ModelRegistryType`, `ModelPublisherType` and `ModelResourceType`, with the placeholders narrowed as §10.1 requires |
 | **AI-Import** | `ModelImportJobType`, the federate/stage/auto modes of §10.3, the exactly-one `Source`/`Registry` rule of §10.2, and the digest verification of §10.4. Requires **AI-Catalogue** |
+A Server **shall** publish the URI of every facet and profile it claims in `Server/ServerCapabilities/ServerProfileArray`, which is where a client discovers what it supports without browsing for members and guessing.
+
+### 13.3 Profiles
+
+A facet is a building block. A **profile** is a complete claim: a named set of facets describing one plausible Server, which is what a procurement document cites and what two vendors implementing the same shape agree they have built.
+
+Four are defined. Each includes **AI-Base**, and a Server **may** claim more than one — a gateway that also mirrors a catalogue claims two, which is the whole reason profiles are composed from facets rather than written out independently.
+
+| Profile | Facets | The Server it describes |
+|---|---|---|
+| **AI Inference Device Server** | AI-Base, AI-Invoke | Runs models itself. A camera, a controller or an industrial PC executing a model in its own process, describing what it runs and answering calls against it. |
+| **AI Inference Gateway Server** | AI-Base, AI-Invoke, AI-OffServer, AI-Federation, AI-Residency | Calls a model hosted elsewhere. The bridge between a plant address space and an external inference service. |
+| **AI Model Catalogue Server** | AI-Base, AI-Catalogue, AI-Import | Holds and distributes models without necessarily running any. A plant MLOps node mirroring a corporate registry and staging artefacts onto controllers. |
+| **AI Model Lifecycle Server** | AI-Base, AI-Dataset, AI-Learning, AI-Catalogue, AI-Import | Closes the loop of clause 7: accumulates a dataset from the line, trains a candidate, evaluates it, promotes it, and keeps the lineage that explains why. |
+
+**AI-Residency is inside the gateway profile rather than optional to it.** The moment inference leaves the Server the question *where does my data go* has an answer, and a gateway that cannot state it is precisely the arrangement §9.5 exists to prevent. A Server that federates and cannot answer claims the facets individually and not this profile.
+
+The **Inference Device** profile does not include AI-Signatures, though a tensor runtime can usually satisfy it, because a Server serving one model behind a documented request body is a legitimate device and `Inputs`/`Outputs` do not describe a JSON contract (§6.4.2). It is claimed alongside where it holds.
+
+The **Lifecycle** profile is the only one that requires AI-Learning, and it requires AI-Dataset with it. A learning loop whose training data is not described is a loop that cannot be audited, and §12.3's promotion authorization exists to be answerable about exactly that.
+
+None of the four is a subset of another, and that is the point. A device that runs one fixed model, a gateway that runs none, and a catalogue node that may never call `Invoke` are three different products, and a single monolithic profile would have made two of them unclaimable.
+
+### 13.4 Profile and facet URIs
+
+A profile name is for a human. `ServerProfileArray` holds URIs, and unless this specification states them two Servers implementing the same profile publish different strings and no client can match either.
+
+Profiles are published under `http://opcfoundation.org/UA-Profile/AI/Server/`:
+
+| Profile | URI suffix |
+|---|---|
+| AI Inference Device Server | `InferenceDevice` |
+| AI Inference Gateway Server | `InferenceGateway` |
+| AI Model Catalogue Server | `ModelCatalogue` |
+| AI Model Lifecycle Server | `ModelLifecycle` |
+
+Facets are published under `http://opcfoundation.org/UA-Profile/AI/Facet/`, with the suffix being the facet name after the `AI-` prefix: **AI-Base** is `Base`, **AI-InvokeAsync** is `InvokeAsync`, **AI-OffServer** is `OffServer`, and so on for every row of §13.2.
+
+These URIs are **provisional**, on the same terms as the namespace URI and the NodeIds: this is a working-group draft, and the OPC Foundation assigns the final values.
 
 ---
-
-## 14 Deliverables and reproducibility
 
 | Artifact | Path |
 |---|---|
