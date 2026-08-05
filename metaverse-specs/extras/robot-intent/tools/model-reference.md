@@ -312,6 +312,7 @@ What one robot will accept. A client reads this once, before it submits anything
 | RealTimeChannelsSupported | Variable | Boolean | Scalar | Mandatory | True when the Server brokers real-time channels. |
 | MissionBranchingSupported | Variable | Boolean | Scalar | Mandatory | True when mission transitions are evaluated. A Server that reports false executes the steps in order and ignores any transitions supplied. |
 | MaxTrajectoryPoints | Variable | UInt32 | Scalar | Optional | Largest number of points accepted in one trajectory. Zero means the Server states no limit. |
+| SupportedFacets | Variable | String | Array | Mandatory | The facets of Table 12.2 this controller claims, by the names given there. A client reads this instead of re-deriving conformance from the address space. Clause 12.2 binds the claim: a facet whose structural requirements are unmet shall not appear, and the behavioural requirements are subject to the honesty rules of clause 9. |
 
 ### CoordinateFrameType — `ns=1;i=1006`
 

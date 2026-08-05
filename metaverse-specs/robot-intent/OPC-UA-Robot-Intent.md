@@ -703,6 +703,8 @@ Five further declarations cover the capability added beyond single moves. `Traje
 
 Each follows the same rule as `BlendingSupported`: a Server declares false rather than accepting work it will not actually perform. A Server that reports `MissionBranchingSupported` false executes the steps in order and ignores any transitions supplied, and a client reading that declaration knows not to express a branch it needs.
 
+`SupportedFacets` is the same contract at the level of whole facets, and it is bound by every rule above. A facet is not a summary of the declaration a client has already read: some of what Table 12.2 requires — that blending modes are honoured, that the refusal rules of §6.2 are followed, that a mission base is immutable — cannot be established by reading the address space at all. Listing such a facet is therefore an attestation, and a Server that lists **RI-Blending** while treating the buffer modes as `Buffered` has made a false statement of exactly the kind rule 3 forbids, whatever `BlendingSupported` says. Clause 12.2 sets out which requirements are structural and which are attested.
+
 ---
 
 ## 10 Safety (normative)
@@ -801,9 +803,15 @@ ISO 10218-1 addresses cybersecurity where a vulnerability could compromise robot
 
 ### 12.1 Declaring conformance
 
-A Server declares conformance by exposing `RobotIntentRootType` under the Server object with `SpecificationVersion` set to the release it implements, and by populating `IntentCapabilitiesType` truthfully.
+A Server declares conformance by exposing `RobotIntentRootType` under the Server object with `SpecificationVersion` set to the release it implements, by populating `IntentCapabilitiesType` truthfully, and by listing in `SupportedFacets` the facets of Table 12.2 that each controller satisfies.
+
+`SupportedFacets` carries the facet names of Table 12.2 verbatim. It exists because conformance is otherwise not machine-readable: a client would have to re-derive the whole table from the address space, and since several rows are behavioural, two clients deriving independently could reach different conclusions about the same Server. This mirrors `ServerCapabilitiesType.ServerProfileArray` in OPC 10000-5, where a Server states its profiles rather than leaving them to be inferred.
+
+A Server shall not list a facet whose structural requirements are unmet. The behavioural requirements are the Server's own attestation and are subject to the honesty rules of clause 9 — a Server that lists **RI-Blending** while treating the blending buffer modes as `Buffered` is making a false statement in exactly the sense clause 9 forbids, and is no more conformant than one that reports `BlendingSupported` true under the same conditions.
 
 ### 12.2 Facets
+
+Requirements are of two kinds. **Structural** requirements are settled by reading the address space and the capability declaration: a client can check them, and so can a compliance tool, without commanding the robot. **Behavioural** requirements — written below as accepting, honouring, maintaining or observing a rule — cannot be settled by reading, only by exercising the Server, and are the Server's attestation under clause 9.
 
 | Facet | Requires |
 |---|---|
@@ -839,6 +847,8 @@ A Server declares conformance by exposing `RobotIntentRootType` under the Server
 | **RI-Interop-40010** | Annex B. |
 
 A facet other than **RI-Base** is claimed only where every intent type it names appears in `SupportedIntents`.
+
+**RI-Base** additionally requires `SupportedFacets`, since a conformance claim that cannot be read is not a claim.
 
 ---
 

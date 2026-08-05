@@ -1675,6 +1675,20 @@ _member_var(IO, "IntentOperationType", "ProgramDiagnostic",
             "altered the inherited member's TypeDefinition or reference type would "
             "declare a second member rather than promote the inherited one.")
 
+# Clause 12 declares conformance in terms of facets but gave a Server nowhere to say
+# which ones it satisfies, so every client had to re-derive the whole of Table 12.2
+# from the address space. Several facet rows are behavioural - "accepted and honoured",
+# "the refusal rules of 6.2" - which no address-space read can settle, so two clients
+# deriving independently could disagree about whether the same Server conforms. This
+# member is the same answer OPC 10000-5 gives with ServerCapabilitiesType.
+# ServerProfileArray: the Server states its claim and clause 9 governs its honesty.
+prop_var(CP, "IntentCapabilitiesType", "SupportedFacets", String,
+         "The facets of Table 12.2 this controller claims, by the names given there. "
+         "A client reads this instead of re-deriving conformance from the address "
+         "space. Clause 12.2 binds the claim: a facet whose structural requirements "
+         "are unmet shall not appear, and the behavioural requirements are subject to "
+         "the honesty rules of clause 9.", MR_Mandatory, valuerank="1")
+
 # ===========================================================================
 # ==================================  EMIT  =================================
 # ===========================================================================
