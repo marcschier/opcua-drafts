@@ -144,8 +144,11 @@ Takes no arguments and returns none.
 
 | Out | DataType | ValueRank | Meaning |
 |---|---|---|---|
-| IntentId | String | Scalar | Identifier of the intent, assigned by the Server when the request left it empty. |
-| Operation | NodeId | Scalar | The IntentOperation that tracks it. |
+| Accepted | Boolean | Scalar | True when the intent was admitted. False is a refusal, which clause 10.5 makes an ordinary outcome rather than an error. |
+| IntentId | String | Scalar | Identifier of the intent, assigned by the Server when the request left it empty. Empty on a refusal. |
+| Operation | NodeId | Scalar | The IntentOperation that tracks it. Null on a refusal, because a refusal creates no operation instance. |
+| Failure | IntentFailureEnum | Scalar | Why the intent was refused, or None when it was admitted. |
+| Message | LocalizedText | Scalar | Human-readable detail on a refusal. For a human; never parsed. |
 
 **Method `CancelIntent`** (Mandatory) — Ask the Server to end an intent early. The Server MAY refuse, and says so in Accepted, because some motions cannot be abandoned safely part-way. This is not the OPC UA Cancel Service, which discards a pending response and leaves the robot moving; see clause 6.5.
 
@@ -188,7 +191,10 @@ Takes no arguments and returns none.
 
 | Out | DataType | ValueRank | Meaning |
 |---|---|---|---|
-| Operation | NodeId | Scalar | The IntentOperation that tracks the new attempt. |
+| Accepted | Boolean | Scalar | True when a new attempt was admitted. |
+| Operation | NodeId | Scalar | The IntentOperation that tracks the new attempt. Null on a refusal. |
+| Failure | IntentFailureEnum | Scalar | Why the re-attempt was refused, or None when it was admitted. |
+| Message | LocalizedText | Scalar | Human-readable detail on a refusal. |
 
 **Method `SubmitMission`** (Optional) — Submit an ordered sequence of intents as one unit. Steps marked Released form the base and are committed; the rest form the horizon and may still be revised by UpdateMission.
 
@@ -198,8 +204,11 @@ Takes no arguments and returns none.
 
 | Out | DataType | ValueRank | Meaning |
 |---|---|---|---|
-| MissionId | String | Scalar | Identifier of the mission, assigned by the Server when the request left it empty. |
-| Operation | NodeId | Scalar | The Mission that tracks it. |
+| Accepted | Boolean | Scalar | True when the mission was admitted. |
+| MissionId | String | Scalar | Identifier of the mission, assigned by the Server when the request left it empty. Empty on a refusal. |
+| Operation | NodeId | Scalar | The Mission that tracks it. Null on a refusal. |
+| Failure | IntentFailureEnum | Scalar | Why the mission was refused, or None when it was admitted. |
+| Message | LocalizedText | Scalar | Human-readable detail on a refusal. |
 
 **Method `UpdateMission`** (Optional) — Replace the horizon of a mission already submitted. The base is untouchable: it has been committed and may already have executed, so an update that would alter a released step is refused rather than partly applied.
 
@@ -238,6 +247,7 @@ Takes no arguments and returns none.
 | EndpointUrl | String | Scalar | Where to connect. |
 | PayloadDescriptor | String | Scalar | The transport's own configuration. |
 | LeaseExpiry | UtcTime | Scalar | When the lease lapses. |
+| Message | LocalizedText | Scalar | Human-readable detail on a refusal. For a human; never parsed. |
 
 **Method `CloseRealTimeChannel`** (Optional) — Give up a lease on a brokered channel.
 
@@ -266,7 +276,7 @@ One submitted intent, tracked to completion. It is a Part 10 program instance, s
 | MissionId | Variable | String | Scalar | Optional | The mission this intent belongs to, or empty when it was submitted alone. |
 | QueuePosition | Variable | UInt32 | Scalar | Optional | Place in the queue while ExecutionState is Queued, 1 being next. Zero once it is no longer queued. |
 | FinalResultData | Object |  |  | Mandatory | Part 10 result container. Carries the same IntentResultDataType value as Result, so a Part 10 client finds the outcome where Part 10 says it will be. Mandatory here because clause 6.7 requires it and an Optional member cannot carry a SHALL. |
-| ProgramDiagnostic | Variable | i=24033 | Scalar | Mandatory | Part 10 invocation diagnostics: which Session invoked the program, when, with what arguments and to what outcome. Mandatory here because the auditable-commanding property of clause 1.2 is exactly this member, and a capability the specification advertises cannot rest on one a Server may omit. |
+| ProgramDiagnostic | Variable | i=24033 | Scalar | Mandatory | Part 10 invocation diagnostics: which Session invoked the program, when, with what arguments and to what outcome. Mandatory here because the auditable-commanding property of clause 1.2 is exactly this member, and a capability the specification advertises cannot rest on one a Server may omit. Declared exactly as OPC 10000-10 declares it - a Variable of ProgramDiagnostic2Type reached by HasComponent - because a promotion that altered the inherited member's TypeDefinition or reference type would declare a second member rather than promote the inherited one. |
 
 ### MissionType — `ns=1;i=1004`
 
@@ -812,7 +822,7 @@ Do nothing for a while, or until released. A mission needs this to express a ren
 | Field | DataType | ValueRank | ArrayDimensions | Description |
 |---|---|---|---|---|
 | Duration | Duration | Scalar |  | How long to wait, in milliseconds. Zero or less waits until Signal is released. |
-| Signal | NodeId | Scalar |  | An OutputSignal or other node whose becoming true ends the wait. Null waits only for Duration. |
+| Signal | NodeId | Scalar |  | An OutputSignal under this controller, or another Variable of DataType Boolean, whose becoming true ends the wait. Null waits only for Duration. Clause 11.3 requires the Server to check that it resolves to one of those two, under the controller being commanded, and to refuse it otherwise. |
 
 ### IntentResultDataType — `ns=1;i=3066`
 

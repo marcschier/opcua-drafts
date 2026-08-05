@@ -308,6 +308,8 @@ Two of these deserve their reasoning stated.
 
 `WaitIntentDataType` waits for a duration, for a signal, or for both. A mission needs it to express a rendezvous with something the robot does not control; without it a client has to hold the queue open from outside, which defeats the point of submitting a mission at all.
 
+`Signal` is bounded so that §11.3 has something to check: it **shall** resolve either to an `OutputSignalType` instance under the controller being commanded, or to a Variable of DataType `Boolean` under it, and a Server **shall** refuse anything else with `ParameterInvalid`. A NodeId-valued member that no rule constrains cannot be validated, and an unvalidated NodeId is the surface §11.3 exists to close.
+
 ### 5.7 Reference objects
 
 `CoordinateFrameType` instances form a tree through `HasFrameParent`, so a pose given in one frame can be re-expressed in another by composing the transforms along the path between them. `Role` follows ISO 9787, which standardises *which* frames exist; the transform between them is carried explicitly because no standard says how to calibrate it.
@@ -315,6 +317,17 @@ Two of these deserve their reasoning stated.
 `ToolType.TcpFrame` **shall** reference a `CoordinateFrameType` whose `Role` is `Tool`. At most one `ToolType` instance under a controller **shall** have `Fitted` true at any time.
 
 `AxisType.Index` fixes the position of that axis in `JointMoveIntentDataType.JointTargets`, and `Kind` fixes the unit of that entry. The indices of the axes under one controller **shall** be the contiguous range `0` to `AxisCount − 1`.
+
+### 5.7.0 What the controller itself reports
+
+Four members of `IntentControllerType` say what the robot is doing right now, and each is read-only and normative.
+
+- `OperationalMode` is the robot's own report of the mode in force. §10.2 gates submission on it and forbids commanding it.
+- `Ready` is true exactly when the Server would admit a well-formed intent from the Session that holds command authority. A Server **shall** report it false whenever §6.2 or §10.4 would refuse for a reason that does not depend on the intent — outside `Automatic` or `AutomaticExternal`, under an emergency or protective stop, or with `SafetyControllerOk` false. It exists so a client can see that submitting is pointless without submitting to find out; it is a **hint about the Server**, and a Server **shall not** treat a client's having read it as licence to skip any check of §6.2.
+- `ActiveIntent` references the `IntentOperationType` instance whose `ExecutionState` is `Executing` or `Cancelling`, and is null when none is. Where the executing intent belongs to a mission, `ActiveMission` references that mission's `MissionType` instance; otherwise `ActiveMission` is null.
+- `ControlOwner` reports the Session holding command authority, or null. Clause 8 governs it.
+
+None of these is a substitute for the per-operation state of §6.3. Two members may not report the state of one intent: the operation's own state machine decides, and these summarise it.
 
 ### 5.7.1 `RobotDescriptionType`
 
@@ -429,6 +442,8 @@ Building on `ProgramStateMachineType` rather than defining a fresh state machine
 
 Inheriting them would not have been enough. §6.7 requires the result to be reachable under `FinalResultData`, and §1.2 advertises auditable commanding, which *is* `ProgramDiagnostic` and nothing else. Both would have rested on members a fully conformant Server could omit — so a Server could pass every conformance test while providing neither, and the two claims would be false against a legal implementation. Promoting them is what makes the claims testable rather than aspirational.
 
+A promotion changes the ModellingRule and **nothing else**. Both members are therefore declared exactly as OPC 10000-10 declares them — `FinalResultData` an Object of `BaseObjectType` reached by `HasComponent`, and `ProgramDiagnostic` a Variable of `ProgramDiagnostic2Type` of DataType `ProgramDiagnostic2DataType`, also reached by `HasComponent`. Altering the reference type or the TypeDefinition would declare a *second* member beside the inherited one rather than promote it, and a client written against Part 10 would then find two.
+
 ### 6.2 Submission
 
 On `SubmitIntent` a Server **shall**, in this order:
@@ -441,6 +456,10 @@ On `SubmitIntent` a Server **shall**, in this order:
 6. Otherwise create an `IntentOperationType` instance, assign an `IntentId` if the request left it empty, and return both.
 
 A refusal at any of these steps **shall not** create an operation instance and **shall not** move the robot.
+
+**A refusal is an output, not a `StatusCode`.** §10.5 makes refusal an ordinary outcome, so a Server **shall** return `Good` from `SubmitIntent` and report the refusal in its output arguments: `Accepted` false, `Failure` set to the `IntentFailureEnum` value named above, `Message` carrying detail for a human, `IntentId` empty and `Operation` null. On admission it returns `Accepted` true, `Failure` `None`, and the assigned `IntentId` and `Operation`. `SubmitMission` and `Retry` report a refusal the same way.
+
+This is what makes the ordered rules above observable. A Server that signalled a refusal with a Bad `StatusCode` would tell a client only that something went wrong, and the whole point of a small, diagnosable failure set (§5.8) is that a client decides whether to retry, re-plan or escalate from that value alone. A Server **shall not** substitute a Bad `StatusCode` for one of these refusals. `Bad_` codes remain what they always were — the transport, the Session and the Service layer failing — and a client **shall** distinguish the two.
 
 An `IntentId` returned by the Server **shall** be unique among the intents that Server currently holds. A client-supplied `IntentId` that collides with an outstanding one **shall** be refused with `ParameterInvalid`.
 
@@ -518,6 +537,8 @@ Where a cancel is accepted, the operation enters `Cancelling` and then `Cancelle
 
 `Retriable` is a terminal state a Server uses where it judges an intent worth another attempt — a grasp that closed on nothing, a location that was momentarily blocked. `Retry` creates a **new** `IntentOperationType` instance for the new attempt; the original remains, terminal, with its own result. A Server that does not offer `Retry` never enters `Retriable` and reports `Failed` instead.
 
+`Retry` refuses like a submission does, and reports it the same way (§6.2): `Accepted` false with a `Failure` and a `Message`. A named intent that is not in `Retriable` is refused with `ParameterInvalid`, and one whose capability entry declares `RetrySupported` false with `CapabilityNotSupported`.
+
 ### 6.7 Results
 
 When an operation reaches a terminal state its `Result` **shall** be complete and **shall not** change thereafter. The same `IntentResultDataType` value **shall** also be reachable under the `FinalResultData` object, which this specification promotes to **Mandatory** on `IntentOperationType` for exactly this reason — Part 10 leaves it Optional, and a **shall** that rests on a member a conformant Server may omit is not a requirement, so that a client written against Part 10 finds the result where Part 10 says it will be.
@@ -542,7 +563,9 @@ A trajectory is submitted like any other intent and tracked by the same lifecycl
 
 Where a client needs a rate this interface cannot carry, the Server describes a channel and leases it. The samples travel on that channel; this specification defines no transport and inspects no payload.
 
-`OpenRealTimeChannel` takes a lease. A Server **shall** refuse it — returning `Granted` false — when the channel is not `Available`, when another Session holds the lease, when `OperationalMode` is not the channel's `RequiredMode`, or when the caller does not hold command authority. On success it returns the `EndpointUrl`, the `PayloadDescriptor` and a `LeaseExpiry`.
+`OpenRealTimeChannel` takes a lease. A Server **shall** refuse it — returning `Granted` false, with `Message` saying which of these it was — when the channel is not `Available`, when another Session holds the lease, when `OperationalMode` is not the channel's `RequiredMode`, or when the caller does not hold command authority. On success it returns the `EndpointUrl`, the `PayloadDescriptor` and a `LeaseExpiry`.
+
+A Server **shall** bound `RequestedLease` to what it is willing to grant and report the bounded value in `LeaseExpiry`; a `RequestedLease` of zero or less asks for the Server's own default.
 
 A lease **shall** lapse at `LeaseExpiry` unless renewed by a further `OpenRealTimeChannel` from the holding Session, and **shall** be released when that Session closes. This is the same reasoning as command authority in clause 8: a client that dies must not hold a resource for good.
 
@@ -737,6 +760,18 @@ Command authority (clause 8) prevents two authorised clients from interleaving m
 ### 11.3 NodeIds in intents are untrusted input
 
 `PickIntentDataType.Source`, `SetOutputIntentDataType.Output`, `CallProgramIntentDataType.Program` and the other NodeId-valued members carry references chosen by the client. A Server **shall** validate that each resolves to a node of the expected type **under the controller being commanded**, and **shall** refuse with `ParameterInvalid` otherwise. A NodeId that resolves to a node belonging to a different controller, or to no node at all, **shall not** be acted on.
+
+The expected type is fixed for every such member, so that "the expected type" is a checkable statement rather than an instruction to guess:
+
+| Member | Resolves to |
+|---|---|
+| `PickIntentDataType.Source`, `PlaceIntentDataType.Destination`, `PalletiseIntentDataType.Pattern` | a `LocationType` instance under the controller |
+| `MotionIntentDataType.ToolFrame`, `ForceIntentDataType.FrameId` | a `CoordinateFrameType` instance under the controller; `ToolFrame` additionally of `Role` `Tool` |
+| `ToolChangeIntentDataType.Tool` | a `ToolType` instance under the controller, or null to release the fitted tool |
+| `SetOutputIntentDataType.Output` | an `OutputSignalType` instance under the controller; `Value` **shall** match that signal's own DataType |
+| `CallProgramIntentDataType.Program`, `ProcessIntentDataType.ProcessProgram` | a `ProgramType` instance under the controller |
+| `WaitIntentDataType.Signal` | an `OutputSignalType` instance under the controller, or a Variable of DataType `Boolean` under it |
+| `FastenIntentDataType.Joint` | a joint in an OPC 40450 / OPC 40451 model where one is implemented; otherwise the intent's own parameters stand alone and the member is null |
 
 `CallProgramIntentDataType` deserves particular care: it runs code the Server holds. A Server **shall** restrict it to programs it has published as `ProgramType` instances, and **shall not** accept a program identifier that names anything else.
 

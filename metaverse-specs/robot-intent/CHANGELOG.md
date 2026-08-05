@@ -2,6 +2,41 @@
 
 All notable changes to this specification and its information model.
 
+## Unreleased
+
+Defects found by implementing the specification in the OPC UA .NET Standard stack. Every change here
+makes an existing claim true; none adds capability, and no previously assigned NodeId moves.
+
+- **A refusal is now observable.** `SubmitIntent`, `SubmitMission` and `Retry` gained `Accepted`,
+  `Failure` (`IntentFailureEnum`) and `Message` output arguments, and §6.2 now states that a Server
+  returns `Good` and reports the refusal in those outputs rather than substituting a Bad `StatusCode`.
+  Before this, §6.2 ordered six distinct refusals and §5.8 called the failure set "small and
+  diagnosable on purpose" — and a client could observe neither, because the only outputs were
+  `IntentId` and `Operation`. A specification cannot require an ordering of refusals a conformant
+  client has no way to see. `OpenRealTimeChannel` gained a `Message` for the same reason: §6.9 lists
+  four grounds for refusal behind a single `Granted` boolean.
+
+- **The Part 10 promotions are now legal promotions.** `IntentOperationType.ProgramDiagnostic` was
+  declared as a Property of `PropertyType` reached by `HasProperty`. OPC 10000-10 declares that member
+  as a Variable of `ProgramDiagnostic2Type` reached by `HasComponent`, so the declaration added a
+  second member beside the inherited one instead of promoting it — which is what stopped a Part 10
+  client, and the first stack that tried to generate the model, from finding it. A promotion changes
+  the ModellingRule and nothing else, and §6.1 now says so.
+
+- **`WaitIntentDataType.Signal` is bounded.** It read "an OutputSignal **or other node**", which §11.3
+  cannot check: an unvalidated NodeId is precisely the surface §11.3 exists to close. It now resolves
+  to an `OutputSignalType` under the controller or to a Variable of DataType `Boolean` under it.
+
+- **§11.3 names the expected type of every NodeId-valued member.** "A node of the expected type" was
+  an instruction to guess. A table now fixes it for `Source`, `Destination`, `Pattern`, `ToolFrame`,
+  `FrameId`, `Tool`, `Output`, `Program`, `ProcessProgram`, `Signal` and `Joint`.
+
+- **§5.7.0 gives `Ready`, `ActiveIntent`, `ActiveMission` and `ControlOwner` normative meaning.** They
+  were in the model and in no clause, so what a Server had to publish in them was unstated.
+
+- **§6.9 bounds `RequestedLease`.** The lease rules never said what limits a request, so a client could
+  ask for a lease of any length and the Server's answer was unspecified.
+
 ## 0.1.0 — 2026-08-02
 
 Initial working-group draft.
