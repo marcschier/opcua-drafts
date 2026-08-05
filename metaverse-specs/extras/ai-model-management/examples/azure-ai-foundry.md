@@ -1,0 +1,200 @@
+# Azure AI Foundry
+
+Informative. Every member named here is defined in
+[the specification](../../../ai-model-management/OPC-UA-AI-Model-Management.md); this guide
+introduces none. Vendor facts verified 2026-08-05 against the documentation linked at the
+end.
+
+Azure AI Foundry serves models over an HTTP contract that is OpenAI-compatible in schema
+and Azure-hosted in everything else — authentication, regions, and the model catalogue
+behind it. **Foundry Local** runs the same contract on the machine, reached either over
+loopback or through an in-process SDK.
+
+Both are covered here because the interesting thing about them is that they are the same
+thing in two places, which is exactly the claim §8.1 makes: where inference runs does not
+change how it is called. What it changes is `InferenceLocation`, `EgressPermitted` and
+`DataJurisdiction` — the members that exist precisely to record that difference.
+
+## The `ModelSourceType`
+
+| Member | Cloud | Foundry Local |
+|---|---|---|
+| `SourceId` | your name for it, stable across restarts | as cloud |
+| `EndpointUri` | `https://{resource}.openai.azure.com/openai/v1/` | `http://localhost:{port}/v1/` |
+| `ApiDialect` | `RestChatCompletions` | `RestChatCompletions`, or `EmbeddedRuntime` through the SDK |
+| `EndpointDescriptionUri` | not required; the dialect names the contract | as cloud |
+| `AuthenticationKind` | `WorkloadIdentity`, or `ApiKey` | `Anonymous` |
+| `CredentialReference` | names the key or the token scope — never the value | empty |
+| `TokenAudience` | `https://ai.azure.com/.default` | empty |
+| `Reachability` | maintained from `TestConnection` and from call outcomes | as cloud |
+
+`AuthenticationKind` is `WorkloadIdentity` when the Server holds a Microsoft Entra managed
+identity and obtains tokens through it, which is the arrangement §9.2 prefers and the one
+to reach for: no secret is stored anywhere, so there is nothing to leak, rotate or archive.
+`ApiKey` is the fallback where a managed identity is not available.
+
+Foundry Local is `Anonymous` because it listens on loopback and there is nothing to
+authenticate to. That is a statement about the deployment, not a relaxation: an endpoint
+reachable only from the machine it runs on has the machine's own access control in front of
+it.
+
+The two SDK-hosted variants are worth distinguishing. Reached over its loopback HTTP
+server, Foundry Local is `RestChatCompletions` and looks like any other endpoint. Reached
+through the in-process SDK — `Microsoft.AI.Foundry.Local` and its siblings, which are
+library APIs rather than HTTP — it is `EmbeddedRuntime`, and `EndpointUri` is empty because
+there is no endpoint. Say which one you built, because the failure modes differ: one can be
+unreachable, the other can only be absent.
+
+## Identity
+
+The listing endpoint returns `id`, `object`, `created` and `owned_by`. That is all there is,
+and it does not decompose into the triple `ModelType` asks for.
+
+| Member | From | Note |
+|---|---|---|
+| `Publisher` | `owned_by` | often `azure` rather than the model's originator |
+| `Name` | `id`, with the trailing date removed | on a deployed model this is the *deployment* name, which is yours |
+| `Version` | the date suffix of `id`, where there is one | `gpt-4o-2024-08-06` yields `2024-08-06` |
+| `ModelId` | the whole `id` | keep it verbatim; it is what you must send back |
+| `Framework`, `Format` | not exposed | leave empty |
+| `Digest`, `DigestAlgorithm` | **not exposed** | see below |
+
+Two traps here.
+
+The `id` on a cloud deployment is a **deployment name you chose**, not the model's identity.
+Two Servers in the same plant can call the same underlying model different things, and
+nothing in the API will tell you they are the same. If the provenance question matters to
+you — and §11 exists because it usually does — record the underlying model in `ModelId` and
+your deployment name in the deployment's `DeploymentId`, where it belongs.
+
+The date suffix is a **convention, not a field**. Splitting `gpt-4o-2024-08-06` on the last
+hyphen group works today and is not something the API promises. A model named without one
+leaves `Version` empty, which is honest, rather than being given a fabricated `1.0.0`.
+
+## `Invoke`
+
+The request body goes through as the caller supplied it. §8.2 makes the payload opaque to
+the Server, and the reason shows here: the `extra-parameters: pass-through` header exists so
+that model-specific fields can reach the model without the API version moving, and a Server
+that parsed and re-serialised the body would defeat it.
+
+| Output | From |
+|---|---|
+| `ResponsePayload` | the response body, verbatim |
+| `ResponseContentType` | `application/json` |
+| `ModelUsed` | the `ModelType` NodeId this deployment resolved to — not the response's `model` string |
+| `Usage.UnitKind` | `tokens` |
+| `Usage.InputUnits` | `usage.prompt_tokens` |
+| `Usage.OutputUnits` | `usage.completion_tokens` |
+| `Usage.TotalUnits` | `usage.total_tokens` |
+| `FinishReason` | `choices[0].finish_reason`, mapped below |
+| `SafetyAssessment` | populated when the content filter fired |
+| `RetryAfter` | the `Retry-After` header on a 429 |
+
+`FinishReason` maps: `stop` to `Stop`, `length` to `Length`, `tool_calls` to `ToolCall`,
+`content_filter` to `Filtered`. There is no `Cancelled` on this contract — a cancelled call
+is cancelled by the Server, not by the endpoint — and `Error` covers a response that arrived
+but could not be understood.
+
+`ModelUsed` is a NodeId in this Server's address space, not the `model` string the endpoint
+echoed back. A caller can already see the string in the payload. What it cannot otherwise
+find out is *which of the models this Server publishes* answered, and that is the question
+`ModelUsed` exists to settle — see §8.5, and the fallback case in §9.4 where the two differ.
+
+## Asynchronous inference
+
+Azure OpenAI has a batch API — `POST /batches`, a job identifier, a 24-hour completion
+window — and it is reached on a different plane from the v1 inference surface. Treat it as
+unavailable from the inference endpoint unless you have checked for your resource.
+
+So `InvokeAsync` is generally the Server's own job: it accepts the call, returns an
+`InferenceJobType` NodeId, and runs the synchronous request itself. §8.6 permits exactly
+this, and the value is real even when nothing native backs it — the result survives the
+client that asked for it disconnecting, which a synchronous call cannot offer.
+
+Where you do wire it to the batch API, the mapping is direct: the batch identifier goes in
+`JobId` and the job's lifecycle follows the Part 10 program state machine as §8.6 requires.
+
+## Large payloads
+
+`POST /files` yields a `file_id` referenced from a later request, on the Azure OpenAI plane.
+It is a way of *keeping* a file, not of transferring one request in pieces, so it does not
+map onto `BeginTransfer`.
+
+`BeginTransfer` and `InferenceTransferType` are the Server's own, over Part 5 `FileType` as
+§8.2 defines. Nothing needs to be arranged with Azure for it: the Server reassembles the
+payload and issues one ordinary request.
+
+## The catalogue
+
+The inference-plane `GET /v1/models` lists **what is deployed on this resource**, which is
+the right source for `ListModels` on the `ModelSourceType` — it answers what this source can
+actually serve.
+
+It is not a catalogue in the §10 sense. The Foundry model catalogue lives on the management
+plane, needs an Azure subscription, and has no notion of a content-addressed version. A
+`ModelRegistryType` over it would be a projection of a browsing experience, and one that
+could not populate `Digest` on any `ModelResourceType` in it.
+
+If you want §10 with real digests, the source has to be a registry that is content-addressed
+— see [the Hugging Face guide](hugging-face.md), which is the one in this set that is.
+
+## Residency, egress and retention
+
+Nothing in the API states any of these. All three are operator assertions.
+
+| Member | Cloud | Foundry Local |
+|---|---|---|
+| `InferenceLocation` | `Cloud` | `OnServer` |
+| `EgressPermitted` | `true` | `false` |
+| `DataJurisdiction` | the region the resource is in | the site |
+| `RetainsInput` | `false` under the standard contract | `false` |
+| `EgressPolicyUri` | your policy document | — |
+
+`DataJurisdiction` comes from the region you created the resource in, and someone has to
+write it down: the API will not tell you, and a resource created in the wrong region answers
+exactly as convincingly as one created in the right one.
+
+`EgressPermitted` is `true` for the cloud service and no encryption changes that. §9.5 makes
+the point and it is worth repeating because it is the mistake people make: TLS answers who
+can read the payload in flight, not whether it left the site. A client refusing to send
+process data off-premises needs the second answer, and needs it before it calls.
+
+`RetainsInput` is `false` on the standard Azure contract, which states that customer data is
+not used to train foundation models. That is a **contractual** statement, not a field in a
+response, and it is the operator who is asserting it here. Abuse-monitoring retention is a
+separate arrangement; if your resource has it configured differently, this member is where
+that shows.
+
+## What this system does not tell you
+
+- **Which weights answered.** No digest, anywhere, on any call. `Digest` and
+  `DigestAlgorithm` stay empty, and §11 is written so that this is permitted rather than
+  papered over. Do not hash the model name to fill them.
+- **What the model was trained on.** Nothing maps to `TrainedOn` or `DatasetType`. If
+  lineage matters, it comes from the model card or the supplier, by hand.
+- **Whether the model behind a name changed.** A `Pinned` deployment here is pinned to a
+  string. The provider's versioning policy is what holds it still; the Server cannot verify
+  it and should not imply otherwise.
+- **Where your data went, or whether it was kept.** Both are contract terms, recorded as
+  operator assertions in `DataJurisdiction`, `EgressPermitted` and `RetainsInput`.
+- **Its own health, before you call it.** There is no dedicated health endpoint on the
+  inference plane; `TestConnection` is a listing call whose success is the signal. That is
+  enough to distinguish a wrong credential from a wrong URL, which is what commissioning
+  needs it for.
+
+## Conformance units
+
+Reachable against Azure AI Foundry: **AI-Base**, **AI-Invoke**, **AI-InvokeAsync**,
+**AI-Transfer**, **AI-OffServer**, **AI-Federation**, **AI-Residency**.
+
+Out of reach without something else: **AI-Catalogue** and **AI-Import** need a
+content-addressed registry; **AI-Signatures** needs tensor shapes this contract does not
+carry; **AI-Learning** needs training, which is not what this is.
+
+## Sources
+
+- [Azure AI Foundry Model Inference REST API](https://learn.microsoft.com/en-us/rest/api/microsoft-foundry/modelinference/)
+- [API version lifecycle](https://learn.microsoft.com/en-us/azure/foundry/openai/api-version-lifecycle)
+- [Foundry Local — get started](https://learn.microsoft.com/en-us/azure/foundry-local/get-started)
+- [Azure OpenAI batch](https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to/batch)

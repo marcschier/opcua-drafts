@@ -1,0 +1,188 @@
+# Amazon Bedrock
+
+Informative. Every member named here is defined in
+[the specification](../../../ai-model-management/OPC-UA-AI-Model-Management.md); this guide
+introduces none. Vendor facts verified 2026-08-05 against the documentation linked at the
+end.
+
+Amazon Bedrock is a managed AWS service for hosted foundation models from several
+publishers. The two inference surfaces that matter here are the Bedrock Runtime Converse
+API, which gives one request and response shape across model families, and InvokeModel,
+which sends a raw body whose schema depends on the selected model family.
+
+That distinction is the practical one for this specification. Converse is the surface to
+prefer for a Server implementing §8.2 because one payload shape across families lets `Invoke`
+stay opaque under §8.2 without the Server learning whether the target is Anthropic, Amazon,
+Meta or another family.
+
+## The `ModelSourceType`
+
+| Member | Amazon Bedrock |
+|---|---|
+| `SourceId` | your name for it, stable across restarts |
+| `EndpointUri` | the regional Bedrock Runtime endpoint, for example `https://bedrock-runtime.{region}.amazonaws.com/` |
+| `ApiDialect` | `Proprietary` |
+| `EndpointDescriptionUri` | the documentation for the exact Bedrock operation and payload shape you use |
+| `AuthenticationKind` | `WorkloadIdentity`, or `ApiKey` for static access keys |
+| `CredentialReference` | names the IAM role binding or key record — never the value |
+| `TokenAudience` | empty |
+| `Reachability` | maintained from `TestConnection` and from call outcomes |
+
+`ApiDialect` is `Proprietary`. Bedrock Converse is not OpenAI-shaped, not KServe-shaped and
+not the OPC UA inference Method. InvokeModel is even more vendor-specific: the body is raw
+JSON whose schema depends on the model family. §9.2 says a Server using `Proprietary`
+should populate `EndpointDescriptionUri`, and Bedrock is the concrete reason. Without that
+URI, nothing in the address space tells a client whether the Server expects the Converse
+shape or a family-specific InvokeModel body.
+
+AWS authenticates Bedrock calls with Signature Version 4. `AuthenticationKindEnum` has
+`Anonymous`, `ApiKey`, `BearerToken`, `WorkloadIdentity` and `MutualTls`; none says
+"SigV4". That is a real gap in the model, and a guide should not hide it.
+
+The best mapping is still answerable if the member is read as classifying **what is
+stored**, not which handshake is performed. SigV4 driven by an IAM role attached to the
+pod, task or instance is `WorkloadIdentity`, because no secret is stored anywhere. That is
+the same property that makes §9.2 prefer it. SigV4 driven by static access keys is
+`ApiKey`, because a secret is stored and must be rotated. Neither value is a perfect fit:
+SigV4 is not an API-key protocol and not a generic workload-identity protocol. If a reader
+needs the handshake recorded exactly, set `EndpointDescriptionUri` to documentation for the
+actual AWS SigV4 arrangement in use.
+
+## Identity
+
+`ListFoundationModels` returns `modelId`, `modelArn`, `modelName`, `providerName` and
+`modelLifecycle`, among other capability fields. That is a better identity surface than
+most hosted systems in this set because `providerName` is the real publisher — Anthropic,
+Meta, Amazon and similar names — rather than the host written into an `owned_by` field.
+
+| Member | From | Note |
+|---|---|---|
+| `Publisher` | `providerName` | the model publisher, not merely AWS as host |
+| `Name` | `modelName` | display name from the Bedrock catalogue |
+| `Version` | parsed from `modelId` or `modelArn`, where the provider encodes one | a version identifier, not a digest |
+| `ModelId` | `modelId` | keep it verbatim; it is what you send back |
+| `Framework`, `Format` | not exposed | leave empty |
+| `Digest`, `DigestAlgorithm` | **not exposed** | `modelArn` is not a weight hash |
+
+`modelArn` is useful because it carries the AWS resource identity and includes a versioned
+model identifier. It still does not identify the bytes by content. Do not publish it as
+`Digest`, and do not infer a digest from the string embedded in it.
+
+## `Invoke`
+
+For Converse, the request body goes through as the caller supplied it. The Server is not
+required to understand the model family, which is exactly why Converse is preferable here:
+one body shape lets §8.2 remain true across families.
+
+| Output | From |
+|---|---|
+| `ResponsePayload` | the Converse response body, verbatim |
+| `ResponseContentType` | `application/json` |
+| `ModelUsed` | the `ModelType` NodeId this deployment resolved to — not the Bedrock `modelId` string |
+| `Usage.UnitKind` | `tokens` |
+| `Usage.InputUnits` | `usage.inputTokens` |
+| `Usage.OutputUnits` | `usage.outputTokens` |
+| `Usage.TotalUnits` | `usage.totalTokens` |
+| `FinishReason` | `stopReason`, mapped below |
+| `SafetyAssessment` | populated when guardrails or filtering intervened |
+| `RetryAfter` | the retry header on throttling, where AWS returns one |
+
+`FinishReason` maps directly where Converse reports one: `end_turn` and `stop_sequence` to
+`Stop`, `max_tokens` to `Length`, `tool_use` to `ToolCall`, and `guardrail_intervened` or
+`content_filtered` to `Filtered`. The research directly verified `end_turn`, `max_tokens`
+and `stop_sequence` from the response schema and found the other values in AWS guidance;
+that uncertainty belongs in an implementation note if the Server treats unrecognised values
+as anything other than `Error`.
+
+InvokeModel is the escape hatch for model-specific bodies. It still maps to `Invoke`
+because §8.2 makes the payload opaque, but the Server cannot give a general mapping for
+usage or finish reason unless the selected family's response schema carries them. If you
+use InvokeModel, make `EndpointDescriptionUri` point to the family-specific contract and
+leave `Usage` fields empty where the response does not define them.
+
+## Asynchronous inference
+
+Bedrock has native batch inference through `CreateModelInvocationJob`. The job takes S3
+input, a `modelId`, an execution `roleArn` and S3 output configuration, returns a `jobArn`,
+and can use either InvokeModel or Converse invocation types. The documented timeout range
+is 24 to 168 hours.
+
+That is a genuine `InvokeAsync` mapping. The Bedrock `jobArn` goes in `JobId`, and the OPC
+UA job follows the Part 10 program lifecycle required by §8.6 while the Server observes the
+Bedrock job and exposes the result or failure through the `InferenceJobType` instance.
+
+## Large payloads
+
+The real-time Bedrock runtime takes the request body inline; the research notes an inline
+limit of about 4 MB. Bedrock batch inference uses S3 input and output locations, but that
+is the batch service's storage contract, not a chunked upload path for one synchronous call.
+
+So `BeginTransfer` is the Server's own Part 5 `FileType` transfer path as §8.2 defines. The
+Server reassembles the request and then issues one Bedrock Converse, InvokeModel or batch
+request, depending on which operation the client started.
+
+## The catalogue
+
+`ListFoundationModels` is the right source for `ListModels` on the `ModelSourceType`: it
+answers which foundation models Bedrock exposes in the region and provides `modelId`,
+`modelArn`, `modelName`, `providerName` and `modelLifecycle`.
+
+It is not a catalogue in the §10.1 sense. The API lists hosted models, not content-addressed
+artefacts that a Server can fetch, hash and stage. `providerName` gives a useful publisher,
+and `modelArn` gives a stable AWS resource identity, but neither supplies `Digest` on a
+`ModelResourceType`.
+
+A Server can federate Bedrock-hosted models under §9.1. It cannot satisfy
+`AI-Catalogue` or `AI-Import` from `ListFoundationModels` alone, because there is no model
+artefact to stage and verify under §10.3 and §10.4.
+
+## Residency, egress and retention
+
+The region is visible in the Bedrock endpoint and the control-plane region used for
+listing. The retention and training-use position is a contractual AWS statement, not a
+field in an inference response. Treat the table as operator assertions.
+
+| Member | Amazon Bedrock |
+|---|---|
+| `InferenceLocation` | `Cloud` |
+| `EgressPermitted` | `true` |
+| `DataJurisdiction` | the AWS region used by the endpoint |
+| `RetainsInput` | asserted from the Bedrock data-use contract |
+| `EgressPolicyUri` | your policy document |
+
+`EgressPermitted` is `true` because the request leaves the Server for a cloud service. §9.5
+makes the point: SigV4 and TLS answer who may call and who can read the traffic in flight,
+not whether the payload left the site.
+
+## What this system does not tell you
+
+- **The exact authentication kind.** SigV4 is not in `AuthenticationKindEnum`. Use
+  `WorkloadIdentity` for role-based signing and `ApiKey` for static access keys because
+  those values describe what is stored, and point `EndpointDescriptionUri` at the SigV4
+  handshake you actually use.
+- **Which weights answered.** No digest is returned by Converse, InvokeModel or
+  `ListFoundationModels`. `modelArn` carries a version identifier, not a weight hash.
+- **A universal request body.** Converse gives one Bedrock body shape; InvokeModel gives a
+  raw body whose schema depends on the provider family.
+- **What the model was trained on.** Nothing maps to `TrainedOn` or `DatasetType`. If
+  lineage matters, it comes from supplier documentation or a model card outside the
+  inference response.
+- **Where your data went, or whether it was kept.** Region and retention are recorded as
+  operator assertions in `DataJurisdiction`, `EgressPermitted` and `RetainsInput`.
+
+## Conformance units
+
+Reachable against Amazon Bedrock: **AI-Base**, **AI-Invoke**, **AI-InvokeAsync**,
+**AI-Transfer**, **AI-OffServer**, **AI-Federation**, **AI-Residency**.
+
+Out of reach without something else: **AI-Catalogue** and **AI-Import** need a
+content-addressed registry; **AI-Signatures** needs tensor shapes this contract does not
+carry; **AI-Learning** needs training, which is not what this is.
+
+## Sources
+
+- [Amazon Bedrock Converse API](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_Converse.html)
+- [Amazon Bedrock InvokeModel API](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_InvokeModel.html)
+- [Amazon Bedrock ListFoundationModels API](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_ListFoundationModels.html)
+- [Amazon Bedrock CreateModelInvocationJob API](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_CreateModelInvocationJob.html)
+- [Amazon SageMaker InvokeEndpoint API](https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_runtime_InvokeEndpoint.html)

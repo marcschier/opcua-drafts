@@ -1101,12 +1101,17 @@ The split matters more here than in a smaller model, because the plausible Serve
 | Generator | `metaverse-specs/extras/ai-model-management/tools/build_model.py` |
 | Validator | `metaverse-specs/extras/ai-model-management/tools/validate_local.py` |
 | Annex A (generated) | `metaverse-specs/extras/ai-model-management/tools/model-reference.md` |
+| Implementation guides (informative) | `metaverse-specs/extras/ai-model-management/examples/` |
+| Guide validator | `metaverse-specs/extras/ai-model-management/examples/tools/validate_examples.py` |
 
 The NodeSet, the CSV and Annex A are generated from a single in-code source of truth and are **deterministic**. The generator is edited; the generated files are not.
+
+The [implementation guides](../extras/ai-model-management/examples/index.md) are informative and introduce nothing. They map this model onto the systems an implementer is likely to be integrating — Azure AI Foundry, OpenAI, Amazon Bedrock and SageMaker, NVIDIA NIM and Triton, Google Vertex AI, Hugging Face, KServe, embedded runtimes, and another Server implementing this specification. Naming products there rather than here is what lets clause 9.2 name dialects for what they do: the normative document stays neutral and the informative folder beside it does not have to. Every literal of `ApiDialectEnum` and `AuthenticationKindEnum` is exercised by at least one guide, and `validate_examples.py` fails if a guide cites a member this model does not declare.
 
 ```powershell
 python metaverse-specs\extras\ai-model-management\tools\build_model.py
 python metaverse-specs\extras\ai-model-management\tools\validate_local.py
+python metaverse-specs\extras\ai-model-management\examples\tools\validate_examples.py
 ```
 
 ---
