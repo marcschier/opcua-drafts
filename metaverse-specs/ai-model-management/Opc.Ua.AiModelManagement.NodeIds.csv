@@ -26,6 +26,8 @@ ReachabilityEnum,3013,DataType
 ReachabilityEnum_EnumStrings,3913,Variable
 TransferStateEnum,3014,DataType
 TransferStateEnum_EnumStrings,3914,Variable
+DigestProvenanceEnum,3015,DataType
+DigestProvenanceEnum_EnumStrings,3915,Variable
 TensorSignatureDataType,3050,DataType
 TensorSignatureDataType_Encoding_DefaultBinary,5001,Object
 ModelReferenceDataType,3051,DataType
@@ -228,3 +230,18 @@ InferenceTransferType_ExpiresAt,6161,Variable
 InferenceTransferType_Execute,6162,Method
 InferenceTransferType_Execute_OutputArguments,6163,Variable
 InferenceTransferType_Abort,6164,Method
+ModelType_DigestProvenance,6165,Variable
+ModelResourceType_DigestProvenance,6166,Variable
+ModelImportJobType_Registry,6167,Variable
+ModelType_PublishedAt,6168,Variable
+ModelType_LastModifiedAt,6169,Variable
+ModelCardType_DeprecatedFrom,6170,Variable
+ModelCardType_SupportedUntil,6171,Variable
+DeploymentType_ApiDialect,6172,Variable
+DeploymentType_EndpointDescriptionUri,6173,Variable
+DeploymentType_RuntimeIdentity,6174,Variable
+DeploymentType_ObservedLatency,6175,Variable
+InferenceJobType_RequestUri,6176,Variable
+InferenceJobType_ResponseUri,6177,Variable
+InferenceJobType_TransferRequired,6178,Variable
+InferenceJobType_Transfer,6179,Variable

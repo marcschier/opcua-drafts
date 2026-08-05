@@ -1,6 +1,6 @@
 # OPC UA — AI Model Management and Inference
 
-> Status: Working-group draft (Release 0.2.0). This document, together with `Opc.Ua.AiModelManagement.NodeSet2.xml` and `Opc.Ua.AiModelManagement.NodeIds.csv`, defines an OPC UA information model for **the AI models an installation runs**: what a model is, what it was trained on, where it executes, and how a better one replaces it.
+> Status: Working-group draft (Release 0.4.0). This document, together with `Opc.Ua.AiModelManagement.NodeSet2.xml` and `Opc.Ua.AiModelManagement.NodeIds.csv`, defines an OPC UA information model for **the AI models an installation runs**: what a model is, what it was trained on, where it executes, and how a better one replaces it.
 >
 > It is deliberately **domain-neutral**. Nothing here names a camera, a sensor, an image or a robot: a model is trained on a dataset, deployed somewhere, and superseded — and that story is the same whether the input is a photograph, a vibration spectrum or a process trace.
 >
@@ -69,7 +69,8 @@
 - [13 Profiles and conformance units](#13-profiles-and-conformance-units)
   - [13.1 Declaring conformance](#131-declaring-conformance)
   - [13.2 Facets](#132-facets)
-- [14 Deliverables and reproducibility](#14-deliverables-and-reproducibility)
+  - [13.3 Profiles](#133-profiles)
+  - [13.4 Profile and facet URIs](#134-profile-and-facet-uris)
 - [Annex A — Information model (generated)](#annex-a--information-model-generated)
 - [Annex B — Informative alignments](#annex-b--informative-alignments)
 - [Annex C — A worked arrangement (informative)](#annex-c--a-worked-arrangement-informative)
@@ -150,6 +151,9 @@ Informative alignments — IDTA 02058, IDTA 02059, IDTA 02060, and the OPC UA �
 | **Learning job** | One turn of the capture, label, train and promote loop. Modelled as `LearningJobType`. |
 | **Promotion** | Making a candidate model the one deployments use. The one operation here that changes what the equipment does. |
 | **Digest** | A cryptographic hash of an artefact, which is what makes a retrieved artefact verifiable as the one described. |
+| **Conformance unit** | The smallest individually testable requirement of this specification. Grouped into facets rather than claimed one by one. |
+| **Facet** | A named, individually claimable set of conformance units — a building block, not a complete claim. Clause 13.2 defines them. |
+| **Profile** | A named set of facets describing one plausible Server, claimed by publishing its URI in `Server/ServerCapabilities/ServerProfileArray`. Clause 13.3 defines them. Not to be confused with a *typed profile* (§6.4.1), which is a consuming specification's payload vocabulary and has nothing to do with conformance. |
 
 ---
 
@@ -222,7 +226,7 @@ How a model gets onto a machine at all, whether by federating its description or
 
 ```mermaid
 flowchart LR
-    CAT["ModelRegistryType<br/>publisher / name / version"] --> J["ModelImportJobType"]
+    CAT["ModelRegistryType<br/>publisher / name / version"] -->|Registry| J["ModelImportJobType"]
     J -->|Federate| FD["ModelType<br/>artefact stays at source"]
     J -->|Stage| ST["fetch + verify Digest"]
     ST --> LD["ModelType<br/>artefact local"]
@@ -389,13 +393,17 @@ An instance is created when a model becomes known to the Server — whether it w
 
 `ModelId`, `Name`, `Version`, `Digest` and `DigestAlgorithm` are **Mandatory**. The first three because a model that cannot be named cannot be discussed; the last two because clause 12 depends on them, and a rule that depends on an Optional member is a rule a conformant Server can silently not satisfy.
 
+**`ModelId` carries the source system's own identifier, verbatim.** Where a model came from a catalogue or a remote endpoint, it is the string that system uses — the string a client would send back to reach the same model there. It is not derived from the other members and it is not reformatted, because its value is that two Servers integrating the same source produce the same one. Where the triple below cannot be recovered, `ModelId` is what remains comparable.
+
+**`Name` is a `LocalizedText` whose `Text` is the source's name for the model, carried across unchanged.** A Server **may** add a translation for display and **shall not** translate, reformat or prettify the `Text` itself. The type is `LocalizedText` because that is how this model types names and retyping it would break every implementation; what is localizable is the presentation, not the identity. Two Servers that fetched one model from two mirrors are meant to produce the same string, and a name adjusted for house style is a name that no longer matches.
+
+**`Publisher` names the organisation that produced the model**, not the one serving it. A hosted endpoint that reports its own operator as the owner has answered a different question, and a Server **shall not** publish the serving organisation there: a `Publisher` of `azure` or `aws` for a model somebody else trained defeats the purpose §6.2.1 gives it, which is recognising the same artefact across two installations that fetched it from different places. Where only the serving organisation is known, `Publisher` is left empty.
+
+Leaving it empty is the right answer more often than it looks. `Publisher` and `Version` are best-effort against a source that publishes one opaque identifier and nothing else, and a decomposition guessed from the shape of that identifier is worth less than an honest gap — it is a convention of the vendor's naming, not a field they promised, and it changes without notice. `ModelId` is the member that always holds.
+
 `TaskKind` is a **String**, not an enumeration. The set of things models do is not closed, and an enumeration would date faster than the models it describes.
 
 `LabelClasses` is an ordered array whose **index** is the contract. A consuming specification's class identifier refers to a position in it, so a Server **shall not** reorder it in place: a model whose class 3 silently becomes class 4 produces results that are wrong in a way nothing detects.
-
-`Inputs` and `Outputs` carry `TensorSignatureDataType` (`ns=2;i=3050`) — name, element type, shape with `-1` for a dynamic axis, and an optional layout hint. This is what lets a client check that what it intends to send matches what the model expects, before it sends it.
-
-Clause 8 leaves the invocation payload opaque, so these signatures are the **only** machine-readable description of what a deployment will accept. A client that ignores them discovers a shape mismatch as a rejected call at run time; one that reads them discovers it at configuration time, which is the difference between a commissioning problem and a production one.
 
 #### 6.2.1 Model identity
 
@@ -412,6 +420,20 @@ Clause 8 leaves the invocation payload opaque, so these signatures are the **onl
 `SafetyPolicyUri` names the policy applied to this model's output, where one is. Like every URI here it is untrusted input (§12.2).
 
 `Card` reaches the `ModelCardType` of §11.1. The split is deliberate: the nameplate answers *which artefact is this*, the card answers *should this be running on my line*, and those are asked by different people at different times.
+
+#### 6.2.3 When the artefact appeared, and when it last moved
+
+`PublishedAt` records when the source first published the model, and a Server **shall not** substitute its own acquisition time — a Server that did would make every model it serves appear to date from its last restart, and the value is only useful because it is the source's.
+
+It answers for a model what `CreatedAt` (§6.3) already answers for a dataset, and the argument transfers unchanged: a model trained before a process change may no longer represent the line it runs on. It is also, for a source that publishes one opaque identifier and no decomposable version, frequently the only datum by which two models can be ordered at all.
+
+`LastModifiedAt` records when the artefact behind the model last changed at the source, and exists for one case in particular. §9.3 defines `FollowsRef`, where the artefact **can** change with nothing else changing, and §12.3.1 requires repointing to be treated as an authorization-bearing act, pointing at `AiJobType.RequestedBy` for the record. But a reference that moves *at the source* produces no job, so there is no `RequestedBy` and no `StartedAt` — and without this member the audit trail §12.3.1 demands cannot be constructed on the one path that clause exists to cover. **A Server whose deployment follows a mutable reference shall populate `LastModifiedAt`.**
+
+Neither is the Server's `SourceTimestamp`. That records when this Server acquired a value; after a restart and a re-read it says today for a model published two years ago.
+
+`Inputs` and `Outputs` carry `TensorSignatureDataType` (`ns=2;i=3050`) — name, element type, shape with `-1` for a dynamic axis, and an optional layout hint. This is what lets a client check that what it intends to send matches what the model expects, before it sends it.
+
+Clause 8 leaves the invocation payload opaque, so these signatures are the **only** machine-readable description of what a deployment will accept. A client that ignores them discovers a shape mismatch as a rejected call at run time; one that reads them discovers it at configuration time, which is the difference between a commissioning problem and a production one.
 
 ### 6.3 `DatasetType`
 
@@ -455,13 +477,33 @@ The members described so far establish what a deployment *is*. Using one draws o
 
 `DataJurisdiction`, `EgressPermitted`, `RetainsInput` and `EgressPolicyUri` state where input data goes. Clause 9.5 defines them. They are read by whoever approves a deployment rather than by whoever calls it, and they are stated on the deployment rather than the model because the same model deployed twice can answer differently.
 
-#### 6.4.2 Deployment state
+`ApiDialect`, `EndpointDescriptionUri` and `RuntimeIdentity` describe the contract a caller must satisfy and what is currently behind it. §9.2 and §9.3 define them, and unlike the four groups above they are read *before the first call ever succeeds*, because a client that does not know what shape its `Payload` should take cannot make one.
+
+#### 6.4.2 What a caller must send
+
+`Invoke` takes an opaque `ByteString`, and §8.2 argues at length for keeping it opaque. That argument is about the payload's **contents**, and it leaves a question it does not answer: a client browsing an unfamiliar deployment can see that `Invoke` exists and has no way to learn whether the bytes should be a chat-completions request body, an inference protocol body, or something a vendor documents elsewhere.
+
+For a tensor deployment `Inputs` and `Outputs` answer it, which is why §6.2 calls them the only machine-readable description of what a deployment accepts. For every deployment whose contract is a JSON request body rather than a tensor set, they are empty and nothing answers it at all.
+
+`ApiDialect` (`ApiDialectEnum`, `ns=2;i=3007`) does, naming **which** contract the opaque bytes are expected to satisfy without typing what is in them. `EndpointDescriptionUri` says where that contract is documented, and is untrusted input under §12.2.
+
+**A Server shall populate `ApiDialect` on every deployment whose payload contract is not described by `Inputs` and `Outputs`**, and **should** populate `EndpointDescriptionUri` wherever `ApiDialect` is `Proprietary` — which is the same *should* §9.2 applies to a source, for the same reason: `Proprietary` with no description names nothing.
+
+This is the same enumeration §9.2 uses, and deliberately so. A deployment that federates a remote endpoint generally passes the payload through, so the contract a client sends to this Server and the contract this Server speaks onward are the same one, and giving them two vocabularies would invite them to disagree. Where they genuinely differ — a Server that translates — the deployment states what **it** accepts, because that is the one a caller has to satisfy.
+
+#### 6.4.3 Deployment state
 
 `State` (`DeploymentStateEnum`, `ns=2;i=3003`) reports the deployment as this Server holds it: `Inactive` when it is declared but not serving, `Ready` when it can serve and has no work in progress, `Active` while it is serving, `Degraded` when it is serving below the quality it was configured for, and `Faulted` when it cannot serve at all.
 
 It is **Mandatory** because availability decisions rest on it. A consuming specification deciding whether to route work to a deployment reads `State` and nothing else, and the learning loop of clause 7 uses it to establish whether a promoted model is actually in service. A member that carried those decisions while being omissible would leave a conformant Server unable to answer the question its clients most often ask.
 
 `Degraded` earns its place between `Active` and `Faulted`. A deployment that is answering but missing its `LatencyBudget`, or falling back to a slower accelerator, is neither healthy nor broken, and collapsing it into either neighbour would either hide a developing fault or stop a line that is still producing usable results.
+
+That comparison needs a published input, and `ObservedLatency` is it: the most recent inference latency this Server measured. `LatencyBudget` states what the deployment is *expected* to meet and is set by whoever commissioned it; `ObservedLatency` states what it *did*. **A Server that reports `Degraded` on latency grounds shall populate `ObservedLatency`**, so the state it publishes can be checked against the numbers it publishes rather than being taken on trust.
+
+Without it the rule above would be untestable — a Server could report `Degraded`, or fail to, and nothing a client could read would distinguish a correct implementation from an incorrect one. A normative statement that cannot be observed to be satisfied or violated is not a requirement.
+
+A client is not obliged to use it. End-to-end latency is measurable from the calling side, and a client that measures its own sees the transport as well. What `ObservedLatency` adds is the Server's own view of the execution site, which is the half a caller cannot separate out — and against a federated deployment it is the only view of the remote leg that exists.
 
 Where a deployment executes somewhere this Server does not control, `State` is not the whole picture — a correctly configured deployment can be unable to reach its execution site. Clause 9 adds `Reachability` for that, and §9.4 sets out how the two combine.
 
@@ -640,6 +682,12 @@ The counts are deliberately **not** named tokens. A token is one accounting unit
 
 `TotalUnits` is **not** required to be the sum of the other two. Caching, deduplication and shared prefixes mean the metered total legitimately differs from the arithmetic one, and a client that recomputes it will disagree with the bill.
 
+**Not every execution site meters at all.** A tensor predict contract returns output tensors and nothing that could be counted, and an in-process runtime returns what the library returns. A Server that supplied a count on such a site's behalf would be publishing a measurement it did not take.
+
+An **empty `UnitKind` means the call was not metered**. Where `UnitKind` is empty a Server **shall** set `InputUnits`, `OutputUnits` and `TotalUnits` to zero, and a client **shall not** read those zeros as measured quantities. A Server **shall not** report a non-empty `UnitKind` alongside counts it did not obtain from the execution site.
+
+The sentinel is the empty unit rather than a zero count because the counts cannot carry it: they are `UInt64`, so a Server with nothing to report and one that metered nothing would otherwise encode identically. Naming the unit is what makes the difference between *no measurement* and *a measurement of none* legible, and that difference is the whole of what a client reading `Usage` is entitled to know.
+
 #### 8.2.4 Payload size, and why `Invoke` is not the general case
 
 `Payload` is a `ByteString`, and a `ByteString` is bounded three times over: by the Server's `MaxByteStringLength`, by the channel's negotiated `MaxMessageSize`, and by the Session's `MaxResponseMessageSize`. **This model does not get to choose any of them.** An image, a point cloud or a window of high-rate samples exceeds them routinely, and a call that cannot carry its input is not a call.
@@ -730,7 +778,7 @@ sequenceDiagram
     participant C as Client
     participant D as DeploymentType
     participant J as InferenceJobType
-    C->>D: InvokeAsync(Payload, ContentType, Parameters)
+    C->>D: InvokeAsync(Payload or PayloadUri, ContentType, Parameters)
     D-->>C: Job (NodeId)
     C->>J: Subscribe
     J-->>C: CurrentState Running, Progress
@@ -740,6 +788,22 @@ sequenceDiagram
 ```
 
 `InferenceJobType` carries `RequestPayload` and `RequestContentType`, `ResponsePayload` and `ResponseContentType`, and the same `ModelUsed`, `Usage`, `FinishReason` and `SafetyAssessment` that `Invoke` returns — the asynchronous path answers the same questions as the synchronous one, which is what makes it a path and not a different feature.
+
+That parity has to extend to size, and §8.6.1 is where it does. The jobs this clause exists for are the ones most likely to produce a result that will not fit in a call, so an asynchronous path bounded by the limits §8.2.4 says this model does not choose would be a path that fails exactly where it was needed.
+
+#### 8.6.1 A payload too large to carry, or already somewhere else
+
+Two different problems, and the model answers them separately because they have different remedies.
+
+**A result too large to return inline** is the problem `Invoke` solves with `TransferRequired` and `Transfer`, and `InferenceJobType` carries the same pair on the same terms: `TransferRequired` true means `ResponsePayload` is empty, the work is **not** lost, and `Transfer` names the `InferenceTransferType` to read it from. `MaxInlinePayloadSize` bounds both paths — it is a property of the deployment, not of the Method that happened to be called.
+
+**Data that never needed to move** is a different problem. A batch already sitting in the plant's object store, or a result the execution site writes to storage of its own, is not made smaller by chunking; carrying it through the Session copies it twice for no benefit and makes the Session the bottleneck for both copies.
+
+So `Invoke` and `InvokeAsync` both take a `PayloadUri`, and a Server **shall** accept exactly one of `Payload` and `PayloadUri` and **shall** reject a call supplying both or neither — the same exactly-one rule §10.2 applies to `Source` and `Registry`, for the same reason: two ways of saying where the input is, and a call that used both would not say which one was read. `InferenceJobType.RequestUri` records what was actually submitted, and `ResponseUri` names where the execution site wrote the result when it returns a location rather than bytes.
+
+This is the model's existing idiom rather than a new one. §1.2 already says this specification does not carry artefacts — `ArtifactUri` says where the bytes are — and §10.3's `Federate` mode is the same choice made about a model instead of a payload.
+
+Two obligations come with it, both inherited rather than invented. A `PayloadUri`, `RequestUri` or `ResponseUri` is **untrusted input** under §12.2 and subject to the same resolver policy as every other URI here. And it is an **egress question** under §9.5: a location the execution site reads is a location the input data reaches, so a deployment whose `EgressPermitted` is false **shall not** accept a `PayloadUri` naming somewhere outside the operator's boundary. A URI is a quieter way to move data than a payload, which is exactly why it needs saying.
 
 ---
 
@@ -767,9 +831,19 @@ A deployment whose `InferenceLocation` is not `OnServer` executes somewhere the 
 
 `ApiDialect` (`ApiDialectEnum`, `ns=2;i=3007`) is `OpcUaInference`, `RestChatCompletions`, `OpenInferenceProtocol`, `TensorRemoteProcedure`, `EmbeddedRuntime` or `Proprietary`.
 
-These name **the contract the remote endpoint speaks**. They never affect how an OPC UA client calls this Server, which is always §8. `OpcUaInference` is another Server implementing this specification; `RestChatCompletions` is the de-facto REST contract for chat and embeddings that most serving runtimes expose, including ones that run on a single workstation — named here for what it does rather than for whoever published it first, because a literal in a standard should not be an advertisement; `OpenInferenceProtocol` is the KServe-derived predict contract; `TensorRemoteProcedure` covers the tensor-oriented RPC contracts of dedicated inference servers; `EmbeddedRuntime` is an in-process runtime reached through a library rather than a socket. `Proprietary` is an honest admission, and a Server using it **should** populate `EndpointDescriptionUri` — otherwise nothing in the address space says how the endpoint is called.
+These name **the contract the remote endpoint speaks**. `OpcUaInference` is another Server implementing this specification; `RestChatCompletions` is the de-facto REST contract for chat and embeddings that most serving runtimes expose, including ones that run on a single workstation — named here for what it does rather than for whoever published it first, because a literal in a standard should not be an advertisement; `OpenInferenceProtocol` is the KServe-derived predict contract; `TensorRemoteProcedure` covers the tensor-oriented RPC contracts of dedicated inference servers; `EmbeddedRuntime` is an in-process runtime reached through a library rather than a socket. `Proprietary` is an honest admission, and a Server using it **should** populate `EndpointDescriptionUri` — otherwise nothing in the address space says how the endpoint is called.
+
+**How an OPC UA client calls this Server is always §8** — one Method, one opaque payload, one envelope, whatever the source speaks. What the dialect on a *source* does not tell a client is what to put in that payload, and §6.4.2 puts the same enumeration on `DeploymentType` to answer that. The two are read by different parties for different purposes: the source's dialect is what this Server must speak outward, the deployment's is what a caller must speak inward, and a Server that translates between them publishes two different values. A Server that passes the payload through publishes the same value twice, which is not duplication so much as the honest answer given twice.
+
+The literals classify the contract **this Server speaks to that endpoint**, not everything the endpoint could offer. A runtime reached in-process is `EmbeddedRuntime` and the same runtime reached over its own loopback HTTP server is `RestChatCompletions`; a hosted endpoint reached through its OpenAI-compatible surface is `RestChatCompletions` and the same host reached through its native API is `Proprietary`. The value describes the integration, so it is answerable, and a Server that changes how it calls an endpoint changes it.
+
+Where a source serves **only as a catalogue** — §10's import reads from it and nothing calls `Invoke` through it — `ApiDialect` is `Proprietary` and `EndpointDescriptionUri` is populated. The member's value domain is inference contracts, a catalogue speaks none of them, and `Proprietary` is the accurate answer rather than a shortcoming: it says there is no inference contract here to recognise, and the description URI says what there is instead.
 
 `AuthenticationKind` (`AuthenticationKindEnum`, `ns=2;i=3008`) is `Anonymous`, `ApiKey`, `BearerToken`, `WorkloadIdentity` or `MutualTls`. `WorkloadIdentity` is preferred wherever the hosting platform offers it, because it is the only one of the five under which no secret is stored anywhere for an attacker to read.
+
+**It classifies the credential the Server stores, not the handshake it performs.** That is what makes it answerable against endpoints whose handshakes have nothing in common. Where a handshake is driven by an identity the platform assigns and no secret is stored, it is `WorkloadIdentity` whatever token the wire ultimately carries; where a secret is stored, it is `ApiKey` or `BearerToken` according to what the stored thing is. A request-signing scheme is therefore `WorkloadIdentity` when an assigned role signs it and `ApiKey` when a stored key does — one scheme, two values, because the question is what an attacker could steal.
+
+Read as a handshake classifier the member would be unanswerable for most real endpoints, and the five literals are deliberately not a taxonomy of handshakes. A source whose handshake a client genuinely needs described names it through `EndpointDescriptionUri`.
 
 **`CredentialReference` is a name, never a secret.** It identifies the credential in whatever store the Server uses. A Server **shall not** expose credential material through any Attribute of any node in this model, and a client that reads `CredentialReference` learns which credential is in use and nothing about what it is. This is stated as a prohibition rather than left implicit because the address space is a browsable, subscribable, historisable surface, and a secret placed in it is not merely readable — it is archived.
 
@@ -784,6 +858,18 @@ A **`FollowsRef`** deployment names a mutable pointer — a branch, a channel, a
 That second case is a promotion (§7) that nobody called `PromoteModel` for. It has the same effect: what the equipment decides changes, and no reader of the address space sees a structural difference. So §12.3's requirement applies to it unchanged — a Server **shall** treat repointing a followed reference as an authorization-bearing act, not as configuration.
 
 Stating this structurally, rather than as an upgrade-policy setting, is deliberate. What a client needs to know is whether the artefact can move under it. That is a property of the binding. When someone *intends* to move it is a schedule, and a schedule is not something a client can check.
+
+#### 9.3.1 What `Pinned` is worth, and what `RuntimeIdentity` adds
+
+`Pinned` says the artefact cannot change without an observable change to the deployment. How much that is worth depends on what this Server can actually verify, and `DigestProvenance` (§12.1.1) is where a client reads the answer.
+
+Where `DigestProvenance` is `ComputedByServer` or `VerifiedOnStage`, the Server holds the bytes and the guarantee is its own. Where it is `NotAvailable`, the deployment is pinned to a **name** the source promises to hold stable, and `Pinned` records that promise rather than this Server's verification. Both are legitimate; they are not the same assurance, and a Server **shall not** represent the second as the first — which it does not have to do explicitly, because the two are already distinguishable by reading one member.
+
+`RuntimeIdentity` is what closes the remaining gap. An artefact that has not changed can still be served by a different runtime build, a different engine compilation or a different accelerator arrangement, and produce different numbers for the same input. Where the execution site publishes an identity for its serving configuration, `RuntimeIdentity` carries it: opaque, compared only for equality, never parsed — the same contract `Digest` has.
+
+**A change to `RuntimeIdentity` is an observable change to the deployment**, and that is what makes the sentence at the top of this clause true rather than aspirational. Under a `Pinned` binding it is often the *only* observable change available, because the model did not move and nothing else in the address space did either.
+
+It answers a question asked long after the fact. An investigation opened in September into parts built in March walks §12.1's chain, reaches a `Digest` that is empty for good reason, and finds `VersionBinding` `Pinned` — and concludes nothing changed. Historising `RuntimeIdentity` makes *did the serving stack move between March and September* answerable through `HistoryRead`. It does not identify which build served an individual call, and a Server **shall not** be read as claiming that; concurrent calls during a rollover can straddle a change. The coarser question is the one that gets asked.
 
 ### 9.4 Availability and fallback
 
@@ -823,6 +909,8 @@ The `FallBackTo` branch is the one that needs care: the caller asked nothing dif
 
 `ListModels` enumerates what the source offers, returning a `ModelReferenceDataType` for each. It takes a `Filter` and a `MaxResults` because a public catalogue holds more models than any client wants to page through, and a Method that could only return everything would be unusable against exactly the sources this clause exists to reach. It is Optional: a source that serves one known model needs no catalogue.
 
+A cap alone is not enough, and `ContinuationPoint` is why. `MaxResults` bounds the response and, on its own, puts every entry past it permanently out of reach — against a public catalogue that is most of them, which turns the member meant to make the Method usable into the one that truncates it. A client passes an empty `ContinuationPoint` on the first call and the value it received on each call after, and the enumeration is complete when the returned one is empty. That is how a client knows to stop, rather than by comparing a count against a bound it set itself and cannot distinguish from a source that happened to have exactly that many.
+
 `TestConnection` probes the endpoint and updates `Reachability`. It exists so a commissioning engineer can establish that credentials and network policy are right **before** production traffic depends on them, rather than learning it from the first failed inference.
 
 ### 9.5 Data residency and egress
@@ -838,6 +926,16 @@ Three members on `DeploymentType` answer it, and all three are about the deploym
 - **`RetainsInput`** states whether the far end keeps input after serving the request — for provider-side logging, for evaluation, for training. **Unknown is not a value.** A Server that cannot establish the answer **shall** report `true`, because the assumption that keeps data in is the one that is safe to be wrong about.
 
 `EgressPolicyUri` names the governing policy for a human.
+
+These three members are **end-to-end, not next-hop**. `DataJurisdiction` names where input is ultimately processed; `EgressPermitted` states whether calling this deployment sends input outside the operator's boundary **by any path**; `RetainsInput` covers retention anywhere along that path. A hop that is itself local does not make the answer local.
+
+That distinction is invisible until a deployment federates. A cell Server calling a site Server over the plant network is one local hop with no internet in sight, and if that site Server is itself calling a hosted endpoint the payload leaves the site anyway. The cell Server publishing `EgressPermitted` false is then publishing something untrue about the only thing its caller wanted to know, while satisfying every rule above — because the rule on `EgressPermitted` binds on `InferenceLocation` being `Cloud`, and the cell Server's is `EdgeOffServer`.
+
+So where a deployment's `Source` names another Server implementing this specification, that Server's declarations are part of the answer. A Server **shall** read `DataJurisdiction`, `EgressPermitted` and `RetainsInput` from the upstream deployment it calls, and **shall not** publish values more permissive than the ones it read. A Server that cannot read them **shall** publish `EgressPermitted` and `RetainsInput` true, for the reason already given: the assumption that keeps data in is the one that is safe to be wrong about.
+
+This propagates assertions; it does not verify them. An upstream Server that declares something false makes its downstream neighbours wrong too, and no protocol can fix that. What it does fix is the case where every Server along a chain is honest and the answer still comes out wrong because nobody was obliged to look up.
+
+§12.3.2 states the same rule for the `FallsBackTo` edge. A payload leaves a deployment along exactly two modelled edges, and the rule is the same on both.
 
 ---
 
@@ -876,6 +974,10 @@ This clause covers the second: a Server obtains a model from a catalogue so that
 
 It takes a `Source`, a `ModelReference` and a `Mode`, and produces `ImportedModel` — a `ModelType` instance in this Server's address space, carrying an `ImportedFrom` reference back to the catalogue resource it came from. That reference is what makes *"where did this model come from"* answerable later, rather than only at the moment of import when someone happened to be watching.
 
+An import reads from one of **two** things, and the job says which. `Source` names a `ModelSourceType` — a live endpoint the Server calls. `Registry` (`NodeId`, Optional) names a `ModelRegistryType` — a catalogue the Server browses, which is the path §4.4 and §5.1 draw and the one a plant MLOps node actually uses. A Server **shall** populate exactly one of them and **shall** leave the other null. A job that named both would not say which of the two produced the artefact whose digest §10.4 verifies, and that is the one question the job exists to make answerable.
+
+A Server that imports only from endpoints omits `Registry` altogether; `Source` is Mandatory and remains the only path for it. `Registry` is Optional because the registry types of this clause are themselves optional to implement — a Server obliged to expose a member it can never populate learns nothing and teaches a client nothing. A Server claiming **AI-Import** does implement them, because that facet requires **AI-Catalogue** (§13.2), so there the member is present and the exactly-one rule has both of its alternatives available.
+
 `ModelReferenceDataType` (`ns=2;i=3051`) is the `Publisher`, `Name`, `Version` triple. An import takes the triple rather than a URL because a URL says where a copy is today and the triple says which artefact is meant — and the two diverge the moment anyone mirrors anything.
 
 ### 10.3 Import modes
@@ -890,7 +992,7 @@ It takes a `Source`, a `ModelReference` and a `Mode`, and produces `ImportedMode
 
 ```mermaid
 flowchart TD
-    A["ModelImportJobType<br/>Source, ModelReference, Mode"] --> B{Mode}
+    A["ModelImportJobType<br/>Source or Registry, ModelReference, Mode"] --> B{Mode}
     B -->|Federate| F["materialize ModelType<br/>artefact stays at the source"]
     B -->|Auto| G{"target InferenceLocation<br/>OnServer or EdgeOffServer?"}
     G -->|no| F
@@ -928,6 +1030,14 @@ The nameplate does not say whether a model may be used, and that is a separate q
 `ModelCardType` (`ns=2;i=1015`), reached through `ModelType.Card`, answers the second. `IntendedUse` and `Limitations` are both **Mandatory**. A card that records only what a model can do describes half its behaviour, and it is the other half — where it stops working, on what inputs, under what conditions — that a commissioning engineer needs in order to decide whether the model suits the installation in front of them. `OutOfScopeUse`, `License`, `EthicalConsiderations` and `ContactUri` are optional.
 
 `TrainingDataCutoff` deserves its own mention. A model cannot know anything after it, and "the model was trained before this existed" is a common and commonly missed explanation for a field failure that otherwise looks like a defect.
+
+`DeprecatedFrom` and `SupportedUntil` are its forward-facing twins, and they are on the card rather than the nameplate for the reason the split exists: *how long will this keep working* is a question about whether the model may run here, not about which artefact it is.
+
+They are different dates with different responses. `DeprecatedFrom` is when the source stops treating the model as current while continuing to serve it — the date that starts a requalification. `SupportedUntil` is when the source stops serving it at all.
+
+The second is worth being blunt about, because its consequence is not the one the surrounding members suggest. On that date the deployment does not degrade; it stops. `Reachability` goes `Unreachable`, `ConsecutiveFailures` climbs, and `FallbackPolicy` decides what happens next — and where that is `FallBackTo`, the line keeps producing while something outside the qualified configuration answers. §12.3.2 constrains that fallback on residency grounds and `ModelUsed` records it faithfully, so nothing here is hidden; it is simply not noticed, because nobody was watching for a date.
+
+That is the whole value of the member. Every other availability facility in this model — `Reachability`, `ConsecutiveFailures`, `LastSuccessAt`, `FallbackPolicy` — is a way of coping *after* the fact. This is the only one whose value is a date in the future, and where a source publishes it in machine-readable form a Server **should** carry it, because a requalification takes longer to schedule than an outage takes to notice.
 
 ### 11.2 Evaluation
 
@@ -987,7 +1097,30 @@ flowchart LR
     M -->|TrainedOn| DS["DatasetType"]
 ```
 
-#### 12.1.1 Broken links
+#### 12.1.1 What a digest is worth, and why an empty one is not a failure
+
+`Digest` is Mandatory so that its absence is uniform and browsable: a client finds the member on every model and reads an empty value, rather than not finding the member and being unable to tell a model without a digest from a Server that does not implement digests. That is the right trade, and it is worth stating plainly that **most sources cannot fill it**. An endpoint that names models but never their content — which is what a hosted inference API generally is — has no digest to give, and a Server integrating one is behaving correctly when it publishes none.
+
+But "empty" then carries two meanings, and a present value carries three. `DigestProvenance` (`DigestProvenanceEnum`, `ns=2;i=3015`) is **Mandatory** on `ModelType` and separates them:
+
+| Value | `Digest` | What a client may conclude |
+|---|---|---|
+| `NotAvailable` | empty | The source publishes no digest. There is nothing to obtain and nothing was withheld. |
+| `DeclaredBySource` | present | An assertion forwarded. No party the Server can speak for has hashed the artefact. |
+| `ComputedByServer` | present | Evidence the Server holds. Nothing independent agrees with it, so a substitution that preceded the Server obtaining the bytes is undetected. |
+| `VerifiedOnStage` | present | The Server computed it during a staging import and it matched what the source declared (§10.4). Two independent parties agree, which is the strongest statement this model carries. |
+
+It is Mandatory for the reason `Digest` itself is, stated in §6.2: clause 12 depends on it, and a rule that depends on an Optional member is one a conformant Server can silently not satisfy. A client deciding whether to run a model on a line needs to distinguish *nobody checked* from *two parties agree*, and an Optional member would let a Server decline to answer exactly where the answer matters.
+
+`ModelResourceType` carries the same member as **Optional**, mirroring the `Digest` it qualifies, which is Optional there. A catalogue declaring a digest it did not compute is `DeclaredBySource`; one serving the artefact through the inherited `Open`, `Read` and `Close` can reach `ComputedByServer`.
+
+**A Server shall not put a non-content identifier in `Digest`.** A response fingerprint, a resource name, a storage entity tag and a repository commit identifier are all tempting, all stable, and none of them a digest of the artefact that ran. A client that verified against one would believe it had checked something it had not, which is the failure mode `DigestAlgorithm`'s strength rule exists to prevent — arrived at by a different route. `NotAvailable` is the answer.
+
+Where such an identifier **locates** the artefact or its provenance record, it belongs in `ArtifactUri` or `ProvenanceUri`, which promise nothing about content. Where it identifies something else — a serving configuration, a request route — this model has no member for it, and inventing one out of `Digest` is not the remedy. A datum with no home is better recorded as having none than filed somewhere a client will read it as an artefact digest.
+
+**Provenance does not strengthen by being forwarded.** Where a deployment's `Source` names another Server implementing this specification, that Server publishes a `Digest` and a `DigestProvenance` of its own, and both are readable. A Server **shall not** publish a `DigestProvenance` stronger than the one it read upstream, where the ordering is `NotAvailable` < `DeclaredBySource` < `ComputedByServer` < `VerifiedOnStage`. A digest received across a federation hop and not checked against bytes this Server holds is `DeclaredBySource` however the upstream Server obtained it: republishing its `VerifiedOnStage` would claim a verification this Server did not perform, and the claim would be indistinguishable from one it had. This is the composition rule §9.5 states for residency, applied to the other thing a federated deployment forwards.
+
+#### 12.1.2 Broken links
 
 The walk is: result → deployment → `ModelUsed` → `ModelType` → `Digest`, and — where the model was imported — `ImportedFrom` → the catalogue resource it came from.
 
@@ -1067,7 +1200,7 @@ A Server declares conformance by exposing `AiRootType` under the Server object w
 
 Facets are **additive and independent** except where a row states otherwise, and only one dependency exists: **AI-Import** requires **AI-Catalogue**, because an import job with nothing to import from is not implementable.
 
-The split matters more here than in a smaller model, because the plausible Servers differ enormously. A device that runs one fixed model and describes it claims **AI-Base** and stops. A gateway that calls a hosted model claims **AI-Base**, **AI-Invoke** and **AI-Federation**. A plant MLOps node that mirrors a corporate catalogue and stages models onto controllers claims **AI-Catalogue** and **AI-Import** and may never call `Invoke` at all. None of these is a partial implementation of the others, and a single monolithic conformance claim would have made two of the three unclaimable.
+The split matters more here than in a smaller model, because the plausible Servers differ enormously — a device running one fixed model, a gateway calling a hosted one, and a plant MLOps node that may never call `Invoke` at all are three different products rather than three degrees of completeness of one. §13.3 names them as profiles. A single monolithic conformance claim would have made two of the three unclaimable.
 
 **AI-Residency** is deliberately separate from **AI-Federation**. A Server can be perfectly capable of calling a remote model while being unable to state where the data goes, and an operator who needs the second guarantee needs to be able to ask for it by name rather than infer it from the first.
 
@@ -1075,23 +1208,61 @@ The split matters more here than in a smaller model, because the plausible Serve
 
 | Facet | Requires |
 |---|---|
-| **AI-Base** (mandatory) | `AiRootType` with `Models` and `Deployments`; at least one `ModelType` with `ModelId`, `Name`, `Version`, `Digest` and `DigestAlgorithm`; at least one `DeploymentType` with `DeploymentId`, `InferenceLocation` and `State`; the exactly-one `UsesModel` rule of §6.5; the digest rules of §12.1 |
+| **AI-Base** (mandatory) | `AiRootType` with `Models` and `Deployments`; at least one `ModelType` with `ModelId`, `Name`, `Version`, `Digest`, `DigestAlgorithm` and `DigestProvenance`; where the Server exposes any deployment, each carries `DeploymentId`, `InferenceLocation` and `State` and satisfies the exactly-one `UsesModel` rule of §6.5; the digest rules of §12.1 |
 | **AI-Dataset** | `DatasetType` instances with `DatasetId` and `SourceKind`, and `TrainedOn` from at least one model |
-| **AI-OffServer** | A deployment whose `InferenceLocation` is not `OnServer`, with `EndpointUri` naming an authenticated, confidential scheme (§12.2) |
+| **AI-OffServer** | A deployment whose `InferenceLocation` is not `OnServer`, and §12.2's requirement that its `EndpointUri` name an authenticated, confidential scheme |
 | **AI-Signatures** | `Inputs` and `Outputs` populated on every model |
 | **AI-Learning** | `LearningJobType`, the §7 state model, every Method that drives a transition in it, and the distinct `PromoteModel` authorization of §12.3 |
-| **AI-Invoke** | `DeploymentType.Invoke` with `ModelUsed`, `Usage` and `FinishReason` populated on every response, and the §8.3 rule that an unsupported parameter is rejected rather than ignored |
-| **AI-InvokeAsync** | `InvokeAsync` and `InferenceJobType`, answering the same questions as `Invoke` (§8.6) |
+| **AI-Invoke** | `DeploymentType.Invoke` with `ModelUsed` and `FinishReason` populated on every response, and `Usage` returned on every response — its `UnitKind` empty where the execution site does not meter, per §8.2.3; the §6.4.2 requirement to publish `ApiDialect` where `Inputs`/`Outputs` do not describe the payload contract; the exactly-one `Payload`/`PayloadUri` rule of §8.6.1; and the §8.3 rule that an unsupported parameter is rejected rather than ignored |
+| **AI-InvokeAsync** | `InvokeAsync` and `InferenceJobType`, answering the same questions as `Invoke` including size (§8.6.1): the exactly-one `Payload`/`PayloadUri` rule, and `TransferRequired` with `Transfer` where a result outgrew the inline bound |
 | **AI-Transfer** | `BeginTransfer` and `InferenceTransferType`, `MaxInlinePayloadSize` on every deployment, and the §8.2.4 rule that `Invoke` reports `TransferRequired` rather than failing a call whose response outgrew the inline bound |
 | **AI-Stream** | Incremental results published over a data channel (§8.5). Entirely optional; a Server that answers only through `Invoke` is conformant without it |
-| **AI-Federation** | `ModelSourceType` with `ApiDialect`, `AuthenticationKind` and `Reachability`; the credential-secrecy prohibition of §9.2; `FallbackPolicy` on every deployment and the acyclicity rule of §9.4 |
+| **AI-Federation** | `ModelSourceType` with `ApiDialect`, `AuthenticationKind` and `Reachability`; the credential-secrecy prohibition of §9.2; `FallbackPolicy` on every deployment and the acyclicity rule of §9.4; `LastModifiedAt` on every model reached through a `FollowsRef` binding (§6.2.3); the composition rules of §9.5 and §12.1.1, which forbid a Server publishing residency or digest provenance stronger than what it read upstream |
 | **AI-Residency** | `DataJurisdiction`, `EgressPermitted` and `RetainsInput` on every deployment, with the §9.5 rules including the requirement to report `RetainsInput` true when it cannot be established |
 | **AI-Catalogue** | `ModelRegistryType`, `ModelPublisherType` and `ModelResourceType`, with the placeholders narrowed as §10.1 requires |
-| **AI-Import** | `ModelImportJobType`, the federate/stage/auto modes of §10.3, and the digest verification of §10.4. Requires **AI-Catalogue** |
+| **AI-Import** | `ModelImportJobType`, the federate/stage/auto modes of §10.3, the exactly-one `Source`/`Registry` rule of §10.2, and the digest verification of §10.4. Requires **AI-Catalogue** |
+
+A Server **shall** publish the URI of every facet and profile it claims in `Server/ServerCapabilities/ServerProfileArray`, which is where a client discovers what it supports without browsing for members and guessing.
+
+### 13.3 Profiles
+
+A facet is a building block. A **profile** is a complete claim: a named set of facets describing one plausible Server, which is what a procurement document cites and what two vendors implementing the same shape agree they have built.
+
+Four are defined. Each includes **AI-Base**, and a Server **may** claim more than one — a gateway that also mirrors a catalogue claims two, which is the whole reason profiles are composed from facets rather than written out independently.
+
+| Profile | Facets | The Server it describes |
+|---|---|---|
+| **AI Inference Device Server** | AI-Base, AI-Invoke | Runs models itself. A camera, a controller or an industrial PC executing a model in its own process, describing what it runs and answering calls against it. |
+| **AI Inference Gateway Server** | AI-Base, AI-Invoke, AI-OffServer, AI-Federation, AI-Residency | Calls a model hosted elsewhere. The bridge between a plant address space and an external inference service. |
+| **AI Model Catalogue Server** | AI-Base, AI-Catalogue, AI-Import | Holds and distributes models without necessarily running any. A plant MLOps node mirroring a corporate registry and staging artefacts onto controllers. |
+| **AI Model Lifecycle Server** | AI-Base, AI-Dataset, AI-Learning, AI-Catalogue, AI-Import | Closes the loop of clause 7: accumulates a dataset from the line, trains a candidate, evaluates it, promotes it, and keeps the lineage that explains why. |
+
+**AI-Residency is inside the gateway profile rather than optional to it.** The moment inference leaves the Server the question *where does my data go* has an answer, and a gateway that cannot state it is precisely the arrangement §9.5 exists to prevent. A Server that federates and cannot answer claims the facets individually and not this profile.
+
+The **Inference Device** profile does not include AI-Signatures, though a tensor runtime can usually satisfy it, because a Server serving one model behind a documented request body is a legitimate device and `Inputs`/`Outputs` do not describe a JSON contract (§6.4.2). It is claimed alongside where it holds.
+
+The **Lifecycle** profile is the only one that requires AI-Learning, and it requires AI-Dataset with it. A learning loop whose training data is not described is a loop that cannot be audited, and §12.3's promotion authorization exists to be answerable about exactly that.
+
+None of the four is a subset of another, and that is the point. A device that runs one fixed model, a gateway that runs none, and a catalogue node that may never call `Invoke` are three different products, and a single monolithic profile would have made two of them unclaimable.
+
+### 13.4 Profile and facet URIs
+
+A profile name is for a human. `ServerProfileArray` holds URIs, and unless this specification states them two Servers implementing the same profile publish different strings and no client can match either.
+
+Profiles are published under `http://opcfoundation.org/UA-Profile/AI/Server/`:
+
+| Profile | URI suffix |
+|---|---|
+| AI Inference Device Server | `InferenceDevice` |
+| AI Inference Gateway Server | `InferenceGateway` |
+| AI Model Catalogue Server | `ModelCatalogue` |
+| AI Model Lifecycle Server | `ModelLifecycle` |
+
+Facets are published under `http://opcfoundation.org/UA-Profile/AI/Facet/`, with the suffix being the facet name after the `AI-` prefix: **AI-Base** is `Base`, **AI-InvokeAsync** is `InvokeAsync`, **AI-OffServer** is `OffServer`, and so on for every row of §13.2.
+
+These URIs are **provisional**, on the same terms as the namespace URI and the NodeIds: this is a working-group draft, and the OPC Foundation assigns the final values.
 
 ---
-
-## 14 Deliverables and reproducibility
 
 | Artifact | Path |
 |---|---|
@@ -1101,12 +1272,17 @@ The split matters more here than in a smaller model, because the plausible Serve
 | Generator | `metaverse-specs/extras/ai-model-management/tools/build_model.py` |
 | Validator | `metaverse-specs/extras/ai-model-management/tools/validate_local.py` |
 | Annex A (generated) | `metaverse-specs/extras/ai-model-management/tools/model-reference.md` |
+| Implementation guides (informative) | `metaverse-specs/extras/ai-model-management/examples/` |
+| Guide validator | `metaverse-specs/extras/ai-model-management/examples/tools/validate_examples.py` |
 
 The NodeSet, the CSV and Annex A are generated from a single in-code source of truth and are **deterministic**. The generator is edited; the generated files are not.
+
+The [implementation guides](../extras/ai-model-management/examples/index.md) are informative and introduce nothing. They map this model onto the systems an implementer is likely to be integrating — Azure AI Foundry, OpenAI, Amazon Bedrock and SageMaker, NVIDIA NIM and Triton, Google Vertex AI, Hugging Face, KServe, embedded runtimes, and another Server implementing this specification. Naming products there rather than here is what lets clause 9.2 name dialects for what they do: the normative document stays neutral and the informative folder beside it does not have to. Every literal of `ApiDialectEnum` and `AuthenticationKindEnum` is exercised by at least one guide, and `validate_examples.py` fails if a guide cites a member this model does not declare.
 
 ```powershell
 python metaverse-specs\extras\ai-model-management\tools\build_model.py
 python metaverse-specs\extras\ai-model-management\tools\validate_local.py
+python metaverse-specs\extras\ai-model-management\examples\tools\validate_examples.py
 ```
 
 ---

@@ -39,8 +39,8 @@ import re
 import xml.sax.saxutils as sx
 
 NAMESPACE = "http://opcfoundation.org/UA/AI/"
-VERSION = "0.2.0"
-PUBDATE = "2026-08-03T00:00:00Z"
+VERSION = "0.4.0"
+PUBDATE = "2026-08-06T00:00:00Z"
 BASE_UA_VERSION = "1.05.04"
 BASE_UA_PUBDATE = "2023-12-15T00:00:00Z"
 
@@ -48,7 +48,7 @@ BASE_UA_PUBDATE = "2023-12-15T00:00:00Z"
 # registry is the same shape as every other registry in this repository rather than a
 # private invention. See clause 10.
 XREG_NS = "http://opcfoundation.org/UA/xRegistry/"
-XREG_VERSION = "0.3.0"
+XREG_VERSION = "0.4.0"
 XREG_PUBDATE = "2026-07-31T00:00:00Z"
 
 # NamespaceUris order fixes the namespace indices for the whole file. Required-model
@@ -580,6 +580,34 @@ enum_type(3014, "TransferStateEnum",
            ("Expired", 5, "The Server reclaimed the transfer before it completed.")])
 TransferStateEnum = T(3014)
 
+enum_type(3015, "DigestProvenanceEnum",
+          "Where a Digest came from, or why there is none. Digest is Mandatory so "
+          "that its absence is uniform and browsable rather than indistinguishable "
+          "from a Server that does not implement digests - but 'empty' then carries "
+          "two different meanings, and a client that must decide whether to trust an "
+          "artefact needs them apart. This member is what tells them apart, and it "
+          "does the same job for a digest that IS present: a value the source "
+          "asserted and a value this Server computed over bytes are not the same "
+          "evidence, and only one of them survives a substituted artefact.",
+          [("NotAvailable", 0,
+            "There is no digest and the source does not publish one. Digest is "
+            "empty. This is the honest answer for an endpoint that names models but "
+            "never their content, and it is what most hosted inference APIs "
+            "require."),
+           ("DeclaredBySource", 1,
+            "Digest carries what the source declared. No party this Server can "
+            "speak for has hashed the artefact, so the value is an assertion "
+            "forwarded rather than evidence held."),
+           ("ComputedByServer", 2,
+            "This Server hashed the artefact it holds. The value is evidence, but "
+            "nothing independent agrees with it - a substitution that happened "
+            "before the Server obtained the bytes is not detected."),
+           ("VerifiedOnStage", 3,
+            "This Server hashed the artefact during a staging import (clause 10.4) "
+            "and it matched what the source declared. Two independent parties agree, "
+            "which is the strongest statement this model can carry.")])
+DigestProvenanceEnum = T(3015)
+
 # ---------------------------------------------------------------------------
 # Structured DataTypes (3050+)
 # ---------------------------------------------------------------------------
@@ -743,7 +771,15 @@ object_type(1002, "ModelType", BaseObjectType,
             "Administration Shell can be populated from this node without loss.")
 AM = 1002
 prop_var(AM, "ModelType", "ModelId", String, "Identifier of the model.", MR_Mandatory)
-prop_var(AM, "ModelType", "Name", LocalizedText, "Human-readable model name.",
+prop_var(AM, "ModelType", "Name", LocalizedText,
+         "Human-readable model name. Its Text SHALL be the name the source system "
+         "uses for the model, carried across unchanged. A LocalizedText because the "
+         "base model types names that way and retyping it would break every "
+         "implementation, but the localizable part is the presentation: a Server MAY "
+         "add a translation for display and SHALL NOT translate, reformat or "
+         "prettify the Text itself. Two Servers that fetched one model from two "
+         "mirrors are meant to produce the same string, and a name adjusted for "
+         "house style is a name that no longer matches.",
          MR_Mandatory)
 prop_var(AM, "ModelType", "Version", String, "Model version.", MR_Mandatory)
 prop_var(AM, "ModelType", "Framework", String,
@@ -819,8 +855,9 @@ prop_var(AY, "DeploymentType", "EndpointUri", String,
          "Inference endpoint when InferenceLocation is not OnServer. Treated as "
          "untrusted input and subject to the resolver policy of clause 12.")
 prop_var(AY, "DeploymentType", "LatencyBudget", Duration,
-         "Latency the deployment is expected to meet, so a client can detect "
-         "regression.")
+         "Latency the deployment is expected to meet. Set by whoever commissioned the "
+         "deployment; ObservedLatency is what it actually achieved, and clause 6.4.3 "
+         "compares the two.")
 prop_var(AY, "DeploymentType", "BatchSize", UInt32,
          "Configured inference batch size.")
 prop_var(AY, "DeploymentType", "State", DeploymentStateEnum,
@@ -902,7 +939,9 @@ object_type(1007, "ModelImportJobType", T(1006),
             "there and nowhere else.")
 MI = 1007
 prop_var(MI, "ModelImportJobType", "Source", NodeId_,
-         "ModelSourceType instance the model is pulled from.", MR_Mandatory)
+         "ModelSourceType instance the model is pulled from, where the import calls "
+         "an endpoint. Null where the import reads a catalogue instead, in which "
+         "case Registry names it. Exactly one of the two is non-null.", MR_Mandatory)
 prop_var(MI, "ModelImportJobType", "ModelReference", ModelReferenceDataType,
          "Publisher, name and version being imported.", MR_Mandatory)
 prop_var(MI, "ModelImportJobType", "Mode", ImportModeEnum,
@@ -1000,9 +1039,18 @@ method(MS, "ModelSourceType", "TestConnection",
 method(MS, "ModelSourceType", "ListModels",
        "Enumerate the models the source offers.", MR_Optional,
        inargs=[("Filter", String, "Optional substring or expression; empty for all."),
-               ("MaxResults", UInt32, "Upper bound on returned entries.")],
+               ("MaxResults", UInt32, "Upper bound on returned entries."),
+               ("ContinuationPoint", ByteString,
+                "Empty on the first call; otherwise the value the previous call "
+                "returned. A cap without a cursor bounds the response and puts every "
+                "entry past it out of reach, which against a public catalogue means "
+                "most of them.")],
        outargs=[("Models", ModelReferenceDataType,
-                 "Publisher, name and version of each model offered.", 1)])
+                 "Publisher, name and version of each model offered.", 1),
+                ("ContinuationPoint", ByteString,
+                 "Pass to the next call to continue. Empty when the enumeration is "
+                 "complete, which is how a client knows to stop rather than by "
+                 "comparing counts.")])
 
 object_type(1014, "EvaluationRunType", BaseObjectType,
             "One measurement of a model against a dataset. It is a first-class object "
@@ -1232,6 +1280,12 @@ method(AY, "DeploymentType", "Invoke",
        "identically; the location changes the trust boundary and the latency, and "
        "nothing else.", MR_Optional,
        inargs=[("Payload", ByteString, "Request body."),
+               ("PayloadUri", String,
+                "Location the request body is read from, where it is supplied by "
+                "reference rather than carried. A Server SHALL accept exactly one of "
+                "Payload and PayloadUri and SHALL reject a call supplying both or "
+                "neither. Untrusted input subject to clause 12.2, and named data the "
+                "execution site will read, so clause 9.5 applies to it."),
                ("ContentType", String, "Media type of Payload."),
                ("Parameters", KeyValuePair,
                 "Call parameters such as a sampling temperature or an output length "
@@ -1271,6 +1325,12 @@ method(AY, "DeploymentType", "InvokeAsync",
        "waits - a batch scored overnight, an analysis over recorded data.",
        MR_Optional,
        inargs=[("Payload", ByteString, "Request body."),
+               ("PayloadUri", String,
+                "Location the request body is read from, where it is supplied by "
+                "reference rather than carried. Exactly one of Payload and PayloadUri "
+                "on the same terms as Invoke. This is the argument that lets a batch "
+                "already sitting in the plant's object store be scored without being "
+                "copied through the Session first."),
                ("ContentType", String, "Media type of Payload."),
                ("Parameters", KeyValuePair, "Call parameters.", 1)],
        outargs=[("Job", NodeId_,
@@ -1378,11 +1438,140 @@ method(TR, "InferenceTransferType", "Abort",
        "caring about a response SHOULD say so rather than leaving the Server to wait "
        "out ExpiresAt.", MR_Optional)
 
-# The actual narrowing. Same BrowseNames and same Organizes as the inherited
-# declarations, so these OVERRIDE them rather than sitting alongside; typed to this
-# model's own types, so a client browsing a model registry knows what it will find.
-# Allocated here because member ids are append-only.
+# ---------------------------------------------------------------------------
+# Members appended in 0.3.0. All append; nothing renumbers.
+# ---------------------------------------------------------------------------
 
+# --- Why a Digest is what it is --------------------------------------------
+# Mandatory on ModelType for the reason Digest itself is: clause 12 depends on
+# it, and a rule that depends on an Optional member is one a conformant Server
+# can silently not satisfy. Optional on ModelResourceType, mirroring the Digest
+# it qualifies, which is Optional there.
+prop_var(1002, "ModelType", "DigestProvenance", DigestProvenanceEnum,
+         "Where Digest came from, or why there is none. NotAvailable is the only "
+         "value permitted with an empty Digest, and it SHALL be used rather than "
+         "leaving a client to guess whether the source publishes no digest or this "
+         "Server declined to carry one.\n\n"
+         "A Server SHALL NOT put a non-content identifier in Digest to avoid saying "
+         "NotAvailable. A response fingerprint, a resource name, a storage entity tag "
+         "and a repository commit identifier are none of them digests of the artefact "
+         "that ran, and a client that verified against one would believe it had "
+         "checked something it had not. Where such an identifier is worth publishing "
+         "it belongs in ArtifactUri or ProvenanceUri, which promise nothing about "
+         "content.",
+         MR_Mandatory)
+prop_var(1012, "ModelResourceType", "DigestProvenance", DigestProvenanceEnum,
+         "Where this resource's Digest came from, on the same terms as ModelType. A "
+         "catalogue that declares a digest it did not compute is DeclaredBySource; "
+         "one serving the artefact through the inherited Open, Read and Close can "
+         "reach ComputedByServer.")
+
+# --- The registry an import job read from ----------------------------------
+prop_var(1007, "ModelImportJobType", "Registry", NodeId_,
+         "ModelRegistryType instance the model is imported from, where the import "
+         "reads a catalogue rather than calling an endpoint. Null otherwise.\n\n"
+         "A Server SHALL populate exactly one of Source and Registry, and SHALL "
+         "leave the other null. The two name the two things an import can read from, "
+         "and a job that named both would not say which one produced the artefact "
+         "whose digest clause 10.4 verifies.")
+
+# ---------------------------------------------------------------------------
+# Members appended in 0.4.0. All append; nothing renumbers.
+#
+# Every one of these answers something a real system publishes and this model
+# had nowhere to put, found by mapping it onto eleven of them. None is
+# Mandatory: each is governed by a conditional SHALL in the specification
+# instead, so the obligation binds exactly where a Server can discharge it.
+# ---------------------------------------------------------------------------
+
+# --- ModelType: when the artefact appeared, and when it last moved ----------
+prop_var(1002, "ModelType", "PublishedAt", UtcTime,
+         "When the source first published this model, where the source states it. "
+         "The same question DatasetType.CreatedAt answers for a dataset, and the same "
+         "reason: a model trained before a process change may no longer represent the "
+         "line it runs on, and Version is a vendor string that often cannot be "
+         "ordered.\n\n"
+         "This is the source's date, not when this Server learned of it - a Server "
+         "SHALL NOT substitute its own acquisition time, which would make every model "
+         "appear to date from the last restart.")
+prop_var(1002, "ModelType", "LastModifiedAt", UtcTime,
+         "When the artefact behind this model last changed at the source.\n\n"
+         "It exists for the FollowsRef case of clause 9.3, where the artefact can "
+         "change with nothing else changing. Clause 12.3.1 requires repointing to be "
+         "treated as an authorization-bearing act and points at AiJobType.RequestedBy "
+         "for the record - but a reference that moves AT THE SOURCE produces no job, "
+         "so without this member the audit trail that clause demands cannot be "
+         "constructed on the one path it exists to cover. A Server that follows a "
+         "mutable reference SHALL populate it.")
+
+# --- ModelCardType: the dates that end a model's working life ---------------
+prop_var(1015, "ModelCardType", "DeprecatedFrom", UtcTime,
+         "When the source stops treating this model as current while continuing to "
+         "serve it. The date that starts a requalification, not the one that ends "
+         "production.")
+prop_var(1015, "ModelCardType", "SupportedUntil", UtcTime,
+         "When the source stops serving this model altogether.\n\n"
+         "Its consequence is not degradation. On this date the deployment stops, "
+         "Reachability goes Unreachable, and FallbackPolicy decides what happens next "
+         "- which, where it is FallBackTo, means the line keeps producing and "
+         "something outside the qualified configuration is answering. A date that was "
+         "knowable a year in advance therefore becomes an unplanned change of model, "
+         "and it is published by the serving system in machine-readable form.")
+
+# --- DeploymentType: what a client must send, and what is serving it --------
+prop_var(1004, "DeploymentType", "ApiDialect", ApiDialectEnum,
+         "The contract a client's Payload must satisfy when calling Invoke on this "
+         "deployment. RestChatCompletions means the Payload is a chat-completions "
+         "request body; OpenInferenceProtocol means it is an OIP inference body; "
+         "EmbeddedRuntime and TensorRemoteProcedure name the tensor contracts "
+         "described by Inputs and Outputs; Proprietary means the contract is named "
+         "only by EndpointDescriptionUri.\n\n"
+         "This does not type the payload - clause 8.2 keeps it opaque and that is "
+         "unchanged. It names WHICH contract the opaque bytes are expected to satisfy, "
+         "which is what a client browsing an unfamiliar deployment needs before it can "
+         "send anything at all.")
+prop_var(1004, "DeploymentType", "EndpointDescriptionUri", String,
+         "Where the request and response contract for this deployment is documented. "
+         "Untrusted input, subject to clause 12.2. Required in practice wherever "
+         "ApiDialect is Proprietary, because nothing else then says what to send.")
+prop_var(1004, "DeploymentType", "RuntimeIdentity", String,
+         "Opaque identifier of the serving configuration currently behind this "
+         "deployment - a serving-stack fingerprint, an engine profile, a container "
+         "image digest. Compared for equality and never parsed, on the same terms as "
+         "Digest.\n\n"
+         "It is not the model. The same artefact served by two runtime builds can "
+         "produce different numbers, and where the execution site publishes such an "
+         "identity it is the only thing that records the difference. A change to it "
+         "under a Pinned binding IS the observable change to the deployment that "
+         "clause 9.3 says a pinned artefact cannot move without.")
+prop_var(1004, "DeploymentType", "ObservedLatency", Duration,
+         "Most recent inference latency this Server measured for this deployment.\n\n"
+         "LatencyBudget states what the deployment is expected to meet, and clause "
+         "6.4.3 makes Degraded the state of a deployment that is answering but missing "
+         "it. Without a measurement the comparison has no published input, so the "
+         "state transition could not be checked against a Server that claimed it. A "
+         "Server that reports Degraded on latency grounds SHALL populate this.")
+
+# --- InferenceJobType: the large-payload path Invoke already had ------------
+prop_var(1008, "InferenceJobType", "RequestUri", String,
+         "Where the request body was read from, where it was supplied by reference "
+         "rather than carried. Untrusted input under clause 12.2, and an egress path "
+         "under clause 9.5.")
+prop_var(1008, "InferenceJobType", "ResponseUri", String,
+         "Where the result was written, where the execution site returns a location "
+         "rather than bytes. Empty when the response is carried inline or through "
+         "Transfer.")
+prop_var(1008, "InferenceJobType", "TransferRequired", Boolean,
+         "True when the job produced a response too large to carry inline. "
+         "ResponsePayload is then empty and the work is NOT lost - Transfer names "
+         "where to read it.")
+prop_var(1008, "InferenceJobType", "Transfer", NodeId_,
+         "InferenceTransferType instance holding the response, where TransferRequired "
+         "is true. Null otherwise.\n\n"
+         "Invoke carries the same pair, and the asymmetry would otherwise leave the "
+         "jobs most likely to produce a large result - a batch scored overnight, an "
+         "analysis over recorded data - bounded by exactly the three limits clause "
+         "8.2.4 says this model does not get to choose.")
 
 # ===========================================================================
 # ==================================  EMIT  =================================
@@ -1554,6 +1743,17 @@ def _esc(s):
     return (s or "").replace("|", "\\|")
 
 
+def _cell(s):
+    """A description as ONE table cell.
+
+    A member description may hold paragraphs, and a raw newline inside a row ends the
+    row: everything after it renders as prose and the following member starts a second
+    table. Paragraph breaks become <br><br>, which keeps the structure and keeps the row
+    on one line. MD033 is off for exactly this reason.
+    """
+    return _esc(s).replace("\n\n", "<br><br>").replace("\n", " ")
+
+
 def emit_md():
     """Annex A. This is the authoritative node reference, so it must carry everything an
     implementer needs: DataType, ValueRank and ModellingRule for every member, the field
@@ -1588,7 +1788,7 @@ def emit_md():
     for nid in ref_types:
         n = NODES[nid]
         L.append(f"| {T(nid)} | {n.bname} | {n.inverse} | "
-                 f"{_dt_name(_supertype(nid))} | {_esc(n.desc)} |")
+                 f"{_dt_name(_supertype(nid))} | {_cell(n.desc)} |")
     L.append("")
 
     L += ["## A.3 ObjectTypes", ""]
@@ -1614,7 +1814,7 @@ def emit_md():
                 dt = _dt_name(mn.attrs.get("DataType", ""))
                 vr = _rank(mn.attrs.get("ValueRank", "-1")) if mn.cls == "UAVariable" else ""
                 L.append(f"| {mn.bname} | {mn.cls[2:]} | {dt} | {vr} | "
-                         f"{_rule_name(m)} | {_esc(mn.desc)} |")
+                         f"{_rule_name(m)} | {_cell(mn.desc)} |")
             L.append("")
         for m in methods:
             mn = NODES[m]
@@ -1628,7 +1828,7 @@ def emit_md():
                 L.append(f"| {label} | DataType | ValueRank | Meaning |")
                 L.append("|---|---|---|---|")
                 for (an, at, ar, ad) in args:
-                    L.append(f"| {an} | {at} | {ar} | {_esc(ad)} |")
+                    L.append(f"| {an} | {at} | {ar} | {_cell(ad)} |")
                 L.append("")
             if not _method_args(m, "InputArguments") and \
                     not _method_args(m, "OutputArguments"):
@@ -1654,7 +1854,7 @@ def emit_md():
                     r'<Field Name="([^"]+)" Value="(\d+)"\s*(?:/>|>'
                     r'(?:<Description>([^<]*)</Description>)?</Field>)', defn):
                 L.append(f"| {mm.group(1)} | {mm.group(2)} | "
-                         f"{_esc(mm.group(3) or '')} |")
+                         f"{_cell(mm.group(3) or '')} |")
         else:
             L.append("| Field | DataType | ValueRank | ArrayDimensions | Description |")
             L.append("|---|---|---|---|---|")
@@ -1667,7 +1867,7 @@ def emit_md():
                 L.append(f"| {mm.group(1)} | {_dt_name(mm.group(2))} | "
                          f"{_rank(vr.group(1)) if vr else 'Scalar'} | "
                          f"{ad.group(1) if ad else ''} | "
-                         f"{_esc(mm.group(4) or '')} |")
+                         f"{_cell(mm.group(4) or '')} |")
         L.append("")
 
     return "\n".join(L).rstrip() + "\n"

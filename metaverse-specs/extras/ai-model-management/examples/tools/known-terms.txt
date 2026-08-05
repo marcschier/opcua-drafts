@@ -1,0 +1,43 @@
+# Backticked PascalCase tokens the guides cite that this model does not declare.
+#
+# validate_examples.py reports any backticked PascalCase token that is neither declared by
+# Opc.Ua.AiModelManagement.NodeSet2.xml nor listed here. The list exists so that a guide
+# can name `InvokeModel` without that becoming a hole wide enough for a misspelt
+# `EgressPermited` to pass through unnoticed.
+#
+# Adding a term is a deliberate act and shows up in a diff. Before adding one, check it is
+# genuinely someone else's name and not a member of this model spelled wrongly.
+#
+# One term per line.
+
+# --- Defined by the base OPC UA specification -------------------------------
+# Cited legitimately: this model builds on them and the guides have to name them.
+ByteString
+FileType
+LocalizedText
+MessageSecurityMode
+SignAndEncrypt
+NodeId
+SecurityMode
+
+# --- Amazon Web Services ----------------------------------------------------
+Accept
+CreateModelInvocationJob
+DescribeEndpoint
+EndpointName
+InferenceId
+InvokeEndpoint
+InvokeEndpointAsync
+InvokeModel
+ListEndpoints
+ListFoundationModels
+OutputLocation
+
+# --- Amazon SageMaker -------------------------------------------------------
+InputLocation
+
+# --- Google Cloud -----------------------------------------------------------
+GenerateContentResponse
+
+# --- NVIDIA -----------------------------------------------------------------
+ModelInfer

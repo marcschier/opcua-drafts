@@ -24,6 +24,7 @@ SELF_CONTAINED = [
     "extras/vision/tools/validate_local.py",
     "extras/robot-intent/tools/validate_local.py",
     "extras/ai-model-management/tools/validate_local.py",
+    "extras/ai-model-management/examples/tools/validate_examples.py",
     # openusd-scene added in the Scene Materialization (Part 2) work.
     # openusd-artifacts added with the xRegistry artifact registry (Bindings 0.4.0).
     # validate_spec added with the submittable xRegistry domain spec; it keeps
@@ -33,6 +34,8 @@ SELF_CONTAINED = [
     # specification against the model in both directions.
     # ai-model-management is a separate specification, so vision's validator also reads
     # that NodeSet to resolve the overlay references that cross between them.
+    # validate_examples keeps the vendor implementation guides beside that specification
+    # from citing members the model no longer declares.
 ]
 
 # Validators that additionally need untracked base data (none yet).
