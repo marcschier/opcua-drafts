@@ -539,6 +539,10 @@ A Server **shall** either honour the requested `StopMode` or treat every value a
 
 `Pause` suspends execution retaining position, and `Resume` continues it. Both are optional, and a capability entry declares per intent type whether they are honoured.
 
+Suspending execution means the robot stops. A Server **shall not** report `Suspended` for an operation whose motion is still in progress: Part 10 defines that state as position retained, and a client or operator that reads it will act on the robot having come to rest. Since this specification defines no channel through which a Server can instruct an actuator to pause mid-motion, whether a Server can honour `Pause` for a running intent depends entirely on the underlying controller.
+
+A Server that cannot suspend a running intent **shall** declare `PauseSupported` false for that intent type. It **may** still stop its queue on `Pause` - refusing to start further work is useful on its own - but the executing operation remains `Executing` until it finishes, and `Ready` **shall** reflect that no new work will be admitted. This is the same rule clause 9 applies to `BlendingSupported`: declare false rather than accept work that will not be performed.
+
 `Retriable` is a terminal state a Server uses where it judges an intent worth another attempt — a grasp that closed on nothing, a location that was momentarily blocked. `Retry` creates a **new** `IntentOperationType` instance for the new attempt; the original remains, terminal, with its own result. A Server that does not offer `Retry` never enters `Retriable` and reports `Failed` instead.
 
 `Retry` refuses like a submission does, and reports it the same way (§6.2): `Accepted` false with a `Failure` and a `Message`. A named intent that is not in `Retriable` is refused with `ParameterInvalid`, and one whose capability entry declares `RetrySupported` false with `CapabilityNotSupported`.
@@ -679,13 +683,14 @@ Reading, browsing and subscribing require no authority. Observation is always pe
 
 `SupportedIntents` carries one `IntentCapabilityDataType` per accepted intent type, naming the DataType and declaring whether cancel, pause and retry are honoured for it, which buffer and blocking modes it accepts, and which named `Attributes` this Server recognises.
 
-Three rules keep the declaration honest, and each is checkable against a running Server:
+Four rules keep the declaration honest, and each is checkable against a running Server:
 
 1. A Server **shall** refuse an intent whose DataType is not listed, with `CapabilityNotSupported`.
 2. Every entry's `SupportedBufferModes` **shall** include `Aborting`.
 3. `BlendingSupported` **shall** be false unless the blending buffer modes actually blend.
+4. `PauseSupported` **shall** be false unless `Pause` actually suspends a *running* intent, per §6.6. Stopping only the queue is not suspending execution, and `Suspended` **shall not** be reported while the robot is still moving.
 
-A fourth rule applies the same honesty to the **Method surface**, because a declaration a client cannot act on is worse than no declaration. Where a Server declares a capability, the Methods that make it usable **shall** be present on the controller and callable:
+A fifth rule applies the same honesty to the **Method surface**, because a declaration a client cannot act on is worse than no declaration. Where a Server declares a capability, the Methods that make it usable **shall** be present on the controller and callable:
 
 | Declaration | Methods that **shall** be present |
 |---|---|
@@ -695,7 +700,7 @@ A fourth rule applies the same honesty to the **Method surface**, because a decl
 | a capability entry with `PauseSupported` true | `Pause`, `Resume` |
 | a capability entry with `RetrySupported` true | `Retry` |
 
-These Methods are Optional on `IntentControllerType`, which is what makes the rule necessary: a Server can otherwise advertise missions while omitting `SubmitMission` entirely, and a client discovers the contradiction only by calling something that is not there. Like the other three, this is observable against a running Server — browse the controller and compare what it offers with what it claims.
+These Methods are Optional on `IntentControllerType`, which is what makes the rule necessary: a Server can otherwise advertise missions while omitting `SubmitMission` entirely, and a client discovers the contradiction only by calling something that is not there. Like the others, this is observable against a running Server — browse the controller and compare what it offers with what it claims.
 
 `AxisCount` states how many entries `JointMoveIntentDataType.JointTargets` must carry, and **shall** equal the number of `AxisType` instances under the controller.
 

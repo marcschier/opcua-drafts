@@ -842,7 +842,10 @@ struct_type(3069, "IntentCapabilityDataType",
              ("CancelSupported", Boolean, "True when Cancel is honoured for it. A "
                                           "Server may still refuse a particular "
                                           "cancel; see clause 6.5."),
-             ("PauseSupported", Boolean, "True when Pause and Resume are honoured."),
+             ("PauseSupported", Boolean, "True when Pause and Resume are honoured for a "
+               "running intent. False when the Server can only stop its queue: "
+               "suspending execution means the robot stops, and Suspended is never "
+               "reported while it is still moving."),
              ("RetrySupported", Boolean, "True when it can terminate Retriable and be "
                                          "re-attempted."),
              ("SupportedBufferModes", BufferModeEnum, "Buffer modes accepted for it. "
@@ -1658,22 +1661,36 @@ prop_var(CP, "IntentCapabilitiesType", "MaxTrajectoryPoints", UInt32,
 # arguments. Both members are OPTIONAL in ProgramStateMachineType, so until they are
 # promoted here a fully conformant Server provides neither and the claims are false
 # against a legal implementation. Allocated at the end because member ids append.
-obj_member(IO, "IntentOperationType", "FinalResultData", BaseObjectType,
-           "Part 10 result container. Carries the same IntentResultDataType value as "
-           "Result, so a Part 10 client finds the outcome where Part 10 says it will "
-           "be. Mandatory here because clause 6.7 requires it and an Optional member "
-           "cannot carry a SHALL.", MR_Mandatory)
-_member_var(IO, "IntentOperationType", "ProgramDiagnostic",
-            ProgramDiagnostic2DataType, ProgramDiagnostic2Type, MR_Mandatory,
-            HasComponent,
-            "Part 10 invocation diagnostics: which Session invoked the program, when, "
-            "with what arguments and to what outcome. Mandatory here because the "
-            "auditable-commanding property of clause 1.2 is exactly this member, and a "
-            "capability the specification advertises cannot rest on one a Server may "
-            "omit. Declared exactly as OPC 10000-10 declares it - a Variable of "
-            "ProgramDiagnostic2Type reached by HasComponent - because a promotion that "
-            "altered the inherited member's TypeDefinition or reference type would "
-            "declare a second member rather than promote the inherited one.")
+#
+# Both are emitted with a namespace-0 BrowseName. OPC 10000-3 says a subtype overrides
+# an inherited InstanceDeclaration by re-declaring a child with the same QualifiedName,
+# and a QualifiedName includes the namespace index - so 1:ProgramDiagnostic does not
+# override 0:ProgramDiagnostic, it declares a second member beside it and leaves the
+# inherited Optional one in place. That is the same failure the TypeDefinition and
+# reference type below are careful to avoid, reached by a different route, and it
+# defeats the entire point of promoting. Every other NodeSet in the reference stack
+# promotes inherited state-machine members unprefixed for this reason.
+_promoted = obj_member(
+    IO, "IntentOperationType", "FinalResultData", BaseObjectType,
+    "Part 10 result container. Carries the same IntentResultDataType value as "
+    "Result, so a Part 10 client finds the outcome where Part 10 says it will "
+    "be. Mandatory here because clause 6.7 requires it and an Optional member "
+    "cannot carry a SHALL.", MR_Mandatory)
+NODES[_promoted].attrs["BrowseNameNamespace"] = 0
+_promoted = _member_var(
+    IO, "IntentOperationType", "ProgramDiagnostic",
+    ProgramDiagnostic2DataType, ProgramDiagnostic2Type, MR_Mandatory,
+    HasComponent,
+    "Part 10 invocation diagnostics: which Session invoked the program, when, "
+    "with what arguments and to what outcome. Mandatory here because the "
+    "auditable-commanding property of clause 1.2 is exactly this member, and a "
+    "capability the specification advertises cannot rest on one a Server may "
+    "omit. Declared exactly as OPC 10000-10 declares it - a Variable of "
+    "ProgramDiagnostic2Type reached by HasComponent, with the inherited "
+    "namespace-0 BrowseName - because a promotion that altered the inherited "
+    "member's TypeDefinition, reference type or BrowseName namespace would "
+    "declare a second member rather than promote the inherited one.")
+NODES[_promoted].attrs["BrowseNameNamespace"] = 0
 
 # Clause 12 declares conformance in terms of facets but gave a Server nowhere to say
 # which ones it satisfies, so every client had to re-derive the whole of Table 12.2
