@@ -1,0 +1,207 @@
+<a id="annex-a"></a>
+
+## Annex A — Information model
+
+This annex is the normative node reference. It is generated from `core-specs/async-services/tools/build_model.py` and always matches `Opc.Ua.AsyncServices.NodeSet2.xml`. Every node is a proposed **addition to the base OPC UA namespace** `http://opcfoundation.org/UA/` (namespace index 0), so BrowseNames are unqualified and NodeIds are plain `i=<n>`. The numeric NodeIds are **provisional**, drawn from the 70000+ block; final identifiers are assigned by the OPC Foundation. The **Declared in** column marks members inherited from a supertype.
+
+### Type overview
+
+| NodeId | BrowseName | NodeClass | Subtype of |
+|---|---|---|---|
+| i=70000 | [AsyncServiceCapabilitiesType](#type-AsyncServiceCapabilitiesType) | ObjectType | [BaseObjectType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.2) |
+| i=70001 | [AsyncServiceDiagnosticsType](#type-AsyncServiceDiagnosticsType) | ObjectType | [BaseObjectType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.2) |
+| i=70010 | [DeferredRequestCompletedEventType](#type-DeferredRequestCompletedEventType) | ObjectType | [BaseEventType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.4) |
+| i=70011 | [AuditDeferredRequestEventType](#type-AuditDeferredRequestEventType) | ObjectType | [AuditSessionEventType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.4) |
+| i=70030 | [DeferredRequestState](#type-DeferredRequestState) | DataType | [Enumeration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.14) |
+| i=70031 | [DeferredRequestTransition](#type-DeferredRequestTransition) | DataType | [Enumeration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.14) |
+| i=70032 | [DeferralRequestHeaderDataType](#type-DeferralRequestHeaderDataType) | DataType | [Structure](https://reference.opcfoundation.org/specs/OPC-10000-3/8.32) |
+| i=70033 | [DeferralResponseHeaderDataType](#type-DeferralResponseHeaderDataType) | DataType | [Structure](https://reference.opcfoundation.org/specs/OPC-10000-3/8.32) |
+| i=70034 | [DeferredRequestDiagnosticsDataType](#type-DeferredRequestDiagnosticsDataType) | DataType | [Structure](https://reference.opcfoundation.org/specs/OPC-10000-3/8.32) |
+| i=70035 | [CompleteRequest](#type-CompleteRequest) | DataType | [Structure](https://reference.opcfoundation.org/specs/OPC-10000-3/8.32) |
+| i=70036 | [CompleteResponse](#type-CompleteResponse) | DataType | [Structure](https://reference.opcfoundation.org/specs/OPC-10000-3/8.32) |
+
+### Object types
+
+<a id="type-AsyncServiceCapabilitiesType"></a>
+
+#### AsyncServiceCapabilitiesType  (i=70000)
+
+*Inherits from:* [BaseObjectType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.2)
+
+Server-wide deferral limits and capabilities, exposed as the AsyncServiceCapabilities component of ServerCapabilities. Its absence is how a Server says it never defers a request, so a Client learns that from one Browse rather than from a Bad_RequestNotComplete it did not expect.
+
+| BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
+|---|---|---|---|---|---|
+| MaxDeferredRequests | Variable | UInt32 | Mandatory | AsyncServiceCapabilitiesType | The greatest number of parked responses the Server holds at one time, across every Session. A request that would take the Server past this number is answered synchronously or refused with Bad_TooManyDeferredRequests; it is never silently dropped. |
+| MaxDeferredRequestsPerSession | Variable | UInt32 | Mandatory | AsyncServiceCapabilitiesType | The greatest number of parked responses the Server holds for one Session. It bounds one Session and nothing wider: a Client may open as many Sessions as MaxSessions allows, so this Property is not by itself a bound on what one user can reserve, and isolating users from one another is a Server matter this model does not describe. |
+| MaxDeferralTime | Variable | [Duration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.13) | Mandatory | AsyncServiceCapabilitiesType | The longest a Server holds a parked response before discarding it. It starts when the request is parked, not when the response becomes ready, so a Client can compute the deadline from the moment it receives Bad_RequestNotComplete. |
+| DefaultRetryAfter | Variable | [Duration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.13) | Mandatory | AsyncServiceCapabilitiesType | The interval a Client waits before each Complete when it cannot read the DeferralResponseHeaderDataType carried in ResponseHeader.additionalHeader. It is never below MinRetryAfter, so a Client that can read nothing else is never throttled for obeying the only value available to it. Every Client can read this Property, so the retry contract does not depend on a header that a stack may discard with the fault that carries it. |
+| MinRetryAfter | Variable | [Duration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.13) | Mandatory | AsyncServiceCapabilitiesType | The shortest interval the Server accepts between two Complete calls for the same parked request. A Client that calls more often is refused with Bad_ServerTooBusy. Without a published floor, a Client that ignores RetryAfter turns a deferral into a poll loop against the very Server that deferred because it was busy. |
+| DeferrableServices | Variable | [NodeId](https://reference.opcfoundation.org/specs/OPC-10000-3/8.2)\[\] | Mandatory | AsyncServiceCapabilitiesType | The DataType NodeIds of the request messages this Server may defer, listed exhaustively. A Service absent from the list is never deferred, so a Client knows before it calls whether an answer can arrive late. |
+
+<a id="type-AsyncServiceDiagnosticsType"></a>
+
+#### AsyncServiceDiagnosticsType  (i=70001)
+
+*Inherits from:* [BaseObjectType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.2)
+
+Counters and per-request records for deferred requests, exposed as the AsyncServiceDiagnostics component of ServerDiagnostics. It is what an operator reads to tell a Server that is slow from a Server whose Clients never collect what they asked for.
+
+| BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
+|---|---|---|---|---|---|
+| DeferredRequestCount | Variable | UInt32 | Mandatory | AsyncServiceDiagnosticsType | The number of parked responses the Server currently holds, in any state. |
+| TotalDeferredCount | Variable | [Counter](https://reference.opcfoundation.org/specs/OPC-10000-3/8.11) | Mandatory | AsyncServiceDiagnosticsType | The number of requests the Server has parked since it started. |
+| CompletedCount | Variable | [Counter](https://reference.opcfoundation.org/specs/OPC-10000-3/8.11) | Mandatory | AsyncServiceDiagnosticsType | The number of parked responses collected by a Complete since the Server started. |
+| ExpiredCount | Variable | [Counter](https://reference.opcfoundation.org/specs/OPC-10000-3/8.11) | Mandatory | AsyncServiceDiagnosticsType | The number of parked responses discarded because MaxDeferralTime elapsed before they were collected. A rising count is the signature of Clients that defer and never return. |
+| CancelledCount | Variable | [Counter](https://reference.opcfoundation.org/specs/OPC-10000-3/8.11) | Mandatory | AsyncServiceDiagnosticsType | The number of parked responses abandoned with Cancel since the Server started. |
+| RejectedCount | Variable | [Counter](https://reference.opcfoundation.org/specs/OPC-10000-3/8.11) | Mandatory | AsyncServiceDiagnosticsType | The number of requests refused with Bad_TooManyDeferredRequests because a parking limit would have been exceeded. |
+| DeferredRequests | Variable | [DeferredRequestDiagnosticsDataType](#type-DeferredRequestDiagnosticsDataType)\[\] | Mandatory | AsyncServiceDiagnosticsType | One record per parked response the reading Session issued. Empty when it holds none. It names who is running what long operation and when, so it carries the EncryptionRequired AccessRestriction and is projected per Session. |
+
+### Event types
+
+<a id="type-DeferredRequestCompletedEventType"></a>
+
+#### DeferredRequestCompletedEventType  (i=70010)
+
+*Inherits from:* [BaseEventType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.4)
+
+Raised when a parked response becomes ready to collect. A Client that subscribes to it calls Complete once, when there is something to collect, instead of polling until there is; a Client that cannot subscribe is unaffected, because RetryAfter remains the contract.
+
+| BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
+|---|---|---|---|---|---|
+| RequestHandle | Variable | [IntegerId](https://reference.opcfoundation.org/specs/OPC-10000-4/7.19) | Mandatory | DeferredRequestCompletedEventType | The requestHandle of the parked request, as the Client sent it in the RequestHeader. It is the only identifier the mechanism uses, so a Client keys the Event to its own outstanding work without holding a Server-assigned ticket. |
+| ServiceId | Variable | [NodeId](https://reference.opcfoundation.org/specs/OPC-10000-3/8.2) | Mandatory | DeferredRequestCompletedEventType | The DataType NodeId of the parked request message, so a Client that deferred several different Services can tell which one completed. |
+| ServiceResult | Variable | [StatusCode](https://reference.opcfoundation.org/specs/OPC-10000-4/7.38) | Mandatory | DeferredRequestCompletedEventType | The service-level serviceResult the parked response carries. For a Service whose response holds per-operation results it says the request was processed, not that every operation in it succeeded. |
+| CompletionTime | Variable | [UtcTime](https://reference.opcfoundation.org/specs/OPC-10000-3/8.37) | Mandatory | DeferredRequestCompletedEventType | When the response became ready. |
+| ExpiryTime | Variable | [UtcTime](https://reference.opcfoundation.org/specs/OPC-10000-3/8.37) | Mandatory | DeferredRequestCompletedEventType | When the Server discards the parked response. A Client has until this time to call Complete. |
+
+<a id="type-AuditDeferredRequestEventType"></a>
+
+#### AuditDeferredRequestEventType  (i=70011)
+
+*Inherits from:* [AuditSessionEventType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.4)
+
+Audit event for every transition of a parked request. A deferred request separates the moment an effect is authorized from the moment its outcome is known, and the Client that authorized it may never collect the answer, so the audit trail is the only record that spans both. It follows AuditCancelEventType, which is likewise an AuditSessionEventType carrying a requestHandle. It names the Session and the user behind every parked request, so it is delivered only to Sessions authorized to audit.
+
+| BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
+|---|---|---|---|---|---|
+| RequestHandle | Variable | [IntegerId](https://reference.opcfoundation.org/specs/OPC-10000-4/7.19) | Mandatory | AuditDeferredRequestEventType | The requestHandle of the request this transition belongs to. |
+| ServiceId | Variable | [NodeId](https://reference.opcfoundation.org/specs/OPC-10000-3/8.2) | Mandatory | AuditDeferredRequestEventType | The DataType NodeId of the deferred request message. |
+| Transition | Variable | [DeferredRequestTransition](#type-DeferredRequestTransition) | Mandatory | AuditDeferredRequestEventType | The transition being reported. |
+| Outcome | Variable | [StatusCode](https://reference.opcfoundation.org/specs/OPC-10000-4/7.38) | Mandatory | AuditDeferredRequestEventType | The serviceResult of the parked response for a Delivered transition, and for an Expired transition whose work had finished. It is the refusing StatusCode for a Denied transition, and Good_CompletesAsynchronously wherever the outcome is not yet known: a Deferred transition, and an Expired transition for a request whose work had not finished. It is the service result, not the audit result: the inherited Status Property says whether the audited action succeeded, which is a different question from what the deferred Service returned. |
+
+### Data types
+
+<a id="type-DeferredRequestState"></a>
+
+#### DeferredRequestState  (i=70030)
+
+*Subtype of:* [Enumeration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.14)
+
+The state of a parked request. Delivered, Expired and Cancelled are terminal records rather than live requests: a Server keeps them so that Complete can say why there is nothing new to collect, and so that a response lost on the network can be collected again.
+
+| Name | Value | Description |
+|---|---|---|
+| Executing | 0 | The Server is still working on the request. Complete returns Bad_RequestNotComplete. |
+| Ready | 1 | The response is complete and parked. The next Complete returns it. |
+| Expired | 2 | The response deadline passed before the response was collected and the Server discarded it. Complete returns Bad_DeferredRequestExpired. |
+| Cancelled | 3 | The Client abandoned the response with Cancel. Complete returns Bad_RequestCancelledByRequest. |
+| Delivered | 4 | The response was collected and is retained for replay until the response deadline. A Complete returns the same response again, so a Client that lost it to a broken connection is not left with an effect whose outcome it can never learn. |
+
+<a id="type-DeferredRequestTransition"></a>
+
+#### DeferredRequestTransition  (i=70031)
+
+*Subtype of:* [Enumeration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.14)
+
+The transitions of a parked request, as reported by AuditDeferredRequestEventType. They are transitions rather than states because Continued and Denied are actions that leave the state unchanged, and an audit trail that recorded only states would not show that a Client asked, or that one was turned away.
+
+| Name | Value | Description |
+|---|---|---|
+| Deferred | 0 | The Server parked the request and answered Bad_RequestNotComplete. |
+| Continued | 1 | A Client called Complete and the response was not yet ready. |
+| Delivered | 2 | A Client collected the parked response, or collected it again by replay. |
+| Denied | 3 | A Complete was refused because the calling Session was not the one that parked the request, or because the SecureChannel was too weak to carry the response. It is what makes a campaign of handle probing visible; a call refused by the retry floor is not a Denied transition, because it never examined the request. |
+| Cancelled | 4 | A Client abandoned the parked response with Cancel. |
+| Expired | 5 | The Server discarded the parked response because the response deadline passed. |
+| Completed | 6 | The work finished and its outcome became known. It is raised even when no response is held any longer, which is the only way the outcome of a request that outlived its response deadline reaches the audit trail. |
+| Discarded | 7 | The Server discarded the parked response before its response deadline because the issuing Session closed, its user identity changed, or the Server shut down. |
+
+<a id="type-DeferralRequestHeaderDataType"></a>
+
+#### DeferralRequestHeaderDataType  (i=70032)
+
+*Subtype of:* [Structure](https://reference.opcfoundation.org/specs/OPC-10000-3/8.32)
+
+Carried in RequestHeader.additionalHeader, where its presence is how a Client says it understands deferral. A Server defers only a request that carries it, so a Client that has never heard of this specification is answered exactly as it is answered today. Its members are preferences and never preconditions: a request that carries the structure may still be answered synchronously.
+
+| Field | DataType | Description |
+|---|---|---|
+| RequestedDeferralTime | [Duration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.13) | How long the Client would like the response held. The Server revises it down to MaxDeferralTime and never up. 0 means no preference and selects MaxDeferralTime. |
+
+<a id="type-DeferralResponseHeaderDataType"></a>
+
+#### DeferralResponseHeaderDataType  (i=70033)
+
+*Subtype of:* [Structure](https://reference.opcfoundation.org/specs/OPC-10000-3/8.32)
+
+Carried in ResponseHeader.additionalHeader of every response that reports a request as parked. Because a Bad serviceResult travels as a ServiceFault, this structure is the only place a per-request hint can ride; the Client that cannot read it falls back on DefaultRetryAfter, which every Client can read.
+
+| Field | DataType | Description |
+|---|---|---|
+| RequestHandle | [IntegerId](https://reference.opcfoundation.org/specs/OPC-10000-4/7.19) | Echo of the requestHandle that identifies the parked request. It is echoed rather than assumed so that a Client whose stack does not surface the RequestHeader it sent can still key the parked request. |
+| RetryAfter | [Duration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.13) | How long to wait before the next Complete. Never below MinRetryAfter. |
+| ExpiryTime | [UtcTime](https://reference.opcfoundation.org/specs/OPC-10000-3/8.37) | When the Server discards the parked response. |
+| EstimatedCompletionTime | [UtcTime](https://reference.opcfoundation.org/specs/OPC-10000-3/8.37) | The Server's estimate of when the response will be ready, or a null DateTime when it cannot estimate. It is a forecast and never a commitment; ExpiryTime is the only deadline that binds. |
+
+<a id="type-DeferredRequestDiagnosticsDataType"></a>
+
+#### DeferredRequestDiagnosticsDataType  (i=70034)
+
+*Subtype of:* [Structure](https://reference.opcfoundation.org/specs/OPC-10000-3/8.32)
+
+One parked request, as reported by AsyncServiceDiagnostics. CompleteCount and StartTime are the two that matter in practice: together they separate a Client that is waiting patiently from one that is polling a Server it was asked not to.
+
+| Field | DataType | Description |
+|---|---|---|
+| SessionId | [NodeId](https://reference.opcfoundation.org/specs/OPC-10000-3/8.2) | The Session that issued the request. |
+| RequestHandle | [IntegerId](https://reference.opcfoundation.org/specs/OPC-10000-4/7.19) | The requestHandle that identifies the parked request within that Session. |
+| ServiceId | [NodeId](https://reference.opcfoundation.org/specs/OPC-10000-3/8.2) | The DataType NodeId of the parked request message. |
+| State | [DeferredRequestState](#type-DeferredRequestState) | The state of the parked request. |
+| StartTime | [UtcTime](https://reference.opcfoundation.org/specs/OPC-10000-3/8.37) | When the Server parked the request. |
+| ExpiryTime | [UtcTime](https://reference.opcfoundation.org/specs/OPC-10000-3/8.37) | When the Server discards the parked response. |
+| CompleteCount | UInt32 | How many times a Client has called Complete for this request. A call refused with Bad_ServerTooBusy is not counted, because it never examined the request. |
+
+<a id="type-CompleteRequest"></a>
+
+#### CompleteRequest  (i=70035)
+
+*Subtype of:* [Structure](https://reference.opcfoundation.org/specs/OPC-10000-3/8.32)
+
+The Complete Service request. Its DataType NodeId is what AsyncServiceCapabilities.DeferrableServices uses to name a Service, and Complete itself is never deferrable.
+
+| Field | DataType | Description |
+|---|---|---|
+| RequestHeader | [RequestHeader](https://reference.opcfoundation.org/specs/OPC-10000-4/7.32) | Common request parameters. |
+| RequestHandle | [IntegerId](https://reference.opcfoundation.org/specs/OPC-10000-4/7.19) | The requestHandle of the parked request, as it appeared in the RequestHeader of the deferred request. |
+
+<a id="type-CompleteResponse"></a>
+
+#### CompleteResponse  (i=70036)
+
+*Subtype of:* [Structure](https://reference.opcfoundation.org/specs/OPC-10000-3/8.32)
+
+The Complete Service response, returned when the parked response is itself a failure. A successful Complete for a parked request that succeeded is answered with the parked Service's own response message instead; a Complete that fails on its own account travels as a ServiceFault. This message is what keeps those two apart, which a bare ServiceFault could not: a parked ApplyChanges that failed and a Complete that arrived too soon would otherwise be the same message.
+
+| Field | DataType | Description |
+|---|---|---|
+| ResponseHeader | [ResponseHeader](https://reference.opcfoundation.org/specs/OPC-10000-4/7.33) | Common response parameters. Its serviceResult is Good: the Complete succeeded, whatever the parked Service returned. |
+| DeferredServiceResult | [StatusCode](https://reference.opcfoundation.org/specs/OPC-10000-4/7.38) | The serviceResult of the parked response. Always a Bad StatusCode; a parked response with a Good serviceResult is returned as the parked Service's own response message. |
+| DeferredDiagnosticInfo | [DiagnosticInfo](https://reference.opcfoundation.org/specs/OPC-10000-4/7.8) | The serviceDiagnostics the parked response carried, whose string table is the ResponseHeader's. |
+
+### Well-known instances
+
+| BrowseName | NodeId | TypeDefinition | Parent | Note |
+|---|---|---|---|---|
+| AsyncServiceCapabilities | i=70100 | [AsyncServiceCapabilitiesType](#type-AsyncServiceCapabilitiesType) | ServerCapabilities (i=2268) | Server-wide deferral capabilities. Its absence is how a Server says it never defers a request. |
+| AsyncServiceDiagnostics | i=70101 | [AsyncServiceDiagnosticsType](#type-AsyncServiceDiagnosticsType) | ServerDiagnostics (i=2274) | Deferred request counters and the per-request records of the reading Session. |
