@@ -1266,6 +1266,8 @@ Two practical consequences:
 
 A Server declares conformance by exposing `AiRootType` under the Server object with `SpecificationVersion` set to the release it implements.
 
+The NodeSet assigns every Node to one of three conformance units: `AiModelManagement` for the ObjectTypes and their members, `AiModelManagement DataTypes` for the structures and enumerations, and `AiModelManagement ReferenceTypes` for the references. The facets below are expressed over those Nodes, so a Server claiming a facet implements the units the facet's members belong to.
+
 Facets are **additive and independent** except where a row states otherwise, and only one dependency exists: **AI-Import** requires **AI-Catalogue**, because an import job with nothing to import from is not implementable.
 
 The split matters more here than in a smaller model, because the plausible Servers differ enormously — a device running one fixed model, a gateway calling a hosted one, and a plant MLOps node that may never call `Invoke` at all are three different products rather than three degrees of completeness of one. §13.3 names them as profiles. A single monolithic conformance claim would have made two of the three unclaimable.

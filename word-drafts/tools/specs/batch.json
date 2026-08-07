@@ -6,7 +6,9 @@
     "schema-registry",
     "generators",
     "data-channels",
-    "arrow-encoding"
+    "arrow-encoding",
+    "vision",
+    "ai-model-management"
   ],
   "ready": [],
   "notAFit": [

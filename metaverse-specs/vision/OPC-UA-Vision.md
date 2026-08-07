@@ -995,6 +995,8 @@ A claim **shall** be discoverable. A Server **shall** add the URI of each facet 
 
 Where a facet's row names members, a Server claiming it **shall** instantiate every named member on every instance of the stated type — an Optional ModellingRule in the model becomes mandatory under the facet that names it. Where a row names a clause, every **shall** in that clause applies.
 
+The NodeSet assigns every Node to one of three conformance units: `Vision` for the ObjectTypes and their members, `Vision DataTypes` for the structures and enumerations, and `Vision ReferenceTypes` for the references. The facets below are expressed over those Nodes, so a Server claiming a facet implements the units the facet's members belong to.
+
 ### 11.2 Facets
 
 | Facet | Requires |
