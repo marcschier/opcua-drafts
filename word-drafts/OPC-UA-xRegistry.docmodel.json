@@ -2917,6 +2917,58 @@
         }
       },
       {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The AddressSpace figures in this document use the OPC UA graphical notation of OPC 10000-3. A Node of an instance NodeClass — Object, Variable or View — is a plain rectangle, a Method is a rounded rectangle, and a type — ObjectType, VariableType, ReferenceType or DataType — is a rectangle standing on a shadow. An abstract type is set in "
+          },
+          {
+            "r": "t",
+            "text": "italics",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": ", and a Node whose BrowseName is a placeholder is written in angle brackets. A "
+          },
+          {
+            "r": "code",
+            "text": "HasTypeDefinition"
+          },
+          {
+            "r": "t",
+            "text": " reference carries a solid arrowhead; a "
+          },
+          {
+            "r": "code",
+            "text": "HasComponent"
+          },
+          {
+            "r": "t",
+            "text": " reference is the plain unlabelled arrow; every other ReferenceType is drawn with its BrowseName on the arrow. A figure shows the part of the model its clause describes, never the whole of it."
+          }
+        ],
+        "src": {
+          "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
+          "s": "6 Information model",
+          "b": 1
+        }
+      },
+      {
+        "t": "figure",
+        "id": "fig-xreg-notation",
+        "caption": "Graphical notation used by the AddressSpace figures",
+        "source": "mermaid",
+        "mermaid": "flowchart LR\n  OBJ[Object, Variable or View]:::object\n  MTH(Method):::method\n  TYP[[ObjectType or VariableType]]:::objecttype\n  ABS[[abstract type]]:::objecttype,abstract\n  PH[&lt;Placeholder&gt;]:::object\n  TYP ==> ABS\n  OBJ --> MTH\n  OBJ -->|Organizes| PH\n\n  classDef object fill:#eef3fa,stroke:#444\n  classDef method fill:#eef3fa,stroke:#444\n  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px\n  classDef abstract fill:#eef3fa,stroke:#444,stroke-width:2px,font-style:italic",
+        "src": {
+          "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
+          "s": "6 Information model",
+          "b": 2
+        }
+      },
+      {
         "t": "clause",
         "id": "c6-5",
         "title": "Common xRegistry attributes",
@@ -4956,6 +5008,48 @@
         }
       },
       {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The registry root, its Mandatory identifier, its two creation Methods and the group placeholder:"
+          }
+        ],
+        "src": {
+          "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
+          "s": "6.1 RegistryType",
+          "b": 1
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "<!-- model-figure: root=ns=1;i=63000 require=mandatory external=FolderType -->"
+          }
+        ],
+        "src": {
+          "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
+          "s": "6.1 RegistryType",
+          "b": 2
+        }
+      },
+      {
+        "t": "figure",
+        "id": "fig-xreg-root",
+        "caption": "The registry root and the group placeholder",
+        "source": "mermaid",
+        "mermaid": "flowchart TD\n  FOLDER[[FolderType]]:::objecttype\n  REG[[RegistryType]]:::objecttype\n  RID[RegistryId]:::variable\n  GRP[&lt;Group&gt;]:::object\n  GRPT[[GroupType]]:::objecttype\n  CREATE(CreateGroup):::method\n  GETCREATE(GetOrCreateGroup):::method\n\n  FOLDER -->|HasSubtype| REG\n  REG -->|HasProperty| RID\n  REG -->|Organizes| GRP\n  GRP ==> GRPT\n  REG --> CREATE\n  REG --> GETCREATE\n\n  classDef object fill:#eef3fa,stroke:#444\n  classDef variable fill:#eef3fa,stroke:#444\n  classDef method fill:#eef3fa,stroke:#444\n  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px",
+        "src": {
+          "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
+          "s": "6.1 RegistryType",
+          "b": 3
+        }
+      },
+      {
         "t": "nodetable",
         "id": "c7-1-tab",
         "caption": "RegistryType definition",
@@ -5192,6 +5286,48 @@
           "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
           "s": "6.2 GroupType",
           "b": 0
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "A group holds resources the same way a registry holds groups, and a resource is a file:"
+          }
+        ],
+        "src": {
+          "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
+          "s": "6.2 GroupType",
+          "b": 1
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "<!-- model-figure: root=ns=1;i=63001 require=mandatory external=FolderType,FileType -->"
+          }
+        ],
+        "src": {
+          "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
+          "s": "6.2 GroupType",
+          "b": 2
+        }
+      },
+      {
+        "t": "figure",
+        "id": "fig-xreg-group",
+        "caption": "A group, its resources and the file they are",
+        "source": "mermaid",
+        "mermaid": "flowchart TD\n  FOLDER[[FolderType]]:::objecttype\n  GRPT[[GroupType]]:::objecttype\n  GID[GroupId]:::variable\n  GNAME[Name]:::variable\n  RES[&lt;Resource&gt;]:::object\n  REST[[ResourceType]]:::objecttype\n  FILE[[FileType]]:::objecttype\n  CREATE(CreateResource):::method\n  DELETE(Delete):::method\n\n  FOLDER -->|HasSubtype| GRPT\n  GRPT -->|HasProperty| GID\n  GRPT -->|HasProperty| GNAME\n  GRPT -->|Organizes| RES\n  RES ==> REST\n  FILE -->|HasSubtype| REST\n  GRPT --> CREATE\n  GRPT --> DELETE\n\n  classDef object fill:#eef3fa,stroke:#444\n  classDef variable fill:#eef3fa,stroke:#444\n  classDef method fill:#eef3fa,stroke:#444\n  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px",
+        "src": {
+          "f": "core-specs/xregistry/OPC-UA-xRegistry.md",
+          "s": "6.2 GroupType",
+          "b": 3
         }
       },
       {

@@ -128,13 +128,90 @@ Registry reads should use a secured channel. An implementation may expose read-o
 
 The abstract base namespace is `http://opcfoundation.org/UA/xRegistry/`. Draft numeric NodeIds use the provisional `63000+` block; final NodeIds are assigned by the OPC Foundation. The four base ObjectTypes and their members are the normative node reference in Annex A. This clause describes their intent. Every Variable in the model has an explicit TypeDefinition: fixed attributes are `PropertyType` Variables, and each dynamic label is a `PropertyType` Variable under an `AttributesType` container (§6.6). A server **shall** set each group's, resource's and version's BrowseName to its identifier (`GroupId` / `ResourceId` / `VersionId`) so a client selects and filters entities directly from Browse results without a Read per candidate; the [*xRegistry — OPC UA API*](xRegistry-OPC-UA-Api.md) relies on this for read-free collection filtering. §6.9 defines how a `GroupId` and a `ResourceId` are constructed and requires a human-readable `Name` beside each.
 
+The AddressSpace figures in this document use the OPC UA graphical notation of OPC 10000-3. A Node of an instance NodeClass — Object, Variable or View — is a plain rectangle, a Method is a rounded rectangle, and a type — ObjectType, VariableType, ReferenceType or DataType — is a rectangle standing on a shadow. An abstract type is set in *italics*, and a Node whose BrowseName is a placeholder is written in angle brackets. A `HasTypeDefinition` reference carries a solid arrowhead; a `HasComponent` reference is the plain unlabelled arrow; every other ReferenceType is drawn with its BrowseName on the arrow. A figure shows the part of the model its clause describes, never the whole of it.
+
+```mermaid
+flowchart LR
+  OBJ[Object, Variable or View]:::object
+  MTH(Method):::method
+  TYP[[ObjectType or VariableType]]:::objecttype
+  ABS[[abstract type]]:::objecttype,abstract
+  PH[&lt;Placeholder&gt;]:::object
+  TYP ==> ABS
+  OBJ --> MTH
+  OBJ -->|Organizes| PH
+
+  classDef object fill:#eef3fa,stroke:#444
+  classDef method fill:#eef3fa,stroke:#444
+  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px
+  classDef abstract fill:#eef3fa,stroke:#444,stroke-width:2px,font-style:italic
+```
+
 ### 6.1 RegistryType
 
 `RegistryType` is a subtype of `FolderType` and is the registry root — a folder that organizes the groups it contains. It creates a group through its `CreateGroup` Method (or the idempotent `GetOrCreateGroup`); a group is removed with the group's own `Delete` Method. Its Properties carry the registry-level xRegistry attributes: the Mandatory `RegistryId` and the optional `SpecVersion` (the xRegistry spec version), plus the common attributes of §6.4. The `Capabilities` document (xRegistry `/capabilities`) is exposed **two ways**: as a component `FileType` object (`Capabilities`, the raw JSON read with `Open`/`Read`/`Close`) and as a typed Variable (`CapabilitiesInfo`) of the `RegistryCapabilitiesDataType` Structure (§6.7) whose fixed fields a client reads in one Variant value without parsing JSON. The `Model` document (xRegistry `/model`) is exposed only as a `FileType` object, because the OPC UA AddressSpace type system (the ObjectTypes and their members) is the structural equivalent of the model, so no structured DataType is defined for it. Its `<Group>` OptionalPlaceholder declares that its folder members are `GroupType` instances. A domain registry subtypes `RegistryType` (for example `SchemaRegistryType`) and constrains `<Group>` to its own group type.
 
+The registry root, its Mandatory identifier, its two creation Methods and the group placeholder:
+
+<!-- model-figure: root=ns=1;i=63000 require=mandatory external=FolderType -->
+
+```mermaid
+flowchart TD
+  FOLDER[[FolderType]]:::objecttype
+  REG[[RegistryType]]:::objecttype
+  RID[RegistryId]:::variable
+  GRP[&lt;Group&gt;]:::object
+  GRPT[[GroupType]]:::objecttype
+  CREATE(CreateGroup):::method
+  GETCREATE(GetOrCreateGroup):::method
+
+  FOLDER -->|HasSubtype| REG
+  REG -->|HasProperty| RID
+  REG -->|Organizes| GRP
+  GRP ==> GRPT
+  REG --> CREATE
+  REG --> GETCREATE
+
+  classDef object fill:#eef3fa,stroke:#444
+  classDef variable fill:#eef3fa,stroke:#444
+  classDef method fill:#eef3fa,stroke:#444
+  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px
+```
+
 ### 6.2 GroupType
 
 `GroupType` is a subtype of `FolderType` and is a group folder — an entry of an xRegistry `GROUPS` collection. It carries the Mandatory `GroupId` and `Name` and the common attributes of §6.4, and its `<Resource>` OptionalPlaceholder declares that its members are `ResourceType` files, created through its `CreateResource` Method (or the idempotent `GetOrCreateResource`); a new version of an existing resource is created as a new sibling file keyed by `(ResourceId, VersionId)` through the same Method. The group is removed by its own `Delete(ExpectedEpoch: UInt32)` Method, which deletes the group together with the resources it contains; `ExpectedEpoch` provides the same optimistic-concurrency check as in §6.6 (non-zero and unequal to the group's `Epoch` → `Bad_InvalidState`, no change; `0` disables it). A domain group subtypes `GroupType` to add the **group key** — the group's source identity (§6.9), from which its `GroupId` is constructed: for example `SchemaGroupType` adds a Mandatory `NamespaceUri`.
+
+A group holds resources the same way a registry holds groups, and a resource is a file:
+
+<!-- model-figure: root=ns=1;i=63001 require=mandatory external=FolderType,FileType -->
+
+```mermaid
+flowchart TD
+  FOLDER[[FolderType]]:::objecttype
+  GRPT[[GroupType]]:::objecttype
+  GID[GroupId]:::variable
+  GNAME[Name]:::variable
+  RES[&lt;Resource&gt;]:::object
+  REST[[ResourceType]]:::objecttype
+  FILE[[FileType]]:::objecttype
+  CREATE(CreateResource):::method
+  DELETE(Delete):::method
+
+  FOLDER -->|HasSubtype| GRPT
+  GRPT -->|HasProperty| GID
+  GRPT -->|HasProperty| GNAME
+  GRPT -->|Organizes| RES
+  RES ==> REST
+  FILE -->|HasSubtype| REST
+  GRPT --> CREATE
+  GRPT --> DELETE
+
+  classDef object fill:#eef3fa,stroke:#444
+  classDef variable fill:#eef3fa,stroke:#444
+  classDef method fill:#eef3fa,stroke:#444
+  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px
+```
 
 ### 6.3 ResourceType
 

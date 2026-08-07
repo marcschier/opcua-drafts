@@ -83,6 +83,25 @@ Numeric NodeIds in namespace 1 are allocated as follows: ObjectTypes `1001–109
 
 ## 5 Information‑model architecture
 
+The AddressSpace figures in this document use the OPC UA graphical notation of OPC 10000-3. A Node of an instance NodeClass — Object, Variable or View — is a plain rectangle, a Method is a rounded rectangle, and a type — ObjectType, VariableType, ReferenceType or DataType — is a rectangle standing on a shadow. An abstract type is set in *italics*, and a Node whose BrowseName is a placeholder is written in angle brackets. A `HasTypeDefinition` reference carries a solid arrowhead; a `HasComponent` reference is the plain unlabelled arrow; every other ReferenceType is drawn with its BrowseName on the arrow. A figure shows the part of the model its clause describes, never the whole of it.
+
+```mermaid
+flowchart LR
+  OBJ[Object, Variable or View]:::object
+  MTH(Method):::method
+  TYP[[ObjectType or VariableType]]:::objecttype
+  ABS[[abstract type]]:::objecttype,abstract
+  PH[&lt;Placeholder&gt;]:::object
+  TYP ==> ABS
+  OBJ --> MTH
+  OBJ -->|Organizes| PH
+
+  classDef object fill:#eef3fa,stroke:#444
+  classDef method fill:#eef3fa,stroke:#444
+  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px
+  classDef abstract fill:#eef3fa,stroke:#444,stroke-width:2px,font-style:italic
+```
+
 ### 5.1 Composition of a generator set
 
 ```mermaid
@@ -126,6 +145,36 @@ The full member tables for every type are in **[Annex A](#annex-a)**. This claus
 ### 6.1 [GeneratorSetType](#type-GeneratorSetType)
 
 The central type. Mandatory content: `OperatingState` (a `GeneratorStateMachineType`), `OperatingMode`, the `Engine`, `Alternator` and `Controller` components, the `Identification` add‑in and a `Ratings` folder. Optional content: fuel/cooling/lubrication/starting subsystems, `EmissionsStandard`, `Application`, breaker and readiness signals (`GeneratorBreakerClosed`, `GeneratorBreakerAvailable`, `RemoteStartInput`, `RunRequest`, `LoadInhibit`, `AvailableToLoad`), and the Machinery building blocks. Methods: `Start` (no argument — starts in the current mode), `Stop`, `EmergencyStop`, `ResetFaults`, `SetOperatingMode`, `StartTest`. The type `GeneratesEvent` `GeneratorProtectionAlarmType`.
+
+The figure shows the Mandatory content — what a conforming generator set always has. The optional subsystems, signals and Methods listed above are omitted; Annex A carries the full member list.
+
+<!-- model-figure: root=ns=1;i=1001 require=mandatory external=DeviceType -->
+
+```mermaid
+flowchart TD
+  DEV[[DeviceType]]:::objecttype
+  GS[[GeneratorSetType]]:::objecttype
+  IDENT[Identification]:::object
+  STATE[OperatingState]:::object
+  MODE[OperatingMode]:::variable
+  ENGINE[Engine]:::object
+  ALT[Alternator]:::object
+  CTRL[Controller]:::object
+  RATINGS[Ratings]:::object
+
+  DEV -->|HasSubtype| GS
+  GS -->|HasAddIn| IDENT
+  GS --> STATE
+  GS --> MODE
+  GS --> ENGINE
+  GS --> ALT
+  GS --> CTRL
+  GS --> RATINGS
+
+  classDef object fill:#eef3fa,stroke:#444
+  classDef variable fill:#eef3fa,stroke:#444
+  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px
+```
 
 ### 6.2 [EngineType](#type-EngineType) and the CAN bus / SAE J1939 interface
 

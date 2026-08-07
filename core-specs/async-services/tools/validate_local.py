@@ -469,6 +469,24 @@ else:
                       f"({ENCRYPTION_REQUIRED}); the Part 5 errata clause 6 requires the "
                       "model to state the restriction its prose defines")
 
+# --- AddressSpace figures ---------------------------------------------------
+# Each `<!-- model-figure -->` diagram is re-derived from the NodeSet, so a figure that
+# draws a Node, a member or a Reference the model does not have fails here.
+_fig_spec = os.path.join(GEN, 'OPC-UA-Async-Services.md')
+_fig_tools = os.path.abspath(os.path.join(HERE, "..", "..", "..", "word-drafts", "tools"))
+if os.path.isdir(_fig_tools) and os.path.exists(_fig_spec):
+    if _fig_tools not in sys.path:
+        sys.path.insert(0, _fig_tools)
+    try:
+        from opcdocx import nodeset_diagram as _nd
+    except ImportError as _exc:
+        warnings.append(f"model-figure check skipped: {_exc}")
+    else:
+        try:
+            errors.extend(_nd.check_markdown(_fig_spec, XML))
+        except ValueError as _exc:
+            errors.append(f"model figure: {_exc}")
+
 # --- Report -----------------------------------------------------------------
 base_note = f"{len(UA)} ids" if UA is not None else "skipped (no local base table)"
 print(f"NodeSet nodes: {len(defined)}   CSV rows: {len(rows)}   "

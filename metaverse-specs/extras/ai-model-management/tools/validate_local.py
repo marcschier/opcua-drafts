@@ -689,6 +689,27 @@ def main() -> int:
     if not os.path.exists(NODESET):
         print(f"ERROR: missing {NODESET}")
         return 2
+
+    # AddressSpace figures must agree with the model they draw. A node table is generated
+    # from the NodeSet and cannot drift; a figure is authored, and a wrong arrow looks
+    # exactly like a right one, so every claim is re-derived from the model.
+    _tools = os.path.normpath(os.path.join(HERE, "..", "..", "..", "..",
+                                           "word-drafts", "tools"))
+    if os.path.isdir(_tools) and os.path.exists(SPEC):
+        if _tools not in sys.path:
+            sys.path.insert(0, _tools)
+        try:
+            from opcdocx import nodeset_diagram as _nd
+        except ImportError as _exc:
+            # The parser lives in the Word tooling, whose dependencies are optional here.
+            # A missing one is a skip, not a wrong figure; CI installs them so the gate runs.
+            print(f"note: model-figure check skipped: {_exc}")
+        else:
+            try:
+                for _msg in _nd.check_markdown(SPEC, NODESET):
+                    err(_msg)
+            except ValueError as _exc:
+                err(f"model figure: {_exc}")
     try:
         m = Model(NODESET)
     except ET.ParseError as exc:

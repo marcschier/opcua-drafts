@@ -121,6 +121,60 @@ On `Close` the server **auto-bootstraps** the schema-specific metadata in additi
 
 The companion namespace is `http://opcfoundation.org/UA/SchemaRegistry/`. Draft numeric NodeIds use the provisional `62000+` block; final NodeIds are assigned by the OPC Foundation. The three schema types subtype the abstract xRegistry base types (namespace `http://opcfoundation.org/UA/xRegistry/`, declared as a `<RequiredModel>`). The types and their members are the normative node reference in Annex A; this clause describes the schema-specific additions.
 
+The AddressSpace figures in this document use the OPC UA graphical notation of OPC 10000-3. A Node of an instance NodeClass — Object, Variable or View — is a plain rectangle, a Method is a rounded rectangle, and a type — ObjectType, VariableType, ReferenceType or DataType — is a rectangle standing on a shadow. An abstract type is set in *italics*, and a Node whose BrowseName is a placeholder is written in angle brackets. A `HasTypeDefinition` reference carries a solid arrowhead; a `HasComponent` reference is the plain unlabelled arrow; every other ReferenceType is drawn with its BrowseName on the arrow. A figure shows the part of the model its clause describes, never the whole of it.
+
+```mermaid
+flowchart LR
+  OBJ[Object, Variable or View]:::object
+  MTH(Method):::method
+  TYP[[ObjectType or VariableType]]:::objecttype
+  ABS[[abstract type]]:::objecttype,abstract
+  PH[&lt;Placeholder&gt;]:::object
+  TYP ==> ABS
+  OBJ --> MTH
+  OBJ -->|Organizes| PH
+
+  classDef object fill:#eef3fa,stroke:#444
+  classDef method fill:#eef3fa,stroke:#444
+  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px
+  classDef abstract fill:#eef3fa,stroke:#444,stroke-width:2px,font-style:italic
+```
+
+The three types narrow the xRegistry base to schemas: a registry of groups, a group keyed by an OPC UA namespace, and a schema file identified by its `SchemaId`.
+
+<!-- model-figure: root=ns=2;i=62000 require=mandatory external=RegistryType,GroupType,ResourceType -->
+
+```mermaid
+flowchart TD
+  BREG[[RegistryType]]:::objecttype
+  BGRP[[GroupType]]:::objecttype
+  BRES[[ResourceType]]:::objecttype
+  REG[[SchemaRegistryType]]:::objecttype
+  GRP[[SchemaGroupType]]:::objecttype
+  FILE[[SchemaFileType]]:::objecttype
+  SG[&lt;SchemaGroup&gt;]:::object
+  SCH[&lt;Schema&gt;]:::object
+  NSURI[NamespaceUri]:::variable
+  SID[SchemaId]:::variable
+  GET(GetSchema):::method
+
+  BREG -->|HasSubtype| REG
+  BGRP -->|HasSubtype| GRP
+  BRES -->|HasSubtype| FILE
+  REG --> SG
+  REG --> GET
+  SG ==> GRP
+  GRP -->|HasProperty| NSURI
+  GRP --> SCH
+  SCH ==> FILE
+  FILE -->|HasProperty| SID
+
+  classDef object fill:#eef3fa,stroke:#444
+  classDef variable fill:#eef3fa,stroke:#444
+  classDef method fill:#eef3fa,stroke:#444
+  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px
+```
+
 ### 6.1 SchemaRegistryType
 
 `SchemaRegistryType` is a subtype of the base `RegistryType` (itself a `FolderType`). It is exposed as one well-known `SchemaRegistry` Object as a `HasComponent` of the `Server` Object (`i=2253`), so **any** Client that can reach the standard `Server` object discovers schema resolution, independent of whether the Server implements PubSub. A Server that also implements Part 14 PubSub **may** additionally add a reference from its `PublishSubscribe` Object to the same `SchemaRegistry` Object so PubSub clients find it in the familiar place, parallel to the Security Key Service (Annex C); that reference is optional and adds no dependency. Its `<SchemaGroup>` OptionalPlaceholder constrains the base `<Group>` to `SchemaGroupType`. It adds the `GetSchema` Method (§6.4) as the method form of the SchemaId fast path. The well-known `SchemaRegistry` Object **materializes** its `GetSchema` Method as a concrete Method node (as the Part 14 `PublishSubscribe` Object declares its methods), so the generated NodeSet yields a callable registry; a Server binds the Method handler and the Opaque-`SchemaId`-NodeId resolution to its schema store. Registration uses the base `CreateResource` Method and `Write` (§5.2); no bespoke register Method is required.

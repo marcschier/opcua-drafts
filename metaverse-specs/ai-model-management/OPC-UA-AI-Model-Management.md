@@ -363,7 +363,75 @@ The consequence for a reader: every member of `ModelType` is about *this* artefa
 
 ## 6 Information model
 
+The AddressSpace figures in this document use the OPC UA graphical notation of OPC 10000-3. A Node of an instance NodeClass — Object, Variable or View — is a plain rectangle, a Method is a rounded rectangle, and a type — ObjectType, VariableType, ReferenceType or DataType — is a rectangle standing on a shadow. An abstract type is set in *italics*, and a Node whose BrowseName is a placeholder is written in angle brackets. A `HasTypeDefinition` reference carries a solid arrowhead; a `HasComponent` reference is the plain unlabelled arrow; every other ReferenceType is drawn with its BrowseName on the arrow. A figure shows the part of the model its clause describes, never the whole of it.
+
+```mermaid
+flowchart LR
+  OBJ[Object, Variable or View]:::object
+  MTH(Method):::method
+  TYP[[ObjectType or VariableType]]:::objecttype
+  ABS[[abstract type]]:::objecttype,abstract
+  PH[&lt;Placeholder&gt;]:::object
+  TYP ==> ABS
+  OBJ --> MTH
+  OBJ -->|Organizes| PH
+
+  classDef object fill:#eef3fa,stroke:#444
+  classDef method fill:#eef3fa,stroke:#444
+  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px
+  classDef abstract fill:#eef3fa,stroke:#444,stroke-width:2px,font-style:italic
+```
+
 ### 6.1 Type hierarchy
+
+The root holds the containers a client browses. `Models` and `Deployments` are Mandatory — a Server that manages no models has nothing to expose here; the rest are Optional:
+
+<!-- model-figure: root=ns=2;i=1001 require=mandatory external=BaseObjectType -->
+
+```mermaid
+flowchart TD
+  BOT[[BaseObjectType]]:::objecttype,abstract
+  ROOT[[AiRootType]]:::objecttype
+  VER[SpecificationVersion]:::variable
+  MODELS[Models]:::object
+  DEPLOY[Deployments]:::object
+  DATASETS[Datasets]:::object
+  JOBS[Jobs]:::object
+
+  BOT -->|HasSubtype| ROOT
+  ROOT -->|HasProperty| VER
+  ROOT --> MODELS
+  ROOT --> DEPLOY
+  ROOT --> DATASETS
+  ROOT --> JOBS
+
+  classDef object fill:#eef3fa,stroke:#444
+  classDef variable fill:#eef3fa,stroke:#444
+  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px
+  classDef abstract fill:#eef3fa,stroke:#444,stroke-width:2px,font-style:italic
+```
+
+Every job is a Part 10 program, and the abstract base carries what every job has:
+
+<!-- model-figure: root=ns=2;i=1006 require=mandatory external=ProgramStateMachineType -->
+
+```mermaid
+flowchart TD
+  PSM[[ProgramStateMachineType]]:::objecttype
+  JOB[[AiJobType]]:::objecttype,abstract
+  JOBID[JobId]:::variable
+  IMPORT[[ModelImportJobType]]:::objecttype
+  INFER[[InferenceJobType]]:::objecttype
+
+  PSM -->|HasSubtype| JOB
+  JOB -->|HasProperty| JOBID
+  JOB -->|HasSubtype| IMPORT
+  JOB -->|HasSubtype| INFER
+
+  classDef variable fill:#eef3fa,stroke:#444
+  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px
+  classDef abstract fill:#eef3fa,stroke:#444,stroke-width:2px,font-style:italic
+```
 
 | Type | NodeId | Subtype of |
 |---|---|---|
@@ -1197,6 +1265,8 @@ Two practical consequences:
 ### 13.1 Declaring conformance
 
 A Server declares conformance by exposing `AiRootType` under the Server object with `SpecificationVersion` set to the release it implements.
+
+The NodeSet assigns every Node to one of three conformance units: `AiModelManagement` for the ObjectTypes and their members, `AiModelManagement DataTypes` for the structures and enumerations, and `AiModelManagement ReferenceTypes` for the references. The facets below are expressed over those Nodes, so a Server claiming a facet implements the units the facet's members belong to.
 
 Facets are **additive and independent** except where a row states otherwise, and only one dependency exists: **AI-Import** requires **AI-Catalogue**, because an import job with nothing to import from is not implementable.
 

@@ -778,6 +778,16 @@
       "pptx": "Observability-Fig2-AddressSpace.pptx"
     },
     {
+      "id": "fig-obs-notation",
+      "caption": "Graphical notation used by the AddressSpace figures",
+      "pptx": "Observability-FigNotation.pptx"
+    },
+    {
+      "id": "fig-obs-bindingtypes",
+      "caption": "Binding groups, bindings and the items they bind",
+      "pptx": "Observability-FigBindingTypes.pptx"
+    },
+    {
       "id": "fig-obs-bounditem",
       "caption": "BoundItemType and its subtypes",
       "pptx": "Observability-Fig3-BoundItem.pptx"

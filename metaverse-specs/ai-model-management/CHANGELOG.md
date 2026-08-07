@@ -4,6 +4,10 @@ All notable changes to this specification and its information model.
 
 ## Unreleased
 
+### Conformance units named in the specification
+
+§13.1 names the three conformance units the NodeSet assigns its Nodes to — `AiModelManagement`, `AiModelManagement DataTypes` and `AiModelManagement ReferenceTypes` — and says the facets are expressed over those Nodes. The units were always in the NodeSet; the document never named them, so a reader could not tell which unit a facet's members belonged to. No Node changes and the release version does not move.
+
 ### Profiles
 
 Clause 13 has been titled *Profiles and conformance units* since 0.1.0 and defined only facets. §13.3 defines four profiles and §13.4 gives their URIs. The information model does not change, so the release version does not move: profiles are published through the base-UA `Server/ServerCapabilities/ServerProfileArray` and need no member.
