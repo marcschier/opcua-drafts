@@ -532,7 +532,10 @@ enum_type(3009, "IntentFailureEnum",
            ("Other", 18, "A reason none of the above describes; see Message."),
            ("SafetyLimitExceeded", 19,
             "Refused because the request would exceed a limit the safety system is "
-            "enforcing. See clause 10.3.")])
+            "enforcing. See clause 10.3."),
+           ("NoTransition", 20,
+            "A mission branch point had no true outgoing transition, or the selected "
+            "transition target did not resolve. See clause 7.4.")])
 IntentFailureEnum = T(3009)
 
 enum_type(3010, "StopModeEnum",

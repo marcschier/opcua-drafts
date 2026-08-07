@@ -323,11 +323,13 @@ Two of these deserve their reasoning stated.
 
 ### 5.7.0 What the controller itself reports
 
-Four members of `IntentControllerType` say what the robot is doing right now, and each is read-only and normative.
+Four reports of `IntentControllerType` say what the robot is doing right now, and each is read-only and normative.
+`ActiveMission` is required only where `MissionsSupported` is true, because a Server that does not implement
+missions has no mission instance to reference.
 
 - `OperationalMode` is the robot's own report of the mode in force. §10.2 gates submission on it and forbids commanding it.
 - `Ready` is true exactly when the Server would admit a well-formed intent from the Session that holds command authority. A Server **shall** report it false whenever §6.2 or §10.4 would refuse for a reason that does not depend on the intent — outside `Automatic` or `AutomaticExternal`, under an emergency or protective stop, or with `SafetyControllerOk` false. It exists so a client can see that submitting is pointless without submitting to find out; it is a **hint about the Server**, and a Server **shall not** treat a client's having read it as licence to skip any check of §6.2.
-- `ActiveIntent` references the `IntentOperationType` instance whose `ExecutionState` is `Executing` or `Cancelling`, and is null when none is. Where the executing intent belongs to a mission, `ActiveMission` references that mission's `MissionType` instance; otherwise `ActiveMission` is null.
+- `ActiveIntent` references the `IntentOperationType` instance whose `ExecutionState` is `Executing` or `Cancelling`, and is null when none is. On a Server that supports missions, where the executing intent belongs to a mission, `ActiveMission` references that mission's `MissionType` instance; otherwise `ActiveMission` is null.
 - `ControlOwner` reports the Session holding command authority, or null. Clause 8 governs it.
 
 None of these is a substitute for the per-operation state of §6.3. Two members may not report the state of one intent: the operation's own state machine decides, and these summarise it.
@@ -424,6 +426,7 @@ The values below are normative. Where a value is cited as interoperable with ano
 | `SafetyStop` | 17 | A safety function acted. The safety system decided this, not this interface. |
 | `Other` | 18 | A reason none of the above describes; see `Message`. |
 | `SafetyLimitExceeded` | 19 | Refused; the request would exceed a limit the safety system is enforcing (§10.3). |
+| `NoTransition` | 20 | A mission branch point had no true outgoing transition, or the selected transition target did not resolve (§7.4). |
 
 **`ErrorPolicyEnum`** (`ns=1;i=3016`) — what a mission does when a step does not succeed (§7.4): `Abort` 0 (the default), `Retry` 1, `Skip` 2, `Fallback` 3, `Compensate` 4.
 
@@ -650,6 +653,11 @@ Each transition carries `FromStepId`, `ToStepId`, a `Condition` and a `Divergenc
 - `Alternative` — exactly one is taken, the first whose `Condition` holds, in `Transitions` order. A Server **shall** evaluate them in that order so that two clients reading the same mission predict the same branch.
 - `Parallel` — all are taken, and the branches execute concurrently. A Server **shall** report `MissionBranchingSupported` false if it cannot run branches concurrently, rather than silently serialising them.
 
+Where a step has outgoing transitions and none of their conditions holds, the mission **shall** terminate `Failed`
+with `NoTransition`. A Server **shall** report the same outcome if the transition selected for execution no longer
+resolves to a step of the mission. It **shall not** report `Succeeded`, because `Succeeded` means the mission ran as
+requested and would falsely state that unexecuted work was complete.
+
 A Server **shall** refuse a mission whose transitions name a `FromStepId` or `ToStepId` that is not a step of that mission, and one that mixes `Alternative` and `Parallel` on transitions leaving the same step.
 
 **Error policies.** `MissionStepDataType.ErrorPolicy` says what happens when the step does not succeed:
@@ -695,9 +703,10 @@ Four rules keep the declaration honest, and each is checkable against a running 
 
 A fifth rule applies the same honesty to the **Method surface**, because a declaration a client cannot act on is worse than no declaration. Where a Server declares a capability, the Methods that make it usable **shall** be present on the controller and callable:
 
-| Declaration | Methods that **shall** be present |
+| Declaration | Methods or members that **shall** be present |
 |---|---|
 | `MissionsSupported` true | `SubmitMission`, `CancelMission` |
+| `MissionsSupported` true | `ActiveMission` |
 | `MissionHorizonSupported` true | `UpdateMission` |
 | `RealTimeChannelsSupported` true | `OpenRealTimeChannel`, `CloseRealTimeChannel` |
 | a capability entry with `PauseSupported` true | `Pause`, `Resume` |
@@ -861,7 +870,13 @@ A facet other than **RI-Base** is claimed only where every intent type it names 
 
 Conformance is therefore declared at two levels, and they answer different questions. `SupportedFacets` is a member of `IntentCapabilitiesType`, so it is stated **per controller**: a Server hosting two robots of different capability has two answers, and a client asking whether *this* controller blends must read *this* controller's list. `ServerProfileArray` is a member of the Server object, so it is stated **once for the Server**, which is the right granularity for a profile (§12.3) — a named shape an integrator specifies and a supplier builds to.
 
-A Server **shall** publish the URI of every profile it claims in `Server/ServerCapabilities/ServerProfileArray`, and **may** publish facet URIs there as well. Where it does, the two **shall** agree: a facet URI on the Server that no controller lists in `SupportedFacets` is a claim nothing in the address space backs, and a client that read only one of them would be told something untrue by the other.
+A Server **shall** publish the URI of every profile it claims in `Server/ServerCapabilities/ServerProfileArray`, and
+**shall** also publish the facet URIs for every facet required by those profiles and every facet listed by any
+controller in `SupportedFacets`. The two discovery paths **shall** agree: a profile URI shall be backed by at least one
+controller whose `SupportedFacets` includes every facet in that profile, and a facet URI shall be backed by at least
+one controller that lists the corresponding facet. A facet URI on the Server that no controller lists in
+`SupportedFacets` is a claim nothing in the address space backs, and a client that read only one of them would be told
+something untrue by the other.
 
 ### 12.3 Profiles
 
@@ -895,7 +910,7 @@ Profiles are published under `http://opcfoundation.org/UA-Profile/RobotIntent/Se
 | Robot Path Server | `Path` |
 | Robot Mission Server | `Mission` |
 
-Facets are published under `http://opcfoundation.org/UA-Profile/RobotIntent/Facet/`, with the suffix being the facet name after the `RI-` prefix: **RI-Base** is `Base`, **RI-Motion-Joint** is `Motion-Joint`, **RI-Process-ArcWeld** is `Process-ArcWeld`, and so on for every row of §12.2. These URIs exist so a generic OPC UA tool that reads `ServerProfileArray` and knows nothing about robots can still recognise a facet; the authority on which facets a given controller satisfies is that controller's `SupportedFacets`, because only it is stated per controller.
+Facets are published under `http://opcfoundation.org/UA-Profile/RobotIntent/Facet/`, with the suffix being the facet name after the `RI-` prefix: **RI-Base** is `Base`, **RI-Motion-Joint** is `Motion-Joint`, **RI-Process-ArcWeld** is `Process-ArcWeld`, and so on for every row of §12.2. A Server claiming a profile publishes the profile URI and the facet URIs that make the profile true; a Server claiming additional per-controller facets publishes those facet URIs as well. These URIs exist so a generic OPC UA tool that reads `ServerProfileArray` and knows nothing about robots can still recognise both the profile and the facets behind it; the authority on which facets a given controller satisfies is that controller's `SupportedFacets`, because only it is stated per controller.
 
 These URIs are **provisional**, on the same terms as the namespace URI and the NodeIds: this is a working-group draft, and the OPC Foundation assigns the final values.
 

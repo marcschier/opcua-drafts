@@ -593,6 +593,7 @@ Why an intent did not succeed. The set is deliberately small and diagnosable: a 
 | SafetyStop | 17 | A safety function acted. The safety system, not this interface, decided this. |
 | Other | 18 | A reason none of the above describes; see Message. |
 | SafetyLimitExceeded | 19 | Refused because the request would exceed a limit the safety system is enforcing. See clause 10.3. |
+| NoTransition | 20 | A mission branch point had no true outgoing transition, or the selected transition target did not resolve. See clause 7.4. |
 
 ### StopModeEnum — `ns=1;i=3010`
 
