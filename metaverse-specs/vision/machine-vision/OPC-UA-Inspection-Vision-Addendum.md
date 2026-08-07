@@ -71,10 +71,10 @@ The frame tree. `ParentFrame` is what makes it composable: a client walks from t
 |---|---|---|
 | `Fx` | `8310.2` | px |
 | `Fy` | `8309.6` | px |
-| `Cx` | `1295.4` | px, corner-datum per 5.10 |
-| `Cy` | `971.2` | px, corner-datum per 5.10 |
+| `Cx` | `1295.4` | px, corner-datum per §5.12 |
+| `Cy` | `971.2` | px, corner-datum per §5.12 |
 | `Skew` | `0.0` | px |
-| `DistortionModel` | `BrownConrady` | 5.10 ordering: k1, k2, p1, p2, k3 |
+| `DistortionModel` | `BrownConrady` | §5.12 ordering: k1, k2, p1, p2, k3 |
 | `DistortionCoefficients` | `[-0.0021, 0.0004, 0.0, 0.0, 0.0]` | dimensionless; a telecentric lens is close to distortion-free |
 | `Width` | `2592` | px |
 | `Height` | `1944` | px |
@@ -96,10 +96,10 @@ The frame tree. `ParentFrame` is what makes it composable: a client walks from t
 
 | Field | Value | Unit / convention |
 |---|---|---|
-| `FrameId` | `station` | equals the TargetFrame's FrameId, per the 5.10 frame-precedence rule |
+| `FrameId` | `station` | equals the TargetFrame's FrameId, per the §5.12 frame-precedence rule |
 | `Position` | `(0.0, 0.0, 0.320)` | metres, ordered (x, y, z) |
 | `Orientation` | `(1.0, 0.0, 0.0, 0.0)` | unit quaternion ordered (x, y, z, w); a 180 degree rotation about x, so the camera looks down at the station |
-| `Covariance` | `empty array` | not reported, per the 5.10 sentinel |
+| `Covariance` | `empty array` | not reported, per the §5.12 sentinel |
 
 Each calibration is reachable from the sensor by a `HasCalibration` reference, as base specification §5.11 requires.
 
@@ -114,7 +114,7 @@ Each calibration is reachable from the sensor by a `HasCalibration` reference, a
 
 Inference runs **on-server**: `InferenceLocation = OnServer`, on an NPU in the station industrial PC. A client consuming the results cannot distinguish this from the off-server robotics example except by reading that one property — which is the intent of base specification §8.2. Because the pipeline is not continuous, `RunInference` is called per part by the station PLC and returns the `ResultId` it produced.
 
-The deployment carries exactly one `UsesModel` reference to the model above, as base specification §5.11 requires. That reference is the only defined path from a result to the model artefact and its `Digest`, so it is what makes the §12.6 provenance check possible.
+The deployment carries exactly one `UsesModel` reference to the model above, as *OPC UA — AI Model Management and Inference* requires. That reference is the only defined path from a result to the model artefact and its `Digest`, so it is what makes the base specification's §12.6 provenance check possible.
 
 ## 7 Results
 
