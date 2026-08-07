@@ -137,4 +137,3 @@ Each tree holds only the **normative** documents and the generated base artifact
 | [`spec-drafts/`](https://github.com/OPCF-Members/spec-drafts) | The private review repository, registered as a submodule. Empty unless you are an OPC Foundation member who asked for it. |
 
 Validation is **per specification**: each extension owns a `tools/validate_local.py`, and the three `validate_all.py` files drive lists of them. A tree drives only its own, so a specification that changes trees takes its entry with it.
-
