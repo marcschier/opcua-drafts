@@ -513,16 +513,19 @@ def repair_markdown_table_rows_release(
             out.append(line)
             continue
 
-        original = stripped[1:].lstrip()
+        original = stripped[1:-1] if stripped.endswith("|") else stripped[1:]
         docs = " · ".join(
             f"[{'Word' if t.lower().endswith('.docx') else 'Specification'}]({private_url(manifest, t)})"
             for t in targets
         ) or "—"
-        replacement = " | ".join(cells[:-2] + [note, docs]) + " |"
+        replacement = " " + " | ".join(cells[:-2] + [note, docs]) + " "
         count += 1
         indent = raw[: len(raw) - len(raw.lstrip())]
+        # Both markers sit INSIDE the outer pipes. markdownlint counts cells without
+        # stripping HTML comments, so a closing marker after the final pipe makes the row
+        # end in content and fails MD055 and MD056 together.
         out.append(
-            f"{indent}| <!-- {MD_MARKER}:{b64(original)} -->{replacement}<!-- /{MD_MARKER} -->{newline}"
+            f"{indent}|<!-- {MD_MARKER}:{b64(original)} -->{replacement}<!-- /{MD_MARKER} -->|{newline}"
         )
 
     return "".join(out), count
