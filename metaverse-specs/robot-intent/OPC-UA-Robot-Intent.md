@@ -89,6 +89,9 @@ Two are worth naming here because a Server may resolve references into them, and
 | **Blocking mode** | Whether an intent tolerates motion and other intents alongside it. `BlockingModeEnum`. |
 | **Command authority** | The exclusive right, held by at most one Session, to submit intents to one controller (clause 8). It is an arbitration mechanism between clients and **not** the single point of control that ISO 10218-2 requires. |
 | **Terminal state** | An `ExecutionStateEnum` value from which execution does not resume: `Succeeded`, `Failed`, `Cancelled`, or `Retriable`. |
+| **Conformance unit** | The smallest individually testable requirement of this specification. Grouped into facets rather than claimed one by one. |
+| **Facet** | A named, individually claimable set of conformance units — a building block, not a complete claim. Clause 12.2 defines them. |
+| **Profile** | A named set of facets describing one plausible robot Server, claimed by publishing its URI in `Server/ServerCapabilities/ServerProfileArray`. Clause 12.3 defines them. |
 
 ---
 
@@ -850,10 +853,51 @@ Requirements are of two kinds. **Structural** requirements are settled by readin
 | **RI-Mission-Horizon** | **RI-Mission**, plus `MissionHorizonSupported` true, `UpdateMission`, and the base immutability rules of §7.2. |
 | **RI-Mission-Branching** | **RI-Mission**, plus `MissionBranchingSupported` true, `Transitions` evaluated per §7.4, and the error policies honoured. |
 | **RI-Interop-40010** | Annex B. |
+| **RI-Interop-Vision** | Annex E. |
 
 A facet other than **RI-Base** is claimed only where every intent type it names appears in `SupportedIntents`.
 
 **RI-Base** additionally requires `SupportedFacets`, since a conformance claim that cannot be read is not a claim.
+
+Conformance is therefore declared at two levels, and they answer different questions. `SupportedFacets` is a member of `IntentCapabilitiesType`, so it is stated **per controller**: a Server hosting two robots of different capability has two answers, and a client asking whether *this* controller blends must read *this* controller's list. `ServerProfileArray` is a member of the Server object, so it is stated **once for the Server**, which is the right granularity for a profile (§12.3) — a named shape an integrator specifies and a supplier builds to.
+
+A Server **shall** publish the URI of every profile it claims in `Server/ServerCapabilities/ServerProfileArray`, and **may** publish facet URIs there as well. Where it does, the two **shall** agree: a facet URI on the Server that no controller lists in `SupportedFacets` is a claim nothing in the address space backs, and a client that read only one of them would be told something untrue by the other.
+
+### 12.3 Profiles
+
+A facet is a building block. A **profile** is a complete claim: a named set of facets describing one plausible robot Server, which is what an integrator specifies and what two manufacturers implementing the same shape agree they have built. §1.2's use cases are written about profiles even though they do not use the word — a mixed-fleet cell works only because two robots claim the same one.
+
+Four are defined. Each includes the **Robot Motion Server** set, and a Server **may** claim more than one: a robot that both follows paths and executes missions claims two.
+
+Claiming a profile is claiming every facet in it, on the terms §12.2 sets out — structural requirements a client can check by reading, behavioural ones the Server attests to under clause 9. A profile is a shorter way to say the same thing, not a weaker one.
+
+| Profile | Facets | The Server it describes |
+|---|---|---|
+| **Robot Motion Server** | RI-Base, RI-Motion-Joint, RI-Motion-Linear, RI-Description, RI-Safety | The baseline. A robot that can be commanded to a joint configuration or a Cartesian pose, that describes its own kinematics and limits, and that reports what its safety system is enforcing. |
+| **Robot Handling Server** | Motion, plus RI-Motion-Circular, RI-Grasp, RI-PickPlace, RI-ToolChange, RI-Output, RI-Queue | Material handling. Picking, placing, changing tools and driving the discrete outputs a gripper needs, with a queue so a cell controller can stay ahead of the robot. |
+| **Robot Path Server** | Motion, plus RI-Trajectory, RI-Path, RI-Blending | Continuous-path work. A whole path is handed over once and the robot's own motion kernel runs it, blending between segments rather than stopping at each. |
+| **Robot Mission Server** | Motion, plus RI-Mission, RI-Program, RI-Wait, RI-Pause, RI-Retry | Long-running supervised operation. A mission is submitted, watched, paused, retried and cancelled, which is §1.2's fourth use case stated as a claim. |
+
+**RI-Safety is in the baseline rather than optional to it.** Clause 10 is explicit that this specification is not safety-rated and that no Method here is a safety function. What it does require is a duty: the Server *reports* what the safety system enforces and *refuses* work that would exceed it. Every profiled Server owes that duty, because an integrator specifying a profile is entitled to assume a robot will decline an intent its safety configuration forbids rather than attempt it. A robot that cannot read its safety system claims facets individually and not a profile.
+
+The process facets — **RI-Process-ArcWeld** and its siblings — are deliberately in no profile. A welding robot is a **Robot Path Server** that additionally claims **RI-Process-ArcWeld**, and bundling the process into a profile would have produced one profile per process and no way to say that the underlying motion is the same. The same reasoning keeps **RI-Force**, **RI-RealTimeChannel** and the two interop facets outside all four.
+
+### 12.4 Profile and facet URIs
+
+A profile name is for a human. `ServerProfileArray` holds URIs, and unless this specification states them two Servers implementing the same profile publish different strings and no client can match either.
+
+Profiles are published under `http://opcfoundation.org/UA-Profile/RobotIntent/Server/`:
+
+| Profile | URI suffix |
+|---|---|
+| Robot Motion Server | `Motion` |
+| Robot Handling Server | `Handling` |
+| Robot Path Server | `Path` |
+| Robot Mission Server | `Mission` |
+
+Facets are published under `http://opcfoundation.org/UA-Profile/RobotIntent/Facet/`, with the suffix being the facet name after the `RI-` prefix: **RI-Base** is `Base`, **RI-Motion-Joint** is `Motion-Joint`, **RI-Process-ArcWeld** is `Process-ArcWeld`, and so on for every row of §12.2. These URIs exist so a generic OPC UA tool that reads `ServerProfileArray` and knows nothing about robots can still recognise a facet; the authority on which facets a given controller satisfies is that controller's `SupportedFacets`, because only it is stated per controller.
+
+These URIs are **provisional**, on the same terms as the namespace URI and the NodeIds: this is a working-group draft, and the OPC Foundation assigns the final values.
 
 ---
 
@@ -961,3 +1005,23 @@ These are **not** normative references and impose no dependency. They are record
 - **IEC 61131-3 sequential function charts** — the step, transition and divergence model of §7.4. Behaviour trees were considered and not adopted: their tick semantics need a runtime that controller vendors do not provide, and their serialization is a library's rather than a standard's.
 - **ISO 15609** — welding procedure specifications, named by `ArcWeldIntentDataType.WeldProcedureRef` and not restated here.
 - **The OPC UA robot skill model** developed in the VDMA SOArc working group (`http://opcfoundation.org/UA/Skills/`) is prior art in this area. This specification uses a different namespace and does not extend it.
+
+---
+
+## Annex E — Vision interop profile (normative for RI-Interop-Vision)
+
+A vision model that publishes a grasp pose and this model that executes it are deployed on the same cell, and each defines its own `CoordinateFrameType`. Without a rule the flange is described twice, with two `FrameId` strings and two transforms that can disagree.
+
+This annex imposes **no** NodeSet dependency in either direction. Both models keep the base OPC UA namespace as their only `RequiredModel`, and a Server implementing only this one is unaffected.
+
+**E.1 This model's frame tree decides.** Where a Server implements both for the same robot, the frames here are authoritative. This model owns `ToolType.TcpFrame` and is what the robot actually moves to; a pose that disagrees with it is wrong however carefully it was measured.
+
+**E.2 `FrameId` corresponds by value.** A frame present in both models **shall** carry the same `FrameId` string in each. That string, not the NodeId, is what `Pose3DDataType` names.
+
+**E.3 Roles correspond by name, never by number.** The two vocabularies agree on `World`, `Base`, `MechanicalInterface`, `Tool`, `Object` and `Other`. A vision model may additionally define a camera role, which this model does not; such a frame **shall** appear here as `Other`. A gateway **shall** map by literal name and **shall not** cast the integer between the two enumerations, because each is decoded against the DataType of the Variable carrying it.
+
+**E.4 Poses transcode explicitly.** A vision pose may carry a covariance field this model's `Pose3DDataType` does not. A boundary **shall** drop it inbound and **shall not** fabricate one outbound. Both sides use metres and a unit quaternion ordered (x, y, z, w) in a right-handed frame, so no numeric conversion is required — but §5.2 rule 3 still applies, and an inbound pose whose quaternion is not normalised **shall** be rejected with `ParameterInvalid` rather than renormalised.
+
+**E.5 An empty `FrameId` is not passed outward.** §5.2 rule 4 reads an empty `FrameId` as this Server's default work frame. A vision model may forbid an empty value entirely, so a boundary publishing a pose outward **shall** substitute the named frame explicitly.
+
+**E.6 A grasp pose is resolved to the tool centre point.** A pose received for execution **shall** be resolved, through the frame tree, to the `Tool` frame named by the intent's `ToolFrame`. A hand-eye calibration resolves to the mechanical interface, and the offset from there to the tool centre point is exactly what it does not measure — so a Server **shall not** execute a pose that resolves only to `MechanicalInterface`, and **shall** refuse it with `ParameterInvalid`.

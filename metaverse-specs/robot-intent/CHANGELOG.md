@@ -4,6 +4,12 @@ All notable changes to this specification and its information model.
 
 ## Unreleased
 
+### Conformance is machine-readable
+
+`IntentCapabilitiesType.SupportedFacets` (`String[]`, Mandatory, appended at `i=6139`; no existing NodeId moves) carries the facet names of Table 12.2 that a controller claims. Clause 12 defined conformance in terms of facets and gave a Server nowhere to state which it had, so a client had to re-derive the whole table from the address space — which is what the reference implementation did. Several rows are behavioural and cannot be settled by browsing at all, so two clients deriving independently could reach opposite conclusions about one Server and both be reading the specification correctly. §12.2 now separates structural requirements, which a client checks by reading, from behavioural ones, which are the Server's attestation under clause 9. **RI-Base** requires the member.
+
+### Implementation defects
+
 Defects found by implementing the specification in the OPC UA .NET Standard stack. Every change here
 makes an existing claim true; none adds capability, and no previously assigned NodeId moves.
 
@@ -54,6 +60,27 @@ makes an existing claim true; none adds capability, and no previously assigned N
 - **§6.4 says which stop a superseded intent gets.** An `Aborting` submission carries no `StopMode`, so the
   mode a superseded intent is stopped with was undefined. The Server chooses, should choose the most urgent
   stop the cell tolerates since the successor is about to command motion, and should document it.
+
+### Profiles
+
+Clause 12 has been titled *Profiles and conformance units* since 0.1.0 and defined only facets. §12.3 defines four profiles and §12.4 gives their URIs. The information model does not change for this, so the release version does not move on its account: profiles are published through the base-UA `Server/ServerCapabilities/ServerProfileArray` and need no member.
+
+| Profile | Facets |
+|---|---|
+| Robot Motion Server | RI-Base, RI-Motion-Joint, RI-Motion-Linear, RI-Description, RI-Safety |
+| Robot Handling Server | Motion, plus RI-Motion-Circular, RI-Grasp, RI-PickPlace, RI-ToolChange, RI-Output, RI-Queue |
+| Robot Path Server | Motion, plus RI-Trajectory, RI-Path, RI-Blending |
+| Robot Mission Server | Motion, plus RI-Mission, RI-Program, RI-Wait, RI-Pause, RI-Retry |
+
+§1.2's use cases were already written about profiles without using the word. A mixed-fleet work cell — two robots from different manufacturers executing one mission definition — works only if both claim the same shape, and there was no name for the shape to claim.
+
+`RI-Safety` is in the baseline rather than optional to it, and that is the decision in this change most worth arguing about. Clause 10 is explicit that this specification is not safety-rated and that no Method here is a safety function. What it does impose is a duty: report what the safety system enforces, and refuse work that would exceed it. An integrator specifying a profile is entitled to assume a robot declines an intent its safety configuration forbids rather than attempting it, and a robot that cannot read its safety system claims facets individually instead.
+
+The process facets are deliberately in **no** profile. A welding robot is a **Robot Path Server** that additionally claims `RI-Process-ArcWeld`; bundling the process in would have produced one profile per process and no way to say the underlying motion is the same. `RI-Force`, `RI-RealTimeChannel` and the two interop facets stay outside all four for the same reason.
+
+§3 gains definitions for *conformance unit*, *facet* and *profile*, none of which the document defined while using the first two throughout.
+
+Facets and profiles are declared at different levels and §12.2 says how they relate: `SupportedFacets` is on `IntentCapabilitiesType` and is therefore per controller, `ServerProfileArray` is on the Server object and is therefore per Server. Where a Server publishes facet URIs as well as profile URIs, the two must agree.
 
 ## 0.1.0 — 2026-08-02
 
