@@ -1,0 +1,377 @@
+{
+  "$schema": "https://xregistry.io/xregistryspecs/core-v1/schemas/model.schema.json",
+
+  "groups": {
+    "shells": {
+      "singular": "shell",
+      "modelversion": "1.0-rc3",
+      "modelcompatiblewith": "https://xregistry.io/xreg/domains/aas/specs/model.json",
+      "description": "Asset Administration Shells. Each Group is one AAS - the digital representation of one asset - and holds the Submodels that describe it. The Group id is the symbolic identifier of the AAS Identifiable id",
+      "attributes": {
+        "aasidentifier": {
+          "name": "aasidentifier",
+          "type": "string",
+          "required": true,
+          "description": "The AAS Identifiable id as authored, an IRI, IRDI or URN of up to 2048 characters. It is the Group source identity and the authority: the shellid is the symbolic identifier constructed from it, a one-way construction that is never inverted"
+        },
+        "idshort": {
+          "name": "idshort",
+          "type": "string",
+          "description": "The AAS idShort, a short human-readable name that is unique only within its parent and is therefore never used as an identifier"
+        },
+        "assetkind": {
+          "name": "assetkind",
+          "type": "string",
+          "required": true,
+          "enum": [ "Type", "Instance", "Batch", "Role", "NotApplicable" ],
+          "strict": true,
+          "description": "The kind of asset this shell represents. Type is a product model, Instance an individual item and Batch a production lot, matching the three granularity levels a product passport is issued at"
+        },
+        "globalassetid": {
+          "name": "globalassetid",
+          "type": "string",
+          "description": "The globally unique identifier of the asset itself, as distinct from the shell that describes it. Where the asset carries an identification link this is that link"
+        },
+        "assettype": {
+          "name": "assettype",
+          "type": "string",
+          "description": "The identifier of the asset type this asset is an occurrence of"
+        },
+        "specificassetids": {
+          "name": "specificassetids",
+          "type": "array",
+          "description": "Additional domain-specific keys the asset is discoverable by, such as a serial number, a manufacturer part id or a batch id",
+          "item": {
+            "type": "object",
+            "attributes": {
+              "name": { "name": "name", "type": "string", "required": true, "description": "The key name, for example serialNumber or manufacturerPartId" },
+              "value": { "name": "value", "type": "string", "required": true, "description": "The key value" },
+              "externalsubjectid": { "name": "externalsubjectid", "type": "string", "description": "The identifier of the subject this key is disclosed to, so that a registry can restrict which callers see it" },
+              "*": { "name": "*", "type": "any" }
+            }
+          }
+        },
+        "derivedfrom": {
+          "name": "derivedfrom",
+          "type": "xid",
+          "target": "/shells",
+          "description": "The Type shell this Instance shell was derived from, so that an individual item can be traced to its product model"
+        },
+        "administration": {
+          "name": "administration",
+          "type": "object",
+          "description": "The AAS administrative information. It records a single current revision only: the lifecycle history of the shell is carried by xRegistry Versions, which the AAS metamodel has no equivalent of",
+          "attributes": {
+            "version": { "name": "version", "type": "string", "description": "The AAS version label" },
+            "revision": { "name": "revision", "type": "string", "description": "The AAS revision label, only meaningful when version is present" },
+            "templateid": { "name": "templateid", "type": "string", "description": "The identifier of the specification template this shell was built from" },
+            "creator": { "name": "creator", "type": "string", "description": "The identifier of the party that created this shell" },
+            "*": { "name": "*", "type": "any" }
+          }
+        },
+        "disclosuretier": {
+          "name": "disclosuretier",
+          "type": "string",
+          "enum": [ "public", "controlled" ],
+          "strict": false,
+          "required": true,
+          "default": "public",
+          "description": "Whether this entity is readable without authentication or requires an authenticated role. It advertises the tier so a Consumer can discover it; it does not enforce it"
+        },
+        "authorization": {
+          "name": "authorization",
+          "type": "array",
+          "description": "The authorization options a Consumer may use to obtain access to this entity, in the shape defined by the xRegistry Endpoint Registry. It is authorization configuration only and MUST NOT carry credentials",
+          "item": {
+            "type": "object",
+            "attributes": {
+              "type": { "name": "type", "type": "string", "description": "The authorization type, for example OAuth2, Plain, SASL, X509Cert or APIKey" },
+              "mechanism": { "name": "mechanism", "type": "string", "description": "The SASL mechanism name, used only when type is SASL" },
+              "resourceuri": { "name": "resourceuri", "type": "uri", "description": "The URI of the resource authorization is requested for" },
+              "authorityuri": { "name": "authorityuri", "type": "uri", "description": "The URI of the authority authorization is obtained from" },
+              "*": { "name": "*", "type": "any" }
+            }
+          }
+        },
+        "eventendpoint": {
+          "name": "eventendpoint",
+          "type": "url",
+          "description": "The Endpoint Registry entry that delivers change events for this shell, where one is published. It is a URL rather than an xid because the Endpoint Registry serving it is usually a different registry, and an xid is resolved relative to the registry that carries it"
+        },
+        "*": { "name": "*", "type": "any" }
+      },
+
+      "resources": {
+        "submodels": {
+          "singular": "submodel",
+          "modelversion": "1.0-rc3",
+          "modelcompatiblewith": "https://xregistry.io/xreg/domains/aas/specs/model.json",
+          "versionmode": "modifiedat",
+          "singleversionroot": true,
+          "validateformat": true,
+          "strictvalidation": false,
+          "description": "A Submodel served as a document. Each Version is one revision of the Submodel, giving the shell a lifecycle history that the AAS metamodel does not itself provide",
+          "attributes": {
+            "format": {
+              "name": "format",
+              "type": "string",
+              "required": true,
+              "enum": [
+                "AAS-Submodel/3.0",
+                "AAS-Submodel/3.1",
+                "AAS-Submodel/3.2",
+                "EN18223-Compressed/1.0",
+                "EN18223-Expanded/1.0",
+                "Opaque/1.0"
+              ],
+              "strict": false,
+              "description": "The serialization format of the document. The AAS-Submodel formats are the Submodel as defined by the AAS metamodel; the EN18223 formats are the product passport serializations derived from it"
+            },
+            "submodelidentifier": {
+              "name": "submodelidentifier",
+              "type": "string",
+              "required": true,
+              "description": "The Submodel Identifiable id as authored. It is the Resource source identity and the authority: the submodelid is the symbolic identifier constructed from it, a one-way construction that is never inverted"
+            },
+            "semanticid": {
+              "name": "semanticid",
+              "type": "string",
+              "description": "The identifier of the concept this Submodel is an occurrence of, which is what makes a Submodel discoverable by meaning rather than by name"
+            },
+            "supplementalsemanticids": {
+              "name": "supplementalsemanticids",
+              "type": "array",
+              "item": { "type": "string" },
+              "description": "Further concept identifiers this Submodel corresponds to, used to carry the same meaning across more than one dictionary"
+            },
+            "kind": {
+              "name": "kind",
+              "type": "string",
+              "enum": [ "Instance", "Template" ],
+              "strict": true,
+              "required": true,
+              "default": "Instance",
+              "description": "Whether this Submodel carries values for one asset or defines the shape other Submodels are built from"
+            },
+            "idshort": {
+              "name": "idshort",
+              "type": "string",
+              "description": "The AAS idShort, unique only within its parent and therefore never used as an identifier"
+            },
+            "template": {
+              "name": "template",
+              "type": "string",
+              "description": "The identifier of the Submodel Template this Submodel was built from, as authored. It is an identifier rather than a pointer so that it resolves the same way whether or not this registry also serves the template"
+            },
+            "digest": {
+              "name": "digest",
+              "type": "string",
+              "description": "Lower-case hexadecimal digest of the exact document bytes a Consumer retrieves, computed with digestalg"
+            },
+            "digestalg": {
+              "name": "digestalg",
+              "type": "string",
+              "enum": [ "Sha256", "Sha384", "Sha512" ],
+              "strict": true,
+              "description": "The algorithm used to compute digest. REQUIRED when digest is present"
+            },
+            "disclosuretier": {
+              "name": "disclosuretier",
+              "type": "string",
+              "enum": [ "public", "controlled" ],
+              "strict": false,
+              "required": true,
+          "default": "public",
+              "description": "Whether this document is readable without authentication or requires an authenticated role. A document is wholly one or the other: a tier boundary that falls between elements inside a document cannot be expressed here"
+            },
+            "authorization": {
+              "name": "authorization",
+              "type": "array",
+              "description": "The authorization options a Consumer may use to obtain access to this document, in the shape defined by the xRegistry Endpoint Registry. It is authorization configuration only and MUST NOT carry credentials",
+              "item": {
+                "type": "object",
+                "attributes": {
+                  "type": { "name": "type", "type": "string", "description": "The authorization type, for example OAuth2, Plain, SASL, X509Cert or APIKey" },
+                  "mechanism": { "name": "mechanism", "type": "string", "description": "The SASL mechanism name, used only when type is SASL" },
+                  "resourceuri": { "name": "resourceuri", "type": "uri", "description": "The URI of the resource authorization is requested for" },
+                  "authorityuri": { "name": "authorityuri", "type": "uri", "description": "The URI of the authority authorization is obtained from" },
+                  "*": { "name": "*", "type": "any" }
+                }
+              }
+            },
+            "*": { "name": "*", "type": "any" }
+          }
+        }
+      }
+    },
+
+    "submodeltemplates": {
+      "singular": "submodeltemplate",
+      "modelversion": "1.0-rc3",
+      "modelcompatiblewith": "https://xregistry.io/xreg/domains/aas/specs/model.json",
+      "description": "Submodel Template families. Each Group is one publisher's template namespace and holds the Submodels whose kind is Template. The submodels Resource type is imported from the shells Group so that a template and the Submodels built from it are the same Resource model type",
+      "ximportresources": [ "/shells/submodels" ],
+      "attributes": {
+        "publisher": {
+          "name": "publisher",
+          "type": "string",
+          "description": "The organization that publishes this template family"
+        },
+        "*": { "name": "*", "type": "any" }
+      }
+    },
+
+    "conceptdictionaries": {
+      "singular": "conceptdictionary",
+      "modelversion": "1.0-rc3",
+      "modelcompatiblewith": "https://xregistry.io/xreg/domains/aas/specs/model.json",
+      "description": "Concept dictionaries. Each Group is one dictionary whose entries give meaning to the semanticid values used elsewhere in this registry",
+      "attributes": {
+        "dictionary": {
+          "name": "dictionary",
+          "type": "string",
+          "description": "The dictionary this Group mirrors, for example an industry classification system or a standards body's common data dictionary"
+        },
+        "*": { "name": "*", "type": "any" }
+      },
+      "resources": {
+        "conceptdescriptions": {
+          "singular": "conceptdescription",
+          "modelversion": "1.0-rc3",
+          "modelcompatiblewith": "https://xregistry.io/xreg/domains/aas/specs/model.json",
+          "validateformat": true,
+          "strictvalidation": false,
+          "description": "A Concept Description served as a document: the definition a semanticid resolves to",
+          "attributes": {
+            "format": {
+              "name": "format",
+              "type": "string",
+              "required": true,
+              "enum": [
+                "AAS-ConceptDescription/3.0",
+                "AAS-ConceptDescription/3.1",
+                "AAS-ConceptDescription/3.2",
+                "Opaque/1.0"
+              ],
+              "strict": false,
+              "description": "The serialization format of the document"
+            },
+            "conceptidentifier": {
+              "name": "conceptidentifier",
+              "type": "string",
+              "required": true,
+              "description": "The Concept Description Identifiable id as authored, which is the value a semanticid elsewhere in this registry refers to. It is the Resource source identity and the authority"
+            },
+            "idshort": {
+              "name": "idshort",
+              "type": "string",
+              "description": "The AAS idShort, unique only within its parent and therefore never used as an identifier"
+            },
+            "iscaseof": {
+              "name": "iscaseof",
+              "type": "array",
+              "item": { "type": "string" },
+              "description": "The identifiers of concepts in other dictionaries this concept corresponds to"
+            },
+            "*": { "name": "*", "type": "any" }
+          }
+        }
+      }
+    },
+
+    "aasxregistries": {
+      "singular": "aasxregistry",
+      "modelversion": "1.0-rc3",
+      "modelcompatiblewith": "https://xregistry.io/xreg/domains/aas/specs/model.json",
+      "description": "Package stores. Each Group is one store holding AASX packages, and where that store is an OCI registry the Group is one registry or namespace within it. Defined by the AAS package binding rather than by the AAS registry model",
+      "attributes": {
+        "registryurl": {
+          "name": "registryurl",
+          "type": "url",
+          "description": "The base URL of the backing package store"
+        },
+        "namespace": {
+          "name": "namespace",
+          "type": "string",
+          "description": "The namespace within the backing store that this Group covers"
+        },
+        "*": { "name": "*", "type": "any" }
+      },
+      "resources": {
+        "packages": {
+          "singular": "package",
+          "modelversion": "1.0-rc3",
+          "modelcompatiblewith": "https://xregistry.io/xreg/domains/aas/specs/model.json",
+          "validateformat": true,
+          "strictvalidation": false,
+          "description": "An AASX package served as a document. Each Version is one immutable release of the package, addressed by digest and optionally attested by signatures",
+          "attributes": {
+            "format": {
+              "name": "format",
+              "type": "string",
+              "required": true,
+              "enum": [ "AASX/3.0", "AASX/3.1", "Opaque/1.0" ],
+              "strict": false,
+              "description": "The package format of the document"
+            },
+            "packageidentifier": {
+              "name": "packageidentifier",
+              "type": "string",
+              "required": true,
+              "description": "The package name as held by the backing store, which for an OCI registry is the repository name. It is the Resource source identity and the authority"
+            },
+            "artifacttype": {
+              "name": "artifacttype",
+              "type": "string",
+              "description": "The media type that identifies what this artifact is, carried by the backing store where it supports one"
+            },
+            "digest": {
+              "name": "digest",
+              "type": "string",
+              "description": "Lower-case hexadecimal digest of the exact package bytes a Consumer retrieves, computed with digestalg. This is the integrity anchor: a tag identifies a Version, a digest identifies its content"
+            },
+            "digestalg": {
+              "name": "digestalg",
+              "type": "string",
+              "enum": [ "Sha256", "Sha384", "Sha512" ],
+              "strict": true,
+              "description": "The algorithm used to compute digest. REQUIRED when digest is present"
+            },
+            "aasidentifiers": {
+              "name": "aasidentifiers",
+              "type": "array",
+              "item": { "type": "string" },
+              "description": "The AAS Identifiable ids contained in this package, so a Consumer can tell what a package holds without retrieving and opening it"
+            },
+            "shell": {
+              "name": "shell",
+              "type": "xid",
+              "target": "/shells",
+              "description": "The shell this package is the packaged form of, where the same registry also serves it as a Group"
+            },
+            "subject": {
+              "name": "subject",
+              "type": "string",
+              "description": "The digest of the artifact this one is attached to, where this artifact is a signature, attestation or other referrer rather than a package in its own right"
+            },
+            "attestations": {
+              "name": "attestations",
+              "type": "array",
+              "description": "The signatures and attestations attached to this package, which a Consumer verifies before trusting its contents",
+              "item": {
+                "type": "object",
+                "attributes": {
+                  "artifacttype": { "name": "artifacttype", "type": "string", "description": "The media type identifying what kind of attestation this is" },
+                  "digest": { "name": "digest", "type": "string", "description": "The digest of the attestation artifact" },
+                  "signer": { "name": "signer", "type": "string", "description": "The identifier of the party that produced the attestation" },
+                  "*": { "name": "*", "type": "any" }
+                }
+              }
+            },
+            "*": { "name": "*", "type": "any" }
+          }
+        }
+      }
+    }
+  }
+}

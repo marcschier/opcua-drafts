@@ -1,0 +1,74 @@
+{
+  "submodels": [
+    {
+      "modelType": "Submodel",
+      "id": "https://fabrikam.com/ids/sm/ordering",
+      "idShort": "Ordering",
+      "kind": "Instance",
+      "submodelElements": [
+        {
+          "modelType": "SubmodelElementList",
+          "idShort": "OrderMatters",
+          "orderRelevant": true,
+          "typeValueListElement": "Property",
+          "valueTypeListElement": "xs:string",
+          "value": [
+            { "modelType": "Property", "valueType": "xs:string", "value": "third" },
+            { "modelType": "Property", "valueType": "xs:string", "value": "first" },
+            { "modelType": "Property", "valueType": "xs:string", "value": "second" }
+          ]
+        },
+        {
+          "modelType": "SubmodelElementList",
+          "idShort": "OrderDoesNotMatter",
+          "orderRelevant": false,
+          "typeValueListElement": "Property",
+          "value": [
+            { "modelType": "Property", "valueType": "xs:int", "value": "9" },
+            { "modelType": "Property", "valueType": "xs:int", "value": "8" },
+            { "modelType": "Property", "valueType": "xs:int", "value": "7" }
+          ]
+        },
+        {
+          "modelType": "SubmodelElementList",
+          "idShort": "NestedLists",
+          "orderRelevant": true,
+          "typeValueListElement": "SubmodelElementList",
+          "value": [
+            {
+              "modelType": "SubmodelElementList",
+              "orderRelevant": true,
+              "typeValueListElement": "Property",
+              "value": [
+                { "modelType": "Property", "valueType": "xs:string", "value": "a0" },
+                { "modelType": "Property", "valueType": "xs:string", "value": "a1" }
+              ]
+            },
+            {
+              "modelType": "SubmodelElementList",
+              "orderRelevant": true,
+              "typeValueListElement": "Property",
+              "value": [
+                { "modelType": "Property", "valueType": "xs:string", "value": "b0" }
+              ]
+            }
+          ]
+        },
+        {
+          "modelType": "SubmodelElementList",
+          "idShort": "CollectionsInsideAList",
+          "orderRelevant": true,
+          "typeValueListElement": "SubmodelElementCollection",
+          "value": [
+            {
+              "modelType": "SubmodelElementCollection",
+              "value": [
+                { "modelType": "Property", "idShort": "Named", "valueType": "xs:string", "value": "inside a list member" }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

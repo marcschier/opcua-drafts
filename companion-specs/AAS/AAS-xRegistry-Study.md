@@ -20,20 +20,25 @@ Baselines: `xregistry/spec` @ `af777bc`[^1] · `xregistry/xrproxy` @ `6e37565`[^
 ## Outcome
 
 This study was written to decide whether the mapping was worth doing. It was,
-and it has been done. The specifications it recommended now exist:
+and it has been done. Two specifications came out of it.
+
+**Proposed to the xRegistry project**, from
+[`marcschier/spec@aas-domain-spec`](https://github.com/marcschier/spec/tree/aas-domain-spec) and
+mirrored beside this study:
 
 | Document | What it is |
 |---|---|
-| `models/aas/spec.md` | The AAS registry model — shells, submodels, concept dictionaries, federation, disclosure tiers, and a product passport profile |
-| `models/aas/oci.md` | AASX packages as content-addressed, signable artifacts |
-| `models/aas/model.json` | The shared model definition, four group types |
+| `xRegistry-AAS.md` | The AAS registry model — shells, submodels, concept dictionaries, federation, disclosure tiers, and a product passport profile |
+| `xRegistry-AAS-Packages.md` | AASX packages as content-addressed, signable artifacts |
+| `xRegistry-AAS.model.json` | The shared model definition, four group types |
 
-They were proposed to the xRegistry project from the branch
-[`marcschier/spec@aas-domain-spec`](https://github.com/marcschier/spec/tree/aas-domain-spec),
-stacked on the OpenUSD registry branch because Section 5.1's identifier
-construction is cited from it rather than duplicated.
+**Written as an OPC UA companion specification**, beside them:
 
-Three findings in this study shaped those documents more than any other:
+| Document | What it is |
+|---|---|
+| [`OPC-UA-AAS.md`](OPC-UA-AAS.md) | OPC 30270 v3.00 — the AAS V3 metamodel mapped losslessly onto OPC UA, together with the same registry as an xRegistry domain extension |
+
+Four findings in this study shaped those documents more than any other:
 
 1. The AAS registry/repository split collapses into xRegistry's existing
    document-versus-URL distinction, so federation needed no new machinery —
@@ -44,6 +49,22 @@ Three findings in this study shaped those documents more than any other:
 3. Disclosure tiering is two-thirds expressible and the remaining third is not,
    because access rights are required at data-element granularity and an
    xRegistry document is opaque bytes ([Section 6.3](#63-tiered-access--what-is-and-is-not-expressible)).
+4. The identifier work pays off only once there is a second binding. Because both
+   projections derive an identifier from the same source identity by the same
+   construction, **the same shell has the same identifier over OPC UA and over
+   HTTP** — which is what makes them two bindings of one registry rather than two
+   registries that resemble each other. That could not be demonstrated until the
+   OPC UA specification existed.
+
+The OPC UA specification also surfaced a finding this study did not anticipate, recorded here
+because it is counter-intuitive enough that a later reader would try to remove it. **Losslessness
+forces a value to be carried twice.** AAS types values with xsd types, and several of them —
+`xs:decimal` at arbitrary precision, `xs:duration`, the partial-date types — have no faithful OPC UA
+equivalent, so a typed mapping cannot be reversible. The specification therefore carries both a
+typed Variable, for the native projection a generic Client expects, and a Mandatory lexical
+`RawValue`, which is normative for round-tripping. The duplication is the price of the requirement,
+and the requirement is what makes it possible to compile an AAS into a Server with a source
+generator.
 
 The sections below are the study as it stood when those decisions were made.
 
@@ -645,7 +666,8 @@ last three remain open.
 | 6 | Write a conformance annex mapping AAS API operations to their xRegistry equivalents, as the OPC UA binding does for HTTP[^55] | **Done** — `spec.md` Annex A, informative |
 | 7 | Prototype against Eclipse BaSyx or FA³ST, using the `crates` service as the xrproxy template[^56] | Open. FA³ST remains the closest analog: one AAS dataset, two protocol facades[^57] |
 | 8 | Raise the xrproxy group-type collision with the maintainers before relying on multi-registry federation[^35] | Open |
-| 9 | Follow up the OPC 30450-1 intersection | Open. A passport projected into OPC UA and a registry served over the OPC UA binding would share an address space[^62] |
+| 9 | Follow up the OPC 30450-1 intersection | **Done** — the OPC UA specification carries it as an informative reference, and a passport served over that model and a registry served over this one now share an address space by construction[^62] |
+| 10 | Project the registry into OPC UA | **Done** — [`OPC-UA-AAS.md`](OPC-UA-AAS.md), which also revises the AAS metamodel mapping to V3 and makes it lossless |
 
 Two decisions were left open by the study and settled during drafting. The
 registry is **fully mutable**, mirroring the AAS API's own create/update/delete

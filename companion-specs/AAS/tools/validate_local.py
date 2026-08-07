@@ -1,0 +1,161 @@
+#!/usr/bin/env python3
+"""Local structural validator for the AAS NodeSet + CSV."""
+import os, sys, csv, re
+import xml.etree.ElementTree as ET
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+GEN = os.path.dirname(HERE)
+REF = os.path.join(HERE, "ref")
+NS = "{http://opcfoundation.org/UA/2011/03/UANodeSet.xsd}"
+XML = os.path.join(GEN, "Opc.Ua.I4AAS.NodeSet2.xml")
+CSVF = os.path.join(GEN, "Opc.Ua.I4AAS.NodeIds.csv")
+XR_NS = 1          # required model: abstract xRegistry base (http://opcfoundation.org/UA/xRegistry/)
+OWN_NS = 2         # this specification's own namespace (SchemaRegistry)
+OWN_MIN = 1001
+
+def load_ids(p):
+    s = set()
+    with open(p, encoding="utf-8") as f:
+        for row in csv.reader(f):
+            if len(row) >= 2 and row[1].strip().isdigit():
+                s.add(int(row[1]))
+    return s
+
+_ua_csv = os.path.join(REF, "UA.NodeIds.csv")
+UA = load_ids(_ua_csv) if os.path.exists(_ua_csv) else None
+UA_EXTRA = {297, 2253}
+# xRegistry base NodeIds (the required model this spec extends), resolved across the two-file dependency.
+_xr_csv = os.path.join(GEN, "..", "xregistry", "Opc.Ua.XRegistry.NodeIds.csv")
+XR = load_ids(_xr_csv) if os.path.exists(_xr_csv) else None
+errors, warnings = [], []
+ALIAS = {}
+tree = ET.parse(XML)
+root = tree.getroot()
+defined = {}
+elems = []
+
+NID_RE = re.compile(r"^(?:ns=(\d+);)?i=(\d+)$")
+
+def parse_numeric_nodeid(t):
+    t = ALIAS.get(t, t)
+    m = NID_RE.match(t or "")
+    if not m:
+        return None
+    ns = int(m.group(1) or 0)
+    return ns, int(m.group(2))
+
+for el in root:
+    tag = el.tag.replace(NS, "")
+    if tag == "Aliases":
+        for a in el:
+            ALIAS[a.get("Alias")] = a.text
+    if not tag.startswith("UA"):
+        continue
+    nid = el.get("NodeId")
+    parsed = parse_numeric_nodeid(nid)
+    if parsed and parsed[0] == OWN_NS:
+        key = parsed[1]
+        if key in defined:
+            errors.append(f"dup NodeId ns={OWN_NS};i={key}")
+        defined[key] = (tag, el.get("BrowseName"))
+    elems.append((tag, el))
+
+def check(t, ctx):
+    parsed = parse_numeric_nodeid(t)
+    if parsed is None:
+        return
+    ns, v = parsed
+    if ns == OWN_NS:
+        if v in defined:
+            return
+        errors.append(f"{ctx}: ns={OWN_NS};i={v} not defined here")
+        return
+    if ns == XR_NS:
+        if XR is None or v in XR:
+            return
+        errors.append(f"{ctx}: ns={XR_NS};i={v} not defined in the xRegistry base model")
+        return
+    if UA is None:
+        return
+    if v in UA or v in UA_EXTRA:
+        return
+    errors.append(f"{ctx}: i={v} not defined here and not a known base/Part 14 id")
+
+for tag, el in elems:
+    bn = el.get("BrowseName"); nid = el.get("NodeId")
+    ctx = f"{tag} {bn} ({nid})"
+    parsed = parse_numeric_nodeid(nid)
+    if parsed and parsed[0] == OWN_NS and parsed[1] < OWN_MIN:
+        errors.append(f"{ctx}: own NodeId below reserved provisional block {OWN_MIN}")
+    if el.get("ParentNodeId"):
+        check(el.get("ParentNodeId"), ctx + " parent")
+    if el.get("DataType"):
+        check(el.get("DataType"), ctx + " datatype")
+    refs = el.find(NS + "References"); rl = []
+    if refs is not None:
+        for r in refs:
+            rt = r.get("ReferenceType"); tgt = r.text; fwd = r.get("IsForward", "true") != "false"
+            rl.append((rt, tgt, fwd)); check(rt, ctx + " reftype"); check(tgt, ctx + " ref")
+    reftypes = [rt for rt, _, _ in rl]
+    typedef = [t for rt, t, f in rl if rt == "HasTypeDefinition"]
+    is_enc = any(parse_numeric_nodeid(t) == (0, 76) for t in typedef)
+    if tag in ("UAObjectType", "UADataType", "UAVariableType", "UAReferenceType"):
+        if not any(rt == "HasSubtype" and not fwd for rt, _, fwd in rl):
+            errors.append(f"{ctx}: type without HasSubtype(inverse)")
+    if tag in ("UAVariable", "UAObject", "UAMethod") and el.get("ParentNodeId"):
+        p = parse_numeric_nodeid(el.get("ParentNodeId"))
+        wellknown_parent = p is not None and p[0] == 0
+        cat_el = el.find(NS + "Category")
+        is_instance = cat_el is not None and (cat_el.text or "").strip() == "AAS Instances"
+        if "HasModellingRule" not in reftypes and not is_enc and not wellknown_parent:
+            # Runtime instances under the well-known registry (and the materialized members of
+            # the well-known SchemaRegistry object) are concrete, not type declarations.
+            if not (parsed and parsed[1] in (1150,)) and not is_instance:
+                warnings.append(f"{ctx}: instance/member without HasModellingRule")
+        if tag in ("UAVariable", "UAObject") and not typedef and not is_enc:
+            errors.append(f"{ctx}: missing HasTypeDefinition")
+
+rows = [r for r in csv.reader(open(CSVF, encoding="utf-8")) if r]
+csv_ids = {}
+for r in rows:
+    if len(r) != 3:
+        errors.append(f"csv bad row {r}"); continue
+    if not r[1].isdigit():
+        errors.append(f"csv nonnumeric id {r}"); continue
+    csv_ids[int(r[1])] = (r[2], r[0])
+for num, (tag, bn) in defined.items():
+    if num not in csv_ids:
+        errors.append(f"ns={OWN_NS};i={num} {bn} missing from CSV")
+    elif csv_ids[num][0] != tag[2:]:
+        errors.append(f"class mismatch ns={OWN_NS};i={num}")
+for cid in csv_ids:
+    if cid not in defined:
+        errors.append(f"csv id {cid} not in XML")
+
+# The AASRegistry well-known instance is a component of the Server object (PubSub-independent).
+registry = next((el for tag, el in elems if el.get("NodeId") == "ns=2;i=1150"), None)
+if registry is None:
+    errors.append("AASRegistry well-known instance ns=2;i=1150 missing")
+elif registry.get("ParentNodeId") != "i=2253":
+    errors.append("AASRegistry well-known instance is not parented by the Server object i=2253")
+
+# The generated Annex A is embedded verbatim in the specification, so a regeneration that
+# is not carried into the document is caught here rather than by a reader.
+_annex = os.path.join(HERE, "model-reference.md")
+_spec = os.path.join(GEN, "OPC-UA-AAS.md")
+if os.path.exists(_annex) and os.path.exists(_spec):
+    with open(_annex, encoding="utf-8") as f:
+        rendered = f.read()
+    with open(_spec, encoding="utf-8") as f:
+        spec_text = f.read()
+    if '<a id="annex-a"></a>' not in spec_text:
+        errors.append('spec is missing the <a id="annex-a"></a> Annex A marker')
+    elif rendered.strip() not in spec_text.replace("\r\n", "\n"):
+        errors.append("generated Annex A (tools/model-reference.md) is not embedded verbatim in the spec")
+
+print(f"XML nodes: {len(defined)}   CSV rows: {len(rows)}   base ids: {len(UA) if UA is not None else 'skipped (no local base table)'}   xRegistry base ids: {len(XR) if XR is not None else 'skipped'}")
+print(f"ERRORS: {len(errors)}")
+for e in errors[:50]: print("  ERR", e)
+print(f"WARNINGS: {len(warnings)}")
+for w in warnings[:40]: print("  WARN", w)
+sys.exit(1 if errors else 0)
