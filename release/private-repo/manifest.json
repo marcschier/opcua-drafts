@@ -54,12 +54,12 @@
     {
       "stored": "payload/dot-github/workflows/agent-task.yml.bundle",
       "destination": ".github/workflows/agent-task.yml",
-      "sha256": "ae2150f39f4d347220d4990ee316a4e9b8f84bbbd1cf902ae7e768efedb1458d"
+      "sha256": "f9f96d03c6e65d1544cb79bd7e444efc741e699a6fcab5132ee13e5f75332eb7"
     },
     {
       "stored": "payload/dot-github/workflows/needs-pr.yml.bundle",
       "destination": ".github/workflows/needs-pr.yml",
-      "sha256": "05ebf7c9fd8ca954fb7d55cdcfafc2c9d3bb78c6e76854e07da0ca947b069550"
+      "sha256": "9d55d72cc8cdcfff3afdef2e8a3f9b1d537c1aed07448aab5cbed701804a69df"
     },
     {
       "stored": "payload/dot-github/workflows/pr-validation.yml.bundle",
