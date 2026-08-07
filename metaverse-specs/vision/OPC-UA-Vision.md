@@ -183,26 +183,63 @@ A Server does not need to implement all of it. `VisionSensorType` with `Media` i
 
 ### 5.1 Type hierarchy
 
+The AddressSpace figures in this document use the OPC UA graphical notation of OPC 10000-3. A Node of an instance NodeClass — Object, Variable or View — is a plain rectangle, a Method is a rounded rectangle, and a type — ObjectType, VariableType, ReferenceType or DataType — is a rectangle standing on a shadow. An abstract type is set in *italics* rather than annotated in its label, and a Node whose BrowseName is a placeholder is written in angle brackets. A `HasTypeDefinition` reference carries a solid arrowhead; a `HasComponent` reference is the plain unlabelled arrow; every other ReferenceType is drawn with its BrowseName on the arrow.
+
 ```mermaid
-graph LR
-    BOT["BaseObjectType"] --> VST["VisionSensorType (abstract)"]
-    VST --> IST["ImageSensorType"]
-    VST --> D3D["Depth3DSensorType"]
+flowchart LR
+  OBJ[Object, Variable or View]:::object
+  MTH(Method):::method
+  TYP[[ObjectType or VariableType]]:::objecttype
+  ABS[[abstract type]]:::objecttype,abstract
+  PH[&lt;Placeholder&gt;]:::object
+  TYP ==> ABS
+  OBJ --> MTH
+  OBJ -->|Organizes| PH
 
-    BOT --> MET["MediaEndpointType (abstract)"]
-    MET --> SET["StreamEndpointType"]
-    MET --> CET["ClipEndpointType"]
+  classDef object fill:#eef3fa,stroke:#444
+  classDef method fill:#eef3fa,stroke:#444
+  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px
+  classDef abstract fill:#eef3fa,stroke:#444,stroke-width:2px,font-style:italic
+```
 
-    BOT --> VCT["VisionCalibrationType (abstract)"]
-    VCT --> ICT["IntrinsicCalibrationType"]
-    VCT --> ECT["ExtrinsicCalibrationType"]
+<!-- model-figure: root=ns=1;i=1002 external=BaseObjectType,BaseInterfaceType -->
 
-    BOT --> VRT["VisionResultType (abstract)"]
-    VRT --> IRT["InspectionResultType"]
-    VRT --> DRT["DetectionResultType"]
-    VRT --> SRT["SegmentationResultType"]
+```mermaid
+flowchart LR
+  BOT[[BaseObjectType]]:::objecttype,abstract
+  VST[[VisionSensorType]]:::objecttype,abstract
+  IST[[ImageSensorType]]:::objecttype
+  D3D[[Depth3DSensorType]]:::objecttype
+  MET[[MediaEndpointType]]:::objecttype,abstract
+  SET[[StreamEndpointType]]:::objecttype
+  CET[[ClipEndpointType]]:::objecttype
+  VCT[[VisionCalibrationType]]:::objecttype,abstract
+  ICT[[IntrinsicCalibrationType]]:::objecttype
+  ECT[[ExtrinsicCalibrationType]]:::objecttype
+  VRT[[VisionResultType]]:::objecttype,abstract
+  IRT[[InspectionResultType]]:::objecttype
+  DRT[[DetectionResultType]]:::objecttype
+  SRT[[SegmentationResultType]]:::objecttype
+  BIT[[BaseInterfaceType]]:::objecttype,abstract
+  IVS[[IVisionSimulatedType]]:::objecttype,abstract
 
-    BIT["BaseInterfaceType"] --> IVS["IVisionSimulatedType"]
+  BOT -->|HasSubtype| VST
+  VST -->|HasSubtype| IST
+  VST -->|HasSubtype| D3D
+  BOT -->|HasSubtype| MET
+  MET -->|HasSubtype| SET
+  MET -->|HasSubtype| CET
+  BOT -->|HasSubtype| VCT
+  VCT -->|HasSubtype| ICT
+  VCT -->|HasSubtype| ECT
+  BOT -->|HasSubtype| VRT
+  VRT -->|HasSubtype| IRT
+  VRT -->|HasSubtype| DRT
+  VRT -->|HasSubtype| SRT
+  BIT -->|HasSubtype| IVS
+
+  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px
+  classDef abstract fill:#eef3fa,stroke:#444,stroke-width:2px,font-style:italic
 ```
 
 Four abstract bases, each with concrete subtypes, and one interface. The pattern is deliberate: a client written against the abstract base — `VisionSensorType`, `MediaEndpointType`, `VisionCalibrationType`, `VisionResultType` — works against every subtype, including ones added in a later release.

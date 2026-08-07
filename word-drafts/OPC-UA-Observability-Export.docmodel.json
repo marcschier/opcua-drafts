@@ -2195,6 +2195,108 @@
         }
       },
       {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The AddressSpace figures in this document use the OPC UA graphical notation of OPC 10000-3. A Node of an instance NodeClass — Object, Variable or View — is a plain rectangle, a Method is a rounded rectangle, and a type — ObjectType, VariableType, ReferenceType or DataType — is a rectangle standing on a shadow. An abstract type is set in "
+          },
+          {
+            "r": "t",
+            "text": "italics",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": ", and a Node whose BrowseName is a placeholder is written in angle brackets. A "
+          },
+          {
+            "r": "code",
+            "text": "HasTypeDefinition"
+          },
+          {
+            "r": "t",
+            "text": " reference carries a solid arrowhead; a "
+          },
+          {
+            "r": "code",
+            "text": "HasComponent"
+          },
+          {
+            "r": "t",
+            "text": " reference is the plain unlabelled arrow; every other ReferenceType is drawn with its BrowseName on the arrow, and a "
+          },
+          {
+            "r": "code",
+            "text": "HasInterface"
+          },
+          {
+            "r": "t",
+            "text": " reference is dashed. A figure shows the part of the model its clause describes, never the whole of it."
+          }
+        ],
+        "src": {
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "5 Information model",
+          "b": 2
+        }
+      },
+      {
+        "t": "figure",
+        "id": "fig-obs-notation",
+        "caption": "Graphical notation used by the AddressSpace figures",
+        "source": "mermaid",
+        "mermaid": "flowchart LR\n  OBJ[Object, Variable or View]:::object\n  MTH(Method):::method\n  TYP[[ObjectType or VariableType]]:::objecttype\n  ABS[[abstract type]]:::objecttype,abstract\n  PH[&lt;Placeholder&gt;]:::object\n  TYP ==> ABS\n  OBJ --> MTH\n  OBJ -->|Organizes| PH\n\n  classDef object fill:#eef3fa,stroke:#444\n  classDef method fill:#eef3fa,stroke:#444\n  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px\n  classDef abstract fill:#eef3fa,stroke:#444,stroke-width:2px,font-style:italic",
+        "src": {
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "5 Information model",
+          "b": 3
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "An observable type carries binding groups, a group carries bindings, and a binding carries the bound items it exports:"
+          }
+        ],
+        "src": {
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "5 Information model",
+          "b": 4
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "<!-- model-figure: root=ns=1;i=60018 require=mandatory external=FolderType,BaseInterfaceType -->"
+          }
+        ],
+        "src": {
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "5 Information model",
+          "b": 5
+        }
+      },
+      {
+        "t": "figure",
+        "id": "fig-obs-bindingtypes",
+        "caption": "Binding groups, bindings and the items they bind",
+        "source": "mermaid",
+        "mermaid": "flowchart TD\n  BIT[[BaseInterfaceType]]:::objecttype,abstract\n  IOBS[[IObservableType]]:::objecttype,abstract\n  FOLDER[[FolderType]]:::objecttype\n  GRPT[[ObservabilityBindingGroupType]]:::objecttype\n  CSURI[CompanionSpecificationUri]:::variable\n  NSURIS[ModelNamespaceUris]:::variable\n  GRP[&lt;ObservabilityBindingGroup&gt;]:::object\n  BND[&lt;ObservabilityBinding&gt;]:::object\n  BNDT[[ObservabilityBindingType]]:::objecttype\n  KIND[SignalKind]:::variable\n  CLASSID[DataSetClassId]:::variable\n  ITEM[&lt;BoundItem&gt;]:::object\n\n  BIT -->|HasSubtype| IOBS\n  IOBS --> GRP\n  GRP ==> GRPT\n  FOLDER -->|HasSubtype| GRPT\n  GRPT -->|HasProperty| CSURI\n  GRPT -->|HasProperty| NSURIS\n  GRPT --> BND\n  BND ==> BNDT\n  BNDT -->|HasProperty| KIND\n  BNDT -->|HasProperty| CLASSID\n  BNDT --> ITEM\n\n  classDef object fill:#eef3fa,stroke:#444\n  classDef variable fill:#eef3fa,stroke:#444\n  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px\n  classDef abstract fill:#eef3fa,stroke:#444,stroke-width:2px,font-style:italic",
+        "src": {
+          "f": "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
+          "s": "5 Information model",
+          "b": 6
+        }
+      },
+      {
         "t": "clause",
         "id": "c6-6",
         "title": "Semantic cross-reference",

@@ -185,7 +185,9 @@
   },
 
   "figures": [
+    {"id": "fig-gen-notation", "caption": "Graphical notation used by the AddressSpace figures", "pptx": "Generators-FigNotation.pptx"},
     {"id": "fig-gen-composition", "caption": "Composition of a generator set",  "pptx": "Generators-Fig1-Composition.pptx"},
+    {"id": "fig-gen-setmembers", "caption": "The Mandatory content of a generator set", "pptx": "Generators-FigSetMembers.pptx"},
     {"id": "fig-gen-statemachine", "caption": "The generator operating state machine", "pptx": "Generators-Fig2-StateMachine.pptx"}
   ]
 }
