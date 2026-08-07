@@ -223,6 +223,12 @@ def common_attrs(nid, sym, name_rule=MR_Optional):
 
 Enumeration = "i=29"
 Server = "i=2253"
+HasOrderedComponent = "i=49"
+Decimal = "i=50"
+Integer = "i=27"
+UInteger = "i=28"
+DateString = "i=12881"
+TimeString = "i=12880"
 
 def X(nid):
     """Reference to a node in the abstract xRegistry base namespace (required model)."""
@@ -232,6 +238,13 @@ XRegistry_RegistryType = X(63000)
 XRegistry_GroupType = X(63001)
 XRegistry_ResourceType = X(63002)
 XRegistry_AttributesType = X(63003)
+
+def ordered_placeholder(owner, owner_sym, name, typedef, desc):
+    """A placeholder whose members form a sequence. HasOrderedComponent (i=49) is the OPC UA
+    statement that the order of these references is meaningful; Index carries the position that
+    makes the order recoverable, because Browse is not required to preserve it."""
+    return obj_member(owner, owner_sym, name, typedef, desc, MR_OptionalPlaceholder, HasOrderedComponent)
+
 
 def instance_method(owner, owner_sym, name, decl_nid, desc, inargs=None, outargs=None):
     """Materialize a concrete method under a well-known instance object, so that loading the
@@ -336,6 +349,14 @@ CAT_INST = "AAS Registry Instances"
 # ---------------------------------------------------------------------------
 # DataTypes - enumerations
 # ---------------------------------------------------------------------------
+add(1199, "UADataType", "AASValueString", "AASValueString",
+    desc="The xsd lexical form of a typed value, as authored. A subtype of String so that a lexical "
+         "value is distinguishable from an ordinary string by its DataType rather than by which "
+         "Variable it came from - the pattern OPC UA already uses for DecimalString, DurationString, "
+         "DateString and TimeString. The xsd type the form denotes is declared separately, in ValueType.",
+    category=(CU_VALUES,))
+ref(1199, HasSubtype, String, forward=False)
+
 enum_type(1200, "AASAssetKindDataType", [
     ("Type", 0, "The shell describes a product model rather than an individual item."),
     ("Instance", 1, "The shell describes one individual physical item."),
@@ -460,7 +481,7 @@ data_type(1225, "AASQualifierDataType", [
     ("Kind", T(1205), "What the qualifier qualifies."),
     ("Type", String, "The qualifier type name."),
     ("ValueType", T(1208), "The xsd type the value is expressed in."),
-    ("Value", String, "The value in its exact lexical form."),
+    ("Value", T(1199), "The value in its exact lexical form."),
     ("ValueId", T(1221), "A reference to the value, where it is itself an identified concept."),
     ("SemanticId", T(1221), "The concept this qualifier is an occurrence of."),
     ("SupplementalSemanticIds", T(1221), "Further concepts this qualifier corresponds to.", 1),
@@ -482,14 +503,14 @@ data_type(1227, "AASDataSpecificationIec61360DataType", [
     ("Definition", T(1222), "Definition per language.", 1),
     ("ValueFormat", String, "Format of the value."),
     ("ValueList", String, "Permitted values, serialized in the metamodel's own form."),
-    ("Value", String, "The value in its exact lexical form."),
+    ("Value", T(1199), "The value in its exact lexical form."),
     ("LevelType", String, "Which of min, nom, typ and max apply."),
 ], "The IEC 61360 data specification content of a concept definition.")
 
 data_type(1228, "AASExtensionDataType", [
     ("Name", String, "Extension name."),
     ("ValueType", T(1208), "The xsd type the value is expressed in."),
-    ("Value", String, "The value in its exact lexical form."),
+    ("Value", T(1199), "The value in its exact lexical form."),
     ("RefersTo", T(1221), "What the extension refers to.", 1),
     ("SemanticId", T(1221), "The concept this extension is an occurrence of."),
     ("SupplementalSemanticIds", T(1221), "Further concepts this extension corresponds to.", 1),
@@ -621,7 +642,7 @@ object_type(1021, "AASPropertyType", T(1020),
 PR = "AASPropertyType"
 prop_var(1021, PR, "ValueType", T(1208), "The xsd type the value is expressed in.", rule=MR_Mandatory)
 prop_var(1021, PR, "Value", "i=24", "The value in its native OPC UA representation, for reading. Where the declared ValueType cannot be represented faithfully, this is the nearest representation and RawValue is authoritative.")
-prop_var(1021, PR, "RawValue", String, "The value in the exact xsd lexical form the metamodel carries. This is the normative carrier for round-tripping: where it and Value disagree, RawValue wins.", rule=MR_Mandatory)
+prop_var(1021, PR, "RawValue", T(1199), "The value in the exact xsd lexical form the metamodel carries. This is the normative carrier for round-tripping: where it and Value disagree, RawValue wins.", rule=MR_Mandatory)
 prop_var(1021, PR, "ValueId", T(1221), "A reference to the value, where the value is itself an identified concept.")
 
 object_type(1022, "AASMultiLanguagePropertyType", T(1020),
@@ -634,8 +655,8 @@ prop_var(1022, ML, "ValueId", T(1221), "A reference to the value, where the valu
 object_type(1023, "AASRangeType", T(1020), "A closed or half-open interval of a single typed value.")
 RA = "AASRangeType"
 prop_var(1023, RA, "ValueType", T(1208), "The xsd type the bounds are expressed in.", rule=MR_Mandatory)
-prop_var(1023, RA, "Min", String, "The lower bound in its exact lexical form. Absent means unbounded below, which is different from a bound of zero.")
-prop_var(1023, RA, "Max", String, "The upper bound in its exact lexical form. Absent means unbounded above.")
+prop_var(1023, RA, "Min", T(1199), "The lower bound in its exact lexical form. Absent means unbounded below, which is different from a bound of zero.")
+prop_var(1023, RA, "Max", T(1199), "The upper bound in its exact lexical form. Absent means unbounded above.")
 
 object_type(1024, "AASBlobType", T(1020), "Binary content carried inline.")
 BL = "AASBlobType"
@@ -671,7 +692,7 @@ prop_var(1031, SL, "OrderRelevant", Boolean, "Whether the order carries meaning.
 prop_var(1031, SL, "TypeValueListElement", T(1210), "The element kind every member is constrained to.", rule=MR_Mandatory)
 prop_var(1031, SL, "SemanticIdListElement", T(1221), "The concept every member is an occurrence of, where they share one.")
 prop_var(1031, SL, "ValueTypeListElement", T(1208), "The xsd type every member's value is expressed in, where they share one.")
-placeholder_obj(1031, SL, "<Element>", T(1020), "A member of this list, named by its index.")
+ordered_placeholder(1031, SL, "<Element>", T(1020), "A member of this list, named by its index. Referenced with HasOrderedComponent because the collection is a sequence; Index carries the position that makes the sequence recoverable.")
 
 object_type(1032, "AASEntityType", T(1020),
             "A component of a composition. A self-managed entity carries the identifier of its own shell, which is "
@@ -689,9 +710,9 @@ prop_var(1033, BE, "Direction", T(1203), "Whether the event is produced or consu
 prop_var(1033, BE, "State", T(1204), "Whether the event source is active.", rule=MR_Mandatory)
 prop_var(1033, BE, "MessageTopic", String, "The topic events are delivered on. Where the delivery endpoint is itself catalogued, the registry entry points at it.")
 prop_var(1033, BE, "MessageBroker", T(1221), "The broker delivering the events.")
-prop_var(1033, BE, "LastUpdate", String, "When the event last fired, in its exact lexical form.")
-prop_var(1033, BE, "MinInterval", String, "Minimum interval between events, in its exact lexical form.")
-prop_var(1033, BE, "MaxInterval", String, "Maximum interval between events, in its exact lexical form.")
+prop_var(1033, BE, "LastUpdate", T(1199), "When the event last fired, in its exact lexical form.")
+prop_var(1033, BE, "MinInterval", T(1199), "Minimum interval between events, in its exact lexical form.")
+prop_var(1033, BE, "MaxInterval", T(1199), "Maximum interval between events, in its exact lexical form.")
 
 object_type(1034, "AASOperationType", T(1020), "An invocable operation.")
 OP = "AASOperationType"
@@ -830,7 +851,8 @@ ALIASES = [
     ("Boolean", Boolean), ("UInt32", UInt32), ("String", String), ("DateTime", DateTime),
     ("ByteString", ByteString), ("ExpandedNodeId", ExpandedNodeId), ("Duration", Duration),
     ("Argument", Argument), ("KeyValuePair", KeyValuePair), ("NodeId", NodeId),
-    ("Enumeration", Enumeration), ("Organizes", Organizes), ("HasModellingRule", HasModellingRule),
+    ("Enumeration", Enumeration), ("Organizes", Organizes),
+    ("HasOrderedComponent", HasOrderedComponent), ("HasModellingRule", HasModellingRule),
     ("HasTypeDefinition", HasTypeDefinition), ("HasSubtype", HasSubtype),
     ("HasProperty", HasProperty), ("HasComponent", HasComponent), ("HasEncoding", HasEncoding),
 ]

@@ -128,7 +128,7 @@ any prior understanding or agreement (oral or written) relating to, this compani
   - [9.4 Versioning and the lifecycle record](#94-versioning-and-the-lifecycle-record)
   - [9.5 Discovery and resolution](#95-discovery-and-resolution)
   - [9.6 Federation](#96-federation)
-  - [9.7 Disclosure tiers](#97-disclosure-tiers)
+  - [9.7 Information disclosure tiers](#97-information-disclosure-tiers)
   - [9.8 The xRegistry API over OPC UA](#98-the-xregistry-api-over-opc-ua)
 - [10 Profiles and conformance](#10-profiles-and-conformance)
 - [11 NodeSet validation](#11-nodeset-validation)
@@ -302,36 +302,66 @@ and concept descriptions it contains. Submodels are held by the environment, not
 shells, because a submodel is not owned by the shell that references it; a shell carries references
 to its submodels, and those references are the link.
 
+`AASEnvironmentType` is a plain `FolderType` and **not** a subtype of the xRegistry `RegistryType`,
+although both are folders and the two would compose. The distinction is what each contains. An
+environment holds the metamodel objects of one serialization — the unit an AASX package carries and
+a source generator compiles — and its membership is whatever that serialization contained. A
+registry holds *documents about* shells, versioned and federatable, and its membership is what the
+Server catalogues. A Server may serve one, the other, or both over the same shells, and making the
+environment a registry would force every Server that materializes an AAS to also implement the
+registry half.
+
+Where both are present, clause 9.2 defines the link between a catalogued shell and its materialized
+node tree.
+
 Every metamodel field has exactly one representation in the AddressSpace. [Annex B](#annex-b) lists
 them all, field by field. A field with no entry in that annex is a defect in this specification, not
 a field an implementation may drop.
 
 ### 5.2 Canonical value representation
 
-AAS types values with an xsd type. Several of those types have no faithful OPC UA equivalent:
-`xs:decimal` and `xs:integer` are arbitrary precision, `xs:duration` has no native match, and the
-partial-date types such as `xs:gYearMonth` describe a period rather than an instant. A mapping that
-carried values only as typed OPC UA Variables would therefore lose information for those types, and
-could not be lossless.
+AAS types values with an xsd type. Most of those types map onto an OPC UA built-in DataType
+directly, including the ones that are awkward elsewhere: `Decimal` (`i=50`) is arbitrary precision,
+`Integer` (`i=27`) and `UInteger` (`i=28`) are unbounded, and `Duration` (`i=290`) already exists.
+Clause 7.1 gives the mapping for every value of `AASDataTypeDefXsdDataType`.
 
-A value is consequently carried **twice**:
+Two things nevertheless have to be carried beyond the typed value, and they are the reason this
+clause exists.
 
-- `Value` is the value in its native OPC UA representation. It is what a generic Client reads, what a
-  Subscription monitors, and what an operator sees in a browser. Where the declared `ValueType`
-  cannot be represented faithfully, it holds the nearest representation.
-- `RawValue` is the value in the exact lexical form the metamodel carries, as a String. It is
-  Mandatory, and it is **the normative carrier for round-tripping**.
+**The declared type is part of the data.** An AAS value knows which xsd type it was authored as,
+and two different xsd types can map onto one OPC UA DataType — `xs:int` and `xs:integer` both read
+as numbers, `xs:anyURI` and `xs:string` both as strings. Materializing a value and serializing it
+again would otherwise have to guess which xsd type to write. `ValueType` is therefore Mandatory
+wherever the metamodel declares one, and it is the authority for what the value *is*.
+
+**The lexical form is part of the data.** xsd values are written, not just held: `1.500000` and
+`1.5` are the same `xs:decimal` and different lexical forms, `+42` and `42` are the same `xs:int`,
+and a partial date such as `xs:gYearMonth` has no instant to round-trip through at all. A Server
+that reconstructed the lexical form from the typed value would produce *a* correct serialization
+but not *the* one it was given, and clause 8 compares against the original.
+
+A value is consequently carried in two Variables:
+
+- `Value` is the typed value, of the OPC UA DataType clause 7.1 assigns to the declared
+  `ValueType`. It is what a generic Client reads, what a Subscription monitors, and what an
+  operator sees in a browser.
+- `RawValue` is the value in the exact xsd lexical form the metamodel carries. Its DataType is
+  `AASValueString`, a subtype of `String` (clause 7.2), so a Client can tell a lexical value from
+  an ordinary string by its type rather than by convention. It is Mandatory, and it is **the
+  normative carrier for round-tripping**.
 
 Where the two disagree, `RawValue` is authoritative. A Server **shall** keep them consistent: a
-write to `Value` updates `RawValue` to the lexical form of what was written, and a write to
-`RawValue` updates `Value` to the nearest native representation. A Client that requires exactness —
-a passport, a certificate, a measurement whose precision is regulated — reads `RawValue`.
+write to `Value` updates `RawValue` to the canonical lexical form of what was written, and a write
+to `RawValue` updates `Value` to the value that lexical form denotes. A Client that requires the
+authored form — a passport, a certificate, a measurement whose precision is regulated — reads
+`RawValue`; a Client that wants to compute reads `Value`.
 
-The duplication is deliberate and is the price of the requirement. It is stated here rather than
-hidden because a later reader will otherwise try to remove it.
+The two Variables are not a redundant encoding of one fact. `Value` is the value; `RawValue` is how
+it was written; `ValueType` is what it was declared as. A round trip needs all three, and dropping
+either extra one loses information that clause 8 will detect.
 
-The same rule applies wherever the metamodel carries a typed value: on `AASPropertyType`, on the
-bounds of `AASRangeType`, and in the qualifier and extension DataTypes, which carry their values
+The same arrangement applies wherever the metamodel carries a typed value: on `AASPropertyType`, on
+the bounds of `AASRangeType`, and in the qualifier and extension DataTypes, which carry their values
 lexically for the same reason.
 
 ### 5.3 NodeId and BrowseName assignment
@@ -362,14 +392,26 @@ BrowseName, because a BrowseName is a name and not a position.
 
 ### 5.4 Ordering
 
-A `SubmodelElementList` is ordered. OPC UA References are not. An ordered collection therefore
-carries its order explicitly or loses it.
+A `SubmodelElementList` is ordered. OPC UA has a ReferenceType for exactly this:
+`HasOrderedComponent` (`i=49`), a subtype of `HasComponent` whose semantic is that the order of the
+references is meaningful.
 
-Every element inside a `SubmodelElementList` **shall** carry a Mandatory `Index`, its zero-based
-position. A serializer emits members in `Index` order and **shall not** rely on the order a Browse
-returns them in.
+A `SubmodelElementList` **shall** reference its members with `HasOrderedComponent`, and every other
+element collection **shall** use `HasComponent` or `Organizes` as its type declares. That much a
+generic OPC UA Client understands without knowing anything about the AAS.
 
-`OrderRelevant` records whether the order carries meaning to the application. Order is preserved
+`HasOrderedComponent` establishes that the order matters; it does not, on its own, survive a round
+trip. The Browse Service is not required to return references in any particular order, and a
+NodeSet is a set of references rather than a sequence, so a serializer that read the order back out
+of a Browse result would be relying on an implementation detail. Every member of a
+`SubmodelElementList` therefore also carries a Mandatory `Index`, its zero-based position, and a
+serializer emits members in `Index` order.
+
+The two are not redundant. `HasOrderedComponent` is the OPC UA statement that this collection is a
+sequence; `Index` is the position that makes the sequence recoverable. A Server **shall** keep them
+consistent: the members' `Index` values are the positions `0 … n-1` without gaps or repeats.
+
+`OrderRelevant` records whether the order carries meaning to the *application*. Order is preserved
 either way: a round trip must reproduce its input whether or not the order is significant, and a
 Server does not get to reorder a list because the model said the order does not matter.
 
@@ -711,7 +753,7 @@ flowchart TD
   SET -->|HasSubtype| SEL
   SET -->|HasSubtype| SEC
   SET -->|HasProperty| IDX
-  SEL -->|Organizes| ELM
+  SEL -->|HasOrderedComponent| ELM
   SEC -->|Organizes| SUB
   ELM ==> SET
   SUB ==> SET
@@ -779,16 +821,75 @@ Figure 10 — Composition, operations and events
 
 ## 7 AAS DataTypes
 
-The DataTypes fall into two groups.
+### 7.1 The xsd type mapping
 
-**Enumerations** are closed. `AASKeyTypesDataType`, `AASDataTypeDefXsdDataType` and the rest
+Every value of `AASDataTypeDefXsdDataType` maps onto an OPC UA built-in DataType. A Server
+materializing a value gives the `Value` Variable the DataType in this table; `RawValue` carries the
+lexical form in every case (clause 5.2).
+
+| `ValueType` | OPC UA DataType | Note |
+|---|---|---|
+| `xs:boolean` | `Boolean` (`i=1`) | |
+| `xs:byte` | `SByte` (`i=2`) | xsd `byte` is signed |
+| `xs:unsignedByte` | `Byte` (`i=3`) | |
+| `xs:short` | `Int16` (`i=4`) | |
+| `xs:unsignedShort` | `UInt16` (`i=5`) | |
+| `xs:int` | `Int32` (`i=6`) | |
+| `xs:unsignedInt` | `UInt32` (`i=7`) | |
+| `xs:long` | `Int64` (`i=8`) | |
+| `xs:unsignedLong` | `UInt64` (`i=9`) | |
+| `xs:float` | `Float` (`i=10`) | |
+| `xs:double` | `Double` (`i=11`) | |
+| `xs:decimal` | `Decimal` (`i=50`) | arbitrary precision |
+| `xs:integer` | `Integer` (`i=27`) | unbounded |
+| `xs:nonNegativeInteger`, `xs:positiveInteger` | `UInteger` (`i=28`) | unbounded |
+| `xs:nonPositiveInteger`, `xs:negativeInteger` | `Integer` (`i=27`) | sign constrained by the declared `ValueType` |
+| `xs:string` | `String` (`i=12`) | |
+| `xs:anyURI` | `String` (`i=12`) | distinguished from `xs:string` by `ValueType` |
+| `xs:dateTime` | `DateTime` (`i=13`) | |
+| `xs:date` | `DateString` (`i=12881`) | a date is not an instant |
+| `xs:time` | `TimeString` (`i=12880`) | |
+| `xs:duration` | `Duration` (`i=290`) | |
+| `xs:gYear`, `xs:gYearMonth`, `xs:gMonth`, `xs:gMonthDay`, `xs:gDay` | `AASValueString` (clause 7.2) | a partial date denotes a period, and OPC UA has no type for one |
+| `xs:base64Binary`, `xs:hexBinary` | `ByteString` (`i=15`) | the encoding is carried by `ValueType` |
+
+Two entries deserve their reasoning stated, because both are places where an obvious choice is
+wrong.
+
+`xs:date` and `xs:time` map onto the `String` subtypes `DateString` and `TimeString` rather than
+onto `DateTime`. A `DateTime` is an instant; a date is a day in some timezone and a time is a
+time-of-day with no day at all. Mapping either onto `DateTime` would require inventing the missing
+component, which a round trip would then have to strip back off.
+
+The partial-date types have no OPC UA DataType, built-in or derived, that denotes a period. They
+are therefore carried as `AASValueString`, which is what `RawValue` uses anyway, and `ValueType`
+says which of the five they are.
+
+### 7.2 `AASValueString`
+
+`AASValueString` is a subtype of `String` (`i=12`). Its value is the xsd lexical form of a typed
+value, as authored.
+
+It exists so that a lexical value is distinguishable from an ordinary string by its DataType rather
+than by knowing which Variable it came from. OPC UA already derives `DecimalString`,
+`DurationString`, `DateString` and `TimeString` from `String` for exactly this reason; this is the
+same pattern for a value whose xsd type is declared separately, in `ValueType`.
+
+Every `RawValue` Variable and every lexical field of a DataType in clause 7.4 has this DataType.
+
+### 7.3 Enumerations
+
+The enumerations are closed. `AASKeyTypesDataType`, `AASDataTypeDefXsdDataType` and the rest
 enumerate exactly the metamodel's values; a value outside the enumeration cannot round-trip, so an
 implementation rejects it rather than dropping it silently.
 
-**Structures** carry the metamodel's value classes: references and their ordered keys,
+### 7.4 Structures
+
+The structures carry the metamodel's value classes: references and their ordered keys,
 language-tagged strings, specific asset identifiers, administrative information, qualifiers,
-extensions, data specifications and their IEC 61360 content. Each carries its values lexically where
-the metamodel types them with an xsd type, for the reason given in clause 5.2.
+extensions, data specifications and their IEC 61360 content. Each carries its values as
+`AASValueString` where the metamodel types them with an xsd type, for the reason given in
+clause 5.2.
 
 `AASReferenceDataType` carries its `Keys` as an ordered array. The order is part of the reference's
 meaning — it is the path — so it is preserved exactly.
@@ -812,9 +913,10 @@ lexically, and a field that cannot be represented is a defect in this specificat
 
 A test corpus accompanies this document under `tools/fixtures/`, and `tools/roundtrip_check.py`
 runs both directions over it. The corpus exercises every element type, nested and ordered lists,
-elements without short names, multi-language values, the xsd types with no faithful OPC UA
-equivalent, the absent-versus-empty distinction, qualifiers, extensions, data specifications and
-multi-key references. A corpus that exercised only string properties would demonstrate nothing.
+elements without short names, multi-language values, the xsd types whose lexical form does not
+survive a round trip through their typed value, the absent-versus-empty distinction, qualifiers,
+extensions, data specifications and multi-key references. A corpus that exercised only string
+properties would demonstrate nothing.
 
 The same tool carries a **negative control**, because a check that cannot fail is not evidence. It
 breaks one normative rule at a time — carrying a value only as a typed number, restoring a list in
@@ -849,9 +951,24 @@ A Server may implement either half or both. Where both are present the same shel
 folders hold shells, submodel template families, concept dictionaries and package stores; its
 Methods answer the discovery question and provide a document fast path.
 
-`AASShellGroupType` holds the submodel documents of one shell. It is deliberately distinct from
-`AASType`: the catalogue entry and the live node tree are different nodes modelling the same shell,
-and conflating them would make it impossible to have one without the other.
+`AASShellGroupType` holds the submodel documents of one shell. It is a `GroupType`, and therefore a
+folder of resource files, whereas `AASType` is the shell's metamodel object tree. They are separate
+types because they are separate things, and three consequences follow that a single type could not
+give:
+
+- **Either half can exist without the other.** A registry that catalogues a shell served by another
+  Server has no metamodel tree to attach to, and a Server that materializes an AAS from a package
+  need not catalogue it. Conflating the two would make each imply the other.
+- **A group is a folder of files; a shell is an object.** The base `GroupType` gives the catalogue
+  entry its xRegistry attributes, its creation Methods and its file members. `AASType` gives the
+  shell its `AssetInformation` and its submodel references. Neither set belongs on the other.
+- **They have different lifetimes.** A catalogued shell has versions, and the current version of its
+  submodel document need not be what the metamodel tree currently holds — that is the whole point of
+  clause 9.4.
+
+Where a Server implements both halves, `AASShellGroupType.ShellNode` points at the `AASType` node
+for the same shell, and both carry the same identifiers, so a Client can move between the catalogue
+and the live tree without re-resolving anything.
 
 `AASSubmodelFileType` is one submodel document. `AASConceptDescriptionFileType` and
 `AASPackageFileType` are the corresponding resources for concept definitions and packages.
@@ -999,10 +1116,24 @@ not the entity.
 Because the construction of clause 9.3 is deterministic, the same shell has the same identifier in
 every registry that describes it, and a Client moving between registries re-resolves nothing.
 
-### 9.7 Disclosure tiers
+### 9.7 Information disclosure tiers
 
-Some assets carry data that cannot be shown to everyone. This specification expresses two of the
-three things that requires, and does not express the third.
+Some assets carry data that cannot be shown to everyone: a product passport is public in part and
+restricted in part, and a supplier's technical data is commercially sensitive.
+
+An **information disclosure tier** is the class of caller an entity's content may be released to.
+This specification defines two, `Public` and `Controlled`, carried by the `DisclosureTier` Property.
+They classify the *information*, not the caller and not the transport: a tier says what kind of
+release this entity's content is, and leaves who may obtain it to the authorization the entity
+advertises. A regulation that names finer classes maps them onto these two by deciding, for each,
+whether the content is readable without authentication.
+
+Note that a disclosure tier is metadata about content, and is therefore itself disclosed. A Server
+that must not reveal even the existence of controlled content omits those entries entirely rather
+than marking them; see the mitigations below.
+
+This specification expresses two of the three things tiering requires, and does not express the
+third.
 
 **Segmentation** is expressible: a registry serves public content as stored documents and represents
 controlled content as entries carrying a `ResourceUrl` or an `ExternalReference` instead of bytes.
@@ -1109,6 +1240,7 @@ This annex is the normative node reference. It is generated from `tools/build_mo
 | ns=1;i=1105 | [AASConceptDescriptionFileType](#type-AASConceptDescriptionFileType) | ObjectType | ns=1;i=63002 |
 | ns=1;i=1106 | [AASPackageStoreGroupType](#type-AASPackageStoreGroupType) | ObjectType | ns=1;i=63001 |
 | ns=1;i=1107 | [AASPackageFileType](#type-AASPackageFileType) | ObjectType | ns=1;i=63002 |
+| ns=1;i=1199 | [AASValueString](#type-AASValueString) | DataType | String |
 | ns=1;i=1200 | [AASAssetKindDataType](#type-AASAssetKindDataType) | DataType | Enumeration |
 | ns=1;i=1201 | [AASModellingKindDataType](#type-AASModellingKindDataType) | DataType | Enumeration |
 | ns=1;i=1202 | [AASEntityTypeDataType](#type-AASEntityTypeDataType) | DataType | Enumeration |
@@ -1319,7 +1451,7 @@ A single typed value. The value is carried twice: as a typed Variable for the na
 |---|---|---|---|---|---|
 | ValueType | Variable | [AASDataTypeDefXsdDataType](#type-AASDataTypeDefXsdDataType) | Mandatory | AASPropertyType | The xsd type the value is expressed in. |
 | Value | Variable | i=24 | Optional | AASPropertyType | The value in its native OPC UA representation, for reading. Where the declared ValueType cannot be represented faithfully, this is the nearest representation and RawValue is authoritative. |
-| RawValue | Variable | String | Mandatory | AASPropertyType | The value in the exact xsd lexical form the metamodel carries. This is the normative carrier for round-tripping: where it and Value disagree, RawValue wins. |
+| RawValue | Variable | [AASValueString](#type-AASValueString) | Mandatory | AASPropertyType | The value in the exact xsd lexical form the metamodel carries. This is the normative carrier for round-tripping: where it and Value disagree, RawValue wins. |
 | ValueId | Variable | [AASReferenceDataType](#type-AASReferenceDataType) | Optional | AASPropertyType | A reference to the value, where the value is itself an identified concept. |
 
 <a id="type-AASMultiLanguagePropertyType"></a>
@@ -1346,8 +1478,8 @@ A closed or half-open interval of a single typed value.
 | BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
 |---|---|---|---|---|---|
 | ValueType | Variable | [AASDataTypeDefXsdDataType](#type-AASDataTypeDefXsdDataType) | Mandatory | AASRangeType | The xsd type the bounds are expressed in. |
-| Min | Variable | String | Optional | AASRangeType | The lower bound in its exact lexical form. Absent means unbounded below, which is different from a bound of zero. |
-| Max | Variable | String | Optional | AASRangeType | The upper bound in its exact lexical form. Absent means unbounded above. |
+| Min | Variable | [AASValueString](#type-AASValueString) | Optional | AASRangeType | The lower bound in its exact lexical form. Absent means unbounded below, which is different from a bound of zero. |
+| Max | Variable | [AASValueString](#type-AASValueString) | Optional | AASRangeType | The upper bound in its exact lexical form. Absent means unbounded above. |
 
 <a id="type-AASBlobType"></a>
 
@@ -1438,7 +1570,6 @@ An ordered sequence of elements. Its members have no IdShort, so they are named 
 | TypeValueListElement | Variable | [AASSubmodelElementsDataType](#type-AASSubmodelElementsDataType) | Mandatory | AASSubmodelElementListType | The element kind every member is constrained to. |
 | SemanticIdListElement | Variable | [AASReferenceDataType](#type-AASReferenceDataType) | Optional | AASSubmodelElementListType | The concept every member is an occurrence of, where they share one. |
 | ValueTypeListElement | Variable | [AASDataTypeDefXsdDataType](#type-AASDataTypeDefXsdDataType) | Optional | AASSubmodelElementListType | The xsd type every member's value is expressed in, where they share one. |
-| <Element> | Object |  | OptionalPlaceholder | AASSubmodelElementListType | A member of this list, named by its index. |
 
 <a id="type-AASEntityType"></a>
 
@@ -1470,9 +1601,9 @@ An event source or sink.
 | State | Variable | [AASStateOfEventDataType](#type-AASStateOfEventDataType) | Mandatory | AASBasicEventElementType | Whether the event source is active. |
 | MessageTopic | Variable | String | Optional | AASBasicEventElementType | The topic events are delivered on. Where the delivery endpoint is itself catalogued, the registry entry points at it. |
 | MessageBroker | Variable | [AASReferenceDataType](#type-AASReferenceDataType) | Optional | AASBasicEventElementType | The broker delivering the events. |
-| LastUpdate | Variable | String | Optional | AASBasicEventElementType | When the event last fired, in its exact lexical form. |
-| MinInterval | Variable | String | Optional | AASBasicEventElementType | Minimum interval between events, in its exact lexical form. |
-| MaxInterval | Variable | String | Optional | AASBasicEventElementType | Maximum interval between events, in its exact lexical form. |
+| LastUpdate | Variable | [AASValueString](#type-AASValueString) | Optional | AASBasicEventElementType | When the event last fired, in its exact lexical form. |
+| MinInterval | Variable | [AASValueString](#type-AASValueString) | Optional | AASBasicEventElementType | Minimum interval between events, in its exact lexical form. |
+| MaxInterval | Variable | [AASValueString](#type-AASValueString) | Optional | AASBasicEventElementType | Maximum interval between events, in its exact lexical form. |
 
 <a id="type-AASOperationType"></a>
 
@@ -1633,6 +1764,14 @@ An xRegistry ResourceType whose file content is one package: an immutable releas
 | Attestations | Variable | [AASAttestationDataType](#type-AASAttestationDataType)\[\] | Optional | AASPackageFileType | The signatures and attestations attached to this package. |
 
 ### DataTypes
+
+<a id="type-AASValueString"></a>
+
+#### AASValueString  (ns=1;i=1199)
+
+*Subtype of:* String
+
+The xsd lexical form of a typed value, as authored. A subtype of String so that a lexical value is distinguishable from an ordinary string by its DataType rather than by which Variable it came from - the pattern OPC UA already uses for DecimalString, DurationString, DateString and TimeString. The xsd type the form denotes is declared separately, in ValueType.
 
 <a id="type-AASAssetKindDataType"></a>
 
@@ -1961,7 +2100,7 @@ A qualifier constraining or annotating an element.
 | Kind | [AASQualifierKindDataType](#type-AASQualifierKindDataType) | What the qualifier qualifies. |
 | Type | String | The qualifier type name. |
 | ValueType | [AASDataTypeDefXsdDataType](#type-AASDataTypeDefXsdDataType) | The xsd type the value is expressed in. |
-| Value | String | The value in its exact lexical form. |
+| Value | [AASValueString](#type-AASValueString) | The value in its exact lexical form. |
 | ValueId | [AASReferenceDataType](#type-AASReferenceDataType) | A reference to the value, where it is itself an identified concept. |
 | SemanticId | [AASReferenceDataType](#type-AASReferenceDataType) | The concept this qualifier is an occurrence of. |
 | SupplementalSemanticIds | [AASReferenceDataType](#type-AASReferenceDataType)\[\] | Further concepts this qualifier corresponds to. |
@@ -1999,7 +2138,7 @@ The IEC 61360 data specification content of a concept definition.
 | Definition | [AASLangStringDataType](#type-AASLangStringDataType)\[\] | Definition per language. |
 | ValueFormat | String | Format of the value. |
 | ValueList | String | Permitted values, serialized in the metamodel's own form. |
-| Value | String | The value in its exact lexical form. |
+| Value | [AASValueString](#type-AASValueString) | The value in its exact lexical form. |
 | LevelType | String | Which of min, nom, typ and max apply. |
 
 <a id="type-AASExtensionDataType"></a>
@@ -2014,7 +2153,7 @@ A proprietary extension carried on a Referable. Extensions round-trip verbatim; 
 |---|---|---|
 | Name | String | Extension name. |
 | ValueType | [AASDataTypeDefXsdDataType](#type-AASDataTypeDefXsdDataType) | The xsd type the value is expressed in. |
-| Value | String | The value in its exact lexical form. |
+| Value | [AASValueString](#type-AASValueString) | The value in its exact lexical form. |
 | RefersTo | [AASReferenceDataType](#type-AASReferenceDataType)\[\] | What the extension refers to. |
 | SemanticId | [AASReferenceDataType](#type-AASReferenceDataType) | The concept this extension is an occurrence of. |
 | SupplementalSemanticIds | [AASReferenceDataType](#type-AASReferenceDataType)\[\] | Further concepts this extension corresponds to. |
@@ -2138,12 +2277,12 @@ list — `Index`. Element-specific fields:
 | Element and field | Address space |
 |---|---|
 | `Property.valueType` | `AASPropertyType.ValueType`, Mandatory |
-| `Property.value` | `AASPropertyType.Value` and `RawValue`; `RawValue` is normative |
+| `Property.value` | `AASPropertyType.Value` (typed per clause 7.1) and `RawValue` (`AASValueString`); `RawValue` is normative |
 | `Property.valueId` | `AASPropertyType.ValueId` |
 | `MultiLanguageProperty.value` | `AASMultiLanguagePropertyType.Value`, order preserved |
 | `MultiLanguageProperty.valueId` | `AASMultiLanguagePropertyType.ValueId` |
 | `Range.valueType` | `AASRangeType.ValueType`, Mandatory |
-| `Range.min`, `Range.max` | `AASRangeType.Min`, `Max`; absent means unbounded |
+| `Range.min`, `Range.max` | `AASRangeType.Min`, `Max` (`AASValueString`); absent means unbounded |
 | `Blob.value` | `AASBlobType.Value` |
 | `Blob.contentType` | `AASBlobType.ContentType`, Mandatory |
 | `File.value` | `AASFileType.Value` |
@@ -2156,7 +2295,7 @@ list — `Index`. Element-specific fields:
 | `SubmodelElementList.typeValueListElement` | `AASSubmodelElementListType.TypeValueListElement`, Mandatory |
 | `SubmodelElementList.semanticIdListElement` | `AASSubmodelElementListType.SemanticIdListElement` |
 | `SubmodelElementList.valueTypeListElement` | `AASSubmodelElementListType.ValueTypeListElement` |
-| `SubmodelElementList.value` | `AASSubmodelElementListType` components, ordered by `Index` |
+| `SubmodelElementList.value` | `AASSubmodelElementListType` members, referenced with `HasOrderedComponent` and ordered by `Index` |
 | `Entity.entityType` | `AASEntityType.EntityType`, Mandatory |
 | `Entity.globalAssetId` | `AASEntityType.GlobalAssetId` |
 | `Entity.specificAssetIds` | `AASEntityType.SpecificAssetIds` |
@@ -2166,8 +2305,8 @@ list — `Index`. Element-specific fields:
 | `BasicEventElement.state` | `AASBasicEventElementType.State`, Mandatory |
 | `BasicEventElement.messageTopic` | `AASBasicEventElementType.MessageTopic` |
 | `BasicEventElement.messageBroker` | `AASBasicEventElementType.MessageBroker` |
-| `BasicEventElement.lastUpdate` | `AASBasicEventElementType.LastUpdate`, lexical |
-| `BasicEventElement.minInterval`, `.maxInterval` | `AASBasicEventElementType.MinInterval`, `MaxInterval`, lexical |
+| `BasicEventElement.lastUpdate` | `AASBasicEventElementType.LastUpdate` (`AASValueString`) |
+| `BasicEventElement.minInterval`, `.maxInterval` | `AASBasicEventElementType.MinInterval`, `MaxInterval` (`AASValueString`) |
 | `Operation.inputVariables` | `AASOperationType.InputVariables`, referencing element nodes |
 | `Operation.outputVariables` | `AASOperationType.OutputVariables` |
 | `Operation.inoutputVariables` | `AASOperationType.InoutputVariables` |
@@ -2182,8 +2321,8 @@ list — `Index`. Element-specific fields:
 | `LangString.language`, `.text` | `AASLangStringDataType` |
 | `SpecificAssetId` fields | `AASSpecificAssetIdDataType` |
 | `AdministrativeInformation` fields | `AASAdministrativeInformationDataType` |
-| `Qualifier` fields | `AASQualifierDataType`, value lexical |
-| `Extension` fields | `AASExtensionDataType`, value lexical |
+| `Qualifier` fields | `AASQualifierDataType`, value as `AASValueString` |
+| `Extension` fields | `AASExtensionDataType`, value as `AASValueString` |
 | `Resource.path`, `.contentType` | `AASResourceDataType` |
 | `EmbeddedDataSpecification` fields | `AASEmbeddedDataSpecificationDataType` |
 | `DataSpecificationIec61360` fields | `AASDataSpecificationIec61360DataType` |

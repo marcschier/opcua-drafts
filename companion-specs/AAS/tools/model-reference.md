@@ -42,6 +42,7 @@ This annex is the normative node reference. It is generated from `tools/build_mo
 | ns=1;i=1105 | [AASConceptDescriptionFileType](#type-AASConceptDescriptionFileType) | ObjectType | ns=1;i=63002 |
 | ns=1;i=1106 | [AASPackageStoreGroupType](#type-AASPackageStoreGroupType) | ObjectType | ns=1;i=63001 |
 | ns=1;i=1107 | [AASPackageFileType](#type-AASPackageFileType) | ObjectType | ns=1;i=63002 |
+| ns=1;i=1199 | [AASValueString](#type-AASValueString) | DataType | String |
 | ns=1;i=1200 | [AASAssetKindDataType](#type-AASAssetKindDataType) | DataType | Enumeration |
 | ns=1;i=1201 | [AASModellingKindDataType](#type-AASModellingKindDataType) | DataType | Enumeration |
 | ns=1;i=1202 | [AASEntityTypeDataType](#type-AASEntityTypeDataType) | DataType | Enumeration |
@@ -252,7 +253,7 @@ A single typed value. The value is carried twice: as a typed Variable for the na
 |---|---|---|---|---|---|
 | ValueType | Variable | [AASDataTypeDefXsdDataType](#type-AASDataTypeDefXsdDataType) | Mandatory | AASPropertyType | The xsd type the value is expressed in. |
 | Value | Variable | i=24 | Optional | AASPropertyType | The value in its native OPC UA representation, for reading. Where the declared ValueType cannot be represented faithfully, this is the nearest representation and RawValue is authoritative. |
-| RawValue | Variable | String | Mandatory | AASPropertyType | The value in the exact xsd lexical form the metamodel carries. This is the normative carrier for round-tripping: where it and Value disagree, RawValue wins. |
+| RawValue | Variable | [AASValueString](#type-AASValueString) | Mandatory | AASPropertyType | The value in the exact xsd lexical form the metamodel carries. This is the normative carrier for round-tripping: where it and Value disagree, RawValue wins. |
 | ValueId | Variable | [AASReferenceDataType](#type-AASReferenceDataType) | Optional | AASPropertyType | A reference to the value, where the value is itself an identified concept. |
 
 <a id="type-AASMultiLanguagePropertyType"></a>
@@ -279,8 +280,8 @@ A closed or half-open interval of a single typed value.
 | BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
 |---|---|---|---|---|---|
 | ValueType | Variable | [AASDataTypeDefXsdDataType](#type-AASDataTypeDefXsdDataType) | Mandatory | AASRangeType | The xsd type the bounds are expressed in. |
-| Min | Variable | String | Optional | AASRangeType | The lower bound in its exact lexical form. Absent means unbounded below, which is different from a bound of zero. |
-| Max | Variable | String | Optional | AASRangeType | The upper bound in its exact lexical form. Absent means unbounded above. |
+| Min | Variable | [AASValueString](#type-AASValueString) | Optional | AASRangeType | The lower bound in its exact lexical form. Absent means unbounded below, which is different from a bound of zero. |
+| Max | Variable | [AASValueString](#type-AASValueString) | Optional | AASRangeType | The upper bound in its exact lexical form. Absent means unbounded above. |
 
 <a id="type-AASBlobType"></a>
 
@@ -371,7 +372,6 @@ An ordered sequence of elements. Its members have no IdShort, so they are named 
 | TypeValueListElement | Variable | [AASSubmodelElementsDataType](#type-AASSubmodelElementsDataType) | Mandatory | AASSubmodelElementListType | The element kind every member is constrained to. |
 | SemanticIdListElement | Variable | [AASReferenceDataType](#type-AASReferenceDataType) | Optional | AASSubmodelElementListType | The concept every member is an occurrence of, where they share one. |
 | ValueTypeListElement | Variable | [AASDataTypeDefXsdDataType](#type-AASDataTypeDefXsdDataType) | Optional | AASSubmodelElementListType | The xsd type every member's value is expressed in, where they share one. |
-| <Element> | Object |  | OptionalPlaceholder | AASSubmodelElementListType | A member of this list, named by its index. |
 
 <a id="type-AASEntityType"></a>
 
@@ -403,9 +403,9 @@ An event source or sink.
 | State | Variable | [AASStateOfEventDataType](#type-AASStateOfEventDataType) | Mandatory | AASBasicEventElementType | Whether the event source is active. |
 | MessageTopic | Variable | String | Optional | AASBasicEventElementType | The topic events are delivered on. Where the delivery endpoint is itself catalogued, the registry entry points at it. |
 | MessageBroker | Variable | [AASReferenceDataType](#type-AASReferenceDataType) | Optional | AASBasicEventElementType | The broker delivering the events. |
-| LastUpdate | Variable | String | Optional | AASBasicEventElementType | When the event last fired, in its exact lexical form. |
-| MinInterval | Variable | String | Optional | AASBasicEventElementType | Minimum interval between events, in its exact lexical form. |
-| MaxInterval | Variable | String | Optional | AASBasicEventElementType | Maximum interval between events, in its exact lexical form. |
+| LastUpdate | Variable | [AASValueString](#type-AASValueString) | Optional | AASBasicEventElementType | When the event last fired, in its exact lexical form. |
+| MinInterval | Variable | [AASValueString](#type-AASValueString) | Optional | AASBasicEventElementType | Minimum interval between events, in its exact lexical form. |
+| MaxInterval | Variable | [AASValueString](#type-AASValueString) | Optional | AASBasicEventElementType | Maximum interval between events, in its exact lexical form. |
 
 <a id="type-AASOperationType"></a>
 
@@ -566,6 +566,14 @@ An xRegistry ResourceType whose file content is one package: an immutable releas
 | Attestations | Variable | [AASAttestationDataType](#type-AASAttestationDataType)\[\] | Optional | AASPackageFileType | The signatures and attestations attached to this package. |
 
 ### DataTypes
+
+<a id="type-AASValueString"></a>
+
+#### AASValueString  (ns=1;i=1199)
+
+*Subtype of:* String
+
+The xsd lexical form of a typed value, as authored. A subtype of String so that a lexical value is distinguishable from an ordinary string by its DataType rather than by which Variable it came from - the pattern OPC UA already uses for DecimalString, DurationString, DateString and TimeString. The xsd type the form denotes is declared separately, in ValueType.
 
 <a id="type-AASAssetKindDataType"></a>
 
@@ -894,7 +902,7 @@ A qualifier constraining or annotating an element.
 | Kind | [AASQualifierKindDataType](#type-AASQualifierKindDataType) | What the qualifier qualifies. |
 | Type | String | The qualifier type name. |
 | ValueType | [AASDataTypeDefXsdDataType](#type-AASDataTypeDefXsdDataType) | The xsd type the value is expressed in. |
-| Value | String | The value in its exact lexical form. |
+| Value | [AASValueString](#type-AASValueString) | The value in its exact lexical form. |
 | ValueId | [AASReferenceDataType](#type-AASReferenceDataType) | A reference to the value, where it is itself an identified concept. |
 | SemanticId | [AASReferenceDataType](#type-AASReferenceDataType) | The concept this qualifier is an occurrence of. |
 | SupplementalSemanticIds | [AASReferenceDataType](#type-AASReferenceDataType)\[\] | Further concepts this qualifier corresponds to. |
@@ -932,7 +940,7 @@ The IEC 61360 data specification content of a concept definition.
 | Definition | [AASLangStringDataType](#type-AASLangStringDataType)\[\] | Definition per language. |
 | ValueFormat | String | Format of the value. |
 | ValueList | String | Permitted values, serialized in the metamodel's own form. |
-| Value | String | The value in its exact lexical form. |
+| Value | [AASValueString](#type-AASValueString) | The value in its exact lexical form. |
 | LevelType | String | Which of min, nom, typ and max apply. |
 
 <a id="type-AASExtensionDataType"></a>
@@ -947,7 +955,7 @@ A proprietary extension carried on a Referable. Extensions round-trip verbatim; 
 |---|---|---|
 | Name | String | Extension name. |
 | ValueType | [AASDataTypeDefXsdDataType](#type-AASDataTypeDefXsdDataType) | The xsd type the value is expressed in. |
-| Value | String | The value in its exact lexical form. |
+| Value | [AASValueString](#type-AASValueString) | The value in its exact lexical form. |
 | RefersTo | [AASReferenceDataType](#type-AASReferenceDataType)\[\] | What the extension refers to. |
 | SemanticId | [AASReferenceDataType](#type-AASReferenceDataType) | The concept this extension is an occurrence of. |
 | SupplementalSemanticIds | [AASReferenceDataType](#type-AASReferenceDataType)\[\] | Further concepts this extension corresponds to. |

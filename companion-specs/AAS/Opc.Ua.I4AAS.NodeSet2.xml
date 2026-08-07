@@ -24,6 +24,7 @@
     <Alias Alias="NodeId">i=17</Alias>
     <Alias Alias="Enumeration">i=29</Alias>
     <Alias Alias="Organizes">i=35</Alias>
+    <Alias Alias="HasOrderedComponent">i=49</Alias>
     <Alias Alias="HasModellingRule">i=37</Alias>
     <Alias Alias="HasTypeDefinition">i=40</Alias>
     <Alias Alias="HasSubtype">i=45</Alias>
@@ -31,6 +32,14 @@
     <Alias Alias="HasComponent">i=47</Alias>
     <Alias Alias="HasEncoding">i=38</Alias>
   </Aliases>
+  <UADataType NodeId="ns=2;i=1199" BrowseName="2:AASValueString">
+    <DisplayName>AASValueString</DisplayName>
+    <Description>The xsd lexical form of a typed value, as authored. A subtype of String so that a lexical value is distinguishable from an ordinary string by its DataType rather than by which Variable it came from - the pattern OPC UA already uses for DecimalString, DurationString, DateString and TimeString. The xsd type the form denotes is declared separately, in ValueType.</Description>
+    <Category>AAS-ValueFidelity</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=12</Reference>
+    </References>
+  </UADataType>
   <UADataType NodeId="ns=2;i=1200" BrowseName="2:AASAssetKindDataType">
     <DisplayName>AASAssetKindDataType</DisplayName>
     <Description>Whether a shell describes a product model, an individual item, a batch, a role, or none of these. The three granularity levels a product passport is issued at map onto Type, Instance and Batch.</Description>
@@ -255,7 +264,7 @@
       <Reference ReferenceType="HasEncoding">ns=2;i=5010</Reference>
       <Reference ReferenceType="HasEncoding">ns=2;i=5011</Reference>
     </References>
-    <Definition Name="AASQualifierDataType"><Field Name="Kind" DataType="ns=2;i=1205"><Description>What the qualifier qualifies.</Description></Field><Field Name="Type" DataType="i=12"><Description>The qualifier type name.</Description></Field><Field Name="ValueType" DataType="ns=2;i=1208"><Description>The xsd type the value is expressed in.</Description></Field><Field Name="Value" DataType="i=12"><Description>The value in its exact lexical form.</Description></Field><Field Name="ValueId" DataType="ns=2;i=1221"><Description>A reference to the value, where it is itself an identified concept.</Description></Field><Field Name="SemanticId" DataType="ns=2;i=1221"><Description>The concept this qualifier is an occurrence of.</Description></Field><Field Name="SupplementalSemanticIds" DataType="ns=2;i=1221" ValueRank="1"><Description>Further concepts this qualifier corresponds to.</Description></Field></Definition>
+    <Definition Name="AASQualifierDataType"><Field Name="Kind" DataType="ns=2;i=1205"><Description>What the qualifier qualifies.</Description></Field><Field Name="Type" DataType="i=12"><Description>The qualifier type name.</Description></Field><Field Name="ValueType" DataType="ns=2;i=1208"><Description>The xsd type the value is expressed in.</Description></Field><Field Name="Value" DataType="ns=2;i=1199"><Description>The value in its exact lexical form.</Description></Field><Field Name="ValueId" DataType="ns=2;i=1221"><Description>A reference to the value, where it is itself an identified concept.</Description></Field><Field Name="SemanticId" DataType="ns=2;i=1221"><Description>The concept this qualifier is an occurrence of.</Description></Field><Field Name="SupplementalSemanticIds" DataType="ns=2;i=1221" ValueRank="1"><Description>Further concepts this qualifier corresponds to.</Description></Field></Definition>
   </UADataType>
   <UAObject NodeId="ns=2;i=5010" BrowseName="Default Binary" ParentNodeId="ns=2;i=1225">
     <DisplayName>Default Binary</DisplayName>
@@ -303,7 +312,7 @@
       <Reference ReferenceType="HasEncoding">ns=2;i=5014</Reference>
       <Reference ReferenceType="HasEncoding">ns=2;i=5015</Reference>
     </References>
-    <Definition Name="AASDataSpecificationIec61360DataType"><Field Name="PreferredName" DataType="ns=2;i=1222" ValueRank="1"><Description>Preferred name per language.</Description></Field><Field Name="ShortName" DataType="ns=2;i=1222" ValueRank="1"><Description>Short name per language.</Description></Field><Field Name="Unit" DataType="i=12"><Description>Unit symbol.</Description></Field><Field Name="UnitId" DataType="ns=2;i=1221"><Description>Reference to the unit concept.</Description></Field><Field Name="SourceOfDefinition" DataType="i=12"><Description>Where the definition comes from.</Description></Field><Field Name="Symbol" DataType="i=12"><Description>Symbol for the concept.</Description></Field><Field Name="DataType" DataType="ns=2;i=1209"><Description>The IEC 61360 data type.</Description></Field><Field Name="Definition" DataType="ns=2;i=1222" ValueRank="1"><Description>Definition per language.</Description></Field><Field Name="ValueFormat" DataType="i=12"><Description>Format of the value.</Description></Field><Field Name="ValueList" DataType="i=12"><Description>Permitted values, serialized in the metamodel's own form.</Description></Field><Field Name="Value" DataType="i=12"><Description>The value in its exact lexical form.</Description></Field><Field Name="LevelType" DataType="i=12"><Description>Which of min, nom, typ and max apply.</Description></Field></Definition>
+    <Definition Name="AASDataSpecificationIec61360DataType"><Field Name="PreferredName" DataType="ns=2;i=1222" ValueRank="1"><Description>Preferred name per language.</Description></Field><Field Name="ShortName" DataType="ns=2;i=1222" ValueRank="1"><Description>Short name per language.</Description></Field><Field Name="Unit" DataType="i=12"><Description>Unit symbol.</Description></Field><Field Name="UnitId" DataType="ns=2;i=1221"><Description>Reference to the unit concept.</Description></Field><Field Name="SourceOfDefinition" DataType="i=12"><Description>Where the definition comes from.</Description></Field><Field Name="Symbol" DataType="i=12"><Description>Symbol for the concept.</Description></Field><Field Name="DataType" DataType="ns=2;i=1209"><Description>The IEC 61360 data type.</Description></Field><Field Name="Definition" DataType="ns=2;i=1222" ValueRank="1"><Description>Definition per language.</Description></Field><Field Name="ValueFormat" DataType="i=12"><Description>Format of the value.</Description></Field><Field Name="ValueList" DataType="i=12"><Description>Permitted values, serialized in the metamodel's own form.</Description></Field><Field Name="Value" DataType="ns=2;i=1199"><Description>The value in its exact lexical form.</Description></Field><Field Name="LevelType" DataType="i=12"><Description>Which of min, nom, typ and max apply.</Description></Field></Definition>
   </UADataType>
   <UAObject NodeId="ns=2;i=5014" BrowseName="Default Binary" ParentNodeId="ns=2;i=1227">
     <DisplayName>Default Binary</DisplayName>
@@ -327,7 +336,7 @@
       <Reference ReferenceType="HasEncoding">ns=2;i=5016</Reference>
       <Reference ReferenceType="HasEncoding">ns=2;i=5017</Reference>
     </References>
-    <Definition Name="AASExtensionDataType"><Field Name="Name" DataType="i=12"><Description>Extension name.</Description></Field><Field Name="ValueType" DataType="ns=2;i=1208"><Description>The xsd type the value is expressed in.</Description></Field><Field Name="Value" DataType="i=12"><Description>The value in its exact lexical form.</Description></Field><Field Name="RefersTo" DataType="ns=2;i=1221" ValueRank="1"><Description>What the extension refers to.</Description></Field><Field Name="SemanticId" DataType="ns=2;i=1221"><Description>The concept this extension is an occurrence of.</Description></Field><Field Name="SupplementalSemanticIds" DataType="ns=2;i=1221" ValueRank="1"><Description>Further concepts this extension corresponds to.</Description></Field></Definition>
+    <Definition Name="AASExtensionDataType"><Field Name="Name" DataType="i=12"><Description>Extension name.</Description></Field><Field Name="ValueType" DataType="ns=2;i=1208"><Description>The xsd type the value is expressed in.</Description></Field><Field Name="Value" DataType="ns=2;i=1199"><Description>The value in its exact lexical form.</Description></Field><Field Name="RefersTo" DataType="ns=2;i=1221" ValueRank="1"><Description>What the extension refers to.</Description></Field><Field Name="SemanticId" DataType="ns=2;i=1221"><Description>The concept this extension is an occurrence of.</Description></Field><Field Name="SupplementalSemanticIds" DataType="ns=2;i=1221" ValueRank="1"><Description>Further concepts this extension corresponds to.</Description></Field></Definition>
   </UADataType>
   <UAObject NodeId="ns=2;i=5016" BrowseName="Default Binary" ParentNodeId="ns=2;i=1228">
     <DisplayName>Default Binary</DisplayName>
@@ -949,7 +958,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1021</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5066" BrowseName="2:RawValue" ParentNodeId="ns=2;i=1021" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5066" BrowseName="2:RawValue" ParentNodeId="ns=2;i=1021" DataType="ns=2;i=1199" ValueRank="-1">
     <DisplayName>RawValue</DisplayName>
     <Description>The value in the exact xsd lexical form the metamodel carries. This is the normative carrier for round-tripping: where it and Value disagree, RawValue wins.</Description>
     <References>
@@ -1017,7 +1026,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1023</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5071" BrowseName="2:Min" ParentNodeId="ns=2;i=1023" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5071" BrowseName="2:Min" ParentNodeId="ns=2;i=1023" DataType="ns=2;i=1199" ValueRank="-1">
     <DisplayName>Min</DisplayName>
     <Description>The lower bound in its exact lexical form. Absent means unbounded below, which is different from a bound of zero.</Description>
     <References>
@@ -1026,7 +1035,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1023</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5072" BrowseName="2:Max" ParentNodeId="ns=2;i=1023" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5072" BrowseName="2:Max" ParentNodeId="ns=2;i=1023" DataType="ns=2;i=1199" ValueRank="-1">
     <DisplayName>Max</DisplayName>
     <Description>The upper bound in its exact lexical form. Absent means unbounded above.</Description>
     <References>
@@ -1187,7 +1196,7 @@
       <Reference ReferenceType="HasProperty">ns=2;i=5083</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=5084</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=5085</Reference>
-      <Reference ReferenceType="Organizes">ns=2;i=5086</Reference>
+      <Reference ReferenceType="HasOrderedComponent">ns=2;i=5086</Reference>
     </References>
   </UAObjectType>
   <UAVariable NodeId="ns=2;i=5082" BrowseName="2:OrderRelevant" ParentNodeId="ns=2;i=1031" DataType="Boolean" ValueRank="-1">
@@ -1228,11 +1237,11 @@
   </UAVariable>
   <UAObject NodeId="ns=2;i=5086" BrowseName="2:&lt;Element&gt;" ParentNodeId="ns=2;i=1031">
     <DisplayName>&lt;Element&gt;</DisplayName>
-    <Description>A member of this list, named by its index.</Description>
+    <Description>A member of this list, named by its index. Referenced with HasOrderedComponent because the collection is a sequence; Index carries the position that makes the sequence recoverable.</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=11508</Reference>
       <Reference ReferenceType="HasTypeDefinition">ns=2;i=1020</Reference>
-      <Reference ReferenceType="Organizes" IsForward="false">ns=2;i=1031</Reference>
+      <Reference ReferenceType="HasOrderedComponent" IsForward="false">ns=2;i=1031</Reference>
     </References>
   </UAObject>
   <UAObjectType NodeId="ns=2;i=1032" BrowseName="2:AASEntityType">
@@ -1344,7 +1353,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1033</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5096" BrowseName="2:LastUpdate" ParentNodeId="ns=2;i=1033" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5096" BrowseName="2:LastUpdate" ParentNodeId="ns=2;i=1033" DataType="ns=2;i=1199" ValueRank="-1">
     <DisplayName>LastUpdate</DisplayName>
     <Description>When the event last fired, in its exact lexical form.</Description>
     <References>
@@ -1353,7 +1362,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1033</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5097" BrowseName="2:MinInterval" ParentNodeId="ns=2;i=1033" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5097" BrowseName="2:MinInterval" ParentNodeId="ns=2;i=1033" DataType="ns=2;i=1199" ValueRank="-1">
     <DisplayName>MinInterval</DisplayName>
     <Description>Minimum interval between events, in its exact lexical form.</Description>
     <References>
@@ -1362,7 +1371,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1033</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5098" BrowseName="2:MaxInterval" ParentNodeId="ns=2;i=1033" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5098" BrowseName="2:MaxInterval" ParentNodeId="ns=2;i=1033" DataType="ns=2;i=1199" ValueRank="-1">
     <DisplayName>MaxInterval</DisplayName>
     <Description>Maximum interval between events, in its exact lexical form.</Description>
     <References>

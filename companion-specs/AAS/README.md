@@ -63,12 +63,15 @@ retrievable as it stood on a date.
 what makes it possible to compile an AAS into a Server with a source generator, because a mapping in
 which any choice is left to the implementer cannot be generated. It forces four decisions:
 
-- **A value is carried twice.** Several xsd types have no faithful OPC UA equivalent —
-  `xs:decimal` is arbitrary precision, `xs:duration` has no match, `xs:gYearMonth` describes a
-  period — so a typed Variable gives the native projection and a Mandatory `RawValue` carries the
-  exact lexical form. `RawValue` wins where they disagree. The duplication is the price.
-- **Order is carried explicitly**, as an `Index` on each list member, because OPC UA References are
-  unordered and a list is not.
+- **A value is carried as three facts, not one.** Most xsd types map onto an OPC UA built-in
+  directly — `Decimal`, `Integer`, `UInteger` and `Duration` all exist. What a typed value alone
+  cannot carry is which xsd type it was authored as, since several map onto one OPC UA type, and
+  the exact lexical form, since `1.500000` and `1.5` are the same number written differently. So an
+  element carries `Value`, `ValueType` and a Mandatory `RawValue` of type `AASValueString`, a
+  `String` subtype. `RawValue` is normative for round-tripping.
+- **Order is stated and recoverable.** An ordered list uses `HasOrderedComponent`, the OPC UA
+  ReferenceType that says a collection is a sequence, and each member also carries an `Index`,
+  because Browse is not required to return references in order.
 - **Identity is deterministic**: String NodeIds built from the AAS identifier and the metamodel's
   own `idShortPath`, so the identifier a generator computes is the one the AAS API already uses.
 - **Absent and empty stay different**: an absent field has no node, an empty collection has a node

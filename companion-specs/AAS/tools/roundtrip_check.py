@@ -305,8 +305,8 @@ def _self_test():
         return elem
 
     controls = [
-        ("clause 5.2 - value carried only as a typed number",
-         "values-without-native-equivalents.json",
+        ("clause 5.2 - lexical form reconstructed from the typed value",
+         "lexical-forms-that-do-not-survive-typing.json",
          lambda n: plain(n, float_values=True)),
         ("clause 5.4 - list order not restored from Index",
          "ordering-and-nesting.json",
