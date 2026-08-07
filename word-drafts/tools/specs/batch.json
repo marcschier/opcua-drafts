@@ -7,6 +7,7 @@
     "generators",
     "data-channels",
     "arrow-encoding",
+    "async-services",
     "vision",
     "ai-model-management"
   ],
